@@ -516,7 +516,7 @@ define("tinymce/dom/DOMUtils", [
 		/**
 		 * Creates a document fragment out of the specified HTML string.
 		 *
-		 * @method  createFragment
+		 * @method createFragment
 		 * @param {String} html Html string to create fragment from.
 		 * @return {DocumentFragment} Document fragment node.
 		 */
@@ -709,6 +709,7 @@ define("tinymce/dom/DOMUtils", [
 		/**
 		 * Removes all attributes from an element or elements.
 		 *
+		 * @method removeAllAttribs
 		 * @param {Element/String/Array} e DOM element, element id string or array of elements/ids to remove attributes from.
 		 */
 		removeAllAttribs: function(e) {
@@ -1525,7 +1526,7 @@ define("tinymce/dom/DOMUtils", [
 		 * @method rename
 		 * @param {Element} elm Element to rename.
 		 * @param {String} name Name of the new element.
-		 * @return New element or the old element if it needed renaming.
+		 * @return {Element} New element or the old element if it needed renaming.
 		 */
 		rename: function(elm, name) {
 			var self = this, newElm;
@@ -1825,6 +1826,7 @@ define("tinymce/dom/DOMUtils", [
 		/**
 		 * Returns the index of the specified node within it's parent.
 		 *
+		 * @method nodeIndex
 		 * @param {Node} node Node to look for.
 		 * @param {boolean} normalized Optional true/false state if the index is what it would be after a normalization.
 		 * @return {Number} Index of the specified node.
@@ -2062,8 +2064,8 @@ define("tinymce/dom/DOMUtils", [
 	/**
 	 * Instance of DOMUtils for the current document.
 	 *
+	 * @static
 	 * @property DOM
-	 * @member tinymce
 	 * @type tinymce.dom.DOMUtils
 	 * @example
 	 * // Example of how to add a class to some element by id

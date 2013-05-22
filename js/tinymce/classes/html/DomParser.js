@@ -164,6 +164,7 @@ define("tinymce/html/DomParser", [
 		/**
 		 * Runs the specified node though the element and attributes filters.
 		 *
+		 * @method filterNode
 		 * @param {tinymce.html.Node} Node the node to run filters on.
 		 * @return {tinymce.html.Node} The passed in node.
 		 */

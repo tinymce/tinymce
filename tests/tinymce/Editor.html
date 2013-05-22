@@ -17,6 +17,46 @@ module("tinymce.Editor", {
 	autostart: false
 });
 
+test('Event: change', function() {
+	var level, lastLevel;
+
+	editor.on('change', function(e) {
+		level = e.level;
+		lastLevel = e.lastLevel;
+	});
+
+	editor.setContent('');
+	editor.insertContent('a');
+	equal(level.content, '<p>a</p>');
+	equal(lastLevel.content, editor.undoManager.data[0].content);
+
+	editor.off('change');
+});
+
+test('Event: beforeExecCommand', function() {
+	var level, lastLevel, cmd, ui, value;
+
+	editor.on('BeforeExecCommand', function(e) {
+		cmd = e.command;
+		ui = e.ui;
+		value = e.value;
+
+		e.preventDefault();
+	});
+
+	editor.setContent('');
+	editor.insertContent('a');
+	equal(editor.getContent(), '');
+	equal(cmd, 'mceInsertContent');
+	equal(ui, false);
+	equal(value, 'a');
+
+	editor.off('BeforeExecCommand');
+	editor.setContent('');
+	editor.insertContent('a');
+	equal(editor.getContent(), '<p>a</p>');
+});
+
 test('urls - relativeURLs', function() {
 	expect(5);
 

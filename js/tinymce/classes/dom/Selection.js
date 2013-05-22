@@ -55,8 +55,10 @@ define("tinymce/dom/Selection", [
 	Selection.prototype = {
 		/**
 		 * Move the selection cursor range to the specified node and offset.
-		 * @param node Node to put the cursor in.
-		 * @param offset Offset from the start of the node to put the cursor at.
+		 *
+		 * @method setCursorLocation
+		 * @param {Node} node Node to put the cursor in.
+		 * @param {Number} offset Offset from the start of the node to put the cursor at.
 		 */
 		setCursorLocation: function(node, offset) {
 			var self = this, rng = self.dom.createRng();

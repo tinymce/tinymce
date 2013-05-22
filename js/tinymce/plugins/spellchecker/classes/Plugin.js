@@ -25,7 +25,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 	"tinymce/util/JSONRequest"
 ], function(DomTextMatcher, PluginManager, Tools, Menu, DOMUtils, JSONRequest) {
 	PluginManager.add('spellchecker', function(editor) {
-		var lastSuggestions, started;
+		var lastSuggestions, started, suggestionsMenu;
 
 		function isEmpty(obj) {
 			/*jshint unused:false*/
@@ -64,15 +64,21 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			]);
 
 			// Render menu
-			var menu = new Menu({
+			suggestionsMenu = new Menu({
 				items: items,
 				context: 'contextmenu',
+				onautohide: function(e) {
+					if (e.target.className.indexOf('spellchecker') != -1) {
+						e.preventDefault();
+					}
+				},
 				onhide: function() {
-					menu.remove();
+					suggestionsMenu.remove();
+					suggestionsMenu = null;
 				}
 			});
 
-			menu.renderTo(document.body);
+			suggestionsMenu.renderTo(document.body);
 
 			// Position menu
 			var pos = DOMUtils.DOM.getPos(editor.getContentAreaContainer());
@@ -81,7 +87,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			pos.x += targetPos.x;
 			pos.y += targetPos.y;
 
-			menu.moveTo(pos.x, pos.y + target.offsetHeight);
+			suggestionsMenu.moveTo(pos.x, pos.y + target.offsetHeight);
 		}
 
 		function spellcheck() {
@@ -99,6 +105,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 
 				if (isEmpty(suggestions)) {
 					editor.windowManager.alert('No misspellings found');
+					started = false;
 					return;
 				}
 
@@ -128,14 +135,20 @@ define("tinymce/spellcheckerplugin/Plugin", [
 					url: editor.settings.spellchecker_rpc_url,
 					method: method,
 					params: {
-						lang: "en",
+						lang: editor.settings.spellchecker_language || "en",
 						words: words
 					},
 					success: function(result) {
 						doneCallback(result);
 					},
-					error: function(result, xhr) {
-						editor.windowManager.alert("Error: " + result + "\nData:" + xhr.responseText);
+					error: function(error, xhr) {
+						if (error == "JSON Parse error.") {
+							error = "Non JSON response:" + xhr.responseText;
+						} else {
+							error = "Error: " + error;
+						}
+
+						editor.windowManager.alert(error);
 						editor.setProgressState(false);
 						textFilter = null;
 					}
@@ -256,6 +269,13 @@ define("tinymce/spellcheckerplugin/Plugin", [
 				editor.on('SpellcheckStart SpellcheckEnd', function() {
 					self.active(started);
 				});
+			}
+		});
+
+		editor.on('remove', function() {
+			if (suggestionsMenu) {
+				suggestionsMenu.remove();
+				suggestionsMenu = null;
 			}
 		});
 	});

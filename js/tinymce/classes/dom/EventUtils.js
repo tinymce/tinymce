@@ -187,6 +187,7 @@ define("tinymce/dom/EventUtils", [], function() {
 		/**
 		 * Executes all event handler callbacks for a specific event.
 		 *
+		 * @private
 		 * @param {Event} evt Event object.
 		 * @param {String} id Expando id value to look for.
 		 */
@@ -504,7 +505,7 @@ define("tinymce/dom/EventUtils", [], function() {
 		/**
 		 * Destroys the event object. Call this on IE to remove memory leaks.
 		 */
-		self.destory = function() {
+		self.destroy = function() {
 			events = {};
 		};
 

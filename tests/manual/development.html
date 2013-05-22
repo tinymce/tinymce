@@ -9,8 +9,6 @@
 <script src="../../js/tinymce/plugins/paste/plugin.dev.js"></script>
 <script src="../../js/tinymce/plugins/spellchecker/plugin.dev.js"></script>
 <script>
-	//tinymce.PluginManager.load('moxiemanager', '/moxiemanager-php/plugin.js');
-
 	tinymce.init({
 		selector: "textarea#elm1",
 		theme: "modern",
@@ -19,10 +17,15 @@
 			"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
 			"save table contextmenu directionality emoticons template paste textcolor"
 		],
+		external_plugins: {
+			//"moxiemanager": "/moxiemanager-php/plugin.js"
+		},
 		content_css: "css/development.css",
 		add_unload_trigger: false,
 
-		toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons",
+		toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table",
+
+		image_advtab: true,
 
 		style_formats: [
 			{title: 'Bold text', format: 'h1'},

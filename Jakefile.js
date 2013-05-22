@@ -62,6 +62,7 @@ task("minify-core", [], function (params) {
 	if (coverage) {
 		settings.outputMinified = false;
 		settings.outputCoverage = "js/tinymce/tinymce.min.js";
+		settings.coverageId = params.substr(params.indexOf(':') + 1 || params.length);
 	}
 
 	compileAmd(settings);

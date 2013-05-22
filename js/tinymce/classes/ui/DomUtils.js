@@ -1,7 +1,11 @@
 /**
- * DomUtils.js
+ * DOMUtils.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 define("tinymce/ui/DomUtils", [
@@ -29,6 +33,10 @@ define("tinymce/ui/DomUtils", [
 
 		getPos: function(elm, root) {
 			return DOMUtils.DOM.getPos(elm, root);
+		},
+
+		getViewPort: function(win) {
+			return DOMUtils.DOM.getViewPort(win);
 		},
 
 		get: function(id) {

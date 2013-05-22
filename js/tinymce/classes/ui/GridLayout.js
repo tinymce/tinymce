@@ -1,11 +1,23 @@
 /**
  * GridLayout.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * This layout manager places controls in a grid.
+ *
+ * @setting {Number} spacing Spacing between controls.
+ * @setting {Number} spacingH Horizontal spacing between controls.
+ * @setting {Number} spacingV Vertical spacing between controls.
+ * @setting {Number} columns Number of columns to use.
+ * @setting {String/Array} alignH start|end|center|stretch or array of values for each column.
+ * @setting {String/Array} alignV start|end|center|stretch or array of values for each column.
+ * @setting {String} pack start|end
  *
  * @class tinymce.ui.GridLayout
  * @extends tinymce.ui.AbsoluteLayout
@@ -16,6 +28,12 @@ define("tinymce/ui/GridLayout", [
 	"use strict";
 
 	return AbsoluteLayout.extend({
+		/**
+		 * Recalculates the positions of the controls in the specified container.
+		 *
+		 * @method recalc
+		 * @param {tinymce.ui.Container} container Container instance to recalc.
+		 */
 		recalc: function(container) {
 			var settings = container.settings, rows, cols, items, contLayoutRect, width, height, rect,
 				ctrlLayoutRect, ctrl, x, y, posX, posY, ctrlSettings, contPaddingBox, align, spacingH, spacingV, alignH, alignV, maxX, maxY,
@@ -32,6 +50,14 @@ define("tinymce/ui/GridLayout", [
 			alignH = settings.alignH || settings.align;
 			alignV = settings.alignV || settings.align;
 			contPaddingBox = container._paddingBox;
+
+			if (alignH && typeof(alignH) == "string") {
+				alignH = [alignH];
+			}
+
+			if (alignV && typeof(alignV) == "string") {
+				alignV = [alignV];
+			}
 
 			// Zero padd columnWidths
 			for (x = 0; x < cols; x++) {
@@ -166,7 +192,7 @@ define("tinymce/ui/GridLayout", [
 					ctrlLayoutRect.y = posY;
 
 					// Align control horizontal
-					align = ctrlSettings.alignH || alignH;
+					align = ctrlSettings.alignH || (alignH ? (alignH[x] || alignH[0]) : null);
 					if (align == "center") {
 						ctrlLayoutRect.x = posX + (width / 2) - (ctrlLayoutRect.w / 2);
 					} else if (align == "right") {
@@ -176,7 +202,7 @@ define("tinymce/ui/GridLayout", [
 					}
 
 					// Align control vertical
-					align = ctrlSettings.alignV || alignV;
+					align = ctrlSettings.alignV || (alignV ? (alignV[x] || alignV[0]) : null);
 					if (align == "center") {
 						ctrlLayoutRect.y = posY + (height / 2) - (ctrlLayoutRect.h / 2);
 					} else  if (align == "bottom") {

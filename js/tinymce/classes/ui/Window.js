@@ -1,11 +1,15 @@
 /**
  * Window.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * Creates a new window.
  *
  * @-x-less Window.less
  * @class tinymce.ui.Window
@@ -39,12 +43,19 @@ define("tinymce/ui/Window", [
 			}
 		},
 
+		/**
+		 * Constructs a instance with the specified settings.
+		 *
+		 * @constructor
+		 * @param {Object} settings Name/value object with settings.
+		 */
 		init: function(settings) {
 			var self = this;
 
 			self._super(settings);
 
 			self.addClass('window');
+			self._fixed = true;
 
 			// Create statusbar
 			if (settings.buttons) {
@@ -75,6 +86,12 @@ define("tinymce/ui/Window", [
 			self._fullscreen = false;
 		},
 
+		/**
+		 * Recalculates the positions of the controls in the current container.
+		 * This is invoked by the reflow method and shouldn't be called directly.
+		 *
+		 * @method recalc
+		 */
 		recalc: function() {
 			var self = this, statusbar = self.statusbar, layoutRect, width, needsRecalc;
 
@@ -113,6 +130,14 @@ define("tinymce/ui/Window", [
 			}
 		},
 
+		/**
+		 * Initializes the current controls layout rect.
+		 * This will be executed by the layout managers to determine the
+		 * default minWidth/minHeight etc.
+		 *
+		 * @method initLayoutRect
+		 * @return {Object} Layout rect instance.
+		 */
 		initLayoutRect: function() {
 			var self = this, layoutRect = self._super(), deltaH = 0, headEl;
 
@@ -142,6 +167,12 @@ define("tinymce/ui/Window", [
 			return layoutRect;
 		},
 
+		/**
+		 * Renders the control as a HTML string.
+		 *
+		 * @method renderHtml
+		 * @return {String} HTML representing the control.
+		 */
 		renderHtml: function() {
 			var self = this, layout = self._layout, id = self._id, prefix = self.classPrefix;
 			var settings = self.settings, headerHtml = '', footerHtml = '', html = settings.html;
@@ -182,6 +213,13 @@ define("tinymce/ui/Window", [
 			);
 		},
 
+		/**
+		 * Switches the window fullscreen mode.
+		 *
+		 * @method fullscreen
+		 * @param {Boolean} state True/false state.
+		 * @return {tinymce.ui.Window} Current window instance.
+		 */
 		fullscreen: function(state) {
 			var self = this, documentElement = document.documentElement, slowRendering, prefix = self.classPrefix, layoutRect;
 
@@ -242,6 +280,11 @@ define("tinymce/ui/Window", [
 			return self.reflow();
 		},
 
+		/**
+		 * Called after the control has been rendered.
+		 *
+		 * @method postRender
+		 */
 		postRender: function() {
 			var self = this, items = [], focusCtrl, autoFocusFound, startPos;
 
@@ -297,7 +340,7 @@ define("tinymce/ui/Window", [
 				focusCtrl.focus();
 			}
 
-			this.dragHelger = new DragHelper(self._id + '-dragh', {
+			this.dragHelper = new DragHelper(self._id + '-dragh', {
 				start: function() {
 					startPos = {
 						x: self.layoutRect().x,
@@ -317,15 +360,33 @@ define("tinymce/ui/Window", [
 			});
 		},
 
+		/**
+		 * Fires a submit event with the serialized form.
+		 *
+		 * @method submit
+		 * @return {Object} Event arguments object.
+		 */
 		submit: function() {
+			// Blur current control so a onchange is fired before submit
+			var ctrl = this.getParentCtrl(document.activeElement);
+			if (ctrl) {
+				ctrl.blur();
+			}
+
 			return this.fire('submit', {data: this.toJSON()});
 		},
 
+		/**
+		 * Removes the current control from DOM and from UI collections.
+		 *
+		 * @method remove
+		 * @return {tinymce.ui.Control} Current control instance.
+		 */
 		remove: function() {
 			var self = this;
 
 			self._super();
-			self.dragHelger.destroy();
+			self.dragHelper.destroy();
 
 			if (self.statusbar) {
 				this.statusbar.remove();

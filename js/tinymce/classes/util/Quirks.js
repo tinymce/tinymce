@@ -6,13 +6,14 @@
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
+ *
+ * @ignore-file
  */
 
 /**
  * This file includes fixes for various browser quirks it's made to make it easy to add/remove browser specific fixes.
  *
  * @class tinymce.util.Quirks
- * @private
  */
 define("tinymce/util/Quirks", [
 	"tinymce/util/VK",
@@ -51,6 +52,7 @@ define("tinymce/util/Quirks", [
 		/**
 		 * Returns true/false if the event is prevented or not.
 		 *
+		 * @private
 		 * @param {Event} e Event object.
 		 * @return {Boolean} true/false if the event is prevented or not.
 		 */
@@ -885,6 +887,19 @@ define("tinymce/util/Quirks", [
 			});
 		}
 
+		/**
+		 * Forces Gecko to render a broken image icon if it fails to load an image.
+		 */
+		function showBrokenImageIcon() {
+			editor.contentStyles.push(
+				'img:-moz-broken {' +
+					'-moz-force-broken-image-icon:1;' +
+					'min-width:24px;' +
+					'min-height:24px' +
+				'}'
+			);
+		}
+
 		// All browsers
 		disableBackspaceIntoATable();
 		removeBlockQuoteOnBackSpace();
@@ -927,6 +942,7 @@ define("tinymce/util/Quirks", [
 			setGeckoEditingOptions();
 			addBrAfterLastLinks();
 			removeGhostSelection();
+			showBrokenImageIcon();
 		}
 	};
 });

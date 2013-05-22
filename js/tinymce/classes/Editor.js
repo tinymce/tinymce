@@ -84,6 +84,12 @@ define("tinymce/Editor", [
 	}
 
 	/**
+	 * Include documentation for all the events.
+	 *
+	 * @include ../../../tools/docs/tinymce.Editor.js
+	 */
+
+	/**
 	 * Constructs a editor instance by id.
 	 *
 	 * @constructor
@@ -129,7 +135,6 @@ define("tinymce/Editor", [
 
 			// See: http://www.w3.org/TR/CSS2/fonts.html#propdef-font-size
 			font_size_legacy_values: 'xx-small,small,medium,large,x-large,xx-large,300%',
-			directionality: 'ltr',
 			forced_root_block: 'p',
 			hidden_input: true,
 			padd_empty_editor: true,
@@ -242,6 +247,7 @@ define("tinymce/Editor", [
 		self.execCommands = {};
 		self.queryStateCommands = {};
 		self.queryValueCommands = {};
+		self.loadedCSS = {};
 
 		self.suffix = editorManager.suffix;
 		self.editorManager = editorManager;
@@ -374,7 +380,11 @@ define("tinymce/Editor", [
 				var scriptLoader = ScriptLoader.ScriptLoader;
 
 				if (settings.language) {
-					scriptLoader.add(self.editorManager.baseURL + '/langs/' + settings.language + '.js');
+					settings.language_url = self.editorManager.baseURL + '/langs/' + settings.language + '.js';
+				}
+
+				if (settings.language_url) {
+					scriptLoader.add(settings.language_url);
 				}
 
 				if (settings.theme && typeof settings.theme != "function" &&
@@ -385,6 +395,11 @@ define("tinymce/Editor", [
 				if (Tools.isArray(settings.plugins)) {
 					settings.plugins = settings.plugins.join(' ');
 				}
+
+				each(settings.external_plugins, function(url, name) {
+					PluginManager.load(name, url);
+					settings.plugins += ' ' + name;
+				});
 
 				each(settings.plugins.split(/[ ,]/), function(plugin) {
 					plugin = trim(plugin);
@@ -590,10 +605,10 @@ define("tinymce/Editor", [
 
 			// Load the CSS by injecting them into the HTML this will reduce "flicker"
 			for (i = 0; i < self.contentCSS.length; i++) {
-				self.iframeHTML += '<link type="text/css" rel="stylesheet" href="' + self.contentCSS[i] + '" />';
+				var cssUrl = self.contentCSS[i];
+				self.iframeHTML += '<link type="text/css" rel="stylesheet" href="' + cssUrl + '" />';
+				self.loadedCSS[cssUrl] = true;
 			}
-
-			self.contentCSS = [];
 
 			bodyId = settings.body_id || 'tinymce';
 			if (bodyId.indexOf('=') != -1) {
@@ -680,6 +695,15 @@ define("tinymce/Editor", [
 			}
 
 			if (settings.content_editable) {
+				self.on('remove', function() {
+					var body = this.getBody();
+
+					DOM.removeClass(body, 'mce-content-body');
+					DOM.removeClass(body, 'mce-edit-focus');
+					DOM.setAttrib(body, 'tabIndex', null);
+					DOM.setAttrib(body, 'contentEditable', null);
+				});
+
 				DOM.addClass(targetElm, 'mce-content-body');
 				targetElm.tabIndex = -1;
 				self.contentDocument = doc = settings.content_document || document;
@@ -923,8 +947,11 @@ define("tinymce/Editor", [
 			}
 
 			// Load specified content CSS last
-			each(self.contentCSS, function(url) {
-				self.dom.loadCSS(url);
+			each(self.contentCSS, function(cssUrl) {
+				if (!self.loadedCSS[cssUrl]) {
+					self.dom.loadCSS(cssUrl);
+					self.loadedCSS[cssUrl] = true;
+				}
 			});
 
 			// Handle auto focus
@@ -1308,8 +1335,8 @@ define("tinymce/Editor", [
 			}
 
 			args = extend({}, args);
-			self.fire('BeforeExecCommand', {command: cmd, ui: ui, value: value});
-			if (args.terminate) {
+			args = self.fire('BeforeExecCommand', {command: cmd, ui: ui, value: value});
+			if (args.isDefaultPrevented()) {
 				return false;
 			}
 
@@ -1714,7 +1741,7 @@ define("tinymce/Editor", [
 		 * Inserts content at caret position.
 		 *
 		 * @method insertContent
-		 * @params {String} content Content to insert.
+		 * @param {String} content Content to insert.
 		 */
 		insertContent: function(content) {
 			this.execCommand('mceInsertContent', false, content);
@@ -1997,7 +2024,7 @@ define("tinymce/Editor", [
 			}
 
 			if (!automatic) {
-				self.editorManager.off(self._beforeUnload);
+				self.editorManager.off('beforeunload', self._beforeUnload);
 
 				// Manual destroy
 				if (self.theme && self.theme.destroy) {

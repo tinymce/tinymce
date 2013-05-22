@@ -109,6 +109,7 @@ define("tinymce/util/LocalStorage", [], function() {
 		 * Length of the number of items in storage.
 		 *
 		 * @property length
+		 * @type Number
 		 * @return {Number} Number of items in storage.
 		 */
 		//length:0,

@@ -1,11 +1,15 @@
 /**
  * ListBox.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * Creates a new list box control.
  *
  * @-x-less ListBox.less
  * @class tinymce.ui.ListBox
@@ -17,6 +21,13 @@ define("tinymce/ui/ListBox", [
 	"use strict";
 
 	return MenuButton.extend({
+		/**
+		 * Constructs a instance with the specified settings.
+		 *
+		 * @constructor
+		 * @param {Object} settings Name/value object with settings.
+		 * @setting {Array} values Array with values to add to list box.
+		 */
 		init: function(settings) {
 			var self = this, values, i, selected, selectedText, lastItemCtrl;
 
@@ -56,6 +67,13 @@ define("tinymce/ui/ListBox", [
 			});
 		},
 
+		/**
+		 * Getter/setter function for the control value.
+		 *
+		 * @method value
+		 * @param {String} [value] Value to be set.
+		 * @return {Boolean/tinymce.ui.ListBox} Value or self if it's a set operation.
+		 */
 		value: function(value) {
 			var self = this, active, selectedText, menu, i;
 
@@ -91,7 +109,7 @@ define("tinymce/ui/ListBox", [
 					}
 				}
 
-				self.text(selectedText);
+				self.text(selectedText || this.settings.text);
 			}
 
 			return self._super(value);

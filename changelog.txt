@@ -1,5 +1,41 @@
-Version 4.0b3 (2013-0x-xx)
+Version 4.0 (2013-05-xx)
+	Added new insertdate_dateformat, insertdate_timeformat and insertdate_formats options to insertdatetime.
+	Added new font_formats, fontsize_formats and block_formats options to configure fontselect, fontsizeselect and formatselect.
+	Added new table_clone_elements option to table plugin. Enables you to specify what elements to clone when adding columns/rows.
+	Added new auto detect logic for site and email urls in link plugin to match the logic found in 3.x.
+	Fixed so font name, font size and block format select boxes gets updated with the current format.
+	Fixed bug where the theme content css wasn't loaded into the preview dialog.
+	Fixed bug where the template description in template dialog wouldn't display the text correctly.
+	Fixed bug where various UI elements wasn't properly removed when an editor instance was removed.
+	Fixed bug where editing links in inline mode would fail on WebKit.
+	Fixed bug where the pagebreak_separator option in the pagebreak plugin wasn't working properly.
+	Fixed bug where the child panels of the float panel in inline mode wasn't properly placed.
+	Fixed bug where the float panel children of windows wasn't position fixed.
+	Fixed so it's possible to disable the toolbar by setting it to false.
+Version 4.0b3 (2013-05-15)
+	Added new optional advanced tab for image dialog with hspace, vspace, border and style.
+	Added new change event that gets fired when undo levels are added to editor instances.
+	Added new removed_menuitems option enables you to list menu items to remove from menus.
+	Added new external_plugins option enables you to specify external locations for plugins.
+	Added new language_url option enables you to specify an external location for the language pack.
+	Added new table toolbar control that displays a menu for inserting/editing menus.
 	Fixed bug where IE 10 wouldn't load files properly from cache.
+	Fixed bug where image dialog wouldn't properly remove width/height if blanked.
+	Fixed bug where all events wasn't properly unbound when editor instances where removed.
+	Fixed bug where data- attributes wasn't working properly in the SaxParser.
+	Fixed bug where Gecko wouldn't properly render broken images.
+	Fixed bug where Gecko wouldn't produce the same error dialog on paste as other browsers.
+	Fixed bug where is wasn't possible to prevent execCommands in beforeExecCommand event.
+	Fixed bug where the fullpage_hide_in_source_view option wasn't working in the fullpage plugin.
+	Fixed bug where the WindowManager close method wouldn't properly close the top most window.
+	Fixed bug where it wasn't possible to paste in IE 10 due to JS exception.
+	Fixed bug where tab key didn't move to the right child control in tabpanels.
+	Fixed bug where enter inside a form would focus the first button like control in TinyMCE.
+	Fixed bug where it would match scripts that looked like the tinymce base directory incorrectly.
+	Fixed bug where the spellchecker wouldn't properly toggle off the spellcheck mode if no errors where found.
+	Fixed bug in searchreplace plugin where it would remove all spans instead of the marker spans.
+	Fixed issue where selector wouldn't disable existing mode setting.
+	Fixed so it's easier to configure the menu and menubar.
 	Fixed so bodyId/bodyClass is applied to preview as it's done to the editor iframe.
 Version 4.0b2 (2013-04-24)
 	Added new rel_list option to link plugin. Enables you to specify values for a rel drop down.

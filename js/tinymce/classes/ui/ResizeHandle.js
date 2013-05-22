@@ -1,11 +1,15 @@
 /**
  * ResizeHandle.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * Renders a resize handle for TinyMCE. Lets you resize the editor.
  *
  * @-x-less ResizeHandle.less
  * @class tinymce.ui.ResizeHandle
@@ -19,6 +23,12 @@ define("tinymce/ui/ResizeHandle", [
 	"use strict";
 
 	return Widget.extend({
+		/**
+		 * Renders the control as a HTML string.
+		 *
+		 * @method renderHtml
+		 * @return {String} HTML representing the control.
+		 */
 		renderHtml: function() {
 			var self = this, prefix = self.classPrefix;
 
@@ -36,6 +46,11 @@ define("tinymce/ui/ResizeHandle", [
 			);
 		},
 
+		/**
+		 * Called after the control has been rendered.
+		 *
+		 * @method postRender
+		 */
 		postRender: function() {
 			var self = this, iframeStartSize, editor = self.settings.editor;
 

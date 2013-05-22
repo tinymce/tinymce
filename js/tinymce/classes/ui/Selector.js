@@ -1,7 +1,11 @@
 /**
  * Selector.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
@@ -9,6 +13,7 @@
  * We currently only support basic CSS expressions to reduce the size of the core
  * and the ones we support should be enough for most cases.
  *
+ * @example
  * Supported expressions:
  *  element
  *  element#name
@@ -27,6 +32,7 @@
  *  element:even
  *  element element
  *  element > element
+ *
  * @class tinymce.ui.Selector
  */
 define("tinymce/ui/Selector", [
@@ -39,6 +45,7 @@ define("tinymce/ui/Selector", [
 	 * Produces an array with a unique set of objects. It will not compare the values
 	 * but the references of the objects.
 	 *
+	 * @private
 	 * @method unqiue
 	 * @param {Array} array Array to make into an array with unique items.
 	 * @return {Array} Array with unique items.
@@ -74,7 +81,7 @@ define("tinymce/ui/Selector", [
 		/**
 		 * Constructs a new Selector instance.
 		 *
-		 * @contructor
+		 * @constructor
 		 * @method init
 		 * @param {String} selector CSS like selector expression.
 		 */

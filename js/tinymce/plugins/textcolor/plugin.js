@@ -108,7 +108,7 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		if ((value = e.target.getAttribute('data-mce-color'))) {
 			buttonCtrl.hidePanel();
 			value = '#' + value;
-			buttonCtrl.showPreview(value);
+			buttonCtrl.color(value);
 			buttonCtrl.hidePanel();
 			editor.execCommand(buttonCtrl.settings.selectcmd, false, value);
 		}

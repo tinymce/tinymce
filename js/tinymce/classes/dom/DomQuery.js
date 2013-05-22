@@ -9,8 +9,13 @@
  *
  * Some of this logic is based on jQuery code that is released under
  * MIT license that grants us to sublicense it under LGPL.
+ *
+ * @ignore-file
  */
 
+/**
+ * @class tinymce.dom.DomQuery
+ */
 define("tinymce/dom/DomQuery", [
 	"tinymce/dom/EventUtils",
 	"tinymce/dom/Sizzle"

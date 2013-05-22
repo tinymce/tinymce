@@ -94,9 +94,9 @@ define("tinymce/util/JSONRequest", [
 			};
 
 			args.data = JSON.serialize({
-				id : args.id || 'c' + (this.count++),
-				method : args.method,
-				params : args.params
+				id: args.id || 'c' + (this.count++),
+				method: args.method,
+				params: args.params
 			});
 
 			// JSON content type for Ruby on rails. Bug: #1883287

@@ -1,15 +1,26 @@
 /**
  * Button.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * This class is used to create buttons. You can create them directly or through the Factory.
+ *
+ * @example
+ * // Create and render a button to the body element
+ * tinymce.ui.Factory({
+ *     type: 'button',
+ *     text: 'My button'
+ * }).renderTo(document.body);
  *
  * @-x-less Button.less
  * @class tinymce.ui.Button
- * @extends tinymce.ui.Control
+ * @extends tinymce.ui.Widget
  */
 define("tinymce/ui/Button", [
 	"tinymce/ui/Widget"
@@ -22,6 +33,15 @@ define("tinymce/ui/Button", [
 			role: "button"
 		},
 
+		/**
+		 * Constructs a new button instance with the specified settings.
+		 *
+		 * @constructor
+		 * @param {Object} settings Name/value object with settings.
+		 * @setting {String} size Size of the button small|medium|large.
+		 * @setting {String} image Image to use for icon.
+		 * @setting {String} icon Icon to use for button.
+		 */
 		init: function(settings) {
 			var self = this, size;
 
@@ -41,6 +61,11 @@ define("tinymce/ui/Button", [
 			}
 		},
 
+		/**
+		 * Repaints the button for example after it's been resizes by a layout engine.
+		 *
+		 * @method repaint
+		 */
 		repaint: function() {
 			var btnStyle = this.getEl().firstChild.style;
 
@@ -49,6 +74,12 @@ define("tinymce/ui/Button", [
 			this._super();
 		},
 
+		/**
+		 * Renders the control as a HTML string.
+		 *
+		 * @method renderHtml
+		 * @return {String} HTML representing the control.
+		 */
 		renderHtml: function() {
 			var self = this, id = self._id, prefix = self.classPrefix;
 			var icon = self.settings.icon, image = '';
@@ -62,7 +93,7 @@ define("tinymce/ui/Button", [
 
 			return (
 				'<div id="' + id + '" class="' + self.classes() + '" tabindex="-1">' +
-					'<button role="presentation" tabindex="-1">' +
+					'<button role="presentation" type="button" tabindex="-1">' +
 						(icon ? '<i class="' + icon + '"' + image + '></i>' : '') +
 						(self._text ? (icon ? ' ' : '') + self.encode(self._text) : '') +
 					'</button>' +

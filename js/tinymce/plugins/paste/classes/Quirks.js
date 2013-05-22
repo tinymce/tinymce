@@ -20,7 +20,11 @@ define("tinymce/pasteplugin/Quirks", [
 	"tinymce/Env",
 	"tinymce/util/Tools"
 ], function(Env, Tools) {
+	"use strict";
+
 	return function(editor) {
+		var explorerBlocksRegExp;
+
 		function addPreProcessFilter(filterFunc) {
 			editor.on('PastePreProcess', function(e) {
 				e.content = filterFunc(e.content);
@@ -70,22 +74,22 @@ define("tinymce/pasteplugin/Quirks", [
 		 */
 		function removeExplorerBrElementsAfterBlocks(html) {
 			// Produce block regexp based on the block elements in schema
-			if (!this.explorerBlocksRegExp) {
+			if (!explorerBlocksRegExp) {
 				var blockElements = [];
 
 				Tools.each(editor.schema.getBlockElements(), function(block, blockName) {
 					blockElements.push(blockName);
 				});
 
-				this.explorerBlocksRegExp = new RegExp(
-					'(?:<br>&nbsp;[\\s\\r\\n]+|<br>)*(<\/?(' + blockElements.join('|') + ')[^>]*>)(?:<br>&nbsp;[\\s\\r\\n]+|<br>)*',
+				explorerBlocksRegExp = new RegExp(
+					'(?:<br>&nbsp;[\\s\\r\\n]+|<br>)*(<\\/?(' + blockElements.join('|') + ')[^>]*>)(?:<br>&nbsp;[\\s\\r\\n]+|<br>)*',
 					'g'
 				);
 			}
 
 			// Remove BR:s from: <BLOCK>X</BLOCK><BR>
 			html = process(html, [
-				[this.explorerBlocksRegExp, '$1']
+				[explorerBlocksRegExp, '$1']
 			]);
 
 			// IE9 also adds an extra BR element for each soft-linefeed and it also adds a BR for each word wrap break

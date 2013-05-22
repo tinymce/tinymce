@@ -171,7 +171,7 @@ define("tinymce/WindowManager", [
 		 */
 		self.close = function() {
 			if (windows.length) {
-				windows[window.length - 1].win.close();
+				windows[window.length - 1].close();
 			}
 		};
 	};

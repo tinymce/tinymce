@@ -1,11 +1,15 @@
 /**
- * KeyboardFocus.js
+ * KeyboardNavigation.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * This class handles keyboard navigation of controls and elements.
  *
  * @class tinymce.ui.KeyboardNavigation
  */
@@ -18,7 +22,6 @@ define("tinymce/ui/KeyboardNavigation", [
 	 * Create a new KeyboardNavigation instance to handle the focus for a specific element.
 	 *
 	 * @constructor
-	 * @method KeyboardNavigation
 	 * @param {Object} settings the settings object to define how keyboard navigation works.
 	 *
 	 * @setting {tinymce.ui.Control} root the root control navigation focus movement is scoped to this root.
@@ -65,6 +68,7 @@ define("tinymce/ui/KeyboardNavigation", [
 		/**
 		 * Returns the currently focused element.
 		 *
+		 * @private
 		 * @return {Element} Currently focused element.
 		 */
 		function getFocusElement() {
@@ -74,6 +78,7 @@ define("tinymce/ui/KeyboardNavigation", [
 		/**
 		 * Returns the currently focused elements wai aria role.
 		 *
+		 * @private
 		 * @param {Element} elm Optional element to get role from.
 		 * @return {String} Role of specified element.
 		 */
@@ -86,6 +91,7 @@ define("tinymce/ui/KeyboardNavigation", [
 		/**
 		 * Returns the role of the parent element.
 		 *
+		 * @private
 		 * @param {Element} elm Optional element to get parent role from.
 		 * @return {String} Role of the first parent that has a role.
 		 */
@@ -102,6 +108,7 @@ define("tinymce/ui/KeyboardNavigation", [
 		/**
 		 * Returns an wai aria property by name.
 		 *
+		 * @private
 		 * @param {String} name Name of the aria property to get for example "disabled".
 		 * @return {String} Aria property value.
 		 */
@@ -115,6 +122,8 @@ define("tinymce/ui/KeyboardNavigation", [
 
 		/**
 		 * Executes the onAction event callback. This is when the user presses enter/space.
+		 *
+		 * @private
 		 */
 		function action() {
 			var focusElm = getFocusElement();
@@ -134,6 +143,8 @@ define("tinymce/ui/KeyboardNavigation", [
 
 		/**
 		 * Cancels the current navigation. The same as pressing the Esc key.
+		 *
+		 * @method cancel
 		 */
 		function cancel() {
 			var focusElm;
@@ -152,16 +163,40 @@ define("tinymce/ui/KeyboardNavigation", [
 		/**
 		 * Moves the focus to the next or previous item. It will wrap to start/end if it can't move.
 		 *
+		 * @method moveFocus
 		 * @param {Number} dir Direction for move -1 or 1.
 		 */
 		function moveFocus(dir) {
 			var idx = -1, focusElm, i;
+			var visibleItems = [];
+
+			function isVisible(elm) {
+				var rootElm = root ? root.getEl() : document.body;
+
+				while (elm && elm != rootElm) {
+					if (elm.style.display == 'none') {
+						return false;
+					}
+
+					elm = elm.parentNode;
+				}
+
+				return true;
+			}
 
 			initItems();
 
-			i = items.length;
+			// TODO: Optimize this, will be slow on lots of items
+			i = visibleItems.length;
+			for (i = 0; i < items.length; i++) {
+				if (isVisible(items[i])) {
+					visibleItems.push(items[i]);
+				}
+			}
+
+			i = visibleItems.length;
 			while (i--) {
-				if (items[i].id === focussedId) {
+				if (visibleItems[i].id === focussedId) {
 					idx = i;
 					break;
 				}
@@ -169,12 +204,12 @@ define("tinymce/ui/KeyboardNavigation", [
 
 			idx += dir;
 			if (idx < 0) {
-				idx = items.length - 1;
-			} else if (idx >= items.length) {
+				idx = visibleItems.length - 1;
+			} else if (idx >= visibleItems.length) {
 				idx = 0;
 			}
 
-			focusElm = items[idx];
+			focusElm = visibleItems[idx];
 			focusElm.focus();
 			focussedId = focusElm.id;
 
@@ -186,6 +221,7 @@ define("tinymce/ui/KeyboardNavigation", [
 		/**
 		 * Moves focus to the first item or the last focused item if root is a toolbar.
 		 *
+		 * @method focusFirst
 		 * @return {[type]} [description]
 		 */
 		function focusFirst() {

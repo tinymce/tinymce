@@ -466,6 +466,12 @@
 			nodes = tinymce.toArray(node.getElementsByTagName('span'));
 			if (nodes.length) {
 				for (i = 0; i < nodes.length; i++) {
+					var nodeIndex = nodes[i].getAttribute('data-mce-index');
+
+					if (nodeIndex === null || !nodeIndex.length) {
+						continue;
+					}
+
 					matchIndex = currentMatchIndex = nodes[i].getAttribute('data-mce-index');
 					if (all || matchIndex === currentIndex) {
 						if (text.length) {
@@ -477,6 +483,11 @@
 
 						while (nodes[++i]) {
 							matchIndex = nodes[i].getAttribute('data-mce-index');
+
+							if (nodeIndex === null || !nodeIndex.length) {
+								continue;
+							}
+
 							if (matchIndex === currentMatchIndex) {
 								removeNode(nodes[i]);
 							} else {

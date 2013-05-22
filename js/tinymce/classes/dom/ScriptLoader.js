@@ -118,7 +118,7 @@ define("tinymce/dom/ScriptLoader", [
 		 *
 		 * @method isDone
 		 * @param {String} url URL to check for.
-		 * @return [Boolean} true/false if the URL is loaded.
+		 * @return {Boolean} true/false if the URL is loaded.
 		 */
 		this.isDone = function(url) {
 			return states[url] == LOADED;

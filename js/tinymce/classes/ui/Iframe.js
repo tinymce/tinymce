@@ -1,13 +1,19 @@
 /**
  * Iframe.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /*jshint scripturl:true */
 
 /**
- * ..
+ * This class creates an iframe.
+ *
+ * @setting {String} url Url to open in the iframe.
  *
  * @-x-less Iframe.less
  * @class tinymce.ui.Iframe
@@ -19,6 +25,12 @@ define("tinymce/ui/Iframe", [
 	"use strict";
 
 	return Widget.extend({
+		/**
+		 * Renders the control as a HTML string.
+		 *
+		 * @method renderHtml
+		 * @return {String} HTML representing the control.
+		 */
 		renderHtml: function() {
 			var self = this;
 
@@ -31,10 +43,23 @@ define("tinymce/ui/Iframe", [
 			);
 		},
 
+		/**
+		 * Setter for the iframe source.
+		 *
+		 * @method src
+		 * @param {String} src Source URL for iframe.
+		 */
 		src: function(src) {
 			this.getEl().src = src;
 		},
 
+		/**
+		 * Inner HTML for the iframe.
+		 *
+		 * @method html
+		 * @param {String} html HTML string to set as HTML inside the iframe.
+		 * @return {tinymce.ui.Iframe} Current iframe control.
+		 */
 		html: function(html) {
 			this.getEl().contentWindow.document.body.innerHTML = html;
 			return this;

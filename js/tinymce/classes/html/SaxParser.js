@@ -129,8 +129,8 @@ define("tinymce/html/SaxParser", [
 				name = name.toLowerCase();
 				value = name in fillAttrsMap ? name : decode(value || val2 || val3 || ''); // Handle boolean attribute than value attribute
 
-				// Validate name and value
-				if (validate && !isInternalElement && name.indexOf('data-mce-') !== 0) {
+				// Validate name and value pass through all data- attributes
+				if (validate && !isInternalElement && name.indexOf('data-') !== 0) {
 					attrRule = validAttributesMap[name];
 
 					// Find rule by pattern matching

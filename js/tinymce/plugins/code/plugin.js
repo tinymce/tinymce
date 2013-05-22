@@ -20,7 +20,7 @@ tinymce.PluginManager.add('code', function(editor) {
 				multiline: true,
 				minWidth: 600,
 				minHeight: 500,
-				value: editor.getContent(),
+				value: editor.getContent({source_view: true}),
 				spellcheck: false
 			},
 			onSubmit: function(e) {

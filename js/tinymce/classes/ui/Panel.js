@@ -1,15 +1,20 @@
 /**
  * Panel.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * Creates a new panel.
  *
  * @-x-less Panel.less
  * @class tinymce.ui.Panel
  * @extends tinymce.ui.Container
+ * @mixes tinymce.ui.Scrollable
  */
 define("tinymce/ui/Panel", [
 	"tinymce/ui/Container",
@@ -17,7 +22,7 @@ define("tinymce/ui/Panel", [
 ], function(Container, Scrollable) {
 	"use strict";
 
-	var Panel = Container.extend({
+	return Container.extend({
 		Defaults: {
 			layout: 'fit',
 			containerCls: 'panel'
@@ -25,30 +30,12 @@ define("tinymce/ui/Panel", [
 
 		Mixins: [Scrollable],
 
-		fromJSON: function(data) {
-			var self = this;
-
-			for (var name in data) {
-				self.find('#' + name).value(data[name]);
-			}
-
-			return self;
-		},
-
-		toJSON: function() {
-			var self = this, data = {};
-
-			self.find('*').each(function(ctrl) {
-				var name = ctrl.name(), value = ctrl.value();
-
-				if (name && typeof(value) != "undefined") {
-					data[name] = value;
-				}
-			});
-
-			return data;
-		},
-
+		/**
+		 * Renders the control as a HTML string.
+		 *
+		 * @method renderHtml
+		 * @return {String} HTML representing the control.
+		 */
 		renderHtml: function() {
 			var self = this, layout = self._layout, innerHtml = self.settings.html;
 
@@ -77,6 +64,4 @@ define("tinymce/ui/Panel", [
 			);
 		}
 	});
-
-	return Panel;
 });

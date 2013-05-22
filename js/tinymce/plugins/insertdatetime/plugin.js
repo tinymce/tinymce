@@ -53,13 +53,13 @@ tinymce.PluginManager.add('insertdatetime', function(editor) {
 	}
 
 	editor.addCommand('mceInsertDate', function() {
-		var str = getDateTime(editor.getParam("plugin_insertdate_dateFormat", editor.translate("%Y-%m-%d")));
+		var str = getDateTime(editor.getParam("insertdate_dateformat", editor.translate("%Y-%m-%d")));
 
 		editor.execCommand('mceInsertContent', false, str);
 	});
 
 	editor.addCommand('mceInsertTime', function() {
-		var str = getDateTime(editor.getParam("plugin_insertdate_timeFormat", editor.translate('%H:%M:%S')));
+		var str = getDateTime(editor.getParam("insertdate_timeformat", editor.translate('%H:%M:%S')));
 
 		editor.execCommand('mceInsertContent', false, str);
 	});
@@ -73,8 +73,7 @@ tinymce.PluginManager.add('insertdatetime', function(editor) {
 		menu: menuItems
 	});
 
-	// TODO: Add config option here
-	tinymce.each([
+	tinymce.each(editor.settings.insertdate_formats || [
 		"%H:%M:%S",
 		"%Y-%m-%d",
 		"%I:%M:%S %p",

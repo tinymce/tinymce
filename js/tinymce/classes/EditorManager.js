@@ -11,7 +11,11 @@
 /**
  * This class used as a factory for manager for tinymce.Editor instaces.
  *
+ * @example
+ * tinymce.EditorManager.init({});
+ *
  * @class tinymce.EditorManager
+ * @static
  */
 define("tinymce/EditorManager", [
 	"tinymce/Editor",
@@ -102,7 +106,7 @@ define("tinymce/EditorManager", [
 				for (var i = 0; i < scripts.length; i++) {
 					var src = scripts[i].src;
 
-					if (/tinymce(\.jquery|)(\.min|\.dev|).js/.test(src)) {
+					if (/tinymce(\.jquery|)(\.min|\.dev|)\.js/.test(src)) {
 						if (src.indexOf('.min') != -1) {
 							suffix = '.min';
 						}
@@ -117,7 +121,7 @@ define("tinymce/EditorManager", [
 			 * Base URL where the root directory if TinyMCE is located.
 			 *
 			 * @property baseURL
-			 * @type {String}
+			 * @type String
 			 */
 			self.baseURL = new URI(documentBaseURL).toAbsolute(baseURL);
 
@@ -125,7 +129,7 @@ define("tinymce/EditorManager", [
 			 * Document base URL where the current document is located.
 			 *
 			 * @property documentBaseURL
-			 * @type {String}
+			 * @type String
 			 */
 			self.documentBaseURL = documentBaseURL;
 
@@ -141,7 +145,7 @@ define("tinymce/EditorManager", [
 			 * Current suffix to add to each plugin/theme that gets loaded for example ".min".
 			 *
 			 * @property suffix
-			 * @type {String}
+			 * @type String
 			 */
 			self.suffix = suffix;
 
@@ -208,6 +212,29 @@ define("tinymce/EditorManager", [
 
 				execCallback(settings, 'onpageload');
 
+				if (settings.types) {
+					// Process type specific selector
+					each(settings.types, function(type) {
+						each(DOM.select(type.selector), function(elm) {
+							var editor = new Editor(createId(elm), extend({}, settings, type), self);
+							editors.push(editor);
+							editor.render(1);
+						});
+					});
+
+					return;
+				} else if (settings.selector) {
+					// Process global selector
+					each(DOM.select(settings.selector), function(elm) {
+						var editor = new Editor(createId(elm), settings, self);
+						editors.push(editor);
+						editor.render(1);
+					});
+
+					return;
+				}
+
+				// Fallback to old setting
 				switch (settings.mode) {
 					case "exact":
 						l = settings.elements || '';
@@ -250,25 +277,6 @@ define("tinymce/EditorManager", [
 							}
 						});
 						break;
-
-					default:
-						if (settings.types) {
-							// Process type specific selector
-							each(settings.types, function(type) {
-								each(DOM.select(type.selector), function(elm) {
-									var editor = new Editor(createId(elm), extend({}, settings, type), self);
-									editors.push(editor);
-									editor.render(1);
-								});
-							});
-						} else if (settings.selector) {
-							// Process global selector
-							each(DOM.select(settings.selector), function(elm) {
-								var editor = new Editor(createId(elm), settings, self);
-								editors.push(editor);
-								editor.render(1);
-							});
-						}
 				}
 
 				// Call onInit when all editors are initialized
@@ -341,6 +349,13 @@ define("tinymce/EditorManager", [
 			editors.push(editor);
 
 			self.activeEditor = editor;
+
+			/**
+			 * Fires when an editor is added to the EditorManager collection.
+			 *
+			 * @event AddEditor
+			 * @param {Object} e Event arguments.
+			 */
 			self.fire('AddEditor', {editor: editor});
 
 			if (!beforeUnloadDelegate) {
@@ -357,22 +372,60 @@ define("tinymce/EditorManager", [
 		/**
 		 * Creates an editor instance and adds it to the EditorManager collection.
 		 *
-		 * @param  {Object} settings Editor instance settings.
+		 * @method createEditor
+		 * @param {String} id Instance id to use for editor.
+		 * @param {Object} settings Editor instance settings.
 		 * @return {tinymce.Editor} Editor instance that got created.
 		 */
-		createEditor: function(settings) {
-			return this.add(new Editor(settings));
+		createEditor: function(id, settings) {
+			return this.add(new Editor(id, settings, this));
 		},
 
 		/**
-		 * Removes a editor instance from the collection.
+		 * Removes a editor or editors form page.
+		 *
+		 * @example
+		 * // Remove all editors bound to divs
+		 * tinymce.remove('div');
+		 *
+		 * // Remove all editors bound to textareas
+		 * tinymce.remove('textarea');
+		 *
+		 * // Remove all editors
+		 * tinymce.remove();
+		 *
+		 * // Remove specific instance by id
+		 * tinymce.remove('#id');
 		 *
 		 * @method remove
-		 * @param {tinymce.Editor} e Editor instance to remove.
+		 * @param {tinymce.Editor/String/Object} [selector] CSS selector or editor instance to remove.
 		 * @return {tinymce.Editor} The editor that got passed in will be return if it was found otherwise null.
 		 */
-		remove: function(editor) {
-			var self = this, i, editors = self.editors;
+		remove: function(selector) {
+			var self = this, i, editors = self.editors, editor;
+
+			// Remove all editors
+			if (!selector) {
+				for (i = editors.length - 1; i >= 0; i--) {
+					self.remove(editors[i]);
+				}
+
+				return;
+			}
+
+			// Remove editors by selector
+			if (typeof(selector) == "string") {
+				selector = selector.selector || selector;
+
+				each(DOM.select(selector), function(elm) {
+					self.remove(editors[elm.id]);
+				});
+
+				return;
+			}
+
+			// Remove specific editor
+			editor = selector;
 
 			// Not in the collection
 			if (!editors[editor.id]) {
@@ -393,7 +446,20 @@ define("tinymce/EditorManager", [
 				self.activeEditor = editors[0];
 			}
 
+			// Don't remove missing editor or removed instances
+			if (!editor || editor.removed) {
+				return;
+			}
+
+			editor.remove();
 			editor.destroy();
+
+			/**
+			 * Fires when an editor is removed from EditorManager collection.
+			 *
+			 * @event RemoveEditor
+			 * @param {Object} e Event arguments.
+			 */
 			self.fire('RemoveEditor', {editor: editor});
 
 			if (!editors.length) {
@@ -482,6 +548,7 @@ define("tinymce/EditorManager", [
 		/**
 		 * Translates the specified string using the language pack items.
 		 *
+		 * @method translate
 		 * @param {String/Array/Object} text String to translate
 		 * @return {String} Translated string.
 		 */

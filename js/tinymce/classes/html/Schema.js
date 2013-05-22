@@ -35,6 +35,7 @@ define("tinymce/html/Schema", [
 	/**
 	 * Builds a schema lookup table
 	 *
+	 * @private
 	 * @param {String} type html4, html5 or html5-strict schema type.
 	 * @return {Object} Schema lookup table.
 	 */
@@ -706,7 +707,7 @@ define("tinymce/html/Schema", [
 		 *    div:{p:{}, h1:{}}
 		 * };
 		 * @field children
-		 * @type {Object}
+		 * @type Object
 		 */
 		self.children = children;
 
@@ -714,7 +715,7 @@ define("tinymce/html/Schema", [
 		 * Name/value map object with valid styles for each element.
 		 *
 		 * @field styles
-		 * @type {Object}
+		 * @type Object
 		 */
 		self.styles = validStyles;
 

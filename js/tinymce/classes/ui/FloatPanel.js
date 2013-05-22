@@ -1,15 +1,21 @@
 /**
  * FloatPanel.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * This class creates a floating panel.
  *
  * @-x-less FloatPanel.less
  * @class tinymce.ui.FloatPanel
  * @extends tinymce.ui.Panel
+ * @mixes tinymce.ui.Movable
+ * @mixes tinymce.ui.Resizable
  */
 define("tinymce/ui/FloatPanel", [
 	"tinymce/ui/Panel",
@@ -25,6 +31,13 @@ define("tinymce/ui/FloatPanel", [
 	var FloatPanel = Panel.extend({
 		Mixins: [Movable, Resizable],
 
+		/**
+		 * Constructs a new control instance with the specified settings.
+		 *
+		 * @constructor
+		 * @param {Object} settings Name/value object with settings.
+		 * @setting {Boolean} autohide Automatically hide the panel.
+		 */
 		init: function(settings) {
 			var self = this;
 
@@ -66,17 +79,42 @@ define("tinymce/ui/FloatPanel", [
 				}
 			}
 
+			/**
+			 * Repositions the panel to the top of page if the panel is outside of the visual viewport. It will
+			 * also reposition all child panels of the current panel.
+			 */
 			function repositionPanel(panel) {
-				var scrollY = document.body.scrollTop || window.pageYOffset || document.documentElement.scrollTop;
+				var scrollY = DomUtils.getViewPort().y;
+
+				function toggleFixedChildPanels(fixed, deltaY) {
+					var parent;
+
+					for (var i = 0; i < visiblePanels.length; i++) {
+						if (visiblePanels[i] != panel) {
+							parent = visiblePanels[i].parent();
+
+							while ((parent = parent.parent())) {
+								if (parent == panel) {
+									visiblePanels[i].fixed(fixed).moveBy(0, deltaY).repaint();
+								}
+							}
+						}
+					}
+				}
 
 				if (panel.settings.autofix) {
-					if (scrollY > (panel._absY || panel.layoutRect().y)) {
-						panel._absY = panel._absY || panel.layoutRect().y;
-						panel.getEl().style.position = 'fixed';
-						panel.layoutRect({y: 0}).repaint();
+					if (!panel._fixed) {
+						panel._autoFixY = panel.layoutRect().y;
+
+						if (panel._autoFixY < scrollY) {
+							panel.fixed(true).layoutRect({y: 0}).repaint();
+							toggleFixedChildPanels(true, scrollY - panel._autoFixY);
+						}
 					} else {
-						panel.getEl().style.position = 'absolute';
-						panel.layoutRect({y: panel._absY}).repaint();
+						if (panel._autoFixY > scrollY) {
+							panel.fixed(false).layoutRect({y: panel._autoFixY}).repaint();
+							toggleFixedChildPanels(false, panel._autoFixY - scrollY);
+						}
 					}
 				}
 			}
@@ -105,7 +143,10 @@ define("tinymce/ui/FloatPanel", [
 									}
 								}
 
-								panel.hide();
+								e = panel.fire('autohide', {target: e.target});
+								if (!e.isDefaultPrevented()) {
+									panel.hide();
+								}
 							}
 						}
 					};
@@ -173,12 +214,48 @@ define("tinymce/ui/FloatPanel", [
 				}
 			});
 
+			self.on('show', function() {
+				self.parents().each(function(ctrl) {
+					if (ctrl._fixed) {
+						self.fixed(true);
+						return false;
+					}
+				});
+			});
+
 			if (settings.popover) {
 				self._preBodyHtml = '<div class="' + self.classPrefix + 'arrow"></div>';
 				self.addClass('popover').addClass('bottom').addClass('start');
 			}
 		},
 
+		fixed: function(state) {
+			var self = this;
+
+			if (self._fixed != state) {
+				if (self._rendered) {
+					var viewport = DomUtils.getViewPort();
+
+					if (state) {
+						self.layoutRect().y -= viewport.y;
+					} else {
+						self.layoutRect().y += viewport.y;
+					}
+				}
+
+				self.toggleClass('fixed', state);
+				self._fixed = state;
+			}
+
+			return self;
+		},
+
+		/**
+		 * Shows the current float panel.
+		 *
+		 * @method show
+		 * @return {tinymce.ui.FloatPanel} Current floatpanel instance.
+		 */
 		show: function() {
 			var self = this, i, state = self._super();
 
@@ -196,15 +273,31 @@ define("tinymce/ui/FloatPanel", [
 			return state;
 		},
 
+		/**
+		 * Hides the current float panel.
+		 *
+		 * @method hide
+		 * @return {tinymce.ui.FloatPanel} Current floatpanel instance.
+		 */
 		hide: function() {
 			removeVisiblePanel(this);
 			return this._super();
 		},
 
+		/**
+		 * Hides all visible the float panels.
+		 *
+		 * @method hideAll
+		 */
 		hideAll: function() {
 			FloatPanel.hideAll();
 		},
 
+		/**
+		 * Closes the float panel. This will remove the float panel from page and fire the close event.
+		 *
+		 * @method close
+		 */
 		close: function() {
 			var self = this;
 
@@ -213,12 +306,23 @@ define("tinymce/ui/FloatPanel", [
 			return self.remove();
 		},
 
+		/**
+		 * Removes the float panel from page.
+		 *
+		 * @method remove
+		 */
 		remove: function() {
 			removeVisiblePanel(this);
 			this._super();
 		}
 	});
 
+	/**
+	 * Hides all visible the float panels.
+	 *
+	 * @static
+	 * @method hideAll
+	 */
 	FloatPanel.hideAll = function() {
 		var i = visiblePanels.length;
 

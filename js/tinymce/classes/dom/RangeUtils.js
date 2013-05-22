@@ -8,6 +8,12 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+/**
+ * RangeUtils
+ *
+ * @class tinymce.dom.RangeUtils
+ * @private
+ */
 define("tinymce/dom/RangeUtils", [
 	"tinymce/util/Tools"
 ], function(Tools) {
@@ -17,6 +23,7 @@ define("tinymce/dom/RangeUtils", [
 		/**
 		 * Walks the specified range like object and executes the callback for each sibling collection it finds.
 		 *
+		 * @method walk
 		 * @param {Object} rng Range like object.
 		 * @param {function} callback Callback function to execute for each sibling collection.
 		 */
@@ -182,6 +189,7 @@ define("tinymce/dom/RangeUtils", [
 		/**
 		 * Splits the specified range at it's start/end points.
 		 *
+		 * @private
 		 * @param {Range/RangeObject} rng Range to split.
 		 * @return {Object} Range position object.
 		 */
@@ -237,6 +245,7 @@ define("tinymce/dom/RangeUtils", [
 	 * Compares two ranges and checks if they are equal.
 	 *
 	 * @static
+	 * @method compareRanges
 	 * @param {DOMRange} rng1 First range to compare.
 	 * @param {DOMRange} rng2 First range to compare.
 	 * @return {Boolean} true/false if the ranges are equal.

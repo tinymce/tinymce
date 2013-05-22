@@ -48,7 +48,7 @@ tinymce.PluginManager.add('visualblocks', function(editor, url) {
 	});
 
 	editor.addButton('visualblocks', {
-		title: 'visualblocks.desc',
+		title: 'Show blocks',
 		cmd: 'mceVisualBlocks'
 	});
 
@@ -68,5 +68,9 @@ tinymce.PluginManager.add('visualblocks', function(editor, url) {
 		if (editor.settings.visualblocks_default_state) {
 			editor.execCommand('mceVisualBlocks', false, null, {skip_focus: true});
 		}
+	});
+
+	editor.on('remove', function() {
+		editor.dom.removeClass(editor.getBody(), 'mce-visualblocks');
 	});
 });

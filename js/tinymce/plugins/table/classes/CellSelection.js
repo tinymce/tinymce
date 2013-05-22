@@ -54,7 +54,7 @@ define("tinymce/tableplugin/CellSelection", [
 				table = dom.getParent(target, 'table');
 				if (table == startTable) {
 					if (!tableGrid) {
-						tableGrid = new TableGrid(editor.selection, table);
+						tableGrid = new TableGrid(editor, table);
 						tableGrid.setStartCell(startCell);
 
 						editor.getBody().style.webkitUserSelect = 'none';
