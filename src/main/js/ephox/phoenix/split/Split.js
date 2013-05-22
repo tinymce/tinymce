@@ -42,15 +42,15 @@ define(
     };
 
     var split = function (element, position) {
-      if (!Node.isText(element)) return TextSplit.bisect(Option.none(), Option.some(element));
-      if (position === 0) return TextSplit.bisect(Option.none(), Option.some(element));
-      if (position === Text.get(element).length) return TextSplit.bisect(Option.some(element), Option.none());
+      if (!Node.isText(element)) return TextSplit(Option.none(), Option.some(element));
+      if (position === 0) return TextSplit(Option.none(), Option.some(element));
+      if (position === Text.get(element).length) return TextSplit(Option.some(element), Option.none());
 
       var parts = tokens(element, [position]);
       Text.set(element, parts[0]);
       var after = Element.fromText(parts[1]);
       Insert.after(element, after);
-      return TextSplit.bisect(Option.some(element), Option.some(after));
+      return TextSplit(Option.some(element), Option.some(after));
     };
 
     return {

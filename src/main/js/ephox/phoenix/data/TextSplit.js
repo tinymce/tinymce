@@ -6,10 +6,6 @@ define(
   ],
 
   function (Struct) {
-    var bisect = Struct.immutable('before', 'after');
-    
-    return {
-      bisect: bisect
-    };
+    return Struct.immutable('before', 'after');
   }
 );
