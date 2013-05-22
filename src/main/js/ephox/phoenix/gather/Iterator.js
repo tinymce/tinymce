@@ -2,12 +2,10 @@ define(
   'ephox.phoenix.gather.Iterator',
 
   [
-    'ephox.peanut.Fun',
-    'ephox.phoenix.gather.GatherResult',
-    'ephox.scullion.Struct'
+    'ephox.phoenix.gather.GatherResult'
   ],
 
-  function (Fun, GatherResult, Struct) {
+  function (GatherResult) {
     
     var process = function (info, iter, f, x, prune) {
       return info.fold(function () {
