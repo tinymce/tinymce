@@ -57,8 +57,8 @@ define("tinymce/WindowManager", [
 		 * @option {String/bool} scrollbars Specifies whether the popup window can have scrollbars if required (i.e. content
 		 * larger than the popup size specified).
 		 */
-		self.open = function(args) {
-			var win;
+		self.open = function(args, params) {
+			var win, params = params || {};
 
 			// Handle URL
 			args.url = args.url || args.file; // Legacy
@@ -116,6 +116,9 @@ define("tinymce/WindowManager", [
 					});
 				});
 			}
+			
+			// store parameters
+			win.params = params;
 
 			// Takes a snapshot in the FocusManager of the selection before focus is lost to dialog
 			editor.nodeChanged();
@@ -173,6 +176,20 @@ define("tinymce/WindowManager", [
 			if (windows.length) {
 				windows[window.length - 1].close();
 			}
+		};
+		
+		self.getParams = function() {
+			if (windows.length) {
+				return windows[windows.length - 1].params;
+			}
+			
+			return null;
+		};
+		
+		self.setParams = function(params) {
+			if (windows.length) {
+				windows[windows.length - 1].params = params;
+			}	
 		};
 	};
 });
