@@ -2,34 +2,13 @@ define(
   'ephox.robin.api.Zone',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.phoenix.group.Group',
-    'ephox.sugar.api.Element'
+    'ephox.peanut.Fun'
   ],
 
-  function (Arr, Fun, Group, Element) {
+  function (Fun) {
     var constant = function (elements) {
       return {
         elements: Fun.constant(elements)
-      };
-    };
-
-    var lazy = function (parent) {
-      var elements = function () {
-        var groups = Group.group([parent]);
-        return Arr.bind(groups, function (x) {
-          return Arr.bind(x, function (y) {
-            // this can change to a fake ' ' text node, but no .. find a better way.
-            return y.toText().fold(Fun.constant([]), function (v) {
-              return [v];
-            });
-          }).concat([Element.fromText(' ')]);
-        });
-      };
-
-      return {
-        elements: elements
       };
     };
 
@@ -39,7 +18,6 @@ define(
 
     return {
       constant: constant,
-      lazy: lazy,
       empty: empty
     };
   }
