@@ -22,7 +22,7 @@ define(
       var len = allText.length;
 
       // FIX ... I may possibly index strings elsewhere.
-      return Arr.bind(matches, function (x) {
+      return Arr.map(matches, function (x) {
         var start = x.start();
         var finish = x.finish();
         var text = allText.substring(start, finish);
