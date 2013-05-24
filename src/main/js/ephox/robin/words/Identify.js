@@ -13,9 +13,6 @@ define(
   ],
 
   function (Arr, Option, Chars, Pattern, Find, WordScope, WordSanitiser, RegExp) {
-  
-    var whitelist = ["'twas"];
-
     var words = function (allText) {
       var pattern = Pattern.token(Chars.wordchar() + '+');
       var matches = Find.all(allText, pattern);
