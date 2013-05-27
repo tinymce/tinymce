@@ -3,6 +3,7 @@ Version 4.0 (2013-05-xx)
 	Added new font_formats, fontsize_formats and block_formats options to configure fontselect, fontsizeselect and formatselect.
 	Added new table_clone_elements option to table plugin. Enables you to specify what elements to clone when adding columns/rows.
 	Added new auto detect logic for site and email urls in link plugin to match the logic found in 3.x.
+	Added new getParams/setParams to WindowManager to make it easier to handle params to iframe based dialogs.
 	Fixed so font name, font size and block format select boxes gets updated with the current format.
 	Fixed bug where the theme content css wasn't loaded into the preview dialog.
 	Fixed bug where the template description in template dialog wouldn't display the text correctly.
@@ -11,6 +12,7 @@ Version 4.0 (2013-05-xx)
 	Fixed bug where the pagebreak_separator option in the pagebreak plugin wasn't working properly.
 	Fixed bug where the child panels of the float panel in inline mode wasn't properly placed.
 	Fixed bug where the float panel children of windows wasn't position fixed.
+	Fixed bug where the size of the ok button was hardcoded, caused issues with i18n.
 	Fixed so it's possible to disable the toolbar by setting it to false.
 Version 4.0b3 (2013-05-15)
 	Added new optional advanced tab for image dialog with hspace, vspace, border and style.
