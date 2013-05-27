@@ -55,7 +55,7 @@ define("tinymce/ui/ElementPath", [
 				var parents = [], selectionParents = e.parents, i = selectionParents.length;
 
 				while (i--) {
-					if (!isBogus(selectionParents[i])) {
+					if (selectionParents[i].nodeType == 1 && !isBogus(selectionParents[i])) {
 						var args = editor.fire('ResolveName', {
 							name: selectionParents[i].nodeName.toLowerCase(),
 							target: selectionParents[i]
