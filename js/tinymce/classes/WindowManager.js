@@ -58,7 +58,7 @@ define("tinymce/WindowManager", [
 		 * larger than the popup size specified).
 		 */
 		self.open = function(args, params) {
-			var win, params = params || {};
+			var win;
 
 			// Handle URL
 			args.url = args.url || args.file; // Legacy
@@ -116,9 +116,9 @@ define("tinymce/WindowManager", [
 					});
 				});
 			}
-			
+
 			// store parameters
-			win.params = params;
+			win.params = params || {};
 
 			// Takes a snapshot in the FocusManager of the selection before focus is lost to dialog
 			editor.nodeChanged();
@@ -177,19 +177,35 @@ define("tinymce/WindowManager", [
 				windows[windows.length - 1].close();
 			}
 		};
-		
+
+		/**
+		 * Returns the params of the last window open call. This can be used in iframe based
+		 * dialog to get params passed from the tinymce plugin.
+		 *
+		 * @example
+		 * var dialogArguments = top.tinymce.activeEditor.windowManager.getParams();
+		 *
+		 * @method getParams
+		 * @return {Object} Name/value object with parameters passed from windowManager.open call.
+		 */
 		self.getParams = function() {
 			if (windows.length) {
 				return windows[windows.length - 1].params;
 			}
-			
+
 			return null;
 		};
-		
+
+		/**
+		 * Sets the params of the last opened window.
+		 *
+		 * @method setParams
+		 * @param {Object} params Params object to set for the last opened window.
+		 */
 		self.setParams = function(params) {
 			if (windows.length) {
 				windows[windows.length - 1].params = params;
-			}	
+			}
 		};
 	};
 });
