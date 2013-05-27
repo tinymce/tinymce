@@ -397,7 +397,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 	editor.on('ResolveName', function(e) {
 		var name;
 
-		if ((name = e.target.getAttribute("data-mce-object"))) {
+		if (e.target.nodeType == 1 && (name = e.target.getAttribute("data-mce-object"))) {
 			e.name = name;
 		}
 	});

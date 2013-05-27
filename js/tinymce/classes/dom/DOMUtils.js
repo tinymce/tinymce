@@ -426,6 +426,11 @@ define("tinymce/dom/DOMUtils", [
 				}
 			}
 
+			// Is non element
+			if (elm.nodeType && elm.nodeType != 1) {
+				return false;
+			}
+
 			return Sizzle.matches(selector, elm.nodeType ? [elm] : elm).length > 0;
 		},
 
