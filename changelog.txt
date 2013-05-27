@@ -15,6 +15,8 @@ Version 4.0 (2013-05-xx)
 	Fixed bug where the float panel children of windows wasn't position fixed.
 	Fixed bug where the size of the ok button was hardcoded, caused issues with i18n.
 	Fixed bug where single comment in editor would cause exceptions due to resolve path logic not detecting elements only.
+	Fixed bug where switching alignment of tables in dialogs wouldn't properly remove existing alignments.
+	Fixed bug where the table properties dialog would show columns/rows textboxes.
 	Fixed so the filetype for media dialog passes out media instead of image as file type.
 	Fixed so it's possible to disable the toolbar by setting it to false.
 Version 4.0b3 (2013-05-15)

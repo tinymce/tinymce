@@ -40,10 +40,17 @@ define("tinymce/tableplugin/Plugin", [
 			return size;
 		}
 
+		function unApplyAlign(elm) {
+			each('left center right'.split(' '), function(name) {
+				editor.formatter.remove('align' + name, {}, elm);
+			});
+		}
+
 		function tableDialog() {
-			var dom = editor.dom, tableElm, data;
+			var dom = editor.dom, tableElm, data, createNewTable;
 
 			tableElm = editor.dom.getParent(editor.selection.getStart(), 'table');
+			createNewTable = false;
 
 			data = {
 				width: removePxSuffix(dom.getStyle(tableElm, 'width') || dom.getAttrib(tableElm, 'width')),
@@ -72,8 +79,8 @@ define("tinymce/tableplugin/Plugin", [
 						maxWidth: 50
 					},
 					items: [
-						{label: 'Cols', name: 'cols', disabled: true},
-						{label: 'Rows', name: 'rows', disabled: true},
+						createNewTable ? {label: 'Cols', name: 'cols', disabled: true} : null,
+						createNewTable ? {label: 'Rows', name: 'rows', disabled: true} : null,
 						{label: 'Width', name: 'width'},
 						{label: 'Height', name: 'height'},
 						{label: 'Cell spacing', name: 'cellspacing'},
@@ -129,13 +136,9 @@ define("tinymce/tableplugin/Plugin", [
 							tableElm.insertBefore(captionElm, tableElm.firstChild);
 						}
 
-						// Apply/remove alignment
+						unApplyAlign(tableElm);
 						if (data.align) {
 							editor.formatter.apply('align' + data.align, {}, tableElm);
-						} else {
-							each('left center right'.split(' '), function(name) {
-								editor.formatter.remove('align' + name, {}, tableElm);
-							});
 						}
 
 						editor.focus();
@@ -264,12 +267,9 @@ define("tinymce/tableplugin/Plugin", [
 							}
 
 							// Apply/remove alignment
+							unApplyAlign(cellElm);
 							if (data.align) {
 								editor.formatter.apply('align' + data.align, {}, cellElm);
-							} else {
-								each('left center right'.split(' '), function(name) {
-									editor.formatter.remove('align' + name, {}, cellElm);
-								});
 							}
 						});
 
@@ -381,12 +381,9 @@ define("tinymce/tableplugin/Plugin", [
 							}
 
 							// Apply/remove alignment
+							unApplyAlign(rowElm);
 							if (data.align) {
 								editor.formatter.apply('align' + data.align, {}, rowElm);
-							} else {
-								each('left center right'.split(' '), function(name) {
-									editor.formatter.remove('align' + name, {}, rowElm);
-								});
 							}
 						});
 
