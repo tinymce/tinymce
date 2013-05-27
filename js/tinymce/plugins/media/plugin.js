@@ -85,9 +85,9 @@ tinymce.PluginManager.add('media', function(editor, url) {
 						this.fromJSON(htmlToData(this.next().find('#embed').value()));
 					},
 					items: [
-						{name: 'source1', type: 'filepicker', filetype: 'image', size: 40, autofocus: true, label: 'Source'},
-						{name: 'source2', type: 'filepicker', filetype: 'image', size: 40, label: 'Alternative source'},
-						{name: 'poster', type: 'filepicker', filetype: 'image', size: 40, label: 'Poster'},
+						{name: 'source1', type: 'filepicker', filetype: 'media', size: 40, autofocus: true, label: 'Source'},
+						{name: 'source2', type: 'filepicker', filetype: 'media', size: 40, label: 'Alternative source'},
+						{name: 'poster', type: 'filepicker', filetype: 'media', size: 40, label: 'Poster'},
 						{
 							type: 'container',
 							label: 'Dimensions',
