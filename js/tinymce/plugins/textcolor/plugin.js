@@ -68,12 +68,11 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 	}
 
 	function renderColorPicker() {
-		var ctrl = this, colors, color, html, size, last, rows, cols, x, y, i;
+		var ctrl = this, colors, color, html, last, rows, cols, x, y, i;
 
 		colors = mapColors();
 
 		html = '<table class="mce-grid mce-colorbutton-grid" role="presentation" cellspacing="0"><tbody>';
-		size = Math.ceil(Math.sqrt(colors.length));
 		last = colors.length - 1;
 		rows = editor.settings.textcolor_rows || 5;
 		cols = editor.settings.textcolor_cols || 8;
