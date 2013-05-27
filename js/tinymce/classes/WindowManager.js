@@ -78,7 +78,7 @@ define("tinymce/WindowManager", [
 
 			if (!args.url && !args.buttons) {
 				args.buttons = [
-					{text: 'Ok', subtype: 'primary', minWidth: 50, onclick: function() {
+					{text: 'Ok', subtype: 'primary', onclick: function() {
 						win.find('form')[0].submit();
 						win.close();
 					}},
