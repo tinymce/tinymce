@@ -28,15 +28,15 @@ Runs all js code though jshint.
 `jake release`
 Builds release packages with the version specified in changelog.txt.
 
-`jake bundle-themes`
-Bundles themes into the tinymce core js files.
+`jake bundle[themes:*]`
+Bundles all themes into the tinymce core js files.
 
-`jake bundle-plugins`
-Bundles plugins into the tinymce core js files.
+`jake bundle[plugins:*]`
+Bundles all plugins into the tinymce core js files.
 
 Bundle themes and plugins into core example
 -------------------------------------------
-`jake minify bundle-themes[modern] bundle-plugins[table,paste]`
+`jake minify bundle[themes:modern,plugins:table,paste]`
 Minifies the core, adds the modern theme and adds the table and paste plugin into tinymce.min.js.
 
 Contributing to the TinyMCE project
