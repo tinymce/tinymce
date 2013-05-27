@@ -5,6 +5,7 @@ Version 4.0 (2013-05-xx)
 	Added new auto detect logic for site and email urls in link plugin to match the logic found in 3.x.
 	Added new getParams/setParams to WindowManager to make it easier to handle params to iframe based dialogs. Contributed by Ryan Demmer.
 	Added new textcolor options that enables you to specify the colors you want to display. Contributed by Jennifer Arsenault.
+	Added new external file support for link_list and image_list options. The file format is a simple JSON file.
 	Fixed so font name, font size and block format select boxes gets updated with the current format.
 	Fixed bug where the theme content css wasn't loaded into the preview dialog.
 	Fixed bug where the template description in template dialog wouldn't display the text correctly.

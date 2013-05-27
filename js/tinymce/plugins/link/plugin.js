@@ -11,14 +11,31 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('link', function(editor) {
-	function showDialog() {
+	function createLinkList(callback) {
+		return function() {
+			var linkList = editor.settings.link_list;
+
+			if (typeof(linkList) == "string") {
+				tinymce.util.XHR.send({
+					url: linkList,
+					success: function(text) {
+						callback(tinymce.util.JSON.parse(text));
+					}
+				});
+			} else {
+				callback(linkList);
+			}
+		};
+	}
+
+	function showDialog(linkList) {
 		var data = {}, selection = editor.selection, dom = editor.dom, selectedElm, anchorElm, initialText;
 		var win, linkListCtrl, relListCtrl, targetListCtrl;
 
 		function buildLinkList() {
 			var linkListItems = [{text: 'None', value: ''}];
 
-			tinymce.each(editor.settings.link_list, function(link) {
+			tinymce.each(linkList, function(link) {
 				linkListItems.push({
 					text: link.text || link.title,
 					value: link.value || link.url,
@@ -85,7 +102,7 @@ tinymce.PluginManager.add('link', function(editor) {
 			data.text = initialText = " ";
 		}
 
-		if (editor.settings.link_list) {
+		if (linkList) {
 			linkListCtrl = {
 				type: 'listbox',
 				label: 'Link list',
@@ -226,7 +243,7 @@ tinymce.PluginManager.add('link', function(editor) {
 		icon: 'link',
 		tooltip: 'Insert/edit link',
 		shortcut: 'Ctrl+K',
-		onclick: showDialog,
+		onclick: createLinkList(showDialog),
 		stateSelector: 'a[href]'
 	});
 
@@ -245,7 +262,7 @@ tinymce.PluginManager.add('link', function(editor) {
 		icon: 'link',
 		text: 'Insert link',
 		shortcut: 'Ctrl+K',
-		onclick: showDialog,
+		onclick: createLinkList(showDialog),
 		stateSelector: 'a[href]',
 		context: 'insert',
 		prependToContext: true
