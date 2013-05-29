@@ -32,6 +32,7 @@ provide([
 			{"title": "Serializer", "url": "tinymce.dom.Serializer.html"},
 			{"title": "DOMUtils", "url": "tinymce.dom.DOMUtils.html"},
 			{"title": "DOMUtils (jQuery)", "url": "tinymce.dom.DOMUtils_jquery.html"},
+			{"title": "DOMUtils (jQuery 1.8)", "url": "tinymce.dom.DOMUtils_jquery_1.8.html"},
 			{"title": "EventUtils", "url": "tinymce.dom.EventUtils.html"}
 		]},
 

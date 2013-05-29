@@ -228,13 +228,16 @@
 		DOM.remove('test');
 	});
 
-	test('is', 3, function() {
+	test('is', 5, function() {
 		DOM.add(document.body, 'div', {id : 'test'});
 		DOM.setHTML('test', '<div id="textX" class="test">test 1</div>');
 
 		ok(DOM.is(DOM.get('textX'), 'div'));
 		ok(DOM.is(DOM.get('textX'), 'div#textX.test'));
 		ok(!DOM.is(DOM.get('textX'), 'div#textX2'));
+
+		ok(DOM.is(DOM.get('textX'), '*'));
+		ok(!DOM.is(DOM.get('textX').childNodes[0], '*'));
 
 		DOM.remove('test');
 	});

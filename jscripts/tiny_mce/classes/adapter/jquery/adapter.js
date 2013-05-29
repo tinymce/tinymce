@@ -156,6 +156,11 @@
 			},
 
 			is : function(n, patt) {
+				// Simple all selector, jQuery 1.8 and above returns true for text nodes, different from previous versions
+				if (n.nodeType !== 1 && patt === '*') {
+					return false;
+				}
+
 				return $(this.get(n)).is(patt);
 			}
 
