@@ -14,6 +14,11 @@
  * Fake Sizzle using jQuery.
  */
 define("tinymce/dom/Sizzle", [], function() {
+	// Detect if jQuery is loaded
+	if (!window.jQuery) {
+		throw new Error("Load jQuery first");
+	}
+
 	var $ = jQuery;
 
 	function Sizzle(selector, context, results, seed) {
