@@ -90,7 +90,7 @@ task("minify-jquery-core", [], function (params) {
 	compileAmd({
 		from: from,
 		moduleOverrides: {
-			"tinymce.dom.Sizzle": "js/tinymce/classes/dom/Sizzle.jQuery.js"
+			"tinymce/dom/Sizzle": "js/tinymce/classes/dom/Sizzle.jQuery.js"
 		},
 		version: details.version,
 		releaseDate: details.releaseDate,

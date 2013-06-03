@@ -11,14 +11,31 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('image', function(editor) {
-	function showDialog() {
+	function createImageList(callback) {
+		return function() {
+			var imageList = editor.settings.image_list;
+
+			if (typeof(imageList) == "string") {
+				tinymce.util.XHR.send({
+					url: imageList,
+					success: function(text) {
+						callback(tinymce.util.JSON.parse(text));
+					}
+				});
+			} else {
+				callback(imageList);
+			}
+		};
+	}
+
+	function showDialog(imageList) {
 		var win, data, dom = editor.dom, imgElm = editor.selection.getNode();
 		var width, height, imageListCtrl;
 
 		function buildImageList() {
 			var linkImageItems = [{text: 'None', value: ''}];
 
-			tinymce.each(editor.settings.image_list, function(link) {
+			tinymce.each(imageList, function(link) {
 				linkImageItems.push({
 					text: link.text || link.title,
 					value: link.value || link.url,
@@ -117,7 +134,7 @@ tinymce.PluginManager.add('image', function(editor) {
 			imgElm = null;
 		}
 
-		if (editor.settings.image_list) {
+		if (imageList) {
 			imageListCtrl = {
 				name: 'target',
 				type: 'listbox',
@@ -244,14 +261,14 @@ tinymce.PluginManager.add('image', function(editor) {
 	editor.addButton('image', {
 		icon: 'image',
 		tooltip: 'Insert/edit image',
-		onclick: showDialog,
+		onclick: createImageList(showDialog),
 		stateSelector: 'img:not([data-mce-object])'
 	});
 
 	editor.addMenuItem('image', {
 		icon: 'image',
 		text: 'Insert image',
-		onclick: showDialog,
+		onclick: createImageList(showDialog),
 		context: 'insert',
 		prependToContext: true
 	});

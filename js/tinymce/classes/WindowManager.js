@@ -57,7 +57,7 @@ define("tinymce/WindowManager", [
 		 * @option {String/bool} scrollbars Specifies whether the popup window can have scrollbars if required (i.e. content
 		 * larger than the popup size specified).
 		 */
-		self.open = function(args) {
+		self.open = function(args, params) {
 			var win;
 
 			// Handle URL
@@ -78,7 +78,7 @@ define("tinymce/WindowManager", [
 
 			if (!args.url && !args.buttons) {
 				args.buttons = [
-					{text: 'Ok', subtype: 'primary', minWidth: 50, onclick: function() {
+					{text: 'Ok', subtype: 'primary', onclick: function() {
 						win.find('form')[0].submit();
 						win.close();
 					}},
@@ -116,6 +116,9 @@ define("tinymce/WindowManager", [
 					});
 				});
 			}
+
+			// store parameters
+			win.params = params || {};
 
 			// Takes a snapshot in the FocusManager of the selection before focus is lost to dialog
 			editor.nodeChanged();
@@ -171,7 +174,37 @@ define("tinymce/WindowManager", [
 		 */
 		self.close = function() {
 			if (windows.length) {
-				windows[window.length - 1].close();
+				windows[windows.length - 1].close();
+			}
+		};
+
+		/**
+		 * Returns the params of the last window open call. This can be used in iframe based
+		 * dialog to get params passed from the tinymce plugin.
+		 *
+		 * @example
+		 * var dialogArguments = top.tinymce.activeEditor.windowManager.getParams();
+		 *
+		 * @method getParams
+		 * @return {Object} Name/value object with parameters passed from windowManager.open call.
+		 */
+		self.getParams = function() {
+			if (windows.length) {
+				return windows[windows.length - 1].params;
+			}
+
+			return null;
+		};
+
+		/**
+		 * Sets the params of the last opened window.
+		 *
+		 * @method setParams
+		 * @param {Object} params Params object to set for the last opened window.
+		 */
+		self.setParams = function(params) {
+			if (windows.length) {
+				windows[windows.length - 1].params = params;
 			}
 		};
 	};
