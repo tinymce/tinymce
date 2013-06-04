@@ -20,6 +20,17 @@ var dependencies = [
     ]
   },
 
+  {
+    name: 'highway',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'highway.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
   /**** demo dependencies ****/
   {
     name: 'exhibition',
