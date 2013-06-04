@@ -53,5 +53,7 @@ test(
     checkAll('C,A', 'F');
     checkAll('', 'A');
     checkAll('A', 'B');
+
+    assert.eq('A', Up.top(d).id);
   }
 );

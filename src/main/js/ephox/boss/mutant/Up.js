@@ -16,6 +16,12 @@ define(
       });
     };
 
+    var top = function (item) {
+      return item.parent.fold(Fun.constant(item), function (parent) {
+        return top(parent);
+      });
+    };
+
     var predicate = function (item, f) {
       return item.parent.bind(function (parent) {
         return f(parent) ? Option.some(parent) : predicate(parent, f);
@@ -31,7 +37,8 @@ define(
     return {
       selector: selector,
       predicate: predicate,
-      all: all
+      all: all,
+      top: top
     };
   }
 );

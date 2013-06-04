@@ -24,13 +24,13 @@ test(
     }, Option.none());
 
     var check = function (expected, input, id) {
-      var family = Tracks.track(input);
+      var family = Tracks.track(input, Option.none());
       var actual = Detach.detach(family, id);
       assert.eq(expected, Logger.basic(family));
     };
 
     var checkNone = function (expected, input, id) {
-      var family = Tracks.track(input);
+      var family = Tracks.track(input, Option.none());
       var actual = Detach.detach(family, id);
       assert.eq(false, actual.isSome());
     };
@@ -86,6 +86,19 @@ test(
         ]}
       ]
     }, 'Z');
+
+    check('A(B,C(D(E)))', {
+      id: 'A',
+      children: [
+        { id: 'B', children: [ ] },
+        { id: 'C', children: [
+          { id: 'D', children: [
+            { id: 'E', children: [] }
+          ]},
+          { id: 'F', children: [] }
+        ]}
+      ]
+    }, 'F');
 
   }
 );
