@@ -32,5 +32,13 @@ test(
     assert.eq('C', Up.selector(d, '_B_,_A_,_C_').getOrDie().id);
     assert.eq(true, Up.selector(d, '_B_,_Z_').isNone());
 
+    assert.eq('A', Up.predicate(d, function (item) {
+      return item.id === 'A';
+    }).getOrDie().id);
+
+    assert.eq(true, Up.predicate(d, function (item) {
+      return item.id === 'root';
+    }).isNone());
+
   }
 );
