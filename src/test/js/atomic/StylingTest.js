@@ -7,7 +7,7 @@ test(
 
   function (Styling) {
 
-    var item = { 
+    var item = {
       css: {
         border: '10'
       }
