@@ -3,10 +3,11 @@ define(
 
   [
     'ephox.compass.Arr',
+    'ephox.peanut.Fun',
     'ephox.perhaps.Option'
   ],
 
-  function (Arr, Option) {
+  function (Arr, Fun, Option) {
     /* Obviously, we can't support full selector syntax ... so let's just split by comma and use as array to compare with name */
     var selector = function (item, query) {
       var matches = query.split(',');
@@ -21,9 +22,16 @@ define(
       });
     };
 
+    var all = function (item) {
+      return item.parent.fold(Fun.constant([]), function (parent) {
+        return [parent].concat(all(parent));
+      });
+    };
+
     return {
       selector: selector,
-      predicate: predicate
+      predicate: predicate,
+      all: all
     };
   }
 );

@@ -5,10 +5,11 @@ test(
     'ephox.boss.mutant.Locator',
     'ephox.boss.mutant.Tracks',
     'ephox.boss.mutant.Up',
+    'ephox.compass.Arr',
     'ephox.perhaps.Option'
   ],
 
-  function (Locator, Tracks, Up, Option) {
+  function (Locator, Tracks, Up, Arr, Option) {
 
     var family = Tracks.track({
       id: 'A',
@@ -40,5 +41,17 @@ test(
       return item.id === 'root';
     }).isNone());
 
+    var checkAll = function (expected, start) {
+      var item = Locator.byId(family, start).getOrDie();
+      var result = Up.all(item);
+      assert.eq(expected, Arr.map(result, function (r) {
+        return r.id;
+      }).join(','));
+    };
+
+    checkAll('D,C,A', 'E');
+    checkAll('C,A', 'F');
+    checkAll('', 'A');
+    checkAll('A', 'B');
   }
 );
