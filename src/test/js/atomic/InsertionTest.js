@@ -31,5 +31,31 @@ test(
       ]
     }, 'E', 'F');
 
+    check('A(F,B,C(D(E)))', {
+      id: 'A',
+      children: [
+        { id: 'B', children: [ ] },
+        { id: 'C', children: [
+          { id: 'D', children: [
+            { id: 'E', children: [] }
+          ]},
+          { id: 'F', children: [] }
+        ]}
+      ]
+    }, 'B', 'F');
+
+    check('A(B,C(E,D,F))', {
+      id: 'A',
+      children: [
+        { id: 'B', children: [ ] },
+        { id: 'C', children: [
+          { id: 'D', children: [
+            { id: 'E', children: [] }
+          ]},
+          { id: 'F', children: [] }
+        ]}
+      ]
+    }, 'D', 'E');
+
   }
 );
