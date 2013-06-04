@@ -10,52 +10,45 @@ test(
   ],
 
   function (Insertion, Locator, Logger, Tracks, Option) {
-    var check = function (expected, input, anchorId, itemId) {
+    var data = function () {
+      return {
+        id: 'A',
+        children: [
+          { id: 'B', children: [ ] },
+          { id: 'C', children: [
+            { id: 'D', children: [
+              { id: 'E', children: [] }
+            ]},
+            { id: 'F', children: [] }
+          ]}
+        ]
+      };
+    };
+
+    var check = function (expected, method, input, anchorId, itemId) {
       var family = Tracks.track(input, Option.none());
       var anchor = Locator.byId(family, anchorId).getOrDie();
       var item = Locator.byId(family, itemId).getOrDie();
-      Insertion.before(anchor, item);
+      method(anchor, item);
       assert.eq(expected, Logger.basic(family));
     };
 
-    check('A(B,C(D(F,E)))', {
-      id: 'A',
-      children: [
-        { id: 'B', children: [ ] },
-        { id: 'C', children: [
-          { id: 'D', children: [
-            { id: 'E', children: [] }
-          ]},
-          { id: 'F', children: [] }
-        ]}
-      ]
-    }, 'E', 'F');
+    var checkBefore = function (expected, input, anchorId, itemId) {
+      check(expected, Insertion.before, input, anchorId, itemId);
+    };
 
-    check('A(F,B,C(D(E)))', {
-      id: 'A',
-      children: [
-        { id: 'B', children: [ ] },
-        { id: 'C', children: [
-          { id: 'D', children: [
-            { id: 'E', children: [] }
-          ]},
-          { id: 'F', children: [] }
-        ]}
-      ]
-    }, 'B', 'F');
+    var checkAfter = function (expected, input, anchorId, itemId) {
+      check(expected, Insertion.after, input, anchorId, itemId);
+    };
 
-    check('A(B,C(E,D,F))', {
-      id: 'A',
-      children: [
-        { id: 'B', children: [ ] },
-        { id: 'C', children: [
-          { id: 'D', children: [
-            { id: 'E', children: [] }
-          ]},
-          { id: 'F', children: [] }
-        ]}
-      ]
-    }, 'D', 'E');
+    // initially A(B,C(D(E),F))
+    checkBefore('A(B,C(D(F,E)))', data(), 'E', 'F');
+    checkBefore('A(F,B,C(D(E)))', data(), 'B', 'F');
+    checkBefore('A(B,C(E,D,F))', data(), 'D', 'E');
+
+    checkAfter('A(B,F,C(D(E)))', data(), 'B', 'F');
+    checkAfter('A(B,C(D,E,F))', data(), 'D', 'E');
+
 
   }
 );
