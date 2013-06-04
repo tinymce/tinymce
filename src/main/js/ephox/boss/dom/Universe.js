@@ -11,11 +11,12 @@ define(
     'ephox.sugar.api.Node',
     'ephox.sugar.api.PredicateFind',
     'ephox.sugar.api.Remove',
+    'ephox.sugar.api.SelectorFilter',
     'ephox.sugar.api.SelectorFind',
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Fun, Compare, Css, Element, Insert, InsertAll, Node, PredicateFind, Remove, SelectorFind, Traverse) {
+  function (Fun, Compare, Css, Element, Insert, InsertAll, Node, PredicateFind, Remove, SelectorFilter, SelectorFind, Traverse) {
     return {
       up: Fun.constant({
         selector: SelectorFind.ancestor,
@@ -23,7 +24,7 @@ define(
         all: Traverse.parents
       }),
       down: Fun.constant({
-        selector: SelectorFind.descendants
+        selector: SelectorFilter.descendants
       }),
       styles: Fun.constant({
         get: Css.get,
