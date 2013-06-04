@@ -41,6 +41,13 @@ test(
       check(expected, Insertion.after, input, anchorId, itemId);
     };
 
+    var checkWrap = function (expected, input, anchorId, wrapper) {
+      var family = Tracks.track(input, Option.none());
+      var anchor = Locator.byId(family, anchorId).getOrDie();
+      Insertion.wrap(anchor, wrapper);
+      assert.eq(expected, Logger.basic(family));
+    };
+
     // initially A(B,C(D(E),F))
     checkBefore('A(B,C(D(F,E)))', data(), 'E', 'F');
     checkBefore('A(F,B,C(D(E)))', data(), 'B', 'F');
@@ -49,6 +56,7 @@ test(
     checkAfter('A(B,F,C(D(E)))', data(), 'B', 'F');
     checkAfter('A(B,C(D,E,F))', data(), 'D', 'E');
 
-
+    checkWrap('A(B,C(D(WRAPPER(E)),F))', data(), 'E', { id: 'WRAPPER' });
+    checkWrap('A(WRAPPER(B),C(D(E),F))', data(), 'B', { id: 'WRAPPER' });
   }
 );
