@@ -8,6 +8,7 @@ define(
 
   function (Arr, Option) {
     var byId = function (item, id) {
+      if (id === undefined) throw 'Id value not specified for byId: ' + id;
       if (item.id !== undefined && item.id === id) {
         return Option.some(item);
       } else {
