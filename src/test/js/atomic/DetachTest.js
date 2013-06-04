@@ -9,7 +9,8 @@ test(
   ],
 
   function (Detach, Logger, Tracks, Option) {
-    var family = Tracks.track({
+    var family = Tracks.track(
+    {
       id: 'A',
       children: [
         { id: 'B', children: [ ] },
