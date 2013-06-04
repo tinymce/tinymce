@@ -2,6 +2,7 @@ define(
   'ephox.boss.dom.Universe',
 
   [
+    'ephox.peanut.Fun',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.Element',
@@ -14,40 +15,40 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Compare, Css, Element, Insert, InsertAll, Node, PredicateFind, Remove, SelectorFind, Traverse) {
+  function (Fun, Compare, Css, Element, Insert, InsertAll, Node, PredicateFind, Remove, SelectorFind, Traverse) {
     return {
-      up: {
+      up: Fun.constant({
         selector: SelectorFind.ancestor,
         predicate: PredicateFind.ancestor,
         all: Traverse.parents
-      },
-      down: {
+      }),
+      down: Fun.constant({
         selector: SelectorFind.descendants
-      },
-      styles: {
+      }),
+      styles: Fun.constant({
         get: Css.get,
         set: Css.set,
         remove: Css.remove
-      },
-      insert: {
+      }),
+      insert: Fun.constant({
         before: Insert.before,
         after: Insert.after,
         append: Insert.append,
         appendAll: InsertAll.append,
         prepend: Insert.prepend,
         wrap: Insert.wrap
-      },
-      remove: {
+      }),
+      remove: Fun.constant({
         unwrap: Remove.unwrap
-      },
-      create: {
+      }),
+      create: Fun.constant({
         nu: Element.fromTag
-      },
-      property: {
+      }),
+      property: Fun.constant({
         children: Traverse.children,
         name: Node.name,
         parent: Traverse.parent
-      },
+      }),
       eq: Compare.eq
     };
   }
