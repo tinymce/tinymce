@@ -53,6 +53,15 @@ test(
       }));
     };
 
+    //
+    // var extract = function (universe, child, offset) {
+    var checkExtract = function (expected, childId, offset) {
+      var child = doc.find(doc.get(), childId).getOrDie();
+      var actual = GhettoExtract.extract(doc, child, offset);
+      assert.eq(expected.id, actual.element().id);
+      assert.eq(expected.offset, actual.offset());
+    };
+
     checkFrom([
       'boundary(1)',
       'boundary(1.1)',
@@ -68,5 +77,7 @@ test(
     checkAll([
       '1', '1.1', '1.1.1', '1.1', '1.2', '1.2.1', '1.2.2.1', '1.2', '1'
     ], 'root');
+
+    checkExtract({ id: '1.2.2', offset: 3 }, '1.2.2.1', 3);
   }
 );

@@ -13,6 +13,7 @@ define(
 
     var count = function (list) {
       return Arr.foldr(list, function (b, a) {
+        console.log('a.len', a.len());
         return a.len() + b;
       }, 0);
     };
