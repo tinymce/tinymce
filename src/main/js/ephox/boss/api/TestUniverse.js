@@ -80,7 +80,9 @@ define(
           isText: Properties.isText,
           isElement: Properties.isElement,
           setText: Properties.setText,
-          getText: Properties.getText
+          getText: Properties.getText,
+          isEmptyTag: Properties.isEmptyTag,
+          isBoundary: Properties.isBoundary
         }),
         eq: Comparator.eq,
         find: find,

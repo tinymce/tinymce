@@ -2,9 +2,10 @@ define(
   'ephox.boss.mutant.Properties',
 
   [
+    'ephox.compass.Arr'
   ],
 
-  function () {
+  function (Arr) {
     var children = function (item) {
       return item.children;
     };
@@ -33,6 +34,14 @@ define(
       item.text = value;
     };
 
+    var isEmptyTag = function (item) {
+      return Arr.contains([ 'br', 'img' ], item.name);
+    };
+
+    var isBoundary = function (item) {
+      return Arr.contains([ 'ol', 'p', 'div', 'ul', 'table', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'body', 'blockquote' ], item.name);
+    };
+
     return {
       children: children,
       name: name,
@@ -40,7 +49,9 @@ define(
       isText: isText,
       isElement: isElement,
       getText: getText,
-      setText: setText
+      setText: setText,
+      isEmptyTag: isEmptyTag,
+      isBoundary: isBoundary
     };
   }
 );

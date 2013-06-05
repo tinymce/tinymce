@@ -2,6 +2,7 @@ define(
   'ephox.boss.api.DomUniverse',
 
   [
+    'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Css',
@@ -17,10 +18,22 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Fun, Compare, Css, Element, Insert, InsertAll, Node, PredicateFind, Remove, SelectorFilter, SelectorFind, Text, Traverse) {
+  function (Arr, Fun, Compare, Css, Element, Insert, InsertAll, Node, PredicateFind, Remove, SelectorFilter, SelectorFind, Text, Traverse) {
     return function () {
       var clone = function (element) {
         return Element.fromDom(element.dom().cloneNode(false));
+      };
+
+      var isBoundary = function (element) {
+        if (!Node.isElement(element)) return false;
+        if (Node.name(element) === 'body') return true;
+        var display = Css.get(element, 'display');
+        return Arr.contains(['block', 'table-cell', 'table-row', 'table', 'list-item'], display);
+      };
+
+      var isEmptyTag = function (element) {
+        if (!Node.isElement(element)) return false;
+        return Arr.contains(['br', 'img'], Node.name(element));
       };
 
       return {
@@ -61,7 +74,9 @@ define(
           isText: Node.isText,
           isElement: Node.isElement,
           getText: Text.get,
-          setText: Text.set
+          setText: Text.set,
+          isBoundary: isBoundary,
+          isEmptyTag: isEmptyTag
         }),
         eq: Compare.eq
       };
