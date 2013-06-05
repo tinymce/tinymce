@@ -59,6 +59,16 @@ var dependencies = [
   },
 
   {
+    name: 'boss',
+    repository: 'buildrepo2',
+    source: 'boss.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
+  {
     name: 'modulator-text',
     repository: 'buildrepo2',
     version: 'latest',
