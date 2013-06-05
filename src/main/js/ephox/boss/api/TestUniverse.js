@@ -68,7 +68,8 @@ define(
           unwrap: Removal.unwrap
         }),
         create: Fun.constant({
-          nu: Creator.nu
+          nu: Creator.nu,
+          clone: Creator.clone
         }),
         property: Fun.constant({
           children: Properties.children,

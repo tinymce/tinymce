@@ -18,6 +18,10 @@ define(
 
   function (Fun, Compare, Css, Element, Insert, InsertAll, Node, PredicateFind, Remove, SelectorFilter, SelectorFind, Traverse) {
     return function () {
+      var clone = function (element) {
+        return Element.fromDom(element.dom().cloneNode(false));
+      };
+
       return {
         up: Fun.constant({
           selector: SelectorFind.ancestor,
@@ -44,7 +48,8 @@ define(
           unwrap: Remove.unwrap
         }),
         create: Fun.constant({
-          nu: Element.fromTag
+          nu: Element.fromTag,
+          clone: clone
         }),
         property: Fun.constant({
           children: Traverse.children,
