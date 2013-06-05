@@ -2,14 +2,14 @@ test(
   'DownTest',
 
   [
+    'ephox.boss.api.Gene',
     'ephox.boss.mutant.Down',
-    'ephox.boss.mutant.Gene',
     'ephox.boss.mutant.Tracks',
     'ephox.compass.Arr',
     'ephox.perhaps.Option'
   ],
 
-  function (Down, Gene, Tracks, Arr, Option) {
+  function (Gene, Down, Tracks, Arr, Option) {
     var family = Tracks.track(
       Gene('1', 'root', [
         Gene('1.1', 'duck', [

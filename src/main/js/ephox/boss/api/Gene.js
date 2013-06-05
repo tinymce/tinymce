@@ -1,5 +1,5 @@
 define(
-  'ephox.boss.mutant.Gene',
+  'ephox.boss.api.Gene',
 
   [
   ],
