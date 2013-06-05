@@ -91,6 +91,16 @@ var dependencies = [
     ]
   },
 
+  {
+    name: 'boss',
+    repository: 'buildrepo2',
+    source: 'boss.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
   /**** demo dependencies ****/
   {
     name: 'exhibition',
