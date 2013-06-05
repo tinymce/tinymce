@@ -3,11 +3,12 @@ test(
 
   [
     'ephox.phoenix.extract.Extract',
+    'ephox.phoenix.ghetto.extract.GhettoExtract',
     'ephox.phoenix.test.Page',
     'ephox.sugar.api.Compare'
   ],
 
-  function (Extract, Page, Compare) {
+  function (Extract, GhettoExtract, Page, Compare) {
 
     var check = function (eNode, eOffset, cNode, cOffset) {
       var actual = Extract.extract(cNode, cOffset);
@@ -28,14 +29,16 @@ test(
   'From',
 
   [
+    'ephox.boss.api.DomUniverse',
     'ephox.compass.Arr',
     'ephox.phoenix.extract.Extract',
+    'ephox.phoenix.ghetto.extract.GhettoExtract',
     'ephox.phoenix.test.Page',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Text'
   ],
 
-  function (Arr, Extract, Page, Element, Text) {
+  function (DomUniverse, Arr, Extract, GhettoExtract, Page, Element, Text) {
     var check = function (expected, input) {
       var rawActual = Extract.from(input);
       var actual = Arr.map(rawActual, function (x) {

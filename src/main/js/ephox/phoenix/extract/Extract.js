@@ -2,9 +2,10 @@ define(
   'ephox.phoenix.extract.Extract',
 
   [
+    'ephox.boss.api.DomUniverse',
     'ephox.compass.Arr',
-    'ephox.phoenix.data.DocElement',
     'ephox.phoenix.data.Spot',
+    'ephox.phoenix.ghetto.extract.GhettoExtract',
     'ephox.phoenix.util.doc.List',
     'ephox.phoenix.util.node.Classification',
     'ephox.sugar.api.Node',
@@ -12,21 +13,10 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Arr, DocElement, Spot, List, Classification, Node, PredicateFind, Traverse) {
+  function (DomUniverse, Arr, Spot, GhettoExtract, List, Classification, Node, PredicateFind, Traverse) {
 
     var from = function (element) {
-      if (Node.isText(element)) {
-        return [ DocElement.text(element) ];
-      } else if (Classification.isEmpty(element)) {
-        return [ DocElement.empty(element) ];
-      } else if (Node.isElement(element)) {
-        var children = Traverse.children(element);
-        var current = Classification.isBoundary(element) ? [DocElement.boundary()] : [];
-        var rest = Arr.bind(children, from);
-        return current.concat(rest).concat(current);
-      } else {
-        return [];
-      }
+      return GhettoExtract.from(DomUniverse(), element);
     };
 
     var all = function (element) {
