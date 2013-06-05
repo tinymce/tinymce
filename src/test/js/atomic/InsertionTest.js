@@ -6,10 +6,11 @@ test(
     'ephox.boss.mutant.Locator',
     'ephox.boss.mutant.Logger',
     'ephox.boss.mutant.Tracks',
+    'ephox.compass.Arr',
     'ephox.perhaps.Option'
   ],
 
-  function (Insertion, Locator, Logger, Tracks, Option) {
+  function (Insertion, Locator, Logger, Tracks, Arr, Option) {
     var data = function () {
       return {
         id: 'A',
@@ -58,5 +59,17 @@ test(
 
     checkWrap('A(B,C(D(WRAPPER(E)),F))', data(), 'E', { id: 'WRAPPER' });
     checkWrap('A(WRAPPER(B),C(D(E),F))', data(), 'B', { id: 'WRAPPER' });
+
+    var checkAfterAll = function (expected, input, anchorId, itemIds) {
+      var family = Tracks.track(input, Option.none());
+      var anchor = Locator.byId(family, anchorId).getOrDie('Did not find anchor: ' + anchorId);
+      var items = Arr.map(itemIds, function (itemId) {
+        return Locator.byId(family, itemId).getOrDie('Did not find item: ' + itemId);
+      });
+      Insertion.afterAll(anchor, items);
+      assert.eq(expected, Logger.basic(family));
+    };
+
+    checkAfterAll('A(B,C(D,E,F))', data(), 'D', [ 'E', 'F' ]);
   }
 );

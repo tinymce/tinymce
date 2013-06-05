@@ -2,10 +2,11 @@ define(
   'ephox.boss.mutant.Creator',
 
   [
+    'ephox.boss.api.TextGene',
     'ephox.highway.Merger'
   ],
 
-  function (Merger) {
+  function (TextGene, Merger) {
     var nu = function (name) {
       return { id: 'nu_' + name, name: name };
     };
@@ -16,9 +17,14 @@ define(
       });
     };
 
+    var text = function (value) {
+      return TextGene('?', value);
+    };
+
     return {
       nu: nu,
-      clone: clone
+      clone: clone,
+      text: text
     };
   }
 );

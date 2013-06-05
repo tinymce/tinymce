@@ -43,6 +43,19 @@ define(
       });
     };
 
+    var afterAll = function (anchor, items) {
+      anchor.parent.each(function (parent) {
+        var index = Locator.indexIn(parent, anchor);
+
+        var detached = Arr.map(items, function (item) {
+          var ditem = Detach.detach(Up.top(anchor), item.id).getOr(item);
+          ditem.parent = Option.some(parent);
+          return ditem;
+        });
+        if (index > -1) parent.children = parent.children.slice(0, index + 1).concat(detached).concat(parent.children.slice(index + 1));
+      });
+    };
+
     var prepend = function (parent, item) {
       var detached = Detach.detach(Up.top(parent), item.id).getOr(item);
       parent.children = parent.children || [];
@@ -65,6 +78,7 @@ define(
     return {
       before: before,
       after: after,
+      afterAll: afterAll,
       append: append,
       appendAll: appendAll,
       prepend: prepend,

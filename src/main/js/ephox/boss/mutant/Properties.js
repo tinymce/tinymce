@@ -17,10 +17,30 @@ define(
       return item.parent;
     };
 
+    var isText = function (item) {
+      return item.name === 'TEXT_GENE';
+    };
+
+    var isElement = function (item) {
+      return item.name !== undefined && item.name !== 'TEXT_GENE';
+    };
+
+    var getText = function (item) {
+      return item.text;
+    };
+
+    var setText = function (item, value) {
+      item.text = value;
+    };
+
     return {
       children: children,
       name: name,
-      parent: parent
+      parent: parent,
+      isText: isText,
+      isElement: isElement,
+      getText: getText,
+      setText: setText
     };
   }
 );

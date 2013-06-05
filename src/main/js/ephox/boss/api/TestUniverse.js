@@ -61,6 +61,7 @@ define(
           after: Insertion.after,
           append: Insertion.append,
           appendAll: Insertion.appendAll,
+          afterAll: Insertion.afterAll,
           prepend: Insertion.prepend,
           wrap: wrap
         }),
@@ -69,12 +70,17 @@ define(
         }),
         create: Fun.constant({
           nu: Creator.nu,
+          text: Creator.text,
           clone: Creator.clone
         }),
         property: Fun.constant({
           children: Properties.children,
           name: Properties.name,
-          parent: Properties.parent
+          parent: Properties.parent,
+          isText: Properties.isText,
+          isElement: Properties.isElement,
+          setText: Properties.setText,
+          getText: Properties.getText
         }),
         eq: Comparator.eq,
         find: find,
