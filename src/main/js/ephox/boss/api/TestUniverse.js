@@ -1,5 +1,5 @@
 define(
-  'ephox.boss.fake.Universe',
+  'ephox.boss.api.TestUniverse',
 
   [
     'ephox.boss.mutant.Comparator',
@@ -21,7 +21,7 @@ define(
     return function (raw) {
       var content = Tracks.track(raw, Option.none());
 
-      // The top point might change when we are wrapping.
+      // NOTE: The top point might change when we are wrapping.
       var wrap = function (anchor, wrapper) {
         Insertion.wrap(anchor, wrapper);
         content.parent.fold(Fun.noop, function (p) {

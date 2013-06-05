@@ -14,7 +14,7 @@ define(
       });
 
       r.children = Arr.map(current.children || [], function (child) {
-        // IMPORTANT, must link to the new one being created, or it will have no parent
+        // NOTE: The child must link to the new one being created (r)
         return track(child, Option.some(r));
       });
 

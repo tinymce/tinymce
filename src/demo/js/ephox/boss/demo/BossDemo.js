@@ -7,11 +7,11 @@ define(
     'ephox.sugar.api.Element'
   ],
 
-  function ($, Boss, Element) {
+  function ($, BasicPage, Element) {
     return function () {
 
       var ephoxUi = Element.fromDom(document.getElementById('ephox-ui'));
-      var boss = Boss();
+      var boss = BasicPage();
       boss.connect(ephoxUi);
     };
   }

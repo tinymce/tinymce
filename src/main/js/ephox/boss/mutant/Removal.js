@@ -9,7 +9,6 @@ define(
 
   function (Comparator, Arr, Option) {
     var unwrap = function (item) {
-      // takes away this item and appends its children to its parent
       item.parent.each(function (parent) {
         var children = item.children;
         Arr.each(children, function (child) {

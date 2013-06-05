@@ -51,7 +51,7 @@ define(
     };
 
     var wrap = function (anchor, wrapper) {
-      // Groan. Mutate this for the time being to see if this concept is even useful
+      // INVESTIGATE: At this stage, mutation is necessary to act like the DOM
       anchor.parent.each(function (parent) {
         wrapper.parent = Option.some(parent);
         parent.children = Arr.map(parent.children || [], function (c) {
