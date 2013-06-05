@@ -16,22 +16,11 @@ define(
   function (DomUniverse, Arr, Spot, GhettoExtract, List, Classification, Node, PredicateFind, Traverse) {
 
     var from = function (element) {
-      return GhettoExtract.from(DomUniverse(), element);
+      return GhettoExtract.typed(DomUniverse(), element);
     };
 
     var all = function (element) {
-      if (Node.isText(element)) {
-        return [ element ];
-      } else if (Classification.isEmpty(element)) {
-        return [ element ];
-      } else if (Node.isElement(element)) {
-        var children = Traverse.children(element);
-        var current = Classification.isBoundary(element) ? [element] : [];
-        var rest = Arr.bind(children, all);
-        return current.concat(rest).concat(current);
-      } else {
-        return [];
-      }
+      return GhettoExtract.items(DomUniverse(), element);
     };
 
     var extractToElem = function (child, offset, element) {

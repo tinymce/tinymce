@@ -27,9 +27,9 @@ test(
       ])
     );
 
-    var check = function (expected, initial) {
+    var check = function (expected, extract, initial) {
       var start = doc.find(doc.get(), initial).getOrDie();
-      var actual = GhettoExtract.from(doc, start);
+      var actual = extract(doc, start);
       assert.eq(expected, Arr.map(actual, function (a) {
         return a.fold(function (item) {
           return 'boundary(' + item.id + ')';
@@ -41,7 +41,19 @@ test(
       }));
     };
 
-    check([
+    var checkFrom = function (expected, initial) {
+      check(expected, GhettoExtract.typed, initial);
+    };
+
+    var checkAll = function (expected, initial) {
+      var start = doc.find(doc.get(), initial).getOrDie();
+      var actual = GhettoExtract.items(doc, start);
+      assert.eq(expected, Arr.map(actual, function (a) {
+        return a.id;
+      }));
+    };
+
+    checkFrom([
       'boundary(1)',
       'boundary(1.1)',
       'empty(1.1.1)',
@@ -53,5 +65,8 @@ test(
       'boundary(1)'
     ], 'root');
 
+    checkAll([
+      '1', '1.1', '1.1.1', '1.1', '1.2', '1.2.1', '1.2.2.1', '1.2', '1'
+    ], 'root');
   }
 );
