@@ -32,13 +32,12 @@ test(
     'ephox.boss.api.DomUniverse',
     'ephox.compass.Arr',
     'ephox.phoenix.extract.Extract',
-    'ephox.phoenix.ghetto.extract.GhettoExtract',
     'ephox.phoenix.test.Page',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Text'
   ],
 
-  function (DomUniverse, Arr, Extract, GhettoExtract, Page, Element, Text) {
+  function (DomUniverse, Arr, Extract, Page, Element, Text) {
     var check = function (expected, input) {
       var rawActual = Extract.from(input);
       var actual = Arr.map(rawActual, function (x) {
