@@ -1,5 +1,5 @@
 define(
-  'ephox.phoenix.util.node.Parents',
+  'ephox.phoenix.util.node.DomParents',
 
   [
     'ephox.boss.api.DomUniverse',

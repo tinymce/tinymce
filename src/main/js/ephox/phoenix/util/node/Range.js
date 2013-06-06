@@ -5,18 +5,18 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.phoenix.api.DomExtract',
-    'ephox.phoenix.util.node.Parents',
+    'ephox.phoenix.util.node.DomParents',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Node'
   ],
 
-  function (Arr, Fun, DomExtract, Parents, Compare, Node) {
+  function (Arr, Fun, DomExtract, DomParents, Compare, Node) {
 
     var curry = Fun.curry;
     
     var range = function (e1, e2) {
       if (Compare.eq(e1.element(), e2.element())) return [e1.element()];
-      var parent = Parents.common(e1.element(), e2.element());
+      var parent = DomParents.common(e1.element(), e2.element());
       return parent.fold(function () {
         return [];
       }, function (v) {
