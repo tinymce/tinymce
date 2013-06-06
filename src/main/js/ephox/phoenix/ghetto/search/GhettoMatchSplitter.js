@@ -56,17 +56,15 @@ define(
         console.log('looking for elements: ', y.start(), y.finish());
         // structure = PositionArray.splitAt(structure, y.start(), y.finish(), splitter, splitter);
         var sub = PositionArray.sub(structure, y.start(), y.finish());
-        var information = Arr.foldl(sub, function (b, a) {
-          var item = a.element();
-          return {
-            elements: b.elements.concat( [ item ] ),
-            exact: b.exact + universe.property().getText(item)
-          };
-        }, { elements: [], exact: '' });
+        var elements = Arr.map(sub, function (s) {
+          return s.element();
+        });
+
+        var exact = Arr.map(elements, universe.property().getText).join('');
         return {
-          elements: Fun.constant(information.elements),
+          elements: Fun.constant(elements),
           word: y.word,
-          exact: Fun.constant(information.exact)
+          exact: Fun.constant(exact)
         };
       });
     };
