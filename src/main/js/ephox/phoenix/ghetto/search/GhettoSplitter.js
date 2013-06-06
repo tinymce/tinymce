@@ -28,16 +28,14 @@ define(
       var pieces = Split.split(text, positions);
       if (pieces.length <= 1) return [ item ];
       universe.property().setText(item, pieces[0]);
-      console.log('pieces:' , pieces);
       var others = PositionArray.make(pieces.slice(1), function (a, start) {
         var nu = universe.create().text(a);
         var result = Spot.range(nu, start, start + a.length);
         return Option.some(result);
-      });
+      }, pieces[0].length);
       var otherItems = Arr.map(others, function (a) {
         return a.element();
       });
-      console.log('other items: ', otherItems);
       universe.insert().afterAll(item, otherItems);
       return [ Spot.range(item, 0, pieces[0].length) ].concat(others);
     };

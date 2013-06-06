@@ -14,29 +14,34 @@ define(
         return GhettoSplitter.split(universe, offset, item);
       };
 
-      var splitAt = function (list, start, finish, first, last) {
-        return Arr.foldr(list, function (b, a) {
-          if (start >= a.start() && start <= a.finish()) {
-            var rest = first(start, a);
-            var after = rest[rest.length - 1];
-            if (finish >= after.start() && finish  <= after.finish()) {
-              var before = rest.length > 1 ? [rest[0]] : [];
-              return before.concat(last(finish, after)).concat(b);
-            } else {
-              return rest.concat(b);
-            }
-            return first(start, a).concat(b);
-          } else if (finish >= a.start() && finish <= a.finish()) {
-            return last(finish, a).concat(b);
-          } else {
-            return [a].concat(b);
-          }
-        }, []);
+      var yipes = function (list, positions) {
+        // get all the positions that are within this item.
+        var inItem = function (item, position) {
+          return position >= item.start() && position <= item.finish();
+        };
+
+        return Arr.bind(list, function (unit) {
+          console.log('a: ', unit);
+          var relevant = Arr.filter(positions, function (pos) {
+            return inItem(unit, pos);
+          });
+
+          return relevant.length > 0 ? [] : [ unit ];
+        });
       };
 
+      // var allPositions = Arr.bind(matches, function (match) {
+      //   console.log('match: ', match);
+      //   return [ match.start(), match.finish() ];
+      // });
+
+      // var structure = yipes(list, allPositions);
+      // console.log('structure: ', structure);
+
+      
       var structure = list;
       return Arr.map(matches, function (y) {
-        structure = splitAt(structure, y.start(), y.finish(), splitter, splitter);
+        structure = PositionArray.splitAt(structure, y.start(), y.finish(), splitter, splitter);
         var sub = PositionArray.sub(structure, y.start(), y.finish());
         var information = Arr.foldl(sub, function (b, a) {
           var item = a.element();

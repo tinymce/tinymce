@@ -29,15 +29,17 @@ test(
 
     };
 
-    var checkSubdivide = function (toplevel, expected, id, positions, data) {
+    var checkSubdivide = function (toplevel, expected, id, positions, offset, data) {
       var universe = TestUniverse(data);
       var item = Finder.get(universe, id);
-      var actual = GhettoSplitter.subdivide(universe, item, positions);
+      var actual = GhettoSplitter.subdivide(universe, item, positions, offset);
       assert.eq(expected.length, actual.length, 'Incorrect size for subdivide test');
       Arr.each(expected, function (exp, i) {
         var act = actual[i];
         console.log('act:', act);
         assert.eq(exp.id, act.element().id);
+        assert.eq(exp.start, act.start(), 'comparing start for ' + exp.id + ': ' + exp.start + ' vs ' + act.start());
+        assert.eq(exp.finish, act.finish(), 'comparing finish for ' + exp.id + ': ' + exp.finish + ' vs ' + act.finish());
       });
 
       assert.eq(toplevel, Arr.map(universe.get().children, TestRenders.text));
@@ -70,12 +72,13 @@ test(
     ]));
 
 
-    checkSubdivide([ '_', 'abcdefghijklm', 'n', 'opqrstuvwxyz' ], [
+    checkSubdivide([ '_', 'abcdefghijklm', 'n', 'opq', 'rstuvwxyz' ], [
       { id: 'a', start: 0, finish: 1 },
       { id: '?_abcdefghijklm', start: 1, finish: 14 },
       { id: '?_n', start: 14, finish: 15 },
-      { id: '?_opqrstuvwxyz', start: 15, finish: 27 }
-    ], 'a', [ 1, 14, 15 ], Gene('root', 'root', [
+      { id: '?_opq', start: 15, finish: 18 },
+      { id: '?_rstuvwxyz', start: 18, finish: 27 }
+    ], 'a', [ 1, 14, 15, 18 ], 0, Gene('root', 'root', [
       TextGene('a', '_abcdefghijklmnopqrstuvwxyz')
     ]));
   }

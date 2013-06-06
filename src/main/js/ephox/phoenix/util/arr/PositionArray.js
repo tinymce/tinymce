@@ -9,10 +9,10 @@ define(
 
   function (Arr, Fun, Option) {
 
-    var make = function (xs, f) {
+    var make = function (xs, f, _start) {
 
       var init = {
-        len: 0,
+        len: _start !== undefined ? _start : 0,
         list: []
       };
 
