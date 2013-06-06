@@ -1,15 +1,15 @@
 test(
-  'ExtractTest',
+  'api.Extract.(from,all,extract,extractTo)',
 
   [
     'ephox.boss.api.Gene',
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
     'ephox.compass.Arr',
-    'ephox.phoenix.ghetto.extract.GhettoExtract'
+    'ephox.phoenix.api.Extract'
   ],
 
-  function (Gene, TestUniverse, TextGene, Arr, GhettoExtract) {
+  function (Gene, TestUniverse, TextGene, Arr, Extract) {
 
     var doc = TestUniverse(
       Gene('root', 'root', [
@@ -48,12 +48,12 @@ test(
     };
 
     var checkFrom = function (expected, initial) {
-      check(expected, GhettoExtract.typed, initial);
+      check(expected, Extract.from, initial);
     };
 
     var checkAll = function (expected, initial) {
       var start = doc.find(doc.get(), initial).getOrDie();
-      var actual = GhettoExtract.items(doc, start);
+      var actual = Extract.all(doc, start);
       assert.eq(expected, Arr.map(actual, function (a) {
         return a.id;
       }));
@@ -63,14 +63,14 @@ test(
     // var extract = function (universe, child, offset) {
     var checkExtract = function (expected, childId, offset) {
       var child = doc.find(doc.get(), childId).getOrDie();
-      var actual = GhettoExtract.extract(doc, child, offset);
+      var actual = Extract.extract(doc, child, offset);
       assert.eq(expected.id, actual.element().id);
       assert.eq(expected.offset, actual.offset());
     };
 
     var checkExtractTo = function (expected, childId, offset, pred) {
       var child = doc.find(doc.get(), childId).getOrDie();
-      var actual = GhettoExtract.extractTo(doc, child, offset, pred);
+      var actual = Extract.extractTo(doc, child, offset, pred);
       assert.eq(expected.id, actual.element().id);
       assert.eq(expected.offset, actual.offset());
     };

@@ -1,15 +1,15 @@
 test(
-  'FindTest',
+  'api.Extract.find',
 
   [
     'ephox.boss.api.Gene',
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
     'ephox.perhaps.Option',
-    'ephox.phoenix.ghetto.extract.GhettoFind'
+    'ephox.phoenix.api.Extract'
   ],
 
-  function (Gene, TestUniverse, TextGene, Option, GhettoFind) {
+  function (Gene, TestUniverse, TextGene, Option, Extract) {
     var doc = TestUniverse(
       Gene('root', 'root', [
         Gene('1', 'div', [
@@ -34,7 +34,7 @@ test(
 
     var check = function (expected, topId, offset) {
       var top = doc.find(doc.get(), topId).getOrDie();
-      var actual = GhettoFind.find(doc, top, offset);
+      var actual = Extract.find(doc, top, offset);
       expected.fold(function () {
         assert.eq(actual.isNone(), true, 'Expected none, actual: some');
       }, function (exp) {

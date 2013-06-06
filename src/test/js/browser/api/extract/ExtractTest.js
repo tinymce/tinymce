@@ -1,16 +1,16 @@
 test(
-  'extract.Extract.extract',
+  'api.DomExtract.extract',
 
   [
-    'ephox.phoenix.extract.Extract',
+    'ephox.phoenix.api.DomExtract',
     'ephox.phoenix.test.Page',
     'ephox.sugar.api.Compare'
   ],
 
-  function (Extract, Page, Compare) {
+  function (DomExtract, Page, Compare) {
 
     var check = function (eNode, eOffset, cNode, cOffset) {
-      var actual = Extract.extract(cNode, cOffset);
+      var actual = DomExtract.extract(cNode, cOffset);
       assert.eq(true, Compare.eq(eNode, actual.element()));
       assert.eq(eOffset, actual.offset());
     };

@@ -1,16 +1,17 @@
 test(
-  'extract.Find.find',
+  'api.DomExtract.find',
 
   [
+    'ephox.phoenix.api.DomExtract',
     'ephox.phoenix.extract.Find',
     'ephox.phoenix.test.Page',
     'ephox.sugar.api.Compare'
   ],
 
-  function (Find, Page, Compare) {
+  function (DomExtract, Find, Page, Compare) {
 
     var check = function (eNode, eOffset, pNode, pOffset) {
-      var actual = Find.find(pNode, pOffset).getOrDie();
+      var actual = DomExtract.find(pNode, pOffset).getOrDie();
       assert.eq(true, Compare.eq(eNode, actual.element()));
       assert.eq(eOffset, actual.offset());
     };

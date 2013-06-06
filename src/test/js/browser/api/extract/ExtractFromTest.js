@@ -1,17 +1,17 @@
 test(
-  'extract.Extract.from',
+  'api.DomExtract.from',
 
   [
     'ephox.compass.Arr',
-    'ephox.phoenix.extract.Extract',
+    'ephox.phoenix.api.DomExtract',
     'ephox.phoenix.test.Page',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Text'
   ],
 
-  function (Arr, Extract, Page, Element, Text) {
+  function (Arr, DomExtract, Page, Element, Text) {
     var check = function (expected, input) {
-      var rawActual = Extract.from(input);
+      var rawActual = DomExtract.from(input);
       var actual = Arr.map(rawActual, function (x) {
         return x.fold(function () {
           return '\\w';
