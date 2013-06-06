@@ -2,9 +2,10 @@ define(
   'ephox.phoenix.test.TestRenders',
 
   [
+    'ephox.compass.Arr'
   ],
 
-  function () {
+  function (Arr) {
     var typeditem = function (a) {
       return a.fold(function (item) {
         return 'boundary(' + item.id + ')';
@@ -15,8 +16,18 @@ define(
       });
     };
 
+    var ids = function (items) {
+      return Arr.map(items, id);
+    };
+
+    var id = function (item) {
+      return item.id;
+    };
+
     return {
-      typeditem: typeditem
+      typeditem: typeditem,
+      ids: ids,
+      id: id
     };
   }
 );
