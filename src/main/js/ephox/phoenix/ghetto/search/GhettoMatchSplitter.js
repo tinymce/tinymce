@@ -10,29 +10,9 @@ define(
   ],
 
   function (Arr, Fun, GhettoListSplitter, GhettoSplitter, PositionArray) {
-    var separate = function (universe, list, matches) {
-      var splitter = function (offset, item) {
-        return GhettoSplitter.split(universe, offset, item);
-      };
-
-      var allPositions = Arr.bind(matches, function (match) {
-        return [ match.start(), match.finish() ];
-      });
-
-
-      var logList = function (label, plist) {
-        console.log(label, Arr.map(plist, function (unit) {
-          return unit.start() + '->' + unit.finish();
-        }).join(', '));
-      };
-
-      var structure = GhettoListSplitter.yipes(universe, list, allPositions);
-      // logList('Yipes: ', structure);
-
-      // var structure = list;
+    var identify = function (universe, list, matches) {
       return Arr.map(matches, function (y) {
-        // structure = PositionArray.splitAt(structure, y.start(), y.finish(), splitter, splitter);
-        var sub = PositionArray.sub(structure, y.start(), y.finish());
+        var sub = PositionArray.sub(list, y.start(), y.finish());
         var elements = Arr.map(sub, function (s) {
           return s.element();
         });
@@ -44,6 +24,19 @@ define(
           exact: Fun.constant(exact)
         };
       });
+    };
+
+    var separate = function (universe, list, matches) {
+      var splitter = function (offset, item) {
+        return GhettoSplitter.split(universe, offset, item);
+      };
+
+      var allPositions = Arr.bind(matches, function (match) {
+        return [ match.start(), match.finish() ];
+      });
+
+      var structure = GhettoListSplitter.yipes(universe, list, allPositions);
+      return identify(universe, structure, matches);
     };
 
     return {
