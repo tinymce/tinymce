@@ -8,6 +8,7 @@ define(
     'ephox.phoenix.data.Spot',
     'ephox.phoenix.group.DomGroup',
     'ephox.phoenix.search.Safe',
+    'ephox.phoenix.search.Sleuth',
     'ephox.phoenix.search.Splitter',
     'ephox.phoenix.util.arr.PositionArray',
     'ephox.phoenix.util.doc.List',
@@ -16,21 +17,11 @@ define(
     'ephox.sugar.api.Text'
   ],
 
-  function (Arr, Fun, Option, Spot, DomGroup, Safe, Splitter, PositionArray, List, Find, Struct, Text) {
+  function (Arr, Fun, Option, Spot, DomGroup, Safe, Sleuth, Splitter, PositionArray, List, Find, Struct, Text) {
 
-    var WordMatch = Struct.immutable('word', 'start', 'finish');
     var WordPattern = Struct.immutable('word', 'pattern');
 
-    var sort = function (array) {
-      var r = Array.prototype.slice.call(array, 0);
-      r.sort(function (a, b) {
-        if (a.start() < b.start()) return -1;
-        else if (b.start() < a.start()) return 1;
-        else return 0;
-      });
-      return r;
-    };
-
+    
     var gen = function (input) {
       return PositionArray.make(input, function (x, offset) {
         var finish = offset + Text.get(x).length;
@@ -44,18 +35,11 @@ define(
         var input = List.justText(x);
         var text = Arr.map(input, Text.get).join('');
 
-        var matches = Arr.bind(patterns, function (y) {
-          var results = Find.all(text, y.pattern());
-          return Arr.map(results, function (z) {
-            return WordMatch(y.word(), z.start(), z.finish());
-          });
-        });
-
-        var sorted = sort(matches);
+        var matches = Sleuth.search(text, patterns);
         var structure = gen(input);
 
         /* Not great that structure changes outside and inside the map */
-        return Arr.map(sorted, function (y) {
+        return Arr.map(matches, function (y) {
           structure = PositionArray.splitAt(structure, y.start(), y.finish(), Splitter.split, Splitter.split);
           var sub = PositionArray.sub(structure, y.start(), y.finish());
           return {
