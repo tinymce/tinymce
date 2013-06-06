@@ -4,11 +4,10 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.sugar.api.Text'
+    'ephox.perhaps.Option'
   ],
 
-  function (Arr, Fun, Option, Text) {
+  function (Arr, Fun, Option) {
 
     var make = function (xs, f) {
 

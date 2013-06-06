@@ -2,11 +2,12 @@ define(
   'ephox.phoenix.search.Searcher',
 
   [
+    'ephox.boss.api.DomUniverse',
     'ephox.compass.Arr',
     'ephox.perhaps.Option',
     'ephox.phoenix.data.Spot',
+    'ephox.phoenix.ghetto.search.GhettoMatchSplitter',
     'ephox.phoenix.group.DomGroup',
-    'ephox.phoenix.search.DomMatchSplitter',
     'ephox.phoenix.search.Safe',
     'ephox.phoenix.search.Sleuth',
     'ephox.phoenix.util.arr.PositionArray',
@@ -15,10 +16,10 @@ define(
     'ephox.sugar.api.Text'
   ],
 
-  function (Arr, Option, Spot, DomGroup, DomMatchSplitter, Safe, Sleuth, PositionArray, List, Struct, Text) {
+  function (DomUniverse, Arr, Option, Spot, GhettoMatchSplitter, DomGroup, Safe, Sleuth, PositionArray, List, Struct, Text) {
 
     var WordPattern = Struct.immutable('word', 'pattern');
-
+    var universe = DomUniverse();
     
     var gen = function (input) {
       return PositionArray.make(input, function (x, offset) {
@@ -36,7 +37,7 @@ define(
         var matches = Sleuth.search(text, patterns);
         var structure = gen(input);
 
-        return DomMatchSplitter.separate(structure, matches);
+        return GhettoMatchSplitter.separate(universe, structure, matches);
       });
 
       return result;

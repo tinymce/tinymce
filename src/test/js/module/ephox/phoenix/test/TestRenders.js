@@ -24,10 +24,20 @@ define(
       return item.id;
     };
 
+    var texts = function (items) {
+      return Arr.map(items, text);
+    };
+
+    var text = function (item) {
+      return item.text;
+    };
+
     return {
       typeditem: typeditem,
       ids: ids,
-      id: id
+      id: id,
+      texts: texts,
+      text: text
     };
   }
 );

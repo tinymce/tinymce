@@ -33,9 +33,9 @@ test(
       TextGene('a', 'cattle')
     ]));
 
-    check([ 'a', '?' ], [
+    check([ 'a', '?_attle' ], [
       { id: 'a', start: 3, finish: 4 },
-      { id: '?', start: 4, finish: 9 }
+      { id: '?_attle', start: 4, finish: 9 }
     ], 'a', 3, 9, 4, Gene('root', 'root', [
       TextGene('a', 'cattle')
     ]));
