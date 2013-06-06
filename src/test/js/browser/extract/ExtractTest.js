@@ -1,5 +1,5 @@
 test(
-  'Extract.extract',
+  'extract.Extract.extract',
 
   [
     'ephox.phoenix.extract.Extract',

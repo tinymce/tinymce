@@ -1,5 +1,5 @@
 test(
-  'Matches',
+  'search.Searcher.safeWords',
 
   [
     'ephox.compass.Arr',

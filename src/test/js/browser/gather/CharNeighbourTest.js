@@ -1,5 +1,5 @@
 test(
-  'CharNeighbour',
+  'gather.CharNeighbour.left, gather.CharNeighbour.right',
 
   [
     'ephox.perhaps.Option',
@@ -12,8 +12,6 @@ test(
   ],
 
   function (Option, CharNeighbour, Element, Insert, InsertAll, Remove, SelectorFind) {
-
-    
 
     var body = SelectorFind.first('body').getOrDie();
     var div = Element.fromTag('div');

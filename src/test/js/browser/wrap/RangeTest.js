@@ -1,5 +1,5 @@
 test(
-  'RangeTest',
+  'wrap.Wrapper.wrapWith (Wraps)',
 
   [
     'ephox.phoenix.wrap.Wrapper',

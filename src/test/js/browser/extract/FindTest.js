@@ -1,5 +1,5 @@
 test(
-  'FindTest',
+  'extract.Find.find',
 
   [
     'ephox.phoenix.extract.Find',

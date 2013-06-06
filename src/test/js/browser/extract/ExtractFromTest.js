@@ -1,5 +1,5 @@
 test(
-  'Extract.from',
+  'extract.Extract.from',
 
   [
     'ephox.compass.Arr',

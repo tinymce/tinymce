@@ -1,5 +1,5 @@
 test(
-  'SplitTest',
+  'split.Split.split, split.Split.splitByPair',
 
   [
     'ephox.compass.Arr',
