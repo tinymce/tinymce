@@ -35,6 +35,7 @@ define(
     };
 
     var extractTo = function (child, offset, pred) {
+      // return Spot.point(child, offset);
       return PredicateFind.ancestor(child, pred).fold(function () {
         return Spot.point(child, offset);
       }, function (v) {
