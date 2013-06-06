@@ -4,10 +4,14 @@ test(
   [
     'ephox.boss.api.Gene',
     'ephox.boss.api.TestUniverse',
-    'ephox.boss.api.TextGene'
+    'ephox.boss.api.TextGene',
+    'ephox.compass.Arr',
+    'ephox.phoenix.ghetto.family.GhettoGroup',
+    'ephox.phoenix.test.Finder',
+    'ephox.phoenix.test.TestRenders'
   ],
 
-  function (Gene, TestUniverse, TextGene) {
+  function (Gene, TestUniverse, TextGene, Arr, GhettoGroup, Finder, TestRenders) {
     var doc = TestUniverse(
       Gene('root', 'root', [
         Gene('1', 'div', [
@@ -29,6 +33,25 @@ test(
         ])
       ])
     );
+
+    var check = function (expected, ids) {
+      var items = Arr.map(ids, function (id) {
+        return Finder.get(doc, id);
+      });
+      var actual = GhettoGroup.group(doc, items);
+      assert.eq(expected, Arr.map(actual, function (xs) {
+        return Arr.map(xs, TestRenders.typeditem);
+      }));
+    };
+
+    check([
+      [ 'empty(1.1.1)', 'text("post-image text")' ],
+      [ 'text("This is text")', 'text("inside a span")', 'text("More text")', 'text("Inside em")', 'text("Last piece of text")' ]
+    ], [ '1' ]);
+
+    check([
+      [ 'empty(1.1.1)', 'text("post-image text")' ]
+    ], [ '1.1' ]);
 
   }
 );

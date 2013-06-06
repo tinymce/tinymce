@@ -7,10 +7,11 @@ test(
     'ephox.boss.api.TextGene',
     'ephox.compass.Arr',
     'ephox.phoenix.api.Extract',
-    'ephox.phoenix.test.Finder'
+    'ephox.phoenix.test.Finder',
+    'ephox.phoenix.test.TestRenders'
   ],
 
-  function (Gene, TestUniverse, TextGene, Arr, Extract, Finder) {
+  function (Gene, TestUniverse, TextGene, Arr, Extract, Finder, TestRenders) {
 
     var doc = TestUniverse(
       Gene('root', 'root', [
@@ -37,15 +38,7 @@ test(
     var check = function (expected, extract, initial) {
       var start = Finder.get(doc, initial);
       var actual = extract(doc, start);
-      assert.eq(expected, Arr.map(actual, function (a) {
-        return a.fold(function (item) {
-          return 'boundary(' + item.id + ')';
-        }, function (item) {
-          return 'empty(' + item.id + ')';
-        }, function (item) {
-          return 'text("' + item.text + '")';
-        });
-      }));
+      assert.eq(expected, Arr.map(actual, TestRenders.typeditem));
     };
 
     var checkFrom = function (expected, initial) {
