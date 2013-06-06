@@ -18,7 +18,7 @@ define(
     };
 
     var text = function (value) {
-      return TextGene('?', value);
+      return TextGene('?_' + value, value);
     };
 
     return {
