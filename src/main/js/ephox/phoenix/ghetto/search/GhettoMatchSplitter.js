@@ -4,11 +4,12 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
+    'ephox.phoenix.ghetto.search.GhettoListSplitter',
     'ephox.phoenix.ghetto.search.GhettoSplitter',
     'ephox.phoenix.util.arr.PositionArray'
   ],
 
-  function (Arr, Fun, GhettoSplitter, PositionArray) {
+  function (Arr, Fun, GhettoListSplitter, GhettoSplitter, PositionArray) {
     var separate = function (universe, list, matches) {
       var splitter = function (offset, item) {
         return GhettoSplitter.split(universe, offset, item);
@@ -48,7 +49,7 @@ define(
         }).join(', '));
       };
 
-      var structure = yipes(list, allPositions);
+      var structure = GhettoListSplitter.yipes(universe, list, allPositions);
       logList('Yipes: ', structure);
 
       // var structure = list;
