@@ -3,12 +3,12 @@ define(
 
   [
     'ephox.phoenix.api.DomSplit',
-    'ephox.phoenix.util.node.Range',
+    'ephox.phoenix.util.node.DomRange',
     'ephox.scullion.Struct',
     'ephox.sugar.api.Compare'
   ],
 
-  function (DomSplit, Range, Struct, Compare) {
+  function (DomSplit, DomRange, Struct, Compare) {
 
     // FIX: Rename me.
     var zz = Struct.immutable('element', 'offset');
@@ -25,7 +25,7 @@ define(
       }, function (v) {
         return zz(v, 1);
       });
-      return Range.range(start, finish);
+      return DomRange.range(start, finish);
     };
 
     var same = function (base, baseOffset, end, endOffset) {
