@@ -81,5 +81,11 @@ test(
     ], 'a', [ 1, 14, 15, 18 ], 0, Gene('root', 'root', [
       TextGene('a', '_abcdefghijklmnopqrstuvwxyz')
     ]));
+
+    checkSubdivide([ '_abcdefghijklmnopqrstuvwxyz' ], [
+      { id: 'a', start: 0, finish: 27 }
+    ], 'a', [ 100 ], 0, Gene('root', 'root', [
+      TextGene('a', '_abcdefghijklmnopqrstuvwxyz')
+    ]));
   }
 );

@@ -20,28 +20,41 @@ define(
           return position >= item.start() && position <= item.finish();
         };
 
+        var subdivide = function (item, points) {
+          var raw = GhettoSplitter.subdivide(universe, item.element(), points);
+          return PositionArray.translate(raw, item.start());
+        };
+
         return Arr.bind(list, function (unit) {
-          console.log('a: ', unit);
-          var relevant = Arr.filter(positions, function (pos) {
-            return inItem(unit, pos);
+          var relevant = Arr.bind(positions, function (pos) {
+            return inItem(unit, pos) ? [ pos - unit.start() ] : [];
           });
 
-          return relevant.length > 0 ? [] : [ unit ];
+          console.log('Unit: ', unit.start(), unit.finish(), 'relevant: ', relevant, 'text: ', universe.property().getText(unit.element()));
+
+          return relevant.length > 0 ? subdivide(unit, relevant) : [ unit ];
         });
       };
 
-      // var allPositions = Arr.bind(matches, function (match) {
-      //   console.log('match: ', match);
-      //   return [ match.start(), match.finish() ];
-      // });
+      var allPositions = Arr.bind(matches, function (match) {
+        return [ match.start(), match.finish() ];
+      });
 
-      // var structure = yipes(list, allPositions);
-      // console.log('structure: ', structure);
 
-      
-      var structure = list;
+      console.log('splitting at positions: ', allPositions);
+      var logList = function (label, plist) {
+        console.log(label, Arr.map(plist, function (unit) {
+          return unit.start() + '->' + unit.finish();
+        }).join(', '));
+      };
+
+      var structure = yipes(list, allPositions);
+      logList('Yipes: ', structure);
+
+      // var structure = list;
       return Arr.map(matches, function (y) {
-        structure = PositionArray.splitAt(structure, y.start(), y.finish(), splitter, splitter);
+        console.log('looking for elements: ', y.start(), y.finish());
+        // structure = PositionArray.splitAt(structure, y.start(), y.finish(), splitter, splitter);
         var sub = PositionArray.sub(structure, y.start(), y.finish());
         var information = Arr.foldl(sub, function (b, a) {
           var item = a.element();

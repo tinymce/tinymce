@@ -22,11 +22,15 @@ define(
         return [ unit ];
       }
     };
-    
+
     var subdivide = function (universe, item, positions) {
       var text = universe.property().getText(item);
-      var pieces = Split.split(text, positions);
-      if (pieces.length <= 1) return [ item ];
+      var pieces = Arr.filter(Split.split(text, positions), function (section) {
+        return section.length > 0;
+      });
+
+      console.log('pieces:', pieces);
+      if (pieces.length <= 1) return [ Spot.range(item, 0, text.length) ];
       universe.property().setText(item, pieces[0]);
       var others = PositionArray.make(pieces.slice(1), function (a, start) {
         var nu = universe.create().text(a);
