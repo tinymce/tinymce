@@ -13,7 +13,7 @@ test(
   ],
 
   function (Gene, TestUniverse, TextGene, Arr, Spot, GhettoSplitter, Finder, TestRenders) {
-    var check = function (toplevel, expected, id, start, finish, offset, data) {
+    var checkSplit = function (toplevel, expected, id, start, finish, offset, data) {
       var universe = TestUniverse(data);
       var item = Finder.get(universe, id);
       var actual = GhettoSplitter.split(universe, offset, Spot.range(item, start, finish));
@@ -29,30 +29,54 @@ test(
 
     };
 
-    check([ 'a' ], [ { id: 'a', start: 3, finish: 9 } ], 'a', 3, 9, 10, Gene('root', 'root', [
+    var checkSubdivide = function (toplevel, expected, id, positions, data) {
+      var universe = TestUniverse(data);
+      var item = Finder.get(universe, id);
+      var actual = GhettoSplitter.subdivide(universe, item, positions);
+      assert.eq(expected.length, actual.length, 'Incorrect size for subdivide test');
+      Arr.each(expected, function (exp, i) {
+        var act = actual[i];
+        console.log('act:', act);
+        assert.eq(exp.id, act.element().id);
+      });
+
+      assert.eq(toplevel, Arr.map(universe.get().children, TestRenders.text));
+    };
+
+    checkSplit([ 'a' ], [ { id: 'a', start: 3, finish: 9 } ], 'a', 3, 9, 10, Gene('root', 'root', [
       TextGene('a', 'cattle')
     ]));
 
-    check([ 'a', '?_attle' ], [
+    checkSplit([ 'a', '?_attle' ], [
       { id: 'a', start: 3, finish: 4 },
       { id: '?_attle', start: 4, finish: 9 }
     ], 'a', 3, 9, 4, Gene('root', 'root', [
       TextGene('a', 'cattle')
     ]));
-    check([ 'a' ], [
+    checkSplit([ 'a' ], [
       { id: 'a', start: 3, finish: 9 }
     ], 'a', 3, 9, 2, Gene('root', 'root', [
       TextGene('a', 'cattle')
     ]));
-    check([ 'a' ], [
+    checkSplit([ 'a' ], [
       { id: 'a', start: 3, finish: 9 }
     ], 'a', 3, 9, 9, Gene('root', 'root', [
       TextGene('a', 'cattle')
     ]));
-    check([ 'a' ], [
+    checkSplit([ 'a' ], [
       { id: 'a', start: 3, finish: 9 }
     ], 'a', 3, 9, 3, Gene('root', 'root', [
       TextGene('a', 'cattle')
+    ]));
+
+
+    checkSubdivide([ '_', 'abcdefghijklm', 'n', 'opqrstuvwxyz' ], [
+      { id: 'a', start: 0, finish: 1 },
+      { id: '?_abcdefghijklm', start: 1, finish: 14 },
+      { id: '?_n', start: 14, finish: 15 },
+      { id: '?_opqrstuvwxyz', start: 15, finish: 27 }
+    ], 'a', [ 1, 14, 15 ], Gene('root', 'root', [
+      TextGene('a', '_abcdefghijklmnopqrstuvwxyz')
     ]));
   }
 );
