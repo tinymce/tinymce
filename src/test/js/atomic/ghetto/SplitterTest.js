@@ -36,7 +36,6 @@ test(
       assert.eq(expected.length, actual.length, 'Incorrect size for subdivide test');
       Arr.each(expected, function (exp, i) {
         var act = actual[i];
-        console.log('act:', act);
         assert.eq(exp.id, act.element().id);
         assert.eq(exp.start, act.start(), 'comparing start for ' + exp.id + ': ' + exp.start + ' vs ' + act.start());
         assert.eq(exp.finish, act.finish(), 'comparing finish for ' + exp.id + ': ' + exp.finish + ' vs ' + act.finish());

@@ -9,6 +9,7 @@ define(
 
   function (Arr, GhettoSplitter, PositionArray) {
     var yipes = function (universe, list, positions) {
+      if (positions.length === 0) return list;
       // get all the positions that are within this item.
       var inItem = function (item, position) {
         return position >= item.start() && position <= item.finish();

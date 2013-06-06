@@ -76,7 +76,6 @@ define(
 
     var translate = function (list, offset) {
       return Arr.map(list, function (unit) {
-        console.log('unit: ', unit);
         return Merger.merge(unit, {
           start: Fun.constant(unit.start() + offset),
           finish: Fun.constant(unit.finish() + offset)

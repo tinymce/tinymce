@@ -29,7 +29,6 @@ define(
         return section.length > 0;
       });
 
-      console.log('pieces:', pieces);
       if (pieces.length <= 1) return [ Spot.range(item, 0, text.length) ];
       universe.property().setText(item, pieces[0]);
       var others = PositionArray.make(pieces.slice(1), function (a, start) {
