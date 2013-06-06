@@ -3,11 +3,12 @@ define(
 
   [
     'ephox.compass.Arr',
+    'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option'
   ],
 
-  function (Arr, Fun, Option) {
+  function (Arr, Merger, Fun, Option) {
 
     var make = function (xs, f, _start) {
 
@@ -73,11 +74,21 @@ define(
       return r;
     };
 
+    var translate = function (list, offset) {
+      return Arr.map(list, function (unit) {
+        return Merger.merge(unit, {
+          start: Fun.constant(unit.start() + offset),
+          finish: Fun.constant(unit.finish() + offset)
+        });
+      });
+    };
+
     return {
       make: make,
       getAt: getAt,
       splitAt: splitAt,
-      sub: sub
+      sub: sub,
+      translate: translate
     };
   }
 );

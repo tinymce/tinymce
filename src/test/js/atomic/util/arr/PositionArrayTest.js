@@ -88,5 +88,18 @@ test(
       check(['b', 'c'], 2, 13);
     })();
 
+    (function () {
+      var input = [['a', 2], ['b', 5], ['c', 6]];
+      var list = PositionArray.make(input, function (a, start) {
+        return Option.some(Tester(a[0], start, start + a[1]));
+      });
+
+      var actual = PositionArray.translate(list, 3);
+
+      assert.eq([['a', 3, 5], ['b', 5, 10], ['c', 10, 16]], Arr.map(actual, function (x) {
+        return [x.data(), x.start(), x.finish()];
+      }));
+    })();
+
   }
 );
