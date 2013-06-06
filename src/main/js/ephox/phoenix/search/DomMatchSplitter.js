@@ -1,5 +1,5 @@
 define(
-  'ephox.phoenix.search.MatchSplitter',
+  'ephox.phoenix.search.DomMatchSplitter',
 
   [
     'ephox.compass.Arr',

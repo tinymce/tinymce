@@ -6,7 +6,7 @@ define(
     'ephox.perhaps.Option',
     'ephox.phoenix.data.Spot',
     'ephox.phoenix.group.DomGroup',
-    'ephox.phoenix.search.MatchSplitter',
+    'ephox.phoenix.search.DomMatchSplitter',
     'ephox.phoenix.search.Safe',
     'ephox.phoenix.search.Sleuth',
     'ephox.phoenix.util.arr.PositionArray',
@@ -15,7 +15,7 @@ define(
     'ephox.sugar.api.Text'
   ],
 
-  function (Arr, Option, Spot, DomGroup, MatchSplitter, Safe, Sleuth, PositionArray, List, Struct, Text) {
+  function (Arr, Option, Spot, DomGroup, DomMatchSplitter, Safe, Sleuth, PositionArray, List, Struct, Text) {
 
     var WordPattern = Struct.immutable('word', 'pattern');
 
@@ -36,7 +36,7 @@ define(
         var matches = Sleuth.search(text, patterns);
         var structure = gen(input);
 
-        return MatchSplitter.separate(structure, matches);
+        return DomMatchSplitter.separate(structure, matches);
       });
 
       return result;
