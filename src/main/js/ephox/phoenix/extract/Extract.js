@@ -31,11 +31,7 @@ define(
     };
 
     var extract = function (child, offset) {
-      return Traverse.parent(child).fold(function () {
-        return Spot.point(child, offset);
-      }, function (v) {
-        return extractToElem(child, offset, v);
-      });
+      return GhettoExtract.extract(DomUniverse(), child, offset);
     };
 
     var extractTo = function (child, offset, pred) {

@@ -67,6 +67,13 @@ test(
       assert.eq(expected.offset, actual.offset());
     };
 
+    var checkExtractTo = function (expected, childId, offset, pred) {
+      var child = doc.find(doc.get(), childId).getOrDie();
+      var actual = GhettoExtract.extractTo(doc, child, offset, pred);
+      assert.eq(expected.id, actual.element().id);
+      assert.eq(expected.offset, actual.offset());
+    };
+
     checkFrom([
       'boundary(1)',
       'boundary(1.1)',
@@ -93,5 +100,9 @@ test(
       id: '1.2',
       offset: 'This is textinside a spanMore textInside em'.length
     }, '1.2.5', 0);
+
+    checkExtractTo({ id: '1.2', offset: 'This is textinside a spanMore text'.length + 2 }, '1.2.4.1', 2, function (item) {
+      return item.name === 'p';
+    });
   }
 );
