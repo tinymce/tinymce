@@ -15,7 +15,8 @@ test(
       Gene('root', 'root', [
         Gene('1', 'div', [
           Gene('1.1', 'p', [
-            Gene('1.1.1', 'img', [])
+            Gene('1.1.1', 'img', []),
+            TextGene('1.1.2', 'post-image text')
           ]),
           Gene('1.2', 'p', [
             TextGene('1.2.1', 'This is text'),
@@ -78,6 +79,7 @@ test(
       'boundary(1)',
       'boundary(1.1)',
       'empty(1.1.1)',
+      'text("post-image text")',
       'boundary(1.1)',
       'boundary(1.2)',
       'text("This is text")',
@@ -90,7 +92,7 @@ test(
     ], 'root');
 
     checkAll([
-      '1', '1.1', '1.1.1', '1.1', '1.2', '1.2.1', '1.2.2.1',
+      '1', '1.1', '1.1.1', '1.1.2', '1.1', '1.2', '1.2.1', '1.2.2.1',
       '1.2.3', '1.2.4.1', '1.2.5', '1.2', '1'
     ], 'root');
 
@@ -100,6 +102,7 @@ test(
       id: '1.2',
       offset: 'This is textinside a spanMore textInside em'.length
     }, '1.2.5', 0);
+    checkExtract({ id: '1.1', offset: 1 }, '1.1.2', 0);
 
     checkExtractTo({ id: '1.2', offset: 'This is textinside a spanMore text'.length + 2 }, '1.2.4.1', 2, function (item) {
       return item.name === 'p';
