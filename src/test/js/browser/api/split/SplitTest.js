@@ -1,15 +1,15 @@
 test(
-  'split.Split.split, split.Split.splitByPair',
+  'api.DomSplit.(split, splitByPair)',
 
   [
     'ephox.compass.Arr',
-    'ephox.phoenix.split.Split',
+    'ephox.phoenix.api.DomSplit',
     'ephox.phoenix.test.Page',
     'ephox.sugar.api.Text',
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Arr, Split, Page, Text, Traverse) {
+  function (Arr, DomSplit, Page, Text, Traverse) {
 
     /*
       <container><div1><p1>{t1:First paragraph}<p2>{t2:Second }<s1>{t3:here}<s2>{t4: is }<s3>{t5:something}
@@ -29,12 +29,12 @@ test(
     };
 
     var checkSplitByPair = function (expected, element, start, end) {
-      Split.splitByPair(element, start, end);
+      DomSplit.splitByPair(element, start, end);
       check(expected, element);
     };
 
     var checkSplit = function (expected, element, offset) {
-      Split.split(element, offset);
+      DomSplit.split(element, offset);
       check(expected, element);
     };
 
