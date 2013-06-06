@@ -3,7 +3,7 @@ test(
 
   [
     'ephox.compass.Arr',
-    'ephox.phoenix.search.Searcher',
+    'ephox.phoenix.search.DomSearcher',
     'ephox.phoenix.wrap.Wrapper',
     'ephox.phoenix.wrap.Wraps',
     'ephox.sugar.api.Attr',
@@ -14,7 +14,7 @@ test(
     'ephox.sugar.api.Remove'
   ],
 
-  function (Arr, Searcher, Wrapper, Wraps, Attr, Element, Html, Insert, InsertAll, Remove) {
+  function (Arr, DomSearcher, Wrapper, Wraps, Attr, Element, Html, Insert, InsertAll, Remove) {
     
     var text = Element.fromText('Sed ut perspiciatis unde omnis iste natus error sit voluptatem');
     var body = Element.fromDom(document.body);
@@ -29,7 +29,7 @@ test(
       Remove.empty(container);
       InsertAll.append(container, elements);
 
-      var snapshots = Searcher.safeWords(elements, words);
+      var snapshots = DomSearcher.safeWords(elements, words);
 
       Arr.each(snapshots, function (x) {
         Wrapper.wrapper(x.elements(), function () {

@@ -4,7 +4,7 @@ define(
   [
     'ephox.wrap.JQuery',
     'ephox.compass.Arr',
-    'ephox.phoenix.search.Searcher',
+    'ephox.phoenix.search.DomSearcher',
     'ephox.phoenix.wrap.Wrapper',
     'ephox.phoenix.wrap.Wraps',
     'ephox.sugar.api.Attr',
@@ -17,7 +17,7 @@ define(
     'text!html/content.html'
   ],
 
-  function ($, Arr, Searcher, Wrapper, Wraps, Attr, Class, Css, Element, Event, Insert, InsertAll, ContentHtml) {
+  function ($, Arr, DomSearcher, Wrapper, Wraps, Attr, Class, Css, Element, Event, Insert, InsertAll, ContentHtml) {
     return function () {
       var container = Element.fromTag('div');
 
@@ -40,14 +40,18 @@ define(
 
       Event.bind(button, 'click', function (event) {
         var token = Attr.get(input, 'value');
-        var matches = Searcher.safeToken([content], token);
-        highlight(matches);
+        if (token.length > 0) {
+          var matches = DomSearcher.safeToken([content], token);
+          highlight(matches);
+        }
       });
 
       Event.bind(buttonWord, 'click', function (event) {
         var word = Attr.get(input, 'value');
-        var matches = Searcher.safeWords([content], [word]);
-        highlight(matches);
+        if (word.length > 0) {
+          var matches = DomSearcher.safeWords([content], [word]);
+          highlight(matches);
+        }
       });
 
       var highlight = function (matches) {

@@ -1,5 +1,5 @@
 define(
-  'ephox.phoenix.search.Searcher',
+  'ephox.phoenix.search.DomSearcher',
 
   [
     'ephox.boss.api.DomUniverse',
@@ -35,9 +35,9 @@ define(
         var text = Arr.map(input, Text.get).join('');
 
         var matches = Sleuth.search(text, patterns);
-        var structure = gen(input);
+        var plist = gen(input);
 
-        return GhettoMatchSplitter.separate(universe, structure, matches);
+        return GhettoMatchSplitter.separate(universe, plist, matches);
       });
 
       return result;
@@ -52,7 +52,7 @@ define(
     };
 
     var safeToken = function (elements, token) {
-      var pattern = WordPattern(token ,Safe.token(token));
+      var pattern = WordPattern(token, Safe.token(token));
       return run(elements, [pattern]);
     };
 
