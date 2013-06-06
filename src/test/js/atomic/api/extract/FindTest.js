@@ -6,10 +6,11 @@ test(
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
     'ephox.perhaps.Option',
-    'ephox.phoenix.api.Extract'
+    'ephox.phoenix.api.Extract',
+    'ephox.phoenix.test.Finder'
   ],
 
-  function (Gene, TestUniverse, TextGene, Option, Extract) {
+  function (Gene, TestUniverse, TextGene, Option, Extract, Finder) {
     var doc = TestUniverse(
       Gene('root', 'root', [
         Gene('1', 'div', [
@@ -33,7 +34,7 @@ test(
     );
 
     var check = function (expected, topId, offset) {
-      var top = doc.find(doc.get(), topId).getOrDie();
+      var top = Finder.get(doc, topId);
       var actual = Extract.find(doc, top, offset);
       expected.fold(function () {
         assert.eq(actual.isNone(), true, 'Expected none, actual: some');

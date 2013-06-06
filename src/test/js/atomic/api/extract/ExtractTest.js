@@ -6,10 +6,11 @@ test(
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
     'ephox.compass.Arr',
-    'ephox.phoenix.api.Extract'
+    'ephox.phoenix.api.Extract',
+    'ephox.phoenix.test.Finder'
   ],
 
-  function (Gene, TestUniverse, TextGene, Arr, Extract) {
+  function (Gene, TestUniverse, TextGene, Arr, Extract, Finder) {
 
     var doc = TestUniverse(
       Gene('root', 'root', [
@@ -34,7 +35,7 @@ test(
     );
 
     var check = function (expected, extract, initial) {
-      var start = doc.find(doc.get(), initial).getOrDie();
+      var start = Finder.get(doc, initial);
       var actual = extract(doc, start);
       assert.eq(expected, Arr.map(actual, function (a) {
         return a.fold(function (item) {
@@ -52,7 +53,7 @@ test(
     };
 
     var checkAll = function (expected, initial) {
-      var start = doc.find(doc.get(), initial).getOrDie();
+      var start = Finder.get(doc, initial);
       var actual = Extract.all(doc, start);
       assert.eq(expected, Arr.map(actual, function (a) {
         return a.id;
@@ -62,14 +63,14 @@ test(
     //
     // var extract = function (universe, child, offset) {
     var checkExtract = function (expected, childId, offset) {
-      var child = doc.find(doc.get(), childId).getOrDie();
+      var child = Finder.get(doc, childId);
       var actual = Extract.extract(doc, child, offset);
       assert.eq(expected.id, actual.element().id);
       assert.eq(expected.offset, actual.offset());
     };
 
     var checkExtractTo = function (expected, childId, offset, pred) {
-      var child = doc.find(doc.get(), childId).getOrDie();
+      var child = Finder.get(doc, childId);
       var actual = Extract.extractTo(doc, child, offset, pred);
       assert.eq(expected.id, actual.element().id);
       assert.eq(expected.offset, actual.offset());

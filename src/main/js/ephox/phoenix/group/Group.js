@@ -10,6 +10,7 @@ define(
   function (Arr, DomExtract, Split) {
 
     var group = function (elements) {
+      // return [];
       var extractions = Arr.bind(elements, DomExtract.from);
       var segments = Split.split(extractions, function (x) {
         return x.isBoundary();

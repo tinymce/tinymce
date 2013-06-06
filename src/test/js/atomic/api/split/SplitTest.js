@@ -6,10 +6,11 @@ test(
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
     'ephox.perhaps.Option',
-    'ephox.phoenix.api.Split'
+    'ephox.phoenix.api.Split',
+    'ephox.phoenix.test.Finder'
   ],
 
-  function (Gene, TestUniverse, TextGene, Option, Split) {
+  function (Gene, TestUniverse, TextGene, Option, Split, Finder) {
     var generate = function (text) {
       var universe = TestUniverse(
         Gene('root', 'root', [
@@ -17,7 +18,7 @@ test(
         ])
       );
 
-      var item = universe.find(universe.get(), 'generate_text').getOrDie();
+      var item = Finder.get(universe, 'generate_text');
       return {
         universe: universe,
         item: item

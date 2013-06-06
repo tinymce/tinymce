@@ -6,10 +6,11 @@ test(
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
     'ephox.compass.Arr',
-    'ephox.phoenix.ghetto.family.GhettoRange'
+    'ephox.phoenix.ghetto.family.GhettoRange',
+    'ephox.phoenix.test.Finder'
   ],
 
-  function (Gene, TestUniverse, TextGene, Arr, GhettoRange) {
+  function (Gene, TestUniverse, TextGene, Arr, GhettoRange, Finder) {
     var doc = TestUniverse(
       Gene('root', 'root', [
         Gene('a', '', [
@@ -43,8 +44,8 @@ test(
     );
 
     var check = function (expected, startId, finishId, delta1, delta2) {
-      var start = doc.find(doc.get(), startId).getOrDie();
-      var finish = doc.find(doc.get(), finishId).getOrDie();
+      var start = Finder.get(doc, startId);
+      var finish = Finder.get(doc, finishId);
       var actual = GhettoRange.range(doc, start, delta1, finish, delta2);
       assert.eq(expected, Arr.map(actual, function (x) { return x.id; }));
     };

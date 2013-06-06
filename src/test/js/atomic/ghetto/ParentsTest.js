@@ -4,10 +4,11 @@ test(
   [
     'ephox.boss.api.Gene',
     'ephox.boss.api.TestUniverse',
-    'ephox.phoenix.ghetto.family.GhettoParents'
+    'ephox.phoenix.ghetto.family.GhettoParents',
+    'ephox.phoenix.test.Finder'
   ],
 
-  function (Gene, TestUniverse, GhettoParents) {
+  function (Gene, TestUniverse, GhettoParents, Finder) {
     var doc = TestUniverse(
       Gene('root', 'root', [
         Gene('a', '', [
@@ -40,8 +41,8 @@ test(
     );
 
     var check = function (expected, first, last) {
-      var start = doc.find(doc.get(), first).getOrDie();
-      var finish = doc.find(doc.get(), last).getOrDie();
+      var start = Finder.get(doc, first);
+      var finish = Finder.get(doc, last);
       var actual = GhettoParents.common(doc, start, finish);
       assert.eq(expected, actual.getOrDie().id);
     };
