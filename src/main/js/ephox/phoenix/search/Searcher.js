@@ -3,21 +3,19 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.phoenix.data.Spot',
     'ephox.phoenix.group.DomGroup',
+    'ephox.phoenix.search.MatchSplitter',
     'ephox.phoenix.search.Safe',
     'ephox.phoenix.search.Sleuth',
-    'ephox.phoenix.search.Splitter',
     'ephox.phoenix.util.arr.PositionArray',
     'ephox.phoenix.util.doc.List',
-    'ephox.phoenix.util.str.Find',
     'ephox.scullion.Struct',
     'ephox.sugar.api.Text'
   ],
 
-  function (Arr, Fun, Option, Spot, DomGroup, Safe, Sleuth, Splitter, PositionArray, List, Find, Struct, Text) {
+  function (Arr, Option, Spot, DomGroup, MatchSplitter, Safe, Sleuth, PositionArray, List, Struct, Text) {
 
     var WordPattern = Struct.immutable('word', 'pattern');
 
@@ -38,16 +36,7 @@ define(
         var matches = Sleuth.search(text, patterns);
         var structure = gen(input);
 
-        /* Not great that structure changes outside and inside the map */
-        return Arr.map(matches, function (y) {
-          structure = PositionArray.splitAt(structure, y.start(), y.finish(), Splitter.split, Splitter.split);
-          var sub = PositionArray.sub(structure, y.start(), y.finish());
-          return {
-            elements: Fun.constant(Arr.map(sub, function (z) { return z.element(); })),
-            word: y.word,
-            exact: Fun.constant(text.substring(y.start(), y.finish()))
-          };
-        });
+        return MatchSplitter.separate(structure, matches);
       });
 
       return result;
