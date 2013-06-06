@@ -47,7 +47,6 @@ define(
 
       var len = function () {
         return fold(Fun.constant(0), Fun.constant(1), function (item, universe) {
-          console.log('item: ', item);
           return universe.property().getText(item).length;
         });
       };

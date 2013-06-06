@@ -48,7 +48,6 @@ define(
       var extractions = typed(universe, item);
       var prior = List.dropUntil(extractions, child);
       var count = List.count(prior);
-      console.log('prior: ', count);
       return Spot.point(item, count + offset);
     };
 
