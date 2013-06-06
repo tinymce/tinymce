@@ -4,13 +4,13 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
-    'ephox.phoenix.extract.Extract',
+    'ephox.phoenix.api.DomExtract',
     'ephox.phoenix.util.node.Parents',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Node'
   ],
 
-  function (Arr, Fun, Extract, Parents, Compare, Node) {
+  function (Arr, Fun, DomExtract, Parents, Compare, Node) {
 
     var curry = Fun.curry;
     
@@ -21,7 +21,7 @@ define(
         return [];
       }, function (v) {
 
-        var nodes = Arr.bind(Extract.from(v), function (x) {
+        var nodes = Arr.bind(DomExtract.from(v), function (x) {
           var no = Fun.constant([]);
           return x.fold(no, Fun.identity, Fun.identity);
         });

@@ -3,14 +3,14 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.phoenix.extract.Extract',
+    'ephox.phoenix.api.DomExtract',
     'ephox.phoenix.util.arr.Split'
   ],
 
-  function (Arr, Extract, Split) {
+  function (Arr, DomExtract, Split) {
 
     var group = function (elements) {
-      var extractions = Arr.bind(elements, Extract.from);
+      var extractions = Arr.bind(elements, DomExtract.from);
       var segments = Split.split(extractions, function (x) {
         return x.isBoundary();
       });

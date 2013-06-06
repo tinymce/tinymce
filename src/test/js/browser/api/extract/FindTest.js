@@ -3,12 +3,11 @@ test(
 
   [
     'ephox.phoenix.api.DomExtract',
-    'ephox.phoenix.extract.Find',
     'ephox.phoenix.test.Page',
     'ephox.sugar.api.Compare'
   ],
 
-  function (DomExtract, Find, Page, Compare) {
+  function (DomExtract, Page, Compare) {
 
     var check = function (eNode, eOffset, pNode, pOffset) {
       var actual = DomExtract.find(pNode, pOffset).getOrDie();
@@ -17,7 +16,7 @@ test(
     };
 
     var checkNone = function (pNode, pOffset) {
-      assert.eq(true, Find.find(pNode, pOffset).isNone());
+      assert.eq(true, DomExtract.find(pNode, pOffset).isNone());
     };
 
     var page = Page();
