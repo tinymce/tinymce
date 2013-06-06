@@ -1,5 +1,5 @@
 define(
-  'ephox.phoenix.group.Group',
+  'ephox.phoenix.group.DomGroup',
 
   [
     'ephox.boss.api.DomUniverse',

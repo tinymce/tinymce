@@ -6,7 +6,7 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.phoenix.data.Spot',
-    'ephox.phoenix.group.Group',
+    'ephox.phoenix.group.DomGroup',
     'ephox.phoenix.search.Safe',
     'ephox.phoenix.search.Splitter',
     'ephox.phoenix.util.arr.PositionArray',
@@ -16,7 +16,7 @@ define(
     'ephox.sugar.api.Text'
   ],
 
-  function (Arr, Fun, Option, Spot, Group, Safe, Splitter, PositionArray, List, Find, Struct, Text) {
+  function (Arr, Fun, Option, Spot, DomGroup, Safe, Splitter, PositionArray, List, Find, Struct, Text) {
 
     var WordMatch = Struct.immutable('word', 'start', 'finish');
     var WordPattern = Struct.immutable('word', 'pattern');
@@ -39,7 +39,7 @@ define(
     };
 
     var run = function (elements, patterns) {
-      var sections = Group.group(elements);
+      var sections = DomGroup.group(elements);
       var result = Arr.bind(sections, function (x) {
         var input = List.justText(x);
         var text = Arr.map(input, Text.get).join('');
