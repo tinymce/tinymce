@@ -37,8 +37,13 @@
 			function resize() {
 				var deltaSize, d = ed.getDoc(), body = d.body, de = d.documentElement, DOM = tinymce.DOM, resizeHeight = t.autoresize_min_height, myHeight;
 
-				// Get height differently depending on the browser used
-				myHeight = tinymce.isIE ? body.scrollHeight : (tinymce.isWebKit && body.clientHeight == 0 ? 0 : body.offsetHeight);
+				// null checks
+				if(!body) {
+					return;
+				}
+
+				// Use jquery to get outer height, including margins
+				myHeight = $(body).outerHeight(true);
 
 				// Don't make it smaller than the minimum height
 				if (myHeight > t.autoresize_min_height)
@@ -76,9 +81,15 @@
 			// Define maximum height
 			t.autoresize_max_height = parseInt(ed.getParam('autoresize_max_height', 0));
 
-			// Add padding at the bottom for better UX
+			// Add padding at the bottom for better UX, and other styles so the <body> fits within the iframe correctly
 			ed.onInit.add(function(ed){
-				ed.dom.setStyle(ed.getBody(), 'paddingBottom', ed.getParam('autoresize_bottom_margin', 50) + 'px');
+				ed.dom.setStyles(ed.getBody(), {
+					'padding-bottom': ed.getParam('autoresize_bottom_margin', 50) + 'px',
+					'display:': 'inline-block',
+					'position': 'absolute',
+					'left': 0,
+					'right': 0
+				})
 			});
 
 			// Add appropriate listeners for resizing content area
