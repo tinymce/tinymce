@@ -7,10 +7,11 @@ test(
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.InsertAll',
+    'ephox.sugar.api.Remove',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Option, CharNeighbour, Element, Insert, InsertAll, SelectorFind) {
+  function (Option, CharNeighbour, Element, Insert, InsertAll, Remove, SelectorFind) {
 
     
 
@@ -58,6 +59,8 @@ test(
     check(Option.some('e'), Option.none(), tf, 5);
     check(Option.none(), Option.some('r'), ta, 0);
     check(Option.none(), Option.some('a'), tg, 0);
+
+    Remove.remove(div);
 
   }
 );

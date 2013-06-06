@@ -5,10 +5,11 @@ define(
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.InsertAll',
+    'ephox.sugar.api.Remove',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Element, Insert, InsertAll, SelectorFind) {
+  function (Element, Insert, InsertAll, Remove, SelectorFind) {
 
         
     /*
@@ -64,6 +65,10 @@ define(
         Insert.append(body, container);
       };
 
+      var disconnect = function () {
+        Remove.remove(container);
+      };
+
       return {
         container: container,
         div1: div1,
@@ -87,7 +92,8 @@ define(
         t9: t9,
         t10: t10,
 
-        connect: connect
+        connect: connect,
+        disconnect: disconnect
       };
     };
 
