@@ -1,16 +1,15 @@
 test(
-  'SplitTest',
+  'api.Split.(split,splitByPair)',
 
   [
     'ephox.boss.api.Gene',
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
-    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.phoenix.ghetto.split.GhettoSplit'
+    'ephox.phoenix.api.Split'
   ],
 
-  function (Gene, TestUniverse, TextGene, Fun, Option, GhettoSplit) {
+  function (Gene, TestUniverse, TextGene, Option, Split) {
     var generate = function (text) {
       var universe = TestUniverse(
         Gene('root', 'root', [
@@ -37,14 +36,14 @@ test(
 
     var checkSplit = function (before, after, text, position) {
       var input = generate(text);
-      var actual = GhettoSplit.split(input.universe, input.item, position);
+      var actual = Split.split(input.universe, input.item, position);
       assert.eq(true, isEq(before, actual.before()));
       assert.eq(true, isEq(after, actual.after()));
     };
 
     var checkPair = function (expected, middle, text, start, finish) {
       var input = generate(text);
-      var actual = GhettoSplit.splitByPair(input.universe, input.item, start, finish);
+      var actual = Split.splitByPair(input.universe, input.item, start, finish);
       assert.eq(middle, actual.text);
       assert.eq(expected, input.universe.shortlog(function (item) {
         return item.name === 'TEXT_GENE' ? 'text("' + item.text + '")' : item.id;
