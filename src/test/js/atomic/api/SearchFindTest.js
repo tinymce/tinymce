@@ -1,15 +1,15 @@
 test(
-  'FindTest',
+  'api.Search.findall',
 
   [
     'ephox.compass.Arr',
-    'ephox.polaris.search.Find',
+    'ephox.polaris.api.Search',
     'ephox.polaris.search.Pattern'
   ],
 
-  function (Arr, Find, Pattern) {
+  function (Arr, Search, Pattern) {
     var checkAll = function (expected, input, pattern) {
-      var actual = Find.all(input, pattern);
+      var actual = Search.findall(input, pattern);
       assert.eq(expected.length, actual.length);
       Arr.each(expected, function (exp, i) {
         assert.eq(exp[0], actual[i].start());
