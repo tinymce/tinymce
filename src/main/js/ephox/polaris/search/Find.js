@@ -12,8 +12,8 @@ define(
       var r = [];
       var match = term.exec(input);
       while (match) {
-        var start = match.index + pattern.preOffset(match);
-        var length = match[0].length - pattern.preOffset(match) - pattern.postOffset(match);
+        var start = match.index + pattern.prefix(match);
+        var length = match[0].length - pattern.prefix(match) - pattern.suffix(match);
         r.push({
           start: Fun.constant(start),
           finish: Fun.constant(start + length)

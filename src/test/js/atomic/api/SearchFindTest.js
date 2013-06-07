@@ -3,11 +3,11 @@ test(
 
   [
     'ephox.compass.Arr',
-    'ephox.polaris.api.Search',
-    'ephox.polaris.search.Pattern'
+    'ephox.polaris.api.Pattern',
+    'ephox.polaris.api.Search'
   ],
 
-  function (Arr, Search, Pattern) {
+  function (Arr, Pattern, Search) {
     var checkAll = function (expected, input, pattern) {
       var actual = Search.findall(input, pattern);
       assert.eq(expected.length, actual.length);
@@ -17,22 +17,22 @@ test(
       });
     };
 
-    checkAll([], 'eskimo', Pattern.token('hi'));
-    checkAll([[1, 7]], ' cattle', Pattern.token('cattle'));
-    checkAll([], 'acattle', Pattern.word('cattle'));
-    checkAll([[1, 7]], ' cattle', Pattern.word('cattle'));
+    checkAll([], 'eskimo', Pattern.unsafetoken('hi'));
+    checkAll([[1, 7]], ' cattle', Pattern.unsafetoken('cattle'));
+    checkAll([], 'acattle', Pattern.unsafeword('cattle'));
+    checkAll([[1, 7]], ' cattle', Pattern.unsafeword('cattle'));
 
-    checkAll([[3, 7], [10, 14]], "no it's i it's done.", Pattern.token("it's"));
-    checkAll([[0, 12]], "catastrophe'", Pattern.token("catastrophe'"));
+    checkAll([[3, 7], [10, 14]], "no it's i it's done.", Pattern.unsafetoken("it's"));
+    checkAll([[0, 12]], "catastrophe'", Pattern.unsafetoken("catastrophe'"));
 
-    checkAll([[0, 3]], 'sre', Pattern.word('sre'));
-    checkAll([[0, 3]], 'sre ', Pattern.word('sre'));
-    checkAll([[1, 4]], ' sre', Pattern.word('sre'));
-    checkAll([[1, 4]], ' sre ', Pattern.word('sre'));
-    checkAll([[0, 3], [4, 7]], 'sre sre', Pattern.word('sre'));
-    checkAll([[1, 4], [5, 8]], ' sre sre', Pattern.word('sre'));
-    checkAll([[1, 4], [5, 8], [9, 12]], ' sre sre sre', Pattern.word('sre'));
-    checkAll([[1, 4], [5, 8], [9, 12]], ' sre sre sre ', Pattern.word('sre'));
+    checkAll([[0, 3]], 'sre', Pattern.unsafeword('sre'));
+    checkAll([[0, 3]], 'sre ', Pattern.unsafeword('sre'));
+    checkAll([[1, 4]], ' sre', Pattern.unsafeword('sre'));
+    checkAll([[1, 4]], ' sre ', Pattern.unsafeword('sre'));
+    checkAll([[0, 3], [4, 7]], 'sre sre', Pattern.unsafeword('sre'));
+    checkAll([[1, 4], [5, 8]], ' sre sre', Pattern.unsafeword('sre'));
+    checkAll([[1, 4], [5, 8], [9, 12]], ' sre sre sre', Pattern.unsafeword('sre'));
+    checkAll([[1, 4], [5, 8], [9, 12]], ' sre sre sre ', Pattern.unsafeword('sre'));
 
   }
 );

@@ -1,5 +1,5 @@
 define(
-  'ephox.polaris.search.Chars',
+  'ephox.polaris.pattern.Chars',
 
   [
     'ephox.peanut.Fun'
