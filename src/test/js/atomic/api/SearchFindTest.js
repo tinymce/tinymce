@@ -1,5 +1,5 @@
 test(
-  'api.Search.findall',
+  'api.Search.findall (using api.Pattern)',
 
   [
     'ephox.compass.Arr',

@@ -1,5 +1,5 @@
 test(
-  'ParrayTranslateTest',
+  'api.PositionArray.translate',
 
   [
     'ephox.polaris.api.PositionArray',

@@ -1,5 +1,5 @@
 test(
-  'ParraySplitTest',
+  'api.PositionArray.splits',
 
   [
     'ephox.polaris.api.PositionArray',

@@ -1,5 +1,5 @@
 test(
-  'ParrayGenerateTest',
+  'api.PositionArray.generate',
 
   [
     'ephox.compass.Arr',

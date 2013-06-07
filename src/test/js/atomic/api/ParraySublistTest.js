@@ -1,5 +1,5 @@
 test(
-  'ParraySublistTest',
+  'api.PositionArray.sublist',
 
   [
     'ephox.polaris.api.PositionArray',

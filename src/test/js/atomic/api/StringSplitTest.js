@@ -1,5 +1,5 @@
 test(
-  'split.Strings',
+  'api.Strings.splits',
 
   [
     'ephox.polaris.api.Strings'
