@@ -25,11 +25,16 @@ define(
       return Translate.translate(parray, amount);
     };
 
+    var sublist = function (parray, start, finish) {
+      return Query.sublist(parray, start, finish);
+    };
+
     return {
       generate: generate,
       get: get,
       splits: splits,
-      translate: translate
+      translate: translate,
+      sublist: sublist
     };
   }
 );
