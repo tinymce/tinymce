@@ -6,14 +6,13 @@ define(
   ],
 
   function (Arr) {
-    /* Note: Changed this so that it didn't return empty strings (value ternary) */
     var splits = function (value, indices) {
       if (indices.length === 0) return [value];
       var divisions = Arr.foldl(indices, function (acc, x) {
         var part = value.substring(acc.prev, x);
         return {
           prev: x,
-          values: part.length ? acc.values.concat([part]) : acc.values
+          values: acc.values.concat([part])
         };
       }, { prev: 0, values: [] });
 

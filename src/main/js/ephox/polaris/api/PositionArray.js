@@ -9,8 +9,8 @@ define(
   ],
 
   function (Generator, Query, Split, Translate) {
-    var generate = function (items, generator) {
-      return Generator.make(items, generator);
+    var generate = function (items, generator, _start) {
+      return Generator.make(items, generator, _start);
     };
 
     var get = function (parray, offset) {
