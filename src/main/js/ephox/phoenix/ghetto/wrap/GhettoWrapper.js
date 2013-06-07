@@ -3,18 +3,10 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.phoenix.ghetto.wrap.GhettoIdentify',
-    'ephox.phoenix.ghetto.wrap.GhettoWraps'
+    'ephox.phoenix.ghetto.wrap.GhettoIdentify'
   ],
 
-  function (Arr, GhettoIdentify, GhettoWraps) {
-
-    var wrap = function (universe, base, baseOffset, end, endOffset) {
-      return wrapWith(base, baseOffset, end, endOffset, function () {
-        return GhettoWraps.simple(universe);
-      });
-    };
-
+  function (Arr, GhettoIdentify) {
     var wrapWith = function (universe, base, baseOffset, end, endOffset, nu) {
       var nodes = GhettoIdentify.nodes(universe, base, baseOffset, end, endOffset);
       return wrapper(universe, nodes, nu);
@@ -36,7 +28,6 @@ define(
     };
 
     return {
-      wrap: wrap,
       wrapWith: wrapWith,
       wrapper: wrapper
     };

@@ -9,10 +9,6 @@ define(
   function (DomUniverse, GhettoWrapper) {
     var universe = DomUniverse();
 
-    var wrap = function (base, baseOffset, end, endOffset) {
-      return GhettoWrapper.wrap(universe, base, baseOffset, end, endOffset);
-    };
-
     var wrapWith = function (base, baseOffset, end, endOffset, c) {
       return GhettoWrapper.wrapWith(universe, base, baseOffset, end, endOffset, c);
     };
@@ -22,7 +18,6 @@ define(
     };
 
     return {
-      wrap: wrap,
       wrapWith: wrapWith,
       wrapper: wrapper
     };
