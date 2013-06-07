@@ -352,6 +352,8 @@ define("tinymce/tableplugin/Plugin", [
 					var data = this.toJSON(), tableElm, oldParentElm, parentElm;
 
 					editor.undoManager.transact(function() {
+						var toType = data.type;
+
 						each(rows, function(rowElm) {
 							editor.dom.setAttrib(rowElm, 'scope', data.scope);
 
@@ -359,13 +361,13 @@ define("tinymce/tableplugin/Plugin", [
 								height: addSizeSuffix(data.height)
 							});
 
-							if (data.type != rowElm.parentNode.nodeName.toLowerCase()) {
+							if (toType != rowElm.parentNode.nodeName.toLowerCase()) {
 								tableElm = dom.getParent(rowElm, 'table');
 
 								oldParentElm = rowElm.parentNode;
-								parentElm = dom.select(tableElm, data.type)[0];
+								parentElm = dom.select(toType, tableElm)[0];
 								if (!parentElm) {
-									parentElm = dom.create(data.type);
+									parentElm = dom.create(toType);
 									if (tableElm.firstChild) {
 										tableElm.insertBefore(parentElm, tableElm.firstChild);
 									} else {
@@ -373,7 +375,7 @@ define("tinymce/tableplugin/Plugin", [
 									}
 								}
 
-								parentElm.insertBefore(rowElm, parentElm.firstChild);
+								parentElm.appendChild(rowElm);
 
 								if (!oldParentElm.hasChildNodes()) {
 									dom.remove(oldParentElm);
