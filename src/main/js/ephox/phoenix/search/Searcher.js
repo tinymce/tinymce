@@ -5,7 +5,7 @@ define(
     'ephox.compass.Arr',
     'ephox.perhaps.Option',
     'ephox.phoenix.api.data.Spot',
-    'ephox.phoenix.family.Group',
+    'ephox.phoenix.api.general.Family',
     'ephox.phoenix.search.MatchSplitter',
     'ephox.phoenix.search.Sleuth',
     'ephox.phoenix.util.doc.List',
@@ -14,7 +14,7 @@ define(
     'ephox.scullion.Struct'
   ],
 
-  function (Arr, Option, Spot, Group, MatchSplitter, Sleuth, List, Pattern, PositionArray, Struct) {
+  function (Arr, Option, Spot, Family, MatchSplitter, Sleuth, List, Pattern, PositionArray, Struct) {
     var namedPattern = Struct.immutable('word', 'pattern');
 
     var gen = function (universe, input) {
@@ -25,7 +25,7 @@ define(
     };
 
     var run = function (universe, elements, patterns) {
-      var sections = Group.group(universe, elements);
+      var sections = Family.group(universe, elements);
       var result = Arr.bind(sections, function (x) {
         var input = List.justText(x);
         var text = Arr.map(input, universe.property().getText).join('');

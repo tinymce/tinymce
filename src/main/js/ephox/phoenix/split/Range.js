@@ -3,11 +3,11 @@ define(
 
   [
     'ephox.phoenix.api.data.Spot',
-    'ephox.phoenix.family.Range',
+    'ephox.phoenix.api.general.Family',
     'ephox.phoenix.split.Split'
   ],
 
-  function (Spot, Range, Split) {
+  function (Spot, Family, Split) {
     var diff = function (universe, base, baseOffset, end, endOffset) {
       var start = Split.split(universe, base, baseOffset).after().fold(function () {
         return Spot.point(base, 1);
@@ -20,7 +20,7 @@ define(
       }, function (before) {
         return Spot.point(before, 1);
       });
-      return Range.range(universe, start.element(), start.offset(), finish.element(), finish.offset());
+      return Family.range(universe, start.element(), start.offset(), finish.element(), finish.offset());
     };
 
     var same = function (universe, base, baseOffset, end, endOffset) {
