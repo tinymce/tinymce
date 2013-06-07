@@ -1,5 +1,5 @@
 test(
-  'ArraysTest',
+  'api.Arrays.splitBy',
 
   [
     'ephox.peanut.Fun',

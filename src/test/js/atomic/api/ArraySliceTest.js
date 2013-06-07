@@ -1,5 +1,5 @@
 test(
-  'SliceTest',
+  'api.Arrays.sliceBy',
 
   [
     'ephox.polaris.array.Slice'
