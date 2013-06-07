@@ -6,7 +6,7 @@ test(
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
     'ephox.perhaps.Option',
-    'ephox.phoenix.api.Split',
+    'ephox.phoenix.api.general.Split',
     'ephox.phoenix.test.Finder'
   ],
 

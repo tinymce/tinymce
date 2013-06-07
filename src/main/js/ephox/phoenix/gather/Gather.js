@@ -4,7 +4,7 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
-    'ephox.phoenix.data.Focus',
+    'ephox.phoenix.api.data.Focus',
     'ephox.phoenix.gather.Traversal',
     'ephox.sugar.api.Traverse'
   ],

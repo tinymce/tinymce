@@ -3,7 +3,7 @@ test(
 
   [
     'ephox.compass.Arr',
-    'ephox.phoenix.api.DomSplit',
+    'ephox.phoenix.api.dom.DomSplit',
     'ephox.phoenix.test.Page',
     'ephox.sugar.api.Text',
     'ephox.sugar.api.Traverse'

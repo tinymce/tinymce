@@ -3,9 +3,8 @@ test(
 
   [
     'ephox.compass.Arr',
-    'ephox.phoenix.search.DomSearcher',
-    'ephox.phoenix.wrap.DomWrapper',
-    'ephox.phoenix.wrap.DomWraps',
+    'ephox.phoenix.api.dom.DomSearch',
+    'ephox.phoenix.api.dom.DomWrapping',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Html',
@@ -14,7 +13,7 @@ test(
     'ephox.sugar.api.Remove'
   ],
 
-  function (Arr, DomSearcher, DomWrapper, DomWraps, Attr, Element, Html, Insert, InsertAll, Remove) {
+  function (Arr, DomSearch, DomWrapping, Attr, Element, Html, Insert, InsertAll, Remove) {
     
     var text = Element.fromText('Sed ut perspiciatis unde omnis iste natus error sit voluptatem');
     var body = Element.fromDom(document.body);
@@ -29,13 +28,13 @@ test(
       Remove.empty(container);
       InsertAll.append(container, elements);
 
-      var snapshots = DomSearcher.safeWords(elements, words);
+      var snapshots = DomSearch.safeWords(elements, words);
 
       Arr.each(snapshots, function (x) {
-        DomWrapper.wrapper(x.elements(), function () {
+        DomWrapping.wrapper(x.elements(), function () {
           var span = Element.fromTag('span');
           Attr.set(span, 'data-word', x.word());
-          return DomWraps(span);
+          return DomWrapping.nu(span);
         });
       });
 

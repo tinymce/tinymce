@@ -3,7 +3,7 @@ test(
 
   [
     'ephox.compass.Arr',
-    'ephox.phoenix.api.DomExtract',
+    'ephox.phoenix.api.dom.DomExtract',
     'ephox.phoenix.test.Page',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Text'

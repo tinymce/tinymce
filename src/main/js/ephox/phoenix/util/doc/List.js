@@ -5,7 +5,7 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.phoenix.data.Spot',
+    'ephox.phoenix.api.data.Spot',
     'ephox.polaris.api.Arrays'
   ],
 

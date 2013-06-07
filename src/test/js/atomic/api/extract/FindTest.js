@@ -6,7 +6,7 @@ test(
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
     'ephox.perhaps.Option',
-    'ephox.phoenix.api.Extract',
+    'ephox.phoenix.api.general.Extract',
     'ephox.phoenix.test.Finder'
   ],
 

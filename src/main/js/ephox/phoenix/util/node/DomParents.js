@@ -3,14 +3,14 @@ define(
 
   [
     'ephox.boss.api.DomUniverse',
-    'ephox.phoenix.ghetto.family.GhettoParents'
+    'ephox.phoenix.family.Parents'
   ],
 
-  function (DomUniverse, GhettoParents) {
+  function (DomUniverse, Parents) {
     var universe = DomUniverse();
 
     var common = function (e1, e2) {
-      return GhettoParents.common(universe, e1, e2);
+      return Parents.common(universe, e1, e2);
     };
 
     return {

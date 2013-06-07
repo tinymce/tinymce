@@ -4,9 +4,8 @@ define(
   [
     'ephox.wrap.JQuery',
     'ephox.compass.Arr',
-    'ephox.phoenix.search.DomSearcher',
-    'ephox.phoenix.wrap.DomWrapper',
-    'ephox.phoenix.wrap.DomWraps',
+    'ephox.phoenix.api.dom.DomSearch',
+    'ephox.phoenix.api.dom.DomWrapping',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Css',
@@ -17,7 +16,7 @@ define(
     'text!html/content.html'
   ],
 
-  function ($, Arr, DomSearcher, DomWrapper, DomWraps, Attr, Class, Css, Element, Event, Insert, InsertAll, ContentHtml) {
+  function ($, Arr, DomSearch, DomWrapping, Attr, Class, Css, Element, Event, Insert, InsertAll, ContentHtml) {
     return function () {
       var container = Element.fromTag('div');
 
@@ -35,13 +34,13 @@ define(
         var c = Element.fromTag('span');
         Class.add(c, 'highlighted');
         Css.set(c, 'background-color', '#cadbee');
-        return DomWraps(c);
+        return DomWrapping.nu(c);
       };
 
       Event.bind(button, 'click', function (event) {
         var token = Attr.get(input, 'value');
         if (token.length > 0) {
-          var matches = DomSearcher.safeToken([content], token);
+          var matches = DomSearch.safeToken([content], token);
           highlight(matches);
         }
       });
@@ -49,14 +48,14 @@ define(
       Event.bind(buttonWord, 'click', function (event) {
         var word = Attr.get(input, 'value');
         if (word.length > 0) {
-          var matches = DomSearcher.safeWords([content], [word]);
+          var matches = DomSearch.safeWords([content], [word]);
           highlight(matches);
         }
       });
 
       var highlight = function (matches) {
         Arr.each(matches, function (x) {
-          DomWrapper.wrapper(x.elements(), wrapper);
+          DomWrapping.wrapper(x.elements(), wrapper);
         });
       };
       

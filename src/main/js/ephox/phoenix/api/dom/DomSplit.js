@@ -1,0 +1,30 @@
+define(
+  'ephox.phoenix.api.dom.DomSplit',
+
+  [
+    'ephox.boss.api.DomUniverse',
+    'ephox.phoenix.api.general.Split'
+  ],
+
+  function (DomUniverse, Split) {
+    var universe = DomUniverse();
+
+    var split = function (element, position) {
+      return Split.split(universe, element, position);
+    };
+
+    var splitByPair = function (element, start, finish) {
+      return Split.splitByPair(universe, element, start, finish);
+    };
+
+    var range = function (start, startOffset, finish, finishOffset) {
+      return Split.range(universe, start, startOffset, finish, finishOffset);
+    };
+
+    return {
+      split: split,
+      splitByPair: splitByPair,
+      range: range
+    };
+  }
+);
