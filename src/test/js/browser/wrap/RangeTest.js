@@ -2,8 +2,8 @@ test(
   'wrap.Wrapper.wrapWith (Wraps)',
 
   [
+    'ephox.phoenix.wrap.DomWraps',
     'ephox.phoenix.wrap.Wrapper',
-    'ephox.phoenix.wrap.Wraps',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Html',
@@ -14,7 +14,7 @@ test(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Wrapper, Wraps, Class, Element, Html, Insert, InsertAll, Remove, SelectorFind, Traverse) {
+  function (DomWraps, Wrapper, Class, Element, Html, Insert, InsertAll, Remove, SelectorFind, Traverse) {
 
     var root = Element.fromTag('div');
     var body = SelectorFind.first('body').getOrDie();
@@ -44,7 +44,7 @@ test(
         Wrapper.wrapWith(first, offset1, second, offset2, function () {
           var basic = Element.fromTag('span');
           Class.add(basic, 'me');
-          return Wraps.basic(basic);
+          return DomWraps.basic(basic);
         });
 
         assert.eq(expected, Html.get(container));

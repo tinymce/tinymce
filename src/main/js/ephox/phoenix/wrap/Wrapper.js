@@ -3,17 +3,17 @@ define(
 
   [
     'ephox.compass.Arr',
+    'ephox.phoenix.wrap.DomWraps',
     'ephox.phoenix.wrap.Identify',
-    'ephox.phoenix.wrap.Wraps',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.Text'
   ],
 
-  function (Arr, Identify, Wraps, Insert, Node, Text) {
+  function (Arr, DomWraps, Identify, Insert, Node, Text) {
 
     var wrap = function (base, baseOffset, end, endOffset) {
-      return wrapWith(base, baseOffset, end, endOffset, Wraps.simple);
+      return wrapWith(base, baseOffset, end, endOffset, DomWraps.simple);
     };
 
     var wrapWith = function (base, baseOffset, end, endOffset, c) {

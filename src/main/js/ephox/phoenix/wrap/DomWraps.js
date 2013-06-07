@@ -1,5 +1,5 @@
 define(
-  'ephox.phoenix.wrap.Wraps',
+  'ephox.phoenix.wrap.DomWraps',
 
   [
     'ephox.peanut.Fun',

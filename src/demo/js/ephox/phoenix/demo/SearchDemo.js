@@ -5,8 +5,8 @@ define(
     'ephox.wrap.JQuery',
     'ephox.compass.Arr',
     'ephox.phoenix.search.DomSearcher',
+    'ephox.phoenix.wrap.DomWraps',
     'ephox.phoenix.wrap.Wrapper',
-    'ephox.phoenix.wrap.Wraps',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Css',
@@ -17,7 +17,7 @@ define(
     'text!html/content.html'
   ],
 
-  function ($, Arr, DomSearcher, Wrapper, Wraps, Attr, Class, Css, Element, Event, Insert, InsertAll, ContentHtml) {
+  function ($, Arr, DomSearcher, DomWraps, Wrapper, Attr, Class, Css, Element, Event, Insert, InsertAll, ContentHtml) {
     return function () {
       var container = Element.fromTag('div');
 
@@ -35,7 +35,7 @@ define(
         var c = Element.fromTag('span');
         Class.add(c, 'highlighted');
         Css.set(c, 'background-color', '#cadbee');
-        return Wraps.basic(c);
+        return DomWraps.basic(c);
       };
 
       Event.bind(button, 'click', function (event) {
