@@ -2,29 +2,19 @@ define(
   'ephox.phoenix.wrap.DomWraps',
 
   [
-    'ephox.peanut.Fun',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert'
+    'ephox.boss.api.DomUniverse',
+    'ephox.phoenix.ghetto.wrap.GhettoWraps'
   ],
 
-  function (Fun, Element, Insert) {
+  function (DomUniverse, GhettoWraps) {
+    var universe = DomUniverse();
 
     var simple = function () {
-      var span = Element.fromTag('span');
-      return basic(span);
+      return GhettoWraps.simple(universe);
     };
 
     var basic = function (elem) {
-
-      var element = Fun.constant(elem);
-      var wrap = function (w) {
-        Insert.append(elem, w);
-      };
-
-      return {
-        element: element,
-        wrap: wrap
-      };
+      return GhettoWraps.basic(universe, elem);
     };
 
     return {
