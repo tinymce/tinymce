@@ -8,17 +8,17 @@ define(
 
   function (Slice, Split) {
 
-    var splitBy = function (array, predicate) {
-      return Split.splitBy(array, predicate);
+    var splitby = function (array, predicate) {
+      return Split.splitby(array, predicate);
     };
 
-    var sliceBy = function (array, predicate) {
-      return Slice.sliceBy(array, predicate);
+    var sliceby = function (array, predicate) {
+      return Slice.sliceby(array, predicate);
     };
 
     return {
-      splitBy: splitBy,
-      sliceBy: sliceBy
+      splitby: splitby,
+      sliceby: sliceby
     };
 
   }

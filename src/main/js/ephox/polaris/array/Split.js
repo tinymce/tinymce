@@ -6,7 +6,7 @@ define(
   ],
 
   function (Arr) {
-    var splitBy = function (xs, pred) {
+    var splitby = function (xs, pred) {
       var r = [];
       var part = [];
       Arr.each(xs, function (x) {
@@ -24,7 +24,7 @@ define(
     };
 
     return {
-      splitBy: splitBy
+      splitby: splitby
     };
   }
 );

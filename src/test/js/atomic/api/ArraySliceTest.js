@@ -1,5 +1,5 @@
 test(
-  'api.Arrays.sliceBy',
+  'api.Arrays.sliceby',
 
   [
     'ephox.polaris.api.Arrays'
@@ -7,7 +7,7 @@ test(
 
   function (Arrays) {
     var check = function (expected, input, pred) {
-      var actual = Arrays.sliceBy(input, pred);
+      var actual = Arrays.sliceby(input, pred);
       assert.eq(expected, actual);
     };
 

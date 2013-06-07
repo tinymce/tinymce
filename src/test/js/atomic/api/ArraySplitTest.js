@@ -1,5 +1,5 @@
 test(
-  'api.Arrays.splitBy',
+  'api.Arrays.splitby',
 
   [
     'ephox.peanut.Fun',
@@ -8,7 +8,7 @@ test(
 
   function (Fun, Arrays) {
     var check = function (expected, input, pred) {
-      var actual = Arrays.splitBy(input, pred);
+      var actual = Arrays.splitby(input, pred);
       assert.eq(expected, actual);
     };
 

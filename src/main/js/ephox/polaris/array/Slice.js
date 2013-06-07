@@ -6,13 +6,13 @@ define(
   ],
 
   function (Arr) {
-    var sliceBy = function (list, pred) {
+    var sliceby = function (list, pred) {
       var index = Arr.findIndex(list, pred);
       return list.slice(0, index);
     };
 
     return {
-      sliceBy: sliceBy
+      sliceby: sliceby
     };
 
   }
