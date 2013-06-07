@@ -29,7 +29,7 @@ define(
       var underline = function () {
         var c = Element.fromTag('span');
         Css.set(c, 'text-decoration', 'underline');
-        return DomWraps.basic(c);
+        return DomWraps(c);
       };
 
       var allWords = (function () {

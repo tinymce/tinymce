@@ -35,7 +35,7 @@ define(
         var c = Element.fromTag('span');
         Class.add(c, 'highlighted');
         Css.set(c, 'background-color', '#cadbee');
-        return DomWraps.basic(c);
+        return DomWraps(c);
       };
 
       Event.bind(button, 'click', function (event) {

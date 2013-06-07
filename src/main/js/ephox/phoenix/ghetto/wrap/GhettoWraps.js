@@ -6,27 +6,15 @@ define(
   ],
 
   function (Fun) {
-    var simple = function (universe) {
-      var span = universe.create().nu('span');
-      return basic(universe, span);
-    };
-
-    var basic = function (universe, item) {
-      var element = Fun.constant(item);
+    return function (universe, item) {
       var wrap = function (contents) {
         universe.insert().append(item, contents);
       };
 
       return {
-        element: element,
+        element: Fun.constant(item),
         wrap: wrap
       };
     };
-
-    return {
-      simple: simple,
-      basic: basic
-    };
-
   }
 );

@@ -44,7 +44,7 @@ test(
         DomWrapper.wrapWith(first, offset1, second, offset2, function () {
           var basic = Element.fromTag('span');
           Class.add(basic, 'me');
-          return DomWraps.basic(basic);
+          return DomWraps(basic);
         });
 
         assert.eq(expected, Html.get(container));

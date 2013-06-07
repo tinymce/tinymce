@@ -9,17 +9,8 @@ define(
   function (DomUniverse, GhettoWraps) {
     var universe = DomUniverse();
 
-    var simple = function () {
-      return GhettoWraps.simple(universe);
-    };
-
-    var basic = function (elem) {
-      return GhettoWraps.basic(universe, elem);
-    };
-
-    return {
-      simple: simple,
-      basic: basic
+    return function (element) {
+      return GhettoWraps(universe, element);
     };
   }
 );

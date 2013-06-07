@@ -35,7 +35,7 @@ test(
         DomWrapper.wrapper(x.elements(), function () {
           var span = Element.fromTag('span');
           Attr.set(span, 'data-word', x.word());
-          return DomWraps.basic(span);
+          return DomWraps(span);
         });
       });
 
