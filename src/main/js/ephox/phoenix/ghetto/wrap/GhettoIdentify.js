@@ -28,7 +28,7 @@ define(
       return [middle];
     };
 
-    var nodes = function (universe, base, baseOffset, end, endOffset, c) {
+    var nodes = function (universe, base, baseOffset, end, endOffset) {
       var f = universe.eq(base, end) ? same : diff;
       return f(universe, base, baseOffset, end, endOffset);
     };

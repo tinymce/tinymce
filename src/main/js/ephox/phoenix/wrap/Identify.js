@@ -8,9 +8,9 @@ define(
 
   function (DomUniverse, GhettoIdentify) {
     var universe = DomUniverse();
-    
-    var nodes = function (base, baseOffset, end, endOffset, c) {
-      return GhettoIdentify.nodes(universe, base, baseOffset, end, endOffset, c);
+
+    var nodes = function (base, baseOffset, end, endOffset) {
+      return GhettoIdentify.nodes(universe, base, baseOffset, end, endOffset);
     };
 
     return {
