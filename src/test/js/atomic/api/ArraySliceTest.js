@@ -2,12 +2,12 @@ test(
   'api.Arrays.sliceBy',
 
   [
-    'ephox.polaris.array.Slice'
+    'ephox.polaris.api.Arrays'
   ],
 
-  function (Slice) {
+  function (Arrays) {
     var check = function (expected, input, pred) {
-      var actual = Slice.sliceBy(input, pred);
+      var actual = Arrays.sliceBy(input, pred);
       assert.eq(expected, actual);
     };
 
