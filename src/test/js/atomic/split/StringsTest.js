@@ -2,7 +2,7 @@ test(
   'split.Strings',
 
   [
-    'ephox.polaris.split.Strings'
+    'ephox.polaris.api.Strings'
   ],
 
   function (Strings) {
