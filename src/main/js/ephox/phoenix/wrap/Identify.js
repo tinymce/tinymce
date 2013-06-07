@@ -2,13 +2,15 @@ define(
   'ephox.phoenix.wrap.Identify',
 
   [
+    'ephox.boss.api.DomUniverse',
     'ephox.phoenix.api.DomSplit',
+    'ephox.phoenix.ghetto.wrap.GhettoIdentify',
     'ephox.phoenix.util.node.DomRange',
     'ephox.scullion.Struct',
     'ephox.sugar.api.Compare'
   ],
 
-  function (DomSplit, DomRange, Struct, Compare) {
+  function (DomUniverse, DomSplit, GhettoIdentify, DomRange, Struct, Compare) {
 
     // FIX: Rename me.
     var zz = Struct.immutable('element', 'offset');
@@ -34,6 +36,7 @@ define(
     };
 
     var nodes = function (base, baseOffset, end, endOffset, c) {
+      return GhettoIdentify.nodes(DomUniverse(), base, baseOffset, end, endOffset, c);
       var f = Compare.eq(base, end) ? same : diff;
       return f(base, baseOffset, end, endOffset);
     };
