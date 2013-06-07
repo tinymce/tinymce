@@ -1,5 +1,5 @@
 test(
-  'api.DomSplit.(split, splitByPair)',
+  'api.dom.DomSplit.(split, splitByPair)',
 
   [
     'ephox.compass.Arr',

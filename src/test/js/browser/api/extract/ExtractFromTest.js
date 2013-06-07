@@ -1,5 +1,5 @@
 test(
-  'api.DomExtract.from',
+  'api.dom.DomExtract.from',
 
   [
     'ephox.compass.Arr',

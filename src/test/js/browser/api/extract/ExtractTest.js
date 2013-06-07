@@ -1,5 +1,5 @@
 test(
-  'api.DomExtract.extract',
+  'api.dom.DomExtract.extract',
 
   [
     'ephox.phoenix.api.dom.DomExtract',

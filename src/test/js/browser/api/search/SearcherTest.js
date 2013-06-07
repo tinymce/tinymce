@@ -1,5 +1,5 @@
 test(
-  'search.Searcher.safeWords',
+  'api.dom.DomSearch',
 
   [
     'ephox.compass.Arr',

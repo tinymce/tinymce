@@ -1,5 +1,5 @@
 test(
-  'wrap.Wrapper.wrapWith (Wraps)',
+  'api.dom.DomWrapping',
 
   [
     'ephox.phoenix.api.dom.DomWrapping',
