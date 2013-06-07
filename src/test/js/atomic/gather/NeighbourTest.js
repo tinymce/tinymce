@@ -1,39 +1,71 @@
 test(
   'NeighbourTest',
 
-  {
-    'ephox.sugar.api.Traverse': '../mock/ephox/sugar/api/Traverse',
-    'ephox.sugar.api.Compare': '../mock/ephox/sugar/api/Compare'
-  },
-
   [
+    'ephox.boss.api.Gene',
+    'ephox.boss.api.TestUniverse',
+    'ephox.boss.api.TextGene',
     'ephox.perhaps.Option',
-    'ephox.phoenix.gather.Neighbour'
+    'ephox.phoenix.api.general.Gather',
+    'ephox.phoenix.test.Finder'
   ],
 
-  function (Option, Neighbour) {
+  function (Gene, TestUniverse, TextGene, Option, Gather, Finder) {
 
     var some = Option.some;
+
+    var universe = TestUniverse(
+      Gene('root', 'root', [
+        Gene('a', 'node', [
+          Gene('aa', 'node', [
+            TextGene('aaa', 'aaa'),
+            TextGene('aab', 'aab'),
+            TextGene('aac', 'aac')
+          ]),
+          Gene('ab', 'node', [
+            TextGene('aba', 'aba'),
+            TextGene('abb', 'abb')
+          ]),
+          Gene('b', 'node', [
+            TextGene('ba', 'ba')
+          ]),
+          Gene('c', 'node', [
+            Gene('ca', 'node', [
+              Gene('caa', 'node', [
+                TextGene('caaa', 'caaa')
+              ])
+            ]),
+            Gene('cb', 'node', []),
+            Gene('cc', 'node', [
+              TextGene('cca', 'cca')
+            ])
+          ]),
+          TextGene('d', 'd')
+        ])
+      ])
+    );
 
     var check = function (expected, actual) {
       actual.fold(function () {
         assert.eq(true, expected.isNone());
-      }, function (v) {
+      }, function (act) {
         expected.fold(function () {
-          assert.fail('Expected none, Actual: ' + v);
-        }, function (vv) {
-          assert.eq(vv, v);
+          assert.fail('Expected none, Actual: ' + act);
+        }, function (exp) {
+          assert.eq(exp, act.id);
         });
       });
     };
 
-    var checkBefore = function (expected, input) {
-      var actual = Neighbour.before(input);
+    var checkBefore = function (expected, id) {
+      var item = Finder.get(universe, id);
+      var actual = Gather.before(universe, item);
       check(expected, actual);
     };
 
-    var checkAfter = function (expected, input) {
-      var actual = Neighbour.after(input);
+    var checkAfter = function (expected, id) {
+      var item = Finder.get(universe, id);
+      var actual = Gather.after(universe, item);
       check(expected, actual);
     };
 

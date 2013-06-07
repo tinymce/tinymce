@@ -4,43 +4,45 @@ define(
   [
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.phoenix.api.data.GatherResult',
     'ephox.phoenix.gather.Gather',
-    'ephox.phoenix.gather.GatherResult',
-    'ephox.phoenix.gather.Traversal',
-    'ephox.sugar.api.Traverse'
+    'ephox.phoenix.gather.Traversal'
   ],
 
-  function (Fun, Option, Gather, GatherResult, Traversal, Traverse) {
+  function (Fun, Option, GatherResult, Gather, Traversal) {
 
     var ignore = function () {
       return GatherResult([], true);
     };
 
-    var one = function (element) {
-      var children = Traverse.children(element);
+    var one = function (universe, element) {
+      var children = universe.property().children(element);
       return children.length === 0 ? Option.some([element]) : Option.none();
     };
 
-    var transform = function (iter, element, prune) {
-      var children = Traverse.children(element);
-      return children.length === 0 ? GatherResult([element], true) : iter(children, transform, prune);
+    var transform = function (universe, iter, element, prune) {
+      var children = universe.property().children(element);
+      var transformer = Fun.curry(transform, universe);
+      return children.length === 0 ? GatherResult([element], true) : iter(children, transformer, prune);
     };
 
-    var before = function (element) {
-      var left = Gather.traverse(Traversal.left(), element, {
-        left: one,
+    var before = function (universe, element) {
+      var transformer = Fun.curry(transform, universe);
+      var left = Gather.traverse(universe, Traversal.left(), element, {
+        left: Fun.curry(one, universe),
         right: ignore,
         stop: Fun.constant(false)
-      }, transform);
+      }, transformer);
       return Option.from(left[0]);
     };
 
-    var after = function (element) {
-      var right = Gather.traverse(Traversal.right(), element, {
+    var after = function (universe, element) {
+      var transformer = Fun.curry(transform, universe);
+      var right = Gather.traverse(universe, Traversal.right(), element, {
         left: ignore,
-        right: one,
+        right: Fun.curry(one, universe),
         stop: Fun.constant(false)
-      }, transform);
+      }, transformer);
       return Option.from(right[0]);
     };
 

@@ -2,17 +2,27 @@ define(
   'ephox.phoenix.api.general.Gather',
 
   [
-    'ephox.phoenix.gather.Gather'
+    'ephox.phoenix.gather.Gather',
+    'ephox.phoenix.gather.Neighbour'
   ],
 
-  function (Gather) {
-    var gather = function (universe, element, prune, transform) {
-      // not boss-ed yet.
-      return Gather.gather(element, prune, transform);
+  function (Gather, Neighbour) {
+    var gather = function (universe, item, prune, transform) {
+      return Gather.gather(universe, item, prune, transform);
+    };
+
+    var before = function (universe, item) {
+      return Neighbour.before(universe, item);
+    };
+
+    var after = function (universe, item) {
+      return Neighbour.after(universe, item);
     };
 
     return {
-      gather: gather
+      gather: gather,
+      before: before,
+      after: after
     };
   }
 );

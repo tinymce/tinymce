@@ -3,34 +3,32 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.sugar.api.Compare',
-    'ephox.sugar.api.Traverse'
+    'ephox.peanut.Fun'
   ],
 
-  function (Arr, Fun, Compare, Traverse) {
-    var left = function (element) {
-      var siblings = siblingsAndSelf(element);
+  function (Arr, Fun) {
+    var left = function (universe, element) {
+      var siblings = siblingsAndSelf(universe, element);
       var current = Arr.findIndex(siblings, function (x) {
-        return Compare.eq(x, element);
+        return universe.eq(x, element);
       });
       
       return siblings.slice(0, current);
     };
 
-    var right = function (element) {
-      var siblings = siblingsAndSelf(element);
+    var right = function (universe, element) {
+      var siblings = siblingsAndSelf(universe, element);
       var current = Arr.findIndex(siblings, function (x) {
-        return Compare.eq(x, element);
+        return universe.eq(x, element);
       });
 
       return current > -1 ? siblings.slice(current + 1) : [];
     };
 
-    var siblingsAndSelf = function (element) {
-      var parent = Traverse.parent(element);
+    var siblingsAndSelf = function (universe, element) {
+      var parent = universe.property().parent(element);
       return parent.fold(Fun.constant([]), function (v) {
-        return Traverse.children(v);
+        return universe.property().children(v);
       });
     };
 

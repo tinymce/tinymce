@@ -5,21 +5,20 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.phoenix.api.data.Focus',
-    'ephox.phoenix.gather.Traversal',
-    'ephox.sugar.api.Traverse'
+    'ephox.phoenix.gather.Traversal'
   ],
 
-  function (Arr, Fun, Focus, Traversal, Traverse) {
+  function (Arr, Fun, Focus, Traversal) {
     var curry = Fun.curry;
   
-    var traverse = function(traversal, element, prune, f) {
-      var siblings = across(traversal, element, prune, f);
-      return chain(siblings, curry(up, traversal, element, prune, f));
+    var traverse = function(universe, traversal, element, prune, f) {
+      var siblings = across(universe, traversal, element, prune, f);
+      return chain(siblings, curry(up, universe, traversal, element, prune, f));
     };
 
-    var gather = function (element, prune, f) {
-      var lefts = traverse(Traversal.left(), element, prune, f);
-      var rights = traverse(Traversal.right(), element, prune, f);
+    var gather = function (universe, element, prune, f) {
+      var lefts = traverse(universe, Traversal.left(), element, prune, f);
+      var rights = traverse(universe, Traversal.right(), element, prune, f);
       var rLeft = Arr.reverse(lefts);
       return Focus(rLeft, element, rights);
     };
@@ -28,21 +27,21 @@ define(
       return result.pruned() ? result.result() : result.result().concat(f());
     };
 
-    var up = function (traversal, element, prune, f) {
-      return Traverse.parent(element).fold(function () {
+    var up = function (universe, traversal, element, prune, f) {
+      return universe.property().parent(element).fold(function () {
         return [];
       }, function (v) {
         if (prune.stop(v)) {
           return [];
         } else {
-          var result = across(traversal, v, prune, f);
-          return chain(result, curry(up, traversal, v, prune, f));
+          var result = across(universe, traversal, v, prune, f);
+          return chain(result, curry(up, universe, traversal, v, prune, f));
         }
       });
     };
 
-    var across = function (traversal, element, prune, f) {
-      var xs = traversal.siblings(element);
+    var across = function (universe, traversal, element, prune, f) {
+      var xs = traversal.siblings(universe, element);
       return traversal.iter(xs, f, prune);
     };
 

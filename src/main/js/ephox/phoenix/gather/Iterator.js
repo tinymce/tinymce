@@ -2,7 +2,7 @@ define(
   'ephox.phoenix.gather.Iterator',
 
   [
-    'ephox.phoenix.gather.GatherResult'
+    'ephox.phoenix.api.data.GatherResult'
   ],
 
   function (GatherResult) {

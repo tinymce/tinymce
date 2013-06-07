@@ -1,30 +1,73 @@
 test('Gathering',
-  {
-    'ephox.sugar.api.Traverse': '../mock/ephox/sugar/api/Traverse',
-    'ephox.sugar.api.Compare': '../mock/ephox/sugar/api/Compare'
-  },
 
   [
+    'ephox.boss.api.Gene',
+    'ephox.boss.api.TestUniverse',
+    'ephox.boss.api.TextGene',
     'ephox.compass.Arr',
+    'ephox.highway.Merger',
     'ephox.perhaps.Option',
-    'ephox.phoenix.gather.Gather',
-    'ephox.phoenix.gather.GatherResult',
-    'ephox.sugar.api.Traverse'
+    'ephox.phoenix.api.data.GatherResult',
+    'ephox.phoenix.api.general.Gather',
+    'ephox.phoenix.test.Finder',
+    'ephox.phoenix.test.TestRenders'
   ],
 
-  function (Arr, Option, Gather, GatherResult, Traverse) {
+  function (Gene, TestUniverse, TextGene, Arr, Merger, Option, GatherResult, Gather, Finder, TestRenders) {
+    var universe = TestUniverse(
+      Gene('root', 'root', [
+        Gene('a', 'node', [
+          Gene('aa', 'node', [
+            TextGene('aaa', 'aaa'),
+            TextGene('aab', 'aab'),
+            TextGene('aac', 'aac')
+          ]),
+          Gene('ab', 'node', [
+            TextGene('aba', 'aba'),
+            TextGene('abb', 'abb')
+          ])
+        ]),
+        Gene('b', 'node', [
+          TextGene('ba', 'ba')
+        ]),
+        Gene('c', 'node', [
+          Gene('ca', 'node', [
+            Gene('caa', 'node', [
+              TextGene('caaa', 'caaa')
+            ])
+          ]),
+          Gene('cb', 'node', []),
+          Gene('cc', 'node', [
+            TextGene('cca', 'cca')
+          ])
+        ]),
+        TextGene('d', 'd')
+      ])
+    );
 
     var pruner = function (elems) {
       var stop = function (x) {
-        return Arr.contains(elems, x);
+        return Arr.contains(elems, x.id);
+      };
+
+      var cutleft = function (x) {
+        return Merger.merge(x, {
+          id: '<' + x.id
+        });
+      };
+
+      var cutright = function (x) {
+        return Merger.merge(x, {
+          id: x.id + '>'
+        });
       };
 
       var left = function (x) {
-        return stop(x) ? Option.some(['<' + x]) : Option.none();
+        return stop(x) ? Option.some([cutleft(x)]) : Option.none();
       };
 
       var right = function (x) {
-        return stop(x) ? Option.some([x + '>']) : Option.none();
+        return stop(x) ? Option.some([cutright(x)]) : Option.none();
       };
 
       return {
@@ -35,16 +78,17 @@ test('Gathering',
     };
 
     var f = function (iterator, x, prune) {
-      var children = Traverse.children(x);
+      var children = universe.property().children(x);
       return children.length > 0 ? iterator(children, f, prune) : GatherResult([x], false);
     };
 
-    var check = function (left, right, element, prunes) {
+    var check = function (left, right, id, prunes) {
       var prune = pruner(prunes);
-      var actual = Gather.gather(element, prune, f);
-      assert.eq(left, actual.left());
-      assert.eq(element, actual.element());
-      assert.eq(right, actual.right());
+      var item = Finder.get(universe, id);
+      var actual = Gather.gather(universe, item, prune, f);
+      assert.eq(left, TestRenders.ids(actual.left()));
+      assert.eq(id, TestRenders.id(actual.element()));
+      assert.eq(right, TestRenders.ids(actual.right()));
     };
 
     check(['aaa'], ['aac', 'aba', 'abb'], 'aab', ['a']);

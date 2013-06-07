@@ -13,8 +13,18 @@ define(
       return Gather.gather(universe, element, prune, transform);
     };
 
+    var before = function (element) {
+      return Gather.before(universe, element);
+    };
+
+    var after = function (element) {
+      return Gather.after(universe, element);
+    };
+
     return {
-      gather: gather
+      gather: gather,
+      before: before,
+      after: after
     };
   }
 );
