@@ -79,6 +79,8 @@ tinymce.PluginManager.add('fullscreen', function(editor) {
 		editor.addShortcut('Ctrl+Alt+F', '', toggleFullscreen);
 	});
 
+	editor.addCommand('mceFullScreen', toggleFullscreen);
+
 	editor.addMenuItem('fullscreen', {
 		text: 'Fullscreen',
 		shortcut: 'Ctrl+Alt+F',
