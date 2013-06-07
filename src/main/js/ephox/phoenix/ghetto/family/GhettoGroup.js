@@ -4,16 +4,16 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.phoenix.api.Extract',
-    'ephox.phoenix.util.arr.Split'
+    'ephox.polaris.api.Arrays'
   ],
 
-  function (Arr, Extract, Split) {
+  function (Arr, Extract, Arrays) {
     var group = function (universe, items) {
       var extractions = Arr.bind(items, function (item) {
         return Extract.from(universe, item);
       });
 
-      var segments = Split.split(extractions, function (item) {
+      var segments = Arrays.splitby(extractions, function (item) {
         return item.isBoundary();
       });
 

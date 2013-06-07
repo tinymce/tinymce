@@ -12,7 +12,7 @@ test(
     'ephox.phoenix.ghetto.search.GhettoMatchSplitter',
     'ephox.phoenix.test.Finder',
     'ephox.phoenix.test.TestRenders',
-    'ephox.phoenix.util.arr.PositionArray'
+    'ephox.polaris.api.PositionArray'
   ],
 
   function (Gene, TestUniverse, TextGene, Arr, Fun, Option, Spot, GhettoMatchSplitter, Finder, TestRenders, PositionArray) {
@@ -29,7 +29,7 @@ test(
     var check = function (all, expected, ids, matches, input) {
       var universe = TestUniverse(input);
       var items = Finder.getAll(universe, ids);
-      var list = PositionArray.make(items, function (item, start) {
+      var list = PositionArray.generate(items, function (item, start) {
         var finish = start + universe.property().getText(item).length;
         return Option.some(Spot.range(item, start, finish));
       });

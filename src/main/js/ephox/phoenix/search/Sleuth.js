@@ -3,11 +3,11 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.phoenix.util.str.Find',
+    'ephox.polaris.api.Search',
     'global!Array'
   ],
 
-  function (Arr, Find, Array) {
+  function (Arr, Search, Array) {
     var sort = function (array) {
       var r = Array.prototype.slice.call(array, 0);
       r.sort(function (a, b) {
@@ -20,7 +20,7 @@ define(
 
     var search = function (text, patterns) {
       var unsorted = Arr.bind(patterns, function (y) {
-        var results = Find.all(text, y.pattern());
+        var results = Search.findall(text, y.pattern());
         return Arr.map(results, function (z) {
           return {
             word: y.word,

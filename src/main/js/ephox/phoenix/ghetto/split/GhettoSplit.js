@@ -4,13 +4,13 @@ define(
   [
     'ephox.perhaps.Option',
     'ephox.phoenix.data.TextSplit',
-    'ephox.phoenix.util.str.Split'
+    'ephox.polaris.api.Strings'
   ],
 
-  function (Option, TextSplit, Split) {
+  function (Option, TextSplit, Strings) {
     var tokens = function (universe, item, ps) {
       var text = universe.property().getText(item);
-      return Split.split(text, ps);
+      return Strings.splits(text, ps);
     };
 
     var split = function (universe, item, position) {

@@ -9,11 +9,10 @@ test('Gathering',
     'ephox.perhaps.Option',
     'ephox.phoenix.gather.Gather',
     'ephox.phoenix.gather.GatherResult',
-    'ephox.scullion.Struct',
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Arr, Option, Gather, GatherResult, Struct, Traverse) {
+  function (Arr, Option, Gather, GatherResult, Traverse) {
 
     var pruner = function (elems) {
       var stop = function (x) {

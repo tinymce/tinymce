@@ -6,10 +6,10 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.phoenix.data.Spot',
-    'ephox.phoenix.util.arr.Slice'
+    'ephox.polaris.api.Arrays'
   ],
 
-  function (Arr, Fun, Option, Spot, Slice) {
+  function (Arr, Fun, Option, Spot, Arrays) {
 
     var count = function (list) {
       return Arr.foldr(list, function (b, a) {
@@ -18,7 +18,7 @@ define(
     };
 
     var dropUntil = function (elements, target) {
-      return Slice.slice(elements, function (x) {
+      return Arrays.sliceby(elements, function (x) {
         return x.is(target);
       });
     };

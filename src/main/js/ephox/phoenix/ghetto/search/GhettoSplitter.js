@@ -5,11 +5,11 @@ define(
     'ephox.compass.Arr',
     'ephox.perhaps.Option',
     'ephox.phoenix.data.Spot',
-    'ephox.phoenix.util.arr.PositionArray',
-    'ephox.phoenix.util.str.Split'
+    'ephox.polaris.api.PositionArray',
+    'ephox.polaris.api.Strings'
   ],
 
-  function (Arr, Option, Spot, PositionArray, Split) {
+  function (Arr, Option, Spot, PositionArray, Strings) {
     var split = function (universe, offset, unit) {
       if (offset > unit.start() && offset < unit.finish()) {
         var newA = Spot.range(unit.element(), unit.start(), offset);
@@ -25,13 +25,13 @@ define(
 
     var subdivide = function (universe, item, positions) {
       var text = universe.property().getText(item);
-      var pieces = Arr.filter(Split.split(text, positions), function (section) {
+      var pieces = Arr.filter(Strings.splits(text, positions), function (section) {
         return section.length > 0;
       });
 
       if (pieces.length <= 1) return [ Spot.range(item, 0, text.length) ];
       universe.property().setText(item, pieces[0]);
-      var others = PositionArray.make(pieces.slice(1), function (a, start) {
+      var others = PositionArray.generate(pieces.slice(1), function (a, start) {
         var nu = universe.create().text(a);
         var result = Spot.range(nu, start, start + a.length);
         return Option.some(result);

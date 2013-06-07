@@ -7,18 +7,18 @@ define(
     'ephox.phoenix.data.Spot',
     'ephox.phoenix.ghetto.family.GhettoGroup',
     'ephox.phoenix.ghetto.search.GhettoMatchSplitter',
-    'ephox.phoenix.search.Safe',
     'ephox.phoenix.search.Sleuth',
-    'ephox.phoenix.util.arr.PositionArray',
     'ephox.phoenix.util.doc.List',
+    'ephox.polaris.api.Pattern',
+    'ephox.polaris.api.PositionArray',
     'ephox.scullion.Struct'
   ],
 
-  function (Arr, Option, Spot, GhettoGroup, GhettoMatchSplitter, Safe, Sleuth, PositionArray, List, Struct) {
+  function (Arr, Option, Spot, GhettoGroup, GhettoMatchSplitter, Sleuth, List, Pattern, PositionArray, Struct) {
     var namedPattern = Struct.immutable('word', 'pattern');
 
     var gen = function (universe, input) {
-      return PositionArray.make(input, function (unit, offset) {
+      return PositionArray.generate(input, function (unit, offset) {
         var finish = offset + universe.property().getText(unit).length;
         return Option.from(Spot.range(unit, offset, finish));
       });
@@ -41,14 +41,14 @@ define(
 
     var safeWords = function (universe, elements, words) {
       var patterns = Arr.map(words, function (word) {
-        var pattern = Safe.word(word);
+        var pattern = Pattern.safeword(word);
         return namedPattern(word, pattern);
       });
       return run(universe, elements, patterns);
     };
 
     var safeToken = function (universe, elements, token) {
-      var pattern = namedPattern(token, Safe.token(token));
+      var pattern = namedPattern(token, Pattern.safetoken(token));
       return run(universe, elements, [pattern]);
     };
 
