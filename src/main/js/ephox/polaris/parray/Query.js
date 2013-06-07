@@ -8,11 +8,11 @@ define(
 
   function (Arr, Option) {
     var get = function (parray, offset) {
-      var item = Arr.find(parray, function (x) {
+      var unit = Arr.find(parray, function (x) {
         return x.start() <= offset && x.finish() >= offset;
       });
 
-      return Option.from(item);
+      return Option.from(unit);
     };
 
     return {

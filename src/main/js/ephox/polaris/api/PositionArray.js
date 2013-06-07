@@ -3,10 +3,12 @@ define(
 
   [
     'ephox.polaris.parray.Generator',
-    'ephox.polaris.parray.Query'
+    'ephox.polaris.parray.Query',
+    'ephox.polaris.parray.Split',
+    'ephox.polaris.parray.Translate'
   ],
 
-  function (Generator, Query) {
+  function (Generator, Query, Split, Translate) {
     var generate = function (items, generator) {
       return Generator.make(items, generator);
     };
@@ -15,9 +17,19 @@ define(
       return Query.get(parray, offset);
     };
 
+    var splits = function (parray, positions, subdivide) {
+      return Split.splits(parray, positions, subdivide);
+    };
+
+    var translate = function (parray, amount) {
+      return Translate.translate(parray, amount);
+    };
+
     return {
       generate: generate,
-      get: get
+      get: get,
+      splits: splits,
+      translate: translate
     };
   }
 );
