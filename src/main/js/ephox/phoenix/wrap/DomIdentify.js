@@ -1,5 +1,5 @@
 define(
-  'ephox.phoenix.wrap.Identify',
+  'ephox.phoenix.wrap.DomIdentify',
 
   [
     'ephox.boss.api.DomUniverse',

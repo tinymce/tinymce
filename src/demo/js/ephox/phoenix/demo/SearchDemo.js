@@ -5,8 +5,8 @@ define(
     'ephox.wrap.JQuery',
     'ephox.compass.Arr',
     'ephox.phoenix.search.DomSearcher',
+    'ephox.phoenix.wrap.DomWrapper',
     'ephox.phoenix.wrap.DomWraps',
-    'ephox.phoenix.wrap.Wrapper',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Css',
@@ -17,7 +17,7 @@ define(
     'text!html/content.html'
   ],
 
-  function ($, Arr, DomSearcher, DomWraps, Wrapper, Attr, Class, Css, Element, Event, Insert, InsertAll, ContentHtml) {
+  function ($, Arr, DomSearcher, DomWrapper, DomWraps, Attr, Class, Css, Element, Event, Insert, InsertAll, ContentHtml) {
     return function () {
       var container = Element.fromTag('div');
 
@@ -56,7 +56,7 @@ define(
 
       var highlight = function (matches) {
         Arr.each(matches, function (x) {
-          Wrapper.wrapper(x.elements(), wrapper);
+          DomWrapper.wrapper(x.elements(), wrapper);
         });
       };
       
