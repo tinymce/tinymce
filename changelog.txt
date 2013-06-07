@@ -25,6 +25,7 @@ Version 4.0 (2013-05-xx)
 	Fixed so an error is thrown if users load jQuery after the jQuery version of TinyMCE.
 	Fixed so the filetype for media dialog passes out media instead of image as file type.
 	Fixed so it's possible to disable the toolbar by setting it to false.
+	Fixed so autoresize plugin isn't initialized when the editor is in inline mode.
 Version 4.0b3 (2013-05-15)
 	Added new optional advanced tab for image dialog with hspace, vspace, border and style.
 	Added new change event that gets fired when undo levels are added to editor instances.
