@@ -3,12 +3,12 @@ test(
 
   [
     'ephox.peanut.Fun',
-    'ephox.polaris.split.Arrays'
+    'ephox.polaris.array.Split'
   ],
 
-  function (Fun, Arrays) {
+  function (Fun, Split) {
     var check = function (expected, input, pred) {
-      var actual = Arrays.splitBy(input, pred);
+      var actual = Split.splitBy(input, pred);
       assert.eq(expected, actual);
     };
 

@@ -1,5 +1,5 @@
 define(
-  'ephox.polaris.split.Arrays',
+  'ephox.polaris.array.Split',
 
   [
     'ephox.compass.Arr'
@@ -26,6 +26,5 @@ define(
     return {
       splitBy: splitBy
     };
-
   }
 );
