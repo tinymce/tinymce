@@ -47,7 +47,7 @@ define("tinymce/ui/Throbber", [
 			}, time || 0);
 
 			return self;
-		},
+		};
 
 		/**
 		 * Hides the throbber.

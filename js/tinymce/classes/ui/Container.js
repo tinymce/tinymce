@@ -276,7 +276,7 @@ define("tinymce/ui/Container", [
 			items = self.create(items);
 			curItems = self.items();
 
-			if (!before) {
+			if (!before && index < curItems.length - 1) {
 				index += 1;
 			}
 

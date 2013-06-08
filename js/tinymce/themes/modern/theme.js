@@ -291,6 +291,52 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		});
 	}
 
+	function getIframeSize() {
+		var elm = editor.getContentAreaContainer().firstChild;
+
+		return {
+			width: elm.clientWidth,
+			height: elm.clientHeight
+		};
+	}
+
+	/**
+	 * Resizes the editor to the specified width, height.
+	 */
+	function resizeTo(width, height) {
+		var containerElm, iframeElm, containerSize, iframeSize;
+
+		function getSize(elm) {
+			return {
+				width: elm.clientWidth,
+				height: elm.clientHeight
+			};
+		}
+
+		containerElm = editor.getContainer();
+		iframeElm = editor.getContentAreaContainer().firstChild;
+		containerSize = getSize(containerElm);
+		iframeSize = getSize(iframeElm);
+
+		width = Math.max(settings.min_width || 100, width);
+		height = Math.max(settings.min_height || 100, height);
+		width = Math.min(settings.max_width || 0xFFFF, width);
+		height = Math.min(settings.max_height || 0xFFFF, height);
+
+		DOM.css(containerElm, 'width', width + (containerSize.width - iframeSize.width));
+		DOM.css(containerElm, 'height', height + (containerSize.height - iframeSize.height));
+
+		DOM.css(iframeElm, 'width', width);
+		DOM.css(iframeElm, 'height', height);
+
+		editor.fire('ResizeEditor');
+	}
+
+	function resizeBy(dw, dh) {
+		var elm = editor.getContentAreaContainer();
+		self.resizeTo(elm.clientWidth + dw, elm.clientHeight + dh);
+	}
+
 	/**
 	 * Renders the inline editor UI.
 	 *
@@ -387,7 +433,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 	 * @return {Object} Name/value object with theme data.
 	 */
 	function renderIframeUI(args) {
-		var panel;
+		var panel, resizeHandleCtrl, startSize;
 
 		// Basic UI layout
 		panel = self.panel = Factory.create({
@@ -403,11 +449,26 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			]
 		});
 
+		if (settings.resize !== false) {
+			resizeHandleCtrl = {
+				type: 'resizehandle',
+				direction: settings.resize,
+
+				onResizeStart: function() {
+					startSize = getIframeSize();
+				},
+
+				onResize: function(e) {
+					resizeTo(startSize.width + e.deltaX, startSize.height + e.deltaY);
+				}
+			};
+		}
+
 		// Add statusbar if needed
 		if (settings.statusbar !== false) {
 			panel.add({type: 'panel', name: 'statusbar', classes: 'statusbar', layout: 'flow', border: '1 0 0 0', items: [
 				{type: 'elementpath'},
-				settings.resize !== false ? ({type: 'resizehandle', editor: editor}) : null
+				resizeHandleCtrl
 			]});
 		}
 
@@ -474,4 +535,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		// Render iframe UI
 		return renderIframeUI(args);
 	};
+
+	self.resizeTo = resizeTo;
+	self.resizeBy = resizeBy;
 });
