@@ -1,5 +1,5 @@
 /**
- * ColorButton.js
+ * ComboBox.js
  *
  * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
