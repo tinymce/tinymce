@@ -24,6 +24,7 @@ Version 4.0 (2013-05-xx)
 	Fixed bug where setting resize option to false whouldn't properly render the word count.
 	Fixed bug where table row type change would produce multiple table section elements.
 	Fixed bug where table row type change on multiple rows would add them in incorrect order.
+	Fixed bug where fullscreen plugin would maximize the editor on resize after toggling it off.
 	Fixed so an error is thrown if users load jQuery after the jQuery version of TinyMCE.
 	Fixed so the filetype for media dialog passes out media instead of image as file type.
 	Fixed so it's possible to disable the toolbar by setting it to false.

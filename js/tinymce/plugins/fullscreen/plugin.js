@@ -11,7 +11,7 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('fullscreen', function(editor) {
-	var fullscreenState = false, DOM = tinymce.DOM, deltaHeight, iframeWidth, iframeHeight;
+	var fullscreenState = false, DOM = tinymce.DOM, iframeWidth, iframeHeight, resizeHandler;
 
 	if (editor.settings.inline) {
 		return;
@@ -53,7 +53,6 @@ tinymce.PluginManager.add('fullscreen', function(editor) {
 		if (fullscreenState) {
 			iframeWidth = iframeStyle.width;
 			iframeHeight = iframeStyle.height;
-			deltaHeight = editorContainer.clientHeight - iframe.clientHeight;
 			iframeStyle.width = iframeStyle.height = '100%';
 
 			DOM.addClass(body, 'mce-fullscreen');
@@ -62,6 +61,7 @@ tinymce.PluginManager.add('fullscreen', function(editor) {
 
 			DOM.bind(window, 'resize', resize);
 			resize();
+			resizeHandler = resize;
 		} else {
 			iframeStyle.width = iframeWidth;
 			iframeStyle.height = iframeHeight;
@@ -69,7 +69,7 @@ tinymce.PluginManager.add('fullscreen', function(editor) {
 			DOM.removeClass(body, 'mce-fullscreen');
 			DOM.removeClass(documentElement, 'mce-fullscreen');
 			DOM.removeClass(editorContainer, 'mce-fullscreen');
-			DOM.unbind(window, 'resize', resize);
+			DOM.unbind(window, 'resize', resizeHandler);
 		}
 
 		editor.fire('FullscreenStateChanged', {state: fullscreenState});
@@ -77,6 +77,12 @@ tinymce.PluginManager.add('fullscreen', function(editor) {
 
 	editor.on('init', function() {
 		editor.addShortcut('Ctrl+Alt+F', '', toggleFullscreen);
+	});
+
+	editor.on('remove', function() {
+		if (resizeHandler) {
+			DOM.unbind(window, 'resize', resizeHandler);
+		}
 	});
 
 	editor.addCommand('mceFullScreen', toggleFullscreen);
