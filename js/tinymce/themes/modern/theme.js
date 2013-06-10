@@ -324,8 +324,6 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		height = Math.min(settings.max_height || 0xFFFF, height);
 
 		DOM.css(containerElm, 'width', width + (containerSize.width - iframeSize.width));
-		DOM.css(containerElm, 'height', height + (containerSize.height - iframeSize.height));
-
 		DOM.css(iframeElm, 'width', width);
 		DOM.css(iframeElm, 'height', height);
 
