@@ -36,6 +36,10 @@ define(
         return Arr.contains(['br', 'img'], Node.name(element));
       };
 
+      var comparePosition = function (element, other) {
+        return element.dom().compareDocumentPosition(other.dom());
+      };
+
       return {
         up: Fun.constant({
           selector: SelectorFind.ancestor,
@@ -68,6 +72,9 @@ define(
           nu: Element.fromTag,
           clone: clone,
           text: Element.fromText
+        }),
+        query: Fun.constant({
+          comparePosition: comparePosition
         }),
         property: Fun.constant({
           children: Traverse.children,

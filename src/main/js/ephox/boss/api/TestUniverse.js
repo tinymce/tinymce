@@ -9,6 +9,7 @@ define(
     'ephox.boss.mutant.Locator',
     'ephox.boss.mutant.Logger',
     'ephox.boss.mutant.Properties',
+    'ephox.boss.mutant.Query',
     'ephox.boss.mutant.Removal',
     'ephox.boss.mutant.Styling',
     'ephox.boss.mutant.Tracks',
@@ -17,7 +18,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (Comparator, Creator, Down, Insertion, Locator, Logger, Properties, Removal, Styling, Tracks, Up, Fun, Option) {
+  function (Comparator, Creator, Down, Insertion, Locator, Logger, Properties, Query, Removal, Styling, Tracks, Up, Fun, Option) {
     return function (raw) {
       var content = Tracks.track(raw, Option.none());
 
@@ -74,6 +75,9 @@ define(
           nu: Creator.nu,
           text: Creator.text,
           clone: Creator.clone
+        }),
+        query: Fun.constant({
+          comparePosition: Query.comparePosition
         }),
         property: Fun.constant({
           children: Properties.children,
