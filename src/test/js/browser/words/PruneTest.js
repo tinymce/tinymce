@@ -2,19 +2,21 @@ test(
   'words :: Prune',
 
   [
+    'ephox.boss.api.DomUniverse',
     'ephox.perhaps.Option',
     'ephox.robin.test.Assertions',
     'ephox.robin.test.BrowserCheck',
     'ephox.robin.words.Prune'
   ],
 
-  function (Option, Assertions, BrowserCheck, Prune) {
+  function (DomUniverse, Option, Assertions, BrowserCheck, Prune) {
+    var prune = Prune(DomUniverse());
 
     var check = function (expected, input) {
       BrowserCheck.run(input, function (node) {
-        assert.eq(expected.stop, Prune.stop(node));
-        Assertions.assertOptTextList(expected.left, Prune.left(node));
-        Assertions.assertOptTextList(expected.right, Prune.right(node));
+        assert.eq(expected.stop, prune.stop(node));
+        Assertions.assertOptTextList(expected.left, prune.left(node));
+        Assertions.assertOptTextList(expected.right, prune.right(node));
       });
     };
 

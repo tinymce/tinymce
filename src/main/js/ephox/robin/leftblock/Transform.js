@@ -2,7 +2,7 @@ define(
   'ephox.robin.leftblock.Transform',
 
   [
-    'ephox.phoenix.gather.GatherResult',
+    'ephox.phoenix.api.data.GatherResult',
     'ephox.robin.gather.Transforms'
   ],
 

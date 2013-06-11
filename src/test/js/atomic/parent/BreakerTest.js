@@ -6,11 +6,10 @@ test(
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
     'ephox.boss.mutant.Logger',
-    'ephox.compass.Arr',
     'ephox.robin.parent.Breaker'
   ],
 
-  function (Gene, TestUniverse, TextGene, Logger, Arr, Breaker) {
+  function (Gene, TestUniverse, TextGene, Logger, Breaker) {
 
     var breakAt = function (universe, parent, child) {
       var parts = bisect(universe, parent, child);

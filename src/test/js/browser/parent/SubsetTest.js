@@ -4,7 +4,7 @@ test(
   [
     'ephox.compass.Arr',
     'ephox.perhaps.Option',
-    'ephox.robin.api.Parent',
+    'ephox.robin.api.dom.Parent',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.SelectorFind'

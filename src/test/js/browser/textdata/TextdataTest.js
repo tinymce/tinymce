@@ -3,7 +3,7 @@ test(
 
   [
     'ephox.perhaps.Option',
-    'ephox.robin.api.Textdata',
+    'ephox.robin.api.dom.Textdata',
     'ephox.robin.test.Assertions',
     'ephox.sugar.api.Element'
   ],

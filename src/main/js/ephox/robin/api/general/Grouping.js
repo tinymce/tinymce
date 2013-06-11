@@ -1,18 +1,18 @@
 define(
-  'ephox.robin.api.Grouping',
+  'ephox.robin.api.general.Grouping',
 
   [
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
-    'ephox.phoenix.extract.Extract',
-    'ephox.phoenix.util.arr.Split'
+    'ephox.phoenix.api.general.Extract',
+    'ephox.polaris.api.Arrays'
   ],
 
-  function (Arr, Fun, Extract, Split) {
-    var text = function (element) {
+  function (Arr, Fun, Extract, Arrays) {
+    var text = function (universe, element) {
       // Used in phoenix, but phoenix doesn't split on empty
-      var extractions = Extract.from(element);
-      var segments = Split.split(extractions, function (x) {
+      var extractions = Extract.from(universe, element);
+      var segments = Arrays.splitby(extractions, function (x) {
         return x.fold(Fun.constant(true), Fun.constant(true), Fun.constant(false));
       });
 

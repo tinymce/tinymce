@@ -8,7 +8,7 @@ define(
     'ephox.phoenix.api.general.Extract',
     'ephox.phoenix.api.general.Gather',
     'ephox.polaris.api.Arrays',
-    'ephox.robin.api.Zone',
+    'ephox.robin.api.general.Zone',
     'ephox.robin.words.Identify',
     'ephox.robin.words.Prune',
     'ephox.robin.words.Transform'

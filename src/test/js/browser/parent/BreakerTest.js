@@ -2,7 +2,7 @@ test(
   'parent :: Breaker',
 
   [
-    'ephox.robin.api.Parent',
+    'ephox.robin.api.dom.Parent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Html',
     'ephox.sugar.api.SelectorFind'

@@ -3,12 +3,11 @@ test(
 
   [
     'ephox.compass.Arr',
-    'ephox.robin.api.Words',
-    'ephox.robin.test.BrowserCheck',
-    'ephox.robin.words.Cluster'
+    'ephox.robin.api.dom.Words',
+    'ephox.robin.test.BrowserCheck'
   ],
 
-  function (Arr, Words, BrowserCheck, Cluster) {
+  function (Arr, Words, BrowserCheck) {
     var check = function (expected, input, f) {
       BrowserCheck.run(input, function (node) {
         var actual = f(node);

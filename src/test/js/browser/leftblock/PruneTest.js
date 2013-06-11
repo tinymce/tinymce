@@ -2,19 +2,21 @@ test(
   'leftblock :: Prune',
 
   [
+    'ephox.boss.api.DomUniverse',
     'ephox.perhaps.Option',
     'ephox.robin.leftblock.Prune',
     'ephox.robin.test.Assertions',
     'ephox.robin.test.BrowserCheck'
   ],
 
-  function (Option, Prune, Assertions, BrowserCheck) {
+  function (DomUniverse, Option, Prune, Assertions, BrowserCheck) {
+    var prune = Prune(DomUniverse());
 
     var check = function (expected, input) {
       BrowserCheck.run(input, function (node) {
-        assert.eq(expected.stop, Prune.stop(node));
-        Assertions.assertOpt(expected.left, Prune.left(node));
-        Assertions.assertOpt(Option.some([]), Prune.right(node));
+        assert.eq(expected.stop, prune.stop(node));
+        Assertions.assertOpt(expected.left, prune.left(node));
+        Assertions.assertOpt(Option.some([]), prune.right(node));
       });
     };
 

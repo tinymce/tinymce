@@ -1,5 +1,5 @@
 define(
-  'ephox.robin.api.Zone',
+  'ephox.robin.api.general.Zone',
 
   [
     'ephox.peanut.Fun'

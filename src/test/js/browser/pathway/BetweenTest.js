@@ -3,7 +3,7 @@ test(
 
   [
     'ephox.compass.Arr',
-    'ephox.robin.api.Pathway',
+    'ephox.robin.api.dom.Pathway',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Elements',
