@@ -14,6 +14,7 @@ define("tinymce/dom/EventUtils", [], function() {
 	"use strict";
 
 	var eventExpandoPrefix = "mce-data-";
+	var mouseEventRe = /^(?:mouse|contextmenu)|click/;
 
 	/**
 	 * Binds a native event to a callback on the speified target.
@@ -41,7 +42,7 @@ define("tinymce/dom/EventUtils", [], function() {
 	 * Normalizes a native event object or just adds the event specific methods on a custom event.
 	 */
 	function fix(originalEvent, data) {
-		var name, event = data || {};
+		var name, event = data || {}, undef;
 
 		// Dummy function that gets replaced on the delegation state functions
 		function returnFalse() {
@@ -64,6 +65,19 @@ define("tinymce/dom/EventUtils", [], function() {
 		// Normalize target IE uses srcElement
 		if (!event.target) {
 			event.target = event.srcElement || document;
+		}
+
+		// Calculate pageX/Y if missing and clientX/Y available
+		if (mouseEventRe.test(originalEvent.type) && originalEvent.pageX === undef && originalEvent.clientX !== undef) {
+			var eventDoc = event.target.ownerDocument || document;
+			var doc = eventDoc.documentElement;
+			var body = eventDoc.body;
+
+			event.pageX = originalEvent.clientX + (doc && doc.scrollLeft || body && body.scrollLeft || 0 ) -
+				( doc && doc.clientLeft || body && body.clientLeft || 0);
+
+			event.pageY = originalEvent.clientY + (doc && doc.scrollTop  || body && body.scrollTop  || 0 ) -
+				( doc && doc.clientTop  || body && body.clientTop  || 0);
 		}
 
 		// Add preventDefault method
