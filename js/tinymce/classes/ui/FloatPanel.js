@@ -93,7 +93,7 @@ define("tinymce/ui/FloatPanel", [
 						if (visiblePanels[i] != panel) {
 							parent = visiblePanels[i].parent();
 
-							while ((parent = parent.parent())) {
+							while (parent && (parent = parent.parent())) {
 								if (parent == panel) {
 									visiblePanels[i].fixed(fixed).moveBy(0, deltaY).repaint();
 								}
