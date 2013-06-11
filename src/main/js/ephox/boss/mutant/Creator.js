@@ -28,7 +28,7 @@ define(
     var clone = function (item) {
       return Merger.merge({}, item, {
         children: [],
-        item: 'clone**<' + item.id + '>'
+        id: 'clone**<' + item.id + '>'
       });
     };
 

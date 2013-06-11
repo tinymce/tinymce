@@ -6,6 +6,6 @@ test(
   ],
 
   function (Creator) {
-    assert.eq({ name: 'cat', children: [] }, Creator.clone({ name: 'cat', children: [ 'kittens' ] }));
+    assert.eq({ id: 'clone**<c>', name: 'cat', children: [] }, Creator.clone({ id: 'c', name: 'cat', children: [ 'kittens' ] }));
   }
 );
