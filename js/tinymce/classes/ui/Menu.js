@@ -40,7 +40,7 @@ define("tinymce/ui/Menu", [
 			var self = this;
 
 			settings.autohide = true;
-			settings.contrainToViewport = true;
+			settings.constrainToViewport = true;
 
 			self._super(settings);
 			self.addClass('menu');

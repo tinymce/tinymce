@@ -103,7 +103,7 @@ define("tinymce/ui/MenuButton", [
 
 			self.menu.show();
 			self.menu.layoutRect({w: self.layoutRect().w});
-			self.menu.moveRel(self.getEl(), 'bl-tl');
+			self.menu.moveRel(self.getEl(), ['bl-tl', 'tl-bl']);
 		},
 
 		/**

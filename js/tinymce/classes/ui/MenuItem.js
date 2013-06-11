@@ -117,7 +117,9 @@ define("tinymce/ui/MenuItem", [
 			});
 
 			if (settings.menu) {
-				if (!self.menu) {
+				menu = self.menu;
+
+				if (!menu) {
 					menu = settings.menu;
 
 					// Is menu array then auto constuct menu control
@@ -130,26 +132,34 @@ define("tinymce/ui/MenuItem", [
 						menu.type = menu.type || 'menu';
 					}
 
-					self.menu = Factory.create(menu).parent(self).renderTo(self.getContainerElm());
-					self.menu.reflow();
-					self.menu.fire('show');
-					self.menu.on('cancel', function() {
+					menu = self.menu = Factory.create(menu).parent(self).renderTo(self.getContainerElm());
+					menu.reflow();
+					menu.fire('show');
+					menu.on('cancel', function() {
 						self.focus();
 					});
 
-					self.menu.on('hide', function(e) {
-						if (e.control === self.menu) {
+					menu.on('hide', function(e) {
+						if (e.control === menu) {
 							self.removeClass('selected');
 						}
 					});
 				} else {
-					self.menu.show();
+					menu.show();
 				}
 
-				self.menu._parentMenu = self.parent();
+				menu._parentMenu = self.parent();
 
-				self.menu.addClass('menu-sub');
-				self.menu.moveRel(self.getEl(), 'tr-tl');
+				menu.addClass('menu-sub');
+
+				var rel = menu.testMoveRel(self.getEl(), ['tr-tl', 'br-bl', 'tl-tr', 'bl-br']);
+				menu.moveRel(self.getEl(), rel);
+
+				rel = 'menu-sub-' + rel;
+				menu.removeClass(menu._lastRel);
+				menu.addClass(rel);
+				menu._lastRel = rel;
+
 				self.addClass('selected');
 				self.aria('expanded', true);
 			}

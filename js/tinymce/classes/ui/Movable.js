@@ -18,7 +18,105 @@ define("tinymce/ui/Movable", [
 ], function(DomUtils) {
 	"use strict";
 
+	function calculateRelativePosition(ctrl, targetElm, rel) {
+		var ctrlElm, pos, x, y, selfW, selfH, targetW, targetH, viewport;
+
+		viewport = DomUtils.getViewPort();
+
+		// Get pos of target
+		pos = DomUtils.getPos(targetElm);
+		x = pos.x;
+		y = pos.y;
+
+		if (ctrl._fixed) {
+			x -= viewport.x;
+			y -= viewport.y;
+		}
+
+		// Get size of self
+		ctrlElm = ctrl.getEl();
+		selfW = ctrlElm.offsetWidth;
+		selfH = ctrlElm.offsetHeight;
+
+		// Get size of target
+		targetW = targetElm.offsetWidth;
+		targetH = targetElm.offsetHeight;
+
+		// Parse align string
+		rel = (rel || '').split('');
+
+		// Target corners
+		if (rel[0] === 'b') {
+			y += targetH;
+		}
+
+		if (rel[1] === 'r') {
+			x += targetW;
+		}
+
+		if (rel[0] === 'c') {
+			y += Math.round(targetH / 2);
+		}
+
+		if (rel[1] === 'c') {
+			x += Math.round(targetW / 2);
+		}
+
+		// Self corners
+		if (rel[3] === 'b') {
+			y -= selfH;
+		}
+
+		if (rel[4] === 'r') {
+			x -= selfW;
+		}
+
+		if (rel[3] === 'c') {
+			y -= Math.round(selfH / 2);
+		}
+
+		if (rel[4] === 'c') {
+			x -= Math.round(selfW / 2);
+		}
+
+		return {
+			x: x,
+			y: y,
+			w: selfW,
+			h: selfH
+		};
+	}
+
 	return {
+		/**
+		 * Tests various positions to get the most suitable one.
+		 *
+		 * @method testMoveRel
+		 * @param {DOMElement} elm Element to position against.
+		 * @param {Array} rels Array with relative positions.
+		 * @return {String} Best suitable relative position.
+		 */
+		testMoveRel: function(elm, rels) {
+			var viewPortRect = DomUtils.getViewPort();
+
+			for (var i = 0; i < rels.length; i++) {
+				var pos = calculateRelativePosition(this, elm, rels[i]);
+
+				if (this._fixed) {
+					if (pos.x > 0 && pos.x + pos.w < viewPortRect.w && pos.y > 0 && pos.y + pos.h < viewPortRect.h) {
+						return rels[i];
+					}
+				} else {
+					if (pos.x > viewPortRect.x && pos.x + pos.w < viewPortRect.w + viewPortRect.x &&
+						pos.y > viewPortRect.y && pos.y + pos.h < viewPortRect.h + viewPortRect.y) {
+						return rels[i];
+					}
+				}
+			}
+
+			return rels[0];
+		},
+
 		/**
 		 * Move relative to the specified element.
 		 *
@@ -28,69 +126,12 @@ define("tinymce/ui/Movable", [
 		 * @return {tinymce.ui.Control} Current control instance.
 		 */
 		moveRel: function(elm, rel) {
-			var self = this, ctrlElm, pos, x, y, selfW, selfH, targetW, targetH, viewport;
-
-			viewport = DomUtils.getViewPort();
-
-			// Get pos of target
-			pos = DomUtils.getPos(elm);
-			x = pos.x;
-			y = pos.y;
-
-			if (self._fixed) {
-				x -= viewport.x;
-				y -= viewport.y;
+			if (typeof(rel) != 'string') {
+				rel = this.testMoveRel(elm, rel);
 			}
 
-			// Get size of self
-			ctrlElm = self.getEl();
-			selfW = ctrlElm.offsetWidth;
-			selfH = ctrlElm.offsetHeight;
-
-			// Get size of target
-			targetW = elm.offsetWidth;
-			targetH = elm.offsetHeight;
-
-			// Parse align string
-			rel = (rel || '').split('');
-
-			// Target corners
-			if (rel[0] === 'b') {
-				y += targetH;
-			}
-
-			if (rel[1] === 'r') {
-				x += targetW;
-			}
-
-			if (rel[0] === 'c') {
-				y += Math.round(targetH / 2);
-			}
-
-			if (rel[1] === 'c') {
-				x += Math.round(targetW / 2);
-			}
-
-			// Self corners
-			if (rel[3] === 'b') {
-				y -= selfH;
-			}
-
-			if (rel[4] === 'r') {
-				x -= selfW;
-			}
-
-			if (rel[3] === 'c') {
-				y -= Math.round(selfH / 2);
-			}
-
-			if (rel[4] === 'c') {
-				x -= Math.round(selfW / 2);
-			}
-
-			self.moveTo(x, y);
-
-			return self;
+			var pos = calculateRelativePosition(this, elm, rel);
+			return this.moveTo(pos.x, pos.y);
 		},
 
 		/**
@@ -134,7 +175,7 @@ define("tinymce/ui/Movable", [
 				return value;
 			}
 
-			if (self.settings.contrainToViewport) {
+			if (self.settings.constrainToViewport) {
 				var viewPortRect = DomUtils.getViewPort(window);
 				var layoutRect = self.layoutRect();
 
