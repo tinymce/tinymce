@@ -7,19 +7,22 @@ define(
   ],
 
   function (GatherResult, Transforms) {
-    var ignoreChildren = function (iter, elem, prune) {
-      return prune.stop(elem) ? GatherResult([], true) : GatherResult([elem], false);
-    };
+    return function (universe) {
+      var ignoreChildren = function (iter, elem, prune) {
+        return prune.stop(elem) ? GatherResult([], true) : GatherResult([elem], false);
+      };
 
-    var inspectChildren = function (iter, elem, prune) {
-      return Transforms.traverse(iter, elem, prune, function (element) {
-        return [ element ];
-      });
-    };
+      var inspectChildren = function (iter, elem, prune) {
+        var transforms = Transforms(universe);
+        return transforms.traverse(iter, elem, prune, function (element) {
+          return [ element ];
+        });
+      };
 
-    return {
-      ignoreChildren: ignoreChildren,
-      inspectChildren: inspectChildren
+      return {
+        ignoreChildren: ignoreChildren,
+        inspectChildren: inspectChildren
+      };
     };
   }
 );
