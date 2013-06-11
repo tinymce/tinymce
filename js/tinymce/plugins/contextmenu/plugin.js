@@ -56,9 +56,13 @@ tinymce.PluginManager.add('contextmenu', function(editor) {
 		}
 
 		// Position menu
-		var pos = tinymce.DOM.getPos(editor.getContentAreaContainer());
-		pos.x += e.clientX;
-		pos.y += e.clientY;
+		var pos = {x: e.pageX, y: e.pageY};
+
+		if (!editor.inline) {
+			pos = tinymce.DOM.getPos(editor.getContentAreaContainer());
+			pos.x += e.clientX;
+			pos.y += e.clientY;
+		}
 
 		menu.moveTo(pos.x, pos.y);
 
