@@ -6,15 +6,15 @@ define(
     'ephox.perhaps.Option',
     'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.api.general.Family',
+    'ephox.phoenix.extract.TypedList',
     'ephox.phoenix.search.MatchSplitter',
     'ephox.phoenix.search.Sleuth',
-    'ephox.phoenix.util.doc.List',
     'ephox.polaris.api.Pattern',
     'ephox.polaris.api.PositionArray',
     'ephox.scullion.Struct'
   ],
 
-  function (Arr, Option, Spot, Family, MatchSplitter, Sleuth, List, Pattern, PositionArray, Struct) {
+  function (Arr, Option, Spot, Family, TypedList, MatchSplitter, Sleuth, Pattern, PositionArray, Struct) {
     var namedPattern = Struct.immutable('word', 'pattern');
 
     var gen = function (universe, input) {
@@ -27,7 +27,7 @@ define(
     var run = function (universe, elements, patterns) {
       var sections = Family.group(universe, elements);
       var result = Arr.bind(sections, function (x) {
-        var input = List.justText(x);
+        var input = TypedList.justText(x);
         var text = Arr.map(input, universe.property().getText).join('');
 
         var matches = Sleuth.search(text, patterns);

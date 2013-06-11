@@ -1,5 +1,5 @@
 define(
-  'ephox.phoenix.util.doc.List',
+  'ephox.phoenix.extract.TypedList',
 
   [
     'ephox.compass.Arr',
@@ -10,29 +10,28 @@ define(
   ],
 
   function (Arr, Fun, Option, Spot, Arrays) {
-
-    var count = function (list) {
-      return Arr.foldr(list, function (b, a) {
+    var count = function (parray) {
+      return Arr.foldr(parray, function (b, a) {
         return a.len() + b;
       }, 0);
     };
 
-    var dropUntil = function (elements, target) {
-      return Arrays.sliceby(elements, function (x) {
+    var dropUntil = function (parray, target) {
+      return Arrays.sliceby(parray, function (x) {
         return x.is(target);
       });
     };
 
-    var gen = function (a, start) {
-      return a.fold(Option.none, function (e) {
+    var gen = function (unit, start) {
+      return unit.fold(Option.none, function (e) {
         return Option.some(Spot.range(e, start, start + 1));
       }, function (t) {
-        return Option.some(Spot.range(t, start, start + a.len()));
+        return Option.some(Spot.range(t, start, start + unit.len()));
       });
     };
 
-    var justText = function (elements) {
-      return Arr.bind(elements, function (x) {
+    var justText = function (parray) {
+      return Arr.bind(parray, function (x) {
         return x.fold(Fun.constant([]), Fun.constant([]), Fun.identity);
       });
     };
@@ -43,5 +42,6 @@ define(
       gen: gen,
       justText: justText
     };
+
   }
 );

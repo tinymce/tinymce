@@ -5,10 +5,10 @@ define(
     'ephox.compass.Arr',
     'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.extract.TypedItem',
-    'ephox.phoenix.util.doc.List'
+    'ephox.phoenix.extract.TypedList'
   ],
 
-  function (Arr, Spot, TypedItem, List) {
+  function (Arr, Spot, TypedItem, TypedList) {
     var typed = function (universe, item) {
       if (universe.property().isText(item)) {
         return [ TypedItem.text(item, universe) ];
@@ -46,8 +46,8 @@ define(
 
     var extractToElem = function (universe, child, offset, item) {
       var extractions = typed(universe, item);
-      var prior = List.dropUntil(extractions, child);
-      var count = List.count(prior);
+      var prior = TypedList.dropUntil(extractions, child);
+      var count = TypedList.count(prior);
       return Spot.point(item, count + offset);
     };
 
