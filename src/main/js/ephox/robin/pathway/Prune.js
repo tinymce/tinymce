@@ -3,18 +3,17 @@ define(
 
   [
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.sugar.api.Compare'
+    'ephox.perhaps.Option'
   ],
 
-  function (Fun, Option, Compare) {
-    var range = function (start, finish) {
+  function (Fun, Option) {
+    var range = function (universe, start, finish) {
       var abort = Fun.constant(Option.some([]));
-      var scour = function (element) {
-        return Compare.eq(element, finish) ? Option.some([element]) : Option.none();
+      var scour = function (item) {
+        return universe.eq(item, finish) ? Option.some([item]) : Option.none();
       };
 
-      var direction = start.dom().compareDocumentPosition(finish.dom());
+      var direction = universe.query().comparePosition(start, finish);
       return {
         left: direction & 2 ? scour : abort,
         right: direction & 4 ? scour : abort,
