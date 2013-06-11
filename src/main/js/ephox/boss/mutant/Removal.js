@@ -3,11 +3,13 @@ define(
 
   [
     'ephox.boss.mutant.Comparator',
+    'ephox.boss.mutant.Detach',
+    'ephox.boss.mutant.Up',
     'ephox.compass.Arr',
     'ephox.perhaps.Option'
   ],
 
-  function (Comparator, Arr, Option) {
+  function (Comparator, Detach, Up, Arr, Option) {
     var unwrap = function (item) {
       item.parent.each(function (parent) {
         var children = item.children;
@@ -25,8 +27,18 @@ define(
       });
     };
 
+    var remove = function (item) {
+      detach(item);
+    };
+
+    var detach = function (item) {
+      Detach.detach(Up.top(item), item);
+    };
+
     return {
-      unwrap: unwrap
+      unwrap: unwrap,
+      remove: remove,
+      detach: detach
     };
   }
 );

@@ -60,7 +60,9 @@ define(
           wrap: Insert.wrap
         }),
         remove: Fun.constant({
-          unwrap: Remove.unwrap
+          unwrap: Remove.unwrap,
+          detach: Remove.detach,
+          remove: Remove.remove
         }),
         create: Fun.constant({
           nu: Element.fromTag,

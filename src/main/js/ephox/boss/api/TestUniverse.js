@@ -66,7 +66,9 @@ define(
           wrap: wrap
         }),
         remove: Fun.constant({
-          unwrap: Removal.unwrap
+          unwrap: Removal.unwrap,
+          detach: Removal.detach,
+          remove: Removal.remove
         }),
         create: Fun.constant({
           nu: Creator.nu,
