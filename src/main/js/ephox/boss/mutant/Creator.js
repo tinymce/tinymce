@@ -3,12 +3,26 @@ define(
 
   [
     'ephox.boss.api.TextGene',
-    'ephox.highway.Merger'
+    'ephox.highway.Merger',
+    'global!Math'
   ],
 
-  function (TextGene, Merger) {
+  function (TextGene, Merger, Math) {
+    var isNu = function (item) {
+      return item.id === 'nu_' + item.name || item.id === '?_' + item.text;
+    };
+
+    var seed = function () {
+      return {
+        random: Math.random()
+      };
+    };
+
     var nu = function (name) {
-      return { id: 'nu_' + name, name: name };
+      return Merger.merge(
+        { id: 'nu_' + name, name: name },
+        seed()
+      );
     };
 
     var clone = function (item) {
@@ -18,13 +32,17 @@ define(
     };
 
     var text = function (value) {
-      return TextGene('?_' + value, value);
+      return Merger.merge(
+        TextGene('?_' + value, value),
+        seed()
+      );
     };
 
     return {
       nu: nu,
       clone: clone,
-      text: text
+      text: text,
+      isNu: isNu
     };
   }
 );

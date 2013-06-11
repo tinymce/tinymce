@@ -3,12 +3,13 @@ test(
 
   [
     'ephox.boss.mutant.Detach',
+    'ephox.boss.mutant.Locator',
     'ephox.boss.mutant.Logger',
     'ephox.boss.mutant.Tracks',
     'ephox.perhaps.Option'
   ],
 
-  function (Detach, Logger, Tracks, Option) {
+  function (Detach, Locator, Logger, Tracks, Option) {
     var family = Tracks.track(
     {
       id: 'A',
@@ -25,13 +26,14 @@ test(
 
     var check = function (expected, input, id) {
       var family = Tracks.track(input, Option.none());
-      var actual = Detach.detach(family, id);
+      var target = Locator.byId(family, id).getOrDie();
+      var actual = Detach.detach(family, target);
       assert.eq(expected, Logger.basic(family));
     };
 
     var checkNone = function (expected, input, id) {
       var family = Tracks.track(input, Option.none());
-      var actual = Detach.detach(family, id);
+      var actual = Detach.detach(family, { id: id });
       assert.eq(false, actual.isSome());
     };
 

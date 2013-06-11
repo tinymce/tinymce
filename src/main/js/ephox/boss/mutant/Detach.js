@@ -9,8 +9,8 @@ define(
   ],
 
   function (Comparator, Locator, Arr, Option) {
-    var detach = function (root, id) {
-      return Locator.byId(root, id).bind(function (item) {
+    var detach = function (root, target) {
+      return Locator.byItem(root, target).bind(function (item) {
         return item.parent.bind(function (parent) {
           var index = Arr.findIndex(parent.children || [], function (child) {
             return Comparator.eq(child, item);
