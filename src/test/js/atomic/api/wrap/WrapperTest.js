@@ -6,13 +6,11 @@ test(
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
     'ephox.boss.mutant.Logger',
-    'ephox.phoenix.api.general.Extract',
     'ephox.phoenix.api.general.Wrapping',
-    'ephox.phoenix.test.Finder',
-    'ephox.phoenix.test.TestRenders'
+    'ephox.phoenix.test.Finder'
   ],
 
-  function (Gene, TestUniverse, TextGene, Logger, Extract, Wrapping, Finder, TestRenders) {
+  function (Gene, TestUniverse, TextGene, Logger, Wrapping, Finder) {
     var doc = TestUniverse(
       Gene('root', 'root', [
         Gene('a', '', [
@@ -47,7 +45,6 @@ test(
 
     var counter = 0;
     var factory = function () {
-      console.log('running');
       var item = { id: 'wrap_' + counter };
       counter++;
       return Wrapping.nu(doc, item);
@@ -59,9 +56,18 @@ test(
       });
     };
 
+    var check = function (overall, expResult, startId, startOffset, endId, endOffset) {
+      counter = 0;
+      var actual = Wrapping.leaves(doc, Finder.get(doc, startId), startOffset, Finder.get(doc, endId), endOffset, factory).getOrDie();
+      assert.eq(overall, dump());
+      assert.eq(expResult.beginId, actual.begin().element().id);
+      assert.eq(expResult.beginOffset, actual.begin().offset());
+      assert.eq(expResult.endId, actual.end().element().id);
+      assert.eq(expResult.endOffset, actual.end().offset());
+    };
+
     // Let's just do stuff.
-    Wrapping.leaves(doc, Finder.get(doc, 'aa'), 1, Finder.get(doc, 'aca'), 4, factory);
-    assert.eq(
+    var result = check(
       'root(' +
         'a(' +
           'aa(' +
@@ -91,18 +97,6 @@ test(
           ')' +
         '),' +
         'b("yes")' +
-      ')', dump());
-
+      ')', { beginId: 'wrap_0', beginOffset: 0, endId: 'wrap_6', endOffset: 1 }, 'aa', 1, 'aca', 4);
   }
 );
-/*
-
-Gene('ac', '', [
-            TextGene('aca', ' --- OCD he was, ')
-          ])
-        ]),
-        TextGene('b', 'yes')
-
-
-            ])
-          ]),*/ 
