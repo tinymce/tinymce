@@ -19,10 +19,15 @@ define(
       return Wrapper.wrapper(universe, wrapped, c);
     };
 
+    var leaves = function (universe, base, baseOffset, end, endOffset, c) {
+      return Wrapper.leaves(universe, base, baseOffset, end, endOffset, c);
+    };
+
     return {
       nu: nu,
       wrapWith: wrapWith,
-      wrapper: wrapper
+      wrapper: wrapper,
+      leaves: leaves
     };
   }
 );

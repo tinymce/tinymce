@@ -3,10 +3,13 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.phoenix.api.general.Split'
+    'ephox.perhaps.Option',
+    'ephox.phoenix.api.data.Spot',
+    'ephox.phoenix.api.general.Split',
+    'ephox.phoenix.wrap.Navigation'
   ],
 
-  function (Arr, Split) {
+  function (Arr, Option, Spot, Split, Navigation) {
     var wrapWith = function (universe, base, baseOffset, end, endOffset, nu) {
       var nodes = Split.range(universe, base, baseOffset, end, endOffset);
       return wrapper(universe, nodes, nu);
@@ -27,9 +30,26 @@ define(
       });
     };
 
+    var leaves = function (universe, base, baseOffset, end, endOffset, nu) {
+      var start = Navigation.toLeaf(universe, base, baseOffset);
+      var finish = Navigation.toLeaf(universe, end, endOffset);
+
+      console.log('start: ', start.element().id, 'finish: ', finish.element().id);
+
+      var wrapped = wrapWith(universe, start.element(), start.offset(), finish.element(), finish.offset(), nu);
+      return Option.from(wrapped[0]).map(function (first) {
+        var last = Navigation.toLast(universe, wrapped);
+        return Spot.points(
+          Spot.point(first, 0),
+          Spot.point(last.element(), last.offset())
+        );
+      });
+    };
+
     return {
       wrapWith: wrapWith,
-      wrapper: wrapper
+      wrapper: wrapper,
+      leaves: leaves
     };
 
   }

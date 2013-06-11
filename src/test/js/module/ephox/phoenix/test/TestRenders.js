@@ -16,6 +16,10 @@ define(
       });
     };
 
+    var typeditems = function (items) {
+      return Arr.map(items, typeditem);
+    };
+
     var ids = function (items) {
       return Arr.map(items, id);
     };
@@ -34,6 +38,7 @@ define(
 
     return {
       typeditem: typeditem,
+      typeditems: typeditems,
       ids: ids,
       id: id,
       texts: texts,
