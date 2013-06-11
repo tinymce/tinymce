@@ -4,18 +4,17 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.perhaps.Option',
-    'ephox.phoenix.search.Chars',
-    'ephox.phoenix.search.Pattern',
-    'ephox.phoenix.util.str.Find',
+    'ephox.polaris.api.Pattern',
+    'ephox.polaris.api.Search',
     'ephox.robin.data.WordScope',
     'ephox.robin.util.WordSanitiser',
     'global!RegExp'
   ],
 
-  function (Arr, Option, Chars, Pattern, Find, WordScope, WordSanitiser, RegExp) {
+  function (Arr, Option, Pattern, Search, WordScope, WordSanitiser, RegExp) {
     var words = function (allText) {
-      var pattern = Pattern.token(Chars.wordchar() + '+');
-      var matches = Find.all(allText, pattern);
+      var pattern = Pattern.unsafetoken(Pattern.wordchar() + '+');
+      var matches = Search.findall(allText, pattern);
       var len = allText.length;
 
       // FIX ... I may possibly index strings elsewhere.

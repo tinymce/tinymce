@@ -2,7 +2,7 @@ define(
   'ephox.robin.words.Transform',
 
   [
-    'ephox.phoenix.data.Spot',
+    'ephox.phoenix.api.data.Spot',
     'ephox.robin.gather.Transforms',
     'ephox.sugar.api.Text'
   ],

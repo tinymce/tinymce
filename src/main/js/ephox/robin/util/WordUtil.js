@@ -4,20 +4,19 @@ define(
   [
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.phoenix.search.Chars',
-    'ephox.phoenix.search.Pattern',
-    'ephox.phoenix.util.str.Find',
+    'ephox.polaris.api.Pattern',
+    'ephox.polaris.api.Search',
     'global!RegExp'
   ],
 
-  function (Fun, Option, Chars, Pattern, Find, RegExp) {
+  function (Fun, Option, Pattern, Search, RegExp) {
 
-    var wordstart = new RegExp(Chars.wordbreak() + '+', 'g');
+    var wordstart = new RegExp(Pattern.wordbreak() + '+', 'g');
 
     var zero = Fun.constant(0);
 
     var lastWord = function (text) {
-      var indices = Find.all(text, Pattern.custom(Chars.wordbreak(), 1, zero, zero));
+      var indices = Search.findall(text, Pattern.custom(Pattern.wordbreak(), zero, zero));
       var last = Option.from(indices[indices.length - 1]);
       return last.map(function (v) {
         return text.substring(v.start());
