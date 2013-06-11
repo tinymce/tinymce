@@ -3,17 +3,20 @@ define(
 
   [
     'ephox.phoenix.api.data.Spot',
-    'ephox.robin.gather.Transforms',
-    'ephox.sugar.api.Text'
+    'ephox.robin.gather.Transforms'
   ],
 
-  function (Spot, Transforms, Text) {
-    return function (iter, elem, prune) {
-      var f = function (x) {
-        var spot = Spot.text(x, Text.get(x));
-        return [spot];
+  function (Spot, Transforms) {
+    return function (universe) {
+      var transforms = Transforms(universe);
+
+      return function (iter, elem, prune) {
+        var f = function (x) {
+          var spot = Spot.text(x, universe.property().getText(x));
+          return [spot];
+        };
+        return transforms.traverse(iter, elem, prune, f);
       };
-      return Transforms.traverse(iter, elem, prune, f);
     };
   }
 );

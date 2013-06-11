@@ -4,33 +4,32 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
-    'ephox.phoenix.data.Spot',
-    'ephox.phoenix.extract.Extract',
-    'ephox.phoenix.gather.Gather',
-    'ephox.phoenix.util.arr.Split',
-    'ephox.phoenix.util.node.Classification',
+    'ephox.phoenix.api.data.Spot',
+    'ephox.phoenix.api.general.Extract',
+    'ephox.phoenix.api.general.Gather',
+    'ephox.polaris.api.Arrays',
     'ephox.robin.api.Zone',
     'ephox.robin.words.Identify',
     'ephox.robin.words.Prune',
-    'ephox.robin.words.Transform',
-    'ephox.sugar.api.Text'
+    'ephox.robin.words.Transform'
   ],
 
-  function (Arr, Fun, Spot, Extract, Gather, Split, Classification, Zone, Identify, Prune, Transform, Text) {
-    var generate = function (element) {
-      var gathered = Gather.gather(element, Prune, Transform);
+  function (Arr, Fun, Spot, Extract, Gather, Arrays, Zone, Identify, Prune, Transform) {
+    var generate = function (universe, element) {
+      var prune = Prune(universe);
+      var gathered = Gather.gather(universe, element, prune, Transform(universe));
       var left = gathered.left();
       var right = gathered.right();
 
-      var inner = Extract.all(element);
+      var inner = Extract.all(universe, element);
       var middle = Arr.map(inner, function (x) {
-        return Spot.text(x, Text.getOption(x).getOr(''));
+        return Spot.text(x, universe.property().isText(x) ? universe.property().getText(x) : '');
       });
 
       var elements = left.concat(middle).concat(right);
-      var groups = Split.split(elements, function (x) {
+      var groups = Arrays.splitby(elements, function (x) {
         var elem = x.element();
-        return Classification.isBoundary(elem) || Classification.isEmpty(elem);
+        return universe.property().isBoundary(elem) || universe.property().isEmptyTag(elem);
       });
 
       var words = Arr.bind(groups, function (x) {

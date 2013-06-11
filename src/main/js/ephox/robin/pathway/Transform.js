@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.peanut.Fun',
-    'ephox.phoenix.gather.GatherResult',
+    'ephox.phoenix.api.data.GatherResult',
     'ephox.sugar.api.Traverse'
   ],
 

@@ -15,6 +15,7 @@ define(
     var words = function (allText) {
       var pattern = Pattern.unsafetoken(Pattern.wordchar() + '+');
       var matches = Search.findall(allText, pattern);
+
       var len = allText.length;
 
       // FIX ... I may possibly index strings elsewhere.
