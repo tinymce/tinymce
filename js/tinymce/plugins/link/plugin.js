@@ -260,7 +260,7 @@ tinymce.PluginManager.add('link', function(editor) {
 
 	editor.addMenuItem('link', {
 		icon: 'link',
-		text: 'Insert link',
+		text: 'Insert/edit link',
 		shortcut: 'Ctrl+K',
 		onclick: createLinkList(showDialog),
 		stateSelector: 'a[href]',
