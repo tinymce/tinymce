@@ -44,6 +44,18 @@
 				'Change Undo Redo AddUndo BeforeAddUndo', function(e) {
 				console.log(e.type, e);
 			});*/
+		},
+
+		spellcheck_callback: function(method, words, callback) {
+			if (method == "spellcheck") {
+				var suggestions = {};
+
+				for (var i = 0; i < words.length; i++) {
+					suggestions[words[i]] = ["First", "second"];
+				}
+
+				callback(suggestions);
+			}
 		}
 	});
 </script>

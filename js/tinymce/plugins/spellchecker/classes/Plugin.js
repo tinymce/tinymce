@@ -25,7 +25,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 	"tinymce/util/JSONRequest"
 ], function(DomTextMatcher, PluginManager, Tools, Menu, DOMUtils, JSONRequest) {
 	PluginManager.add('spellchecker', function(editor) {
-		var lastSuggestions, started, suggestionsMenu;
+		var lastSuggestions, started, suggestionsMenu, settings = editor.settings;
 
 		function isEmpty(obj) {
 			/*jshint unused:false*/
@@ -130,12 +130,12 @@ define("tinymce/spellcheckerplugin/Plugin", [
 				}
 			});
 
-			editor.settings.spellcheck_callback = function(method, words, doneCallback) {
+			function defaultSpellcheckCallback(method, words, doneCallback) {
 				JSONRequest.sendRPC({
-					url: editor.settings.spellchecker_rpc_url,
+					url: settings.spellchecker_rpc_url,
 					method: method,
 					params: {
-						lang: editor.settings.spellchecker_language || "en",
+						lang: settings.spellchecker_language || "en",
 						words: words
 					},
 					success: function(result) {
@@ -153,10 +153,12 @@ define("tinymce/spellcheckerplugin/Plugin", [
 						textFilter = null;
 					}
 				});
-			};
+			}
 
 			editor.setProgressState(true);
-			editor.settings.spellcheck_callback("spellcheck", words, doneCallback);
+
+			var spellCheckCallback = settings.spellcheck_callback || defaultSpellcheckCallback;
+			spellCheckCallback("spellcheck", words, doneCallback);
 		}
 
 		function checkIfFinished() {
