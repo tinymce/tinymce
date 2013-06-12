@@ -122,7 +122,10 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 
 	function onButtonClick() {
 		var self = this;
-		editor.execCommand(self.settings.selectcmd, false, self._color);
+
+		if (self._color) {
+			editor.execCommand(self.settings.selectcmd, false, self._color);
+		}
 	}
 
 	editor.addButton('forecolor', {
