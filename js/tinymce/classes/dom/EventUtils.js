@@ -68,7 +68,7 @@ define("tinymce/dom/EventUtils", [], function() {
 		}
 
 		// Calculate pageX/Y if missing and clientX/Y available
-		if (mouseEventRe.test(originalEvent.type) && originalEvent.pageX === undef && originalEvent.clientX !== undef) {
+		if (originalEvent && mouseEventRe.test(originalEvent.type) && originalEvent.pageX === undef && originalEvent.clientX !== undef) {
 			var eventDoc = event.target.ownerDocument || document;
 			var doc = eventDoc.documentElement;
 			var body = eventDoc.body;
