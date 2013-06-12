@@ -67,7 +67,7 @@ define("tinymce/Shortcuts", [
 				cmdFunc = function() {
 					editor.execCommand(cmd, false, null);
 				};
-			} else if (cmdFunc.length) {
+			} else if (Tools.isArray(cmd)) {
 				cmdFunc = function() {
 					editor.execCommand(cmd[0], cmd[1], cmd[2]);
 				};
