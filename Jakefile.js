@@ -281,6 +281,13 @@ task("less", [], function () {
 		toCss: "js/tinymce/skins/lightgray/content.min.css",
 		baseDir: "js/tinymce/skins/lightgray"
 	});
+
+	// Content CSS (inline)
+	less({
+		from: ["Content.Inline.less"],
+		toCss: "js/tinymce/skins/lightgray/content.inline.min.css",
+		baseDir: "js/tinymce/skins/lightgray"
+	});
 });
 
 desc("Builds release packages as zip files");

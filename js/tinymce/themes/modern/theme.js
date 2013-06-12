@@ -510,8 +510,8 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				tinymce.DOM.loadCSS(tinymce.baseURL + '/skins/' + skin + '/skin.min.css');
 			}
 
-			// Load content_css
-			editor.contentCSS.push(tinymce.baseURL + '/skins/' + skin + '/content.min.css');
+			// Load content.min.css or content.inline.min.css
+			editor.contentCSS.push(tinymce.baseURL + '/skins/' + skin + '/content' + (editor.inline ? '.inline' : '') + '.min.css');
 		}
 
 		// Handle editor setProgressState change
