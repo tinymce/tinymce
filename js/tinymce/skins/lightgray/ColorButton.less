@@ -27,18 +27,31 @@
 	}
 }
 
-.mce-colorbutton {
-	position: relative;
+.mce-colorbutton button {
+	padding-right: 4px;
 }
 
 .mce-colorbutton .mce-preview {
+	padding-right: 3px;
 	display: block;
 	position: absolute;
-	left: 50%; top: 50%;
-	margin-left: -8px;
+	left: 50%;
+	top: 50%;
+	margin-left: -14px;
 	margin-top: 7px;
 	background: gray;
-	width: 16px;
+	width: 13px;
 	height: 2px;
 	overflow: hidden;
+}
+
+.mce-colorbutton .mce-open {
+	padding-left: 4px;
+	border-left: 1px solid transparent;
+	border-right: 1px solid transparent;
+}
+
+.mce-colorbutton:hover .mce-open {
+	border-left-color: @btn-border-color;
+	border-right-color: @btn-border-color;
 }
