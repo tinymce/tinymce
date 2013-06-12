@@ -29,7 +29,7 @@ define("tinymce/Shortcuts", [
 		editor.on('keyup keypress keydown', function(e) {
 			if (e.altKey || e.ctrlKey || e.metaKey) {
 				each(shortcuts, function(shortcut) {
-					var ctrlState = Env.isMac ? e.metaKey : e.ctrlKey;
+					var ctrlState = Env.mac ? e.metaKey || e.ctrlKey : e.ctrlKey;
 
 					if (shortcut.ctrl != ctrlState || shortcut.alt != e.altKey || shortcut.shift != e.shiftKey) {
 						return;

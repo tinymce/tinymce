@@ -81,7 +81,7 @@ define("tinymce/UndoManager", [
 				editor.nodeChanged();
 			}
 
-			if (keyCode == 46 || keyCode == 8 || (Env.isMac && (keyCode == 91 || keyCode == 93))) {
+			if (keyCode == 46 || keyCode == 8 || (Env.mac && (keyCode == 91 || keyCode == 93))) {
 				editor.nodeChanged();
 			}
 
