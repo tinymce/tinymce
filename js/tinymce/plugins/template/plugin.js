@@ -172,7 +172,7 @@ tinymce.PluginManager.add('template', function(editor) {
 		onclick: showDialog
 	});
 
-	editor.addMenuItem('image', {
+	editor.addMenuItem('template', {
 		text: 'Insert template',
 		onclick: showDialog,
 		context: 'insert'
