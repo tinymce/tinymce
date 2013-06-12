@@ -23,6 +23,7 @@ tinymce.PluginManager.add('template', function(editor) {
 
 		tinymce.each(editor.settings.templates, function(template) {
 			values.push({
+				selected: !values.length,
 				text: template.title,
 				value: {
 					url: template.url,
@@ -64,6 +65,8 @@ tinymce.PluginManager.add('template', function(editor) {
 				insertTemplate(false, templateHtml);
 			}
 		});
+
+		win.find('listbox')[0].fire('select');
 	}
 
 	function getDateTime(fmt, date) {
