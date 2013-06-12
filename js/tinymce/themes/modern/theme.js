@@ -291,15 +291,6 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		});
 	}
 
-	function getIframeSize() {
-		var elm = editor.getContentAreaContainer().firstChild;
-
-		return {
-			width: elm.clientWidth,
-			height: elm.clientHeight
-		};
-	}
-
 	/**
 	 * Resizes the editor to the specified width, height.
 	 */
@@ -459,7 +450,12 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				direction: settings.resize,
 
 				onResizeStart: function() {
-					startSize = getIframeSize();
+					var elm = editor.getContentAreaContainer().firstChild;
+
+					startSize = {
+						width: elm.clientWidth,
+						height: elm.clientHeight
+					};
 				},
 
 				onResize: function(e) {
