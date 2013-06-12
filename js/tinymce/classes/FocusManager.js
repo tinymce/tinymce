@@ -18,8 +18,9 @@
  * @class tinymce.FocusManager
  */
 define("tinymce/FocusManager", [
-	"tinymce/dom/DOMUtils"
-], function(DOMUtils) {
+	"tinymce/dom/DOMUtils",
+	"tinymce/Env"
+], function(DOMUtils, Env) {
 	/**
 	 * Constructs a new focus manager instance.
 	 *
@@ -38,7 +39,7 @@ define("tinymce/FocusManager", [
 		}
 
 		function registerEvents(e) {
-			var editor = e.editor, restoreRng, lastRng;
+			var editor = e.editor, restoreRng, lastRng, selectionChangeHandler;
 
 			function isUIElement(elm) {
 				return !!DOMUtils.DOM.getParent(elm, FocusManager.isEditorUIElement);
@@ -70,6 +71,28 @@ define("tinymce/FocusManager", [
 							lastRng = editor.selection.getRng();
 						}
 					});
+
+					// Handles the issue with WebKit not retaining selection within inline document
+					// If the user releases the mouse out side the body while selecting a nodeChange won't
+					// fire and there for the selection snapshot won't be stored
+					// TODO: Optimize this since we only need to bind these on the active editor
+					if (Env.webkit) {
+						selectionChangeHandler = function() {
+							var rng = editor.selection.getRng();
+
+							// Store when it's non collapsed
+							if (!rng.collapsed) {
+								lastRng = rng;
+							}
+						};
+
+						// Bind selection handler
+						DOMUtils.DOM.bind(document, 'selectionchange', selectionChangeHandler);
+
+						editor.on('remove', function() {
+							DOMUtils.DOM.unbind(document, 'selectionchange', selectionChangeHandler);
+						});
+					}
 				}
 			});
 
