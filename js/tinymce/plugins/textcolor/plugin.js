@@ -116,9 +116,13 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 			buttonCtrl.hidePanel();
 			value = '#' + value;
 			buttonCtrl.color(value);
-			buttonCtrl.hidePanel();
 			editor.execCommand(buttonCtrl.settings.selectcmd, false, value);
 		}
+	}
+	
+	function onButtonClick() {
+		var self = this;
+		editor.execCommand(self.settings.selectcmd, false, self._color);
 	}
 
 	editor.addButton('forecolor', {
@@ -129,7 +133,8 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		panel: {
 			html: renderColorPicker,
 			onclick: onPanelClick
-		}
+		},
+		onclick: onButtonClick
 	});
 
 	editor.addButton('backcolor', {
@@ -140,6 +145,7 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		panel: {
 			html: renderColorPicker,
 			onclick: onPanelClick
-		}
+		},
+		onclick: onButtonClick
 	});
 });
