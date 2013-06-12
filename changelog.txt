@@ -37,6 +37,7 @@ Version 4.0 (2013-05-xx)
 	Fixed bug where some keyboard shortcuts wouldn't work on IE 8.
 	Fixed bug where the undo state wasn't updated until the end of a typing level.
 	Fixed bug where keyboard shortcuts on Mac OS wasn't working correctly.
+	Fixed bug where empty inline elements would be created when toggling formatting of in empty block.
 	Fixed so the isDirty/isNotDirty states gets updated to true/false on save() and change events.
 	Fixed so skins have separate CSS files for inline and iframe mode.
 	Fixed so menus and tool tips gets constrained to the current viewport.
