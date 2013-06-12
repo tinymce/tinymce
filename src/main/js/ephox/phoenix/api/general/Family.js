@@ -11,22 +11,12 @@ define(
       return Range.range(universe, start, startDelta, finish, finishDelta);
     };
 
-    var left = function (universe, item, offset) {
-
-    };
-
-    var right = function (universe, item, offset) {
-
-    };
-
     var group = function (universe, items) {
       return Group.group(universe, items);
     };
 
     return {
       range: range,
-      left: left,
-      right: right,
       group: group
     };
 
