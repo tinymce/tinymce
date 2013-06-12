@@ -13,9 +13,8 @@
  */
 define("tinymce/Shortcuts", [
 	"tinymce/util/Tools",
-	"tinymce/util/VK",
 	"tinymce/Env"
-], function(Tools, VK) {
+], function(Tools, Env) {
 	var each = Tools.each, explode = Tools.explode;
 
 	var keyCodeLookup = {
@@ -30,7 +29,9 @@ define("tinymce/Shortcuts", [
 		editor.on('keyup keypress keydown', function(e) {
 			if (e.altKey || e.ctrlKey || e.metaKey) {
 				each(shortcuts, function(shortcut) {
-					if (shortcut.ctrl != VK.metaKeyPressed(e) || shortcut.alt != e.altKey || shortcut.shift != e.shiftKey) {
+					var ctrlKey = Env.mac ? (e.ctrlKey || e.metaKey) : e.ctrlKey;
+
+					if (shortcut.ctrl != ctrlKey || shortcut.alt != e.altKey || shortcut.shift != e.shiftKey) {
 						return;
 					}
 
