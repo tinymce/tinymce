@@ -345,7 +345,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 
 		function reposition() {
 			if (panel && panel.visible() && !panel._fixed) {
-				panel.moveRel(editor.getBody(), 'tl-bl');
+				panel.moveRel(editor.getBody(), ['tl-bl', 'bl-tl']);
 			}
 		}
 
