@@ -388,7 +388,7 @@ define("tinymce/ui/FormatControls", [
 			var self = this;
 
 			self.disabled(!hasUndo());
-			editor.on('Undo Redo AddUndo', function() {
+			editor.on('Undo Redo AddUndo TypingUndo', function() {
 				self.disabled(!hasUndo());
 			});
 		}
@@ -397,7 +397,7 @@ define("tinymce/ui/FormatControls", [
 			var self = this;
 
 			self.disabled(!hasRedo());
-			editor.on('Undo Redo AddUndo', function() {
+			editor.on('Undo Redo AddUndo TypingUndo', function() {
 				self.disabled(!hasRedo());
 			});
 		}

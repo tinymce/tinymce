@@ -26,7 +26,7 @@ define("tinymce/UndoManager", [
 	].join('|'), 'gi');
 
 	return function(editor) {
-		var self, index = 0, data = [], beforeBookmark;
+		var self, index = 0, data = [], beforeBookmark, isFirstTypedCharacter;
 
 		// Returns a trimmed version of the current editor contents
 		function getContent() {
@@ -84,6 +84,12 @@ define("tinymce/UndoManager", [
 			if (keyCode == 46 || keyCode == 8 || (Env.isMac && (keyCode == 91 || keyCode == 93))) {
 				editor.nodeChanged();
 			}
+
+			// Fire a TypingUndo event on the first character entered
+			if (isFirstTypedCharacter && self.typing) {
+				editor.fire('TypingUndo');
+				isFirstTypedCharacter = false;
+			}
 		});
 
 		editor.on('KeyDown', function(e) {
@@ -103,6 +109,7 @@ define("tinymce/UndoManager", [
 				self.beforeChange();
 				self.typing = true;
 				self.add();
+				isFirstTypedCharacter = true;
 			}
 		});
 
