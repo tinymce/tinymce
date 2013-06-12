@@ -1657,6 +1657,7 @@ define("tinymce/Editor", [
 				body.innerHTML = content;
 				self.selection.select(body, true);
 				self.selection.collapse(true);
+				self.fire('SetContent', args);
 				return;
 			}
 
