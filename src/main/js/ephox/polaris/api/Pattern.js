@@ -2,12 +2,13 @@ define(
   'ephox.polaris.api.Pattern',
 
   [
+    'ephox.polaris.pattern.Chars',
     'ephox.polaris.pattern.Custom',
     'ephox.polaris.pattern.Safe',
     'ephox.polaris.pattern.Unsafe'
   ],
 
-  function (Custom, Safe, Unsafe) {
+  function (Chars, Custom, Safe, Unsafe) {
     var safeword = function (input) {
       return Safe.word(input);
     };
@@ -32,13 +33,28 @@ define(
       return Safe.sanitise(input);
     };
 
+    var chars = function () {
+      return Chars.chars();
+    };
+
+    var wordbreak = function () {
+      return Chars.wordbreak();
+    };
+
+    var wordchar = function () {
+      return Chars.wordchar();
+    };
+
     return {
       safeword: safeword,
       safetoken: safetoken,
       custom: custom,
       unsafeword: unsafeword,
       unsafetoken: unsafetoken,
-      sanitise: sanitise
+      sanitise: sanitise,
+      chars: chars,
+      wordbreak: wordbreak,
+      wordchar: wordchar
     };
   }
 );
