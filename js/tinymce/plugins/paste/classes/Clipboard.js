@@ -101,7 +101,7 @@ define("tinymce/pasteplugin/Clipboard", [
 
 		editor.on('keydown', function(e) {
 			// Shift+Ctrl+V
-			if (e.shiftKey && e.keyCode == 86) {
+			if (VK.metaKeyPressed(e) && e.shiftKey && e.keyCode == 86) {
 				plainTextPasteTime = new Date().getTime();
 			}
 		});
