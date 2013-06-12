@@ -9,6 +9,7 @@ Version 4.0 (2013-05-xx)
 	Added new "both" mode for the resize option. Enables resizing in both width and height.
 	Fixed so font name, font size and block format select boxes gets updated with the current format.
 	Fixed so the resizeTo/resizeBy methods for the theme are exposed as it as in 3.x.
+	Fixed so the textcolor controls are splitbuttons as in 3.x. Patch contributed by toxalot/jashua212.
 	Fixed bug where the theme content css wasn't loaded into the preview dialog.
 	Fixed bug where the template description in template dialog wouldn't display the text correctly.
 	Fixed bug where various UI elements wasn't properly removed when an editor instance was removed.
@@ -26,6 +27,7 @@ Version 4.0 (2013-05-xx)
 	Fixed bug where table row type change on multiple rows would add them in incorrect order.
 	Fixed bug where fullscreen plugin would maximize the editor on resize after toggling it off.
 	Fixed bug where context menu would be position at an incorrect coordinate in inline mode.
+	Fixed bug where inserting lists in inline mode on IE would produce errors since the body would be converted.
 	Fixed so menus and tool tips gets constrained to the current viewport.
 	Fixed so an error is thrown if users load jQuery after the jQuery version of TinyMCE.
 	Fixed so the filetype for media dialog passes out media instead of image as file type.
