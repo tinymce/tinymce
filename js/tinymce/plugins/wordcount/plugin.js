@@ -24,20 +24,22 @@ tinymce.PluginManager.add('wordcount', function(editor) {
 		var statusbar = editor.theme.panel && editor.theme.panel.find('#statusbar')[0];
 
 		if (statusbar) {
-			statusbar.insert({
-				type: 'label',
-				name: 'wordcount',
-				text: ['Words: {0}', self.getCount()],
-				classes: 'wordcount'
+			window.setTimeout(function() {
+				statusbar.insert({
+					type: 'label',
+					name: 'wordcount',
+					text: ['Words: {0}', self.getCount()],
+					classes: 'wordcount'
+				}, 0);
+
+				editor.on('setcontent beforeaddundo', update);
+
+				editor.on('keyup', function(e) {
+					if (e.keyCode == 32) {
+						update();
+					}
+				});
 			}, 0);
-
-			editor.on('setcontent beforeaddundo', update);
-
-			editor.on('keyup', function(e) {
-				if (e.keyCode == 32) {
-					update();
-				}
-			});
 		}
 	});
 
