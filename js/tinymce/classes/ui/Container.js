@@ -47,7 +47,7 @@ define("tinymce/ui/Container", [
 
 			self._super(settings);
 			settings = self.settings;
-
+			self._fixed = settings.fixed;
 			self._items = new Collection();
 
 			self.addClass('container');

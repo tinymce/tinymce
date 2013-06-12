@@ -8,6 +8,7 @@ Version 4.0 (2013-05-xx)
 	Added new external file support for link_list and image_list options. The file format is a simple JSON file.
 	Added new "both" mode for the resize option. Enables resizing in both width and height.
 	Added new paste_data_images option that allows you to enable/disable paste of data images.
+	Added new fixed_toolbar_container option that allows you to add a fixed container for the inline toolbar.
 	Fixed so font name, font size and block format select boxes gets updated with the current format.
 	Fixed so the resizeTo/resizeBy methods for the theme are exposed as it as in 3.x.
 	Fixed so the textcolor controls are splitbuttons as in 3.x. Patch contributed by toxalot/jashua212.

@@ -341,10 +341,14 @@ tinymce.ThemeManager.add('modern', function(editor) {
 	 * @return {Object} Name/value object with theme data.
 	 */
 	function renderInlineUI() {
-		var panel;
+		var panel, inlineToolbarContainer;
+
+		if (settings.fixed_toolbar_container) {
+			inlineToolbarContainer = DOM.select(settings.fixed_toolbar_container)[0];
+		}
 
 		function reposition() {
-			if (panel && panel.visible() && !panel._fixed) {
+			if (panel && panel.moveRel && panel.visible() && !panel._fixed) {
 				panel.moveRel(editor.getBody(), ['tl-bl', 'bl-tl']);
 			}
 		}
@@ -377,13 +381,15 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				return;
 			}
 
+			// Render a plain panel inside the inlineToolbarContainer if it's defined
 			panel = self.panel = Factory.create({
-				type: 'floatpanel',
+				type: inlineToolbarContainer ? 'panel' : 'floatpanel',
 				classes: 'tinymce tinymce-inline',
 				layout: 'flex',
 				direction: 'column',
 				autohide: false,
 				autofix: true,
+				fixed: !!inlineToolbarContainer,
 				border: 1,
 				items: [
 					settings.menubar === false ? null : {type: 'menubar', border: '0 0 1 0', items: createMenuButtons()},
@@ -398,7 +404,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				]});
 			}*/
 
-			panel.renderTo(document.body).reflow();
+			panel.renderTo(inlineToolbarContainer || document.body).reflow();
 
 			addAccessibilityKeys(panel);
 			show();
