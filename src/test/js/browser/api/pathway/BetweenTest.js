@@ -3,7 +3,7 @@ test(
 
   [
     'ephox.compass.Arr',
-    'ephox.robin.api.dom.Pathway',
+    'ephox.robin.api.dom.DomPathway',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Elements',
@@ -13,7 +13,7 @@ test(
     'ephox.sugar.api.Text'
   ],
 
-  function (Arr, Pathway, Attr, Element, Elements, InsertAll, Node, SelectorFind, Text) {
+  function (Arr, DomPathway, Attr, Element, Elements, InsertAll, Node, SelectorFind, Text) {
     var container = Element.fromTag('body');
     var contents = Elements.fromHtml(
       '<p id="p1">This is the first paragraph</p>' +
@@ -39,7 +39,7 @@ test(
     };
 
     var check = function (expected, start, end) {
-      var actual = Pathway.between(start, end);
+      var actual = DomPathway.between(start, end);
       assert.eq(expected, conform(actual));
     };
 

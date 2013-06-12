@@ -1,5 +1,5 @@
 define(
-  'ephox.robin.api.dom.Parent',
+  'ephox.robin.api.dom.DomParent',
 
   [
     'ephox.boss.api.DomUniverse',

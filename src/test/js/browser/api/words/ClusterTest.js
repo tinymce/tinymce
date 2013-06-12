@@ -3,11 +3,11 @@ test(
 
   [
     'ephox.compass.Arr',
-    'ephox.robin.api.dom.Words',
+    'ephox.robin.api.dom.DomWords',
     'ephox.robin.test.BrowserCheck'
   ],
 
-  function (Arr, Words, BrowserCheck) {
+  function (Arr, DomWords, BrowserCheck) {
     var check = function (expected, input, f) {
       BrowserCheck.run(input, function (node) {
         var actual = f(node);
@@ -20,7 +20,7 @@ test(
     };
 
     var checkLocal = function (expected, input) {
-      check(expected, input, Words.cluster);
+      check(expected, input, DomWords.cluster);
     };
 
     checkLocal(['house', 'Not'], 'house<span class="me"><br/><br/>Not');

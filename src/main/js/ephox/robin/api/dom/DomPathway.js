@@ -1,5 +1,5 @@
 define(
-  'ephox.robin.api.dom.Pathway',
+  'ephox.robin.api.dom.DomPathway',
 
   [
     'ephox.boss.api.DomUniverse',

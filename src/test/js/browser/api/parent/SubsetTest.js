@@ -4,13 +4,13 @@ test(
   [
     'ephox.compass.Arr',
     'ephox.perhaps.Option',
-    'ephox.robin.api.dom.Parent',
+    'ephox.robin.api.dom.DomParent',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Option, Parent, Attr, Element, SelectorFind) {
+  function (Arr, Option, DomParent, Attr, Element, SelectorFind) {
     var check = function (expected, s, f) {
       var container = Element.fromTag('div');
       container.dom().innerHTML =
@@ -34,7 +34,7 @@ test(
 
       var parent = SelectorFind.descendant(container, '.' + s).getOrDie();
       var child = SelectorFind.descendant(container, '.' + f).getOrDie();
-      var subset = Parent.subset(parent, child);
+      var subset = DomParent.subset(parent, child);
       expected.fold(function () {
         assert.eq(true, subset.isNone());
       }, function (exp) {

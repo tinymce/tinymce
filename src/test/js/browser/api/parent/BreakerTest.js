@@ -2,13 +2,13 @@ test(
   'parent :: Breaker',
 
   [
-    'ephox.robin.api.dom.Parent',
+    'ephox.robin.api.dom.DomParent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Html',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Parent, Element, Html, SelectorFind) {
+  function (DomParent, Element, Html, SelectorFind) {
 
     var check = function (expected, p, c) {
       var container = Element.fromTag('div');
@@ -33,7 +33,7 @@ test(
 
       var parent = SelectorFind.descendant(container, '.' + p).getOrDie();
       var child = SelectorFind.descendant(container, '.' + c).getOrDie();
-      Parent.breakAt(parent, child);
+      DomParent.breakAt(parent, child);
       assert.eq(expected, Html.get(container));
     };
 

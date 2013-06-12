@@ -3,12 +3,12 @@ test(
 
   [
     'ephox.perhaps.Option',
-    'ephox.robin.api.dom.Textdata',
+    'ephox.robin.api.dom.DomTextdata',
     'ephox.robin.test.Assertions',
     'ephox.sugar.api.Element'
   ],
 
-  function (Option, Textdata, Assertions, Element) {
+  function (Option, DomTextdata, Assertions, Element) {
 
     var a = Element.fromText('alpha');
     var b = Element.fromText(' beta');
@@ -18,7 +18,7 @@ test(
     var f = Element.fromText('foo');
 
     var check = function (expected, elements, current, offset) {
-      var actual = Textdata.from(elements, current, offset);
+      var actual = DomTextdata.from(elements, current, offset);
       assert.eq(expected.text, actual.text());
       Assertions.assertOpt(expected.cursor, actual.cursor());
     };

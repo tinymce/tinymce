@@ -3,7 +3,7 @@ test(
 
   [
     'ephox.compass.Arr',
-    'ephox.robin.api.dom.Pathway',
+    'ephox.robin.api.dom.DomPathway',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Elements',
@@ -12,7 +12,7 @@ test(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Pathway, Compare, Element, Elements, Insert, InsertAll, SelectorFind) {
+  function (Arr, DomPathway, Compare, Element, Elements, Insert, InsertAll, SelectorFind) {
 
     var container = Element.fromTag('div');
     InsertAll.append(container, Elements.fromHtml(
@@ -48,7 +48,7 @@ test(
 
     // sanity check
     check(['a', 'b'], [ $('a'), $('b') ]);
-    check([ 'a' ], Pathway.simplify( [ $('a') ]));
-    check([ 'a' ], Pathway.simplify( [ $('a-b'), $('a'), $('a-a-a') ]));
+    check([ 'a' ], DomPathway.simplify( [ $('a') ]));
+    check([ 'a' ], DomPathway.simplify( [ $('a-b'), $('a'), $('a-a-a') ]));
   }
 );

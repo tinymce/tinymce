@@ -1,5 +1,5 @@
 define(
-  'ephox.robin.api.dom.Grouping',
+  'ephox.robin.api.dom.DomGrouping',
 
   [
     'ephox.boss.api.DomUniverse',

@@ -1,5 +1,5 @@
 define(
-  'ephox.robin.api.dom.LeftBlock',
+  'ephox.robin.api.dom.DomLeftBlock',
 
   [
     'ephox.boss.api.DomUniverse',

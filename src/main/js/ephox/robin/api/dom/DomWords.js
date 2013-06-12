@@ -1,5 +1,5 @@
 define(
-  'ephox.robin.api.dom.Words',
+  'ephox.robin.api.dom.DomWords',
 
   [
     'ephox.boss.api.DomUniverse',
