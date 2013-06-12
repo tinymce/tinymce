@@ -10,8 +10,8 @@ define(
     var universe = DomUniverse();
 
     var sharedOne = function (look, elements) {
-      return Parent.sharedOne(universe, function (element) {
-        return look(universe, element);
+      return Parent.sharedOne(universe, function (universe, element) {
+        return look(element);
       }, elements);
     };
 
