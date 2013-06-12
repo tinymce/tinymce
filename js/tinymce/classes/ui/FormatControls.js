@@ -17,15 +17,19 @@
 define("tinymce/ui/FormatControls", [
 	"tinymce/ui/Factory",
 	"tinymce/ui/Control",
+	"tinymce/ui/Widget",
 	"tinymce/ui/FloatPanel",
 	"tinymce/util/Tools",
-	"tinymce/EditorManager"
-], function(Factory, Control, FloatPanel, Tools, EditorManager) {
+	"tinymce/EditorManager",
+	"tinymce/Env"
+], function(Factory, Control, Widget, FloatPanel, Tools, EditorManager, Env) {
 	var each = Tools.each;
 
 	Control.translate = function(text) {
 		return EditorManager.translate(text);
 	};
+
+	Widget.tooltips = !Env.iOS;
 
 	// Generates a preview for a format
 	function getPreviewCss(format) {
