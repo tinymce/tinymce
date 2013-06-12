@@ -72,7 +72,7 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 
 		colors = mapColors();
 
-		html = '<table class="mce-grid mce-colorbutton-grid" role="presentation" cellspacing="0"><tbody>';
+		html = '<table class="mce-grid mce-grid-border mce-colorbutton-grid" role="presentation" cellspacing="0"><tbody>';
 		last = colors.length - 1;
 		rows = editor.settings.textcolor_rows || 5;
 		cols = editor.settings.textcolor_cols || 8;
@@ -119,7 +119,7 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 			editor.execCommand(buttonCtrl.settings.selectcmd, false, value);
 		}
 	}
-	
+
 	function onButtonClick() {
 		var self = this;
 		editor.execCommand(self.settings.selectcmd, false, self._color);

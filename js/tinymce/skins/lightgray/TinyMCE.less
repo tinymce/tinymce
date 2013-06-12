@@ -59,12 +59,31 @@ div.mce-fullscreen {
 	height: 20px;
 	line-height: 20px;
 	text-align: center;
-	vertical-align: center;
+	vertical-align: middle;
 	padding: 2px;
+}
+
+.mce-charmap td div {
+	text-align: center;
 }
 
 .mce-charmap td:hover {
 	background: @btn-background-highlight;
+}
+
+.mce-grid td div {
+	border: 1px solid #808080;
+	width: 12px; height: 12px;
+	margin: 2px;
+	cursor: pointer;
+	&:hover {
+		border-color: black;
+	}
+	&:focus {
+		border-color: @focus-border-color-fallback;
+		outline: 1px solid @focus-border-color;
+		border-color: @focus-border-color
+	}
 }
 
 .mce-grid {
