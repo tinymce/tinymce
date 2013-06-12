@@ -120,6 +120,14 @@ define("tinymce/Env", [], function() {
 		 * @property range
 		 * @type Boolean
 		 */
-		range: window.getSelection && "Range" in window
+		range: window.getSelection && "Range" in window,
+
+		/**
+		 * Returns the IE document mode for non IE browsers this will fake IE 10.
+		 *
+		 * @property documentMode
+		 * @type Number
+		 */
+		documentMode: ie ? (document.documentMode || 7) : 10
 	};
 });

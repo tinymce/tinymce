@@ -504,7 +504,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		if (skin) {
 			// Load special skin for IE7
 			// TODO: Remove this when we drop IE7 support
-			if (tinymce.Env.ie && tinymce.Env.ie <= 7) {
+			if (tinymce.Env.documentMode <= 7) {
 				tinymce.DOM.loadCSS(tinymce.baseURL + '/skins/' + skin + '/skin.ie7.min.css');
 			} else {
 				tinymce.DOM.loadCSS(tinymce.baseURL + '/skins/' + skin + '/skin.min.css');
