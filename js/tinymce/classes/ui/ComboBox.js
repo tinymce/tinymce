@@ -157,17 +157,24 @@ define("tinymce/ui/ComboBox", [
 		 */
 		repaint: function() {
 			var self = this, elm = self.getEl(), openElm = self.getEl('open'), rect = self.layoutRect();
+			var width, lineHeight;
 
 			if (openElm) {
-				DomUtils.css(elm.firstChild, {
-					width: rect.w - openElm.offsetWidth - 10
-					//lineHeight: (self.layoutRect().h - 2) + 'px'
-				});
+				width = rect.w - openElm.offsetWidth - 10;
 			} else {
-				DomUtils.css(elm.firstChild, {
-					width: rect.w - 10
-				});
+				width = rect.w - 10;
 			}
+
+			// Detect old IE 7+8 add lineHeight to align caret vertically in the middle
+			var doc = document;
+			if (doc.all && (!doc.documentMode || doc.documentMode <= 8)) {
+				lineHeight = (self.layoutRect().h - 2) + 'px';
+			}
+
+			DomUtils.css(elm.firstChild, {
+				width: width,
+				lineHeight: lineHeight
+			});
 
 			self._super();
 

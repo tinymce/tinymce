@@ -97,6 +97,12 @@ define("tinymce/ui/TextBox", [
 			rect = self._layoutRect;
 			lastRepaintRect = self._lastRepaintRect || {};
 
+			// Detect old IE 7+8 add lineHeight to align caret vertically in the middle
+			var doc = document;
+			if (!self.settings.multiline && doc.all && (!doc.documentMode || doc.documentMode <= 8)) {
+				style.lineHeight = (rect.h - borderH) + 'px';
+			}
+
 			borderBox = self._borderBox;
 			borderW = borderBox.left + borderBox.right + 8;
 			borderH = borderBox.top + borderBox.bottom + (self.settings.multiline ? 8 : 0);
@@ -120,10 +126,6 @@ define("tinymce/ui/TextBox", [
 				style.height = (rect.h - borderH) + 'px';
 				lastRepaintRect.h = rect.h;
 			}
-
-			/*if (!self.settings.multiline) {
-				//style.lineHeight = (rect.h - borderH) + 'px';
-			}*/
 
 			self._lastRepaintRect = lastRepaintRect;
 			self.fire('repaint', {}, false);
