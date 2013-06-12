@@ -338,6 +338,7 @@
 
 		self.init = function(ed) {
 			ed.addMenuItem('searchreplace', {
+				icon: 'searchreplace',
 				text: 'Find and replace',
 				shortcut: 'Ctrl+F',
 				onclick: showDialog,
@@ -346,6 +347,7 @@
 			});
 
 			ed.addButton('searchreplace', {
+				icon: 'searchreplace',
 				tooltip: 'Find and replace',
 				shortcut: 'Ctrl+F',
 				onclick: showDialog
