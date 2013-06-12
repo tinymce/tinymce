@@ -178,10 +178,10 @@ define("tinymce/Editor", [
 		 *     // Save contents using some XHR call
 		 *     alert(ed.getContent());
 		 *
-		 *     ed.isNotDirty = 1; // Force not dirty state
+		 *     ed.isNotDirty = true; // Force not dirty state
 		 * }
 		 */
-		self.isNotDirty = false;
+		self.isNotDirty = true;
 
 		/**
 		 * Name/Value object containting plugin instances.
@@ -320,7 +320,7 @@ define("tinymce/Editor", [
 					form._mceOldSubmit = form.submit;
 					form.submit = function() {
 						self.editorManager.triggerSave();
-						self.isNotDirty = 1;
+						self.isNotDirty = true;
 
 						return form._mceOldSubmit(form);
 					};
@@ -360,7 +360,7 @@ define("tinymce/Editor", [
 				self.on('submit', function() {
 					if (self.initialized) {
 						self.save();
-						self.isNotDirty = 1;
+						self.isNotDirty = true;
 					}
 				});
 			}
@@ -1599,6 +1599,7 @@ define("tinymce/Editor", [
 			}
 
 			args.element = elm = null;
+			self.isNotDirty = true;
 
 			return html;
 		},
@@ -1757,7 +1758,7 @@ define("tinymce/Editor", [
 		 *     alert("You must save your contents.");
 		 */
 		isDirty: function() {
-			return !this.isNotDirty && this.undoManager.hasUndo();
+			return !this.isNotDirty;
 		},
 
 		/**
