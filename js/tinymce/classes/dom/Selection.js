@@ -997,19 +997,20 @@ define("tinymce/dom/Selection", [
 		},
 
 		getSelectedBlocks: function(startElm, endElm) {
-			var self = this, dom = self.dom, node, selectedBlocks = [];
+			var self = this, dom = self.dom, node, root, selectedBlocks = [];
 
+			root = dom.getRoot();
 			startElm = dom.getParent(startElm || self.getStart(), dom.isBlock);
 			endElm = dom.getParent(endElm || self.getEnd(), dom.isBlock);
 
-			if (startElm) {
+			if (startElm && startElm != root) {
 				selectedBlocks.push(startElm);
 			}
 
 			if (startElm && endElm && startElm != endElm) {
 				node = startElm;
 
-				var walker = new TreeWalker(startElm, dom.getRoot());
+				var walker = new TreeWalker(startElm, root);
 				while ((node = walker.next()) && node != endElm) {
 					if (dom.isBlock(node)) {
 						selectedBlocks.push(node);
@@ -1017,7 +1018,7 @@ define("tinymce/dom/Selection", [
 				}
 			}
 
-			if (endElm && startElm != endElm) {
+			if (endElm && startElm != endElm && endElm != root) {
 				selectedBlocks.push(endElm);
 			}
 
