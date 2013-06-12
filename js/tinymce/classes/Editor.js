@@ -992,6 +992,7 @@ define("tinymce/Editor", [
 
 				// Focus the window iframe
 				if (!contentEditable) {
+					self.getBody().focus(); // WebKit needs this call to fire focusin event properly see #5948
 					self.getWin().focus();
 				}
 
