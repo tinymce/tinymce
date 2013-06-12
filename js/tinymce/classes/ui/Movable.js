@@ -168,7 +168,7 @@ define("tinymce/ui/Movable", [
 				}
 
 				if (value + size > max) {
-					value = value - size;
+					value = max - size;
 					return value < 0 ? 0 : value;
 				}
 
