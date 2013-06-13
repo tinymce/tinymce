@@ -47,6 +47,8 @@ define("tinymce/pasteplugin/Clipboard", [
 		function processHtml(html) {
 			var args = editor.fire('PastePreProcess', {content: html});
 
+			html = args.content;
+
 			// Remove all data images from paste for example from Gecko
 			if (!editor.settings.paste_data_images) {
 				html = html.replace(/<img src=\"data:image[^>]+>/g, '');
@@ -55,8 +57,6 @@ define("tinymce/pasteplugin/Clipboard", [
 			if (editor.settings.paste_remove_styles || (editor.settings.paste_remove_styles_if_webkit !== false && Env.webkit)) {
 				html = html.replace(/ style=\"[^\"]+\"/g, '');
 			}
-
-			args.content = html;
 
 			if (!args.isDefaultPrevented()) {
 				editor.insertContent(html);
