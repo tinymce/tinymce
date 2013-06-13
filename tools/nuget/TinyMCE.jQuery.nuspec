@@ -13,7 +13,7 @@
 		<summary>TinyMCE.jQuery is special jQuery build of TinyMCE and a jQuery integration plugin.</summary>
 		<tags>Editor TinyMCE HTML HTMLEditor JQuery</tags>
 		<dependencies>
-			<dependency id="JQuery" version="(1.4.3, )" />
+			<dependency id="JQuery" version="1.9" />
 		</dependencies>
 	</metadata>
 	<files>
