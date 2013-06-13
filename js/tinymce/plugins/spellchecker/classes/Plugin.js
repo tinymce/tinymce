@@ -22,9 +22,10 @@ define("tinymce/spellcheckerplugin/Plugin", [
 	"tinymce/util/Tools",
 	"tinymce/ui/Menu",
 	"tinymce/dom/DOMUtils",
-	"tinymce/util/JSONRequest"
-], function(DomTextMatcher, PluginManager, Tools, Menu, DOMUtils, JSONRequest) {
-	PluginManager.add('spellchecker', function(editor) {
+	"tinymce/util/JSONRequest",
+	"tinymce/util/URI",
+], function(DomTextMatcher, PluginManager, Tools, Menu, DOMUtils, JSONRequest, URI) {
+	PluginManager.add('spellchecker', function(editor, url) {
 		var lastSuggestions, started, suggestionsMenu, settings = editor.settings;
 
 		function isEmpty(obj) {
@@ -132,7 +133,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 
 			function defaultSpellcheckCallback(method, words, doneCallback) {
 				JSONRequest.sendRPC({
-					url: settings.spellchecker_rpc_url,
+					url: new URI(url).toAbsolute(settings.spellchecker_rpc_url),
 					method: method,
 					params: {
 						lang: settings.spellchecker_language || "en",
@@ -151,6 +152,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 						editor.windowManager.alert(error);
 						editor.setProgressState(false);
 						textFilter = null;
+						started = false;
 					}
 				});
 			}
