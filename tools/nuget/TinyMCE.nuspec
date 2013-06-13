@@ -17,6 +17,7 @@
 		<file src="..\..\js\tinymce\langs\**\*.*" target="content\scripts\tinymce\langs" />
 		<file src="..\..\js\tinymce\plugins\**\*.*" target="content\scripts\tinymce\plugins" />
 		<file src="..\..\js\tinymce\themes\**\*.*" target="content\scripts\tinymce\themes" />
+		<file src="..\..\js\tinymce\skins\**\*.*" target="content\scripts\tinymce\skins" exclude="..\..\**\*.less;..\..\**\*.dev.svg" />
 		<file src="..\..\js\tinymce\tinymce.js" target="content\scripts\tinymce\tinymce.js" />
 		<file src="..\..\js\tinymce\tinymce.min.js" target="content\scripts\tinymce\tinymce.min.js" />
 		<file src="..\..\js\tinymce\license.txt" target="content\scripts\tinymce\license.txt" />

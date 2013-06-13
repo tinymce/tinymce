@@ -268,13 +268,6 @@ task("less", [], function () {
 		toCss: "js/tinymce/skins/lightgray/skin.ie7.min.css"
 	});
 
-	// Classic
-	less({
-		baseDir: "js/tinymce/skins/lightgray",
-		from: lessFiles.concat(["Icons.less"]),
-		toCss: "js/tinymce/skins/lightgray/skin.classic.min.css"
-	});
-
 	// Content CSS
 	less({
 		from: ["Content.less"],
