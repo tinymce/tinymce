@@ -277,7 +277,7 @@ define("tinymce/ui/Collection", [
 		 * Binds a callback to the specified event. This event can both be
 		 * native browser events like "click" or custom ones like PostRender.
 		 *
-		 * The callback function will have two parameters the first one being the control that recieved the event
+		 * The callback function will have two parameters the first one being the control that received the event
 		 * the second one will be the event object either the browsers native event object or a custom JS object.
 		 *
 		 * @method on
