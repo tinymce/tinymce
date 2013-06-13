@@ -310,6 +310,8 @@ define("tinymce/dom/ControlSelection", [
 			controlElm = dom.getParent(controlElm, isIE ? 'table' : 'table,img,hr');
 
 			if (controlElm) {
+				disableGeckoResize();
+
 				if (isChildOrEqual(selection.getStart(), controlElm) && isChildOrEqual(selection.getEnd(), controlElm)) {
 					if (!isIE || (controlElm != selection.getStart() && selection.getStart().nodeName !== 'IMG')) {
 						showResizeRect(controlElm);
@@ -382,6 +384,15 @@ define("tinymce/dom/ControlSelection", [
 			detachEvent(selectedElm, 'resizestart', resizeNativeStart);
 		}
 
+		function disableGeckoResize() {
+			try {
+				// Disable object resizing on Gecko
+				editor.getDoc().execCommand('enableObjectResizing', false, false);
+			} catch (ex) {
+				// Ignore
+			}
+		}
+
 		function controlSelect(elm) {
 			var ctrlRng;
 
@@ -412,12 +423,7 @@ define("tinymce/dom/ControlSelection", [
 
 				attachEvent(editor.getBody(), 'controlselect', nativeControlSelect);
 			} else {
-				try {
-					// Disable object resizing on Gecko
-					editor.getDoc().execCommand('enableObjectResizing', false, false);
-				} catch (ex) {
-					// Ignore
-				}
+				disableGeckoResize();
 			}
 
 			editor.on('nodechange mousedown ResizeEditor', updateResizeRect);
