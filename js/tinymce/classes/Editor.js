@@ -1184,20 +1184,18 @@ define("tinymce/Editor", [
 		 * @param {String} name Button name to add.
 		 * @param {Object} settings Settings object with title, cmd etc.
 		 * @example
-		 * // Adds a custom button to the editor and when a user clicks the button it will open
-		 * // an alert box with the selected contents as plain text.
+		 * // Adds a custom button to the editor that inserts contents when clicked
 		 * tinymce.init({
 		 *    ...
 		 *
-		 *    theme_advanced_buttons1: 'example,..'
+		 *    toolbar: 'example'
 		 *
 		 *    setup: function(ed) {
-		 *       // Register example button
 		 *       ed.addButton('example', {
-		 *          title: 'example.desc',
+		 *          title: 'My title',
 		 *          image: '../js/tinymce/plugins/example/img/example.gif',
 		 *          onclick: function() {
-		 *             ed.windowManager.alert('Hello world!! Selection: ' + ed.selection.getContent({format: 'text'}));
+		 *             ed.insertContent('Hello world!!');
 		 *          }
 		 *       });
 		 *    }
@@ -1218,6 +1216,29 @@ define("tinymce/Editor", [
 			self.buttons[name] = settings;
 		},
 
+		/**
+		 * Adds a menu item to be used in the menus of the modern theme.
+		 *
+		 * @method addMenuItem
+		 * @param {String} name Menu item name to add.
+		 * @param {Object} settings Settings object with title, cmd etc.
+		 * @example
+		 * // Adds a custom menu item to the editor that inserts contents when clicked
+		 * // The context option allows you to add the menu item to an existing default menu
+		 * tinymce.init({
+		 *    ...
+		 *
+		 *    setup: function(ed) {
+		 *       ed.addMenuItem('example', {
+		 *          title: 'My menu item',
+		 *          context: 'tools',
+		 *          onclick: function() {
+		 *             ed.insertContent('Hello world!!');
+		 *          }
+		 *       });
+		 *    }
+		 * });
+		 */
 		addMenuItem: function(name, settings) {
 			var self = this;
 
