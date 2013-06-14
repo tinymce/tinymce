@@ -213,7 +213,7 @@
 			var self = this, ed;
 
 			// Handle set value
-			if (value !== undef) {
+			if (value != null) {
 				removeEditors.call(self);
 
 				// Saves the contents before get/set value of textarea/div
