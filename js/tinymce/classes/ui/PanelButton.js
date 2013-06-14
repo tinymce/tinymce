@@ -38,10 +38,12 @@ define("tinymce/ui/PanelButton", [
 					self.active(false);
 				}).parent(self).renderTo(self.getContainerElm());
 				self.panel.fire('show');
-				self.panel.reflow().moveRel(self.getEl(), settings.popoverAlign || 'bc-tc');
+				self.panel.reflow();
 			} else {
 				self.panel.show();
 			}
+
+			self.panel.moveRel(self.getEl(), settings.popoverAlign || 'bc-tc');
 		},
 
 		/**

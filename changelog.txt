@@ -1,4 +1,5 @@
 Version 4.0.1 (2013-xx-xx)
+	Fixed bug where the position of the text color picker would be wrong if you switched to fullscreen.
 	Fixed so it doesn't load any language pack if the language option is set to "en".
 Version 4.0 (2013-06-13)
 	Added new insertdate_dateformat, insertdate_timeformat and insertdate_formats options to insertdatetime.
