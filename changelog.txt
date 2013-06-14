@@ -1,3 +1,5 @@
+Version 4.0.1 (2013-xx-xx)
+	Fixed so it doesn't load any language pack if the language option is set to "en".
 Version 4.0 (2013-06-13)
 	Added new insertdate_dateformat, insertdate_timeformat and insertdate_formats options to insertdatetime.
 	Added new font_formats, fontsize_formats and block_formats options to configure fontselect, fontsizeselect and formatselect.
