@@ -77,7 +77,7 @@ define("tinymce/Editor", [
 	var isGecko = Env.gecko, isIE = Env.ie, isOpera = Env.opera;
 
 	function getEventTarget(editor, eventName) {
-		if (eventName == 'selectionchange') {
+		if (eventName == 'selectionchange' || eventName == 'drop') {
 			return editor.getDoc();
 		}
 

@@ -207,6 +207,17 @@ define("tinymce/pasteplugin/Clipboard", [
 					}
 				});
 			}
+
+			// Prevent users from dropping data images on Gecko
+			if (!editor.settings.paste_data_images) {
+				editor.on('drop', function(e) {
+					var dataTransfer = e.dataTransfer;
+
+					if (dataTransfer && dataTransfer.files && dataTransfer.files.length > 0) {
+						e.preventDefault();
+					}
+				});
+			}
 		}
 
 		// Block all drag/drop events
