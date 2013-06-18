@@ -213,6 +213,7 @@
 			var self = this, ed;
 
 			// Handle set value
+			/*jshint eqnull:true */
 			if (value != null) {
 				removeEditors.call(self);
 
