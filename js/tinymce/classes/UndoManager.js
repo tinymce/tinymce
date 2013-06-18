@@ -126,8 +126,8 @@ define("tinymce/UndoManager", [
 		});
 
 		// Add keyboard shortcuts for undo/redo keys
-		editor.addShortcut('ctrl+z', 'undo_desc', 'Undo');
-		editor.addShortcut('ctrl+y', 'redo_desc', 'Redo');
+		editor.addShortcut('ctrl+z', '', 'Undo');
+		editor.addShortcut('ctrl+y,ctrl+shift+z', '', 'Redo');
 
 		editor.on('AddUndo Undo Redo ClearUndos MouseUp', function(e) {
 			if (!e.isDefaultPrevented()) {
