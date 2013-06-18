@@ -11,6 +11,33 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('image', function(editor) {
+	function getImageSize(url, callback) {
+		var img = new Image();
+
+		function done(width, height) {
+			img.parentNode.removeChild(img);
+			callback({width: width, height: height});
+		}
+
+		img.onload = function() {
+			done(img.clientWidth, img.clientHeight);
+		};
+
+		img.onerror = function() {
+			done();
+		};
+
+		img.src = url;
+
+		var style = img.style;
+		style.visibility = 'hidden';
+		style.position = 'fixed';
+		style.bottom = style.left = 0;
+		style.width = style.height = 'auto';
+
+		document.body.appendChild(img);
+	}
+
 	function createImageList(callback) {
 		return function() {
 			var imageList = editor.settings.image_list;
@@ -71,11 +98,24 @@ tinymce.PluginManager.add('image', function(editor) {
 
 		function onSubmitForm() {
 			function waitLoad(imgElm) {
-				imgElm.onload = imgElm.onerror = function() {
+				function selectImage() {
 					imgElm.onload = imgElm.onerror = null;
 					editor.selection.select(imgElm);
 					editor.nodeChanged();
+				}
+
+				imgElm.onload = function() {
+					if (!data.width && !data.height) {
+						dom.setAttribs(imgElm, {
+							width: imgElm.clientWidth,
+							height: imgElm.clientHeight
+						});
+					}
+
+					selectImage();
 				};
+
+				imgElm.onerror = selectImage;
 			}
 
 			var data = win.toJSON();
@@ -120,6 +160,18 @@ tinymce.PluginManager.add('image', function(editor) {
 			return value;
 		}
 
+		function updateSize() {
+			getImageSize(this.value(), function(data) {
+				if (data.width && data.height) {
+					width = data.width;
+					height = data.height;
+
+					win.find('#width').value(width);
+					win.find('#height').value(height);
+				}
+			});
+		}
+
 		width = dom.getAttrib(imgElm, 'width');
 		height = dom.getAttrib(imgElm, 'height');
 
@@ -154,7 +206,7 @@ tinymce.PluginManager.add('image', function(editor) {
 
 		// General settings shared between simple and advanced dialogs
 		var generalFormItems = [
-			{name: 'src', type: 'filepicker', filetype: 'image', label: 'Source', autofocus: true},
+			{name: 'src', type: 'filepicker', filetype: 'image', label: 'Source', autofocus: true, onchange: updateSize},
 			imageListCtrl,
 			{name: 'alt', type: 'textbox', label: 'Image description'},
 			{
