@@ -8,6 +8,11 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+/**
+ * This mixin will add event binding logic to classes.
+ *
+ * @mixin tinymce.util.Observable
+ */
 define("tinymce/util/Observable", [
 	"tinymce/util/Tools"
 ], function(Tools) {
@@ -26,6 +31,17 @@ define("tinymce/util/Observable", [
 	}
 
 	return {
+		/**
+		 * Fires the specified event by name.
+		 *
+		 * @method fire
+		 * @param {String} name Name of the event to fire.
+		 * @param {tinymce.Event/Object?} args Event arguments.
+		 * @param {Boolean?} bubble True/false if the event is to be bubbled.
+		 * @return {tinymce.Event} Event instance passed in converted into tinymce.Event instance.
+		 * @example
+		 * instance.fire('event', {...});
+		 */
 		fire: function(name, args, bubble) {
 			var self = this, handlers, i, l, callback, parent;
 
@@ -96,6 +112,18 @@ define("tinymce/util/Observable", [
 			return args;
 		},
 
+		/**
+		 * Binds an event listener to a specific event by name.
+		 *
+		 * @method on
+		 * @param {String} name Event name or space separated list of events to bind.
+		 * @param {callback} callback Callback to be executed when the event occurs.
+		 * @return {Object} Current class instance.
+		 * @example
+		 * instance.on('event', function(e) {
+		 *     // Callback logic
+		 * });
+		 */
 		on: function(name, callback) {
 			var self = this, bindings, handlers, names, i;
 
@@ -131,6 +159,23 @@ define("tinymce/util/Observable", [
 			return self;
 		},
 
+		/**
+		 * Unbinds an event listener to a specific event by name.
+		 *
+		 * @method off
+		 * @param {String?} name Name of the event to unbind.
+		 * @param {callback?} callback Callback to unbind.
+		 * @return {Object} Current class instance.
+		 * @example
+		 * // Unbind specific callback
+		 * instance.off('event', handler);
+		 *
+		 * // Unbind all listeners by name
+		 * instance.off('event');
+		 *
+		 * // Unbind all events
+		 * instance.off();
+		 */
 		off: function(name, callback) {
 			var self = this, i, bindings = self[bindingsName], handlers, bindingName, names, hi;
 

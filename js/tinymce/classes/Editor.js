@@ -11,9 +11,16 @@
 /*jshint scripturl:true */
 
 /**
+ * Include the base event class documentation.
+ *
+ * @include ../../../tools/docs/tinymce.Event.js
+ */
+
+/**
  * This class contains the core logic for a TinyMCE editor.
  *
  * @class tinymce.Editor
+ * @mixes tinymce.util.Observable
  * @example
  * // Add a class to all paragraphs in the editor.
  * tinymce.activeEditor.dom.addClass(tinymce.activeEditor.dom.select('p'), 'someclass');

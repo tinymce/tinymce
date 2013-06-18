@@ -15,6 +15,7 @@
  * tinymce.EditorManager.init({});
  *
  * @class tinymce.EditorManager
+ * @mixes tinymce.util.Observable
  * @static
  */
 define("tinymce/EditorManager", [
