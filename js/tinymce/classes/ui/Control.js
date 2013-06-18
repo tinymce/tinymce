@@ -565,7 +565,7 @@ define("tinymce/ui/Control", [
 			var self = this, i, bindings = self._bindings, handlers, bindingName, names, hi;
 
 			if (bindings) {
-				if (name) {
+				if (name && !{object:1, 'function':1}[typeof name]) {
 					names = name.toLowerCase().split(' ');
 					i = names.length;
 					while (i--) {
