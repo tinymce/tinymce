@@ -23,7 +23,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 	"tinymce/ui/Menu",
 	"tinymce/dom/DOMUtils",
 	"tinymce/util/JSONRequest",
-	"tinymce/util/URI",
+	"tinymce/util/URI"
 ], function(DomTextMatcher, PluginManager, Tools, Menu, DOMUtils, JSONRequest, URI) {
 	PluginManager.add('spellchecker', function(editor, url) {
 		var lastSuggestions, started, suggestionsMenu, settings = editor.settings;
