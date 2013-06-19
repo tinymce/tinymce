@@ -5,12 +5,14 @@
 }
 
 .mce-menubtn span {
-	line-height: 20px;
+	line-height: @line-height;
+	*line-height: @line-height - 4px;
 }
 
 .mce-menubtn.mce-btn-small span {
 	font-size: @font-size - 2px;
 	line-height: @line-height - 5px;
+	*line-height: @line-height - 4px;
 }
 
 .mce-menubtn.mce-fixed-width span {
