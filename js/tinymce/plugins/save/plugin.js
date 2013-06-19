@@ -75,6 +75,7 @@ tinymce.PluginManager.add('save', function(editor) {
 	editor.addCommand('mceCancel', cancel);
 
 	editor.addButton('save', {
+		icon: 'save',
 		text: 'Save',
 		cmd: 'mceSave',
 		disabled: true,

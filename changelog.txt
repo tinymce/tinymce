@@ -7,6 +7,7 @@ Version 4.0.1 (2013-xx-xx)
 	Fixed bug where list outdent operation could produce empty list elements on specific selections.
 	Fixed bug where element path wouldn't properly select parent elements on IE.
 	Fixed bug where IE would sometimes throw an exception when extrancting the current selection range.
+	Fixed so the icon parameter for addButton isn't automatically filled if a button text is provided.
 	Fixed so image size fields gets updated when selecting a new image in the image dialog.
 	Fixed so it doesn't load any language pack if the language option is set to "en".
 	Fixed so ctrl+shift+z works as an alternative redo shortcut to match a common Mac OS X shortcut.

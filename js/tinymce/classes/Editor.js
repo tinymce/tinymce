@@ -1217,9 +1217,12 @@ define("tinymce/Editor", [
 				};
 			}
 
+			if (!settings.text && !settings.icon) {
+				settings.icon = name;
+			}
+
 			self.buttons = self.buttons || {};
 			settings.tooltip = settings.tooltip || settings.title;
-			settings.icon = settings.icon || (settings.icon !== false ? name : false);
 			self.buttons[name] = settings;
 		},
 
