@@ -16,7 +16,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 	// Default menus
 	var defaultMenus = {
 		file: {title: 'File', items: 'newdocument'},
-		edit: {title: 'Edit', items: 'undo redo | cut copy paste | selectall'},
+		edit: {title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall'},
 		insert: {title: 'Insert', items: '|'},
 		view: {title: 'View', items: 'visualaid |'},
 		format: {title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | removeformat'},

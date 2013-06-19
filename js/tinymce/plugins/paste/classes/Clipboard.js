@@ -25,10 +25,14 @@ define("tinymce/pasteplugin/Clipboard", [
 	}
 
 	return function(editor) {
-		var plainTextPasteTime;
+		var self = this, plainTextPasteTime;
+
+		function innerText(elm) {
+			return elm.innerText || elm.textContent;
+		}
 
 		function shouldPasteAsPlainText() {
-			return new Date().getTime() - plainTextPasteTime < 100;
+			return new Date().getTime() - plainTextPasteTime < 100 || self.pasteFormat == "text";
 		}
 
 		// TODO: Move this to a class?
@@ -64,13 +68,21 @@ define("tinymce/pasteplugin/Clipboard", [
 		}
 
 		function processText(text) {
-			text = editor.dom.encode(text);
+			text = editor.dom.encode(text).replace(/\r\n/g, '\n');
 
-			text = process(text, [
-				[/\n\n/g, "</p><p>"],
-				[/^(.*<\/p>)(<p>)$/, '<p>$1'],
-				[/\n/g, "<br />"]
-			]);
+			var startBlock = editor.dom.getParent(editor.selection.getStart(), editor.dom.isBlock);
+
+			if ((startBlock && /^(PRE|DIV)$/.test(startBlock.nodeName)) || !editor.settings.forced_root_block) {
+				text = process(text, [
+					[/\n/g, "<br>"]
+				]);
+			} else {
+				text = process(text, [
+					[/\n\n/g, "</p><p>"],
+					[/^(.*<\/p>)(<p>)$/, '<p>$1'],
+					[/\n/g, "<br />"]
+				]);
+			}
 
 			var args = editor.fire('PastePreProcess', {content: text});
 
@@ -173,9 +185,13 @@ define("tinymce/pasteplugin/Clipboard", [
 							return;
 						}
 
-						var html = pastebinElm.firstChild.innerHTML;
 						editor.selection.setRng(lastRng);
-						processHtml(html);
+
+						if (shouldPasteAsPlainText()) {
+							processText(innerText(pastebinElm.firstChild));
+						} else {
+							processHtml(pastebinElm.firstChild.innerHTML);
+						}
 					});
 				});
 			} else {
@@ -201,7 +217,12 @@ define("tinymce/pasteplugin/Clipboard", [
 								removePasteBin();
 								editor.lastRng = lastRng;
 								editor.selection.setRng(lastRng);
-								processHtml(pastebinElm.firstChild.innerHTML);
+
+								if (shouldPasteAsPlainText()) {
+									processText(innerText(pastebinElm.firstChild));
+								} else {
+									processHtml(pastebinElm.firstChild.innerHTML);
+								}
 							}, 0);
 						});
 					}
