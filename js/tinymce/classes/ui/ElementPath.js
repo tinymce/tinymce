@@ -33,20 +33,19 @@ define("tinymce/ui/ElementPath", [
 			}
 
 			self.on('select', function(e) {
-				var parents = [], node = editor.selection.getNode(), body = editor.getBody();
+				var parents = [], node, body = editor.getBody();
 
-				while (node) {
+				editor.focus();
+
+				node = editor.selection.getStart();
+				while (node && node != body) {
 					if (!isBogus(node)) {
 						parents.push(node);
 					}
 
 					node = node.parentNode;
-					if (node == body) {
-						break;
-					}
 				}
 
-				editor.focus();
 				editor.selection.select(parents[parents.length - 1 - e.index]);
 				editor.nodeChanged();
 			});
