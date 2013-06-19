@@ -18,8 +18,8 @@ tinymce.PluginManager.add('lists', function(editor) {
 
 		/**
 		 * Returns a range bookmark. This will convert indexed bookmarks into temporary span elements with
-		 * index 0 so that they can be restored properly after the DOM has been modified. Text bookmarks will be passed out
-		 * as is since this is for operations that doesn't alter text.
+		 * index 0 so that they can be restored properly after the DOM has been modified. Text bookmarks will not have spans
+		 * added to them since they can be restored after a dom operation.
 		 *
 		 * So this: <p><b>|</b><b>|</b></p>
 		 * becomes: <p><b><span data-mce-type="bookmark">|</span></b><b data-mce-type="bookmark">|</span></b></p>
@@ -304,12 +304,19 @@ tinymce.PluginManager.add('lists', function(editor) {
 		function outdent() {
 			var state, bookmark = createBookmark(selection.getRng(true));
 
+			function removeEmptyLi(li) {
+				if (dom.isEmpty(li)) {
+					dom.remove(li);
+				}
+			}
+
 			tinymce.each(getSelectedListItems(), function(li) {
 				var ul = li.parentNode, ulParent = ul.parentNode, newBlock;
 
 				if (isFirstChild(li) && isLastChild(li)) {
 					if (ulParent.nodeName == "LI") {
 						dom.insertAfter(li, ulParent);
+						removeEmptyLi(ulParent);
 					} else if (isListNode(ulParent)) {
 						dom.remove(ul, true);
 					} else {
@@ -321,6 +328,7 @@ tinymce.PluginManager.add('lists', function(editor) {
 						newBlock = dom.create("LI");
 						newBlock.appendChild(ul);
 						dom.insertAfter(newBlock, li);
+						removeEmptyLi(ulParent);
 					} else if (isListNode(ulParent)) {
 						ulParent.insertBefore(li, ul);
 					} else {

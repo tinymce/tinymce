@@ -1,6 +1,7 @@
 Version 4.0.1 (2013-xx-xx)
 	Fixed bug where the position of the text color picker would be wrong if you switched to fullscreen.
 	Fixed bug where the link plugin would ask to add the mailto: prefix multiple times.
+	Fixed bug where list outdent operation could produce empty list elements on specific selections.
 	Fixed so image size fields gets updated when selecting a new image in the image dialog.
 	Fixed so it doesn't load any language pack if the language option is set to "en".
 	Fixed so ctrl+shift+z works as an alternative redo shortcut to match a common Mac OS X shortcut.

@@ -818,6 +818,68 @@ test('Outdent inside LI in middle of OL in OL', function() {
 	equal(editor.selection.getNode().nodeName, 'LI');
 });
 
+test('Outdent inside first/last LI in inner OL', function() {
+	editor.getBody().innerHTML = trimBrs(
+		'<ol>' +
+			'<li>1' +
+			'<ol>' +
+				'<li>2</li>' +
+				'<li>3</li>' +
+			'</ol>' +
+			'</li>' +
+			'<li>4</li>' +
+		'</ol>'
+	);
+
+	editor.focus();
+	setSelection('ol ol li:nth-child(1)', 0, 'ol ol li:nth-child(2)', 1);
+	editor.execCommand('Outdent');
+
+	equal(editor.getContent(), 
+		'<ol>' +
+			'<li>1</li>' +
+			'<li>2</li>' +
+			'<li>3</li>' +
+			'<li>4</li>' +
+		'</ol>'
+	);
+
+	equal(editor.selection.getRng(true).startContainer.nodeValue, '2');
+	equal(editor.selection.getRng(true).endContainer.nodeValue, '3');
+});
+
+test('Outdent inside first LI in inner OL where OL is single child of parent LI', function() {
+	editor.getBody().innerHTML = trimBrs(
+		'<ol>' +
+			'<li>a</li>' +
+			'<li>' +
+				'<ol>' +
+					'<li>b</li>' +
+					'<li>c</li>' +
+				'</ol>' +
+			'</li>' +
+		'</ol>'
+	);
+
+	editor.focus();
+	setSelection('ol ol li:first', 0);
+	editor.execCommand('Outdent');
+
+	equal(editor.getContent(), 
+		'<ol>' +
+			'<li>a</li>' +
+			'<li>b</li>' +
+			'<li>' +
+				'<ol>' +
+					'<li>c</li>' +
+				'</ol>' +
+			'</li>' +
+		'</ol>'
+	);
+
+	equal(editor.selection.getNode().nodeName, 'LI');
+});
+
 test('Outdent inside LI in end of OL in OL', function() {
 	editor.getBody().innerHTML = trimBrs(
 		'<ol>' +
