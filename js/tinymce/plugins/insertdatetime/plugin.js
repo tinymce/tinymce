@@ -52,23 +52,43 @@ tinymce.PluginManager.add('insertdatetime', function(editor) {
 		return fmt;
 	}
 
-	editor.addCommand('mceInsertDate', function() {
-		var str = getDateTime(editor.getParam("insertdate_dateformat", editor.translate("%Y-%m-%d")));
+	function insertDateTime(format) {
+		var html = getDateTime(format);
 
-		editor.execCommand('mceInsertContent', false, str);
+		if (editor.settings.insertdatetime_element) {
+			var computerTime;
+
+			if (/%[HMSIp]/.test(format)) {
+				computerTime = getDateTime("%Y-%m-%dT%H:%M");
+			} else {
+				computerTime = getDateTime("%Y-%m-%d");
+			}
+
+			html = '<time datetime="' + computerTime + '">' + html + '</time>';
+
+			var timeElm = editor.dom.getParent(editor.selection.getStart(), 'time');
+			if (timeElm) {
+				editor.dom.setOuterHTML(timeElm, html);
+				return;
+			}
+		}
+
+		editor.insertContent(html);
+	}
+
+	editor.addCommand('mceInsertDate', function() {
+		insertDateTime(editor.getParam("insertdate_dateformat", editor.translate("%Y-%m-%d")));
 	});
 
 	editor.addCommand('mceInsertTime', function() {
-		var str = getDateTime(editor.getParam("insertdate_timeformat", editor.translate('%H:%M:%S')));
-
-		editor.execCommand('mceInsertContent', false, str);
+		insertDateTime(editor.getParam("insertdate_timeformat", editor.translate('%H:%M:%S')));
 	});
 
 	editor.addButton('inserttime', {
 		type: 'splitbutton',
 		title: 'Insert time',
 		onclick: function() {
-			editor.insertContent(getDateTime(lastFormat || "%H:%M:%S"));
+			insertDateTime(lastFormat || "%H:%M:%S");
 		},
 		menu: menuItems
 	});
@@ -83,7 +103,7 @@ tinymce.PluginManager.add('insertdatetime', function(editor) {
 			text: getDateTime(fmt),
 			onclick: function() {
 				lastFormat = fmt;
-				editor.insertContent(getDateTime(fmt));
+				insertDateTime(fmt);
 			}
 		});
 	});
