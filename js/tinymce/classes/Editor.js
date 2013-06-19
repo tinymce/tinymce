@@ -1212,8 +1212,10 @@ define("tinymce/Editor", [
 			var self = this;
 
 			if (settings.cmd) {
-				settings.onclick = function() {
-					self.execCommand(settings.cmd);
+				settings.onclick = function(e) {
+					if(self.editorContainer == e.currentTarget){
+						self.execCommand(settings.cmd);
+					}
 				};
 			}
 
@@ -1250,8 +1252,10 @@ define("tinymce/Editor", [
 			var self = this;
 
 			if (settings.cmd) {
-				settings.onclick = function() {
-					self.execCommand(settings.cmd);
+				settings.onclick = function(e) {
+					if(self.editorContainer == e.currentTarget){
+						self.execCommand(settings.cmd);
+					}
 				};
 			}
 
