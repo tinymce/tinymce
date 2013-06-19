@@ -880,7 +880,8 @@ define("tinymce/Editor", [
 			self.fire('PreInit');
 
 			if (!settings.browser_spellcheck && !settings.gecko_spellcheck) {
-				doc.body.spellcheck = false;
+				doc.body.spellcheck = false; // Gecko
+				DOM.setAttrib(body, "spellcheck", "false");
 			}
 
 			self.fire('PostRender');
