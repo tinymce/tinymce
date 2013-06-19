@@ -247,7 +247,7 @@ define("tinymce/ui/FormatControls", [
 
 				each(formats, function(format) {
 					var menuItem = {
-						text: {raw: format.title},
+						text: format.title,
 						icon: format.icon
 					};
 
