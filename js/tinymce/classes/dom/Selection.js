@@ -789,7 +789,7 @@ define("tinymce/dom/Selection", [
 		 * @see http://www.dotvoid.com/2001/03/using-the-range-object-in-mozilla/
 		 */
 		getRng: function(w3c) {
-			var self = this, selection, rng, elm, doc = self.win.document;
+			var self = this, selection, rng, elm, doc = self.win.document, ieRng;
 
 			// Found tridentSel object then we need to use that one
 			if (w3c && self.tridentSel) {
@@ -809,11 +809,20 @@ define("tinymce/dom/Selection", [
 			}
 
 			// We have W3C ranges and it's IE then fake control selection since IE9 doesn't handle that correctly yet
-			if (isIE && rng && rng.setStart && doc.selection.createRange().item) {
-				elm = doc.selection.createRange().item(0);
-				rng = doc.createRange();
-				rng.setStartBefore(elm);
-				rng.setEndAfter(elm);
+			if (isIE && rng && rng.setStart) {
+				try {
+					// IE will sometimes throw an exception here
+					ieRng = doc.selection.createRange();
+				} catch (ex) {
+
+				}
+
+				if (ieRng && ieRng.item) {
+					elm = ieRng.item(0);
+					rng = doc.createRange();
+					rng.setStartBefore(elm);
+					rng.setEndAfter(elm);
+				}
 			}
 
 			// No range found then create an empty one

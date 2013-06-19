@@ -1,13 +1,18 @@
 Version 4.0.1 (2013-xx-xx)
+	Added new paste_as_text config option to force paste as plaintext mode.
+	Added new pastetext menu item that lets you toggle paste as plain text mode on/off.
 	Fixed bug where the position of the text color picker would be wrong if you switched to fullscreen.
 	Fixed bug where the link plugin would ask to add the mailto: prefix multiple times.
 	Fixed bug where list outdent operation could produce empty list elements on specific selections.
+	Fixed bug where element path wouldn't properly select parent elements on IE.
+	Fixed bug where IE would sometimes throw an exception when extrancting the current selection range.
 	Fixed so image size fields gets updated when selecting a new image in the image dialog.
 	Fixed so it doesn't load any language pack if the language option is set to "en".
 	Fixed so ctrl+shift+z works as an alternative redo shortcut to match a common Mac OS X shortcut.
 	Fixed so it's not possible to drag/drop in images in Gecko by default when paste plugin is enabled.
 	Fixed so format menu item texts gets translated using the specified language pack.
 	Fixed so the image dialog title is the same as the insert/edit image button text.
+	Fixed so paste as plain text produces BR:s in PRE block and when forced_root_block is disabled.
 Version 4.0 (2013-06-13)
 	Added new insertdate_dateformat, insertdate_timeformat and insertdate_formats options to insertdatetime.
 	Added new font_formats, fontsize_formats and block_formats options to configure fontselect, fontsizeselect and formatselect.
