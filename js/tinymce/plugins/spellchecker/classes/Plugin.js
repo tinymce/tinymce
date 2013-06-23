@@ -124,7 +124,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			}
 
 			// Find all words and make an unique words array
-			textFilter = new DomTextMatcher(/\w+/g, editor.getBody(), editor.schema).each(function(match) {
+			textFilter = new DomTextMatcher(/[^\\\s!"#$%&()*+,-./:;<=>?@[\]^_{|}§©«®±¶·¸»¼½¾¿×÷¤\u201d\u201c\'’´`„]+/g, editor.getBody(), editor.schema).each(function(match) {
 				if (!uniqueWords[match[2][0]]) {
 					words.push(match[2][0]);
 					uniqueWords[match[2][0]] = true;
