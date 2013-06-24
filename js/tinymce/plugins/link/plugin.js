@@ -249,7 +249,7 @@ tinymce.PluginManager.add('link', function(editor) {
 
 	editor.addButton('unlink', {
 		icon: 'unlink',
-		tooltip: 'Remove link(s)',
+		tooltip: 'Remove link',
 		cmd: 'unlink',
 		stateSelector: 'a[href]'
 	});
