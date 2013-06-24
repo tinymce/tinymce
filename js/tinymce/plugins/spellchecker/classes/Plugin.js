@@ -123,11 +123,29 @@ define("tinymce/spellcheckerplugin/Plugin", [
 				editor.fire('SpellcheckStart');
 			}
 
+			// Regexp for finding word specific characters this will split words by
+			// spaces, quotes, copy right characters etc. It's escaped with unicode characters
+			// to make it easier to output scripts on servers using different encodings
+			// so if you add any characters outside the 128 byte range make sure to escape it
+			var nonWordSeparatorCharacters = new RegExp("[^" +
+				"\\s!\"#$%&()*+,-./:;<=>?@[\\]^_{|}`" +
+				"\u00a7\u00a9\u00ab\u00ae\u00b1\u00b6\u00b7\u00b8\u00bb" +
+				"\u00bc\u00bd\u00be\u00bf\u00d7\u00f7\u00a4\u201d\u201c\u201e" +
+			"]+", "g");
+
 			// Find all words and make an unique words array
-			textFilter = new DomTextMatcher(/\w+/g, editor.getBody(), editor.schema).each(function(match) {
-				if (!uniqueWords[match[2][0]]) {
-					words.push(match[2][0]);
-					uniqueWords[match[2][0]] = true;
+			textFilter = new DomTextMatcher(nonWordSeparatorCharacters, editor.getBody(), editor.schema).each(function(match) {
+				var word = match[2][0];
+
+				// TODO: Fix so it remembers correctly spelled words
+				if (!uniqueWords[word]) {
+					// Ignore numbers and single character words
+					if (/^\d+$/.test(word) || word.length == 1) {
+						return;
+					}
+
+					words.push(word);
+					uniqueWords[word] = true;
 				}
 			});
 
@@ -159,7 +177,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 
 			editor.setProgressState(true);
 
-			var spellCheckCallback = settings.spellcheck_callback || defaultSpellcheckCallback;
+			var spellCheckCallback = settings.spellchecker_callback || defaultSpellcheckCallback;
 			spellCheckCallback("spellcheck", words, doneCallback);
 		}
 
