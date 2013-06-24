@@ -27,12 +27,21 @@ define("tinymce/pasteplugin/Clipboard", [
 	return function(editor) {
 		var self = this, plainTextPasteTime;
 
+		function now() {
+			return new Date().getTime();
+		}
+
+		function isPasteKeyEvent(e) {
+			// Ctrl+V or Shift+Insert
+			return (VK.metaKeyPressed(e) && e.keyCode == 86) || (e.shiftKey && e.keyCode == 45);
+		}
+
 		function innerText(elm) {
 			return elm.innerText || elm.textContent;
 		}
 
 		function shouldPasteAsPlainText() {
-			return new Date().getTime() - plainTextPasteTime < 100 || self.pasteFormat == "text";
+			return now() - plainTextPasteTime < 100 || self.pasteFormat == "text";
 		}
 
 		// TODO: Move this to a class?
@@ -96,17 +105,15 @@ define("tinymce/pasteplugin/Clipboard", [
 
 			// Create a pastebin and move the selection into the bin
 			var pastebinElm = editor.dom.add(editor.getBody(), 'div', {
-				id: 'mcePasteBin',
 				contentEditable: false,
+				"data-mce-bogus": "1",
 				style: 'position: absolute; top: ' + scrollTop + 'px; left: 0; background: red; width: 1px; height: 1px; overflow: hidden'
-			}, '<div contentEditable="true">X</div>');
+			}, '<div contentEditable="true" data-mce-bogus="1">X</div>');
 
 			return pastebinElm;
 		}
 
-		function removePasteBin() {
-			var pastebinElm = editor.dom.get('mcePasteBin');
-
+		function removePasteBin(pastebinElm) {
 			editor.dom.unbind(pastebinElm);
 			editor.dom.remove(pastebinElm);
 		}
@@ -114,7 +121,7 @@ define("tinymce/pasteplugin/Clipboard", [
 		editor.on('keydown', function(e) {
 			// Shift+Ctrl+V
 			if (VK.metaKeyPressed(e) && e.shiftKey && e.keyCode == 86) {
-				plainTextPasteTime = new Date().getTime();
+				plainTextPasteTime = now();
 			}
 		});
 
@@ -153,44 +160,65 @@ define("tinymce/pasteplugin/Clipboard", [
 			if (Env.ie) {
 				// Explorer fallback
 				editor.on('init', function() {
-					var dom = editor.dom;
+					var dom = editor.dom, keyPasteTime = 0;
 
+					editor.on('keydown', function(e) {
+						if (isPasteKeyEvent(e) && !e.isDefaultPrevented()) {
+							var pastebinElm = createPasteBin();
+							keyPasteTime = now();
+
+							dom.bind(pastebinElm, 'paste', function() {
+								setTimeout(function() {
+									removePasteBin(pastebinElm);
+									editor.selection.setRng(lastRng);
+
+									if (shouldPasteAsPlainText()) {
+										processText(innerText(pastebinElm.firstChild));
+									} else {
+										processHtml(pastebinElm.firstChild.innerHTML);
+									}
+								}, 0);
+							});
+
+							var lastRng = editor.selection.getRng();
+							pastebinElm.firstChild.focus();
+							pastebinElm.firstChild.innerText = '';
+						}
+					});
+
+					// Use a different method if the paste was made without using the keyboard
+					// for example using the browser menu items
 					editor.dom.bind(editor.getBody(), 'paste', function(e) {
-						var gotPasteEvent;
+						if (now() - keyPasteTime > 100) {
+							var gotPasteEvent, pastebinElm = createPasteBin();
 
-						e.preventDefault();
+							e.preventDefault();
 
-						if (shouldPasteAsPlainText() && dom.doc.dataTransfer) {
-							processText(dom.doc.dataTransfer.getData('Text'));
-							return;
-						}
+							dom.bind(pastebinElm, 'paste', function(e) {
+								e.stopPropagation();
+								gotPasteEvent = true;
+							});
 
-						var pastebinElm = createPasteBin();
+							var lastRng = editor.selection.getRng();
 
-						dom.bind(pastebinElm, 'paste', function(e) {
-							e.stopPropagation();
-							gotPasteEvent = true;
-						});
+							// Select the container
+							var rng = dom.doc.body.createTextRange();
+							rng.moveToElementText(pastebinElm.firstChild);
+							rng.execCommand('Paste');
+							removePasteBin(pastebinElm);
 
-						var lastRng = editor.selection.getRng();
+							if (!gotPasteEvent) {
+								editor.windowManager.alert('Please use Ctrl+V/Cmd+V keyboard shortcuts to paste contents.');
+								return;
+							}
 
-						// Select the container
-						var rng = dom.doc.body.createTextRange();
-						rng.moveToElementText(pastebinElm.firstChild);
-						rng.execCommand('Paste');
-						removePasteBin();
+							editor.selection.setRng(lastRng);
 
-						if (!gotPasteEvent) {
-							editor.windowManager.alert('Clipboard access not possible.');
-							return;
-						}
-
-						editor.selection.setRng(lastRng);
-
-						if (shouldPasteAsPlainText()) {
-							processText(innerText(pastebinElm.firstChild));
-						} else {
-							processHtml(pastebinElm.firstChild.innerHTML);
+							if (shouldPasteAsPlainText()) {
+								processText(innerText(pastebinElm.firstChild));
+							} else {
+								processHtml(pastebinElm.firstChild.innerHTML);
+							}
 						}
 					});
 				});
@@ -204,7 +232,7 @@ define("tinymce/pasteplugin/Clipboard", [
 
 				// Old Gecko/WebKit/Opera fallback
 				editor.on('keydown', function(e) {
-					if (VK.metaKeyPressed(e) && e.keyCode == 86 && !e.isDefaultPrevented()) {
+					if (isPasteKeyEvent(e) && !e.isDefaultPrevented()) {
 						var pastebinElm = createPasteBin();
 						var lastRng = editor.selection.getRng();
 
@@ -214,7 +242,7 @@ define("tinymce/pasteplugin/Clipboard", [
 							e.stopPropagation();
 
 							setTimeout(function() {
-								removePasteBin();
+								removePasteBin(pastebinElm);
 								editor.lastRng = lastRng;
 								editor.selection.setRng(lastRng);
 

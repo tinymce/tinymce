@@ -14,6 +14,7 @@ Version 4.0.1 (2013-xx-xx)
 	Fixed bug where spellchecker wouldn't properly find non English words.
 	Fixed bug where deactivating inline editor instances would force padding-top: 0 on page body.
 	Fixed bug where jQuery would initialize editors multiple times since it didn't check if the editor already existed.
+	Fixed bug where it wasn't possible to paste contents on IE 10 in modern UI mode when paste filtering was enabled.
 	Fixed so the icon parameter for addButton isn't automatically filled if a button text is provided.
 	Fixed so image size fields gets updated when selecting a new image in the image dialog.
 	Fixed so it doesn't load any language pack if the language option is set to "en".

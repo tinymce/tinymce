@@ -48,9 +48,11 @@ define("tinymce/FocusManager", [
 			editor.on('init', function() {
 				// On IE take selection snapshot onbeforedeactivate
 				if ("onbeforedeactivate" in document) {
-					editor.dom.bind(editor.getBody(), 'beforedeactivate', function() {
-						var ieSelection = editor.getDoc().selection;
-						lastRng = ieSelection && ieSelection.createRange ? ieSelection.createRange() : editor.selection.getRng();
+					editor.dom.bind(editor.getBody(), 'beforedeactivate', function(e) {
+						if (e.target == this) {
+							var ieSelection = editor.getDoc().selection;
+							lastRng = ieSelection && ieSelection.createRange ? ieSelection.createRange() : editor.selection.getRng();
+						}
 					});
 				} else if (editor.inline) {
 					// On other browsers take snapshot on nodechange in inline mode since they have Ghost selections for iframes
