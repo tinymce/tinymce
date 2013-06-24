@@ -2,6 +2,7 @@ Version 4.0.1 (2013-xx-xx)
 	Added new paste_as_text config option to force paste as plaintext mode.
 	Added new pastetext menu item that lets you toggle paste as plain text mode on/off.
 	Added new insertdatetime_element option to insertdatetime plugin. Enables HTML5 time element support.
+	Added new spellchecker_wordchar_pattern option to allow configuration of language specific characters.
 	Fixed bug where the position of the text color picker would be wrong if you switched to fullscreen.
 	Fixed bug where the link plugin would ask to add the mailto: prefix multiple times.
 	Fixed bug where list outdent operation could produce empty list elements on specific selections.
