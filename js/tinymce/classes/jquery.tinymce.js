@@ -49,6 +49,11 @@
 					node.id = id = tinymce.DOM.uniqueId();
 				}
 
+				// Only init the editor once
+				if (tinymce.get(id)) {
+					return;
+				}
+
 				// Create editor instance and render it
 				ed = new tinymce.Editor(id, settings, tinymce.EditorManager);
 				editors.push(ed);
