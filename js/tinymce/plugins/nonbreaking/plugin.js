@@ -11,6 +11,8 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('nonbreaking', function(editor) {
+	var setting = editor.getParam('nonbreaking_force_tab');
+
 	editor.addCommand('mceNonBreaking', function() {
 		editor.insertContent(
 			(editor.plugins.visualchars && editor.plugins.visualchars.state) ?
@@ -29,14 +31,20 @@ tinymce.PluginManager.add('nonbreaking', function(editor) {
 		context: 'insert'
 	});
 
-	if (editor.getParam('nonbreaking_force_tab')) {
+	if (setting) {
+		var spaces = +setting > 1 ? +setting : 3;  // defaults to 3 spaces if setting is true (or 1)
+
 		editor.on('keydown', function(e) {
 			if (e.keyCode == 9) {
-				e.preventDefault();
 
-				editor.execCommand('mceNonBreaking');
-				editor.execCommand('mceNonBreaking');
-				editor.execCommand('mceNonBreaking');
+				if (e.shiftKey) {
+					return;
+				}
+
+				e.preventDefault();
+				for (var i = 0; i < spaces; i++) {
+					editor.execCommand('mceNonBreaking');
+				}
 			}
 		});
 	}
