@@ -11,13 +11,13 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('visualchars', function(editor) {
-	var state, visualCharsMenuItem;
+	var state;
 
 	function toggleVisualChars(addBookmark) {
 		var node, nodeList, i, body = editor.getBody(), nodeValue, selection = editor.selection, div, bookmark;
 
 		state = !state;
-		visualCharsMenuItem.active(state);
+		editor.fire('VisualChars', {state: state});
 
 		if (addBookmark) {
 			bookmark = selection.getBookmark();
@@ -53,19 +53,26 @@ tinymce.PluginManager.add('visualchars', function(editor) {
 		selection.moveToBookmark(bookmark);
 	}
 
+	function toggleActiveState() {
+		var self = this;
+
+		editor.on('VisualChars', function(e) {
+			self.active(e.state);
+		});
+	}
+
 	editor.addCommand('mceVisualChars', toggleVisualChars);
 
 	editor.addButton('visualchars', {
 		title: 'Show invisible characters',
-		cmd: 'mceVisualChars'
+		cmd: 'mceVisualChars',
+		onPostRender: toggleActiveState
 	});
 
 	editor.addMenuItem('visualchars', {
 		text: 'Show invisible characters',
 		cmd: 'mceVisualChars',
-		onPostRender: function() {
-			visualCharsMenuItem = this;
-		},
+		onPostRender: toggleActiveState,
 		selectable: true,
 		context: 'view',
 		prependToContext: true

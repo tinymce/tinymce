@@ -18,6 +18,14 @@ tinymce.PluginManager.add('visualblocks', function(editor, url) {
 		return;
 	}
 
+	function toggleActiveState() {
+		var self = this;
+
+		editor.on('VisualBlocks', function() {
+			self.active(editor.dom.hasClass(editor.getBody(), 'mce-visualblocks'));
+		});
+	}
+
 	editor.addCommand('mceVisualBlocks', function() {
 		var dom = editor.dom, linkElm;
 
@@ -45,20 +53,20 @@ tinymce.PluginManager.add('visualblocks', function(editor, url) {
 		if (visualBlocksMenuItem) {
 			visualBlocksMenuItem.active(dom.hasClass(editor.getBody(), 'mce-visualblocks'));
 		}
+
+		editor.fire('VisualBlocks');
 	});
 
 	editor.addButton('visualblocks', {
 		title: 'Show blocks',
-		cmd: 'mceVisualBlocks'
+		cmd: 'mceVisualBlocks',
+		onPostRender: toggleActiveState
 	});
 
 	editor.addMenuItem('visualblocks', {
 		text: 'Show blocks',
 		cmd: 'mceVisualBlocks',
-		onPostRender: function() {
-			visualBlocksMenuItem = this;
-			visualBlocksMenuItem.active(editor.dom.hasClass(editor.getBody(), 'mce-visualblocks'));
-		},
+		onPostRender: toggleActiveState,
 		selectable: true,
 		context: 'view',
 		prependToContext: true
