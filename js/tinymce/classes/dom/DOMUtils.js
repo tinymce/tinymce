@@ -9,7 +9,7 @@
  */
 
 /**
- * Utility class for various DOM manipulation and retrival functions.
+ * Utility class for various DOM manipulation and retrieval functions.
  *
  * @class tinymce.dom.DOMUtils
  * @example
@@ -170,7 +170,7 @@ define("tinymce/dom/DOMUtils", [
 		},
 
 		/**
-		 * Returns the root node of the document this is normally the body but might be a DIV. Parents like getParent will not
+		 * Returns the root node of the document. This is normally the body but might be a DIV. Parents like getParent will not
 		 * go above the point of this root node.
 		 *
 		 * @method getRoot
@@ -209,8 +209,8 @@ define("tinymce/dom/DOMUtils", [
 		 * Returns the rectangle for a specific element.
 		 *
 		 * @method getRect
-		 * @param {Element/String} elm Element object or element ID to get rectange from.
-		 * @return {object} Rectange for specified element object with x, y, w, h fields.
+		 * @param {Element/String} elm Element object or element ID to get rectangle from.
+		 * @return {object} Rectangle for specified element object with x, y, w, h fields.
 		 */
 		getRect: function(elm) {
 			var self = this, pos, size;
@@ -229,8 +229,8 @@ define("tinymce/dom/DOMUtils", [
 		 * Returns the size dimensions of the specified element.
 		 *
 		 * @method getSize
-		 * @param {Element/String} elm Element object or element ID to get rectange from.
-		 * @return {object} Rectange for specified element object with w, h fields.
+		 * @param {Element/String} elm Element object or element ID to get rectangle from.
+		 * @return {object} Rectangle for specified element object with w, h fields.
 		 */
 		getSize: function(elm) {
 			var self = this, w, h;
@@ -373,7 +373,7 @@ define("tinymce/dom/DOMUtils", [
 
 		/**
 		 * Selects specific elements by a CSS level 3 pattern. For example "div#a1 p.test".
-		 * This function is optimized for the most common patterns needed in TinyMCE but it also performes good enough
+		 * This function is optimized for the most common patterns needed in TinyMCE but it also performs well enough
 		 * on more complex patterns.
 		 *
 		 * @method select
@@ -384,7 +384,7 @@ define("tinymce/dom/DOMUtils", [
 		 * // Adds a class to all paragraphs in the currently active editor
 		 * tinymce.activeEditor.dom.addClass(tinymce.activeEditor.dom.select('p'), 'someclass');
 		 *
-		 * // Adds a class to all spans that has the test class in the currently active editor
+		 * // Adds a class to all spans that have the test class in the currently active editor
 		 * tinymce.activeEditor.dom.addClass(tinymce.activeEditor.dom.select('span.test'), 'someclass')
 		 */
 		select: function(selector, scope) {
@@ -399,7 +399,7 @@ define("tinymce/dom/DOMUtils", [
 		 *
 		 * @method is
 		 * @param {Node/NodeList} elm DOM node to match or an array of nodes to match.
-		 * @param {String} selector CSS pattern to match the element agains.
+		 * @param {String} selector CSS pattern to match the element against.
 		 */
 		is: function(elm, selector) {
 			var i;
@@ -440,11 +440,12 @@ define("tinymce/dom/DOMUtils", [
 		 * Adds the specified element to another element or elements.
 		 *
 		 * @method add
-		 * @param {String/Element/Array} parentElm Element id string, DOM node element or array of id's or elements to add to.
+		 * @param {String/Element/Array} parentElm Element id string, DOM node element or array of ids or elements to add to.
 		 * @param {String/Element} name Name of new element to add or existing element to add.
 		 * @param {Object} attrs Optional object collection with arguments to add to the new element(s).
 		 * @param {String} html Optional inner HTML contents to add for each element.
-		 * @return {Element/Array} Element that got created or array with elements if multiple elements where passed.
+		 * @return {Element/Array} Element that got created, or an array of created elements if multiple input elements
+		 * were passed in.
 		 * @example
 		 * // Adds a new paragraph to the end of the active editor
 		 * tinymce.activeEditor.dom.add(tinymce.activeEditor.getBody(), 'p', {title: 'my title'}, 'Some content');
@@ -488,13 +489,13 @@ define("tinymce/dom/DOMUtils", [
 		},
 
 		/**
-		 * Create HTML string for element. The element will be closed unless an empty inner HTML string is passed.
+		 * Creates HTML string for element. The element will be closed unless an empty inner HTML string is passed in.
 		 *
 		 * @method createHTML
 		 * @param {String} name Name of new element.
 		 * @param {Object} attrs Optional object name/value collection with element attributes.
 		 * @param {String} html Optional HTML string to set as inner HTML of the element.
-		 * @return {String} String with new HTML element like for example: <a href="#">test</a>.
+		 * @return {String} String with new HTML element, for example: <a href="#">test</a>.
 		 * @example
 		 * // Creates a html chunk and inserts it at the current selection/caret location
 		 * tinymce.activeEditor.selection.setContent(tinymce.activeEditor.dom.createHTML('a', {href: 'test.html'}, 'some line'));
@@ -549,12 +550,13 @@ define("tinymce/dom/DOMUtils", [
 		 * @param {String/Element/Array} node ID of element or DOM element object or array containing multiple elements/ids.
 		 * @param {Boolean} keep_children Optional state to keep children or not. If set to true all children will be
 		 * placed at the location of the removed element.
-		 * @return {Element/Array} HTML DOM element that got removed or array of elements depending on input.
+		 * @return {Element/Array} HTML DOM element that got removed, or an array of removed elements if multiple input elements
+		 * were passed in.
 		 * @example
 		 * // Removes all paragraphs in the active editor
 		 * tinymce.activeEditor.dom.remove(tinymce.activeEditor.dom.select('p'));
 		 *
-		 * // Removes a element by id in the document
+		 * // Removes an element by id in the document
 		 * tinymce.DOM.remove('mydiv');
 		 */
 		remove: function(node, keep_children) {
@@ -643,13 +645,13 @@ define("tinymce/dom/DOMUtils", [
 		},
 
 		/**
-		 * Returns the current style or runtime/computed value of a element.
+		 * Returns the current style or runtime/computed value of an element.
 		 *
 		 * @method getStyle
 		 * @param {String/Element} elm HTML element or element id string to get style from.
 		 * @param {String} name Style name to return.
 		 * @param {Boolean} computed Computed style.
-		 * @return {String} Current style or computed style value of a element.
+		 * @return {String} Current style or computed style value of an element.
 		 */
 		getStyle: function(elm, name, computed) {
 			elm = this.get(elm);
@@ -727,23 +729,23 @@ define("tinymce/dom/DOMUtils", [
 		},
 
 		/**
-		 * Sets the specified attributes value of a element or elements.
+		 * Sets the specified attribute of an element or elements.
 		 *
 		 * @method setAttrib
 		 * @param {Element/String/Array} e DOM element, element id string or array of elements/ids to set attribute on.
 		 * @param {String} n Name of attribute to set.
-		 * @param {String} v Value to set on the attribute of this value is falsy like null 0 or '' it will remove the attribute instead.
+		 * @param {String} v Value to set on the attribute - if this value is falsy like null, 0 or '' it will remove the attribute instead.
 		 * @example
-		 * // Sets an attribute to all paragraphs in the active editor
+		 * // Sets class attribute on all paragraphs in the active editor
 		 * tinymce.activeEditor.dom.setAttrib(tinymce.activeEditor.dom.select('p'), 'class', 'myclass');
 		 *
-		 * // Sets an attribute to a specific element in the current page
+		 * // Sets class attribute on a specific element in the current page
 		 * tinymce.dom.setAttrib('mydiv', 'class', 'myclass');
 		 */
 		setAttrib: function(e, n, v) {
 			var t = this;
 
-			// Whats the point
+			// What's the point
 			if (!e || !n) {
 				return;
 			}
@@ -809,16 +811,16 @@ define("tinymce/dom/DOMUtils", [
 		},
 
 		/**
-		 * Sets the specified attributes of a element or elements.
+		 * Sets two or more specified attributes of an element or elements.
 		 *
 		 * @method setAttribs
 		 * @param {Element/String/Array} elm DOM element, element id string or array of elements/ids to set attributes on.
 		 * @param {Object} attrs Name/Value collection of attribute items to add to the element(s).
 		 * @example
-		 * // Sets some attributes to all paragraphs in the active editor
+		 * // Sets class and title attributes on all paragraphs in the active editor
 		 * tinymce.activeEditor.dom.setAttribs(tinymce.activeEditor.dom.select('p'), {'class': 'myclass', title: 'some title'});
 		 *
-		 * // Sets some attributes to a specific element in the current page
+		 * // Sets class and title attributes on a specific element in the current page
 		 * tinymce.DOM.setAttribs('mydiv', {'class': 'myclass', title: 'some title'});
 		 */
 		setAttribs: function(elm, attrs) {
@@ -977,7 +979,7 @@ define("tinymce/dom/DOMUtils", [
 		},
 
 		/**
-		 * Returns the absolute x, y position of a node. The position will be returned in a object with x, y fields.
+		 * Returns the absolute x, y position of a node. The position will be returned in an object with x, y fields.
 		 *
 		 * @method getPos
 		 * @param {Element/String} n HTML element or element id to get x, y position from.
@@ -1024,12 +1026,12 @@ define("tinymce/dom/DOMUtils", [
 
 		/**
 		 * Parses the specified style value into an object collection. This parser will also
-		 * merge and remove any redundant items that browsers might have added. It will also convert non hex
+		 * merge and remove any redundant items that browsers might have added. It will also convert non-hex
 		 * colors to hex values. Urls inside the styles will also be converted to absolute/relative based on settings.
 		 *
 		 * @method parseStyle
-		 * @param {String} cssText Style value to parse for example: border:1px solid red;.
-		 * @return {Object} Object representation of that style like {border: '1px solid red'}
+		 * @param {String} cssText Style value to parse, for example: border:1px solid red;.
+		 * @return {Object} Object representation of that style, for example: {border: '1px solid red'}
 		 */
 		parseStyle: function(cssText) {
 			return this.styles.parse(cssText);
@@ -1039,9 +1041,9 @@ define("tinymce/dom/DOMUtils", [
 		 * Serializes the specified style object into a string.
 		 *
 		 * @method serializeStyle
-		 * @param {Object} styles Object to serialize as string for example: {border: '1px solid red'}
+		 * @param {Object} styles Object to serialize as string, for example: {border: '1px solid red'}
 		 * @param {String} name Optional element name.
-		 * @return {String} String representation of the style object for example: border: 1px solid red.
+		 * @return {String} String representation of the style object, for example: border: 1px solid red.
 		 */
 		serializeStyle: function(styles, name) {
 			return this.styles.serialize(styles, name);
@@ -1136,7 +1138,7 @@ define("tinymce/dom/DOMUtils", [
 				link = self.create('link', {rel: 'stylesheet', href: url});
 
 				// IE 8 has a bug where dynamically loading stylesheets would produce a 1 item remaining bug
-				// This fix seems to resolve that issue by realcing the document ones a stylesheet finishes loading
+				// This fix seems to resolve that issue by recalcing the document once a stylesheet finishes loading
 				// It's ugly but it seems to work fine.
 				if (isIE && doc.documentMode && doc.recalc) {
 					link.onload = function() {
@@ -1190,8 +1192,9 @@ define("tinymce/dom/DOMUtils", [
 		 *
 		 * @method removeClass
 		 * @param {String/Element/Array} elm Element ID string or DOM element or array with elements or IDs.
-		 * @param {String} cls Class name to remove to each element.
-		 * @return {String/Array} String with new class value or array with new class values for all elements.
+		 * @param {String} cls Class name to remove from each element.
+		 * @return {String/Array} String of remaining class name(s), or an array of strings if multiple input elements
+		 * were passed in.
 		 * @example
 		 * // Removes a class from all paragraphs in the active editor
 		 * tinymce.activeEditor.dom.removeClass(tinymce.activeEditor.dom.select('p'), 'myclass');
@@ -1282,7 +1285,7 @@ define("tinymce/dom/DOMUtils", [
 		 * @method hide
 		 * @param {String/Element/Array} e ID of DOM element or DOM element or array with elements or IDs to hide.
 		 * @example
-		 * // Hides a element by id in the document
+		 * // Hides an element by id in the document
 		 * tinymce.DOM.hide('myid');
 		 */
 		hide: function(elm) {
@@ -1304,10 +1307,10 @@ define("tinymce/dom/DOMUtils", [
 
 		/**
 		 * Returns a unique id. This can be useful when generating elements on the fly.
-		 * This method will not check if the element allready exists.
+		 * This method will not check if the element already exists.
 		 *
 		 * @method uniqueId
-		 * @param {String} prefix Optional prefix to add infront of all ids defaults to "mce_".
+		 * @param {String} prefix Optional prefix to add in front of all ids - defaults to "mce_".
 		 * @return {String} Unique id.
 		 */
 		uniqueId: function(prefix) {
@@ -1315,17 +1318,17 @@ define("tinymce/dom/DOMUtils", [
 		},
 
 		/**
-		 * Sets the specified HTML content inside the element or elements. The HTML will first be processed this means
+		 * Sets the specified HTML content inside the element or elements. The HTML will first be processed. This means
 		 * URLs will get converted, hex color values fixed etc. Check processHTML for details.
 		 *
 		 * @method setHTML
-		 * @param {Element/String/Array} e DOM element, element id string or array of elements/ids to set HTML inside.
+		 * @param {Element/String/Array} e DOM element, element id string or array of elements/ids to set HTML inside of.
 		 * @param {String} h HTML content to set as inner HTML of the element.
 		 * @example
 		 * // Sets the inner HTML of all paragraphs in the active editor
 		 * tinymce.activeEditor.dom.setHTML(tinymce.activeEditor.dom.select('p'), 'some inner html');
 		 *
-		 * // Sets the inner HTML of a element by id in the document
+		 * // Sets the inner HTML of an element by id in the document
 		 * tinymce.DOM.setHTML('mydiv', 'some inner html');
 		 */
 		setHTML: function(element, html) {
@@ -1344,11 +1347,11 @@ define("tinymce/dom/DOMUtils", [
 						element.innerHTML = '<br />' + html;
 						element.removeChild(element.firstChild);
 					} catch (ex) {
-						// IE sometimes produces an unknown runtime error on innerHTML if it's an block element
+						// IE sometimes produces an unknown runtime error on innerHTML if it's a block element
 						// within a block element for example a div inside a p
 						// This seems to fix this problem
 
-						// Create new div with HTML contents and a BR infront to keep comments
+						// Create new div with HTML contents and a BR in front to keep comments
 						var newElement = self.create('div');
 						newElement.innerHTML = '<br />' + html;
 
@@ -1398,17 +1401,17 @@ define("tinymce/dom/DOMUtils", [
 		},
 
 		/**
-		 * Sets the specified outer HTML on a element or elements.
+		 * Sets the specified outer HTML on an element or elements.
 		 *
 		 * @method setOuterHTML
 		 * @param {Element/String/Array} elm DOM element, element id string or array of elements/ids to set outer HTML on.
 		 * @param {Object} html HTML code to set as outer value for the element.
-		 * @param {Document} doc Optional document scope to use in this process defaults to the document of the DOM class.
+		 * @param {Document} doc Optional document scope to use in this process - defaults to the document of the DOM class.
 		 * @example
 		 * // Sets the outer HTML of all paragraphs in the active editor
 		 * tinymce.activeEditor.dom.setOuterHTML(tinymce.activeEditor.dom.select('p'), '<div>some html</div>');
 		 *
-		 * // Sets the outer HTML of a element by id in the document
+		 * // Sets the outer HTML of an element by id in the document
 		 * tinymce.DOM.setOuterHTML('mydiv', '<div>some html</div>');
 		 */
 		setOuterHTML: function(elm, html, doc) {
@@ -1454,7 +1457,7 @@ define("tinymce/dom/DOMUtils", [
 		},
 
 		/**
-		 * Entity decode a string, resolves any HTML entities like &aring;.
+		 * Entity decodes a string. This method decodes any HTML entities, such as &aring;.
 		 *
 		 * @method decode
 		 * @param {String} s String to decode entities on.
@@ -1463,7 +1466,7 @@ define("tinymce/dom/DOMUtils", [
 		decode: Entities.decode,
 
 		/**
-		 * Entity encodes a string, encodes the most common entities <>"& into entities.
+		 * Entity encodes a string. This method encodes the most common entities, such as <>"&.
 		 *
 		 * @method encode
 		 * @param {String} text String to encode with entities.
@@ -1472,7 +1475,7 @@ define("tinymce/dom/DOMUtils", [
 		encode: Entities.encodeAllRaw,
 
 		/**
-		 * Inserts a element after the reference element.
+		 * Inserts an element after the reference element.
 		 *
 		 * @method insertAfter
 		 * @param {Element} node Element to insert after the reference.
@@ -1499,8 +1502,8 @@ define("tinymce/dom/DOMUtils", [
 		},
 
 		/**
-		 * Replaces the specified element or elements with the specified element, the new element will
-		 * be cloned if multiple inputs elements are passed.
+		 * Replaces the specified element or elements with the new element specified. The new element will
+		 * be cloned if multiple input elements are passed in.
 		 *
 		 * @method replace
 		 * @param {Element} newElm New element to replace old ones with.
@@ -1526,7 +1529,7 @@ define("tinymce/dom/DOMUtils", [
 		},
 
 		/**
-		 * Renames the specified element to a new name and keep it's attributes and children.
+		 * Renames the specified element and keeps its attributes and children.
 		 *
 		 * @method rename
 		 * @param {Element} elm Element to rename.
@@ -1596,11 +1599,11 @@ define("tinymce/dom/DOMUtils", [
 		},
 
 		/**
-		 * Returns a array of all single CSS classes in the document. A single CSS class is a simple
-		 * rule like ".class" complex ones like "div td.class" will not be added to output.
+		 * Returns an array of all single CSS classes in the document. A single CSS class is a simple
+		 * rule like ".class" - complex ones like "div td.class" will not be added to output.
 		 *
 		 * @method getClasses
-		 * @return {Array} Array with class objects each object has a class field might be other fields in the future.
+		 * @return {Array} Array with class objects - each object has a class field - might be other fields in the future.
 		 */
 		getClasses: function() {
 			var self = this, classList = [], lookup = {}, filter = self.settings.class_filter, oldVal;
@@ -1674,7 +1677,7 @@ define("tinymce/dom/DOMUtils", [
 		 * @param {String/Element/Array} Element ID or DOM element object or array with ids or elements.
 		 * @param {function} f Function to execute for each item.
 		 * @param {Object} s Optional scope to execute the function in.
-		 * @return {Object/Array} Single object or array with objects depending on multiple input or not.
+		 * @return {Object/Array} Single object, or an array of objects if multiple input elements were passed in.
 		 */
 		run: function(elm, func, scope) {
 			var self = this, result;
@@ -1708,7 +1711,7 @@ define("tinymce/dom/DOMUtils", [
 		},
 
 		/**
-		 * Returns an NodeList with attributes for the element.
+		 * Returns a NodeList with attributes for the element.
 		 *
 		 * @method getAttribs
 		 * @param {HTMLElement/string} elm Element node or string id to get attributes from.
@@ -1754,7 +1757,7 @@ define("tinymce/dom/DOMUtils", [
 		 * @example
 		 * tinymce.DOM.isEmpty(node, {img: true});
 		 * @method isEmpty
-		 * @param {Object} elements Optional name/value object with elements that are automatically treated as non empty elements.
+		 * @param {Object} elements Optional name/value object with elements that are automatically treated as non-empty elements.
 		 * @return {Boolean} true/false if the node is empty or not.
 		 */
 		isEmpty: function(node, elements) {
@@ -1813,8 +1816,8 @@ define("tinymce/dom/DOMUtils", [
 		},
 
 		/**
-		 * Created a new DOM Range object. This will use the native DOM Range API if it's
-		 * available if it's not it will fallback to the custom TinyMCE implementation.
+		 * Creates a new DOM Range object. This will use the native DOM Range API if it's
+		 * available. If it's not, it will fall back to the custom TinyMCE implementation.
 		 *
 		 * @method createRng
 		 * @return {DOMRange} DOM Range object.
@@ -1829,7 +1832,7 @@ define("tinymce/dom/DOMUtils", [
 		},
 
 		/**
-		 * Returns the index of the specified node within it's parent.
+		 * Returns the index of the specified node within its parent.
 		 *
 		 * @method nodeIndex
 		 * @param {Node} node Node to look for.
@@ -1859,25 +1862,25 @@ define("tinymce/dom/DOMUtils", [
 
 		/**
 		 * Splits an element into two new elements and places the specified split
-		 * element or element between the new ones. For example splitting the paragraph at the bold element in
+		 * element or elements between the new ones. For example splitting the paragraph at the bold element in
 		 * this example <p>abc<b>abc</b>123</p> would produce <p>abc</p><b>abc</b><p>123</p>.
 		 *
 		 * @method split
 		 * @param {Element} parentElm Parent element to split.
 		 * @param {Element} splitElm Element to split at.
-		 * @param {Element} replacementElm Optional replacement element to replace the split element by.
+		 * @param {Element} replacementElm Optional replacement element to replace the split element with.
 		 * @return {Element} Returns the split element or the replacement element if that is specified.
 		 */
 		split: function(parentElm, splitElm, replacementElm) {
 			var self = this, r = self.createRng(), bef, aft, pa;
 
-			// W3C valid browsers tend to leave empty nodes to the left/right side of the contents, this makes sense
+			// W3C valid browsers tend to leave empty nodes to the left/right side of the contents - this makes sense
 			// but we don't want that in our code since it serves no purpose for the end user
-			// For example if this is chopped:
+			// For example splitting this html at the bold element:
 			//   <p>text 1<span><b>CHOP</b></span>text 2</p>
 			// would produce:
 			//   <p>text 1<span></span></p><b>CHOP</b><p><span></span>text 2</p>
-			// this function will then trim of empty edges and produce:
+			// this function will then trim off empty edges and produce:
 			//   <p>text 1</p><b>CHOP</b><p>text 2</p>
 			function trimNode(node) {
 				var i, children = node.childNodes, type = node.nodeType;
@@ -1965,7 +1968,7 @@ define("tinymce/dom/DOMUtils", [
 		 * @method bind
 		 * @param {Element/Document/Window/Array/String} o Object or element id string to add event
 		 * handler to or an array of elements/ids/documents.
-		 * @param {String} n Name of event handler to add for example: click.
+		 * @param {String} n Name of event handler to add, for example: click.
 		 * @param {function} f Function to execute when the event occurs.
 		 * @param {Object} s Optional scope to execute the function in.
 		 * @return {function} Function callback handler the same as the one passed in.
@@ -1975,13 +1978,14 @@ define("tinymce/dom/DOMUtils", [
 		},
 
 		/**
-		 * Removes the specified event handler by name and function from a element or collection of elements.
+		 * Removes the specified event handler by name and function from an element or collection of elements.
 		 *
 		 * @method unbind
 		 * @param {String/Element/Array} o Element ID string or HTML element or an array of elements or ids to remove handler from.
-		 * @param {String} n Event handler name like for example: "click"
+		 * @param {String} n Event handler name, for example: "click"
 		 * @param {function} f Function to remove.
-		 * @return {bool/Array} Bool state if true if the handler was removed or an array with states if multiple elements where passed in.
+		 * @return {bool/Array} Bool state of true if the handler was removed, or an array of states if multiple input elements
+		 * were passed in.
 		 */
 		unbind: function(target, name, func) {
 			return this.events.unbind(target, name, func);
