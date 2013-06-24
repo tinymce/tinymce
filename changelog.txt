@@ -12,6 +12,7 @@ Version 4.0.1 (2013-xx-xx)
 	Fixed bug where menubuttons/listboxes would have an incorrect height on IE 7.
 	Fixed bug where browser spellchecking was enabled while editing inline on IE 10.
 	Fixed bug where spellchecker wouldn't properly find non English words.
+	Fixed bug where deactivating inline editor instances would force padding-top: 0 on page body.
 	Fixed so the icon parameter for addButton isn't automatically filled if a button text is provided.
 	Fixed so image size fields gets updated when selecting a new image in the image dialog.
 	Fixed so it doesn't load any language pack if the language option is set to "en".

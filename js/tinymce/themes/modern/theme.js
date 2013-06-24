@@ -356,10 +356,6 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			if (panel) {
 				panel.hide();
 				DOM.removeClass(editor.getBody(), 'mce-edit-focus');
-
-				if (document.activeElement && document.activeElement.className.indexOf('mce-content-body') == -1) {
-					DOM.setStyle(document.body, 'padding-top', 0);
-				}
 			}
 		}
 
