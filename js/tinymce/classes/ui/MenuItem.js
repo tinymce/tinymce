@@ -51,6 +51,10 @@ define("tinymce/ui/MenuItem", [
 				self.addClass('menu-item-expand');
 			}
 
+			if (settings.preview) {
+				self.addClass('menu-item-preview');
+			}
+
 			if (self._text === '-' || self._text === '|') {
 				self.addClass('menu-item-sep');
 				self.aria('role', 'separator');

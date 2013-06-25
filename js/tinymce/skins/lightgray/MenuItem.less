@@ -2,7 +2,7 @@
 
 .mce-menu-item {
 	display: block;
-	padding: 6px 20px;
+	padding: 6px 15px 6px 12px;
 	clear: both;
 	font-weight: normal;
 	line-height: 20px;
@@ -10,6 +10,8 @@
 	white-space: nowrap;
 	cursor: pointer;
 	line-height: normal;
+	border-left: 4px solid transparent;
+	margin-bottom: 1px;
 }
 
 .mce-menu-item.mce-disabled .mce-text {
@@ -38,11 +40,11 @@
 
 .mce-menu-shortcut {
 	.inline-block();
-	padding: 0 20px 0 20px;
+	padding: 0 15px 0 20px;
 }
 
 .mce-menu-item .mce-caret {
-	margin-top: 6px;
+	margin-top: 4px;
 	*margin-top: 3px;
 	margin-right: 6px;
 	border-top: 4px solid transparent;
@@ -81,6 +83,12 @@
 .mce-menu-item.mce-active {
 	background-color: #C8DEF4;
 	outline: 1px solid @btn-border-color;
+}
+
+.mce-menu-item-preview.mce-active {
+	border-left: 5px solid #666;
+	background-color: transparent;
+	outline: 0;
 }
 
 .mce-menu-item-checkbox.mce-active {
