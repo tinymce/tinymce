@@ -101,14 +101,18 @@ define("tinymce/pasteplugin/Clipboard", [
 		}
 
 		function createPasteBin() {
-			var scrollTop = (editor.inline ? editor.getBody() : editor.getDoc().documentElement).scrollTop;
+			var scrollTop = editor.dom.getViewPort().y;
 
 			// Create a pastebin and move the selection into the bin
 			var pastebinElm = editor.dom.add(editor.getBody(), 'div', {
 				contentEditable: false,
 				"data-mce-bogus": "1",
-				style: 'position: absolute; top: ' + scrollTop + 'px; left: 0; background: red; width: 1px; height: 1px; overflow: hidden'
+				style: 'position: absolute; top: ' + scrollTop + 'px; left: 0; width: 1px; height: 1px; overflow: hidden'
 			}, '<div contentEditable="true" data-mce-bogus="1">X</div>');
+
+			editor.dom.bind(pastebinElm, 'beforedeactivate focusin focusout', function(e) {
+				e.stopPropagation();
+			});
 
 			return pastebinElm;
 		}
@@ -246,10 +250,17 @@ define("tinymce/pasteplugin/Clipboard", [
 								editor.lastRng = lastRng;
 								editor.selection.setRng(lastRng);
 
+								var pastebinContents = pastebinElm.firstChild;
+
+								// Remove last BR Safari on Mac adds trailing BR
+								if (pastebinContents.lastChild && pastebinContents.lastChild.nodeName == 'BR') {
+									pastebinContents.removeChild(pastebinContents.lastChild);
+								}
+
 								if (shouldPasteAsPlainText()) {
-									processText(innerText(pastebinElm.firstChild));
+									processText(innerText(pastebinContents));
 								} else {
-									processHtml(pastebinElm.firstChild.innerHTML);
+									processHtml(pastebinContents.innerHTML);
 								}
 							}, 0);
 						});
