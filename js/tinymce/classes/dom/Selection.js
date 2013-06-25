@@ -791,6 +791,12 @@ define("tinymce/dom/Selection", [
 		getRng: function(w3c) {
 			var self = this, selection, rng, elm, doc = self.win.document, ieRng;
 
+			// Use last rng passed from FocusManager if it's available this enables
+			// calls to editor.selection.getStart() to work when caret focus is lost on IE
+			if (!w3c && self.restoreRng) {
+				return self.restoreRng;
+			}
+
 			// Found tridentSel object then we need to use that one
 			if (w3c && self.tridentSel) {
 				return self.tridentSel.getRangeAt(0);
