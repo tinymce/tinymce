@@ -69,7 +69,11 @@ define("tinymce/ui/PanelButton", [
 
 			self.on('click', function(e) {
 				if (e.control === self) {
-					self.showPanel();
+					if (self.panel && self.panel.visible()) {
+						self.hidePanel();
+					} else {
+						self.showPanel();
+					}
 				}
 			});
 

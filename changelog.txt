@@ -20,6 +20,7 @@ Version 4.0.1 (2013-xx-xx)
 	Fixed bug where tabfocus plugin wouldn't work properly on inline editor instances.
 	Fixed bug where fullpage plugin would clear the existing HTML head if contents where inserted into the editor.
 	Fixed bug where deleting all table rows/columns in a table would cause an exception to be thrown on IE.
+	Fixed so color button panels gets toggled on/off when activated/deactivated.
 	Fixed so format menu items that can't be applied to the current selection gets disabled.
 	Fixed so the icon parameter for addButton isn't automatically filled if a button text is provided.
 	Fixed so image size fields gets updated when selecting a new image in the image dialog.
