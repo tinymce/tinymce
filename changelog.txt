@@ -1,4 +1,4 @@
-Version 4.0.1 (2013-xx-xx)
+Version 4.0.1 (2013-06-26)
 	Added new paste_as_text config option to force paste as plaintext mode.
 	Added new pastetext menu item that lets you toggle paste as plain text mode on/off.
 	Added new insertdatetime_element option to insertdatetime plugin. Enables HTML5 time element support.
