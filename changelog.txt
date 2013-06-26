@@ -3,6 +3,7 @@ Version 4.0.1 (2013-xx-xx)
 	Added new pastetext menu item that lets you toggle paste as plain text mode on/off.
 	Added new insertdatetime_element option to insertdatetime plugin. Enables HTML5 time element support.
 	Added new spellchecker_wordchar_pattern option to allow configuration of language specific characters.
+	Added new marker to formats menu displaying the formats used at the current selection/caret location.
 	Fixed bug where the position of the text color picker would be wrong if you switched to fullscreen.
 	Fixed bug where the link plugin would ask to add the mailto: prefix multiple times.
 	Fixed bug where list outdent operation could produce empty list elements on specific selections.
@@ -17,6 +18,7 @@ Version 4.0.1 (2013-xx-xx)
 	Fixed bug where jQuery would initialize editors multiple times since it didn't check if the editor already existed.
 	Fixed bug where it wasn't possible to paste contents on IE 10 in modern UI mode when paste filtering was enabled.
 	Fixed bug where tabfocus plugin wouldn't work properly on inline editor instances.
+	Fixed so format menu items that can't be applied to the current selection gets disabled.
 	Fixed so the icon parameter for addButton isn't automatically filled if a button text is provided.
 	Fixed so image size fields gets updated when selecting a new image in the image dialog.
 	Fixed so it doesn't load any language pack if the language option is set to "en".

@@ -274,6 +274,7 @@ define("tinymce/ui/FormatControls", [
 							var self = this;
 
 							self.parent().on('show', function() {
+								self.disabled(!editor.formatter.canApply(formatName));
 								self.active(editor.formatter.match(formatName));
 							});
 						};
