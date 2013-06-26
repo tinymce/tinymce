@@ -308,6 +308,10 @@ tinymce.PluginManager.add('fullpage', function(editor) {
 	function setContent(o) {
 		var startPos, endPos, content = o.content, headerFragment, styles = '', dom = editor.dom, elm;
 
+		if (o.selection) {
+			return;
+		}
+
 		function low(s) {
 			return s.replace(/<\/?[A-Z]+/g, function(a) {
 				return a.toLowerCase();
