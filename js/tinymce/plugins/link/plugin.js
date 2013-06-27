@@ -254,7 +254,7 @@ tinymce.PluginManager.add('link', function(editor) {
 		stateSelector: 'a[href]'
 	});
 
-	editor.addShortcut('Ctrl+K', '', showDialog);
+	editor.addShortcut('Ctrl+K', '', createLinkList(showDialog));
 
 	this.showDialog = showDialog;
 
