@@ -187,6 +187,7 @@ define("tinymce/ui/MenuButton", [
 							}
 
 							ctrl.hideMenu();
+							ctrl.blur();
 						}
 					});
 
