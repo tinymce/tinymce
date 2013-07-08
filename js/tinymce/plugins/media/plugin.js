@@ -62,6 +62,9 @@ tinymce.PluginManager.add('media', function(editor, url) {
 
 	function showDialog() {
 		var win, width, height, data;
+		var generalFormItems = [
+			{name: 'source1', type: 'filepicker', filetype: 'media', size: 40, autofocus: true, label: 'Source'}
+		];
 
 		function recalcSize(e) {
 			var widthCtrl, heightCtrl, newWidth, newHeight;
@@ -86,6 +89,30 @@ tinymce.PluginManager.add('media', function(editor, url) {
 			height = newHeight;
 		}
 
+		if (!editor.settings.media_hide_alt_source) {
+			generalFormItems.push({name: 'source2', type: 'filepicker', filetype: 'media', size: 40, label: 'Alternative source'});
+		}
+
+		if (!editor.settings.media_hide_poster) {
+			generalFormItems.push({name: 'poster', type: 'filepicker', filetype: 'image', size: 40, label: 'Poster'});
+		}
+
+		if (!editor.settings.media_hide_dimensions) {
+			generalFormItems.push({
+				type: 'container',
+				label: 'Dimensions',
+				layout: 'flex',
+				align: 'center',
+				spacing: 5,
+				items: [
+					{name: 'width', type: 'textbox', maxLength: 3, size: 3, onchange: recalcSize},
+					{type: 'label', text: 'x'},
+					{name: 'height', type: 'textbox', maxLength: 3, size: 3, onchange: recalcSize},
+					{name: 'constrain', type: 'checkbox', checked: true, text: 'Constrain proportions'}
+				]
+			});
+		}
+
 		data = getData(editor.selection.getNode());
 		width = data.width;
 		height = data.height;
@@ -102,24 +129,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 						data = htmlToData(this.next().find('#embed').value());
 						this.fromJSON(data);
 					},
-					items: [
-						{name: 'source1', type: 'filepicker', filetype: 'media', size: 40, autofocus: true, label: 'Source'},
-						{name: 'source2', type: 'filepicker', filetype: 'media', size: 40, label: 'Alternative source'},
-						{name: 'poster', type: 'filepicker', filetype: 'image', size: 40, label: 'Poster'},
-						{
-							type: 'container',
-							label: 'Dimensions',
-							layout: 'flex',
-							align: 'center',
-							spacing: 5,
-							items: [
-								{name: 'width', type: 'textbox', maxLength: 5, size: 3, ariaLabel: 'Width', onchange: recalcSize},
-								{type: 'label', text: 'x'},
-								{name: 'height', type: 'textbox', maxLength: 5, size: 3, ariaLabel: 'Height', onchange: recalcSize},
-								{name: 'constrain', type: 'checkbox', checked: true, text: 'Constrain proportions'}
-							]
-						}
-					]
+					items: generalFormItems
 				},
 
 				{
