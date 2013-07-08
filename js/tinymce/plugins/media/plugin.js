@@ -185,6 +185,14 @@ tinymce.PluginManager.add('media', function(editor, url) {
 			}
 		}
 
+		if (!data.source2) {
+			data.source2 = '';
+		}
+
+		if (!data.poster) {
+			data.poster = '';
+		}
+
 		data.source1 = editor.convertURL(data.source1, "source");
 		data.source2 = editor.convertURL(data.source2, "source");
 		data.source1mime = guessMime(data.source1);
