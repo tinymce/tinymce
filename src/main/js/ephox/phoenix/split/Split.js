@@ -27,7 +27,7 @@ define(
 
     var splitByPair = function (universe, item, start, end) {
       if (start === end) return item;
-      if (start > end) throw 'Invalid split operation. Value for start ('  + start + ') must be lower than end (' + end + ')';
+      if (start > end) return splitByPair(universe, item, end, start);
       if (!universe.property().isText(item)) return item;
 
       var len = universe.property().getText(item).length;

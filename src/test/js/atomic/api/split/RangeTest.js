@@ -61,5 +61,11 @@ test(
       TextGene('b', 'Gorilla')
     ]));
 
+    check([ 'Caterpillar', 'Mogel', 'G', 'orilla' ], [ 'Mogel', 'G' ], 'b', 1, 'a', 11, Gene('root', 'root', [
+      TextGene('a', 'Caterpillar'),
+      TextGene('_', 'Mogel'),
+      TextGene('b', 'Gorilla')
+    ]));
+
   }
 );

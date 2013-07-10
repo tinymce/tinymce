@@ -51,15 +51,6 @@ test(
       }));
     };
 
-    var tryCheck = function (expected, fail, f) {
-      try {
-        f();
-        assert.fail(fail);
-      } catch (err) {
-        assert.eq(expected, err);
-      }
-    };
-
     checkSplit(Option.some('a '), Option.some('cat'), 'a cat', 2);
     checkSplit(Option.none(), Option.some('apple'), 'apple', 0);
     checkSplit(Option.some('car'), Option.some('t'), 'cart', 3);
@@ -67,11 +58,11 @@ test(
 
     checkPair('root(text("apples"))', 'apples', 'apples', 0, 0);
     checkPair('root(text("apples"))', 'apples', 'apples', 0, 6);
-    tryCheck('Invalid split operation. Value for start (1) must be lower than end (0)', 'Expected error', function () {
-      checkPair('root(text("apples"))', 'apples', 'apples', 1, 0);
-    });
+    checkPair('root(text("a"),text("pples"))', 'a', 'apples', 1, 0);
     checkPair('root(text("apple"),text("s"))', 'apple', 'apples', 0, 5);
     checkPair('root(text("a"),text("ppl"),text("es"))', 'ppl', 'apples', 1, 4);
     checkPair('root(text("app"),text("les"))', 'les', 'apples', 3, 6);
+
+    checkPair('root(text("app"),text("les"))', 'les', 'apples', 6, 3);
   }
 );

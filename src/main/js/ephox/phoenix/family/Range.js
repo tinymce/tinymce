@@ -13,6 +13,10 @@ define(
       return Arr.findIndex(items, Fun.curry(universe.eq, item));
     };
 
+    var order = function (items, a, delta1, b, delta2) {
+      return a < b ? items.slice(a + delta1, b + delta2) : items.slice(b + delta2, a + delta1);
+    };
+
     var range = function (universe, item1, delta1, item2, delta2) {
       if (universe.eq(item1, item2)) return [item1];
 
@@ -28,7 +32,8 @@ define(
         var start = index(universe, items, item1);
         var finish = index(universe, items, item2);
 
-        var result = start > -1 && finish > -1 ? items.slice(start + delta1, finish + delta2) : [];
+
+        var result = start > -1 && finish > -1 ? order(items, start, delta1, finish, delta2) : [];
         return Arr.filter(result, universe.property().isText);
       });
     };
