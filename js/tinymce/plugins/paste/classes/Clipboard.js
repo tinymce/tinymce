@@ -173,8 +173,8 @@ define("tinymce/pasteplugin/Clipboard", [
 
 							dom.bind(pastebinElm, 'paste', function() {
 								setTimeout(function() {
-									removePasteBin(pastebinElm);
 									editor.selection.setRng(lastRng);
+									removePasteBin(pastebinElm);
 
 									if (shouldPasteAsPlainText()) {
 										processText(innerText(pastebinElm.firstChild));
