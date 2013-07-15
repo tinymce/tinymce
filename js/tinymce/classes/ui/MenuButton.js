@@ -191,6 +191,7 @@ define("tinymce/ui/MenuButton", [
 					});
 
 					if (hasVisibleSiblingMenu) {
+						overCtrl.focus(); // Fix for: #5887
 						overCtrl.showMenu();
 					}
 				}
