@@ -12,7 +12,7 @@
 
 tinymce.PluginManager.add('image', function(editor) {
 	function getImageSize(url, callback) {
-		var img = new Image();
+		var img = document.createElement('img');
 
 		function done(width, height) {
 			img.parentNode.removeChild(img);

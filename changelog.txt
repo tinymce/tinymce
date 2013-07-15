@@ -1,6 +1,7 @@
 Version 4.0.2 (2013-xx-xx)
 	Fixed bug where formatting using menus or toolbars wasn't possible on Opera 12.15.
 	Fixed bug where IE 8 keyboard input would break after paste using the paste plugin.
+	Fixed bug where IE 8 would throw an error when populating image size in image dialog.
 Version 4.0.1 (2013-06-26)
 	Added new paste_as_text config option to force paste as plaintext mode.
 	Added new pastetext menu item that lets you toggle paste as plain text mode on/off.
