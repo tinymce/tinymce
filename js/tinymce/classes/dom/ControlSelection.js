@@ -25,6 +25,7 @@ define("tinymce/dom/ControlSelection", [
 		var selectedElm, selectedElmGhost, resizeHandles, selectedHandle;
 		var startX, startY, selectedElmX, selectedElmY, startW, startH, ratio, resizeStarted;
 		var width, height, editableDoc = editor.getDoc(), rootDocument = document, isIE = Env.ie;
+		var lastMouseDownEvent;
 
 		// Details about each resize handle how to scale etc
 		resizeHandles = {
@@ -339,8 +340,8 @@ define("tinymce/dom/ControlSelection", [
 			var target = e.srcElement, pos, name, corner, cornerX, cornerY, relativeX, relativeY;
 
 			pos = target.getBoundingClientRect();
-			relativeX = e.clientX - pos.left;
-			relativeY = e.clientY - pos.top;
+			relativeX = lastMouseDownEvent.clientX - pos.left;
+			relativeY = lastMouseDownEvent.clientY - pos.top;
 
 			// Figure out what corner we are draging on
 			for (name in resizeHandles) {
@@ -358,7 +359,7 @@ define("tinymce/dom/ControlSelection", [
 			// Remove native selection and let the magic begin
 			resizeStarted = true;
 			editor.getDoc().selection.empty();
-			showResizeRect(target, name, e);
+			showResizeRect(target, name, lastMouseDownEvent);
 		}
 
 		function nativeControlSelect(e) {
@@ -422,6 +423,10 @@ define("tinymce/dom/ControlSelection", [
 				});
 
 				attachEvent(editor.getBody(), 'controlselect', nativeControlSelect);
+
+				editor.on('mousedown', function(e) {
+					lastMouseDownEvent = e;
+				});
 			} else {
 				disableGeckoResize();
 			}
