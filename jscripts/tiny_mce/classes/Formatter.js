@@ -1895,15 +1895,17 @@
 			return next;
 		};
 
-		/**
-		 * Returns true/false if the specified node is a text block or not.
-		 *
-		 * @private
-		 * @param {Node} node Node to check.
-		 * @return {boolean} True/false if the node is a text block.
-		 */
-		function isTextBlock(name) {
-			return /^(h[1-6]|p|div|pre|address|dl|dt|dd)$/.test(name);
+        	/**
+		* Returns true/false if the specified node is a text block or not.
+		*
+		* @private
+		* @param {Node/String} node Node to check.
+		* @return {boolean} True/false if the node is a text block.
+		*/
+		function isTextBlock(node) {
+		    var nodeName = typeof (node) == "string" ? node : node.nodeName;
+
+		    return /^(h[1-6]|p|div|pre|address|dl|dt|dd)$/gi.test(nodeName);
 		};
 
 		function getContainer(rng, start) {
