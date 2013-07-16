@@ -2,11 +2,13 @@ define(
   'ephox.boss.mutant.Query',
 
   [
+    'ephox.boss.mutant.Properties',
     'ephox.boss.mutant.Up',
-    'ephox.compass.Arr'
+    'ephox.compass.Arr',
+    'ephox.perhaps.Option'
   ],
 
-  function (Up, Arr) {
+  function (Properties, Up, Arr, Option) {
     var extract = function (item) {
       var self = item.id;
       var rest = item.children && item.children.length > 0 ? Arr.bind(item.children, extract) : [];
@@ -27,8 +29,26 @@ define(
       return 0;
     };
 
+    var prevSibling = function (item) {
+      var parent = Properties.parent(item);
+      var kin = parent.map(Properties.children).getOr([]);
+      var itemIndex = Arr.findIndex(kin, function (x) { return item.id === x.id; });
+      if (itemIndex > 0) return Option.some(kin[itemIndex - 1]);
+      else return Option.none();
+    };
+
+    var nextSibling = function (item) {
+      var parent = Properties.parent(item);
+      var kin = parent.map(Properties.children).getOr([]);
+      var itemIndex = Arr.findIndex(kin, function (x) { return item.id === x.id; });
+      if (itemIndex < kin.length - 1) return Option.some(kin[itemIndex + 1]);
+      else return Option.none();
+    };
+
     return {
-      comparePosition: comparePosition
+      comparePosition: comparePosition,
+      prevSibling: prevSibling,
+      nextSibling: nextSibling
     };
   }
 );

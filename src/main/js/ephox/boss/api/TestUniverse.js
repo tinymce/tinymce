@@ -77,7 +77,9 @@ define(
           clone: Creator.clone
         }),
         query: Fun.constant({
-          comparePosition: Query.comparePosition
+          comparePosition: Query.comparePosition,
+          nextSibling: Query.nextSibling,
+          prevSibling: Query.prevSibling
         }),
         property: Fun.constant({
           children: Properties.children,

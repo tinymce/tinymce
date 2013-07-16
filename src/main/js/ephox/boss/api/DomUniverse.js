@@ -74,7 +74,9 @@ define(
           text: Element.fromText
         }),
         query: Fun.constant({
-          comparePosition: comparePosition
+          comparePosition: comparePosition,
+          prevSibling: Traverse.prevSibling,
+          nextSibling: Traverse.nextSibling
         }),
         property: Fun.constant({
           children: Traverse.children,

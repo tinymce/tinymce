@@ -25,7 +25,19 @@ test(
       ])
     ]), Option.none());
 
-    var check = function (expected, one, other) {
+    var checkPrev = function (expected, id) {
+      var first = universe.find(universe.get(), id).getOrDie();
+      var actual = Query.prevSibling(first).getOr({ id: '_nope_' });
+      assert.eq(expected, actual.id);
+    };
+
+    var checkNext = function (expected, id) {
+      var first = universe.find(universe.get(), id).getOrDie();
+      var actual = Query.nextSibling(first).getOr({ id: '_nope_' });
+      assert.eq(expected, actual.id);
+    };
+
+    var checkPosition = function (expected, one, other) {
       var first = universe.find(universe.get(), one).getOrDie();
       var last = universe.find(universe.get(), other).getOrDie();
 
@@ -33,8 +45,14 @@ test(
       assert.eq(expected, actual);
     };
 
-    check(2, '1.1.1', '1.1.2');
-    check(4, '1.1.2', '1.1.1');
-    check(2, '1.1.1', '1.1.4.1');
+    checkPosition(2, '1.1.1', '1.1.2');
+    checkPosition(4, '1.1.2', '1.1.1');
+    checkPosition(2, '1.1.1', '1.1.4.1');
+
+    checkPrev('_nope_', '1.1.2.2.1');
+    checkPrev('1.1.3', '1.1.4');
+
+    checkNext('1.1.2', '1.1.1');
+    checkNext('_nope_', '1.1.4');
   }
 );
