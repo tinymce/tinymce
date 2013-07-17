@@ -326,8 +326,10 @@ define("tinymce/ui/FormatControls", [
 						});
 					}
 				},
-				onclick: function() {
-					toggleFormat(name);
+				onclick: function(e) {
+					if(editor.editorContainer == e.currentTarget){
+						toggleFormat(name);
+					}
 				}
 			});
 		});
