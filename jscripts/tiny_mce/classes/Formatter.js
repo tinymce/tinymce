@@ -51,7 +51,11 @@
 			getContentEditable = dom.getContentEditable;
 
 		function isTextBlock(name) {
-			return !!ed.schema.getTextBlocks()[name.toLowerCase()];
+			if (name.nodeType) {
+				name = name.nodeName;
+			}
+
+			return !!ed.schema.getTextBlockElements()[name.toLowerCase()];
 		}
 
 		function getParents(node, selector) {
@@ -1893,17 +1897,6 @@
 			}
 
 			return next;
-		};
-
-		/**
-		 * Returns true/false if the specified node is a text block or not.
-		 *
-		 * @private
-		 * @param {Node} node Node to check.
-		 * @return {boolean} True/false if the node is a text block.
-		 */
-		function isTextBlock(name) {
-			return /^(h[1-6]|p|div|pre|address|dl|dt|dd)$/.test(name);
 		};
 
 		function getContainer(rng, start) {
