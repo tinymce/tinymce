@@ -14,8 +14,16 @@ define(
       });
     };
 
+    var predicate = function (item, pred) {
+      return Arr.bind(item.children || [], function (child) {
+        var rest = predicate(child, pred);
+        return pred(child) ? [ child ].concat(rest) : rest;
+      });
+    };
+
     return {
-      selector: selector
+      selector: selector,
+      predicate: predicate
     };
   }
 );

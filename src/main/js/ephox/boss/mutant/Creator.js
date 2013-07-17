@@ -4,10 +4,11 @@ define(
   [
     'ephox.boss.api.TextGene',
     'ephox.highway.Merger',
+    'ephox.perhaps.Option',
     'global!Math'
   ],
 
-  function (TextGene, Merger, Math) {
+  function (TextGene, Merger, Option, Math) {
     var isNu = function (item) {
       return item.id === 'nu_' + item.name || item.id === '?_' + item.text;
     };
@@ -20,7 +21,7 @@ define(
 
     var nu = function (name) {
       return Merger.merge(
-        { id: 'nu_' + name, name: name },
+        { id: 'nu_' + name, name: name, parent: Option.none() },
         seed()
       );
     };

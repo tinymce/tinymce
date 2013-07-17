@@ -50,7 +50,8 @@ define(
           top: Up.top
         }),
         down: Fun.constant({
-          selector: Down.selector
+          selector: Down.selector,
+          predicate: Down.predicate
         }),
         styles: Fun.constant({
           get: Styling.get,

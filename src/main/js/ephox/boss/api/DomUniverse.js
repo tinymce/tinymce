@@ -10,6 +10,7 @@ define(
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.InsertAll',
     'ephox.sugar.api.Node',
+    'ephox.sugar.api.PredicateFilter',
     'ephox.sugar.api.PredicateFind',
     'ephox.sugar.api.Remove',
     'ephox.sugar.api.SelectorFilter',
@@ -18,7 +19,7 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Arr, Fun, Compare, Css, Element, Insert, InsertAll, Node, PredicateFind, Remove, SelectorFilter, SelectorFind, Text, Traverse) {
+  function (Arr, Fun, Compare, Css, Element, Insert, InsertAll, Node, PredicateFilter, PredicateFind, Remove, SelectorFilter, SelectorFind, Text, Traverse) {
     return function () {
       var clone = function (element) {
         return Element.fromDom(element.dom().cloneNode(false));
@@ -47,7 +48,8 @@ define(
           all: Traverse.parents
         }),
         down: Fun.constant({
-          selector: SelectorFilter.descendants
+          selector: SelectorFilter.descendants,
+          predicate: PredicateFilter.descendants
         }),
         styles: Fun.constant({
           get: Css.get,
