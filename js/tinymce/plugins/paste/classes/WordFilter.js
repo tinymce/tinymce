@@ -224,7 +224,7 @@ define("tinymce/pasteplugin/WordFilter", [
 				// Setup strict schema
 				var schema = new Schema({
 					valid_elements: '@[style],-strong/b,-em/i,-span,-p,-ol,-ul,-li,-h1,-h2,-h3,-h4,-h5,-h6,-table,' +
-								'-tr,-td[colspan|rowspan],-th,-thead,-tfoot,-tbody,-a[!href]'
+								'-tr,-td[colspan|rowspan],-th,-thead,-tfoot,-tbody,-a[!href],sub,sup,strike'
 				});
 
 				// Parse HTML into DOM structure
