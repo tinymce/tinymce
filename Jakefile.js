@@ -253,33 +253,35 @@ task("less", [], function () {
 		"TinyMCE.less"
 	].concat(parseLessDocs("js/tinymce/tinymce.js"));
 
-	// Modern browsers
-	less({
-		baseDir: "js/tinymce/skins/lightgray",
-		from: lessFiles.concat(["Icons.less"]),
-		toCss: "js/tinymce/skins/lightgray/skin.min.css",
-		toLess: "js/tinymce/skins/lightgray/skin.less"
-	});
+	fs.readdirSync("js/tinymce/skins").forEach(function(skinName) {
+		// Modern browsers
+		less({
+			baseDir: "js/tinymce/skins/" + skinName + "",
+			from: lessFiles.concat(["Icons.less"]),
+			toCss: "js/tinymce/skins/" + skinName + "/skin.min.css",
+			toLess: "js/tinymce/skins/" + skinName + "/skin.less"
+		});
 
-	// IE7
-	less({
-		baseDir: "js/tinymce/skins/lightgray",
-		from: lessFiles.concat(["Icons.Ie7.less"]),
-		toCss: "js/tinymce/skins/lightgray/skin.ie7.min.css"
-	});
+		// IE7
+		less({
+			baseDir: "js/tinymce/skins/" + skinName + "",
+			from: lessFiles.concat(["Icons.Ie7.less"]),
+			toCss: "js/tinymce/skins/" + skinName + "/skin.ie7.min.css"
+		});
 
-	// Content CSS
-	less({
-		from: ["Content.less"],
-		toCss: "js/tinymce/skins/lightgray/content.min.css",
-		baseDir: "js/tinymce/skins/lightgray"
-	});
+		// Content CSS
+		less({
+			from: ["Content.less"],
+			toCss: "js/tinymce/skins/" + skinName + "/content.min.css",
+			baseDir: "js/tinymce/skins/" + skinName + ""
+		});
 
-	// Content CSS (inline)
-	less({
-		from: ["Content.Inline.less"],
-		toCss: "js/tinymce/skins/lightgray/content.inline.min.css",
-		baseDir: "js/tinymce/skins/lightgray"
+		// Content CSS (inline)
+		less({
+			from: ["Content.Inline.less"],
+			toCss: "js/tinymce/skins/" + skinName + "/content.inline.min.css",
+			baseDir: "js/tinymce/skins/" + skinName + ""
+		});
 	});
 });
 
