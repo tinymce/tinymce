@@ -33,6 +33,25 @@ define("tinymce/pasteplugin/Plugin", [
 			self.clipboard.pasteFormat = "text";
 		}
 
+		self.togglePlainText = function() {
+			if (clipboard.pasteFormat == "text") {
+				this.active(false);
+				clipboard.pasteFormat = "html";
+			} else {
+				clipboard.pasteFormat = "text";
+				this.active(true);
+
+				if (!userIsInformed) {
+					editor.windowManager.alert(
+						'Paste is now in plain text mode. Contents will now ' +
+							'be pasted as plain text until you toggle this option off.'
+					);
+
+					userIsInformed = true;
+				}
+			}
+		};
+
 		editor.addCommand('mceInsertClipboardContent', function(ui, value) {
 			if (value.content) {
 				self.clipboard.paste(value.content);
@@ -47,24 +66,12 @@ define("tinymce/pasteplugin/Plugin", [
 			text: 'Paste as text',
 			selectable: true,
 			active: clipboard.pasteFormat,
-			onclick: function() {
-				if (clipboard.pasteFormat == "text") {
-					this.active(false);
-					clipboard.pasteFormat = "html";
-				} else {
-					clipboard.pasteFormat = "text";
-					this.active(true);
+			onclick: self.togglePlainText
+		});
 
-					if (!userIsInformed) {
-						editor.windowManager.alert(
-							'Paste is now in plain text mode. Contents will now ' +
-							'be pasted as plain text until you toggle this option off.'
-						);
-
-						userIsInformed = true;
-					}
-				}
-			}
+		editor.addButton('pastetext', {
+			tooltip: 'Paste as text',
+			onclick: self.togglePlainText
 		});
 	});
 });
