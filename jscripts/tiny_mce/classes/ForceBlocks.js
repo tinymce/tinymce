@@ -24,6 +24,7 @@ tinymce.ForceBlocks = function(editor) {
 
 			node = node.parentNode;
 		}
+		if(node.nodeName == 'BODY') return;
 
 		// Get current selection
 		rng = selection.getRng();
