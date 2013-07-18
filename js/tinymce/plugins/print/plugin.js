@@ -10,12 +10,17 @@
 
 /*global tinymce:true */
 
-tinymce.PluginManager.add('print',function(editor) {
+tinymce.PluginManager.add('print', function(editor) {
 	editor.addCommand('mcePrint', function() {
 		editor.getWin().print();
 	});
 
-	editor.addButton('print', {title: 'Print', cmd: 'mcePrint'});
+	editor.addButton('print', {
+		title: 'Print',
+		cmd: 'mcePrint'
+	});
+
+	editor.addShortcut('Ctrl+P', '', 'mcePrint');
 
 	editor.addMenuItem('print', {
 		text: 'Print',
