@@ -1681,13 +1681,19 @@ define("tinymce/Editor", [
 
 			// Padd empty content in Gecko and Safari. Commands will otherwise fail on the content
 			// It will also be impossible to place the caret in the editor unless there is a BR element present
-			if (!isIE && (content.length === 0 || /^\s+$/.test(content))) {
+			if (content.length === 0 || /^\s+$/.test(content)) {
 				forcedRootBlockName = self.settings.forced_root_block;
 
 				// Check if forcedRootBlock is configured and that the block is a valid child of the body
 				if (forcedRootBlockName && self.schema.isValidChild(body.nodeName.toLowerCase(), forcedRootBlockName.toLowerCase())) {
-					content = '<' + forcedRootBlockName + '><br data-mce-bogus="1"></' + forcedRootBlockName + '>';
-				} else {
+					if (isIE) {
+						// IE renders BR elements in blocks so lets just add an empty block
+						content = '<' + forcedRootBlockName + '></' + forcedRootBlockName + '>';
+					} else {
+						content = '<' + forcedRootBlockName + '><br data-mce-bogus="1"></' + forcedRootBlockName + '>';
+					}
+				} else if (!isIE) {
+					// We need to add a BR when forced_root_block is disabled on non IE browsers to place the caret
 					content = '<br data-mce-bogus="1">';
 				}
 

@@ -50,7 +50,12 @@ define("tinymce/FocusManager", [
 				if ("onbeforedeactivate" in document) {
 					editor.dom.bind(editor.getBody(), 'beforedeactivate', function() {
 						var ieSelection = editor.getDoc().selection;
-						lastRng = ieSelection && ieSelection.createRange ? ieSelection.createRange() : editor.selection.getRng();
+
+						try {
+							lastRng = ieSelection && ieSelection.createRange ? ieSelection.createRange() : editor.selection.getRng();
+						} catch (ex) {
+							// IE throws "Unexcpected call to method or property access" some times so lets ignore it
+						}
 					});
 				} else if (editor.inline) {
 					// On other browsers take snapshot on nodechange in inline mode since they have Ghost selections for iframes

@@ -126,7 +126,7 @@ define("tinymce/ForceBlocks", [], function() {
 
 		// Force root blocks
 		if (settings.forced_root_block) {
-			editor.on('KeyUp NodeChange', addRootBlocks);
+			editor.on('NodeChange', addRootBlocks);
 		}
 	};
 });
