@@ -206,7 +206,7 @@ exports.jshint = function (options) {
 		}
 
 		if (/\.js$/.test(filePath)) {
-			if (!jshint(fs.readFileSync(filePath).toString(), options)) {
+			if (!jshint(fs.readFileSync(filePath).toString(), options, {define: true})) {
 				// Print the errors
 				console.log(color('Errors in file ' + filePath, 'red'));
 				var out = jshint.data(),
