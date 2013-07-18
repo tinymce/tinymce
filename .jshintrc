@@ -1,4 +1,7 @@
 {
+	"predef": {
+		"define": true
+	},
 	"passfail": false,
 	"maxerr": 50,
 	"maxparams": 50,
