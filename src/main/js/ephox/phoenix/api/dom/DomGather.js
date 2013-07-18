@@ -13,12 +13,12 @@ define(
       return Gather.gather(universe, element, prune, transform);
     };
 
-    var before = function (element) {
-      return Gather.before(universe, element);
+    var before = function (element, isRoot) {
+      return Gather.before(universe, element, isRoot);
     };
 
-    var after = function (element) {
-      return Gather.after(universe, element);
+    var after = function (element, isRoot) {
+      return Gather.after(universe, element, isRoot);
     };
 
     return {

@@ -26,22 +26,22 @@ define(
       return children.length === 0 ? GatherResult([element], true) : iter(children, transformer, prune);
     };
 
-    var before = function (universe, element) {
+    var before = function (universe, element, isRoot) {
       var transformer = Fun.curry(transform, universe);
       var left = Gather.traverse(universe, Traversal.left(), element, {
         left: Fun.curry(one, universe),
         right: ignore,
-        stop: Fun.constant(false)
+        stop: isRoot !== undefined ? isRoot : Fun.constant(false)
       }, transformer);
       return Option.from(left[0]);
     };
 
-    var after = function (universe, element) {
+    var after = function (universe, element, isRoot) {
       var transformer = Fun.curry(transform, universe);
       var right = Gather.traverse(universe, Traversal.right(), element, {
         left: ignore,
         right: Fun.curry(one, universe),
-        stop: Fun.constant(false)
+        stop: isRoot !== undefined ? isRoot : Fun.constant(false)
       }, transformer);
       return Option.from(right[0]);
     };
