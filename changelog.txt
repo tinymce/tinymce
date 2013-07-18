@@ -7,6 +7,7 @@ Version 4.0.2 (2013-07-18)
 	Fixed bug where paste would produce an extra uneeded undo level on IE and Gecko.
 	Fixed so anchors gets listed in the link dialog as they where in TinyMCE 3.x.
 	Fixed so sub, sup and strike though gets passed through when pasting from Word.
+	Fixed so Ctrl+P can be used to print the current document. Patch contributed by jashua212.
 Version 4.0.1 (2013-06-26)
 	Added new paste_as_text config option to force paste as plaintext mode.
 	Added new pastetext menu item that lets you toggle paste as plain text mode on/off.
