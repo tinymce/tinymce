@@ -320,7 +320,7 @@ define("tinymce/util/Quirks", [
 					selection.getSel().setBaseAndExtent(e, 0, e, 1);
 				}
 
-				if (e.nodeName == 'A' && dom.hasClass(e, 'mceItemAnchor')) {
+				if (e.nodeName == 'A' && dom.hasClass(e, 'mce-item-anchor')) {
 					selection.select(e);
 				}
 

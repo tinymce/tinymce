@@ -32,6 +32,16 @@ tinymce.PluginManager.add('link', function(editor) {
 		var data = {}, selection = editor.selection, dom = editor.dom, selectedElm, anchorElm, initialText;
 		var win, linkListCtrl, relListCtrl, targetListCtrl;
 
+		function linkListChangeHandler(e) {
+			var textCtrl = win.find('#text');
+
+			if (!textCtrl.value() || (e.lastControl && textCtrl.value() == e.lastControl.text())) {
+				textCtrl.value(e.control.text());
+			}
+
+			win.find('#href').value(e.control.value());
+		}
+
 		function buildLinkList() {
 			var linkListItems = [{text: 'None', value: ''}];
 
@@ -78,14 +88,39 @@ tinymce.PluginManager.add('link', function(editor) {
 			return targetListItems;
 		}
 
+		function buildAnchorListControl(url) {
+			var anchorList = [];
+
+			tinymce.each(editor.dom.select('a:not([href])'), function(anchor) {
+				var id = anchor.name || anchor.id;
+
+				if (id) {
+					anchorList.push({
+						text: id,
+						value: '#' + id,
+						selected: url.indexOf('#' + id) != -1
+					});
+				}
+			});
+
+			if (anchorList.length) {
+				anchorList.unshift({text: 'None', value: ''});
+
+				return {
+					name: 'anchor',
+					type: 'listbox',
+					label: 'Anchors',
+					values: anchorList,
+					onselect: linkListChangeHandler
+				};
+			}
+		}
+
 		function updateText() {
 			if (!initialText && data.text.length === 0) {
 				this.parent().parent().find('#text')[0].value(this.value());
 			}
 		}
-
-		// Focus the editor since selection is lost on WebKit in inline mode
-		editor.focus();
 
 		selectedElm = selection.getNode();
 		anchorElm = dom.getParent(selectedElm, 'a[href]');
@@ -107,15 +142,7 @@ tinymce.PluginManager.add('link', function(editor) {
 				type: 'listbox',
 				label: 'Link list',
 				values: buildLinkList(),
-				onselect: function(e) {
-					var textCtrl = win.find('#text');
-
-					if (!textCtrl.value() || (e.lastControl && textCtrl.value() == e.lastControl.text())) {
-						textCtrl.value(e.control.text());
-					}
-
-					win.find('#href').value(e.control.value());
-				}
+				onselect: linkListChangeHandler
 			};
 		}
 
@@ -154,6 +181,7 @@ tinymce.PluginManager.add('link', function(editor) {
 				{name: 'text', type: 'textbox', size: 40, label: 'Text to display', onchange: function() {
 					data.text = this.value();
 				}},
+				buildAnchorListControl(data.href),
 				linkListCtrl,
 				relListCtrl,
 				targetListCtrl

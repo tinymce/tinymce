@@ -12,9 +12,11 @@
 
 tinymce.PluginManager.add('anchor', function(editor) {
 	function showDialog() {
+		var selectedNode = editor.selection.getNode();
+
 		editor.windowManager.open({
 			title: 'Anchor',
-			body: {type: 'textbox', name: 'name', size: 40, label: 'Name', value: editor.selection.getNode().id},
+			body: {type: 'textbox', name: 'name', size: 40, label: 'Name', value: selectedNode.name || selectedNode.id},
 			onsubmit: function(e) {
 				editor.execCommand('mceInsertContent', false, editor.dom.createHTML('a', {
 					id: e.data.name
