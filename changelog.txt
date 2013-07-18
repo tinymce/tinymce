@@ -1,9 +1,11 @@
-Version 4.0.2 (2013-xx-xx)
+Version 4.0.2 (2013-07-18)
 	Fixed bug where formatting using menus or toolbars wasn't possible on Opera 12.15.
 	Fixed bug where IE 8 keyboard input would break after paste using the paste plugin.
 	Fixed bug where IE 8 would throw an error when populating image size in image dialog.
 	Fixed bug where image resizing wouldn't work properly on latest IE 10.0.9 version.
 	Fixed bug where focus wasn't moved to the hovered menu button in a menubar container.
+	Fixed bug where paste would produce an extra uneeded undo level on IE and Gecko.
+	Fixed so anchors gets listed in the link dialog as they where in TinyMCE 3.x.
 	Fixed so sub, sup and strike though gets passed through when pasting from Word.
 Version 4.0.1 (2013-06-26)
 	Added new paste_as_text config option to force paste as plaintext mode.
