@@ -14,6 +14,7 @@ define(
         var row = Element.fromTag('tr');
         for (var j = 0; j < columns; j++) {
           var cell = Element.fromTag('td');
+          Insert.append(cell, Element.fromText('(' + i + ', ' + j + ')'));
           Insert.append(row, cell);
         }
         Insert.append(table, row);

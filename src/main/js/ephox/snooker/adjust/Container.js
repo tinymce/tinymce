@@ -11,19 +11,18 @@ define(
     'ephox.sugar.api.Classes',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.Element',
-    'ephox.sugar.api.Height',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.InsertAll',
-    'ephox.sugar.api.Remove',
-    'ephox.sugar.api.Width'
+    'ephox.sugar.api.Remove'
   ],
 
-  function (Event, Events, Border, Resizer, Styles, Class, Classes, Css, Element, Height, Insert, InsertAll, Remove, Width) {
+  function (Event, Events, Border, Resizer, Styles, Class, Classes, Css, Element, Insert, InsertAll, Remove) {
     return function () {
 
       // INVESTIGATE: Should I care about the document coming in?
       var container = Element.fromTag('div');
       Css.set(container, 'position', 'relative');
+      Css.set(container, 'display', 'inline-block');
       Classes.add(container, [ Styles.resolve('adjust-container') ]);
 
       // Can't quite use Sugar wrap, because the wrapping is a little more customised.
@@ -63,11 +62,13 @@ define(
       };
 
       var events = Events.create({
-        click: Event([])
+        resize: Event([]),
+        width: Event(['column']),
+        height: Event(['row'])
       });
 
       resizer.events.click.bind(function () {
-        events.trigger.click();
+        events.trigger.resize();
       });
 
       return {

@@ -39,6 +39,16 @@ var dependencies = [
     ]
   },
 
+  {
+    name: 'lid',
+    repository: 'buildrepo2',
+    source: 'lid.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
   /**** demo dependencies ****/
   {
     name: 'exhibition',

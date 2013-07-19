@@ -30,8 +30,8 @@ define(
 
         // ASSUMPTION: Border is 1px wide.
         Css.setAll(border, {
-          width: width - 2 ,
-          height: height - 2
+          // width: width - 2 ,
+          // height: height - 2
         });
       };
 
