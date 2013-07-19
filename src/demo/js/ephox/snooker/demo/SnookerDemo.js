@@ -9,11 +9,12 @@ define(
     'ephox.snooker.build.Table',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Css',
+    'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert'
   ],
 
-  function ($, Activate, Blah, Container, Table, Attr, Css, Element, Insert) {
+  function ($, Activate, Blah, Container, Table, Attr, Css, DomEvent, Element, Insert) {
     return function () {
       var ephoxUi = Element.fromDom(document.getElementById('ephox-ui'));
       var table = Table(6, 3);
@@ -26,6 +27,24 @@ define(
         height: '300px'
       });
 
+      var toggle = Element.fromTag('input');
+      Attr.set(toggle, 'type', 'checkbox');
+      Attr.set(toggle, 'checked', false);
+
+      DomEvent.bind(toggle, 'change', function () {
+        var selected = Attr.get(toggle, 'checked');
+        if (selected) {
+          dragger.open(table.element());
+          Activate.glossy(table.element());
+        } else {
+          dragger.close();
+          Activate.plain(table.element());
+        }
+      });
+
+      Insert.append(ephoxUi, toggle);
+      Insert.after(toggle, Element.fromText('Manipulate table.'));
+
       var dragger = Blah();
 
       console.log('cell:' , Element.fromHtml('<td>A</td>').dom());
@@ -34,9 +53,6 @@ define(
       Insert.append(editor, table.element());
 
       dragger.connect();
-      dragger.open(table.element());
-
-      Activate.glossy(table.element());
     };
   }
 );
