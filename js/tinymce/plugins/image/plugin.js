@@ -36,6 +36,7 @@ tinymce.PluginManager.add('image', function(editor) {
 		style.width = style.height = 'auto';
 
 		document.body.appendChild(img);
+    tinyMCE.activeEditor.fire('change');
 	}
 
 	function createImageList(callback) {
