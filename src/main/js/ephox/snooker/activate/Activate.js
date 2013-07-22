@@ -39,7 +39,7 @@ define(
       var distribute = function () {
         var cells = getCells();
         var totalWidth = Width.get(table);
-        console.log('totalWidth: ', totalWidth);
+        
       };
 
       var refresh = function () {
@@ -53,14 +53,12 @@ define(
 
         var widths = Arr.map(cells, Dimensions.getWidth);
         var water = Water.water(widths, column, step, 10);
-        console.log('Resizing (' + column + ' by ' + step + '): ', widths, ' -> ', water);
         Arr.map(cells, function (r, i) {
           Dimensions.addWidth(r, water[i]);
           // Width.set(r, water[i]);
         });
 
         var total = Arr.foldr(water, function (b, a) { return b + a; }, 0);
-        console.log('total: ', total);
         Dimensions.addWidth(table, total);
       };
 
@@ -94,6 +92,7 @@ define(
 
       var glossy = function () {
         dragger.on();
+        Attr.set(table, 'contenteditable', false);
         if (SelectorExists.descendant(table, '.mogel')) plain(table);
         var rows = SelectorFilter.descendants(table, 'tr');
         Arr.each(rows, function (row, i) {
@@ -120,6 +119,7 @@ define(
       };
 
       var plain = function () {
+        Attr.remove(table, 'contenteditable');
         dragger.off();
         var cells = SelectorFilter.descendants(table, '.mogel');
         // TODO: Remove the column heading classes.

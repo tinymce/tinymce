@@ -59,7 +59,7 @@ define(
           return zero(result.slice(0, index)).concat([ size - result[index] ]);
         }
       };
-      console.log('haha');
+      
       return context.fold(onNone, onOnly, onLeft, onMiddle, onRight);
     };
 

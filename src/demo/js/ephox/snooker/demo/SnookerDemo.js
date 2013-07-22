@@ -12,12 +12,14 @@ define(
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
-    'ephox.sugar.api.InsertAll'
+    'ephox.sugar.api.InsertAll',
+    'ephox.sugar.api.Ready'
   ],
 
-  function ($, Activate, Blah, Container, Table, Attr, Css, DomEvent, Element, Insert, InsertAll) {
+  function ($, Activate, Blah, Container, Table, Attr, Css, DomEvent, Element, Insert, InsertAll, Ready) {
     return function () {
       var ephoxUi = Element.fromDom(document.getElementById('ephox-ui'));
+
       var table = Table(6, 3);
 
       var editor = Element.fromTag('div');
@@ -71,6 +73,13 @@ define(
       dragger.events.stop.bind(function () {
         activation.refresh();
       });
+
+      // For firefox.
+      Ready.execute(function () {
+        document.execCommand("enableInlineTableEditing", null, false);
+        document.execCommand("enableObjectResizing", false, "false");
+      });
+
 
       dragger.connect();
     };
