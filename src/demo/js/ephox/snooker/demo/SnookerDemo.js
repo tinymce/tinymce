@@ -31,16 +31,16 @@ define(
       Attr.set(toggle, 'type', 'checkbox');
       Attr.set(toggle, 'checked', false);
 
-      var activation = Activate.activate();
+      var activation = Activate.activate(table.element());
 
       DomEvent.bind(toggle, 'change', function () {
         var selected = Attr.get(toggle, 'checked');
         if (selected) {
           dragger.open(table.element());
-          activation.glossy(table.element());
+          activation.glossy();
         } else {
           dragger.close();
-          activation.plain(table.element());
+          activation.plain();
         }
       });
 
