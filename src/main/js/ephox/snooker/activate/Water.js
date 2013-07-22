@@ -2,12 +2,13 @@ define(
   'ephox.snooker.activate.Water',
 
   [
+    'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.snooker.activate.ColumnContext',
     'global!Math'
   ],
 
-  function (Fun, ColumnContext, Math) {
+  function (Arr, Fun, ColumnContext, Math) {
     var neighbours = function (input, index) {
       if (input.length === 0) return ColumnContext.none();
       if (input.length === 1) return ColumnContext.only();
@@ -23,19 +24,24 @@ define(
 
       var context = neighbours(input, column);
 
-      var onNone = Fun.constant(result);
-      var onOnly = function (index) {
-        return Math.max(min, [ result[index] + step ]);
+      var zero = function (array) {
+        return Arr.map(array, Fun.constant(0));
       };
 
+      var onNone = Fun.constant(zero(result));
+      var onOnly = function (index) {
+        return Math.max(min, [ step ]);
+      };
+
+     
       var onChange = function (index, next) {
         if (step >= 0) {
           var newNext = Math.max(min, result[next] - step);
-          return result.slice(0, index).concat([ result[index] + step, newNext ]).concat(result.slice(next + 1));
+          return zero(result.slice(0, index)).concat([ step, newNext-result[next] ]).concat(zero(result.slice(next + 1)));
         } else {
           var newThis = Math.max(min, result[index] + step);
           var diffx = result[index] - newThis;
-          return result.slice(0, index).concat([ newThis, result[next] + diffx ]).concat(result.slice(next + 1));
+          return zero(result.slice(0, index)).concat([ newThis - result[index], diffx ]).concat(zero(result.slice(next + 1)));
         }
       };
 
@@ -47,10 +53,10 @@ define(
 
       var onRight = function (prev, index) {
         if (step >= 0) {
-          return result.slice(0, index).concat([ result[index] + step ]);
+          return zero(result.slice(0, index)).concat([ step ]);
         } else {
           var size = Math.max(min, result[index] + step);
-          return result.slice(0, index).concat([ size ]);
+          return zero(result.slice(0, index)).concat([ size - result[index] ]);
         }
       };
       console.log('haha');

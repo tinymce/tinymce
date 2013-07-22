@@ -58,13 +58,19 @@ define(
       var column = Element.fromTag('input');
       Attr.set(column, 'value', 0);
       var step = Element.fromTag('input');
-      Attr.set(step, 'value',100);
+      Attr.set(step, 'value',0);
       var button = Element.fromTag('button');
       Insert.append(button, Element.fromText('RESIZE'));
       DomEvent.bind(button, 'click', function () {
         activation.resize(parseInt(Attr.get(column, 'value')), parseInt(Attr.get(step, 'value')));
       });
       InsertAll.append(ephoxUi, [ column, step, button ]);
+
+      activation.distribute();
+
+      dragger.events.stop.bind(function () {
+        activation.refresh();
+      });
 
       dragger.connect();
     };

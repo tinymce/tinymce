@@ -11,17 +11,16 @@ define(
     'ephox.snooker.adjust.Mutation',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
-    'ephox.sugar.api.Height',
-    'ephox.sugar.api.Width',
     'global!Math',
     'global!document'
   ],
 
-  function (Dragger, Option, Event, Events, Container, Dimensions, Mutation, Class, Element, Height, Width, Math, document) {
+  function (Dragger, Option, Event, Events, Container, Dimensions, Mutation, Class, Element, Math, document) {
     return function () {
       var handles = Container();
       var events = Events.create({
-        grow: Event(['x', 'y'])
+        grow: Event(['x', 'y']),
+        stop: Event([])
       });
 
       var subject = Option.none();
@@ -75,7 +74,8 @@ define(
         connect: connect,
         open: open,
         close: close,
-        destroy: destroy
+        destroy: destroy,
+        events: events.registry
       };
     };
   }

@@ -2,17 +2,13 @@ define(
   'ephox.snooker.activate.ColumnMutation',
 
   [
-    'ephox.compass.Arr',
     'ephox.perhaps.Option',
     'ephox.porkbun.Event',
     'ephox.porkbun.Events',
-    'ephox.snooker.adjust.Mutation',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.SelectorFind',
-    'ephox.sugar.api.Traverse'
+    'ephox.snooker.adjust.Mutation'
   ],
 
-  function (Arr, Option, Event, Events, Mutation, Class, SelectorFind, Traverse) {
+  function (Option, Event, Events, Mutation) {
     return function () {
       var events = Events.create({
         drag: Event(['xDelta', 'yDelta', 'target'])

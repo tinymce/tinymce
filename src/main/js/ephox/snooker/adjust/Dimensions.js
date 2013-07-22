@@ -37,10 +37,16 @@ define(
       return Width.get(element) + hacktastic(element);
     };
 
+    var addWidth = function (element, amount) {
+      var current = Width.get(element) + hacktastic(element);
+      Width.set(element, current + amount);
+    };
+
     return {
       adjust: adjust,
       setWidth: setWidth,
-      getWidth: getWidth
+      getWidth: getWidth,
+      addWidth: addWidth
     };
   }
 );
