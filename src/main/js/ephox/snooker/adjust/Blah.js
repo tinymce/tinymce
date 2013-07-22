@@ -7,7 +7,6 @@ define(
     'ephox.porkbun.Event',
     'ephox.porkbun.Events',
     'ephox.snooker.adjust.Container',
-    'ephox.snooker.adjust.Grow',
     'ephox.snooker.adjust.Mutation',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
@@ -17,7 +16,7 @@ define(
     'global!document'
   ],
 
-  function (Dragger, Option, Event, Events, Container, Grow, Mutation, Class, Element, Height, Width, Math, document) {
+  function (Dragger, Option, Event, Events, Container, Mutation, Class, Element, Height, Width, Math, document) {
     return function () {
       var handles = Container();
       var events = Events.create({
