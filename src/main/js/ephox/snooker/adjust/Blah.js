@@ -8,6 +8,7 @@ define(
     'ephox.porkbun.Events',
     'ephox.snooker.adjust.Container',
     'ephox.snooker.adjust.Grow',
+    'ephox.snooker.adjust.Mutation',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Height',
@@ -16,7 +17,7 @@ define(
     'global!document'
   ],
 
-  function (Dragger, Option, Event, Events, Container, Grow, Class, Element, Height, Width, Math, document) {
+  function (Dragger, Option, Event, Events, Container, Grow, Mutation, Class, Element, Height, Width, Math, document) {
     return function () {
       var handles = Container();
       var events = Events.create({
@@ -43,16 +44,16 @@ define(
         return h - Height.get(elem);
       };
 
-      var grower = Grow();
-      grower.events.grow.bind(function (event) {
+      var grower = Mutation();
+      grower.events.drag.bind(function (event) {
         subject.each(function (s) {
           var width = Width.get(s) + hacktastic(s);
           var height = Height.get(s) + hacktastic(s);
-          var w = Math.max(1, width + event.x());
-          var h = Math.max(1, height + event.y());
+          var w = Math.max(1, width + event.xDelta());
+          var h = Math.max(1, height + event.yDelta());
           Width.set(s, w);
           Height.set(s, h);
-          events.trigger.grow(event.x(), event.y());
+          events.trigger.grow(event.xDelta(), event.yDelta());
         });
         handles.hide();
       });
