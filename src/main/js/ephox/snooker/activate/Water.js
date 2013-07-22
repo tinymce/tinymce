@@ -28,18 +28,32 @@ define(
         return Math.max(min, [ result[index] + step ]);
       };
 
-      var onLeft = function (index, next) {
+      var onChange = function (index, next) {
         if (step >= 0) {
           var newNext = Math.max(min, result[next] - step);
-          return result.slice(0, index).concat([ result[index] + step, newNext ].concat(result.slice(next + 1)));
+          return result.slice(0, index).concat([ result[index] + step, newNext ]).concat(result.slice(next + 1));
         } else {
           var newThis = Math.max(min, result[index] + step);
           var diffx = result[index] - newThis;
-          return [ newThis, result[next] + diffx ].concat(result.slice(next + 1));
+          return result.slice(0, index).concat([ newThis, result[next] + diffx ]).concat(result.slice(next + 1));
         }
       };
 
-      return context.fold(onNone, onOnly, onLeft, onNone, onNone);
+      var onLeft = onChange;
+
+      var onMiddle = function (prev, index, next) {
+        return onChange(index, next);
+      };
+
+      var onRight = function (prev, index) {
+        if (step >= 0) {
+          return result.slice(0, index).concat(result[index] + step);
+        } else {
+
+        }
+      };
+
+      return context.fold(onNone, onOnly, onLeft, onMiddle, onRight);
     };
 
     return {
