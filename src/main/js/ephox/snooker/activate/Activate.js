@@ -5,6 +5,7 @@ define(
     'ephox.compass.Arr',
     'ephox.dragster.api.Dragger',
     'ephox.snooker.activate.ColumnMutation',
+    'ephox.snooker.adjust.Dimensions',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Css',
@@ -17,13 +18,14 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Dragger, ColumnMutation, Attr, Class, Css, DomEvent, Element, Insert, Remove, SelectorExists, SelectorFilter, SelectorFind) {
+  function (Arr, Dragger, ColumnMutation, Dimensions, Attr, Class, Css, DomEvent, Element, Insert, Remove, SelectorExists, SelectorFilter, SelectorFind) {
     var activate = function (table) {
       var mutation = ColumnMutation();
       var dragger = Dragger.transform(mutation, {});
 
       mutation.events.drag.bind(function (event) {
         console.log('Dragging column', event.target().dom());
+        Dimensions.adjust(event.target(), event.xDelta(), 0);
       });
 
       // Global me.
@@ -34,6 +36,7 @@ define(
           var attr = Attr.get(event.target(), 'data-ephox-snooker-column');
           var cell = SelectorFind.descendant(table, '.' + attr);
           cell.each(function (c) {
+            console.log('c.nextsibling: ', c.dom().nextSibling);
             mutation.assign(c);
             dragger.go(body);
           });
