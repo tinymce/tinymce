@@ -47,9 +47,10 @@ define(
 
       var onRight = function (prev, index) {
         if (step >= 0) {
-          return result.slice(0, index).concat(result[index] + step);
+          return result.slice(0, index).concat([ result[index] + step ]);
         } else {
-
+          var size = Math.max(min, result[index] + step);
+          return result.slice(0, index).concat([ size ]);
         }
       };
 
