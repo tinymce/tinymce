@@ -5,6 +5,7 @@ define(
     'ephox.compass.Arr',
     'ephox.dragster.api.Dragger',
     'ephox.snooker.activate.ColumnMutation',
+    'ephox.snooker.activate.Water',
     'ephox.snooker.adjust.Dimensions',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Class',
@@ -15,20 +16,50 @@ define(
     'ephox.sugar.api.Remove',
     'ephox.sugar.api.SelectorExists',
     'ephox.sugar.api.SelectorFilter',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.sugar.api.SelectorFind',
+    'ephox.sugar.api.Traverse',
+    'ephox.sugar.api.Width'
   ],
 
-  function (Arr, Dragger, ColumnMutation, Dimensions, Attr, Class, Css, DomEvent, Element, Insert, Remove, SelectorExists, SelectorFilter, SelectorFind) {
+  function (Arr, Dragger, ColumnMutation, Water, Dimensions, Attr, Class, Css, DomEvent, Element, Insert, Remove, SelectorExists, SelectorFilter, SelectorFind, Traverse, Width) {
     var activate = function (table) {
       var mutation = ColumnMutation();
       var dragger = Dragger.transform(mutation, {});
 
+      var resize = function (col, delta) {
+        var column = col ? parseInt(col) : 0;
+        var step = delta ? parseInt(delta) : 0;
+        var cells = SelectorFind.descendant(table, 'tr').map(function (tr) {
+          return SelectorFilter.descendants(tr, 'td');
+        }).getOr([]);
+
+        var real = Arr.filter(cells, function (c) {
+          return !Class.has(c, 'mogel');
+        });
+
+        var widths = Arr.map(real, Dimensions.getWidth);
+        var water = Water.water(widths, column, step, 10);
+        console.log('Resizing (' + column + ' by ' + step + '): ', widths, ' -> ', water);
+        Arr.map(real, function (r, i) {
+          Width.set(r, water[i]);
+        });
+
+        var total = Arr.foldr(water, function (b, a) { return b + a; }, 0);
+        Dimensions.setWidth(table, total);
+      };
+
       mutation.events.drag.bind(function (event) {
-        console.log('Dragging column', event.target().dom());
-        Dimensions.adjust(event.target(), event.xDelta(), 0);
+        var cells = SelectorFind.ancestor(event.target(), 'tr').map(Traverse.children).getOr([]);
+        var real = Arr.filter(cells, function (c) {
+          return !Class.has(c, 'mogel');
+        });
+
+        var column = Attr.get(event.target(), 'data-column-id');
+        resize(column, event.xDelta());
+        // Dimensions.adjust(event.target(), event.xDelta(), 0);
       });
 
-      // Global me.
+      // TODO: Global modulator document.
       var resizer = DomEvent.bind(Element.fromDom(document), 'mousedown', function (event) {
         if (Class.has(event.target(), 'mogel')) {
           var body = Element.fromDom(document.body);
@@ -36,7 +67,6 @@ define(
           var attr = Attr.get(event.target(), 'data-ephox-snooker-column');
           var cell = SelectorFind.descendant(table, '.' + attr);
           cell.each(function (c) {
-            console.log('c.nextsibling: ', c.dom().nextSibling);
             mutation.assign(c);
             dragger.go(body);
           });
@@ -50,8 +80,6 @@ define(
         Arr.each(rows, function (row, i) {
           var cells = SelectorFilter.children(row, 'td');
 
-
-
           Arr.each(cells, function (cell, j) {
             var id = 'ephox-snooker-column-' + j;
             var mogel = Element.fromTag('td');
@@ -63,6 +91,7 @@ define(
             });
 
             Class.add(cell, id);
+            Attr.set(cell, 'data-column-id', j);
             Attr.set(mogel, 'data-ephox-snooker-column', id);
             Class.add(mogel, id);
 
@@ -80,7 +109,8 @@ define(
 
       return {
         glossy: glossy,
-        plain: plain
+        plain: plain,
+        resize: resize
       };
     };
 

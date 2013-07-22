@@ -29,8 +29,18 @@ define(
       Height.set(element, h);
     };
 
+    var setWidth = function (element, w) {
+      Width.set(element, w + hacktastic(element));
+    };
+
+    var getWidth = function (element) {
+      return Width.get(element) + hacktastic(element);
+    };
+
     return {
-      adjust: adjust
+      adjust: adjust,
+      setWidth: setWidth,
+      getWidth: getWidth
     };
   }
 );

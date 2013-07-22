@@ -11,10 +11,11 @@ define(
     'ephox.sugar.api.Css',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert'
+    'ephox.sugar.api.Insert',
+    'ephox.sugar.api.InsertAll'
   ],
 
-  function ($, Activate, Blah, Container, Table, Attr, Css, DomEvent, Element, Insert) {
+  function ($, Activate, Blah, Container, Table, Attr, Css, DomEvent, Element, Insert, InsertAll) {
     return function () {
       var ephoxUi = Element.fromDom(document.getElementById('ephox-ui'));
       var table = Table(6, 3);
@@ -53,6 +54,17 @@ define(
 
       Insert.append(ephoxUi, editor);
       Insert.append(editor, table.element());
+
+      var column = Element.fromTag('input');
+      Attr.set(column, 'value', 0);
+      var step = Element.fromTag('input');
+      Attr.set(step, 'value',100);
+      var button = Element.fromTag('button');
+      Insert.append(button, Element.fromText('RESIZE'));
+      DomEvent.bind(button, 'click', function () {
+        activation.resize(parseInt(Attr.get(column, 'value')), parseInt(Attr.get(step, 'value')));
+      });
+      InsertAll.append(ephoxUi, [ column, step, button ]);
 
       dragger.connect();
     };
