@@ -18,7 +18,7 @@ define("tinymce/util/URI", [
 	var each = Tools.each, trim = Tools.trim;
 
 	/**
-	 * Constucts a new URI instance.
+	 * Constructs a new URI instance.
 	 *
 	 * @constructor
 	 * @method URI

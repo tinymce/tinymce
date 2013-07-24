@@ -9,7 +9,7 @@
  */
 
 /**
- * This class used as a factory for manager for tinymce.Editor instaces.
+ * This class used as a factory for manager for tinymce.Editor instances.
  *
  * @example
  * tinymce.EditorManager.init({});
