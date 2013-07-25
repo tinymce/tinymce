@@ -28,7 +28,7 @@ define("tinymce/dom/Serializer", [
 	var DOM = DOMUtils.DOM;
 
 	/**
-	 * Constucts a new DOM serializer class.
+	 * Constructs a new DOM serializer class.
 	 *
 	 * @constructor
 	 * @method Serializer

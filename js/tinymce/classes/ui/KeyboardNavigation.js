@@ -27,7 +27,7 @@ define("tinymce/ui/KeyboardNavigation", [
 	 * @setting {tinymce.ui.Control} root the root control navigation focus movement is scoped to this root.
 	 * @setting {Array} items an array containing the items to move focus between. Every object in this array must have an
 	 *                        id attribute which maps to the actual DOM element and it must be able to have focus i.e. tabIndex=-1.
-	 * @setting {Function} onCancel the callback for when the user presses escape or otherwise indicates cancelling.
+	 * @setting {Function} onCancel the callback for when the user presses escape or otherwise indicates canceling.
 	 * @setting {Function} onAction (optional) the action handler to call when the user activates an item.
 	 * @setting {Boolean} enableLeftRight (optional, default) when true, the up/down arrows move through items.
 	 * @setting {Boolean} enableUpDown (optional) when true, the up/down arrows move through items.

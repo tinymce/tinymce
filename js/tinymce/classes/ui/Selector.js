@@ -25,7 +25,7 @@
  *  element[attr^=value]
  *  element[attr$=value]
  *  element:<state>
- *  element:not(<expession>)
+ *  element:not(<expression>)
  *  element:first
  *  element:last
  *  element:odd
@@ -318,11 +318,11 @@ define("tinymce/ui/Selector", [
 
 					// All filters matched the item
 					if (fi === fl) {
-						// Matched item is on the last expession like: panel toolbar [button]
+						// Matched item is on the last expression like: panel toolbar [button]
 						if (index == selector.length - 1) {
 							matches.push(item);
 						} else {
-							// Collect next expession type
+							// Collect next expression type
 							if (item.items) {
 								collect(item.items(), selector, index + 1);
 							}
