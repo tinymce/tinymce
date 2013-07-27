@@ -1009,6 +1009,11 @@ define("tinymce/Editor", [
 					self.getWin().focus();
 				}
 
+				if (document != self.getDoc()) {
+					//WebKit in iOs needs a window focus call if the current document is different than self.getDoc().
+					self.getWin().focus();
+				}
+
 				// Focus the body as well since it's contentEditable
 				if (isGecko || contentEditable) {
 					body = self.getBody();
