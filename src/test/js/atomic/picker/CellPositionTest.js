@@ -2,21 +2,27 @@ test(
   'CellPositionTest',
 
   [
+    'ephox.snooker.data.Structs',
     'ephox.snooker.picker.CellPosition'
   ],
 
-  function (CellPosition) {
+  function (Structs, CellPosition) {
 
 
-   var check = function (expected, position, size, numCols, numRows, mousePosition) {
-    var actual = CellPosition.getPosition(position, size, numCols, numRows, mousePosition);
-    assert.eq(expected, actual);
+   var check = function (expected, posX, posY, width, height, rows, cols, x, y) {
+    var position = Structs.xy(posX, posY);
+    var dimensions = Structs.dimensions(width, height);
+    var grid = Structs.grid(rows, cols);
+    var mouse = Structs.xy(x, y);
+    var actual = CellPosition.findCell(position, dimensions, grid, mouse);
+    assert.eq(expected.col, actual.column());
+    assert.eq(expected.row, actual.row());
    }
 
-   check({row:0, col:0}, {x:0,y:0}, {width:500, height:500}, 10,10, {x:0,y:0});
-   check({row:2, col:2}, {x:0,y:0}, {width:500, height:500}, 10,10, {x:110,y:110});
-   check({row:0, col:2}, {x:0,y:0}, {width:500, height:500}, 10,10, {x:110,y:10});
-   check({row:2, col:1}, {x:0,y:0}, {width:300, height:1000}, 5,10, {x:110,y:210});
-   check({row:0, col:1}, {x:50,y:180}, {width:300, height:1000}, 5,10, {x:110,y:210});
+   check({row:0, col:0}, 0, 0, 500, 500, 10, 10, 0, 0);
+   check({row:2, col:2}, 0, 0, 500, 500, 10, 10, 110, 100);
+   check({row:0, col:2}, 0, 0, 500, 500, 10, 10, 110, 10);
+   check({row:2, col:1}, 0, 0, 300, 1000, 10, 5, 110, 210);
+   check({row:0, col:1}, 50, 180, 300, 1000, 10, 5, 110, 210);
   }
 );

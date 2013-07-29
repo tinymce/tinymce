@@ -2,35 +2,26 @@ define(
   'ephox.snooker.picker.CellPosition',
 
   [
+    'ephox.snooker.data.Structs',
+    'global!Math'
   ],
 
-  function () {
+  function (Structs, Math) {
     
-    var getPosition = function (tablePosition, tableSize, numCols, numRows, mousePosition) {
-      
-      var relativeMousePosition = {x:0, y:0};
-      relativeMousePosition.x = mousePosition.x - tablePosition.x;
-      relativeMousePosition.y = mousePosition.y - tablePosition.y;
+    var findCell = function (position, dimensions, grid, mouse) {
+      var delta = Structs.xy(mouse.x() - position.x(), mouse.y() - position.y());
 
-      var cellWidth = tableSize.width/numCols;
-      var cellHeight = tableSize.height/numRows;
+      var cellWidth = dimensions.width()/grid.columns();
+      var cellHeight = dimensions.height()/grid.rows();
 
-      var col = Math.floor(relativeMousePosition.x/cellWidth);
-      var row = Math.floor(relativeMousePosition.y/cellHeight);
+      var col = Math.floor(delta.x()/cellWidth);
+      var row = Math.floor(delta.y()/cellHeight);
 
-
-
-      return {
-        row: row,
-        col: col
-      }  
-
+      return Structs.cell(row, col);
     };
 
-
     return {
-      getPosition: getPosition
-    }
-
+      findCell: findCell
+    };
   }
 );

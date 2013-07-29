@@ -36,7 +36,6 @@ define(
 
 
       picker.on();
-      picker.go();
 
       // setInterval(function () {
       //   val++;
