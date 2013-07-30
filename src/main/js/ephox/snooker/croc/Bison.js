@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.compass.Arr',
+    'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.scullion.Struct',
@@ -10,7 +11,7 @@ define(
     'ephox.snooker.util.Util'
   ],
 
-  function (Arr, Fun, Option, Struct, Spanning, Util) {
+  function (Arr, Merger, Fun, Option, Struct, Spanning, Util) {
 
     var getId = function (r, c) {
       return r + ',' + c;
@@ -62,7 +63,7 @@ define(
       for (var i = column + 1; i < 7; i++) {
         var position = getId(rowId, i);
         var w = worm[position];
-        if (r.length === 0 || r[r.length - 1].id() !== w.id()) {
+        if (w !== undefined && (r.length === 0 || r[r.length - 1].id() !== w.id())) {
           if (w.column() !== column && w.column() === i && w.row() === rowId) r.push(w);
         }
       }
@@ -89,54 +90,43 @@ define(
       });
 
       return result;
-      return Arr.map(input, function (row) {
-        /*
-          Let's just sketch this out.
-
-          Essentially, all the cells above this cell determine whether or not this 
-          cell is in the right position. Assume always that the row is correct, it is
-          just the column that needs to be determined, and the column is such a fluid
-          concept.
-
-
-        */
-
-
-
-        return {
-          before: Fun.constant(row.slice(0, ci)),
-          on: Fun.constant(Option.some(row[ci])),
-          after: Fun.constant(row.slice(ci + 1))
-        };
-      });
     };
 
     var split = function (input, ri, ci) {
-      var target = input[ri] !== undefined ? input[ri][ci] : Spanning(0,0);
+      if (input.length === 0) return input;
+      console.log('ri: ', ri);
+      var target = input[ri] !== undefined ? input[ri][ci] : Spanning('?',0,0);
       var colspan = target.colspan();
       var rowspan = target.rowspan();
 
-
-      return Arr.map(input, function (row, r) {
-        return Arr.bind(row, function (cell, c) {
-          console.log('ci: ', ci, 'c: ', c, 'ri: ', ri, 'r: ',r);
-          if (ri === r && ci === c) {
-            // INVESTIGATE: Merging content.
-            if (cell.colspan() !== 1) {
-              return Util.repeat(cell.colspan(), function () {
-                return Spanning(cell.rowspan(), 1);
-              });
-            } else {
-              return [
-                Spanning(cell.rowspan(), 1),
-                Spanning(cell.rowspan(), 1)
-              ]
-            }
-          } else {
-            return [ cell ]
-          }
+      if (colspan !== 1) {
+        var before = input[ri].slice(0, ci);
+        var after = input[ri].slice(ci + 1);
+        // ignoring rowspan for the time being
+        var divided = Util.repeat(colspan, function (i) {
+          return Spanning(target.id() + '_' + i, rowspan, 1); 
         });
-      });
+
+        return Arr.map(input, function (row, r) {
+          return r === ri ? before.concat(divided).concat(after) : row;
+        });
+      } else {
+        var section = voom(input, ci);
+        return Arr.map(section, function (row, r) {
+          return row.on().fold(function () {
+            return row.before().concat(row.after());
+          }, function (on) {
+            var newCell = Merger.merge(on, {
+              colspan: Fun.constant(on.colspan() + 1)
+            });
+            var hacked = Spanning(on.id(), on.rowspan(), 1);
+            var created = Spanning('+', on.rowspan(), 1);
+            return r === ri ?
+              row.before().concat([hacked, created]).concat(row.after()) :
+              row.before().concat([newCell]).concat(row.after());
+          });
+        });
+      }
     };
 
     return {
