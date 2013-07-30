@@ -3,13 +3,14 @@ test(
 
   [
     'ephox.compass.Arr',
+    'ephox.compass.Obj',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.snooker.croc.Bison',
     'ephox.snooker.croc.Spanning'
   ],
 
-  function (Arr, Fun, Option, Bison, Spanning) {
+  function (Arr, Obj, Fun, Option, Bison, Spanning) {
     var s = Spanning;
     var some = Option.some;
     var none = Option.none;
@@ -37,7 +38,7 @@ test(
     };
 
     var checkV = function (expected, input, c) {
-      console.log('doing a check');
+      console.log('doing a check', c);
       var actual = Bison.voom(input, c);
       assert.eq(expected.length, actual.length);
       Arr.each(expected, function (e, i) {
@@ -58,7 +59,7 @@ test(
 
     var checkX = function (expected, input) {
       var actual = Bison.stomp(input);
-      assert.eq(expected, actual);
+      assert.eq(expected, Obj.map(actual, function (x) { return x.id(); }));
     };
 
     var testTable = [
@@ -140,7 +141,7 @@ test(
     ], testTable, 3);
 
     checkV([
-      [ [ 'a', 'b', 'c' ], some('d'), [ 'e', 'f', 'g' ] ],
+      [ [ 'a', 'b', 'c' ], some('d'), [ 'e', 'f' ] ],
       [ [ 'g', 'h', 'i', 'j' ], some('k'), [] ],
       [ [ 'l', 'm', 'n' ], some('o'), [ 'p', 'q' ] ],
       [ [ 'r', 's' ], some('t'), [ 'u', 'v' ] ],
