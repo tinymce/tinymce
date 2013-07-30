@@ -6,6 +6,6 @@ define(
   ],
 
   function (Struct) {
-    return Struct.immutable('rowspan', 'colspan');
+    return Struct.immutable('id', 'rowspan', 'colspan');
   }
 );
