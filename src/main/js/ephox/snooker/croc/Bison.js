@@ -100,6 +100,76 @@ define(
       });
     };
 
+    var single = function (input, ri, ci) {
+      console.log('single');
+      var worm = stomp(input);
+      var tack = tacky(worm, input[ri][ci].id());
+      var section = voom(input, tack.column());
+
+      return Arr.map(section, function (row, r) {
+        if (ri === r) {
+          return input[ri].slice(0, ci).concat([ Spanning('+1', 1,1), Spanning('+2',1,1) ]).concat(input[ri].slice(ci+1));
+        } else {
+          return row.on().fold(function () {
+            return input[r];
+          }, function (on) {
+            var grown = Merger.merge(on, {
+              colspan: Fun.constant(on.colspan() + 1)
+            });
+            console.log('on: ', on.id());
+            return row.before().concat([grown]).concat(row.after());
+          });
+        }
+      });
+    };
+
+    var horizontal = function (input, ri, ci) {
+      console.log('horizontal');
+      var target = input[ri][ci];
+      return Arr.map(input, function (row, r) {
+        if (ri === r) {
+          var before = row.slice(0, ci);
+          var after = row.slice(ci + 1);
+          var divided = Util.repeat(target.colspan(), function () {
+            return Spanning(target.id(), 1, 1);
+          });
+          return before.concat(divided).concat(after);
+        } else {
+          return row;
+        }
+      });
+    };
+
+    var vertical = function (input, ri, ci) {
+      console.log('vertical');
+      /* TODO: Implement later */
+      return input;
+    }
+
+    var box = function (input, ri, ci) {
+      console.log('box');
+      var worm = stomp(input);
+      var target = input[ri][ci];
+      var tack = tacky(worm, target.id());
+      var section = voom(input, tack.column());
+
+      return Arr.map(section, function (row, r) {
+        var divided = Util.repeat(target.colspan(), function () {
+          return Spanning(target.id(), 1, 1);
+        });
+        if (r === ri) {
+          var before = input[ri].slice(0, ci);
+          var after = input[ri].slice(ci + 1);
+          return before.concat(divided).concat(after);
+        } else if (r > ri && r < ri + target.rowspan()) {
+          return row.before().concat(divided).concat(row.after());
+        } else {
+          return input[r];
+        }
+      });
+
+    };
+
     var split = function (input, ri, ci) {
       /* The values coming in here are just direct links to the arrays. */
       if (input.length === 0) return input;
@@ -107,36 +177,51 @@ define(
       var colspan = target.colspan();
       var rowspan = target.rowspan();
 
-      if (colspan !== 1) {
-        var before = input[ri].slice(0, ci);
-        var after = input[ri].slice(ci + 1);
-        // ignoring rowspan for the time being
-        var divided = Util.repeat(colspan, function (i) {
-          return Spanning(target.id() + '_' + i, rowspan, 1); 
-        });
+      if (colspan === 1 && rowspan === 1) return single(input, ri, ci);
+      else if (colspan > 1 && rowspan === 1) return horizontal(input, ri, ci);
+      else if (colspan === 1 && rowspan > 1) return vertical(input, ri, ci);
+      else return box(input, ri, ci);
 
-        return Arr.map(input, function (row, r) {
-          return r === ri ? before.concat(divided).concat(after) : row;
-        });
-      } else {
-        var worm = stomp(input);
-        var tack = tacky(worm, target.id());
-        var section = voom(input, tack.column());
-        return Arr.map(section, function (row, r) {
+      var worm = stomp(input);
+      var tack = tacky(worm, target.id());
+      var section = voom(input, tack.column());
+      return Arr.map(section, function (row, r) {
+        if (r === ri) {
+          if (colspan !== 1) {
+            var divided = Util.repeat(colspan, function (i) {
+              return Spanning(target.id() + '_' + i, rowspan, 1); 
+            });
+            return input[ri].slice(0, ci).concat(divided).concat(input[ri].slice(ci + 1));
+          } else {
+            var hacked = Spanning(target.id(), 1, 1);
+            var created = Spanning('+', 1, 1);  
+            return row.before().concat([hacked, created]).concat(row.after());
+          }
+        } else {
           return row.on().fold(function () {
+            console.log('here we are');
             return row.before().concat(row.after());
           }, function (on) {
+
             var newCell = Merger.merge(on, {
               colspan: Fun.constant(on.colspan() + 1)
             });
-            var hacked = Spanning(on.id(), on.rowspan(), 1);
-            var created = Spanning('+', on.rowspan(), 1);
-            return r === ri ?
-              row.before().concat([hacked, created]).concat(row.after()) :
-              row.before().concat([newCell]).concat(row.after());
+          
+            /* The situations for a colspan === 1
+
+              1. We are on the correct row, so create a new cell after this one.
+              2. We are on rows affected by the rowspan of the split cell, so add a new cell to each of these rows
+              3. We are on any other row, so just add a new cell.
+            */
+
+            if (r > ri && r < ri + target.rowspan()) {
+              return row.before().concat([Spanning(on.id()+'_', 1,1), Spanning(on.id()+'__', 1,1)]).concat(row.after());
+            } else {
+              return row.before().concat([newCell]).concat(row.after());  
+            }
           });
-        });
-      }
+        };
+      });
     };
 
     return {
