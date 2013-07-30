@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.compass.Arr',
+    'ephox.compass.Obj',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
@@ -11,7 +12,7 @@ define(
     'ephox.snooker.util.Util'
   ],
 
-  function (Arr, Merger, Fun, Option, Struct, Spanning, Util) {
+  function (Arr, Obj, Merger, Fun, Option, Struct, Spanning, Util) {
 
     var getId = function (r, c) {
       return r + ',' + c;
@@ -92,9 +93,16 @@ define(
       return result;
     };
 
+    var tacky = function (worm, id) {
+      var values = Obj.values(worm);
+      return Arr.find(values, function (x) {
+        return x.id() === id;
+      });
+    };
+
     var split = function (input, ri, ci) {
+      /* The values coming in here are just direct links to the arrays. */
       if (input.length === 0) return input;
-      console.log('ri: ', ri);
       var target = input[ri] !== undefined ? input[ri][ci] : Spanning('?',0,0);
       var colspan = target.colspan();
       var rowspan = target.rowspan();
@@ -111,7 +119,9 @@ define(
           return r === ri ? before.concat(divided).concat(after) : row;
         });
       } else {
-        var section = voom(input, ci);
+        var worm = stomp(input);
+        var tack = tacky(worm, target.id());
+        var section = voom(input, tack.column());
         return Arr.map(section, function (row, r) {
           return row.on().fold(function () {
             return row.before().concat(row.after());
