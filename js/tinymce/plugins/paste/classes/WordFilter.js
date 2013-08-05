@@ -88,8 +88,8 @@ define("tinymce/pasteplugin/WordFilter", [
 						nextNode.value = nextNode.value.replace(/^\u00a0+/, '');
 					}
 
-					// Append list to previous list
-					if (level > lastLevel) {
+					// Append list to previous list if it exists
+					if (level > lastLevel && prevListNode) {
 						prevListNode.lastChild.append(currentListNode);
 					}
 
