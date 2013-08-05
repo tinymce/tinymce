@@ -1,6 +1,7 @@
 Version 4.0.3 (2013-07-xx)
 	Fixed bug where input method would produce new lines when inserting contents to an empty editor.
 	Fixed so sub/sup elements gets removed when the Clear formatting action is executed.
+	Fixed so text/javascript type value get removed by default from script elements to match the HTML5 spec.
 Version 4.0.2 (2013-07-18)
 	Fixed bug where formatting using menus or toolbars wasn't possible on Opera 12.15.
 	Fixed bug where IE 8 keyboard input would break after paste using the paste plugin.
