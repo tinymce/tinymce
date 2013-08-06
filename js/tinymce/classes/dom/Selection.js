@@ -675,7 +675,10 @@ define("tinymce/dom/Selection", [
 		 * tinymce.activeEditor.selection.select(tinymce.activeEditor.dom.select('p')[0]);
 		 */
 		select: function(node, content) {
-			var t = this, dom = t.dom, rng = dom.createRng(), idx;
+			var self = this, dom = self.dom, rng = dom.createRng(), idx;
+
+			// Clear stored range set by FocusManager
+			self.restoreRng = null;
 
 			function setPoint(node, start) {
 				var walker = new TreeWalker(node, node);
@@ -706,7 +709,7 @@ define("tinymce/dom/Selection", [
 			}
 
 			if (node) {
-				if (!content && t.controlSelection.controlSelect(node)) {
+				if (!content && self.controlSelection.controlSelect(node)) {
 					return;
 				}
 
@@ -720,7 +723,7 @@ define("tinymce/dom/Selection", [
 					setPoint(node);
 				}
 
-				t.setRng(rng);
+				self.setRng(rng);
 			}
 
 			return node;

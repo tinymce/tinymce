@@ -59,7 +59,7 @@ define("tinymce/FocusManager", [
 					});
 				} else if (editor.inline) {
 					// On other browsers take snapshot on nodechange in inline mode since they have Ghost selections for iframes
-					editor.on('nodechange', function() {
+					editor.on('nodechange keyup', function() {
 						var isInBody, node = document.activeElement;
 
 						// Check if selection is within editor body

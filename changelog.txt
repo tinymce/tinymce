@@ -5,6 +5,7 @@ Version 4.0.3 (2013-07-xx)
 	Fixed bug where input method would produce new lines when inserting contents to an empty editor.
 	Fixed bug where pasting single indented list items from Word would cause a JS exception.
 	Fixed bug where applying block formats inside list elements in inline mode would apply them to whole document.
+	Fixed bug where link editing in inline mode would cause exception on IE/WebKit.
 	Fixed so sub/sup elements gets removed when the Clear formatting action is executed.
 	Fixed so text/javascript type value get removed by default from script elements to match the HTML5 spec.
 Version 4.0.2 (2013-07-18)

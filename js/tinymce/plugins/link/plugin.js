@@ -124,11 +124,8 @@ tinymce.PluginManager.add('link', function(editor) {
 
 		selectedElm = selection.getNode();
 		anchorElm = dom.getParent(selectedElm, 'a[href]');
-		if (anchorElm) {
-			selection.select(anchorElm);
-		}
 
-		data.text = initialText = selection.getContent({format: 'text'});
+		data.text = initialText = anchorElm ? (anchorElm.innerText || anchorElm.textContent) : '';
 		data.href = anchorElm ? dom.getAttrib(anchorElm, 'href') : '';
 		data.target = anchorElm ? dom.getAttrib(anchorElm, 'target') : '';
 		data.rel = anchorElm ? dom.getAttrib(anchorElm, 'rel') : '';
