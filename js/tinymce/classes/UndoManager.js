@@ -26,7 +26,7 @@ define("tinymce/UndoManager", [
 	].join('|'), 'gi');
 
 	return function(editor) {
-		var self, index = 0, data = [], beforeBookmark, isFirstTypedCharacter;
+		var self, index = 0, data = [], beforeBookmark, isFirstTypedCharacter, lock;
 
 		// Returns a trimmed version of the current editor contents
 		function getContent() {
@@ -154,7 +154,9 @@ define("tinymce/UndoManager", [
 			 * @method beforeChange
 			 */
 			beforeChange: function() {
-				beforeBookmark = editor.selection.getBookmark(2, true);
+				if (!lock) {
+					beforeBookmark = editor.selection.getBookmark(2, true);
+				}
 			},
 
 			/**
@@ -170,7 +172,7 @@ define("tinymce/UndoManager", [
 				level = level || {};
 				level.content = getContent();
 
-				if (editor.fire('BeforeAddUndo', {level: level}).isDefaultPrevented()) {
+				if (lock || editor.fire('BeforeAddUndo', {level: level}).isDefaultPrevented()) {
 					return null;
 				}
 
@@ -303,14 +305,19 @@ define("tinymce/UndoManager", [
 			/**
 			 * Executes the specified function in an undo transation. The selection
 			 * before the modification will be stored to the undo stack and if the DOM changes
-			 * it will add a new undo level.
+			 * it will add a new undo level. Any methods within the transation that adds undo levels will
+			 * be ignored. So a transation can include calls to execCommand or editor.insertContent.
 			 *
 			 * @method transact
 			 * @param {function} callback Function to execute dom manipulation logic in.
 			 */
 			transact: function(callback) {
 				self.beforeChange();
+
+				lock = true;
 				callback();
+				lock = false;
+
 				self.add();
 			}
 		};
