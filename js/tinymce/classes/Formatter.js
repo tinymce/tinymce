@@ -1092,8 +1092,9 @@ define("tinymce/Formatter", [
 				for (x = formatList.length - 1; x >= 0; x--) {
 					selector = formatList[x].selector;
 
-					// Format is not selector based, then always return TRUE
-					if (!selector) {
+					// Format is not selector based then always return TRUE
+					// Is it has a defaultBlock then it's likely it can be applied for example align on a non block element line
+					if (!selector || formatList[x].defaultBlock) {
 						return TRUE;
 					}
 

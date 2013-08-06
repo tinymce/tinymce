@@ -10,6 +10,7 @@ Version 4.0.3 (2013-07-xx)
 	Fixed bug where localStorage initialization would fail on Firefox/Chrome with disabled support.
 	Fixed bug where image elements would get an __mce id when undo/redo:ing to a level with image changes.
 	Fixed bug where too long template names wouldn't fit the listbox in template plugin.
+	Fixed bug where alignment format options would be marked disabled when forced_root_block was set to false.
 	Fixed so the undoManages transact function disables any other undo levels from being added while within the transaction.
 	Fixed so sub/sup elements gets removed when the Clear formatting action is executed.
 	Fixed so text/javascript type value get removed by default from script elements to match the HTML5 spec.
