@@ -1,4 +1,5 @@
 Version 4.0.3 (2013-07-xx)
+	Added new code_dialog_width/code_dialog_height options to control code dialog size.
 	Fixed bug where input method would produce new lines when inserting contents to an empty editor.
 	Fixed bug where pasting single indented list items from Word would cause a JS exception.
 	Fixed so sub/sup elements gets removed when the Clear formatting action is executed.
