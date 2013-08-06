@@ -28,7 +28,7 @@
  * var value = tinymce.util.LocalStorage.getItem('key');
  */
 define("tinymce/util/LocalStorage", [], function() {
-	var LocalStorage, storageElm, items, keys, userDataKey;
+	var LocalStorage, storageElm, items, keys, userDataKey, hasOldIEDataSupport;
 
 	// Check for native support
 	if (window.localStorage) {
@@ -37,7 +37,11 @@ define("tinymce/util/LocalStorage", [], function() {
 
 	userDataKey = "tinymce";
 	storageElm = document.documentElement;
-	storageElm.addBehavior('#default#userData');
+	hasOldIEDataSupport = !!storageElm.addBehavior;
+
+	if (hasOldIEDataSupport) {
+		storageElm.addBehavior('#default#userData');
+	}
 
 	/**
 	 * Gets the keys names and updates LocalStorage.length property. Since IE7 doesn't have any getters/setters.
@@ -59,6 +63,11 @@ define("tinymce/util/LocalStorage", [], function() {
 		var key, data, value, pos = 0;
 
 		items = {};
+
+		// localStorage can be disabled on WebKit/Gecko so make a dummy storage
+		if (!hasOldIEDataSupport) {
+			return;
+		}
 
 		function next(end) {
 			var value, nextPos;
@@ -93,6 +102,11 @@ define("tinymce/util/LocalStorage", [], function() {
 	 */
 	function save() {
 		var value, data = '';
+
+		// localStorage can be disabled on WebKit/Gecko so make a dummy storage
+		if (!hasOldIEDataSupport) {
+			return;
+		}
 
 		for (var key in items) {
 			value = items[key];
