@@ -14,12 +14,13 @@ tinymce.PluginManager.add('code', function(editor) {
 	function showSourceEditor() {
 		editor.windowManager.open({
 			title: "Source code",
+            width: parseInt(editor.getParam("plugin_code_width", "600"), 10),
+            height: parseInt(editor.getParam("plugin_code_height", "600"), 10),
 			body: {
 				type: 'textbox',
 				name: 'code',
 				multiline: true,
-				minWidth: 600,
-				minHeight: 500,
+                minHeight: parseInt(editor.getParam("plugin_code_height", "600"), 10)-50,
 				value: editor.getContent({source_view: true}),
 				spellcheck: false
 			},
