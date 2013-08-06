@@ -56,7 +56,9 @@ tinymce.PluginManager.add('template', function(editor) {
 			title: 'Insert template',
 
 			body: [
-				{type: 'listbox', name: 'template', flex: 0, label: 'Templates', values: values, onselect: onSelectTemplate},
+				{type: 'container', label: 'Templates', items: {
+					type: 'listbox', name: 'template', values: values, onselect: onSelectTemplate
+				}},
 				{type: 'label', name: 'description', label: 'Description', text: '\u00a0'},
 				{type: 'iframe', minWidth: 600, minHeight: 400, border: 1}
 			],
