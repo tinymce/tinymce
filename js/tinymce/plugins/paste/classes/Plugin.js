@@ -25,6 +25,25 @@ define("tinymce/pasteplugin/Plugin", [
 	PluginManager.add('paste', function(editor) {
 		var self = this, clipboard;
 
+		function togglePlainTextPaste() {
+			if (clipboard.pasteFormat == "text") {
+				this.active(false);
+				clipboard.pasteFormat = "html";
+			} else {
+				clipboard.pasteFormat = "text";
+				this.active(true);
+
+				if (!userIsInformed) {
+					editor.windowManager.alert(
+						'Paste is now in plain text mode. Contents will now ' +
+						'be pasted as plain text until you toggle this option off.'
+					);
+
+					userIsInformed = true;
+				}
+			}
+		}
+
 		self.clipboard = clipboard = new Clipboard(editor);
 		self.quirks = new Quirks(editor);
 		self.wordFilter = new WordFilter(editor);
@@ -43,28 +62,17 @@ define("tinymce/pasteplugin/Plugin", [
 			}
 		});
 
+		editor.addButton('pastetext', {
+			icon: 'pastetext',
+			tooltip: 'Paste as text',
+			onclick: togglePlainTextPaste
+		});
+
 		editor.addMenuItem('pastetext', {
 			text: 'Paste as text',
 			selectable: true,
 			active: clipboard.pasteFormat,
-			onclick: function() {
-				if (clipboard.pasteFormat == "text") {
-					this.active(false);
-					clipboard.pasteFormat = "html";
-				} else {
-					clipboard.pasteFormat = "text";
-					this.active(true);
-
-					if (!userIsInformed) {
-						editor.windowManager.alert(
-							'Paste is now in plain text mode. Contents will now ' +
-							'be pasted as plain text until you toggle this option off.'
-						);
-
-						userIsInformed = true;
-					}
-				}
-			}
+			onclick: togglePlainTextPaste
 		});
 	});
 });
