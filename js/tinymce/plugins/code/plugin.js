@@ -25,6 +25,7 @@ tinymce.PluginManager.add('code', function(editor) {
 			},
 			onSubmit: function(e) {
 				editor.setContent(e.data.code);
+				editor.nodeChanged();
 			}
 		});
 	}

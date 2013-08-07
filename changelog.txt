@@ -1,4 +1,4 @@
-Version 4.0.3 (2013-07-xx)
+Version 4.0.3 (2013-08-xx)
 	Added new code_dialog_width/code_dialog_height options to control code dialog size.
 	Added missing pastetext button that works the same way as the pastetext menu item.
 	Added missing smaller browse button for the classical smaller toolbars.
@@ -15,6 +15,7 @@ Version 4.0.3 (2013-07-xx)
 	Fixed bug where the formats select box would mark the editable container DIV as a applied format in inline mode.
 	Fixed bug where IE 7/8 would scroll to empty editors when initialized.
 	Fixed bug where IE 7/8 wouldn't display previews of format options.
+	Fixed bug where UI states wasn't properly updated after code was changed in the code dialog.
 	Fixed bug with setting contents in IE would select all contents within the editor.
 	Fixed so the undoManages transact function disables any other undo levels from being added while within the transaction.
 	Fixed so sub/sup elements gets removed when the Clear formatting action is executed.

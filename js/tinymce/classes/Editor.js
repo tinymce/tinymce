@@ -1719,9 +1719,9 @@ define("tinymce/Editor", [
 
 				// Don't normalize selection if the focused element isn't the body in
 				// content editable mode since it will steal focus otherwise
-				if (!self.settings.content_editable || document.activeElement === self.getBody()) {
+				/*if (!self.settings.content_editable || document.activeElement === self.getBody()) {
 					self.selection.normalize();
-				}
+				}*/
 			}
 
 			// Move selection to start of body if it's a after init setContent call
