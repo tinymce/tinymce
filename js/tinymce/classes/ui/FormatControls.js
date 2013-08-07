@@ -271,7 +271,7 @@ define("tinymce/ui/FormatControls", [
 						};
 
 						menuItem.onPostRender = function() {
-							var self = this;
+							var self = this, editor = EditorManager.activeEditor;
 
 							self.parent().on('show', function() {
 								self.disabled(!editor.formatter.canApply(formatName));

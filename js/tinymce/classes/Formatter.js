@@ -1014,9 +1014,11 @@ define("tinymce/Formatter", [
 			var startNode;
 
 			function matchParents(node) {
+				var root = dom.getRoot();
+
 				// Find first node with similar format settings
 				node = dom.getParent(node, function(node) {
-					return !!matchNode(node, name, vars, true);
+					return node.parentNode === root || !!matchNode(node, name, vars, true);
 				});
 
 				// Do an exact check on the similar format element
