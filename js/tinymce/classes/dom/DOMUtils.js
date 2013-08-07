@@ -685,7 +685,7 @@ define("tinymce/dom/DOMUtils", [
 			}
 
 			// IE & Opera
-			if (name.currentStyle && computed) {
+			if (elm.currentStyle && computed) {
 				return elm.currentStyle[name];
 			}
 

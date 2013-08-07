@@ -14,6 +14,7 @@ Version 4.0.3 (2013-07-xx)
 	Fixed bug where UI listboxes such as fontsize, fontfamily wouldn't update properly when switching editors in inline mode.
 	Fixed bug where the formats select box would mark the editable container DIV as a applied format in inline mode.
 	Fixed bug where IE 7/8 would scroll to empty editors when initialized.
+	Fixed bug where IE 7/8 wouldn't display previews of format options.
 	Fixed bug with setting contents in IE would select all contents within the editor.
 	Fixed so the undoManages transact function disables any other undo levels from being added while within the transaction.
 	Fixed so sub/sup elements gets removed when the Clear formatting action is executed.
