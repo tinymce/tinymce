@@ -13,6 +13,8 @@ Version 4.0.3 (2013-07-xx)
 	Fixed bug where alignment format options would be marked disabled when forced_root_block was set to false.
 	Fixed bug where UI listboxes such as fontsize, fontfamily wouldn't update properly when switching editors in inline mode.
 	Fixed bug where the formats select box would mark the editable container DIV as a applied format in inline mode.
+	Fixed bug where IE 7/8 would scroll to empty editors when initialized.
+	Fixed bug with setting contents in IE would select all contents within the editor.
 	Fixed so the undoManages transact function disables any other undo levels from being added while within the transaction.
 	Fixed so sub/sup elements gets removed when the Clear formatting action is executed.
 	Fixed so text/javascript type value get removed by default from script elements to match the HTML5 spec.

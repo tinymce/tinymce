@@ -1698,31 +1698,37 @@ define("tinymce/Editor", [
 				}
 
 				body.innerHTML = content;
+
+				self.fire('SetContent', args);
+			} else {
+				// Parse and serialize the html
+				if (args.format !== 'raw') {
+					content = new Serializer({}, self.schema).serialize(
+						self.parser.parse(content, {isRootContent: true})
+					);
+				}
+
+				// Set the new cleaned contents to the editor
+				args.content = trim(content);
+				self.dom.setHTML(body, args.content);
+
+				// Do post processing
+				if (!args.no_events) {
+					self.fire('SetContent', args);
+				}
+
+				// Don't normalize selection if the focused element isn't the body in
+				// content editable mode since it will steal focus otherwise
+				if (!self.settings.content_editable || document.activeElement === self.getBody()) {
+					self.selection.normalize();
+				}
+			}
+
+			// Move selection to start of body if it's a after init setContent call
+			// This prevents IE 7/8 from moving focus to empty editors
+			if (!args.initial) {
 				self.selection.select(body, true);
 				self.selection.collapse(true);
-				self.fire('SetContent', args);
-				return;
-			}
-
-			// Parse and serialize the html
-			if (args.format !== 'raw') {
-				content = new Serializer({}, self.schema).serialize(
-					self.parser.parse(content, {isRootContent: true})
-				);
-			}
-
-			// Set the new cleaned contents to the editor
-			args.content = trim(content);
-			self.dom.setHTML(body, args.content);
-
-			// Do post processing
-			if (!args.no_events) {
-				self.fire('SetContent', args);
-			}
-
-			// Don't normalize selection if the focused element isn't the body in content editable mode since it will steal focus otherwise
-			if (!self.settings.content_editable || document.activeElement === self.getBody()) {
-				self.selection.normalize();
 			}
 
 			return args.content;
