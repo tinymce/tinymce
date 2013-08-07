@@ -114,6 +114,7 @@ define("tinymce/FocusManager", [
 						focusedEditor.fire('blur', {focusedEditor: editor});
 					}
 
+					editorManager.activeEditor = editor;
 					editor.fire('focus', {blurredEditor: focusedEditor});
 					editor.focus(false);
 					editorManager.focusedEditor = editor;
@@ -131,7 +132,7 @@ define("tinymce/FocusManager", [
 						editor.selection.restoreRng = null;
 					}
 
-					// Still the same editor the the blur was outside any editor
+					// Still the same editor the the blur was outside any editor UI
 					if (!isUIElement(getActiveElement()) && focusedEditor == editor) {
 						editor.fire('blur', {focusedEditor: null});
 						editorManager.focusedEditor = null;
