@@ -1,4 +1,4 @@
-Version 4.0.3 (2013-08-xx)
+Version 4.0.3 (2013-08-08)
 	Added new code_dialog_width/code_dialog_height options to control code dialog size.
 	Added missing pastetext button that works the same way as the pastetext menu item.
 	Added missing smaller browse button for the classical smaller toolbars.
