@@ -1,3 +1,5 @@
+Version 4.0.4 (2013-08-xx)
+	Fixed bug where resize handles would be positioned incorrectly when inline element parent was using position: relative.
 Version 4.0.3 (2013-08-08)
 	Added new code_dialog_width/code_dialog_height options to control code dialog size.
 	Added missing pastetext button that works the same way as the pastetext menu item.
