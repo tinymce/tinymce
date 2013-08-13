@@ -25,6 +25,12 @@ define("tinymce/ui/FormatControls", [
 ], function(Factory, Control, Widget, FloatPanel, Tools, EditorManager, Env) {
 	var each = Tools.each;
 
+	EditorManager.on('AddEditor', function(e) {
+		e.editor.on('BeforeRenderUI', function() {
+			registerControls(this);
+		});
+	});
+
 	Control.translate = function(text) {
 		return EditorManager.translate(text);
 	};
@@ -197,8 +203,8 @@ define("tinymce/ui/FormatControls", [
 		return formats;
 	}
 
-	EditorManager.on('AddEditor', function(e) {
-		var editor = e.editor, formatMenu;
+	function registerControls(editor) {
+		var formatMenu;
 
 		function createFormatMenu() {
 			var count = 0, newFormats = [];
@@ -248,8 +254,7 @@ define("tinymce/ui/FormatControls", [
 				each(formats, function(format) {
 					var menuItem = {
 						text: format.title,
-						icon: format.icon,
-						preview: true
+						icon: format.icon
 					};
 
 					if (format.items) {
@@ -262,22 +267,7 @@ define("tinymce/ui/FormatControls", [
 							newFormats.push(format);
 						}
 
-						menuItem.textStyle = function() {
-							return getPreviewCss(formatName);
-						};
-
-						menuItem.onclick = function() {
-							toggleFormat(formatName);
-						};
-
-						menuItem.onPostRender = function() {
-							var self = this, editor = EditorManager.activeEditor;
-
-							self.parent().on('show', function() {
-								self.disabled(!editor.formatter.canApply(formatName));
-								self.active(editor.formatter.match(formatName));
-							});
-						};
+						menuItem.format = formatName;
 					}
 
 					menu.push(menuItem);
@@ -293,6 +283,41 @@ define("tinymce/ui/FormatControls", [
 			});
 
 			var menu = createMenu(editor.settings.style_formats || defaultStyleFormats);
+
+			menu = {
+				type: 'menu',
+				items: menu,
+				onPostRender: function(e) {
+					editor.fire('renderFormatsMenu', {control: e.control});
+				},
+				itemDefaults: {
+					preview: true,
+
+					textStyle: function() {
+						if (this.settings.format) {
+							return getPreviewCss(this.settings.format);
+						}
+					},
+
+					onPostRender: function() {
+						var self = this, editor = EditorManager.activeEditor;
+						var formatName = this.settings.format;
+
+						if (formatName) {
+							self.parent().on('show', function() {
+								self.disabled(!editor.formatter.canApply(formatName));
+								self.active(editor.formatter.match(formatName));
+							});
+						}
+					},
+
+					onclick: function() {
+						if (this.settings.format) {
+							toggleFormat(this.settings.format);
+						}
+					}
+				}
+			};
 
 			return menu;
 		}
@@ -500,22 +525,9 @@ define("tinymce/ui/FormatControls", [
 		}
 
 		Factory.add('styleselect', function(settings) {
-			var menu = [].concat(formatMenu);
-
-			/*
-			menu.push({text: '-'});
-			menu.push({
-				text: 'Remove formatting',
-				icon: 'removeformat',
-				onclick: function() {
-					editor.execCommand('RemoveFormat');
-				}
-			});
-			*/
-
 			return Factory.create('menubutton', Tools.extend({
 				text: 'Formats',
-				menu: menu
+				menu: formatMenu
 			}, settings));
 		});
 
@@ -621,5 +633,5 @@ define("tinymce/ui/FormatControls", [
 			text: 'Formats',
 			menu: formatMenu
 		});
-	});
+	}
 });
