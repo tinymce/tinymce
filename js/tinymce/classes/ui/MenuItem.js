@@ -112,9 +112,9 @@ define("tinymce/ui/MenuItem", [
 		 * @method showMenu
 		 */
 		showMenu: function() {
-			var self = this, settings = self.settings, menu;
+			var self = this, settings = self.settings, menu, parent = self.parent();
 
-			self.parent().items().each(function(ctrl) {
+			parent.items().each(function(ctrl) {
 				if (ctrl !== self) {
 					ctrl.hideMenu();
 				}
@@ -136,6 +136,10 @@ define("tinymce/ui/MenuItem", [
 						menu.type = menu.type || 'menu';
 					}
 
+					if (parent.settings.itemDefaults) {
+						menu.itemDefaults = parent.settings.itemDefaults;
+					}
+
 					menu = self.menu = Factory.create(menu).parent(self).renderTo(self.getContainerElm());
 					menu.reflow();
 					menu.fire('show');
@@ -152,7 +156,7 @@ define("tinymce/ui/MenuItem", [
 					menu.show();
 				}
 
-				menu._parentMenu = self.parent();
+				menu._parentMenu = parent;
 
 				menu.addClass('menu-sub');
 
@@ -228,7 +232,7 @@ define("tinymce/ui/MenuItem", [
 
 			var textStyle = settings.textStyle;
 			if (typeof(textStyle) == "function") {
-				textStyle = textStyle();
+				textStyle = textStyle.call(this);
 			}
 
 			if (textStyle) {

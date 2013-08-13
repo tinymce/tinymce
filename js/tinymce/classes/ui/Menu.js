@@ -42,6 +42,14 @@ define("tinymce/ui/Menu", [
 			settings.autohide = true;
 			settings.constrainToViewport = true;
 
+			if (settings.itemDefaults) {
+				var items = settings.items, i = items.length;
+
+				while (i--) {
+					items[i] = tinymce.extend({}, settings.itemDefaults, items[i]);
+				}
+			}
+
 			self._super(settings);
 			self.addClass('menu');
 
