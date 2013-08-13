@@ -288,7 +288,7 @@ define("tinymce/ui/FormatControls", [
 				type: 'menu',
 				items: menu,
 				onPostRender: function(e) {
-					editor.fire('renderFormatsMenu', {control: e.control});
+					EditorManager.activeEditor.fire('renderFormatsMenu', {control: e.control});
 				},
 				itemDefaults: {
 					preview: true,

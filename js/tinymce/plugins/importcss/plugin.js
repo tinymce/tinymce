@@ -32,7 +32,7 @@ tinymce.PluginManager.add('importcss', function(editor) {
 					});
 				}
 			});
-		};
+		}
 
 		each(editor.contentCSS, function(url) {
 			contentCSSUrls[url] = true;
@@ -54,7 +54,7 @@ tinymce.PluginManager.add('importcss', function(editor) {
 
 		var formatName = tinymce.DOM.uniqueId();
 		var elementName = selector[1];
-		var classes = selector[2].substr(1).split('.').join(',');
+		var classes = selector[2].substr(1).split('.').join(' ');
 
 		// element.class - Produce block formats
 		if (selector[1]) {
