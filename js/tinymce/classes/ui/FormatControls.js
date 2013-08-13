@@ -15,14 +15,13 @@
  * @class tinymce.ui.FormatControls
  */
 define("tinymce/ui/FormatControls", [
-	"tinymce/ui/Factory",
 	"tinymce/ui/Control",
 	"tinymce/ui/Widget",
 	"tinymce/ui/FloatPanel",
 	"tinymce/util/Tools",
 	"tinymce/EditorManager",
 	"tinymce/Env"
-], function(Factory, Control, Widget, FloatPanel, Tools, EditorManager, Env) {
+], function(Control, Widget, FloatPanel, Tools, EditorManager, Env) {
 	var each = Tools.each;
 
 	EditorManager.on('AddEditor', function(e) {
@@ -37,174 +36,175 @@ define("tinymce/ui/FormatControls", [
 
 	Widget.tooltips = !Env.iOS;
 
-	// Generates a preview for a format
-	function getPreviewCss(format) {
-		var editor = EditorManager.activeEditor, name, previewElm, dom = editor.dom;
-		var previewCss = '', parentFontSize, previewStyles;
+	function registerControls(editor) {
+		var formatMenu;
 
-		previewStyles = editor.settings.preview_styles;
+		// Generates a preview for a format
+		function getPreviewCss(format) {
+			var name, previewElm, dom = editor.dom;
+			var previewCss = '', parentFontSize, previewStyles;
 
-		// No preview forced
-		if (previewStyles === false) {
-			return '';
-		}
+			previewStyles = editor.settings.preview_styles;
 
-		// Default preview
-		if (!previewStyles) {
-			previewStyles = 'font-family font-size font-weight text-decoration text-transform color background-color border border-radius';
-		}
-
-		// Removes any variables since these can't be previewed
-		function removeVars(val) {
-			return val.replace(/%(\w+)/g, '');
-		}
-
-		// Create block/inline element to use for preview
-		format = editor.formatter.get(format);
-		if (!format) {
-			return;
-		}
-
-		format = format[0];
-		name = format.block || format.inline || 'span';
-		previewElm = dom.create(name);
-
-		// Add format styles to preview element
-		each(format.styles, function(value, name) {
-			value = removeVars(value);
-
-			if (value) {
-				dom.setStyle(previewElm, name, value);
+			// No preview forced
+			if (previewStyles === false) {
+				return '';
 			}
-		});
 
-		// Add attributes to preview element
-		each(format.attributes, function(value, name) {
-			value = removeVars(value);
-
-			if (value) {
-				dom.setAttrib(previewElm, name, value);
+			// Default preview
+			if (!previewStyles) {
+				previewStyles = 'font-family font-size font-weight text-decoration ' +
+					'text-transform color background-color border border-radius';
 			}
-		});
 
-		// Add classes to preview element
-		each(format.classes, function(value) {
-			value = removeVars(value);
-
-			if (!dom.hasClass(previewElm, value)) {
-				dom.addClass(previewElm, value);
+			// Removes any variables since these can't be previewed
+			function removeVars(val) {
+				return val.replace(/%(\w+)/g, '');
 			}
-		});
 
-		editor.fire('PreviewFormats');
+			// Create block/inline element to use for preview
+			format = editor.formatter.get(format);
+			if (!format) {
+				return;
+			}
 
-		// Add the previewElm outside the visual area
-		dom.setStyles(previewElm, {position: 'absolute', left: -0xFFFF});
-		editor.getBody().appendChild(previewElm);
+			format = format[0];
+			name = format.block || format.inline || 'span';
+			previewElm = dom.create(name);
 
-		// Get parent container font size so we can compute px values out of em/% for older IE:s
-		parentFontSize = dom.getStyle(editor.getBody(), 'fontSize', true);
-		parentFontSize = /px$/.test(parentFontSize) ? parseInt(parentFontSize, 10) : 0;
+			// Add format styles to preview element
+			each(format.styles, function(value, name) {
+				value = removeVars(value);
 
-		each(previewStyles.split(' '), function(name) {
-			var value = dom.getStyle(previewElm, name, true);
-
-			// If background is transparent then check if the body has a background color we can use
-			if (name == 'background-color' && /transparent|rgba\s*\([^)]+,\s*0\)/.test(value)) {
-				value = dom.getStyle(editor.getBody(), name, true);
-
-				// Ignore white since it's the default color, not the nicest fix
-				// TODO: Fix this by detecting runtime style
-				if (dom.toHex(value).toLowerCase() == '#ffffff') {
-					return;
+				if (value) {
+					dom.setStyle(previewElm, name, value);
 				}
-			}
+			});
 
-			if (name == 'color') {
-				// Ignore black since it's the default color, not the nicest fix
-				// TODO: Fix this by detecting runtime style
-				if (dom.toHex(value).toLowerCase() == '#000000') {
-					return;
+			// Add attributes to preview element
+			each(format.attributes, function(value, name) {
+				value = removeVars(value);
+
+				if (value) {
+					dom.setAttrib(previewElm, name, value);
 				}
-			}
+			});
 
-			// Old IE won't calculate the font size so we need to do that manually
-			if (name == 'font-size') {
-				if (/em|%$/.test(value)) {
-					if (parentFontSize === 0) {
+			// Add classes to preview element
+			each(format.classes, function(value) {
+				value = removeVars(value);
+
+				if (!dom.hasClass(previewElm, value)) {
+					dom.addClass(previewElm, value);
+				}
+			});
+
+			editor.fire('PreviewFormats');
+
+			// Add the previewElm outside the visual area
+			dom.setStyles(previewElm, {position: 'absolute', left: -0xFFFF});
+			editor.getBody().appendChild(previewElm);
+
+			// Get parent container font size so we can compute px values out of em/% for older IE:s
+			parentFontSize = dom.getStyle(editor.getBody(), 'fontSize', true);
+			parentFontSize = /px$/.test(parentFontSize) ? parseInt(parentFontSize, 10) : 0;
+
+			each(previewStyles.split(' '), function(name) {
+				var value = dom.getStyle(previewElm, name, true);
+
+				// If background is transparent then check if the body has a background color we can use
+				if (name == 'background-color' && /transparent|rgba\s*\([^)]+,\s*0\)/.test(value)) {
+					value = dom.getStyle(editor.getBody(), name, true);
+
+					// Ignore white since it's the default color, not the nicest fix
+					// TODO: Fix this by detecting runtime style
+					if (dom.toHex(value).toLowerCase() == '#ffffff') {
 						return;
 					}
-
-					// Convert font size from em/% to px
-					value = parseFloat(value, 10) / (/%$/.test(value) ? 100 : 1);
-					value = (value * parentFontSize) + 'px';
 				}
-			}
 
-			if (name == "border" && value) {
-				previewCss += 'padding:0 2px;';
-			}
+				if (name == 'color') {
+					// Ignore black since it's the default color, not the nicest fix
+					// TODO: Fix this by detecting runtime style
+					if (dom.toHex(value).toLowerCase() == '#000000') {
+						return;
+					}
+				}
 
-			previewCss += name + ':' + value + ';';
-		});
-
-		editor.fire('AfterPreviewFormats');
-
-		//previewCss += 'line-height:normal';
-
-		dom.remove(previewElm);
-
-		return previewCss;
-	}
-
-	function createListBoxChangeHandler(items, formatName) {
-		return function() {
-			var self = this;
-
-			EditorManager.activeEditor.on('nodeChange', function(e) {
-				var formatter = EditorManager.activeEditor.formatter;
-				var value = null;
-
-				each(e.parents, function(node) {
-					each(items, function(item) {
-						if (formatName) {
-							if (formatter.matchNode(node, formatName, {value: item.value})) {
-								value = item.value;
-							}
-						} else {
-							if (formatter.matchNode(node, item.value)) {
-								value = item.value;
-							}
+				// Old IE won't calculate the font size so we need to do that manually
+				if (name == 'font-size') {
+					if (/em|%$/.test(value)) {
+						if (parentFontSize === 0) {
+							return;
 						}
+
+						// Convert font size from em/% to px
+						value = parseFloat(value, 10) / (/%$/.test(value) ? 100 : 1);
+						value = (value * parentFontSize) + 'px';
+					}
+				}
+
+				if (name == "border" && value) {
+					previewCss += 'padding:0 2px;';
+				}
+
+				previewCss += name + ':' + value + ';';
+			});
+
+			editor.fire('AfterPreviewFormats');
+
+			//previewCss += 'line-height:normal';
+
+			dom.remove(previewElm);
+
+			return previewCss;
+		}
+
+		function createListBoxChangeHandler(items, formatName) {
+			return function() {
+				var self = this;
+
+				editor.on('nodeChange', function(e) {
+					var formatter = editor.formatter;
+					var value = null;
+
+					each(e.parents, function(node) {
+						each(items, function(item) {
+							if (formatName) {
+								if (formatter.matchNode(node, formatName, {value: item.value})) {
+									value = item.value;
+								}
+							} else {
+								if (formatter.matchNode(node, item.value)) {
+									value = item.value;
+								}
+							}
+
+							if (value) {
+								return false;
+							}
+						});
 
 						if (value) {
 							return false;
 						}
 					});
 
-					if (value) {
-						return false;
-					}
+					self.value(value);
 				});
-
-				self.value(value);
-			});
-		};
-	}
-
-	function createFormats(formats) {
-		formats = formats.split(';');
-
-		var i = formats.length;
-		while (i--) {
-			formats[i] = formats[i].split('=');
+			};
 		}
 
-		return formats;
-	}
+		function createFormats(formats) {
+			formats = formats.split(';');
 
-	function registerControls(editor) {
-		var formatMenu;
+			var i = formats.length;
+			while (i--) {
+				formats[i] = formats[i].split('=');
+			}
+
+			return formats;
+		}
 
 		function createFormatMenu() {
 			var count = 0, newFormats = [];
@@ -288,7 +288,7 @@ define("tinymce/ui/FormatControls", [
 				type: 'menu',
 				items: menu,
 				onPostRender: function(e) {
-					EditorManager.activeEditor.fire('renderFormatsMenu', {control: e.control});
+					editor.fire('renderFormatsMenu', {control: e.control});
 				},
 				itemDefaults: {
 					preview: true,
@@ -300,8 +300,7 @@ define("tinymce/ui/FormatControls", [
 					},
 
 					onPostRender: function() {
-						var self = this, editor = EditorManager.activeEditor;
-						var formatName = this.settings.format;
+						var self = this, formatName = this.settings.format;
 
 						if (formatName) {
 							self.parent().on('show', function() {
@@ -520,18 +519,17 @@ define("tinymce/ui/FormatControls", [
 			}
 
 			if (fmt) {
-				EditorManager.activeEditor.execCommand('mceToggleFormat', false, fmt);
+				editor.execCommand('mceToggleFormat', false, fmt);
 			}
 		}
 
-		Factory.add('styleselect', function(settings) {
-			return Factory.create('menubutton', Tools.extend({
-				text: 'Formats',
-				menu: formatMenu
-			}, settings));
+		editor.addButton('styleselect', {
+			type: 'menubutton',
+			text: 'Formats',
+			menu: formatMenu
 		});
 
-		Factory.add('formatselect', function(settings) {
+		editor.addButton('formatselect', function() {
 			var items = [], blocks = createFormats(editor.settings.block_formats ||
 				'Paragraph=p;' +
 				'Address=address;' +
@@ -554,16 +552,17 @@ define("tinymce/ui/FormatControls", [
 				});
 			});
 
-			return Factory.create('listbox', Tools.extend({
+			return {
+				type: 'listbox',
 				text: {raw: blocks[0][0]},
 				values: items,
 				fixedWidth: true,
 				onselect: toggleFormat,
 				onPostRender: createListBoxChangeHandler(items)
-			}, settings));
+			};
 		});
 
-		Factory.add('fontselect', function(settings) {
+		editor.addButton('fontselect', function() {
 			var defaultFontsFormats =
 				'Andale Mono=andale mono,times;' +
 				'Arial=arial,helvetica,sans-serif;' +
@@ -593,7 +592,8 @@ define("tinymce/ui/FormatControls", [
 				});
 			});
 
-			return Factory.create('listbox', Tools.extend({
+			return {
+				type: 'listbox',
 				text: 'Font Family',
 				tooltip: 'Font Family',
 				values: items,
@@ -601,13 +601,13 @@ define("tinymce/ui/FormatControls", [
 				onPostRender: createListBoxChangeHandler(items, 'fontname'),
 				onselect: function(e) {
 					if (e.control.settings.value) {
-						EditorManager.activeEditor.execCommand('FontName', false, e.control.settings.value);
+						editor.execCommand('FontName', false, e.control.settings.value);
 					}
 				}
-			}, settings));
+			};
 		});
 
-		Factory.add('fontsizeselect', function(settings) {
+		editor.addButton('fontsizeselect', function() {
 			var items = [], defaultFontsizeFormats = '8pt 10pt 12pt 14pt 18pt 24pt 36pt';
 			var fontsize_formats = editor.settings.fontsize_formats || defaultFontsizeFormats;
 
@@ -615,7 +615,8 @@ define("tinymce/ui/FormatControls", [
 				items.push({text: item, value: item});
 			});
 
-			return Factory.create('listbox', Tools.extend({
+			return {
+				type: 'listbox',
 				text: 'Font Sizes',
 				tooltip: 'Font Sizes',
 				values: items,
@@ -623,10 +624,10 @@ define("tinymce/ui/FormatControls", [
 				onPostRender: createListBoxChangeHandler(items, 'fontsize'),
 				onclick: function(e) {
 					if (e.control.settings.value) {
-						EditorManager.activeEditor.execCommand('FontSize', false, e.control.settings.value);
+						editor.execCommand('FontSize', false, e.control.settings.value);
 					}
 				}
-			}, settings));
+			};
 		});
 
 		editor.addMenuItem('formats', {

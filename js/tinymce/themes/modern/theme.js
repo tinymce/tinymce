@@ -110,8 +110,14 @@ tinymce.ThemeManager.add('modern', function(editor) {
 						}
 
 						if (editor.buttons[item]) {
+							// TODO: Move control creation to some UI class
 							itemName = item;
 							item = editor.buttons[itemName];
+
+							if (typeof(item) == "function") {
+								item = item();
+							}
+
 							item.type = item.type || 'button';
 
 							if (settings.toolbar_items_size) {
