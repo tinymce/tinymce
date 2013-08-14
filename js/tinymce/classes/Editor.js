@@ -74,7 +74,7 @@ define("tinymce/Editor", [
 	var extend = Tools.extend, each = Tools.each, explode = Tools.explode;
 	var inArray = Tools.inArray, trim = Tools.trim, resolve = Tools.resolve;
 	var Event = EventUtils.Event;
-	var isGecko = Env.gecko, isIE = Env.ie, isOpera = Env.opera;
+	var isGecko = Env.gecko, ie = Env.ie, isOpera = Env.opera;
 
 	function getEventTarget(editor, eventName) {
 		if (eventName == 'selectionchange' || eventName == 'drop') {
@@ -634,7 +634,7 @@ define("tinymce/Editor", [
 
 			// Domain relaxing enabled, then set document domain
 			// TODO: Fix this old stuff
-			if (self.editorManager.relaxedDomain && (isIE || (isOpera && parseFloat(window.opera.version()) < 11))) {
+			if (self.editorManager.relaxedDomain && (ie || (isOpera && parseFloat(window.opera.version()) < 11))) {
 				// We need to write the contents here in IE since multiple writes messes up refresh button and back button
 				url = 'javascript:(function(){document.open();document.domain="' + document.domain + '";' +
 					'var ed = window.parent.tinymce.get("' + self.id + '");document.write(ed.iframeHTML);' +
@@ -691,7 +691,7 @@ define("tinymce/Editor", [
 			}
 
 			// Setup iframe body
-			if ((!isIE || !self.editorManager.relaxedDomain) && !settings.content_editable) {
+			if ((!ie || !self.editorManager.relaxedDomain) && !settings.content_editable) {
 				doc.open();
 				doc.write(self.iframeHTML);
 				doc.close();
@@ -1167,7 +1167,7 @@ define("tinymce/Editor", [
 				// Get start node
 				root = self.getBody();
 				node = selection.getStart() || root;
-				node = isIE && node.ownerDocument != self.getDoc() ? self.getBody() : node; // Fix for IE initial state
+				node = ie && node.ownerDocument != self.getDoc() ? self.getBody() : node; // Fix for IE initial state
 
 				// Edge case for <p>|<img></p>
 				if (node.nodeName == 'IMG' && selection.isCollapsed()) {
@@ -1518,7 +1518,7 @@ define("tinymce/Editor", [
 			var self = this, doc = self.getDoc();
 
 			// Fixed bug where IE has a blinking cursor left from the editor
-			if (isIE && doc) {
+			if (ie && doc) {
 				doc.execCommand('SelectAll');
 			}
 
@@ -1686,13 +1686,13 @@ define("tinymce/Editor", [
 
 				// Check if forcedRootBlock is configured and that the block is a valid child of the body
 				if (forcedRootBlockName && self.schema.isValidChild(body.nodeName.toLowerCase(), forcedRootBlockName.toLowerCase())) {
-					if (isIE) {
+					if (ie && ie < 11) {
 						// IE renders BR elements in blocks so lets just add an empty block
 						content = '<' + forcedRootBlockName + '></' + forcedRootBlockName + '>';
 					} else {
 						content = '<' + forcedRootBlockName + '><br data-mce-bogus="1"></' + forcedRootBlockName + '>';
 					}
-				} else if (!isIE) {
+				} else if (!ie) {
 					// We need to add a BR when forced_root_block is disabled on non IE browsers to place the caret
 					content = '<br data-mce-bogus="1">';
 				}
@@ -2001,7 +2001,7 @@ define("tinymce/Editor", [
 				self.removed = 1; // Cancels post remove event execution
 
 				// Fixed bug where IE has a blinking cursor left from the editor
-				if (isIE && doc) {
+				if (ie && doc) {
 					doc.execCommand('SelectAll');
 				}
 
