@@ -47,7 +47,7 @@ define("tinymce/FocusManager", [
 
 			editor.on('init', function() {
 				// On IE take selection snapshot onbeforedeactivate
-				if ("onbeforedeactivate" in document) {
+				if ("onbeforedeactivate" in document && Env.ie < 11) {
 					editor.dom.bind(editor.getBody(), 'beforedeactivate', function() {
 						var ieSelection = editor.getDoc().selection;
 
@@ -61,6 +61,11 @@ define("tinymce/FocusManager", [
 					// On other browsers take snapshot on nodechange in inline mode since they have Ghost selections for iframes
 					editor.on('nodechange keyup', function() {
 						var isInBody, node = document.activeElement;
+
+						// IE 11 reports active element as iframe not body of iframe
+						if (node && node.id == editor.id + '_ifr') {
+							node = editor.getBody();
+						}
 
 						// Check if selection is within editor body
 						while (node) {
