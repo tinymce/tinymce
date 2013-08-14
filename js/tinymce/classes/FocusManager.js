@@ -38,6 +38,35 @@ define("tinymce/FocusManager", [
 			}
 		}
 
+		// We can't store a real range on IE 11 since it gets mutated so we need to use a bookmark object
+		// TODO: Move this to a separate range utils class since it's it's logic is present in Selection as well.
+		function createBookmark(rng) {
+			if (rng && rng.startContainer) {
+				return {
+					startContainer: rng.startContainer,
+					startOffset: rng.startOffset,
+					endContainer: rng.endContainer,
+					endOffset: rng.endOffset
+				};
+			}
+
+			return rng;
+		}
+
+		function bookmarkToRng(editor, bookmark) {
+			var rng;
+
+			if (bookmark.startContainer) {
+				rng = editor.getDoc().createRange();
+				rng.setStart(bookmark.startContainer, bookmark.startOffset);
+				rng.setEnd(bookmark.endContainer, bookmark.endOffset);
+			} else {
+				rng = bookmark;
+			}
+
+			return rng;
+		}
+
 		function registerEvents(e) {
 			var editor = e.editor, lastRng, selectionChangeHandler;
 
@@ -109,9 +138,9 @@ define("tinymce/FocusManager", [
 			editor.on('focusin', function() {
 				var focusedEditor = editorManager.focusedEditor;
 
-				if (editor.selection.restoreRng) {
-					editor.selection.setRng(editor.selection.restoreRng);
-					editor.selection.restoreRng = null;
+				if (editor.selection.lastFocusBookmark) {
+					editor.selection.setRng(bookmarkToRng(editor, editor.selection.lastFocusBookmark));
+					editor.selection.lastFocusBookmark = null;
 				}
 
 				if (focusedEditor != editor) {
@@ -127,21 +156,21 @@ define("tinymce/FocusManager", [
 			});
 
 			editor.on('focusout', function() {
-				editor.selection.restoreRng = lastRng;
+				editor.selection.lastFocusBookmark = createBookmark(lastRng);
 
 				window.setTimeout(function() {
 					var focusedEditor = editorManager.focusedEditor;
 
 					// Focus from editorA into editorB then don't restore selection
 					if (focusedEditor != editor) {
-						editor.selection.restoreRng = null;
+						editor.selection.lastFocusBookmark = null;
 					}
 
 					// Still the same editor the the blur was outside any editor UI
 					if (!isUIElement(getActiveElement()) && focusedEditor == editor) {
 						editor.fire('blur', {focusedEditor: null});
 						editorManager.focusedEditor = null;
-						editor.selection.restoreRng = null;
+						editor.selection.lastFocusBookmark = null;
 					}
 				}, 0);
 			});

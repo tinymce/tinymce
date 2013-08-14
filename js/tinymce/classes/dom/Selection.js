@@ -678,7 +678,7 @@ define("tinymce/dom/Selection", [
 			var self = this, dom = self.dom, rng = dom.createRng(), idx;
 
 			// Clear stored range set by FocusManager
-			self.restoreRng = null;
+			self.lastFocusBookmark = null;
 
 			function setPoint(node, start) {
 				var walker = new TreeWalker(node, node);
@@ -796,8 +796,19 @@ define("tinymce/dom/Selection", [
 
 			// Use last rng passed from FocusManager if it's available this enables
 			// calls to editor.selection.getStart() to work when caret focus is lost on IE
-			if (!w3c && self.restoreRng) {
-				return self.restoreRng;
+			if (!w3c && self.lastFocusBookmark) {
+				var bookmark = self.lastFocusBookmark;
+
+				// Convert bookmark to range IE 11 fix
+				if (bookmark.startContainer) {
+					rng = doc.createRange();
+					rng.setStart(bookmark.startContainer, bookmark.startOffset);
+					rng.setEnd(bookmark.endContainer, bookmark.endOffset);
+				} else {
+					rng = bookmark;
+				}
+
+				return rng;
 			}
 
 			// Found tridentSel object then we need to use that one
