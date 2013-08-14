@@ -57,7 +57,7 @@ define("tinymce/FocusManager", [
 							// IE throws "Unexcpected call to method or property access" some times so lets ignore it
 						}
 					});
-				} else if (editor.inline) {
+				} else if (editor.inline || Env.ie > 10) {
 					// On other browsers take snapshot on nodechange in inline mode since they have Ghost selections for iframes
 					editor.on('nodechange keyup', function() {
 						var isInBody, node = document.activeElement;

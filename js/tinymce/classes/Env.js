@@ -18,12 +18,14 @@
  */
 define("tinymce/Env", [], function() {
 	var nav = navigator, userAgent = nav.userAgent;
-	var opera, webkit, ie, gecko, mac, iDevice;
+	var opera, webkit, ie, ie11, gecko, mac, iDevice;
 
 	opera = window.opera && window.opera.buildNumber;
 	webkit = /WebKit/.test(userAgent);
 	ie = !webkit && !opera && (/MSIE/gi).test(userAgent) && (/Explorer/gi).test(nav.appName);
 	ie = ie && /MSIE (\w+)\./.exec(userAgent)[1];
+	ie11 = userAgent.indexOf('Trident') != -1 ? 11 : false;
+	ie = ie || ie11;
 	gecko = !webkit && /Gecko/.test(userAgent);
 	mac = userAgent.indexOf('Mac') != -1;
 	iDevice = /(iPad|iPhone)/.test(userAgent);

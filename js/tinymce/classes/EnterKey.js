@@ -15,7 +15,7 @@ define("tinymce/EnterKey", [
 	"tinymce/dom/TreeWalker",
 	"tinymce/Env"
 ], function(TreeWalker, Env) {
-	var isIE = Env.ie;
+	var isIE = Env.ie && Env.ie < 11;
 
 	return function(editor) {
 		var dom = editor.dom, selection = editor.selection, settings = editor.settings;

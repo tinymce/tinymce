@@ -923,7 +923,7 @@ define("tinymce/util/Quirks", [
 		}
 
 		// IE
-		if (isIE) {
+		if (isIE && Env.ie < 11) {
 			removeHrOnBackspace();
 			ensureBodyHasRoleApplication();
 			addNewLinesBeforeBrInPre();
