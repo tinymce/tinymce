@@ -68,7 +68,10 @@ tinymce.PluginManager.add('template', function(editor) {
 			}
 		});
 
-		win.find('listbox')[0].fire('select');
+		setTimeout(function(){
+		    win.find('listbox')[0].fire('select');
+		}, 450);
+		
 	}
 
 	function getDateTime(fmt, date) {
