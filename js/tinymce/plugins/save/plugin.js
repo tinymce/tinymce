@@ -67,7 +67,7 @@ tinymce.PluginManager.add('save', function(editor) {
 		var self = this;
 
 		editor.on('nodeChange', function() {
-			self.disabled(!editor.isDirty());
+			self.disabled(editor.getParam("save_enablewhendirty") && !editor.isDirty());
 		});
 	}
 
