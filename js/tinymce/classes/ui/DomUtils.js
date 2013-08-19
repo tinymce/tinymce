@@ -73,6 +73,11 @@ define("tinymce/ui/DomUtils", [
 
 		fire: function(target, name, args) {
 			return DOMUtils.DOM.fire(target, name, args);
+		},
+
+		innerHtml: function(elm, html) {
+			// Workaround for <div> in <p> bug on IE 8 #6178
+			DOMUtils.DOM.setHTML(elm, html);
 		}
 	};
 });

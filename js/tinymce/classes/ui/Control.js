@@ -887,6 +887,18 @@ define("tinymce/ui/Control", [
 		},
 
 		/**
+		 * Sets the inner HTML of the control element.
+		 *
+		 * @method innerHtml
+		 * @param {String} html Html string to set as inner html.
+		 * @return {tinymce.ui.Control} Current control object.
+		 */
+		innerHtml: function(html) {
+			DomUtils.innerHtml(this.getEl(), html);
+			return this;
+		},
+
+		/**
 		 * Returns the control DOM element or sub element.
 		 *
 		 * @method getEl

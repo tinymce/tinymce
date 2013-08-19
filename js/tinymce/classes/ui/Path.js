@@ -93,7 +93,7 @@ define("tinymce/ui/Path", [
 		 * @private
 		 */
 		update: function() {
-			this.getEl().innerHTML = this._getPathHtml();
+			this.innerHtml(this._getPathHtml());
 		},
 
 		/**

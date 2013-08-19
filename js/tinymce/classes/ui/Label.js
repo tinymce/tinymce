@@ -118,7 +118,7 @@ define("tinymce/ui/Label", [
 			var self = this;
 
 			if (self._rendered && text) {
-				self.getEl().innerHTML = self.encode(text);
+				this.innerHtml(self.encode(text));
 			}
 
 			return self._super(text);
