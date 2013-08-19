@@ -163,18 +163,18 @@ define("tinymce/dom/ControlSelection", [
 		}
 
 		function showResizeRect(targetElm, mouseDownHandleName, mouseDownEvent) {
-			var position, targetWidth, targetHeight, e, rect, offsetParentPos = {x: 0, y: 0};
+			var position, targetWidth, targetHeight, e, rect;
 
 			// Fix when inline element is within a relaive container
 			var offsetParent = editor.getBody().offsetParent;
-			if (offsetParent && offsetParent.nodeName != 'BODY') {
-				offsetParentPos = dom.getPos(offsetParent, editor.getBody());
+			if (!offsetParent) {
+				offsetParent = editor.getBody();
 			}
 
 			// Get position and size of target
-			position = dom.getPos(targetElm, editor.getBody());
-			selectedElmX = position.x - offsetParentPos.x;
-			selectedElmY = position.y - offsetParentPos.y;
+			position = dom.getPos(targetElm, offsetParent);
+			selectedElmX = position.x;
+			selectedElmY = position.y;
 			rect = targetElm.getBoundingClientRect(); // Fix for Gecko offsetHeight for table with caption
 			targetWidth = rect.width || (rect.right - rect.left);
 			targetHeight = rect.height || (rect.bottom - rect.top);
