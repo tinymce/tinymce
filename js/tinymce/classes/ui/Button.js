@@ -13,7 +13,7 @@
  *
  * @example
  * // Create and render a button to the body element
- * tinymce.ui.Factory({
+ * tinymce.ui.Factory.create({
  *     type: 'button',
  *     text: 'My button'
  * }).renderTo(document.body);

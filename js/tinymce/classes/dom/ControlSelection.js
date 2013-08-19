@@ -166,10 +166,7 @@ define("tinymce/dom/ControlSelection", [
 			var position, targetWidth, targetHeight, e, rect;
 
 			// Fix when inline element is within a relaive container
-			var offsetParent = editor.getBody().offsetParent;
-			if (!offsetParent) {
-				offsetParent = editor.getBody();
-			}
+			var offsetParent = editor.getBody().offsetParent || editor.getBody();
 
 			// Get position and size of target
 			position = dom.getPos(targetElm, offsetParent);

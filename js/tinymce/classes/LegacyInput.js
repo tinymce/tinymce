@@ -15,10 +15,10 @@ define("tinymce/LegacyInput", [
 	var each = Tools.each, explode = Tools.explode;
 
 	EditorManager.on('AddEditor', function(e) {
-		var ed = e.editor;
+		var editor = e.editor;
 
-		ed.on('preInit', function() {
-			var filters, fontSizes, dom, settings = ed.settings;
+		editor.on('preInit', function() {
+			var filters, fontSizes, dom, settings = editor.settings;
 
 			function replaceWithSpan(node, styles) {
 				each(styles, function(value, name) {
@@ -31,7 +31,7 @@ define("tinymce/LegacyInput", [
 			}
 
 			function convert(e) {
-				dom = ed.dom;
+				dom = editor.dom;
 
 				if (settings.convert_fonts_to_spans) {
 					each(dom.select('font,u,strike', e.node), function(node) {
@@ -66,7 +66,7 @@ define("tinymce/LegacyInput", [
 					}
 				};
 
-				ed.on('PreProcess SetContent', convert);
+				editor.on('PreProcess SetContent', convert);
 			}
 		});
 	});

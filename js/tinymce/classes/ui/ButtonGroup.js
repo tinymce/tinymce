@@ -14,7 +14,7 @@
  *
  * @example
  * // Create and render a buttongroup with two buttons to the body element
- * tinymce.ui.Factory({
+ * tinymce.ui.Factory.create({
  *     type: 'buttongroup',
  *     items: [
  *         {text: 'Button A'},
