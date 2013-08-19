@@ -660,6 +660,50 @@ test('Remove UL with multiple LI in BR mode', function() {
 	equal(editor.selection.getStart().nodeName, 'BODY');
 });
 
+test('Remove empty UL between two textblocks', function() {
+	editor.getBody().innerHTML = trimBrs(
+		'<div>a</div>' +
+		'<ul>' +
+			'<li></li>' +
+		'</ul>' +
+		'<div>b</div>'
+	);
+
+	editor.focus();
+	setSelection('li:first', 0);
+	editor.execCommand('InsertUnorderedList');
+
+	equal(editor.getContent(), 
+		'<div>a</div>' +
+		'<p>\u00a0</p>' +
+		'<div>b</div>'
+	);
+	equal(editor.selection.getNode().nodeName, 'P');
+});
+
+test('Remove empty UL between two textblocks in BR mode', function() {
+	editor.settings.forced_root_block = false;
+
+	editor.getBody().innerHTML = trimBrs(
+		'<div>a</div>' +
+		'<ul>' +
+			'<li></li>' +
+		'</ul>' +
+		'<div>b</div>'
+	);
+
+	editor.focus();
+	setSelection('li:first', 0);
+	editor.execCommand('InsertUnorderedList');
+
+	equal(editor.getContent(), 
+		'<div>a</div>' +
+		'<br />' +
+		'<div>b</div>'
+	);
+	equal(editor.selection.getStart().nodeName, 'BR');
+});
+
 test('Outdent inside LI in beginning of OL in LI', function() {
 	editor.getBody().innerHTML = trimBrs(
 		'<ol>' +
@@ -1383,5 +1427,6 @@ tinymce.init({
 	<h2 id="qunit-userAgent"></h2>
 	<ol id="qunit-tests"></ol>
 	<textarea id="elm1" name="elm1"></textarea>
+	<a href="javascript:;" onclick="alert(tinymce.get('elm1').getContent({format: 'raw'}));return false;">[Get raw]</a>
 </body>
 </html>

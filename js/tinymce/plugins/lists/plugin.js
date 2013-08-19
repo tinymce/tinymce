@@ -55,7 +55,10 @@ tinymce.PluginManager.add('lists', function(editor) {
 			}
 
 			setupEndPoint(true);
-			setupEndPoint();
+
+			if (!rng.collapsed) {
+				setupEndPoint();
+			}
 
 			return bookmark;
 		}
@@ -91,13 +94,38 @@ tinymce.PluginManager.add('lists', function(editor) {
 				container = node = bookmark[start ? 'startContainer' : 'endContainer'];
 				offset = bookmark[start ? 'startOffset' : 'endOffset'];
 
+				if (!container) {
+					return;
+				}
+
 				if (container.nodeType == 1) {
-					if (start) {
-						offset = nodeIndex(container);
-						container = container.parentNode;
+					if (container.parentNode == editor.getBody()) {
+						// TODO: Move the create block or br to some global class possible ForceBlocks.js
+						var block, forcedRootBlock = editor.settings.forced_root_block;
+
+						if (forcedRootBlock) {
+							block = dom.create(forcedRootBlock);
+							if (!tinymce.Env.ie || tinymce.Env.ie > 10) {
+								block.appendChild(dom.create('br', {'data-mce-bogus': 'true'}));
+							}
+
+							container.parentNode.insertBefore(block, container);
+							container = block;
+							offset = 0;
+						} else {
+							block = dom.create('br');
+							container.parentNode.insertBefore(block, container);
+							container = container.parentNode;
+							offset = nodeIndex(block);
+						}
 					} else {
-						offset = nodeIndex(container);
-						container = container.parentNode;
+						if (start) {
+							offset = nodeIndex(container);
+							container = container.parentNode;
+						} else {
+							offset = nodeIndex(container);
+							container = container.parentNode;
+						}
 					}
 
 					dom.remove(node);
@@ -113,7 +141,10 @@ tinymce.PluginManager.add('lists', function(editor) {
 			var rng = dom.createRng();
 
 			rng.setStart(bookmark.startContainer, bookmark.startOffset);
-			rng.setEnd(bookmark.endContainer, bookmark.endOffset);
+
+			if (bookmark.endContainer) {
+				rng.setEnd(bookmark.endContainer, bookmark.endOffset);
+			}
 
 			selection.setRng(rng);
 		}
@@ -158,7 +189,7 @@ tinymce.PluginManager.add('lists', function(editor) {
 			}
 
 			// BR is needed in empty blocks on non IE browsers
-			if (!textBlock.hasChildNodes() && !tinymce.isIE) {
+			if (!textBlock.hasChildNodes() && (!tinymce.Env.ie || tinymce.Env.ie > 10)) {
 				textBlock.innerHTML = '<br data-mce-bogus="1">';
 			}
 
@@ -178,6 +209,8 @@ tinymce.PluginManager.add('lists', function(editor) {
 		function splitList(ul, li, newBlock) {
 			var tmpRng, fragment;
 
+			var bookmarks = dom.select('span[data-mce-type="bookmark"]', ul);
+
 			newBlock = newBlock || createNewTextBlock(li);
 			tmpRng = dom.createRng();
 			tmpRng.setStartAfter(li);
@@ -193,6 +226,10 @@ tinymce.PluginManager.add('lists', function(editor) {
 			}
 
 			if (dom.isEmpty(li.parentNode)) {
+				tinymce.each(bookmarks, function(node) {
+					li.parentNode.parentNode.insertBefore(node, li.parentNode);
+				});
+
 				dom.remove(li.parentNode);
 			}
 
