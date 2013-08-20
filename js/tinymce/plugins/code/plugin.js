@@ -24,7 +24,10 @@ tinymce.PluginManager.add('code', function(editor) {
 				spellcheck: false
 			},
 			onSubmit: function(e) {
-				editor.setContent(e.data.code);
+				editor.undoManager.transact(function() {
+					editor.setContent(e.data.code);
+				});
+	
 				editor.nodeChanged();
 			}
 		});

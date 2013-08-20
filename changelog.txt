@@ -6,6 +6,7 @@ Version 4.0.4 (2013-08-xx)
 	Fixed bug where IE 10 wouldn't properly initialize template dialog due to async loading issues.
 	Fixed bug where autosave wouldn't properly display the warning about content not being saved due to isDirty changes.
 	Fixed bug where it wouldn't be possible to type if a touchstart event was bound to the parent document.
+	Fixed bug where code dialog in code plugin wouldn't wouldn't add a proper undo level.
 	Fixed so an initial change event is fired when the user types the first character into the editor.
 Version 4.0.3 (2013-08-08)
 	Added new code_dialog_width/code_dialog_height options to control code dialog size.
