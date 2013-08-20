@@ -315,13 +315,16 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		containerSize = getSize(containerElm);
 		iframeSize = getSize(iframeElm);
 
-		width = Math.max(settings.min_width || 100, width);
-		height = Math.max(settings.min_height || 100, height);
-		width = Math.min(settings.max_width || 0xFFFF, width);
-		height = Math.min(settings.max_height || 0xFFFF, height);
+		if (width !== null) {
+			width = Math.max(settings.min_width || 100, width);
+			width = Math.min(settings.max_width || 0xFFFF, width);
 
-		DOM.css(containerElm, 'width', width + (containerSize.width - iframeSize.width));
-		DOM.css(iframeElm, 'width', width);
+			DOM.css(containerElm, 'width', width + (containerSize.width - iframeSize.width));
+			DOM.css(iframeElm, 'width', width);
+		}
+
+		height = Math.max(settings.min_height || 100, height);
+		height = Math.min(settings.max_height || 0xFFFF, height);
 		DOM.css(iframeElm, 'height', height);
 
 		editor.fire('ResizeEditor');
@@ -461,7 +464,11 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				},
 
 				onResize: function(e) {
-					resizeTo(startSize.width + e.deltaX, startSize.height + e.deltaY);
+					if (settings.resize == 'both') {
+						resizeTo(startSize.width + e.deltaX, startSize.height + e.deltaY);
+					} else {
+						resizeTo(null, startSize.height + e.deltaY);
+					}
 				}
 			};
 		}
