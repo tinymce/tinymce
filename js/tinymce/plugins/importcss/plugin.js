@@ -48,18 +48,16 @@ tinymce.PluginManager.add('importcss', function(editor) {
 	function convertSelectorToFormat(selectorText) {
 		// Parse simple element.class1, .class1
 		var selector = /(?:([\w\-]+))?(\.[\w\-\.]+)/.exec(selectorText);
-		if (!selector || selector[2].indexOf('.mce-') !== -1) {
+		if (!selector) {
 			return;
 		}
 
-		var formatName = tinymce.DOM.uniqueId();
 		var elementName = selector[1];
 		var classes = selector[2].substr(1).split('.').join(' ');
 
 		// element.class - Produce block formats
 		if (selector[1]) {
 			var format = {
-				name: formatName,
 				title: selectorText,
 				classes: classes
 			};
@@ -82,7 +80,6 @@ tinymce.PluginManager.add('importcss', function(editor) {
 		if (selector[2]) {
 			return {
 				inline: 'span',
-				name: formatName,
 				title: selectorText.substr(1),
 				classes: classes
 			};
@@ -95,15 +92,22 @@ tinymce.PluginManager.add('importcss', function(editor) {
 		}
 
 		editor.on('renderFormatsMenu', function(e) {
-			each(getSelectors(editor.getDoc()), function(selector) {
-				var format = convertSelectorToFormat(selector);
+			var selectorConverter = editor.settings.importcss_selector_converter || convertSelectorToFormat;
 
-				if (format) {
-					editor.formatter.register(format.name, format);
-					e.control.append(tinymce.extend({}, e.control.settings.itemDefaults, {
-						text: format.title,
-						format: format.name
-					}));
+			each(getSelectors(editor.getDoc()), function(selector) {
+				if (selector.indexOf('.mce-') === -1) {
+					var format = selectorConverter(selector);
+
+					if (format) {
+						var formatName = format.name || tinymce.DOM.uniqueId();
+
+						editor.formatter.register(formatName, format);
+
+						e.control.append(tinymce.extend({}, e.control.settings.itemDefaults, {
+							text: format.title,
+							format: formatName
+						}));
+					}
 				}
 			});
 		});
