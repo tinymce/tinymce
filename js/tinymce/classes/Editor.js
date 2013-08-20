@@ -367,7 +367,6 @@ define("tinymce/Editor", [
 				self.on('submit', function() {
 					if (self.initialized) {
 						self.save();
-						self.isNotDirty = true;
 					}
 				});
 			}
@@ -375,7 +374,7 @@ define("tinymce/Editor", [
 			if (settings.add_unload_trigger) {
 				self._beforeUnload = function() {
 					if (self.initialized && !self.destroyed && !self.isHidden()) {
-						self.save({format: 'raw', no_events: true});
+						self.save({format: 'raw', no_events: true, set_dirty: false});
 					}
 				};
 
@@ -1637,7 +1636,10 @@ define("tinymce/Editor", [
 			}
 
 			args.element = elm = null;
-			self.isNotDirty = true;
+
+			if (args.set_dirty !== false) {
+				self.isNotDirty = true;
+			}
 
 			return html;
 		},

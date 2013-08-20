@@ -90,6 +90,11 @@ define("tinymce/UndoManager", [
 				// Make the it dirty if the content was changed after typing the first character
 				if (!editor.isDirty()) {
 					editor.isNotDirty = !data[0] || getContent() == data[0].content;
+
+					// Fire initial change event
+					if (!editor.isNotDirty) {
+						editor.fire('change', {level: data[0], lastLevel: null});
+					}
 				}
 
 				editor.fire('TypingUndo');

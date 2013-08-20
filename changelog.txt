@@ -4,6 +4,8 @@ Version 4.0.4 (2013-08-xx)
 	Fixed bug where IE 8 would throw Unknown runtime error if the editor was placed within a P tag.
 	Fixed bug where removing empty lists wouldn't produce blocks or brs where the old list was in the DOM.
 	Fixed bug where IE 10 wouldn't properly initialize template dialog due to async loading issues.
+	Fixed bug where autosave wouldn't properly display the warning about content not being saved due to isDirty changes.
+	Fixed so an initial change event is fired when the user types the first character into the editor.
 Version 4.0.3 (2013-08-08)
 	Added new code_dialog_width/code_dialog_height options to control code dialog size.
 	Added missing pastetext button that works the same way as the pastetext menu item.
