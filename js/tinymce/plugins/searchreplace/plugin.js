@@ -350,6 +350,8 @@
 				shortcut: 'Ctrl+F',
 				onclick: showDialog
 			});
+			
+			ed.addCommand("SearchReplace", showDialog);
 
 			ed.shortcuts.add('Ctrl+F', '', showDialog);
 		};
