@@ -142,7 +142,9 @@ define("tinymce/html/DomParser", [
 							continue;
 						}
 
-						node.wrap(self.filterNode(new Node('ul', 1)));
+						if (!settings.prevent_list_wrap) {
+							node.wrap(self.filterNode(new Node('ul', 1)));
+						}
 						continue;
 					}
 

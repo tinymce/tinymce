@@ -276,6 +276,18 @@ define("tinymce/dom/Serializer", [
 			 */
 			addAttributeFilter: htmlParser.addAttributeFilter,
 
+			serialize_without_validation: function(node, args) {
+				var htmlSerializer = new Serializer(settings, schema); // HTML serializer, NOT this one!
+				var body = node.cloneNode(true);
+
+				var parsedHTML = htmlParser.parse(body.innerHTML, args); // domSerializer parser
+				args.content = htmlSerializer.serialize(parsedHTML);
+
+				body = null;
+
+				return args.content;
+			},
+
 			/**
 			 * Serializes the specified browser DOM node into a HTML string.
 			 *

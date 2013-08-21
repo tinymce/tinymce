@@ -1812,6 +1812,8 @@ define("tinymce/Editor", [
 				content = body.innerHTML;
 			} else if (args.format == 'text') {
 				content = body.innerText || body.textContent;
+			} else if (args.format == 'unvalidated_html') {
+				content = self.serializer.serialize_without_validation(body, args);
 			} else {
 				content = self.serializer.serialize(body, args);
 			}
