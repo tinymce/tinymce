@@ -40,6 +40,10 @@ tinymce.PluginManager.add('media', function(editor, url) {
 			return 'video/ogg';
 		}
 
+		if (url.indexOf('.swf') != -1) {
+			return 'application/x-shockwave-flash';
+		}
+
 		return '';
 	}
 
@@ -195,6 +199,14 @@ tinymce.PluginManager.add('media', function(editor, url) {
 
 			if (data.type == "iframe") {
 				html += '<iframe src="' + data.source1 + '" width="' + data.width + '" height="' + data.height + '"></iframe>';
+			} else if (data.source1mime == "application/x-shockwave-flash") {
+				html += '<object data="' + data.source1 + '" width="' + data.width + '" height="' + data.height + '" type="application/x-shockwave-flash">';
+
+				if (data.poster) {
+					html += '<img src="' + data.poster + '" width="' + data.width + '" height="' + data.height + '" />';
+				}
+
+				html += '</object>';
 			} else if (data.source1mime.indexOf('audio') != -1) {
 				if (editor.settings.audio_template_callback) {
 					html = editor.settings.audio_template_callback(data);
@@ -244,6 +256,10 @@ tinymce.PluginManager.add('media', function(editor, url) {
 						data.source2 = attrs.map.src;
 					}
 				}
+
+				if (name == "img" && !data.poster) {
+					data.poster = attrs.map.src;
+				}
 			}
 		}).parse(html);
 
@@ -264,7 +280,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 
 	function updateHtml(html, data, updateAll) {
 		var writer = new tinymce.html.Writer();
-		var sourceCount = 0;
+		var sourceCount = 0, hasImage;
 
 		function setAttributes(attrs, updatedAttrs) {
 			var name, i, value, attr;
@@ -362,6 +378,14 @@ tinymce.PluginManager.add('media', function(editor, url) {
 								}
 							}
 						break;
+
+						case "img":
+							if (!data.poster) {
+								return;
+							}
+
+							hasImage = true;
+							break;
 					}
 				}
 
@@ -385,6 +409,19 @@ tinymce.PluginManager.add('media', function(editor, url) {
 							}
 						}
 					}
+				}
+
+				if (data.poster && name == "object" && updateAll && !hasImage) {
+					var imgAttrs = [];
+					imgAttrs.map = {};
+
+					setAttributes(imgAttrs, {
+						src: data.poster,
+						width: data.width,
+						height: data.height
+					});
+
+					writer.start("img", imgAttrs, true);
 				}
 
 				writer.end(name);
