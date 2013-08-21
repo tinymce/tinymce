@@ -32,6 +32,8 @@ tinymce.PluginManager.add('code', function(editor) {
 			}
 		});
 	}
+	
+	this.showSourceEditor = showSourceEditor;
 
 	editor.addButton('code', {
 		icon: 'code',
