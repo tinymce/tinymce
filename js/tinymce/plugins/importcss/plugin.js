@@ -46,6 +46,8 @@ tinymce.PluginManager.add('importcss', function(editor) {
 	}
 
 	function convertSelectorToFormat(selectorText) {
+		var format;
+
 		// Parse simple element.class1, .class1
 		var selector = /(?:([\w\-]+))?(\.[\w\-\.]+)/.exec(selectorText);
 		if (!selector) {
@@ -57,9 +59,8 @@ tinymce.PluginManager.add('importcss', function(editor) {
 
 		// element.class - Produce block formats
 		if (selector[1]) {
-			var format = {
-				title: selectorText,
-				classes: classes
+			format = {
+				title: selectorText
 			};
 
 			if (editor.schema.getTextBlockElements()[elementName]) {
@@ -72,18 +73,23 @@ tinymce.PluginManager.add('importcss', function(editor) {
 				// Inline format strong.class1
 				format.inline = elementName;
 			}
-
-			return format;
-		}
-
-		// .class - Produce inline span with classes
-		if (selector[2]) {
-			return {
+		} else if (selector[2]) {
+			// .class - Produce inline span with classes
+			format = {
 				inline: 'span',
 				title: selectorText.substr(1),
 				classes: classes
 			};
 		}
+
+		// Append to or override class attribute
+		if (editor.settings.importcss_merge_classes !== false) {
+			format.classes = classes;
+		} else {
+			format.attributes = {"class": classes};
+		}
+
+		return format;
 	}
 
 	if (!editor.settings.style_formats) {
