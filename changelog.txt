@@ -8,6 +8,7 @@ Version 4.0.4 (2013-08-xx)
 	Fixed bug where it wouldn't be possible to type if a touchstart event was bound to the parent document.
 	Fixed bug where code dialog in code plugin wouldn't wouldn't add a proper undo level.
 	Fixed issue where resizing the editor in vertical mode would set the iframe width to a pixel value.
+	Fixed issue with naming of insertdatetime settings. All are now prefixed with the plugin name.
 	Fixed so an initial change event is fired when the user types the first character into the editor.
 Version 4.0.3 (2013-08-08)
 	Added new code_dialog_width/code_dialog_height options to control code dialog size.

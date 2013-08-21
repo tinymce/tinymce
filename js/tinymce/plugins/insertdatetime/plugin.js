@@ -77,11 +77,11 @@ tinymce.PluginManager.add('insertdatetime', function(editor) {
 	}
 
 	editor.addCommand('mceInsertDate', function() {
-		insertDateTime(editor.getParam("insertdate_dateformat", editor.translate("%Y-%m-%d")));
+		insertDateTime(editor.getParam("insertdatetime_dateformat", editor.translate("%Y-%m-%d")));
 	});
 
 	editor.addCommand('mceInsertTime', function() {
-		insertDateTime(editor.getParam("insertdate_timeformat", editor.translate('%H:%M:%S')));
+		insertDateTime(editor.getParam("insertdatetime_timeformat", editor.translate('%H:%M:%S')));
 	});
 
 	editor.addButton('inserttime', {
@@ -93,7 +93,7 @@ tinymce.PluginManager.add('insertdatetime', function(editor) {
 		menu: menuItems
 	});
 
-	tinymce.each(editor.settings.insertdate_formats || [
+	tinymce.each(editor.settings.insertdatetime_formats || [
 		"%H:%M:%S",
 		"%Y-%m-%d",
 		"%I:%M:%S %p",
