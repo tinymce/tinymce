@@ -143,7 +143,7 @@ tinymce.PluginManager.add('image', function(editor) {
 			if (!imgElm) {
 				editor.undoManager.transact(function() {
 					data.id = '__mcenew';
-					editor.insertContent(dom.createHTML('img', data));
+					editor.selection.setContent(dom.createHTML('img', data));
 					imgElm = dom.get('__mcenew');
 					dom.setAttrib(imgElm, 'id', null);
 				});
