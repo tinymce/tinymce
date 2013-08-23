@@ -1,4 +1,5 @@
 Version 4.0.5 (2013-xx-xx)
+	Added visuals for UL, LI and BR to visualblocks plugin. Patch contributed by Dan Ransom.
 	Fixed bug where an exception was thrown when inserting images if valid_elements didn't include an ID for the image.
 	Fixed bug where the advlist plugin wouldn't properly render the splitbutton controls.
 Version 4.0.4 (2013-08-21)
