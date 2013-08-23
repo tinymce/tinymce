@@ -93,12 +93,12 @@ tinymce.PluginManager.add('importcss', function(editor) {
 	}
 
 	if (!editor.settings.style_formats) {
-		if (!editor.settings.importcss_append) {
-			editor.settings.style_formats = {};
-		}
-
 		editor.on('renderFormatsMenu', function(e) {
 			var selectorConverter = editor.settings.importcss_selector_converter || convertSelectorToFormat;
+
+			if (!editor.settings.importcss_append) {
+				e.control.items().remove();
+			}
 
 			each(getSelectors(editor.getDoc()), function(selector) {
 				if (selector.indexOf('.mce-') === -1) {

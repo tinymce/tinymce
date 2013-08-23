@@ -25,9 +25,7 @@ define("tinymce/ui/FormatControls", [
 	var each = Tools.each;
 
 	EditorManager.on('AddEditor', function(e) {
-		e.editor.on('BeforeRenderUI', function() {
-			registerControls(this);
-		});
+		registerControls(e.editor);
 	});
 
 	Control.translate = function(text) {
