@@ -11,7 +11,7 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('code', function(editor) {
-	function showSourceEditor() {
+	function showDialog() {
 		editor.windowManager.open({
 			title: "Source code",
 			body: {
@@ -33,16 +33,18 @@ tinymce.PluginManager.add('code', function(editor) {
 		});
 	}
 
+	editor.addCommand("mceCodeEditor", showDialog);
+
 	editor.addButton('code', {
 		icon: 'code',
 		tooltip: 'Source code',
-		onclick: showSourceEditor
+		onclick: showDialog
 	});
 
 	editor.addMenuItem('code', {
 		icon: 'code',
 		text: 'Source code',
 		context: 'tools',
-		onclick: showSourceEditor
+		onclick: showDialog
 	});
 });
