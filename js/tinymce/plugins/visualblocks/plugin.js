@@ -21,6 +21,8 @@ tinymce.PluginManager.add('visualblocks', function(editor, url) {
 	function toggleActiveState() {
 		var self = this;
 
+		self.active(enabled);
+
 		editor.on('VisualBlocks', function() {
 			self.active(editor.dom.hasClass(editor.getBody(), 'mce-visualblocks'));
 		});

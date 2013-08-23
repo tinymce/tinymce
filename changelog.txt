@@ -2,6 +2,7 @@ Version 4.0.5 (2013-xx-xx)
 	Added visuals for UL, LI and BR to visualblocks plugin. Patch contributed by Dan Ransom.
 	Fixed bug where an exception was thrown when inserting images if valid_elements didn't include an ID for the image.
 	Fixed bug where the advlist plugin wouldn't properly render the splitbutton controls.
+	Fixed bug where visual blocks menu item wouldn't be marked checked when using the visualblocks_default_state option.
 	Fixed issue where custom_elements would not remove the some of the default rules when cloning rules from div and span.
 Version 4.0.4 (2013-08-21)
 	Added new importcss plugin. Lets you auto import classes from CSS files similar to the 3.x behavior.
