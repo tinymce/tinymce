@@ -16,16 +16,18 @@ tinymce.PluginManager.add('importcss', function(editor) {
 	function getSelectors(doc) {
 		var selectors = [], contentCSSUrls = {};
 
-		function append(styleSheet) {
-			if (!contentCSSUrls[styleSheet.href]) {
+		function append(styleSheet, imported) {
+			if (!imported && !contentCSSUrls[styleSheet.href]) {
 				return;
 			}
 
-			each(styleSheet.imports, append);
+			each(styleSheet.imports, function(styleSheet) {
+				append(styleSheet, true);
+			});
 
 			each(styleSheet.cssRules || styleSheet.rules, function(cssRule) {
 				if (cssRule.styleSheet) {
-					append(cssRule.styleSheet);
+					append(cssRule.styleSheet, true);
 				} else if (cssRule.selectorText) {
 					each(cssRule.selectorText.split(','), function(selector) {
 						selectors.push(tinymce.trim(selector));
@@ -49,7 +51,7 @@ tinymce.PluginManager.add('importcss', function(editor) {
 		var format;
 
 		// Parse simple element.class1, .class1
-		var selector = /(?:([\w\-]+))?(\.[\w\-\.]+)/.exec(selectorText);
+		var selector = /^(?:([a-z0-9\-_]+))?(\.[a-z0-9_\-\.]+)$/i.exec(selectorText);
 		if (!selector) {
 			return;
 		}
@@ -95,6 +97,7 @@ tinymce.PluginManager.add('importcss', function(editor) {
 	if (!editor.settings.style_formats) {
 		editor.on('renderFormatsMenu', function(e) {
 			var selectorConverter = editor.settings.importcss_selector_converter || convertSelectorToFormat;
+			var selectors = {};
 
 			if (!editor.settings.importcss_append) {
 				e.control.items().remove();
@@ -102,17 +105,21 @@ tinymce.PluginManager.add('importcss', function(editor) {
 
 			each(getSelectors(editor.getDoc()), function(selector) {
 				if (selector.indexOf('.mce-') === -1) {
-					var format = selectorConverter(selector);
+					if (!selectors[selector]) {
+						var format = selectorConverter(selector);
 
-					if (format) {
-						var formatName = format.name || tinymce.DOM.uniqueId();
+						if (format) {
+							var formatName = format.name || tinymce.DOM.uniqueId();
 
-						editor.formatter.register(formatName, format);
+							editor.formatter.register(formatName, format);
 
-						e.control.append(tinymce.extend({}, e.control.settings.itemDefaults, {
-							text: format.title,
-							format: formatName
-						}));
+							e.control.append(tinymce.extend({}, e.control.settings.itemDefaults, {
+								text: format.title,
+								format: formatName
+							}));
+						}
+
+						selectors[selector] = true;
 					}
 				}
 			});
