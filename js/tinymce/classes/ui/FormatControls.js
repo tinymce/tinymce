@@ -542,7 +542,7 @@ define("tinymce/ui/FormatControls", [
 
 			each(blocks, function(block) {
 				items.push({
-					text: {raw: block[0]},
+					text: block[0],
 					value: block[1],
 					textStyle: function() {
 						return getPreviewCss(block[1]);
