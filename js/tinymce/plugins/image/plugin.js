@@ -140,18 +140,27 @@ tinymce.PluginManager.add('image', function(editor) {
 				style: data.style
 			};
 
-			if (!imgElm) {
-				editor.undoManager.transact(function() {
+			editor.undoManager.transact(function() {
+				if (!data.src) {
+					if (imgElm) {
+						dom.remove(imgElm);
+						editor.nodeChanged();
+					}
+
+					return;
+				}
+
+				if (!imgElm) {
 					data.id = '__mcenew';
 					editor.selection.setContent(dom.createHTML('img', data));
 					imgElm = dom.get('__mcenew');
 					dom.setAttrib(imgElm, 'id', null);
-				});
-			} else {
-				dom.setAttribs(imgElm, data);
-			}
+				} else {
+					dom.setAttribs(imgElm, data);
+				}
 
-			waitLoad(imgElm);
+				waitLoad(imgElm);
+			});
 		}
 
 		function removePixelSuffix(value) {

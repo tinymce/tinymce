@@ -4,6 +4,9 @@ Version 4.0.5 (2013-xx-xx)
 	Fixed bug where the advlist plugin wouldn't properly render the splitbutton controls.
 	Fixed bug where visual blocks menu item wouldn't be marked checked when using the visualblocks_default_state option.
 	Fixed bug where save button in save plugin wouldn't get properly enabled when contents was changed.
+	Fixed bug where it was possible to insert images without any value for it's source attribute.
+	Fixed bug where altering image attributes wouldn't add a new undo level.
+	Fixed so it's possible to remove images by setting the src attribute to a blank value.
 	Fixed so the save_enablewhendirty setting in the save plugin is enabled by default.
 	Fixed so block formats drop down for classic mode can be translated properly using language packs.
 	Fixed issue with Chrome throwing CSS warning about border styling for combo boxes.
