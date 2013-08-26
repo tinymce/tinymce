@@ -378,7 +378,7 @@ define("tinymce/ui/FormatControls", [
 		each({
 			blockquote: ['Toggle blockquote', 'mceBlockQuote'],
 			numlist: ['Numbered list', 'InsertOrderedList'],
-			bullist: ['Bulleted list', 'InsertUnorderedList'],
+			bullist: ['Bullet list', 'InsertUnorderedList'],
 			subscript: ['Subscript', 'Subscript'],
 			superscript: ['Superscript', 'Superscript'],
 			alignleft: ['Align left', 'JustifyLeft'],
