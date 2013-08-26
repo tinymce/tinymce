@@ -276,7 +276,7 @@ define("tinymce/ui/Collection", [
 			}
 
 			return this;
-		},
+		}
 
 		/**
 		 * Fires the specified event by name and arguments on the control. This will execute all
