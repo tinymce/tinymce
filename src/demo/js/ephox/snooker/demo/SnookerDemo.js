@@ -18,6 +18,15 @@ define(
 
   function ($, Activate, Blah, Container, Table, Attr, Css, DomEvent, Element, Insert, InsertAll, Ready) {
     return function () {
+      /*
+       ANDY's IDEA:
+
+          Transparent divs around the borders of table, use mouse over events to show resize handles like elj does
+
+          Assuming size can be measured correctly
+
+      */
+
       var ephoxUi = Element.fromDom(document.getElementById('ephox-ui'));
 
       var table = Table(6, 3);
