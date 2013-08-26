@@ -15,6 +15,7 @@ define("tinymce/dom/EventUtils", [], function() {
 
 	var eventExpandoPrefix = "mce-data-";
 	var mouseEventRe = /^(?:mouse|contextmenu)|click/;
+	var deprecated = {keyLocation: 1, layerX: 1, layerY: 1};
 
 	/**
 	 * Binds a native event to a callback on the speified target.
@@ -57,7 +58,7 @@ define("tinymce/dom/EventUtils", [], function() {
 		// Copy all properties from the original event
 		for (name in originalEvent) {
 			// layerX/layerY is deprecated in Chrome and produces a warning
-			if (name !== "layerX" && name !== "layerY") {
+			if (!deprecated[name]) {
 				event[name] = originalEvent[name];
 			}
 		}
