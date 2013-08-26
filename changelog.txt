@@ -9,6 +9,7 @@ Version 4.0.5 (2013-xx-xx)
 	Fixed so it's possible to remove images by setting the src attribute to a blank value.
 	Fixed so the save_enablewhendirty setting in the save plugin is enabled by default.
 	Fixed so block formats drop down for classic mode can be translated properly using language packs.
+	Fixed so hr menu item and toolbar button gets the same translation string.
 	Fixed issue with Chrome logging CSS warning about border styling for combo boxes.
 	Fixed issue with Chrome logging warnings about deprecated keyLocation property.
 	Fixed issue where custom_elements would not remove the some of the default rules when cloning rules from div and span.
