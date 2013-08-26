@@ -8,6 +8,7 @@ Version 4.0.5 (2013-xx-xx)
 	Fixed bug where altering image attributes wouldn't add a new undo level.
 	Fixed bug where import rules in CSS files wouldn't be properly imported by the importcss plugin.
 	Fixed bug where selectors could be imported multiple times. Producing duplicate formats.
+	Fixed bug where IE would throw exception if selection was changed while the editor was hidden.
 	Fixed so complex rules like .class:before doesn't get imported by default in the importcss plugin.
 	Fixed so it's possible to remove images by setting the src attribute to a blank value.
 	Fixed so the save_enablewhendirty setting in the save plugin is enabled by default.

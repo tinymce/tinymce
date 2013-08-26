@@ -902,11 +902,10 @@ define("tinymce/dom/Selection", [
 
 					try {
 						sel.removeAllRanges();
+						sel.addRange(rng);
 					} catch (ex) {
-						// IE9 might throw errors here don't know why
+						// IE might throw errors here if the editor is within a hidden container and selection is changed
 					}
-
-					sel.addRange(rng);
 
 					// Forward is set to false and we have an extend function
 					if (forward === false && sel.extend) {
