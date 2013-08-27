@@ -1,5 +1,6 @@
-Version 4.0.5 (2013-xx-xx)
+Version 4.0.5 (2013-08-27)
 	Added visuals for UL, LI and BR to visualblocks plugin. Patch contributed by Dan Ransom.
+	Added new autosave_restore_when_empty option to autosave plugin. Enabled by default.
 	Fixed bug where an exception was thrown when inserting images if valid_elements didn't include an ID for the image.
 	Fixed bug where the advlist plugin wouldn't properly render the splitbutton controls.
 	Fixed bug where visual blocks menu item wouldn't be marked checked when using the visualblocks_default_state option.

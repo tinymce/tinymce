@@ -8,6 +8,7 @@
 		{"title": "Table (robot)", "url": "table_robot.html", "jsrobot": true},
 		{"title": "jQuery", "url": "jquery_plugin.html"},
 		{"title": "Autolink", "url": "autolink.html", "jsrobot": true},
+		{"title": "Autosave", "url": "autosave.html"},
 		{"title": "Wordcount", "url": "wordcount.html"},
 		{"title": "Fullpage", "url": "fullpage.html"},
 		{"title": "Legacyoutput", "url": "legacyoutput.html"},
