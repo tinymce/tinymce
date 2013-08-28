@@ -315,7 +315,7 @@ tinymce.PluginManager.add('image', function(editor) {
 		} else {
 			// Simple default dialog
 			win = editor.windowManager.open({
-				title: 'Edit image',
+				title: 'Insert/edit image',
 				data: data,
 				body: generalFormItems,
 				onSubmit: onSubmitForm
