@@ -10,11 +10,17 @@ define(
   ],
 
   function (Arr, Option, Spot, Split, Navigation) {
+    /**
+     * Wrap all text nodes between two DOM positions, using the nu() wrapper
+     */
     var wrapWith = function (universe, base, baseOffset, end, endOffset, nu) {
       var nodes = Split.range(universe, base, baseOffset, end, endOffset);
       return wrapper(universe, nodes, nu);
     };
 
+    /**
+     * Wrap non-empty text nodes using the nu() wrapper
+     */
     var wrapper = function (universe, wrapped, nu) {
       if (wrapped.length === 0) return wrapped;
 
@@ -30,16 +36,25 @@ define(
       });
     };
 
+    /**
+     * Return the cursor positions at the start and end of a collection of wrapper elements
+     */
     var endPoints = function (universe, wrapped) {
       return Option.from(wrapped[0]).map(function (first) {
         var last = Navigation.toLast(universe, wrapped[wrapped.length - 1]);
         return Spot.points(
           Spot.point(first, 0),
+    /**
+     *
+     */
           Spot.point(last.element(), last.offset())
         );
       });
     };
 
+    /**
+     * Calls wrapWith() on text nodes in the range, and returns the end points
+     */
     var leaves = function (universe, base, baseOffset, end, endOffset, nu) {
       var start = Navigation.toLeaf(universe, base, baseOffset);
       var finish = Navigation.toLeaf(universe, end, endOffset);
