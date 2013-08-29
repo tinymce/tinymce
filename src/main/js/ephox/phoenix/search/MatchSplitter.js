@@ -9,22 +9,11 @@ define(
   ],
 
   function (Arr, Fun, Splitter, PositionArray) {
-    var identify = function (universe, list, matches) {
-      return Arr.map(matches, function (y) {
-        var sub = PositionArray.sublist(list, y.start(), y.finish());
-        var elements = Arr.map(sub, function (s) {
-          return s.element();
-        });
-
-        var exact = Arr.map(elements, universe.property().getText).join('');
-        return {
-          elements: Fun.constant(elements),
-          word: y.word,
-          exact: Fun.constant(exact)
-        };
-      });
-    };
-
+    /**
+     * Split each text node in the list using the match endpoints.
+     *
+     * Each match is then mapped to the word it matched and the elements that make up the word.
+     */
     var separate = function (universe, list, matches) {
       var allPositions = Arr.bind(matches, function (match) {
         return [ match.start(), match.finish() ];
@@ -35,7 +24,21 @@ define(
       };
 
       var structure = PositionArray.splits(list, allPositions, subdivide);
-      return identify(universe, structure, matches);
+
+      var collate = function (match) {
+        var sub = PositionArray.sublist(structure, match.start(), match.finish());
+
+        var elements = Arr.map(sub, function (unit) { return unit.element(); });
+
+        var exact = Arr.map(elements, universe.property().getText).join('');
+        return {
+          elements: Fun.constant(elements),
+          word: match.word,
+          exact: Fun.constant(exact)
+        };
+      };
+
+      return Arr.map(matches, collate);
     };
 
     return {
