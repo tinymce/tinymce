@@ -18,14 +18,20 @@ define(
       return r;
     };
 
+
+    /**
+     * For each pattern, find the matching text (if there is any) and record the start and end offsets.
+     *
+     * Then sort the result by start point.
+     */
     var search = function (text, patterns) {
-      var unsorted = Arr.bind(patterns, function (y) {
-        var results = Search.findall(text, y.pattern());
-        return Arr.map(results, function (z) {
+      var unsorted = Arr.bind(patterns, function (p) {
+        var results = Search.findall(text, p.pattern());
+        return Arr.map(results, function (r) {
           return {
-            word: y.word,
-            start: z.start,
-            finish: z.finish
+            word: p.word,
+            start: r.start,
+            finish: r.finish
           };
         });
       });

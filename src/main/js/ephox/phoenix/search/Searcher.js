@@ -24,6 +24,13 @@ define(
       });
     };
 
+    /**
+     * Extracts groups of elements separated by boundaries.
+     *
+     * For each group, search the text for pattern matches.
+     *
+     * Returns a list of matches.
+     */
     var run = function (universe, elements, patterns) {
       var sections = Family.group(universe, elements);
       var result = Arr.bind(sections, function (x) {
@@ -39,6 +46,10 @@ define(
       return result;
     };
 
+
+    /**
+     * Runs a search for one or more words
+     */
     var safeWords = function (universe, elements, words) {
       var patterns = Arr.map(words, function (word) {
         var pattern = Pattern.safeword(word);
@@ -47,6 +58,10 @@ define(
       return run(universe, elements, patterns);
     };
 
+
+    /**
+     * Runs a search for a single token
+     */
     var safeToken = function (universe, elements, token) {
       var pattern = namedPattern(token, Pattern.safetoken(token));
       return run(universe, elements, [pattern]);
