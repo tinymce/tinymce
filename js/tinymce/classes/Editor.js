@@ -395,7 +395,15 @@ define("tinymce/Editor", [
 
 				if (settings.theme && typeof settings.theme != "function" &&
 					settings.theme.charAt(0) != '-' && !ThemeManager.urls[settings.theme]) {
-					ThemeManager.load(settings.theme, 'themes/' + settings.theme + '/theme' + suffix + '.js');
+					var themeUrl = settings.theme_url;
+
+					if (themeUrl) {
+						themeUrl = self.documentBaseURI.toAbsolute(themeUrl);
+					} else {
+						themeUrl = 'themes/' + settings.theme + '/theme' + suffix + '.js';
+					}
+
+					ThemeManager.load(settings.theme, themeUrl);
 				}
 
 				if (Tools.isArray(settings.plugins)) {

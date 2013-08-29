@@ -513,16 +513,24 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		var skin = settings.skin !== false ? settings.skin || 'lightgray' : false;
 
 		if (skin) {
+			var skinUrl = settings.skin_url;
+
+			if (skinUrl) {
+				skinUrl = editor.documentBaseURI.toAbsolute(skinUrl);
+			} else {
+				skinUrl = tinymce.baseURL + '/skins/' + skin;
+			}
+
 			// Load special skin for IE7
 			// TODO: Remove this when we drop IE7 support
 			if (tinymce.Env.documentMode <= 7) {
-				tinymce.DOM.loadCSS(tinymce.baseURL + '/skins/' + skin + '/skin.ie7.min.css');
+				tinymce.DOM.loadCSS(skinUrl + '/skin.ie7.min.css');
 			} else {
-				tinymce.DOM.loadCSS(tinymce.baseURL + '/skins/' + skin + '/skin.min.css');
+				tinymce.DOM.loadCSS(skinUrl + '/skin.min.css');
 			}
 
 			// Load content.min.css or content.inline.min.css
-			editor.contentCSS.push(tinymce.baseURL + '/skins/' + skin + '/content' + (editor.inline ? '.inline' : '') + '.min.css');
+			editor.contentCSS.push(skinUrl + '/content' + (editor.inline ? '.inline' : '') + '.min.css');
 		}
 
 		// Handle editor setProgressState change
