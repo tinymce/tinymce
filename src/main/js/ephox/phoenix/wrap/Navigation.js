@@ -6,20 +6,26 @@ define(
   ],
 
   function (Spot) {
-    var toLast = function (universe, children) {
-      var last = children[children.length - 1];
-      var lastOffset = universe.property().isText(last) ?
-        universe.property().getText(last).length :
-        universe.property().children(last).length;
-      return Spot.point(last, lastOffset);
+
+    /**
+     * Return the last available cursor position in the node.
+     */
+    var toLast = function (universe, node) {
+      var lastOffset = universe.property().isText(node) ?
+        universe.property().getText(node).length :
+        universe.property().children(node).length;
+      return Spot.point(node, lastOffset);
     };
 
+    /**
+     * Descend down to a leaf node at the given offset.
+     */
     var toLeaf = function (universe, element, offset) {
       var children = universe.property().children(element);
       if (children.length > 0 && offset < children.length) {
         return toLeaf(universe, children[offset], 0);
       } else if (children.length > 0 && universe.property().isElement(element) && children.length === offset) {
-        return toLast(universe, children);
+        return toLast(universe, children[children.length - 1]);
       } else {
         return Spot.point(element, offset);
       }

@@ -36,7 +36,7 @@ define(
 
       var wrapped = wrapWith(universe, start.element(), start.offset(), finish.element(), finish.offset(), nu);
       return Option.from(wrapped[0]).map(function (first) {
-        var last = Navigation.toLast(universe, wrapped);
+        var last = Navigation.toLast(universe, wrapped[wrapped.length - 1]);
         return Spot.points(
           Spot.point(first, 0),
           Spot.point(last.element(), last.offset())
