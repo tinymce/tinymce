@@ -30,7 +30,7 @@ define(
       });
     };
 
-    var endPoints = function (wrapped) {
+    var endPoints = function (universe, wrapped) {
       return Option.from(wrapped[0]).map(function (first) {
         var last = Navigation.toLast(universe, wrapped[wrapped.length - 1]);
         return Spot.points(
@@ -45,7 +45,7 @@ define(
       var finish = Navigation.toLeaf(universe, end, endOffset);
 
       var wrapped = wrapWith(universe, start.element(), start.offset(), finish.element(), finish.offset(), nu);
-      return endPoints(wrapped);
+      return endPoints(universe, wrapped);
     };
 
     return {
