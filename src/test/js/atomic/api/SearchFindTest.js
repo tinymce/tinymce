@@ -32,6 +32,7 @@ test(
     checkAll([[0, 3], [4, 7]], 'sre sre', Pattern.unsafeword('sre'));
     checkAll([[1, 4], [5, 8]], ' sre sre', Pattern.unsafeword('sre'));
     checkAll([[1, 4], [5, 8], [9, 12]], ' sre sre sre', Pattern.unsafeword('sre'));
+    checkAll([[0, 3], [4, 7], [8, 11]], 'sre sre sre ', Pattern.unsafeword('sre'));
     checkAll([[1, 4], [5, 8], [9, 12]], ' sre sre sre ', Pattern.unsafeword('sre'));
 
   }
