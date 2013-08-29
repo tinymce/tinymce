@@ -13,6 +13,14 @@ define(
       return Strings.splits(text, ps);
     };
 
+    /**
+     * Return a TextSplit of item split at position.
+     *
+     * Edge cases:
+     *   pos at start:      (none, some(item))
+     *   pos at end:        (some(item), none)
+     *   item is not text:  (none, some(item))
+     */
     var split = function (universe, item, position) {
       if (!universe.property().isText(item)) return TextSplit(Option.none(), Option.some(item));
       if (position === 0) return TextSplit(Option.none(), Option.some(item));
@@ -25,23 +33,32 @@ define(
       return TextSplit(Option.some(item), Option.some(after));
     };
 
+    /**
+     * Split an item into three parts, and return the middle.
+     *
+     * If no split is required, return the item.
+     */
     var splitByPair = function (universe, item, start, end) {
-      if (start === end) return item;
+      if (!universe.property().isText(item) || start === end) return item;
       if (start > end) return splitByPair(universe, item, end, start);
-      if (!universe.property().isText(item)) return item;
 
       var len = universe.property().getText(item).length;
-      var parts = tokens(universe, item, [start, end]);
-
       if (start === 0 && end === len) return item;
-      else if (start === 0) {
+
+      var parts = tokens(universe, item, [start, end]);
+      if (start === 0) {
+        // No before, so item becomes the "middle" and is returned.
         universe.property().setText(item, parts[1]);
         universe.insert().after(item, universe.create().text(parts[2]));
         return item;
       } else {
         universe.property().setText(item, parts[0]);
         var middle = universe.create().text(parts[1]);
-        var nodes = [middle].concat(parts[2] && parts[2].length > 0 ? [universe.create().text(parts[2])] : []);
+
+        var part3 = parts[2] && parts[2].length > 0 ? [universe.create().text(parts[2])] : [];
+
+        var nodes = [middle].concat(part3);
+
         universe.insert().afterAll(item, nodes);
         return middle;
       }
