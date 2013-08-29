@@ -10,17 +10,17 @@ define(
   function (Spot, Family, Split) {
     var diff = function (universe, base, baseOffset, end, endOffset) {
       var start = Split.split(universe, base, baseOffset).after().fold(function () {
-        return Spot.point(base, 1);
+        return Spot.delta(base, 1);
       }, function (after) {
-        return Spot.point(after, 0);
+        return Spot.delta(after, 0);
       });
 
       var finish = Split.split(universe, end, endOffset).before().fold(function () {
-        return Spot.point(end, 0);
+        return Spot.delta(end, 0);
       }, function (before) {
-        return Spot.point(before, 1);
+        return Spot.delta(before, 1);
       });
-      return Family.range(universe, start.element(), start.offset(), finish.element(), finish.offset());
+      return Family.range(universe, start.element(), start.deltaOffset(), finish.element(), finish.deltaOffset());
     };
 
     var same = function (universe, base, baseOffset, end, endOffset) {
