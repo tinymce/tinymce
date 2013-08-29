@@ -1,5 +1,6 @@
-TinyMCE - The JavaScript Rich Text editor
+TinyMCE for Shopify 
 ==========================================
+This is a fork of [https://github.com/tinymce/tinymce](TinyMCE) customized to suit Shopify's specific needs. 
 
 Building TinyMCE
 -----------------
