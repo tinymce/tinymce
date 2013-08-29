@@ -30,11 +30,7 @@ define(
       });
     };
 
-    var leaves = function (universe, base, baseOffset, end, endOffset, nu) {
-      var start = Navigation.toLeaf(universe, base, baseOffset);
-      var finish = Navigation.toLeaf(universe, end, endOffset);
-
-      var wrapped = wrapWith(universe, start.element(), start.offset(), finish.element(), finish.offset(), nu);
+    var endPoints = function (wrapped) {
       return Option.from(wrapped[0]).map(function (first) {
         var last = Navigation.toLast(universe, wrapped[wrapped.length - 1]);
         return Spot.points(
@@ -42,6 +38,14 @@ define(
           Spot.point(last.element(), last.offset())
         );
       });
+    };
+
+    var leaves = function (universe, base, baseOffset, end, endOffset, nu) {
+      var start = Navigation.toLeaf(universe, base, baseOffset);
+      var finish = Navigation.toLeaf(universe, end, endOffset);
+
+      var wrapped = wrapWith(universe, start.element(), start.offset(), finish.element(), finish.offset(), nu);
+      return endPoints(wrapped);
     };
 
     return {
