@@ -6,6 +6,9 @@ define(
   ],
 
   function (Arr) {
+    /**
+     * Split an array into chunks matched by the predicate
+     */
     var splitby = function (xs, pred) {
       var r = [];
       var part = [];
@@ -14,7 +17,6 @@ define(
           r.push(part);
           part = [];
         } else {
-
           part.push(x);
         }
       });
