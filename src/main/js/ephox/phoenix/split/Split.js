@@ -2,12 +2,13 @@ define(
   'ephox.phoenix.split.Split',
 
   [
+    'ephox.compass.Arr',
     'ephox.perhaps.Option',
     'ephox.phoenix.api.data.TextSplit',
     'ephox.polaris.api.Strings'
   ],
 
-  function (Option, TextSplit, Strings) {
+  function (Arr, Option, TextSplit, Strings) {
     var tokens = function (universe, item, ps) {
       var text = universe.property().getText(item);
       return Strings.splits(text, ps);
@@ -46,22 +47,19 @@ define(
       if (start === 0 && end === len) return item;
 
       var parts = tokens(universe, item, [start, end]);
-      if (start === 0) {
-        // No before, so item becomes the "middle" and is returned.
-        universe.property().setText(item, parts[1]);
-        universe.insert().after(item, universe.create().text(parts[2]));
-        return item;
-      } else {
-        universe.property().setText(item, parts[0]);
-        var middle = universe.create().text(parts[1]);
 
-        var part3 = parts[2] && parts[2].length > 0 ? [universe.create().text(parts[2])] : [];
+      // Rewrite the item to be the first section of the split
+      universe.property().setText(item, parts[0]);
 
-        var nodes = [middle].concat(part3);
+      // Create new text nodes for the split text sections
+      var newText = Arr.map(parts.slice(1), universe.create().text);
+      var middle = newText[0];
 
-        universe.insert().afterAll(item, nodes);
-        return middle;
-      }
+      // Append new items
+      universe.insert().afterAll(item, newText);
+
+      // If there is no before element, item becomes the "middle"
+      return start === 0 ? item : middle;
     };
 
     return {
