@@ -11,11 +11,10 @@ define(
 
   function (Fun, Option, GatherResult, Gather, Traversal) {
 
-    var ignore = function () {
-      return GatherResult([], true);
-    };
+    var ignore = Fun.constant(Option.some([]));
 
     var one = function (universe, element) {
+      // FIX: Could be optimised to just ask "has children"
       var children = universe.property().children(element);
       return children.length === 0 ? Option.some([element]) : Option.none();
     };

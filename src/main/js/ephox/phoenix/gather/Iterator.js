@@ -6,20 +6,24 @@ define(
   ],
 
   function (GatherResult) {
-    
+
     var process = function (info, iter, f, x, prune) {
-      return info.fold(function () {
+      var next = function () {
         var fx = f(iter, x, prune);
         return {
           r: fx.result(),
           pruned: fx.pruned()
         };
-      }, function (v) {
+      };
+
+      var stop = function (contents) {
         return {
-          r: v,
+          r: contents,
           pruned: true
         };
-      });
+      };
+
+      return info.fold(next, stop);
     };
 
     var rtl = function (xs, f, prune) {
@@ -32,7 +36,7 @@ define(
         r = r.concat(result.r);
         if (result.pruned) return GatherResult(r, true);
       }
-      
+
       return GatherResult(r, false);
     };
 
