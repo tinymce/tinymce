@@ -8,8 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-// Some global instances
-var tinymce = null, tinyMCEPopup, tinyMCE;
+var tinymce, tinyMCE;
 
 /**
  * TinyMCE popup/dialog helper class. This gives you easy access to the
@@ -19,47 +18,55 @@ var tinymce = null, tinyMCEPopup, tinyMCE;
  * @static
  * @class tinyMCEPopup
  */
-tinyMCEPopup = {
+var tinyMCEPopup = {
 	/**
 	 * Initializes the popup this will be called automatically.
 	 *
 	 * @method init
 	 */
-	init : function() {
-		var t = this, w, ti, settings;
+	init: function() {
+		var self = this, parentWin, settings, uiWindow;
 
 		// Find window & API
-		w = t.getWin();
-		tinymce = w.tinymce;
-		tinyMCE = w.tinyMCE;
-		t.editor = tinymce.EditorManager.activeEditor;
-		t.params = t.editor.windowManager.params;
-		t.features = t.editor.windowManager.features;
-		settings = t.editor.settings;
+		parentWin = self.getWin();
+		tinymce = tinyMCE = parentWin.tinymce;
+		self.editor = tinymce.EditorManager.activeEditor;
+		self.params = self.editor.windowManager.getParams();
+
+		uiWindow = self.editor.windowManager.windows[self.editor.windowManager.windows.length - 1];
+		self.features = uiWindow.features;
+		self.uiWindow = uiWindow;
+
+		settings = self.editor.settings;
 
 		// Setup popup CSS path(s)
 		if (settings.popup_css !== false) {
 			if (settings.popup_css) {
-				settings.popup_css = t.documentBaseURI.toAbsolute(settings.popup_css);
+				settings.popup_css = self.editor.documentBaseURI.toAbsolute(settings.popup_css);
 			} else {
-				settings.popup_css = t.baseURI.toAbsolute("themes/" + settings.theme + "/skins/" + settings.skin + "/dialog.css");
+				settings.popup_css = self.editor.baseURI.toAbsolute("plugins/compat3x/css/dialog.css");
 			}
 		}
 
 		if (settings.popup_css_add) {
-			settings.popup_css += ',' + t.documentBaseURI.toAbsolute(settings.popup_css_add);
+			settings.popup_css += ',' + self.editor.documentBaseURI.toAbsolute(settings.popup_css_add);
 		}
 
 		// Setup local DOM
-		t.dom = t.editor.windowManager.createInstance('tinymce.dom.DOMUtils', document, {ownEvents: true, proxy: tinyMCEPopup._eventProxy});
-		t.dom.bind(window, 'ready', t._onDOMLoaded, t);
+		self.dom = self.editor.windowManager.createInstance('tinymce.dom.DOMUtils', document, {
+			ownEvents: true,
+			proxy: tinyMCEPopup._eventProxy
+		});
+
+		self.dom.bind(window, 'ready', self._onDOMLoaded, self);
 
 		// Enables you to skip loading the default css
-		if (t.features.popup_css !== false)
-			t.dom.loadCSS(t.features.popup_css || t.editor.settings.popup_css);
+		if (self.features.popup_css !== false) {
+			self.dom.loadCSS(self.features.popup_css || self.editor.settings.popup_css);
+		}
 
 		// Setup on init listeners
-		t.listeners = [];
+		self.listeners = [];
 
 		/**
 		 * Fires when the popup is initialized.
@@ -75,14 +82,14 @@ tinyMCEPopup = {
 		 * // Executes the init method on page load in some object using the SomeObject scope
 		 * tinyMCEPopup.onInit.add(SomeObject.init, SomeObject);
 		 */
-		t.onInit = {
-			add : function(f, s) {
-				t.listeners.push({func : f, scope : s});
+		self.onInit = {
+			add: function(func, scope) {
+				self.listeners.push({func : func, scope : scope});
 			}
 		};
 
-		t.isWindow = !t.getWindowArg('mce_inline');
-		t.id = t.getWindowArg('mce_window_id');
+		self.isWindow = !self.getWindowArg('mce_inline');
+		self.id = self.getWindowArg('mce_window_id');
 	},
 
 	/**
@@ -91,7 +98,7 @@ tinyMCEPopup = {
 	 * @method getWin
 	 * @return {Window} Reference to the parent window that opened the dialog.
 	 */
-	getWin : function() {
+	getWin: function() {
 		// Added frameElement check to fix bug: #2817583
 		return (!window.frameElement && window.dialogArguments) || opener || parent || top;
 	},
@@ -100,38 +107,38 @@ tinyMCEPopup = {
 	 * Returns a window argument/parameter by name.
 	 *
 	 * @method getWindowArg
-	 * @param {String} n Name of the window argument to retrive.
-	 * @param {String} dv Optional default value to return.
+	 * @param {String} name Name of the window argument to retrive.
+	 * @param {String} defaultValue Optional default value to return.
 	 * @return {String} Argument value or default value if it wasn't found.
 	 */
-	getWindowArg : function(n, dv) {
-		var v = this.params[n];
+	getWindowArg : function(name, defaultValue) {
+		var value = this.params[name];
 
-		return tinymce.is(v) ? v : dv;
+		return tinymce.is(value) ? value : defaultValue;
 	},
 
 	/**
 	 * Returns a editor parameter/config option value.
 	 *
 	 * @method getParam
-	 * @param {String} n Name of the editor config option to retrive.
-	 * @param {String} dv Optional default value to return.
+	 * @param {String} name Name of the editor config option to retrive.
+	 * @param {String} defaultValue Optional default value to return.
 	 * @return {String} Parameter value or default value if it wasn't found.
 	 */
-	getParam : function(n, dv) {
-		return this.editor.getParam(n, dv);
+	getParam : function(name, defaultValue) {
+		return this.editor.getParam(name, defaultValue);
 	},
 
 	/**
 	 * Returns a language item by key.
 	 *
 	 * @method getLang
-	 * @param {String} n Language item like mydialog.something.
-	 * @param {String} dv Optional default value to return.
+	 * @param {String} name Language item like mydialog.something.
+	 * @param {String} defaultValue Optional default value to return.
 	 * @return {String} Language value for the item like "my string" or the default value if it wasn't found.
 	 */
-	getLang : function(n, dv) {
-		return this.editor.getLang(n, dv);
+	getLang : function(name, defaultValue) {
+		return this.editor.getLang(name, defaultValue);
 	},
 
 	/**
@@ -143,12 +150,12 @@ tinyMCEPopup = {
 	 * @param {Object} val Optional value to pass with the comman like an URL.
 	 * @param {Object} a Optional arguments object.
 	 */
-	execCommand : function(cmd, ui, val, a) {
-		a = a || {};
-		a.skip_focus = 1;
+	execCommand : function(cmd, ui, val, args) {
+		args = args || {};
+		args.skip_focus = 1;
 
 		this.restoreSelection();
-		return this.editor.execCommand(cmd, ui, val, a);
+		return this.editor.execCommand(cmd, ui, val, args);
 	},
 
 	/**
@@ -158,19 +165,19 @@ tinyMCEPopup = {
 	 * @method resizeToInnerSize
 	 */
 	resizeToInnerSize : function() {
-		var t = this;
+		/*var self = this;
 
 		// Detach it to workaround a Chrome specific bug
 		// https://sourceforge.net/tracker/?func=detail&atid=635682&aid=2926339&group_id=103281
 		setTimeout(function() {
-			var vp = t.dom.getViewPort(window);
+			var vp = self.dom.getViewPort(window);
 
-			t.editor.windowManager.resizeBy(
-				t.getWindowArg('mce_width') - vp.w,
-				t.getWindowArg('mce_height') - vp.h,
-				t.id || window
+			self.editor.windowManager.resizeBy(
+				self.getWindowArg('mce_width') - vp.w,
+				self.getWindowArg('mce_height') - vp.h,
+				self.id || window
 			);
-		}, 10);
+		}, 10);*/
 	},
 
 	/**
@@ -178,11 +185,11 @@ tinyMCEPopup = {
 	 * was added for compatibility with the 2.x branch.
 	 *
 	 * @method executeOnLoad
-	 * @param {String} s String to evalutate on init.
+	 * @param {String} evil String to evalutate on init.
 	 */
-	executeOnLoad : function(s) {
+	executeOnLoad : function(evil) {
 		this.onInit.add(function() {
-			eval(s);
+			eval(evil);
 		});
 	},
 
@@ -203,10 +210,11 @@ tinyMCEPopup = {
 	 * @method restoreSelection
 	 */
 	restoreSelection : function() {
-		var t = tinyMCEPopup;
+		var self = tinyMCEPopup;
 
-		if (!t.isWindow && tinymce.isIE)
-			t.editor.selection.moveToBookmark(t.editor.windowManager.bookmark);
+		if (!self.isWindow && tinymce.isIE) {
+			self.editor.selection.moveToBookmark(self.editor.windowManager.bookmark);
+		}
 	},
 
 	/**
@@ -216,14 +224,18 @@ tinyMCEPopup = {
 	 * @method requireLangPack
 	 */
 	requireLangPack : function() {
-		var t = this, u = t.getWindowArg('plugin_url') || t.getWindowArg('theme_url');
+		var self = this, url = self.getWindowArg('plugin_url') || self.getWindowArg('theme_url'), settings = self.editor.settings, lang;
 
-		if (u && t.editor.settings.language && t.features.translate_i18n !== false && t.editor.settings.language_load !== false) {
-			u += '/langs/' + t.editor.settings.language + '_dlg.js';
+		if (settings.language !== false) {
+			lang = settings.language || "en";
+		}
 
-			if (!tinymce.ScriptLoader.isDone(u)) {
-				document.write('<script type="text/javascript" src="' + u + '"></script>');
-				tinymce.ScriptLoader.markDone(u);
+		if (url && lang && self.features.translate_i18n !== false && settings.language_load !== false) {
+			url += '/langs/' + lang + '_dlg.js';
+
+			if (!tinymce.ScriptLoader.isDone(url)) {
+				document.write('<script type="text/javascript" src="' + url + '"></script>');
+				tinymce.ScriptLoader.markDone(url);
 			}
 		}
 	},
@@ -403,6 +415,8 @@ tinyMCEPopup = {
 		}
 
 		document.onkeyup = tinyMCEPopup._closeWinKeyHandler;
+
+		t.uiWindow.getEl('head').firstChild.firstChild.data = document.title;
 	},
 
 	_accessHandler : function(e) {
@@ -421,8 +435,9 @@ tinyMCEPopup = {
 	_closeWinKeyHandler : function(e) {
 		e = e || window.event;
 
-		if (e.keyCode == 27)
+		if (e.keyCode == 27) {
 			tinyMCEPopup.close();
+		}
 	},
 
 	_eventProxy: function(id) {
@@ -433,3 +448,62 @@ tinyMCEPopup = {
 };
 
 tinyMCEPopup.init();
+
+tinymce.util.Dispatcher = function(scope) {
+	this.scope = scope || this;
+	this.listeners = [];
+
+	this.add = function(callback, scope) {
+		this.listeners.push({cb : callback, scope : scope || this.scope});
+
+		return callback;
+	};
+
+	this.addToTop = function(callback, scope) {
+		var self = this, listener = {cb : callback, scope : scope || self.scope};
+
+		// Create new listeners if addToTop is executed in a dispatch loop
+		if (self.inDispatch) {
+			self.listeners = [listener].concat(self.listeners);
+		} else {
+			self.listeners.unshift(listener);
+		}
+
+		return callback;
+	};
+
+	this.remove = function(callback) {
+		var listeners = this.listeners, output = null;
+
+		tinymce.each(listeners, function(listener, i) {
+			if (callback == listener.cb) {
+				output = listener;
+				listeners.splice(i, 1);
+				return false;
+			}
+		});
+
+		return output;
+	};
+
+	this.dispatch = function() {
+		var self = this, returnValue, args = arguments, i, listeners = self.listeners, listener;
+
+		self.inDispatch = true;
+		
+		// Needs to be a real loop since the listener count might change while looping
+		// And this is also more efficient
+		for (i = 0; i < listeners.length; i++) {
+			listener = listeners[i];
+			returnValue = listener.cb.apply(listener.scope, args.length > 0 ? args : [listener.scope]);
+
+			if (returnValue === false) {
+				break;
+			}
+		}
+
+		self.inDispatch = false;
+
+		return returnValue;
+	};
+};

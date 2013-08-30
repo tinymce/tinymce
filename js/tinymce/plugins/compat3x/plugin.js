@@ -17,7 +17,6 @@
  * Unsupported things:
  *  - No editor.onEvent
  *  - Can't cancel execCommands with beforeExecCommand
- *  - onNodeChange passes in "null" as controlManager since it's removed in 4.x
  */
 (function(tinymce) {
 	var reported;
@@ -108,6 +107,22 @@
 			};
 		}
 
+		editor.controlManager = {
+			buttons: {},
+
+			setDisabled: function(name, state) {
+				if (this.buttons[name]) {
+					this.buttons[name].disabled(state);
+				}
+			},
+
+			setActive: function(name, state) {
+				if (this.buttons[name]) {
+					this.buttons[name].active(state);
+				}
+			},
+		};
+
 		patchEditorEvents("PreInit BeforeRenderUI PostRender Load Init Remove Activate Deactivate", "editor");
 		patchEditorEvents("Click MouseUp MouseDown DblClick KeyDown KeyUp KeyPress ContextMenu Paste Submit Reset");
 		patchEditorEvents("BeforeExecCommand ExecCommand", "command ui value args"); // args.terminate not supported
@@ -119,12 +134,38 @@
 
 		patchEditorEvents("NodeChange", function(type, e) {
 			return [
-				null,
+				editor.controlManager,
 				e.element,
 				editor.selection.isCollapsed(),
 				e
 			];
 		});
+
+		var originalAddButton = editor.addButton;
+		editor.addButton = function(name, settings) {
+			var originalOnPostRender;
+
+			function patchedPostRender() {
+				editor.controlManager.buttons[name] = this;
+
+				if (originalOnPostRender) {
+					return originalOnPostRender.call(this);
+				}
+			}
+
+			for (var key in settings) {
+				if (key.toLowerCase() === "onpostrender") {
+					originalOnPostRender = settings[key];
+					settings.onPostRender = patchedPostRender;
+				}
+			}
+
+			if (!originalOnPostRender) {
+				settings.onPostRender = patchedPostRender;
+			}
+
+			return originalAddButton.call(this, name, settings);
+		};
 
 		editor.on('init', function() {
 			var undoManager = editor.undoManager, selection = editor.selection;
@@ -138,6 +179,39 @@
 			selection.onGetContent = new Dispatcher(editor, "GetContent", filterSelectionEvents(true), selection);
 			selection.onBeforeSetContent = new Dispatcher(editor, "BeforeSetContent", filterSelectionEvents(true), selection);
 			selection.onSetContent = new Dispatcher(editor, "SetContent", filterSelectionEvents(true), selection);
+
+			editor.windowManager.createInstance = function(className, a, b, c, d, e) {
+				var constr = tinymce.resolve(className);
+
+				return new constr(a, b, c, d, e);
+			};
 		});
 	});
+
+	tinymce.addI18n = function(prefix, o) {
+		var i18n = this.i18n, each = tinymce.each;
+
+		if (typeof(prefix) == "string" && prefix.indexOf('.') === -1) {
+			tinymce.util.I18n.add(prefix, o);
+			return;
+		}
+
+		if (!tinymce.is(prefix, 'string')) {
+			each(prefix, function(o, lc) {
+				each(o, function(o, g) {
+					each(o, function(o, k) {
+						if (g === 'common') {
+							i18n[lc + '.' + k] = o;
+						} else {
+							i18n[lc + '.' + g + '.' + k] = o;
+						}
+					});
+				});
+			});
+		} else {
+			each(o, function(o, k) {
+				i18n[prefix + '.' + k] = o;
+			});
+		}
+	};
 })(tinymce);

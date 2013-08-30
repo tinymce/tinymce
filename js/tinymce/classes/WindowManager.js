@@ -41,6 +41,12 @@ define("tinymce/WindowManager", [
 	return function(editor) {
 		var self = this, windows = [];
 
+		function getTopMostWindow() {
+			if (windows.length) {
+				return windows[windows.length - 1];
+			}
+		}
+
 		self.windows = windows;
 
 		/**
@@ -59,6 +65,8 @@ define("tinymce/WindowManager", [
 		 */
 		self.open = function(args, params) {
 			var win;
+
+			args.title = args.title || ' ';
 
 			// Handle URL
 			args.url = args.url || args.file; // Legacy
@@ -117,7 +125,8 @@ define("tinymce/WindowManager", [
 				});
 			}
 
-			// store parameters
+			// store args and parameters
+			win.features = args || {};
 			win.params = params || {};
 
 			// Takes a snapshot in the FocusManager of the selection before focus is lost to dialog
@@ -173,8 +182,8 @@ define("tinymce/WindowManager", [
 		 * @method close
 		 */
 		self.close = function() {
-			if (windows.length) {
-				windows[windows.length - 1].close();
+			if (getTopMostWindow()) {
+				getTopMostWindow().close();
 			}
 		};
 
@@ -189,11 +198,7 @@ define("tinymce/WindowManager", [
 		 * @return {Object} Name/value object with parameters passed from windowManager.open call.
 		 */
 		self.getParams = function() {
-			if (windows.length) {
-				return windows[windows.length - 1].params;
-			}
-
-			return null;
+			return getTopMostWindow() ? getTopMostWindow().params : null;
 		};
 
 		/**
@@ -203,8 +208,8 @@ define("tinymce/WindowManager", [
 		 * @param {Object} params Params object to set for the last opened window.
 		 */
 		self.setParams = function(params) {
-			if (windows.length) {
-				windows[windows.length - 1].params = params;
+			if (getTopMostWindow()) {
+				getTopMostWindow().params = params;
 			}
 		};
 	};
