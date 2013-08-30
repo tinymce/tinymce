@@ -7,6 +7,9 @@ define(
 
   function (Fun) {
 
+    /**
+     * Returns the offset pairs of all matches of pattern on the input string, adjusting for prefix and suffix offsets
+     */
     var all = function (input, pattern) {
       var term = pattern.term();
       var r = [];

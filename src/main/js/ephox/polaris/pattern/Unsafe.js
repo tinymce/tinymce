@@ -8,10 +8,19 @@ define(
   ],
 
   function (Fun, Chars, Custom) {
+
+    /**
+     * Tokens have no prefix or suffix
+     */
     var token = function (input) {
       return Custom(input, Fun.constant(0), Fun.constant(0));
     };
 
+    /**
+     * Words have complex rules as to what a "word break" actually is.
+     *
+     * These are consumed by the regex and then excluded by prefix/suffix lengths.
+     */
     var word = function (input) {
       var regex = '((?:^\'?)|(?:' + Chars.wordbreak() + '+\'?))' + input + '((?:\'?$)|(?:\'?' + Chars.wordbreak() + '+))';
 

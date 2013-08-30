@@ -5,7 +5,9 @@ define(
     'ephox.polaris.pattern.Unsafe'
   ],
 
+  /** Sanitises all inputs to Unsafe */
   function (Unsafe) {
+    /** Escapes regex characters in a string */
     var sanitise = function (input) {
       return input.replace(/[-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&");
     };
