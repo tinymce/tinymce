@@ -1100,8 +1100,8 @@ define("tinymce/Editor", [
 				return '';
 			}
 
-			return i18n[lang + '.' + text] || text.replace(/\{\#([^\}]+)\}/g, function(a, b) {
-				return i18n[lang + '.' + b] || '{#' + b + '}';
+			return i18n.data[lang + '.' + text] || text.replace(/\{\#([^\}]+)\}/g, function(a, b) {
+				return i18n.data[lang + '.' + b] || '{#' + b + '}';
 			});
 		},
 
@@ -1114,7 +1114,7 @@ define("tinymce/Editor", [
 		 */
 		getLang: function(name, defaultVal) {
 			return (
-				this.editorManager.i18n[(this.settings.language || 'en') + '.' + name] ||
+				this.editorManager.i18n.data[(this.settings.language || 'en') + '.' + name] ||
 				(defaultVal !== undefined ? defaultVal : '{#' + name + '}')
 			);
 		},

@@ -189,10 +189,10 @@
 	});
 
 	tinymce.addI18n = function(prefix, o) {
-		var i18n = this.i18n, each = tinymce.each;
+		var I18n = tinymce.util.I18n, each = tinymce.each;
 
 		if (typeof(prefix) == "string" && prefix.indexOf('.') === -1) {
-			tinymce.util.I18n.add(prefix, o);
+			I18n.add(prefix, o);
 			return;
 		}
 
@@ -201,16 +201,16 @@
 				each(o, function(o, g) {
 					each(o, function(o, k) {
 						if (g === 'common') {
-							i18n[lc + '.' + k] = o;
+							I18n.data[lc + '.' + k] = o;
 						} else {
-							i18n[lc + '.' + g + '.' + k] = o;
+							I18n.data[lc + '.' + g + '.' + k] = o;
 						}
 					});
 				});
 			});
 		} else {
 			each(o, function(o, k) {
-				i18n[prefix + '.' + k] = o;
+				I18n.data[prefix + '.' + k] = o;
 			});
 		}
 	};

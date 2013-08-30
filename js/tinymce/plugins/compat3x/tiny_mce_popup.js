@@ -272,7 +272,7 @@ var tinyMCEPopup = {
 	 * @param {string} type Type of browser to open image/file/flash.
 	 * @param {string} option Option name to get the file_broswer_callback function name from.
 	 */
-	openBrowser : function(element_id, type, option) {
+	openBrowser : function(element_id, type) {
 		tinyMCEPopup.restoreSelection();
 		this.editor.execCallback('file_browser_callback', element_id, document.getElementById(element_id).value, type, window);
 	},
@@ -315,12 +315,13 @@ var tinyMCEPopup = {
 		function close() {
 			t.editor.windowManager.close(window);
 			tinymce = tinyMCE = t.editor = t.params = t.dom = t.dom.doc = null; // Cleanup
-		};
+		}
 
-		if (tinymce.isOpera)
+		if (tinymce.isOpera) {
 			t.getWin().setTimeout(close, 0);
-		else
+		} else {
 			close();
+		}
 	},
 
 	// Internal functions	
@@ -341,27 +342,44 @@ var tinyMCEPopup = {
 	},*/
 
 	_onDOMLoaded : function() {
-		var t = tinyMCEPopup, ti = document.title, bm, h, nv;
+		var t = tinyMCEPopup, ti = document.title, h, nv;
 
 		// Translate page
 		if (t.features.translate_i18n !== false) {
+			var map = {
+				"update": "Ok",
+				"insert": "Ok",
+				"cancel": "Cancel",
+				"not_set": "--",
+				"class_name": "Class name"
+			};
+
+			var langCode = tinymce.settings.language || 'en';
+			for (var key in map) {
+				tinymce.i18n.data[langCode + "." + key] = tinymce.i18n.translate(map[key]);
+			}
+
 			h = document.body.innerHTML;
 
 			// Replace a=x with a="x" in IE
-			if (tinymce.isIE)
-				h = h.replace(/ (value|title|alt)=([^"][^\s>]+)/gi, ' $1="$2"')
+			if (tinymce.isIE) {
+				h = h.replace(/ (value|title|alt)=([^"][^\s>]+)/gi, ' $1="$2"');
+			}
 
 			document.dir = t.editor.getParam('directionality','');
 
-			if ((nv = t.editor.translate(h)) && nv != h)
+			if ((nv = t.editor.translate(h)) && nv != h) {
 				document.body.innerHTML = nv;
+			}
 
-			if ((nv = t.editor.translate(ti)) && nv != ti)
+			if ((nv = t.editor.translate(ti)) && nv != ti) {
 				document.title = ti = nv;
+			}
 		}
 
-		if (!t.editor.getParam('browser_preferred_colors', false) || !t.isWindow)
+		if (!t.editor.getParam('browser_preferred_colors', false) || !t.isWindow) {
 			t.dom.addClass(document.body, 'forceColors');
+		}
 
 		document.body.style.display = '';
 
@@ -377,10 +395,11 @@ var tinyMCEPopup = {
 		t.resizeToInnerSize();
 
 		// Set inline title
-		if (!t.isWindow)
+		if (!t.isWindow) {
 			t.editor.windowManager.setTitle(window, ti);
-		else
+		} else {
 			window.focus();
+		}
 
 		if (!tinymce.isIE && !t.isWindow) {
 			t.dom.bind(document, 'focus', function() {
@@ -425,8 +444,9 @@ var tinyMCEPopup = {
 		if (e.keyCode == 13 || e.keyCode == 32) {
 			var elm = e.target || e.srcElement;
 
-			if (elm.onchange)
+			if (elm.onchange) {
 				elm.onchange();
+			}
 
 			return tinymce.dom.Event.cancel(e);
 		}
