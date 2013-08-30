@@ -9,7 +9,11 @@ define(
     'ephox.polaris.api.Arrays'
   ],
 
+  /**
+   * Extracts various information from a list of TypedItem
+   */
   function (Arr, Fun, Option, Spot, Arrays) {
+
     var count = function (parray) {
       return Arr.foldr(parray, function (b, a) {
         return a.len() + b;
@@ -22,6 +26,11 @@ define(
       });
     };
 
+    /**
+     * Transform a TypedItem into a range representing that item from the start position.
+     *
+     * The generation function for making a PositionArray out of a list of TypedItems.
+     */
     var gen = function (unit, start) {
       return unit.fold(Option.none, function (e) {
         return Option.some(Spot.range(e, start, start + 1));

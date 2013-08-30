@@ -6,6 +6,12 @@ define(
     'ephox.perhaps.Option'
   ],
 
+  /**
+   * Church encoded ADT representing whether an element is:
+   * - boundary (block tag or inline tag with block CSS display)
+   * - empty
+   * - text
+   */
   function (Fun, Option) {
     var no = Fun.constant(false);
     var yes = Fun.constant(true);
