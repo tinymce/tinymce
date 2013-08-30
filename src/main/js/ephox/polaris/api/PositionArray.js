@@ -8,6 +8,9 @@ define(
     'ephox.polaris.parray.Translate'
   ],
 
+  /**
+   * Documentation is in the actual implementations.
+   */
   function (Generator, Query, Split, Translate) {
     var generate = function (items, generator, _start) {
       return Generator.make(items, generator, _start);

@@ -6,6 +6,9 @@ define(
     'ephox.polaris.array.Split'
   ],
 
+  /**
+   * Documentation is in the actual implementations.
+   */
   function (Slice, Split) {
 
     var splitby = function (array, predicate) {

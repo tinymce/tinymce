@@ -8,6 +8,9 @@ define(
     'ephox.polaris.pattern.Unsafe'
   ],
 
+  /**
+   * Documentation is in the actual implementations.
+   */
   function (Chars, Custom, Safe, Unsafe) {
     var safeword = function (input) {
       return Safe.word(input);
