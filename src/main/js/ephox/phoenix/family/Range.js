@@ -17,6 +17,11 @@ define(
       return a < b ? items.slice(a + delta1, b + delta2) : items.slice(b + delta2, a + delta1);
     };
 
+    /**
+     * Returns a flat array of text nodes between two items.
+     *
+     * Deltas are a broken concept. They control whether the item passed is included in the result.
+     */
     var range = function (universe, item1, delta1, item2, delta2) {
       if (universe.eq(item1, item2)) return [item1];
 

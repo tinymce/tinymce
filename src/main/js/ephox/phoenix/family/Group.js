@@ -8,6 +8,9 @@ define(
   ],
 
   function (Arr, Extract, Arrays) {
+    /**
+     * Return an array of arrays split by boundaries
+     */
     var group = function (universe, items) {
       var extractions = Arr.bind(items, function (item) {
         return Extract.from(universe, item);
