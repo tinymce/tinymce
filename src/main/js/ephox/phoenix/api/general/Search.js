@@ -5,6 +5,9 @@ define(
     'ephox.phoenix.search.Searcher'
   ],
 
+  /**
+   * Documentation is in the actual implementations.
+   */
   function (Searcher) {
     var run = function (universe, items, patterns) {
       return Searcher.run(universe, items, patterns);

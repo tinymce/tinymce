@@ -6,6 +6,9 @@ define(
     'ephox.phoenix.api.general.Extract'
   ],
 
+  /**
+   * Documentation is in the actual implementations.
+   */
   function (DomUniverse, Extract) {
 
     var universe = DomUniverse();

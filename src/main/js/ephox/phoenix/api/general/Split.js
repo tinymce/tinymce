@@ -6,6 +6,9 @@ define(
     'ephox.phoenix.split.Split'
   ],
 
+  /**
+   * Documentation is in the actual implementations.
+   */
   function (Range, Split) {
     var split = function (universe, item, position) {
       return Split.split(universe, item, position);

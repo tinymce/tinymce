@@ -6,6 +6,9 @@ define(
     'ephox.phoenix.api.general.Search'
   ],
 
+  /**
+   * Documentation is in the actual implementations.
+   */
   function (DomUniverse, Search) {
     var universe = DomUniverse();
 

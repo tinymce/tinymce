@@ -6,6 +6,9 @@ define(
     'ephox.phoenix.api.general.Split'
   ],
 
+  /**
+   * Documentation is in the actual implementations.
+   */
   function (DomUniverse, Split) {
     var universe = DomUniverse();
 

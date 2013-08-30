@@ -6,6 +6,9 @@ define(
     'ephox.phoenix.api.general.Wrapping'
   ],
 
+  /**
+   * Documentation is in the actual implementations.
+   */
   function (DomUniverse, Wrapping) {
     var universe = DomUniverse();
 

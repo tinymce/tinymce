@@ -6,6 +6,9 @@ define(
     'ephox.phoenix.extract.Find'
   ],
 
+  /**
+   * Documentation is in the actual implementations.
+   */
   function (Extract, Find) {
 
     var from = function (universe, item) {

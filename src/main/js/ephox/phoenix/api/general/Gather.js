@@ -6,6 +6,9 @@ define(
     'ephox.phoenix.gather.Neighbour'
   ],
 
+  /**
+   * Documentation is in the actual implementations.
+   */
   function (Gather, Neighbour) {
     var gather = function (universe, item, prune, transform) {
       return Gather.gather(universe, item, prune, transform);

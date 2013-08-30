@@ -6,6 +6,9 @@ define(
     'ephox.phoenix.api.general.Gather'
   ],
 
+  /**
+   * Documentation is in the actual implementations.
+   */
   function (DomUniverse, Gather) {
     var universe = DomUniverse();
 

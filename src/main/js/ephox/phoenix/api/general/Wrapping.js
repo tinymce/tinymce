@@ -6,6 +6,9 @@ define(
     'ephox.phoenix.wrap.Wraps'
   ],
 
+  /**
+   * Documentation is in the actual implementations.
+   */
   function (Wrapper, Wraps) {
     var nu = function (universe, element) {
       return Wraps(universe, element);

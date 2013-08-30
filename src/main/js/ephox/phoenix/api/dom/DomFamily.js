@@ -6,6 +6,9 @@ define(
     'ephox.phoenix.api.general.Family'
   ],
 
+  /**
+   * Documentation is in the actual implementations.
+   */
   function (DomUniverse, Family) {
     var universe = DomUniverse();
 
