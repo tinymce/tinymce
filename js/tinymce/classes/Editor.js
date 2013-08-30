@@ -2100,8 +2100,11 @@ define("tinymce/Editor", [
 
 			form = self.formElement;
 			if (form) {
-				form.submit = form._mceOldSubmit;
-				form._mceOldSubmit = null;
+				if (form._mceOldSubmit) {
+					form.submit = form._mceOldSubmit;
+					form._mceOldSubmit = null;
+				}
+
 				DOM.unbind(form, 'submit reset', self.formEventDelegate);
 			}
 
