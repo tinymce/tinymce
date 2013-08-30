@@ -7,6 +7,14 @@ define(
   ],
 
   function (Arr, Fun) {
+
+    /**
+     * Generate a PositionArray
+     *
+     * xs:     list of thing
+     * f:      thing -> Optional unit
+     * _start: sets the start position to search at
+     */
     var make = function (xs, f, _start) {
 
       var init = {

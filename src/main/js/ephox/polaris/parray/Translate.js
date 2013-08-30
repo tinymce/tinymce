@@ -8,6 +8,7 @@ define(
   ],
 
   function (Arr, Merger, Fun) {
+    /** Adjust a PositionArray positions by an offset */
     var translate = function (parray, offset) {
       return Arr.map(parray, function (unit) {
         return Merger.merge(unit, {
