@@ -6,9 +6,15 @@ define(
   ],
 
   function (Arr) {
+    /**
+     * Splits a string into multiple chunks
+     */
     var splits = function (value, indices) {
       if (indices.length === 0) return [value];
+
       var divisions = Arr.foldl(indices, function (acc, x) {
+        if (x === 0) return acc;
+
         var part = value.substring(acc.prev, x);
         return {
           prev: x,
