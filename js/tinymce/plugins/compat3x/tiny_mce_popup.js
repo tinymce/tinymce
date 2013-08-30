@@ -351,7 +351,8 @@ var tinyMCEPopup = {
 				"insert": "Ok",
 				"cancel": "Cancel",
 				"not_set": "--",
-				"class_name": "Class name"
+				"class_name": "Class name",
+				"browse": "Browse"
 			};
 
 			var langCode = tinymce.settings.language || 'en';
