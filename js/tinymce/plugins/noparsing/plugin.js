@@ -7,6 +7,8 @@
  * License: http://www.tinymce.com/license
  */
 
+/*global tinymce:true */
+
 /**
  * No Parsing
  *
