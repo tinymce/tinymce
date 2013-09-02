@@ -54,6 +54,7 @@ define("tinymce/dom/DOMUtils", [
 		self.stdMode = !isIE || doc.documentMode >= 8;
 		self.boxModel = !isIE || doc.compatMode == "CSS1Compat" || self.stdMode;
 		self.hasOuterHTML = "outerHTML" in doc.createElement("a");
+		this.boundEvents = [];
 
 		self.settings = settings = extend({
 			keep_values: false,
@@ -1902,7 +1903,14 @@ define("tinymce/dom/DOMUtils", [
 		 * @return {function} Function callback handler the same as the one passed in.
 		 */
 		bind: function(target, name, func, scope) {
-			return this.events.bind(target, name, func, scope || this);
+			var self = this;
+
+			// Collect all window/document events bound by editor instance
+			if (self.settings.collect && (target === self.doc || target === self.win)) {
+				self.boundEvents.push([target, name, func, scope]);
+			}
+
+			return self.events.bind(target, name, func, scope || self);
 		},
 
 		/**
@@ -1916,6 +1924,21 @@ define("tinymce/dom/DOMUtils", [
 		 * were passed in.
 		 */
 		unbind: function(target, name, func) {
+			var self = this;
+
+			// Remove any bound events matching the input
+			if (self.boundEvents) {
+				var i = self.boundEvents.length;
+
+				while (i--) {
+					var item = self.boundEvents[i];
+
+					if (target == item[0] && (!name || name == item[1]) && (!func || func == item[2])) {
+						this.events.unbind(item[0], item[1], item[2]);
+					}
+				}
+			}
+
 			return this.events.unbind(target, name, func);
 		},
 
@@ -1958,6 +1981,18 @@ define("tinymce/dom/DOMUtils", [
 		 */
 		destroy: function() {
 			var self = this;
+
+			// Unbind all events bound to window/document by editor instance
+			if (self.boundEvents) {
+				var i = self.boundEvents.length;
+
+				while (i--) {
+					var item = self.boundEvents[i];
+					this.events.unbind(item[0], item[1], item[2]);
+				}
+
+				self.boundEvents = null;
+			}
 
 			self.win = self.doc = self.root = self.events = self.frag = null;
 		},

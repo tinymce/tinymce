@@ -1113,7 +1113,7 @@ define("tinymce/ui/Control", [
 			delete Control.controlIdLookup[self._id];
 			delete elementIdCache[self._id];
 
-			if (elm.parentNode) {
+			if (elm && elm.parentNode) {
 				var nodes = elm.getElementsByTagName('*');
 
 				i = nodes.length;

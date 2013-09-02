@@ -161,8 +161,9 @@ define("tinymce/Editor", [
 			ie7_compat: true
 		}, settings);
 
-		// TODO: Fix this
-		AddOnManager.settings = settings;
+		AddOnManager.language = settings.language || 'en';
+		AddOnManager.languageLoad = settings.language_load;
+
 		AddOnManager.baseURL = editorManager.baseURL;
 
 		/**
@@ -273,15 +274,16 @@ define("tinymce/Editor", [
 		render: function() {
 			var self = this, settings = self.settings, id = self.id, suffix = self.suffix;
 
-			// Page is not loaded yet, wait for it
-			if (!Event.domLoaded) {
-				DOM.bind(window, 'ready', function() {
-					self.render();
-				});
-				return;
+			function readyHandler() {
+				DOM.unbind(window, 'ready', readyHandler);
+				self.render();
 			}
 
-			self.editorManager.settings = settings;
+			// Page is not loaded yet, wait for it
+			if (!Event.domLoaded) {
+				DOM.bind(window, 'ready', readyHandler);
+				return;
+			}
 
 			// Element not found, then skip initialization
 			if (!self.getElement()) {
@@ -766,6 +768,7 @@ define("tinymce/Editor", [
 				class_filter: settings.class_filter,
 				update_styles: true,
 				root_element: settings.content_editable ? self.id : null,
+				collect: settings.content_editable,
 				schema: self.schema,
 				onSetAttrib: function(e) {
 					self.fire('SetAttrib', e);
@@ -2034,6 +2037,7 @@ define("tinymce/Editor", [
 
 				self.editorManager.remove(self);
 				DOM.remove(elm);
+				self.destroy();
 			}
 		},
 
@@ -2079,7 +2083,7 @@ define("tinymce/Editor", [
 
 			// We must unbind on Gecko since it would otherwise produce the pesky "attempt
 			// to run compile-and-go script on a cleared scope" message
-			if (isGecko) {
+			if (automatic && isGecko) {
 				Event.unbind(self.getDoc());
 				Event.unbind(self.getWin());
 				Event.unbind(self.getBody());
