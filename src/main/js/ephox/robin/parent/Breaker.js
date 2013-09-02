@@ -24,6 +24,9 @@ define(
       return second;
     };
 
+    /**
+     * Move everything after child in the parent element into a clone of the parent (placed after parent).
+     */
     var breakAt = function (universe, parent, child) {
       var parts = bisect(universe, parent, child);
       return parts.map(function (ps) {

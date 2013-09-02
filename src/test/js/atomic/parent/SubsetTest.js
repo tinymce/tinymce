@@ -52,6 +52,7 @@ test(
     check(Option.some(['three-five']), 'three-five', 'five');
     check(Option.some(['three-five']), 'five', 'three-five');
     check(Option.some(['two', 'three-five']), 'two', 'five');
+    check(Option.some(['two', 'three-five']), 'two', 'four');
     check(Option.some(['two', 'three-five', 'six', 'seven-nine']), 'two', 'eight');
 
 

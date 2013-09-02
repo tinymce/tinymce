@@ -9,11 +9,18 @@ define(
 
   function (Arr, Fun, Option) {
     var all = function (universe, look, elements, f) {
-      return elements.length > 0 ? f(universe, look, elements[0], elements.slice(1)) : Option.none();
+      var head = elements[0];
+      var tail = elements.slice(1);
+      return f(universe, look, head, tail);
     };
 
+    /**
+     * Check if look returns the same element for all elements, and return it if it exists.
+     */
     var oneAll = function (universe, look, elements) {
-      return all(universe, look, elements, unsafeOne);
+      return elements.length > 0 ?
+        all(universe, look, elements, unsafeOne) :
+        Option.none();
     };
 
     var unsafeOne = function (universe, look, head, tail) {
