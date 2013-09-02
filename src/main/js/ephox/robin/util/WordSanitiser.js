@@ -21,25 +21,26 @@ define(
       return WordScope(word.substring(0, word.length - 1), ws.left(), Option.some("'"));
     };
 
-    var isQuote = function (s, i) { 
-      return s.charAt(i) === "'";
+    var isQuote = function (s) {
+      return s === "'";
     };
 
     var rhs = function (ws) {
       var word = ws.word();
-      var trailing = word.length >= 2 && isQuote(word, word.length - 1) && !isQuote(word, word.length - 2);
+      var trailing = word.length >= 2 && isQuote(word.charAt(word.length - 1)) && !isQuote(word.charAt(word.length - 2));
       return trailing ? trimEnd(ws) : ws;
     };
 
     var lhs = function (ws) {
       var word = ws.word();
-      var exc = Arr.exists(whitelist, function (x) {
+      var whitelisted = Arr.exists(whitelist, function (x) {
         return word.indexOf(x) > -1;
       });
 
-      var leading = exc ? 
-        isQuote(word, 0) && isQuote(word, 1) && !isQuote(word, 2)
-        : word.length >= 2 && isQuote(word, 0) && !isQuote(word, 1);
+      var apostrophes = whitelisted ? 2 : 1;
+      var quoted = word.substring(0, apostrophes);
+
+      var leading = Arr.forall(quoted, isQuote) && !isQuote(word.charAt(apostrophes));
 
       return leading ? trimStart(ws) : ws;
     };

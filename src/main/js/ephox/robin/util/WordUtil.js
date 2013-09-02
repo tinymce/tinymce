@@ -15,6 +15,9 @@ define(
 
     var zero = Fun.constant(0);
 
+    /**
+     * Returns optional text after the last word break character
+     */
     var lastWord = function (text) {
       var indices = Search.findall(text, Pattern.custom(Pattern.wordbreak(), zero, zero));
       var last = Option.from(indices[indices.length - 1]);
@@ -23,6 +26,9 @@ define(
       });
     };
 
+    /**
+     * Returns optional text up to the first word break character
+     */
     var firstWord = function (text) {
       // ASSUMPTION: search is sufficient because we only need to find the first one.
       var index = text.search(wordstart);
