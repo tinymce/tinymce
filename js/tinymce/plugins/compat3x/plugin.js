@@ -21,14 +21,18 @@
 (function(tinymce) {
 	var reported;
 
+	function log(apiCall) {
+		if (!reported && window && window.console) {
+			reported = true;
+			console.log("Deprecated TinyMCE API call: " + apiCall);
+		}
+	}
+
 	function Dispatcher(target, newEventName, argsMap, defaultScope) {
 		target = target || this;
 
 		this.add = function(callback, scope) {
-			if (!reported && window && window.console) {
-				reported = true;
-				console.log('Deprecated TinyMCE API call: <target>.on' + newEventName + ".add(..)");
-			}
+			log('<target>.on' + newEventName + ".add(..)");
 
 			// Convert callback({arg1:x, arg2:x}) -> callback(arg1, arg2)
 			function patchedEventCallback(e) {
@@ -85,7 +89,7 @@
 	tinymce.onAddEditor = new Dispatcher(tinymce, "AddEditor", "editor");
 	tinymce.onRemoveEditor = new Dispatcher(tinymce, "RemoveEditor", "editor");
 
-	tinymce.PluginManager.add("compat3x", function(editor) {
+	function patchEditor(editor) {
 		function patchEditorEvents(oldEventNames, argsMap) {
 			tinymce.each(oldEventNames.split(" "), function(oldName) {
 				editor["on" + oldName] = new Dispatcher(editor, oldName, argsMap);
@@ -107,16 +111,24 @@
 			};
 		}
 
+		if (editor.controlManager) {
+			return;
+		}
+
 		editor.controlManager = {
 			buttons: {},
 
 			setDisabled: function(name, state) {
+				log("controlManager.setDisabled(..)");
+
 				if (this.buttons[name]) {
 					this.buttons[name].disabled(state);
 				}
 			},
 
 			setActive: function(name, state) {
+				log("controlManager.setActive(..)");
+
 				if (this.buttons[name]) {
 					this.buttons[name].active(state);
 				}
@@ -164,6 +176,8 @@
 				settings.onPostRender = patchedPostRender;
 			}
 
+			settings.title = tinymce.i18n.translate((editor.settings.language || "en") + "." + settings.title);
+
 			return originalAddButton.call(this, name, settings);
 		};
 
@@ -181,12 +195,16 @@
 			selection.onSetContent = new Dispatcher(editor, "SetContent", filterSelectionEvents(true), selection);
 
 			editor.windowManager.createInstance = function(className, a, b, c, d, e) {
-				var constr = tinymce.resolve(className);
+				log("windowManager.createInstance(..)");
 
+				var constr = tinymce.resolve(className);
 				return new constr(a, b, c, d, e);
 			};
 		});
-	});
+	}
+
+	tinymce.on('SetupEditor', patchEditor);
+	tinymce.PluginManager.add("compat3x", patchEditor);
 
 	tinymce.addI18n = function(prefix, o) {
 		var I18n = tinymce.util.I18n, each = tinymce.each;
