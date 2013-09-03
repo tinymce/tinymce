@@ -1,7 +1,9 @@
-Version 4.0.6 (2013-08-27)
+Version 4.0.6 (2013-09-xx)
+	Added new compat3x plugin that makes it possible to load most 3.x plugins. Only available in the development package.
 	Added new skin_url option enables you to load local skins when using the CDN version.
 	Added new theme_url option enables you to load local themes when using the CDN version.
 	Fixed bug where editor.insertContent wouldn't set format and selection type on events.
+	Fixed various memory leaks when removing editor instances dynamically.
 	Removed CSS for BR elements in visualblocks due to problems with Chrome and IE.
 Version 4.0.5 (2013-08-27)
 	Added visuals for UL, LI and BR to visualblocks plugin. Patch contributed by Dan Ransom.
