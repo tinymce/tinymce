@@ -651,5 +651,26 @@
 		equal(false, DOM.isEmpty(elm));
 	});
 
+	test('bind/unbind/fire', function() {
+		var count = 0;
+
+		DOM.bind(document, 'click', function() {count++;});
+		DOM.fire(document, 'click');
+		DOM.unbind(document, 'click');
+		equal(count, 1);
+
+		count = 0;
+		DOM.bind([document, window], 'click', function(e) {e.stopPropagation(); count++;});
+		DOM.fire(document, 'click');
+		DOM.fire(window, 'click');
+		DOM.unbind([document, window], 'click');
+		equal(count, 2);
+
+		count = 0;
+		DOM.fire(document, 'click');
+		DOM.fire(window, 'click');
+		equal(count, 0);
+	});
+
 	DOM.remove('test');
 })();
