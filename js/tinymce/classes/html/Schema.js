@@ -694,18 +694,18 @@ define("tinymce/html/Schema", [
 			// Remove these if they are empty by default
 			each(split('ol ul sub sup blockquote span font a table tbody tr strong em b i'), function(name) {
 				if (elements[name]) {
-					elements[name].removeEmpty = true;
+					elements[name].removeEmpty = false;
 				}
 			});
 
 			// Padd these by default
 			each(split('p h1 h2 h3 h4 h5 h6 th td pre div address caption'), function(name) {
-				elements[name].paddEmpty = true;
+				elements[name].paddEmpty = false;
 			});
 
 			// Remove these if they have no attributes
 			each(split('span'), function(name) {
-				elements[name].removeEmptyAttrs = true;
+				elements[name].removeEmptyAttrs = false;
 			});
 
 			// Remove these by default
