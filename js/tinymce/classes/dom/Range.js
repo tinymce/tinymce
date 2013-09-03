@@ -140,7 +140,11 @@ define("tinymce/dom/Range", [
 				if (o) {
 					startContainer.insertBefore(n, o);
 				} else {
-					startContainer.appendChild(n);
+					if (startContainer.nodeType == 3) {
+						dom.insertAfter(n, startContainer);
+					} else {
+						startContainer.appendChild(n);
+					}
 				}
 			}
 		}
