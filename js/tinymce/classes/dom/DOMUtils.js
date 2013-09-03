@@ -1895,15 +1895,25 @@ define("tinymce/dom/DOMUtils", [
 		 * Adds an event handler to the specified object.
 		 *
 		 * @method bind
-		 * @param {Element/Document/Window/Array/String} o Object or element id string to add event
+		 * @param {Element/Document/Window/Array} target Target element to bind events to.
 		 * handler to or an array of elements/ids/documents.
-		 * @param {String} n Name of event handler to add, for example: click.
-		 * @param {function} f Function to execute when the event occurs.
-		 * @param {Object} s Optional scope to execute the function in.
+		 * @param {String} name Name of event handler to add, for example: click.
+		 * @param {function} func Function to execute when the event occurs.
+		 * @param {Object} scope Optional scope to execute the function in.
 		 * @return {function} Function callback handler the same as the one passed in.
 		 */
 		bind: function(target, name, func, scope) {
 			var self = this;
+
+			if (Tools.isArray(target)) {
+				var i = target.length;
+
+				while (i--) {
+					target[i] = self.bind(target[i], name, func, scope);
+				}
+
+				return target;
+			}
 
 			// Collect all window/document events bound by editor instance
 			if (self.settings.collect && (target === self.doc || target === self.win)) {
@@ -1917,18 +1927,28 @@ define("tinymce/dom/DOMUtils", [
 		 * Removes the specified event handler by name and function from an element or collection of elements.
 		 *
 		 * @method unbind
-		 * @param {String/Element/Array} o Element ID string or HTML element or an array of elements or ids to remove handler from.
-		 * @param {String} n Event handler name, for example: "click"
-		 * @param {function} f Function to remove.
+		 * @param {Element/Document/Window/Array} target Target element to unbind events on.
+		 * @param {String} name Event handler name, for example: "click"
+		 * @param {function} func Function to remove.
 		 * @return {bool/Array} Bool state of true if the handler was removed, or an array of states if multiple input elements
 		 * were passed in.
 		 */
 		unbind: function(target, name, func) {
-			var self = this;
+			var self = this, i;
+
+			if (Tools.isArray(target)) {
+				i = target.length;
+
+				while (i--) {
+					target[i] = self.unbind(target[i], name, func);
+				}
+
+				return target;
+			}
 
 			// Remove any bound events matching the input
-			if (self.boundEvents) {
-				var i = self.boundEvents.length;
+			if (self.boundEvents && (target === self.doc || target === self.win)) {
+				i = self.boundEvents.length;
 
 				while (i--) {
 					var item = self.boundEvents[i];
