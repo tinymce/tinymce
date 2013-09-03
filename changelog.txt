@@ -2,6 +2,7 @@ Version 4.0.6 (2013-09-xx)
 	Added new compat3x plugin that makes it possible to load most 3.x plugins. Only available in the development package.
 	Added new skin_url option enables you to load local skins when using the CDN version.
 	Added new theme_url option enables you to load local themes when using the CDN version.
+	Added new importcss_file_filter option to importcss to enable users to specify what files to import from.
 	Fixed bug where editor.insertContent wouldn't set format and selection type on events.
 	Fixed bug where inserting BR elements on IE 8 would thrown an exception when the range is at a empty text node.
 	Fixed so code dialog height gets smaller that the viewport height if it doesn't fit.

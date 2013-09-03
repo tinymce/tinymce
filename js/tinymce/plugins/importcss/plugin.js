@@ -13,12 +13,24 @@
 tinymce.PluginManager.add('importcss', function(editor) {
 	var each = tinymce.each;
 
-	function getSelectors(doc) {
+	function getSelectors(doc, fileFilter) {
 		var selectors = [], contentCSSUrls = {};
 
 		function append(styleSheet, imported) {
-			if (!imported && !contentCSSUrls[styleSheet.href]) {
+			var href = styleSheet.href;
+
+			if (!imported && !contentCSSUrls[href]) {
 				return;
+			}
+
+			if (fileFilter) {
+				if (fileFilter instanceof RegExp && !fileFilter.test(href)) {
+					return;
+				}
+
+				if (typeof(fileFilter) == "string" && href.indexOf(fileFilter) === -1) {
+					return;
+				}
 			}
 
 			each(styleSheet.imports, function(styleSheet) {
@@ -98,12 +110,13 @@ tinymce.PluginManager.add('importcss', function(editor) {
 		editor.on('renderFormatsMenu', function(e) {
 			var selectorConverter = editor.settings.importcss_selector_converter || convertSelectorToFormat;
 			var selectors = {};
+			var fileFilter = editor.settings.importcss_file_filter;
 
 			if (!editor.settings.importcss_append) {
 				e.control.items().remove();
 			}
 
-			each(getSelectors(editor.getDoc()), function(selector) {
+			each(getSelectors(editor.getDoc(), fileFilter), function(selector) {
 				if (selector.indexOf('.mce-') === -1) {
 					if (!selectors[selector]) {
 						var format = selectorConverter(selector);
@@ -113,7 +126,7 @@ tinymce.PluginManager.add('importcss', function(editor) {
 
 							editor.formatter.register(formatName, format);
 
-							e.control.append(tinymce.extend({}, e.control.settings.itemDefaults, {
+							e.control.add(tinymce.extend({}, e.control.settings.itemDefaults, {
 								text: format.title,
 								format: formatName
 							}));
@@ -123,6 +136,8 @@ tinymce.PluginManager.add('importcss', function(editor) {
 					}
 				}
 			});
+
+			e.control.renderNew();
 		});
 	}
 });
