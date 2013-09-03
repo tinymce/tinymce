@@ -19,7 +19,7 @@ tinymce.PluginManager.add('code', function(editor) {
 				name: 'code',
 				multiline: true,
 				minWidth: editor.getParam("code_dialog_width", 600),
-				minHeight: editor.getParam("code_dialog_height", 500),
+				minHeight: editor.getParam("code_dialog_height", Math.min(tinymce.DOM.getViewPort().h - 200, 500)),
 				value: editor.getContent({source_view: true}),
 				spellcheck: false
 			},

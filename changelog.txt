@@ -4,6 +4,7 @@ Version 4.0.6 (2013-09-xx)
 	Added new theme_url option enables you to load local themes when using the CDN version.
 	Fixed bug where editor.insertContent wouldn't set format and selection type on events.
 	Fixed bug where inserting BR elements on IE 8 would thrown an exception when the range is at a empty text node.
+	Fixed so code dialog height gets smaller that the viewport height if it doesn't fit.
 	Fixed various memory leaks when removing editor instances dynamically.
 	Removed CSS for BR elements in visualblocks due to problems with Chrome and IE.
 Version 4.0.5 (2013-08-27)
