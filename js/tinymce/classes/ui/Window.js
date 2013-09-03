@@ -385,8 +385,8 @@ define("tinymce/ui/Window", [
 		remove: function() {
 			var self = this;
 
-			self._super();
 			self.dragHelper.destroy();
+			self._super();
 
 			if (self.statusbar) {
 				this.statusbar.remove();

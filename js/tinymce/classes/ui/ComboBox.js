@@ -197,6 +197,11 @@ define("tinymce/ui/ComboBox", [
 			return self._super();
 		},
 
+		remove: function() {
+			DomUtils.off(this.getEl('inp'));
+			this._super();
+		},
+
 		/**
 		 * Renders the control as a HTML string.
 		 *

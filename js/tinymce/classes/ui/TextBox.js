@@ -183,6 +183,11 @@ define("tinymce/ui/TextBox", [
 			});
 
 			return self._super();
+		},
+
+		remove: function() {
+			DomUtils.off(this.getEl());
+			this._super();
 		}
 	});
 });
