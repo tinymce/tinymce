@@ -45,11 +45,19 @@ define(
       return leading ? trimStart(ws) : ws;
     };
 
+    /**
+     * If there are quotes at the edges of the WordScope, this determines if they are part of the word
+     *
+     * ws: WordScope
+     */
     var scope = function (ws) {
       var r = rhs(ws);
       return lhs(r);
     };
 
+    /**
+     * Extracts the actual word from the text using scope()
+     */
     var text = function (word) {
       var ws = WordScope(word, Option.none(), Option.none());
       var r = scope(ws);
