@@ -263,6 +263,7 @@ define("tinymce/Editor", [
 
 		// Call setup
 		self.execCallback('setup', self);
+		editorManager.fire('SetupEditor', self);
 	}
 
 	Editor.prototype = {
