@@ -1751,7 +1751,7 @@ define("tinymce/Editor", [
 				self.fire('SetContent', args);
 			} else {
 				// Parse and serialize the html
-				if (args.format !== 'raw') {
+				if (args.format !== 'raw' && args.format !== 'unvalidated_html') {
 					content = new Serializer({}, self.schema).serialize(
 						self.parser.parse(content, {isRootContent: true})
 					);
