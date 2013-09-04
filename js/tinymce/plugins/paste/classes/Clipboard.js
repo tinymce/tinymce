@@ -105,7 +105,7 @@ define("tinymce/pasteplugin/Clipboard", [
 
 			// Create a pastebin and move the selection into the bin
 			var pastebinElm = editor.dom.add(editor.getBody(), 'div', {
-				contentEditable: false,
+				contentEditable: true,
 				"data-mce-bogus": "1",
 				style: 'position: absolute; top: ' + scrollTop + 'px; left: 0; width: 1px; height: 1px; overflow: hidden'
 			}, '<div contentEditable="true" data-mce-bogus="1">X</div>');
