@@ -11,6 +11,11 @@ define(
 
   function (Arr, Option, Spot, PositionArray, Strings) {
 
+    /**
+     * Re-generates an item's text nodes, split as defined by the positions array.
+     *
+     * Returns a PositionArray of the result.
+     */
     var subdivide = function (universe, item, positions) {
       var text = universe.property().getText(item);
       var pieces = Arr.filter(Strings.splits(text, positions), function (section) {
@@ -26,8 +31,8 @@ define(
         return Option.some(result);
       }, pieces[0].length);
 
-      var otherItems = Arr.map(others, function (a) { return a.element(); });
-      universe.insert().afterAll(item, otherItems);
+      var otherElements = Arr.map(others, function (a) { return a.element(); });
+      universe.insert().afterAll(item, otherElements);
 
       return [ Spot.range(item, 0, pieces[0].length) ].concat(others);
     };

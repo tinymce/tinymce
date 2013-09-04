@@ -18,7 +18,7 @@ define(
     };
 
     /**
-     * Returns a flat array of text nodes between two items.
+     * Returns a flat array of text nodes between two defined nodes.
      *
      * Deltas are a broken concept. They control whether the item passed is included in the result.
      */
