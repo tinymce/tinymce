@@ -9,6 +9,10 @@ define(
   function (DomUniverse, Parent) {
     var universe = DomUniverse();
 
+    var sharedBlock = function(elements) {
+      return Parent.sharedBlock(universe, elements);
+    };
+
     var sharedOne = function (look, elements) {
       return Parent.sharedOne(universe, function (universe, element) {
         return look(element);
@@ -25,6 +29,7 @@ define(
 
     return {
       sharedOne: sharedOne,
+      sharedBlock: sharedBlock,
       subset: subset,
       breakAt: breakAt
     };
