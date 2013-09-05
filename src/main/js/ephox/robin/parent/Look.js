@@ -5,7 +5,6 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  // FIX: No API wrapper for this
   function (Option) {
     /**
      * Creates a look function that searches the parent elements until

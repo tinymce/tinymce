@@ -9,14 +9,18 @@ define(
   function (DomUniverse, Parent) {
     var universe = DomUniverse();
 
-    var sharedBlock = function(elements) {
-      return Parent.sharedBlock(universe, elements);
-    };
-
     var sharedOne = function (look, elements) {
       return Parent.sharedOne(universe, function (universe, element) {
         return look(element);
       }, elements);
+    };
+
+    var lookFor = function (element) {
+      return Parent.lookFor(universe, element);
+    };
+
+    var lookUntil = function (pred) {
+      return Parent.lookUntil(universe, predicate);
     };
 
     var subset = function (start, finish) {
@@ -29,8 +33,9 @@ define(
 
     return {
       sharedOne: sharedOne,
-      sharedBlock: sharedBlock,
       subset: subset,
+      lookFor: lookFor,
+      lookUntil: lookUntil,
       breakAt: breakAt
     };
   }
