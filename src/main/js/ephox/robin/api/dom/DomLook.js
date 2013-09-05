@@ -3,22 +3,23 @@ define(
 
   [
     'ephox.boss.api.DomUniverse',
+    'ephox.peanut.Fun',
     'ephox.robin.api.general.Look'
   ],
 
-  function (DomUniverse, Look) {
+  function (DomUniverse, Fun, Look) {
     var universe = DomUniverse();
 
     var selector = function (sel) {
-      return Look.selector(universe, sel);
+      return Fun.curry(Look.selector(universe, sel), universe);
     };
 
     var predicate = function (pred) {
-      return Look.predicate(universe, pred);
+      return Fun.curry(Look.predicate(universe, pred), universe);
     };
 
     var exact = function (element) {
-      return Look.exact(universe, element);
+      return Fun.curry(Look.exact(universe, element), universe);
     };
 
     return {
