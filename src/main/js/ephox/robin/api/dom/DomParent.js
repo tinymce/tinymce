@@ -15,14 +15,6 @@ define(
       }, elements);
     };
 
-    var lookFor = function (element) {
-      return Parent.lookFor(universe, element);
-    };
-
-    var lookUntil = function (pred) {
-      return Parent.lookUntil(universe, predicate);
-    };
-
     var subset = function (start, finish) {
       return Parent.subset(universe, start, finish);
     };
@@ -34,8 +26,6 @@ define(
     return {
       sharedOne: sharedOne,
       subset: subset,
-      lookFor: lookFor,
-      lookUntil: lookUntil,
       breakAt: breakAt
     };
   }

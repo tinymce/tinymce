@@ -3,24 +3,11 @@ define(
 
   [
     'ephox.robin.parent.Breaker',
-    'ephox.robin.parent.Look',
     'ephox.robin.parent.Shared',
     'ephox.robin.parent.Subset'
   ],
 
-  function (Breaker, Look, Shared, Subset) {
-    var lookFor = function (universe, element) {
-      var predicate = function (elem) {
-        return universe.eq(element, elem);
-      };
-
-      return lookUntil(universe, predicate);
-    };
-
-    var lookUntil = function (universe, predicate) {
-      return Look.predicate(predicate);
-    };
-
+  function (Breaker, Shared, Subset) {
     var sharedOne = function (universe, look, elements) {
       return Shared.oneAll(universe, look, elements);
     };
@@ -35,8 +22,6 @@ define(
 
     return {
       sharedOne: sharedOne,
-      lookFor: lookFor,
-      lookUntil: lookUntil,
       subset: subset,
       breakAt: breakAt
     };

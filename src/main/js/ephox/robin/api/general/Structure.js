@@ -1,5 +1,5 @@
 define(
-  'ephox.robin.api.general.Identify',
+  'ephox.robin.api.general.Structure',
 
   [
     'ephox.compass.Arr'
@@ -35,9 +35,8 @@ define(
       ];
     };
 
-    var isBlock = function (universe, x) {
-      var tagName = universe.property().name(x);
-
+    var isBlock = function (universe, item) {
+      var tagName = universe.property().name(item);
       return Arr.contains(blockList(), tagName);
     };
 
