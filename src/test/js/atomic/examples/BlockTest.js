@@ -6,13 +6,15 @@ test(
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
     'ephox.compass.Arr',
+    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.robin.api.general.Look',
     'ephox.robin.api.general.Parent',
+    'ephox.robin.api.general.Structure',
     'ephox.robin.test.Assertions'
   ],
 
-  function (Gene, TestUniverse, TextGene, Arr, Option, Look, Parent, Assertions) {
+  function (Gene, TestUniverse, TextGene, Arr, Fun, Option, Look, Parent, Structure, Assertions) {
     var doc = TestUniverse(Gene('root', 'root', [
       Gene('d1', 'div', [
         TextGene('d1_t1', 'List: '),
@@ -51,6 +53,9 @@ test(
     check(Option.some('ol1'), ['li2'], Look.selector(doc, 'ol'));
     check(Option.some('ol1'), ['li2', 'li3', 'li4_text'], Look.selector(doc, 'ol'));
     check(Option.none(), ['li2', 'li5'], Look.selector(doc, 'ol'));
+
+    check(Option.some('ol1'), ['li2', 'li4'], Look.predicate(doc, Fun.curry(Structure.isBlock, doc)));
+    check(Option.some('d1'), ['li1_text', 'li5_text'], Look.exact(doc, { id: 'd1' }));
 
   }
 );
