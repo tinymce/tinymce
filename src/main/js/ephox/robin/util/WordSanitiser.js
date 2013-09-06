@@ -9,20 +9,20 @@ define(
 
   function (Arr, Option, WordScope) {
 
-    var whitelist = ["'twas"];
+    var whitelist = ['\'twas'];
 
     var trimStart = function (ws) {
       var word = ws.word();
-      return WordScope(word.substring(1), Option.some("'"), ws.right());
+      return WordScope(word.substring(1), Option.some('\''), ws.right());
     };
 
     var trimEnd = function (ws) {
       var word = ws.word();
-      return WordScope(word.substring(0, word.length - 1), ws.left(), Option.some("'"));
+      return WordScope(word.substring(0, word.length - 1), ws.left(), Option.some('\''));
     };
 
     var isQuote = function (s) {
-      return s === "'";
+      return s === '\'';
     };
 
     var rhs = function (ws) {
