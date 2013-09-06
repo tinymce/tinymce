@@ -20,6 +20,10 @@ define(
       return Query.get(parray, offset);
     };
 
+    var find = function (parray, pred) {
+      return Query.find(parray, pred);
+    };
+
     var splits = function (parray, positions, subdivide) {
       return Split.splits(parray, positions, subdivide);
     };
@@ -35,6 +39,7 @@ define(
     return {
       generate: generate,
       get: get,
+      find: find,
       splits: splits,
       translate: translate,
       sublist: sublist

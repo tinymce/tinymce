@@ -49,8 +49,13 @@ define(
       return first > -1 && last > -1 ? parray.slice(first, last) : [];
     };
 
+    var find = function (parray, pred) {
+      return Option.from(Arr.find(parray, pred));
+    };
+
     return {
       get: get,
+      find: find,
       inUnit: inUnit,
       sublist: sublist
     };
