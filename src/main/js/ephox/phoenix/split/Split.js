@@ -52,7 +52,7 @@ define(
       universe.property().setText(item, parts[0]);
 
       // Create new text nodes for the split text sections
-      var newText = Arr.map(parts.slice(1), universe.create().text);
+      var newText = Arr.map(parts.slice(1), function (text) { return universe.create().text(text); });
       var middle = newText[0];
 
       // Append new items
