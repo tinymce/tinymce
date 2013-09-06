@@ -2,10 +2,14 @@ define(
   'ephox.robin.api.general.Look',
 
   [
+    'ephox.peanut.Fun',
     'ephox.robin.look.Look'
   ],
 
-  function (Look) {
+  /**
+   * Documentation is in the actual implementations.
+   */
+  function (Fun, Look) {
     var selector = function (universe, sel) {
       return Look.selector(sel);
     };
@@ -15,11 +19,9 @@ define(
     };
 
     var exact = function (universe, item) {
-      var pred = function (other) {
-        return universe.eq(item, other);
-      };
+      var itemMatch = Fun.curry(universe.eq, item);
 
-      return Look.predicate(pred);
+      return Look.predicate(itemMatch);
     };
 
     return {

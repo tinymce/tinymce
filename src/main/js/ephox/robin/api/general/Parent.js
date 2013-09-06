@@ -7,6 +7,9 @@ define(
     'ephox.robin.parent.Subset'
   ],
 
+  /**
+   * Documentation is in the actual implementations.
+   */
   function (Breaker, Shared, Subset) {
     var sharedOne = function (universe, look, elements) {
       return Shared.oneAll(universe, look, elements);

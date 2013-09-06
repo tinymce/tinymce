@@ -9,13 +9,22 @@ define(
   ],
 
   function (Gather, Prune, Simplify, Transform) {
+
+    /**
+     * Gathers nodes between the start and finish elements.
+     *
+     * Where a node's children are all included, only the node is returned.
+     */
     var between = function (universe, start, finish) {
       var prune = Prune.range(universe, start, finish);
-      var transform =  Transform(universe);
+      var transform = Transform(universe);
       var actual = Gather.gather(universe, start, prune, transform);
       return actual.left().concat([start]).concat(actual.right());
     };
 
+    /**
+     * @see Simplify.simplify()
+     */
     var simplify = function (universe, elements) {
       return Simplify.simplify(universe, elements);
     };

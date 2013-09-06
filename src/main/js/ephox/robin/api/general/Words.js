@@ -6,6 +6,9 @@ define(
     'ephox.robin.words.Identify'
   ],
 
+  /**
+   * Documentation is in the actual implementations.
+   */
   function (Cluster, Identify) {
     var identify = function (allText) {
       return Identify.words(allText);

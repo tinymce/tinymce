@@ -9,20 +9,25 @@ define(
   ],
 
   function (Arr, Fun, Extract, Arrays) {
+    // FIX: dupe of phoenix.extract.TypedList.justText()
+    var justText = function (segment) {
+      return Arr.bind(segment, function (typedItem) {
+        return typedItem.fold(Fun.constant([]), Fun.constant([]), Fun.identity);
+      });
+    };
+
+    /**
+     * Groups all text nodes in the element tree by boundary and empty elements.
+     *
+     * Returns an array of array of text node.
+     */
     var text = function (universe, element) {
-      // Used in phoenix, but phoenix doesn't split on empty
       var extractions = Extract.from(universe, element);
       var segments = Arrays.splitby(extractions, function (x) {
         return x.fold(Fun.constant(true), Fun.constant(true), Fun.constant(false));
       });
 
-      return Arr.map(segments, function (x) {
-        return Arr.bind(x, function (y) {
-          return y.toText().fold(Fun.constant([]), function (v) {
-            return [v];
-          });
-        });
-      });
+      return Arr.map(segments, justText);
     };
 
     return {
