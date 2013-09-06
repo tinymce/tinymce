@@ -18,6 +18,11 @@ define(
         return universe.property().isEmptyTag(element) || universe.property().isBoundary(element);
       };
 
+      /**
+       * Prune transform for word cluster gathering. Stops on boundaries, empty elements and word edges.
+       *
+       * Splits the text (but not the node) on word boundaries.
+       */
       var prune = function (word, element) {
         var include = inc(element, word);
         return include.fold(function () {

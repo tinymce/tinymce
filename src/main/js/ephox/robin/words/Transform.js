@@ -7,6 +7,9 @@ define(
   ],
 
   function (Spot, Transforms) {
+    /**
+     * Continue transform for word cluster gathering, returns all text.
+     */
     return function (universe) {
       var transforms = Transforms(universe);
 

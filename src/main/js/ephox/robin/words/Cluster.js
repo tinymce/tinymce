@@ -15,34 +15,51 @@ define(
   ],
 
   function (Arr, Fun, Spot, Extract, Gather, Arrays, Zone, Identify, Prune, Transform) {
-    var generate = function (universe, element) {
-      var prune = Prune(universe);
-      var gathered = Gather.gather(universe, element, prune, Transform(universe));
-      var left = gathered.left();
-      var right = gathered.right();
-
-      var inner = Extract.all(universe, element);
-      var middle = Arr.map(inner, function (x) {
+    var extract = function (universe, element) {
+      var children = Extract.all(universe, element);
+      return Arr.map(children, function (x) {
         return Spot.text(x, universe.property().isText(x) ? universe.property().getText(x) : '');
       });
+    };
 
-      var elements = left.concat(middle).concat(right);
+    /**
+     * Finds words in groups of text (each HTML text node can have multiple words).
+     */
+    var findWords = function (universe, elements) {
       var groups = Arrays.splitby(elements, function (x) {
         var elem = x.element();
         return universe.property().isBoundary(elem) || universe.property().isEmptyTag(elem);
       });
 
-      var words = Arr.bind(groups, function (x) {
+      return Arr.bind(groups, function (x) {
         var text = Arr.bind(x, function (y) {
           return y.text();
         }).join('');
         return Identify.words(text);
       });
+    };
 
-      var baseElements = Arr.map(elements, function (x) {
-        return x.element();
-      });
+    /**
+     * Searches for words within the element or that span the edge of the element.
+     *
+     * Returns the words found and the elements that contain the words (not split on word boundaries).
+     */
+    var generate = function (universe, element) {
+      var prune = Prune(universe);
+      var transform = Transform(universe);
+      var gathered = Gather.gather(universe, element, prune, transform);
+
+      var left = gathered.left();
+      var right = gathered.right();
+      var middle = extract(universe, element);
+
+      var elements = left.concat(middle).concat(right);
+
+      var baseElements = Arr.map(elements, function (x) { return x.element(); });
       var zone = Zone.constant(baseElements);
+
+      var words = findWords(universe, elements);
+
       return {
         zone: Fun.constant(zone),
         words: Fun.constant(words)
