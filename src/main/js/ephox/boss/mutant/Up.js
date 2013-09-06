@@ -2,17 +2,16 @@ define(
   'ephox.boss.mutant.Up',
 
   [
-    'ephox.compass.Arr',
+    'ephox.boss.mutant.Comparator',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option'
   ],
 
-  function (Arr, Fun, Option) {
-    /* Obviously, we can't support full selector syntax ... so let's just split by comma and use as array to compare with name */
+  function (Comparator, Fun, Option) {
     var selector = function (item, query) {
-      var matches = query.split(',');
+      var matches = [];
       return item.parent.bind(function (parent) {
-        return  Arr.contains(matches, parent.name) ? Option.some(parent) : selector(parent, query);
+        return Comparator.is(parent, query) ? Option.some(parent) : selector(parent, query);
       });
     };
 

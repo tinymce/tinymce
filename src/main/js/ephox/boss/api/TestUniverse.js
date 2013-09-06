@@ -94,6 +94,7 @@ define(
           isBoundary: Properties.isBoundary
         }),
         eq: Comparator.eq,
+        is: Comparator.is,
         find: find,
         get: get,
         shortlog: shortlog

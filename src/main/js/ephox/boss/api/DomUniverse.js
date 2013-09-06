@@ -78,7 +78,7 @@ define(
         query: Fun.constant({
           comparePosition: comparePosition,
           prevSibling: Traverse.prevSibling,
-          nextSibling: Traverse.nextSibling
+          nextSibling: Traverse.nextSibling,
         }),
         property: Fun.constant({
           children: Traverse.children,
@@ -91,7 +91,8 @@ define(
           isBoundary: isBoundary,
           isEmptyTag: isEmptyTag
         }),
-        eq: Compare.eq
+        eq: Compare.eq,
+        is: Compare.is
       };
     };
   }
