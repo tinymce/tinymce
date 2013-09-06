@@ -6,9 +6,12 @@ define(
   ],
 
   function (Option) {
+    /**
+     * A prune that keeps going left until it reaches an empty element or boundary.
+     */
     return function (universe) {
       var stop = function (element) {
-        // INVESTIGATE: Probably shouldn't stop on empty.
+        // INVESTIGATE: Should it really stop on empty?
         return universe.property().isEmptyTag(element) || universe.property().isBoundary(element);
       };
 
