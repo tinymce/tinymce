@@ -8,7 +8,7 @@ define(
   function (Option) {
     return function (universe) {
       var stop = function (element) {
-        // FIX: Probably shouldn't stop on empty.
+        // INVESTIGATE: Probably shouldn't stop on empty.
         return universe.property().isEmptyTag(element) || universe.property().isBoundary(element);
       };
 
@@ -16,7 +16,7 @@ define(
         return stop(element) ? Option.some([]) : Option.none();
       };
 
-      var right = function (element) {
+      var right = function (/* element */) {
         return Option.some([]);
       };
 

@@ -22,8 +22,14 @@ define(
       });
     };
 
-    // FIX: Horribly inefficient.
+
+    /**
+     * Flattens the item list into just the top-most elements in the tree.
+     *
+     * In other words, removes duplicates and children.
+     */
     var simplify = function (universe, items) {
+    // FIX: Horribly inefficient.
       return Arr.filter(items, function (x, i) {
         var left = items.slice(0, i);
         var right = items.slice(i + 1);

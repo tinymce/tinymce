@@ -52,6 +52,7 @@ test(
     check([], []);
     check([ 'a' ], [ 'a' ]);
     check([ 'a' ], [ 'a', 'aa', 'ab' ]);
+    check([ 'a' ], [ 'a', 'aa', 'ab', 'acbba' ]);
     check([ 'a', 'b' ], [ 'a', 'aa', 'ab', 'b' ]);
   }
 );
