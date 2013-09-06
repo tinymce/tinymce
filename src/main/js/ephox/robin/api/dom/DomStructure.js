@@ -6,6 +6,9 @@ define(
     'ephox.robin.api.general.Structure'
   ],
 
+  /**
+   * Documentation is in the actual implementations.
+   */
   function (DomUniverse, Structure) {
     var universe = DomUniverse();
 

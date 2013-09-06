@@ -6,6 +6,9 @@ define(
     'ephox.robin.api.general.Pathway'
   ],
 
+  /**
+   * Documentation is in the actual implementations.
+   */
   function (DomUniverse, Pathway) {
     var universe = DomUniverse();
 

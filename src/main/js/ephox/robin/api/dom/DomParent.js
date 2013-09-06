@@ -6,6 +6,9 @@ define(
     'ephox.robin.api.general.Parent'
   ],
 
+  /**
+   * Documentation is in the actual implementations.
+   */
   function (DomUniverse, Parent) {
     var universe = DomUniverse();
 

@@ -6,6 +6,9 @@ define(
     'ephox.robin.api.general.LeftBlock'
   ],
 
+  /**
+   * Documentation is in the actual implementations.
+   */
   function (DomUniverse, LeftBlock) {
     var universe = DomUniverse();
 

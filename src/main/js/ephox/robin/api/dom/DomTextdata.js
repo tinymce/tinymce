@@ -6,6 +6,9 @@ define(
     'ephox.robin.api.general.Textdata'
   ],
 
+  /**
+   * Documentation is in the actual implementations.
+   */
   function (DomUniverse, Textdata) {
     var universe = DomUniverse();
 

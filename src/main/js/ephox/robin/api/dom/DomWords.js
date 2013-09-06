@@ -6,6 +6,9 @@ define(
     'ephox.robin.api.general.Words'
   ],
 
+  /**
+   * Documentation is in the actual implementations.
+   */
   function (DomUniverse, Words) {
     var universe = DomUniverse();
 

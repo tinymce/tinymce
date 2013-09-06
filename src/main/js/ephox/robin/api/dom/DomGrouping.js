@@ -6,6 +6,9 @@ define(
     'ephox.robin.api.general.Grouping'
   ],
 
+  /**
+   * Documentation is in the actual implementations.
+   */
   function (DomUniverse, Grouping) {
     var universe = DomUniverse();
     var text = function (element) {

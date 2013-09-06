@@ -7,6 +7,9 @@ define(
     'ephox.robin.api.general.Look'
   ],
 
+  /**
+   * Documentation is in the actual implementations.
+   */
   function (DomUniverse, Fun, Look) {
     var universe = DomUniverse();
 
