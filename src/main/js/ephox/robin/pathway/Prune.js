@@ -7,6 +7,9 @@ define(
   ],
 
   function (Fun, Option) {
+    /**
+     * A prune that given a start element, goes left or right until it reaches the finish element.
+     */
     var range = function (universe, start, finish) {
       var abort = Fun.constant(Option.some([]));
       var scour = function (item) {
