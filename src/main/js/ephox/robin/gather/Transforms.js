@@ -19,6 +19,12 @@ define(
         }, prune);
       };
 
+      /**
+       * Used by gather.Iterator (the 'f' variable).
+       * Recursively descends into children using iterator.
+       *
+       * Applies the transform to every leaf.
+       */
       var traverse = function (iterator, element, prune, transform) {
         var f = universe.property().isText(element) ? leaf : children;
         return f(iterator, element, prune, transform);

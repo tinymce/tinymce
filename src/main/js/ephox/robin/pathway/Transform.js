@@ -18,8 +18,9 @@ define(
 
       /**
        * Used by gather.Iterator (the 'f' variable).
+       * Recursively descends into children using iterator.
        *
-       * Recursively descends into children, which uses the iterator to find elements to call this function on.
+       * If nothing was pruned, returns the element instead of the recursive gather result.
        */
       var traverse = function (iterator, element, prune) {
         return universe.property().children(element).length === 0 ?
