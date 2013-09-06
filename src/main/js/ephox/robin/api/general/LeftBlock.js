@@ -10,7 +10,9 @@ define(
   function (Gather, Prune, Transform) {
     // FIX: Dupe, but Transform needs to change first
 
-    /** Gather elements left to the edge of the block item is in, ignoring children */
+    /**
+     * Gather elements left to the edge of the block item is in, ignoring children
+     */
     var top = function (universe, item) {
       var transform = Transform(universe);
       var prune = Prune(universe);
@@ -18,7 +20,9 @@ define(
       return gathered.left().concat([item]);
     };
 
-    /** Gather leaves left to the edge of the block item is in */
+    /**
+     * Gather leaves left to the edge of the block item is in
+     */
     var all = function (universe, item) {
       var transform = Transform(universe);
       var prune = Prune(universe);
