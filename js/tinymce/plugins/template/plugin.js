@@ -34,9 +34,6 @@ tinymce.PluginManager.add('template', function(editor) {
 		});
 
 		
-		
-		
-		
 		function onSelectTemplate(e) {
 			var value = e.control.value();
 
@@ -50,11 +47,11 @@ tinymce.PluginManager.add('template', function(editor) {
 						
 						// load content_css
 						if( editor.getParam('template_preview_apply_css') )
-				            previewHtml += getContentCss();
+                                                  previewHtml += getContentCss();
 						
 						// replace values
 						if( editor.getParam('template_preview_replace_values') )
-                            previewHtml += replaceTplVars( html );
+                                                  previewHtml += replaceTplVars( html );
 						else
 						    previewHtml += html;
 						
@@ -68,9 +65,7 @@ tinymce.PluginManager.add('template', function(editor) {
 			}
 
 			win.find('#description')[0].text(e.control.value().description);
-			
-			
-			
+
 		}
 
 		win = editor.windowManager.open({
@@ -190,7 +185,6 @@ tinymce.PluginManager.add('template', function(editor) {
 	function insertTemplate(ui, html) {
 		var el, n, dom = editor.dom, sel = editor.selection.getContent();
 
-		// OLAS2 addition
 		// original tmce code extracted to method 
 		html = replaceTplVars( html );
 
