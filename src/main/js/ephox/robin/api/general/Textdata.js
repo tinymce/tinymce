@@ -10,6 +10,9 @@ define(
   ],
 
   function (Arr, Fun, Option, Spot, PositionArray) {
+    /**
+     * Create a PositionArray of textnodes and returns the array along with the concatenated text.
+     */
     var get = function (universe, elements) {
       var list =  PositionArray.generate(elements, function (x, start) {
         return universe.property().isText(x) ?
@@ -28,13 +31,10 @@ define(
     };
 
     var cursor = function (universe, data, current, offset) {
-      // FIX: Breaking abstraction.
-      var element = Option.from(Arr.find(data.list(), function (x) {
-        return universe.eq(x.element(), current);
-      }));
-
-      var position = element.map(function (v) {
-        return v.start() + offset;
+      var position = PositionArray.find(data.list(), function (item) {
+        return universe.eq(item.element(), current);
+      }).map(function (element) {
+        return element.start() + offset;
       });
 
       return {
@@ -44,6 +44,12 @@ define(
       };
     };
 
+    /**
+     * Extract information from text nodes in the elements array. Returns:
+     * - a PositionArray of the text nodes
+     * - the text found, as a string
+     * - the cursor position of 'offset' in the text
+     */
     var from = function (universe, elements, current, offset) {
       var data = get(universe, elements);
       return cursor(universe, data, current, offset);
