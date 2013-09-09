@@ -234,8 +234,18 @@ define("tinymce/pasteplugin/Clipboard", [
 			} else {
 				editor.on('init', function() {
 					editor.dom.bind(editor.getBody(), 'paste', function(e) {
-						e.preventDefault();
-						editor.windowManager.alert('Please use Ctrl+V/Cmd+V keyboard shortcuts to paste contents.');
+						var doc = editor.getDoc();
+
+						if (shouldPasteAsPlainText() && (e.clipboardData || doc.dataTransfer)) {
+							e.preventDefault();
+							processText((e.clipboardData || doc.dataTransfer).getData('Text'));
+							return;
+						}
+
+						if (!Env.iOS) {
+							e.preventDefault();
+							editor.windowManager.alert('Please use Ctrl+V/Cmd+V keyboard shortcuts to paste contents.');
+						}
 					});
 				});
 
