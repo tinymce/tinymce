@@ -236,16 +236,16 @@ define("tinymce/pasteplugin/Clipboard", [
 					editor.dom.bind(editor.getBody(), 'paste', function(e) {
 						var doc = editor.getDoc();
 
-						if (shouldPasteAsPlainText() && (e.clipboardData || doc.dataTransfer)) {
-							e.preventDefault();
+						e.preventDefault();
+
+						// Paste as plain text when not using the keyboard
+						if (e.clipboardData || doc.dataTransfer) {
 							processText((e.clipboardData || doc.dataTransfer).getData('Text'));
 							return;
 						}
 
-						if (!Env.iOS) {
-							e.preventDefault();
-							editor.windowManager.alert('Please use Ctrl+V/Cmd+V keyboard shortcuts to paste contents.');
-						}
+						e.preventDefault();
+						editor.windowManager.alert('Please use Ctrl+V/Cmd+V keyboard shortcuts to paste contents.');
 					});
 				});
 
