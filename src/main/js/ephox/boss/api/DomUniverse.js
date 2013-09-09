@@ -78,7 +78,7 @@ define(
         query: Fun.constant({
           comparePosition: comparePosition,
           prevSibling: Traverse.prevSibling,
-          nextSibling: Traverse.nextSibling,
+          nextSibling: Traverse.nextSibling
         }),
         property: Fun.constant({
           children: Traverse.children,
