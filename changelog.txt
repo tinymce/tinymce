@@ -5,6 +5,10 @@ Version 4.0.6 (2013-09-xx)
 	Added new importcss_file_filter option to importcss to enable users to specify what files to import from.
 	Fixed bug where editor.insertContent wouldn't set format and selection type on events.
 	Fixed bug where inserting BR elements on IE 8 would thrown an exception when the range is at a empty text node.
+	Fixed bug where outdent of single LI element within another LI would produce an empty list element OL/UL.
+	Fixed bug where the bullist/numlist buttons wouldn't be deselected when deleting all contents.
+	Fixed bug where toggling an empty list item off wouldn't produce a new empty block element.
+	Fixed bug where it wasn't possible to apply lists to mixed text blocks and br lines.
 	Fixed so code dialog height gets smaller that the viewport height if it doesn't fit.
 	Fixed various memory leaks when removing editor instances dynamically.
 	Removed CSS for BR elements in visualblocks due to problems with Chrome and IE.

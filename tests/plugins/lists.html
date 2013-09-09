@@ -25,6 +25,12 @@ function trimBrs(html) {
 	return html.toLowerCase().replace(/<br[^>]*>|[\r\n]+/gi, '');
 }
 
+function execCommand(cmd) {
+	// Make sure we execute custom execCommands not browser commands
+	var cmdItem = editor.execCommands[cmd];
+	return cmdItem.func.call(cmdItem.scope, false, null);
+}
+
 test('Apply UL list to single P', function() {
 	editor.getBody().innerHTML = trimBrs(
 		'<p>a</p>'
@@ -32,7 +38,7 @@ test('Apply UL list to single P', function() {
 
 	editor.focus();
 	setSelection('p', 0);
-	editor.execCommand('InsertUnorderedList');
+	execCommand('InsertUnorderedList');
 
 	equal(editor.getContent(), '<ul><li>a</li></ul>');
 	equal(editor.selection.getNode().nodeName, 'LI');
@@ -45,7 +51,7 @@ test('Apply UL list to single empty P', function() {
 
 	editor.focus();
 	setSelection('p', 0);
-	editor.execCommand('InsertUnorderedList');
+	execCommand('InsertUnorderedList');
 
 	equal(trimBrs(editor.getContent({format: 'raw'})), '<ul><li></li></ul>');
 	equal(editor.selection.getNode().nodeName, 'LI');
@@ -60,7 +66,7 @@ test('Apply UL list to multiple Ps', function() {
 
 	editor.focus();
 	setSelection('p', 0, 'p:last', 0);
-	editor.execCommand('InsertUnorderedList');
+	execCommand('InsertUnorderedList');
 
 	equal(editor.getContent(), 
 		'<ul>' +
@@ -79,7 +85,7 @@ test('Apply OL list to single P', function() {
 
 	editor.focus();
 	setSelection('p', 0);
-	editor.execCommand('InsertOrderedList');
+	execCommand('InsertOrderedList');
 
 	equal(editor.getContent(), '<ol><li>a</li></ol>');
 	equal(editor.selection.getNode().nodeName, 'LI');
@@ -92,7 +98,7 @@ test('Apply OL list to single empty P', function() {
 
 	editor.focus();
 	setSelection('p', 0);
-	editor.execCommand('InsertOrderedList');
+	execCommand('InsertOrderedList');
 
 	equal(trimBrs(editor.getContent({format: 'raw'})), '<ol><li></li></ol>');
 	equal(editor.selection.getNode().nodeName, 'LI');
@@ -107,7 +113,7 @@ test('Apply OL list to multiple Ps', function() {
 
 	editor.focus();
 	setSelection('p', 0, 'p:last', 0);
-	editor.execCommand('InsertOrderedList');
+	execCommand('InsertOrderedList');
 
 	equal(editor.getContent(), 
 		'<ol>' +
@@ -130,7 +136,7 @@ test('Apply OL to UL list', function() {
 
 	editor.focus();
 	setSelection('li', 0, 'li:last', 0);
-	editor.execCommand('InsertOrderedList');
+	execCommand('InsertOrderedList');
 
 	equal(editor.getContent(), 
 		'<ol>' +
@@ -153,7 +159,7 @@ test('Apply OL to UL list with collapsed selection', function() {
 
 	editor.focus();
 	setSelection('li:nth-child(2)');
-	editor.execCommand('InsertOrderedList');
+	execCommand('InsertOrderedList');
 
 	equal(editor.getContent(), 
 		'<ol>' +
@@ -176,7 +182,7 @@ test('Apply UL to OL list', function() {
 
 	editor.focus();
 	setSelection('li', 0, 'li:last', 0);
-	editor.execCommand('InsertUnorderedList');
+	execCommand('InsertUnorderedList');
 
 	equal(editor.getContent(), 
 		'<ul>' +
@@ -199,7 +205,7 @@ test('Apply UL to OL list collapsed selection', function() {
 
 	editor.focus();
 	setSelection('li:nth-child(2)');
-	editor.execCommand('InsertUnorderedList');
+	execCommand('InsertUnorderedList');
 
 	equal(editor.getContent(), 
 		'<ul>' +
@@ -224,7 +230,7 @@ test('Apply UL to P and merge with adjacent lists', function() {
 
 	editor.focus();
 	setSelection('p', 1);
-	editor.execCommand('InsertUnorderedList');
+	execCommand('InsertUnorderedList');
 
 	equal(editor.getContent(), 
 		'<ul>' +
@@ -249,7 +255,7 @@ test('Apply UL to OL and merge with adjacent lists', function() {
 
 	editor.focus();
 	setSelection('ol li', 1);
-	editor.execCommand('InsertUnorderedList');
+	execCommand('InsertUnorderedList');
 
 	equal(editor.getContent(), 
 		'<ul>' +
@@ -274,7 +280,7 @@ test('Apply OL to P and merge with adjacent lists', function() {
 
 	editor.focus();
 	setSelection('p', 1);
-	editor.execCommand('InsertOrderedList');
+	execCommand('InsertOrderedList');
 
 	equal(editor.getContent(), 
 		'<ol>' +
@@ -299,7 +305,7 @@ test('Apply OL to UL and merge with adjacent lists', function() {
 
 	editor.focus();
 	setSelection('ul li', 1);
-	editor.execCommand('InsertOrderedList');
+	execCommand('InsertOrderedList');
 
 	equal(editor.getContent(), 
 		'<ol>' +
@@ -320,7 +326,7 @@ test('Apply UL list to single text line', function() {
 
 	editor.focus();
 	setSelection('body', 0);
-	editor.execCommand('InsertUnorderedList');
+	execCommand('InsertUnorderedList');
 
 	equal(editor.getContent(), '<ul><li>a</li></ul>');
 	equal(editor.selection.getNode().nodeName, 'LI');
@@ -335,7 +341,7 @@ test('Apply UL list to single text line with BR', function() {
 
 	editor.focus();
 	setSelection('body', 0);
-	editor.execCommand('InsertUnorderedList');
+	execCommand('InsertUnorderedList');
 
 	equal(editor.getContent(), '<ul><li>a</li></ul>');
 	equal(editor.selection.getNode().nodeName, 'LI');
@@ -352,7 +358,7 @@ test('Apply UL list to multiple lines separated by BR', function() {
 
 	editor.focus();
 	editor.execCommand('SelectAll');
-	editor.execCommand('InsertUnorderedList');
+	execCommand('InsertUnorderedList');
 
 	equal(editor.getContent(),
 		'<ul>' +
@@ -375,7 +381,7 @@ test('Apply UL list to multiple lines separated by BR and with trailing BR', fun
 
 	editor.focus();
 	editor.execCommand('SelectAll');
-	editor.execCommand('InsertUnorderedList');
+	execCommand('InsertUnorderedList');
 
 	equal(editor.getContent(),
 		'<ul>' +
@@ -397,8 +403,8 @@ test('Apply UL list to multiple formatted lines separated by BR', function() {
 	);
 
 	editor.focus();
-	editor.execCommand('SelectAll');
-	editor.execCommand('InsertUnorderedList');
+	setSelection('strong', 0, 'em', 0);
+	execCommand('InsertUnorderedList');
 
 	equal(editor.getContent(),
 		'<ul>' +
@@ -421,8 +427,11 @@ test('Apply UL list to br line and text block line', function() {
 	);
 
 	editor.focus();
-	editor.execCommand('SelectAll');
-	editor.execCommand('InsertUnorderedList');
+	var rng = editor.dom.createRng();
+	rng.setStart(editor.getBody().firstChild, 0);
+	rng.setEnd(editor.getBody().lastChild.firstChild, 1);
+	editor.selection.setRng(rng);
+	execCommand('InsertUnorderedList');
 
 	equal(editor.getContent(),
 		'<ul>' +
@@ -444,8 +453,11 @@ test('Apply UL list to text block line and br line', function() {
 	);
 
 	editor.focus();
-	editor.execCommand('SelectAll');
-	editor.execCommand('InsertUnorderedList');
+	var rng = editor.dom.createRng();
+	rng.setStart(editor.getBody().firstChild.firstChild, 0);
+	rng.setEnd(editor.getBody().lastChild, 1);
+	editor.selection.setRng(rng);
+	execCommand('InsertUnorderedList');
 
 	equal(editor.getContent(),
 		'<ul>' +
@@ -458,6 +470,50 @@ test('Apply UL list to text block line and br line', function() {
 	equal(editor.selection.getEnd().nodeName, 'LI');
 });
 
+test('Apply UL list to all BR lines (SelectAll)', function() {
+	editor.settings.forced_root_block = false;
+
+	editor.getBody().innerHTML = (
+		'a<br>' +
+		'b<br>' +
+		'c<br>'
+	);
+
+	editor.focus();
+	editor.execCommand('SelectAll');
+	execCommand('InsertUnorderedList');
+
+	equal(editor.getContent(),
+		'<ul>' +
+			'<li>a</li>' +
+			'<li>b</li>' +
+			'<li>c</li>' +
+		'</ul>'
+	);
+});
+
+test('Apply UL list to all P lines (SelectAll)', function() {
+	editor.getBody().innerHTML = (
+		'<p>a</p>' +
+		'<p>b</p>' +
+		'<p>c</p>'
+	);
+
+	editor.focus();
+	editor.execCommand('SelectAll');
+	execCommand('InsertUnorderedList');
+
+	equal(editor.getContent(),
+		'<ul>' +
+			'<li>a</li>' +
+			'<li>b</li>' +
+			'<li>c</li>' +
+		'</ul>'
+	);
+});
+
+// Remove
+
 test('Remove UL at single LI', function() {
 	editor.getBody().innerHTML = trimBrs(
 		'<ul>' +
@@ -467,7 +523,7 @@ test('Remove UL at single LI', function() {
 
 	editor.focus();
 	setSelection('li');
-	editor.execCommand('InsertUnorderedList');
+	execCommand('InsertUnorderedList');
 
 	equal(editor.getContent(), 
 		'<p>a</p>'
@@ -486,7 +542,7 @@ test('Remove UL at start LI', function() {
 
 	editor.focus();
 	setSelection('li');
-	editor.execCommand('InsertUnorderedList');
+	execCommand('InsertUnorderedList');
 
 	equal(editor.getContent(), 
 		'<p>a</p>' +
@@ -496,6 +552,29 @@ test('Remove UL at start LI', function() {
 		'</ul>'
 	);
 	equal(editor.selection.getStart().nodeName, 'P');
+});
+
+test('Remove UL at start empty LI', function() {
+	editor.getBody().innerHTML = trimBrs(
+		'<ul>' +
+			'<li><br></li>' +
+			'<li>b</li>' +
+			'<li>c</li>' +
+		'</ul>'
+	);
+
+	editor.focus();
+	setSelection('li');
+	execCommand('InsertUnorderedList');
+
+	equal(editor.getContent(), 
+		'<p>\u00a0</p>' +
+		'<ul>' +
+			'<li>b</li>' +
+			'<li>c</li>' +
+		'</ul>'
+	);
+	equal(editor.selection.getNode().nodeName, 'P');
 });
 
 test('Remove UL at middle LI', function() {
@@ -509,7 +588,7 @@ test('Remove UL at middle LI', function() {
 
 	editor.focus();
 	setSelection('li:nth-child(2)', 1);
-	editor.execCommand('InsertUnorderedList');
+	execCommand('InsertUnorderedList');
 
 	equal(editor.getContent(), 
 		'<ul>' +
@@ -523,6 +602,31 @@ test('Remove UL at middle LI', function() {
 	equal(editor.selection.getStart().nodeName, 'P');
 });
 
+test('Remove UL at middle empty LI', function() {
+	editor.getBody().innerHTML = trimBrs(
+		'<ul>' +
+			'<li>a</li>' +
+			'<li><br></li>' +
+			'<li>c</li>' +
+		'</ul>'
+	);
+
+	editor.focus();
+	setSelection('li:nth-child(2)', 0);
+	execCommand('InsertUnorderedList');
+
+	equal(editor.getContent(), 
+		'<ul>' +
+			'<li>a</li>' +
+		'</ul>' +
+		'<p>\u00a0</p>' +
+		'<ul>' +
+			'<li>c</li>' +
+		'</ul>'
+	);
+	equal(editor.selection.getNode().nodeName, 'P');
+});
+
 test('Remove UL at end LI', function() {
 	editor.getBody().innerHTML = trimBrs(
 		'<ul>' +
@@ -534,7 +638,7 @@ test('Remove UL at end LI', function() {
 
 	editor.focus();
 	setSelection('li:last', 1);
-	editor.execCommand('InsertUnorderedList');
+	execCommand('InsertUnorderedList');
 
 	equal(editor.getContent(), 
 		'<ul>' +
@@ -544,6 +648,29 @@ test('Remove UL at end LI', function() {
 		'<p>c</p>'
 	);
 	equal(editor.selection.getStart().nodeName, 'P');
+});
+
+test('Remove UL at end empty LI', function() {
+	editor.getBody().innerHTML = trimBrs(
+		'<ul>' +
+			'<li>a</li>' +
+			'<li>b</li>' +
+			'<li><br></li>' +
+		'</ul>'
+	);
+
+	editor.focus();
+	setSelection('li:last', 0);
+	execCommand('InsertUnorderedList');
+
+	equal(editor.getContent(), 
+		'<ul>' +
+			'<li>a</li>' +
+			'<li>b</li>' +
+		'</ul>' +
+		'<p>\u00a0</p>'
+	);
+	equal(editor.selection.getNode().nodeName, 'P');
 });
 
 test('Remove UL at middle LI inside parent OL', function() {
@@ -561,7 +688,7 @@ test('Remove UL at middle LI inside parent OL', function() {
 
 	editor.focus();
 	setSelection('ul li:nth-child(2)', 1);
-	editor.execCommand('InsertUnorderedList');
+	execCommand('InsertUnorderedList');
 
 	equal(editor.getContent(), 
 		'<ol>' +
@@ -597,7 +724,7 @@ test('Remove UL at middle LI inside parent OL (html5)', function() {
 
 	editor.focus();
 	setSelection('ul li:nth-child(2)', 1);
-	editor.execCommand('InsertUnorderedList');
+	execCommand('InsertUnorderedList');
 
 	equal(editor.getContent(), 
 		'<ol>' +
@@ -631,7 +758,7 @@ test('Remove UL with single LI in BR mode', function() {
 
 	editor.focus();
 	setSelection('li', 1);
-	editor.execCommand('InsertUnorderedList');
+	execCommand('InsertUnorderedList');
 
 	equal(editor.getContent(), 
 		'a'
@@ -651,7 +778,7 @@ test('Remove UL with multiple LI in BR mode', function() {
 
 	editor.focus();
 	setSelection('li:first', 1, 'li:last', 1);
-	editor.execCommand('InsertUnorderedList');
+	execCommand('InsertUnorderedList');
 
 	equal(editor.getContent(), 
 		'a<br />' +
@@ -671,7 +798,7 @@ test('Remove empty UL between two textblocks', function() {
 
 	editor.focus();
 	setSelection('li:first', 0);
-	editor.execCommand('InsertUnorderedList');
+	execCommand('InsertUnorderedList');
 
 	equal(editor.getContent(), 
 		'<div>a</div>' +
@@ -694,7 +821,7 @@ test('Remove empty UL between two textblocks in BR mode', function() {
 
 	editor.focus();
 	setSelection('li:first', 0);
-	editor.execCommand('InsertUnorderedList');
+	execCommand('InsertUnorderedList');
 
 	equal(editor.getContent(), 
 		'<div>a</div>' +
@@ -703,6 +830,8 @@ test('Remove empty UL between two textblocks in BR mode', function() {
 	);
 	equal(editor.selection.getStart().nodeName, 'BR');
 });
+
+// Outdent
 
 test('Outdent inside LI in beginning of OL in LI', function() {
 	editor.getBody().innerHTML = trimBrs(
@@ -718,7 +847,7 @@ test('Outdent inside LI in beginning of OL in LI', function() {
 
 	editor.focus();
 	setSelection('li li', 1);
-	editor.execCommand('Outdent');
+	execCommand('Outdent');
 
 	equal(editor.getContent(), 
 		'<ol>' +
@@ -750,7 +879,7 @@ test('Outdent inside LI in middle of OL in LI', function() {
 
 	editor.focus();
 	setSelection('li li:nth-child(2)', 1);
-	editor.execCommand('Outdent');
+	execCommand('Outdent');
 
 	equal(editor.getContent(), 
 		'<ol>' +
@@ -784,7 +913,7 @@ test('Outdent inside LI in end of OL in LI', function() {
 
 	editor.focus();
 	setSelection('li li:last', 1);
-	editor.execCommand('Outdent');
+	execCommand('Outdent');
 
 	equal(editor.getContent(), 
 		'<ol>' +
@@ -815,7 +944,7 @@ test('Outdent inside LI in beginning of OL in OL', function() {
 
 	editor.focus();
 	setSelection('ol ol li', 1);
-	editor.execCommand('Outdent');
+	execCommand('Outdent');
 
 	equal(editor.getContent(), 
 		'<ol>' +
@@ -844,7 +973,7 @@ test('Outdent inside LI in middle of OL in OL', function() {
 
 	editor.focus();
 	setSelection('ol ol li:nth-child(2)', 1);
-	editor.execCommand('Outdent');
+	execCommand('Outdent');
 
 	equal(editor.getContent(), 
 		'<ol>' +
@@ -877,7 +1006,7 @@ test('Outdent inside first/last LI in inner OL', function() {
 
 	editor.focus();
 	setSelection('ol ol li:nth-child(1)', 0, 'ol ol li:nth-child(2)', 1);
-	editor.execCommand('Outdent');
+	execCommand('Outdent');
 
 	equal(editor.getContent(), 
 		'<ol>' +
@@ -907,7 +1036,7 @@ test('Outdent inside first LI in inner OL where OL is single child of parent LI'
 
 	editor.focus();
 	setSelection('ol ol li:first', 0);
-	editor.execCommand('Outdent');
+	execCommand('Outdent');
 
 	equal(editor.getContent(), 
 		'<ol>' +
@@ -937,7 +1066,7 @@ test('Outdent inside LI in end of OL in OL', function() {
 
 	editor.focus();
 	setSelection('ol ol li:last', 1);
-	editor.execCommand('Outdent');
+	execCommand('Outdent');
 
 	equal(editor.getContent(), 
 		'<ol>' +
@@ -946,6 +1075,31 @@ test('Outdent inside LI in end of OL in OL', function() {
 				'<li>b</li>' +
 			'</ol>' +
 			'<li>c</li>' +
+		'</ol>'
+	);
+
+	equal(editor.selection.getNode().nodeName, 'LI');
+});
+
+test('Outdent inside only child LI in OL in OL', function() {
+	editor.getBody().innerHTML = trimBrs(
+		'<ol>' +
+			'<li>a' +
+				'<ol>' +
+					'<li>b</li>' +
+				'</ol>' +
+			'</li>' +
+		'</ol>'
+	);
+
+	editor.focus();
+	setSelection('ol ol li', 0);
+	execCommand('Outdent');
+
+	equal(editor.getContent(), 
+		'<ol>' +
+			'<li>a</li>' +
+			'<li>b</li>' +
 		'</ol>'
 	);
 
@@ -963,7 +1117,7 @@ test('Indent single LI in OL', function() {
 
 	editor.focus();
 	setSelection('li', 0);
-	editor.execCommand('Indent');
+	execCommand('Indent');
 
 	equal(editor.getContent(), 
 		'<ol>' +
@@ -985,7 +1139,7 @@ test('Indent middle LI in OL', function() {
 
 	editor.focus();
 	setSelection('li:nth-child(2)', 0);
-	editor.execCommand('Indent');
+	execCommand('Indent');
 
 	equal(editor.getContent(), 
 		'<ol>' +
@@ -1011,7 +1165,7 @@ test('Indent last LI in OL', function() {
 
 	editor.focus();
 	setSelection('li:last', 0);
-	editor.execCommand('Indent');
+	execCommand('Indent');
 
 	equal(editor.getContent(), 
 		'<ol>' +
@@ -1408,14 +1562,16 @@ tinymce.init({
 	indent : false,
 	schema: 'html5',
 	entities : 'raw',
-	extended_valid_elements: 'div[id|style|contenteditable],span[id|style|contenteditable]',
+	valid_elements: 'li,ol,ul,em,strong,span,#p,div,br',
 	valid_styles : {
 		'*' : 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display,position,top,left'
 	},
 	disable_nodechange: true,
 	init_instance_callback : function(ed) {
 		editor = ed;
-		QUnit.start();
+		window.setTimeout(function() {
+			QUnit.start();
+		}, 0);
 	}
 });
 </script>

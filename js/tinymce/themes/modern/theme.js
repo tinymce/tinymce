@@ -59,7 +59,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 								}
 							}
 
-							item.active(nodeName == "UL");
+							item.active(state && nodeName == "UL");
 						});
 					}
 
@@ -74,7 +74,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 								}
 							}
 
-							item.active(nodeName == "OL");
+							item.active(state && nodeName == "OL");
 						});
 					}
 
