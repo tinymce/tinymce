@@ -1311,12 +1311,51 @@ define("tinymce/dom/Selection", [
 		},
 
 		scrollIntoView: function(elm) {
-			var y, viewPort, self = this, dom = self.dom;
+			var y, viewPort, self = this, dom = self.dom, root = dom.getRoot(), viewPortY, viewPortH;
+
+			function getPos(elm) {
+				var x = 0, y = 0;
+
+				var offsetParent = elm;
+				while (offsetParent && offsetParent.nodeType) {
+					x += offsetParent.offsetLeft || 0;
+					y += offsetParent.offsetTop || 0;
+					offsetParent = offsetParent.offsetParent;
+				}
+
+				return {x: x, y: y};
+			}
+
+			if (root.nodeName != 'BODY') {
+				var scrollContainer, node = elm;
+
+				while (node && node.nodeName != 'BODY') {
+					if (node.scrollHeight > node.clientHeight) {
+						scrollContainer = node;
+						break;
+					}
+
+					node = node.parentNode;
+				}
+
+				if (scrollContainer) {
+					y = getPos(elm).y - getPos(scrollContainer).y;
+					viewPortH = root.clientHeight;
+					viewPortY = root.scrollTop;
+					if (y < viewPortY || y + 25 > viewPortY + viewPortH) {
+						scrollContainer.scrollTop = y < viewPortY ? y : y - viewPortH + 25;
+					}
+
+					return;
+				}
+			}
 
 			viewPort = dom.getViewPort(self.editor.getWin());
 			y = dom.getPos(elm).y;
-			if (y < viewPort.y || y + 25 > viewPort.y + viewPort.h) {
-				self.editor.getWin().scrollTo(0, y < viewPort.y ? y : y - viewPort.h + 25);
+			viewPortY = viewPort.y;
+			viewPortH = viewPort.h;
+			if (y < viewPort.y || y + 25 > viewPortY + viewPortH) {
+				self.editor.getWin().scrollTo(0, y < viewPortY ? y : y - viewPortH + 25);
 			}
 		},
 
