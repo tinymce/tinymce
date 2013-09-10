@@ -1310,6 +1310,21 @@ define("tinymce/dom/Selection", [
 			return self;
 		},
 
+		getScrollContainer: function() {
+			var scrollContainer, node = this.dom.getRoot();
+
+			while (node && node.nodeName != 'BODY') {
+				if (node.scrollHeight > node.clientHeight) {
+					scrollContainer = node;
+					break;
+				}
+
+				node = node.parentNode;
+			}
+
+			return scrollContainer;
+		},
+
 		scrollIntoView: function(elm) {
 			var y, viewPort, self = this, dom = self.dom, root = dom.getRoot(), viewPortY, viewPortH;
 
@@ -1327,21 +1342,11 @@ define("tinymce/dom/Selection", [
 			}
 
 			if (root.nodeName != 'BODY') {
-				var scrollContainer, node = elm;
-
-				while (node && node.nodeName != 'BODY') {
-					if (node.scrollHeight > node.clientHeight) {
-						scrollContainer = node;
-						break;
-					}
-
-					node = node.parentNode;
-				}
-
+				var scrollContainer = self.getScrollContainer();
 				if (scrollContainer) {
 					y = getPos(elm).y - getPos(scrollContainer).y;
-					viewPortH = root.clientHeight;
-					viewPortY = root.scrollTop;
+					viewPortH = scrollContainer.clientHeight;
+					viewPortY = scrollContainer.scrollTop;
 					if (y < viewPortY || y + 25 > viewPortY + viewPortH) {
 						scrollContainer.scrollTop = y < viewPortY ? y : y - viewPortH + 25;
 					}

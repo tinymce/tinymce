@@ -13,6 +13,7 @@ Version 4.0.6 (2013-09-xx)
 	Fixed bug where it wasn't possible to delete HR elements on Gecko.
 	Fixed so code dialog height gets smaller that the viewport height if it doesn't fit.
 	Fixed so inline editable regions scroll when pressing enter/return.
+	Fixed so inline toolbar gets positioned correctly when inline element is within a scrollable container.
 	Fixed various memory leaks when removing editor instances dynamically.
 	Removed CSS for BR elements in visualblocks due to problems with Chrome and IE.
 Version 4.0.5 (2013-08-27)
