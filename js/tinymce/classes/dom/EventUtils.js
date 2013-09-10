@@ -393,6 +393,8 @@ define("tinymce/dom/EventUtils", [], function() {
 								ci = callbackList.length;
 								while (ci--) {
 									if (callbackList[ci].func === callback) {
+										callbackList = callbackList.slice(0, ci).concat(callbackList.slice(ci + 1));
+										eventMap[name] = callbackList;
 										callbackList.splice(ci, 1);
 									}
 								}
