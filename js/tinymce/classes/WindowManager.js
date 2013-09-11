@@ -66,6 +66,8 @@ define("tinymce/WindowManager", [
 		self.open = function(args, params) {
 			var win;
 
+			editor.editorManager.activeEditor = editor;
+
 			args.title = args.title || ' ';
 
 			// Handle URL
