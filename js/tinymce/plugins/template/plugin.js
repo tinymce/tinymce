@@ -33,30 +33,6 @@ tinymce.PluginManager.add('template', function(editor) {
 			});
 		});
 
-		function processHtml(html) {
-			if (html.indexOf('<html>') == -1) {
-				var contentCssLinks = '';
-
-				tinymce.each(editor.contentCSS, function(url) {
-					contentCssLinks += '<link type="text/css" rel="stylesheet" href="' + editor.documentBaseURI.toAbsolute(url) + '">';
-				});
-
-				html = (
-					'<!DOCTYPE html>' +
-					'<html>' +
-						'<head>' +
-							contentCssLinks +
-						'</head>' +
-						'<body>' +
-							html +
-						'</body>' +
-					'</html>'
-				);
-			}
-
-			return html;
-		}
-
 		function onSelectTemplate(e) {
 			var value = e.control.value();
 
@@ -80,6 +56,8 @@ tinymce.PluginManager.add('template', function(editor) {
 						'</html>'
 					);
 				}
+
+				html = replaceTemplateValues(html, 'template_preview_replace_values');
 
 				var doc = win.find('iframe')[0].getEl().contentWindow.document;
 				doc.open();
@@ -176,15 +154,20 @@ tinymce.PluginManager.add('template', function(editor) {
 		});
 	}
 
-	function insertTemplate(ui, html) {
-		var el, n, dom = editor.dom, sel = editor.selection.getContent();
-
-		each(editor.getParam('template_replace_values'), function(v, k) {
+	function replaceTemplateValues(html, templateValuesOptionName) {
+		each(editor.getParam(templateValuesOptionName), function(v, k) {
 			if (typeof(v) != 'function') {
 				html = html.replace(new RegExp('\\{\\$' + k + '\\}', 'g'), v);
 			}
 		});
 
+		return html;
+	}
+
+	function insertTemplate(ui, html) {
+		var el, n, dom = editor.dom, sel = editor.selection.getContent();
+
+		html = replaceTemplateValues(html, 'template_replace_values');
 		el = dom.create('div', null, html);
 
 		// Find template element within div

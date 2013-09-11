@@ -37,8 +37,16 @@
 			{title: 'Table row 1', selector: 'tr', classes: 'tablerow1'}
 		],
 
+		template_replace_values : {
+			username : "Jack Black",
+		},
+
+		template_preview_replace_values : {
+			username : "Preview user name",
+		},
+
 		templates: [ 
-			{title: 'Some title 1', description: 'Some desc 1', content: '<strong class="red">My content</strong>'}, 
+			{title: 'Some title 1', description: 'Some desc 1', content: '<strong class="red">My content: {$username}</strong>'}, 
 			{title: 'Some title 2', description: 'Some desc 2', url: 'development.html'} 
 		],
 
