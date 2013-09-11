@@ -31,8 +31,12 @@ define("tinymce/util/LocalStorage", [], function() {
 	var LocalStorage, storageElm, items, keys, userDataKey, hasOldIEDataSupport;
 
 	// Check for native support
-	if (window.localStorage) {
-		return localStorage;
+	try {
+		if (window.localStorage) {
+			return localStorage;
+		}
+	} catch (ex) {
+		// Ignore
 	}
 
 	userDataKey = "tinymce";
