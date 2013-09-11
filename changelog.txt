@@ -14,6 +14,7 @@ Version 4.0.6 (2013-09-xx)
 	Fixed bug where scrolling and refocusing using the mouse would place the caret incorrectly on IE.
 	Fixed bug where you needed to hit the empty paragraph to get editor focus in IE 11.
 	Fixed bug where activeEditor wasn't set to the correct editor when opening windows.
+	Fixed bug where dirty state wasn't set to false when undoing to the first undo level.
 	Fixed so code dialog height gets smaller that the viewport height if it doesn't fit.
 	Fixed so inline editable regions scroll when pressing enter/return.
 	Fixed so inline toolbar gets positioned correctly when inline element is within a scrollable container.

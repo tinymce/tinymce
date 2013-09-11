@@ -244,6 +244,11 @@ define("tinymce/UndoManager", [
 				if (index > 0) {
 					level = data[--index];
 
+					// Undo to first index then set dirty state to false
+					if (index === 0) {
+						editor.isNotDirty = true;
+					}
+
 					editor.setContent(level.content, {format: 'raw'});
 					editor.selection.moveToBookmark(level.beforeBookmark);
 
