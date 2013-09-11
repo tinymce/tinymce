@@ -203,17 +203,22 @@ define("tinymce/ui/MenuItem", [
 		 */
 		renderHtml: function() {
 			var self = this, id = self._id, settings = self.settings, prefix = self.classPrefix, text = self.encode(self._text);
-			var icon = self.settings.icon;
+			var icon = self.settings.icon, image = '';
 
 			if (icon) {
 				self.parent().addClass('menu-has-icons');
+			}
+
+			if (settings.image) {
+				icon = 'none';
+				image = ' style="background-image: url(\'' + settings.image + '\')"';
 			}
 
 			icon = prefix + 'ico ' + prefix + 'i-' + (self.settings.icon || 'none');
 
 			return (
 				'<div id="' + id + '" class="' + self.classes() + '" tabindex="-1">' +
-					(text !== '-' ? '<i class="' + icon + '"></i>&nbsp;' : '') +
+					(text !== '-' ? '<i class="' + icon + '"' + image + '></i>&nbsp;' : '') +
 					(text !== '-' ? '<span id="' + id + '-text" class="' + prefix + 'text">' + text + '</span>' : '') +
 					(settings.shortcut ? '<div id="' + id + '-shortcut" class="' + prefix + 'menu-shortcut">' +
 						settings.shortcut + '</div>' : '') +

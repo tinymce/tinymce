@@ -3,6 +3,7 @@ Version 4.0.6 (2013-09-xx)
 	Added new skin_url option enables you to load local skins when using the CDN version.
 	Added new theme_url option enables you to load local themes when using the CDN version.
 	Added new importcss_file_filter option to importcss to enable users to specify what files to import from.
+	Added image option support for addMenuItem calls. Enables you to provide a custom image for menu items.
 	Fixed bug where editor.insertContent wouldn't set format and selection type on events.
 	Fixed bug where inserting BR elements on IE 8 would thrown an exception when the range is at a empty text node.
 	Fixed bug where outdent of single LI element within another LI would produce an empty list element OL/UL.
