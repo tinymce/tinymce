@@ -33,6 +33,7 @@ tinymce.PluginManager.add('template', function(editor) {
 			});
 		});
 
+		
 		function onSelectTemplate(e) {
 			var value = e.control.value();
 
@@ -41,7 +42,21 @@ tinymce.PluginManager.add('template', function(editor) {
 					url: value.url,
 					success: function(html) {
 						templateHtml = html;
-						win.find('iframe')[0].html(html);
+						var previewHtml = "";
+						
+						
+						// load content_css
+						if( editor.getParam('template_preview_apply_css') )
+                                                  previewHtml += getContentCss();
+						
+						// replace values
+						if( editor.getParam('template_preview_replace_values') )
+                                                  previewHtml += replaceTplVars( html );
+						else
+						    previewHtml += html;
+						
+						
+						win.find('iframe')[0].html( previewHtml );
 					}
 				});
 			} else {
@@ -50,6 +65,7 @@ tinymce.PluginManager.add('template', function(editor) {
 			}
 
 			win.find('#description')[0].text(e.control.value().description);
+
 		}
 
 		win = editor.windowManager.open({
@@ -71,6 +87,47 @@ tinymce.PluginManager.add('template', function(editor) {
 		win.find('listbox')[0].fire('select');
 	}
 
+	
+	/**
+	 * Replace template variables with thirs values
+	 * 
+	 * @param string html
+	 * @return string 
+	 */
+	function replaceTplVars( html )
+    {
+        var output = html;
+        each(editor.getParam('template_replace_values'), function(v, k) {
+            if (typeof(v) != 'function') {
+                output = output.replace(new RegExp('\\{\\$' + k + '\\}', 'g'), v);
+            }
+        });
+        
+        return output;
+    }
+	
+	
+	/**
+	 * Generates CSS links based on content_css setting
+	 * 
+	 * @return string
+	 */
+	function getContentCss()
+	{
+	    var contentCss = editor.getParam('content_css');
+	    var output = "";
+	    
+	    // Load specified content CSS last
+        if ( contentCss ) {
+            each( contentCss.split(','), function(u) {
+                output += "<link type=\"text/css\" rel=\"stylesheet\" href=\"" + u.replace(/(^\s*)|(\s*$)/g, "") + "\">\r\n";
+            });
+        }
+        
+        return output;
+	}
+	
+	
 	function getDateTime(fmt, date) {
 		var daysShort = "Sun Mon Tue Wed Thu Fri Sat Sun".split(' ');
 		var daysLong = "Sunday Monday Tuesday Wednesday Thursday Friday Saturday Sunday".split(' ');
@@ -128,11 +185,8 @@ tinymce.PluginManager.add('template', function(editor) {
 	function insertTemplate(ui, html) {
 		var el, n, dom = editor.dom, sel = editor.selection.getContent();
 
-		each(editor.getParam('template_replace_values'), function(v, k) {
-			if (typeof(v) != 'function') {
-				html = html.replace(new RegExp('\\{\\$' + k + '\\}', 'g'), v);
-			}
-		});
+		// original tmce code extracted to method 
+		html = replaceTplVars( html );
 
 		el = dom.create('div', null, html);
 
