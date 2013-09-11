@@ -33,20 +33,71 @@ tinymce.PluginManager.add('template', function(editor) {
 			});
 		});
 
+		function processHtml(html) {
+			if (html.indexOf('<html>') == -1) {
+				var contentCssLinks = '';
+
+				tinymce.each(editor.contentCSS, function(url) {
+					contentCssLinks += '<link type="text/css" rel="stylesheet" href="' + editor.documentBaseURI.toAbsolute(url) + '">';
+				});
+
+				html = (
+					'<!DOCTYPE html>' +
+					'<html>' +
+						'<head>' +
+							contentCssLinks +
+						'</head>' +
+						'<body>' +
+							html +
+						'</body>' +
+					'</html>'
+				);
+			}
+
+			return html;
+		}
+
 		function onSelectTemplate(e) {
 			var value = e.control.value();
+
+			function insertIframeHtml(html) {
+				if (html.indexOf('<html>') == -1) {
+					var contentCssLinks = '';
+
+					tinymce.each(editor.contentCSS, function(url) {
+						contentCssLinks += '<link type="text/css" rel="stylesheet" href="' + editor.documentBaseURI.toAbsolute(url) + '">';
+					});
+
+					html = (
+						'<!DOCTYPE html>' +
+						'<html>' +
+							'<head>' +
+								contentCssLinks +
+							'</head>' +
+							'<body>' +
+								html +
+							'</body>' +
+						'</html>'
+					);
+				}
+
+				var doc = win.find('iframe')[0].getEl().contentWindow.document;
+				doc.open();
+				doc.write(html);
+				doc.close();
+			}
 
 			if (value.url) {
 				tinymce.util.XHR.send({
 					url: value.url,
 					success: function(html) {
 						templateHtml = html;
-						win.find('iframe')[0].html(html);
+						insertIframeHtml(templateHtml);
 					}
 				});
 			} else {
 				templateHtml = value.content;
-				win.find('iframe')[0].html(value.content);
+				insertIframeHtml(templateHtml);
 			}
 
 			win.find('#description')[0].text(e.control.value().description);
