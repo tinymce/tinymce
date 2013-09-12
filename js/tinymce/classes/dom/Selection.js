@@ -675,13 +675,15 @@ define("tinymce/dom/Selection", [
 		 * tinymce.activeEditor.selection.select(tinymce.activeEditor.dom.select('p')[0]);
 		 */
 		select: function(node, content) {
-			var self = this, dom = self.dom, rng = dom.createRng(), idx;
+			var self = this, dom = self.dom, rng = dom.createRng(), idx, nonEmptyElementsMap;
 
 			// Clear stored range set by FocusManager
 			self.lastFocusBookmark = null;
 
+			nonEmptyElementsMap = dom.schema.getNonEmptyElements();
+
 			function setPoint(node, start) {
-				var walker = new TreeWalker(node, node);
+				var root = node, walker = new TreeWalker(node, root);
 
 				do {
 					// Text node
@@ -695,17 +697,30 @@ define("tinymce/dom/Selection", [
 						return;
 					}
 
-					// BR element
-					if (node.nodeName == 'BR') {
+					// BR/IMG/INPUT elements
+					if (nonEmptyElementsMap[node.nodeName]) {
 						if (start) {
 							rng.setStartBefore(node);
 						} else {
-							rng.setEndBefore(node);
+							if (node.nodeName == 'BR') {
+								rng.setEndBefore(node);
+							} else {
+								rng.setEndAfter(node);
+							}
 						}
 
 						return;
 					}
 				} while ((node = (start ? walker.next() : walker.prev())));
+
+				// Failed to find any text node or other suitable location then move to the root of body
+				if (root.nodeName == 'BODY') {
+					if (start) {
+						rng.setStart(root, 0);
+					} else {
+						rng.setEnd(root, root.childNodes.length);
+					}
+				}
 			}
 
 			if (node) {
