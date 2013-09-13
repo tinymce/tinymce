@@ -253,7 +253,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			}
 		}
 
-		var enabledMenuNames = settings.menubar ? settings.menubar.split(/[ ,]/) : defaultMenuBar;
+		var enabledMenuNames = typeof(settings.menubar) == "string" ? settings.menubar.split(/[ ,]/) : defaultMenuBar;
 		for (var i = 0; i < enabledMenuNames.length; i++) {
 			var menu = enabledMenuNames[i];
 			menu = createMenu(menu);
