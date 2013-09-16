@@ -128,7 +128,9 @@ define("tinymce/ui/TabPanel", [
 		initLayoutRect: function() {
 			var self = this, rect, minW, minH;
 
-			minW = minH = 0;
+			minW = self.getEl('head').offsetWidth;
+			minW = minW < 0 ? 0 : minW;
+			minH = 0;
 			self.items().each(function(item, i) {
 				minW = Math.max(minW, item.layoutRect().minW);
 				minH = Math.max(minH, item.layoutRect().minH);
