@@ -21,7 +21,11 @@ define("tinymce/pasteplugin/WordFilter", [
 	"tinymce/html/Serializer",
 	"tinymce/html/Node"
 ], function(Tools, DomParser, Schema, Serializer, Node) {
-	return function(editor) {
+	function isWordContent(content) {
+		return (/class="?Mso|style="[^"]*\bmso-|style='[^'']*\bmso-|w:WordDocument/i).test(content);
+	}
+
+	function WordFilter(editor) {
 		var each = Tools.each;
 
 		editor.on('PastePreProcess', function(e) {
@@ -193,7 +197,7 @@ define("tinymce/pasteplugin/WordFilter", [
 			}
 
 			// Detect is the contents is Word junk HTML
-			if (/class="?Mso|style="[^"]*\bmso-|style='[^'']*\bmso-|w:WordDocument/i.test(e.content)) {
+			if (isWordContent(e.content)) {
 				e.wordContent = true; // Mark it for other processors
 
 				// Remove basic Word junk
@@ -255,5 +259,9 @@ define("tinymce/pasteplugin/WordFilter", [
 				e.content = new Serializer({}, schema).serialize(rootNode);
 			}
 		});
-	};
+	}
+
+	WordFilter.isWordContent = isWordContent;
+
+	return WordFilter;
 });
