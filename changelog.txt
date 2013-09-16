@@ -1,4 +1,5 @@
 Version 4.0.7 (2013-09-xx)
+	Added new importcss_selector_filter option to importcss plugin. Makes it easier to select specific classes to import.
 	Added new PastePreProcess/PastePostProcess events and reintroduced paste_preprocess/paste_postprocess paste options.
 	Fixed issue with the tabpanel not expanding properly when the tabs where wider than the body of the panel.
 	Fixed issue with the menubar option producing a JS exception if set to true.

@@ -13,6 +13,20 @@
 tinymce.PluginManager.add('importcss', function(editor) {
 	var each = tinymce.each;
 
+	function compileFilter(filter) {
+		if (typeof(filter) == "string") {
+			return function(value) {
+				return value.indexOf(filter) !== -1;
+			};
+		} else if (filter instanceof RegExp) {
+			return function(value) {
+				return filter.test(value);
+			};
+		}
+
+		return filter;
+	}
+
 	function getSelectors(doc, fileFilter) {
 		var selectors = [], contentCSSUrls = {};
 
@@ -23,14 +37,8 @@ tinymce.PluginManager.add('importcss', function(editor) {
 				return;
 			}
 
-			if (fileFilter) {
-				if (fileFilter instanceof RegExp && !fileFilter.test(href)) {
-					return;
-				}
-
-				if (typeof(fileFilter) == "string" && href.indexOf(fileFilter) === -1) {
-					return;
-				}
+			if (fileFilter && !fileFilter(href)) {
+				return;
 			}
 
 			each(styleSheet.imports, function(styleSheet) {
@@ -108,17 +116,17 @@ tinymce.PluginManager.add('importcss', function(editor) {
 
 	if (!editor.settings.style_formats) {
 		editor.on('renderFormatsMenu', function(e) {
-			var selectorConverter = editor.settings.importcss_selector_converter || convertSelectorToFormat;
-			var selectors = {};
-			var fileFilter = editor.settings.importcss_file_filter;
+			var settings = editor.settings, selectors = {};
+			var selectorConverter = settings.importcss_selector_converter || convertSelectorToFormat;
+			var selectorFilter = compileFilter(settings.importcss_selector_filter);
 
 			if (!editor.settings.importcss_append) {
 				e.control.items().remove();
 			}
 
-			each(getSelectors(editor.getDoc(), fileFilter), function(selector) {
+			each(getSelectors(editor.getDoc(), compileFilter(settings.importcss_file_filter)), function(selector) {
 				if (selector.indexOf('.mce-') === -1) {
-					if (!selectors[selector]) {
+					if (!selectors[selector] && (!selectorFilter || selectorFilter(selector))) {
 						var format = selectorConverter(selector);
 
 						if (format) {
