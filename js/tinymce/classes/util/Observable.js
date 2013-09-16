@@ -228,6 +228,14 @@ define("tinymce/util/Observable", [
 			}
 
 			return self;
+		},
+
+		hasEventListeners: function(name) {
+			var bindings = this[bindingsName];
+
+			name = name.toLowerCase();
+
+			return !(!bindings || !bindings[name] || bindings[name].length === 0);
 		}
 	};
 });
