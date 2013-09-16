@@ -245,6 +245,60 @@ test('paste plain text with paragraphs', function(){
 	equal(editor.getContent().replace(/[\r\n]+/g, ''), '<p>ta<br />&lt;b&gt;b&lt;/b&gt;</p><p>c</p><p>xt</p>');
 });
 
+test('paste pre process text (event)', function(){
+	function callback(e) {
+		e.content = 'PRE:' + e.content;
+	}
+
+	editor.setContent('<p>a</p>');
+	setSelection('p', 0, 'p', 1);
+	editor.on('PastePreProcess', callback);
+	editor.execCommand('mceInsertClipboardContent', false, {text : 'b\n2'});
+	equal(editor.getContent(), '<p>PRE:b<br />2</p>');
+
+	editor.setContent('<p>a</p>');
+	setSelection('p', 0, 'p', 1);
+	editor.off('PastePreProcess', callback);
+	editor.execCommand('mceInsertClipboardContent', false, {text : 'c'});
+	equal(editor.getContent(), '<p>c</p>');
+});
+
+test('paste pre process html (event)', function(){
+	function callback(e) {
+		e.content = 'PRE:' + e.content;
+	}
+
+	editor.setContent('<p>a</p>');
+	setSelection('p', 0, 'p', 1);
+	editor.on('PastePreProcess', callback);
+	editor.execCommand('mceInsertClipboardContent', false, {content : '<em>b</em>'});
+	equal(editor.getContent(), '<p>PRE:<em>b</em></p>');
+
+	editor.setContent('<p>a</p>');
+	setSelection('p', 0, 'p', 1);
+	editor.off('PastePreProcess', callback);
+	editor.execCommand('mceInsertClipboardContent', false, {content : '<em>c</em>'});
+	equal(editor.getContent(), '<p><em>c</em></p>');
+});
+
+test('paste post process (event)', function(){
+	function callback(e) {
+		e.node.innerHTML += ':POST';
+	}
+
+	editor.setContent('<p>a</p>');
+	setSelection('p', 0, 'p', 1);
+	editor.on('PastePostProcess', callback);
+	editor.execCommand('mceInsertClipboardContent', false, {content : '<em>b</em>'});
+	equal(editor.getContent(), '<p><em>b</em>:POST</p>');
+
+	editor.setContent('<p>a</p>');
+	setSelection('p', 0, 'p', 1);
+	editor.off('PastePostProcess', callback);
+	editor.execCommand('mceInsertClipboardContent', false, {content : '<em>c</em>'});
+	equal(editor.getContent(), '<p><em>c</em></p>');
+});
+
 tinymce.init({
 	mode : "exact",
 	elements : "elm1",

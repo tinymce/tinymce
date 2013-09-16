@@ -1,4 +1,5 @@
 Version 4.0.7 (2013-09-xx)
+	Added new PastePreProcess/PastePostProcess events and reintroduced paste_preprocess/paste_postprocess paste options.
 	Fixed issue with the menubar option producing a JS exception if set to true.
 Version 4.0.6 (2013-09-12)
 	Added new compat3x plugin that makes it possible to load most 3.x plugins. Only available in the development package.

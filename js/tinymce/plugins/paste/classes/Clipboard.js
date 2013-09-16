@@ -58,7 +58,7 @@ define("tinymce/pasteplugin/Clipboard", [
 		}
 
 		function processHtml(html) {
-			var args = editor.fire('PastePreProcess', {content: html});
+			var args = editor.fire('PastePreProcess', {content: html}), dom = editor.dom;
 
 			html = args.content;
 
@@ -72,7 +72,20 @@ define("tinymce/pasteplugin/Clipboard", [
 			}
 
 			if (!args.isDefaultPrevented()) {
-				editor.insertContent(html);
+				// User has bound PastePostProcess events then we need to pass it through a DOM node
+				// This is not ideal but we don't want to let the browser mess up the HTML for example
+				// some browsers add &nbsp; to P tags etc
+				if (editor.hasEventListeners('PastePostProcess') && !args.isDefaultPrevented()) {
+					// We need to attach the element to the DOM so Sizzle selectors work on the contents
+					var tempBody = dom.add(editor.getBody(), 'div', {style: 'display:none'}, html);
+					args = editor.fire('PastePostProcess', {node: tempBody});
+					dom.remove(tempBody);
+					html = args.node.innerHTML;
+				}
+
+				if (!args.isDefaultPrevented()) {
+					editor.insertContent(html);
+				}
 			}
 		}
 
@@ -93,11 +106,7 @@ define("tinymce/pasteplugin/Clipboard", [
 				]);
 			}
 
-			var args = editor.fire('PastePreProcess', {content: text});
-
-			if (!args.isDefaultPrevented()) {
-				editor.insertContent(args.content);
-			}
+			processHtml(text);
 		}
 
 		function createPasteBin() {

@@ -23,7 +23,7 @@ define("tinymce/pasteplugin/Plugin", [
 	var userIsInformed;
 
 	PluginManager.add('paste', function(editor) {
-		var self = this, clipboard;
+		var self = this, clipboard, settings = editor.settings;
 
 		function togglePlainTextPaste() {
 			if (clipboard.pasteFormat == "text") {
@@ -50,6 +50,18 @@ define("tinymce/pasteplugin/Plugin", [
 
 		if (editor.settings.paste_as_text) {
 			self.clipboard.pasteFormat = "text";
+		}
+
+		if (settings.paste_preprocess) {
+			editor.on('PastePreProcess', function(e) {
+				settings.paste_preprocess.call(self, self, e);
+			});
+		}
+
+		if (settings.paste_postprocess) {
+			editor.on('PastePostProcess', function(e) {
+				settings.paste_postprocess.call(self, self, e);
+			});
 		}
 
 		editor.addCommand('mceInsertClipboardContent', function(ui, value) {
