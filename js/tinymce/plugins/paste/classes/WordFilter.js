@@ -26,12 +26,12 @@ define("tinymce/pasteplugin/WordFilter", [
 	}
 
 	function WordFilter(editor) {
-		var each = Tools.each;
+		var each = Tools.each, settings = editor.settings;
 
 		editor.on('PastePreProcess', function(e) {
 			var content = e.content, retainStyleProperties, validStyles;
 
-			retainStyleProperties = editor.settings.paste_retain_style_properties;
+			retainStyleProperties = settings.paste_retain_style_properties;
 			if (retainStyleProperties) {
 				validStyles = Tools.makeMap(retainStyleProperties);
 			}
@@ -192,7 +192,7 @@ define("tinymce/pasteplugin/WordFilter", [
 				return null;
 			}
 
-			if (editor.settings.paste_enable_default_filters === false) {
+			if (settings.paste_enable_default_filters === false) {
 				return;
 			}
 
@@ -225,10 +225,15 @@ define("tinymce/pasteplugin/WordFilter", [
 					]
 				]);
 
+				var validElements = settings.paste_word_valid_elements;
+				if (!validElements) {
+					validElements = '@[style],-strong/b,-em/i,-span,-p,-ol,-ul,-li,-h1,-h2,-h3,-h4,-h5,-h6,' +
+						'-table,-tr,-td[colspan|rowspan],-th,-thead,-tfoot,-tbody,-a[!href],sub,sup,strike,br';
+				}
+
 				// Setup strict schema
 				var schema = new Schema({
-					valid_elements: '@[style],-strong/b,-em/i,-span,-p,-ol,-ul,-li,-h1,-h2,-h3,-h4,-h5,-h6,-table,' +
-								'-tr,-td[colspan|rowspan],-th,-thead,-tfoot,-tbody,-a[!href],sub,sup,strike'
+					valid_elements: validElements
 				});
 
 				// Parse HTML into DOM structure

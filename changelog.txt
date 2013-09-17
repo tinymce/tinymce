@@ -2,6 +2,8 @@ Version 4.0.7 (2013-09-xx)
 	Added new importcss_selector_filter option to importcss plugin. Makes it easier to select specific classes to import.
 	Added new importcss_groups option to importcss plugin. Enables you separate classes into menu groups based on filters.
 	Added new PastePreProcess/PastePostProcess events and reintroduced paste_preprocess/paste_postprocess paste options.
+	Added new paste_word_valid_elements option lets you control what elements gets pasted when pasting from Word.
+	Fixed bug where paste from word would remove all BR elements since it was missing in the default paste_word_valid_elements.
 	Fixed issue with the tabpanel not expanding properly when the tabs where wider than the body of the panel.
 	Fixed issue with the menubar option producing a JS exception if set to true.
 	Fixed bug where linebreaks would be removed by paste plugin on IE since it didn't properly detect Word contents.
