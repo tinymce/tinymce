@@ -7,7 +7,7 @@
 }
 
 .mce-tooltip-inner {
-	font-size: 11px;
+	font-size: @tooltip-font-size;
 	background-color: @tooltip-background;
 	color: @tooltip-text-color;
 	max-width: 200px;
@@ -127,13 +127,3 @@
 	border-top-color: transparent;
 	border-bottom-color: transparent;
 }
-
-// Invalid field tooltip
-/*
-.mce-tooltip-inner { background: #aa0000; }
-.mce-tooltip-arrow-n { border-bottom-color: #aa0000; }
-.mce-tooltip-arrow-s { border-top-color: #aa0000; }
-.mce-tooltip-arrow-e { border-left-color: #aa0000; }
-.mce-tooltip-arrow-w { border-right-color: #aa0000; }
-.mce-tooltip-arrow { border: 5px dashed #aa0000; }
-*/

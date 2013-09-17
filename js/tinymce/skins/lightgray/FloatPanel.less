@@ -2,7 +2,7 @@
 
 .mce-floatpanel {
 	position: absolute;
-	.box-shadow(#ccc 5px 5px 5px);
+	.box-shadow(@floatpanel-box-shadow);
 }
 
 .mce-floatpanel.mce-fixed {
@@ -34,13 +34,10 @@
 	top: 0;
 	left: 0;
 	background: @popover-background;
-	-webkit-background-clip: padding-box;
-	-moz-background-clip: padding;
-	background-clip: padding-box;
-	border: 1px solid #ccc;
-	border: 1px solid rgba(0,0,0,.2);
+	border: 1px solid @popover-arrow-outer-color-fallback;
+	border: 1px solid @popover-arrow-outer-color;
 	.border-radius(6px);
-	.box-shadow(0 5px 10px rgba(0,0,0,.2));
+	.box-shadow(@floatpanel-box-shadow);
 
 	&.mce-bottom {
 		margin-top: 10px;
@@ -49,7 +46,7 @@
 			left: 50%;
 			margin-left: -@popover-arrow-outer-width;
 			border-top-width: 0;
-			border-bottom-color: #999; // IE8 fallback
+			border-bottom-color: @popover-arrow-outer-color-fallback;
 			border-bottom-color: @popover-arrow-outer-color;
 			top: -@popover-arrow-outer-width;
 
