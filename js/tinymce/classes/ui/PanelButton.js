@@ -29,12 +29,24 @@ define("tinymce/ui/PanelButton", [
 		showPanel: function() {
 			var self = this, settings = self.settings;
 
-			settings.panel.popover = true;
-			settings.panel.autohide = true;
 			self.active(true);
 
 			if (!self.panel) {
-				self.panel = new FloatPanel(settings.panel).on('hide', function() {
+				var panelSettings = settings.panel;
+
+				// Wrap panel in grid layout if type if specified
+				// This makes it possible to add forms or other containers directly in the panel option
+				if (panelSettings.type) {
+					panelSettings = {
+						layout: 'grid',
+						items: panelSettings
+					};
+				}
+
+				panelSettings.popover = true;
+				panelSettings.autohide = true;
+
+				self.panel = new FloatPanel(panelSettings).on('hide', function() {
 					self.active(false);
 				}).parent(self).renderTo(self.getContainerElm());
 				self.panel.fire('show');
@@ -43,7 +55,7 @@ define("tinymce/ui/PanelButton", [
 				self.panel.show();
 			}
 
-			self.panel.moveRel(self.getEl(), settings.popoverAlign || 'bc-tc');
+			self.panel.moveRel(self.getEl(), settings.popoverAlign || ['bc-tl', 'bc-tc']);
 		},
 
 		/**
