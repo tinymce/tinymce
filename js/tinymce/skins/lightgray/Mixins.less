@@ -7,7 +7,7 @@
 	zoom: 1;
 }
 
-.vertical-gradient(@startColor, @endColor) {
+.vertical-gradient(@startColor, @endColor) when (@has-gradients = true) {
 	background-color: mix(@startColor, @endColor, 60%);
 	background-image: -moz-linear-gradient(top, @startColor, @endColor); // FF 3.6+
 	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@startColor), to(@endColor)); // Safari 4+, Chrome 2+
@@ -19,7 +19,11 @@
 	zoom: 1;
 }
 
-.border-radius(@radius:3px) {
+.vertical-gradient(@startColor, @endColor) when (@has-gradients = false) {
+	background-color: mix(@startColor, @endColor, 60%);
+}
+
+.border-radius(@radius) when (@has-radius = true) {
 	-webkit-border-radius: @radius;
 	-moz-border-radius: @radius;
 	border-radius: @radius;
