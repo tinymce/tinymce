@@ -2,30 +2,29 @@
 
 .mce-btn {
 	border: 1px solid @btn-border-color;
+	border-color: @btn-border-color2;
 	position: relative;
 	text-shadow: @textShadow;
-	.button-background(@btn-background, @btn-background-highlight, @btn-text-color, 0 1px 1px rgba(255, 255, 255, .75));
-	.inline-block();
 
+	.inline-block();
 	.border-radius(3px);
-	.box-shadow(inset 0 1px 0 rgba(255, 255, 255, .2), 0 1px 2px rgba(0, 0, 0, .05));
+	.box-shadow(@btn-box-shadow);
+	.vertical-gradient(@btn-background, @btn-background-highlight);
 
 	&:hover, &:focus {
 		color: @btn-text-color;
-		text-decoration: none;
-		.button-background(darken(@btn-background, 5%), darken(@btn-background-highlight, 5%), @btn-text-color, 0 1px 1px rgba(255, 255, 255, .75));
+		.vertical-gradient(darken(@btn-background, 5%), darken(@btn-background-highlight, 5%));
 	}
 
-	&.mce-disabled, &.mce-disabled:hover {
+	&.mce-disabled button, &.mce-disabled:hover button {
 		cursor: default;
-		background-image: none;
 		.box-shadow(none);
-		.opacity(0.65);
+		.opacity(@btn-box-disabled-opacity);
 	}
 
 	&.mce-active, &.mce-active:hover {
-		.button-background(darken(@btn-background, 10%), darken(@btn-background-highlight, 10%), @btn-text-color, 0 1px 1px rgba(255, 255, 255, .75));
-		.box-shadow(inset 0 2px 4px rgba(0, 0, 0, .15), 0 1px 2px rgba(0, 0, 0 ,.05));
+		.vertical-gradient(darken(@btn-background, 10%), darken(@btn-background-highlight, 10%));
+		.box-shadow(@btn-box-shadow-active);
 	}
 }
 
@@ -53,10 +52,11 @@
 
 .mce-primary {
 	min-width: 50px;
-	.button-background(@btn-background-primary, @btn-background-primary-highlight, white, 0 1px 1px rgba(255, 255, 255, .75));
+	color: @btn-background-primary-text-color;
+	.vertical-gradient(@btn-background-primary, @btn-background-primary-highlight);
 
 	&:hover, &:focus {
-		.button-background(darken(@btn-background-primary, 5%), darken(@btn-background-primary-highlight, 5%), white, 0 1px 1px rgba(255, 255, 255, .75));
+		.vertical-gradient(darken(@btn-background-primary, 5%), darken(@btn-background-primary-highlight, 5%));
 	}
 }
 

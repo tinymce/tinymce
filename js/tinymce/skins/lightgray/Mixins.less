@@ -48,11 +48,3 @@
 	filter: e(%("progid:DXImageTransform.Microsoft.gradient(enabled = false)"));
 	background: transparent;
 }
-
-.button-background(@startColor, @endColor, @textColor, @textShadow) {
-	color: @textColor;
-	text-shadow: @textShadow;
-	.vertical-gradient(@startColor, @endColor);
-	border-color: @endColor @endColor darken(@endColor, 15%);
-	border-color: rgba(0, 0, 0, .1) rgba(0, 0, 0, .1) fadein(rgba(0, 0, 0, .1), 15%);
-}

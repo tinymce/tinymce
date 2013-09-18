@@ -73,13 +73,11 @@ div.mce-fullscreen {
 }
 
 .mce-grid td div {
-	border: 1px solid #808080;
+	border: 1px solid @grid-border;
 	width: 12px; height: 12px;
 	margin: 2px;
 	cursor: pointer;
-	&:hover {
-		border-color: black;
-	}
+
 	&:focus {
 		border-color: @focus-border-color-fallback;
 		outline: 1px solid @focus-border-color;
@@ -96,7 +94,7 @@ div.mce-fullscreen {
 		border: 1px solid transparent;
 
 		&:hover {
-			border-color: @btn-border-color;
+			border-color: @grid-border-active;
 		}
 	}
 }
@@ -110,8 +108,8 @@ div.mce-fullscreen {
 	}
 
 	a:hover, a.mce-active {
-		border-color: #c4daff;
-		background: #deeafa;
+		border-color: @grid-border-active;
+		background: @grid-background-active;
 	}
 }
 

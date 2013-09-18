@@ -17,9 +17,13 @@
 @btn-text-color:                     #333;
 @btn-text-shadow:                    #fff;
 @btn-border-color:                   #c5c5c5;
+@btn-border-color2:                  rgba(0, 0, 0, .1) rgba(0, 0, 0, .1) fadein(rgba(0, 0, 0, .1), 15%);
 @btn-caret-color:                    #444;
 @btn-text-color-disabled:            @text-color-disabled;
-
+@btn-box-shadow:                     inset 0 1px 0 rgba(255, 255, 255, .2), 0 1px 2px rgba(0, 0, 0, .05);
+@btn-box-shadow-active:              inset 0 2px 4px rgba(0, 0, 0, .15), 0 1px 2px rgba(0, 0, 0, .05);
+@btn-box-disabled-opacity:           0.4;
+@btn-background-primary-text-color:  white;
 @btn-background:                     white;
 @btn-background-highlight:           darken(white, 15%);
 @btn-background-hover:               darken(@btn-background, 5%);
@@ -96,6 +100,7 @@
 // Checkbox
 @checkbox-gradient-start:            #FDFDFD;
 @checkbox-gradient-end:              #DDD;
+@checkbox-box-shadow:                inset 0 1px 0 rgba(255, 255, 255, .2), 0 1px 2px rgba(0, 0, 0, .05);
 
 // Path
 @path-item-focus-background:         #666;
@@ -106,6 +111,7 @@
 @textbox-box-shadow:                 inset 0 1px 1px rgba(0, 0, 0, 0.075);
 @textbox-box-shadow-focus:           inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(82, 168, 236, .6);
 @textbox-background:                 #fff;
+@textbox-border-color:               @btn-border-color;
 
 // Throbber
 @throbber-background:                #fff url('img/loader.gif') no-repeat center center;
@@ -117,3 +123,8 @@
 @buttongroup-item-disabled-box-shadow:  inset 0 1px 0 rgba(255, 255, 255, .2), 0 1px 2px rgba(0, 0, 0, .05);
 @buttongroup-item-active-box-shadow:    inset 0 2px 4px rgba(0, 0, 0, .15), 0 1px 2px rgba(0, 0, 0 ,.05);
 @buttongroup-border-color:              @btn-border-color;
+
+// Grid
+@grid-background-active:                @menuitem-active-color;
+@grid-border-active:                    #777;
+@grid-border:                           #808080;
