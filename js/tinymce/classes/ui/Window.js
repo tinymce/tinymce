@@ -312,7 +312,7 @@ define("tinymce/ui/Window", [
 						items.push(ctrl.getEl('inp'));
 
 						if (ctrl.getEl('open')) {
-							items.push(ctrl.getEl('open').firstChild);
+							items.push(ctrl.getEl('open'));
 						}
 					} else {
 						items.push(ctrl.getEl());
