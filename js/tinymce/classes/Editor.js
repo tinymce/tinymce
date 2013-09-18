@@ -1680,13 +1680,15 @@ define("tinymce/Editor", [
 		 * tinymce.activeEditor.setContent('[b]some[/b] html', {format: 'bbcode'});
 		 */
 		setContent: function(content, args) {
-			var self = this, body = self.getBody(), forcedRootBlockName;
+			var self = this, body = self.getBody(), forcedRootBlockName, classes, style;
 
 			// Setup args object
 			args = args || {};
 			args.format = args.format || 'html';
 			args.set = true;
 			args.content = content;
+			classes = self.settings.root_block_classes;
+		    style = self.settings.root_block_style;
 
 			// Do preprocessing
 			if (!args.no_events) {
