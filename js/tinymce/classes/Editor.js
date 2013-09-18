@@ -143,6 +143,8 @@ define("tinymce/Editor", [
 			// See: http://www.w3.org/TR/CSS2/fonts.html#propdef-font-size
 			font_size_legacy_values: 'xx-small,small,medium,large,x-large,xx-large,300%',
 			forced_root_block: 'p',
+			root_block_classes: '',
+			root_block_style:'',
 			hidden_input: true,
 			padd_empty_editor: true,
 			render_ui: true,
@@ -1700,16 +1702,26 @@ define("tinymce/Editor", [
 
 				// Check if forcedRootBlock is configured and that the block is a valid child of the body
 				if (forcedRootBlockName && self.schema.isValidChild(body.nodeName.toLowerCase(), forcedRootBlockName.toLowerCase())) {
-					if (ie && ie < 11) {
-						// IE renders BR elements in blocks so lets just add an empty block
-						content = '<' + forcedRootBlockName + '></' + forcedRootBlockName + '>';
-					} else {
-						content = '<' + forcedRootBlockName + '><br data-mce-bogus="1"></' + forcedRootBlockName + '>';
-					}
-				} else if (!ie) {
-					// We need to add a BR when forced_root_block is disabled on non IE browsers to place the caret
-					content = '<br data-mce-bogus="1">';
-				}
+				    if (ie && ie < 11) {
+				        // IE renders BR elements in blocks so lets just add an empty block
+				        if (classes && style) {
+				            content = '<' + forcedRootBlockName + ' class="' + classes + '" style ="'+style+'"></' + forcedRootBlockName + '>';
+				        }
+				        else if (classes && !style) {
+				            content = '<' + forcedRootBlockName + ' class="' + style + '"></' + forcedRootBlockName + '>';
+				        } else {
+				            content = '<' + forcedRootBlockName + '></' + forcedRootBlockName + '>';
+				        }
+				    } else {
+				        if (classes && style) {
+				            content = '<' + forcedRootBlockName + ' class="' + classes + '" style ="' + style + '"><br data-mce-bogus="1"></' + forcedRootBlockName + '>';
+				        }
+				        else if (classes && !style) {
+				            content = '<' + forcedRootBlockName + ' class="' + classes + '"><br data-mce-bogus="1"></' + forcedRootBlockName + '>';
+				        } else {
+				            content = '<' + forcedRootBlockName + '><br data-mce-bogus="1"></' + forcedRootBlockName + '>';
+				        }
+				    }
 
 				body.innerHTML = content;
 
