@@ -27,8 +27,8 @@
 
 @btn-background-primary:                 #0088cc;
 @btn-background-primary-highlight:       #0044cc;
-@btn-background-primary-hover:           darken(#0088cc, 5%);
-@btn-background-primary-highlight-hover: darken(#0044cc, 5%);
+@btn-background-primary-hover:           darken(@btn-background-primary, 5%);
+@btn-background-primary-highlight-hover: darken(@btn-background-primary-highlight, 5%);
 @btn-text-color-primary:                 #fff;
 
 // Menu
@@ -47,6 +47,7 @@
 @menuitem-separator-bottom-color:    white;
 @menuitem-active-color:              #C8DEF4;
 @menuitem-preview-active-color:      #aaa;
+@menuitem-color-inverse:             #fff;
 
 // Panel
 @panel-border:                       #9E9E9E;
@@ -104,6 +105,15 @@
 @textbox-placeholder-color:          #aaa;
 @textbox-box-shadow:                 inset 0 1px 1px rgba(0, 0, 0, 0.075);
 @textbox-box-shadow-focus:           inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(82, 168, 236, .6);
+@textbox-background:                 #fff;
 
 // Throbber
 @throbber-background:                #fff url('img/loader.gif') no-repeat center center;
+
+// Combobox
+@combobox-border-color:              rgba(0, 0, 0, .15);
+
+// Buttongroup
+@buttongroup-item-disabled-box-shadow:  inset 0 1px 0 rgba(255, 255, 255, .2), 0 1px 2px rgba(0, 0, 0, .05);
+@buttongroup-item-active-box-shadow:    inset 0 2px 4px rgba(0, 0, 0, .15), 0 1px 2px rgba(0, 0, 0 ,.05);
+@buttongroup-border-color:              @btn-border-color;
