@@ -466,7 +466,7 @@ define("tinymce/Editor", [
 		 */
 		init: function() {
 			var self = this, settings = self.settings, elm = self.getElement();
-			var w, h, minHeight, n, o, url, bodyId, bodyClass, re, i, initializedPlugins = [];
+			var w, h, minHeight, n, o, bodyId, bodyClass, re, i, initializedPlugins = [];
 
 			self.editorManager.add(self);
 
@@ -600,11 +600,6 @@ define("tinymce/Editor", [
 				return self.initContentBody();
 			}
 
-			// User specified a document.domain value
-			if (document.domain && location.hostname != document.domain) {
-				self.editorManager.relaxedDomain = document.domain;
-			}
-
 			self.iframeHTML = settings.doctype + '<html><head>';
 
 			// We only need to override paths if we have to
@@ -642,20 +637,11 @@ define("tinymce/Editor", [
 			self.iframeHTML += '</head><body id="' + bodyId + '" class="mce-content-body ' + bodyClass + '" ' +
 				'onload="window.parent.tinymce.get(\'' + self.id + '\').fire(\'load\');"><br></body></html>';
 
-			// Domain relaxing enabled, then set document domain
-			// TODO: Fix this old stuff
-			if (self.editorManager.relaxedDomain && (ie || (isOpera && parseFloat(window.opera.version()) < 11))) {
-				// We need to write the contents here in IE since multiple writes messes up refresh button and back button
-				url = 'javascript:(function(){document.open();document.domain="' + document.domain + '";' +
-					'var ed = window.parent.tinymce.get("' + self.id + '");document.write(ed.iframeHTML);' +
-					'document.close();ed.initContentBody();})()';
-			}
-
 			// Create iframe
 			// TODO: ACC add the appropriate description on this.
 			n = DOM.add(o.iframeContainer, 'iframe', {
 				id: self.id + "_ifr",
-				src: url || 'javascript:""', // Workaround for HTTPS warning in IE6/7
+				src: 'javascript:""', // Workaround for HTTPS warning in IE6/7
 				frameBorder: '0',
 				allowTransparency: "true",
 				title: self.editorManager.translate(
@@ -678,9 +664,7 @@ define("tinymce/Editor", [
 			DOM.get(self.id).style.display = 'none';
 			DOM.setAttrib(self.id, 'aria-hidden', true);
 
-			if (!self.editorManager.relaxedDomain || !url) {
-				self.initContentBody();
-			}
+			self.initContentBody();
 
 			elm = n = o = null; // Cleanup
 		},
@@ -701,14 +685,10 @@ define("tinymce/Editor", [
 			}
 
 			// Setup iframe body
-			if ((!ie || !self.editorManager.relaxedDomain) && !settings.content_editable) {
+			if (!settings.content_editable) {
 				doc.open();
 				doc.write(self.iframeHTML);
 				doc.close();
-
-				if (self.editorManager.relaxedDomain) {
-					doc.domain = self.editorManager.relaxedDomain;
-				}
 			}
 
 			if (settings.content_editable) {
@@ -2009,12 +1989,13 @@ define("tinymce/Editor", [
 		 * @method remove
 		 */
 		remove: function() {
-			var self = this, elm = self.getContainer(), doc = self.getDoc();
+			var self = this;
 
 			if (!self.removed) {
 				self.removed = 1; // Cancels post remove event execution
 
 				// Fixed bug where IE has a blinking cursor left from the editor
+				var doc = self.getDoc();
 				if (ie && doc) {
 					doc.execCommand('SelectAll');
 				}
@@ -2031,6 +2012,7 @@ define("tinymce/Editor", [
 					Event.unbind(self.getDoc());
 				}
 
+				var elm = self.getContainer();
 				Event.unbind(self.getBody());
 				Event.unbind(elm);
 
