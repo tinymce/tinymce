@@ -74,7 +74,7 @@ define("tinymce/Editor", [
 	var extend = Tools.extend, each = Tools.each, explode = Tools.explode;
 	var inArray = Tools.inArray, trim = Tools.trim, resolve = Tools.resolve;
 	var Event = EventUtils.Event;
-	var isGecko = Env.gecko, ie = Env.ie, isOpera = Env.opera;
+	var isGecko = Env.gecko, ie = Env.ie;
 
 	function getEventTarget(editor, eventName) {
 		if (eventName == 'selectionchange' || eventName == 'drop') {
