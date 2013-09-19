@@ -466,7 +466,7 @@ define("tinymce/Editor", [
 		 */
 		init: function() {
 			var self = this, settings = self.settings, elm = self.getElement();
-			var w, h, minHeight, n, o, bodyId, bodyClass, re, i, initializedPlugins = [];
+			var w, h, minHeight, n, o, url, bodyId, bodyClass, re, i, initializedPlugins = [];
 
 			self.editorManager.add(self);
 
@@ -637,11 +637,21 @@ define("tinymce/Editor", [
 			self.iframeHTML += '</head><body id="' + bodyId + '" class="mce-content-body ' + bodyClass + '" ' +
 				'onload="window.parent.tinymce.get(\'' + self.id + '\').fire(\'load\');"><br></body></html>';
 
+			var domainRelaxUrl = 'javascript:(function(){'+
+				'document.open();document.domain="' + document.domain + '";' +
+				'var ed = window.parent.tinymce.get("' + self.id + '");document.write(ed.iframeHTML);' +
+				'document.close();ed.initContentBody(true);})()';
+
+			// Domain relaxing is required since the user has messed around with document.domain
+			if (document.domain != location.hostname) {
+				url = domainRelaxUrl;
+			}
+
 			// Create iframe
 			// TODO: ACC add the appropriate description on this.
 			n = DOM.add(o.iframeContainer, 'iframe', {
 				id: self.id + "_ifr",
-				src: 'javascript:""', // Workaround for HTTPS warning in IE6/7
+				src: url || 'javascript:""', // Workaround for HTTPS warning in IE6/7
 				frameBorder: '0',
 				allowTransparency: "true",
 				title: self.editorManager.translate(
@@ -655,6 +665,16 @@ define("tinymce/Editor", [
 				}
 			});
 
+			// Try accessing the document this will fail on IE when document.domain is set to the same as location.hostname
+			// Then we have to force domain relaxing using the domainRelaxUrl approach very ugly!!
+			if (ie) {
+				try {
+					self.getDoc();
+				} catch (e) {
+					n.src = url = domainRelaxUrl;
+				}
+			}
+
 			self.contentAreaContainer = o.iframeContainer;
 
 			if (o.editorContainer) {
@@ -664,7 +684,9 @@ define("tinymce/Editor", [
 			DOM.get(self.id).style.display = 'none';
 			DOM.setAttrib(self.id, 'aria-hidden', true);
 
-			self.initContentBody();
+			if (!url) {
+				self.initContentBody();
+			}
 
 			elm = n = o = null; // Cleanup
 		},
@@ -676,7 +698,7 @@ define("tinymce/Editor", [
 		 * @method initContentBody
 		 * @private
 		 */
-		initContentBody: function() {
+		initContentBody: function(skipWrite) {
 			var self = this, settings = self.settings, targetElm = DOM.get(self.id), doc = self.getDoc(), body, contentCssText;
 
 			// Restore visibility on target element
@@ -685,7 +707,7 @@ define("tinymce/Editor", [
 			}
 
 			// Setup iframe body
-			if (!settings.content_editable) {
+			if (!skipWrite && !settings.content_editable) {
 				doc.open();
 				doc.write(self.iframeHTML);
 				doc.close();
