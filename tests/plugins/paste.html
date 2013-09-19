@@ -121,6 +121,16 @@ test("Paste Word fake list before BR", function() {
 	equal(editor.getContent().replace(/[\r\n]+/g, ''), '<ul><li>Item 1</li><li>Item 2</li><li>Item 3</li><li>Item 4</li><li>Item 5</li><li>Item 6</li></ul><p><br />a</p>');
 });
 
+test("Paste list like paragraph and list", function() {
+	editor.setContent('');
+
+	editor.execCommand('mceInsertClipboardContent', false, {
+		content : '<p class=MsoNormal><span style=\'font-size:10.0pt;line-height:115%;font-family:"Trebuchet MS","sans-serif";color:#666666\'>A. X<o:p></o:p></span></p><p class=MsoListParagraph style=\'text-indent:-.25in;mso-list:l0 level1 lfo1\'><![if !supportLists]><span style=\'mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin\'><span style=\'mso-list:Ignore\'>1.<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></span><![endif]>Y</p>'
+	});
+
+	equal(editor.getContent().replace(/[\r\n]+/g, ''), '<p>A. X</p><ol><li>Y</li></ol>');
+});
+
 test("Paste Word table", function() {
 	var rng = editor.dom.createRng();
 

@@ -8,6 +8,7 @@ Version 4.0.7 (2013-09-xx)
 	Fixed issue with the menubar option producing a JS exception if set to true.
 	Fixed bug where paste from word would remove all BR elements since it was missing in the default paste_word_valid_elements.
 	Fixed bug where linebreaks would be removed by paste plugin on IE since it didn't properly detect Word contents.
+	Fixed bug where paste plugin would convert some Word paragraphs that looked like lists into lists.
 	Removed all logic regarding document.domain since all built in plugins are CDN compatible.
 Version 4.0.6 (2013-09-12)
 	Added new compat3x plugin that makes it possible to load most 3.x plugins. Only available in the development package.
