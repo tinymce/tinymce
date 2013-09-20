@@ -355,6 +355,17 @@ tinymce.PluginManager.add('fullpage', function(editor) {
 			}
 		});
 
+        each(headerFragment.getAll('link'), function(node) {
+            if (node && node.attr('rel') == 'stylesheet' && node.attr('type') == 'text/css') {
+                try {
+                    editor.contentCSS.push(editor.documentBaseURI.toAbsolute(node.attr('href')));
+                }
+                catch(e) {
+                    /* bad uri; nothing to be done */
+                }
+            }
+        });
+
 		elm = headerFragment.getAll('body')[0];
 		if (elm) {
 			dom.setAttribs(editor.getBody(), {
