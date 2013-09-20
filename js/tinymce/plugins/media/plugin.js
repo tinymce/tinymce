@@ -334,6 +334,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 				switch (name) {
 					case "video":
 					case "object":
+					case "embed":
 					case "img":
 					case "iframe":
 						setAttributes(attrs, {
