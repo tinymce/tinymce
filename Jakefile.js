@@ -259,14 +259,16 @@ task("less", [], function () {
 			baseDir: "js/tinymce/skins/" + skinName + "",
 			from: lessFiles.concat(["Icons.less"]),
 			toCss: "js/tinymce/skins/" + skinName + "/skin.min.css",
-			toLess: "js/tinymce/skins/" + skinName + "/skin.less"
+			toLess: "js/tinymce/skins/" + skinName + "/skin.less",
+			toLessDev: "js/tinymce/skins/" + skinName + "/skin.dev.less"
 		});
 
 		// IE7
 		less({
 			baseDir: "js/tinymce/skins/" + skinName + "",
 			from: lessFiles.concat(["Icons.Ie7.less"]),
-			toCss: "js/tinymce/skins/" + skinName + "/skin.ie7.min.css"
+			toCss: "js/tinymce/skins/" + skinName + "/skin.ie7.min.css",
+			toLess: "js/tinymce/skins/" + skinName + "/skin.ie7.less"
 		});
 
 		// Content CSS
