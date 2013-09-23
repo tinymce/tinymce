@@ -267,8 +267,8 @@ define("tinymce/pasteplugin/Clipboard", [
 						var pastebinElm = createPasteBin();
 						var lastRng = editor.selection.getRng();
 
-						// Hack for #6051
-						if (Env.webkit && editor.inline) {
+						// Hack for #6051 & #6256
+						if (Env.webkit) {
 							pastebinElm.contentEditable = true;
 						}
 
