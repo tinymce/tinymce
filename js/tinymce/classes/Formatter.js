@@ -265,6 +265,29 @@ define("tinymce/Formatter", [
 				}
 			}
 		}
+	    
+	    // Remove embeded span nodes after moving style attributes to the parent node
+		function fixEmbededSpanNodes(node) {
+		    var parentStyle, childStyle, name;
+		    if (node.nodeType === 1 && node.parentNode && node.parentNode.nodeType === 1 && isEq(node, 'span') && isEq(node.parentNode, 'span') && !isBookmarkNode(node) && !isCaretNode(node)) {
+		        each(ed.dom.getAttrib(node, 'style').replace(/\s/g, '').split(';'), function (value) {
+		            if (value) {
+		                name = value.split(':')[0];
+		                parentStyle = ed.dom.getStyle(node.parentNode, name);
+		                childStyle = ed.dom.getStyle(node, name);
+		                if (childStyle && !parentStyle) {
+		                    ed.dom.setStyle(node.parentNode, name, childStyle);
+		                    ed.dom.setStyle(node, name, null);
+		                } else if (childStyle && (childStyle === parentStyle)) {
+		                    ed.dom.setStyle(node, name, null);
+		                }
+		            }
+		        });
+		        if (!ed.dom.getAttrib(node, 'style')) {
+		            ed.dom.setOuterHTML(node, node.innerHTML);
+		        }
+		    }
+		}
 
 		/**
 		 * Applies the specified format to the current selection or specified node.
@@ -665,6 +688,11 @@ define("tinymce/Formatter", [
 						if (format.styles && (format.styles.color || format.styles.textDecoration)) {
 							walk(curSelNode, processUnderlineAndColor, 'childNodes');
 							processUnderlineAndColor(curSelNode);
+						}
+					    // cleanup: remove embeded span nodes specially when format is configured to be exact: true
+						if (format.inline && format.styles) {
+						    walk(curSelNode, fixEmbededSpanNodes, 'childNodes');
+						    fixEmbededSpanNodes(curSelNode);
 						}
 
 						selection.moveToBookmark(bookmark);
