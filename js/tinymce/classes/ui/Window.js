@@ -367,12 +367,6 @@ define("tinymce/ui/Window", [
 		 * @return {Object} Event arguments object.
 		 */
 		submit: function() {
-			// Blur current control so a onchange is fired before submit
-			var ctrl = this.getParentCtrl(document.activeElement);
-			if (ctrl) {
-				ctrl.blur();
-			}
-
 			return this.fire('submit', {data: this.toJSON()});
 		},
 
