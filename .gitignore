@@ -28,3 +28,5 @@ mcmanager
 *.min.css
 skin.less
 skin.dev.less
+skin.ie7.less
+skin.ie7.dev.less
