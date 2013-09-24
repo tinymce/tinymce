@@ -21,7 +21,7 @@ define("tinymce/ui/TabPanel", [
 	"tinymce/ui/Panel",
 	"tinymce/ui/DomUtils"
 ], function(Panel, DomUtils) {
-	"use stict";
+	"use strict";
 
 	return Panel.extend({
 		lastIdx: 0,
