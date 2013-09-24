@@ -256,9 +256,22 @@
 	}
 
 	function Plugin(editor) {
-		var self = this, currentIndex = -1, spellcheckerEnabled;
+		var self = this, currentIndex = -1;
 
 		function showDialog() {
+			var last = {};
+
+			function updateButtonStates() {
+				win.statusbar.find('#next').disabled(!findSpansByIndex(currentIndex + 1).length);
+				win.statusbar.find('#prev').disabled(!findSpansByIndex(currentIndex - 1).length);
+			}
+
+			function notFoundAlert() {
+				tinymce.ui.MessageBox.alert('Could not find the specified string.', function() {
+					win.find('#find')[0].focus();
+				});
+			}
+
 			var win = tinymce.ui.Factory.create({
 				type: 'window',
 				layout: "flex",
@@ -266,28 +279,72 @@
 				align: "center",
 				onClose: function() {
 					editor.focus();
-					spellcheckerEnabled = false;
-					self.unmarkAllMatches();
+					self.done();
+				},
+				onSubmit: function(e) {
+					var count, caseState, text, wholeWord;
+
+					e.preventDefault();
+
+					caseState = win.find('#case').checked();
+					wholeWord = win.find('#words').checked();
+
+					text = win.find('#find').value();
+					if (!text.length) {
+						self.done(false);
+						win.statusbar.items().slice(1).disabled(true);
+						return;
+					}
+
+					if (last.text == text && last.caseState == caseState && last.wholeWord == wholeWord) {
+						if (findSpansByIndex(currentIndex + 1).length === 0) {
+							notFoundAlert();
+							return;
+						}
+
+						self.next();
+						updateButtonStates();
+						return;
+					}
+
+					count = self.find(text, caseState, wholeWord);
+					if (!count) {
+						notFoundAlert();
+					}
+
+					win.statusbar.items().slice(1).disabled(count === 0);
+					updateButtonStates();
+
+					last = {
+						text: text,
+						caseState: caseState,
+						wholeWord: wholeWord
+					};
 				},
 				buttons: [
 					{text: "Find", onclick: function() {
-						win.find('form')[0].submit();
+						win.submit();
 					}},
 					{text: "Replace", disabled: true, onclick: function() {
 						if (!self.replace(win.find('#replace').value())) {
 							win.statusbar.items().slice(1).disabled(true);
+							currentIndex = -1;
+							last = {};
 						}
 					}},
 					{text: "Replace all", disabled: true, onclick: function() {
-						self.replaceAll(win.find('#replace').value());
+						self.replace(win.find('#replace').value(), true, true);
 						win.statusbar.items().slice(1).disabled(true);
+						last = {};
 					}},
 					{type: "spacer", flex: 1},
-					{text: "Prev", disabled: true, onclick: function() {
+					{text: "Prev", name: 'prev', disabled: true, onclick: function() {
 						self.prev();
+						updateButtonStates();
 					}},
-					{text: "Next", disabled: true, onclick: function() {
+					{text: "Next", name: 'next', disabled: true, onclick: function() {
 						self.next();
+						updateButtonStates();
 					}}
 				],
 				title: "Find and replace",
@@ -296,34 +353,6 @@
 					padding: 20,
 					labelGap: 30,
 					spacing: 10,
-					onsubmit: function(e) {
-						var count, regEx, caseState, text, wholeWord;
-
-						e.preventDefault();
-
-						caseState = win.find('#case').checked();
-						wholeWord = win.find('#words').checked();
-
-						text = win.find('#find').value();
-						if (!text.length) {
-							self.unmarkAllMatches();
-							win.statusbar.items().slice(1).disabled(true);
-							return;
-						}
-
-						text = text.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
-						text = wholeWord ? '\\b' + text + '\\b' : text;
-						regEx = new RegExp(text, caseState ? 'g' : 'gi');
-						count = self.markAllMatches(regEx);
-
-						if (count) {
-							self.first();
-						} else {
-							tinymce.ui.MessageBox.alert('Could not find the specified string.');
-						}
-
-						win.statusbar.items().slice(1).disabled(count === 0);
-					},
 					items: [
 						{type: 'textbox', name: 'find', size: 40, label: 'Find', value: editor.selection.getNode().src},
 						{type: 'textbox', name: 'replace', size: 40, label: 'Replace with'},
@@ -332,8 +361,6 @@
 					]
 				}
 			}).renderTo().reflow();
-
-			spellcheckerEnabled = true;
 		}
 
 		self.init = function(ed) {
@@ -356,7 +383,7 @@
 			ed.shortcuts.add('Ctrl+F', '', showDialog);
 		};
 
-		self.markAllMatches = function(regex) {
+		function markAllMatches(regex) {
 			var node, marker;
 
 			marker = editor.dom.create('span', {
@@ -366,10 +393,10 @@
 
 			node = editor.getBody();
 
-			self.unmarkAllMatches(node);
+			self.done(false);
 
 			return findAndReplaceDOMText(regex, node, marker, false, editor.schema);
-		};
+		}
 
 		function unwrap(node) {
 			var parentNode = node.parentNode;
@@ -377,169 +404,176 @@
 			node.parentNode.removeChild(node);
 		}
 
-		function moveSelection(forward, fromStart) {
-			var selection = editor.selection, rng = selection.getRng(true), currentIndex = -1,
-				startContainer, endContainer;
+		function findSpansByIndex(index) {
+			var nodes, spans = [];
 
-			forward = forward !== false;
-
-			function walkToIndex() {
-				var node, walker;
-
-				if (fromStart) {
-					node = editor.getBody()[forward ? 'firstChild' : 'lastChild'];
-				} else {
-					node = rng[forward ? 'endContainer' : 'startContainer'];
-				}
-
-				walker = new tinymce.dom.TreeWalker(node, editor.getBody());
-
-				while ((node = walker.current())) {
-					if (node.nodeType == 1 && node.nodeName == "SPAN" && node.getAttribute('data-mce-index') !== null) {
-						currentIndex = node.getAttribute('data-mce-index');
-						startContainer = node.firstChild;
-
-						while ((node = walker.current())) {
-							if (node.nodeType == 1 && node.nodeName == "SPAN" && node.getAttribute('data-mce-index') !== null) {
-								if (node.getAttribute('data-mce-index') === currentIndex) {
-									endContainer = node.firstChild;
-								} else {
-									return;
-								}
-							}
-
-							walker[forward ? 'next' : 'prev']();
-						}
-					}
-
-					walker[forward ? 'next' : 'prev']();
-				}
-			}
-
-			walkToIndex();
-
-			if (startContainer && endContainer) {
-				editor.focus();
-
-				if (forward) {
-					rng.setStart(startContainer, 0);
-					rng.setEnd(endContainer, endContainer.length);
-				} else {
-					rng.setStart(endContainer, 0);
-					rng.setEnd(startContainer, startContainer.length);
-				}
-
-				selection.scrollIntoView(startContainer.parentNode);
-				selection.setRng(rng);
-			}
-
-			return currentIndex;
-		}
-
-		function removeNode(node) {
-			node.parentNode.removeChild(node);
-		}
-
-		self.first = function() {
-			currentIndex = moveSelection(true, true);
-			return currentIndex !== -1;
-		};
-
-		self.next = function() {
-			currentIndex = moveSelection(true);
-			return currentIndex !== -1;
-		};
-
-		self.prev = function() {
-			currentIndex = moveSelection(false);
-			return currentIndex !== -1;
-		};
-
-		self.replace = function(text, forward, all) {
-			var i, nodes, node, matchIndex, currentMatchIndex, nextIndex;
-
-			if (currentIndex === -1) {
-				currentIndex = moveSelection(forward);
-			}
-
-			nextIndex = moveSelection(forward);
-
-			node = editor.getBody();
-			nodes = tinymce.toArray(node.getElementsByTagName('span'));
+			nodes = tinymce.toArray(editor.getBody().getElementsByTagName('span'));
 			if (nodes.length) {
-				for (i = 0; i < nodes.length; i++) {
+				for (var i = 0; i < nodes.length; i++) {
 					var nodeIndex = nodes[i].getAttribute('data-mce-index');
 
 					if (nodeIndex === null || !nodeIndex.length) {
 						continue;
 					}
 
-					matchIndex = currentMatchIndex = nodes[i].getAttribute('data-mce-index');
-					if (all || matchIndex === currentIndex) {
-						if (text.length) {
-							nodes[i].firstChild.nodeValue = text;
-							unwrap(nodes[i]);
-						} else {
-							removeNode(nodes[i]);
-						}
-
-						while (nodes[++i]) {
-							matchIndex = nodes[i].getAttribute('data-mce-index');
-
-							if (nodeIndex === null || !nodeIndex.length) {
-								continue;
-							}
-
-							if (matchIndex === currentMatchIndex) {
-								removeNode(nodes[i]);
-							} else {
-								i--;
-								break;
-							}
-						}
+					if (nodeIndex === index.toString()) {
+						spans.push(nodes[i]);
 					}
 				}
 			}
 
-			if (nextIndex == -1) {
-				nextIndex = moveSelection(forward, true);
+			return spans;
+		}
+
+		function moveSelection(forward) {
+			var testIndex = currentIndex, dom = editor.dom;
+
+			forward = forward !== false;
+
+			if (forward) {
+				testIndex++;
+			} else {
+				testIndex--;
 			}
 
-			currentIndex = nextIndex;
+			dom.removeClass(findSpansByIndex(currentIndex), 'mce-match-marker-selected');
 
-			if (all) {
-				editor.selection.setCursorLocation(editor.getBody(), 0);
+			var spans = findSpansByIndex(testIndex);
+			if (spans.length) {
+				dom.addClass(findSpansByIndex(testIndex), 'mce-match-marker-selected');
+				editor.selection.scrollIntoView(spans[0]);
+				return testIndex;
+			}
+
+			return -1;
+		}
+
+		function removeNode(node) {
+			node.parentNode.removeChild(node);
+		}
+
+		self.find = function(text, matchCase, wholeWord) {
+			text = text.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+			text = wholeWord ? '\\b' + text + '\\b' : text;
+
+			var count = markAllMatches(new RegExp(text, matchCase ? 'g' : 'gi'));
+
+			if (count) {
+				currentIndex = -1;
+				currentIndex = moveSelection(true);
+			}
+
+			return count;
+		};
+
+		self.next = function() {
+			var index = moveSelection(true);
+
+			if (index !== -1) {
+				currentIndex = index;
+			}
+		};
+
+		self.prev = function() {
+			var index = moveSelection(false);
+
+			if (index !== -1) {
+				currentIndex = index;
+			}
+		};
+
+		self.replace = function(text, forward, all) {
+			var i, nodes, node, matchIndex, currentMatchIndex, nextIndex = currentIndex, hasMore;
+
+			forward = forward !== false;
+
+			node = editor.getBody();
+			nodes = tinymce.toArray(node.getElementsByTagName('span'));
+			for (i = 0; i < nodes.length; i++) {
+				var nodeIndex = nodes[i].getAttribute('data-mce-index');
+
+				if (nodeIndex === null || !nodeIndex.length) {
+					continue;
+				}
+
+				matchIndex = currentMatchIndex = parseInt(nodeIndex, 10);
+				if (all || matchIndex === currentIndex) {
+					if (text.length) {
+						nodes[i].firstChild.nodeValue = text;
+						unwrap(nodes[i]);
+					} else {
+						removeNode(nodes[i]);
+					}
+
+					while (nodes[++i]) {
+						matchIndex = nodes[i].getAttribute('data-mce-index');
+
+						if (nodeIndex === null || !nodeIndex.length) {
+							continue;
+						}
+
+						if (matchIndex === currentMatchIndex) {
+							removeNode(nodes[i]);
+						} else {
+							i--;
+							break;
+						}
+					}
+
+					if (forward) {
+						nextIndex--;
+					}
+				} else if (currentMatchIndex > currentIndex) {
+					nodes[i].setAttribute('data-mce-index', currentMatchIndex - 1);
+				}
 			}
 
 			editor.undoManager.add();
+			currentIndex = nextIndex;
 
-			return currentIndex !== -1;
+			if (forward) {
+				hasMore = findSpansByIndex(nextIndex + 1).length > 0;
+				self.next();
+			} else {
+				hasMore = findSpansByIndex(nextIndex - 1).length > 0;
+				self.prev();
+			}
+
+			return !all && hasMore;
 		};
 
-		self.replaceAll = function(text) {
-			self.replace(text, true, true);
-		};
+		self.done = function(keepEditorSelection) {
+			var i, nodes, startContainer, endContainer;
 
-		self.unmarkAllMatches = function() {
-			var i, nodes, node;
+			nodes = tinymce.toArray(editor.getBody().getElementsByTagName('span'));
+			for (i = 0; i < nodes.length; i++) {
+				var nodeIndex = nodes[i].getAttribute('data-mce-index');
 
-			node = editor.getBody();
-			nodes = node.getElementsByTagName('span');
-			i = nodes.length;
-			while (i--) {
-				node = nodes[i];
-				if (node.getAttribute('data-mce-index')) {
-					unwrap(node);
+				if (nodeIndex !== null && nodeIndex.length) {
+					if (nodeIndex === currentIndex.toString()) {
+						if (!startContainer) {
+							startContainer = nodes[i].firstChild;
+						}
+
+						endContainer = nodes[i].firstChild;
+					}
+
+					unwrap(nodes[i]);
 				}
 			}
-		};
 
-		editor.on('beforeaddundo keydown', function(e) {
-			if (spellcheckerEnabled) {
-				e.preventDefault();
-				return false;
+			if (startContainer && endContainer) {
+				var rng = editor.dom.createRng();
+				rng.setStart(startContainer, 0);
+				rng.setEnd(endContainer, endContainer.data.length);
+
+				if (keepEditorSelection !== false) {
+					editor.selection.setRng(rng);
+				}
+
+				return rng;
 			}
-		});
+		};
 	}
 
 	tinymce.PluginManager.add('searchreplace', Plugin);
