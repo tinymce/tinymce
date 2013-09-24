@@ -275,14 +275,16 @@ task("less", [], function () {
 		less({
 			from: ["Content.less"],
 			toCss: "js/tinymce/skins/" + skinName + "/content.min.css",
-			baseDir: "js/tinymce/skins/" + skinName + ""
+			baseDir: "js/tinymce/skins/" + skinName + "",
+			force: true
 		});
 
 		// Content CSS (inline)
 		less({
 			from: ["Content.Inline.less"],
 			toCss: "js/tinymce/skins/" + skinName + "/content.inline.min.css",
-			baseDir: "js/tinymce/skins/" + skinName + ""
+			baseDir: "js/tinymce/skins/" + skinName + "",
+			force: true
 		});
 	});
 });
