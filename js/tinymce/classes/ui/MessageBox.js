@@ -130,6 +130,7 @@ define("tinymce/ui/MessageBox", [
 						buttons = [
 							{type: "button", text: "Ok", subtype: "primary", onClick: function(e) {
 								e.control.parents()[1].close();
+								callback(true);
 							}}
 						];
 						break;
