@@ -58,10 +58,22 @@
 	&:hover, &:focus {
 		.vertical-gradient(darken(@btn-background-primary, 5%), darken(@btn-background-primary-highlight, 5%));
 	}
+
+	&.mce-disabled button, &.mce-disabled:hover button {
+		cursor: default;
+		.box-shadow(none);
+		.opacity(@btn-box-disabled-opacity);
+	}
+
+	&.mce-active, &.mce-active:hover {
+		.vertical-gradient(darken(@btn-background-primary, 10%), darken(@btn-background-primary-highlight, 10%));
+		.box-shadow(@btn-box-shadow-active);
+	}
 }
 
-.mce-primary button {
+.mce-primary button, .mce-primary button i {
 	color: @btn-text-color-primary;
+	text-shadow: 1px 1px @btn-text-shadow-primary;
 }
 
 .mce-btn-large button {

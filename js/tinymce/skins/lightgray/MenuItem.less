@@ -15,7 +15,7 @@
 }
 
 .mce-menu-item.mce-disabled .mce-text, .mce-menu-item.mce-disabled .mce-ico {
-	color: @text-color-disabled;
+	color: mix(@text-color, @menu-background, 40%);
 }
 
 .mce-menu-item:hover .mce-text, .mce-menu-item.mce-selected .mce-text {
@@ -32,7 +32,7 @@
 
 .mce-menu-shortcut {
 	display: inline-block;
-	color: @text-color-disabled;
+	color: mix(@text-color, @menu-background, 40%);
 }
 
 .mce-menu-shortcut {

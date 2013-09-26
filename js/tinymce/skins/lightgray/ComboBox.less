@@ -12,6 +12,10 @@
 	height: 28px;
 }
 
+.mce-combobox.mce-disabled input {
+	color: mix(@text-color, @textbox-background, 40%);
+}
+
 .mce-combobox.mce-has-open input {
 	.border-radius(4px 0 0 4px);
 }
@@ -24,4 +28,10 @@
 .mce-combobox button {
 	padding-right: 8px;
 	padding-left: 8px;
+}
+
+.mce-combobox.mce-disabled .mce-btn button {
+	cursor: default;
+	.box-shadow(none);
+	.opacity(@btn-box-disabled-opacity);
 }
