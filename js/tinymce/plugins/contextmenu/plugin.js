@@ -65,10 +65,10 @@ tinymce.PluginManager.add('contextmenu', function(editor) {
 		}
 
 		menu.moveTo(pos.x, pos.y);
+	});
 
-		editor.on('remove', function() {
-			menu.remove();
-			menu = null;
-		});
+	editor.on('remove', function() {
+		menu.remove();
+		menu = null;
 	});
 });

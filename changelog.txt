@@ -12,6 +12,7 @@ Version 4.0.7 (2013-09-xx)
 	Fixed bug where linebreaks would be removed by paste plugin on IE since it didn't properly detect Word contents.
 	Fixed bug where paste plugin would convert some Word paragraphs that looked like lists into lists.
 	Fixed bug where editors wasn't properly initialized if the document.domain is set to the same as the current domain on IE.
+	Fixed bug where an exception was thrown when removing an editor after opening the context menu multiple times.
 Version 4.0.6 (2013-09-12)
 	Added new compat3x plugin that makes it possible to load most 3.x plugins. Only available in the development package.
 	Added new skin_url option enables you to load local skins when using the CDN version.
