@@ -134,11 +134,11 @@ define("tinymce/ui/ComboBox", [
 		disabled: function(state) {
 			var self = this;
 
-			self._super(state);
-
-			if (self._rendered) {
+			if (self._rendered && typeof(state) != 'undefined') {
 				self.getEl('inp').disabled = state;
 			}
+
+			return self._super(state);
 		},
 
 		/**
@@ -232,7 +232,7 @@ define("tinymce/ui/ComboBox", [
 			return (
 				'<div id="' + id + '" class="' + self.classes() + '">' +
 					'<input id="' + id + '-inp" class="' + prefix + 'textbox ' + prefix + 'placeholder" value="' +
-					value + '" hidefocus="true">' +
+					value + '" hidefocus="true"' + (self.disabled() ? ' disabled="disabled"' : '') + '>' +
 					openBtnHtml +
 				'</div>'
 			);

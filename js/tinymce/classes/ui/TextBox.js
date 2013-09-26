@@ -59,6 +59,23 @@ define("tinymce/ui/TextBox", [
 		},
 
 		/**
+		 * Getter/setter function for the disabled state.
+		 *
+		 * @method value
+		 * @param {Boolean} [state] State to be set.
+		 * @return {Boolean|tinymce.ui.ComboBox} True/false or self if it's a set operation.
+		 */
+		disabled: function(state) {
+			var self = this;
+
+			if (self._rendered && typeof(state) != 'undefined') {
+				self.getEl().disabled = state;
+			}
+
+			return self._super(state);
+		},
+
+		/**
 		 * Getter/setter function for the control value.
 		 *
 		 * @method value
@@ -156,6 +173,10 @@ define("tinymce/ui/TextBox", [
 
 			if (settings.subtype) {
 				extraAttrs += ' type="' + settings.subtype + '"';
+			}
+
+			if (self.disabled()) {
+				extraAttrs += ' disabled="disabled"';
 			}
 
 			if (settings.multiline) {
