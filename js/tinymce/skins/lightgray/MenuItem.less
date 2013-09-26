@@ -14,15 +14,8 @@
 	margin-bottom: 1px;
 }
 
-.mce-menu-item.mce-disabled .mce-text {
+.mce-menu-item.mce-disabled .mce-text, .mce-menu-item.mce-disabled .mce-ico {
 	color: @text-color-disabled;
-}
-
-.mce-menu-item:hover, .mce-menu-item.mce-selected, .mce-menu-item:focus {
-	text-decoration: none;
-	color: @text-color-inverse;
-	background-color: @menuitem-background-hover;
-	.vertical-gradient(@menuitem-selected-gradient-start, @menuitem-selected-gradient-end);
 }
 
 .mce-menu-item:hover .mce-text, .mce-menu-item.mce-selected .mce-text {
@@ -47,6 +40,10 @@
 	padding: 0 15px 0 20px;
 }
 
+.mce-menu-item:hover .mce-menu-shortcut, .mce-menu-item.mce-selected .mce-menu-shortcut, .mce-menu-item:focus .mce-menu-shortcut {
+	color: @menuitem-color-inverse;
+}
+
 .mce-menu-item .mce-caret {
 	margin-top: 4px;
 	*margin-top: 3px;
@@ -56,7 +53,7 @@
 	border-left: 4px solid @menuitem-caret-color;
 }
 
-.mce-menu-item.mce-selected .mce-caret, .mce-menu-item:focus  .mce-caret {
+.mce-menu-item.mce-selected .mce-caret, .mce-menu-item:focus .mce-caret {
 	border-left-color: @menuitem-caret-color-selected;
 }
 
@@ -67,18 +64,6 @@
 .mce-menu-align .mce-menu-shortcut, .mce-menu-align .mce-caret {
 	position: absolute;
 	right: 0;
-}
-
-.mce-menu-item-sep, .mce-menu-item-sep:hover {
-	border: 0;
-	padding: 0;
-	height: 1px;
-	margin: 9px 1px;
-	overflow: hidden;
-	background: @menuitem-separator-top-color;
-	border-bottom: 1px solid @menuitem-separator-bottom-color;
-	cursor: default;
-	filter: none;
 }
 
 .mce-menu-item.mce-active i {
@@ -99,4 +84,22 @@
 .mce-menu-item-checkbox.mce-active {
 	background-color: @menu-background;
 	outline: 0;
+}
+
+.mce-menu-item:hover, .mce-menu-item.mce-selected, .mce-menu-item:focus {
+	text-decoration: none;
+	color: @text-color-inverse;
+	.vertical-gradient(@menuitem-selected-gradient-start, @menuitem-selected-gradient-end);
+}
+
+.mce-menu-item-sep, .mce-menu-item-sep:hover {
+	border: 0;
+	padding: 0;
+	height: 1px;
+	margin: 9px 1px;
+	overflow: hidden;
+	background: @menuitem-separator-top-color;
+	border-bottom: 1px solid @menuitem-separator-bottom-color;
+	cursor: default;
+	filter: none;
 }
