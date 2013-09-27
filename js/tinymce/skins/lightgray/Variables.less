@@ -40,9 +40,9 @@
 @menu-background:                     #fff;
 @menu-border-color:                   rgba(0, 0, 0, 0.2);
 @menu-border-color-fallback:          #ccc;
-@menubar-border:                      @menu-border-color;
+@menubar-border:                      mix(@panel-border, @panel-background, 60%);
 @menuitem-color-inverse:              @text-color-inverse;
-@menubar-background-active:           #ddd;
+@menubar-background-active:           darken(@btn-background, 10%);
 @menuitem-background-hover:           #0081C2;
 @menuitem-selected-gradient-start:    #08C;
 @menuitem-selected-gradient-end:      #0077B3;
@@ -77,8 +77,8 @@
 // Window
 @window-border:                       @btn-border-color;
 @window-head-border-color:            @window-border;
-@window-head-close-color:             #CCC;
-@window-head-close-color-hover:       #AAA;
+@window-head-close-color:             mix(@text-color, @window-background, 60%);
+@window-head-close-color-hover:       mix(@text-color, @window-background, 40%);
 @window-foot-border-color:            @window-border;
 @window-foot-background:              @window-background;
 @window-fullscreen-background:        #FFF;
@@ -100,8 +100,8 @@
 @floatpanel-box-shadow:               0 5px 10px rgba(0, 0, 0, .2);
 
 // Checkbox
-@checkbox-gradient-start:             #FDFDFD;
-@checkbox-gradient-end:               #DDD;
+@checkbox-gradient-start:             @btn-background;
+@checkbox-gradient-end:               @btn-background-highlight;
 @checkbox-box-shadow:                 inset 0 1px 0 rgba(255, 255, 255, .2), 0 1px 2px rgba(0, 0, 0, .05);
 
 // Path
