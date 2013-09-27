@@ -151,7 +151,9 @@ define("tinymce/WindowManager", [
 		 */
 		self.alert = function(message, callback, scope) {
 			MessageBox.alert(message, function() {
-				callback.call(scope || this);
+				if (callback) {
+					callback.call(scope || this);
+				}
 			});
 		};
 
