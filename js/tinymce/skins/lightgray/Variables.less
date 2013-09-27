@@ -10,14 +10,17 @@
 // Text colors
 @text-color:                          #333;
 @text-color-inverse:                  white;
-@text-color-disabled:                 lighten(@text-color, 40%);
+@text-color-disabled:                 #aaa;
 @text-shadow:                         0 1px 1px hsla(hue(@text-color-inverse), saturation(@text-color-inverse), lightness(@text-color-inverse), 0.75);
 
 // Button
 @btn-text-color:                      @text-color;
 @btn-text-shadow:                     @text-color-inverse;
 @btn-border-color:                    #c5c5c5;
-@btn-border-color2:                   rgba(0, 0, 0, .1) rgba(0, 0, 0, .1) fadein(rgba(0, 0, 0, .1), 15%);
+@btn-border-top-color:                rgba(0, 0, 0, .1);
+@btn-border-right-color:              rgba(0, 0, 0, .1);
+@btn-border-bottom-color:             fadein(rgba(0, 0, 0, .1), 15%);
+@btn-border-left-color:               fadein(rgba(0, 0, 0, .1), 15%);
 @btn-caret-color:                     @btn-text-color;
 @btn-text-color-disabled:             @text-color-disabled;
 @btn-box-shadow:                      inset 0 1px 0 rgba(255, 255, 255, .2), 0 1px 2px rgba(0, 0, 0, .05);
@@ -25,7 +28,7 @@
 @btn-box-disabled-opacity:            0.4;
 @btn-background-primary-text-color:   white;
 @btn-background:                      white;
-@btn-background-highlight:            darken(white, 15%);
+@btn-background-highlight:            #D9D9D9;
 @btn-background-hover:                darken(@btn-background, 5%);
 @btn-background-highlight-hover:      darken(@btn-background-highlight, 5%);
 
@@ -49,7 +52,7 @@
 @menuitem-disabled-background:        #CCC;
 @menuitem-caret-color:                @btn-text-color;
 @menuitem-caret-color-selected:       @menuitem-color-inverse;
-@menuitem-separator-top-color:        @menu-border-color;
+@menuitem-separator-top-color:        #CBCBCB;
 @menuitem-separator-bottom-color:     @menu-background;
 @menuitem-active-color:               #C8DEF4;
 @menuitem-preview-active-color:       #aaa;
