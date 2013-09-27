@@ -120,7 +120,7 @@ define("tinymce/pasteplugin/WordFilter", [
 						}
 
 						// Detect unordered lists look for bullets
-						if (/^\s*[\u2022\u00b7\u00a7\u00d8o\u25CF]\s*$/.test(nodeText)) {
+						if (/^\s*[\u2022\u00b7\u00a7\u00d8\u25CF]\s*$/.test(nodeText)) {
 							convertParagraphToLi(node, listStartTextNode, 'ul');
 							continue;
 						}
