@@ -375,7 +375,7 @@ define("tinymce/html/Schema", [
 		nonEmptyElementsMap = createLookupTable('non_empty_elements', 'td th iframe video audio object', shortEndedElementsMap);
 		textBlockElementsMap = createLookupTable('text_block_elements', 'h1 h2 h3 h4 h5 h6 p div address pre form ' +
 						'blockquote center dir fieldset header footer article section hgroup aside nav figure');
-		blockElementsMap = createLookupTable('block_elements', 'hr table tbody thead tfoot ' +
+		blockElementsMap = createLookupTable('block_elements', 'hr table tbody thead tfoot html head body style output figcaption audio canvas' +
 						'th tr td li ol ul caption dl dt dd noscript menu isindex samp option ' +
 						'datalist select optgroup', textBlockElementsMap);
 
