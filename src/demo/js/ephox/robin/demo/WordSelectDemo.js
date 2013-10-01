@@ -5,27 +5,18 @@ define(
     'ephox.wrap.JQuery',
     'ephox.peanut.Fun',
     'ephox.robin.api.dom.DomSmartSelect',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Css',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function ($, Fun, DomSmartSelect, Attr, Css, DomEvent, Element, Insert, SelectorFind) {
+  function ($, Fun, DomSmartSelect, DomEvent, Element, Insert, SelectorFind) {
     return function () {
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
-      var editor = Element.fromTag('div');
-      Attr.set(editor, 'contenteditable', 'true');
-      Css.setAll(editor, {
-        width: '500px',
-        height: '400px',
-        border: '1px solid black'
-      });
-
-      Insert.append(editor, Element.fromText('This is something to start with'));
+      var editor = Element.fromHtml('<div contenteditable="true" style="width: 500px; height: 300px; border: 1px solid black;">' +
+        'This is <span style="color: red;">som</span>eth<b>ing that you should</b> see.</div>');
 
       Insert.append(ephoxUi, editor);
 

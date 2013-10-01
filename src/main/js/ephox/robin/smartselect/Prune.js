@@ -13,21 +13,21 @@ define(
         return universe.property().isEmptyTag(element) || universe.property().isBoundary(element);
       };
 
-      var left = function (element) {
+      var breakUsing = function (breaker, element, adjust) {
         var textOption = universe.property().isText(element) ? Option.some(universe.property().getText(element)) : Option.none();
-        var edge = textOption.bind(WordUtil.leftBreak);
+        var edge = textOption.bind(breaker);
         return edge.map(function (index) {
-          return Spot.point(element, index);
+          return Spot.point(element, index + adjust);
         });
       };
 
+      var left = function (element) {
+        // The 1 here is because we don't want to include the breaking character.
+        return breakUsing(WordUtil.leftBreak, element, 1);
+      };
+
       var right = function (element) {
-        // Dupe with above.
-        var textOption = universe.property().isText(element) ? Option.some(universe.property().getText(element)) : Option.none();
-        var edge = textOption.bind(WordUtil.rightBreak);
-        return edge.map(function (index) {
-          return Spot.point(element, index);
-        });
+        return breakUsing(WordUtil.rightBreak, element, 0);
       };
 
       return {
