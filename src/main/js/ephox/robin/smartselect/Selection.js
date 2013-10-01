@@ -50,9 +50,7 @@ define(
       });
 
       var finish = parts.after().fold(function () {
-        console.log('no after');
         var right = gathered.right();
-        console.log('right: ', right, text.length, text);
         return Option.from(right[right.length - 1]).map(defaultRight).getOrThunk(function () {
           return Spot.point(item, text.length);
         });

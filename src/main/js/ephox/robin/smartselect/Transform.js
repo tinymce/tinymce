@@ -16,7 +16,6 @@ define(
 
       return function (iter, elem, prune) {
         var f = function (x) {
-          console.log('x: ', x);
           return [Spot.point(x, Option.none())];
         };
         return transforms.traverse(iter, elem, prune, f);
