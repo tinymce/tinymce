@@ -42,7 +42,6 @@ test(
     ]));
 
     var check = function (expected, doc, id, offset) {
-      console.log('checking: ', expected);
       var item = doc.find(doc.get(), id).getOrDie();
       var actual = Selection.word(doc, item, offset);
       assert.eq(expected.startContainer, actual.startContainer().id);
