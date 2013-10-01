@@ -2,10 +2,12 @@ define(
   'ephox.robin.smartselect.Transform',
 
   [
+    'ephox.perhaps.Option',
+    'ephox.phoenix.api.data.Spot',
     'ephox.robin.gather.Transforms'
   ],
 
-  function (Transforms) {
+  function (Option, Spot, Transforms) {
     /**
      * Continue transform for word selection gathering, returning.
      */
@@ -15,7 +17,7 @@ define(
       return function (iter, elem, prune) {
         var f = function (x) {
           console.log('x: ', x);
-          return [];
+          return [Spot.point(x, Option.none())];
         };
         return transforms.traverse(iter, elem, prune, f);
       };

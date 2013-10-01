@@ -14,25 +14,23 @@ define(
         return universe.property().isEmptyTag(element) || universe.property().isBoundary(element);
       };
 
-      var breakUsing = function (breaker, element, adjust, extremity) {
+      var breakUsing = function (breaker, element, adjust) {
         if (stop(element)) { return  Option.some([]); }
         var textOption = universe.property().isText(element) ? Option.some(universe.property().getText(element)) : Option.none();
         return textOption.bind(function (text) {
           return breaker(text).map(function (index) {
-            return [ Spot.point(element, index + adjust) ];
+            return [ Spot.point(element, Option.some(index + adjust)) ];
           });
         });
       };
 
       var left = function (element) {
         // The 1 here is because we don't want to include the breaking character.
-        return breakUsing(WordUtil.leftBreak, element, 1, Fun.constant(0));
+        return breakUsing(WordUtil.leftBreak, element, 1);
       };
 
       var right = function (element) {
-        return breakUsing(WordUtil.rightBreak, element, 0, function (text) {
-          return text.length;
-        });
+        return breakUsing(WordUtil.rightBreak, element, 0);
       };
 
       return {

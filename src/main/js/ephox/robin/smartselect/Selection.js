@@ -14,11 +14,19 @@ define(
   ],
 
   function (Arr, Fun, Option, Spot, Gather, WordRange, Prune, Transform, WordUtil) {
-    
     /* Given an initial position (item, offset), identify the selection range which represents the 
        word that (item, offset) is on
      */
     var word = function (universe, item, offset) {
+      var defaultLeft = function (point) {
+        return Spot.point(point.element(), point.offset().getOr(0));
+      };
+
+      var defaultRight = function (point) {
+        var text = universe.property().getText(point.element());
+        return Spot.point(point.element(), point.offset().getOr(text.length));
+      };
+
       // ASSUMPTION: item is a text node. Probably an invalid assumption. Clean this up.
       var text = universe.property().getText(item);
       var parts = WordUtil.around(text, offset);
@@ -34,8 +42,7 @@ define(
       var gathered = Gather.gather(universe, item, prune, transform);
 
       var start = parts.before().fold(function () {
-        console.log('no before', Arr.map(gathered.left(), function (l) { return l; }));
-        return Option.from(gathered.left()[0]).getOrThunk(function () {
+        return Option.from(gathered.left()[0]).map(defaultLeft).getOrThunk(function () {
           return Spot.point(item, 0);
         });
       }, function (index) {
@@ -45,8 +52,8 @@ define(
       var finish = parts.after().fold(function () {
         console.log('no after');
         var right = gathered.right();
-        console.log('right: ', right);
-        return Option.from(right[right.length - 1]).getOrThunk(function () {
+        console.log('right: ', right, text.length, text);
+        return Option.from(right[right.length - 1]).map(defaultRight).getOrThunk(function () {
           return Spot.point(item, text.length);
         });
       }, function (index) {
