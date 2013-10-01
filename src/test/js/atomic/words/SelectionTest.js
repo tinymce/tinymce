@@ -38,11 +38,11 @@ test(
       assert.eq(expected.endOffset, actual.endOffset());
     };
 
-    check({
-      startContainer: 'b',
-      startOffset: 's '.length,
-      endContainer: 'b',
-      endOffset: 's something'.length
-    }, 'b', 's so'.length);
+    // check({
+    //   startContainer: 'b',
+    //   startOffset: 's '.length,
+    //   endContainer: 'b',
+    //   endOffset: 's something'.length
+    // }, 'b', 's so'.length);
   }
 );

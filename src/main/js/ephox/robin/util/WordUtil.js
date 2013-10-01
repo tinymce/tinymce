@@ -19,10 +19,8 @@ define(
      * Returns optional text after the last word break character
      */
     var lastWord = function (text) {
-      var indices = Search.findall(text, Pattern.custom(Pattern.wordbreak(), zero, zero));
-      var last = Option.from(indices[indices.length - 1]);
-      return last.map(function (v) {
-        return text.substring(v.start());
+      return leftBreak(text).map(function (index) {
+        return text.substring(index);
       });
     };
 
@@ -30,14 +28,35 @@ define(
      * Returns optional text up to the first word break character
      */
     var firstWord = function (text) {
+      return rightBreak(text).map(function (index) {
+        return text.substring(0, index + 1);
+      });
+    };
+
+    /*
+     * Returns the index position of a break when going left (i.e. last word break)
+     */
+    var leftBreak = function (text) {
+      var indices = Search.findall(text, Pattern.custom(Pattern.wordbreak(), zero, zero));
+      return Option.from(indices[indices.length - 1]).map(function (match) {
+        return match.start();
+      });
+    };
+
+    /*
+     * Returns the index position of a break when going right (i.e. first word break)
+     */
+    var rightBreak = function (text) {
       // ASSUMPTION: search is sufficient because we only need to find the first one.
       var index = text.search(wordstart);
-      return index > -1 ? Option.some(text.substring(0, index + 1)) : Option.none();
+      return index > -1 ? Option.some(index) : Option.none();
     };
 
     return {
       firstWord: firstWord,
-      lastWord: lastWord
+      lastWord: lastWord,
+      leftBreak: leftBreak,
+      rightBreak: rightBreak
     };
 
   }
