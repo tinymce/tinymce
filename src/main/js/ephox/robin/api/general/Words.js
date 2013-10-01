@@ -3,14 +3,13 @@ define(
 
   [
     'ephox.robin.words.Cluster',
-    'ephox.robin.words.Identify',
-    'ephox.robin.words.Selection'
+    'ephox.robin.words.Identify'
   ],
 
   /**
    * Documentation is in the actual implementations.
    */
-  function (Cluster, Identify, Selection) {
+  function (Cluster, Identify) {
     var identify = function (allText) {
       return Identify.words(allText);
     };
@@ -19,14 +18,9 @@ define(
       return universe.property().isBoundary(element) ? Cluster.empty() : Cluster.generate(universe, element);
     };
 
-    var selection = function (universe, element, offset) {
-      return Selection.current(universe, element, offset);
-    };
-
     return {
       identify: identify,
-      cluster: cluster,
-      selection: selection
+      cluster: cluster
     };
   }
 );

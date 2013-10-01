@@ -16,7 +16,7 @@ define(
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
       var editor = Element.fromHtml('<div contenteditable="true" style="width: 500px; height: 300px; border: 1px solid black;">' +
-        'This is <span style="color: red;">som</span>eth<b>ing that you should</b> see.</div>');
+        'This is <span style="color: red;">som</span>eth<b>ing that you should</b> see.<img src="http://www.google.com/google.jpg">The<br>dog</div>');
 
       Insert.append(ephoxUi, editor);
 
