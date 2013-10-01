@@ -20,9 +20,14 @@ define(
       return Words.cluster(universe, element);
     };
 
+    var selection = function (element, offset) {
+      return Words.selection(universe, element, offset);
+    };
+
     return {
       identify: identify,
-      cluster: cluster
+      cluster: cluster,
+      selection: selection
     };
 
   }
