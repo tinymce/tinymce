@@ -2,6 +2,7 @@ define(
   'ephox.robin.api.general.Words',
 
   [
+    'ephox.robin.util.WordUtil',
     'ephox.robin.words.Cluster',
     'ephox.robin.words.Identify'
   ],
@@ -9,7 +10,7 @@ define(
   /**
    * Documentation is in the actual implementations.
    */
-  function (Cluster, Identify) {
+  function (WordUtil, Cluster, Identify) {
     var identify = function (allText) {
       return Identify.words(allText);
     };
@@ -18,9 +19,14 @@ define(
       return universe.property().isBoundary(element) ? Cluster.empty() : Cluster.generate(universe, element);
     };
 
+    var isWord = function (_universe, text) {
+      return WordUtil.firstWord(text).isNone();
+    };
+
     return {
       identify: identify,
-      cluster: cluster
+      cluster: cluster,
+      isWord: isWord
     };
   }
 );

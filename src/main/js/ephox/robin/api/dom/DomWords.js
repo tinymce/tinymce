@@ -20,9 +20,14 @@ define(
       return Words.cluster(universe, element);
     };
 
+    var isWord = function (text) {
+      return Words.isWord(universe, text);
+    };
+
     return {
       identify: identify,
-      cluster: cluster
+      cluster: cluster,
+      isWord: isWord
     };
 
   }
