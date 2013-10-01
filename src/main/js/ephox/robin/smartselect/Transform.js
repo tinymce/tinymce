@@ -14,6 +14,7 @@ define(
 
       return function (iter, elem, prune) {
         var f = function (x) {
+          console.log('x: ', x);
           return [];
         };
         return transforms.traverse(iter, elem, prune, f);

@@ -9,7 +9,7 @@ test(
   ],
 
   function (Gene, TestUniverse, TextGene, Selection) {
-    var doc = TestUniverse(Gene('root', 'root', [
+    var doc1 = TestUniverse(Gene('root', 'root', [
       Gene('p1', 'p', [
         TextGene('a', 'There i'),
         TextGene('b', 's something'),
@@ -29,7 +29,19 @@ test(
       ])
     ]));
 
-    var check = function (expected, id, offset) {
+    var doc2 = TestUniverse(Gene('root', 'root', [
+      TextGene('a', 'This is '),
+      Gene('b', 'span', [
+        TextGene('c', 'som'),
+      ]),
+      TextGene('d', 'eth'),
+      Gene('e', 'b', [
+        TextGene('f', 'ing that you should')
+      ]),
+      TextGene('g', ' see.')
+    ]));
+
+    var check = function (expected, doc, id, offset) {
       console.log('checking: ', expected);
       var item = doc.find(doc.get(), id).getOrDie();
       var actual = Selection.word(doc, item, offset);
@@ -44,34 +56,41 @@ test(
       startOffset: 's '.length,
       endContainer: 'c',
       endOffset: ''.length
-    }, 'b', 's so'.length);
+    }, doc1, 'b', 's so'.length);
 
     check({
       startContainer: 'c',
       startOffset: ' going on '.length,
       endContainer: 'c',
       endOffset: ' going on here'.length
-    }, 'c', ' going on he'.length);
+    }, doc1, 'c', ' going on he'.length);
 
     check({
       startContainer: 'a',
       startOffset: 'There '.length,
       endContainer: 'b',
       endOffset: 's'.length
-    }, 'b', ''.length);
+    }, doc1, 'b', ''.length);
 
     check({
       startContainer: 'd',
       startOffset: 'not be '.length,
       endContainer: 'e',
       endOffset: 'termined'.length
-    }, 'e', 'term'.length);
+    }, doc1, 'e', 'term'.length);
 
     check({
       startContainer: 'g',
       startOffset: ' it\'s driving me '.length,
       endContainer: 'h',
       endOffset: 'sane'.length
-    }, 'g', ' it\'s driving me i'.length);
+    }, doc1, 'g', ' it\'s driving me i'.length);
+
+    check({
+      startContainer: 'a',
+      startOffset: 'This is '.length,
+      endContainer: 'f',
+      endOffset: 'ing'.length
+    }, doc2, 'f', 'i'.length);
   }
 );

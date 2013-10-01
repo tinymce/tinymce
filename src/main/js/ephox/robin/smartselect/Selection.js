@@ -2,6 +2,7 @@ define(
   'ephox.robin.smartselect.Selection',
 
   [
+    'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.phoenix.api.data.Spot',
@@ -12,7 +13,7 @@ define(
     'ephox.robin.util.WordUtil'
   ],
 
-  function (Fun, Option, Spot, Gather, WordRange, Prune, Transform, WordUtil) {
+  function (Arr, Fun, Option, Spot, Gather, WordRange, Prune, Transform, WordUtil) {
     
     /* Given an initial position (item, offset), identify the selection range which represents the 
        word that (item, offset) is on
@@ -33,7 +34,7 @@ define(
       var gathered = Gather.gather(universe, item, prune, transform);
 
       var start = parts.before().fold(function () {
-        console.log('no before');
+        console.log('no before', Arr.map(gathered.left(), function (l) { return l; }));
         return Option.from(gathered.left()[0]).getOrThunk(function () {
           return Spot.point(item, 0);
         });
