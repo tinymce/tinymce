@@ -52,11 +52,29 @@ define(
       return index > -1 ? Option.some(index) : Option.none();
     };
 
+
+    var around = function (text, position) {
+      var first = text.substring(0, position);
+      var before = leftBreak(first).map(function (index) {
+        return index + 1;
+      });
+      var last = text.substring(position);
+      var after = rightBreak(last).map(function (index) {
+        return position + index;
+      });
+
+      return {
+        before: Fun.constant(before),
+        after: Fun.constant(after)
+      };
+    };
+
     return {
       firstWord: firstWord,
       lastWord: lastWord,
       leftBreak: leftBreak,
-      rightBreak: rightBreak
+      rightBreak: rightBreak,
+      around: around
     };
 
   }
