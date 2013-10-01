@@ -3,7 +3,7 @@
 .mce-fullscreen {
 	border: 0; padding: 0; margin: 0;
 	overflow: hidden;
-	background: @window-fullscreen-background;
+	background: @window-fullscreen-bg;
 	height: 100%;
 }
 
@@ -17,7 +17,7 @@ div.mce-fullscreen {
 	position: fixed;
 	left: 0; top: 0;
 	width: 100%; height: 100%;
-	background: @window-modalblock-background;
+	background: @window-modalblock-bg;
 }
 
 #mce-modal-block.mce-in {
@@ -32,7 +32,7 @@ div.mce-fullscreen {
 	.border-radius(6px);
 	.box-shadow(@window-box-shadow);
 	.reset-gradient();
-	background: @window-background;
+	background: @window-bg;
 	position: fixed;
 	top: 0; left: 0;
 	opacity: 0;
@@ -45,7 +45,7 @@ div.mce-fullscreen {
 
 .mce-window-head {
 	padding: 9px 15px;
-	border-bottom: 1px solid @window-head-border-color;
+	border-bottom: 1px solid @window-head-border;
 	position: relative;
 }
 
@@ -56,7 +56,7 @@ div.mce-fullscreen {
 	font-size: 20px;
 	font-weight: bold;
 	line-height: 20px;
-	color: @window-head-close-color;
+	color: @window-head-close;
 	cursor: pointer;
 
 	// IE7
@@ -65,7 +65,7 @@ div.mce-fullscreen {
 }
 
 .mce-close:hover {
-	color: @window-head-close-color-hover;
+	color: @window-head-close-hover;
 }
 
 .mce-window-head .mce-title {
@@ -83,8 +83,8 @@ div.mce-fullscreen {
 
 .mce-foot {
 	display: block;
-	background-color: @window-foot-background;
-	border-top: 1px solid @window-foot-border-color;
+	background-color: @window-foot-bg;
+	border-top: 1px solid @window-foot-border;
 	.border-radius(0 0 6px 6px);
 }
 

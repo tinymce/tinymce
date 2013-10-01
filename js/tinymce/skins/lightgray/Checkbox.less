@@ -6,10 +6,10 @@
 
 i.mce-i-checkbox {
 	margin: 0 3px 0 0;
-	border: 1px solid @btn-border-color;
+	border: 1px solid @checkbox-border;
 	.border-radius(3px);
 	.box-shadow(@checkbox-box-shadow);
-	.vertical-gradient(@checkbox-gradient-start, @checkbox-gradient-end);
+	.vertical-gradient(@checkbox-bg, @checkbox-bg-hlight);
 	text-indent: -10em;
 	*font-size: 0;
 	*line-height: 0;
@@ -18,18 +18,17 @@ i.mce-i-checkbox {
 }
 
 .mce-checked i.mce-i-checkbox {
-	color: @text-color;
+	color: @btn-text;
 	font-size: 16px;
 	line-height: 16px;
 	text-indent: 0;
 }
 
-.mce-checkbox:focus i.mce-i-checkbox {
-	border: 1px solid @focus-border-color-fallback;
-	border: 1px solid @focus-border-color;
-	.box-shadow(inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(82, 168, 236, .6));
+.mce-checkbox:focus i.mce-i-checkbox, .mce-checkbox.mce-focus i.mce-i-checkbox {
+	border: 1px solid @checkbox-border-focus;
+	.box-shadow(inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px fadeout(@checkbox-border-focus, 15%));
 }
 
 .mce-checkbox.mce-disabled .mce-label, .mce-checkbox.mce-disabled i.mce-i-checkbox {
-	color: mix(@text-color, @panel-background, 40%);
+	color: mix(@text, @panel-bg, 40%);
 }

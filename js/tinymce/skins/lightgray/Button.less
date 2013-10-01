@@ -1,19 +1,19 @@
 // Button
 
 .mce-btn {
-	border: 1px solid @btn-border-color;
-	border-color: @btn-border-top-color @btn-border-right-color @btn-border-bottom-color @btn-border-left-color;
+	border: 1px solid mix(rgb(red(@btn-border-right), green(@btn-border-right), blue(@btn-border-right)), @panel-bg, 30%);
+	border-color: @btn-border-top @btn-border-right @btn-border-bottom @btn-border-left;
 	position: relative;
 	text-shadow: @text-shadow;
 
 	.inline-block();
 	.border-radius(3px);
 	.box-shadow(@btn-box-shadow);
-	.vertical-gradient(@btn-background, @btn-background-highlight);
+	.vertical-gradient(@btn-bg, @btn-bg-hlight);
 
 	&:hover, &:focus {
-		color: @btn-text-color;
-		.vertical-gradient(darken(@btn-background, 5%), darken(@btn-background-highlight, 5%));
+		color: @btn-text;
+		.vertical-gradient(darken(@btn-bg, 5%), darken(@btn-bg-hlight, 5%));
 	}
 
 	&.mce-disabled button, &.mce-disabled:hover button {
@@ -22,8 +22,8 @@
 		.opacity(@btn-box-disabled-opacity);
 	}
 
-	&.mce-active, &.mce-active:hover {
-		.vertical-gradient(darken(@btn-background, 10%), darken(@btn-background-highlight, 10%));
+	&.mce-active, &.mce-active:hover, &:not(.mce-disabled):active {
+		.vertical-gradient(darken(@btn-bg, 10%), darken(@btn-bg-hlight, 10%));
 		.box-shadow(@btn-box-shadow-active);
 	}
 }
@@ -34,7 +34,7 @@
 	line-height: @line-height;
 	*line-height: @line-height - 4px;
 	cursor: pointer;
-	color: @btn-text-color;
+	color: @btn-text;
 	text-align: center;
 
 	// Fixes for default inner padding of button
@@ -52,11 +52,11 @@
 
 .mce-primary {
 	min-width: 50px;
-	color: @btn-background-primary-text-color;
-	.vertical-gradient(@btn-background-primary, @btn-background-primary-highlight);
+	color: @btn-primary-text;
+	.vertical-gradient(@btn-primary-bg, @btn-primary-bg-hlight);
 
 	&:hover, &:focus {
-		.vertical-gradient(darken(@btn-background-primary, 5%), darken(@btn-background-primary-highlight, 5%));
+		.vertical-gradient(darken(@btn-primary-bg, 5%), darken(@btn-primary-bg-hlight, 5%));
 	}
 
 	&.mce-disabled button, &.mce-disabled:hover button {
@@ -65,15 +65,15 @@
 		.opacity(@btn-box-disabled-opacity);
 	}
 
-	&.mce-active, &.mce-active:hover {
-		.vertical-gradient(darken(@btn-background-primary, 10%), darken(@btn-background-primary-highlight, 10%));
+	&.mce-active, &.mce-active:hover, &:not(.mce-disabled):active {
+		.vertical-gradient(darken(@btn-primary-bg, 10%), darken(@btn-primary-bg-hlight, 10%));
 		.box-shadow(@btn-box-shadow-active);
 	}
 }
 
 .mce-primary button, .mce-primary button i {
-	color: @btn-text-color-primary;
-	text-shadow: 1px 1px @btn-text-shadow-primary;
+	color: @btn-primary-text;
+	text-shadow: 1px 1px @btn-primary-text-shadow;
 }
 
 .mce-btn-large button {
@@ -113,17 +113,17 @@
 	.inline-block();
 	width: 0; height: 0;
 	vertical-align: top;
-	border-top: 4px solid @btn-caret-color;
+	border-top: 4px solid @btn-caret-border;
 	border-right: 4px solid transparent;
 	border-left: 4px solid transparent;
 	content: "";
 }
 
 .mce-disabled .mce-caret {
-	border-top-color: @text-color-disabled;
+	border-top-color: @text-disabled;
 }
 
 .mce-caret.mce-up {
-	border-bottom: 4px solid @btn-caret-color;
+	border-bottom: 4px solid @btn-caret-border;
 	border-top: 0;
 }

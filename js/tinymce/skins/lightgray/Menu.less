@@ -6,9 +6,9 @@
 	padding: 5px 0 5px 0;
 	margin: 2px 0 0;
 	min-width: 160px;
-	background: @menu-background;
-	border: 1px solid @menu-border-color-fallback;
-	border: 1px solid @menu-border-color;
+	background: @menu-bg;
+	border: 1px solid mix(rgb(red(@menu-border), green(@menu-border), blue(@menu-border)), @panel-bg, round(alpha(@menu-border) * 200));
+	border: 1px solid @menu-border;
 	z-index: 1002;
 	.border-radius(6px);
 	.box-shadow(0 5px 10px rgba(0,0,0,.2));

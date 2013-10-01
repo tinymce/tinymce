@@ -69,6 +69,10 @@ define("tinymce/ui/MenuItem", [
 				settings.icon = 'selected';
 			}
 
+			if (!settings.preview && !settings.selectable) {
+				self.addClass('menu-item-normal');
+			}
+
 			self.on('mousedown', function(e) {
 				e.preventDefault();
 			});

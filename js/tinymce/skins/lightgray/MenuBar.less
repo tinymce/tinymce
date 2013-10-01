@@ -12,13 +12,17 @@
 	border: 1px solid @menubar-border;
 }
 
-.mce-menubar .mce-menubtn button {
-	color: @text-color;
+.mce-menubar .mce-menubtn button span {
+	color: @text;
+}
+
+.mce-menubar .mce-caret {
+	border-top-color: @text;
 }
 
 .mce-menubar .mce-menubtn:hover, .mce-menubar .mce-menubtn.mce-active, .mce-menubar .mce-menubtn:focus {
 	border-color: transparent;
-	background: @menubar-background-active;
+	background: @menubar-bg-active;
 	filter: none;
 	.box-shadow(none);
 }

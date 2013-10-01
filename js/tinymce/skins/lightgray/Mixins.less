@@ -29,7 +29,7 @@
 	border-radius: @radius;
 }
 
-.box-shadow(@shadowA, @shadowB:X, ...){
+.box-shadow(@shadowA, @shadowB:X, ...) when (@has-boxshadow = true) {
 	// Multiple shadow solution from http://toekneestuck.com/blog/2012/05/15/less-css-arguments-variable/
 	@props: ~`"@{arguments}".replace(/[\[\]]|\,\sX/g, '')`;
 	-webkit-box-shadow: @props;
