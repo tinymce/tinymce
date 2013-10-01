@@ -31,18 +31,18 @@ test(
 
     var check = function (expected, id, offset) {
       var item = doc.find(doc.get(), id).getOrDie();
-      var actual = Selection.current(doc, item, offset);
+      var actual = Selection.word(doc, item, offset);
       assert.eq(expected.startContainer, actual.startContainer().id);
       assert.eq(expected.startOffset, actual.startOffset());
       assert.eq(expected.endContainer, actual.endContainer().id);
       assert.eq(expected.endOffset, actual.endOffset());
     };
 
-    // check({
-    //   startContainer: 'b',
-    //   startOffset: 's '.length,
-    //   endContainer: 'b',
-    //   endOffset: 's something'.length
-    // }, 'b', 's so'.length);
+    check({
+      startContainer: 'b',
+      startOffset: 's '.length,
+      endContainer: 'c',
+      endOffset: ''.length
+    }, 'b', 's so'.length);
   }
 );

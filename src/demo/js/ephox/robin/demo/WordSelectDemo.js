@@ -4,6 +4,7 @@ define(
   [
     'ephox.wrap.JQuery',
     'ephox.peanut.Fun',
+    'ephox.robin.api.dom.DomSmartSelect',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.DomEvent',
@@ -12,7 +13,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function ($, Fun, Attr, Css, DomEvent, Element, Insert, SelectorFind) {
+  function ($, Fun, DomSmartSelect, Attr, Css, DomEvent, Element, Insert, SelectorFind) {
     return function () {
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
@@ -56,7 +57,8 @@ define(
 
       DomEvent.bind(editor, 'click', function (event) {
         var current = getSelect();
-        if (current !== null) select(current.startContainer(), current.startOffset(), current.startContainer(), current.startOffset() + 1);
+        var wordRange = DomSmartSelect.word(current.startContainer(), current.startOffset());
+        if (current !== null) select(wordRange.startContainer(), wordRange.startOffset(), wordRange.endContainer(), wordRange.endOffset());
       });
     };
   }
