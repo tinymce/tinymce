@@ -10,7 +10,7 @@ define(
   function ($, Console, Examples) {
     return function () {
       var examples = Examples.add([
-        { name: 'Robin Demo', module: 'ephox.robin.demo.RobinDemo' }
+        { name: 'Robin Demo', module: 'ephox.robin.demo.WordSelectDemo' }
       ]);
 
       var consoleUI = Console.use();
