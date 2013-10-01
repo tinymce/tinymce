@@ -44,6 +44,7 @@ define(
       var finish = parts.after().fold(function () {
         console.log('no after');
         var right = gathered.right();
+        console.log('right: ', right);
         return Option.from(right[right.length - 1]).getOrThunk(function () {
           return Spot.point(item, text.length);
         });

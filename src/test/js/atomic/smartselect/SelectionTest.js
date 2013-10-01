@@ -30,6 +30,7 @@ test(
     ]));
 
     var check = function (expected, id, offset) {
+      console.log('checking: ', expected);
       var item = doc.find(doc.get(), id).getOrDie();
       var actual = Selection.word(doc, item, offset);
       assert.eq(expected.startContainer, actual.startContainer().id);
@@ -44,5 +45,33 @@ test(
       endContainer: 'c',
       endOffset: ''.length
     }, 'b', 's so'.length);
+
+    check({
+      startContainer: 'c',
+      startOffset: ' going on '.length,
+      endContainer: 'c',
+      endOffset: ' going on here'.length
+    }, 'c', ' going on he'.length);
+
+    check({
+      startContainer: 'a',
+      startOffset: 'There '.length,
+      endContainer: 'b',
+      endOffset: 's'.length
+    }, 'b', ''.length);
+
+    check({
+      startContainer: 'd',
+      startOffset: 'not be '.length,
+      endContainer: 'e',
+      endOffset: 'termined'.length
+    }, 'e', 'term'.length);
+
+    check({
+      startContainer: 'g',
+      startOffset: ' it\'s driving me '.length,
+      endContainer: 'h',
+      endOffset: 'sane'.length
+    }, 'g', ' it\'s driving me i'.length);
   }
 );
