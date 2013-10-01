@@ -23,11 +23,8 @@ tinymce.PluginManager.add('pagebreak', function(editor) {
 		var generateCode = function(pb, current){
 			var parent = current && current.parentNode || editor.selection.getNode();
 			var parentNode = parent.nodeName.toLowerCase();
-			console.log(parentNode);
 			
 			if (parentNode == 'body'){
-				console.log(pb);
-				
 				return pb;
 			}else{
 				pb = generateCode(pb, parent);
@@ -35,8 +32,8 @@ tinymce.PluginManager.add('pagebreak', function(editor) {
 				var attributes = parent.attributes;
 				
 				for (var i=0; i < attributes.length; i++){
-				    var item = attributes.item(i);
-				    attrs = attrs + item.nodeName.toLowerCase() + '="' + item.nodeValue + '" ';
+					var item = attributes.item(i);
+					attrs = attrs + item.nodeName.toLowerCase() + '="' + item.nodeValue + '" ';
 				}
 				pb = '</' + parentNode + '>' + pb + '<' + parentNode + attrs + '>';
 				
