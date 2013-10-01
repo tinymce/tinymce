@@ -47,6 +47,7 @@ define("tinymce/pasteplugin/Plugin", [
 		self.clipboard = clipboard = new Clipboard(editor);
 		self.quirks = new Quirks(editor);
 		self.wordFilter = new WordFilter(editor);
+		self.innerText = clipboard.innerText;
 
 		if (editor.settings.paste_as_text) {
 			self.clipboard.pasteFormat = "text";
