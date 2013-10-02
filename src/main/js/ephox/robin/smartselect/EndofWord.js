@@ -29,25 +29,20 @@ define(
       var leftmost = Option.from(left[0]).getOr(Spot.point(textitem, 0));
       var rightmost = Option.from(right[right.length - 1]).getOr(Spot.point(textitem, text.length));
       
-      var isLeftEdge = function () {
-        return leftText.length === 0 && offset === 0;
-      };
-
-      var isRightEdge = function () {
-        return rightText.length === 0 && offset === text.length;
-      };
+      var isLeftEdge = leftText.length === 0 && offset === 0;
+      var isRightEdge = rightText.length === 0 && offset === text.length;
 
       var neither = function () {
-        return isLeftEdge() || isRightEdge() ? Option.none() :
+        return isLeftEdge || isRightEdge ? Option.none() :
           Option.some(WordRange(leftmost.element(), leftmost.offset(), rightmost.element(), rightmost.offset()));
       };
 
       var justBefore = function (bindex) {
-        return isRightEdge() ? Option.none() : Option.some(WordRange(textitem, bindex, rightmost.element(), rightmost.offset()));
+        return isRightEdge ? Option.none() : Option.some(WordRange(textitem, bindex, rightmost.element(), rightmost.offset()));
       };
 
       var justAfter = function (aindex) {
-        return isLeftEdge() ? Option.none() : Option.some(WordRange(leftmost.element(), leftmost.offset(), textitem, aindex));
+        return isLeftEdge ? Option.none() : Option.some(WordRange(leftmost.element(), leftmost.offset(), textitem, aindex));
       };
 
       var both = function (bindex, aindex) {
