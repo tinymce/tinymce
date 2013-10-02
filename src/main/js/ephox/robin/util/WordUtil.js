@@ -6,10 +6,11 @@ define(
     'ephox.perhaps.Option',
     'ephox.polaris.api.Pattern',
     'ephox.polaris.api.Search',
+    'ephox.robin.data.BeforeAfter',
     'global!RegExp'
   ],
 
-  function (Fun, Option, Pattern, Search, RegExp) {
+  function (Fun, Option, Pattern, Search, BeforeAfter, RegExp) {
 
     var wordstart = new RegExp(Pattern.wordbreak() + '+', 'g');
 
@@ -63,10 +64,19 @@ define(
         return position + index;
       });
 
-      return {
-        before: Fun.constant(before),
-        after: Fun.constant(after)
-      };
+      var fallback = BeforeAfter(before, after);
+
+      var current = BeforeAfter(Option.some(position), Option.some(position));
+
+      var endOfWord = after.bind(function (a) {
+        return position === a ? Option.some(current): Option.none();
+      });
+
+      return endOfWord.getOrThunk(function () {
+        return before.bind(function (b) {
+          return position === b  ? Option.some(current) : Option.none();
+        }).getOr(fallback);
+      });
     };
 
     return {

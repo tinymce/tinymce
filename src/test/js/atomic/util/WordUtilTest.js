@@ -40,8 +40,14 @@ test(
     check('apple ', 'apple bear cat', WordUtil.firstWord);
     check('apple ', 'apple ', WordUtil.firstWord);
 
-    checkAt({ before: Option.some(11), after: Option.some(15) }, ' this is a test case', 12);
-    checkAt({ before: Option.some(16), after: Option.none() }, ' this is a test case', 18);
+    checkAt({ before: Option.some(' this is a '.length), after: Option.some(' this is a test'.length) },
+      ' this is a test case', ' this is a t'.length);
+    checkAt({ before: Option.some(' this is a test '.length), after: Option.none() },
+      ' this is a test case', ' this is a test ca'.length);
+
+    checkAt({ before: Option.some(' this is a test'.length), after: Option.some(' this is a test'.length) },
+      ' this is a test case', ' this is a test'.length);
+    checkAt({ before: Option.some(16), after: Option.none() }, ' this is a test case', ' this is a test ca'.length);
 
   }
 );

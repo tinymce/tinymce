@@ -91,5 +91,12 @@ test(
       endContainer: 'f',
       endOffset: 'ing'.length
     }, doc2, 'f', 'i'.length);
+
+    // check({
+    //   startContainer: 'f',
+    //   startOffset: 'ing that you should'.length,
+    //   endContainer: 'f',
+    //   endOffset: 'ing that you should'.length
+    // }, doc2, 'f', 'ing that you should'.length);
   }
 );
