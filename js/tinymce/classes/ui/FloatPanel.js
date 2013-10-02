@@ -346,6 +346,13 @@ define("tinymce/ui/FloatPanel", [
 				visiblePanels.splice(i, 1);
 			}
 		}
+
+		i = zOrder.length;
+		while (i--) {
+			if (zOrder[i] === panel) {
+				zOrder.splice(i, 1);
+			}
+		}
 	}
 
 	return FloatPanel;

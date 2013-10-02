@@ -7,6 +7,7 @@ Version 4.0.7 (2013-09-xx)
 	Fixed so editor.destroy calls editor.remove so that both destroy and remove can be used to remove an editor instance.
 	Fixed issue with the tabpanel not expanding properly when the tabs where wider than the body of the panel.
 	Fixed issue with the menubar option producing a JS exception if set to true.
+	Fixed bug where closing a dialog with an opened listbox would cause errors if new dialogs where opened.
 	Fixed bug where hidden input elements wasn't removed when inline editor instances where removed.
 	Fixed bug where editors wouldn't initialize some times due to event logic not working correctly.
 	Fixed bug where embed elements wouldn't be properly resized if they where configured in using the video_template_callback.
