@@ -1,15 +1,18 @@
-Version 4.0.7 (2013-09-xx)
+Version 4.0.7 (2013-10-02)
 	Added new importcss_selector_filter option to importcss plugin. Makes it easier to select specific classes to import.
 	Added new importcss_groups option to importcss plugin. Enables you separate classes into menu groups based on filters.
 	Added new PastePreProcess/PastePostProcess events and reintroduced paste_preprocess/paste_postprocess paste options.
 	Added new paste_word_valid_elements option lets you control what elements gets pasted when pasting from Word.
 	Fixed so panelbutton is easier to use. It's now possible to set the panel contents to any container type.
 	Fixed so editor.destroy calls editor.remove so that both destroy and remove can be used to remove an editor instance.
+	Fixed so the searchreplace plugin doesn't move focus into the editor until you close the dialog.
+	Fixed so the searchreplace plugin search for next item if you hit enter inside the dialog.
 	Fixed issue with the tabpanel not expanding properly when the tabs where wider than the body of the panel.
 	Fixed issue with the menubar option producing a JS exception if set to true.
 	Fixed bug where closing a dialog with an opened listbox would cause errors if new dialogs where opened.
 	Fixed bug where hidden input elements wasn't removed when inline editor instances where removed.
 	Fixed bug where editors wouldn't initialize some times due to event logic not working correctly.
+	Fixed bug where pre elements woudl cause searchreplace and spellchecker plugins to mark incorrect locations.
 	Fixed bug where embed elements wouldn't be properly resized if they where configured in using the video_template_callback.
 	Fixed bug where paste from word would remove all BR elements since it was missing in the default paste_word_valid_elements.
 	Fixed bug where paste filtering wouldn't work properly on old WebKit installations pre Clipboard API.

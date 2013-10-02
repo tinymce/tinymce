@@ -55,7 +55,7 @@
 				return node.data;
 			}
 
-			if (hiddenTextElementsMap[node.nodeName]) {
+			if (hiddenTextElementsMap[node.nodeName] && !blockElementsMap[node.nodeName]) {
 				return '';
 			}
 
@@ -127,7 +127,7 @@
 					if (!matchLocation) {
 						break; // no more matches
 					}
-				} else if (!hiddenTextElementsMap[curNode.nodeName] && curNode.firstChild) {
+				} else if ((!hiddenTextElementsMap[curNode.nodeName] || blockElementsMap[curNode.nodeName]) && curNode.firstChild) {
 					// Move down
 					curNode = curNode.firstChild;
 					continue;

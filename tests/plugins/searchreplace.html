@@ -94,6 +94,16 @@ test('Find multiple matches and unmark them', function() {
 	equal(0, editor.getBody().getElementsByTagName('span').length);
 });
 
+test('Find multiple matches with pre blocks', function() {
+	editor.getBody().innerHTML = 'abc<pre>  abc  </pre>abc';
+	equal(3, editor.plugins.searchreplace.find('b'));
+	equal(cleanHtml(editor.getBody().innerHTML), (
+		'a<span class="mce-match-marker mce-match-marker-selected" data-mce-bogus="1" data-mce-index="0">b</span>c' +
+		'<pre>  a<span class="mce-match-marker" data-mce-bogus="1" data-mce-index="1">b</span>c  </pre>' +
+		'a<span class="mce-match-marker" data-mce-bogus="1" data-mce-index="2">b</span>c'
+	));
+});
+
 tinymce.init({
 	mode: "exact",
 	plugins: "searchreplace",
