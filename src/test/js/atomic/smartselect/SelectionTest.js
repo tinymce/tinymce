@@ -99,5 +99,7 @@ test(
     }, doc2, 'f', 'i'.length);
 
     checkNone(doc2, 'f', 'ing that you should'.length);
+
+    checkNone(doc2, 'b', 0);
   }
 );

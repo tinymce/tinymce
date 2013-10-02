@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.compass.Arr',
+    'ephox.perhaps.Option',
     'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.api.general.Gather',
     'ephox.robin.smartselect.EndofWord',
@@ -10,7 +11,7 @@ define(
     'ephox.robin.smartselect.Transform'
   ],
 
-  function (Arr, Spot, Gather, EndofWord, Prune, Transform) {
+  function (Arr, Option, Spot, Gather, EndofWord, Prune, Transform) {
     var gather = function (universe, item) {
       var prune = Prune(universe);
       var transform = Transform(universe);
@@ -23,6 +24,7 @@ define(
        on that word.
      */
     var word = function (universe, item, offset) {
+      if (!universe.property().isText(item)) return Option.none();
       var defaultLeft = function (point) {
         return Spot.point(point.element(), point.offset().getOr(0));
       };
