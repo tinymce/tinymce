@@ -32,6 +32,7 @@ define(
       var finish = Option.from(right[right.length - 1]).getOr(Spot.point(item, text.length));
       var current = WordRange(item, offset, item, offset);
 
+      console.log('considering [' + text + '] at (' + offset + ')');
       var isLeftEdge = function () {
         return leftText.length === 0 && offset === 0;
       };
@@ -41,19 +42,24 @@ define(
       };
 
       var neither = function () {
-        return isLeftEdge() || isRightEdge() ? current : WordRange(start.element(), start.offset(), finish.element(), finish.offset());
+        console.log('neither');
+        return isLeftEdge() || isRightEdge() ? Option.none() :
+          Option.some(WordRange(start.element(), start.offset(), finish.element(), finish.offset()));
       };
 
       var justBefore = function (bindex) {
-        return isRightEdge() ? current : WordRange(item, bindex, finish.element(), finish.offset());
+        console.log('just.before', bindex);
+        return isRightEdge() ? Option.none() : Option.some(WordRange(item, bindex, finish.element(), finish.offset()));
       };
 
       var justAfter = function (aindex) {
-        return isLeftEdge() ? current : WordRange(start.element(), start.offset(), item, aindex);
+        console.log('just.after', aindex);
+        return isLeftEdge() ? Option.none() : Option.some(WordRange(start.element(), start.offset(), item, aindex));
       };
 
       var both = function (bindex, aindex) {
-        return WordRange(item, bindex, item, aindex);
+        console.log('both', bindex, aindex);
+        return bindex === aindex ? Option.none() : Option.some(WordRange(item, bindex, item, aindex));
       };
 
       return parts.before().fold(function () {

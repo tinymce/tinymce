@@ -39,7 +39,8 @@ define(
             startContainer: Fun.constant(Element.fromDom(range.startContainer)),
             startOffset: Fun.constant(range.startOffset),
             endContainer: Fun.constant(Element.fromDom(range.endContainer)),
-            endOffset: Fun.constant(range.endOffset)
+            endOffset: Fun.constant(range.endOffset),
+            collapsed: Fun.constant(range.collapsed)
           };
         } else {
           return null;
@@ -48,8 +49,12 @@ define(
 
       DomEvent.bind(editor, 'click', function (event) {
         var current = getSelect();
-        var wordRange = DomSmartSelect.word(current.startContainer(), current.startOffset());
-        if (current !== null) select(wordRange.startContainer(), wordRange.startOffset(), wordRange.endContainer(), wordRange.endOffset());
+        if (current !== null && current.collapsed()) {
+          var wordRange = DomSmartSelect.word(current.startContainer(), current.startOffset());
+          wordRange.each(function (wr) {
+            select(wr.startContainer(), wr.startOffset(), wr.endContainer(), wr.endOffset());
+          });
+        }
       });
     };
   }

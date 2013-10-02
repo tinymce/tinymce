@@ -43,11 +43,17 @@ test(
 
     var check = function (expected, doc, id, offset) {
       var item = doc.find(doc.get(), id).getOrDie();
-      var actual = Selection.word(doc, item, offset);
+      var actual = Selection.word(doc, item, offset).getOrDie();
       assert.eq(expected.startContainer, actual.startContainer().id);
       assert.eq(expected.startOffset, actual.startOffset());
       assert.eq(expected.endContainer, actual.endContainer().id);
       assert.eq(expected.endOffset, actual.endOffset());
+    };
+
+    var checkNone = function (doc, id, offset) {
+      var item = doc.find(doc.get(), id).getOrDie();
+      var actual = Selection.word(doc, item, offset);
+      assert.eq(true, actual.isNone());
     };
 
     check({
@@ -92,11 +98,6 @@ test(
       endOffset: 'ing'.length
     }, doc2, 'f', 'i'.length);
 
-    check({
-      startContainer: 'f',
-      startOffset: 'ing that you should'.length,
-      endContainer: 'f',
-      endOffset: 'ing that you should'.length
-    }, doc2, 'f', 'ing that you should'.length);
+    checkNone(doc2, 'f', 'ing that you should'.length);
   }
 );
