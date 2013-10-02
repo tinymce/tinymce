@@ -45,8 +45,6 @@ test(
     checkAt({ before: Option.some(' this is a test '.length), after: Option.none() },
       ' this is a test case', ' this is a test ca'.length);
 
-    /* Not sure what I want these edge of word things to return at this stage */
-
     checkAt({ before: Option.some(' this is a test'.length), after: Option.some(' this is a test'.length) },
       ' this is a test case', ' this is a test'.length);
     checkAt({ before: Option.some(' this is a test '.length), after: Option.none() },
