@@ -15,7 +15,7 @@ define(
     var gather = function (universe, item) {
       var prune = Prune(universe);
       var transform = Transform(universe);
-      // This needs to be more selective. I shouldn't have to gather all directions every time.
+      // This needs to be more selective. I shouldn't have to gather both left and right every time.
       return Gather.gather(universe, item, prune, transform);
     };
 

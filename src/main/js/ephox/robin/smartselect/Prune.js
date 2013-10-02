@@ -13,6 +13,10 @@ define(
         return universe.property().isEmptyTag(element) || universe.property().isBoundary(element);
       };
 
+      /*
+       * Using a breaker (identification of an index position of a word break in a string), returns a pruned
+       * version of element at that breakpoint. Returns none if not a text node or no breakpoint exists.
+       */
       var breakUsing = function (breaker, element, adjust) {
         if (stop(element)) { return  Option.some([]); }
         var textOption = universe.property().isText(element) ? Option.some(universe.property().getText(element)) : Option.none();

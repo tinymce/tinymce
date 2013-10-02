@@ -10,6 +10,10 @@ define(
   ],
 
   function (Arr, Option, Spot, WordRange, CurrentWord) {
+    /*
+     * Returns an optional range which represents the selection of an entire word which may span 
+     * several elements.
+     */
     var select = function (universe, textitem, offset, left, right) {
       var getText = function (target) {
         return universe.property().isText(target) ? universe.property().getText(target) : '';
