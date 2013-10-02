@@ -11,7 +11,7 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('importcss', function(editor) {
-	var each = tinymce.each;
+	var self = this, each = tinymce.each;
 
 	function compileFilter(filter) {
 		if (typeof(filter) == "string") {
@@ -134,7 +134,7 @@ tinymce.PluginManager.add('importcss', function(editor) {
 			each(getSelectors(editor.getDoc(), compileFilter(settings.importcss_file_filter)), function(selector) {
 				if (selector.indexOf('.mce-') === -1) {
 					if (!selectors[selector] && (!selectorFilter || selectorFilter(selector))) {
-						var format = selectorConverter(selector), menu;
+						var format = selectorConverter.call(self, selector), menu;
 
 						if (format) {
 							var formatName = format.name || tinymce.DOM.uniqueId();
@@ -178,4 +178,7 @@ tinymce.PluginManager.add('importcss', function(editor) {
 			e.control.renderNew();
 		});
 	}
+
+	// Expose default convertSelectorToFormat implementation
+	self.convertSelectorToFormat = convertSelectorToFormat;
 });

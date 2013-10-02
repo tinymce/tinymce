@@ -7,6 +7,8 @@ Version 4.0.7 (2013-10-02)
 	Fixed so editor.destroy calls editor.remove so that both destroy and remove can be used to remove an editor instance.
 	Fixed so the searchreplace plugin doesn't move focus into the editor until you close the dialog.
 	Fixed so the searchreplace plugin search for next item if you hit enter inside the dialog.
+	Fixed so importcss_selector_converter callback is executed with the scope set to importcss plugin instance.
+	Fixed so the default selector converter function is exposed in importcss plugin.
 	Fixed issue with the tabpanel not expanding properly when the tabs where wider than the body of the panel.
 	Fixed issue with the menubar option producing a JS exception if set to true.
 	Fixed bug where closing a dialog with an opened listbox would cause errors if new dialogs where opened.
