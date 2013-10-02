@@ -23,7 +23,7 @@
 @btn-border-right:               rgba(0, 0, 0, .1);
 @btn-border-bottom:              fadein(rgba(0, 0, 0, .1), 15%);
 @btn-border-left:                fadein(rgba(0, 0, 0, .1), 15%);
-@btn-split-border:               @btn-border-right;
+@btn-split-border:               #bdbdbd;
 @btn-caret-border:               @btn-text;
 @btn-text-disabled:              @text-disabled;
 @btn-box-shadow:                 inset 0 1px 0 rgba(255, 255, 255, .2), 0 1px 2px rgba(0, 0, 0, .05);
@@ -40,6 +40,10 @@
 @btn-primary-bg-hover-hlight:    darken(@btn-primary-bg-hlight, 5%);
 @btn-primary-text:               #fff;
 @btn-primary-text-shadow:        #333;
+@btn-primary-border-top:         mix(@btn-border-top, @btn-primary-bg, 50%);
+@btn-primary-border-right:       mix(@btn-border-right, @btn-primary-bg, 50%);
+@btn-primary-border-bottom:      mix(@btn-border-bottom, @btn-primary-bg, 50%);
+@btn-primary-border-left:        mix(@btn-border-left, @btn-primary-bg, 50%);
 
 // Menu
 @menuitem-text:                  @text;

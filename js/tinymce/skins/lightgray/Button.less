@@ -53,6 +53,8 @@
 .mce-primary {
 	min-width: 50px;
 	color: @btn-primary-text;
+	border: 1px solid mix(rgb(red(@btn-border-right), green(@btn-border-right), blue(@btn-border-right)), @panel-bg, 30%);
+	border-color: @btn-border-top @btn-border-right @btn-border-bottom @btn-border-left;
 	.vertical-gradient(@btn-primary-bg, @btn-primary-bg-hlight);
 
 	&:hover, &:focus {
