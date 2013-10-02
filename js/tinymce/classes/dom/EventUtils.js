@@ -400,7 +400,6 @@ define("tinymce/dom/EventUtils", [], function() {
 										callbackList.nativeHandler = nativeHandler;
 
 										eventMap[name] = callbackList;
-										callbackList.splice(ci, 1);
 									}
 								}
 							}
