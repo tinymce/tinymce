@@ -2,12 +2,10 @@ test(
   'Word Util',
 
   [
-    'ephox.perhaps.Option',
-    'ephox.robin.test.Assertions',
     'ephox.robin.util.WordUtil'
   ],
 
-  function (Option, Assertions, WordUtil) {
+  function (WordUtil) {
 
     var checkNone = function (text, word) {
       var actual = word(text);
