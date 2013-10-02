@@ -11,7 +11,7 @@ define(
   ],
 
   function (Arr, Fun, Option, Spot, WordRange, WordUtil) {
-    var mogel = function (universe, item, offset, left, right) {
+    var select = function (universe, item, offset, left, right) {
       var getText = function (target) {
         return universe.property().isText(target) ? universe.property().getText(target) : '';
       };
@@ -73,7 +73,7 @@ define(
     };
 
     return {
-      mogel: mogel
+      select: select
     };
   }
 );

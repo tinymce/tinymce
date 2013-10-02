@@ -31,7 +31,7 @@ define(
 
       var left = Arr.map(gathered.left(), defaultLeft);
       var right = Arr.map(gathered.right(), defaultRight);
-      return EndofWord.mogel(universe, item, offset, left, right);
+      return EndofWord.select(universe, item, offset, left, right);
     };
 
     return {
