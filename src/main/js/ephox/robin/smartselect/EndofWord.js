@@ -10,13 +10,12 @@ define(
   ],
 
   function (Arr, Option, Spot, WordRange, CurrentWord) {
-    var select = function (universe, item, offset, left, right) {
+    var select = function (universe, textitem, offset, left, right) {
       var getText = function (target) {
         return universe.property().isText(target) ? universe.property().getText(target) : '';
       };
 
-      // ASSUMPTION: item is a text node. Probably an invalid assumption. Clean this up.
-      var text = universe.property().getText(item);
+      var text = universe.property().getText(textitem);
       var parts = CurrentWord.around(text, offset);
 
       var leftText = Arr.map(left, function (l) {
@@ -27,9 +26,9 @@ define(
         return getText(r.element()).substring(0, r.offset());
       }).join('');
 
-      var start = Option.from(left[0]).getOr(Spot.point(item, 0));
-      var finish = Option.from(right[right.length - 1]).getOr(Spot.point(item, text.length));
-      var current = WordRange(item, offset, item, offset);
+      var start = Option.from(left[0]).getOr(Spot.point(textitem, 0));
+      var finish = Option.from(right[right.length - 1]).getOr(Spot.point(textitem, text.length));
+      var current = WordRange(textitem, offset, textitem, offset);
 
       var isLeftEdge = function () {
         return leftText.length === 0 && offset === 0;
@@ -45,15 +44,15 @@ define(
       };
 
       var justBefore = function (bindex) {
-        return isRightEdge() ? Option.none() : Option.some(WordRange(item, bindex, finish.element(), finish.offset()));
+        return isRightEdge() ? Option.none() : Option.some(WordRange(textitem, bindex, finish.element(), finish.offset()));
       };
 
       var justAfter = function (aindex) {
-        return isLeftEdge() ? Option.none() : Option.some(WordRange(start.element(), start.offset(), item, aindex));
+        return isLeftEdge() ? Option.none() : Option.some(WordRange(start.element(), start.offset(), textitem, aindex));
       };
 
       var both = function (bindex, aindex) {
-        return bindex === aindex ? Option.none() : Option.some(WordRange(item, bindex, item, aindex));
+        return bindex === aindex ? Option.none() : Option.some(WordRange(textitem, bindex, textitem, aindex));
       };
 
       return parts.before().fold(function () {
