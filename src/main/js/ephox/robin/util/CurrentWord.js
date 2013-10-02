@@ -11,7 +11,7 @@ define(
     /* 
      * Returns an optional before and optional after representing the index positions of the nearest
      * breaks around position in text. Note, that a substring from before to after should represent
-     * the word positoin is in (when they are set). A value of none for either before or after suggests
+     * the word that position is in (when they are set). A value of none for either before or after suggests
      * that there were no breaks in the respective direction from position in text. The before and the 
      * after values will be equal if position is at the start or the end of a word.
      */
