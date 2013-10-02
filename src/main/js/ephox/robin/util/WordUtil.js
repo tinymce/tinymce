@@ -55,13 +55,11 @@ define(
 
 
     var around = function (text, position) {
-      console.log('around: ', position);
       var first = text.substring(0, position);
       var before = leftBreak(first).map(function (index) {
         return index + 1;
       });
       var last = text.substring(position);
-      console.log('last: [' + last + ']');
       var after = rightBreak(last).map(function (index) {
         return position + index;
       });
@@ -71,13 +69,11 @@ define(
       var current = BeforeAfter(Option.some(position), Option.some(position));
 
       var endOfWord = after.bind(function (a) {
-        console.log('position: ', position, 'a: ', a);
         return position === a ? Option.some(current): Option.none();
       });
 
       return endOfWord.getOrThunk(function () {
         return before.bind(function (b) {
-          console.log('position: ', position, 'b: ', b);
           return position === b  ? Option.some(current) : Option.none();
         }).getOr(fallback);
       });
