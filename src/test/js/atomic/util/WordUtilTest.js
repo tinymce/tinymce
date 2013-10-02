@@ -23,12 +23,6 @@ test(
       });
     };
 
-    var checkAt = function (expected, text, position) {
-      var actual = WordUtil.around(text, position);
-      Assertions.assertOpt(expected.before, actual.before());
-      Assertions.assertOpt(expected.after, actual.after());
-    };
-
     checkNone('ballast', WordUtil.firstWord);
     checkNone('ballast', WordUtil.lastWord);
     check(' one', 'ballast one', WordUtil.lastWord);
