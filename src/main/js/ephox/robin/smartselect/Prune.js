@@ -25,7 +25,7 @@ define(
       };
 
       var left = function (element) {
-        // The 1 here is because we don't want to include the breaking character.
+        // The +1 here is because we don't want to include the breaking character.
         return breakUsing(WordUtil.leftBreak, element, 1);
       };
 

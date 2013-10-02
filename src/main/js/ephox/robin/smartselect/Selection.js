@@ -19,7 +19,8 @@ define(
     };
 
     /* Given an initial position (item, offset), identify the selection range which represents the 
-       word that (item, offset) is on
+       word that (item, offset) is on. The start of the word and the end of the word is NOT considered
+       on that word.
      */
     var word = function (universe, item, offset) {
       var defaultLeft = function (point) {

@@ -20,7 +20,6 @@ define(
       var text = universe.property().getText(item);
       var parts = WordUtil.around(text, offset);
 
-      /* Check the text node length of the items left. If text length is zero, then at end of word */
       var leftText = Arr.map(left, function (l) {
         return getText(l.element()).substring(l.offset());
       }).join('');
