@@ -26,10 +26,9 @@ define(
         return getText(r.element()).substring(0, r.offset());
       }).join('');
 
-      var start = Option.from(left[0]).getOr(Spot.point(textitem, 0));
-      var finish = Option.from(right[right.length - 1]).getOr(Spot.point(textitem, text.length));
-      var current = WordRange(textitem, offset, textitem, offset);
-
+      var leftmost = Option.from(left[0]).getOr(Spot.point(textitem, 0));
+      var rightmost = Option.from(right[right.length - 1]).getOr(Spot.point(textitem, text.length));
+      
       var isLeftEdge = function () {
         return leftText.length === 0 && offset === 0;
       };
@@ -40,15 +39,15 @@ define(
 
       var neither = function () {
         return isLeftEdge() || isRightEdge() ? Option.none() :
-          Option.some(WordRange(start.element(), start.offset(), finish.element(), finish.offset()));
+          Option.some(WordRange(leftmost.element(), leftmost.offset(), rightmost.element(), rightmost.offset()));
       };
 
       var justBefore = function (bindex) {
-        return isRightEdge() ? Option.none() : Option.some(WordRange(textitem, bindex, finish.element(), finish.offset()));
+        return isRightEdge() ? Option.none() : Option.some(WordRange(textitem, bindex, rightmost.element(), rightmost.offset()));
       };
 
       var justAfter = function (aindex) {
-        return isLeftEdge() ? Option.none() : Option.some(WordRange(start.element(), start.offset(), textitem, aindex));
+        return isLeftEdge() ? Option.none() : Option.some(WordRange(leftmost.element(), leftmost.offset(), textitem, aindex));
       };
 
       var both = function (bindex, aindex) {
