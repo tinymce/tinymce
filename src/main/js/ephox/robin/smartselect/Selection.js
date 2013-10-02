@@ -19,9 +19,9 @@ define(
       return Gather.gather(universe, item, prune, transform);
     };
 
-    /* Given an initial position (item, offset), identify the selection range which represents the 
+    /* Given an initial position (item, offset), identify the optional selection range which represents the 
        word that (item, offset) is on. The start of the word and the end of the word is NOT considered
-       on that word.
+       on that word. Returns none if no word can be identified containing offset.
      */
     var word = function (universe, item, offset) {
       if (!universe.property().isText(item)) return Option.none();
