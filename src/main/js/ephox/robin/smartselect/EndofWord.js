@@ -3,14 +3,13 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.phoenix.api.data.Spot',
     'ephox.robin.data.WordRange',
-    'ephox.robin.util.WordUtil'
+    'ephox.robin.util.CurrentWord'
   ],
 
-  function (Arr, Fun, Option, Spot, WordRange, WordUtil) {
+  function (Arr, Option, Spot, WordRange, CurrentWord) {
     var select = function (universe, item, offset, left, right) {
       var getText = function (target) {
         return universe.property().isText(target) ? universe.property().getText(target) : '';
@@ -18,7 +17,7 @@ define(
 
       // ASSUMPTION: item is a text node. Probably an invalid assumption. Clean this up.
       var text = universe.property().getText(item);
-      var parts = WordUtil.around(text, offset);
+      var parts = CurrentWord.around(text, offset);
 
       var leftText = Arr.map(left, function (l) {
         return getText(l.element()).substring(l.offset());

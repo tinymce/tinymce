@@ -2,13 +2,12 @@ define(
   'ephox.robin.smartselect.Prune',
 
   [
-    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.phoenix.api.data.Spot',
     'ephox.robin.util.WordUtil'
   ],
 
-  function (Fun, Option, Spot, WordUtil) {
+  function (Option, Spot, WordUtil) {
     return function (universe) {
       var stop = function (element) {
         return universe.property().isEmptyTag(element) || universe.property().isBoundary(element);
