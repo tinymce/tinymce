@@ -311,6 +311,7 @@ define("tinymce/Editor", [
 				// Add hidden input for non input elements inside form elements
 				if (settings.hidden_input && !/TEXTAREA|INPUT/i.test(self.getElement().nodeName)) {
 					DOM.insertAfter(DOM.create('input', {type: 'hidden', name: id}), id);
+					self.hasHiddenInput = true;
 				}
 
 				// Pass submit/reset from form to editor instance
@@ -2016,6 +2017,11 @@ define("tinymce/Editor", [
 			if (!self.removed) {
 				self.removed = 1; // Cancels post remove event execution
 
+				// Remove any hidden input
+				if (self.hasHiddenInput) {
+					DOM.remove(self.getElement().nextSibling);
+				}
+
 				// Fixed bug where IE has a blinking cursor left from the editor
 				var doc = self.getDoc();
 				if (ie && doc) {
@@ -2083,6 +2089,13 @@ define("tinymce/Editor", [
 
 			// One time is enough
 			if (self.destroyed) {
+				return;
+			}
+
+			// If user manually calls destroy and not remove
+			// Users seems to have logic that calls destroy instead of remove
+			if (!automatic && !self.removed) {
+				self.remove();
 				return;
 			}
 
