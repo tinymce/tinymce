@@ -50,6 +50,10 @@ define("tinymce/ui/Container", [
 			self._fixed = settings.fixed;
 			self._items = new Collection();
 
+			if (self.isRtl()) {
+				self.addClass('rtl');
+			}
+
 			self.addClass('container');
 			self.addClass('container-body', 'body');
 

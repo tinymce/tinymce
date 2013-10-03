@@ -96,7 +96,6 @@ tinymce.PluginManager.add('media', function(editor, url) {
 							type: 'container',
 							label: 'Dimensions',
 							layout: 'flex',
-							direction: 'row',
 							align: 'center',
 							spacing: 5,
 							items: [

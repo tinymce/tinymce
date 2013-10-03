@@ -96,7 +96,7 @@
 	.vertical-gradient(@menuitem-bg-selected, @menuitem-bg-selected-hlight);
 }
 
-.mce-menu-item-sep, .mce-menu-item-sep:hover {
+div.mce-menu .mce-menu-item-sep, .mce-menu-item-sep:hover {
 	border: 0;
 	padding: 0;
 	height: 1px;
@@ -106,4 +106,29 @@
 	border-bottom: 1px solid @menuitem-separator-bottom;
 	cursor: default;
 	filter: none;
+}
+
+// RTL
+
+.mce-rtl .mce-menu-item {
+	text-align: right;
+	direction: rtl;
+	padding: 6px 12px 6px 15px;
+}
+
+.mce-menu-align.mce-rtl .mce-menu-shortcut, .mce-menu-align.mce-rtl .mce-caret {
+	right: auto;
+	left: 0;
+}
+
+.mce-rtl .mce-menu-item .mce-caret {
+	margin-left: 6px;
+	margin-right: 0;
+	border-right: 4px solid @menuitem-caret;
+	border-left: 0;
+}
+
+.mce-rtl .mce-menu-item.mce-selected .mce-caret, .mce-rtl .mce-menu-item:focus .mce-caret, .mce-rtl .mce-menu-item:hover .mce-caret {
+	border-left-color: transparent;
+	border-right-color: @menuitem-caret-selected;
 }

@@ -34,7 +34,9 @@ define("tinymce/ui/Control", [
 			controlIdLookup: {}
 		},
 
-		dom: DomUtils,
+		isRtl: function() {
+			return Control.rtl;
+		},
 
 		/**
 		 * Class/id prefix to use for all controls.

@@ -69,7 +69,6 @@ div.mce-fullscreen {
 }
 
 .mce-window-head .mce-title {
-	.inline-block();
 	line-height: 20px;
 	font-size: @window-title-font-size;
 	font-weight: bold;
@@ -103,4 +102,22 @@ div.mce-fullscreen {
 
 .mce-window.mce-fullscreen, .mce-window.mce-fullscreen .mce-foot {
 	.border-radius(0);
+}
+
+// RTL
+
+.mce-rtl .mce-window-head .mce-close {
+	position: absolute;
+	right: auto;
+	left: 15px;
+}
+
+.mce-rtl .mce-window-head .mce-dragh {
+	left: auto;
+	right: 0;
+}
+
+.mce-rtl .mce-window-head .mce-title {
+	direction: rtl;
+	text-align: right;
 }

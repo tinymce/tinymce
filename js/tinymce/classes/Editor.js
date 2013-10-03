@@ -161,6 +161,8 @@ define("tinymce/Editor", [
 			ie7_compat: true
 		}, settings);
 
+		self.rtl = settings.directionality == 'rtl';
+
 		AddOnManager.language = settings.language || 'en';
 		AddOnManager.languageLoad = settings.language_load;
 

@@ -54,6 +54,10 @@ define("tinymce/ui/Window", [
 
 			self._super(settings);
 
+			if (self.isRtl()) {
+				self.addClass('rtl');
+			}
+
 			self.addClass('window');
 			self._fixed = true;
 
@@ -65,7 +69,7 @@ define("tinymce/ui/Window", [
 					spacing: 3,
 					padding: 10,
 					align: 'center',
-					pack: 'end',
+					pack: self.isRtl() ? 'start' : 'end',
 					defaults: {
 						type: 'button'
 					},

@@ -45,9 +45,9 @@ define("tinymce/ui/FlexLayout", [
 			contLayoutRect = container.layoutRect();
 			contPaddingBox = container._paddingBox;
 			contSettings = container.settings;
-			direction = contSettings.direction;
+			direction = container.isRtl() ? (contSettings.direction || 'row-reversed') : contSettings.direction;
 			align = contSettings.align;
-			pack = contSettings.pack;
+			pack = container.isRtl() ? (contSettings.pack || 'end') : contSettings.pack;
 			spacing = contSettings.spacing || 0;
 
 			if (direction == "row-reversed" || direction == "column-reverse") {

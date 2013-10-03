@@ -25,6 +25,10 @@ define("tinymce/ui/FormatControls", [
 	var each = Tools.each;
 
 	EditorManager.on('AddEditor', function(e) {
+		if (e.editor.rtl) {
+			Control.rtl = true;
+		}
+
 		registerControls(e.editor);
 	});
 

@@ -164,7 +164,11 @@ define("tinymce/ui/MenuItem", [
 
 				menu.addClass('menu-sub');
 
-				var rel = menu.testMoveRel(self.getEl(), ['tr-tl', 'br-bl', 'tl-tr', 'bl-br']);
+				var rel = menu.testMoveRel(
+					self.getEl(),
+					self.isRtl() ? ['tl-tr', 'bl-br', 'tr-tl', 'br-bl'] : ['tr-tl', 'br-bl', 'tl-tr', 'bl-br']
+				);
+
 				menu.moveRel(self.getEl(), rel);
 
 				rel = 'menu-sub-' + rel;

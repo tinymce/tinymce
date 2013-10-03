@@ -22,10 +22,6 @@ define("tinymce/ui/Path", [
 	"use strict";
 
 	return Control.extend({
-		Defaults: {
-			delimiter: "\u00BB"
-		},
-
 		/**
 		 * Constructs a instance with the specified settings.
 		 *
@@ -35,6 +31,10 @@ define("tinymce/ui/Path", [
 		 */
 		init: function(settings) {
 			var self = this;
+
+			if (!settings.delimiter) {
+				settings.delimiter = self.isRtl() ? '\u00AB' : '\u00BB';
+			}
 
 			self._super(settings);
 			self.addClass('path');
@@ -126,14 +126,30 @@ define("tinymce/ui/Path", [
 		},
 
 		_getPathHtml: function() {
-			var self = this, parts = self._data || [], i, l, html = '', prefix = self.classPrefix;
+			var self = this, parts = self._data || [], i, l, html = '', prefix = self.classPrefix, rtl = self.isRtl();
+			var delimiterHtml = '<div class="'+ prefix + 'divider" aria-hidden="true"> ' + self.settings.delimiter + ' </div>';
 
-			for (i = 0, l = parts.length; i < l; i++) {
+			if (rtl) {
+				i = parts.length - 1;
+				l = 0;
+			} else {
+				i = 0;
+				l = parts.length;
+			}
+
+			for (i, l; rtl ? i >= 0 : i < l; rtl ? i-- : i++) {
+				if (!rtl && i > 0) {
+					html += delimiterHtml;
+				}
+
 				html += (
-					(i > 0 ? '<div class="'+ prefix + 'divider" aria-hidden="true"> ' + self.settings.delimiter + ' </div>' : '') +
 					'<div role="button" class="' + prefix + 'path-item' + (i == l - 1 ? ' ' + prefix + 'last' : '') + '" data-index="' +
 					i + '" tabindex="-1" id="' + self._id + '-' + i +'">' + parts[i].name + '</div>'
 				);
+
+				if (rtl && i > 0) {
+					html += delimiterHtml;
+				}
 			}
 
 			if (!html) {

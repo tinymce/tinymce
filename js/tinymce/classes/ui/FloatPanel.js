@@ -225,7 +225,7 @@ define("tinymce/ui/FloatPanel", [
 
 			if (settings.popover) {
 				self._preBodyHtml = '<div class="' + self.classPrefix + 'arrow"></div>';
-				self.addClass('popover').addClass('bottom').addClass('start');
+				self.addClass('popover').addClass('bottom').addClass(self.isRtl() ? 'end' : 'start');
 			}
 		},
 
