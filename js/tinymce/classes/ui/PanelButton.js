@@ -55,7 +55,7 @@ define("tinymce/ui/PanelButton", [
 				self.panel.show();
 			}
 
-			self.panel.moveRel(self.getEl(), settings.popoverAlign || self.isRtl() ? ['bc-tr', 'bc-tc'] : ['bc-tl', 'bc-tc']);
+			self.panel.moveRel(self.getEl(), settings.popoverAlign || (self.isRtl() ? ['bc-tr', 'bc-tc'] : ['bc-tl', 'bc-tc']));
 		},
 
 		/**

@@ -131,7 +131,6 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 	editor.addButton('forecolor', {
 		type: 'colorbutton',
 		tooltip: 'Text color',
-		popoverAlign: 'bc-tl',
 		selectcmd: 'ForeColor',
 		panel: {
 			html: renderColorPicker,
@@ -143,7 +142,6 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 	editor.addButton('backcolor', {
 		type: 'colorbutton',
 		tooltip: 'Background color',
-		popoverAlign: 'bc-tl',
 		selectcmd: 'HiliteColor',
 		panel: {
 			html: renderColorPicker,
