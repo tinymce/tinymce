@@ -41,7 +41,7 @@ define("tinymce/ui/SplitButton", [
 			menuButtonElm = elm.lastChild;
 
 			DOM.css(mainButtonElm, {
-				width: rect.w - menuButtonElm.offsetWidth,
+				width: rect.w - DOM.getSize(menuButtonElm).width,
 				height: rect.h - 2
 			});
 

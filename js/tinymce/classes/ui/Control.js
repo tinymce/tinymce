@@ -34,6 +34,8 @@ define("tinymce/ui/Control", [
 			controlIdLookup: {}
 		},
 
+		dom: DomUtils,
+
 		/**
 		 * Class/id prefix to use for all controls.
 		 *
@@ -237,7 +239,7 @@ define("tinymce/ui/Control", [
 			}
 
 			function getSide(name) {
-				var val = parseInt(getStyle(name), 10);
+				var val = parseFloat(getStyle(name), 10);
 
 				return isNaN(val) ? 0 : val;
 			}
@@ -261,18 +263,19 @@ define("tinymce/ui/Control", [
 		initLayoutRect: function() {
 			var self = this, settings = self.settings, borderBox, layoutRect;
 			var elm = self.getEl(), width, height, minWidth, minHeight, autoResize;
-			var startMinWidth, startMinHeight;
+			var startMinWidth, startMinHeight, initialSize;
 
-			// Measure boxes
+			// Measure the current element
 			borderBox = self._borderBox = self._borderBox || self.measureBox(elm, 'border');
 			self._paddingBox = self._paddingBox || self.measureBox(elm, 'padding');
 			self._marginBox = self._marginBox || self.measureBox(elm, 'margin');
+			initialSize = DomUtils.getSize(elm);
 
 			// Setup minWidth/minHeight and width/height
 			startMinWidth = settings.minWidth;
 			startMinHeight = settings.minHeight;
-			minWidth = startMinWidth || elm.offsetWidth;
-			minHeight = startMinHeight || elm.offsetHeight;
+			minWidth = startMinWidth || initialSize.width;
+			minHeight = startMinHeight || initialSize.height;
 			width = settings.width;
 			height = settings.height;
 			autoResize = settings.autoResize;
@@ -1498,6 +1501,6 @@ define("tinymce/ui/Control", [
 		 */
 		// title: function(value) {} -- Generated
 	});
-window.elementIdCache = elementIdCache;
+
 	return Control;
 });

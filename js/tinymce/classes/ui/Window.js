@@ -144,8 +144,12 @@ define("tinymce/ui/Window", [
 			// Reserve vertical space for title
 			if (self.settings.title && !self._fullscreen) {
 				headEl = self.getEl('head');
-				layoutRect.headerW = headEl.offsetWidth;
-				layoutRect.headerH = headEl.offsetHeight;
+
+				var size = DomUtils.getSize(headEl);
+
+				layoutRect.headerW = size.width;
+				layoutRect.headerH = size.height;
+
 				deltaH += layoutRect.headerH;
 			}
 

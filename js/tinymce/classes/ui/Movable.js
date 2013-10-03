@@ -19,7 +19,7 @@ define("tinymce/ui/Movable", [
 	"use strict";
 
 	function calculateRelativePosition(ctrl, targetElm, rel) {
-		var ctrlElm, pos, x, y, selfW, selfH, targetW, targetH, viewport;
+		var ctrlElm, pos, x, y, selfW, selfH, targetW, targetH, viewport, size;
 
 		viewport = DomUtils.getViewPort();
 
@@ -35,12 +35,14 @@ define("tinymce/ui/Movable", [
 
 		// Get size of self
 		ctrlElm = ctrl.getEl();
-		selfW = ctrlElm.offsetWidth;
-		selfH = ctrlElm.offsetHeight;
+		size = DomUtils.getSize(ctrlElm);
+		selfW = size.width;
+		selfH = size.height;
 
 		// Get size of target
-		targetW = targetElm.offsetWidth;
-		targetH = targetElm.offsetHeight;
+		size = DomUtils.getSize(targetElm);
+		targetW = size.width;
+		targetH = size.height;
 
 		// Parse align string
 		rel = (rel || '').split('');

@@ -160,7 +160,7 @@ define("tinymce/ui/ComboBox", [
 			var width, lineHeight;
 
 			if (openElm) {
-				width = rect.w - openElm.offsetWidth - 10;
+				width = rect.w - DomUtils.getSize(openElm).width - 10;
 			} else {
 				width = rect.w - 10;
 			}

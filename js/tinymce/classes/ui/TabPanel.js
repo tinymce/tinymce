@@ -128,7 +128,7 @@ define("tinymce/ui/TabPanel", [
 		initLayoutRect: function() {
 			var self = this, rect, minW, minH;
 
-			minW = self.getEl('head').offsetWidth;
+			minW = DomUtils.getSize(self.getEl('head')).width;
 			minW = minW < 0 ? 0 : minW;
 			minH = 0;
 			self.items().each(function(item, i) {
@@ -153,13 +153,13 @@ define("tinymce/ui/TabPanel", [
 				});
 			});
 
-			var headH = self.getEl('head').offsetHeight;
+			var headH = DomUtils.getSize(self.getEl('head')).height;
 
 			self.settings.minWidth = minW;
 			self.settings.minHeight = minH + headH;
 
 			rect = self._super();
-			rect.deltaH += self.getEl('head').offsetHeight;
+			rect.deltaH += headH;
 			rect.innerH = rect.h - rect.deltaH;
 
 			return rect;

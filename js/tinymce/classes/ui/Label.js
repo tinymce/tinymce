@@ -17,8 +17,9 @@
  * @extends tinymce.ui.Widget
  */
 define("tinymce/ui/Label", [
-	"tinymce/ui/Widget"
-], function(Widget) {
+	"tinymce/ui/Widget",
+	"tinymce/ui/DomUtils"
+], function(Widget, DomUtils) {
 	"use strict";
 
 	return Widget.extend({
@@ -58,14 +59,16 @@ define("tinymce/ui/Label", [
 			var self = this, layoutRect = self._super();
 
 			if (self.settings.multiline) {
+				var size = DomUtils.getSize(self.getEl());
+
 				// Check if the text fits within maxW if not then try word wrapping it
-				if (self.getEl().offsetWidth > layoutRect.maxW) {
+				if (size.width > layoutRect.maxW) {
 					layoutRect.minW = layoutRect.maxW;
 					self.addClass('multiline');
 				}
 
 				self.getEl().style.width = layoutRect.minW + 'px';
-				layoutRect.startMinH = layoutRect.h = layoutRect.minH = Math.min(layoutRect.maxH, self.getEl().offsetHeight);
+				layoutRect.startMinH = layoutRect.h = layoutRect.minH = Math.min(layoutRect.maxH, size.height);
 			}
 
 			return layoutRect;
