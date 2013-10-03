@@ -68,7 +68,7 @@ define("tinymce/ui/Label", [
 				}
 
 				self.getEl().style.width = layoutRect.minW + 'px';
-				layoutRect.startMinH = layoutRect.h = layoutRect.minH = Math.min(layoutRect.maxH, size.height);
+				layoutRect.startMinH = layoutRect.h = layoutRect.minH = Math.min(layoutRect.maxH, DomUtils.getSize(self.getEl()).height);
 			}
 
 			return layoutRect;
