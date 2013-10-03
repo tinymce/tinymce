@@ -53,11 +53,16 @@ define(
       return index > -1 ? Option.some(index) : Option.none();
     };
 
+    var hasBreak = function (text) {
+      return rightBreak(text).isSome();
+    };
+
     return {
       firstWord: firstWord,
       lastWord: lastWord,
       leftBreak: leftBreak,
-      rightBreak: rightBreak
+      rightBreak: rightBreak,
+      hasBreak: hasBreak
     };
 
   }

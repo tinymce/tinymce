@@ -20,10 +20,8 @@ define(
       var breakUsing = function (breaker, element, adjust) {
         if (stop(element)) { return  Option.some([]); }
         var textOption = universe.property().isText(element) ? Option.some(universe.property().getText(element)) : Option.none();
-        return textOption.bind(function (text) {
-          return breaker(text).map(function (index) {
-            return [ Spot.point(element, Option.some(index + adjust)) ];
-          });
+        return textOption.bind(breaker).map(function (index) {
+          return [ Spot.point(element, Option.some(index + adjust)) ];
         });
       };
 

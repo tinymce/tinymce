@@ -30,7 +30,7 @@ define(
         selection.addRange(range);
       };
 
-      var getSelect = function () {
+      var getSelection = function () {
         var selection = window.getSelection();
         if (selection.rangeCount > 0) {
           var range = selection.getRangeAt(0);
@@ -48,7 +48,7 @@ define(
       };
 
       DomEvent.bind(editor, 'click', function (event) {
-        var current = getSelect();
+        var current = getSelection();
         if (current !== null && current.collapsed()) {
           var wordRange = DomSmartSelect.word(current.startContainer(), current.startOffset());
           wordRange.each(function (wr) {

@@ -21,6 +21,11 @@ test(
       });
     };
 
+    var checkBreak = function (expected, text) {
+      var actual = WordUtil.hasBreak(text);
+      assert.eq(expected, actual);
+    };
+
     checkNone('ballast', WordUtil.firstWord);
     checkNone('ballast', WordUtil.lastWord);
     check(' one', 'ballast one', WordUtil.lastWord);
@@ -31,5 +36,12 @@ test(
     check(' ', '  o pp qq', WordUtil.firstWord);
     check('apple ', 'apple bear cat', WordUtil.firstWord);
     check('apple ', 'apple ', WordUtil.firstWord);
+
+    checkBreak(false, 'apple');
+    checkBreak(true, 'apple ');
+    checkBreak(true, ' apple');
+    checkBreak(true, 'apples and oranges');
+    checkBreak(false, '');
+    checkBreak(false, 'applesandoranges');
   }
 );

@@ -20,7 +20,7 @@ define(
     };
 
     var isWord = function (_universe, text) {
-      return WordUtil.firstWord(text).isNone();
+      return !WordUtil.hasBreak(text);
     };
 
     return {
