@@ -1555,7 +1555,12 @@
 
 						// Import
 						case 3:
-							addClasses(r.styleSheet);
+							try {
+								addClasses(r.styleSheet);
+							} catch (ex) {
+								// Ignore
+							}
+
 							break;
 					}
 				});
