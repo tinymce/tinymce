@@ -2292,8 +2292,9 @@ define("tinymce/Formatter", [
 
 					// Move selection to text node
 					selection.setCursorLocation(node, 1);
+
 					// If the formatNode is empty, we can remove it safely. 
-					if(dom.isEmpty(formatNode)) {
+					if (dom.isEmpty(formatNode)) {
 						dom.remove(formatNode);
 					}
 				}
