@@ -192,8 +192,9 @@ tinyMCEPopup = {
 	restoreSelection : function() {
 		var t = tinyMCEPopup;
 
-		if (!t.isWindow && tinymce.isIE)
+		if (!t.isWindow && (tinymce.isIE || tinymce.isIE11)) {
 			t.editor.selection.moveToBookmark(t.editor.windowManager.bookmark);
+		}
 	},
 
 	/**

@@ -179,7 +179,7 @@ test('getBookmark/setBookmark (persistent)', function() {
 	editor.setContent('<p>text</p>\n<p>text</p>');
 	rng = editor.dom.createRng();
 	rng.setStart(editor.getBody().firstChild.firstChild, 1);
-	rng.setEnd(editor.getBody().lastChild.firstChild, 3);
+	rng.setEnd(editor.getBody().firstChild.nextSibling.firstChild, 3);
 	editor.selection.setRng(rng);
 	bookmark = editor.selection.getBookmark();
 	equal(editor.getContent(), '<p>text</p>\n<p>text</p>', 'Editor contents (elements)');
@@ -205,7 +205,7 @@ test('getBookmark/setBookmark (simple)', function() {
 	editor.setContent('<p>text</p>\n<p>text</p>');
 	rng = editor.dom.createRng();
 	rng.setStart(editor.getBody().firstChild.firstChild, 1);
-	rng.setEnd(editor.getBody().lastChild.firstChild, 3);
+	rng.setEnd(editor.getBody().firstChild.nextSibling.firstChild, 3);
 	editor.selection.setRng(rng);
 	bookmark = editor.selection.getBookmark(1);
 	equal(editor.getContent(), '<p>text</p>\n<p>text</p>', 'Editor contents (elements)');
@@ -254,7 +254,7 @@ test('getBookmark/setBookmark (nonintrusive) - Get non intrusive bookmark multip
 	editor.setContent('<p>text</p>\n<p>text</p>');
 	rng = editor.dom.createRng();
 	rng.setStart(editor.getBody().firstChild.firstChild, 1);
-	rng.setEnd(editor.getBody().lastChild.firstChild, 3);
+	rng.setEnd(editor.getBody().firstChild.nextSibling.firstChild, 3);
 	editor.selection.setRng(rng);
 	bookmark = editor.selection.getBookmark(2);
 	equal(editor.getContent(), '<p>text</p>\n<p>text</p>', 'Editor contents (elements)');
@@ -275,7 +275,7 @@ test('getBookmark/setBookmark (nonintrusive)', function() {
 	editor.dom.select('p')[0].appendChild(editor.dom.doc.createTextNode('text'));
 	rng = editor.dom.createRng();
 	rng.setStart(editor.getBody().firstChild.lastChild, 1);
-	rng.setEnd(editor.getBody().lastChild.firstChild, 3);
+	rng.setEnd(editor.getBody().firstChild.nextSibling.firstChild, 3);
 	editor.selection.setRng(rng);
 	bookmark = editor.selection.getBookmark(2);
 	equal(editor.getContent(), '<p>textaaatext</p>\n<p>text</p>', 'Editor contents (fragmented, elements)');
@@ -296,7 +296,7 @@ test('getBookmark/setBookmark (nonintrusive) - fragmentext text (normalized)', f
 	editor.dom.select('p')[0].appendChild(editor.dom.doc.createTextNode('text'));
 	rng = editor.dom.createRng();
 	rng.setStart(editor.getBody().firstChild.lastChild, 1);
-	rng.setEnd(editor.getBody().lastChild.firstChild, 3);
+	rng.setEnd(editor.getBody().firstChild.nextSibling.firstChild, 3);
 	editor.selection.setRng(rng);
 	bookmark = editor.selection.getBookmark(2, true);
 	editor.setContent(editor.getContent());

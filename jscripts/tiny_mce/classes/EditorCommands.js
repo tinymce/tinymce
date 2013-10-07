@@ -458,7 +458,7 @@
 			mceRepaint : function() {
 				var bookmark;
 
-				if (tinymce.isGecko) {
+				if (tinymce.isGecko && !tinymce.isIE11) {
 					try {
 						storeSelection(TRUE);
 

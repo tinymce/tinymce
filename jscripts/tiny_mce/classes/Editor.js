@@ -478,15 +478,23 @@
 
 					// Use specified iframe height or the targets offsetHeight
 					h = o.iframeHeight || e.offsetHeight;
+				}
 
-					// Store away the selection when it's changed to it can be restored later with a editor.focus() call
-					if (isIE) {
-						t.onInit.add(function(ed) {
-							ed.dom.bind(ed.getBody(), 'beforedeactivate keydown', function() {
-								ed.lastIERng = ed.selection.getRng();
-							});
+				// Store away the selection when it's changed to it can be restored later with a editor.focus() call
+				if (isIE || tinymce.isIE11) {
+					t.onInit.add(function(ed) {
+						ed.dom.bind(ed.getBody(), 'beforedeactivate keydown keyup', function() {
+							if (document.activeElement.id == ed.id + "_ifr") {
+								ed.windowManager.bookmark = ed.selection.getBookmark(1);
+							}
 						});
-					}
+					});
+
+					t.onNodeChange.add(function(ed) {
+						if (document.activeElement.id == ed.id + "_ifr") {
+							ed.windowManager.bookmark = ed.selection.getBookmark(1);
+						}
+					});
 				}
 
 				t.editorContainer = o.editorContainer;
@@ -889,8 +897,8 @@
 			var oed, self = this, selection = self.selection, contentEditable = self.settings.content_editable, ieRng, controlElm, doc = self.getDoc(), body;
 
 			if (!skip_focus) {
-				if (self.lastIERng) {
-					selection.setRng(self.lastIERng);
+				if (self.windowManager && self.windowManager.bookmark) {
+					selection.moveToBookmark(self.windowManager.bookmark);
 				}
 
 				// Get selected control element

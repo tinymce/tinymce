@@ -166,6 +166,8 @@
 			 */
 			t.isIOS5 = t.isIDevice && ua.match(/AppleWebKit\/(\d*)/)[1]>=534;
 
+			t.isIE11 = ua.indexOf('Trident') !== -1;
+
 			// TinyMCE .NET webcontrol might be setting the values for TinyMCE
 			if (win.tinyMCEPreInit) {
 				t.suffix = tinyMCEPreInit.suffix;

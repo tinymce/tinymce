@@ -1014,6 +1014,26 @@ tinymce.util.Quirks = function(editor) {
 		}
 	}
 
+	/**
+	 * IE 11 has an annoying issue where you can't move focus into the editor
+	 * by clicking on the white area HTML element. We used to be able to to fix this with
+	 * the fixCaretSelectionOfDocumentElementOnIe fix. But since M$ removed the selection
+	 * object it's not possible anymore. So we need to hack in a ungly CSS to force the
+	 * body to be at least 150px. If the user clicks the HTML element out side this 150px region
+	 * we simply move the focus into the first paragraph. Not ideal since you loose the
+	 * positioning of the caret but goot enough for most cases.
+	 */
+	function bodyHeight() {
+		editor.contentStyles.push('body {min-height: 100px}');
+		editor.onClick.add(function(ed, e) {
+			if (e.target.nodeName == 'HTML') {
+				editor.execCommand('SelectAll');
+				editor.selection.collapse(true);
+				editor.nodeChanged();
+			}
+		});
+	}
+
 	// All browsers
 	disableBackspaceIntoATable();
 	removeBlockQuoteOnBackSpace();
@@ -1047,8 +1067,13 @@ tinymce.util.Quirks = function(editor) {
 		keepNoScriptContents();
 	}
 
+	// IE 11+
+	if (tinymce.isIE11) {
+		bodyHeight();
+	}
+
 	// Gecko
-	if (tinymce.isGecko) {
+	if (tinymce.isGecko && !tinymce.isIE11) {
 		removeHrOnBackspace();
 		focusBody();
 		removeStylesWhenDeletingAccrossBlockElements();

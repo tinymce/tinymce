@@ -16,6 +16,7 @@ function init() {
 }
 
 function insertAbbr() {
+	tinyMCEPopup.restoreSelection();
 	SXE.insertElement('abbr');
 	tinyMCEPopup.close();
 }

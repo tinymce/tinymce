@@ -25,6 +25,7 @@ function setElementAttribs(elm) {
 }
 
 function insertDel() {
+	tinyMCEPopup.restoreSelection();
 	var elm = tinyMCEPopup.editor.dom.getParent(SXE.focusElement, 'DEL');
 
 	if (elm == null) {
