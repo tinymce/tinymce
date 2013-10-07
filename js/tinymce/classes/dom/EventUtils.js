@@ -206,9 +206,9 @@ define("tinymce/dom/EventUtils", [], function() {
 		 * @param {String} id Expando id value to look for.
 		 */
 		function executeHandlers(evt, id) {
-			var callbackList, i, l, callback;
+			var callbackList, i, l, callback, container = events[id];
 
-			callbackList = events[id][evt.type];
+			callbackList = container && container[evt.type];
 			if (callbackList) {
 				for (i = 0, l = callbackList.length; i < l; i++) {
 					callback = callbackList[i];
@@ -407,6 +407,7 @@ define("tinymce/dom/EventUtils", [], function() {
 							// Remove all callbacks if there isn't a specified callback or there is no callbacks left
 							if (!callback || callbackList.length === 0) {
 								delete eventMap[name];
+								console.log(name);
 								removeEvent(target, callbackList.fakeName || name, callbackList.nativeHandler, callbackList.capture);
 							}
 						}
