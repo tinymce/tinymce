@@ -31,7 +31,7 @@ tinymce.PluginManager.add('importcss', function(editor) {
 		var selectors = [], contentCSSUrls = {};
 
 		function append(styleSheet, imported) {
-			var href = styleSheet.href;
+			var href = styleSheet.href, rules;
 
 			if (!imported && !contentCSSUrls[href]) {
 				return;
@@ -45,7 +45,14 @@ tinymce.PluginManager.add('importcss', function(editor) {
 				append(styleSheet, true);
 			});
 
-			each(styleSheet.cssRules || styleSheet.rules, function(cssRule) {
+			try {
+				rules = styleSheet.cssRules || styleSheet.rules;
+			} catch (e) {
+				// Firefox fails on rules to remote domain for example: 
+				// @import url(//fonts.googleapis.com/css?family=Pathway+Gothic+One);
+			}
+
+			each(rules, function(cssRule) {
 				if (cssRule.styleSheet) {
 					append(cssRule.styleSheet, true);
 				} else if (cssRule.selectorText) {
