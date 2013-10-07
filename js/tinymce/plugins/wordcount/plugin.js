@@ -13,7 +13,7 @@
 tinymce.PluginManager.add('wordcount', function(editor) {
 	var self = this, countre, cleanre;
 
-	countre = editor.getParam('wordcount_countregex', /[\w\u2019\x27\-]+/g); // u2019 == &rsquo;
+	countre = editor.getParam('wordcount_countregex', /[\w\u2019\x27\-\u0600-\u06FF]+/g); // u2019 == &rsquo;
 	cleanre = editor.getParam('wordcount_cleanregex', /[0-9.(),;:!?%#$?\x27\x22_+=\\\/\-]*/g);
 
 	function update() {

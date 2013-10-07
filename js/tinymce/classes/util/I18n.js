@@ -21,6 +21,14 @@ define("tinymce/util/I18n", [], function() {
 
 	return {
 		/**
+		 * Property gets set to true if a RTL language pack was loaded.
+		 *
+		 * @property rtl
+		 * @type {Boolean}
+		 */
+		rtl: false,
+
+		/**
 		 * Adds translations for a specific language code.
 		 *
 		 * @method add
@@ -31,6 +39,8 @@ define("tinymce/util/I18n", [], function() {
 			for (var name in items) {
 				data[name] = items[name];
 			}
+
+			this.rtl = this.rtl || data._dir === 'rtl';
 		},
 
 		/**

@@ -1,6 +1,8 @@
 Version 4.0.8 (2013-10-xx)
+	Added RTL support so all of the UI is rendered right to left if a language pack has a _dir property set to rtl.
 	Fixed bug where layout managers wouldn't handle subpixel values properly. When for example the browser was zoomed in.
 	Fixed bug where the importcss plugin wouldn't import classes from local stylesheets with remote @import rules on Gecko.
+	Fixed bug where Arabic characters wouldn't be properly counted in wordcount plugin.
 Version 4.0.7 (2013-10-02)
 	Added new importcss_selector_filter option to importcss plugin. Makes it easier to select specific classes to import.
 	Added new importcss_groups option to importcss plugin. Enables you separate classes into menu groups based on filters.
