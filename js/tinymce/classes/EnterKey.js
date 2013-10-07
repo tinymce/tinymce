@@ -598,6 +598,10 @@ define("tinymce/EnterKey", [
 			}
 
 			dom.setAttrib(newBlock, 'id', ''); // Remove ID since it needs to be document unique
+
+			// Allow custom handling of new blocks
+			editor.fire('NewBlock', { newBlock: newBlock });
+
 			undoManager.add();
 		}
 
