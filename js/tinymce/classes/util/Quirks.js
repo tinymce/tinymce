@@ -941,6 +941,7 @@ define("tinymce/util/Quirks", [
 					if (e.target.nodeName == 'HTML') {
 						editor.execCommand('SelectAll');
 						editor.selection.collapse(true);
+						editor.nodeChanged();
 					}
 				});
 			}
