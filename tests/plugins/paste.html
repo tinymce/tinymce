@@ -341,7 +341,7 @@ test('paste innerText of P with VIDEO', function(){
 
 test('paste innerText of PRE', function(){
 	editor.getBody().innerHTML = '<pre>a\nb\n</pre>';
-	equal(editor.plugins.paste.innerText(editor.getBody()), 'a\nb\n');
+	equal(editor.plugins.paste.innerText(editor.getBody()).replace(/\r\n/g, '\n'), 'a\nb\n');
 });
 
 test('paste innerText of textnode with whitespace', function(){

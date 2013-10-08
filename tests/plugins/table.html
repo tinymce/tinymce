@@ -248,8 +248,8 @@ test("Table row properties dialog (update all)", function() {
 	});
 
 	equal(
-		cleanTableHtml(editor.getContent({format: 'raw'})),
-		'<table class="mce-item-table"><thead><tr style="height: 10px; text-align: right;"><td>x</td></tr></thead></table>'
+		cleanTableHtml(editor.getContent()),
+		'<table><thead><tr style="height: 10px; text-align: right;"><td>x</td></tr></thead></table>'
 	);
 });
 
@@ -323,6 +323,9 @@ tinymce.init({
 	selector: "textarea",
 	add_unload_trigger: false,
 	plugins: 'table',
+	valid_styles: {
+		'*' : 'width,height,text-align,float'
+	},
 	init_instance_callback: function(ed) {
 		editor = ed;
 		QUnit.start();

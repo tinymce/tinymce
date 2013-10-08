@@ -1745,8 +1745,17 @@ define("tinymce/Editor", [
 			// Move selection to start of body if it's a after init setContent call
 			// This prevents IE 7/8 from moving focus to empty editors
 			if (!args.initial) {
-				self.selection.select(body, true);
-				self.selection.collapse(true);
+				var dom = self.dom, selection = self.selection;
+
+				// IE can't have the caret inside <body><p>|</p></body> unless we do some magic
+				if (ie < 11 && dom.isBlock(body.firstChild) && dom.isEmpty(body.firstChild)) {
+					body.firstChild.appendChild(dom.doc.createTextNode('\u00a0'));
+					selection.select(body.firstChild, true);
+					dom.remove(body.firstChild.lastChild);
+				} else {
+					selection.select(body, true);
+					selection.collapse(true);
+				}
 			}
 
 			return args.content;

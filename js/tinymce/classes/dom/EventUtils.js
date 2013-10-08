@@ -407,7 +407,6 @@ define("tinymce/dom/EventUtils", [], function() {
 							// Remove all callbacks if there isn't a specified callback or there is no callbacks left
 							if (!callback || callbackList.length === 0) {
 								delete eventMap[name];
-								console.log(name);
 								removeEvent(target, callbackList.fakeName || name, callbackList.nativeHandler, callbackList.capture);
 							}
 						}

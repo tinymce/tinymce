@@ -244,7 +244,7 @@ test("test_cloneContents", function() {
 	r.setStart(document.getElementById('first').firstChild, 1);
 	r.setEnd(document.getElementById('two').firstChild, 2);
 
-	equal(getHTML(r.cloneContents()), '<p id="first">irst<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">ab</td></tr></tbody></table>')
+	equal(getHTML(r.cloneContents()), '<p id="first">irst<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">ab</td></tr></tbody></table>')
 	equal(r.startContainer.nodeType, 3)
 	equal(r.startOffset, 1)
 	equal(r.endContainer.nodeType, 3)
@@ -255,7 +255,7 @@ test("test_cloneContents", function() {
 	r.setStart(document.getElementById('two').firstChild, 1);
 	r.setEnd(document.getElementById('last').firstChild, 2);
 
-	equal(getHTML(r.cloneContents()), '<table id="table" width="300"><tbody><tr><td id="two">bc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">te</p>')
+	equal(getHTML(r.cloneContents()), '<table id="table"><tbody><tr><td id="two">bc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">te</p>')
 	equal(r.startContainer.nodeType, 3)
 	equal(r.startOffset, 1)
 	equal(r.endContainer.nodeType, 3)
@@ -288,7 +288,7 @@ test("test_cloneContents", function() {
 	r.setStart(document.getElementById('first'), 0);
 	r.setEnd(document.getElementById('last'), 0);
 
-	equal(getHTML(r.cloneContents()), '<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id=\"last\"></p>')
+	equal(getHTML(r.cloneContents()), '<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id=\"last\"></p>')
 	equal(r.startContainer.nodeType, 1)
 	equal(r.startOffset, 0)
 	equal(r.endContainer.nodeType, 1)
@@ -299,7 +299,7 @@ test("test_cloneContents", function() {
 	r.setStart(document.getElementById('first'), 1);
 	r.setEnd(document.getElementById('last'), 1);
 
-	equal(getHTML(r.cloneContents()), '<p id="first"><!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc</p>')
+	equal(getHTML(r.cloneContents()), '<p id="first"><!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc</p>')
 	equal(r.startContainer.nodeType, 1)
 	equal(r.startOffset, 1)
 	equal(r.endContainer.nodeType, 1)
@@ -310,7 +310,7 @@ test("test_cloneContents", function() {
 	r.setStart(document.getElementById('sample'), 0);
 	r.setEnd(document.getElementById('sample'), document.getElementById('sample').childNodes.length - 1);
 
-	equal(getHTML(r.cloneContents()), '<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table>')
+	equal(getHTML(r.cloneContents()), '<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table>')
 	equal(r.startContainer.nodeType, 1)
 	equal(r.startOffset, 0)
 	equal(r.endContainer.nodeType, 1)
@@ -321,7 +321,7 @@ test("test_cloneContents", function() {
 	r.setStart(document.getElementById('first'), 0);
 	r.setEnd(document.getElementById('last').firstChild, 1);
 
-	equal(getHTML(r.cloneContents()), '<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">t</p>')
+	equal(getHTML(r.cloneContents()), '<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">t</p>')
 	equal(r.startContainer.nodeType, 1)
 	equal(r.startOffset, 0)
 	equal(r.endContainer.nodeType, 3)
@@ -332,7 +332,7 @@ test("test_cloneContents", function() {
 	r.setStart(document.getElementById('first').firstChild, 1);
 	r.setEnd(document.getElementById('last'), 0);
 
-	equal(getHTML(r.cloneContents()), '<p id="first">irst<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id=\"last\"></p>')
+	equal(getHTML(r.cloneContents()), '<p id="first">irst<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id=\"last\"></p>')
 	equal(r.startContainer.nodeType, 3)
 	equal(r.startOffset, 1)
 	equal(r.endContainer.nodeType, 1)
@@ -394,13 +394,13 @@ test("test_extractContents2", function() {
 	r.setStart(document.getElementById('two').firstChild, 1);
 	r.setEnd(document.getElementById('last').firstChild, 2);
 
-	equal(getHTML(r.extractContents()), '<table id="table" width="300"><tbody><tr><td id="two">bc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">te</p>')
+	equal(getHTML(r.extractContents()), '<table id="table"><tbody><tr><td id="two">bc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">te</p>')
 	equal(r.startContainer.nodeType, 1)
-	equal(getHTML(r.startContainer), '<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>')
+	equal(getHTML(r.startContainer), '<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>')
 	equal(r.startOffset, 4)
 	equal(r.endContainer.nodeType, 1)
 	equal(r.endOffset, 4)
-	equal(getHTML(r.endContainer), '<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>')
+	equal(getHTML(r.endContainer), '<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>')
 	equal(r.collapsed, true)
 	equal(r.commonAncestorContainer.nodeName, 'DIV')
 });
@@ -415,12 +415,12 @@ test("test_extractContents3", function() {
 	r.setEnd(document.getElementById('traverse'), 2);
 
 	equal(getHTML(r.extractContents()), '<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em></p>')
-	equal(getHTML(r.startContainer), '<div id="sample"><p id="traverse">more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
+	equal(getHTML(r.startContainer), '<div id="sample"><p id="traverse">more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
 	equal(r.startOffset, 0)
 	equal(r.endContainer.nodeType, 1)
 	equal(r.endOffset, 0)
-	equal(getHTML(r.endContainer), '<div id="sample"><p id="traverse">more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
-	equal(getHTML(document.getElementById('sample')), '<div id="sample"><p id="traverse">more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
+	equal(getHTML(r.endContainer), '<div id="sample"><p id="traverse">more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
+	equal(getHTML(document.getElementById('sample')), '<div id="sample"><p id="traverse">more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
 	equal(r.collapsed, true)
 	equal(r.commonAncestorContainer.nodeName, 'DIV')
 });
@@ -435,12 +435,12 @@ test("test_deleteContents1", function() {
 	r.setEnd(document.getElementById('last').firstChild, 2);
 	r.deleteContents();
 
-	equal(getHTML(r.startContainer), '<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>')
+	equal(getHTML(r.startContainer), '<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>')
 	equal(r.startOffset, 4)
 	equal(r.endContainer.nodeType, 1)
 	equal(r.endOffset, 4)
-	equal(getHTML(r.endContainer), '<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>')
-	equal(getHTML(document.getElementById('sample')), '<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>')
+	equal(getHTML(r.endContainer), '<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>')
+	equal(getHTML(document.getElementById('sample')), '<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>')
 	equal(r.collapsed, true)
 	equal(r.commonAncestorContainer.nodeName, 'DIV')
 });
@@ -460,7 +460,7 @@ test("test_deleteContents2", function() {
 	equal(r.endContainer.nodeType, 1)
 	equal(r.endOffset, 1)
 	equal(getHTML(r.endContainer), '<p id="first">fong.</p>')
-	equal(getHTML(document.getElementById('sample')), '<div id="sample"><p id="first">fong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
+	equal(getHTML(document.getElementById('sample')), '<div id="sample"><p id="first">fong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
 	equal(r.collapsed, true)
 	equal(r.commonAncestorContainer.nodeName, 'P')
 });
@@ -475,12 +475,12 @@ test("test_deleteContents3", function() {
 	r.setEnd(document.getElementById('sample'), 2);
 	r.deleteContents();
 
-	equal(getHTML(r.startContainer), '<div id="sample"><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
+	equal(getHTML(r.startContainer), '<div id="sample"><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
 	equal(r.startOffset, 0)
 	equal(r.endContainer.nodeType, 1)
 	equal(r.endOffset, 0)
-	equal(getHTML(r.endContainer), '<div id="sample"><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
-	equal(getHTML(document.getElementById('sample')), '<div id="sample"><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
+	equal(getHTML(r.endContainer), '<div id="sample"><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
+	equal(getHTML(document.getElementById('sample')), '<div id="sample"><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
 	equal(r.collapsed, true)
 	equal(r.commonAncestorContainer.nodeName, 'DIV')
 });
@@ -495,12 +495,12 @@ test("test_deleteContents4", function() {
 	r.setEnd(document.getElementById('traverse'), 2);
 	r.deleteContents();
 
-	equal(getHTML(r.startContainer), '<div id="sample"><p id="traverse">more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
+	equal(getHTML(r.startContainer), '<div id="sample"><p id="traverse">more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
 	equal(r.startOffset, 0)
 	equal(r.endContainer.nodeType, 1)
 	equal(r.endOffset, 0)
-	equal(getHTML(r.endContainer), '<div id="sample"><p id="traverse">more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
-	equal(getHTML(document.getElementById('sample')), '<div id="sample"><p id="traverse">more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
+	equal(getHTML(r.endContainer), '<div id="sample"><p id="traverse">more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
+	equal(getHTML(document.getElementById('sample')), '<div id="sample"><p id="traverse">more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
 	equal(r.collapsed, true)
 	equal(r.commonAncestorContainer.nodeName, 'DIV')
 });
@@ -590,7 +590,7 @@ tinymce.DOM.bind(window, 'load', function() {
 		<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p>
 		<p id="second">bar</p>
 		<p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p>
-		<table id="table" width="300">
+		<table id="table">
 			<tr>
 				<td>1</td>
 				<td id="two">abc</td>

@@ -41,7 +41,10 @@ test("Embed retain as is", function() {
 	);
 
 	equal(editor.getContent(),
-		'<p><video width="300" height="150" src="320x240.ogg" autoplay="autoplay" loop="loop" controls="controls">text<a href="#">link</a></video></p>'
+		// IE produces a different attribute order for some odd reason, I love IE
+		tinymce.isIE ? 
+			'<p><video width="300" height="150" controls="controls" loop="loop" autoplay="autoplay" src="320x240.ogg">text<a href="#">link</a></video></p>' :
+			'<p><video width="300" height="150" src="320x240.ogg" autoplay="autoplay" loop="loop" controls="controls">text<a href="#">link</a></video></p>'
 	);
 });
 
@@ -51,7 +54,10 @@ test("Video retain as is", function() {
 	);
 
 	equal(editor.getContent(),
-		'<p><video width="300" height="150" src="320x240.ogg" autoplay="autoplay" loop="loop" controls="controls">text<a href="#">link</a></video></p>'
+		// IE produces a different attribute order for some odd reason, I love IE
+		tinymce.isIE ? 
+			'<p><video width="300" height="150" controls="controls" loop="loop" autoplay="autoplay" src="320x240.ogg">text<a href="#">link</a></video></p>' :
+			'<p><video width="300" height="150" src="320x240.ogg" autoplay="autoplay" loop="loop" controls="controls">text<a href="#">link</a></video></p>'
 	);
 });
 
