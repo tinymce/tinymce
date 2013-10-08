@@ -184,7 +184,7 @@ function type(chr) {
 
 					// If caret is at <p>abc|</p> and after the abc text node then move it to the end of the text node
 					// Expand the range to include the last char <p>ab[c]</p> since IE 11 doesn't delete otherwise
-					if (rng.startOffset >= nodes.length - 1 && lastNode) {
+					if (rng.startOffset >= nodes.length - 1 && lastNode && lastNode.nodeType == 3 && lastNode.data.length > 0) {
 						rng.setStart(lastNode, lastNode.data.length - 1);
 						rng.setEnd(lastNode, lastNode.data.length);
 						editor.selection.setRng(rng);
