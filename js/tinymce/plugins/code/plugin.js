@@ -21,7 +21,8 @@ tinymce.PluginManager.add('code', function(editor) {
 				minWidth: editor.getParam("code_dialog_width", 600),
 				minHeight: editor.getParam("code_dialog_height", Math.min(tinymce.DOM.getViewPort().h - 200, 500)),
 				value: editor.getContent({source_view: true}),
-				spellcheck: false
+				spellcheck: false,
+				style: 'direction: ltr; text-align: left'
 			},
 			onSubmit: function(e) {
 				editor.undoManager.transact(function() {
