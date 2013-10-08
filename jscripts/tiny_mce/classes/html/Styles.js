@@ -79,6 +79,12 @@ tinymce.html.Styles = function(settings, schema) {
 			function compress(prefix, suffix) {
 				var top, right, bottom, left;
 
+				// IE 11 will produce a border-image: none when getting the style attribute from <p style="border: 1px solid red"></p>
+				// So lets asume it shouldn't be there
+				if (styles['border-image'] === 'none') {
+					delete styles['border-image'];
+				}
+
 				// Get values and check it it needs compressing
 				top = styles[prefix + '-top' + suffix];
 				if (!top)

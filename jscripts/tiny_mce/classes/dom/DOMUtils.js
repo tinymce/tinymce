@@ -121,7 +121,7 @@
 		fixDoc: function(doc) {
 			var settings = this.settings, name;
 
-			if (isIE && settings.schema) {
+			if (isIE && !tinymce.isIE11 && settings.schema) {
 				// Add missing HTML 4/5 elements to IE
 				('abbr article aside audio canvas ' +
 				'details figcaption figure footer ' +
@@ -142,7 +142,7 @@
 			var self = this, clone, doc;
 
 			// TODO: Add feature detection here in the future
-			if (!isIE || node.nodeType !== 1 || deep) {
+			if (!isIE || tinymce.isIE11 || node.nodeType !== 1 || deep) {
 				return node.cloneNode(deep);
 			}
 
@@ -581,7 +581,7 @@
 				switch (na) {
 					case 'opacity':
 						// IE specific opacity
-						if (isIE) {
+						if (isIE && ! tinymce.isIE11) {
 							s.filter = v === '' ? '' : "alpha(opacity=" + (v * 100) + ")";
 
 							if (!n.currentStyle || !n.currentStyle.hasLayout)
@@ -593,7 +593,7 @@
 						break;
 
 					case 'float':
-						isIE ? s.styleFloat = v : s.cssFloat = v;
+						(isIE && ! tinymce.isIE11) ? s.styleFloat = v : s.cssFloat = v;
 						break;
 					
 					default:
@@ -1071,7 +1071,7 @@
 				// IE 8 has a bug where dynamically loading stylesheets would produce a 1 item remaining bug
 				// This fix seems to resolve that issue by realcing the document ones a stylesheet finishes loading
 				// It's ugly but it seems to work fine.
-				if (isIE && d.documentMode && d.recalc) {
+				if (isIE && !tinymce.isIE11 && d.documentMode && d.recalc) {
 					link.onload = function() {
 						if (d.recalc)
 							d.recalc();

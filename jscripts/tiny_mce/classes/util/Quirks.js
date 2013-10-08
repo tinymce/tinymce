@@ -1057,7 +1057,7 @@ tinymce.util.Quirks = function(editor) {
 	}
 
 	// IE
-	if (tinymce.isIE) {
+	if (tinymce.isIE && !tinymce.isIE11) {
 		removeHrOnBackspace();
 		ensureBodyHasRoleApplication();
 		addNewLinesBeforeBrInPre();

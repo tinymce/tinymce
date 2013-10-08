@@ -400,7 +400,7 @@
 					ed.render();
 
 					// Fix IE memory leaks
-					if (tinymce.isIE) {
+					if (tinymce.isIE && ! tinymce.isIE11) {
 						w.attachEvent('onunload', clr);
 					}
 

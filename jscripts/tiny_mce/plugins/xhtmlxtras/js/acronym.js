@@ -16,7 +16,6 @@ function init() {
 }
 
 function insertAcronym() {
-	tinyMCEPopup.restoreSelection();
 	SXE.insertElement('acronym');
 	tinyMCEPopup.close();
 }

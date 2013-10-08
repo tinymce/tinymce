@@ -166,7 +166,7 @@
 
 					// Add something to the inner node
 					if (curNode)
-						curNode.innerHTML = tinymce.isIE ? '&nbsp;' : '<br data-mce-bogus="1" />';
+						curNode.innerHTML = tinymce.isIE && !tinymce.isIE11 ? '&nbsp;' : '<br data-mce-bogus="1" />';
 
 					return false;
 				}
@@ -179,7 +179,7 @@
 			if (formatNode) {
 				cell.appendChild(formatNode);
 			} else {
-				if (!tinymce.isIE)
+				if (!tinymce.isIE || tinymce.isIE11)
 					cell.innerHTML = '<br data-mce-bogus="1" />';
 			}
 
@@ -1249,7 +1249,7 @@
 
 					if (last && last.nodeName == 'TABLE') {
 						if (ed.settings.forced_root_block)
-							ed.dom.add(ed.getBody(), ed.settings.forced_root_block, null, tinymce.isIE ? '&nbsp;' : '<br data-mce-bogus="1" />');
+							ed.dom.add(ed.getBody(), ed.settings.forced_root_block, null, tinymce.isIE && !tinymce.isIE11 ? '&nbsp;' : '<br data-mce-bogus="1" />');
 						else
 							ed.dom.add(ed.getBody(), 'br', {'data-mce-bogus': '1'});
 					}

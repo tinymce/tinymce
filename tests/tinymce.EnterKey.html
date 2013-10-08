@@ -239,7 +239,7 @@ test('Enter inside at beginning of text node in body', function() {
 	setSelection('body', 0);
 	pressEnter();
 	equal(editor.getContent(), '<p>\u00a0</p><p>abcd</p>');
-	equal(editor.selection.getNode().nodeName, 'P');
+	equal(editor.selection.getStart().nodeName, 'P');
 });
 
 test('Enter inside at end of text node in body', function() {
@@ -259,7 +259,7 @@ test('Enter inside empty body', function() {
 });
 
 test('Enter inside empty li in beginning of ol', function() {
-	editor.getBody().innerHTML = tinymce.isIE ? '<ol><li></li><li>a</li></ol>' : '<ol><li><br></li><li>a</li></ol>';
+	editor.getBody().innerHTML = (tinymce.isIE && !tinymce.isIE11) ? '<ol><li></li><li>a</li></ol>' : '<ol><li><br></li><li>a</li></ol>';
 	setSelection('li', 0);
 	pressEnter();
 	equal(editor.getContent(), '<p>\u00a0</p><ol><li>a</li></ol>');
@@ -267,7 +267,7 @@ test('Enter inside empty li in beginning of ol', function() {
 });
 
 test('Enter inside empty li at the end of ol', function() {
-	editor.getBody().innerHTML = tinymce.isIE ? '<ol><li>a</li><li></li></ol>' : '<ol><li>a</li><li><br></li></ol>';
+	editor.getBody().innerHTML = (tinymce.isIE && !tinymce.isIE11) ? '<ol><li>a</li><li></li></ol>' : '<ol><li>a</li><li><br></li></ol>';
 	setSelection('li:last', 0);
 	pressEnter();
 	equal(editor.getContent(), '<ol><li>a</li></ol><p>\u00a0</p>');
@@ -275,7 +275,7 @@ test('Enter inside empty li at the end of ol', function() {
 });
 
 test('Shift+Enter inside empty li in the middle of ol', function() {
-	editor.getBody().innerHTML =tinymce.isIE ? '<ol><li>a</li><li></li><li>b</li></ol>' :  '<ol><li>a</li><li><br></li><li>b</li></ol>';
+	editor.getBody().innerHTML = (tinymce.isIE && !tinymce.isIE11) ? '<ol><li>a</li><li></li><li>b</li></ol>' :  '<ol><li>a</li><li><br></li><li>b</li></ol>';
 	setSelection('li:nth-child(2)', 0);
 	pressEnter({shiftKey: true});
 	equal(editor.getContent(), '<ol><li>a</li></ol><p>\u00a0</p><ol><li>b</li></ol>');
@@ -283,7 +283,7 @@ test('Shift+Enter inside empty li in the middle of ol', function() {
 });
 
 test('Shift+Enter inside empty li in beginning of ol', function() {
-	editor.getBody().innerHTML = tinymce.isIE ? '<ol><li></li><li>a</li></ol>' : '<ol><li><br></li><li>a</li></ol>';
+	editor.getBody().innerHTML = (tinymce.isIE && !tinymce.isIE11) ? '<ol><li></li><li>a</li></ol>' : '<ol><li><br></li><li>a</li></ol>';
 	setSelection('li', 0);
 	pressEnter({shiftKey: true});
 	equal(editor.getContent(), '<p>\u00a0</p><ol><li>a</li></ol>');
@@ -291,7 +291,7 @@ test('Shift+Enter inside empty li in beginning of ol', function() {
 });
 
 test('Shift+Enter inside empty li at the end of ol', function() {
-	editor.getBody().innerHTML = tinymce.isIE ? '<ol><li>a</li><li></li></ol>' : '<ol><li>a</li><li><br></li></ol>';
+	editor.getBody().innerHTML = (tinymce.isIE && !tinymce.isIE11) ? '<ol><li>a</li><li></li></ol>' : '<ol><li>a</li><li><br></li></ol>';
 	setSelection('li:last', 0);
 	pressEnter({shiftKey: true});
 	equal(editor.getContent(), '<ol><li>a</li></ol><p>\u00a0</p>');
@@ -300,7 +300,7 @@ test('Shift+Enter inside empty li at the end of ol', function() {
 
 test('Enter inside empty li in the middle of ol with forced_root_block: false', function() {
 	editor.settings.forced_root_block = false;
-	editor.getBody().innerHTML =tinymce.isIE ? '<ol><li>a</li><li></li><li>b</li></ol>' :  '<ol><li>a</li><li><br></li><li>b</li></ol>';
+	editor.getBody().innerHTML = (tinymce.isIE && !tinymce.isIE11) ? '<ol><li>a</li><li></li><li>b</li></ol>' :  '<ol><li>a</li><li><br></li><li>b</li></ol>';
 	setSelection('li:nth-child(2)', 0);
 	pressEnter();
 	equal(editor.getContent(), '<ol><li>a</li></ol><br /><ol><li>b</li></ol>');
@@ -309,7 +309,7 @@ test('Enter inside empty li in the middle of ol with forced_root_block: false', 
 
 test('Enter inside empty li in beginning of ol with forced_root_block: false', function() {
 	editor.settings.forced_root_block = false;
-	editor.getBody().innerHTML = tinymce.isIE ? '<ol><li></li><li>a</li></ol>' : '<ol><li><br></li><li>a</li></ol>';
+	editor.getBody().innerHTML = (tinymce.isIE && !tinymce.isIE11) ? '<ol><li></li><li>a</li></ol>' : '<ol><li><br></li><li>a</li></ol>';
 	setSelection('li', 0);
 	pressEnter();
 	equal(editor.getContent(), '<br /><ol><li>a</li></ol>');
@@ -318,7 +318,7 @@ test('Enter inside empty li in beginning of ol with forced_root_block: false', f
 
 test('Enter inside empty li at the end of ol with forced_root_block: false', function() {
 	editor.settings.forced_root_block = false;
-	editor.getBody().innerHTML = tinymce.isIE ? '<ol><li>a</li><li></li></ol>' : '<ol><li>a</li><li><br></li></ol>';
+	editor.getBody().innerHTML = (tinymce.isIE && !tinymce.isIE11) ? '<ol><li>a</li><li></li></ol>' : '<ol><li>a</li><li><br></li></ol>';
 	setSelection('li:last', 0);
 	pressEnter();
 	equal(cleanHtml(editor.getBody().innerHTML), '<ol><li>a</li></ol><br>');
@@ -326,7 +326,7 @@ test('Enter inside empty li at the end of ol with forced_root_block: false', fun
 });
 
 test('Enter inside empty li in the middle of ol', function() {
-	editor.getBody().innerHTML =tinymce.isIE ? '<ol><li>a</li><li></li><li>b</li></ol>' :  '<ol><li>a</li><li><br></li><li>b</li></ol>';
+	editor.getBody().innerHTML = (tinymce.isIE && !tinymce.isIE11) ? '<ol><li>a</li><li></li><li>b</li></ol>' :  '<ol><li>a</li><li><br></li><li>b</li></ol>';
 	setSelection('li:nth-child(2)', 0);
 	pressEnter();
 	equal(editor.getContent(), '<ol><li>a</li></ol><p>\u00a0</p><ol><li>b</li></ol>');
@@ -422,7 +422,7 @@ test('Enter at the end of text in P with forced_root_block set to false', functi
 	editor.getBody().innerHTML = '<p>abc</p>';
 	setSelection('p', 3);
 	pressEnter();
-	equal(cleanHtml(editor.getBody().innerHTML), tinymce.isIE ? '<p>abc<br></p>' : '<p>abc<br><br></p>');
+	equal(cleanHtml(editor.getBody().innerHTML), (tinymce.isIE && !tinymce.isIE11) ? '<p>abc<br></p>' : '<p>abc<br><br></p>');
 });
 
 test('Enter at the middle of text in BODY with forced_root_block set to false', function() {
@@ -449,12 +449,12 @@ test('Enter at the end of text in BODY with forced_root_block set to false', fun
 	setSelection('body', 4);
 	editor.focus();
 	pressEnter();
-	equal(cleanHtml(editor.getBody().innerHTML), tinymce.isIE ? 'abcd<br>' : 'abcd<br><br>');
+	equal(cleanHtml(editor.getBody().innerHTML), (tinymce.isIE && !tinymce.isIE11) ? 'abcd<br>' : 'abcd<br><br>');
 });
 
 test('Enter in empty P at the end of a blockquote and end_container_on_empty_block: true', function() {
 	editor.settings.end_container_on_empty_block = true;
-	editor.getBody().innerHTML = tinymce.isIE ? '<blockquote><p>abc</p><p></p></blockquote>' : '<blockquote><p>abc</p><p><br></p></blockquote>';
+	editor.getBody().innerHTML = (tinymce.isIE && !tinymce.isIE11) ? '<blockquote><p>abc</p><p></p></blockquote>' : '<blockquote><p>abc</p><p><br></p></blockquote>';
 	setSelection('p:last', 0);
 	pressEnter();
 	equal(editor.getContent(), '<blockquote><p>abc</p></blockquote><p>\u00a0</p>');
@@ -462,7 +462,7 @@ test('Enter in empty P at the end of a blockquote and end_container_on_empty_blo
 
 test('Enter in empty P at the beginning of a blockquote and end_container_on_empty_block: true', function() {
 	editor.settings.end_container_on_empty_block = true;
-	editor.getBody().innerHTML = tinymce.isIE ? '<blockquote><p></p><p>abc</p></blockquote>' : '<blockquote><p><br></p><p>abc</p></blockquote>';
+	editor.getBody().innerHTML = (tinymce.isIE && !tinymce.isIE11) ? '<blockquote><p></p><p>abc</p></blockquote>' : '<blockquote><p><br></p><p>abc</p></blockquote>';
 	setSelection('p', 0);
 	pressEnter();
 	equal(editor.getContent(), '<p>\u00a0</p><blockquote><p>abc</p></blockquote>');
@@ -470,7 +470,7 @@ test('Enter in empty P at the beginning of a blockquote and end_container_on_emp
 
 test('Enter in empty P at in the middle of a blockquote and end_container_on_empty_block: true', function() {
 	editor.settings.end_container_on_empty_block = true;
-	editor.getBody().innerHTML = tinymce.isIE ? '<blockquote><p>abc</p><p></p><p>123</p></blockquote>' : '<blockquote><p>abc</p><p><br></p><p>123</p></blockquote>';
+	editor.getBody().innerHTML = (tinymce.isIE && !tinymce.isIE11) ? '<blockquote><p>abc</p><p></p><p>123</p></blockquote>' : '<blockquote><p>abc</p><p><br></p><p>123</p></blockquote>';
 	setSelection('p:nth-child(2)', 0);
 	pressEnter();
 	equal(editor.getContent(), '<blockquote><p>abc</p></blockquote><p>\u00a0</p><blockquote><p>123</p></blockquote>');
@@ -502,7 +502,7 @@ test('Shift+Enter at the end of P', function() {
 	editor.getBody().innerHTML = '<p>abcd</p>';
 	setSelection('p', 4);
 	pressEnter({shiftKey: true});
-	equal(editor.getContent(), tinymce.isIE ? '<p>abcd</p>' : '<p>abcd<br /><br /></p>');
+	equal(editor.getContent(), (tinymce.isIE && !tinymce.isIE11) ? '<p>abcd</p>' : '<p>abcd<br /><br /></p>');
 });
 
 test('Shift+Enter in the middle of B with a BR after it', function() {
@@ -537,7 +537,7 @@ test('Enter at the end of PRE', function() {
 	editor.getBody().innerHTML = '<pre>abcd</pre>';
 	setSelection('pre', 4);
 	pressEnter();
-	equal(editor.getContent(), tinymce.isIE ? '<pre>abcd</pre>' : '<pre>abcd<br /><br /></pre>');
+	equal(editor.getContent(), (tinymce.isIE && !tinymce.isIE11) ? '<pre>abcd</pre>' : '<pre>abcd<br /><br /></pre>');
 });
 
 test('Enter in beginning of PRE and br_in_pre: false', function() {

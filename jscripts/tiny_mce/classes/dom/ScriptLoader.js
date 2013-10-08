@@ -116,7 +116,7 @@
 
 			// Add onload listener for non IE browsers since IE9
 			// fires onload event before the script is parsed and executed
-			if (!tinymce.isIE)
+			if (!tinymce.isIE || tinymce.isIE11)
 				elm.onload = done;
 
 			// Add onerror event will get fired on some browsers but not all of them

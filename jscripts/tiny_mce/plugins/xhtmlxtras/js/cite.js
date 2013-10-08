@@ -16,7 +16,6 @@ function init() {
 }
 
 function insertCite() {
-	tinyMCEPopup.restoreSelection();
 	SXE.insertElement('cite');
 	tinyMCEPopup.close();
 }

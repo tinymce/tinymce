@@ -34,7 +34,7 @@
 			function renderBlockOnIE(block) {
 				var oldRng;
 
-				if (tinymce.isIE && dom.isBlock(block)) {
+				if (tinymce.isIE && !tinymce.isIE11 && dom.isBlock(block)) {
 					oldRng = selection.getRng();
 					block.appendChild(dom.create('span', null, '\u00a0'));
 					selection.select(block);
@@ -169,7 +169,7 @@
 				}
 
 				// BR is needed in empty blocks on non IE browsers
-				if (!tinymce.isIE) {
+				if (!tinymce.isIE || tinymce.isIE11) {
 					caretNode.innerHTML = '<br data-mce-bogus="1">';
 				}
 
@@ -348,7 +348,7 @@
 
 				if (container && container.nodeType == 3 && offset >= container.nodeValue.length) {
 					// Insert extra BR element at the end block elements
-					if (!tinymce.isIE && !hasRightSideContent()) {
+					if ((!tinymce.isIE || tinymce.isIE11) && !hasRightSideContent()) {
 						brElm = dom.create('br');
 						rng.insertNode(brElm);
 						rng.setStartAfter(brElm);
@@ -361,7 +361,7 @@
 				rng.insertNode(brElm);
 
 				// Rendering modes below IE8 doesn't display BR elements in PRE unless we have a \n before it
-				if (tinymce.isIE && parentBlockName == 'PRE' && (!documentMode || documentMode < 8)) {
+				if ((tinymce.isIE && !tinymce.isIE11) && parentBlockName == 'PRE' && (!documentMode || documentMode < 8)) {
 					brElm.parentNode.insertBefore(dom.doc.createTextNode('\r'), brElm);
 				}
 
@@ -415,7 +415,7 @@
 				var lastChild;
 
 				// IE will render the blocks correctly other browsers needs a BR
-				if (!tinymce.isIE) {
+				if (!tinymce.isIE || tinymce.isIE11) {
 					block.normalize(); // Remove empty text nodes that got left behind by the extract
 
 					// Check if the block is empty or contains a floated last child

@@ -58,6 +58,8 @@
 		_init : function() {
 			var t = this, d = document, na = navigator, ua = na.userAgent, i, nl, n, base, p, v;
 
+			t.isIE11 = ua.indexOf('Trident/') != -1 && ua.indexOf('rv:') != -1;
+
 			/**
 			 * Constant that is true if the browser is Opera.
 			 *
@@ -83,7 +85,7 @@
 			 * @type Boolean
 			 * @final
 			 */
-			t.isIE = !t.isWebKit && !t.isOpera && (/MSIE/gi).test(ua) && (/Explorer/gi).test(na.appName);
+			t.isIE = !t.isWebKit && !t.isOpera && (/MSIE/gi).test(ua) && (/Explorer/gi).test(na.appName) || t.isIE11;
 
 			/**
 			 * Constant that is true if the browser is IE 6 or older.
@@ -128,7 +130,7 @@
 			 * @type Boolean
 			 * @final
 			 */
-			t.isGecko = !t.isWebKit && /Gecko/.test(ua);
+			t.isGecko = !t.isWebKit && !t.isIE11 && /Gecko/.test(ua);
 
 			/**
 			 * Constant that is true if the os is Mac OS.
@@ -165,8 +167,6 @@
 			 * @final
 			 */
 			t.isIOS5 = t.isIDevice && ua.match(/AppleWebKit\/(\d*)/)[1]>=534;
-
-			t.isIE11 = ua.indexOf('Trident') !== -1;
 
 			// TinyMCE .NET webcontrol might be setting the values for TinyMCE
 			if (win.tinyMCEPreInit) {

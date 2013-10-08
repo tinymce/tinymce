@@ -25,7 +25,6 @@ function setElementAttribs(elm) {
 }
 
 function insertIns() {
-	tinyMCEPopup.restoreSelection();
 	var elm = tinyMCEPopup.editor.dom.getParent(SXE.focusElement, 'INS');
 
 	if (elm == null) {

@@ -177,6 +177,20 @@ function type(chr) {
 				rng.select();
 				rng.execCommand('Delete', false, null);
 			} else {
+				var rng = editor.selection.getRng();
+
+				if (rng.startContainer.nodeType == 1 && rng.collapsed) {
+					var nodes = rng.startContainer.childNodes, lastNode = nodes[nodes.length - 1];
+
+					// If caret is at <p>abc|</p> and after the abc text node then move it to the end of the text node
+					// Expand the range to include the last char <p>ab[c]</p> since IE 11 doesn't delete otherwise
+					if (rng.startOffset >= nodes.length - 1 && lastNode) {
+						rng.setStart(lastNode, lastNode.data.length - 1);
+						rng.setEnd(lastNode, lastNode.data.length);
+						editor.selection.setRng(rng);
+					}
+				}
+
 				editor.getDoc().execCommand('Delete', false, null);
 			}
 		} else if (typeof(chr) == 'string') {

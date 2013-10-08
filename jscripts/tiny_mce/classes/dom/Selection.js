@@ -88,7 +88,7 @@
 			if (!t.win.getSelection)
 				t.tridentSel = new tinymce.dom.TridentSelection(t);
 
-			if (tinymce.isIE && dom.boxModel)
+			if (tinymce.isIE && ! tinymce.isIE11 && dom.boxModel)
 				this._fixIESelection();
 
 			// Prevent leaks
@@ -821,7 +821,7 @@
 			}
 
 			// We have W3C ranges and it's IE then fake control selection since IE9 doesn't handle that correctly yet
-			if (tinymce.isIE && rng && rng.setStart && doc.selection.createRange().item) {
+			if (tinymce.isIE && ! tinymce.isIE11 && rng && rng.setStart && doc.selection.createRange().item) {
 				elm = doc.selection.createRange().item(0);
 				rng = doc.createRange();
 				rng.setStartBefore(elm);

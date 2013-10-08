@@ -481,7 +481,7 @@
 				}
 
 				// Store away the selection when it's changed to it can be restored later with a editor.focus() call
-				if (isIE || tinymce.isIE11) {
+				if (tinymce.isIE11) {
 					t.onInit.add(function(ed) {
 						ed.dom.bind(ed.getBody(), 'beforedeactivate keydown keyup', function() {
 							if (document.activeElement.id == ed.id + "_ifr") {
@@ -919,7 +919,7 @@
 					body = self.getBody();
 
 					// Check for setActive since it doesn't scroll to the element
-					if (body.setActive) {
+					if (body.setActive && ! tinymce.isIE11) {
 						body.setActive();
 					} else {
 						body.focus();

@@ -14,6 +14,7 @@ var SearchReplaceDialog = {
 		mcTabs.onChange.add(function(tab_id, panel_id) {
 			t.switchMode(tab_id.substring(0, tab_id.indexOf('_')));
 		});
+
 	},
 
 	switchMode : function(m) {
@@ -38,6 +39,11 @@ var SearchReplaceDialog = {
 
 	searchNext : function(a) {
 		var ed = tinyMCEPopup.editor, se = ed.selection, r = se.getRng(), f, m = this.lastMode, s, b, fl = 0, w = ed.getWin(), wm = ed.windowManager, fo = 0;
+
+		if (tinymce.isIE11 && !window.find) {
+			ed.windowManager.alert("This feature is not available in IE 11+. Upgrade TinyMCE to 4.x to get this functionallity back.");
+			return;
+		}
 
 		// Get input
 		f = document.forms[0];
