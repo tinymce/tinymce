@@ -69,17 +69,9 @@ define("tinymce/ui/TabPanel", [
 			self.preRender();
 			layout.preRender(self);
 
-			var items = self.items();
-
-			if (self.isRtl()) {
-				items = items.reverse();
-			}
-
-			items.each(function(ctrl, i) {
-				var idx = self.isRtl() ? items.length - 1 - i : i;
-
+			self.items().each(function(ctrl, i) {
 				tabsHtml += (
-					'<div id="' + self._id + '-t' + idx + '" class="' + prefix + 'tab" unselectable="on">' +
+					'<div id="' + self._id + '-t' + i + '" class="' + prefix + 'tab" unselectable="on">' +
 						self.encode(ctrl.settings.title) +
 					'</div>'
 				);
@@ -114,11 +106,11 @@ define("tinymce/ui/TabPanel", [
 				var targetParent = e.target.parentNode;
 
 				if (e.target.parentNode.id == self._id + '-head') {
-					var l = targetParent.childNodes.length, i = l;
+					var i = targetParent.childNodes.length;
 
 					while (i--) {
 						if (targetParent.childNodes[i] == e.target) {
-							self.activateTab(self.isRtl() ? l - 1 - i : i);
+							self.activateTab(i);
 						}
 					}
 				}
