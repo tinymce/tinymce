@@ -2065,6 +2065,10 @@ define("tinymce/Editor", [
 		bindNative: function(name) {
 			var self = this;
 
+			if (self.settings.readonly) {
+				return;
+			}
+
 			if (self.initialized) {
 				self.dom.bind(getEventTarget(self, name), name, function(e) {
 					self.fire(name, e);

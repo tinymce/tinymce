@@ -493,6 +493,10 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			]});
 		}
 
+		if (settings.readonly) {
+			panel.find('*').disabled(true);
+		}
+
 		// Render before the target textarea/div
 		panel.renderBefore(args.targetNode).reflow();
 
