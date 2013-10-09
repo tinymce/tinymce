@@ -537,8 +537,6 @@
 		moveToBookmark : function(bookmark) {
 			var t = this, dom = t.dom, marker1, marker2, rng, rng2, root, startContainer, endContainer, startOffset, endOffset;
 
-			t.editor.windowManager.bookmark = null;
-
 			function setEndPoint(start) {
 				var point = bookmark[start ? 'start' : 'end'], i, node, offset, children;
 
@@ -864,8 +862,6 @@
 		 */
 		setRng : function(r, forward) {
 			var s, t = this;
-
-			t.editor.windowManager.bookmark = null;
 
 			if (!t.tridentSel) {
 				s = t.getSel();
