@@ -696,6 +696,17 @@ define("tinymce/ui/Control", [
 		},
 
 		/**
+		 * Returns true/false if the specified event has any listeners.
+		 *
+		 * @method hasEventListeners
+		 * @param {String} name Name of the event to check for.
+		 * @return {Boolean} True/false state if the event has listeners.
+		 */
+		hasEventListeners: function(name) {
+			return name in this._bindings;
+		},
+
+		/**
 		 * Returns a control collection with all parent controls.
 		 *
 		 * @method parents

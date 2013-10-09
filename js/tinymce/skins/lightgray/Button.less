@@ -22,7 +22,12 @@
 		.opacity(@btn-box-disabled-opacity);
 	}
 
-	&.mce-active, &.mce-active:hover, &:not(.mce-disabled):active {
+	&.mce-active, &.mce-active:hover {
+		.vertical-gradient(darken(@btn-bg, 10%), darken(@btn-bg-hlight, 10%));
+		.box-shadow(@btn-box-shadow-active);
+	}
+
+	&:not(.mce-disabled):active {
 		.vertical-gradient(darken(@btn-bg, 10%), darken(@btn-bg-hlight, 10%));
 		.box-shadow(@btn-box-shadow-active);
 	}

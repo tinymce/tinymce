@@ -29,7 +29,8 @@ tinymce.PluginManager.add('wordcount', function(editor) {
 					type: 'label',
 					name: 'wordcount',
 					text: ['Words: {0}', self.getCount()],
-					classes: 'wordcount'
+					classes: 'wordcount',
+					disabled: editor.settings.readonly
 				}, 0);
 
 				editor.on('setcontent beforeaddundo', update);

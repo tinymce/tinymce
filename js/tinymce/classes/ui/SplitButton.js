@@ -17,10 +17,8 @@
  */
 define("tinymce/ui/SplitButton", [
 	"tinymce/ui/MenuButton",
-	"tinymce/dom/DOMUtils"
+	"tinymce/ui/DomUtils"
 ], function(MenuButton, DomUtils) {
-	var DOM = DomUtils.DOM;
-
 	return MenuButton.extend({
 		Defaults: {
 			classes: "widget btn splitbtn",
@@ -40,12 +38,12 @@ define("tinymce/ui/SplitButton", [
 			mainButtonElm = elm.firstChild;
 			menuButtonElm = elm.lastChild;
 
-			DOM.css(mainButtonElm, {
-				width: rect.w - DOM.getSize(menuButtonElm).width,
+			DomUtils.css(mainButtonElm, {
+				width: rect.w - DomUtils.getSize(menuButtonElm).width,
 				height: rect.h - 2
 			});
 
-			DOM.css(menuButtonElm, {
+			DomUtils.css(menuButtonElm, {
 				height: rect.h - 2
 			});
 
@@ -66,7 +64,7 @@ define("tinymce/ui/SplitButton", [
 		activeMenu: function(state) {
 			var self = this;
 
-			DOM.toggleClass(self.getEl().lastChild, self.classPrefix + 'active', state);
+			DomUtils.toggleClass(self.getEl().lastChild, self.classPrefix + 'active', state);
 		},
 
 		/**
@@ -87,7 +85,7 @@ define("tinymce/ui/SplitButton", [
 					'</button>' +
 					'<button type="button" class="' + prefix + 'open" hidefocus tabindex="-1">' +
 						//(icon ? '<i class="' + icon + '"></i>' : '') +
-						(self._menuBtnText ? (icon ? ' ' : '') + self._menuBtnText : '') +
+						(self._menuBtnText ? (icon ? '\u00a0' : '') + self._menuBtnText : '') +
 						' <i class="' + prefix + 'caret"></i>' +
 					'</button>' +
 				'</div>'
@@ -103,9 +101,19 @@ define("tinymce/ui/SplitButton", [
 			var self = this, onClickHandler = self.settings.onclick;
 
 			self.on('click', function(e) {
-				if (e.control == this && !DOM.getParent(e.target, '.' + this.classPrefix + 'open')) {
-					e.stopImmediatePropagation();
-					onClickHandler.call(this, e);
+				var node = e.target;
+
+				if (e.control == this) {
+					// Find clicks that is on the main button
+					while (node) {
+						if (node.nodeName == 'BUTTON' && node.className.indexOf('open') == -1) {
+							e.stopImmediatePropagation();
+							onClickHandler.call(this, e);
+							return;
+						}
+
+						node = node.parentNode;
+					}
 				}
 			});
 
