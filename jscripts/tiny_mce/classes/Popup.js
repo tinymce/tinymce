@@ -302,19 +302,11 @@ tinyMCEPopup = {
 	// Internal functions	
 
 	_restoreSelection : function(e) {
-		var e = e.target || window.event.srcElement;
+		var e = (e && e.target) || window.event.srcElement;
 
 		if (e.nodeName == 'INPUT' && (e.type == 'submit' || e.type == 'button'))
 			tinyMCEPopup.restoreSelection();
 	},
-
-/*	_restoreSelection : function() {
-		var e = window.event.srcElement;
-
-		// If user focus a non text input or textarea
-		if ((e.nodeName != 'INPUT' && e.nodeName != 'TEXTAREA') || e.type != 'text')
-			tinyMCEPopup.restoreSelection();
-	},*/
 
 	_onDOMLoaded : function() {
 		var t = tinyMCEPopup, ti = document.title, bm, h, nv;
