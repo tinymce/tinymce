@@ -1,4 +1,4 @@
-Version 3.5.9 (2013-10-xx)
+Version 3.5.9 (2013-10-10)
 	Added IE 11 compatibility. IE 11 is treated as Gecko but it has still many IE bugs.
 	Fixed bug where importing CSS classes would fail if it contained @import rules to remote domain on Gecko.
 	Fixed bug in spelling plugin where misspelt words are not always marked.
