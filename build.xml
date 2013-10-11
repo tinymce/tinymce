@@ -280,6 +280,9 @@
 				<include name="**/*.htm*" />
 			</fileset>
 		</replaceregexp>
+
+		<replaceregexp match="tiny_mce_dev\.js" replace="tiny_mce.js" flags="g" byline="false"
+			file="${temp_dir}/tinymce/jscripts/tiny_mce/plugins/fullscreen/fullscreen.htm" />
 	</target>
 
 	<target name="prepare-version-queries" depends="prepare-release-files, prepare-versions">
