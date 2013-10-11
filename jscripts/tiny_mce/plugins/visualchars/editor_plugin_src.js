@@ -72,12 +72,9 @@
 						event.preventDefault();
 					} 
 					
-					//t.setVisualChars(ed, ed.selection.getRng(1).commonAncestorContainer.parentNode);
-					
+
 					if (event.keyCode==32) {
 						
-//						tinyMCE.activeEditor.focus();
-//						ed.execCommand('mceInsertContent', false, '<input value="&nbsp;" type="text" class="mceItemHidden mceItemNbsp mceNonEditable" disabled="disabled" readonly="readonly"/>\uFEFF');
 						t.counter=(t.counter+1) % 2;
 						var alt = new Array('\u00B7\u200B','\u0387\u200B');
 						if(document.selection){
@@ -97,7 +94,7 @@
 				else {
 					if (event.keyCode==9) {
 						
-//						ed.execCommand('mceInsertContent', false, '<span class="mceItemTab" style="mso-tab-count: 1" >&nbsp;&nbsp;&nbsp;</span>\uFEFF');
+
 						//inserire immagine bianca
 						ed.execCommand('mceInsertContent', false, t.tabWImg+'\uFEFF');
 						tinymce.dom.Event.cancel(event);
@@ -123,12 +120,9 @@
 			}, 'childNodes');
 
 			for (i = 0; i < nl.length; i++) {
-				//nv = nl[i].nodeValue;
+
 				nv = $(nl[i]).text();
-				//nv = nv.replace(/ /g, '<input value="&nbsp;" type="text" data-mce-bogus="1" class="mceItemHidden mceItemNbsp mceNonEditable" disabled="disabled" readonly="readonly"/>');
-//				nv = nv.replace(/(\u0009)/g, '<img alt="" class="mceItemHidden mceItemTab mceNonEditable" disabled="disabled" readonly="readonly" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAALCAYAAACQy8Z9AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAA8SURBVDhPY/wPBAxUBkxQmqpg4A1lZGQEY0KALJcSMhhrRBHjGhDAFcckxT6yZfi0keV9Qu4Y0emUgQEADj0ZCU8rZicAAAAASUVORK5CYII=" />');
-				//nv = nv.replace(/(\u00a0)/g, '<input value="&nbsp;" type="text" data-mce-bogus="1" class="mceItemHidden mceItemNbsp mceNonEditable" disabled="disabled" readonly="readonly"/>');
-				
+
 				nv = nv.replace(/(\u00a0)/g, '\u00B7\u200B');
 				nv = nv.replace(/ /g, '\u0387\u200B');
 
@@ -142,8 +136,6 @@
 			}
 			ed.dom.addClass(ed.dom.select('p'), 'paragraph');
 			ed.dom.addClass(ed.dom.select('li'), 'paragraph');
-			
-//			$(ed.dom.select('span.mceItemTab')).replaceWith('<img alt="" class="mceItemTabImg" disabled="disabled" readonly="readonly" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAALCAYAAACQy8Z9AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAA8SURBVDhPY/wPBAxUBkxQmqpg4A1lZGQEY0KALJcSMhhrRBHjGhDAFcckxT6yZfi0keV9Qu4Y0emUgQEADj0ZCU8rZicAAAAASUVORK5CYII=" />');
 			
 			//cambiare immagine bianca con tab
 			$(ed.dom.select('img.mceItemWTabImg')).replaceWith(this.tabImg);
@@ -200,7 +192,7 @@
 				
 				ed.dom.removeClass(ed.dom.select('.paragraph'), 'paragraph');
 				
-//				$(ed.dom.select('img.mceItemTabImg')).replaceWith('<span class="mceItemTab" style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;</span>');
+
 				
 				//cambiare immagine tab con bianca
 				$(ed.dom.select('img.mceItemTabImg')).replaceWith(t.tabWImg);
