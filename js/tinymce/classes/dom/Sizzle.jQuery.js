@@ -19,15 +19,5 @@ define("tinymce/dom/Sizzle", [], function() {
 		throw new Error("Load jQuery first");
 	}
 
-	var $ = jQuery;
-
-	function Sizzle(selector, context, results, seed) {
-		return $.find(selector, context, results, seed);
-	}
-
-	Sizzle.matches = function(expr, elements) {
-		return $(elements).is(expr) ? elements : [];
-	};
-
-	return Sizzle;
+	return jQuery.find;
 });
