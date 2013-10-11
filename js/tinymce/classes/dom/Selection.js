@@ -675,10 +675,15 @@ define("tinymce/dom/Selection", [
 		 * tinymce.activeEditor.selection.select(tinymce.activeEditor.dom.select('p')[0]);
 		 */
 		select: function(node, content) {
-			var t = this, dom = t.dom, rng = dom.createRng(), idx;
+			var self = this, dom = self.dom, rng = dom.createRng(), idx, nonEmptyElementsMap;
+
+			// Clear stored range set by FocusManager
+			self.lastFocusBookmark = null;
+
+			nonEmptyElementsMap = dom.schema.getNonEmptyElements();
 
 			function setPoint(node, start) {
-				var walker = new TreeWalker(node, node);
+				var root = node, walker = new TreeWalker(node, root);
 
 				do {
 					// Text node
@@ -692,21 +697,34 @@ define("tinymce/dom/Selection", [
 						return;
 					}
 
-					// BR element
-					if (node.nodeName == 'BR') {
+					// BR/IMG/INPUT elements
+					if (nonEmptyElementsMap[node.nodeName]) {
 						if (start) {
 							rng.setStartBefore(node);
 						} else {
-							rng.setEndBefore(node);
+							if (node.nodeName == 'BR') {
+								rng.setEndBefore(node);
+							} else {
+								rng.setEndAfter(node);
+							}
 						}
 
 						return;
 					}
 				} while ((node = (start ? walker.next() : walker.prev())));
+
+				// Failed to find any text node or other suitable location then move to the root of body
+				if (root.nodeName == 'BODY') {
+					if (start) {
+						rng.setStart(root, 0);
+					} else {
+						rng.setEnd(root, root.childNodes.length);
+					}
+				}
 			}
 
 			if (node) {
-				if (!content && t.controlSelection.controlSelect(node)) {
+				if (!content && self.controlSelection.controlSelect(node)) {
 					return;
 				}
 
@@ -720,7 +738,7 @@ define("tinymce/dom/Selection", [
 					setPoint(node);
 				}
 
-				t.setRng(rng);
+				self.setRng(rng);
 			}
 
 			return node;
@@ -789,7 +807,24 @@ define("tinymce/dom/Selection", [
 		 * @see http://www.dotvoid.com/2001/03/using-the-range-object-in-mozilla/
 		 */
 		getRng: function(w3c) {
-			var self = this, selection, rng, elm, doc = self.win.document;
+			var self = this, selection, rng, elm, doc = self.win.document, ieRng;
+
+			// Use last rng passed from FocusManager if it's available this enables
+			// calls to editor.selection.getStart() to work when caret focus is lost on IE
+			if (!w3c && self.lastFocusBookmark) {
+				var bookmark = self.lastFocusBookmark;
+
+				// Convert bookmark to range IE 11 fix
+				if (bookmark.startContainer) {
+					rng = doc.createRange();
+					rng.setStart(bookmark.startContainer, bookmark.startOffset);
+					rng.setEnd(bookmark.endContainer, bookmark.endOffset);
+				} else {
+					rng = bookmark;
+				}
+
+				return rng;
+			}
 
 			// Found tridentSel object then we need to use that one
 			if (w3c && self.tridentSel) {
@@ -809,11 +844,20 @@ define("tinymce/dom/Selection", [
 			}
 
 			// We have W3C ranges and it's IE then fake control selection since IE9 doesn't handle that correctly yet
-			if (isIE && rng && rng.setStart && doc.selection.createRange().item) {
-				elm = doc.selection.createRange().item(0);
-				rng = doc.createRange();
-				rng.setStartBefore(elm);
-				rng.setEndAfter(elm);
+			if (isIE && rng && rng.setStart) {
+				try {
+					// IE will sometimes throw an exception here
+					ieRng = doc.selection.createRange();
+				} catch (ex) {
+
+				}
+
+				if (ieRng && ieRng.item) {
+					elm = ieRng.item(0);
+					rng = doc.createRange();
+					rng.setStartBefore(elm);
+					rng.setEndAfter(elm);
+				}
 			}
 
 			// No range found then create an empty one
@@ -873,11 +917,10 @@ define("tinymce/dom/Selection", [
 
 					try {
 						sel.removeAllRanges();
+						sel.addRange(rng);
 					} catch (ex) {
-						// IE9 might throw errors here don't know why
+						// IE might throw errors here if the editor is within a hidden container and selection is changed
 					}
-
-					sel.addRange(rng);
 
 					// Forward is set to false and we have an extend function
 					if (forward === false && sel.extend) {
@@ -997,19 +1040,20 @@ define("tinymce/dom/Selection", [
 		},
 
 		getSelectedBlocks: function(startElm, endElm) {
-			var self = this, dom = self.dom, node, selectedBlocks = [];
+			var self = this, dom = self.dom, node, root, selectedBlocks = [];
 
+			root = dom.getRoot();
 			startElm = dom.getParent(startElm || self.getStart(), dom.isBlock);
 			endElm = dom.getParent(endElm || self.getEnd(), dom.isBlock);
 
-			if (startElm) {
+			if (startElm && startElm != root) {
 				selectedBlocks.push(startElm);
 			}
 
 			if (startElm && endElm && startElm != endElm) {
 				node = startElm;
 
-				var walker = new TreeWalker(startElm, dom.getRoot());
+				var walker = new TreeWalker(startElm, root);
 				while ((node = walker.next()) && node != endElm) {
 					if (dom.isBlock(node)) {
 						selectedBlocks.push(node);
@@ -1017,7 +1061,7 @@ define("tinymce/dom/Selection", [
 				}
 			}
 
-			if (endElm && startElm != endElm) {
+			if (endElm && startElm != endElm && endElm != root) {
 				selectedBlocks.push(endElm);
 			}
 
@@ -1281,13 +1325,57 @@ define("tinymce/dom/Selection", [
 			return self;
 		},
 
+		getScrollContainer: function() {
+			var scrollContainer, node = this.dom.getRoot();
+
+			while (node && node.nodeName != 'BODY') {
+				if (node.scrollHeight > node.clientHeight) {
+					scrollContainer = node;
+					break;
+				}
+
+				node = node.parentNode;
+			}
+
+			return scrollContainer;
+		},
+
 		scrollIntoView: function(elm) {
-			var y, viewPort, self = this, dom = self.dom;
+			var y, viewPort, self = this, dom = self.dom, root = dom.getRoot(), viewPortY, viewPortH;
+
+			function getPos(elm) {
+				var x = 0, y = 0;
+
+				var offsetParent = elm;
+				while (offsetParent && offsetParent.nodeType) {
+					x += offsetParent.offsetLeft || 0;
+					y += offsetParent.offsetTop || 0;
+					offsetParent = offsetParent.offsetParent;
+				}
+
+				return {x: x, y: y};
+			}
+
+			if (root.nodeName != 'BODY') {
+				var scrollContainer = self.getScrollContainer();
+				if (scrollContainer) {
+					y = getPos(elm).y - getPos(scrollContainer).y;
+					viewPortH = scrollContainer.clientHeight;
+					viewPortY = scrollContainer.scrollTop;
+					if (y < viewPortY || y + 25 > viewPortY + viewPortH) {
+						scrollContainer.scrollTop = y < viewPortY ? y : y - viewPortH + 25;
+					}
+
+					return;
+				}
+			}
 
 			viewPort = dom.getViewPort(self.editor.getWin());
 			y = dom.getPos(elm).y;
-			if (y < viewPort.y || y + 25 > viewPort.y + viewPort.h) {
-				self.editor.getWin().scrollTo(0, y < viewPort.y ? y : y - viewPort.h + 25);
+			viewPortY = viewPort.y;
+			viewPortH = viewPort.h;
+			if (y < viewPort.y || y + 25 > viewPortY + viewPortH) {
+				self.editor.getWin().scrollTo(0, y < viewPortY ? y : y - viewPortH + 25);
 			}
 		},
 

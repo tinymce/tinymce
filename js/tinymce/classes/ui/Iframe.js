@@ -58,10 +58,25 @@ define("tinymce/ui/Iframe", [
 		 *
 		 * @method html
 		 * @param {String} html HTML string to set as HTML inside the iframe.
+		 * @param {function} callback Optional callback to execute when the iframe body is filled with contents.
 		 * @return {tinymce.ui.Iframe} Current iframe control.
 		 */
-		html: function(html) {
-			this.getEl().contentWindow.document.body.innerHTML = html;
+		html: function(html, callback) {
+			var self = this, body = this.getEl().contentWindow.document.body;
+
+			// Wait for iframe to initialize IE 10 takes time
+			if (!body) {
+				setTimeout(function() {
+					self.html(html);
+				}, 0);
+			} else {
+				body.innerHTML = html;
+
+				if (callback) {
+					callback();
+				}
+			}
+
 			return this;
 		}
 	});

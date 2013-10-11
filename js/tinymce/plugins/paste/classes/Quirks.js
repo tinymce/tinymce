@@ -18,8 +18,9 @@
  */
 define("tinymce/pasteplugin/Quirks", [
 	"tinymce/Env",
-	"tinymce/util/Tools"
-], function(Env, Tools) {
+	"tinymce/util/Tools",
+	"tinymce/pasteplugin/WordFilter"
+], function(Env, Tools, WordFilter) {
 	"use strict";
 
 	return function(editor) {
@@ -73,6 +74,11 @@ define("tinymce/pasteplugin/Quirks", [
 		 *  <p>a</p><p>b</p>
 		 */
 		function removeExplorerBrElementsAfterBlocks(html) {
+			// Only filter word specific content
+			if (!WordFilter.isWordContent(html)) {
+				return html;
+			}
+
 			// Produce block regexp based on the block elements in schema
 			if (!explorerBlocksRegExp) {
 				var blockElements = [];

@@ -132,9 +132,9 @@ function addClassesToList(list_id, specific_option) {
 			}
 		}
 	} else {
-		tinymce.each(tinyMCEPopup.editor.dom.getClasses(), function(o) {
+		/*tinymce.each(tinyMCEPopup.editor.dom.getClasses(), function(o) {
 			styleSelectElm.options[styleSelectElm.length] = new Option(o.title || o['class'], o['class']);
-		});
+		});*/
 	}
 }
 

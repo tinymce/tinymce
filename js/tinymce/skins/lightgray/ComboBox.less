@@ -2,15 +2,19 @@
 
 .mce-combobox {
 	.inline-block();
-	.border-radius();
-	width: 100px;
-	.box-shadow(inset 0 1px 0 rgba(255, 255, 255, .2), 0 1px 2px rgba(0, 0, 0, .05));
+	.border-radius(3px);
+	.box-shadow(@textbox-box-shadow);
+	*height: 32px;
 }
 
 .mce-combobox input {
-	border-color: 1px solid @btn-border-color;
-	border-right-color: rgba(0, 0, 0, .15);
+	border: 1px solid @textbox-border;
+	border-right-color: @combobox-border;
 	height: 28px;
+}
+
+.mce-combobox.mce-disabled input {
+	color: mix(@text, @textbox-bg, 40%);
 }
 
 .mce-combobox.mce-has-open input {
@@ -27,8 +31,8 @@
 	padding-left: 8px;
 }
 
-.mce-combobox *:focus {
-	border-color: @focus-border-color-fallback;
-	border-color: @focus-border-color;
-	.box-shadow(inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(82, 168, 236, .6));
+.mce-combobox.mce-disabled .mce-btn button {
+	cursor: default;
+	.box-shadow(none);
+	.opacity(@btn-box-disabled-opacity);
 }

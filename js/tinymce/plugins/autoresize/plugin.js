@@ -20,6 +20,10 @@
 tinymce.PluginManager.add('autoresize', function(editor) {
 	var settings = editor.settings, oldSize = 0;
 
+	if (editor.settings.inline) {
+		return;
+	}
+
 	/**
 	 * This method gets executed each time the editor needs to resize.
 	 */

@@ -89,47 +89,6 @@ exports.less = function (options) {
 		strictImports: options.strictImports
 	});
 
-	// Patch over BOM bug
-	// Todo: Remove this when they fix the bug
-	less.Parser.importer = function (file, paths, callback, env) {
-		var pathname;
-
-		paths.unshift('.');
-
-		for (var i = 0; i < paths.length; i++) {
-			try {
-				pathname = path.join(paths[i], file);
-				fs.statSync(pathname);
-				break;
-			} catch (e) {
-				pathname = null;
-			}
-		}
-
-		if (pathname) {
-			fs.readFile(pathname, 'utf-8', function(e, data) {
-				if (e) {
-					return callback(e);
-				}
-
-				data = data.replace(/^\uFEFF/, '');
-
-				new(less.Parser)({
-					paths: [path.dirname(pathname)].concat(paths),
-					filename: pathname
-				}).parse(data, function (e, root) {
-					callback(e, root, data);
-				});
-			});
-		} else {
-			if (typeof(env.errback) === "function") {
-				env.errback(file, paths, callback);
-			} else {
-				callback({ type: 'File', message: "'" + file + "' wasn't found.\n" });
-			}
-		}
-	};
-
 	// Parse one or multiple files
 	if (sourceFile instanceof Array) {
 		sourceFile.forEach(function(sourceFile) {
@@ -144,14 +103,18 @@ exports.less = function (options) {
 			source += fs.readFileSync(path.join(options.baseDir, sourceFile), 'utf-8').toString().replace(/^\uFEFF/g, '');
 		});
 
-		if (options.toLess) {
+		if (options.toLessDev) {
 			var lessImportCode = "";
 
 			sourceFile.forEach(function(sourceFile) {
 				lessImportCode += '@import "' + sourceFile + '";\n';
 			});
 
-			fs.writeFileSync(options.toLess, lessImportCode);
+			fs.writeFileSync(options.toLessDev, lessImportCode);
+		}
+
+		if (options.toLess) {
+			fs.writeFileSync(options.toLess, source);
 		}
 	} else {
 		lastMod = getFileModTime(sourceFile);
@@ -247,7 +210,7 @@ exports.jshint = function (options) {
 		}
 
 		if (/\.js$/.test(filePath)) {
-			if (!jshint(fs.readFileSync(filePath).toString(), options)) {
+			if (!jshint(fs.readFileSync(filePath).toString(), options, {define: true})) {
 				// Print the errors
 				console.log(color('Errors in file ' + filePath, 'red'));
 				var out = jshint.data(),

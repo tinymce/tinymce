@@ -13,19 +13,15 @@
  *
  * @-x-less Path.less
  * @class tinymce.ui.Path
- * @extends tinymce.ui.Control
+ * @extends tinymce.ui.Widget
  */
 define("tinymce/ui/Path", [
-	"tinymce/ui/Control",
+	"tinymce/ui/Widget",
 	"tinymce/ui/KeyboardNavigation"
-], function(Control, KeyboardNavigation) {
+], function(Widget, KeyboardNavigation) {
 	"use strict";
 
-	return Control.extend({
-		Defaults: {
-			delimiter: "\u00BB"
-		},
-
+	return Widget.extend({
 		/**
 		 * Constructs a instance with the specified settings.
 		 *
@@ -35,6 +31,10 @@ define("tinymce/ui/Path", [
 		 */
 		init: function(settings) {
 			var self = this;
+
+			if (!settings.delimiter) {
+				settings.delimiter = '\u00BB';
+			}
 
 			self._super(settings);
 			self.addClass('path');
@@ -93,7 +93,7 @@ define("tinymce/ui/Path", [
 		 * @private
 		 */
 		update: function() {
-			this.getEl().innerHTML = this._getPathHtml();
+			this.innerHtml(this._getPathHtml());
 		},
 
 		/**
@@ -119,7 +119,7 @@ define("tinymce/ui/Path", [
 			var self = this;
 
 			return (
-				'<div id="' + self._id + '" class="' + self.classPrefix + 'path">' +
+				'<div id="' + self._id + '" class="' + self.classes() + '">' +
 					self._getPathHtml() +
 				'</div>'
 			);

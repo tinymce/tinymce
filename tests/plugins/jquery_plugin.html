@@ -80,6 +80,8 @@ test("Get contents using :tinymce selector", function() {
 	equal($('textarea:tinymce').val(), '<p>Test get</p>');
 });
 
+QUnit.stop();
+
 $(function() {
 	$('textarea.tinymce').tinymce({
 		// Location of TinyMCE script

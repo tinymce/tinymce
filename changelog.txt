@@ -1,4 +1,163 @@
-Version 4.0 (2013-05-xx)
+Version 4.0.8 (2013-10-10)
+	Added RTL support so all of the UI is rendered right to left if a language pack has a _dir property set to rtl.
+	Fixed bug where layout managers wouldn't handle subpixel values properly. When for example the browser was zoomed in.
+	Fixed bug where the importcss plugin wouldn't import classes from local stylesheets with remote @import rules on Gecko.
+	Fixed bug where Arabic characters wouldn't be properly counted in wordcount plugin.
+	Fixed bug where submit event would still fire even if it was unbound on IE 10. Now the event is simply ignored.
+	Fixed bug where IE 11 would return border-image: none when getting style attributes with borders in them.
+	Fixed various UI rendering issues on older IE versions.
+	Fixed so readonly option renderes the editor in inline mode with all UI elements disabled and all events blocked.
+Version 4.0.7 (2013-10-02)
+	Added new importcss_selector_filter option to importcss plugin. Makes it easier to select specific classes to import.
+	Added new importcss_groups option to importcss plugin. Enables you separate classes into menu groups based on filters.
+	Added new PastePreProcess/PastePostProcess events and reintroduced paste_preprocess/paste_postprocess paste options.
+	Added new paste_word_valid_elements option lets you control what elements gets pasted when pasting from Word.
+	Fixed so panelbutton is easier to use. It's now possible to set the panel contents to any container type.
+	Fixed so editor.destroy calls editor.remove so that both destroy and remove can be used to remove an editor instance.
+	Fixed so the searchreplace plugin doesn't move focus into the editor until you close the dialog.
+	Fixed so the searchreplace plugin search for next item if you hit enter inside the dialog.
+	Fixed so importcss_selector_converter callback is executed with the scope set to importcss plugin instance.
+	Fixed so the default selector converter function is exposed in importcss plugin.
+	Fixed issue with the tabpanel not expanding properly when the tabs where wider than the body of the panel.
+	Fixed issue with the menubar option producing a JS exception if set to true.
+	Fixed bug where closing a dialog with an opened listbox would cause errors if new dialogs where opened.
+	Fixed bug where hidden input elements wasn't removed when inline editor instances where removed.
+	Fixed bug where editors wouldn't initialize some times due to event logic not working correctly.
+	Fixed bug where pre elements woudl cause searchreplace and spellchecker plugins to mark incorrect locations.
+	Fixed bug where embed elements wouldn't be properly resized if they where configured in using the video_template_callback.
+	Fixed bug where paste from word would remove all BR elements since it was missing in the default paste_word_valid_elements.
+	Fixed bug where paste filtering wouldn't work properly on old WebKit installations pre Clipboard API.
+	Fixed bug where linebreaks would be removed by paste plugin on IE since it didn't properly detect Word contents.
+	Fixed bug where paste plugin would convert some Word paragraphs that looked like lists into lists.
+	Fixed bug where editors wasn't properly initialized if the document.domain is set to the same as the current domain on IE.
+	Fixed bug where an exception was thrown when removing an editor after opening the context menu multiple times.
+	Fixed bug where paste as plain text on Gecko would add extra BR elements when pasting paragraphs.
+Version 4.0.6 (2013-09-12)
+	Added new compat3x plugin that makes it possible to load most 3.x plugins. Only available in the development package.
+	Added new skin_url option enables you to load local skins when using the CDN version.
+	Added new theme_url option enables you to load local themes when using the CDN version.
+	Added new importcss_file_filter option to importcss to enable users to specify what files to import from.
+	Added new template_preview_replace_values option to template plugin to add example data for variables.
+	Added image option support for addMenuItem calls. Enables you to provide a custom image for menu items.
+	Fixed bug where editor.insertContent wouldn't set format and selection type on events.
+	Fixed bug where inserting BR elements on IE 8 would thrown an exception when the range is at a empty text node.
+	Fixed bug where outdent of single LI element within another LI would produce an empty list element OL/UL.
+	Fixed bug where the bullist/numlist buttons wouldn't be deselected when deleting all contents.
+	Fixed bug where toggling an empty list item off wouldn't produce a new empty block element.
+	Fixed bug where it wasn't possible to apply lists to mixed text blocks and br lines.
+	Fixed bug where it wasn't possible to paste contents on iOS when the paste plugin was enabled.
+	Fixed bug where it wasn't possible to delete HR elements on Gecko.
+	Fixed bug where scrolling and refocusing using the mouse would place the caret incorrectly on IE.
+	Fixed bug where you needed to hit the empty paragraph to get editor focus in IE 11.
+	Fixed bug where activeEditor wasn't set to the correct editor when opening windows.
+	Fixed bug where dirty state wasn't set to false when undoing to the first undo level.
+	Fixed bug where pasting in inline mode on Safari on Mac wouldn't work properly.
+	Fixed bug where content_css wasn't loaded into the insert template dialog.
+	Fixed bug where setting the contents of the editor to non text contents would produce an incorrect selection range.
+	Fixed so code dialog height gets smaller that the viewport height if it doesn't fit.
+	Fixed so inline editable regions scroll when pressing enter/return.
+	Fixed so inline toolbar gets positioned correctly when inline element is within a scrollable container.
+	Fixed various memory leaks when removing editor instances dynamically.
+	Removed CSS for BR elements in visualblocks due to problems with Chrome and IE.
+Version 4.0.5 (2013-08-27)
+	Added visuals for UL, LI and BR to visualblocks plugin. Patch contributed by Dan Ransom.
+	Added new autosave_restore_when_empty option to autosave plugin. Enabled by default.
+	Fixed bug where an exception was thrown when inserting images if valid_elements didn't include an ID for the image.
+	Fixed bug where the advlist plugin wouldn't properly render the splitbutton controls.
+	Fixed bug where visual blocks menu item wouldn't be marked checked when using the visualblocks_default_state option.
+	Fixed bug where save button in save plugin wouldn't get properly enabled when contents was changed.
+	Fixed bug where it was possible to insert images without any value for it's source attribute.
+	Fixed bug where altering image attributes wouldn't add a new undo level.
+	Fixed bug where import rules in CSS files wouldn't be properly imported by the importcss plugin.
+	Fixed bug where selectors could be imported multiple times. Producing duplicate formats.
+	Fixed bug where IE would throw exception if selection was changed while the editor was hidden.
+	Fixed so complex rules like .class:before doesn't get imported by default in the importcss plugin.
+	Fixed so it's possible to remove images by setting the src attribute to a blank value.
+	Fixed so the save_enablewhendirty setting in the save plugin is enabled by default.
+	Fixed so block formats drop down for classic mode can be translated properly using language packs.
+	Fixed so hr menu item and toolbar button gets the same translation string.
+	Fixed so bullet list toolbar button gets the correct translation from language packs.
+	Fixed issue with Chrome logging CSS warning about border styling for combo boxes.
+	Fixed issue with Chrome logging warnings about deprecated keyLocation property.
+	Fixed issue where custom_elements would not remove the some of the default rules when cloning rules from div and span.
+Version 4.0.4 (2013-08-21)
+	Added new importcss plugin. Lets you auto import classes from CSS files similar to the 3.x behavior.
+	Fixed bug where resize handles would be positioned incorrectly when inline element parent was using position: relative.
+	Fixed bug where IE 8 would throw Unknown runtime error if the editor was placed within a P tag.
+	Fixed bug where removing empty lists wouldn't produce blocks or brs where the old list was in the DOM.
+	Fixed bug where IE 10 wouldn't properly initialize template dialog due to async loading issues.
+	Fixed bug where autosave wouldn't properly display the warning about content not being saved due to isDirty changes.
+	Fixed bug where it wouldn't be possible to type if a touchstart event was bound to the parent document.
+	Fixed bug where code dialog in code plugin wouldn't wouldn't add a proper undo level.
+	Fixed issue where resizing the editor in vertical mode would set the iframe width to a pixel value.
+	Fixed issue with naming of insertdatetime settings. All are now prefixed with the plugin name.
+	Fixed so an initial change event is fired when the user types the first character into the editor.
+	Fixed so swf gets mapped to object element in media plugin. Enables embedding of flash with alternative poster.
+Version 4.0.3 (2013-08-08)
+	Added new code_dialog_width/code_dialog_height options to control code dialog size.
+	Added missing pastetext button that works the same way as the pastetext menu item.
+	Added missing smaller browse button for the classical smaller toolbars.
+	Fixed bug where input method would produce new lines when inserting contents to an empty editor.
+	Fixed bug where pasting single indented list items from Word would cause a JS exception.
+	Fixed bug where applying block formats inside list elements in inline mode would apply them to whole document.
+	Fixed bug where link editing in inline mode would cause exception on IE/WebKit.
+	Fixed bug where IE 10 wouldn't render the last button group properly in inline mode due to wrapping.
+	Fixed bug where localStorage initialization would fail on Firefox/Chrome with disabled support.
+	Fixed bug where image elements would get an __mce id when undo/redo:ing to a level with image changes.
+	Fixed bug where too long template names wouldn't fit the listbox in template plugin.
+	Fixed bug where alignment format options would be marked disabled when forced_root_block was set to false.
+	Fixed bug where UI listboxes such as fontsize, fontfamily wouldn't update properly when switching editors in inline mode.
+	Fixed bug where the formats select box would mark the editable container DIV as a applied format in inline mode.
+	Fixed bug where IE 7/8 would scroll to empty editors when initialized.
+	Fixed bug where IE 7/8 wouldn't display previews of format options.
+	Fixed bug where UI states wasn't properly updated after code was changed in the code dialog.
+	Fixed bug with setting contents in IE would select all contents within the editor.
+	Fixed so the undoManages transact function disables any other undo levels from being added while within the transaction.
+	Fixed so sub/sup elements gets removed when the Clear formatting action is executed.
+	Fixed so text/javascript type value get removed by default from script elements to match the HTML5 spec.
+Version 4.0.2 (2013-07-18)
+	Fixed bug where formatting using menus or toolbars wasn't possible on Opera 12.15.
+	Fixed bug where IE 8 keyboard input would break after paste using the paste plugin.
+	Fixed bug where IE 8 would throw an error when populating image size in image dialog.
+	Fixed bug where image resizing wouldn't work properly on latest IE 10.0.9 version.
+	Fixed bug where focus wasn't moved to the hovered menu button in a menubar container.
+	Fixed bug where paste would produce an extra uneeded undo level on IE and Gecko.
+	Fixed so anchors gets listed in the link dialog as they where in TinyMCE 3.x.
+	Fixed so sub, sup and strike though gets passed through when pasting from Word.
+	Fixed so Ctrl+P can be used to print the current document. Patch contributed by jashua212.
+Version 4.0.1 (2013-06-26)
+	Added new paste_as_text config option to force paste as plaintext mode.
+	Added new pastetext menu item that lets you toggle paste as plain text mode on/off.
+	Added new insertdatetime_element option to insertdatetime plugin. Enables HTML5 time element support.
+	Added new spellchecker_wordchar_pattern option to allow configuration of language specific characters.
+	Added new marker to formats menu displaying the formats used at the current selection/caret location.
+	Fixed bug where the position of the text color picker would be wrong if you switched to fullscreen.
+	Fixed bug where the link plugin would ask to add the mailto: prefix multiple times.
+	Fixed bug where list outdent operation could produce empty list elements on specific selections.
+	Fixed bug where element path wouldn't properly select parent elements on IE.
+	Fixed bug where IE would sometimes throw an exception when extrancting the current selection range.
+	Fixed bug where line feeds wasn't properly rendered in source view on IE.
+	Fixed bug where word count wouldn't be properly rendered on IE 7.
+	Fixed bug where menubuttons/listboxes would have an incorrect height on IE 7.
+	Fixed bug where browser spellchecking was enabled while editing inline on IE 10.
+	Fixed bug where spellchecker wouldn't properly find non English words.
+	Fixed bug where deactivating inline editor instances would force padding-top: 0 on page body.
+	Fixed bug where jQuery would initialize editors multiple times since it didn't check if the editor already existed.
+	Fixed bug where it wasn't possible to paste contents on IE 10 in modern UI mode when paste filtering was enabled.
+	Fixed bug where tabfocus plugin wouldn't work properly on inline editor instances.
+	Fixed bug where fullpage plugin would clear the existing HTML head if contents where inserted into the editor.
+	Fixed bug where deleting all table rows/columns in a table would cause an exception to be thrown on IE.
+	Fixed so color button panels gets toggled on/off when activated/deactivated.
+	Fixed so format menu items that can't be applied to the current selection gets disabled.
+	Fixed so the icon parameter for addButton isn't automatically filled if a button text is provided.
+	Fixed so image size fields gets updated when selecting a new image in the image dialog.
+	Fixed so it doesn't load any language pack if the language option is set to "en".
+	Fixed so ctrl+shift+z works as an alternative redo shortcut to match a common Mac OS X shortcut.
+	Fixed so it's not possible to drag/drop in images in Gecko by default when paste plugin is enabled.
+	Fixed so format menu item texts gets translated using the specified language pack.
+	Fixed so the image dialog title is the same as the insert/edit image button text.
+	Fixed so paste as plain text produces BR:s in PRE block and when forced_root_block is disabled.
+Version 4.0 (2013-06-13)
 	Added new insertdate_dateformat, insertdate_timeformat and insertdate_formats options to insertdatetime.
 	Added new font_formats, fontsize_formats and block_formats options to configure fontselect, fontsizeselect and formatselect.
 	Added new table_clone_elements option to table plugin. Enables you to specify what elements to clone when adding columns/rows.
@@ -6,7 +165,12 @@ Version 4.0 (2013-05-xx)
 	Added new getParams/setParams to WindowManager to make it easier to handle params to iframe based dialogs. Contributed by Ryan Demmer.
 	Added new textcolor options that enables you to specify the colors you want to display. Contributed by Jennifer Arsenault.
 	Added new external file support for link_list and image_list options. The file format is a simple JSON file.
+	Added new "both" mode for the resize option. Enables resizing in both width and height.
+	Added new paste_data_images option that allows you to enable/disable paste of data images.
+	Added new fixed_toolbar_container option that allows you to add a fixed container for the inline toolbar.
 	Fixed so font name, font size and block format select boxes gets updated with the current format.
+	Fixed so the resizeTo/resizeBy methods for the theme are exposed as it as in 3.x.
+	Fixed so the textcolor controls are splitbuttons as in 3.x. Patch contributed by toxalot/jashua212.
 	Fixed bug where the theme content css wasn't loaded into the preview dialog.
 	Fixed bug where the template description in template dialog wouldn't display the text correctly.
 	Fixed bug where various UI elements wasn't properly removed when an editor instance was removed.
@@ -19,9 +183,31 @@ Version 4.0 (2013-05-xx)
 	Fixed bug where switching alignment of tables in dialogs wouldn't properly remove existing alignments.
 	Fixed bug where the table properties dialog would show columns/rows textboxes.
 	Fixed bug where jQuery wasn't used instead of Sizzle in the jQuery version of TinyMCE.
+	Fixed bug where setting resize option to false whouldn't properly render the word count.
+	Fixed bug where table row type change would produce multiple table section elements.
+	Fixed bug where table row type change on multiple rows would add them in incorrect order.
+	Fixed bug where fullscreen plugin would maximize the editor on resize after toggling it off.
+	Fixed bug where context menu would be position at an incorrect coordinate in inline mode.
+	Fixed bug where inserting lists in inline mode on IE would produce errors since the body would be converted.
+	Fixed bug where the body couldn't be styled properly in custom content_css files.
+	Fixed bug where template plugins menu item would override the image menu item.
+	Fixed bug where IE 7-8 would render the text inside inputs at the wrong vertical location.
+	Fixed bug where IE configured to IE 7 compatibility mode wouldn't render the icons properly.
+	Fixed bug where editor.focus wouldn't properly fire the focusin event on WebKit.
+	Fixed bug where some keyboard shortcuts wouldn't work on IE 8.
+	Fixed bug where the undo state wasn't updated until the end of a typing level.
+	Fixed bug where keyboard shortcuts on Mac OS wasn't working correctly.
+	Fixed bug where empty inline elements would be created when toggling formatting of in empty block.
+	Fixed bug where applying styles on WebKit would fail in inline mode if the user released the mouse button outside the body.
+	Fixed bug where the visual aids menu item wasn't selected if the editor was empty.
+	Fixed so the isDirty/isNotDirty states gets updated to true/false on save() and change events.
+	Fixed so skins have separate CSS files for inline and iframe mode.
+	Fixed so menus and tool tips gets constrained to the current viewport.
 	Fixed so an error is thrown if users load jQuery after the jQuery version of TinyMCE.
 	Fixed so the filetype for media dialog passes out media instead of image as file type.
 	Fixed so it's possible to disable the toolbar by setting it to false.
+	Fixed so autoresize plugin isn't initialized when the editor is in inline mode.
+	Fixed so the inline editing toolbar will be rendered below elements if it doesn't fit above it.
 Version 4.0b3 (2013-05-15)
 	Added new optional advanced tab for image dialog with hspace, vspace, border and style.
 	Added new change event that gets fired when undo levels are added to editor instances.

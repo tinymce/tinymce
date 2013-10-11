@@ -37,7 +37,7 @@
 	background: transparent center center;
 	width: 16px;
 	height: 16px;
-	color: @btn-text-color;
+	color: @btn-text;
 }
 
 .mce-btn-small .mce-ico {
@@ -98,10 +98,11 @@
 .mce-i-copy:before           { content: "\e031"; }
 .mce-i-resize:before         { content: "\e032"; }
 .mce-i-browse:before         { content: "\e034"; }
+.mce-i-pastetext:before      { content: "\e035"; }
 
 .mce-i-checkbox:before, .mce-i-selected:before {
 	content: "\e033";
 }
 
 .mce-i-selected              { visibility: hidden; }
-i.mce-i-backcolor            { text-shadow: none; background: #BBB; }
+i.mce-i-backcolor            { text-shadow: none; background: @colorbtn-backcolor-bg; }

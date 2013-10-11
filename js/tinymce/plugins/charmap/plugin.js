@@ -324,7 +324,7 @@ tinymce.PluginManager.add('charmap', function(editor) {
 		};
 
 		win = editor.windowManager.open({
-			title: "Special characters",
+			title: "Special character",
 			spacing: 10,
 			padding: 10,
 			items: [
@@ -349,7 +349,7 @@ tinymce.PluginManager.add('charmap', function(editor) {
 
 	editor.addButton('charmap', {
 		icon: 'charmap',
-		tooltip: 'Insert special character',
+		tooltip: 'Special character',
 		onclick: showDialog
 	});
 

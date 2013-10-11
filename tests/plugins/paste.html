@@ -121,6 +121,16 @@ test("Paste Word fake list before BR", function() {
 	equal(editor.getContent().replace(/[\r\n]+/g, ''), '<ul><li>Item 1</li><li>Item 2</li><li>Item 3</li><li>Item 4</li><li>Item 5</li><li>Item 6</li></ul><p><br />a</p>');
 });
 
+test("Paste list like paragraph and list", function() {
+	editor.setContent('');
+
+	editor.execCommand('mceInsertClipboardContent', false, {
+		content : '<p class=MsoNormal><span style=\'font-size:10.0pt;line-height:115%;font-family:"Trebuchet MS","sans-serif";color:#666666\'>A. X<o:p></o:p></span></p><p class=MsoListParagraph style=\'text-indent:-.25in;mso-list:l0 level1 lfo1\'><![if !supportLists]><span style=\'mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin\'><span style=\'mso-list:Ignore\'>1.<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></span><![endif]>Y</p>'
+	});
+
+	equal(editor.getContent().replace(/[\r\n]+/g, ''), '<p>A. X</p><ol><li>Y</li></ol>');
+});
+
 test("Paste Word table", function() {
 	var rng = editor.dom.createRng();
 
@@ -243,6 +253,100 @@ test('paste plain text with paragraphs', function(){
 	editor.execCommand('mceInsertClipboardContent', false, {text : 'a\n<b>b</b>\n\nc'});
 
 	equal(editor.getContent().replace(/[\r\n]+/g, ''), '<p>ta<br />&lt;b&gt;b&lt;/b&gt;</p><p>c</p><p>xt</p>');
+});
+
+test('paste pre process text (event)', function(){
+	function callback(e) {
+		e.content = 'PRE:' + e.content;
+	}
+
+	editor.setContent('<p>a</p>');
+	setSelection('p', 0, 'p', 1);
+	editor.on('PastePreProcess', callback);
+	editor.execCommand('mceInsertClipboardContent', false, {text : 'b\n2'});
+	equal(editor.getContent(), '<p>PRE:b<br />2</p>');
+
+	editor.setContent('<p>a</p>');
+	setSelection('p', 0, 'p', 1);
+	editor.off('PastePreProcess', callback);
+	editor.execCommand('mceInsertClipboardContent', false, {text : 'c'});
+	equal(editor.getContent(), '<p>c</p>');
+});
+
+test('paste pre process html (event)', function(){
+	function callback(e) {
+		e.content = 'PRE:' + e.content;
+	}
+
+	editor.setContent('<p>a</p>');
+	setSelection('p', 0, 'p', 1);
+	editor.on('PastePreProcess', callback);
+	editor.execCommand('mceInsertClipboardContent', false, {content : '<em>b</em>'});
+	equal(editor.getContent(), '<p>PRE:<em>b</em></p>');
+
+	editor.setContent('<p>a</p>');
+	setSelection('p', 0, 'p', 1);
+	editor.off('PastePreProcess', callback);
+	editor.execCommand('mceInsertClipboardContent', false, {content : '<em>c</em>'});
+	equal(editor.getContent(), '<p><em>c</em></p>');
+});
+
+test('paste post process (event)', function(){
+	function callback(e) {
+		e.node.innerHTML += ':POST';
+	}
+
+	editor.setContent('<p>a</p>');
+	setSelection('p', 0, 'p', 1);
+	editor.on('PastePostProcess', callback);
+	editor.execCommand('mceInsertClipboardContent', false, {content : '<em>b</em>'});
+	equal(editor.getContent(), '<p><em>b</em>:POST</p>');
+
+	editor.setContent('<p>a</p>');
+	setSelection('p', 0, 'p', 1);
+	editor.off('PastePostProcess', callback);
+	editor.execCommand('mceInsertClipboardContent', false, {content : '<em>c</em>'});
+	equal(editor.getContent(), '<p><em>c</em></p>');
+});
+
+test('paste innerText of single P', function(){
+	editor.setContent('<p>a</p>');
+	equal(editor.plugins.paste.innerText(editor.getBody()), 'a');
+});
+
+test('paste innerText of single P with whitespace wrapped content', function(){
+	editor.setContent('<p>   a   </p>');
+	equal(editor.plugins.paste.innerText(editor.getBody()), 'a');
+});
+
+test('paste innerText of two P', function(){
+	editor.setContent('<p>a</p><p>b</p>');
+	equal(editor.plugins.paste.innerText(editor.getBody()), 'a\n\nb');
+});
+
+test('paste innerText of H1 and P', function(){
+	editor.setContent('<h1>a</h1><p>b</p>');
+	equal(editor.plugins.paste.innerText(editor.getBody()), 'a\nb');
+});
+
+test('paste innerText of P with BR', function(){
+	editor.setContent('<p>a<br>b</p>');
+	equal(editor.plugins.paste.innerText(editor.getBody()), 'a\nb');
+});
+
+test('paste innerText of P with VIDEO', function(){
+	editor.setContent('<p>a<video>b<br>c</video>d</p>');
+	equal(editor.plugins.paste.innerText(editor.getBody()), 'a d');
+});
+
+test('paste innerText of PRE', function(){
+	editor.getBody().innerHTML = '<pre>a\nb\n</pre>';
+	equal(editor.plugins.paste.innerText(editor.getBody()).replace(/\r\n/g, '\n'), 'a\nb\n');
+});
+
+test('paste innerText of textnode with whitespace', function(){
+	editor.getBody().innerHTML = ' a ';
+	equal(editor.plugins.paste.innerText(editor.getBody()), ' a ');
 });
 
 tinymce.init({

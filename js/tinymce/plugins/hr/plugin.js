@@ -17,7 +17,7 @@ tinymce.PluginManager.add('hr', function(editor) {
 
 	editor.addButton('hr', {
 		icon: 'hr',
-		tooltip: 'Insert horizontal ruler',
+		tooltip: 'Horizontal line',
 		cmd: 'InsertHorizontalRule'
 	});
 

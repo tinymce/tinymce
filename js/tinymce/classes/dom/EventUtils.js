@@ -14,6 +14,8 @@ define("tinymce/dom/EventUtils", [], function() {
 	"use strict";
 
 	var eventExpandoPrefix = "mce-data-";
+	var mouseEventRe = /^(?:mouse|contextmenu)|click/;
+	var deprecated = {keyLocation: 1, layerX: 1, layerY: 1, returnValue: 1};
 
 	/**
 	 * Binds a native event to a callback on the speified target.
@@ -41,7 +43,7 @@ define("tinymce/dom/EventUtils", [], function() {
 	 * Normalizes a native event object or just adds the event specific methods on a custom event.
 	 */
 	function fix(originalEvent, data) {
-		var name, event = data || {};
+		var name, event = data || {}, undef;
 
 		// Dummy function that gets replaced on the delegation state functions
 		function returnFalse() {
@@ -56,7 +58,7 @@ define("tinymce/dom/EventUtils", [], function() {
 		// Copy all properties from the original event
 		for (name in originalEvent) {
 			// layerX/layerY is deprecated in Chrome and produces a warning
-			if (name !== "layerX" && name !== "layerY") {
+			if (!deprecated[name]) {
 				event[name] = originalEvent[name];
 			}
 		}
@@ -64,6 +66,19 @@ define("tinymce/dom/EventUtils", [], function() {
 		// Normalize target IE uses srcElement
 		if (!event.target) {
 			event.target = event.srcElement || document;
+		}
+
+		// Calculate pageX/Y if missing and clientX/Y available
+		if (originalEvent && mouseEventRe.test(originalEvent.type) && originalEvent.pageX === undef && originalEvent.clientX !== undef) {
+			var eventDoc = event.target.ownerDocument || document;
+			var doc = eventDoc.documentElement;
+			var body = eventDoc.body;
+
+			event.pageX = originalEvent.clientX + (doc && doc.scrollLeft || body && body.scrollLeft || 0 ) -
+				( doc && doc.clientLeft || body && body.clientLeft || 0);
+
+			event.pageY = originalEvent.clientY + (doc && doc.scrollTop  || body && body.scrollTop  || 0 ) -
+				( doc && doc.clientTop  || body && body.clientTop  || 0);
 		}
 
 		// Add preventDefault method
@@ -192,9 +207,9 @@ define("tinymce/dom/EventUtils", [], function() {
 		 * @param {String} id Expando id value to look for.
 		 */
 		function executeHandlers(evt, id) {
-			var callbackList, i, l, callback;
+			var callbackList, i, l, callback, container = events[id];
 
-			callbackList = events[id][evt.type];
+			callbackList = container && container[evt.type];
 			if (callbackList) {
 				for (i = 0, l = callbackList.length; i < l; i++) {
 					callback = callbackList[i];
@@ -379,7 +394,13 @@ define("tinymce/dom/EventUtils", [], function() {
 								ci = callbackList.length;
 								while (ci--) {
 									if (callbackList[ci].func === callback) {
-										callbackList.splice(ci, 1);
+										var nativeHandler = callbackList.nativeHandler;
+
+										// Clone callbackList since unbind inside a callback would otherwise break the handlers loop
+										callbackList = callbackList.slice(0, ci).concat(callbackList.slice(ci + 1));
+										callbackList.nativeHandler = nativeHandler;
+
+										eventMap[name] = callbackList;
 									}
 								}
 							}

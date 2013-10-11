@@ -253,33 +253,39 @@ task("less", [], function () {
 		"TinyMCE.less"
 	].concat(parseLessDocs("js/tinymce/tinymce.js"));
 
-	// Modern browsers
-	less({
-		baseDir: "js/tinymce/skins/lightgray",
-		from: lessFiles.concat(["Icons.less"]),
-		toCss: "js/tinymce/skins/lightgray/skin.min.css",
-		toLess: "js/tinymce/skins/lightgray/skin.less"
-	});
+	fs.readdirSync("js/tinymce/skins").forEach(function(skinName) {
+		// Modern browsers
+		less({
+			baseDir: "js/tinymce/skins/" + skinName + "",
+			from: lessFiles.concat(["Icons.less"]),
+			toCss: "js/tinymce/skins/" + skinName + "/skin.min.css",
+			toLess: "js/tinymce/skins/" + skinName + "/skin.less",
+			toLessDev: "js/tinymce/skins/" + skinName + "/skin.dev.less"
+		});
 
-	// IE7
-	less({
-		baseDir: "js/tinymce/skins/lightgray",
-		from: lessFiles.concat(["Icons.Ie7.less"]),
-		toCss: "js/tinymce/skins/lightgray/skin.ie7.min.css"
-	});
+		// IE7
+		less({
+			baseDir: "js/tinymce/skins/" + skinName + "",
+			from: lessFiles.concat(["Icons.Ie7.less"]),
+			toCss: "js/tinymce/skins/" + skinName + "/skin.ie7.min.css",
+			toLess: "js/tinymce/skins/" + skinName + "/skin.ie7.less"
+		});
 
-	// Classic
-	less({
-		baseDir: "js/tinymce/skins/lightgray",
-		from: lessFiles.concat(["Icons.less"]),
-		toCss: "js/tinymce/skins/lightgray/skin.classic.min.css"
-	});
+		// Content CSS
+		less({
+			from: ["Content.less"],
+			toCss: "js/tinymce/skins/" + skinName + "/content.min.css",
+			baseDir: "js/tinymce/skins/" + skinName + "",
+			force: true
+		});
 
-	// Content CSS
-	less({
-		from: ["Content.less"],
-		toCss: "js/tinymce/skins/lightgray/content.min.css",
-		baseDir: "js/tinymce/skins/lightgray"
+		// Content CSS (inline)
+		less({
+			from: ["Content.Inline.less"],
+			toCss: "js/tinymce/skins/" + skinName + "/content.inline.min.css",
+			baseDir: "js/tinymce/skins/" + skinName + "",
+			force: true
+		});
 	});
 });
 
@@ -305,6 +311,7 @@ task("zip-production", [], function () {
 			"js/tinymce/tinymce.jquery.dev.js",
 			"js/tinymce/jquery.tinymce.min.js",
 			"js/tinymce/plugins/visualblocks/img",
+			"js/tinymce/plugins/compat3x",
 			"readme.md",
 			/(imagemanager|filemanager|moxiemanager)/,
 			/plugin\.js|plugin\.dev\.js|theme\.js/,
@@ -348,6 +355,7 @@ task("zip-production-jquery", [], function () {
 			"js/tinymce/tinymce.jquery.js",
 			"js/tinymce/tinymce.jquery.dev.js",
 			"js/tinymce/plugins/visualblocks/img",
+			"js/tinymce/plugins/compat3x",
 			"readme.md",
 			/(imagemanager|filemanager|moxiemanager)/,
 			/plugin\.js|plugin\.dev\.js|theme\.js/,

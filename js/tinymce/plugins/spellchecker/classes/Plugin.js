@@ -22,10 +22,11 @@ define("tinymce/spellcheckerplugin/Plugin", [
 	"tinymce/util/Tools",
 	"tinymce/ui/Menu",
 	"tinymce/dom/DOMUtils",
-	"tinymce/util/JSONRequest"
-], function(DomTextMatcher, PluginManager, Tools, Menu, DOMUtils, JSONRequest) {
-	PluginManager.add('spellchecker', function(editor) {
-		var lastSuggestions, started, suggestionsMenu;
+	"tinymce/util/JSONRequest",
+	"tinymce/util/URI"
+], function(DomTextMatcher, PluginManager, Tools, Menu, DOMUtils, JSONRequest, URI) {
+	PluginManager.add('spellchecker', function(editor, url) {
+		var lastSuggestions, started, suggestionsMenu, settings = editor.settings;
 
 		function isEmpty(obj) {
 			/*jshint unused:false*/
@@ -122,20 +123,38 @@ define("tinymce/spellcheckerplugin/Plugin", [
 				editor.fire('SpellcheckStart');
 			}
 
+			// Regexp for finding word specific characters this will split words by
+			// spaces, quotes, copy right characters etc. It's escaped with unicode characters
+			// to make it easier to output scripts on servers using different encodings
+			// so if you add any characters outside the 128 byte range make sure to escape it
+			var nonWordSeparatorCharacters = editor.getParam('spellchecker_wordchar_pattern') || new RegExp("[^" +
+				"\\s!\"#$%&()*+,-./:;<=>?@[\\]^_{|}`" +
+				"\u00a7\u00a9\u00ab\u00ae\u00b1\u00b6\u00b7\u00b8\u00bb" +
+				"\u00bc\u00bd\u00be\u00bf\u00d7\u00f7\u00a4\u201d\u201c\u201e" +
+			"]+", "g");
+
 			// Find all words and make an unique words array
-			textFilter = new DomTextMatcher(/\w+/g, editor.getBody(), editor.schema).each(function(match) {
-				if (!uniqueWords[match[2][0]]) {
-					words.push(match[2][0]);
-					uniqueWords[match[2][0]] = true;
+			textFilter = new DomTextMatcher(nonWordSeparatorCharacters, editor.getBody(), editor.schema).each(function(match) {
+				var word = match[2][0];
+
+				// TODO: Fix so it remembers correctly spelled words
+				if (!uniqueWords[word]) {
+					// Ignore numbers and single character words
+					if (/^\d+$/.test(word) || word.length == 1) {
+						return;
+					}
+
+					words.push(word);
+					uniqueWords[word] = true;
 				}
 			});
 
-			editor.settings.spellcheck_callback = function(method, words, doneCallback) {
+			function defaultSpellcheckCallback(method, words, doneCallback) {
 				JSONRequest.sendRPC({
-					url: editor.settings.spellchecker_rpc_url,
+					url: new URI(url).toAbsolute(settings.spellchecker_rpc_url),
 					method: method,
 					params: {
-						lang: editor.settings.spellchecker_language || "en",
+						lang: settings.spellchecker_language || "en",
 						words: words
 					},
 					success: function(result) {
@@ -151,12 +170,15 @@ define("tinymce/spellcheckerplugin/Plugin", [
 						editor.windowManager.alert(error);
 						editor.setProgressState(false);
 						textFilter = null;
+						started = false;
 					}
 				});
-			};
+			}
 
 			editor.setProgressState(true);
-			editor.settings.spellcheck_callback("spellcheck", words, doneCallback);
+
+			var spellCheckCallback = settings.spellchecker_callback || defaultSpellcheckCallback;
+			spellCheckCallback("spellcheck", words, doneCallback);
 		}
 
 		function checkIfFinished() {

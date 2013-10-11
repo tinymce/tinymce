@@ -202,8 +202,8 @@ define("tinymce/tableplugin/TableGrid", [
 
 			// Empty table
 			if (dom.select('tr', table).length === 0) {
-				rng.setStartAfter(table);
-				rng.setEndAfter(table);
+				rng.setStartBefore(table);
+				rng.setEndBefore(table);
 				selection.setRng(rng);
 				dom.remove(table);
 				return;

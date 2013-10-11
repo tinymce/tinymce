@@ -2,8 +2,8 @@
 
 .mce-label {
 	.inline-block();
-	text-shadow: @textShadow;
-	border: 0 solid @btn-border-color;
+	text-shadow: @text-shadow;
+	border: 0;
 	overflow: hidden;
 }
 
@@ -11,10 +11,17 @@
 	overflow: auto;
 }
 
-.mce-label-disabled .mce-text {
-	color: @text-color-disabled;
+.mce-label.mce-disabled {
+	color: @text-disabled;
 }
 
 .mce-label.mce-multiline {
 	white-space: pre-wrap;
+}
+
+// RTL
+
+.mce-rtl .mce-label {
+	text-align: right;
+	direction: rtl;
 }

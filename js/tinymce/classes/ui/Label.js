@@ -17,8 +17,9 @@
  * @extends tinymce.ui.Widget
  */
 define("tinymce/ui/Label", [
-	"tinymce/ui/Widget"
-], function(Widget) {
+	"tinymce/ui/Widget",
+	"tinymce/ui/DomUtils"
+], function(Widget, DomUtils) {
 	"use strict";
 
 	return Widget.extend({
@@ -58,38 +59,19 @@ define("tinymce/ui/Label", [
 			var self = this, layoutRect = self._super();
 
 			if (self.settings.multiline) {
+				var size = DomUtils.getSize(self.getEl());
+
 				// Check if the text fits within maxW if not then try word wrapping it
-				if (self.getEl().offsetWidth > layoutRect.maxW) {
+				if (size.width > layoutRect.maxW) {
 					layoutRect.minW = layoutRect.maxW;
 					self.addClass('multiline');
 				}
 
 				self.getEl().style.width = layoutRect.minW + 'px';
-				layoutRect.startMinH = layoutRect.h = layoutRect.minH = Math.min(layoutRect.maxH, self.getEl().offsetHeight);
+				layoutRect.startMinH = layoutRect.h = layoutRect.minH = Math.min(layoutRect.maxH, DomUtils.getSize(self.getEl()).height);
 			}
 
 			return layoutRect;
-		},
-
-		/**
-		 * Sets/gets the disabled state on the control.
-		 *
-		 * @method disabled
-		 * @param {Boolean} state Value to set to control.
-		 * @return {Boolean/tinymce.ui.Label} Current control on a set operation or current state on a get.
-		 */
-		disabled: function(state) {
-			var self = this, undef;
-
-			if (state !== undef) {
-				self.toggleClass('label-disabled', state);
-
-				if (self._rendered) {
-					self.getEl()[0].className = self.classes();
-				}
-			}
-
-			return self._super(state);
 		},
 
 		/**
@@ -118,7 +100,7 @@ define("tinymce/ui/Label", [
 			var self = this;
 
 			if (self._rendered && text) {
-				self.getEl().innerHTML = self.encode(text);
+				this.innerHtml(self.encode(text));
 			}
 
 			return self._super(text);

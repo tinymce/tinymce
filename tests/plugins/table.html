@@ -47,9 +47,7 @@ test("Table properties dialog (get data from plain table)", function() {
 		"caption": false,
 		"cellpadding": "",
 		"cellspacing": "",
-		"cols": "",
 		"height": "",
-		"rows": "",
 		"width": ""
 	});
 
@@ -77,9 +75,7 @@ test("Table properties dialog (get data from full table)", function() {
 		"caption": true,
 		"cellpadding": "3",
 		"cellspacing": "2",
-		"cols": "",
 		"height": "101",
-		"rows": "",
 		"width": "100"
 	});
 
@@ -252,8 +248,8 @@ test("Table row properties dialog (update all)", function() {
 	});
 
 	equal(
-		cleanTableHtml(editor.getContent({format: 'raw'})),
-		'<table class="mce-item-table"><thead><tr style="height: 10px; text-align: right;"><td>x</td></tr></thead></table>'
+		cleanTableHtml(editor.getContent()),
+		'<table><thead><tr style="height: 10px; text-align: right;"><td>x</td></tr></thead></table>'
 	);
 });
 
@@ -327,6 +323,9 @@ tinymce.init({
 	selector: "textarea",
 	add_unload_trigger: false,
 	plugins: 'table',
+	valid_styles: {
+		'*' : 'width,height,text-align,float'
+	},
 	init_instance_callback: function(ed) {
 		editor = ed;
 		QUnit.start();

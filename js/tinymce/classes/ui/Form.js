@@ -40,7 +40,12 @@ define("tinymce/ui/Form", [
 			flex: 1,
 			padding: 20,
 			labelGap: 30,
-			spacing: 10
+			spacing: 10,
+			callbacks: {
+				submit: function() {
+					this.submit();
+				}
+			}
 		},
 
 		/**
@@ -128,12 +133,6 @@ define("tinymce/ui/Form", [
 		 * @return {Object} Event arguments object.
 		 */
 		submit: function() {
-			// Blur current control so a onchange is fired before submit
-			var ctrl = this.getParentCtrl(document.activeElement);
-			if (ctrl) {
-				ctrl.blur();
-			}
-
 			return this.fire('submit', {data: this.toJSON()});
 		},
 

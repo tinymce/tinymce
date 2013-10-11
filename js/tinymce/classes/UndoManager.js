@@ -26,7 +26,7 @@ define("tinymce/UndoManager", [
 	].join('|'), 'gi');
 
 	return function(editor) {
-		var self, index = 0, data = [], beforeBookmark;
+		var self, index = 0, data = [], beforeBookmark, isFirstTypedCharacter, lock;
 
 		// Returns a trimmed version of the current editor contents
 		function getContent() {
@@ -81,7 +81,24 @@ define("tinymce/UndoManager", [
 				editor.nodeChanged();
 			}
 
-			if (keyCode == 46 || keyCode == 8 || (Env.isMac && (keyCode == 91 || keyCode == 93))) {
+			if (keyCode == 46 || keyCode == 8 || (Env.mac && (keyCode == 91 || keyCode == 93))) {
+				editor.nodeChanged();
+			}
+
+			// Fire a TypingUndo event on the first character entered
+			if (isFirstTypedCharacter && self.typing) {
+				// Make the it dirty if the content was changed after typing the first character
+				if (!editor.isDirty()) {
+					editor.isNotDirty = !data[0] || getContent() == data[0].content;
+
+					// Fire initial change event
+					if (!editor.isNotDirty) {
+						editor.fire('change', {level: data[0], lastLevel: null});
+					}
+				}
+
+				editor.fire('TypingUndo');
+				isFirstTypedCharacter = false;
 				editor.nodeChanged();
 			}
 		});
@@ -103,6 +120,7 @@ define("tinymce/UndoManager", [
 				self.beforeChange();
 				self.typing = true;
 				self.add();
+				isFirstTypedCharacter = true;
 			}
 		});
 
@@ -113,8 +131,8 @@ define("tinymce/UndoManager", [
 		});
 
 		// Add keyboard shortcuts for undo/redo keys
-		editor.addShortcut('ctrl+z', 'undo_desc', 'Undo');
-		editor.addShortcut('ctrl+y', 'redo_desc', 'Redo');
+		editor.addShortcut('ctrl+z', '', 'Undo');
+		editor.addShortcut('ctrl+y,ctrl+shift+z', '', 'Redo');
 
 		editor.on('AddUndo Undo Redo ClearUndos MouseUp', function(e) {
 			if (!e.isDefaultPrevented()) {
@@ -141,7 +159,9 @@ define("tinymce/UndoManager", [
 			 * @method beforeChange
 			 */
 			beforeChange: function() {
-				beforeBookmark = editor.selection.getBookmark(2, true);
+				if (!lock) {
+					beforeBookmark = editor.selection.getBookmark(2, true);
+				}
 			},
 
 			/**
@@ -157,7 +177,7 @@ define("tinymce/UndoManager", [
 				level = level || {};
 				level.content = getContent();
 
-				if (editor.fire('BeforeAddUndo', {level: level}).isDefaultPrevented()) {
+				if (lock || editor.fire('BeforeAddUndo', {level: level}).isDefaultPrevented()) {
 					return null;
 				}
 
@@ -198,10 +218,10 @@ define("tinymce/UndoManager", [
 				var args = {level: level, lastLevel: lastLevel};
 
 				editor.fire('AddUndo', args);
-				editor.isNotDirty = 0;
 
 				if (index > 0) {
 					editor.fire('change', args);
+					editor.isNotDirty = false;
 				}
 
 				return level;
@@ -223,6 +243,11 @@ define("tinymce/UndoManager", [
 
 				if (index > 0) {
 					level = data[--index];
+
+					// Undo to first index then set dirty state to false
+					if (index === 0) {
+						editor.isNotDirty = true;
+					}
 
 					editor.setContent(level.content, {format: 'raw'});
 					editor.selection.moveToBookmark(level.beforeBookmark);
@@ -290,14 +315,19 @@ define("tinymce/UndoManager", [
 			/**
 			 * Executes the specified function in an undo transation. The selection
 			 * before the modification will be stored to the undo stack and if the DOM changes
-			 * it will add a new undo level.
+			 * it will add a new undo level. Any methods within the transation that adds undo levels will
+			 * be ignored. So a transation can include calls to execCommand or editor.insertContent.
 			 *
 			 * @method transact
 			 * @param {function} callback Function to execute dom manipulation logic in.
 			 */
 			transact: function(callback) {
 				self.beforeChange();
+
+				lock = true;
 				callback();
+				lock = false;
+
 				self.add();
 			}
 		};

@@ -22,7 +22,7 @@ tinymce.PluginManager.add('tabfocus', function(editor) {
 	function tabHandler(e) {
 		var x, el, v, i;
 
-		function find(d) {
+		function find(direction) {
 			el = DOM.select(':input:enabled,*[tabindex]:not(iframe)');
 
 			function canSelectRecursive(e) {
@@ -30,8 +30,9 @@ tinymce.PluginManager.add('tabfocus', function(editor) {
 					e.style.display != "none" &&
 					e.style.visibility != "hidden" && canSelectRecursive(e.parentNode));
 			}
+
 			function canSelectInOldIe(el) {
-				return el.attributes.tabIndex.specified || el.nodeName == "INPUT" || el.nodeName == "TEXTAREA";
+				return el.tabIndex || el.nodeName == "INPUT" || el.nodeName == "TEXTAREA";
 			}
 
 			function canSelect(el) {
@@ -44,7 +45,7 @@ tinymce.PluginManager.add('tabfocus', function(editor) {
 					return false;
 				}
 			});
-			if (d > 0) {
+			if (direction > 0) {
 				for (i = x + 1; i < el.length; i++) {
 					if (canSelect(el[i])) {
 						return el[i];
@@ -85,8 +86,10 @@ tinymce.PluginManager.add('tabfocus', function(editor) {
 			}
 
 			if (el) {
-				if (el.id && (editor = tinymce.get(el.id || el.name))) {
-					editor.focus();
+				var focusEditor = tinymce.get(el.id || el.name);
+
+				if (el.id && focusEditor) {
+					focusEditor.focus();
 				} else {
 					window.setTimeout(function() {
 						if (!tinymce.Env.webkit) {
@@ -101,6 +104,13 @@ tinymce.PluginManager.add('tabfocus', function(editor) {
 			}
 		}
 	}
+
+	editor.on('init', function() {
+		if (editor.inline) {
+			// Remove default tabIndex in inline mode
+			tinymce.DOM.setAttrib(editor.getBody(), 'tabIndex', null);
+		}
+	});
 
 	editor.on('keyup', tabCancel);
 

@@ -16,7 +16,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 	// Default menus
 	var defaultMenus = {
 		file: {title: 'File', items: 'newdocument'},
-		edit: {title: 'Edit', items: 'undo redo | cut copy paste | selectall'},
+		edit: {title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall'},
 		insert: {title: 'Insert', items: '|'},
 		view: {title: 'View', items: 'visualaid |'},
 		format: {title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | removeformat'},
@@ -59,7 +59,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 								}
 							}
 
-							item.active(nodeName == "UL");
+							item.active(state && nodeName == "UL");
 						});
 					}
 
@@ -74,7 +74,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 								}
 							}
 
-							item.active(nodeName == "OL");
+							item.active(state && nodeName == "OL");
 						});
 					}
 
@@ -110,8 +110,14 @@ tinymce.ThemeManager.add('modern', function(editor) {
 						}
 
 						if (editor.buttons[item]) {
+							// TODO: Move control creation to some UI class
 							itemName = item;
 							item = editor.buttons[itemName];
+
+							if (typeof(item) == "function") {
+								item = item();
+							}
+
 							item.type = item.type || 'button';
 
 							if (settings.toolbar_items_size) {
@@ -247,7 +253,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			}
 		}
 
-		var enabledMenuNames = settings.menubar ? settings.menubar.split(/[ ,]/) : defaultMenuBar;
+		var enabledMenuNames = typeof(settings.menubar) == "string" ? settings.menubar.split(/[ ,]/) : defaultMenuBar;
 		for (var i = 0; i < enabledMenuNames.length; i++) {
 			var menu = enabledMenuNames[i];
 			menu = createMenu(menu);
@@ -292,16 +298,69 @@ tinymce.ThemeManager.add('modern', function(editor) {
 	}
 
 	/**
+	 * Resizes the editor to the specified width, height.
+	 */
+	function resizeTo(width, height) {
+		var containerElm, iframeElm, containerSize, iframeSize;
+
+		function getSize(elm) {
+			return {
+				width: elm.clientWidth,
+				height: elm.clientHeight
+			};
+		}
+
+		containerElm = editor.getContainer();
+		iframeElm = editor.getContentAreaContainer().firstChild;
+		containerSize = getSize(containerElm);
+		iframeSize = getSize(iframeElm);
+
+		if (width !== null) {
+			width = Math.max(settings.min_width || 100, width);
+			width = Math.min(settings.max_width || 0xFFFF, width);
+
+			DOM.css(containerElm, 'width', width + (containerSize.width - iframeSize.width));
+			DOM.css(iframeElm, 'width', width);
+		}
+
+		height = Math.max(settings.min_height || 100, height);
+		height = Math.min(settings.max_height || 0xFFFF, height);
+		DOM.css(iframeElm, 'height', height);
+
+		editor.fire('ResizeEditor');
+	}
+
+	function resizeBy(dw, dh) {
+		var elm = editor.getContentAreaContainer();
+		self.resizeTo(elm.clientWidth + dw, elm.clientHeight + dh);
+	}
+
+	/**
 	 * Renders the inline editor UI.
 	 *
 	 * @return {Object} Name/value object with theme data.
 	 */
 	function renderInlineUI() {
-		var panel;
+		var panel, inlineToolbarContainer;
+
+		if (settings.fixed_toolbar_container) {
+			inlineToolbarContainer = DOM.select(settings.fixed_toolbar_container)[0];
+		}
 
 		function reposition() {
-			if (panel && panel.visible() && !panel._fixed) {
-				panel.moveRel(editor.getBody(), 'tl-bl');
+			if (panel && panel.moveRel && panel.visible() && !panel._fixed) {
+				// TODO: This is kind of ugly and doesn't handle multiple scrollable elements
+				var scrollContainer = editor.selection.getScrollContainer(), body = editor.getBody();
+				var deltaX = 0, deltaY = 0;
+
+				if (scrollContainer) {
+					var bodyPos = DOM.getPos(body), scrollContainerPos = DOM.getPos(scrollContainer);
+
+					deltaX = Math.max(0, scrollContainerPos.x - bodyPos.x);
+					deltaY = Math.max(0, scrollContainerPos.y - bodyPos.y);
+				}
+
+				panel.fixed(false).moveRel(body, editor.rtl ? ['tr-br', 'br-tr'] : ['tl-bl', 'bl-tl']).moveBy(deltaX, deltaY);
 			}
 		}
 
@@ -317,10 +376,6 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			if (panel) {
 				panel.hide();
 				DOM.removeClass(editor.getBody(), 'mce-edit-focus');
-
-				if (document.activeElement && document.activeElement.className.indexOf('mce-content-body') == -1) {
-					DOM.setStyle(document.body, 'padding-top', 0);
-				}
 			}
 		}
 
@@ -333,13 +388,16 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				return;
 			}
 
+			// Render a plain panel inside the inlineToolbarContainer if it's defined
 			panel = self.panel = Factory.create({
-				type: 'floatpanel',
+				type: inlineToolbarContainer ? 'panel' : 'floatpanel',
 				classes: 'tinymce tinymce-inline',
 				layout: 'flex',
 				direction: 'column',
+				align: 'stretch',
 				autohide: false,
 				autofix: true,
+				fixed: !!inlineToolbarContainer,
 				border: 1,
 				items: [
 					settings.menubar === false ? null : {type: 'menubar', border: '0 0 1 0', items: createMenuButtons()},
@@ -354,7 +412,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				]});
 			}*/
 
-			panel.renderTo(document.body).reflow();
+			panel.renderTo(inlineToolbarContainer || document.body).reflow();
 
 			addAccessibilityKeys(panel);
 			show();
@@ -387,7 +445,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 	 * @return {Object} Name/value object with theme data.
 	 */
 	function renderIframeUI(args) {
-		var panel;
+		var panel, resizeHandleCtrl, startSize;
 
 		// Basic UI layout
 		panel = self.panel = Factory.create({
@@ -403,12 +461,40 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			]
 		});
 
+		if (settings.resize !== false) {
+			resizeHandleCtrl = {
+				type: 'resizehandle',
+				direction: settings.resize,
+
+				onResizeStart: function() {
+					var elm = editor.getContentAreaContainer().firstChild;
+
+					startSize = {
+						width: elm.clientWidth,
+						height: elm.clientHeight
+					};
+				},
+
+				onResize: function(e) {
+					if (settings.resize == 'both') {
+						resizeTo(startSize.width + e.deltaX, startSize.height + e.deltaY);
+					} else {
+						resizeTo(null, startSize.height + e.deltaY);
+					}
+				}
+			};
+		}
+
 		// Add statusbar if needed
 		if (settings.statusbar !== false) {
 			panel.add({type: 'panel', name: 'statusbar', classes: 'statusbar', layout: 'flow', border: '1 0 0 0', items: [
 				{type: 'elementpath'},
-				settings.resize !== false ? ({type: 'resizehandle', editor: editor}) : null
+				resizeHandleCtrl
 			]});
+		}
+
+		if (settings.readonly) {
+			panel.find('*').disabled(true);
 		}
 
 		// Render before the target textarea/div
@@ -443,16 +529,24 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		var skin = settings.skin !== false ? settings.skin || 'lightgray' : false;
 
 		if (skin) {
-			// Load special skin for IE7
-			// TODO: Remove this when we drop IE7 support
-			if (tinymce.Env.ie && tinymce.Env.ie <= 7) {
-				tinymce.DOM.loadCSS(tinymce.baseURL + '/skins/' + skin + '/skin.ie7.min.css');
+			var skinUrl = settings.skin_url;
+
+			if (skinUrl) {
+				skinUrl = editor.documentBaseURI.toAbsolute(skinUrl);
 			} else {
-				tinymce.DOM.loadCSS(tinymce.baseURL + '/skins/' + skin + '/skin.min.css');
+				skinUrl = tinymce.baseURL + '/skins/' + skin;
 			}
 
-			// Load content_css
-			editor.contentCSS.push(tinymce.baseURL + '/skins/' + skin + '/content.min.css');
+			// Load special skin for IE7
+			// TODO: Remove this when we drop IE7 support
+			if (tinymce.Env.documentMode <= 7) {
+				tinymce.DOM.loadCSS(skinUrl + '/skin.ie7.min.css');
+			} else {
+				tinymce.DOM.loadCSS(skinUrl + '/skin.min.css');
+			}
+
+			// Load content.min.css or content.inline.min.css
+			editor.contentCSS.push(skinUrl + '/content' + (editor.inline ? '.inline' : '') + '.min.css');
 		}
 
 		// Handle editor setProgressState change
@@ -474,4 +568,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		// Render iframe UI
 		return renderIframeUI(args);
 	};
+
+	self.resizeTo = resizeTo;
+	self.resizeBy = resizeBy;
 });

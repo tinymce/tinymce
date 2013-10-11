@@ -49,6 +49,11 @@
 					node.id = id = tinymce.DOM.uniqueId();
 				}
 
+				// Only init the editor once
+				if (tinymce.get(id)) {
+					return;
+				}
+
 				// Create editor instance and render it
 				ed = new tinymce.Editor(id, settings, tinymce.EditorManager);
 				editors.push(ed);
@@ -89,7 +94,7 @@
 			base = url.substring(0, url.lastIndexOf("/"));
 
 			// Check if it's a dev/src version they want to load then
-			// make sure that all plugins, themes etc are loaded in source mode aswell
+			// make sure that all plugins, themes etc are loaded in source mode as well
 			if (url.indexOf('.min') != -1) {
 				suffix = ".min";
 			}
@@ -106,7 +111,7 @@
 			if (url.indexOf('gzip') != -1) {
 				lang = settings.language || "en";
 				url = url + (/\?/.test(url) ? '&' : '?') + "js=true&core=true&suffix=" + escape(suffix) +
-					"&themes=" + escape(settings.theme) + "&plugins=" + escape(settings.plugins) + "&languages=" + lang;
+					"&themes=" + escape(settings.theme || '') + "&plugins=" + escape(settings.plugins || '') + "&languages=" + (lang || '');
 
 				// Check if compressor script is already loaded otherwise setup a basic one
 				if (!win.tinyMCE_GZ) {
@@ -213,7 +218,8 @@
 			var self = this, ed;
 
 			// Handle set value
-			if (value !== undef) {
+			/*jshint eqnull:true */
+			if (value != null) {
 				removeEditors.call(self);
 
 				// Saves the contents before get/set value of textarea/div

@@ -263,7 +263,9 @@ define("tinymce/util/Quirks", [
 		 * browser just deletes the paragraph - the browser fails to merge the text node with a horizontal rule so it is
 		 * left there. TinyMCE sees a floating text node and wraps it in a paragraph on the key up event (ForceBlocks.js
 		 * addRootBlocks), meaning the action does nothing. With this code, FireFox/IE matche the behaviour of other
-		 * browsers
+		 * browsers.
+		 *
+		 * It also fixes a bug on Firefox where it's impossible to delete HR elements.
 		 */
 		function removeHrOnBackspace() {
 			editor.on('keydown', function(e) {
@@ -271,6 +273,12 @@ define("tinymce/util/Quirks", [
 					if (selection.isCollapsed() && selection.getRng(true).startOffset === 0) {
 						var node = selection.getNode();
 						var previousSibling = node.previousSibling;
+
+						if (node.nodeName == 'HR') {
+							dom.remove(node);
+							e.preventDefault();
+							return;
+						}
 
 						if (previousSibling && previousSibling.nodeName && previousSibling.nodeName.toLowerCase() === "hr") {
 							dom.remove(previousSibling);
@@ -320,7 +328,7 @@ define("tinymce/util/Quirks", [
 					selection.getSel().setBaseAndExtent(e, 0, e, 1);
 				}
 
-				if (e.nodeName == 'A' && dom.hasClass(e, 'mceItemAnchor')) {
+				if (e.nodeName == 'A' && dom.hasClass(e, 'mce-item-anchor')) {
 					selection.select(e);
 				}
 
@@ -340,7 +348,7 @@ define("tinymce/util/Quirks", [
 		 * Instead of:
 		 * <p style="color:red">bla|ed</p>
 		 */
-		function removeStylesWhenDeletingAccrossBlockElements() {
+		function removeStylesWhenDeletingAcrossBlockElements() {
 			function getAttributeApplyFunction() {
 				var template = dom.getAttribs(selection.getStart().cloneNode(false));
 
@@ -900,6 +908,45 @@ define("tinymce/util/Quirks", [
 			);
 		}
 
+		/**
+		 * iOS has a bug where it's impossible to type if the document has a touchstart event
+		 * bound and the user touches the document while having the on screen keyboard visible.
+		 *
+		 * The touch event moves the focus to the parent document while having the caret inside the iframe
+		 * this fix moves the focus back into the iframe document.
+		 */
+		function restoreFocusOnKeyDown() {
+			if (!editor.inline) {
+				editor.on('keydown', function() {
+					if (document.activeElement == document.body) {
+						editor.getWin().focus();
+					}
+				});
+			}
+		}
+
+		/**
+		 * IE 11 has an annoying issue where you can't move focus into the editor
+		 * by clicking on the white area HTML element. We used to be able to to fix this with
+		 * the fixCaretSelectionOfDocumentElementOnIe fix. But since M$ removed the selection
+		 * object it's not possible anymore. So we need to hack in a ungly CSS to force the
+		 * body to be at least 150px. If the user clicks the HTML element out side this 150px region
+		 * we simply move the focus into the first paragraph. Not ideal since you loose the
+		 * positioning of the caret but goot enough for most cases.
+		 */
+		function bodyHeight() {
+			if (!editor.inline) {
+				editor.contentStyles.push('body {min-height: 150px}');
+				editor.on('click', function(e) {
+					if (e.target.nodeName == 'HTML') {
+						editor.execCommand('SelectAll');
+						editor.selection.collapse(true);
+						editor.nodeChanged();
+					}
+				});
+			}
+		}
+
 		// All browsers
 		disableBackspaceIntoATable();
 		removeBlockQuoteOnBackSpace();
@@ -917,13 +964,14 @@ define("tinymce/util/Quirks", [
 			// iOS
 			if (Env.iOS) {
 				selectionChangeNodeChanged();
+				restoreFocusOnKeyDown();
 			} else {
 				selectAll();
 			}
 		}
 
 		// IE
-		if (isIE) {
+		if (isIE && Env.ie < 11) {
 			removeHrOnBackspace();
 			ensureBodyHasRoleApplication();
 			addNewLinesBeforeBrInPre();
@@ -934,11 +982,15 @@ define("tinymce/util/Quirks", [
 			fixCaretSelectionOfDocumentElementOnIe();
 		}
 
+		if (Env.ie >= 11) {
+			bodyHeight();
+		}
+
 		// Gecko
 		if (isGecko) {
 			removeHrOnBackspace();
 			focusBody();
-			removeStylesWhenDeletingAccrossBlockElements();
+			removeStylesWhenDeletingAcrossBlockElements();
 			setGeckoEditingOptions();
 			addBrAfterLastLinks();
 			removeGhostSelection();

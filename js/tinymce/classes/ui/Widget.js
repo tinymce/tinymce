@@ -22,7 +22,7 @@ define("tinymce/ui/Widget", [
 
 	var tooltip;
 
-	return Control.extend({
+	var Widget = Control.extend({
 		/**
 		 * Constructs a instance with the specified settings.
 		 *
@@ -38,12 +38,20 @@ define("tinymce/ui/Widget", [
 			self._super(settings);
 			self.canFocus = true;
 
-			if (settings.tooltip) {
+			if (settings.tooltip && Widget.tooltips !== false) {
 				self.on('mouseenter mouseleave', function(e) {
+					var tooltip = self.tooltip().moveTo(-0xFFFF);
+
 					if (e.control == self && e.type == 'mouseenter') {
-						self.tooltip().moveTo(-0xFFFF).text(settings.tooltip).show().moveRel(self.getEl(), 'bc tc');
+						var rel = tooltip.text(settings.tooltip).show().testMoveRel(self.getEl(), ['bc-tc', 'bc-tl', 'bc-tr']);
+
+						tooltip.toggleClass('tooltip-n', rel == 'bc-tc');
+						tooltip.toggleClass('tooltip-nw', rel == 'bc-tl');
+						tooltip.toggleClass('tooltip-ne', rel == 'bc-tr');
+
+						tooltip.moveRel(self.getEl(), rel);
 					} else {
-						self.tooltip().moveTo(-0xFFFF).hide();
+						tooltip.hide();
 					}
 				});
 			}
@@ -143,4 +151,6 @@ define("tinymce/ui/Widget", [
 			}
 		}
 	});
+
+	return Widget;
 });

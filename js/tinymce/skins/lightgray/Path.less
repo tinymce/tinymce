@@ -18,11 +18,7 @@
 .mce-path-item {
 	.inline-block();
 	cursor: pointer;
-	color: @text-color;
-}
-
-.mce-path .mce-last {
-	//color: @text-color-disabled;
+	color: @path-text;
 }
 
 .mce-path-item:hover {
@@ -30,10 +26,20 @@
 }
 
 .mce-path-item:focus {
-	background: gray;
-	color: white;
+	background: @path-bg-focus;
+	color: @path-text-focus;
 }
 
 .mce-path .mce-divider {
 	display: inline;
+}
+
+.mce-disabled .mce-path-item {
+	color: @text-disabled;
+}
+
+// RTL
+
+.mce-rtl .mce-path {
+	direction: rtl;
 }

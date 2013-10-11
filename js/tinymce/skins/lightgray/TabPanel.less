@@ -8,21 +8,32 @@
 .mce-tab {
 	.inline-block();
 	border: 1px solid @tab-border;
-	border-width: 1px 1px 0 0;
-	background: @tab-background;
+	border-width: 0 1px 0 0;
+	background: @tab-bg;
 	padding: 8px;
-	text-shadow: @textShadow;
+	text-shadow: @text-shadow;
 	height: 13px;
 	cursor: pointer;
 }
 
 .mce-tab:hover {
-	background: @tab-background-hover;
+	background: @tab-bg-hover;
 }
 
 .mce-tab.mce-active {
-	background: @tab-background-active;
+	background: @tab-bg-active;
 	border-bottom-color: transparent;
 	margin-bottom: -1px;
 	height: 14px;
+}
+
+// RTL
+
+.mce-rtl .mce-tabs {
+	text-align: right;
+	direction: rtl;
+}
+
+.mce-rtl .mce-tab {
+	border-width: 0 0 0 1px;
 }

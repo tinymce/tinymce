@@ -13,7 +13,7 @@
 tinymce.PluginManager.add('wordcount', function(editor) {
 	var self = this, countre, cleanre;
 
-	countre = editor.getParam('wordcount_countregex', /[\w\u2019\x27\-]+/g); // u2019 == &rsquo;
+	countre = editor.getParam('wordcount_countregex', /[\w\u2019\x27\-\u0600-\u06FF]+/g); // u2019 == &rsquo;
 	cleanre = editor.getParam('wordcount_cleanregex', /[0-9.(),;:!?%#$?\x27\x22_+=\\\/\-]*/g);
 
 	function update() {
@@ -24,20 +24,23 @@ tinymce.PluginManager.add('wordcount', function(editor) {
 		var statusbar = editor.theme.panel && editor.theme.panel.find('#statusbar')[0];
 
 		if (statusbar) {
-			statusbar.insert({
-				type: 'label',
-				name: 'wordcount',
-				text: ['Words: {0}', self.getCount()],
-				classes: 'wordcount'
+			window.setTimeout(function() {
+				statusbar.insert({
+					type: 'label',
+					name: 'wordcount',
+					text: ['Words: {0}', self.getCount()],
+					classes: 'wordcount',
+					disabled: editor.settings.readonly
+				}, 0);
+
+				editor.on('setcontent beforeaddundo', update);
+
+				editor.on('keyup', function(e) {
+					if (e.keyCode == 32) {
+						update();
+					}
+				});
 			}, 0);
-
-			editor.on('setcontent beforeaddundo', update);
-
-			editor.on('keyup', function(e) {
-				if (e.keyCode == 32) {
-					update();
-				}
-			});
 		}
 	});
 

@@ -29,9 +29,9 @@ define("tinymce/Shortcuts", [
 		editor.on('keyup keypress keydown', function(e) {
 			if (e.altKey || e.ctrlKey || e.metaKey) {
 				each(shortcuts, function(shortcut) {
-					var ctrlState = Env.isMac ? e.metaKey : e.ctrlKey;
+					var ctrlKey = Env.mac ? (e.ctrlKey || e.metaKey) : e.ctrlKey;
 
-					if (shortcut.ctrl != ctrlState || shortcut.alt != e.altKey || shortcut.shift != e.shiftKey) {
+					if (shortcut.ctrl != ctrlKey || shortcut.alt != e.altKey || shortcut.shift != e.shiftKey) {
 						return;
 					}
 
@@ -67,7 +67,7 @@ define("tinymce/Shortcuts", [
 				cmdFunc = function() {
 					editor.execCommand(cmd, false, null);
 				};
-			} else if (cmdFunc.length) {
+			} else if (Tools.isArray(cmd)) {
 				cmdFunc = function() {
 					editor.execCommand(cmd[0], cmd[1], cmd[2]);
 				};

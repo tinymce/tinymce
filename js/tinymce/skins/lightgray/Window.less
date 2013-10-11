@@ -3,7 +3,7 @@
 .mce-fullscreen {
 	border: 0; padding: 0; margin: 0;
 	overflow: hidden;
-	background: #FFF;
+	background: @window-fullscreen-bg;
 	height: 100%;
 }
 
@@ -17,11 +17,11 @@ div.mce-fullscreen {
 	position: fixed;
 	left: 0; top: 0;
 	width: 100%; height: 100%;
-	background: #000;
+	background: @window-modalblock-bg;
 }
 
 #mce-modal-block.mce-in {
-	.opacity(0.3);
+	.opacity(@window-modalblock-opacity);
 }
 
 .mce-window-move {
@@ -30,9 +30,9 @@ div.mce-fullscreen {
 
 .mce-window {
 	.border-radius(6px);
-	.box-shadow(0 3px 7px rgba(0,0,0,0.3));
+	.box-shadow(@window-box-shadow);
 	.reset-gradient();
-	background: #FFF;
+	background: @window-bg;
 	position: fixed;
 	top: 0; left: 0;
 	opacity: 0;
@@ -45,7 +45,7 @@ div.mce-fullscreen {
 
 .mce-window-head {
 	padding: 9px 15px;
-	border-bottom: 1px solid #EEE;
+	border-bottom: 1px solid @window-head-border;
 	position: relative;
 }
 
@@ -56,8 +56,7 @@ div.mce-fullscreen {
 	font-size: 20px;
 	font-weight: bold;
 	line-height: 20px;
-	color: #CCC;
-	text-shadow: 0 1px 0 white;
+	color: @window-head-close;
 	cursor: pointer;
 
 	// IE7
@@ -66,13 +65,12 @@ div.mce-fullscreen {
 }
 
 .mce-close:hover {
-	color: #AAA;
+	color: @window-head-close-hover;
 }
 
 .mce-window-head .mce-title {
-	.inline-block();
 	line-height: 20px;
-	font-size: 20px;
+	font-size: @window-title-font-size;
 	font-weight: bold;
 	text-rendering: optimizelegibility;
 	padding-right: 10px;
@@ -84,10 +82,9 @@ div.mce-fullscreen {
 
 .mce-foot {
 	display: block;
-	background-color: whiteSmoke;
-	border-top: 1px solid #DDD;
+	background-color: @window-foot-bg;
+	border-top: 1px solid @window-foot-border;
 	.border-radius(0 0 6px 6px);
-	.box-shadow(inset 0 1px 0 white);
 }
 
 .mce-window-head .mce-dragh {
@@ -105,4 +102,22 @@ div.mce-fullscreen {
 
 .mce-window.mce-fullscreen, .mce-window.mce-fullscreen .mce-foot {
 	.border-radius(0);
+}
+
+// RTL
+
+.mce-rtl .mce-window-head .mce-close {
+	position: absolute;
+	right: auto;
+	left: 15px;
+}
+
+.mce-rtl .mce-window-head .mce-dragh {
+	left: auto;
+	right: 0;
+}
+
+.mce-rtl .mce-window-head .mce-title {
+	direction: rtl;
+	text-align: right;
 }

@@ -572,7 +572,13 @@ define("tinymce/html/Schema", [
 
 					// Add elements clone if needed
 					if (!elements[name]) {
-						elements[name] = elements[cloneName];
+						var customRule = elements[cloneName];
+
+						customRule = extend({}, customRule);
+						delete customRule.removeEmptyAttrs;
+						delete customRule.removeEmpty;
+
+						elements[name] = customRule;
 					}
 
 					// Add custom elements at span/div positions

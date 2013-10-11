@@ -34,6 +34,10 @@ define("tinymce/ui/Control", [
 			controlIdLookup: {}
 		},
 
+		isRtl: function() {
+			return Control.rtl;
+		},
+
 		/**
 		 * Class/id prefix to use for all controls.
 		 *
@@ -237,7 +241,7 @@ define("tinymce/ui/Control", [
 			}
 
 			function getSide(name) {
-				var val = parseInt(getStyle(name), 10);
+				var val = parseFloat(getStyle(name), 10);
 
 				return isNaN(val) ? 0 : val;
 			}
@@ -261,18 +265,19 @@ define("tinymce/ui/Control", [
 		initLayoutRect: function() {
 			var self = this, settings = self.settings, borderBox, layoutRect;
 			var elm = self.getEl(), width, height, minWidth, minHeight, autoResize;
-			var startMinWidth, startMinHeight;
+			var startMinWidth, startMinHeight, initialSize;
 
-			// Measure boxes
+			// Measure the current element
 			borderBox = self._borderBox = self._borderBox || self.measureBox(elm, 'border');
 			self._paddingBox = self._paddingBox || self.measureBox(elm, 'padding');
 			self._marginBox = self._marginBox || self.measureBox(elm, 'margin');
+			initialSize = DomUtils.getSize(elm);
 
 			// Setup minWidth/minHeight and width/height
 			startMinWidth = settings.minWidth;
 			startMinHeight = settings.minHeight;
-			minWidth = startMinWidth || elm.offsetWidth;
-			minHeight = startMinHeight || elm.offsetHeight;
+			minWidth = startMinWidth || initialSize.width;
+			minHeight = startMinHeight || initialSize.height;
 			width = settings.width;
 			height = settings.height;
 			autoResize = settings.autoResize;
@@ -691,6 +696,17 @@ define("tinymce/ui/Control", [
 		},
 
 		/**
+		 * Returns true/false if the specified event has any listeners.
+		 *
+		 * @method hasEventListeners
+		 * @param {String} name Name of the event to check for.
+		 * @return {Boolean} True/false state if the event has listeners.
+		 */
+		hasEventListeners: function(name) {
+			return name in this._bindings;
+		},
+
+		/**
 		 * Returns a control collection with all parent controls.
 		 *
 		 * @method parents
@@ -887,6 +903,18 @@ define("tinymce/ui/Control", [
 		},
 
 		/**
+		 * Sets the inner HTML of the control element.
+		 *
+		 * @method innerHtml
+		 * @param {String} html Html string to set as inner html.
+		 * @return {tinymce.ui.Control} Current control object.
+		 */
+		innerHtml: function(html) {
+			DomUtils.innerHtml(this.getEl(), html);
+			return this;
+		},
+
+		/**
 		 * Returns the control DOM element or sub element.
 		 *
 		 * @method getEl
@@ -1071,11 +1099,11 @@ define("tinymce/ui/Control", [
 		 * @return {tinymce.ui.Control} Current control instance.
 		 */
 		remove: function() {
-			var self = this, elm = self.getEl(), parent = self.parent(), newItems;
+			var self = this, elm = self.getEl(), parent = self.parent(), newItems, i;
 
 			if (self.items) {
 				var controls = self.items().toArray();
-				var i = controls.length;
+				i = controls.length;
 				while (i--) {
 					controls[i].remove();
 				}
@@ -1099,8 +1127,16 @@ define("tinymce/ui/Control", [
 			}
 
 			delete Control.controlIdLookup[self._id];
+			delete elementIdCache[self._id];
 
-			if (elm.parentNode) {
+			if (elm && elm.parentNode) {
+				var nodes = elm.getElementsByTagName('*');
+
+				i = nodes.length;
+				while (i--) {
+					delete elementIdCache[nodes[i].id];
+				}
+
 				elm.parentNode.removeChild(elm);
 			}
 

@@ -708,7 +708,7 @@ define("tinymce/html/DomParser", [
 						// Replaces BR elements inside inline elements like <p><b><i><br></i></b></p>
 						// so they become <p><b><i>&nbsp;</i></b></p>
 						lastParent = node;
-						while (parent.firstChild === lastParent && parent.lastChild === lastParent) {
+						while (parent && parent.firstChild === lastParent && parent.lastChild === lastParent) {
 							lastParent = parent;
 
 							if (blockElements[parent.name]) {

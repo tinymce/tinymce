@@ -4,41 +4,71 @@
 	position: relative;
 }
 
-.mce-colorpicker {
-	background: #FFF;
-}
-
 .mce-colorbutton-grid {
 	margin: 4px;	
 }
 
-.mce-grid td div {
-	border: 1px solid #808080;
-	width: 12px; height: 12px;
-	margin: 2px;
-	cursor: pointer;
-	&:hover {
-		border-color: black;
-	}
-	&:focus {
-		border-color: @focus-border-color-fallback;
-		outline: 1px solid @focus-border-color;
-		border-color: @focus-border-color
-	}
-}
-
-.mce-colorbutton {
-	position: relative;
+.mce-colorbutton button {
+	padding-right: 4px;
 }
 
 .mce-colorbutton .mce-preview {
+	padding-right: 3px;
 	display: block;
 	position: absolute;
-	left: 50%; top: 50%;
-	margin-left: -8px;
+	left: 50%;
+	top: 50%;
+	margin-left: -14px;
 	margin-top: 7px;
 	background: gray;
-	width: 16px;
+	width: 13px;
 	height: 2px;
 	overflow: hidden;
+}
+
+.mce-colorbutton.mce-btn-small .mce-preview {
+	margin-left: -17px;
+	padding-right: 0;
+	width: 16px;
+}
+
+.mce-colorbutton .mce-open {
+	padding-left: 4px;
+	border-left: 1px solid transparent;
+	border-right: 1px solid transparent;
+}
+
+.mce-colorbutton:hover .mce-open {
+	border-left-color: @btn-split-border;
+	border-right-color: @btn-split-border;
+}
+
+// RTL
+
+.mce-rtl .mce-colorbutton {
+	direction: rtl;
+}
+
+.mce-rtl .mce-colorbutton .mce-preview {
+	margin-left: 0;
+	padding-right: 0;
+	padding-left: 3px;
+	margin-right: -14px;
+}
+
+.mce-rtl .mce-colorbutton.mce-btn-small .mce-preview {
+	margin-left: 0;
+	padding-right: 0;
+	margin-right: -17px;
+	padding-left: 0;
+}
+
+.mce-rtl .mce-colorbutton button {
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+.mce-rtl .mce-colorbutton .mce-open {
+	padding-left: 4px;
+	padding-right: 4px;
 }

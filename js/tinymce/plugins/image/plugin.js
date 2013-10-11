@@ -11,6 +11,33 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('image', function(editor) {
+	function getImageSize(url, callback) {
+		var img = document.createElement('img');
+
+		function done(width, height) {
+			img.parentNode.removeChild(img);
+			callback({width: width, height: height});
+		}
+
+		img.onload = function() {
+			done(img.clientWidth, img.clientHeight);
+		};
+
+		img.onerror = function() {
+			done();
+		};
+
+		img.src = url;
+
+		var style = img.style;
+		style.visibility = 'hidden';
+		style.position = 'fixed';
+		style.bottom = style.left = 0;
+		style.width = style.height = 'auto';
+
+		document.body.appendChild(img);
+	}
+
 	function createImageList(callback) {
 		return function() {
 			var imageList = editor.settings.image_list;
@@ -71,11 +98,24 @@ tinymce.PluginManager.add('image', function(editor) {
 
 		function onSubmitForm() {
 			function waitLoad(imgElm) {
-				imgElm.onload = imgElm.onerror = function() {
+				function selectImage() {
 					imgElm.onload = imgElm.onerror = null;
 					editor.selection.select(imgElm);
 					editor.nodeChanged();
+				}
+
+				imgElm.onload = function() {
+					if (!data.width && !data.height) {
+						dom.setAttribs(imgElm, {
+							width: imgElm.clientWidth,
+							height: imgElm.clientHeight
+						});
+					}
+
+					selectImage();
 				};
+
+				imgElm.onerror = selectImage;
 			}
 
 			var data = win.toJSON();
@@ -100,16 +140,27 @@ tinymce.PluginManager.add('image', function(editor) {
 				style: data.style
 			};
 
-			if (!imgElm) {
-				data.id = '__mcenew';
-				editor.insertContent(dom.createHTML('img', data));
-				imgElm = dom.get('__mcenew');
-				dom.setAttrib(imgElm, 'id', null);
-			} else {
-				dom.setAttribs(imgElm, data);
-			}
+			editor.undoManager.transact(function() {
+				if (!data.src) {
+					if (imgElm) {
+						dom.remove(imgElm);
+						editor.nodeChanged();
+					}
 
-			waitLoad(imgElm);
+					return;
+				}
+
+				if (!imgElm) {
+					data.id = '__mcenew';
+					editor.selection.setContent(dom.createHTML('img', data));
+					imgElm = dom.get('__mcenew');
+					dom.setAttrib(imgElm, 'id', null);
+				} else {
+					dom.setAttribs(imgElm, data);
+				}
+
+				waitLoad(imgElm);
+			});
 		}
 
 		function removePixelSuffix(value) {
@@ -118,6 +169,18 @@ tinymce.PluginManager.add('image', function(editor) {
 			}
 
 			return value;
+		}
+
+		function updateSize() {
+			getImageSize(this.value(), function(data) {
+				if (data.width && data.height) {
+					width = data.width;
+					height = data.height;
+
+					win.find('#width').value(width);
+					win.find('#height').value(height);
+				}
+			});
 		}
 
 		width = dom.getAttrib(imgElm, 'width');
@@ -154,7 +217,7 @@ tinymce.PluginManager.add('image', function(editor) {
 
 		// General settings shared between simple and advanced dialogs
 		var generalFormItems = [
-			{name: 'src', type: 'filepicker', filetype: 'image', label: 'Source', autofocus: true},
+			{name: 'src', type: 'filepicker', filetype: 'image', label: 'Source', autofocus: true, onchange: updateSize},
 			imageListCtrl,
 			{name: 'alt', type: 'textbox', label: 'Image description'},
 			{
@@ -185,6 +248,8 @@ tinymce.PluginManager.add('image', function(editor) {
 			var data = win.toJSON();
 			var css = dom.parseStyle(data.style);
 
+			dom.setAttrib(imgElm, 'style', '');
+
 			delete css.margin;
 			css['margin-top'] = css['margin-bottom'] = addPixelSuffix(data.vspace);
 			css['margin-left'] = css['margin-right'] = addPixelSuffix(data.hspace);
@@ -204,7 +269,7 @@ tinymce.PluginManager.add('image', function(editor) {
 
 			// Advanced dialog shows general+advanced tabs
 			win = editor.windowManager.open({
-				title: 'Edit image',
+				title: 'Insert/edit image',
 				data: data,
 				bodyType: 'tabpanel',
 				body: [
@@ -250,7 +315,7 @@ tinymce.PluginManager.add('image', function(editor) {
 		} else {
 			// Simple default dialog
 			win = editor.windowManager.open({
-				title: 'Edit image',
+				title: 'Insert/edit image',
 				data: data,
 				body: generalFormItems,
 				onSubmit: onSubmitForm

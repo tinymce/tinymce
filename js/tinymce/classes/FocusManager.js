@@ -18,8 +18,9 @@
  * @class tinymce.FocusManager
  */
 define("tinymce/FocusManager", [
-	"tinymce/dom/DOMUtils"
-], function(DOMUtils) {
+	"tinymce/dom/DOMUtils",
+	"tinymce/Env"
+], function(DOMUtils, Env) {
 	/**
 	 * Constructs a new focus manager instance.
 	 *
@@ -37,8 +38,37 @@ define("tinymce/FocusManager", [
 			}
 		}
 
+		// We can't store a real range on IE 11 since it gets mutated so we need to use a bookmark object
+		// TODO: Move this to a separate range utils class since it's it's logic is present in Selection as well.
+		function createBookmark(rng) {
+			if (rng && rng.startContainer) {
+				return {
+					startContainer: rng.startContainer,
+					startOffset: rng.startOffset,
+					endContainer: rng.endContainer,
+					endOffset: rng.endOffset
+				};
+			}
+
+			return rng;
+		}
+
+		function bookmarkToRng(editor, bookmark) {
+			var rng;
+
+			if (bookmark.startContainer) {
+				rng = editor.getDoc().createRange();
+				rng.setStart(bookmark.startContainer, bookmark.startOffset);
+				rng.setEnd(bookmark.endContainer, bookmark.endOffset);
+			} else {
+				rng = bookmark;
+			}
+
+			return rng;
+		}
+
 		function registerEvents(e) {
-			var editor = e.editor, restoreRng, lastRng;
+			var editor = e.editor, lastRng, selectionChangeHandler;
 
 			function isUIElement(elm) {
 				return !!DOMUtils.DOM.getParent(elm, FocusManager.isEditorUIElement);
@@ -46,15 +76,25 @@ define("tinymce/FocusManager", [
 
 			editor.on('init', function() {
 				// On IE take selection snapshot onbeforedeactivate
-				if ("onbeforedeactivate" in document) {
+				if ("onbeforedeactivate" in document && Env.ie < 11) {
 					editor.dom.bind(editor.getBody(), 'beforedeactivate', function() {
 						var ieSelection = editor.getDoc().selection;
-						lastRng = ieSelection && ieSelection.createRange ? ieSelection.createRange() : editor.selection.getRng();
+
+						try {
+							lastRng = ieSelection && ieSelection.createRange ? ieSelection.createRange() : editor.selection.getRng();
+						} catch (ex) {
+							// IE throws "Unexcpected call to method or property access" some times so lets ignore it
+						}
 					});
-				} else if (editor.inline) {
+				} else if (editor.inline || Env.ie > 10) {
 					// On other browsers take snapshot on nodechange in inline mode since they have Ghost selections for iframes
-					editor.on('nodechange', function() {
+					editor.on('nodechange keyup', function() {
 						var isInBody, node = document.activeElement;
+
+						// IE 11 reports active element as iframe not body of iframe
+						if (node && node.id == editor.id + '_ifr') {
+							node = editor.getBody();
+						}
 
 						// Check if selection is within editor body
 						while (node) {
@@ -70,15 +110,42 @@ define("tinymce/FocusManager", [
 							lastRng = editor.selection.getRng();
 						}
 					});
+
+					// Handles the issue with WebKit not retaining selection within inline document
+					// If the user releases the mouse out side the body while selecting a nodeChange won't
+					// fire and there for the selection snapshot won't be stored
+					// TODO: Optimize this since we only need to bind these on the active editor
+					if (Env.webkit) {
+						selectionChangeHandler = function() {
+							var rng = editor.selection.getRng();
+
+							// Store when it's non collapsed
+							if (!rng.collapsed) {
+								lastRng = rng;
+							}
+						};
+
+						// Bind selection handler
+						DOMUtils.DOM.bind(document, 'selectionchange', selectionChangeHandler);
+
+						editor.on('remove', function() {
+							DOMUtils.DOM.unbind(document, 'selectionchange', selectionChangeHandler);
+						});
+					}
 				}
+			});
+
+			// Remove last selection bookmark on mousedown see #6305
+			editor.on('mousedown', function() {
+				editor.selection.lastFocusBookmark = null;
 			});
 
 			editor.on('focusin', function() {
 				var focusedEditor = editorManager.focusedEditor;
 
-				if (restoreRng) {
-					editor.selection.setRng(restoreRng);
-					restoreRng = null;
+				if (editor.selection.lastFocusBookmark) {
+					editor.selection.setRng(bookmarkToRng(editor, editor.selection.lastFocusBookmark));
+					editor.selection.lastFocusBookmark = null;
 				}
 
 				if (focusedEditor != editor) {
@@ -86,6 +153,7 @@ define("tinymce/FocusManager", [
 						focusedEditor.fire('blur', {focusedEditor: editor});
 					}
 
+					editorManager.activeEditor = editor;
 					editor.fire('focus', {blurredEditor: focusedEditor});
 					editor.focus(false);
 					editorManager.focusedEditor = editor;
@@ -93,21 +161,21 @@ define("tinymce/FocusManager", [
 			});
 
 			editor.on('focusout', function() {
-				restoreRng = lastRng;
+				editor.selection.lastFocusBookmark = createBookmark(lastRng);
 
 				window.setTimeout(function() {
 					var focusedEditor = editorManager.focusedEditor;
 
 					// Focus from editorA into editorB then don't restore selection
 					if (focusedEditor != editor) {
-						restoreRng = null;
+						editor.selection.lastFocusBookmark = null;
 					}
 
-					// Still the same editor the the blur was outside any editor
+					// Still the same editor the the blur was outside any editor UI
 					if (!isUIElement(getActiveElement()) && focusedEditor == editor) {
 						editor.fire('blur', {focusedEditor: null});
 						editorManager.focusedEditor = null;
-						restoreRng = null;
+						editor.selection.lastFocusBookmark = null;
 					}
 				}, 0);
 			});

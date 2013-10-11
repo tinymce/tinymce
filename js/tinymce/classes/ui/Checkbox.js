@@ -13,7 +13,7 @@
  *
  * @example
  * // Create and render a checkbox to the body element
- * tinymce.ui.Factory({
+ * tinymce.ui.Factory.create({
  *     type: 'checkbox',
  *     checked: true,
  *     text: 'My checkbox'

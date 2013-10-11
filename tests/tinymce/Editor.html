@@ -27,7 +27,7 @@ test('Event: change', function() {
 
 	editor.setContent('');
 	editor.insertContent('a');
-	equal(level.content, '<p>a</p>');
+	equal(level.content.toLowerCase(), '<p>a</p>');
 	equal(lastLevel.content, editor.undoManager.data[0].content);
 
 	editor.off('change');

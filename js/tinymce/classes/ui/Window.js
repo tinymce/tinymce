@@ -54,6 +54,10 @@ define("tinymce/ui/Window", [
 
 			self._super(settings);
 
+			if (self.isRtl()) {
+				self.addClass('rtl');
+			}
+
 			self.addClass('window');
 			self._fixed = true;
 
@@ -65,7 +69,7 @@ define("tinymce/ui/Window", [
 					spacing: 3,
 					padding: 10,
 					align: 'center',
-					pack: 'end',
+					pack: self.isRtl() ? 'start' : 'end',
 					defaults: {
 						type: 'button'
 					},
@@ -144,8 +148,12 @@ define("tinymce/ui/Window", [
 			// Reserve vertical space for title
 			if (self.settings.title && !self._fullscreen) {
 				headEl = self.getEl('head');
-				layoutRect.headerW = headEl.offsetWidth;
-				layoutRect.headerH = headEl.offsetHeight;
+
+				var size = DomUtils.getSize(headEl);
+
+				layoutRect.headerW = size.width;
+				layoutRect.headerH = size.height;
+
 				deltaH += layoutRect.headerH;
 			}
 
@@ -312,7 +320,7 @@ define("tinymce/ui/Window", [
 						items.push(ctrl.getEl('inp'));
 
 						if (ctrl.getEl('open')) {
-							items.push(ctrl.getEl('open').firstChild);
+							items.push(ctrl.getEl('open'));
 						}
 					} else {
 						items.push(ctrl.getEl());
@@ -367,12 +375,6 @@ define("tinymce/ui/Window", [
 		 * @return {Object} Event arguments object.
 		 */
 		submit: function() {
-			// Blur current control so a onchange is fired before submit
-			var ctrl = this.getParentCtrl(document.activeElement);
-			if (ctrl) {
-				ctrl.blur();
-			}
-
 			return this.fire('submit', {data: this.toJSON()});
 		},
 
@@ -385,8 +387,8 @@ define("tinymce/ui/Window", [
 		remove: function() {
 			var self = this;
 
-			self._super();
 			self.dragHelper.destroy();
+			self._super();
 
 			if (self.statusbar) {
 				this.statusbar.remove();

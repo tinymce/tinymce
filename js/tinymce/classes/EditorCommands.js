@@ -364,8 +364,8 @@ define("tinymce/EditorCommands", [
 				parentNode = selection.getNode();
 
 				// Parse the fragment within the context of the parent node
-				args = {context: parentNode.nodeName.toLowerCase()};
-				fragment = parser.parse(value, args);
+				var parserArgs = {context: parentNode.nodeName.toLowerCase()};
+				fragment = parser.parse(value, parserArgs);
 
 				// Move the caret to a more suitable location
 				node = fragment.lastChild;
@@ -381,7 +381,7 @@ define("tinymce/EditorCommands", [
 				}
 
 				// If parser says valid we can insert the contents into that parent
-				if (!args.invalid) {
+				if (!parserArgs.invalid) {
 					value = serializer.serialize(fragment);
 
 					// Check if parent is empty or only has one BR element then set the innerHTML of that parent

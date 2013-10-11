@@ -382,7 +382,7 @@ test("event states when event object is fired twice", function() {
 
 	var event = {};
 	eventUtils.fire(window, 'keydown', event);
-	eventUtils.fire(window, 'keyup', event);	
+	eventUtils.fire(window, 'keyup', event);
 
 	ok(event.isDefaultPrevented(), "Default is prevented.");
 	ok(event.isPropagationStopped(), "Propagation is stopped.");
@@ -392,16 +392,30 @@ test("event states when event object is fired twice", function() {
 });
 
 test("unbind inside callback", function() {
-	function a() {}
+	var data;
 
-	eventUtils.bind(window, 'click', function() {
-		eventUtils.unbind(window, 'click', a);
-	});
+	function append(value) {
+		return function() {
+			data += value;
+		};
+	}
 
-	eventUtils.bind(window, 'click', a);
+	function callback() {
+		eventUtils.unbind(window, 'click', callback);
+		data += 'b';
+	}
+
+	data = '';
+	eventUtils.bind(window, 'click', append("a"));
+	eventUtils.bind(window, 'click', callback);
+	eventUtils.bind(window, 'click', append("c"));
+
 	eventUtils.fire(window, 'click', {});
+	equal(data, 'abc');
 
-	ok(true, "No exception");
+	data = '';
+	eventUtils.fire(window, 'click', {});
+	equal(data, 'ac');
 });
 </script>
 

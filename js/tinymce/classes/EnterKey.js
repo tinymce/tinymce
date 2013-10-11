@@ -15,7 +15,7 @@ define("tinymce/EnterKey", [
 	"tinymce/dom/TreeWalker",
 	"tinymce/Env"
 ], function(TreeWalker, Env) {
-	var isIE = Env.ie;
+	var isIE = Env.ie && Env.ie < 11;
 
 	return function(editor) {
 		var dom = editor.dom, selection = editor.selection, settings = editor.settings;
@@ -583,6 +583,7 @@ define("tinymce/EnterKey", [
 				// Insert new block before
 				newBlock = parentBlock.parentNode.insertBefore(createNewBlock(), parentBlock);
 				renderBlockOnIE(newBlock);
+				moveToCaretPosition(parentBlock);
 			} else {
 				// Extract after fragment and insert it after the current block
 				tmpRng = rng.cloneRange();
@@ -597,6 +598,10 @@ define("tinymce/EnterKey", [
 			}
 
 			dom.setAttrib(newBlock, 'id', ''); // Remove ID since it needs to be document unique
+
+			// Allow custom handling of new blocks
+			editor.fire('NewBlock', { newBlock: newBlock });
+
 			undoManager.add();
 		}
 

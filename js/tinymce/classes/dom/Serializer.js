@@ -28,7 +28,7 @@ define("tinymce/dom/Serializer", [
 	var DOM = DOMUtils.DOM;
 
 	/**
-	 * Constucts a new DOM serializer class.
+	 * Constructs a new DOM serializer class.
 	 *
 	 * @constructor
 	 * @method Serializer
@@ -141,8 +141,9 @@ define("tinymce/dom/Serializer", [
 				value = node.firstChild ? node.firstChild.value : '';
 
 				if (name === "script") {
-					// Remove mce- prefix from script elements
-					node.attr('type', (node.attr('type') || 'text/javascript').replace(/^mce\-/, ''));
+					// Remove mce- prefix from script elements and remove default text/javascript mime type (HTML5)
+					var type = (node.attr('type') || 'text/javascript').replace(/^mce\-/, '');
+					node.attr('type', type === 'text/javascript' ? null : type);
 
 					if (value.length > 0) {
 						node.firstChild.value = '// <![CDATA[\n' + trim(value) + '\n// ]]>';

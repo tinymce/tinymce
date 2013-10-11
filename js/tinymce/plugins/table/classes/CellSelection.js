@@ -37,17 +37,7 @@ define("tinymce/tableplugin/CellSelection", [
 			}
 		}
 
-		// Add cell selection logic
-		editor.on('MouseDown', function(e) {
-			if (e.button != 2) {
-				clear();
-
-				startCell = dom.getParent(e.target, 'td,th');
-				startTable = dom.getParent(startCell, 'table');
-			}
-		});
-
-		dom.bind(editor.getDoc(), 'mouseover', function(e) {
+		function cellSelectionHandler(e) {
 			var sel, table, target = e.target;
 
 			if (startCell && (tableGrid || target != startCell) && (target.nodeName == 'TD' || target.nodeName == 'TH')) {
@@ -79,6 +69,22 @@ define("tinymce/tableplugin/CellSelection", [
 
 				e.preventDefault();
 			}
+		}
+
+		// Add cell selection logic
+		editor.on('MouseDown', function(e) {
+			if (e.button != 2) {
+				clear();
+
+				startCell = dom.getParent(e.target, 'td,th');
+				startTable = dom.getParent(startCell, 'table');
+			}
+		});
+
+		dom.bind(editor.getDoc(), 'mouseover', cellSelectionHandler);
+
+		editor.on('remove', function() {
+			dom.unbind(editor.getDoc(), 'mouseover', cellSelectionHandler);
 		});
 
 		editor.on('MouseUp', function() {

@@ -1,13 +1,13 @@
 // Mixins
 
-.opacity(@opacity:0.5) {
+.opacity(@opacity) {
 	opacity: @opacity;
 	@opacityie: @opacity * 100;
 	filter: ~"alpha(opacity=@{opacityie})";
 	zoom: 1;
 }
 
-.vertical-gradient(@startColor: #FDFDFD, @endColor: #DDD) {
+.vertical-gradient(@startColor, @endColor) when (@has-gradients = true) {
 	background-color: mix(@startColor, @endColor, 60%);
 	background-image: -moz-linear-gradient(top, @startColor, @endColor); // FF 3.6+
 	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@startColor), to(@endColor)); // Safari 4+, Chrome 2+
@@ -15,17 +15,21 @@
 	background-image: -o-linear-gradient(top, @startColor, @endColor); // Opera 11.10
 	background-image: linear-gradient(to bottom, @startColor, @endColor); // Standard, IE10
 	background-repeat: repeat-x;
-	filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",argb(@startColor),argb(@endColor)));
+	filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)", argb(@startColor), argb(@endColor)));
 	zoom: 1;
 }
 
-.border-radius(@radius:3px) {
+.vertical-gradient(@startColor, @endColor) when (@has-gradients = false) {
+	background-color: mix(@startColor, @endColor, 60%);
+}
+
+.border-radius(@radius) when (@has-radius = true) {
 	-webkit-border-radius: @radius;
 	-moz-border-radius: @radius;
 	border-radius: @radius;
 }
 
-.box-shadow(@shadowA:#ccc 5px 5px 5px, @shadowB:X, ...){
+.box-shadow(@shadowA, @shadowB:X, ...) when (@has-boxshadow = true) {
 	// Multiple shadow solution from http://toekneestuck.com/blog/2012/05/15/less-css-arguments-variable/
 	@props: ~`"@{arguments}".replace(/[\[\]]|\,\sX/g, '')`;
 	-webkit-box-shadow: @props;
@@ -40,8 +44,6 @@
 
 .inline-block() {
 	display: inline-block;
-
-	// IE7
 	*display: inline;
 	*zoom: 1;
 }
@@ -49,12 +51,4 @@
 .reset-gradient() {
 	filter: e(%("progid:DXImageTransform.Microsoft.gradient(enabled = false)"));
 	background: transparent;
-}
-
-.button-background(@startColor, @endColor, @textColor: #fff, @textShadow: 0 -1px 0 rgba(0,0,0,.25)) {
-	color: @textColor;
-	text-shadow: @textShadow;
-	.vertical-gradient(@startColor, @endColor);
-	border-color: @endColor @endColor darken(@endColor, 15%);
-	border-color: rgba(0,0,0,.1) rgba(0,0,0,.1) fadein(rgba(0,0,0,.1), 15%);
 }

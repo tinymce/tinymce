@@ -15,14 +15,24 @@
 		plugins: [
 			["advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker"],
 			["searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking"],
-			["save table contextmenu directionality emoticons template paste"]
+			["save table contextmenu directionality emoticons template paste importcss"]
 		],
 		content_css: "css/development.css",
 		add_unload_trigger: false,
-		schema: "html5",
 		inline: true,
 		toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media",
-		statusbar: false
+
+		spellchecker_callback: function(method, words, callback) {
+			if (method == "spellcheck") {
+				var suggestions = {};
+
+				for (var i = 0; i < words.length; i++) {
+					suggestions[words[i]] = ["First", "second"];
+				}
+
+				callback(suggestions);
+			}
+		}
 	});
 
 	tinymce.init({
@@ -30,10 +40,8 @@
 		theme: "modern",
 		content_css: "css/development.css",
 		add_unload_trigger: false,
-		schema: "html5",
 		inline: true,
-		toolbar: "undo redo",
-		statusbar: false
+		toolbar: "undo redo"
 	});
 </script>
 </head>
@@ -65,7 +73,7 @@ div.edit {
 
 		<br style="clear: both" />
 
-		<div>
+		<div style="height: 300px; overflow: auto; border: 1px solid gray">
 			<h1 class="edit">Edit me</h1>
 			<div class="edit">Simple content</div>
 

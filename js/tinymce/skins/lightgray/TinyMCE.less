@@ -7,7 +7,6 @@
 .mce-fullscreen {
 	border: 0; padding: 0; margin: 0;
 	overflow: hidden;
-	background: #FFF;
 	height: 100%;
 	z-index: 100;
 }
@@ -21,15 +20,17 @@ div.mce-fullscreen {
 
 .mce-tinymce {
 	display: block;
-	border-radius: 2px;
+	.border-radius(2px);
 }
 
 .mce-wordcount {
-	float: right;
+	position: absolute;
+	top: 0;
+	right: 0;
 	padding: 8px;
 }
 
-.mce-edit-area {
+div.mce-edit-area {
 	background: #FFF;
 	filter: none;
 }
@@ -54,17 +55,28 @@ div.mce-fullscreen {
 
 .mce-charmap td {
 	cursor: default;
-	border: 1px solid @btn-border-color;
+	border: 1px solid @panel-border;
 	width: 20px;
 	height: 20px;
 	line-height: 20px;
 	text-align: center;
-	vertical-align: center;
+	vertical-align: middle;
 	padding: 2px;
 }
 
+.mce-charmap td div {
+	text-align: center;
+}
+
 .mce-charmap td:hover {
-	background: @btn-background-highlight;
+	background: @btn-bg-hlight;
+}
+
+.mce-grid td div {
+	border: 1px solid @grid-border;
+	width: 12px; height: 12px;
+	margin: 2px;
+	cursor: pointer;
 }
 
 .mce-grid {
@@ -76,7 +88,7 @@ div.mce-fullscreen {
 		border: 1px solid transparent;
 
 		&:hover {
-			border-color: @btn-border-color;
+			border-color: @grid-border-active;
 		}
 	}
 }
@@ -85,13 +97,13 @@ div.mce-fullscreen {
 	margin: 0 4px 0 4px;
 
 	a {
-		border-color: #e8e8e8;
+		border-color: @grid-border;
 		width: 13px; height: 13px;
 	}
 
 	a:hover, a.mce-active {
-		border-color: #c4daff;
-		background: #deeafa;
+		border-color: @grid-border-active;
+		background: @grid-bg-active;
 	}
 }
 
@@ -102,4 +114,11 @@ div.mce-fullscreen {
 div.mce-tinymce-inline {
 	width: 100%;
 	.box-shadow(none);
+}
+
+// RTL
+
+.mce-rtl .mce-wordcount {
+	left: 0;
+	right: auto;
 }

@@ -4,6 +4,11 @@
 <title>Development file</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
+<!--
+<script type="text/javascript">less = {env: "development", async: false};</script>
+<link rel="stylesheet/less" type="text/css" href="../../js/tinymce/skins/lightgray/skin.dev.less">
+<script src="../../node_modules/less/dist/less-1.4.2.min.js"></script>
+-->
 <script src="../../js/tinymce/tinymce.dev.js"></script>
 <script src="../../js/tinymce/plugins/table/plugin.dev.js"></script>
 <script src="../../js/tinymce/plugins/paste/plugin.dev.js"></script>
@@ -15,7 +20,7 @@
 		plugins: [
 			"advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
 			"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-			"save table contextmenu directionality emoticons template paste textcolor"
+			"save table contextmenu directionality emoticons template paste textcolor importcss"
 		],
 		external_plugins: {
 			//"moxiemanager": "/moxiemanager-php/plugin.js"
@@ -37,6 +42,19 @@
 			{title: 'Table row 1', selector: 'tr', classes: 'tablerow1'}
 		],
 
+		template_replace_values : {
+			username : "Jack Black"
+		},
+
+		template_preview_replace_values : {
+			username : "Preview user name"
+		},
+
+		templates: [ 
+			{title: 'Some title 1', description: 'Some desc 1', content: '<strong class="red">My content: {$username}</strong>'}, 
+			{title: 'Some title 2', description: 'Some desc 2', url: 'development.html'} 
+		],
+
 		setup: function(ed) {
 			/*ed.on(
 				'Init PreInit PostRender PreProcess PostProcess BeforeExecCommand ExecCommand Activate Deactivate ' +
@@ -44,6 +62,18 @@
 				'Change Undo Redo AddUndo BeforeAddUndo', function(e) {
 				console.log(e.type, e);
 			});*/
+		},
+
+		spellchecker_callback: function(method, words, callback) {
+			if (method == "spellcheck") {
+				var suggestions = {};
+
+				for (var i = 0; i < words.length; i++) {
+					suggestions[words[i]] = ["First", "second"];
+				}
+
+				callback(suggestions);
+			}
 		}
 	});
 </script>

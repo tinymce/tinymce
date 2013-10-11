@@ -28,7 +28,19 @@ define("tinymce/ui/DomUtils", [
 		},
 
 		getSize: function(elm) {
-			return DOMUtils.DOM.getSize(elm);
+			var width, height;
+
+			if (elm.getBoundingClientRect) {
+				var rect = elm.getBoundingClientRect();
+
+				width = Math.max(rect.width || (rect.right - rect.left), elm.offsetWidth);
+				height = Math.max(rect.height || (rect.bottom - rect.bottom), elm.offsetHeight);
+			} else {
+				width = elm.offsetWidth;
+				height = elm.offsetHeight;
+			}
+
+			return {width: width, height: height};
 		},
 
 		getPos: function(elm, root) {
@@ -73,6 +85,11 @@ define("tinymce/ui/DomUtils", [
 
 		fire: function(target, name, args) {
 			return DOMUtils.DOM.fire(target, name, args);
+		},
+
+		innerHtml: function(elm, html) {
+			// Workaround for <div> in <p> bug on IE 8 #6178
+			DOMUtils.DOM.setHTML(elm, html);
 		}
 	};
 });

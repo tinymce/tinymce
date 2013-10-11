@@ -141,11 +141,11 @@ function normalizeRng(rng) {
 
 // TODO: Replace this with the new event logic in 3.5
 function type(chr) {
-	var editor = tinymce.activeEditor, keyCode, charCode, event = tinymce.dom.Event, evt, startElm;
+	var editor = tinymce.activeEditor, keyCode, charCode, event = tinymce.dom.Event, evt, startElm, rng;
 
 	function fakeEvent(target, type, evt) {
 		editor.dom.fire(target, type, evt);
-	};
+	}
 
 	// Numeric keyCode
 	if (typeof(chr) == "number") {
@@ -175,19 +175,33 @@ function type(chr) {
 	if (!evt.isDefaultPrevented()) {
 		if (keyCode == 8) {
 			if (editor.getDoc().selection) {
-				var rng = editor.getDoc().selection.createRange();
+				rng = editor.getDoc().selection.createRange();
 
-				if (rng.text.length == 0) {
+				if (rng.text.length === 0) {
 					rng.moveStart('character', -1);
 					rng.select();
 				}
 
 				rng.execCommand('Delete', false, null);
 			} else {
+				rng = editor.selection.getRng();
+
+				if (rng.startContainer.nodeType == 1 && rng.collapsed) {
+					var nodes = rng.startContainer.childNodes, lastNode = nodes[nodes.length - 1];
+
+					// If caret is at <p>abc|</p> and after the abc text node then move it to the end of the text node
+					// Expand the range to include the last char <p>ab[c]</p> since IE 11 doesn't delete otherwise
+					if (rng.startOffset >= nodes.length - 1 && lastNode && lastNode.nodeType == 3 && lastNode.data.length > 0) {
+						rng.setStart(lastNode, lastNode.data.length - 1);
+						rng.setEnd(lastNode, lastNode.data.length);
+						editor.selection.setRng(rng);
+					}
+				}
+
 				editor.getDoc().execCommand('Delete', false, null);
 			}
 		} else if (typeof(chr) == 'string') {
-			var rng = editor.selection.getRng(true);
+			rng = editor.selection.getRng(true);
 
 			if (rng.startContainer.nodeType == 3 && rng.collapsed) {
 				rng.startContainer.insertData(rng.startOffset, chr);
@@ -205,7 +219,7 @@ function type(chr) {
 
 function cleanHtml(html) {
 	html = html.toLowerCase().replace(/[\r\n]+/gi, '');
-	html = html.replace(/ (sizcache|nodeindex|sizset|data\-mce\-expando|data\-mce\-selected)="[^"]*"/gi, '');
+	html = html.replace(/ (sizcache[0-9]+|sizcache|nodeindex|sizset[0-9]+|sizset|data\-mce\-expando|data\-mce\-selected)="[^"]*"/gi, '');
 	html = html.replace(/<span[^>]+data-mce-bogus[^>]+>[\u200B\uFEFF]+<\/span>|<div[^>]+data-mce-bogus[^>]+><\/div>/gi, '');
 
 	return html;

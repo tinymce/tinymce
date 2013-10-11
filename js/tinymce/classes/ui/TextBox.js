@@ -48,14 +48,31 @@ define("tinymce/ui/TextBox", [
 						self.parents().reverse().each(function(ctrl) {
 							e.preventDefault();
 
-							if (ctrl.submit) {
-								ctrl.submit();
+							if (ctrl.hasEventListeners('submit') && ctrl.toJSON) {
+								ctrl.fire('submit', {data: ctrl.toJSON()});
 								return false;
 							}
 						});
 					}
 				});
 			}
+		},
+
+		/**
+		 * Getter/setter function for the disabled state.
+		 *
+		 * @method value
+		 * @param {Boolean} [state] State to be set.
+		 * @return {Boolean|tinymce.ui.ComboBox} True/false or self if it's a set operation.
+		 */
+		disabled: function(state) {
+			var self = this;
+
+			if (self._rendered && typeof(state) != 'undefined') {
+				self.getEl().disabled = state;
+			}
+
+			return self._super(state);
 		},
 
 		/**
@@ -97,6 +114,12 @@ define("tinymce/ui/TextBox", [
 			rect = self._layoutRect;
 			lastRepaintRect = self._lastRepaintRect || {};
 
+			// Detect old IE 7+8 add lineHeight to align caret vertically in the middle
+			var doc = document;
+			if (!self.settings.multiline && doc.all && (!doc.documentMode || doc.documentMode <= 8)) {
+				style.lineHeight = (rect.h - borderH) + 'px';
+			}
+
 			borderBox = self._borderBox;
 			borderW = borderBox.left + borderBox.right + 8;
 			borderH = borderBox.top + borderBox.bottom + (self.settings.multiline ? 8 : 0);
@@ -120,10 +143,6 @@ define("tinymce/ui/TextBox", [
 				style.height = (rect.h - borderH) + 'px';
 				lastRepaintRect.h = rect.h;
 			}
-
-			/*if (!self.settings.multiline) {
-				//style.lineHeight = (rect.h - borderH) + 'px';
-			}*/
 
 			self._lastRepaintRect = lastRepaintRect;
 			self.fire('repaint', {}, false);
@@ -156,6 +175,10 @@ define("tinymce/ui/TextBox", [
 				extraAttrs += ' type="' + settings.subtype + '"';
 			}
 
+			if (self.disabled()) {
+				extraAttrs += ' disabled="disabled"';
+			}
+
 			if (settings.multiline) {
 				return (
 					'<textarea id="' + id + '" class="' + self.classes() + '" ' +
@@ -181,6 +204,11 @@ define("tinymce/ui/TextBox", [
 			});
 
 			return self._super();
+		},
+
+		remove: function() {
+			DomUtils.off(this.getEl());
+			this._super();
 		}
 	});
 });

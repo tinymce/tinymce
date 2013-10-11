@@ -16,7 +16,7 @@ tinymce.PluginManager.add('save', function(editor) {
 
 		formObj = tinymce.DOM.getParent(editor.id, 'form');
 
-		if (editor.getParam("save_enablewhendirty") && !editor.isDirty()) {
+		if (editor.getParam("save_enablewhendirty", true) && !editor.isDirty()) {
 			return;
 		}
 
@@ -67,7 +67,7 @@ tinymce.PluginManager.add('save', function(editor) {
 		var self = this;
 
 		editor.on('nodeChange', function() {
-			self.disabled(!editor.isDirty());
+			self.disabled(editor.getParam("save_enablewhendirty", true) && !editor.isDirty());
 		});
 	}
 
@@ -75,6 +75,7 @@ tinymce.PluginManager.add('save', function(editor) {
 	editor.addCommand('mceCancel', cancel);
 
 	editor.addButton('save', {
+		icon: 'save',
 		text: 'Save',
 		cmd: 'mceSave',
 		disabled: true,

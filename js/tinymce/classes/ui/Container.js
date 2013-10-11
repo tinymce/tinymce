@@ -47,8 +47,12 @@ define("tinymce/ui/Container", [
 
 			self._super(settings);
 			settings = self.settings;
-
+			self._fixed = settings.fixed;
 			self._items = new Collection();
+
+			if (self.isRtl()) {
+				self.addClass('rtl');
+			}
 
 			self.addClass('container');
 			self.addClass('container-body', 'body');
@@ -276,7 +280,7 @@ define("tinymce/ui/Container", [
 			items = self.create(items);
 			curItems = self.items();
 
-			if (!before) {
+			if (!before && index < curItems.length - 1) {
 				index += 1;
 			}
 

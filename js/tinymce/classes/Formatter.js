@@ -11,7 +11,7 @@
 /**
  * Text formatter engine class. This class is used to apply formats like bold, italic, font size
  * etc to the current selection or specific nodes. This engine was build to replace the browsers
- * default formatting logic for execCommand due to it's inconsistant and buggy behavior.
+ * default formatting logic for execCommand due to it's inconsistent and buggy behavior.
  *
  * @class tinymce.Formatter
  * @example
@@ -140,7 +140,14 @@ define("tinymce/Formatter", [
 				},
 
 				removeformat: [
-					{selector: 'b,strong,em,i,font,u,strike', remove: 'all', split: true, expand: false, block_expand: true, deep: true},
+					{
+						selector: 'b,strong,em,i,font,u,strike,sub,sup',
+						remove: 'all',
+						split: true,
+						expand: false,
+						block_expand: true,
+						deep: true
+					},
 					{selector: 'span', attributes: ['style', 'class'], remove: 'empty', split: true, expand: false, deep: true},
 					{selector: '*', attributes: ['style', 'class'], split: false, expand: false, deep: true}
 				]
@@ -1007,9 +1014,11 @@ define("tinymce/Formatter", [
 			var startNode;
 
 			function matchParents(node) {
+				var root = dom.getRoot();
+
 				// Find first node with similar format settings
 				node = dom.getParent(node, function(node) {
-					return !!matchNode(node, name, vars, true);
+					return node.parentNode === root || !!matchNode(node, name, vars, true);
 				});
 
 				// Do an exact check on the similar format element
@@ -1085,8 +1094,9 @@ define("tinymce/Formatter", [
 				for (x = formatList.length - 1; x >= 0; x--) {
 					selector = formatList[x].selector;
 
-					// Format is not selector based, then always return TRUE
-					if (!selector) {
+					// Format is not selector based then always return TRUE
+					// Is it has a defaultBlock then it's likely it can be applied for example align on a non block element line
+					if (!selector || formatList[x].defaultBlock) {
 						return TRUE;
 					}
 
@@ -1516,7 +1526,7 @@ define("tinymce/Formatter", [
 			}
 
 			function findBlockEndPoint(container, sibling_name) {
-				var node;
+				var node, root = dom.getRoot();
 
 				// Expand to block of similar type
 				if (!format[0].wrapper) {
@@ -1525,7 +1535,10 @@ define("tinymce/Formatter", [
 
 				// Expand to first wrappable block element or any block element
 				if (!node) {
-					node = dom.getParent(container.nodeType == 3 ? container.parentNode : container, isTextBlock);
+					node = dom.getParent(container.nodeType == 3 ? container.parentNode : container, function(node) {
+						// Fixes #6183 where it would expand to editable parent element in inline mode
+						return node != root && isTextBlock(node);
+					});
 				}
 
 				// Exclude inner lists from wrapping
@@ -1576,14 +1589,14 @@ define("tinymce/Formatter", [
 
 			if (format[0].inline) {
 				if (rng.collapsed) {
-					// Expand left to closest word boundery
+					// Expand left to closest word boundary
 					endPoint = findWordEndPoint(startContainer, startOffset, true);
 					if (endPoint) {
 						startContainer = endPoint.container;
 						startOffset = endPoint.offset;
 					}
 
-					// Expand right to closest word boundery
+					// Expand right to closest word boundary
 					endPoint = findWordEndPoint(endContainer, endOffset);
 					if (endPoint) {
 						endContainer = endPoint.container;
@@ -2267,11 +2280,23 @@ define("tinymce/Formatter", [
 					node.appendChild(dom.doc.createTextNode(INVISIBLE_CHAR));
 					node = node.firstChild;
 
-					// Insert caret container after the formated node
-					dom.insertAfter(caretContainer, formatNode);
+					var block = dom.getParent(formatNode, isTextBlock);
+
+					if (block && dom.isEmpty(block)) {
+						// Replace formatNode with caretContainer when removing format from empty block like <p><b>|</b></p>
+						formatNode.parentNode.replaceChild(caretContainer, formatNode);
+					} else {
+						// Insert caret container after the formated node
+						dom.insertAfter(caretContainer, formatNode);
+					}
 
 					// Move selection to text node
 					selection.setCursorLocation(node, 1);
+
+					// If the formatNode is empty, we can remove it safely. 
+					if (dom.isEmpty(formatNode)) {
+						dom.remove(formatNode);
+					}
 				}
 			}
 

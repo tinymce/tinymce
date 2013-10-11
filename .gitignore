@@ -1,7 +1,6 @@
 bin
 obj
 tmp
-docs
 .settings
 .idea
 .project
@@ -28,3 +27,6 @@ mcmanager
 *.dev.js
 *.min.css
 skin.less
+skin.dev.less
+skin.ie7.less
+skin.ie7.dev.less

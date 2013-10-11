@@ -43,7 +43,6 @@ tinymce.PluginManager.add('emoticons', function(editor, url) {
 
 	editor.addButton('emoticons', {
 		type: 'panelbutton',
-		popoverAlign: 'bc-tl',
 		panel: {
 			autohide: true,
 			html: getHtml,
@@ -58,20 +57,4 @@ tinymce.PluginManager.add('emoticons', function(editor, url) {
 		},
 		tooltip: 'Emoticons'
 	});
-/*
-	editor.addButton('emoticons', {
-		type: 'panelbutton',
-		popoverAlign: 'bc-tl',
-		panel: {
-			layout: 'flex',
-			spacing: 5,
-			padding: 5,
-			autohide: true,
-			items: [
-				{type: 'textbox', label: 'Url'},
-				{type: 'button', text: 'OK'}
-			]
-		},
-		tooltip: 'Emoticons'
-	});*/
 });

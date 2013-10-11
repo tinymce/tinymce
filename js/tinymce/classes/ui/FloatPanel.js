@@ -93,7 +93,7 @@ define("tinymce/ui/FloatPanel", [
 						if (visiblePanels[i] != panel) {
 							parent = visiblePanels[i].parent();
 
-							while ((parent = parent.parent())) {
+							while (parent && (parent = parent.parent())) {
 								if (parent == panel) {
 									visiblePanels[i].fixed(fixed).moveBy(0, deltaY).repaint();
 								}
@@ -225,7 +225,7 @@ define("tinymce/ui/FloatPanel", [
 
 			if (settings.popover) {
 				self._preBodyHtml = '<div class="' + self.classPrefix + 'arrow"></div>';
-				self.addClass('popover').addClass('bottom').addClass('start');
+				self.addClass('popover').addClass('bottom').addClass(self.isRtl() ? 'end' : 'start');
 			}
 		},
 
@@ -344,6 +344,13 @@ define("tinymce/ui/FloatPanel", [
 		while (i--) {
 			if (visiblePanels[i] === panel) {
 				visiblePanels.splice(i, 1);
+			}
+		}
+
+		i = zOrder.length;
+		while (i--) {
+			if (zOrder[i] === panel) {
+				zOrder.splice(i, 1);
 			}
 		}
 	}
