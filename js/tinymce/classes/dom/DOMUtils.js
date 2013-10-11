@@ -2014,6 +2014,12 @@ define("tinymce/dom/DOMUtils", [
 				self.boundEvents = null;
 			}
 
+			// Restore sizzle document to window.document
+			// Since the current document might be removed producing "Permission denied" on IE see #6325
+			if (Sizzle.setDocument) {
+				Sizzle.setDocument();
+			}
+
 			self.win = self.doc = self.root = self.events = self.frag = null;
 		},
 
