@@ -133,11 +133,7 @@
 				nv = nv.replace(/ /g, '\u0387\u200B');
 
 				
-				div = ed.dom.create('div', null, nv);
-				while (node = div.lastChild)
-					ed.dom.insertAfter(node, nl[i]);
-
-				ed.dom.remove(nl[i]);
+				nl[i].nodeValue = nv;
 				
 			}
 			ed.dom.addClass(ed.dom.select('p'), 'paragraph');
@@ -189,11 +185,7 @@
 					nv = nv.replace(/(\u0387)/g, ' ');
 					nv = nv.replace(/(\u200B)/g, '');
 					
-					div = ed.dom.create('div', null, nv);
-					while (node = div.lastChild)
-						ed.dom.insertAfter(node, nl[i]);
-
-					ed.dom.remove(nl[i]);
+					nl[i].nodeValue = nv;
 				}				
 				
 				ed.dom.removeClass(ed.dom.select('.paragraph'), 'paragraph');
