@@ -31,7 +31,8 @@ define("tinymce/ui/Control", [
 
 	var Control = Class.extend({
 		Statics: {
-			controlIdLookup: {}
+			controlIdLookup: {},
+			elementIdCache: elementIdCache
 		},
 
 		isRtl: function() {
