@@ -31,6 +31,7 @@
 				}
 			});
 			
+			//avoid img placeholder resize
 			ed.onMouseDown.add(function(ed, e) {    
                 var body = ed.getBody();
                 if(jQuery(e.target).hasClass('mceItemTab')) {
@@ -41,6 +42,7 @@
 
             }); 
 			
+			//on before set content replace span tabs with img placeholder
 			ed.onBeforeSetContent.add(function(ed, o) {
 				o.content = o.content.replace(/<span[^>]+>.*<\/span>/g, function(im) {
 					if (im.indexOf('mso-tab-count') !== -1)
@@ -49,10 +51,10 @@
 				});
 			});
 			
+			//on post process replace tab img placeholder with word compatible span tab
 			ed.onPostProcess.add(function(ed, o) {
 				if (o.get)
 					o.content = o.content.replace(/<img[^>]+>/g, function(im) {
-//						console.log(im);
 						if (im.indexOf('data:image') !== -1)
 							im = '<span style="mso-tab-count: 1" >&nbsp;&nbsp; </span>';
 
@@ -65,7 +67,7 @@
 				if (t.state) {		
 					
 					if (event.keyCode==9) {
-						
+						//inserting tab img placeholder
 						ed.execCommand('mceInsertContent', false, t.tabImg+'\uFEFF');
 						
 						tinymce.dom.Event.cancel(event);
@@ -75,13 +77,18 @@
 
 					if (event.keyCode==32) {
 						
+						//counter will be 0 or 1 to insert normal space or nbsp
+						//insert also 200b to enable word wrap
 						t.counter=(t.counter+1) % 2;
 						var alt = new Array('\u00B7\u200B','\u0387\u200B');
+						//explorer <=8 fix 
 						if(document.selection){
 							var sel = document.selection.createRange();
 							sel.text=alt[t.counter];	
 						}
+						//other browser
 						else {
+							
 							ed.execCommand('mceInsertContent', false, alt[t.counter]);	
 						}
 						
@@ -94,8 +101,7 @@
 				else {
 					if (event.keyCode==9) {
 						
-
-						//inserire immagine bianca
+						//insert white image tab placeholder
 						ed.execCommand('mceInsertContent', false, t.tabWImg+'\uFEFF');
 						tinymce.dom.Event.cancel(event);
 						event.preventDefault();
@@ -137,7 +143,7 @@
 			ed.dom.addClass(ed.dom.select('p'), 'paragraph');
 			ed.dom.addClass(ed.dom.select('li'), 'paragraph');
 			
-			//cambiare immagine bianca con tab
+			//change white placeholder with tab placeholder
 			$(ed.dom.select('img.mceItemWTabImg')).replaceWith(this.tabImg);
 			
 		},
@@ -192,9 +198,6 @@
 				
 				ed.dom.removeClass(ed.dom.select('.paragraph'), 'paragraph');
 				
-
-				
-				//cambiare immagine tab con bianca
 				$(ed.dom.select('img.mceItemTabImg')).replaceWith(t.tabWImg);
 				
 			}
