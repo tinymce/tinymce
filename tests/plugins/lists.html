@@ -9,7 +9,7 @@
 <script src="../js/utils.js"></script>
 <script src="../js/tinymce_loader.js"></script>
 <script>
-var editor, rng;
+var editor, inlineEditor, rng;
 
 QUnit.config.reorder = false;
 QUnit.config.autostart = false;
@@ -1554,24 +1554,58 @@ test('Delete at end of middle LI in UL inside UL', function() {
 	equal(editor.selection.getNode().nodeName, 'LI');
 });
 
+test('Remove UL in inline body element contained in LI', function() {
+	inlineEditor.setContent('<ul><li>a</li></ul>');
+	inlineEditor.focus();
+	inlineEditor.execCommand('InsertUnorderedList');
+	equal(inlineEditor.getContent(), '<p>a</p>');
+});
+
+test('Backspace in LI in UL in inline body element contained within LI', function() {
+	inlineEditor.setContent('<ul><li>a</li></ul>');
+	inlineEditor.focus();
+	inlineEditor.plugins.lists.backspaceDelete();
+	equal(inlineEditor.getContent(), '<p>a</p>');
+});
+
+function wait() {
+	if (editor && inlineEditor) {
+		if (!QUnit.started) {
+			QUnit.start();
+			QUnit.started = true;
+		}
+	} else {
+		setTimeout(wait, 0);
+	}
+}
+
 tinymce.init({
-	mode : "exact",
-	plugins : "lists",
-	elements : "elm1",
-	add_unload_trigger : false,
-	indent : false,
+	mode: "exact",
+	plugins: "lists",
+	elements: "elm1",
+	add_unload_trigger: false,
+	indent: false,
 	schema: 'html5',
-	entities : 'raw',
+	entities: 'raw',
 	valid_elements: 'li,ol,ul,em,strong,span,#p,div,br',
-	valid_styles : {
-		'*' : 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display,position,top,left'
+	valid_styles: {
+		'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display,position,top,left'
 	},
 	disable_nodechange: true,
-	init_instance_callback : function(ed) {
+	init_instance_callback: function(ed) {
 		editor = ed;
-		window.setTimeout(function() {
-			QUnit.start();
-		}, 0);
+		wait();
+	}
+});
+
+tinymce.init({
+	selector: '#elm2',
+	inline: true,
+	add_unload_trigger: false,
+	plugins: "lists",
+	init_instance_callback: function(ed) {
+		inlineEditor = ed;
+		wait();
 	}
 });
 </script>
@@ -1584,5 +1618,8 @@ tinymce.init({
 	<ol id="qunit-tests"></ol>
 	<textarea id="elm1" name="elm1"></textarea>
 	<a href="javascript:;" onclick="alert(tinymce.get('elm1').getContent({format: 'raw'}));return false;">[Get raw]</a>
+
+	<ul><li><div id="elm2"></div></li></ul>
+	<a href="javascript:;" onclick="alert(tinymce.get('elm2').getContent({format: 'raw'}));return false;">[Get raw]</a>
 </body>
 </html>

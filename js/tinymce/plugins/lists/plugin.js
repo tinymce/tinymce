@@ -504,7 +504,7 @@ tinymce.PluginManager.add('lists', function(editor) {
 		}
 
 		function removeList() {
-			var bookmark = createBookmark(selection.getRng(true));
+			var bookmark = createBookmark(selection.getRng(true)), root = editor.getBody();
 
 			tinymce.each(getSelectedListItems(), function(li) {
 				var node, rootList;
@@ -514,7 +514,7 @@ tinymce.PluginManager.add('lists', function(editor) {
 					return;
 				}
 
-				for (node = li; node; node = node.parentNode) {
+				for (node = li; node && node != root; node = node.parentNode) {
 					if (isListNode(node)) {
 						rootList = node;
 					}
