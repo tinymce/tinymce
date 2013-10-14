@@ -1,3 +1,5 @@
+Version 3.5.x (2013-xx-xx)
+	Fixed bug in paste plugin word import that was removing type from lists
 Version 3.5.9 (2013-10-10)
 	Added IE 11 compatibility. IE 11 is treated as Gecko but it has still many IE bugs.
 	Fixed bug where importing CSS classes would fail if it contained @import rules to remote domain on Gecko.
@@ -182,7 +184,7 @@ Version 3.5b1 (2012-03-08)
 	Added new types and selector options to make it easier to create editor instances with different configs.
 	Added new preview of formatting options in various listboxes.
 	Added new preview_styles option that enables control over what gets previewed.
-	Fixed bug where content css would be loaded twice into iframe. 
+	Fixed bug where content css would be loaded twice into iframe.
 	Fixed bug where start elements with only whitespace in the attribute part wouldn't be correctly parsed.
 	Fixed bug where the advlink dialog would produce an error about the addSelectAccessibility function not being defined.
 	Fixed bug where the caret would be placed at an incorrect position if span was removed by the invalid_elements setting.
@@ -190,7 +192,7 @@ Version 3.5b1 (2012-03-08)
 Version 3.4.9 (2012-02-23)
 	Added settings to wordcount plugin to configure update rate and checking wordcount on backspace and delete using wordcount_update_rate and wordcount_update_on_delete.
 	Fixed bug in Webkit and IE where deleting empty paragraphs would remove entire editor contents.
-	Fixed bug where pressing enter on end of list item with a heading would create a new item with heading.	
+	Fixed bug where pressing enter on end of list item with a heading would create a new item with heading.
 	Fixed edit css style dialog text-decoration none checkbox so it disables other text-decoration options when enabled.
 	Fixed bug in Gecko where undo wasn't added when focus was lost.
 	Fixed bug in Gecko where shift-enter in table cell ending with BR doesn't move caret to new line.
@@ -217,8 +219,8 @@ Version 3.4.8 (2012-02-02)
 	Added spacebar onclick handler to toolbar buttons to ensure that the accessibility behaviour works correctly.
 	Fixed bug where a stranded bullet point would get created in WebKit.
 	Fixed bug where selecting text in a blockquote and pressing backspace toggles the style.
-	Fixed bug where pressing enter from a heading in IE, the resulting P tag below it shares the style property. 
-	Fix white space in between spans from being deleted. 
+	Fixed bug where pressing enter from a heading in IE, the resulting P tag below it shares the style property.
+	Fix white space in between spans from being deleted.
 	Fixed bug where scrollbars where visible in the character map dialog on Gecko.
 	Fixed issue with missing translation for one of the emoticons.
 	Fixed bug where dots in id:s where causing problems. Patch provided by Abhishek Dev.
