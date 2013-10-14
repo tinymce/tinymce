@@ -505,7 +505,7 @@ define("tinymce/tableplugin/Plugin", [
 										}
 									}
 
-									pos[0] = 10 - pos[0];
+									pos[0] = 9 - pos[0];
 									table.nextSibling.innerHTML = pos[0] + ' x '+ (pos[1] + 1);
 								} else {
 									for (y = 0; y < 10; y++) {
