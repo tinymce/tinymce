@@ -1,4 +1,5 @@
 Version 3.5.x (2013-xx-xx)
+	Fixed bug where dialogs using inlinepopups plugin would display incorrectly sometimes
 	Fixed bug in paste plugin word import that was removing type from lists
 Version 3.5.9 (2013-10-10)
 	Added IE 11 compatibility. IE 11 is treated as Gecko but it has still many IE bugs.
