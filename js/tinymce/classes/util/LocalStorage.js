@@ -98,8 +98,16 @@ define("tinymce/util/LocalStorage", [], function() {
 
 			key = next(parseInt(offset, 32) || 0);
 			if (key !== null) {
-				value = next(parseInt(next(), 32) || 0);
-				items[key] = value;
+				offset = next();
+				if (offset === null) {
+					break;
+				}
+
+				value = next(parseInt(offset, 32) || 0);
+
+				if (key) {
+					items[key] = value;
+				}
 			}
 		} while (key !== null);
 
