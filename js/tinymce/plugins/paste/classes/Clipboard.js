@@ -123,7 +123,7 @@ define("tinymce/pasteplugin/Clipboard", [
 
 			// Remove all data images from paste for example from Gecko
 			if (!editor.settings.paste_data_images) {
-				html = html.replace(/<img src=\"data:image[^>]+>/g, '');
+				html = html.replace(/<img[^>]+src=\"data:image[^>]+>/g, '');
 			}
 
 			if (editor.settings.paste_remove_styles || (editor.settings.paste_remove_styles_if_webkit !== false && Env.webkit)) {
