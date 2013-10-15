@@ -46,7 +46,7 @@ tinymce.PluginManager.add('fullscreen', function(editor) {
 
 		fullscreenState = !fullscreenState;
 
-		editorContainer = editor.getContainer().firstChild;
+		editorContainer = editor.getContainer();
 		iframe = editor.getContentAreaContainer().firstChild;
 		iframeStyle = iframe.style;
 
