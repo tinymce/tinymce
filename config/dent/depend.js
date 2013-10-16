@@ -32,6 +32,16 @@ var dependencies = [
   },
 
   {
+    name: 'scullion',
+    repository: 'buildrepo2',
+    source: 'scullion.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
+  {
     name: 'perhaps',
     repository: 'buildrepo2',
     version: 'latest',
