@@ -4,10 +4,11 @@ test(
   [
     'ephox.compass.Arr',
     'ephox.polaris.api.Pattern',
-    'ephox.polaris.api.Search'
+    'ephox.polaris.api.Search',
+    'ephox.polaris.pattern.Safe'
   ],
 
-  function (Arr, Pattern, Search) {
+  function (Arr, Pattern, Search, Safe) {
     var checkAll = function (expected, input, pattern) {
       var actual = Search.findall(input, pattern);
       assert.eq(expected.length, actual.length);
@@ -34,6 +35,10 @@ test(
     checkAll([[1, 4], [5, 8], [9, 12]], ' sre sre sre', Pattern.unsafeword('sre'));
     checkAll([[0, 3], [4, 7], [8, 11]], 'sre sre sre ', Pattern.unsafeword('sre'));
     checkAll([[1, 4], [5, 8], [9, 12]], ' sre sre sre ', Pattern.unsafeword('sre'));
+
+    var prefix = Safe.sanitise('[');
+    var suffix = Safe.sanitise(']');
+    checkAll([[1, 5]], ' [wo] and more', Pattern.unsafetoken(prefix + '[^' + suffix + ']*' + suffix));
 
   }
 );
