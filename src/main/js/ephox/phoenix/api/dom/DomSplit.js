@@ -24,10 +24,15 @@ define(
       return Split.range(universe, start, startOffset, finish, finishOffset);
     };
 
+    var subdivide = function (element, positions) {
+      return Split.subdivide(universe, element, positions);
+    };
+
     return {
       split: split,
       splitByPair: splitByPair,
-      range: range
+      range: range,
+      subdivide: subdivide
     };
   }
 );
