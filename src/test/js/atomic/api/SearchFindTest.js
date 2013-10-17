@@ -5,16 +5,27 @@ test(
     'ephox.compass.Arr',
     'ephox.polaris.api.Pattern',
     'ephox.polaris.api.Search',
-    'ephox.polaris.pattern.Safe'
+    'ephox.polaris.pattern.Safe',
+    'ephox.scullion.Struct'
   ],
 
-  function (Arr, Pattern, Search, Safe) {
+  function (Arr, Pattern, Search, Safe, Struct) {
     var checkAll = function (expected, input, pattern) {
       var actual = Search.findall(input, pattern);
       assert.eq(expected.length, actual.length);
       Arr.each(expected, function (exp, i) {
         assert.eq(exp[0], actual[i].start());
         assert.eq(exp[1], actual[i].finish());
+      });
+    };
+
+    var checkMany = function (expected, text, targets) {
+      var actual = Search.findmany(text, targets);
+      assert.eq(expected.length, actual.length);
+      Arr.each(expected, function (exp, i) {
+        assert.eq(exp[0], actual[i].start());
+        assert.eq(exp[1], actual[i].finish());
+        assert.eq(exp[2], actual[i].name());
       });
     };
 
@@ -40,5 +51,23 @@ test(
     var suffix = Safe.sanitise(']');
     checkAll([[1, 5]], ' [wo] and more', Pattern.unsafetoken(prefix + '[^' + suffix + ']*' + suffix));
 
+    var testData = Struct.immutable('pattern', 'name');
+    checkMany([], '', []);
+    checkMany([
+      [1, 3, 'alpha']
+    ], ' aa bb cc', [
+      testData(Pattern.safeword('aa'), 'alpha')
+    ]);
+
+    checkMany([
+      [0, 2, 'alpha'],
+      [3, 6, 'beta'],
+      [8, 18, 'gamma']
+    ], 'aa bbb  abcdefghij', [
+      testData(Pattern.safeword('bbb'), 'beta'),
+      testData(Pattern.safeword('abcdefghij'), 'gamma'),
+      testData(Pattern.safeword('aa'), 'alpha'),
+      testData(Pattern.safeword('not-there'), 'delta')
+    ]);
   }
 );
