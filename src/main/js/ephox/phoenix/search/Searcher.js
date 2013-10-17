@@ -8,13 +8,13 @@ define(
     'ephox.phoenix.api.general.Family',
     'ephox.phoenix.extract.TypedList',
     'ephox.phoenix.search.MatchSplitter',
-    'ephox.phoenix.search.Sleuth',
     'ephox.polaris.api.Pattern',
     'ephox.polaris.api.PositionArray',
+    'ephox.polaris.api.Search',
     'ephox.scullion.Struct'
   ],
 
-  function (Arr, Option, Spot, Family, TypedList, MatchSplitter, Sleuth, Pattern, PositionArray, Struct) {
+  function (Arr, Option, Spot, Family, TypedList, MatchSplitter, Pattern, PositionArray, Search, Struct) {
     var namedPattern = Struct.immutable('word', 'pattern');
 
     var gen = function (universe, input) {
@@ -37,7 +37,7 @@ define(
         var input = TypedList.justText(x);
         var text = Arr.map(input, universe.property().getText).join('');
 
-        var matches = Sleuth.search(text, patterns);
+        var matches = Search.findmany(text, patterns);
         var plist = gen(universe, input);
 
         return MatchSplitter.separate(universe, plist, matches);
