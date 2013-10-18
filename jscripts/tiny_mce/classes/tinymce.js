@@ -58,7 +58,7 @@
 		_init : function() {
 			var t = this, d = document, na = navigator, ua = na.userAgent, i, nl, n, base, p, v;
 
-			t.isIE11 = ua.indexOf('Trident/') != -1 && ua.indexOf('rv:') != -1;
+			t.isIE11 = ua.indexOf('Trident/') != -1 && (ua.indexOf('rv:') != -1 || na.appName.indexOf('Netscape') != -1);
 
 			/**
 			 * Constant that is true if the browser is Opera.
