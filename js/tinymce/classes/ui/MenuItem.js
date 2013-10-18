@@ -170,6 +170,7 @@ define("tinymce/ui/MenuItem", [
 				);
 
 				menu.moveRel(self.getEl(), rel);
+				menu.rel = rel;
 
 				rel = 'menu-sub-' + rel;
 				menu.removeClass(menu._lastRel);
