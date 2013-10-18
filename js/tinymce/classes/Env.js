@@ -24,7 +24,7 @@ define("tinymce/Env", [], function() {
 	webkit = /WebKit/.test(userAgent);
 	ie = !webkit && !opera && (/MSIE/gi).test(userAgent) && (/Explorer/gi).test(nav.appName);
 	ie = ie && /MSIE (\w+)\./.exec(userAgent)[1];
-	ie11 = userAgent.indexOf('Trident') != -1 ? 11 : false;
+	ie11 = userAgent.indexOf('Trident/') != -1 && (userAgent.indexOf('rv:') != -1 || nav.appName.indexOf('Netscape') != -1) ? 11 : false;
 	ie = ie || ie11;
 	gecko = !webkit && /Gecko/.test(userAgent);
 	mac = userAgent.indexOf('Mac') != -1;
