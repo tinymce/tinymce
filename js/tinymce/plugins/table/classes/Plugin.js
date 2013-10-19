@@ -487,6 +487,7 @@ define("tinymce/tableplugin/Plugin", [
 						if (target.nodeName == 'A') {
 							var table = editor.dom.getParent(target, 'table');
 							var pos = target.getAttribute('data-mce-index');
+							var rel = e.control.parent().rel;
 
 							if (pos != this.lastPos) {
 								pos = pos.split(',');
@@ -494,7 +495,7 @@ define("tinymce/tableplugin/Plugin", [
 								pos[0] = parseInt(pos[0], 10);
 								pos[1] = parseInt(pos[1], 10);
 
-								if (e.control.isRtl()) {
+								if (e.control.isRtl() || rel == 'tl-tr') {
 									for (y = 9; y >= 0; y--) {
 										for (x = 0; x < 10; x++) {
 											editor.dom.toggleClass(
@@ -505,7 +506,7 @@ define("tinymce/tableplugin/Plugin", [
 										}
 									}
 
-									pos[0] = 10 - pos[0];
+									pos[0] = 9 - pos[0];
 									table.nextSibling.innerHTML = pos[0] + ' x '+ (pos[1] + 1);
 								} else {
 									for (y = 0; y < 10; y++) {

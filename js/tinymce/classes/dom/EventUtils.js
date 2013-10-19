@@ -167,7 +167,11 @@ define("tinymce/dom/EventUtils", [], function() {
 
 		// Use W3C method
 		if (doc.addEventListener) {
-			addEvent(win, 'DOMContentLoaded', readyHandler);
+			if (doc.readyState === "complete") {
+				readyHandler();
+			} else {
+				addEvent(win, 'DOMContentLoaded', readyHandler);
+			}
 		} else {
 			// Use IE method
 			addEvent(doc, "readystatechange", waitForDomLoaded);

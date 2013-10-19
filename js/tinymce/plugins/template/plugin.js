@@ -13,15 +13,32 @@
 tinymce.PluginManager.add('template', function(editor) {
 	var each = tinymce.each;
 
-	function showDialog() {
+	function createTemplateList(callback) {
+		return function() {
+			var templateList = editor.settings.templates;
+
+			if (typeof(templateList) == "string") {
+				tinymce.util.XHR.send({
+					url: templateList,
+					success: function(text) {
+						callback(tinymce.util.JSON.parse(text));
+					}
+				});
+			} else {
+				callback(templateList);
+			}
+		};
+	}
+
+	function showDialog(templateList) {
 		var win, values = [], templateHtml;
 
-		if (!editor.settings.templates) {
+		if (!templateList || templateList.length === 0) {
 			editor.windowManager.alert('No templates defined');
 			return;
 		}
 
-		tinymce.each(editor.settings.templates, function(template) {
+		tinymce.each(templateList, function(template) {
 			values.push({
 				selected: !values.length,
 				text: template.title,
@@ -208,12 +225,12 @@ tinymce.PluginManager.add('template', function(editor) {
 
 	editor.addButton('template', {
 		title: 'Insert template',
-		onclick: showDialog
+		onclick: createTemplateList(showDialog)
 	});
 
 	editor.addMenuItem('template', {
 		text: 'Insert template',
-		onclick: showDialog,
+		onclick: createTemplateList(showDialog),
 		context: 'insert'
 	});
 
