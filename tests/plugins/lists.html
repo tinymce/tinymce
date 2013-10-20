@@ -852,8 +852,7 @@ test('Outdent inside LI in beginning of OL in LI', function() {
 	equal(editor.getContent(), 
 		'<ol>' +
 			'<li>a</li>' +
-			'<li>b</li>' +
-			'<li>' +
+			'<li>b' +
 				'<ol>' +
 					'<li>c</li>' +
 				'</ol>' +
@@ -1041,8 +1040,7 @@ test('Outdent inside first LI in inner OL where OL is single child of parent LI'
 	equal(editor.getContent(), 
 		'<ol>' +
 			'<li>a</li>' +
-			'<li>b</li>' +
-			'<li>' +
+			'<li>b' +
 				'<ol>' +
 					'<li>c</li>' +
 				'</ol>' +
@@ -1104,6 +1102,29 @@ test('Outdent inside only child LI in OL in OL', function() {
 	);
 
 	equal(editor.selection.getNode().nodeName, 'LI');
+});
+
+test('Outdent multiple LI in OL and nested OL', function() {
+	editor.getBody().innerHTML = trimBrs(
+		'<ol>' +
+			'<li>a' +
+				'<ol>' +
+					'<li>b</li>' +
+				'</ol>' +
+			'</li>' +
+		'</ol>'
+	);
+
+	editor.focus();
+	setSelection('li', 0, 'li li', 1);
+	execCommand('Outdent');
+
+	equal(editor.getContent(), 
+		'<p>a</p>' +
+		'<ol>' +
+			'<li>b</li>' +
+		'</ol>'
+	);
 });
 
 // Indent
@@ -1175,6 +1196,129 @@ test('Indent last LI in OL', function() {
 				'</ol>' +
 			'</li>' +
 		'</ol>'
+	);
+
+	equal(editor.selection.getNode().nodeName, 'LI');
+});
+
+test('Indent last LI to same level as middle LI', function() {
+	editor.getBody().innerHTML = trimBrs(
+		'<ol>' +
+			'<li>a' +
+				'<ol>' +
+					'<li>b</li>' +
+				'</ol>' +
+			'</li>' +
+			'<li>c</li>' +
+		'</ol>'
+	);
+
+	editor.focus();
+	setSelection('li:last', 0);
+	execCommand('Indent');
+
+	equal(editor.getContent(), 
+		'<ol>' +
+			'<li>a' +
+				'<ol>' +
+					'<li>b</li>' +
+					'<li>c</li>' +
+				'</ol>' +
+			'</li>' +
+		'</ol>'
+	);
+
+	equal(editor.selection.getNode().nodeName, 'LI');
+});
+
+test('Indent first LI and nested LI OL', function() {
+	editor.getBody().innerHTML = trimBrs(
+		'<ol>' +
+			'<li>a' +
+				'<ol>' +
+					'<li>b</li>' +
+				'</ol>' +
+			'</li>' +
+		'</ol>'
+	);
+
+	editor.focus();
+	setSelection('li', 0, 'li li', 0);
+	execCommand('Indent');
+
+	equal(editor.getContent(), 
+		'<ol>' +
+			'<li>a' +
+				'<ol>' +
+					'<li>b</li>' +
+				'</ol>' +
+			'</li>' +
+		'</ol>'
+	);
+
+	equal(editor.selection.getNode().nodeName, 'LI');
+});
+
+test('Indent second LI to same level as nested LI', function() {
+	editor.getBody().innerHTML = trimBrs(
+		'<ul>' +
+			'<li>a</li>' +
+			'<li>b' +
+				'<ul>' +
+					'<li>c</li>' +
+				'</ul>' +
+			'</li>' +
+		'</ul>'
+	);
+
+	editor.focus();
+	setSelection('li:nth-child(2)', 0);
+	execCommand('Indent');
+
+	equal(editor.getContent(), 
+		'<ul>' +
+			'<li>a' +
+				'<ul>' +
+					'<li>b</li>' +
+					'<li>c</li>' +
+				'</ul>' +
+			'</li>' +
+		'</ul>'
+	);
+
+	equal(editor.selection.getNode().nodeName, 'LI');
+});
+
+test('Indent second LI to same level as nested LI', function() {
+	editor.getBody().innerHTML = trimBrs(
+		'<ul>' +
+			'<li>a' +
+				'<ul>' +
+					'<li>b</li>' +
+				'</ul>' +
+			'</li>' +
+			'<li>c' +
+				'<ul>' +
+					'<li>d</li>' +
+				'</ul>' +
+			'</li>' +
+		'</ul>'
+	);
+
+	editor.focus();
+	setSelection('li:nth-child(2)', 0);
+	execCommand('Indent');
+
+	equal(editor.getContent(), 
+		'<ul>' +
+			'<li>a' +
+				'<ul>' +
+					'<li>b</li>' +
+					'<li>c</li>' +
+					'<li>d</li>' +
+				'</ul>' +
+			'</li>' +
+		'</ul>'
 	);
 
 	equal(editor.selection.getNode().nodeName, 'LI');

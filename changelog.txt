@@ -4,6 +4,7 @@ Version 4.0.9 (2013-10-xx)
 	Fixed bug where lists plugin would remove outer list items if inline editable element was within a LI parent.
 	Fixed bug where insert table grid widget would insert a table on item to large when using a RTL language pack.
 	Fixed bug where fullscreen mode wasn't rendering properly on IE 7.
+	Fixed various bugs and issues related to indentation of OL/UL list elements.
 	Fixed so IE 7 renders the classic mode buttons the same size as other browsers.
 	Fixed so document.readyState is checked when loading and initializing TinyMCE manually after page load.
 Version 4.0.8 (2013-10-10)

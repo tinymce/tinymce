@@ -81,6 +81,24 @@ define("tinymce/EnterKey", [
 			function moveToCaretPosition(root) {
 				var walker, node, rng, lastNode = root, tempElm;
 
+				function firstNonWhiteSpaceNodeSibling(node) {
+					while (node) {
+						if (node.nodeType == 1 || (node.nodeType == 3 && node.data && /[\r\n\s]/.test(node.data))) {
+							return node;
+						}
+
+						node = node.nextSibling;
+					}
+				}
+
+				if (root.nodeName == 'LI') {
+					var firstChild = firstNonWhiteSpaceNodeSibling(root.firstChild);
+
+					if (firstChild && /^(UL|OL)$/.test(firstChild.nodeName)) {
+						root.insertBefore(dom.doc.createTextNode('\u00a0'), root.firstChild);
+					}
+				}
+
 				rng = dom.createRng();
 
 				if (root.hasChildNodes()) {
@@ -350,8 +368,14 @@ define("tinymce/EnterKey", [
 					tmpRng.setStartAfter(parentBlock);
 					tmpRng.setEndAfter(containerBlock);
 					fragment = tmpRng.extractContents();
-					dom.insertAfter(fragment, containerBlock);
-					dom.insertAfter(newBlock, containerBlock);
+
+					if (newBlockName == 'LI' && fragment.firstChild.nodeName == 'LI') {
+						newBlock = fragment.firstChild;
+						dom.insertAfter(fragment, containerBlock);
+					} else {
+						dom.insertAfter(fragment, containerBlock);
+						dom.insertAfter(newBlock, containerBlock);
+					}
 				}
 
 				dom.remove(parentBlock);
