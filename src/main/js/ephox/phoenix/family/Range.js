@@ -14,7 +14,7 @@ define(
     };
 
     var order = function (items, a, delta1, b, delta2) {
-      return a < b ? items.slice(a + delta1, b + delta2) : items.slice(b + delta2, a + delta1);
+      return a < b ? items.slice(a + delta1, b + delta2) : items.slice(b + delta1, a + delta2);
     };
 
     /**
