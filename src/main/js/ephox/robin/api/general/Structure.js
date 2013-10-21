@@ -30,7 +30,8 @@ define(
       'h4',
       'h5',
       'h6',
-      'blockquote'
+      'blockquote',
+      'pre'
     ];
 
     var isBlock = function (universe, item) {
