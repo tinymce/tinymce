@@ -311,42 +311,42 @@ test('paste post process (event)', function(){
 
 test('paste innerText of single P', function(){
 	editor.setContent('<p>a</p>');
-	equal(editor.plugins.paste.innerText(editor.getBody()), 'a');
+	equal(tinymce.pasteplugin.Utils.innerText(editor.getBody().innerHTML), 'a');
 });
 
 test('paste innerText of single P with whitespace wrapped content', function(){
 	editor.setContent('<p>   a   </p>');
-	equal(editor.plugins.paste.innerText(editor.getBody()), 'a');
+	equal(tinymce.pasteplugin.Utils.innerText(editor.getBody().innerHTML), 'a');
 });
 
 test('paste innerText of two P', function(){
 	editor.setContent('<p>a</p><p>b</p>');
-	equal(editor.plugins.paste.innerText(editor.getBody()), 'a\n\nb');
+	equal(tinymce.pasteplugin.Utils.innerText(editor.getBody().innerHTML), 'a\n\nb');
 });
 
 test('paste innerText of H1 and P', function(){
 	editor.setContent('<h1>a</h1><p>b</p>');
-	equal(editor.plugins.paste.innerText(editor.getBody()), 'a\nb');
+	equal(tinymce.pasteplugin.Utils.innerText(editor.getBody().innerHTML), 'a\nb');
 });
 
 test('paste innerText of P with BR', function(){
 	editor.setContent('<p>a<br>b</p>');
-	equal(editor.plugins.paste.innerText(editor.getBody()), 'a\nb');
+	equal(tinymce.pasteplugin.Utils.innerText(editor.getBody().innerHTML), 'a\nb');
 });
 
 test('paste innerText of P with VIDEO', function(){
 	editor.setContent('<p>a<video>b<br>c</video>d</p>');
-	equal(editor.plugins.paste.innerText(editor.getBody()), 'a d');
+	equal(tinymce.pasteplugin.Utils.innerText(editor.getBody().innerHTML), 'a d');
 });
 
 test('paste innerText of PRE', function(){
 	editor.getBody().innerHTML = '<pre>a\nb\n</pre>';
-	equal(editor.plugins.paste.innerText(editor.getBody()).replace(/\r\n/g, '\n'), 'a\nb\n');
+	equal(tinymce.pasteplugin.Utils.innerText(editor.getBody().innerHTML).replace(/\r\n/g, '\n'), 'a\nb\n');
 });
 
 test('paste innerText of textnode with whitespace', function(){
 	editor.getBody().innerHTML = ' a ';
-	equal(editor.plugins.paste.innerText(editor.getBody()), ' a ');
+	equal(tinymce.pasteplugin.Utils.innerText(editor.getBody().innerHTML), ' a ');
 });
 
 tinymce.init({

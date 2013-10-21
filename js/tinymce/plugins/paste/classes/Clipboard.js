@@ -11,124 +11,47 @@
 /**
  * This class contains logic for getting HTML contents out of the clipboard.
  *
+ * We need to make a lot of ugly hacks to get the contents out of the clipboard since
+ * the W3C Clipboard API is broken in all browsers: Gecko/WebKit/Blink. We might rewrite
+ * this the way those API:s stabilize.
+ *
+ * Current implementation steps:
+ *  1. On keydown with paste keys Ctrl+V or Shift+Insert create
+ *     a paste bin element and move focus to that element.
+ *  2. Wait for the browser to fire a "paste" event and get the contents out of the paste bin.
+ *  3. Check if the paste was successful if true, process the HTML.
+ *  (4). If the paste was unsuccessful use IE execCommand, Clipboard API, document.dataTransfer old WebKit API etc.
+ * 
  * @class tinymce.pasteplugin.Clipboard
  * @private
  */
 define("tinymce/pasteplugin/Clipboard", [
 	"tinymce/Env",
-	"tinymce/util/Tools",
 	"tinymce/util/VK",
-	"tinymce/html/DomParser",
-	"tinymce/html/Serializer",
-	"tinymce/html/Schema"
-], function(Env, Tools, VK, DomParser, Serializer, Schema) {
-	function hasClipboardData() {
-		// Gecko is excluded until the fix: https://bugzilla.mozilla.org/show_bug.cgi?id=850663
-		return !Env.gecko && (("ClipboardEvent" in window) || (Env.webkit && "FocusEvent" in window));
-	}
-
+	"tinymce/pasteplugin/Utils"
+], function(Env, VK, Utils) {
 	return function(editor) {
-		var self = this, plainTextPasteTime;
-
-		function now() {
-			return new Date().getTime();
-		}
-
-		function isPasteKeyEvent(e) {
-			// Ctrl+V or Shift+Insert
-			return (VK.metaKeyPressed(e) && e.keyCode == 86) || (e.shiftKey && e.keyCode == 45);
-		}
+		var self = this, pasteBinElm, lastRng, keyboardPasteTimeStamp = 0;
+		var pasteBinDefaultContent = '%MCEPASTEBIN%', keyboardPastePlainTextState;
 
 		/**
-		 * Gets the innerText of the specified element. It will handle edge cases
-		 * and works better than textContent on Gecko.
+		 * Pastes the specified HTML. This means that the HTML is filtered and then
+		 * inserted at the current selection in the editor. It will also fire paste events
+		 * for custom user filtering.
 		 *
-		 * @param {Element} elm HTML element to get text from.
-		 * @return {String} String of text with line feeds.
+		 * @param {String} html HTML code to paste into the current selection.
 		 */
-		function innerText(elm) {
-			var schema = new Schema(), domParser = new DomParser({}, schema), text = '';
-			var shortEndedElements = schema.getShortEndedElements();
-			var ignoreElements = Tools.makeMap('script noscript style textarea video audio iframe object', ' ');
-			var blockElements = editor.schema.getBlockElements();
-
-			function walk(node) {
-				var name = node.name, currentNode = node;
-
-				if (name === 'br') {
-					text += '\n';
-					return;
-				}
-
-				// img/input/hr
-				if (shortEndedElements[name]) {
-					text += ' ';
-				}
-
-				// Ingore script, video contents
-				if (ignoreElements[name]) {
-					text += ' ';
-					return;
-				}
-
-				if (node.type == 3) {
-					text += node.value;
-				}
-
-				// Walk all children
-				if (!node.shortEnded) {
-					if ((node = node.firstChild)) {
-						do {
-							walk(node);
-						} while ((node = node.next));
-					}
-				}
-
-				// Add \n or \n\n for blocks or P
-				if (blockElements[name] && currentNode.next) {
-					text += '\n';
-
-					if (name == 'p') {
-						text += '\n';
-					}
-				}
-			}
-
-			walk(domParser.parse(elm.innerHTML));
-
-			return text;
-		}
-
-		function shouldPasteAsPlainText() {
-			return now() - plainTextPasteTime < 100 || self.pasteFormat == "text";
-		}
-
-		// TODO: Move this to a class?
-		function process(content, items) {
-			Tools.each(items, function(v) {
-				if (v.constructor == RegExp) {
-					content = content.replace(v, '');
-				} else {
-					content = content.replace(v[0], v[1]);
-				}
-			});
-
-			return content;
-		}
-
-		function processHtml(html) {
-			var args = editor.fire('PastePreProcess', {content: html}), dom = editor.dom;
-
-			html = args.content;
+		function pasteHtml(html) {
+			var args, dom = editor.dom;
 
 			// Remove all data images from paste for example from Gecko
 			if (!editor.settings.paste_data_images) {
 				html = html.replace(/<img src=\"data:image[^>]+>/g, '');
 			}
 
-			if (editor.settings.paste_remove_styles || (editor.settings.paste_remove_styles_if_webkit !== false && Env.webkit)) {
-				html = html.replace(/ style=\"[^\"]+\"/g, '');
-			}
+			args = editor.fire('BeforePastePreProcess', {content: html}); // Internal event used by Quirks
+			args = editor.fire('PastePreProcess', args);
+			html = args.content;
 
 			if (!args.isDefaultPrevented()) {
 				// User has bound PastePostProcess events then we need to pass it through a DOM node
@@ -148,239 +71,192 @@ define("tinymce/pasteplugin/Clipboard", [
 			}
 		}
 
-		function processText(text) {
+		/**
+		 * Pastes the specified text. This means that the plain text is processed
+		 * and converted into BR and P elements. It will fire paste events for custom filtering.
+		 *
+		 * @param {String} text Text to paste as the current selection location.
+		 */
+		function pasteText(text) {
 			text = editor.dom.encode(text).replace(/\r\n/g, '\n');
 
 			var startBlock = editor.dom.getParent(editor.selection.getStart(), editor.dom.isBlock);
 
 			if ((startBlock && /^(PRE|DIV)$/.test(startBlock.nodeName)) || !editor.settings.forced_root_block) {
-				text = process(text, [
+				text = Utils.filter(text, [
 					[/\n/g, "<br>"]
 				]);
 			} else {
-				text = process(text, [
+				text = Utils.filter(text, [
 					[/\n\n/g, "</p><p>"],
 					[/^(.*<\/p>)(<p>)$/, '<p>$1'],
 					[/\n/g, "<br />"]
 				]);
 			}
 
-			processHtml(text);
+			pasteHtml(text);
 		}
 
+		/**
+		 * Creates a paste bin element and moves the selection into that element. It will also move the element offscreen
+		 * so that resize handles doesn't get produced on IE or Drag handles or Firefox.
+		 */
 		function createPasteBin() {
-			var scrollTop = editor.dom.getViewPort().y;
+			var dom = editor.dom, body = editor.getBody(), viewport = editor.dom.getViewPort(editor.getWin());
+			var scrollY = editor.inline ? body.scrollTop : viewport.y, height = editor.inline ? body.clientHeight : viewport.h;
 
-			// Create a pastebin and move the selection into the bin
-			var pastebinElm = editor.dom.add(editor.getBody(), 'div', {
-				contentEditable: false,
+			removePasteBin();
+
+			// Create a pastebin
+			pasteBinElm = dom.add(editor.getBody(), 'div', {
+				id: "mcepastebin",
+				contentEditable: true,
 				"data-mce-bogus": "1",
-				style: 'position: absolute; top: ' + scrollTop + 'px; left: 0; width: 1px; height: 1px; overflow: hidden'
-			}, '<div contentEditable="true" data-mce-bogus="1">X</div>');
+				style: 'position: absolute; top: ' + (scrollY + 20) + 'px;' +
+					'width: 10px; height: ' + (height - 40) + 'px; overflow: hidden; opacity: 0'
+			}, pasteBinDefaultContent);
 
-			editor.dom.bind(pastebinElm, 'beforedeactivate focusin focusout', function(e) {
+			// Move paste bin out of sight since the controlSelection rect gets displayed otherwise
+			dom.setStyle(pasteBinElm, 'left', dom.getStyle(body, 'direction', true) == 'rtl' ? 0xFFFF : -0xFFFF);
+
+			// Prevent focus events from bubbeling fixed FocusManager issues
+			dom.bind(pasteBinElm, 'beforedeactivate focusin focusout', function(e) {
 				e.stopPropagation();
 			});
 
-			return pastebinElm;
+			lastRng = editor.selection.getRng();
+			pasteBinElm.focus();
+			editor.selection.select(pasteBinElm, true);
 		}
 
-		function removePasteBin(pastebinElm) {
-			editor.dom.unbind(pastebinElm);
-			editor.dom.remove(pastebinElm);
+		/**
+		 * Removes the paste bin if it exists.
+		 */
+		function removePasteBin() {
+			if (pasteBinElm) {
+				editor.dom.unbind(pasteBinElm);
+				editor.dom.remove(pasteBinElm);
+
+				if (lastRng) {
+					editor.selection.setRng(lastRng);
+				}
+			}
+
+			keyboardPastePlainTextState = false;
+			pasteBinElm = lastRng = null;
+		}
+
+		/**
+		 * Returns the contents of the paste bin as a HTML string.
+		 *
+		 * @return {String} Get the contents of the paste bin.
+		 */
+		function getPasteBinHtml() {
+			return pasteBinElm ? pasteBinElm.innerHTML : pasteBinDefaultContent;
+		}
+
+		/**
+		 * Gets various content types out of the Clipboard API. It will also get the
+		 * plain text using older IE and WebKit API:s.
+		 *
+		 * @param {ClipboardEvent} clipboardEvent Event fired on paste.
+		 * @return {Object} Object with mime types and data for those mime types.
+		 */
+		function getClipboardContent(clipboardEvent) {
+			var data = {}, clipboardData = clipboardEvent.clipboardData || editor.getDoc().dataTransfer;
+
+			if (clipboardData && clipboardData.types) {
+				data['text/plain'] = clipboardData.getData('Text');
+
+				for (var i = 0; i < clipboardData.types.length; i++) {
+					var contentType = clipboardData.types[i];
+					data[contentType] = clipboardData.getData(contentType);
+				}
+			}
+
+			return data;
 		}
 
 		editor.on('keydown', function(e) {
-			// Shift+Ctrl+V
-			if (VK.metaKeyPressed(e) && e.shiftKey && e.keyCode == 86) {
-				plainTextPasteTime = now();
+			if (e.isDefaultPrevented()) {
+				return;
+			}
+
+			// Ctrl+V or Shift+Insert
+			if ((VK.metaKeyPressed(e) && e.keyCode == 86) || (e.shiftKey && e.keyCode == 45)) {
+				keyboardPastePlainTextState = e.shiftKey && e.keyCode == 86;
+
+				// Prevent undoManager keydown handler from making an undo level with the pastebin in it
+				e.stopImmediatePropagation();
+
+				keyboardPasteTimeStamp = new Date().getTime();
+
+				// IE doesn't support Ctrl+Shift+V and it doesn't even produce a paste event
+				// so lets fake a paste event and let IE use the execCommand/dataTransfer methods
+				if (Env.ie && keyboardPastePlainTextState) {
+					e.preventDefault();
+					editor.fire('paste', {ieFake: true});
+					return;
+				}
+
+				createPasteBin();
 			}
 		});
 
-		// Use Clipboard API if it's available
-		if (hasClipboardData()) {
-			editor.on('paste', function(e) {
-				var clipboardData = e.clipboardData;
+		editor.on('paste', function(e) {
+			var clipboardContent = getClipboardContent(e);
+			var isKeyBoardPaste = new Date().getTime() - keyboardPasteTimeStamp < 100;
+			var plainTextMode = self.pasteFormat == "text" || keyboardPastePlainTextState;
 
-				function processByContentType(contentType, processFunc) {
-					for (var ti = 0; ti < clipboardData.types.length; ti++) {
-						if (clipboardData.types[ti] == contentType) {
-							processFunc(clipboardData.getData(contentType));
-							//clipboardData.items[ti].getAsString(processFunc);
-							return true;
-						}
-					}
-				}
-
-				if (clipboardData) {
-					e.preventDefault();
-
-					if (shouldPasteAsPlainText()) {
-						// First look for HTML then look for plain text
-						if (!processByContentType('text/plain', processText)) {
-							processByContentType('text/html', processHtml);
-						}
-					} else {
-						// First look for HTML then look for plain text
-						if (!processByContentType('text/html', processHtml)) {
-							processByContentType('text/plain', processText);
-						}
-					}
-				}
-			});
-		} else {
-			if (Env.ie) {
-				var keyPasteTime = 0;
-
-				editor.on('keydown', function(e) {
-					if (isPasteKeyEvent(e) && !e.isDefaultPrevented()) {
-						// Prevent undoManager keydown handler from making an undo level with the pastebin in it
-						e.stopImmediatePropagation();
-
-						var pastebinElm = createPasteBin();
-						keyPasteTime = now();
-
-						editor.dom.bind(pastebinElm, 'paste', function() {
-							setTimeout(function() {
-								editor.selection.setRng(lastRng);
-								removePasteBin(pastebinElm);
-
-								if (shouldPasteAsPlainText()) {
-									processText(innerText(pastebinElm.firstChild));
-								} else {
-									processHtml(pastebinElm.firstChild.innerHTML);
-								}
-							}, 0);
-						});
-
-						var lastRng = editor.selection.getRng();
-						pastebinElm.firstChild.focus();
-						pastebinElm.firstChild.innerText = '';
-					}
-				});
-
-				// Explorer fallback
-				editor.on('init', function() {
-					var dom = editor.dom;
-
-					// Use a different method if the paste was made without using the keyboard
-					// for example using the browser menu items
-					editor.dom.bind(editor.getBody(), 'paste', function(e) {
-						if (now() - keyPasteTime > 100) {
-							var gotPasteEvent, pastebinElm = createPasteBin();
-
-							e.preventDefault();
-
-							dom.bind(pastebinElm, 'paste', function(e) {
-								e.stopPropagation();
-								gotPasteEvent = true;
-							});
-
-							var lastRng = editor.selection.getRng();
-
-							// Select the container
-							var rng = dom.doc.body.createTextRange();
-							rng.moveToElementText(pastebinElm.firstChild);
-							rng.execCommand('Paste');
-							removePasteBin(pastebinElm);
-
-							if (!gotPasteEvent) {
-								editor.windowManager.alert('Please use Ctrl+V/Cmd+V keyboard shortcuts to paste contents.');
-								return;
-							}
-
-							editor.selection.setRng(lastRng);
-
-							if (shouldPasteAsPlainText()) {
-								processText(innerText(pastebinElm.firstChild));
-							} else {
-								processHtml(pastebinElm.firstChild.innerHTML);
-							}
-						}
-					});
-				});
-			} else {
-				editor.on('init', function() {
-					editor.dom.bind(editor.getBody(), 'paste', function(e) {
-						var doc = editor.getDoc();
-
-						e.preventDefault();
-
-						// Paste as plain text when not using the keyboard
-						if (e.clipboardData || doc.dataTransfer) {
-							processText((e.clipboardData || doc.dataTransfer).getData('Text'));
-							return;
-						}
-
-						e.preventDefault();
-						editor.windowManager.alert('Please use Ctrl+V/Cmd+V keyboard shortcuts to paste contents.');
-					});
-				});
-
-				// Old Gecko/WebKit/Opera fallback
-				editor.on('keydown', function(e) {
-					if (isPasteKeyEvent(e) && !e.isDefaultPrevented()) {
-						// Prevent undoManager keydown handler from making an undo level with the pastebin in it
-						e.stopImmediatePropagation();
-
-						var pastebinElm = createPasteBin();
-						var lastRng = editor.selection.getRng();
-
-						// Hack for #6051 & #6256
-						if (Env.webkit) {
-							pastebinElm.contentEditable = true;
-						}
-
-						editor.selection.select(pastebinElm, true);
-
-						editor.dom.bind(pastebinElm, 'paste', function(e) {
-							e.stopPropagation();
-
-							setTimeout(function() {
-								removePasteBin(pastebinElm);
-								editor.lastRng = lastRng;
-								editor.selection.setRng(lastRng);
-
-								var pastebinContents = pastebinElm.firstChild;
-
-								// Remove last BR Safari on Mac adds trailing BR
-								if (pastebinContents.lastChild && pastebinContents.lastChild.nodeName == 'BR') {
-									pastebinContents.removeChild(pastebinContents.lastChild);
-								}
-
-								if (shouldPasteAsPlainText()) {
-									processText(innerText(pastebinContents));
-								} else {
-									processHtml(pastebinContents.innerHTML);
-								}
-							}, 0);
-						});
-					}
-				});
-			}
-
-			// Prevent users from dropping data images on Gecko
-			if (!editor.settings.paste_data_images) {
-				editor.on('drop', function(e) {
-					var dataTransfer = e.dataTransfer;
-
-					if (dataTransfer && dataTransfer.files && dataTransfer.files.length > 0) {
-						e.preventDefault();
-					}
-				});
-			}
-		}
-
-		// Block all drag/drop events
-		if (editor.paste_block_drop) {
-			editor.on('dragend dragover draggesture dragdrop drop drag', function(e) {
+			// Not a keyboard paste prevent default paste and try to grab the clipboard contents using different APIs
+			if (!isKeyBoardPaste) {
 				e.preventDefault();
-				e.stopPropagation();
-			});
-		}
+			}
 
-		this.paste = processHtml;
-		this.pasteText = processText;
-		this.innerText = innerText;
+			// Try IE only method if paste isn't a keyboard paste
+			if (Env.ie && (!isKeyBoardPaste || e.ieFake)) {
+				createPasteBin();
+
+				editor.dom.bind(pasteBinElm, 'paste', function(e) {
+					e.stopPropagation();
+				});
+
+				editor.getDoc().execCommand('Paste', false, null);
+				clipboardContent["text/html"] = getPasteBinHtml();
+				removePasteBin();
+			}
+
+			setTimeout(function() {
+				var html = getPasteBinHtml();
+
+				// WebKit has a nice bug where it clones the paste bin if you paste from for example notepad
+				if (pasteBinElm && pasteBinElm.firstChild && pasteBinElm.firstChild.id === 'mcepastebin') {
+					plainTextMode = true;
+				}
+
+				removePasteBin();
+
+				if (html == pasteBinDefaultContent || !isKeyBoardPaste) {
+					html = clipboardContent['text/html'] || clipboardContent['text/plain'] || pasteBinDefaultContent;
+
+					if (html == pasteBinDefaultContent) {
+						if (!isKeyBoardPaste) {
+							editor.windowManager.alert('Please use Ctrl+V/Cmd+V keyboard shortcuts to paste contents.');
+						}
+
+						return;
+					}
+				}
+
+				if (plainTextMode) {
+					pasteText(clipboardContent['text/plain'] || Utils.innerText(html));
+				} else {
+					pasteHtml(html);
+				}
+			}, 0);
+		});
+
+		self.pasteHtml = pasteHtml;
+		self.pasteText = pasteText;
 	};
 });

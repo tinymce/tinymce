@@ -34,16 +34,71 @@
 
 		setup: function(ed) {
 			ed.on('PastePreProcess', function(e) {
-				console.dir(e.type, e.content);
+				if (window.console && console.dir) {
+					console.dir(e.type, e.content);
+				}
+
 				e.content = e.content.toUpperCase();
 			});
+
+			/*ed.on('focus blur', function(e) {
+				if (window.console && console.log) {
+					console.log(e.type);
+				}
+			});*/
+		}
+	});
+
+	tinymce.init({
+		selector: "#inline",
+		plugins: 'paste',
+		inline: true,
+		setup: function(ed) {
+			ed.on('PastePreProcess', function(e) {
+				if (window.console && console.dir) {
+					console.dir(e.type, e.content);
+				}
+
+				e.content = e.content.toUpperCase();
+			});
+
+			/*ed.on('focus blur', function(e) {
+				if (window.console && console.log) {
+					console.log(e.type);
+				}
+			});*/
 		}
 	});
 </script>
 </head>
 <body role="application">
 <form method="post" action="http://www.tinymce.com/dump.php?example=true">
-	<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%"></textarea>
+	<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%">
+		<pre>Pre element</pre>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+	</textarea>
 	<div>
 		<a href="javascript:;" onclick="tinymce.get('elm1').show();return false;">[Show]</a>
 		<a href="javascript:;" onclick="tinymce.get('elm1').hide();return false;">[Hide]</a>
@@ -57,6 +112,33 @@
 		<a href="javascript:;" onclick="alert(tinymce.get('elm1').selection.getNode().nodeName);return false;">[Get selected element]</a>
 		<a href="javascript:;" onclick="tinymce.execCommand('mceInsertContent',false,'<b>Hello world!!</b>');return false;">[Insert HTML]</a>
 		<a href="javascript:;" onclick="tinymce.execCommand('mceReplaceContent',false,'<b>{$selection}</b>');return false;">[Replace selection]</a>
+	</div>
+
+	<div id="inline" style="height: 200px; overflow: auto">
+		<pre>Pre element</pre>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
+		<p><strong>abc</strong>def</p>
 	</div>
 </form>
 
