@@ -228,7 +228,7 @@ test('paste plain text with double linefeeds', function(){
 	rng.setStart(editor.dom.select('p')[0].firstChild, 1);
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 2);
 	editor.selection.setRng(rng);
-	editor.execCommand('mceInsertClipboardContent', false, {text : 'a\n\nb\n\n\c\n\n'});
+	editor.execCommand('mceInsertClipboardContent', false, {text : 'a\n\nb\n\nc'});
 
 	equal(editor.getContent().replace(/[\r\n]+/g, ''), '<p>t</p><p>a</p><p>b</p><p>c</p><p>xt</p>');
 });
@@ -252,7 +252,7 @@ test('paste plain text with paragraphs', function(){
 	editor.selection.setRng(rng);
 	editor.execCommand('mceInsertClipboardContent', false, {text : 'a\n<b>b</b>\n\nc'});
 
-	equal(editor.getContent().replace(/[\r\n]+/g, ''), '<p>ta<br />&lt;b&gt;b&lt;/b&gt;</p><p>c</p><p>xt</p>');
+	equal(editor.getContent().replace(/[\r\n]+/g, ''), '<p>t</p><p>a<br />&lt;b&gt;b&lt;/b&gt;</p><p>c</p><p>xt</p>');
 });
 
 test('paste pre process text (event)', function(){

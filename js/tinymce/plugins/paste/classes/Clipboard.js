@@ -92,6 +92,10 @@ define("tinymce/pasteplugin/Clipboard", [
 					[/^(.*<\/p>)(<p>)$/, '<p>$1'],
 					[/\n/g, "<br />"]
 				]);
+
+				if (text.indexOf('<p>') != -1) {
+					text = '<p>' + text;
+				}
 			}
 
 			pasteHtml(text);
