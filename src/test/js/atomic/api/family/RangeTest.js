@@ -13,29 +13,29 @@ test(
   function (Gene, TestUniverse, TextGene, Arr, Family, Finder) {
     var doc = TestUniverse(
       Gene('root', 'root', [
-        Gene('a', '', [
-          Gene('aa', '', [
+        Gene('a', 'div', [
+          Gene('aa', 'div', [
             TextGene('aaa', 'once upon a time'),
-            Gene('aab', '', [
-              Gene('aaba', '', [
+            Gene('aab', 'div', [
+              Gene('aaba', 'div', [
                 Gene('aabaa', 'img', []),
                 TextGene('aabab', ' there was a dragon')
               ])
             ])
           ]),
-          Gene('ab', '', [
+          Gene('ab', 'div', [
             TextGene('aba', ' called '),
             TextGene('abb', ' not-dragon, '),
-            Gene('abc', '', [
+            Gene('abc', 'div', [
               Gene('abca', 'br', []),
               TextGene('abcb', 'and that dragon'),
               TextGene('abcc', 'stayed in a far away land'),
-              Gene('abcd', '', [
+              Gene('abcd', 'div', [
                 TextGene('abcda', 'free of contaminants')
               ])
             ])
           ]),
-          Gene('ac', '', [
+          Gene('ac', 'div', [
             TextGene('aca', ' --- OCD he was, ')
           ])
         ]),
@@ -56,6 +56,9 @@ test(
     check(['aabab', 'aba', 'abb', 'abcb', 'abcc', 'abcda'], 'aabab', 'aca', 0, 0);
     check(['aabab', 'aba', 'abb', 'abcb', 'abcc', 'abcda', 'aca'], 'aabab', 'aca', 0, 1);
     check(['aba', 'abb', 'abcb', 'abcc', 'abcda', 'aca'], 'aabab', 'aca', 1, 1);
+
+    check(['abcb', 'abcc'], 'abc', 'abcda', 0, 0);
+    check(['aaa', 'aabab', 'aba', 'abb', 'abcb', 'abcc', 'abcda'], 'aa', 'ac', 0, 1);
 
   }
 );
