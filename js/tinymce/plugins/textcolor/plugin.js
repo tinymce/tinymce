@@ -68,7 +68,9 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 	}
 
 	function renderColorPicker() {
-		var ctrl = this, colors, color, html, last, rows, cols, x, y, i;
+		var ctrl = this, colors, color, html, last, rows, cols, x, y, i, pick;
+
+		pick = editor.settings.textcolor_manual_entry;
 
 		colors = mapColors();
 
@@ -104,9 +106,34 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 			html += '</tr>';
 		}
 
+		if(pick){
+			html += '<tr><td colspan="' + cols + '"><label for="textcolor-manual">' +
+				'Custom:' + //TODO: i18n
+				' </label><input id="textcolor-manual" type="text" /></td></tr>';
+		}
+
 		html += '</tbody></table>';
 
 		return html;
+	}
+
+	function afterPanelRender(){
+		console.log("afterPanelRender");
+		var buttonCtrl = this.parent();
+		var manualInput = document.getElementById("textcolor-manual");
+		manualInput.value = buttonCtrl.color();
+		editor.dom.bind(manualInput, "keydown", function(ev){
+			if(ev.keyCode == 13){
+				ev.preventDefault();
+				buttonCtrl.hidePanel();
+				var value = ev.target.value;
+				if(value.charAt(0) != "#"){ 
+					value = "#" + value;
+				}
+				buttonCtrl.color(value);
+				editor.execCommand(buttonCtrl.settings.selectcmd, false, value);
+			}
+		});
 	}
 
 	function onPanelClick(e) {
@@ -134,7 +161,8 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		selectcmd: 'ForeColor',
 		panel: {
 			html: renderColorPicker,
-			onclick: onPanelClick
+			onclick: onPanelClick,
+			onpostrender: afterPanelRender
 		},
 		onclick: onButtonClick
 	});
@@ -145,7 +173,8 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		selectcmd: 'HiliteColor',
 		panel: {
 			html: renderColorPicker,
-			onclick: onPanelClick
+			onclick: onPanelClick,
+			onpostrender: afterPanelRender
 		},
 		onclick: onButtonClick
 	});
