@@ -67,6 +67,17 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		return colors;
 	}
 
+    function renderColorSwatch(id, color, className) {
+        return '<div id="' + id + '"' +
+            ' data-mce-color="' + color.color + '"' +
+            ' role="option"' +
+            ' tabIndex="-1"' +
+            ' style="' + (color ? 'background-color: #' + color.color : '') + '"' +
+            ' title="' + color.text + '"' +
+            (className ? 'class="' + className + '"' : '') +'>' +
+            '</div>';
+    }
+
 	function renderColorPicker() {
 		var ctrl = this, colors, color, html, last, rows, cols, x, y, i, pick;
 
@@ -91,13 +102,7 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 					color = colors[i];
 					html += (
 						'<td>' +
-							'<div id="' + ctrl._id + '-' + i + '"' +
-								' data-mce-color="' + color.color + '"' +
-								' role="option"' +
-								' tabIndex="-1"' +
-								' style="' + (color ? 'background-color: #' + color.color : '') + '"' +
-								' title="' + color.text + '">' +
-							'</div>' +
+                            renderColorSwatch(ctrl._id + '-' + i, color) +
 						'</td>'
 					);
 				}
@@ -107,9 +112,15 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		}
 
 		if(pick){
-			html += '<tr><td colspan="' + cols + '"><label for="textcolor-manual">' +
-				'Custom:' + //TODO: i18n
-				' </label><input id="textcolor-manual" type="text" /></td></tr>';
+            var customId = ctrl._id + '-custom';
+			html += '<tr><td colspan="' + cols + '">' +
+                '<label for="' + customId + '">#</label>' +
+                '<input id="' + customId + '" class="mce-textbox custom" maxlength="6" size="6" type="text" />' +
+                renderColorSwatch(customId + '-swatch', {
+                    color: "000000",
+                    text: "Custom"  //TODO: I18N
+                }, "custom-swatch") +
+                '</td></tr>';
 		}
 
 		html += '</tbody></table>';
@@ -117,24 +128,53 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		return html;
 	}
 
-	function afterPanelRender(){
-		console.log("afterPanelRender");
-		var buttonCtrl = this.parent();
-		var manualInput = document.getElementById("textcolor-manual");
-		manualInput.value = buttonCtrl.color();
-		editor.dom.bind(manualInput, "keydown", function(ev){
-			if(ev.keyCode == 13){
-				ev.preventDefault();
-				buttonCtrl.hidePanel();
-				var value = ev.target.value;
-				if(value.charAt(0) != "#"){ 
-					value = "#" + value;
-				}
-				buttonCtrl.color(value);
-				editor.execCommand(buttonCtrl.settings.selectcmd, false, value);
-			}
-		});
-	}
+   function onKeydown(ev){
+        var buttonCtrl = this.parent();
+       if (editor.dom.hasClass(ev.target, "custom")) {
+           if (ev.keyCode == 13) {
+               ev.preventDefault();
+               var value = ev.target.value;
+               if(/[a-fA-F0-9]{6}/.test(value)){
+                   buttonCtrl.hidePanel();
+                   if (value.charAt(0) != "#") {
+                       value = "#" + value;
+                   }
+                   buttonCtrl.color(value);
+                   editor.execCommand(buttonCtrl.settings.selectcmd, false, value);
+               }
+           }else{
+               ev.stopPropagation();
+           }
+       }
+    }
+
+    function onShow(){
+        var buttonCtrl = this.parent(),
+            manualInput = this.getEl("custom"),
+            value = buttonCtrl.color();
+        if(!value){
+            value = "";
+        } else {
+            value = value.replace(/^#/, "");
+        }
+        manualInput.value = value;
+    }
+
+    function setCustomSwatch(panel, color){
+        var swatch = panel.getEl('custom-swatch');
+        editor.dom.setAttrib(swatch, "data-mce-color", color);
+        editor.dom.setStyle(swatch, "background-color", "#" + color);
+    }
+
+    function onInput(ev){
+        var manualInput = ev.target;
+        if(editor.dom.hasClass(manualInput, "custom")){
+            var value = manualInput.value;
+            if(/[a-fA-F0-9]{6}/.test(value)){
+                setCustomSwatch(this, value);
+            }
+        }
+    }
 
 	function onPanelClick(e) {
 		var buttonCtrl = this.parent(), value;
@@ -155,15 +195,24 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		}
 	}
 
+    var panelOpts = {
+        html: renderColorPicker,
+        onclick: onPanelClick
+    };
+
+    if(editor.settings.textcolor_manual_entry){
+        panelOpts = tinymce.extend(panelOpts, {
+            onkeydown: onKeydown,
+            onshow: onShow,
+            oninput: onInput
+        });
+    }
+
 	editor.addButton('forecolor', {
 		type: 'colorbutton',
 		tooltip: 'Text color',
 		selectcmd: 'ForeColor',
-		panel: {
-			html: renderColorPicker,
-			onclick: onPanelClick,
-			onpostrender: afterPanelRender
-		},
+		panel: panelOpts,
 		onclick: onButtonClick
 	});
 
@@ -171,11 +220,7 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		type: 'colorbutton',
 		tooltip: 'Background color',
 		selectcmd: 'HiliteColor',
-		panel: {
-			html: renderColorPicker,
-			onclick: onPanelClick,
-			onpostrender: afterPanelRender
-		},
+		panel: panelOpts,
 		onclick: onButtonClick
 	});
 });
