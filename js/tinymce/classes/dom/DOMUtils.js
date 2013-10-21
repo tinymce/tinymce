@@ -1001,8 +1001,8 @@ define("tinymce/dom/DOMUtils", [
 
 					// Add scroll offsets from documentElement or body since IE with the wrong box model will use d.body and so do WebKit
 					// Also remove the body/documentelement clientTop/clientLeft on IE 6, 7 since they offset the position
-					x = pos.left + (doc.documentElement.scrollLeft || doc.body.scrollLeft) - rootElm.clientTop;
-					y = pos.top + (doc.documentElement.scrollTop || doc.body.scrollTop) - rootElm.clientLeft;
+					x = pos.left + rootElm.scrollLeft - rootElm.clientTop;
+					y = pos.top + rootElm.scrollTop - rootElm.clientLeft;
 
 					return {x: x, y: y};
 				}
@@ -2012,6 +2012,12 @@ define("tinymce/dom/DOMUtils", [
 				}
 
 				self.boundEvents = null;
+			}
+
+			// Restore sizzle document to window.document
+			// Since the current document might be removed producing "Permission denied" on IE see #6325
+			if (Sizzle.setDocument) {
+				Sizzle.setDocument();
 			}
 
 			self.win = self.doc = self.root = self.events = self.frag = null;

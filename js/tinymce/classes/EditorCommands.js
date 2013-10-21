@@ -303,7 +303,7 @@ define("tinymce/EditorCommands", [
 
 			mceInsertContent: function(command, ui, value) {
 				var parser, serializer, parentNode, rootNode, fragment, args;
-				var marker, nodeRect, viewPortRect, rng, node, node2, bookmarkHtml, viewportBodyElement;
+				var marker, rng, node, node2, bookmarkHtml;
 
 				function trimOrPaddLeftRight(html) {
 					var rng, container, offset;
@@ -434,18 +434,7 @@ define("tinymce/EditorCommands", [
 				}
 
 				marker = dom.get('mce_marker');
-
-				// Scroll range into view scrollIntoView on element can't be used since it will scroll the main view port as well
-				nodeRect = dom.getRect(marker);
-				viewPortRect = dom.getViewPort(editor.getWin());
-
-				// Check if node is out side the viewport if it is then scroll to it
-				if ((nodeRect.y + nodeRect.h > viewPortRect.y + viewPortRect.h || nodeRect.y < viewPortRect.y) ||
-					(nodeRect.x > viewPortRect.x + viewPortRect.w || nodeRect.x < viewPortRect.x)) {
-					viewportBodyElement = isIE ? editor.getDoc().documentElement : editor.getBody();
-					viewportBodyElement.scrollLeft = nodeRect.x;
-					viewportBodyElement.scrollTop = nodeRect.y - viewPortRect.h + 25;
-				}
+				selection.scrollIntoView(marker);
 
 				// Move selection before marker and remove it
 				rng = dom.createRng();

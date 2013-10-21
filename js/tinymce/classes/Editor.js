@@ -743,6 +743,10 @@ define("tinymce/Editor", [
 			body.disabled = true;
 
 			if (!settings.readonly) {
+				if (self.inline && DOM.getStyle(body, 'position', true) == 'static') {
+					body.style.position = 'relative';
+				}
+
 				body.contentEditable = self.getParam('content_editable_state', true);
 			}
 

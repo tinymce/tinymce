@@ -1913,12 +1913,14 @@ setDocument();
 [0, 0].sort( sortOrder );
 support.detectDuplicates = hasDuplicate;
 
+/*
 // EXPOSE
 if ( typeof define === "function" && define.amd ) {
 	define(function() { return Sizzle; });
 } else {
 	window.Sizzle = Sizzle;
 }
+*/
 
 // EXPOSE
 return Sizzle;

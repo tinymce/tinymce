@@ -19,29 +19,16 @@
 define("tinymce/pasteplugin/Quirks", [
 	"tinymce/Env",
 	"tinymce/util/Tools",
-	"tinymce/pasteplugin/WordFilter"
-], function(Env, Tools, WordFilter) {
+	"tinymce/pasteplugin/WordFilter",
+	"tinymce/pasteplugin/Utils"
+], function(Env, Tools, WordFilter, Utils) {
 	"use strict";
 
 	return function(editor) {
-		var explorerBlocksRegExp;
-
 		function addPreProcessFilter(filterFunc) {
-			editor.on('PastePreProcess', function(e) {
+			editor.on('BeforePastePreProcess', function(e) {
 				e.content = filterFunc(e.content);
 			});
-		}
-
-		function process(content, items) {
-			Tools.each(items, function(v) {
-				if (v.constructor == RegExp) {
-					content = content.replace(v, '');
-				} else {
-					content = content.replace(v[0], v[1]);
-				}
-			});
-
-			return content;
 		}
 
 		/**
@@ -54,7 +41,7 @@ define("tinymce/pasteplugin/Quirks", [
 		 *   a&nbsp;b
 		 */
 		function removeWebKitFragments(html) {
-			html = process(html, [
+			html = Utils.filter(html, [
 				/^[\s\S]*<!--StartFragment-->|<!--EndFragment-->[\s\S]*$/g,        // WebKit fragment
 				[/<span class="Apple-converted-space">\u00a0<\/span>/g, '\u00a0'], // WebKit &nbsp;
 				/<br>$/															   // Traling BR elements
@@ -80,26 +67,24 @@ define("tinymce/pasteplugin/Quirks", [
 			}
 
 			// Produce block regexp based on the block elements in schema
-			if (!explorerBlocksRegExp) {
-				var blockElements = [];
+			var blockElements = [];
 
-				Tools.each(editor.schema.getBlockElements(), function(block, blockName) {
-					blockElements.push(blockName);
-				});
+			Tools.each(editor.schema.getBlockElements(), function(block, blockName) {
+				blockElements.push(blockName);
+			});
 
-				explorerBlocksRegExp = new RegExp(
-					'(?:<br>&nbsp;[\\s\\r\\n]+|<br>)*(<\\/?(' + blockElements.join('|') + ')[^>]*>)(?:<br>&nbsp;[\\s\\r\\n]+|<br>)*',
-					'g'
-				);
-			}
+			var explorerBlocksRegExp = new RegExp(
+				'(?:<br>&nbsp;[\\s\\r\\n]+|<br>)*(<\\/?(' + blockElements.join('|') + ')[^>]*>)(?:<br>&nbsp;[\\s\\r\\n]+|<br>)*',
+				'g'
+			);
 
 			// Remove BR:s from: <BLOCK>X</BLOCK><BR>
-			html = process(html, [
+			html = Utils.filter(html, [
 				[explorerBlocksRegExp, '$1']
 			]);
 
 			// IE9 also adds an extra BR element for each soft-linefeed and it also adds a BR for each word wrap break
-			html = process(html, [
+			html = Utils.filter(html, [
 				[/<br><br>/g, '<BR><BR>'], // Replace multiple BR elements with uppercase BR to keep them intact
 				[/<br>/g, ' '],            // Replace single br elements with space since they are word wrap BR:s
 				[/<BR><BR>/g, '<br>']      // Replace back the double brs but into a single BR
@@ -108,8 +93,26 @@ define("tinymce/pasteplugin/Quirks", [
 			return html;
 		}
 
+		/**
+		 * WebKit has a nasty bug where the all runtime styles gets added to style attributes when copy/pasting contents.
+		 * This fix solves that by simply removing the whole style attribute.
+		 *
+		 * Todo: This can be made smarter. Keeping styles that override existing ones etc.
+		 *
+		 * @param {String} content Content that needs to be processed.
+		 * @return {String} Processed contents.
+		 */
+		function removeWebKitStyles(content) {
+			if (editor.settings.paste_remove_styles || editor.settings.paste_remove_styles_if_webkit !== false) {
+				content = content.replace(/ style=\"[^\"]+\"/g, '');
+			}
+
+			return content;
+		}
+
 		// Sniff browsers and apply fixes since we can't feature detect
 		if (Env.webkit) {
+			addPreProcessFilter(removeWebKitStyles);
 			addPreProcessFilter(removeWebKitFragments);
 		}
 

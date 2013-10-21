@@ -392,8 +392,7 @@ test('Enter inside empty LI in middle of OL in LI', function() {
 					'<li>a</li>' +
 				'</ol>' +
 			'</li>' +
-			'<li></li>' +
-			'<li>' +
+			'<li>\u00a0' +
 				'<ol>' +
 					'<li>b</li>' +
 				'</ol>' +
@@ -435,6 +434,37 @@ test('Enter inside empty LI in end of OL in LI', function() {
 });
 
 // Nested lists in OL elements
+
+test('Enter before nested list', function() {
+	editor.getBody().innerHTML = trimBrsOnIE(
+		'<ol>' +
+			'<li>a' +
+				'<ul>' +
+					'<li>b</li>' +
+					'<li>c</li>' +
+				'</ul>' +
+			'</li>' +
+		'</ol>'
+	);
+
+	setSelection('ol > li', 1);
+	editor.focus();
+	pressEnter();
+
+	equal(editor.getContent(), 
+		'<ol>' +
+			'<li>a</li>' +
+			'<li>\u00a0' +
+				'<ul>' +
+					'<li>b</li>' +
+					'<li>c</li>' +
+				'</ul>' +
+			'</li>' +
+		'</ol>'
+	);
+
+	equal(editor.selection.getNode().nodeName, 'LI');
+});
 
 test('Enter inside empty LI in beginning of OL in OL', function() {
 	editor.getBody().innerHTML = trimBrsOnIE(

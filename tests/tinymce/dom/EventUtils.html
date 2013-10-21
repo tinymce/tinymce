@@ -417,6 +417,27 @@ test("unbind inside callback", function() {
 	eventUtils.fire(window, 'click', {});
 	equal(data, 'ac');
 });
+
+test("ready/DOMContentLoaded (domLoaded = true)", function() {
+	var evt;
+
+	eventUtils.bind(window, "ready", function(e) {evt = e});
+	equal(evt.type, "ready");
+});
+
+test("ready/DOMContentLoaded (document.readyState check)", function() {
+	var evt;
+
+	eventUtils.domLoaded = false;
+	document.readyState = "loading";
+	eventUtils.bind(window, "ready", function(e) {evt = e});
+	ok(typeof(evt), "undefined");
+
+	eventUtils.domLoaded = false;
+	document.readyState = "complete";
+	eventUtils.bind(window, "ready", function(e) {evt = e});
+	equal(evt.type, "ready");
+});
 </script>
 
 	<h1 id="qunit-header">Unit tests for DOM Selection IE implementation</h1>

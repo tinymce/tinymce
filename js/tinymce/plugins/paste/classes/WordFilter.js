@@ -19,31 +19,22 @@ define("tinymce/pasteplugin/WordFilter", [
 	"tinymce/html/DomParser",
 	"tinymce/html/Schema",
 	"tinymce/html/Serializer",
-	"tinymce/html/Node"
-], function(Tools, DomParser, Schema, Serializer, Node) {
+	"tinymce/html/Node",
+	"tinymce/pasteplugin/Utils"
+], function(Tools, DomParser, Schema, Serializer, Node, Utils) {
 	function isWordContent(content) {
 		return (/class="?Mso|style="[^"]*\bmso-|style='[^'']*\bmso-|w:WordDocument/i).test(content);
 	}
 
 	function WordFilter(editor) {
-		var each = Tools.each, settings = editor.settings;
+		var settings = editor.settings;
 
-		editor.on('PastePreProcess', function(e) {
+		editor.on('BeforePastePreProcess', function(e) {
 			var content = e.content, retainStyleProperties, validStyles;
 
 			retainStyleProperties = settings.paste_retain_style_properties;
 			if (retainStyleProperties) {
 				validStyles = Tools.makeMap(retainStyleProperties);
-			}
-
-			function process(items) {
-				each(items, function(v) {
-					if (v.constructor == RegExp) {
-						content = content.replace(v, '');
-					} else {
-						content = content.replace(v[0], v[1]);
-					}
-				});
 			}
 
 			/**
@@ -201,7 +192,7 @@ define("tinymce/pasteplugin/WordFilter", [
 				e.wordContent = true; // Mark it for other processors
 
 				// Remove basic Word junk
-				process([
+				content = Utils.filter(content, [
 					// Word comments like conditional comments etc
 					/<!--[\s\S]+?-->/gi,
 

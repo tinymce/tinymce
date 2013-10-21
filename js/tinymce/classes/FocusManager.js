@@ -158,6 +158,8 @@ define("tinymce/FocusManager", [
 					editor.focus(false);
 					editorManager.focusedEditor = editor;
 				}
+
+				lastRng = null;
 			});
 
 			editor.on('focusout', function() {

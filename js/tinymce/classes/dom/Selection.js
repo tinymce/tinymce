@@ -974,7 +974,7 @@ define("tinymce/dom/Selection", [
 		getNode: function() {
 			var self = this, rng = self.getRng(), elm;
 			var startContainer = rng.startContainer, endContainer = rng.endContainer;
-			var startOffset = rng.startOffset, endOffset = rng.endOffset;
+			var startOffset = rng.startOffset, endOffset = rng.endOffset, root = self.dom.getRoot();
 
 			function skipEmptyTextNodes(node, forwards) {
 				var orig = node;
@@ -988,7 +988,7 @@ define("tinymce/dom/Selection", [
 
 			// Range maybe lost after the editor is made visible again
 			if (!rng) {
-				return self.dom.getRoot();
+				return root;
 			}
 
 			if (rng.setStart) {
@@ -1036,7 +1036,14 @@ define("tinymce/dom/Selection", [
 				return elm;
 			}
 
-			return rng.item ? rng.item(0) : rng.parentElement();
+			elm = rng.item ? rng.item(0) : rng.parentElement();
+
+			// IE 7 might return elements outside the iframe
+			if (elm.ownerDocument !== self.win.document) {
+				elm = root;
+			}
+
+			return elm;
 		},
 
 		getSelectedBlocks: function(startElm, endElm) {

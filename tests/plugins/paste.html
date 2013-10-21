@@ -228,7 +228,7 @@ test('paste plain text with double linefeeds', function(){
 	rng.setStart(editor.dom.select('p')[0].firstChild, 1);
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 2);
 	editor.selection.setRng(rng);
-	editor.execCommand('mceInsertClipboardContent', false, {text : 'a\n\nb\n\n\c\n\n'});
+	editor.execCommand('mceInsertClipboardContent', false, {text : 'a\n\nb\n\nc'});
 
 	equal(editor.getContent().replace(/[\r\n]+/g, ''), '<p>t</p><p>a</p><p>b</p><p>c</p><p>xt</p>');
 });
@@ -252,7 +252,7 @@ test('paste plain text with paragraphs', function(){
 	editor.selection.setRng(rng);
 	editor.execCommand('mceInsertClipboardContent', false, {text : 'a\n<b>b</b>\n\nc'});
 
-	equal(editor.getContent().replace(/[\r\n]+/g, ''), '<p>ta<br />&lt;b&gt;b&lt;/b&gt;</p><p>c</p><p>xt</p>');
+	equal(editor.getContent().replace(/[\r\n]+/g, ''), '<p>t</p><p>a<br />&lt;b&gt;b&lt;/b&gt;</p><p>c</p><p>xt</p>');
 });
 
 test('paste pre process text (event)', function(){
@@ -311,42 +311,42 @@ test('paste post process (event)', function(){
 
 test('paste innerText of single P', function(){
 	editor.setContent('<p>a</p>');
-	equal(editor.plugins.paste.innerText(editor.getBody()), 'a');
+	equal(tinymce.pasteplugin.Utils.innerText(editor.getBody().innerHTML), 'a');
 });
 
 test('paste innerText of single P with whitespace wrapped content', function(){
 	editor.setContent('<p>   a   </p>');
-	equal(editor.plugins.paste.innerText(editor.getBody()), 'a');
+	equal(tinymce.pasteplugin.Utils.innerText(editor.getBody().innerHTML), 'a');
 });
 
 test('paste innerText of two P', function(){
 	editor.setContent('<p>a</p><p>b</p>');
-	equal(editor.plugins.paste.innerText(editor.getBody()), 'a\n\nb');
+	equal(tinymce.pasteplugin.Utils.innerText(editor.getBody().innerHTML), 'a\n\nb');
 });
 
 test('paste innerText of H1 and P', function(){
 	editor.setContent('<h1>a</h1><p>b</p>');
-	equal(editor.plugins.paste.innerText(editor.getBody()), 'a\nb');
+	equal(tinymce.pasteplugin.Utils.innerText(editor.getBody().innerHTML), 'a\nb');
 });
 
 test('paste innerText of P with BR', function(){
 	editor.setContent('<p>a<br>b</p>');
-	equal(editor.plugins.paste.innerText(editor.getBody()), 'a\nb');
+	equal(tinymce.pasteplugin.Utils.innerText(editor.getBody().innerHTML), 'a\nb');
 });
 
 test('paste innerText of P with VIDEO', function(){
 	editor.setContent('<p>a<video>b<br>c</video>d</p>');
-	equal(editor.plugins.paste.innerText(editor.getBody()), 'a d');
+	equal(tinymce.pasteplugin.Utils.innerText(editor.getBody().innerHTML), 'a d');
 });
 
 test('paste innerText of PRE', function(){
 	editor.getBody().innerHTML = '<pre>a\nb\n</pre>';
-	equal(editor.plugins.paste.innerText(editor.getBody()).replace(/\r\n/g, '\n'), 'a\nb\n');
+	equal(tinymce.pasteplugin.Utils.innerText(editor.getBody().innerHTML).replace(/\r\n/g, '\n'), 'a\nb\n');
 });
 
 test('paste innerText of textnode with whitespace', function(){
 	editor.getBody().innerHTML = ' a ';
-	equal(editor.plugins.paste.innerText(editor.getBody()), ' a ');
+	equal(tinymce.pasteplugin.Utils.innerText(editor.getBody().innerHTML), ' a ');
 });
 
 tinymce.init({
