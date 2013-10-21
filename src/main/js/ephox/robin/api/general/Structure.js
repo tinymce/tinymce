@@ -31,8 +31,7 @@ define(
       'h5',
       'h6',
       'blockquote',
-      'pre',
-      'li'
+      'pre'
     ];
 
     var isBlock = function (universe, item) {
