@@ -813,6 +813,7 @@ define("tinymce/Formatter", [
 
 			function removeRngStyle(rng) {
 				var startContainer, endContainer;
+				var commonAncestorName = rng.commonAncestorContainer.nodeName;
 
 				rng = expandRng(rng, formatList, TRUE);
 
@@ -821,15 +822,21 @@ define("tinymce/Formatter", [
 					endContainer = getContainer(rng);
 
 					if (startContainer != endContainer) {
-						// WebKit will render the table incorrectly if we wrap a TD in a SPAN
-						// so lets see if the can use the first child instead
-						// This will happen if you tripple click a table cell and use remove formatting
-						if (/^(TR|TD)$/.test(startContainer.nodeName) && startContainer.firstChild) {
-							if (startContainer.nodeName == "TD") {
-								startContainer = startContainer.firstChild || startContainer;
-							} else {
+						// WebKit will render the table incorrectly if we wrap a TH or TD in a SPAN
+						// so let's see if we can use the first child instead
+						// This will happen if you triple click a table cell and use remove formatting
+						if (/^(TR|TH|TD)$/.test(startContainer.nodeName) && startContainer.firstChild) {
+							if (startContainer.nodeName == "TR") {
 								startContainer = startContainer.firstChild.firstChild || startContainer;
+							} else {
+								startContainer = startContainer.firstChild || startContainer;
 							}
+						}
+
+						// Try to adjust endContainer as well if cells on the same row were selected - bug #6410
+						if (commonAncestorName == 'TR' &&
+							/^(TH|TD)$/.test(endContainer.nodeName) && endContainer.firstChild) {
+							endContainer = endContainer.firstChild || endContainer;
 						}
 
 						// Wrap start/end nodes in span element since these might be cloned/moved
