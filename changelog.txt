@@ -9,6 +9,7 @@ Version 4.0.9 (2013-10-xx)
 	Fixed bug where Shift+Ctrl+V didn't produce a plain text paste on IE.
 	Fixed bug where IE would sometimes move the selection to the a previous location.
 	Fixed bug where the editor wasn't properly scrolled to the content insert location in inline mode.
+	Fixed bug where some comments would be parsed as HTML by the SaxParser.
 	Fixed various bugs and issues related to indentation of OL/UL list elements.
 	Fixed so IE 7 renders the classic mode buttons the same size as other browsers.
 	Fixed so document.readyState is checked when loading and initializing TinyMCE manually after page load.

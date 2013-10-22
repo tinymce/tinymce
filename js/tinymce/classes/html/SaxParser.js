@@ -360,6 +360,11 @@ define("tinymce/html/SaxParser", [
 						}
 					}
 				} else if ((value = matches[1])) { // Comment
+					// Padd comment value to avoid browsers from parsing invalid comments as HTML
+					if (value.charAt(0) === '>') {
+						value = ' ' + value;
+					}
+
 					self.comment(value);
 				} else if ((value = matches[2])) { // CDATA
 					self.cdata(value);
