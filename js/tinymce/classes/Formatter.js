@@ -813,7 +813,6 @@ define("tinymce/Formatter", [
 
 			function removeRngStyle(rng) {
 				var startContainer, endContainer;
-				var commonAncestorName = rng.commonAncestorContainer.nodeName;
 
 				rng = expandRng(rng, formatList, TRUE);
 
@@ -834,7 +833,9 @@ define("tinymce/Formatter", [
 						}
 
 						// Try to adjust endContainer as well if cells on the same row were selected - bug #6410
-						if (commonAncestorName == 'TR' &&
+						var commonAncestorContainer = rng.commonAncestorContainer;
+						if (commonAncestorContainer &&
+							/^T(HEAD|BODY|FOOT|R)$/.test(commonAncestorContainer.nodeName) &&
 							/^(TH|TD)$/.test(endContainer.nodeName) && endContainer.firstChild) {
 							endContainer = endContainer.firstChild || endContainer;
 						}
