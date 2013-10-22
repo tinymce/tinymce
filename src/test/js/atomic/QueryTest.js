@@ -45,9 +45,9 @@ test(
       assert.eq(expected, actual);
     };
 
-    checkPosition(2, '1.1.1', '1.1.2');
-    checkPosition(4, '1.1.2', '1.1.1');
-    checkPosition(2, '1.1.1', '1.1.4.1');
+    checkPosition(4, '1.1.1', '1.1.2');
+    checkPosition(2, '1.1.2', '1.1.1');
+    checkPosition(4, '1.1.1', '1.1.4.1');
 
     checkPrev('_nope_', '1.1.2.2.1');
     checkPrev('1.1.3', '1.1.4');

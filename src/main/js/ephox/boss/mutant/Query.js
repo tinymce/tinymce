@@ -23,8 +23,8 @@ define(
       var itemIndex = Arr.findIndex(all, function (x) { return item.id === x; });
       var otherIndex = Arr.findIndex(all, function (x) { return other.id === x; });
       if (itemIndex > -1 && otherIndex > -1) {
-        if (itemIndex < otherIndex) return 2;
-        else return 4;
+        if (itemIndex < otherIndex) return 4;
+        else return 2;
       }
       return 0;
     };
