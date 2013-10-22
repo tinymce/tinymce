@@ -230,9 +230,9 @@ tinymce.init({
 
 		tinymce.each(performanceTests, function(test, title) {
 			tinymce.DOM.add('tests', 'li', null, '<a id="test_' + (++count) + '" href="#">' + title + '</a>');
-			tinymce.DOM.bind('test_' + count, 'click', function(e) {
+			tinymce.DOM.bind(tinymce.DOM.get('test_' + count), 'click', function(e) {
 				var count = 0, numberOfRuns;
-	
+
 				numberOfRuns = parseInt(document.getElementById('runs').value);
 
 				e.preventDefault();
