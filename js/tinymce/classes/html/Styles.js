@@ -75,7 +75,8 @@ define("tinymce/html/Styles", [], function() {
 			 * @return {Object} Object representation of that style like {border: '1px solid red'}
 			 */
 			parse: function(css) {
-				var styles = {}, matches, name, value, isEncoded, urlConverter = settings.url_converter, urlConverterScope = settings.url_converter_scope || this;
+				var styles = {}, matches, name, value, isEncoded, urlConverter = settings.url_converter;
+				var urlConverterScope = settings.url_converter_scope || this;
 
 				function compress(prefix, suffix) {
 					var top, right, bottom, left;
@@ -196,6 +197,10 @@ define("tinymce/html/Styles", [], function() {
 
 					url = decode(url || url2 || url3);
 
+					if (!settings.allow_script_urls && /(java|vb)script:/i.test(url.replace(/[\s\r\n]+/, ''))) {
+						return "";
+					}
+
 					// Convert the URL to relative/absolute depending on config
 					if (urlConverter) {
 						url = urlConverter.call(urlConverterScope, url, 'style');
@@ -206,6 +211,8 @@ define("tinymce/html/Styles", [], function() {
 				}
 
 				if (css) {
+					css = css.replace(/[\u0000-\u001F]/g, '');
+
 					// Encode \" \' % and ; and : inside strings so they don't interfere with the style parsing
 					css = css.replace(/\\[\"\';:\uFEFF]/g, encode).replace(/\"[^\"]+\"|\'[^\']+\'/g, function(str) {
 						return str.replace(/[;:]/g, encode);
@@ -217,6 +224,10 @@ define("tinymce/html/Styles", [], function() {
 						value = matches[2].replace(trimRightRegExp, '');
 
 						if (name && value.length > 0) {
+							if (!settings.allow_script_urls && (name == "behavior" || /expression\s*\(/.test(value))) {
+								continue;
+							}
+
 							// Opera will produce 700 instead of bold in their style values
 							if (name === 'font-weight' && value === '700') {
 								value = 'bold';

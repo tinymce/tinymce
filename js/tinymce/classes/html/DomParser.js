@@ -382,6 +382,8 @@ define("tinymce/html/DomParser", [
 
 			parser = new SaxParser({
 				validate: validate,
+				allow_script_urls: settings.allow_script_urls,
+				allow_conditional_comments: settings.allow_conditional_comments,
 
 				// Exclude P and LI from DOM parsing since it's treated better by the DOM parser
 				self_closing_elements: cloneAndExcludeBlocks(schema.getSelfClosingElements()),

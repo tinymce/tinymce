@@ -1,5 +1,6 @@
 Version 4.0.9 (2013-10-xx)
 	Added support for external template files to template plugin just set the templates option to a URL with JSON data.
+	Added new allow_script_urls option. Enabled by default, trims all script urls from attributes.
 	Fixed bug where IE would sometimes throw a "Permission denied" error unless the Sizzle doc was properly removed.
 	Fixed bug where lists plugin would remove outer list items if inline editable element was within a LI parent.
 	Fixed bug where insert table grid widget would insert a table on item to large when using a RTL language pack.
@@ -13,6 +14,7 @@ Version 4.0.9 (2013-10-xx)
 	Fixed various bugs and issues related to indentation of OL/UL list elements.
 	Fixed so IE 7 renders the classic mode buttons the same size as other browsers.
 	Fixed so document.readyState is checked when loading and initializing TinyMCE manually after page load.
+	Removed script and style elements from the default list of valid elements. Use extended_valid_elements to add them back if needed.
 Version 4.0.8 (2013-10-10)
 	Added RTL support so all of the UI is rendered right to left if a language pack has a _dir property set to rtl.
 	Fixed bug where layout managers wouldn't handle subpixel values properly. When for example the browser was zoomed in.

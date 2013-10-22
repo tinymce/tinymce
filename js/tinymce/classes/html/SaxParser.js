@@ -94,7 +94,7 @@ define("tinymce/html/SaxParser", [
 			var validate, elementRule, isValidElement, attr, attribsValue, validAttributesMap, validAttributePatterns;
 			var attributesRequired, attributesDefault, attributesForced;
 			var anyAttributesRequired, selfClosing, tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0;
-			var decode = Entities.decode, fixSelfClosing;
+			var decode = Entities.decode, fixSelfClosing, filteredAttrs = Tools.makeMap('src,href');
 
 			function processEndTag(name) {
 				var pos, i;
@@ -124,7 +124,7 @@ define("tinymce/html/SaxParser", [
 			}
 
 			function parseAttribute(match, name, value, val2, val3) {
-				var attrRule, i;
+				var attrRule, i, trimRegExp = /[\s\u0000-\u001F]+/g;
 
 				name = name.toLowerCase();
 				value = name in fillAttrsMap ? name : decode(value || val2 || val3 || ''); // Handle boolean attribute than value attribute
@@ -156,6 +156,12 @@ define("tinymce/html/SaxParser", [
 
 					// Validate value
 					if (attrRule.validValues && !(value in attrRule.validValues)) {
+						return;
+					}
+				}
+
+				if (filteredAttrs[name] && !settings.allow_script_urls) {
+					if (/(java|vb)script:/i.test(decodeURIComponent(value.replace(trimRegExp, '')))) {
 						return;
 					}
 				}
@@ -362,6 +368,10 @@ define("tinymce/html/SaxParser", [
 				} else if ((value = matches[1])) { // Comment
 					// Padd comment value to avoid browsers from parsing invalid comments as HTML
 					if (value.charAt(0) === '>') {
+						value = ' ' + value;
+					}
+
+					if (!settings.allow_conditional_comments && value.substr(0, 3) === '[if') {
 						value = ' ' + value;
 					}
 

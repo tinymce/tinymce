@@ -238,6 +238,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 
 		new tinymce.html.SaxParser({
 			validate: false,
+			allow_conditional_comments: true,
 			special: 'script,noscript',
 			start: function(name, attrs) {
 				if (!data.source1 && name == "param") {
@@ -315,6 +316,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 
 		new tinymce.html.SaxParser({
 			validate: false,
+			allow_conditional_comments: true,
 			special: 'script,noscript',
 
 			comment: function(text) {
