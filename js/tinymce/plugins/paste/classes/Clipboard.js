@@ -46,7 +46,7 @@ define("tinymce/pasteplugin/Clipboard", [
 
 			// Remove all data images from paste for example from Gecko
 			if (!editor.settings.paste_data_images) {
-				html = html.replace(/<img src=\"data:image[^>]+>/g, '');
+				html = html.replace(/<img[^>]+src=\"data:image[^>]+>/g, '');
 			}
 
 			args = editor.fire('BeforePastePreProcess', {content: html}); // Internal event used by Quirks
