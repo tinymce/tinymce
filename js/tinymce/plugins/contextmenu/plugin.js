@@ -50,6 +50,9 @@ tinymce.PluginManager.add('contextmenu', function(editor) {
 				context: 'contextmenu'
 			});
 
+			// allow css to target this special menu
+			menu.addClass('contextmenu');
+
 			menu.renderTo(document.body);
 
 			editor.on('remove', function() {
