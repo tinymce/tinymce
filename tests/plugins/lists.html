@@ -415,18 +415,17 @@ test('Apply UL list to multiple formatted lines separated by BR', function() {
 	);
 
 	equal(editor.selection.getStart().nodeName, 'STRONG');
-	equal(editor.selection.getEnd().nodeName, 'EM');
+	equal(editor.selection.getEnd().nodeName, tinymce.Env.ie && tinymce.Env.ie < 9 ? 'LI' : 'EM'); // Old IE will return the end LI not a big deal
 });
 
 test('Apply UL list to br line and text block line', function() {
 	editor.settings.forced_root_block = false;
 
-	editor.getBody().innerHTML = (
+	editor.setContent(
 		'a' +
 		'<p>b</p>'
 	);
 
-	editor.focus();
 	var rng = editor.dom.createRng();
 	rng.setStart(editor.getBody().firstChild, 0);
 	rng.setEnd(editor.getBody().lastChild.firstChild, 1);
@@ -1214,7 +1213,7 @@ test('Indent last LI to same level as middle LI', function() {
 	);
 
 	editor.focus();
-	setSelection('li:last', 0);
+	setSelection('li:last', 1);
 	execCommand('Indent');
 
 	equal(editor.getContent(), 
@@ -1289,7 +1288,7 @@ test('Indent second LI to same level as nested LI', function() {
 	equal(editor.selection.getNode().nodeName, 'LI');
 });
 
-test('Indent second LI to same level as nested LI', function() {
+test('Indent second LI to same level as nested LI 2', function() {
 	editor.getBody().innerHTML = trimBrs(
 		'<ul>' +
 			'<li>a' +
@@ -1297,16 +1296,16 @@ test('Indent second LI to same level as nested LI', function() {
 					'<li>b</li>' +
 				'</ul>' +
 			'</li>' +
-			'<li>c' +
+			'<li>cd' +
 				'<ul>' +
-					'<li>d</li>' +
+					'<li>e</li>' +
 				'</ul>' +
 			'</li>' +
 		'</ul>'
 	);
 
 	editor.focus();
-	setSelection('li:nth-child(2)', 0);
+	setSelection('li:nth-child(2)', 1);
 	execCommand('Indent');
 
 	equal(editor.getContent(), 
@@ -1314,8 +1313,8 @@ test('Indent second LI to same level as nested LI', function() {
 			'<li>a' +
 				'<ul>' +
 					'<li>b</li>' +
-					'<li>c</li>' +
-					'<li>d</li>' +
+					'<li>cd</li>' +
+					'<li>e</li>' +
 				'</ul>' +
 			'</li>' +
 		'</ul>'

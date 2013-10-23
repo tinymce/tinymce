@@ -428,10 +428,17 @@ test("ready/DOMContentLoaded (domLoaded = true)", function() {
 test("ready/DOMContentLoaded (document.readyState check)", function() {
 	var evt;
 
+	try {
+		document.readyState = "loading";
+	} catch (e) {
+		ok(true, "IE doesn't allow us to set document.readyState");
+		return;
+	}
+
 	eventUtils.domLoaded = false;
 	document.readyState = "loading";
 	eventUtils.bind(window, "ready", function(e) {evt = e});
-	ok(typeof(evt), "undefined");
+	ok(typeof(evt) !== "undefined");
 
 	eventUtils.domLoaded = false;
 	document.readyState = "complete";

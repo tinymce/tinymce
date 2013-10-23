@@ -601,7 +601,7 @@ test('Shift+Enter at end of P inside LI', function() {
 	editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
 	setSelection('p', 4);
 	pressEnter({shiftKey: true});
-	equal(editor.getContent(), '<ol><li><p>abcd<br /><br /></p></li></ol>');
+	equal(editor.getContent(), (tinymce.isIE && tinymce.Env.ie < 11) ? '<ol><li><p>abcd</p></li></ol>' : '<ol><li><p>abcd<br /><br /></p></li></ol>');
 	equal(editor.selection.getNode().nodeName, 'P');
 });
 
@@ -844,7 +844,7 @@ test('Shift+Enter in body with forced_root_block set to false', function() {
 
 test('Enter at the end of DIV layer', function() {
 	editor.settings.br_in_pre = false;
-	editor.getBody().innerHTML = '<div style="position: absolute; top: 1px; left: 2px;">abcd</div>';
+	editor.setContent('<div style="position: absolute; top: 1px; left: 2px;">abcd</div>');
 	setSelection('div', 4);
 	pressEnter();
 	equal(editor.getContent(), '<div style="position: absolute; top: 1px; left: 2px;"><p>abcd</p><p>\u00a0</p></div>');

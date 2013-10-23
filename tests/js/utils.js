@@ -225,6 +225,34 @@ function cleanHtml(html) {
 	return html;
 }
 
+function normalizeHtml(html) {
+	var writer = new tinymce.html.Writer();
+
+	new tinymce.html.SaxParser({
+		validate: false,
+		comment: writer.comment,
+		cdata: writer.cdata,
+		text: writer.text,
+		end: writer.end,
+		pi: writer.pi,
+		doctype: writer.doctype,
+
+		start: function(name, attrs, empty) {
+			attrs.sort(function(a, b) {
+				if (a.name === b.name) {
+					return 0;
+				}
+
+				return a.name > b.name ? 1 : -1;
+			});
+
+			writer.start(name, attrs, empty);
+		}
+	}).parse(html);
+
+	return writer.getContent();
+}
+
 /**
  * Measures the x, y, w, h of the specified element/control relative to the view element.
  */

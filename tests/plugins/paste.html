@@ -55,7 +55,7 @@ test("Paste paragraph in paragraph", function() {
 	editor.selection.setRng(rng);
 
 	editor.execCommand('mceInsertClipboardContent', false, {content: '<p>TEST</p>'});
-	equal(editor.getContent().replace(/[\r\n]+/g, ''), tinymce.isGecko ? '<p>1TEST4</p>': '<p>1</p><p>TEST</p><p>4</p>'); // Gecko needed a workaround since copy of <h1>t[e]xt</h1> will become <h1>e</h1>
+	equal(editor.getContent().replace(/[\r\n]+/g, ''), '<p>1</p><p>TEST</p><p>4</p>');
 });
 
 test("Paste paragraphs in complex paragraph", function() {
@@ -364,8 +364,8 @@ test('paste innerText of PRE', function() {
 });
 
 test('paste innerText of textnode with whitespace', function() {
-	editor.getBody().innerHTML = ' a ';
-	equal(tinymce.pasteplugin.Utils.innerText(editor.getBody().innerHTML), ' a ');
+	editor.getBody().innerHTML = '<pre> a </pre>';
+	equal(tinymce.pasteplugin.Utils.innerText(editor.getBody().firstChild.innerHTML), ' a ');
 });
 
 tinymce.init({

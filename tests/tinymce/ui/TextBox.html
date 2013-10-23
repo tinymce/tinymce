@@ -38,13 +38,13 @@ function createTextBox(settings) {
 test("textbox text, size default", function() {
 	var textBox = createTextBox({text: 'X'});
 
-	deepEqual(rect(textBox), [2, 0, 159, 30]);
+	deepEqual(size(textBox), [25, 30]);
 });
 
 test("textbox text, size 100x100", function() {
 	var textBox = createTextBox({text: 'X', width: 100, height: 100});
 
-	deepEqual(rect(textBox), [0, 0, 100, 100]);
+	deepEqual(size(textBox), [100, 100]);
 });
 </script>
 </head>
