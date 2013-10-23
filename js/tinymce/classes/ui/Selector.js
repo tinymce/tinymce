@@ -36,9 +36,8 @@
  * @class tinymce.ui.Selector
  */
 define("tinymce/ui/Selector", [
-	"tinymce/util/Class",
-	"tinymce/util/Tools"
-], function(Class, Tools) {
+	"tinymce/util/Class"
+], function(Class) {
 	"use strict";
 
 	/**
@@ -257,8 +256,12 @@ define("tinymce/ui/Selector", [
 						// Find the index and length since a psuedo filter like :first needs it
 						if (filters.psuedo) {
 							siblings = item.parent().items();
-							index = Tools.inArray(item, siblings);
-							length = siblings.length;
+							index = length = siblings.length;
+							while (index--) {
+								if (siblings[index] === item) {
+									break;
+								}
+							}
 						}
 
 						for (fi = 0, fl = filters.length; fi < fl; fi++) {

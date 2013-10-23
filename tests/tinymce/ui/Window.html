@@ -23,7 +23,7 @@ module("ui.Window", {
 	},
 
 	teardown: function() {
-		//document.getElementById('view').innerHTML = '';
+		tinymce.DOM.remove(document.getElementById('mce-modal-block'));
 	}
 });
 
@@ -40,7 +40,7 @@ function createWindow(settings) {
 test("window x, y, w, h", function() {
 	win = createWindow({x: 100, y: 120, width: 200, height: 210});
 
-	deepEqual(rect(win), [100, 120, 200, 210]);
+	deepEqual(size(win), [200, 210]);
 });
 
 test("no title, no buttonbar, autoResize", function() {
@@ -52,22 +52,22 @@ test("no title, no buttonbar, autoResize", function() {
 		]
 	});
 
-	deepEqual(rect(win), [100, 120, 22, 22]);
-	deepEqual(rect(win.find("spacer")[0]), [101, 121, 20, 20]);
+	deepEqual(size(win), [22, 22]);
+	deepEqual(size(win.find("spacer")[0]), [20, 20]);
 });
 
 test("title, no buttonbar, autoResize, title is widest", function() {
 	win = createWindow({
 		x: 100,
 		y: 120,
-		title: "X",
+		title: "XXXXXXXXXXXXXXXXXXXXXX",
 		items: [
 			{type: 'spacer', classes: 'red', flex: 1}
 		]
 	});
 
-	deepEqual(rect(win), [100, 120, 154, 61]);
-	deepEqual(rect(win.find("spacer")[0]), [101, 160, 152, 20]);
+	nearlyEqualRects(size(win), [326, 61], 10);
+	nearlyEqualRects(size(win.find("spacer")[0]), [324, 20], 10);
 });
 
 test("buttonbar, autoResize, buttonbar is widest", function() {
@@ -78,13 +78,13 @@ test("buttonbar, autoResize, buttonbar is widest", function() {
 			{type: 'spacer', classes: 'red', flex: 1}
 		],
 		buttons: [
-			{type: 'spacer', classes: 'green', minWidth: 100}
+			{type: 'spacer', classes: 'green', minWidth: 400}
 		]
 	});
 
-	deepEqual(rect(win), [100, 120, 122, 63]);
-	deepEqual(rect(win.find("spacer")[0]), [101, 121, 120, 20]);
-	deepEqual(rect(win.statusbar.find("spacer")[0]), [111, 152, 100, 20]);
+	deepEqual(size(win), [422, 63]);
+	deepEqual(size(win.find("spacer")[0]), [420, 20]);
+	deepEqual(size(win.statusbar.find("spacer")[0]), [400, 20]);
 });
 
 test("buttonbar, title, autoResize, content is widest", function() {
@@ -93,17 +93,17 @@ test("buttonbar, title, autoResize, content is widest", function() {
 		y: 120,
 		title: "X",
 		items: [
-			{type: 'spacer', classes: 'red', minWidth: 200}
+			{type: 'spacer', classes: 'red', minWidth: 400}
 		],
 		buttons: [
 			{type: 'spacer', classes: 'green'}
 		]
 	});
 
-	deepEqual(rect(win), [100, 120, 202, 102]);
-	deepEqual(rect(win.getEl("head")), [101, 121, 200, 39]);
-	deepEqual(rect(win.find("spacer")[0]), [101, 160, 200, 20]);
-	deepEqual(rect(win.statusbar.find("spacer")[0]), [271, 191, 20, 20]);
+	deepEqual(size(win), [402, 102]);
+	deepEqual(size(win.getEl("head")), [400, 39]);
+	deepEqual(size(win.find("spacer")[0]), [400, 20]);
+	deepEqual(size(win.statusbar.find("spacer")[0]), [20, 20]);
 });
 </script>
 </head>
@@ -113,6 +113,6 @@ test("buttonbar, title, autoResize, content is widest", function() {
 	<h2 id="qunit-userAgent"></h2>
 	<ol id="qunit-tests">
 	</ol>
-	<div id="view" style="position: absolute; right: 0; top: 0"></div>
+	<div id="view" style="position: absolute; left: 0; top: 0"></div>
 </body>
 </html>

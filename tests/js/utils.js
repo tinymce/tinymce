@@ -247,6 +247,10 @@ function rect(ctrl) {
 	];
 }
 
+function size(ctrl) {
+	return rect(ctrl).slice(2);
+}
+
 function resetScroll(elm) {
 	elm.scrollTop = 0;
 	elm.scrollLeft = 0;

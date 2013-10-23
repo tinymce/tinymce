@@ -186,7 +186,7 @@ define("tinymce/ui/GridLayout", [
 					// Get control settings and calculate x, y
 					ctrlSettings = ctrl.settings;
 					ctrlLayoutRect = ctrl.layoutRect();
-					width = colWidths[x];
+					width = Math.max(colWidths[x], ctrlLayoutRect.startMinWidth);
 					alignX = alignY = 0;
 					ctrlLayoutRect.x = posX;
 					ctrlLayoutRect.y = posY;

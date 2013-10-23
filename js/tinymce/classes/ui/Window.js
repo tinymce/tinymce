@@ -97,7 +97,7 @@ define("tinymce/ui/Window", [
 		 * @method recalc
 		 */
 		recalc: function() {
-			var self = this, statusbar = self.statusbar, layoutRect, width, needsRecalc;
+			var self = this, statusbar = self.statusbar, layoutRect, width, x, needsRecalc;
 
 			if (self._fullscreen) {
 				self.layoutRect(DomUtils.getWindowSize());
@@ -112,7 +112,8 @@ define("tinymce/ui/Window", [
 			if (self.settings.title && !self._fullscreen) {
 				width = layoutRect.headerW;
 				if (width > layoutRect.w) {
-					self.layoutRect({w: width});
+					x = layoutRect.x - Math.max(0, width / 2);
+					self.layoutRect({w: width, x: x});
 					needsRecalc = true;
 				}
 			}
@@ -123,7 +124,8 @@ define("tinymce/ui/Window", [
 
 				width = statusbar.layoutRect().minW + layoutRect.deltaW;
 				if (width > layoutRect.w) {
-					self.layoutRect({w: width});
+					x = layoutRect.x - Math.max(0, width / 2);
+					self.layoutRect({w: width, x: x});
 					needsRecalc = true;
 				}
 			}
