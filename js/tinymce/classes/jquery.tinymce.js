@@ -148,7 +148,7 @@
 			script.onload = script.onreadystatechange = function(e) {
 				e = e || event;
 
-				if (e.type == 'load' || /complete|loaded/.test(script.readyState)) {
+				if (lazyLoading !== 2 && (e.type == 'load' || /complete|loaded/.test(script.readyState))) {
 					tinymce.dom.Event.domLoaded = 1;
 					lazyLoading = 2;
 
