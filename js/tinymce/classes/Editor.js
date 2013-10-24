@@ -1746,9 +1746,9 @@ define("tinymce/Editor", [
 				}*/
 			}
 
-			// Move selection to start of body if it's a after init setContent call
-			// This prevents IE 7/8 from moving focus to empty editors
-			if (!args.initial) {
+			// Move selection to start of body if the args focus is set to true
+			// So you need to manually set focus as of 4.0.10 to avoid auto focus issues like #6423
+			if (args.focus) {
 				var dom = self.dom, selection = self.selection;
 
 				// IE can't have the caret inside <body><p>|</p></body> unless we do some magic

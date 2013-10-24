@@ -17,6 +17,7 @@ Version 4.0.9 (2013-10-xx)
 	Fixed bug where the Window wasn't properly positioned if the size of the button bar or title bar was wider than the contents.
 	Fixed bug where psuedo selectors for finding UI controls didn't work properly.
 	Fixed bug where resized splitbuttons would throw an exception if it didn't contain an icon.
+	Fixed bug where setContent would move focus into the editor even though it wasn't active.
 	Fixed various bugs and issues related to indentation of OL/UL list elements.
 	Fixed so IE 7 renders the classic mode buttons the same size as other browsers.
 	Fixed so document.readyState is checked when loading and initializing TinyMCE manually after page load.
