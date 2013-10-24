@@ -68,7 +68,9 @@ tinymce.PluginManager.add('importcss', function(editor) {
 		});
 
 		try {
-			each(doc.styleSheets, append);
+			each(doc.styleSheets, function(styleSheet) {
+				append(styleSheet);
+			});
 		} catch (e) {}
 
 		return selectors;
