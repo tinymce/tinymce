@@ -682,9 +682,10 @@ define("tinymce/html/Schema", [
 			});
 
 			// Remove these by default
-			each(split('script style'), function(name) {
+			// TODO: Reenable in 4.1
+			/*each(split('script style'), function(name) {
 				delete elements[name];
-			});
+			});*/
 		} else {
 			setValidElements(settings.valid_elements);
 		}
