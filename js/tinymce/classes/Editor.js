@@ -1033,7 +1033,7 @@ define("tinymce/Editor", [
 					body = self.getBody();
 
 					// Check for setActive since it doesn't scroll to the element
-					if (body.setActive) {
+					if (body.setActive && Env.ie < 11) {
 						body.setActive();
 					} else {
 						body.focus();
