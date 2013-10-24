@@ -124,7 +124,7 @@ define("tinymce/ui/Window", [
 
 				width = statusbar.layoutRect().minW + layoutRect.deltaW;
 				if (width > layoutRect.w) {
-					x = layoutRect.x - Math.max(0, width / 2);
+					x = layoutRect.x - Math.max(0, width - layoutRect.w);
 					self.layoutRect({w: width, x: x});
 					needsRecalc = true;
 				}
