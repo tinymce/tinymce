@@ -1707,6 +1707,8 @@ test('Remove UL in inline body element contained in LI', function() {
 test('Backspace in LI in UL in inline body element contained within LI', function() {
 	inlineEditor.setContent('<ul><li>a</li></ul>');
 	inlineEditor.focus();
+	inlineEditor.selection.select(inlineEditor.getBody(), true);
+	inlineEditor.selection.collapse(true);
 	inlineEditor.plugins.lists.backspaceDelete();
 	equal(inlineEditor.getContent(), '<p>a</p>');
 });

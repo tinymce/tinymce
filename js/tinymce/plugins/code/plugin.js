@@ -26,9 +26,10 @@ tinymce.PluginManager.add('code', function(editor) {
 			},
 			onSubmit: function(e) {
 				editor.undoManager.transact(function() {
-					editor.setContent(e.data.code, {focus: true});
+					editor.setContent(e.data.code);
 				});
 
+				editor.focus();
 				editor.nodeChanged();
 			}
 		});

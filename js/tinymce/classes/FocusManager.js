@@ -135,6 +135,10 @@ define("tinymce/FocusManager", [
 				}
 			});
 
+			editor.on('setcontent', function() {
+				lastRng = null;
+			});
+
 			// Remove last selection bookmark on mousedown see #6305
 			editor.on('mousedown', function() {
 				editor.selection.lastFocusBookmark = null;

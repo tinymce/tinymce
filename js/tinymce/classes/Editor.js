@@ -1746,22 +1746,6 @@ define("tinymce/Editor", [
 				}*/
 			}
 
-			// Move selection to start of body if the args focus is set to true
-			// So you need to manually set focus as of 4.0.10 to avoid auto focus issues like #6423
-			if (args.focus) {
-				var dom = self.dom, selection = self.selection;
-
-				// IE can't have the caret inside <body><p>|</p></body> unless we do some magic
-				if (ie < 11 && dom.isBlock(body.firstChild) && dom.isEmpty(body.firstChild)) {
-					body.firstChild.appendChild(dom.doc.createTextNode('\u00a0'));
-					selection.select(body.firstChild, true);
-					dom.remove(body.firstChild.lastChild);
-				} else {
-					selection.select(body, true);
-					selection.collapse(true);
-				}
-			}
-
 			return args.content;
 		},
 
