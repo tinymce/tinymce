@@ -1,3 +1,5 @@
+Version 4.0.10 (2013-10-xx)
+	Fixed bug where the code plugin would select all contents in IE when content was updated.
 Version 4.0.9 (2013-10-24)
 	Added support for external template files to template plugin just set the templates option to a URL with JSON data.
 	Added new allow_script_urls option. Enabled by default, trims all script urls from attributes.

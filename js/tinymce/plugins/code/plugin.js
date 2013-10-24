@@ -25,10 +25,16 @@ tinymce.PluginManager.add('code', function(editor) {
 				style: 'direction: ltr; text-align: left'
 			},
 			onSubmit: function(e) {
+				// We get a lovely "Wrong document" error in IE 11 if we
+				// don't move the focus to the editor before creating an undo
+				// transation since it tries to make a bookmark for the current selection
+				editor.focus();
+
 				editor.undoManager.transact(function() {
 					editor.setContent(e.data.code);
 				});
 
+				// Focus again to place the caret inside the editor
 				editor.focus();
 				editor.nodeChanged();
 			}
