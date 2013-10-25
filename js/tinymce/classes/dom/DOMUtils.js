@@ -1001,8 +1001,8 @@ define("tinymce/dom/DOMUtils", [
 
 					// Add scroll offsets from documentElement or body since IE with the wrong box model will use d.body and so do WebKit
 					// Also remove the body/documentelement clientTop/clientLeft on IE 6, 7 since they offset the position
-					x = pos.left + rootElm.scrollLeft - rootElm.clientTop;
-					y = pos.top + rootElm.scrollTop - rootElm.clientLeft;
+					x = pos.left + (doc.documentElement.scrollLeft || doc.body.scrollLeft) - rootElm.clientTop;
+					y = pos.top + (doc.documentElement.scrollTop || doc.body.scrollTop) - rootElm.clientLeft;
 
 					return {x: x, y: y};
 				}
