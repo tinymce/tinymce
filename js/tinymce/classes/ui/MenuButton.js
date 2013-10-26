@@ -19,7 +19,7 @@ define("tinymce/ui/MenuButton", [
 	"tinymce/ui/Button",
 	"tinymce/ui/Factory",
 	"tinymce/ui/MenuBar",
-    "tinymce/ui/DomUtils"
+	"tinymce/ui/DomUtils"
 ], function(Button, Factory, MenuBar, DomUtils) {
 	"use strict";
 
@@ -221,35 +221,35 @@ define("tinymce/ui/MenuButton", [
 			return this._super(text);
 		},
 
-        /**
-         * Sets/gets the current button icon.
-         *
-         * @method icon
-         * @param {String} [icon] New icon identifier.
-         * @return {String|tinymce.ui.MenuButton} Current icon or current MenuButton instance.
-         */
-        icon: function(icon) {
-            var self = this, children, prefix = self.classPrefix;
+		/**
+		 * Sets/gets the current button icon.
+		 *
+		 * @method icon
+		 * @param {String} [icon] New icon identifier.
+		 * @return {String|tinymce.ui.MenuButton} Current icon or current MenuButton instance.
+		 */
+		icon: function(icon) {
+			var self = this, children, prefix = self.classPrefix;
 
-            self.settings.icon = icon;
-            icon = self.settings.icon ? prefix + 'ico ' + prefix + 'i-' + self.settings.icon : '';
+			self.settings.icon = icon;
+			icon = self.settings.icon ? prefix + 'ico ' + prefix + 'i-' + self.settings.icon : '';
 
-            if(self._rendered) {
-                children = self.getEl('open').getElementsByTagName('i');
-                if(children.length == 2) {
-                    if(icon) {
-                        children[0].className = icon;
-                    }
-                    else {
-                        children[0].remove();
-                    }
-                }
-                else if(icon) {
-                    var iconElement = DomUtils.createFragment('<i class="' + icon + '"></i> ');
-                    self.getEl('open').insertBefore(iconElement, self.getEl('open').childNodes[0]);
-                }
-            };
-        },
+			if(self._rendered) {
+				children = self.getEl('open').getElementsByTagName('i');
+				if(children.length == 2) {
+					if(icon) {
+						children[0].className = icon;
+					}
+					else {
+						children[0].remove();
+					}
+				}
+				else if(icon) {
+					var iconElement = DomUtils.createFragment('<i class="' + icon + '"></i> ');
+					self.getEl('open').insertBefore(iconElement, self.getEl('open').childNodes[0]);
+				}
+			};
+		},
 
 		/**
 		 * Removes the control and it's menus.
