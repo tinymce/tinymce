@@ -214,7 +214,7 @@ define("tinymce/ui/MenuButton", [
 			if (self._rendered) {
 				children = self.getEl('open').getElementsByTagName('span');
 				for (i = 0; i < children.length; i++) {
-					children[i].innerHTML = self.encode(text);
+					children[i].innerHTML = (self.settings.icon ? '\u00a0' : '') + self.encode(text);
 				}
 			}
 
@@ -245,8 +245,9 @@ define("tinymce/ui/MenuButton", [
 					}
 				}
 				else if(icon) {
-					var iconElement = DomUtils.createFragment('<i class="' + icon + '"></i> ');
+					var iconElement = DomUtils.createFragment('<i class="' + icon + '"></i>');
 					self.getEl('open').insertBefore(iconElement, self.getEl('open').childNodes[0]);
+                    self.text(self._text); // Set text again to fix whitespace between icon + text
 				}
 			};
 		},
