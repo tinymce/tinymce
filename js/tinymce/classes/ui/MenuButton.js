@@ -247,7 +247,7 @@ define("tinymce/ui/MenuButton", [
 				else if(icon) {
 					var iconElement = DomUtils.createFragment('<i class="' + icon + '"></i>');
 					self.getEl('open').insertBefore(iconElement, self.getEl('open').childNodes[0]);
-                    self.text(self._text); // Set text again to fix whitespace between icon + text
+					self.text(self._text); // Set text again to fix whitespace between icon + text
 				}
 			};
 		},
