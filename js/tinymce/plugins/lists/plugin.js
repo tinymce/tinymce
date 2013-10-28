@@ -157,6 +157,11 @@ tinymce.PluginManager.add('lists', function(editor) {
 
 			if (blockName) {
 				textBlock = dom.create(blockName);
+
+				if (textBlock.tagName === editor.settings.forced_root_block) {
+					dom.setAttribs(textBlock, editor.settings.forced_root_block_attrs);
+				}
+
 				fragment.appendChild(textBlock);
 			}
 

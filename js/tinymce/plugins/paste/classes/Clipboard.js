@@ -82,19 +82,27 @@ define("tinymce/pasteplugin/Clipboard", [
 
 			var startBlock = editor.dom.getParent(editor.selection.getStart(), editor.dom.isBlock);
 
-			if ((startBlock && /^(PRE|DIV)$/.test(startBlock.nodeName)) || !editor.settings.forced_root_block) {
+			// Create start block html for example <p attr="value">
+			var forcedRootBlockName = editor.settings.forced_root_block;
+			var forcedRootBlockStartHtml;
+			if (forcedRootBlockName) {
+				forcedRootBlockStartHtml = editor.dom.createHTML(forcedRootBlockName, editor.settings.forced_root_block_attrs);
+				forcedRootBlockStartHtml = forcedRootBlockStartHtml.substr(0, forcedRootBlockStartHtml.length - 3) + '>';
+			}
+
+			if ((startBlock && /^(PRE|DIV)$/.test(startBlock.nodeName)) || !forcedRootBlockName) {
 				text = Utils.filter(text, [
 					[/\n/g, "<br>"]
 				]);
 			} else {
 				text = Utils.filter(text, [
-					[/\n\n/g, "</p><p>"],
-					[/^(.*<\/p>)(<p>)$/, '<p>$1'],
+					[/\n\n/g, "</p>" + forcedRootBlockStartHtml],
+					[/^(.*<\/p>)(<p>)$/, forcedRootBlockStartHtml + '$1'],
 					[/\n/g, "<br />"]
 				]);
 
 				if (text.indexOf('<p>') != -1) {
-					text = '<p>' + text;
+					text = forcedRootBlockStartHtml + text;
 				}
 			}
 

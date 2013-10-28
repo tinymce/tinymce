@@ -1,4 +1,5 @@
-Version 4.0.10 (2013-10-xx)
+Version 4.0.10 (2013-10-28)
+	Added new forced_root_block_attrs option that allows you to specify attributes for the root block.
 	Fixed bug where the code plugin would select all contents in IE when content was updated.
 	Fixed bug where the scroll position wouldn't get applied to floating toolbars.
 	Fixed bug where focusing in/out of the editor would move the caret to the top of the editor on IE 11.
