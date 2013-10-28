@@ -45,7 +45,7 @@ test('Wrap single root text node in P with attrs', function() {
 	editor.getBody().innerHTML = 'abcd';
 	setSelection('body', 2);
 	pressArrowKey();
-	equal(cleanHtml(editor.getBody().innerHTML), '<p class="class1">abcd</p>');
+	equal(editor.getContent(), '<p class="class1">abcd</p>');
 	equal(editor.selection.getNode().nodeName, 'P');
 });
 
