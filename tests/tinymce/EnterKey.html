@@ -18,6 +18,7 @@ module("tinymce.EnterKey", {
 	autostart: false,
 	setup: function() {
 		editor.settings.forced_root_block = 'p';
+		editor.settings.forced_root_block_attrs = null;
 		editor.settings.end_container_on_empty_block = false;
 		editor.settings.br_in_pre = true;
 		editor.settings.keep_styles = true;
@@ -704,6 +705,14 @@ test('Enter inside empty P with empty P siblings', function() {
 	setSelection('p', 0);
 	pressEnter();
 	equal(editor.getContent(), '<p>\u00a0</p><p>\u00a0</p><p>\u00a0</p><p>X</p>');
+});
+
+test('Enter at end of H1 with forced_root_block_attrs', function() {
+	editor.settings.forced_root_block_attrs = {"class": "class1"};
+	editor.getBody().innerHTML = '<h1>a</h1>';
+	setSelection('h1', 1);
+	pressEnter();
+	equal(editor.getContent(), '<h1>a</h1><p class="class1">\u00a0</p>');
 });
 
 test('Shift+Enter at beginning of P', function() {
