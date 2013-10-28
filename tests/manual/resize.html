@@ -10,6 +10,7 @@ tinymce.init({
 	add_unload_trigger: false,
 	plugins: "media code",
 	content_css: 'css/development.css',
+	//object_resizing: false,
 	init_instance_callback: function(ed) {
 		ed.on('ObjectResized', function(e) {
 			if (window.console) {
@@ -17,7 +18,10 @@ tinymce.init({
 			}
 		});
 	},
-	content_style: 'div {margin: 10px; border: 5px solid red; padding: 3px}'
+	content_style: (
+		'div {margin: 10px; border: 5px solid red; padding: 3px}' + 
+		'body.mce-content-body div.mce-resizehandle {background:red}'
+	)
 });
 
 tinymce.init({
@@ -26,6 +30,7 @@ tinymce.init({
 	add_unload_trigger: false,
 	plugins: "media code",
 	content_css: 'css/development.css',
+	//object_resizing: false,
 	init_instance_callback: function(ed) {
 		ed.on('ObjectResized', function(e) {
 			if (window.console) {
@@ -33,7 +38,10 @@ tinymce.init({
 			}
 		});
 	},
-	content_style: 'div {margin: 10px; border: 5px solid red; padding: 3px}'
+	content_style: (
+		'div {margin: 10px; border: 5px solid red; padding: 3px}' + 
+		'div.mce-content-body div.mce-resizehandle {background:red}'
+	)
 });
 
 function select(selector, idx) {
@@ -81,6 +89,8 @@ function select(selector, idx) {
 	<table style="float: right"><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>
 	<h4>Table in table</h4>
 	<table><tr><td><table><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table></td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>
+	<h4>Table with caption</h4>
+	<table><caption>C</caption><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>
 
 	<h3>Other objects</h3>
 	<h4>Auto size</h4>
@@ -91,6 +101,8 @@ function select(selector, idx) {
 	<object width="100" height="100"></object>
 	<h4>Mixed attr/style size</h4>
 	<object width="100" style="height:100px"></object>
+	<h4>HR element</h4>
+	<hr width="100" style="height:100px" />
 	<h4>Edge case on IE</h4>
 	<div style="width: 100px; height: 100px; border: 1px solid red">DIV</div>
 </textarea>
@@ -140,6 +152,8 @@ function select(selector, idx) {
 	<object width="100" height="100"></object>
 	<h4>Mixed attr/style size</h4>
 	<object width="100" style="height:100px"></object>
+	<h4>HR element</h4>
+	<hr width="100" style="height:100px" />
 	<h4>Edge case on IE</h4>
 	<div style="width: 100px; height: 100px; border: 1px solid red">DIV</div>
 </div>
