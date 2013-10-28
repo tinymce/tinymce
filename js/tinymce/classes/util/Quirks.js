@@ -223,7 +223,7 @@ define("tinymce/util/Quirks", [
 		 */
 		function selectAll() {
 			editor.on('keydown', function(e) {
-				if (!isDefaultPrevented(e) && e.keyCode == 65 && VK.metaKeyPressed(e)) {
+				if (!isDefaultPrevented(e) && e.keyCode == 65 && VK.metaKeyPressed(e, editor)) {
 					e.preventDefault();
 					editor.execCommand('SelectAll');
 				}
@@ -889,7 +889,7 @@ define("tinymce/util/Quirks", [
 		function normalizeSelection() {
 			// Normalize selection for example <b>a</b><i>|a</i> becomes <b>a|</b><i>a</i> except for Ctrl+A since it selects everything
 			editor.on('keyup focusin', function(e) {
-				if (e.keyCode != 65 || !VK.metaKeyPressed(e)) {
+				if (e.keyCode != 65 || !VK.metaKeyPressed(e, editor)) {
 					selection.normalize();
 				}
 			});
