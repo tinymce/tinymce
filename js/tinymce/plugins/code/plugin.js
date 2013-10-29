@@ -34,8 +34,7 @@ tinymce.PluginManager.add('code', function(editor) {
 					editor.setContent(e.data.code);
 				});
 
-				// Focus again to place the caret inside the editor
-				editor.focus();
+				editor.selection.setCursorLocation();
 				editor.nodeChanged();
 			}
 		});

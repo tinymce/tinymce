@@ -1,4 +1,5 @@
 Version 4.0.11 (2013-11-xx)
+	Fixed bug where the caret wasn't moved to the first suitable element when updating the source.
 	Fixed bug where protocol relative urls would be forced into http protocol.
 	Fixed bug where internal images with data urls such as video elements would be removed by the paste_data_images option.
 Version 4.0.10 (2013-10-28)
