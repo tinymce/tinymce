@@ -460,6 +460,7 @@ test('Formatting commands (alignInline)', function() {
 test('mceBlockQuote', function() {
 	expect(2);
 
+	editor.focus();
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('mceBlockQuote');

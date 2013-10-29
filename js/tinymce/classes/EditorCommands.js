@@ -357,11 +357,16 @@ define("tinymce/EditorCommands", [
 				value = value.replace(/\{\$caret\}/, bookmarkHtml);
 
 				// If selection is at <body>|<p></p> then move it into <body><p>|</p>
+				rng = selection.getRng();
+				var caretElement = rng.startContainer || (rng.parentElement ? rng.parentElement() : null);
 				var body = editor.getBody();
-				if (dom.isBlock(body.firstChild) && dom.isEmpty(body.firstChild)) {
-					body.firstChild.appendChild(dom.doc.createTextNode('\u00a0'));
-					selection.select(body.firstChild, true);
-					dom.remove(body.firstChild.lastChild);
+				if (caretElement === body && selection.isCollapsed()) {
+					if (dom.isBlock(body.firstChild) && dom.isEmpty(body.firstChild)) {
+						rng = dom.createRng();
+						rng.setStart(body.firstChild, 0);
+						rng.setEnd(body.firstChild, 0);
+						selection.setRng(rng);
+					}
 				}
 
 				// Insert node maker where we will insert the new HTML and get it's parent
@@ -580,16 +585,42 @@ define("tinymce/EditorCommands", [
 			},
 
 			selectAll: function() {
-				var root = dom.getRoot(), rng = dom.createRng();
+				var root = dom.getRoot(), rng;
 
-				// Old IE does a better job with selectall than new versions
 				if (selection.getRng().setStart) {
+					rng = dom.createRng();
 					rng.setStart(root, 0);
 					rng.setEnd(root, root.childNodes.length);
-
 					selection.setRng(rng);
 				} else {
-					execNativeCommand('SelectAll');
+					// IE will render it's own root level block elements and sometimes
+					// even put font elements in them when the user starts typing. So we need to
+					// move the selection to a more suitable element from this:
+					// <body>|<p></p></body> to this: <body><p>|</p></body>
+					rng = selection.getRng();
+					if (!rng.item) {
+						rng.moveToElementText(root);
+						rng.select();
+					}
+				}
+			},
+
+			"delete": function() {
+				execNativeCommand("Delete");
+
+				// Check if body is empty after the delete call if so then set the contents
+				// to an empty string and move the caret to any block produced by that operation
+				// this fixes the issue with root blocks not being properly produced after a delete call on IE
+				var body = editor.getBody();
+
+				if (dom.isEmpty(body)) {
+					editor.setContent('');
+
+					if (body.firstChild && dom.isBlock(body.firstChild)) {
+						editor.selection.setCursorLocation(body.firstChild, 0);
+					} else {
+						editor.selection.setCursorLocation(body, 0);
+					}
 				}
 			},
 

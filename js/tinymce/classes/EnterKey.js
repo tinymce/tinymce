@@ -91,6 +91,15 @@ define("tinymce/EnterKey", [
 					}
 				}
 
+				// Old IE versions doesn't properly render blocks with br elements in them
+				// For example <p><br></p> wont be rendered correctly in a contentEditable area
+				// until you remove the br producing <p></p>
+				if (Env.ie && Env.ie < 9 && parentBlock && parentBlock.firstChild) {
+					if (parentBlock.firstChild == parentBlock.lastChild && parentBlock.firstChild.tagName == 'BR') {
+						dom.remove(parentBlock.firstChild);
+					}
+				}
+
 				if (root.nodeName == 'LI') {
 					var firstChild = firstNonWhiteSpaceNodeSibling(root.firstChild);
 
