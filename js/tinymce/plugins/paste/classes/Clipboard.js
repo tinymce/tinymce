@@ -44,11 +44,6 @@ define("tinymce/pasteplugin/Clipboard", [
 		function pasteHtml(html) {
 			var args, dom = editor.dom;
 
-			// Remove all data images from paste for example from Gecko
-			if (!editor.settings.paste_data_images) {
-				html = html.replace(/<img[^>]+src=\"data:image[^>]+>/g, '');
-			}
-
 			args = editor.fire('BeforePastePreProcess', {content: html}); // Internal event used by Quirks
 			args = editor.fire('PastePreProcess', args);
 			html = args.content;
@@ -270,5 +265,24 @@ define("tinymce/pasteplugin/Clipboard", [
 
 		self.pasteHtml = pasteHtml;
 		self.pasteText = pasteText;
+
+		// Remove all data images from paste for example from Gecko
+		// except internal images like video elements
+		editor.on('preInit', function() {
+			editor.parser.addNodeFilter('img', function(nodes) {
+				if (!editor.settings.paste_data_images) {
+					var i = nodes.length;
+
+					while (i--) {
+						var src = nodes[i].attributes.map.src;
+						if (src && src.indexOf('data:image') === 0) {
+							if (!nodes[i].attr('data-mce-object') && src !== Env.transparentSrc) {
+								nodes[i].remove();
+							}
+						}
+					}
+				}
+			});
+		});
 	};
 });
