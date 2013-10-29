@@ -15,13 +15,29 @@ QUnit.config.reorder = false;
 
 var URI = tinymce.util.URI;
 
-test('tinymce.util.URI - parseFullURLs', 3, function() {
+test('protocol relative url', function() {
+	var uri = new URI('//www.site.com/dir1/file?query#hash');
+
+	equal(uri.protocol, "");
+	equal(uri.host, "www.site.com");
+	equal(uri.path, "/dir1/file");
+	equal(uri.query, "query");
+	equal(uri.anchor, "hash");
+	equal(uri.source, "//www.site.com/dir1/file?query#hash");
+	equal(uri.getURI(), "//www.site.com/dir1/file?query#hash");
+	equal(uri.toRelative('//www.site.com/dir1/file2'), 'file2');
+	equal(uri.toRelative('//www.site2.com/dir1/file2'), '//www.site2.com/dir1/file2');
+	equal(uri.toAbsolute('../file2'), '//www.site.com/dir1/file2');
+	equal(uri.toAbsolute('//www.site2.com/dir1/file2'), '//www.site2.com/dir1/file2');
+});
+
+test('parseFullURLs', 3, function() {
 	equal(new URI('http://abc:123@www.site.com:8080/path/dir/file.ext?key1=val1&key2=val2#hash').getURI(), 'http://abc:123@www.site.com:8080/path/dir/file.ext?key1=val1&key2=val2#hash');
 	ok(new URI('http://a2bc:123@www.site.com:8080/path/dir/file.ext?key1=val1&key2=val2#hash').getURI() != 'http://abc:123@www.site.com:8080/path/dir/file.ext?key1=val1&key2=val2#hash');
 	equal(new URI('chrome-extension://abcdefghijklmnopqrstuvwzyz1234567890:8080/path/dir/file.ext?key1=val1&key2=val2#hash').getURI(), 'chrome-extension://abcdefghijklmnopqrstuvwzyz1234567890:8080/path/dir/file.ext?key1=val1&key2=val2#hash');
 });
 
-test('tinymce.util.URI - relativeURLs', 29, function() {
+test('relativeURLs', 29, function() {
 	equal(new URI('http://www.site.com/dir1/dir2/file.html').toRelative('http://www.site.com/dir1/dir3/file.html'), '../dir3/file.html');
 	equal(new URI('http://www.site.com/dir1/dir2/file.html').toRelative('http://www.site.com/dir3/dir4/file.html'), '../../dir3/dir4/file.html');
 	equal(new URI('http://www.site.com/dir1/').toRelative('http://www.site.com/dir1/dir3/file.htm'), 'dir3/file.htm');
@@ -53,7 +69,7 @@ test('tinymce.util.URI - relativeURLs', 29, function() {
 	equal(new URI('http://www.site.com/').toRelative('http://www.site.com'), 'http://www.site.com/');
 });
 
-test('tinymce.util.URI - absoluteURLs', 18, function() {
+test('absoluteURLs', 18, function() {
 	equal(new URI('http://www.site.com/dir1/dir2/').toAbsolute('../dir3'), 'http://www.site.com/dir1/dir3');
 	equal(new URI('http://www.site.com/dir1/dir2/').toAbsolute('../dir3', 1), '/dir1/dir3');
 	equal(new URI('http://www.site.com/dir1/dir2/').toAbsolute('../../../../dir3'), 'http://www.site.com/dir3');
@@ -74,7 +90,7 @@ test('tinymce.util.URI - absoluteURLs', 18, function() {
 	equal(new URI('chrome-extension://abcdefghijklmnopqrstuvwzyz1234567890/dir1/dir2/').toAbsolute('chrome-extension://abcdefghijklmnopqrstuvwzyz1234567890/dir1/dir2/', true), '/dir1/dir2/');
 });
 
-test('tinymce.util.URI - strangeURLs', 6, function() {
+test('strangeURLs', 6, function() {
 	equal(new URI('//www.site.com').getURI(), '//www.site.com');
 	equal(new URI('mailto:test@test.com').getURI(), 'mailto:test@test.com');
 	equal(new URI('news:somegroup').getURI(), 'news:somegroup');
