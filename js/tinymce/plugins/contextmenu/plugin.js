@@ -11,10 +11,15 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('contextmenu', function(editor) {
-	var menu;
+	var menu, contextmenuNeverUseNative = editor.settings.contextmenu_never_use_native;
 
 	editor.on('contextmenu', function(e) {
 		var contextmenu;
+
+		// Block TinyMCE menu on ctrlKey
+		if (e.ctrlKey && !contextmenuNeverUseNative) {
+			return;
+		}
 
 		e.preventDefault();
 
