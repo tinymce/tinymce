@@ -401,7 +401,9 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				border: 1,
 				items: [
 					settings.menubar === false ? null : {type: 'menubar', border: '0 0 1 0', items: createMenuButtons()},
-					settings.toolbar === false ? null : {type: 'panel', name: 'toolbar', layout: 'stack', items: createToolbars()}
+					settings.toolbar === false ? null : {
+						type: 'panel', layout: 'stack', classes: "toolbar-grp", items: createToolbars()
+					}
 				]
 			});
 
@@ -412,6 +414,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				]});
 			}*/
 
+			editor.fire('BeforeRenderUI');
 			panel.renderTo(inlineToolbarContainer || document.body).reflow();
 
 			addAccessibilityKeys(panel);
@@ -456,7 +459,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			border: 1,
 			items: [
 				settings.menubar === false ? null : {type: 'menubar', border: '0 0 1 0', items: createMenuButtons()},
-				settings.toolbar === false ? null : {type: 'panel', layout: 'stack', items: createToolbars()},
+				settings.toolbar === false ? null : {type: 'panel', layout: 'stack', classes: "toolbar-grp", items: createToolbars()},
 				{type: 'panel', name: 'iframe', layout: 'stack', classes: 'edit-area', html: '', border: '1 0 0 0'}
 			]
 		});
@@ -497,7 +500,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			panel.find('*').disabled(true);
 		}
 
-		// Render before the target textarea/div
+		editor.fire('BeforeRenderUI');
 		panel.renderBefore(args.targetNode).reflow();
 
 		if (settings.width) {

@@ -521,9 +521,6 @@ define("tinymce/Editor", [
 			// Create all plugins
 			each(settings.plugins.replace(/\-/g, '').split(/[ ,]/), initPlugin);
 
-			// Enables users to override the control factory
-			self.fire('BeforeRenderUI');
-
 			// Measure box
 			if (settings.render_ui && self.theme) {
 				self.orgDisplay = elm.style.display;
