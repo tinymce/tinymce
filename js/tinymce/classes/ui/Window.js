@@ -387,13 +387,18 @@ define("tinymce/ui/Window", [
 		 * @return {tinymce.ui.Control} Current control instance.
 		 */
 		remove: function() {
-			var self = this;
+			var self = this, prefix = self.classPrefix;
 
 			self.dragHelper.destroy();
 			self._super();
 
 			if (self.statusbar) {
 				this.statusbar.remove();
+			}
+
+			if (self._fullscreen) {
+				DomUtils.removeClass(document.documentElement, prefix + 'fullscreen');
+				DomUtils.removeClass(document.body, prefix + 'fullscreen');
 			}
 		}
 	});
