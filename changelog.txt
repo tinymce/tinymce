@@ -5,6 +5,7 @@ Version 4.0.11 (2013-11-xx)
 	Fixed bug where the caret wasn't moved to the first suitable element when updating the source.
 	Fixed bug where protocol relative urls would be forced into http protocol.
 	Fixed bug where internal images with data urls such as video elements would be removed by the paste_data_images option.
+	Fixed bug where the autoresize plugin wouldn't properly resize the editor to initial contents some times.
 Version 4.0.10 (2013-10-28)
 	Added new forced_root_block_attrs option that allows you to specify attributes for the root block.
 	Fixed bug where the custom resize handles didn't work properly on IE 11.
