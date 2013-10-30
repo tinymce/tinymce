@@ -213,7 +213,7 @@ define("tinymce/ui/MenuButton", [
 			if (self._rendered) {
 				children = self.getEl('open').getElementsByTagName('span');
 				for (i = 0; i < children.length; i++) {
-					children[i].innerHTML = self.encode(text);
+					children[i].innerHTML = (self.settings.icon && text ? '\u00a0' : '') + self.encode(text);
 				}
 			}
 

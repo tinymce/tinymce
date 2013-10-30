@@ -1,4 +1,5 @@
 Version 4.0.11 (2013-11-xx)
+	Added the possibility to update button icon after it's been rendered.
 	Fixed bug where IE would some times produce font elements when typing out side the body root blocks.
 	Fixed bug where IE wouldn't properly use the configured root block element but instead use the a paragraph.
 	Fixed bug where the caret wasn't moved to the first suitable element when updating the source.
