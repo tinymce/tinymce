@@ -155,6 +155,7 @@ define("tinymce/Editor", [
 			indent_after: 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,ul,li,area,table,thead,' +
 				'tfoot,tbody,tr,section,article,hgroup,aside,figure,option,optgroup,datalist',
 			validate: true,
+			mac_ctrl_key: 'both',
 			entity_encoding: 'named',
 			url_converter: self.convertURL,
 			url_converter_scope: self,
@@ -1278,6 +1279,16 @@ define("tinymce/Editor", [
 				settings.onclick = function() {
 					self.execCommand(settings.cmd);
 				};
+			}
+
+			// format shortcut for the mac based on the mac_ctrl_key preference.
+			if (Env.mac && settings.shortcut) {
+				var shortcut = settings.shortcut, ctrl = (Env.mac && self.settings.mac_ctrl_key !== 'ctrl') ? '&#x2318;' : '&#x2303;';
+				shortcut = shortcut.replace(/ctrl\+alt\+/i, '&#x2325;' + ctrl);
+				shortcut = shortcut.replace(/ctrl\+/i, ctrl);
+				shortcut = shortcut.replace(/alt\+/i, '&#x2325;');
+				shortcut = shortcut.replace(/shift\+/i, '&#x21E7;');
+				settings.shortcut = shortcut;
 			}
 
 			self.menuItems = self.menuItems || {};
