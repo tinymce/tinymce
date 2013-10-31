@@ -383,14 +383,24 @@
 			ed.shortcuts.add('Ctrl+F', '', showDialog);
 		};
 
+		function getElmIndex(elm) {
+			var value = elm.getAttribute('data-mce-index');
+
+			if (typeof(value) == "number") {
+				return "" + value;
+			}
+
+			return value;
+		}
+
 		function markAllMatches(regex) {
 			var node, marker;
 
 			marker = editor.dom.create('span', {
-				"class": 'mce-match-marker',
 				"data-mce-bogus": 1
 			});
 
+			marker.className = 'mce-match-marker'; // IE 7 adds class="mce-match-marker" and class=mce-match-marker
 			node = editor.getBody();
 
 			self.done(false);
@@ -410,7 +420,7 @@
 			nodes = tinymce.toArray(editor.getBody().getElementsByTagName('span'));
 			if (nodes.length) {
 				for (var i = 0; i < nodes.length; i++) {
-					var nodeIndex = nodes[i].getAttribute('data-mce-index');
+					var nodeIndex = getElmIndex(nodes[i]);
 
 					if (nodeIndex === null || !nodeIndex.length) {
 						continue;
@@ -490,7 +500,7 @@
 			node = editor.getBody();
 			nodes = tinymce.toArray(node.getElementsByTagName('span'));
 			for (i = 0; i < nodes.length; i++) {
-				var nodeIndex = nodes[i].getAttribute('data-mce-index');
+				var nodeIndex = getElmIndex(nodes[i]);
 
 				if (nodeIndex === null || !nodeIndex.length) {
 					continue;
@@ -506,7 +516,7 @@
 					}
 
 					while (nodes[++i]) {
-						matchIndex = nodes[i].getAttribute('data-mce-index');
+						matchIndex = getElmIndex(nodes[i]);
 
 						if (nodeIndex === null || !nodeIndex.length) {
 							continue;
@@ -547,7 +557,7 @@
 
 			nodes = tinymce.toArray(editor.getBody().getElementsByTagName('span'));
 			for (i = 0; i < nodes.length; i++) {
-				var nodeIndex = nodes[i].getAttribute('data-mce-index');
+				var nodeIndex = getElmIndex(nodes[i]);
 
 				if (nodeIndex !== null && nodeIndex.length) {
 					if (nodeIndex === currentIndex.toString()) {
