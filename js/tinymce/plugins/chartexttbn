@@ -1,0 +1,60 @@
+/**
+ * plugin.js
+ *
+ * Copyright, Fusonic GmbH
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
+ */
+
+tinymce.PluginManager.add('chartextbtn', function(editor) {
+    var plugin = this;
+
+    editor.addButton('chartextbtn', {
+        type: 'menubutton',
+        title: 'Modify Char',
+        icon: 'bold',
+        menu: {
+            type: 'menu',
+            items: [
+                {
+                    text: 'Bold',
+                    icon: 'bold',
+                    cmd: 'bold'
+                },
+                {
+                    text: 'Italic',
+                    icon: 'italic',
+                    cmd: 'italic'
+                },
+                {
+                    text: 'Underline',
+                    icon: 'underline',
+                    cmd: 'underline'
+                },
+                {
+                    text: 'Strikethrough',
+                    icon: 'strikethrough',
+                    cmd: 'strikethrough'
+                }
+            ]
+        },
+        onPostRender: function() {
+            var ctrl = this;
+
+            editor.on('init', function() {
+                tinymce.each(ctrl.settings.menu.items, function(option) {
+                    var chartext = option.text;
+
+                    editor.formatter.formatChanged('chartext' + chartext.toLowerCase(), function(state) {
+                        ctrl.icon('atbtn' + (state ? chartext : 'bold'));
+                    });
+                });
+            });
+        },
+        onselect: function(e) {
+            editor.execCommand(e.control.settings.cmd);
+        }
+    });
+});
