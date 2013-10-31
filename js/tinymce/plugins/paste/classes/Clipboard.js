@@ -110,7 +110,7 @@ define("tinymce/pasteplugin/Clipboard", [
 		 */
 		function createPasteBin() {
 			var dom = editor.dom, body = editor.getBody(), viewport = editor.dom.getViewPort(editor.getWin());
-			var scrollY = editor.inline ? body.scrollTop : viewport.y, height = editor.inline ? body.clientHeight : viewport.h;
+			var height = editor.inline ? body.clientHeight : viewport.h;
 
 			removePasteBin();
 
@@ -119,7 +119,7 @@ define("tinymce/pasteplugin/Clipboard", [
 				id: "mcepastebin",
 				contentEditable: true,
 				"data-mce-bogus": "1",
-				style: 'position: absolute; top: ' + (scrollY + 20) + 'px;' +
+				style: 'position: fixed; top: 20px;' +
 					'width: 10px; height: ' + (height - 40) + 'px; overflow: hidden; opacity: 0'
 			}, pasteBinDefaultContent);
 

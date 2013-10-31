@@ -341,7 +341,7 @@ define("tinymce/EditorCommands", [
 				// Setup parser and serializer
 				parser = editor.parser;
 				serializer = new Serializer({}, editor.schema);
-				bookmarkHtml = '<span id="mce_marker" data-mce-type="bookmark">&#xFEFF;</span>';
+				bookmarkHtml = '<span id="mce_marker" data-mce-type="bookmark">&#xFEFF;&#200B;</span>';
 
 				// Run beforeSetContent handlers on the HTML to be inserted
 				args = {content: value, format: 'html', selection: true};
