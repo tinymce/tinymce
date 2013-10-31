@@ -71,7 +71,7 @@ test("pack: default, flex: 1", function() {
 
 	deepEqual(rect(panel.find('spacer')[0]), [0, 0, 67, 20]);
 	deepEqual(rect(panel.find('spacer')[1]), [67, 0, 67, 20]);
-	deepEqual(rect(panel.find('spacer')[2]), [134, 0, 67, 20]);
+	deepEqual(rect(panel.find('spacer')[2]), [133, 0, 67, 20]);
 });
 
 test("pack: default, flex: 1, minWidth: various", function() {
@@ -86,7 +86,7 @@ test("pack: default, flex: 1, minWidth: various", function() {
 
 	deepEqual(rect(panel.find('spacer')[0]), [0, 0, 62, 20]);
 	deepEqual(rect(panel.find('spacer')[1]), [62, 0, 67, 20]);
-	deepEqual(rect(panel.find('spacer')[2]), [129, 0, 72, 20]);
+	deepEqual(rect(panel.find('spacer')[2]), [128, 0, 72, 20]);
 });
 
 test("pack: start, flex: default", function() {
@@ -107,7 +107,7 @@ test("pack: start, flex: 1", function() {
 
 	deepEqual(rect(panel.find('spacer')[0]), [0, 0, 67, 20]);
 	deepEqual(rect(panel.find('spacer')[1]), [67, 0, 67, 20]);
-	deepEqual(rect(panel.find('spacer')[2]), [134, 0, 67, 20]);
+	deepEqual(rect(panel.find('spacer')[2]), [133, 0, 67, 20]);
 });
 
 test("pack: end, flex: default", function() {
@@ -128,7 +128,7 @@ test("pack: end, flex: 1", function() {
 
 	deepEqual(rect(panel.find('spacer')[0]), [0, 0, 67, 20]);
 	deepEqual(rect(panel.find('spacer')[1]), [67, 0, 67, 20]);
-	deepEqual(rect(panel.find('spacer')[2]), [134, 0, 67, 20]);
+	deepEqual(rect(panel.find('spacer')[2]), [133, 0, 67, 20]);
 });
 
 test("pack: center, flex: default", function() {
@@ -149,7 +149,7 @@ test("pack: center, flex: 1", function() {
 
 	deepEqual(rect(panel.find('spacer')[0]), [0, 0, 67, 20]);
 	deepEqual(rect(panel.find('spacer')[1]), [67, 0, 67, 20]);
-	deepEqual(rect(panel.find('spacer')[2]), [134, 0, 67, 20]);
+	deepEqual(rect(panel.find('spacer')[2]), [133, 0, 67, 20]);
 });
 
 test("pack: start, spacing: 3", function() {
@@ -275,9 +275,9 @@ test("pack: start, flex: mixed values", function() {
 		]
 	});
 
-	deepEqual(rect(panel.find('spacer')[0]), [0, 0, 44, 20]);
-	deepEqual(rect(panel.find('spacer')[1]), [44, 0, 98, 20]);
-	deepEqual(rect(panel.find('spacer')[2]), [142, 0, 59, 20]);
+	deepEqual(rect(panel.find('spacer')[0]), [0, 0, 43, 20]);
+	deepEqual(rect(panel.find('spacer')[1]), [43, 0, 98, 20]);
+	deepEqual(rect(panel.find('spacer')[2]), [141, 0, 59, 20]);
 });
 
 test("pack: justify", function() {
@@ -383,14 +383,14 @@ test("pack: start, flex: 1, reflow after resize outer width", function() {
 
 	deepEqual(rect(panel.find('spacer')[0]), [0, 0, 67, 20]);
 	deepEqual(rect(panel.find('spacer')[1]), [67, 0, 67, 20]);
-	deepEqual(rect(panel.find('spacer')[2]), [134, 0, 67, 20]);
+	deepEqual(rect(panel.find('spacer')[2]), [133, 0, 67, 20]);
 
 	panel.layoutRect({w: 400, h: 400}).reflow();
 
 	deepEqual(rect(panel), [0, 0, 400, 400]);
-	deepEqual(rect(panel.find('spacer')[0]), [0, 0, 134, 20]);
-	deepEqual(rect(panel.find('spacer')[1]), [134, 0, 134, 20]);
-	deepEqual(rect(panel.find('spacer')[2]), [268, 0, 134, 20]);
+	deepEqual(rect(panel.find('spacer')[0]), [0, 0, 133, 20]);
+	deepEqual(rect(panel.find('spacer')[1]), [133, 0, 133, 20]);
+	deepEqual(rect(panel.find('spacer')[2]), [267, 0, 133, 20]);
 });
 
 test("pack: start, maxWidth/maxHeight: 100, item minWidth/maxHeight: 200 (overflow W+H)", function() {
@@ -564,7 +564,7 @@ test("direction: column, pack: default, flex: 1", function() {
 
 	deepEqual(rect(panel.find('spacer')[0]), [0, 0, 20, 67]);
 	deepEqual(rect(panel.find('spacer')[1]), [0, 67, 20, 67]);
-	deepEqual(rect(panel.find('spacer')[2]), [0, 134, 20, 67]);
+	deepEqual(rect(panel.find('spacer')[2]), [0, 133, 20, 67]);
 });
 
 test("direction: column, pack: default, flex: 1, minWidth: various", function() {
@@ -579,7 +579,7 @@ test("direction: column, pack: default, flex: 1, minWidth: various", function() 
 
 	deepEqual(rect(panel.find('spacer')[0]), [0, 0, 20, 62]);
 	deepEqual(rect(panel.find('spacer')[1]), [0, 62, 20, 67]);
-	deepEqual(rect(panel.find('spacer')[2]), [0, 129, 20, 72]);
+	deepEqual(rect(panel.find('spacer')[2]), [0, 128, 20, 72]);
 });
 
 test("direction: column, pack: start, flex: default", function() {
@@ -600,7 +600,7 @@ test("direction: column, pack: start, flex: 1", function() {
 
 	deepEqual(rect(panel.find('spacer')[0]), [0, 0, 20, 67]);
 	deepEqual(rect(panel.find('spacer')[1]), [0, 67, 20, 67]);
-	deepEqual(rect(panel.find('spacer')[2]), [0, 134, 20, 67]);
+	deepEqual(rect(panel.find('spacer')[2]), [0, 133, 20, 67]);
 });
 
 test("direction: column, pack: end, flex: default", function() {
@@ -621,7 +621,7 @@ test("direction: column, pack: end, flex: 1", function() {
 
 	deepEqual(rect(panel.find('spacer')[0]), [0, 0, 20, 67]);
 	deepEqual(rect(panel.find('spacer')[1]), [0, 67, 20, 67]);
-	deepEqual(rect(panel.find('spacer')[2]), [0, 134, 20, 67]);
+	deepEqual(rect(panel.find('spacer')[2]), [0, 133, 20, 67]);
 });
 
 test("direction: column, pack: center, flex: default", function() {
@@ -642,7 +642,7 @@ test("direction: column, pack: center, flex: 1", function() {
 
 	deepEqual(rect(panel.find('spacer')[0]), [0, 0, 20, 67]);
 	deepEqual(rect(panel.find('spacer')[1]), [0, 67, 20, 67]);
-	deepEqual(rect(panel.find('spacer')[2]), [0, 134, 20, 67]);
+	deepEqual(rect(panel.find('spacer')[2]), [0, 133, 20, 67]);
 });
 
 test("direction: column, pack: start, spacing: 3", function() {
@@ -768,9 +768,9 @@ test("direction: column, pack: start, flex: mixed values", function() {
 		]
 	});
 
-	deepEqual(rect(panel.find('spacer')[0]), [0, 0, 20, 44]);
-	deepEqual(rect(panel.find('spacer')[1]), [0, 44, 20, 98]);
-	deepEqual(rect(panel.find('spacer')[2]), [0, 142, 20, 59]);
+	deepEqual(rect(panel.find('spacer')[0]), [0, 0, 20, 43]);
+	deepEqual(rect(panel.find('spacer')[1]), [0, 43, 20, 98]);
+	deepEqual(rect(panel.find('spacer')[2]), [0, 141, 20, 59]);
 });
 
 test("direction: column, pack: justify", function() {
@@ -854,14 +854,14 @@ test("direction: column, pack: start, flex: 1, reflow after resize outer height"
 
 	deepEqual(rect(panel.find('spacer')[0]), [0, 0, 20, 67]);
 	deepEqual(rect(panel.find('spacer')[1]), [0, 67, 20, 67]);
-	deepEqual(rect(panel.find('spacer')[2]), [0, 134, 20, 67]);
+	deepEqual(rect(panel.find('spacer')[2]), [0, 133, 20, 67]);
 
 	panel.layoutRect({w: 400, h: 400}).reflow();
 
 	deepEqual(rect(panel), [0, 0, 400, 400]);
-	deepEqual(rect(panel.find('spacer')[0]), [0, 0, 20, 134]);
-	deepEqual(rect(panel.find('spacer')[1]), [0, 134, 20, 134]);
-	deepEqual(rect(panel.find('spacer')[2]), [0, 268, 20, 134]);
+	deepEqual(rect(panel.find('spacer')[0]), [0, 0, 20, 133]);
+	deepEqual(rect(panel.find('spacer')[1]), [0, 133, 20, 133]);
+	deepEqual(rect(panel.find('spacer')[2]), [0, 267, 20, 133]);
 });
 
 test("direction: column, pack: start, flex: 1, border: 1, reflow after resize inner width", function() {

@@ -438,7 +438,12 @@ define("tinymce/ui/Control", [
 		 * @method repaint
 		 */
 		repaint: function() {
-			var self = this, style, bodyStyle, rect, borderBox, borderW = 0, borderH = 0, lastRepaintRect;
+			var self = this, style, bodyStyle, rect, borderBox, borderW = 0, borderH = 0, lastRepaintRect, round;
+
+			// Use Math.round on all values on IE < 9
+			round = !document.createRange ? Math.round : function(value) {
+				return value;
+			};
 
 			style = self.getEl().style;
 			rect = self._layoutRect;
@@ -449,35 +454,35 @@ define("tinymce/ui/Control", [
 			borderH = borderBox.top + borderBox.bottom;
 
 			if (rect.x !== lastRepaintRect.x) {
-				style.left = rect.x + 'px';
+				style.left = round(rect.x) + 'px';
 				lastRepaintRect.x = rect.x;
 			}
 
 			if (rect.y !== lastRepaintRect.y) {
-				style.top = rect.y + 'px';
+				style.top = round(rect.y) + 'px';
 				lastRepaintRect.y = rect.y;
 			}
 
 			if (rect.w !== lastRepaintRect.w) {
-				style.width = (rect.w - borderW) + 'px';
+				style.width = round(rect.w - borderW) + 'px';
 				lastRepaintRect.w = rect.w;
 			}
 
 			if (rect.h !== lastRepaintRect.h) {
-				style.height = (rect.h - borderH) + 'px';
+				style.height = round(rect.h - borderH) + 'px';
 				lastRepaintRect.h = rect.h;
 			}
 
 			// Update body if needed
 			if (self._hasBody && rect.innerW !== lastRepaintRect.innerW) {
 				bodyStyle = self.getEl('body').style;
-				bodyStyle.width = (rect.innerW) + 'px';
+				bodyStyle.width = round(rect.innerW) + 'px';
 				lastRepaintRect.innerW = rect.innerW;
 			}
 
 			if (self._hasBody && rect.innerH !== lastRepaintRect.innerH) {
 				bodyStyle = bodyStyle || self.getEl('body').style;
-				bodyStyle.height = (rect.innerH) + 'px';
+				bodyStyle.height = round(rect.innerH) + 'px';
 				lastRepaintRect.innerH = rect.innerH;
 			}
 
