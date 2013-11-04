@@ -8,9 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-tinymce.PluginManager.add('alignbtn', function(editor) {
-    var plugin = this;
+/*global tinymce:true */
 
+tinymce.PluginManager.add('alignbtn', function(editor) {
     editor.addButton('align', {
         type: 'menubutton',
         title: 'Alignment',
