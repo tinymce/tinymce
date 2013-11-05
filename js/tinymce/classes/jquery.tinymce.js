@@ -111,7 +111,8 @@
 			if (url.indexOf('gzip') != -1) {
 				lang = settings.language || "en";
 				url = url + (/\?/.test(url) ? '&' : '?') + "js=true&core=true&suffix=" + escape(suffix) +
-					"&themes=" + escape(settings.theme || '') + "&plugins=" + escape(settings.plugins || '') + "&languages=" + (lang || '');
+					"&themes=" + escape(settings.theme || 'modern') + "&plugins=" +
+					escape(settings.plugins || '') + "&languages=" + (lang || '');
 
 				// Check if compressor script is already loaded otherwise setup a basic one
 				if (!win.tinyMCE_GZ) {
