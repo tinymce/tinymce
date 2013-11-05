@@ -1706,7 +1706,7 @@ define("tinymce/Editor", [
 				// Check if forcedRootBlock is configured and that the block is a valid child of the body
 				if (forcedRootBlockName && self.schema.isValidChild(body.nodeName.toLowerCase(), forcedRootBlockName.toLowerCase())) {
 					// Padd with bogus BR elements on modern browsers and IE 7 and 8 since they don't render empty P tags properly
-					content = ie && ie > 8 && ie < 11 ? '' : '<br data-mce-bogus="1">';
+					content = ie && ie < 11 ? '' : '<br data-mce-bogus="1">';
 					content = self.dom.createHTML(forcedRootBlockName, self.settings.forced_root_block_attrs, content);
 				} else if (!ie || ie < 11) {
 					// We need to add a BR when forced_root_block is disabled on non IE browsers to place the caret
