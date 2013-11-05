@@ -62,7 +62,7 @@ define("tinymce/AddOnManager", [
 		 */
 		requireLangPack: function(name, languages) {
 			if (AddOnManager.language && AddOnManager.languageLoad !== false) {
-				if (languages && new RegExp('[, ]*' + AddOnManager.language + '[, ]*').test(languages) === false) {
+				if (languages && new RegExp('([, ]|\\b)' + AddOnManager.language + '([, ]|\\b)').test(languages) === false) {
 					return;
 				}
 
