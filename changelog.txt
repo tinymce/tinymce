@@ -10,6 +10,7 @@ Version 4.0.11 (2013-11-xx)
 	Fixed bug where the autoresize plugin wouldn't properly resize the editor to initial contents some times.
 	Fixed bug where the templates dialog wouldn't be properly rendered on IE 7.
 	Fixed so the template_popup_width/template_popup_height option works properly in the template plugin.
+	Fixed so the languages parameter for AddOnManager.requireLangPack works the same way as for 3.x.
 Version 4.0.10 (2013-10-28)
 	Added new forced_root_block_attrs option that allows you to specify attributes for the root block.
 	Fixed bug where the custom resize handles didn't work properly on IE 11.
