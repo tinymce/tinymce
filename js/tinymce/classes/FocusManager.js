@@ -74,6 +74,18 @@ define("tinymce/FocusManager", [
 				return !!DOMUtils.DOM.getParent(elm, FocusManager.isEditorUIElement);
 			}
 
+			function isNodeInBody(node) {
+				var body = editor.getBody();
+
+				while (node) {
+					if (node == body) {
+						return true;
+					}
+
+					node = node.parentNode;
+				}
+			}
+
 			editor.on('init', function() {
 				// On IE take selection snapshot onbeforedeactivate
 				if ("onbeforedeactivate" in document && Env.ie < 11) {
@@ -89,24 +101,14 @@ define("tinymce/FocusManager", [
 				} else if (editor.inline || Env.ie > 10) {
 					// On other browsers take snapshot on nodechange in inline mode since they have Ghost selections for iframes
 					editor.on('nodechange keyup', function() {
-						var isInBody, node = document.activeElement;
+						var node = document.activeElement;
 
 						// IE 11 reports active element as iframe not body of iframe
 						if (node && node.id == editor.id + '_ifr') {
 							node = editor.getBody();
 						}
 
-						// Check if selection is within editor body
-						while (node) {
-							if (node == editor.getBody()) {
-								isInBody = true;
-								break;
-							}
-
-							node = node.parentNode;
-						}
-
-						if (isInBody) {
+						if (isNodeInBody(node)) {
 							lastRng = editor.selection.getRng();
 						}
 					});
@@ -166,7 +168,14 @@ define("tinymce/FocusManager", [
 				lastRng = null;
 			});
 
-			editor.on('focusout', function() {
+			editor.on('focusout', function(e) {
+				// Moving focus to elements within the body that have a control seleciton on IE
+				// will fire an focusout event so we need to check if the event is fired on the body
+				// or on a sub element see #6456
+				if (e.target !== editor.getBody() && isNodeInBody(e.target)) {
+					return;
+				}
+
 				editor.selection.lastFocusBookmark = createBookmark(lastRng);
 
 				window.setTimeout(function() {

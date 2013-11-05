@@ -2,6 +2,7 @@ Version 4.0.11 (2013-11-xx)
 	Added the possibility to update button icon after it's been rendered.
 	Fixed bug where IE would some times produce font elements when typing out side the body root blocks.
 	Fixed bug where IE wouldn't properly use the configured root block element but instead use the a paragraph.
+	Fixed bug where IE would throw a stack overflow if control selections non images was made in inline mode.
 	Fixed bug where the caret wasn't moved to the first suitable element when updating the source.
 	Fixed bug where protocol relative urls would be forced into http protocol.
 	Fixed bug where internal images with data urls such as video elements would be removed by the paste_data_images option.
