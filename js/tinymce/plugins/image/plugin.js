@@ -255,8 +255,6 @@ tinymce.PluginManager.add('image', function(editor) {
 			var data = win.toJSON();
 			var css = dom.parseStyle(data.style);
 
-			dom.setAttrib(imgElm, 'style', '');
-
 			delete css.margin;
 			css['margin-top'] = css['margin-bottom'] = addPixelSuffix(data.vspace);
 			css['margin-left'] = css['margin-right'] = addPixelSuffix(data.hspace);

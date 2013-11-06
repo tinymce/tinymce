@@ -78,38 +78,42 @@ define("tinymce/html/Styles", [], function() {
 				var styles = {}, matches, name, value, isEncoded, urlConverter = settings.url_converter;
 				var urlConverterScope = settings.url_converter_scope || this;
 
-				function compress(prefix, suffix) {
+				function compress(prefix, suffix, noJoin) {
 					var top, right, bottom, left;
 
-					// IE 11 will produce a border-image: none when getting the style attribute from <p style="border: 1px solid red"></p>
-					// So lets asume it shouldn't be there
-					if (styles['border-image'] === 'none') {
-						delete styles['border-image'];
-					}
-
-					// Get values and check it it needs compressing
 					top = styles[prefix + '-top' + suffix];
 					if (!top) {
 						return;
 					}
 
 					right = styles[prefix + '-right' + suffix];
-					if (top != right) {
+					if (!right) {
 						return;
 					}
 
 					bottom = styles[prefix + '-bottom' + suffix];
-					if (right != bottom) {
+					if (!bottom) {
 						return;
 					}
 
 					left = styles[prefix + '-left' + suffix];
-					if (bottom != left) {
+					if (!left) {
 						return;
 					}
 
-					// Compress
-					styles[prefix + suffix] = left;
+					var box = [top, right, bottom, left];
+					i = box.length - 1;
+					while (i--) {
+						if (box[i] !== box[i + 1]) {
+							break;
+						}
+					}
+
+					if (i > -1 && noJoin) {
+						return;
+					}
+
+					styles[prefix + suffix] = i == -1 ? box[0] : box.join(' ');
 					delete styles[prefix + '-top' + suffix];
 					delete styles[prefix + '-right' + suffix];
 					delete styles[prefix + '-bottom' + suffix];
@@ -122,7 +126,7 @@ define("tinymce/html/Styles", [], function() {
 				function canCompress(key) {
 					var value = styles[key], i;
 
-					if (!value || value.indexOf(' ') < 0) {
+					if (!value) {
 						return;
 					}
 
@@ -245,9 +249,8 @@ define("tinymce/html/Styles", [], function() {
 
 						styleRegExp.lastIndex = matches.index + matches[0].length;
 					}
-
 					// Compress the styles to reduce it's size for example IE will expand styles
-					compress("border", "");
+					compress("border", "", true);
 					compress("border", "-width");
 					compress("border", "-color");
 					compress("border", "-style");
@@ -258,6 +261,12 @@ define("tinymce/html/Styles", [], function() {
 					// Remove pointless border, IE produces these
 					if (styles.border === 'medium none') {
 						delete styles.border;
+					}
+
+					// IE 11 will produce a border-image: none when getting the style attribute from <p style="border: 1px solid red"></p>
+					// So lets asume it shouldn't be there
+					if (styles['border-image'] === 'none') {
+						delete styles['border-image'];
 					}
 				}
 
