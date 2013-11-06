@@ -17,8 +17,9 @@
  */
 define("tinymce/ui/MenuItem", [
 	"tinymce/ui/Widget",
-	"tinymce/ui/Factory"
-], function(Widget, Factory) {
+	"tinymce/ui/Factory",
+	"tinymce/Env"
+], function(Widget, Factory, Env) {
 	"use strict";
 
 	return Widget.extend({
@@ -212,7 +213,7 @@ define("tinymce/ui/MenuItem", [
 		 */
 		renderHtml: function() {
 			var self = this, id = self._id, settings = self.settings, prefix = self.classPrefix, text = self.encode(self._text);
-			var icon = self.settings.icon, image = '';
+			var icon = self.settings.icon, image = '', shortcut = settings.shortcut;
 
 			if (icon) {
 				self.parent().addClass('menu-has-icons');
@@ -223,14 +224,22 @@ define("tinymce/ui/MenuItem", [
 				image = ' style="background-image: url(\'' + settings.image + '\')"';
 			}
 
+			if (shortcut && Env.mac) {
+				// format shortcut for Mac
+				shortcut = shortcut.replace(/ctrl\+alt\+/i, '&#x2325;&#x2318;'); // ctrl+cmd
+				shortcut = shortcut.replace(/ctrl\+/i, '&#x2318;'); // ctrl symbol
+				shortcut = shortcut.replace(/alt\+/i, '&#x2325;'); // cmd symbol
+				shortcut = shortcut.replace(/shift\+/i, '&#x21E7;'); // shift symbol
+			}
+
 			icon = prefix + 'ico ' + prefix + 'i-' + (self.settings.icon || 'none');
 
 			return (
 				'<div id="' + id + '" class="' + self.classes() + '" tabindex="-1">' +
 					(text !== '-' ? '<i class="' + icon + '"' + image + '></i>&nbsp;' : '') +
 					(text !== '-' ? '<span id="' + id + '-text" class="' + prefix + 'text">' + text + '</span>' : '') +
-					(settings.shortcut ? '<div id="' + id + '-shortcut" class="' + prefix + 'menu-shortcut">' +
-						settings.shortcut + '</div>' : '') +
+					(shortcut ? '<div id="' + id + '-shortcut" class="' + prefix + 'menu-shortcut">' +
+					 shortcut + '</div>' : '') +
 					(settings.menu ? '<div class="' + prefix + 'caret"></div>' : '') +
 				'</div>'
 			);
