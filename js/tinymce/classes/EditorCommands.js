@@ -175,7 +175,7 @@ define("tinymce/EditorCommands", [
 					);
 
 					if (Env.mac) {
-						msg = msg.replace(/Ctrl\+/, '\u2318+');
+						msg = msg.replace(/Ctrl\+/g, '\u2318+');
 					}
 
 					editor.windowManager.alert(msg);
