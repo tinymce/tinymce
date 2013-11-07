@@ -107,7 +107,11 @@ define("tinymce/EditorManager", [
 				for (var i = 0; i < scripts.length; i++) {
 					var src = scripts[i].src;
 
-					if (/tinymce(\.jquery|)(\.min|\.dev|)\.js/.test(src)) {
+					// Script types supported:
+					// tinymce.js tinymce.min.js tinymce.dev.js
+					// tinymce.jquery.js tinymce.jquery.min.js tinymce.jquery.dev.js
+					// tinymce.full.js tinymce.full.min.js tinymce.full.dev.js
+					if (/tinymce(\.full|\.jquery|)(\.min|\.dev|)\.js/.test(src)) {
 						if (src.indexOf('.min') != -1) {
 							suffix = '.min';
 						}

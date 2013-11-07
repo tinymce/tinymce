@@ -10,6 +10,7 @@ Version 4.0.11 (2013-11-xx)
 	Fixed bug where the autoresize plugin wouldn't properly resize the editor to initial contents some times.
 	Fixed bug where the templates dialog wouldn't be properly rendered on IE 7.
 	Fixed bug where updating styles in the advanced tab under the image dialog would remove the style attribute on cancel.
+	Fixed bug where tinymce.full.min.js bundle script wasn't detected when looking for the tinymce root path.
 	Fixed so menu shortcuts gets rendered with the Apple command icon patch contributed by Andy Keller.
 	Fixed so the CSS compression of styles like "border" is a bit better for mixed values.
 	Fixed so the template_popup_width/template_popup_height option works properly in the template plugin.
