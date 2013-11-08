@@ -11,7 +11,12 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('autosave', function(editor) {
-	var settings = editor.settings, LocalStorage = tinymce.util.LocalStorage, prefix = editor.id, started;
+	var settings = editor.settings, LocalStorage = tinymce.util.LocalStorage, prefix, started;
+
+	prefix = settings.autosave_prefix || 'tinymce-autosave-{path}{query}-{id}-';
+	prefix = prefix.replace(/\{path\}/g, document.location.pathname);
+	prefix = prefix.replace(/\{query\}/g, document.location.search);
+	prefix = prefix.replace(/\{id\}/g, editor.id);
 
 	function parseTime(time, defaultTime) {
 		var multipels = {
@@ -25,7 +30,7 @@ tinymce.PluginManager.add('autosave', function(editor) {
 	}
 
 	function hasDraft() {
-		var time = parseInt(LocalStorage.getItem(prefix + "autosave.time"), 10) || 0;
+		var time = parseInt(LocalStorage.getItem(prefix + "time"), 10) || 0;
 
 		if (new Date().getTime() - time > settings.autosave_retention) {
 			removeDraft(false);
@@ -36,8 +41,8 @@ tinymce.PluginManager.add('autosave', function(editor) {
 	}
 
 	function removeDraft(fire) {
-		LocalStorage.removeItem(prefix + "autosave.draft");
-		LocalStorage.removeItem(prefix + "autosave.time");
+		LocalStorage.removeItem(prefix + "draft");
+		LocalStorage.removeItem(prefix + "time");
 
 		if (fire !== false) {
 			editor.fire('RemoveDraft');
@@ -46,15 +51,15 @@ tinymce.PluginManager.add('autosave', function(editor) {
 
 	function storeDraft() {
 		if (!isEmpty()) {
-			LocalStorage.setItem(prefix + "autosave.draft", editor.getContent({format: 'raw', no_events: true}));
-			LocalStorage.setItem(prefix + "autosave.time", new Date().getTime());
+			LocalStorage.setItem(prefix + "draft", editor.getContent({format: 'raw', no_events: true}));
+			LocalStorage.setItem(prefix + "time", new Date().getTime());
 			editor.fire('StoreDraft');
 		}
 	}
 
 	function restoreDraft() {
 		if (hasDraft()) {
-			editor.setContent(LocalStorage.getItem(prefix + "autosave.draft"), {format: 'raw'});
+			editor.setContent(LocalStorage.getItem(prefix + "draft"), {format: 'raw'});
 			editor.fire('RestoreDraft');
 		}
 	}
