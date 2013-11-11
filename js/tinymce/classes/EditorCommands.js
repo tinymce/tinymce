@@ -196,13 +196,13 @@ define("tinymce/EditorCommands", [
 			'JustifyLeft,JustifyCenter,JustifyRight,JustifyFull': function(command) {
 				var align = command.substring(7);
 
-				if (align == 'full') {
+				if (align === 'full') {
 					align = 'justify';
 				}
 
 				// Remove all other alignments first
 				each('left,center,right,justify'.split(','), function(name) {
-					if (align != name) {
+					if (align !== name) {
 						formatter.remove('align' + name);
 					}
 				});
@@ -285,7 +285,7 @@ define("tinymce/EditorCommands", [
 				var node = value || selection.getNode();
 
 				// Make sure that the body node isn't removed
-				if (node != editor.getBody()) {
+				if (node !== editor.getBody()) {
 					storeSelection();
 					editor.dom.remove(node, TRUE);
 					restoreSelection();
@@ -296,7 +296,7 @@ define("tinymce/EditorCommands", [
 				var counter = 0;
 
 				dom.getParent(selection.getNode(), function(node) {
-					if (node.nodeType == 1 && counter++ == value) {
+					if (node.nodeType === 1 && counter++ === value) {
 						selection.select(node);
 						return FALSE;
 					}
@@ -322,7 +322,7 @@ define("tinymce/EditorCommands", [
 						return container[siblingName] && container[siblingName].nodeType == 3;
 					}
 
-					if (container.nodeType == 3) {
+					if (container.nodeType === 3) {
 						if (offset > 0) {
 							html = html.replace(/^&nbsp;/, ' ');
 						} else if (!hasSiblingText('previousSibling')) {
@@ -388,11 +388,11 @@ define("tinymce/EditorCommands", [
 
 				// Move the caret to a more suitable location
 				node = fragment.lastChild;
-				if (node.attr('id') == 'mce_marker') {
+				if (node.attr('id') === 'mce_marker') {
 					marker = node;
 
 					for (node = node.prev; node; node = node.walk(true)) {
-						if (node.type == 3 || !dom.isBlock(node.name)) {
+						if (node.type === 3 || !dom.isBlock(node.name)) {
 							node.parent.insert(marker, node, node.name === 'br');
 							break;
 						}
@@ -421,7 +421,7 @@ define("tinymce/EditorCommands", [
 					rootNode = editor.getBody();
 
 					// Opera will return the document node when selection is in root
-					if (parentNode.nodeType == 9) {
+					if (parentNode.nodeType === 9) {
 						parentNode = node = rootNode;
 					} else {
 						node = parentNode;
@@ -434,7 +434,7 @@ define("tinymce/EditorCommands", [
 					}
 
 					// Get the outer/inner HTML depending on if we are in the root and parser and serialize that
-					value = parentNode == rootNode ? rootNode.innerHTML : dom.getOuterHTML(parentNode);
+					value = parentNode === rootNode ? rootNode.innerHTML : dom.getOuterHTML(parentNode);
 					value = serializer.serialize(
 						parser.parse(
 							// Need to replace by using a function since $ in the contents would otherwise be a problem
@@ -445,7 +445,7 @@ define("tinymce/EditorCommands", [
 					);
 
 					// Set the inner/outer HTML depending on if we are in the root or not
-					if (parentNode == rootNode) {
+					if (parentNode === rootNode) {
 						dom.setHTML(rootNode, value);
 					} else {
 						dom.setOuterHTML(parentNode, value);
@@ -460,13 +460,13 @@ define("tinymce/EditorCommands", [
 
 				// If previous sibling is a text node set the selection to the end of that node
 				node = marker.previousSibling;
-				if (node && node.nodeType == 3) {
+				if (node && node.nodeType === 3) {
 					rng.setStart(node, node.nodeValue.length);
 
 					// TODO: Why can't we normalize on IE
 					if (!isIE) {
 						node2 = marker.nextSibling;
-						if (node2 && node2.nodeType == 3) {
+						if (node2 && node2.nodeType === 3) {
 							node.appendData(node2.data);
 							node2.parentNode.removeChild(node2);
 						}
@@ -520,10 +520,10 @@ define("tinymce/EditorCommands", [
 					each(selection.getSelectedBlocks(), function(element) {
 						var indentStyleName;
 
-						if (element.nodeName != "LI") {
-							indentStyleName = dom.getStyle(element, 'direction', true) == 'rtl' ? 'paddingRight' : 'paddingLeft';
+						if (element.nodeName !== 'LI') {
+							indentStyleName = dom.getStyle(element, 'direction', true) === 'rtl' ? 'paddingRight' : 'paddingLeft';
 
-							if (command == 'outdent') {
+							if (command === 'outdent') {
 								value = Math.max(0, parseInt(element.style[indentStyleName] || 0, 10) - intentValue);
 								dom.setStyle(element, indentStyleName, value ? value + indentUnit : '');
 							} else {
@@ -570,7 +570,7 @@ define("tinymce/EditorCommands", [
 			mceInsertLink: function(command, ui, value) {
 				var anchor;
 
-				if (typeof(value) == 'string') {
+				if (typeof(value) === 'string') {
 					value = {href: value};
 				}
 
@@ -692,7 +692,7 @@ define("tinymce/EditorCommands", [
 				var value = 0, parent;
 
 				if ((parent = dom.getParent(selection.getNode(), 'span'))) {
-					if (command == 'fontsize') {
+					if (command === 'fontsize') {
 						value = parent.style.fontSize;
 					} else {
 						value = parent.style.fontFamily.replace(/, /g, ',').replace(/[\'\"]/g, '').toLowerCase();

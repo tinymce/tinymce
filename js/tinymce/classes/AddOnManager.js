@@ -175,7 +175,7 @@ define("tinymce/AddOnManager", [
 				url = u.prefix + u.resource + u.suffix;
 			}
 
-			if (url.indexOf('/') !== 0 && url.indexOf('://') == -1) {
+			if (url.indexOf('/') !== 0 && url.indexOf('://') === -1) {
 				url = AddOnManager.baseURL + '/' + url;
 			}
 
