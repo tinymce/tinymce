@@ -7,16 +7,18 @@ define(
     'ephox.snooker.adjust.Blah',
     'ephox.snooker.adjust.Container',
     'ephox.snooker.build.Table',
+    'ephox.snooker.croc.Hippo',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.InsertAll',
+    'ephox.sugar.api.Node',
     'ephox.sugar.api.Ready'
   ],
 
-  function ($, Activate, Blah, Container, Table, Attr, Css, DomEvent, Element, Insert, InsertAll, Ready) {
+  function ($, Activate, Blah, Container, Table, Hippo, Attr, Css, DomEvent, Element, Insert, InsertAll, Node, Ready) {
     return function () {
       /*
        ANDY's IDEA:
@@ -88,6 +90,15 @@ define(
         document.execCommand("enableInlineTableEditing", null, false);
         document.execCommand("enableObjectResizing", false, "false");
       });
+
+      DomEvent.bind(table.element(), 'mousemove', function (event) {
+        if (Node.name(event.target()) === 'td') {
+          var hippo = Hippo.index(event.target());
+          hippo.each(function (h) {
+            console.log('found: ', h.row(), h.column());
+          });
+        }
+      })
 
 
       dragger.connect();

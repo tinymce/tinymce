@@ -9,7 +9,6 @@ test(
     var min = 10;
     var check = function (expected, input, column, step) {
       var actual = Water.water(input, column, step, min);
-      console.log('Actual: ', actual);
       assert.eq(expected, actual);
     };
 
@@ -35,6 +34,7 @@ test(
 
     // check([127, 127, 127], [127, 127, 127], 0, 100);
     // widths [127, 127, 127] column 0 step 100 min: 10 
+
 
   }
 );
