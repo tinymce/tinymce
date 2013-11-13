@@ -8,48 +8,17 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.scullion.Struct',
+    'ephox.snooker.croc.CellLookup',
     'ephox.snooker.croc.Spanning',
     'ephox.snooker.util.Util'
   ],
 
-  function (Arr, Obj, Merger, Fun, Option, Struct, Spanning, Util) {
-
-    var getId = function (r, c) {
-      return r + ',' + c;
-    };
-
-    var stomp = function (input) {
-      var result = {};
-      Arr.each(input, function (row, r) {
-        Arr.each(row, function (cell) {
-          var start = 0;
-          while (result[getId(r, start)] !== undefined) {
-            start++;
-          }
-
-          for (var i = 0; i < cell.colspan(); i++) {
-            for (var j = 0; j < cell.rowspan(); j++) {
-              var newpos = getId(r + j, start + i);
-              result[newpos] = {
-                row: Fun.constant(r),
-                column: Fun.constant(start),
-                id: cell.id,
-                colspan: cell.colspan,
-                rowspan: cell.rowspan
-              };
-            }
-          }
-        });
-      });
-
-      return result;
-    };
-
+  function (Arr, Obj, Merger, Fun, Option, Struct, CellLookup, Spanning, Util) {
     var blecker = function (worm, row, rowId, column) {
       /* Generates a list of cells before this column */
       var r = [];
       for (var i = 0; i < column; i++) {
-        var position = getId(rowId, i);
+        var position = CellLookup.key(rowId, i);
         var w = worm[position];
         if (r.length === 0 || r[r.length - 1].id() !== w.id()) {
           if (w.column() + w.colspan() <= column && w.column() !== column && w.column() === i && w.row() === rowId) r.push(w);
@@ -62,7 +31,7 @@ define(
     var decker = function (worm, row, rowId, column) {
       var r = [];
       for (var i = column + 1; i < 7; i++) {
-        var position = getId(rowId, i);
+        var position = CellLookup.key(rowId, i);
         var w = worm[position];
         if (w !== undefined && (r.length === 0 || r[r.length - 1].id() !== w.id())) {
           if (w.column() !== column && w.column() === i && w.row() === rowId) r.push(w);
@@ -75,11 +44,11 @@ define(
     var max = Struct.immutable('before', 'on', 'after');
 
     var voom = function (input, c) {
-      var worm = stomp(input);
+      var worm = CellLookup.model(input);
 
       var result = [];
       Arr.each(input, function (row, r) {
-        var position = getId(r, c);
+        var position = CellLookup.key(r, c);
         var cell = worm[position];
         var before = blecker(worm, row, r, c);
         var after = decker(worm, row, r, c);
@@ -102,7 +71,7 @@ define(
 
     var single = function (input, ri, ci) {
       console.log('single');
-      var worm = stomp(input);
+      var worm = CellLookup.model(input);
       var tack = tacky(worm, input[ri][ci].id());
       var section = voom(input, tack.column());
 
@@ -144,7 +113,7 @@ define(
       console.log('vertical');
       
       // TODO: Clean up the dupe and guesswork
-      var worm = stomp(input);
+      var worm = CellLookup.model(input);
       var target = input[ri][ci];
       var tack = tacky(worm, target.id());
       var section = voom(input, tack.column());
@@ -163,7 +132,7 @@ define(
 
     var box = function (input, ri, ci) {
       console.log('box');
-      var worm = stomp(input);
+      var worm = CellLookup.model(input);
       var target = input[ri][ci];
       var tack = tacky(worm, target.id());
       var section = voom(input, tack.column());
@@ -200,8 +169,7 @@ define(
 
     return {
       voom: voom,
-      split: split,
-      stomp: stomp
+      split: split
     };
   }
 );
