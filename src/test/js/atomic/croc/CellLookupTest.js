@@ -11,7 +11,7 @@ test(
     var s = Spanning;
     var check = function (expected, input) {
       var actual = CellLookup.model(input);
-      assert.eq(expected, Obj.map(actual, function (x) { return x.id(); }));
+      assert.eq(expected, Obj.map(actual.data(), function (x) { return x.id(); }));
     };
 
     var testTable = [
@@ -59,6 +59,18 @@ test(
       '4,5': 'x',
       '4,6': 'y'
     }, testTable);
+
+    check({
+      '0,0': 'a',
+      '0,1': 'a',
+      '0,2': 'a'
+    },
+      [
+        [ s('a', 1, 3) ]
+      ]
+    );
+
+
 
   }
 );

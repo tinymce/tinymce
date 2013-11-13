@@ -3,16 +3,20 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.peanut.Fun'
+    'ephox.peanut.Fun',
+    'global!Math'
   ],
 
-  function (Arr, Fun) {
+  function (Arr, Fun, Math) {
     var key = function (row, column) {
       return row + ',' + column;
     };
 
     var model = function (input) {
       var result = {};
+
+      var maxRows = 0;
+      var maxColumns = 0;
       Arr.each(input, function (row, r) {
         Arr.each(row, function (cell) {
           var start = 0;
@@ -30,12 +34,23 @@ define(
                 colspan: cell.colspan,
                 rowspan: cell.rowspan
               };
+
+
+
+              maxRows = Math.max(maxRows, r + j + 1);
+              maxColumns = Math.max(maxColumns, start + i + 1);
             }
           }
         });
       });
 
-      return result;
+      console.log('max: ', maxRows + ', ' + maxColumns);
+
+      return {
+        data: Fun.constant(result),
+        rows: Fun.constant(maxRows),
+        columns: Fun.constant(maxColumns)
+      };
     };
 
     return {

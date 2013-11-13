@@ -44,7 +44,7 @@ define(
     var max = Struct.immutable('before', 'on', 'after');
 
     var voom = function (input, c) {
-      var worm = CellLookup.model(input);
+      var worm = CellLookup.model(input).data();
 
       var result = [];
       Arr.each(input, function (row, r) {
@@ -71,7 +71,7 @@ define(
 
     var single = function (input, ri, ci) {
       console.log('single');
-      var worm = CellLookup.model(input);
+      var worm = CellLookup.model(input).data();
       var tack = tacky(worm, input[ri][ci].id());
       var section = voom(input, tack.column());
 
@@ -113,7 +113,7 @@ define(
       console.log('vertical');
       
       // TODO: Clean up the dupe and guesswork
-      var worm = CellLookup.model(input);
+      var worm = CellLookup.model(input).data();
       var target = input[ri][ci];
       var tack = tacky(worm, target.id());
       var section = voom(input, tack.column());
@@ -132,7 +132,7 @@ define(
 
     var box = function (input, ri, ci) {
       console.log('box');
-      var worm = CellLookup.model(input);
+      var worm = CellLookup.model(input).data();
       var target = input[ri][ci];
       var tack = tacky(worm, target.id());
       var section = voom(input, tack.column());
