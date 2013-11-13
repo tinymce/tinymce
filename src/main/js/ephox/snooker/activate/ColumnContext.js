@@ -14,7 +14,7 @@ define(
     var only = function () {
       return folder(function (n, o, l, m, r) {
         return o();
-      })
+      });
     };
 
     var left = function (index, next) {

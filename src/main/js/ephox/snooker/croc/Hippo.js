@@ -35,23 +35,8 @@ define(
       });
     };
 
-    var grid = function (cell) {
-      return SelectorFind.ancestor(cell, 'tr').bind(function (tr) {
-        return SelectorFind.ancestor(tr, 'table').bind(function (table) {
-          var rowsInTable = SelectorFilter.descendants(table, 'tr');
-          var rowIndex = Arr.findIndex(rowsInTable, function (x) {
-            return Compare.eq(tr, x);
-          });
-
-          var cellsInRow = SelectorFilter.descendants(tr, 'td');
-          var colIndex = Arr.findIndex(cellsInRow, function (x) {
-            return Compare.eq(x, cell);
-          });
-
-          return rowIndex > -1 && colIndex > -1 ? Option.some(Structs.cell(rowIndex, colIndex)) : Option.none();
-        });
-      });
-    };
+    // Not implemented yet.
+    var grid = index;
 
     return {
       index: index,

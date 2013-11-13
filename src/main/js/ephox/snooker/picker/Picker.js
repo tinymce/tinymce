@@ -95,7 +95,10 @@ define(
         console.log('grid: ', grid.row(), 'x', grid.column());
       });
 
-      var mover = DomEvent.bind(Element.fromDom(document), 'mousemove', function (event) {
+      alert("hello");
+
+      var mover = DomEvent.bind(Element.fromDom(document), 'touchmove', function (event) {
+        console.log("moving");
         redimension.handle(self, Structs.grid(size.height, size.width), event.x(), event.y());
       })
 
