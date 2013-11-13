@@ -34,6 +34,7 @@ define(
       var grower = Mutation();
       grower.events.drag.bind(function (event) {
         subject.each(function (s) {
+          console.log('subject: ', s.dom());
           Dimensions.adjust(s, event.xDelta(), event.yDelta());
           events.trigger.grow(event.xDelta(), event.yDelta());
         });

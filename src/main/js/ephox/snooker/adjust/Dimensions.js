@@ -39,6 +39,7 @@ define(
 
     var addWidth = function (element, amount) {
       var current = Width.get(element) + hacktastic(element);
+      // var current = Width.get(element);
       Width.set(element, current + amount);
     };
 

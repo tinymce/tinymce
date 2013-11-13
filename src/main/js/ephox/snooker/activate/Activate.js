@@ -55,6 +55,7 @@ define(
         var water = Water.water(widths, column, step, 10);
         console.log('adjustments: ', water);
         Arr.map(cells, function (r, i) {
+          console.log('adjusting: ', r.dom(), water[i]);
           Dimensions.addWidth(r, water[i]);
           // Width.set(r, water[i]);
         });
