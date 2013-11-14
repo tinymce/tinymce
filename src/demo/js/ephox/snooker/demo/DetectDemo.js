@@ -5,9 +5,11 @@ define(
     'ephox.compass.Arr',
     'ephox.dragster.api.Dragger',
     'ephox.peanut.Fun',
+    'ephox.snooker.activate.Water',
     'ephox.snooker.croc.CellLookup',
     'ephox.snooker.tbio.Aq',
     'ephox.snooker.tbio.query.Lookup',
+    'ephox.snooker.tbio.resize.bar.Bars',
     'ephox.snooker.tbio.resize.box.BoxDragging',
     'ephox.snooker.tbio.resize.common.TargetMutation',
     'ephox.sugar.api.Attr',
@@ -25,7 +27,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Dragger, Fun, CellLookup, Aq, Lookup, BoxDragging, TargetMutation, Attr, Class, Compare, Css, DomEvent, Element, Height, Insert, Location, Node, SelectorExists, SelectorFilter, SelectorFind) {
+  function (Arr, Dragger, Fun, Water, CellLookup, Aq, Lookup, Bars, BoxDragging, TargetMutation, Attr, Class, Compare, Css, DomEvent, Element, Height, Insert, Location, Node, SelectorExists, SelectorFilter, SelectorFind) {
     return function () {
       var subject = Element.fromHtml(
         '<table style="border-collapse: collapse;"><tbody>' +
@@ -111,21 +113,29 @@ define(
           var currentWidths = Lookup.widths(currentInput);
 
           var column = Attr.get(target, 'data-column');
-          currentWidths[column] = parseInt(currentWidths[column], 10) + delta + 'px';
-          console.log('currentWidths: ', currentWidths);
+          var ice = Arr.map(currentWidths, function (w) {
+            return parseInt(w, 10);
+          });
+          console.log('ice: ', ice, column, delta);
 
-          var setTheWidths2 = Aq.aq(currentInput, currentWidths);
-          Arr.each(setTheWidths2, function (x) {
-            console.log('setting.width', x.width());
-            Css.set(x.id(), 'width', x.width());
+          var adjustments = Water.water(ice, parseInt(column, 10), delta, 10);
+          console.log('adjustment: ', adjustments);
+
+          var setTheWidths2 = Aq.aq(currentInput, Arr.map(adjustments, function (adjust, i) {
+            return adjust + ice[i];
+          }));
+          Arr.each(setTheWidths2, function (x, i) {
+            console.log('setting.width', x.width(), x.id().dom());
+            Css.set(x.id(), 'width', x.width() + 'px');
           });
 
           Attr.remove(target, 'data-initial-left');
+          Bars.refresh(ephoxUi, subject);
         });
       });
 
       DomEvent.bind(ephoxUi, 'mousedown', function (event) {
-        if (Class.has(event.target(), 'mogel-mogel')) {
+        if (Bars.isBar(event.target())) {
           var body = Element.fromDom(document.body);
           var column = Attr.get(event.target(), 'data-column');
           mutation.assign(event.target());
@@ -134,55 +144,19 @@ define(
         }
       });
 
-      // Find the column lines.
-      var position = Location.absolute(subject);
-      console.log('position: ', position.left(), position.top());
-
-      var makeResizer = function (x, col) {
-        var blocker = Element.fromTag('div');
-        Css.setAll(blocker, {
-          position: 'absolute',
-          left: x - 5,
-          top: position.top(),
-          height: Height.getOuter(subject),
-          width: 10,
-          'background-color': 'blue',
-          opacity: '0.05',
-          cursor: 'w-resize'
-        });
-
-        Attr.set(blocker, 'data-column', col);
-
-        Insert.append(ephoxUi, blocker);
-        Class.add(blocker, 'mogel-mogel');
-        return blocker;
-      };
-
-      var current = position.left();
-      makeResizer(current, 0);
-      for (var i = 0; i < widths.length; i++) {
-        current += parseInt(widths[i], 10) + 3;
-        console.log('left: ', current);
-        makeResizer(current, i);
-      }
-
       DomEvent.bind(ephoxUi, 'mouseover', function (event) {
         if (Node.name(event.target()) === 'table' || SelectorExists.ancestor(event.target(), 'table')) {
-          var mogels = SelectorFilter.all('.mogel-mogel');
-          Arr.each(mogels, function (mogel) {
-            Css.set(mogel, 'display', 'block');
-          });
+          Bars.show(ephoxUi);
         }
       });
 
       DomEvent.bind(ephoxUi, 'mouseout', function (event) {
         if (Node.name(event.target()) === 'table') {
-          var mogels = SelectorFilter.all('.mogel-mogel');
-          Arr.each(mogels, function (mogel) {
-            Css.set(mogel, 'display', 'none');
-          });
+          Bars.hide(ephoxUi);
         }
       });
+
+      Bars.refresh(ephoxUi, subject);
 
     };
   }
