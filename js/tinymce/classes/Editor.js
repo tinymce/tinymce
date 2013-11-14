@@ -1534,7 +1534,7 @@ define("tinymce/Editor", [
 			var self = this, doc = self.getDoc();
 
 			// Fixed bug where IE has a blinking cursor left from the editor
-			if (ie && doc) {
+			if (ie && doc && !self.inline) {
 				doc.execCommand('SelectAll');
 			}
 
@@ -2016,7 +2016,7 @@ define("tinymce/Editor", [
 
 				// Fixed bug where IE has a blinking cursor left from the editor
 				var doc = self.getDoc();
-				if (ie && doc) {
+				if (ie && doc && !self.inline) {
 					doc.execCommand('SelectAll');
 				}
 
