@@ -48,7 +48,7 @@ define(
 
       dragger.connect();
 
-      dragger.open(table.element());
+      dragger.assign(table.element());
       activation.glossy();
     };
   }

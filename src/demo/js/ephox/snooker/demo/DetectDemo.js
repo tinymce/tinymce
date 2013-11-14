@@ -6,15 +6,20 @@ define(
     'ephox.peanut.Fun',
     'ephox.snooker.croc.CellLookup',
     'ephox.snooker.tbio.Aq',
+    'ephox.snooker.tbio.query.Lookup',
+    'ephox.snooker.tbio.resize.box.BoxDragging',
     'ephox.sugar.api.Attr',
+    'ephox.sugar.api.Compare',
     'ephox.sugar.api.Css',
+    'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
+    'ephox.sugar.api.Node',
     'ephox.sugar.api.SelectorFilter',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Fun, CellLookup, Aq, Attr, Css, Element, Insert, SelectorFilter, SelectorFind) {
+  function (Arr, Fun, CellLookup, Aq, Lookup, BoxDragging, Attr, Compare, Css, DomEvent, Element, Insert, Node, SelectorFilter, SelectorFind) {
     return function () {
       var subject = Element.fromHtml(
         '<table style="border-collapse: collapse;"><tbody>' +
@@ -53,31 +58,10 @@ define(
 
 
       var rows = SelectorFilter.descendants(subject, 'tr');
-      var input = Arr.map(rows, function (row) {
-        var cells = SelectorFilter.descendants(row, 'td,th');
-        return Arr.map(cells, function (cell) {
-          return {
-            id: Fun.constant(cell),
-            rowspan: Fun.constant(Attr.get(cell, 'rowspan') || 1),
-            colspan: Fun.constant(Attr.get(cell, 'colspan') || 1)
-          };
-        });
-      });
+      var input = Lookup.information(subject);
 
       var model = CellLookup.model(input);
-      var widths = [];
-
-      // find the width of the 1st column 
-      var data = model.data();
-      for (var i = 0; i < model.columns(); i++) {
-        Arr.find(rows, function (row, r) {
-          var key = CellLookup.key(r, i);
-          var cell = data[key];
-          if (cell && cell.colspan() === 1 && widths[i] === undefined) {
-            widths[i] = Css.get(cell.id(), 'width');
-          }
-        });
-      }
+      var widths = Lookup.widths(input);
 
       console.log('widths: ', widths);
 
@@ -86,6 +70,16 @@ define(
         console.log('haha', x.width());
         Css.set(x.id(), 'width', x.width());
       });
+
+      DomEvent.bind(subject, 'mousemove', function (event) {
+        if (Node.name(event.target()) === 'td') return;
+        console.log(event.target().dom());
+      });
+
+
+      var dragger = BoxDragging();
+      dragger.connect();
+      dragger.assign(subject);
 
     };
   }

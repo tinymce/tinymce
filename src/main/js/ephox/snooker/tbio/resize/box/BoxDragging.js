@@ -43,7 +43,7 @@ define(
 
       drag.events.stop.bind(onStop);
 
-      var open = function (target) {
+      var assign = function (target) {
         subject = Option.some(target);
         drag.on();
         handles.show(target);
@@ -69,7 +69,7 @@ define(
 
       return {
         connect: connect,
-        open: open,
+        assign: assign,
         close: close,
         destroy: destroy,
         events: events.registry

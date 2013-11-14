@@ -29,10 +29,13 @@ define(
       // Width.set(element, w);
       // Height.set(element, h);
       var width = getWidth(element);
+      var height = getHeight(element);
       // var height = Height.get(element);
       var w = Math.max(1, width + x);
+      var h = Math.max(1, height + y);
       // var h = Math.max(1, height + y);
       setWidth(element, w);
+      setHeight(element, h);
     };
 
     var setWidth = function (element, w) {
@@ -43,6 +46,14 @@ define(
     var getWidth = function (element) {
       return parseInt(Css.get(element, 'width'), 10);
       // return Width.get(element) + hacktastic(element);
+    };
+
+    var getHeight = function (element) {
+      return parseInt(Css.get(element, 'height'), 10);
+    };
+
+    var setHeight = function (element, h) {
+      Css.set(element, 'height', h + 'px');
     };
 
     var addWidth = function (element, amount) {
