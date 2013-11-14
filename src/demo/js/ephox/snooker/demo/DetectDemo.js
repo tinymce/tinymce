@@ -198,6 +198,7 @@ define(
         }
       });
 
+      /* This is required on Firefox to stop the default drag behaviour interfering with dragster */
       DomEvent.bind(ephoxUi, 'dragstart', function (event) {
         event.raw().preventDefault();
       });
