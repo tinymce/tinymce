@@ -52,12 +52,27 @@ test(
     };
 
     check2([
-      [ 'a---1x1', 'b---d1x1' ],
+      [ 'a---1x1', 'b---1x1' ],
       [ 'c---1x2' ]
     ], [
       [ Spanning('a', 1, 1), Spanning('b', 1, 1) ],
       [ Spanning('c', 1, 2)]
     ], 0);
+
+
+    (function () {
+      var input = [
+        [ Spanning('a', 1, 1), Spanning('b', 1, 1) ],
+        [ Spanning('c', 1, 2)]
+      ];
+      var model = CellLookup.model(input);
+
+      var col = 0;
+      var actual = CellGroups.hackColumn(model, col);
+      console.log('actual: ', Arr.map(actual, function (a) {
+        return Arr.map(a.before(), stringify2) + ' >>> ' + stringify(a.on()) + ' <<< ' + Arr.map(a.after(), stringify2);
+      }));
+    })();
 
   }
 );

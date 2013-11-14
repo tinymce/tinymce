@@ -11,7 +11,7 @@ define(
     var aq = function (input, widths) {
       var model = CellLookup.model(input);
 
-      var all = model.all();
+      var all = Arr.flatten(model.all());
       console.log('model.all: ', all);
 
       var total = function (start, end) {
@@ -35,7 +35,7 @@ define(
     var qwe = function (input, heights) {
       var model = CellLookup.model(input);
 
-      var all = model.all();
+      var all = Arr.flatten(model.all());
       console.log('model.all: ', all);
 
       var total = function (start, end) {

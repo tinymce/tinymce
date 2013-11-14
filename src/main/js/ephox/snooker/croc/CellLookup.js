@@ -19,7 +19,8 @@ define(
       var maxRows = 0;
       var maxColumns = 0;
       Arr.each(input, function (row, r) {
-        Arr.each(row, function (cell) {
+        var currentRow = [];
+        Arr.each(row, function (cell, c) {
           var start = 0;
           while (result[key(r, start)] !== undefined) {
             start++;
@@ -42,8 +43,9 @@ define(
             }
           }
 
-          cells.push(current);
+          currentRow.push(current);
         });
+        cells.push(currentRow);
       });
 
       console.log('max: ', maxRows + ', ' + maxColumns);
