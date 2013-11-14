@@ -32,8 +32,35 @@ define(
       });
     };
 
+    var qwe = function (input, heights) {
+      var model = CellLookup.model(input);
+
+      var all = model.all();
+      console.log('model.all: ', all);
+
+      var total = function (start, end) {
+        var r = 0;
+        for (var i = start; i < end; i++) {
+          r += heights[i] !== undefined ? parseInt(heights[i], 10) : 0;
+        }
+        return r;
+      };
+
+
+      return Arr.map(all, function (cell) {
+        var height = total(cell.row(), cell.row() + cell.rowspan());
+        return {
+          id: cell.id, //F
+          height: Fun.constant(height)
+        };
+      });
+    };
+
+
+
     return {
-      aq: aq
+      aq: aq,
+      qwe: qwe
     };
   }
 );

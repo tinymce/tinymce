@@ -95,51 +95,92 @@ define(
 
       mutation.events.drag.bind(function (event) {
         var column = Attr.get(event.target(), 'data-column');
-        var current = parseInt(Css.get(event.target(), 'left'), 10);
-        Css.set(event.target(), 'left', current + event.xDelta() + 'px');
-
-        // resize(column, event.xDelta());
-        // Dimensions.adjust(event.target(), event.xDelta(), 0);
+        if (column !== undefined) {
+          var current = parseInt(Css.get(event.target(), 'left'), 10);
+          Css.set(event.target(), 'left', current + event.xDelta() + 'px');
+        } else {
+          var row = Attr.get(event.target(), 'data-row');
+          var top = parseInt(Css.get(event.target(), 'top'), 10);
+          Css.set(event.target(), 'top', top + event.yDelta() + 'px');
+        }
       });
+
+      var adjustWidths = function (target, column) {
+        var old = Attr.get(target, 'data-initial-left');
+        var current = parseInt(Css.get(target, 'left'), 10);
+        var delta = current - old;
+
+        var information = Lookup.information(subject);
+        var ws = Lookup.widths(information);
+
+        var numbers = Arr.map(ws, function (x) {
+          return parseInt(x, 10);
+        });
+
+        var adjustments = Water.water(numbers, column, delta, 10);
+        var withAdjustment = Arr.map(adjustments, function (a, i) {
+          return a + numbers[i];
+        });
+
+        var newValues = Aq.aq(information, withAdjustment);
+        Arr.each(newValues, function (v) {
+          Css.set(v.id(), 'width', v.width() + 'px');
+        });
+
+        Attr.remove(target, 'data-initial-left');
+
+      };
+
+      // Dupe city.
+      var adjustHeights = function (target, row) {
+        var old = Attr.get(target, 'data-initial-top');
+        var current = parseInt(Css.get(target, 'top'), 10);
+        var delta = current - old;
+
+        var information = Lookup.information(subject);
+        var hs = Lookup.heights(information);
+        console.log('hs: ', hs);
+
+        var numbers = Arr.map(hs, function (x) {
+          return parseInt(x, 10);
+        });
+
+        var adjustments = Water.water(numbers, row, delta, 10);
+        var withAdjustment = Arr.map(adjustments, function (a, i) {
+          return a + numbers[i];
+        });
+
+        var newValues = Aq.qwe(information, withAdjustment);
+        Arr.each(newValues, function (v) {
+          Css.set(v.id(), 'height', v.height() + 'px');
+        });
+
+        Attr.remove(target, 'data-initial-top');
+      };
 
       resizing.events.stop.bind(function (event) {
         mutation.get().each(function (target) {
-          var current = parseInt(Css.get(target, 'left'), 10);
-          var old = Attr.get(target, 'data-initial-left');
-          var delta = current - old;
-          console.log('delta: ', delta);
-
-          var currentInput = Lookup.information(subject);
-          var currentWidths = Lookup.widths(currentInput);
-
           var column = Attr.get(target, 'data-column');
-          var ice = Arr.map(currentWidths, function (w) {
-            return parseInt(w, 10);
-          });
-          console.log('ice: ', ice, column, delta);
-
-          var adjustments = Water.water(ice, parseInt(column, 10), delta, 10);
-          console.log('adjustment: ', adjustments);
-
-          var setTheWidths2 = Aq.aq(currentInput, Arr.map(adjustments, function (adjust, i) {
-            return adjust + ice[i];
-          }));
-          Arr.each(setTheWidths2, function (x, i) {
-            console.log('setting.width', x.width(), x.id().dom());
-            Css.set(x.id(), 'width', x.width() + 'px');
-          });
-
-          Attr.remove(target, 'data-initial-left');
+          if (column !== undefined) adjustWidths(target, parseInt(column, 10));
+          else {
+            var row = Attr.get(target, 'data-row');
+            if (row !== undefined) adjustHeights(target, parseInt(row, 10));
+          }
           Bars.refresh(ephoxUi, subject);
         });
       });
 
       DomEvent.bind(ephoxUi, 'mousedown', function (event) {
-        if (Bars.isVBar(event.target())) {
-          var body = Element.fromDom(document.body);
+        var body = Element.fromDom(document.body);
+        if (Bars.isVBar(event.target())) {         
           var column = Attr.get(event.target(), 'data-column');
           mutation.assign(event.target());
           Attr.set(event.target(), 'data-initial-left', parseInt(Css.get(event.target(), 'left'), 10));
+          resizing.go(body);
+        } else if (Bars.isHBar(event.target())) {
+          var row = Attr.get(event.target(), 'data-row');
+          mutation.assign(event.target());
+          Attr.set(event.target(), 'data-initial-top', parseInt(Css.get(event.target(), 'top'), 10));
           resizing.go(body);
         }
       });
