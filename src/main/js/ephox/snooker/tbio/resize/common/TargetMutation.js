@@ -29,8 +29,13 @@ define(
         target = Option.some(t);
       };
 
+      var get = function () {
+        return target;
+      };
+
       return {
         assign: assign,
+        get: get,
         mutate: delegate.mutate,
         events: events.registry
       };
