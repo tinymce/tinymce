@@ -1,12 +1,12 @@
 define(
-  'ephox.snooker.adjust.Container',
+  'ephox.snooker.tbio.resize.box.BoxHandles',
 
   [
     'ephox.porkbun.Event',
     'ephox.porkbun.Events',
     'ephox.snooker.adjust.Border',
-    'ephox.snooker.adjust.Resizer',
     'ephox.snooker.style.Styles',
+    'ephox.snooker.tbio.resize.box.Resizer',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Classes',
     'ephox.sugar.api.Css',
@@ -16,7 +16,7 @@ define(
     'ephox.sugar.api.Remove'
   ],
 
-  function (Event, Events, Border, Resizer, Styles, Class, Classes, Css, Element, Insert, InsertAll, Remove) {
+  function (Event, Events, Border, Styles, Resizer, Class, Classes, Css, Element, Insert, InsertAll, Remove) {
     return function () {
 
       // INVESTIGATE: Should I care about the document coming in?

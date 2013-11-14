@@ -1,5 +1,5 @@
 define(
-  'ephox.snooker.adjust.Resizer',
+  'ephox.snooker.tbio.resize.box.Resizer',
 
   [
     'ephox.porkbun.Event',

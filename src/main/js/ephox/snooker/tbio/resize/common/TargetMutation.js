@@ -1,11 +1,11 @@
 define(
-  'ephox.snooker.activate.ColumnMutation',
+  'ephox.snooker.tbio.resize.common.TargetMutation',
 
   [
     'ephox.perhaps.Option',
     'ephox.porkbun.Event',
     'ephox.porkbun.Events',
-    'ephox.snooker.adjust.Mutation'
+    'ephox.snooker.tbio.resize.common.Mutation'
   ],
 
   function (Option, Event, Events, Mutation) {

@@ -1,23 +1,22 @@
 define(
-  'ephox.snooker.adjust.Blah',
+  'ephox.snooker.tbio.resize.box.BoxDragging',
 
   [
     'ephox.dragster.api.Dragger',
     'ephox.perhaps.Option',
     'ephox.porkbun.Event',
     'ephox.porkbun.Events',
-    'ephox.snooker.adjust.Container',
     'ephox.snooker.adjust.Dimensions',
-    'ephox.snooker.adjust.Mutation',
-    'ephox.sugar.api.Class',
+    'ephox.snooker.tbio.resize.box.BoxHandles',
+    'ephox.snooker.tbio.resize.common.Mutation',
     'ephox.sugar.api.Element',
     'global!Math',
     'global!document'
   ],
 
-  function (Dragger, Option, Event, Events, Container, Dimensions, Mutation, Class, Element, Math, document) {
+  function (Dragger, Option, Event, Events, Dimensions, BoxHandles, Mutation, Element, Math, document) {
     return function () {
-      var handles = Container();
+      var handles = BoxHandles();
       var events = Events.create({
         grow: Event(['x', 'y']),
         stop: Event([])
@@ -34,7 +33,6 @@ define(
       var grower = Mutation();
       grower.events.drag.bind(function (event) {
         subject.each(function (s) {
-          console.log('subject: ', s.dom());
           Dimensions.adjust(s, event.xDelta(), event.yDelta());
           events.trigger.grow(event.xDelta(), event.yDelta());
         });
@@ -44,7 +42,6 @@ define(
       var drag = Dragger.transform(grower, {});
 
       drag.events.stop.bind(onStop);
-      Class.add(drag.element());
 
       var open = function (target) {
         subject = Option.some(target);
@@ -59,7 +56,6 @@ define(
       };
 
       var connect = function () {
-        // handles.connect();
         handles.events.resize.bind(function (event) {
           var body = Element.fromDom(document.body);
           drag.go(body);

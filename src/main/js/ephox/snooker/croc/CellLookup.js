@@ -14,6 +14,7 @@ define(
 
     var model = function (input) {
       var result = {};
+      var cells = [];
 
       var maxRows = 0;
       var maxColumns = 0;
@@ -24,23 +25,24 @@ define(
             start++;
           }
 
+          var current = {
+            row: Fun.constant(r),
+            column: Fun.constant(start),
+            id: cell.id,
+            colspan: cell.colspan,
+            rowspan: cell.rowspan
+          };
+
           for (var i = 0; i < cell.colspan(); i++) {
             for (var j = 0; j < cell.rowspan(); j++) {
               var newpos = key(r + j, start + i);
-              result[newpos] = {
-                row: Fun.constant(r),
-                column: Fun.constant(start),
-                id: cell.id,
-                colspan: cell.colspan,
-                rowspan: cell.rowspan
-              };
-
-
-
+              result[newpos] = current;
               maxRows = Math.max(maxRows, r + j + 1);
               maxColumns = Math.max(maxColumns, start + i + 1);
             }
           }
+
+          cells.push(current);
         });
       });
 
@@ -49,7 +51,8 @@ define(
       return {
         data: Fun.constant(result),
         rows: Fun.constant(maxRows),
-        columns: Fun.constant(maxColumns)
+        columns: Fun.constant(maxColumns),
+        all: Fun.constant(cells)
       };
     };
 

@@ -1,5 +1,5 @@
 define(
-  'ephox.snooker.adjust.Mutation',
+  'ephox.snooker.tbio.resize.common.Mutation',
 
   [
     'ephox.porkbun.Event',

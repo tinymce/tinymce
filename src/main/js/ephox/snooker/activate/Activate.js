@@ -4,9 +4,9 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.dragster.api.Dragger',
-    'ephox.snooker.activate.ColumnMutation',
     'ephox.snooker.activate.Water',
     'ephox.snooker.adjust.Dimensions',
+    'ephox.snooker.tbio.resize.common.TargetMutation',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Css',
@@ -21,9 +21,9 @@ define(
     'ephox.sugar.api.Width'
   ],
 
-  function (Arr, Dragger, ColumnMutation, Water, Dimensions, Attr, Class, Css, DomEvent, Element, Insert, Remove, SelectorExists, SelectorFilter, SelectorFind, Traverse, Width) {
+  function (Arr, Dragger, Water, Dimensions, TargetMutation, Attr, Class, Css, DomEvent, Element, Insert, Remove, SelectorExists, SelectorFilter, SelectorFind, Traverse, Width) {
     var activate = function (table) {
-      var mutation = ColumnMutation();
+      var mutation = TargetMutation();
       var dragger = Dragger.transform(mutation, {});
 
       var getCells = function () {
@@ -36,12 +36,6 @@ define(
         });
       };
 
-      var distribute = function () {
-        var cells = getCells();
-        var totalWidth = Width.get(table);
-        
-      };
-
       var refresh = function () {
         resize(0, 0);
       };
@@ -52,10 +46,12 @@ define(
         var cells = getCells();
 
         var widths = Arr.map(cells, Dimensions.getWidth);
+        console.log('Widths: ', widths);
         var water = Water.water(widths, column, step, 10);
-        console.log('adjustments: ', water);
+        console.log('Adjustments: ', water);
+        // console.log('adjustments: ', water);
         Arr.map(cells, function (r, i) {
-          console.log('adjusting: ', r.dom(), water[i]);
+          // console.log('adjusting: ', r.dom(), water[i]);
           Dimensions.addWidth(r, water[i]);
           // Width.set(r, water[i]);
         });
@@ -94,7 +90,7 @@ define(
 
       var glossy = function () {
         dragger.on();
-        Attr.set(table, 'contenteditable', false);
+        // Attr.set(table, 'contenteditable', false);
         if (SelectorExists.descendant(table, '.mogel')) plain(table);
         var rows = SelectorFilter.descendants(table, 'tr');
         Arr.each(rows, function (row, i) {
@@ -132,7 +128,6 @@ define(
         glossy: glossy,
         plain: plain,
         resize: resize,
-        distribute: distribute,
         refresh: refresh
       };
     };
