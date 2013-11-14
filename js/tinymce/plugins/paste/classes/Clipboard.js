@@ -43,6 +43,9 @@ define("tinymce/pasteplugin/Clipboard", [
 		 */
 		function pasteHtml(html) {
 			var args, dom = editor.dom;
+			
+			// Fix for bug #6481. Strips out folder and file references for internal document links in IE
+			html = html.replace(/href[ |=]+["|']file:\/\/[^>]+#([^>]+)["|']/g, 'href="#$1"');
 
 			args = editor.fire('BeforePastePreProcess', {content: html}); // Internal event used by Quirks
 			args = editor.fire('PastePreProcess', args);
