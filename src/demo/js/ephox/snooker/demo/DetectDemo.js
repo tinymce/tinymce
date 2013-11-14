@@ -22,15 +22,16 @@ define(
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Location',
     'ephox.sugar.api.Node',
+    'ephox.sugar.api.Ready',
     'ephox.sugar.api.SelectorExists',
     'ephox.sugar.api.SelectorFilter',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Dragger, Fun, Water, CellLookup, Aq, Lookup, Bars, BoxDragging, TargetMutation, Attr, Class, Compare, Css, DomEvent, Element, Height, Insert, Location, Node, SelectorExists, SelectorFilter, SelectorFind) {
+  function (Arr, Dragger, Fun, Water, CellLookup, Aq, Lookup, Bars, BoxDragging, TargetMutation, Attr, Class, Compare, Css, DomEvent, Element, Height, Insert, Location, Node, Ready, SelectorExists, SelectorFilter, SelectorFind) {
     return function () {
       var subject = Element.fromHtml(
-        '<table style="border-collapse: collapse;"><tbody>' +
+        '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
           '<tr>' +
             '<td style="width: 110px;">1</td>' +
             '<td colspan="5">.</td>' +
@@ -197,7 +198,17 @@ define(
         }
       });
 
+      DomEvent.bind(ephoxUi, 'dragstart', function (event) {
+        event.raw().preventDefault();
+      });
+
       Bars.refresh(ephoxUi, subject);
+
+      // For firefox.
+      Ready.execute(function () {
+        // document.execCommand("enableInlineTableEditing", null, false);
+        // document.execCommand("enableObjectResizing", false, "false");
+      });
 
     };
   }
