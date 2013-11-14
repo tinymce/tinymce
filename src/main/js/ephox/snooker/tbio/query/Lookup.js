@@ -34,7 +34,7 @@ define(
      */
     var widths = function (info) {
       var model = CellLookup.model(info);
-      var widths = [];
+      var ws = [];
 
       // find the width of the 1st column 
       var data = model.data();
@@ -42,18 +42,40 @@ define(
         Arr.find(info, function (_, r) {
           var key = CellLookup.key(r, i);
           var cell = data[key];
-          if (cell && cell.colspan() === 1 && widths[i] === undefined) {
-            widths[i] = Css.get(cell.id(), 'width');
+          if (cell && cell.colspan() === 1 && ws[i] === undefined) {
+            ws[i] = Css.get(cell.id(), 'width');
           }
         });
       }
 
-      return widths;
+      return ws;
+    };
+
+    // Massive amoutn of dupe.
+    var heights = function (info) {
+      var model = CellLookup.model(info);
+      var hs = [];
+
+      // find the width of the 1st column 
+      var data = model.data();
+      for (var r = 0; r < model.rows(); r++) {
+        for (var c = 0; c < model.columns(); c++) {
+          var key = CellLookup.key(r, c);
+          var cell = data[key];
+          if (cell && cell.rowspan() === 1 && hs[r] === undefined) {
+            hs[r] = Css.get(cell.id(), 'height');
+          }
+        }
+      }
+
+      return hs;
+
     };
 
     return {
       information: information,
-      widths: widths
+      widths: widths,
+      heights: heights
     };
   }
 );

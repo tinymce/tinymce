@@ -135,7 +135,7 @@ define(
       });
 
       DomEvent.bind(ephoxUi, 'mousedown', function (event) {
-        if (Bars.isBar(event.target())) {
+        if (Bars.isVBar(event.target())) {
           var body = Element.fromDom(document.body);
           var column = Attr.get(event.target(), 'data-column');
           mutation.assign(event.target());
