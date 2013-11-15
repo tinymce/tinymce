@@ -12,6 +12,7 @@ define(
     'ephox.snooker.tbio.TableOperation',
     'ephox.snooker.tbio.Yeco',
     'ephox.snooker.tbio.query.Lookup',
+    'ephox.snooker.tbio.resize.Adjustments',
     'ephox.snooker.tbio.resize.bar.Bars',
     'ephox.snooker.tbio.resize.common.TargetMutation',
     'ephox.sugar.api.Attr',
@@ -26,7 +27,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Dragger, Option, Water, CellLookup, Spanning, Aq, TableOperation, Yeco, Lookup, Bars, TargetMutation, Attr, Css, DomEvent, Element, Insert, Node, Ready, SelectorExists, SelectorFilter, SelectorFind) {
+  function (Arr, Dragger, Option, Water, CellLookup, Spanning, Aq, TableOperation, Yeco, Lookup, Adjustments, Bars, TargetMutation, Attr, Css, DomEvent, Element, Insert, Node, Ready, SelectorExists, SelectorFilter, SelectorFind) {
     return function () {
       var subject = Element.fromHtml(
         '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
@@ -99,66 +100,13 @@ define(
         }
       });
 
-      var adjustWidths = function (target, column) {
-        var old = Attr.get(target, 'data-initial-left');
-        var current = parseInt(Css.get(target, 'left'), 10);
-        var delta = current - old;
-
-        var information = Lookup.information(subject);
-        var ws = Lookup.widths(information);
-
-        var numbers = Arr.map(ws, function (x) {
-          return parseInt(x, 10);
-        });
-
-        var adjustments = Water.water(numbers, column, delta, 10);
-        var withAdjustment = Arr.map(adjustments, function (a, i) {
-          return a + numbers[i];
-        });
-
-        var newValues = Aq.aq(information, withAdjustment);
-        Arr.each(newValues, function (v) {
-          Css.set(v.id(), 'width', v.width() + 'px');
-        });
-
-        Attr.remove(target, 'data-initial-left');
-
-      };
-
-      // Dupe city.
-      var adjustHeights = function (target, row) {
-        var old = Attr.get(target, 'data-initial-top');
-        var current = parseInt(Css.get(target, 'top'), 10);
-        var delta = current - old;
-
-        var information = Lookup.information(subject);
-        var hs = Lookup.heights(information);
-        console.log('hs: ', hs);
-
-        var numbers = Arr.map(hs, function (x) {
-          return parseInt(x, 10);
-        });
-
-        var adjustments = Water.water(numbers, row, delta, 10);
-        var withAdjustment = Arr.map(adjustments, function (a, i) {
-          return a + numbers[i];
-        });
-
-        var newValues = Aq.qwe(information, withAdjustment);
-        Arr.each(newValues, function (v) {
-          Css.set(v.id(), 'height', v.height() + 'px');
-        });
-
-        Attr.remove(target, 'data-initial-top');
-      };
-
       resizing.events.stop.bind(function (event) {
         mutation.get().each(function (target) {
           var column = Attr.get(target, 'data-column');
-          if (column !== undefined) adjustWidths(target, parseInt(column, 10));
+          if (column !== undefined) Adjustments.adjustWidths(subject, target, parseInt(column, 10));
           else {
             var row = Attr.get(target, 'data-row');
-            if (row !== undefined) adjustHeights(target, parseInt(row, 10));
+            if (row !== undefined) Adjustments.adjustHeights(subject, target, parseInt(row, 10));
           }
           Bars.refresh(ephoxUi, subject);
         });
