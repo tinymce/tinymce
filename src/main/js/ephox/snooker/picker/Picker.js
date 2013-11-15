@@ -97,10 +97,10 @@ define(
 
       alert("hello");
 
-      var mover = DomEvent.bind(Element.fromDom(document), 'touchmove', function (event) {
+      var mover = DomEvent.bind(Element.fromDom(document), 'mousemove', function (event) {
         console.log("moving");
         redimension.handle(self, Structs.grid(size.height, size.width), event.x(), event.y());
-      })
+      });
 
       var clicker = DomEvent.bind(table, 'mousedown', function (event) {
         var target = event.target();

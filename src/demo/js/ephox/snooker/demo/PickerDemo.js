@@ -12,8 +12,7 @@ define(
 
   function (Picker, Element, Height, Insert, Width, Math) {
     return function () {
-      console.log('hello world');
-
+      
       var picker = Picker();
       var ephoxUi = Element.fromDom(document.getElementById('ephox-ui'));
 
