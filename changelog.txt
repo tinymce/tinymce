@@ -17,6 +17,7 @@ Version 4.0.11 (2013-11-xx)
 	Fixed bug where the scrollbar would be placed to the left and on top of the text of menu items in RTL mode.
 	Fixed bug where Firefox on Mac OS X would navigate forward/backward on CMD+Arrow keys.
 	Fixed bug where fullscreen toggle on fixed sized editors wouldn't be properly full screened.
+	Fixed bug where the unlink button would remove all links from the body element in inline mode under running in IE.
 	Fixed so menu shortcuts gets rendered with the Apple command icon patch contributed by Andy Keller.
 	Fixed so the CSS compression of styles like "border" is a bit better for mixed values.
 	Fixed so the template_popup_width/template_popup_height option works properly in the template plugin.

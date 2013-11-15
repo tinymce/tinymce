@@ -185,7 +185,12 @@ define("tinymce/EditorCommands", [
 			// Override unlink command
 			unlink: function(command) {
 				if (selection.isCollapsed()) {
-					selection.select(selection.getNode());
+					var elm = selection.getNode();
+					if (elm.tagName == 'A') {
+						editor.dom.remove(elm, true);
+					}
+
+					return;
 				}
 
 				execNativeCommand(command);
