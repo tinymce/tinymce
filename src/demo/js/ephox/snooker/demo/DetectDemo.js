@@ -5,9 +5,13 @@ define(
     'ephox.compass.Arr',
     'ephox.dragster.api.Dragger',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.snooker.activate.Water',
     'ephox.snooker.croc.CellLookup',
+    'ephox.snooker.croc.Spanning',
     'ephox.snooker.tbio.Aq',
+    'ephox.snooker.tbio.TableOperation',
+    'ephox.snooker.tbio.Yeco',
     'ephox.snooker.tbio.query.Lookup',
     'ephox.snooker.tbio.resize.bar.Bars',
     'ephox.snooker.tbio.resize.box.BoxDragging',
@@ -23,12 +27,14 @@ define(
     'ephox.sugar.api.Location',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.Ready',
+    'ephox.sugar.api.Remove',
     'ephox.sugar.api.SelectorExists',
     'ephox.sugar.api.SelectorFilter',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.sugar.api.SelectorFind',
+    'ephox.sugar.api.Traverse'
   ],
 
-  function (Arr, Dragger, Fun, Water, CellLookup, Aq, Lookup, Bars, BoxDragging, TargetMutation, Attr, Class, Compare, Css, DomEvent, Element, Height, Insert, Location, Node, Ready, SelectorExists, SelectorFilter, SelectorFind) {
+  function (Arr, Dragger, Fun, Option, Water, CellLookup, Spanning, Aq, TableOperation, Yeco, Lookup, Bars, BoxDragging, TargetMutation, Attr, Class, Compare, Css, DomEvent, Element, Height, Insert, Location, Node, Ready, Remove, SelectorExists, SelectorFilter, SelectorFind, Traverse) {
     return function () {
       var subject = Element.fromHtml(
         '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
@@ -209,6 +215,44 @@ define(
       Ready.execute(function () {
         // document.execCommand("enableInlineTableEditing", null, false);
         // document.execCommand("enableObjectResizing", false, "false");
+      });
+
+
+      var afterButton = Element.fromTag('button');
+      Insert.append(afterButton, Element.fromText('>>'));
+      Insert.append(ephoxUi, afterButton);
+
+      var getIndex = function (elem) {
+        return Traverse.parent(elem).map(function (parent) {
+          var children = Traverse.children(parent);
+          return Arr.findIndex(children, function (child) {
+            return Compare.eq(child, elem);
+          });
+        });
+      };
+
+      var getRowIndex = function (cell) {
+        return SelectorFind.ancestor(cell, 'tr').bind(getIndex);
+      };
+
+      DomEvent.bind(afterButton, 'click', function (event) {
+        var selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+          var range = selection.getRangeAt(0);
+          var start = Element.fromDom(range.startContainer);
+          var cell = Arr.contains([ 'td', 'th' ], Node.name(start)) ? Option.some(start) : SelectorFind.ancestor(start, 'th,td');
+          cell.each(function (c) {
+
+            TableOperation.run(ephoxUi, subject, c, function (information, gridpos) {
+              return Yeco.insertAfter(information, gridpos.column(), gridpos.row(), function (prev) {
+                var td = Element.fromTag('td');
+                if (prev.colspan() === 1) Css.set(td, 'width', Css.get(prev.id(), 'width'));
+                if (prev.rowspan() === 1) Css.set(td, 'height', Css.get(prev.id(), 'height'));
+                return Spanning(td, 1, 1);
+              });
+            });
+          });
+        }
       });
 
     };

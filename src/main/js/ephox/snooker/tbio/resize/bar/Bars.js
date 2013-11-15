@@ -32,7 +32,7 @@ define(
         height: h,
         width: w,
         'background-color': '#555',
-        opacity: '0.05',
+        opacity: '0.00',
         cursor: 'w-resize'
       });
 
@@ -50,7 +50,7 @@ define(
         height: h,
         width: w,
         'background-color': '#555',
-        opacity: '0.05',
+        opacity: '0.00',
         cursor: 's-resize'
       });
 

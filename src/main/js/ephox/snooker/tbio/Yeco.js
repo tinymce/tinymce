@@ -59,9 +59,9 @@ define(
     var insertAfter = function (input, cx, cy, nu) {
       var operation = function (on) {
         return on.fold(function (whole) {
-          return [ whole, nu() ];
+          return [ whole, nu(whole) ];
         }, function (partial, offset) {
-          return offset < partial.colspan() - 1 ? [ adjust(partial, 1) ] : [ partial, nu() ];
+          return offset < partial.colspan() - 1 ? [ adjust(partial, 1) ] : [ partial, nu(partial) ];
         });
       };
 
@@ -71,9 +71,9 @@ define(
     var insertBefore = function (input, cx, cy, nu) {
       var operation = function (on) {
         return on.fold(function (whole) {
-          return [ nu(), whole ];
+          return [ nu(whole), whole ];
         }, function (partial, offset) {
-          return offset === 0 ? [ nu(), partial ] : [ adjust(partial, 1) ];
+          return offset === 0 ? [ nu(partial), partial ] : [ adjust(partial, 1) ];
         });
       };
 
