@@ -51,9 +51,26 @@ define(
         '</tbody></table>'
       );
 
+      var subject2 = Element.fromHtml(
+        '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
+          '<tr>' +
+            '<td style="width: 110px;">1</td>' +
+            '<td colspan="4">.</td>' +
+          '</tr>' +
+          '<tr>' +
+            '<td>x</td>' +
+            '<td style="width: 120px;">2</td>' +
+            '<td>.</td>' +
+            '<td style="width: 150px;">5</td>' +
+            '<td>x</td>' +
+          '</tr>' +
+        '</tbody></table>'
+      );
+
 
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
       Insert.append(ephoxUi, subject);
+      Insert.append(ephoxUi, subject2);
 
       var manager = BarManager(ephoxUi);
       manager.events.adjustWidth.bind(function (event) {

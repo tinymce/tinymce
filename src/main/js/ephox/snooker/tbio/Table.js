@@ -14,8 +14,7 @@ define(
       Css.setAll(table, {
         border: '1px solid black',
         'border-collapse': 'collapse',
-        width: '100%',
-        height: 20 * rows
+        width: '100%'
       });
 
       var tbody = Element.fromTag('tbody');
@@ -26,7 +25,7 @@ define(
         var tr = Element.fromTag('tr');
         for (var j = 0; j < columns; j++) {
           var td = Element.fromTag('td');
-          Insert.append(td, Element.fromText(''));
+          Insert.append(td, Element.fromText('\uFEFF'));
           Css.set(td, 'border', '1px solid #444');
           Css.set(td, 'width', (100 / columns) + '%');
           Insert.append(tr, td);

@@ -54,19 +54,18 @@ define(
       });
 
       DomEvent.bind(container, 'mousedown', function (event) {
-        var body = Element.fromDom(document.body);
         if (Bars.isVBar(event.target())) {
           var column = Attr.get(event.target(), 'data-column');
           mutation.assign(event.target());
           Attr.set(event.target(), 'data-initial-left', parseInt(Css.get(event.target(), 'left'), 10));
-          Css.set(event.target(), 'opacity', 0.04);
-          resizing.go(body);
+          Css.set(event.target(), 'opacity', 0.2);
+          resizing.go(container);
         } else if (Bars.isHBar(event.target())) {
           var row = Attr.get(event.target(), 'data-row');
           mutation.assign(event.target());
           Attr.set(event.target(), 'data-initial-top', parseInt(Css.get(event.target(), 'top'), 10));
-          Css.set(event.target(), 'opacity', 0.04);
-          resizing.go(body);
+          Css.set(event.target(), 'opacity', 0.2);
+          resizing.go(container);
         }
       });
 

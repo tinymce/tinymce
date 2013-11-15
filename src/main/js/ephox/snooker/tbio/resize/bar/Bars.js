@@ -69,6 +69,7 @@ define(
       console.log('heights: ', heights);
 
       var position = Location.absolute(table);
+      console.log('position of table: ', table.dom(), position.left(), position.top());
       var current = position.left();
       for (var i = 0; i < widths.length; i++) {
         current += parseInt(widths[i], 10) + 3;
@@ -76,12 +77,12 @@ define(
         Insert.append(container, bar);
       }
 
-      var hCurrent = position.top();
-      for (var j = 0; j < heights.length; j++) {
-        hCurrent += parseInt(heights[j], 10) + 3;
-        var barH = createHoriz(j, position.left(), hCurrent, Width.getOuter(table), 10);
-        Insert.append(container, barH);
-      }
+      // var hCurrent = position.top();
+      // for (var j = 0; j < heights.length; j++) {
+      //   hCurrent += parseInt(heights[j], 10) + 3;
+      //   var barH = createHoriz(j, position.left(), hCurrent, Width.getOuter(table), 10);
+      //   Insert.append(container, barH);
+      // }
     };
 
     var hide = function (container) {
