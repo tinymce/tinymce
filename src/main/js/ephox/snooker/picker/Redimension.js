@@ -17,8 +17,8 @@ define(
     return function (options) {
       var settings = Merger.merge(options, {
         minCols: 2,
-        maxCols: 5,
-        minRows: 2,
+        maxCols: 10,
+        minRows: 1,
         maxRows: 10
       });
 

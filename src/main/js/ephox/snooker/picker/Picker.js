@@ -64,6 +64,7 @@ define(
         Arr.each(rows, function (row, r) {
           var cells = repeat(numCols, function (c) {
             var td = Element.fromTag('td');
+            Class.add(td, Styles.resolve('table-picker-cell'));
             Attr.set(td, 'data-picker-row', r);
             Attr.set(td, 'data-picker-col', c);
             return td;
@@ -92,13 +93,9 @@ define(
       var redimension = Redimension();
       redimension.events.resize.bind(function (event) {
         var grid = event.grid();
-        console.log('grid: ', grid.row(), 'x', grid.column());
       });
 
-      alert("hello");
-
       var mover = DomEvent.bind(Element.fromDom(document), 'mousemove', function (event) {
-        console.log("moving");
         redimension.handle(self, Structs.grid(size.height, size.width), event.x(), event.y());
       });
 
@@ -109,6 +106,7 @@ define(
           var col = parseInt(Attr.get(c, 'data-picker-col'), 10);
           var row = parseInt(Attr.get(c, 'data-picker-row'), 10);
           events.trigger.select(col + 1, row + 1 );
+          event.raw().preventDefault();
         });
       });
 
