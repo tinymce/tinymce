@@ -546,24 +546,6 @@ test('Parse no attributes span before strong', function() {
 	equal(writer.getContent(), '<p>A <strong>B</strong></p>');
 });
 
-test('Conditional comments (denied)', function() {
-	var counter = createCounter(writer);
-	counter.validate = false;
-	var parser = new tinymce.html.SaxParser(counter, schema);
-
-	writer.reset();
-	parser.parse(
-		'<a href="jAvaScript:alert(1)">1</a>' +
-		'<a href="vbscript:alert(2)">2</a>' +
-		'<a href="java\u0000script:alert(3)">3</a>' +
-		'<a href="\njavascript:alert(4)">4</a>' +
-		'<a href="java\nscript:alert(5)">5</a>' +
-		'<a href="java\tscript:alert(6)">6</a>' +
-		'<a href="%6aavascript:alert(7)">7</a>'
-	);
-	equal(writer.getContent(), '<a>1</a><a>2</a><a>3</a><a>4</a><a>5</a><a>6</a><a>7</a>');
-});
-
 test('Conditional comments (allowed)', function() {
 	var counter = createCounter(writer);
 	counter.validate = false;
@@ -575,7 +557,7 @@ test('Conditional comments (allowed)', function() {
 	equal(writer.getContent(), '<!--[if gte IE 4]>alert(1)<![endif]-->');
 });
 
-test('Parse script urls (denied)', function() {
+test('Conditional comments (denied)', function() {
 	var counter = createCounter(writer);
 	counter.validate = false;
 	counter.allow_conditional_comments = false;
@@ -601,6 +583,25 @@ test('Parse script urls (allowed)', function() {
 		'<a href=" 2 ">2</a>'
 	);
 	equal(writer.getContent(), '<a href="javascript:alert(1)">1</a><a href=" 2 ">2</a>');
+});
+
+test('Parse script urls (denied)', function() {
+	var counter = createCounter(writer);
+	counter.validate = false;
+	var parser = new tinymce.html.SaxParser(counter, schema);
+
+	writer.reset();
+	parser.parse(
+		'<a href="jAvaScript:alert(1)">1</a>' +
+		'<a href="vbscript:alert(2)">2</a>' +
+		'<a href="java\u0000script:alert(3)">3</a>' +
+		'<a href="\njavascript:alert(4)">4</a>' +
+		'<a href="java\nscript:alert(5)">5</a>' +
+		'<a href="java\tscript:alert(6)">6</a>' +
+		'<a href="%6aavascript:alert(7)">7</a>' +
+		'<a href="%E3%82%AA%E3%83%BC%E3%83">Invalid url</a>'
+	);
+	equal(writer.getContent(), '<a>1</a><a>2</a><a>3</a><a>4</a><a>5</a><a>6</a><a>7</a><a href="%E3%82%AA%E3%83%BC%E3%83">Invalid url</a>');
 });
 </script>
 </head>
