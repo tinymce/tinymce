@@ -3,31 +3,22 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.dragster.api.Dragger',
     'ephox.perhaps.Option',
-    'ephox.snooker.activate.Water',
-    'ephox.snooker.croc.CellLookup',
     'ephox.snooker.croc.Spanning',
-    'ephox.snooker.tbio.Aq',
     'ephox.snooker.tbio.TableOperation',
     'ephox.snooker.tbio.Yeco',
-    'ephox.snooker.tbio.query.Lookup',
     'ephox.snooker.tbio.resize.Adjustments',
-    'ephox.snooker.tbio.resize.bar.Bars',
-    'ephox.snooker.tbio.resize.common.TargetMutation',
-    'ephox.sugar.api.Attr',
+    'ephox.snooker.tbio.resize.bar.BarManager',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.Ready',
-    'ephox.sugar.api.SelectorExists',
-    'ephox.sugar.api.SelectorFilter',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Dragger, Option, Water, CellLookup, Spanning, Aq, TableOperation, Yeco, Lookup, Adjustments, Bars, TargetMutation, Attr, Css, DomEvent, Element, Insert, Node, Ready, SelectorExists, SelectorFilter, SelectorFind) {
+  function (Arr, Option, Spanning, TableOperation, Yeco, Adjustments, BarManager, Css, DomEvent, Element, Insert, Node, Ready, SelectorFind) {
     return function () {
       var subject = Element.fromHtml(
         '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
@@ -64,89 +55,14 @@ define(
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
       Insert.append(ephoxUi, subject);
 
-
-      var rows = SelectorFilter.descendants(subject, 'tr');
-      var input = Lookup.information(subject);
-
-      var model = CellLookup.model(input);
-      var widths = Lookup.widths(input);
-
-      console.log('widths: ', widths);
-
-      var setTheWidths = Aq.aq(input, widths);
-      Arr.each(setTheWidths, function (x) {
-        console.log('haha', x.width());
-        Css.set(x.id(), 'width', x.width());
+      var manager = BarManager(ephoxUi, subject);
+      manager.events.adjustWidth.bind(function (event) {
+        Adjustments.adjustWidths(subject, event.bar(), event.column());
       });
-
-      DomEvent.bind(subject, 'mousemove', function (event) {
-        if (Node.name(event.target()) === 'td') return;
-        console.log(event.target().dom());
+      manager.events.adjustHeight.bind(function (event) {
+        Adjustments.adjustHeights(subject, event.bar(), event.row());
       });
-
-      var mutation = TargetMutation();
-      var resizing = Dragger.transform(mutation, {});
-      resizing.on();
-
-      mutation.events.drag.bind(function (event) {
-        var column = Attr.get(event.target(), 'data-column');
-        if (column !== undefined) {
-          var current = parseInt(Css.get(event.target(), 'left'), 10);
-          Css.set(event.target(), 'left', current + event.xDelta() + 'px');
-        } else {
-          var row = Attr.get(event.target(), 'data-row');
-          var top = parseInt(Css.get(event.target(), 'top'), 10);
-          Css.set(event.target(), 'top', top + event.yDelta() + 'px');
-        }
-      });
-
-      resizing.events.stop.bind(function (event) {
-        mutation.get().each(function (target) {
-          var column = Attr.get(target, 'data-column');
-          if (column !== undefined) Adjustments.adjustWidths(subject, target, parseInt(column, 10));
-          else {
-            var row = Attr.get(target, 'data-row');
-            if (row !== undefined) Adjustments.adjustHeights(subject, target, parseInt(row, 10));
-          }
-          Bars.refresh(ephoxUi, subject);
-        });
-      });
-
-      DomEvent.bind(ephoxUi, 'mousedown', function (event) {
-        var body = Element.fromDom(document.body);
-        if (Bars.isVBar(event.target())) {         
-          var column = Attr.get(event.target(), 'data-column');
-          mutation.assign(event.target());
-          Attr.set(event.target(), 'data-initial-left', parseInt(Css.get(event.target(), 'left'), 10));
-          Css.set(event.target(), 'opacity', 0.04);
-          resizing.go(body);
-        } else if (Bars.isHBar(event.target())) {
-          var row = Attr.get(event.target(), 'data-row');
-          mutation.assign(event.target());
-          Attr.set(event.target(), 'data-initial-top', parseInt(Css.get(event.target(), 'top'), 10));
-          Css.set(event.target(), 'opacity', 0.04);
-          resizing.go(body);
-        }
-      });
-
-      DomEvent.bind(ephoxUi, 'mouseover', function (event) {
-        if (Node.name(event.target()) === 'table' || SelectorExists.ancestor(event.target(), 'table')) {
-          Bars.show(ephoxUi);
-        }
-      });
-
-      DomEvent.bind(ephoxUi, 'mouseout', function (event) {
-        if (Node.name(event.target()) === 'table') {
-          Bars.hide(ephoxUi);
-        }
-      });
-
-      /* This is required on Firefox to stop the default drag behaviour interfering with dragster */
-      DomEvent.bind(ephoxUi, 'dragstart', function (event) {
-        event.raw().preventDefault();
-      });
-
-      Bars.refresh(ephoxUi, subject);
+      manager.on();
 
       // For firefox.
       Ready.execute(function () {
