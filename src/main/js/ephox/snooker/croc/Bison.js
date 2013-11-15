@@ -14,6 +14,10 @@ define(
   ],
 
   function (Arr, Obj, Merger, Fun, Option, Struct, CellLookup, Spanning, Util) {
+    /*
+      This is legacy experimental POC splitting and merging. Didn't get all that far.
+
+    */
     var blecker = function (worm, row, rowId, column) {
       /* Generates a list of cells before this column */
       var r = [];
@@ -128,7 +132,7 @@ define(
           return input[r];
         }
       });
-    }
+    };
 
     var box = function (input, ri, ci) {
       console.log('box');

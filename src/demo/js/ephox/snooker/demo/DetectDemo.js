@@ -4,7 +4,6 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.dragster.api.Dragger',
-    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.snooker.activate.Water',
     'ephox.snooker.croc.CellLookup',
@@ -14,27 +13,20 @@ define(
     'ephox.snooker.tbio.Yeco',
     'ephox.snooker.tbio.query.Lookup',
     'ephox.snooker.tbio.resize.bar.Bars',
-    'ephox.snooker.tbio.resize.box.BoxDragging',
     'ephox.snooker.tbio.resize.common.TargetMutation',
     'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.Compare',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
-    'ephox.sugar.api.Height',
     'ephox.sugar.api.Insert',
-    'ephox.sugar.api.Location',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.Ready',
-    'ephox.sugar.api.Remove',
     'ephox.sugar.api.SelectorExists',
     'ephox.sugar.api.SelectorFilter',
-    'ephox.sugar.api.SelectorFind',
-    'ephox.sugar.api.Traverse'
+    'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Dragger, Fun, Option, Water, CellLookup, Spanning, Aq, TableOperation, Yeco, Lookup, Bars, BoxDragging, TargetMutation, Attr, Class, Compare, Css, DomEvent, Element, Height, Insert, Location, Node, Ready, Remove, SelectorExists, SelectorFilter, SelectorFind, Traverse) {
+  function (Arr, Dragger, Option, Water, CellLookup, Spanning, Aq, TableOperation, Yeco, Lookup, Bars, TargetMutation, Attr, Css, DomEvent, Element, Insert, Node, Ready, SelectorExists, SelectorFilter, SelectorFind) {
     return function () {
       var subject = Element.fromHtml(
         '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
@@ -90,11 +82,6 @@ define(
         if (Node.name(event.target()) === 'td') return;
         console.log(event.target().dom());
       });
-
-
-      var dragger = BoxDragging();
-      dragger.connect();
-      dragger.assign(subject);
 
       var mutation = TargetMutation();
       var resizing = Dragger.transform(mutation, {});

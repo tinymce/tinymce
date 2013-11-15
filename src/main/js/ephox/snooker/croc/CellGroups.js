@@ -4,40 +4,11 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
-    'ephox.snooker.croc.CellLookup',
     'ephox.snooker.croc.CellType'
   ],
 
-  function (Arr, Fun, CellLookup, CellType) {
-
-    var column = function (model, colId) {
-      var r = [];
-      var data = model.data();
-      // TODO: Get rid of the for loop
-      for (var i = 0; i < model.rows(); i++) {
-        // Give this an API so that it can return option.
-        var position = CellLookup.key(i, colId);
-        console.log('position: ', position);
-        var cell = data[position];
-        if (cell !== undefined) {
-          var current = cell.colspan() > 1 ?
-            CellType.partial(cell, colId - cell.column()) : CellType.whole(cell);
-          r.push(current);
-        }
-      }
-      return r;
-    };
-
-    var insertAfterCol = function (input, colId) {
-      var model = CellLookup.model(input);
-      return input;
-    };
-
-    var row = function (model, rowId) {
-
-    };
-
-    var hackColumn = function (model, colId) {
+  function (Arr, Fun, CellType) {
+    var columnContext = function (model, colId) {
       /* Return a list of before, on, after */
       var r = [];
       var all = model.all();
@@ -64,10 +35,7 @@ define(
     };
 
     return {
-      column: column,
-      row: row,
-      insertAfterCol: insertAfterCol,
-      hackColumn: hackColumn
+      columnContext: columnContext
     };
   }
 );

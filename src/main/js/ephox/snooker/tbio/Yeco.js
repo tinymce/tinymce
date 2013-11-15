@@ -40,7 +40,7 @@ define(
       });
 
       return cell.map(function (td) {
-        var details = CellGroups.hackColumn(model, td.column());
+        var details = CellGroups.columnContext(model, td.column());
         return Arr.map(details, function (detail) {
           var before = detail.before();
           var after = detail.after();
