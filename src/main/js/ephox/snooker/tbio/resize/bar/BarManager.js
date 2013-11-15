@@ -4,6 +4,7 @@ define(
   [
     'ephox.dragster.api.Dragger',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.porkbun.Event',
     'ephox.porkbun.Events',
     'ephox.snooker.tbio.resize.bar.Bars',
@@ -13,13 +14,16 @@ define(
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Node',
-    'ephox.sugar.api.SelectorExists'
+    'ephox.sugar.api.SelectorExists',
+    'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Dragger, Fun, Event, Events, Bars, TargetMutation, Attr, Css, DomEvent, Element, Node, SelectorExists) {
-    return function (container, table) {
+  function (Dragger, Fun, Option, Event, Events, Bars, TargetMutation, Attr, Css, DomEvent, Element, Node, SelectorExists, SelectorFind) {
+    return function (container) {
       var mutation = TargetMutation();
       var resizing = Dragger.transform(mutation, {});
+
+      var hoverTable = Option.none();
       
       mutation.events.drag.bind(function (event) {
         var column = Attr.get(event.target(), 'data-column');
@@ -35,13 +39,17 @@ define(
 
       resizing.events.stop.bind(function (event) {
         mutation.get().each(function (target) {
-          var column = Attr.get(target, 'data-column');
-          if (column !== undefined) events.trigger.adjustWidth(table, target, parseInt(column, 10));
-          else {
-            var row = Attr.get(target, 'data-row');
-            if (row !== undefined) events.trigger.adjustHeight(table, target, parseInt(row, 10));
-          }
-          Bars.refresh(container, table);
+          console.log('target: ', target.dom());
+          hoverTable.each(function (table) {
+            console.log('table: ', table.dom());
+            var column = Attr.get(target, 'data-column');
+            if (column !== undefined) events.trigger.adjustWidth(table, target, parseInt(column, 10));
+            else {
+              var row = Attr.get(target, 'data-row');
+              if (row !== undefined) events.trigger.adjustHeight(table, target, parseInt(row, 10));
+            }
+            Bars.refresh(container, table);
+          });
         });
       });
 
@@ -64,7 +72,8 @@ define(
 
       DomEvent.bind(container, 'mouseover', function (event) {
         if (Node.name(event.target()) === 'table' || SelectorExists.ancestor(event.target(), 'table')) {
-          Bars.show(container);
+          hoverTable = Node.name(event.target()) === 'table' ? Option.some(event.target()) : SelectorFind.ancestor(event.target(), 'table');
+          Bars.refresh(container, hoverTable.getOrDie());
         }
       });
 
@@ -79,7 +88,9 @@ define(
         event.raw().preventDefault();
       });
 
-      Bars.refresh(container, table);
+      var refresh = function (tbl) {
+        Bars.refresh(container, tbl);
+      };
 
       var events = Events.create({
         adjustWidth: Event(['table', 'bar', 'column']),
@@ -88,6 +99,7 @@ define(
 
       return {
         destroy: Fun.identity,
+        refresh: refresh,
         on: resizing.on,
         off: resizing.off,
         events: events.registry

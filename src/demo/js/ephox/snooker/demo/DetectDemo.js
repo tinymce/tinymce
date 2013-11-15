@@ -55,14 +55,17 @@ define(
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
       Insert.append(ephoxUi, subject);
 
-      var manager = BarManager(ephoxUi, subject);
+      var manager = BarManager(ephoxUi);
       manager.events.adjustWidth.bind(function (event) {
-        Adjustments.adjustWidths(subject, event.bar(), event.column());
+        console.log('adjusting width');
+        Adjustments.adjustWidths(event.table(), event.bar(), event.column());
       });
       manager.events.adjustHeight.bind(function (event) {
-        Adjustments.adjustHeights(subject, event.bar(), event.row());
+        Adjustments.adjustHeights(event.table(), event.bar(), event.row());
       });
       manager.on();
+
+      // manager.refresh(subject);
 
       // For firefox.
       Ready.execute(function () {
