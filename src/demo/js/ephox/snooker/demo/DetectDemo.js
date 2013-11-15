@@ -222,39 +222,55 @@ define(
       Insert.append(afterButton, Element.fromText('>>'));
       Insert.append(ephoxUi, afterButton);
 
-      var getIndex = function (elem) {
-        return Traverse.parent(elem).map(function (parent) {
-          var children = Traverse.children(parent);
-          return Arr.findIndex(children, function (child) {
-            return Compare.eq(child, elem);
-          });
-        });
-      };
+      var beforeButton = Element.fromTag('button');
+      Insert.append(beforeButton, Element.fromText('<<'));
+      Insert.append(ephoxUi, beforeButton);
 
-      var getRowIndex = function (cell) {
-        return SelectorFind.ancestor(cell, 'tr').bind(getIndex);
-      };
+      var deleteButton = Element.fromTag('button');
+      Insert.append(deleteButton, Element.fromText('X'));
+      Insert.append(ephoxUi, deleteButton);
 
-      DomEvent.bind(afterButton, 'click', function (event) {
+      var detection = function () {
         var selection = window.getSelection();
         if (selection.rangeCount > 0) {
           var range = selection.getRangeAt(0);
           var start = Element.fromDom(range.startContainer);
-          var cell = Arr.contains([ 'td', 'th' ], Node.name(start)) ? Option.some(start) : SelectorFind.ancestor(start, 'th,td');
-          cell.each(function (c) {
-
-            TableOperation.run(ephoxUi, subject, c, function (information, gridpos) {
-              return Yeco.insertAfter(information, gridpos.column(), gridpos.row(), function (prev) {
-                var td = Element.fromTag('td');
-                if (prev.colspan() === 1) Css.set(td, 'width', Css.get(prev.id(), 'width'));
-                if (prev.rowspan() === 1) Css.set(td, 'height', Css.get(prev.id(), 'height'));
-                return Spanning(td, 1, 1);
-              });
-            });
-          });
+          return Arr.contains([ 'td', 'th' ], Node.name(start)) ? Option.some(start) : SelectorFind.ancestor(start, 'th,td');
+        } else {
+          return Option.none();
         }
+      };
+
+      var newCell = function (prev) {
+        var td = Element.fromTag('td');
+        if (prev.colspan() === 1) Css.set(td, 'width', Css.get(prev.id(), 'width'));
+        if (prev.rowspan() === 1) Css.set(td, 'height', Css.get(prev.id(), 'height'));
+        return Spanning(td, 1, 1);
+      };
+
+      DomEvent.bind(afterButton, 'click', function (event) {
+        detection().each(function (cell) {
+          TableOperation.run(ephoxUi, subject, cell, function (information, gridpos) {
+            return Yeco.insertAfter(information, gridpos.column(), gridpos.row(), newCell);
+          });
+        });
       });
 
+      DomEvent.bind(beforeButton, 'click', function (event) {
+        detection().each(function (cell) {
+          TableOperation.run(ephoxUi, subject, cell, function (information, gridpos) {
+            return Yeco.insertBefore(information, gridpos.column(), gridpos.row(), newCell);
+          });
+        });
+      });
+
+      DomEvent.bind(deleteButton, 'click', function (event) {
+        detection().each(function (cell) {
+          TableOperation.run(ephoxUi, subject, cell, function (information, gridpos) {
+            return Yeco.erase(information, gridpos.column(), gridpos.row());
+          });
+        });
+      });
     };
   }
 );

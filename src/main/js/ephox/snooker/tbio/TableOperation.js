@@ -60,7 +60,7 @@ define(
 
     var adjustWidths = function (information) {
       var widths = Lookup.widths(information);
-      var numbers = Arr.map(ws, function (x) {
+      var numbers = Arr.map(widths, function (x) {
         return parseInt(x, 10);
       });
 
