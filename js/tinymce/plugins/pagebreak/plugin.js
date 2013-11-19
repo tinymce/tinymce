@@ -20,7 +20,28 @@ tinymce.PluginManager.add('pagebreak', function(editor) {
 
 	// Register commands
 	editor.addCommand('mcePageBreak', function() {
-		editor.execCommand('mceInsertContent', 0, pb);
+		var generateCode = function(pb, current){
+			var parent = current && current.parentNode || editor.selection.getNode();
+			var parentNode = parent.nodeName.toLowerCase();
+			
+			if (parentNode == 'body'){
+				return pb;
+			}else{
+				pb = generateCode(pb, parent);
+				var attrs = ' ';
+				var attributes = parent.attributes;
+				
+				for (var i=0; i < attributes.length; i++){
+					var item = attributes.item(i);
+					attrs = attrs + item.nodeName.toLowerCase() + '="' + item.nodeValue + '" ';
+				}
+				pb = '</' + parentNode + '>' + pb + '<' + parentNode + attrs + '>';
+				
+				return pb;
+			}
+		};
+		
+		editor.execCommand('mceInsertRawHTML', 0, generateCode(pb));
 	});
 
 	// Register buttons
