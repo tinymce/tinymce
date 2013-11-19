@@ -33,7 +33,7 @@ define(
         width: w,
         'background-color': '#555',
         opacity: '0.00',
-        cursor: 'w-resize'
+        cursor: 'ew-resize'
       });
 
       Attr.set(blocker, 'data-column', column);
