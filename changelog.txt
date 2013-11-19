@@ -24,6 +24,7 @@ Version 4.0.11 (2013-11-xx)
 	Fixed so the template_popup_width/template_popup_height option works properly in the template plugin.
 	Fixed so the languages parameter for AddOnManager.requireLangPack works the same way as for 3.x.
 	Fixed so the autosave plugin uses the current page path, query string and editor id as it's default prefix.
+	Fixed so the fullpage plugin adds/removes any link style sheets to the current iframe document.
 Version 4.0.10 (2013-10-28)
 	Added new forced_root_block_attrs option that allows you to specify attributes for the root block.
 	Fixed bug where the custom resize handles didn't work properly on IE 11.
