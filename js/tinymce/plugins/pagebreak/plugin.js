@@ -11,16 +11,22 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('pagebreak', function(editor) {
-	var cls = 'mce-pagebreak', sep = editor.getParam('pagebreak_separator', '<!-- pagebreak -->'), pbRE;
-	var pb = '<img src="' + tinymce.Env.transparentSrc + '" class="' + cls + '" data-mce-resize="false" />';
+	var pageBreakClass = 'mce-pagebreak', separatorHtml = editor.getParam('pagebreak_separator', '<!-- pagebreak -->');
 
-	pbRE = new RegExp(sep.replace(/[\?\.\*\[\]\(\)\{\}\+\^\$\:]/g, function(a) {
+	var pageBreakSeparatorRegExp = new RegExp(separatorHtml.replace(/[\?\.\*\[\]\(\)\{\}\+\^\$\:]/g, function(a) {
 		return '\\' + a;
 	}), 'gi');
 
+	var pageBreakPlaceHolderHtml = '<img src="' + tinymce.Env.transparentSrc + '" class="' +
+		pageBreakClass + '" data-mce-resize="false" />';
+
 	// Register commands
 	editor.addCommand('mcePageBreak', function() {
-		editor.execCommand('mceInsertContent', 0, pb);
+		if (editor.settings.pagebreak_split_block) {
+			editor.insertContent('<p>' + pageBreakPlaceHolderHtml + '</p>');
+		} else {
+			editor.insertContent(pageBreakPlaceHolderHtml);
+		}
 	});
 
 	// Register buttons
@@ -37,7 +43,7 @@ tinymce.PluginManager.add('pagebreak', function(editor) {
 	});
 
 	editor.on('ResolveName', function(e) {
-		if (e.target.nodeName == 'IMG' && editor.dom.hasClass(e.target, cls)) {
+		if (e.target.nodeName == 'IMG' && editor.dom.hasClass(e.target, pageBreakClass)) {
 			e.name = 'pagebreak';
 		}
 	});
@@ -45,13 +51,13 @@ tinymce.PluginManager.add('pagebreak', function(editor) {
 	editor.on('click', function(e) {
 		e = e.target;
 
-		if (e.nodeName === 'IMG' && editor.dom.hasClass(e, cls)) {
+		if (e.nodeName === 'IMG' && editor.dom.hasClass(e, pageBreakClass)) {
 			editor.selection.select(e);
 		}
 	});
 
 	editor.on('BeforeSetContent', function(e) {
-		e.content = e.content.replace(pbRE, pb);
+		e.content = e.content.replace(pageBreakSeparatorRegExp, pageBreakPlaceHolderHtml);
 	});
 
 	editor.on('PreInit', function() {
@@ -62,8 +68,18 @@ tinymce.PluginManager.add('pagebreak', function(editor) {
 				node = nodes[i];
 				className = node.attr('class');
 				if (className && className.indexOf('mce-pagebreak') !== -1) {
+					// Replace parent block node if pagebreak_split_block is enabled
+					var parentNode = node.parent;
+					if (editor.schema.getBlockElements()[parentNode.name] && editor.settings.pagebreak_split_block) {
+						parentNode.type = 3;
+						parentNode.value = separatorHtml;
+						parentNode.raw = true;
+						node.remove();
+						continue;
+					}
+
 					node.type = 3;
-					node.value = sep;
+					node.value = separatorHtml;
 					node.raw = true;
 				}
 			}
