@@ -993,6 +993,7 @@ define("tinymce/util/Quirks", [
 			if (Env.iOS) {
 				selectionChangeNodeChanged();
 				restoreFocusOnKeyDown();
+				bodyHeight();
 			} else {
 				selectAll();
 			}
