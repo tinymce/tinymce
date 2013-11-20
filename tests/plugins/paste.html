@@ -143,6 +143,31 @@ test("Paste Word table", function() {
 	equal(editor.getContent().replace(/[\r\n]+/g, ''), '<table><tbody><tr><td><p>Cell 1</p></td><td><p>Cell 2</p></td></tr><tr><td><p>Cell 3</p></td><td><p>Cell 4</p></td></tr></tbody></table><p>&nbsp;</p>');
 });
 
+test("Paste Word links", function() {
+	editor.setContent('');
+	editor.execCommand('mceInsertClipboardContent', false, {
+		content: (
+			'<p class="MsoNormal">' +
+				'<a href="file:///C:/somelocation/filename.doc#_Toc238571849">1</a>' +
+				'<a href="#_Toc238571849">2</a>' +
+				'<a name="Toc238571849">3</a>' +
+				'<a href="http://www.tinymce.com/someurl">4</a>' +
+				'<a>5</a>' +
+			'</p>'
+		)
+	});
+
+	equal(trimContent(editor.getContent()), (
+		'<p>' +
+			'<a href="#_Toc238571849">1</a>' +
+			'<a href="#_Toc238571849">2</a>' +
+			'<a name="Toc238571849"></a>3' +
+			'<a href="http://www.tinymce.com/someurl">4</a>' +
+			'5' +
+		'</p>'
+	));
+});
+
 test("Paste Word retain styles", function() {
 	var rng = editor.dom.createRng();
 
