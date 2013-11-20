@@ -132,12 +132,13 @@ tinymce.PluginManager.add('importcss', function(editor) {
 			e.control.items().remove();
 		}
 
-		var groups = settings.importcss_groups;
-		if (groups) {
-			for (var i = 0; i < groups.length; i++) {
-				groups[i].filter = compileFilter(groups[i].filter);
-			}
-		}
+		// Setup new groups collection by cloning the configured one
+		var groups = [];
+		tinymce.each(settings.importcss_groups, function(group) {
+			group = tinymce.extend({}, group);
+			group.filter = compileFilter(group.filter);
+			groups.push(group);
+		});
 
 		each(getSelectors(editor.getDoc(), compileFilter(settings.importcss_file_filter)), function(selector) {
 			if (selector.indexOf('.mce-') === -1) {
