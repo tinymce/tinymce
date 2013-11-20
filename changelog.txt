@@ -1,4 +1,4 @@
-Version 4.0.11 (2013-11-xx)
+Version 4.0.11 (2013-11-20)
 	Added the possibility to update button icon after it's been rendered.
 	Added new autosave_prefix option allows you to set the prefix for the local storage keys.
 	Added new pagebreak_split_block option to make it easier to split block elements with a page break.
