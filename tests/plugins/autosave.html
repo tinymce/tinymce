@@ -25,6 +25,7 @@ test("isEmpty true", function() {
 	ok(editor.plugins.autosave.isEmpty('   '));
 	ok(editor.plugins.autosave.isEmpty('\t\t\t'));
 
+	ok(editor.plugins.autosave.isEmpty('<p id="x"></p>'));
 	ok(editor.plugins.autosave.isEmpty('<p></p>'));
 	ok(editor.plugins.autosave.isEmpty('<p> </p>'));
 	ok(editor.plugins.autosave.isEmpty('<p>\t</p>'));

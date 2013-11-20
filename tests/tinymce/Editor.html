@@ -58,8 +58,6 @@ test('Event: beforeExecCommand', function() {
 });
 
 test('urls - relativeURLs', function() {
-	expect(5);
-
 	editor.settings.relative_urls = true;
 	editor.documentBaseURI = new tinymce.util.URI('http://www.site.com/dirA/dirB/dirC/');
 
@@ -77,11 +75,15 @@ test('urls - relativeURLs', function() {
 
 	editor.setContent('<a href="http://www.somesite.com/test/file.htm">test</a>');
 	equal(editor.getContent(), '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>');
+
+	editor.setContent('<a href="//www.site.com/test/file.htm">test</a>');
+	equal(editor.getContent(), '<p><a href="../../../test/file.htm">test</a></p>');
+
+	editor.setContent('<a href="//www.somesite.com/test/file.htm">test</a>');
+	equal(editor.getContent(), '<p><a href="//www.somesite.com/test/file.htm">test</a></p>');
 });
 
 test('urls - absoluteURLs', function() {
-	expect(8);
-
 	editor.settings.relative_urls = false;
 	editor.settings.remove_script_host = true;
 	editor.documentBaseURI = new tinymce.util.URI('http://www.site.com/dirA/dirB/dirC/');
@@ -112,6 +114,12 @@ test('urls - absoluteURLs', function() {
 
 	editor.setContent('<a href="http://www.somesite.com/test/file.htm">test</a>');
 	equal(editor.getContent(), '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>');
+
+	editor.setContent('<a href="//www.site.com/test/file.htm">test</a>');
+	equal(editor.getContent(), '<p><a href="//www.site.com/test/file.htm">test</a></p>');
+
+	editor.setContent('<a href="//www.somesite.com/test/file.htm">test</a>');
+	equal(editor.getContent(), '<p><a href="//www.somesite.com/test/file.htm">test</a></p>');
 });
 
 test('WebKit Serialization range bug', function() {

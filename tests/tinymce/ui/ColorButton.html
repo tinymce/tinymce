@@ -38,19 +38,19 @@ function createColorButton(settings) {
 test("colorbutton text, size default", function() {
 	var colorButton = createColorButton({text: 'X'});
 
-	nearlyEqualRects(rect(colorButton), [0, 0, 34, 30], 4);
+	nearlyEqualRects(rect(colorButton), [0, 0, 42, 30], 4);
 });
 
 test("colorbutton text, size large", function() {
 	var colorButton = createColorButton({text: 'X', size: 'large'});
 
-	nearlyEqualRects(rect(colorButton), [0, 0, 41, 39], 4);
+	nearlyEqualRects(rect(colorButton), [0, 0, 49, 39], 4);
 });
 
 test("colorbutton text, size small", function() {
 	var colorButton = createColorButton({text: 'X', size: 'small'});
 
-	nearlyEqualRects(rect(colorButton), [0, 0, 19, 23], 4);
+	nearlyEqualRects(rect(colorButton), [0, 0, 34, 23], 4);
 });
 
 test("colorbutton text, width 100, height 100", function() {
@@ -63,19 +63,19 @@ test("colorbutton text, width 100, height 100", function() {
 test("colorbutton icon, size default", function() {
 	var colorButton = createColorButton({icon: 'test'});
 
-	nearlyEqualRects(rect(colorButton), [0, 0, 40, 30], 4);
+	nearlyEqualRects(rect(colorButton), [0, 0, 50, 30], 4);
 });
 
 test("colorbutton icon, size small", function() {
 	var colorButton = createColorButton({icon: 'test', size: 'small'});
 
-	nearlyEqualRects(rect(colorButton), [0, 0, 28, 24], 4);
+	nearlyEqualRects(rect(colorButton), [0, 0, 43, 24], 4);
 });
 
 test("colorbutton icon, size large", function() {
 	var colorButton = createColorButton({icon: 'test', size: 'large'});
 
-	nearlyEqualRects(rect(colorButton), [0, 0, 44, 40], 4);
+	nearlyEqualRects(rect(colorButton), [0, 0, 54, 40], 4);
 });
 
 test("colorbutton icon, width 100, height 100", function() {
@@ -88,19 +88,19 @@ test("colorbutton icon, width 100, height 100", function() {
 test("colorbutton text & icon, size default", function() {
 	var colorButton = createColorButton({text: 'X', icon: 'test'});
 
-	nearlyEqualRects(rect(colorButton), [0, 0, 52, 30], 4);
+	nearlyEqualRects(rect(colorButton), [0, 0, 62, 30], 4);
 });
 
 test("colorbutton text & icon, size large", function() {
 	var colorButton = createColorButton({text: 'X', icon: 'test', size: 'large'});
 
-	nearlyEqualRects(rect(colorButton), [0, 0, 59, 40], 4);
+	nearlyEqualRects(rect(colorButton), [0, 0, 69, 40], 4);
 });
 
 test("colorbutton text & icon, size small", function() {
 	var colorButton = createColorButton({text: 'X', icon: 'test', size: 'small'});
 
-	nearlyEqualRects(rect(colorButton), [0, 0, 38, 24], 4);
+	nearlyEqualRects(rect(colorButton), [0, 0, 53, 24], 4);
 });
 
 test("colorbutton text & icon, width 100, height 100", function() {
@@ -114,12 +114,10 @@ test("colorbutton click event", function() {
 	var colorButton, clicks = {};
 
 	colorButton = createColorButton({text: 'X', onclick: function() {clicks.a = 'a';}});
-	colorButton.on('click', function() {clicks.b = 'b';});
 	colorButton.renderTo(document.getElementById('view'));
-	colorButton.on('click', function() {clicks.c = 'c';});
-	colorButton.fire('click');
+	colorButton.fire('click', {target: colorButton.getEl()});
 
-	deepEqual(clicks, {a: 'a', b: 'b', c: 'c'});
+	deepEqual(clicks, {a: 'a'});
 });
 </script>
 </head>

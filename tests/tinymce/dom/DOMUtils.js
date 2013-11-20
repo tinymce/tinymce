@@ -243,7 +243,7 @@
 		equal(DOM.encode('abc<>"&\'\u00e5\u00e4\u00f6'), 'abc&lt;&gt;&quot;&amp;&#39;\u00e5\u00e4\u00f6');
 	});
 
-	test('setGetAttrib', 14, function() {
+	test('setGetAttrib', 16, function() {
 		var dom;
 
 		DOM.add(document.body, 'div', {id : 'test'});
@@ -257,6 +257,10 @@
 		equal(DOM.getAttrib('test', 'abc'), '');
 
 		DOM.setAttribs('test', {'class' : '123', title : 'abc'});
+		equal(DOM.getAttrib('test', 'class'), '123');
+		equal(DOM.getAttrib('test', 'title'), 'abc');
+
+		DOM.setAttribs('test');
 		equal(DOM.getAttrib('test', 'class'), '123');
 		equal(DOM.getAttrib('test', 'title'), 'abc');
 

@@ -73,7 +73,7 @@ test("set", function() {
 });
 
 test("filter", function() {
-	equal(panel.find('button').filter(':first').length, 4);
+	equal(panel.find('button').filter('*:first').length, 4);
 	equal(panel.find('button').filter('buttongroup button').length, 9);
 	equal(panel.find('button').filter('*').length, 12);
 	equal(panel.find('button').filter('nomatch').length, 0);
@@ -231,11 +231,6 @@ test("active", function() {
 	ok(panel.find('button#button2').active(true).active());
 
 	panel.find('button#button2').active(false);
-});
-
-test("width/height", function() {
-	equal(panel.find('button#button2').width(100).width(), 100);
-	equal(panel.find('button#button2').height(200).height(), 200);
 });
 
 test("name", function() {

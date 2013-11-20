@@ -12,6 +12,7 @@
 
 tinymce.PluginManager.add('fullscreen', function(editor) {
 	var fullscreenState = false, DOM = tinymce.DOM, iframeWidth, iframeHeight, resizeHandler;
+	var containerWidth, containerHeight;
 
 	if (editor.settings.inline) {
 		return;
@@ -37,7 +38,7 @@ tinymce.PluginManager.add('fullscreen', function(editor) {
 	}
 
 	function toggleFullscreen() {
-		var body = document.body, documentElement = document.documentElement;
+		var body = document.body, documentElement = document.documentElement, editorContainerStyle;
 		var editorContainer, iframe, iframeStyle;
 
 		function resize() {
@@ -47,6 +48,7 @@ tinymce.PluginManager.add('fullscreen', function(editor) {
 		fullscreenState = !fullscreenState;
 
 		editorContainer = editor.getContainer();
+		editorContainerStyle = editorContainer.style;
 		iframe = editor.getContentAreaContainer().firstChild;
 		iframeStyle = iframe.style;
 
@@ -54,6 +56,9 @@ tinymce.PluginManager.add('fullscreen', function(editor) {
 			iframeWidth = iframeStyle.width;
 			iframeHeight = iframeStyle.height;
 			iframeStyle.width = iframeStyle.height = '100%';
+			containerWidth = editorContainerStyle.width;
+			containerHeight = editorContainerStyle.height;
+			editorContainerStyle.width = editorContainerStyle.height = '';
 
 			DOM.addClass(body, 'mce-fullscreen');
 			DOM.addClass(documentElement, 'mce-fullscreen');
@@ -65,6 +70,14 @@ tinymce.PluginManager.add('fullscreen', function(editor) {
 		} else {
 			iframeStyle.width = iframeWidth;
 			iframeStyle.height = iframeHeight;
+
+			if (containerWidth) {
+				editorContainerStyle.width = containerWidth;
+			}
+
+			if (containerHeight) {
+				editorContainerStyle.height = containerHeight;
+			}
 
 			DOM.removeClass(body, 'mce-fullscreen');
 			DOM.removeClass(documentElement, 'mce-fullscreen');

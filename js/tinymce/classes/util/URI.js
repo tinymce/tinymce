@@ -41,15 +41,21 @@ define("tinymce/util/URI", [
 			return;
 		}
 
+		var isProtocolRelative = url.indexOf('//') === 0;
+
 		// Absolute path with no host, fake host and protocol
-		if (url.indexOf('/') === 0 && url.indexOf('//') !== 0) {
+		if (url.indexOf('/') === 0 && !isProtocolRelative) {
 			url = (settings.base_uri ? settings.base_uri.protocol || 'http' : 'http') + '://mce_host' + url;
 		}
 
 		// Relative path http:// or protocol relative //path
 		if (!/^[\w\-]*:?\/\//.test(url)) {
 			base_url = settings.base_uri ? settings.base_uri.path : new URI(location.href).directory;
-			url = ((settings.base_uri && settings.base_uri.protocol) || 'http') + '://mce_host' + self.toAbsPath(base_url, url);
+			if (settings.base_uri.protocol === "") {
+				url = '//mce_host' + self.toAbsPath(base_url, url);
+			} else {
+				url = ((settings.base_uri && settings.base_uri.protocol) || 'http') + '://mce_host' + self.toAbsPath(base_url, url);
+			}
 		}
 
 		// Parse URL (Credits goes to Steave, http://blog.stevenlevithan.com/archives/parseuri)
@@ -88,6 +94,10 @@ define("tinymce/util/URI", [
 			}
 
 			self.source = '';
+		}
+
+		if (isProtocolRelative) {
+			self.protocol = '';
 		}
 
 		//t.path = t.path || '/';
@@ -135,14 +145,15 @@ define("tinymce/util/URI", [
 			uri = new URI(uri, {base_uri: self});
 
 			// Not on same domain/port or protocol
-			if ((uri.host != 'mce_host' && self.host != uri.host && uri.host) || self.port != uri.port || self.protocol != uri.protocol) {
+			if ((uri.host != 'mce_host' && self.host != uri.host && uri.host) || self.port != uri.port ||
+				(self.protocol != uri.protocol && uri.protocol !== "")) {
 				return uri.getURI();
 			}
 
 			var tu = self.getURI(), uu = uri.getURI();
 
 			// Allow usage of the base_uri when relative_urls = true
-			if(tu == uu || (tu.charAt(tu.length - 1) == "/" && tu.substr(0, tu.length - 1) == uu)) {
+			if (tu == uu || (tu.charAt(tu.length - 1) == "/" && tu.substr(0, tu.length - 1) == uu)) {
 				return tu;
 			}
 
@@ -314,6 +325,8 @@ define("tinymce/util/URI", [
 				if (!noProtoHost) {
 					if (self.protocol) {
 						s += self.protocol + '://';
+					} else {
+						s += '//';
 					}
 
 					if (self.userInfo) {

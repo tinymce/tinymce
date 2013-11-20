@@ -171,7 +171,7 @@ define("tinymce/ui/FlexLayout", [
 				ctrl = maxSizeItems[i];
 				ctrlLayoutRect = ctrl.layoutRect();
 				maxSize = ctrlLayoutRect[maxSizeName];
-				size = ctrlLayoutRect[minSizeName] + Math.ceil(ctrlLayoutRect.flex * ratio);
+				size = ctrlLayoutRect[minSizeName] + ctrlLayoutRect.flex * ratio;
 
 				if (size > maxSize) {
 					availableSpace -= (ctrlLayoutRect[maxSizeName] - ctrlLayoutRect[minSizeName]);
@@ -230,7 +230,7 @@ define("tinymce/ui/FlexLayout", [
 
 				// Calculate new size based on flex
 				if (ctrlLayoutRect.flex > 0) {
-					size += Math.ceil(ctrlLayoutRect.flex * ratio);
+					size += ctrlLayoutRect.flex * ratio;
 				}
 
 				rect[sizeName] = size;

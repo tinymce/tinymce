@@ -58,9 +58,14 @@ define("tinymce/AddOnManager", [
 		 *
 		 * @method requireLangPack
 		 * @param {String} name Short name of the add-on.
+		 * @param {String} languages Optional comma or space separated list of languages to check if it matches the name.
 		 */
-		requireLangPack: function(name) {
+		requireLangPack: function(name, languages) {
 			if (AddOnManager.language && AddOnManager.languageLoad !== false) {
+				if (languages && new RegExp('([, ]|\\b)' + AddOnManager.language + '([, ]|\\b)').test(languages) === false) {
+					return;
+				}
+
 				ScriptLoader.ScriptLoader.add(this.urls[name] + '/langs/' + AddOnManager.language + '.js');
 			}
 		},

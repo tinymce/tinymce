@@ -24,6 +24,16 @@ function normalizeHTML(html) {
 	return html.replace(/\s/g, '');
 }
 
+function hasLink(href) {
+	var links = editor.getDoc().getElementsByTagName('link');
+
+	for (var i = 0; i < links.length; i++) {
+		if (links[i].href.indexOf('/' + href) != -1) {
+			return true;
+		}
+	}
+}
+
 test('Keep header/footer intact', function() {
 	expect(2);
 
@@ -74,6 +84,38 @@ test('fullpage_hide_in_source_view: false', function() {
 	editor.settings.fullpage_hide_in_source_view = true;
 	editor.setContent('<html><body><p>1</p></body></html>');
 	equal(editor.getContent({source_view: true}), '<p>1</p>');
+});
+
+test('fullpage link elements', function() {
+	editor.setContent('<html><head><link rel="stylesheet" href="a.css"><link rel="something"></head><body><p>c</p></body></html>');
+	equal(editor.getContent(), '<html><head><link rel="stylesheet" href="a.css"><link rel="something"></head><body>\n<p>c</p>\n</body></html>');
+});
+
+test('fullpage add/remove stylesheets', function() {
+	editor.setContent('<html><head><link rel="stylesheet" href="a.css"></head><body><p>c</p></body></html>');
+	ok(hasLink("a.css"));
+	ok(!hasLink("b.css"));
+	ok(!hasLink("c.css"));
+
+	editor.setContent('<html><head><link rel="stylesheet" href="a.css"><link rel="stylesheet" href="b.css"></head><body><p>c</p></body></html>');
+	ok(hasLink("a.css"));
+	ok(hasLink("b.css"));
+	ok(!hasLink("c.css"));
+
+	editor.setContent('<html><head><link rel="stylesheet" href="a.css"><link rel="stylesheet" href="b.css"><link rel="stylesheet" href="c.css"></head><body><p>c</p></body></html>');
+	ok(hasLink("a.css"));
+	ok(hasLink("b.css"));
+	ok(hasLink("c.css"));
+
+	editor.setContent('<html><head><link rel="stylesheet" href="a.css"></head><body><p>c</p></body></html>');
+	ok(hasLink("a.css"));
+	ok(!hasLink("b.css"));
+	ok(!hasLink("c.css"));
+
+	editor.setContent('<html><head></head><body><p>c</p></body></html>');
+	ok(!hasLink("a.css"));
+	ok(!hasLink("b.css"));
+	ok(!hasLink("c.css"));
 });
 
 tinymce.init({

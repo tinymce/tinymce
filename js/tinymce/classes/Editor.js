@@ -521,9 +521,6 @@ define("tinymce/Editor", [
 			// Create all plugins
 			each(settings.plugins.replace(/\-/g, '').split(/[ ,]/), initPlugin);
 
-			// Enables users to override the control factory
-			self.fire('BeforeRenderUI');
-
 			// Measure box
 			if (settings.render_ui && self.theme) {
 				self.orgDisplay = elm.style.display;
@@ -1033,7 +1030,7 @@ define("tinymce/Editor", [
 					body = self.getBody();
 
 					// Check for setActive since it doesn't scroll to the element
-					if (body.setActive) {
+					if (body.setActive && Env.ie < 11) {
 						body.setActive();
 					} else {
 						body.focus();
@@ -1537,7 +1534,7 @@ define("tinymce/Editor", [
 			var self = this, doc = self.getDoc();
 
 			// Fixed bug where IE has a blinking cursor left from the editor
-			if (ie && doc) {
+			if (ie && doc && !self.inline) {
 				doc.execCommand('SelectAll');
 			}
 
@@ -1708,13 +1705,10 @@ define("tinymce/Editor", [
 
 				// Check if forcedRootBlock is configured and that the block is a valid child of the body
 				if (forcedRootBlockName && self.schema.isValidChild(body.nodeName.toLowerCase(), forcedRootBlockName.toLowerCase())) {
-					if (ie && ie < 11) {
-						// IE renders BR elements in blocks so lets just add an empty block
-						content = '<' + forcedRootBlockName + '></' + forcedRootBlockName + '>';
-					} else {
-						content = '<' + forcedRootBlockName + '><br data-mce-bogus="1"></' + forcedRootBlockName + '>';
-					}
-				} else if (!ie) {
+					// Padd with bogus BR elements on modern browsers and IE 7 and 8 since they don't render empty P tags properly
+					content = ie && ie < 11 ? '' : '<br data-mce-bogus="1">';
+					content = self.dom.createHTML(forcedRootBlockName, self.settings.forced_root_block_attrs, content);
+				} else if (!ie || ie < 11) {
 					// We need to add a BR when forced_root_block is disabled on non IE browsers to place the caret
 					content = '<br data-mce-bogus="1">';
 				}
@@ -1744,22 +1738,6 @@ define("tinymce/Editor", [
 				/*if (!self.settings.content_editable || document.activeElement === self.getBody()) {
 					self.selection.normalize();
 				}*/
-			}
-
-			// Move selection to start of body if it's a after init setContent call
-			// This prevents IE 7/8 from moving focus to empty editors
-			if (!args.initial) {
-				var dom = self.dom, selection = self.selection;
-
-				// IE can't have the caret inside <body><p>|</p></body> unless we do some magic
-				if (ie < 11 && dom.isBlock(body.firstChild) && dom.isEmpty(body.firstChild)) {
-					body.firstChild.appendChild(dom.doc.createTextNode('\u00a0'));
-					selection.select(body.firstChild, true);
-					dom.remove(body.firstChild.lastChild);
-				} else {
-					selection.select(body, true);
-					selection.collapse(true);
-				}
 			}
 
 			return args.content;
@@ -2038,7 +2016,7 @@ define("tinymce/Editor", [
 
 				// Fixed bug where IE has a blinking cursor left from the editor
 				var doc = self.getDoc();
-				if (ie && doc) {
+				if (ie && doc && !self.inline) {
 					doc.execCommand('SelectAll');
 				}
 

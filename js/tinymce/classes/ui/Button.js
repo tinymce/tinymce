@@ -62,6 +62,43 @@ define("tinymce/ui/Button", [
 		},
 
 		/**
+		 * Sets/gets the current button icon.
+		 *
+		 * @method icon
+		 * @param {String} [icon] New icon identifier.
+		 * @return {String|tinymce.ui.MenuButton} Current icon or current MenuButton instance.
+		 */
+		icon: function(icon) {
+			var self = this, prefix = self.classPrefix;
+
+			if (typeof(icon) == 'undefined') {
+				return self.settings.icon;
+			}
+
+			self.settings.icon = icon;
+			icon = icon ? prefix + 'ico ' + prefix + 'i-' + self.settings.icon : '';
+
+			if (self._rendered) {
+				var btnElm = self.getEl().firstChild, iconElm = btnElm.getElementsByTagName('i')[0];
+
+				if (icon) {
+					if (!iconElm || iconElm != btnElm.firstChild) {
+						iconElm = document.createElement('i');
+						btnElm.insertBefore(iconElm, btnElm.firstChild);
+					}
+
+					iconElm.className = icon;
+				} else if (iconElm) {
+					btnElm.removeChild(iconElm);
+				}
+
+				self.text(self._text); // Set text again to fix whitespace between icon + text
+			}
+
+			return self;
+		},
+
+		/**
 		 * Repaints the button for example after it's been resizes by a layout engine.
 		 *
 		 * @method repaint

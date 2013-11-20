@@ -31,7 +31,7 @@ define("tinymce/ui/SplitButton", [
 		 * @method repaint
 		 */
 		repaint: function() {
-			var self = this, elm = self.getEl(), rect = self.layoutRect(), mainButtonElm, menuButtonElm, btnStyle;
+			var self = this, elm = self.getEl(), rect = self.layoutRect(), mainButtonElm, menuButtonElm;
 
 			self._super();
 
@@ -46,12 +46,6 @@ define("tinymce/ui/SplitButton", [
 			DomUtils.css(menuButtonElm, {
 				height: rect.h - 2
 			});
-
-			btnStyle = mainButtonElm.firstChild.style;
-			btnStyle.width = btnStyle.height = "100%";
-
-			btnStyle = menuButtonElm.firstChild.style;
-			btnStyle.width = btnStyle.height = "100%";
 
 			return self;
 		},

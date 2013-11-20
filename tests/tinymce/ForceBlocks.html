@@ -18,6 +18,7 @@ module("tinymce.ForceBlocks", {
 	autostart: false,
 	setup: function() {
 		editor.settings.forced_root_block = 'p';
+		editor.settings.forced_root_block_attrs = null;
 	}
 });
 
@@ -36,6 +37,15 @@ test('Wrap single root text node in P', function() {
 	setSelection('body', 2);
 	pressArrowKey();
 	equal(cleanHtml(editor.getBody().innerHTML), '<p>abcd</p>');
+	equal(editor.selection.getNode().nodeName, 'P');
+});
+
+test('Wrap single root text node in P with attrs', function() {
+	editor.settings.forced_root_block_attrs = {"class": "class1"};
+	editor.getBody().innerHTML = 'abcd';
+	setSelection('body', 2);
+	pressArrowKey();
+	equal(editor.getContent(), '<p class="class1">abcd</p>');
 	equal(editor.selection.getNode().nodeName, 'P');
 });
 

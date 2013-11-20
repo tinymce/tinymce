@@ -9,7 +9,7 @@
  */
 
 /**
- * This class contains various environment constrants like browser versions etc.
+ * This class contains various environment constants like browser versions etc.
  * Normally you don't want to sniff specific browser versions but sometimes you have
  * to when it's impossible to feature detect. So use this with care.
  *
@@ -26,7 +26,7 @@ define("tinymce/Env", [], function() {
 	ie = ie && /MSIE (\w+)\./.exec(userAgent)[1];
 	ie11 = userAgent.indexOf('Trident/') != -1 && (userAgent.indexOf('rv:') != -1 || nav.appName.indexOf('Netscape') != -1) ? 11 : false;
 	ie = ie || ie11;
-	gecko = !webkit && /Gecko/.test(userAgent);
+	gecko = !webkit && !ie11 && /Gecko/.test(userAgent);
 	mac = userAgent.indexOf('Mac') != -1;
 	iDevice = /(iPad|iPhone)/.test(userAgent);
 

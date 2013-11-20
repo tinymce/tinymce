@@ -128,11 +128,7 @@ define("tinymce/tableplugin/Plugin", [
 
 						if (!captionElm && data.caption) {
 							captionElm = dom.create('caption');
-
-							if (!Env.ie) {
-								captionElm.innerHTML = '<br data-mce-bogus="1"/>';
-							}
-
+							captionElm.innerHTML = !Env.ie ? '<br data-mce-bogus="1"/>' : '\u00a0';
 							tableElm.insertBefore(captionElm, tableElm.firstChild);
 						}
 

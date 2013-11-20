@@ -431,16 +431,24 @@ define("tinymce/dom/ControlSelection", [
 
 				if (Env.ie >= 11) {
 					// TODO: Drag/drop doesn't work
-					editor.on('mouseup mousedown', function(e) {
-						if (e.target.nodeName == 'IMG' || editor.selection.getNode().nodeName == 'IMG') {
+					editor.on('mouseup', function(e) {
+						var nodeName = e.target.nodeName;
+
+						if (/^(TABLE|IMG|HR)$/.test(nodeName)) {
+							editor.selection.select(e.target, nodeName == 'TABLE');
+							editor.nodeChanged();
+						}
+					});
+
+					editor.dom.bind(editor.getBody(), 'mscontrolselect', function(e) {
+						if (/^(TABLE|IMG|HR)$/.test(e.target.nodeName)) {
 							e.preventDefault();
-							editor.selection.select(e.target);
 						}
 					});
 				}
 			}
 
-			editor.on('nodechange mousedown ResizeEditor', updateResizeRect);
+			editor.on('nodechange mousedown mouseup ResizeEditor', updateResizeRect);
 
 			// Update resize rect while typing in a table
 			editor.on('keydown keyup', function(e) {

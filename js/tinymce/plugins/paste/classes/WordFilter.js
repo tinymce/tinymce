@@ -219,7 +219,7 @@ define("tinymce/pasteplugin/WordFilter", [
 				var validElements = settings.paste_word_valid_elements;
 				if (!validElements) {
 					validElements = '@[style],-strong/b,-em/i,-span,-p,-ol,-ul,-li,-h1,-h2,-h3,-h4,-h5,-h6,' +
-						'-table,-tr,-td[colspan|rowspan],-th,-thead,-tfoot,-tbody,-a[!href],sub,sup,strike,br';
+						'-table,-tr,-td[colspan|rowspan],-th,-thead,-tfoot,-tbody,-a[href|name],sub,sup,strike,br';
 				}
 
 				// Setup strict schema
@@ -230,7 +230,6 @@ define("tinymce/pasteplugin/WordFilter", [
 				// Parse HTML into DOM structure
 				var domParser = new DomParser({}, schema);
 
-				// Filte element style attributes
 				domParser.addAttributeFilter('style', function(nodes) {
 					var i = nodes.length, node;
 
@@ -245,6 +244,31 @@ define("tinymce/pasteplugin/WordFilter", [
 					}
 				});
 
+				domParser.addNodeFilter('a', function(nodes) {
+					var i = nodes.length, node, href, name;
+
+					while (i--) {
+						node = nodes[i];
+						href = node.attr('href');
+						name = node.attr('name');
+
+						if (href && href.indexOf('file://') === 0) {
+							href = href.split('#')[1];
+							if (href) {
+								href = '#' + href;
+							}
+						}
+
+						if (!href && !name) {
+							node.unwrap();
+						} else {
+							node.attr({
+								href: href,
+								name: name
+							});
+						}
+					}
+				});
 				// Parse into DOM structure
 				var rootNode = domParser.parse(content);
 

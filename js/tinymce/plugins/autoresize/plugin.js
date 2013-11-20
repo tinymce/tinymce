@@ -68,6 +68,22 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 		}
 	}
 
+	/**
+	 * Calls the resize x times in 100ms intervals. We can't wait for load events since
+	 * the CSS files might load async.
+	 */
+	function wait(times, interval, callback) {
+		setTimeout(function() {
+			resize({});
+
+			if (times--) {
+				wait(times, interval, callback);
+			} else if (callback) {
+				callback();
+			}
+		}, interval);
+	}
+
 	// Define minimum height
 	settings.autoresize_min_height = parseInt(editor.getParam('autoresize_min_height', editor.getElement().offsetHeight), 10);
 
@@ -83,7 +99,13 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 	editor.on("change setcontent paste keyup", resize);
 
 	if (editor.getParam('autoresize_on_init', true)) {
-		editor.on('load', resize);
+		editor.on('init', function() {
+			// Hit it 20 times in 100 ms intervals
+			wait(20, 100, function() {
+				// Hit it 5 times in 1 sec intervals
+				wait(5, 1000);
+			});
+		});
 	}
 
 	// Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand('mceExample');

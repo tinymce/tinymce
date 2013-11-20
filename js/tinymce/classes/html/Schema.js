@@ -680,6 +680,12 @@ define("tinymce/html/Schema", [
 			each(split('span'), function(name) {
 				elements[name].removeEmptyAttrs = true;
 			});
+
+			// Remove these by default
+			// TODO: Reenable in 4.1
+			/*each(split('script style'), function(name) {
+				delete elements[name];
+			});*/
 		} else {
 			setValidElements(settings.valid_elements);
 		}

@@ -91,6 +91,15 @@ define("tinymce/EnterKey", [
 					}
 				}
 
+				// Old IE versions doesn't properly render blocks with br elements in them
+				// For example <p><br></p> wont be rendered correctly in a contentEditable area
+				// until you remove the br producing <p></p>
+				if (Env.ie && Env.ie < 9 && parentBlock && parentBlock.firstChild) {
+					if (parentBlock.firstChild == parentBlock.lastChild && parentBlock.firstChild.tagName == 'BR') {
+						dom.remove(parentBlock.firstChild);
+					}
+				}
+
 				if (root.nodeName == 'LI') {
 					var firstChild = firstNonWhiteSpaceNodeSibling(root.firstChild);
 
@@ -153,12 +162,26 @@ define("tinymce/EnterKey", [
 				selection.scrollIntoView(root);
 			}
 
+			function setForcedBlockAttrs(node) {
+				var forcedRootBlockName = settings.forced_root_block;
+
+				if (forcedRootBlockName && forcedRootBlockName.toLowerCase() === node.tagName.toLowerCase()) {
+					dom.setAttribs(node, settings.forced_root_block_attrs);
+				}
+			}
+
 			// Creates a new block element by cloning the current one or creating a new one if the name is specified
 			// This function will also copy any text formatting from the parent block and add it to the new one
 			function createNewBlock(name) {
 				var node = container, block, clonedNode, caretNode;
 
-				block = name || parentBlockName == "TABLE" ? dom.create(name || newBlockName) : parentBlock.cloneNode(false);
+				if (name || parentBlockName == "TABLE") {
+					block = dom.create(name || newBlockName);
+					setForcedBlockAttrs(block);
+				} else {
+					block = parentBlock.cloneNode(false);
+				}
+
 				caretNode = block;
 
 				// Clone any parent styles
@@ -264,6 +287,7 @@ define("tinymce/EnterKey", [
 
 					if (!parentBlock.hasChildNodes()) {
 						newBlock = dom.create(blockName);
+						setForcedBlockAttrs(newBlock);
 						parentBlock.appendChild(newBlock);
 						rng.setStart(newBlock, 0);
 						rng.setEnd(newBlock, 0);
@@ -284,6 +308,7 @@ define("tinymce/EnterKey", [
 
 					if (startNode && schema.isValidChild(rootBlockName, blockName.toLowerCase())) {
 						newBlock = dom.create(blockName);
+						setForcedBlockAttrs(newBlock);
 						startNode.parentNode.insertBefore(newBlock, startNode);
 
 						// Start wrapping until we hit a block

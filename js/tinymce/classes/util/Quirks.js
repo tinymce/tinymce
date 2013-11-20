@@ -177,6 +177,16 @@ define("tinymce/util/Quirks", [
 			}
 
 			function allContentsSelected(rng) {
+				if (!rng.setStart) {
+					if (rng.item) {
+						return false;
+					}
+
+					var bodyRng = rng.duplicate();
+					bodyRng.moveToElementText(editor.getBody());
+					return RangeUtils.compareRanges(rng, bodyRng);
+				}
+
 				var selection = serializeRng(rng);
 
 				var allRng = dom.createRng();
@@ -187,19 +197,15 @@ define("tinymce/util/Quirks", [
 			}
 
 			editor.on('keydown', function(e) {
-				var keyCode = e.keyCode, isCollapsed;
+				var keyCode = e.keyCode, isCollapsed, body;
 
 				// Empty the editor if it's needed for example backspace at <p><b>|</b></p>
 				if (!isDefaultPrevented(e) && (keyCode == DELETE || keyCode == BACKSPACE)) {
 					isCollapsed = editor.selection.isCollapsed();
+					body = editor.getBody();
 
 					// Selection is collapsed but the editor isn't empty
-					if (isCollapsed && !dom.isEmpty(editor.getBody())) {
-						return;
-					}
-
-					// IE deletes all contents correctly when everything is selected
-					if (isIE && !isCollapsed) {
+					if (isCollapsed && !dom.isEmpty(body)) {
 						return;
 					}
 
@@ -211,7 +217,13 @@ define("tinymce/util/Quirks", [
 					// Manually empty the editor
 					e.preventDefault();
 					editor.setContent('');
-					editor.selection.setCursorLocation(editor.getBody(), 0);
+
+					if (body.firstChild && dom.isBlock(body.firstChild)) {
+						editor.selection.setCursorLocation(body.firstChild, 0);
+					} else {
+						editor.selection.setCursorLocation(body, 0);
+					}
+
 					editor.nodeChanged();
 				}
 			});
@@ -219,6 +231,7 @@ define("tinymce/util/Quirks", [
 
 		/**
 		 * WebKit doesn't select all the nodes in the body when you press Ctrl+A.
+		 * IE selects more than the contents <body>[<p>a</p>]</body> instead of <body><p>[a]</p]</body> see bug #6438
 		 * This selects the whole body so that backspace/delete logic will delete everything
 		 */
 		function selectAll() {
@@ -947,6 +960,21 @@ define("tinymce/util/Quirks", [
 			}
 		}
 
+		/**
+		 * Firefox on Mac OS will move the browser back to the previous page if you press CMD+Left arrow.
+		 * You might then loose all your work so we need to block that behavior and replace it with our own.
+		 */
+		function blockCmdArrowNavigation() {
+			if (Env.mac) {
+				editor.on('keydown', function(e) {
+					if (VK.metaKeyPressed(e) && (e.keyCode == 37 || e.keyCode == 39)) {
+						e.preventDefault();
+						editor.selection.getSel().modify('move', e.keyCode == 37 ? 'backward' : 'forward', 'word');
+					}
+				});
+			}
+		}
+
 		// All browsers
 		disableBackspaceIntoATable();
 		removeBlockQuoteOnBackSpace();
@@ -965,6 +993,7 @@ define("tinymce/util/Quirks", [
 			if (Env.iOS) {
 				selectionChangeNodeChanged();
 				restoreFocusOnKeyDown();
+				bodyHeight();
 			} else {
 				selectAll();
 			}
@@ -986,6 +1015,10 @@ define("tinymce/util/Quirks", [
 			bodyHeight();
 		}
 
+		if (Env.ie) {
+			selectAll();
+		}
+
 		// Gecko
 		if (isGecko) {
 			removeHrOnBackspace();
@@ -995,6 +1028,7 @@ define("tinymce/util/Quirks", [
 			addBrAfterLastLinks();
 			removeGhostSelection();
 			showBrokenImageIcon();
+			blockCmdArrowNavigation();
 		}
 	};
 });
