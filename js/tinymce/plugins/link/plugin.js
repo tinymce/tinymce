@@ -149,7 +149,7 @@ tinymce.PluginManager.add('link', function(editor) {
 
 		data.text = initialText = anchorElm ? (anchorElm.innerText || anchorElm.textContent) : selection.getContent({format: 'text'});
 		data.href = anchorElm ? dom.getAttrib(anchorElm, 'href') : '';
-		data.target = anchorElm ? dom.getAttrib(anchorElm, 'target') : '';
+		data.target = anchorElm ? dom.getAttrib(anchorElm, 'target') : (editor.settings.default_link_target || '');
 		data.rel = anchorElm ? dom.getAttrib(anchorElm, 'rel') : '';
 
 		if (onlyText) {
