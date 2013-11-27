@@ -126,12 +126,37 @@ test("Resize complex object", function() {
 	);
 });
 
+test("Media script elements", function() {
+	editor.setContent(
+		'<script src="http://media1.tinymce.com/123456"></sc'+'ript>' +
+		'<script src="http://media2.tinymce.com/123456"></sc'+'ript>'
+	);
+
+	equal(editor.getBody().getElementsByTagName('img')[0].className, 'mce-object mce-object-script');
+	equal(editor.getBody().getElementsByTagName('img')[0].width, 300);
+	equal(editor.getBody().getElementsByTagName('img')[0].height, 150);
+	equal(editor.getBody().getElementsByTagName('img')[1].className, 'mce-object mce-object-script');
+	equal(editor.getBody().getElementsByTagName('img')[1].width, 100);
+	equal(editor.getBody().getElementsByTagName('img')[1].height, 200);
+
+	equal(editor.getContent(),
+		'<p>\n' +
+			'<script src="http://media1.tinymce.com/123456" type="text/javascript"></sc'+'ript>\n' +
+			'<script src="http://media2.tinymce.com/123456" type="text/javascript"></sc'+'ript>\n' +
+		'</p>'
+	);
+});
+
 tinymce.init({
 	mode: "exact",
 	elements: "elm1",
 	add_unload_trigger: false,
 	document_base_url: '/tinymce/tinymce/trunk/tests/',
 	plugins: 'media',
+	media_scripts: [
+		{filter: 'http://media1.tinymce.com'},
+		{filter: 'http://media2.tinymce.com', width: 100, height: 200}
+	],
 	init_instance_callback: function(ed) {
 		editor = ed;
 		QUnit.start();
