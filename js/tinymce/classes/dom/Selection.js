@@ -1063,6 +1063,7 @@ define("tinymce/dom/Selection", [
 
 			function normalizeEndPoint(start) {
 				var container, offset, walker, dom = self.dom, body = dom.getRoot(), node, nonEmptyElementsMap, nodeName;
+				var directionLeft;
 
 				function hasBrBeforeAfter(node, left) {
 					var walker = new TreeWalker(node, dom.getParent(node.parentNode, dom.isBlock) || body);
@@ -1115,6 +1116,11 @@ define("tinymce/dom/Selection", [
 				container = rng[(start ? 'start' : 'end') + 'Container'];
 				offset = rng[(start ? 'start' : 'end') + 'Offset'];
 				nonEmptyElementsMap = dom.schema.getNonEmptyElements();
+				directionLeft = start;
+
+				if (container.nodeType == 1 && offset > container.childNodes.length - 1) {
+					directionLeft = false;
+				}
 
 				// If the container is a document move it to the body element
 				if (container.nodeType === 9) {
@@ -1125,7 +1131,7 @@ define("tinymce/dom/Selection", [
 				// If the container is body try move it into the closest text node or position
 				if (container === body) {
 					// If start is before/after a image, table etc
-					if (start) {
+					if (directionLeft) {
 						node = container.childNodes[offset > 0 ? offset - 1 : 0];
 						if (node) {
 							nodeName = node.nodeName.toLowerCase();
@@ -1137,7 +1143,7 @@ define("tinymce/dom/Selection", [
 
 					// Resolve the index
 					if (container.hasChildNodes()) {
-						offset = Math.min(!start && offset > 0 ? offset - 1 : offset, container.childNodes.length - 1);
+						offset = Math.min(!directionLeft && offset > 0 ? offset - 1 : offset, container.childNodes.length - 1);
 						container = container.childNodes[offset];
 						offset = 0;
 
@@ -1150,7 +1156,7 @@ define("tinymce/dom/Selection", [
 							do {
 								// Found a text node use that position
 								if (node.nodeType === 3 && node.nodeValue.length > 0) {
-									offset = start ? 0 : node.nodeValue.length;
+									offset = directionLeft ? 0 : node.nodeValue.length;
 									container = node;
 									normalized = true;
 									break;
@@ -1162,14 +1168,14 @@ define("tinymce/dom/Selection", [
 									container = node.parentNode;
 
 									// Put caret after image when moving the end point
-									if (node.nodeName ==  "IMG" && !start) {
+									if (node.nodeName ==  "IMG" && !directionLeft) {
 										offset++;
 									}
 
 									normalized = true;
 									break;
 								}
-							} while ((node = (start ? walker.next() : walker.prev())));
+							} while ((node = (directionLeft ? walker.next() : walker.prev())));
 						}
 					}
 				}
@@ -1200,7 +1206,7 @@ define("tinymce/dom/Selection", [
 				// Lean the start of the selection right if possible
 				// So this: x[<b>x]</b>
 				// Becomes: x<b>[x]</b>
-				if (start && !collapsed && container.nodeType === 3 && offset === container.nodeValue.length) {
+				if (directionLeft && !collapsed && container.nodeType === 3 && offset === container.nodeValue.length) {
 					findTextNodeRelative(false);
 				}
 
