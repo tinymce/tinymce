@@ -284,5 +284,10 @@ define("tinymce/pasteplugin/Clipboard", [
 				}
 			});
 		});
+
+		// Fix for #6504 we need to remove the paste bin on IE if the user paste in a file
+		editor.on('PreProcess', function() {
+			editor.dom.remove(editor.dom.get('mcepastebin'));
+		});
 	};
 });
