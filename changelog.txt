@@ -1,4 +1,6 @@
 Version 4.0.12 (2013-11-xx)
+	Fixed bug where div block formats in inline mode where applied to all paragraphs within the editor.
+	Fixed bug where div blocks where marked as an active format in inline mode when doing non collapsed selections.
 	Fixed bug where the importcss plugin wouldn't append styles if the style_formats option was configured.
 	Fixed bug where the importcss plugin would import styles into groups multiple times for different format menus.
 Version 4.0.11 (2013-11-20)

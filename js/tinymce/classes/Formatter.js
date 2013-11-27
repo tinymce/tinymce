@@ -1024,6 +1024,10 @@ define("tinymce/Formatter", [
 			function matchParents(node) {
 				var root = dom.getRoot();
 
+				if (node === root) {
+					return false;
+				}
+
 				// Find first node with similar format settings
 				node = dom.getParent(node, function(node) {
 					return node.parentNode === root || !!matchNode(node, name, vars, true);
@@ -1538,7 +1542,7 @@ define("tinymce/Formatter", [
 
 				// Expand to block of similar type
 				if (!format[0].wrapper) {
-					node = dom.getParent(container, format[0].block);
+					node = dom.getParent(container, format[0].block, root);
 				}
 
 				// Expand to first wrappable block element or any block element
