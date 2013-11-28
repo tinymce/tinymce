@@ -121,7 +121,7 @@ tinymce.PluginManager.add('link', function(editor) {
 				linkListCtrl.value(editor.convertURL(this.value(), 'href'));
 			}
 
-			if (!initialText && data.text.length === 0) {
+			if (!initialText && data.text.length === 0 && onlyText) {
 				this.parent().parent().find('#text')[0].value(this.value());
 			}
 		}
@@ -130,19 +130,23 @@ tinymce.PluginManager.add('link', function(editor) {
 		anchorElm = dom.getParent(selectedElm, 'a[href]');
 
 		var onlyText = true;
-		if (anchorElm) {
+		if (/</.test(selection.getContent())) {
+			onlyText = false;
+		} else if (anchorElm){
 			var nodes = anchorElm.childNodes, i;
-			for (i = nodes.length - 1; i >= 0; i--) {
-				if (nodes[i].nodeType != 3) {
-					onlyText = false;
-					break;
+			if (nodes.length == 0) {
+				onlyText = false;
+			} else {
+				for (i = nodes.length - 1; i >= 0; i--) {
+					if (nodes[i].nodeType != 3) {
+						onlyText = false;
+						break;
+					}
 				}
 			}
-			data.text = initialText = anchorElm.innerText || anchorElm.textContent;
-		} else {
-			data.text = initialText = selection.getContent({format: 'text'});
 		}
 
+		data.text = initialText = anchorElm ? (anchorElm.innerText || anchorElm.textContent) : selection.getContent({format: 'text'});
 		data.href = anchorElm ? dom.getAttrib(anchorElm, 'href') : '';
 		data.target = anchorElm ? dom.getAttrib(anchorElm, 'target') : '';
 		data.rel = anchorElm ? dom.getAttrib(anchorElm, 'rel') : '';
@@ -221,34 +225,34 @@ tinymce.PluginManager.add('link', function(editor) {
 				}
 
 				function insertLink() {
-					if (data.text != initialText) {
-						if (anchorElm) {
-							editor.focus();
+					if (anchorElm) {
+						editor.focus();
 
-							if (onlyText) {
-								anchorElm.innerText = data.text;
-							}
+						if (onlyText && data.text != initialText) {
+							anchorElm.innerText = data.text;
+						}
 
-							dom.setAttribs(anchorElm, {
-								href: href,
-								target: data.target ? data.target : null,
-								rel: data.rel ? data.rel : null
-							});
+						dom.setAttribs(anchorElm, {
+							href: href,
+							target: data.target ? data.target : null,
+							rel: data.rel ? data.rel : null
+						});
 
-							selection.select(anchorElm);
-						} else {
+						selection.select(anchorElm);
+					} else {
+						if (onlyText) {
 							editor.insertContent(dom.createHTML('a', {
 								href: href,
 								target: data.target ? data.target : null,
 								rel: data.rel ? data.rel : null
 							}, data.text));
+						} else {
+							editor.execCommand('mceInsertLink', false, {
+								href: href,
+								target: data.target,
+								rel: data.rel ? data.rel : null
+							});
 						}
-					} else {
-						editor.execCommand('mceInsertLink', false, {
-							href: href,
-							target: data.target,
-							rel: data.rel ? data.rel : null
-						});
 					}
 				}
 
