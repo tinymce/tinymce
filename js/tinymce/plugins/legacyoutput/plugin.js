@@ -26,6 +26,7 @@
 		editor.on('init', function() {
 			var alignElements = 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img',
 				fontSizes = tinymce.explode(editor.settings.font_size_style_values),
+				lineHeights = tinymce.explode(editor.settings.line_height_style_values),
 				schema = editor.schema;
 
 			// Override some internal formats to produce legacy elements and attributes
@@ -63,6 +64,14 @@
 					attributes: {
 						size: function(vars) {
 							return tinymce.inArray(fontSizes, vars.value) + 1;
+						}
+					}
+				},
+				lineheight: {
+					inline: 'font',
+					attributes: {
+						size: function(vars) {
+							return tinymce.inArray(lineHeights, vars.value) + 1;
 						}
 					}
 				},
