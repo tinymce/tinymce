@@ -134,7 +134,7 @@ tinymce.PluginManager.add('link', function(editor) {
 			onlyText = false;
 		} else if (anchorElm){
 			var nodes = anchorElm.childNodes, i;
-			if (nodes.length == 0) {
+			if (nodes.length === 0) {
 				onlyText = false;
 			} else {
 				for (i = nodes.length - 1; i >= 0; i--) {
