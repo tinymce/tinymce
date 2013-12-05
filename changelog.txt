@@ -1,6 +1,7 @@
 Version 4.0.12 (2013-11-xx)
 	Added new media_scripts option to the media plugin. This makes it possible to embed videos using script elements.
 	Fixed bug where WebKit/Blink would produce random span elements and styles when deleting contents inside the editor.
+	Fixed bug where WebKit/Blink would produce span elements out of link elements when they where removed by the unlink command.
 	Fixed bug where div block formats in inline mode where applied to all paragraphs within the editor.
 	Fixed bug where div blocks where marked as an active format in inline mode when doing non collapsed selections.
 	Fixed bug where the importcss plugin wouldn't append styles if the style_formats option was configured.
