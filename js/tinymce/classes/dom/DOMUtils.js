@@ -1488,12 +1488,18 @@ define("tinymce/dom/DOMUtils", [
 		 */
 		setText: function(elm, text) {
 			var self = this;
+			var s = self.settings;
 			var textAttr = self.hasInnerText ? "innerText" : "textContent";
 
 			return self.run(elm, function(elm) {
 				// Only set text on elements
 				if (elm.nodeType == 1) {
+					var originalValue = self.getText(elm);
 					elm[textAttr] = text;
+
+					if (originalValue != text && s.onSetText) {
+						s.onSetText({element: elm, content: elm.innerHTML});
+					}
 				}
 			});
 		},
