@@ -556,7 +556,7 @@ define("tinymce/ui/FormatControls", [
 
 			return {
 				type: 'listbox',
-				text: {raw: blocks[0][0]},
+				text: blocks[0][0],
 				values: items,
 				fixedWidth: true,
 				onselect: toggleFormat,
