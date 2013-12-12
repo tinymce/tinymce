@@ -7,10 +7,12 @@ define(
     'ephox.snooker.croc.CellLookup',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Css',
-    'ephox.sugar.api.SelectorFilter'
+    'ephox.sugar.api.Location',
+    'ephox.sugar.api.SelectorFilter',
+    'ephox.sugar.api.Width'
   ],
 
-  function (Arr, Fun, CellLookup, Attr, Css, SelectorFilter) {
+  function (Arr, Fun, CellLookup, Attr, Css, Location, SelectorFilter, Width) {
     /*
      * Takes a DOM table and returns a list of list of (id, colspan, rowspan) structs
      */
@@ -44,7 +46,28 @@ define(
           var cell = data[key];
           if (cell && cell.colspan() === 1 && ws[i] === undefined) {
             ws[i] = Css.get(cell.id(), 'width');
+            console.log('Location: ', Location.relative(cell.id()).left());
+            console.log('ws: ', ws[i], Width.getInner(cell.id()), Width.getOuter(cell.id()));
           }
+        });
+      }
+
+      return ws;
+    };
+
+
+    // Takes a list of list of (id, colspan, rowspan) structs and returns the a list of cells representing columns.
+    var columns = function (info) {
+      var model = CellLookup.model(info);
+      var ws = [];
+
+      // find the width of the 1st column 
+      var data = model.data();
+      for (var i = 0; i < model.columns(); i++) {
+        Arr.find(info, function (_, r) {
+          var key = CellLookup.key(r, i);
+          var cell = data[key];
+          if (cell && cell.colspan() === 1 && ws[i] === undefined) ws[i] = cell.id();
         });
       }
 
@@ -75,7 +98,8 @@ define(
     return {
       information: information,
       widths: widths,
-      heights: heights
+      heights: heights,
+      columns: columns
     };
   }
 );

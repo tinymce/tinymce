@@ -41,7 +41,7 @@ define(
           r.push(f(i));
         }
         return r;
-      }
+      };
 
       var element = function() {
         return table;

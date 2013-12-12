@@ -56,7 +56,7 @@ define(
         Css.set(v.id(), direction.style(), v[direction.style()]() + 'px');
       });
 
-      var total = Arr.fold(withAdjustment, function (b, a) { return b + a; }, 0);
+      var total = Arr.foldr(withAdjustment, function (b, a) { return b + a; }, 0);
       Css.set(table, direction.style(), total + 'px');
 
       Attr.remove(bar, direction.data());

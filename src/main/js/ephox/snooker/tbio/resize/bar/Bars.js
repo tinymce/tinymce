@@ -32,7 +32,7 @@ define(
         height: h,
         width: w,
         'background-color': '#555',
-        opacity: '0.00',
+        opacity: '0.0',
         cursor: 'ew-resize'
       });
 
@@ -50,7 +50,7 @@ define(
         height: h,
         width: w,
         'background-color': '#555',
-        opacity: '0.00',
+        opacity: '0.0',
         cursor: 's-resize'
       });
 
@@ -64,18 +64,19 @@ define(
       Arr.each(previous, Remove.remove);
 
       var input = Lookup.information(table);
-      var widths = Lookup.widths(input);
-      var heights = Lookup.heights(input);
-      console.log('heights: ', heights);
+      var cols = Lookup.columns(input);
 
       var position = Location.absolute(table);
-      console.log('position of table: ', table.dom(), position.left(), position.top());
-      var current = position.left();
-      for (var i = 0; i < widths.length; i++) {
-        current += parseInt(widths[i], 10) + 3;
-        var bar = createVert(i, current, position.top(), 10, Height.getOuter(table));
+     
+      Arr.each(cols.slice(1), function (cell, col) {
+        var pos = Location.absolute(cell);
+        var bar = createVert(col, pos.left(), position.top(), 3, Height.getOuter(table));
         Insert.append(container, bar);
-      }
+      });
+
+
+      var bar = createVert(cols.length - 1, Location.absolute(cols[cols.length - 1]).left() + Width.getOuter(cols[cols.length - 1]), position.top(), 3, Height.getOuter(table));
+      Insert.append(container, bar);
 
       // var hCurrent = position.top();
       // for (var j = 0; j < heights.length; j++) {
