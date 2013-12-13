@@ -12,6 +12,7 @@ define(
     var coords = Struct.immutable('x', 'y');
     var detail = Struct.immutable('element', 'rowspan', 'colspan');
     var extended = Struct.immutable('element', 'rowspan', 'colspan', 'row', 'column');
+    var context = Struct.immutable('before', 'on', 'after');
 
     return {
       dimensions: dimensions,
@@ -19,7 +20,8 @@ define(
       address: address,
       coords: coords,
       extended: extended,
-      detail: detail
+      detail: detail,
+      context: context
     };
   }
 );
