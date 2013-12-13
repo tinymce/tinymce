@@ -4,16 +4,19 @@ define(
   [
     'ephox.snooker.ready.lookup.TagLookup',
     'ephox.snooker.ready.model.DetailsList',
+    'ephox.snooker.ready.model.Warehouse',
     'ephox.snooker.ready.operate.Redraw',
     'ephox.snooker.ready.resize.Adjustments',
     'ephox.snooker.ready.resize.Bars'
   ],
 
-  function (TagLookup, DetailsList, Redraw, Adjustments, Bars) {
+  function (TagLookup, DetailsList, Warehouse, Redraw, Adjustments, Bars) {
     var run = function (container, table, cell, operation) {
       TagLookup.detect(cell).each(function (gridpos) {
-        var initial = DetailsList.fromTable(table);
-        var post = operation(initial, gridpos);
+        var list = DetailsList.fromTable(table);
+
+        var warehouse = Warehouse.generate(list);
+        var post = operation(warehouse, gridpos);
 
         Redraw.render(table, post);
         Adjustments.adjustTo(post);

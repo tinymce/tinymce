@@ -15,7 +15,7 @@ define(
     var minWidth = 10;
 
     var recalculate = function (warehouse, widths) {
-      var all = Arr.flatten(warehouse.all());
+      var all = Warehouse.justCells(warehouse);
       
       var total = function (start, end) {
         var r = 0;
@@ -42,11 +42,7 @@ define(
     };
 
     var getWarehouse = function (list) {
-      var rows = Arr.map(list, function (x) {
-        return x.cells();
-      });
-
-      return Warehouse.generate(rows);
+      return Warehouse.generate(list);
     };
 
     var adjust = function (table, delta, index, direction) {

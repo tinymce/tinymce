@@ -33,22 +33,23 @@ define(
       var r = [];
       var all = warehouse.all();
       return Arr.map(all, function (row) {
-        var index = Arr.findIndex(row, function (extended, i) {
+        var cellsInRow = row.cells();
+        var index = Arr.findIndex(cellsInRow, function (extended, i) {
           var start = extended.column();
           var end = extended.column() + extended.colspan() - 1;
           /* Find the FIRST cell which would span over this colId */
           return colId >= start && colId <= end;
         });
 
-        var before = Arr.filter(row, function (extended) {
+        var before = Arr.filter(cellsInRow, function (extended) {
           return extended.column() + extended.colspan() - 1 < colId;
         });
 
-        var after = Arr.filter(row, function (extended) {
+        var after = Arr.filter(cellsInRow, function (extended) {
           return extended.column() > colId;
         });
 
-        var onCell = Arr.find(row, function (extended) {
+        var onCell = Arr.find(cellsInRow, function (extended) {
           var start = extended.column();
           var end = extended.column() + extended.colspan() - 1;
           /* Find the FIRST cell which would span over this colId */
@@ -61,7 +62,8 @@ define(
         return {
           before: Fun.constant(before),
           after: Fun.constant(after),
-          on: Fun.constant(on)
+          on: Fun.constant(on),
+          row: row.element
         };
       });
     };

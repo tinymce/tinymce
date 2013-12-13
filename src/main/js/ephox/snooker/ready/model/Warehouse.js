@@ -32,7 +32,7 @@ define(
 
       Arr.each(list, function (details, r) {
         var currentRow = [];
-        Arr.each(details, function (detail, c) {
+        Arr.each(details.cells(), function (detail, c) {
           var start = 0;
 
           // If this spot has been taken by a previous rowspan, skip it.
@@ -57,7 +57,10 @@ define(
           currentRow.push(current);
         });
 
-        cells.push(currentRow);
+        cells.push({
+          row: details.row,
+          cells: Fun.constant(currentRow)
+        });
       });
 
       var grid = Structs.grid(maxRows, maxColumns);
@@ -69,9 +72,18 @@ define(
       };
     };
 
+    var justCells = function (warehouse) {
+      var rows = Arr.map(warehouse.all(), function (w) {
+        return w.cells();
+      });
+
+      return Arr.flatten(rows);
+    };
+
     return {
       generate: generate,
-      getAt: getAt
+      getAt: getAt,
+      justCells: justCells
     };
   }
 );

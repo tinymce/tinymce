@@ -30,10 +30,7 @@ define(
       clear(container, table);
 
       var list = DetailsList.fromTable(table);
-      var rows = Arr.map(list, function (x) {
-        return x.cells();
-      });
-      var warehouse = Warehouse.generate(rows);
+      var warehouse = Warehouse.generate(list);
       var cols = Blocks.columns(warehouse);
 
       var position = Location.absolute(table);

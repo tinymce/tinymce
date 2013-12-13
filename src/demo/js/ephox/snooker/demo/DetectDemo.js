@@ -4,6 +4,9 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.perhaps.Option',
+    'ephox.snooker.ready.data.Structs',
+    'ephox.snooker.ready.operate.Insertion',
+    'ephox.snooker.ready.operate.TableOperation',
     'ephox.snooker.ready.resize.Adjustments',
     'ephox.snooker.ready.resize.BarManager',
     'ephox.sugar.api.Css',
@@ -15,7 +18,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Option, Adjustments, BarManager, Css, DomEvent, Element, Insert, Node, Ready, SelectorFind) {
+  function (Arr, Option, Structs, Insertion, TableOperation, Adjustments, BarManager, Css, DomEvent, Element, Insert, Node, Ready, SelectorFind) {
     return function () {
       var subject = Element.fromHtml(
         '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
@@ -109,15 +112,15 @@ define(
 
       var newCell = function (prev) {
         var td = Element.fromTag('td');
-        if (prev.colspan() === 1) Css.set(td, 'width', Css.get(prev.id(), 'width'));
-        if (prev.rowspan() === 1) Css.set(td, 'height', Css.get(prev.id(), 'height'));
-        return Spanning(td, 1, 1);
+        if (prev.colspan() === 1) Css.set(td, 'width', Css.get(prev.element(), 'width'));
+        if (prev.rowspan() === 1) Css.set(td, 'height', Css.get(prev.element(), 'height'));
+        return Structs.detail(td, 1, 1);
       };
 
       DomEvent.bind(afterButton, 'click', function (event) {
         detection().each(function (cell) {
           TableOperation.run(ephoxUi, subject, cell, function (information, gridpos) {
-            return Yeco.insertAfter(information, gridpos.column(), gridpos.row(), newCell);
+            return Insertion.insertAfter(information, gridpos.row(), gridpos.column(), newCell);
           });
         });
       });
@@ -125,7 +128,7 @@ define(
       DomEvent.bind(beforeButton, 'click', function (event) {
         detection().each(function (cell) {
           TableOperation.run(ephoxUi, subject, cell, function (information, gridpos) {
-            return Yeco.insertBefore(information, gridpos.column(), gridpos.row(), newCell);
+            return Insertion.insertBefore(information, gridpos.row(), gridpos.column(), newCell);
           });
         });
       });
@@ -133,7 +136,7 @@ define(
       DomEvent.bind(deleteButton, 'click', function (event) {
         detection().each(function (cell) {
           TableOperation.run(ephoxUi, subject, cell, function (information, gridpos) {
-            return Yeco.erase(information, gridpos.column(), gridpos.row());
+            return Insertion.erase(information, gridpos.column(), gridpos.row());
           });
         });
       });
