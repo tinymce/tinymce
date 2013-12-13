@@ -5,12 +5,11 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.snooker.ready.data.CellType',
-    'ephox.snooker.ready.data.Structs',
     'ephox.snooker.ready.model.Warehouse',
     'ephox.snooker.ready.util.Util'
   ],
 
-  function (Arr, Fun, CellType, Structs, Warehouse, Util) {
+  function (Arr, Fun, CellType, Warehouse, Util) {
     var columns = function (warehouse) {
       var grid = warehouse.grid();
       var cols = Util.range(0, grid.columns());
