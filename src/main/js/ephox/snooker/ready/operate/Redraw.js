@@ -16,6 +16,7 @@ define(
       Remove.empty(tbody);
 
       var rows = Arr.map(list, function (row) {
+        console.log('row: ', row);
         var tr = row.element();
         Arr.each(row, function (cell) {
           Attr.set(cell.id(), 'colspan', cell.colspan());

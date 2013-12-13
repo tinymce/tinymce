@@ -58,7 +58,7 @@ define(
         });
 
         cells.push({
-          row: details.row,
+          element: details.element,
           cells: Fun.constant(currentRow)
         });
       });

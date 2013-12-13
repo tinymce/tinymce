@@ -6,11 +6,10 @@ define(
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.snooker.ready.lookup.Blocks',
-    'ephox.snooker.ready.model.Warehouse'
+    'ephox.snooker.ready.lookup.Blocks'
   ],
 
-  function (Arr, Merger, Fun, Option, Blocks, Warehouse) {
+  function (Arr, Merger, Fun, Option, Blocks) {
     var operate = function (warehouse, rowIndex, colIndex, operation) {
       /* 
          The process:
@@ -24,7 +23,7 @@ define(
       var cells = warehouse.all();
       console.log('cells: ', cells);
       var initial = Option.from(cells[rowIndex]).bind(function (row) {
-        return Option.from(row[colIndex]);
+        return Option.from(row.cells()[colIndex]);
       });
 
       return initial.map(function (start) {
@@ -33,9 +32,11 @@ define(
           var before = context.before();
           var after = context.after();
           var on = operation(context.on());
+
+          console.log('on: ', on);
           return {
             cells: Fun.constant(context.before().concat(on).concat(context.after())),
-            element: context.row().element
+            element: context.row
           };
         });
       }).getOrThunk(function () {

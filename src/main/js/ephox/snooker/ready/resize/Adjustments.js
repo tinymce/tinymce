@@ -73,7 +73,7 @@ define(
       var widths = getWidths(warehouse);
 
       // Set the width of each cell based on the column widths
-      var newSizes = recalculate(warehouse, newWidths);
+      var newSizes = recalculate(warehouse, widths);
       Arr.each(newSizes, function (cell) {
         Css.set(cell.element(), 'width', cell.width() + 'px');
       });

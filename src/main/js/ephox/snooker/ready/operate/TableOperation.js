@@ -16,6 +16,7 @@ define(
         var list = DetailsList.fromTable(table);
 
         var warehouse = Warehouse.generate(list);
+        console.log('post: ', warehouse.grid().rows(), warehouse.grid().columns());
         var post = operation(warehouse, gridpos);
 
         Redraw.render(table, post);
