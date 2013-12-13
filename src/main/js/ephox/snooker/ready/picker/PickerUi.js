@@ -9,6 +9,7 @@ define(
     'ephox.snooker.ready.data.Structs',
     'ephox.snooker.ready.lookup.TableLookup',
     'ephox.snooker.ready.picker.Redimension',
+    'ephox.snooker.ready.util.Util',
     'ephox.snooker.style.Styles',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Class',
@@ -20,7 +21,7 @@ define(
     'ephox.sugar.api.Remove'
   ],
 
-  function (Arr, Fun, Event, Events, Structs, TableLookup, Redimension, Styles, Attr, Class, Classes, DomEvent, Element, Insert, InsertAll, Remove) {
+  function (Arr, Fun, Event, Events, Structs, TableLookup, Redimension, Util, Styles, Attr, Class, Classes, DomEvent, Element, Insert, InsertAll, Remove) {
     return function (settings) {
       var events = Events.create({
         select: Event(['cols', 'rows', 'columnHeaders', 'rowHeaders'])
@@ -48,23 +49,15 @@ define(
         refresh();
       };
 
-      var repeat = function(repititions, f) {
-        var r = [];
-        for (var i = 0; i < repititions; i++) {
-          r.push(f(i));
-        }
-        return r;
-      };
-
       var refresh = function () {
         Remove.empty(tbody);
         //create a set of trs, then for each tr, insert numCols tds
-        var rows = repeat(size.height, function (r) {
+        var rows = Util.repeat(size.height, function (r) {
           return Element.fromTag('tr');
         });
 
         Arr.each(rows, function (row, rindex) {
-          var cells = repeat(size.width, function (cindex) {
+          var cells = Util.repeat(size.width, function (cindex) {
             var td = Element.fromTag('td');
             Class.add(td, Styles.resolve('table-picker-cell'));
             return td;
