@@ -15,21 +15,26 @@ define(
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.SelectorExists',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.sugar.api.SelectorFind',
+    'global!parseInt'
   ],
 
-  function (Dragger, Option, Event, Events, BarMutation, Bars, Styles, Attr, Class, Css, DomEvent, Node, SelectorExists, SelectorFind) {
+  function (Dragger, Option, Event, Events, BarMutation, Bars, Styles, Attr, Class, Css, DomEvent, Node, SelectorExists, SelectorFind, parseInt) {
     return function (container) {
       var mutation = BarMutation();
       var resizing = Dragger.transform(mutation, {});
 
       var hoverTable = Option.none();
+
+      var getInt = function (element, property) {
+        return parseInt(Css.get(element, property), 10);
+      };
       
       /* Repositoion the bar as the user drags */
       mutation.events.drag.bind(function (event) {
         var column = Attr.get(event.target(), 'data-column');
         if (column !== undefined) {
-          var current = parseInt(Css.get(event.target(), 'left'), 10);
+          var current = getInt(event.target(), 'left');
           Css.set(event.target(), 'left', current + event.xDelta() + 'px');
         }
       });
@@ -39,7 +44,11 @@ define(
         mutation.get().each(function (target) {
           hoverTable.each(function (table) {
             var column = Attr.get(target, 'data-column');
-            if (column !== undefined) events.trigger.adjustWidth(table, target, parseInt(column, 10));
+            var newX = getInt(target, 'left');
+            var oldX = parseInt(Attr.get(target, 'data-initial-left'), 10);
+            var delta = newX - oldX;
+            Attr.remove(target, 'data-initial-left');
+            if (column !== undefined) events.trigger.adjustWidth(table, delta, parseInt(column, 10));
             Bars.refresh(container, table);
           });
         });
@@ -89,7 +98,7 @@ define(
       };
 
       var events = Events.create({
-        adjustWidth: Event(['table', 'bar', 'column'])
+        adjustWidth: Event(['table', 'delta', 'column'])
       });
 
       return {
