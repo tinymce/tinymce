@@ -1,6 +1,12 @@
 test(
   'AdjustmentsTest',
 
+  {
+    'ephox.sugar.api.Css': '../../mock/ephox/sugar/api/Css',
+    'ephox.sugar.api.Attr': '../../mock/ephox/sugar/api/Attr',
+    'ephox.snooker.ready.model.DetailsList': '../../mock/ephox/snooker/ready/model/DetailsList'
+  },
+
   [
     'ephox.compass.Arr',
     'ephox.scullion.Struct',

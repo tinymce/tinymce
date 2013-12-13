@@ -6,10 +6,11 @@ define(
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.snooker.ready.lookup.Blocks'
+    'ephox.snooker.ready.lookup.Blocks',
+    'ephox.snooker.ready.model.Warehouse'
   ],
 
-  function (Arr, Merger, Fun, Option, Blocks) {
+  function (Arr, Merger, Fun, Option, Blocks, Warehouse) {
     var operate = function (warehouse, rowIndex, colIndex, operation) {
       /* 
          The process:
@@ -21,7 +22,6 @@ define(
        */
 
       var cells = warehouse.all();
-      console.log('cells: ', cells);
       var initial = Option.from(cells[rowIndex]).bind(function (row) {
         return Option.from(row.cells()[colIndex]);
       });
@@ -52,7 +52,7 @@ define(
       });
     };
 
-    var insertAfter = function (input, cx, cy, nu) {
+    var insertAfter = function (warehouse, cx, cy, nu) {
       var operation = function (on) {
         return on.fold(function () {
           return [];
@@ -63,10 +63,10 @@ define(
         });
       };
 
-      return operate(input, cx, cy, operation);
+      return operate(warehouse, cx, cy, operation);
     };
 
-    var insertBefore = function (input, cx, cy, nu) {
+    var insertBefore = function (warehouse, cx, cy, nu) {
       var operation = function (on) {
         return on.fold(function () {
           return [];
@@ -77,20 +77,22 @@ define(
         });
       };
 
-      return operate(input, cx, cy, operation);
+      return operate(warehouse, cx, cy, operation);
     };
 
     // Should this really be in a module called Insertion?
-    var erase = function (input, cx, cy) {
+    var erase = function (warehouse, cx, cy) {
       var operation = function (on) {
-        return on.fold(function (whole) {
+        return on.fold(function () {
+          return [];
+        }, function (whole) {
           return [];
         }, function (partial, offset) {
           return [ adjust(partial, -1) ];
         });
       };
 
-      return operate(input, cx, cy, operation);
+      return operate(warehouse, cx, cy, operation);
     };
 
     return {
