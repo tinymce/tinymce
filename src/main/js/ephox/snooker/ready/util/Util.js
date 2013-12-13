@@ -14,8 +14,17 @@ define(
       return r;
     };
 
+    var range = function (start, end) {
+      var r = [];
+      for (var i = start; i < end; i++) {
+        r.push(i);
+      }
+      return r;
+    };
+
     return {
-      repeat: repeat
+      repeat: repeat,
+      range: range
     };
   }
 );

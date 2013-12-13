@@ -13,8 +13,8 @@ define(
       return row + ',' + column;
     };
 
-    var isOccupied = function (warehouse, row, column) {
-      return warehouse[key(row, column)] !== undefined;
+    var getAt = function (warehouse, row, column) {
+      return warehouse.access()[key(row, column)];
     };
 
     /* 
@@ -36,7 +36,7 @@ define(
           var start = 0;
 
           // If this spot has been taken by a previous rowspan, skip it.
-          while (isOccupied(access, r, start)) {
+          while (access[key(r, start)] !== undefined) {
             start++;
           }
 
@@ -70,7 +70,8 @@ define(
     };
 
     return {
-      generate: generate
+      generate: generate,
+      getAt: getAt
     };
   }
 );

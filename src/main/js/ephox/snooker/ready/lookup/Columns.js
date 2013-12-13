@@ -2,25 +2,27 @@ define(
   'ephox.snooker.ready.lookup.Columns',
 
   [
+    'ephox.compass.Arr',
+    'ephox.snooker.ready.model.Warehouse',
+    'ephox.snooker.ready.util.Util'
   ],
 
-  function () {
-    // Takes a list of list of (id, colspan, rowspan) structs and returns the a list of cells representing columns.
-    var derive = function (info) {
-      var model = CellLookup.model(info);
-      var ws = [];
+  function (Arr, Warehouse, Util) {
+    var derive = function (warehouse) {
+      var grid = warehouse.grid();
+      var cols = Util.range(0, grid.columns());
+      var rows = Util.range(0, grid.rows());
 
-      // find the width of the 1st column 
-      var data = model.data();
-      for (var i = 0; i < model.columns(); i++) {
-        Arr.find(info, function (_, r) {
-          var key = CellLookup.key(r, i);
-          var cell = data[key];
-          if (cell && cell.colspan() === 1 && ws[i] === undefined) ws[i] = cell.id();
+      return Arr.map(result, function (col) {
+        var rawRow = Arr.find(rows, function (r) {
+          var cell = Warehouse.getAt(warehouse, r, col);
+          return cell !== undefined && cell.colspan() === 1;
         });
-      }
 
-      return ws;
+        var row = rawRow > -1 ? rawRow : 0;
+        var result = Warehouse.getAt(warehouse, row, col);
+        return result.element();
+      });
     };
 
     return {
