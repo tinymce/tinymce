@@ -8,7 +8,8 @@ define(
 
   function (Structs, Math) {
     /*
-     * Determine the address(row, column) of a mouse position on the document.
+     * Determine the address(row, column) of a mouse position on the entire document based
+     * on position being the (x, y) coordinate of the picker component.
      */
     var findCell = function (position, dimensions, grid, mouse) {
       var deltaX = mouse.x() - position.x();

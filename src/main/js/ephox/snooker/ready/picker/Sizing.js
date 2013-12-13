@@ -18,6 +18,10 @@ define(
       return Structs.address(row, col);
     };
 
+    /* 
+     * Given a (row, column) address of the current mouse, identify the table size 
+     * and current selection.
+     */
     var resize = function (address, settings) {
       var newSize = translate(address, 1, 1);
       var selection = validate(newSize, 0, settings.maxCols, 0, settings.maxRows);
