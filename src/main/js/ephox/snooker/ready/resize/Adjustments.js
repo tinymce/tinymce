@@ -34,15 +34,25 @@ define(
       });
     };
 
-    var adjust = function (table, delta, index, direction) {
-      var list = DetailsList.fromTable(table);
-
-      // Calculate the current widths of the columns
-      var warehouse = Warehouse.generate(list);
+    var getWidths = function (warehouse) {
       var columns = Blocks.columns(warehouse);
-      var widths = Arr.map(columns, function (cell) {
+      return Arr.map(columns, function (cell) {
         return parseInt(Css.get(cell, 'width'), 10);
       });
+    };
+
+    var getWarehouse = function (list) {
+      var rows = Arr.map(list, function (x) {
+        return x.cells();
+      });
+
+      return Warehouse.generate(rows);
+    };
+
+    var adjust = function (table, delta, index, direction) {
+      var list = DetailsList.fromTable(table);
+      var warehouse = getWarehouse(list);
+      var widths = getWidths(warehouse);
       
       // Calculate all of the new widths for columns
       var deltas = Deltas.determine(widths, index, delta, minWidth);
@@ -61,9 +71,22 @@ define(
       Css.set(table, 'width', total + 'px');
     };
 
+    // Ensure that the width of table cells match the passed in table information.
+    var adjustTo = function (list) {
+      var warehouse = getWarehouse(list);
+      var widths = getWidths(warehouse);
+
+      // Set the width of each cell based on the column widths
+      var newSizes = recalculate(warehouse, newWidths);
+      Arr.each(newSizes, function (cell) {
+        Css.set(cell.element(), 'width', cell.width() + 'px');
+      });
+    };
+
     return {
       adjust: adjust,
-      recalculate: recalculate
+      recalculate: recalculate,
+      adjustTo: adjustTo
     };
   }
 );

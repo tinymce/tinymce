@@ -30,22 +30,26 @@ define(
       clear(container, table);
 
       var list = DetailsList.fromTable(table);
-      var warehouse = Warehouse.generate(list);
+      var rows = Arr.map(list, function (x) {
+        return x.cells();
+      });
+      var warehouse = Warehouse.generate(rows);
       var cols = Blocks.columns(warehouse);
 
       var position = Location.absolute(table);
      
       Arr.each(cols.slice(1), function (cell, col) {
         var pos = Location.absolute(cell);
-        var bar = Bar(col, pos.left(), pos.top(), 3, Height.getOuter(table));
+        var bar = Bar(col, pos.left(), position.top(), 3, Height.getOuter(table));
         Class.add(bar, resizeBar);
         Insert.append(container, bar);
       });
 
       var lastLeft = Location.absolute(cols[cols.length - 1]).left() + Width.getOuter(cols[cols.length - 1]);
       var lastTop = position.top();
-      var bar = createVert(cols.length - 1, lastLeft, lastTop, 3, Height.getOuter(table));
-      Insert.append(container, bar);
+      var rightBar = Bar(cols.length - 1, lastLeft, lastTop, 3, Height.getOuter(table));
+      Class.add(rightBar, resizeBar);
+      Insert.append(container, rightBar);
     };
 
     var hide = function (container) {

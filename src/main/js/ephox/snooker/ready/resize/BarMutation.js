@@ -5,7 +5,7 @@ define(
     'ephox.perhaps.Option',
     'ephox.porkbun.Event',
     'ephox.porkbun.Events',
-    'ephox.snooker.tbio.resize.common.Mutation'
+    'ephox.snooker.ready.resize.Mutation'
   ],
 
   function (Option, Event, Events, Mutation) {

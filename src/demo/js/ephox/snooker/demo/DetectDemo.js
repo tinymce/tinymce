@@ -4,11 +4,8 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.perhaps.Option',
-    'ephox.snooker.croc.Spanning',
-    'ephox.snooker.tbio.TableOperation',
-    'ephox.snooker.tbio.Yeco',
-    'ephox.snooker.tbio.resize.Adjustments',
-    'ephox.snooker.tbio.resize.bar.BarManager',
+    'ephox.snooker.ready.resize.Adjustments',
+    'ephox.snooker.ready.resize.BarManager',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
@@ -18,7 +15,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Option, Spanning, TableOperation, Yeco, Adjustments, BarManager, Css, DomEvent, Element, Insert, Node, Ready, SelectorFind) {
+  function (Arr, Option, Adjustments, BarManager, Css, DomEvent, Element, Insert, Node, Ready, SelectorFind) {
     return function () {
       var subject = Element.fromHtml(
         '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
@@ -74,11 +71,7 @@ define(
 
       var manager = BarManager(ephoxUi);
       manager.events.adjustWidth.bind(function (event) {
-        console.log('adjusting width');
-        Adjustments.adjustWidths(event.table(), event.bar(), event.column());
-      });
-      manager.events.adjustHeight.bind(function (event) {
-        Adjustments.adjustHeights(event.table(), event.bar(), event.row());
+        Adjustments.adjust(event.table(), event.delta(), event.column());
       });
       manager.on();
 
