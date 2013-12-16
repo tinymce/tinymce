@@ -4,13 +4,11 @@ define(
   [
     'ephox.snooker.ready.picker.PickerUi',
     'ephox.sugar.api.Element',
-    'ephox.sugar.api.Height',
     'ephox.sugar.api.Insert',
-    'ephox.sugar.api.Width',
     'global!Math'
   ],
 
-  function (PickerUi, Element, Height, Insert, Width, Math) {
+  function (PickerUi, Element, Insert, Math) {
     return function () {
       
       var picker = PickerUi({
