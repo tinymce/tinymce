@@ -1,16 +1,15 @@
 define(
-  'ephox.snooker.ready.operate.Insertion',
+  'ephox.snooker.ready.operate.ColumnInsertion',
 
   [
     'ephox.compass.Arr',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.snooker.ready.lookup.Blocks',
-    'ephox.snooker.ready.model.Warehouse'
+    'ephox.snooker.ready.lookup.Blocks'
   ],
 
-  function (Arr, Merger, Fun, Option, Blocks, Warehouse) {
+  function (Arr, Merger, Fun, Option, Blocks) {
     var operate = function (warehouse, rowIndex, colIndex, operation) {
       /* 
          The process:

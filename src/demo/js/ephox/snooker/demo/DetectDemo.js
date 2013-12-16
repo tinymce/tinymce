@@ -5,7 +5,7 @@ define(
     'ephox.compass.Arr',
     'ephox.perhaps.Option',
     'ephox.snooker.ready.data.Structs',
-    'ephox.snooker.ready.operate.Insertion',
+    'ephox.snooker.ready.operate.ColumnInsertion',
     'ephox.snooker.ready.operate.TableOperation',
     'ephox.snooker.ready.resize.Adjustments',
     'ephox.snooker.ready.resize.BarManager',
@@ -18,7 +18,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Option, Structs, Insertion, TableOperation, Adjustments, BarManager, Css, DomEvent, Element, Insert, Node, Ready, SelectorFind) {
+  function (Arr, Option, Structs, ColumnInsertion, TableOperation, Adjustments, BarManager, Css, DomEvent, Element, Insert, Node, Ready, SelectorFind) {
     return function () {
       var subject = Element.fromHtml(
         '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
@@ -120,7 +120,7 @@ define(
       DomEvent.bind(afterButton, 'click', function (event) {
         detection().each(function (cell) {
           TableOperation.run(ephoxUi, subject, cell, function (warehouse, gridpos) {
-            return Insertion.insertAfter(warehouse, gridpos.row(), gridpos.column(), newCell);
+            return ColumnInsertion.insertAfter(warehouse, gridpos.row(), gridpos.column(), newCell);
           });
         });
       });
@@ -129,7 +129,7 @@ define(
         detection().each(function (cell) {
           console.log('Table: ', subject.dom().innerHTML);
           TableOperation.run(ephoxUi, subject, cell, function (warehouse, gridpos) {
-            return Insertion.insertBefore(warehouse, gridpos.row(), gridpos.column(), newCell);
+            return ColumnInsertion.insertBefore(warehouse, gridpos.row(), gridpos.column(), newCell);
           });
           console.log('Post: ', subject.dom().innerHTML);
         });
@@ -138,7 +138,7 @@ define(
       DomEvent.bind(deleteButton, 'click', function (event) {
         detection().each(function (cell) {
           TableOperation.run(ephoxUi, subject, cell, function (warehouse, gridpos) {
-            return Insertion.erase(warehouse, gridpos.column(), gridpos.row());
+            return ColumnInsertion.erase(warehouse, gridpos.column(), gridpos.row());
           });
         });
       });
