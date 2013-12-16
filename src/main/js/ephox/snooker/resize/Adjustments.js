@@ -8,10 +8,11 @@ define(
     'ephox.snooker.lookup.Blocks',
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
+    'ephox.snooker.resize.Sizes',
     'ephox.sugar.api.Css'
   ],
 
-  function (Arr, Fun, Deltas, Blocks, DetailsList, Warehouse, Css) {
+  function (Arr, Fun, Deltas, Blocks, DetailsList, Warehouse, Sizes, Css) {
     var minWidth = 10;
 
     var recalculate = function (warehouse, widths) {
@@ -37,7 +38,7 @@ define(
     var getWidths = function (warehouse) {
       var columns = Blocks.columns(warehouse);
       return Arr.map(columns, function (cell) {
-        return parseInt(Css.get(cell, 'width'), 10);
+        return Sizes.getWidth(cell);
       });
     };
 
@@ -49,7 +50,7 @@ define(
       var list = DetailsList.fromTable(table);
       var warehouse = getWarehouse(list);
       var widths = getWidths(warehouse);
-      
+
       // Calculate all of the new widths for columns
       var deltas = Deltas.determine(widths, index, delta, minWidth);
       var newWidths = Arr.map(deltas, function (dx, i) {
@@ -59,12 +60,12 @@ define(
       // Set the width of each cell based on the column widths
       var newSizes = recalculate(warehouse, newWidths);
       Arr.each(newSizes, function (cell) {
-        Css.set(cell.element(), 'width', cell.width() + 'px');
+        Sizes.setWidth(cell.element(), cell.width());
       });
 
       // Set the overall width of the table.
       var total = Arr.foldr(newWidths, function (b, a) { return b + a; }, 0);
-      Css.set(table, 'width', total + 'px');
+      Sizes.setWidth(table, total);
     };
 
     // Ensure that the width of table cells match the passed in table information.
@@ -75,8 +76,10 @@ define(
       // Set the width of each cell based on the column widths
       var newSizes = recalculate(warehouse, widths);
       Arr.each(newSizes, function (cell) {
-        Css.set(cell.element(), 'width', cell.width() + 'px');
+        Sizes.setWidth(cell.element(), cell.width());
       });
+
+      // var total = Arr.foldr(newSizes, function ())
     };
 
     return {

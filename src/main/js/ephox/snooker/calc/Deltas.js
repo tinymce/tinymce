@@ -28,7 +28,7 @@ define(
 
       var onNone = Fun.constant(zero(result));
       var onOnly = function (index) {
-        return Math.max(min, [ step ]);
+        return [ Math.max(step, -result[column] + min) ];
       };
      
       var onChange = function (index, next) {
