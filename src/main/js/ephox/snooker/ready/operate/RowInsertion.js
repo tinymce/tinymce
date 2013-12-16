@@ -34,8 +34,9 @@ define(
     };
 
     var adjust = function (cell, delta) {
+      console.log('adjusting');
       return Merger.merge(cell, {
-        colspan: Fun.constant(cell.rowspan() + delta)
+        rowspan: Fun.constant(cell.rowspan() + delta)
       });
     };
 
@@ -51,7 +52,8 @@ define(
         });
 
         var nextRow = Arr.bind(row.cells(), function (cell) {
-          return cell.rowspan() === 1 || rindex >= cell.row() + cell.rowspan() ? Util.repeat(cell.colspan(), Fun.curry(nuCell, cell)) : [];
+          console.log('rIndex: ', rindex, cell.row(), cell.colspan(), cell.element().dom());
+          return cell.rowspan() === 1 || rindex >= cell.row() + cell.rowspan() - 1 ? Util.repeat(cell.colspan(), Fun.curry(nuCell, cell)) : [];
         });
 
         var after = {
@@ -61,7 +63,7 @@ define(
 
         return [{
           element: Fun.constant(element),
-          cells: Fun.constant(cells)
+          cells: Fun.constant(modCells)
         }, after];
       };
 
