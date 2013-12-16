@@ -62,24 +62,15 @@ define(
       };
     };
 
-    var expandCurrent = function (row, rindex, nuRow, nuCell, isSpanner, context, eq) {
+    var expandCurrent = function (row, rindex, nuRow, nuCell, isSpanner, unspanned) {
       var next = nuRow();
       
       var currentRow = Arr.map(row.cells(), function (cell) {
         return isSpanner(cell) ? adjust(cell, 1) : cell;
       });
 
-
-      var ending = Arr.bind(context, function (span) {
-        return span.fold(Fun.constant([]), function (w) {
-          return [ w ];
-        }, function (p, offset) {
-          return offset == p.rowspan() - 1 ? [ p ] : [];
-        });
-      });
-
       // For all of the cells that are considered unique and aren't being spanned, create a new cell.
-      var nextRow = Arr.map(ending, nuCell);
+      var nextRow = Arr.map(unspanned, nuCell);
 
       var after = {
         element: next.element,
@@ -105,16 +96,23 @@ define(
           });
         });
 
+        var unspanned = Arr.bind(context, function (span) {
+          return span.fold(Fun.constant([]), function (w) {
+            return [ w ];
+          }, function (p, offset) {
+            return offset == p.rowspan() - 1 ? [ p ] : [];
+          });
+        });
+
         var isSpanner = function (candidate) {
           return Arr.exists(spanners, function (sp) {
-            console.log('sp: ', sp.element(), 'candidate: ', candidate.element());
             return eq(candidate.element(), sp.element());
           });
         };
 
         return Arr.bind(cells, function (row, rindex) {
           if (rindex === start.row()) {
-            return expandCurrent(row, rindex, nuRow, nuCell, isSpanner, context, eq);
+            return expandCurrent(row, rindex, nuRow, nuCell, isSpanner, unspanned);
           } else {
             return expandPrev(row, isSpanner);
           }
