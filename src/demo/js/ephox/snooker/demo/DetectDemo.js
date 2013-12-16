@@ -119,24 +119,26 @@ define(
 
       DomEvent.bind(afterButton, 'click', function (event) {
         detection().each(function (cell) {
-          TableOperation.run(ephoxUi, subject, cell, function (information, gridpos) {
-            return Insertion.insertAfter(information, gridpos.row(), gridpos.column(), newCell);
+          TableOperation.run(ephoxUi, subject, cell, function (warehouse, gridpos) {
+            return Insertion.insertAfter(warehouse, gridpos.row(), gridpos.column(), newCell);
           });
         });
       });
 
       DomEvent.bind(beforeButton, 'click', function (event) {
         detection().each(function (cell) {
-          TableOperation.run(ephoxUi, subject, cell, function (information, gridpos) {
-            return Insertion.insertBefore(information, gridpos.row(), gridpos.column(), newCell);
+          console.log('Table: ', subject.dom().innerHTML);
+          TableOperation.run(ephoxUi, subject, cell, function (warehouse, gridpos) {
+            return Insertion.insertBefore(warehouse, gridpos.row(), gridpos.column(), newCell);
           });
+          console.log('Post: ', subject.dom().innerHTML);
         });
       });
 
       DomEvent.bind(deleteButton, 'click', function (event) {
         detection().each(function (cell) {
-          TableOperation.run(ephoxUi, subject, cell, function (information, gridpos) {
-            return Insertion.erase(information, gridpos.column(), gridpos.row());
+          TableOperation.run(ephoxUi, subject, cell, function (warehouse, gridpos) {
+            return Insertion.erase(warehouse, gridpos.column(), gridpos.row());
           });
         });
       });

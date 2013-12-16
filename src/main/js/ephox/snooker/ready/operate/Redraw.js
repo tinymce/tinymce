@@ -16,12 +16,13 @@ define(
       Remove.empty(tbody);
 
       var rows = Arr.map(list, function (row) {
-        console.log('row: ', row);
+        console.log("row: ", row);
         var tr = row.element();
-        Arr.each(row, function (cell) {
-          Attr.set(cell.id(), 'colspan', cell.colspan());
-          Attr.set(cell.id(), 'rowspan', cell.rowspan());
-          Insert.append(tr, cell.id());
+        Remove.empty(tr);
+        Arr.each(row.cells(), function (cell) {
+          Attr.set(cell.element(), 'colspan', cell.colspan());
+          Attr.set(cell.element(), 'rowspan', cell.rowspan());
+          Insert.append(tr, cell.element());
         });
         return tr;
       });

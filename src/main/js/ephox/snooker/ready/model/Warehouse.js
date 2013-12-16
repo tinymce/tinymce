@@ -32,7 +32,6 @@ define(
 
       Arr.each(list, function (details, r) {
         var currentRow = [];
-        console.log('details: ', details);
         Arr.each(details.cells(), function (detail, c) {
           var start = 0;
 

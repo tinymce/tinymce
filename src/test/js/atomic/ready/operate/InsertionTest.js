@@ -2,20 +2,33 @@ test(
   'InsertionTest',
 
   [
+    'ephox.compass.Arr',
     'ephox.scullion.Struct',
     'ephox.snooker.ready.data.Structs',
     'ephox.snooker.ready.model.Warehouse',
-    'ephox.snooker.ready.operate.Insertion',
-    'ephox.snooker.test.Assertions'
+    'ephox.snooker.ready.operate.Insertion'
   ],
 
-  function (Struct, Structs, Warehouse, Insertion, Assertions) {
-    var check = function (expected, method, input, cx, cy) {
+  function (Arr, Struct, Structs, Warehouse, Insertion) {
+    var check = function (expected, method, input, rowIndex, colIndex) {
       var warehouse = Warehouse.generate(input);
-      var actual = method(warehouse, cx, cy, function () {
+      var actual = method(warehouse, rowIndex, colIndex, function () {
         return d('?', 1, 1);
       });
-      Assertions.assertInfo(expected, actual);
+
+      assert.eq(expected.length, actual.length);
+      Arr.each(expected, function (exp, i) {
+        var act = actual[i];
+        var raw = Arr.map(act.cells(), function (cell) {
+          return {
+            element: cell.element(),
+            colspan: cell.colspan(),
+            rowspan: cell.rowspan()
+          };
+        });
+
+        assert.eq(exp, raw);
+      });
     };
 
     var r = Struct.immutable('element', 'cells');
@@ -29,35 +42,35 @@ test(
     };
 
     check([
-      r('r0', [ { id: 'b', colspan: 1, rowspan: 1 } ]),
-      r('r1', [ { id: 'c', colspan: 1, rowspan: 1 } ])
+      [ { element: 'b', colspan: 1, rowspan: 1 } ],
+      [ { element: 'c', colspan: 1, rowspan: 1 } ]
     ], Insertion.erase, generate(), 0, 0);
 
-    // check([
-    //   [ { id: 'a', colspan: 1, rowspan: 1 } ],
-    //   [ { id: 'c', colspan: 1, rowspan: 1 } ]
-    // ], Insertion.erase, generate(), 1, 0);
+    check([
+      [ { element: 'a', colspan: 1, rowspan: 1 } ],
+      [ { element: 'c', colspan: 1, rowspan: 1 } ]
+    ], Insertion.erase, generate(), 0, 1);
 
 
-    // check([
-    //   [ { id: 'a', colspan: 1, rowspan: 1 }, { id: '?', colspan: 1, rowspan: 1 }, { id: 'b', colspan: 1, rowspan: 1 } ],
-    //   [ { id: 'c', colspan: 3, rowspan: 1 } ]
-    // ], Insertion.insertAfter, generate(), 0, 0);
+    check([
+      [ { element: 'a', colspan: 1, rowspan: 1 }, { element: '?', colspan: 1, rowspan: 1 }, { element: 'b', colspan: 1, rowspan: 1 } ],
+      [ { element: 'c', colspan: 3, rowspan: 1 } ]
+    ], Insertion.insertAfter, generate(), 0, 0);
 
-    // check([
-    //   [ { id: 'a', colspan: 1, rowspan: 1 }, { id: 'b', colspan: 1, rowspan: 1 }, { id: '?', colspan: 1, rowspan: 1 } ],
-    //   [ { id: 'c', colspan: 2, rowspan: 1 }, { id: '?', colspan: 1, rowspan: 1 } ]
-    // ], Insertion.insertAfter, generate(), 1, 0);
+    check([
+      [ { element: 'a', colspan: 1, rowspan: 1 }, { element: 'b', colspan: 1, rowspan: 1 }, { element: '?', colspan: 1, rowspan: 1 } ],
+      [ { element: 'c', colspan: 2, rowspan: 1 }, { element: '?', colspan: 1, rowspan: 1 } ]
+    ], Insertion.insertAfter, generate(), 0, 1);
 
-    // check([
-    //   [ { id: '?', colspan: 1, rowspan: 1 }, { id: 'a', colspan: 1, rowspan: 1 }, { id: 'b', colspan: 1, rowspan: 1 } ],
-    //   [ { id: '?', colspan: 1, rowspan: 1 }, { id: 'c', colspan: 2, rowspan: 1 } ]
-    // ], Insertion.insertBefore, generate(), 0, 0);
+    check([
+      [ { element: '?', colspan: 1, rowspan: 1 }, { element: 'a', colspan: 1, rowspan: 1 }, { element: 'b', colspan: 1, rowspan: 1 } ],
+      [ { element: '?', colspan: 1, rowspan: 1 }, { element: 'c', colspan: 2, rowspan: 1 } ]
+    ], Insertion.insertBefore, generate(), 0, 0);
 
-    // check([
-    //   [ { id: 'a', colspan: 1, rowspan: 1 }, { id: '?', colspan: 1, rowspan: 1 }, { id: 'b', colspan: 1, rowspan: 1 } ],
-    //   [ { id: 'c', colspan: 3, rowspan: 1 } ]
-    // ], Insertion.insertBefore, generate(), 1, 0);
+    check([
+      [ { element: 'a', colspan: 1, rowspan: 1 }, { element: '?', colspan: 1, rowspan: 1 }, { element: 'b', colspan: 1, rowspan: 1 } ],
+      [ { element: 'c', colspan: 3, rowspan: 1 } ]
+    ], Insertion.insertBefore, generate(), 0, 1);
 
   }
 );

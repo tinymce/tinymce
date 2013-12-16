@@ -28,19 +28,19 @@ define(
 
       return initial.map(function (start) {
         var column = Blocks.column(warehouse, start.column());
-        return Arr.map(column, function (context) {
+        return Arr.map(column, function (context, i) {
           var before = context.before();
           var after = context.after();
           var on = operation(context.on());
 
-          console.log('on: ', on);
+          var resultant = context.before().concat(on).concat(context.after());
           return {
-            cells: Fun.constant(context.before().concat(on).concat(context.after())),
+            cells: Fun.constant(resultant),
             element: context.row
           };
         });
       }).getOrThunk(function () {
-        console.log('not finding it!');
+        console.log('The cell is not being found in the table.', rowIndex, colIndex);
         // This won't be right ... won't be in the elemnt, cells format *
         return warehouse.all();
       });
@@ -52,7 +52,7 @@ define(
       });
     };
 
-    var insertAfter = function (warehouse, cx, cy, nu) {
+    var insertAfter = function (warehouse, rowIndex, colIndex, nu) {
       var operation = function (on) {
         return on.fold(function () {
           return [];
@@ -63,10 +63,10 @@ define(
         });
       };
 
-      return operate(warehouse, cx, cy, operation);
+      return operate(warehouse, rowIndex, colIndex, operation);
     };
 
-    var insertBefore = function (warehouse, cx, cy, nu) {
+    var insertBefore = function (warehouse, rowIndex, colIndex, nu) {
       var operation = function (on) {
         return on.fold(function () {
           return [];
@@ -77,11 +77,11 @@ define(
         });
       };
 
-      return operate(warehouse, cx, cy, operation);
+      return operate(warehouse, rowIndex, colIndex, operation);
     };
 
     // Should this really be in a module called Insertion?
-    var erase = function (warehouse, cx, cy) {
+    var erase = function (warehouse, rowIndex, colIndex) {
       var operation = function (on) {
         return on.fold(function () {
           return [];
@@ -92,7 +92,7 @@ define(
         });
       };
 
-      return operate(warehouse, cx, cy, operation);
+      return operate(warehouse, rowIndex, colIndex, operation);
     };
 
     return {
