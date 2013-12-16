@@ -10,6 +10,7 @@ define(
     'ephox.snooker.ready.operate.TableOperation',
     'ephox.snooker.ready.resize.Adjustments',
     'ephox.snooker.ready.resize.BarManager',
+    'ephox.sugar.api.Compare',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
@@ -19,7 +20,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Option, Structs, ColumnInsertion, RowInsertion, TableOperation, Adjustments, BarManager, Css, DomEvent, Element, Insert, Node, Ready, SelectorFind) {
+  function (Arr, Option, Structs, ColumnInsertion, RowInsertion, TableOperation, Adjustments, BarManager, Compare, Css, DomEvent, Element, Insert, Node, Ready, SelectorFind) {
     return function () {
       var subject = Element.fromHtml(
         '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
@@ -129,10 +130,12 @@ define(
         return Structs.detail(tr, 1, 1);
       };
 
+      var eq = Compare.eq;
+
       DomEvent.bind(afterButton, 'click', function (event) {
         detection().each(function (cell) {
           TableOperation.run(ephoxUi, subject, cell, function (warehouse, gridpos) {
-            return ColumnInsertion.insertAfter(warehouse, gridpos.row(), gridpos.column(), newCell);
+            return ColumnInsertion.insertAfter(warehouse, gridpos.row(), gridpos.column(), newCell, eq);
           });
         });
       });
@@ -141,7 +144,7 @@ define(
         detection().each(function (cell) {
           console.log('Table: ', subject.dom().innerHTML);
           TableOperation.run(ephoxUi, subject, cell, function (warehouse, gridpos) {
-            return RowInsertion.insertBefore(warehouse, gridpos.row(), gridpos.column(), newRow, newCell);
+            return RowInsertion.insertBefore(warehouse, gridpos.row(), gridpos.column(), newRow, newCell, eq);
           });
           console.log('Post: ', subject.dom().innerHTML);
         });

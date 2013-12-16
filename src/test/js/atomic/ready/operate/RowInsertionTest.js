@@ -14,8 +14,10 @@ test(
       var warehouse = Warehouse.generate(input);
       var actual = method(warehouse, rowIndex, colIndex, function () {
         return '???';
-      }, function () {
-        return d('?', 1, 1);
+      }, function (aa) {
+        return d('?' + aa.element(), 1, 1);
+      }, function (a, b) {
+        return a === b;
       });
 
       assert.eq(expected.length, actual.length);
@@ -43,17 +45,32 @@ test(
       ];
     };
 
+    var complex = function () {
+      return [
+        r('r0', [ d('a', 2, 1), d('b', 1, 1), d('c', 1, 1) ]),
+        r('r1', [ d('d', 1, 2) ]),
+        r('r2', [ d('e', 1, 1), d('f', 1, 2) ])
+      ];
+    };
+
     check([
       [ { element: 'a', colspan: 1, rowspan: 1 }, { element: 'c', colspan: 1, rowspan: 3 }],
-      [ { element: '?', colspan: 1, rowspan: 1 } ],
+      [ { element: '?a', colspan: 1, rowspan: 1 } ],
       [ { element: 'b', colspan: 1, rowspan: 1 } ]
     ], RowInsertion.insertAfter, generate(), 0, 0);
 
     check([
-      [ { element: 'a', colspan: 1, rowspan: 1 }, { element: 'c', colspan: 1, rowspan: 3 } ],
+      [ { element: 'a', colspan: 1, rowspan: 1 }, { element: 'c', colspan: 1, rowspan: 2 } ],
       [ { element: 'b', colspan: 1, rowspan: 1 } ],
-      [ { element: '?', colspan: 1, rowspan: 1 } ]
+      [ { element: '?b', colspan: 1, rowspan: 1 }, { element: '?c', colspan: 1, rowspan: 1 }]
     ], RowInsertion.insertAfter, generate(), 1, 0);
+
+    check([
+      [ { element: 'a', colspan: 1, rowspan: 2 }, { element: 'b', colspan: 1, rowspan: 1 }, { element: 'c', colspan: 1, rowspan: 1 } ],
+      [ { element: 'd', colspan: 2, rowspan: 1 } ],
+      [ { element: '?a', colspan: 1, rowspan: 1 }, { element: '?d', colspan: 1, rowspan: 1 }, { element: '?d', colspan: 1, rowspan: 1 } ],
+      [ { element: 'e', colspan: 1, rowspan: 1 }, { element: 'f', colspan: 2, rowspan: 1 } ]
+    ], RowInsertion.insertAfter, complex(), 1, 0);
 
     // check([
     //   [ { element: '?', colspan: 1, rowspan: 1 }, { element: 'a', colspan: 1, rowspan: 1 }, { element: 'b', colspan: 1, rowspan: 1 } ],

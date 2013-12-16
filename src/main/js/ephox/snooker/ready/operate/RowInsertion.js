@@ -6,10 +6,21 @@ define(
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.snooker.ready.data.CellType',
+    'ephox.snooker.ready.model.Warehouse',
     'ephox.snooker.ready.util.Util'
   ],
 
-  function (Arr, Merger, Fun, Option, Util) {
+  function (Arr, Merger, Fun, Option, CellType, Warehouse, Util) {
+    var getRow = function (warehouse, rowIndex) {
+      var range = Util.range(0, warehouse.grid().columns());
+      return Arr.map(range, function (colIndex) {
+        var item = Warehouse.getAt(warehouse, rowIndex, colIndex);
+        return item === undefined ? CellType.none() :
+          item.rowspan() > 1 ? CellType.partial(item, rowIndex - item.row()) : CellType.whole(item);
+      });
+    };
+
     var operate = function (warehouse, rowIndex, colIndex, operation) {
       /* 
          The process:
@@ -20,15 +31,15 @@ define(
        */
 
       var cells = warehouse.all();
+      var context = getRow(warehouse, rowIndex);
       var initial = Option.from(cells[rowIndex]).bind(function (row) {
         return Option.from(row.cells()[colIndex]);
       });
 
       return initial.map(function (start) {
-        return Arr.bind(cells, function (row, i) {
-          return operation(start, rowIndex, row, i);
-        });
+        return operation(context, start, cells);
       }).getOrThunk(function () {
+        console.log('Did not find what you speak of');
         return warehouse.all();
       });
     };
@@ -40,9 +51,9 @@ define(
       });
     };
 
-    var expandPrev = function (rindex, row) {
+    var expandPrev = function (row, isSpanner) {
       var cells = Arr.map(row.cells(), function (cell) {
-        return cell.row() < rindex && cell.row() + cell.rowspan() > rindex ? adjust(cell, 1) : cell;
+        return isSpanner(cell) ? adjust(cell, 1) : cell;
       });
 
       return {
@@ -51,15 +62,43 @@ define(
       };
     };
 
-    var expandCurrent = function (rindex, row, nuRow, nuCell) {
+    var expandCurrent = function (row, rindex, nuRow, nuCell, isSpanner, context, eq) {
       var next = nuRow();
-
-      var modCells = Arr.map(row.cells(), function (cell) {
-        return cell.rowspan() > 1 && rindex < cell.row() + cell.rowspan() ? adjust(cell, 1) : cell;
+      
+      var currentRow = Arr.map(row.cells(), function (cell) {
+        return isSpanner(cell) ? adjust(cell, 1) : cell;
       });
 
-      var nextRow = Arr.bind(row.cells(), function (cell) {
-        return cell.rowspan() === 1 || rindex >= cell.row() + cell.rowspan() - 1 ? Util.repeat(cell.colspan(), Fun.curry(nuCell, cell)) : [];
+
+      var ending = Arr.bind(context, function (span) {
+        return span.fold(Fun.constant([]), function (w) {
+          return [ w ];
+        }, function (p, offset) {
+          return offset == p.rowspan() - 1 ? [ p ] : [];
+        });
+      });
+
+      // dedupe
+      var unique = [];
+      Arr.each(ending, function (ed) {
+        var existing = Arr.exists(unique, function (a) {
+          return eq(a.element(), ed.element());
+        });
+        console.log('ed: element', ed.element(), ending.length, existing);
+
+        if (!existing) unique.push(ed);
+      });
+
+      console.log('unique: ', unique.length);
+
+      var nextRow = Arr.bind(unique, function (cell) {
+        console.log('Inspecting next row:  rIndex: ', rindex, 'row', cell.row(), 'span', cell.rowspan(), 'cell', cell.element());
+        // Skip cells which are already getting span changes.
+        console.log('element: ', cell.element());
+        // if (isSpanner(cell)) return [];
+        var res = Util.repeat(cell.colspan(), Fun.curry(nuCell, cell));
+        console.log('res: ', res, cell.colspan());
+        return res;
       });
 
       var after = {
@@ -69,33 +108,37 @@ define(
 
       return [{
         element: Fun.constant(row.element()),
-        cells: Fun.constant(modCells)
+        cells: Fun.constant(currentRow)
       }, after];
     };
 
-    var insertAfter = function (warehouse, rowIndex, colIndex, nuRow, nuCell) {
-      var operation = function (start, rindex, row, index) {
-        var element = row.element();
-        var cells = row.cells();
+    var insertAfter = function (warehouse, rowIndex, colIndex, nuRow, nuCell, eq) {
+      var operation = function (context, start, cells) {
+        console.log('context: ', context.length);
+        var spanners = Arr.bind(context, function (span) {
+          return span.fold(function () {
+            return [];
+          }, function (whole) {
+            return [];
+          }, function (p, offset) {
+            return start.row() < p.row() + p.rowspan() - 1 ? [ p ] : [];
+          });
+        });
 
-        // So there are two paths:
-        // 1. just modify the rowspan cells. (target row and not target row)
-        // 2. create a new row in addition to the target row
-        return rindex !== index ? expandPrev(rindex, row) : expandCurrent(rindex, row, nuRow, nuCell);
-      };
+        var isSpanner = function (candidate) {
+          return Arr.exists(spanners, function (sp) {
+            console.log('sp: ', sp.element(), 'candidate: ', candidate.element());
+            return eq(candidate.element(), sp.element());
+          });
+        };
 
-      return operate(warehouse, rowIndex, colIndex, operation);
-    };
-
-    var insertBefore = function (warehouse, rowIndex, colIndex, nu) {
-      var operation = function (row) {
-        var element = row.element();
-        var cells = row.cells();
-
-        return [{
-          element: Fun.constant(element),
-          cells: Fun.constant(cells)
-        }];
+        return Arr.bind(cells, function (row, rindex) {
+          if (rindex === start.row()) {
+            return expandCurrent(row, rindex, nuRow, nuCell, isSpanner, context, eq);
+          } else {
+            return expandPrev(row, isSpanner);
+          }
+        });
       };
 
       return operate(warehouse, rowIndex, colIndex, operation);
