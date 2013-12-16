@@ -25,7 +25,7 @@ define(
 
       return initial.map(function (start) {
         return Arr.bind(cells, function (row, i) {
-          return i === start.row() ? operation(row) : [ row ];
+          return i === rowIndex ? operation(start, rowIndex, row) : [ row ];
         });
       }).getOrThunk(function () {
         return warehouse.all();
@@ -38,15 +38,32 @@ define(
       });
     };
 
-    var insertAfter = function (warehouse, rowIndex, colIndex, nu) {
-      var operation = function (row) {
+    var insertAfter = function (warehouse, rowIndex, colIndex, nuRow, nuCell) {
+      var operation = function (start, rindex, row) {
         var element = row.element();
         var cells = row.cells();
+
+        var next = nuRow();
+
+        var modCells = Arr.map(row.cells(), function (cell) {
+          return cell.rowspan() > 1 && rindex < cell.row() + cell.rowspan() ? adjust(cell, 1) : cell;
+        });
+
+        var nextRow = Arr.bind(row.cells(), function (cell) {
+          return cell.rowspan() === 1 || rindex >= cell.row() + cell.rowspan() ? [ Merger.merge(nuCell(cell), {
+            colspan: Fun.constant(cell.colspan())
+          }) ] : [];
+        });
+
+        var after = {
+          element: next.element,
+          cells: Fun.constant(nextRow)
+        };
 
         return [{
           element: Fun.constant(element),
           cells: Fun.constant(cells)
-        }];
+        }, after];
       };
 
       return operate(warehouse, rowIndex, colIndex, operation);
@@ -67,7 +84,8 @@ define(
     };
 
     return {
-      insertBefore: insertBefore,
+      // TODO: Insert before.
+      insertBefore: insertAfter,
       insertAfter: insertAfter
     };
   }

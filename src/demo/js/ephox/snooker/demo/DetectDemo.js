@@ -118,6 +118,11 @@ define(
         return Structs.detail(td, 1, 1);
       };
 
+      var newRow = function (prev) {
+        var tr = Element.fromTag('tr');
+        return Structs.detail(tr, 1, 1);
+      };
+
       DomEvent.bind(afterButton, 'click', function (event) {
         detection().each(function (cell) {
           TableOperation.run(ephoxUi, subject, cell, function (warehouse, gridpos) {
@@ -130,7 +135,7 @@ define(
         detection().each(function (cell) {
           console.log('Table: ', subject.dom().innerHTML);
           TableOperation.run(ephoxUi, subject, cell, function (warehouse, gridpos) {
-            return RowInsertion.insertBefore(warehouse, gridpos.row(), gridpos.column(), newCell);
+            return RowInsertion.insertBefore(warehouse, gridpos.row(), gridpos.column(), newRow, newCell);
           });
           console.log('Post: ', subject.dom().innerHTML);
         });
