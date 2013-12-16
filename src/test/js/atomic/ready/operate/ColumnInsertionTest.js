@@ -6,10 +6,10 @@ test(
     'ephox.scullion.Struct',
     'ephox.snooker.ready.data.Structs',
     'ephox.snooker.ready.model.Warehouse',
-    'ephox.snooker.ready.operate.Insertion'
+    'ephox.snooker.ready.operate.ColumnInsertion'
   ],
 
-  function (Arr, Struct, Structs, Warehouse, Insertion) {
+  function (Arr, Struct, Structs, Warehouse, ColumnInsertion) {
     var check = function (expected, method, input, rowIndex, colIndex) {
       var warehouse = Warehouse.generate(input);
       var actual = method(warehouse, rowIndex, colIndex, function () {
@@ -44,33 +44,33 @@ test(
     check([
       [ { element: 'b', colspan: 1, rowspan: 1 } ],
       [ { element: 'c', colspan: 1, rowspan: 1 } ]
-    ], Insertion.erase, generate(), 0, 0);
+    ], ColumnInsertion.erase, generate(), 0, 0);
 
     check([
       [ { element: 'a', colspan: 1, rowspan: 1 } ],
       [ { element: 'c', colspan: 1, rowspan: 1 } ]
-    ], Insertion.erase, generate(), 0, 1);
+    ], ColumnInsertion.erase, generate(), 0, 1);
 
 
     check([
       [ { element: 'a', colspan: 1, rowspan: 1 }, { element: '?', colspan: 1, rowspan: 1 }, { element: 'b', colspan: 1, rowspan: 1 } ],
       [ { element: 'c', colspan: 3, rowspan: 1 } ]
-    ], Insertion.insertAfter, generate(), 0, 0);
+    ], ColumnInsertion.insertAfter, generate(), 0, 0);
 
     check([
       [ { element: 'a', colspan: 1, rowspan: 1 }, { element: 'b', colspan: 1, rowspan: 1 }, { element: '?', colspan: 1, rowspan: 1 } ],
       [ { element: 'c', colspan: 2, rowspan: 1 }, { element: '?', colspan: 1, rowspan: 1 } ]
-    ], Insertion.insertAfter, generate(), 0, 1);
+    ], ColumnInsertion.insertAfter, generate(), 0, 1);
 
     check([
       [ { element: '?', colspan: 1, rowspan: 1 }, { element: 'a', colspan: 1, rowspan: 1 }, { element: 'b', colspan: 1, rowspan: 1 } ],
       [ { element: '?', colspan: 1, rowspan: 1 }, { element: 'c', colspan: 2, rowspan: 1 } ]
-    ], Insertion.insertBefore, generate(), 0, 0);
+    ], ColumnInsertion.insertBefore, generate(), 0, 0);
 
     check([
       [ { element: 'a', colspan: 1, rowspan: 1 }, { element: '?', colspan: 1, rowspan: 1 }, { element: 'b', colspan: 1, rowspan: 1 } ],
       [ { element: 'c', colspan: 3, rowspan: 1 } ]
-    ], Insertion.insertBefore, generate(), 0, 1);
+    ], ColumnInsertion.insertBefore, generate(), 0, 1);
 
   }
 );
