@@ -13,15 +13,6 @@ define(
   ],
 
   function (Arr, Merger, Fun, Option, CellType, Warehouse, Rowspans, Util) {
-    var getRow = function (warehouse, rowIndex) {
-      var range = Util.range(0, warehouse.grid().columns());
-      return Arr.map(range, function (colIndex) {
-        var item = Warehouse.getAt(warehouse, rowIndex, colIndex);
-        return item === undefined ? CellType.none() :
-          item.rowspan() > 1 ? CellType.partial(item, rowIndex - item.row()) : CellType.whole(item);
-      });
-    };
-
     var operate = function (warehouse, rowIndex, colIndex, operation) {
       /* 
          The process:
@@ -32,13 +23,12 @@ define(
        */
 
       var cells = warehouse.all();
-      var context = getRow(warehouse, rowIndex);
       var initial = Option.from(cells[rowIndex]).bind(function (row) {
         return Option.from(row.cells()[colIndex]);
       });
 
       return initial.map(function (start) {
-        return operation(context, start, cells);
+        return operation(start, cells);
       }).getOrThunk(function () {
         console.log('Did not find what you speak of');
         return warehouse.all();
@@ -52,7 +42,32 @@ define(
       });
     };
 
-    var expandPrev = function (row, isSpanner) {
+    var creation = function (row, isSpanner, generators, unspanned) {
+      var nu = generators.row();
+
+      var current = Arr.map(row.cells(), function (cell) {
+        return isSpanner(cell) ? adjust(cell, 1) : cell;
+      });
+
+      var otherCells = Arr.map(unspanned, generators.cell);
+
+      var active = {
+        element: row.element,
+        cells: Fun.constant(current)
+      };
+
+      var other = {
+        element: nu.element,
+        cells: Fun.constant(otherCells)
+      };
+
+      return {
+        active: Fun.constant(active),
+        other: Fun.constant(other)
+      };
+    };
+
+    var expansion = function (row, isSpanner) {
       var cells = Arr.map(row.cells(), function (cell) {
         return isSpanner(cell) ? adjust(cell, 1) : cell;
       });
@@ -63,28 +78,7 @@ define(
       };
     };
 
-    var expandCurrent = function (row, rindex, nuRow, nuCell, isSpanner, unspanned) {
-      var next = nuRow();
-      
-      var currentRow = Arr.map(row.cells(), function (cell) {
-        return isSpanner(cell) ? adjust(cell, 1) : cell;
-      });
-
-      // For all of the cells that are considered unique and aren't being spanned, create a new cell.
-      var nextRow = Arr.map(unspanned, nuCell);
-
-      var after = {
-        element: next.element,
-        cells: Fun.constant(nextRow)
-      };
-
-      return [{
-        element: Fun.constant(row.element()),
-        cells: Fun.constant(currentRow)
-      }, after];
-    };
-
-    var isSpanner = function (spanners, eq) {
+    var isSpanCell = function (spanners, eq) {
       return function (candidate) {
         return Arr.exists(spanners, function (sp) {
           return eq(candidate.element(), sp.element());
@@ -93,14 +87,21 @@ define(
     };
 
     var insertAfter = function (warehouse, rowIndex, colIndex, nuRow, nuCell, eq) {
-      var operation = function (context, start, cells) {
+      var operation = function (start, cells) {
         var spanners = Rowspans.after(warehouse, rowIndex);
+        var generators = {
+          cell: nuCell,
+          row: nuRow
+        };
+
+        var isSpanner = isSpanCell(spanners.spanned(), eq);
         
         return Arr.bind(cells, function (row, rindex) {
           if (rindex === start.row()) {
-            return expandCurrent(row, rindex, nuRow, nuCell, isSpanner(spanners.spanned(), eq), spanners.unspanned());
+            var result = creation(row, isSpanner, generators, spanners.unspanned());
+            return [ result.active(), result.other() ];
           } else {
-            return expandPrev(row, isSpanner(spanners.spanned(), eq));
+            return [ expansion(row, isSpanner) ];
           }
         });
       };
