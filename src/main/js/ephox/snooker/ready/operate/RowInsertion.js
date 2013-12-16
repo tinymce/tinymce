@@ -59,7 +59,6 @@ define(
       });
 
       var nextRow = Arr.bind(row.cells(), function (cell) {
-        console.log('rIndex: ', rindex, cell.row(), cell.colspan(), cell.element().dom());
         return cell.rowspan() === 1 || rindex >= cell.row() + cell.rowspan() - 1 ? Util.repeat(cell.colspan(), Fun.curry(nuCell, cell)) : [];
       });
 

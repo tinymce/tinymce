@@ -95,11 +95,11 @@ define(
 
 
       var afterButton = Element.fromTag('button');
-      Insert.append(afterButton, Element.fromText('>>'));
+      Insert.append(afterButton, Element.fromText('After'));
       Insert.append(ephoxUi, afterButton);
 
       var beforeButton = Element.fromTag('button');
-      Insert.append(beforeButton, Element.fromText('<<'));
+      Insert.append(beforeButton, Element.fromText('Before'));
       Insert.append(ephoxUi, beforeButton);
 
       var deleteButton = Element.fromTag('button');
