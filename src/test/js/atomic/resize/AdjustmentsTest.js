@@ -4,6 +4,7 @@ test(
   {
     'ephox.sugar.api.Css': '../mock/ephox/sugar/api/Css',
     'ephox.sugar.api.Attr': '../mock/ephox/sugar/api/Attr',
+    'ephox.sugar.api.SelectorFind': '../mock/ephox/sugar/api/SelectorFind',
     'ephox.snooker.model.DetailsList': '../mock/ephox/snooker/ready/model/DetailsList'
   },
 

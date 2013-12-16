@@ -5,11 +5,12 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.snooker.api.CellLocation',
     'ephox.snooker.lookup.TableLookup',
     'ephox.sugar.api.Compare'
   ],
 
-  function (Arr, Fun, Option, TableLookup, Compare) {
+  function (Arr, Fun, Option, CellLocation, TableLookup, Compare) {
     var detect = function (current) {
       return TableLookup.table(current).bind(function (table) {
         var all = TableLookup.cells(table);
@@ -26,15 +27,19 @@ define(
 
     var next = function (current) {
       var detection = detect(current);
-      return detection.bind(function (info) {
-        return info.index() + 1 < info.all().length ? Option.some(info.all()[info.index() + 1]) : Option.none();
+      return detection.fold(function () {
+        return CellLocation.none(current);
+      }, function (info) {
+        return info.index() + 1 < info.all().length ? CellLocation.middle(current, info.all()[info.index() + 1]) : CellLocation.last(current);
       });
     };
 
     var prev = function (current) {
       var detection = detect(current);
-      return detection.bind(function (info) {
-        return info.index() - 1 >= 0 ? Option.some(info.all()[info.index() - 1]) : Option.none();
+      return detection.bind(function () {
+        return CellLocation.none();
+      }, function (info) {
+        return info.index() - 1 >= 0 ? CellLocation.middle(current, info.all()[info.index() - 1]) : CellLocation.none(current);
       });
     };
 

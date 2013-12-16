@@ -9,11 +9,10 @@ define(
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.resize.Sizes',
-    'ephox.sugar.api.Css',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Fun, Deltas, Blocks, DetailsList, Warehouse, Sizes, Css, SelectorFind) {
+  function (Arr, Fun, Deltas, Blocks, DetailsList, Warehouse, Sizes, SelectorFind) {
     var minWidth = 10;
 
     var recalculate = function (warehouse, widths) {
