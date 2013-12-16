@@ -9,10 +9,11 @@ define(
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.resize.Sizes',
-    'ephox.sugar.api.Css'
+    'ephox.sugar.api.Css',
+    'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Fun, Deltas, Blocks, DetailsList, Warehouse, Sizes, Css) {
+  function (Arr, Fun, Deltas, Blocks, DetailsList, Warehouse, Sizes, Css, SelectorFind) {
     var minWidth = 10;
 
     var recalculate = function (warehouse, widths) {
@@ -79,7 +80,13 @@ define(
         Sizes.setWidth(cell.element(), cell.width());
       });
 
-      // var total = Arr.foldr(newSizes, function ())
+      var total = Arr.foldr(widths, function (b, a) { return a + b; }, 0);
+      console.log('total: ', total, Arr.map(newSizes, function (ns) { return ns.width(); }));
+      if (newSizes.length > 0) {
+        SelectorFind.ancestor(newSizes[0].element(), 'table').each(function (table) {
+          Sizes.setWidth(table, total);
+        });
+      }
     };
 
     return {
