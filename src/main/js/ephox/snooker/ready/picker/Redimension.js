@@ -54,8 +54,7 @@ define(
       return {
         on: on,
         off: off,
-        handle: handle,
-        events: events.registry
+        handle: handle
       };
     };
 
