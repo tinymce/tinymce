@@ -5,10 +5,11 @@ define(
     'ephox.compass.Arr',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option'
+    'ephox.perhaps.Option',
+    'ephox.snooker.ready.util.Util'
   ],
 
-  function (Arr, Merger, Fun, Option) {
+  function (Arr, Merger, Fun, Option, Util) {
     var operate = function (warehouse, rowIndex, colIndex, operation) {
       /* 
          The process:
@@ -50,9 +51,7 @@ define(
         });
 
         var nextRow = Arr.bind(row.cells(), function (cell) {
-          return cell.rowspan() === 1 || rindex >= cell.row() + cell.rowspan() ? [ Merger.merge(nuCell(cell), {
-            colspan: Fun.constant(cell.colspan())
-          }) ] : [];
+          return cell.rowspan() === 1 || rindex >= cell.row() + cell.rowspan() ? Util.repeat(cell.colspan(), Fun.curry(nuCell, cell)) : [];
         });
 
         var after = {
