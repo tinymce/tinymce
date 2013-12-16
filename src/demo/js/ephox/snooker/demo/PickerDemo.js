@@ -2,7 +2,7 @@ define(
   'ephox.snooker.demo.PickerDemo',
 
   [
-    'ephox.snooker.ready.picker.PickerUi',
+    'ephox.snooker.picker.PickerUi',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'global!Math'

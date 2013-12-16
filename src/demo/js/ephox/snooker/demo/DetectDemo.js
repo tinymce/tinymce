@@ -4,12 +4,12 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.perhaps.Option',
-    'ephox.snooker.ready.data.Structs',
-    'ephox.snooker.ready.operate.ColumnInsertion',
-    'ephox.snooker.ready.operate.RowInsertion',
-    'ephox.snooker.ready.operate.TableOperation',
-    'ephox.snooker.ready.resize.Adjustments',
-    'ephox.snooker.ready.resize.BarManager',
+    'ephox.snooker.data.Structs',
+    'ephox.snooker.operate.ColumnInsertion',
+    'ephox.snooker.operate.RowInsertion',
+    'ephox.snooker.operate.TableOperation',
+    'ephox.snooker.resize.Adjustments',
+    'ephox.snooker.resize.BarManager',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.DomEvent',
@@ -95,13 +95,21 @@ define(
       });
 
 
-      var afterButton = Element.fromTag('button');
-      Insert.append(afterButton, Element.fromText('After'));
-      Insert.append(ephoxUi, afterButton);
+      var afterRow = Element.fromTag('button');
+      Insert.append(afterRow, Element.fromText('Row After'));
+      Insert.append(ephoxUi, afterRow);
 
-      var beforeButton = Element.fromTag('button');
-      Insert.append(beforeButton, Element.fromText('Before'));
-      Insert.append(ephoxUi, beforeButton);
+      var beforeRow = Element.fromTag('button');
+      Insert.append(beforeRow, Element.fromText('Row Before'));
+      Insert.append(ephoxUi, beforeRow);
+
+      var afterColumn = Element.fromTag('button');
+      Insert.append(afterColumn, Element.fromText('Column After'));
+      Insert.append(ephoxUi, afterColumn);
+
+      var beforeColumn = Element.fromTag('button');
+      Insert.append(beforeColumn, Element.fromText('Column Before'));
+      Insert.append(ephoxUi, beforeColumn);
 
       var deleteButton = Element.fromTag('button');
       Insert.append(deleteButton, Element.fromText('X'));
@@ -132,7 +140,7 @@ define(
 
       var eq = Compare.eq;
 
-      DomEvent.bind(afterButton, 'click', function (event) {
+      DomEvent.bind(afterRow, 'click', function (event) {
         detection().each(function (cell) {
           TableOperation.run(ephoxUi, subject, cell, function (warehouse, gridpos) {
             return RowInsertion.insertAfter(warehouse, gridpos.row(), gridpos.column(), newRow, newCell, eq);
@@ -140,13 +148,27 @@ define(
         });
       });
 
-      DomEvent.bind(beforeButton, 'click', function (event) {
+      DomEvent.bind(beforeRow, 'click', function (event) {
         detection().each(function (cell) {
-          console.log('Table: ', subject.dom().innerHTML);
           TableOperation.run(ephoxUi, subject, cell, function (warehouse, gridpos) {
             return RowInsertion.insertBefore(warehouse, gridpos.row(), gridpos.column(), newRow, newCell, eq);
           });
-          console.log('Post: ', subject.dom().innerHTML);
+        });
+      });
+
+      DomEvent.bind(beforeColumn, 'click', function (event) {
+        detection().each(function (cell) {
+          TableOperation.run(ephoxUi, subject, cell, function (warehouse, gridpos) {
+            return ColumnInsertion.insertBefore(warehouse, gridpos.row(), gridpos.column(), newCell);
+          });
+        });
+      });
+
+      DomEvent.bind(afterColumn, 'click', function (event) {
+        detection().each(function (cell) {
+          TableOperation.run(ephoxUi, subject, cell, function (warehouse, gridpos) {
+            return ColumnInsertion.insertAfter(warehouse, gridpos.row(), gridpos.column(), newCell);
+          });
         });
       });
 
