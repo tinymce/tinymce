@@ -92,7 +92,7 @@ define(
           }, function (whole) {
             return [];
           }, function (p, offset) {
-            return start.row() < p.row() + p.rowspan() - 1 ? [ p ] : [];
+            return offset < p.rowspan() - 1 ? [ p ] : [];
           });
         });
 
