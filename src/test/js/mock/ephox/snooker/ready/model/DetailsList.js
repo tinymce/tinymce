@@ -1,5 +1,5 @@
 define(
-  'ephox.snooker.ready.model.DetailsList',
+  'ephox.snooker.model.DetailsList',
 
   [
   ],
