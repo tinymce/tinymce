@@ -78,28 +78,8 @@ define(
         });
       });
 
-      // dedupe
-      var unique = [];
-      Arr.each(ending, function (ed) {
-        var existing = Arr.exists(unique, function (a) {
-          return eq(a.element(), ed.element());
-        });
-        console.log('ed: element', ed.element(), ending.length, existing);
-
-        if (!existing) unique.push(ed);
-      });
-
-      console.log('unique: ', unique.length);
-
-      var nextRow = Arr.bind(unique, function (cell) {
-        console.log('Inspecting next row:  rIndex: ', rindex, 'row', cell.row(), 'span', cell.rowspan(), 'cell', cell.element());
-        // Skip cells which are already getting span changes.
-        console.log('element: ', cell.element());
-        // if (isSpanner(cell)) return [];
-        var res = Util.repeat(cell.colspan(), Fun.curry(nuCell, cell));
-        console.log('res: ', res, cell.colspan());
-        return res;
-      });
+      // For all of the cells that are considered unique and aren't being spanned, create a new cell.
+      var nextRow = Arr.map(ending, nuCell);
 
       var after = {
         element: next.element,
