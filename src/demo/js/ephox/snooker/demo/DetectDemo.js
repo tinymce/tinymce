@@ -4,9 +4,8 @@ define(
   [
     'ephox.perhaps.Option',
     'ephox.snooker.api.TableOperations',
+    'ephox.snooker.api.TableResize',
     'ephox.snooker.data.Structs',
-    'ephox.snooker.resize.Adjustments',
-    'ephox.snooker.resize.BarManager',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.DomEvent',
@@ -16,7 +15,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Option, TableOperations, Structs, Adjustments, BarManager, Compare, Css, DomEvent, Element, Insert, Ready, SelectorFind) {
+  function (Option, TableOperations, TableResize, Structs, Compare, Css, DomEvent, Element, Insert, Ready, SelectorFind) {
     return function () {
       var subject = Element.fromHtml(
         '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
@@ -79,10 +78,7 @@ define(
       Insert.append(ephoxUi, subject);
       Insert.append(ephoxUi, subject2);
 
-      var manager = BarManager(ephoxUi);
-      manager.events.adjustWidth.bind(function (event) {
-        Adjustments.adjust(event.table(), event.delta(), event.column());
-      });
+      var manager = TableResize(ephoxUi);
       manager.on();
 
       // manager.refresh(subject);
