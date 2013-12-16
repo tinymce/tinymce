@@ -72,5 +72,15 @@ test(
       [ { element: 'c', colspan: 3, rowspan: 1 } ]
     ], ColumnInsertion.insertBefore, generate(), 0, 1);
 
+    check([
+      [ { element: '?', colspan: 1, rowspan: 1 }, { element: 'a1', colspan: 1, rowspan: 1 }, { element: 'a2', colspan: 1, rowspan: 1 } ],
+      [ { element: '?', colspan: 1, rowspan: 1 }, { element: 'b', colspan: 1, rowspan: 2 }, { element: 'c', colspan: 1, rowspan: 1 } ],
+      [ { element: '?', colspan: 1, rowspan: 1 }, { element: 'd', colspan: 1, rowspan: 1 } ]
+    ], ColumnInsertion.insertBefore, [
+      r('r0', [ d('a1', 1, 1), d('a2', 1, 1) ]),
+      r('r1', [ d('b', 2, 1), d('c', 1, 1) ]),
+      r('r2', [ d('d', 1, 1) ])
+    ], 0, 0);
+
   }
 );

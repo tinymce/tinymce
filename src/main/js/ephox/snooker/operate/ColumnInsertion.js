@@ -6,10 +6,11 @@ define(
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.snooker.lookup.Blocks'
+    'ephox.snooker.lookup.Blocks',
+    'ephox.snooker.model.Warehouse'
   ],
 
-  function (Arr, Merger, Fun, Option, Blocks) {
+  function (Arr, Merger, Fun, Option, Blocks, Warehouse) {
     var operate = function (warehouse, rowIndex, colIndex, operation) {
       /* 
          The process:
@@ -33,6 +34,8 @@ define(
           var on = operation(context.on());
 
           var resultant = context.before().concat(on).concat(context.after());
+          console.log('row: ', i);
+          console.log('before: ', before);
           return {
             cells: Fun.constant(resultant),
             element: context.row
@@ -52,7 +55,7 @@ define(
     var insertAfter = function (warehouse, rowIndex, colIndex, nu) {
       var operation = function (on) {
         return on.fold(function () {
-          return [];
+          return [ nu(Warehouse.getAt(warehouse, rowIndex, colIndex)) ];
         }, function (whole) {
           return [ whole, nu(whole) ];
         }, function (partial, offset) {
@@ -66,7 +69,9 @@ define(
     var insertBefore = function (warehouse, rowIndex, colIndex, nu) {
       var operation = function (on) {
         return on.fold(function () {
-          return [];
+          // there is nothing there ... so let's see what warehouse thinks.
+          return [ nu(Warehouse.getAt(warehouse, rowIndex, colIndex)) ];
+          // return [];
         }, function (whole) {
           return [ nu(whole), whole ];
         }, function (partial, offset) {
@@ -99,3 +104,19 @@ define(
     };
   }
 );
+
+/*
+
+return Arr.bind(cells, function (row) {
+  return Arr.bind(row.cells(), function (cell) {
+    if (isSpanner) adjust(+1)
+    else {
+      if isEndedSpan(cell) [ /// yeah, that approach won't work for spanning ... I need to know that I'm on a span row.
+      // How do I know when to insert another cell?]
+      else if (cell.column() === target) [ nu, this ]  
+    }
+  });
+})
+
+
+*/

@@ -59,6 +59,9 @@ define(
         '</tbody></table>'
       );
 
+// subject = Element.fromHtml('<table contenteditable="true" style="border-collapse: collapse;"><tbody><tr><td>A</td><td>A2</td></tr><tr><td rowspan=2>B</td><td>C</td></tr><tr><td>d</td></tr></tbody></table>');
+// subject = Element.fromHtml('<table contenteditable="true" style="border-collapse: collapse;"><tbody><tr><td>A</td></tr><tr><td rowspan=2>B</td></tr></tbody></table>');
+
       var subject2 = Element.fromHtml(
         '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
           '<tr>' +
@@ -128,6 +131,7 @@ define(
 
       var newCell = function (prev) {
         var td = Element.fromTag('td');
+        Insert.append(td, Element.fromText('?'));
         if (prev.colspan() === 1) Css.set(td, 'width', Css.get(prev.element(), 'width'));
         if (prev.rowspan() === 1) Css.set(td, 'height', Css.get(prev.element(), 'height'));
         return Structs.detail(td, 1, 1);
