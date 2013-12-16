@@ -130,6 +130,7 @@ define(
         on: redimension.on,
         off: redimension.off,
         reset: reset,
+        refresh: refresh,
         events: events.registry
       };
     };
