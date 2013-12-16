@@ -10,6 +10,7 @@ Version 4.0.12 (2013-12-xx)
 	Fixed bug where selection normalization wouldn't properly handle cases where a range point was after a element node.
 	Fixed bug where the default time format for the inserttime split button wasn't the first item in the list.
 	Fixed bug where the default text for the formatselect control wasn't properly translated by the language pack.
+	Fixed bug where links would be inserted incorrectly when auto detecting absolute urls/emails links in inline mode.
 	Fixed so image button isn't set to an active state when selecting control/media placeholder items.
 Version 4.0.11 (2013-11-20)
 	Added the possibility to update button icon after it's been rendered.
