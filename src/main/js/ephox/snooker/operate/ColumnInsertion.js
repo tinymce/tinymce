@@ -34,8 +34,6 @@ define(
           var on = operation(context.on());
 
           var resultant = context.before().concat(on).concat(context.after());
-          console.log('row: ', i);
-          console.log('before: ', before);
           return {
             cells: Fun.constant(resultant),
             element: context.row
@@ -55,7 +53,9 @@ define(
     var insertAfter = function (warehouse, rowIndex, colIndex, nu) {
       var operation = function (on) {
         return on.fold(function () {
-          return [ nu(Warehouse.getAt(warehouse, rowIndex, colIndex)) ];
+          // TODO: This should probably be an Option.
+          var occupant = Warehouse.getAt(warehouse, rowIndex, colIndex);
+          return occupant !== undefined ? [ nu(occupant) ] : [];
         }, function (whole) {
           return [ whole, nu(whole) ];
         }, function (partial, offset) {
@@ -69,9 +69,9 @@ define(
     var insertBefore = function (warehouse, rowIndex, colIndex, nu) {
       var operation = function (on) {
         return on.fold(function () {
-          // there is nothing there ... so let's see what warehouse thinks.
-          return [ nu(Warehouse.getAt(warehouse, rowIndex, colIndex)) ];
-          // return [];
+          // TODO: This should probably be an Option.
+          var occupant = Warehouse.getAt(warehouse, rowIndex, colIndex);
+          return occupant !== undefined ? [ nu(occupant) ] : [];
         }, function (whole) {
           return [ nu(whole), whole ];
         }, function (partial, offset) {
