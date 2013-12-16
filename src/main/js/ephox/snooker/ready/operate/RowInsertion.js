@@ -8,10 +8,11 @@ define(
     'ephox.perhaps.Option',
     'ephox.snooker.ready.data.CellType',
     'ephox.snooker.ready.model.Warehouse',
+    'ephox.snooker.ready.operate.Rowspans',
     'ephox.snooker.ready.util.Util'
   ],
 
-  function (Arr, Merger, Fun, Option, CellType, Warehouse, Util) {
+  function (Arr, Merger, Fun, Option, CellType, Warehouse, Rowspans, Util) {
     var getRow = function (warehouse, rowIndex) {
       var range = Util.range(0, warehouse.grid().columns());
       return Arr.map(range, function (colIndex) {
@@ -83,38 +84,23 @@ define(
       }, after];
     };
 
+    var isSpanner = function (spanners, eq) {
+      return function (candidate) {
+        return Arr.exists(spanners, function (sp) {
+          return eq(candidate.element(), sp.element());
+        });
+      };
+    };
+
     var insertAfter = function (warehouse, rowIndex, colIndex, nuRow, nuCell, eq) {
       var operation = function (context, start, cells) {
-        console.log('context: ', context.length);
-        var spanners = Arr.bind(context, function (span) {
-          return span.fold(function () {
-            return [];
-          }, function (whole) {
-            return [];
-          }, function (p, offset) {
-            return offset < p.rowspan() - 1 ? [ p ] : [];
-          });
-        });
-
-        var unspanned = Arr.bind(context, function (span) {
-          return span.fold(Fun.constant([]), function (w) {
-            return [ w ];
-          }, function (p, offset) {
-            return offset == p.rowspan() - 1 ? [ p ] : [];
-          });
-        });
-
-        var isSpanner = function (candidate) {
-          return Arr.exists(spanners, function (sp) {
-            return eq(candidate.element(), sp.element());
-          });
-        };
-
+        var spanners = Rowspans.after(warehouse, rowIndex);
+        
         return Arr.bind(cells, function (row, rindex) {
           if (rindex === start.row()) {
-            return expandCurrent(row, rindex, nuRow, nuCell, isSpanner, unspanned);
+            return expandCurrent(row, rindex, nuRow, nuCell, isSpanner(spanners.spanned(), eq), spanners.unspanned());
           } else {
-            return expandPrev(row, isSpanner);
+            return expandPrev(row, isSpanner(spanners.spanned(), eq));
           }
         });
       };

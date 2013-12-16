@@ -19,13 +19,7 @@ define(
       });
     };
 
-    var general = function (warehouse, rowIndex) { };
-
-    var before = function (warehouse, rowIndex) {
-
-    };
-
-    var after = function (warehouse, rowIndex) {
+    var general = function (warehouse, rowIndex, isSpanning, stoppedSpanning) {
       var context = get(warehouse, rowIndex);
       var spanned = Arr.bind(context, function (span) {
         return span.fold(function () {
@@ -33,7 +27,7 @@ define(
         }, function (whole) {
           return [];
         }, function (p, offset) {
-          return start.row() < p.row() + p.rowspan() - 1 ? [ p ] : [];
+          return isSpanning(p, offset) ? [ p ] : [];
         });
       });
 
@@ -41,7 +35,7 @@ define(
         return span.fold(Fun.constant([]), function (w) {
           return [ w ];
         }, function (p, offset) {
-          return offset == p.rowspan() - 1 ? [ p ] : [];
+          return stoppedSpanning(p, offset) ? [ p ] : [];
         });
       });
 
@@ -49,6 +43,22 @@ define(
         spanned: Fun.constant(spanned),
         unspanned: Fun.constant(unspanned)
       };
+    };
+
+    var before = function (warehouse, rowIndex) {
+
+    };
+
+    var after = function (warehouse, rowIndex) {
+      var isSpanning = function (p, offset) {
+        return offset < p.rowspan() - 1;
+      };
+
+      var stoppedSpanning = function (p, offset) {
+        return offset === p.rowspan() - 1;
+      };
+
+      return general(warehouse, rowIndex, isSpanning, stoppedSpanning);
     };
 
     return {
