@@ -72,10 +72,19 @@ test(
       [ { element: 'e', colspan: 1, rowspan: 1 }, { element: 'f', colspan: 2, rowspan: 1 } ]
     ], RowInsertion.insertAfter, complex(), 1, 0);
 
-    // check([
-    //   [ { element: '?', colspan: 1, rowspan: 1 }, { element: 'a', colspan: 1, rowspan: 1 }, { element: 'b', colspan: 1, rowspan: 1 } ],
-    //   [ { element: '?', colspan: 1, rowspan: 1 }, { element: 'c', colspan: 2, rowspan: 1 } ]
-    // ], RowInsertion.insertBefore, generate(), 0, 0);
+
+    check([
+      [ { element: 'a', colspan: 1, rowspan: 3 }, { element: 'b', colspan: 1, rowspan: 1 }, { element: 'c', colspan: 1, rowspan: 1 } ],
+      [ { element: '?b', colspan: 1, rowspan: 1 }, { element: '?c', colspan: 1, rowspan: 1 } ],
+      [ { element: 'd', colspan: 2, rowspan: 1 } ],
+      [ { element: 'e', colspan: 1, rowspan: 1 }, { element: 'f', colspan: 2, rowspan: 1 } ]
+    ], RowInsertion.insertAfter, complex(), 0, 2);
+
+    check([
+      [ { element: '?a', colspan: 1, rowspan: 1 }, { element: '?c', colspan: 1, rowspan: 1 } ],
+      [ { element: 'a', colspan: 1, rowspan: 1 }, { element: 'c', colspan: 1, rowspan: 2 } ],
+      [ { element: 'b', colspan: 1, rowspan: 1 } ]
+    ], RowInsertion.insertBefore, generate(), 0, 0);
 
     // check([
     //   [ { element: 'a', colspan: 1, rowspan: 1 }, { element: '?', colspan: 1, rowspan: 1 }, { element: 'b', colspan: 1, rowspan: 1 } ],

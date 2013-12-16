@@ -109,9 +109,31 @@ define(
       return operate(warehouse, rowIndex, colIndex, operation);
     };
 
+    var insertBefore = function (warehouse, rowIndex, colIndex, nuRow, nuCell, eq) {
+      var operation = function (start, cells) {
+        var spanners = Rowspans.before(warehouse, rowIndex);
+        var generators = {
+          cell: nuCell,
+          row: nuRow
+        };
+
+        var isSpanner = isSpanCell(spanners.spanned(), eq);
+        
+        return Arr.bind(cells, function (row, rindex) {
+          if (rindex === start.row()) {
+            var result = creation(row, isSpanner, generators, spanners.unspanned());
+            return [ result.other(), result.active() ];
+          } else {
+            return [ expansion(row, isSpanner) ];
+          }
+        });
+      };
+
+      return operate(warehouse, rowIndex, colIndex, operation);
+    };
+
     return {
-      // TODO: Insert before.
-      insertBefore: insertAfter,
+      insertBefore: insertBefore,
       insertAfter: insertAfter
     };
   }

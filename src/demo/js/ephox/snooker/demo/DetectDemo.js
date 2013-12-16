@@ -135,7 +135,7 @@ define(
       DomEvent.bind(afterButton, 'click', function (event) {
         detection().each(function (cell) {
           TableOperation.run(ephoxUi, subject, cell, function (warehouse, gridpos) {
-            return ColumnInsertion.insertAfter(warehouse, gridpos.row(), gridpos.column(), newCell, eq);
+            return RowInsertion.insertAfter(warehouse, gridpos.row(), gridpos.column(), newRow, newCell, eq);
           });
         });
       });

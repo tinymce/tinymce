@@ -46,7 +46,15 @@ define(
     };
 
     var before = function (warehouse, rowIndex) {
+      var isSpanning = function (p, offset) {
+        return offset > 0;
+      };
 
+      var stoppedSpanning = function (p, offset) {
+        return offset === 0;
+      };
+
+      return general(warehouse, rowIndex, isSpanning, stoppedSpanning);
     };
 
     var after = function (warehouse, rowIndex) {
