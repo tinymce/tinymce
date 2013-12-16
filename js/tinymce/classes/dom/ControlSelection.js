@@ -471,6 +471,10 @@ define("tinymce/dom/ControlSelection", [
 		}
 
 		return {
+			isResizable: isResizable,
+			showResizeRect: showResizeRect,
+			hideResizeRect: hideResizeRect,
+			updateResizeRect: updateResizeRect,
 			controlSelect: controlSelect,
 			destroy: destroy
 		};
