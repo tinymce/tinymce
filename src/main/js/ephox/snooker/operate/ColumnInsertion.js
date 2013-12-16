@@ -53,9 +53,12 @@ define(
     var insertAfter = function (warehouse, rowIndex, colIndex, nu) {
       var operation = function (on) {
         return on.fold(function () {
-          // TODO: This should probably be an Option.
           var occupant = Warehouse.getAt(warehouse, rowIndex, colIndex);
-          return occupant !== undefined ? [ nu(occupant) ] : [];
+          return occupant.fold(function () {
+            return [];
+          }, function (occ) {
+            return [ nu(occ) ];
+          });
         }, function (whole) {
           return [ whole, nu(whole) ];
         }, function (partial, offset) {
@@ -69,9 +72,12 @@ define(
     var insertBefore = function (warehouse, rowIndex, colIndex, nu) {
       var operation = function (on) {
         return on.fold(function () {
-          // TODO: This should probably be an Option.
           var occupant = Warehouse.getAt(warehouse, rowIndex, colIndex);
-          return occupant !== undefined ? [ nu(occupant) ] : [];
+          return occupant.fold(function () {
+            return [];
+          }, function (occ) {
+            return [ nu(occ) ];
+          });
         }, function (whole) {
           return [ nu(whole), whole ];
         }, function (partial, offset) {

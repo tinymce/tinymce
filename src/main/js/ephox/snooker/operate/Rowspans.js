@@ -14,8 +14,11 @@ define(
       var range = Util.range(0, warehouse.grid().columns());
       return Arr.map(range, function (colIndex) {
         var item = Warehouse.getAt(warehouse, rowIndex, colIndex);
-        return item === undefined ? CellType.none() :
-          item.rowspan() > 1 ? CellType.partial(item, rowIndex - item.row()) : CellType.whole(item);
+        return item.fold(function () {
+          return CellType.none();
+        }, function (val) {
+          return val.rowspan() > 1 ? CellType.partial(val, rowIndex - val.row()) : CellType.whole(val);
+        });
       });
     };
 

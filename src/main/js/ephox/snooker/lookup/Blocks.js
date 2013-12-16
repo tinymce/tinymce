@@ -18,11 +18,13 @@ define(
       return Arr.map(cols, function (col) {
         var rawRow = Arr.find(rows, function (r) {
           var cell = Warehouse.getAt(warehouse, r, col);
-          return cell !== undefined && cell.colspan() === 1;
+          return cell.exists(function (cl) {
+            return cl.colspan() === 1;
+          });
         });
 
         var row = rawRow > -1 ? rawRow : 0;
-        var result = Warehouse.getAt(warehouse, row, col);
+        var result = Warehouse.getAt(warehouse, row, col).getOrDie();
         return result.element();
       });
     };

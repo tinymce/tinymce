@@ -4,17 +4,19 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.snooker.data.Structs',
     'global!Math'
   ],
 
-  function (Arr, Fun, Structs, Math) {
+  function (Arr, Fun, Option, Structs, Math) {
     var key = function (row, column) {
       return row + ',' + column;
     };
 
     var getAt = function (warehouse, row, column) {
-      return warehouse.access()[key(row, column)];
+      var raw = warehouse.access()[key(row, column)];
+      return raw !== undefined ? Option.some(raw) : Option.none();
     };
 
     /* 
