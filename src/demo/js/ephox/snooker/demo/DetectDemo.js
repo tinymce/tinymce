@@ -6,6 +6,7 @@ define(
     'ephox.perhaps.Option',
     'ephox.snooker.ready.data.Structs',
     'ephox.snooker.ready.operate.ColumnInsertion',
+    'ephox.snooker.ready.operate.RowInsertion',
     'ephox.snooker.ready.operate.TableOperation',
     'ephox.snooker.ready.resize.Adjustments',
     'ephox.snooker.ready.resize.BarManager',
@@ -18,7 +19,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Option, Structs, ColumnInsertion, TableOperation, Adjustments, BarManager, Css, DomEvent, Element, Insert, Node, Ready, SelectorFind) {
+  function (Arr, Option, Structs, ColumnInsertion, RowInsertion, TableOperation, Adjustments, BarManager, Css, DomEvent, Element, Insert, Node, Ready, SelectorFind) {
     return function () {
       var subject = Element.fromHtml(
         '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
@@ -129,7 +130,7 @@ define(
         detection().each(function (cell) {
           console.log('Table: ', subject.dom().innerHTML);
           TableOperation.run(ephoxUi, subject, cell, function (warehouse, gridpos) {
-            return ColumnInsertion.insertBefore(warehouse, gridpos.row(), gridpos.column(), newCell);
+            return RowInsertion.insertBefore(warehouse, gridpos.row(), gridpos.column(), newCell);
           });
           console.log('Post: ', subject.dom().innerHTML);
         });

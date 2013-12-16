@@ -34,13 +34,6 @@ define(
       var all = warehouse.all();
       return Arr.map(all, function (row) {
         var cellsInRow = row.cells();
-        var index = Arr.findIndex(cellsInRow, function (extended, i) {
-          var start = extended.column();
-          var end = extended.column() + extended.colspan() - 1;
-          /* Find the FIRST cell which would span over this colId */
-          return colId >= start && colId <= end;
-        });
-
         var before = Arr.filter(cellsInRow, function (extended) {
           return extended.column() + extended.colspan() - 1 < colId;
         });

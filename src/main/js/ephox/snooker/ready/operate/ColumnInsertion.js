@@ -39,8 +39,6 @@ define(
           };
         });
       }).getOrThunk(function () {
-        console.log('The cell is not being found in the table.', rowIndex, colIndex);
-        // This won't be right ... won't be in the elemnt, cells format *
         return warehouse.all();
       });
     };
