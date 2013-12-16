@@ -6,13 +6,10 @@ define(
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.snooker.ready.data.CellType',
-    'ephox.snooker.ready.model.Warehouse',
-    'ephox.snooker.ready.operate.Rowspans',
-    'ephox.snooker.ready.util.Util'
+    'ephox.snooker.ready.operate.Rowspans'
   ],
 
-  function (Arr, Merger, Fun, Option, CellType, Warehouse, Rowspans, Util) {
+  function (Arr, Merger, Fun, Option, Rowspans) {
     var operate = function (warehouse, rowIndex, colIndex, operation) {
       /* 
          The process:
@@ -30,13 +27,11 @@ define(
       return initial.map(function (start) {
         return operation(start, cells);
       }).getOrThunk(function () {
-        console.log('Did not find what you speak of');
         return warehouse.all();
       });
     };
 
     var adjust = function (cell, delta) {
-      console.log('adjusting');
       return Merger.merge(cell, {
         rowspan: Fun.constant(cell.rowspan() + delta)
       });

@@ -16,7 +16,6 @@ define(
       Remove.empty(tbody);
 
       var rows = Arr.map(list, function (row) {
-        console.log("row: ", row.element());
         var tr = row.element();
         Remove.empty(tr);
         Arr.each(row.cells(), function (cell) {
