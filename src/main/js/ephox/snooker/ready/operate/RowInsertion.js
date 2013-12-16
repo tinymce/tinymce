@@ -26,7 +26,7 @@ define(
 
       return initial.map(function (start) {
         return Arr.bind(cells, function (row, i) {
-          return i === rowIndex ? operation(start, rowIndex, row) : [ row ];
+          return operation(start, rowIndex, row, i);
         });
       }).getOrThunk(function () {
         return warehouse.all();
@@ -40,31 +40,49 @@ define(
       });
     };
 
+    var expandPrev = function (rindex, row) {
+      var cells = Arr.map(row.cells(), function (cell) {
+        return cell.row() < rindex && cell.row() + cell.rowspan() > rindex ? adjust(cell, 1) : cell;
+      });
+
+      return {
+        element: row.element,
+        cells: Fun.constant(cells)
+      };
+    };
+
+    var expandCurrent = function (rindex, row, nuRow, nuCell) {
+      var next = nuRow();
+
+      var modCells = Arr.map(row.cells(), function (cell) {
+        return cell.rowspan() > 1 && rindex < cell.row() + cell.rowspan() ? adjust(cell, 1) : cell;
+      });
+
+      var nextRow = Arr.bind(row.cells(), function (cell) {
+        console.log('rIndex: ', rindex, cell.row(), cell.colspan(), cell.element().dom());
+        return cell.rowspan() === 1 || rindex >= cell.row() + cell.rowspan() - 1 ? Util.repeat(cell.colspan(), Fun.curry(nuCell, cell)) : [];
+      });
+
+      var after = {
+        element: next.element,
+        cells: Fun.constant(nextRow)
+      };
+
+      return [{
+        element: Fun.constant(row.element()),
+        cells: Fun.constant(modCells)
+      }, after];
+    };
+
     var insertAfter = function (warehouse, rowIndex, colIndex, nuRow, nuCell) {
-      var operation = function (start, rindex, row) {
+      var operation = function (start, rindex, row, index) {
         var element = row.element();
         var cells = row.cells();
 
-        var next = nuRow();
-
-        var modCells = Arr.map(row.cells(), function (cell) {
-          return cell.rowspan() > 1 && rindex < cell.row() + cell.rowspan() ? adjust(cell, 1) : cell;
-        });
-
-        var nextRow = Arr.bind(row.cells(), function (cell) {
-          console.log('rIndex: ', rindex, cell.row(), cell.colspan(), cell.element().dom());
-          return cell.rowspan() === 1 || rindex >= cell.row() + cell.rowspan() - 1 ? Util.repeat(cell.colspan(), Fun.curry(nuCell, cell)) : [];
-        });
-
-        var after = {
-          element: next.element,
-          cells: Fun.constant(nextRow)
-        };
-
-        return [{
-          element: Fun.constant(element),
-          cells: Fun.constant(modCells)
-        }, after];
+        // So there are two paths:
+        // 1. just modify the rowspan cells. (target row and not target row)
+        // 2. create a new row in addition to the target row
+        return rindex !== index ? expandPrev(rindex, row) : expandCurrent(rindex, row, nuRow, nuCell);
       };
 
       return operate(warehouse, rowIndex, colIndex, operation);
