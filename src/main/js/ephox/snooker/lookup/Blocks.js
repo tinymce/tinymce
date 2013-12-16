@@ -24,6 +24,7 @@ define(
         });
 
         var row = rawRow > -1 ? rawRow : 0;
+        // This may not be safe because of the defaulting of row above.
         var result = Warehouse.getAt(warehouse, row, col).getOrDie();
         return result.element();
       });

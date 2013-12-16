@@ -50,38 +50,38 @@ define(
       });
     };
 
-    var insertAfter = function (warehouse, rowIndex, colIndex, nu) {
+    var insertAfter = function (warehouse, rowIndex, colIndex, generators, eq) {
       var operation = function (on) {
         return on.fold(function () {
           var occupant = Warehouse.getAt(warehouse, rowIndex, colIndex);
           return occupant.fold(function () {
             return [];
           }, function (occ) {
-            return [ nu(occ) ];
+            return [ generators.cell(occ) ];
           });
         }, function (whole) {
-          return [ whole, nu(whole) ];
+          return [ whole, generators.cell(whole) ];
         }, function (partial, offset) {
-          return offset < partial.colspan() - 1 ? [ adjust(partial, 1) ] : [ partial, nu(partial) ];
+          return offset < partial.colspan() - 1 ? [ adjust(partial, 1) ] : [ partial, generators.cell(partial) ];
         });
       };
 
       return operate(warehouse, rowIndex, colIndex, operation);
     };
 
-    var insertBefore = function (warehouse, rowIndex, colIndex, nu) {
+    var insertBefore = function (warehouse, rowIndex, colIndex, generators, eq) {
       var operation = function (on) {
         return on.fold(function () {
           var occupant = Warehouse.getAt(warehouse, rowIndex, colIndex);
           return occupant.fold(function () {
             return [];
           }, function (occ) {
-            return [ nu(occ) ];
+            return [ generators.cell(occ) ];
           });
         }, function (whole) {
-          return [ nu(whole), whole ];
+          return [ generators.cell(whole), whole ];
         }, function (partial, offset) {
-          return offset === 0 ? [ nu(partial), partial ] : [ adjust(partial, 1) ];
+          return offset === 0 ? [ generators.cell(partial), partial ] : [ adjust(partial, 1) ];
         });
       };
 
@@ -89,7 +89,7 @@ define(
     };
 
     // Should this really be in a module called Insertion?
-    var erase = function (warehouse, rowIndex, colIndex) {
+    var erase = function (warehouse, rowIndex, colIndex, generators, eq) {
       var operation = function (on) {
         return on.fold(function () {
           return [];

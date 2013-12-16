@@ -2,12 +2,9 @@ define(
   'ephox.snooker.demo.DetectDemo',
 
   [
-    'ephox.compass.Arr',
     'ephox.perhaps.Option',
+    'ephox.snooker.api.TableOperations',
     'ephox.snooker.data.Structs',
-    'ephox.snooker.operate.ColumnInsertion',
-    'ephox.snooker.operate.RowInsertion',
-    'ephox.snooker.operate.TableOperation',
     'ephox.snooker.resize.Adjustments',
     'ephox.snooker.resize.BarManager',
     'ephox.sugar.api.Compare',
@@ -15,12 +12,11 @@ define(
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
-    'ephox.sugar.api.Node',
     'ephox.sugar.api.Ready',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Option, Structs, ColumnInsertion, RowInsertion, TableOperation, Adjustments, BarManager, Compare, Css, DomEvent, Element, Insert, Node, Ready, SelectorFind) {
+  function (Option, TableOperations, Structs, Adjustments, BarManager, Compare, Css, DomEvent, Element, Insert, Ready, SelectorFind) {
     return function () {
       var subject = Element.fromHtml(
         '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
@@ -114,16 +110,11 @@ define(
       Insert.append(beforeColumn, Element.fromText('Column Before'));
       Insert.append(ephoxUi, beforeColumn);
 
-      var deleteButton = Element.fromTag('button');
-      Insert.append(deleteButton, Element.fromText('X'));
-      Insert.append(ephoxUi, deleteButton);
-
       var detection = function () {
         var selection = window.getSelection();
         if (selection.rangeCount > 0) {
           var range = selection.getRangeAt(0);
-          var start = Element.fromDom(range.startContainer);
-          return Arr.contains([ 'td', 'th' ], Node.name(start)) ? Option.some(start) : SelectorFind.ancestor(start, 'th,td');
+          return Option.some(Element.fromDom(range.startContainer));
         } else {
           return Option.none();
         }
@@ -144,45 +135,23 @@ define(
 
       var eq = Compare.eq;
 
-      DomEvent.bind(afterRow, 'click', function (event) {
-        detection().each(function (cell) {
-          TableOperation.run(ephoxUi, subject, cell, function (warehouse, gridpos) {
-            return RowInsertion.insertAfter(warehouse, gridpos.row(), gridpos.column(), newRow, newCell, eq);
-          });
-        });
-      });
+      var generators = {
+        row: newRow,
+        cell: newCell
+      };
 
-      DomEvent.bind(beforeRow, 'click', function (event) {
-        detection().each(function (cell) {
-          TableOperation.run(ephoxUi, subject, cell, function (warehouse, gridpos) {
-            return RowInsertion.insertBefore(warehouse, gridpos.row(), gridpos.column(), newRow, newCell, eq);
+      var runOperation = function (operation) {
+        return function (event) {
+          detection().each(function (start) {
+            operation(ephoxUi, start, generators);
           });
-        });
-      });
+        };
+      };
 
-      DomEvent.bind(beforeColumn, 'click', function (event) {
-        detection().each(function (cell) {
-          TableOperation.run(ephoxUi, subject, cell, function (warehouse, gridpos) {
-            return ColumnInsertion.insertBefore(warehouse, gridpos.row(), gridpos.column(), newCell);
-          });
-        });
-      });
-
-      DomEvent.bind(afterColumn, 'click', function (event) {
-        detection().each(function (cell) {
-          TableOperation.run(ephoxUi, subject, cell, function (warehouse, gridpos) {
-            return ColumnInsertion.insertAfter(warehouse, gridpos.row(), gridpos.column(), newCell);
-          });
-        });
-      });
-
-      DomEvent.bind(deleteButton, 'click', function (event) {
-        detection().each(function (cell) {
-          TableOperation.run(ephoxUi, subject, cell, function (warehouse, gridpos) {
-            return ColumnInsertion.erase(warehouse, gridpos.column(), gridpos.row());
-          });
-        });
-      });
+      DomEvent.bind(afterRow, 'click', runOperation(TableOperations.insertRowAfter));
+      DomEvent.bind(beforeRow, 'click', runOperation(TableOperations.insertRowBefore));
+      DomEvent.bind(beforeColumn, 'click', runOperation(TableOperations.insertColumnBefore));
+      DomEvent.bind(afterColumn, 'click', runOperation(TableOperations.insertColumnAfter));
     };
   }
 );

@@ -12,10 +12,13 @@ test(
   function (Arr, Struct, Structs, Warehouse, RowInsertion) {
     var check = function (expected, method, input, rowIndex, colIndex) {
       var warehouse = Warehouse.generate(input);
-      var actual = method(warehouse, rowIndex, colIndex, function () {
-        return '???';
-      }, function (aa) {
-        return d('?' + aa.element(), 1, 1);
+      var actual = method(warehouse, rowIndex, colIndex, {
+        row: function () {
+          return '???';
+        },
+        cell: function (aa) {
+          return d('?' + aa.element(), 1, 1);
+        }
       }, function (a, b) {
         return a === b;
       });

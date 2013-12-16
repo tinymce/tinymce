@@ -12,8 +12,10 @@ test(
   function (Arr, Struct, Structs, Warehouse, ColumnInsertion) {
     var check = function (expected, method, input, rowIndex, colIndex) {
       var warehouse = Warehouse.generate(input);
-      var actual = method(warehouse, rowIndex, colIndex, function () {
-        return d('?', 1, 1);
+      var actual = method(warehouse, rowIndex, colIndex, {
+        cell: function () {
+          return d('?', 1, 1);
+        }
       });
 
       assert.eq(expected.length, actual.length);
