@@ -32,6 +32,8 @@ define(
 
     var getWidth = function (cell) {
       var value = getWidthValue(cell);
+      // Note, Firefox doesn't calculate the width for you with Css.get
+      if (!value) return Width.get(cell);
       var number = parseInt(value, 10);
       return Strings.endsWith(value, '%') && Node.name(cell) !== 'table' ? convert(cell, number) : number;
     };
