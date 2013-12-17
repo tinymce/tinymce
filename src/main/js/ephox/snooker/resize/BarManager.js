@@ -57,6 +57,7 @@ define(
       /* Start the dragging when the bar is clicked, storing the initial position. */
       var mousedown = DomEvent.bind(container, 'mousedown', function (event) {
         if (Bars.isBar(event.target())) {
+          events.trigger.startAdjust();
           var column = Attr.get(event.target(), 'data-column');
           mutation.assign(event.target());
           Attr.set(event.target(), 'data-initial-left', parseInt(Css.get(event.target(), 'left'), 10));
@@ -98,7 +99,8 @@ define(
       };
 
       var events = Events.create({
-        adjustWidth: Event(['table', 'delta', 'column'])
+        adjustWidth: Event(['table', 'delta', 'column']),
+        startAdjust: Event([])
       });
 
       return {

@@ -17,13 +17,18 @@ define(
 
       var events = Events.create({
         beforeResize: Event([]),
-        afterResize: Event([])
+        afterResize: Event([]),
+        startDrag: Event([])
       });
 
       manager.events.adjustWidth.bind(function (event) {
         events.trigger.beforeResize();
         Adjustments.adjust(event.table(), event.delta(), event.column());
         events.trigger.afterResize();
+      });
+
+      manager.events.startAdjust.bind(function (event) {
+        events.trigger.startDrag();
       });
 
       var destroy = function () {
