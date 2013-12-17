@@ -89,10 +89,11 @@ test(
       [ { element: 'b', colspan: 1, rowspan: 1 } ]
     ], RowInsertion.insertBefore, generate(), 0, 0);
 
-    // check([
-    //   [ { element: 'a', colspan: 1, rowspan: 1 }, { element: '?', colspan: 1, rowspan: 1 }, { element: 'b', colspan: 1, rowspan: 1 } ],
-    //   [ { element: 'c', colspan: 3, rowspan: 1 } ]
-    // ], RowInsertion.insertBefore, generate(), 0, 1);
+    check([
+      [ { element: '?a', colspan: 1, rowspan: 1 }, { element: '?c', colspan: 1, rowspan: 1 } ],
+      [ { element: 'a', colspan: 1, rowspan: 1 }, { element: 'c', colspan: 1, rowspan: 2 } ],
+      [ { element: 'b', colspan: 1, rowspan: 1 } ]
+    ], RowInsertion.insertBefore, generate(), 0, 1);
 
   }
 );
