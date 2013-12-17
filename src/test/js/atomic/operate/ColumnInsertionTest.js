@@ -53,6 +53,13 @@ test(
       [ { element: 'c', colspan: 1, rowspan: 1 } ]
     ], ColumnInsertion.erase, generate(), 0, 1);
 
+    check([
+      [ { element: 'a', colspan: 1, rowspan: 1 }, { element: '?', colspan: 1, rowspan: 1 } ]
+    ], ColumnInsertion.insertAfter, [ r('r0', [ d('a', 1, 1) ]) ], 0, 0);
+
+    check([
+      [ { element: '?', colspan: 1, rowspan: 1 }, { element: 'a', colspan: 1, rowspan: 1 } ]
+    ], ColumnInsertion.insertBefore, [ r('r0', [ d('a', 1, 1) ]) ], 0, 0);
 
     check([
       [ { element: 'a', colspan: 1, rowspan: 1 }, { element: '?', colspan: 1, rowspan: 1 }, { element: 'b', colspan: 1, rowspan: 1 } ],

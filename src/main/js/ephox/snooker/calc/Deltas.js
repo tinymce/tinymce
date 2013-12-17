@@ -9,6 +9,9 @@ define(
   ],
 
   function (Arr, Fun, ColumnContext, Math) {
+    /*
+     * Based on the column index, identify the context
+     */
     var neighbours = function (input, index) {
       if (input.length === 0) return ColumnContext.none();
       if (input.length === 1) return ColumnContext.only(0);
@@ -18,6 +21,10 @@ define(
       return ColumnContext.none();
     };
 
+    /*
+     * Calculate the offsets to apply to each column width (not the absolute widths themselves) 
+     * based on a resize at column: column of step: step. The minimum column width allowed is min
+     */
     var determine = function (input, column, step, min) {
       var result = input.slice(0);
       var context = neighbours(input, column);
@@ -64,6 +71,5 @@ define(
     return {
       determine: determine
     };
-
   }
 );
