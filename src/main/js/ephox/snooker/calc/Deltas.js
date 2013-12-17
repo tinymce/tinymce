@@ -11,7 +11,7 @@ define(
   function (Arr, Fun, ColumnContext, Math) {
     var neighbours = function (input, index) {
       if (input.length === 0) return ColumnContext.none();
-      if (input.length === 1) return ColumnContext.only();
+      if (input.length === 1) return ColumnContext.only(0);
       if (index === 0) return ColumnContext.left(0, 1);
       if (index === input.length - 1) return ColumnContext.right(index - 1, index);
       if (index > 0 && index < input.length - 1) return ColumnContext.middle(index - 1, index, index + 1);
@@ -28,7 +28,8 @@ define(
 
       var onNone = Fun.constant(zero(result));
       var onOnly = function (index) {
-        return [ Math.max(step, -result[column] + min) ];
+        var newNext = Math.max(min, result[index] + step);
+        return [ newNext - result[index] ];
       };
      
       var onChange = function (index, next) {

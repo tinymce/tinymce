@@ -13,7 +13,10 @@ define(
   ],
 
   function (Arr, Option, ColumnInsertion, RowInsertion, TableOperation, Compare, Node, SelectorFind) {
-    var detection = function (element, offset) {
+    /*
+     * Identify the optional cell that element represents
+     */
+    var detection = function (element) {
       var selection = window.getSelection();
       if (selection.rangeCount > 0) {
         var range = selection.getRangeAt(0);
@@ -23,6 +26,9 @@ define(
       }
     };
 
+    /*
+     * Using the current element, execute operation on the table 
+     */
     var insert = function (operation) {
       return function (container, element, generators) {
         detection(element).each(function (cell) {

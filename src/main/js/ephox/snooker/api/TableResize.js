@@ -7,6 +7,9 @@ define(
   ],
 
   function (Adjustments, BarManager) {
+    /* 
+     * Creates and sets up a bar-based column resize manager 
+     */
     return function (container) {
       var manager = BarManager(container);
 

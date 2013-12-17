@@ -11,6 +11,10 @@ define(
   ],
 
   function (Arr, Fun, Option, CellLocation, TableLookup, Compare) {
+    /*
+     * Identify the index of the current cell within all the cells, and 
+     * a list of the cells within its table.
+     */
     var detect = function (current) {
       return TableLookup.table(current).bind(function (table) {
         var all = TableLookup.cells(table);
@@ -25,6 +29,9 @@ define(
       });
     };
 
+    /* 
+     * Identify the CellLocation of the cell when navigating forward from current
+     */
     var next = function (current) {
       var detection = detect(current);
       return detection.fold(function () {
@@ -34,6 +41,9 @@ define(
       });
     };
 
+    /* 
+     * Identify the CellLocation of the cell when navigating back from current
+     */
     var prev = function (current) {
       var detection = detect(current);
       return detection.bind(function () {

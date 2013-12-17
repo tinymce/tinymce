@@ -11,9 +11,9 @@ define(
       });
     };
 
-    var only = function () {
+    var only = function (index) {
       return folder(function (n, o, l, m, r) {
-        return o();
+        return o(index);
       });
     };
 
