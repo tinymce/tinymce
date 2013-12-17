@@ -212,7 +212,7 @@ define("tinymce/pasteplugin/Clipboard", [
 
 		editor.on('paste', function(e) {
 			var clipboardContent = getClipboardContent(e);
-			var isKeyBoardPaste = new Date().getTime() - keyboardPasteTimeStamp < 100;
+			var isKeyBoardPaste = new Date().getTime() - keyboardPasteTimeStamp < 1000;
 			var plainTextMode = self.pasteFormat == "text" || keyboardPastePlainTextState;
 
 			// Not a keyboard paste prevent default paste and try to grab the clipboard contents using different APIs
@@ -230,7 +230,6 @@ define("tinymce/pasteplugin/Clipboard", [
 
 				editor.getDoc().execCommand('Paste', false, null);
 				clipboardContent["text/html"] = getPasteBinHtml();
-				removePasteBin();
 			}
 
 			setTimeout(function() {
