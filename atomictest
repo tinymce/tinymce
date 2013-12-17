@@ -1,4 +1,0 @@
-#!/bin/sh
-
-bolt test config/bolt/atomic.js $(find src/test/js/atomic -name *Test.js | tr ' ' ':')
-
