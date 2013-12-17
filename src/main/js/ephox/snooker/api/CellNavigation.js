@@ -16,11 +16,15 @@ define(
      * a list of the cells within its table.
      */
     var detect = function (current) {
+      console.log('current: ', current.dom());
       return TableLookup.table(current).bind(function (table) {
+        console.log('table: ', table.dom());
         var all = TableLookup.cells(table);
         var index = Arr.findIndex(all, function (x) {
           return Compare.eq(current, x);
         });
+
+        console.log('index: ', index);
 
         return index < 0 ? Option.none() : Option.some({
           index: Fun.constant(index),
@@ -46,7 +50,7 @@ define(
      */
     var prev = function (current) {
       var detection = detect(current);
-      return detection.bind(function () {
+      return detection.fold(function () {
         return CellLocation.none();
       }, function (info) {
         return info.index() - 1 >= 0 ? CellLocation.middle(current, info.all()[info.index() - 1]) : CellLocation.none(current);

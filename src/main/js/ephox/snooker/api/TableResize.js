@@ -2,19 +2,28 @@ define(
   'ephox.snooker.api.TableResize',
 
   [
+    'ephox.porkbun.Event',
+    'ephox.porkbun.Events',
     'ephox.snooker.resize.Adjustments',
     'ephox.snooker.resize.BarManager'
   ],
 
-  function (Adjustments, BarManager) {
+  function (Event, Events, Adjustments, BarManager) {
     /* 
      * Creates and sets up a bar-based column resize manager 
      */
     return function (container) {
       var manager = BarManager(container);
 
+      var events = Events.create({
+        beforeResize: Event([]),
+        afterResize: Event([])
+      });
+
       manager.events.adjustWidth.bind(function (event) {
+        events.trigger.beforeResize();
         Adjustments.adjust(event.table(), event.delta(), event.column());
+        events.trigger.afterResize();
       });
 
       var destroy = function () {
@@ -24,7 +33,8 @@ define(
       return {
         on: manager.on,
         off: manager.off,
-        destroy: destroy
+        destroy: destroy,
+        events: events.registry
       };
     };
   }
