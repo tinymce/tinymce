@@ -17,13 +17,7 @@ define(
      * Identify the optional cell that element represents
      */
     var detection = function (element) {
-      var selection = window.getSelection();
-      if (selection.rangeCount > 0) {
-        var range = selection.getRangeAt(0);
-        return Arr.contains([ 'td', 'th' ], Node.name(element)) ? Option.some(element) : SelectorFind.ancestor(element, 'th,td');
-      } else {
-        return Option.none();
-      }
+      return Arr.contains([ 'td', 'th' ], Node.name(element)) ? Option.some(element) : SelectorFind.ancestor(element, 'th,td');
     };
 
     /*
