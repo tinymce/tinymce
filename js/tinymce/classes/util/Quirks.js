@@ -207,18 +207,20 @@ define("tinymce/util/Quirks", [
 			});
 
 			editor.on('drop', function(e) {
-				var internalContent = e.dataTransfer.getData('mce-internal');
+				if (!isDefaultPrevented(e)) {
+					var internalContent = e.dataTransfer.getData('mce-internal');
 
-				if (internalContent && doc.caretRangeFromPoint) {
-					e.preventDefault();
-					customDelete();
-					editor.selection.setRng(doc.caretRangeFromPoint(e.x, e.y));
-					editor.insertContent(internalContent);
+					if (internalContent && doc.caretRangeFromPoint) {
+						e.preventDefault();
+						customDelete();
+						editor.selection.setRng(doc.caretRangeFromPoint(e.x, e.y));
+						editor.insertContent(internalContent);
+					}
 				}
 			});
 
 			editor.on('cut', function(e) {
-				if (e.clipboardData) {
+				if (!isDefaultPrevented(e) && e.clipboardData) {
 					e.preventDefault();
 					e.clipboardData.clearData();
 					e.clipboardData.setData('text/html', editor.selection.getContent());
