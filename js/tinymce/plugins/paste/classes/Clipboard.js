@@ -163,6 +163,27 @@ define("tinymce/pasteplugin/Clipboard", [
 		}
 
 		/**
+		 * Gets various content types out of a datatransfer object.
+		 *
+		 * @param {DataTransfer} dataTransfer Event fired on paste.
+		 * @return {Object} Object with mime types and data for those mime types.
+		 */
+		function getDataTransferItems(dataTransfer) {
+			var data = {};
+
+			if (dataTransfer && dataTransfer.types) {
+				data['text/plain'] = dataTransfer.getData('Text');
+
+				for (var i = 0; i < dataTransfer.types.length; i++) {
+					var contentType = dataTransfer.types[i];
+					data[contentType] = dataTransfer.getData(contentType);
+				}
+			}
+
+			return data;
+		}
+
+		/**
 		 * Gets various content types out of the Clipboard API. It will also get the
 		 * plain text using older IE and WebKit API:s.
 		 *
@@ -170,18 +191,22 @@ define("tinymce/pasteplugin/Clipboard", [
 		 * @return {Object} Object with mime types and data for those mime types.
 		 */
 		function getClipboardContent(clipboardEvent) {
-			var data = {}, clipboardData = clipboardEvent.clipboardData || editor.getDoc().dataTransfer;
+			return getDataTransferItems(clipboardEvent.clipboardData || editor.getDoc().dataTransfer);
+		}
 
-			if (clipboardData && clipboardData.types) {
-				data['text/plain'] = clipboardData.getData('Text');
+		function getCaretRangeFromEvent(e) {
+			var doc = editor.getDoc(), rng;
 
-				for (var i = 0; i < clipboardData.types.length; i++) {
-					var contentType = clipboardData.types[i];
-					data[contentType] = clipboardData.getData(contentType);
-				}
+			if (doc.caretPositionFromPoint) {
+				var point = doc.caretPositionFromPoint(e.pageX, e.pageY);
+				rng = doc.createRange();
+				rng.setStart(point.offsetNode, point.offset);
+				rng.collapse(true);
+			} else if (doc.caretRangeFromPoint) {
+				rng = doc.caretRangeFromPoint(e.pageX, e.pageY);
 			}
 
-			return data;
+			return rng;
 		}
 
 		editor.on('keydown', function(e) {
@@ -260,6 +285,39 @@ define("tinymce/pasteplugin/Clipboard", [
 					pasteHtml(html);
 				}
 			}, 0);
+		});
+
+		editor.on('dragstart', function(e) {
+			if (e.dataTransfer.types) {
+				e.dataTransfer.setData('mce-internal', editor.selection.getContent());
+			}
+		});
+
+		editor.on('drop', function(e) {
+			var rng = getCaretRangeFromEvent(e);
+
+			if (rng) {
+				var dropContent = getDataTransferItems(e.dataTransfer);
+				var content = dropContent['mce-internal'] || dropContent['text/html'] || dropContent['text/plain'];
+
+				if (content) {
+					e.preventDefault();
+
+					editor.undoManager.transact(function() {
+						if (dropContent['mce-internal']) {
+							editor.execCommand('Delete');
+						}
+
+						editor.selection.setRng(rng);
+
+						if (!dropContent['text/html']) {
+							pasteText(content);
+						} else {
+							pasteHtml(content);
+						}
+					});
+				}
+			}
 		});
 
 		self.pasteHtml = pasteHtml;

@@ -13,6 +13,7 @@ Version 4.0.12 (2013-12-xx)
 	Fixed bug where links would be inserted incorrectly when auto detecting absolute urls/emails links in inline mode.
 	Fixed bug where IE 11 would insert contents in the wrong order due to focus/blur async problems.
 	Fixed bug where pasting contents on IE sometimes would place the contents at the end of the editor.
+	Fixed so drag/drop on non IE browsers gets filtered by the paste plugin. IE doesn't have the necessary APIs.
 	Fixed so the paste plugin better detects Word 2007 contents not marked with -mso junk.
 	Fixed so image button isn't set to an active state when selecting control/media placeholder items.
 Version 4.0.11 (2013-11-20)
