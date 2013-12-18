@@ -53,7 +53,9 @@ define("tinymce/dom/DOMUtils", [
 		self.counter = 0;
 		self.stdMode = !isIE || doc.documentMode >= 8;
 		self.boxModel = !isIE || doc.compatMode == "CSS1Compat" || self.stdMode;
-		self.hasOuterHTML = "outerHTML" in doc.createElement("a");
+		var a = doc.createElement("a");
+		self.hasOuterHTML = "outerHTML" in a;
+		self.hasInnerText = "innerText" in a;
 		this.boundEvents = [];
 
 		self.settings = settings = extend({
@@ -1453,6 +1455,45 @@ define("tinymce/dom/DOMUtils", [
 					} else {
 						set();
 					}
+				}
+			});
+		},
+
+		/**
+		 * Gets inner text of element.
+		 *
+		 * @method getText
+		 * @param {String/Element} elm Element ID or element object to get outer HTML from.
+		 * @return {String} Inner text of element.
+		 */
+		getText: function(elm) {
+			var self = this;
+
+			elm = self.get(elm);
+
+			if (elm && elm.nodeType == 1) {
+				return self.hasInnerText ? elm.innerText : elm.textContent;
+			}
+			else {
+				return null;
+			}
+		},
+
+		/**
+		 * Sets inner text of element.
+		 *
+		 * @method setText
+		 * @param {Element/String/Array} elm DOM element, element id string or array of elements/ids to set inner text on.
+		 * @param {String} text Inner text.
+		 */
+		setText: function(elm, text) {
+			var self = this;
+			var textAttr = self.hasInnerText ? "innerText" : "textContent";
+
+			return self.run(elm, function(elm) {
+				// Only set text on elements
+				if (elm.nodeType == 1) {
+					elm[textAttr] = text;
 				}
 			});
 		},
