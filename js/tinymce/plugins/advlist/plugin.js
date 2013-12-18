@@ -11,7 +11,7 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('advlist', function(editor) {
-	var olMenuItems, ulMenuItems, lastStyles = {};
+	var olMenuItems, ulMenuItems, advlist_show_style_options, lastStyles = {};
 
 	function buildMenuItems(listName, styleValues) {
 		var items = [];
@@ -30,6 +30,8 @@ tinymce.PluginManager.add('advlist', function(editor) {
 		"advlist_number_styles",
 		"default,lower-alpha,lower-greek,lower-roman,upper-alpha,upper-roman"
 	));
+
+	advlist_show_style_options = editor.getParam("advlist_show_style_options", true);
 
 	ulMenuItems = buildMenuItems('UL', editor.getParam("advlist_bullet_styles", "default,circle,disc,square"));
 
@@ -66,7 +68,7 @@ tinymce.PluginManager.add('advlist', function(editor) {
 	}
 
 	editor.addButton('numlist', {
-		type: 'splitbutton',
+		type: (advlist_show_style_options) ? 'splitbutton' : 'button',
 		tooltip: 'Numbered list',
 		menu: olMenuItems,
 		onshow: updateSelection,
@@ -79,7 +81,7 @@ tinymce.PluginManager.add('advlist', function(editor) {
 	});
 
 	editor.addButton('bullist', {
-		type: 'splitbutton',
+		type: (advlist_show_style_options) ?'splitbutton' : 'button',
 		tooltip: 'Bullet list',
 		menu: ulMenuItems,
 		onshow: updateSelection,
