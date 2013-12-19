@@ -522,10 +522,11 @@ define("tinymce/EditorCommands", [
 					}
 
 					each(selection.getSelectedBlocks(), function(element) {
-						var indentStyleName;
+						var indentStyleDir, indentStyleName;
 
 						if (element.nodeName != "LI") {
-							indentStyleName = dom.getStyle(element, 'direction', true) == 'rtl' ? 'paddingRight' : 'paddingLeft';
+							indentStyleDir = dom.getStyle(element, 'direction', true) == 'rtl' ? 'Right' : 'Left';
+                            indentStyleName = (editor.getParam('indent_use_margin', false)) ? "margin" + indentStyleDir : "padding" + indentStyleDir;
 
 							if (command == 'outdent') {
 								value = Math.max(0, parseInt(element.style[indentStyleName] || 0, 10) - intentValue);
