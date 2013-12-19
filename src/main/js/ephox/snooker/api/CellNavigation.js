@@ -6,7 +6,7 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.snooker.api.CellLocation',
-    'ephox.snooker.lookup.TableLookup',
+    'ephox.snooker.api.TableLookup',
     'ephox.sugar.api.Compare'
   ],
 

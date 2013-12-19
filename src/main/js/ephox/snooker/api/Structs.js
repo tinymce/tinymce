@@ -1,5 +1,5 @@
 define(
-  'ephox.snooker.data.Structs',
+  'ephox.snooker.api.Structs',
 
   [
     'ephox.scullion.Struct'

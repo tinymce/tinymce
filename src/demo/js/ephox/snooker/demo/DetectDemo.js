@@ -3,9 +3,9 @@ define(
 
   [
     'ephox.perhaps.Option',
+    'ephox.snooker.api.Structs',
     'ephox.snooker.api.TableOperations',
     'ephox.snooker.api.TableResize',
-    'ephox.snooker.data.Structs',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.DomEvent',
@@ -15,7 +15,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Option, TableOperations, TableResize, Structs, Compare, Css, DomEvent, Element, Insert, Ready, SelectorFind) {
+  function (Option, Structs, TableOperations, TableResize, Compare, Css, DomEvent, Element, Insert, Ready, SelectorFind) {
     return function () {
       var subject = Element.fromHtml(
         '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +

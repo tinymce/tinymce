@@ -5,7 +5,7 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.snooker.data.Structs',
+    'ephox.snooker.api.Structs',
     'global!Math'
   ],
 

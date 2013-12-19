@@ -2,7 +2,7 @@ define(
   'ephox.snooker.picker.CellPosition',
 
   [
-    'ephox.snooker.data.Structs',
+    'ephox.snooker.api.Structs',
     'global!Math'
   ],
 

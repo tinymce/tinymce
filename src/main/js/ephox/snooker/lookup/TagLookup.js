@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.snooker.data.Structs',
+    'ephox.snooker.api.Structs',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.SelectorFind',
     'ephox.sugar.api.Traverse'

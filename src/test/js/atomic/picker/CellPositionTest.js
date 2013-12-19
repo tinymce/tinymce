@@ -2,7 +2,7 @@ test(
   'CellPositionTest',
 
   [
-    'ephox.snooker.data.Structs',
+    'ephox.snooker.api.Structs',
     'ephox.snooker.picker.CellPosition'
   ],
 

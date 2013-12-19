@@ -2,7 +2,7 @@ define(
   'ephox.snooker.resize.Sizes',
 
   [
-    'ephox.snooker.lookup.TableLookup',
+    'ephox.snooker.api.TableLookup',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.Width',
@@ -24,7 +24,8 @@ define(
 
     var convert = function (cell, number) {
       var newWidth = TableLookup.table(cell).map(function (table) {
-        return Math.floor((number / 100.0) * Width.get(table));
+        var total = Width.get(table);
+        return Math.floor((number / 100.0) * total);
       }).getOr(number);
       setWidth(cell, newWidth);
       return newWidth;

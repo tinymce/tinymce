@@ -4,7 +4,7 @@ test(
   [
     'ephox.compass.Arr',
     'ephox.scullion.Struct',
-    'ephox.snooker.data.Structs',
+    'ephox.snooker.api.Structs',
     'ephox.snooker.lookup.Blocks',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.test.Stringify'

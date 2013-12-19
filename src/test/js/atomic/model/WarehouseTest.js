@@ -4,7 +4,7 @@ test(
   [
     'ephox.compass.Obj',
     'ephox.scullion.Struct',
-    'ephox.snooker.data.Structs',
+    'ephox.snooker.api.Structs',
     'ephox.snooker.model.Warehouse'
   ],
 

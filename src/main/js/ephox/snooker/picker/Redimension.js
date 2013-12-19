@@ -2,7 +2,7 @@ define(
   'ephox.snooker.picker.Redimension',
 
   [
-    'ephox.snooker.data.Structs',
+    'ephox.snooker.api.Structs',
     'ephox.snooker.picker.CellPosition',
     'ephox.snooker.picker.Sizing',
     'ephox.sugar.api.Height',

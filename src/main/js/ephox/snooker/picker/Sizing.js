@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.peanut.Fun',
-    'ephox.snooker.data.Structs',
+    'ephox.snooker.api.Structs',
     'global!Math'
   ],
 

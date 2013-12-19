@@ -4,8 +4,8 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
-    'ephox.snooker.data.Structs',
-    'ephox.snooker.lookup.TableLookup',
+    'ephox.snooker.api.Structs',
+    'ephox.snooker.api.TableLookup',
     'ephox.sugar.api.Attr'
   ],
 

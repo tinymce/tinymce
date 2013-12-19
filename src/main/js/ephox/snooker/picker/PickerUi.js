@@ -6,8 +6,8 @@ define(
     'ephox.peanut.Fun',
     'ephox.porkbun.Event',
     'ephox.porkbun.Events',
-    'ephox.snooker.data.Structs',
-    'ephox.snooker.lookup.TableLookup',
+    'ephox.snooker.api.Structs',
+    'ephox.snooker.api.TableLookup',
     'ephox.snooker.picker.Redimension',
     'ephox.snooker.util.Util',
     'ephox.snooker.style.Styles',
@@ -41,7 +41,7 @@ define(
       var destroy = function() {
         clicker.unbind();
         mover.unbind();
-        Remove.remove(element);
+        Remove.remove(table);
       };
 
       var setSize = function (numRows, numCols) {

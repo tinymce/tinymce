@@ -1,10 +1,10 @@
 define(
-  'ephox.snooker.lookup.TableLookup',
+  'ephox.snooker.api.TableLookup',
 
   [
     'ephox.compass.Arr',
     'ephox.perhaps.Option',
-    'ephox.snooker.data.Structs',
+    'ephox.snooker.api.Structs',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.SelectorFilter',
