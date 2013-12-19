@@ -526,7 +526,8 @@ define("tinymce/EditorCommands", [
 
 						if (element.nodeName != "LI") {
 							indentStyleDir = dom.getStyle(element, 'direction', true) == 'rtl' ? 'Right' : 'Left';
-                            indentStyleName = (editor.getParam('indent_use_margin', false)) ? "margin" + indentStyleDir : "padding" + indentStyleDir;
+                            indentStyleName = (editor.getParam(
+                                'indent_use_margin', false)) ? "margin" + indentStyleDir : "padding" + indentStyleDir;
 
 							if (command == 'outdent') {
 								value = Math.max(0, parseInt(element.style[indentStyleName] || 0, 10) - intentValue);
