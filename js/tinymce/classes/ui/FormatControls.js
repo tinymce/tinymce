@@ -56,7 +56,7 @@ define("tinymce/ui/FormatControls", [
 			// Default preview
 			if (!previewStyles) {
 				previewStyles = 'font-family font-size font-weight font-style text-decoration ' +
-					'text-transform color background-color border border-radius';
+					'text-transform color background-color border border-radius outline';
 			}
 
 			// Removes any variables since these can't be previewed
