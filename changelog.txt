@@ -1,4 +1,5 @@
 Version 4.0.12 (2014-01-xx)
+	Added language selection menu to spellchecker button.
 	Fixed bug where table resize handles could sometimes be added to elements out side the editable inline element.
 Version 4.0.12 (2013-12-18)
 	Added new media_scripts option to the media plugin. This makes it possible to embed videos using script elements.

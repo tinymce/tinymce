@@ -10,6 +10,8 @@
 
 /*jshint camelcase:false */
 
+/*global tinymce:true */
+
 /**
  * This class contains all core logic for the spellchecker plugin.
  *
@@ -26,7 +28,34 @@ define("tinymce/spellcheckerplugin/Plugin", [
 	"tinymce/util/URI"
 ], function(DomTextMatcher, PluginManager, Tools, Menu, DOMUtils, JSONRequest, URI) {
 	PluginManager.add('spellchecker', function(editor, url) {
-		var lastSuggestions, started, suggestionsMenu, settings = editor.settings;
+		var languageMenuItems, lastSuggestions, started, suggestionsMenu, settings = editor.settings;
+
+		function buildMenuItems(listName, languageValues) {
+			var items = [];
+
+			tinymce.each(languageValues, function(languageValue) {
+				items.push({
+					text: languageValue.name,
+					data: languageValue.value
+				});
+			});
+
+			return items;
+		}
+
+		// TODO read these from settings.spellchecker_languages instead
+		languageMenuItems = buildMenuItems('Language', [
+			{ name: 'English', value: 'en' },
+			{ name: 'Danish', value: 'da' },
+			{ name: 'Dutch', value: 'nl' },
+			{ name: 'French', value: 'fr_FR' },
+			{ name: 'German', value: 'de' },
+			{ name: 'Italian', value: 'it' },
+			{ name: 'Polish', value: 'pl' },
+			{ name: 'Portuguese', value: 'pt_BR' },
+			{ name: 'Spanish', value: 'es' },
+			{ name: 'Swedish', value: 'sv' }
+		]);
 
 		function isEmpty(obj) {
 			/*jshint unused:false*/
@@ -282,8 +311,22 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			}
 		});
 
+		function updateSelection(e) {
+			var selectedLanguage = settings.spellchecker_language;
+
+			e.control.items().each(function(ctrl) {
+				ctrl.active(ctrl.settings.data === selectedLanguage);
+			});
+		}
+
 		editor.addButton('spellchecker', {
+			type: 'splitbutton',
 			tooltip: 'Spellcheck',
+			menu: languageMenuItems,
+			onshow: updateSelection,
+			onselect: function(e) {
+				settings.spellchecker_language = e.control.settings.data;
+			},
 			onclick: spellcheck,
 			onPostRender: function() {
 				var self = this;
