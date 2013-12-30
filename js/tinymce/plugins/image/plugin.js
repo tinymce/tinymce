@@ -190,7 +190,7 @@ tinymce.PluginManager.add('image', function(editor) {
 		width = dom.getAttrib(imgElm, 'width');
 		height = dom.getAttrib(imgElm, 'height');
 
-		if (imgElm.nodeName == 'IMG' && !imgElm.getAttribute('data-mce-object')) {
+		if (imgElm.nodeName == 'IMG' && !imgElm.getAttribute('data-mce-object') && !imgElm.getAttribute('data-mce-placeholder')) {
 			data = {
 				src: dom.getAttrib(imgElm, 'src'),
 				alt: dom.getAttrib(imgElm, 'alt'),
@@ -332,7 +332,7 @@ tinymce.PluginManager.add('image', function(editor) {
 		icon: 'image',
 		tooltip: 'Insert/edit image',
 		onclick: createImageList(showDialog),
-		stateSelector: 'img:not([data-mce-object])'
+		stateSelector: 'img:not([data-mce-object],[data-mce-placeholder])'
 	});
 
 	editor.addMenuItem('image', {

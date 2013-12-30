@@ -67,36 +67,36 @@ define("tinymce/FocusManager", [
 			return rng;
 		}
 
-		function registerEvents(e) {
-			var editor = e.editor, lastRng, selectionChangeHandler;
+		function isUIElement(elm) {
+			return !!DOMUtils.DOM.getParent(elm, FocusManager.isEditorUIElement);
+		}
 
-			function isUIElement(elm) {
-				return !!DOMUtils.DOM.getParent(elm, FocusManager.isEditorUIElement);
-			}
+		function isNodeInBodyOfEditor(node, editor) {
+			var body = editor.getBody();
 
-			function isNodeInBody(node) {
-				var body = editor.getBody();
-
-				while (node) {
-					if (node == body) {
-						return true;
-					}
-
-					node = node.parentNode;
+			while (node) {
+				if (node == body) {
+					return true;
 				}
+
+				node = node.parentNode;
 			}
+		}
+
+		function registerEvents(e) {
+			var editor = e.editor, selectionChangeHandler;
 
 			editor.on('init', function() {
 				// On IE take selection snapshot onbeforedeactivate
 				if ("onbeforedeactivate" in document && Env.ie < 11) {
 					editor.dom.bind(editor.getBody(), 'beforedeactivate', function() {
-						var ieSelection = editor.getDoc().selection;
-
 						try {
-							lastRng = ieSelection && ieSelection.createRange ? ieSelection.createRange() : editor.selection.getRng();
+							editor.lastRng = editor.selection.getRng();
 						} catch (ex) {
 							// IE throws "Unexcpected call to method or property access" some times so lets ignore it
 						}
+
+						editor.selection.lastFocusBookmark = createBookmark(editor.lastRng);
 					});
 				} else if (editor.inline || Env.ie > 10) {
 					// On other browsers take snapshot on nodechange in inline mode since they have Ghost selections for iframes
@@ -108,8 +108,8 @@ define("tinymce/FocusManager", [
 							node = editor.getBody();
 						}
 
-						if (isNodeInBody(node)) {
-							lastRng = editor.selection.getRng();
+						if (isNodeInBodyOfEditor(node, editor)) {
+							editor.lastRng = editor.selection.getRng();
 						}
 					});
 
@@ -123,7 +123,7 @@ define("tinymce/FocusManager", [
 
 							// Store when it's non collapsed
 							if (!rng.collapsed) {
-								lastRng = rng;
+								editor.lastRng = rng;
 							}
 						};
 
@@ -138,7 +138,7 @@ define("tinymce/FocusManager", [
 			});
 
 			editor.on('setcontent', function() {
-				lastRng = null;
+				editor.lastRng = null;
 			});
 
 			// Remove last selection bookmark on mousedown see #6305
@@ -160,31 +160,17 @@ define("tinymce/FocusManager", [
 					}
 
 					editorManager.activeEditor = editor;
+					editorManager.focusedEditor = editor;
 					editor.fire('focus', {blurredEditor: focusedEditor});
 					editor.focus(false);
-					editorManager.focusedEditor = editor;
 				}
 
-				lastRng = null;
+				editor.lastRng = null;
 			});
 
-			editor.on('focusout', function(e) {
-				// Moving focus to elements within the body that have a control seleciton on IE
-				// will fire an focusout event so we need to check if the event is fired on the body
-				// or on a sub element see #6456
-				if (e.target !== editor.getBody() && isNodeInBody(e.target)) {
-					return;
-				}
-
-				editor.selection.lastFocusBookmark = createBookmark(lastRng);
-
+			editor.on('focusout', function() {
 				window.setTimeout(function() {
 					var focusedEditor = editorManager.focusedEditor;
-
-					// Focus from editorA into editorB then don't restore selection
-					if (focusedEditor != editor) {
-						editor.selection.lastFocusBookmark = null;
-					}
 
 					// Still the same editor the the blur was outside any editor UI
 					if (!isUIElement(getActiveElement()) && focusedEditor == editor) {
@@ -195,6 +181,22 @@ define("tinymce/FocusManager", [
 				}, 0);
 			});
 		}
+
+		// Check if focus is moved to an element outside the active editor by checking if the target node
+		// isn't within the body of the activeEditor nor a UI element such as a dialog child control
+		DOMUtils.DOM.bind(document, 'focusin', function(e) {
+			var activeEditor = editorManager.activeEditor;
+
+			if (activeEditor && e.target.ownerDocument == document) {
+				activeEditor.selection.lastFocusBookmark = createBookmark(activeEditor.lastRng);
+
+				// Fire a blur event if the element isn't a UI element
+				if (!isUIElement(e.target) && editorManager.focusedEditor == activeEditor) {
+					activeEditor.fire('blur', {focusedEditor: null});
+					editorManager.focusedEditor = null;
+				}
+			}
+		});
 
 		editorManager.on('AddEditor', registerEvents);
 	}

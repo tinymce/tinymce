@@ -183,7 +183,7 @@ define("tinymce/EditorCommands", [
 			},
 
 			// Override unlink command
-			unlink: function(command) {
+			unlink: function() {
 				if (selection.isCollapsed()) {
 					var elm = selection.getNode();
 					if (elm.tagName == 'A') {
@@ -193,8 +193,7 @@ define("tinymce/EditorCommands", [
 					return;
 				}
 
-				execNativeCommand(command);
-				selection.collapse(FALSE);
+				formatter.remove("link");
 			},
 
 			// Override justify commands to use the text formatter engine
