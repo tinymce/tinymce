@@ -48,6 +48,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			{ name: 'English', value: 'en' },
 			{ name: 'Danish', value: 'da' },
 			{ name: 'Dutch', value: 'nl' },
+			{ name: 'Finnish', value: 'fi' },
 			{ name: 'French', value: 'fr_FR' },
 			{ name: 'German', value: 'de' },
 			{ name: 'Italian', value: 'it' },
