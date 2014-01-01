@@ -11,8 +11,10 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('textcolor', function(editor) {
+	var autocolorOption = editor.settings.textcolor_autocolor; // boolean
+
 	function mapColors() {
-		var i, colors = [], colorMap;
+		var i, l, colors = [], colorMap;
 
 		colorMap = editor.settings.textcolor_map || [
 			"000000", "Black",
@@ -57,7 +59,7 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 			"FFFFFF", "White"
 		];
 
-		for (i = 0; i < colorMap.length; i += 2) {
+		for (i = 0, l = colorMap.length; i < l; i += 2) {
 			colors.push({
 				text: colorMap[i + 1],
 				color: colorMap[i]
@@ -68,14 +70,22 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 	}
 
 	function renderColorPicker() {
-		var ctrl = this, colors, color, html, last, rows, cols, x, y, i;
+		var ctrl = this, colors, color, last, rows, cols, autocolorText, autocolorBar, html, x, y, i;
 
 		colors = mapColors();
-
-		html = '<table class="mce-grid mce-grid-border mce-colorbutton-grid" role="presentation" cellspacing="0"><tbody>';
 		last = colors.length - 1;
 		rows = editor.settings.textcolor_rows || 5;
 		cols = editor.settings.textcolor_cols || 8;
+		autocolorText = ctrl.parent().settings.selectcmd === 'ForeColor' ? 'Auto' : 'None';
+		autocolorBar = '<div class="mce-colorbutton-autocolor"' +
+						' id="' + ctrl._id + '-auto"' +
+						' data-mce-color="auto"' +
+						' role="option"' +
+						' tabIndex="-1">' + autocolorText +
+						'</div>';
+
+		html = (autocolorOption ? autocolorBar : '') +
+			'<table class="mce-grid mce-grid-border mce-colorbutton-grid" role="presentation" cellspacing="0"><tbody>';
 
 		for (y = 0; y < rows; y++) {
 			html += '<tr>';
@@ -111,20 +121,51 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 
 	function onPanelClick(e) {
 		var buttonCtrl = this.parent(), value;
+		var targetValue = e.target.getAttribute('data-mce-color');
+		var styleName, formatName;
 
-		if ((value = e.target.getAttribute('data-mce-color'))) {
+		if (targetValue) {
 			buttonCtrl.hidePanel();
-			value = '#' + value;
+			value = targetValue === 'auto' ? targetValue : '#' + targetValue;
 			buttonCtrl.color(value);
-			editor.execCommand(buttonCtrl.settings.selectcmd, false, value);
+			formatName = buttonCtrl.settings.selectcmd.toLowerCase();
+
+			if (autocolorOption) {
+				if (value === 'auto') {
+					styleName = formatName === 'forecolor' ? 'color' : 'backgroundColor';
+					editor.formatter.remove(formatName, false, false, styleName);
+				} else {
+					editor.formatter.apply(formatName, {'value': value});
+				}
+
+				editor.focus(); // added for performCaretAction
+				editor.save();
+
+			} else {
+				editor.execCommand(formatName, false, value);
+
+			}
 		}
 	}
 
 	function onButtonClick() {
 		var self = this;
+		var buttonColor = self.color();
+		var styleName, formatName = self.settings.selectcmd.toLowerCase();
 
-		if (self._color) {
-			editor.execCommand(self.settings.selectcmd, false, self._color);
+		if (autocolorOption) {
+			if (!buttonColor || buttonColor === 'auto') { // removing color is autocolorOption's default
+				styleName = formatName === 'forecolor' ? 'color' : 'backgroundColor';
+				editor.formatter.remove(formatName, false, false, styleName);
+			} else {
+				editor.formatter.apply(formatName, {'value': buttonColor});
+			}
+
+			editor.save();
+
+		} else if (buttonColor) {
+			editor.execCommand(formatName, false, buttonColor);
+
 		}
 	}
 
