@@ -44,19 +44,33 @@ define("tinymce/spellcheckerplugin/Plugin", [
 		}
 
 		// TODO read these from settings.spellchecker_languages instead
-		languageMenuItems = buildMenuItems('Language', [
-			{ name: 'English', value: 'en' },
-			{ name: 'Danish', value: 'da' },
-			{ name: 'Dutch', value: 'nl' },
-			{ name: 'Finnish', value: 'fi' },
-			{ name: 'French', value: 'fr_FR' },
-			{ name: 'German', value: 'de' },
-			{ name: 'Italian', value: 'it' },
-			{ name: 'Polish', value: 'pl' },
-			{ name: 'Portuguese', value: 'pt_BR' },
-			{ name: 'Spanish', value: 'es' },
-			{ name: 'Swedish', value: 'sv' }
-		]);
+		if (settings.spellchecker_languages) {
+			languageMenuItems = buildMenuItems('Language',
+				settings.spellchecker_languages
+					.split(',')
+					.map(function(lang_pair) {
+						var lang = lang_pair.split('=');
+						return {
+							name: lang[0],
+							value: lang[1]
+						};
+					})
+			);
+		} else {
+			languageMenuItems = buildMenuItems('Language', [
+				{ name: 'English', value: 'en' },
+				{ name: 'Danish', value: 'da' },
+				{ name: 'Dutch', value: 'nl' },
+				{ name: 'Finnish', value: 'fi' },
+				{ name: 'French', value: 'fr_FR' },
+				{ name: 'German', value: 'de' },
+				{ name: 'Italian', value: 'it' },
+				{ name: 'Polish', value: 'pl' },
+				{ name: 'Portuguese', value: 'pt_BR' },
+				{ name: 'Spanish', value: 'es' },
+				{ name: 'Swedish', value: 'sv' }
+			]);
+		}
 
 		function isEmpty(obj) {
 			/*jshint unused:false*/
@@ -320,14 +334,8 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			});
 		}
 
-		editor.addButton('spellchecker', {
-			type: 'splitbutton',
+		var buttonArgs = {
 			tooltip: 'Spellcheck',
-			menu: languageMenuItems,
-			onshow: updateSelection,
-			onselect: function(e) {
-				settings.spellchecker_language = e.control.settings.data;
-			},
 			onclick: spellcheck,
 			onPostRender: function() {
 				var self = this;
@@ -336,7 +344,18 @@ define("tinymce/spellcheckerplugin/Plugin", [
 					self.active(started);
 				});
 			}
-		});
+		};
+
+		if (languageMenuItems.length > 1) {
+			buttonArgs.type = 'splitbutton';
+			buttonArgs.menu = languageMenuItems;
+			buttonArgs.onshow = updateSelection;
+			buttonArgs.onselect = function(e) {
+				settings.spellchecker_language = e.control.settings.data;
+			};
+		}
+
+		editor.addButton('spellchecker', buttonArgs);
 
 		editor.on('remove', function() {
 			if (suggestionsMenu) {
@@ -344,5 +363,9 @@ define("tinymce/spellcheckerplugin/Plugin", [
 				suggestionsMenu = null;
 			}
 		});
+
+		// Set default spellchecker language if it's not specified
+		settings.spellchecker_language =
+			settings.spellchecker_language || settings.language || 'en';
 	});
 });
