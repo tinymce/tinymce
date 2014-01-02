@@ -43,34 +43,22 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			return items;
 		}
 
-		// TODO read these from settings.spellchecker_languages instead
-		if (settings.spellchecker_languages) {
-			languageMenuItems = buildMenuItems('Language',
-				settings.spellchecker_languages
-					.split(',')
-					.map(function(lang_pair) {
-						var lang = lang_pair.split('=');
-						return {
-							name: lang[0],
-							value: lang[1]
-						};
-					})
-			);
-		} else {
-			languageMenuItems = buildMenuItems('Language', [
-				{ name: 'English', value: 'en' },
-				{ name: 'Danish', value: 'da' },
-				{ name: 'Dutch', value: 'nl' },
-				{ name: 'Finnish', value: 'fi' },
-				{ name: 'French', value: 'fr_FR' },
-				{ name: 'German', value: 'de' },
-				{ name: 'Italian', value: 'it' },
-				{ name: 'Polish', value: 'pl' },
-				{ name: 'Portuguese', value: 'pt_BR' },
-				{ name: 'Spanish', value: 'es' },
-				{ name: 'Swedish', value: 'sv' }
-			]);
-		}
+		var languagesString = settings.spellchecker_languages ||
+			'English=en,Danish=da,Dutch=nl,Finnish=fi,French=fr_FR,' +
+			'German=de,Italian=it,Polish=pl,Portuguese=pt_BR,' +
+			'Spanish=es,Swedish=sv';
+
+		languageMenuItems = buildMenuItems('Language',
+			languagesString.split(',').map(
+				function(lang_pair) {
+					var lang = lang_pair.split('=');
+					return {
+						name: lang[0],
+						value: lang[1]
+					};
+				}
+			)
+		);
 
 		function isEmpty(obj) {
 			/*jshint unused:false*/
