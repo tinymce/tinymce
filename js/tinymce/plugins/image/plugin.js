@@ -117,6 +117,8 @@ tinymce.PluginManager.add('image', function(editor) {
 
 				imgElm.onerror = selectImage;
 			}
+			
+			updateStyle();
 
 			var data = win.toJSON();
 
