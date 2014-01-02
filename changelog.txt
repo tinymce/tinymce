@@ -1,5 +1,6 @@
 Version 4.0.12 (2014-01-xx)
 	Fixed bug where table resize handles could sometimes be added to elements out side the editable inline element.
+	Fixed bug where IE 8 would insert the image outside the editor unless it was focused first.
 Version 4.0.12 (2013-12-18)
 	Added new media_scripts option to the media plugin. This makes it possible to embed videos using script elements.
 	Fixed bug where WebKit/Blink would produce random span elements and styles when deleting contents inside the editor.
