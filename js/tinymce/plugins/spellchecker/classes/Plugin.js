@@ -10,8 +10,6 @@
 
 /*jshint camelcase:false */
 
-/*global tinymce:true */
-
 /**
  * This class contains all core logic for the spellchecker plugin.
  *
@@ -33,7 +31,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 		function buildMenuItems(listName, languageValues) {
 			var items = [];
 
-			tinymce.each(languageValues, function(languageValue) {
+			Tools.each(languageValues, function(languageValue) {
 				items.push({
 					text: languageValue.name,
 					data: languageValue.value
