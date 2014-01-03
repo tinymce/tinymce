@@ -786,6 +786,23 @@ if (!tinymce.isIE) {
 		equal(rng.endContainer.nodeName, 'BODY');
 		equal(rng.endOffset, 1);
 	});
+
+	test('normalize after paragraph', function() {
+		var rng;
+
+		editor.getBody().innerHTML = '<p>a</p>';
+		rng = editor.dom.createRng();
+		rng.setStartAfter(editor.getBody().firstChild);
+		rng.setEndAfter(editor.getBody().lastChild);
+		editor.selection.setRng(rng);
+		editor.selection.normalize();
+
+		rng = editor.selection.getRng(true);
+		equal(rng.startContainer.nodeName, '#text');
+		equal(rng.startOffset, 1);
+		equal(rng.endContainer.nodeName, '#text');
+		equal(rng.endOffset, 1);
+	});
 }
 
 test('custom elements', function() {

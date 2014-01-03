@@ -143,6 +143,23 @@ test("Paste Word table", function() {
 	equal(editor.getContent().replace(/[\r\n]+/g, ''), '<table><tbody><tr><td><p>Cell 1</p></td><td><p>Cell 2</p></td></tr><tr><td><p>Cell 3</p></td><td><p>Cell 4</p></td></tr></tbody></table><p>&nbsp;</p>');
 });
 
+test("Paste Word without mso markings", function() {
+	editor.setContent('');
+	editor.execCommand('mceInsertClipboardContent', false, {
+		content: (
+			'<font face="Times New Roman" size="3"></font>' +
+			'<p style="margin: 0in 0in 10pt;">' +
+			'<span style=\'line-height: 115%; font-family: "Comic Sans MS"; font-size: 22pt;\'>Comic Sans MS</span>' +
+			'</p>' +
+			'<font face="Times New Roman" size="3"></font>'
+		)
+	});
+
+	equal(trimContent(editor.getContent()), (
+		'<p>Comic Sans MS</p>'
+	));
+});
+
 test("Paste Word links", function() {
 	editor.setContent('');
 	editor.execCommand('mceInsertClipboardContent', false, {

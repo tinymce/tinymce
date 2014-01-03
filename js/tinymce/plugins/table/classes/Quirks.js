@@ -327,6 +327,31 @@ define("tinymce/tableplugin/Quirks", [
 			});
 		}
 
+		/**
+		 * Delete table if all cells are selected.
+		 */
+		function deleteTable() {
+			editor.on('keydown', function(e) {
+				if ((e.keyCode == VK.DELETE || e.keyCode == VK.BACKSPACE) && !e.isDefaultPrevented()) {
+					var table = editor.dom.getParent(editor.selection.getStart(), 'table');
+
+					if (table) {
+						var cells = editor.dom.select('td,th', table), i = cells.length;
+						while (i--) {
+							if (!editor.dom.hasClass(cells[i], 'mce-item-selected')) {
+								return;
+							}
+						}
+
+						e.preventDefault();
+						editor.execCommand('mceTableDelete');
+					}
+				}
+			});
+		}
+
+		deleteTable();
+
 		if (Env.webkit) {
 			moveWebKitSelection();
 			fixTableCellSelection();

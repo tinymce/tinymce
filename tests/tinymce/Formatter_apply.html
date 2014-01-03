@@ -9,7 +9,7 @@
 <script src="../js/utils.js"></script>
 <script src="../js/tinymce_loader.js"></script>
 <script>
-var editor, rng, format;
+var editor, inlineEditor, rng, format;
 
 QUnit.config.reorder = false;
 QUnit.config.autostart = false;
@@ -1138,104 +1138,58 @@ test('Bug #5453 - TD contents with BR gets wrapped in block format', function() 
 	equal(getContent(), '<table><tbody><tr><td><h1>abc</h1>123</td></tr></tbody></table>');
 });
 
-/*
-test('apply (list block)', function() {
-	var rng;
-
-	// Ordered list on selected paragraph text
-	editor.getBody().innerHTML = '<p>1234</p>';
-	rng = editor.dom.createRng();
-	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
-	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
-	editor.selection.setRng(rng);
-	editor.formatter.apply({list_block : 'ol', replace : 'ul', list_item : 'li'});
-	equal(getContent(), '<ol><li>1234</li></ol>', 'Ordered list on paragraph text');
-
-	// Ordered list on the text of two selected paragraphs
-	editor.getBody().innerHTML = '<p>1234</p><p>5678</p>';
-	rng = editor.dom.createRng();
-	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
-	rng.setEnd(editor.dom.select('p')[1].firstChild, 4);
-	editor.selection.setRng(rng);
-	editor.formatter.apply({list_block : 'ol', replace : 'ul', list_item : 'li'});
-	equal(getContent(), '<ol><li>1234</li><li>5678</li></ol>', 'Ordered list on the text of two selected paragraphs');
-
-	// Ordered list on two selected paragraph elements
-	editor.getBody().innerHTML = '<p>1234</p><p>5678</p>';
-	rng = editor.dom.createRng();
-	rng.setStart(editor.getBody(), 0);
-	rng.setEnd(editor.getBody(), 2);
-	editor.selection.setRng(rng);
-	editor.formatter.apply({list_block : 'ol', replace : 'ul', list_item : 'li'});
-	equal(getContent(), '<ol><li>1234</li><li>5678</li></ol>', 'Ordered list on two selected paragraph elements');
-
-	// Ordered list on selected paragraph text before similar list
-	editor.getBody().innerHTML = '<p>1234</p><ol><li>abc</li></ol>';
-	rng = editor.dom.createRng();
-	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
-	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
-	editor.selection.setRng(rng);
-	editor.formatter.apply({list_block : 'ol', replace : 'ul', list_item : 'li'});
-	equal(getContent(), '<ol><li>1234</li><li>abc</li></ol>', 'Ordered list on selected paragraph text before similar list');
-
-	// Ordered list on selected paragraph text after similar list
-	editor.getBody().innerHTML = '<ol><li>abc</li></ol><p>1234</p>';
-	rng = editor.dom.createRng();
-	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
-	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
-	editor.selection.setRng(rng);
-	editor.formatter.apply({list_block : 'ol', replace : 'ul', list_item : 'li'});
-	equal(getContent(), '<ol><li>abc</li><li>1234</li></ol>', 'Ordered list on selected paragraph text after similar list');
-
-	// Ordered list on selected paragraph text between similar list
-	editor.getBody().innerHTML = '<ol><li>1234</li></ol><p>5678</p><ol><li>9123</li></ol>';
-	rng = editor.dom.createRng();
-	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
-	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
-	editor.selection.setRng(rng);
-	editor.formatter.apply({list_block : 'ol', replace : 'ul', list_item : 'li'});
-	equal(getContent(), '<ol><li>1234</li><li>5678</li><li>9123</li></ol>', 'Ordered list on selected paragraph text between similar list');
-
-	// Ordered list on selected unordered list item text
-	editor.getBody().innerHTML = '<ul><li>1234</li></ul>';
-	rng = editor.dom.createRng();
-	rng.setStart(editor.dom.select('li')[0].firstChild, 0);
-	rng.setEnd(editor.dom.select('li')[0].firstChild, 4);
-	editor.selection.setRng(rng);
-	editor.formatter.apply({list_block : 'ol', replace : 'ul', list_item : 'li'});
-	equal(getContent(), '<ol><li>1234</li></ol>', 'Ordered list on selected unordered list item text');
-
-	// Ordered list on selected unordered list with sublists
-	editor.getBody().innerHTML = '<ul><li>1234<ul><li>1234</li></ul></li></ul>';
-	rng = editor.dom.createRng();
-	rng.setStart(editor.dom.select('li')[0].firstChild, 0);
-	rng.setEnd(editor.dom.select('li')[0].firstChild, 4);
-	editor.selection.setRng(rng);
-	editor.formatter.apply({list_block : 'ol', replace : 'ul', list_item : 'li'});
-	equal(getContent(), '<ol><li>1234<ol><li>1234</li></ol></li></ol>', 'Ordered list on selected unordered list with sublists');
+test('Bug #6518 - Apply div blocks to inline editor paragraph', function() {
+	inlineEditor.setContent('<p>a</p><p>b</p>');
+	inlineEditor.selection.select(inlineEditor.getBody().firstChild, true);
+	inlineEditor.selection.collapse(true);
+	inlineEditor.formatter.register('format', {block: 'div'});
+	inlineEditor.formatter.apply('format');
+	equal(inlineEditor.getContent(), '<div>a</div><p>b</p>');
 });
-*/
 
 tinymce.init({
-	mode : "exact",
-	elements : "elm1",
+	selector: "#elm1",
 	plugins: "noneditable",
-	add_unload_trigger : false,
-	indent : false,
-	theme_advanced_styles : 'test1=test1;test2=test2',
-	valid_elements : '@[contenteditable|id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur],strong,b,em,i,strike,u,#p,-ol[type|compact],-ul[type|compact],-li,br,img[longdesc|usemap|src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,-blockquote[cite],-table[border|cellspacing|cellpadding|width|frame|rules|height|align|summary|bgcolor|background|bordercolor],-tr[rowspan|width|height|align|valign|bgcolor|background|bordercolor],tbody,thead,tfoot,#td[colspan|rowspan|width|height|align|valign|bgcolor|background|bordercolor|scope],#th[colspan|rowspan|width|height|align|valign|scope],caption,-div,-span,-code,-pre,address,-h1,-h2,-h3,-h4,-h5,-h6,hr[size|noshade],-font[face|size|color],dd,dl,dt,cite,abbr,acronym,del[datetime|cite],ins[datetime|cite],object[classid|width|height|codebase|*],param[name|value],embed[type|width|height|src|*],script[src|type],map[name],area[shape|coords|href|alt|target],bdo,button,col[align|char|charoff|span|valign|width],colgroup[align|char|charoff|span|valign|width],dfn,fieldset,form[action|accept|accept-charset|enctype|method],input[accept|alt|checked|disabled|maxlength|name|readonly|size|src|type|value|tabindex|accesskey],kbd,label[for],legend,noscript,optgroup[label|disabled],option[disabled|label|selected|value],q[cite],samp,select[disabled|multiple|name|size],small,textarea[cols|rows|disabled|name|readonly],tt,var,big',
-	fix_list_elements : 0,
-	fix_table_elements : 0,
-	forced_root_block : '',
-	convert_fonts_to_spans : false,
+	add_unload_trigger: false,
+	indent: false,
+	theme_advanced_styles: 'test1=test1;test2=test2',
+	valid_elements: '@[contenteditable|id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur],strong,b,em,i,strike,u,#p,-ol[type|compact],-ul[type|compact],-li,br,img[longdesc|usemap|src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,-blockquote[cite],-table[border|cellspacing|cellpadding|width|frame|rules|height|align|summary|bgcolor|background|bordercolor],-tr[rowspan|width|height|align|valign|bgcolor|background|bordercolor],tbody,thead,tfoot,#td[colspan|rowspan|width|height|align|valign|bgcolor|background|bordercolor|scope],#th[colspan|rowspan|width|height|align|valign|scope],caption,-div,-span,-code,-pre,address,-h1,-h2,-h3,-h4,-h5,-h6,hr[size|noshade],-font[face|size|color],dd,dl,dt,cite,abbr,acronym,del[datetime|cite],ins[datetime|cite],object[classid|width|height|codebase|*],param[name|value],embed[type|width|height|src|*],script[src|type],map[name],area[shape|coords|href|alt|target],bdo,button,col[align|char|charoff|span|valign|width],colgroup[align|char|charoff|span|valign|width],dfn,fieldset,form[action|accept|accept-charset|enctype|method],input[accept|alt|checked|disabled|maxlength|name|readonly|size|src|type|value|tabindex|accesskey],kbd,label[for],legend,noscript,optgroup[label|disabled],option[disabled|label|selected|value],q[cite],samp,select[disabled|multiple|name|size],small,textarea[cols|rows|disabled|name|readonly],tt,var,big',
+	forced_root_block: '',
+	convert_fonts_to_spans: false,
 	disable_nodechange: true,
-	entities : 'raw',
-	valid_styles : {
-		'*' : 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display'
+	entities: 'raw',
+	valid_styles: {
+		'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display'
 	},
-	init_instance_callback : function(ed) {
+	init_instance_callback: function(ed) {
 		editor = ed;
-		QUnit.start();
+
+		if (inlineEditor) {
+			QUnit.start();
+		}
+	}
+});
+
+tinymce.init({
+	selector: "#elm2",
+	inline: true,
+	plugins: "noneditable",
+	add_unload_trigger: false,
+	indent: false,
+	theme_advanced_styles: 'test1=test1;test2=test2',
+	forced_root_block: '',
+	convert_fonts_to_spans: false,
+	disable_nodechange: true,
+	entities: 'raw',
+	valid_styles: {
+		'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display'
+	},
+	init_instance_callback: function(ed) {
+		inlineEditor = ed;
+
+		if (editor) {
+			QUnit.start();
+		}
 	}
 });
 </script>
@@ -1251,5 +1205,6 @@ tinymce.init({
 		<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent({format : 'raw'}));">[getRawContents]</a>
 		<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent());">[getContents]</a>
 	</div>
+	<div id="elm2"></div>
 </body>
 </html>

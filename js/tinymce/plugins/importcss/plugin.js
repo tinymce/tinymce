@@ -123,70 +123,69 @@ tinymce.PluginManager.add('importcss', function(editor) {
 		return format;
 	}
 
-	if (!editor.settings.style_formats) {
-		editor.on('renderFormatsMenu', function(e) {
-			var settings = editor.settings, selectors = {};
-			var selectorConverter = settings.importcss_selector_converter || convertSelectorToFormat;
-			var selectorFilter = compileFilter(settings.importcss_selector_filter);
+	editor.on('renderFormatsMenu', function(e) {
+		var settings = editor.settings, selectors = {};
+		var selectorConverter = settings.importcss_selector_converter || convertSelectorToFormat;
+		var selectorFilter = compileFilter(settings.importcss_selector_filter);
 
-			if (!editor.settings.importcss_append) {
-				e.control.items().remove();
-			}
+		if (!editor.settings.importcss_append && !editor.settings.style_formats) {
+			e.control.items().remove();
+		}
 
-			var groups = settings.importcss_groups;
-			if (groups) {
-				for (var i = 0; i < groups.length; i++) {
-					groups[i].filter = compileFilter(groups[i].filter);
-				}
-			}
+		// Setup new groups collection by cloning the configured one
+		var groups = [];
+		tinymce.each(settings.importcss_groups, function(group) {
+			group = tinymce.extend({}, group);
+			group.filter = compileFilter(group.filter);
+			groups.push(group);
+		});
 
-			each(getSelectors(editor.getDoc(), compileFilter(settings.importcss_file_filter)), function(selector) {
-				if (selector.indexOf('.mce-') === -1) {
-					if (!selectors[selector] && (!selectorFilter || selectorFilter(selector))) {
-						var format = selectorConverter.call(self, selector), menu;
+		each(getSelectors(editor.getDoc(), compileFilter(settings.importcss_file_filter)), function(selector) {
+			if (selector.indexOf('.mce-') === -1) {
+				if (!selectors[selector] && (!selectorFilter || selectorFilter(selector))) {
+					var format = selectorConverter.call(self, selector), menu;
 
-						if (format) {
-							var formatName = format.name || tinymce.DOM.uniqueId();
+					if (format) {
+						var formatName = format.name || tinymce.DOM.uniqueId();
 
-							if (groups) {
-								for (var i = 0; i < groups.length; i++) {
-									if (!groups[i].filter || groups[i].filter(selector)) {
-										if (!groups[i].item) {
-											groups[i].item = {text: groups[i].title, menu: []};
-										}
-
-										menu = groups[i].item.menu;
-										break;
+						if (groups) {
+							for (var i = 0; i < groups.length; i++) {
+								if (!groups[i].filter || groups[i].filter(selector)) {
+									if (!groups[i].item) {
+										groups[i].item = {text: groups[i].title, menu: []};
 									}
+
+									menu = groups[i].item.menu;
+									break;
 								}
-							}
-
-							editor.formatter.register(formatName, format);
-
-							var menuItem = tinymce.extend({}, e.control.settings.itemDefaults, {
-								text: format.title,
-								format: formatName
-							});
-
-							if (menu) {
-								menu.push(menuItem);
-							} else {
-								e.control.add(menuItem);
 							}
 						}
 
-						selectors[selector] = true;
+						editor.formatter.register(formatName, format);
+
+						var menuItem = tinymce.extend({}, e.control.settings.itemDefaults, {
+							text: format.title,
+							format: formatName
+						});
+
+						if (menu) {
+							menu.push(menuItem);
+						} else {
+							e.control.add(menuItem);
+						}
 					}
+
+					selectors[selector] = true;
 				}
-			});
-
-			each(groups, function(group) {
-				e.control.add(group.item);
-			});
-
-			e.control.renderNew();
+			}
 		});
-	}
+
+		each(groups, function(group) {
+			e.control.add(group.item);
+		});
+
+		e.control.renderNew();
+	});
 
 	// Expose default convertSelectorToFormat implementation
 	self.convertSelectorToFormat = convertSelectorToFormat;

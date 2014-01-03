@@ -1,3 +1,21 @@
+Version 4.0.12 (2013-12-18)
+	Added new media_scripts option to the media plugin. This makes it possible to embed videos using script elements.
+	Fixed bug where WebKit/Blink would produce random span elements and styles when deleting contents inside the editor.
+	Fixed bug where WebKit/Blink would produce span elements out of link elements when they where removed by the unlink command.
+	Fixed bug where div block formats in inline mode where applied to all paragraphs within the editor.
+	Fixed bug where div blocks where marked as an active format in inline mode when doing non collapsed selections.
+	Fixed bug where the importcss plugin wouldn't append styles if the style_formats option was configured.
+	Fixed bug where the importcss plugin would import styles into groups multiple times for different format menus.
+	Fixed bug where the paste plugin wouldn't properly remove the paste bin element on IE if a tried to paste a file.
+	Fixed bug where selection normalization wouldn't properly handle cases where a range point was after a element node.
+	Fixed bug where the default time format for the inserttime split button wasn't the first item in the list.
+	Fixed bug where the default text for the formatselect control wasn't properly translated by the language pack.
+	Fixed bug where links would be inserted incorrectly when auto detecting absolute urls/emails links in inline mode.
+	Fixed bug where IE 11 would insert contents in the wrong order due to focus/blur async problems.
+	Fixed bug where pasting contents on IE sometimes would place the contents at the end of the editor.
+	Fixed so drag/drop on non IE browsers gets filtered by the paste plugin. IE doesn't have the necessary APIs.
+	Fixed so the paste plugin better detects Word 2007 contents not marked with -mso junk.
+	Fixed so image button isn't set to an active state when selecting control/media placeholder items.
 Version 4.0.11 (2013-11-20)
 	Added the possibility to update button icon after it's been rendered.
 	Added new autosave_prefix option allows you to set the prefix for the local storage keys.

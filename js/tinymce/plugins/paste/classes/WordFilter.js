@@ -23,7 +23,7 @@ define("tinymce/pasteplugin/WordFilter", [
 	"tinymce/pasteplugin/Utils"
 ], function(Tools, DomParser, Schema, Serializer, Node, Utils) {
 	function isWordContent(content) {
-		return (/class="?Mso|style="[^"]*\bmso-|style='[^'']*\bmso-|w:WordDocument/i).test(content);
+		return (/<font face="Times New Roman"|class="?Mso|style="[^"]*\bmso-|style='[^'']*\bmso-|w:WordDocument/i).test(content);
 	}
 
 	function WordFilter(editor) {

@@ -9,7 +9,7 @@
 <script src="../js/tinymce_loader.js"></script>
 <script src="../js/utils.js"></script>
 <script>
-var editor, rng, format;
+var editor, inlineEditor, rng, format;
 
 QUnit.config.reorder = false;
 QUnit.config.autostart = false;
@@ -200,6 +200,12 @@ test('formatChanged complex format', function() {
 	equal(newArgs.parents.length, 1);
 });
 
+test('Match format on div block in inline mode', function() {
+	inlineEditor.setContent('<p>a</p><p>b</p>');
+	inlineEditor.execCommand('SelectAll');
+	ok(!inlineEditor.formatter.match('div'), 'Formatter.match on div says true');
+});
+
 tinymce.init({
 	mode : "exact",
 	elements : "elm1",
@@ -214,7 +220,33 @@ tinymce.init({
 	},
 	init_instance_callback : function(ed) {
 		editor = ed;
-		QUnit.start();
+
+		if (inlineEditor) {
+			QUnit.start();
+		}
+	}
+});
+
+tinymce.init({
+	selector: "#elm2",
+	inline: true,
+	plugins: "noneditable",
+	add_unload_trigger: false,
+	indent: false,
+	theme_advanced_styles: 'test1=test1;test2=test2',
+	forced_root_block: '',
+	convert_fonts_to_spans: false,
+	disable_nodechange: true,
+	entities: 'raw',
+	valid_styles: {
+		'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display'
+	},
+	init_instance_callback: function(ed) {
+		inlineEditor = ed;
+
+		if (editor) {
+			QUnit.start();
+		}
 	}
 });
 </script>
@@ -230,5 +262,6 @@ tinymce.init({
 		<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent({format : 'raw'}));">[getRawContents]</a>
 		<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent());">[getContents]</a>
 	</div>
+	<div id="elm2"></div>
 </body>
 </html>

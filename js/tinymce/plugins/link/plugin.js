@@ -196,8 +196,13 @@ tinymce.PluginManager.add('link', function(editor) {
 
 				// Delay confirm since onSubmit will move focus
 				function delayedConfirm(message, callback) {
+					var rng = editor.selection.getRng();
+
 					window.setTimeout(function() {
-						editor.windowManager.confirm(message, callback);
+						editor.windowManager.confirm(message, function(state) {
+							editor.selection.setRng(rng);
+							callback(state);
+						});
 					}, 0);
 				}
 
