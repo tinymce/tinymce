@@ -11,12 +11,12 @@ define(
 
   function (Arr, Merger, Fun, Option, Rowspans) {
     var operate = function (warehouse, rowIndex, colIndex, operation) {
-      /* 
+      /*
          The process:
 
          Identify which cell has selection focus
          Get the row of that cell
-         Apply operation on that ow and intergrate into table
+         Apply operation on that row and intergrate into table
        */
 
       var cells = warehouse.all();
@@ -85,7 +85,7 @@ define(
       var operation = function (start, cells) {
         var spanners = Rowspans.after(warehouse, rowIndex);
         var isSpanner = isSpanCell(spanners.spanned(), eq);
-        
+
         return Arr.bind(cells, function (row, rindex) {
           if (rindex === start.row()) {
             var result = creation(row, isSpanner, generators, spanners.unspanned());
@@ -103,7 +103,7 @@ define(
       var operation = function (start, cells) {
         var spanners = Rowspans.before(warehouse, rowIndex);
         var isSpanner = isSpanCell(spanners.spanned(), eq);
-        
+
         return Arr.bind(cells, function (row, rindex) {
           if (rindex === start.row()) {
             var result = creation(row, isSpanner, generators, spanners.unspanned());

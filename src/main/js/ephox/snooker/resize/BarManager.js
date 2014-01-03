@@ -29,8 +29,8 @@ define(
       var getInt = function (element, property) {
         return parseInt(Css.get(element, property), 10);
       };
-      
-      /* Repositoion the bar as the user drags */
+
+      /* Reposition the bar as the user drags */
       mutation.events.drag.bind(function (event) {
         var column = Attr.get(event.target(), 'data-column');
         if (column !== undefined) {
