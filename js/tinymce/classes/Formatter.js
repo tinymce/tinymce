@@ -713,7 +713,7 @@ define("tinymce/Formatter", [
 						}
 					} else {
 						styleValue = dom.toHex(dom.getStyle(node, styleName));
-						removeFormat(format, {styleName: styleValue}, node);
+						removeFormat(format, {value: styleValue}, node);
 					}
 				}
 
@@ -787,7 +787,7 @@ define("tinymce/Formatter", [
 							}
 						} else {
 							styleValue = dom.toHex(dom.getStyle(clone, styleName));
-							if (removeFormat(format, {styleName: styleValue}, clone)) {
+							if (removeFormat(format, {value: styleValue}, clone)) {
 								clone = 0;
 							}
 						}
