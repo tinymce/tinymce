@@ -289,7 +289,11 @@ define("tinymce/pasteplugin/Clipboard", [
 
 		editor.on('dragstart', function(e) {
 			if (e.dataTransfer.types) {
-				e.dataTransfer.setData('mce-internal', editor.selection.getContent());
+				try {
+					e.dataTransfer.setData('mce-internal', editor.selection.getContent());
+				} catch (ex) {
+					// IE 10 throws an error since it doesn't support custom data items
+				}
 			}
 		});
 
