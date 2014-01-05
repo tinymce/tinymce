@@ -10,7 +10,8 @@ define(
   function ($, Console, Examples) {
     return function () {
       var examples = Examples.add([
-        { name: 'Snooker Demo', module: 'ephox.snooker.demo.SnookerDemo' }
+        { name: 'Detect Demo', module: 'ephox.snooker.demo.DetectDemo' },
+        { name: 'Picker Demo', module: 'ephox.snooker.demo.PickerDemo' }
       ]);
 
       var consoleUI = Console.use();

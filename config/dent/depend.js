@@ -49,6 +49,15 @@ var dependencies = [
     ]
   },
 
+  {
+    name: 'violin',
+    repository: 'buildrepo2',
+    source: 'violin.zip',
+    targets: [
+      { name: 'module/*.js', path: depend }
+    ]
+  },
+
   /**** demo dependencies ****/
   {
     name: 'exhibition',

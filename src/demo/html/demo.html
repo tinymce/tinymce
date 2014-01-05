@@ -5,8 +5,9 @@
     <title>Snooker Demo Page</title>
     <script type="text/javascript" src="../../../config/bolt/bootstrap-demo.js"></script>
     <script type="text/javascript">
-      ephox.bolt.module.api.main('ephox.snooker.demo.SnookerDemo');
+      ephox.bolt.module.api.main('ephox.snooker.demo.Demo');
     </script>
+    <link rel="Stylesheet" href="../../main/css/bars.css">
 
     <style type="text/css">
       #ephox-ui {
@@ -18,7 +19,9 @@
       }
 
       table td {
-        border: 1px solid b;
+        border: 1px solid black;
+        width: 30px;
+        height: 30px;
       }
 
       .ephox-snooker-adjust-se-resize {
@@ -28,7 +31,7 @@
         position: absolute;
         right: 0;
         bottom: 0;
-        cursor: se-resize;
+        cursor: nwse-resize;
       }
 
       table.ephox-snooker-adjust-selected {
@@ -45,6 +48,14 @@
 
       table.ephox-snooker-adjust-selected td {
         border: none;
+      }
+
+      td.ephox-snooker-picker-selected {
+        background-color: #CADBEE;
+      }
+
+      td.ephox-snooker-picker-selected.ephox-snooker-picker-header {
+        background-color: #BEECAD;
       }
     </style>
   </head>
