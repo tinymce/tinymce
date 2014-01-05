@@ -16,7 +16,7 @@ define(
 
          Identify which cell has selection focus
          Get the row of that cell
-         Apply operation on that row and intergrate into table
+         Apply operation on that row and integrate into table
        */
 
       var cells = warehouse.all();
