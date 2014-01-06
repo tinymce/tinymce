@@ -74,6 +74,9 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 	 */
 	function wait(times, interval, callback) {
 		setTimeout(function() {
+			if (editor.destroyed) {
+				 return;
+			}
 			resize({});
 
 			if (times--) {
