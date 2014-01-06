@@ -80,7 +80,6 @@ define(
       });
 
       var total = Arr.foldr(widths, function (b, a) { return a + b; }, 0);
-      console.log('total: ', total, Arr.map(newSizes, function (ns) { return ns.width(); }));
       if (newSizes.length > 0) {
         SelectorFind.ancestor(newSizes[0].element(), 'table').each(function (table) {
           Sizes.setWidth(table, total);
