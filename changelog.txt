@@ -1,4 +1,6 @@
 Version 4.0.12 (2014-01-xx)
+	Fixed bug where the DOMUtils getPos API function didn't properly handle the location of the root element. Patch contributed by Andrew Ozz.
+	Fixed bug where the spellchecker wouldn't properly place the spellchecker suggestions menu. Patch contributed by Andrew Ozz.
 	Fixed bug where table resize handles could sometimes be added to elements out side the editable inline element.
 	Fixed bug where IE 8 would insert the image outside the editor unless it was focused first.
 	Fixed bug where older IE versions would throw an exception on drag/drop since they don't support modern dataTransfer API.

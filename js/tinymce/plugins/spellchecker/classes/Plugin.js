@@ -84,6 +84,16 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			// Position menu
 			var pos = DOMUtils.DOM.getPos(editor.getContentAreaContainer());
 			var targetPos = editor.dom.getPos(target);
+			var root = editor.dom.getRoot();
+
+			// Adjust targetPos for scrolling in the editor
+			if (root.nodeName == 'BODY') {
+				targetPos.x -= root.ownerDocument.documentElement.scrollLeft || root.scrollLeft;
+				targetPos.y -= root.ownerDocument.documentElement.scrollTop || root.scrollTop;
+			} else {
+				targetPos.x -= root.scrollLeft;
+				targetPos.y -= root.scrollTop;
+			}
 
 			pos.x += targetPos.x;
 			pos.y += targetPos.y;
