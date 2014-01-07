@@ -7,6 +7,9 @@
 	"engines": {
 		"node" : ">=0.8.0"
 	},
+	"devDependencies": {
+		"jake": ">= 0.7.0"
+	},
 	"dependencies": {
 		"amdlc": ">= 0.0.2",
 		"jshint": ">= 2.1.4",
