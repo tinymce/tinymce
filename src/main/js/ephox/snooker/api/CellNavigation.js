@@ -49,7 +49,7 @@ define(
       return detection.fold(function () {
         return CellLocation.none();
       }, function (info) {
-        return info.index() - 1 >= 0 ? CellLocation.middle(current, info.all()[info.index() - 1]) : CellLocation.none(current);
+        return info.index() - 1 >= 0 ? CellLocation.middle(current, info.all()[info.index() - 1]) : CellLocation.first(current);
       });
     };
 
