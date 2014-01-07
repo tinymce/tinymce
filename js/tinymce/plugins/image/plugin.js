@@ -19,23 +19,23 @@ tinymce.PluginManager.add('image', function(editor) {
 			callback({width: width, height: height});
 		}
 
-		img.onload = function() {
-			done(img.clientWidth, img.clientHeight);
-		};
-
-		img.onerror = function() {
-			done();
-		};
-
-		img.src = url;
-
 		var style = img.style;
-		style.visibility = 'hidden';
-		style.position = 'fixed';
-		style.bottom = style.left = 0;
-		style.width = style.height = 'auto';
-
-		document.body.appendChild(img);
+	        style.visibility = 'hidden';
+	        style.position = 'fixed';
+	        style.bottom = style.left = 0;
+	        style.width = style.height = 'auto';
+	
+	        document.body.appendChild(img);
+	
+	        img.onload = function () {
+	          done(img.clientWidth, img.clientHeight);
+	        };
+	
+	        img.onerror = function () {
+	          done();
+	        };
+	
+	       img.src = url;
 	}
 
 	function createImageList(callback) {
