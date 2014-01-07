@@ -15,7 +15,8 @@ tinymce.PluginManager.add('image', function(editor) {
 		var img = document.createElement('img');
 
 		function done(width, height) {
-			img.parentNode.removeChild(img);
+			if(img.parentNode)
+				img.parentNode.removeChild(img);
 			callback({width: width, height: height});
 		}
 
