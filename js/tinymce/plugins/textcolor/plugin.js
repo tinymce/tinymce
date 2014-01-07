@@ -175,7 +175,7 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		selectcmd: 'ForeColor',
 		panel: {
 			html: renderColorPicker,
-			onclick: onPanelClick
+			onmousedown: onPanelClick
 		},
 		onclick: onButtonClick
 	});
@@ -186,7 +186,7 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		selectcmd: 'HiliteColor',
 		panel: {
 			html: renderColorPicker,
-			onclick: onPanelClick
+			onmousedown: onPanelClick
 		},
 		onclick: onButtonClick
 	});
