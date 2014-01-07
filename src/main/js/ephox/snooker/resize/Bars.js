@@ -26,13 +26,7 @@ define(
       Arr.each(previous, Remove.remove);
     };
 
-    var refresh = function (container, table) {
-      clear(container, table);
-
-      var list = DetailsList.fromTable(table);
-      var warehouse = Warehouse.generate(list);
-      var cols = Blocks.columns(warehouse);
-
+    var refreshCols = function (container, table, cols) {
       var position = Location.absolute(table);
      
       Arr.each(cols.slice(1), function (cell, col) {
@@ -47,6 +41,15 @@ define(
       var rightBar = Bar(cols.length - 1, lastLeft, lastTop, 3, Height.getOuter(table));
       Class.add(rightBar, resizeBar);
       Insert.append(container, rightBar);
+    };
+
+    var refresh = function (container, table) {
+      clear(container, table);
+
+      var list = DetailsList.fromTable(table);
+      var warehouse = Warehouse.generate(list);
+      var cols = Blocks.columns(warehouse);
+      if (cols.length > 0) refreshCols(container, table, cols);
     };
 
     var hide = function (container) {

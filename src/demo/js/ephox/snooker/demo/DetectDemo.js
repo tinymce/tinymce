@@ -61,15 +61,15 @@ define(
         '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
           '<tr>' +
             '<td style="width: 110px;">1</td>' +
-            '<td colspan="4">.</td>' +
+            // '<td colspan="1">.</td>' +
           '</tr>' +
-          '<tr>' +
-            '<td>x</td>' +
-            '<td style="width: 120px;">2</td>' +
-            '<td>.</td>' +
-            '<td style="width: 150px;">5</td>' +
-            '<td>x</td>' +
-          '</tr>' +
+          // '<tr>' +
+          //   '<td>x</td>' +
+          //   '<td style="width: 120px;">2</td>' +
+          //   '<td>.</td>' +
+          //   '<td style="width: 150px;">5</td>' +
+          //   '<td>x</td>' +
+          // '</tr>' +
         '</tbody></table>'
       );
 
@@ -105,6 +105,10 @@ define(
       var beforeColumn = Element.fromTag('button');
       Insert.append(beforeColumn, Element.fromText('Column Before'));
       Insert.append(ephoxUi, beforeColumn);
+
+      var eraseColumn = Element.fromTag('button');
+      Insert.append(eraseColumn, Element.fromText('Erase column'));
+      Insert.append(ephoxUi, eraseColumn);
 
       var detection = function () {
         var selection = window.getSelection();
@@ -148,6 +152,7 @@ define(
       DomEvent.bind(beforeRow, 'click', runOperation(TableOperations.insertRowBefore));
       DomEvent.bind(beforeColumn, 'click', runOperation(TableOperations.insertColumnBefore));
       DomEvent.bind(afterColumn, 'click', runOperation(TableOperations.insertColumnAfter));
+      DomEvent.bind(eraseColumn, 'click', runOperation(TableOperations.eraseColumn));
     };
   }
 );
