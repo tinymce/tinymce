@@ -59,10 +59,7 @@ define(
           currentRow.push(current);
         });
 
-        cells.push({
-          element: details.element,
-          cells: Fun.constant(currentRow)
-        });
+        cells.push(Structs.rowdata(details.element(), currentRow));
       });
 
       var grid = Structs.grid(maxRows, maxColumns);

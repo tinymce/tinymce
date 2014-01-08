@@ -10,6 +10,7 @@ define(
   ],
 
   function (Arr, Fun, CellType, Warehouse, Util) {
+    // Returns a list of length grid.columns that has a CellType for each column position on this row.
     var get = function (warehouse, rowIndex) {
       var range = Util.range(0, warehouse.grid().columns());
       return Arr.map(range, function (colIndex) {
@@ -24,6 +25,7 @@ define(
 
     var general = function (warehouse, rowIndex, isSpanning, stoppedSpanning) {
       var context = get(warehouse, rowIndex);
+      // Identify the list of cells which have a span that will affect a row operation at rowIndex
       var spanned = Arr.bind(context, function (span) {
         return span.fold(function () {
           return [];
@@ -34,6 +36,7 @@ define(
         });
       });
 
+      // Identify the list of cells which have a span that will not affect a row operation at rowIndex
       var unspanned = Arr.bind(context, function (span) {
         return span.fold(Fun.constant([]), function (w) {
           return [ w ];
@@ -49,10 +52,12 @@ define(
     };
 
     var before = function (warehouse, rowIndex) {
+      // Cells which have an offset higher than the start are just going to increase span when inserting before
       var isSpanning = function (p, offset) {
         return offset > 0;
       };
 
+      // Cells which have an offset at the start are not going to be affected when inserting before
       var stoppedSpanning = function (p, offset) {
         return offset === 0;
       };
@@ -61,10 +66,12 @@ define(
     };
 
     var after = function (warehouse, rowIndex) {
+      // Cells which have an offset before the end are just going to increase span when inserting after
       var isSpanning = function (p, offset) {
         return offset < p.rowspan() - 1;
       };
 
+      // Cells which have an offset at the end are not going to be affected when inserting after
       var stoppedSpanning = function (p, offset) {
         return offset === p.rowspan() - 1;
       };

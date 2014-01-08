@@ -41,16 +41,12 @@ define(
     var creation = function (row, isSpanner, generators, unspanned) {
       var nu = generators.row();
 
-      //  We are creating a new row, so adjust the spans of cells that span onto this row
-      var current = Arr.map(row.cells(), function (cell) {
-        return isSpanner(cell) ? adjust(cell, 1) : cell;
-      });
-
       // Only create cells for cells which aren't already covered by the span increase. Those that 
       // do span, will already be spanning into this new row.
       var otherCells = Arr.map(unspanned, generators.cell);
 
-      var active = Structs.rowdata(row.element(), current);
+      //  We are creating a new row, so adjust the spans of cells that span onto this row
+      var active = expansion(row, isSpanner);
       var other = Structs.rowdata(nu.element(), otherCells);
 
       return {
@@ -59,6 +55,7 @@ define(
       };
     };
 
+    // Returns the row after performing any expansions of cell rowspans that is required.
     var expansion = function (row, isSpanner) {
       var cells = Arr.map(row.cells(), function (cell) {
         return isSpanner(cell) ? adjust(cell, 1) : cell;
@@ -105,6 +102,7 @@ define(
             var result = creation(row, isSpanner, generators, spanners.unspanned());
             return [ result.active(), result.other() ];
           } else {
+            // expand other cells where appropriate if they span onto our target row
             return [ expansion(row, isSpanner) ];
           }
         });
