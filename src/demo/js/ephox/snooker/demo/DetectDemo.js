@@ -46,7 +46,13 @@ define(
             '<td>x</td>' +
           '</tr>' +
           '<tr>' +
-            '<td style="width: 120px;">2</td>' +
+            '<td style="width: 120px;" rowspan=2>2</td>' +
+            '<td colspan=2>.</td>' +
+            '<td style="width: 150px;">5</td>' +
+            '<td>x</td>' +
+          '</tr>' +
+          '<tr>' +
+            '<td>1</td>' +
             '<td colspan=2>.</td>' +
             '<td style="width: 150px;">5</td>' +
             '<td>x</td>' +

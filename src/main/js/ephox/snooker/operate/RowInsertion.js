@@ -136,7 +136,7 @@ define(
        *    leave the rest alone.
        */
       var operation = function (start, cells) {
-        var spanners = Rowspans.after(warehouse, rowIndex);
+        var spanners = Rowspans.either(warehouse, rowIndex);
         var isSpanner = isSpanCell(spanners.spanned(), eq);
         
         /*
@@ -170,9 +170,11 @@ define(
               return [];
             });
 
-            return [ Structs.rowdata(row.element(), included)];
+            return Structs.rowdata(row.element(), included);
           }
           else {
+            console.log('haha');
+            // The isSpanner test for this isn't working as expected.
             return [ shrink(row, isSpanner) ];
           }
         });

@@ -79,9 +79,16 @@ define(
       return general(warehouse, rowIndex, isSpanning, stoppedSpanning);
     };
 
+    var either = function (warehouse, rowIndex) {
+      var isSpanning = Fun.constant(true);
+      var stoppedSpanning = Fun.constant(false);
+      return general(warehouse, rowIndex, isSpanning, stoppedSpanning);
+    };
+
     return {
       before: before,
-      after: after
+      after: after,
+      either: either
     };
   }
 );
