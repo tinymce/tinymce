@@ -19,21 +19,21 @@ define(
     return function () {
       var subject = Element.fromHtml(
         '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
-          '<tr>' +
-            '<td style="width: 110px;">1</td>' +
-            '<td colspan="5">.</td>' +
-          '</tr>' +
-          '<tr>' +
-            '<td colspan=2>.</td>' +
-            '<td style="width: 130px;">3</td>' +
-            '<td colspan=2>.</td>' +
-            '<td style="width: 160px;">6</td>' +
-          '</tr>' +
-          '<tr>' +
-            '<td colspan=3>.</td>' +
-            '<td style="width: 140px;">4</td>' +
-            '<td colspan=2>.</td>' +
-          '</tr>' +
+          // '<tr>' +
+          //   '<td style="width: 110px;">1</td>' +
+          //   '<td colspan="5">.</td>' +
+          // '</tr>' +
+          // '<tr>' +
+          //   '<td colspan=2>.</td>' +
+          //   '<td style="width: 130px;">3</td>' +
+          //   '<td colspan=2>.</td>' +
+          //   '<td style="width: 160px;">6</td>' +
+          // '</tr>' +
+          // '<tr>' +
+          //   '<td colspan=3>.</td>' +
+          //   '<td style="width: 140px;">4</td>' +
+          //   '<td colspan=2>.</td>' +
+          // '</tr>' +
           '<tr>' +
             '<td colspan=4>.</td>' +
             '<td colspan=2>.</td>' +
@@ -106,6 +106,10 @@ define(
       Insert.append(beforeColumn, Element.fromText('Column Before'));
       Insert.append(ephoxUi, beforeColumn);
 
+      var eraseRow = Element.fromTag('button');
+      Insert.append(eraseRow, Element.fromText('Erase row'));
+      Insert.append(ephoxUi, eraseRow);
+
       var eraseColumn = Element.fromTag('button');
       Insert.append(eraseColumn, Element.fromText('Erase column'));
       Insert.append(ephoxUi, eraseColumn);
@@ -152,6 +156,7 @@ define(
       DomEvent.bind(beforeRow, 'click', runOperation(TableOperations.insertRowBefore));
       DomEvent.bind(beforeColumn, 'click', runOperation(TableOperations.insertColumnBefore));
       DomEvent.bind(afterColumn, 'click', runOperation(TableOperations.insertColumnAfter));
+      DomEvent.bind(eraseRow, 'click', runOperation(TableOperations.eraseRow));
       DomEvent.bind(eraseColumn, 'click', runOperation(TableOperations.eraseColumn));
     };
   }

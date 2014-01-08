@@ -70,6 +70,17 @@ define(
       };
     };
 
+    var shrink = function (row, isSpanner) {
+      var cells = Arr.map(row.cells(), function (cell) {
+        return isSpanner(cell) ? adjust(cell, -1) : cell;
+      });
+
+      return {
+        element: row.element,
+        cells: Fun.constant(cells)
+      };
+    };
+
     var isSpanCell = function (spanners, eq) {
       return function (candidate) {
         return Arr.exists(spanners, function (sp) {
@@ -126,9 +137,38 @@ define(
       return operate(warehouse, rowIndex, colIndex, operation);
     };
 
+    var erase = function (warehouse, rowIndex, colIndex, generators, eq) {
+      /*
+       * For each row in the table:
+       *  - if we are on the specified row, remove it.
+       *  - if we are on a different row, decrease by 1 all the cells which span onto the specified row and 
+       *    leave the rest alone.
+       */
+      var operation = function (start, cells) {
+        var spanners = Rowspans.before(warehouse, rowIndex);
+        var isSpanner = isSpanCell(spanners.spanned(), eq);
+
+        /*
+         * For each row in the table:
+         *  - if we are on the specified row: create a new row and return both this and the old row. 
+         *    Add the new row first, because it is being inserted before.
+         *  - if we are on a different row, expand all cells which span onto the specified row and leave the rest alone
+         */
+        return Arr.bind(cells, function (row, rindex) {
+          if (rindex === start.row()) return [];
+          else {
+            return [ shrink(row, isSpanner) ];
+          }
+        });
+      };
+
+      return operate(warehouse, rowIndex, colIndex, operation);
+    };
+
     return {
       insertBefore: insertBefore,
-      insertAfter: insertAfter
+      insertAfter: insertAfter,
+      erase: erase
     };
   }
 );

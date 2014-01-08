@@ -52,7 +52,8 @@ define(
       insertRowAfter: modify(RowInsertion.insertAfter, Fun.noop),
       insertColumnBefore: modify(ColumnModification.insertBefore, Fun.noop),
       insertColumnAfter: modify(ColumnModification.insertAfter, Fun.noop),
-      eraseColumn: modify(ColumnModification.erase, prune)
+      eraseColumn: modify(ColumnModification.erase, prune),
+      eraseRow: modify(RowInsertion.erase, prune)
     };
   }
 );
