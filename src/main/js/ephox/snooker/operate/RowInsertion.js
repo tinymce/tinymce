@@ -86,9 +86,23 @@ define(
       };
     };
 
-    var insertAfter = function (warehouse, rowIndex, colIndex, generators, eq) {
+    var before = {
+      spanners: Rowspans.before,
+      order: function (result) {
+        return [ result.other(), result.active() ];
+      }
+    };
+
+    var after = {
+      spanners: Rowspans.after,
+      order: function (result) {
+        return [ result.active(), result.other() ]
+      }
+    };
+
+    var insert = function (type, warehouse, rowIndex, colIndex, generators, eq) {
       var operation = function (start, cells) {
-        var spanners = Rowspans.after(warehouse, rowIndex);
+        var spanners = type.spanners(warehouse, rowIndex);
         var isSpanner = isSpanCell(spanners.spanned(), eq);
 
         /*
@@ -100,33 +114,9 @@ define(
         return Arr.bind(cells, function (row, rindex) {
           if (rindex === start.row()) {
             var result = creation(row, isSpanner, generators, spanners.unspanned());
-            return [ result.active(), result.other() ];
+            return type.order(result);
           } else {
             // expand other cells where appropriate if they span onto our target row
-            return [ expansion(row, isSpanner) ];
-          }
-        });
-      };
-
-      return operate(warehouse, rowIndex, colIndex, operation);
-    };
-
-    var insertBefore = function (warehouse, rowIndex, colIndex, generators, eq) {
-      var operation = function (start, cells) {
-        var spanners = Rowspans.before(warehouse, rowIndex);
-        var isSpanner = isSpanCell(spanners.spanned(), eq);
-
-        /*
-         * For each row in the table:
-         *  - if we are on the specified row: create a new row and return both this and the old row. 
-         *    Add the new row first, because it is being inserted before.
-         *  - if we are on a different row, expand all cells which span onto the specified row and leave the rest alone
-         */
-        return Arr.bind(cells, function (row, rindex) {
-          if (rindex === start.row()) {
-            var result = creation(row, isSpanner, generators, spanners.unspanned());
-            return [ result.other(), result.active() ];
-          } else {
             return [ expansion(row, isSpanner) ];
           }
         });
@@ -164,8 +154,8 @@ define(
     };
 
     return {
-      insertBefore: insertBefore,
-      insertAfter: insertAfter,
+      insertBefore: Fun.curry(insert, before),
+      insertAfter: Fun.curry(insert, after),
       erase: erase
     };
   }
