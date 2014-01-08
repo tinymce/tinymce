@@ -254,6 +254,10 @@ task("less", [], function () {
 	].concat(parseLessDocs("js/tinymce/tinymce.js"));
 
 	fs.readdirSync("js/tinymce/skins").forEach(function(skinName) {
+		if (skinName.charAt(0) == '.') {
+			return;
+		}
+
 		// Modern browsers
 		less({
 			baseDir: "js/tinymce/skins/" + skinName + "",
