@@ -43,5 +43,10 @@ test(
     check({ spanned: [ 'g', 'g' ], unspanned: [ 'h', 'i' ] }, house, 3, Rowspans.before);
     check({ spanned: [], unspanned: [ 'h', 'g', 'g', 'i' ] }, house, 3, Rowspans.after);
 
+    check({ spanned: [ 'c' ], unspanned: [ 'a', 'a', 'b' ] }, house, 0, Rowspans.either);
+    check({ spanned: [ 'd', 'c' ], unspanned: [ 'e', 'f' ] }, house, 1, Rowspans.either);
+    check({ spanned: [ 'd', 'g', 'g', 'c' ], unspanned: [ ] }, house, 2, Rowspans.either);
+    check({ spanned: [ 'g', 'g' ], unspanned: [ 'h', 'i' ] }, house, 3, Rowspans.either);
+
   }
 );
