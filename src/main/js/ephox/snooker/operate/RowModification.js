@@ -1,5 +1,5 @@
 define(
-  'ephox.snooker.operate.RowInsertion',
+  'ephox.snooker.operate.RowModification',
 
   [
     'ephox.compass.Arr',
@@ -140,28 +140,18 @@ define(
         var isSpanner = isSpanCell(spanners.spanned(), eq);
         
         /*
-         * For each row in the table:
-         *  - if we are on the specified row: create a new row and return both this and the old row. 
-         *    Add the new row first, because it is being inserted before.
-         *  - if we are on a different row, expand all cells which span onto the specified row and leave the rest alone
+         * Three cases:
+         * - row to delete ... return no cells
+         * - row after row to delete, move any cells that started on deleted row to it, shrinking them by 1 rowspan
+         * - other row, shrink any cells that span onto row to delete
          */
         return Arr.bind(cells, function (row, rindex) {
+
           if (rindex === start.row()) {
-           
             return [];
-
-            // actually, what you need to do here is find the cells which span on this row, and have 
-            // offset 0. We need to find the ones that start here, and move them to the next row.
-
-            // when trying to identify where to put it, I guess you could use the warehouse to get the 
-            // previous column position of the next row, and insert it after that element or before 
-            // the next warehouse position.
           } else if (rindex === start.row() + 1) {
-            // Return this row, where we map over the row, and introduce any new cells representing any 
-            // cut off cells into the appropriate positions in this row.
-
-            // get a list of all the cells which are on this row for each column
-            // generate a deduped list of these cells for anything which has a starting row of the current row
+            // get a deduped list of all the cells which are on this row for each column
+            // generate a list of these cells for anything which has a starting row of the current row
             // or the deleted row. The cells brought from the deleted row will need to be shrunk.
             var cellsInRow = Blocks.cellsInRow(warehouse, rindex);
             var included = Arr.bind(cellsInRow, function (cell) {
@@ -173,19 +163,9 @@ define(
             return Structs.rowdata(row.element(), included);
           }
           else {
-            console.log('haha');
-            // The isSpanner test for this isn't working as expected.
             return [ shrink(row, isSpanner) ];
           }
         });
-
-        /*
-         * This does not handle the following case:
-
-            The row being deleted contains a cell which has a rowspan that spans onto the next row.
-            That cell will then need to be moved to the next row, which means that something is going 
-            to have to move it, somehow. And move it to the right spot as well.
-         */
       };
 
       return operate(warehouse, rowIndex, colIndex, operation);

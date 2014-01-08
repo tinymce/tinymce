@@ -7,7 +7,7 @@ define(
     'ephox.perhaps.Option',
     'ephox.snooker.api.TableLookup',
     'ephox.snooker.operate.ColumnModification',
-    'ephox.snooker.operate.RowInsertion',
+    'ephox.snooker.operate.RowModification',
     'ephox.snooker.operate.TableOperation',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Node',
@@ -15,7 +15,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Fun, Option, TableLookup, ColumnModification, RowInsertion, TableOperation, Compare, Node, Remove, SelectorFind) {
+  function (Arr, Fun, Option, TableLookup, ColumnModification, RowModification, TableOperation, Compare, Node, Remove, SelectorFind) {
     /*
      * Identify the optional cell that element represents
      */
@@ -48,12 +48,12 @@ define(
     // TODO: Erase column / row ?
 
     return {
-      insertRowBefore: modify(RowInsertion.insertBefore, Fun.noop),
-      insertRowAfter: modify(RowInsertion.insertAfter, Fun.noop),
+      insertRowBefore: modify(RowModification.insertBefore, Fun.noop),
+      insertRowAfter: modify(RowModification.insertAfter, Fun.noop),
       insertColumnBefore: modify(ColumnModification.insertBefore, Fun.noop),
       insertColumnAfter: modify(ColumnModification.insertAfter, Fun.noop),
       eraseColumn: modify(ColumnModification.erase, prune),
-      eraseRow: modify(RowInsertion.erase, prune)
+      eraseRow: modify(RowModification.erase, prune)
     };
   }
 );
