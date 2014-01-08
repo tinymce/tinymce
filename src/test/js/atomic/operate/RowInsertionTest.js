@@ -3,18 +3,21 @@ test(
 
   [
     'ephox.compass.Arr',
+    'ephox.peanut.Fun',
     'ephox.scullion.Struct',
     'ephox.snooker.api.Structs',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.operate.RowInsertion'
   ],
 
-  function (Arr, Struct, Structs, Warehouse, RowInsertion) {
+  function (Arr, Fun, Struct, Structs, Warehouse, RowInsertion) {
     var check = function (expected, method, input, rowIndex, colIndex) {
       var warehouse = Warehouse.generate(input);
       var actual = method(warehouse, rowIndex, colIndex, {
         row: function () {
-          return '???';
+          return {
+            element: Fun.constant('???')
+          };
         },
         cell: function (aa) {
           return d('?' + aa.element(), 1, 1);
