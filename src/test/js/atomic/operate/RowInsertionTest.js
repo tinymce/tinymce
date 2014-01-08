@@ -41,7 +41,7 @@ test(
       });
     };
 
-    var r = Struct.immutable('element', 'cells');
+    var r = Structs.rowdata;
     var d = Structs.detail;
 
     var generate = function () {
@@ -98,5 +98,21 @@ test(
       [ { element: 'b', colspan: 1, rowspan: 1 } ]
     ], RowInsertion.insertBefore, generate(), 0, 1);
 
+    check([
+      [ { element: 'b', colspan: 1, rowspan: 1 }, { element: 'c', colspan: 1, rowspan: 1 } ]
+    ], RowInsertion.erase, generate(), 0, 0);
+
+    check([
+      [ { element: 'b', colspan: 1, rowspan: 1 }, { element: 'c', colspan: 1, rowspan: 1 }, { element: 'f', colspan: 2, rowspan: 1 } ]
+    ], RowInsertion.erase, [
+      r('r0', [ d('a', 1, 1), d('c', 2, 1), d('e', 1, 2) ]),
+      r('r1', [ d('b', 1, 1), d('f', 1, 2) ])
+    ], 0, 0);
+// var generate = function () {
+//       return [
+//         r('r0', [ d('a', 1, 1), d('c', 2, 1) ]),
+//         r('r1', [ d('b', 1, 1) ])
+//       ];
+//     };
   }
 );

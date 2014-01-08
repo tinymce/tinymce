@@ -7,10 +7,13 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.snooker.api.Structs',
-    'ephox.snooker.operate.Rowspans'
+    'ephox.snooker.lookup.Blocks',
+    'ephox.snooker.model.Warehouse',
+    'ephox.snooker.operate.Rowspans',
+    'ephox.snooker.util.Util'
   ],
 
-  function (Arr, Merger, Fun, Option, Structs, Rowspans) {
+  function (Arr, Merger, Fun, Option, Structs, Blocks, Warehouse, Rowspans, Util) {
     var operate = function (warehouse, rowIndex, colIndex, operation) {
       /*
          The process:
@@ -107,8 +110,8 @@ define(
 
         /*
          * For each row in the table:
-         *  - if we are on the specified row: create a new row and return both this and the old row. 
-         *    Add the new row last, because it is being inserted after.
+         *  - if we are on the specified row: create a new row and return both this and the old row
+         *  - add the rows in the particular order depending on type
          *  - if we are on a different row, expand all cells which span onto the specified row and leave the rest alone
          */
         return Arr.bind(cells, function (row, rindex) {
@@ -133,9 +136,9 @@ define(
        *    leave the rest alone.
        */
       var operation = function (start, cells) {
-        var spanners = Rowspans.before(warehouse, rowIndex);
+        var spanners = Rowspans.after(warehouse, rowIndex);
         var isSpanner = isSpanCell(spanners.spanned(), eq);
-
+        
         /*
          * For each row in the table:
          *  - if we are on the specified row: create a new row and return both this and the old row. 
@@ -143,11 +146,44 @@ define(
          *  - if we are on a different row, expand all cells which span onto the specified row and leave the rest alone
          */
         return Arr.bind(cells, function (row, rindex) {
-          if (rindex === start.row()) return [];
+          if (rindex === start.row()) {
+           
+            return [];
+
+            // actually, what you need to do here is find the cells which span on this row, and have 
+            // offset 0. We need to find the ones that start here, and move them to the next row.
+
+            // when trying to identify where to put it, I guess you could use the warehouse to get the 
+            // previous column position of the next row, and insert it after that element or before 
+            // the next warehouse position.
+          } else if (rindex === start.row() + 1) {
+            // Return this row, where we map over the row, and introduce any new cells representing any 
+            // cut off cells into the appropriate positions in this row.
+
+            // get a list of all the cells which are on this row for each column
+            // generate a deduped list of these cells for anything which has a starting row of the current row
+            // or the deleted row. The cells brought from the deleted row will need to be shrunk.
+            var cellsInRow = Blocks.cellsInRow(warehouse, rindex);
+            var included = Arr.bind(cellsInRow, function (cell) {
+              if (cell.row() === rindex) return [ cell ];
+              if (cell.row() === start.row()) return [ adjust(cell, -1) ];
+              return [];
+            });
+
+            return [ Structs.rowdata(row.element(), included)];
+          }
           else {
             return [ shrink(row, isSpanner) ];
           }
         });
+
+        /*
+         * This does not handle the following case:
+
+            The row being deleted contains a cell which has a rowspan that spans onto the next row.
+            That cell will then need to be moved to the next row, which means that something is going 
+            to have to move it, somehow. And move it to the right spot as well.
+         */
       };
 
       return operate(warehouse, rowIndex, colIndex, operation);
