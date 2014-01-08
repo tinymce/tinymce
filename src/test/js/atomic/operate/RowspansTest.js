@@ -19,6 +19,13 @@ test(
     var r = Struct.immutable('element', 'cells');
     var d = Structs.detail;
 
+    /*
+    | a . - | b | c |
+    | d | e | f | - |
+    | - | g . - | - |
+    | h | - . - | i |
+    */
+
     var house = Warehouse.generate([
       r('r0', [ d('a', 1, 2), d('b', 1, 1), d('c', 3, 1) ]),
       r('r1', [ d('d', 2, 1), d('e', 1, 1), d('f', 1, 1) ]),

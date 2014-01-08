@@ -6,10 +6,11 @@ define(
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.snooker.api.Structs',
     'ephox.snooker.operate.Rowspans'
   ],
 
-  function (Arr, Merger, Fun, Option, Rowspans) {
+  function (Arr, Merger, Fun, Option, Structs, Rowspans) {
     var operate = function (warehouse, rowIndex, colIndex, operation) {
       /*
          The process:
@@ -40,21 +41,17 @@ define(
     var creation = function (row, isSpanner, generators, unspanned) {
       var nu = generators.row();
 
+      //  We are creating a new row, so adjust the spans of cells that span onto this row
       var current = Arr.map(row.cells(), function (cell) {
         return isSpanner(cell) ? adjust(cell, 1) : cell;
       });
 
+      // Only create cells for cells which aren't already covered by the span increase. Those that 
+      // do span, will already be spanning into this new row.
       var otherCells = Arr.map(unspanned, generators.cell);
 
-      var active = {
-        element: row.element,
-        cells: Fun.constant(current)
-      };
-
-      var other = {
-        element: nu.element,
-        cells: Fun.constant(otherCells)
-      };
+      var active = Structs.rowdata(row.element(), current);
+      var other = Structs.rowdata(nu.element(), otherCells);
 
       return {
         active: Fun.constant(active),
@@ -86,6 +83,12 @@ define(
         var spanners = Rowspans.after(warehouse, rowIndex);
         var isSpanner = isSpanCell(spanners.spanned(), eq);
 
+        /*
+         * For each row in the table:
+         *  - if we are on the specified row: create a new row and return both this and the old row. 
+         *    Add the new row last, because it is being inserted after.
+         *  - if we are on a different row, expand all cells which span onto the specified row and leave the rest alone
+         */
         return Arr.bind(cells, function (row, rindex) {
           if (rindex === start.row()) {
             var result = creation(row, isSpanner, generators, spanners.unspanned());
@@ -104,6 +107,12 @@ define(
         var spanners = Rowspans.before(warehouse, rowIndex);
         var isSpanner = isSpanCell(spanners.spanned(), eq);
 
+        /*
+         * For each row in the table:
+         *  - if we are on the specified row: create a new row and return both this and the old row. 
+         *    Add the new row first, because it is being inserted before.
+         *  - if we are on a different row, expand all cells which span onto the specified row and leave the rest alone
+         */
         return Arr.bind(cells, function (row, rindex) {
           if (rindex === start.row()) {
             var result = creation(row, isSpanner, generators, spanners.unspanned());
