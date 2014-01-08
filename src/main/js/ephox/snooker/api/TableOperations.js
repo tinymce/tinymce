@@ -45,8 +45,6 @@ define(
       if (cells.length === 0) Remove.remove(table);
     };
 
-    // TODO: Erase column / row ?
-
     return {
       insertRowBefore: modify(RowModification.insertBefore, Fun.noop),
       insertRowAfter: modify(RowModification.insertAfter, Fun.noop),
