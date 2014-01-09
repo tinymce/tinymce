@@ -2,20 +2,17 @@ define(
   'ephox.snooker.api.TableOperations',
 
   [
-    'ephox.compass.Arr',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
     'ephox.snooker.api.TableLookup',
     'ephox.snooker.operate.ColumnModification',
     'ephox.snooker.operate.RowModification',
     'ephox.snooker.operate.TableOperation',
     'ephox.sugar.api.Compare',
-    'ephox.sugar.api.Node',
     'ephox.sugar.api.Remove',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Fun, Option, TableLookup, ColumnModification, RowModification, TableOperation, Compare, Node, Remove, SelectorFind) {
+  function (Fun, TableLookup, ColumnModification, RowModification, TableOperation, Compare, Remove, SelectorFind) {
     /*
      * Using the current element, execute operation on the table.
      */
