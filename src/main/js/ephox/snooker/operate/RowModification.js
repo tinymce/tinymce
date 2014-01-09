@@ -8,12 +8,10 @@ define(
     'ephox.perhaps.Option',
     'ephox.snooker.api.Structs',
     'ephox.snooker.lookup.Blocks',
-    'ephox.snooker.model.Warehouse',
-    'ephox.snooker.operate.Rowspans',
-    'ephox.snooker.util.Util'
+    'ephox.snooker.operate.Rowspans'
   ],
 
-  function (Arr, Merger, Fun, Option, Structs, Blocks, Warehouse, Rowspans, Util) {
+  function (Arr, Merger, Fun, Option, Structs, Blocks, Rowspans) {
     var operate = function (warehouse, rowIndex, colIndex, operation) {
       /*
          The process:
@@ -172,10 +170,24 @@ define(
     };
 
     var makeHeader = function (warehouse, rowIndex, colIndex, generators, eq) {
-      // TODO
+      var rows = warehouse.all();
+      return Arr.map(rows, function (row, rindex) {
+        var make = function (cell) {
+          var elem = generators.replace(cell.element(), 'th', {
+            scope: 'col'
+          });
+          return Merger.merge(cell, {
+            element: Fun.constant(elem)
+          });
+        };
+
+        var cells = rindex === rowIndex ? Arr.map(row.cells(), make) : row.cells();
+        return Structs.rowdata(row.element(), cells);
+      });
     };
 
     var unmakeHeader = function (warehouse, rowIndex, colIndex, generators, eq) {
+      return warehouse.all();
       // TODO
     };
 
