@@ -130,11 +130,5 @@ test(
       ],
       [ { element: 'd', colspan: 2, rowspan: 1 } ]
     ], RowModification.erase, complex(), 2, 0);
-
-    return [
-        r('r0', [ d('a', 2, 1), d('b', 1, 1), d('c', 1, 1), d('g', 3, 1) ]),
-        r('r1', [ d('d', 1, 2) ]),
-        r('r2', [ d('e', 1, 1), d('f', 1, 2) ])
-      ];
   }
 );
