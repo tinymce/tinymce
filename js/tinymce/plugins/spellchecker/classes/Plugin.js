@@ -26,7 +26,15 @@ define("tinymce/spellcheckerplugin/Plugin", [
 	"tinymce/util/URI"
 ], function(DomTextMatcher, PluginManager, Tools, Menu, DOMUtils, JSONRequest, URI) {
 	PluginManager.add('spellchecker', function(editor, url) {
-		var lastSuggestions, started, suggestionsMenu, settings = editor.settings;
+		var self = this, lastSuggestions, started, suggestionsMenu, settings = editor.settings;
+
+		function getTextMatcher() {
+			if (!self.textMatcher) {
+				self.textMatcher = new DomTextMatcher(editor.getBody(), editor);
+			}
+
+			return self.textMatcher;
+		}
 
 		function isEmpty(obj) {
 			/*jshint unused:false*/
@@ -37,14 +45,16 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			return true;
 		}
 
-		function showSuggestions(target, word) {
-			var items = [], suggestions = lastSuggestions[word];
+		function showSuggestions(match) {
+			var items = [], suggestions = lastSuggestions[match.text];
 
 			Tools.each(suggestions, function(suggestion) {
 				items.push({
 					text: suggestion,
 					onclick: function() {
-						editor.insertContent(suggestion);
+						var rng = getTextMatcher().replace(match, suggestion);
+						rng.collapse(false);
+						editor.selection.setRng(rng);
 						checkIfFinished();
 					}
 				});
@@ -54,11 +64,11 @@ define("tinymce/spellcheckerplugin/Plugin", [
 				{text: '-'},
 
 				{text: 'Ignore', onclick: function() {
-					ignoreWord(target, word);
+					ignoreWord(match);
 				}},
 
 				{text: 'Ignore all', onclick: function() {
-					ignoreWord(target, word, true);
+					ignoreWord(match, true);
 				}},
 
 				{text: 'Finish', onclick: finish}
@@ -82,8 +92,9 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			suggestionsMenu.renderTo(document.body);
 
 			// Position menu
+			var matchNode = getTextMatcher().elementFromMatch(match);
 			var pos = DOMUtils.DOM.getPos(editor.getContentAreaContainer());
-			var targetPos = editor.dom.getPos(target);
+			var targetPos = editor.dom.getPos(matchNode);
 			var root = editor.dom.getRoot();
 
 			// Adjust targetPos for scrolling in the editor
@@ -98,15 +109,17 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			pos.x += targetPos.x;
 			pos.y += targetPos.y;
 
-			suggestionsMenu.moveTo(pos.x, pos.y + target.offsetHeight);
+			suggestionsMenu.moveTo(pos.x, pos.y + matchNode.offsetHeight);
 		}
 
 		function spellcheck() {
-			var textFilter, words = [], uniqueWords = {};
+			var words = [], uniqueWords = {};
 
 			if (started) {
 				finish();
 				return;
+			} else {
+				finish();
 			}
 
 			started = true;
@@ -122,14 +135,15 @@ define("tinymce/spellcheckerplugin/Plugin", [
 
 				lastSuggestions = suggestions;
 
-				textFilter.filter(function(match) {
-					return !!suggestions[match[2][0]];
-				}).mark(editor.dom.create('span', {
-					"class": 'mce-spellchecker-word',
-					"data-mce-bogus": 1
-				}));
+				getTextMatcher().filter(function(match) {
+					return !!suggestions[match.text];
+				}).wrap(function() {
+					return editor.dom.create('span', {
+						"class": 'mce-spellchecker-word',
+						"data-mce-bogus": 1
+					});
+				});
 
-				textFilter = null;
 				editor.fire('SpellcheckStart');
 			}
 
@@ -144,8 +158,8 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			"]+", "g");
 
 			// Find all words and make an unique words array
-			textFilter = new DomTextMatcher(nonWordSeparatorCharacters, editor.getBody(), editor.schema).each(function(match) {
-				var word = match[2][0];
+			getTextMatcher().find(nonWordSeparatorCharacters).each(function(match) {
+				var word = match.text;
 
 				// TODO: Fix so it remembers correctly spelled words
 				if (!uniqueWords[word]) {
@@ -179,8 +193,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 
 						editor.windowManager.alert(error);
 						editor.setProgressState(false);
-						textFilter = null;
-						started = false;
+						finish();
 					}
 				});
 			}
@@ -197,84 +210,40 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			}
 		}
 
-		function unwrap(node) {
-			var parentNode = node.parentNode;
-			parentNode.insertBefore(node.firstChild, node);
-			node.parentNode.removeChild(node);
-		}
+		function ignoreWord(wordMatch, all) {
+			editor.selection.collapse();
 
-		function ignoreWord(target, word, all) {
 			if (all) {
-				Tools.each(editor.dom.select('span.mce-spellchecker-word'), function(item) {
-					var text = item.innerText || item.textContent;
-
-					if (text == word) {
-						unwrap(item);
+				getTextMatcher().each(function(match) {
+					if (match.text == wordMatch.text) {
+						getTextMatcher().unwrap(match);
 					}
 				});
 			} else {
-				unwrap(target);
+				getTextMatcher().unwrap(wordMatch);
 			}
 
 			checkIfFinished();
 		}
 
 		function finish() {
-			var i, nodes, node;
+			getTextMatcher().reset();
+			self.textMatcher = null;
 
-			started = false;
-			node = editor.getBody();
-			nodes = node.getElementsByTagName('span');
-			i = nodes.length;
-			while (i--) {
-				node = nodes[i];
-				if (node.getAttribute('data-mce-index')) {
-					unwrap(node);
-				}
+			if (started) {
+				editor.fire('SpellcheckEnd');
+				started = false;
 			}
-
-			editor.fire('SpellcheckEnd');
-		}
-
-		function selectMatch(index) {
-			var nodes, i, spanElm, spanIndex = -1, startContainer, endContainer;
-
-			index = "" + index;
-			nodes = editor.getBody().getElementsByTagName("span");
-			for (i = 0; i < nodes.length; i++) {
-				spanElm = nodes[i];
-				if (spanElm.className == "mce-spellchecker-word") {
-					spanIndex = spanElm.getAttribute('data-mce-index');
-					if (spanIndex === index) {
-						spanIndex = index;
-
-						if (!startContainer) {
-							startContainer = spanElm.firstChild;
-						}
-
-						endContainer = spanElm.firstChild;
-					}
-
-					if (spanIndex !== index && endContainer) {
-						break;
-					}
-				}
-			}
-
-			var rng = editor.dom.createRng();
-			rng.setStart(startContainer, 0);
-			rng.setEnd(endContainer, endContainer.length);
-			editor.selection.setRng(rng);
-
-			return rng;
 		}
 
 		editor.on('click', function(e) {
 			if (e.target.className == "mce-spellchecker-word") {
 				e.preventDefault();
 
-				var rng = selectMatch(e.target.getAttribute('data-mce-index'));
-				showSuggestions(e.target, rng.toString());
+				var match = getTextMatcher().matchFromElement(e.target);
+				editor.selection.setRng(getTextMatcher().rangeFromMatch(match));
+
+				showSuggestions(match);
 			}
 		});
 
@@ -310,5 +279,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 				suggestionsMenu = null;
 			}
 		});
+
+		this.getTextMatcher = getTextMatcher;
 	});
 });
