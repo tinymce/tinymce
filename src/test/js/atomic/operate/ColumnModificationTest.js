@@ -17,7 +17,7 @@ test(
         cell: function () {
           return d('?', 1, 1);
         },
-        th: Fun.identity
+        replace: Fun.identity
       });
 
       assert.eq(expected.length, actual.length);

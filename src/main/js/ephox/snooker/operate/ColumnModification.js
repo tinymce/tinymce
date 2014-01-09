@@ -133,29 +133,28 @@ define(
     };
 
     var replaceElement = function (generators, cell, tag, scope) {
-      var replica = generators.th(cell.element(), scope);
+      var replica = generators.replace(cell.element(), tag, {scope: scope});
       return Merger.merge(cell, {
         element: Fun.constant(replica)
       });
     };
 
-    var makeHeader = function (warehouse, rowIndex, colIndex, generators, eq) {
+    var header = function (tag, scope, warehouse, rowIndex, colIndex, generators, eq) {
       var operation = function (on) {
         return on.fold(function() {
           return [];
         }, function (whole) {
-          return [replaceElement(generators, whole, 'th', 'row')];
+          return [replaceElement(generators, whole, tag, scope)];
         }, function (partial, offset) {
-          return [replaceElement(generators, partial, 'th', 'row')];
+          return [replaceElement(generators, partial, tag, scope)];
         });
       };
 
       return operate(warehouse, rowIndex, colIndex, operation);
     };
 
-    var unmakeHeader = function (warehouse, rowIndex, colIndex, generators, eq) {
-      // TODO
-    };
+    var makeHeader = Fun.curry(header, 'th', 'row');
+    var unmakeHeader = Fun.curry(header, 'td', null);
 
     return {
       insertAfter: insertAfter,

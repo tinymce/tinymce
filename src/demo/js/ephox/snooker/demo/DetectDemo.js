@@ -163,18 +163,18 @@ define(
         return Structs.detail(tr, 1, 1);
       };
 
-      var convertToHeader = function (cell, scope) {
-        var replica = Replication.change(cell, 'th');
-        Attr.set(replica, 'scope', scope);
+      var replace = function (cell, tag, attrs) {
+        var replica = Replication.change(cell, tag);
+        Attr.setAll(replica, attrs);
         return replica;
-      }
+      };
 
       var eq = Compare.eq;
 
       var generators = {
         row: newRow,
         cell: newCell,
-        th: convertToHeader
+        replace: replace
       };
 
       var runOperation = function (operation) {
