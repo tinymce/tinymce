@@ -3,16 +3,18 @@ define(
 
   [
     'ephox.compass.Arr',
+    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.snooker.api.Structs',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.SelectorFilter',
     'ephox.sugar.api.SelectorFind',
+    'ephox.sugar.api.Traverse',
     'global!parseInt'
   ],
 
-  function (Arr, Option, Structs, Attr, Node, SelectorFilter, SelectorFind, parseInt) {
+  function (Arr, Fun, Option, Structs, Attr, Node, SelectorFilter, SelectorFind, Traverse, parseInt) {
     var lookup = function (tags, element) {
       return Arr.contains(tags, Node.name(element)) ? Option.some(element) : SelectorFind.ancestor(element, tags.join(','));
     };
@@ -27,6 +29,15 @@ define(
     var cells = function (ancestor) {
       return SelectorFilter.descendants(ancestor, 'th,td');
     };
+
+    var neighbours = function (selector, element) {
+      return Traverse.parent(element).map(function (parent) {
+        return SelectorFilter.children(parent, selector);
+      });
+    };
+
+    var neighbourCells = Fun.curry(neighbours, 'th,td');
+    var neighbourRows  = Fun.curry(neighbours, 'tr');
 
     var firstCell = function (ancestor) {
       return SelectorFind.descendant(ancestor, 'th,td');
@@ -58,9 +69,11 @@ define(
       cell: cell,
       firstCell: firstCell,
       cells: cells,
+      neighbourCells: neighbourCells,
       table: table,
       row: row,
       rows: rows,
+      neighbourRows: neighbourRows,
       attr: attr,
       grid: grid
     };

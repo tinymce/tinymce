@@ -5,28 +5,26 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.snooker.api.Structs',
-    'ephox.sugar.api.Compare',
-    'ephox.sugar.api.SelectorFilter',
-    'ephox.sugar.api.SelectorFind',
-    'ephox.sugar.api.Traverse'
+    'ephox.snooker.api.TableLookup',
+    'ephox.sugar.api.Compare'
   ],
 
-  function (Arr, Fun, Structs, Compare, SelectorFilter, SelectorFind, Traverse) {
+  function (Arr, Fun, Structs, TableLookup, Compare) {
     var detect = function (cell) {
-      var getIndex = function (selector, elem) {
-        return Traverse.parent(elem).map(function (parent) {
-          var children = SelectorFilter.children(parent, selector);
+
+      var getIndex = function (getChildren, elem) {
+        return getChildren(elem).map(function (children) {
           return Arr.findIndex(children, function (child) {
             return Compare.eq(child, elem);
           });
         });
       };
 
-      var getRowIndex = Fun.curry(getIndex, 'tr');
-      var getCellIndex = Fun.curry(getIndex, 'td,th');
+      var getRowIndex = Fun.curry(getIndex, TableLookup.neighbourRows);
+      var getCellIndex = Fun.curry(getIndex, TableLookup.neighbourCells);
 
       return getCellIndex(cell).bind(function (colId) {
-        return SelectorFind.ancestor(cell, 'tr').bind(getRowIndex).map(function (rowId) {
+        return TableLookup.row(cell).bind(getRowIndex).map(function (rowId) {
           return Structs.address(rowId, colId);
         });
       });
