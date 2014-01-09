@@ -133,20 +133,26 @@ define(
     };
 
     var replaceElement = function (generators, cell, tag, scope) {
-      var replica = generators.replace(cell.element(), tag, {scope: scope});
+      var replica = generators.replace(cell.element(), tag, {
+        scope: scope
+      });
       return Merger.merge(cell, {
         element: Fun.constant(replica)
       });
     };
 
     var header = function (tag, scope, warehouse, rowIndex, colIndex, generators, eq) {
+      var replace = function (cell) {
+        return replaceElement(generators, cell, tag, scope);
+      };
+
       var operation = function (on) {
         return on.fold(function() {
           return [];
         }, function (whole) {
-          return [replaceElement(generators, whole, tag, scope)];
-        }, function (partial, offset) {
-          return [replaceElement(generators, partial, tag, scope)];
+          return [ replace(whole) ];
+        }, function (partial, _offset) {
+          return [ replace(partial) ];
         });
       };
 

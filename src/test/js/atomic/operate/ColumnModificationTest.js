@@ -17,7 +17,9 @@ test(
         cell: function () {
           return d('?', 1, 1);
         },
-        replace: Fun.identity
+        replace: function (cell, tag, attrs) {
+          return tag + '_' + cell + '>>' + attrs.scope;
+        }
       });
 
       assert.eq(expected.length, actual.length);
@@ -92,6 +94,24 @@ test(
       r('r1', [ d('b', 2, 1), d('c', 1, 1) ]),
       r('r2', [ d('d', 1, 1) ])
     ], 0, 0);
+
+    check([
+      [ { element: 'a', colspan: 1, rowspan: 1 }, { element: 'th_b>>row', colspan: 1, rowspan: 1 } ],
+      [ { element: 'th_c>>row', colspan: 2, rowspan: 1 } ]
+    ], ColumnModification.makeHeader, generate(), 0, 1);
+
+    check([
+      [ { element: 'a', colspan: 1, rowspan: 1 }, { element: 'td_b>>null', colspan: 1, rowspan: 1 } ],
+      [ { element: 'td_c>>null', colspan: 2, rowspan: 1 } ]
+    ], ColumnModification.unmakeHeader, generate(), 0, 1);
+
+var generate = function () {
+      return [
+        r('r0', [ d('a', 1, 1), d('b', 1, 1) ]),
+        r('r1', [ d('c', 1, 2) ])
+      ];
+    };
+
 
   }
 );
