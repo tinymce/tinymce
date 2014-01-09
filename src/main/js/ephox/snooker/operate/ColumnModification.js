@@ -159,15 +159,12 @@ define(
       return operate(warehouse, rowIndex, colIndex, operation);
     };
 
-    var makeHeader = Fun.curry(header, 'th', 'row');
-    var unmakeHeader = Fun.curry(header, 'td', null);
-
     return {
       insertAfter: insertAfter,
       insertBefore: insertBefore,
       erase: erase,
-      makeHeader: makeHeader,
-      unmakeHeader: unmakeHeader
+      makeHeader: Fun.curry(header, 'th', 'row'),
+      unmakeHeader: Fun.curry(header, 'td', null)
     };
   }
 );

@@ -169,12 +169,12 @@ define(
       return operate(warehouse, rowIndex, colIndex, operation);
     };
 
-    var header = function (tag, warehouse, rowIndex, colIndex, generators, eq) {
+    var header = function (tag, scope, warehouse, rowIndex, colIndex, generators, eq) {
       var rows = warehouse.all();
       return Arr.map(rows, function (row, rindex) {
         var make = function (cell) {
           var elem = generators.replace(cell.element(), tag, {
-            scope: 'col'
+            scope: scope
           });
           return Merger.merge(cell, {
             element: Fun.constant(elem)
@@ -190,8 +190,8 @@ define(
       insertBefore: Fun.curry(insert, before),
       insertAfter: Fun.curry(insert, after),
       erase: erase,
-      makeHeader: Fun.curry(header, 'th'),
-      unmakeHeader: Fun.curry(header, 'td')
+      makeHeader: Fun.curry(header, 'th', 'col'),
+      unmakeHeader: Fun.curry(header, 'td', null)
     };
   }
 );
