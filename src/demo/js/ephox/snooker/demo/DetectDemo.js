@@ -79,10 +79,14 @@ define(
         '</tbody></table>'
       );
 
+      var subject3 = Element.fromHtml('<table contenteditable="true" width="100%" cellpadding="0" border="1" cellspacing="0"> <tbody><tr> <td rowspan="2" width="34%">&nbsp;a</td> <td width="33%">&nbsp;b</td> <td width="33%">&nbsp;c</td> </tr> <tr> <td width="33%">&nbsp;d</td> <td rowspan="2" width="33%">&nbsp;e</td> </tr> <tr> <td width="34%">&nbsp;f</td> <td width="33%">&nbsp;g</td> </tr> <tr> <td width="34%">&nbsp;h</td> <td width="33%">&nbsp;i</td> <td width="33%">j&nbsp;</td> </tr> </tbody></table>');
 
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
       Insert.append(ephoxUi, subject);
+      Insert.append(ephoxUi, Element.fromTag('p'));
       Insert.append(ephoxUi, subject2);
+      Insert.append(ephoxUi, Element.fromTag('p'));
+      Insert.append(ephoxUi, subject3);
 
       var manager = TableResize(ephoxUi);
       manager.on();
