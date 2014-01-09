@@ -3,14 +3,13 @@ test(
 
   [
     'ephox.compass.Arr',
-    'ephox.peanut.Fun',
     'ephox.scullion.Struct',
     'ephox.snooker.api.Structs',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.operate.ColumnModification'
   ],
 
-  function (Arr, Fun, Struct, Structs, Warehouse, ColumnModification) {
+  function (Arr, Struct, Structs, Warehouse, ColumnModification) {
     var check = function (expected, method, input, rowIndex, colIndex) {
       var warehouse = Warehouse.generate(input);
       var actual = method(warehouse, rowIndex, colIndex, {
