@@ -104,14 +104,5 @@ test(
       [ { element: 'a', colspan: 1, rowspan: 1 }, { element: 'td_b>>null', colspan: 1, rowspan: 1 } ],
       [ { element: 'td_c>>null', colspan: 2, rowspan: 1 } ]
     ], ColumnModification.unmakeHeader, generate(), 0, 1);
-
-var generate = function () {
-      return [
-        r('r0', [ d('a', 1, 1), d('b', 1, 1) ]),
-        r('r1', [ d('c', 1, 2) ])
-      ];
-    };
-
-
   }
 );
