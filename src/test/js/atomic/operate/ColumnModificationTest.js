@@ -18,7 +18,8 @@ test(
           return d('?', 1, 1);
         },
         replace: function (cell, tag, attrs) {
-          return tag + '_' + cell + '>>' + attrs.scope;
+          var scope = attrs.scope === null? '' : '>>' + attrs.scope;
+          return tag + '_' + cell + scope;
         }
       });
 
@@ -101,8 +102,8 @@ test(
     ], ColumnModification.makeHeader, generate(), 0, 1);
 
     check([
-      [ { element: 'a', colspan: 1, rowspan: 1 }, { element: 'td_b>>null', colspan: 1, rowspan: 1 } ],
-      [ { element: 'td_c>>null', colspan: 2, rowspan: 1 } ]
+      [ { element: 'a', colspan: 1, rowspan: 1 }, { element: 'td_b', colspan: 1, rowspan: 1 } ],
+      [ { element: 'td_c', colspan: 2, rowspan: 1 } ]
     ], ColumnModification.unmakeHeader, generate(), 0, 1);
   }
 );
