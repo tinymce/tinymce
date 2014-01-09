@@ -132,10 +132,37 @@ define(
       return operate(warehouse, rowIndex, colIndex, operation);
     };
 
+    var replaceElement = function (generators, cell, tag, scope) {
+      var replica = generators.th(cell.element(), scope);
+      return Merger.merge(cell, {
+        element: Fun.constant(replica)
+      });
+    };
+
+    var makeHeader = function (warehouse, rowIndex, colIndex, generators, eq) {
+      var operation = function (on) {
+        return on.fold(function() {
+          return [];
+        }, function (whole) {
+          return [replaceElement(generators, whole, 'th', 'row')];
+        }, function (partial, offset) {
+          return [replaceElement(generators, partial, 'th', 'row')];
+        });
+      };
+
+      return operate(warehouse, rowIndex, colIndex, operation);
+    };
+
+    var unmakeHeader = function (warehouse, rowIndex, colIndex, generators, eq) {
+      // TODO
+    };
+
     return {
       insertAfter: insertAfter,
       insertBefore: insertBefore,
-      erase: erase
+      erase: erase,
+      makeHeader: makeHeader,
+      unmakeHeader: unmakeHeader
     };
   }
 );

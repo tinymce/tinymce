@@ -2,20 +2,24 @@ define(
   'ephox.snooker.demo.DetectDemo',
 
   [
+    'ephox.compass.Arr',
     'ephox.perhaps.Option',
     'ephox.snooker.api.Structs',
     'ephox.snooker.api.TableOperations',
     'ephox.snooker.api.TableResize',
+    'ephox.sugar.api.Attr',
+    'ephox.sugar.api.Class',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Ready',
+    'ephox.sugar.api.Replication',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Option, Structs, TableOperations, TableResize, Compare, Css, DomEvent, Element, Insert, Ready, SelectorFind) {
+  function (Arr, Option, Structs, TableOperations, TableResize, Attr, Class, Compare, Css, DomEvent, Element, Insert, Ready, Replication, SelectorFind) {
     return function () {
       var subject = Element.fromHtml(
         '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
@@ -124,6 +128,18 @@ define(
       Insert.append(eraseColumn, Element.fromText('Erase column'));
       Insert.append(ephoxUi, eraseColumn);
 
+      var makeButton = function (desc) {
+        var button = Element.fromTag('button');
+        Insert.append(button, Element.fromText(desc));
+        Insert.append(ephoxUi, button);
+        return button;
+      };
+
+      var makeColumnHeader = makeButton('Make column header');
+      var unmakeColumnHeader = makeButton('Unmake column header');
+      var makeRowHeader = makeButton('makeRowHeader');
+      var unmakeRowHeader = makeButton('unmakeRowHeader');
+
       var detection = function () {
         var selection = window.getSelection();
         if (selection.rangeCount > 0) {
@@ -147,11 +163,18 @@ define(
         return Structs.detail(tr, 1, 1);
       };
 
+      var convertToHeader = function (cell, scope) {
+        var replica = Replication.change(cell, 'th');
+        Attr.set(replica, 'scope', scope);
+        return replica;
+      }
+
       var eq = Compare.eq;
 
       var generators = {
         row: newRow,
-        cell: newCell
+        cell: newCell,
+        th: convertToHeader
       };
 
       var runOperation = function (operation) {
@@ -166,8 +189,14 @@ define(
       DomEvent.bind(beforeRow, 'click', runOperation(TableOperations.insertRowBefore));
       DomEvent.bind(beforeColumn, 'click', runOperation(TableOperations.insertColumnBefore));
       DomEvent.bind(afterColumn, 'click', runOperation(TableOperations.insertColumnAfter));
+
       DomEvent.bind(eraseRow, 'click', runOperation(TableOperations.eraseRow));
       DomEvent.bind(eraseColumn, 'click', runOperation(TableOperations.eraseColumn));
+
+      DomEvent.bind(makeColumnHeader, 'click', runOperation(TableOperations.makeColumnHeader));
+      DomEvent.bind(unmakeColumnHeader, 'click', runOperation(TableOperations.unmakeColumnHeader));
+      DomEvent.bind(makeRowHeader, 'click', runOperation(TableOperations.makeRowHeader));
+      DomEvent.bind(unmakeRowHeader, 'click', runOperation(TableOperations.unmakeRowHeader));
     };
   }
 );

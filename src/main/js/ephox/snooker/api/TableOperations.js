@@ -41,7 +41,11 @@ define(
       insertColumnBefore: modify(ColumnModification.insertBefore, Fun.noop),
       insertColumnAfter: modify(ColumnModification.insertAfter, Fun.noop),
       eraseColumn: modify(ColumnModification.erase, prune),
-      eraseRow: modify(RowModification.erase, prune)
+      eraseRow: modify(RowModification.erase, prune),
+      makeColumnHeader: modify(ColumnModification.makeHeader, Fun.noop),
+      unmakeColumnHeader: modify(ColumnModification.unmakeHeader, Fun.noop),
+      makeRowHeader: modify(RowModification.makeHeader, Fun.noop),
+      unmakeRowHeader: modify(RowModification.unmakeHeader, Fun.noop)
     };
   }
 );

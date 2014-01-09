@@ -171,10 +171,20 @@ define(
       return operate(warehouse, rowIndex, colIndex, operation);
     };
 
+    var makeHeader = function (warehouse, rowIndex, colIndex, generators, eq) {
+      // TODO
+    };
+
+    var unmakeHeader = function (warehouse, rowIndex, colIndex, generators, eq) {
+      // TODO
+    };
+
     return {
       insertBefore: Fun.curry(insert, before),
       insertAfter: Fun.curry(insert, after),
-      erase: erase
+      erase: erase,
+      makeHeader: makeHeader,
+      unmakeHeader: unmakeHeader
     };
   }
 );
