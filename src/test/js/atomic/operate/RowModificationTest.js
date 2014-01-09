@@ -134,12 +134,14 @@ test(
       [ { element: 'd', colspan: 2, rowspan: 1 } ]
     ], RowModification.erase, complex(), 2, 0);
 
-
-//r('r0', [ d('a', 1, 1), d('c', 2, 1) ]),
-        // r('r1', [ d('b', 1, 1) ])
     check([
       [ { element: 'th_a>>col', rowspan: 1, colspan: 1 }, { element: 'th_c>>col', rowspan: 2, colspan: 1 } ],
       [ { element: 'b', rowspan: 1, colspan: 1 } ]
     ], RowModification.makeHeader, generate(), 0, 0);
+
+    check([
+      [ { element: 'td_a>>col', rowspan: 1, colspan: 1 }, { element: 'td_c>>col', rowspan: 2, colspan: 1 } ],
+      [ { element: 'b', rowspan: 1, colspan: 1 } ]
+    ], RowModification.unmakeHeader, generate(), 0, 0);
   }
 );

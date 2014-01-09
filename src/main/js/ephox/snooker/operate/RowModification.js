@@ -169,11 +169,11 @@ define(
       return operate(warehouse, rowIndex, colIndex, operation);
     };
 
-    var makeHeader = function (warehouse, rowIndex, colIndex, generators, eq) {
+    var header = function (tag, warehouse, rowIndex, colIndex, generators, eq) {
       var rows = warehouse.all();
       return Arr.map(rows, function (row, rindex) {
         var make = function (cell) {
-          var elem = generators.replace(cell.element(), 'th', {
+          var elem = generators.replace(cell.element(), tag, {
             scope: 'col'
           });
           return Merger.merge(cell, {
@@ -186,17 +186,12 @@ define(
       });
     };
 
-    var unmakeHeader = function (warehouse, rowIndex, colIndex, generators, eq) {
-      return warehouse.all();
-      // TODO
-    };
-
     return {
       insertBefore: Fun.curry(insert, before),
       insertAfter: Fun.curry(insert, after),
       erase: erase,
-      makeHeader: makeHeader,
-      unmakeHeader: unmakeHeader
+      makeHeader: Fun.curry(header, 'th'),
+      unmakeHeader: Fun.curry(header, 'td')
     };
   }
 );
