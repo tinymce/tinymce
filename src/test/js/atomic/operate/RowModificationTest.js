@@ -22,7 +22,8 @@ test(
           return d('?' + aa.element(), 1, 1);
         },
         replace: function (cell, tag, attrs) {
-          return tag + '_' + cell + '>>' + attrs.scope;
+          var scope = attrs.scope === null ? '' : '>>' + attrs.scope;
+          return tag + '_' + cell + scope;
         }
       }, function (a, b) {
         return a === b;
@@ -140,7 +141,7 @@ test(
     ], RowModification.makeHeader, generate(), 0, 0);
 
     check([
-      [ { element: 'td_a>>col', rowspan: 1, colspan: 1 }, { element: 'td_c>>col', rowspan: 2, colspan: 1 } ],
+      [ { element: 'td_a', rowspan: 1, colspan: 1 }, { element: 'td_c', rowspan: 2, colspan: 1 } ],
       [ { element: 'b', rowspan: 1, colspan: 1 } ]
     ], RowModification.unmakeHeader, generate(), 0, 0);
   }
