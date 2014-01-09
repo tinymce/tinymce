@@ -17,6 +17,9 @@ define(
       return Arr.contains(tags, Node.name(element)) ? Option.some(element) : SelectorFind.ancestor(element, tags.join(','));
     };
 
+    /*
+     * Identify the optional cell that element represents.
+     */
     var cell = function (element) {
       return lookup([ 'td', 'th' ], element);
     };

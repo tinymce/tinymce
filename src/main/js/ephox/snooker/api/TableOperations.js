@@ -17,18 +17,11 @@ define(
 
   function (Arr, Fun, Option, TableLookup, ColumnModification, RowModification, TableOperation, Compare, Node, Remove, SelectorFind) {
     /*
-     * Identify the optional cell that element represents
-     */
-    var detection = function (element) {
-      return Arr.contains([ 'td', 'th' ], Node.name(element)) ? Option.some(element) : SelectorFind.ancestor(element, 'th,td');
-    };
-
-    /*
-     * Using the current element, execute operation on the table 
+     * Using the current element, execute operation on the table.
      */
     var modify = function (operation, post) {
       return function (container, element, generators) {
-        detection(element).each(function (cell) {
+        TableLookup.cell(element).each(function (cell) {
           SelectorFind.ancestor(cell, 'table').each(function (table) {
             TableOperation.run(container, table, cell, function (warehouse, gridpos) {
               return operation(warehouse, gridpos.row(), gridpos.column(), generators, Compare.eq);
