@@ -380,7 +380,7 @@ define("tinymce/ui/FormatControls", [
 
 		// Simple command controls with format state
 		each({
-			blockquote: ['Toggle blockquote', 'mceBlockQuote'],
+			blockquote: ['Blockquote', 'mceBlockQuote'],
 			numlist: ['Numbered list', 'InsertOrderedList'],
 			bullist: ['Bullet list', 'InsertUnorderedList'],
 			subscript: ['Subscript', 'Subscript'],
