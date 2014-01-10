@@ -97,8 +97,8 @@ tinymce.PluginManager.add('importcss', function(editor) {
 			if (editor.schema.getTextBlockElements()[elementName]) {
 				// Text block format ex: h1.class1
 				format.block = elementName;
-			} else if (editor.schema.getBlockElements()[elementName]) {
-				// Non text block format ex: tr.row
+			} else if (editor.schema.getBlockElements()[elementName] || elementName.toLowerCase() == "a") {
+				// Non text block format ex: tr.row or a.className
 				format.selector = elementName;
 			} else {
 				// Inline format strong.class1

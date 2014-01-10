@@ -5,6 +5,7 @@ Version 4.0.12 (2014-01-xx)
 	Fixed bug where IE 8 would insert the image outside the editor unless it was focused first.
 	Fixed bug where older IE versions would throw an exception on drag/drop since they don't support modern dataTransfer API.
 	Fixed bug where the blockquote button text wasn't properly translated since it had the wrong English key.
+	Fixed bug where the importcss plugin didn't import a.class rules properly as selector formats.
 Version 4.0.12 (2013-12-18)
 	Added new media_scripts option to the media plugin. This makes it possible to embed videos using script elements.
 	Fixed bug where WebKit/Blink would produce random span elements and styles when deleting contents inside the editor.
