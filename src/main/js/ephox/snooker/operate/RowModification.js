@@ -5,13 +5,13 @@ define(
     'ephox.compass.Arr',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
     'ephox.snooker.api.Structs',
     'ephox.snooker.lookup.Blocks',
+    'ephox.snooker.model.Warehouse',
     'ephox.snooker.operate.Rowspans'
   ],
 
-  function (Arr, Merger, Fun, Option, Structs, Blocks, Rowspans) {
+  function (Arr, Merger, Fun, Structs, Blocks, Warehouse, Rowspans) {
     var operate = function (warehouse, rowIndex, colIndex, operation) {
       /*
          The process:
@@ -20,14 +20,8 @@ define(
          Get the row of that cell
          Apply operation on that row and integrate into table
        */
-
-      var cells = warehouse.all();
-      var initial = Option.from(cells[rowIndex]).bind(function (row) {
-        return Option.from(row.cells()[colIndex]);
-      });
-
-      return initial.map(function (start) {
-        return operation(start, cells);
+      return Warehouse.domAt(warehouse, rowIndex, colIndex).map(function (start) {
+        return operation(start, warehouse.all());
       }).getOrThunk(function () {
         return warehouse.all();
       });

@@ -19,6 +19,15 @@ define(
       return raw !== undefined ? Option.some(raw) : Option.none();
     };
 
+    // Identify extended by the dom position of the cell.
+    var domAt = function (warehouse, rowIndex, colIndex) {
+      var cells = warehouse.all();
+      // Identify the actual DOM position of the cell.
+      return Option.from(cells[rowIndex]).bind(function (row) {
+        return Option.from(row.cells()[colIndex]);
+      });
+    };
+
     /* 
      * From a list of list of Detail, generate three pieces of information: 
      *  1. the grid size
@@ -82,6 +91,7 @@ define(
     return {
       generate: generate,
       getAt: getAt,
+      domAt: domAt,
       justCells: justCells
     };
   }

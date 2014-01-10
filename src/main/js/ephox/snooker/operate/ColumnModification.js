@@ -5,13 +5,12 @@ define(
     'ephox.compass.Arr',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
     'ephox.snooker.api.Structs',
     'ephox.snooker.lookup.Blocks',
     'ephox.snooker.model.Warehouse'
   ],
 
-  function (Arr, Merger, Fun, Option, Structs, Blocks, Warehouse) {
+  function (Arr, Merger, Fun, Structs, Blocks, Warehouse) {
     // Returns a list of RowData. [(element: Element, cells: List[Extended])]
     var operate = function (warehouse, rowIndex, colIndex, operation) {
       /* 
@@ -22,14 +21,7 @@ define(
          Find all the cells on that column
          Apply operation
        */
-
-      var cells = warehouse.all();
-      // Identify the actual DOM position of the cell.
-      var initial = Option.from(cells[rowIndex]).bind(function (row) {
-        return Option.from(row.cells()[colIndex]);
-      });
-
-      return initial.map(function (start) {
+      return Warehouse.domAt(warehouse, rowIndex, colIndex).map(function (start) {
         /* Retrieve a list for each row of using the grid column (not DOM column) of cell as a pivot:
          *  row: Element
          *  before: List[Extended],
