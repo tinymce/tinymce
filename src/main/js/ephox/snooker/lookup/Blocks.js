@@ -73,9 +73,26 @@ define(
       });
     };
 
+    var cellsInRow = function (warehouse, rowId) {
+      var range = Util.range(0, warehouse.grid().columns());
+      var cells = Arr.bind(range, function (colIndex) {
+        var item = Warehouse.getAt(warehouse, rowId, colIndex);
+        return item.fold(function () {
+          return [];
+        }, function (val) {
+          return [ val ];
+        });
+      });
+
+      return Util.unique(cells, function (a, b) {
+        return a.row() === b.row() && a.column() === b.column();
+      });
+    };
+
     return {
       column: column,
-      columns: columns
+      columns: columns,
+      cellsInRow: cellsInRow
     };
   }
 );

@@ -3,25 +3,28 @@ define(
 
   [
     'ephox.compass.Arr',
+    'ephox.peanut.Fun',
     'ephox.snooker.api.Structs',
-    'ephox.sugar.api.Compare',
-    'ephox.sugar.api.SelectorFind',
-    'ephox.sugar.api.Traverse'
+    'ephox.snooker.api.TableLookup',
+    'ephox.sugar.api.Compare'
   ],
 
-  function (Arr, Structs, Compare, SelectorFind, Traverse) {
+  function (Arr, Fun, Structs, TableLookup, Compare) {
     var detect = function (cell) {
-      var getIndex = function (elem) {
-        return Traverse.parent(elem).map(function (parent) {
-          var children = Traverse.children(parent);
+
+      var getIndex = function (getChildren, elem) {
+        return getChildren(elem).map(function (children) {
           return Arr.findIndex(children, function (child) {
             return Compare.eq(child, elem);
           });
         });
       };
 
-      return getIndex(cell).bind(function (colId) {
-        return SelectorFind.ancestor(cell, 'tr').bind(getIndex).map(function (rowId) {
+      var getRowIndex = Fun.curry(getIndex, TableLookup.neighbourRows);
+      var getCellIndex = Fun.curry(getIndex, TableLookup.neighbourCells);
+
+      return getCellIndex(cell).bind(function (colId) {
+        return TableLookup.row(cell).bind(getRowIndex).map(function (rowId) {
           return Structs.address(rowId, colId);
         });
       });

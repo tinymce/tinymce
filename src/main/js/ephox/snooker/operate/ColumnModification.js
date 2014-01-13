@@ -1,16 +1,17 @@
 define(
-  'ephox.snooker.operate.ColumnInsertion',
+  'ephox.snooker.operate.ColumnModification',
 
   [
     'ephox.compass.Arr',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
+    'ephox.snooker.api.Structs',
     'ephox.snooker.lookup.Blocks',
     'ephox.snooker.model.Warehouse'
   ],
 
-  function (Arr, Merger, Fun, Option, Blocks, Warehouse) {
+  function (Arr, Merger, Fun, Structs, Blocks, Warehouse) {
+    // Returns a list of RowData. [(element: Element, cells: List[Extended])]
     var operate = function (warehouse, rowIndex, colIndex, operation) {
       /* 
          The process:
@@ -20,13 +21,13 @@ define(
          Find all the cells on that column
          Apply operation
        */
-
-      var cells = warehouse.all();
-      var initial = Option.from(cells[rowIndex]).bind(function (row) {
-        return Option.from(row.cells()[colIndex]);
-      });
-
-      return initial.map(function (start) {
+      return Warehouse.domAt(warehouse, rowIndex, colIndex).map(function (start) {
+        /* Retrieve a list for each row of using the grid column (not DOM column) of cell as a pivot:
+         *  row: Element
+         *  before: List[Extended],
+         *  after : List[Extended],
+         *  on: CellType
+         */
         var column = Blocks.column(warehouse, start.column());
         return Arr.map(column, function (context, i) {
           var before = context.before();
@@ -34,10 +35,7 @@ define(
           var on = operation(context.on());
 
           var resultant = context.before().concat(on).concat(context.after());
-          return {
-            cells: Fun.constant(resultant),
-            element: context.row
-          };
+          return Structs.rowdata(context.row(), resultant);
         });
       }).getOrThunk(function () {
         return warehouse.all();
@@ -51,6 +49,14 @@ define(
     };
 
     var insertAfter = function (warehouse, rowIndex, colIndex, generators, eq) {
+      /* Situations: 
+           None => there is no cell in this particular column on this row, but if there is one 
+                   that spans here from another row, create a new cell to represent this inserted
+                   column (same as insertBefore)
+           Whole => Insert a cell after the whole cell, and return the whole cell as well in (current, new) order.
+           Partial => Insert a cell after the partial cell if we are the last offset of the partial cell, 
+                      otherwise, adjust its colspan so that it spans an extra column.
+       */
       var operation = function (on) {
         return on.fold(function () {
           var occupant = Warehouse.getAt(warehouse, rowIndex, colIndex);
@@ -62,7 +68,8 @@ define(
         }, function (whole) {
           return [ whole, generators.cell(whole) ];
         }, function (partial, offset) {
-          return offset < partial.colspan() - 1 ? [ adjust(partial, 1) ] : [ partial, generators.cell(partial) ];
+          var lastOffset = partial.colspan() - 1;
+          return offset < lastOffset ? [ adjust(partial, 1) ] : [ partial, generators.cell(partial) ];
         });
       };
 
@@ -70,7 +77,17 @@ define(
     };
 
     var insertBefore = function (warehouse, rowIndex, colIndex, generators, eq) {
+      // Returns a list of extended cell information to be inserted within the before and after
+      // for the row.
       var operation = function (on) {
+        /* Situations: 
+           None => there is no cell in this particular column on this row, but if there is one 
+                   that spans here from another row, create a new cell to represent this inserted
+                   column
+           Whole => Insert a cell before the whole cell, and return the whole cell as well in (new, current) order
+           Partial => Insert a cell before the partial cell if we are at the start of the partial cell, 
+                      otherwise, adjust its colspan so that it spans an extra column.
+         */
         return on.fold(function () {
           var occupant = Warehouse.getAt(warehouse, rowIndex, colIndex);
           return occupant.fold(function () {
@@ -88,8 +105,12 @@ define(
       return operate(warehouse, rowIndex, colIndex, operation);
     };
 
-    // Should this really be in a module called Insertion?
     var erase = function (warehouse, rowIndex, colIndex, generators, eq) {
+      /* Situations: 
+           None => there is no cell in this particular column on this row, don't do anything
+           Whole => remove the cell
+           Partial => remove 1 from the colspan
+       */
       var operation = function (on) {
         return on.fold(function () {
           return [];
@@ -103,10 +124,39 @@ define(
       return operate(warehouse, rowIndex, colIndex, operation);
     };
 
+    var replaceElement = function (generators, cell, tag, scope) {
+      var replica = generators.replace(cell.element(), tag, {
+        scope: scope
+      });
+      return Merger.merge(cell, {
+        element: Fun.constant(replica)
+      });
+    };
+
+    var header = function (tag, scope, warehouse, rowIndex, colIndex, generators, eq) {
+      var replace = function (cell) {
+        return replaceElement(generators, cell, tag, scope);
+      };
+
+      var operation = function (on) {
+        return on.fold(function() {
+          return [];
+        }, function (whole) {
+          return [ replace(whole) ];
+        }, function (partial, _offset) {
+          return [ replace(partial) ];
+        });
+      };
+
+      return operate(warehouse, rowIndex, colIndex, operation);
+    };
+
     return {
       insertAfter: insertAfter,
       insertBefore: insertBefore,
-      erase: erase
+      erase: erase,
+      makeHeader: Fun.curry(header, 'th', 'row'),
+      unmakeHeader: Fun.curry(header, 'td', null)
     };
   }
 );

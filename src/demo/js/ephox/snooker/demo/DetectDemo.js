@@ -2,20 +2,24 @@ define(
   'ephox.snooker.demo.DetectDemo',
 
   [
+    'ephox.compass.Arr',
     'ephox.perhaps.Option',
     'ephox.snooker.api.Structs',
     'ephox.snooker.api.TableOperations',
     'ephox.snooker.api.TableResize',
+    'ephox.sugar.api.Attr',
+    'ephox.sugar.api.Class',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Ready',
+    'ephox.sugar.api.Replication',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Option, Structs, TableOperations, TableResize, Compare, Css, DomEvent, Element, Insert, Ready, SelectorFind) {
+  function (Arr, Option, Structs, TableOperations, TableResize, Attr, Class, Compare, Css, DomEvent, Element, Insert, Ready, Replication, SelectorFind) {
     return function () {
       var subject = Element.fromHtml(
         '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
@@ -46,7 +50,13 @@ define(
             '<td>x</td>' +
           '</tr>' +
           '<tr>' +
-            '<td style="width: 120px;">2</td>' +
+            '<td style="width: 120px;" rowspan=2>2</td>' +
+            '<td colspan=2>.</td>' +
+            '<td style="width: 150px;">5</td>' +
+            '<td>x</td>' +
+          '</tr>' +
+          '<tr>' +
+            '<td>1</td>' +
             '<td colspan=2>.</td>' +
             '<td style="width: 150px;">5</td>' +
             '<td>x</td>' +
@@ -61,22 +71,26 @@ define(
         '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
           '<tr>' +
             '<td style="width: 110px;">1</td>' +
-            '<td colspan="4">.</td>' +
+            // '<td colspan="1">.</td>' +
           '</tr>' +
-          '<tr>' +
-            '<td>x</td>' +
-            '<td style="width: 120px;">2</td>' +
-            '<td>.</td>' +
-            '<td style="width: 150px;">5</td>' +
-            '<td>x</td>' +
-          '</tr>' +
+          // '<tr>' +
+          //   '<td>x</td>' +
+          //   '<td style="width: 120px;">2</td>' +
+          //   '<td>.</td>' +
+          //   '<td style="width: 150px;">5</td>' +
+          //   '<td>x</td>' +
+          // '</tr>' +
         '</tbody></table>'
       );
 
+      var subject3 = Element.fromHtml('<table contenteditable="true" width="100%" cellpadding="0" border="1" cellspacing="0"> <tbody><tr> <td rowspan="2" width="34%">&nbsp;a</td> <td width="33%">&nbsp;b</td> <td width="33%">&nbsp;c</td> </tr> <tr> <td width="33%">&nbsp;d</td> <td rowspan="2" width="33%">&nbsp;e</td> </tr> <tr> <td width="34%">&nbsp;f</td> <td width="33%">&nbsp;g</td> </tr> <tr> <td width="34%">&nbsp;h</td> <td width="33%">&nbsp;i</td> <td width="33%">j&nbsp;</td> </tr> </tbody></table>');
 
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
       Insert.append(ephoxUi, subject);
+      Insert.append(ephoxUi, Element.fromTag('p'));
       Insert.append(ephoxUi, subject2);
+      Insert.append(ephoxUi, Element.fromTag('p'));
+      Insert.append(ephoxUi, subject3);
 
       var manager = TableResize(ephoxUi);
       manager.on();
@@ -106,6 +120,26 @@ define(
       Insert.append(beforeColumn, Element.fromText('Column Before'));
       Insert.append(ephoxUi, beforeColumn);
 
+      var eraseRow = Element.fromTag('button');
+      Insert.append(eraseRow, Element.fromText('Erase row'));
+      Insert.append(ephoxUi, eraseRow);
+
+      var eraseColumn = Element.fromTag('button');
+      Insert.append(eraseColumn, Element.fromText('Erase column'));
+      Insert.append(ephoxUi, eraseColumn);
+
+      var makeButton = function (desc) {
+        var button = Element.fromTag('button');
+        Insert.append(button, Element.fromText(desc));
+        Insert.append(ephoxUi, button);
+        return button;
+      };
+
+      var makeColumnHeader = makeButton('Make column header');
+      var unmakeColumnHeader = makeButton('Unmake column header');
+      var makeRowHeader = makeButton('makeRowHeader');
+      var unmakeRowHeader = makeButton('unmakeRowHeader');
+
       var detection = function () {
         var selection = window.getSelection();
         if (selection.rangeCount > 0) {
@@ -129,11 +163,18 @@ define(
         return Structs.detail(tr, 1, 1);
       };
 
+      var replace = function (cell, tag, attrs) {
+        var replica = Replication.change(cell, tag);
+        Attr.setAll(replica, attrs);
+        return replica;
+      };
+
       var eq = Compare.eq;
 
       var generators = {
         row: newRow,
-        cell: newCell
+        cell: newCell,
+        replace: replace
       };
 
       var runOperation = function (operation) {
@@ -148,6 +189,14 @@ define(
       DomEvent.bind(beforeRow, 'click', runOperation(TableOperations.insertRowBefore));
       DomEvent.bind(beforeColumn, 'click', runOperation(TableOperations.insertColumnBefore));
       DomEvent.bind(afterColumn, 'click', runOperation(TableOperations.insertColumnAfter));
+
+      DomEvent.bind(eraseRow, 'click', runOperation(TableOperations.eraseRow));
+      DomEvent.bind(eraseColumn, 'click', runOperation(TableOperations.eraseColumn));
+
+      DomEvent.bind(makeColumnHeader, 'click', runOperation(TableOperations.makeColumnHeader));
+      DomEvent.bind(unmakeColumnHeader, 'click', runOperation(TableOperations.unmakeColumnHeader));
+      DomEvent.bind(makeRowHeader, 'click', runOperation(TableOperations.makeRowHeader));
+      DomEvent.bind(unmakeRowHeader, 'click', runOperation(TableOperations.unmakeRowHeader));
     };
   }
 );

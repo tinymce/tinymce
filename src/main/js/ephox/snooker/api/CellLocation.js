@@ -11,19 +11,25 @@ define(
      * when navigating past the last cell (e.g. create a new row).
      */
     var none = function (current) {
-      return folder(function (n, m, l) {
+      return folder(function (n, f, m, l) {
         return n(current);
       });
     };
 
+    var first = function (current) {
+      return folder(function (n, f, m, l) {
+        return f(current);
+      });
+    };
+
     var middle = function (current, target) {
-      return folder(function (n, m, l) {
+      return folder(function (n, f, m, l) {
         return m(current, target);
       });
     };
 
     var last = function (current) {
-      return folder(function (n, m, l) {
+      return folder(function (n, f, m, l) {
         return l(current);
       });
     };
@@ -36,6 +42,7 @@ define(
 
     return {
       none: none,
+      first: first,
       middle: middle,
       last: last
     };

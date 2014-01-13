@@ -6,15 +6,19 @@ test(
     'ephox.scullion.Struct',
     'ephox.snooker.api.Structs',
     'ephox.snooker.model.Warehouse',
-    'ephox.snooker.operate.ColumnInsertion'
+    'ephox.snooker.operate.ColumnModification'
   ],
 
-  function (Arr, Struct, Structs, Warehouse, ColumnInsertion) {
+  function (Arr, Struct, Structs, Warehouse, ColumnModification) {
     var check = function (expected, method, input, rowIndex, colIndex) {
       var warehouse = Warehouse.generate(input);
       var actual = method(warehouse, rowIndex, colIndex, {
         cell: function () {
           return d('?', 1, 1);
+        },
+        replace: function (cell, tag, attrs) {
+          var scope = attrs.scope === null? '' : '>>' + attrs.scope;
+          return tag + '_' + cell + scope;
         }
       });
 
@@ -46,50 +50,59 @@ test(
     check([
       [ { element: 'b', colspan: 1, rowspan: 1 } ],
       [ { element: 'c', colspan: 1, rowspan: 1 } ]
-    ], ColumnInsertion.erase, generate(), 0, 0);
+    ], ColumnModification.erase, generate(), 0, 0);
 
     check([
       [ { element: 'a', colspan: 1, rowspan: 1 } ],
       [ { element: 'c', colspan: 1, rowspan: 1 } ]
-    ], ColumnInsertion.erase, generate(), 0, 1);
+    ], ColumnModification.erase, generate(), 0, 1);
 
     check([
       [ { element: 'a', colspan: 1, rowspan: 1 }, { element: '?', colspan: 1, rowspan: 1 } ]
-    ], ColumnInsertion.insertAfter, [ r('r0', [ d('a', 1, 1) ]) ], 0, 0);
+    ], ColumnModification.insertAfter, [ r('r0', [ d('a', 1, 1) ]) ], 0, 0);
 
     check([
       [ { element: '?', colspan: 1, rowspan: 1 }, { element: 'a', colspan: 1, rowspan: 1 } ]
-    ], ColumnInsertion.insertBefore, [ r('r0', [ d('a', 1, 1) ]) ], 0, 0);
+    ], ColumnModification.insertBefore, [ r('r0', [ d('a', 1, 1) ]) ], 0, 0);
 
     check([
       [ { element: 'a', colspan: 1, rowspan: 1 }, { element: '?', colspan: 1, rowspan: 1 }, { element: 'b', colspan: 1, rowspan: 1 } ],
       [ { element: 'c', colspan: 3, rowspan: 1 } ]
-    ], ColumnInsertion.insertAfter, generate(), 0, 0);
+    ], ColumnModification.insertAfter, generate(), 0, 0);
 
     check([
       [ { element: 'a', colspan: 1, rowspan: 1 }, { element: 'b', colspan: 1, rowspan: 1 }, { element: '?', colspan: 1, rowspan: 1 } ],
       [ { element: 'c', colspan: 2, rowspan: 1 }, { element: '?', colspan: 1, rowspan: 1 } ]
-    ], ColumnInsertion.insertAfter, generate(), 0, 1);
+    ], ColumnModification.insertAfter, generate(), 0, 1);
 
     check([
       [ { element: '?', colspan: 1, rowspan: 1 }, { element: 'a', colspan: 1, rowspan: 1 }, { element: 'b', colspan: 1, rowspan: 1 } ],
       [ { element: '?', colspan: 1, rowspan: 1 }, { element: 'c', colspan: 2, rowspan: 1 } ]
-    ], ColumnInsertion.insertBefore, generate(), 0, 0);
+    ], ColumnModification.insertBefore, generate(), 0, 0);
 
     check([
       [ { element: 'a', colspan: 1, rowspan: 1 }, { element: '?', colspan: 1, rowspan: 1 }, { element: 'b', colspan: 1, rowspan: 1 } ],
       [ { element: 'c', colspan: 3, rowspan: 1 } ]
-    ], ColumnInsertion.insertBefore, generate(), 0, 1);
+    ], ColumnModification.insertBefore, generate(), 0, 1);
 
     check([
       [ { element: '?', colspan: 1, rowspan: 1 }, { element: 'a1', colspan: 1, rowspan: 1 }, { element: 'a2', colspan: 1, rowspan: 1 } ],
       [ { element: '?', colspan: 1, rowspan: 1 }, { element: 'b', colspan: 1, rowspan: 2 }, { element: 'c', colspan: 1, rowspan: 1 } ],
       [ { element: '?', colspan: 1, rowspan: 1 }, { element: 'd', colspan: 1, rowspan: 1 } ]
-    ], ColumnInsertion.insertBefore, [
+    ], ColumnModification.insertBefore, [
       r('r0', [ d('a1', 1, 1), d('a2', 1, 1) ]),
       r('r1', [ d('b', 2, 1), d('c', 1, 1) ]),
       r('r2', [ d('d', 1, 1) ])
     ], 0, 0);
 
+    check([
+      [ { element: 'a', colspan: 1, rowspan: 1 }, { element: 'th_b>>row', colspan: 1, rowspan: 1 } ],
+      [ { element: 'th_c>>row', colspan: 2, rowspan: 1 } ]
+    ], ColumnModification.makeHeader, generate(), 0, 1);
+
+    check([
+      [ { element: 'a', colspan: 1, rowspan: 1 }, { element: 'td_b', colspan: 1, rowspan: 1 } ],
+      [ { element: 'td_c', colspan: 2, rowspan: 1 } ]
+    ], ColumnModification.unmakeHeader, generate(), 0, 1);
   }
 );
