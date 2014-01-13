@@ -29,6 +29,7 @@ define(
       });
     };
 
+    
     /* 
      * Identify the CellLocation of the cell when navigating forward from current
      */

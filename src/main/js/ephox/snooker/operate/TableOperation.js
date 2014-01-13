@@ -12,11 +12,11 @@ define(
 
   function (TagLookup, DetailsList, Warehouse, Redraw, Adjustments, Bars) {
     var run = function (container, table, cell, operation) {
-      TagLookup.detect(cell).each(function (gridpos) {
+      TagLookup.detect(cell).each(function (dompos) {
         var list = DetailsList.fromTable(table);
 
         var warehouse = Warehouse.generate(list);
-        var post = operation(warehouse, gridpos);
+        var post = operation(warehouse, dompos);
 
         Redraw.render(table, post);
         Adjustments.adjustTo(post);

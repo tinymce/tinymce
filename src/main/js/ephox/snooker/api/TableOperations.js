@@ -20,8 +20,8 @@ define(
       return function (container, element, generators) {
         TableLookup.cell(element).each(function (cell) {
           SelectorFind.ancestor(cell, 'table').each(function (table) {
-            TableOperation.run(container, table, cell, function (warehouse, gridpos) {
-              return operation(warehouse, gridpos.row(), gridpos.column(), generators, Compare.eq);
+            TableOperation.run(container, table, cell, function (warehouse, dompos) {
+              return operation(warehouse, dompos.row(), dompos.column(), generators, Compare.eq);
             });
 
             post(table);
