@@ -197,8 +197,8 @@ tinymce.PluginManager.add('media', function(editor, url) {
 
 					data.source1 = url;
 					data.type = pattern.type;
-					data.width = pattern.w;
-					data.height = pattern.h;
+					data.width = data.width || pattern.w;
+					data.height = data.height || pattern.h;
 				}
 			});
 
