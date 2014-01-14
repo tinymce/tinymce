@@ -50,6 +50,11 @@
 			}
 
 			// example: <strong> to [b]
+			rep(/<ul.*?>[\n]/gi,"[ul]");
+			rep(/<ol.*?>[\n]/gi,"[ol]");
+			rep(/<li.*?>(.*?)<\/li>[\n]/gi,"[li]$1[/li]");
+			rep(/<\/ul>/gi,"[/ul]");
+			rep(/<\/ol>/gi,"[/ol]");
 			rep(/<a.*?href=\"(.*?)\".*?>(.*?)<\/a>/gi,"[url=$1]$2[/url]");
 			rep(/<font.*?color=\"(.*?)\".*?class=\"codeStyle\".*?>(.*?)<\/font>/gi,"[code][color=$1]$2[/color][/code]");
 			rep(/<font.*?color=\"(.*?)\".*?class=\"quoteStyle\".*?>(.*?)<\/font>/gi,"[quote][color=$1]$2[/color][/quote]");
