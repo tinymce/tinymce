@@ -132,7 +132,7 @@ tinymce.PluginManager.add('link', function(editor) {
 		var onlyText = true;
 		if (/</.test(selection.getContent())) {
 			onlyText = false;
-		} else if (anchorElm){
+		} else if (anchorElm) {
 			var nodes = anchorElm.childNodes, i;
 			if (nodes.length === 0) {
 				onlyText = false;
