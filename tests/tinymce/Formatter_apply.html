@@ -163,25 +163,25 @@ test('Inline element with attributes', function() {
 });
 
 test('Inline element with styles', function() {
-	editor.formatter.register('format', {inline : 'b', styles : {color : '#ff0000', fontSize : '10px'}});
+	editor.formatter.register('format', {inline : 'b', styles : {color : '#ff0000', fontSize : '10px', lineHeight : '12px'}});
 	editor.getBody().innerHTML = '<p>1234</p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equal(getContent(), '<p><b style=\"color: #ff0000; font-size: 10px;\">1234</b></p>', 'Inline element with styles');
+	equal(getContent(), '<p><b style=\"color: #ff0000; font-size: 10px; line-height: 12px;\">1234</b></p>', 'Inline element with styles');
 });
 
 test('Inline element with attributes and styles', function() {
-	editor.formatter.register('format', {inline : 'b', attributes : {title : 'value1', id : 'value2'}, styles : {color : '#ff0000', fontSize : '10px'}});
+	editor.formatter.register('format', {inline : 'b', attributes : {title : 'value1', id : 'value2'}, styles : {color : '#ff0000', fontSize : '10px', lineHeight : '12px'}});
 	editor.getBody().innerHTML = '<p>1234</p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equal(getContent(), '<p><b id="value2" style="color: #ff0000; font-size: 10px;" title="value1">1234</b></p>', 'Inline element with attributes and styles');
+	equal(getContent(), '<p><b id="value2" style="color: #ff0000; font-size: 10px; line-height: 12px;" title="value1">1234</b></p>', 'Inline element with attributes and styles');
 });
 
 test('Inline element with wrapable parents', function() {

@@ -18,7 +18,7 @@ define("tinymce/LegacyInput", [
 		var editor = e.editor;
 
 		editor.on('preInit', function() {
-			var filters, fontSizes, dom, settings = editor.settings;
+			var filters, fontSizes, lineHeights, dom, settings = editor.settings;
 
 			function replaceWithSpan(node, styles) {
 				each(styles, function(value, name) {
@@ -42,7 +42,7 @@ define("tinymce/LegacyInput", [
 
 			if (settings.inline_styles) {
 				fontSizes = explode(settings.font_size_legacy_values);
-
+				lineHeights = explode(settings.font_size_legacy_values);
 				filters = {
 					font: function(dom, node) {
 						replaceWithSpan(node, {
@@ -52,7 +52,16 @@ define("tinymce/LegacyInput", [
 							fontSize: fontSizes[parseInt(node.size, 10) - 1]
 						});
 					},
+					height: function(dom, node) {
+						replaceWithSpan(node, {
+							backgroundColor: node.style.backgroundColor,
+							color: node.color,
+							fontFamily: node.face,
+							fontSize: node.size,
+							lineHeight: lineHeights[parseInt(node.size, 10) - 1],
 
+						});
+					},
 					u: function(dom, node) {
 						replaceWithSpan(node, {
 							textDecoration: 'underline'

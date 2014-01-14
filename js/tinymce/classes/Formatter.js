@@ -122,6 +122,8 @@ define("tinymce/Formatter", [
 				fontname: {inline: 'span', styles: {fontFamily: '%value'}},
 				fontsize: {inline: 'span', styles: {fontSize: '%value'}},
 				fontsize_class: {inline: 'span', attributes: {'class': '%value'}},
+				lineheight:  {inline: 'span', styles: {lineHeight: '%value'}},
+				lineheight_class: {inline: 'span', attributes: {'class': '%value'}},
 				blockquote: {block: 'blockquote', wrapper: 1, remove: 'all'},
 				subscript: {inline: 'sub'},
 				superscript: {inline: 'sup'},

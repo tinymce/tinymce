@@ -264,6 +264,23 @@ define("tinymce/EditorCommands", [
 
 				toggleFormat(command, value);
 			},
+			LineHeight: function(command, ui, value) {
+				var fontClasses, lineHeights;
+
+				// Convert font size 1-7 to styles
+				if (value >= 1 && value <= 7) {
+					lineHeights = explode(settings.line_height_style_values);
+					fontClasses = explode(settings.line_height_classes);
+
+					if (fontClasses) {
+						value = fontClasses[value - 1] || value;
+					} else {
+						value = lineHeights[value - 1] || value;
+					}
+				}
+
+				toggleFormat(command, value);
+			},
 
 			RemoveFormat: function(command) {
 				formatter.remove(command);
@@ -692,12 +709,14 @@ define("tinymce/EditorCommands", [
 
 		// Add queryCommandValue overrides
 		addCommands({
-			'FontSize,FontName': function(command) {
+			'FontSize,FontName,LineHeight': function(command) {
 				var value = 0, parent;
 
 				if ((parent = dom.getParent(selection.getNode(), 'span'))) {
 					if (command == 'fontsize') {
 						value = parent.style.fontSize;
+					} else if(command == 'lineheight')  {
+						value = parent.style.lineHeight;
 					} else {
 						value = parent.style.fontFamily.replace(/, /g, ',').replace(/[\'\"]/g, '').toLowerCase();
 					}

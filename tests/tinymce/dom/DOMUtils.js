@@ -335,6 +335,29 @@
 
 		DOM.remove('test');
 	});
+	test('setGetLine', 7, function() {
+		DOM.add(document.body, 'div', {id : 'test'});
+
+		DOM.setStyle('test', 'line-height', '20px');
+		equal(DOM.getStyle('test', 'line-height'), '20px', null, tinymce.isWebKit);
+
+		DOM.setStyle('test', 'lineHeight', '21px');
+		equal(DOM.getStyle('test', 'lineHeight'), '21px', null, tinymce.isWebKit);
+
+		DOM.setStyles('test', {lineHeight : '22px', display : 'inline'});
+		equal(DOM.getStyle('test', 'lineHeight'), '22px', null, tinymce.isWebKit);
+		equal(DOM.getStyle('test', 'display'), 'inline', null, tinymce.isWebKit);
+
+		DOM.get('test').innerHTML = '<span id="test2"></span><span id="test3"></span><span id="test4"></span>';
+		DOM.setStyles(['test2', 'test3', 'test4'], {lineHeight : "22px"});
+		equal(DOM.getStyle('test2', 'lineHeight'), '22px');
+		equal(DOM.getStyle('test3', 'lineHeight'), '22px');
+		equal(DOM.getStyle('test4', 'lineHeight'), '22px');
+
+		DOM.setAttrib('test', 'style', '');
+
+		DOM.remove('test');
+	});
 
 	test('getPos', 2, function() {
 		DOM.add(document.body, 'div', {id : 'test'});

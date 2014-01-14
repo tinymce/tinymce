@@ -44,7 +44,7 @@ define("tinymce/ui/FormatControls", [
 		// Generates a preview for a format
 		function getPreviewCss(format) {
 			var name, previewElm, dom = editor.dom;
-			var previewCss = '', parentFontSize, previewStyles;
+			var previewCss = '', parentFontSize, previewStyles, parentLineHeight;
 
 			previewStyles = editor.settings.preview_styles;
 
@@ -110,6 +110,9 @@ define("tinymce/ui/FormatControls", [
 			// Get parent container font size so we can compute px values out of em/% for older IE:s
 			parentFontSize = dom.getStyle(editor.getBody(), 'fontSize', true);
 			parentFontSize = /px$/.test(parentFontSize) ? parseInt(parentFontSize, 10) : 0;
+
+			parentLineHeight = dom.getStyle(editor.getBody(), 'lineHeight', true);
+			parentLineHeight = /px$/.test(parentLineHeight) ? parseInt(parentLineHeight, 10) : 0;
 
 			each(previewStyles.split(' '), function(name) {
 				var value = dom.getStyle(previewElm, name, true);
@@ -627,6 +630,28 @@ define("tinymce/ui/FormatControls", [
 				onclick: function(e) {
 					if (e.control.settings.value) {
 						editor.execCommand('FontSize', false, e.control.settings.value);
+					}
+				}
+			};
+		});
+		editor.addButton('lineheightselect', function() {
+			var items = [], defaultLineheightFormats = '8pt 10pt 12pt 14pt 18pt 24pt 36pt';
+			var lineheight_formats = editor.settings.lineheight_formats || defaultLineheightFormats;
+
+			each(lineheight_formats.split(' '), function(item) {
+				items.push({text: item, value: item});
+			});
+
+			return {
+				type: 'listbox',
+				text: 'Line Height',
+				tooltip: 'Line Height',
+				values: items,
+				fixedWidth: true,
+				onPostRender: createListBoxChangeHandler(items, 'lineheight'),
+				onclick: function(e) {
+					if (e.control.settings.value) {
+						editor.execCommand('LineHeight', false, e.control.settings.value);
 					}
 				}
 			};

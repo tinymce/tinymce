@@ -51,6 +51,16 @@ test('Selected style element with attributes', function() {
 	ok(editor.formatter.match('fontsize'), 'Selected style element with attributes');
 });
 
+test('Selected style element with attributes', function() {
+	editor.formatter.register('lineheight', {inline : 'font', attributes : {size : '9'}});
+	editor.getBody().innerHTML = '<p><font size="9">1234</font></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('font')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('font')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	ok(editor.formatter.match('lineheight'), 'Selected style element with attributes');
+});
+
 test('Selected style element text multiple formats', function() {
 	editor.formatter.register('multiple', [
 		{inline : 'b'},

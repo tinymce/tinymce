@@ -376,6 +376,11 @@ test('Formatting commands (xhtmlTextStyles)', function() {
 
 	editor.setContent('test 123');
 	editor.execCommand('SelectAll');
+	editor.execCommand('LineHeight',false,'7');
+	equal(editor.getContent(), '<p><span style="line-height: 24px;">test 123</span></p>');
+
+	editor.setContent('test 123');
+	editor.execCommand('SelectAll');
 	editor.execCommand('ForeColor', false, '#FF0000');
 	equal(editor.getContent(), '<p><span style="color: #ff0000;">test 123</span></p>');
 

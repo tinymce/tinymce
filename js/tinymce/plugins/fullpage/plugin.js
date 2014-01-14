@@ -47,6 +47,7 @@ tinymce.PluginManager.add('fullpage', function(editor) {
 		// Default some values
 		data.fontface = editor.getParam("fullpage_default_fontface", "");
 		data.fontsize = editor.getParam("fullpage_default_fontsize", "");
+		data.lineheight = editor.getParam("fullpage_default_lineheight", "");
 
 		// Parse XML PI
 		elm = headerFragment.firstChild;
