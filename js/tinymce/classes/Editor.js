@@ -77,7 +77,7 @@ define("tinymce/Editor", [
 	var isGecko = Env.gecko, ie = Env.ie;
 
 	function getEventTarget(editor, eventName) {
-		if (eventName == 'selectionchange' || eventName == 'drop') {
+		if (eventName === 'selectionchange' || eventName === 'drop') {
 			return editor.getDoc();
 		}
 
@@ -359,7 +359,7 @@ define("tinymce/Editor", [
 			 */
 			self.windowManager = new WindowManager(self);
 
-			if (settings.encoding == 'xml') {
+			if (settings.encoding === 'xml') {
 				self.on('GetContent', function(e) {
 					if (e.save) {
 						e.content = DOM.encode(e.content);
@@ -389,7 +389,7 @@ define("tinymce/Editor", [
 			function loadScripts() {
 				var scriptLoader = ScriptLoader.ScriptLoader;
 
-				if (settings.language && settings.language != 'en') {
+				if (settings.language && settings.language !== 'en') {
 					settings.language_url = self.editorManager.baseURL + '/langs/' + settings.language + '.js';
 				}
 
@@ -397,8 +397,8 @@ define("tinymce/Editor", [
 					scriptLoader.add(settings.language_url);
 				}
 
-				if (settings.theme && typeof settings.theme != "function" &&
-					settings.theme.charAt(0) != '-' && !ThemeManager.urls[settings.theme]) {
+				if (settings.theme && typeof settings.theme !== "function" &&
+					settings.theme.charAt(0) !== '-' && !ThemeManager.urls[settings.theme]) {
 					var themeUrl = settings.theme_url;
 
 					if (themeUrl) {
@@ -423,7 +423,7 @@ define("tinymce/Editor", [
 					plugin = trim(plugin);
 
 					if (plugin && !PluginManager.urls[plugin]) {
-						if (plugin.charAt(0) == '-') {
+						if (plugin.charAt(0) === '-') {
 							plugin = plugin.substr(1, plugin.length);
 
 							var dependencies = PluginManager.dependencies(plugin);
@@ -483,8 +483,8 @@ define("tinymce/Editor", [
 			 * // Executes a method on the theme directly
 			 * tinymce.activeEditor.theme.someMethod();
 			 */
-			if (settings.theme) {
-				if (typeof settings.theme != "function") {
+			if (settings.theme) {	
+				if (typeof settings.theme !== "function") {
 					settings.theme = settings.theme.replace(/-/, '');
 					o = ThemeManager.get(settings.theme);
 					self.theme = new o(self, ThemeManager.urls[settings.theme]);
@@ -525,7 +525,7 @@ define("tinymce/Editor", [
 			if (settings.render_ui && self.theme) {
 				self.orgDisplay = elm.style.display;
 
-				if (typeof settings.theme != "function") {
+				if (typeof settings.theme !== 'function') {
 					w = settings.width || elm.style.width || elm.offsetWidth;
 					h = settings.height || elm.style.height || elm.offsetHeight;
 					minHeight = settings.min_height || 100;
@@ -556,7 +556,7 @@ define("tinymce/Editor", [
 							h2eight: h
 						});
 
-						h = (o.iframeHeight || h) + (typeof(h) == 'number' ? (o.deltaHeight || 0) : '');
+						h = (o.iframeHeight || h) + (typeof(h) === 'number' ? (o.deltaHeight || 0) : '');
 						if (h < minHeight) {
 							h = minHeight;
 						}
@@ -603,7 +603,7 @@ define("tinymce/Editor", [
 
 			// We only need to override paths if we have to
 			// IE has a bug where it remove site absolute urls to relative ones if this is specified
-			if (settings.document_base_url != self.documentBaseUrl) {
+			if (settings.document_base_url !== self.documentBaseUrl) {
 				self.iframeHTML += '<base href="' + self.documentBaseURI.getURI() + '" />';
 			}
 
@@ -622,13 +622,13 @@ define("tinymce/Editor", [
 			}
 
 			bodyId = settings.body_id || 'tinymce';
-			if (bodyId.indexOf('=') != -1) {
+			if (bodyId.indexOf('=') !== -1) {
 				bodyId = self.getParam('body_id', '', 'hash');
 				bodyId = bodyId[self.id] || bodyId;
 			}
 
 			bodyClass = settings.body_class || '';
-			if (bodyClass.indexOf('=') != -1) {
+			if (bodyClass.indexOf('=') !== -1) {
 				bodyClass = self.getParam('body_class', '', 'hash');
 				bodyClass = bodyClass[self.id] || '';
 			}
@@ -642,17 +642,17 @@ define("tinymce/Editor", [
 				'document.close();ed.initContentBody(true);})()';
 
 			// Domain relaxing is required since the user has messed around with document.domain
-			if (document.domain != location.hostname) {
+			if (document.domain !== location.hostname) {
 				url = domainRelaxUrl;
 			}
 
 			// Create iframe
 			// TODO: ACC add the appropriate description on this.
 			n = DOM.add(o.iframeContainer, 'iframe', {
-				id: self.id + "_ifr",
+				id: self.id + '_ifr',
 				src: url || 'javascript:""', // Workaround for HTTPS warning in IE6/7
 				frameBorder: '0',
-				allowTransparency: "true",
+				allowTransparency: 'true',
 				title: self.editorManager.translate(
 					"Rich Text Area. Press ALT-F9 for menu. " +
 					"Press ALT-F10 for toolbar. Press ALT-0 for help"
@@ -740,7 +740,7 @@ define("tinymce/Editor", [
 			body.disabled = true;
 
 			if (!settings.readonly) {
-				if (self.inline && DOM.getStyle(body, 'position', true) == 'static') {
+				if (self.inline && DOM.getStyle(body, 'position', true) === 'static') {
 					body.style.position = 'relative';
 				}
 
@@ -1051,7 +1051,7 @@ define("tinymce/Editor", [
 				}
 			}
 
-			if (self.editorManager.activeEditor != self) {
+			if (self.editorManager.activeEditor !== self) {
 				if ((oed = self.editorManager.activeEditor)) {
 					oed.fire('deactivate', {relatedTarget: self});
 				}
@@ -1183,10 +1183,10 @@ define("tinymce/Editor", [
 				// Get start node
 				root = self.getBody();
 				node = selection.getStart() || root;
-				node = ie && node.ownerDocument != self.getDoc() ? self.getBody() : node; // Fix for IE initial state
+				node = ie && node.ownerDocument !== self.getDoc() ? self.getBody() : node; // Fix for IE initial state
 
 				// Edge case for <p>|<img></p>
-				if (node.nodeName == 'IMG' && selection.isCollapsed()) {
+				if (node.nodeName === 'IMG' && selection.isCollapsed()) {
 					node = node.parentNode;
 				}
 
@@ -1642,7 +1642,7 @@ define("tinymce/Editor", [
 				// Update hidden form element
 				if ((form = DOM.getParent(self.id, 'form'))) {
 					each(form.elements, function(elm) {
-						if (elm.name == self.id) {
+						if (elm.name === self.id) {
 							elm.value = html;
 							return false;
 						}
@@ -1775,16 +1775,16 @@ define("tinymce/Editor", [
 			}
 
 			// Get raw contents or by default the cleaned contents
-			if (args.format == 'raw') {
+			if (args.format === 'raw') {
 				content = body.innerHTML;
-			} else if (args.format == 'text') {
+			} else if (args.format === 'text') {
 				content = body.innerText || body.textContent;
 			} else {
 				content = self.serializer.serialize(body, args);
 			}
 
 			// Trim whitespace in beginning/end of HTML
-			if (args.format != 'text') {
+			if (args.format !== 'text') {
 				args.content = trim(content);
 			} else {
 				args.content = content;
@@ -1869,7 +1869,7 @@ define("tinymce/Editor", [
 			var self = this, elm;
 
 			if (!self.contentWindow) {
-				elm = DOM.get(self.id + "_ifr");
+				elm = DOM.get(self.id + '_ifr');
 
 				if (elm) {
 					self.contentWindow = elm.contentWindow;
@@ -1929,7 +1929,7 @@ define("tinymce/Editor", [
 			}
 
 			// Don't convert link href since thats the CSS files that gets loaded into the editor also skip local file URLs
-			if (!settings.convert_urls || (elm && elm.nodeName == 'LINK') || url.indexOf('file:') === 0 || url.length === 0) {
+			if (!settings.convert_urls || (elm && elm.nodeName === 'LINK') || url.indexOf('file:') === 0 || url.length === 0) {
 				return url;
 			}
 
@@ -1967,7 +1967,7 @@ define("tinymce/Editor", [
 						cls = settings.visual_table_class || 'mce-item-table';
 						value = dom.getAttrib(elm, 'border');
 
-						if (!value || value == '0') {
+						if (!value || value === '0') {
 							if (self.hasVisual) {
 								dom.addClass(elm, cls);
 							} else {
