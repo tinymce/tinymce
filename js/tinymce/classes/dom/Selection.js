@@ -424,7 +424,7 @@ define("tinymce/dom/Selection", [
 
 			if (type == 2) {
 				element = t.getNode();
-				name = element.nodeName;
+				name = element ? element.nodeName : null;
 
 				if (name == 'IMG') {
 					return {name: name, index: findIndex(name, element)};
