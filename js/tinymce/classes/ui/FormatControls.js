@@ -352,7 +352,7 @@ define("tinymce/ui/FormatControls", [
 						});
 					}
 				},
-				onclick: function(e) {
+				onclick: function() {
 					toggleFormat(name);
 				}
 			});
