@@ -210,7 +210,7 @@ tinymce.PluginManager.add('link', function(editor) {
 					if (data.text != initialText) {
 						if (anchorElm) {
 							editor.focus();
-							anchorElm.innerHTML = data.text;
+							editor.dom.setText(anchorElm, data.text);
 
 							dom.setAttribs(anchorElm, {
 								href: href,
@@ -219,6 +219,7 @@ tinymce.PluginManager.add('link', function(editor) {
 							});
 
 							selection.select(anchorElm);
+							editor.undoManager.add();
 						} else {
 							editor.insertContent(dom.createHTML('a', {
 								href: href,

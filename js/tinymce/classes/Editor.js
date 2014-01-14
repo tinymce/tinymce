@@ -778,6 +778,9 @@ define("tinymce/Editor", [
 				schema: self.schema,
 				onSetAttrib: function(e) {
 					self.fire('SetAttrib', e);
+				},
+				onSetText: function(e) {
+					self.fire('NodeChange', e);
 				}
 			});
 
