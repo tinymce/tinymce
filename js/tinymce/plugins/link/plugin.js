@@ -71,9 +71,10 @@ tinymce.PluginManager.add('link', function(editor) {
 		}
 
 		function buildTargetList(targetValue) {
-			var targetListItems = [{text: 'None', value: ''}];
+			var targetListItems = [];
 
 			if (!editor.settings.target_list) {
+				targetListItems.push({text: 'None', value: ''});
 				targetListItems.push({text: 'New window', value: '_blank'});
 			}
 
