@@ -209,7 +209,7 @@ define("tinymce/ui/FormatControls", [
 		}
 
 		function createFormatMenu() {
-			var count = 0, newFormats = [], menu = [];
+			var count = 0, newFormats = [];
 
 			var defaultStyleFormats = [
 				{title: 'Headers', items: [
@@ -278,27 +278,31 @@ define("tinymce/ui/FormatControls", [
 				return menu;
 			}
 
+			function createStylesMenu() {
+				var menu;
+
+				if (editor.settings.style_formats_merge) {
+					if (editor.settings.style_formats) {
+						menu = createMenu(defaultStyleFormats.concat(editor.settings.style_formats));
+					} else {
+						menu = createMenu(defaultStyleFormats);
+					}
+				} else {
+					menu = createMenu(editor.settings.style_formats || defaultStyleFormats);
+				}
+
+				return menu;
+			}
+
 			editor.on('init', function() {
 				each(newFormats, function(format) {
 					editor.formatter.register(format.name, format);
 				});
 			});
 
-			if (editor.settings.style_formats_merge) {
-				if (editor.settings.style_formats) {
-					menu = createMenu(defaultStyleFormats.concat(editor.settings.style_formats));
-				}
-				else {
-					menu = createMenu(defaultStyleFormats);
-				}
-			}
-			else {
-				menu = createMenu(editor.settings.style_formats || defaultStyleFormats);
-				}
-
-			menu = {
+			return {
 				type: 'menu',
-				items: menu,
+				items: createStylesMenu(),
 				onPostRender: function(e) {
 					editor.fire('renderFormatsMenu', {control: e.control});
 				},
@@ -329,8 +333,6 @@ define("tinymce/ui/FormatControls", [
 					}
 				}
 			};
-
-			return menu;
 		}
 
 		formatMenu = createFormatMenu();
