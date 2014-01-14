@@ -47,10 +47,9 @@ define("tinymce/tableplugin/Plugin", [
 		}
 
 		function tableDialog() {
-			var dom = editor.dom, tableElm, data, createNewTable;
+			var dom = editor.dom, tableElm, data;
 
-			tableElm = editor.dom.getParent(editor.selection.getStart(), 'table');
-			createNewTable = false;
+			tableElm = dom.getParent(editor.selection.getStart(), 'table');
 
 			data = {
 				width: removePxSuffix(dom.getStyle(tableElm, 'width') || dom.getAttrib(tableElm, 'width')),
@@ -79,8 +78,6 @@ define("tinymce/tableplugin/Plugin", [
 						maxWidth: 50
 					},
 					items: [
-						createNewTable ? {label: 'Cols', name: 'cols', disabled: true} : null,
-						createNewTable ? {label: 'Rows', name: 'rows', disabled: true} : null,
 						{label: 'Width', name: 'width'},
 						{label: 'Height', name: 'height'},
 						{label: 'Cell spacing', name: 'cellspacing'},
