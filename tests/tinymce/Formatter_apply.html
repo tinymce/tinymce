@@ -1138,6 +1138,18 @@ test('Bug #5453 - TD contents with BR gets wrapped in block format', function() 
 	equal(getContent(), '<table><tbody><tr><td><h1>abc</h1>123</td></tr></tbody></table>');
 });
 
+test('Bug #6471 - Merge left/right style properties', function() {
+	editor.formatter.register('format', {inline: 'span', styles: {fontWeight: 'bold'}});
+	editor.setContent('<p>abc</p>');
+	setSelection('p', 2, 'p', 3);
+	editor.formatter.apply('format');
+	setSelection('p', 1, 'p', 2);
+	editor.formatter.apply('format');
+	setSelection('p', 0, 'p', 1);
+	editor.formatter.apply('format');
+	equal(editor.getContent(), '<p><span style="font-weight: bold;">abc</span></p>');
+});
+
 test('Bug #6518 - Apply div blocks to inline editor paragraph', function() {
 	inlineEditor.setContent('<p>a</p><p>b</p>');
 	inlineEditor.selection.select(inlineEditor.getBody().firstChild, true);

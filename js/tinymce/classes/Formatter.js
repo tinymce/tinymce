@@ -1892,7 +1892,7 @@ define("tinymce/Formatter", [
 				next = next ? 'nextSibling' : 'previousSibling';
 
 				for (node = inc ? node : node[next]; node; node = node[next]) {
-				    if (node.nodeType == 1 && !isWhiteSpaceNode(node) && !isBookmarkNode(node)) {
+					if (node.nodeType == 1 && !isWhiteSpaceNode(node)) {
 						return node;
 					}
 				}
