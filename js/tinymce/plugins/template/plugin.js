@@ -12,121 +12,336 @@
 
 tinymce.PluginManager.add('template', function(editor) {
 	var each = tinymce.each;
-
-	function createTemplateList(callback) {
-		return function() {
+	var extend = tinymce.extend;
+	
+	// template model
+	var Template = function (name, url, content, description, params) {
+		var self = this;
+		var initialized = params ? false : true;
+		var templateOptions = {};
+		
+		// setting up default template options values
+		each(params, function(el, name) {
+			templateOptions[name] = el.value;
+		});
+		
+		self.show = function(mediator) {
+			mediator.setCurrent(self);
+			mediator.prepareParamsPopup(params);
+			mediator.setDescription(description);
+			
+			if (url)
+			{
+				if (!initialized)
+				{
+					mediator.setTemplate('');
+				}
+				else
+				{
+					var urlParams = [];
+					
+					// TODO: do you have any tool for building urls from object or how you add depedency on something already exiting in node libraries?
+					each(templateOptions, function(value, key) {
+						urlParams.push(key + '=' + value);
+					});
+					
+					tinymce.util.XHR.send({
+						url: url + '?' + urlParams.join('&'),
+						success: function(html) {
+							mediator.setTemplate(html);
+						}
+					});
+				}
+			}
+			else
+			{
+				mediator.setTemplate(content);
+			}
+		};
+		
+		self.update = function(value) {
+			initialized = true;
+			// setting params for request
+			templateOptions = value;
+			// rewriting new values to template setup form
+			each(params, function(el, name) {
+				el.value = templateOptions[name];
+			});
+		};
+		
+		self.isInitialized = function() {
+			return initialized;
+		}
+		
+		return {
+			show: self.show,
+			update: self.update,
+			isInitialized: self.isInitialized
+		}
+	}
+	
+	var TemplateController = function() {
+		var self = this;
+		
+		var pluginPopupWindow = null, // plugin popup window
+			paramsPopupWindow = null, // popup for template params
+			templateParamsPopupControl = null, // button for showing template settings popup
+			templateSelectionControl = null, // select control with avaible templates
+			templateDescriptionControl = null,
+			templateHtml = '',
+			current = null, // currently displayed template
+			paramsPopupBody = [],
+			optionsControls = [],
+			templates = []; // obecnie edytowany schemat
+		
+		// initializing plugin and showing popup
+		self.start = function() {
 			var templateList = editor.settings.templates;
-
-			if (typeof(templateList) == "string") {
+			
+			if (!templateList)
+			{
+				editor.windowManager.alert('No templates defined');
+				return;
+			}
+			else if (typeof(templateList) == "string")
+			{
 				tinymce.util.XHR.send({
 					url: templateList,
 					success: function(text) {
-						callback(tinymce.util.JSON.parse(text));
+						self.show(tinymce.util.JSON.parse(text));
 					}
 				});
-			} else {
-				callback(templateList);
+			}
+			else
+			{
+				self.show(templateList);
 			}
 		};
-	}
-
-	function showDialog(templateList) {
-		var win, values = [], templateHtml;
-
-		if (!templateList || templateList.length === 0) {
-			editor.windowManager.alert('No templates defined');
-			return;
-		}
-
-		tinymce.each(templateList, function(template) {
-			values.push({
-				selected: !values.length,
-				text: template.title,
-				value: {
-					url: template.url,
-					content: template.content,
-					description: template.description
-				}
-			});
-		});
-
-		function onSelectTemplate(e) {
-			var value = e.control.value();
-
-			function insertIframeHtml(html) {
-				if (html.indexOf('<html>') == -1) {
-					var contentCssLinks = '';
-
-					tinymce.each(editor.contentCSS, function(url) {
-						contentCssLinks += '<link type="text/css" rel="stylesheet" href="' + editor.documentBaseURI.toAbsolute(url) + '">';
-					});
-
-					html = (
-						'<!DOCTYPE html>' +
-						'<html>' +
-							'<head>' +
-								contentCssLinks +
-							'</head>' +
-							'<body>' +
-								html +
-							'</body>' +
-						'</html>'
-					);
-				}
-
-				html = replaceTemplateValues(html, 'template_preview_replace_values');
-
-				var doc = win.find('iframe')[0].getEl().contentWindow.document;
-				doc.open();
-				doc.write(html);
-				doc.close();
-			}
-
-			if (value.url) {
-				tinymce.util.XHR.send({
-					url: value.url,
-					success: function(html) {
-						templateHtml = html;
-						insertIframeHtml(templateHtml);
-					}
+		
+		// building popup and selecting first template
+		self.show = function(templateList) {
+			pluginPopupWindow = editor.windowManager.open(self.build(templateList));
+			
+			templateSelectionControl.fire('select');
+		};
+		
+		// building main popup
+		self.build = function(templateList) {
+			// preparing model for template select control
+			
+			each(templateList, function(template) {
+				templates.push({
+					selected: !templates.length,
+					text: template.title,
+					// each select option from template control points to template model instance
+					value: new Template(
+							template.title,
+							template.url,
+							template.content,
+							template.description,
+							template.options
+						)
 				});
-			} else {
-				templateHtml = value.content;
-				insertIframeHtml(templateHtml);
+			});
+			
+			// preparing main plugin popup form 
+			
+			templateSelectionControl = tinymce.ui.Factory.create({
+				type: 'listbox',
+				name: 'template',
+				values: templates,
+				onselect: self.onSelectTemplate
+			});
+			
+			templateParamsPopupControl = tinymce.ui.Factory.create({
+				type: 'button',
+				icon: 'template',
+				text: 'setup',
+				onclick: self.showParamsSetup
+			});
+			
+			templateDescriptionControl = tinymce.ui.Factory.create({
+				type: 'label',
+				name: 'description',
+				label: 'Description',
+				text: '\u00a0'
+			});
+			
+			// returning main form template
+			
+			return {
+				title: 'Insert template',
+				layout: 'flex',
+				direction: 'column',
+				align: 'stretch',
+				padding: 15,
+				spacing: 10,
+				
+				body: [
+					{
+						type: 'container',
+						label: 'Templates',
+						items: [
+							templateSelectionControl,
+							templateParamsPopupControl
+						]
+					},
+					{
+						type: 'container',
+						label: 'Description',
+						items: [
+							templateDescriptionControl
+						]
+					},
+					{
+						type: 'iframe',
+						minHeight: 300,
+						width: editor.getParam('template_popup_width', 600) - 30,
+						border: 1
+					}
+				],
+				
+				onsubmit: function() {
+					insertTemplate(false, templateHtml);
+				},
+				
+				width: editor.getParam('template_popup_width', 600),
+				height: editor.getParam('template_popup_height', 500)
+			};
+		};
+		
+		// updating template description on plugin popup form
+		self.setDescription = function(value) {
+			templateDescriptionControl.text(value);
+		};
+		
+		// updating template view on plugin popup form
+		self.setTemplate = function(html) {
+			templateHtml = html;
+			
+			if (html.indexOf('<html>') == -1)
+			{
+				var contentCssLinks = '';
+				
+				each(editor.contentCSS, function(url) {
+					contentCssLinks += '<link type="text/css" rel="stylesheet" href="' + editor.documentBaseURI.toAbsolute(url) + '">';
+				});
+				
+				html = (
+					'<!DOCTYPE html>' +
+					'<html>' +
+						'<head>' +
+							contentCssLinks +
+						'</head>' +
+						'<body>' +
+							html +
+						'</body>' +
+					'</html>'
+				);
 			}
+			
+			html = replaceTemplateValues(html, 'template_preview_replace_values');
+			
+			var doc = pluginPopupWindow.find('iframe')[0].getEl().contentWindow.document;
+			doc.open();
+			doc.write(html);
+			doc.close();
+		};
+		
+		// preparing popup for template settings
+		self.prepareParamsPopup = function(options) {
+			paramsPopupBody = [];
+			optionsControls = {};
+			
+			if (typeof(options) == 'undefined')
+			{
+				templateParamsPopupControl.hide();
+			}
+			else
+			{
+				templateParamsPopupControl.show();
+			}
+			
+			each(options, function(el, name) {
+				var control = tinymce.ui.Factory.create(el);
+				optionsControls[name] = control;
+				paramsPopupBody.push({
+					type: 'container',
+					label: el.label,
+					items: [control]
+				});
+			});
+			
+			paramsPopupWindow = editor.windowManager.open({
+				title: 'Template options',
+				body: paramsPopupBody,
+				onsubmit: self.onParamsUpdate,
+				onclose: self.onParamsClose
+			});
+			
+			paramsPopupWindow.hide();
+		};
+		
+		self.setCurrent = function(template) {
+			current = template;
+		};
+		
+		// called when users chooses template from template select control
+		self.onSelectTemplate = function(e) {
+			if (paramsPopupWindow != null)
+			{
+				paramsPopupWindow.hide();
+			}
+			
+			var template = e.control.value();
+			template.show(self);
+			
+			if (!template.isInitialized())
+			{
+				self.showParamsSetup();
+			}
+		};
+		
+		// show template setup popup
+		self.showParamsSetup = function() {
+			paramsPopupWindow.show();
+		};
+		
+		// called when template params where submited
+		self.onParamsUpdate = function() {
+			var params = {};
+			
+			each(optionsControls, function(el, name) {
+				params[name] = el.value();
+			});
+			
+			current.update(params);
+		};
+		
+		// called when template params where discarded
+		self.onParamsClose = function() {
+			current.show(self);
+		};
+		
+		return {
+			// controller interface
+			start: self.start,
+			// template model view mediator interface
+			prepareParamsPopup: self.prepareParamsPopup,
+			setDescription: self.setDescription,
+			setTemplate: self.setTemplate,
+			setCurrent: self.setCurrent
+		};
+	};
 
-			win.find('#description')[0].text(e.control.value().description);
-		}
-
-		win = editor.windowManager.open({
-			title: 'Insert template',
-			layout: 'flex',
-			direction: 'column',
-			align: 'stretch',
-			padding: 15,
-			spacing: 10,
-
-			items: [
-				{type: 'form', flex: 0, padding: 0, items: [
-					{type: 'container', label: 'Templates', items: {
-						type: 'listbox', label: 'Templates', name: 'template', values: values, onselect: onSelectTemplate
-					}}
-				]},
-				{type: 'label', name: 'description', label: 'Description', text: '\u00a0'},
-				{type: 'iframe', flex: 1, border: 1}
-			],
-
-			onsubmit: function() {
-				insertTemplate(false, templateHtml);
-			},
-
-			width: editor.getParam('template_popup_width', 600),
-			height: editor.getParam('template_popup_height', 500)
-		});
-
-		win.find('listbox')[0].fire('select');
+	// left for lazy initialization
+	function showDialog() {
+		var controller = new TemplateController();
+		
+		controller.start();
 	}
 
+	// rest almost not changed
 	function getDateTime(fmt, date) {
 		var daysShort = "Sun Mon Tue Wed Thu Fri Sat Sun".split(' ');
 		var daysLong = "Sunday Monday Tuesday Wednesday Thursday Friday Saturday Sunday".split(' ');
@@ -235,12 +450,12 @@ tinymce.PluginManager.add('template', function(editor) {
 
 	editor.addButton('template', {
 		title: 'Insert template',
-		onclick: createTemplateList(showDialog)
+		onclick: showDialog
 	});
 
 	editor.addMenuItem('template', {
 		text: 'Insert template',
-		onclick: createTemplateList(showDialog),
+		onclick: showDialog,
 		context: 'insert'
 	});
 
