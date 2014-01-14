@@ -93,6 +93,10 @@ var SearchReplaceDialog = {
 
 						if (b) {
 							r.moveEnd("character", -(rs.length)); // Otherwise will loop forever
+						} else {
+							// to avoid looping for ever in MSIE 9/10 when just
+							// changing the case
+							r.moveStart("character", rs.length);
 						}
 					}
 
