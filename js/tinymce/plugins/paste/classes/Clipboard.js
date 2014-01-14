@@ -123,8 +123,10 @@ define("tinymce/pasteplugin/Clipboard", [
 					'width: 10px; height: ' + (height - 40) + 'px; overflow: hidden; opacity: 0'
 			}, pasteBinDefaultContent);
 
-			// Move paste bin out of sight since the controlSelection rect gets displayed otherwise
-			dom.setStyle(pasteBinElm, 'left', dom.getStyle(body, 'direction', true) == 'rtl' ? 0xFFFF : -0xFFFF);
+			// Move paste bin out of sight since the controlSelection rect gets displayed otherwise on IE
+			if (Env.ie) {
+				dom.setStyle(pasteBinElm, 'left', dom.getStyle(body, 'direction', true) == 'rtl' ? 0xFFFF : -0xFFFF);
+			}
 
 			// Prevent focus events from bubbeling fixed FocusManager issues
 			dom.bind(pasteBinElm, 'beforedeactivate focusin focusout', function(e) {

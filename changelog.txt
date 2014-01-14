@@ -11,6 +11,7 @@ Version 4.0.12 (2014-01-xx)
 	Fixed bug where the combobox control couldn't be disabled or set to a specific character size initially.
 	Fixed bug where the FormItem didn't inherit the disabled state from the control to be wrapped.
 	Fixed bug where adding a TinyMCE instance within a TinyMCE dialog wouldn't properly delegate the events.
+	Fixed bug where any overflow parent containers would automatically scroll to the left when pasting in Chrome.
 	Fixed bug where the media plugin would override specified dimensions for url pattern matches. Patch contributed by penc.
 	Fixed bug where the autoresize plugin wouldn't take margins into account when calculating the body size. Patch contributed by lepoltj.
 	Fixed bug where the image plugin would throw errors some times on IE 8 when it preloaded the image to get it's dimensions.
