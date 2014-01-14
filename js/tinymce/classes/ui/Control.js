@@ -31,7 +31,6 @@ define("tinymce/ui/Control", [
 
 	var Control = Class.extend({
 		Statics: {
-			controlIdLookup: {},
 			elementIdCache: elementIdCache
 		},
 
@@ -153,10 +152,10 @@ define("tinymce/ui/Control", [
 		 * @return {tinymce.ui.Control} Control instance or undefined.
 		 */
 		getParentCtrl: function(elm) {
-			var ctrl;
+			var ctrl, lookup = this.getRoot().controlIdLookup;
 
-			while (elm) {
-				ctrl = Control.controlIdLookup[elm.id];
+			while (elm && lookup) {
+				ctrl = lookup[elm.id];
 				if (ctrl) {
 					break;
 				}
@@ -1132,7 +1131,11 @@ define("tinymce/ui/Control", [
 				DomUtils.off(elm);
 			}
 
-			delete Control.controlIdLookup[self._id];
+			var lookup = self.getRoot().controlIdLookup;
+			if (lookup) {
+				delete lookup[self._id];
+			}
+
 			delete elementIdCache[self._id];
 
 			if (elm && elm.parentNode) {
@@ -1235,7 +1238,12 @@ define("tinymce/ui/Control", [
 			}
 
 			// Add instance to lookup
-			Control.controlIdLookup[self._id] = self;
+			var root = self.getRoot();
+			if (!root.controlIdLookup) {
+				root.controlIdLookup = {};
+			}
+
+			root.controlIdLookup[self._id] = self;
 
 			for (var key in self._aria) {
 				self.aria(key, self._aria[key]);
@@ -1429,6 +1437,32 @@ define("tinymce/ui/Control", [
 					nativeEvents[name] = false;
 				}
 			}
+		},
+
+		getRoot: function() {
+			var ctrl = this, rootControl, parents = [];
+
+			while (ctrl) {
+				if (ctrl.rootControl) {
+					rootControl = ctrl.rootControl;
+					break;
+				}
+
+				parents.push(ctrl);
+				rootControl = ctrl;
+				ctrl = ctrl.parent();
+			}
+
+			if (!rootControl) {
+				rootControl = this;
+			}
+
+			var i = parents.length;
+			while (i--) {
+				parents[i].rootControl = rootControl;
+			}
+
+			return rootControl;
 		},
 
 		/**

@@ -8,12 +8,14 @@ Version 4.0.12 (2014-01-xx)
 	Fixed bug where the importcss plugin didn't import a.class rules properly as selector formats.
 	Fixed bug where the combobox control couldn't be disabled or set to a specific character size initially.
 	Fixed bug where the FormItem didn't inherit the disabled state from the control to be wrapped.
+	Fixed bug where adding a TinyMCE instance within a TinyMCE dialog wouldn't properly delegate the events.
 	Fixed bug where the media plugin would override specified dimensions for url pattern matches. Patch contributed by penc.
 	Fixed bug where the autoresize plugin wouldn't take margins into account when calculating the body size. Patch contributed by lepoltj.
 	Fixed bug where the image plugin would throw errors some times on IE 8 when it preloaded the image to get it's dimensions.
 	Fixed bug where the image plugin wouldn't update the style if the user closed the dialog before focusing out. Patch contributed by jonparrott.
 	Fixed bug where bindOnReady in EventUtils wouldn't work properly for some edge cases on older IE versions. Patch contributed by Godefroy.
 	Fixed so the link dialog "text to display" field gets automatically hidden if the selection isn't text contents. Patch contributed by Godefroy.
+	Fixed so the none option for the target field in the link dialog gets excluded when specifiying the target_list config option.
 	Fixed so outline styles are displayed by default in the formats preview. Patch contributed by nhammadi.
 Version 4.0.12 (2013-12-18)
 	Added new media_scripts option to the media plugin. This makes it possible to embed videos using script elements.
