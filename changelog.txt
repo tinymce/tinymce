@@ -10,6 +10,7 @@ Version 4.0.12 (2014-01-xx)
 	Fixed bug where the autoresize plugin wouldn't take margins into account when calculating the body size. Patch contributed by lepoltj.
 	Fixed bug where the image plugin would throw errors some times on IE 8 when it preloaded the image to get it's dimensions.
 	Fixed bug where the image plugin wouldn't update the style if the user closed the dialog before focusing out. Patch contributed by jonparrott.
+	Fixed so outline styles are displayed by default in the formats preview. Patch contributed by nhammadi.
 Version 4.0.12 (2013-12-18)
 	Added new media_scripts option to the media plugin. This makes it possible to embed videos using script elements.
 	Fixed bug where WebKit/Blink would produce random span elements and styles when deleting contents inside the editor.
