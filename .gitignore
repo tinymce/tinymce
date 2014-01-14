@@ -25,6 +25,7 @@ filemanager
 mcmanager
 *.min.js
 *.dev.js
+*.full.js
 *.min.css
 skin.less
 skin.dev.less

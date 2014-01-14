@@ -212,6 +212,96 @@ task("bundle", ["minify"], function(params) {
 	fs.writeFileSync("js/tinymce/tinymce.full.min.js", minContent);
 });
 
+desc("Bundles in plugins/themes without minifying into a tinymce.full.js file");
+task("bundle-full", ["default"], function (params) {
+  var inputFiles, fullContent, addPlugins = true;
+
+  function appendAddon (name) {
+    if (addPlugins) {
+      if (name == '*') {
+        glob.sync('js/tinymce/plugins/*/plugin.js').forEach(function (filePath) {
+          fullContent += "\n;" + fs.readFileSync(filePath).toString();
+        });
+      } else {
+        fullContent += "\n;" + fs.readFileSync("js/tinymce/plugins/" + name + "/plugin.js").toString();
+      }
+    } else {
+      if (name == '*') {
+        glob.sync('js/tinymce/themes/*/theme.min.js').forEach(function (filePath) {
+          fullContent += "\n;" + fs.readFileSync(filePath).toString();
+        });
+      } else {
+        fullContent += "\n;" + fs.readFileSync("js/tinymce/themes/" + name + "/theme.js").toString();
+      }
+    }
+  }
+
+  fullContent = fs.readFileSync("js/tinymce/tinymce.js").toString();
+
+  if (arguments[0] == '*') {
+    arguments = ['themes:*', 'plugins:*'];
+  }
+
+  for (var i = 0; i < arguments.length; i++) {
+    var args = arguments[i].split(':');
+
+    if (args[0] == 'plugins') {
+      addPlugins = true;
+    } else if (args[0] == 'themes') {
+      addPlugins = false;
+    }
+
+    appendAddon(args[1] || args[0]);
+  }
+
+  fs.writeFileSync("js/tinymce/tinymce.full.js", fullContent);
+});
+
+desc("Bundles in the plugins/themes without minifying, including jQuery into a tinymce.jquery.full.js file");
+task("bundle-full-jquery", ["default"], function (params) {
+	var inputFiles, fullContent, addPlugins = true;
+
+	function appendAddon (name) {
+		if (addPlugins) {
+			if (name == '*') {
+				glob.sync('js/tinymce/plugins/*/plugin.js').forEach(function (filePath) {
+					fullContent += "\n;" + fs.readFileSync(filePath).toString();
+				});
+			} else {
+				fullContent += "\n;" + fs.readFileSync("js/tinymce/plugins/" + name + "/plugin.js").toString();
+			}
+		} else {
+			if (name == '*') {
+				glob.sync('js/tinymce/themes/*/theme.min.js').forEach(function (filePath) {
+					fullContent += "\n;" + fs.readFileSync(filePath).toString();
+				});
+			} else {
+				fullContent += "\n;" + fs.readFileSync("js/tinymce/themes/" + name + "/theme.js").toString();
+			}
+		}
+	}
+
+	fullContent = fs.readFileSync("js/tinymce/tinymce.jquery.js").toString();
+
+	if (arguments[0] == '*') {
+		arguments = ['themes:*', 'plugins:*'];
+	}
+
+	for (var i = 0; i < arguments.length; i++) {
+		var args = arguments[i].split(':');
+
+		if (args[0] == 'plugins') {
+			addPlugins = true;
+		} else if (args[0] == 'themes') {
+			addPlugins = false;
+		}
+
+		appendAddon(args[1] || args[0]);
+	}
+
+	fs.writeFileSync("js/tinymce/tinymce.jquery.full.js", fullContent);
+});
+
 desc("Runs JSHint on core source files");
 task("jshint", ["jshint-core", "jshint-plugins", "jshint-themes"], function () {});
 
@@ -309,10 +399,12 @@ task("zip-production", [], function () {
 		exclude: [
 			"js/tinymce/tinymce.js",
 			"js/tinymce/tinymce.dev.js",
+      "js/tinymce/tinymce.full.js",
 			"js/tinymce/tinymce.full.min.js",
 			"js/tinymce/tinymce.jquery.js",
 			"js/tinymce/tinymce.jquery.min.js",
 			"js/tinymce/tinymce.jquery.dev.js",
+			"js/tinymce/tinymce.jquery.full.js",
 			"js/tinymce/jquery.tinymce.min.js",
 			"js/tinymce/plugins/visualblocks/img",
 			"js/tinymce/plugins/compat3x",
@@ -355,9 +447,11 @@ task("zip-production-jquery", [], function () {
 			"js/tinymce/tinymce.js",
 			"js/tinymce/tinymce.min.js",
 			"js/tinymce/tinymce.dev.js",
+      "js/tinymce/tinymce.full.js",
 			"js/tinymce/tinymce.full.min.js",
 			"js/tinymce/tinymce.jquery.js",
 			"js/tinymce/tinymce.jquery.dev.js",
+			"js/tinymce/tinymce.jquery.full.js",
 			"js/tinymce/plugins/visualblocks/img",
 			"js/tinymce/plugins/compat3x",
 			"readme.md",
