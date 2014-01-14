@@ -211,7 +211,27 @@ define("tinymce/ui/ComboBox", [
 		renderHtml: function() {
 			var self = this, id = self._id, settings = self.settings, prefix = self.classPrefix;
 			var value = settings.value || settings.placeholder || '';
-			var icon, text, openBtnHtml = '';
+			var icon, text, openBtnHtml = '', extraAttrs = '';
+
+			if ("spellcheck" in settings) {
+				extraAttrs += ' spellcheck="' + settings.spellcheck + '"';
+			}
+
+			if (settings.maxLength) {
+				extraAttrs += ' maxlength="' + settings.maxLength + '"';
+			}
+
+			if (settings.size) {
+				extraAttrs += ' size="' + settings.size + '"';
+			}
+
+			if (settings.subtype) {
+				extraAttrs += ' type="' + settings.subtype + '"';
+			}
+
+			if (self.disabled()) {
+				extraAttrs += ' disabled="disabled"';
+			}
 
 			icon = settings.icon ? prefix + 'ico ' + prefix + 'i-' + settings.icon : '';
 			text = self._text;
@@ -232,7 +252,7 @@ define("tinymce/ui/ComboBox", [
 			return (
 				'<div id="' + id + '" class="' + self.classes() + '">' +
 					'<input id="' + id + '-inp" class="' + prefix + 'textbox ' + prefix + 'placeholder" value="' +
-					value + '" hidefocus="true"' + (self.disabled() ? ' disabled="disabled"' : '') + '>' +
+					value + '" hidefocus="true"' + extraAttrs + '>' +
 					openBtnHtml +
 				'</div>'
 			);
