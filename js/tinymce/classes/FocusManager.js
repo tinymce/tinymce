@@ -177,7 +177,7 @@ define("tinymce/FocusManager", [
 						editor.fire('blur', {focusedEditor: null});
 						editorManager.focusedEditor = null;
 
-						// Make sure selection is valid
+						// Make sure selection is valid could be invalid if the editor is blured and removed before the timeout occurs
 						if (editor.selection) {
 							editor.selection.lastFocusBookmark = null;
 						}
