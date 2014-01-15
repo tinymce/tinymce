@@ -176,7 +176,11 @@ define("tinymce/FocusManager", [
 					if (!isUIElement(getActiveElement()) && focusedEditor == editor) {
 						editor.fire('blur', {focusedEditor: null});
 						editorManager.focusedEditor = null;
-						editor.selection.lastFocusBookmark = null;
+
+						// Make sure selection is valid
+						if (editor.selection) {
+							editor.selection.lastFocusBookmark = null;
+						}
 					}
 				}, 0);
 			});
