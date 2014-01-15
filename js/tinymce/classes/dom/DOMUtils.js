@@ -27,8 +27,9 @@ define("tinymce/dom/DOMUtils", [
 	"tinymce/dom/Range",
 	"tinymce/html/Entities",
 	"tinymce/Env",
-	"tinymce/util/Tools"
-], function(Sizzle, Styles, EventUtils, TreeWalker, Range, Entities, Env, Tools) {
+	"tinymce/util/Tools",
+	"tinymce/dom/StyleSheetLoader"
+], function(Sizzle, Styles, EventUtils, TreeWalker, Range, Entities, Env, Tools, StyleSheetLoader) {
 	// Shorten names
 	var each = Tools.each, is = Tools.is, grep = Tools.grep, trim = Tools.trim, extend = Tools.extend;
 	var isWebKit = Env.webkit, isIE = Env.ie;
@@ -54,6 +55,7 @@ define("tinymce/dom/DOMUtils", [
 		self.stdMode = !isIE || doc.documentMode >= 8;
 		self.boxModel = !isIE || doc.compatMode == "CSS1Compat" || self.stdMode;
 		self.hasOuterHTML = "outerHTML" in doc.createElement("a");
+		self.styleSheetLoader = new StyleSheetLoader(doc);
 		this.boundEvents = [];
 
 		self.settings = settings = extend({
