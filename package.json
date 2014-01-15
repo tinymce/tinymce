@@ -12,9 +12,7 @@
 		"node" : ">=0.8.0"
 	},
 	"devDependencies": {
-		"jake": ">= 0.7.0"
-	},
-	"dependencies": {
+		"jake": ">= 0.7.0",
 		"amdlc": ">= 0.0.2",
 		"jshint": ">= 2.1.4",
 		"uglify-js": ">= 2.0.0",
