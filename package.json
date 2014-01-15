@@ -1,6 +1,10 @@
 {
 	"name": "tinymce",
 	"version": "4.0.0",
+	"repository": {
+		"type" : "git",
+		"url" : "https://github.com/tinymce/tinymce.git"
+	},
 	"description": "TinyMCE rich text editor",
 	"author": "Johan Sörlin <spocke@moxiecode.com>",
 	"bugs": { "url" : "http://www.tinymce.com/develop/bugtracker.php" },
