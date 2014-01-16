@@ -318,7 +318,7 @@ define("tinymce/ui/Window", [
 					focusCtrl = focusCtrl || ctrl;
 
 					// TODO: Figure out a better way
-					if (ctrl.type == 'filepicker') {
+					if (ctrl.subinput) {
 						items.push(ctrl.getEl('inp'));
 
 						if (ctrl.getEl('open')) {
