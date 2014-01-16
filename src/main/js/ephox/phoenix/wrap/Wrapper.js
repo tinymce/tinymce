@@ -63,10 +63,42 @@ define(
       return endPoints(universe, wrapped);
     };
 
+    var viper = function (universe, subjects) {
+      var init = {
+        groups: [],
+        current: [],
+        parent: null
+      };
+
+      var result = Arr.foldl(subjects, function (rest, subject) {
+        return universe.property().parent(subject).fold(function () {
+          if (current.length > 0) {
+            return { groups: rest.groups.concat({ parent: rest.parent, children: current }), current: [], parent: null };
+          } else {
+            return { groups: rest.groups, current: [], parent: null };
+          }
+        }, function (parent) {
+          console.log("rest: ", rest);
+          console.log('parent: ', parent);
+          if (rest.parent === null || universe.eq(parent, rest.parent)) {
+            return { groups: rest.groups, current: rest.current.concat( [subject] ), parent: parent };
+          } else {
+            return { groups: rest.groups.concat({ parent: rest.parent, children: rest.current }), current: [ subject ], parent: parent };
+          }
+        });
+      }, init);
+
+      console.log("result", result);
+      var output =  result.current.length > 0 ? result.groups.concat({ parent: result.parent, children: result.current }) : result.groups;
+      console.log('output: ', output);
+      return output;
+    };
+
     return {
       wrapWith: wrapWith,
       wrapper: wrapper,
-      leaves: leaves
+      leaves: leaves,
+      viper: viper
     };
 
   }
