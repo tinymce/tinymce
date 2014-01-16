@@ -338,7 +338,6 @@ define("tinymce/util/Quirks", [
 				// Case 2 IME doesn't initialize if you click the documentElement it also doesn't properly fire the focusin event
 				dom.bind(editor.getDoc(), 'mousedown', function(e) {
 					if (e.target == editor.getDoc().documentElement) {
-						e.preventDefault();
 						editor.getBody().focus();
 						selection.setRng(selection.getRng());
 					}
