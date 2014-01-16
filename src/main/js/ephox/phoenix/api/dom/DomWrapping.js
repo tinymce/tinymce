@@ -28,11 +28,16 @@ define(
       return Wrapping.leaves(universe, base, baseOffset, end, endOffset, c);
     };
 
+    var reuse = function (base, baseOffset, end, endOffset, predicate, nu) {
+      return Wrapping.reuse(universe, base, baseOffset, end, endOffset, predicate, nu);
+    };
+
     return {
       nu: nu,
       wrapWith: wrapWith,
       wrapper: wrapper,
-      leaves: leaves
+      leaves: leaves,
+      reuse: reuse
     };
   }
 );

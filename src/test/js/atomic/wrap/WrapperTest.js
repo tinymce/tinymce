@@ -26,6 +26,7 @@ test(
         ]),
         Gene('3', 'span', [
           TextGene('1.5'),
+          Gene('img', 'img'),
           TextGene('1.6')
         ])
       ])
@@ -48,7 +49,8 @@ test(
     check([
       { parent: '1', children: [ '1.1', '1.2', '1.3' ] },
       { parent: '2', children: [ '1.4' ] },
-      { parent: '3', children: [ '1.5', '1.6' ] }
+      { parent: '3', children: [ '1.5' ] },
+      { parent: '3', children: [ '1.6' ] }
     ], [ '1.1', '1.2', '1.3', '1.4', '1.5', '1.6' ]);
   }
 );
