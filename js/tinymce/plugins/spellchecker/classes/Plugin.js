@@ -263,8 +263,8 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			self.textMatcher = null;
 
 			if (started) {
-				editor.fire('SpellcheckEnd');
 				started = false;
+				editor.fire('SpellcheckEnd');
 			}
 		}
 
