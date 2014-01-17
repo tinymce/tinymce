@@ -152,8 +152,15 @@ define("tinymce/pasteplugin/Clipboard", [
 		 */
 		function removePasteBin() {
 			if (pasteBinElm) {
-				editor.dom.unbind(pasteBinElm);
-				editor.dom.remove(pasteBinElm);
+				var pasteBinClone;
+
+				// WebKit/Blink might clone the div so
+				// lets make sure we remove all clones
+				// TODO: Man o man is this ugly. WebKit is the new IE! Remove this if they ever fix it!
+				while ((pasteBinClone = editor.dom.get('mcepastebin'))) {
+					editor.dom.remove(pasteBinClone);
+					editor.dom.unbind(pasteBinClone);
+				}
 
 				if (lastRng) {
 					editor.selection.setRng(lastRng);
@@ -170,7 +177,26 @@ define("tinymce/pasteplugin/Clipboard", [
 		 * @return {String} Get the contents of the paste bin.
 		 */
 		function getPasteBinHtml() {
-			return pasteBinElm ? pasteBinElm.innerHTML : pasteBinDefaultContent;
+			var html = pasteBinDefaultContent, pasteBinClones, i;
+
+			// Since WebKit/Chrome might clone the paste bin when pasting
+			// for example: <img style="float: right"> we need to check if any of them contains some useful html.
+			// TODO: Man o man is this ugly. WebKit is the new IE! Remove this if they ever fix it!
+			pasteBinClones = editor.dom.select('div[id=mcepastebin]');
+			i = pasteBinClones.length;
+			while (i--) {
+				var cloneHtml = pasteBinClones[i].innerHTML;
+
+				if (html == pasteBinDefaultContent) {
+					html = '';
+				}
+
+				if (cloneHtml.length > html.length) {
+					html = cloneHtml;
+				}
+			}
+
+			return html;
 		}
 
 		/**
