@@ -1,16 +1,19 @@
 {
 	"name": "tinymce",
 	"version": "4.0.0",
+	"repository": {
+		"type" : "git",
+		"url" : "https://github.com/tinymce/tinymce.git"
+	},
 	"description": "TinyMCE rich text editor",
 	"author": "Johan Sörlin <spocke@moxiecode.com>",
 	"bugs": { "url" : "http://www.tinymce.com/develop/bugtracker.php" },
+	"private": true,
 	"engines": {
 		"node" : ">=0.8.0"
 	},
 	"devDependencies": {
-		"jake": ">= 0.7.0"
-	},
-	"dependencies": {
+		"jake": ">= 0.7.0",
 		"amdlc": ">= 0.0.2",
 		"jshint": ">= 2.1.4",
 		"uglify-js": ">= 2.0.0",
