@@ -109,22 +109,32 @@ define("tinymce/pasteplugin/Clipboard", [
 		 * so that resize handles doesn't get produced on IE or Drag handles or Firefox.
 		 */
 		function createPasteBin() {
-			var dom = editor.dom, body = editor.getBody(), viewport = editor.dom.getViewPort(editor.getWin());
-			var height = editor.inline ? body.clientHeight : viewport.h;
+			var dom = editor.dom, body = editor.getBody();
+			var viewport = editor.dom.getViewPort(editor.getWin()), scrollTop, top = 20;
 
-			removePasteBin();
+			lastRng = editor.selection.getRng();
+			scrollTop = editor.inline ? editor.selection.getScrollContainer().scrollTop : viewport.y;
+
+			// Calculate top cordinate this is needed to avoid scrolling to top of document
+			// We want the paste bin to be as close to the caret as possible to avoid scrolling
+			if (lastRng.getClientRects) {
+				var rects = lastRng.getClientRects();
+				if (rects.length) {
+					top = scrollTop + (rects[0].top - dom.getPos(body).y);
+				}
+			}
 
 			// Create a pastebin
 			pasteBinElm = dom.add(editor.getBody(), 'div', {
 				id: "mcepastebin",
 				contentEditable: true,
 				"data-mce-bogus": "1",
-				style: 'position: fixed; top: 20px;' +
-					'width: 10px; height: ' + (height - 40) + 'px; overflow: hidden; opacity: 0'
+				style: 'position: absolute; top: ' + top + 'px;' +
+					'width: 10px; height: 10px; overflow: hidden; opacity: 0'
 			}, pasteBinDefaultContent);
 
-			// Move paste bin out of sight since the controlSelection rect gets displayed otherwise on IE
-			if (Env.ie) {
+			// Move paste bin out of sight since the controlSelection rect gets displayed otherwise on IE and Gecko
+			if (Env.ie || Env.gecko) {
 				dom.setStyle(pasteBinElm, 'left', dom.getStyle(body, 'direction', true) == 'rtl' ? 0xFFFF : -0xFFFF);
 			}
 
@@ -133,7 +143,6 @@ define("tinymce/pasteplugin/Clipboard", [
 				e.stopPropagation();
 			});
 
-			lastRng = editor.selection.getRng();
 			pasteBinElm.focus();
 			editor.selection.select(pasteBinElm, true);
 		}
@@ -233,6 +242,7 @@ define("tinymce/pasteplugin/Clipboard", [
 					return;
 				}
 
+				removePasteBin();
 				createPasteBin();
 			}
 		});
