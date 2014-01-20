@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>{#groupdocs_dlg.title}</title>
+	<script type="text/javascript" src="../../tiny_mce_popup.js?v={tinymce_version}"></script>
+	<script type="text/javascript" src="js/groupdocs.js?v={tinymce_version}"></script>
+</head>
+<body>
+
+<form onsubmit="GroupdocsDialog.insert();return false;" action="#">
+	<p>GroupDocs</p>
+        
+	<p>File ID: <input id="groupdocs_file_id" name="groupdocs_file_id" type="text" class="text" /></p>
+	<p>Height: <input id="height" name="height" type="text" class="text" /></p>
+	<p>Width: <input id="width" name="width" type="text" class="text" /></p>
+
+	<div class="mceActionPanel">
+		<input type="button" id="insert" name="insert" value="{#insert}" onclick="GroupdocsDialog.insert();" />
+		<input type="button" id="cancel" name="cancel" value="{#cancel}" onclick="tinyMCEPopup.close();" />
+	</div>
+</form>
+
+</body>
+</html>
