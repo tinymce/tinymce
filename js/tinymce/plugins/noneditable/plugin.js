@@ -424,6 +424,14 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 				}
 			}
 		}
+        //This prevents a user from dropping content into a noneditable,
+        function handleDrop(e){
+           var contenteditablemce = e.target.getAttribute("data-mce-contenteditable");
+            if(contenteditablemce !== null){
+                return contenteditablemce === "true";
+            }
+            return true;
+        }
 
 		editor.on('mousedown', function(e) {
 			var node = editor.selection.getNode();
@@ -436,7 +444,10 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 
 		editor.on('mouseup keyup', moveSelection);
 		editor.on('keydown', handleKey);
+        editor.on('drop', handleDrop);
 	}
+
+
 
 	var editClass, nonEditClass, nonEditableRegExps;
 
