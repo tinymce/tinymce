@@ -323,6 +323,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 		}
 
 		editor.addButton('spellchecker', buttonArgs);
+		editor.addCommand('mceSpellCheck', spellcheck);
 
 		editor.on('remove', function() {
 			if (suggestionsMenu) {
