@@ -424,14 +424,14 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 				}
 			}
 		}
-        //This prevents a user from dropping content into a noneditable.
-        // ToDo: Add intelligence to move cursor to proper position and insert current dragged element.
-        function handleDrop(e){
-           var contenteditablemce = getContentEditable(e.target);
-            if(contenteditablemce !== null){
-                return contenteditablemce === "true";
-            }
-        }
+		//This prevents a user from dropping content into a noneditable.
+		// ToDo: Add intelligence to move cursor to proper position and insert current dragged element.
+		function handleDrop(e){
+		   var contenteditablemce = getContentEditable(e.target);
+			if(contenteditablemce !== null){
+				return contenteditablemce === "true";
+			}
+		}
 
 		editor.on('mousedown', function(e) {
 			var node = editor.selection.getNode();
@@ -444,7 +444,7 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 
 		editor.on('mouseup keyup', moveSelection);
 		editor.on('keydown', handleKey);
-        editor.on('drop', handleDrop);
+		editor.on('drop', handleDrop);
 	}
 
 
