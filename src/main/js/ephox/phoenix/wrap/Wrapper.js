@@ -64,15 +64,27 @@ define(
       return endPoints(universe, wrapped);
     };
 
+    /*
+     * Returns a list of spans (reusing where possible) that wrap the text nodes within the range 
+     */
     var reuse = function (universe, base, baseOffset, end, endOffset, predicate, nu) {
       var start = Navigation.toLeaf(universe, base, baseOffset);
       var finish = Navigation.toLeaf(universe, end, endOffset);
       var nodes = Split.range(universe, base, baseOffset, end, endOffset);
-      console.log('nodes: ', Arr.map(nodes, function (n) { return n.dom(); }));
+      
+      var groups = Contiguous.textnodes(universe, nodes);
 
-      var groups = viper(universe, nodes);
+      var canReuse = function (group) {
+        // TODO: Work out a sensible way to consider empty text nodes here.
+        var children = universe.property().children(group.parent);
+        return children.length === group.children.length && predicate(group.parent);
+      };
 
-      var yeti = function (group) {
+      var recycle = function (group) {
+        return group.parent;
+      };
+
+      var create = function (group) {
         var container = nu();
         universe.insert().before(group.children[0], container.element());
         Arr.each(group.children, container.wrap);
@@ -80,17 +92,9 @@ define(
       };
 
       return Arr.map(groups, function (group) {
-        var children = universe.property().children(group.parent);
-        if (children.length === group.children.length) {
-          // return parent if it is a span, otherwise make a nu one.
-          if (predicate(group.parent)) {
-            return group.parent;
-          } else {
-            return yeti(group);
-          }
-        } else {
-          return yeti(group);
-        }
+        // return parent if it is a span, otherwise make a nu one.
+        var builder = canReuse(group) ? recycle : create;
+        return builder(group);
       });
     };
 
