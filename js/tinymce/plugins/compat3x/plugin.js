@@ -21,6 +21,8 @@
 (function(tinymce) {
 	var reported;
 
+	function noop() {}
+
 	function log(apiCall) {
 		if (!reported && window && window.console) {
 			reported = true;
@@ -30,6 +32,11 @@
 
 	function Dispatcher(target, newEventName, argsMap, defaultScope) {
 		target = target || this;
+
+		if (!newEventName) {
+			this.add = this.addToTop = this.remove = this.dispatch = noop;
+			return;
+		}
 
 		this.add = function(callback, scope) {
 			log('<target>.on' + newEventName + ".add(..)");
@@ -85,9 +92,14 @@
 		};
 	}
 
+	tinymce.util.Dispatcher = Dispatcher;
 	tinymce.onBeforeUnload = new Dispatcher(tinymce, "BeforeUnload");
 	tinymce.onAddEditor = new Dispatcher(tinymce, "AddEditor", "editor");
 	tinymce.onRemoveEditor = new Dispatcher(tinymce, "RemoveEditor", "editor");
+
+	tinymce.util.Cookie = {
+		get: noop, getHash: noop, remove: noop, set: noop, setHash: noop
+	};
 
 	function patchEditor(editor) {
 		function patchEditorEvents(oldEventNames, argsMap) {
@@ -115,6 +127,25 @@
 			return;
 		}
 
+		function cmNoop() {
+			var obj = {}, methods = 'add addMenu addSeparator collapse createMenu destroy displayColor expand focus ' +
+				'getLength hasMenus hideMenu isActive isCollapsed isDisabled isRendered isSelected mark ' +
+				'postRender remove removeAll renderHTML renderMenu renderNode renderTo select selectByIndex ' +
+				'setActive setAriaProperty setColor setDisabled setSelected setState showMenu update';
+
+			log('editor.controlManager.*');
+
+			function _noop() {
+				return cmNoop();
+			}
+
+			tinymce.each(methods.split(' '), function(method) {
+				obj[method] = _noop;
+			});
+
+			return obj;
+		}
+
 		editor.controlManager = {
 			buttons: {},
 
@@ -133,6 +164,24 @@
 					this.buttons[name].active(state);
 				}
 			},
+
+			onAdd: new Dispatcher(),
+			onPostRender: new Dispatcher(),
+
+			add: function(obj) { return obj; },
+			createButton: cmNoop,
+			createColorSplitButton: cmNoop,
+			createControl: cmNoop,
+			createDropMenu: cmNoop,
+			createListBox: cmNoop,
+			createMenuButton: cmNoop,
+			createSeparator: cmNoop,
+			createSplitButton: cmNoop,
+			createToolbar: cmNoop,
+			createToolbarGroup: cmNoop,
+			destroy: noop,
+			get: noop,
+			setControlType: cmNoop
 		};
 
 		patchEditorEvents("PreInit BeforeRenderUI PostRender Load Init Remove Activate Deactivate", "editor");
@@ -176,7 +225,9 @@
 				settings.onPostRender = patchedPostRender;
 			}
 
-			settings.title = tinymce.i18n.translate((editor.settings.language || "en") + "." + settings.title);
+			if (settings.title) {
+				settings.title = tinymce.i18n.translate((editor.settings.language || "en") + "." + settings.title);
+			}
 
 			return originalAddButton.call(this, name, settings);
 		};
@@ -193,8 +244,14 @@
 			selection.onGetContent = new Dispatcher(editor, "GetContent", filterSelectionEvents(true), selection);
 			selection.onBeforeSetContent = new Dispatcher(editor, "BeforeSetContent", filterSelectionEvents(true), selection);
 			selection.onSetContent = new Dispatcher(editor, "SetContent", filterSelectionEvents(true), selection);
+		});
 
-			editor.windowManager.createInstance = function(className, a, b, c, d, e) {
+		editor.on('BeforeRenderUI', function() {
+			var windowManager = editor.windowManager;
+
+			windowManager.onOpen = new Dispatcher();
+			windowManager.onClose = new Dispatcher();
+			windowManager.createInstance = function(className, a, b, c, d, e) {
 				log("windowManager.createInstance(..)");
 
 				var constr = tinymce.resolve(className);
