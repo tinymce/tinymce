@@ -27,6 +27,7 @@ Version 4.0.12 (2014-01-xx)
 	Fixed so outline styles are displayed by default in the formats preview. Patch contributed by nhammadi.
 	Fixed so the max characters for width/height is more than 3 in the media and image dialogs.
 	Fixed so the old mceSpellCheck command toggles the spellchecker on/off.
+	Fixed so the setupeditor event is fired before the setup callback setting to ease up compatibility with 3.x.
 	Removed the custom scrollbars for WebKit since the default browser scrollbars looks a lot better now days.
 Version 4.0.12 (2013-12-18)
 	Added new media_scripts option to the media plugin. This makes it possible to embed videos using script elements.
