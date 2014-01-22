@@ -6,10 +6,11 @@ define(
     'ephox.perhaps.Option',
     'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.api.general.Split',
+    'ephox.phoenix.util.Contiguous',
     'ephox.phoenix.wrap.Navigation'
   ],
 
-  function (Arr, Option, Spot, Split, Navigation) {
+  function (Arr, Option, Spot, Split, Contiguous, Navigation) {
     /**
      * Wrap all text nodes between two DOM positions, using the nu() wrapper
      */
@@ -93,64 +94,10 @@ define(
       });
     };
 
-    var viper = function (universe, subjects) {
-      var init = {
-        groups: [],
-        current: [],
-        parent: null
-      };
-
-      var nextlist = function (rest, parent, subject) {
-        return {
-          groups: rest.current.length > 0 ? rest.groups.concat({ parent: rest.parent, children: rest.current }) : rest.groups,
-          current: [ subject ],
-          parent: parent
-        };
-      };
-
-      var startlist = function (rest, parent, subject) {
-        return {
-          groups: rest.groups,
-          current: [ subject ],
-          parent: parent
-        };
-      };
-
-      var accumulate = function (rest, parent, subject) {
-        return {
-          groups: rest.groups,
-          current: rest.current.concat([ subject ]),
-          parent: parent
-        };
-      };
-
-      var result = Arr.foldl(subjects, function (rest, subject) {
-        return universe.property().parent(subject).fold(function () {
-          return rest;
-        }, function (parent) {
-          // Conditions: 
-          // 1. There is nothing in the current list ... start a current list with subject
-          // 2. The subject is the right sibling of the last thing on the current list ... accumulate into current list.
-          // 3. Otherwise ... close off current, and start a new current with subject
-          var modifier = rest.current.length === 0 ? startlist : universe.query().nextSibling(rest.current[rest.current.length - 1]).bind(function (next) {
-            return universe.eq(next, subject) ? Option.some(accumulate) : Option.none();
-          }).getOr(nextlist);
-
-          return modifier(rest, parent, subject);
-        });
-      }, init);
-
-      // console.log("result", result);
-      var output =  result.current.length > 0 ? result.groups.concat({ parent: result.parent, children: result.current }) : result.groups;
-      console.log('output: ', output);
-      return output;
-    };
-
     return {
       wrapWith: wrapWith,
       wrapper: wrapper,
       leaves: leaves,
-      viper: viper,
       reuse: reuse
     };
 
