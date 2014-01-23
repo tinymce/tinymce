@@ -92,7 +92,7 @@ define(
       };
 
       return Arr.map(groups, function (group) {
-        // return parent if it is a span, otherwise make a nu one.
+        // return parent if it can be reused (e.g. span with no other children), otherwise make a nu one.
         var builder = canReuse(group) ? recycle : create;
         return builder(group);
       });
