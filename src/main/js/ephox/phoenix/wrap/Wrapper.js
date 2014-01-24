@@ -6,10 +6,11 @@ define(
     'ephox.perhaps.Option',
     'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.api.general.Split',
+    'ephox.phoenix.util.Contiguous',
     'ephox.phoenix.wrap.Navigation'
   ],
 
-  function (Arr, Option, Spot, Split, Navigation) {
+  function (Arr, Option, Spot, Split, Contiguous, Navigation) {
     /**
      * Wrap all text nodes between two DOM positions, using the nu() wrapper
      */
@@ -63,10 +64,45 @@ define(
       return endPoints(universe, wrapped);
     };
 
+    /*
+     * Returns a list of spans (reusing where possible) that wrap the text nodes within the range 
+     */
+    var reuse = function (universe, base, baseOffset, end, endOffset, predicate, nu) {
+      var start = Navigation.toLeaf(universe, base, baseOffset);
+      var finish = Navigation.toLeaf(universe, end, endOffset);
+      var nodes = Split.range(universe, base, baseOffset, end, endOffset);
+      
+      var groups = Contiguous.textnodes(universe, nodes);
+
+      var canReuse = function (group) {
+        // TODO: Work out a sensible way to consider empty text nodes here.
+        var children = universe.property().children(group.parent);
+        return children.length === group.children.length && predicate(group.parent);
+      };
+
+      var recycle = function (group) {
+        return group.parent;
+      };
+
+      var create = function (group) {
+        var container = nu();
+        universe.insert().before(group.children[0], container.element());
+        Arr.each(group.children, container.wrap);
+        return container.element();
+      };
+
+      return Arr.map(groups, function (group) {
+        // return parent if it can be reused (e.g. span with no other children), otherwise make a new one.
+        var builder = canReuse(group) ? recycle : create;
+        return builder(group);
+      });
+    };
+
     return {
       wrapWith: wrapWith,
       wrapper: wrapper,
-      leaves: leaves
+      leaves: leaves,
+      reuse: reuse
     };
 
   }
