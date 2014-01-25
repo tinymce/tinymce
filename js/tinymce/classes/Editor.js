@@ -387,14 +387,17 @@ define("tinymce/Editor", [
 
 			// Load scripts
 			function loadScripts() {
-				var scriptLoader = ScriptLoader.ScriptLoader;
+				var scriptLoader = ScriptLoader.ScriptLoader, languageUri;
 
 				if (settings.language && settings.language != 'en') {
-					settings.language_url = self.editorManager.baseURL + '/langs/' + settings.language + '.js';
+					languageUri = self.editorManager.baseURL + '/langs/' + settings.language + '.js';
 				}
 
 				if (settings.language_url) {
 					scriptLoader.add(settings.language_url);
+				}
+				else {
+					scriptLoader.add(languageUri);
 				}
 
 				if (settings.theme && typeof settings.theme != "function" &&
