@@ -3,6 +3,7 @@ Version 4.0.12 (2014-01-xx)
 	Added new style_formats_merge option that enables you to append to the default formats instead of replaceing them. Patch contributed by PacificMorrowind.
 	Fixed bug where the DOMUtils getPos API function didn't properly handle the location of the root element. Patch contributed by Andrew Ozz.
 	Fixed bug where the spellchecker wouldn't properly place the spellchecker suggestions menu. Patch contributed by Andrew Ozz.
+	Fixed bug where the tabfocus plugin would prevent the user from suing Ctrl+Tab, Patch contributed by Andrew Ozz.
 	Fixed bug where table resize handles could sometimes be added to elements out side the editable inline element.
 	Fixed bug where the inline mode editor UI would render incorrectly when the stylesheets didn't finish loading on Chrome.
 	Fixed bug where IE 8 would insert the image outside the editor unless it was focused first.
