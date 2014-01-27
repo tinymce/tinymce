@@ -50,7 +50,7 @@ tinymce.PluginManager.add('autosave', function(editor) {
 	}
 
 	function storeDraft() {
-		if (!isEmpty()) {
+		if (!isEmpty() && editor.isDirty()) {
 			LocalStorage.setItem(prefix + "draft", editor.getContent({format: 'raw', no_events: true}));
 			LocalStorage.setItem(prefix + "time", new Date().getTime());
 			editor.fire('StoreDraft');
