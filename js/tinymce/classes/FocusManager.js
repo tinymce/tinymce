@@ -192,7 +192,11 @@ define("tinymce/FocusManager", [
 			var activeEditor = editorManager.activeEditor;
 
 			if (activeEditor && e.target.ownerDocument == document) {
-				activeEditor.selection.lastFocusBookmark = createBookmark(activeEditor.lastRng);
+
+				// Check to make sure we have a valid selection
+				if (activeEditor.selection) {
+					activeEditor.selection.lastFocusBookmark = createBookmark(activeEditor.lastRng);
+				}
 
 				// Fire a blur event if the element isn't a UI element
 				if (!isUIElement(e.target) && editorManager.focusedEditor == activeEditor) {
