@@ -267,11 +267,13 @@ define("tinymce/dom/ControlSelection", [
 						top: (targetHeight * handle[1] + selectedElmY) - (handleElm.offsetHeight / 2)
 					});
 				});
+
+				// Only add the selected attribute if this is element is actually resizable
+				selectedElm.setAttribute('data-mce-selected', '1');
+
 			} else {
 				hideResizeRect();
 			}
-
-			selectedElm.setAttribute('data-mce-selected', '1');
 		}
 
 		function hideResizeRect() {
