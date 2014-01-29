@@ -1149,6 +1149,8 @@ define("tinymce/ui/Control", [
 				elm.parentNode.removeChild(elm);
 			}
 
+			self._rendered = false;
+
 			return self;
 		},
 
