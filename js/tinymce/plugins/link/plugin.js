@@ -252,7 +252,7 @@ tinymce.PluginManager.add('link', function(editor) {
 								href: href,
 								target: data.target ? data.target : null,
 								rel: data.rel ? data.rel : null
-							}, data.text));
+							}, dom.encode(data.text)));
 						} else {
 							editor.execCommand('mceInsertLink', false, {
 								href: href,
