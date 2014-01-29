@@ -24,6 +24,7 @@ Version 4.0.12 (2014-01-xx)
 	Fixed bug where the image plugin wouldn't update the style if the user closed the dialog before focusing out. Patch contributed by jonparrott.
 	Fixed bug where bindOnReady in EventUtils wouldn't work properly for some edge cases on older IE versions. Patch contributed by Godefroy.
 	Fixed bug where image selector formats wasn't properly handled by the importcss plugin.
+	Fixed bug where the dirty state of the editor wasn't set when editing an existing link URL.
 	Fixed so you don't need to set language option to false when specifying a custom language_url.
 	Fixed so the link dialog "text to display" field gets automatically hidden if the selection isn't text contents. Patch contributed by Godefroy.
 	Fixed so the none option for the target field in the link dialog gets excluded when specifiying the target_list config option.

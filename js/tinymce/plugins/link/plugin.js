@@ -245,6 +245,7 @@ tinymce.PluginManager.add('link', function(editor) {
 						});
 
 						selection.select(anchorElm);
+						editor.undoManager.add();
 					} else {
 						if (onlyText) {
 							editor.insertContent(dom.createHTML('a', {
