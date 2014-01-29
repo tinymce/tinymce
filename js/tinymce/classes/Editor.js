@@ -389,7 +389,7 @@ define("tinymce/Editor", [
 			function loadScripts() {
 				var scriptLoader = ScriptLoader.ScriptLoader;
 
-				if (settings.language && settings.language != 'en') {
+				if (settings.language && settings.language != 'en' && !settings.language_url) {
 					settings.language_url = self.editorManager.baseURL + '/langs/' + settings.language + '.js';
 				}
 
