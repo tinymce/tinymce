@@ -27,6 +27,7 @@ Version 4.0.12 (2014-01-xx)
 	Fixed bug where the dirty state of the editor wasn't set when editing an existing link URL.
 	Fixed bug where it wasn't possible to prevent paste from happening by blocking the default behavior when the paste plugin was enabled.
 	Fixed bug where text to display in the insert/edit link dialog wouldn't be properly entity encoded.
+	Fixed bug where Safari 7 on Mac OS X would delete contents if you pressed Cmd+C since it passes out a charCode for the event.
 	Fixed so you don't need to set language option to false when specifying a custom language_url.
 	Fixed so the link dialog "text to display" field gets automatically hidden if the selection isn't text contents. Patch contributed by Godefroy.
 	Fixed so the none option for the target field in the link dialog gets excluded when specifiying the target_list config option.

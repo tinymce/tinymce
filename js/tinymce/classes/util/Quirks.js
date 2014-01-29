@@ -187,7 +187,7 @@ define("tinymce/util/Quirks", [
 			});
 
 			editor.on('keypress', function(e) {
-				if (!isDefaultPrevented(e) && !selection.isCollapsed() && e.charCode) {
+				if (!isDefaultPrevented(e) && !selection.isCollapsed() && e.charCode && !VK.metaKeyPressed(e)) {
 					e.preventDefault();
 					customDelete(true);
 					editor.selection.setContent(String.fromCharCode(e.charCode));
