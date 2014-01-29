@@ -27,11 +27,21 @@ test(
 
     var d = Locator.byId(family, 'D').getOrDie();
     assert.eq('A', Up.selector(d, '_A_').getOrDie().id);
+    assert.eq('A', Up.closest(d, '_A_').getOrDie().id);
     assert.eq('C', Up.selector(d, '_C_').getOrDie().id);
+    assert.eq('C', Up.closest(d, '_C_').getOrDie().id);
+    assert.eq(true, Up.selector(d, '_D_').isNone());
+    assert.eq('D', Up.closest(d, '_D_').getOrDie().id);
+    assert.eq('D', Up.closest(d, '_A_,_D_').getOrDie().id);
+    assert.eq('D', Up.closest(d, '_A_,_D_,_B_').getOrDie().id);
     assert.eq('C', Up.selector(d, '_C_,_A_').getOrDie().id);
+    assert.eq('C', Up.closest(d, '_C_,_A_').getOrDie().id);
     assert.eq('C', Up.selector(d, '_B_,_C_,_A_').getOrDie().id);
+    assert.eq('C', Up.closest(d, '_B_,_C_,_A_').getOrDie().id);
     assert.eq('C', Up.selector(d, '_B_,_A_,_C_').getOrDie().id);
+    assert.eq('C', Up.closest(d, '_B_,_A_,_C_').getOrDie().id);
     assert.eq(true, Up.selector(d, '_B_,_Z_').isNone());
+    assert.eq(true, Up.closest(d, '_B_,_Z_').isNone());
 
     assert.eq('A', Up.predicate(d, function (item) {
       return item.id === 'A';

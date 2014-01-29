@@ -15,6 +15,10 @@ define(
       });
     };
 
+    var closest = function (scope, query) {
+      return Comparator.is(scope, query) ? Option.some(scope) : selector(scope, query);
+    };
+
     var top = function (item) {
       return item.parent.fold(Fun.constant(item), function (parent) {
         return top(parent);
@@ -35,6 +39,7 @@ define(
 
     return {
       selector: selector,
+      closest: closest,
       predicate: predicate,
       all: all,
       top: top

@@ -45,6 +45,7 @@ define(
       return {
         up: Fun.constant({
           selector: Up.selector,
+          closest: Up.closest,
           predicate: Up.predicate,
           all: Up.all,
           top: Up.top
