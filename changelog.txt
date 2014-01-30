@@ -1,3 +1,5 @@
+Version 4.0.15 (2014-02-xx)
+	Fixed bug where paste in inline mode would produce an exception if the contents was pasted inside non overflow element.
 Version 4.0.14 (2014-01-30)
 	Fixed a bug in the image plugin where images couldn't be inserted if the image_advtab option wasn't set to true.
 Version 4.0.13 (2014-01-30)
