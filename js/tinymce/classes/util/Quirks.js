@@ -987,6 +987,13 @@ define("tinymce/util/Quirks", [
 			}
 		}
 
+		/**
+		 * Disables the autolinking in IE 8+ this is then re-enabled by the autolink plugin.
+		 */
+		function disableAutoUrlDetect() {
+			setEditorCommandState("AutoUrlDetect", false);
+		}
+
 		// All browsers
 		disableBackspaceIntoATable();
 		removeBlockQuoteOnBackSpace();
@@ -1028,6 +1035,7 @@ define("tinymce/util/Quirks", [
 
 		if (Env.ie) {
 			selectAll();
+			disableAutoUrlDetect();
 		}
 
 		// Gecko
