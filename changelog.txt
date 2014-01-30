@@ -1,4 +1,4 @@
-Version 4.0.12 (2014-01-xx)
+Version 4.0.12 (2014-01-30)
 	Added language selection menu to spellchecker button similar to the 3.x functionality. Patch contributed by threebytesfull.
 	Added new style_formats_merge option that enables you to append to the default formats instead of replaceing them. Patch contributed by PacificMorrowind.
 	Fixed bug where the DOMUtils getPos API function didn't properly handle the location of the root element. Patch contributed by Andrew Ozz.
