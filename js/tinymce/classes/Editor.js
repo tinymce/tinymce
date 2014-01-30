@@ -77,13 +77,13 @@ define("tinymce/Editor", [
 	var isGecko = Env.gecko, ie = Env.ie;
 
 	function getEventTarget(editor, eventName) {
-		if (eventName == 'selectionchange' || eventName == 'drop') {
+		if (eventName == 'selectionchange') {
 			return editor.getDoc();
 		}
 
 		// Need to bind mousedown/mouseup etc to document not body in iframe mode
 		// Since the user might click on the HTML element not the BODY
-		if (!editor.inline && /^mouse|click|contextmenu/.test(eventName)) {
+		if (!editor.inline && /^mouse|click|contextmenu|drop/.test(eventName)) {
 			return editor.getDoc();
 		}
 
