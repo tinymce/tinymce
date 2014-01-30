@@ -101,7 +101,13 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 
 	// Add padding at the bottom for better UX
 	editor.on("init", function() {
-		editor.dom.setStyle(editor.getBody(), 'paddingBottom', editor.getParam('autoresize_bottom_margin', 50) + 'px');
+		var overflowPadding = editor.getParam('autoresize_overflow_padding', 1);
+
+		editor.dom.setStyles(editor.getBody(), {
+			paddingBottom: editor.getParam('autoresize_bottom_margin', 50),
+			paddingLeft: overflowPadding,
+			paddingRight: overflowPadding
+		});
 	});
 
 	// Add appropriate listeners for resizing content area
