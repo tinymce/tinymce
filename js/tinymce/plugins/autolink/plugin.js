@@ -20,7 +20,11 @@ tinymce.PluginManager.add('autolink', function(editor) {
 	// Internet Explorer has built-in automatic linking for most cases
 	if (tinymce.Env.ie) {
 		editor.on("init", function() {
-			editor.execCommand('AutoUrlDetect', false, true);
+			try {
+				editor.execCommand('AutoUrlDetect', false, true);
+			} catch (ex) {
+				// Ignore
+			}
 		});
 
 		return;

@@ -80,6 +80,7 @@ tinymce.init({
 	selector: "textarea",
 	add_unload_trigger: false,
 	plugins: 'autosave',
+	autosave_ask_before_unload: false,
 	init_instance_callback: function(ed) {
 		editor = ed;
 		editor.plugins.autosave.removeDraft();
