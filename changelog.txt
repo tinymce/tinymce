@@ -1,3 +1,5 @@
+Version 4.0.14 (2014-01-30)
+	Fixed a bug in the image plugin where images couldn't be inserted if the image_advtab option wasn't set to true.
 Version 4.0.13 (2014-01-30)
 	Added language selection menu to spellchecker button similar to the 3.x functionality. Patch contributed by threebytesfull.
 	Added new style_formats_merge option that enables you to append to the default formats instead of replaceing them. Patch contributed by PacificMorrowind.

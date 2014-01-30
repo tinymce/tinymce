@@ -258,6 +258,10 @@ tinymce.PluginManager.add('image', function(editor) {
 				return value;
 			}
 
+			if (!editor.settings.image_advtab) {
+				return;
+			}
+
 			var data = win.toJSON();
 			var css = dom.parseStyle(data.style);
 
