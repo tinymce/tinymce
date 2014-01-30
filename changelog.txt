@@ -35,7 +35,7 @@ Version 4.0.12 (2014-01-xx)
 	Fixed so the max characters for width/height is more than 3 in the media and image dialogs.
 	Fixed so the old mceSpellCheck command toggles the spellchecker on/off.
 	Fixed so the setupeditor event is fired before the setup callback setting to ease up compatibility with 3.x.
-	Fixed so auto url link creation in IE 8+ is disabled by default and re-enabled by the autolink plugin.
+	Fixed so auto url link creation in IE 9+ is disabled by default and re-enabled by the autolink plugin.
 	Removed the custom scrollbars for WebKit since the default browser scrollbars looks a lot better now days.
 Version 4.0.12 (2013-12-18)
 	Added new media_scripts option to the media plugin. This makes it possible to embed videos using script elements.

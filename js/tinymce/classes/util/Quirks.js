@@ -988,7 +988,7 @@ define("tinymce/util/Quirks", [
 		}
 
 		/**
-		 * Disables the autolinking in IE 8+ this is then re-enabled by the autolink plugin.
+		 * Disables the autolinking in IE 9+ this is then re-enabled by the autolink plugin.
 		 */
 		function disableAutoUrlDetect() {
 			setEditorCommandState("AutoUrlDetect", false);
