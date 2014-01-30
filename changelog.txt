@@ -30,6 +30,7 @@ Version 4.0.12 (2014-01-xx)
 	Fixed bug where Safari 7 on Mac OS X would delete contents if you pressed Cmd+C since it passes out a charCode for the event.
 	Fixed bug where bound drop events inside inline editors would get fired on all editor instances instead of the specific instance.
 	Fixed bug where images outlined selection border would be clipped when the autoresize plugin was enabled.
+	Fixed bug where image dimension constrains proportions wouldn't work properly if you altered a value and immediately clicked the submit button.
 	Fixed so you don't need to set language option to false when specifying a custom language_url.
 	Fixed so the link dialog "text to display" field gets automatically hidden if the selection isn't text contents. Patch contributed by Godefroy.
 	Fixed so the none option for the target field in the link dialog gets excluded when specifiying the target_list config option.

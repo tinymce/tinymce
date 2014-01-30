@@ -75,7 +75,7 @@ tinymce.PluginManager.add('image', function(editor) {
 			return imageListItems;
 		}
 
-		function recalcSize(e) {
+		function recalcSize() {
 			var widthCtrl, heightCtrl, newWidth, newHeight;
 
 			widthCtrl = win.find('#width')[0];
@@ -85,7 +85,7 @@ tinymce.PluginManager.add('image', function(editor) {
 			newHeight = heightCtrl.value();
 
 			if (win.find('#constrain')[0].checked() && width && height && newWidth && newHeight) {
-				if (e.control == widthCtrl) {
+				if (width != newWidth) {
 					newHeight = Math.round((newWidth / width) * newHeight);
 					heightCtrl.value(newHeight);
 				} else {
@@ -121,6 +121,7 @@ tinymce.PluginManager.add('image', function(editor) {
 			}
 			
 			updateStyle();
+			recalcSize();
 
 			var data = win.toJSON();
 
