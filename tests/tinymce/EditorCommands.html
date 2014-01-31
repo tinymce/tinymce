@@ -715,7 +715,7 @@ test('indent/outdent', function() {
 test('RemoveFormat', function() {
 	var t = this;
 
-	expect(3);
+	expect(4);
 
 	editor.setContent('<p><em>test</em> <strong>123</strong> <a href="123">123</a> 123</p>');
 	editor.execCommand('SelectAll');
@@ -731,6 +731,11 @@ test('RemoveFormat', function() {
 	editor.selection.select(editor.dom.get('x'));
 	editor.execCommand('RemoveFormat');
 	equal(editor.getContent(), '<p><em>test</em><span id="x">test 123</span><em><a href="123">123</a> 123</em></p>');
+
+	editor.setContent('<p><dfn>dfn tag </dfn> <code>code tag </code> <samp>samp tag</samp> <kbd> kbd tag</kbd> <var> var tag</var> <cite> cite tag</cite> <mark> mark tag</mark> <q> q tag</q></p>');
+	editor.execCommand('SelectAll');
+	editor.execCommand('RemoveFormat');
+	equal(editor.getContent(), '<p>dfn tag code tag samp tag kbd tag var tag cite tag mark tag q tag</p>');
 });
 
 tinymce.init({
