@@ -1,4 +1,5 @@
 Version 4.0.17 (2014-02-xx)
+	Added dfn,code,samp,kbd,var,cite,mark,q elements to the default remove formats list. Patch contributed by Naim Hammadi.
 	Fixed bug where the autolink plugin would steal focus when loaded on IE 9+.
 	Fixed so pagebreak elements in the editor breaks pages when printing. Patch contributed by penc.
 Version 4.0.16 (2014-01-31)
