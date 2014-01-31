@@ -1,3 +1,5 @@
+Version 4.0.16 (2014-01-31)
+	Fixed bug where the editor wouldn't be properly rendered on IE 10 depending on the document.readyState.
 Version 4.0.15 (2014-01-31)
 	Fixed bug where paste in inline mode would produce an exception if the contents was pasted inside non overflow element.
 Version 4.0.14 (2014-01-30)

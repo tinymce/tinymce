@@ -167,7 +167,7 @@ define("tinymce/dom/EventUtils", [], function() {
 
 		// Use W3C method
 		if (doc.addEventListener) {
-			if (doc.readyState === "complete" || doc.readyState === "interactive") {
+			if (doc.readyState === "complete") {
 				readyHandler();
 			} else {
 				addEvent(win, 'DOMContentLoaded', readyHandler);
