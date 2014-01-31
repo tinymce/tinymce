@@ -44,6 +44,7 @@ define(
       return {
         up: Fun.constant({
           selector: SelectorFind.ancestor,
+          closest: SelectorFind.closest,
           predicate: PredicateFind.ancestor,
           all: Traverse.parents
         }),
