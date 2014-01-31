@@ -141,7 +141,7 @@ define("tinymce/Formatter", [
 
 				removeformat: [
 					{
-						selector: 'b,strong,em,i,font,u,strike,sub,sup',
+						selector: 'b,strong,em,i,font,u,strike,sub,sup,dfn,code,samp,kbd,var,cite,mark,q',
 						remove: 'all',
 						split: true,
 						expand: false,
