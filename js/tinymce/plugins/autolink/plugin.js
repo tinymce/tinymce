@@ -11,6 +11,8 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('autolink', function(editor) {
+	var AutoUrlDetectState;
+
 	editor.on("keydown", function(e) {
 		if (e.keyCode == 13) {
 			return handleEnter(editor);
@@ -19,11 +21,15 @@ tinymce.PluginManager.add('autolink', function(editor) {
 
 	// Internet Explorer has built-in automatic linking for most cases
 	if (tinymce.Env.ie) {
-		editor.on("init", function() {
-			try {
-				editor.execCommand('AutoUrlDetect', false, true);
-			} catch (ex) {
-				// Ignore
+		editor.on("focus", function() {
+			if (!AutoUrlDetectState) {
+				AutoUrlDetectState = true;
+
+				try {
+					editor.execCommand('AutoUrlDetect', false, true);
+				} catch (ex) {
+					// Ignore
+				}
 			}
 		});
 
