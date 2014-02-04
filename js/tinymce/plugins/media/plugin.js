@@ -641,7 +641,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 	editor.addButton('media', {
 		tooltip: 'Insert/edit video',
 		onclick: showDialog,
-		stateSelector: 'img[data-mce-object=video]'
+		stateSelector: ['img[data-mce-object=video]', 'img[data-mce-object=iframe]']
 	});
 
 	editor.addMenuItem('media', {
