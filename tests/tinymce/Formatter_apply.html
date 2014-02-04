@@ -1112,6 +1112,20 @@ test('Align specified table element with collapsed: false and selection collapse
 	equal(getContent(), '<table style="float: right;"><tbody><tr><td>a</td></tr></tbody></table>');
 });
 
+test('Apply ID format to around existing bookmark node', function() {
+	editor.getBody().innerHTML = '<p>a<span id="b" data-mce-type="bookmark"></span>b</p>';
+
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].lastChild, 1);
+	editor.selection.setRng(rng);
+
+	editor.formatter.register('format', {inline: 'span', attributes: {id: 'id'}});
+	editor.formatter.apply('format');
+
+	equal(cleanHtml(editor.getBody().innerHTML), '<p><span id="id">a<span id="b" data-mce-type="bookmark"></span>b</span></p>');
+});
+
 test('Bug #5134 - TinyMCE removes formatting tags in the getContent', function() {
 	editor.setContent('');
 	editor.formatter.register('format', {inline : 'strong', toggle: false});

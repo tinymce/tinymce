@@ -470,7 +470,7 @@ define("tinymce/Formatter", [
 								!(!node_specific && node.nodeType === 3 &&
 								node.nodeValue.length === 1 &&
 								node.nodeValue.charCodeAt(0) === 65279) &&
-								!isCaretNode(node) && !isBookmarkNode(node) &&
+								!isCaretNode(node) &&
 								(!format.inline || !isBlock(node))) {
 							// Start wrapping
 							if (!currentWrapElm) {
@@ -556,7 +556,7 @@ define("tinymce/Formatter", [
 						});
 
 						// If child was found and of the same type as the current node
-						if (child && matchName(child, format)) {
+						if (child && !isBookmarkNode(child) && matchName(child, format)) {
 							clone = dom.clone(child, FALSE);
 							setElementFormat(clone);
 
@@ -590,6 +590,10 @@ define("tinymce/Formatter", [
 							// will become: <span style="color:red"><b><span style="font-size:10px">text</span></b></span>
 							each(dom.select(format.inline, node), function(child) {
 								var parent;
+
+								if (isBookmarkNode(child)) {
+									return;
+								}
 
 								// When wrap_links is set to false we don't want
 								// to remove the format on children within links
@@ -2010,7 +2014,7 @@ define("tinymce/Formatter", [
 					return FALSE;
 				}
 
-				return TRUE;
+				return !isBookmarkNode(node1) && !isBookmarkNode(node2);
 			}
 
 			function findElementSibling(node, sibling_name) {
