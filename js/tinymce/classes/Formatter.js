@@ -470,7 +470,7 @@ define("tinymce/Formatter", [
 								!(!node_specific && node.nodeType === 3 &&
 								node.nodeValue.length === 1 &&
 								node.nodeValue.charCodeAt(0) === 65279) &&
-								!isCaretNode(node) &&
+								!isCaretNode(node) && !isBookmarkNode(node) &&
 								(!format.inline || !isBlock(node))) {
 							// Start wrapping
 							if (!currentWrapElm) {
