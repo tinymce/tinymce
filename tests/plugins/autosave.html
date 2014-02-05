@@ -64,19 +64,23 @@ test("hasDraft/storeDraft/restoreDraft", function() {
 	ok(!editor.plugins.autosave.hasDraft());
 
 	editor.setContent('X');
+	editor.undoManager.add();
 	editor.plugins.autosave.storeDraft();
 
 	ok(editor.plugins.autosave.hasDraft());
 
 	editor.setContent('Y');
+	editor.undoManager.add();
+
 	editor.plugins.autosave.restoreDraft();
-	equal('<p>X</p>', editor.getContent());
+	equal(editor.getContent(), '<p>X</p>');
 });
 
 tinymce.init({
 	selector: "textarea",
 	add_unload_trigger: false,
 	plugins: 'autosave',
+	autosave_ask_before_unload: false,
 	init_instance_callback: function(ed) {
 		editor = ed;
 		editor.plugins.autosave.removeDraft();

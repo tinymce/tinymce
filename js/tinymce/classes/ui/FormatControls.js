@@ -56,7 +56,7 @@ define("tinymce/ui/FormatControls", [
 			// Default preview
 			if (!previewStyles) {
 				previewStyles = 'font-family font-size font-weight font-style text-decoration ' +
-					'text-transform color background-color border border-radius';
+					'text-transform color background-color border border-radius outline text-shadow';
 			}
 
 			// Removes any variables since these can't be previewed
@@ -278,17 +278,31 @@ define("tinymce/ui/FormatControls", [
 				return menu;
 			}
 
+			function createStylesMenu() {
+				var menu;
+
+				if (editor.settings.style_formats_merge) {
+					if (editor.settings.style_formats) {
+						menu = createMenu(defaultStyleFormats.concat(editor.settings.style_formats));
+					} else {
+						menu = createMenu(defaultStyleFormats);
+					}
+				} else {
+					menu = createMenu(editor.settings.style_formats || defaultStyleFormats);
+				}
+
+				return menu;
+			}
+
 			editor.on('init', function() {
 				each(newFormats, function(format) {
 					editor.formatter.register(format.name, format);
 				});
 			});
 
-			var menu = createMenu(editor.settings.style_formats || defaultStyleFormats);
-
-			menu = {
+			return {
 				type: 'menu',
-				items: menu,
+				items: createStylesMenu(),
 				onPostRender: function(e) {
 					editor.fire('renderFormatsMenu', {control: e.control});
 				},
@@ -319,8 +333,6 @@ define("tinymce/ui/FormatControls", [
 					}
 				}
 			};
-
-			return menu;
 		}
 
 		formatMenu = createFormatMenu();
@@ -380,7 +392,7 @@ define("tinymce/ui/FormatControls", [
 
 		// Simple command controls with format state
 		each({
-			blockquote: ['Toggle blockquote', 'mceBlockQuote'],
+			blockquote: ['Blockquote', 'mceBlockQuote'],
 			numlist: ['Numbered list', 'InsertOrderedList'],
 			bullist: ['Bullet list', 'InsertUnorderedList'],
 			subscript: ['Subscript', 'Subscript'],

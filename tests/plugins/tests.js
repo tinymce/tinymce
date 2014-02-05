@@ -18,6 +18,7 @@
 		{"title": "Dependency Chain Init Call Order", "url": "plugin_dependency_init_call_order.html"},
 		{"title": "Dependency With Specific Location", "url": "plugin_dependency_specific_location.html"},
 		{"title": "Lists", "url": "lists.html"},
-		{"title": "Searchreplace", "url": "searchreplace.html"}
+		{"title": "Searchreplace", "url": "searchreplace.html"},
+		{"title": "Spellchecker", "url": "spellchecker.html"}
 	]
 }

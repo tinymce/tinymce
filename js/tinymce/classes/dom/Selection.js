@@ -424,7 +424,7 @@ define("tinymce/dom/Selection", [
 
 			if (type == 2) {
 				element = t.getNode();
-				name = element.nodeName;
+				name = element ? element.nodeName : null;
 
 				if (name == 'IMG') {
 					return {name: name, index: findIndex(name, element)};
@@ -808,7 +808,8 @@ define("tinymce/dom/Selection", [
 			}
 
 			// We have W3C ranges and it's IE then fake control selection since IE9 doesn't handle that correctly yet
-			if (isIE && rng && rng.setStart) {
+			// IE 11 doesn't support the selection object so we check for that as well
+			if (isIE && rng && rng.setStart && doc.selection) {
 				try {
 					// IE will sometimes throw an exception here
 					ieRng = doc.selection.createRange();

@@ -87,6 +87,7 @@ tinymce.PluginManager.add('importcss', function(editor) {
 
 		var elementName = selector[1];
 		var classes = selector[2].substr(1).split('.').join(' ');
+		var inlineSelectorElements = tinymce.makeMap('a,img');
 
 		// element.class - Produce block formats
 		if (selector[1]) {
@@ -97,8 +98,8 @@ tinymce.PluginManager.add('importcss', function(editor) {
 			if (editor.schema.getTextBlockElements()[elementName]) {
 				// Text block format ex: h1.class1
 				format.block = elementName;
-			} else if (editor.schema.getBlockElements()[elementName]) {
-				// Non text block format ex: tr.row
+			} else if (editor.schema.getBlockElements()[elementName] || inlineSelectorElements[elementName.toLowerCase()]) {
+				// Block elements such as table.class and special inline elements such as a.class or img.class
 				format.selector = elementName;
 			} else {
 				// Inline format strong.class1
@@ -128,7 +129,7 @@ tinymce.PluginManager.add('importcss', function(editor) {
 		var selectorConverter = settings.importcss_selector_converter || convertSelectorToFormat;
 		var selectorFilter = compileFilter(settings.importcss_selector_filter);
 
-		if (!editor.settings.importcss_append && !editor.settings.style_formats) {
+		if (!editor.settings.importcss_append) {
 			e.control.items().remove();
 		}
 

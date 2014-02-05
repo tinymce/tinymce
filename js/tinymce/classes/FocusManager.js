@@ -176,7 +176,11 @@ define("tinymce/FocusManager", [
 					if (!isUIElement(getActiveElement()) && focusedEditor == editor) {
 						editor.fire('blur', {focusedEditor: null});
 						editorManager.focusedEditor = null;
-						editor.selection.lastFocusBookmark = null;
+
+						// Make sure selection is valid could be invalid if the editor is blured and removed before the timeout occurs
+						if (editor.selection) {
+							editor.selection.lastFocusBookmark = null;
+						}
 					}
 				}, 0);
 			});
@@ -188,7 +192,11 @@ define("tinymce/FocusManager", [
 			var activeEditor = editorManager.activeEditor;
 
 			if (activeEditor && e.target.ownerDocument == document) {
-				activeEditor.selection.lastFocusBookmark = createBookmark(activeEditor.lastRng);
+
+				// Check to make sure we have a valid selection
+				if (activeEditor.selection) {
+					activeEditor.selection.lastFocusBookmark = createBookmark(activeEditor.lastRng);
+				}
 
 				// Fire a blur event if the element isn't a UI element
 				if (!isUIElement(e.target) && editorManager.focusedEditor == activeEditor) {

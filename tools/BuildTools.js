@@ -279,7 +279,9 @@ exports.zip = function (options) {
 			archive.addData(path.join(options.baseDir, zipFilePath), data);
 		} else if (stat.isDirectory()) {
 			fs.readdirSync(filePath).forEach(function(fileName) {
-				process(path.join(filePath, fileName), path.join(zipFilePath, fileName));
+				if (fileName.charAt(0) != '.') {
+					process(path.join(filePath, fileName), path.join(zipFilePath, fileName));
+				}
 			});
 		}
 	}

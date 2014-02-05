@@ -187,7 +187,7 @@ define("tinymce/util/Quirks", [
 			});
 
 			editor.on('keypress', function(e) {
-				if (!isDefaultPrevented(e) && !selection.isCollapsed() && e.charCode) {
+				if (!isDefaultPrevented(e) && !selection.isCollapsed() && e.charCode && !VK.metaKeyPressed(e)) {
 					e.preventDefault();
 					customDelete(true);
 					editor.selection.setContent(String.fromCharCode(e.charCode));
@@ -338,7 +338,7 @@ define("tinymce/util/Quirks", [
 				// Case 2 IME doesn't initialize if you click the documentElement it also doesn't properly fire the focusin event
 				dom.bind(editor.getDoc(), 'mousedown', function(e) {
 					if (e.target == editor.getDoc().documentElement) {
-						editor.getWin().focus();
+						editor.getBody().focus();
 						selection.setRng(selection.getRng());
 					}
 				});
@@ -987,6 +987,13 @@ define("tinymce/util/Quirks", [
 			}
 		}
 
+		/**
+		 * Disables the autolinking in IE 9+ this is then re-enabled by the autolink plugin.
+		 */
+		function disableAutoUrlDetect() {
+			setEditorCommandState("AutoUrlDetect", false);
+		}
+
 		// All browsers
 		disableBackspaceIntoATable();
 		removeBlockQuoteOnBackSpace();
@@ -1028,6 +1035,7 @@ define("tinymce/util/Quirks", [
 
 		if (Env.ie) {
 			selectAll();
+			disableAutoUrlDetect();
 		}
 
 		// Gecko

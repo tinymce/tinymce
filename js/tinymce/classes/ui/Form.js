@@ -66,7 +66,7 @@ define("tinymce/ui/Form", [
 						autoResize: "overflow",
 						defaults: {flex: 1},
 						items: [
-							{type: 'label', text: label, flex: 0, forId: ctrl._id}
+							{type: 'label', text: label, flex: 0, forId: ctrl._id, disabled: ctrl.disabled()}
 						]
 					});
 

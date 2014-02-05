@@ -116,7 +116,7 @@ define("tinymce/ui/Label", [
 			var self = this, forId = self.settings.forId;
 
 			return (
-				'<label id="' + self._id + '" class="' + self.classes() + '"' + (forId ? ' for="' + forId : '') + '">' +
+				'<label id="' + self._id + '" class="' + self.classes() + '"' + (forId ? ' for="' + forId +'"' : '') + '>' +
 					self.encode(self._text) +
 				'</label>'
 			);

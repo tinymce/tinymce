@@ -294,11 +294,13 @@ define("tinymce/dom/ControlSelection", [
 			var controlElm;
 
 			function isChildOrEqual(node, parent) {
-				do {
-					if (node === parent) {
-						return true;
-					}
-				} while ((node = node.parentNode));
+				if (node) {
+					do {
+						if (node === parent) {
+							return true;
+						}
+					} while ((node = node.parentNode));
+				}
 			}
 
 			// Remove data-mce-selected from all elements since they might have been copied using Ctrl+c/v
@@ -309,7 +311,7 @@ define("tinymce/dom/ControlSelection", [
 			controlElm = e.type == 'mousedown' ? e.target : selection.getNode();
 			controlElm = dom.getParent(controlElm, isIE ? 'table' : 'table,img,hr');
 
-			if (controlElm) {
+			if (isChildOrEqual(controlElm, editor.getBody())) {
 				disableGeckoResize();
 
 				if (isChildOrEqual(selection.getStart(), controlElm) && isChildOrEqual(selection.getEnd(), controlElm)) {
@@ -471,6 +473,10 @@ define("tinymce/dom/ControlSelection", [
 		}
 
 		return {
+			isResizable: isResizable,
+			showResizeRect: showResizeRect,
+			hideResizeRect: hideResizeRect,
+			updateResizeRect: updateResizeRect,
 			controlSelect: controlSelect,
 			destroy: destroy
 		};

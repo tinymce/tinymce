@@ -1892,7 +1892,7 @@ define("tinymce/Formatter", [
 				next = next ? 'nextSibling' : 'previousSibling';
 
 				for (node = inc ? node : node[next]; node; node = node[next]) {
-					if (node.nodeType == 1 || !isWhiteSpaceNode(node)) {
+					if (node.nodeType == 1 && !isWhiteSpaceNode(node)) {
 						return node;
 					}
 				}
@@ -1950,7 +1950,7 @@ define("tinymce/Formatter", [
 						var name = attr.nodeName.toLowerCase();
 
 						// Don't compare internal attributes or style
-						if (name.indexOf('_') !== 0 && name !== 'style') {
+						if (name.indexOf('_') !== 0 && name !== 'style' && name !== 'data-mce-style') {
 							attribs[name] = dom.getAttrib(node, name);
 						}
 					});
