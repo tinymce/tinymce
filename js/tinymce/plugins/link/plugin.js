@@ -59,15 +59,31 @@ tinymce.PluginManager.add('link', function(editor) {
 		function buildRelList(relValue) {
 			var relListItems = [{text: 'None', value: ''}];
 
-			tinymce.each(editor.settings.rel_list, function(rel) {
-				relListItems.push({
-					text: rel.text || rel.title,
-					value: rel.value,
-					selected: relValue === rel.value
+			if (!editor.settings.rel_list) {
+				// HTML5 DEFAULT TOKENS
+				relListItems.push({text: 'alternate', value: 'alternate'});
+				relListItems.push({text: 'author', value: 'author'});
+				relListItems.push({text: 'bookmark', value: 'bookmark'});
+				relListItems.push({text: 'help', value: 'help'});
+				relListItems.push({text: 'license', value: 'license'});
+				relListItems.push({text: 'next', value: 'next'});
+				relListItems.push({text: 'nofollow', value: 'nofollow'});
+				relListItems.push({text: 'noreferrer', value: 'noreferrer'});
+				relListItems.push({text: 'prefetch', value: 'prefetch'});
+				relListItems.push({text: 'prev', value: 'prev'});
+				relListItems.push({text: 'search', value: 'search'});
+				relListItems.push({text: 'tag', value: 'tag'});
+			} else {
+				tinymce.each(editor.settings.rel_list, function(rel) {
+					relListItems.push({
+						text: rel.text || rel.title,
+						value: rel.value,
+						selected: rel === rel.value
+					});
 				});
-			});
-
+			}
 			return relListItems;
+
 		}
 
 		function buildTargetList(targetValue) {
@@ -186,15 +202,13 @@ tinymce.PluginManager.add('link', function(editor) {
 			};
 		}
 
-		if (editor.settings.rel_list) {
-			relListCtrl = {
-				name: 'rel',
-				type: 'listbox',
-				label: 'Rel',
-				values: buildRelList(data.rel)
-			};
-		}
-
+		relListCtrl = {
+			name: 'rel',
+			type: 'listbox',
+			label: 'Rel',
+			values: buildRelList(data.rel)
+		};
+		
 		win = editor.windowManager.open({
 			title: 'Insert link',
 			data: data,
