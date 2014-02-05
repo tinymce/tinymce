@@ -2,6 +2,7 @@ Version 4.0.17 (2014-02-xx)
 	Added dfn,code,samp,kbd,var,cite,mark,q elements to the default remove formats list. Patch contributed by Naim Hammadi.
 	Fixed bug where the autolink plugin would steal focus when loaded on IE 9+.
 	Fixed bug where the formatter would merge span elements with parent bookmarks if an id format was used.
+	Fixed bug where WebKit/Blink browsers would scroll to the top of the editor when pasting into an empty element.
 	Fixed so pagebreak elements in the editor breaks pages when printing. Patch contributed by penc.
 	Added support for highlighting the video icon when a video is added that produces an iframe. Patch contributed by monkeydiane.
 Version 4.0.16 (2014-01-31)
