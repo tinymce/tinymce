@@ -523,6 +523,7 @@ define("tinymce/tableplugin/Plugin", [
 					onclick: function(e) {
 						if (e.target.nodeName == 'A' && this.lastPos) {
 							e.preventDefault();
+							e.stopPropagation();
 
 							insertTable(this.lastPos[0] + 1, this.lastPos[1] + 1);
 
