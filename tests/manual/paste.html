@@ -33,19 +33,13 @@
 		],
 
 		setup: function(ed) {
-			ed.on('PastePreProcess', function(e) {
+			ed.on('BeforePastePreProcess PastePreProcess', function(e) {
 				if (window.console && console.dir) {
-					console.dir(e.type, e.content);
+					console.log(e.type + ": " + e.content);
 				}
 
 				e.content = e.content.toUpperCase();
 			});
-
-			/*ed.on('focus blur', function(e) {
-				if (window.console && console.log) {
-					console.log(e.type);
-				}
-			});*/
 		}
 	});
 
@@ -54,19 +48,13 @@
 		plugins: 'paste',
 		inline: true,
 		setup: function(ed) {
-			ed.on('PastePreProcess', function(e) {
+			ed.on('BeforePastePreProcess PastePreProcess', function(e) {
 				if (window.console && console.dir) {
-					console.dir(e.type, e.content);
+					console.log(e.type + ": " + e.content);
 				}
 
 				e.content = e.content.toUpperCase();
 			});
-
-			/*ed.on('focus blur', function(e) {
-				if (window.console && console.log) {
-					console.log(e.type);
-				}
-			});*/
 		}
 	});
 </script>
