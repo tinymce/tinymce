@@ -394,7 +394,7 @@ define("tinymce/dom/Range", [
 			return _traverseCommonAncestors(startNode, endNode, how);
 		}
 
-		 function _traverseSameContainer(how) {
+		function _traverseSameContainer(how) {
 			var frag, s, sub, n, cnt, sibling, xferNode, start, len;
 
 			if (how != DELETE) {
