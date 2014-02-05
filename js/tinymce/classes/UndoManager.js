@@ -177,7 +177,11 @@ define("tinymce/UndoManager", [
 				level = level || {};
 				level.content = getContent();
 
-				if (lock || editor.fire('BeforeAddUndo', {level: level}).isDefaultPrevented()) {
+				if (lock || editor.removed) {
+					return null;
+				}
+
+				if (editor.fire('BeforeAddUndo', {level: level}).isDefaultPrevented()) {
 					return null;
 				}
 
