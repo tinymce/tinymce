@@ -162,7 +162,7 @@ define("tinymce/FocusManager", [
 					editorManager.activeEditor = editor;
 					editorManager.focusedEditor = editor;
 					editor.fire('focus', {blurredEditor: focusedEditor});
-					editor.focus(false);
+					editor.focus(true);
 				}
 
 				editor.lastRng = null;
