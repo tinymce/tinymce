@@ -5,6 +5,7 @@ Version 4.0.17 (2014-02-xx)
 	Fixed bug where the formatter would merge span elements with parent bookmarks if an id format was used.
 	Fixed bug where WebKit/Blink browsers would scroll to the top of the editor when pasting into an empty element.
 	Fixed bug where removing the editor would cause an error about wrong document on IE 11 under specific circumstances.
+	Fixed bug where Gecko would place the caret at an incorrect location when using backspace.
 	Fixed so pagebreak elements in the editor breaks pages when printing. Patch contributed by penc.
 	Added support for highlighting the video icon when a video is added that produces an iframe. Patch contributed by monkeydiane.
 Version 4.0.16 (2014-01-31)

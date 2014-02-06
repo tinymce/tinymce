@@ -803,6 +803,76 @@ if (!tinymce.isIE) {
 		equal(rng.endContainer.nodeName, '#text');
 		equal(rng.endOffset, 1);
 	});
+
+	test('normalize caret after trailing BR', function() {
+		var rng;
+
+		editor.setContent('<p>a<br /></p>');
+		rng = editor.dom.createRng();
+		rng.setStart(editor.getBody().firstChild, 2);
+		rng.setEnd(editor.getBody().firstChild, 2);
+		editor.selection.setRng(rng);
+		editor.selection.normalize();
+
+		rng = editor.selection.getRng(true);
+		equal(rng.startContainer.nodeName, '#text', 'startContainer node name');
+		equal(rng.startOffset, 1, 'startContainer offset');
+		equal(rng.endContainer.nodeName, '#text', 'endContainer node name');
+		equal(rng.endOffset, 1, 'endOffset offset');
+	});
+
+	test('normalize caret after bogus block BR', function() {
+		var rng;
+
+		editor.setContent('<p><br /></p>');
+		rng = editor.dom.createRng();
+		rng.setStart(editor.getBody().firstChild, 1);
+		rng.setEnd(editor.getBody().firstChild, 1);
+		editor.selection.setRng(rng);
+		editor.selection.normalize();
+
+		rng = editor.selection.getRng(true);
+		equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
+		equal(rng.startOffset, 0, 'startContainer offset');
+		equal(rng.endContainer.nodeName, 'P', 'endContainer node name');
+		equal(rng.endOffset, 0, 'endOffset offset');
+	});
+
+/*
+	test('normalize caret after last BR in block', function() {
+		var rng;
+
+		editor.setContent('<p><br /><br /></p>');
+		rng = editor.dom.createRng();
+		rng.setStart(editor.getBody().firstChild, 2);
+		rng.setEnd(editor.getBody().firstChild, 2);
+		editor.selection.setRng(rng);
+		editor.selection.normalize();
+
+		rng = editor.selection.getRng(true);
+		equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
+		equal(rng.startOffset, 1, 'startContainer offset');
+		equal(rng.endContainer.nodeName, 'P', 'endContainer node name');
+		equal(rng.endOffset, 1, 'endOffset offset');
+	});
+*/
+
+	test('normalize caret after double BR', function() {
+		var rng;
+
+		editor.setContent('<p>a<br /><br /></p>');
+		rng = editor.dom.createRng();
+		rng.setStart(editor.getBody().firstChild, 3);
+		rng.setEnd(editor.getBody().firstChild, 3);
+		editor.selection.setRng(rng);
+		editor.selection.normalize();
+
+		rng = editor.selection.getRng(true);
+		equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
+		equal(rng.startOffset, 3, 'startContainer offset');
+		equal(rng.endContainer.nodeName, 'P', 'endContainer node name');
+		equal(rng.endOffset, 3, 'endOffset offset');
+	});
 }
 
 test('custom elements', function() {

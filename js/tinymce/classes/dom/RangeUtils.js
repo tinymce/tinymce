@@ -253,7 +253,7 @@ define("tinymce/dom/RangeUtils", [
 
 			function normalizeEndPoint(start) {
 				var container, offset, walker, body = dom.getRoot(), node, nonEmptyElementsMap, nodeName;
-				var directionLeft;
+				var directionLeft, isAfterNode;
 
 				function hasBrBeforeAfter(node, left) {
 					var walker = new TreeWalker(node, dom.getParent(node.parentNode, dom.isBlock) || body);
@@ -272,12 +272,22 @@ define("tinymce/dom/RangeUtils", [
 				// Walks the dom left/right to find a suitable text node to move the endpoint into
 				// It will only walk within the current parent block or body and will stop if it hits a block or a BR/IMG
 				function findTextNodeRelative(left, startNode) {
-					var walker, lastInlineElement;
+					var walker, lastInlineElement, parentBlockContainer;
 
 					startNode = startNode || container;
-					walker = new TreeWalker(startNode, dom.getParent(startNode.parentNode, dom.isBlock) || body);
+					parentBlockContainer = dom.getParent(startNode.parentNode, dom.isBlock) || body;
+
+					// Lean left before the BR element if it's the only BR within a block element. Gecko bug: #6680
+					// This: <p><br>|</p> becomes <p>|<br></p>
+					if (left && startNode.nodeName == 'BR' && isAfterNode && dom.isEmpty(parentBlockContainer)) {
+						container = startNode.parentNode;
+						offset = dom.nodeIndex(startNode);
+						normalized = true;
+						return;
+					}
 
 					// Walk left until we hit a text node we can move to or a block/br/img
+					walker = new TreeWalker(startNode, parentBlockContainer);
 					while ((node = walker[left ? 'prev' : 'next']())) {
 						// Found text node that has a length
 						if (node.nodeType === 3 && node.nodeValue.length > 0) {
@@ -305,6 +315,7 @@ define("tinymce/dom/RangeUtils", [
 
 				container = rng[(start ? 'start' : 'end') + 'Container'];
 				offset = rng[(start ? 'start' : 'end') + 'Offset'];
+				isAfterNode = container.nodeType == 1 && offset === container.childNodes.length;
 				nonEmptyElementsMap = dom.schema.getNonEmptyElements();
 				directionLeft = start;
 
@@ -386,9 +397,16 @@ define("tinymce/dom/RangeUtils", [
 					// Special edge case for <p><a>x</a>|<br></p> since we don't want <p><a>x|</a><br></p>
 					if (container.nodeType === 1) {
 						node = container.childNodes[offset];
-						if(node && node.nodeName === 'BR' && !isPrevNode(node, 'A') &&
+
+						// Offset is after the containers last child
+						// then use the previous child for normalization
+						if (!node) {
+							node = container.childNodes[offset - 1];
+						}
+
+						if (node && node.nodeName === 'BR' && !isPrevNode(node, 'A') &&
 							!hasBrBeforeAfter(node) && !hasBrBeforeAfter(node, true)) {
-							findTextNodeRelative(true, container.childNodes[offset]);
+							findTextNodeRelative(true, node);
 						}
 					}
 				}
