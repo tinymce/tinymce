@@ -188,7 +188,7 @@ define("tinymce/EnterKey", [
 				// Clone any parent styles
 				if (settings.keep_styles !== false) {
 					do {
-						if (/^(SPAN|STRONG|B|EM|I|FONT|STRIKE|U|VAR|CITE|DFN|CODE|MARK|Q|SUP|SUB)$/.test(node.nodeName)) {
+						if (/^(SPAN|STRONG|B|EM|I|FONT|STRIKE|U|VAR|CITE|DFN|CODE|MARK|Q|SUP|SUB|SAMP)$/.test(node.nodeName)) {
 							// Never clone a caret containers
 							if (node.id == '_mce_caret') {
 								continue;
