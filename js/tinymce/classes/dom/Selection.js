@@ -774,6 +774,19 @@ define("tinymce/dom/Selection", [
 		getRng: function(w3c) {
 			var self = this, selection, rng, elm, doc = self.win.document, ieRng;
 
+			function tryCompareBounderyPoints(how, sourceRange, destinationRange) {
+				try {
+					return sourceRange.compareBoundaryPoints(how, destinationRange);
+				} catch (ex) {
+					// Gecko throws wrong document exception if the range points
+					// to nodes that where removed from the dom #6690
+					// Browsers should mutate existing DOMRange instances so that they always point
+					// to something in the document this is not the case in Gecko works fine in IE/WebKit/Blink
+					// For performance reasons just return -1
+					return -1;
+				}
+			}
+
 			// Use last rng passed from FocusManager if it's available this enables
 			// calls to editor.selection.getStart() to work when caret focus is lost on IE
 			if (!w3c && self.lastFocusBookmark) {
@@ -841,8 +854,8 @@ define("tinymce/dom/Selection", [
 			}
 
 			if (self.selectedRange && self.explicitRange) {
-				if (rng.compareBoundaryPoints(rng.START_TO_START, self.selectedRange) === 0 &&
-					rng.compareBoundaryPoints(rng.END_TO_END, self.selectedRange) === 0) {
+				if (tryCompareBounderyPoints(rng.START_TO_START, rng, self.selectedRange) === 0 &&
+					tryCompareBounderyPoints(rng.END_TO_END, rng, self.selectedRange) === 0) {
 					// Safari, Opera and Chrome only ever select text which causes the range to change.
 					// This lets us use the originally set range if the selection hasn't been changed by the user.
 					rng = self.explicitRange;
