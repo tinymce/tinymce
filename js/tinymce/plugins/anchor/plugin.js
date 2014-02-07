@@ -11,19 +11,28 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('anchor', function(editor) {
-	function showDialog() {
-		var selectedNode = editor.selection.getNode();
+    function showDialog() {
+        var selectedNode = editor.selection.getNode(), settings = editor.settings, fields;
 
-		editor.windowManager.open({
-			title: 'Anchor',
-			body: {type: 'textbox', name: 'name', size: 40, label: 'Name', value: selectedNode.name || selectedNode.id},
-			onsubmit: function(e) {
-				editor.execCommand('mceInsertContent', false, editor.dom.createHTML('a', {
-					id: e.data.name
-				}));
-			}
-		});
-	}
+        if (settings.allow_html_in_named_anchor) {
+            fields = [
+                { type: 'textbox', name: 'name', size: 40, label: 'Name', value: selectedNode.name || selectedNode.id },
+                { type: 'textbox', name: 'html', size: 40, label: 'Html', value: '' }
+            ];
+        } else {
+            fields = [
+                { type: 'textbox', name: 'name', size: 40, label: 'Name', value: selectedNode.name || selectedNode.id }
+            ];
+        }
+
+        editor.windowManager.open({
+            title: 'Anchor',
+            body: fields,
+            onsubmit: function (e) {
+                editor.execCommand('mceInsertContent', false, editor.dom.createHTML('a', { id: e.data.name }, e.data.html));
+            }
+        });
+    }
 
 	editor.addButton('anchor', {
 		icon: 'anchor',
