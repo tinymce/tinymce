@@ -159,8 +159,13 @@ test('Undo added when typing and losing focus', function() {
 	editor.setContent("<p>some text</p>");
 	setSelection('p', 4, 'p', 9);
 	type('\b');
-	window.focus();
-	editor.dom.fire(editor.getBody(), 'focusout');
+
+	// Move focus to an input element
+	var input = document.createElement('input');
+	document.body.appendChild(input);
+	input.focus();
+	input.parentNode.removeChild(input);
+
 	editor.execCommand('FormatBlock', false, 'h1');
 	editor.undoManager.undo();
 	equal(editor.getContent(), "<p>some</p>");
