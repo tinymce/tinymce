@@ -114,7 +114,7 @@ define("tinymce/tableplugin/TableGrid", [
 
 			each(table.rows, function(row) {
 				each(row.cells, function(cell) {
-					if (dom.hasClass(cell, 'mce-item-selected') || cell == selectedCell.elm) {
+					if (dom.hasClass(cell, 'mce-item-selected') || (selectedCell && cell == selectedCell.elm)) {
 						rows.push(row);
 						return false;
 					}
@@ -219,11 +219,14 @@ define("tinymce/tableplugin/TableGrid", [
 			// Restore selection to start position if it still exists
 			buildGrid();
 
-			// Restore the selection to the closest table position
-			row = grid[Math.min(grid.length - 1, startPos.y)];
-			if (row) {
-				selection.select(row[Math.min(row.length - 1, startPos.x)].elm, true);
-				selection.collapse(true);
+			// If we have a valid startPos object
+			if (startPos) {
+				// Restore the selection to the closest table position
+				row = grid[Math.min(grid.length - 1, startPos.y)];
+				if (row) {
+					selection.select(row[Math.min(row.length - 1, startPos.x)].elm, true);
+					selection.collapse(true);
+				}
 			}
 		}
 
@@ -311,11 +314,13 @@ define("tinymce/tableplugin/TableGrid", [
 					});
 				});
 
-				// Use selection
-				startX = startPos.x;
-				startY = startPos.y;
-				endX = endPos.x;
-				endY = endPos.y;
+				// Use selection, but make sure startPos is valid before accessing
+				if (startPos) {
+					startX = startPos.x;
+					startY = startPos.y;
+					endX = endPos.x;
+					endY = endPos.y;
+				}
 			}
 
 			// Find start/end cells
@@ -393,6 +398,11 @@ define("tinymce/tableplugin/TableGrid", [
 					return !posY;
 				}
 			});
+
+			// If posY is undefined there is nothing for us to do here...just return to avoid crashing below
+			if (posY === undefined) {
+				return;
+			}
 
 			for (x = 0; x < grid[0].length; x++) {
 				// Cell not found could be because of an invalid table structure

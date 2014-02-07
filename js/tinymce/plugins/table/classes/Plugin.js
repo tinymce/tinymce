@@ -170,6 +170,11 @@ define("tinymce/tableplugin/Plugin", [
 
 			cellElm = cellElm || cells[0];
 
+			if (!cellElm) {
+				// If this element is null, return now to avoid crashing.
+				return;
+			}
+
 			data = {
 				width: removePxSuffix(dom.getStyle(cellElm, 'width') || dom.getAttrib(cellElm, 'width')),
 				height: removePxSuffix(dom.getStyle(cellElm, 'height') || dom.getAttrib(cellElm, 'height')),
@@ -288,6 +293,10 @@ define("tinymce/tableplugin/Plugin", [
 			});
 
 			rowElm = rows[0];
+			if (!rowElm) {
+				// If this element is null, return now to avoid crashing.
+				return;
+			}
 
 			data = {
 				height: removePxSuffix(dom.getStyle(rowElm, 'height') || dom.getAttrib(rowElm, 'height')),
