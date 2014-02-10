@@ -8,6 +8,7 @@ Version 4.0.17 (2014-02-xx)
 	Fixed bug where removing the editor would cause an error about wrong document on IE 11 under specific circumstances.
 	Fixed bug where Gecko would place the caret at an incorrect location when using backspace.
 	Fixed bug where Gecko would throw "Wrong Document Error" for ranges that pointing to removed nodes.
+	Fixed bug where it wasn't possible to properly update the title and encoding properties in the fullpage plugin.
 	Fixed bug where paste plugin would produce an extra undo level on IE.
 	Fixed so pagebreak elements in the editor breaks pages when printing. Patch contributed by penc.
 	Fixed so UndoManager events pass though the original event that created the undo level such as a keydown, blur etc. 
