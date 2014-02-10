@@ -1079,6 +1079,8 @@ define("tinymce/dom/Selection", [
 			if (!isIE && new RangeUtils(self.dom).normalize(rng)) {
 				self.setRng(rng, self.isForward());
 			}
+
+			return rng;
 		},
 
 		/**
