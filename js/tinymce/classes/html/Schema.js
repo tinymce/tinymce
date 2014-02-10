@@ -376,7 +376,7 @@ define("tinymce/html/Schema", [
 		textBlockElementsMap = createLookupTable('text_block_elements', 'h1 h2 h3 h4 h5 h6 p div address pre form ' +
 						'blockquote center dir fieldset header footer article section hgroup aside nav figure');
 		blockElementsMap = createLookupTable('block_elements', 'hr table tbody thead tfoot ' +
-						'th tr td li ol ul caption dl dt dd noscript menu isindex samp option ' +
+						'th tr td li ol ul caption dl dt dd noscript menu isindex option ' +
 						'datalist select optgroup', textBlockElementsMap);
 
 		each((settings.special || 'script noscript style textarea').split(' '), function(name) {
