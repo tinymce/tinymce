@@ -688,19 +688,20 @@ define("tinymce/Formatter", [
 		 * @param {String} name Name of format to remove.
 		 * @param {Object} vars Optional list of variables to replace within format before removing it.
 		 * @param {Node/Range} node Optional node or DOM range to remove the format from defaults to current selection.
+		 * @param {String} styleName Optional name of style property to remove, e.g. backgroundColor or fontFamily.
 		 */
-		function remove(name, vars, node) {
+		function remove(name, vars, node, styleName) {
 			var formatList = get(name), format = formatList[0], bookmark, rng, contentEditable = true;
 
 			// Merges the styles for each node
 			function process(node) {
-				var children, i, l, lastContentEditable, hasContentEditableState;
+				var children, i, l, lastContentEditable, hasContentEditableState, styleValue;
 
 				// Node has a contentEditable value
 				if (node.nodeType === 1 && getContentEditable(node)) {
 					lastContentEditable = contentEditable;
 					contentEditable = getContentEditable(node) === "true";
-					hasContentEditableState = true; // We don't want to wrap the container only it's children
+					hasContentEditableState = true; // We don't want to wrap the container only its children
 				}
 
 				// Grab the children first since the nodelist might be changed
@@ -708,10 +709,15 @@ define("tinymce/Formatter", [
 
 				// Process current node
 				if (contentEditable && !hasContentEditableState) {
-					for (i = 0, l = formatList.length; i < l; i++) {
-						if (removeFormat(formatList[i], vars, node, node)) {
-							break;
+					if (!styleName) {
+						for (i = 0, l = formatList.length; i < l; i++) {
+							if (removeFormat(formatList[i], vars, node, node)) {
+								break;
+							}
 						}
+					} else {
+						styleValue = dom.toHex(dom.getStyle(node, styleName));
+						removeFormat(format, {value: styleValue}, node);
 					}
 				}
 
@@ -727,6 +733,18 @@ define("tinymce/Formatter", [
 						}
 					}
 				}
+
+				// Remove parent span if it only contains text-decoration: underline, yet a parent node is also underlined
+				if (node.nodeType === 1 && dom.getStyle(node, 'text-decoration') === 'underline' &&
+					node.parentNode && getTextDecoration(node.parentNode) === 'underline') {
+					removeFormat({
+						'deep': false,
+						'exact': true,
+						'inline': 'span',
+						'styles': {'textDecoration': 'underline'}
+					}, null, node);
+
+				}
 			}
 
 			function findFormatRoot(container) {
@@ -739,7 +757,12 @@ define("tinymce/Formatter", [
 					// Find format root element
 					if (!formatRoot && parent.id != '_start' && parent.id != '_end') {
 						// Is the node matching the format we are looking for
-						format = matchNode(parent, name, vars);
+						if (!styleName) {
+							format = matchNode(parent, name, vars);
+						}
+						if (styleName && dom.is(parent, 'span') && dom.getStyle(parent, styleName)) {
+							format = get(name)[0];
+						}
 						if (format && format.split !== false) {
 							formatRoot = parent;
 						}
@@ -750,7 +773,7 @@ define("tinymce/Formatter", [
 			}
 
 			function wrapAndSplit(format_root, container, target, split) {
-				var parent, clone, lastClone, firstClone, i, formatRootParent;
+				var parent, clone, lastClone, firstClone, i, l, formatRootParent, styleValue;
 
 				// Format root found then clone formats and split it
 				if (format_root) {
@@ -759,10 +782,17 @@ define("tinymce/Formatter", [
 					for (parent = container.parentNode; parent && parent != formatRootParent; parent = parent.parentNode) {
 						clone = dom.clone(parent, FALSE);
 
-						for (i = 0; i < formatList.length; i++) {
-							if (removeFormat(formatList[i], vars, clone, clone)) {
+						if (!styleName) {
+							for (i = 0, l = formatList.length; i < l; i++) {
+								if (removeFormat(formatList[i], vars, clone, clone)) {
+									clone = 0;
+									break;
+								}
+							}
+						} else {
+							styleValue = dom.toHex(dom.getStyle(clone, styleName));
+							if (removeFormat(format, {value: styleValue}, clone)) {
 								clone = 0;
-								break;
 							}
 						}
 
@@ -817,7 +847,6 @@ define("tinymce/Formatter", [
 
 			function removeRngStyle(rng) {
 				var startContainer, endContainer;
-				var commonAncestorContainer = rng.commonAncestorContainer;
 
 				rng = expandRng(rng, formatList, TRUE);
 
@@ -837,11 +866,13 @@ define("tinymce/Formatter", [
 							}
 						}
 
-						// Try to adjust endContainer as well if cells on the same row were selected - bug #6410
-						if (commonAncestorContainer &&
-							/^T(HEAD|BODY|FOOT|R)$/.test(commonAncestorContainer.nodeName) &&
-							/^(TH|TD)$/.test(endContainer.nodeName) && endContainer.firstChild) {
-							endContainer = endContainer.firstChild || endContainer;
+						// Try to adjust endContainer as well if it is a cell - bug #6410
+						if (/^(TR|TH|TD)$/.test(endContainer.nodeName) && endContainer.firstChild) {
+							if (endContainer.nodeName == "TR") {
+								endContainer = endContainer.firstChild.firstChild || endContainer;
+							} else {
+								endContainer = endContainer.firstChild || endContainer;
+							}
 						}
 
 						// Wrap start/end nodes in span element since these might be cloned/moved
@@ -870,19 +901,6 @@ define("tinymce/Formatter", [
 				rangeUtils.walk(rng, function(nodes) {
 					each(nodes, function(node) {
 						process(node);
-
-						// Remove parent span if it only contains text-decoration: underline, yet a parent node is also underlined.
-						if (node.nodeType === 1 && ed.dom.getStyle(node, 'text-decoration') === 'underline' &&
-							node.parentNode && getTextDecoration(node.parentNode) === 'underline') {
-							removeFormat({
-								'deep': false,
-								'exact': true,
-								'inline': 'span',
-								'styles': {
-									'textDecoration': 'underline'
-								}
-							}, null, node);
-						}
 					});
 				});
 			}
@@ -908,13 +926,16 @@ define("tinymce/Formatter", [
 
 				// Check if start element still has formatting then we are at: "<b>text|</b>text"
 				// and need to move the start into the next text node
-				if (format.inline && match(name, vars, selection.getStart())) {
-					moveStart(selection.getRng(true));
+				if (format.inline) {
+					if ((!styleName && match(name, vars, selection.getStart())) ||
+						(styleName && dom.getStyle(selection.getStart(), styleName))) {
+						moveStart(selection.getRng(true));
+					}
 				}
 
 				ed.nodeChanged();
 			} else {
-				performCaretAction('remove', name, vars);
+				performCaretAction('remove', name, vars, styleName);
 			}
 		}
 
@@ -2090,7 +2111,7 @@ define("tinymce/Formatter", [
 			return container;
 		}
 
-		function performCaretAction(type, name, vars) {
+		function performCaretAction(type, name, vars, styleName) {
 			var caretContainerId = '_mce_caret', debug = ed.settings.caret_debug;
 
 			// Creates a caret container bogus element
@@ -2197,7 +2218,7 @@ define("tinymce/Formatter", [
 					textNode = findFirstTextNode(caretContainer);
 				}
 
-				// Expand to word is caret is in the middle of a text node and the char before/after is a alpha numeric character
+				// Expand to word if caret is in the middle of a text node and the char before/after is an alphanumeric character
 				if (text && offset > 0 && offset < text.length && /\w/.test(text.charAt(offset)) && /\w/.test(text.charAt(offset - 1))) {
 					// Get bookmark of caret position
 					bookmark = selection.getBookmark();
@@ -2249,7 +2270,8 @@ define("tinymce/Formatter", [
 				}
 
 				while (node) {
-					if (matchNode(node, name, vars)) {
+					if ((!styleName && matchNode(node, name, vars)) ||
+						(styleName && dom.is(node, 'span') && dom.getStyle(node, styleName))) {
 						formatNode = node;
 						break;
 					}
@@ -2267,7 +2289,7 @@ define("tinymce/Formatter", [
 					return;
 				}
 
-				// Is there contents after the caret then remove the format on the element
+				// If there are contents after the caret then remove the format on the element
 				if (hasContentAfter) {
 					// Get bookmark of caret position
 					bookmark = selection.getBookmark();
@@ -2280,7 +2302,7 @@ define("tinymce/Formatter", [
 					rng = rangeUtils.split(rng);
 
 					// Remove the format from the range
-					remove(name, vars, rng);
+					remove(name, vars, rng, styleName);
 
 					// Move selection back to caret position
 					selection.moveToBookmark(bookmark);
@@ -2310,7 +2332,7 @@ define("tinymce/Formatter", [
 					// Move selection to text node
 					selection.setCursorLocation(node, 1);
 
-					// If the formatNode is empty, we can remove it safely. 
+					// If the formatNode is empty, we can remove it safely
 					if (dom.isEmpty(formatNode)) {
 						dom.remove(formatNode);
 					}
@@ -2318,7 +2340,7 @@ define("tinymce/Formatter", [
 			}
 
 			// Checks if the parent caret container node isn't empty if that is the case it
-			// will remove the bogus state on all children that isn't empty
+			// will remove the bogus state on all children that aren't empty
 			function unmarkBogusCaretParents() {
 				var caretContainer;
 
@@ -2369,7 +2391,7 @@ define("tinymce/Formatter", [
 				ed._hasCaretEvents = true;
 			}
 
-			// Do apply or remove caret format
+			// Apply or remove caret format
 			if (type == "apply") {
 				applyCaretFormat();
 			} else {
@@ -2393,7 +2415,7 @@ define("tinymce/Formatter", [
 				isAtEndOfText = true;
 			}
 
-			// Move startContainer/startOffset in to a suitable node
+			// Move startContainer/startOffset into a suitable node
 			if (container.nodeType == 1) {
 				nodes = container.childNodes;
 				container = nodes[Math.min(offset, nodes.length - 1)];

@@ -45,9 +45,20 @@ define("tinymce/ui/ColorButton", [
 		 * @return {String|tinymce.ui.ColorButton} Current color or current instance.
 		 */
 		color: function(color) {
+			var previewStyle;
+
 			if (color) {
 				this._color = color;
-				this.getEl('preview').style.backgroundColor = color;
+				previewStyle = this.getEl('preview').style;
+
+				if (color === 'auto') {
+					previewStyle.borderColor = '#808080';
+					previewStyle.backgroundColor = null;
+					previewStyle.height = '2px';
+				} else {
+					previewStyle.borderColor = previewStyle.backgroundColor = color;
+					previewStyle.height = '1px';
+				}
 				return this;
 			}
 
