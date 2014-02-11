@@ -219,7 +219,7 @@ define("tinymce/pasteplugin/WordFilter", [
 				var validElements = settings.paste_word_valid_elements;
 				if (!validElements) {
 					validElements = '@[style],-strong/b,-em/i,-span,-p,-ol,-ul,-li,-h1,-h2,-h3,-h4,-h5,-h6,' +
-						'-table,-tr,-td[colspan|rowspan],-th,-thead,-tfoot,-tbody,-a[href|name],sub,sup,strike,br';
+						'-table[width],-tr,-td[colspan|rowspan|width],-th,-thead,-tfoot,-tbody,-a[href|name],sub,sup,strike,br';
 				}
 
 				// Setup strict schema
