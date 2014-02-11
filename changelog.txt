@@ -1,3 +1,5 @@
+Version 3.5.x (2014-xx-xx)
+	Fixed bug in paste plugin word import with lists that have strikethrough on numbers
 Version 3.5.10 (2013-10-24)
 	Fixed bug where dialogs using inlinepopups plugin would display incorrectly sometimes
 	Fixed bug in paste plugin word import that was removing type from lists

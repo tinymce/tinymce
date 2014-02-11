@@ -131,6 +131,16 @@ test("Paste Word list with type", function() {
 	equal(editor.getContent().replace(/[\r\n]+/g, ''), '<ol type="A" start="1"><li>Item 1</li><li>Item 2</li><li>Item 3</li></ol>');
 });
 
+test("Paste Word list with strikethrough on numbers", function() {
+	var rng = editor.dom.createRng();
+
+	editor.setContent('');
+	editor.execCommand('mceInsertClipboardContent', false, {content : '<p class="MsoNormal" style="margin-left:36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo1;tab-stops:list 72.0pt"><!--[if !supportLists]--><s><span lang="EN-US" style="font-family:Courier;mso-fareast-font-family:Courier;mso-bidi-font-family:Courier">1.<span style="font-size: 7pt; font-family: \'Times New Roman\';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></s><!--[endif]--><s><span lang="EN-US" style="font-family:Courier">Item 1<o:p></o:p></span></s></p><p class="MsoNormal" style="margin-left:36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo1;tab-stops:list 72.0pt"><!--[if !supportLists]--><s><span lang="EN-US" style="font-family:Courier;mso-fareast-font-family:Courier;mso-bidi-font-family:Courier">2.<span style="font-size: 7pt; font-family: \'Times New Roman\';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></s><!--[endif]--><b><span lang="EN-US" style="font-family:Courier">Item 2</span></b><s><span lang="EN-US" style="font-family:Courier"><o:p></o:p></span></s></p>'
+	});
+
+	equal(editor.getContent().replace(/[\r\n]+/g, ''), '<ol><li><span style=\"text-decoration: line-through;\">Item 1</span></li><li><strong>Item 2</strong></li></ol>');
+});
+
 test("Paste Word table", function() {
 	var rng = editor.dom.createRng();
 
