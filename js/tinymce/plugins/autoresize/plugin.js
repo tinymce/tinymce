@@ -31,7 +31,7 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 		var deltaSize, d = editor.getDoc(), body = d.body, de = d.documentElement, DOM = tinymce.DOM,
 			resizeHeight = settings.autoresize_min_height, myHeight, marginTop, marginBottom;
 
-		if (!body || !e || (e.type === "setcontent" && e.initial) ||
+		if (!body || (e && e.type === "setcontent" && e.initial) ||
 				(editor.plugins.fullscreen && editor.plugins.fullscreen.isFullscreen())) {
 			return;
 		}
