@@ -1896,7 +1896,7 @@ define("tinymce/Formatter", [
 				next = next ? 'nextSibling' : 'previousSibling';
 
 				for (node = inc ? node : node[next]; node; node = node[next]) {
-					if (node.nodeType == 1 && !isWhiteSpaceNode(node)) {
+					if (node.nodeType == 1 || !isWhiteSpaceNode(node)) {
 						return node;
 					}
 				}

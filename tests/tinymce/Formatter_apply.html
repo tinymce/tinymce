@@ -951,6 +951,14 @@ test('Caret format inside single inline wrapped word', function() {
 	equal(editor.getContent(), '<p>abc <b><em>123</em></b> 456</p>');
 });
 
+test('Caret format inside word before similar format', function() {
+	editor.setContent('<p>abc 123 <b>456</b></p>');
+	editor.formatter.register('format', {inline: 'b'});
+	setSelection('p', 1, 'p', 1);
+	editor.formatter.apply('format');
+	equal(editor.getContent(), '<p><b>abc</b> 123 <b>456</b></p>');
+});
+
 test('Caret format inside last inline wrapped word', function() {
 	editor.setContent('<p>abc <em>abc 123</em> 456</p>');
 	editor.formatter.register('format', {inline: 'b'});
