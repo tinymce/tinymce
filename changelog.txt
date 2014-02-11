@@ -2,6 +2,7 @@ Version 4.0.17 (2014-02-xx)
 	Added dfn,code,samp,kbd,var,cite,mark,q elements to the default remove formats list. Patch contributed by Naim Hammadi.
 	Added var,cite,dfn,code,mark,q,sup,sub to the list of elements that gets cloned on enter. Patch contributed by Naim Hammadi.
 	Added new visual_anchor_class option to specify a custom class for inline anchors. Patch contributed by Naim Hammadi.
+	Added support for paste_data_images on WebKit/Blink when the user pastes image data.
 	Fixed bug where the autolink plugin would steal focus when loaded on IE 9+.
 	Fixed bug where the formatter would merge span elements with parent bookmarks if an id format was used.
 	Fixed bug where WebKit/Blink browsers would scroll to the top of the editor when pasting into an empty element.
@@ -12,7 +13,7 @@ Version 4.0.17 (2014-02-xx)
 	Fixed bug where paste plugin would produce an extra undo level on IE.
 	Fixed bug where the formatter would apply inline formatting outside the current word in if the selection was collapsed.
 	Fixed so pagebreak elements in the editor breaks pages when printing. Patch contributed by penc.
-	Fixed so UndoManager events pass though the original event that created the undo level such as a keydown, blur etc. 
+	Fixed so UndoManager events pass though the original event that created the undo level such as a keydown, blur etc.
 	Added support for highlighting the video icon when a video is added that produces an iframe. Patch contributed by monkeydiane.
 Version 4.0.16 (2014-01-31)
 	Fixed bug where the editor wouldn't be properly rendered on IE 10 depending on the document.readyState.

@@ -237,7 +237,11 @@ define("tinymce/pasteplugin/Clipboard", [
 			var data = {};
 
 			if (dataTransfer && dataTransfer.types) {
-				data['text/plain'] = dataTransfer.getData('Text');
+				// Use old WebKit API
+				var legacyText = dataTransfer.getData('Text');
+				if (legacyText && legacyText.length > 0) {
+					data['text/plain'] = legacyText;
+				}
 
 				for (var i = 0; i < dataTransfer.types.length; i++) {
 					var contentType = dataTransfer.types[i];
@@ -257,6 +261,48 @@ define("tinymce/pasteplugin/Clipboard", [
 		 */
 		function getClipboardContent(clipboardEvent) {
 			return getDataTransferItems(clipboardEvent.clipboardData || editor.getDoc().dataTransfer);
+		}
+
+		/**
+		 * Checks if the clipboard contains image data if it does it will take that data
+		 * and convert it into a data url image and paste that image at the caret location.
+		 *
+		 * @param  {ClipboardEvent} e Paste event object.
+		 * @param  {Object} clipboardContent Collection of clipboard contents.
+		 * @return {Boolean} true/false if the image data was found or not.
+		 */
+		function pasteImageData(e, clipboardContent) {
+			function pasteImage(item) {
+				if (items[i].type == 'image/png') {
+					var reader = new FileReader();
+
+					reader.onload = function() {
+						pasteHtml('<img src="' + reader.result + '">');
+					};
+
+					reader.readAsDataURL(item.getAsFile());
+
+					return true;
+				}
+			}
+
+			// If paste data images are disabled or there is HTML or plain text
+			// contents then proceed with the normal paste process
+			if (!editor.settings.paste_data_images || "text/html" in clipboardContent || "text/plain" in clipboardContent) {
+				return;
+			}
+
+			if (e.clipboardData) {
+				var items = e.clipboardData.items;
+
+				if (items) {
+					for (var i = 0; i < items.length; i++) {
+						if (pasteImage(items[i])) {
+							return true;
+						}
+					}
+				}
+			}
 		}
 
 		function getCaretRangeFromEvent(e) {
@@ -308,6 +354,11 @@ define("tinymce/pasteplugin/Clipboard", [
 				var plainTextMode = self.pasteFormat == "text" || keyboardPastePlainTextState;
 
 				if (e.isDefaultPrevented()) {
+					removePasteBin();
+					return;
+				}
+
+				if (pasteImageData(e, clipboardContent)) {
 					removePasteBin();
 					return;
 				}
