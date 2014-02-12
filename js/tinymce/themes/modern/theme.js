@@ -391,6 +391,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			// Render a plain panel inside the inlineToolbarContainer if it's defined
 			panel = self.panel = Factory.create({
 				type: inlineToolbarContainer ? 'panel' : 'floatpanel',
+				role: 'application',
 				classes: 'tinymce tinymce-inline',
 				layout: 'flex',
 				direction: 'column',
@@ -472,6 +473,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		// Basic UI layout
 		panel = self.panel = Factory.create({
 			type: 'panel',
+			role: 'application',
 			classes: 'tinymce',
 			style: 'visibility: hidden',
 			layout: 'stack',
