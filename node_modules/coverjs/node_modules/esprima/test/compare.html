@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Esprima: Speed Comparison</title>
+<link rel="stylesheet" type="text/css" href="../assets/style.css"/>
+<script src="../esprima.js"></script>
+<script src="../assets/json2.js"></script>
+<script src="compare.js"></script>
+<script src="3rdparty/benchmark.js"></script>
+<script src="3rdparty/XMLHttpRequest.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+<div class="topbar">
+<ul class="nav">
+<li><a href="../index.html">&larr; Home</a></li>
+<li><a href="http://github.com/ariya/esprima">Code</a></li>
+<li><a href="http://wiki.esprima.org">Documentation</a></li>
+<li><a href="http://issues.esprima.org">Issues</a></li>
+</ul>
+</div>
+
+<h1>Compare <small>with other parsers</small></h1>
+
+<p>Time measurement is carried out using <a href="http://benchmarkjs.com" target="_blank">Benchmark.js</a><span id="benchmarkjs-version"></span>.</p>
+
+<p>Esprima version <span id="version"></span>.</p>
+
+<p><span id="status">Please wait...</span>
+<input id="run" type="submit" value="Run speed comparison" disabled /></p>
+
+<table>
+<thead>
+    <tr>
+        <th>Source</th>
+        <th>Size (KiB)</th>
+        <th>Esprima</th>
+        <th>parse-js</th>
+        <th>ZeParser</th>
+        <th>Narcissus</th>
+    </tr>
+</thead>
+<tbody>
+    <tr>
+        <td>jQuery 1.7.1</td>
+        <td id="jquery-1.7.1-size"></td>
+        <td id="esprima-jquery-1.7.1"></td>
+        <td id="parsejs-jquery-1.7.1"></td>
+        <td id="zeparser-jquery-1.7.1"></td>
+        <td id="narcissus-jquery-1.7.1"></td>
+    </tr>
+    <tr>
+        <td>Prototype 1.7.0.0</td>
+        <td id="prototype-1.7.0.0-size"></td>
+        <td id="esprima-prototype-1.7.0.0"></td>
+        <td id="parsejs-prototype-1.7.0.0"></td>
+        <td id="zeparser-prototype-1.7.0.0"></td>
+        <td id="narcissus-prototype-1.7.0.0"></td>
+    </tr>
+    <tr>
+        <td>MooTools 1.4.1</td>
+        <td id="mootools-1.4.1-size"></td>
+        <td id="esprima-mootools-1.4.1"></td>
+        <td id="parsejs-mootools-1.4.1"></td>
+        <td id="zeparser-mootools-1.4.1"></td>
+        <td id="narcissus-mootools-1.4.1"></td>
+    </tr>
+    <tr>
+        <td>Ext Core 3.1.0</td>
+        <td id="ext-core-3.1.0-size"></td>
+        <td id="esprima-ext-core-3.1.0"></td>
+        <td id="parsejs-ext-core-3.1.0"></td>
+        <td id="zeparser-ext-core-3.1.0"></td>
+        <td id="narcissus-ext-core-3.1.0"></td>
+    </tr>
+    <tr>
+        <td>Total</td>
+        <td id="total-size"></td>
+        <td id="esprima-time"></td>
+        <td id="parsejs-time"></td>
+        <td id="zeparser-time"></td>
+        <td id="narcissus-time"></td>
+    </tr>
+</tbody>
+</table>
+
+<p><strong>Warning:</strong> Since each parser has a different format for the syntax tree, the speed is not fully comparable (the cost of constructing different result is not taken into account). These tests exist only to ensure that Esprima parser is not ridiculously slow compare to other parsers.</p>
+
+<p><strong>parse-js</strong> is the parser used in <a href="https://github.com/mishoo/UglifyJS">UglifyJS</a>. It's a JavaScript port of the Common LISP version. This test uses <code>parse-js</code> from UglifyJS version 1.2.5 (Jan 13 2011).</p>
+
+<p><strong>ZeParser</strong> is from <a href="https://github.com/qfox/ZeParser">github.com/qfox/ZeParser</a> revision 51e52908 (dated Dec 24 2011). Beside the syntax tree, ZeParser also provides location info for the syntax nodes, as well as the list of all tokens.</p>
+
+<p><strong>Narcissus</strong> is Mozilla's JavaScript engine implemented in JavaScript. This test uses the parser from Narcissus, taken from its
+<a href="https://github.com/mozilla/narcissus">code repository</a> revision b5caa7df (dated Oct 26 2011). Narcissus supports many extensions (generators, comprehension, destructuring, etc) and therefore it takes longer to parse JavaScript code. Narcissus parser output also contains the location info for the syntax node. <strong>Note</strong>: Narcissus will not work if <code>Object.create</code> and <code>Object.defineProperty</code> are not available.</p>
+
+<div class="footer"><strong>Esprima</strong> is created by
+<a href="http://ariya.ofilabs.com/about" target="_blank">Ariya Hidayat</a>. Follow <a href="http://twitter.com/ariyahidayat">@ariyahidayat</a> on Twitter.
+</div>
+</div>
+<script>
+/*jslint sloppy:true, browser:true */
+/*global runBenchmarks: true, exports: true */
+window.onload = function () {
+
+    function inject(fname) {
+        var head = document.getElementsByTagName('head')[0],
+            script = document.createElement('script');
+
+        script.src = fname;
+        script.type = 'text/javascript';
+        head.appendChild(script);
+    }
+
+    // Mozilla Narcissus
+    if (typeof Object.create === 'function' && typeof Object.defineProperty === 'function') {
+        inject('3rdparty/jsdefs.js');
+        inject('3rdparty/jslex.js');
+        inject('3rdparty/jsparse.js');
+    }
+
+    window.setTimeout(runBenchmarks, 211);
+};
+</script>
+
+<!-- ZeParser (https://github.com/qfox/ZeParser) -->
+<script src="3rdparty/Tokenizer.js"></script>
+<script src="3rdparty/ZeParser.js"></script>
+
+<!-- parse-js, part of UglifyJS -->
+<script>
+exports = window.parseJS = {};
+</script>
+<script src="3rdparty/parse-js.js"></script>
+
+</body>
+</html>
+

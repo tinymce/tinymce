@@ -1,0 +1,92 @@
+Update escodegen for the rewrite demo.
+Update CodeMirror to version 2.23.
+Collect the last line comment.
+Dynamically loading Narcissus in the speed comparison page.
+Show an exemplary coverage analysis result.
+Generate coverage analysis report.
+Tree interface for the parse demo.
+Use increment operator in various scanning functions.
+Use increment operator in comment handling functions.
+Unbreak the test suite on older web browsers.
+Reenable testing with Node.js 0.4.
+Compensate if invalid regular expression flag is not handled correctly.
+Mention github.com/Yoric/Marv-the-Tinker.
+Preserve line terminators in block comments
+Tolerant mode: ignore with restriction
+Do not use Object.freeze for various hash tables.
+Simplify nextChar() function with increment operator.
+Tolerant mode: ignore return not within a function
+Import Esmorph code for the Function Trace demo.
+Remove source modification feature.
+Reorganize binary node tracking routines.
+Vary parsing options while testing for invalid syntax.
+Fix wrong location info when comments are present.
+Add a test case for do while ended with a semicolon.
+Add a test case for continue statement with a semicolon.
+Shuffle the code in wrapTrackingFunction() function.
+Import escodegen for the Source Rewrite demo.
+Split code generator from esprima core
+Add test cases for reserved words as function argument name.
+Add a test case for using future reserved word as function name.
+Shuffle the code in parseSourceElement() function.
+Add a test case for computed member in left hand-side expression.
+Make note of unreachable case when parsing object property key.
+Update CodeMirror to version 2.22.
+Update platform.js to v1.0.0-pre.
+Temporarily disable Travis CI test on Node.js 0.4.
+Add a test case to trigger an error due to expecting a keyword.
+No need to shorten the token value for unexpected token error.
+Add a test case for (invalid) Unicode escape in regular expression flag.
+Add a test case for octal directive restriction before strict directive in Program
+Strict mode: duplicate identifier in function parameter list
+Add a test case for an error of non-identifier after non-computed property.
+Syntax errors for duplicate object properties.
+Fixed property name error message identifiers.
+Add test cases to capture some escaping in the string literals.
+Add test cases for invalid octal literals.
+Add a test case for semicolon after a comment.
+Add a test case to provoke an error in the object property setter.
+Add test cases for break and continue followed by a line break.
+Add a test case for empty source elements.
+Use assert for better semantics of contract.
+Reject illegal numeric literal like '10E+'
+ArrayInitialiser / ObjectInitialiser don't handle end-of-input correctly
+Add tests to catch various corner cases when handling Unicode literals.
+Static mapping of token value and its name.
+Incomplete statement should trigger an error.
+Remove unused function unpatching after the refactoring.
+Support space separator as white space
+Add comment about following V8 error messages.
+Fix syntax error message strings.
+Handle LHS in for-in and assignment correctly
+SyntaxError for 'return' outside function body
+Mention related projects based on Esprima.
+IE6 fix for parser demo error reporting.
+IE6 fixes for labelSet.
+Fix coding style violations in the new isKeyword() function.
+Syntax errors for invalid continue/break and label references
+Faster isKeyword() implementation.
+Add generator identity test
+Freeze constant values
+Remove some invalid Precedence
+generate() fails on consecutive unary expressions.
+Optimize moving the index forward instead of calling nextChar().
+Add API test cases for Mozilla Reflect compatibility.
+Add support for indentation option in the rewriter demo.
+New demo to showcase source code rewrite.
+Simplify nextChar() function.
+Unterminated block comment should trigger an error.
+Make the regular expressions for `IdentifierStart` and `IdentifierPart` more compact
+Strict Mode: restrict with statement
+Duplicated property check should be robust against special name.
+Fix code generator with an empty program.
+Fix generator indentation bug in double nested If statements.
+Allow some future reserved word in non-strict code.
+Unnecessary forward slash in json2.js Opera fix.
+Strict mode: do not allow octal literals.
+Fixed null literal value property.
+Clean-up unused variables.
+Strict mode: trigger an error when using eval and arguments.
+Mark numeric literal specified as an octal number.
+Fix Unicode bug with Letter number (Nl) and `\u200C` or `\u200D`.
+Include the forgotten Python script to generated Unicode regex.
