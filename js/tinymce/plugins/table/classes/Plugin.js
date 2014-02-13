@@ -45,6 +45,12 @@ define("tinymce/tableplugin/Plugin", [
 				editor.formatter.remove('align' + name, {}, elm);
 			});
 		}
+		
+		function unApplyVAlign(elm) {
+			each('top middle bottom'.split(' '), function(name) {
+				editor.formatter.remove('valign' + name, {}, elm);
+			});
+		}			
 
 		function tableDialog() {
 			var dom = editor.dom, tableElm, data;
@@ -231,7 +237,7 @@ define("tinymce/tableplugin/Plugin", [
 							]
 						},
 						{
-							label: 'Alignment',
+							label: 'H Align',
 							name: 'align',
 							type: 'listbox',
 							text: 'None',
@@ -242,6 +248,20 @@ define("tinymce/tableplugin/Plugin", [
 								{text: 'Left', value: 'left'},
 								{text: 'Center', value: 'center'},
 								{text: 'Right', value: 'right'}
+							]
+						},
+						{
+							label: 'V Align',
+							name: 'valign',
+							type: 'listbox',
+							text: 'None',
+							minWidth: 90,
+							maxWidth: null,
+							values: [
+								{text: 'None', value: ''},
+								{text: 'Top', value: 'top'},
+								{text: 'Middle', value: 'middle'},
+								{text: 'Bottom', value: 'bottom'}
 							]
 						}
 					]
@@ -269,6 +289,13 @@ define("tinymce/tableplugin/Plugin", [
 							if (data.align) {
 								editor.formatter.apply('align' + data.align, {}, cellElm);
 							}
+
+							// Apply/remove vertical alignment
+							unApplyVAlign(cellElm);
+							if (data.valign) {
+								editor.formatter.apply('valign' + data.valign, {}, cellElm);
+							}								
+							
 						});
 
 						editor.focus();
