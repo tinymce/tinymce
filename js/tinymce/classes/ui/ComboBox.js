@@ -50,7 +50,11 @@ define("tinymce/ui/ComboBox", [
 				var elm = e.target;
 
 				while (elm) {
-					if (elm.id && elm.id.indexOf('-open') != -1) {
+					var id = "";
+					if(elm.nodeType !== 9){ // Document node
+						elm.id = id = (elm.getAttribute && elm.getAttribute('id')) || "";
+					}
+					if (id.indexOf('-open') != -1) {
 						self.fire('action');
 
 						if (settings.menu) {
