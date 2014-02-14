@@ -19,7 +19,7 @@
 	});
 </script>
 </head>
-<body role="application">
+<body>
 <form method="post" action="http://www.tinymce.com/dump.php?example=true">
 	<div>
 		<div>
@@ -49,7 +49,7 @@
 				<a href="javascript:;" onclick="alert(tinymce.get('elm1').getContent());return false;">[Get contents]</a>
 				<a href="javascript:;" onclick="alert(tinymce.get('elm1').getContent({format: 'raw'}));return false;">[Get raw]</a>
 				<a href="javascript:;" onclick="alert(tinymce.get('elm1').selection.getContent());return false;">[Get selected HTML]</a>
-				<a href="javascript:;" onclick="alert(tinymce.get('elm1').selection.getContent({format : 'text'}));return false;">[Get selected text]</a>
+				<a href="javascript:;" onclick="alert(tinymce.get('elm1').selection.getContent({format: 'text'}));return false;">[Get selected text]</a>
 				<a href="javascript:;" onclick="alert(tinymce.get('elm1').selection.getNode().nodeName);return false;">[Get selected element]</a>
 				<a href="javascript:;" onclick="tinymce.execCommand('mceInsertContent',false,'<b>Hello world!!</b>');return false;">[Insert HTML]</a>
 				<a href="javascript:;" onclick="tinymce.execCommand('mceReplaceContent',false,'<b>{$selection}</b>');return false;">[Replace selection]</a>
