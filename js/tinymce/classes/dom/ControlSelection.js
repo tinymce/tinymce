@@ -188,8 +188,6 @@ define("tinymce/dom/ControlSelection", [
 					var handleElm, handlerContainerElm;
 
 					function startDrag(e) {
-						resizeStarted = true;
-
 						startX = e.screenX;
 						startY = e.screenY;
 						startW = selectedElm.clientWidth;

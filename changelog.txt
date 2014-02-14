@@ -1,8 +1,10 @@
 Version 4.0.17 (2014-02-xx)
+	Added much better wai-aria accessibility support when it comes to keyboard navigation of complex UI controls.
 	Added dfn,code,samp,kbd,var,cite,mark,q elements to the default remove formats list. Patch contributed by Naim Hammadi.
 	Added var,cite,dfn,code,mark,q,sup,sub to the list of elements that gets cloned on enter. Patch contributed by Naim Hammadi.
 	Added new visual_anchor_class option to specify a custom class for inline anchors. Patch contributed by Naim Hammadi.
 	Added support for paste_data_images on WebKit/Blink when the user pastes image data.
+	Fixed bug where the ObjectResizeStart event didn't get fired properly by the ControlSelection class.
 	Fixed bug where the autolink plugin would steal focus when loaded on IE 9+.
 	Fixed bug where the formatter would merge span elements with parent bookmarks if an id format was used.
 	Fixed bug where WebKit/Blink browsers would scroll to the top of the editor when pasting into an empty element.
