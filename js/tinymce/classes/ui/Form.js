@@ -66,11 +66,12 @@ define("tinymce/ui/Form", [
 						autoResize: "overflow",
 						defaults: {flex: 1},
 						items: [
-							{type: 'label', text: label, flex: 0, forId: ctrl._id, disabled: ctrl.disabled()}
+							{type: 'label', id: ctrl._id + '-l', text: label, flex: 0, forId: ctrl._id, disabled: ctrl.disabled()}
 						]
 					});
 
 					formItem.type = 'formitem';
+					ctrl.aria('labelledby', ctrl._id + '-l');
 
 					if (typeof(ctrl.settings.flex) == "undefined") {
 						ctrl.settings.flex = 1;

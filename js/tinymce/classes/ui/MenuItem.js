@@ -59,13 +59,11 @@ define("tinymce/ui/MenuItem", [
 			if (self._text === '-' || self._text === '|') {
 				self.addClass('menu-item-sep');
 				self.aria('role', 'separator');
-				self.canFocus = false;
 				self._text = '-';
 			}
 
 			if (settings.selectable) {
 				self.aria('role', 'menuitemcheckbox');
-				self.aria('checked', true);
 				self.addClass('menu-item-checkbox');
 				settings.icon = 'selected';
 			}
@@ -87,9 +85,9 @@ define("tinymce/ui/MenuItem", [
 					} else {
 						self.showMenu();
 
-						if (e.keyboard) {
+						if (e.aria) {
 							setTimeout(function() {
-								self.menu.items()[0].focus();
+								self.menu.focus(true);
 							}, 0);
 						}
 					}
@@ -148,7 +146,9 @@ define("tinymce/ui/MenuItem", [
 					menu = self.menu = Factory.create(menu).parent(self).renderTo(self.getContainerElm());
 					menu.reflow();
 					menu.fire('show');
-					menu.on('cancel', function() {
+					menu.on('cancel', function(e) {
+						e.stopPropagation();
+						menu.hide();
 						self.focus();
 					});
 
@@ -157,6 +157,8 @@ define("tinymce/ui/MenuItem", [
 							self.removeClass('selected');
 						}
 					});
+
+					menu.submenu = true;
 				} else {
 					menu.show();
 				}
@@ -265,6 +267,14 @@ define("tinymce/ui/MenuItem", [
 			}
 
 			return self._super();
+		},
+
+		active: function(state) {
+			if (typeof(state) != "undefined") {
+				this.aria('checked', state);
+			}
+
+			return this._super(state);
 		},
 
 		/**

@@ -22,7 +22,7 @@ define("tinymce/ui/SplitButton", [
 	return MenuButton.extend({
 		Defaults: {
 			classes: "widget btn splitbtn",
-			role: "splitbutton"
+			role: "button"
 		},
 
 		/**
@@ -72,7 +72,7 @@ define("tinymce/ui/SplitButton", [
 			var icon = self.settings.icon ? prefix + 'ico ' + prefix + 'i-' + self.settings.icon : '';
 
 			return (
-				'<div id="' + id + '" class="' + self.classes() + '">' +
+				'<div id="' + id + '" class="' + self.classes() + '" role="button" tabindex="-1">' +
 					'<button type="button" hidefocus tabindex="-1">' +
 						(icon ? '<i class="' + icon + '"></i>' : '') +
 						(self._text ? (icon ? ' ' : '') + self._text : '') +
@@ -100,7 +100,7 @@ define("tinymce/ui/SplitButton", [
 				if (e.control == this) {
 					// Find clicks that is on the main button
 					while (node) {
-						if (node.nodeName == 'BUTTON' && node.className.indexOf('open') == -1) {
+						if ((e.aria && e.aria.key != 'down') || (node.nodeName == 'BUTTON' && node.className.indexOf('open') == -1)) {
 							e.stopImmediatePropagation();
 							onClickHandler.call(this, e);
 							return;

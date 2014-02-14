@@ -113,6 +113,13 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		var buttonCtrl = this.parent(), value;
 
 		if ((value = e.target.getAttribute('data-mce-color'))) {
+			if (this.lastId) {
+				document.getElementById(this.lastId).setAttribute('aria-selected', false);
+			}
+
+			e.target.setAttribute('aria-selected', true);
+			this.lastId = e.target.id;
+
 			buttonCtrl.hidePanel();
 			value = '#' + value;
 			buttonCtrl.color(value);
@@ -133,6 +140,7 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		tooltip: 'Text color',
 		selectcmd: 'ForeColor',
 		panel: {
+			ariaRemember: true,
 			html: renderColorPicker,
 			onclick: onPanelClick
 		},
@@ -144,6 +152,7 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		tooltip: 'Background color',
 		selectcmd: 'HiliteColor',
 		panel: {
+			ariaRemember: true,
 			html: renderColorPicker,
 			onclick: onPanelClick
 		},

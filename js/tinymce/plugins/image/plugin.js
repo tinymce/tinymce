@@ -241,9 +241,9 @@ tinymce.PluginManager.add('image', function(editor) {
 				align: 'center',
 				spacing: 5,
 				items: [
-					{name: 'width', type: 'textbox', maxLength: 5, size: 3, onchange: recalcSize},
+					{name: 'width', type: 'textbox', maxLength: 5, size: 3, onchange: recalcSize, ariaLabel: 'Width'},
 					{type: 'label', text: 'x'},
-					{name: 'height', type: 'textbox', maxLength: 5, size: 3, onchange: recalcSize},
+					{name: 'height', type: 'textbox', maxLength: 5, size: 3, onchange: recalcSize, ariaLabel: 'Height'},
 					{name: 'constrain', type: 'checkbox', checked: true, text: 'Constrain proportions'}
 				]
 			}

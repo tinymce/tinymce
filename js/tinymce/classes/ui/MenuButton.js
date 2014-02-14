@@ -87,7 +87,9 @@ define("tinymce/ui/MenuButton", [
 				self.fire('createmenu');
 				self.menu.reflow();
 				self.menu.on('cancel', function(e) {
-					if (e.control === self.menu) {
+					if (e.control.parent() === self.menu) {
+						e.stopPropagation();
+						self.menu.hide();
 						self.focus();
 					}
 				});
@@ -170,7 +172,7 @@ define("tinymce/ui/MenuButton", [
 				if (e.control === self && isChildOf(e.target, self.getEl())) {
 					self.showMenu();
 
-					if (e.keyboard) {
+					if (e.aria) {
 						self.menu.items()[0].focus();
 					}
 				}

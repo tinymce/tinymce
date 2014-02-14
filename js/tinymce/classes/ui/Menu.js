@@ -17,10 +17,9 @@
  */
 define("tinymce/ui/Menu", [
 	"tinymce/ui/FloatPanel",
-	"tinymce/ui/KeyboardNavigation",
 	"tinymce/ui/MenuItem",
 	"tinymce/util/Tools"
-], function(FloatPanel, KeyboardNavigation, MenuItem, Tools) {
+], function(FloatPanel, MenuItem, Tools) {
 	"use strict";
 
 	var Menu = FloatPanel.extend({
@@ -28,7 +27,8 @@ define("tinymce/ui/Menu", [
 			defaultType: 'menuitem',
 			border: 1,
 			layout: 'stack',
-			role: 'menu'
+			role: 'menu',
+			ariaRoot: true
 		},
 
 		/**
@@ -53,23 +53,6 @@ define("tinymce/ui/Menu", [
 
 			self._super(settings);
 			self.addClass('menu');
-
-			self.keyNav = new KeyboardNavigation({
-				root: self,
-				enableUpDown: true,
-				enableLeftRight: true,
-
-				leftAction: function() {
-					if (self.parent() instanceof MenuItem) {
-						self.keyNav.cancel();
-					}
-				},
-
-				onCancel: function() {
-					self.fire('cancel', {}, false);
-					self.hide();
-				}
-			});
 		},
 
 		/**

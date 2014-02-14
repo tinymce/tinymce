@@ -16,9 +16,8 @@
  * @extends tinymce.ui.Widget
  */
 define("tinymce/ui/Path", [
-	"tinymce/ui/Widget",
-	"tinymce/ui/KeyboardNavigation"
-], function(Widget, KeyboardNavigation) {
+	"tinymce/ui/Widget"
+], function(Widget) {
 	"use strict";
 
 	return Widget.extend({
@@ -58,12 +57,7 @@ define("tinymce/ui/Path", [
 		focus: function() {
 			var self = this;
 
-			self.keyNav = new KeyboardNavigation({
-				root: self,
-				enableLeftRight: true
-			});
-
-			self.keyNav.focusFirst();
+			self.getEl().firstChild.focus();
 
 			return self;
 		},

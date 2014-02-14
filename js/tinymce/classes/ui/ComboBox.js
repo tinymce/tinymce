@@ -55,7 +55,7 @@ define("tinymce/ui/ComboBox", [
 						if (settings.menu) {
 							self.showMenu();
 
-							if (e.keyboard) {
+							if (e.aria) {
 								self.menu.items()[0].focus();
 							}
 						}
@@ -308,7 +308,7 @@ define("tinymce/ui/ComboBox", [
 
 			if (icon || text) {
 				openBtnHtml = (
-					'<div id="' + id + '-open" class="' + prefix + 'btn ' + prefix + 'open" tabIndex="-1">' +
+					'<div id="' + id + '-open" class="' + prefix + 'btn ' + prefix + 'open" tabIndex="-1" role="button">' +
 						'<button id="' + id + '-action" type="button" hidefocus tabindex="-1">' +
 							(icon != 'caret' ? '<i class="' + icon + '"></i>' : '<i class="' + prefix + 'caret"></i>') +
 							(text ? (icon ? ' ' : '') + text : '') +

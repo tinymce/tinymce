@@ -69,7 +69,7 @@ define("tinymce/ui/Control", [
 			self.settings = settings = Tools.extend({}, self.Defaults, settings);
 
 			// Initial states
-			self._id = DomUtils.id();
+			self._id = settings.id || DomUtils.id();
 			self._text = self._name = '';
 			self._width = self._height = 0;
 			self._aria = {role: settings.role};

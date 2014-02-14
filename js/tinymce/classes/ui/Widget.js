@@ -58,10 +58,9 @@ define("tinymce/ui/Widget", [
 				self.on('mouseleave mousedown click', function() {
 					self.tooltip().hide();
 				});
-
 			}
 
-			self.aria('label', settings.tooltip);
+			self.aria('label', settings.ariaLabel || settings.tooltip);
 		},
 
 		/**

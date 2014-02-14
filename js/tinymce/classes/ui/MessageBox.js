@@ -147,6 +147,7 @@ define("tinymce/ui/MessageBox", [
 					align: "center",
 					buttons: buttons,
 					title: settings.title,
+					role: 'alertdialog',
 					items: {
 						type: "label",
 						multiline: true,

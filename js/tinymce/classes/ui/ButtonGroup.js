@@ -34,7 +34,7 @@ define("tinymce/ui/ButtonGroup", [
 	return Container.extend({
 		Defaults: {
 			defaultType: 'button',
-			role: 'toolbar'
+			role: 'group'
 		},
 
 		/**

@@ -276,7 +276,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			var item = panel.find(type)[0];
 
 			if (item) {
-				item.focus();
+				item.focus(true);
 			}
 		}
 
@@ -403,7 +403,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				items: [
 					settings.menubar === false ? null : {type: 'menubar', border: '0 0 1 0', items: createMenuButtons()},
 					settings.toolbar === false ? null : {
-						type: 'panel', layout: 'stack', classes: "toolbar-grp", items: createToolbars()
+						type: 'panel', layout: 'stack', classes: "toolbar-grp", ariaRoot: true, ariaRemember: true, items: createToolbars()
 					}
 				]
 			});
@@ -480,7 +480,9 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			border: 1,
 			items: [
 				settings.menubar === false ? null : {type: 'menubar', border: '0 0 1 0', items: createMenuButtons()},
-				settings.toolbar === false ? null : {type: 'panel', layout: 'stack', classes: "toolbar-grp", items: createToolbars()},
+				settings.toolbar === false ? null : {
+					type: 'panel', layout: 'stack', classes: "toolbar-grp", ariaRoot: true, ariaRemember: true, items: createToolbars()
+				},
 				{type: 'panel', name: 'iframe', layout: 'stack', classes: 'edit-area', html: '', border: '1 0 0 0'}
 			]
 		});
@@ -511,7 +513,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 
 		// Add statusbar if needed
 		if (settings.statusbar !== false) {
-			panel.add({type: 'panel', name: 'statusbar', classes: 'statusbar', layout: 'flow', border: '1 0 0 0', items: [
+			panel.add({type: 'panel', name: 'statusbar', classes: 'statusbar', layout: 'flow', border: '1 0 0 0', ariaRoot: true, items: [
 				{type: 'elementpath'},
 				resizeHandleCtrl
 			]});
