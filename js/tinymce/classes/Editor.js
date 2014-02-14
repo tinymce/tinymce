@@ -1262,7 +1262,7 @@ define("tinymce/Editor", [
 		 *
 		 *    setup: function(ed) {
 		 *       ed.addMenuItem('example', {
-		 *          title: 'My menu item',
+		 *          text: 'My menu item',
 		 *          context: 'tools',
 		 *          onclick: function() {
 		 *             ed.insertContent('Hello world!!');
