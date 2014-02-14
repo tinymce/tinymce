@@ -37,6 +37,7 @@ define("tinymce/ui/ComboBox", [
 			self._super(settings);
 			self.addClass('combobox');
 			self.subinput = true;
+			self.ariaTarget = 'inp'; // TODO: Figure out a better way
 
 			settings = self.settings;
 			settings.menu = settings.menu || settings.values;

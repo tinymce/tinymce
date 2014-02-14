@@ -112,9 +112,9 @@ tinymce.PluginManager.add('media', function(editor, url) {
 							align: 'center',
 							spacing: 5,
 							items: [
-								{name: 'width', type: 'textbox', maxLength: 5, size: 3, onchange: recalcSize},
+								{name: 'width', type: 'textbox', maxLength: 5, size: 3, ariaLabel: 'Width', onchange: recalcSize},
 								{type: 'label', text: 'x'},
-								{name: 'height', type: 'textbox', maxLength: 5, size: 3, onchange: recalcSize},
+								{name: 'height', type: 'textbox', maxLength: 5, size: 3, ariaLabel: 'Height', onchange: recalcSize},
 								{name: 'constrain', type: 'checkbox', checked: true, text: 'Constrain proportions'}
 							]
 						}

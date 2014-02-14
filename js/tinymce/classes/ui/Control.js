@@ -1025,7 +1025,7 @@ define("tinymce/ui/Control", [
 		 * @return {tinymce.ui.Control} Current control instance.
 		 */
 		aria: function(name, value) {
-			var self = this, elm = self.getEl();
+			var self = this, elm = self.getEl(self.ariaTarget);
 
 			if (typeof(value) === "undefined") {
 				return self._aria[name];
