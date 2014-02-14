@@ -1637,7 +1637,10 @@ define("tinymce/Editor", [
 			html = args.content;
 
 			if (!/TEXTAREA|INPUT/i.test(elm.nodeName)) {
-				elm.innerHTML = html;
+				// Update DIV element when not in inline mode
+				if (!self.inline) {
+					elm.innerHTML = html;
+				}
 
 				// Update hidden form element
 				if ((form = DOM.getParent(self.id, 'form'))) {
