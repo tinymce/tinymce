@@ -77,15 +77,15 @@ define("tinymce/Formatter", [
 			register({
 				
 				valigntop: [
-					{selector: 'td', styles: {'verticalAlign': 'top'}}
+					{selector: 'td,th', styles: {'verticalAlign': 'top'}}
 				],
 
 				valignmiddle: [
-					{selector: 'td', styles: {'verticalAlign': 'middle'}}
+					{selector: 'td,th', styles: {'verticalAlign': 'middle'}}
 				],
 				
 				valignbottom: [
-					{selector: 'td', styles: {'verticalAlign': 'bottom'}}
+					{selector: 'td,th', styles: {'verticalAlign': 'bottom'}}
 				],				
 				
 				alignleft: [
