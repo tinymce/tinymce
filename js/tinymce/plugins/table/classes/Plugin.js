@@ -600,7 +600,7 @@ define("tinymce/tableplugin/Plugin", [
 					},
 
 					onclick: function(e) {
-						if (e.target.nodeName == 'A' && this.lastX) {
+						if (e.target.nodeName == 'A') {
 							e.preventDefault();
 							e.stopPropagation();
 

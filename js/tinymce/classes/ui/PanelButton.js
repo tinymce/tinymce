@@ -43,7 +43,7 @@ define("tinymce/ui/PanelButton", [
 					};
 				}
 
-				panelSettings.role = 'dialog';
+				panelSettings.role = panelSettings.role || 'dialog';
 				panelSettings.popover = true;
 				panelSettings.autohide = true;
 				panelSettings.ariaRoot = true;

@@ -21,7 +21,7 @@ tinymce.PluginManager.add('emoticons', function(editor, url) {
 	function getHtml() {
 		var emoticonsHtml;
 
-		emoticonsHtml = '<table role="presentation" class="mce-grid">';
+		emoticonsHtml = '<table role="list" class="mce-grid">';
 
 		tinymce.each(emoticons, function(row) {
 			emoticonsHtml += '<tr>';
@@ -45,6 +45,7 @@ tinymce.PluginManager.add('emoticons', function(editor, url) {
 	editor.addButton('emoticons', {
 		type: 'panelbutton',
 		panel: {
+			role: 'application',
 			autohide: true,
 			html: getHtml,
 			onclick: function(e) {

@@ -216,7 +216,7 @@ define("tinymce/ui/Window", [
 			}
 
 			return (
-				'<div id="' + id + '" class="' + self.classes() + '" hideFocus="1" tabIndex="-1">' +
+				'<div id="' + id + '" class="' + self.classes() + '" hideFocus="1">' +
 					headerHtml +
 					'<div id="' + id + '-body" class="' + self.classes('body') + '">' +
 						html +

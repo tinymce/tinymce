@@ -27,7 +27,8 @@ define("tinymce/ui/Menu", [
 			defaultType: 'menuitem',
 			border: 1,
 			layout: 'stack',
-			role: 'menu',
+			role: 'application',
+			bodyRole: 'menu',
 			ariaRoot: true
 		},
 

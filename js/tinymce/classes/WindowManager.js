@@ -153,6 +153,8 @@ define("tinymce/WindowManager", [
 			MessageBox.alert(message, function() {
 				if (callback) {
 					callback.call(scope || this);
+				} else {
+					editor.focus();
 				}
 			});
 		};

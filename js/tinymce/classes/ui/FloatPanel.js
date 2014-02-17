@@ -312,6 +312,16 @@ define("tinymce/ui/FloatPanel", [
 		remove: function() {
 			removeVisiblePanel(this);
 			this._super();
+		},
+
+		postRender: function() {
+			var self = this;
+
+			if (self.settings.bodyRole) {
+				this.getEl('body').setAttribute('role', self.settings.bodyRole);
+			}
+
+			return self._super();
 		}
 	});
 
