@@ -74,7 +74,7 @@ define("tinymce/pasteplugin/Quirks", [
 			});
 
 			var explorerBlocksRegExp = new RegExp(
-				'(?:<br>&nbsp;[\\s\\r\\n]+|<br>)*(<\\/?(' + blockElements.join('|') + ')[^>]*>)(?:<br>&nbsp;[\\s\\r\\n]+|<br>)*',
+				'(?:<br>&#xa0;[\\s\\r\\n]+|<br>)*(<\\/?(' + blockElements.join('|') + ')[^>]*>)(?:<br>&#xa0;[\\s\\r\\n]+|<br>)*',
 				'g'
 			);
 

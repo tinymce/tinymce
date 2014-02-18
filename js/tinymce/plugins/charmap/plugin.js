@@ -297,7 +297,7 @@ tinymce.PluginManager.add('charmap', function(editor) {
 				var id = 'g' + (y * width + x);
 
 				gridHtml += '<td title="' + chr[1] + '"><div id="' + id + '" tabIndex="-1" title="' + chr[1] + '" role="button">' +
-					(chr ? String.fromCharCode(parseInt(chr[0], 10)) : '&nbsp;') + '</div></td>';
+					(chr ? String.fromCharCode(parseInt(chr[0], 10)) : '&#xa0;') + '</div></td>';
 			}
 
 			gridHtml += '</tr>';

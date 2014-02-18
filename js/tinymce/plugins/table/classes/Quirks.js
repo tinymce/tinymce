@@ -248,7 +248,7 @@ define("tinymce/tableplugin/Quirks", [
 							editor.getBody(),
 							editor.settings.forced_root_block,
 							editor.settings.forced_root_block_attrs,
-							Env.ie && Env.ie < 11 ? '&nbsp;' : '<br data-mce-bogus="1" />'
+							Env.ie && Env.ie < 11 ? '&#xa0;' : '<br data-mce-bogus="1" />'
 						);
 					} else {
 						editor.dom.add(editor.getBody(), 'br', {'data-mce-bogus': '1'});

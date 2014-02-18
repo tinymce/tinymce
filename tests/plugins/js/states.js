@@ -50,13 +50,13 @@ ParagraphBetweenUnorderedLists = createState('<ul><li>Item1</li></ul><p>Test</p>
 ParagraphBetweenMixedLists = createState('<ol><li>Item1</li></ol><p>Test</p><ul><li>Item2</li></ul>', 'p', 2);
 
 NonEmptyHeading = createState('<h1>Test</h1>', 'h1', 0);
-TableCellWithoutBrs = createState('<table><tbody><tr><td>Test</td><td>&nbsp;</td></tr></tbody></table>', 'td', 4);
-TableCellWithoutBrs2 = createState('<table><tbody><tr><td>Test</td><td>&nbsp;</td></tr></tbody></table>', 'td', 0);
-TableCellWithBrsFirstLine = createState('<table><tbody><tr><td>Test<br>Line 2</td><td>&nbsp;</td></tr></tbody></table>', 'td', 1);
-TableCellWithBrsFirstLine2 = createState('<table><tbody><tr><td>Test<br>Line 2</td><td>&nbsp;</td></tr></tbody></table>', 'td', 0);
-TableCellWithBrsMiddleLine = createState('<table><tbody><tr><td>Test<br/>Line 2<br/>Line 3</td><td>&nbsp;</td></tr></tbody></table>', 'td br:nth-child(1)', 'afterNextCharacter');
-TableCellWithBrsLastLine = createState('<table><tbody><tr><td>Test<br>Line 2</td><td>&nbsp;</td></tr></tbody></table>', 'td br:nth-child(1)', 'afterNextCharacter');
-TableCellWithAdjacentBrsFirstLine = createState('<table><tbody><tr><td>Test<br><br>Line 2</td><td>&nbsp;</td></tr></tbody></table>', 'td', 1);
+TableCellWithoutBrs = createState('<table><tbody><tr><td>Test</td><td>&#xa0;</td></tr></tbody></table>', 'td', 4);
+TableCellWithoutBrs2 = createState('<table><tbody><tr><td>Test</td><td>&#xa0;</td></tr></tbody></table>', 'td', 0);
+TableCellWithBrsFirstLine = createState('<table><tbody><tr><td>Test<br>Line 2</td><td>&#xa0;</td></tr></tbody></table>', 'td', 1);
+TableCellWithBrsFirstLine2 = createState('<table><tbody><tr><td>Test<br>Line 2</td><td>&#xa0;</td></tr></tbody></table>', 'td', 0);
+TableCellWithBrsMiddleLine = createState('<table><tbody><tr><td>Test<br/>Line 2<br/>Line 3</td><td>&#xa0;</td></tr></tbody></table>', 'td br:nth-child(1)', 'afterNextCharacter');
+TableCellWithBrsLastLine = createState('<table><tbody><tr><td>Test<br>Line 2</td><td>&#xa0;</td></tr></tbody></table>', 'td br:nth-child(1)', 'afterNextCharacter');
+TableCellWithAdjacentBrsFirstLine = createState('<table><tbody><tr><td>Test<br><br>Line 2</td><td>&#xa0;</td></tr></tbody></table>', 'td', 1);
 
 HeadingInOrderedList = createState('<ol><li><h2>Test</h2></li></ol>', 'h2', '2');
 HeadingInUnorderedList = createState('<ul><li><h2>Test</h2></li></ul>', 'h2', '2');
@@ -70,12 +70,12 @@ EndOfParagraphBeforeUL = createState('<p>Test</p><ul><li>Item</li></ul>', 'p', 4
 StartOfParagraphAfterOL = createState('<ol><li>Item</li></ol><p>Test</p>', 'p', 1);
 StartOfParagraphAfterUL = createState('<ul><li>Item</li></ul><p>Test</p>', 'p', 1);
 StartOfParagraphAfterOLWithListType = createState('<ol style="list-style-type: lower-alpha;"><li>Item</li></ol><p>Test</p>', 'p', 1);
-EmptyOrderedListItem = createState('<ol><li>Before</li><li>&nbsp;</li><li>After</li></ol>', 'li:nth-child(2)', 0);
-EmptyUnorderedListItem = createState('<ul><li>Before</li><li>&nbsp;</li><li>After</li></ul>', 'li:nth-child(2)', 0);
+EmptyOrderedListItem = createState('<ol><li>Before</li><li>&#xa0;</li><li>After</li></ol>', 'li:nth-child(2)', 0);
+EmptyUnorderedListItem = createState('<ul><li>Before</li><li>&#xa0;</li><li>After</li></ul>', 'li:nth-child(2)', 0);
 NonEmptyOrderedListItem = createState('<ol><li>Before</li><li>Test</li><li>After</li></ol>', 'li:nth-child(2)', 0);
 NonEmptyUnorderedListItem = createState('<ul><li>Before</li><li>Test</li><li>After</li></ul>', 'li:nth-child(2)', 0);
-NestedEmptyOrderedListItem = createState('<ol><li>Before<ol><li>&nbsp;</li></ol></li><li>After</li></ol>', 'li ol li', 0);
-NestedEmptyUnorderedListItem = createState('<ul><li>Before<ul><li>&nbsp;</li></ul></li><li>After</li></ul>', 'li ul li', 0);
+NestedEmptyOrderedListItem = createState('<ol><li>Before<ol><li>&#xa0;</li></ol></li><li>After</li></ol>', 'li ol li', 0);
+NestedEmptyUnorderedListItem = createState('<ul><li>Before<ul><li>&#xa0;</li></ul></li><li>After</li></ul>', 'li ul li', 0);
 NestedNonEmptyOrderedListItem = createState('<ol><li>Before<ol><li>Test</li></ol></li><li>After</li></ol>', 'li ol li', 0);
 NestedNonEmptyUnorderedListItem = createState('<ul><li>Before<ul><li>Test</li></ul></li><li>After</li></ul>', 'li ul li', 0);
 NestedOrderedListWithMultipleItems = createState('<ol><li>Before<ol><li>Item1</li><li>Item2</li></ol></li></ol>', 'li ol li', 0);
@@ -132,7 +132,7 @@ SingleBlockWithBrSelection = createState('<div>Item1<br />Item2</div>', 'div', 3
 MultipleBlockWithBrSelection = createState('<div>Item1<br />Item2</div><div>Item3</div>', 'div:nth-child(1)', 2, 'div:nth-child(2)', 3);
 MultipleBlockWithBrPartialSelection = createState('<div>Item1<br />Item2</div><div>Item3<br />Item4</div>', 'div:nth-child(1)', 2, 'div:nth-child(2)', 3);
 MultipleBlockWithBrPartialSelectionAtEnd = createState('<div>Item1<br />Item2</div><div>Item3<br />Item4</div>', 'div:nth-child(1) br', 'afterNextCharacter', 'div:nth-child(2) br', 'afterNextCharacter');
-MultipleBlockWithEmptyDivsAllSelected = createState('<div id="start">&nbsp;</div><div>a</div><div></div><div>b</div><div></div><div id="end">&nbsp;</div>', '#start', 0, '#end', 0);
+MultipleBlockWithEmptyDivsAllSelected = createState('<div id="start">&#xa0;</div><div>a</div><div></div><div>b</div><div></div><div id="end">&#xa0;</div>', '#start', 0, '#end', 0);
 
 CellWithoutBrSelection = createState('<table><tbody><tr><td>Cell 1</td></tr></tbody></table>', 'td', 1, 'td', 1); //selection is a single point so it will avoid table selection bugs in ie9.
 CellWithBrSingleLineSelection = createState('<table><tbody><tr><td>Cell 1<br>Line 2</td></tr></tbody></table>', 'td', 1, 'td', 4);

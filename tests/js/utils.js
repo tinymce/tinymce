@@ -69,7 +69,7 @@ function initWhenTinyAndRobotAreReady(initTinyFunction) {
 }
 
 function trimContent(content) {
-	return content.replace(/^<p>&nbsp;<\/p>\n?/, '').replace(/\n?<p>&nbsp;<\/p>$/, '');
+	return content.replace(/^<p>&#xa0;<\/p>\n?/, '').replace(/\n?<p>&#xa0;<\/p>$/, '');
 }
 
 /**
