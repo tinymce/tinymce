@@ -17,6 +17,7 @@ Version 4.0.17 (2014-02-xx)
 	Fixed bug where the formatter would apply inline formatting outside the current word in if the selection was collapsed.
 	Fixed so pagebreak elements in the editor breaks pages when printing. Patch contributed by penc.
 	Fixed so UndoManager events pass though the original event that created the undo level such as a keydown, blur etc.
+	Fixed bug where there is an extra br tag for IE 9/10 that isn't needed. Patch contributed by monkeydiane.
 	Added support for highlighting the video icon when a video is added that produces an iframe. Patch contributed by monkeydiane.
 Version 4.0.16 (2014-01-31)
 	Fixed bug where the editor wouldn't be properly rendered on IE 10 depending on the document.readyState.
