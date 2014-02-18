@@ -1006,14 +1006,14 @@ QUnit.jsDump = (function() {
 			return type;
 		},
 		separator:function() {
-			return this.multiline ?	this.HTML ? '<br />' : '\n' : this.HTML ? '&nbsp;' : ' ';
+			return this.multiline ?	this.HTML ? '<br />' : '\n' : this.HTML ? '&#xa0;' : ' ';
 		},
 		indent:function( extra ) {// extra can be a number, shortcut for increasing-calling-decreasing
 			if ( !this.multiline )
 				return '';
 			var chr = this.indentChar;
 			if ( this.HTML )
-				chr = chr.replace(/\t/g,'   ').replace(/ /g,'&nbsp;');
+				chr = chr.replace(/\t/g,'   ').replace(/ /g,'&#xa0;');
 			return Array( this._depth_ + (extra||0) ).join(chr);
 		},
 		up:function( a ) {

@@ -330,13 +330,13 @@ define("tinymce/EditorCommands", [
 						if (offset > 0) {
 							html = html.replace(/^&nbsp;/, ' ');
 						} else if (!hasSiblingText('previousSibling')) {
-							html = html.replace(/^ /, '&nbsp;');
+							html = html.replace(/^ /, '&#xa0;');
 						}
 
 						if (offset < container.length) {
 							html = html.replace(/&nbsp;(<br>|)$/, ' ');
 						} else if (!hasSiblingText('nextSibling')) {
-							html = html.replace(/(&nbsp;| )(<br>|)$/, '&nbsp;');
+							html = html.replace(/(&nbsp;| )(<br>|)$/, '&#xa0;');
 						}
 					}
 

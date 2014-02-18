@@ -444,7 +444,7 @@ define("tinymce/EnterKey", [
 				}
 
 				// Insert temp marker and scroll to that
-				marker = dom.create('span', {}, '&nbsp;');
+				marker = dom.create('span', {}, '&#xa0;');
 				brElm.parentNode.insertBefore(marker, brElm);
 				selection.scrollIntoView(marker);
 				dom.remove(marker);
