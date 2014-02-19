@@ -309,7 +309,7 @@ define("tinymce/pasteplugin/Clipboard", [
 			var doc = editor.getDoc(), rng;
 
 			if (doc.caretPositionFromPoint) {
-				var point = doc.caretPositionFromPoint(e.pageX, e.pageY);
+				var point = doc.caretPositionFromPoint(e.clientX, e.clientY);
 				rng = doc.createRange();
 				rng.setStart(point.offsetNode, point.offset);
 				rng.collapse(true);
