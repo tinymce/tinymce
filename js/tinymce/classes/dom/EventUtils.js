@@ -146,7 +146,9 @@ define("tinymce/dom/EventUtils", [], function() {
 		}
 
 		function waitForDomLoaded() {
-			if (doc.readyState === "complete" || doc.readyState === "interactive") {
+			// Check complete or interactive state if there is a body
+			// element on some iframes IE 8 will produce a null body
+			if (doc.readyState === "complete" || (doc.readyState === "interactive" && doc.body)) {
 				removeEvent(doc, "readystatechange", waitForDomLoaded);
 				readyHandler();
 			}
