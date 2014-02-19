@@ -314,7 +314,7 @@ define("tinymce/pasteplugin/Clipboard", [
 				rng.setStart(point.offsetNode, point.offset);
 				rng.collapse(true);
 			} else if (doc.caretRangeFromPoint) {
-				rng = doc.caretRangeFromPoint(e.pageX, e.pageY);
+				rng = doc.caretRangeFromPoint(e.clientX, e.clientY);
 			}
 
 			return rng;
