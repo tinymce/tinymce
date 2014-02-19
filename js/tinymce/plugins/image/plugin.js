@@ -149,6 +149,7 @@ tinymce.PluginManager.add('image', function(editor) {
 				if (!data.src) {
 					if (imgElm) {
 						dom.remove(imgElm);
+						editor.focus();
 						editor.nodeChanged();
 					}
 
