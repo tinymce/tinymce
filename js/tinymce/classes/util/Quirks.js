@@ -900,7 +900,7 @@ define("tinymce/util/Quirks", [
 						dom.bind(doc, 'mouseup', endSelection);
 						dom.bind(doc, 'mousemove', selectionChange);
 
-						dom.win.focus();
+						dom.getRoot().focus();
 						startRng.select();
 					}
 				}
