@@ -235,10 +235,15 @@ define("tinymce/dom/ControlSelection", [
 							id: 'mceResizeHandle' + name,
 							'data-mce-bogus': true,
 							'class': 'mce-resizehandle',
-							contentEditable: false, // Hides IE move layer cursor
 							unSelectabe: true,
 							style: 'cursor:' + name + '-resize; margin:0; padding:0'
 						});
+
+						// Hides IE move layer cursor
+						// If we set it on Chrome we get this wounderful bug: #6725
+						if (Env.ie) {
+							handleElm.contentEditable = false;
+						}
 
 						dom.bind(handleElm, 'mousedown', function(e) {
 							e.preventDefault();
