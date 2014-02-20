@@ -76,24 +76,6 @@ define("tinymce/ui/MenuItem", [
 				e.preventDefault();
 			});
 
-			self.on('mouseenter click', function(e) {
-				if (e.control === self) {
-					if (!settings.menu && e.type === 'click') {
-						self.parent().hideAll();
-						self.fire('cancel');
-						self.fire('select');
-					} else {
-						self.showMenu();
-
-						if (e.aria) {
-							setTimeout(function() {
-								self.menu.focus(true);
-							}, 0);
-						}
-					}
-				}
-			});
-
 			if (settings.menu) {
 				self.aria('haspopup', true);
 			}
@@ -148,8 +130,8 @@ define("tinymce/ui/MenuItem", [
 					menu.fire('show');
 					menu.on('cancel', function(e) {
 						e.stopPropagation();
-						menu.hide();
 						self.focus();
+						menu.hide();
 					});
 
 					menu.on('hide', function(e) {
@@ -266,7 +248,24 @@ define("tinymce/ui/MenuItem", [
 				}
 			}
 
-			return self._super();
+			self.on('mouseenter click', function(e) {
+				if (e.control === self) {
+					if (!settings.menu && e.type === 'click') {
+						self.fire('select');
+						self.parent().hideAll();
+					} else {
+						self.showMenu();
+
+						if (e.aria) {
+							self.menu.focus(true);
+						}
+					}
+				}
+			});
+
+			self._super();
+
+			return self;
 		},
 
 		active: function(state) {

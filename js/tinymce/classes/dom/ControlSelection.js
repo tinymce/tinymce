@@ -235,7 +235,7 @@ define("tinymce/dom/ControlSelection", [
 							id: 'mceResizeHandle' + name,
 							'data-mce-bogus': true,
 							'class': 'mce-resizehandle',
-							unSelectabe: true,
+							unselectable: true,
 							style: 'cursor:' + name + '-resize; margin:0; padding:0'
 						});
 
@@ -246,6 +246,7 @@ define("tinymce/dom/ControlSelection", [
 						}
 
 						dom.bind(handleElm, 'mousedown', function(e) {
+							e.stopImmediatePropagation();
 							e.preventDefault();
 							startDrag(e);
 						});

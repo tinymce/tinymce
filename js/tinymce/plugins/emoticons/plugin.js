@@ -29,7 +29,7 @@ tinymce.PluginManager.add('emoticons', function(editor, url) {
 			tinymce.each(row, function(icon) {
 				var emoticonUrl = url + '/img/smiley-' + icon + '.gif';
 
-				emoticonsHtml += '<td><a href="#" data-mce-url="' + emoticonUrl + '" tabindex="-1"' +
+				emoticonsHtml += '<td><a href="#" data-mce-url="' + emoticonUrl + '" data-mce-alt="' + icon + '" tabindex="-1"' +
 					'role="option" aria-label="' + icon + '"><img src="' +
 					emoticonUrl + '" style="width: 18px; height: 18px" role="presentation"></a></td>';
 			});
@@ -52,7 +52,10 @@ tinymce.PluginManager.add('emoticons', function(editor, url) {
 				var linkElm = editor.dom.getParent(e.target, 'a');
 
 				if (linkElm) {
-					editor.insertContent('<img src="' + linkElm.getAttribute('data-mce-url') + '" />');
+					editor.insertContent(
+						'<img src="' + linkElm.getAttribute('data-mce-url') + '" alt="' + linkElm.getAttribute('data-mce-alt') + '" />'
+					);
+
 					this.hide();
 				}
 			}

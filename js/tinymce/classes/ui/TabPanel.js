@@ -76,10 +76,13 @@ define("tinymce/ui/TabPanel", [
 			layout.preRender(self);
 
 			self.items().each(function(ctrl, i) {
+				var id = self._id + '-t' + i;
+
 				ctrl.aria('role', 'tabpanel');
+				ctrl.aria('labelledby', id);
 
 				tabsHtml += (
-					'<div id="' + self._id + '-t' + i + '" class="' + prefix + 'tab" '+
+					'<div id="' + id + '" class="' + prefix + 'tab" '+
 						'unselectable="on" role="tab" aria-controls="' + ctrl._id + '" aria-selected="false" tabIndex="-1">' +
 						self.encode(ctrl.settings.title) +
 					'</div>'

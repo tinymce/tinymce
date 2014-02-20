@@ -81,7 +81,6 @@ define("tinymce/ui/Menu", [
 			var self = this;
 
 			self.hideAll();
-			self.fire('cancel');
 			self.fire('select');
 		},
 

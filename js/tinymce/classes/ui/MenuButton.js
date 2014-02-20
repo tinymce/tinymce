@@ -89,18 +89,23 @@ define("tinymce/ui/MenuButton", [
 				self.menu.on('cancel', function(e) {
 					if (e.control.parent() === self.menu) {
 						e.stopPropagation();
-						self.menu.hide();
 						self.focus();
+						self.hideMenu();
 					}
+				});
+
+				// Move focus to button when a menu item is selected/clicked
+				self.menu.on('select', function() {
+					self.focus();
 				});
 
 				self.menu.on('show hide', function(e) {
 					if (e.control == self.menu) {
 						self.activeMenu(e.type == 'show');
 					}
-				}).fire('show');
 
-				self.aria('expanded', true);
+					self.aria('expanded', e.type == 'show');
+				}).fire('show');
 			}
 
 			self.menu.show();
@@ -124,7 +129,6 @@ define("tinymce/ui/MenuButton", [
 				});
 
 				self.menu.hide();
-				self.aria('expanded', false);
 			}
 		},
 

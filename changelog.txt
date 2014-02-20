@@ -18,6 +18,7 @@ Version 4.0.17 (2014-02-xx)
 	Fixed bug where the formatter would apply inline formatting outside the current word in if the selection was collapsed.
 	Fixed bug where it wasn't possible to delete tables on Chrome if you placed the selection within all the contents of the table.
 	Fixed bug where older IE versions wouldn't properly insert contents into table cells when editor focus was lost.
+	Fixed bug where older IE versions would fire focus/blur events even though the editor focus didn't change.
 	Fixed so pagebreak elements in the editor breaks pages when printing. Patch contributed by penc.
 	Fixed so UndoManager events pass though the original event that created the undo level such as a keydown, blur etc.
 	Fixed bug where the image dialog would get stuck if the src was removed. Patch contribued by monkeydiane.

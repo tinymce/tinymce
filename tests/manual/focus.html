@@ -68,22 +68,26 @@
 }
 </style>
 </head>
-<body>
+<body id="root">
 <form method="post" action="http://www.tinymce.com/dump.php?example=true">
 	<div>
 		<div>
-			<textarea id="e1" class="editor">e1<table><tr><td>Cell</td></tr></table>Text2</textarea>
+			<textarea id="e1" class="editor">
+				e1&lt;table&gt;&lt;tr&gt;&lt;td&gt;Cell&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;Text2&lt;div contenteditable=&quot;false&quot;&gt;contentEditable:false&lt;/div&gt;
+			</textarea>
+
 			<button type="button">Button</button> <a href="#">Link</a>
 
-			<textarea id="e2" class="editor">e2<table><tr><td>Cell</td></tr></table>Text2</textarea>
-			<button type="button">Button</button> <a href="#">Link</a>
+			<textarea id="e2" class="editor">
+				e2&lt;table&gt;&lt;tr&gt;&lt;td&gt;Cell&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;Text2&lt;div contenteditable=&quot;false&quot;&gt;contentEditable:false&lt;/div&gt;
+			</textarea>
 
 			<div id="e3" class="editor">
-				e3<table><tr><td>Cell</td></tr></table>Text2
+				e3<table><tr><td>Cell</td></tr></table>Text2<div contenteditable="false">contentEditable:false</div>
 			</div>
 
 			<div id="e4" class="editor">
-				e4<table><tr><td>Cell</td></tr></table>Text2
+				e4<table><tr><td>Cell</td></tr></table>Text2<div contenteditable="false">contentEditable:false</div>
 			</div>
 		</div>
 

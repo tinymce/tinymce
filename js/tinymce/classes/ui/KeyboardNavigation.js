@@ -26,6 +26,9 @@ define("tinymce/ui/KeyboardNavigation", [
 	return function(settings) {
 		var root = settings.root, focusedElement, focusedControl;
 
+		focusedElement = document.activeElement;
+		focusedControl = root.getParentCtrl(focusedElement);
+
 		/**
 		 * Returns the currently focused elements wai aria role of the currently
 		 * focused element or specified element.
@@ -94,7 +97,7 @@ define("tinymce/ui/KeyboardNavigation", [
 		 * @return {Boolean} True/false if the element can have focus.
 		 */
 		function canFocus(elm) {
-			if (elm.tagName == "INPUT" && !elm.hidden) {
+			if (isTextInputElement(elm) && !elm.hidden) {
 				return true;
 			}
 
@@ -294,7 +297,11 @@ define("tinymce/ui/KeyboardNavigation", [
 			var parentRole = getParentRole();
 
 			if (parentRole == "tablist") {
-				getFocusElements(focusedControl.getEl('body'))[0].focus();
+				var elm = getFocusElements(focusedControl.getEl('body'))[0];
+
+				if (elm) {
+					elm.focus();
+				}
 			} else {
 				moveFocus(e.shiftKey ? -1 : 1);
 			}
