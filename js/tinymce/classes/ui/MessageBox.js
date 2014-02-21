@@ -158,7 +158,10 @@ define("tinymce/ui/MessageBox", [
 					onPostRender: function() {
 						this.aria('describedby', this.items()[0]._id);
 					},
-					onClose: settings.onClose
+					onClose: settings.onClose,
+					onCancel: function() {
+						callback(false);
+					}
 				}).renderTo(document.body).reflow();
 			},
 
