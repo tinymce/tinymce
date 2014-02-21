@@ -458,7 +458,8 @@ define("tinymce/tableplugin/Plugin", [
 				html += '<tr>';
 
 				for (var x = 0; x < 10; x++) {
-					html += '<td role="gridcell" tabindex="-1"><a id="mcegrid' + (y * 10 + x) + '" href="#" data-mce-x="' + x + '" data-mce-y="' + y + '" ' +
+					html += '<td role="gridcell" tabindex="-1"><a id="mcegrid' + (y * 10 + x) + '" href="#" ' +
+						'data-mce-x="' + x + '" data-mce-y="' + y + '" ' +
 						'' + (x + y === 0 ? ' class="mce-active"' : '') + '></a></td>';
 				}
 
