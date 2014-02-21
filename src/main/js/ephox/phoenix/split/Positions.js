@@ -7,7 +7,7 @@ define(
 
   function (SplitPosition) {
     /* 
-     * Category a split of a text node as: none, start, middle, or end
+     * Categorise a split of a text node as: none, start, middle, or end
      */
     var determine = function (target) {
       return target.before().fold(function () {
