@@ -48,6 +48,8 @@ test(
 
     // Valid child of parent.
     check('root(a(aa(text("INJECTED"),text("aaa"),text("aab"),text("aac")),ab(text("aba"),text("abb"))))', 'aa', 0, TextGene('INJECTED', 'INJECTED'));
+    // Valid child of parent.
+    check('root(a(aa(text("aaa"),text("INJECTED"),text("aab"),text("aac")),ab(text("aba"),text("abb"))))', 'aa', 1, TextGene('INJECTED', 'INJECTED'));
 
     // Last child of parent.
     check('root(a(aa(text("aaa"),text("aab"),text("aac"),text("INJECTED")),ab(text("aba"),text("abb"))))', 'aa', 3, TextGene('INJECTED', 'INJECTED'));
