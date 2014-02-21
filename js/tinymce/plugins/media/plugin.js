@@ -135,9 +135,11 @@ tinymce.PluginManager.add('media', function(editor, url) {
 					items: [
 						{
 							type: 'label',
-							text: 'Paste your embed code below:'
+							text: 'Paste your embed code below:',
+							forId: 'mcemediasource'
 						},
 						{
+							id: 'mcemediasource',
 							type: 'textbox',
 							flex: 1,
 							name: 'embed',
