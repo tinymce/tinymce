@@ -217,11 +217,13 @@ define("tinymce/ui/Window", [
 
 			return (
 				'<div id="' + id + '" class="' + self.classes() + '" hideFocus="1">' +
-					headerHtml +
-					'<div id="' + id + '-body" class="' + self.classes('body') + '">' +
-						html +
+					'<div class="' + self.classPrefix + 'reset" role="application">' +
+						headerHtml +
+						'<div id="' + id + '-body" class="' + self.classes('body') + '">' +
+							html +
+						'</div>' +
+						footerHtml +
 					'</div>' +
-					footerHtml +
 				'</div>'
 			);
 		},

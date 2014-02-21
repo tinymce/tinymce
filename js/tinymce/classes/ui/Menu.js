@@ -96,7 +96,25 @@ define("tinymce/ui/Menu", [
 
 			return self._super();
 		},
+/*
+		getContainerElm: function() {
+			var doc = document, id = this.classPrefix + 'menucontainer';
 
+			var elm = doc.getElementById(id);
+			if (!elm) {
+				elm = doc.createElement('div');
+				elm.id = id;
+				elm.setAttribute('role', 'application');
+				elm.className = this.classPrefix + '-reset';
+				elm.style.position = 'absolute';
+				elm.style.top = elm.style.left = '0';
+				elm.style.overflow = 'visible';
+				doc.body.appendChild(elm);
+			}
+
+			return elm;
+		},
+*/
 		/**
 		 * Invoked before the menu is rendered.
 		 *

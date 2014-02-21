@@ -155,6 +155,9 @@ define("tinymce/ui/MessageBox", [
 						maxHeight: 200,
 						text: settings.text
 					},
+					onPostRender: function() {
+						this.aria('describedby', this.items()[0]._id);
+					},
 					onClose: settings.onClose
 				}).renderTo(document.body).reflow();
 			},

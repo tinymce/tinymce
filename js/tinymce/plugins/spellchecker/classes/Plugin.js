@@ -234,6 +234,8 @@ define("tinymce/spellcheckerplugin/Plugin", [
 
 			var spellCheckCallback = settings.spellchecker_callback || defaultSpellcheckCallback;
 			spellCheckCallback("spellcheck", words, doneCallback);
+
+			editor.focus();
 		}
 
 		function checkIfFinished() {

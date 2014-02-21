@@ -458,8 +458,8 @@ define("tinymce/tableplugin/Plugin", [
 				html += '<tr>';
 
 				for (var x = 0; x < 10; x++) {
-					html += '<td><a href="#" data-mce-x="' + x + '" data-mce-y="' + y + '" role="gridcell" ' +
-						'tabindex="-1"' + (x + y === 0 ? ' class="mce-active"' : '') + '></a></td>';
+					html += '<td role="gridcell" tabindex="-1"><a id="mcegrid' + (y * 10 + x) + '" href="#" data-mce-x="' + x + '" data-mce-y="' + y + '" ' +
+						'' + (x + y === 0 ? ' class="mce-active"' : '') + '></a></td>';
 				}
 
 				html += '</tr>';
@@ -515,7 +515,7 @@ define("tinymce/tableplugin/Plugin", [
 				table.nextSibling.innerHTML = (tx + 1) + ' x '+ (ty + 1);
 			}
 
-			return focusCell;
+			return focusCell.parentNode;
 		}
 
 		editor.addMenuItem('inserttable', {
@@ -603,11 +603,9 @@ define("tinymce/tableplugin/Plugin", [
 						if (e.target.nodeName == 'A') {
 							e.preventDefault();
 							e.stopPropagation();
+							this.parent().cancel();
 
 							insertTable(this.lastX + 1, this.lastY + 1);
-
-							// TODO: Maybe rework this?
-							this.parent().cancel(); // Close parent menu as if it was a click
 						}
 					}
 				}

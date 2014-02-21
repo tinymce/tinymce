@@ -125,7 +125,7 @@ define("tinymce/ui/MenuItem", [
 						menu.itemDefaults = parent.settings.itemDefaults;
 					}
 
-					menu = self.menu = Factory.create(menu).parent(self).renderTo(self.getContainerElm());
+					menu = self.menu = Factory.create(menu).parent(self).renderTo();
 					menu.reflow();
 					menu.fire('show');
 					menu.on('cancel', function(e) {

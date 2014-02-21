@@ -83,7 +83,7 @@ define("tinymce/ui/MenuButton", [
 					menu.type = menu.type || 'menu';
 				}
 
-				self.menu = Factory.create(menu).parent(self).renderTo(self.getContainerElm());
+				self.menu = Factory.create(menu).parent(self).renderTo();
 				self.fire('createmenu');
 				self.menu.reflow();
 				self.menu.on('cancel', function(e) {
@@ -154,7 +154,7 @@ define("tinymce/ui/MenuButton", [
 			self.aria('role', self.parent() instanceof MenuBar ? 'menuitem' : 'button');
 
 			return (
-				'<div id="' + id + '" class="' + self.classes() + '" tabindex="-1">' +
+				'<div id="' + id + '" class="' + self.classes() + '" tabindex="-1" aria-labelledby="' + id + '">' +
 					'<button id="' + id + '-open" role="presentation" type="button" tabindex="-1">' +
 						(icon ? '<i class="' + icon + '"></i>' : '') +
 						'<span>' + (self._text ? (icon ? '\u00a0' : '') + self.encode(self._text) : '') + '</span>' +

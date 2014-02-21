@@ -70,11 +70,9 @@ define("tinymce/ui/Widget", [
 		 * @return {tinymce.ui.Tooltip} Tooltip instance.
 		 */
 		tooltip: function() {
-			var self = this;
-
 			if (!tooltip) {
 				tooltip = new Tooltip({type: 'tooltip'});
-				tooltip.renderTo(self.getContainerElm());
+				tooltip.renderTo();
 			}
 
 			return tooltip;
