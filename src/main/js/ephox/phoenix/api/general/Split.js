@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.phoenix.search.Splitter',
+    'ephox.phoenix.split.Positions',
     'ephox.phoenix.split.Range',
     'ephox.phoenix.split.Split'
   ],
@@ -10,7 +11,7 @@ define(
   /**
    * Documentation is in the actual implementations.
    */
-  function (Splitter, Range, Split) {
+  function (Splitter, Positions, Range, Split) {
     var split = function (universe, item, position) {
       return Split.split(universe, item, position);
     };
@@ -27,11 +28,16 @@ define(
       return Splitter.subdivide(universe, item, positions);
     };
 
+    var position = function (universe, target) {
+      return Positions.determine(target);
+    };
+
     return {
       split: split,
       splitByPair: splitByPair,
       range: range,
-      subdivide: subdivide
+      subdivide: subdivide,
+      position: position
     };
   }
 );
