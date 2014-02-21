@@ -5,11 +5,11 @@ test(
     'ephox.boss.api.Gene',
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
-    'ephox.phoenix.insert.InsertAt',
+    'ephox.phoenix.injection.Injection',
     'ephox.phoenix.test.Finder'
   ],
 
-  function (Gene, TestUniverse, TextGene, InsertAt, Finder) {
+  function (Gene, TestUniverse, TextGene, Injection, Finder) {
     var makeUniverse = function () {
       return TestUniverse(
         Gene('root', 'root', [
@@ -31,7 +31,7 @@ test(
     var check = function (expected, element, offset, injection) {
       var universe = makeUniverse();
       var start = Finder.get(universe, element);
-      InsertAt.atStartOf(universe, start, offset, injection);
+      Injection.atStartOf(universe, start, offset, injection);
       assert.eq(expected, universe.shortlog(function (item) {
         return item.name === 'TEXT_GENE' ? 'text("' + item.text + '")' : item.id;
       }));

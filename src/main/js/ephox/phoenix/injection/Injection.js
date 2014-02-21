@@ -1,5 +1,5 @@
 define(
-  'ephox.phoenix.insert.InsertAt',
+  'ephox.phoenix.injection.Injection',
 
   [
     'ephox.peanut.Fun',
