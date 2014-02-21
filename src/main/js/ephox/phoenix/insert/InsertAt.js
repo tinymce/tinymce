@@ -13,7 +13,7 @@ define(
       var position = Split.position(universe, split);
       return position.fold(function () {
         return InjectPosition.invalid(element, offset);
-      }, InjectPosition.before, InjectPosition.before, InjectPosition.after);
+      }, InjectPosition.before, InjectPosition.after, InjectPosition.after);
     };
 
     var insertAtElement = function (universe, parent, offset) {
@@ -41,15 +41,15 @@ define(
       var position = insertion(universe, element, offset);
 
       var onLast = function (p) {
-        universe.insert().append(p, element);
+        universe.insert().append(p, injection);
       };
 
       var onBefore = function (m) {
-        universe.insert().before(m, element);
+        universe.insert().before(m, injection);
       };
 
       var onAfter = function (m) {
-        universe.insert().after(m, element);
+        universe.insert().after(m, injection);
       };
 
       var onRest = onBefore;
