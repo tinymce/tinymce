@@ -22,6 +22,7 @@ Version 4.0.17 (2014-02-xx)
 	Fixed so pagebreak elements in the editor breaks pages when printing. Patch contributed by penc.
 	Fixed so UndoManager events pass though the original event that created the undo level such as a keydown, blur etc.
 	Fixed so the inserttime button is callsed insertdatetime the same as the menu item and plugin name.
+	Fixed bug where the auroreize plugin would throw an error if the editor was manually removed within a few seconds.
 	Fixed bug where the image dialog would get stuck if the src was removed. Patch contribued by monkeydiane.
 	Fixed bug where there is an extra br tag for IE 9/10 that isn't needed. Patch contributed by monkeydiane.
 	Fixed bug where drag/drop in a scrolled editor would fail since it didn't use clientX/clientY cordinates. Patch contributed by annettem.
