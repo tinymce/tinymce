@@ -53,7 +53,7 @@ tinymce.PluginManager.add('wordcount', function(editor) {
 			tx = tx.replace(/<.[^<>]*?>/g, ' ').replace(/&nbsp;|&#160;/gi, ' '); // remove html tags and space chars
 
 			// deal with html entities
-			tx = tx.replace(/(\w+)(&.+?;)+(\w+)/, "$1$3").replace(/&.+?;/g, ' ');
+			tx = tx.replace(/(\w+)(&#?[a-z0-9]+;)+(\w+)/i, "$1$3").replace(/&.+?;/g, ' ');
 			tx = tx.replace(cleanre, ''); // remove numbers and punctuation
 
 			var wordArray = tx.match(countre);
