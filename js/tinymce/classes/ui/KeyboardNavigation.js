@@ -328,9 +328,9 @@ define("tinymce/ui/KeyboardNavigation", [
 		}
 
 		root.on('keydown', function(e) {
-			function handleEvent(e, handler, isArrowKey) {
-				// Ignore arrow keys for text input elements
-				if (isArrowKey && isTextInputElement(focusedElement)) {
+			function handleNonTabEvent(e, handler) {
+				// Ignore non tab keys for text elements
+				if (isTextInputElement(focusedElement)) {
 					return;
 				}
 
@@ -345,33 +345,35 @@ define("tinymce/ui/KeyboardNavigation", [
 
 			switch (e.keyCode) {
 				case 37: // DOM_VK_LEFT
-					handleEvent(e, left, true);
+					handleNonTabEvent(e, left);
 					break;
 
 				case 39: // DOM_VK_RIGHT
-					handleEvent(e, right, true);
+					handleNonTabEvent(e, right);
 					break;
 
 				case 38: // DOM_VK_UP
-					handleEvent(e, up, true);
+					handleNonTabEvent(e, up);
 					break;
 
 				case 40: // DOM_VK_DOWN
-					handleEvent(e, down, true);
-					break;
-
-				case 9: // DOM_VK_TAB
-					handleEvent(e, tab);
+					handleNonTabEvent(e, down);
 					break;
 
 				case 27: // DOM_VK_ESCAPE
-					handleEvent(e, cancel);
+					handleNonTabEvent(e, cancel);
 					break;
 
 				case 14: // DOM_VK_ENTER
 				case 13: // DOM_VK_RETURN
 				case 32: // DOM_VK_SPACE
-					handleEvent(e, enter);
+					handleNonTabEvent(e, enter);
+					break;
+
+				case 9: // DOM_VK_TAB
+					if (tab(e) !== false) {
+						e.preventDefault();
+					}
 					break;
 			}
 		});
