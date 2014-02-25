@@ -964,8 +964,8 @@ define("tinymce/util/Quirks", [
 				editor.contentStyles.push('body {min-height: 150px}');
 				editor.on('click', function(e) {
 					if (e.target.nodeName == 'HTML') {
-						editor.execCommand('SelectAll');
-						editor.selection.collapse(true);
+						editor.getBody().focus();
+						editor.selection.normalize();
 						editor.nodeChanged();
 					}
 				});
