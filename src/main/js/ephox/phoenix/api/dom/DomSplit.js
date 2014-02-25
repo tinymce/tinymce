@@ -28,11 +28,16 @@ define(
       return Split.subdivide(universe, element, positions);
     };
 
+    var position = function (target) {
+      return Split.position(universe, target);
+    };
+
     return {
       split: split,
       splitByPair: splitByPair,
       range: range,
-      subdivide: subdivide
+      subdivide: subdivide,
+      position: position
     };
   }
 );
