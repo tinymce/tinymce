@@ -994,6 +994,21 @@ define("tinymce/util/Quirks", [
 			setEditorCommandState("AutoUrlDetect", false);
 		}
 
+		/**
+		 * IE 11 has a fantastic bug where it will produce two trailing BR elements to iframe bodies when
+		 * the iframe is hidden by display: none. This workaround solves this by switching
+		 * on designMode on the whole document.
+		 *
+		 * Example this: <body>text</body> becomes <body>text<br><br></body>
+		 */
+		function doubleTrailingBrElements() {
+			if (!editor.inline) {
+				editor.on('init', function() {
+					editor.getDoc().designMode = 'on';
+				});
+			}
+		}
+
 		// All browsers
 		disableBackspaceIntoATable();
 		removeBlockQuoteOnBackSpace();
@@ -1031,6 +1046,7 @@ define("tinymce/util/Quirks", [
 
 		if (Env.ie >= 11) {
 			bodyHeight();
+			doubleTrailingBrElements();
 		}
 
 		if (Env.ie) {
