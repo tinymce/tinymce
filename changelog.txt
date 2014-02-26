@@ -21,6 +21,7 @@ Version 4.0.17 (2014-02-xx)
 	Fixed bug where older IE versions wouldn't properly insert contents into table cells when editor focus was lost.
 	Fixed bug where older IE versions would fire focus/blur events even though the editor focus didn't change.
 	Fixed bug where IE 11 would add two trailing BR elements to the editor iframe body if the editor was hidden.
+	Fixed bug where the visualchars plugin wouldn't display non breaking spaces if they where inserted while the state was enabled.
 	Fixed bug where the wordcount plugin would be very slow some HTML where to much backtracking occured.
 	Fixed so pagebreak elements in the editor breaks pages when printing. Patch contributed by penc.
 	Fixed so UndoManager events pass though the original event that created the undo level such as a keydown, blur etc.

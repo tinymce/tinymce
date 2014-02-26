@@ -11,12 +11,13 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('visualchars', function(editor) {
-	var state;
+	var self = this, state;
 
 	function toggleVisualChars(addBookmark) {
 		var node, nodeList, i, body = editor.getBody(), nodeValue, selection = editor.selection, div, bookmark;
 
 		state = !state;
+		self.state = state;
 		editor.fire('VisualChars', {state: state});
 
 		if (addBookmark) {
