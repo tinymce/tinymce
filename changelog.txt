@@ -1,4 +1,4 @@
-Version 4.0.17 (2014-02-xx)
+Version 4.0.17 (2014-02-26)
 	Added much better wai-aria accessibility support when it comes to keyboard navigation of complex UI controls.
 	Added dfn,code,samp,kbd,var,cite,mark,q elements to the default remove formats list. Patch contributed by Naim Hammadi.
 	Added var,cite,dfn,code,mark,q,sup,sub to the list of elements that gets cloned on enter. Patch contributed by Naim Hammadi.
