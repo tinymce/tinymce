@@ -24,7 +24,7 @@ define("tinymce/util/I18n", [], function() {
 		 * Property gets set to true if a RTL language pack was loaded.
 		 *
 		 * @property rtl
-		 * @type {Boolean}
+		 * @type Boolean
 		 */
 		rtl: false,
 
