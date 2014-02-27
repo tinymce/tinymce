@@ -170,6 +170,10 @@ tinymce.PluginManager.add('image', function(editor) {
 				"class": data["class"]
 			};
 
+			if (!data["class"]) {
+				delete data["class"];
+			}
+
 			editor.undoManager.transact(function() {
 				if (!data.src) {
 					if (imgElm) {

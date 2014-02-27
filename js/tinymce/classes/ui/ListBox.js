@@ -39,7 +39,14 @@ define("tinymce/ui/ListBox", [
 					if (selected) {
 						selectedText = selectedText || values[i].text;
 						self._value = values[i].value;
+						break;
 					}
+				}
+
+				// Default with first item
+				if (!selected && values.length > 0) {
+					selectedText = values[0].text;
+					self._value = values[0].value;
 				}
 
 				settings.menu = values;
