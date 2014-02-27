@@ -1,4 +1,4 @@
-Version 4.0.18 (2014-02-xx)
+Version 4.0.18 (2014-02-27)
 	Fixed bug where images would get class false/undefined when initially created.
 Version 4.0.17 (2014-02-26)
 	Added much better wai-aria accessibility support when it comes to keyboard navigation of complex UI controls.
