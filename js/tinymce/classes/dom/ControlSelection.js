@@ -67,19 +67,35 @@ define("tinymce/dom/ControlSelection", [
 		);
 
 		function isResizable(elm) {
-			if (editor.settings.object_resizing === false) {
-				return false;
-			}
-
 			if (!/TABLE|IMG|DIV/.test(elm.nodeName)) {
 				return false;
 			}
-
+			
 			if (elm.getAttribute('data-mce-resize') === 'false') {
 				return false;
 			}
-
-			return true;
+			
+			var object_resizing;
+			
+			//Compatibility with previous versions
+			if (typeof editor.settings.object_resizing == 'string'){
+				object_resizing = editor.settings.object_resizing;
+			}else if (editor.settings.object_resizing == false){
+				object_resizing = 'none';
+			} else{
+				object_resizing = 'both';
+			}
+			
+			switch(object_resizing){
+				case 'none':
+					return false;
+				case 'table':
+					return /TABLE|DIV/.test(elm.nodeName);
+				case 'image':
+					return /IMG/.test(elm.nodeName);
+				default:
+					return true;
+			}
 		}
 
 		function resizeGhostElement(e) {
