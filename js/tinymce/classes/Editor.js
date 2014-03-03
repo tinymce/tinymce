@@ -1179,7 +1179,7 @@ define("tinymce/Editor", [
 			var self = this, selection = self.selection, node, parents, root;
 
 			// Fix for bug #1896577 it seems that this can not be fired while the editor is loading
-			if (self.initialized && !self.settings.disable_nodechange) {
+			if (self.initialized && !self.settings.disable_nodechange && !self.settings.readonly) {
 				// Get start node
 				root = self.getBody();
 				node = selection.getStart() || root;
