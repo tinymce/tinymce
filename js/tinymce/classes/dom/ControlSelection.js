@@ -67,19 +67,21 @@ define("tinymce/dom/ControlSelection", [
 		);
 
 		function isResizable(elm) {
-			if (editor.settings.object_resizing === false) {
+			var selector = editor.settings.object_resizing;
+
+			if (selector === false) {
 				return false;
 			}
 
-			if (!/TABLE|IMG|DIV/.test(elm.nodeName)) {
-				return false;
+			if (typeof selector != 'string') {
+				selector = 'table,img,div';
 			}
 
 			if (elm.getAttribute('data-mce-resize') === 'false') {
 				return false;
 			}
 
-			return true;
+			return editor.dom.is(elm, selector);
 		}
 
 		function resizeGhostElement(e) {
