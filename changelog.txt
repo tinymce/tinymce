@@ -1,5 +1,6 @@
 Version 4.0.19 (2014-03-xx)
 	Added support for CSS selector expressions in object_resizing option. Allows you to control what to resize.
+	Fixed bug on IE where it wasn't possible to align images when they where floated left.
 Version 4.0.18 (2014-02-27)
 	Fixed bug where images would get class false/undefined when initially created.
 Version 4.0.17 (2014-02-26)

@@ -451,6 +451,14 @@ define("tinymce/dom/ControlSelection", [
 					editor.dom.bind(editor.getBody(), 'mscontrolselect', function(e) {
 						if (/^(TABLE|IMG|HR)$/.test(e.target.nodeName)) {
 							e.preventDefault();
+
+							// This moves the selection from being a control selection to a text like selection like in WebKit #6753
+							// TODO: Fix this the day IE works like other browsers without this nasty native ugly control selections.
+							if (e.target.tagName == 'IMG') {
+								window.setTimeout(function() {
+									editor.selection.select(e.target);
+								}, 0);
+							}
 						}
 					});
 				}
