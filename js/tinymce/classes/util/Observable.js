@@ -45,6 +45,10 @@ define("tinymce/util/Observable", [
 		fire: function(name, args, bubble) {
 			var self = this, handlers, i, l, callback, parent;
 
+			if (self.removed) {
+				return;
+			}
+
 			name = name.toLowerCase();
 			args = args || {};
 			args.type = name;
