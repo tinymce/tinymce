@@ -42,7 +42,7 @@ test("Table properties dialog (get data from plain table)", function() {
 	editor.execCommand('mceInsertTable');
 
 	deepEqual(getFontmostWindow().toJSON(), {
-		"align": false,
+		"align": "",
 		"border": "",
 		"caption": false,
 		"cellpadding": "",
@@ -70,7 +70,7 @@ test("Table properties dialog (get data from full table)", function() {
 	editor.execCommand('mceInsertTable');
 
 	deepEqual(getFontmostWindow().toJSON(), {
-		"align": false,
+		"align": "",
 		"border": "4",
 		"caption": true,
 		"cellpadding": "3",
@@ -163,7 +163,7 @@ test("Table cell properties dialog (get data from plain cell)", function() {
 	editor.execCommand('mceTableCellProps');
 
 	deepEqual(getFontmostWindow().toJSON(), {
-		"align": false,
+		"align": "",
 		"height": "",
 		"scope": "",
 		"type": "td",
@@ -214,7 +214,7 @@ test("Table row properties dialog (get data from plain cell)", function() {
 	editor.execCommand('mceTableRowProps');
 
 	deepEqual(getFontmostWindow().toJSON(), {
-		"align": false,
+		"align": "",
 		"height": "",
 		"type": "tbody"
 	});
