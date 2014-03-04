@@ -210,7 +210,7 @@ define("tinymce/tableplugin/Plugin", [
 							text: 'None',
 							minWidth: 90,
 							maxWidth: null,
-							menu: [
+							values: [
 								{text: 'Cell', value: 'td'},
 								{text: 'Header cell', value: 'th'}
 							]
@@ -222,7 +222,7 @@ define("tinymce/tableplugin/Plugin", [
 							text: 'None',
 							minWidth: 90,
 							maxWidth: null,
-							menu: [
+							values: [
 								{text: 'None', value: ''},
 								{text: 'Row', value: 'row'},
 								{text: 'Column', value: 'col'},
@@ -327,7 +327,7 @@ define("tinymce/tableplugin/Plugin", [
 							label: 'Row type',
 							text: 'None',
 							maxWidth: null,
-							menu: [
+							values: [
 								{text: 'Header', value: 'thead'},
 								{text: 'Body', value: 'tbody'},
 								{text: 'Footer', value: 'tfoot'}
@@ -339,7 +339,7 @@ define("tinymce/tableplugin/Plugin", [
 							label: 'Alignment',
 							text: 'None',
 							maxWidth: null,
-							menu: [
+							values: [
 								{text: 'None', value: ''},
 								{text: 'Left', value: 'left'},
 								{text: 'Center', value: 'center'},
