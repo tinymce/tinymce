@@ -9,6 +9,7 @@
  */
 
 /*jshint bitwise:false */
+/*eslint no-bitwise:0 */
 
 /**
  * Entity encoder class.

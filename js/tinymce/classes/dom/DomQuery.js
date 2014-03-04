@@ -101,6 +101,7 @@ define("tinymce/dom/DomQuery", [
 	var numericCssMap = makeMap('fillOpacity fontWeight lineHeight opacity orphans widows zIndex zoom');
 
 	function DomQuery(selector, context) {
+		/*eslint new-cap:0 */
 		return new DomQuery.fn.init(selector, context);
 	}
 
@@ -180,9 +181,10 @@ define("tinymce/dom/DomQuery", [
 	};
 
 	var whiteSpaceRegExp = /^\s*|\s*$/g;
-	var trim = function(str) {
+
+	function trim(str) {
 		return (str === null || str === undefined) ? '' : ("" + str).replace(whiteSpaceRegExp, '');
-	};
+	}
 
 	/**
 	 * Executes the callback function for each item in array/object. If you return false in the
@@ -477,8 +479,8 @@ define("tinymce/dom/DomQuery", [
 					self.toggleClass(this, state);
 				});
 			} else {
-				self.each(function() {
-					var node = this, existingClassName;
+				self.each(function(node) {
+					var existingClassName;
 
 					if (hasClass(node, className) !== state) {
 						existingClassName = node.className;
@@ -618,9 +620,13 @@ define("tinymce/dom/DomQuery", [
 				expr = ":not(" + expr + ")";
 			}
 
-			return elems.length === 1 ?
-				DomQuery.find.matchesSelector(elems[0], expr) ? [elems[0]] : [] :
-				DomQuery.find.matches(expr, elems);
+			if (elems.length === 1) {
+				elems = DomQuery.find.matchesSelector(elems[0], expr) ? [elems[0]] : [];
+			} else {
+				elems = DomQuery.find.matches(expr, elems);
+			}
+
+			return elems;
 		}
 	});
 

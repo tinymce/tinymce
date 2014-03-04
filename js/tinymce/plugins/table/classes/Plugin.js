@@ -495,7 +495,7 @@ define("tinymce/tableplugin/Plugin", [
 				}
 
 				tx = 9 - tx;
-				table.nextSibling.innerHTML = tx + ' x '+ (ty + 1);
+				table.nextSibling.innerHTML = tx + ' x ' + (ty + 1);
 			} else {
 				for (y = 0; y < 10; y++) {
 					for (x = 0; x < 10; x++) {
@@ -513,7 +513,7 @@ define("tinymce/tableplugin/Plugin", [
 					}
 				}
 
-				table.nextSibling.innerHTML = (tx + 1) + ' x '+ (ty + 1);
+				table.nextSibling.innerHTML = (tx + 1) + ' x ' + (ty + 1);
 			}
 
 			return focusCell.parentNode;

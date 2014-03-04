@@ -9,6 +9,7 @@
  */
 
 /*jshint smarttabs:true, undef:true, unused:true, latedef:true, curly:true, bitwise:true */
+/*eslint no-labels:0, no-constant-condition: 0 */
 /*global tinymce:true */
 
 (function() {
@@ -176,7 +177,7 @@
 				makeReplacementNode = nodeName;
 			}
 
-			return function replace(range) {
+			return function(range) {
 				var before, after, parentNode, startNode = range.startNode,
 					endNode = range.endNode, matchIndex = range.matchIndex;
 

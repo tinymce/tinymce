@@ -8,6 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+/*eslint consistent-this:0 */
+
 /**
  * This is the base class for all controls and containers. All UI control instances inherit
  * from this one as it has the base logic needed by all of them.
@@ -719,10 +721,10 @@ define("tinymce/ui/Control", [
 		 * @return {tinymce.ui.Collection} Collection with all parent controls.
 		 */
 		parents: function(selector) {
-			var ctrl = this, parents = new Collection();
+			var self = this, ctrl, parents = new Collection();
 
 			// Add each parent to collection
-			for (ctrl = ctrl.parent(); ctrl; ctrl = ctrl.parent()) {
+			for (ctrl = self.parent(); ctrl; ctrl = ctrl.parent()) {
 				parents.add(ctrl);
 			}
 
@@ -1367,10 +1369,10 @@ define("tinymce/ui/Control", [
 				e.preventDefault();
 
 				if (e.type == "mousewheel") {
-					e.deltaY = - 1/40 * e.wheelDelta;
+					e.deltaY = -1 / 40 * e.wheelDelta;
 
 					if (e.wheelDeltaX) {
-						e.deltaX = -1/40 * e.wheelDeltaX;
+						e.deltaX = -1 / 40 * e.wheelDeltaX;
 					}
 				} else {
 					e.deltaX = 0;

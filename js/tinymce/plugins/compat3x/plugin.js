@@ -9,6 +9,7 @@
  */
 
 /*global tinymce:true, console:true */
+/*eslint no-console:0, new-cap:0 */
 
 /**
  * This plugin adds missing events form the 4.x API back. Not every event is

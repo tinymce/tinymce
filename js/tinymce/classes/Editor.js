@@ -467,7 +467,7 @@ define("tinymce/Editor", [
 		 */
 		init: function() {
 			var self = this, settings = self.settings, elm = self.getElement();
-			var w, h, minHeight, n, o, url, bodyId, bodyClass, re, i, initializedPlugins = [];
+			var w, h, minHeight, n, o, Theme, url, bodyId, bodyClass, re, i, initializedPlugins = [];
 
 			self.rtl = this.editorManager.i18n.rtl;
 			self.editorManager.add(self);
@@ -486,8 +486,8 @@ define("tinymce/Editor", [
 			if (settings.theme) {
 				if (typeof settings.theme != "function") {
 					settings.theme = settings.theme.replace(/-/, '');
-					o = ThemeManager.get(settings.theme);
-					self.theme = new o(self, ThemeManager.urls[settings.theme]);
+					Theme = ThemeManager.get(settings.theme);
+					self.theme = new Theme(self, ThemeManager.urls[settings.theme]);
 
 					if (self.theme.init) {
 						self.theme.init(self, ThemeManager.urls[settings.theme] || self.documentBaseUrl.replace(/\/$/, ''));
@@ -498,21 +498,21 @@ define("tinymce/Editor", [
 			}
 
 			function initPlugin(plugin) {
-				var constr = PluginManager.get(plugin), url, pluginInstance;
+				var Plugin = PluginManager.get(plugin), pluginUrl, pluginInstance;
 
-				url = PluginManager.urls[plugin] || self.documentBaseUrl.replace(/\/$/, '');
+				pluginUrl = PluginManager.urls[plugin] || self.documentBaseUrl.replace(/\/$/, '');
 				plugin = trim(plugin);
-				if (constr && inArray(initializedPlugins, plugin) === -1) {
+				if (Plugin && inArray(initializedPlugins, plugin) === -1) {
 					each(PluginManager.dependencies(plugin), function(dep){
 						initPlugin(dep);
 					});
 
-					pluginInstance = new constr(self, url);
+					pluginInstance = new Plugin(self, pluginUrl);
 
 					self.plugins[plugin] = pluginInstance;
 
 					if (pluginInstance.init) {
-						pluginInstance.init(self, url);
+						pluginInstance.init(self, pluginUrl);
 						initializedPlugins.push(plugin);
 					}
 				}
@@ -532,11 +532,11 @@ define("tinymce/Editor", [
 					re = /^[0-9\.]+(|px)$/i;
 
 					if (re.test('' + w)) {
-						w = Math.max(parseInt(w, 10) + (o.deltaWidth || 0), 100);
+						w = Math.max(parseInt(w, 10), 100);
 					}
 
 					if (re.test('' + h)) {
-						h = Math.max(parseInt(h, 10) + (o.deltaHeight || 0), minHeight);
+						h = Math.max(parseInt(h, 10), minHeight);
 					}
 
 					// Render UI
@@ -636,7 +636,8 @@ define("tinymce/Editor", [
 			self.iframeHTML += '</head><body id="' + bodyId + '" class="mce-content-body ' + bodyClass + '" ' +
 				'onload="window.parent.tinymce.get(\'' + self.id + '\').fire(\'load\');"><br></body></html>';
 
-			var domainRelaxUrl = 'javascript:(function(){'+
+			/*eslint no-script-url:0 */
+			var domainRelaxUrl = 'javascript:(function(){' +
 				'document.open();document.domain="' + document.domain + '";' +
 				'var ed = window.parent.tinymce.get("' + self.id + '");document.write(ed.iframeHTML);' +
 				'document.close();ed.initContentBody(true);})()';
@@ -714,12 +715,12 @@ define("tinymce/Editor", [
 
 			if (settings.content_editable) {
 				self.on('remove', function() {
-					var body = this.getBody();
+					var bodyEl = this.getBody();
 
-					DOM.removeClass(body, 'mce-content-body');
-					DOM.removeClass(body, 'mce-edit-focus');
-					DOM.setAttrib(body, 'tabIndex', null);
-					DOM.setAttrib(body, 'contentEditable', null);
+					DOM.removeClass(bodyEl, 'mce-content-body');
+					DOM.removeClass(bodyEl, 'mce-edit-focus');
+					DOM.setAttrib(bodyEl, 'tabIndex', null);
+					DOM.setAttrib(bodyEl, 'contentEditable', null);
 				});
 
 				DOM.addClass(targetElm, 'mce-content-body');

@@ -9,6 +9,7 @@
  */
 
 /*global tinymce:true */
+/*eslint no-nested-ternary:0 */
 
 /**
  * Auto Resize

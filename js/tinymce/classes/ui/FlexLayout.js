@@ -35,8 +35,8 @@ define("tinymce/ui/FlexLayout", [
 			// A ton of variables, needs to be in the same scope for performance
 			var i, l, items, contLayoutRect, contPaddingBox, contSettings, align, pack, spacing, totalFlex, availableSpace, direction;
 			var ctrl, ctrlLayoutRect, ctrlSettings, flex, maxSizeItems = [], size, maxSize, ratio, rect, pos, maxAlignEndPos;
-			var sizeName, minSizeName, posName, maxSizeName, beforeName, innerSizeName, afterName, deltaSizeName, contentSizeName;
-			var alignAxisName, alignInnerSizeName, alignSizeName, alignMinSizeName, alignMaxSizeName, alignBeforeName, alignAfterName;
+			var sizeName, minSizeName, posName, maxSizeName, beforeName, innerSizeName, deltaSizeName, contentSizeName;
+			var alignAxisName, alignInnerSizeName, alignSizeName, alignMinSizeName, alignBeforeName, alignAfterName;
 			var alignDeltaSizeName, alignContentSizeName;
 			var max = Math.max, min = Math.min;
 
@@ -63,7 +63,6 @@ define("tinymce/ui/FlexLayout", [
 				maxSizeName = "maxH";
 				innerSizeName = "innerH";
 				beforeName = 'top';
-				afterName = 'bottom';
 				deltaSizeName = "deltaH";
 				contentSizeName = "contentH";
 
@@ -72,7 +71,6 @@ define("tinymce/ui/FlexLayout", [
 				alignAxisName = "x";
 				alignInnerSizeName = "innerW";
 				alignMinSizeName = "minW";
-				alignMaxSizeName = "maxW";
 				alignAfterName = "right";
 				alignDeltaSizeName = "deltaW";
 				alignContentSizeName = "contentW";
@@ -83,7 +81,6 @@ define("tinymce/ui/FlexLayout", [
 				maxSizeName = "maxW";
 				innerSizeName = "innerW";
 				beforeName = 'left';
-				afterName = 'right';
 				deltaSizeName = "deltaW";
 				contentSizeName = "contentW";
 
@@ -92,7 +89,6 @@ define("tinymce/ui/FlexLayout", [
 				alignAxisName = "y";
 				alignInnerSizeName = "innerH";
 				alignMinSizeName = "minH";
-				alignMaxSizeName = "maxH";
 				alignAfterName = "bottom";
 				alignDeltaSizeName = "deltaH";
 				alignContentSizeName = "contentH";

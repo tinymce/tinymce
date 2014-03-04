@@ -62,6 +62,7 @@ define("tinymce/util/URI", [
 		url = url.replace(/@@/g, '(mce_at)'); // Zope 3 workaround, they use @@something
 
 		/*jshint maxlen: 255 */
+		/*eslint max-len: 0 */
 		url = /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@\/]*):?([^:@\/]*))?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/.exec(url);
 
 		each(["source","protocol","authority","userInfo","user","password","host","port","relative","path","directory","file","query","anchor"], function(v, i) {

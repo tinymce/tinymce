@@ -10,6 +10,7 @@ var glob = require("glob");
 var path = require("path");
 var fs = require("fs");
 var exec = require("child_process").exec;
+var eslint = require('./tools/BuildTools').eslint;
 
 desc("Default build task");
 task("default", ["minify", "less", "jshint"], function () {});
@@ -302,7 +303,41 @@ task("bundle-full-jquery", ["default"], function (params) {
 	fs.writeFileSync("js/tinymce/tinymce.jquery.full.js", fullContent);
 });
 
-desc("Runs JSHint on core source files");
+desc("Runs ESLint on core");
+task("eslint-core", [], function() {
+	eslint({
+		src: [
+			"js/tinymce/classes/**/*.js"
+		]
+	});
+});
+
+desc("Runs ESLint on themes");
+task("eslint-themes", [], function() {
+	eslint({
+		src: [
+			"js/tinymce/themes/**/theme.js"
+		]
+	});
+});
+
+desc("Runs ESLint on plugins");
+task("eslint-plugins", [], function() {
+	eslint({
+		src: [
+			"js/tinymce/plugins/**/plugin.js",
+			"js/tinymce/plugins/**/classes/*.js",
+			"!js/tinymce/plugins/table/plugin.js",
+			"!js/tinymce/plugins/paste/plugin.js",
+			"!js/tinymce/plugins/spellchecker/plugin.js"
+		]
+	});
+});
+
+desc("Runs ESLint on all source files");
+task("eslint", ["eslint-core", "eslint-themes", "eslint-plugins"]);
+
+desc("Runs JSHint on all source files");
 task("jshint", ["jshint-core", "jshint-plugins", "jshint-themes"], function () {});
 
 desc("Runs JSHint on core source files");

@@ -82,7 +82,7 @@ define("tinymce/ui/TabPanel", [
 				ctrl.aria('labelledby', id);
 
 				tabsHtml += (
-					'<div id="' + id + '" class="' + prefix + 'tab" '+
+					'<div id="' + id + '" class="' + prefix + 'tab" ' +
 						'unselectable="on" role="tab" aria-controls="' + ctrl._id + '" aria-selected="false" tabIndex="-1">' +
 						self.encode(ctrl.settings.title) +
 					'</div>'

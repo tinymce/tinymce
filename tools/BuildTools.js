@@ -337,3 +337,45 @@ exports.instrumentFile = function(options) {
 		name: options.from
 	}).instrument());
 };
+
+exports.eslint = function(options) {
+	var eslint = require('eslint').cli, args = [];
+
+	function globFiles(patterns) {
+		var files = [], glob = require("glob");
+
+		if (patterns instanceof Array) {
+			patterns.forEach(function(pattern) {
+				if (pattern[0] == '!') {
+					glob.sync(pattern.substr(1)).forEach(function(file) {
+						var idx = files.indexOf(file);
+
+						if (idx != -1) {
+							files.splice(idx, 1);
+						}
+					});
+				} else {
+					files = files.concat(glob.sync(pattern));
+				}
+			});
+		} else {
+			globFiles([patterns]);
+		}
+
+		return files;
+	}
+
+	if (options.config) {
+		args.push('--config', path.resolve(options.config));
+	}
+
+	if (options.rulesdir) {
+		args.push('--rulesdir', options.rulesdir);
+	}
+
+	if (options.format) {
+		args.push('--format', options.format);
+	}
+
+	eslint.execute(args.concat(globFiles(options.src)).join(' '));
+};

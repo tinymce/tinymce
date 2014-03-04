@@ -37,7 +37,7 @@ define("tinymce/ui/GridLayout", [
 		recalc: function(container) {
 			var settings = container.settings, rows, cols, items, contLayoutRect, width, height, rect,
 				ctrlLayoutRect, ctrl, x, y, posX, posY, ctrlSettings, contPaddingBox, align, spacingH, spacingV, alignH, alignV, maxX, maxY,
-				colWidths = [], rowHeights = [], ctrlMinWidth, ctrlMinHeight, alignX, alignY, availableWidth, availableHeight;
+				colWidths = [], rowHeights = [], ctrlMinWidth, ctrlMinHeight, availableWidth, availableHeight;
 
 			// Get layout settings
 			settings = container.settings;
@@ -187,7 +187,6 @@ define("tinymce/ui/GridLayout", [
 					ctrlSettings = ctrl.settings;
 					ctrlLayoutRect = ctrl.layoutRect();
 					width = Math.max(colWidths[x], ctrlLayoutRect.startMinWidth);
-					alignX = alignY = 0;
 					ctrlLayoutRect.x = posX;
 					ctrlLayoutRect.y = posY;
 

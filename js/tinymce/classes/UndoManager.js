@@ -26,7 +26,7 @@ define("tinymce/UndoManager", [
 	].join('|'), 'gi');
 
 	return function(editor) {
-		var self, index = 0, data = [], beforeBookmark, isFirstTypedCharacter, lock;
+		var self = this, index = 0, data = [], beforeBookmark, isFirstTypedCharacter, lock;
 
 		// Returns a trimmed version of the current editor contents
 		function getContent() {

@@ -377,7 +377,7 @@ define("tinymce/ui/Container", [
 
 			return (
 				'<div id="' + self._id + '" class="' + self.classes() + '"' + (role ? ' role="' + this.settings.role + '"' : '') + '>' +
-					'<div id="' + self._id + '-body" class="' + self.classes('body') + '">'+
+					'<div id="' + self._id + '-body" class="' + self.classes('body') + '">' +
 						(self.settings.html || '') + layout.renderHtml(self) +
 					'</div>' +
 				'</div>'
@@ -468,13 +468,13 @@ define("tinymce/ui/Container", [
 		 * @return {tinymce.ui.Container} Current container instance.
 		 */
 		reflow: function() {
-			var i, items;
+			var i;
 
 			if (this.visible()) {
 				Control.repaintControls = [];
 				Control.repaintControls.map = {};
 
-				items = this.recalc();
+				this.recalc();
 				i = Control.repaintControls.length;
 
 				while (i--) {

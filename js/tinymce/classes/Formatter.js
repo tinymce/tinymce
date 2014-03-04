@@ -1375,7 +1375,8 @@ define("tinymce/Formatter", [
 					}
 				}
 
-				for (;;) {
+				/*eslint no-constant-condition:0 */
+				while (true) {
 					// Stop expanding on block elements
 					if (!format[0].block_expand && isBlock(parent)) {
 						return parent;

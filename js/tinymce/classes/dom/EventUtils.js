@@ -9,6 +9,7 @@
  */
 
 /*jshint loopfunc:true*/
+/*eslint no-loop-func:0 */
 
 define("tinymce/dom/EventUtils", [], function() {
 	"use strict";

@@ -17,7 +17,7 @@
 		win = window;
 
 	$.fn.tinymce = function(settings) {
-		var self = this, url, base, lang, suffix = "";
+		var self = this, url, base, lang, suffix = "", patchApplied;
 
 		// No match then just ignore the call
 		if (!self.length) {
@@ -35,9 +35,9 @@
 			var editors = [], initCount = 0;
 
 			// Apply patches to the jQuery object, only once
-			if (applyPatch) {
+			if (!patchApplied) {
 				applyPatch();
-				applyPatch = null;
+				patchApplied = true;
 			}
 
 			// Create an editor instance for each matched node
@@ -147,7 +147,7 @@
 			var script = document.createElement('script');
 			script.type = 'text/javascript';
 			script.onload = script.onreadystatechange = function(e) {
-				e = e || event;
+				e = e || window.event;
 
 				if (lazyLoading !== 2 && (e.type == 'load' || /complete|loaded/.test(script.readyState))) {
 					tinymce.dom.Event.domLoaded = 1;

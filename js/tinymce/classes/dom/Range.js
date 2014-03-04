@@ -13,7 +13,7 @@ define("tinymce/dom/Range", [
 ], function(Tools) {
 	// Range constructor
 	function Range(dom) {
-		var t = this,
+		var self = this,
 			doc = dom.doc,
 			EXTRACT = 0,
 			CLONE = 1,
@@ -57,14 +57,14 @@ define("tinymce/dom/Range", [
 
 		function collapse(ts) {
 			if (ts) {
-				t[END_CONTAINER] = t[START_CONTAINER];
-				t[END_OFFSET] = t[START_OFFSET];
+				self[END_CONTAINER] = self[START_CONTAINER];
+				self[END_OFFSET] = self[START_OFFSET];
 			} else {
-				t[START_CONTAINER] = t[END_CONTAINER];
-				t[START_OFFSET] = t[END_OFFSET];
+				self[START_CONTAINER] = self[END_CONTAINER];
+				self[START_OFFSET] = self[END_OFFSET];
 			}
 
-			t.collapsed = TRUE;
+			self.collapsed = TRUE;
 		}
 
 		function selectNode(n) {
@@ -78,7 +78,7 @@ define("tinymce/dom/Range", [
 		}
 
 		function compareBoundaryPoints(h, r) {
-			var sc = t[START_CONTAINER], so = t[START_OFFSET], ec = t[END_CONTAINER], eo = t[END_OFFSET],
+			var sc = self[START_CONTAINER], so = self[START_OFFSET], ec = self[END_CONTAINER], eo = self[END_OFFSET],
 			rsc = r.startContainer, rso = r.startOffset, rec = r.endContainer, reo = r.endOffset;
 
 			// Check START_TO_START
@@ -150,21 +150,21 @@ define("tinymce/dom/Range", [
 		}
 
 		function surroundContents(n) {
-			var f = t.extractContents();
+			var f = self.extractContents();
 
-			t.insertNode(n);
+			self.insertNode(n);
 			n.appendChild(f);
-			t.selectNode(n);
+			self.selectNode(n);
 		}
 
 		function cloneRange() {
 			return extend(new Range(dom), {
-				startContainer: t[START_CONTAINER],
-				startOffset: t[START_OFFSET],
-				endContainer: t[END_CONTAINER],
-				endOffset: t[END_OFFSET],
-				collapsed: t.collapsed,
-				commonAncestorContainer: t.commonAncestorContainer
+				startContainer: self[START_CONTAINER],
+				startOffset: self[START_OFFSET],
+				endContainer: self[END_CONTAINER],
+				endOffset: self[END_OFFSET],
+				collapsed: self.collapsed,
+				commonAncestorContainer: self.commonAncestorContainer
 			});
 		}
 
@@ -195,7 +195,7 @@ define("tinymce/dom/Range", [
 		}
 
 		function _isCollapsed() {
-			return (t[START_CONTAINER] == t[END_CONTAINER] && t[START_OFFSET] == t[END_OFFSET]);
+			return (self[START_CONTAINER] == self[END_CONTAINER] && self[START_OFFSET] == self[END_OFFSET]);
 		}
 
 		function _compareBoundaryPoints(containerA, offsetA, containerB, offsetB) {
@@ -311,23 +311,23 @@ define("tinymce/dom/Range", [
 			var ec, sc;
 
 			if (st) {
-				t[START_CONTAINER] = n;
-				t[START_OFFSET] = o;
+				self[START_CONTAINER] = n;
+				self[START_OFFSET] = o;
 			} else {
-				t[END_CONTAINER] = n;
-				t[END_OFFSET] = o;
+				self[END_CONTAINER] = n;
+				self[END_OFFSET] = o;
 			}
 
 			// If one boundary-point of a Range is set to have a root container
 			// other than the current one for the Range, the Range is collapsed to
 			// the new position. This enforces the restriction that both boundary-
 			// points of a Range must have the same root container.
-			ec = t[END_CONTAINER];
+			ec = self[END_CONTAINER];
 			while (ec.parentNode) {
 				ec = ec.parentNode;
 			}
 
-			sc = t[START_CONTAINER];
+			sc = self[START_CONTAINER];
 			while (sc.parentNode) {
 				sc = sc.parentNode;
 			}
@@ -337,34 +337,34 @@ define("tinymce/dom/Range", [
 				// end position. To enforce this restriction, if the start is set to
 				// be at a position after the end, the Range is collapsed to that
 				// position.
-				if (_compareBoundaryPoints(t[START_CONTAINER], t[START_OFFSET], t[END_CONTAINER], t[END_OFFSET]) > 0) {
-					t.collapse(st);
+				if (_compareBoundaryPoints(self[START_CONTAINER], self[START_OFFSET], self[END_CONTAINER], self[END_OFFSET]) > 0) {
+					self.collapse(st);
 				}
 			} else {
-				t.collapse(st);
+				self.collapse(st);
 			}
 
-			t.collapsed = _isCollapsed();
-			t.commonAncestorContainer = dom.findCommonAncestor(t[START_CONTAINER], t[END_CONTAINER]);
+			self.collapsed = _isCollapsed();
+			self.commonAncestorContainer = dom.findCommonAncestor(self[START_CONTAINER], self[END_CONTAINER]);
 		}
 
 		function _traverse(how) {
 			var c, endContainerDepth = 0, startContainerDepth = 0, p, depthDiff, startNode, endNode, sp, ep;
 
-			if (t[START_CONTAINER] == t[END_CONTAINER]) {
+			if (self[START_CONTAINER] == self[END_CONTAINER]) {
 				return _traverseSameContainer(how);
 			}
 
-			for (c = t[END_CONTAINER], p = c.parentNode; p; c = p, p = p.parentNode) {
-				if (p == t[START_CONTAINER]) {
+			for (c = self[END_CONTAINER], p = c.parentNode; p; c = p, p = p.parentNode) {
+				if (p == self[START_CONTAINER]) {
 					return _traverseCommonStartContainer(c, how);
 				}
 
 				++endContainerDepth;
 			}
 
-			for (c = t[START_CONTAINER], p = c.parentNode; p; c = p, p = p.parentNode) {
-				if (p == t[END_CONTAINER]) {
+			for (c = self[START_CONTAINER], p = c.parentNode; p; c = p, p = p.parentNode) {
+				if (p == self[END_CONTAINER]) {
 					return _traverseCommonEndContainer(c, how);
 				}
 
@@ -373,13 +373,13 @@ define("tinymce/dom/Range", [
 
 			depthDiff = startContainerDepth - endContainerDepth;
 
-			startNode = t[START_CONTAINER];
+			startNode = self[START_CONTAINER];
 			while (depthDiff > 0) {
 				startNode = startNode.parentNode;
 				depthDiff--;
 			}
 
-			endNode = t[END_CONTAINER];
+			endNode = self[END_CONTAINER];
 			while (depthDiff < 0) {
 				endNode = endNode.parentNode;
 				depthDiff++;
@@ -402,21 +402,21 @@ define("tinymce/dom/Range", [
 			}
 
 			// If selection is empty, just return the fragment
-			if (t[START_OFFSET] == t[END_OFFSET]) {
+			if (self[START_OFFSET] == self[END_OFFSET]) {
 				return frag;
 			}
 
 			// Text node needs special case handling
-			if (t[START_CONTAINER].nodeType == 3 /* TEXT_NODE */) {
+			if (self[START_CONTAINER].nodeType == 3 /* TEXT_NODE */) {
 				// get the substring
-				s = t[START_CONTAINER].nodeValue;
-				sub = s.substring(t[START_OFFSET], t[END_OFFSET]);
+				s = self[START_CONTAINER].nodeValue;
+				sub = s.substring(self[START_OFFSET], self[END_OFFSET]);
 
 				// set the original text node to its new value
 				if (how != CLONE) {
-					n = t[START_CONTAINER];
-					start = t[START_OFFSET];
-					len = t[END_OFFSET] - t[START_OFFSET];
+					n = self[START_CONTAINER];
+					start = self[START_OFFSET];
+					len = self[END_OFFSET] - self[START_OFFSET];
 
 					if (start === 0 && len >= n.nodeValue.length - 1) {
 						n.parentNode.removeChild(n);
@@ -425,7 +425,7 @@ define("tinymce/dom/Range", [
 					}
 
 					// Nothing is partially selected, so collapse to start point
-					t.collapse(TRUE);
+					self.collapse(TRUE);
 				}
 
 				if (how == DELETE) {
@@ -440,8 +440,8 @@ define("tinymce/dom/Range", [
 			}
 
 			// Copy nodes between the start/end offsets.
-			n = _getSelectedNode(t[START_CONTAINER], t[START_OFFSET]);
-			cnt = t[END_OFFSET] - t[START_OFFSET];
+			n = _getSelectedNode(self[START_CONTAINER], self[START_OFFSET]);
+			cnt = self[END_OFFSET] - self[START_OFFSET];
 
 			while (n && cnt > 0) {
 				sibling = n.nextSibling;
@@ -457,7 +457,7 @@ define("tinymce/dom/Range", [
 
 			// Nothing is partially selected, so collapse to start point
 			if (how != CLONE) {
-				t.collapse(TRUE);
+				self.collapse(TRUE);
 			}
 
 			return frag;
@@ -477,14 +477,14 @@ define("tinymce/dom/Range", [
 			}
 
 			endIdx = nodeIndex(endAncestor);
-			cnt = endIdx - t[START_OFFSET];
+			cnt = endIdx - self[START_OFFSET];
 
 			if (cnt <= 0) {
 				// Collapse to just before the endAncestor, which
 				// is partially selected.
 				if (how != CLONE) {
-					t.setEndBefore(endAncestor);
-					t.collapse(FALSE);
+					self.setEndBefore(endAncestor);
+					self.collapse(FALSE);
 				}
 
 				return frag;
@@ -506,8 +506,8 @@ define("tinymce/dom/Range", [
 			// Collapse to just before the endAncestor, which
 			// is partially selected.
 			if (how != CLONE) {
-				t.setEndBefore(endAncestor);
-				t.collapse(FALSE);
+				self.setEndBefore(endAncestor);
+				self.collapse(FALSE);
 			}
 
 			return frag;
@@ -528,7 +528,7 @@ define("tinymce/dom/Range", [
 			startIdx = nodeIndex(startAncestor);
 			++startIdx; // Because we already traversed it
 
-			cnt = t[END_OFFSET] - startIdx;
+			cnt = self[END_OFFSET] - startIdx;
 			n = startAncestor.nextSibling;
 			while (n && cnt > 0) {
 				sibling = n.nextSibling;
@@ -543,15 +543,15 @@ define("tinymce/dom/Range", [
 			}
 
 			if (how != CLONE) {
-				t.setStartAfter(startAncestor);
-				t.collapse(TRUE);
+				self.setStartAfter(startAncestor);
+				self.collapse(TRUE);
 			}
 
 			return frag;
 		}
 
 		function _traverseCommonAncestors(startAncestor, endAncestor, how) {
-			var n, frag, commonParent, startOffset, endOffset, cnt, sibling, nextSibling;
+			var n, frag, startOffset, endOffset, cnt, sibling, nextSibling;
 
 			if (how != DELETE) {
 				frag = createDocumentFragment();
@@ -562,7 +562,6 @@ define("tinymce/dom/Range", [
 				frag.appendChild(n);
 			}
 
-			commonParent = startAncestor.parentNode;
 			startOffset = nodeIndex(startAncestor);
 			endOffset = nodeIndex(endAncestor);
 			++startOffset;
@@ -589,16 +588,16 @@ define("tinymce/dom/Range", [
 			}
 
 			if (how != CLONE) {
-				t.setStartAfter(startAncestor);
-				t.collapse(TRUE);
+				self.setStartAfter(startAncestor);
+				self.collapse(TRUE);
 			}
 
 			return frag;
 		}
 
 		function _traverseRightBoundary(root, how) {
-			var next = _getSelectedNode(t[END_CONTAINER], t[END_OFFSET] - 1), parent, clonedParent;
-			var prevSibling, clonedChild, clonedGrandParent, isFullySelected = next != t[END_CONTAINER];
+			var next = _getSelectedNode(self[END_CONTAINER], self[END_OFFSET] - 1), parent, clonedParent;
+			var prevSibling, clonedChild, clonedGrandParent, isFullySelected = next != self[END_CONTAINER];
 
 			if (next == root) {
 				return _traverseNode(next, isFullySelected, FALSE, how);
@@ -638,7 +637,7 @@ define("tinymce/dom/Range", [
 		}
 
 		function _traverseLeftBoundary(root, how) {
-			var next = _getSelectedNode(t[START_CONTAINER], t[START_OFFSET]), isFullySelected = next != t[START_CONTAINER];
+			var next = _getSelectedNode(self[START_CONTAINER], self[START_OFFSET]), isFullySelected = next != self[START_CONTAINER];
 			var parent, clonedParent, nextSibling, clonedChild, clonedGrandParent;
 
 			if (next == root) {
@@ -689,11 +688,11 @@ define("tinymce/dom/Range", [
 				txtValue = n.nodeValue;
 
 				if (isLeft) {
-					offset = t[START_OFFSET];
+					offset = self[START_OFFSET];
 					newNodeValue = txtValue.substring(offset);
 					oldNodeValue = txtValue.substring(0, offset);
 				} else {
-					offset = t[END_OFFSET];
+					offset = self[END_OFFSET];
 					newNodeValue = txtValue.substring(0, offset);
 					oldNodeValue = txtValue.substring(offset);
 				}
@@ -731,7 +730,7 @@ define("tinymce/dom/Range", [
 			return dom.create('body', null, cloneContents()).outerText;
 		}
 
-		extend(t, {
+		extend(self, {
 			// Inital states
 			startContainer: doc,
 			startOffset: 0,
@@ -766,7 +765,7 @@ define("tinymce/dom/Range", [
 			toStringIE: toStringIE
 		});
 
-		return t;
+		return self;
 	}
 
 	// Older IE versions doesn't let you override toString by it's constructor so we have to stick it in the prototype
