@@ -379,3 +379,74 @@ exports.eslint = function(options) {
 
 	eslint.execute(args.concat(globFiles(options.src)).join(' '));
 };
+
+exports.nuget = function(options) {
+	var http = require("http"), fs = require("fs");
+	var child_process = require("child_process");
+	var args = [];
+
+	if (!/^win/.test(process.platform)) {
+		return;
+	}
+
+	function download(fromUrl, toPath, callback) {
+		var req = http.get(fromUrl, function(response) {
+			var location = response.headers.location;
+
+			if (location) {
+				req.abort();
+				download(require("url").resolve(fromUrl, location), toPath, callback);
+			} else {
+				var file = fs.createWriteStream(toPath);
+				file.on('finish', callback);
+				response.pipe(file);
+			}
+		});
+	}
+
+	function execNuget(nuspec, args) {
+		child_process.execFile(options.cmd, ["pack", nuspec].concat(args), function (error, stdout, stderr) {
+			if (!options.quiet) {
+				if (error !== null) {
+					console.log("NuGet exec error: " + error);
+				}
+
+				if (stdout !== null) {
+					console.log(stdout);
+				}
+
+				if (stderr !== null) {
+					console.log(stderr);
+				}
+			}
+		});
+	}
+
+	if (!fs.existsSync(options.cmd)) {
+		download("http://nuget.org/nuget.exe", options.cmd, function() {
+			if (fs.existsSync(options.cmd)) {
+				exports.nuget(options);
+			}
+		});
+
+		return;
+	}
+
+	if (options.version) {
+		args.push("-Version", options.version);
+	}
+
+	if (options.dest) {
+		args.push("-OutputDirectory", options.dest);
+	}
+
+	if (options.nuspec) {
+		if (options.nuspec instanceof Array) {
+			options.nuspec.forEach(function(nuspec) {
+				execNuget(nuspec, args);
+			});
+		} else {
+			execNuget(options.nuspec, args);
+		}
+	}
+};

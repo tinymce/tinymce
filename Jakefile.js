@@ -9,11 +9,11 @@ var instrumentFile = require('./tools/BuildTools').instrumentFile;
 var glob = require("glob");
 var path = require("path");
 var fs = require("fs");
-var exec = require("child_process").exec;
 var eslint = require('./tools/BuildTools').eslint;
+var nuget = require('./tools/BuildTools').nuget;
 
 desc("Default build task");
-task("default", ["minify", "less", "jshint"], function () {});
+task("default", ["minify", "less"], function () {});
 
 desc("Minify all JS files");
 task("minify", [
@@ -418,15 +418,17 @@ task("less", [], function () {
 	});
 });
 
-desc("Builds release packages as zip files");
-task("release", ["default", "nuget", "zip-production", "zip-production-jquery", "zip-development"], function (params) {});
-
-task("zip-production", [], function () {
-	var details = getReleaseDetails("changelog.txt");
-
+task("mktmp", [], function() {
 	if (!fs.existsSync("tmp")) {
 		fs.mkdirSync("tmp");
 	}
+});
+
+desc("Builds release packages as zip files");
+task("release", ["default", "nuget", "zip-production", "zip-production-jquery", "zip-development", "jshint", "eslint"]);
+
+task("zip-production", ["mktmp"], function () {
+	var details = getReleaseDetails("changelog.txt");
 
 	zip({
 		baseDir: "tinymce",
@@ -462,12 +464,8 @@ task("zip-production", [], function () {
 	});
 });
 
-task("zip-production-jquery", [], function () {
+task("zip-production-jquery", ["mktmp"], function () {
 	var details = getReleaseDetails("changelog.txt");
-
-	if (!fs.existsSync("tmp")) {
-		fs.mkdirSync("tmp");
-	}
 
 	zip({
 		baseDir: "tinymce",
@@ -508,12 +506,8 @@ task("zip-production-jquery", [], function () {
 	});
 });
 
-task("zip-development", [], function () {
+task("zip-development", ["mktmp"], function () {
 	var details = getReleaseDetails("changelog.txt");
-
-	if (!fs.existsSync("tmp")) {
-		fs.mkdirSync("tmp");
-	}
 
 	zip({
 		baseDir: "tinymce",
@@ -538,19 +532,15 @@ task("zip-development", [], function () {
 	});
 });
 
-task("nuget", [], function () {
+task("nuget", ["mktmp"], function () {
 	var details = getReleaseDetails("changelog.txt");
 
-	exec("NuGet.exe pack tools/nuget/TinyMCE.nuspec -Version " + details.version + " -OutputDirectory tmp", function (error, stdout, stderr) {
-		if (error !== null) {
-			console.log('exec error: ' + error);
-		}
-	});
-
-	exec("NuGet.exe pack tools/nuget/TinyMCE.jquery.nuspec -Version " + details.version + " -OutputDirectory tmp", function (error, stdout, stderr) {
-		if (error !== null) {
-			console.log('exec error: ' + error);
-		}
+	nuget({
+		cmd: 'tmp/nuget.exe',
+		nuspec: ['tools/nuget/TinyMCE.nuspec', 'tools/nuget/TinyMCE.jquery.nuspec'],
+		version: details.version,
+		dest: 'tmp',
+		quiet: true
 	});
 });
 
