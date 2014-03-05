@@ -122,13 +122,14 @@ define("tinymce/util/Observable", [
 		 * @method on
 		 * @param {String} name Event name or space separated list of events to bind.
 		 * @param {callback} callback Callback to be executed when the event occurs.
+		 * @param {Boolean} first Optional flag if the event should be prepended. Use this with care.
 		 * @return {Object} Current class instance.
 		 * @example
 		 * instance.on('event', function(e) {
 		 *     // Callback logic
 		 * });
 		 */
-		on: function(name, callback) {
+		on: function(name, callback, prepend) {
 			var self = this, bindings, handlers, names, i;
 
 			if (callback === false) {
@@ -156,7 +157,11 @@ define("tinymce/util/Observable", [
 						}
 					}
 
-					handlers.push(callback);
+					if (prepend) {
+						handlers.unshift(callback);
+					} else {
+						handlers.push(callback);
+					}
 				}
 			}
 

@@ -4,6 +4,7 @@ Version 4.0.19 (2014-03-xx)
 	Fixed bug where the indent/outdent buttons was enabled though readonly mode was enabled.
 	Fixed bug where the nodeChanged event was fired when readonly mode was enabled.
 	Fixed bug where events like blur could be fired to editor instances that where manually removed on IE 11.
+	Fixed bug where IE 11 would move focus to menubar/toolbar when using the tab key in a form with an editor.
 Version 4.0.18 (2014-02-27)
 	Fixed bug where images would get class false/undefined when initially created.
 Version 4.0.17 (2014-02-26)
