@@ -303,6 +303,9 @@ task("bundle-full-jquery", ["default"], function (params) {
 	fs.writeFileSync("js/tinymce/tinymce.jquery.full.js", fullContent);
 });
 
+desc("Runs ESLint on all source files");
+task("eslint", ["eslint-core", "eslint-themes", "eslint-plugins"]);
+
 desc("Runs ESLint on core");
 task("eslint-core", [], function() {
 	eslint({
@@ -333,9 +336,6 @@ task("eslint-plugins", [], function() {
 		]
 	});
 });
-
-desc("Runs ESLint on all source files");
-task("eslint", ["eslint-core", "eslint-themes", "eslint-plugins"]);
 
 desc("Runs JSHint on all source files");
 task("jshint", ["jshint-core", "jshint-plugins", "jshint-themes"], function () {});

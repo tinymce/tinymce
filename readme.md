@@ -5,7 +5,8 @@ Building TinyMCE
 -----------------
 1. Install Node.js
 2. Open a console and go to the project directory
-3. Write "npm install" to install all Node.js modules needed
+3. Write "npm i -g jake" to install the jake tool globally.
+4. Write "npm i" to install all package dependencies
 4. Build TinyMCE by writing "jake"
 
 Build tasks
@@ -24,6 +25,9 @@ Compiles all LESS based skins into css files that can be included in the browser
 
 `jake jshint`
 Runs all js code though jshint.
+
+`jake eslint`
+Runs all js code though eslint.
 
 `jake release`
 Builds release packages with the version specified in changelog.txt.
