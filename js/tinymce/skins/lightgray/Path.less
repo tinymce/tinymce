@@ -1,45 +1,45 @@
 // Path
 
-.mce-path {
+.@{prefix}-path {
 	.inline-block();
 	padding: 8px;
 	white-space: normal;
 }
 
-.mce-path .mce-txt {
+.@{prefix}-path .@{prefix}-txt {
 	display: inline-block;
 	padding-right: 3px;
 }
 
-.mce-path .mce-path-body {
+.@{prefix}-path .@{prefix}-path-body {
 	display: inline-block;
 }
 
-.mce-path-item {
+.@{prefix}-path-item {
 	.inline-block();
 	cursor: pointer;
 	color: @path-text;
 }
 
-.mce-path-item:hover {
+.@{prefix}-path-item:hover {
 	text-decoration: underline;
 }
 
-.mce-path-item:focus {
+.@{prefix}-path-item:focus {
 	background: @path-bg-focus;
 	color: @path-text-focus;
 }
 
-.mce-path .mce-divider {
+.@{prefix}-path .@{prefix}-divider {
 	display: inline;
 }
 
-.mce-disabled .mce-path-item {
+.@{prefix}-disabled .@{prefix}-path-item {
 	color: @text-disabled;
 }
 
 // RTL
 
-.mce-rtl .mce-path {
+.@{prefix}-rtl .@{prefix}-path {
 	direction: rtl;
 }

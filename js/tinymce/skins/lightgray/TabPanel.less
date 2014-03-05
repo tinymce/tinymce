@@ -1,11 +1,11 @@
 // TabPanel
 
-.mce-tabs {
+.@{prefix}-tabs {
 	display: block;
 	border-bottom: 1px solid @tab-border;
 }
 
-.mce-tab {
+.@{prefix}-tab {
 	.inline-block();
 	border: 1px solid @tab-border;
 	border-width: 0 1px 0 0;
@@ -16,11 +16,11 @@
 	cursor: pointer;
 }
 
-.mce-tab:hover {
+.@{prefix}-tab:hover {
 	background: @tab-bg-hover;
 }
 
-.mce-tab.mce-active {
+.@{prefix}-tab.@{prefix}-active {
 	background: @tab-bg-active;
 	border-bottom-color: transparent;
 	margin-bottom: -1px;
@@ -29,11 +29,11 @@
 
 // RTL
 
-.mce-rtl .mce-tabs {
+.@{prefix}-rtl .@{prefix}-tabs {
 	text-align: right;
 	direction: rtl;
 }
 
-.mce-rtl .mce-tab {
+.@{prefix}-rtl .@{prefix}-tab {
 	border-width: 0 0 0 1px;
 }

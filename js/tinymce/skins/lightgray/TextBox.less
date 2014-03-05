@@ -1,6 +1,6 @@
 // TextBox
 
-.mce-textbox {
+.@{prefix}-textbox {
 	background: @textbox-bg;
 	border: 1px solid @textbox-border;
 	.border-radius(3px);
@@ -15,26 +15,26 @@
 	color: @text;
 }
 
-.mce-textbox:focus, .mce-textbox.mce-focus {
+.@{prefix}-textbox:focus, .@{prefix}-textbox.@{prefix}-focus {
 	border-color: @textbox-border-focus;
 	.box-shadow(inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px fadeout(@textbox-border-focus, 15%));
 }
 
-.mce-placeholder .mce-textbox {
+.@{prefix}-placeholder .@{prefix}-textbox {
 	color: @textbox-text-placeholder;
 }
 
-.mce-textbox.mce-multiline {
+.@{prefix}-textbox.@{prefix}-multiline {
 	padding: 4px;
 }
 
-.mce-textbox.mce-disabled {
+.@{prefix}-textbox.@{prefix}-disabled {
 	color: mix(@text, @textbox-bg, 40%);
 }
 
 // RTL
 
-.mce-rtl .mce-textbox {
+.@{prefix}-rtl .@{prefix}-textbox {
 	text-align: right;
 	direction: rtl;
 }

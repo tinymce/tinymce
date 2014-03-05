@@ -1,59 +1,59 @@
-.mce-tinymce {
+.@{prefix}-tinymce {
 	// Avoid FOUC
 	visibility: visible !important;
 	position: relative;
 }
 
-.mce-fullscreen {
+.@{prefix}-fullscreen {
 	border: 0; padding: 0; margin: 0;
 	overflow: hidden;
 	height: 100%;
 	z-index: 100;
 }
 
-div.mce-fullscreen {
+div.@{prefix}-fullscreen {
 	position: fixed;
 	top: 0; left: 0;
 	width: 100%;
 	height: auto;
 }
 
-.mce-tinymce {
+.@{prefix}-tinymce {
 	display: block;
 	.border-radius(2px);
 }
 
-.mce-wordcount {
+.@{prefix}-wordcount {
 	position: absolute;
 	top: 0;
 	right: 0;
 	padding: 8px;
 }
 
-div.mce-edit-area {
+div.@{prefix}-edit-area {
 	background: #FFF;
 	filter: none;
 }
 
-.mce-statusbar {
+.@{prefix}-statusbar {
 	position: relative;
 }
 
-.mce-statusbar .mce-container-body {
+.@{prefix}-statusbar .@{prefix}-container-body {
 	position: relative;
 }
 
-.mce-fullscreen .mce-resizehandle {
+.@{prefix}-fullscreen .@{prefix}-resizehandle {
 	display: none;
 }
 
 // Charmap
 
-.mce-charmap {
+.@{prefix}-charmap {
 	border-collapse: collapse;
 }
 
-.mce-charmap td {
+.@{prefix}-charmap td {
 	cursor: default;
 	border: 1px solid @panel-border;
 	width: 20px;
@@ -64,15 +64,15 @@ div.mce-edit-area {
 	padding: 2px;
 }
 
-.mce-charmap td div {
+.@{prefix}-charmap td div {
 	text-align: center;
 }
 
-.mce-charmap td:hover {
+.@{prefix}-charmap td:hover {
 	background: @btn-bg-hlight;
 }
 
-.mce-grid td div {
+.@{prefix}-grid td div {
 	border: 1px solid @grid-border;
 	width: 12px; height: 12px;
 	margin: 2px;
@@ -83,7 +83,7 @@ div.mce-edit-area {
 	}
 }
 
-.mce-grid {
+.@{prefix}-grid {
 	border-spacing: 2px;
 	border-collapse: separate;
 
@@ -97,7 +97,7 @@ div.mce-edit-area {
 	}
 }
 
-.mce-grid-border {
+.@{prefix}-grid-border {
 	margin: 0 4px 0 4px;
 
 	a {
@@ -105,34 +105,34 @@ div.mce-edit-area {
 		width: 13px; height: 13px;
 	}
 
-	a:hover, a.mce-active {
+	a:hover, a.@{prefix}-active {
 		border-color: @grid-border-active;
 		background: @grid-bg-active;
 	}
 }
 
-.mce-text-center {
+.@{prefix}-text-center {
 	text-align: center;
 }
 
-div.mce-tinymce-inline {
+div.@{prefix}-tinymce-inline {
 	width: 100%;
 	.box-shadow(none);
 }
 
 // Reduce double margins between toolbar rows
 
-.mce-toolbar-grp {
+.@{prefix}-toolbar-grp {
 	padding-bottom: 2px;
 }
 
-.mce-toolbar-grp .mce-flow-layout-item {
+.@{prefix}-toolbar-grp .@{prefix}-flow-layout-item {
 	margin-bottom: 0;
 }
 
 // RTL
 
-.mce-rtl .mce-wordcount {
+.@{prefix}-rtl .@{prefix}-wordcount {
 	left: 0;
 	right: auto;
 }
