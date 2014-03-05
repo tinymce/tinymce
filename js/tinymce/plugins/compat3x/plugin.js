@@ -39,7 +39,7 @@
 			return;
 		}
 
-		this.add = function(callback, scope) {
+		this.add = function(callback, scope, prepend) {
 			log('<target>.on' + newEventName + ".add(..)");
 
 			// Convert callback({arg1:x, arg2:x}) -> callback(arg1, arg2)
@@ -74,13 +74,14 @@
 				}
 			}
 
-			target.on(newEventName, patchedEventCallback);
+			target.on(newEventName, patchedEventCallback, prepend);
 
 			return patchedEventCallback;
 		};
 
-		// Not supported to just use add
-		this.addToTop = this.add;
+		this.addToTop = function(callback, scope) {
+			this.add(callback, scope, true);
+		};
 
 		this.remove = function(callback) {
 			return target.off(newEventName, callback);
