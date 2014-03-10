@@ -88,7 +88,7 @@ define("tinymce/util/Quirks", [
 		 * fix seemed like a huge task. I hope we can remove this before the year 2030. 
 		 */
 		function cleanupStylesWhenDeleting() {
-			var doc = editor.getDoc();
+			var doc = editor.getDoc(), urlPrefix = 'data:text/mce-internal,';
 
 			if (!window.MutationObserver) {
 				return;
@@ -203,14 +203,20 @@ define("tinymce/util/Quirks", [
 			});
 
 			editor.on('dragstart', function(e) {
-				e.dataTransfer.setData('mce-internal', editor.selection.getContent());
+				// Safari doesn't support custom dataTransfer items so we can only use URL and Text
+				e.dataTransfer.setData('URL', 'data:text/mce-internal,' + escape(editor.selection.getContent()));
 			});
 
 			editor.on('drop', function(e) {
 				if (!isDefaultPrevented(e)) {
-					var internalContent = e.dataTransfer.getData('mce-internal');
+					var internalContent = e.dataTransfer.getData('URL');
 
-					if (internalContent && doc.caretRangeFromPoint) {
+					if (!internalContent || internalContent.indexOf(urlPrefix) == -1 || !doc.caretRangeFromPoint) {
+						return;
+					}
+
+					internalContent = unescape(internalContent.substr(urlPrefix.length));
+					if (doc.caretRangeFromPoint) {
 						e.preventDefault();
 						customDelete();
 						editor.selection.setRng(doc.caretRangeFromPoint(e.x, e.y));
