@@ -22,7 +22,7 @@
 	color: mix(@menuitem-text, @menu-bg, 40%);
 }
 
-.mce-menu-item:hover .mce-text, .mce-menu-item.mce-selected .mce-text {
+.mce-menu-item:hover .mce-text, .mce-menu-item.mce-selected .mce-text, .mce-menu-item:focus .mce-text {
 	color: @menuitem-text-inverse;
 }
 
@@ -87,6 +87,10 @@
 }
 
 .mce-menu-item-normal.mce-active:hover .mce-text, .mce-menu-item-normal.mce-active:hover .mce-ico {
+	color: @menuitem-text-inverse;
+}
+
+.mce-menu-item-normal.mce-active:focus .mce-text, .mce-menu-item-normal.mce-active:focus .mce-ico {
 	color: @menuitem-text-inverse;
 }
 

@@ -43,12 +43,19 @@ define("tinymce/ui/PanelButton", [
 					};
 				}
 
+				panelSettings.role = panelSettings.role || 'dialog';
 				panelSettings.popover = true;
 				panelSettings.autohide = true;
+				panelSettings.ariaRoot = true;
 
 				self.panel = new FloatPanel(panelSettings).on('hide', function() {
 					self.active(false);
+				}).on('cancel', function(e) {
+					e.stopPropagation();
+					self.focus();
+					self.hidePanel();
 				}).parent(self).renderTo(self.getContainerElm());
+
 				self.panel.fire('show');
 				self.panel.reflow();
 			} else {
@@ -79,12 +86,15 @@ define("tinymce/ui/PanelButton", [
 		postRender: function() {
 			var self = this;
 
+			self.aria('haspopup', true);
+
 			self.on('click', function(e) {
 				if (e.control === self) {
 					if (self.panel && self.panel.visible()) {
 						self.hidePanel();
 					} else {
 						self.showPanel();
+						self.panel.focus(!!e.aria);
 					}
 				}
 			});

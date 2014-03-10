@@ -170,6 +170,11 @@ define("tinymce/tableplugin/Plugin", [
 
 			cellElm = cellElm || cells[0];
 
+			if (!cellElm) {
+				// If this element is null, return now to avoid crashing.
+				return;
+			}
+
 			data = {
 				width: removePxSuffix(dom.getStyle(cellElm, 'width') || dom.getAttrib(cellElm, 'width')),
 				height: removePxSuffix(dom.getStyle(cellElm, 'height') || dom.getAttrib(cellElm, 'height')),
@@ -288,6 +293,10 @@ define("tinymce/tableplugin/Plugin", [
 			});
 
 			rowElm = rows[0];
+			if (!rowElm) {
+				// If this element is null, return now to avoid crashing.
+				return;
+			}
 
 			data = {
 				height: removePxSuffix(dom.getStyle(rowElm, 'height') || dom.getAttrib(rowElm, 'height')),
@@ -443,13 +452,15 @@ define("tinymce/tableplugin/Plugin", [
 		function generateTableGrid() {
 			var html = '';
 
-			html = '<table role="presentation" class="mce-grid mce-grid-border">';
+			html = '<table role="grid" class="mce-grid mce-grid-border" aria-readonly="true">';
 
 			for (var y = 0; y < 10; y++) {
 				html += '<tr>';
 
 				for (var x = 0; x < 10; x++) {
-					html += '<td><a href="#" data-mce-index="' + x + ',' + y + '"></a></td>';
+					html += '<td role="gridcell" tabindex="-1"><a id="mcegrid' + (y * 10 + x) + '" href="#" ' +
+						'data-mce-x="' + x + '" data-mce-y="' + y + '" ' +
+						'' + (x + y === 0 ? ' class="mce-active"' : '') + '></a></td>';
 				}
 
 				html += '</tr>';
@@ -457,9 +468,55 @@ define("tinymce/tableplugin/Plugin", [
 
 			html += '</table>';
 
-			html += '<div class="mce-text-center">0 x 0</div>';
+			html += '<div class="mce-text-center" role="presentation">1 x 1</div>';
 
 			return html;
+		}
+
+		function selectGrid(tx, ty, control) {
+			var table = control.getEl().getElementsByTagName('table')[0];
+			var rel = control.parent().rel, x, y, focusCell, cell;
+
+			if (control.isRtl() || rel == 'tl-tr') {
+				for (y = 9; y >= 0; y--) {
+					for (x = 0; x < 10; x++) {
+						cell = table.rows[y].childNodes[x].firstChild;
+
+						editor.dom.toggleClass(
+							cell,
+							'mce-active',
+							x >= tx && y <= ty
+						);
+
+						if (x >= tx && y <= ty) {
+							focusCell = cell;
+						}
+					}
+				}
+
+				tx = 9 - tx;
+				table.nextSibling.innerHTML = tx + ' x '+ (ty + 1);
+			} else {
+				for (y = 0; y < 10; y++) {
+					for (x = 0; x < 10; x++) {
+						cell = table.rows[y].childNodes[x].firstChild;
+
+						editor.dom.toggleClass(
+							cell,
+							'mce-active',
+							x <= tx && y <= ty
+						);
+
+						if (x <= tx && y <= ty) {
+							focusCell = cell;
+						}
+					}
+				}
+
+				table.nextSibling.innerHTML = (tx + 1) + ' x '+ (ty + 1);
+			}
+
+			return focusCell.parentNode;
 		}
 
 		editor.addMenuItem('inserttable', {
@@ -467,67 +524,89 @@ define("tinymce/tableplugin/Plugin", [
 			icon: 'table',
 			context: 'table',
 			onhide: function() {
-				editor.dom.removeClass(this.menu.items()[0].getEl().getElementsByTagName('a'), 'mce-active');
+				var elements = this.menu.items()[0].getEl().getElementsByTagName('a');
+				editor.dom.removeClass(elements, 'mce-active');
+				editor.dom.addClass(elements[0], 'mce-active');
 			},
 			menu: [
 				{
 					type: 'container',
 					html: generateTableGrid(),
 
+					onPostRender: function() {
+						this.lastX = this.lastY = 0;
+					},
+
 					onmousemove: function(e) {
-						var x, y, target = e.target;
+						var target = e.target, x, y;
 
 						if (target.nodeName == 'A') {
-							var table = editor.dom.getParent(target, 'table');
-							var pos = target.getAttribute('data-mce-index');
-							var rel = e.control.parent().rel;
+							x = parseInt(target.getAttribute('data-mce-x'), 10);
+							y = parseInt(target.getAttribute('data-mce-y'), 10);
 
-							if (pos != this.lastPos) {
-								pos = pos.split(',');
+							if (x !== this.lastX || y !== this.lastY) {
+								selectGrid(x, y, e.control);
 
-								pos[0] = parseInt(pos[0], 10);
-								pos[1] = parseInt(pos[1], 10);
-
-								if (e.control.isRtl() || rel == 'tl-tr') {
-									for (y = 9; y >= 0; y--) {
-										for (x = 0; x < 10; x++) {
-											editor.dom.toggleClass(
-												table.rows[y].childNodes[x].firstChild,
-												'mce-active',
-												x >= pos[0] && y <= pos[1]
-											);
-										}
-									}
-
-									pos[0] = 9 - pos[0];
-									table.nextSibling.innerHTML = pos[0] + ' x '+ (pos[1] + 1);
-								} else {
-									for (y = 0; y < 10; y++) {
-										for (x = 0; x < 10; x++) {
-											editor.dom.toggleClass(
-												table.rows[y].childNodes[x].firstChild,
-												'mce-active',
-												x <= pos[0] && y <= pos[1]
-											);
-										}
-									}
-
-									table.nextSibling.innerHTML = (pos[0] + 1) + ' x '+ (pos[1] + 1);
-								}
-
-								this.lastPos = pos;
+								this.lastX = x;
+								this.lastY = y;
 							}
 						}
 					},
 
-					onclick: function(e) {
-						if (e.target.nodeName == 'A' && this.lastPos) {
+					onkeydown: function(e) {
+						var x = this.lastX, y = this.lastY, isHandled;
+
+						switch (e.keyCode) {
+							case 37: // DOM_VK_LEFT
+								if (x > 0) {
+									x--;
+									isHandled = true;
+								}
+								break;
+
+							case 39: // DOM_VK_RIGHT
+								isHandled = true;
+
+								if (x < 9) {
+									x++;
+								}
+								break;
+
+							case 38: // DOM_VK_UP
+								isHandled = true;
+
+								if (y > 0) {
+									y--;
+								}
+								break;
+
+							case 40: // DOM_VK_DOWN
+								isHandled = true;
+
+								if (y < 9) {
+									y++;
+								}
+								break;
+						}
+
+						if (isHandled) {
 							e.preventDefault();
+							e.stopPropagation();
 
-							insertTable(this.lastPos[0] + 1, this.lastPos[1] + 1);
+							selectGrid(x, y, e.control).focus();
 
-							// TODO: Maybe rework this?
-							this.parent().cancel(); // Close parent menu as if it was a click
+							this.lastX = x;
+							this.lastY = y;
+						}
+					},
+
+					onclick: function(e) {
+						if (e.target.nodeName == 'A') {
+							e.preventDefault();
+							e.stopPropagation();
+							this.parent().cancel();
+
+							insertTable(this.lastX + 1, this.lastY + 1);
 						}
 					}
 				}

@@ -178,14 +178,14 @@ tinymce.PluginManager.add('fullpage', function(editor) {
 		}
 
 		// Add meta encoding
-		if (data.docencoding) {
-			elm = null;
-			each(headerFragment.getAll('meta'), function(meta) {
-				if (meta.attr('http-equiv') == 'Content-Type') {
-					elm = meta;
-				}
-			});
+		elm = null;
+		each(headerFragment.getAll('meta'), function(meta) {
+			if (meta.attr('http-equiv') == 'Content-Type') {
+				elm = meta;
+			}
+		});
 
+		if (data.docencoding) {
 			if (!elm) {
 				elm = new Node('meta', 1);
 				elm.attr('http-equiv', 'Content-Type');
@@ -194,6 +194,8 @@ tinymce.PluginManager.add('fullpage', function(editor) {
 			}
 
 			elm.attr('content', 'text/html; charset=' + data.docencoding);
+		} else {
+			elm.remove();
 		}
 
 		// Add/update/remove title
@@ -201,9 +203,12 @@ tinymce.PluginManager.add('fullpage', function(editor) {
 		if (data.title) {
 			if (!elm) {
 				elm = new Node('title', 1);
-				elm.append(new Node('#text', 3)).value = data.title;
 				addHeadNode(elm);
+			} else {
+				elm.empty();
 			}
+
+			elm.append(new Node('#text', 3)).value = data.title;
 		} else if (elm) {
 			elm.remove();
 		}

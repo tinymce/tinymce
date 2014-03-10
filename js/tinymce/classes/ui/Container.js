@@ -22,9 +22,10 @@ define("tinymce/ui/Container", [
 	"tinymce/ui/Collection",
 	"tinymce/ui/Selector",
 	"tinymce/ui/Factory",
+	"tinymce/ui/KeyboardNavigation",
 	"tinymce/util/Tools",
 	"tinymce/ui/DomUtils"
-], function(Control, Collection, Selector, Factory, Tools, DomUtils) {
+], function(Control, Collection, Selector, Factory, KeyboardNavigation, Tools, DomUtils) {
 	"use strict";
 
 	var selectorCache = {};
@@ -115,15 +116,41 @@ define("tinymce/ui/Container", [
 		 * for the first control in the container and focus that.
 		 *
 		 * @method focus
+		 * @param {Boolean} keyboard Optional true/false if the focus was a keyboard focus or not.
 		 * @return {tinymce.ui.Collection} Current instance.
 		 */
-		focus: function() {
-			var self = this;
+		focus: function(keyboard) {
+			var self = this, focusCtrl, keyboardNav, items;
 
-			if (self.keyNav) {
-				self.keyNav.focusFirst();
-			} else {
-				self._super();
+			if (keyboard) {
+				keyboardNav = self.keyboardNav || self.parents().eq(-1)[0].keyboardNav;
+
+				if (keyboardNav) {
+					keyboardNav.focusFirst(self);
+					return;
+				}
+			}
+
+			items = self.find('*');
+
+			// TODO: Figure out a better way to auto focus alert dialog buttons
+			if (self.statusbar) {
+				items.add(self.statusbar.items());
+			}
+
+			items.each(function(ctrl) {
+				if (ctrl.settings.autofocus) {
+					focusCtrl = null;
+					return false;
+				}
+
+				if (ctrl.canFocus) {
+					focusCtrl = focusCtrl || ctrl;
+				}
+			});
+
+			if (focusCtrl) {
+				focusCtrl.focus();
 			}
 
 			return self;
@@ -383,6 +410,12 @@ define("tinymce/ui/Container", [
 					'border-right-width': box.right,
 					'border-bottom-width': box.bottom,
 					'border-left-width': box.left
+				});
+			}
+
+			if (!self.parent()) {
+				self.keyboardNav = new KeyboardNavigation({
+					root: self
 				});
 			}
 

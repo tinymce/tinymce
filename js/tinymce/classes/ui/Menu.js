@@ -17,10 +17,9 @@
  */
 define("tinymce/ui/Menu", [
 	"tinymce/ui/FloatPanel",
-	"tinymce/ui/KeyboardNavigation",
 	"tinymce/ui/MenuItem",
 	"tinymce/util/Tools"
-], function(FloatPanel, KeyboardNavigation, MenuItem, Tools) {
+], function(FloatPanel, MenuItem, Tools) {
 	"use strict";
 
 	var Menu = FloatPanel.extend({
@@ -28,7 +27,9 @@ define("tinymce/ui/Menu", [
 			defaultType: 'menuitem',
 			border: 1,
 			layout: 'stack',
-			role: 'menu'
+			role: 'application',
+			bodyRole: 'menu',
+			ariaRoot: true
 		},
 
 		/**
@@ -53,23 +54,6 @@ define("tinymce/ui/Menu", [
 
 			self._super(settings);
 			self.addClass('menu');
-
-			self.keyNav = new KeyboardNavigation({
-				root: self,
-				enableUpDown: true,
-				enableLeftRight: true,
-
-				leftAction: function() {
-					if (self.parent() instanceof MenuItem) {
-						self.keyNav.cancel();
-					}
-				},
-
-				onCancel: function() {
-					self.fire('cancel', {}, false);
-					self.hide();
-				}
-			});
 		},
 
 		/**
@@ -97,7 +81,6 @@ define("tinymce/ui/Menu", [
 			var self = this;
 
 			self.hideAll();
-			self.fire('cancel');
 			self.fire('select');
 		},
 
@@ -113,7 +96,25 @@ define("tinymce/ui/Menu", [
 
 			return self._super();
 		},
+/*
+		getContainerElm: function() {
+			var doc = document, id = this.classPrefix + 'menucontainer';
 
+			var elm = doc.getElementById(id);
+			if (!elm) {
+				elm = doc.createElement('div');
+				elm.id = id;
+				elm.setAttribute('role', 'application');
+				elm.className = this.classPrefix + '-reset';
+				elm.style.position = 'absolute';
+				elm.style.top = elm.style.left = '0';
+				elm.style.overflow = 'visible';
+				doc.body.appendChild(elm);
+			}
+
+			return elm;
+		},
+*/
 		/**
 		 * Invoked before the menu is rendered.
 		 *

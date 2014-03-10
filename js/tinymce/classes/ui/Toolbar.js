@@ -15,9 +15,8 @@
  * @extends tinymce.ui.Container
  */
 define("tinymce/ui/Toolbar", [
-	"tinymce/ui/Container",
-	"tinymce/ui/KeyboardNavigation"
-], function(Container, KeyboardNavigation) {
+	"tinymce/ui/Container"
+], function(Container) {
 	"use strict";
 
 	return Container.extend({
@@ -48,11 +47,6 @@ define("tinymce/ui/Toolbar", [
 			var self = this;
 
 			self.items().addClass('toolbar-item');
-
-			self.keyNav = new KeyboardNavigation({
-				root: self,
-				enableLeftRight: true
-			});
 
 			return self._super();
 		}

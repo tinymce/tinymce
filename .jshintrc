@@ -47,7 +47,7 @@
 	"undef": true,
 	"unused": true,
 	"validthis": false,
-	"smarttabs": true,
+	"smarttabs": false,
 	"proto": false,
 	"onecase": true,
 	"nonstandard": true,

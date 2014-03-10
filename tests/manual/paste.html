@@ -33,19 +33,13 @@
 		],
 
 		setup: function(ed) {
-			ed.on('PastePreProcess', function(e) {
+			ed.on('BeforePastePreProcess PastePreProcess', function(e) {
 				if (window.console && console.dir) {
-					console.dir(e.type, e.content);
+					console.log(e.type + ": " + e.content);
 				}
 
 				e.content = e.content.toUpperCase();
 			});
-
-			/*ed.on('focus blur', function(e) {
-				if (window.console && console.log) {
-					console.log(e.type);
-				}
-			});*/
 		}
 	});
 
@@ -54,24 +48,18 @@
 		plugins: 'paste',
 		inline: true,
 		setup: function(ed) {
-			ed.on('PastePreProcess', function(e) {
+			ed.on('BeforePastePreProcess PastePreProcess', function(e) {
 				if (window.console && console.dir) {
-					console.dir(e.type, e.content);
+					console.log(e.type + ": " + e.content);
 				}
 
 				e.content = e.content.toUpperCase();
 			});
-
-			/*ed.on('focus blur', function(e) {
-				if (window.console && console.log) {
-					console.log(e.type);
-				}
-			});*/
 		}
 	});
 </script>
 </head>
-<body role="application">
+<body>
 <form method="post" action="http://www.tinymce.com/dump.php?example=true">
 	<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%">
 		<pre>Pre element</pre>
@@ -108,7 +96,7 @@
 		<a href="javascript:;" onclick="alert(tinymce.get('elm1').getContent());return false;">[Get contents]</a>
 		<a href="javascript:;" onclick="alert(tinymce.get('elm1').getContent({format: 'raw'}));return false;">[Get raw]</a>
 		<a href="javascript:;" onclick="alert(tinymce.get('elm1').selection.getContent());return false;">[Get selected HTML]</a>
-		<a href="javascript:;" onclick="alert(tinymce.get('elm1').selection.getContent({format : 'text'}));return false;">[Get selected text]</a>
+		<a href="javascript:;" onclick="alert(tinymce.get('elm1').selection.getContent({format: 'text'}));return false;">[Get selected text]</a>
 		<a href="javascript:;" onclick="alert(tinymce.get('elm1').selection.getNode().nodeName);return false;">[Get selected element]</a>
 		<a href="javascript:;" onclick="tinymce.execCommand('mceInsertContent',false,'<b>Hello world!!</b>');return false;">[Insert HTML]</a>
 		<a href="javascript:;" onclick="tinymce.execCommand('mceReplaceContent',false,'<b>{$selection}</b>');return false;">[Replace selection]</a>

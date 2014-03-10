@@ -16,9 +16,8 @@
  * @extends tinymce.ui.Widget
  */
 define("tinymce/ui/Path", [
-	"tinymce/ui/Widget",
-	"tinymce/ui/KeyboardNavigation"
-], function(Widget, KeyboardNavigation) {
+	"tinymce/ui/Widget"
+], function(Widget) {
 	"use strict";
 
 	return Widget.extend({
@@ -58,12 +57,7 @@ define("tinymce/ui/Path", [
 		focus: function() {
 			var self = this;
 
-			self.keyNav = new KeyboardNavigation({
-				root: self,
-				enableLeftRight: true
-			});
-
-			self.keyNav.focusFirst();
+			self.getEl().firstChild.focus();
 
 			return self;
 		},
@@ -132,7 +126,7 @@ define("tinymce/ui/Path", [
 				html += (
 					(i > 0 ? '<div class="'+ prefix + 'divider" aria-hidden="true"> ' + self.settings.delimiter + ' </div>' : '') +
 					'<div role="button" class="' + prefix + 'path-item' + (i == l - 1 ? ' ' + prefix + 'last' : '') + '" data-index="' +
-					i + '" tabindex="-1" id="' + self._id + '-' + i +'">' + parts[i].name + '</div>'
+					i + '" tabindex="-1" id="' + self._id + '-' + i +'" aria-level="' + i + '">' + parts[i].name + '</div>'
 				);
 			}
 

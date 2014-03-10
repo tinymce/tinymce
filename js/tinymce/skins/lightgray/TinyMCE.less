@@ -77,6 +77,10 @@ div.mce-edit-area {
 	width: 12px; height: 12px;
 	margin: 2px;
 	cursor: pointer;
+
+	&:focus {
+		border-color: @grid-border-active;
+	}
 }
 
 .mce-grid {
@@ -87,7 +91,7 @@ div.mce-edit-area {
 		display: block;
 		border: 1px solid transparent;
 
-		&:hover {
+		&:hover, &:focus {
 			border-color: @grid-border-active;
 		}
 	}

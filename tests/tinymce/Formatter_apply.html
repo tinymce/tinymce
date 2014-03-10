@@ -951,6 +951,14 @@ test('Caret format inside single inline wrapped word', function() {
 	equal(editor.getContent(), '<p>abc <b><em>123</em></b> 456</p>');
 });
 
+test('Caret format inside word before similar format', function() {
+	editor.setContent('<p>abc 123 <b>456</b></p>');
+	editor.formatter.register('format', {inline: 'b'});
+	setSelection('p', 1, 'p', 1);
+	editor.formatter.apply('format');
+	equal(editor.getContent(), '<p><b>abc</b> 123 <b>456</b></p>');
+});
+
 test('Caret format inside last inline wrapped word', function() {
 	editor.setContent('<p>abc <em>abc 123</em> 456</p>');
 	editor.formatter.register('format', {inline: 'b'});
@@ -1110,6 +1118,20 @@ test('Align specified table element with collapsed: false and selection collapse
 	editor.formatter.register('format', {selector: 'table', collapsed: false, styles: {'float': 'right'}});
 	editor.formatter.apply('format', {}, editor.getBody().firstChild);
 	equal(getContent(), '<table style="float: right;"><tbody><tr><td>a</td></tr></tbody></table>');
+});
+
+test('Apply ID format to around existing bookmark node', function() {
+	editor.getBody().innerHTML = '<p>a<span id="b" data-mce-type="bookmark"></span>b</p>';
+
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].lastChild, 1);
+	editor.selection.setRng(rng);
+
+	editor.formatter.register('format', {inline: 'span', attributes: {id: 'id'}});
+	editor.formatter.apply('format');
+
+	equal(normalizeHtml(editor.getBody().innerHTML), '<p><span id="id">a<span data-mce-type="bookmark" id="b"></span>b</span></p>');
 });
 
 test('Bug #5134 - TinyMCE removes formatting tags in the getContent', function() {

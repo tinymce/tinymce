@@ -265,7 +265,7 @@
 			var origFn = jQueryFn[name] = $.fn[name],
 				textProc = (name === "text");
 
-			 $.fn[name] = function(value) {
+			$.fn[name] = function(value) {
 				var self = this;
 
 				if (!containsTinyMCE(self)) {
@@ -293,7 +293,7 @@
 
 					return ret;
 				}
-			 };
+			};
 		});
 
 		// Makes it possible to use $('#id').append("content"); to append contents to the TinyMCE editor iframe
@@ -301,7 +301,7 @@
 			var origFn = jQueryFn[name] = $.fn[name],
 				prepend = (name === "prepend");
 
-			 $.fn[name] = function(value) {
+			$.fn[name] = function(value) {
 				var self = this;
 
 				if (!containsTinyMCE(self)) {
@@ -321,7 +321,7 @@
 
 					return self; // return original set for chaining
 				}
-			 };
+			};
 		});
 
 		// Makes sure that the editor instance gets properly destroyed when the parent element is removed

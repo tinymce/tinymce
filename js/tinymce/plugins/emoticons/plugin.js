@@ -21,7 +21,7 @@ tinymce.PluginManager.add('emoticons', function(editor, url) {
 	function getHtml() {
 		var emoticonsHtml;
 
-		emoticonsHtml = '<table role="presentation" class="mce-grid">';
+		emoticonsHtml = '<table role="list" class="mce-grid">';
 
 		tinymce.each(emoticons, function(row) {
 			emoticonsHtml += '<tr>';
@@ -29,8 +29,9 @@ tinymce.PluginManager.add('emoticons', function(editor, url) {
 			tinymce.each(row, function(icon) {
 				var emoticonUrl = url + '/img/smiley-' + icon + '.gif';
 
-				emoticonsHtml += '<td><a href="#" data-mce-url="' + emoticonUrl + '" tabindex="-1"><img src="' +
-					emoticonUrl + '" style="width: 18px; height: 18px"></a></td>';
+				emoticonsHtml += '<td><a href="#" data-mce-url="' + emoticonUrl + '" data-mce-alt="' + icon + '" tabindex="-1"' +
+					'role="option" aria-label="' + icon + '"><img src="' +
+					emoticonUrl + '" style="width: 18px; height: 18px" role="presentation"></a></td>';
 			});
 
 			emoticonsHtml += '</tr>';
@@ -44,13 +45,17 @@ tinymce.PluginManager.add('emoticons', function(editor, url) {
 	editor.addButton('emoticons', {
 		type: 'panelbutton',
 		panel: {
+			role: 'application',
 			autohide: true,
 			html: getHtml,
 			onclick: function(e) {
 				var linkElm = editor.dom.getParent(e.target, 'a');
 
 				if (linkElm) {
-					editor.insertContent('<img src="' + linkElm.getAttribute('data-mce-url') + '" />');
+					editor.insertContent(
+						'<img src="' + linkElm.getAttribute('data-mce-url') + '" alt="' + linkElm.getAttribute('data-mce-alt') + '" />'
+					);
+
 					this.hide();
 				}
 			}

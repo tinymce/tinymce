@@ -24,6 +24,7 @@ define("tinymce/ui/MenuBar", [
 		Defaults: {
 			role: 'menubar',
 			containerCls: 'menubar',
+			ariaRoot: true,
 			defaults: {
 				type: 'menubutton'
 			}

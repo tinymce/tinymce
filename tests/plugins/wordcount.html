@@ -55,7 +55,7 @@ test("Does not count asterisks, non-word characters", function() {
 test("Does not count htmlentities", function() {
 	expect(1);
 
-	editor.setContent('<p>It&rsquo;s my life &ndash; don\'t you forget.</p>');
+	editor.setContent('<p>It&rsquo;s my life &ndash; &#8211; &#x2013; don\'t you forget.</p>');
 	var result = editor.plugins.wordcount.getCount();
 	equal(result, 6);
 });

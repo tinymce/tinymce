@@ -69,7 +69,7 @@ define("tinymce/ui/Control", [
 			self.settings = settings = Tools.extend({}, self.Defaults, settings);
 
 			// Initial states
-			self._id = DomUtils.id();
+			self._id = settings.id || DomUtils.id();
 			self._text = self._name = '';
 			self._width = self._height = 0;
 			self._aria = {role: settings.role};
@@ -1025,7 +1025,7 @@ define("tinymce/ui/Control", [
 		 * @return {tinymce.ui.Control} Current control instance.
 		 */
 		aria: function(name, value) {
-			var self = this, elm = self.getEl();
+			var self = this, elm = self.getEl(self.ariaTarget);
 
 			if (typeof(value) === "undefined") {
 				return self._aria[name];
@@ -1034,10 +1034,6 @@ define("tinymce/ui/Control", [
 			}
 
 			if (self._rendered) {
-				if (name == 'label') {
-					elm.setAttribute('aria-labelledby', self._id);
-				}
-
 				elm.setAttribute(name == 'role' ? name : 'aria-' + name, value);
 			}
 

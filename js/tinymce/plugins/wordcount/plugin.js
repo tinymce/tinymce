@@ -13,7 +13,9 @@
 tinymce.PluginManager.add('wordcount', function(editor) {
 	var self = this, countre, cleanre;
 
-	countre = editor.getParam('wordcount_countregex', /[\w\u2019\x27\-\u0600-\u06FF]+/g); // u2019 == &rsquo;
+	// Included most unicode blocks see: http://en.wikipedia.org/wiki/Unicode_block
+	// Latin-1_Supplement letters, a-z, u2019 == &rsquo;
+	countre = editor.getParam('wordcount_countregex', /[\w\u2019\x27\-\u00C0-\u1FFF]+/g);
 	cleanre = editor.getParam('wordcount_cleanregex', /[0-9.(),;:!?%#$?\x27\x22_+=\\\/\-]*/g);
 
 	function update() {
@@ -53,7 +55,7 @@ tinymce.PluginManager.add('wordcount', function(editor) {
 			tx = tx.replace(/<.[^<>]*?>/g, ' ').replace(/&nbsp;|&#160;/gi, ' '); // remove html tags and space chars
 
 			// deal with html entities
-			tx = tx.replace(/(\w+)(&.+?;)+(\w+)/, "$1$3").replace(/&.+?;/g, ' ');
+			tx = tx.replace(/(\w+)(&#?[a-z0-9]+;)+(\w+)/i, "$1$3").replace(/&.+?;/g, ' ');
 			tx = tx.replace(cleanre, ''); // remove numbers and punctuation
 
 			var wordArray = tx.match(countre);

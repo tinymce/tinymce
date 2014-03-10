@@ -40,13 +40,19 @@ define("tinymce/ui/TabPanel", [
 		 * @param {Number} idx Index of the tab to activate.
 		 */
 		activateTab: function(idx) {
+			var activeTabElm;
+
 			if (this.activeTabId) {
-				DomUtils.removeClass(this.getEl(this.activeTabId), this.classPrefix + 'active');
+				activeTabElm = this.getEl(this.activeTabId);
+				DomUtils.removeClass(activeTabElm, this.classPrefix + 'active');
+				activeTabElm.setAttribute('aria-selected', "false");
 			}
 
 			this.activeTabId = 't' + idx;
 
-			DomUtils.addClass(this.getEl('t' + idx), this.classPrefix + 'active');
+			activeTabElm = this.getEl('t' + idx);
+			activeTabElm.setAttribute('aria-selected', "true");
+			DomUtils.addClass(activeTabElm, this.classPrefix + 'active');
 
 			if (idx != this.lastIdx) {
 				this.items()[this.lastIdx].hide();
@@ -70,8 +76,14 @@ define("tinymce/ui/TabPanel", [
 			layout.preRender(self);
 
 			self.items().each(function(ctrl, i) {
+				var id = self._id + '-t' + i;
+
+				ctrl.aria('role', 'tabpanel');
+				ctrl.aria('labelledby', id);
+
 				tabsHtml += (
-					'<div id="' + self._id + '-t' + i + '" class="' + prefix + 'tab" unselectable="on">' +
+					'<div id="' + id + '" class="' + prefix + 'tab" '+
+						'unselectable="on" role="tab" aria-controls="' + ctrl._id + '" aria-selected="false" tabIndex="-1">' +
 						self.encode(ctrl.settings.title) +
 					'</div>'
 				);
@@ -79,7 +91,7 @@ define("tinymce/ui/TabPanel", [
 
 			return (
 				'<div id="' + self._id + '" class="' + self.classes() + '" hideFocus="1" tabIndex="-1">' +
-					'<div id="' + self._id + '-head" class="' + prefix + 'tabs">' +
+					'<div id="' + self._id + '-head" class="' + prefix + 'tabs" role="tablist">' +
 						tabsHtml +
 					'</div>' +
 					'<div id="' + self._id + '-body" class="' + self.classes('body') + '">' +

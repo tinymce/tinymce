@@ -28,10 +28,18 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 	 * This method gets executed each time the editor needs to resize.
 	 */
 	function resize(e) {
-		var deltaSize, d = editor.getDoc(), body = d.body, de = d.documentElement, DOM = tinymce.DOM,
-			resizeHeight = settings.autoresize_min_height, myHeight, marginTop, marginBottom;
+		var deltaSize, doc, body, docElm, DOM = tinymce.DOM, resizeHeight, myHeight, marginTop, marginBottom;
 
-		if (!body || !e || (e.type === "setcontent" && e.initial) ||
+		doc = editor.getDoc();
+		if (!doc) {
+			return;
+		}
+
+		body = doc.body;
+		docElm = doc.documentElement;
+		resizeHeight = settings.autoresize_min_height;
+
+		if (!body || (e && e.type === "setcontent" && e.initial) ||
 				(editor.plugins.fullscreen && editor.plugins.fullscreen.isFullscreen())) {
 			return;
 		}
@@ -56,10 +64,10 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 		if (settings.autoresize_max_height && myHeight > settings.autoresize_max_height) {
 			resizeHeight = settings.autoresize_max_height;
 			body.style.overflowY = "auto";
-			de.style.overflowY = "auto"; // Old IE
+			docElm.style.overflowY = "auto"; // Old IE
 		} else {
 			body.style.overflowY = "hidden";
-			de.style.overflowY = "hidden"; // Old IE
+			docElm.style.overflowY = "hidden"; // Old IE
 			body.scrollTop = 0;
 		}
 
@@ -84,7 +92,7 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 	function wait(times, interval, callback) {
 		setTimeout(function() {
 			if (editor.destroyed) {
-				 return;
+				return;
 			}
 			resize({});
 

@@ -85,7 +85,7 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 
 		colors = mapColors();
 
-		html = '<table class="mce-grid mce-grid-border mce-colorbutton-grid" role="presentation" cellspacing="0"><tbody>';
+		html = '<table class="mce-grid mce-grid-border mce-colorbutton-grid" role="list" cellspacing="0"><tbody>';
 		last = colors.length - 1;
 		rows = editor.settings.textcolor_rows || 5;
 		cols = editor.settings.textcolor_cols || 8;
@@ -180,6 +180,13 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		var buttonCtrl = this.parent(), value;
 
 		if ((value = e.target.getAttribute('data-mce-color'))) {
+			if (this.lastId) {
+				document.getElementById(this.lastId).setAttribute('aria-selected', false);
+			}
+
+			e.target.setAttribute('aria-selected', true);
+			this.lastId = e.target.id;
+
 			buttonCtrl.hidePanel();
 			value = '#' + value;
 			buttonCtrl.color(value);
@@ -212,7 +219,12 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		type: 'colorbutton',
 		tooltip: 'Text color',
 		selectcmd: 'ForeColor',
-		panel: panelOpts,
+		panel: {
+			role: 'application',
+			ariaRemember: true,
+			html: renderColorPicker,
+			onclick: onPanelClick
+		},
 		onclick: onButtonClick
 	});
 
@@ -220,7 +232,12 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		type: 'colorbutton',
 		tooltip: 'Background color',
 		selectcmd: 'HiliteColor',
-		panel: panelOpts,
+		panel: {
+			role: 'application',
+			ariaRemember: true,
+			html: renderColorPicker,
+			onclick: onPanelClick
+		},
 		onclick: onButtonClick
 	});
 });

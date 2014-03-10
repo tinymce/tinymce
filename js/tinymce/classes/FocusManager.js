@@ -89,14 +89,24 @@ define("tinymce/FocusManager", [
 			editor.on('init', function() {
 				// On IE take selection snapshot onbeforedeactivate
 				if ("onbeforedeactivate" in document && Env.ie < 11) {
+					// Gets fired when the editor is about to be blurred but also when the selection
+					// is moved into a table cell so we need to add the range as a pending range then
+					// use that pending range on the blur event of the editor body
 					editor.dom.bind(editor.getBody(), 'beforedeactivate', function() {
 						try {
-							editor.lastRng = editor.selection.getRng();
+							editor.pendingRng = editor.selection.getRng();
 						} catch (ex) {
 							// IE throws "Unexcpected call to method or property access" some times so lets ignore it
 						}
+					});
 
-						editor.selection.lastFocusBookmark = createBookmark(editor.lastRng);
+					// Set the pending range as the current last range if the blur event occurs
+					editor.dom.bind(editor.getBody(), 'blur', function() {
+						if (editor.pendingRng) {
+							editor.lastRng = editor.pendingRng;
+							editor.selection.lastFocusBookmark = createBookmark(editor.lastRng);
+							editor.pendingRng = null;
+						}
 					});
 				} else if (editor.inline || Env.ie > 10) {
 					// On other browsers take snapshot on nodechange in inline mode since they have Ghost selections for iframes
@@ -162,7 +172,7 @@ define("tinymce/FocusManager", [
 					editorManager.activeEditor = editor;
 					editorManager.focusedEditor = editor;
 					editor.fire('focus', {blurredEditor: focusedEditor});
-					editor.focus(false);
+					editor.focus(true);
 				}
 
 				editor.lastRng = null;
@@ -192,7 +202,6 @@ define("tinymce/FocusManager", [
 			var activeEditor = editorManager.activeEditor;
 
 			if (activeEditor && e.target.ownerDocument == document) {
-
 				// Check to make sure we have a valid selection
 				if (activeEditor.selection) {
 					activeEditor.selection.lastFocusBookmark = createBookmark(activeEditor.lastRng);

@@ -1,3 +1,38 @@
+Version 4.0.18 (2014-02-27)
+	Fixed bug where images would get class false/undefined when initially created.
+Version 4.0.17 (2014-02-26)
+	Added much better wai-aria accessibility support when it comes to keyboard navigation of complex UI controls.
+	Added dfn,code,samp,kbd,var,cite,mark,q elements to the default remove formats list. Patch contributed by Naim Hammadi.
+	Added var,cite,dfn,code,mark,q,sup,sub to the list of elements that gets cloned on enter. Patch contributed by Naim Hammadi.
+	Added new visual_anchor_class option to specify a custom class for inline anchors. Patch contributed by Naim Hammadi.
+	Added support for paste_data_images on WebKit/Blink when the user pastes image data.
+	Added support for highlighting the video icon when a video is added that produces an iframe. Patch contributed by monkeydiane.
+	Added image_class_list/link_class_list options to image/link dialogs to let the user select classes.
+	Fixed bug where the ObjectResizeStart event didn't get fired properly by the ControlSelection class.
+	Fixed bug where the autolink plugin would steal focus when loaded on IE 9+.
+	Fixed bug where the editor save method would remove the current selection when called on an inline editor.
+	Fixed bug where the formatter would merge span elements with parent bookmarks if an id format was used.
+	Fixed bug where WebKit/Blink browsers would scroll to the top of the editor when pasting into an empty element.
+	Fixed bug where removing the editor would cause an error about wrong document on IE 11 under specific circumstances.
+	Fixed bug where Gecko would place the caret at an incorrect location when using backspace.
+	Fixed bug where Gecko would throw "Wrong Document Error" for ranges that pointing to removed nodes.
+	Fixed bug where it wasn't possible to properly update the title and encoding properties in the fullpage plugin.
+	Fixed bug where paste plugin would produce an extra undo level on IE.
+	Fixed bug where the formatter would apply inline formatting outside the current word in if the selection was collapsed.
+	Fixed bug where it wasn't possible to delete tables on Chrome if you placed the selection within all the contents of the table.
+	Fixed bug where older IE versions wouldn't properly insert contents into table cells when editor focus was lost.
+	Fixed bug where older IE versions would fire focus/blur events even though the editor focus didn't change.
+	Fixed bug where IE 11 would add two trailing BR elements to the editor iframe body if the editor was hidden.
+	Fixed bug where the visualchars plugin wouldn't display non breaking spaces if they where inserted while the state was enabled.
+	Fixed bug where the wordcount plugin would be very slow some HTML where to much backtracking occured.
+	Fixed so pagebreak elements in the editor breaks pages when printing. Patch contributed by penc.
+	Fixed so UndoManager events pass though the original event that created the undo level such as a keydown, blur etc.
+	Fixed so the inserttime button is callsed insertdatetime the same as the menu item and plugin name.
+	Fixed so the word count plugin handles counting properly on most languages on the planet.
+	Fixed bug where the auroreize plugin would throw an error if the editor was manually removed within a few seconds.
+	Fixed bug where the image dialog would get stuck if the src was removed. Patch contribued by monkeydiane.
+	Fixed bug where there is an extra br tag for IE 9/10 that isn't needed. Patch contributed by monkeydiane.
+	Fixed bug where drag/drop in a scrolled editor would fail since it didn't use clientX/clientY cordinates. Patch contributed by annettem.
 Version 4.0.16 (2014-01-31)
 	Fixed bug where the editor wouldn't be properly rendered on IE 10 depending on the document.readyState.
 Version 4.0.15 (2014-01-31)

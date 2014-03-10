@@ -13,8 +13,9 @@
  */
 define("tinymce/EnterKey", [
 	"tinymce/dom/TreeWalker",
+	"tinymce/dom/RangeUtils",
 	"tinymce/Env"
-], function(TreeWalker, Env) {
+], function(TreeWalker, RangeUtils, Env) {
 	var isIE = Env.ie && Env.ie < 11;
 
 	return function(editor) {
@@ -22,7 +23,7 @@ define("tinymce/EnterKey", [
 		var undoManager = editor.undoManager, schema = editor.schema, nonEmptyElementsMap = schema.getNonEmptyElements();
 
 		function handleEnterKey(evt) {
-			var rng = selection.getRng(true), tmpRng, editableRoot, container, offset, parentBlock, documentMode, shiftKey,
+			var rng, tmpRng, editableRoot, container, offset, parentBlock, documentMode, shiftKey,
 				newBlock, fragment, containerBlock, parentBlockName, containerBlockName, newBlockName, isAfterLastNodeInContainer;
 
 			// Returns true if the block can be split into two blocks or not
@@ -187,7 +188,7 @@ define("tinymce/EnterKey", [
 				// Clone any parent styles
 				if (settings.keep_styles !== false) {
 					do {
-						if (/^(SPAN|STRONG|B|EM|I|FONT|STRIKE|U)$/.test(node.nodeName)) {
+						if (/^(SPAN|STRONG|B|EM|I|FONT|STRIKE|U|VAR|CITE|DFN|CODE|MARK|Q|SUP|SUB|SAMP)$/.test(node.nodeName)) {
 							// Never clone a caret containers
 							if (node.id == '_mce_caret') {
 								continue;
@@ -504,18 +505,21 @@ define("tinymce/EnterKey", [
 				}
 			}
 
-			// Delete any selected contents
-			if (!rng.collapsed) {
-				editor.execCommand('Delete');
-				return;
-			}
+			rng = selection.getRng(true);
 
 			// Event is blocked by some other handler for example the lists plugin
 			if (evt.isDefaultPrevented()) {
 				return;
 			}
 
+			// Delete any selected contents
+			if (!rng.collapsed) {
+				editor.execCommand('Delete');
+				return;
+			}
+
 			// Setup range items and newBlockName
+			new RangeUtils(dom).normalize(rng);
 			container = rng.startContainer;
 			offset = rng.startOffset;
 			newBlockName = (settings.force_p_newlines ? 'p' : '') || settings.forced_root_block;
@@ -526,6 +530,7 @@ define("tinymce/EnterKey", [
 			// Resolve node index
 			if (container.nodeType == 1 && container.hasChildNodes()) {
 				isAfterLastNodeInContainer = offset > container.childNodes.length - 1;
+
 				container = container.childNodes[Math.min(offset, container.childNodes.length - 1)] || container;
 				if (isAfterLastNodeInContainer && container.nodeType == 3) {
 					offset = container.nodeValue.length;

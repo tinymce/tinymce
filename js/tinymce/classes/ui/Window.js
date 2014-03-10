@@ -19,9 +19,8 @@ define("tinymce/ui/Window", [
 	"tinymce/ui/FloatPanel",
 	"tinymce/ui/Panel",
 	"tinymce/ui/DomUtils",
-	"tinymce/ui/KeyboardNavigation",
 	"tinymce/ui/DragHelper"
-], function(FloatPanel, Panel, DomUtils, KeyboardNavigation, DragHelper) {
+], function(FloatPanel, Panel, DomUtils, DragHelper) {
 	"use strict";
 
 	var Window = FloatPanel.extend({
@@ -86,6 +85,11 @@ define("tinymce/ui/Window", [
 				}
 			});
 
+			self.on('cancel', function() {
+				self.close();
+			});
+
+			self.aria('describedby', self.describedBy || self._id + '-none');
 			self.aria('label', settings.title);
 			self._fullscreen = false;
 		},
@@ -193,7 +197,7 @@ define("tinymce/ui/Window", [
 			if (settings.title) {
 				headerHtml = (
 					'<div id="' + id + '-head" class="' + prefix + 'window-head">' +
-						'<div class="' + prefix + 'title">' + self.encode(settings.title) + '</div>' +
+						'<div id="' + id + '-title" class="' + prefix + 'title">' + self.encode(settings.title) + '</div>' +
 						'<button type="button" class="' + prefix + 'close" aria-hidden="true">&times;</button>' +
 						'<div id="' + id + '-dragh" class="' + prefix + 'dragh"></div>' +
 					'</div>'
@@ -213,12 +217,14 @@ define("tinymce/ui/Window", [
 			}
 
 			return (
-				'<div id="' + id + '" class="' + self.classes() + '" hideFocus="1" tabIndex="-1">' +
-					headerHtml +
-					'<div id="' + id + '-body" class="' + self.classes('body') + '">' +
-						html +
+				'<div id="' + id + '" class="' + self.classes() + '" hideFocus="1">' +
+					'<div class="' + self.classPrefix + 'reset" role="application">' +
+						headerHtml +
+						'<div id="' + id + '-body" class="' + self.classes('body') + '">' +
+							html +
+						'</div>' +
+						footerHtml +
 					'</div>' +
-					footerHtml +
 				'</div>'
 			);
 		},
@@ -296,49 +302,11 @@ define("tinymce/ui/Window", [
 		 * @method postRender
 		 */
 		postRender: function() {
-			var self = this, items = [], focusCtrl, autoFocusFound, startPos;
+			var self = this, startPos;
 
 			setTimeout(function() {
 				self.addClass('in');
 			}, 0);
-
-			self.keyboardNavigation = new KeyboardNavigation({
-				root: self,
-				enableLeftRight: false,
-				enableUpDown: false,
-				items: items,
-				onCancel: function() {
-					self.close();
-				}
-			});
-
-			self.find('*').each(function(ctrl) {
-				if (ctrl.canFocus) {
-					autoFocusFound = autoFocusFound || ctrl.settings.autofocus;
-					focusCtrl = focusCtrl || ctrl;
-
-					// TODO: Figure out a better way
-					if (ctrl.subinput) {
-						items.push(ctrl.getEl('inp'));
-
-						if (ctrl.getEl('open')) {
-							items.push(ctrl.getEl('open'));
-						}
-					} else {
-						items.push(ctrl.getEl());
-					}
-				}
-			});
-
-			if (self.statusbar) {
-				self.statusbar.find('*').each(function(ctrl) {
-					if (ctrl.canFocus) {
-						autoFocusFound = autoFocusFound || ctrl.settings.autofocus;
-						focusCtrl = focusCtrl || ctrl;
-						items.push(ctrl.getEl());
-					}
-				});
-			}
 
 			self._super();
 
@@ -346,9 +314,7 @@ define("tinymce/ui/Window", [
 				self.statusbar.postRender();
 			}
 
-			if (!autoFocusFound && focusCtrl) {
-				focusCtrl.focus();
-			}
+			self.focus();
 
 			this.dragHelper = new DragHelper(self._id + '-dragh', {
 				start: function() {
