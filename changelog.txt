@@ -8,6 +8,7 @@ Version 4.0.19 (2014-03-xx)
 	Fixed bug where IE 11 would move focus to menubar/toolbar when using the tab key in a form with an editor.
 	Fixed bug where drag/drop in Safari on Mac didn't work properly due to lack of support for modern dataTransfer object.
 	Fixed bug where the remove event wasn't properly executed when the editor instances where removed.
+	Fixed bug where the selection change handler on inline editors would fail if the editor instance was removed.
 Version 4.0.18 (2014-02-27)
 	Fixed bug where images would get class false/undefined when initially created.
 Version 4.0.17 (2014-02-26)

@@ -2012,6 +2012,7 @@ define("tinymce/Editor", [
 
 			if (!self.removed) {
 				self.fire('remove');
+				self.off();
 				self.removed = 1; // Cancels post remove event execution
 
 				// Remove any hidden input
@@ -2129,7 +2130,7 @@ define("tinymce/Editor", [
 				DOM.unbind(form, 'submit reset', self.formEventDelegate);
 			}
 
-			self.contentAreaContainer = self.formElement = self.container = null;
+			self.contentAreaContainer = self.formElement = self.container = self.editorContainer = null;
 			self.settings.content_element = self.bodyElement = self.contentDocument = self.contentWindow = null;
 
 			if (self.selection) {
