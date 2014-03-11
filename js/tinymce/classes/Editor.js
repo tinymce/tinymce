@@ -2011,6 +2011,7 @@ define("tinymce/Editor", [
 			var self = this;
 
 			if (!self.removed) {
+				self.fire('remove');
 				self.removed = 1; // Cancels post remove event execution
 
 				// Remove any hidden input
@@ -2039,8 +2040,6 @@ define("tinymce/Editor", [
 				var elm = self.getContainer();
 				Event.unbind(self.getBody());
 				Event.unbind(elm);
-
-				self.fire('remove');
 
 				self.editorManager.remove(self);
 				DOM.remove(elm);
