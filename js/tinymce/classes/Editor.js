@@ -2020,12 +2020,6 @@ define("tinymce/Editor", [
 					DOM.remove(self.getElement().nextSibling);
 				}
 
-				// Fixed bug where IE has a blinking cursor left from the editor
-				var doc = self.getDoc();
-				if (ie && doc && !self.inline) {
-					doc.execCommand('SelectAll');
-				}
-
 				// We must save before we hide so Safari doesn't crash
 				self.save();
 
