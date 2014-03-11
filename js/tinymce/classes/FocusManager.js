@@ -129,11 +129,14 @@ define("tinymce/FocusManager", [
 					// TODO: Optimize this since we only need to bind these on the active editor
 					if (Env.webkit) {
 						selectionChangeHandler = function() {
-							var rng = editor.selection.getRng();
+							var selection = editor.selection;
+							if (selection) {
+								var rng = selection.getRng();
 
-							// Store when it's non collapsed
-							if (!rng.collapsed) {
-								editor.lastRng = rng;
+								// Store when it's non collapsed
+								if (!rng.collapsed) {
+									editor.lastRng = rng;
+								}
 							}
 						};
 
