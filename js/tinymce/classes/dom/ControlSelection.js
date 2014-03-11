@@ -69,7 +69,7 @@ define("tinymce/dom/ControlSelection", [
 		function isResizable(elm) {
 			var selector = editor.settings.object_resizing;
 
-			if (selector === false) {
+			if (selector === false || Env.iOS) {
 				return false;
 			}
 
