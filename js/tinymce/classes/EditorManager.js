@@ -456,6 +456,11 @@ define("tinymce/EditorManager", [
 				self.activeEditor = editors[0];
 			}
 
+			// Clear focusedEditor if necessary, so that we don't try to blur the destroyed editor
+			if (self.focusedEditor == editor) {
+				self.focusedEditor = null;
+			}
+
 			/**
 			 * Fires when an editor is removed from EditorManager collection.
 			 *
