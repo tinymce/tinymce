@@ -1,4 +1,4 @@
-Version 4.0.19 (2014-03-xx)
+Version 4.0.19 (2014-03-11)
 	Added support for CSS selector expressions in object_resizing option. Allows you to control what to resize.
 	Added addToTop compatibility to compat3x plugin enables more legacy 3.x plugins to work properly.
 	Fixed bug on IE where it wasn't possible to align images when they where floated left.
