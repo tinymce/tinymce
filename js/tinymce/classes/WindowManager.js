@@ -90,7 +90,6 @@ define("tinymce/WindowManager", [
 				args.buttons = [
 					{text: 'Ok', subtype: 'primary', onclick: function() {
 						win.find('form')[0].submit();
-						win.close();
 					}},
 
 					{text: 'Cancel', onclick: function() {

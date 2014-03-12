@@ -2,6 +2,7 @@ Version 4.0.20 (2014-03-xx)
 	Fixed a performance issue with the "is" method in DOMUtils. Patch contributed by Paul Bosselaar.
 	Fixed bug where paste plugin wouldn't paste plain text properly when pasting using browser menus.
 	Fixed so selection normalization gets executed more often to reduce incorrect UI states on Gecko.
+	Fixed so the default action of closing the window on a form submission can be prevented using "preventDefault".
 Version 4.0.19 (2014-03-11)
 	Added support for CSS selector expressions in object_resizing option. Allows you to control what to resize.
 	Added addToTop compatibility to compat3x plugin enables more legacy 3.x plugins to work properly.
