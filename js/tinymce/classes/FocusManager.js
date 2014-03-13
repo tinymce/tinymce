@@ -238,7 +238,8 @@ define("tinymce/FocusManager", [
 	 * @return {Boolean} True/false state if the element is part of the UI or not.
 	 */
 	FocusManager.isEditorUIElement = function(elm) {
-		return elm.className.indexOf('mce-') !== -1;
+		// Needs to be converted to string since svg can have focus: #6776
+		return elm.className.toString().indexOf('mce-') !== -1;
 	};
 
 	return FocusManager;
