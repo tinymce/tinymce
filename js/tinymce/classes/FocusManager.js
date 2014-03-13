@@ -218,7 +218,11 @@ define("tinymce/FocusManager", [
 			}
 		}
 
-		function unregisterDocumentEvents() {
+		function unregisterDocumentEvents(e) {
+			if (editorManager.focusedEditor == e.editor) {
+				editorManager.focusedEditor = null;
+			}
+
 			if (!editorManager.activeEditor) {
 				DOM.unbind(document, 'selectionchange', selectionChangeHandler);
 				DOM.unbind(document, 'focusin', documentFocusInHandler);
