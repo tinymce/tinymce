@@ -2011,6 +2011,7 @@ define("tinymce/Editor", [
 			var self = this;
 
 			if (!self.removed) {
+				self.save();
 				self.fire('remove');
 				self.off();
 				self.removed = 1; // Cancels post remove event execution
@@ -2019,9 +2020,6 @@ define("tinymce/Editor", [
 				if (self.hasHiddenInput) {
 					DOM.remove(self.getElement().nextSibling);
 				}
-
-				// We must save before we hide so Safari doesn't crash
-				self.save();
 
 				DOM.setStyle(self.id, 'display', self.orgDisplay);
 

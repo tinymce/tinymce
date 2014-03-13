@@ -4,6 +4,7 @@ Version 4.0.20 (2014-03-xx)
 	Fixed bug where focusable SVG elements would throw an error since className isn't a proper string.
 	Fixed bug where the preview plugin didn't properly support the document_base_url setting.
 	Fixed bug where the focusedEditor wouldn't be set to null when that editor was removed.
+	Fixed bug where Gecko would throw an exception when editors where removed.
 	Fixed so selection normalization gets executed more often to reduce incorrect UI states on Gecko.
 	Fixed so the default action of closing the window on a form submission can be prevented using "preventDefault".
 Version 4.0.19 (2014-03-11)
