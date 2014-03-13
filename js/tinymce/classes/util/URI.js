@@ -15,7 +15,13 @@
 define("tinymce/util/URI", [
 	"tinymce/util/Tools"
 ], function(Tools) {
-	var each = Tools.each, trim = Tools.trim;
+	var each = Tools.each, trim = Tools.trim,
+		DEFAULT_PORTS = {
+			'ftp': 21,
+			'http': 80,
+			'https': 443,
+			'mailto': 25
+		};
 
 	/**
 	 * Constructs a new URI instance.
@@ -187,7 +193,27 @@ define("tinymce/util/URI", [
 		toAbsolute: function(uri, noHost) {
 			uri = new URI(uri, {base_uri: this});
 
-			return uri.getURI(this.host == uri.host && this.protocol == uri.protocol ? noHost : 0);
+			return uri.getURI(noHost && this.isSameOrigin(uri));
+		},
+
+		/**
+		 * Determine whether the given URI has the same origin as this URI.  Based on RFC-6454.
+		 * Supports default ports for protocols listed in DEFAULT_PORTS.  Unsupported protocols will fail safe: they
+		 * won't match, if the port specifications differ.
+		 * @param uri
+		 * @returns {boolean} True if the origins are the same.
+		 */
+		isSameOrigin: function(uri){
+			if(this.host == uri.host && this.protocol == uri.protocol){
+				if(this.port == uri.port){
+					return true;
+				}
+				var defaultPort = DEFAULT_PORTS[this.protocol];
+				if(defaultPort && ((this.port || defaultPort) == (uri.port || defaultPort))){
+					return true;
+				}
+			}
+			return false;
 		},
 
 		/**
