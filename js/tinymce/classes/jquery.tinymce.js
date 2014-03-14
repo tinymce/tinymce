@@ -26,7 +26,7 @@
 
 		// Get editor instance
 		if (!settings) {
-			return tinymce.get(self[0].id);
+			return window.tinymce ? tinymce.get(self[0].id) : null;
 		}
 
 		self.css('visibility', 'hidden'); // Hide textarea to avoid flicker
