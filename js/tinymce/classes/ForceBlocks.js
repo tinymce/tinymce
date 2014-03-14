@@ -72,7 +72,7 @@ define("tinymce/ForceBlocks", [], function() {
 			rootNodeName = rootNode.nodeName.toLowerCase();
 			while (node) {
 				// TODO: Break this up, too complex
-				if (((node.nodeType === 3 || (node.nodeType == 1 && !blockElements[node.nodeName]))) &&
+				if (((node.nodeType === 3 || (node.nodeType == 1 && !blockElements[node.nodeName] && !node.getAttribute('data-mce-type')))) &&
 					schema.isValidChild(rootNodeName, forcedRootBlock.toLowerCase())) {
 					// Remove empty text nodes
 					if (node.nodeType === 3 && node.nodeValue.length === 0) {
