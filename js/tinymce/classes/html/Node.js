@@ -327,6 +327,10 @@ define("tinymce/html/Node", [], function() {
 				node.remove();
 			}
 
+			if (!ref_node) {
+				ref_node = this;
+			}
+
 			parent = ref_node.parent || this;
 
 			if (before) {
