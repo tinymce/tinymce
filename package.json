@@ -10,7 +10,7 @@
 	"bugs": { "url" : "http://www.tinymce.com/develop/bugtracker.php" },
 	"private": true,
 	"engines": {
-		"node" : ">=0.8.0"
+		"node" : ">=0.10.26"
 	},
 	"devDependencies": {
 		"jake": ">= 0.7.0",
