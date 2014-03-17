@@ -113,7 +113,9 @@ define("tinymce/tableplugin/Plugin", [
 
 						editor.dom.setStyles(tableElm, {
 							width: addSizeSuffix(data.width),
-							height: addSizeSuffix(data.height)
+							height: addSizeSuffix(data.height),
+							borderSpacing: addSizeSuffix(data.cellspacing),
+							borderWidth: addSizeSuffix(data.border)
 						});
 
 						// Toggle caption on/off
