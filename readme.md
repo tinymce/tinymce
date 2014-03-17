@@ -57,3 +57,5 @@ Run the unit tests on the minified TinyMCE core and click the coverage report bu
 Contributing to the TinyMCE project
 ------------------------------------
 You can read more about how to contribute to this project at [http://www.tinymce.com/develop/contributing.php](http://www.tinymce.com/develop/contributing.php)
+
+[![Build Status](https://travis-ci.org/tinymce/tinymce.png?branch=master)](https://travis-ci.org/tinymce/tinymce)

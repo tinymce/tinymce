@@ -1,3 +1,4 @@
 language: node_js
 node_js:
   - 0.10
+script: "jake minify && phantomjs tests/js/runner.js tests/index.html"
