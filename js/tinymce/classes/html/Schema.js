@@ -555,6 +555,9 @@ define("tinymce/html/Schema", [
 			var customElementRegExp = /^(~)?(.+)$/;
 
 			if (custom_elements) {
+				// Flush cached items since we are altering the default maps
+				mapCache.text_block_elements = mapCache.block_elements = null;
+
 				each(split(custom_elements, ','), function(rule) {
 					var matches = customElementRegExp.exec(rule),
 						inline = matches[1] === '~',
@@ -582,8 +585,9 @@ define("tinymce/html/Schema", [
 					}
 
 					// Add custom elements at span/div positions
-					each(children, function(element) {
+					each(children, function(element, elmName) {
 						if (element[cloneName]) {
+							children[elmName] = element = extend({}, children[elmName]);
 							element[name] = element[cloneName];
 						}
 					});
@@ -613,6 +617,10 @@ define("tinymce/html/Schema", [
 
 						each(split(matches[3], '|'), function(child) {
 							if (prefix === '-') {
+								// Clone the element before we delete
+								// things in it to not mess up default schemas
+								children[matches[2]] = parent = extend({}, children[matches[2]]);
+
 								delete parent[child];
 							} else {
 								parent[child] = {};

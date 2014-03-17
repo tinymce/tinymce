@@ -89,9 +89,44 @@ define("tinymce/util/Quirks", [
 		 */
 		function cleanupStylesWhenDeleting() {
 			var doc = editor.getDoc(), urlPrefix = 'data:text/mce-internal,';
+			var MutationObserver = window.MutationObserver, olderWebKit;
 
-			if (!window.MutationObserver) {
-				return;
+			// Add mini polyfill for older WebKits
+			// TODO: Remove this when old Safari versions gets updated
+			if (!MutationObserver) {
+				olderWebKit = true;
+
+				MutationObserver = function() {
+					var records = [], target;
+
+					function nodeInsert(e) {
+						var target = e.relatedNode || e.target;
+						records.push({target: target, addedNodes: [target]});
+					}
+
+					function attrModified(e) {
+						var target = e.relatedNode || e.target;
+						records.push({target: target, attributeName: e.attrName});
+					}
+
+					this.observe = function(node) {
+						target = node;
+						target.addEventListener('DOMSubtreeModified', nodeInsert, false);
+						target.addEventListener('DOMNodeInsertedIntoDocument', nodeInsert, false);
+						target.addEventListener('DOMNodeInserted', nodeInsert, false);
+						target.addEventListener('DOMAttrModified', attrModified, false);
+					};
+
+					this.disconnect = function() {
+						target.removeEventListener('DOMNodeInserted', nodeInsert);
+						target.removeEventListener('DOMAttrModified', attrModified);
+						target.removeEventListener('DOMSubtreeModified', nodeInsert, false);
+					};
+
+					this.takeRecords = function() {
+						return records;
+					};
+				};
 			}
 
 			function customDelete(isForward) {
@@ -201,6 +236,11 @@ define("tinymce/util/Quirks", [
 			editor.addCommand('ForwardDelete', function() {
 				customDelete(true);
 			});
+
+			// Older WebKits doesn't properly handle the clipboard so we can't add the rest
+			if (olderWebKit) {
+				return;
+			}
 
 			editor.on('dragstart', function(e) {
 				// Safari doesn't support custom dataTransfer items so we can only use URL and Text
