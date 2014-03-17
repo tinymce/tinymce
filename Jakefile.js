@@ -11,6 +11,7 @@ var path = require("path");
 var fs = require("fs");
 var eslint = require('./tools/BuildTools').eslint;
 var nuget = require('./tools/BuildTools').nuget;
+var phantomjs = require('./tools/BuildTools').phantomjs;
 
 desc("Default build task");
 task("default", ["minify", "less"], function () {});
@@ -366,6 +367,23 @@ task("jshint-themes", [], function () {
 	jshint({patterns: ["js/tinymce/themes/**/theme.js", "js/tinymce/themes/**/classes/**/*.js"]});
 });
 
+desc("Runs JSHint on tests");
+task("jshint-tests", [], function () {
+	jshint({
+		jshintrc: 'tests/.jshintrc',
+		patterns: [
+			"tests/tinymce/**/*.js",
+			"tests/plugins/**/*.js"
+		],
+
+		exclude: [
+			"tests/plugins/js/autolink.actions.js",
+			"tests/plugins/js/dsl.js",
+			"tests/plugins/js/states.js"
+		]
+	});
+});
+
 desc("Compiles LESS skins to CSS");
 task("less", [], function () {
 	var lessFiles;
@@ -551,6 +569,11 @@ task("instrument-plugin", [], function(pluginName) {
 			to: "js/tinymce/plugins/" + pluginName + "/plugin.min.js"
 		});
 	}
+});
+
+desc("Runs qunit tests in phantomjs");
+task("phantomjs-tests", [], function(pluginName) {
+	phantomjs(["tests/js/runner.js", "tests/index.html"]);
 });
 
 desc("Cleans the build directories");

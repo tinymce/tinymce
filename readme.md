@@ -38,10 +38,21 @@ Bundles all themes into the tinymce core js files.
 `jake bundle[plugins:*]`
 Bundles all plugins into the tinymce core js files.
 
+`jake phantomjs-tests`
+Runs all qunit tests in a headless WebKit.
+
 Bundle themes and plugins into core example
 -------------------------------------------
 `jake minify bundle[themes:modern,plugins:table,paste]`
 Minifies the core, adds the modern theme and adds the table and paste plugin into tinymce.min.js.
+
+Run code coverage on TinyMCE core
+----------------------------------
+`jake minify-core[coverage]`
+Compiles the core classes with jscoverage data.
+
+Run the unit tests on the minified TinyMCE core and click the coverage report button.
+`tests/index.html?min=true`
 
 Contributing to the TinyMCE project
 ------------------------------------

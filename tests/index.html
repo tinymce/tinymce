@@ -1,22 +1,95 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8" />
-<title>Test Runner</title>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<link rel="stylesheet" href="js/qunit/testrunner.css" type="text/css" />
-<script src="js/qunit/testrunner.js"></script>
-<script>
-TestRunner.addSuites([
-	"tinymce/tests.js",
-	"tinymce/dom/tests.js",
-	"tinymce/html/tests.js",
-	"tinymce/ui/tests.js",
-	"tinymce/util/tests.js",
-	"plugins/tests.js"
-]);
-</script>
+	<meta charset="UTF-8" />
+	<title>TinyMCE QUnit tests</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
+	<title>QUnit tests</title>
+	<link rel="stylesheet" href="js/qunit/qunit.css" type="text/css" />
+	<link rel="stylesheet" href="../js/tinymce/skins/lightgray/skin.min.css" type="text/css" />
+	<link rel="stylesheet" href="tinymce/ui/css/ui-overrides.css" type="text/css" />
+	<style>
+		#qunit-modulefilter-container { float: none; }
+	</style>
 </head>
 <body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+	<div id="view" style="position: absolute; right: 0; top: 0"></div>
+
+	<script src="http://www.google.com/jsapi"></script>
+	<script>google.load("jquery", "1");</script>
+	<script src="js/qunit/qunit.js"></script>
+	<script src="js/tinymce_loader.js"></script>
+	<script src="../js/tinymce/classes/jquery.tinymce.js"></script>
+	<script src="js/utils.js"></script>
+	<script src="js/init.js"></script>
+
+	<!-- tinymce.dom.* -->
+	<script src="tinymce/dom/DOMUtils.js"></script>
+	<script src="tinymce/dom/EventUtils.js"></script>
+	<script src="tinymce/dom/Range.js"></script>
+	<script src="tinymce/dom/Selection.js"></script>
+	<script src="tinymce/dom/Serializer.js"></script>
+	<script src="tinymce/dom/TridentSelection.js"></script>
+
+	<!-- tinymce.html.* -->
+	<script src="tinymce/html/DomParser.js"></script>
+	<script src="tinymce/html/Entities.js"></script>
+	<script src="tinymce/html/Node.js"></script>
+	<script src="tinymce/html/SaxParser.js"></script>
+	<script src="tinymce/html/Schema.js"></script>
+	<script src="tinymce/html/Styles.js"></script>
+	<script src="tinymce/html/Writer.js"></script>
+
+	<!-- tnymce.ui.* -->
+	<script src="tinymce/ui/AbsoluteLayout.js"></script>
+	<script src="tinymce/ui/Button.js"></script>
+	<script src="tinymce/ui/Collection.js"></script>
+	<script src="tinymce/ui/ColorButton.js"></script>
+	<script src="tinymce/ui/Control.js"></script>
+	<script src="tinymce/ui/FitLayout.js"></script>
+	<script src="tinymce/ui/FlexLayout.js"></script>
+	<script src="tinymce/ui/GridLayout.js"></script>
+	<script src="tinymce/ui/MenuButton.js"></script>
+	<script src="tinymce/ui/Panel.js"></script>
+	<script src="tinymce/ui/Selector.js"></script>
+	<script src="tinymce/ui/SplitButton.js"></script>
+	<script src="tinymce/ui/TabPanel.js"></script>
+	<script src="tinymce/ui/TextBox.js"></script>
+	<script src="tinymce/ui/Window.js"></script>
+
+	<!-- tinymce.util.* -->
+	<script src="tinymce/util/JSON.js"></script>
+	<script src="tinymce/util/JSONRequest.js"></script>
+	<script src="tinymce/util/LocalStorage.js"></script>
+	<script src="tinymce/util/Quirks_WebKit.js"></script>
+	<script src="tinymce/util/URI.js"></script>
+	<script src="tinymce/util/XHR.js"></script>
+
+	<!-- tinymce.* -->
+	<script src="tinymce/Editor.js"></script>
+	<script src="tinymce/EditorCommands.js"></script>
+	<script src="tinymce/EnterKey.js"></script>
+	<script src="tinymce/ForceBlocks.js"></script>
+	<script src="tinymce/Formatter_apply.js"></script>
+	<script src="tinymce/Formatter_check.js"></script>
+	<script src="tinymce/Formatter_remove.js"></script>
+	<script src="tinymce/UndoManager.js"></script>
+
+	<!-- tinymce.plugins.* -->
+	<script src="plugins/autosave.js"></script>
+	<script src="plugins/fullpage.js"></script>
+	<script src="plugins/jquery_plugin.js"></script>
+	<script src="plugins/legacyoutput.js"></script>
+	<script src="plugins/lists.js"></script>
+	<script src="plugins/media.js"></script>
+	<script src="plugins/noneditable.js"></script>
+	<script src="plugins/paste.js"></script>
+	<script src="plugins/searchreplace.js"></script>
+	<script src="plugins/spellchecker.js"></script>
+	<script src="plugins/table.js"></script>
+	<script src="plugins/wordcount.js"></script>
 </body>
 </html>

@@ -189,7 +189,8 @@ exports.jshint = function (options) {
 	color.green = '\u001b[32m';
 
 	if (fs.existsSync(".jshintrc")) {
-		options = extend(JSON.parse(removeComments("" + fs.readFileSync(".jshintrc"))), options);
+		options = extend(JSON.parse(removeComments("" + fs.readFileSync(options.jshintrc || ".jshintrc"))), options);
+		delete options.jshintrc;
 	}
 
 	if (options.exclude) {
@@ -449,4 +450,15 @@ exports.nuget = function(options) {
 			execNuget(options.nuspec, args);
 		}
 	}
+};
+
+exports.phantomjs = function(args) {
+	var childProcess = require('child_process');
+	var phantomjs = require('phantomjs');
+	var binPath = phantomjs.path;
+
+	childProcess.execFile(binPath, args, function(err, stdout, stderr) {
+		console.log(stdout);
+		console.log(stderr);
+	});
 };
