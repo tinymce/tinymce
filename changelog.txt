@@ -7,6 +7,7 @@ Version 4.0.20 (2014-03-xx)
 	Fixed bug where the focusedEditor wouldn't be set to null when that editor was removed.
 	Fixed bug where Gecko would throw an exception when editors where removed.
 	Fixed bug where the FocusManager wouldn't handle selection restoration properly on older IE versions.
+	Fixed bug where the searchreplace plugin would produce an exception on very specific multiple searches.
 	Fixed so the jQuery plugin returns null when getting the the tinymce instance of an element before it's initialized.
 	Fixed so selection normalization gets executed more often to reduce incorrect UI states on Gecko.
 	Fixed so the default action of closing the window on a form submission can be prevented using "preventDefault".

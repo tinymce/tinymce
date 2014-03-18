@@ -411,7 +411,11 @@
 
 		function unwrap(node) {
 			var parentNode = node.parentNode;
-			parentNode.insertBefore(node.firstChild, node);
+
+			if (node.firstChild) {
+				parentNode.insertBefore(node.firstChild, node);
+			}
+
 			node.parentNode.removeChild(node);
 		}
 
