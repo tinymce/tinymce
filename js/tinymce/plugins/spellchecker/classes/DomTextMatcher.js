@@ -174,7 +174,7 @@ define("tinymce/spellcheckerplugin/DomTextMatcher", [], function() {
 				return clone;
 			}
 
-			return function replace(range) {
+			return function(range) {
 				var before, after, parentNode, startNode = range.startNode,
 					endNode = range.endNode, matchIndex = range.matchIndex,
 					doc = dom.doc;

@@ -9,14 +9,6 @@
 		}
 	});
 
-	if (window.callPhantom) {
-		test("PhantomJS dummy test", function() {
-			ok(true, "UI tests are disabled on PhantomJS since it doesn't support layout as normal browsers.");
-		});
-
-		return;
-	}
-
 	function renderGridPanel(settings) {
 		var panel = tinymce.ui.Factory.create(tinymce.extend({
 			type: "panel",

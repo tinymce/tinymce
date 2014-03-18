@@ -9,14 +9,6 @@
 		}
 	});
 
-	if (window.callPhantom) {
-		test("PhantomJS dummy test", function() {
-			ok(true, "UI tests are disabled on PhantomJS since it doesn't support layout as normal browsers.");
-		});
-
-		return;
-	}
-
 	function createWindow(settings) {
 		return tinymce.ui.Factory.create(tinymce.extend({
 			type: 'window'
@@ -52,7 +44,7 @@
 			]
 		});
 
-		Utils.nearlyEqualRects(Utils.size(win), [326, 61], 30);
+		Utils.nearlyEqualRects(Utils.size(win), [375, 61], 30);
 		Utils.nearlyEqualRects(Utils.size(win.find("spacer")[0]), [324, 20], 30);
 	});
 
