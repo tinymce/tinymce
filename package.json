@@ -24,6 +24,6 @@
 		"coverjs": ">= 0.0.14"
 	},
 	"scripts": {
-		"test": "node ./node_modules/jake/bin/cli.js phantomjs-tests"
+		"test": "jake jshint eslint minify less phantomjs-tests"
 	}
 }
