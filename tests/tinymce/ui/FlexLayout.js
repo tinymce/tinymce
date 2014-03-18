@@ -7,7 +7,7 @@
 		},
 
 		teardown: function() {
-			document.getElementById('view').innerHTML = '';
+			tinymce.dom.Event.clean(document.getElementById('view'));
 		}
 	});
 

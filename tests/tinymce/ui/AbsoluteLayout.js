@@ -2,6 +2,10 @@
 	module("tinymce.ui.AbsoluteLayout", {
 		setup: function() {
 			document.getElementById('view').innerHTML = '';
+		},
+
+		teardown: function() {
+			tinymce.dom.Event.clean(document.getElementById('view'));
 		}
 	});
 

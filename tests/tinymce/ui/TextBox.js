@@ -2,6 +2,10 @@
 	module("tinymce.ui.TextBox", {
 		setup: function() {
 			document.getElementById('view').innerHTML = '';
+		},
+
+		teardown: function() {
+			tinymce.dom.Event.clean(document.getElementById('view'));
 		}
 	});
 

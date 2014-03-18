@@ -4,6 +4,10 @@
 	module("tinymce.ui.Panel", {
 		setup: function() {
 			document.getElementById('view').innerHTML = '';
+		},
+
+		teardown: function() {
+			tinymce.dom.Event.clean(document.getElementById('view'));
 		}
 	});
 

@@ -31,6 +31,10 @@
 					]}
 				]
 			}).renderTo(document.getElementById('view'));
+		},
+
+		teardown: function() {
+			tinymce.dom.Event.clean(document.getElementById('view'));
 		}
 	});
 

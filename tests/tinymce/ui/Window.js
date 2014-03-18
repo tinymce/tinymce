@@ -5,6 +5,7 @@
 		},
 
 		teardown: function() {
+			tinymce.dom.Event.clean(document.getElementById('view'));
 			tinymce.DOM.remove(document.getElementById('mce-modal-block'));
 		}
 	});
