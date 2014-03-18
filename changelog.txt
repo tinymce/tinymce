@@ -1,5 +1,6 @@
 Version 4.0.20 (2014-03-xx)
 	Fixed so all unit tests can be executed in a headless phantomjs instance for CI testing.
+	Fixed so directionality setting gets applied to the preview dialog as well as the editor body element.
 	Fixed a performance issue with the "is" method in DOMUtils. Patch contributed by Paul Bosselaar.
 	Fixed bug where paste plugin wouldn't paste plain text properly when pasting using browser menus.
 	Fixed bug where focusable SVG elements would throw an error since className isn't a proper string.

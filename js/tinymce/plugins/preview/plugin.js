@@ -48,13 +48,15 @@ tinymce.PluginManager.add('preview', function(editor) {
 					bodyClass = bodyClass[editor.id] || '';
 				}
 
+				var dirAttr = editor.settings.directionality ? ' dir="' + editor.settings.directionality + '"' : '';
+
 				previewHtml = (
 					'<!DOCTYPE html>' +
 					'<html>' +
 					'<head>' +
 						headHtml +
 					'</head>' +
-					'<body id="' + bodyId + '" class="mce-content-body ' + bodyClass + '">' +
+					'<body id="' + bodyId + '" class="mce-content-body ' + bodyClass + '"' + dirAttr + '>' +
 						editor.getContent() +
 					'</body>' +
 					'</html>'
