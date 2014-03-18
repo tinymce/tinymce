@@ -542,6 +542,10 @@ define("tinymce/util/Quirks", [
 				}
 
 				selectionTimer = window.setTimeout(function() {
+					if (editor.removed) {
+						return;
+					}
+
 					var rng = selection.getRng();
 
 					// Compare the ranges to see if it was a real change or not

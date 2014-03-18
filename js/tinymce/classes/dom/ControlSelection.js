@@ -167,6 +167,8 @@ define("tinymce/dom/ControlSelection", [
 		function showResizeRect(targetElm, mouseDownHandleName, mouseDownEvent) {
 			var position, targetWidth, targetHeight, e, rect, offsetParent = editor.getBody();
 
+			unbindResizeHandleEvents();
+
 			// Get position and size of target
 			position = dom.getPos(targetElm, offsetParent);
 			selectedElmX = position.x;
@@ -246,14 +248,18 @@ define("tinymce/dom/ControlSelection", [
 						if (Env.ie) {
 							handleElm.contentEditable = false;
 						}
+					} else {
+						dom.show(handleElm);
+					}
 
+					if (!handle.elm) {
 						dom.bind(handleElm, 'mousedown', function(e) {
 							e.stopImmediatePropagation();
 							e.preventDefault();
 							startDrag(e);
 						});
-					} else {
-						dom.show(handleElm);
+
+						handle.elm = handleElm;
 					}
 
 					/*
@@ -282,6 +288,8 @@ define("tinymce/dom/ControlSelection", [
 
 		function hideResizeRect() {
 			var name, handleElm;
+
+			unbindResizeHandleEvents();
 
 			if (selectedElm) {
 				selectedElm.removeAttribute('data-mce-selected');
@@ -392,6 +400,17 @@ define("tinymce/dom/ControlSelection", [
 			detachEvent(selectedElm, 'resizestart', resizeNativeStart);
 		}
 
+		function unbindResizeHandleEvents() {
+			for (var name in resizeHandles) {
+				var handle = resizeHandles[name];
+
+				if (handle.elm) {
+					dom.unbind(handle.elm);
+					delete handle.elm;
+				}
+			}
+		}
+
 		function disableGeckoResize() {
 			try {
 				// Disable object resizing on Gecko
@@ -476,6 +495,8 @@ define("tinymce/dom/ControlSelection", [
 			// Hide rect on focusout since it would float on top of windows otherwise
 			//editor.on('focusout', hideResizeRect);
 		});
+
+		editor.on('remove', unbindResizeHandleEvents);
 
 		function destroy() {
 			selectedElm = selectedElmGhost = null;
