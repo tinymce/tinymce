@@ -1059,6 +1059,21 @@ define("tinymce/util/Quirks", [
 			}
 		}
 
+		/**
+		 * iOS 7.1 introduced two new bugs:
+		 * 1) It's possible to open links within a contentEditable area by clicking on them.
+		 * 2) If you hold down the finger it will display the link/image touch callout menu.
+		 */
+		function tapLinksAndImages() {
+			editor.on('click', function(e) {
+				if (e.target.tagName === 'A') {
+					e.preventDefault();
+				}
+			});
+
+			editor.contentStyles.push('.mce-content-body {-webkit-touch-callout: none}');
+		}
+
 		// All browsers
 		disableBackspaceIntoATable();
 		removeBlockQuoteOnBackSpace();
@@ -1077,6 +1092,7 @@ define("tinymce/util/Quirks", [
 				selectionChangeNodeChanged();
 				restoreFocusOnKeyDown();
 				bodyHeight();
+				tapLinksAndImages();
 			} else {
 				selectAll();
 			}
