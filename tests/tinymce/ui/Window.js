@@ -44,8 +44,8 @@
 			]
 		});
 
-		Utils.nearlyEqualRects(Utils.size(win), [375, 61], 30);
-		Utils.nearlyEqualRects(Utils.size(win.find("spacer")[0]), [324, 20], 30);
+		Utils.nearlyEqualRects(Utils.size(win), [326, 61], 60);
+		Utils.nearlyEqualRects(Utils.size(win.find("spacer")[0]), [324, 20], 60);
 	});
 
 	test("buttonbar, autoResize, buttonbar is widest", function() {
