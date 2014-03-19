@@ -12,6 +12,7 @@ var fs = require("fs");
 var eslint = require('./tools/BuildTools').eslint;
 var nuget = require('./tools/BuildTools').nuget;
 var phantomjs = require('./tools/BuildTools').phantomjs;
+var saucelabs = require('./tools/saucelabs').saucelabs;
 
 desc("Default build task");
 task("default", ["minify", "less"], function () {});
@@ -216,47 +217,47 @@ task("bundle", ["minify"], function(params) {
 
 desc("Bundles in plugins/themes without minifying into a tinymce.full.js file");
 task("bundle-full", ["default"], function (params) {
-  var inputFiles, fullContent, addPlugins = true;
+	var inputFiles, fullContent, addPlugins = true;
 
-  function appendAddon (name) {
-    if (addPlugins) {
-      if (name == '*') {
-        glob.sync('js/tinymce/plugins/*/plugin.js').forEach(function (filePath) {
-          fullContent += "\n;" + fs.readFileSync(filePath).toString();
-        });
-      } else {
-        fullContent += "\n;" + fs.readFileSync("js/tinymce/plugins/" + name + "/plugin.js").toString();
-      }
-    } else {
-      if (name == '*') {
-        glob.sync('js/tinymce/themes/*/theme.min.js').forEach(function (filePath) {
-          fullContent += "\n;" + fs.readFileSync(filePath).toString();
-        });
-      } else {
-        fullContent += "\n;" + fs.readFileSync("js/tinymce/themes/" + name + "/theme.js").toString();
-      }
-    }
-  }
+	function appendAddon(name) {
+		if (addPlugins) {
+			if (name == '*') {
+				glob.sync('js/tinymce/plugins/*/plugin.js').forEach(function (filePath) {
+					fullContent += "\n;" + fs.readFileSync(filePath).toString();
+				});
+			} else {
+				fullContent += "\n;" + fs.readFileSync("js/tinymce/plugins/" + name + "/plugin.js").toString();
+			}
+		} else {
+			if (name == '*') {
+				glob.sync('js/tinymce/themes/*/theme.min.js').forEach(function (filePath) {
+					fullContent += "\n;" + fs.readFileSync(filePath).toString();
+				});
+			} else {
+				fullContent += "\n;" + fs.readFileSync("js/tinymce/themes/" + name + "/theme.js").toString();
+			}
+		}
+	}
 
-  fullContent = fs.readFileSync("js/tinymce/tinymce.js").toString();
+	fullContent = fs.readFileSync("js/tinymce/tinymce.js").toString();
 
-  if (arguments[0] == '*') {
-    arguments = ['themes:*', 'plugins:*'];
-  }
+	if (arguments[0] == '*') {
+		arguments = ['themes:*', 'plugins:*'];
+	}
 
-  for (var i = 0; i < arguments.length; i++) {
-    var args = arguments[i].split(':');
+	for (var i = 0; i < arguments.length; i++) {
+		var args = arguments[i].split(':');
 
-    if (args[0] == 'plugins') {
-      addPlugins = true;
-    } else if (args[0] == 'themes') {
-      addPlugins = false;
-    }
+		if (args[0] == 'plugins') {
+			addPlugins = true;
+		} else if (args[0] == 'themes') {
+			addPlugins = false;
+		}
 
-    appendAddon(args[1] || args[0]);
-  }
+		appendAddon(args[1] || args[0]);
+	}
 
-  fs.writeFileSync("js/tinymce/tinymce.full.js", fullContent);
+	fs.writeFileSync("js/tinymce/tinymce.full.js", fullContent);
 });
 
 desc("Bundles in the plugins/themes without minifying, including jQuery into a tinymce.jquery.full.js file");
@@ -454,7 +455,7 @@ task("zip-production", ["mktmp"], function () {
 		exclude: [
 			"js/tinymce/tinymce.js",
 			"js/tinymce/tinymce.dev.js",
-      "js/tinymce/tinymce.full.js",
+			"js/tinymce/tinymce.full.js",
 			"js/tinymce/tinymce.full.min.js",
 			"js/tinymce/tinymce.jquery.js",
 			"js/tinymce/tinymce.jquery.min.js",
@@ -498,7 +499,7 @@ task("zip-production-jquery", ["mktmp"], function () {
 			"js/tinymce/tinymce.js",
 			"js/tinymce/tinymce.min.js",
 			"js/tinymce/tinymce.dev.js",
-      "js/tinymce/tinymce.full.js",
+			"js/tinymce/tinymce.full.js",
 			"js/tinymce/tinymce.full.min.js",
 			"js/tinymce/tinymce.jquery.js",
 			"js/tinymce/tinymce.jquery.dev.js",
@@ -574,6 +575,27 @@ task("instrument-plugin", [], function(pluginName) {
 desc("Runs qunit tests in phantomjs");
 task("phantomjs-tests", [], function(pluginName) {
 	phantomjs(["tests/js/runner.js", "tests/index.html"]);
+});
+
+desc("Runs qunit tests in saucelabs");
+task("saucelabs-tests", [], function(pluginName) {
+	saucelabs.qunit({
+		testname: 'TinyMCE QUnit Tests',
+		urls: ['http://127.0.0.1:9999/tests/index.html?min=true'],
+		browsers: [
+			{browserName: 'firefox', platform: 'XP'},
+			{browserName: 'googlechrome', platform: 'XP'},
+			{browserName: 'internet explorer', version: '8', platform: 'XP'},
+			{browserName: 'internet explorer', version: '9', platform: 'Windows 7'},
+			{browserName: 'internet explorer', version: '10', platform: 'Windows 7'},
+			{browserName: 'internet explorer', version: '11', platform: 'Windows 7'},
+			{browserName: 'safari', version: '7', platform: 'OS X 10.9'},
+			{browserName: "safari", version: "6", platform: "OS X 10.8"},
+			//{browserName: "ipad", version: "7", platform: "OS X 10.9"},
+			{browserName: 'firefox', platform: 'Linux'},
+			{browserName: 'googlechrome', platform: 'Linux'}
+		]
+	});
 });
 
 desc("Cleans the build directories");
