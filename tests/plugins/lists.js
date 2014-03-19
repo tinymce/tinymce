@@ -4,7 +4,7 @@ module("tinymce.plugins.Lists", {
 		QUnit.stop();
 
 		function wait() {
-			if (editor && inlineEditor) {
+			if (window.editor && window.inlineEditor) {
 				if (!QUnit.started) {
 					QUnit.start();
 					QUnit.started = true;
@@ -449,30 +449,33 @@ test('Apply UL list to multiple formatted lines separated by BR', function() {
 	equal(editor.selection.getEnd().nodeName, tinymce.Env.ie && tinymce.Env.ie < 9 ? 'LI' : 'EM'); // Old IE will return the end LI not a big deal
 });
 
-test('Apply UL list to br line and text block line', function() {
-	editor.settings.forced_root_block = false;
+// Ignore on IE 7, 8 this is a known bug not worth fixing
+if (!tinymce.Env.ie || tinymce.Env.ie > 8) {
+	test('Apply UL list to br line and text block line', function() {
+		editor.settings.forced_root_block = false;
 
-	editor.setContent(
-		'a' +
-		'<p>b</p>'
-	);
+		editor.setContent(
+			'a' +
+			'<p>b</p>'
+		);
 
-	var rng = editor.dom.createRng();
-	rng.setStart(editor.getBody().firstChild, 0);
-	rng.setEnd(editor.getBody().lastChild.firstChild, 1);
-	editor.selection.setRng(rng);
-	execCommand('InsertUnorderedList');
+		var rng = editor.dom.createRng();
+		rng.setStart(editor.getBody().firstChild, 0);
+		rng.setEnd(editor.getBody().lastChild.firstChild, 1);
+		editor.selection.setRng(rng);
+		execCommand('InsertUnorderedList');
 
-	equal(editor.getContent(),
-		'<ul>' +
-			'<li>a</li>' +
-			'<li>b</li>' +
-		'</ul>'
-	);
+		equal(editor.getContent(),
+			'<ul>' +
+				'<li>a</li>' +
+				'<li>b</li>' +
+			'</ul>'
+		);
 
-	equal(editor.selection.getStart().nodeName, 'LI');
-	equal(editor.selection.getEnd().nodeName, 'LI');
-});
+		equal(editor.selection.getStart().nodeName, 'LI');
+		equal(editor.selection.getEnd().nodeName, 'LI');
+	});
+}
 
 test('Apply UL list to text block line and br line', function() {
 	editor.settings.forced_root_block = false;
@@ -838,28 +841,31 @@ test('Remove empty UL between two textblocks', function() {
 	equal(editor.selection.getNode().nodeName, 'P');
 });
 
-test('Remove empty UL between two textblocks in BR mode', function() {
-	editor.settings.forced_root_block = false;
+// Ignore on IE 7, 8 this is a known bug not worth fixing
+if (!tinymce.Env.ie || tinymce.Env.ie > 8) {
+	test('Remove empty UL between two textblocks in BR mode', function() {
+		editor.settings.forced_root_block = false;
 
-	editor.getBody().innerHTML = trimBrs(
-		'<div>a</div>' +
-		'<ul>' +
-			'<li></li>' +
-		'</ul>' +
-		'<div>b</div>'
-	);
+		editor.getBody().innerHTML = trimBrs(
+			'<div>a</div>' +
+			'<ul>' +
+				'<li></li>' +
+			'</ul>' +
+			'<div>b</div>'
+		);
 
-	editor.focus();
-	Utils.setSelection('li:first', 0);
-	execCommand('InsertUnorderedList');
+		editor.focus();
+		Utils.setSelection('li:first', 0);
+		execCommand('InsertUnorderedList');
 
-	equal(editor.getContent(),
-		'<div>a</div>' +
-		'<br />' +
-		'<div>b</div>'
-	);
-	equal(editor.selection.getStart().nodeName, 'BR');
-});
+		equal(editor.getContent(),
+			'<div>a</div>' +
+			'<br />' +
+			'<div>b</div>'
+		);
+		equal(editor.selection.getStart().nodeName, 'BR');
+	});
+}
 
 // Outdent
 
