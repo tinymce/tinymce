@@ -123,6 +123,8 @@ tinymce.PluginManager.add('image', function(editor) {
 		}
 
 		function onSubmitForm() {
+			updateStyle();
+
 			function waitLoad(imgElm) {
 				function selectImage() {
 					imgElm.onload = imgElm.onerror = null;
@@ -144,7 +146,6 @@ tinymce.PluginManager.add('image', function(editor) {
 				imgElm.onerror = selectImage;
 			}
 			
-			updateStyle();
 			recalcSize();
 
 			data = tinymce.extend(data, win.toJSON());
