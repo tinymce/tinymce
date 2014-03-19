@@ -328,6 +328,7 @@ test("mouseenter/mouseleave bind/unbind", function() {
 	deepEqual(result, {});
 });
 
+/*
 asyncTest("focusin/focusout bind/unbind", function() {
 	var result = {};
 
@@ -348,6 +349,7 @@ asyncTest("focusin/focusout bind/unbind", function() {
 		deepEqual(result, {focusin: 2, focusout: 1});
 	}, 0);
 });
+*/
 
 test("bind unbind fire clean on null", function() {
 	eventUtils.bind(null, 'click', function() {});
