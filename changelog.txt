@@ -4,6 +4,7 @@ Version 4.0.21 (2014-03-xx)
 	Added title input field to link dialog for a11y reasons can be disabled by using the link_title option.
 	Fixed bug where iOS 7.1 Safari would open linked when images where inserted into links.
 	Fixed issue where the UndoManager transact method couldn't be nested since it only had one lock.
+	Fixed issue where headings/heading where labeled incorrectly as headers/header.
 Version 4.0.20 (2014-03-18)
 	Fixed so all unit tests can be executed in a headless phantomjs instance for CI testing.
 	Fixed so directionality setting gets applied to the preview dialog as well as the editor body element.

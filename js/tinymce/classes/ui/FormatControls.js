@@ -91,13 +91,13 @@ define("tinymce/ui/FormatControls", [
 			var count = 0, newFormats = [];
 
 			var defaultStyleFormats = [
-				{title: 'Headers', items: [
-					{title: 'Header 1', format: 'h1'},
-					{title: 'Header 2', format: 'h2'},
-					{title: 'Header 3', format: 'h3'},
-					{title: 'Header 4', format: 'h4'},
-					{title: 'Header 5', format: 'h5'},
-					{title: 'Header 6', format: 'h6'}
+				{title: 'Headings', items: [
+					{title: 'Heading 1', format: 'h1'},
+					{title: 'Heading 2', format: 'h2'},
+					{title: 'Heading 3', format: 'h3'},
+					{title: 'Heading 4', format: 'h4'},
+					{title: 'Heading 5', format: 'h5'},
+					{title: 'Heading 6', format: 'h6'}
 				]},
 
 				{title: 'Inline', items: [
@@ -427,12 +427,12 @@ define("tinymce/ui/FormatControls", [
 				'Paragraph=p;' +
 				'Address=address;' +
 				'Pre=pre;' +
-				'Header 1=h1;' +
-				'Header 2=h2;' +
-				'Header 3=h3;' +
-				'Header 4=h4;' +
-				'Header 5=h5;' +
-				'Header 6=h6'
+				'Heading 1=h1;' +
+				'Heading 2=h2;' +
+				'Heading 3=h3;' +
+				'Heading 4=h4;' +
+				'Heading 5=h5;' +
+				'Heading 6=h6'
 			);
 
 			each(blocks, function(block) {
