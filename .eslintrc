@@ -24,7 +24,7 @@
 		"no-floating-decimal": 2,
 		"no-nested-ternary": 2,
 		"radix": 2,
-		"wrap-iife": 2,
+		"wrap-iife": [2, "inside"],
 		"consistent-this": [2, "self"],
 		"no-bitwise": 2,
 		"max-params": [2, 50],
