@@ -223,7 +223,7 @@ define("tinymce/EditorManager", [
 						each(DOM.select(type.selector), function(elm) {
 							var editor = new Editor(createId(elm), extend({}, settings, type), self);
 							editors.push(editor);
-							editor.render(1);
+							editor.render();
 						});
 					});
 
@@ -233,7 +233,7 @@ define("tinymce/EditorManager", [
 					each(DOM.select(settings.selector), function(elm) {
 						var editor = new Editor(createId(elm), settings, self);
 						editors.push(editor);
-						editor.render(1);
+						editor.render();
 					});
 
 					return;
@@ -244,12 +244,12 @@ define("tinymce/EditorManager", [
 					case "exact":
 						l = settings.elements || '';
 
-						if(l.length > 0) {
+						if (l.length > 0) {
 							each(explode(l), function(v) {
 								if (DOM.get(v)) {
 									editor = new Editor(v, settings, self);
 									editors.push(editor);
-									editor.render(true);
+									editor.render();
 								} else {
 									each(document.forms, function(f) {
 										each(f.elements, function(e) {
@@ -259,7 +259,7 @@ define("tinymce/EditorManager", [
 
 												editor = new Editor(v, settings, self);
 												editors.push(editor);
-												editor.render(1);
+												editor.render();
 											}
 										});
 									});
@@ -278,7 +278,7 @@ define("tinymce/EditorManager", [
 							if (!settings.editor_selector || hasClass(elm, settings.editor_selector)) {
 								editor = new Editor(createId(elm), settings, self);
 								editors.push(editor);
-								editor.render(true);
+								editor.render();
 							}
 						});
 						break;
