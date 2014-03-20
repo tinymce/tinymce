@@ -546,10 +546,9 @@ define("tinymce/ui/Control", [
 
 					if (nativeEvents[name]) {
 						if (!self._nativeEvents) {
-							self._nativeEvents = {name: true};
-						} else {
-							self._nativeEvents[name] = true;
+							self._nativeEvents = {};
 						}
+						self._nativeEvents[name] = true;
 
 						if (self._rendered) {
 							self.bindPendingEvents();
