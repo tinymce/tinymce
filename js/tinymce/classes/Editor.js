@@ -1031,8 +1031,13 @@ define("tinymce/Editor", [
 					body = self.getBody();
 
 					// Check for setActive since it doesn't scroll to the element
-					if (body.setActive && Env.ie < 11) {
-						body.setActive();
+					if (body.setActive) {
+						// IE 11 sometimes throws "Invalid function" then fallback to focus
+						try {
+							body.setActive();
+						} catch (ex) {
+							body.focus();
+						}
 					} else {
 						body.focus();
 					}
