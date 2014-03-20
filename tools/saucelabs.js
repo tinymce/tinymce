@@ -217,6 +217,7 @@ function runTask(arg, framework, callback) {
 			if (!isCreated) {
 				log("Could not create tunnel to Sauce Labs");
 				callback(false);
+				webserver.stop();
 				return;
 			}
 
