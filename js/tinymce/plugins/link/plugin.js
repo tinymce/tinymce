@@ -30,7 +30,7 @@ tinymce.PluginManager.add('link', function(editor) {
 
 	function showDialog(linkList) {
 		var data = {}, selection = editor.selection, dom = editor.dom, selectedElm, anchorElm, initialText;
-		var win, onlyText, textListCtrl, linkListCtrl, relListCtrl, targetListCtrl, classListCtrl;
+		var win, onlyText, textListCtrl, linkListCtrl, relListCtrl, targetListCtrl, classListCtrl, linkTitleCtrl;
 
 		function linkListChangeHandler(e) {
 			var textCtrl = win.find('#text');
@@ -152,6 +152,7 @@ tinymce.PluginManager.add('link', function(editor) {
 		data.target = anchorElm ? dom.getAttrib(anchorElm, 'target') : (editor.settings.default_link_target || null);
 		data.rel = anchorElm ? dom.getAttrib(anchorElm, 'rel') : null;
 		data['class'] = anchorElm ? dom.getAttrib(anchorElm, 'class') : null;
+		data.title = anchorElm ? dom.getAttrib(anchorElm, 'title') : '';
 
 		if (onlyText) {
 			textListCtrl = {
@@ -205,6 +206,15 @@ tinymce.PluginManager.add('link', function(editor) {
 			};
 		}
 
+		if (editor.settings.link_title !== false) {
+			linkTitleCtrl = {
+				name: 'title',
+				type: 'textbox',
+				label: 'Title',
+				value: data.title
+			};
+		}
+
 		win = editor.windowManager.open({
 			title: 'Insert link',
 			data: data,
@@ -220,6 +230,7 @@ tinymce.PluginManager.add('link', function(editor) {
 					onkeyup: urlChange
 				},
 				textListCtrl,
+				linkTitleCtrl,
 				buildAnchorListControl(data.href),
 				linkListCtrl,
 				relListCtrl,
@@ -245,6 +256,14 @@ tinymce.PluginManager.add('link', function(editor) {
 				}
 
 				function insertLink() {
+					var linkAttrs = {
+						href: href,
+						target: data.target ? data.target : null,
+						rel: data.rel ? data.rel : null,
+						"class": data["class"] ? data["class"] : null,
+						title: data.title ? data.title : null
+					};
+
 					if (anchorElm) {
 						editor.focus();
 
@@ -252,29 +271,15 @@ tinymce.PluginManager.add('link', function(editor) {
 							anchorElm.innerText = data.text;
 						}
 
-						dom.setAttribs(anchorElm, {
-							href: href,
-							target: data.target ? data.target : null,
-							rel: data.rel ? data.rel : null,
-							"class": data["class"] ? data["class"] : null
-						});
+						dom.setAttribs(anchorElm, linkAttrs);
 
 						selection.select(anchorElm);
 						editor.undoManager.add();
 					} else {
 						if (onlyText) {
-							editor.insertContent(dom.createHTML('a', {
-								href: href,
-								target: data.target ? data.target : null,
-								rel: data.rel ? data.rel : null,
-								"class": data["class"] ? data["class"] : null
-							}, dom.encode(data.text)));
+							editor.insertContent(dom.createHTML('a', linkAttrs, dom.encode(data.text)));
 						} else {
-							editor.execCommand('mceInsertLink', false, {
-								href: href,
-								target: data.target,
-								rel: data.rel ? data.rel : null
-							});
+							editor.execCommand('mceInsertLink', false, linkAttrs);
 						}
 					}
 				}
