@@ -469,7 +469,7 @@ task("zip-production", ["mktmp"], function () {
 			/plugin\.js|plugin\.dev\.js|theme\.js/,
 			/classes/,
 			/.+\.less/,
-			/\.dev\.svg/
+			/\.json/
 		],
 
 		from: [
@@ -511,7 +511,7 @@ task("zip-production-jquery", ["mktmp"], function () {
 			/plugin\.js|plugin\.dev\.js|theme\.js/,
 			/classes/,
 			/.+\.less/,
-			/\.dev\.svg/
+			/\.json/
 		],
 
 		from: [
