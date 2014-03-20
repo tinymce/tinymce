@@ -89,15 +89,15 @@ tinymce.PluginManager.add('media', function(editor, url) {
 			height = newHeight;
 		}
 
-		if (!editor.settings.media_hide_alt_source) {
+		if (editor.settings.media_alt_source !== false) {
 			generalFormItems.push({name: 'source2', type: 'filepicker', filetype: 'media', size: 40, label: 'Alternative source'});
 		}
 
-		if (!editor.settings.media_hide_poster) {
+		if (editor.settings.media_poster !== false) {
 			generalFormItems.push({name: 'poster', type: 'filepicker', filetype: 'image', size: 40, label: 'Poster'});
 		}
 
-		if (!editor.settings.media_hide_dimensions) {
+		if (editor.settings.media_dimensions !== false) {
 			generalFormItems.push({
 				type: 'container',
 				label: 'Dimensions',
