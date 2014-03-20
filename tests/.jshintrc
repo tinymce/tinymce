@@ -16,6 +16,7 @@
 		"stop": false,
 		"strictEqual": false,
 		"test": false,
+		"throws": false,
 		"$": false,
 		"tinymce": false,
 		"editor": false,

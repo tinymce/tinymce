@@ -149,6 +149,67 @@ test('Events', function() {
 	ok(redo.bookmark);
 });
 
+test('Transact', function() {
+	var count = 0;
+
+	editor.undoManager.clear();
+
+	editor.on('BeforeAddUndo', function() {
+		count++;
+	});
+
+	editor.undoManager.transact(function() {
+		editor.undoManager.add();
+		editor.undoManager.add();
+	});
+
+	equal(count, 1);
+});
+
+test('Transact nested', function() {
+	var count = 0;
+
+	editor.undoManager.clear();
+
+	editor.on('BeforeAddUndo', function() {
+		count++;
+	});
+
+	editor.undoManager.transact(function() {
+		editor.undoManager.add();
+
+		editor.undoManager.transact(function() {
+			editor.undoManager.add();
+		});
+	});
+
+	equal(count, 1);
+});
+
+test('Transact exception', function() {
+	var count = 0;
+
+	editor.undoManager.clear();
+
+	editor.on('BeforeAddUndo', function() {
+		count++;
+	});
+
+	throws(
+		function() {
+			editor.undoManager.transact(function() {
+				throw new Error("Test");
+			});
+		},
+
+		"Test"
+	);
+
+	editor.undoManager.add();
+
+	equal(count, 1);
+});
+
 asyncTest('Undo added when typing and losing focus', function() {
 	window.focus();
 

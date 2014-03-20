@@ -26,7 +26,7 @@ define("tinymce/UndoManager", [
 	].join('|'), 'gi');
 
 	return function(editor) {
-		var self = this, index = 0, data = [], beforeBookmark, isFirstTypedCharacter, lock;
+		var self = this, index = 0, data = [], beforeBookmark, isFirstTypedCharacter, locks = 0;
 
 		// Returns a trimmed version of the current editor contents
 		function getContent() {
@@ -154,7 +154,7 @@ define("tinymce/UndoManager", [
 			 * @method beforeChange
 			 */
 			beforeChange: function() {
-				if (!lock) {
+				if (!locks) {
 					beforeBookmark = editor.selection.getBookmark(2, true);
 				}
 			},
@@ -173,7 +173,7 @@ define("tinymce/UndoManager", [
 				level = level || {};
 				level.content = getContent();
 
-				if (lock || editor.removed) {
+				if (locks || editor.removed) {
 					return null;
 				}
 
@@ -324,9 +324,12 @@ define("tinymce/UndoManager", [
 			transact: function(callback) {
 				self.beforeChange();
 
-				lock = true;
-				callback();
-				lock = false;
+				try {
+					locks++;
+					callback();
+				} finally {
+					locks--;
+				}
 
 				self.add();
 			}
