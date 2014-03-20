@@ -56,6 +56,16 @@ tinymce.PluginManager.add('link', function(editor) {
 			return linkListItems;
 		}
 
+		function applyPreview(items) {
+			tinymce.each(items, function(item) {
+				item.textStyle = function() {
+					return editor.formatter.getCssText({inline: 'a', classes: [item.value]});
+				};
+			});
+
+			return items;
+		}
+
 		function buildValues(listSettingName, dataItemName, defaultItems) {
 			var selectedItem, items = [];
 
@@ -202,7 +212,7 @@ tinymce.PluginManager.add('link', function(editor) {
 				name: 'class',
 				type: 'listbox',
 				label: 'Class',
-				values: buildValues('link_class_list', 'class')
+				values: applyPreview(buildValues('link_class_list', 'class'))
 			};
 		}
 

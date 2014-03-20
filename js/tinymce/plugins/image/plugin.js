@@ -40,6 +40,16 @@ tinymce.PluginManager.add('image', function(editor) {
 		img.src = url;
 	}
 
+	function applyPreview(items) {
+		tinymce.each(items, function(item) {
+			item.textStyle = function() {
+				return editor.formatter.getCssText({inline: 'img', classes: [item.value]});
+			};
+		});
+
+		return items;
+	}
+
 	function createImageList(callback) {
 		return function() {
 			var imageList = editor.settings.image_list;
@@ -264,7 +274,7 @@ tinymce.PluginManager.add('image', function(editor) {
 				name: 'class',
 				type: 'listbox',
 				label: 'Class',
-				values: buildValues('image_class_list', 'class')
+				values: applyPreview(buildValues('image_class_list', 'class'))
 			};
 		}
 

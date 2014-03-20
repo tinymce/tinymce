@@ -228,3 +228,8 @@ test('Match format on div block in inline mode', function() {
 	inlineEditor.execCommand('SelectAll');
 	ok(!inlineEditor.formatter.match('div'), 'Formatter.match on div says true');
 });
+
+test('Get preview css text for formats', function() {
+	ok(editor.formatter.getCssText('bold').indexOf('bold') != -1, 'Bold not found in preview style');
+	ok(editor.formatter.getCssText({inline: 'b'}).indexOf('bold') != -1, 'Bold not found in preview style');
+});

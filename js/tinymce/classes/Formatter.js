@@ -25,8 +25,9 @@
 define("tinymce/Formatter", [
 	"tinymce/dom/TreeWalker",
 	"tinymce/dom/RangeUtils",
-	"tinymce/util/Tools"
-], function(TreeWalker, RangeUtils, Tools) {
+	"tinymce/util/Tools",
+	"tinymce/fmt/Preview"
+], function(TreeWalker, RangeUtils, Tools, Preview) {
 	/**
 	 * Constructs a new formatter instance.
 	 *
@@ -1191,6 +1192,20 @@ define("tinymce/Formatter", [
 			return this;
 		}
 
+		/**
+		 * Returns a preview css text for the specified format.
+		 *
+		 * @method getCssText
+		 * @param {String/Object} format Format to generate preview css text for.
+		 * @return {String} Css text for the specified format.
+		 * @example
+		 * var cssText1 = editor.formatter.getCssText('bold');
+		 * var cssText2 = editor.formatter.getCssText({inline: 'b'});
+		 */
+		function getCssText(format) {
+			return Preview.getCssText(ed, format);
+		}
+
 		// Expose to public
 		extend(this, {
 			get: get,
@@ -1202,7 +1217,8 @@ define("tinymce/Formatter", [
 			matchAll: matchAll,
 			matchNode: matchNode,
 			canApply: canApply,
-			formatChanged: formatChanged
+			formatChanged: formatChanged,
+			getCssText: getCssText
 		});
 
 		// Initialize
