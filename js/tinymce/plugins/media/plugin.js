@@ -14,10 +14,10 @@
 
 tinymce.PluginManager.add('media', function(editor, url) {
 	var urlPatterns = [
-		{regex: /youtu\.be\/([a-z1-9.-_]+)/, type: 'iframe', w: 425, h: 350, url: 'http://www.youtube.com/embed/$1'},
-		{regex: /youtube\.com(.+)v=([^&]+)/, type: 'iframe', w: 425, h: 350, url: 'http://www.youtube.com/embed/$2'},
-		{regex: /vimeo\.com\/([0-9]+)/, type: 'iframe', w: 425, h: 350, url: 'http://player.vimeo.com/video/$1?title=0&byline=0&portrait=0&color=8dc7dc'},
-		{regex: /maps\.google\.([a-z]{2,3})\/maps\/(.+)msid=(.+)/, type: 'iframe', w: 425, h: 350, url: 'http://maps.google.com/maps/ms?msid=$2&output=embed"'}
+		{regex: /youtu\.be\/([\w\-.]+)/, type: 'iframe', w: 425, h: 350, url: '//www.youtube.com/embed/$1'},
+		{regex: /youtube\.com(.+)v=([^&]+)/, type: 'iframe', w: 425, h: 350, url: '//www.youtube.com/embed/$2'},
+		{regex: /vimeo\.com\/([0-9]+)/, type: 'iframe', w: 425, h: 350, url: '//player.vimeo.com/video/$1?title=0&byline=0&portrait=0&color=8dc7dc'},
+		{regex: /maps\.google\.([a-z]{2,3})\/maps\/(.+)msid=(.+)/, type: 'iframe', w: 425, h: 350, url: '//maps.google.com/maps/ms?msid=$2&output=embed"'}
 	];
 
 	function guessMime(url) {
