@@ -540,7 +540,7 @@ define("tinymce/tableplugin/Plugin", [
 					onmousemove: function(e) {
 						var target = e.target, x, y;
 
-						if (target.nodeName == 'A') {
+						if (target.tagName.toUpperCase() == 'A') {
 							x = parseInt(target.getAttribute('data-mce-x'), 10);
 							y = parseInt(target.getAttribute('data-mce-y'), 10);
 
@@ -601,7 +601,7 @@ define("tinymce/tableplugin/Plugin", [
 					},
 
 					onclick: function(e) {
-						if (e.target.nodeName == 'A') {
+						if (e.target.tagName.toUpperCase() == 'A') {
 							e.preventDefault();
 							e.stopPropagation();
 							this.parent().cancel();

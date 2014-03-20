@@ -43,7 +43,7 @@ define("tinymce/ui/FormItem", [
 			layout.preRender(self);
 
 			return (
-				'<div id="' + self._id + '" class="' + self.classes() + '" hideFocus="1" tabIndex="-1">' +
+				'<div id="' + self._id + '" class="' + self.classes() + '" hidefocus="1" tabindex="-1">' +
 					(self.settings.title ? ('<div id="' + self._id + '-title" class="' + prefix + 'title">' +
 						self.settings.title + '</div>') : '') +
 					'<div id="' + self._id + '-body" class="' + self.classes('body') + '">' +

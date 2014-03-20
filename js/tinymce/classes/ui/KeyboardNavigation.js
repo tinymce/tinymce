@@ -84,9 +84,11 @@ define("tinymce/ui/KeyboardNavigation", [
 		 * @return {Boolean} True/false if the element is a text element or not.
 		 */
 		function isTextInputElement(elm) {
+			var tagName = elm.tagName.toUpperCase();
+
 			// Notice: since type can be "email" etc we don't check the type
 			// So all input elements gets treated as text input elements
-			return elm.tagName == "INPUT" || elm.tagName == "TEXTAREA";
+			return tagName == "INPUT" || tagName == "TEXTAREA";
 		}
 
 		/**

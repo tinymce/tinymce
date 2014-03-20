@@ -57,7 +57,7 @@ define("tinymce/ui/Panel", [
 			}
 
 			return (
-				'<div id="' + self._id + '" class="' + self.classes() + '" hideFocus="1" tabIndex="-1" role="group">' +
+				'<div id="' + self._id + '" class="' + self.classes() + '" hidefocus="1" tabindex="-1" role="group">' +
 					(self._preBodyHtml || '') +
 					innerHtml +
 				'</div>'

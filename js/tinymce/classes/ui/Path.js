@@ -131,7 +131,7 @@ define("tinymce/ui/Path", [
 			}
 
 			if (!html) {
-				html = '<div class="' + prefix + 'path-item">&nbsp;</div>';
+				html = '<div class="' + prefix + 'path-item">\u00a0</div>';
 			}
 
 			return html;

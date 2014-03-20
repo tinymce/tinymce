@@ -29,9 +29,9 @@ tinymce.PluginManager.add('emoticons', function(editor, url) {
 			tinymce.each(row, function(icon) {
 				var emoticonUrl = url + '/img/smiley-' + icon + '.gif';
 
-				emoticonsHtml += '<td><a href="#" data-mce-url="' + emoticonUrl + '" data-mce-alt="' + icon + '" tabindex="-1"' +
+				emoticonsHtml += '<td><a href="#" data-mce-url="' + emoticonUrl + '" data-mce-alt="' + icon + '" tabindex="-1" ' +
 					'role="option" aria-label="' + icon + '"><img src="' +
-					emoticonUrl + '" style="width: 18px; height: 18px" role="presentation"></a></td>';
+					emoticonUrl + '" style="width: 18px; height: 18px" role="presentation" /></a></td>';
 			});
 
 			emoticonsHtml += '</tr>';

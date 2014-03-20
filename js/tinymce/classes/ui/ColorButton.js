@@ -67,12 +67,12 @@ define("tinymce/ui/ColorButton", [
 
 			return (
 				'<div id="' + id + '" class="' + self.classes() + '" role="button" tabindex="-1" aria-haspopup="true">' +
-					'<button role="presentation" hidefocus type="button" tabindex="-1">' +
+					'<button role="presentation" hidefocus="1" type="button" tabindex="-1">' +
 						(icon ? '<i class="' + icon + '"' + image + '></i>' : '') +
 						'<span id="' + id + '-preview" class="' + prefix + 'preview"></span>' +
 						(self._text ? (icon ? ' ' : '') + (self._text) : '') +
 					'</button>' +
-					'<button type="button" class="' + prefix + 'open" hidefocus tabindex="-1">' +
+					'<button type="button" class="' + prefix + 'open" hidefocus="1" tabindex="-1">' +
 						' <i class="' + prefix + 'caret"></i>' +
 					'</button>' +
 				'</div>'

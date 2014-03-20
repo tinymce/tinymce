@@ -90,7 +90,7 @@ define("tinymce/ui/TabPanel", [
 			});
 
 			return (
-				'<div id="' + self._id + '" class="' + self.classes() + '" hideFocus="1" tabIndex="-1">' +
+				'<div id="' + self._id + '" class="' + self.classes() + '" hidefocus="1" tabindex="-1">' +
 					'<div id="' + self._id + '-head" class="' + prefix + 'tabs" role="tablist">' +
 						tabsHtml +
 					'</div>' +
