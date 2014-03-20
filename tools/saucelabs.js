@@ -209,20 +209,20 @@ function runTask(arg, framework, callback) {
 	var webserver = new WebServer();
 
 	webserver.start(function() {
-		if (arg.tunneled) {
-			var tunnel = new SauceTunnel(arg.username, arg.key, arg.identifier, arg.tunneled);
-			log("Starting Tunnel to Sauce Labs");
-			configureLogEvents(tunnel);
+		var tunnel = new SauceTunnel(arg.username, arg.key, arg.identifier, arg.tunneled);
+		log("Starting Tunnel to Sauce Labs");
+		configureLogEvents(tunnel);
 
-			tunnel.start(function(isCreated) {
-				if (!isCreated) {
-					log("Could not create tunnel to Sauce Labs");
-					callback(false);
-					return;
-				}
+		tunnel.start(function(isCreated) {
+			if (!isCreated) {
+				log("Could not create tunnel to Sauce Labs");
+				callback(false);
+				return;
+			}
 
-				log("Connected to Saucelabs");
+			log("Connected to Saucelabs");
 
+			try {
 				test.runTests(
 					arg.browsers,
 					arg.urls,
@@ -243,14 +243,11 @@ function runTask(arg, framework, callback) {
 						webserver.stop();
 					}
 				);
-			});
-		} else {
-			test.runTests(arg.browsers, arg.pages, framework, null, arg.testname, arg.tags, arg.build, arg.onTestComplete, function(status) {
-				status = status.every(function(passed) { return passed; });
-				log("All tests completed with status %s", status);
-				callback(status);
-			});
-		}
+			} catch (ex) {
+				webserver.stop();
+				throw ex;
+			}
+		});
 	});
 }
 
