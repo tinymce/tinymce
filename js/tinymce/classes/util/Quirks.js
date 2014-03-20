@@ -1070,9 +1070,14 @@ define("tinymce/util/Quirks", [
 		 */
 		function tapLinksAndImages() {
 			editor.on('click', function(e) {
-				if (e.target.tagName === 'A') {
-					e.preventDefault();
-				}
+				var elm = e.target;
+
+				do {
+					if (elm.tagName === 'A') {
+						e.preventDefault();
+						return;
+					}
+				} while ((elm = elm.parentNode));
 			});
 
 			editor.contentStyles.push('.mce-content-body {-webkit-touch-callout: none}');

@@ -1,3 +1,5 @@
+Version 4.0.21 (2014-03-xx)
+	Fixed bug where iOS 7.1 Safari would open linked when images where inserted into links.
 Version 4.0.20 (2014-03-18)
 	Fixed so all unit tests can be executed in a headless phantomjs instance for CI testing.
 	Fixed so directionality setting gets applied to the preview dialog as well as the editor body element.
