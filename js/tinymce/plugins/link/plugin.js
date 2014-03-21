@@ -278,7 +278,11 @@ tinymce.PluginManager.add('link', function(editor) {
 						editor.focus();
 
 						if (onlyText && data.text != initialText) {
-							anchorElm.innerText = data.text;
+							if ("innerText" in anchorElm) {
+								anchorElm.innerText = data.text;
+							} else {
+								anchorElm.textContent = data.text;
+							}
 						}
 
 						dom.setAttribs(anchorElm, linkAttrs);

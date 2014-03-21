@@ -9,6 +9,7 @@ Version 4.0.21 (2014-03-xx)
 	Fixed bug where iOS 7.1 Safari would open linked when images where inserted into links.
 	Fixed bug where IE 11 would scroll to the top of inline editable elements when applying formatting.
 	Fixed bug where tabindex on elements within the editor contents would cause issues on some browsers.
+	Fixed bug where link text wouldn't be properly updated in gecko if you changed an existing link.
 	Fixed issue where the UndoManager transact method couldn't be nested since it only had one lock.
 	Fixed issue where headings/heading where labeled incorrectly as headers/header.
 Version 4.0.20 (2014-03-18)
