@@ -719,12 +719,10 @@ define("tinymce/Editor", [
 
 					DOM.removeClass(bodyEl, 'mce-content-body');
 					DOM.removeClass(bodyEl, 'mce-edit-focus');
-					DOM.setAttrib(bodyEl, 'tabIndex', null);
 					DOM.setAttrib(bodyEl, 'contentEditable', null);
 				});
 
 				DOM.addClass(targetElm, 'mce-content-body');
-				targetElm.tabIndex = -1;
 				self.contentDocument = doc = settings.content_document || document;
 				self.contentWindow = settings.content_window || window;
 				self.bodyElement = targetElm;
