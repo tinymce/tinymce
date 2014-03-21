@@ -1,12 +1,15 @@
 Version 4.0.21 (2014-03-xx)
 	Added new getCssText method to formatter to get the preview css text value for a format to be used in UI.
 	Added new table_grid option that allows you to disable the table grid and use a dialog.
+	Added new image_description, image_dimensions options to image plugin. Patch contributed by Pat O'Neill.
+	Added new media_alt_source, media_poster, media_dimensions options to media plugin. Patch contributed by Pat O'Neill.
 	Added preview of classes for the selectboxes used by the link_class_list/image_class_list options.
 	Added support for Sauce Labs browser testing using the new saucelabs-tests build target.
 	Added title input field to link dialog for a11y reasons can be disabled by using the link_title option.
 	Fixed so the toolbar option handles an array as input for multiple toolbar rows.
 	Fixed so the editor renders in XHTML mode apparently some people still use this rendering mode.
 	Fixed so icons gets rendered better on Firefox on Mac OS X by applying -moz-osx-font-smoothing.
+	Fixed so the auto detected external media sources produced protocol relative urls. Patch contributed by Pat O'Neill.
 	Fixed bug where iOS 7.1 Safari would open linked when images where inserted into links.
 	Fixed bug where IE 11 would scroll to the top of inline editable elements when applying formatting.
 	Fixed bug where tabindex on elements within the editor contents would cause issues on some browsers.
