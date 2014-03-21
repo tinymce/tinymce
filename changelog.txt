@@ -1,5 +1,6 @@
 Version 4.0.21 (2014-03-xx)
 	Added new getCssText method to formatter to get the preview css text value for a format to be used in UI.
+	Added new table_grid option that allows you to disable the table grid and use a dialog.
 	Added preview of classes for the selectboxes used by the link_class_list/image_class_list options.
 	Added support for Sauce Labs browser testing using the new saucelabs-tests build target.
 	Added title input field to link dialog for a11y reasons can be disabled by using the link_title option.
@@ -10,6 +11,8 @@ Version 4.0.21 (2014-03-xx)
 	Fixed bug where IE 11 would scroll to the top of inline editable elements when applying formatting.
 	Fixed bug where tabindex on elements within the editor contents would cause issues on some browsers.
 	Fixed bug where link text wouldn't be properly updated in gecko if you changed an existing link.
+	Fixed bug where it wasn't possible to close dialogs with the escape key if the focus was inside a textbox.
+	Fixed so screen readers use a dialog instead of the grid for inserting tables.
 	Fixed issue where the UndoManager transact method couldn't be nested since it only had one lock.
 	Fixed issue where headings/heading where labeled incorrectly as headers/header.
 Version 4.0.20 (2014-03-18)
