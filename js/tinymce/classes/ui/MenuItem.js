@@ -236,8 +236,6 @@ define("tinymce/ui/MenuItem", [
 		postRender: function() {
 			var self = this, settings = self.settings;
 
-			self._super();
-
 			var textStyle = settings.textStyle;
 			if (typeof(textStyle) == "function") {
 				textStyle = textStyle.call(this);
@@ -264,6 +262,8 @@ define("tinymce/ui/MenuItem", [
 					}
 				}
 			});
+
+			self._super();
 
 			return self;
 		},
