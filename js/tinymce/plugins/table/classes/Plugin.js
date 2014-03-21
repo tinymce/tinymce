@@ -67,7 +67,7 @@ define("tinymce/tableplugin/Plugin", [
 			});
 
 			if (!tableElm) {
-				colsCtrl = {label: 'Columns', name: 'cols'};
+				colsCtrl = {label: 'Cols', name: 'cols'};
 				rowsCtrl = {label: 'Rows', name: 'rows'};
 			}
 
