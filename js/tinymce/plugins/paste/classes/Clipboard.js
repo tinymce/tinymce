@@ -394,6 +394,11 @@ define("tinymce/pasteplugin/Clipboard", [
 
 					removePasteBin();
 
+					// Always use pastebin HTML if it's available since it contains Word contents
+					if (!plainTextMode && isKeyBoardPaste && html && html != pasteBinDefaultContent) {
+						clipboardContent['text/html'] = html;
+					}
+
 					if (html == pasteBinDefaultContent || !isKeyBoardPaste) {
 						html = clipboardContent['text/html'] || clipboardContent['text/plain'] || pasteBinDefaultContent;
 

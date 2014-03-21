@@ -144,7 +144,7 @@ define("tinymce/pasteplugin/WordFilter", [
 					}
 				}
 
-				if (editor.getParam("paste_retain_style_properties", "none")) {
+				if (retainStyleProperties) {
 					var outputStyle = "";
 
 					Tools.each(editor.dom.parseStyle(styleValue), function(value, name) {
@@ -167,6 +167,11 @@ define("tinymce/pasteplugin/WordFilter", [
 							case "mso-highlight":
 								name = "background";
 								break;
+						}
+
+						// Never allow mso- prefixed names
+						if (name.indexOf('mso-') === 0) {
+							return;
 						}
 
 						// Output only valid styles
@@ -269,6 +274,7 @@ define("tinymce/pasteplugin/WordFilter", [
 						}
 					}
 				});
+
 				// Parse into DOM structure
 				var rootNode = domParser.parse(content);
 
