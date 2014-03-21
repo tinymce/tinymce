@@ -76,15 +76,15 @@ tinymce.PluginManager.add('save', function(editor) {
 
 	editor.addButton('save', {
 		icon: 'save',
-		text: 'Save',
+		tooltip: 'Save',
 		cmd: 'mceSave',
 		disabled: true,
 		onPostRender: stateToggle
 	});
 
 	editor.addButton('cancel', {
-		text: 'Cancel',
 		icon: false,
+		tooltip: 'Cancel',
 		cmd: 'mceCancel',
 		disabled: true,
 		onPostRender: stateToggle
