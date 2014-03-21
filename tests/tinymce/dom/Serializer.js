@@ -490,3 +490,12 @@ test('Remove internal classes', function() {
 	DOM.setHTML('test', '<span class="b mce-item-X"></span>');
 	equal(ser.serialize(DOM.get('test')), '<span class="b"></span>');
 });
+
+test('Restore tabindex', function() {
+	var ser = new tinymce.dom.Serializer({
+		valid_elements: 'span[tabindex]'
+	});
+
+	DOM.setHTML('test', '<span data-mce-tabindex="42"></span>');
+	equal(ser.serialize(DOM.get('test')), '<span tabindex="42"></span>');
+});
