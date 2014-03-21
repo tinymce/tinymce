@@ -177,6 +177,7 @@ tinymce.PluginManager.add('image', function(editor) {
 
 			data = {
 				src: data.src,
+				title: data.title,
 				alt: data.alt,
 				width: data.width,
 				height: data.height,
@@ -243,6 +244,7 @@ tinymce.PluginManager.add('image', function(editor) {
 		if (imgElm.nodeName == 'IMG' && !imgElm.getAttribute('data-mce-object') && !imgElm.getAttribute('data-mce-placeholder')) {
 			data = {
 				src: dom.getAttrib(imgElm, 'src'),
+				title: dom.getAttrib(imgElm, 'title'),
 				alt: dom.getAttrib(imgElm, 'alt'),
 				"class": dom.getAttrib(imgElm, 'class'),
 				width: width,
@@ -288,8 +290,11 @@ tinymce.PluginManager.add('image', function(editor) {
 			imageListCtrl
 		];
 
-		if (editor.settings.image_description !== false) {
-			generalFormItems.push({name: 'alt', type: 'textbox', label: 'Image description'});
+		if (editor.settings.image_title !== false) {
+			generalFormItems.push({name: 'title', type: 'textbox', label: 'Title'});
+		}
+		if (editor.settings.image_alt !== false) {
+			generalFormItems.push({name: 'alt', type: 'textbox', label: 'Alternative text'});
 		}
 
 		if (editor.settings.image_dimensions !== false) {
