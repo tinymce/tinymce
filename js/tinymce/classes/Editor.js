@@ -791,7 +791,7 @@ define("tinymce/Editor", [
 			self.parser = new DomParser(settings, self.schema);
 
 			// Convert src and href into data-mce-src, data-mce-href and data-mce-style
-			self.parser.addAttributeFilter('src,href,style', function(nodes, name) {
+			self.parser.addAttributeFilter('src,href,style,tabindex', function(nodes, name) {
 				var i = nodes.length, node, dom = self.dom, value, internalName;
 
 				while (i--) {
@@ -803,6 +803,9 @@ define("tinymce/Editor", [
 					if (!node.attributes.map[internalName]) {
 						if (name === "style") {
 							node.attr(internalName, dom.serializeStyle(dom.parseStyle(value), node.name));
+						} else if (name === "tabindex") {
+							node.attr(internalName, value);
+							node.attr(name, null);
 						} else {
 							node.attr(internalName, self.convertURL(value, name, node.name));
 						}

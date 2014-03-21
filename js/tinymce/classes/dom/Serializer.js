@@ -51,6 +51,17 @@ define("tinymce/dom/Serializer", [
 
 		htmlParser = new DomParser(settings, schema);
 
+		// Convert tabindex back to elements when serializing contents
+		htmlParser.addAttributeFilter('data-mce-tabindex', function(nodes, name) {
+			var i = nodes.length, node;
+
+			while (i--) {
+				node = nodes[i];
+				node.attr('tabindex', node.attributes.map['data-mce-tabindex']);
+				node.attr(name, null);
+			}
+		});
+
 		// Convert move data-mce-src, data-mce-href and data-mce-style into nodes or process them if needed
 		htmlParser.addAttributeFilter('src,href,style', function(nodes, name) {
 			var i = nodes.length, node, value, internalName = 'data-mce-' + name;
