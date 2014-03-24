@@ -122,7 +122,10 @@ define("tinymce/ui/Button", [
 			var self = this;
 
 			if (self._rendered) {
-				self.getEl().lastChild.lastChild.data = self.translate(text);
+				var textNode = self.getEl().lastChild.lastChild;
+				if (textNode) {
+					textNode.data = self.translate(text);
+				}
 			}
 
 			return self._super(text);
