@@ -139,11 +139,20 @@ define("tinymce/ui/Button", [
 		 */
 		renderHtml: function() {
 			var self = this, id = self._id, prefix = self.classPrefix;
-			var icon = self.settings.icon, image = '';
+			var icon = self.settings.icon, image;
 
-			if (self.settings.image) {
+			image = self.settings.image;
+			if (image) {
 				icon = 'none';
-				image = ' style="background-image: url(\'' + self.settings.image + '\')"';
+
+				// Support for [high dpi, low dpi] image sources
+				if (typeof image != "string") {
+					image = window.getSelection ? image[0] : image[1];
+				}
+
+				image = ' style="background-image: url(\'' + image + '\')"';
+			} else {
+				image = '';
 			}
 
 			icon = self.settings.icon ? prefix + 'ico ' + prefix + 'i-' + icon : '';

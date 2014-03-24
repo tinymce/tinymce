@@ -3,6 +3,7 @@ Version 4.0.21 (2014-03-xx)
 	Added new table_grid option that allows you to disable the table grid and use a dialog.
 	Added new image_description, image_dimensions options to image plugin. Patch contributed by Pat O'Neill.
 	Added new media_alt_source, media_poster, media_dimensions options to media plugin. Patch contributed by Pat O'Neill.
+	Added new ability to specify high/low dpi versions custom button images for retina displays.
 	Added preview of classes for the selectboxes used by the link_class_list/image_class_list options.
 	Added support for Sauce Labs browser testing using the new saucelabs-tests build target.
 	Added title input field to link dialog for a11y reasons can be disabled by using the link_title option.
