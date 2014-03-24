@@ -210,6 +210,39 @@ test('Transact exception', function() {
 	equal(count, 1);
 });
 
+test('Exclude internal elements', function() {
+	var count = 0;
+
+	editor.undoManager.clear();
+	equal(count, 0);
+
+	editor.on('AddUndo', function() {
+		count++;
+	});
+
+	editor.getBody().innerHTML = (
+		'test' +
+		'<img src="about:blank" data-mce-selected="1" />' +
+		'<table data-mce-selected="1"><tr><td>X</td></tr></table>'
+	);
+
+	editor.undoManager.add();
+	equal(count, 1);
+
+	editor.getBody().innerHTML = (
+		'<span data-mce-bogus="1">\u200B</span>' +
+		'<span data-mce-bogus="1">\uFEFF</span>' +
+		'<div data-mce-bogus="1"></div>' +
+		'test' +
+		'<img src="about:blank" />' +
+		'<table><tr><td>X</td></tr></table>'
+	);
+
+	editor.undoManager.add();
+
+	equal(count, 1);
+});
+
 asyncTest('Undo added when typing and losing focus', function() {
 	window.focus();
 
