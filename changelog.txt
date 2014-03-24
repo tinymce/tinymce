@@ -10,6 +10,7 @@ Version 4.0.21 (2014-03-xx)
 	Fixed so the editor renders in XHTML mode apparently some people still use this rendering mode.
 	Fixed so icons gets rendered better on Firefox on Mac OS X by applying -moz-osx-font-smoothing.
 	Fixed so the auto detected external media sources produced protocol relative urls. Patch contributed by Pat O'Neill.
+	Fixed so it's possible to update the text of a button after it's been rendered to page DOM.
 	Fixed bug where iOS 7.1 Safari would open linked when images where inserted into links.
 	Fixed bug where IE 11 would scroll to the top of inline editable elements when applying formatting.
 	Fixed bug where tabindex on elements within the editor contents would cause issues on some browsers.

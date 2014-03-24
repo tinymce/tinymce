@@ -36,6 +36,7 @@ define("tinymce/ui/Widget", [
 			var self = this;
 
 			self._super(settings);
+			settings = self.settings;
 			self.canFocus = true;
 
 			if (settings.tooltip && Widget.tooltips !== false) {

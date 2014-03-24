@@ -510,7 +510,7 @@ define("tinymce/ui/Control", [
 
 				return function(e) {
 					if (!callback) {
-						self.parents().each(function(ctrl) {
+						self.parentsAndSelf().each(function(ctrl) {
 							var callbacks = ctrl.settings.callbacks;
 
 							if (callbacks && (callback = callbacks[name])) {
@@ -734,6 +734,17 @@ define("tinymce/ui/Control", [
 			}
 
 			return parents;
+		},
+
+		/**
+		 * Returns the current control and it's parents.
+		 *
+		 * @method parentsAndSelf
+		 * @param {String} selector Optional selector expression to find parents.
+		 * @return {tinymce.ui.Collection} Collection with all parent controls.
+		 */
+		parentsAndSelf: function(selector) {
+			return new Collection(this).add(this.parents(selector));
 		},
 
 		/**
@@ -1052,13 +1063,24 @@ define("tinymce/ui/Control", [
 		 * @return {String} Encoded and possible traslated string. 
 		 */
 		encode: function(text, translate) {
-			if (translate !== false && Control.translate) {
-				text = Control.translate(text);
+			if (translate !== false) {
+				text = this.translate(text);
 			}
 
 			return (text || '').replace(/[&<>"]/g, function(match) {
 				return '&#' + match.charCodeAt(0) + ';';
 			});
+		},
+
+		/**
+		 * Returns the translated string.
+		 *
+		 * @method translate
+		 * @param {String} text Text to translate.
+		 * @return {String} Translated string or the same as the input.
+		 */
+		translate: function(text) {
+			return Control.translate ? Control.translate(text) : text;
 		},
 
 		/**

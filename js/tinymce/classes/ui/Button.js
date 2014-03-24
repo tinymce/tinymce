@@ -112,6 +112,23 @@ define("tinymce/ui/Button", [
 		},
 
 		/**
+		 * Sets/gets the current button text.
+		 *
+		 * @method text
+		 * @param {String} [text] New button text.
+		 * @return {String|tinymce.ui.Button} Current text or current Button instance.
+		 */
+		text: function(text) {
+			var self = this;
+
+			if (self._rendered) {
+				self.getEl().lastChild.lastChild.data = self.translate(text);
+			}
+
+			return self._super(text);
+		},
+
+		/**
 		 * Renders the control as a HTML string.
 		 *
 		 * @method renderHtml
