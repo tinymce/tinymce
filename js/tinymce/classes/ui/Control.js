@@ -548,10 +548,10 @@ define("tinymce/ui/Control", [
 
 					if (nativeEvents[name]) {
 						if (!self._nativeEvents) {
-							self._nativeEvents = {name: true};
-						} else {
-							self._nativeEvents[name] = true;
+							self._nativeEvents = {};
 						}
+
+						self._nativeEvents[name] = true;
 
 						if (self._rendered) {
 							self.bindPendingEvents();
@@ -1426,6 +1426,11 @@ define("tinymce/ui/Control", [
 					parents[i]._eventsRoot = eventRootCtrl;
 				}
 
+				var eventRootDelegates = eventRootCtrl._delegates;
+				if (!eventRootDelegates) {
+					eventRootDelegates = eventRootCtrl._delegates = {};
+				}
+
 				// Bind native event delegates
 				for (name in nativeEvents) {
 					if (!nativeEvents) {
@@ -1450,9 +1455,9 @@ define("tinymce/ui/Control", [
 							DomUtils.on(eventRootCtrl.getEl(), "mouseover", mouseEnterHandler);
 							eventRootCtrl._hasMouseEnter = 1;
 						}
-					} else if (!eventRootCtrl[name]) {
+					} else if (!eventRootDelegates[name]) {
 						DomUtils.on(eventRootCtrl.getEl(), name, delegate);
-						eventRootCtrl[name] = true;
+						eventRootDelegates[name] = true;
 					}
 
 					// Remove the event once it's bound

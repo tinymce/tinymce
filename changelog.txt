@@ -18,6 +18,7 @@ Version 4.0.21 (2014-03-xx)
 	Fixed bug where link text wouldn't be properly updated in gecko if you changed an existing link.
 	Fixed bug where it wasn't possible to close dialogs with the escape key if the focus was inside a textbox.
 	Fixed bug where Gecko wouldn't paste rich text contents from Word or other similar word processors.
+	Fixed bug where binding events after the control had been rendered could fail to produce a valid delegate.
 	Fixed so screen readers use a dialog instead of the grid for inserting tables.
 	Fixed bug where tabIndex is set to -1 on inline editable elements. It now keeps the existing tabIndex intact.
 	Fixed issue where the UndoManager transact method couldn't be nested since it only had one lock.
