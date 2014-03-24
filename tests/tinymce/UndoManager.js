@@ -211,7 +211,7 @@ test('Transact exception', function() {
 });
 
 test('Exclude internal elements', function() {
-	var count = 0;
+	var count = 0, lastLevel;
 
 	editor.undoManager.clear();
 	equal(count, 0);
@@ -220,14 +220,23 @@ test('Exclude internal elements', function() {
 		count++;
 	});
 
+	editor.on('BeforeAddUndo', function(e) {
+		lastLevel = e.level;
+	});
+
 	editor.getBody().innerHTML = (
 		'test' +
 		'<img src="about:blank" data-mce-selected="1" />' +
-		'<table data-mce-selected="1"><tr><td>X</td></tr></table>'
+		'<table data-mce-selected="1"><tr><td>x</td></tr></table>'
 	);
 
 	editor.undoManager.add();
 	equal(count, 1);
+	equal(Utils.cleanHtml(lastLevel.content),
+		'test' +
+		'<img src="about:blank">' +
+		'<table><tbody><tr><td>x</td></tr></tbody></table>'
+	);
 
 	editor.getBody().innerHTML = (
 		'<span data-mce-bogus="1">\u200B</span>' +
@@ -235,34 +244,35 @@ test('Exclude internal elements', function() {
 		'<div data-mce-bogus="1"></div>' +
 		'test' +
 		'<img src="about:blank" />' +
-		'<table><tr><td>X</td></tr></table>'
+		'<table><tr><td>x</td></tr></table>'
 	);
 
 	editor.undoManager.add();
-
 	equal(count, 1);
+	equal(Utils.cleanHtml(lastLevel.content),
+		'test' +
+		'<img src="about:blank">' +
+		'<table><tbody><tr><td>x</td></tr></tbody></table>'
+	);
 });
 
-asyncTest('Undo added when typing and losing focus', function() {
-	window.focus();
+test('Undo added when typing and losing focus', function() {
+	var lastLevel;
 
-	window.setTimeout(function() {
-		start();
+	editor.on('BeforeAddUndo', function(e) {
+		lastLevel = e.level;
+	});
 
-		editor.focus();
-		editor.undoManager.clear();
-		editor.setContent("<p>some text</p>");
-		Utils.setSelection('p', 4, 'p', 9);
-		Utils.type('\b');
+	editor.undoManager.clear();
+	editor.setContent("<p>some text</p>");
+	Utils.setSelection('p', 4, 'p', 9);
+	Utils.type('\b');
 
-		// Move focus to an input element
-		var input = document.createElement('input');
-		document.getElementById('view').appendChild(input);
-		input.focus();
-		input.parentNode.removeChild(input);
+	equal(lastLevel.content, "<p>some text</p>");
+	editor.fire('blur');
+	equal(lastLevel.content, "<p>some</p>");
 
-		editor.execCommand('FormatBlock', false, 'h1');
-		editor.undoManager.undo();
-		equal(editor.getContent(), "<p>some</p>");
-	}, 0);
+	editor.execCommand('FormatBlock', false, 'h1');
+	editor.undoManager.undo();
+	equal(editor.getContent(), "<p>some</p>");
 });
