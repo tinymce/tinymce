@@ -268,9 +268,9 @@ test('Undo added when typing and losing focus', function() {
 	Utils.setSelection('p', 4, 'p', 9);
 	Utils.type('\b');
 
-	equal(lastLevel.content, "<p>some text</p>");
+	equal(Utils.cleanHtml(lastLevel.content), "<p>some text</p>");
 	editor.fire('blur');
-	equal(lastLevel.content, "<p>some</p>");
+	equal(Utils.cleanHtml(lastLevel.content), "<p>some</p>");
 
 	editor.execCommand('FormatBlock', false, 'h1');
 	editor.undoManager.undo();
