@@ -20,6 +20,7 @@ Version 4.0.21 (2014-03-xx)
 	Fixed bug where Gecko wouldn't paste rich text contents from Word or other similar word processors.
 	Fixed bug where binding events after the control had been rendered could fail to produce a valid delegate.
 	Fixed bug where IE 8 would throw and error when removing editors with a cross domain content_css setting.
+	Fixed bug where IE 9 wouldn't be able to select text after an editor instance with caret focus was removed.
 	Fixed so screen readers use a dialog instead of the grid for inserting tables.
 	Fixed bug where tabIndex is set to -1 on inline editable elements. It now keeps the existing tabIndex intact.
 	Fixed issue where the UndoManager transact method couldn't be nested since it only had one lock.

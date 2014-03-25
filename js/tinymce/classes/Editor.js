@@ -2017,21 +2017,26 @@ define("tinymce/Editor", [
 			var self = this;
 
 			if (!self.removed) {
+				self.removed = 1;
 				self.save();
-				self.fire('remove');
-				self.off();
-				self.removed = 1; // Cancels post remove event execution
 
 				// Remove any hidden input
 				if (self.hasHiddenInput) {
 					DOM.remove(self.getElement().nextSibling);
 				}
 
-				// Don't clear the window or document if content editable
-				// is enabled since other instances might still be present
 				if (!self.inline) {
+					// IE 9 has a bug where the selection stops working if you place the
+					// caret inside the editor then remove the iframe
+					if (ie && ie < 10) {
+						self.getDoc().execCommand('SelectAll', false, null);
+					}
+
 					DOM.setStyle(self.id, 'display', self.orgDisplay);
 					self.getBody().onload = null; // Prevent #6816
+
+					// Don't clear the window or document if content editable
+					// is enabled since other instances might still be present
 					Event.unbind(self.getWin());
 					Event.unbind(self.getDoc());
 				}
@@ -2039,6 +2044,8 @@ define("tinymce/Editor", [
 				var elm = self.getContainer();
 				Event.unbind(self.getBody());
 				Event.unbind(elm);
+
+				self.fire('remove');
 
 				self.editorManager.remove(self);
 				DOM.remove(elm);
