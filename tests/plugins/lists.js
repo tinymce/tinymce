@@ -1736,7 +1736,7 @@ test('Delete at end of middle LI in UL inside UL', function() {
 
 test('Remove UL in inline body element contained in LI', function() {
 	inlineEditor.setContent('<ul><li>a</li></ul>');
-	inlineEditor.focus();
+	inlineEditor.selection.setCursorLocation();
 	inlineEditor.execCommand('InsertUnorderedList');
 	equal(inlineEditor.getContent(), '<p>a</p>');
 });
