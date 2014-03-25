@@ -2027,11 +2027,11 @@ define("tinymce/Editor", [
 					DOM.remove(self.getElement().nextSibling);
 				}
 
-				DOM.setStyle(self.id, 'display', self.orgDisplay);
-
 				// Don't clear the window or document if content editable
 				// is enabled since other instances might still be present
-				if (!self.settings.content_editable) {
+				if (!self.inline) {
+					DOM.setStyle(self.id, 'display', self.orgDisplay);
+					self.getBody().onload = null; // Prevent #6816
 					Event.unbind(self.getWin());
 					Event.unbind(self.getDoc());
 				}
