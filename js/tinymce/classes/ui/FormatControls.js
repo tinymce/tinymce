@@ -77,7 +77,7 @@ define("tinymce/ui/FormatControls", [
 		}
 
 		function createFormats(formats) {
-			formats = formats.split(';');
+			formats = formats.replace(/;$/, '').split(';');
 
 			var i = formats.length;
 			while (i--) {
