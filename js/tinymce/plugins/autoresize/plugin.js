@@ -120,7 +120,7 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 	});
 
 	// Add appropriate listeners for resizing content area
-	editor.on("change setcontent paste keyup", resize);
+	editor.on("nodechange keyup", resize);
 
 	if (editor.getParam('autoresize_on_init', true)) {
 		editor.on('init', function() {
