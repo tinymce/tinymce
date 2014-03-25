@@ -62,12 +62,8 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 
 		// If a maximum height has been defined don't exceed this height
 		if (settings.autoresize_max_height && myHeight > settings.autoresize_max_height) {
-			resizeHeight = settings.autoresize_max_height;
-			body.style.overflowY = "auto";
-			docElm.style.overflowY = "auto"; // Old IE
-		} else {
-			body.style.overflowY = "hidden";
-			docElm.style.overflowY = "hidden"; // Old IE
+            resizeHeight = settings.autoresize_max_height;
+        } else {
 			body.scrollTop = 0;
 		}
 
