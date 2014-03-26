@@ -1723,9 +1723,9 @@ define("tinymce/dom/DOMUtils", [
 
 						// Keep elements with data-bookmark attributes or name attribute like <a name="1"></a>
 						attributes = self.getAttribs(node);
-						i = node.attributes.length;
+						i = attributes.length;
 						while (i--) {
-							name = node.attributes[i].nodeName;
+							name = attributes[i].nodeName;
 							if (name === "name" || name === 'data-mce-bookmark') {
 								return false;
 							}

@@ -252,7 +252,7 @@ define("tinymce/dom/RangeUtils", [
 			var normalized, collapsed;
 
 			function normalizeEndPoint(start) {
-				var container, offset, walker, body = dom.getRoot(), node, nonEmptyElementsMap, nodeName;
+				var container, offset, walker, body = dom.getRoot(), node, nonEmptyElementsMap;
 				var directionLeft, isAfterNode;
 
 				function hasBrBeforeAfter(node, left) {
@@ -335,7 +335,6 @@ define("tinymce/dom/RangeUtils", [
 					if (directionLeft) {
 						node = container.childNodes[offset > 0 ? offset - 1 : 0];
 						if (node) {
-							nodeName = node.nodeName.toLowerCase();
 							if (nonEmptyElementsMap[node.nodeName] || node.nodeName == "TABLE") {
 								return;
 							}
