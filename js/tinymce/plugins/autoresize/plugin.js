@@ -21,6 +21,10 @@
 tinymce.PluginManager.add('autoresize', function(editor) {
 	var settings = editor.settings, oldSize = 0;
 
+	function isFullscreen() {
+		return editor.plugins.fullscreen && editor.plugins.fullscreen.isFullscreen();
+	}
+
 	if (editor.settings.inline) {
 		return;
 	}
@@ -40,8 +44,12 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 		docElm = doc.documentElement;
 		resizeHeight = settings.autoresize_min_height;
 
-		if (!body || (e && e.type === "setcontent" && e.initial) ||
-				(editor.plugins.fullscreen && editor.plugins.fullscreen.isFullscreen())) {
+		if (!body || (e && e.type === "setcontent" && e.initial) || isFullscreen()) {
+			if (body && docElm) {
+				body.style.overflowY = "auto";
+				docElm.style.overflowY = "auto"; // Old IE
+			}
+
 			return;
 		}
 
@@ -120,7 +128,7 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 	});
 
 	// Add appropriate listeners for resizing content area
-	editor.on("nodechange keyup", resize);
+	editor.on("nodechange setcontent keyup FullscreenStateChanged", resize);
 
 	if (editor.getParam('autoresize_on_init', true)) {
 		editor.on('init', function() {
