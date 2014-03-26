@@ -222,6 +222,7 @@ define("tinymce/WindowManager", [
 		 * Returns the currently opened window objects.
 		 *
 		 * @method getWindows
+		 * @return {Array} Array of the currently opened windows.
 		 */
 		self.getWindows = function() {
 			return windows;
