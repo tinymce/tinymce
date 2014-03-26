@@ -141,6 +141,18 @@ test("Paste Word table", function() {
 	equal(editor.getContent().replace(/[\r\n]+/g, ''), '<table><tbody><tr><td width="307"><p>Cell 1</p></td><td width="307"><p>Cell 2</p></td></tr><tr><td width="307"><p>Cell 3</p></td><td width="307"><p>Cell 4</p></td></tr></tbody></table><p>&nbsp;</p>');
 });
 
+test("Paste Office 365", function() {
+	var rng = editor.dom.createRng();
+
+	editor.setContent('<p>1234</p>');
+	rng.setStart(editor.getBody().firstChild.firstChild, 0);
+	rng.setEnd(editor.getBody().firstChild.firstChild, 4);
+	editor.selection.setRng(rng);
+
+	editor.execCommand('mceInsertClipboardContent', false, {content: '<div class="OutlineElement Ltr SCX195156559">Test</div>'});
+	equal(editor.getContent().replace(/[\r\n]+/g, ''), '<p>Test</p>');
+});
+
 test("Paste Word without mso markings", function() {
 	editor.setContent('');
 	editor.execCommand('mceInsertClipboardContent', false, {

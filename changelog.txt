@@ -23,6 +23,7 @@ Version 4.0.21 (2014-03-xx)
 	Fixed bug where IE 9 wouldn't be able to select text after an editor instance with caret focus was removed.
 	Fixed bug where the autoresize plugin wouldn't resize the editor if you inserted huge images.
 	Fixed so screen readers use a dialog instead of the grid for inserting tables.
+	Fixed so Office 365 Word contents gets filtered the same way as content from desktop Office.
 	Fixed bug where tabIndex is set to -1 on inline editable elements. It now keeps the existing tabIndex intact.
 	Fixed issue where the UndoManager transact method couldn't be nested since it only had one lock.
 	Fixed issue where headings/heading where labeled incorrectly as headers/header.
