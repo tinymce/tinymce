@@ -217,5 +217,14 @@ define("tinymce/WindowManager", [
 				getTopMostWindow().params = params;
 			}
 		};
+
+		/**
+		 * Returns the currently opened window objects.
+		 *
+		 * @method getWindows
+		 */
+		self.getWindows = function() {
+			return windows;
+		};
 	};
 });

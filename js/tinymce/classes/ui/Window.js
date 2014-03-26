@@ -366,6 +366,17 @@ define("tinymce/ui/Window", [
 				DomUtils.removeClass(document.documentElement, prefix + 'fullscreen');
 				DomUtils.removeClass(document.body, prefix + 'fullscreen');
 			}
+		},
+
+		/**
+		 * Returns the contentWindow object of the iframe if it exists.
+		 *
+		 * @method getContentWindow
+		 * @return {Window} window object or null.
+		 */
+		getContentWindow: function() {
+			var ifr = this.getEl().getElementsByTagName('iframe')[0];
+			return ifr ? ifr.contentWindow : null;
 		}
 	});
 
