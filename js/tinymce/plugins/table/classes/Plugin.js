@@ -559,6 +559,7 @@ define("tinymce/tableplugin/Plugin", [
 					var elements = this.menu.items()[0].getEl().getElementsByTagName('a');
 					editor.dom.removeClass(elements, 'mce-active');
 					editor.dom.addClass(elements[0], 'mce-active');
+					this.menu.items()[0].getEl().getElementsByClassName('mce-text-center')[0].innerHTML = "1 x 1";
 				},
 				menu: [
 					{
