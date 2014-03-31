@@ -707,7 +707,7 @@ define("tinymce/Editor", [
 			}
 
 			// Setup iframe body
-			if (!skipWrite && !settings.content_editable) {
+			if (!skipWrite && !settings.content_editable&&!tinyMCE.isWebKit) {
 				doc.open();
 				doc.write(self.iframeHTML);
 				doc.close();
