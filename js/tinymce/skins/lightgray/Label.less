@@ -3,7 +3,6 @@
 .@{prefix}-label {
 	.inline-block();
 	text-shadow: @text-shadow;
-	border: 0;
 	overflow: hidden;
 }
 
@@ -17,6 +16,10 @@
 
 .@{prefix}-label.@{prefix}-multiline {
 	white-space: pre-wrap;
+}
+
+.@{prefix}-label.@{prefix}-error {
+	color: @text-error;
 }
 
 // RTL

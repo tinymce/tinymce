@@ -30,10 +30,12 @@ define("tinymce/ui/Control", [
 	var elementIdCache = {};
 	var hasMouseWheelEventSupport = "onmousewheel" in document;
 	var hasWheelEventSupport = false;
+	var classPrefix = "mce-";
 
 	var Control = Class.extend({
 		Statics: {
-			elementIdCache: elementIdCache
+			elementIdCache: elementIdCache,
+			classPrefix: classPrefix
 		},
 
 		isRtl: function() {
@@ -46,7 +48,7 @@ define("tinymce/ui/Control", [
 		 * @final
 		 * @field {String} classPrefix
 		 */
-		classPrefix: "mce-",
+		classPrefix: classPrefix,
 
 		/**
 		 * Constructs a new control instance with the specified settings.
