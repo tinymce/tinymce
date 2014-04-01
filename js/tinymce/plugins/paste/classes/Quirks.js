@@ -113,7 +113,7 @@ define("tinymce/pasteplugin/Quirks", [
 
 			// Filter away styles that isn't matching the target node
 
-			var webKitStyles = editor.getParam("paste_webkit_styles", "color font-size font-family background-color").split(' ');
+			var webKitStyles = editor.getParam("paste_webkit_styles", "color font-size font-family background-color").split(/[, ]/);
 
 			if (editor.settings.paste_remove_styles_if_webkit === false) {
 				webKitStyles = "all";
