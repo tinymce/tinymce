@@ -1,4 +1,4 @@
-Version 4.0.21 (2014-03-xx)
+Version 4.0.21 (2014-04-01)
 	Added new getCssText method to formatter to get the preview css text value for a format to be used in UI.
 	Added new table_grid option that allows you to disable the table grid and use a dialog.
 	Added new image_description, image_dimensions options to image plugin. Patch contributed by Pat O'Neill.
