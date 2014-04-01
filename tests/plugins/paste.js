@@ -15,6 +15,13 @@ module("tinymce.plugins.Paste", {
 				QUnit.start();
 			}
 		});
+	},
+
+	teardown: function() {
+		delete editor.settings.paste_remove_styles_if_webkit;
+		delete editor.settings.paste_retain_style_properties;
+		delete editor.settings.paste_enable_default_filters;
+		delete editor.settings.paste_data_images;
 	}
 });
 
@@ -96,7 +103,6 @@ test("Paste Word fake list", function() {
 	editor.selection.setRng(rng);
 	editor.execCommand('mceInsertClipboardContent', false, {content: '<p class="ListStyle" style="margin-left:36.0pt;mso-add-space:auto;text-indent:-18.0pt;mso-list:l0 level1 lfo1;tab-stops:list 36.0pt"><span lang="EN-US" style="color:black;mso-ansi-language:EN-US"><span style="mso-list:Ignore">1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><span lang="EN-US" style="font-family:Arial;mso-fareast-font-family:Arial;mso-bidi-font-family:Arial;color:black;mso-ansi-language:EN-US">Version 7.0</span><span lang="EN-US" style="font-family:Arial;mso-fareast-font-family:Arial;mso-bidi-font-family:Arial;color:black;mso-ansi-language:EN-US">:<o:p></o:p></span></p>'});
 	equal(editor.getContent().replace(/[\r\n]+/g, ''), '<ol><li>Version 7.0:</li></ol>');
-	editor.settings.paste_retain_style_properties = '';
 });
 
 test("Paste Word fake list before BR", function() {
@@ -150,6 +156,18 @@ test("Paste Office 365", function() {
 	editor.selection.setRng(rng);
 
 	editor.execCommand('mceInsertClipboardContent', false, {content: '<div class="OutlineElement Ltr SCX195156559">Test</div>'});
+	equal(editor.getContent().replace(/[\r\n]+/g, ''), '<p>Test</p>');
+});
+
+test("Paste Google Docs", function() {
+	var rng = editor.dom.createRng();
+
+	editor.setContent('<p>1234</p>');
+	rng.setStart(editor.getBody().firstChild.firstChild, 0);
+	rng.setEnd(editor.getBody().firstChild.firstChild, 4);
+	editor.selection.setRng(rng);
+
+	editor.execCommand('mceInsertClipboardContent', false, {content: '<span id="docs-internal-guid-94e46f1a-1c88-b42b-d502-1d19da30dde7"></span><p dir="ltr>Test</p>'});
 	equal(editor.getContent().replace(/[\r\n]+/g, ''), '<p>Test</p>');
 });
 
@@ -209,8 +227,25 @@ test("Paste Word retain styles", function() {
 	editor.execCommand('SelectAll');
 	editor.execCommand('mceInsertClipboardContent', false, {content: '<p class="MsoNormal" style="background-color: #ff0000">Test</p>'});
 	equal(Utils.trimContent(editor.getContent().replace(/[\r\n]+/g, '')), '<p style=\"background-color: #ff0000;\">Test</p>');
+});
 
-	editor.settings.paste_retain_style_properties = '';
+test("Paste Word retain bold/italic styles to elements", function() {
+	editor.settings.paste_retain_style_properties = 'color';
+
+	editor.setContent('');
+
+	editor.execCommand('mceInsertClipboardContent', false, {
+		content: (
+			'<p class="MsoNormal">' +
+				'<span style="font-weight: bold">bold</span>' +
+				'<span style="font-style: italic">italic</span>' +
+				'<span style="font-weight: bold; font-style: italic">bold + italic</span>' +
+				'<span style="font-weight: bold; color: red">bold + color</span>' +
+			'</p>'
+		)
+	});
+
+	equal(editor.getContent(), '<p><strong>bold</strong><em>italic</em><strong><em>bold + italic</em></strong><strong><span style="color: red;">bold + color</span></strong></p>');
 });
 
 test("Paste part of list from IE", function() {
@@ -229,8 +264,6 @@ test("Disable default filters", function() {
 	
 	editor.execCommand('mceInsertClipboardContent', false, {content: '<p class="MsoNormal" style="color: #ff0000;">Test</p>'});
 	equal(Utils.trimContent(editor.getContent().replace(/[\r\n]+/g, '')), '<p class="MsoNormal" style="color: #ff0000;">Test</p>');
-
-	editor.settings.paste_enable_default_filters = true;
 });
 
 test('paste invalid content with spans on page', function() {
@@ -413,3 +446,95 @@ test('paste innerText of textnode with whitespace', function() {
 	editor.getBody().innerHTML = '<pre> a </pre>';
 	equal(tinymce.pasteplugin.Utils.innerText(editor.getBody().firstChild.innerHTML), ' a ');
 });
+
+if (tinymce.Env.webkit) {
+	test('paste webkit remove runtime styles (color)', function() {
+		editor.setContent('');
+		editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="color:red; text-indent: 10px">Test</span>'});
+		equal(editor.getContent(), '<p><span style="color: red;">Test</span></p>');
+	});
+
+	test('paste webkit remove runtime styles (background-color)', function() {
+		editor.setContent('');
+		editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="background-color:red; text-indent: 10px">Test</span>'});
+		equal(editor.getContent(), '<p><span style="background-color: red;">Test</span></p>');
+	});
+
+	test('paste webkit remove runtime styles (font-size)', function() {
+		editor.setContent('');
+		editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="font-size:42px; text-indent: 10px">Test</span>'});
+		equal(editor.getContent(), '<p><span style="font-size: 42px;">Test</span></p>');
+	});
+
+	test('paste webkit remove runtime styles (font-family)', function() {
+		editor.setContent('');
+		editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="font-family:Arial; text-indent: 10px">Test</span>'});
+		equal(editor.getContent(), '<p><span style="font-family: Arial;">Test</span></p>');
+	});
+
+	test('paste webkit remove runtime styles (custom styles)', function() {
+		editor.settings.paste_webkit_styles = 'color font-style';
+		editor.setContent('');
+		editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="color: red; font-style: italic; text-indent: 10px">Test</span>'});
+		equal(editor.getContent(), '<p><span style="color: red; font-style: italic;">Test</span></p>');
+	});
+
+	test('paste webkit remove runtime styles (all)', function() {
+		editor.settings.paste_webkit_styles = 'all';
+		editor.setContent('');
+		editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="color: red; font-style: italic; text-indent: 10px">Test</span>'});
+		equal(editor.getContent(), '<p><span style=\"color: red; font-style: italic; text-indent: 10px;\">Test</span></p>');
+	});
+
+	test('paste webkit remove runtime styles (none)', function() {
+		editor.settings.paste_webkit_styles = 'none';
+		editor.setContent('');
+		editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="color: red; font-style: italic; text-indent: 10px">Test</span>'});
+		equal(editor.getContent(), '<p>Test</p>');
+	});
+
+	test('paste webkit remove runtime styles (color) in the same (color) (named)', function() {
+		editor.setContent('<p style="color:red">Test</span>');
+		Utils.setSelection('p', 0, 'p', 4);
+
+		editor.execCommand('mceInsertClipboardContent', false, {
+			content: (
+				'<span style="color:red; text-indent: 10px">a</span>' +
+				'<span style="color:#ff0000; text-indent: 10px">b</span>' +
+				'<span style="color:rgb(255, 0, 0); text-indent: 10px">c</span>'
+			)
+		});
+
+		equal(editor.getContent(), '<p style="color: red;">abc</p>');
+	});
+
+	test('paste webkit remove runtime styles (color) in the same (color) (hex)', function() {
+		editor.setContent('<p style="color:#ff0000">Test</span>');
+		Utils.setSelection('p', 0, 'p', 4);
+
+		editor.execCommand('mceInsertClipboardContent', false, {
+			content: (
+				'<span style="color:red; text-indent: 10px">a</span>' +
+				'<span style="color:#ff0000; text-indent: 10px">b</span>' +
+				'<span style="color:rgb(255, 0, 0); text-indent: 10px">c</span>'
+			)
+		});
+
+		equal(editor.getContent(), '<p style="color: #ff0000;">abc</p>');
+	});
+
+	test('paste webkit remove runtime styles (color) in the same (color) (rgb)', function() {
+		editor.setContent('<p style="color:rgb(255, 0, 0)">Test</span>');
+		Utils.setSelection('p', 0, 'p', 4);
+
+		editor.execCommand('mceInsertClipboardContent', false, {
+			content: (
+				'<span style="color:red; text-indent: 10px">a</span>' +
+				'<span style="color:#ff0000; text-indent: 10px">b</span>' +
+				'<span style="color:rgb(255, 0, 0); text-indent: 10px">c</span>'
+			)
+		});
+
+		equal(editor.getContent(), '<p style="color: #ff0000;">abc</p>');
+	});
+}
