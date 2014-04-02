@@ -693,9 +693,20 @@ define("tinymce/EditorCommands", [
 		// Add queryCommandValue overrides
 		addCommands({
 			'FontSize,FontName': function(command) {
-				var value = 0, parent;
+				var value = 0, node = selection.getNode(), parent, fmt;
 
-				if ((parent = dom.getParent(selection.getNode(), 'span'))) {
+				//This getNode, getStart fallback matches the logic in formatter.match, which is relatively robust.
+				fmt = editor.formatter.matchNode(node, command, {}, true);
+				if(!fmt){
+					node = selection.getStart();
+					fmt = editor.formatter.matchNode(node, command, {}, true);
+				}
+
+				if(fmt){
+					parent = dom.getParent(node, 'span');
+				}
+
+				if (parent) {
 					if (command == 'fontsize') {
 						value = parent.style.fontSize;
 					} else {
