@@ -1360,6 +1360,31 @@ test('Indent second LI to same level as nested LI 2', function() {
 	equal(editor.selection.getNode().nodeName, 'LI');
 });
 
+test('Indent second and third LI', function() {
+	editor.getBody().innerHTML = trimBrs(
+		'<ul>' +
+			'<li>a</li>' +
+			'<li>b</li>' +
+			'<li>c</li>' +
+		'</ul>'
+	);
+
+	editor.focus();
+	Utils.setSelection('li:nth-child(2)', 0, 'li:last', 0);
+	execCommand('Indent');
+
+	equal(editor.getContent(),
+		'<ul>' +
+			'<li>a' +
+				'<ul>' +
+					'<li>b</li>' +
+					'<li>c</li>' +
+				'</ul>' +
+			'</li>' +
+		'</ul>'
+	);
+});
+
 // Backspace
 
 test('Backspace at beginning of single LI in UL', function() {
