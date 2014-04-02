@@ -132,10 +132,10 @@ define("tinymce/AddOnManager", [
 		 * Loads an add-on from a specific url.
 		 *
 		 * @method load
-		 * @param {String} n Short name of the add-on that gets loaded.
-		 * @param {String} u URL to the add-on that will get loaded.
-		 * @param {function} cb Optional callback to execute ones the add-on is loaded.
-		 * @param {Object} s Optional scope to execute the callback in.
+		 * @param {String} name Short name of the add-on that gets loaded.
+		 * @param {String} addOnUrl URL to the add-on that will get loaded.
+		 * @param {function} callback Optional callback to execute ones the add-on is loaded.
+		 * @param {Object} scope Optional scope to execute the callback in.
 		 * @example
 		 * // Loads a plugin from an external URL
 		 * tinymce.PluginManager.load('myplugin', '/some/dir/someplugin/plugin.js');
@@ -146,45 +146,45 @@ define("tinymce/AddOnManager", [
 		 *  plugins: '-myplugin' // Don't try to load it again
 		 * });
 		 */
-		load: function(n, u, cb, s) {
-			var t = this, url = u;
+		load: function(name, addOnUrl, callback, scope) {
+			var self = this, url = addOnUrl;
 
 			function loadDependencies() {
-				var dependencies = t.dependencies(n);
+				var dependencies = self.dependencies(name);
 
 				each(dependencies, function(dep) {
-					var newUrl = t.createUrl(u, dep);
+					var newUrl = self.createUrl(addOnUrl, dep);
 
-					t.load(newUrl.resource, newUrl, undefined, undefined);
+					self.load(newUrl.resource, newUrl, undefined, undefined);
 				});
 
-				if (cb) {
-					if (s) {
-						cb.call(s);
+				if (callback) {
+					if (scope) {
+						callback.call(scope);
 					} else {
-						cb.call(ScriptLoader);
+						callback.call(ScriptLoader);
 					}
 				}
 			}
 
-			if (t.urls[n]) {
+			if (self.urls[name]) {
 				return;
 			}
 
-			if (typeof u === "object") {
-				url = u.prefix + u.resource + u.suffix;
+			if (typeof addOnUrl === "object") {
+				url = addOnUrl.prefix + addOnUrl.resource + addOnUrl.suffix;
 			}
 
 			if (url.indexOf('/') !== 0 && url.indexOf('://') == -1) {
 				url = AddOnManager.baseURL + '/' + url;
 			}
 
-			t.urls[n] = url.substring(0, url.lastIndexOf('/'));
+			self.urls[name] = url.substring(0, url.lastIndexOf('/'));
 
-			if (t.lookup[n]) {
+			if (self.lookup[name]) {
 				loadDependencies();
 			} else {
-				ScriptLoader.ScriptLoader.add(url, loadDependencies, s);
+				ScriptLoader.ScriptLoader.add(url, loadDependencies, scope);
 			}
 		}
 	};

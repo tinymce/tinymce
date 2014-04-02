@@ -112,6 +112,26 @@ define("tinymce/ui/Button", [
 		},
 
 		/**
+		 * Sets/gets the current button text.
+		 *
+		 * @method text
+		 * @param {String} [text] New button text.
+		 * @return {String|tinymce.ui.Button} Current text or current Button instance.
+		 */
+		text: function(text) {
+			var self = this;
+
+			if (self._rendered) {
+				var textNode = self.getEl().lastChild.lastChild;
+				if (textNode) {
+					textNode.data = self.translate(text);
+				}
+			}
+
+			return self._super(text);
+		},
+
+		/**
 		 * Renders the control as a HTML string.
 		 *
 		 * @method renderHtml
@@ -119,11 +139,20 @@ define("tinymce/ui/Button", [
 		 */
 		renderHtml: function() {
 			var self = this, id = self._id, prefix = self.classPrefix;
-			var icon = self.settings.icon, image = '';
+			var icon = self.settings.icon, image;
 
-			if (self.settings.image) {
+			image = self.settings.image;
+			if (image) {
 				icon = 'none';
-				image = ' style="background-image: url(\'' + self.settings.image + '\')"';
+
+				// Support for [high dpi, low dpi] image sources
+				if (typeof image != "string") {
+					image = window.getSelection ? image[0] : image[1];
+				}
+
+				image = ' style="background-image: url(\'' + image + '\')"';
+			} else {
+				image = '';
 			}
 
 			icon = self.settings.icon ? prefix + 'ico ' + prefix + 'i-' + icon : '';

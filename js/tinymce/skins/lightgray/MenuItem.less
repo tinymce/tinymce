@@ -1,6 +1,6 @@
 // MenuItem
 
-.mce-menu-item {
+.@{prefix}-menu-item {
 	display: block;
 	padding: 6px 15px 6px 12px;
 	clear: both;
@@ -14,41 +14,41 @@
 	margin-bottom: 1px;
 }
 
-.mce-menu-item .mce-ico, .mce-menu-item .mce-text {
+.@{prefix}-menu-item .@{prefix}-ico, .@{prefix}-menu-item .@{prefix}-text {
 	color: @menuitem-text;
 }
 
-.mce-menu-item.mce-disabled .mce-text, .mce-menu-item.mce-disabled .mce-ico {
+.@{prefix}-menu-item.@{prefix}-disabled .@{prefix}-text, .@{prefix}-menu-item.@{prefix}-disabled .@{prefix}-ico {
 	color: mix(@menuitem-text, @menu-bg, 40%);
 }
 
-.mce-menu-item:hover .mce-text, .mce-menu-item.mce-selected .mce-text, .mce-menu-item:focus .mce-text {
+.@{prefix}-menu-item:hover .@{prefix}-text, .@{prefix}-menu-item.@{prefix}-selected .@{prefix}-text, .@{prefix}-menu-item:focus .@{prefix}-text {
 	color: @menuitem-text-inverse;
 }
 
-.mce-menu-item:hover .mce-ico, .mce-menu-item.mce-selected .mce-ico, .mce-menu-item:focus .mce-ico {
+.@{prefix}-menu-item:hover .@{prefix}-ico, .@{prefix}-menu-item.@{prefix}-selected .@{prefix}-ico, .@{prefix}-menu-item:focus .@{prefix}-ico {
 	color: @menuitem-text-inverse;
 }
 
-.mce-menu-item.mce-disabled:hover {
+.@{prefix}-menu-item.@{prefix}-disabled:hover {
 	background: @menuitem-bg-disabled;
 }
 
-.mce-menu-shortcut {
+.@{prefix}-menu-shortcut {
 	display: inline-block;
 	color: mix(@menuitem-text, @menu-bg, 40%);
 }
 
-.mce-menu-shortcut {
+.@{prefix}-menu-shortcut {
 	.inline-block();
 	padding: 0 15px 0 20px;
 }
 
-.mce-menu-item:hover .mce-menu-shortcut, .mce-menu-item.mce-selected .mce-menu-shortcut, .mce-menu-item:focus .mce-menu-shortcut {
+.@{prefix}-menu-item:hover .@{prefix}-menu-shortcut, .@{prefix}-menu-item.@{prefix}-selected .@{prefix}-menu-shortcut, .@{prefix}-menu-item:focus .@{prefix}-menu-shortcut {
 	color: @menuitem-text-inverse;
 }
 
-.mce-menu-item .mce-caret {
+.@{prefix}-menu-item .@{prefix}-caret {
 	margin-top: 4px;
 	*margin-top: 3px;
 	margin-right: 6px;
@@ -57,50 +57,50 @@
 	border-left: 4px solid @menuitem-caret;
 }
 
-.mce-menu-item.mce-selected .mce-caret, .mce-menu-item:focus .mce-caret, .mce-menu-item:hover .mce-caret {
+.@{prefix}-menu-item.@{prefix}-selected .@{prefix}-caret, .@{prefix}-menu-item:focus .@{prefix}-caret, .@{prefix}-menu-item:hover .@{prefix}-caret {
 	border-left-color: @menuitem-caret-selected;
 }
 
-.mce-menu-align .mce-menu-shortcut {
+.@{prefix}-menu-align .@{prefix}-menu-shortcut {
 	*margin-top: -2px;
 }
 
-.mce-menu-align .mce-menu-shortcut, .mce-menu-align .mce-caret {
+.@{prefix}-menu-align .@{prefix}-menu-shortcut, .@{prefix}-menu-align .@{prefix}-caret {
 	position: absolute;
 	right: 0;
 }
 
-.mce-menu-item.mce-active i {
+.@{prefix}-menu-item.@{prefix}-active i {
 	visibility: visible;
 }
 
-.mce-menu-item-normal.mce-active {
+.@{prefix}-menu-item-normal.@{prefix}-active {
 	background-color: @menuitem-bg-active;
 }
 
-.mce-menu-item-preview.mce-active {
+.@{prefix}-menu-item-preview.@{prefix}-active {
 	border-left: 5px solid @menuitem-preview-border-active;
 }
 
-.mce-menu-item-normal.mce-active .mce-text {
+.@{prefix}-menu-item-normal.@{prefix}-active .@{prefix}-text {
 	color: @menuitem-text-active;
 }
 
-.mce-menu-item-normal.mce-active:hover .mce-text, .mce-menu-item-normal.mce-active:hover .mce-ico {
+.@{prefix}-menu-item-normal.@{prefix}-active:hover .@{prefix}-text, .@{prefix}-menu-item-normal.@{prefix}-active:hover .@{prefix}-ico {
 	color: @menuitem-text-inverse;
 }
 
-.mce-menu-item-normal.mce-active:focus .mce-text, .mce-menu-item-normal.mce-active:focus .mce-ico {
+.@{prefix}-menu-item-normal.@{prefix}-active:focus .@{prefix}-text, .@{prefix}-menu-item-normal.@{prefix}-active:focus .@{prefix}-ico {
 	color: @menuitem-text-inverse;
 }
 
-.mce-menu-item:hover, .mce-menu-item.mce-selected, .mce-menu-item:focus {
+.@{prefix}-menu-item:hover, .@{prefix}-menu-item.@{prefix}-selected, .@{prefix}-menu-item:focus {
 	text-decoration: none;
 	color: @menuitem-text-inverse;
 	.vertical-gradient(@menuitem-bg-selected, @menuitem-bg-selected-hlight);
 }
 
-div.mce-menu .mce-menu-item-sep, .mce-menu-item-sep:hover {
+div.@{prefix}-menu .@{prefix}-menu-item-sep, .@{prefix}-menu-item-sep:hover {
 	border: 0;
 	padding: 0;
 	height: 1px;
@@ -114,29 +114,29 @@ div.mce-menu .mce-menu-item-sep, .mce-menu-item-sep:hover {
 
 // RTL
 
-.mce-menu.mce-rtl {
+.@{prefix}-menu.@{prefix}-rtl {
 	direction: rtl;
 }
 
-.mce-rtl .mce-menu-item {
+.@{prefix}-rtl .@{prefix}-menu-item {
 	text-align: right;
 	direction: rtl;
 	padding: 6px 12px 6px 15px;
 }
 
-.mce-menu-align.mce-rtl .mce-menu-shortcut, .mce-menu-align.mce-rtl .mce-caret {
+.@{prefix}-menu-align.@{prefix}-rtl .@{prefix}-menu-shortcut, .@{prefix}-menu-align.@{prefix}-rtl .@{prefix}-caret {
 	right: auto;
 	left: 0;
 }
 
-.mce-rtl .mce-menu-item .mce-caret {
+.@{prefix}-rtl .@{prefix}-menu-item .@{prefix}-caret {
 	margin-left: 6px;
 	margin-right: 0;
 	border-right: 4px solid @menuitem-caret;
 	border-left: 0;
 }
 
-.mce-rtl .mce-menu-item.mce-selected .mce-caret, .mce-rtl .mce-menu-item:focus .mce-caret, .mce-rtl .mce-menu-item:hover .mce-caret {
+.@{prefix}-rtl .@{prefix}-menu-item.@{prefix}-selected .@{prefix}-caret, .@{prefix}-rtl .@{prefix}-menu-item:focus .@{prefix}-caret, .@{prefix}-rtl .@{prefix}-menu-item:hover .@{prefix}-caret {
 	border-left-color: transparent;
 	border-right-color: @menuitem-caret-selected;
 }

@@ -1,4 +1,6 @@
 (function() {
+	module("tinymce.dom.DOMUtils");
+
 	var DOM = new tinymce.dom.DOMUtils(document, {keep_values : true, schema : new tinymce.html.Schema()});
 
 	test('parseStyle', 11, function() {
@@ -6,7 +8,7 @@
 
 		DOM.add(document.body, 'div', {id : 'test'});
 
-		dom = new tinymce.dom.DOMUtils(document, {hex_colors : true, keep_values : true, url_converter : function(u, n, e) {
+		dom = new tinymce.dom.DOMUtils(document, {hex_colors : true, keep_values : true, url_converter : function(u) {
 			return 'X' + u + 'Y';
 		}});
 
@@ -218,10 +220,10 @@
 		equal(DOM.select('div', 'test').length, 4);
 		ok(DOM.select('div', 'test').reverse);
 
-		DOM.setHTML('test', '<div class="test1 test2 test3">test 1</div><div class="test2">test 2 <div>test 3</div></div><div>test 4</div>')
+		DOM.setHTML('test', '<div class="test1 test2 test3">test 1</div><div class="test2">test 2 <div>test 3</div></div><div>test 4</div>');
 		equal(DOM.select('div.test2', 'test').length, 2);
 
-		DOM.setHTML('test', '<div class="test1 test2 test3">test 1</div><div class="test2">test 2 <div>test 3</div></div><div>test 4</div>')
+		DOM.setHTML('test', '<div class="test1 test2 test3">test 1</div><div class="test2">test 2 <div>test 3</div></div><div>test 4</div>');
 		equal(DOM.select('div div', 'test').length, 1, null, tinymce.isWebKit); // Issue: http://bugs.webkit.org/show_bug.cgi?id=17461
 		//alert(DOM.select('div div', 'test').length +","+DOM.get('test').querySelectorAll('div div').length);
 
@@ -264,7 +266,7 @@
 		equal(DOM.getAttrib('test', 'class'), '123');
 		equal(DOM.getAttrib('test', 'title'), 'abc');
 
-		dom = new tinymce.dom.DOMUtils(document, {keep_values : true, url_converter : function(u, n, e) {
+		dom = new tinymce.dom.DOMUtils(document, {keep_values : true, url_converter : function(u, n) {
 			return '&<>"' + u + '&<>"' + n;
 		}});
 
@@ -286,20 +288,19 @@
 	});
 
 	test('getAttribs', 2, function() {
-		var dom;
-
 		function check(obj, val) {
 			var count = 0;
 
 			val = val.split(',');
 
 			tinymce.each(obj, function(o) {
-				if (tinymce.inArray(val, o.nodeName.toLowerCase()) != -1 && o.specified)
+				if (tinymce.inArray(val, o.nodeName.toLowerCase()) != -1 && o.specified) {
 					count++;
+				}
 			});
 
 			return count == obj.length;
-		};
+		}
 
 		DOM.add(document.body, 'div', {id : 'test'});
 
@@ -356,7 +357,7 @@
 		equal(DOM.getParent('test2', function(n) {return n.nodeName == 'SPAN';}).nodeName, 'SPAN');
 		equal(DOM.getParent('test2', function(n) {return n.nodeName == 'BODY';}).nodeName, 'BODY');
 		equal(DOM.getParent('test2', function(n) {return n.nodeName == 'BODY';}, document.body), null);
-		equal(DOM.getParent('test2', function(n) {return false;}), null);
+		equal(DOM.getParent('test2', function() {return false;}), null);
 		equal(DOM.getParent('test2', 'SPAN').nodeName, 'SPAN');
 		equal(DOM.getParent('test2', 'body', DOM.get('test')), null);
 
@@ -435,8 +436,6 @@
 	});
 
 	test('getNext', 5, function() {
-		var r;
-
 		DOM.add(document.body, 'div', {id : 'test'});
 
 		DOM.get('test').innerHTML = '<strong>A</strong><span>B</span><em>C</em>';
@@ -444,14 +443,12 @@
 		equal(DOM.getNext(DOM.get('test').firstChild, 'em').nodeName, 'EM');
 		equal(DOM.getNext(DOM.get('test').firstChild, 'div'), null);
 		equal(DOM.getNext(null, 'div'), null);
-		equal(DOM.getNext(DOM.get('test').firstChild, function(n) {return n.nodeName == 'EM'}).nodeName, 'EM');
+		equal(DOM.getNext(DOM.get('test').firstChild, function(n) {return n.nodeName == 'EM';}).nodeName, 'EM');
 
 		DOM.remove('test');
 	});
 
 	test('getPrev', 5, function() {
-		var r;
-
 		DOM.add(document.body, 'div', {id : 'test'});
 
 		DOM.get('test').innerHTML = '<strong>A</strong><span>B</span><em>C</em>';
@@ -459,7 +456,7 @@
 		equal(DOM.getPrev(DOM.get('test').lastChild, 'strong').nodeName, 'STRONG');
 		equal(DOM.getPrev(DOM.get('test').lastChild, 'div'), null);
 		equal(DOM.getPrev(null, 'div'), null);
-		equal(DOM.getPrev(DOM.get('test').lastChild, function(n) {return n.nodeName == 'STRONG'}).nodeName, 'STRONG');
+		equal(DOM.getPrev(DOM.get('test').lastChild, function(n) {return n.nodeName == 'STRONG';}).nodeName, 'STRONG');
 
 		DOM.remove('test');
 	});
@@ -467,11 +464,12 @@
 	test('loadCSS', 1, function() {
 		var c = 0;
 
-		DOM.loadCSS('css/test.css?a=1,css/test.css?a=2,css/test.css?a=3');
+		DOM.loadCSS('tinymce/dom/test.css?a=1,tinymce/dom/test.css?a=2,tinymce/dom/test.css?a=3');
 
 		tinymce.each(document.getElementsByTagName('link'), function(n) {
-			if (n.href.indexOf('test.css?a=') != -1)
+			if (n.href.indexOf('test.css?a=') != -1) {
 				c++;
+			}
 		});
 
 		equal(c, 3, null, tinymce.isOpera);
@@ -576,7 +574,7 @@
 		parent = DOM.select('li:nth-child(1)', DOM.get('test'))[0];
 		point = DOM.select('ul li:nth-child(2)', DOM.get('test'))[0];
 		DOM.split(parent, point);
-		equal(cleanHtml(DOM.get('test').innerHTML), '<ul><li>first line<br><ul><li><span>second</span> <span>line</span></li></ul></li><li>third line<br></li></ul>');
+		equal(Utils.cleanHtml(DOM.get('test').innerHTML), '<ul><li>first line<br><ul><li><span>second</span> <span>line</span></li></ul></li><li>third line<br></li></ul>');
 
 		DOM.remove('test');
 	});
@@ -630,7 +628,7 @@
 		DOM.setHTML('test', '<div><span><b></b></span><b></b><em><a name="x"></a></em></div>');
 		ok(!DOM.isEmpty(DOM.get('test')), 'Non empty complex HTML with achor name');
 
-		DOM.setHTML('test', '<img src="x">');
+		DOM.setHTML('test', '<img src="tinymce/ui/img/raster.gif">');
 		ok(!DOM.isEmpty(DOM.get('test')), 'Non empty html with img element');
 
 		DOM.setHTML('test', '<span data-mce-bookmark="1"></span>');

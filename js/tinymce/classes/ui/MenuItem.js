@@ -76,7 +76,7 @@ define("tinymce/ui/MenuItem", [
 				e.preventDefault();
 			});
 
-			if (settings.menu) {
+			if (settings.menu && !settings.ariaHideMenu) {
 				self.aria('haspopup', true);
 			}
 		},
@@ -220,7 +220,7 @@ define("tinymce/ui/MenuItem", [
 
 			return (
 				'<div id="' + id + '" class="' + self.classes() + '" tabindex="-1">' +
-					(text !== '-' ? '<i class="' + icon + '"' + image + '></i>&nbsp;' : '') +
+					(text !== '-' ? '<i class="' + icon + '"' + image + '></i>\u00a0' : '') +
 					(text !== '-' ? '<span id="' + id + '-text" class="' + prefix + 'text">' + text + '</span>' : '') +
 					(shortcut ? '<div id="' + id + '-shortcut" class="' + prefix + 'menu-shortcut">' + shortcut + '</div>' : '') +
 					(settings.menu ? '<div class="' + prefix + 'caret"></div>' : '') +

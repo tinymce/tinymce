@@ -198,7 +198,7 @@ define("tinymce/ui/Window", [
 				headerHtml = (
 					'<div id="' + id + '-head" class="' + prefix + 'window-head">' +
 						'<div id="' + id + '-title" class="' + prefix + 'title">' + self.encode(settings.title) + '</div>' +
-						'<button type="button" class="' + prefix + 'close" aria-hidden="true">&times;</button>' +
+						'<button type="button" class="' + prefix + 'close" aria-hidden="true">\u00d7</button>' +
 						'<div id="' + id + '-dragh" class="' + prefix + 'dragh"></div>' +
 					'</div>'
 				);
@@ -217,7 +217,7 @@ define("tinymce/ui/Window", [
 			}
 
 			return (
-				'<div id="' + id + '" class="' + self.classes() + '" hideFocus="1">' +
+				'<div id="' + id + '" class="' + self.classes() + '" hidefocus="1">' +
 					'<div class="' + self.classPrefix + 'reset" role="application">' +
 						headerHtml +
 						'<div id="' + id + '-body" class="' + self.classes('body') + '">' +
@@ -366,6 +366,17 @@ define("tinymce/ui/Window", [
 				DomUtils.removeClass(document.documentElement, prefix + 'fullscreen');
 				DomUtils.removeClass(document.body, prefix + 'fullscreen');
 			}
+		},
+
+		/**
+		 * Returns the contentWindow object of the iframe if it exists.
+		 *
+		 * @method getContentWindow
+		 * @return {Window} window object or null.
+		 */
+		getContentWindow: function() {
+			var ifr = this.getEl().getElementsByTagName('iframe')[0];
+			return ifr ? ifr.contentWindow : null;
 		}
 	});
 

@@ -1,27 +1,27 @@
 // ButtonGroup
 
-.mce-btn-group .mce-btn {
+.@{prefix}-btn-group .@{prefix}-btn {
 	border-width: 1px 0 1px 0;
 	margin: 0;
 	.border-radius(0);
 }
 
-.mce-btn-group .mce-first {
+.@{prefix}-btn-group .@{prefix}-first {
 	border-left: 1px solid mix(rgb(red(@btn-border-left), green(@btn-border-left), blue(@btn-border-left)), @panel-bg, 30%);
 	border-left: 1px solid @btn-border-left;
 	.border-radius(3px 0 0 3px);
 }
 
-.mce-btn-group .mce-last {
+.@{prefix}-btn-group .@{prefix}-last {
 	border-right: 1px solid mix(rgb(red(@btn-border-right), green(@btn-border-right), blue(@btn-border-right)), @panel-bg, 30%);
 	border-right: 1px solid @btn-border-right;
 	.border-radius(0 3px 3px 0);
 }
 
-.mce-btn-group .mce-first.mce-last {
+.@{prefix}-btn-group .@{prefix}-first.@{prefix}-last {
 	.border-radius(3px);
 }
 
-.mce-btn-group .mce-btn.mce-flow-layout-item {
+.@{prefix}-btn-group .@{prefix}-btn.@{prefix}-flow-layout-item {
 	margin: 0;
 }

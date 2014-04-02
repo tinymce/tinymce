@@ -434,7 +434,8 @@ define("tinymce/dom/DOMUtils", [
 				return false;
 			}
 
-			return Sizzle.matches(selector, elm.nodeType ? [elm] : elm).length > 0;
+			var elms = elm.nodeType ? [elm] : elm;
+			return Sizzle(selector, elms[0].ownerDocument || elms[0], null, elms).length > 0;
 		},
 
 		// #endif
@@ -746,7 +747,7 @@ define("tinymce/dom/DOMUtils", [
 		 * tinymce.dom.setAttrib('mydiv', 'class', 'myclass');
 		 */
 		setAttrib: function(e, n, v) {
-			var t = this;
+			var self = this;
 
 			// What's the point
 			if (!e || !n) {
@@ -754,14 +755,14 @@ define("tinymce/dom/DOMUtils", [
 			}
 
 			return this.run(e, function(e) {
-				var s = t.settings;
+				var s = self.settings;
 				var originalValue = e.getAttribute(n);
 				if (v !== null) {
 					switch (n) {
 						case "style":
 							if (!is(v, 'string')) {
 								each(v, function(v, n) {
-									t.setStyle(e, n, v);
+									self.setStyle(e, n, v);
 								});
 
 								return;
@@ -787,10 +788,10 @@ define("tinymce/dom/DOMUtils", [
 						case "href":
 							if (s.keep_values) {
 								if (s.url_converter) {
-									v = s.url_converter.call(s.url_converter_scope || t, v, n, e);
+									v = s.url_converter.call(s.url_converter_scope || self, v, n, e);
 								}
 
-								t.setAttrib(e, 'data-mce-' + n, v, 2);
+								self.setAttrib(e, 'data-mce-' + n, v, 2);
 							}
 
 							break;
@@ -1359,7 +1360,7 @@ define("tinymce/dom/DOMUtils", [
 						newElement.innerHTML = '<br />' + html;
 
 						// Add all children from div to target
-						each (grep(newElement.childNodes), function(node, i) {
+						each(grep(newElement.childNodes), function(node, i) {
 							// Skip br element
 							if (i && element.canHaveHTML) {
 								element.appendChild(node);
@@ -1722,9 +1723,9 @@ define("tinymce/dom/DOMUtils", [
 
 						// Keep elements with data-bookmark attributes or name attribute like <a name="1"></a>
 						attributes = self.getAttribs(node);
-						i = node.attributes.length;
+						i = attributes.length;
 						while (i--) {
-							name = node.attributes[i].nodeName;
+							name = attributes[i].nodeName;
 							if (name === "name" || name === 'data-mce-bookmark') {
 								return false;
 							}
@@ -1771,10 +1772,10 @@ define("tinymce/dom/DOMUtils", [
 		 * @return {Number} Index of the specified node.
 		 */
 		nodeIndex: function(node, normalized) {
-			var idx = 0, lastNodeType, lastNode, nodeType;
+			var idx = 0, lastNodeType, nodeType;
 
 			if (node) {
-				for (lastNodeType = node.nodeType, node = node.previousSibling, lastNode = node; node; node = node.previousSibling) {
+				for (lastNodeType = node.nodeType, node = node.previousSibling; node; node = node.previousSibling) {
 					nodeType = node.nodeType;
 
 					// Normalize text nodes

@@ -22,8 +22,15 @@ define("tinymce/pasteplugin/WordFilter", [
 	"tinymce/html/Node",
 	"tinymce/pasteplugin/Utils"
 ], function(Tools, DomParser, Schema, Serializer, Node, Utils) {
+	/**
+	 * Checks if the specified content is from any of the following sources: MS Word/Office 365/Google docs.
+	 */
 	function isWordContent(content) {
-		return (/<font face="Times New Roman"|class="?Mso|style="[^"]*\bmso-|style='[^'']*\bmso-|w:WordDocument/i).test(content);
+		return (
+			(/<font face="Times New Roman"|class="?Mso|style="[^"]*\bmso-|style='[^'']*\bmso-|w:WordDocument/i).test(content) ||
+			(/class="OutlineElement/).test(content) ||
+			(/id="?docs\-internal\-guid\-/.test(content))
+		);
 	}
 
 	function WordFilter(editor) {
@@ -34,7 +41,7 @@ define("tinymce/pasteplugin/WordFilter", [
 
 			retainStyleProperties = settings.paste_retain_style_properties;
 			if (retainStyleProperties) {
-				validStyles = Tools.makeMap(retainStyleProperties);
+				validStyles = Tools.makeMap(retainStyleProperties.split(/[, ]/));
 			}
 
 			/**
@@ -135,6 +142,8 @@ define("tinymce/pasteplugin/WordFilter", [
 			}
 
 			function filterStyles(node, styleValue) {
+				var outputStyles = {}, styles = editor.dom.parseStyle(styleValue);
+
 				// Parse out list indent level for lists
 				if (node.name === 'p') {
 					var matches = /mso-list:\w+ \w+([0-9]+)/.exec(styleValue);
@@ -144,40 +153,62 @@ define("tinymce/pasteplugin/WordFilter", [
 					}
 				}
 
-				if (editor.getParam("paste_retain_style_properties", "none")) {
-					var outputStyle = "";
+				Tools.each(styles, function(value, name) {
+					// Convert various MS styles to W3C styles
+					switch (name) {
+						case "horiz-align":
+							name = "text-align";
+							break;
 
-					Tools.each(editor.dom.parseStyle(styleValue), function(value, name) {
-						// Convert various MS styles to W3C styles
-						switch (name) {
-							case "horiz-align":
-								name = "text-align";
-								return;
+						case "vert-align":
+							name = "vertical-align";
+							break;
 
-							case "vert-align":
-								name = "vertical-align";
-								return;
+						case "font-color":
+						case "mso-foreground":
+							name = "color";
+							break;
 
-							case "font-color":
-							case "mso-foreground":
-								name = "color";
-								return;
+						case "mso-background":
+						case "mso-highlight":
+							name = "background";
+							break;
 
-							case "mso-background":
-							case "mso-highlight":
-								name = "background";
-								break;
-						}
-
-						// Output only valid styles
-						if (retainStyleProperties == "all" || (validStyles && validStyles[name])) {
-							outputStyle += name + ':' + value + ';';
-						}
-					});
-
-					if (outputStyle) {
-						return outputStyle;
+						case "font-weight":
+						case "font-style":
+							if (value != "normal") {
+								outputStyles[name] = value;
+							}
+							return;
 					}
+
+					// Never allow mso- prefixed names
+					if (name.indexOf('mso-') === 0) {
+						return;
+					}
+
+					// Output only valid styles
+					if (retainStyleProperties == "all" || (validStyles && validStyles[name])) {
+						outputStyles[name] = value;
+					}
+				});
+
+				// Convert bold style to "b" element
+				if (/(bold)/i.test(outputStyles["font-weight"])) {
+					delete outputStyles["font-weight"];
+					node.wrap(new Node("b", 1));
+				}
+
+				// Convert italic style to "i" element
+				if (/(italic)/i.test(outputStyles["font-style"])) {
+					delete outputStyles["font-style"];
+					node.wrap(new Node("i", 1));
+				}
+
+				// Serialize the styles and see if there is something left to keep
+				outputStyles = editor.dom.serializeStyle(outputStyles, node.name);
+				if (outputStyles) {
+					return outputStyles;
 				}
 
 				return null;
@@ -211,7 +242,7 @@ define("tinymce/pasteplugin/WordFilter", [
 					[/<span\s+style\s*=\s*"\s*mso-spacerun\s*:\s*yes\s*;?\s*"\s*>([\s\u00a0]*)<\/span>/gi,
 						function(str, spaces) {
 							return (spaces.length > 0) ?
-								spaces.replace(/./, " ").slice(Math.floor(spaces.length/2)).split("").join("\u00a0") : "";
+								spaces.replace(/./, " ").slice(Math.floor(spaces.length / 2)).split("").join("\u00a0") : "";
 						}
 					]
 				]);
@@ -269,6 +300,7 @@ define("tinymce/pasteplugin/WordFilter", [
 						}
 					}
 				});
+
 				// Parse into DOM structure
 				var rootNode = domParser.parse(content);
 

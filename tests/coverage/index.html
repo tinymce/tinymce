@@ -16,14 +16,13 @@
 
 </head>
 <body>
-    <div id="coverage"></div>
-    <div id="menu"></div>
-    
-    <script>
-    	if (top != window && top.TestRunner) {
-    		new JSCovReporter({ coverObject: top.TestRunner.getCoverObject() });
-    		//onsole.info(top.TestRunner.getCoverObject());
-    	}
+	<div id="coverage"></div>
+	<div id="menu"></div>
+
+	<script>
+		if (window.opener) {
+			new JSCovReporter({coverObject: window.opener.getCoverObject()});
+		}
 	</script>
 </body>
 </html>

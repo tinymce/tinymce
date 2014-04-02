@@ -51,8 +51,8 @@ define("tinymce/ui/ButtonGroup", [
 			layout.preRender(self);
 
 			return (
-				'<div id="' + self._id + '" class="' + self.classes() + '">'+
-					'<div id="' + self._id + '-body">'+
+				'<div id="' + self._id + '" class="' + self.classes() + '">' +
+					'<div id="' + self._id + '-body">' +
 						(self.settings.html || '') + layout.renderHtml(self) +
 					'</div>' +
 				'</div>'

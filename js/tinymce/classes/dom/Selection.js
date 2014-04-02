@@ -344,7 +344,7 @@ define("tinymce/dom/Selection", [
 		 * tinymce.activeEditor.selection.moveToBookmark(bm);
 		 */
 		getBookmark: function(type, normalized) {
-			var t = this, dom = t.dom, rng, rng2, id, collapsed, name, element, chr = '&#xFEFF;', styles;
+			var self = this, dom = self.dom, rng, rng2, id, collapsed, name, element, chr = '&#xFEFF;', styles;
 
 			function findIndex(name, element) {
 				var index = 0;
@@ -382,7 +382,7 @@ define("tinymce/dom/Selection", [
 			}
 
 			function getLocation() {
-				var rng = t.getRng(true), root = dom.getRoot(), bookmark = {};
+				var rng = self.getRng(true), root = dom.getRoot(), bookmark = {};
 
 				function getPoint(rng, start) {
 					var container = rng[start ? 'startContainer' : 'endContainer'],
@@ -404,11 +404,11 @@ define("tinymce/dom/Selection", [
 							offset = Math.max(0, childNodes.length - 1);
 						}
 
-						point.push(t.dom.nodeIndex(childNodes[offset], normalized) + after);
+						point.push(self.dom.nodeIndex(childNodes[offset], normalized) + after);
 					}
 
 					for (; container && container != root; container = container.parentNode) {
-						point.push(t.dom.nodeIndex(container, normalized));
+						point.push(self.dom.nodeIndex(container, normalized));
 					}
 
 					return point;
@@ -416,7 +416,7 @@ define("tinymce/dom/Selection", [
 
 				bookmark.start = getPoint(rng, true);
 
-				if (!t.isCollapsed()) {
+				if (!self.isCollapsed()) {
 					bookmark.end = getPoint(rng);
 				}
 
@@ -424,15 +424,15 @@ define("tinymce/dom/Selection", [
 			}
 
 			if (type == 2) {
-				element = t.getNode();
+				element = self.getNode();
 				name = element ? element.nodeName : null;
 
 				if (name == 'IMG') {
 					return {name: name, index: findIndex(name, element)};
 				}
 
-				if (t.tridentSel) {
-					return t.tridentSel.getBookmark(type);
+				if (self.tridentSel) {
+					return self.tridentSel.getBookmark(type);
 				}
 
 				return getLocation();
@@ -440,12 +440,12 @@ define("tinymce/dom/Selection", [
 
 			// Handle simple range
 			if (type) {
-				return {rng: t.getRng()};
+				return {rng: self.getRng()};
 			}
 
-			rng = t.getRng();
+			rng = self.getRng();
 			id = dom.uniqueId();
-			collapsed = t.isCollapsed();
+			collapsed = self.isCollapsed();
 			styles = 'overflow:hidden;line-height:0px';
 
 			// Explorer method
@@ -484,7 +484,7 @@ define("tinymce/dom/Selection", [
 					return {name: name, index: findIndex(name, element)};
 				}
 			} else {
-				element = t.getNode();
+				element = self.getNode();
 				name = element.nodeName;
 				if (name == 'IMG') {
 					return {name: name, index: findIndex(name, element)};
@@ -504,7 +504,7 @@ define("tinymce/dom/Selection", [
 				rng.insertNode(dom.create('span', {'data-mce-type': "bookmark", id: id + '_start', style: styles}, chr));
 			}
 
-			t.moveToBookmark({id: id, keep: 1});
+			self.moveToBookmark({id: id, keep: 1});
 
 			return {id: id};
 		},
@@ -525,7 +525,7 @@ define("tinymce/dom/Selection", [
 		 * tinymce.activeEditor.selection.moveToBookmark(bm);
 		 */
 		moveToBookmark: function(bookmark) {
-			var t = this, dom = t.dom, rng, root, startContainer, endContainer, startOffset, endOffset;
+			var self = this, dom = self.dom, rng, root, startContainer, endContainer, startOffset, endOffset;
 
 			function setEndPoint(start) {
 				var point = bookmark[start ? 'start' : 'end'], i, node, offset, children;
@@ -645,12 +645,12 @@ define("tinymce/dom/Selection", [
 					rng = dom.createRng();
 					root = dom.getRoot();
 
-					if (t.tridentSel) {
-						return t.tridentSel.moveToBookmark(bookmark);
+					if (self.tridentSel) {
+						return self.tridentSel.moveToBookmark(bookmark);
 					}
 
 					if (setEndPoint(true) && setEndPoint()) {
-						t.setRng(rng);
+						self.setRng(rng);
 					}
 				} else if (bookmark.id) {
 					// Restore start/end points
@@ -661,12 +661,12 @@ define("tinymce/dom/Selection", [
 						rng = dom.createRng();
 						rng.setStart(addBogus(startContainer), startOffset);
 						rng.setEnd(addBogus(endContainer), endOffset);
-						t.setRng(rng);
+						self.setRng(rng);
 					}
 				} else if (bookmark.name) {
-					t.select(dom.select(bookmark.name)[bookmark.index]);
+					self.select(dom.select(bookmark.name)[bookmark.index]);
 				} else if (bookmark.rng) {
-					t.setRng(bookmark.rng);
+					self.setRng(bookmark.rng);
 				}
 			}
 		},

@@ -15,8 +15,9 @@
  * @class tinymce.ui.Throbber
  */
 define("tinymce/ui/Throbber", [
-	"tinymce/ui/DomUtils"
-], function(DomUtils) {
+	"tinymce/ui/DomUtils",
+	"tinymce/ui/Control"
+], function(DomUtils, Control) {
 	"use strict";
 
 	/**
@@ -24,9 +25,10 @@ define("tinymce/ui/Throbber", [
 	 *
 	 * @constructor
 	 * @param {Element} elm DOM Html element to display throbber in.
+	 * @param {Boolean} inline Optional true/false state if the throbber should be appended to end of element for infinite scroll.
 	 */
-	return function(elm) {
-		var self = this, state;
+	return function(elm, inline) {
+		var self = this, state, classPrefix = Control.classPrefix;
 
 		/**
 		 * Shows the throbber.
@@ -42,7 +44,9 @@ define("tinymce/ui/Throbber", [
 
 			window.setTimeout(function() {
 				if (state) {
-					elm.appendChild(DomUtils.createFragment('<div class="mce-throbber"></div>'));
+					elm.appendChild(DomUtils.createFragment(
+						'<div class="' + classPrefix + 'throbber' + (inline ? ' ' + classPrefix + 'throbber-inline' : '') + '"></div>'
+					));
 				}
 			}, time || 0);
 

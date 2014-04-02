@@ -1,6 +1,6 @@
 // Reset
 
-.mce-container, .mce-container *, .mce-widget, .mce-widget *, .mce-reset {
+.@{prefix}-container, .@{prefix}-container *, .@{prefix}-widget, .@{prefix}-widget *, .@{prefix}-reset {
 	margin: 0; padding: 0; border: 0; outline: 0;
 	vertical-align: top; background: transparent;
 	text-decoration: none; color: @text;
@@ -17,13 +17,13 @@
 	direction: ltr;
 }
 
-.mce-widget button {
+.@{prefix}-widget button {
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
-.mce-container *[unselectable] {
+.@{prefix}-container *[unselectable] {
 	-moz-user-select: none;
 	-webkit-user-select: none;
 	-o-user-select: none;

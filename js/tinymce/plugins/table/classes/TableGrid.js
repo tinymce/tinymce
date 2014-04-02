@@ -348,6 +348,7 @@ define("tinymce/tableplugin/TableGrid", [
 						cell = grid[y][x].elm;
 
 						/*jshint loopfunc:true */
+						/*eslint loop-func:0 */
 						if (cell != startCell) {
 							// Move children to startCell
 							children = Tools.grep(cell.childNodes);

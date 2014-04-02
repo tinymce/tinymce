@@ -1,6 +1,6 @@
 // Button
 
-.mce-btn {
+.@{prefix}-btn {
 	border: 1px solid mix(rgb(red(@btn-border-right), green(@btn-border-right), blue(@btn-border-right)), @panel-bg, 30%);
 	border-color: @btn-border-top @btn-border-right @btn-border-bottom @btn-border-left;
 	position: relative;
@@ -16,24 +16,24 @@
 		.vertical-gradient(darken(@btn-bg, 5%), darken(@btn-bg-hlight, 5%));
 	}
 
-	&.mce-disabled button, &.mce-disabled:hover button {
+	&.@{prefix}-disabled button, &.@{prefix}-disabled:hover button {
 		cursor: default;
 		.box-shadow(none);
 		.opacity(@btn-box-disabled-opacity);
 	}
 
-	&.mce-active, &.mce-active:hover {
+	&.@{prefix}-active, &.@{prefix}-active:hover {
 		.vertical-gradient(darken(@btn-bg, 10%), darken(@btn-bg-hlight, 10%));
 		.box-shadow(@btn-box-shadow-active);
 	}
 
-	&:not(.mce-disabled):active {
+	&:not(.@{prefix}-disabled):active {
 		.vertical-gradient(darken(@btn-bg, 10%), darken(@btn-bg-hlight, 10%));
 		.box-shadow(@btn-box-shadow-active);
 	}
 }
 
-.mce-btn button {
+.@{prefix}-btn button {
 	padding: 4px 10px;
 	font-size: @font-size;
 	line-height: @line-height;
@@ -51,11 +51,11 @@
 	}
 }
 
-.mce-btn i {
+.@{prefix}-btn i {
 	text-shadow: 1px 1px @btn-text-shadow;
 }
 
-.mce-primary {
+.@{prefix}-primary {
 	min-width: 50px;
 	color: @btn-primary-text;
 	border: 1px solid mix(rgb(red(@btn-border-right), green(@btn-border-right), blue(@btn-border-right)), @panel-bg, 30%);
@@ -66,57 +66,57 @@
 		.vertical-gradient(darken(@btn-primary-bg, 5%), darken(@btn-primary-bg-hlight, 5%));
 	}
 
-	&.mce-disabled button, &.mce-disabled:hover button {
+	&.@{prefix}-disabled button, &.@{prefix}-disabled:hover button {
 		cursor: default;
 		.box-shadow(none);
 		.opacity(@btn-box-disabled-opacity);
 	}
 
-	&.mce-active, &.mce-active:hover, &:not(.mce-disabled):active {
+	&.@{prefix}-active, &.@{prefix}-active:hover, &:not(.@{prefix}-disabled):active {
 		.vertical-gradient(darken(@btn-primary-bg, 10%), darken(@btn-primary-bg-hlight, 10%));
 		.box-shadow(@btn-box-shadow-active);
 	}
 }
 
-.mce-primary button, .mce-primary button i {
+.@{prefix}-primary button, .@{prefix}-primary button i {
 	color: @btn-primary-text;
 	text-shadow: 1px 1px @btn-primary-text-shadow;
 }
 
-.mce-btn-large button {
+.@{prefix}-btn-large button {
 	padding: 9px 14px;
 	font-size: @font-size + 2px;
 	line-height: normal;
 	.border-radius(5px);
 }
 
-.mce-btn-large i {
+.@{prefix}-btn-large i {
 	margin-top: 2px;
 }
 
-.mce-btn-small button {
+.@{prefix}-btn-small button {
 	padding: 1px 5px;
 	font-size: @font-size - 2px;
 	*padding-bottom: 2px;
 }
 
-.mce-btn-small i {
+.@{prefix}-btn-small i {
 	line-height: 20px;
 	vertical-align: top;
 	*line-height: 18px;
 }
 
-.mce-btn .mce-caret {
+.@{prefix}-btn .@{prefix}-caret {
 	margin-top: 8px;
 	margin-left: 0;
 }
 
-.mce-btn-small .mce-caret {
+.@{prefix}-btn-small .@{prefix}-caret {
 	margin-top: 8px;
 	margin-left: 0;
 }
 
-.mce-caret {
+.@{prefix}-caret {
 	.inline-block();
 	width: 0; height: 0;
 	vertical-align: top;
@@ -126,17 +126,17 @@
 	content: "";
 }
 
-.mce-disabled .mce-caret {
+.@{prefix}-disabled .@{prefix}-caret {
 	border-top-color: @text-disabled;
 }
 
-.mce-caret.mce-up {
+.@{prefix}-caret.@{prefix}-up {
 	border-bottom: 4px solid @btn-caret-border;
 	border-top: 0;
 }
 
 // RTL
 
-.mce-rtl .mce-btn button {
+.@{prefix}-rtl .@{prefix}-btn button {
 	direction: rtl;
 }

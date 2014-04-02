@@ -8,6 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+/*eslint max-depth:[2, 9] */
+
 /**
  * This class parses HTML code using pure JavaScript and executes various events for each item it finds. It will
  * always execute the events in the right order for tag soup code like <b><p></b></p>. It will also remove elements
@@ -64,7 +66,9 @@ define("tinymce/html/SaxParser", [
 	 * @param {tinymce.html.Schema} schema HTML Schema class to use when parsing.
 	 */
 	return function(settings, schema) {
-		var self = this, noop = function() {};
+		var self = this;
+
+		function noop() {}
 
 		settings = settings || {};
 		self.schema = schema = schema || new Schema();

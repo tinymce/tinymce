@@ -1,3 +1,65 @@
+Version 4.0.21 (2014-04-01)
+	Added new getCssText method to formatter to get the preview css text value for a format to be used in UI.
+	Added new table_grid option that allows you to disable the table grid and use a dialog.
+	Added new image_description, image_dimensions options to image plugin. Patch contributed by Pat O'Neill.
+	Added new media_alt_source, media_poster, media_dimensions options to media plugin. Patch contributed by Pat O'Neill.
+	Added new ability to specify high/low dpi versions custom button images for retina displays.
+	Added new getWindows method to WindowManager makes it easier to control the currently opened windows.
+	Added new paste_webkit_styles option to paste plugin to control the styles that gets retained on WebKit.
+	Added preview of classes for the selectboxes used by the link_class_list/image_class_list options.
+	Added support for Sauce Labs browser testing using the new saucelabs-tests build target.
+	Added title input field to link dialog for a11y reasons can be disabled by using the link_title option.
+	Fixed so the toolbar option handles an array as input for multiple toolbar rows.
+	Fixed so the editor renders in XHTML mode apparently some people still use this rendering mode.
+	Fixed so icons gets rendered better on Firefox on Mac OS X by applying -moz-osx-font-smoothing.
+	Fixed so the auto detected external media sources produced protocol relative urls. Patch contributed by Pat O'Neill.
+	Fixed so it's possible to update the text of a button after it's been rendered to page DOM.
+	Fixed bug where iOS 7.1 Safari would open linked when images where inserted into links.
+	Fixed bug where IE 11 would scroll to the top of inline editable elements when applying formatting.
+	Fixed bug where tabindex on elements within the editor contents would cause issues on some browsers.
+	Fixed bug where link text wouldn't be properly updated in gecko if you changed an existing link.
+	Fixed bug where it wasn't possible to close dialogs with the escape key if the focus was inside a textbox.
+	Fixed bug where Gecko wouldn't paste rich text contents from Word or other similar word processors.
+	Fixed bug where binding events after the control had been rendered could fail to produce a valid delegate.
+	Fixed bug where IE 8 would throw and error when removing editors with a cross domain content_css setting.
+	Fixed bug where IE 9 wouldn't be able to select text after an editor instance with caret focus was removed.
+	Fixed bug where the autoresize plugin wouldn't resize the editor if you inserted huge images.
+	Fixed bug where multiple calls to the same init would produce extra editor instances.
+	Fixed bug where fullscreen toggle while having the autoresize plugin enabled wouldn't produce scrollbars.
+	Fixed so screen readers use a dialog instead of the grid for inserting tables.
+	Fixed so Office 365 Word contents gets filtered the same way as content from desktop Office.
+	Fixed so it's possible to override the root container for UI elements defaults to document.body.
+	Fixed bug where tabIndex is set to -1 on inline editable elements. It now keeps the existing tabIndex intact.
+	Fixed issue where the UndoManager transact method couldn't be nested since it only had one lock.
+	Fixed issue where headings/heading where labeled incorrectly as headers/header.
+Version 4.0.20 (2014-03-18)
+	Fixed so all unit tests can be executed in a headless phantomjs instance for CI testing.
+	Fixed so directionality setting gets applied to the preview dialog as well as the editor body element.
+	Fixed a performance issue with the "is" method in DOMUtils. Patch contributed by Paul Bosselaar.
+	Fixed bug where paste plugin wouldn't paste plain text properly when pasting using browser menus.
+	Fixed bug where focusable SVG elements would throw an error since className isn't a proper string.
+	Fixed bug where the preview plugin didn't properly support the document_base_url setting.
+	Fixed bug where the focusedEditor wouldn't be set to null when that editor was removed.
+	Fixed bug where Gecko would throw an exception when editors where removed.
+	Fixed bug where the FocusManager wouldn't handle selection restoration properly on older IE versions.
+	Fixed bug where the searchreplace plugin would produce an exception on very specific multiple searches.
+	Fixed bug where some events wasn't properly unbound when all editors where removed from page.
+	Fixed bug where tapping links on iOS 7.1 would open the link instead of placing the caret inside.
+	Fixed bug where holding the finger down on iOS 7.1 would open the link/image callout menu.
+	Fixed so the jQuery plugin returns null when getting the the tinymce instance of an element before it's initialized.
+	Fixed so selection normalization gets executed more often to reduce incorrect UI states on Gecko.
+	Fixed so the default action of closing the window on a form submission can be prevented using "preventDefault".
+Version 4.0.19 (2014-03-11)
+	Added support for CSS selector expressions in object_resizing option. Allows you to control what to resize.
+	Added addToTop compatibility to compat3x plugin enables more legacy 3.x plugins to work properly.
+	Fixed bug on IE where it wasn't possible to align images when they where floated left.
+	Fixed bug where the indent/outdent buttons was enabled though readonly mode was enabled.
+	Fixed bug where the nodeChanged event was fired when readonly mode was enabled.
+	Fixed bug where events like blur could be fired to editor instances that where manually removed on IE 11.
+	Fixed bug where IE 11 would move focus to menubar/toolbar when using the tab key in a form with an editor.
+	Fixed bug where drag/drop in Safari on Mac didn't work properly due to lack of support for modern dataTransfer object.
+	Fixed bug where the remove event wasn't properly executed when the editor instances where removed.
+	Fixed bug where the selection change handler on inline editors would fail if the editor instance was removed.
 Version 4.0.18 (2014-02-27)
 	Fixed bug where images would get class false/undefined when initially created.
 Version 4.0.17 (2014-02-26)

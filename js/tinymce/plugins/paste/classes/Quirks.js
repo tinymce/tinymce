@@ -44,7 +44,7 @@ define("tinymce/pasteplugin/Quirks", [
 			html = Utils.filter(html, [
 				/^[\s\S]*<!--StartFragment-->|<!--EndFragment-->[\s\S]*$/g, // WebKit fragment
 				[/<span class="Apple-converted-space">\u00a0<\/span>/g, '\u00a0'], // WebKit &nbsp;
-				/<br>$/ // Traling BR elements
+				/<br>$/i // Traling BR elements
 			]);
 
 			return html;
@@ -94,17 +94,55 @@ define("tinymce/pasteplugin/Quirks", [
 		}
 
 		/**
-		 * WebKit has a nasty bug where the all runtime styles gets added to style attributes when copy/pasting contents.
+		 * WebKit has a nasty bug where the all computed styles gets added to style attributes when copy/pasting contents.
 		 * This fix solves that by simply removing the whole style attribute.
 		 *
-		 * Todo: This can be made smarter. Keeping styles that override existing ones etc.
+		 * The paste_webkit_styles option can be set to specify what to keep:
+		 *  paste_webkit_styles: "none" // Keep no styles
+		 *  paste_webkit_styles: "all", // Keep all of them
+		 *  paste_webkit_styles: "font-weight color" // Keep specific ones
 		 *
 		 * @param {String} content Content that needs to be processed.
 		 * @return {String} Processed contents.
 		 */
 		function removeWebKitStyles(content) {
-			if (editor.settings.paste_remove_styles || editor.settings.paste_remove_styles_if_webkit !== false) {
-				content = content.replace(/ style=\"[^\"]+\"/g, '');
+			// Passthrough all styles from Word and let the WordFilter handle that junk
+			if (WordFilter.isWordContent(content)) {
+				return content;
+			}
+
+			// Filter away styles that isn't matching the target node
+
+			var webKitStyles = editor.getParam("paste_webkit_styles", "color font-size font-family background-color").split(/[, ]/);
+
+			if (editor.settings.paste_remove_styles_if_webkit === false) {
+				webKitStyles = "all";
+			}
+
+			// Keep specific styles that doesn't match the current node computed style
+			if (webKitStyles != "all") {
+				var dom = editor.dom, node = editor.selection.getNode();
+
+				content = content.replace(/ style=\"([^\"]+)\"/gi, function(a, value) {
+					var inputStyles = dom.parseStyle(value, 'span'), outputStyles = {};
+
+					if (webKitStyles === "none") {
+						return '';
+					}
+
+					for (var i = 0; i < webKitStyles.length; i++) {
+						if (dom.toHex(dom.getStyle(node, webKitStyles[i], true)) != inputStyles[webKitStyles[i]]) {
+							outputStyles[webKitStyles[i]] = inputStyles[webKitStyles[i]];
+						}
+					}
+
+					outputStyles = dom.serializeStyle(outputStyles, 'span');
+					if (outputStyles) {
+						return ' style="' + outputStyles + '"';
+					}
+
+					return '';
+				});
 			}
 
 			return content;

@@ -23,9 +23,10 @@ define("tinymce/util/Tools", [], function() {
 	 * @return {String} New string with removed whitespace.
 	 */
 	var whiteSpaceRegExp = /^\s*|\s*$/g;
-	var trim = function(str) {
+
+	function trim(str) {
 		return (str === null || str === undefined) ? '' : ("" + str).replace(whiteSpaceRegExp, '');
-	};
+	}
 
 	/**
 	 * Returns true/false if the object is an array or not.
@@ -135,7 +136,7 @@ define("tinymce/util/Tools", [], function() {
 
 		if (o.length !== undefined) {
 			// Indexed arrays, needed for Safari
-			for (n=0, l = o.length; n < l; n++) {
+			for (n = 0, l = o.length; n < l; n++) {
 				if (cb.call(s, o[n], n, o) === false) {
 					return 0;
 				}
@@ -244,14 +245,14 @@ define("tinymce/util/Tools", [], function() {
 	 * });
 	 */
 	function create(s, p, root) {
-		var t = this, sp, ns, cn, scn, c, de = 0;
+		var self = this, sp, ns, cn, scn, c, de = 0;
 
 		// Parse : <prefix> <class>:<super class>
 		s = /^((static) )?([\w.]+)(:([\w.]+))?/.exec(s);
 		cn = s[3].match(/(^|\.)(\w+)$/i)[2]; // Class name
 
 		// Create namespace for new class
-		ns = t.createNS(s[3].replace(/\.\w+$/, ''), root);
+		ns = self.createNS(s[3].replace(/\.\w+$/, ''), root);
 
 		// Class already exists
 		if (ns[cn]) {
@@ -277,11 +278,11 @@ define("tinymce/util/Tools", [], function() {
 
 		// Add constructor and methods
 		ns[cn] = p[cn];
-		t.extend(ns[cn].prototype, p);
+		self.extend(ns[cn].prototype, p);
 
 		// Extend
 		if (s[5]) {
-			sp = t.resolve(s[5]).prototype;
+			sp = self.resolve(s[5]).prototype;
 			scn = s[5].match(/\.(\w+)$/i)[1]; // Class name
 
 			// Extend constructor
@@ -301,12 +302,12 @@ define("tinymce/util/Tools", [], function() {
 			ns[cn].prototype[cn] = ns[cn];
 
 			// Add super methods
-			t.each(sp, function(f, n) {
+			self.each(sp, function(f, n) {
 				ns[cn].prototype[n] = sp[n];
 			});
 
 			// Add overridden methods
-			t.each(p, function(f, n) {
+			self.each(p, function(f, n) {
 				// Extend methods if needed
 				if (sp[n]) {
 					ns[cn].prototype[n] = function() {
@@ -323,7 +324,7 @@ define("tinymce/util/Tools", [], function() {
 
 		// Add static methods
 		/*jshint sub:true*/
-		t.each(p['static'], function(f, n) {
+		self.each(p['static'], function(f, n) {
 			ns[cn][n] = f;
 		});
 	}
@@ -423,7 +424,7 @@ define("tinymce/util/Tools", [], function() {
 		o = o || window;
 
 		n = n.split('.');
-		for (i=0; i<n.length; i++) {
+		for (i = 0; i < n.length; i++) {
 			v = n[i];
 
 			if (!o[v]) {

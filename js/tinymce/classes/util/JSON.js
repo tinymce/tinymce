@@ -55,7 +55,7 @@ define("tinymce/util/JSON", [], function() {
 
 		if (t == 'object') {
 			if (o.hasOwnProperty && Object.prototype.toString.call(o) === '[object Array]') {
-					for (i=0, v = '['; i<o.length; i++) {
+					for (i = 0, v = '['; i < o.length; i++) {
 						v += (i > 0 ? ',' : '') + serialize(o[i], quote);
 					}
 
@@ -67,7 +67,7 @@ define("tinymce/util/JSON", [], function() {
 				for (name in o) {
 					if (o.hasOwnProperty(name)) {
 						v += typeof o[name] != 'function' ? (v.length > 1 ? ',' + quote : quote) + name +
-							quote +':' + serialize(o[name], quote) : '';
+							quote + ':' + serialize(o[name], quote) : '';
 					}
 				}
 

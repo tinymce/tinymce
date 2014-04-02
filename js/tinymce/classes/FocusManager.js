@@ -21,6 +21,8 @@ define("tinymce/FocusManager", [
 	"tinymce/dom/DOMUtils",
 	"tinymce/Env"
 ], function(DOMUtils, Env) {
+	var selectionChangeHandler, documentFocusInHandler, DOM = DOMUtils.DOM;
+
 	/**
 	 * Constructs a new focus manager instance.
 	 *
@@ -68,7 +70,7 @@ define("tinymce/FocusManager", [
 		}
 
 		function isUIElement(elm) {
-			return !!DOMUtils.DOM.getParent(elm, FocusManager.isEditorUIElement);
+			return !!DOM.getParent(elm, FocusManager.isEditorUIElement);
 		}
 
 		function isNodeInBodyOfEditor(node, editor) {
@@ -84,31 +86,11 @@ define("tinymce/FocusManager", [
 		}
 
 		function registerEvents(e) {
-			var editor = e.editor, selectionChangeHandler;
+			var editor = e.editor;
 
 			editor.on('init', function() {
-				// On IE take selection snapshot onbeforedeactivate
-				if ("onbeforedeactivate" in document && Env.ie < 11) {
-					// Gets fired when the editor is about to be blurred but also when the selection
-					// is moved into a table cell so we need to add the range as a pending range then
-					// use that pending range on the blur event of the editor body
-					editor.dom.bind(editor.getBody(), 'beforedeactivate', function() {
-						try {
-							editor.pendingRng = editor.selection.getRng();
-						} catch (ex) {
-							// IE throws "Unexcpected call to method or property access" some times so lets ignore it
-						}
-					});
-
-					// Set the pending range as the current last range if the blur event occurs
-					editor.dom.bind(editor.getBody(), 'blur', function() {
-						if (editor.pendingRng) {
-							editor.lastRng = editor.pendingRng;
-							editor.selection.lastFocusBookmark = createBookmark(editor.lastRng);
-							editor.pendingRng = null;
-						}
-					});
-				} else if (editor.inline || Env.ie > 10) {
+				// Gecko/WebKit has ghost selections in iframes and IE only has one selection per browser tab
+				if (editor.inline || Env.ie) {
 					// On other browsers take snapshot on nodechange in inline mode since they have Ghost selections for iframes
 					editor.on('nodechange keyup', function() {
 						var node = document.activeElement;
@@ -124,25 +106,22 @@ define("tinymce/FocusManager", [
 					});
 
 					// Handles the issue with WebKit not retaining selection within inline document
-					// If the user releases the mouse out side the body while selecting a nodeChange won't
-					// fire and there for the selection snapshot won't be stored
-					// TODO: Optimize this since we only need to bind these on the active editor
-					if (Env.webkit) {
+					// If the user releases the mouse out side the body since a mouse up event wont occur on the body
+					if (Env.webkit && !selectionChangeHandler) {
 						selectionChangeHandler = function() {
-							var rng = editor.selection.getRng();
+							var activeEditor = editorManager.activeEditor;
 
-							// Store when it's non collapsed
-							if (!rng.collapsed) {
-								editor.lastRng = rng;
+							if (activeEditor && activeEditor.selection) {
+								var rng = activeEditor.selection.getRng();
+
+								// Store when it's non collapsed
+								if (rng && !rng.collapsed) {
+									editor.lastRng = rng;
+								}
 							}
 						};
 
-						// Bind selection handler
-						DOMUtils.DOM.bind(document, 'selectionchange', selectionChangeHandler);
-
-						editor.on('remove', function() {
-							DOMUtils.DOM.unbind(document, 'selectionchange', selectionChangeHandler);
-						});
+						DOM.bind(document, 'selectionchange', selectionChangeHandler);
 					}
 				}
 			});
@@ -194,28 +173,45 @@ define("tinymce/FocusManager", [
 					}
 				}, 0);
 			});
+
+			if (!documentFocusInHandler) {
+				documentFocusInHandler = function(e) {
+					var activeEditor = editorManager.activeEditor;
+
+					if (activeEditor && e.target.ownerDocument == document) {
+						// Check to make sure we have a valid selection
+						if (activeEditor.selection) {
+							activeEditor.selection.lastFocusBookmark = createBookmark(activeEditor.lastRng);
+						}
+
+						// Fire a blur event if the element isn't a UI element
+						if (!isUIElement(e.target) && editorManager.focusedEditor == activeEditor) {
+							activeEditor.fire('blur', {focusedEditor: null});
+							editorManager.focusedEditor = null;
+						}
+					}
+				};
+
+				// Check if focus is moved to an element outside the active editor by checking if the target node
+				// isn't within the body of the activeEditor nor a UI element such as a dialog child control
+				DOM.bind(document, 'focusin', documentFocusInHandler);
+			}
 		}
 
-		// Check if focus is moved to an element outside the active editor by checking if the target node
-		// isn't within the body of the activeEditor nor a UI element such as a dialog child control
-		DOMUtils.DOM.bind(document, 'focusin', function(e) {
-			var activeEditor = editorManager.activeEditor;
-
-			if (activeEditor && e.target.ownerDocument == document) {
-				// Check to make sure we have a valid selection
-				if (activeEditor.selection) {
-					activeEditor.selection.lastFocusBookmark = createBookmark(activeEditor.lastRng);
-				}
-
-				// Fire a blur event if the element isn't a UI element
-				if (!isUIElement(e.target) && editorManager.focusedEditor == activeEditor) {
-					activeEditor.fire('blur', {focusedEditor: null});
-					editorManager.focusedEditor = null;
-				}
+		function unregisterDocumentEvents(e) {
+			if (editorManager.focusedEditor == e.editor) {
+				editorManager.focusedEditor = null;
 			}
-		});
+
+			if (!editorManager.activeEditor) {
+				DOM.unbind(document, 'selectionchange', selectionChangeHandler);
+				DOM.unbind(document, 'focusin', documentFocusInHandler);
+				selectionChangeHandler = documentFocusInHandler = null;
+			}
+		}
 
 		editorManager.on('AddEditor', registerEvents);
+		editorManager.on('RemoveEditor', unregisterDocumentEvents);
 	}
 
 	/**
@@ -226,7 +222,8 @@ define("tinymce/FocusManager", [
 	 * @return {Boolean} True/false state if the element is part of the UI or not.
 	 */
 	FocusManager.isEditorUIElement = function(elm) {
-		return elm.className.indexOf('mce-') !== -1;
+		// Needs to be converted to string since svg can have focus: #6776
+		return elm.className.toString().indexOf('mce-') !== -1;
 	};
 
 	return FocusManager;

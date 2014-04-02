@@ -1,27 +1,30 @@
 // Label
 
-.mce-label {
+.@{prefix}-label {
 	.inline-block();
 	text-shadow: @text-shadow;
-	border: 0;
 	overflow: hidden;
 }
 
-.mce-label.mce-autoscroll {
+.@{prefix}-label.@{prefix}-autoscroll {
 	overflow: auto;
 }
 
-.mce-label.mce-disabled {
+.@{prefix}-label.@{prefix}-disabled {
 	color: @text-disabled;
 }
 
-.mce-label.mce-multiline {
+.@{prefix}-label.@{prefix}-multiline {
 	white-space: pre-wrap;
+}
+
+.@{prefix}-label.@{prefix}-error {
+	color: @text-error;
 }
 
 // RTL
 
-.mce-rtl .mce-label {
+.@{prefix}-rtl .@{prefix}-label {
 	text-align: right;
 	direction: rtl;
 }

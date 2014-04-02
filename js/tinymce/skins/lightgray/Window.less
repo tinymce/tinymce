@@ -1,18 +1,18 @@
 ﻿// Window
 
-.mce-fullscreen {
+.@{prefix}-fullscreen {
 	border: 0; padding: 0; margin: 0;
 	overflow: hidden;
 	background: @window-fullscreen-bg;
 	height: 100%;
 }
 
-div.mce-fullscreen {
+div.@{prefix}-fullscreen {
 	position: fixed;
 	top: 0; left: 0;
 }
 
-#mce-modal-block {
+#@{prefix}-modal-block {
 	.opacity(0);
 	position: fixed;
 	left: 0; top: 0;
@@ -20,15 +20,15 @@ div.mce-fullscreen {
 	background: @window-modalblock-bg;
 }
 
-#mce-modal-block.mce-in {
+#@{prefix}-modal-block.@{prefix}-in {
 	.opacity(@window-modalblock-opacity);
 }
 
-.mce-window-move {
+.@{prefix}-window-move {
 	cursor: move;
 }
 
-.mce-window {
+.@{prefix}-window {
 	.border-radius(6px);
 	.box-shadow(@window-box-shadow);
 	.reset-gradient();
@@ -39,17 +39,17 @@ div.mce-fullscreen {
 	.transition(opacity 150ms ease-in);
 }
 
-.mce-window.mce-in {
+.@{prefix}-window.@{prefix}-in {
 	opacity: 1;
 }
 
-.mce-window-head {
+.@{prefix}-window-head {
 	padding: 9px 15px;
 	border-bottom: 1px solid @window-head-border;
 	position: relative;
 }
 
-.mce-window-head .mce-close {
+.@{prefix}-window-head .@{prefix}-close {
 	position: absolute;
 	right: 15px;
 	top: 9px;
@@ -64,11 +64,11 @@ div.mce-fullscreen {
 	overflow: hidden;
 }
 
-.mce-close:hover {
+.@{prefix}-close:hover {
 	color: @window-head-close-hover;
 }
 
-.mce-window-head .mce-title {
+.@{prefix}-window-head .@{prefix}-title {
 	line-height: 20px;
 	font-size: @window-title-font-size;
 	font-weight: bold;
@@ -76,18 +76,18 @@ div.mce-fullscreen {
 	padding-right: 10px;
 }
 
-.mce-window .mce-container-body {
+.@{prefix}-window .@{prefix}-container-body {
 	display: block;
 }
 
-.mce-foot {
+.@{prefix}-foot {
 	display: block;
 	background-color: @window-foot-bg;
 	border-top: 1px solid @window-foot-border;
 	.border-radius(0 0 6px 6px);
 }
 
-.mce-window-head .mce-dragh {
+.@{prefix}-window-head .@{prefix}-dragh {
 	position: absolute;
 	top: 0; left: 0;
 	cursor: move;
@@ -95,29 +95,29 @@ div.mce-fullscreen {
 	height: 100%;
 }
 
-.mce-window iframe {
+.@{prefix}-window iframe {
 	width: 100%;
 	height: 100%;
 }
 
-.mce-window.mce-fullscreen, .mce-window.mce-fullscreen .mce-foot {
+.@{prefix}-window.@{prefix}-fullscreen, .@{prefix}-window.@{prefix}-fullscreen .@{prefix}-foot {
 	.border-radius(0);
 }
 
 // RTL
 
-.mce-rtl .mce-window-head .mce-close {
+.@{prefix}-rtl .@{prefix}-window-head .@{prefix}-close {
 	position: absolute;
 	right: auto;
 	left: 15px;
 }
 
-.mce-rtl .mce-window-head .mce-dragh {
+.@{prefix}-rtl .@{prefix}-window-head .@{prefix}-dragh {
 	left: auto;
 	right: 0;
 }
 
-.mce-rtl .mce-window-head .mce-title {
+.@{prefix}-rtl .@{prefix}-window-head .@{prefix}-title {
 	direction: rtl;
 	text-align: right;
 }

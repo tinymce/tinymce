@@ -13,19 +13,19 @@
 (function() {
 	tinymce.create('tinymce.plugins.BBCodePlugin', {
 		init : function(ed) {
-			var t = this, dialect = ed.getParam('bbcode_dialect', 'punbb').toLowerCase();
+			var self = this, dialect = ed.getParam('bbcode_dialect', 'punbb').toLowerCase();
 
 			ed.on('beforeSetContent', function(e) {
-				e.content = t['_' + dialect + '_bbcode2html'](e.content);
+				e.content = self['_' + dialect + '_bbcode2html'](e.content);
 			});
 
 			ed.on('postProcess', function(e) {
 				if (e.set) {
-					e.content = t['_' + dialect + '_bbcode2html'](e.content);
+					e.content = self['_' + dialect + '_bbcode2html'](e.content);
 				}
 
 				if (e.get) {
-					e.content = t['_' + dialect + '_html2bbcode'](e.content);
+					e.content = self['_' + dialect + '_html2bbcode'](e.content);
 				}
 			});
 		},

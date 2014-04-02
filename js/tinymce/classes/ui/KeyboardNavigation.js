@@ -84,9 +84,11 @@ define("tinymce/ui/KeyboardNavigation", [
 		 * @return {Boolean} True/false if the element is a text element or not.
 		 */
 		function isTextInputElement(elm) {
+			var tagName = elm.tagName.toUpperCase();
+
 			// Notice: since type can be "email" etc we don't check the type
 			// So all input elements gets treated as text input elements
-			return elm.tagName == "INPUT" || elm.tagName == "TEXTAREA";
+			return tagName == "INPUT" || tagName == "TEXTAREA";
 		}
 
 		/**
@@ -328,7 +330,7 @@ define("tinymce/ui/KeyboardNavigation", [
 		}
 
 		root.on('keydown', function(e) {
-			function handleNonTabEvent(e, handler) {
+			function handleNonTabOrEscEvent(e, handler) {
 				// Ignore non tab keys for text elements
 				if (isTextInputElement(focusedElement)) {
 					return;
@@ -345,29 +347,29 @@ define("tinymce/ui/KeyboardNavigation", [
 
 			switch (e.keyCode) {
 				case 37: // DOM_VK_LEFT
-					handleNonTabEvent(e, left);
+					handleNonTabOrEscEvent(e, left);
 					break;
 
 				case 39: // DOM_VK_RIGHT
-					handleNonTabEvent(e, right);
+					handleNonTabOrEscEvent(e, right);
 					break;
 
 				case 38: // DOM_VK_UP
-					handleNonTabEvent(e, up);
+					handleNonTabOrEscEvent(e, up);
 					break;
 
 				case 40: // DOM_VK_DOWN
-					handleNonTabEvent(e, down);
+					handleNonTabOrEscEvent(e, down);
 					break;
 
 				case 27: // DOM_VK_ESCAPE
-					handleNonTabEvent(e, cancel);
+					cancel();
 					break;
 
 				case 14: // DOM_VK_ENTER
 				case 13: // DOM_VK_RETURN
 				case 32: // DOM_VK_SPACE
-					handleNonTabEvent(e, enter);
+					handleNonTabOrEscEvent(e, enter);
 					break;
 
 				case 9: // DOM_VK_TAB

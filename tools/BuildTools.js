@@ -189,7 +189,8 @@ exports.jshint = function (options) {
 	color.green = '\u001b[32m';
 
 	if (fs.existsSync(".jshintrc")) {
-		options = extend(JSON.parse(removeComments("" + fs.readFileSync(".jshintrc"))), options);
+		options = extend(JSON.parse(removeComments("" + fs.readFileSync(options.jshintrc || ".jshintrc"))), options);
+		delete options.jshintrc;
 	}
 
 	if (options.exclude) {
@@ -336,4 +337,128 @@ exports.instrumentFile = function(options) {
 	fs.writeFileSync(options.to, new Instrument(source, {
 		name: options.from
 	}).instrument());
+};
+
+exports.eslint = function(options) {
+	var eslint = require('eslint').cli, args = [];
+
+	function globFiles(patterns) {
+		var files = [], glob = require("glob");
+
+		if (patterns instanceof Array) {
+			patterns.forEach(function(pattern) {
+				if (pattern[0] == '!') {
+					glob.sync(pattern.substr(1)).forEach(function(file) {
+						var idx = files.indexOf(file);
+
+						if (idx != -1) {
+							files.splice(idx, 1);
+						}
+					});
+				} else {
+					files = files.concat(glob.sync(pattern));
+				}
+			});
+		} else {
+			globFiles([patterns]);
+		}
+
+		return files;
+	}
+
+	if (options.config) {
+		args.push('--config', path.resolve(options.config));
+	}
+
+	if (options.rulesdir) {
+		args.push('--rulesdir', options.rulesdir);
+	}
+
+	if (options.format) {
+		args.push('--format', options.format);
+	}
+
+	eslint.execute(args.concat(globFiles(options.src)).join(' '));
+};
+
+exports.nuget = function(options) {
+	var http = require("http"), fs = require("fs");
+	var child_process = require("child_process");
+	var args = [];
+
+	if (!/^win/.test(process.platform)) {
+		return;
+	}
+
+	function download(fromUrl, toPath, callback) {
+		var req = http.get(fromUrl, function(response) {
+			var location = response.headers.location;
+
+			if (location) {
+				req.abort();
+				download(require("url").resolve(fromUrl, location), toPath, callback);
+			} else {
+				var file = fs.createWriteStream(toPath);
+				file.on('finish', callback);
+				response.pipe(file);
+			}
+		});
+	}
+
+	function execNuget(nuspec, args) {
+		child_process.execFile(options.cmd, ["pack", nuspec].concat(args), function (error, stdout, stderr) {
+			if (!options.quiet) {
+				if (error !== null) {
+					console.log("NuGet exec error: " + error);
+				}
+
+				if (stdout !== null) {
+					console.log(stdout);
+				}
+
+				if (stderr !== null) {
+					console.log(stderr);
+				}
+			}
+		});
+	}
+
+	if (!fs.existsSync(options.cmd)) {
+		download("http://nuget.org/nuget.exe", options.cmd, function() {
+			if (fs.existsSync(options.cmd)) {
+				exports.nuget(options);
+			}
+		});
+
+		return;
+	}
+
+	if (options.version) {
+		args.push("-Version", options.version);
+	}
+
+	if (options.dest) {
+		args.push("-OutputDirectory", options.dest);
+	}
+
+	if (options.nuspec) {
+		if (options.nuspec instanceof Array) {
+			options.nuspec.forEach(function(nuspec) {
+				execNuget(nuspec, args);
+			});
+		} else {
+			execNuget(options.nuspec, args);
+		}
+	}
+};
+
+exports.phantomjs = function(args) {
+	var childProcess = require('child_process');
+	var phantomjs = require('phantomjs');
+	var binPath = phantomjs.path;
+
+	childProcess.execFile(binPath, args, function(err, stdout, stderr) {
+		console.log(stdout);
+		console.log(stderr);
+	});
 };

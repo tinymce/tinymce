@@ -50,9 +50,19 @@
 			username : "Preview user name"
 		},
 
-		templates: [ 
-			{title: 'Some title 1', description: 'Some desc 1', content: '<strong class="red">My content: {$username}</strong>'}, 
-			{title: 'Some title 2', description: 'Some desc 2', url: 'development.html'} 
+		link_class_list: [
+			{title: 'Example 1', value: 'example1'},
+			{title: 'Example 2', value: 'example2'}
+		],
+
+		image_class_list: [
+			{title: 'Example 1', value: 'example1'},
+			{title: 'Example 2', value: 'example2'}
+		],
+
+		templates: [
+			{title: 'Some title 1', description: 'Some desc 1', content: '<strong class="red">My content: {$username}</strong>'},
+			{title: 'Some title 2', description: 'Some desc 2', url: 'development.html'}
 		],
 
 		setup: function(ed) {

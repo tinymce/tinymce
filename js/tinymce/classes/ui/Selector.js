@@ -8,6 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+/*eslint no-nested-ternary:0 */
+
 /**
  * Selector engine, enables you to select controls by using CSS like expressions.
  * We currently only support basic CSS expressions to reduce the size of the core
@@ -72,6 +74,7 @@ define("tinymce/ui/Selector", [
 	var expression = /^([\w\\*]+)?(?:#([\w\\]+))?(?:\.([\w\\\.]+))?(?:\[\@?([\w\\]+)([\^\$\*!~]?=)([\w\\]+)\])?(?:\:(.+))?/i;
 
 	/*jshint maxlen:255 */
+	/*eslint max-len:0 */
 	var chunker = /((?:\((?:\([^()]+\)|[^()]+)+\)|\[(?:\[[^\[\]]*\]|['"][^'"]*['"]|[^\[\]'"]+)+\]|\\.|[^ >+~,(\[\\]+)+|[>+~])(\s*,\s*)?((?:.|\r|\n)*)/g,
 		whiteSpace = /^\s*|\s*$/g,
 		Collection;

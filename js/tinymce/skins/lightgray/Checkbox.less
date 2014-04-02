@@ -1,10 +1,10 @@
 // Checkbox
 
-.mce-checkbox {
+.@{prefix}-checkbox {
 	cursor: pointer;
 }
 
-i.mce-i-checkbox {
+i.@{prefix}-i-checkbox {
 	margin: 0 3px 0 0;
 	border: 1px solid @checkbox-border;
 	.border-radius(3px);
@@ -17,29 +17,29 @@ i.mce-i-checkbox {
 	overflow: hidden;
 }
 
-.mce-checked i.mce-i-checkbox {
+.@{prefix}-checked i.@{prefix}-i-checkbox {
 	color: @btn-text;
 	font-size: 16px;
 	line-height: 16px;
 	text-indent: 0;
 }
 
-.mce-checkbox:focus i.mce-i-checkbox, .mce-checkbox.mce-focus i.mce-i-checkbox {
+.@{prefix}-checkbox:focus i.@{prefix}-i-checkbox, .@{prefix}-checkbox.@{prefix}-focus i.@{prefix}-i-checkbox {
 	border: 1px solid @checkbox-border-focus;
 	.box-shadow(inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px fadeout(@checkbox-border-focus, 15%));
 }
 
-.mce-checkbox.mce-disabled .mce-label, .mce-checkbox.mce-disabled i.mce-i-checkbox {
+.@{prefix}-checkbox.@{prefix}-disabled .@{prefix}-label, .@{prefix}-checkbox.@{prefix}-disabled i.@{prefix}-i-checkbox {
 	color: mix(@text, @panel-bg, 40%);
 }
 
 // RTL
 
-.mce-rtl .mce-checkbox {
+.@{prefix}-rtl .@{prefix}-checkbox {
 	direction: rtl;
 	text-align: right;
 }
 
-.mce-rtl i.mce-i-checkbox {
+.@{prefix}-rtl i.@{prefix}-i-checkbox {
 	margin: 0 0 0 3px;
 }

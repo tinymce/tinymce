@@ -28,6 +28,10 @@ tinymce.PluginManager.add('preview', function(editor) {
 			onPostRender: function() {
 				var doc = this.getEl('body').firstChild.contentWindow.document, previewHtml, headHtml = '';
 
+				if (editor.settings.document_base_url != editor.documentBaseUrl) {
+					headHtml += '<base href="' + editor.documentBaseURI.getURI() + '">';
+				}
+
 				tinymce.each(editor.contentCSS, function(url) {
 					headHtml += '<link type="text/css" rel="stylesheet" href="' + editor.documentBaseURI.toAbsolute(url) + '">';
 				});
@@ -44,13 +48,15 @@ tinymce.PluginManager.add('preview', function(editor) {
 					bodyClass = bodyClass[editor.id] || '';
 				}
 
+				var dirAttr = editor.settings.directionality ? ' dir="' + editor.settings.directionality + '"' : '';
+
 				previewHtml = (
 					'<!DOCTYPE html>' +
 					'<html>' +
 					'<head>' +
 						headHtml +
 					'</head>' +
-					'<body id="' + bodyId + '" class="mce-content-body ' + bodyClass + '">' +
+					'<body id="' + bodyId + '" class="mce-content-body ' + bodyClass + '"' + dirAttr + '>' +
 						editor.getContent() +
 					'</body>' +
 					'</html>'

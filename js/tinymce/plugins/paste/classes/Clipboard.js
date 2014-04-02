@@ -320,6 +320,10 @@ define("tinymce/pasteplugin/Clipboard", [
 			return rng;
 		}
 
+		function hasContentType(clipboardContent, mimeType) {
+			return mimeType in clipboardContent && clipboardContent[mimeType].length > 0;
+		}
+
 		function registerEventHandlers() {
 			editor.on('keydown', function(e) {
 				if (e.isDefaultPrevented()) {
@@ -390,6 +394,11 @@ define("tinymce/pasteplugin/Clipboard", [
 
 					removePasteBin();
 
+					// Always use pastebin HTML if it's available since it contains Word contents
+					if (!plainTextMode && isKeyBoardPaste && html && html != pasteBinDefaultContent) {
+						clipboardContent['text/html'] = html;
+					}
+
 					if (html == pasteBinDefaultContent || !isKeyBoardPaste) {
 						html = clipboardContent['text/html'] || clipboardContent['text/plain'] || pasteBinDefaultContent;
 
@@ -400,6 +409,11 @@ define("tinymce/pasteplugin/Clipboard", [
 
 							return;
 						}
+					}
+
+					// Force plain text mode if we only got a text/plain content type
+					if (!hasContentType(clipboardContent, 'text/html') && hasContentType(clipboardContent, 'text/plain')) {
+						plainTextMode = true;
 					}
 
 					if (plainTextMode) {

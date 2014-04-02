@@ -90,7 +90,6 @@ define("tinymce/WindowManager", [
 				args.buttons = [
 					{text: 'Ok', subtype: 'primary', onclick: function() {
 						win.find('form')[0].submit();
-						win.close();
 					}},
 
 					{text: 'Cancel', onclick: function() {
@@ -134,7 +133,7 @@ define("tinymce/WindowManager", [
 			// Takes a snapshot in the FocusManager of the selection before focus is lost to dialog
 			editor.nodeChanged();
 
-			return win.renderTo(document.body).reflow();
+			return win.renderTo().reflow();
 		};
 
 		/**
@@ -217,6 +216,16 @@ define("tinymce/WindowManager", [
 			if (getTopMostWindow()) {
 				getTopMostWindow().params = params;
 			}
+		};
+
+		/**
+		 * Returns the currently opened window objects.
+		 *
+		 * @method getWindows
+		 * @return {Array} Array of the currently opened windows.
+		 */
+		self.getWindows = function() {
+			return windows;
 		};
 	};
 });

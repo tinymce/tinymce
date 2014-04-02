@@ -46,7 +46,7 @@ define("tinymce/ui/FieldSet", [
 			layout.preRender(self);
 
 			return (
-				'<fieldset id="' + self._id + '" class="' + self.classes() + '" hideFocus="1" tabIndex="-1">' +
+				'<fieldset id="' + self._id + '" class="' + self.classes() + '" hidefocus="1" tabindex="-1">' +
 					(self.settings.title ? ('<legend id="' + self._id + '-title" class="' + prefix + 'fieldset-title">' +
 						self.settings.title + '</legend>') : '') +
 					'<div id="' + self._id + '-body" class="' + self.classes('body') + '">' +
