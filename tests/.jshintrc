@@ -21,7 +21,8 @@
 		"tinymce": false,
 		"editor": false,
 		"inlineEditor": false,
-		"Utils": false
+		"Utils": false,
+		"google": false
 	},
 	"passfail": false,
 	"maxerr": 50,
