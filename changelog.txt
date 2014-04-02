@@ -1,3 +1,5 @@
+Version 4.0.22 (2014-04-xx)
+	Fixed so old language packs get properly loaded when the new longer language code format is used.
 Version 4.0.21 (2014-04-01)
 	Added new getCssText method to formatter to get the preview css text value for a format to be used in UI.
 	Added new table_grid option that allows you to disable the table grid and use a dialog.
