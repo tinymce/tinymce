@@ -268,6 +268,18 @@ test('isValidChild', function() {
 	ok(!schema.isValidChild('p', 'body'));
 });
 
+test('isValidChild of anchor', function(){
+	var schemaHtml5, schemaHtml4;
+
+	expect(2);
+
+	schemaHtml5 = new tinymce.html.Schema({schema: "html5"});
+	schemaHtml4 = new tinymce.html.Schema({schema: "html4"});
+
+	ok(schemaHtml5.isValidChild('a', 'p'));
+	ok(!schemaHtml4.isValidChild('a', 'p'));
+});
+
 test('getElementRule', function() {
 	var schema;
 

@@ -216,6 +216,7 @@ define("tinymce/html/Schema", [
 
 		// Extend with HTML5 elements
 		if (type != "html4") {
+			add("a", "href target rel media hreflang type", phrasingContent, flowContent);
 			add("wbr");
 			add("ruby", "", phrasingContent, "rt rp");
 			add("figcaption", "", flowContent);
