@@ -26,10 +26,17 @@ define(
       return Parent.breakAt(universe, parent, child);
     };
 
+    var breakPath = function (isTop, child, breaker) {
+      return Parent.breakPath(universe, isTop, child, function (u, p, c) {
+        return breaker(p, c);
+      });
+    };
+
     return {
       sharedOne: sharedOne,
       subset: subset,
-      breakAt: breakAt
+      breakAt: breakAt,
+      breakPath: breakPath
     };
   }
 );

@@ -4,10 +4,11 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option'
+    'ephox.perhaps.Option',
+    'ephox.scullion.Struct'
   ],
 
-  function (Arr, Fun, Option) {
+  function (Arr, Fun, Option, Struct) {
     var bisect = function (universe, parent, child) {
       var children = universe.property().children(parent);
       var index = Arr.findIndex(children, Fun.curry(universe.eq, child));
@@ -34,8 +35,33 @@ define(
       });
     };
 
+
+    /*
+     * Using the breaker, break from the child up to the top element defined by the predicate
+     */
+    var breakPath  = function (universe, item, isTop, breaker) {
+      var result = Struct.immutable('first', 'second');
+
+      var next = function (child, group) {
+        var fallback = result(child, Option.none());
+
+        if (isTop(child)) return result(child, group);
+        else {
+          return universe.property().parent(child).fold(function () {
+            return fallback;
+          }, function (parent) {
+            var second = breaker(universe, parent, child);
+            return next(parent, second);
+          });
+        }
+      };
+
+      return next(item, Option.none());
+    };
+
     return {
-      breakAt: breakAt
+      breakAt: breakAt,
+      breakPath: breakPath
     };
   }
 );
