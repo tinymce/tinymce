@@ -4,10 +4,11 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option'
+    'ephox.perhaps.Option',
+    'global!Math'
   ],
 
-  function (Arr, Fun, Option) {
+  function (Arr, Fun, Option, Math) {
     var eq = function (universe, item) {
       return Fun.curry(universe.eq, item);
     };
@@ -32,8 +33,12 @@ define(
       var startIndex = finder(ps1);
       var endIndex = finder(ps2);
 
-      // Return all common children between start and end index
-      return startIndex > -1 && endIndex > -1 ? Option.some(children.slice(startIndex, endIndex + 1)) : Option.none();
+      // This is required because the range could be backwards.
+      var first = Math.min(startIndex, endIndex);
+      var last = Math.max(startIndex, endIndex);
+
+      // Return all common children between first and last
+      return startIndex > -1 && endIndex > -1 ? Option.some(children.slice(first, last + 1)) : Option.none();
     };
 
     /**
