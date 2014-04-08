@@ -20,9 +20,14 @@ define(
       return Pathway.simplify(universe, elements);
     };
 
+    var transform = function () {
+      return Pathway.transform(universe);
+    };
+
     return {
       between: between,
-      simplify: simplify
+      simplify: simplify,
+      transform: transform
     };
 
   }

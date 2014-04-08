@@ -17,8 +17,7 @@ define(
      */
     var between = function (universe, start, finish) {
       var prune = Prune.range(universe, start, finish);
-      var transform = Transform(universe);
-      var actual = Gather.gather(universe, start, prune, transform);
+      var actual = Gather.gather(universe, start, prune, transform(universe));
       return actual.left().concat([start]).concat(actual.right());
     };
 
@@ -29,9 +28,14 @@ define(
       return Simplify.simplify(universe, elements);
     };
 
+    var transform = function (universe) {
+      return Transform(universe);
+    };
+
     return {
       between: between,
-      simplify: simplify
+      simplify: simplify,
+      transform: transform
     };
   }
 );
