@@ -44,7 +44,6 @@ define(
 
       var next = function (child, group) {
         var fallback = result(child, Option.none());
-console.log('isTop: ', isTop, 'item', item, 'breaker' ,breaker);
         if (isTop(child)) return result(child, group);
         else {
           return universe.property().parent(child).fold(function () {
