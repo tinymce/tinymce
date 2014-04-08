@@ -11,7 +11,8 @@ define(
         name: 'TEXT_GENE',
         text: text,
         children: [],
-        css: {}
+        css: {},
+        attrs: {}
       };
     };
   }
