@@ -4,6 +4,7 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
+    'ephox.sugar.api.Attr',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.Element',
@@ -19,7 +20,7 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Arr, Fun, Compare, Css, Element, Insert, InsertAll, Node, PredicateFilter, PredicateFind, Remove, SelectorFilter, SelectorFind, Text, Traverse) {
+  function (Arr, Fun, Attr, Compare, Css, Element, Insert, InsertAll, Node, PredicateFilter, PredicateFind, Remove, SelectorFilter, SelectorFind, Text, Traverse) {
     return function () {
       var clone = function (element) {
         return Element.fromDom(element.dom().cloneNode(false));
@@ -56,6 +57,11 @@ define(
           get: Css.get,
           set: Css.set,
           remove: Css.remove
+        }),
+        attrs: Fun.constant({
+          get: Attr.get,
+          set: Attr.set,
+          remove: Attr.remove
         }),
         insert: Fun.constant({
           before: Insert.before,

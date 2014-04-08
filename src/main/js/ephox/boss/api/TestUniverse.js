@@ -2,6 +2,7 @@ define(
   'ephox.boss.api.TestUniverse',
 
   [
+    'ephox.boss.mutant.Attribution',
     'ephox.boss.mutant.Comparator',
     'ephox.boss.mutant.Creator',
     'ephox.boss.mutant.Down',
@@ -18,7 +19,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (Comparator, Creator, Down, Insertion, Locator, Logger, Properties, Query, Removal, Styling, Tracks, Up, Fun, Option) {
+  function (Attribution, Comparator, Creator, Down, Insertion, Locator, Logger, Properties, Query, Removal, Styling, Tracks, Up, Fun, Option) {
     return function (raw) {
       var content = Tracks.track(raw, Option.none());
 
@@ -58,6 +59,11 @@ define(
           get: Styling.get,
           set: Styling.set,
           remove: Styling.remove
+        }),
+        attrs: Fun.constant({
+          get: Attribution.get,
+          set: Attribution.set,
+          remove: Attribution.remove
         }),
         insert: Fun.constant({
           before: Insertion.before,
