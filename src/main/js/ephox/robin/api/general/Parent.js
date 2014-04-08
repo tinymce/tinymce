@@ -23,8 +23,8 @@ define(
       return Breaker.breakAt(universe, parent, child);
     };
 
-    var breakPath = function (universe, isTop, child, breaker) {
-      return Breaker.breakPath(universe, isTop, child, breaker);
+    var breakPath = function (universe, child, isTop, breaker) {
+      return Breaker.breakPath(universe, child, isTop, breaker);
     };
 
     return {
