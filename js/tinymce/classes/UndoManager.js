@@ -177,12 +177,12 @@ define("tinymce/UndoManager", [
 					return null;
 				}
 
-				if (editor.fire('BeforeAddUndo', {level: level, originalEvent: event}).isDefaultPrevented()) {
+				lastLevel = data[index];
+				if (editor.fire('BeforeAddUndo', {level: level, lastLevel: lastLevel, originalEvent: event}).isDefaultPrevented()) {
 					return null;
 				}
 
 				// Add undo level if needed
-				lastLevel = data[index];
 				if (lastLevel && lastLevel.content == level.content) {
 					return null;
 				}

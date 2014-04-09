@@ -276,3 +276,40 @@ test('Undo added when typing and losing focus', function() {
 	editor.undoManager.undo();
 	equal(editor.getContent(), "<p>some</p>");
 });
+
+test('BeforeAddUndo event', function() {
+	var lastEvt, addUndoEvt;
+
+	editor.on('BeforeAddUndo', function(e) {
+		lastEvt = e;
+	});
+
+	editor.undoManager.clear();
+	editor.setContent("<p>a</p>");
+	editor.undoManager.add();
+
+	equal(lastEvt.lastLevel, null);
+	equal(Utils.cleanHtml(lastEvt.level.content), "<p>a</p>");
+
+	editor.setContent("<p>b</p>");
+	editor.undoManager.add();
+
+	equal(Utils.cleanHtml(lastEvt.lastLevel.content), "<p>a</p>");
+	equal(Utils.cleanHtml(lastEvt.level.content), "<p>b</p>");
+
+	editor.on('BeforeAddUndo', function(e) {
+		e.preventDefault();
+	});
+
+	editor.on('AddUndo', function(e) {
+		addUndoEvt = e;
+	});
+
+	editor.setContent("<p>c</p>");
+	editor.undoManager.add(null, {data: 1});
+
+	equal(Utils.cleanHtml(lastEvt.lastLevel.content), "<p>b</p>");
+	equal(Utils.cleanHtml(lastEvt.level.content), "<p>c</p>");
+	equal(lastEvt.originalEvent.data, 1);
+	ok(!addUndoEvt, "Event level produced when it should be blocked");
+});
