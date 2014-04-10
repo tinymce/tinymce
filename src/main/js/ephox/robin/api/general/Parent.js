@@ -23,10 +23,15 @@ define(
       return Breaker.breakAt(universe, parent, child);
     };
 
+    var breakPath = function (universe, child, isTop, breaker) {
+      return Breaker.breakPath(universe, child, isTop, breaker);
+    };
+
     return {
       sharedOne: sharedOne,
       subset: subset,
-      breakAt: breakAt
+      breakAt: breakAt,
+      breakPath: breakPath
     };
   }
 );
