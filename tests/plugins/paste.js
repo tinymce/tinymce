@@ -275,7 +275,7 @@ test("Paste part of list from IE", function() {
 	editor.setContent('');
 	editor.execCommand('SelectAll');
 	editor.execCommand('mceInsertClipboardContent', false, {content: '<li>item2</li><li>item3</li>'});
-	equal(editor.getContent(), '<ul><li>item2</li><li>item3</li></ul>', 'List tags are inferred when pasting LI');
+	equal(Utils.trimContent(editor.getContent()), '<ul><li>item2</li><li>item3</li></ul>', 'List tags are inferred when pasting LI');
 });
 
 test("Disable default filters", function() {
