@@ -45,7 +45,7 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 		resizeHeight = settings.autoresize_min_height;
 
 		if (!body || (e && e.type === "setcontent" && e.initial) || isFullscreen()) {
-			if (body && docElm) {
+			if (body && docElm && !settings.autoresize_iframe_scroll) { //The iframe will scroll, not the body.
 				body.style.overflowY = "auto";
 				docElm.style.overflowY = "auto"; // Old IE
 			}
