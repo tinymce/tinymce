@@ -715,8 +715,17 @@ tinymce.PluginManager.add('lists', function(editor) {
 			var ctrl = this;
 
 			editor.on('nodechange', function() {
-				var li = editor.dom.getParent(editor.selection.getNode(), 'LI,UL,OL');
-				ctrl.disabled(li && (li.nodeName != 'LI' || isFirstChild(li)));
+				var blocks = editor.selection.getSelectedBlocks();
+				var disable = false;
+
+				for (var i = 0, l = blocks.length; !disable && i < l; i++) {
+					var tag = blocks[i].nodeName;
+
+					disable = (tag == 'LI' && isFirstChild(blocks[i]) ||
+					           tag == 'UL' || tag == 'OL');
+				}
+
+				ctrl.disabled(disable);
 			});
 		}
 	});
