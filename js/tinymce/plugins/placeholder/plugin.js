@@ -13,11 +13,7 @@
 tinymce.PluginManager.add('placeholder', function(editor) {
     editor.addButton('placeholder', {
         type: 'menubutton',
-<<<<<<< HEAD
         title: 'Insert template',
-=======
-        title: 'Placeholder',
->>>>>>> First version of the placeholder plugin
         icon: 'template',
         menu: {
             type: 'menu',
