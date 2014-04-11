@@ -1135,24 +1135,27 @@ define("tinymce/dom/DOMUtils", [
 				var link;
 
 				if (self.files[url]) {
+					self.fire(doc, "loadedCss", {href: url, newStyles: false});
 					return;
 				}
 
 				self.files[url] = true;
-				link = self.create('link', {rel: 'stylesheet', href: url});
+				link = self.create('link', {rel: 'stylesheet'});
 
-				// IE 8 has a bug where dynamically loading stylesheets would produce a 1 item remaining bug
-				// This fix seems to resolve that issue by recalcing the document once a stylesheet finishes loading
-				// It's ugly but it seems to work fine.
-				if (isIE && doc.documentMode && doc.recalc) {
-					link.onload = function() {
-						if (doc.recalc) {
-							doc.recalc();
-						}
+				link.onload = function (){
+					//Sometimes it's necessary to reflow a layout after CSS has loaded.
+					self.fire(doc, "loadedCss", {href: url, newStyles: true});
 
-						link.onload = null;
-					};
-				}
+					// IE 8 has a bug where dynamically loading stylesheets would produce a 1 item remaining bug
+					// This fix seems to resolve that issue by recalcing the document once a stylesheet finishes loading
+					// It's ugly but it seems to work fine.
+					if (isIE && doc.documentMode && doc.recalc) {
+						doc.recalc();
+					}
+					link.onload = null;
+				};
+
+				self.setAttrib(link, "href", url);
 
 				head.appendChild(link);
 			});
