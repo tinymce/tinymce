@@ -1,5 +1,6 @@
 Version 4.0.22 (2014-04-xx)
 	Added lastLevel to BeforeAddUndo level event so it's easier to block undo level creation based.
+	Fixed so multiple list elements can be indented properly. Patch contributed by Dan Villiom Podlaski Christiansen.
 	Fixed bug where the selection would be at the wrong location sometimes for inline editor instances.
 	Fixed so old language packs get properly loaded when the new longer language code format is used.
 	Fixed so all track changes junk such as comments, deletes etc gets removed when pasting from Word.
