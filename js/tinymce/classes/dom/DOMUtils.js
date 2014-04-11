@@ -2026,6 +2026,18 @@ define("tinymce/dom/DOMUtils", [
 			self.win = self.doc = self.root = self.events = self.frag = null;
 		},
 
+		isChildOf: function(node, parent) {
+			while (node) {
+				if (parent === node) {
+					return true;
+				}
+
+				node = node.parentNode;
+			}
+
+			return false;
+		},
+
 		// #ifdef debug
 
 		dumpRng: function(r) {
