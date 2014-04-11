@@ -341,7 +341,7 @@ define("tinymce/html/Schema", [
 				}
 			} else {
 				// Create custom map
-				value = makeMap(value, ',', makeMap(value.toUpperCase(), ' '));
+				value = makeMap(value, ' ', makeMap(value.toUpperCase(), ' '));
 			}
 
 			return value;
