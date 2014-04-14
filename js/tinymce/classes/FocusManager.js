@@ -42,8 +42,13 @@ define("tinymce/FocusManager", [
 
 		// We can't store a real range on IE 11 since it gets mutated so we need to use a bookmark object
 		// TODO: Move this to a separate range utils class since it's it's logic is present in Selection as well.
-		function createBookmark(rng) {
+		function createBookmark(dom, rng) {
 			if (rng && rng.startContainer) {
+				// Verify that the range is within the root of the editor
+				if (!dom.isChildOf(rng.startContainer, dom.getRoot()) || !dom.isChildOf(rng.endContainer, dom.getRoot())) {
+					return;
+				}
+
 				return {
 					startContainer: rng.startContainer,
 					startOffset: rng.startOffset,
@@ -183,7 +188,7 @@ define("tinymce/FocusManager", [
 					if (activeEditor && e.target.ownerDocument == document) {
 						// Check to make sure we have a valid selection
 						if (activeEditor.selection) {
-							activeEditor.selection.lastFocusBookmark = createBookmark(activeEditor.lastRng);
+							activeEditor.selection.lastFocusBookmark = createBookmark(activeEditor.dom, activeEditor.lastRng);
 						}
 
 						// Fire a blur event if the element isn't a UI element
@@ -209,7 +214,7 @@ define("tinymce/FocusManager", [
 
 						if (!rng.collapsed) {
 							activeEditor.lastRng = activeEditor.selection.getRng();
-							activeEditor.selection.lastFocusBookmark = createBookmark(activeEditor.lastRng);
+							activeEditor.selection.lastFocusBookmark = createBookmark(activeEditor.dom, activeEditor.lastRng);
 						}
 					}
 				};
