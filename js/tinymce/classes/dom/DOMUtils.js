@@ -1983,7 +1983,7 @@ define("tinymce/dom/DOMUtils", [
 			var contentEditable;
 
 			// Check type
-			if (node.nodeType != 1) {
+			if (!node || node.nodeType != 1) {
 				return null;
 			}
 
@@ -1995,6 +1995,20 @@ define("tinymce/dom/DOMUtils", [
 
 			// Check for real content editable
 			return node.contentEditable !== "inherit" ? node.contentEditable : null;
+		},
+
+		getContentEditableParent: function(node) {
+			var root = this.getRoot(), state = null;
+
+			for (; node && node !== root; node = node.parentNode) {
+				state = this.getContentEditable(node);
+
+				if (state !== null) {
+					break;
+				}
+			}
+
+			return state;
 		},
 
 		/**

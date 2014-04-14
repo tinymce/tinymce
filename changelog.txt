@@ -4,6 +4,7 @@ Version 4.0.22 (2014-04-xx)
 	Fixed bug where the selection would be at the wrong location sometimes for inline editor instances.
 	Fixed bug where drag/dropping content into an inline editor would fail on WebKit/Blink.
 	Fixed bug where table grid wouldn't work properly when the UI was rendered in for RTL mode.
+	Fixed bug where range normalization wouldn't handle mixed contentEditable nodes properly.
 	Fixed so old language packs get properly loaded when the new longer language code format is used.
 	Fixed so all track changes junk such as comments, deletes etc gets removed when pasting from Word.
 	Fixed so non image data urls is blocked by default since they might contain scripts.

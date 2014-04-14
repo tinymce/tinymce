@@ -289,6 +289,11 @@ define("tinymce/dom/RangeUtils", [
 					// Walk left until we hit a text node we can move to or a block/br/img
 					walker = new TreeWalker(startNode, parentBlockContainer);
 					while ((node = walker[left ? 'prev' : 'next']())) {
+						// Break if we hit a non content editable node
+						if (dom.getContentEditableParent(node) === "false") {
+							return;
+						}
+
 						// Found text node that has a length
 						if (node.nodeType === 3 && node.nodeValue.length > 0) {
 							container = node;
