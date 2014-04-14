@@ -721,8 +721,7 @@ tinymce.PluginManager.add('lists', function(editor) {
 				for (var i = 0, l = blocks.length; !disable && i < l; i++) {
 					var tag = blocks[i].nodeName;
 
-					disable = (tag == 'LI' && isFirstChild(blocks[i]) ||
-					           tag == 'UL' || tag == 'OL');
+					disable = (tag == 'LI' && isFirstChild(blocks[i]) || tag == 'UL' || tag == 'OL');
 				}
 
 				ctrl.disabled(disable);
