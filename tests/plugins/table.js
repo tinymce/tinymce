@@ -158,6 +158,7 @@ test("Table cell properties dialog (get data from plain cell)", function() {
 
 	deepEqual(Utils.getFontmostWindow().toJSON(), {
 		"align": "",
+		"valign": "",
 		"height": "",
 		"scope": "",
 		"type": "td",
@@ -168,12 +169,13 @@ test("Table cell properties dialog (get data from plain cell)", function() {
 });
 
 test("Table cell properties dialog (get data from complex cell)", function() {
-	editor.setContent('<table><tr><th style="text-align: right; width: 10px; height: 11px" scope="row">X</th></tr></table>');
+	editor.setContent('<table><tr><th style="text-align: right; vertical-align: top; width: 10px; height: 11px" scope="row">X</th></tr></table>');
 	Utils.setSelection('th', 0);
 	editor.execCommand('mceTableCellProps');
 
 	deepEqual(Utils.getFontmostWindow().toJSON(), {
 		"align": "right",
+		"valign": "top",
 		"height": "11",
 		"scope": "row",
 		"type": "th",
