@@ -609,9 +609,33 @@
 		writer.reset();
 		parser.parse(
 			'<a href="javascript:alert(1)">1</a>' +
-			'<a href=" 2 ">2</a>'
+			'<a href=" 2 ">2</a>' +
+			'<a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+">3</a>'
 		);
-		equal(writer.getContent(), '<a href="javascript:alert(1)">1</a><a href=" 2 ">2</a>');
+		equal(
+			writer.getContent(),
+			'<a href="javascript:alert(1)">1</a><a href=" 2 ">2</a>' +
+			'<a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+">3</a>'
+		);
+	});
+
+	test('Parse script urls (allowed html data uris)', function() {
+		var counter, parser;
+
+		counter = createCounter(writer);
+		counter.validate = false;
+		counter.allow_html_data_urls = true;
+		parser = new tinymce.html.SaxParser(counter, schema);
+		writer.reset();
+		parser.parse(
+			'<a href="javascript:alert(1)">1</a>' +
+			'<a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+">2</a>'
+		);
+		equal(
+			writer.getContent(),
+			'<a>1</a>' +
+			'<a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+">2</a>'
+		);
 	});
 
 	test('Parse script urls (denied)', function() {
@@ -630,8 +654,21 @@
 			'<a href="java\nscript:alert(5)">5</a>' +
 			'<a href="java\tscript:alert(6)">6</a>' +
 			'<a href="%6aavascript:alert(7)">7</a>' +
+			'<a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+">8</a>' +
+			'<a href=" dAt%61: tExt/html  ; bAse64 , PHN2Zy9vbmxvYWQ9YWxlcnQoMik+">9</a>' +
+			'<object data="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+">10</object>' +
+			'<button formaction="javascript:alert(11)">11</button>' +
+			'<table background="javascript:alert(12)"><tr><tr>12</tr></tr></table>' +
+			'<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">' +
 			'<a href="%E3%82%AA%E3%83%BC%E3%83">Invalid url</a>'
 		);
-		equal(writer.getContent(), '<a>1</a><a>2</a><a>3</a><a>4</a><a>5</a><a>6</a><a>7</a><a href="%E3%82%AA%E3%83%BC%E3%83">Invalid url</a>');
+
+		equal(
+			writer.getContent(),
+			'<a>1</a><a>2</a><a>3</a><a>4</a><a>5</a><a>6</a><a>7</a><a>8</a><a>9</a>' +
+			'<object>10</object><button>11</button><table><tr></tr><tr>12</tr></table>' +
+			'<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />' +
+			'<a href="%E3%82%AA%E3%83%BC%E3%83">Invalid url</a>'
+		);
 	});
 })();
