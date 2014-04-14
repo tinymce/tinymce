@@ -206,6 +206,12 @@ define("tinymce/tableplugin/Plugin", [
 				}
 			});
 
+			each('top middle bottom'.split(' '), function(name) {
+				if (editor.formatter.matchNode(cellElm, 'valign' + name)) {
+					data.valign = name;
+				}
+			});
+
 			editor.windowManager.open({
 				title: "Cell properties",
 				items: {
