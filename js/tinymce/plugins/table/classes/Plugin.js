@@ -475,8 +475,7 @@ define("tinymce/tableplugin/Plugin", [
 
 				for (var x = 0; x < 10; x++) {
 					html += '<td role="gridcell" tabindex="-1"><a id="mcegrid' + (y * 10 + x) + '" href="#" ' +
-						'data-mce-x="' + x + '" data-mce-y="' + y + '" ' +
-						'' + (x + y === 0 ? ' class="mce-active"' : '') + '></a></td>';
+						'data-mce-x="' + x + '" data-mce-y="' + y + '"></a></td>';
 				}
 
 				html += '</tr>';
@@ -491,45 +490,26 @@ define("tinymce/tableplugin/Plugin", [
 
 		function selectGrid(tx, ty, control) {
 			var table = control.getEl().getElementsByTagName('table')[0];
-			var rel = control.parent().rel, x, y, focusCell, cell;
+			var x, y, focusCell, cell, active;
+			var rtl = control.isRtl() || control.parent().rel == 'tl-tr';
 
-			if (control.isRtl() || rel == 'tl-tr') {
-				for (y = 9; y >= 0; y--) {
-					for (x = 0; x < 10; x++) {
-						cell = table.rows[y].childNodes[x].firstChild;
+			table.nextSibling.innerHTML = (tx + 1) + ' x ' + (ty + 1);
 
-						editor.dom.toggleClass(
-							cell,
-							'mce-active',
-							x >= tx && y <= ty
-						);
-
-						if (x >= tx && y <= ty) {
-							focusCell = cell;
-						}
-					}
-				}
-
+			if (rtl) {
 				tx = 9 - tx;
-				table.nextSibling.innerHTML = tx + ' x ' + (ty + 1);
-			} else {
-				for (y = 0; y < 10; y++) {
-					for (x = 0; x < 10; x++) {
-						cell = table.rows[y].childNodes[x].firstChild;
+			}
 
-						editor.dom.toggleClass(
-							cell,
-							'mce-active',
-							x <= tx && y <= ty
-						);
+			for (y = 0; y < 10; y++) {
+				for (x = 0; x < 10; x++) {
+					cell = table.rows[y].childNodes[x].firstChild;
+					active = (rtl ? x >= tx : x <= tx) && y <= ty;
 
-						if (x <= tx && y <= ty) {
-							focusCell = cell;
-						}
+					editor.dom.toggleClass(cell, 'mce-active', active);
+
+					if (active) {
+						focusCell = cell;
 					}
 				}
-
-				table.nextSibling.innerHTML = (tx + 1) + ' x ' + (ty + 1);
 			}
 
 			return focusCell.parentNode;
@@ -555,6 +535,9 @@ define("tinymce/tableplugin/Plugin", [
 						tableDialog();
 					}
 				},
+				onshow: function() {
+					selectGrid(0, 0, this.menu.items()[0]);
+				},
 				onhide: function() {
 					var elements = this.menu.items()[0].getEl().getElementsByTagName('a');
 					editor.dom.removeClass(elements, 'mce-active');
@@ -575,6 +558,10 @@ define("tinymce/tableplugin/Plugin", [
 							if (target.tagName.toUpperCase() == 'A') {
 								x = parseInt(target.getAttribute('data-mce-x'), 10);
 								y = parseInt(target.getAttribute('data-mce-y'), 10);
+
+								if (this.isRtl() || this.parent().rel == 'tl-tr') {
+									x = 9 - x;
+								}
 
 								if (x !== this.lastX || y !== this.lastY) {
 									selectGrid(x, y, e.control);
