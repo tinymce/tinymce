@@ -46,6 +46,11 @@ Bundle themes and plugins into core example
 `jake minify bundle[themes:modern,plugins:table,paste]`
 Minifies the core, adds the modern theme and adds the table and paste plugin into tinymce.min.js.
 
+__Note for zsh users__ : you will need to escape the brackets or wrap in single
+quotes like this to pass parameters :
+
+    jake 'bundle[themes:modern,plugins:table,paste]'
+
 Run code coverage on TinyMCE core
 ----------------------------------
 `jake minify-core[coverage]`
