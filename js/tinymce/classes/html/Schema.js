@@ -222,8 +222,8 @@ define("tinymce/html/Schema", [
 			add("mark rt rp summary bdi", "", phrasingContent);
 			add("canvas", "width height", flowContent);
 			add("video", "src crossorigin poster preload autoplay mediagroup loop " +
-				"muted controls width height", flowContent, "track source");
-			add("audio", "src crossorigin preload autoplay mediagroup loop muted controls", flowContent, "track source");
+				"muted controls width height buffered", flowContent, "track source");
+			add("audio", "src crossorigin preload autoplay mediagroup loop muted controls buffered volume", flowContent, "track source");
 			add("source", "src type media");
 			add("track", "kind src srclang label default");
 			add("datalist", "", phrasingContent, "option");
@@ -282,7 +282,7 @@ define("tinymce/html/Schema", [
 			addAttrs("input textarea", "placeholder");
 			addAttrs("a", "download");
 			addAttrs("link script img", "crossorigin");
-			addAttrs("iframe", "srcdoc sandbox seamless allowfullscreen");
+			addAttrs("iframe", "sandbox seamless allowfullscreen"); // Excluded: srcdoc
 		}
 
 		// Special: iframe, ruby, video, audio, label
