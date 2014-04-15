@@ -98,8 +98,8 @@ define("tinymce/html/SaxParser", [
 			var validate, elementRule, isValidElement, attr, attribsValue, validAttributesMap, validAttributePatterns;
 			var attributesRequired, attributesDefault, attributesForced;
 			var anyAttributesRequired, selfClosing, tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0;
-			var decode = Entities.decode, fixSelfClosing, filteredUrlAttrs = Tools.makeMap('src,href,data,background,formaction');
-			var scriptUriRegExp = /(java|vb)script:/i, dataUriRegExp = /^data:/i;
+			var decode = Entities.decode, fixSelfClosing, filteredUrlAttrs = Tools.makeMap('src,href,data,background,formaction,poster');
+			var scriptUriRegExp = /((java|vb)script|mhtml):/i, dataUriRegExp = /^data:/i;
 
 			function processEndTag(name) {
 				var pos, i;
@@ -181,7 +181,7 @@ define("tinymce/html/SaxParser", [
 						return;
 					}
 
-					if (dataUriRegExp.test(uri) && !/^data:image\//i.test(uri) && !settings.allow_html_data_urls) {
+					if (!settings.allow_html_data_urls && dataUriRegExp.test(uri) && !/^data:image\//i.test(uri)) {
 						return;
 					}
 				}
