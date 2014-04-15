@@ -511,7 +511,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		});
 
 		// Allow elements
-		editor.schema.addValidElements('object[id|style|width|height|classid|codebase|*],embed[id|style|width|height|type|src|*],video[*],audio[*]');
+		//editor.schema.addValidElements('object[id|style|width|height|classid|codebase|*],embed[id|style|width|height|type|src|*],video[*],audio[*]');
 
 		// Set allowFullscreen attribs as boolean
 		var boolAttrs = editor.schema.getBoolAttrs();
