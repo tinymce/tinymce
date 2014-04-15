@@ -135,6 +135,8 @@ test('Script urls denied', function() {
 
 	equal(styles.serialize(styles.parse('behavior:url(test.htc)')), "");
 	equal(styles.serialize(styles.parse('color:expression(alert(1))')), "");
+	equal(styles.serialize(styles.parse('color:exp/**/ression(alert(1))')), "");
+	equal(styles.serialize(styles.parse('color:/**/')), "");
 	equal(styles.serialize(styles.parse('color:  expression  (  alert(1))')), "");
 	equal(styles.serialize(styles.parse('background:url(jAvaScript:alert(1)')), "");
 	equal(styles.serialize(styles.parse('background:url(javascript:alert(1)')), "");

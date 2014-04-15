@@ -229,7 +229,8 @@ define("tinymce/html/Styles", [], function() {
 						value = matches[2].replace(trimRightRegExp, '');
 
 						if (name && value.length > 0) {
-							if (!settings.allow_script_urls && (name == "behavior" || /expression\s*\(/.test(value))) {
+							// Don't allow behavior name or expression/comments within the values
+							if (!settings.allow_script_urls && (name == "behavior" || /expression\s*\(|\/\*|\*\//.test(value))) {
 								continue;
 							}
 
