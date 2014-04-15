@@ -354,7 +354,7 @@ define("tinymce/pasteplugin/WordFilter", [
 						if (!href && !name) {
 							node.unwrap();
 						} else {
-							if (name && name.indexOf('Toc') !== 0) {
+							if (name && name.indexOf('Toc') !== 0 && name.indexOf('Toc') !== -1) {
 								node.unwrap();
 								continue;
 							}
