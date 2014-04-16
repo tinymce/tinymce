@@ -1,4 +1,4 @@
-Version 4.0.22 (2014-04-xx)
+Version 4.0.22 (2014-04-16)
 	Added lastLevel to BeforeAddUndo level event so it's easier to block undo level creation based.
 	Fixed so multiple list elements can be indented properly. Patch contributed by Dan Villiom Podlaski Christiansen.
 	Fixed bug where the selection would be at the wrong location sometimes for inline editor instances.
@@ -10,6 +10,8 @@ Version 4.0.22 (2014-04-xx)
 	Fixed so all track changes junk such as comments, deletes etc gets removed when pasting from Word.
 	Fixed so non image data urls is blocked by default since they might contain scripts.
 	Fixed so it's possible to import styles from the current page stylesheets into an inline editor by using the importcss_file_filter.
+	Fixed bug where the spellchecker plugin wouldn't add undo levels for each suggestion replacement.
+	Reworked the default spellchecker RPC API to match the new PHP Spellchecker package. Fallback documented in the TinyMCE docs.
 Version 4.0.21 (2014-04-01)
 	Added new getCssText method to formatter to get the preview css text value for a format to be used in UI.
 	Added new table_grid option that allows you to disable the table grid and use a dialog.
