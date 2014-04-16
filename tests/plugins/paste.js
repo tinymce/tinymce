@@ -197,6 +197,7 @@ test("Paste Word links", function() {
 				'<a href="file:///C:/somelocation/filename.doc#_Toc238571849">1</a>' +
 				'<a href="#_Toc238571849">2</a>' +
 				'<a name="Toc238571849">3</a>' +
+				'<a name="_Toc238571849">4</a>' +
 				'<a href="http://www.tinymce.com/someurl">4</a>' +
 				'<a>5</a>' +
 			'</p>'
@@ -208,6 +209,7 @@ test("Paste Word links", function() {
 			'<a href="#_Toc238571849">1</a>' +
 			'<a href="#_Toc238571849">2</a>' +
 			'<a name="Toc238571849"></a>3' +
+			'<a name="_Toc238571849"></a>4' +
 			'<a href="http://www.tinymce.com/someurl">4</a>' +
 			'5' +
 		'</p>'
