@@ -1055,7 +1055,7 @@ define("tinymce/util/Quirks", [
 		 */
 		function doubleTrailingBrElements() {
 			if (!editor.inline) {
-				editor.on('focus blur', function() {
+				editor.on('focus blur beforegetcontent', function() {
 					var br = editor.dom.create('br');
 					editor.getBody().appendChild(br);
 					br.parentNode.removeChild(br);

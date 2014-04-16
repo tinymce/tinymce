@@ -1,3 +1,5 @@
+Version 4.0.23 (2014-04-xx)
+	Fixed bug where IE 11 would add br elements to the end of the editor body element each time it was shown/hidden.
 Version 4.0.22 (2014-04-16)
 	Added lastLevel to BeforeAddUndo level event so it's easier to block undo level creation based.
 	Fixed so multiple list elements can be indented properly. Patch contributed by Dan Villiom Podlaski Christiansen.
