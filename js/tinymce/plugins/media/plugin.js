@@ -13,6 +13,8 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('media', function(editor, url) {
+
+
 	var urlPatterns = [
 		{regex: /youtu\.be\/([\w\-.]+)/, type: 'iframe', w: 425, h: 350, url: '//www.youtube.com/embed/$1'},
 		{regex: /youtube\.com(.+)v=([^&]+)/, type: 'iframe', w: 425, h: 350, url: '//www.youtube.com/embed/$2'},
@@ -21,6 +23,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 	];
 
 	function guessMime(url) {
+
 		if (url.indexOf('.mp3') != -1) {
 			return 'audio/mpeg';
 		}
@@ -113,6 +116,64 @@ tinymce.PluginManager.add('media', function(editor, url) {
 			});
 		}
 
+    var tabs = [
+      {
+        title: 'General',
+        type: "form",
+        onShowTab: function() {
+          data = htmlToData(this.parent().find('#embed').value());
+          this.fromJSON(data);
+        },
+        items: generalFormItems
+      },
+
+      {
+        title: 'Embed',
+        type: "panel",
+        layout: 'flex',
+        direction: 'column',
+        align: 'stretch',
+        padding: 10,
+        spacing: 10,
+        onShowTab: function() {
+          this.find('#embed').value(dataToHtml(this.parent().toJSON()));
+          this.active(true);
+
+          if (editor.settings.media_general_tab === false){
+            var _id = this.parent()._id+'-t1';
+            var element = document.getElementById(_id);
+            var classes = element.getAttribute('class');
+            if (classes.indexOf('hidden') < 0){
+              element.setAttribute('class','hidden '+classes);
+            }
+          }
+        },
+        items: [
+          {
+            type: 'label',
+            text: 'Paste your embed code below:',
+            forId: 'mcemediasource'
+          },
+          {
+            id: 'mcemediasource',
+            type: 'textbox',
+            flex: 1,
+            name: 'embed',
+            value: getSource(),
+            multiline: true,
+            label: 'Source'
+          }
+        ]
+      }
+    ];
+
+    if (editor.settings.media_general_tab === false){
+      var gen_tab = tabs[0];
+      tabs.splice(0,1);
+      tabs.push(gen_tab);
+    }
+
+
 		data = getData(editor.selection.getNode());
 		width = data.width;
 		height = data.height;
@@ -121,46 +182,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 			title: 'Insert/edit video',
 			data: data,
 			bodyType: 'tabpanel',
-			body: [
-				{
-					title: 'General',
-					type: "form",
-					onShowTab: function() {
-						data = htmlToData(this.next().find('#embed').value());
-						this.fromJSON(data);
-					},
-					items: generalFormItems
-				},
-
-				{
-					title: 'Embed',
-					type: "panel",
-					layout: 'flex',
-					direction: 'column',
-					align: 'stretch',
-					padding: 10,
-					spacing: 10,
-					onShowTab: function() {
-						this.find('#embed').value(dataToHtml(this.parent().toJSON()));
-					},
-					items: [
-						{
-							type: 'label',
-							text: 'Paste your embed code below:',
-							forId: 'mcemediasource'
-						},
-						{
-							id: 'mcemediasource',
-							type: 'textbox',
-							flex: 1,
-							name: 'embed',
-							value: getSource(),
-							multiline: true,
-							label: 'Source'
-						}
-					]
-				}
-			],
+			body: tabs,
 			onSubmit: function() {
 				editor.insertContent(dataToHtml(this.toJSON()));
 			}
