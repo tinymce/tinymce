@@ -74,7 +74,9 @@
 			});*/
 		},
 
-		spellchecker_callback: function(method, words, callback) {
+		spellchecker_callback: function(method, text, success) {
+			var words = text.match(this.getWordCharPattern());
+
 			if (method == "spellcheck") {
 				var suggestions = {};
 
@@ -82,7 +84,7 @@
 					suggestions[words[i]] = ["First", "second"];
 				}
 
-				callback(suggestions);
+				success(suggestions);
 			}
 		}
 	});
