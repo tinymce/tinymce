@@ -24,7 +24,7 @@ define("tinymce/html/Entities", [
 	var makeMap = Tools.makeMap;
 
 	var namedEntities, baseEntities, reverseEntities,
-		attrsCharsRegExp = /[&<>\"\u007E-\uD7FF\uE000-\uFFEF]|[\uD800-\uDBFF][\uDC00-\uDFFF]/g,
+		attrsCharsRegExp = /[&<>\"\u0060\u007E-\uD7FF\uE000-\uFFEF]|[\uD800-\uDBFF][\uDC00-\uDFFF]/g,
 		textCharsRegExp = /[<>&\u007E-\uD7FF\uE000-\uFFEF]|[\uD800-\uDBFF][\uDC00-\uDFFF]/g,
 		rawCharsRegExp = /[<>&\"\']/g,
 		entityRegExp = /&(#x|#)?([\w]+);/g,
@@ -42,7 +42,8 @@ define("tinymce/html/Entities", [
 		"'": '&#39;',
 		'<': '&lt;',
 		'>': '&gt;',
-		'&': '&amp;'
+		'&': '&amp;',
+		'\u0060': '&#96;'
 	};
 
 	// Reverse lookup table for raw entities

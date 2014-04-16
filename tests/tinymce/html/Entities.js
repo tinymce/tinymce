@@ -3,8 +3,8 @@ module("tinymce.html.Entities");
 test('encodeRaw', function() {
 	expect(2);
 
-	equal(tinymce.html.Entities.encodeRaw('<>"\'&\u00e5\u00e4\u00f6'), '&lt;&gt;"\'&amp;\u00e5\u00e4\u00f6', 'Raw encoding text');
-	equal(tinymce.html.Entities.encodeRaw('<>"\'&\u00e5\u00e4\u00f6', true), '&lt;&gt;&quot;\'&amp;\u00e5\u00e4\u00f6', 'Raw encoding attribute');
+	equal(tinymce.html.Entities.encodeRaw('<>"\'&\u00e5\u00e4\u00f6\u0060'), '&lt;&gt;"\'&amp;\u00e5\u00e4\u00f6\u0060', 'Raw encoding text');
+	equal(tinymce.html.Entities.encodeRaw('<>"\'&\u00e5\u00e4\u00f6\u0060', true), '&lt;&gt;&quot;\'&amp;\u00e5\u00e4\u00f6&#96;', 'Raw encoding attribute');
 });
 
 test('encodeAllRaw', function() {

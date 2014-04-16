@@ -1083,6 +1083,18 @@ define("tinymce/util/Quirks", [
 			editor.contentStyles.push('.mce-content-body {-webkit-touch-callout: none}');
 		}
 
+		/**
+		 * WebKit has a bug where it will allow forms to be submitted if they are inside a contentEditable element.
+		 * For example this: <form><button></form>
+		 */
+		function blockFormSubmitInsideEditor() {
+			editor.on('init', function() {
+				editor.dom.bind(editor.getBody(), 'submit', function(e) {
+					e.preventDefault();
+				});
+			});
+		}
+
 		// All browsers
 		disableBackspaceIntoATable();
 		removeBlockQuoteOnBackSpace();
@@ -1095,6 +1107,7 @@ define("tinymce/util/Quirks", [
 			inputMethodFocus();
 			selectControlElements();
 			setDefaultBlockType();
+			blockFormSubmitInsideEditor();
 
 			// iOS
 			if (Env.iOS) {

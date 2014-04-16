@@ -354,7 +354,8 @@ define("tinymce/pasteplugin/WordFilter", [
 						if (!href && !name) {
 							node.unwrap();
 						} else {
-							if (name && name.indexOf('Toc') !== 0) {
+							// Remove all named anchors that isn't toc specific
+							if (name && !/^_?toc/i.test(name)) {
 								node.unwrap();
 								continue;
 							}
