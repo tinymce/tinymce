@@ -63,6 +63,30 @@ tinymce.PluginManager.add('autolink', function(editor) {
 	function parseCurrentLine(editor, end_offset, delimiter) {
 		var rng, end, start, endContainer, bookmark, text, matches, prev, len;
 
+		function scopeIndex(container, index) {
+			if (index < 0) {
+				index = 0;
+			}
+
+			if (container.nodeType == 3) {
+				var len = container.data;
+
+				if (index > len) {
+					index = len;
+				}
+			}
+
+			return index;
+		}
+
+		function setStart(container, offset) {
+			rng.setStart(container, scopeIndex(container, offset));
+		}
+		
+		function setEnd(container, offset) {
+			rng.setEnd(container, scopeIndex(container, offset));
+		}
+
 		// We need at least five characters to form a URL,
 		// hence, at minimum, five characters from the beginning of the line.
 		rng = editor.selection.getRng(true).cloneRange();
@@ -79,8 +103,8 @@ tinymce.PluginManager.add('autolink', function(editor) {
 			}
 
 			len = prev.length;
-			rng.setStart(prev, len);
-			rng.setEnd(prev, len);
+			setStart(prev, len);
+			setEnd(prev, len);
 
 			if (rng.endOffset < 5) {
 				return;
@@ -99,8 +123,8 @@ tinymce.PluginManager.add('autolink', function(editor) {
 
 				// Move range to text node
 				if (endContainer.nodeType == 3) {
-					rng.setStart(endContainer, 0);
-					rng.setEnd(endContainer, endContainer.nodeValue.length);
+					setStart(endContainer, 0);
+					setEnd(endContainer, endContainer.nodeValue.length);
 				}
 			}
 
@@ -115,8 +139,8 @@ tinymce.PluginManager.add('autolink', function(editor) {
 
 		do {
 			// Move the selection one character backwards.
-			rng.setStart(endContainer, end >= 2 ? end - 2 : 0);
-			rng.setEnd(endContainer, end >= 1 ? end - 1 : 0);
+			setStart(endContainer, end >= 2 ? end - 2 : 0);
+			setEnd(endContainer, end >= 1 ? end - 1 : 0);
 			end -= 1;
 
 			// Loop until one of the following is found: a blank space, &nbsp;, delimiter, (end-2) >= 0
@@ -124,21 +148,21 @@ tinymce.PluginManager.add('autolink', function(editor) {
 			rng.toString().charCodeAt(0) != 160 && (end - 2) >= 0 && rng.toString() != delimiter);
 
 		if (rng.toString() == delimiter || rng.toString().charCodeAt(0) == 160) {
-			rng.setStart(endContainer, end);
-			rng.setEnd(endContainer, start);
+			setStart(endContainer, end);
+			setEnd(endContainer, start);
 			end += 1;
 		} else if (rng.startOffset === 0) {
-			rng.setStart(endContainer, 0);
-			rng.setEnd(endContainer, start);
+			setStart(endContainer, 0);
+			setEnd(endContainer, start);
 		} else {
-			rng.setStart(endContainer, end);
-			rng.setEnd(endContainer, start);
+			setStart(endContainer, end);
+			setEnd(endContainer, start);
 		}
 
 		// Exclude last . from word like "www.site.com."
 		text = rng.toString();
 		if (text.charAt(text.length - 1) == '.') {
-			rng.setEnd(endContainer, start - 1);
+			setEnd(endContainer, start - 1);
 		}
 
 		text = rng.toString();
@@ -163,8 +187,8 @@ tinymce.PluginManager.add('autolink', function(editor) {
 				// move the caret to its original position
 				editor.selection.collapse(false);
 				var max = Math.min(endContainer.length, start + 1);
-				rng.setStart(endContainer, max);
-				rng.setEnd(endContainer, max);
+				setStart(endContainer, max);
+				setEnd(endContainer, max);
 				editor.selection.setRng(rng);
 			}
 		}
