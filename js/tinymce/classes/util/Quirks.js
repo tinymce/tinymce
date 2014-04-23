@@ -270,18 +270,25 @@ define("tinymce/util/Quirks", [
 					if (doc.caretRangeFromPoint) {
 						e.preventDefault();
 
-						var pointRng = doc.caretRangeFromPoint(e.x, e.y);
+						// Safari has a weird issue where drag/dropping images sometimes
+						// produces a green plus icon. When this happens the caretRangeFromPoint
+						// will return "null" even though the x, y coordinate is correct.
+						// But if we detach the insert from the drop event we will get a proper range
+						window.setTimeout(function() {
+							var pointRng = doc.caretRangeFromPoint(e.x, e.y);
 
-						if (dragStartRng) {
-							selection.setRng(dragStartRng);
-							dragStartRng = null;
-						}
+							if (dragStartRng) {
+								selection.setRng(dragStartRng);
+								dragStartRng = null;
+							}
 
-						customDelete();
+							customDelete();
 
-						selection.setRng(pointRng);
-						editor.insertContent(internalContent);
+							selection.setRng(pointRng);
+							editor.insertContent(internalContent);
+						}, 0);
 					}
+
 				}
 			});
 
