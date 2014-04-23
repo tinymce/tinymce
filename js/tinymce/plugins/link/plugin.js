@@ -46,10 +46,12 @@ tinymce.PluginManager.add('link', function(editor) {
 			var linkListItems = [{text: 'None', value: ''}];
 
 			tinymce.each(linkList, function(link) {
+				var linkListItemValue = editor.convertURL(link.value || link.url, 'href');
 				linkListItems.push({
 					text: link.text || link.title,
-					value: editor.convertURL(link.value || link.url, 'href'),
-					menu: link.menu
+					value: linkListItemValue,
+					menu: link.menu,
+					selected: linkListItemValue === data.href
 				});
 			});
 
