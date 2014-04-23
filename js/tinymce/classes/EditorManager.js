@@ -138,23 +138,34 @@ define("tinymce/EditorManager", [
 			if (preInit) {
 				baseURL = preInit.base || preInit.baseURL;
 				suffix = preInit.suffix;
-			} else {
-				// Get base where the tinymce script is located
-				var scripts = document.getElementsByTagName('script');
-				for (var i = 0; i < scripts.length; i++) {
-					var src = scripts[i].src;
-
-					// Script types supported:
-					// tinymce.js tinymce.min.js tinymce.dev.js
-					// tinymce.jquery.js tinymce.jquery.min.js tinymce.jquery.dev.js
-					// tinymce.full.js tinymce.full.min.js tinymce.full.dev.js
-					if (/tinymce(\.full|\.jquery|)(\.min|\.dev|)\.js/.test(src)) {
-						if (src.indexOf('.min') != -1) {
-							suffix = '.min';
+			} 
+			else {
+				// use document.currentScript if available ( https://developer.mozilla.org/en/docs/Web/API/document.currentScript )
+				if ( typeof document.currentScript == 'string' ) {
+					var src = document.currentScript;
+					if (src.indexOf('.min') != -1) {
+						suffix = '.min';
+					}
+					baseURL = src.substring(0, src.lastIndexOf('/'));
+				}
+				else {
+					// Get base where the tinymce script is located
+					var scripts = document.getElementsByTagName('script');
+					for (var i = 0; i < scripts.length; i++) {
+						var src = scripts[i].src;
+	
+						// Script types supported:
+						// tinymce.js tinymce.min.js tinymce.dev.js
+						// tinymce.jquery.js tinymce.jquery.min.js tinymce.jquery.dev.js
+						// tinymce.full.js tinymce.full.min.js tinymce.full.dev.js
+						if (/tinymce(\.full|\.jquery|)(\.min|\.dev|)\.js/.test(src)) {
+							if (src.indexOf('.min') != -1) {
+								suffix = '.min';
+							}
+	
+							baseURL = src.substring(0, src.lastIndexOf('/'));
+							break;
 						}
-
-						baseURL = src.substring(0, src.lastIndexOf('/'));
-						break;
 					}
 				}
 			}
