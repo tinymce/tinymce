@@ -5,6 +5,7 @@ Version 4.0.23 (2014-04-xx)
 	Fixed bug where pasting from Excel 2011 on Mac didn't produce a proper table when using the paste plugin.
 	Fixed bug where drag/dropping inside a table wouldn't properly end the table cell selection.
 	Fixed bug where drag/dropping images within tables on Safari on Mac wouldn't work properly.
+	Fixed bug where editors couldn't be re-initialized if they where externally destroyed.
 Version 4.0.22 (2014-04-16)
 	Added lastLevel to BeforeAddUndo level event so it's easier to block undo level creation based.
 	Fixed so multiple list elements can be indented properly. Patch contributed by Dan Villiom Podlaski Christiansen.

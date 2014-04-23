@@ -30,9 +30,46 @@ define("tinymce/EditorManager", [
 ], function(Editor, DOMUtils, URI, Env, Tools, Observable, I18n, FocusManager) {
 	var DOM = DOMUtils.DOM;
 	var explode = Tools.explode, each = Tools.each, extend = Tools.extend;
-	var instanceCounter = 0, beforeUnloadDelegate;
+	var instanceCounter = 0, beforeUnloadDelegate, EditorManager;
 
-	var EditorManager = {
+	function removeEditorFromList(editor) {
+		var editors = EditorManager.editors, removedFromList;
+
+		delete editors[editor.id];
+
+		for (var i = 0; i < editors.length; i++) {
+			if (editors[i] == editor) {
+				editors.splice(i, 1);
+				removedFromList = true;
+				break;
+			}
+		}
+
+		// Select another editor since the active one was removed
+		if (EditorManager.activeEditor == editor) {
+			EditorManager.activeEditor = editors[0];
+		}
+
+		// Clear focusedEditor if necessary, so that we don't try to blur the destroyed editor
+		if (EditorManager.focusedEditor == editor) {
+			EditorManager.focusedEditor = null;
+		}
+
+		return removedFromList;
+	}
+
+	function purgeDestroyedEditor(editor) {
+		// User has manually destroyed the editor lets clean up the mess
+		if (editor && !(editor.getContainer() || editor.getBody()).parentNode) {
+			removeEditorFromList(editor);
+			editor.destroy(true);
+			editor = null;
+		}
+
+		return editor;
+	}
+
+	EditorManager = {
 		/**
 		 * Major version of TinyMCE build.
 		 *
@@ -197,7 +234,7 @@ define("tinymce/EditorManager", [
 			}
 
 			function createEditor(id, settings) {
-				if (!self.get(id)) {
+				if (!purgeDestroyedEditor(self.get(id))) {
 					var editor = new Editor(id, settings, self);
 					editors.push(editor);
 					editor.render();
@@ -410,7 +447,7 @@ define("tinymce/EditorManager", [
 		 * @return {tinymce.Editor} The editor that got passed in will be return if it was found otherwise null.
 		 */
 		remove: function(selector) {
-			var self = this, i, editors = self.editors, editor, removedFromList;
+			var self = this, i, editors = self.editors, editor;
 
 			// Remove all editors
 			if (!selector) {
@@ -440,28 +477,13 @@ define("tinymce/EditorManager", [
 				return null;
 			}
 
-			delete editors[editor.id];
-
-			for (i = 0; i < editors.length; i++) {
-				if (editors[i] == editor) {
-					editors.splice(i, 1);
-					removedFromList = true;
-					break;
-				}
-			}
-
-			// Select another editor since the active one was removed
-			if (self.activeEditor == editor) {
-				self.activeEditor = editors[0];
-			}
-
 			/**
 			 * Fires when an editor is removed from EditorManager collection.
 			 *
 			 * @event RemoveEditor
 			 * @param {Object} e Event arguments.
 			 */
-			if (removedFromList) {
+			if (removeEditorFromList(editor)) {
 				self.fire('RemoveEditor', {editor: editor});
 			}
 

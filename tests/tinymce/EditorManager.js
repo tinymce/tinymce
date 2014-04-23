@@ -49,6 +49,32 @@ test('Re-init on same id', function() {
 	strictEqual(tinymce.get().length, 1);
 });
 
+asyncTest('Externally destroyed editor', function() {
+	tinymce.remove();
+
+	tinymce.init({
+		selector: "textarea",
+		init_instance_callback: function(editor1) {
+			setTimeout(function() {
+				// Destroy the editor by setting innerHTML common ajax pattern
+				document.getElementById('view').innerHTML = '<textarea id="' + editor1.id + '"></textarea>';
+
+				// Re-init the editor will have the same id
+				tinymce.init({
+					selector: "textarea",
+					init_instance_callback: function(editor2) {
+						QUnit.start();
+
+						strictEqual(tinymce.get().length, 1);
+						strictEqual(editor1.id, editor2.id);
+						ok(editor1.destroyed, "First editor instance should be destroyed");
+					}
+				});
+			}, 0);
+		}
+	});
+});
+
 asyncTest('Init/remove on same id', function() {
 	var textArea = document.createElement('textarea');
 	document.getElementById('view').appendChild(textArea);
