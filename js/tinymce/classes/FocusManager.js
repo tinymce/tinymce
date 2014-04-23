@@ -78,18 +78,6 @@ define("tinymce/FocusManager", [
 			return !!DOM.getParent(elm, FocusManager.isEditorUIElement);
 		}
 
-		function isNodeInBodyOfEditor(node, editor) {
-			var body = editor.getBody();
-
-			while (node) {
-				if (node == body) {
-					return true;
-				}
-
-				node = node.parentNode;
-			}
-		}
-
 		function registerEvents(e) {
 			var editor = e.editor;
 
@@ -105,7 +93,7 @@ define("tinymce/FocusManager", [
 							node = editor.getBody();
 						}
 
-						if (isNodeInBodyOfEditor(node, editor)) {
+						if (editor.dom.isChildOf(node, editor.getBody())) {
 							editor.lastRng = editor.selection.getRng();
 						}
 					});
@@ -213,8 +201,7 @@ define("tinymce/FocusManager", [
 						var rng = activeEditor.selection.getRng();
 
 						if (!rng.collapsed) {
-							activeEditor.lastRng = activeEditor.selection.getRng();
-							activeEditor.selection.lastFocusBookmark = createBookmark(activeEditor.dom, activeEditor.lastRng);
+							activeEditor.lastRng = rng;
 						}
 					}
 				};
