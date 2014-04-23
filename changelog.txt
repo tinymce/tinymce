@@ -2,6 +2,7 @@ Version 4.0.23 (2014-04-xx)
 	Fixed bug where IE 11 would add br elements to the end of the editor body element each time it was shown/hidden.
 	Fixed bug where the autolink plugin would produce an index out of range exception for some very specific HTML.
 	Fixed bug where the charmap plugin wouldn't properly insert non breaking space characters when selected.
+	Fixed bug where pasting from Excel 2011 on Mac didn't produce a proper table when using the paste plugin.
 Version 4.0.22 (2014-04-16)
 	Added lastLevel to BeforeAddUndo level event so it's easier to block undo level creation based.
 	Fixed so multiple list elements can be indented properly. Patch contributed by Dan Villiom Podlaski Christiansen.

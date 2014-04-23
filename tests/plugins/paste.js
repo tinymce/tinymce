@@ -473,6 +473,24 @@ test('paste innerText of textnode with whitespace', function() {
 });
 
 if (tinymce.Env.webkit) {
+	test('paste webkit body fragment', function() {
+		editor.setContent('');
+		editor.execCommand('mceInsertClipboardContent', false, {content: 'a\n<body>\n<!--StartFragment-->\nb\n<!--EndFragment-->\n</body>\nc'});
+		equal(editor.getContent(), '<p>b</p>');
+	});
+
+	test('paste webkit body fragment no line feeds', function() {
+		editor.setContent('');
+		editor.execCommand('mceInsertClipboardContent', false, {content: 'a<body><!--StartFragment-->b<!--EndFragment--></body>c'});
+		equal(editor.getContent(), '<p>b</p>');
+	});
+
+	test('paste webkit inner fragment', function() {
+		editor.setContent('');
+		editor.execCommand('mceInsertClipboardContent', false, {content: 'a<!--StartFragment-->b<!--EndFragment-->c'});
+		equal(editor.getContent(), '<p>abc</p>');
+	});
+
 	test('paste webkit remove runtime styles (color)', function() {
 		editor.setContent('');
 		editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="color:red; text-indent: 10px">Test</span>'});
