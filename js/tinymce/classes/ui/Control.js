@@ -25,7 +25,7 @@ define("tinymce/ui/Control", [
 	"use strict";
 
 	var nativeEvents = Tools.makeMap("focusin focusout scroll click dblclick mousedown mouseup mousemove mouseover" +
-								" mouseout mouseenter mouseleave wheel keydown keypress keyup contextmenu", " ");
+								" mouseout mouseenter mouseleave wheel keydown keypress input keyup contextmenu", " ");
 
 	var elementIdCache = {};
 	var hasMouseWheelEventSupport = "onmousewheel" in document;
