@@ -156,8 +156,9 @@ define("tinymce/tableplugin/CellSelection", [
 			}
 		});
 
-		editor.on('KeyUp', function() {
+		editor.on('KeyUp Drop', function() {
 			clear();
+			startCell = tableGrid = startTable = null;
 		});
 
 		return {
