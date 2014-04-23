@@ -83,3 +83,19 @@ test('strangeURLs', 6, function() {
 	equal(new tinymce.util.URI('tel:somegroup').getURI(), 'tel:somegroup');
 	equal(new tinymce.util.URI('//www.site.com/a@b').getURI(), '//www.site.com/a@b');
 });
+
+test('isSameOrigin', function() {
+	ok(new tinymce.util.URI('http://www.site.com').isSameOrigin(new tinymce.util.URI('http://www.site.com')));
+	ok(new tinymce.util.URI('//www.site.com').isSameOrigin(new tinymce.util.URI('//www.site.com')));
+	ok(new tinymce.util.URI('http://www.site.com:80').isSameOrigin(new tinymce.util.URI('http://www.site.com')));
+	ok(new tinymce.util.URI('https://www.site.com:443').isSameOrigin(new tinymce.util.URI('https://www.site.com')));
+	ok(new tinymce.util.URI('//www.site.com:80').isSameOrigin(new tinymce.util.URI('//www.site.com:80')));
+	ok(new tinymce.util.URI('mailto:test@site.com').isSameOrigin(new tinymce.util.URI('mailto:test@site.com')));
+	ok(new tinymce.util.URI('mailto:test@site.com:25').isSameOrigin(new tinymce.util.URI('mailto:test@site.com')));
+	ok(new tinymce.util.URI('ftp://www.site.com').isSameOrigin(new tinymce.util.URI('ftp://www.site.com')));
+	ok(new tinymce.util.URI('ftp://www.site.com:21').isSameOrigin(new tinymce.util.URI('ftp://www.site.com')));
+	ok(new tinymce.util.URI('https://www.site.com').isSameOrigin(new tinymce.util.URI('http://www.site.com')) == false);
+	ok(new tinymce.util.URI('http://www.site.com:8080').isSameOrigin(new tinymce.util.URI('http://www.site.com')) == false);
+	ok(new tinymce.util.URI('https://www.site.com:8080').isSameOrigin(new tinymce.util.URI('https://www.site.com')) == false);
+	ok(new tinymce.util.URI('ftp://www.site.com:1021').isSameOrigin(new tinymce.util.URI('ftp://www.site.com')) == false);
+});

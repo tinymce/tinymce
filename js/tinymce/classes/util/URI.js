@@ -200,19 +200,23 @@ define("tinymce/util/URI", [
 		 * Determine whether the given URI has the same origin as this URI.  Based on RFC-6454.
 		 * Supports default ports for protocols listed in DEFAULT_PORTS.  Unsupported protocols will fail safe: they
 		 * won't match, if the port specifications differ.
-		 * @param uri
-		 * @returns {boolean} True if the origins are the same.
+		 *
+		 * @method isSameOrigin
+		 * @param {tinymce.util.URI} uri Uri instance to compare.
+		 * @returns {Boolean} True if the origins are the same.
 		 */
-		isSameOrigin: function(uri){
-			if(this.host == uri.host && this.protocol == uri.protocol){
-				if(this.port == uri.port){
+		isSameOrigin: function(uri) {
+			if (this.host == uri.host && this.protocol == uri.protocol){
+				if (this.port == uri.port) {
 					return true;
 				}
+
 				var defaultPort = DEFAULT_PORTS[this.protocol];
-				if(defaultPort && ((this.port || defaultPort) == (uri.port || defaultPort))){
+				if (defaultPort && ((this.port || defaultPort) == (uri.port || defaultPort))) {
 					return true;
 				}
 			}
+
 			return false;
 		},
 
