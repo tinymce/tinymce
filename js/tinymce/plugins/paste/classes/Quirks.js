@@ -113,15 +113,18 @@ define("tinymce/pasteplugin/Quirks", [
 			}
 
 			// Filter away styles that isn't matching the target node
+			var webKitStyles = editor.settings.paste_webkit_styles;
 
-			var webKitStyles = editor.getParam("paste_webkit_styles", "color font-size font-family background-color").split(/[, ]/);
+			if (editor.settings.paste_remove_styles_if_webkit === false || webKitStyles == "all") {
+				return content;
+			}
 
-			if (editor.settings.paste_remove_styles_if_webkit === false) {
-				webKitStyles = "all";
+			if (webKitStyles) {
+				webKitStyles = webKitStyles.split(/[, ]/);
 			}
 
 			// Keep specific styles that doesn't match the current node computed style
-			if (webKitStyles != "all") {
+			if (webKitStyles) {
 				var dom = editor.dom, node = editor.selection.getNode();
 
 				content = content.replace(/ style=\"([^\"]+)\"/gi, function(a, value) {
@@ -132,8 +135,15 @@ define("tinymce/pasteplugin/Quirks", [
 					}
 
 					for (var i = 0; i < webKitStyles.length; i++) {
-						if (dom.toHex(dom.getStyle(node, webKitStyles[i], true)) != inputStyles[webKitStyles[i]]) {
-							outputStyles[webKitStyles[i]] = inputStyles[webKitStyles[i]];
+						var inputValue = inputStyles[webKitStyles[i]], currentValue = dom.getStyle(node, webKitStyles[i], true);
+
+						if (/color/.test(webKitStyles[i])) {
+							inputValue = dom.toHex(inputValue);
+							currentValue = dom.toHex(currentValue);
+						}
+
+						if (currentValue != inputValue) {
+							outputStyles[webKitStyles[i]] = inputValue;
 						}
 					}
 
@@ -144,7 +154,15 @@ define("tinymce/pasteplugin/Quirks", [
 
 					return '';
 				});
+			} else {
+				// Remove all external styles
+				content = content.replace(/ style=\"[^\"]+\"/gi, '');
 			}
+
+			// Keep internal styles
+			content = content.replace(/ data-mce-style=\"([^\"]+)\"/gi, function(a, value) {
+				return ' style="' + value + '"' + a;
+			});
 
 			return content;
 		}

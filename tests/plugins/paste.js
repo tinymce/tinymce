@@ -23,6 +23,7 @@ module("tinymce.plugins.Paste", {
 		delete editor.settings.paste_retain_style_properties;
 		delete editor.settings.paste_enable_default_filters;
 		delete editor.settings.paste_data_images;
+		delete editor.settings.paste_webkit_styles;
 	}
 });
 
@@ -43,6 +44,7 @@ test("Paste styled text content", function() {
 	var rng = editor.dom.createRng();
 
 	editor.settings.paste_remove_styles_if_webkit = false;
+
 	editor.setContent('<p>1234</p>');
 	rng.setStart(editor.getBody().firstChild.firstChild, 1);
 	rng.setEnd(editor.getBody().firstChild.firstChild, 3);
@@ -501,25 +503,36 @@ if (tinymce.Env.webkit) {
 		equal(editor.getContent(), '<p>abc</p>');
 	});
 
+	test('paste webkit remove runtime styles internal', function() {
+		editor.settings.paste_webkit_styles = 'color';
+		editor.setContent('');
+		editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="color:red; font-size: 42px" data-mce-style="color: red;">Test</span>'});
+		equal(editor.getContent(), '<p><span style="color: red;">Test</span></p>');
+	});
+
 	test('paste webkit remove runtime styles (color)', function() {
+		editor.settings.paste_webkit_styles = 'color';
 		editor.setContent('');
 		editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="color:red; text-indent: 10px">Test</span>'});
 		equal(editor.getContent(), '<p><span style="color: red;">Test</span></p>');
 	});
 
 	test('paste webkit remove runtime styles (background-color)', function() {
+		editor.settings.paste_webkit_styles = 'background-color';
 		editor.setContent('');
 		editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="background-color:red; text-indent: 10px">Test</span>'});
 		equal(editor.getContent(), '<p><span style="background-color: red;">Test</span></p>');
 	});
 
 	test('paste webkit remove runtime styles (font-size)', function() {
+		editor.settings.paste_webkit_styles = 'font-size';
 		editor.setContent('');
 		editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="font-size:42px; text-indent: 10px">Test</span>'});
 		equal(editor.getContent(), '<p><span style="font-size: 42px;">Test</span></p>');
 	});
 
 	test('paste webkit remove runtime styles (font-family)', function() {
+		editor.settings.paste_webkit_styles = 'font-family';
 		editor.setContent('');
 		editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="font-family:Arial; text-indent: 10px">Test</span>'});
 		equal(editor.getContent(), '<p><span style="font-family: Arial;">Test</span></p>');
@@ -547,18 +560,19 @@ if (tinymce.Env.webkit) {
 	});
 
 	test('paste webkit remove runtime styles (color) in the same (color) (named)', function() {
+		editor.settings.paste_webkit_styles = 'color';
+
 		editor.setContent('<p style="color:red">Test</span>');
 		Utils.setSelection('p', 0, 'p', 4);
 
 		editor.execCommand('mceInsertClipboardContent', false, {
 			content: (
-				'<span style="color:red; text-indent: 10px">a</span>' +
-				'<span style="color:#ff0000; text-indent: 10px">b</span>' +
-				'<span style="color:rgb(255, 0, 0); text-indent: 10px">c</span>'
+				'<span style="color:#ff0000; text-indent: 10px">a</span>' +
+				'<span style="color:rgb(255, 0, 0); text-indent: 10px">b</span>'
 			)
 		});
 
-		equal(editor.getContent(), '<p style="color: red;">abc</p>');
+		equal(editor.getContent(), '<p style="color: red;">ab</p>');
 	});
 
 	test('paste webkit remove runtime styles (color) in the same (color) (hex)', function() {
