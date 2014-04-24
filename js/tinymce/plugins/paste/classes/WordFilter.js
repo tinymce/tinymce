@@ -354,8 +354,8 @@ define("tinymce/pasteplugin/WordFilter", [
 						if (!href && !name) {
 							node.unwrap();
 						} else {
-							// Remove all named anchors that isn't toc specific
-							if (name && !/^_?toc/i.test(name)) {
+							// Remove all named anchors that aren't specific to TOC, Footnotes or Endnotes
+							if (name && !/^_?(?:toc|edn|ftn)/i.test(name)) {
 								node.unwrap();
 								continue;
 							}

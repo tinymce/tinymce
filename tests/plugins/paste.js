@@ -88,7 +88,7 @@ test("Paste Word fake list", function() {
 	equal(editor.getContent(), '<ul><li>Item 1</li><li>Item 2</li><li>Item 3</li><li>Item 4</li><li>Item 5</li><li>Item 6</li></ul>');
 
 	editor.settings.paste_retain_style_properties = 'border';
-	
+
 	rng = editor.dom.createRng();
 	editor.setContent('<p>1234</p>');
 	rng.setStart(editor.getBody().firstChild.firstChild, 0);
@@ -198,7 +198,12 @@ test("Paste Word links", function() {
 				'<a href="#_Toc238571849">2</a>' +
 				'<a name="Toc238571849">3</a>' +
 				'<a name="_Toc238571849">4</a>' +
+				'<a href="#_ftn238571849" name="_ftnref238571849">[5]</a>' +
+				'<a href="#_ftnref238571849" name="_ftn238571849">[5]</a>' +
+				'<a href="#_edn238571849" name="_ednref238571849">[6]</a>' +
+				'<a href="#_ednref238571849" name="_edn238571849">[6]</a>' +
 				'<a href="http://www.tinymce.com/someurl">4</a>' +
+				'<a href="http://www.tinymce.com/someurl" name="named_link">named_link</a>' +
 				'<a>5</a>' +
 			'</p>'
 		)
@@ -210,7 +215,12 @@ test("Paste Word links", function() {
 			'<a href="#_Toc238571849">2</a>' +
 			'<a name="Toc238571849"></a>3' +
 			'<a name="_Toc238571849"></a>4' +
+			'<a href="#_ftn238571849" name="_ftnref238571849">[5]</a>' +
+			'<a href="#_ftnref238571849" name="_ftn238571849">[5]</a>' +
+			'<a href="#_edn238571849" name="_ednref238571849">[6]</a>' +
+			'<a href="#_ednref238571849" name="_edn238571849">[6]</a>' +
 			'<a href="http://www.tinymce.com/someurl">4</a>' +
+			'named_link' +
 			'5' +
 		'</p>'
 	));
@@ -286,7 +296,7 @@ test("Disable default filters", function() {
 	// Test color
 	editor.setContent('');
 	editor.execCommand('SelectAll');
-	
+
 	editor.execCommand('mceInsertClipboardContent', false, {content: '<p class="MsoNormal" style="color: #ff0000;">Test</p>'});
 	equal(editor.getContent(), '<p class="MsoNormal" style="color: #ff0000;">Test</p>');
 });
