@@ -28,9 +28,7 @@ tinymce.PluginManager.add('preview', function(editor) {
 			onPostRender: function() {
 				var previewHtml, headHtml = '';
 
-				if (editor.settings.document_base_url != editor.documentBaseUrl) {
-					headHtml += '<base href="' + editor.documentBaseURI.getURI() + '">';
-				}
+				headHtml += '<base href="' + editor.documentBaseURI.getURI() + '">';
 
 				tinymce.each(editor.contentCSS, function(url) {
 					headHtml += '<link type="text/css" rel="stylesheet" href="' + editor.documentBaseURI.toAbsolute(url) + '">';
