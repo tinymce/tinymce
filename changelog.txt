@@ -8,6 +8,7 @@ Version 4.0.23 (2014-04-xx)
 	Fixed bug where drag/dropping images within tables on Safari on Mac wouldn't work properly.
 	Fixed bug where editors couldn't be re-initialized if they where externally destroyed.
 	Fixed bug where inline editors would produce a range index exception when clicking on buttons like bold.
+	Fixed bug where the preview plugin wouldn't properly handle non encoded upper UTF-8 characters.
 	Fixed so document.currentScript is used when detecting the current script location. Patch contributed by Mickael Desgranges.
 	Fixed issue with the paste_webkit_styles option so is disabled by default since it might produce a lot of extra styles.
 Version 4.0.22 (2014-04-16)

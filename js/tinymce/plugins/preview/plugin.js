@@ -71,7 +71,7 @@ tinymce.PluginManager.add('preview', function(editor) {
 					doc.write(previewHtml);
 					doc.close();
 				} else {
-					this.getEl('body').firstChild.src = 'data:text/html;charset=utf-8,' + escape(previewHtml);
+					this.getEl('body').firstChild.src = 'data:text/html;charset=utf-8,' + encodeURIComponent(previewHtml);
 				}
 			}
 		});
