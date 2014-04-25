@@ -203,8 +203,9 @@ test("Paste Word links", function() {
 				'<a href="#_ftn238571849" name="_ftnref238571849">[5]</a>' +
 				'<a href="#_ftnref238571849" name="_ftn238571849">[5]</a>' +
 				'<a href="#_edn238571849" name="_ednref238571849">[6]</a>' +
-				'<a href="#_ednref238571849" name="_edn238571849">[6]</a>' +
-				'<a href="http://www.tinymce.com/someurl">4</a>' +
+				'<a href="#_ednref238571849" name="_edn238571849">[7]</a>' +
+				'<a href="http://www.tinymce.com/someurl">8</a>' +
+				'<a name="#unknown">9</a>' +
 				'<a href="http://www.tinymce.com/someurl" name="named_link">named_link</a>' +
 				'<a>5</a>' +
 			'</p>'
@@ -220,8 +221,9 @@ test("Paste Word links", function() {
 			'<a href="#_ftn238571849" name="_ftnref238571849">[5]</a>' +
 			'<a href="#_ftnref238571849" name="_ftn238571849">[5]</a>' +
 			'<a href="#_edn238571849" name="_ednref238571849">[6]</a>' +
-			'<a href="#_ednref238571849" name="_edn238571849">[6]</a>' +
-			'<a href="http://www.tinymce.com/someurl">4</a>' +
+			'<a href="#_ednref238571849" name="_edn238571849">[7]</a>' +
+			'<a href="http://www.tinymce.com/someurl">8</a>' +
+			'9' +
 			'named_link' +
 			'5' +
 		'</p>'
