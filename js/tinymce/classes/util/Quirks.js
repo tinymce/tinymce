@@ -118,9 +118,10 @@ define("tinymce/util/Quirks", [
 					};
 
 					this.disconnect = function() {
-						target.removeEventListener('DOMNodeInserted', nodeInsert);
-						target.removeEventListener('DOMAttrModified', attrModified);
 						target.removeEventListener('DOMSubtreeModified', nodeInsert, false);
+						target.removeEventListener('DOMNodeInsertedIntoDocument', nodeInsert, false);
+						target.removeEventListener('DOMNodeInserted', nodeInsert, false);
+						target.removeEventListener('DOMAttrModified', attrModified, false);
 					};
 
 					this.takeRecords = function() {
@@ -158,6 +159,10 @@ define("tinymce/util/Quirks", [
 				var caretElement = rng.startContainer.parentNode;
 
 				Tools.each(mutationObserver.takeRecords(), function(record) {
+					if (!dom.isChildOf(record.target, editor.getBody())) {
+						return;
+					}
+
 					// Restore style attribute to previous value
 					if (record.attributeName == "style") {
 						var oldValue = record.target.getAttribute('data-mce-style');
