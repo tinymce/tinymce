@@ -37,7 +37,7 @@ tinymce.PluginManager.add('autolink', function(editor) {
 	}
 
 	editor.on("keypress", function(e) {
-		if (e.which == 41) {
+		if (e.keyCode == 41) {
 			return handleEclipse(editor);
 		}
 	});
@@ -69,7 +69,7 @@ tinymce.PluginManager.add('autolink', function(editor) {
 			}
 
 			if (container.nodeType == 3) {
-				var len = container.data;
+				var len = container.data.length;
 
 				if (index > len) {
 					index = len;
@@ -181,16 +181,6 @@ tinymce.PluginManager.add('autolink', function(editor) {
 			editor.execCommand('createlink', false, matches[1] + matches[2]);
 			editor.selection.moveToBookmark(bookmark);
 			editor.nodeChanged();
-
-			// TODO: Determine if this is still needed.
-			if (tinymce.Env.webkit) {
-				// move the caret to its original position
-				editor.selection.collapse(false);
-				var max = Math.min(endContainer.length, start + 1);
-				setStart(endContainer, max);
-				setEnd(endContainer, max);
-				editor.selection.setRng(rng);
-			}
 		}
 	}
 });

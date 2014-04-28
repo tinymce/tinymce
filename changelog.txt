@@ -1,5 +1,6 @@
 Version 4.0.24 (2014-04-xx)
 	Fixed bug where preview plugin dialog didn't handle relative urls properly.
+	Fixed bug where the autolink plugin would remove the trailing space after an inserted link.
 Version 4.0.23 (2014-04-24)
 	Added isSameOrigin method to tinymce.util.URI it handles default protocol port numbers better. Patch contributed by Matt Whelan.
 	Fixed bug where IE 11 would add br elements to the end of the editor body element each time it was shown/hidden.
