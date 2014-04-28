@@ -48,7 +48,7 @@ test("Does not count dashes", function() {
 test("Does not count asterisks, non-word characters", function() {
 	expect(1);
 
-	editor.setContent('<p>* something\n· something else</p>');
+	editor.setContent('<p>* something· something\n else</p>');
 	var result = editor.plugins.wordcount._getCount(editor);
 	equal(result, 3);
 });
@@ -67,6 +67,14 @@ test("Counts hyphenated words as one word", function() {
 	editor.setContent('<p>Hello some-word here.</p>');
 	var result = editor.plugins.wordcount._getCount(editor);
 	equal(result, 3);
+});
+
+test("Does not count accents", function() {
+	expect(1);
+
+	editor.setContent('<p>introducci&oacute;n t&Ocirc;</p>');
+	var result = editor.plugins.wordcount._getCount(editor);
+	equal(result, 2);
 });
 
 /*

@@ -18,7 +18,7 @@
 		init : function(ed, url) {
 			var t = this, last = 0, VK = tinymce.VK;
 
-			t.countre = ed.getParam('wordcount_countregex', /[\w\u2019\'-\u00co-\u00ff^\uc397^u00f7]+/g); // u2019 == &rsquo; u00c0-u00ff extended latin chars with diacritical marks. exclude uc397 multiplication & u00f7 division
+			t.countre = ed.getParam('wordcount_countregex', /[\w\u2019\u00co-\u00ff^\uc397^u00f7\'-]+/g); // u2019 == &rsquo; u00c0-u00ff extended latin chars with diacritical marks. exclude uc397 multiplication & u00f7 division
 			t.cleanre = ed.getParam('wordcount_cleanregex', /[0-9.(),;:!?%#$?\'\"_+=\\\/-]*/g);
 			t.update_rate = ed.getParam('wordcount_update_rate', 2000);
 			t.update_on_delete = ed.getParam('wordcount_update_on_delete', false);
