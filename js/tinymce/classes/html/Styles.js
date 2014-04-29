@@ -238,7 +238,7 @@ define("tinymce/html/Styles", [], function() {
 
 						// Decode escaped sequences like \65 -> e
 						/*jshint loopfunc:true*/
-						/*eslint no-loop-func:0 */ 
+						/*eslint no-loop-func:0 */
 						value = value.replace(/\\[0-9a-f]+/g, function(e) {
 							return String.fromCharCode(parseInt(e.substr(1), 16));
 						});

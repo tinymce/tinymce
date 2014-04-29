@@ -121,7 +121,9 @@ define("tinymce/pasteplugin/Clipboard", [
 			if (editor.inline) {
 				scrollContainer = editor.selection.getScrollContainer();
 
-				if (scrollContainer) {
+				// Can't always rely on scrollTop returning a useful value.
+				// It returns 0 if the browser doesn't support scrollTop for the element or is non-scrollable
+				if (scrollContainer && scrollContainer.scrollTop > 0) {
 					scrollTop = scrollContainer.scrollTop;
 				}
 			}
