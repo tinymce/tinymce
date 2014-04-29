@@ -66,7 +66,7 @@ define("tinymce/UndoManager", [
 		});
 
 		editor.on('SaveContent ObjectResized blur', addNonTypingUndoLevel);
-		editor.dom.bind(editor.dom.getRoot(), 'dragend', addNonTypingUndoLevel);
+		editor.on('DragEnd', addNonTypingUndoLevel);
 
 		editor.on('KeyUp', function(e) {
 			var keyCode = e.keyCode;

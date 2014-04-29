@@ -2053,31 +2053,32 @@ define("tinymce/Editor", [
 			}
 		},
 
-		bindNative: function(name) {
+		toggleNativeEvent: function(name, state) {
 			var self = this;
 
 			if (self.settings.readonly) {
 				return;
 			}
 
-			if (self.initialized) {
-				self.dom.bind(getEventTarget(self, name), name, function(e) {
-					self.fire(name, e);
-				});
-			} else {
-				if (!self._pendingNativeEvents) {
-					self._pendingNativeEvents = [name];
-				} else {
-					self._pendingNativeEvents.push(name);
-				}
+			// Never bind focus/blur since the FocusManager fakes those
+			if (name == "focus" || name == "blur") {
+				return;
 			}
-		},
 
-		unbindNative: function(name) {
-			var self = this;
-
-			if (self.initialized) {
-				self.dom.unbind(name);
+			if (state) {
+				if (self.initialized) {
+					self.dom.bind(getEventTarget(self, name), name, function(e) {
+						self.fire(name, e);
+					});
+				} else {
+					if (!self._pendingNativeEvents) {
+						self._pendingNativeEvents = [name];
+					} else {
+						self._pendingNativeEvents.push(name);
+					}
+				}
+			} else if (self.initialized) {
+				self.dom.unbind(getEventTarget(self, name), name);
 			}
 		},
 

@@ -19,18 +19,39 @@
 define("tinymce/ui/Control", [
 	"tinymce/util/Class",
 	"tinymce/util/Tools",
+	"tinymce/util/EventDispatcher",
 	"tinymce/ui/Collection",
 	"tinymce/ui/DomUtils"
-], function(Class, Tools, Collection, DomUtils) {
+], function(Class, Tools, EventDispatcher, Collection, DomUtils) {
 	"use strict";
-
-	var nativeEvents = Tools.makeMap("focusin focusout scroll click dblclick mousedown mouseup mousemove mouseover" +
-								" mouseout mouseenter mouseleave wheel keydown keypress input keyup contextmenu", " ");
 
 	var elementIdCache = {};
 	var hasMouseWheelEventSupport = "onmousewheel" in document;
 	var hasWheelEventSupport = false;
 	var classPrefix = "mce-";
+
+	function getEventDispatcher(obj) {
+		if (!obj._eventDispatcher) {
+			obj._eventDispatcher = new EventDispatcher({
+				scope: obj,
+				toggleEvent: function(name, state) {
+					if (state && EventDispatcher.isNative(name)) {
+						if (!obj._nativeEvents) {
+							obj._nativeEvents = {};
+						}
+
+						obj._nativeEvents[name] = true;
+
+						if (obj._rendered) {
+							obj.bindPendingEvents();
+						}
+					}
+				}
+			});
+		}
+
+		return obj._eventDispatcher;
+	}
 
 	var Control = Class.extend({
 		Statics: {
@@ -505,10 +526,14 @@ define("tinymce/ui/Control", [
 		 * @return {tinymce.ui.Control} Current control object.
 		 */
 		on: function(name, callback) {
-			var self = this, bindings, handlers, names, i;
+			var self = this;
 
 			function resolveCallbackName(name) {
 				var callback, scope;
+
+				if (typeof(name) != 'string') {
+					return name;
+				}
 
 				return function(e) {
 					if (!callback) {
@@ -526,41 +551,7 @@ define("tinymce/ui/Control", [
 				};
 			}
 
-			if (callback) {
-				if (typeof(callback) == 'string') {
-					callback = resolveCallbackName(callback);
-				}
-
-				names = name.toLowerCase().split(' ');
-				i = names.length;
-				while (i--) {
-					name = names[i];
-
-					bindings = self._bindings;
-					if (!bindings) {
-						bindings = self._bindings = {};
-					}
-
-					handlers = bindings[name];
-					if (!handlers) {
-						handlers = bindings[name] = [];
-					}
-
-					handlers.push(callback);
-
-					if (nativeEvents[name]) {
-						if (!self._nativeEvents) {
-							self._nativeEvents = {};
-						}
-
-						self._nativeEvents[name] = true;
-
-						if (self._rendered) {
-							self.bindPendingEvents();
-						}
-					}
-				}
-			}
+			getEventDispatcher(self).on(name, resolveCallbackName(callback));
 
 			return self;
 		},
@@ -576,46 +567,8 @@ define("tinymce/ui/Control", [
 		 * @return {mxex.ui.Control} Current control object.
 		 */
 		off: function(name, callback) {
-			var self = this, i, bindings = self._bindings, handlers, bindingName, names, hi;
-
-			if (bindings) {
-				if (name) {
-					names = name.toLowerCase().split(' ');
-					i = names.length;
-					while (i--) {
-						name = names[i];
-						handlers = bindings[name];
-
-						// Unbind all handlers
-						if (!name) {
-							for (bindingName in bindings) {
-								bindings[bindingName].length = 0;
-							}
-
-							return self;
-						}
-
-						if (handlers) {
-							// Unbind all by name
-							if (!callback) {
-								handlers.length = 0;
-							} else {
-								// Unbind specific ones
-								hi = handlers.length;
-								while (hi--) {
-									if (handlers[hi] === callback) {
-										handlers.splice(hi, 1);
-									}
-								}
-							}
-						}
-					}
-				} else {
-					self._bindings = [];
-				}
-			}
-
-			return self;
+			getEventDispatcher(this).off(name, callback);
+			return this;
 		},
 
 		/**
@@ -629,75 +582,22 @@ define("tinymce/ui/Control", [
 		 * @return {Object} Current arguments object.
 		 */
 		fire: function(name, args, bubble) {
-			var self = this, i, l, handlers, parentCtrl;
+			var self = this;
 
-			name = name.toLowerCase();
-
-			// Dummy function that gets replaced on the delegation state functions
-			function returnFalse() {
-				return false;
-			}
-
-			// Dummy function that gets replaced on the delegation state functions
-			function returnTrue() {
-				return true;
-			}
-
-			// Setup empty object if args is omited
 			args = args || {};
 
-			// Stick type into event object
-			if (!args.type) {
-				args.type = name;
-			}
-
-			// Stick control into event
 			if (!args.control) {
 				args.control = self;
 			}
 
-			// Add event delegation methods if they are missing
-			if (!args.preventDefault) {
-				// Add preventDefault method
-				args.preventDefault = function() {
-					args.isDefaultPrevented = returnTrue;
-				};
+			args = getEventDispatcher(self).fire(name, args);
 
-				// Add stopPropagation
-				args.stopPropagation = function() {
-					args.isPropagationStopped = returnTrue;
-				};
-
-				// Add stopImmediatePropagation
-				args.stopImmediatePropagation = function() {
-					args.isImmediatePropagationStopped = returnTrue;
-				};
-
-				// Add event delegation states
-				args.isDefaultPrevented = returnFalse;
-				args.isPropagationStopped = returnFalse;
-				args.isImmediatePropagationStopped = returnFalse;
-			}
-
-			if (self._bindings) {
-				handlers = self._bindings[name];
-
-				if (handlers) {
-					for (i = 0, l = handlers.length; i < l; i++) {
-						// Execute callback and break if the callback returns a false
-						if (!args.isImmediatePropagationStopped() && handlers[i].call(self, args) === false) {
-							break;
-						}
-					}
-				}
-			}
-
-			// Bubble event up to parent controls
-			if (bubble !== false) {
-				parentCtrl = self.parent();
-				while (parentCtrl && !args.isPropagationStopped()) {
-					parentCtrl.fire(name, args, false);
-					parentCtrl = parentCtrl.parent();
+			// Bubble event up to parents
+			if (bubble !== false && self.parent) {
+				var parent = self.parent();
+				while (parent && !args.isPropagationStopped()) {
+					parent.fire(name, args, false);
+					parent = parent.parent();
 				}
 			}
 
@@ -712,7 +612,7 @@ define("tinymce/ui/Control", [
 		 * @return {Boolean} True/false state if the event has listeners.
 		 */
 		hasEventListeners: function(name) {
-			return name in this._bindings;
+			return getEventDispatcher(this).has(name);
 		},
 
 		/**

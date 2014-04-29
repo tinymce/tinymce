@@ -1121,7 +1121,7 @@ define("tinymce/util/Quirks", [
 		 */
 		function blockFormSubmitInsideEditor() {
 			editor.on('init', function() {
-				editor.dom.bind(editor.getBody(), 'submit', function(e) {
+				editor.on('submit', function(e) {
 					e.preventDefault();
 				});
 			});
