@@ -8,6 +8,7 @@ test("fire (no event listeners)", function() {
 	equal(args.isDefaultPrevented(), false);
 	equal(args.isPropagationStopped(), false);
 	equal(args.isImmediatePropagationStopped(), false);
+	strictEqual(args.target, dispatcher);
 
 	args = dispatcher.fire('click');
 	equal(args.isDefaultPrevented(), false);
@@ -112,7 +113,7 @@ test("off (all specific observer)", function() {
 });
 
 test("scope setting", function() {
-	var lastScope, dispatcher;
+	var lastScope, lastEvent, dispatcher;
 		
 	dispatcher = new tinymce.util.EventDispatcher();
 	dispatcher.on('click', function() {
@@ -122,10 +123,12 @@ test("scope setting", function() {
 
 	var scope = {test: 1};
 	dispatcher = new tinymce.util.EventDispatcher({scope: scope});
-	dispatcher.on('click', function() {
+	dispatcher.on('click', function(e) {
 		lastScope = this;
+		lastEvent = e;
 	}).fire('click');
 	strictEqual(scope, lastScope);
+	strictEqual(lastEvent.target, lastScope);
 });
 
 test("beforeFire setting", function() {
