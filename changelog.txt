@@ -1,3 +1,5 @@
+Version 4.0.25 (2014-04-30)
+	Fixed bug where it wasn't possible to submit forms with editor instances on WebKit/Blink.
 Version 4.0.24 (2014-04-30)
 	Added new event_root setting for inline editors. Lets you bind all editor events on a parent container.
 	Fixed bug where show/hide/isHidden didn't work properly for inline editor instances.
