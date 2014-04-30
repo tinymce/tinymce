@@ -61,6 +61,8 @@ tinymce.PluginManager.add('image', function(editor) {
 						callback(tinymce.util.JSON.parse(text));
 					}
 				});
+			} else if (typeof(imageList) == "function") {
+				imageList(callback);
 			} else {
 				callback(imageList);
 			}

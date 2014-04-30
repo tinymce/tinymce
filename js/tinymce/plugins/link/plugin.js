@@ -22,6 +22,8 @@ tinymce.PluginManager.add('link', function(editor) {
 						callback(tinymce.util.JSON.parse(text));
 					}
 				});
+			} else if (typeof(linkList) == "function") {
+				linkList(callback);
 			} else {
 				callback(linkList);
 			}

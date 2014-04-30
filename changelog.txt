@@ -5,6 +5,7 @@ Version 4.0.24 (2014-04-xx)
 	Fixed bug where the autolink plugin would remove the trailing space after an inserted link.
 	Fixed bug in paste plugin where pasting in a page with scrollbars would scroll to top of page in webkit browsers.
 	Fixed bug where the paste plugin on WebKit would remove styles from pasted source code with style attributes.
+	Fixed so image_list/link_list can be a function that allows custom async calls to populate these lists.
 Version 4.0.23 (2014-04-24)
 	Added isSameOrigin method to tinymce.util.URI it handles default protocol port numbers better. Patch contributed by Matt Whelan.
 	Fixed bug where IE 11 would add br elements to the end of the editor body element each time it was shown/hidden.
