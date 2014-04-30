@@ -1,4 +1,6 @@
 Version 4.0.24 (2014-04-xx)
+	Added new event_root setting for inline editors. Lets you bind all editor events on a parent container.
+	Fixed bug where show/hide/isHidden didn't work properly for inline editor instances.
 	Fixed bug where preview plugin dialog didn't handle relative urls properly.
 	Fixed bug where the autolink plugin would remove the trailing space after an inserted link.
 	Fixed bug in paste plugin where pasting in a page with scrollbars would scroll to top of page in webkit browsers.

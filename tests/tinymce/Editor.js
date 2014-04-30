@@ -1,9 +1,10 @@
 module("tinymce.Editor", {
 	setupModule: function() {
+		document.getElementById('view').innerHTML = '<textarea id="elm1"></textarea><div id="elm2"></div>';
 		QUnit.stop();
 
 		tinymce.init({
-			selector: "textarea",
+			selector: "#elm1",
 			add_unload_trigger: false,
 			disable_nodechange: true,
 			skin: false,
@@ -16,7 +17,27 @@ module("tinymce.Editor", {
 			extended_valid_elements: 'custom1,custom2',
 			init_instance_callback: function(ed) {
 				window.editor = ed;
-				QUnit.start();
+
+				if (window.inlineEditor) {
+					QUnit.start();
+				}
+			}
+		});
+
+		tinymce.init({
+			selector: "#elm2",
+			add_unload_trigger: false,
+			disable_nodechange: true,
+			skin: false,
+			entities: 'raw',
+			indent: false,
+			inline: true,
+			init_instance_callback: function(ed) {
+				window.inlineEditor = ed;
+
+				if (window.editor) {
+					QUnit.start();
+				}
 			}
 		});
 	}
@@ -196,4 +217,58 @@ test('Store/restore tabindex', function() {
 	editor.setContent('<span tabindex="42">abc</span>');
 	equal(editor.getContent({format:'raw'}).toLowerCase(), '<p><span data-mce-tabindex="42">abc</span></p>');
 	equal(editor.getContent(), '<p><span tabindex="42">abc</span></p>');
+});
+
+test('show/hide/isHidden and events', function() {
+	var lastEvent;
+
+	editor.on('show hide', function(e) {
+		lastEvent = e;
+	});
+
+	equal(editor.isHidden(), false, 'Initial isHidden state');
+
+	editor.hide();
+	equal(editor.isHidden(), true, 'After hide isHidden state');
+	equal(lastEvent.type, "hide");
+
+	lastEvent = null;
+	editor.hide();
+	strictEqual(lastEvent, null);
+
+	editor.show();
+	equal(editor.isHidden(), false, 'After show isHidden state');
+	equal(lastEvent.type, "show");
+
+	lastEvent = null;
+	editor.show();
+	strictEqual(lastEvent, null);
+});
+
+test('show/hide/isHidden and events (inline)', function() {
+	var lastEvent;
+
+	inlineEditor.on('show hide', function(e) {
+		lastEvent = e;
+	});
+
+	equal(inlineEditor.isHidden(), false, 'Initial isHidden state');
+
+	inlineEditor.hide();
+	equal(inlineEditor.isHidden(), true, 'After hide isHidden state');
+	equal(lastEvent.type, "hide");
+	strictEqual(inlineEditor.getBody().contentEditable, "false", "ContentEditable after hide");
+
+	lastEvent = null;
+	inlineEditor.hide();
+	strictEqual(lastEvent, null);
+
+	inlineEditor.show();
+	equal(inlineEditor.isHidden(), false, 'After show isHidden state');
+	equal(lastEvent.type, "show");
+	strictEqual(inlineEditor.getBody().contentEditable, "true", "ContentEditable after show");
+
+	lastEvent = null;
+	inlineEditor.show();
+	strictEqual(lastEvent, null);
 });

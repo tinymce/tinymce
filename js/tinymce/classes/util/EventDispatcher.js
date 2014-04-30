@@ -63,7 +63,7 @@ define("tinymce/util/EventDispatcher", [
 
 			// Setup target is there isn't one
 			if (!args.target) {
-				args.target = self;
+				args.target = scope;
 			}
 
 			// Add event delegation methods if they are missing
