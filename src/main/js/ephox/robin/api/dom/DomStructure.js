@@ -16,8 +16,18 @@ define(
       return Structure.isBlock(universe, element);
     };
 
+    var isFormatting = function (element) {
+      return Structure.isFormatting(universe, element);
+    };
+
+    var isContainer = function (element) {
+      return Structure.isContainer(universe, element);
+    };
+
     return {
-      isBlock: isBlock
+      isBlock: isBlock,
+      isFormatting: isFormatting,
+      isContainer: isContainer
     };
   }
 );
