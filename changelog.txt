@@ -1,5 +1,6 @@
 Version 4.0.26 (2014-05-xx)
 	Fixed bug in media plugin where changing existing url did not use media regex patterns to create protocol neutral url.
+	Fixed bug where selection wasn't properly restored on IE 11 due to a browser bug with Element.contains.
 Version 4.0.25 (2014-04-30)
 	Fixed bug where it wasn't possible to submit forms with editor instances on WebKit/Blink.
 Version 4.0.24 (2014-04-30)
