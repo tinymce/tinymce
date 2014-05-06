@@ -109,20 +109,28 @@ define("tinymce/ui/ListBox", [
 				});
 			}
 
+			function setActiveValues(menuValues) {
+				for (i = 0; i < menuValues.length; i++) {
+					active = menuValues[i].value == value;
+
+					if (active) {
+						selectedText = selectedText || menuValues[i].text;
+					}
+
+					menuValues[i].active = active;
+
+					if('menu' in menuValues[i]) {
+						setActiveValues(menuValues[i].menu);
+					}
+				}
+			}
+
 			if (typeof(value) != "undefined") {
 				if (self.menu) {
 					activateByValue(self.menu, value);
 				} else {
 					menu = self.settings.menu;
-					for (i = 0; i < menu.length; i++) {
-						active = menu[i].value == value;
-
-						if (active) {
-							selectedText = selectedText || menu[i].text;
-						}
-
-						menu[i].active = active;
-					}
+					setActiveValues(menu);
 				}
 
 				self.text(selectedText || this.settings.text);
