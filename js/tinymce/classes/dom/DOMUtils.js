@@ -2041,10 +2041,6 @@ define("tinymce/dom/DOMUtils", [
 		},
 
 		isChildOf: function(node, parent) {
-			if (parent.contains) {
-				return parent.contains(node);
-			}
-
 			while (node) {
 				if (parent === node) {
 					return true;
