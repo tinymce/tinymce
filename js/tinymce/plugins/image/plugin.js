@@ -173,7 +173,7 @@ tinymce.PluginManager.add('image', function(editor) {
 				data.height = null;
 			}
 
-			if (data.style === '') {
+			if (!data.style) {
 				data.style = null;
 			}
 
