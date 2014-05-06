@@ -586,8 +586,8 @@ task("zip-component", ["mktmp"], function () {
 			[jsonToBuffer({
 				"name": "tinymce",
 				"version": details.version,
-				"description": "Web based Javascript HTML WYSIWYG editor control released as Open Source under LGPL.",
-				"license": "LGPL-2.1",
+				"description": "Web based JavaScript HTML WYSIWYG editor control.",
+				"license": "http://www.tinymce.com/license",
 				"keywords": keywords,
 				"homepage": "http://www.tinymce.com",
 				"main": "tinymce.min.js",
@@ -598,14 +598,9 @@ task("zip-component", ["mktmp"], function () {
 			[jsonToBuffer({
 				"name": "tinymce",
 				"version": details.version,
-				"description": "Web based Javascript HTML WYSIWYG editor control released as Open Source under LGPL.",
+				"description": "Web based JavaScript HTML WYSIWYG editor control.",
 				"license": "LGPL-2.1",
 				"keywords": keywords,
-				"repository": {
-					"type": "git",
-					"url": "https://github.com/tinymce/tinymce-component.git"
-				},
-				"author": "Johan Sörlin <spocke@moxiecode.com>",
 				"bugs": {"url": "http://www.tinymce.com/develop/bugtracker.php"}
 			}), "package.json"],
 
@@ -613,7 +608,7 @@ task("zip-component", ["mktmp"], function () {
 			[jsonToBuffer({
 				"name": "tinymce/tinymce",
 				"version": details.version,
-				"description": "Web based Javascript HTML WYSIWYG editor control released as Open Source under LGPL.",
+				"description": "Web based JavaScript HTML WYSIWYG editor control.",
 				"license": ["LGPL-2.1"],
 				"keywords": keywords,
 				"homepage": "http://www.tinymce.com",
