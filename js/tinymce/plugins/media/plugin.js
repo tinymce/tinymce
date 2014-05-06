@@ -526,6 +526,9 @@ tinymce.PluginManager.add('media', function(editor, url) {
 
 			while (i--) {
 				node = nodes[i];
+				if (!node.parent) {
+					continue;
+				}
 
 				if (node.name == 'script') {
 					videoScript = getVideoScriptMatch(node.attr('src'));
@@ -591,6 +594,10 @@ tinymce.PluginManager.add('media', function(editor, url) {
 
 			while (i--) {
 				node = nodes[i];
+				if (!node.parent) {
+					continue;
+				}
+
 				realElmName = node.attr(name);
 				realElm = new tinymce.html.Node(realElmName, 1);
 
