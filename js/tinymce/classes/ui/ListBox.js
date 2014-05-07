@@ -29,11 +29,11 @@ define("tinymce/ui/ListBox", [
 		 * @setting {Array} values Array with values to add to list box.
 		 */
 		init: function(settings) {
-			var self = this, values, i, selected, selectedText, lastItemCtrl;
+			var self = this, values, selected, selectedText, lastItemCtrl;
 
 			function setSelected(menuValues) {
 				// Try to find a selected value
-				for (i = 0; i < menuValues.length; i++) {
+				for (var i = 0; i < menuValues.length; i++) {
 					selected = menuValues[i].selected || settings.value === menuValues[i].value;
 
 					if (selected) {
@@ -91,7 +91,7 @@ define("tinymce/ui/ListBox", [
 		 * @return {Boolean/tinymce.ui.ListBox} Value or self if it's a set operation.
 		 */
 		value: function(value) {
-			var self = this, active, selectedText, menu, i;
+			var self = this, active, selectedText, menu;
 
 			function activateByValue(menu, value) {
 				menu.items().each(function(ctrl) {
@@ -110,7 +110,7 @@ define("tinymce/ui/ListBox", [
 			}
 
 			function setActiveValues(menuValues) {
-				for (i = 0; i < menuValues.length; i++) {
+				for (var i = 0; i < menuValues.length; i++) {
 					active = menuValues[i].value == value;
 
 					if (active) {
