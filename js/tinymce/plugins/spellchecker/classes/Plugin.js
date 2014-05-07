@@ -177,7 +177,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 
 			Tools.each(data, function(value, key) {
 				if (postData) {
-					postData += '&';	
+					postData += '&';
 				}
 
 				postData += key + '=' + encodeURIComponent(value);
