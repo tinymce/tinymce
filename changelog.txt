@@ -1,5 +1,6 @@
 Version 4.0.27 (2014-05-xx)
 	Added better support for nested link_list/image_list menu items each item can now have a "menu" item with subitems.
+	Added support add to dictionary support for spellchecker backends that support that check the RPC format docs in the TinyMCE wiki.
 	Fixed so the selected state is properly handled on nested menu items in listboxes patch contributed by Jelle Kralt.
 	Fixed so the invisiblity css value for TinyMCE gets set to inherit instead of visible to better support dialog scripts like reveal.
 Version 4.0.26 (2014-05-06)

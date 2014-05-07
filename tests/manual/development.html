@@ -74,17 +74,20 @@
 			});*/
 		},
 
-		spellchecker_callback: function(method, text, success) {
-			var words = text.match(this.getWordCharPattern());
-
+		spellchecker_callback: function(method, data, success) {
 			if (method == "spellcheck") {
+				var words = data.match(this.getWordCharPattern());
 				var suggestions = {};
 
 				for (var i = 0; i < words.length; i++) {
 					suggestions[words[i]] = ["First", "second"];
 				}
 
-				success(suggestions);
+				success({words: suggestions, dictionary: true});
+			}
+
+			if (method == "addToDictionary") {
+				success();
 			}
 		}
 	});
