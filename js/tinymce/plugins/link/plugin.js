@@ -45,17 +45,25 @@ tinymce.PluginManager.add('link', function(editor) {
 		}
 
 		function buildLinkList() {
-			var linkListItems = [{text: 'None', value: ''}];
+			function appendItems(values, output) {
+				output = output || [];
 
-			tinymce.each(linkList, function(link) {
-				linkListItems.push({
-					text: link.text || link.title,
-					value: editor.convertURL(link.value || link.url, 'href'),
-					menu: link.menu
+				tinymce.each(values, function(value) {
+					var item = {text: value.text || value.title};
+
+					if (value.menu) {
+						item.menu = appendItems(value.menu);
+					} else {
+						item.value = editor.convertURL(value.value || value.url, 'href');
+					}
+
+					output.push(item);
 				});
-			});
 
-			return linkListItems;
+				return output;
+			}
+
+			return appendItems(linkList, [{text: 'None', value: ''}]);
 		}
 
 		function applyPreview(items) {
