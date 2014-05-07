@@ -31,17 +31,26 @@ define("tinymce/ui/ListBox", [
 		init: function(settings) {
 			var self = this, values, i, selected, selectedText, lastItemCtrl;
 
-			self._values = values = settings.values;
-			if (values) {
-				for (i = 0; i < values.length; i++) {
-					selected = values[i].selected || settings.value === values[i].value;
+			function setSelected(menuValues) {
+				// Try to find a selected value
+				for (i = 0; i < menuValues.length; i++) {
+					selected = menuValues[i].selected || settings.value === menuValues[i].value;
 
 					if (selected) {
-						selectedText = selectedText || values[i].text;
-						self._value = values[i].value;
+						selectedText = selectedText || menuValues[i].text;
+						self._value = menuValues[i].value;
 						break;
 					}
+					// If the value has a submenu, try to find the selected values in that menu
+					if('menu' in menuValues[i]) {
+						setSelected(menuValues[i].menu);
+					}
 				}
+			}
+
+			self._values = values = settings.values;
+			if (values) {
+				setSelected(values);
 
 				// Default with first item
 				if (!selected && values.length > 0) {
@@ -100,20 +109,28 @@ define("tinymce/ui/ListBox", [
 				});
 			}
 
+			function setActiveValues(menuValues) {
+				for (i = 0; i < menuValues.length; i++) {
+					active = menuValues[i].value == value;
+
+					if (active) {
+						selectedText = selectedText || menuValues[i].text;
+					}
+
+					menuValues[i].active = active;
+
+					if('menu' in menuValues[i]) {
+						setActiveValues(menuValues[i].menu);
+					}
+				}
+			}
+
 			if (typeof(value) != "undefined") {
 				if (self.menu) {
 					activateByValue(self.menu, value);
 				} else {
 					menu = self.settings.menu;
-					for (i = 0; i < menu.length; i++) {
-						active = menu[i].value == value;
-
-						if (active) {
-							selectedText = selectedText || menu[i].text;
-						}
-
-						menu[i].active = active;
-					}
+					setActiveValues(menu);
 				}
 
 				self.text(selectedText || this.settings.text);
