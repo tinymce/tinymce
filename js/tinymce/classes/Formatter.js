@@ -25,9 +25,10 @@
 define("tinymce/Formatter", [
 	"tinymce/dom/TreeWalker",
 	"tinymce/dom/RangeUtils",
+	"tinymce/dom/BookmarkManager",
 	"tinymce/util/Tools",
 	"tinymce/fmt/Preview"
-], function(TreeWalker, RangeUtils, Tools, Preview) {
+], function(TreeWalker, RangeUtils, BookmarkManager, Tools, Preview) {
 	/**
 	 * Constructs a new formatter instance.
 	 *
@@ -51,7 +52,8 @@ define("tinymce/Formatter", [
 			undef,
 			getContentEditable = dom.getContentEditable,
 			disableCaretContainer,
-			markCaretContainersBogus;
+			markCaretContainersBogus,
+			isBookmarkNode = BookmarkManager.isBookmarkNode;
 
 		var each = Tools.each,
 			grep = Tools.grep,
@@ -367,7 +369,7 @@ define("tinymce/Formatter", [
 
 				// get the index of the bookmarks
 				each(node.childNodes, function(n, index) {
-					if (n.nodeName === "SPAN" && dom.getAttrib(n, "data-mce-type") == "bookmark") {
+					if (isBookmarkNode(n)) {
 						if (n.id == bookmark.id + "_start") {
 							startIndex = index;
 						} else if (n.id == bookmark.id + "_end") {
@@ -1941,17 +1943,6 @@ define("tinymce/Formatter", [
 					}
 				}
 			}
-		}
-
-		/**
-		 * Checks if the specified node is a bookmark node or not.
-		 *
-		 * @private
-		 * @param {Node} node Node to check if it's a bookmark node or not.
-		 * @return {Boolean} true/false if the node is a bookmark node.
-		 */
-		function isBookmarkNode(node) {
-			return node && node.nodeType == 1 && node.getAttribute('data-mce-type') == 'bookmark';
 		}
 
 		/**

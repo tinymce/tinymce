@@ -12,7 +12,6 @@
  * This class handles selection bookmarks.
  *
  * @class tinymce.dom.BookmarkManager
- * @private
  */
 define("tinymce/dom/BookmarkManager", [
 	"tinymce/Env",
@@ -25,7 +24,7 @@ define("tinymce/dom/BookmarkManager", [
 	 * @method BookmarkManager
 	 * @param {tinymce.dom.Selection} selection Selection instance to handle bookmarks for.
 	 */
-	return function(selection) {
+	function BookmarkManager(selection) {
 		var dom = selection.dom;
 
 		/**
@@ -372,5 +371,19 @@ define("tinymce/dom/BookmarkManager", [
 				}
 			}
 		};
+	}
+
+	/**
+	 * Returns true/false if the specified node is a bookmark node or not.
+	 *
+	 * @static
+	 * @method isBookmarkNode
+	 * @param {DOMNode} node DOM Node to check if it's a bookmark node or not.
+	 * @return {Boolean} true/false if the node is a bookmark node or not.
+	 */
+	BookmarkManager.isBookmarkNode = function(node) {
+		return node && node.tagName === 'SPAN' && node.getAttribute('data-mce-type') === 'bookmark';
 	};
+
+	return BookmarkManager;
 });

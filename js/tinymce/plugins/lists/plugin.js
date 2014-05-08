@@ -30,10 +30,6 @@ tinymce.PluginManager.add('lists', function(editor) {
 		return node && !!editor.schema.getTextBlockElements()[node.nodeName];
 	}
 
-	function isBookmarkNode(node) {
-		return node && node.nodeName === 'SPAN' && node.getAttribute('data-mce-type') === 'bookmark';
-	}
-
 	editor.on('init', function() {
 		var dom = editor.dom, selection = editor.selection;
 
@@ -522,7 +518,7 @@ tinymce.PluginManager.add('lists', function(editor) {
 					}
 
 					var nextSibling = node.nextSibling;
-					if (isBookmarkNode(node)) {
+					if (tinymce.dom.BookmarkManager.isBookmarkNode(node)) {
 						if (isTextBlock(nextSibling) || (!nextSibling && node.parentNode == root)) {
 							block = null;
 							return;
