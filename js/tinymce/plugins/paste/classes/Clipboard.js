@@ -197,7 +197,6 @@ define("tinymce/pasteplugin/Clipboard", [
 				}
 			}
 
-			keyboardPastePlainTextState = false;
 			pasteBinElm = lastRng = null;
 		}
 
@@ -359,6 +358,8 @@ define("tinymce/pasteplugin/Clipboard", [
 				var isKeyBoardPaste = new Date().getTime() - keyboardPasteTimeStamp < 1000;
 				var plainTextMode = self.pasteFormat == "text" || keyboardPastePlainTextState;
 
+				keyboardPastePlainTextState = false;
+
 				if (e.isDefaultPrevented()) {
 					removePasteBin();
 					return;
@@ -387,41 +388,54 @@ define("tinymce/pasteplugin/Clipboard", [
 				}
 
 				setTimeout(function() {
-					var html = getPasteBinHtml();
+					var content;
+
+					// Grab HTML from Clipboard API or paste bin as a fallback
+					if (hasContentType(clipboardContent, 'text/html')) {
+						content = Utils.trimHtml(clipboardContent['text/html']);
+					} else {
+						content = getPasteBinHtml();
+
+						// If paste bin is empty try using plain text mode
+						// since that is better than nothing right
+						if (content == pasteBinDefaultContent) {
+							plainTextMode = true;
+						}
+					}
 
 					// WebKit has a nice bug where it clones the paste bin if you paste from for example notepad
+					// so we need to force plain text mode in this case
 					if (pasteBinElm && pasteBinElm.firstChild && pasteBinElm.firstChild.id === 'mcepastebin') {
 						plainTextMode = true;
 					}
 
 					removePasteBin();
 
-					// Always use pastebin HTML if it's available since it contains Word contents
-					if (!plainTextMode && isKeyBoardPaste && html && html != pasteBinDefaultContent) {
-						clipboardContent['text/html'] = html;
-					}
-
-					if (html == pasteBinDefaultContent || !isKeyBoardPaste) {
-						html = clipboardContent['text/html'] || clipboardContent['text/plain'] || pasteBinDefaultContent;
-
-						if (html == pasteBinDefaultContent) {
-							if (!isKeyBoardPaste) {
-								editor.windowManager.alert('Please use Ctrl+V/Cmd+V keyboard shortcuts to paste contents.');
-							}
-
-							return;
+					// Grab plain text from Clipboard API or convert existing HTML to plain text
+					if (plainTextMode) {
+						// Use plain text contents from Clipboard API unless the HTML contains paragraphs then
+						// we should convert the HTML to plain text since works better when pasting HTML/Word contents as plain text
+						if (hasContentType(clipboardContent, 'text/plain') && content.indexOf('</p>') == -1) {
+							content = clipboardContent['text/plain'];
+						} else {
+							content = Utils.innerText(content);
 						}
 					}
 
-					// Force plain text mode if we only got a text/plain content type
-					if (!hasContentType(clipboardContent, 'text/html') && hasContentType(clipboardContent, 'text/plain')) {
-						plainTextMode = true;
+					// If the content is the paste bin default HTML then it was
+					// impossible to get the cliboard data out.
+					if (content == pasteBinDefaultContent) {
+						if (!isKeyBoardPaste) {
+							editor.windowManager.alert('Please use Ctrl+V/Cmd+V keyboard shortcuts to paste contents.');
+						}
+
+						return;
 					}
 
 					if (plainTextMode) {
-						pasteText(clipboardContent['text/plain'] || Utils.innerText(html));
+						pasteText(content);
 					} else {
-						pasteHtml(html);
+						pasteHtml(content);
 					}
 				}, 0);
 			});

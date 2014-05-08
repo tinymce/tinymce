@@ -91,8 +91,27 @@ define("tinymce/pasteplugin/Utils", [
 		return text;
 	}
 
+	/**
+	 * Trims the specified HTML by removing all WebKit fragments, all elements wrapping the body trailing BR elements etc.
+	 *
+	 * @param {String} html Html string to trim contents on.
+	 * @return {String} Html contents that got trimmed.
+	 */
+	function trimHtml(html) {
+		html = filter(html, [
+			/^[\s\S]*<body[^>]*>\s*<!--StartFragment-->|<!--EndFragment-->\s*<\/body[^>]*>[\s\S]*$/g, // WebKit fragment body
+			/<!--StartFragment-->|<!--EndFragment-->/g, // Inner fragments (tables from excel on mac)
+			[/<span class="Apple-converted-space">\u00a0<\/span>/g, '\u00a0'], // WebKit &nbsp;
+			[/(.*)<body[^>]*>(.*?)<\/body>(.*)/gi, '$2'], // Remove anything but the contents within the BODY element
+			/<br>$/i // Trailing BR elements
+		]);
+
+		return html;
+	}
+
 	return {
 		filter: filter,
-		innerText: innerText
+		innerText: innerText,
+		trimHtml: trimHtml
 	};
 });

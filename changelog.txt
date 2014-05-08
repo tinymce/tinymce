@@ -1,8 +1,10 @@
 Version 4.0.27 (2014-05-xx)
 	Added better support for nested link_list/image_list menu items each item can now have a "menu" item with subitems.
-	Added support add to dictionary support for spellchecker backends that support that check the RPC format docs in the TinyMCE wiki.
+	Added "Add to Dictionary" support to spellchecker plugin when the backend tells that this feature is available.
 	Fixed so the selected state is properly handled on nested menu items in listboxes patch contributed by Jelle Kralt.
 	Fixed so the invisiblity css value for TinyMCE gets set to inherit instead of visible to better support dialog scripts like reveal.
+	Fixed bug where Gecko would remove anchors when pasting since the their default built in logic removes empty nodes.
+	Fixed so plain text mode works better when it converts rich text to plain text when pasting from for example Word.
 Version 4.0.26 (2014-05-06)
 	Fixed bug in media plugin where changing existing url did not use media regex patterns to create protocol neutral url.
 	Fixed bug where selection wasn't properly restored on IE 11 due to a browser bug with Element.contains.

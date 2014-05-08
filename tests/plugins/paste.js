@@ -486,25 +486,14 @@ test('paste innerText of textnode with whitespace', function() {
 	equal(tinymce.pasteplugin.Utils.innerText(editor.getBody().firstChild.innerHTML), ' a ');
 });
 
+test('trim html from clipboard fragments', function() {
+	equal(tinymce.pasteplugin.Utils.trimHtml('<!--StartFragment-->a<!--EndFragment-->'), 'a');
+	equal(tinymce.pasteplugin.Utils.trimHtml('a\n<body>\n<!--StartFragment-->\nb\n<!--EndFragment-->\n</body>\nc'), '\nb\n');
+	equal(tinymce.pasteplugin.Utils.trimHtml('a<!--StartFragment-->b<!--EndFragment-->c'), 'abc');
+	equal(tinymce.pasteplugin.Utils.trimHtml('a<body>b</body>c'), 'b');
+});
+
 if (tinymce.Env.webkit) {
-	test('paste webkit body fragment', function() {
-		editor.setContent('');
-		editor.execCommand('mceInsertClipboardContent', false, {content: 'a\n<body>\n<!--StartFragment-->\nb\n<!--EndFragment-->\n</body>\nc'});
-		equal(editor.getContent(), '<p>b</p>');
-	});
-
-	test('paste webkit body fragment no line feeds', function() {
-		editor.setContent('');
-		editor.execCommand('mceInsertClipboardContent', false, {content: 'a<body><!--StartFragment-->b<!--EndFragment--></body>c'});
-		equal(editor.getContent(), '<p>b</p>');
-	});
-
-	test('paste webkit inner fragment', function() {
-		editor.setContent('');
-		editor.execCommand('mceInsertClipboardContent', false, {content: 'a<!--StartFragment-->b<!--EndFragment-->c'});
-		equal(editor.getContent(), '<p>abc</p>');
-	});
-
 	test('paste webkit retains text styles runtime styles internal', function() {
 		editor.settings.paste_webkit_styles = 'color';
 		editor.setContent('');

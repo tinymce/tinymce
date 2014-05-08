@@ -32,26 +32,6 @@ define("tinymce/pasteplugin/Quirks", [
 		}
 
 		/**
-		 * Removes WebKit fragment comments and converted-space spans.
-		 *
-		 * This:
-		 *   <!--StartFragment-->a<span class="Apple-converted-space">&nbsp;</span>b<!--EndFragment-->
-		 *
-		 * Becomes:
-		 *   a&nbsp;b
-		 */
-		function removeWebKitFragments(html) {
-			html = Utils.filter(html, [
-				/^[\s\S]*<body[^>]*>\s*<!--StartFragment-->|<!--EndFragment-->\s*<\/body[^>]*>[\s\S]*$/g, // WebKit fragment body
-				/<!--StartFragment-->|<!--EndFragment-->/g, // Inner fragments (tables from excel on mac)
-				[/<span class="Apple-converted-space">\u00a0<\/span>/g, '\u00a0'], // WebKit &nbsp;
-				/<br>$/i // Traling BR elements
-			]);
-
-			return html;
-		}
-
-		/**
 		 * Removes BR elements after block elements. IE9 has a nasty bug where it puts a BR element after each
 		 * block element when pasting from word. This removes those elements.
 		 *
@@ -170,7 +150,6 @@ define("tinymce/pasteplugin/Quirks", [
 		// Sniff browsers and apply fixes since we can't feature detect
 		if (Env.webkit) {
 			addPreProcessFilter(removeWebKitStyles);
-			addPreProcessFilter(removeWebKitFragments);
 		}
 
 		if (Env.ie) {
