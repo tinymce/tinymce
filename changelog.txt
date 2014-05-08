@@ -1,6 +1,7 @@
-Version 3.5.x (2014-xx-xx)
-	Fixed bug in paste plugin word import with lists that have strikethrough on numbers
-	Fixed bug in word count plugin where characters with diacritical marks were split as seperate words
+Version 3.5.11 (2014-05-08)
+	Fixed bug in paste plugin word import with lists that have strikethrough on numbers.
+	Fixed bug in word count plugin where characters with diacritical marks were split as seperate words.
+	Fixed bug in IE 11 where the selection of images would fail when they where at the end of blocks.
 Version 3.5.10 (2013-10-24)
 	Fixed bug where dialogs using inlinepopups plugin would display incorrectly sometimes
 	Fixed bug in paste plugin word import that was removing type from lists

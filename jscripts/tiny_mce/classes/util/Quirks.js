@@ -1034,6 +1034,34 @@ tinymce.util.Quirks = function(editor) {
 		});
 	}
 
+	/**
+	 * Fixes control selection bug #6613 in IE 11 by an ugly hack. IE 11 has a bug where it will return the parent
+	 * element container of an image if you select it as the last child in for
+	 * example this HTML: <p>a<img src="b"></p>
+	 */
+	function fixControlSelection() {
+		editor.onInit.add(function() {
+			var selectedRng;
+
+			editor.getBody().addEventListener('mscontrolselect', function(e) {
+				setTimeout(function() {
+					if (editor.selection.getNode() != e.target) {
+						selectedRng = editor.selection.getRng();
+						selection.fakeRng = editor.dom.createRng();
+						selection.fakeRng.setStartBefore(e.target);
+						selection.fakeRng.setEndAfter(e.target);
+					}
+				}, 0);
+			}, false);
+
+			editor.getDoc().addEventListener('selectionchange', function(e) {
+				if (selectedRng && !tinymce.dom.RangeUtils.compareRanges(editor.selection.getRng(), selectedRng)) {
+					selection.fakeRng = selectedRng = null;
+				}
+			}, false);
+		});
+	}
+
 	// All browsers
 	disableBackspaceIntoATable();
 	removeBlockQuoteOnBackSpace();
@@ -1070,6 +1098,7 @@ tinymce.util.Quirks = function(editor) {
 	// IE 11+
 	if (tinymce.isIE11) {
 		bodyHeight();
+		fixControlSelection();
 	}
 
 	// Gecko

@@ -805,6 +805,11 @@
 		getRng : function(w3c) {
 			var self = this, selection, rng, elm, doc = self.win.document;
 
+			// Workaround for IE 11 not being able to select images properly see #6613 see quirk fix
+			if (self.fakeRng) {
+				return self.fakeRng;
+			}
+
 			// Found tridentSel object then we need to use that one
 			if (w3c && self.tridentSel) {
 				return self.tridentSel.getRangeAt(0);
