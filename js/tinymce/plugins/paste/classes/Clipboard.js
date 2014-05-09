@@ -306,6 +306,18 @@ define("tinymce/pasteplugin/Clipboard", [
 			}
 		}
 
+		/**
+		 * Chrome on Andoid doesn't support proper clipboard access so we have no choice but to allow the browser default behavior.
+		 *
+		 * @param {Event} e Paste event object to check if it contains any data.
+		 * @return {Boolean} true/false if the clipboard is empty or not.
+		 */
+		function isBrokenAndoidClipboardEvent(e) {
+			var clipboardData = e.clipboardData;
+
+			return navigator.userAgent.indexOf('Android') != -1 && clipboardData && clipboardData.items && clipboardData.items.length === 0;
+		}
+
 		function getCaretRangeFromEvent(e) {
 			var doc = editor.getDoc(), rng;
 
@@ -360,7 +372,7 @@ define("tinymce/pasteplugin/Clipboard", [
 
 				keyboardPastePlainTextState = false;
 
-				if (e.isDefaultPrevented()) {
+				if (e.isDefaultPrevented() || isBrokenAndoidClipboardEvent(e)) {
 					removePasteBin();
 					return;
 				}
