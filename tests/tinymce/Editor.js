@@ -272,3 +272,17 @@ test('show/hide/isHidden and events (inline)', function() {
 	inlineEditor.show();
 	strictEqual(lastEvent, null);
 });
+
+test('insertContent', function() {
+	editor.setContent('<p>a</p>');
+	Utils.setSelection('p', 1);
+	editor.insertContent('b');
+	equal(editor.getContent(), '<p>ab</p>');
+});
+
+test('insertContent merge', function() {
+	editor.setContent('<p><strong>a</strong></p>');
+	Utils.setSelection('p', 1);
+	editor.insertContent('<em><strong>b</strong></em>', {merge: true});
+	equal(editor.getContent(), '<p><strong>a<em>b</em></strong></p>');
+});

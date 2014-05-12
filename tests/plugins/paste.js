@@ -280,6 +280,24 @@ test('paste track changes comment', function() {
 	equal(editor.getContent(), '<p>1</p>');
 });
 
+test("Paste paste_merge_formats: true", function() {
+	editor.settings.paste_merge_formats = true;
+
+	editor.setContent('<p><strong>a</strong></p>');
+	Utils.setSelection('p', 1);
+	editor.execCommand('mceInsertClipboardContent', false, {content: '<em><strong>b</strong></em>'});
+	equal(editor.getContent(), '<p><strong>a<em>b</em></strong></p>');
+});
+
+test("Paste paste_merge_formats: false", function() {
+	editor.settings.paste_merge_formats = false;
+
+	editor.setContent('<p><strong>a</strong></p>');
+	Utils.setSelection('p', 1);
+	editor.execCommand('mceInsertClipboardContent', false, {content: '<em><strong>b</strong></em>'});
+	equal(editor.getContent(), '<p><strong>a<em><strong>b</strong></em></strong></p>');
+});
+
 test("Paste word DIV as P", function() {
 	editor.setContent('');
 	editor.execCommand('SelectAll');
