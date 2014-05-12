@@ -34,11 +34,9 @@ define("tinymce/util/URI", [
 	function URI(url, settings) {
 		var self = this, baseUri, base_url;
 
-		// Trim whitespace
 		url = trim(url);
-
-		// Default settings
 		settings = self.settings = settings || {};
+		baseUri = settings.base_uri;
 
 		// Strange app protocol that isn't http/https or local anchor
 		// For example: mailto,skype,tel etc.
@@ -51,7 +49,7 @@ define("tinymce/util/URI", [
 
 		// Absolute path with no host, fake host and protocol
 		if (url.indexOf('/') === 0 && !isProtocolRelative) {
-			url = (settings.base_uri ? settings.base_uri.protocol || 'http' : 'http') + '://mce_host' + url;
+			url = (baseUri ? baseUri.protocol || 'http' : 'http') + '://mce_host' + url;
 		}
 
 		// Relative path http:// or protocol relative //path
@@ -60,7 +58,8 @@ define("tinymce/util/URI", [
 			if (settings.base_uri.protocol === "") {
 				url = '//mce_host' + self.toAbsPath(base_url, url);
 			} else {
-				url = ((settings.base_uri && settings.base_uri.protocol) || 'http') + '://mce_host' + self.toAbsPath(base_url, url);
+				url = /([^#?]+)([#?]?.*)/.exec(url);
+				url = ((baseUri && baseUri.protocol) || 'http') + '://mce_host' + self.toAbsPath(base_url, url[1]) + url[2];
 			}
 		}
 
@@ -82,7 +81,6 @@ define("tinymce/util/URI", [
 			self[v] = part;
 		});
 
-		baseUri = settings.base_uri;
 		if (baseUri) {
 			if (!self.protocol) {
 				self.protocol = baseUri.protocol;

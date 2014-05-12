@@ -8,6 +8,7 @@ Version 4.0.27 (2014-05-xx)
 	Fixed bug where user defined type attribute value of text/javascript didn't get properly serialized.
 	Fixed bug where space in span elements would removed when the element was considered empty.
 	Fixed bug where the undo/redo button states didn't change if you removed all undo levels using undoManager.clear.
+	Fixed bug where unencoded links inside query strings or hash values would get processed by the relative urls logic.
 	Fixed so plain text mode works better when it converts rich text to plain text when pasting from for example Word.
 Version 4.0.26 (2014-05-06)
 	Fixed bug in media plugin where changing existing url did not use media regex patterns to create protocol neutral url.

@@ -22,7 +22,7 @@ test('parseFullURLs', 3, function() {
 	equal(new tinymce.util.URI('chrome-extension://abcdefghijklmnopqrstuvwzyz1234567890:8080/path/dir/file.ext?key1=val1&key2=val2#hash').getURI(), 'chrome-extension://abcdefghijklmnopqrstuvwzyz1234567890:8080/path/dir/file.ext?key1=val1&key2=val2#hash');
 });
 
-test('relativeURLs', 29, function() {
+test('relativeURLs', 31, function() {
 	equal(new tinymce.util.URI('http://www.site.com/dir1/dir2/file.html').toRelative('http://www.site.com/dir1/dir3/file.html'), '../dir3/file.html');
 	equal(new tinymce.util.URI('http://www.site.com/dir1/dir2/file.html').toRelative('http://www.site.com/dir3/dir4/file.html'), '../../dir3/dir4/file.html');
 	equal(new tinymce.util.URI('http://www.site.com/dir1/').toRelative('http://www.site.com/dir1/dir3/file.htm'), 'dir3/file.htm');
@@ -52,6 +52,8 @@ test('relativeURLs', 29, function() {
 	equal(new tinymce.util.URI('chrome-extension://abcdefghijklmnopqrstuvwzyz1234567890/dir1/dir2/').toRelative('/dir1', true), '../');
 	equal(new tinymce.util.URI('http://www.site.com/').toRelative('http://www.site.com/'), 'http://www.site.com/');
 	equal(new tinymce.util.URI('http://www.site.com/').toRelative('http://www.site.com'), 'http://www.site.com/');
+	equal(new tinymce.util.URI('http://www.site.com/dir1/dir2/').toRelative('/file.htm?q=http://site.com/'), '../../file.htm?q=http://site.com/');
+	equal(new tinymce.util.URI('http://www.site.com/dir1/dir2/').toRelative('/file.htm#http://site.com/'), '../../file.htm#http://site.com/');
 });
 
 test('absoluteURLs', 18, function() {
