@@ -6,6 +6,7 @@ Version 4.0.27 (2014-05-xx)
 	Fixed bug where Gecko would remove anchors when pasting since the their default built in logic removes empty nodes.
 	Fixed bug where it wasn't possible to paste on Chrome Andoid since it doesn't properly support the Clipboard API yet.
 	Fixed bug where user defined type attribute value of text/javascript didn't get properly serialized.
+	Fixed bug where space in span elements would removed when the element was considered empty.
 	Fixed so plain text mode works better when it converts rich text to plain text when pasting from for example Word.
 Version 4.0.26 (2014-05-06)
 	Fixed bug in media plugin where changing existing url did not use media regex patterns to create protocol neutral url.

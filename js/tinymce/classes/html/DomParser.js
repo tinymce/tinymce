@@ -573,7 +573,7 @@ define("tinymce/html/DomParser", [
 									// Leave nodes that have a name like <a name="name">
 									if (!node.attributes.map.name && !node.attributes.map.id) {
 										tempNode = node.parent;
-										node.empty().remove();
+										node.unwrap();
 										node = tempNode;
 										return;
 									}

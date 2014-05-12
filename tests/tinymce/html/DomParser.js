@@ -162,6 +162,12 @@
 		deepEqual(countNodes(root), {"body":1, "div":1, "section":1, "p":1, "#text":1}, 'P inside SECTION (count)');
 	});
 
+	test('Remove empty nodes', function() {
+		parser = new tinymce.html.DomParser({}, new tinymce.html.Schema({valid_elements: '-p,-span[id]'}));
+		root = parser.parse('<p>a<span></span><span> </span><span id="x">b</span><span id="y"></span></p><p></p><p><span></span></p><p> </p>');
+		equal(serializer.serialize(root), '<p>a <span id="x">b</span><span id="y"></span></p>');
+	});
+
 	test('addNodeFilter', function() {
 		var parser, result;
 
