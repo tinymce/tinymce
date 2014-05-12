@@ -39,8 +39,19 @@ define(
       return Arr.contains(blockList, tagName);
     };
 
+    var isFormatting = function (universe, item) {
+      var tagName = universe.property().name(item);
+      return Arr.contains([ 'address', 'pre', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ], tagName);
+    };
+
+    var isContainer = function (universe, item) {
+      return Arr.contains([ 'div', 'li', 'td', 'th', 'blockquote', 'body' ], universe.property().name(item));
+    };
+
     return {
-      isBlock: isBlock
+      isBlock: isBlock,
+      isFormatting: isFormatting,
+      isContainer: isContainer
     };
   }
 );
