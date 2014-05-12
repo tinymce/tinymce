@@ -99,10 +99,9 @@ define("tinymce/pasteplugin/Utils", [
 	 */
 	function trimHtml(html) {
 		html = filter(html, [
-			/^[\s\S]*<body[^>]*>\s*<!--StartFragment-->|<!--EndFragment-->\s*<\/body[^>]*>[\s\S]*$/g, // WebKit fragment body
+			/^[\s\S]*<body[^>]*>\s*|\s*<\/body[^>]*>[\s\S]*$/g, // Remove anything but the contents within the BODY element
 			/<!--StartFragment-->|<!--EndFragment-->/g, // Inner fragments (tables from excel on mac)
 			[/<span class="Apple-converted-space">\u00a0<\/span>/g, '\u00a0'], // WebKit &nbsp;
-			[/(.*)<body[^>]*>(.*?)<\/body>(.*)/gi, '$2'], // Remove anything but the contents within the BODY element
 			/<br>$/i // Trailing BR elements
 		]);
 
