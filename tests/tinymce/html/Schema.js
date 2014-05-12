@@ -256,6 +256,20 @@ test('getTextBlockElements', function() {
 	});
 });
 
+test('getTextInlineElements', function() {
+	var schema;
+
+	expect(1);
+
+	schema = new tinymce.html.Schema();
+	deepEqual(schema.getTextInlineElements(), {
+		"B": {}, "CITE": {}, "CODE": {}, "DFN": {},	"EM": {}, "FONT": {}, "I": {}, "MARK": {}, "Q": {},
+		"SAMP": {}, "SPAN": {}, "STRIKE": {}, "STRONG": {}, "SUB": {}, "SUP": {}, "U": {}, "VAR": {},
+		"b": {}, "cite": {}, "code": {}, "dfn": {}, "em": {}, "font": {}, "i": {}, "mark": {}, "q": {},
+		"samp": {}, "span": {}, "strike": {}, "strong": {}, "sub": {}, "sup": {}, "u": {}, "var": {}
+	});
+});
+
 test('isValidChild', function() {
 	var schema;
 

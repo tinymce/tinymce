@@ -323,7 +323,8 @@ define("tinymce/html/Schema", [
 	return function(settings) {
 		var self = this, elements = {}, children = {}, patternElements = [], validStyles, schemaItems;
 		var whiteSpaceElementsMap, selfClosingElementsMap, shortEndedElementsMap, boolAttrMap;
-		var blockElementsMap, nonEmptyElementsMap, textBlockElementsMap, customElementsMap = {}, specialElements = {};
+		var blockElementsMap, nonEmptyElementsMap, textBlockElementsMap, textInlineElementsMap;
+		var customElementsMap = {}, specialElements = {};
 
 		// Creates an lookup table map object for the specified option or the default value
 		function createLookupTable(option, default_value, extendWith) {
@@ -378,6 +379,8 @@ define("tinymce/html/Schema", [
 		blockElementsMap = createLookupTable('block_elements', 'hr table tbody thead tfoot ' +
 						'th tr td li ol ul caption dl dt dd noscript menu isindex option ' +
 						'datalist select optgroup', textBlockElementsMap);
+		textInlineElementsMap = createLookupTable('text_inline_elements', 'span strong b em i font strike u var cite ' +
+										'dfn code mark q sup sub samp');
 
 		each((settings.special || 'script noscript style textarea').split(' '), function(name) {
 			specialElements[name] = new RegExp('<\/' + name + '[^>]*>','gi');
@@ -767,6 +770,16 @@ define("tinymce/html/Schema", [
 		 */
 		self.getTextBlockElements = function() {
 			return textBlockElementsMap;
+		};
+
+		/**
+		 * Returns a map of inline text format nodes for example strong/span or ins.
+		 *
+		 * @method getTextInlineElements
+		 * @return {Object} Name/value lookup map for text format elements.
+		 */
+		self.getTextInlineElements = function() {
+			return textInlineElementsMap;
 		};
 
 		/**

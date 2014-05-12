@@ -174,7 +174,7 @@ define("tinymce/EnterKey", [
 			// Creates a new block element by cloning the current one or creating a new one if the name is specified
 			// This function will also copy any text formatting from the parent block and add it to the new one
 			function createNewBlock(name) {
-				var node = container, block, clonedNode, caretNode;
+				var node = container, block, clonedNode, caretNode, textInlineElements = schema.getTextInlineElements();
 
 				if (name || parentBlockName == "TABLE") {
 					block = dom.create(name || newBlockName);
@@ -188,7 +188,7 @@ define("tinymce/EnterKey", [
 				// Clone any parent styles
 				if (settings.keep_styles !== false) {
 					do {
-						if (/^(SPAN|STRONG|B|EM|I|FONT|STRIKE|U|VAR|CITE|DFN|CODE|MARK|Q|SUP|SUB|SAMP)$/.test(node.nodeName)) {
+						if (textInlineElements[node.nodeName]) {
 							// Never clone a caret containers
 							if (node.id == '_mce_caret') {
 								continue;
