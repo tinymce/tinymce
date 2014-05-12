@@ -303,30 +303,21 @@ define("tinymce/ui/FormatControls", [
 			});
 		});
 
-		function hasUndo() {
-			return editor.undoManager ? editor.undoManager.hasUndo() : false;
-		}
+		function toggleUndoRedoState(type) {
+			return function() {
+				var self = this;
 
-		function hasRedo() {
-			return editor.undoManager ? editor.undoManager.hasRedo() : false;
-		}
+				type = type == 'redo' ? 'hasRedo' : 'hasUndo';
 
-		function toggleUndoState() {
-			var self = this;
+				function checkState() {
+					return editor.undoManager ? editor.undoManager[type]() : false;
+				}
 
-			self.disabled(!hasUndo());
-			editor.on('Undo Redo AddUndo TypingUndo', function() {
-				self.disabled(!hasUndo());
-			});
-		}
-
-		function toggleRedoState() {
-			var self = this;
-
-			self.disabled(!hasRedo());
-			editor.on('Undo Redo AddUndo TypingUndo', function() {
-				self.disabled(!hasRedo());
-			});
+				self.disabled(!checkState());
+				editor.on('Undo Redo AddUndo TypingUndo ClearUndos', function() {
+					self.disabled(!checkState());
+				});
+			};
 		}
 
 		function toggleVisualAidState() {
@@ -341,13 +332,13 @@ define("tinymce/ui/FormatControls", [
 
 		editor.addButton('undo', {
 			tooltip: 'Undo',
-			onPostRender: toggleUndoState,
+			onPostRender: toggleUndoRedoState('undo'),
 			cmd: 'undo'
 		});
 
 		editor.addButton('redo', {
 			tooltip: 'Redo',
-			onPostRender: toggleRedoState,
+			onPostRender: toggleUndoRedoState('redo'),
 			cmd: 'redo'
 		});
 
@@ -362,7 +353,7 @@ define("tinymce/ui/FormatControls", [
 			text: 'Undo',
 			icon: 'undo',
 			shortcut: 'Ctrl+Z',
-			onPostRender: toggleUndoState,
+			onPostRender: toggleUndoRedoState('undo'),
 			cmd: 'undo'
 		});
 
@@ -370,7 +361,7 @@ define("tinymce/ui/FormatControls", [
 			text: 'Redo',
 			icon: 'redo',
 			shortcut: 'Ctrl+Y',
-			onPostRender: toggleRedoState,
+			onPostRender: toggleUndoRedoState('redo'),
 			cmd: 'redo'
 		});
 
