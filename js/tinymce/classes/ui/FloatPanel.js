@@ -128,6 +128,11 @@ define("tinymce/ui/FloatPanel", [
 			if (settings.autohide) {
 				if (!documentClickHandler) {
 					documentClickHandler = function(e) {
+						// Gecko fires click event and in the wrong order on Mac so lets normalize
+						if (e.button == 2) {
+							return;
+						}
+
 						// Hide any float panel when a click is out side that float panel and the
 						// float panels direct parent for example a click on a menu button
 						var i = visiblePanels.length;
