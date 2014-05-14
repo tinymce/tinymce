@@ -288,7 +288,8 @@ define("tinymce/ui/FloatPanel", [
 		},
 
 		/**
-		 * Hides all visible the float panels.
+		 * Hide all visible float panels with he autohide setting enabled. This is for
+		 * manually hiding floating menus or panels.
 		 *
 		 * @method hideAll
 		 */
@@ -331,7 +332,8 @@ define("tinymce/ui/FloatPanel", [
 	});
 
 	/**
-	 * Hides all visible the float panels.
+	 * Hide all visible float panels with he autohide setting enabled. This is for
+	 * manually hiding floating menus or panels.
 	 *
 	 * @static
 	 * @method hideAll
