@@ -660,7 +660,11 @@ define("tinymce/tableplugin/Plugin", [
 								e.stopPropagation();
 								this.parent().cancel();
 
-								insertTable(this.lastX + 1, this.lastY + 1);
+								editor.undoManager.transact((function() {
+									insertTable(this.lastX + 1, this.lastY + 1);
+								}).bind(this));
+
+								editor.addVisual();
 							}
 						}
 					}
