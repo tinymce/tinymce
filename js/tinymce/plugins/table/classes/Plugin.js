@@ -468,6 +468,9 @@ define("tinymce/tableplugin/Plugin", [
 			var tableElm = editor.dom.get('__mce');
 			editor.dom.setAttrib(tableElm, 'id', null);
 
+			editor.dom.setAttribs(tableElm, editor.settings.default_table_attributes || {});
+			editor.dom.setStyles(tableElm, editor.settings.default_table_styles || {});
+
 			return tableElm;
 		}
 
