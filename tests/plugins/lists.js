@@ -1842,7 +1842,7 @@ test('Indent single DT in DL', function() {
 	);
 
 	editor.focus();
-	Utils.setSelection('li', 0);
+	Utils.setSelection('dt', 0);
 	execCommand('Indent');
 
 	equal(editor.getContent(),
