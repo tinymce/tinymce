@@ -101,10 +101,10 @@ define("tinymce/EnterKey", [
 					}
 				}
 
-				if (root.nodeName == 'LI') {
+				if (/^(LI|DT|DD)$/.test(root.nodeName)) {
 					var firstChild = firstNonWhiteSpaceNodeSibling(root.firstChild);
 
-					if (firstChild && /^(UL|OL)$/.test(firstChild.nodeName)) {
+					if (firstChild && /^(UL|OL|DL)$/.test(firstChild.nodeName)) {
 						root.insertBefore(dom.doc.createTextNode('\u00a0'), root.firstChild);
 					}
 				}
@@ -349,7 +349,7 @@ define("tinymce/EnterKey", [
 				function getContainerBlock() {
 					var containerBlockParent = containerBlock.parentNode;
 
-					if (containerBlockParent.nodeName == 'LI') {
+					if (/^(LI|DT|DD)$/.test(containerBlockParent.nodeName)) {
 						return containerBlockParent;
 					}
 
