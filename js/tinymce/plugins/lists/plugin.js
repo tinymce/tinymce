@@ -15,7 +15,7 @@ tinymce.PluginManager.add('lists', function(editor) {
 	var self = this;
 
 	function isListNode(node) {
-		return node && (/^(OL|UL)$/).test(node.nodeName);
+		return node && (/^(OL|UL|DL)$/).test(node.nodeName);
 	}
 
 	function isFirstChild(node) {
@@ -202,7 +202,7 @@ tinymce.PluginManager.add('lists', function(editor) {
 
 		function getSelectedListItems() {
 			return tinymce.grep(selection.getSelectedBlocks(), function(block) {
-				return block.nodeName == 'LI';
+				return /^(LI|DT|DD)$/.test(block.nodeName);
 			});
 		}
 
@@ -294,6 +294,11 @@ tinymce.PluginManager.add('lists', function(editor) {
 				}
 			}
 
+			if (li.nodeName == 'DD') {
+				dom.rename(li, 'DT');
+				return true;
+			}
+
 			if (isFirstChild(li) && isLastChild(li)) {
 				if (ulParent.nodeName == "LI") {
 					dom.insertAfter(li, ulParent);
@@ -363,6 +368,11 @@ tinymce.PluginManager.add('lists', function(editor) {
 
 					dom.remove(from);
 				}
+			}
+
+			if (li.nodeName == 'DT') {
+				dom.rename(li, 'DD');
+				return true;
 			}
 
 			sibling = li.previousSibling;
@@ -458,7 +468,13 @@ tinymce.PluginManager.add('lists', function(editor) {
 		}
 
 		function applyList(listName) {
-			var rng = selection.getRng(true), bookmark = createBookmark(rng);
+			var rng = selection.getRng(true), bookmark = createBookmark(rng), listItemName = 'LI';
+
+			listName = listName.toUpperCase();
+
+			if (listName == 'DL') {
+				listItemName = 'DT';
+			}
 
 			function getSelectedTextBlocks() {
 				var textBlocks = [], root = editor.getBody();
@@ -537,21 +553,19 @@ tinymce.PluginManager.add('lists', function(editor) {
 				return textBlocks;
 			}
 
-			var textBlocks = getSelectedTextBlocks();
-
-			tinymce.each(textBlocks, function(block) {
+			tinymce.each(getSelectedTextBlocks(), function(block) {
 				var listBlock, sibling;
 
 				sibling = block.previousSibling;
 				if (sibling && isListNode(sibling) && sibling.nodeName == listName) {
 					listBlock = sibling;
-					block = dom.rename(block, 'LI');
+					block = dom.rename(block, listItemName);
 					sibling.appendChild(block);
 				} else {
 					listBlock = dom.create(listName);
 					block.parentNode.insertBefore(listBlock, block);
 					listBlock.appendChild(block);
-					block = dom.rename(block, 'LI');
+					block = dom.rename(block, listItemName);
 				}
 
 				mergeWithAdjacentLists(listBlock);
@@ -584,7 +598,7 @@ tinymce.PluginManager.add('lists', function(editor) {
 		}
 
 		function toggleList(listName) {
-			var parentList = dom.getParent(selection.getStart(), 'OL,UL');
+			var parentList = dom.getParent(selection.getStart(), 'OL,UL,DL');
 
 			if (parentList) {
 				if (parentList.nodeName == listName) {
@@ -597,6 +611,14 @@ tinymce.PluginManager.add('lists', function(editor) {
 			} else {
 				applyList(listName);
 			}
+		}
+
+		function queryListCommandState(listName) {
+			return function() {
+				var parentList = dom.getParent(editor.selection.getStart(), 'UL,OL,DL');
+
+				return parentList && parentList.nodeName == listName;
+			};
 		}
 
 		self.backspaceDelete = function(isForward) {
@@ -690,8 +712,16 @@ tinymce.PluginManager.add('lists', function(editor) {
 			toggleList('OL');
 		});
 
+		editor.addCommand('InsertDefinitionList', function() {
+			toggleList('DL');
+		});
+
+		editor.addQueryStateHandler('InsertUnorderedList', queryListCommandState('UL'));
+		editor.addQueryStateHandler('InsertOrderedList', queryListCommandState('OL'));
+		editor.addQueryStateHandler('InsertDefinitionList', queryListCommandState('DL'));
+
 		editor.on('keydown', function(e) {
-			if (e.keyCode == 9 && editor.dom.getParent(editor.selection.getStart(), 'LI')) {
+			if (e.keyCode == 9 && editor.dom.getParent(editor.selection.getStart(), 'LI,DT,DD')) {
 				e.preventDefault();
 
 				if (e.shiftKey) {
@@ -717,7 +747,7 @@ tinymce.PluginManager.add('lists', function(editor) {
 				for (var i = 0, l = blocks.length; !disable && i < l; i++) {
 					var tag = blocks[i].nodeName;
 
-					disable = (tag == 'LI' && isFirstChild(blocks[i]) || tag == 'UL' || tag == 'OL');
+					disable = (tag == 'LI' && isFirstChild(blocks[i]) || tag == 'UL' || tag == 'OL' || tag == 'DD');
 				}
 
 				ctrl.disabled(disable);

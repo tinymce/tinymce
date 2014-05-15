@@ -149,6 +149,7 @@ define("tinymce/ui/FormatControls", [
 						}
 
 						menuItem.format = formatName;
+						menuItem.cmd = format.cmd;
 					}
 
 					menu.push(menuItem);
@@ -195,19 +196,31 @@ define("tinymce/ui/FormatControls", [
 					},
 
 					onPostRender: function() {
-						var self = this, formatName = this.settings.format;
+						var self = this;
 
-						if (formatName) {
-							self.parent().on('show', function() {
+						self.parent().on('show', function() {
+							var formatName, command;
+
+							formatName = self.settings.format;
+							if (formatName) {
 								self.disabled(!editor.formatter.canApply(formatName));
 								self.active(editor.formatter.match(formatName));
-							});
-						}
+							}
+
+							command = self.settings.cmd;
+							if (command) {
+								self.active(editor.queryCommandState(command));
+							}
+						});
 					},
 
 					onclick: function() {
 						if (this.settings.format) {
 							toggleFormat(this.settings.format);
+						}
+
+						if (this.settings.cmd) {
+							editor.execCommand(this.settings.cmd);
 						}
 					}
 				}

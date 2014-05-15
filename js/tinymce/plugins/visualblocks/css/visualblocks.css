@@ -126,3 +126,10 @@
 	margin: 0 0 1em 3px;
 	background: transparent no-repeat url(data:image/gif;base64,R0lGODlhDQAKAIABALu7u////yH5BAEAAAEALAAAAAANAAoAAAIXjI8GybH6HHt0qourxC6CvzXieHyeWQAAOw==);
 }
+
+.mce-visualblocks dl {
+	padding-top: 10px;
+	border: 1px dashed #BBB;
+	margin: 0 0 1em 3px;
+	background: transparent no-repeat url(data:image/gif;base64,R0lGODlhDQAKAIABALu7u////yH5BAEAAAEALAAAAAANAAoAAAIXjI8GybEOnmOvUoWznTqeuEjNSCqeGRUAOw==);
+}

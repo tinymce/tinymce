@@ -1440,8 +1440,8 @@ define("tinymce/Editor", [
 			if ((queryItem = self.queryStateCommands[cmd])) {
 				returnVal = queryItem.func.call(queryItem.scope);
 
-				// Fall though on true
-				if (returnVal !== true) {
+				// Fall though on non boolean returns
+				if (returnVal === true || returnVal === false) {
 					return returnVal;
 				}
 			}

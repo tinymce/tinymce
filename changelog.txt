@@ -1,4 +1,7 @@
 Version 4.0.27 (2014-05-xx)
+	Added support for definition lists to lists plugin and enter key logic. This can now created by the format menu.
+	Added cmd option for the style_formats menu enables you to toggle commands on/off using the formats menu for example lists.
+	Added definition lists to visualblocks plugin so these are properly visualized like other list elements.
 	Added new paste_merge_formats option that reduces the number of nested text format elements produced on paste. Enabled by default.
 	Added better support for nested link_list/image_list menu items each item can now have a "menu" item with subitems.
 	Added "Add to Dictionary" support to spellchecker plugin when the backend tells that this feature is available.
@@ -12,6 +15,7 @@ Version 4.0.27 (2014-05-xx)
 	Fixed bug where unencoded links inside query strings or hash values would get processed by the relative urls logic.
 	Fixed bug where contextmenu would automatically close in inline editing mode on Firefox running on Mac.
 	Fixed bug where Gecko/IE would produce multiple BR elements when forced_root_block was set to false and a table was the last child of body.
+	Fixed bug where custom queryCommandState handlers didn't properly handle boolean states.
 	Fixed so plain text mode works better when it converts rich text to plain text when pasting from for example Word.
 Version 4.0.26 (2014-05-06)
 	Fixed bug in media plugin where changing existing url did not use media regex patterns to create protocol neutral url.

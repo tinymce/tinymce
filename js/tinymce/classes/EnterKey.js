@@ -579,8 +579,8 @@ define("tinymce/EnterKey", [
 				parentBlockName = containerBlockName;
 			}
 
-			// Handle enter in LI
-			if (parentBlockName == 'LI') {
+			// Handle enter in list item
+			if (/^(LI|DT|DD)$/.test(parentBlockName)) {
 				if (!newBlockName && shiftKey) {
 					insertBr();
 					return;

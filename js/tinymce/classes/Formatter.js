@@ -79,7 +79,6 @@ define("tinymce/Formatter", [
 
 		function defaultFormats() {
 			register({
-				
 				valigntop: [
 					{selector: 'td,th', styles: {'verticalAlign': 'top'}}
 				],
