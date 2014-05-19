@@ -531,9 +531,7 @@ define("tinymce/tableplugin/TableGrid", [
 			var rows;
 
 			function deleteRow(tr) {
-				var nextTr, pos, lastCell;
-
-				nextTr = dom.getNext(tr, 'tr');
+				var pos, lastCell;
 
 				// Move down row spanned cells
 				each(tr.cells, function(cell) {

@@ -298,7 +298,9 @@ define("tinymce/dom/DOMUtils", [
 				selectorVal = selector;
 
 				if (selector === '*') {
-					selector = function(node) {return node.nodeType == 1;};
+					selector = function(node) {
+						return node.nodeType == 1;
+					};
 				} else {
 					selector = function(node) {
 						return self.is(node, selectorVal);

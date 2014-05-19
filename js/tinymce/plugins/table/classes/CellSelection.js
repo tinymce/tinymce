@@ -88,7 +88,7 @@ define("tinymce/tableplugin/CellSelection", [
 		});
 
 		editor.on('MouseUp', function() {
-			var rng, sel = editor.selection, selectedCells, walker, node, lastNode, endNode;
+			var rng, sel = editor.selection, selectedCells, walker, node, lastNode;
 
 			function setPoint(node, start) {
 				var walker = new TreeWalker(node, node);
@@ -129,7 +129,6 @@ define("tinymce/tableplugin/CellSelection", [
 				if (selectedCells.length > 0) {
 					rng = dom.createRng();
 					node = selectedCells[0];
-					endNode = selectedCells[selectedCells.length - 1];
 					rng.setStartBefore(node);
 					rng.setEndAfter(node);
 

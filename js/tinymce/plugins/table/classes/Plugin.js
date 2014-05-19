@@ -26,7 +26,7 @@ define("tinymce/tableplugin/Plugin", [
 	var each = Tools.each;
 
 	function Plugin(editor) {
-		var winMan, clipboardRows, self = this; // Might be selected cells on reload
+		var clipboardRows, self = this; // Might be selected cells on reload
 
 		function removePxSuffix(size) {
 			return size ? size.replace(/px$/, '') : "";
@@ -746,7 +746,6 @@ define("tinymce/tableplugin/Plugin", [
 		self.quirks = new Quirks(editor);
 
 		editor.on('Init', function() {
-			winMan = editor.windowManager;
 			self.cellSelection = new CellSelection(editor);
 		});
 
@@ -757,13 +756,9 @@ define("tinymce/tableplugin/Plugin", [
 			},
 
 			mceTableMergeCells: function(grid) {
-				var rowSpan, colSpan, cell;
+				var cell;
 
 				cell = editor.dom.getParent(editor.selection.getStart(), 'th,td');
-				if (cell) {
-					rowSpan = cell.rowSpan;
-					colSpan = cell.colSpan;
-				}
 
 				if (!editor.dom.select('td.mce-item-selected,th.mce-item-selected').length) {
 					mergeDialog(grid, cell);
