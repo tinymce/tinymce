@@ -114,15 +114,6 @@ define("tinymce/dom/Serializer", [
 			}
 		});
 
-		// Remove expando attributes
-		htmlParser.addAttributeFilter('data-mce-expando', function(nodes, name) {
-			var i = nodes.length;
-
-			while (i--) {
-				nodes[i].attr(name, null);
-			}
-		});
-
 		htmlParser.addNodeFilter('noscript', function(nodes) {
 			var i = nodes.length, node;
 
@@ -225,13 +216,19 @@ define("tinymce/dom/Serializer", [
 		}
 
 		// Remove internal data attributes
-		htmlParser.addAttributeFilter('data-mce-src,data-mce-href,data-mce-style,data-mce-selected', function(nodes, name) {
-			var i = nodes.length;
+		htmlParser.addAttributeFilter(
+			'data-mce-src,data-mce-href,data-mce-style,' +
+			'data-mce-selected,data-mce-expando,' +
+			'data-mce-type,data-mce-resize',
 
-			while (i--) {
-				nodes[i].attr(name, null);
+			function(nodes, name) {
+				var i = nodes.length;
+
+				while (i--) {
+					nodes[i].attr(name, null);
+				}
 			}
-		});
+		);
 
 		// Return public methods
 		return {
