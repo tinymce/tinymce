@@ -468,8 +468,8 @@ define("tinymce/tableplugin/Plugin", [
 			var tableElm = editor.dom.get('__mce');
 			editor.dom.setAttrib(tableElm, 'id', null);
 
-			editor.dom.setAttribs(tableElm, editor.settings.default_table_attributes || {});
-			editor.dom.setStyles(tableElm, editor.settings.default_table_styles || {});
+			editor.dom.setAttribs(tableElm, editor.settings.table_default_attributes || {});
+			editor.dom.setStyles(tableElm, editor.settings.table_default_styles || {});
 
 			return tableElm;
 		}
@@ -655,14 +655,16 @@ define("tinymce/tableplugin/Plugin", [
 						},
 
 						onclick: function(e) {
+							var self = this;
+
 							if (e.target.tagName.toUpperCase() == 'A') {
 								e.preventDefault();
 								e.stopPropagation();
-								this.parent().cancel();
+								self.parent().cancel();
 
-								editor.undoManager.transact((function() {
-									insertTable(this.lastX + 1, this.lastY + 1);
-								}).bind(this));
+								editor.undoManager.transact(function() {
+									insertTable(self.lastX + 1, self.lastY + 1);
+								});
 
 								editor.addVisual();
 							}
