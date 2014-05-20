@@ -162,7 +162,7 @@ define("tinymce/dom/TridentSelection", [], function() {
 					}
 
 					// Find the text node and offset
-					while (sibling) {
+					while (sibling && sibling.nodeValue) {
 						nodeValue = sibling.nodeValue;
 						textNodeOffset += nodeValue.length;
 
@@ -195,7 +195,7 @@ define("tinymce/dom/TridentSelection", [], function() {
 						return;
 					}
 
-					while (sibling) {
+					while (sibling && sibling.nodeValue) {
 						textNodeOffset += sibling.nodeValue.length;
 
 						// We are at or passed the position we where looking for

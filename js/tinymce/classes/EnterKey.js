@@ -53,7 +53,10 @@ define("tinymce/EnterKey", [
 				var node = block, firstChilds = [], i;
 
 				// Find inner most first child ex: <p><i><b>*</b></i></p>
-				while ((node = node.firstChild)) {
+				if (node) {
+					node = node.firstChild;
+				}
+				while (node) {
 					if (dom.isBlock(node)) {
 						return;
 					}
@@ -61,6 +64,8 @@ define("tinymce/EnterKey", [
 					if (node.nodeType == 1 && !nonEmptyElementsMap[node.nodeName.toLowerCase()]) {
 						firstChilds.push(node);
 					}
+					
+					node = node.firstChild;
 				}
 
 				i = firstChilds.length;
