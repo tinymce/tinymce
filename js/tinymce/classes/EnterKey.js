@@ -52,6 +52,10 @@ define("tinymce/EnterKey", [
 			function trimInlineElementsOnLeftSideOfBlock(block) {
 				var node = block, firstChilds = [], i;
 
+				if (!node) {
+					return;
+				}
+
 				// Find inner most first child ex: <p><i><b>*</b></i></p>
 				while ((node = node.firstChild)) {
 					if (dom.isBlock(node)) {
@@ -90,6 +94,10 @@ define("tinymce/EnterKey", [
 
 						node = node.nextSibling;
 					}
+				}
+
+				if (!root) {
+					return;
 				}
 
 				// Old IE versions doesn't properly render blocks with br elements in them

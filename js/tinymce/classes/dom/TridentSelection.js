@@ -163,15 +163,17 @@ define("tinymce/dom/TridentSelection", [], function() {
 
 					// Find the text node and offset
 					while (sibling) {
-						nodeValue = sibling.nodeValue;
-						textNodeOffset += nodeValue.length;
+						if (sibling.nodeType == 3) {
+							nodeValue = sibling.nodeValue;
+							textNodeOffset += nodeValue.length;
 
-						// We are at or passed the position we where looking for
-						if (textNodeOffset >= offset) {
-							container = sibling;
-							textNodeOffset -= offset;
-							textNodeOffset = nodeValue.length - textNodeOffset;
-							break;
+							// We are at or passed the position we where looking for
+							if (textNodeOffset >= offset) {
+								container = sibling;
+								textNodeOffset -= offset;
+								textNodeOffset = nodeValue.length - textNodeOffset;
+								break;
+							}
 						}
 
 						sibling = sibling.nextSibling;
@@ -196,13 +198,15 @@ define("tinymce/dom/TridentSelection", [], function() {
 					}
 
 					while (sibling) {
-						textNodeOffset += sibling.nodeValue.length;
+						if (sibling.nodeType == 3) {
+							textNodeOffset += sibling.nodeValue.length;
 
-						// We are at or passed the position we where looking for
-						if (textNodeOffset >= offset) {
-							container = sibling;
-							textNodeOffset -= offset;
-							break;
+							// We are at or passed the position we where looking for
+							if (textNodeOffset >= offset) {
+								container = sibling;
+								textNodeOffset -= offset;
+								break;
+							}
 						}
 
 						sibling = sibling.previousSibling;
