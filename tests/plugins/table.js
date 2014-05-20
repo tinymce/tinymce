@@ -8,7 +8,7 @@ module("tinymce.plugins.Table", {
 			skin: false,
 			plugins: 'table',
 			valid_styles: {
-				'*' : 'width,height,text-align,float'
+				'*' : 'width,height,vertical-align,text-align,float'
 			},
 			init_instance_callback: function(ed) {
 				window.editor = ed;

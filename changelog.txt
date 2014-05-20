@@ -5,8 +5,9 @@ Version 4.0.27 (2014-05-xx)
 	Added new paste_merge_formats option that reduces the number of nested text format elements produced on paste. Enabled by default.
 	Added better support for nested link_list/image_list menu items each item can now have a "menu" item with subitems.
 	Added "Add to Dictionary" support to spellchecker plugin when the backend tells that this feature is available.
-	Added table_default_attributes/table_default_styles options patch contributed by Dan Villiom Podlaski Christiansen.
-	Added table_class_list/table_cell_class_list/table_row_class_list options to table plugin.
+	Added new table_default_attributes/table_default_styles options patch contributed by Dan Villiom Podlaski Christiansen.
+	Added new table_class_list/table_cell_class_list/table_row_class_list options to table plugin.
+	Added new invalid_styles/valid_classes options to better control what gets returned for the style/class attribute.
 	Fixed so the selected state is properly handled on nested menu items in listboxes patch contributed by Jelle Kralt.
 	Fixed so the invisiblity css value for TinyMCE gets set to inherit instead of visible to better support dialog scripts like reveal.
 	Fixed bug where Gecko would remove anchors when pasting since the their default built in logic removes empty nodes.
