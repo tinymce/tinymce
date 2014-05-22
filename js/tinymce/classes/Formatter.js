@@ -2180,7 +2180,7 @@ define("tinymce/Formatter", [
 				node = container;
 
 				if (container.nodeType == 3) {
-					if (offset != container.nodeValue.length || container.nodeValue === INVISIBLE_CHAR) {
+					if (offset != container.nodeValue.length) {
 						hasContentAfter = true;
 					}
 
