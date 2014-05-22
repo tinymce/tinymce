@@ -25,7 +25,7 @@ define("tinymce/ui/FloatPanel", [
 ], function(Panel, Movable, Resizable, DomUtils) {
 	"use strict";
 
-	var documentClickHandler, documentScrollHandler, visiblePanels = [];
+	var documentClickHandler, documentScrollHandler, windowResizeHandler, visiblePanels = [];
 	var zOrder = [], hasModal;
 
 	var FloatPanel = Panel.extend({
@@ -177,6 +177,14 @@ define("tinymce/ui/FloatPanel", [
 				self.on('move', function() {
 					repositionPanel(this);
 				});
+			}
+
+			if (!windowResizeHandler) {
+				windowResizeHandler = function() {
+					FloatPanel.hideAll();
+				};
+
+				DomUtils.on(window, 'resize', windowResizeHandler);
 			}
 
 			self.on('postrender show', function(e) {

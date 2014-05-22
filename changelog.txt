@@ -19,6 +19,7 @@ Version 4.0.27 (2014-05-xx)
 	Fixed bug where contextmenu would automatically close in inline editing mode on Firefox running on Mac.
 	Fixed bug where Gecko/IE would produce multiple BR elements when forced_root_block was set to false and a table was the last child of body.
 	Fixed bug where custom queryCommandState handlers didn't properly handle boolean states.
+	Fixed bug where auto closing float panels link menus wasn't automatically closed when the window was resized.
 	Fixed so plain text mode works better when it converts rich text to plain text when pasting from for example Word.
 Version 4.0.26 (2014-05-06)
 	Fixed bug in media plugin where changing existing url did not use media regex patterns to create protocol neutral url.
