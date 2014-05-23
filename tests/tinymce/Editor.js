@@ -294,7 +294,7 @@ test('execCommand return values', function() {
 	var expectedSuccess = editor.execCommand("SelectAll");
 	strictEqual(expectedSuccess, true, "Return value for an editor handled command");
 
-	// Would be nice to have a test here for a command that WILL be passed to the Browser
-	// and will return true, but I can't easily find/think of one that will make it to
-	// the browser and be handled with true on all platforms?
+	// At least on WebKit/Mac, this falls through to the browser case and does return true
+	var expectedSuccess = editor.execCommand("InsertLineBreak");
+	strictEqual(expectedSuccess, true, "Return value for a browser-handled command");
 });
