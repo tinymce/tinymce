@@ -1424,8 +1424,12 @@ define("tinymce/Editor", [
 			}
 
 			// Browser commands
-			self.getDoc().execCommand(cmd, ui, value);
-			self.fire('ExecCommand', {command: cmd, ui: ui, value: value});
+			if (self.getDoc().execCommand(cmd, ui, value)) {
+				self.fire('ExecCommand', {command: cmd, ui: ui, value: value});
+				return true;
+			}
+
+			return false;
 		},
 
 		/**
