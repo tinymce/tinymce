@@ -70,7 +70,7 @@ define(
     var reuse = function (universe, base, baseOffset, end, endOffset, predicate, nu) {
       var start = Navigation.toLeaf(universe, base, baseOffset);
       var finish = Navigation.toLeaf(universe, end, endOffset);
-      var nodes = Split.range(universe, base, baseOffset, end, endOffset);
+      var nodes = Split.range(universe, start.element(), start.offset(), finish.element(), finish.offset());
       
       var groups = Contiguous.textnodes(universe, nodes);
 

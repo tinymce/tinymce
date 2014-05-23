@@ -27,7 +27,8 @@ test(
             TextGene('1.5', 'rho'),
             Gene('img', 'img'),
             TextGene('1.6', 'epsilon')
-          ])
+          ]),
+          Gene('4', 'br', [])
         ])
       );
     };
@@ -53,20 +54,33 @@ test(
       }));
     };
       
-    check('root(1(new-span-1(text("alpha"),text("b")),text("eta"),text("gamma")),2(text("delta")),3(text("rho"),img,text("epsilon")))', [
+    check('root(1(new-span-1(text("alpha"),text("b")),text("eta"),text("gamma")),2(text("delta")),3(text("rho"),img,text("epsilon")),4)', [
       'new-span-1'
     ], '1.1', 0, '1.2', 1);
 
-    check('root(1(text("alpha"),text("b"),new-span-1(text("eta"),text("gamma"))),2(text("delta")),3(new-span-2(text("rho")),img,text("epsilon")))', [
+    check('root(1(text("alpha"),text("b"),new-span-1(text("eta"),text("gamma"))),2(text("delta")),3(new-span-2(text("rho")),img,text("epsilon")),4)', [
       'new-span-1',
       '2',
       'new-span-2'
     ], '1.2', 1, '1.5', 3);
 
-    check('root(1(text("alpha"),text("beta"),text("gamma")),2(text("delta")),3(new-span-1(text("rho")),img,text("epsilon")))', [
+    check('root(1(text("alpha"),text("beta"),text("gamma")),2(text("delta")),3(new-span-1(text("rho")),img,text("epsilon")),4)', [
       '1',
       '2',
       'new-span-1'
     ], '1.1', 0, '1.5', 3);
+
+    check('root(1(text("alpha"),text("beta"),text("gamma")),2(text("delta")),3(new-span-1(text("rho")),img,text("epsilon")),4)', [
+      '1',
+      '2',
+      'new-span-1'
+    ], '1.1', 0, '1.5', 3);
+
+    check('root(1(text("alpha"),text("beta"),text("gamma")),2(text("delta")),3(new-span-1(text("rho")),img,new-span-2(text("epsilon"))),4)', [
+      '1',
+      '2',
+      'new-span-1',
+      'new-span-2'
+    ], '1.1', 0, 'root', 3);
   }
 );
