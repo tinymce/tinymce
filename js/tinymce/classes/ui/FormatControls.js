@@ -509,7 +509,14 @@ define("tinymce/ui/FormatControls", [
 			var fontsize_formats = editor.settings.fontsize_formats || defaultFontsizeFormats;
 
 			each(fontsize_formats.split(' '), function(item) {
-				items.push({text: item, value: item});
+				var text = item, value = item;
+				// Allow text=value font sizes.
+				var values = item.split('=');
+				if (values.length > 1) {
+					text = values[0];
+					value = values[1];
+				}
+				items.push({text: text, value: value});
 			});
 
 			return {
