@@ -617,7 +617,7 @@ define("tinymce/dom/DOMUtils", [
 						});
 
 						// Default px suffix on these
-						if (typeof(value) === 'number' && !numericCssMap[name]) {
+						if (((typeof(value) === 'number') || /^[\-0-9\.]+$/.test(value)) && !numericCssMap[name]) {
 							value += 'px';
 						}
 
