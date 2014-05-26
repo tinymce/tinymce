@@ -40,6 +40,10 @@ module("tinymce.Editor", {
 				}
 			}
 		});
+	},
+
+	teardown: function() {
+		Utils.unpatch(editor.getDoc()); 
 	}
 });
 
@@ -287,14 +291,16 @@ test('insertContent merge', function() {
 	equal(editor.getContent(), '<p><strong>a<em>b</em></strong></p>');
 });
 
-test('execCommand return values', function() {
-	var expectedFailure = editor.execCommand("Bogus");
-	strictEqual(expectedFailure, false, "Return value for a completely unhandled command");
+test('execCommand return values for native commands', function() {
+	var lastCmd;
 
-	var expectedSuccess = editor.execCommand("SelectAll");
-	strictEqual(expectedSuccess, true, "Return value for an editor handled command");
+	strictEqual(editor.execCommand("NonExistingCommand"), false, "Return value for a completely unhandled command");
 
-	// Would be nice to have a test here for a command that WILL be passed to the Browser
-	// and will return true, but I can't easily find/think of one that will make it to
-	// the browser and be handled with true on all platforms?
+	Utils.patch(editor.getDoc(), 'execCommand', function(orgFunc, cmd, ui, value) {
+		lastCmd = cmd;
+		return true;
+	});
+
+	strictEqual(editor.execCommand("ExistingCommand"), true, "Return value for an editor handled command");
+	strictEqual(lastCmd, "ExistingCommand");
 });
