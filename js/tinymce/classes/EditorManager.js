@@ -128,9 +128,16 @@ define("tinymce/EditorManager", [
 			var self = this, baseURL, documentBaseURL, suffix = "", preInit, src;
 
 			// Get base URL for the current document
-			documentBaseURL = document.location.href.replace(/[\?#].*$/, '').replace(/[\/\\][^\/]+$/, '');
-			if (!/[\/\\]$/.test(documentBaseURL)) {
-				documentBaseURL += '/';
+			documentBaseURL = document.location.href;
+
+			// Check if the URL is a document based format like: http://site/dir/file
+			// leave other formats like applewebdata://... intact
+			if (/^[^:]+:\/\/[^\/]+\//.test(documentBaseURL)) {
+				documentBaseURL = documentBaseURL.replace(/[\?#].*$/, '').replace(/[\/\\][^\/]+$/, '');
+
+				if (!/[\/\\]$/.test(documentBaseURL)) {
+					documentBaseURL += '/';
+				}
 			}
 
 			// If tinymce is defined and has a base use that or use the old tinyMCEPreInit
