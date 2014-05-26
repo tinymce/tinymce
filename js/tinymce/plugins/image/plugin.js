@@ -275,7 +275,7 @@ tinymce.PluginManager.add('image', function(editor) {
 						altCtrl.value(e.control.text());
 					}
 
-					win.find('#src').value(e.control.value());
+					win.find('#src').value(e.control.value()).fire('change');
 				},
 				onPostRender: function() {
 					imageListCtrl = this;
