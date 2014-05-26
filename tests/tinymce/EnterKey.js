@@ -990,6 +990,19 @@ test('Enter when forced_root_block: false and force_p_newlines: true', function(
 	equal(editor.getContent(),'<p>te</p><p>xt</p>');
 });
 
+test('Enter at end of br line', function() {
+	editor.settings.forced_root_block = false;
+	editor.settings.force_p_newlines = true;
+	editor.getBody().innerHTML = '<p>a<br>b</p>';
+	Utils.setSelection('p', 1);
+	Utils.pressEnter();
+	equal(editor.getContent(), '<p>a</p><p><br />b</p>');
+
+	var rng = editor.selection.getRng(true);
+	equal(rng.startContainer.nodeName, 'P');
+	equal(rng.startContainer.childNodes[rng.startOffset].nodeName, 'BR');
+});
+
 // Ignore on IE 7, 8 this is a known bug not worth fixing
 if (!tinymce.Env.ie || tinymce.Env.ie > 8) {
 	test('Enter before BR between DIVs', function() {

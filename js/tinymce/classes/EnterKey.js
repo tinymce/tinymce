@@ -119,6 +119,13 @@ define("tinymce/EnterKey", [
 
 				rng = dom.createRng();
 
+				// Normalize whitespace to remove empty text nodes. Fix for: #6904
+				// Gecko will be able to place the caret in empty text nodes but it won't render propery
+				// Older IE versions will sometimes crash so for now ignore all IE versions
+				if (!Env.ie) {
+					root.normalize();
+				}
+
 				if (root.hasChildNodes()) {
 					walker = new TreeWalker(root, root);
 

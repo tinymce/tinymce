@@ -17,8 +17,9 @@
  * @extends tinymce.ui.ComboBox
  */
 define("tinymce/ui/FilePicker", [
-	"tinymce/ui/ComboBox"
-], function(ComboBox) {
+	"tinymce/ui/ComboBox",
+	"tinymce/util/Tools"
+], function(ComboBox, Tools) {
 	"use strict";
 
 	return ComboBox.extend({
@@ -29,12 +30,17 @@ define("tinymce/ui/FilePicker", [
 		 * @param {Object} settings Name/value object with settings.
 		 */
 		init: function(settings) {
-			var self = this, editor = tinymce.activeEditor, fileBrowserCallback;
+			var self = this, editor = tinymce.activeEditor, fileBrowserCallback, fileBrowserCallbackTypes;
 
 			settings.spellcheck = false;
 
+			fileBrowserCallbackTypes = editor.settings.file_browser_callback_types;
+			if (fileBrowserCallbackTypes) {
+				fileBrowserCallbackTypes = Tools.makeMap(fileBrowserCallbackTypes, /[, ]/);
+			}
+
 			fileBrowserCallback = editor.settings.file_browser_callback;
-			if (fileBrowserCallback) {
+			if (fileBrowserCallback && (!fileBrowserCallbackTypes || fileBrowserCallbackTypes[settings.filetype])) {
 				settings.icon = 'browse';
 
 				settings.onaction = function() {

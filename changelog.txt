@@ -8,6 +8,7 @@ Version 4.0.27 (2014-05-xx)
 	Added new table_default_attributes/table_default_styles options patch contributed by Dan Villiom Podlaski Christiansen.
 	Added new table_class_list/table_cell_class_list/table_row_class_list options to table plugin.
 	Added new invalid_styles/valid_classes options to better control what gets returned for the style/class attribute.
+	Added new file_browser_callback_types option that allows you to specify where to display the picker based on dialog type.
 	Fixed so the selected state is properly handled on nested menu items in listboxes patch contributed by Jelle Kralt.
 	Fixed so the invisiblity css value for TinyMCE gets set to inherit instead of visible to better support dialog scripts like reveal.
 	Fixed bug where Gecko would remove anchors when pasting since the their default built in logic removes empty nodes.
@@ -23,6 +24,7 @@ Version 4.0.27 (2014-05-xx)
 	Fixed bug where the image plugin wouldn't update image dimensions when the current image was changed using the image_list select box.
 	Fixed bug with paste plugin not properly removing paste bin on Safari Mac when using the cmd+shift+v keyboard command.
 	Fixed bug where the paste plugin wouln't properly strip trailing br elements under very specific scenarios.
+	Fixed bug where enter key wouldn't properly place the caret on Gecko when pressing enter in a text block with a br ended line inside.
 	Fixed so plain text mode works better when it converts rich text to plain text when pasting from for example Word.
 	Fixed bug where formatting before cursor gets removed when toggled off for continued content.
 Version 4.0.26 (2014-05-06)
