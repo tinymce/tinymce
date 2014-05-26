@@ -1424,7 +1424,13 @@ define("tinymce/Editor", [
 			}
 
 			// Browser commands
-			if (self.getDoc().execCommand(cmd, ui, value)) {
+			try {
+				state = self.getDoc().execCommand(cmd, ui, value);
+			} catch (ex) {
+				// Ignore old IE errors
+			}
+
+			if (state) {
 				self.fire('ExecCommand', {command: cmd, ui: ui, value: value});
 				return true;
 			}
