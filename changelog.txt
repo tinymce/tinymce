@@ -21,6 +21,8 @@ Version 4.0.27 (2014-05-xx)
 	Fixed bug where custom queryCommandState handlers didn't properly handle boolean states.
 	Fixed bug where auto closing float panels link menus wasn't automatically closed when the window was resized.
 	Fixed bug where the image plugin wouldn't update image dimensions when the current image was changed using the image_list select box.
+	Fixed bug with paste plugin not properly removing paste bin on Safari Mac when using the cmd+shift+v keyboard command.
+	Fixed bug where the paste plugin wouln't properly strip trailing br elements under very specific scenarios.
 	Fixed so plain text mode works better when it converts rich text to plain text when pasting from for example Word.
 	Fixed bug where formatting before cursor gets removed when toggled off for continued content.
 Version 4.0.26 (2014-05-06)

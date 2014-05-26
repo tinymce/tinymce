@@ -337,15 +337,21 @@ define("tinymce/pasteplugin/Clipboard", [
 			return mimeType in clipboardContent && clipboardContent[mimeType].length > 0;
 		}
 
+		function isKeyboardPasteEvent(e) {
+			return (VK.metaKeyPressed(e) && e.keyCode == 86) || (e.shiftKey && e.keyCode == 45);
+		}
+
 		function registerEventHandlers() {
 			editor.on('keydown', function(e) {
-				if (e.isDefaultPrevented()) {
-					return;
-				}
-
 				// Ctrl+V or Shift+Insert
-				if ((VK.metaKeyPressed(e) && e.keyCode == 86) || (e.shiftKey && e.keyCode == 45)) {
+				if (isKeyboardPasteEvent(e) && !e.isDefaultPrevented()) {
 					keyboardPastePlainTextState = e.shiftKey && e.keyCode == 86;
+
+					// Edge case on Safari on Mac where it doesn't handle Cmd+Shift+V correctly
+					// it fires the keydown but no paste or keyup so we are left with a paste bin
+					if (keyboardPastePlainTextState && Env.webkit && navigator.userAgent.indexOf('Version/') != -1) {
+						return;
+					}
 
 					// Prevent undoManager keydown handler from making an undo level with the pastebin in it
 					e.stopImmediatePropagation();
@@ -362,6 +368,13 @@ define("tinymce/pasteplugin/Clipboard", [
 
 					removePasteBin();
 					createPasteBin();
+				}
+			});
+
+			editor.on('keyup', function(e) {
+				// Ctrl+V or Shift+Insert
+				if (isKeyboardPasteEvent(e) && !e.isDefaultPrevented()) {
+					removePasteBin();
 				}
 			});
 
@@ -404,7 +417,7 @@ define("tinymce/pasteplugin/Clipboard", [
 
 					// Grab HTML from Clipboard API or paste bin as a fallback
 					if (hasContentType(clipboardContent, 'text/html')) {
-						content = Utils.trimHtml(clipboardContent['text/html']);
+						content = clipboardContent['text/html'];
 					} else {
 						content = getPasteBinHtml();
 
@@ -414,6 +427,8 @@ define("tinymce/pasteplugin/Clipboard", [
 							plainTextMode = true;
 						}
 					}
+
+					content = Utils.trimHtml(getPasteBinHtml());
 
 					// WebKit has a nice bug where it clones the paste bin if you paste from for example notepad
 					// so we need to force plain text mode in this case
@@ -514,9 +529,12 @@ define("tinymce/pasteplugin/Clipboard", [
 			});
 		});
 
-		// Fix for #6504 we need to remove the paste bin on IE if the user paste in a file
-		editor.on('PreProcess', function() {
-			editor.dom.remove(editor.dom.get('mcepastebin'));
+		editor.on('BeforeAddUndo', function(e) {
+			// Remove pastebin HTML incase it should be added to an undo
+			// level for example when you paste a file on older IE
+			if (e.level.content) {
+				e.level.content = e.level.content.replace(/<div id="?mcepastebin"?[^>]+>%MCEPASTEBIN%<\/div>/gi, '');
+			}
 		});
 	};
 });
