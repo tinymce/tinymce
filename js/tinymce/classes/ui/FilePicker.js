@@ -29,22 +29,37 @@ define("tinymce/ui/FilePicker", [
 		 * @param {Object} settings Name/value object with settings.
 		 */
 		init: function(settings) {
-			var self = this, editor = tinymce.activeEditor, fileBrowserCallback;
+			var self = this, editor = tinymce.activeEditor, fileBrowserCallback, fileBrowserCallbackEnabled;
 
 			settings.spellcheck = false;
 
 			fileBrowserCallback = editor.settings.file_browser_callback;
 			if (fileBrowserCallback) {
-				settings.icon = 'browse';
+			
+				fileBrowserCallbackEnabled = editor.settings.file_browser_callback_enabled;
+				
+				if (fileBrowserCallbackEnabled && typeof(fileBrowserCallbackEnabled) == 'string') {
+					// Option enabled set to a string, check if the current fileBrowser match the setting
+					// Current filetype possible values are file, image, and media
+					// file_browser_callback_enabled should be set to something like file|image
+					fileBrowserCallbackEnabled = fileBrowserCallbackEnabled.indexOf(settings.filetype) !== -1;
+				} else if (typeof(fileBrowserCallbackEnabled) == 'undefined') {
+					// Option not set, consider it enabled
+					fileBrowserCallbackEnabled = true;
+				}
+				
+				if (fileBrowserCallbackEnabled) {
+					settings.icon = 'browse';
 
-				settings.onaction = function() {
-					fileBrowserCallback(
-						self.getEl('inp').id,
-						self.getEl('inp').value,
-						settings.filetype,
-						window
-					);
-				};
+					settings.onaction = function() {
+						fileBrowserCallback(
+							self.getEl('inp').id,
+							self.getEl('inp').value,
+							settings.filetype,
+							window
+						);
+					};
+				}
 			}
 
 			self._super(settings);
