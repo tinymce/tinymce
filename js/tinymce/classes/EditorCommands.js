@@ -18,8 +18,9 @@ define("tinymce/EditorCommands", [
 	"tinymce/html/Serializer",
 	"tinymce/Env",
 	"tinymce/util/Tools",
-	"tinymce/dom/ElementUtils"
-], function(Serializer, Env, Tools, ElementUtils) {
+	"tinymce/dom/ElementUtils",
+	"tinymce/dom/TreeWalker"
+], function(Serializer, Env, Tools, ElementUtils, TreeWalker) {
 	// Added for compression purposes
 	var each = Tools.each, extend = Tools.extend;
 	var map = Tools.map, inArray = Tools.inArray, explode = Tools.explode;
@@ -673,6 +674,65 @@ define("tinymce/EditorCommands", [
 
 			mceNewDocument: function() {
 				editor.setContent('');
+			},
+
+			"InsertLineBreak": function () {
+				var brElm, extraBr, marker;
+				var rng = selection.getRng();
+				var offset = rng.startOffset;
+				var container = rng.startContainer;
+				var parentBlock = dom.getParent(container, dom.isBlock);
+				var nonEmptyElementsMap = editor.schema.getNonEmptyElements();
+
+				// Walks the parent block to the right and look for BR elements
+				function hasRightSideContent() {
+					var walker = new TreeWalker(container, parentBlock), node;
+
+					while ((node = walker.next())) {
+						if (nonEmptyElementsMap[node.nodeName.toLowerCase()] || node.length > 0) {
+							return true;
+						}
+					}
+				}
+
+				if (container && container.nodeType == 3 && offset >= container.nodeValue.length) {
+					// Insert extra BR element at the end block elements
+					if (!isIE && !hasRightSideContent()) {
+						brElm = dom.create('br');
+						rng.insertNode(brElm);
+						rng.setStartAfter(brElm);
+						rng.setEndAfter(brElm);
+						extraBr = true;
+					}
+				}
+
+				brElm = dom.create('br');
+				rng.insertNode(brElm);
+
+				// Rendering modes below IE8 doesn't display BR elements in PRE unless we have a \n before it
+				var documentMode = dom.doc.documentMode;
+				if (isIE && parentBlockName == 'PRE' && (!documentMode || documentMode < 8)) {
+					brElm.parentNode.insertBefore(dom.doc.createTextNode('\r'), brElm);
+				}
+
+				// Insert temp marker and scroll to that
+				marker = dom.create('span', {}, '&nbsp;');
+				brElm.parentNode.insertBefore(marker, brElm);
+				selection.scrollIntoView(marker);
+				dom.remove(marker);
+
+				if (!extraBr) {
+					rng.setStartAfter(brElm);
+					rng.setEndAfter(brElm);
+				} else {
+					rng.setStartBefore(brElm);
+					rng.setEndBefore(brElm);
+				}
+
+				selection.setRng(rng);
+				editor.undoManager.add();
+
+				return TRUE;
 			}
 		});
 
