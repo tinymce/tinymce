@@ -224,8 +224,8 @@ define("tinymce/tableplugin/Plugin", [
 			editor.windowManager.open({
 				title: "Merge cells",
 				body: [
-					{label: 'Cols', name: 'cols', type: 'textbox', size: 10},
-					{label: 'Rows', name: 'rows', type: 'textbox', size: 10}
+					{label: 'Cols', name: 'cols', type: 'textbox', value: '1', size: 10},
+					{label: 'Rows', name: 'rows', type: 'textbox', value: '1', size: 10}
 				],
 				onsubmit: function() {
 					var data = this.toJSON();
@@ -947,6 +947,32 @@ define("tinymce/tableplugin/Plugin", [
 				func(val);
 			});
 		});
+
+		// Enable tab key cell navigation
+		if (editor.settings.table_tab_navigation !== false) {
+			editor.on('keydown', function(e) {
+				var cellElm, grid, delta;
+
+				if (e.keyCode == 9) {
+					cellElm = editor.dom.getParent(editor.selection.getStart(), 'th,td');
+
+					if (cellElm) {
+						e.preventDefault();
+
+						grid = new TableGrid(editor);
+						delta = e.shiftKey ? -1 : 1;
+
+						editor.undoManager.transact(function() {
+							if (!grid.moveRelIdx(cellElm, delta) && delta > 0) {
+								grid.insertRow();
+								grid.refresh();
+								grid.moveRelIdx(cellElm, delta);
+							}
+						});
+					}
+				}
+			});
+		}
 	}
 
 	PluginManager.add('table', Plugin);

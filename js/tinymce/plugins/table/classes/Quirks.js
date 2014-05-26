@@ -312,8 +312,10 @@ define("tinymce/tableplugin/Quirks", [
 				}
 
 				// Select the entire table cell. Nothing outside of the table cell should be selected.
-				rng.setEnd(end, end.nodeValue.length);
-				editor.selection.setRng(rng);
+				if (end.nodeType == 3) {
+					rng.setEnd(end, end.data.length);
+					editor.selection.setRng(rng);
+				}
 			}
 
 			editor.on('KeyDown', function() {
