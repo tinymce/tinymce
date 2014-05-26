@@ -424,56 +424,9 @@ define("tinymce/EnterKey", [
 				undoManager.add();
 			}
 
-			// Walks the parent block to the right and look for BR elements
-			function hasRightSideContent() {
-				var walker = new TreeWalker(container, parentBlock), node;
-
-				while ((node = walker.next())) {
-					if (nonEmptyElementsMap[node.nodeName.toLowerCase()] || node.length > 0) {
-						return true;
-					}
-				}
-			}
-
 			// Inserts a BR element if the forced_root_block option is set to false or empty string
 			function insertBr() {
-				var brElm, extraBr, marker;
-
-				if (container && container.nodeType == 3 && offset >= container.nodeValue.length) {
-					// Insert extra BR element at the end block elements
-					if (!isIE && !hasRightSideContent()) {
-						brElm = dom.create('br');
-						rng.insertNode(brElm);
-						rng.setStartAfter(brElm);
-						rng.setEndAfter(brElm);
-						extraBr = true;
-					}
-				}
-
-				brElm = dom.create('br');
-				rng.insertNode(brElm);
-
-				// Rendering modes below IE8 doesn't display BR elements in PRE unless we have a \n before it
-				if (isIE && parentBlockName == 'PRE' && (!documentMode || documentMode < 8)) {
-					brElm.parentNode.insertBefore(dom.doc.createTextNode('\r'), brElm);
-				}
-
-				// Insert temp marker and scroll to that
-				marker = dom.create('span', {}, '&nbsp;');
-				brElm.parentNode.insertBefore(marker, brElm);
-				selection.scrollIntoView(marker);
-				dom.remove(marker);
-
-				if (!extraBr) {
-					rng.setStartAfter(brElm);
-					rng.setEndAfter(brElm);
-				} else {
-					rng.setStartBefore(brElm);
-					rng.setEndBefore(brElm);
-				}
-
-				selection.setRng(rng);
-				undoManager.add();
+				editor.execCommand("InsertLineBreak", false, evt);
 			}
 
 			// Trims any linebreaks at the beginning of node user for example when pressing enter in a PRE element
