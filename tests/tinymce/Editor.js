@@ -44,6 +44,8 @@ module("tinymce.Editor", {
 
 	teardown: function() {
 		Utils.unpatch(editor.getDoc()); 
+		inlineEditor.show();
+		editor.show();
 	}
 });
 
@@ -275,6 +277,22 @@ test('show/hide/isHidden and events (inline)', function() {
 	lastEvent = null;
 	inlineEditor.show();
 	strictEqual(lastEvent, null);
+});
+
+test('hide save content and hidden state while saving', function() {
+	var lastEvent, hiddenStateWhileSaving;
+
+	editor.on('SaveContent', function(e) {
+		lastEvent = e;
+		hiddenStateWhileSaving = editor.isHidden();
+	});
+
+	editor.setContent('xyz');
+	editor.hide();
+
+	strictEqual(hiddenStateWhileSaving, false, 'False isHidden state while saving');
+	strictEqual(lastEvent.content, '<p>xyz</p>');
+	strictEqual(document.getElementById('elm1').value, '<p>xyz</p>');
 });
 
 test('insertContent', function() {
