@@ -244,7 +244,8 @@ define("tinymce/html/Schema", [
 		if (type != "html5-strict") {
 			addAttrs("script", "language xml:space");
 			addAttrs("style", "xml:space");
-			addAttrs("object", "declare classid codebase codetype archive standby align border hspace vspace");
+			addAttrs("object", "declare classid code codebase codetype archive standby align border hspace vspace");
+			addAttrs("embed", "align name hspace vspace");
 			addAttrs("param", "valuetype type");
 			addAttrs("a", "charset name rev shape coords");
 			addAttrs("br", "clear");
