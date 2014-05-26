@@ -92,8 +92,13 @@ define("tinymce/Shortcuts", [
 							break;
 
 						default:
-							shortcut.charCode = value.charCodeAt(0);
-							shortcut.keyCode = keyCodeLookup[value] || value.toUpperCase().charCodeAt(0);
+							// Allow numeric keycodes like ctrl+219 for ctrl+[
+							if (/^[0-9]{2,}$/.test(value)) {
+								shortcut.keyCode = parseInt(value, 10);
+							} else {
+								shortcut.charCode = value.charCodeAt(0);
+								shortcut.keyCode = keyCodeLookup[value] || value.toUpperCase().charCodeAt(0);
+							}
 					}
 				});
 

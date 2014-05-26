@@ -26,6 +26,7 @@ Version 4.0.27 (2014-05-xx)
 	Fixed bug where the paste plugin wouln't properly strip trailing br elements under very specific scenarios.
 	Fixed bug where enter key wouldn't properly place the caret on Gecko when pressing enter in a text block with a br ended line inside.
 	Fixed so plain text mode works better when it converts rich text to plain text when pasting from for example Word.
+	Fixed so numeric keycodes can be used in the shortcut format enabling support for any key to be specified.
 	Fixed bug where formatting before cursor gets removed when toggled off for continued content.
 Version 4.0.26 (2014-05-06)
 	Fixed bug in media plugin where changing existing url did not use media regex patterns to create protocol neutral url.
