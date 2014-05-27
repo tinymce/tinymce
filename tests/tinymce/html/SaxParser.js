@@ -672,4 +672,30 @@
 			'<a href="%E3%82%AA%E3%83%BC%E3%83">Invalid url</a>'
 		);
 	});
+
+	test('Parse away bogus elements', function() {
+		function assertBogusSaxParse(inputHtml, outputHtml, counters) {
+			var counter, parser;
+
+			counter = createCounter(writer);
+			counter.validate = true;
+			parser = new tinymce.html.SaxParser(counter, schema);
+			writer.reset();
+			parser.parse(inputHtml);
+			equal(writer.getContent(), outputHtml);
+			deepEqual(counter.counts, counters);
+		}
+
+		assertBogusSaxParse('a<b data-mce-bogus="1">b</b>c', 'abc', {text: 3});
+		assertBogusSaxParse('a<b data-mce-bogus="true">b</b>c', 'abc', {text: 3});
+		assertBogusSaxParse('a<b data-mce-bogus="1"></b>c', 'ac', {text: 2});
+		assertBogusSaxParse('a<b data-mce-bogus="all">b</b>c', 'ac', {text: 2});
+		assertBogusSaxParse('a<b data-mce-bogus="all"><!-- x --><?xml?></b>c', 'ac', {text: 2});
+		assertBogusSaxParse('a<b data-mce-bogus="all"><b>b</b></b>c', 'ac', {text: 2});
+		assertBogusSaxParse('a<b data-mce-bogus="all"><br>b</b><b>c</b>', 'a<b>c</b>', {start: 1, end: 1, text: 2});
+		assertBogusSaxParse('a<b data-mce-bogus="all"><img>b</b><b>c</b>', 'a<b>c</b>', {start: 1, end: 1, text: 2});
+		assertBogusSaxParse('a<b data-mce-bogus="all"><b attr="x">b</b></b>c', 'ac', {text: 2});
+		assertBogusSaxParse('a<b data-mce-bogus="all"></b>c', 'ac', {text: 2});
+		assertBogusSaxParse('a<b data-mce-bogus="all"></b><b>c</b>', 'a<b>c</b>', {start: 1, end: 1, text:2});
+	});
 })();

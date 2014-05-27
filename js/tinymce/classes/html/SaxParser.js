@@ -58,6 +58,36 @@ define("tinymce/html/SaxParser", [
 	var each = Tools.each;
 
 	/**
+	 * Returns the index of the end tag for a specific start tag. This can be
+	 * used to skip all children of a parent element from being processed.
+	 */
+	function skipUntilEndTag(schema, html, startIndex) {
+		var count = 1, matches, tokenRegExp, shortEndedElements;
+
+		shortEndedElements = schema.getShortEndedElements();
+		tokenRegExp = /<([!?\/])?([A-Za-z0-9\-\:\.]+)((?:\s+[^"\'>]+(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>]*))*|\/|\s+)>/g;
+		tokenRegExp.lastIndex = startIndex;
+
+		while ((matches = tokenRegExp.exec(html))) {
+			if (matches[1] === '/') { // End element
+				count--;
+			} else if (!matches[1]) { // Start element
+				if (matches[2] in shortEndedElements) {
+					continue;
+				}
+
+				count++;
+			}
+
+			if (count === 0) {
+				break;
+			}
+		}
+
+		return tokenRegExp.lastIndex;
+	}
+
+	/**
 	 * Constructs a new SaxParser instance.
 	 *
 	 * @constructor
@@ -338,7 +368,13 @@ define("tinymce/html/SaxParser", [
 							}
 
 							// Invalidate element if it's marked as bogus
-							if (attrList.map['data-mce-bogus']) {
+							if ((attr = attrList.map['data-mce-bogus'])) {
+								if (attr === 'all') {
+									index = skipUntilEndTag(schema, html, tokenRegExp.lastIndex);
+									tokenRegExp.lastIndex = index;
+									continue;
+								}
+
 								isValidElement = false;
 							}
 						}
