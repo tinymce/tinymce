@@ -25,6 +25,7 @@ Version 4.0.27 (2014-05-xx)
 	Fixed bug with paste plugin not properly removing paste bin on Safari Mac when using the cmd+shift+v keyboard command.
 	Fixed bug where the paste plugin wouln't properly strip trailing br elements under very specific scenarios.
 	Fixed bug where enter key wouldn't properly place the caret on Gecko when pressing enter in a text block with a br ended line inside.
+	Fixed bug where Safari Mac shortcuts like Cmd+Opt+L didn't get passed through to the browser due to a Quirks fix.
 	Fixed so plain text mode works better when it converts rich text to plain text when pasting from for example Word.
 	Fixed so numeric keycodes can be used in the shortcut format enabling support for any key to be specified.
 	Fixed so table cells can be navigated with tab key and new rows gets automatically added when you are at the last cell.
