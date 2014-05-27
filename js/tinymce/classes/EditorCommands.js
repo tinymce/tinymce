@@ -19,8 +19,9 @@ define("tinymce/EditorCommands", [
 	"tinymce/Env",
 	"tinymce/util/Tools",
 	"tinymce/dom/ElementUtils",
+	"tinymce/dom/RangeUtils",
 	"tinymce/dom/TreeWalker"
-], function(Serializer, Env, Tools, ElementUtils, TreeWalker) {
+], function(Serializer, Env, Tools, ElementUtils, RangeUtils, TreeWalker) {
 	// Added for compression purposes
 	var each = Tools.each, extend = Tools.extend;
 	var map = Tools.map, inArray = Tools.inArray, explode = Tools.explode;
@@ -679,15 +680,41 @@ define("tinymce/EditorCommands", [
 			"InsertLineBreak": function () {
 				var brElm, extraBr, marker;
 				var rng = selection.getRng();
+				new RangeUtils(dom).normalize(rng);
+
 				var offset = rng.startOffset;
 				var container = rng.startContainer;
+
+				// Resolve node index
+				if (container.nodeType == 1 && container.hasChildNodes()) {
+					isAfterLastNodeInContainer = offset > container.childNodes.length - 1;
+
+					container = container.childNodes[Math.min(offset, container.childNodes.length - 1)] || container;
+					if (isAfterLastNodeInContainer && container.nodeType == 3) {
+						offset = container.nodeValue.length;
+					} else {
+						offset = 0;
+					}
+				}
+
 				var parentBlock = dom.getParent(container, dom.isBlock);
 				var parentBlockName = parentBlock ? parentBlock.nodeName.toUpperCase() : ''; // IE < 9 & HTML5
-				var nonEmptyElementsMap = editor.schema.getNonEmptyElements();
+				var containerBlock = parentBlock ? dom.getParent(parentBlock.parentNode, dom.isBlock) : null;
+				var containerBlockName = containerBlock ? containerBlock.nodeName.toUpperCase() : ''; // IE < 9 & HTML5
+
+				// Enter inside block contained within a LI then split or insert before/after LI
+// •DCJ• Testing - event is not available - need a better way to let this code know to behave differently
+// if control key is held down ...
+//				if (containerBlockName == 'LI' && !evt.ctrlKey) {
+				if (containerBlockName == 'LI') {
+					parentBlock = containerBlock;
+					parentBlockName = containerBlockName;
+				}
 
 				// Walks the parent block to the right and look for BR elements
 				function hasRightSideContent() {
 					var walker = new TreeWalker(container, parentBlock), node;
+					var nonEmptyElementsMap = editor.schema.getNonEmptyElements();
 
 					while ((node = walker.next())) {
 						if (nonEmptyElementsMap[node.nodeName.toLowerCase()] || node.length > 0) {
