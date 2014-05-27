@@ -1,4 +1,4 @@
-Version 4.0.27 (2014-05-xx)
+Version 4.0.27 (2014-05-27)
 	Added support for definition lists to lists plugin and enter key logic. This can now created by the format menu.
 	Added cmd option for the style_formats menu enables you to toggle commands on/off using the formats menu for example lists.
 	Added definition lists to visualblocks plugin so these are properly visualized like other list elements.
