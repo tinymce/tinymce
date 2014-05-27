@@ -426,7 +426,7 @@ define("tinymce/EnterKey", [
 
 			// Inserts a BR element if the forced_root_block option is set to false or empty string
 			function insertBr() {
-				editor.execCommand("InsertLineBreak");
+				editor.execCommand("InsertLineBreak", false, evt);
 			}
 
 			// Trims any linebreaks at the beginning of node user for example when pressing enter in a PRE element

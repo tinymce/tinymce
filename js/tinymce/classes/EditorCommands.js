@@ -678,7 +678,10 @@ define("tinymce/EditorCommands", [
 				editor.setContent('');
 			},
 
-			"InsertLineBreak": function () {
+			"InsertLineBreak": function (command, ui, value) {
+				// We load the current event in from EnterKey.js when appropriate to heed
+				// certain event-specific variations such as ctrl-enter in a list
+				var evt = value;
 				var brElm, extraBr, marker;
 				var rng = selection.getRng();
 				new RangeUtils(dom).normalize(rng);
@@ -704,10 +707,8 @@ define("tinymce/EditorCommands", [
 				var containerBlockName = containerBlock ? containerBlock.nodeName.toUpperCase() : ''; // IE < 9 & HTML5
 
 				// Enter inside block contained within a LI then split or insert before/after LI
-// •DCJ• Testing - event is not available - need a better way to let this code know to behave differently
-// if control key is held down ...
-//				if (containerBlockName == 'LI' && !evt.ctrlKey) {
-				if (containerBlockName == 'LI') {
+				var isControlKey = evt && evt.ctrlKey;
+				if (containerBlockName == 'LI' && !isControlKey) {
 					parentBlock = containerBlock;
 					parentBlockName = containerBlockName;
 				}
