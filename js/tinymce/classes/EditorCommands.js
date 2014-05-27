@@ -26,7 +26,6 @@ define("tinymce/EditorCommands", [
 	var each = Tools.each, extend = Tools.extend;
 	var map = Tools.map, inArray = Tools.inArray, explode = Tools.explode;
 	var isGecko = Env.gecko, isIE = Env.ie, isOldIE = Env.ie && Env.ie < 11;
-;
 	var TRUE = true, FALSE = false;
 
 	return function(editor) {
@@ -691,7 +690,7 @@ define("tinymce/EditorCommands", [
 
 				// Resolve node index
 				if (container.nodeType == 1 && container.hasChildNodes()) {
-					isAfterLastNodeInContainer = offset > container.childNodes.length - 1;
+					var isAfterLastNodeInContainer = offset > container.childNodes.length - 1;
 
 					container = container.childNodes[Math.min(offset, container.childNodes.length - 1)] || container;
 					if (isAfterLastNodeInContainer && container.nodeType == 3) {

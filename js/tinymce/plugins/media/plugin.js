@@ -223,7 +223,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 
 		if (data.embed) {
 			html = updateHtml(data.embed, data, true);
-		} else {	
+		} else {
 			var videoScript = getVideoScriptMatch(data.source1);
 			if (videoScript) {
 				data.type = 'script';
