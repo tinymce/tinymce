@@ -682,6 +682,7 @@ define("tinymce/EditorCommands", [
 				var offset = rng.startOffset;
 				var container = rng.startContainer;
 				var parentBlock = dom.getParent(container, dom.isBlock);
+				var parentBlockName = parentBlock ? parentBlock.nodeName.toUpperCase() : ''; // IE < 9 & HTML5
 				var nonEmptyElementsMap = editor.schema.getNonEmptyElements();
 
 				// Walks the parent block to the right and look for BR elements
