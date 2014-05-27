@@ -56,7 +56,8 @@ test('relativeURLs', 31, function() {
 	equal(new tinymce.util.URI('http://www.site.com/dir1/dir2/').toRelative('/file.htm#http://site.com/'), '../../file.htm#http://site.com/');
 });
 
-test('absoluteURLs', 18, function() {
+test('absoluteURLs', 19, function() {
+	equal(new tinymce.util.URI('http://www.site.com/dir1/dir2/').toAbsolute(''), 'http://www.site.com/dir1/dir2/');
 	equal(new tinymce.util.URI('http://www.site.com/dir1/dir2/').toAbsolute('../dir3'), 'http://www.site.com/dir1/dir3');
 	equal(new tinymce.util.URI('http://www.site.com/dir1/dir2/').toAbsolute('../dir3', 1), '/dir1/dir3');
 	equal(new tinymce.util.URI('http://www.site.com/dir1/dir2/').toAbsolute('../../../../dir3'), 'http://www.site.com/dir3');

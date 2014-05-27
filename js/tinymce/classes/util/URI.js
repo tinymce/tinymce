@@ -58,7 +58,7 @@ define("tinymce/util/URI", [
 			if (settings.base_uri.protocol === "") {
 				url = '//mce_host' + self.toAbsPath(base_url, url);
 			} else {
-				url = /([^#?]+)([#?]?.*)/.exec(url);
+				url = /([^#?]*)([#?]?.*)/.exec(url);
 				url = ((baseUri && baseUri.protocol) || 'http') + '://mce_host' + self.toAbsPath(base_url, url[1]) + url[2];
 			}
 		}
