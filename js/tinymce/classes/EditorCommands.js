@@ -25,7 +25,8 @@ define("tinymce/EditorCommands", [
 	// Added for compression purposes
 	var each = Tools.each, extend = Tools.extend;
 	var map = Tools.map, inArray = Tools.inArray, explode = Tools.explode;
-	var isGecko = Env.gecko, isIE = Env.ie;
+	var isGecko = Env.gecko, isIE = Env.ie, isOldIE = Env.ie && Env.ie < 11;
+;
 	var TRUE = true, FALSE = false;
 
 	return function(editor) {
@@ -725,7 +726,7 @@ define("tinymce/EditorCommands", [
 
 				if (container && container.nodeType == 3 && offset >= container.nodeValue.length) {
 					// Insert extra BR element at the end block elements
-					if (!isIE && !hasRightSideContent()) {
+					if (!isOldIE && !hasRightSideContent()) {
 						brElm = dom.create('br');
 						rng.insertNode(brElm);
 						rng.setStartAfter(brElm);
@@ -739,7 +740,7 @@ define("tinymce/EditorCommands", [
 
 				// Rendering modes below IE8 doesn't display BR elements in PRE unless we have a \n before it
 				var documentMode = dom.doc.documentMode;
-				if (isIE && parentBlockName == 'PRE' && (!documentMode || documentMode < 8)) {
+				if (isOldIE && parentBlockName == 'PRE' && (!documentMode || documentMode < 8)) {
 					brElm.parentNode.insertBefore(dom.doc.createTextNode('\r'), brElm);
 				}
 
