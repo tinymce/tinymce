@@ -1,3 +1,6 @@
+Version 4.0.29 (2014-06-xx)
+	Added new resize helper element that shows the current width & height while resizing.
+	Fixed so the default resize method for images are proportional shift/ctrl can be used to make an unproportional size.
 Version 4.0.28 (2014-05-27)
 	Fixed critical issue with empty urls producing an exception when converted into absolute urls due to resent bug fix in tinymce.util.URI.
 Version 4.0.27 (2014-05-27)

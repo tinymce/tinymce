@@ -21,7 +21,7 @@ define("tinymce/UndoManager", [
 
 	trimContentRegExp = new RegExp([
 		'<span[^>]+data-mce-bogus[^>]+>[\u200B\uFEFF]+<\\/span>', // Trim bogus spans like caret containers
-		'<div[^>]+data-mce-bogus[^>]+><\\/div>', // Trim bogus divs like resize handles
+		'<div[^>]+data-mce-bogus[^>]+>[^>]*<\\/div>', // Trim bogus divs like resize handles/resize helper
 		'\\s?data-mce-selected="[^"]+"' // Trim temporaty data-mce prefixed attributes like data-mce-selected
 	].join('|'), 'gi');
 
