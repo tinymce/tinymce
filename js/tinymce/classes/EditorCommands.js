@@ -682,7 +682,7 @@ define("tinymce/EditorCommands", [
 				// certain event-specific variations such as ctrl-enter in a list
 				var evt = value;
 				var brElm, extraBr, marker;
-				var rng = selection.getRng();
+				var rng = selection.getRng(true);
 				new RangeUtils(dom).normalize(rng);
 
 				var offset = rng.startOffset;
