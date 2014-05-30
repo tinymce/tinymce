@@ -742,3 +742,20 @@ test('RemoveFormat', function() {
 	editor.execCommand('RemoveFormat');
 	equal(editor.getContent(), '<p>dfn tag code tag samp tag kbd tag var tag cite tag mark tag q tag</p>');
 });
+
+test('InsertLineBreak', function() {
+	editor.setContent('<p>123</p>');
+	Utils.setSelection('p', 2);
+	editor.execCommand('InsertLineBreak');
+	equal(editor.getContent(), '<p>12<br />3</p>');
+
+	editor.setContent('<p>123</p>');
+	Utils.setSelection('p', 0);
+	editor.execCommand('InsertLineBreak');
+	equal(editor.getContent(), '<p><br />123</p>');
+
+	editor.setContent('<p>123</p>');
+	Utils.setSelection('p', 3);
+	editor.execCommand('InsertLineBreak');
+	equal(editor.getContent(), '<p>123<br /><br /></p>');
+});
