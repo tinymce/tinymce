@@ -169,9 +169,10 @@
 		equal(e.innerHTML.toLowerCase(), 'content <b>abc</b>');
 	});
 
-	test('createHTML', 4, function() {
-		equal(DOM.createHTML('span', {'id' : 'id1', 'class' : 'abc 123'}, 'content <b>abc</b>'), '<span id="id1" class="abc 123">content <b>abc</b></span>');
-		equal(DOM.createHTML('span', {'id' : 'id1', 'class' : 'abc 123'}), '<span id="id1" class="abc 123" />');
+	test('createHTML', 5, function() {
+		equal(DOM.createHTML('span', {'id': 'id1', 'class': 'abc 123'}, 'content <b>abc</b>'), '<span id="id1" class="abc 123">content <b>abc</b></span>');
+		equal(DOM.createHTML('span', {'id': 'id1', 'class': 'abc 123'}), '<span id="id1" class="abc 123" />');
+		equal(DOM.createHTML('span', {'id': null, 'class': undefined}), '<span />');
 		equal(DOM.createHTML('span'), '<span />');
 		equal(DOM.createHTML('span', null, 'content <b>abc</b>'), '<span>content <b>abc</b></span>');
 	});
