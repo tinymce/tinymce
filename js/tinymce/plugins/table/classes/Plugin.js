@@ -52,38 +52,30 @@ define("tinymce/tableplugin/Plugin", [
 			});
 		}
 
-		function applyPreview(tagName, items) {
-			Tools.each(items, function(item) {
-				item.textStyle = function() {
-					return editor.formatter.getCssText({block: tagName, classes: [item.value]});
-				};
-			});
+		function buildListItems(inputList, itemCallback, startItems) {
+			function appendItems(values, output) {
+				output = output || [];
 
-			return items;
-		}
+				Tools.each(values, function(item) {
+					var menuItem = {text: item.text || item.title};
 
-		function buildValues(data, listSettingName, dataItemName, defaultItems) {
-			var selectedItem, items = [];
+					if (item.menu) {
+						menuItem.menu = appendItems(item.menu);
+					} else {
+						menuItem.value = item.value;
 
-			Tools.each(editor.settings[listSettingName] || defaultItems, function(target) {
-				var item = {
-					text: target.text || target.title,
-					value: target.value
-				};
+						if (itemCallback) {
+							itemCallback(menuItem);
+						}
+					}
 
-				items.push(item);
+					output.push(menuItem);
+				});
 
-				if (data[dataItemName] === target.value || (!selectedItem && target.selected)) {
-					selectedItem = item;
-				}
-			});
-
-			if (selectedItem) {
-				data[dataItemName] = selectedItem.value;
-				selectedItem.selected = true;
+				return output;
 			}
 
-			return items;
+			return appendItems(inputList, startItems || []);
 		}
 
 		function tableDialog() {
@@ -121,7 +113,16 @@ define("tinymce/tableplugin/Plugin", [
 					name: 'class',
 					type: 'listbox',
 					label: 'Class',
-					values: applyPreview('table', buildValues(data, 'table_class_list', 'class'))
+					values: buildListItems(
+						editor.settings.table_class_list,
+						function(item) {
+							if (item.value) {
+								item.textStyle = function() {
+									return editor.formatter.getCssText({block: 'table', classes: [item.value]});
+								};
+							}
+						}
+					)
 				};
 			}
 
@@ -280,7 +281,16 @@ define("tinymce/tableplugin/Plugin", [
 					name: 'class',
 					type: 'listbox',
 					label: 'Class',
-					values: applyPreview('td', buildValues(data, 'table_cell_class_list', 'class'))
+					values: buildListItems(
+						editor.settings.table_cell_class_list,
+						function(item) {
+							if (item.value) {
+								item.textStyle = function() {
+									return editor.formatter.getCssText({block: 'td', classes: [item.value]});
+								};
+							}
+						}
+					)
 				};
 			}
 
@@ -291,10 +301,10 @@ define("tinymce/tableplugin/Plugin", [
 					layout: 'flex',
 					direction: 'column',
 					labelGapCalc: 'children',
+					data: data,
 					items: [
 						{
 							type: 'form',
-							data: data,
 							layout: 'grid',
 							columns: 2,
 							labelGapCalc: false,
@@ -447,7 +457,16 @@ define("tinymce/tableplugin/Plugin", [
 					name: 'class',
 					type: 'listbox',
 					label: 'Class',
-					values: applyPreview('tr', buildValues(data, 'table_row_class_list', 'class'))
+					values: buildListItems(
+						editor.settings.table_row_class_list,
+						function(item) {
+							if (item.value) {
+								item.textStyle = function() {
+									return editor.formatter.getCssText({block: 'tr', classes: [item.value]});
+								};
+							}
+						}
+					)
 				};
 			}
 
