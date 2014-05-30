@@ -2041,8 +2041,8 @@ define("tinymce/Editor", [
 			var self = this;
 
 			if (!self.removed) {
-				self.removed = 1;
 				self.save();
+				self.removed = 1;
 
 				// Remove any hidden input
 				if (self.hasHiddenInput) {
