@@ -295,6 +295,34 @@ test('hide save content and hidden state while saving', function() {
 	strictEqual(document.getElementById('elm1').value, '<p>xyz</p>');
 });
 
+asyncTest('remove editor', function() {
+	document.getElementById('view').appendChild(tinymce.DOM.create('textarea', {id: 'elmx'}));
+
+	tinymce.init({
+		selector: "#elmx",
+		add_unload_trigger: false,
+		disable_nodechange: true,
+		skin: false,
+		init_instance_callback: function(editor) {
+			window.setTimeout(function() {
+				var lastEvent;
+
+				editor.on('SaveContent', function(e) {
+					lastEvent = e;
+				});
+
+				editor.setContent('xyz');
+				editor.remove();
+
+				QUnit.start();
+
+				strictEqual(lastEvent.content, '<p>xyz</p>');
+				strictEqual(document.getElementById('elmx').value, '<p>xyz</p>');
+			}, 0);
+		}
+	});
+});
+
 test('insertContent', function() {
 	editor.setContent('<p>a</p>');
 	Utils.setSelection('p', 1);
@@ -314,7 +342,7 @@ test('execCommand return values for native commands', function() {
 
 	strictEqual(editor.execCommand("NonExistingCommand"), false, "Return value for a completely unhandled command");
 
-	Utils.patch(editor.getDoc(), 'execCommand', function(orgFunc, cmd, ui, value) {
+	Utils.patch(editor.getDoc(), 'execCommand', function(orgFunc, cmd) {
 		lastCmd = cmd;
 		return true;
 	});
