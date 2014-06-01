@@ -5,7 +5,6 @@
 	<title>TinyMCE QUnit tests</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
-	<title>QUnit tests</title>
 	<link rel="stylesheet" href="js/qunit/qunit.css" type="text/css" />
 	<link rel="stylesheet" href="../js/tinymce/skins/lightgray/skin.min.css" type="text/css" />
 	<link rel="stylesheet" href="tinymce/ui/css/ui-overrides.css" type="text/css" />
@@ -61,14 +60,17 @@
 	<script src="tinymce/ui/Window.js"></script>
 
 	<!-- tinymce.util.* -->
+	<script src="tinymce/util/EventDispatcher.js"></script>
 	<script src="tinymce/util/JSON.js"></script>
 	<script src="tinymce/util/JSONRequest.js"></script>
 	<script src="tinymce/util/LocalStorage.js"></script>
+	<script src="tinymce/util/Observable.js"></script>
 	<script src="tinymce/util/Quirks_webkit.js"></script>
 	<script src="tinymce/util/URI.js"></script>
 	<script src="tinymce/util/XHR.js"></script>
 
 	<!-- tinymce.* -->
+	<script src="tinymce/AddOnManager.js"></script>
 	<script src="tinymce/Editor.js"></script>
 	<script src="tinymce/EditorCommands.js"></script>
 	<script src="tinymce/EditorManager.js"></script>
@@ -77,13 +79,18 @@
 	<script src="tinymce/Formatter_apply.js"></script>
 	<script src="tinymce/Formatter_check.js"></script>
 	<script src="tinymce/Formatter_remove.js"></script>
+	<script src="tinymce/Shortcuts.js"></script>
 	<script src="tinymce/UndoManager.js"></script>
 
 	<!-- tinymce.plugins.* -->
+	<script src="plugins/autolink.js"></script>
 	<script src="plugins/autosave.js"></script>
 	<script src="plugins/fullpage.js"></script>
+	<script src="plugins/image.js"></script>
+	<script src="plugins/importcss.js"></script>
 	<script src="plugins/jquery_plugin.js"></script>
 	<script src="plugins/legacyoutput.js"></script>
+	<script src="plugins/link.js"></script>
 	<script src="plugins/lists.js"></script>
 	<script src="plugins/media.js"></script>
 	<script src="plugins/noneditable.js"></script>

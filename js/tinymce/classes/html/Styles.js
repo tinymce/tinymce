@@ -34,9 +34,14 @@ define("tinymce/html/Styles", [], function() {
 			urlOrStrRegExp = /(?:url(?:(?:\(\s*\"([^\"]+)\"\s*\))|(?:\(\s*\'([^\']+)\'\s*\))|(?:\(\s*([^)\s]+)\s*\))))|(?:\'([^\']+)\')|(?:\"([^\"]+)\")/gi,
 			styleRegExp = /\s*([^:]+):\s*([^;]+);?/g,
 			trimRightRegExp = /\s+$/,
-			undef, i, encodingLookup = {}, encodingItems, invisibleChar = '\uFEFF';
+			undef, i, encodingLookup = {}, encodingItems, validStyles, invalidStyles, invisibleChar = '\uFEFF';
 
 		settings = settings || {};
+
+		if (schema) {
+			validStyles = schema.getValidStyles();
+			invalidStyles = schema.getInvalidStyles();
+		}
 
 		encodingItems = ('\\" \\\' \\; \\: ; : ' + invisibleChar).split(' ');
 		for (i = 0; i < encodingItems.length; i++) {
@@ -202,8 +207,16 @@ define("tinymce/html/Styles", [], function() {
 
 					url = decode(url || url2 || url3);
 
-					if (!settings.allow_script_urls && /(java|vb)script:/i.test(url.replace(/[\s\r\n]+/, ''))) {
-						return "";
+					if (!settings.allow_script_urls) {
+						var scriptUrl = url.replace(/[\s\r\n]+/, '');
+
+						if (/(java|vb)script:/i.test(scriptUrl)) {
+							return "";
+						}
+
+						if (!settings.allow_svg_data_urls && /^data:image\/svg/i.test(scriptUrl)) {
+							return "";
+						}
 					}
 
 					// Convert the URL to relative/absolute depending on config
@@ -228,8 +241,16 @@ define("tinymce/html/Styles", [], function() {
 						name = matches[1].replace(trimRightRegExp, '').toLowerCase();
 						value = matches[2].replace(trimRightRegExp, '');
 
+						// Decode escaped sequences like \65 -> e
+						/*jshint loopfunc:true*/
+						/*eslint no-loop-func:0 */
+						value = value.replace(/\\[0-9a-f]+/g, function(e) {
+							return String.fromCharCode(parseInt(e.substr(1), 16));
+						});
+
 						if (name && value.length > 0) {
-							if (!settings.allow_script_urls && (name == "behavior" || /expression\s*\(/.test(value))) {
+							// Don't allow behavior name or expression/comments within the values
+							if (!settings.allow_script_urls && (name == "behavior" || /expression\s*\(|\/\*|\*\//.test(value))) {
 								continue;
 							}
 
@@ -279,16 +300,16 @@ define("tinymce/html/Styles", [], function() {
 			 *
 			 * @method serialize
 			 * @param {Object} styles Object to serialize as string for example: {border: '1px solid red'}
-			 * @param {String} element_name Optional element name, if specified only the styles that matches the schema will be serialized.
+			 * @param {String} elementName Optional element name, if specified only the styles that matches the schema will be serialized.
 			 * @return {String} String representation of the style object for example: border: 1px solid red.
 			 */
-			serialize: function(styles, element_name) {
+			serialize: function(styles, elementName) {
 				var css = '', name, value;
 
 				function serializeStyles(name) {
 					var styleList, i, l, value;
 
-					styleList = schema.styles[name];
+					styleList = validStyles[name];
 					if (styleList) {
 						for (i = 0, l = styleList.length; i < l; i++) {
 							name = styleList[i];
@@ -301,18 +322,36 @@ define("tinymce/html/Styles", [], function() {
 					}
 				}
 
+				function isValid(name, elementName) {
+					var styleMap;
+
+					styleMap = invalidStyles['*'];
+					if (styleMap && styleMap[name]) {
+						return false;
+					}
+
+					styleMap = invalidStyles[elementName];
+					if (styleMap && styleMap[name]) {
+						return false;
+					}
+
+					return true;
+				}
+
 				// Serialize styles according to schema
-				if (element_name && schema && schema.styles) {
+				if (elementName && validStyles) {
 					// Serialize global styles and element specific styles
 					serializeStyles('*');
-					serializeStyles(element_name);
+					serializeStyles(elementName);
 				} else {
 					// Output the styles in the order they are inside the object
 					for (name in styles) {
 						value = styles[name];
 
 						if (value !== undef && value.length > 0) {
-							css += (css.length > 0 ? ' ' : '') + name + ': ' + value + ';';
+							if (!invalidStyles || isValid(name, elementName)) {
+								css += (css.length > 0 ? ' ' : '') + name + ': ' + value + ';';
+							}
 						}
 					}
 				}

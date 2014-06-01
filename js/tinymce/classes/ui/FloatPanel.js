@@ -25,8 +25,116 @@ define("tinymce/ui/FloatPanel", [
 ], function(Panel, Movable, Resizable, DomUtils) {
 	"use strict";
 
-	var documentClickHandler, documentScrollHandler, visiblePanels = [];
+	var documentClickHandler, documentScrollHandler, windowResizeHandler, visiblePanels = [];
 	var zOrder = [], hasModal;
+
+	function bindDocumentClickHandler() {
+		function isChildOf(ctrl, parent) {
+			while (ctrl) {
+				if (ctrl == parent) {
+					return true;
+				}
+
+				ctrl = ctrl.parent();
+			}
+		}
+
+		if (!documentClickHandler) {
+			documentClickHandler = function(e) {
+				// Gecko fires click event and in the wrong order on Mac so lets normalize
+				if (e.button == 2) {
+					return;
+				}
+
+				// Hide any float panel when a click is out side that float panel and the
+				// float panels direct parent for example a click on a menu button
+				var i = visiblePanels.length;
+				while (i--) {
+					var panel = visiblePanels[i], clickCtrl = panel.getParentCtrl(e.target);
+
+					if (panel.settings.autohide) {
+						if (clickCtrl) {
+							if (isChildOf(clickCtrl, panel) || panel.parent() === clickCtrl) {
+								continue;
+							}
+						}
+
+						e = panel.fire('autohide', {target: e.target});
+						if (!e.isDefaultPrevented()) {
+							panel.hide();
+						}
+					}
+				}
+			};
+
+			DomUtils.on(document, 'click', documentClickHandler);
+		}
+	}
+
+	function bindDocumentScrollHandler() {
+		if (!documentScrollHandler) {
+			documentScrollHandler = function() {
+				var i;
+
+				i = visiblePanels.length;
+				while (i--) {
+					repositionPanel(visiblePanels[i]);
+				}
+			};
+
+			DomUtils.on(window, 'scroll', documentScrollHandler);
+		}
+	}
+
+	function bindWindowResizeHandler() {
+		if (!windowResizeHandler) {
+			windowResizeHandler = function() {
+				FloatPanel.hideAll();
+			};
+
+			DomUtils.on(window, 'resize', windowResizeHandler);
+		}
+	}
+
+	/**
+	 * Repositions the panel to the top of page if the panel is outside of the visual viewport. It will
+	 * also reposition all child panels of the current panel.
+	 */
+	function repositionPanel(panel) {
+		var scrollY = DomUtils.getViewPort().y;
+
+		function toggleFixedChildPanels(fixed, deltaY) {
+			var parent;
+
+			for (var i = 0; i < visiblePanels.length; i++) {
+				if (visiblePanels[i] != panel) {
+					parent = visiblePanels[i].parent();
+
+					while (parent && (parent = parent.parent())) {
+						if (parent == panel) {
+							visiblePanels[i].fixed(fixed).moveBy(0, deltaY).repaint();
+						}
+					}
+				}
+			}
+		}
+
+		if (panel.settings.autofix) {
+			if (!panel._fixed) {
+				panel._autoFixY = panel.layoutRect().y;
+
+				if (panel._autoFixY < scrollY) {
+					panel.fixed(true).layoutRect({y: 0}).repaint();
+					toggleFixedChildPanels(true, scrollY - panel._autoFixY);
+				}
+			} else {
+				if (panel._autoFixY > scrollY) {
+					panel.fixed(false).layoutRect({y: panel._autoFixY}).repaint();
+					toggleFixedChildPanels(false, panel._autoFixY - scrollY);
+				}
+			}
+		}
+	}
 
 	var FloatPanel = Panel.extend({
 		Mixins: [Movable, Resizable],
@@ -69,56 +177,6 @@ define("tinymce/ui/FloatPanel", [
 				FloatPanel.currentZIndex = zIndex;
 			}
 
-			function isChildOf(ctrl, parent) {
-				while (ctrl) {
-					if (ctrl == parent) {
-						return true;
-					}
-
-					ctrl = ctrl.parent();
-				}
-			}
-
-			/**
-			 * Repositions the panel to the top of page if the panel is outside of the visual viewport. It will
-			 * also reposition all child panels of the current panel.
-			 */
-			function repositionPanel(panel) {
-				var scrollY = DomUtils.getViewPort().y;
-
-				function toggleFixedChildPanels(fixed, deltaY) {
-					var parent;
-
-					for (var i = 0; i < visiblePanels.length; i++) {
-						if (visiblePanels[i] != panel) {
-							parent = visiblePanels[i].parent();
-
-							while (parent && (parent = parent.parent())) {
-								if (parent == panel) {
-									visiblePanels[i].fixed(fixed).moveBy(0, deltaY).repaint();
-								}
-							}
-						}
-					}
-				}
-
-				if (panel.settings.autofix) {
-					if (!panel._fixed) {
-						panel._autoFixY = panel.layoutRect().y;
-
-						if (panel._autoFixY < scrollY) {
-							panel.fixed(true).layoutRect({y: 0}).repaint();
-							toggleFixedChildPanels(true, scrollY - panel._autoFixY);
-						}
-					} else {
-						if (panel._autoFixY > scrollY) {
-							panel.fixed(false).layoutRect({y: panel._autoFixY}).repaint();
-							toggleFixedChildPanels(false, panel._autoFixY - scrollY);
-						}
-					}
-				}
-			}
-
 			self._super(settings);
 			self._eventsRoot = self;
 
@@ -126,48 +184,13 @@ define("tinymce/ui/FloatPanel", [
 
 			// Hide floatpanes on click out side the root button
 			if (settings.autohide) {
-				if (!documentClickHandler) {
-					documentClickHandler = function(e) {
-						// Hide any float panel when a click is out side that float panel and the
-						// float panels direct parent for example a click on a menu button
-						var i = visiblePanels.length;
-						while (i--) {
-							var panel = visiblePanels[i], clickCtrl = panel.getParentCtrl(e.target);
-
-							if (panel.settings.autohide) {
-								if (clickCtrl) {
-									if (isChildOf(clickCtrl, panel) || panel.parent() === clickCtrl) {
-										continue;
-									}
-								}
-
-								e = panel.fire('autohide', {target: e.target});
-								if (!e.isDefaultPrevented()) {
-									panel.hide();
-								}
-							}
-						}
-					};
-
-					DomUtils.on(document, 'click', documentClickHandler);
-				}
-
+				bindDocumentClickHandler();
+				bindWindowResizeHandler();
 				visiblePanels.push(self);
 			}
 
 			if (settings.autofix) {
-				if (!documentScrollHandler) {
-					documentScrollHandler = function() {
-						var i;
-
-						i = visiblePanels.length;
-						while (i--) {
-							repositionPanel(visiblePanels[i]);
-						}
-					};
-
-					DomUtils.on(window, 'scroll', documentScrollHandler);
-				}
+				bindDocumentScrollHandler();
 
 				self.on('move', function() {
 					repositionPanel(this);
@@ -283,7 +306,8 @@ define("tinymce/ui/FloatPanel", [
 		},
 
 		/**
-		 * Hides all visible the float panels.
+		 * Hide all visible float panels with he autohide setting enabled. This is for
+		 * manually hiding floating menus or panels.
 		 *
 		 * @method hideAll
 		 */
@@ -326,7 +350,8 @@ define("tinymce/ui/FloatPanel", [
 	});
 
 	/**
-	 * Hides all visible the float panels.
+	 * Hide all visible float panels with he autohide setting enabled. This is for
+	 * manually hiding floating menus or panels.
 	 *
 	 * @static
 	 * @method hideAll

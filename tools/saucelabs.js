@@ -8,6 +8,7 @@ var http = require('http');
 var path = require('path');
 var url = require('url');
 var mime = require('mime');
+var chalk = require('chalk');
 
 function log() {
 	console.log.apply(this, arguments);
@@ -125,15 +126,13 @@ TestRunner.prototype.runTests = function(browsers, urls, framework, tunnelIdenti
 						result.passed = alteredResult;
 					}
 
-					//log("\nTested %s", url);
-
 					if (result.passed === undefined) {
-						log("[FAILED] %s".red, result.platform, result.result.message);
+						log(chalk.red("[FAILED] %s"), result.platform, result.result.message);
 					} else {
 						if (result.passed) {
-							log("[PASSED] %s".green, result.platform);
+							log(chalk.green("[PASSED] %s"), result.platform);
 						} else {
-							log("[FAILED] %s".red, result.platform);
+							log(chalk.red("[FAILED] %s"), result.platform);
 						}
 					}
 

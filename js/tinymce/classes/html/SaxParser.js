@@ -58,6 +58,36 @@ define("tinymce/html/SaxParser", [
 	var each = Tools.each;
 
 	/**
+	 * Returns the index of the end tag for a specific start tag. This can be
+	 * used to skip all children of a parent element from being processed.
+	 */
+	function skipUntilEndTag(schema, html, startIndex) {
+		var count = 1, matches, tokenRegExp, shortEndedElements;
+
+		shortEndedElements = schema.getShortEndedElements();
+		tokenRegExp = /<([!?\/])?([A-Za-z0-9\-\:\.]+)((?:\s+[^"\'>]+(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>]*))*|\/|\s+)>/g;
+		tokenRegExp.lastIndex = startIndex;
+
+		while ((matches = tokenRegExp.exec(html))) {
+			if (matches[1] === '/') { // End element
+				count--;
+			} else if (!matches[1]) { // Start element
+				if (matches[2] in shortEndedElements) {
+					continue;
+				}
+
+				count++;
+			}
+
+			if (count === 0) {
+				break;
+			}
+		}
+
+		return tokenRegExp.lastIndex;
+	}
+
+	/**
 	 * Constructs a new SaxParser instance.
 	 *
 	 * @constructor
@@ -98,8 +128,8 @@ define("tinymce/html/SaxParser", [
 			var validate, elementRule, isValidElement, attr, attribsValue, validAttributesMap, validAttributePatterns;
 			var attributesRequired, attributesDefault, attributesForced;
 			var anyAttributesRequired, selfClosing, tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0;
-			var decode = Entities.decode, fixSelfClosing, filteredUrlAttrs = Tools.makeMap('src,href');
-			var scriptUriRegExp = /(java|vb)script:/i;
+			var decode = Entities.decode, fixSelfClosing, filteredUrlAttrs = Tools.makeMap('src,href,data,background,formaction,poster');
+			var scriptUriRegExp = /((java|vb)script|mhtml):/i, dataUriRegExp = /^data:/i;
 
 			function processEndTag(name) {
 				var pos, i;
@@ -165,22 +195,24 @@ define("tinymce/html/SaxParser", [
 					}
 				}
 
-				// Block any javascript: urls
+				// Block any javascript: urls or non image data uris
 				if (filteredUrlAttrs[name] && !settings.allow_script_urls) {
 					var uri = value.replace(trimRegExp, '');
 
 					try {
 						// Might throw malformed URI sequence
 						uri = decodeURIComponent(uri);
-						if (scriptUriRegExp.test(uri)) {
-							return;
-						}
 					} catch (ex) {
 						// Fallback to non UTF-8 decoder
 						uri = unescape(uri);
-						if (scriptUriRegExp.test(uri)) {
-							return;
-						}
+					}
+
+					if (scriptUriRegExp.test(uri)) {
+						return;
+					}
+
+					if (!settings.allow_html_data_urls && dataUriRegExp.test(uri) && !/^data:image\//i.test(uri)) {
+						return;
 					}
 				}
 
@@ -336,7 +368,13 @@ define("tinymce/html/SaxParser", [
 							}
 
 							// Invalidate element if it's marked as bogus
-							if (attrList.map['data-mce-bogus']) {
+							if ((attr = attrList.map['data-mce-bogus'])) {
+								if (attr === 'all') {
+									index = skipUntilEndTag(schema, html, tokenRegExp.lastIndex);
+									tokenRegExp.lastIndex = index;
+									continue;
+								}
+
 								isValidElement = false;
 							}
 						}

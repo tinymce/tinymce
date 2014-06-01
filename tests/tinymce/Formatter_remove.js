@@ -311,6 +311,16 @@ test('Caret format at end of text inside other format with text after 2', functi
 	equal(editor.getContent(), '<p><em><b>abc</b></em><b>d</b>e</p>');
 });
 
+test('Toggle styles at the end of the content don\' removes the format where it is not needed.', function() {
+	editor.setContent('<p><em><b>abce</b></em></p>');
+	editor.formatter.register('b', {inline: 'b'});
+	editor.formatter.register('em', {inline: 'em'});
+	Utils.setSelection('b', 4, 'b', 4);
+	editor.formatter.remove('b');
+	editor.formatter.remove('em');
+	equal(editor.getContent(), '<p><em><b>abce</b></em></p>');
+});
+
 test('Caret format on second word in table cell', function() {
 	editor.setContent('<table><tbody><tr><td>one <b>two</b></td></tr></tbody></table>');
 	editor.formatter.register('format', {inline: 'b'});

@@ -20,7 +20,7 @@
 	});
 
 	// Sauce labs
-	QUnit.testStart(function(testDetails){
+	QUnit.testStart(function(testDetails) {
 		QUnit.log = function(details) {
 			if (!details.result) {
 				details.name = currentModule + ':' + testDetails.name;
@@ -41,15 +41,16 @@
 		}
 
 		// Sauce labs
-		var tests = $.map(log, function(details) {
-			return {
-				name: details.name,
-				result: details.result,
-				expected: details.expected,
-				actual: details.actual,
-				source: details.source
-			};
-		});
+		var tests = [];
+		for (var i = 0; i < log.length; i++) {
+			tests.push({
+				name: log[i].name,
+				result: log[i].result,
+				expected: log[i].expected,
+				actual: log[i].actual,
+				source: log[i].source
+			});
+		}
 
 		results.tests = tests;
 		window.global_test_results = results;

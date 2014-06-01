@@ -133,7 +133,7 @@ define("tinymce/WindowManager", [
 			// Takes a snapshot in the FocusManager of the selection before focus is lost to dialog
 			editor.nodeChanged();
 
-			return win.renderTo(document.body).reflow();
+			return win.renderTo().reflow();
 		};
 
 		/**
@@ -222,6 +222,7 @@ define("tinymce/WindowManager", [
 		 * Returns the currently opened window objects.
 		 *
 		 * @method getWindows
+		 * @return {Array} Array of the currently opened windows.
 		 */
 		self.getWindows = function() {
 			return windows;

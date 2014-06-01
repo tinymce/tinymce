@@ -63,7 +63,7 @@ define("tinymce/pasteplugin/Clipboard", [
 				}
 
 				if (!args.isDefaultPrevented()) {
-					editor.insertContent(html);
+					editor.insertContent(html, {merge: editor.settings.paste_merge_formats !== false});
 				}
 			}
 		}
@@ -121,7 +121,9 @@ define("tinymce/pasteplugin/Clipboard", [
 			if (editor.inline) {
 				scrollContainer = editor.selection.getScrollContainer();
 
-				if (scrollContainer) {
+				// Can't always rely on scrollTop returning a useful value.
+				// It returns 0 if the browser doesn't support scrollTop for the element or is non-scrollable
+				if (scrollContainer && scrollContainer.scrollTop > 0) {
 					scrollTop = scrollContainer.scrollTop;
 				}
 			}
@@ -195,7 +197,6 @@ define("tinymce/pasteplugin/Clipboard", [
 				}
 			}
 
-			keyboardPastePlainTextState = false;
 			pasteBinElm = lastRng = null;
 		}
 
@@ -305,6 +306,18 @@ define("tinymce/pasteplugin/Clipboard", [
 			}
 		}
 
+		/**
+		 * Chrome on Andoid doesn't support proper clipboard access so we have no choice but to allow the browser default behavior.
+		 *
+		 * @param {Event} e Paste event object to check if it contains any data.
+		 * @return {Boolean} true/false if the clipboard is empty or not.
+		 */
+		function isBrokenAndoidClipboardEvent(e) {
+			var clipboardData = e.clipboardData;
+
+			return navigator.userAgent.indexOf('Android') != -1 && clipboardData && clipboardData.items && clipboardData.items.length === 0;
+		}
+
 		function getCaretRangeFromEvent(e) {
 			var doc = editor.getDoc(), rng;
 
@@ -324,15 +337,21 @@ define("tinymce/pasteplugin/Clipboard", [
 			return mimeType in clipboardContent && clipboardContent[mimeType].length > 0;
 		}
 
+		function isKeyboardPasteEvent(e) {
+			return (VK.metaKeyPressed(e) && e.keyCode == 86) || (e.shiftKey && e.keyCode == 45);
+		}
+
 		function registerEventHandlers() {
 			editor.on('keydown', function(e) {
-				if (e.isDefaultPrevented()) {
-					return;
-				}
-
 				// Ctrl+V or Shift+Insert
-				if ((VK.metaKeyPressed(e) && e.keyCode == 86) || (e.shiftKey && e.keyCode == 45)) {
+				if (isKeyboardPasteEvent(e) && !e.isDefaultPrevented()) {
 					keyboardPastePlainTextState = e.shiftKey && e.keyCode == 86;
+
+					// Edge case on Safari on Mac where it doesn't handle Cmd+Shift+V correctly
+					// it fires the keydown but no paste or keyup so we are left with a paste bin
+					if (keyboardPastePlainTextState && Env.webkit && navigator.userAgent.indexOf('Version/') != -1) {
+						return;
+					}
 
 					// Prevent undoManager keydown handler from making an undo level with the pastebin in it
 					e.stopImmediatePropagation();
@@ -352,12 +371,21 @@ define("tinymce/pasteplugin/Clipboard", [
 				}
 			});
 
+			editor.on('keyup', function(e) {
+				// Ctrl+V or Shift+Insert
+				if (isKeyboardPasteEvent(e) && !e.isDefaultPrevented()) {
+					removePasteBin();
+				}
+			});
+
 			editor.on('paste', function(e) {
 				var clipboardContent = getClipboardContent(e);
 				var isKeyBoardPaste = new Date().getTime() - keyboardPasteTimeStamp < 1000;
 				var plainTextMode = self.pasteFormat == "text" || keyboardPastePlainTextState;
 
-				if (e.isDefaultPrevented()) {
+				keyboardPastePlainTextState = false;
+
+				if (e.isDefaultPrevented() || isBrokenAndoidClipboardEvent(e)) {
 					removePasteBin();
 					return;
 				}
@@ -385,41 +413,56 @@ define("tinymce/pasteplugin/Clipboard", [
 				}
 
 				setTimeout(function() {
-					var html = getPasteBinHtml();
+					var content;
+
+					// Grab HTML from Clipboard API or paste bin as a fallback
+					if (hasContentType(clipboardContent, 'text/html')) {
+						content = clipboardContent['text/html'];
+					} else {
+						content = getPasteBinHtml();
+
+						// If paste bin is empty try using plain text mode
+						// since that is better than nothing right
+						if (content == pasteBinDefaultContent) {
+							plainTextMode = true;
+						}
+					}
+
+					content = Utils.trimHtml(getPasteBinHtml());
 
 					// WebKit has a nice bug where it clones the paste bin if you paste from for example notepad
+					// so we need to force plain text mode in this case
 					if (pasteBinElm && pasteBinElm.firstChild && pasteBinElm.firstChild.id === 'mcepastebin') {
 						plainTextMode = true;
 					}
 
 					removePasteBin();
 
-					// Always use pastebin HTML if it's available since it contains Word contents
-					if (!plainTextMode && isKeyBoardPaste && html && html != pasteBinDefaultContent) {
-						clipboardContent['text/html'] = html;
-					}
-
-					if (html == pasteBinDefaultContent || !isKeyBoardPaste) {
-						html = clipboardContent['text/html'] || clipboardContent['text/plain'] || pasteBinDefaultContent;
-
-						if (html == pasteBinDefaultContent) {
-							if (!isKeyBoardPaste) {
-								editor.windowManager.alert('Please use Ctrl+V/Cmd+V keyboard shortcuts to paste contents.');
-							}
-
-							return;
+					// Grab plain text from Clipboard API or convert existing HTML to plain text
+					if (plainTextMode) {
+						// Use plain text contents from Clipboard API unless the HTML contains paragraphs then
+						// we should convert the HTML to plain text since works better when pasting HTML/Word contents as plain text
+						if (hasContentType(clipboardContent, 'text/plain') && content.indexOf('</p>') == -1) {
+							content = clipboardContent['text/plain'];
+						} else {
+							content = Utils.innerText(content);
 						}
 					}
 
-					// Force plain text mode if we only got a text/plain content type
-					if (!hasContentType(clipboardContent, 'text/html') && hasContentType(clipboardContent, 'text/plain')) {
-						plainTextMode = true;
+					// If the content is the paste bin default HTML then it was
+					// impossible to get the cliboard data out.
+					if (content == pasteBinDefaultContent) {
+						if (!isKeyBoardPaste) {
+							editor.windowManager.alert('Please use Ctrl+V/Cmd+V keyboard shortcuts to paste contents.');
+						}
+
+						return;
 					}
 
 					if (plainTextMode) {
-						pasteText(clipboardContent['text/plain'] || Utils.innerText(html));
+						pasteText(content);
 					} else {
-						pasteHtml(html);
+						pasteHtml(content);
 					}
 				}, 0);
 			});
@@ -486,9 +529,12 @@ define("tinymce/pasteplugin/Clipboard", [
 			});
 		});
 
-		// Fix for #6504 we need to remove the paste bin on IE if the user paste in a file
-		editor.on('PreProcess', function() {
-			editor.dom.remove(editor.dom.get('mcepastebin'));
+		editor.on('BeforeAddUndo', function(e) {
+			// Remove pastebin HTML incase it should be added to an undo
+			// level for example when you paste a file on older IE
+			if (e.level.content) {
+				e.level.content = e.level.content.replace(/<div id="?mcepastebin"?[^>]+>%MCEPASTEBIN%<\/div>/gi, '');
+			}
 		});
 	};
 });

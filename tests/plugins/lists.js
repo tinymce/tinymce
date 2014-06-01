@@ -22,7 +22,7 @@ module("tinymce.plugins.Lists", {
 			indent: false,
 			schema: 'html5',
 			entities: 'raw',
-			valid_elements: 'li,ol,ul,em,strong,span,#p,div,br',
+			valid_elements: 'li,ol,ul,dl,dt,dd,em,strong,span,#p,div,br',
 			valid_styles: {
 				'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display,position,top,left'
 			},
@@ -1360,6 +1360,31 @@ test('Indent second LI to same level as nested LI 2', function() {
 	equal(editor.selection.getNode().nodeName, 'LI');
 });
 
+test('Indent second and third LI', function() {
+	editor.getBody().innerHTML = trimBrs(
+		'<ul>' +
+			'<li>a</li>' +
+			'<li>b</li>' +
+			'<li>c</li>' +
+		'</ul>'
+	);
+
+	editor.focus();
+	Utils.setSelection('li:nth-child(2)', 0, 'li:last', 0);
+	execCommand('Indent');
+
+	equal(editor.getContent(),
+		'<ul>' +
+			'<li>a' +
+				'<ul>' +
+					'<li>b</li>' +
+					'<li>c</li>' +
+				'</ul>' +
+			'</li>' +
+		'</ul>'
+	);
+});
+
 // Backspace
 
 test('Backspace at beginning of single LI in UL', function() {
@@ -1748,4 +1773,103 @@ test('Backspace in LI in UL in inline body element contained within LI', functio
 	inlineEditor.selection.collapse(true);
 	inlineEditor.plugins.lists.backspaceDelete();
 	equal(inlineEditor.getContent(), '<p>a</p>');
+});
+
+test('Apply DL list to multiple Ps', function() {
+	editor.getBody().innerHTML = trimBrs(
+		'<p>a</p>' +
+		'<p>b</p>' +
+		'<p>c</p>'
+	);
+
+	editor.focus();
+	Utils.setSelection('p', 0, 'p:last', 0);
+	execCommand('InsertDefinitionList');
+
+	equal(editor.getContent(),
+		'<dl>' +
+			'<dt>a</dt>' +
+			'<dt>b</dt>' +
+			'<dt>c</dt>' +
+		'</dl>'
+	);
+	equal(editor.selection.getStart().nodeName, 'DT');
+});
+
+test('Apply OL list to single P', function() {
+	editor.getBody().innerHTML = trimBrs(
+		'<p>a</p>'
+	);
+
+	editor.focus();
+	Utils.setSelection('p', 0);
+	execCommand('InsertDefinitionList');
+
+	equal(editor.getContent(),'<dl><dt>a</dt></dl>');
+	equal(editor.selection.getNode().nodeName, 'DT');
+});
+
+test('Apply DL to P and merge with adjacent lists', function() {
+	editor.getBody().innerHTML = trimBrs(
+		'<dl>' +
+			'<dt>a</dt>' +
+		'</dl>' +
+		'<p>b</p>' +
+		'<dl>' +
+			'<dt>c</dt>' +
+		'</dl>'
+	);
+
+	editor.focus();
+	Utils.setSelection('p', 1);
+	execCommand('InsertDefinitionList');
+
+	equal(editor.getContent(),
+		'<dl>' +
+			'<dt>a</dt>' +
+			'<dt>b</dt>' +
+			'<dt>c</dt>' +
+		'</dl>'
+	);
+	equal(editor.selection.getStart().nodeName, 'DT');
+});
+
+test('Indent single DT in DL', function() {
+	editor.getBody().innerHTML = trimBrs(
+		'<dl>' +
+			'<dt>a</dt>' +
+		'</dl>'
+	);
+
+	editor.focus();
+	Utils.setSelection('dt', 0);
+	execCommand('Indent');
+
+	equal(editor.getContent(),
+		'<dl>' +
+			'<dd>a</dd>' +
+		'</dl>'
+	);
+
+	equal(editor.selection.getNode().nodeName, 'DD');
+});
+
+test('Outdent single DD in DL', function() {
+	editor.getBody().innerHTML = trimBrs(
+		'<dl>' +
+			'<dd>a</dd>' +
+		'</dl>'
+	);
+
+	editor.focus();
+	Utils.setSelection('dd', 1);
+	execCommand('Outdent');
+
+	equal(editor.getContent(),
+		'<dl>' +
+			'<dt>a</dt>' +
+		'</dl>'
+	);
+
+	equal(editor.selection.getNode().nodeName, 'DT');
 });

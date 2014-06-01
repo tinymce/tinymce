@@ -311,6 +311,27 @@ test('mceInsertContent - block element with space before/after at middle of bloc
 	equal(editor.getContent(), '<p>a</p><p>b</p><p>c</p>');
 });
 
+test('mceInsertContent - strong in strong', function() {
+	editor.getBody().innerHTML = '<strong>ac</strong>';
+	Utils.setSelection('strong', 1);
+	editor.execCommand('mceInsertContent', false, {content: '<strong>b</strong>', merge: true});
+	equal(editor.getContent(), '<p><strong>abc</strong></p>');
+});
+
+test('mceInsertContent - span in span same style color', function() {
+	editor.getBody().innerHTML = '<span style="color:#ff0000">ac</strong>';
+	Utils.setSelection('span', 1);
+	editor.execCommand('mceInsertContent', false, {content: '<span style="color:#ff0000">b</span>', merge: true});
+	equal(editor.getContent(), '<p><span style="color: #ff0000;">abc</span></p>');
+});
+
+test('mceInsertContent - span in span different style color', function() {
+	editor.getBody().innerHTML = '<span style="color:#ff0000">ac</strong>';
+	Utils.setSelection('span', 1);
+	editor.execCommand('mceInsertContent', false, {content: '<span style="color:#00ff00">b</span>', merge: true});
+	equal(editor.getContent(), '<p><span style="color: #ff0000;">a<span style="color: #00ff00;">b</span>c</span></p>');
+});
+
 test('InsertHorizontalRule', function() {
 	var rng;
 	
@@ -720,4 +741,21 @@ test('RemoveFormat', function() {
 	editor.execCommand('SelectAll');
 	editor.execCommand('RemoveFormat');
 	equal(editor.getContent(), '<p>dfn tag code tag samp tag kbd tag var tag cite tag mark tag q tag</p>');
+});
+
+test('InsertLineBreak', function() {
+	editor.setContent('<p>123</p>');
+	Utils.setSelection('p', 2);
+	editor.execCommand('InsertLineBreak');
+	equal(editor.getContent(), '<p>12<br />3</p>');
+
+	editor.setContent('<p>123</p>');
+	Utils.setSelection('p', 0);
+	editor.execCommand('InsertLineBreak');
+	equal(editor.getContent(), '<p><br />123</p>');
+
+	editor.setContent('<p>123</p>');
+	Utils.setSelection('p', 3);
+	editor.execCommand('InsertLineBreak');
+	equal(editor.getContent(), '<p>123<br /><br /></p>');
 });

@@ -61,12 +61,21 @@ define("tinymce/AddOnManager", [
 		 * @param {String} languages Optional comma or space separated list of languages to check if it matches the name.
 		 */
 		requireLangPack: function(name, languages) {
-			if (AddOnManager.language && AddOnManager.languageLoad !== false) {
-				if (languages && new RegExp('([, ]|\\b)' + AddOnManager.language + '([, ]|\\b)').test(languages) === false) {
-					return;
+			var language = AddOnManager.language;
+
+			if (language && AddOnManager.languageLoad !== false) {
+				if (languages) {
+					languages = ',' + languages + ',';
+
+					// Load short form sv.js or long form sv_SE.js
+					if (languages.indexOf(',' + language.substr(0, 2) + ',') != -1) {
+						language = language.substr(0, 2);
+					} else if (languages.indexOf(',' + language + ',') == -1) {
+						return;
+					}
 				}
 
-				ScriptLoader.ScriptLoader.add(this.urls[name] + '/langs/' + AddOnManager.language + '.js');
+				ScriptLoader.ScriptLoader.add(this.urls[name] + '/langs/' + language + '.js');
 			}
 		},
 

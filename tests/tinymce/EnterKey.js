@@ -10,7 +10,7 @@ module("tinymce.EnterKey", {
 			skin: false,
 			entities: 'raw',
 			schema: 'html5',
-			extended_valid_elements: 'div[id|style|contenteditable],span[id|style|contenteditable]',
+			extended_valid_elements: 'div[id|style|contenteditable],span[id|style|contenteditable],#dt,#dd',
 			valid_styles: {
 				'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display,position,top,left'
 			},
@@ -552,7 +552,69 @@ test('Enter inside empty LI in end of OL in OL', function() {
 	equal(editor.selection.getNode().nodeName, 'LI');
 });
 
+test('Enter at beginning of first DT inside DL', function() {
+	editor.getBody().innerHTML = '<dl><dt>a</dt></dl>';
+	Utils.setSelection('dt', 0);
+	Utils.pressEnter();
+	equal(editor.getContent(),'<dl><dt>\u00a0</dt><dt>a</dt></dl>');
+	equal(editor.selection.getNode().nodeName, 'DT');
+});
 
+test('Enter at beginning of first DD inside DL', function() {
+	editor.getBody().innerHTML = '<dl><dd>a</dd></dl>';
+	Utils.setSelection('dd', 0);
+	Utils.pressEnter();
+	equal(editor.getContent(),'<dl><dd>\u00a0</dd><dd>a</dd></dl>');
+	equal(editor.selection.getNode().nodeName, 'DD');
+});
+
+test('Enter at beginning of middle DT inside DL', function() {
+	editor.getBody().innerHTML = '<dl><dt>a</dt><dt>b</dt><dt>c</dt></dl>';
+	Utils.setSelection('dt:nth-child(2)', 0);
+	Utils.pressEnter();
+	equal(editor.getContent(),'<dl><dt>a</dt><dt>\u00a0</dt><dt>b</dt><dt>c</dt></dl>');
+	equal(editor.selection.getNode().nodeName, 'DT');
+});
+
+test('Enter at beginning of middle DD inside DL', function() {
+	editor.getBody().innerHTML = '<dl><dd>a</dd><dd>b</dd><dd>c</dd></dl>';
+	Utils.setSelection('dd:nth-child(2)', 0);
+	Utils.pressEnter();
+	equal(editor.getContent(),'<dl><dd>a</dd><dd>\u00a0</dd><dd>b</dd><dd>c</dd></dl>');
+	equal(editor.selection.getNode().nodeName, 'DD');
+});
+
+test('Enter at end of last DT inside DL', function() {
+	editor.getBody().innerHTML = '<dl><dt>a</dt></dl>';
+	Utils.setSelection('dt', 1);
+	Utils.pressEnter();
+	equal(editor.getContent(),'<dl><dt>a</dt><dt>\u00a0</dt></dl>');
+	equal(editor.selection.getNode().nodeName, 'DT');
+});
+
+test('Enter at end of last DD inside DL', function() {
+	editor.getBody().innerHTML = '<dl><dd>a</dd></dl>';
+	Utils.setSelection('dd', 1);
+	Utils.pressEnter();
+	equal(editor.getContent(),'<dl><dd>a</dd><dd>\u00a0</dd></dl>');
+	equal(editor.selection.getNode().nodeName, 'DD');
+});
+
+test('Enter at end of last empty DT inside DL', function() {
+	editor.getBody().innerHTML = '<dl><dt>a</dt><dt></dt></dl>';
+	Utils.setSelection('dt:nth-child(2)', 0);
+	Utils.pressEnter();
+	equal(editor.getContent(),'<dl><dt>a</dt></dl><p>\u00a0</p>');
+	equal(editor.selection.getNode().nodeName, 'P');
+});
+
+test('Enter at end of last empty DD inside DL', function() {
+	editor.getBody().innerHTML = '<dl><dd>a</dd><dd></dd></dl>';
+	Utils.setSelection('dd:nth-child(2)', 0);
+	Utils.pressEnter();
+	equal(editor.getContent(),'<dl><dd>a</dd></dl><p>\u00a0</p>');
+	equal(editor.selection.getNode().nodeName, 'P');
+});
 
 test('Enter at beginning of P inside LI', function() {
 	editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
@@ -926,6 +988,19 @@ test('Enter when forced_root_block: false and force_p_newlines: true', function(
 	Utils.setSelection('body', 2);
 	Utils.pressEnter();
 	equal(editor.getContent(),'<p>te</p><p>xt</p>');
+});
+
+test('Enter at end of br line', function() {
+	editor.settings.forced_root_block = false;
+	editor.settings.force_p_newlines = true;
+	editor.getBody().innerHTML = '<p>a<br>b</p>';
+	Utils.setSelection('p', 1);
+	Utils.pressEnter();
+	equal(editor.getContent(), '<p>a</p><p><br />b</p>');
+
+	var rng = editor.selection.getRng(true);
+	equal(rng.startContainer.nodeName, 'P');
+	equal(rng.startContainer.childNodes[rng.startOffset].nodeName, 'BR');
 });
 
 // Ignore on IE 7, 8 this is a known bug not worth fixing

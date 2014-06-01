@@ -33,11 +33,7 @@ tinymce.PluginManager.add('importcss', function(editor) {
 		function append(styleSheet, imported) {
 			var href = styleSheet.href, rules;
 
-			if (!imported && !contentCSSUrls[href]) {
-				return;
-			}
-
-			if (fileFilter && !fileFilter(href)) {
+			if (!href || !fileFilter(href, imported)) {
 				return;
 			}
 
@@ -66,6 +62,12 @@ tinymce.PluginManager.add('importcss', function(editor) {
 		each(editor.contentCSS, function(url) {
 			contentCSSUrls[url] = true;
 		});
+
+		if (!fileFilter) {
+			fileFilter = function(href, imported) {
+				return imported || contentCSSUrls[href];
+			};
+		}
 
 		try {
 			each(doc.styleSheets, function(styleSheet) {
@@ -127,10 +129,10 @@ tinymce.PluginManager.add('importcss', function(editor) {
 	editor.on('renderFormatsMenu', function(e) {
 		var settings = editor.settings, selectors = {};
 		var selectorConverter = settings.importcss_selector_converter || convertSelectorToFormat;
-		var selectorFilter = compileFilter(settings.importcss_selector_filter);
+		var selectorFilter = compileFilter(settings.importcss_selector_filter), ctrl = e.control;
 
 		if (!editor.settings.importcss_append) {
-			e.control.items().remove();
+			ctrl.items().remove();
 		}
 
 		// Setup new groups collection by cloning the configured one
@@ -141,7 +143,7 @@ tinymce.PluginManager.add('importcss', function(editor) {
 			groups.push(group);
 		});
 
-		each(getSelectors(editor.getDoc(), compileFilter(settings.importcss_file_filter)), function(selector) {
+		each(getSelectors(e.doc || editor.getDoc(), compileFilter(settings.importcss_file_filter)), function(selector) {
 			if (selector.indexOf('.mce-') === -1) {
 				if (!selectors[selector] && (!selectorFilter || selectorFilter(selector))) {
 					var format = selectorConverter.call(self, selector), menu;
@@ -164,7 +166,7 @@ tinymce.PluginManager.add('importcss', function(editor) {
 
 						editor.formatter.register(formatName, format);
 
-						var menuItem = tinymce.extend({}, e.control.settings.itemDefaults, {
+						var menuItem = tinymce.extend({}, ctrl.settings.itemDefaults, {
 							text: format.title,
 							format: formatName
 						});
@@ -172,7 +174,7 @@ tinymce.PluginManager.add('importcss', function(editor) {
 						if (menu) {
 							menu.push(menuItem);
 						} else {
-							e.control.add(menuItem);
+							ctrl.add(menuItem);
 						}
 					}
 
@@ -182,7 +184,7 @@ tinymce.PluginManager.add('importcss', function(editor) {
 		});
 
 		each(groups, function(group) {
-			e.control.add(group.item);
+			ctrl.add(group.item);
 		});
 
 		e.control.renderNew();

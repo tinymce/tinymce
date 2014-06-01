@@ -11,14 +11,14 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('preview', function(editor) {
-	var settings = editor.settings;
+	var settings = editor.settings, sandbox = !tinymce.Env.ie;
 
 	editor.addCommand('mcePreview', function() {
 		editor.windowManager.open({
 			title: 'Preview',
 			width : parseInt(editor.getParam("plugin_preview_width", "650"), 10),
 			height : parseInt(editor.getParam("plugin_preview_height", "500"), 10),
-			html: '<iframe src="javascript:\'\'" frameborder="0"></iframe>',
+			html: '<iframe src="javascript:\'\'" frameborder="0"' + (sandbox ? ' sandbox="allow-scripts"' : '') + '></iframe>',
 			buttons: {
 				text: 'Close',
 				onclick: function() {
@@ -26,11 +26,9 @@ tinymce.PluginManager.add('preview', function(editor) {
 				}
 			},
 			onPostRender: function() {
-				var doc = this.getEl('body').firstChild.contentWindow.document, previewHtml, headHtml = '';
+				var previewHtml, headHtml = '';
 
-				if (editor.settings.document_base_url != editor.documentBaseUrl) {
-					headHtml += '<base href="' + editor.documentBaseURI.getURI() + '">';
-				}
+				headHtml += '<base href="' + editor.documentBaseURI.getURI() + '">';
 
 				tinymce.each(editor.contentCSS, function(url) {
 					headHtml += '<link type="text/css" rel="stylesheet" href="' + editor.documentBaseURI.toAbsolute(url) + '">';
@@ -62,9 +60,17 @@ tinymce.PluginManager.add('preview', function(editor) {
 					'</html>'
 				);
 
-				doc.open();
-				doc.write(previewHtml);
-				doc.close();
+				if (!sandbox) {
+					// IE 6-11 doesn't support data uris on iframes
+					// so I guess they will have to be less secure since we can't sandbox on those
+					// TODO: Use sandbox if future versions of IE supports iframes with data: uris.
+					var doc = this.getEl('body').firstChild.contentWindow.document;
+					doc.open();
+					doc.write(previewHtml);
+					doc.close();
+				} else {
+					this.getEl('body').firstChild.src = 'data:text/html;charset=utf-8,' + encodeURIComponent(previewHtml);
+				}
 			}
 		});
 	});

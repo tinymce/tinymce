@@ -293,7 +293,7 @@ test('Script with type attrib and less than', 1, function() {
 	ser.setRules('script[type|language|src]');
 
 	DOM.setHTML('test', '<s'+'cript type="text/javascript">1 < 2;</s'+'cript>');
-	equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script>// <![CDATA[\n1 < 2;\n// ]]></s'+'cript>');
+	equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript">// <![CDATA[\n1 < 2;\n// ]]></s'+'cript>');
 });
 
 test('Script with whitespace in beginning/end', 1, function() {

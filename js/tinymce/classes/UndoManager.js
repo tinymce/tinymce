@@ -21,7 +21,7 @@ define("tinymce/UndoManager", [
 
 	trimContentRegExp = new RegExp([
 		'<span[^>]+data-mce-bogus[^>]+>[\u200B\uFEFF]+<\\/span>', // Trim bogus spans like caret containers
-		'<div[^>]+data-mce-bogus[^>]+><\\/div>', // Trim bogus divs like resize handles
+		'<div[^>]+data-mce-bogus[^>]+>[^>]*<\\/div>', // Trim bogus divs like resize handles/resize helper
 		'\\s?data-mce-selected="[^"]+"' // Trim temporaty data-mce prefixed attributes like data-mce-selected
 	].join('|'), 'gi');
 
@@ -66,7 +66,7 @@ define("tinymce/UndoManager", [
 		});
 
 		editor.on('SaveContent ObjectResized blur', addNonTypingUndoLevel);
-		editor.dom.bind(editor.dom.getRoot(), 'dragend', addNonTypingUndoLevel);
+		editor.on('DragEnd', addNonTypingUndoLevel);
 
 		editor.on('KeyUp', function(e) {
 			var keyCode = e.keyCode;
@@ -177,12 +177,12 @@ define("tinymce/UndoManager", [
 					return null;
 				}
 
-				if (editor.fire('BeforeAddUndo', {level: level, originalEvent: event}).isDefaultPrevented()) {
+				lastLevel = data[index];
+				if (editor.fire('BeforeAddUndo', {level: level, lastLevel: lastLevel, originalEvent: event}).isDefaultPrevented()) {
 					return null;
 				}
 
 				// Add undo level if needed
-				lastLevel = data[index];
 				if (lastLevel && lastLevel.content == level.content) {
 					return null;
 				}

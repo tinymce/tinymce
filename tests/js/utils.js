@@ -98,8 +98,9 @@
 		} else {
 			ev = document.createEvent('UIEvents');
 
-			if (ev.initUIEvent)
+			if (ev.initUIEvent) {
 				ev.initUIEvent(na, true, true, window, 1);
+			}
 
 			ev.keyCode = o.keyCode;
 			ev.charCode = o.charCode;
@@ -110,17 +111,19 @@
 
 	function normalizeRng(rng) {
 		if (rng.startContainer.nodeType == 3) {
-			if (rng.startOffset == 0)
+			if (rng.startOffset === 0) {
 				rng.setStartBefore(rng.startContainer);
-			else if (rng.startOffset >= rng.startContainer.nodeValue.length - 1)
+			} else if (rng.startOffset >= rng.startContainer.nodeValue.length - 1) {
 				rng.setStartAfter(rng.startContainer);
+			}
 		}
 
 		if (rng.endContainer.nodeType == 3) {
-			if (rng.endOffset == 0)
+			if (rng.endOffset === 0) {
 				rng.setEndBefore(rng.endContainer);
-			else if (rng.endOffset >= rng.endContainer.nodeValue.length - 1)
+			} else if (rng.endOffset >= rng.endContainer.nodeValue.length - 1) {
 				rng.setEndAfter(rng.endContainer);
+			}
 		}
 
 		return rng;
@@ -128,7 +131,7 @@
 
 	// TODO: Replace this with the new event logic in 3.5
 	function type(chr) {
-		var editor = tinymce.activeEditor, keyCode, charCode, event = tinymce.dom.Event, evt, startElm, rng;
+		var editor = tinymce.activeEditor, keyCode, charCode, evt, startElm, rng;
 
 		function fakeEvent(target, type, evt) {
 			editor.dom.fire(target, type, evt);
@@ -317,6 +320,46 @@
 		return html.replace(/<br[^>]*>/gi, '');
 	}
 
+	function patch(proto, name, patchFunc) {
+		var originalFunc = proto[name];
+		var originalFuncs = proto.__originalFuncs;
+
+		if (!originalFuncs) {
+			proto.__originalFuncs = originalFuncs = {};
+		}
+
+		if (!originalFuncs[name]) {
+			originalFuncs[name] = originalFunc;
+		} else {
+			originalFunc = originalFuncs[name];
+		}
+
+		proto[name] = function() {
+			var args = Array.prototype.slice.call(arguments);
+			args.unshift(originalFunc);
+			return patchFunc.apply(this, args);
+		};
+	}
+
+	function unpatch(proto, name) {
+		var originalFuncs = proto.__originalFuncs;
+
+		if (!originalFuncs) {
+			return;
+		}
+
+		if (name) {
+			proto[name] = originalFuncs[name];
+			delete originalFuncs[name];
+		} else {
+			for (var key in originalFuncs) {
+				proto[key] = originalFuncs[key];
+			}
+
+			delete proto.__originalFuncs;
+		}
+	}
+
 	window.Utils = {
 		fontFace: fontFace,
 		findContainer: findContainer,
@@ -334,6 +377,8 @@
 		getFontmostWindow: getFontmostWindow,
 		pressArrowKey: pressArrowKey,
 		pressEnter: pressEnter,
-		trimBrsOnIE: trimBrsOnIE
+		trimBrsOnIE: trimBrsOnIE,
+		patch: patch,
+		unpatch: unpatch
 	};
 })();

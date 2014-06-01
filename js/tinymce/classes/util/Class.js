@@ -76,6 +76,8 @@ define("tinymce/util/Class", [
 		// Instantiate a base class (but only create the instance,
 		// don't run the init constructor)
 		initializing = true;
+		
+		/*eslint new-cap:0 */
 		prototype = new self();
 		initializing = false;
 

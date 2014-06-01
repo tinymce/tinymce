@@ -89,13 +89,19 @@ define("tinymce/ui/Form", [
 		 * @private
 		 */
 		recalcLabels: function() {
-			var self = this, maxLabelWidth = 0, labels = [], i, labelGap;
+			var self = this, maxLabelWidth = 0, labels = [], i, labelGap, items;
 
 			if (self.settings.labelGapCalc === false) {
 				return;
 			}
 
-			self.items().filter('formitem').each(function(item) {
+			if (self.settings.labelGapCalc == "children") {
+				items = self.find('formitem');
+			} else {
+				items = self.items();
+			}
+
+			items.filter('formitem').each(function(item) {
 				var labelCtrl = item.items()[0], labelWidth = labelCtrl.getEl().clientWidth;
 
 				maxLabelWidth = labelWidth > maxLabelWidth ? labelWidth : maxLabelWidth;

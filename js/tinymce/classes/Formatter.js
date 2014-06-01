@@ -25,9 +25,11 @@
 define("tinymce/Formatter", [
 	"tinymce/dom/TreeWalker",
 	"tinymce/dom/RangeUtils",
+	"tinymce/dom/BookmarkManager",
+	"tinymce/dom/ElementUtils",
 	"tinymce/util/Tools",
 	"tinymce/fmt/Preview"
-], function(TreeWalker, RangeUtils, Tools, Preview) {
+], function(TreeWalker, RangeUtils, BookmarkManager, ElementUtils, Tools, Preview) {
 	/**
 	 * Constructs a new formatter instance.
 	 *
@@ -51,7 +53,8 @@ define("tinymce/Formatter", [
 			undef,
 			getContentEditable = dom.getContentEditable,
 			disableCaretContainer,
-			markCaretContainersBogus;
+			markCaretContainersBogus,
+			isBookmarkNode = BookmarkManager.isBookmarkNode;
 
 		var each = Tools.each,
 			grep = Tools.grep,
@@ -76,6 +79,18 @@ define("tinymce/Formatter", [
 
 		function defaultFormats() {
 			register({
+				valigntop: [
+					{selector: 'td,th', styles: {'verticalAlign': 'top'}}
+				],
+
+				valignmiddle: [
+					{selector: 'td,th', styles: {'verticalAlign': 'middle'}}
+				],
+
+				valignbottom: [
+					{selector: 'td,th', styles: {'verticalAlign': 'bottom'}}
+				],
+
 				alignleft: [
 					{selector: 'figure,p,h1,h2,h3,h4,h5,h6,td,th,tr,div,ul,ol,li', styles: {textAlign: 'left'}, defaultBlock: 'div'},
 					{selector: 'img,table', collapsed: false, styles: {'float': 'left'}}
@@ -290,6 +305,16 @@ define("tinymce/Formatter", [
 						dom.setStyle(elm, name, replaceVars(value, vars));
 					});
 
+					// Needed for the WebKit span spam bug
+					// TODO: Remove this once WebKit/Blink fixes this
+					if (fmt.styles) {
+						var styleVal = dom.getAttrib(elm, 'style');
+
+						if (styleVal) {
+							elm.setAttribute('data-mce-style', styleVal);
+						}
+					}
+
 					each(fmt.attributes, function(value, name) {
 						dom.setAttrib(elm, name, replaceVars(value, vars));
 					});
@@ -344,7 +369,7 @@ define("tinymce/Formatter", [
 
 				// get the index of the bookmarks
 				each(node.childNodes, function(n, index) {
-					if (n.nodeName === "SPAN" && dom.getAttrib(n, "data-mce-type") == "bookmark") {
+					if (isBookmarkNode(n)) {
 						if (n.id == bookmark.id + "_start") {
 							startIndex = index;
 						} else if (n.id == bookmark.id + "_end") {
@@ -1921,17 +1946,6 @@ define("tinymce/Formatter", [
 		}
 
 		/**
-		 * Checks if the specified node is a bookmark node or not.
-		 *
-		 * @private
-		 * @param {Node} node Node to check if it's a bookmark node or not.
-		 * @return {Boolean} true/false if the node is a bookmark node.
-		 */
-		function isBookmarkNode(node) {
-			return node && node.nodeType == 1 && node.getAttribute('data-mce-type') == 'bookmark';
-		}
-
-		/**
 		 * Merges the next/previous sibling element if they match.
 		 *
 		 * @private
@@ -1940,99 +1954,7 @@ define("tinymce/Formatter", [
 		 * @return {Node} Next node if we didn't merge and prev node if we did.
 		 */
 		function mergeSiblings(prev, next) {
-			var sibling, tmpSibling;
-
-			/**
-			 * Compares two nodes and checks if it's attributes and styles matches.
-			 * This doesn't compare classes as items since their order is significant.
-			 *
-			 * @private
-			 * @param {Node} node1 First node to compare with.
-			 * @param {Node} node2 Second node to compare with.
-			 * @return {boolean} True/false if the nodes are the same or not.
-			 */
-			function compareElements(node1, node2) {
-				// Not the same name
-				if (node1.nodeName != node2.nodeName) {
-					return FALSE;
-				}
-
-				/**
-				 * Returns all the nodes attributes excluding internal ones, styles and classes.
-				 *
-				 * @private
-				 * @param {Node} node Node to get attributes from.
-				 * @return {Object} Name/value object with attributes and attribute values.
-				 */
-				function getAttribs(node) {
-					var attribs = {};
-
-					each(dom.getAttribs(node), function(attr) {
-						var name = attr.nodeName.toLowerCase();
-
-						// Don't compare internal attributes or style
-						if (name.indexOf('_') !== 0 && name !== 'style' && name !== 'data-mce-style') {
-							attribs[name] = dom.getAttrib(node, name);
-						}
-					});
-
-					return attribs;
-				}
-
-				/**
-				 * Compares two objects checks if it's key + value exists in the other one.
-				 *
-				 * @private
-				 * @param {Object} obj1 First object to compare.
-				 * @param {Object} obj2 Second object to compare.
-				 * @return {boolean} True/false if the objects matches or not.
-				 */
-				function compareObjects(obj1, obj2) {
-					var value, name;
-
-					for (name in obj1) {
-						// Obj1 has item obj2 doesn't have
-						if (obj1.hasOwnProperty(name)) {
-							value = obj2[name];
-
-							// Obj2 doesn't have obj1 item
-							if (value === undef) {
-								return FALSE;
-							}
-
-							// Obj2 item has a different value
-							if (obj1[name] != value) {
-								return FALSE;
-							}
-
-							// Delete similar value
-							delete obj2[name];
-						}
-					}
-
-					// Check if obj 2 has something obj 1 doesn't have
-					for (name in obj2) {
-						// Obj2 has item obj1 doesn't have
-						if (obj2.hasOwnProperty(name)) {
-							return FALSE;
-						}
-					}
-
-					return TRUE;
-				}
-
-				// Attribs are not the same
-				if (!compareObjects(getAttribs(node1), getAttribs(node2))) {
-					return FALSE;
-				}
-
-				// Styles are not the same
-				if (!compareObjects(dom.parseStyle(dom.getAttrib(node1, 'style')), dom.parseStyle(dom.getAttrib(node2, 'style')))) {
-					return FALSE;
-				}
-
-				return !isBookmarkNode(node1) && !isBookmarkNode(node2);
-			}
+			var sibling, tmpSibling, elementUtils = new ElementUtils(dom);
 
 			function findElementSibling(node, sibling_name) {
 				for (sibling = node; sibling; sibling = sibling[sibling_name]) {
@@ -2055,7 +1977,7 @@ define("tinymce/Formatter", [
 				next = findElementSibling(next, 'nextSibling');
 
 				// Compare next and previous nodes
-				if (compareElements(prev, next)) {
+				if (elementUtils.compare(prev, next)) {
 					// Append nodes between
 					for (sibling = prev.nextSibling; sibling && sibling != next;) {
 						tmpSibling = sibling;
@@ -2258,7 +2180,7 @@ define("tinymce/Formatter", [
 				node = container;
 
 				if (container.nodeType == 3) {
-					if (offset != container.nodeValue.length || container.nodeValue === INVISIBLE_CHAR) {
+					if (offset != container.nodeValue.length) {
 						hasContentAfter = true;
 					}
 

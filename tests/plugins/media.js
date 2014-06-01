@@ -40,14 +40,12 @@ test("Object retain as is", function() {
 
 test("Embed retain as is", function() {
 	editor.setContent(
-		'<video src="320x240.ogg" autoplay loop controls>text<a href="#">link</a></video>'
+		'<embed src="320x240.ogg" width="100" height="200">text<a href="#">link</a></embed>'
 	);
 
-	equal(editor.getContent(),
-		// IE produces a different attribute order for some odd reason, I love IE
-		tinymce.isIE ?
-			'<p><video width="300" height="150" controls="controls" loop="loop" autoplay="autoplay" src="320x240.ogg">text<a href="#">link</a></video></p>' :
-			'<p><video width="300" height="150" src="320x240.ogg" autoplay="autoplay" loop="loop" controls="controls">text<a href="#">link</a></video></p>'
+	equal(
+		editor.getContent(),
+		'<p><embed src="320x240.ogg" width="100" height="200"></embed>text<a href="#">link</a></p>'
 	);
 });
 
@@ -56,11 +54,9 @@ test("Video retain as is", function() {
 		'<video src="320x240.ogg" autoplay loop controls>text<a href="#">link</a></video>'
 	);
 
-	equal(editor.getContent(),
-		// IE produces a different attribute order for some odd reason, I love IE
-		tinymce.isIE ?
-			'<p><video width="300" height="150" controls="controls" loop="loop" autoplay="autoplay" src="320x240.ogg">text<a href="#">link</a></video></p>' :
-			'<p><video width="300" height="150" src="320x240.ogg" autoplay="autoplay" loop="loop" controls="controls">text<a href="#">link</a></video></p>'
+	equal(
+		editor.getContent(),
+		'<p><video src="320x240.ogg" autoplay="autoplay" loop="loop" controls="controls" width="300" height="150">text<a href="#">link</a></video></p>'
 	);
 });
 
@@ -114,7 +110,7 @@ test("Resize complex object", function() {
 
 	equal(editor.getContent(),
 		'<p>' +
-			'<video width="100" height="200" controls="controls">' +
+			'<video controls="controls" width="100" height="200">' +
 				'<source src="s" />' +
 				'<object type="application/x-shockwave-flash" data="../../js/tinymce/plugins/media/moxieplayer.swf" width="100" height="200">' +
 					'<param name="allowfullscreen" value="true" />' +

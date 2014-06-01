@@ -571,6 +571,45 @@ test('normalize to br from document', function() {
 
 // Only run on non IE browsers since it's not an issue on IE
 if (!tinymce.isIE) {
+	test('normalize with contentEditable:false element', function() {
+		var rng;
+
+		editor.setContent('<p>a<b contentEditable="false">b</b>c</p>');
+		rng = editor.dom.createRng();
+		rng.setStart(editor.getBody().firstChild.lastChild, 0);
+		rng.setEnd(editor.getBody().firstChild.lastChild, 0);
+		editor.selection.setRng(rng);
+		editor.selection.normalize();
+
+		rng = editor.selection.getRng(true);
+		equal(rng.collapsed, true);
+		equal(rng.startContainer.nodeType, 3);
+		equal(rng.startContainer.data, 'c');
+	});
+
+	test('normalize with contentEditable:false parent and contentEditable:true child element', function() {
+		editor.setContent('<p contentEditable="false">a<em contentEditable="true">b</em></p>');
+		Utils.setSelection('em', 0);
+		editor.selection.normalize();
+
+		var rng = editor.selection.getRng(true);
+		equal(rng.collapsed, true);
+		equal(rng.startContainer.nodeType, 3);
+		equal(rng.startContainer.data, 'b');
+	});
+
+	test('normalize with contentEditable:true parent and contentEditable:false child element', function() {
+		editor.setContent('<p contentEditable="true">a<em contentEditable="false">b</em></p>');
+		Utils.setSelection('em', 0);
+		editor.selection.normalize();
+
+		var rng = editor.selection.getRng(true);
+		equal(rng.collapsed, true);
+		equal(rng.startContainer.nodeType, 3);
+		equal(rng.startContainer.data, 'a');
+		equal(rng.startOffset, 1);
+	});
+
 	test('normalize to text node from body', function() {
 		var rng;
 

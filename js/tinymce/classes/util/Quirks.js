@@ -89,7 +89,7 @@ define("tinymce/util/Quirks", [
 		 */
 		function cleanupStylesWhenDeleting() {
 			var doc = editor.getDoc(), urlPrefix = 'data:text/mce-internal,';
-			var MutationObserver = window.MutationObserver, olderWebKit;
+			var MutationObserver = window.MutationObserver, olderWebKit, dragStartRng;
 
 			// Add mini polyfill for older WebKits
 			// TODO: Remove this when old Safari versions gets updated
@@ -118,9 +118,10 @@ define("tinymce/util/Quirks", [
 					};
 
 					this.disconnect = function() {
-						target.removeEventListener('DOMNodeInserted', nodeInsert);
-						target.removeEventListener('DOMAttrModified', attrModified);
 						target.removeEventListener('DOMSubtreeModified', nodeInsert, false);
+						target.removeEventListener('DOMNodeInsertedIntoDocument', nodeInsert, false);
+						target.removeEventListener('DOMNodeInserted', nodeInsert, false);
+						target.removeEventListener('DOMAttrModified', attrModified, false);
 					};
 
 					this.takeRecords = function() {
@@ -158,6 +159,10 @@ define("tinymce/util/Quirks", [
 				var caretElement = rng.startContainer.parentNode;
 
 				Tools.each(mutationObserver.takeRecords(), function(record) {
+					if (!dom.isChildOf(record.target, editor.getBody())) {
+						return;
+					}
+
 					// Restore style attribute to previous value
 					if (record.attributeName == "style") {
 						var oldValue = record.target.getAttribute('data-mce-style');
@@ -243,8 +248,19 @@ define("tinymce/util/Quirks", [
 			}
 
 			editor.on('dragstart', function(e) {
+				var selectionHtml;
+
+				if (editor.selection.isCollapsed() && e.target.tagName == 'IMG') {
+					selection.select(e.target);
+				}
+
+				dragStartRng = selection.getRng();
+				selectionHtml = editor.selection.getContent();
+
 				// Safari doesn't support custom dataTransfer items so we can only use URL and Text
-				e.dataTransfer.setData('URL', 'data:text/mce-internal,' + escape(editor.selection.getContent()));
+				if (selectionHtml.length > 0) {
+					e.dataTransfer.setData('URL', 'data:text/mce-internal,' + escape(selectionHtml));
+				}
 			});
 
 			editor.on('drop', function(e) {
@@ -258,10 +274,26 @@ define("tinymce/util/Quirks", [
 					internalContent = unescape(internalContent.substr(urlPrefix.length));
 					if (doc.caretRangeFromPoint) {
 						e.preventDefault();
-						customDelete();
-						editor.selection.setRng(doc.caretRangeFromPoint(e.x, e.y));
-						editor.insertContent(internalContent);
+
+						// Safari has a weird issue where drag/dropping images sometimes
+						// produces a green plus icon. When this happens the caretRangeFromPoint
+						// will return "null" even though the x, y coordinate is correct.
+						// But if we detach the insert from the drop event we will get a proper range
+						window.setTimeout(function() {
+							var pointRng = doc.caretRangeFromPoint(e.x, e.y);
+
+							if (dragStartRng) {
+								selection.setRng(dragStartRng);
+								dragStartRng = null;
+							}
+
+							customDelete();
+
+							selection.setRng(pointRng);
+							editor.insertContent(internalContent);
+						}, 0);
 					}
+
 				}
 			});
 
@@ -1055,7 +1087,7 @@ define("tinymce/util/Quirks", [
 		 */
 		function doubleTrailingBrElements() {
 			if (!editor.inline) {
-				editor.on('focus blur', function() {
+				editor.on('focus blur beforegetcontent', function() {
 					var br = editor.dom.create('br');
 					editor.getBody().appendChild(br);
 					br.parentNode.removeChild(br);
@@ -1083,6 +1115,18 @@ define("tinymce/util/Quirks", [
 			editor.contentStyles.push('.mce-content-body {-webkit-touch-callout: none}');
 		}
 
+		/**
+		 * WebKit has a bug where it will allow forms to be submitted if they are inside a contentEditable element.
+		 * For example this: <form><button></form>
+		 */
+		function blockFormSubmitInsideEditor() {
+			editor.on('init', function() {
+				editor.dom.bind(editor.getBody(), 'submit', function(e) {
+					e.preventDefault();
+				});
+			});
+		}
+
 		// All browsers
 		disableBackspaceIntoATable();
 		removeBlockQuoteOnBackSpace();
@@ -1095,6 +1139,7 @@ define("tinymce/util/Quirks", [
 			inputMethodFocus();
 			selectControlElements();
 			setDefaultBlockType();
+			blockFormSubmitInsideEditor();
 
 			// iOS
 			if (Env.iOS) {

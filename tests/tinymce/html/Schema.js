@@ -256,6 +256,20 @@ test('getTextBlockElements', function() {
 	});
 });
 
+test('getTextInlineElements', function() {
+	var schema;
+
+	expect(1);
+
+	schema = new tinymce.html.Schema();
+	deepEqual(schema.getTextInlineElements(), {
+		"B": {}, "CITE": {}, "CODE": {}, "DFN": {},	"EM": {}, "FONT": {}, "I": {}, "MARK": {}, "Q": {},
+		"SAMP": {}, "SPAN": {}, "STRIKE": {}, "STRONG": {}, "SUB": {}, "SUP": {}, "U": {}, "VAR": {},
+		"b": {}, "cite": {}, "code": {}, "dfn": {}, "em": {}, "font": {}, "i": {}, "mark": {}, "q": {},
+		"samp": {}, "span": {}, "strike": {}, "strong": {}, "sub": {}, "sup": {}, "u": {}, "var": {}
+	});
+});
+
 test('isValidChild', function() {
 	var schema;
 
@@ -407,3 +421,116 @@ test('isValid', function() {
 	ok(schema.isValid('i', 'id'));
 });
 
+test('validStyles', function() {
+	var schema;
+
+	schema = new tinymce.html.Schema({valid_styles: 'color,font-size'});
+	deepEqual(schema.getValidStyles(), {
+		"*": [
+			"color",
+			"font-size"
+		]
+	});
+
+	schema = new tinymce.html.Schema({valid_styles: 'color font-size'});
+	deepEqual(schema.getValidStyles(), {
+		"*": [
+			"color",
+			"font-size"
+		]
+	});
+
+	schema = new tinymce.html.Schema({
+		valid_styles: {
+			'*': 'color font-size',
+			'a': 'background font-family'
+		}
+	});
+	deepEqual(schema.getValidStyles(), {
+		"*": [
+			"color",
+			"font-size"
+		],
+
+		"a": [
+			"background",
+			"font-family"
+		]
+	});
+});
+
+test('invalidStyles', function() {
+	var schema;
+
+	schema = new tinymce.html.Schema({invalid_styles: 'color,font-size'});
+	deepEqual(schema.getInvalidStyles(), {
+		'*': {
+			'color': {},
+			'font-size': {}
+		}
+	});
+
+	schema = new tinymce.html.Schema({invalid_styles: 'color font-size'});
+	deepEqual(schema.getInvalidStyles(), {
+		'*': {
+			'color': {},
+			'font-size': {}
+		}
+	});
+
+	schema = new tinymce.html.Schema({
+		invalid_styles: {
+			'*': 'color font-size',
+			'a': 'background font-family'
+		}
+	});
+	deepEqual(schema.getInvalidStyles(), {
+		'*': {
+			'color': {},
+			'font-size': {}
+		},
+
+		'a': {
+			'background': {},
+			'font-family': {}
+		}
+	});
+});
+
+test('validClasses', function() {
+	var schema;
+
+	schema = new tinymce.html.Schema({valid_classes: 'classA,classB'});
+	deepEqual(schema.getValidClasses(), {
+		'*': {
+			'classA': {},
+			'classB': {}
+		}
+	});
+
+	schema = new tinymce.html.Schema({valid_classes: 'classA classB'});
+	deepEqual(schema.getValidClasses(), {
+		'*': {
+			'classA': {},
+			'classB': {}
+		}
+	});
+
+	schema = new tinymce.html.Schema({
+		valid_classes: {
+			'*': 'classA classB',
+			'a': 'classC classD'
+		}
+	});
+	deepEqual(schema.getValidClasses(), {
+		'*': {
+			'classA': {},
+			'classB': {}
+		},
+
+		'a': {
+			'classC': {},
+			'classD': {}
+		}
+	});
+});

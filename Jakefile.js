@@ -444,7 +444,7 @@ task("mktmp", [], function() {
 });
 
 desc("Builds release packages as zip files");
-task("release", ["default", "nuget", "zip-production", "zip-production-jquery", "zip-development", "jshint", "eslint"]);
+task("release", ["default", "jshint", "eslint", "nuget", "zip-production", "zip-production-jquery", "zip-development", "zip-component"]);
 
 task("zip-production", ["mktmp"], function () {
 	var details = getReleaseDetails("changelog.txt");
@@ -548,6 +548,78 @@ task("zip-development", ["mktmp"], function () {
 		],
 
 		to: "tmp/tinymce_" + details.version + "_dev.zip"
+	});
+});
+
+task("zip-component", ["mktmp"], function () {
+	var details = getReleaseDetails("changelog.txt");
+
+	function jsonToBuffer(json) {
+		return new Buffer(JSON.stringify(json, null, '\t'));
+	}
+
+	var keywords = ["editor", "wysiwyg", "tinymce", "richtext", "javascript", "html"];
+
+	zip({
+		exclude: [
+			"js/tinymce/plugins/visualblocks/img",
+			"js/tinymce/plugins/compat3x",
+			"js/tinymce/plugins/example",
+			"js/tinymce/plugins/example_dependency",
+			/(imagemanager|filemanager|moxiemanager)/,
+			/plugin\.js|plugin\.dev\.js|theme\.js/,
+			/classes/,
+			/(.+\.less|\.dev\.svg|\.json|\.md)$/
+		],
+
+		from: [
+			["js/tinymce/skins", "skins"],
+			["js/tinymce/plugins", "plugins"],
+			["js/tinymce/themes", "themes"],
+			["js/tinymce/tinymce.min.js", "tinymce.min.js"],
+			["js/tinymce/jquery.tinymce.min.js", "jquery.tinymce.min.js"],
+			["js/tinymce/tinymce.jquery.min.js", "tinymce.jquery.min.js"],
+			["js/tinymce/license.txt", "license.txt"],
+			"changelog.txt",
+
+			// Bower meta
+			[jsonToBuffer({
+				"name": "tinymce",
+				"version": details.version,
+				"description": "Web based JavaScript HTML WYSIWYG editor control.",
+				"license": "http://www.tinymce.com/license",
+				"keywords": keywords,
+				"homepage": "http://www.tinymce.com",
+				"main": "tinymce.min.js",
+				"ignore": ["readme.md", "composer.json", "package.json"]
+			}), "bower.json"],
+
+			// Npm meta
+			[jsonToBuffer({
+				"name": "tinymce",
+				"version": details.version,
+				"description": "Web based JavaScript HTML WYSIWYG editor control.",
+				"license": "LGPL-2.1",
+				"keywords": keywords,
+				"bugs": {"url": "http://www.tinymce.com/develop/bugtracker.php"}
+			}), "package.json"],
+
+			// Composer meta
+			[jsonToBuffer({
+				"name": "tinymce/tinymce",
+				"version": details.version,
+				"description": "Web based JavaScript HTML WYSIWYG editor control.",
+				"license": ["LGPL-2.1"],
+				"keywords": keywords,
+				"homepage": "http://www.tinymce.com",
+				"type": "library",
+				"archive": {
+					"exclude": ["readme.md", "bower.js", "package.json"]
+				}
+			}), "composer.json"]
+		],
+
+		to: "tmp/tinymce_" + details.version + "_component.zip"
 	});
 });
 

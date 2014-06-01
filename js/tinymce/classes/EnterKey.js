@@ -52,6 +52,10 @@ define("tinymce/EnterKey", [
 			function trimInlineElementsOnLeftSideOfBlock(block) {
 				var node = block, firstChilds = [], i;
 
+				if (!node) {
+					return;
+				}
+
 				// Find inner most first child ex: <p><i><b>*</b></i></p>
 				while ((node = node.firstChild)) {
 					if (dom.isBlock(node)) {
@@ -92,6 +96,10 @@ define("tinymce/EnterKey", [
 					}
 				}
 
+				if (!root) {
+					return;
+				}
+
 				// Old IE versions doesn't properly render blocks with br elements in them
 				// For example <p><br></p> wont be rendered correctly in a contentEditable area
 				// until you remove the br producing <p></p>
@@ -101,15 +109,22 @@ define("tinymce/EnterKey", [
 					}
 				}
 
-				if (root.nodeName == 'LI') {
+				if (/^(LI|DT|DD)$/.test(root.nodeName)) {
 					var firstChild = firstNonWhiteSpaceNodeSibling(root.firstChild);
 
-					if (firstChild && /^(UL|OL)$/.test(firstChild.nodeName)) {
+					if (firstChild && /^(UL|OL|DL)$/.test(firstChild.nodeName)) {
 						root.insertBefore(dom.doc.createTextNode('\u00a0'), root.firstChild);
 					}
 				}
 
 				rng = dom.createRng();
+
+				// Normalize whitespace to remove empty text nodes. Fix for: #6904
+				// Gecko will be able to place the caret in empty text nodes but it won't render propery
+				// Older IE versions will sometimes crash so for now ignore all IE versions
+				if (!Env.ie) {
+					root.normalize();
+				}
 
 				if (root.hasChildNodes()) {
 					walker = new TreeWalker(root, root);
@@ -174,7 +189,7 @@ define("tinymce/EnterKey", [
 			// Creates a new block element by cloning the current one or creating a new one if the name is specified
 			// This function will also copy any text formatting from the parent block and add it to the new one
 			function createNewBlock(name) {
-				var node = container, block, clonedNode, caretNode;
+				var node = container, block, clonedNode, caretNode, textInlineElements = schema.getTextInlineElements();
 
 				if (name || parentBlockName == "TABLE") {
 					block = dom.create(name || newBlockName);
@@ -188,7 +203,7 @@ define("tinymce/EnterKey", [
 				// Clone any parent styles
 				if (settings.keep_styles !== false) {
 					do {
-						if (/^(SPAN|STRONG|B|EM|I|FONT|STRIKE|U|VAR|CITE|DFN|CODE|MARK|Q|SUP|SUB|SAMP)$/.test(node.nodeName)) {
+						if (textInlineElements[node.nodeName]) {
 							// Never clone a caret containers
 							if (node.id == '_mce_caret') {
 								continue;
@@ -349,7 +364,7 @@ define("tinymce/EnterKey", [
 				function getContainerBlock() {
 					var containerBlockParent = containerBlock.parentNode;
 
-					if (containerBlockParent.nodeName == 'LI') {
+					if (/^(LI|DT|DD)$/.test(containerBlockParent.nodeName)) {
 						return containerBlockParent;
 					}
 
@@ -409,56 +424,9 @@ define("tinymce/EnterKey", [
 				undoManager.add();
 			}
 
-			// Walks the parent block to the right and look for BR elements
-			function hasRightSideContent() {
-				var walker = new TreeWalker(container, parentBlock), node;
-
-				while ((node = walker.next())) {
-					if (nonEmptyElementsMap[node.nodeName.toLowerCase()] || node.length > 0) {
-						return true;
-					}
-				}
-			}
-
 			// Inserts a BR element if the forced_root_block option is set to false or empty string
 			function insertBr() {
-				var brElm, extraBr, marker;
-
-				if (container && container.nodeType == 3 && offset >= container.nodeValue.length) {
-					// Insert extra BR element at the end block elements
-					if (!isIE && !hasRightSideContent()) {
-						brElm = dom.create('br');
-						rng.insertNode(brElm);
-						rng.setStartAfter(brElm);
-						rng.setEndAfter(brElm);
-						extraBr = true;
-					}
-				}
-
-				brElm = dom.create('br');
-				rng.insertNode(brElm);
-
-				// Rendering modes below IE8 doesn't display BR elements in PRE unless we have a \n before it
-				if (isIE && parentBlockName == 'PRE' && (!documentMode || documentMode < 8)) {
-					brElm.parentNode.insertBefore(dom.doc.createTextNode('\r'), brElm);
-				}
-
-				// Insert temp marker and scroll to that
-				marker = dom.create('span', {}, '&nbsp;');
-				brElm.parentNode.insertBefore(marker, brElm);
-				selection.scrollIntoView(marker);
-				dom.remove(marker);
-
-				if (!extraBr) {
-					rng.setStartAfter(brElm);
-					rng.setEndAfter(brElm);
-				} else {
-					rng.setStartBefore(brElm);
-					rng.setEndBefore(brElm);
-				}
-
-				selection.setRng(rng);
-				undoManager.add();
+				editor.execCommand("InsertLineBreak", false, evt);
 			}
 
 			// Trims any linebreaks at the beginning of node user for example when pressing enter in a PRE element
@@ -579,8 +547,8 @@ define("tinymce/EnterKey", [
 				parentBlockName = containerBlockName;
 			}
 
-			// Handle enter in LI
-			if (parentBlockName == 'LI') {
+			// Handle enter in list item
+			if (/^(LI|DT|DD)$/.test(parentBlockName)) {
 				if (!newBlockName && shiftKey) {
 					insertBr();
 					return;
