@@ -59,6 +59,67 @@ test("on (prepend)", function() {
 	equal(data, 'ba');
 });
 
+test("once", function() {
+	var dispatcher = new tinymce.util.EventDispatcher(), data = '';
+
+	strictEqual(dispatcher.on('click', function() {data += 'a';}), dispatcher);
+	strictEqual(dispatcher.once('click', function() {data += 'b';}), dispatcher);
+	strictEqual(dispatcher.on('click', function() {data += 'c';}), dispatcher);
+
+	dispatcher.fire('click');
+	equal(data, 'abc');
+
+	dispatcher.fire('click');
+	equal(data, 'abcac');
+});
+
+test("once (prepend)", function() {
+	var dispatcher = new tinymce.util.EventDispatcher(), data = '';
+
+	strictEqual(dispatcher.on('click', function() {data += 'a';}), dispatcher);
+	strictEqual(dispatcher.once('click', function() {data += 'b';}, true), dispatcher);
+	strictEqual(dispatcher.on('click', function() {data += 'c';}), dispatcher);
+
+	dispatcher.fire('click');
+	equal(data, 'bac');
+
+	dispatcher.fire('click');
+	equal(data, 'bacac');
+});
+
+test("once (unbind)", function() {
+	var dispatcher = new tinymce.util.EventDispatcher(), data = '';
+
+	function handler() {
+		data += 'b';
+	}
+
+	dispatcher.once('click', function() {data += 'a';});
+	dispatcher.once('click', handler);
+	dispatcher.off('click', handler);
+
+	dispatcher.fire('click');
+	equal(data, 'a');
+});
+
+test("once (multiple events)", function() {
+	var dispatcher = new tinymce.util.EventDispatcher(), data = '';
+
+	dispatcher.once('click', function() {data += 'a';});
+	dispatcher.once('keydown', function() {data += 'b';});
+
+	dispatcher.fire('click');
+	equal(data, 'a');
+
+	dispatcher.fire('keydown');
+	equal(data, 'ab');
+
+	dispatcher.fire('click');
+	dispatcher.fire('keydown');
+
+	equal(data, 'ab');
+});
+
 test("off (all)", function() {
 	var dispatcher = new tinymce.util.EventDispatcher(), data = '';
 

@@ -1,5 +1,6 @@
 Version 4.0.29 (2014-06-xx)
 	Added new resize helper element that shows the current width & height while resizing.
+	Added new "once" method to Editor and EventDispatcher enables since callback execution events.
 	Fixed so the default resize method for images are proportional shift/ctrl can be used to make an unproportional size.
 	Fixed bug where the image_dimensions option of the image plugin would cause exceptions when it tried to update the size.
 	Fixed bug where table cell dialog class field wasn't properly updated when editing an a table cell with an existing class.

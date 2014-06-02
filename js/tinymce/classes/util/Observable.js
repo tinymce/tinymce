@@ -104,6 +104,18 @@ define("tinymce/util/Observable", [
 		},
 
 		/**
+		 * Bind the event callback and once it fires the callback is removed.
+		 *
+		 * @method once
+		 * @param {String} name Name of the event to bind.
+		 * @param {callback} callback Callback to bind only once.
+		 * @return {Object} Current class instance.
+		 */
+		once: function(name, callback) {
+			return getEventDispatcher(this).once(name, callback);
+		},
+
+		/**
 		 * Returns true/false if the object has a event of the specified name.
 		 *
 		 * @method hasEventListeners
