@@ -757,5 +757,5 @@ test('InsertLineBreak', function() {
 	editor.setContent('<p>123</p>');
 	Utils.setSelection('p', 3);
 	editor.execCommand('InsertLineBreak');
-	equal(editor.getContent(), '<p>123<br /><br /></p>');
+	equal(Utils.cleanHtml(editor.getBody().innerHTML), (tinymce.isIE && tinymce.Env.ie < 11) ? '<p>123<br></p>': '<p>123<br><br></p>');
 });
