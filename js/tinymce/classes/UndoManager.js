@@ -135,6 +135,25 @@ define("tinymce/UndoManager", [
 			}
 		});
 
+		editor.on('Click', function(e) {
+			// Selection range isn't updated until after the click events default handler is executed
+			// so we need to wait for the selection to update on Gecko/WebKit it happens right away on IE
+			// it might take a while so we listen for the SelectionChange event.
+			// We can't use the SelectionChange event since Gecko doesn't support that and we need to fallback
+			// to setTimeout on IE since they might fix this issue in the future.
+			if (!e.isDefaultPrevented()) {
+				if (Env.ie) {
+					editor.once('SelectionChange', function() {
+						editor.nodeChanged();
+					});
+				}
+
+				setTimeout(function() {
+					editor.nodeChanged();
+				}, 0);
+			}
+		});
+
 		self = {
 			// Explose for debugging reasons
 			data: data,
