@@ -1169,8 +1169,9 @@ define("tinymce/Editor", [
 		 * need to update the UI states or element path etc.
 		 *
 		 * @method nodeChanged
+		 * @param {Object} args Optional args to pass to NodeChange event handlers.
 		 */
-		nodeChanged: function() {
+		nodeChanged: function(args) {
 			var self = this, selection = self.selection, node, parents, root;
 
 			// Fix for bug #1896577 it seems that this can not be fired while the editor is loading
@@ -1195,7 +1196,11 @@ define("tinymce/Editor", [
 					parents.push(node);
 				});
 
-				self.fire('NodeChange', {element: node, parents: parents});
+				args = args || {};
+				args.element = node;
+				args.parents = parents;
+
+				self.fire('NodeChange', args);
 			}
 		},
 
