@@ -268,41 +268,43 @@ define("tinymce/pasteplugin/Clipboard", [
 		 * Checks if the clipboard contains image data if it does it will take that data
 		 * and convert it into a data url image and paste that image at the caret location.
 		 *
-		 * @param  {ClipboardEvent} e Paste event object.
-		 * @param  {Object} clipboardContent Collection of clipboard contents.
+		 * @param  {ClipboardEvent} e Paste/drop event object.
+		 * @param  {DOMRange} rng Optional rng object to move selection to.
 		 * @return {Boolean} true/false if the image data was found or not.
 		 */
-		function pasteImageData(e, clipboardContent) {
-			function pasteImage(item) {
-				if (items[i].type == 'image/png') {
-					var reader = new FileReader();
+		function pasteImageData(e, rng) {
+			var dataTransfer = e.clipboardData || e.dataTransfer;
 
-					reader.onload = function() {
-						pasteHtml('<img src="' + reader.result + '">');
-					};
+			function processItems(items) {
+				var i, item, reader;
 
-					reader.readAsDataURL(item.getAsFile());
+				function pasteImage() {
+					if (rng) {
+						editor.selection.setRng(rng);
+						rng = null;
+					}
 
-					return true;
+					pasteHtml('<img src="' + reader.result + '">');
 				}
-			}
-
-			// If paste data images are disabled or there is HTML or plain text
-			// contents then proceed with the normal paste process
-			if (!editor.settings.paste_data_images || "text/html" in clipboardContent || "text/plain" in clipboardContent) {
-				return;
-			}
-
-			if (e.clipboardData) {
-				var items = e.clipboardData.items;
 
 				if (items) {
-					for (var i = 0; i < items.length; i++) {
-						if (pasteImage(items[i])) {
+					for (i = 0; i < items.length; i++) {
+						item = items[i];
+
+						if (/^image\/(jpeg|png|gif)$/.test(item.type)) {
+							reader = new FileReader();
+							reader.onload = pasteImage;
+							reader.readAsDataURL(item.getAsFile ? item.getAsFile() : item);
+
+							e.preventDefault();
 							return true;
 						}
 					}
 				}
+			}
+
+			if (editor.settings.paste_data_images && dataTransfer) {
+				return processItems(dataTransfer.items) || processItems(dataTransfer.files);
 			}
 		}
 
@@ -390,7 +392,7 @@ define("tinymce/pasteplugin/Clipboard", [
 					return;
 				}
 
-				if (pasteImageData(e, clipboardContent)) {
+				if (pasteImageData(e)) {
 					removePasteBin();
 					return;
 				}
@@ -480,7 +482,15 @@ define("tinymce/pasteplugin/Clipboard", [
 			editor.on('drop', function(e) {
 				var rng = getCaretRangeFromEvent(e);
 
-				if (rng && !e.isDefaultPrevented()) {
+				if (e.isDefaultPrevented()) {
+					return;
+				}
+
+				if (pasteImageData(e, rng)) {
+					return;
+				}
+
+				if (rng) {
 					var dropContent = getDataTransferItems(e.dataTransfer);
 					var content = dropContent['mce-internal'] || dropContent['text/html'] || dropContent['text/plain'];
 
@@ -503,6 +513,20 @@ define("tinymce/pasteplugin/Clipboard", [
 					}
 				}
 			});
+
+			editor.on('dragover dragend', function(e) {
+				var i, dataTransfer = e.dataTransfer;
+
+				if (editor.settings.paste_data_images && dataTransfer) {
+					for (i = 0; i < dataTransfer.types.length; i++) {
+						// Prevent default if we have files dragged into the editor since the pasteImageData handles that
+						if (dataTransfer.types[i] == "Files") {
+							e.preventDefault();
+							return false;
+						}
+					}
+				}
+			});
 		}
 
 		self.pasteHtml = pasteHtml;
@@ -519,7 +543,10 @@ define("tinymce/pasteplugin/Clipboard", [
 
 					while (i--) {
 						var src = nodes[i].attributes.map.src;
-						if (src && src.indexOf('data:image') === 0) {
+
+						// Some browsers automatically produce data uris on paste
+						// Safari on Mac produces webkit-fake-url see: https://bugs.webkit.org/show_bug.cgi?id=49141
+						if (src && /^(data:image|webkit\-fake\-url)/.test(src)) {
 							if (!nodes[i].attr('data-mce-object') && src !== Env.transparentSrc) {
 								nodes[i].remove();
 							}
