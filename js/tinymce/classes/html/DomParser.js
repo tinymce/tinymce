@@ -573,7 +573,7 @@ define("tinymce/html/DomParser", [
 									// Leave nodes that have a name like <a name="name">
 									if (!node.attributes.map.name && !node.attributes.map.id) {
 										tempNode = node.parent;
-										node.empty().remove();
+										node.unwrap();
 										node = tempNode;
 										return;
 									}
@@ -749,6 +749,48 @@ define("tinymce/html/DomParser", [
 							sibling = prevSibling;
 						} while (sibling);
 					}
+				}
+			});
+		}
+
+		if (settings.validate && schema.getValidClasses()) {
+			self.addAttributeFilter('class', function(nodes) {
+				var i = nodes.length, node, classList, ci, className, classValue;
+				var validClasses = schema.getValidClasses(), validClassesMap, valid;
+
+				while (i--) {
+					node = nodes[i];
+					classList = node.attr('class').split(' ');
+					classValue = '';
+
+					for (ci = 0; ci < classList.length; ci++) {
+						className = classList[ci];
+						valid = false;
+
+						validClassesMap = validClasses['*'];
+						if (validClassesMap && validClassesMap[className]) {
+							valid = true;
+						}
+
+						validClassesMap = validClasses[node.name];
+						if (!valid && validClassesMap && !validClassesMap[className]) {
+							valid = true;
+						}
+
+						if (valid) {
+							if (classValue) {
+								classValue += ' ';
+							}
+
+							classValue += className;
+						}
+					}
+
+					if (!classValue.length) {
+						classValue = null;
+					}
+
+					node.attr('class', classValue);
 				}
 			});
 		}

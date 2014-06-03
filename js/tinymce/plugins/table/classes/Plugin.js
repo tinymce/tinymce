@@ -26,7 +26,7 @@ define("tinymce/tableplugin/Plugin", [
 	var each = Tools.each;
 
 	function Plugin(editor) {
-		var winMan, clipboardRows, self = this; // Might be selected cells on reload
+		var clipboardRows, self = this; // Might be selected cells on reload
 
 		function removePxSuffix(size) {
 			return size ? size.replace(/px$/, '') : "";
@@ -45,9 +45,49 @@ define("tinymce/tableplugin/Plugin", [
 				editor.formatter.remove('align' + name, {}, elm);
 			});
 		}
+		
+		function unApplyVAlign(elm) {
+			each('top middle bottom'.split(' '), function(name) {
+				editor.formatter.remove('valign' + name, {}, elm);
+			});
+		}
+
+		function applyPreview(tagName, items) {
+			Tools.each(items, function(item) {
+				item.textStyle = function() {
+					return editor.formatter.getCssText({block: tagName, classes: [item.value]});
+				};
+			});
+
+			return items;
+		}
+
+		function buildValues(data, listSettingName, dataItemName, defaultItems) {
+			var selectedItem, items = [];
+
+			Tools.each(editor.settings[listSettingName] || defaultItems, function(target) {
+				var item = {
+					text: target.text || target.title,
+					value: target.value
+				};
+
+				items.push(item);
+
+				if (data[dataItemName] === target.value || (!selectedItem && target.selected)) {
+					selectedItem = item;
+				}
+			});
+
+			if (selectedItem) {
+				data[dataItemName] = selectedItem.value;
+				selectedItem.selected = true;
+			}
+
+			return items;
+		}
 
 		function tableDialog() {
-			var dom = editor.dom, tableElm, colsCtrl, rowsCtrl, data;
+			var dom = editor.dom, tableElm, colsCtrl, rowsCtrl, classListCtrl, data;
 
 			tableElm = dom.getParent(editor.selection.getStart(), 'table');
 
@@ -57,7 +97,8 @@ define("tinymce/tableplugin/Plugin", [
 				cellspacing: tableElm ? dom.getAttrib(tableElm, 'cellspacing') : '',
 				cellpadding: tableElm ? dom.getAttrib(tableElm, 'cellpadding') : '',
 				border: tableElm ? dom.getAttrib(tableElm, 'border') : '',
-				caption: !!dom.select('caption', tableElm)[0]
+				caption: !!dom.select('caption', tableElm)[0],
+				'class': dom.getAttrib(tableElm, 'class')
 			};
 
 			each('left center right'.split(' '), function(name) {
@@ -71,45 +112,71 @@ define("tinymce/tableplugin/Plugin", [
 				rowsCtrl = {label: 'Rows', name: 'rows'};
 			}
 
+			if (editor.settings.table_class_list) {
+				if (data["class"]) {
+					data["class"] = data["class"].replace(/\s*mce\-item\-table\s*/g, '');
+				}
+
+				classListCtrl = {
+					name: 'class',
+					type: 'listbox',
+					label: 'Class',
+					values: applyPreview('table', buildValues(data, 'table_class_list', 'class'))
+				};
+			}
+
 			editor.windowManager.open({
 				title: "Table properties",
 				items: {
 					type: 'form',
-					layout: 'grid',
-					columns: 2,
-					data: data,
-					defaults: {
-						type: 'textbox',
-						maxWidth: 50
-					},
+					layout: 'flex',
+					direction: 'column',
+					labelGapCalc: 'children',
 					items: [
-						colsCtrl,
-						rowsCtrl,
-						{label: 'Width', name: 'width'},
-						{label: 'Height', name: 'height'},
-						{label: 'Cell spacing', name: 'cellspacing'},
-						{label: 'Cell padding', name: 'cellpadding'},
-						{label: 'Border', name: 'border'},
-						{label: 'Caption', name: 'caption', type: 'checkbox'},
+						{
+							type: 'form',
+							labelGapCalc: false,
+							padding: 0,
+							layout: 'grid',
+							columns: 2,
+							data: data,
+							defaults: {
+								type: 'textbox',
+								maxWidth: 50
+							},
+							items: [
+								colsCtrl,
+								rowsCtrl,
+								{label: 'Width', name: 'width'},
+								{label: 'Height', name: 'height'},
+								{label: 'Cell spacing', name: 'cellspacing'},
+								{label: 'Cell padding', name: 'cellpadding'},
+								{label: 'Border', name: 'border'},
+								{label: 'Caption', name: 'caption', type: 'checkbox'}
+							]
+						},
+
 						{
 							label: 'Alignment',
-							minWidth: 90,
 							name: 'align',
 							type: 'listbox',
 							text: 'None',
-							maxWidth: null,
 							values: [
 								{text: 'None', value: ''},
 								{text: 'Left', value: 'left'},
 								{text: 'Center', value: 'center'},
 								{text: 'Right', value: 'right'}
 							]
-						}
+						},
+
+						classListCtrl
 					]
 				},
 
 				onsubmit: function() {
-					var data = this.toJSON(), captionElm;
+					var captionElm;
+
+					data = Tools.extend(data, this.toJSON());
 
 					editor.undoManager.transact(function() {
 						if (!tableElm) {
@@ -119,7 +186,8 @@ define("tinymce/tableplugin/Plugin", [
 						editor.dom.setAttribs(tableElm, {
 							cellspacing: data.cellspacing,
 							cellpadding: data.cellpadding,
-							border: data.border
+							border: data.border,
+							'class': data['class']
 						});
 
 						editor.dom.setStyles(tableElm, {
@@ -156,8 +224,8 @@ define("tinymce/tableplugin/Plugin", [
 			editor.windowManager.open({
 				title: "Merge cells",
 				body: [
-					{label: 'Cols', name: 'cols', type: 'textbox', size: 10},
-					{label: 'Rows', name: 'rows', type: 'textbox', size: 10}
+					{label: 'Cols', name: 'cols', type: 'textbox', value: '1', size: 10},
+					{label: 'Rows', name: 'rows', type: 'textbox', value: '1', size: 10}
 				],
 				onsubmit: function() {
 					var data = this.toJSON();
@@ -170,7 +238,7 @@ define("tinymce/tableplugin/Plugin", [
 		}
 
 		function cellDialog() {
-			var dom = editor.dom, cellElm, data, cells = [];
+			var dom = editor.dom, cellElm, data, classListCtrl, cells = [];
 
 			// Get selected cells or the current cell
 			cells = editor.dom.select('td.mce-item-selected,th.mce-item-selected');
@@ -189,7 +257,8 @@ define("tinymce/tableplugin/Plugin", [
 			data = {
 				width: removePxSuffix(dom.getStyle(cellElm, 'width') || dom.getAttrib(cellElm, 'width')),
 				height: removePxSuffix(dom.getStyle(cellElm, 'height') || dom.getAttrib(cellElm, 'height')),
-				scope: dom.getAttrib(cellElm, 'scope')
+				scope: dom.getAttrib(cellElm, 'scope'),
+				'class': dom.getAttrib(cellElm, 'class')
 			};
 
 			data.type = cellElm.nodeName.toLowerCase();
@@ -200,70 +269,114 @@ define("tinymce/tableplugin/Plugin", [
 				}
 			});
 
+			each('top middle bottom'.split(' '), function(name) {
+				if (editor.formatter.matchNode(cellElm, 'valign' + name)) {
+					data.valign = name;
+				}
+			});
+
+			if (editor.settings.table_cell_class_list) {
+				classListCtrl = {
+					name: 'class',
+					type: 'listbox',
+					label: 'Class',
+					values: applyPreview('td', buildValues(data, 'table_cell_class_list', 'class'))
+				};
+			}
+
 			editor.windowManager.open({
 				title: "Cell properties",
 				items: {
 					type: 'form',
-					data: data,
-					layout: 'grid',
-					columns: 2,
-					defaults: {
-						type: 'textbox',
-						maxWidth: 50
-					},
+					layout: 'flex',
+					direction: 'column',
+					labelGapCalc: 'children',
 					items: [
-						{label: 'Width', name: 'width'},
-						{label: 'Height', name: 'height'},
 						{
-							label: 'Cell type',
-							name: 'type',
-							type: 'listbox',
-							text: 'None',
-							minWidth: 90,
-							maxWidth: null,
-							values: [
-								{text: 'Cell', value: 'td'},
-								{text: 'Header cell', value: 'th'}
+							type: 'form',
+							data: data,
+							layout: 'grid',
+							columns: 2,
+							labelGapCalc: false,
+							padding: 0,
+							defaults: {
+								type: 'textbox',
+								maxWidth: 50
+							},
+							items: [
+								{label: 'Width', name: 'width'},
+								{label: 'Height', name: 'height'},
+								{
+									label: 'Cell type',
+									name: 'type',
+									type: 'listbox',
+									text: 'None',
+									minWidth: 90,
+									maxWidth: null,
+									values: [
+										{text: 'Cell', value: 'td'},
+										{text: 'Header cell', value: 'th'}
+									]
+								},
+								{
+									label: 'Scope',
+									name: 'scope',
+									type: 'listbox',
+									text: 'None',
+									minWidth: 90,
+									maxWidth: null,
+									values: [
+										{text: 'None', value: ''},
+										{text: 'Row', value: 'row'},
+										{text: 'Column', value: 'col'},
+										{text: 'Row group', value: 'rowgroup'},
+										{text: 'Column group', value: 'colgroup'}
+									]
+								},
+								{
+									label: 'H Align',
+									name: 'align',
+									type: 'listbox',
+									text: 'None',
+									minWidth: 90,
+									maxWidth: null,
+									values: [
+										{text: 'None', value: ''},
+										{text: 'Left', value: 'left'},
+										{text: 'Center', value: 'center'},
+										{text: 'Right', value: 'right'}
+									]
+								},
+								{
+									label: 'V Align',
+									name: 'valign',
+									type: 'listbox',
+									text: 'None',
+									minWidth: 90,
+									maxWidth: null,
+									values: [
+										{text: 'None', value: ''},
+										{text: 'Top', value: 'top'},
+										{text: 'Middle', value: 'middle'},
+										{text: 'Bottom', value: 'bottom'}
+									]
+								}
 							]
 						},
-						{
-							label: 'Scope',
-							name: 'scope',
-							type: 'listbox',
-							text: 'None',
-							minWidth: 90,
-							maxWidth: null,
-							values: [
-								{text: 'None', value: ''},
-								{text: 'Row', value: 'row'},
-								{text: 'Column', value: 'col'},
-								{text: 'Row group', value: 'rowgroup'},
-								{text: 'Column group', value: 'colgroup'}
-							]
-						},
-						{
-							label: 'Alignment',
-							name: 'align',
-							type: 'listbox',
-							text: 'None',
-							minWidth: 90,
-							maxWidth: null,
-							values: [
-								{text: 'None', value: ''},
-								{text: 'Left', value: 'left'},
-								{text: 'Center', value: 'center'},
-								{text: 'Right', value: 'right'}
-							]
-						}
+
+						classListCtrl
 					]
 				},
 
 				onsubmit: function() {
-					var data = this.toJSON();
+					data = Tools.extend(data, this.toJSON());
 
 					editor.undoManager.transact(function() {
 						each(cells, function(cellElm) {
-							editor.dom.setAttrib(cellElm, 'scope', data.scope);
+							editor.dom.setAttribs(cellElm, {
+								scope: data.scope,
+								'class': data['class']
+							});
 
 							editor.dom.setStyles(cellElm, {
 								width: addSizeSuffix(data.width),
@@ -280,6 +393,12 @@ define("tinymce/tableplugin/Plugin", [
 							if (data.align) {
 								editor.formatter.apply('align' + data.align, {}, cellElm);
 							}
+
+							// Apply/remove vertical alignment
+							unApplyVAlign(cellElm);
+							if (data.valign) {
+								editor.formatter.apply('valign' + data.valign, {}, cellElm);
+							}
 						});
 
 						editor.focus();
@@ -289,7 +408,7 @@ define("tinymce/tableplugin/Plugin", [
 		}
 
 		function rowDialog() {
-			var dom = editor.dom, tableElm, cellElm, rowElm, data, rows = [];
+			var dom = editor.dom, tableElm, cellElm, rowElm, classListCtrl, data, rows = [];
 
 			tableElm = editor.dom.getParent(editor.selection.getStart(), 'table');
 			cellElm = editor.dom.getParent(editor.selection.getStart(), 'td,th');
@@ -311,7 +430,8 @@ define("tinymce/tableplugin/Plugin", [
 
 			data = {
 				height: removePxSuffix(dom.getStyle(rowElm, 'height') || dom.getAttrib(rowElm, 'height')),
-				scope: dom.getAttrib(rowElm, 'scope')
+				scope: dom.getAttrib(rowElm, 'scope'),
+				'class': dom.getAttrib(rowElm, 'class')
 			};
 
 			data.type = rowElm.parentNode.nodeName.toLowerCase();
@@ -321,6 +441,15 @@ define("tinymce/tableplugin/Plugin", [
 					data.align = name;
 				}
 			});
+
+			if (editor.settings.table_row_class_list) {
+				classListCtrl = {
+					name: 'class',
+					type: 'listbox',
+					label: 'Class',
+					values: applyPreview('tr', buildValues(data, 'table_row_class_list', 'class'))
+				};
+			}
 
 			editor.windowManager.open({
 				title: "Row properties",
@@ -357,18 +486,24 @@ define("tinymce/tableplugin/Plugin", [
 								{text: 'Right', value: 'right'}
 							]
 						},
-						{label: 'Height', name: 'height'}
+						{label: 'Height', name: 'height'},
+						classListCtrl
 					]
 				},
 
 				onsubmit: function() {
-					var data = this.toJSON(), tableElm, oldParentElm, parentElm;
+					var tableElm, oldParentElm, parentElm;
+
+					data = Tools.extend(data, this.toJSON());
 
 					editor.undoManager.transact(function() {
 						var toType = data.type;
 
 						each(rows, function(rowElm) {
-							editor.dom.setAttrib(rowElm, 'scope', data.scope);
+							editor.dom.setAttribs(rowElm, {
+								scope: data.scope,
+								'class': data['class']
+							});
 
 							editor.dom.setStyles(rowElm, {
 								height: addSizeSuffix(data.height)
@@ -436,6 +571,9 @@ define("tinymce/tableplugin/Plugin", [
 			var tableElm = editor.dom.get('__mce');
 			editor.dom.setAttrib(tableElm, 'id', null);
 
+			editor.dom.setAttribs(tableElm, editor.settings.table_default_attributes || {});
+			editor.dom.setStyles(tableElm, editor.settings.table_default_styles || {});
+
 			return tableElm;
 		}
 
@@ -475,8 +613,7 @@ define("tinymce/tableplugin/Plugin", [
 
 				for (var x = 0; x < 10; x++) {
 					html += '<td role="gridcell" tabindex="-1"><a id="mcegrid' + (y * 10 + x) + '" href="#" ' +
-						'data-mce-x="' + x + '" data-mce-y="' + y + '" ' +
-						'' + (x + y === 0 ? ' class="mce-active"' : '') + '></a></td>';
+						'data-mce-x="' + x + '" data-mce-y="' + y + '"></a></td>';
 				}
 
 				html += '</tr>';
@@ -491,45 +628,26 @@ define("tinymce/tableplugin/Plugin", [
 
 		function selectGrid(tx, ty, control) {
 			var table = control.getEl().getElementsByTagName('table')[0];
-			var rel = control.parent().rel, x, y, focusCell, cell;
+			var x, y, focusCell, cell, active;
+			var rtl = control.isRtl() || control.parent().rel == 'tl-tr';
 
-			if (control.isRtl() || rel == 'tl-tr') {
-				for (y = 9; y >= 0; y--) {
-					for (x = 0; x < 10; x++) {
-						cell = table.rows[y].childNodes[x].firstChild;
+			table.nextSibling.innerHTML = (tx + 1) + ' x ' + (ty + 1);
 
-						editor.dom.toggleClass(
-							cell,
-							'mce-active',
-							x >= tx && y <= ty
-						);
-
-						if (x >= tx && y <= ty) {
-							focusCell = cell;
-						}
-					}
-				}
-
+			if (rtl) {
 				tx = 9 - tx;
-				table.nextSibling.innerHTML = tx + ' x ' + (ty + 1);
-			} else {
-				for (y = 0; y < 10; y++) {
-					for (x = 0; x < 10; x++) {
-						cell = table.rows[y].childNodes[x].firstChild;
+			}
 
-						editor.dom.toggleClass(
-							cell,
-							'mce-active',
-							x <= tx && y <= ty
-						);
+			for (y = 0; y < 10; y++) {
+				for (x = 0; x < 10; x++) {
+					cell = table.rows[y].childNodes[x].firstChild;
+					active = (rtl ? x >= tx : x <= tx) && y <= ty;
 
-						if (x <= tx && y <= ty) {
-							focusCell = cell;
-						}
+					editor.dom.toggleClass(cell, 'mce-active', active);
+
+					if (active) {
+						focusCell = cell;
 					}
 				}
-
-				table.nextSibling.innerHTML = (tx + 1) + ' x ' + (ty + 1);
 			}
 
 			return focusCell.parentNode;
@@ -555,6 +673,9 @@ define("tinymce/tableplugin/Plugin", [
 						tableDialog();
 					}
 				},
+				onshow: function() {
+					selectGrid(0, 0, this.menu.items()[0]);
+				},
 				onhide: function() {
 					var elements = this.menu.items()[0].getEl().getElementsByTagName('a');
 					editor.dom.removeClass(elements, 'mce-active');
@@ -575,6 +696,10 @@ define("tinymce/tableplugin/Plugin", [
 							if (target.tagName.toUpperCase() == 'A') {
 								x = parseInt(target.getAttribute('data-mce-x'), 10);
 								y = parseInt(target.getAttribute('data-mce-y'), 10);
+
+								if (this.isRtl() || this.parent().rel == 'tl-tr') {
+									x = 9 - x;
+								}
 
 								if (x !== this.lastX || y !== this.lastY) {
 									selectGrid(x, y, e.control);
@@ -633,12 +758,18 @@ define("tinymce/tableplugin/Plugin", [
 						},
 
 						onclick: function(e) {
+							var self = this;
+
 							if (e.target.tagName.toUpperCase() == 'A') {
 								e.preventDefault();
 								e.stopPropagation();
-								this.parent().cancel();
+								self.parent().cancel();
 
-								insertTable(this.lastX + 1, this.lastY + 1);
+								editor.undoManager.transact(function() {
+									insertTable(self.lastX + 1, self.lastY + 1);
+								});
+
+								editor.addVisual();
 							}
 						}
 					}
@@ -727,7 +858,6 @@ define("tinymce/tableplugin/Plugin", [
 		self.quirks = new Quirks(editor);
 
 		editor.on('Init', function() {
-			winMan = editor.windowManager;
 			self.cellSelection = new CellSelection(editor);
 		});
 
@@ -738,13 +868,9 @@ define("tinymce/tableplugin/Plugin", [
 			},
 
 			mceTableMergeCells: function(grid) {
-				var rowSpan, colSpan, cell;
+				var cell;
 
 				cell = editor.dom.getParent(editor.selection.getStart(), 'th,td');
-				if (cell) {
-					rowSpan = cell.rowSpan;
-					colSpan = cell.colSpan;
-				}
 
 				if (!editor.dom.select('td.mce-item-selected,th.mce-item-selected').length) {
 					mergeDialog(grid, cell);
@@ -821,6 +947,32 @@ define("tinymce/tableplugin/Plugin", [
 				func(val);
 			});
 		});
+
+		// Enable tab key cell navigation
+		if (editor.settings.table_tab_navigation !== false) {
+			editor.on('keydown', function(e) {
+				var cellElm, grid, delta;
+
+				if (e.keyCode == 9) {
+					cellElm = editor.dom.getParent(editor.selection.getStart(), 'th,td');
+
+					if (cellElm) {
+						e.preventDefault();
+
+						grid = new TableGrid(editor);
+						delta = e.shiftKey ? -1 : 1;
+
+						editor.undoManager.transact(function() {
+							if (!grid.moveRelIdx(cellElm, delta) && delta > 0) {
+								grid.insertRow();
+								grid.refresh();
+								grid.moveRelIdx(cellElm, delta);
+							}
+						});
+					}
+				}
+			});
+		}
 	}
 
 	PluginManager.add('table', Plugin);

@@ -1,3 +1,77 @@
+Version 4.0.28 (2014-05-27)
+	Fixed critical issue with empty urls producing an exception when converted into absolute urls due to resent bug fix in tinymce.util.URI.
+Version 4.0.27 (2014-05-27)
+	Added support for definition lists to lists plugin and enter key logic. This can now created by the format menu.
+	Added cmd option for the style_formats menu enables you to toggle commands on/off using the formats menu for example lists.
+	Added definition lists to visualblocks plugin so these are properly visualized like other list elements.
+	Added new paste_merge_formats option that reduces the number of nested text format elements produced on paste. Enabled by default.
+	Added better support for nested link_list/image_list menu items each item can now have a "menu" item with subitems.
+	Added "Add to Dictionary" support to spellchecker plugin when the backend tells that this feature is available.
+	Added new table_default_attributes/table_default_styles options patch contributed by Dan Villiom Podlaski Christiansen.
+	Added new table_class_list/table_cell_class_list/table_row_class_list options to table plugin.
+	Added new invalid_styles/valid_classes options to better control what gets returned for the style/class attribute.
+	Added new file_browser_callback_types option that allows you to specify where to display the picker based on dialog type.
+	Fixed so the selected state is properly handled on nested menu items in listboxes patch contributed by Jelle Kralt.
+	Fixed so the invisiblity css value for TinyMCE gets set to inherit instead of visible to better support dialog scripts like reveal.
+	Fixed bug where Gecko would remove anchors when pasting since the their default built in logic removes empty nodes.
+	Fixed bug where it wasn't possible to paste on Chrome Andoid since it doesn't properly support the Clipboard API yet.
+	Fixed bug where user defined type attribute value of text/javascript didn't get properly serialized.
+	Fixed bug where space in span elements would removed when the element was considered empty.
+	Fixed bug where the undo/redo button states didn't change if you removed all undo levels using undoManager.clear.
+	Fixed bug where unencoded links inside query strings or hash values would get processed by the relative urls logic.
+	Fixed bug where contextmenu would automatically close in inline editing mode on Firefox running on Mac.
+	Fixed bug where Gecko/IE would produce multiple BR elements when forced_root_block was set to false and a table was the last child of body.
+	Fixed bug where custom queryCommandState handlers didn't properly handle boolean states.
+	Fixed bug where auto closing float panels link menus wasn't automatically closed when the window was resized.
+	Fixed bug where the image plugin wouldn't update image dimensions when the current image was changed using the image_list select box.
+	Fixed bug with paste plugin not properly removing paste bin on Safari Mac when using the cmd+shift+v keyboard command.
+	Fixed bug where the paste plugin wouln't properly strip trailing br elements under very specific scenarios.
+	Fixed bug where enter key wouldn't properly place the caret on Gecko when pressing enter in a text block with a br ended line inside.
+	Fixed bug where Safari Mac shortcuts like Cmd+Opt+L didn't get passed through to the browser due to a Quirks fix.
+	Fixed so plain text mode works better when it converts rich text to plain text when pasting from for example Word.
+	Fixed so numeric keycodes can be used in the shortcut format enabling support for any key to be specified.
+	Fixed so table cells can be navigated with tab key and new rows gets automatically added when you are at the last cell.
+	Fixed bug where formatting before cursor gets removed when toggled off for continued content.
+Version 4.0.26 (2014-05-06)
+	Fixed bug in media plugin where changing existing url did not use media regex patterns to create protocol neutral url.
+	Fixed bug where selection wasn't properly restored on IE 11 due to a browser bug with Element.contains.
+Version 4.0.25 (2014-04-30)
+	Fixed bug where it wasn't possible to submit forms with editor instances on WebKit/Blink.
+Version 4.0.24 (2014-04-30)
+	Added new event_root setting for inline editors. Lets you bind all editor events on a parent container.
+	Fixed bug where show/hide/isHidden didn't work properly for inline editor instances.
+	Fixed bug where preview plugin dialog didn't handle relative urls properly.
+	Fixed bug where the autolink plugin would remove the trailing space after an inserted link.
+	Fixed bug in paste plugin where pasting in a page with scrollbars would scroll to top of page in webkit browsers.
+	Fixed bug where the paste plugin on WebKit would remove styles from pasted source code with style attributes.
+	Fixed so image_list/link_list can be a function that allows custom async calls to populate these lists.
+Version 4.0.23 (2014-04-24)
+	Added isSameOrigin method to tinymce.util.URI it handles default protocol port numbers better. Patch contributed by Matt Whelan.
+	Fixed bug where IE 11 would add br elements to the end of the editor body element each time it was shown/hidden.
+	Fixed bug where the autolink plugin would produce an index out of range exception for some very specific HTML.
+	Fixed bug where the charmap plugin wouldn't properly insert non breaking space characters when selected.
+	Fixed bug where pasting from Excel 2011 on Mac didn't produce a proper table when using the paste plugin.
+	Fixed bug where drag/dropping inside a table wouldn't properly end the table cell selection.
+	Fixed bug where drag/dropping images within tables on Safari on Mac wouldn't work properly.
+	Fixed bug where editors couldn't be re-initialized if they where externally destroyed.
+	Fixed bug where inline editors would produce a range index exception when clicking on buttons like bold.
+	Fixed bug where the preview plugin wouldn't properly handle non encoded upper UTF-8 characters.
+	Fixed so document.currentScript is used when detecting the current script location. Patch contributed by Mickael Desgranges.
+	Fixed issue with the paste_webkit_styles option so is disabled by default since it might produce a lot of extra styles.
+Version 4.0.22 (2014-04-16)
+	Added lastLevel to BeforeAddUndo level event so it's easier to block undo level creation based.
+	Fixed so multiple list elements can be indented properly. Patch contributed by Dan Villiom Podlaski Christiansen.
+	Fixed bug where the selection would be at the wrong location sometimes for inline editor instances.
+	Fixed bug where drag/dropping content into an inline editor would fail on WebKit/Blink.
+	Fixed bug where table grid wouldn't work properly when the UI was rendered in for RTL mode.
+	Fixed bug where range normalization wouldn't handle mixed contentEditable nodes properly.
+	Fixed so the media plugin doesn't override the existing element rules you now need to manually whitelist non standard attributes.
+	Fixed so old language packs get properly loaded when the new longer language code format is used.
+	Fixed so all track changes junk such as comments, deletes etc gets removed when pasting from Word.
+	Fixed so non image data urls is blocked by default since they might contain scripts.
+	Fixed so it's possible to import styles from the current page stylesheets into an inline editor by using the importcss_file_filter.
+	Fixed bug where the spellchecker plugin wouldn't add undo levels for each suggestion replacement.
+	Reworked the default spellchecker RPC API to match the new PHP Spellchecker package. Fallback documented in the TinyMCE docs.
 Version 4.0.21 (2014-04-01)
 	Added new getCssText method to formatter to get the preview css text value for a format to be used in UI.
 	Added new table_grid option that allows you to disable the table grid and use a dialog.

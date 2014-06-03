@@ -14,9 +14,11 @@ define("tinymce/ui/DomUtils", [
 ], function(Tools, DOMUtils) {
 	"use strict";
 
+	var count = 0;
+
 	return {
 		id: function() {
-			return DOMUtils.DOM.uniqueId();
+			return 'mceu_' + (count++);
 		},
 
 		createFragment: function(html) {

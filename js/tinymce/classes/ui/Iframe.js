@@ -37,6 +37,7 @@ define("tinymce/ui/Iframe", [
 			self.addClass('iframe');
 			self.canFocus = false;
 
+			/*eslint no-script-url:0 */
 			return (
 				'<iframe id="' + self._id + '" class="' + self.classes() + '" tabindex="-1" src="' +
 				(self.settings.url || "javascript:\'\'") + '" frameborder="0"></iframe>'

@@ -6,9 +6,10 @@ module("tinymce.plugins.Table", {
 			selector: "textarea",
 			add_unload_trigger: false,
 			skin: false,
+			indent: false,
 			plugins: 'table',
 			valid_styles: {
-				'*' : 'width,height,text-align,float'
+				'*' : 'width,height,vertical-align,text-align,float'
 			},
 			init_instance_callback: function(ed) {
 				window.editor = ed;
@@ -158,6 +159,7 @@ test("Table cell properties dialog (get data from plain cell)", function() {
 
 	deepEqual(Utils.getFontmostWindow().toJSON(), {
 		"align": "",
+		"valign": "",
 		"height": "",
 		"scope": "",
 		"type": "td",
@@ -168,12 +170,13 @@ test("Table cell properties dialog (get data from plain cell)", function() {
 });
 
 test("Table cell properties dialog (get data from complex cell)", function() {
-	editor.setContent('<table><tr><th style="text-align: right; width: 10px; height: 11px" scope="row">X</th></tr></table>');
+	editor.setContent('<table><tr><th style="text-align: right; vertical-align: top; width: 10px; height: 11px" scope="row">X</th></tr></table>');
 	Utils.setSelection('th', 0);
 	editor.execCommand('mceTableCellProps');
 
 	deepEqual(Utils.getFontmostWindow().toJSON(), {
 		"align": "right",
+		"valign": "top",
 		"height": "11",
 		"scope": "row",
 		"type": "th",
@@ -310,5 +313,29 @@ test("mceTableSplitCells command", function() {
 	equal(
 		cleanTableHtml(editor.getContent()),
 		'<table><tbody><tr><td>12</td><td>&nbsp;</td></tr></tbody></table>'
+	);
+});
+
+test("Tab key navigation", function() {
+	editor.setContent('<table><tbody><tr><td>A1</td><td>A2</td></tr><tr><td>B1</td><td>B2</td></tr></tbody></table><p>x</p>');
+
+	Utils.setSelection('td', 0);
+	editor.fire('keydown', {keyCode: 9});
+	equal(editor.selection.getStart().innerHTML, 'A2');
+
+	Utils.setSelection('td', 0);
+	editor.fire('keydown', {keyCode: 9, shiftKey: true});
+	equal(editor.selection.getStart().innerHTML, 'A1');
+
+	Utils.setSelection('td:nth-child(2)', 0);
+	editor.fire('keydown', {keyCode: 9, shiftKey: true});
+	equal(editor.selection.getStart().innerHTML, 'A1');
+
+	Utils.setSelection('tr:nth-child(2) td:nth-child(2)', 0);
+	editor.fire('keydown', {keyCode: 9});
+	equal(editor.selection.getStart().nodeName, 'TD');
+	equal(
+		editor.getContent(),
+		'<table><tbody><tr><td>A1</td><td>A2</td></tr><tr><td>B1</td><td>B2</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table><p>x</p>'
 	);
 });

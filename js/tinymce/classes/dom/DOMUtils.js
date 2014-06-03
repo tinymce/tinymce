@@ -298,7 +298,9 @@ define("tinymce/dom/DOMUtils", [
 				selectorVal = selector;
 
 				if (selector === '*') {
-					selector = function(node) {return node.nodeType == 1;};
+					selector = function(node) {
+						return node.nodeType == 1;
+					};
 				} else {
 					selector = function(node) {
 						return self.is(node, selectorVal);
@@ -615,7 +617,7 @@ define("tinymce/dom/DOMUtils", [
 						});
 
 						// Default px suffix on these
-						if (typeof(value) === 'number' && !numericCssMap[name]) {
+						if (((typeof(value) === 'number') || /^[\-0-9\.]+$/.test(value)) && !numericCssMap[name]) {
 							value += 'px';
 						}
 
@@ -1986,7 +1988,7 @@ define("tinymce/dom/DOMUtils", [
 			var contentEditable;
 
 			// Check type
-			if (node.nodeType != 1) {
+			if (!node || node.nodeType != 1) {
 				return null;
 			}
 
@@ -1998,6 +2000,20 @@ define("tinymce/dom/DOMUtils", [
 
 			// Check for real content editable
 			return node.contentEditable !== "inherit" ? node.contentEditable : null;
+		},
+
+		getContentEditableParent: function(node) {
+			var root = this.getRoot(), state = null;
+
+			for (; node && node !== root; node = node.parentNode) {
+				state = this.getContentEditable(node);
+
+				if (state !== null) {
+					break;
+				}
+			}
+
+			return state;
 		},
 
 		/**
@@ -2027,6 +2043,18 @@ define("tinymce/dom/DOMUtils", [
 			}
 
 			self.win = self.doc = self.root = self.events = self.frag = null;
+		},
+
+		isChildOf: function(node, parent) {
+			while (node) {
+				if (parent === node) {
+					return true;
+				}
+
+				node = node.parentNode;
+			}
+
+			return false;
 		},
 
 		// #ifdef debug

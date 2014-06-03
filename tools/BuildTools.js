@@ -240,8 +240,14 @@ exports.zip = function (options) {
 	var archive = new ZipWriter();
 
 	function process(filePath, zipFilePath) {
-		var args, stat = fs.statSync(filePath);
+		var args, stat;
 
+		if (filePath instanceof Buffer) {
+			archive.addData(path.join(options.baseDir, zipFilePath), filePath);
+			return;
+		}
+
+		stat = fs.statSync(filePath);
 		zipFilePath = zipFilePath || filePath;
 		filePath = filePath.replace(/\\/g, '/');
 		zipFilePath = zipFilePath.replace(/\\/g, '/');

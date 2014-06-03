@@ -122,7 +122,7 @@ test('Font weight', function() {
 });
 
 test('Valid styles', function() {
-	var styles = new tinymce.html.Styles({}, new tinymce.html.Schema({valid_styles : {'*' : 'color,font-size', 'a' : 'margin-left'}}));
+	var styles = new tinymce.html.Styles({}, new tinymce.html.Schema({valid_styles : {'*': 'color,font-size', 'a': 'margin-left'}}));
 
 	expect(2);
 
@@ -130,16 +130,27 @@ test('Valid styles', function() {
 	equal(styles.serialize(styles.parse('color: #ff0000; font-size: 10px; margin-left: 10px; invalid: 2;'), 'a'), "color: #ff0000; font-size: 10px; margin-left: 10px;");
 });
 
+test('Invalid styles', function() {
+	var styles = new tinymce.html.Styles({}, new tinymce.html.Schema({invalid_styles : {'*': 'color,font-size', 'a': 'margin-left'}}));
+
+	equal(styles.serialize(styles.parse('color: #ff0000; font-size: 10px; margin-left: 10px'), 'b'), "margin-left: 10px;");
+	equal(styles.serialize(styles.parse('color: #ff0000; font-size: 10px; margin-left: 10px; margin-right: 10px;'), 'a'), "margin-right: 10px;");
+});
+
 test('Script urls denied', function() {
 	var styles = new tinymce.html.Styles();
 
 	equal(styles.serialize(styles.parse('behavior:url(test.htc)')), "");
 	equal(styles.serialize(styles.parse('color:expression(alert(1))')), "");
+	equal(styles.serialize(styles.parse('color:\\65xpression(alert(1))')), "");
+	equal(styles.serialize(styles.parse('color:exp/**/ression(alert(1))')), "");
+	equal(styles.serialize(styles.parse('color:/**/')), "");
 	equal(styles.serialize(styles.parse('color:  expression  (  alert(1))')), "");
 	equal(styles.serialize(styles.parse('background:url(jAvaScript:alert(1)')), "");
 	equal(styles.serialize(styles.parse('background:url(javascript:alert(1)')), "");
 	equal(styles.serialize(styles.parse('background:url(vbscript:alert(1)')), "");
 	equal(styles.serialize(styles.parse('background:url(j\navas\u0000cr\tipt:alert(1)')), "");
+	equal(styles.serialize(styles.parse('background:url(data:image/svg+xml,%3Csvg/%3E)')), "");
 });
 
 test('Script urls allowed', function() {

@@ -22,11 +22,12 @@ define("tinymce/dom/Selection", [
 	"tinymce/dom/TridentSelection",
 	"tinymce/dom/ControlSelection",
 	"tinymce/dom/RangeUtils",
+	"tinymce/dom/BookmarkManager",
 	"tinymce/Env",
 	"tinymce/util/Tools"
-], function(TreeWalker, TridentSelection, ControlSelection, RangeUtils, Env, Tools) {
-	var each = Tools.each, grep = Tools.grep, trim = Tools.trim;
-	var isIE = Env.ie, isOpera = Env.opera;
+], function(TreeWalker, TridentSelection, ControlSelection, RangeUtils, BookmarkManager, Env, Tools) {
+	var each = Tools.each, trim = Tools.trim;
+	var isIE = Env.ie;
 
 	/**
 	 * Constructs a new selection instance.
@@ -44,7 +45,7 @@ define("tinymce/dom/Selection", [
 		self.win = win;
 		self.serializer = serializer;
 		self.editor = editor;
-
+		self.bookmarkManager = new BookmarkManager(self);
 		self.controlSelection = new ControlSelection(self, editor);
 
 		// No W3C Range support
@@ -344,169 +345,7 @@ define("tinymce/dom/Selection", [
 		 * tinymce.activeEditor.selection.moveToBookmark(bm);
 		 */
 		getBookmark: function(type, normalized) {
-			var self = this, dom = self.dom, rng, rng2, id, collapsed, name, element, chr = '&#xFEFF;', styles;
-
-			function findIndex(name, element) {
-				var index = 0;
-
-				each(dom.select(name), function(node, i) {
-					if (node == element) {
-						index = i;
-					}
-				});
-
-				return index;
-			}
-
-			function normalizeTableCellSelection(rng) {
-				function moveEndPoint(start) {
-					var container, offset, childNodes, prefix = start ? 'start' : 'end';
-
-					container = rng[prefix + 'Container'];
-					offset = rng[prefix + 'Offset'];
-
-					if (container.nodeType == 1 && container.nodeName == "TR") {
-						childNodes = container.childNodes;
-						container = childNodes[Math.min(start ? offset : offset - 1, childNodes.length - 1)];
-						if (container) {
-							offset = start ? 0 : container.childNodes.length;
-							rng['set' + (start ? 'Start' : 'End')](container, offset);
-						}
-					}
-				}
-
-				moveEndPoint(true);
-				moveEndPoint();
-
-				return rng;
-			}
-
-			function getLocation() {
-				var rng = self.getRng(true), root = dom.getRoot(), bookmark = {};
-
-				function getPoint(rng, start) {
-					var container = rng[start ? 'startContainer' : 'endContainer'],
-						offset = rng[start ? 'startOffset' : 'endOffset'], point = [], node, childNodes, after = 0;
-
-					if (container.nodeType == 3) {
-						if (normalized) {
-							for (node = container.previousSibling; node && node.nodeType == 3; node = node.previousSibling) {
-								offset += node.nodeValue.length;
-							}
-						}
-
-						point.push(offset);
-					} else {
-						childNodes = container.childNodes;
-
-						if (offset >= childNodes.length && childNodes.length) {
-							after = 1;
-							offset = Math.max(0, childNodes.length - 1);
-						}
-
-						point.push(self.dom.nodeIndex(childNodes[offset], normalized) + after);
-					}
-
-					for (; container && container != root; container = container.parentNode) {
-						point.push(self.dom.nodeIndex(container, normalized));
-					}
-
-					return point;
-				}
-
-				bookmark.start = getPoint(rng, true);
-
-				if (!self.isCollapsed()) {
-					bookmark.end = getPoint(rng);
-				}
-
-				return bookmark;
-			}
-
-			if (type == 2) {
-				element = self.getNode();
-				name = element ? element.nodeName : null;
-
-				if (name == 'IMG') {
-					return {name: name, index: findIndex(name, element)};
-				}
-
-				if (self.tridentSel) {
-					return self.tridentSel.getBookmark(type);
-				}
-
-				return getLocation();
-			}
-
-			// Handle simple range
-			if (type) {
-				return {rng: self.getRng()};
-			}
-
-			rng = self.getRng();
-			id = dom.uniqueId();
-			collapsed = self.isCollapsed();
-			styles = 'overflow:hidden;line-height:0px';
-
-			// Explorer method
-			if (rng.duplicate || rng.item) {
-				// Text selection
-				if (!rng.item) {
-					rng2 = rng.duplicate();
-
-					try {
-						// Insert start marker
-						rng.collapse();
-						rng.pasteHTML('<span data-mce-type="bookmark" id="' + id + '_start" style="' + styles + '">' + chr + '</span>');
-
-						// Insert end marker
-						if (!collapsed) {
-							rng2.collapse(false);
-
-							// Detect the empty space after block elements in IE and move the
-							// end back one character <p></p>] becomes <p>]</p>
-							rng.moveToElementText(rng2.parentElement());
-							if (rng.compareEndPoints('StartToEnd', rng2) === 0) {
-								rng2.move('character', -1);
-							}
-
-							rng2.pasteHTML('<span data-mce-type="bookmark" id="' + id + '_end" style="' + styles + '">' + chr + '</span>');
-						}
-					} catch (ex) {
-						// IE might throw unspecified error so lets ignore it
-						return null;
-					}
-				} else {
-					// Control selection
-					element = rng.item(0);
-					name = element.nodeName;
-
-					return {name: name, index: findIndex(name, element)};
-				}
-			} else {
-				element = self.getNode();
-				name = element.nodeName;
-				if (name == 'IMG') {
-					return {name: name, index: findIndex(name, element)};
-				}
-
-				// W3C method
-				rng2 = normalizeTableCellSelection(rng.cloneRange());
-
-				// Insert end marker
-				if (!collapsed) {
-					rng2.collapse(false);
-					rng2.insertNode(dom.create('span', {'data-mce-type': "bookmark", id: id + '_end', style: styles}, chr));
-				}
-
-				rng = normalizeTableCellSelection(rng);
-				rng.collapse(true);
-				rng.insertNode(dom.create('span', {'data-mce-type': "bookmark", id: id + '_start', style: styles}, chr));
-			}
-
-			self.moveToBookmark({id: id, keep: 1});
-
-			return {id: id};
+			return this.bookmarkManager.getBookmark(type, normalized);
 		},
 
 		/**
@@ -525,150 +364,7 @@ define("tinymce/dom/Selection", [
 		 * tinymce.activeEditor.selection.moveToBookmark(bm);
 		 */
 		moveToBookmark: function(bookmark) {
-			var self = this, dom = self.dom, rng, root, startContainer, endContainer, startOffset, endOffset;
-
-			function setEndPoint(start) {
-				var point = bookmark[start ? 'start' : 'end'], i, node, offset, children;
-
-				if (point) {
-					offset = point[0];
-
-					// Find container node
-					for (node = root, i = point.length - 1; i >= 1; i--) {
-						children = node.childNodes;
-
-						if (point[i] > children.length - 1) {
-							return;
-						}
-
-						node = children[point[i]];
-					}
-
-					// Move text offset to best suitable location
-					if (node.nodeType === 3) {
-						offset = Math.min(point[0], node.nodeValue.length);
-					}
-
-					// Move element offset to best suitable location
-					if (node.nodeType === 1) {
-						offset = Math.min(point[0], node.childNodes.length);
-					}
-
-					// Set offset within container node
-					if (start) {
-						rng.setStart(node, offset);
-					} else {
-						rng.setEnd(node, offset);
-					}
-				}
-
-				return true;
-			}
-
-			function restoreEndPoint(suffix) {
-				var marker = dom.get(bookmark.id + '_' + suffix), node, idx, next, prev, keep = bookmark.keep;
-
-				if (marker) {
-					node = marker.parentNode;
-
-					if (suffix == 'start') {
-						if (!keep) {
-							idx = dom.nodeIndex(marker);
-						} else {
-							node = marker.firstChild;
-							idx = 1;
-						}
-
-						startContainer = endContainer = node;
-						startOffset = endOffset = idx;
-					} else {
-						if (!keep) {
-							idx = dom.nodeIndex(marker);
-						} else {
-							node = marker.firstChild;
-							idx = 1;
-						}
-
-						endContainer = node;
-						endOffset = idx;
-					}
-
-					if (!keep) {
-						prev = marker.previousSibling;
-						next = marker.nextSibling;
-
-						// Remove all marker text nodes
-						each(grep(marker.childNodes), function(node) {
-							if (node.nodeType == 3) {
-								node.nodeValue = node.nodeValue.replace(/\uFEFF/g, '');
-							}
-						});
-
-						// Remove marker but keep children if for example contents where inserted into the marker
-						// Also remove duplicated instances of the marker for example by a
-						// split operation or by WebKit auto split on paste feature
-						while ((marker = dom.get(bookmark.id + '_' + suffix))) {
-							dom.remove(marker, 1);
-						}
-
-						// If siblings are text nodes then merge them unless it's Opera since it some how removes the node
-						// and we are sniffing since adding a lot of detection code for a browser with 3% of the market
-						// isn't worth the effort. Sorry, Opera but it's just a fact
-						if (prev && next && prev.nodeType == next.nodeType && prev.nodeType == 3 && !isOpera) {
-							idx = prev.nodeValue.length;
-							prev.appendData(next.nodeValue);
-							dom.remove(next);
-
-							if (suffix == 'start') {
-								startContainer = endContainer = prev;
-								startOffset = endOffset = idx;
-							} else {
-								endContainer = prev;
-								endOffset = idx;
-							}
-						}
-					}
-				}
-			}
-
-			function addBogus(node) {
-				// Adds a bogus BR element for empty block elements
-				if (dom.isBlock(node) && !node.innerHTML && !isIE) {
-					node.innerHTML = '<br data-mce-bogus="1" />';
-				}
-
-				return node;
-			}
-
-			if (bookmark) {
-				if (bookmark.start) {
-					rng = dom.createRng();
-					root = dom.getRoot();
-
-					if (self.tridentSel) {
-						return self.tridentSel.moveToBookmark(bookmark);
-					}
-
-					if (setEndPoint(true) && setEndPoint()) {
-						self.setRng(rng);
-					}
-				} else if (bookmark.id) {
-					// Restore start/end points
-					restoreEndPoint('start');
-					restoreEndPoint('end');
-
-					if (startContainer) {
-						rng = dom.createRng();
-						rng.setStart(addBogus(startContainer), startOffset);
-						rng.setEnd(addBogus(endContainer), endOffset);
-						self.setRng(rng);
-					}
-				} else if (bookmark.name) {
-					self.select(dom.select(bookmark.name)[bookmark.index]);
-				} else if (bookmark.rng) {
-					self.setRng(bookmark.rng);
-				}
-			}
+			return this.bookmarkManager.moveToBookmark(bookmark);
 		},
 
 		/**
