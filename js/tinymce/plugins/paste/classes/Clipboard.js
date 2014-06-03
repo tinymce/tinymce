@@ -345,6 +345,13 @@ define("tinymce/pasteplugin/Clipboard", [
 
 		function registerEventHandlers() {
 			editor.on('keydown', function(e) {
+				function removePasteBinOnKeyUp(e) {
+					// Ctrl+V or Shift+Insert
+					if (isKeyboardPasteEvent(e) && !e.isDefaultPrevented()) {
+						removePasteBin();
+					}
+				}
+
 				// Ctrl+V or Shift+Insert
 				if (isKeyboardPasteEvent(e) && !e.isDefaultPrevented()) {
 					keyboardPastePlainTextState = e.shiftKey && e.keyCode == 86;
@@ -370,13 +377,12 @@ define("tinymce/pasteplugin/Clipboard", [
 
 					removePasteBin();
 					createPasteBin();
-				}
-			});
 
-			editor.on('keyup', function(e) {
-				// Ctrl+V or Shift+Insert
-				if (isKeyboardPasteEvent(e) && !e.isDefaultPrevented()) {
-					removePasteBin();
+					// Remove pastebin if we get a keyup and no paste event
+					editor.once('keyup', removePasteBinOnKeyUp);
+					editor.once('paste', function() {
+						editor.off('keyup', removePasteBinOnKeyUp);
+					});
 				}
 			});
 
