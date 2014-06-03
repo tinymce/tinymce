@@ -1,0 +1,36 @@
+// FlowLayout
+
+.@{prefix}-flow-layout-item {
+	.inline-block();
+}
+
+.@{prefix}-flow-layout-item {
+	margin: 2px 0 2px 2px;	
+}
+
+.@{prefix}-flow-layout-item.@{prefix}-last {
+	margin-right: 2px;
+}
+
+.@{prefix}-flow-layout {
+	white-space: normal;
+}
+
+.@{prefix}-tinymce-inline .@{prefix}-flow-layout {
+	white-space: nowrap;
+}
+
+// RTL
+
+.@{prefix}-rtl .@{prefix}-flow-layout {
+	text-align: right;
+	direction: rtl;
+}
+
+.@{prefix}-rtl .@{prefix}-flow-layout-item {
+	margin: 2px 2px 2px 0;	
+}
+
+.@{prefix}-rtl .@{prefix}-flow-layout-item.@{prefix}-last {
+	margin-left: 2px;
+}

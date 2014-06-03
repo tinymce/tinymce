@@ -1,0 +1,113 @@
+/* Icons IE7 */
+
+@font-face {
+	font-family: 'tinymce';
+	src:url('fonts/tinymce.eot');
+	src:url('fonts/tinymce.eot?#iefix') format('embedded-opentype'),
+		url('fonts/tinymce.woff') format('woff'),
+		url('fonts/tinymce.ttf') format('truetype'),
+		url('fonts/tinymce.svg#tinymce') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'tinymce-small';
+	src:url('fonts/tinymce-small.eot');
+	src:url('fonts/tinymce-small.eot?#iefix') format('embedded-opentype'),
+		url('fonts/tinymce-small.woff') format('woff'),
+		url('fonts/tinymce-small.ttf') format('truetype'),
+		url('fonts/tinymce-small.svg#tinymce') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@iconSize: 16px;
+
+.@{prefix}-ico {
+	font-family: 'tinymce';
+	font-style: normal;
+	font-weight: normal;
+	font-size: @iconSize;
+	line-height: 16px;
+	vertical-align: text-top;
+	-webkit-font-smoothing: antialiased;
+
+	display: inline-block;
+	background: transparent center center;
+	width: 16px;
+	height: 16px;
+	color: @btn-text;
+	-ie7-icon: ' ';
+}
+
+.@{prefix}-btn-small .@{prefix}-ico {
+	font-family: 'tinymce-small';
+}
+
+// .@{prefix}-i-checkbox needs to have zoom overridden since it's set by the gradient mixin
+.@{prefix}-ico, i.@{prefix}-i-checkbox {
+	zoom: ~"expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = this.currentStyle['-ie7-icon'].substr(1, 1) + '&nbsp;')";	
+}
+
+.@{prefix}-i-save           { -ie7-icon: "\e000"; }
+.@{prefix}-i-newdocument    { -ie7-icon: "\e001"; }
+.@{prefix}-i-fullpage       { -ie7-icon: "\e002"; }
+.@{prefix}-i-alignleft      { -ie7-icon: "\e003"; }
+.@{prefix}-i-aligncenter    { -ie7-icon: "\e004"; }
+.@{prefix}-i-alignright     { -ie7-icon: "\e005"; }
+.@{prefix}-i-alignjustify   { -ie7-icon: "\e006"; }
+.@{prefix}-i-cut            { -ie7-icon: "\e007"; }
+.@{prefix}-i-paste          { -ie7-icon: "\e008"; }
+.@{prefix}-i-searchreplace  { -ie7-icon: "\e009"; }
+.@{prefix}-i-bullist        { -ie7-icon: "\e00a"; }
+.@{prefix}-i-numlist        { -ie7-icon: "\e00b"; }
+.@{prefix}-i-indent         { -ie7-icon: "\e00c"; }
+.@{prefix}-i-outdent        { -ie7-icon: "\e00d"; }
+.@{prefix}-i-blockquote     { -ie7-icon: "\e00e"; }
+.@{prefix}-i-undo           { -ie7-icon: "\e00f"; }
+.@{prefix}-i-redo           { -ie7-icon: "\e010"; }
+.@{prefix}-i-link           { -ie7-icon: "\e011"; }
+.@{prefix}-i-unlink         { -ie7-icon: "\e012"; }
+.@{prefix}-i-anchor         { -ie7-icon: "\e013"; }
+.@{prefix}-i-image          { -ie7-icon: "\e014"; }
+.@{prefix}-i-media          { -ie7-icon: "\e015"; }
+.@{prefix}-i-help           { -ie7-icon: "\e016"; }
+.@{prefix}-i-code           { -ie7-icon: "\e017"; }
+.@{prefix}-i-insertdatetime { -ie7-icon: "\e018"; }
+.@{prefix}-i-preview        { -ie7-icon: "\e019"; }
+.@{prefix}-i-forecolor      { -ie7-icon: "\e01a"; }
+.@{prefix}-i-backcolor      { -ie7-icon: "\e01a"; }
+.@{prefix}-i-table          { -ie7-icon: "\e01b"; }
+.@{prefix}-i-hr             { -ie7-icon: "\e01c"; }
+.@{prefix}-i-removeformat   { -ie7-icon: "\e01d"; }
+.@{prefix}-i-subscript      { -ie7-icon: "\e01e"; }
+.@{prefix}-i-superscript    { -ie7-icon: "\e01f"; }
+.@{prefix}-i-charmap        { -ie7-icon: "\e020"; }
+.@{prefix}-i-emoticons      { -ie7-icon: "\e021"; }
+.@{prefix}-i-print          { -ie7-icon: "\e022"; }
+.@{prefix}-i-fullscreen     { -ie7-icon: "\e023"; }
+.@{prefix}-i-spellchecker   { -ie7-icon: "\e024"; }
+.@{prefix}-i-nonbreaking    { -ie7-icon: "\e025"; }
+.@{prefix}-i-template       { -ie7-icon: "\e026"; }
+.@{prefix}-i-pagebreak      { -ie7-icon: "\e027"; }
+.@{prefix}-i-restoredraft   { -ie7-icon: "\e028"; }
+.@{prefix}-i-untitled       { -ie7-icon: "\e029"; }
+.@{prefix}-i-bold           { -ie7-icon: "\e02a"; }
+.@{prefix}-i-italic         { -ie7-icon: "\e02b"; }
+.@{prefix}-i-underline      { -ie7-icon: "\e02c"; }
+.@{prefix}-i-strikethrough  { -ie7-icon: "\e02d"; }
+.@{prefix}-i-visualchars    { -ie7-icon: "\e02e"; }
+.@{prefix}-i-ltr            { -ie7-icon: "\e02f"; }
+.@{prefix}-i-rtl            { -ie7-icon: "\e030"; }
+.@{prefix}-i-copy           { -ie7-icon: "\e031"; }
+.@{prefix}-i-resize         { -ie7-icon: "\e032"; }
+.@{prefix}-i-browse         { -ie7-icon: "\e034"; }
+.@{prefix}-i-pastetext      { -ie7-icon: "\e035"; }
+
+.@{prefix}-i-checkbox, .@{prefix}-i-selected {
+	-ie7-icon: "\e033";
+}
+
+.@{prefix}-i-selected              { visibility: hidden; }
+.@{prefix}-i-backcolor             { background: #BBB; }
