@@ -975,5 +975,7 @@ define("tinymce/tableplugin/Plugin", [
 		}
 	}
 
+	Plugin.TableGrid = TableGrid;
+
 	PluginManager.add('table', Plugin);
 });
