@@ -337,7 +337,50 @@
 				return true;
 			}
 
-			startElement = selection.getStart()
+			/**
+		 	 * handleDirectionalStroke 	handles when the user presses a button within a caret container, and 
+		 	 * 							make sure the direction of the cursor or of the deletion is within the
+		 	 * 							user expectations.
+		 	 * 			
+		 	 * @param  {string} keyCode        is the current keycode
+		 	 * @param  {object} caretContainer is the caretContainer
+		 	 * @param  {string} side           left (backspace and left arrow) or right (delete and right arrow)
+		 	 * @param  {object} e 			   is the currenlty handled event
+		 	 * @return {null}                
+		 	 */
+			function handleDirectionalStroke(keyCode, caretContainer, e) {
+				var nonEditableParent;
+				var side = (keyCode === VK.LEFT) || (keyCode === VK.BACKSPACE) ? 'left' : 'right';
+				var arrow = side === 'left' ? VK.LEFT : VK.RIGHT;
+				var action = side === 'left' ? VK.BACKSPACE : VK.DELETE;
+				var next = side === 'left' ? true : false;
+				var caret = selection.getRng(true);
+
+				if (keyCode === arrow || keyCode === action) {
+					nonEditableParent = getNonEmptyTextNodeSibling(caretContainer, next);
+					
+					if (nonEditableParent && getContentEditable(nonEditableParent) === "false") {
+
+                        if (keyCode === arrow) {
+                            positionCaretOnElement(nonEditableParent, next);
+                        }
+
+                        // If the caret contains something, for example typing right after
+                        // a nonEditable element I don't want to remove the nonEditable token when
+                        // I press backSpace.
+                        if (keyCode === action && (caretContainer.innerHTML === invisibleChar || !tinymce.trim(caretContainer.innerText)) ) {
+                            e.preventDefault();
+                            positionCaretOnElement(nonEditableParent, next);
+                            dom.remove(nonEditableParent);
+                            return;
+                        }
+                    } else {
+                      removeCaretContainer(caretContainer);
+                    }
+                }
+            }
+
+			startElement = selection.getStart();
 			endElement = selection.getEnd();
 
 			// Disable all key presses in contentEditable=false except delete or backspace
@@ -368,41 +411,7 @@
 				if (keyCode == VK.LEFT || keyCode == VK.RIGHT || keyCode == VK.BACKSPACE || keyCode == VK.DELETE) {
 					caretContainer = getParentCaretContainer(startElement);
 					if (caretContainer) {
-						// Arrow left or backspace
-						if (keyCode == VK.LEFT || keyCode == VK.BACKSPACE) {
-							nonEditableParent = getNonEmptyTextNodeSibling(caretContainer, true);
-
-							if (nonEditableParent && getContentEditable(nonEditableParent) === "false") {
-								e.preventDefault();
-
-								if (keyCode == VK.LEFT) {
-									positionCaretOnElement(nonEditableParent, true);
-								} else {
-									dom.remove(nonEditableParent);
-									return;
-								}
-							} else {
-								removeCaretContainer(caretContainer);
-							}
-						}
-
-						// Arrow right or delete
-						if (keyCode == VK.RIGHT || keyCode == VK.DELETE) {
-							nonEditableParent = getNonEmptyTextNodeSibling(caretContainer);
-
-							if (nonEditableParent && getContentEditable(nonEditableParent) === "false") {
-								e.preventDefault();
-
-								if (keyCode == VK.RIGHT) {
-									positionCaretOnElement(nonEditableParent, false);
-								} else {
-									dom.remove(nonEditableParent);
-									return;
-								}
-							} else {
-								removeCaretContainer(caretContainer);
-							}
-						}
+						handleDirectionalStroke(keyCode, caretContainer, e);
 					}
 
 					if ((keyCode == VK.BACKSPACE || keyCode == VK.DELETE) && !canDelete(keyCode == VK.BACKSPACE)) {
@@ -411,7 +420,8 @@
 					}
 				}
 			}
-		};
+		}
+
 
 		ed.onMouseDown.addToTop(function(ed, e) {
 			var node = ed.selection.getNode();
@@ -423,6 +433,7 @@
 		});
 
 		ed.onMouseUp.addToTop(moveSelection);
+		ed.onMouseDown.addToTop(moveSelection);
 		ed.onKeyDown.addToTop(handleKey);
 		ed.onKeyUp.addToTop(moveSelection);
 	};
