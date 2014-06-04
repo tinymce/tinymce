@@ -45,7 +45,7 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 		resizeHeight = settings.autoresize_min_height;
 
 		if (!body || (e && e.type === "setcontent" && e.initial) || isFullscreen()) {
-			if (body && docElm) {
+			if (body && docElm && !settings.autoresize_iframe_scroll) { //The iframe will scroll, not the body.
 				body.style.overflowY = "auto";
 				docElm.style.overflowY = "auto"; // Old IE
 			}
@@ -71,12 +71,8 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 
 		// If a maximum height has been defined don't exceed this height
 		if (settings.autoresize_max_height && myHeight > settings.autoresize_max_height) {
-			resizeHeight = settings.autoresize_max_height;
-			body.style.overflowY = "auto";
-			docElm.style.overflowY = "auto"; // Old IE
-		} else {
-			body.style.overflowY = "hidden";
-			docElm.style.overflowY = "hidden"; // Old IE
+            resizeHeight = settings.autoresize_max_height;
+        } else {
 			body.scrollTop = 0;
 		}
 
@@ -100,6 +96,9 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 	 */
 	function wait(times, interval, callback) {
 		setTimeout(function() {
+			if (editor.destroyed) {
+				return;
+			}
 			resize({});
 
 			if (times--) {
@@ -118,13 +117,15 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 
 	// Add padding at the bottom for better UX
 	editor.on("init", function() {
-		var overflowPadding = editor.getParam('autoresize_overflow_padding', 1);
+		if(!editor.getParam("autoresize_skip_padding")) {
+			var overflowPadding = editor.getParam('autoresize_overflow_padding', 1);
 
-		editor.dom.setStyles(editor.getBody(), {
-			paddingBottom: editor.getParam('autoresize_bottom_margin', 50),
-			paddingLeft: overflowPadding,
-			paddingRight: overflowPadding
-		});
+			editor.dom.setStyles(editor.getBody(), {
+				paddingBottom: editor.getParam('autoresize_bottom_margin', 50),
+				paddingLeft: overflowPadding,
+				paddingRight: overflowPadding
+			});
+		}
 	});
 
 	// Add appropriate listeners for resizing content area

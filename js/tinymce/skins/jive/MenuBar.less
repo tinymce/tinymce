@@ -1,0 +1,28 @@
+/* MenuBar */
+
+.@{prefix}-menubar .@{prefix}-menubtn {
+	border-color: transparent;
+	background: transparent;
+	.border-radius(0);
+	.box-shadow(none);
+	filter: none;
+}
+
+.@{prefix}-menubar {
+	border: 1px solid @menubar-border;
+}
+
+.@{prefix}-menubar .@{prefix}-menubtn button span {
+	color: @text;
+}
+
+.@{prefix}-menubar .@{prefix}-caret {
+	border-top-color: @text;
+}
+
+.@{prefix}-menubar .@{prefix}-menubtn:hover, .@{prefix}-menubar .@{prefix}-menubtn.@{prefix}-active, .@{prefix}-menubar .@{prefix}-menubtn:focus {
+	border-color: transparent;
+	background: @menubar-bg-active;
+	filter: none;
+	.box-shadow(none);
+}

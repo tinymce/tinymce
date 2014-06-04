@@ -497,8 +497,13 @@ define("tinymce/ui/FormatControls", [
 				fixedWidth: true,
 				onPostRender: createListBoxChangeHandler(items, 'fontname'),
 				onselect: function(e) {
-					if (e.control.settings.value) {
-						editor.execCommand('FontName', false, e.control.settings.value);
+					var value = e.control.settings.value;
+					if(value == 'inherit'){
+						//unapply current FontName
+						value = editor.queryCommandValue('FontName');
+					}
+					if (value) {
+						editor.execCommand('FontName', false, value);
 					}
 				}
 			};
@@ -527,8 +532,13 @@ define("tinymce/ui/FormatControls", [
 				fixedWidth: true,
 				onPostRender: createListBoxChangeHandler(items, 'fontsize'),
 				onclick: function(e) {
-					if (e.control.settings.value) {
-						editor.execCommand('FontSize', false, e.control.settings.value);
+					var value = e.control.settings.value;
+					if(value == 'inherit'){
+						//unapply current FontSize
+						value = editor.queryCommandValue('FontSize');
+					}
+					if (value) {
+						editor.execCommand('FontSize', false, value);
 					}
 				}
 			};

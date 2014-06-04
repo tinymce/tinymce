@@ -1,0 +1,38 @@
+// ComboBox
+
+.@{prefix}-combobox {
+	.inline-block();
+	.border-radius(3px);
+	.box-shadow(@textbox-box-shadow);
+	*height: 32px;
+}
+
+.@{prefix}-combobox input {
+	border: 1px solid @textbox-border;
+	border-right-color: @combobox-border;
+	height: 28px;
+}
+
+.@{prefix}-combobox.@{prefix}-disabled input {
+	color: mix(@text, @textbox-bg, 40%);
+}
+
+.@{prefix}-combobox.@{prefix}-has-open input {
+	.border-radius(4px 0 0 4px);
+}
+
+.@{prefix}-combobox .@{prefix}-btn {
+	border-left: 0;
+	.border-radius(0 4px 4px 0);
+}
+
+.@{prefix}-combobox button {
+	padding-right: 8px;
+	padding-left: 8px;
+}
+
+.@{prefix}-combobox.@{prefix}-disabled .@{prefix}-btn button {
+	cursor: default;
+	.box-shadow(none);
+	.opacity(@btn-box-disabled-opacity);
+}

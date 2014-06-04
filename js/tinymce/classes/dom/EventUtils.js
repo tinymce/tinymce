@@ -138,7 +138,8 @@ define("tinymce/dom/EventUtils", [], function() {
 	function bindOnReady(win, callback, eventUtils) {
 		var doc = win.document, event = {type: 'ready'};
 
-		if (eventUtils.domLoaded) {
+		if (doc.readyState === "complete") {
+			eventUtils.domLoaded = true;
 			callback(event);
 			return;
 		}

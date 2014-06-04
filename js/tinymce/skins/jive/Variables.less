@@ -1,0 +1,142 @@
+// Variables
+// Syntax: <control>-(<sub control>)-<bg|border|text>-(<state>)-(<extra>);
+// Example: @btn-primary-bg-hover-hlight;
+
+@prefix:                         mce;
+
+// Default font
+@font-family:                    "Helvetica Neue", Helvetica, Arial, sans-serif;
+@font-size:                      14px;
+@line-height:                    20px;
+@has-gradients:                  true;
+@has-radius:                     true;
+@has-boxshadow:                  true;
+
+// Text colors
+@text:                           #333;
+@text-inverse:                   white;
+@text-disabled:                  #aaa;
+@text-shadow:                    0 1px 1px hsla(hue(@text-inverse), saturation(@text-inverse), lightness(@text-inverse), 0.75);
+@text-error:                     #aa0000;
+
+// Button
+@btn-text:                       @text;
+@btn-text-shadow:                @text-inverse;
+@btn-border-top:                 rgba(0, 0, 0, .1);
+@btn-border-right:               rgba(0, 0, 0, .1);
+@btn-border-bottom:              fadein(rgba(0, 0, 0, .1), 15%);
+@btn-border-left:                fadein(rgba(0, 0, 0, .1), 15%);
+@btn-split-border:               #bdbdbd;
+@btn-caret-border:               @btn-text;
+@btn-text-disabled:              @text-disabled;
+@btn-box-shadow:                 inset 0 1px 0 rgba(255, 255, 255, .2), 0 1px 2px rgba(0, 0, 0, .05);
+@btn-box-shadow-active:          inset 0 2px 4px rgba(0, 0, 0, .15), 0 1px 2px rgba(0, 0, 0, .05);
+@btn-box-disabled-opacity:       0.4;
+@btn-bg:                         white;
+@btn-bg-hlight:                  #D9D9D9;
+@btn-bg-hover:                   darken(@btn-bg, 5%);
+@btn-bg-hlight-hover:            darken(@btn-bg-hlight, 5%);
+
+@btn-primary-bg:                 #0088cc;
+@btn-primary-bg-hlight:          #0044cc;
+@btn-primary-bg-hover:           darken(@btn-primary-bg, 5%);
+@btn-primary-bg-hover-hlight:    darken(@btn-primary-bg-hlight, 5%);
+@btn-primary-text:               #fff;
+@btn-primary-text-shadow:        #333;
+@btn-primary-border-top:         mix(@btn-border-top, @btn-primary-bg, 50%);
+@btn-primary-border-right:       mix(@btn-border-right, @btn-primary-bg, 50%);
+@btn-primary-border-bottom:      mix(@btn-border-bottom, @btn-primary-bg, 50%);
+@btn-primary-border-left:        mix(@btn-border-left, @btn-primary-bg, 50%);
+
+// Menu
+@menuitem-text:                  @text;
+@menu-bg:                        #fff;
+@menu-border:                    rgba(0, 0, 0, 0.2);
+@menubar-border:                 mix(@panel-border, @panel-bg, 60%);
+@menuitem-text-inverse:          @text-inverse;
+@menubar-bg-active:              darken(@btn-bg, 10%);
+@menuitem-bg-hover:              #0081C2;
+@menuitem-bg-selected:           #08C;
+@menuitem-bg-selected-hlight:    #0077B3;
+@menuitem-bg-disabled:           #CCC;
+@menuitem-caret:                 @menuitem-text;
+@menuitem-caret-selected:        @menuitem-text-inverse;
+@menuitem-separator-top:         #CBCBCB;
+@menuitem-separator-bottom:      @menu-bg;
+@menuitem-bg-active:             #C8DEF4;
+@menuitem-text-active:           @text;
+@menuitem-preview-border-active: #aaa;
+
+// Panel
+@panel-border:                   #9E9E9E;
+@panel-bg:                       #FDFDFD;
+@panel-bg-hlight:                #DDD;
+
+// Tabs
+@tab-border:                     #c5c5c5;
+@tab-bg:                         #e3e3e3;
+@tab-bg-hover:                   #FDFDFD;
+@tab-bg-active:                  #FDFDFD;
+
+// Tooltip
+@tooltip-bg:                     #000;
+@tooltip-text:                   white;
+@tooltip-font-size:              11px;
+
+// Window
+@window-border:                  #c5c5c5;
+@window-head-border:             @window-border;
+@window-head-close:              mix(@text, @window-bg, 60%);
+@window-head-close-hover:        mix(@text, @window-bg, 40%);
+@window-foot-border:             @window-border;
+@window-foot-bg:                 @window-bg;
+@window-fullscreen-bg:           #FFF;
+@window-modalblock-bg:           #000;
+@window-modalblock-opacity:      0.3;
+@window-box-shadow:              0 3px 7px rgba(0, 0, 0, 0.3);
+@window-bg:                      #FFF;
+@window-title-font-size:         20px;
+
+// Popover
+@popover-bg:                     @window-bg;
+@popover-arrow-width:            10px;
+@popover-arrow:                  @window-bg;
+@popover-arrow-outer-width:      @popover-arrow-width + 1;
+@popover-arrow-outer:            rgba(0, 0, 0, 0.25);
+
+// Floatpanel
+@floatpanel-box-shadow:          0 5px 10px rgba(0, 0, 0, .2);
+
+// Checkbox
+@checkbox-bg:                    @btn-bg;
+@checkbox-bg-hlight:             @btn-bg-hlight;
+@checkbox-box-shadow:            inset 0 1px 0 rgba(255, 255, 255, .2), 0 1px 2px rgba(0, 0, 0, .05);
+@checkbox-border:                #c5c5c5;
+@checkbox-border-focus:          rgba(82, 168, 236, .8);
+
+// Path
+@path-text:                      @text;
+@path-bg-focus:                  #666;
+@path-text-focus:                #fff;
+
+// Textbox
+@textbox-text-placeholder:       #aaa;
+@textbox-box-shadow:             inset 0 1px 1px rgba(0, 0, 0, 0.075);
+@textbox-bg:                     #fff;
+@textbox-border:                 #c5c5c5;
+@textbox-border-focus:           rgba(82, 168, 236, .8);
+
+// Throbber
+@throbber-bg:                    #fff url('img/loader.gif') no-repeat center center;
+
+// Combobox
+@combobox-border:                @textbox-border;
+
+// Grid
+@grid-bg-active:                 @menuitem-bg-active;
+@grid-border-active:             #a1a1a1;
+@grid-border:                    #d6d6d6;
+
+// Misc
+@colorbtn-backcolor-bg:          #BBB;
+@iframe-border:                  @panel-border;
