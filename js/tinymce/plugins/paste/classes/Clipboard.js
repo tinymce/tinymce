@@ -158,7 +158,7 @@ define("tinymce/pasteplugin/Clipboard", [
 			pasteBinElm = dom.add(editor.getBody(), 'div', {
 				id: "mcepastebin",
 				contentEditable: true,
-				"data-mce-bogus": "1",
+				"data-mce-bogus": "all",
 				style: 'position: absolute; top: ' + top + 'px;' +
 					'width: 10px; height: 10px; overflow: hidden; opacity: 0'
 			}, pasteBinDefaultContent);
@@ -561,14 +561,6 @@ define("tinymce/pasteplugin/Clipboard", [
 					}
 				}
 			});
-		});
-
-		editor.on('BeforeAddUndo', function(e) {
-			// Remove pastebin HTML incase it should be added to an undo
-			// level for example when you paste a file on older IE
-			if (e.level.content) {
-				e.level.content = e.level.content.replace(/<div id="?mcepastebin"?[^>]+>%MCEPASTEBIN%<\/div>/gi, '');
-			}
 		});
 	};
 });

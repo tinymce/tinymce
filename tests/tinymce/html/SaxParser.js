@@ -674,7 +674,7 @@
 	});
 
 	test('Parse away bogus elements', function() {
-		function assertBogusSaxParse(inputHtml, outputHtml, counters) {
+		function testBogusSaxParse(inputHtml, outputHtml, counters) {
 			var counter, parser;
 
 			counter = createCounter(writer);
@@ -686,16 +686,29 @@
 			deepEqual(counter.counts, counters);
 		}
 
-		assertBogusSaxParse('a<b data-mce-bogus="1">b</b>c', 'abc', {text: 3});
-		assertBogusSaxParse('a<b data-mce-bogus="true">b</b>c', 'abc', {text: 3});
-		assertBogusSaxParse('a<b data-mce-bogus="1"></b>c', 'ac', {text: 2});
-		assertBogusSaxParse('a<b data-mce-bogus="all">b</b>c', 'ac', {text: 2});
-		assertBogusSaxParse('a<b data-mce-bogus="all"><!-- x --><?xml?></b>c', 'ac', {text: 2});
-		assertBogusSaxParse('a<b data-mce-bogus="all"><b>b</b></b>c', 'ac', {text: 2});
-		assertBogusSaxParse('a<b data-mce-bogus="all"><br>b</b><b>c</b>', 'a<b>c</b>', {start: 1, end: 1, text: 2});
-		assertBogusSaxParse('a<b data-mce-bogus="all"><img>b</b><b>c</b>', 'a<b>c</b>', {start: 1, end: 1, text: 2});
-		assertBogusSaxParse('a<b data-mce-bogus="all"><b attr="x">b</b></b>c', 'ac', {text: 2});
-		assertBogusSaxParse('a<b data-mce-bogus="all"></b>c', 'ac', {text: 2});
-		assertBogusSaxParse('a<b data-mce-bogus="all"></b><b>c</b>', 'a<b>c</b>', {start: 1, end: 1, text:2});
+		testBogusSaxParse('a<b data-mce-bogus="1">b</b>c', 'abc', {text: 3});
+		testBogusSaxParse('a<b data-mce-bogus="true">b</b>c', 'abc', {text: 3});
+		testBogusSaxParse('a<b data-mce-bogus="1"></b>c', 'ac', {text: 2});
+		testBogusSaxParse('a<b data-mce-bogus="all">b</b>c', 'ac', {text: 2});
+		testBogusSaxParse('a<b data-mce-bogus="all"><!-- x --><?xml?></b>c', 'ac', {text: 2});
+		testBogusSaxParse('a<b data-mce-bogus="all"><b>b</b></b>c', 'ac', {text: 2});
+		testBogusSaxParse('a<b data-mce-bogus="all"><br>b</b><b>c</b>', 'a<b>c</b>', {start: 1, end: 1, text: 2});
+		testBogusSaxParse('a<b data-mce-bogus="all"><img>b</b><b>c</b>', 'a<b>c</b>', {start: 1, end: 1, text: 2});
+		testBogusSaxParse('a<b data-mce-bogus="all"><b attr="x">b</b></b>c', 'ac', {text: 2});
+		testBogusSaxParse('a<b data-mce-bogus="all"></b>c', 'ac', {text: 2});
+		testBogusSaxParse('a<b data-mce-bogus="all"></b><b>c</b>', 'a<b>c</b>', {start: 1, end: 1, text:2});
+	});
+
+	test('findEndTag', function() {
+		function testFindEndTag(html, startIndex, expectedIndex) {
+			equal(tinymce.html.SaxParser.findEndTag(schema, html, startIndex), expectedIndex);
+		}
+
+		testFindEndTag('<b>', 3, 3);
+		testFindEndTag('<img>', 3, 3);
+		testFindEndTag('<b></b>', 3, 7);
+		testFindEndTag('<b><img></b>', 3, 12);
+		testFindEndTag('<b><!-- </b> --></b>', 3, 20);
+		testFindEndTag('<span><b><i>a<img>b</i><b>c</b></b></span>', 9, 35);
 	});
 })();

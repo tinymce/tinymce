@@ -79,6 +79,7 @@ define("tinymce/dom/ControlSelection", [
 				'margin: 5px 10px;' +
 				'padding: 5px;' +
 				'position: absolute;' +
+				'z-index: 10001' +
 			'}'
 		);
 
@@ -301,7 +302,7 @@ define("tinymce/dom/ControlSelection", [
 
 						handleElm = dom.add(handlerContainerElm, 'div', {
 							id: 'mceResizeHandle' + name,
-							'data-mce-bogus': true,
+							'data-mce-bogus': 'all',
 							'class': 'mce-resizehandle',
 							unselectable: true,
 							style: 'cursor:' + name + '-resize; margin:0; padding:0'
