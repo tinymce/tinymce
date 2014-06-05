@@ -37,7 +37,7 @@ define("tinymce/ui/GridLayout", [
 		recalc: function(container) {
 			var settings = container.settings, rows, cols, items, contLayoutRect, width, height, rect,
 				ctrlLayoutRect, ctrl, x, y, posX, posY, ctrlSettings, contPaddingBox, align, spacingH, spacingV, alignH, alignV, maxX, maxY,
-				colWidths = [], rowHeights = [], ctrlMinWidth, ctrlMinHeight, availableWidth, availableHeight;
+				colWidths = [], rowHeights = [], ctrlMinWidth, ctrlMinHeight, availableWidth, availableHeight, reverseRows, idx;
 
 			// Get layout settings
 			settings = container.settings;
@@ -50,6 +50,7 @@ define("tinymce/ui/GridLayout", [
 			alignH = settings.alignH || settings.align;
 			alignV = settings.alignV || settings.align;
 			contPaddingBox = container._paddingBox;
+			reverseRows = 'reverseRows' in settings ? settings.reverseRows : container.isRtl();
 
 			if (alignH && typeof(alignH) == "string") {
 				alignH = [alignH];
@@ -176,7 +177,13 @@ define("tinymce/ui/GridLayout", [
 				height = rowHeights[y] + flexV;
 
 				for (x = 0; x < cols; x++) {
-					ctrl = items[y * cols + x];
+					if (reverseRows) {
+						idx = y * cols + cols - 1 - x;
+					} else {
+						idx = y * cols + x;
+					}
+
+					ctrl = items[idx];
 
 					// No more controls to render then break
 					if (!ctrl) {
