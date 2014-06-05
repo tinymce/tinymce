@@ -44,7 +44,10 @@
 			"cellpadding": "",
 			"cellspacing": "",
 			"height": "",
-			"width": ""
+			"width": "",
+			"backgroundColor": "",
+			"borderColor": "",
+			"style": ""
 		});
 
 		Utils.getFontmostWindow().close();
@@ -72,7 +75,10 @@
 			"cellpadding": "3",
 			"cellspacing": "2",
 			"height": "101",
-			"width": "100"
+			"width": "100",
+			"backgroundColor": "",
+			"borderColor": "",
+			"style": ""
 		});
 
 		Utils.getFontmostWindow().close();
