@@ -96,8 +96,12 @@ define("tinymce/dom/Serializer", [
 
 			while (i--) {
 				node = nodes[i];
-				value = node.attr('class').replace(/(?:^|\s)mce-item-\w+(?!\S)/g, '');
-				node.attr('class', value.length > 0 ? value : null);
+				value = node.attr('class');
+
+				if (value) {
+					value = node.attr('class').replace(/(?:^|\s)mce-item-\w+(?!\S)/g, '');
+					node.attr('class', value.length > 0 ? value : null);
+				}
 			}
 		});
 
