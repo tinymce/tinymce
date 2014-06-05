@@ -193,7 +193,7 @@ define("tinymce/tableplugin/Dialogs", [
 								padding: 0,
 								formItemDefaults: {
 									layout: 'grid',
-									alignH: ['start', 'right'],
+									alignH: ['start', 'right']
 								},
 								defaults: {
 									size: 7

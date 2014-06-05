@@ -81,7 +81,8 @@ define("tinymce/ui/ColorPicker", [
 			};
 		}
 
-		d = (r ==minRGB) ? g - b : ((b == minRGB) ? r - g : b - r);
+		/*eslint no-nested-ternary:0 */
+		d = (r == minRGB) ? g - b : ((b == minRGB) ? r - g : b - r);
 		h = (r == minRGB) ? 3 : ((b == minRGB) ? 1 : 5);
 		h = 60 * (h - d / (maxRGB - minRGB));
 		s = (maxRGB - minRGB) / maxRGB;
