@@ -14,7 +14,7 @@
 	var VK = tinymce.VK;
 
 	function handleContentEditableSelection(ed) {
-		var dom = ed.dom, selection = ed.selection, invisibleChar, caretContainerId = 'mce_noneditablecaret', invisibleChar = '\uFEFF';
+		var dom = ed.dom, selection = ed.selection, caretContainerId = 'mce_noneditablecaret', invisibleChar = '\uFEFF';
 
 		// Returns the content editable state of a node "true/false" or null
 		function getContentEditable(node) {

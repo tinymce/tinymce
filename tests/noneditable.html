@@ -200,6 +200,25 @@ test('noneditable regexp', function() {
 	equal(editor.getContent(), '<p>{test1}{test2}</p>');
 });
 
+test('type after non editable and then pressing backspace should only remove last typed char.', function() {
+	editor.setContent('<p><span class="mceNonEditable">no</span></p>');
+
+	editor.selection.setCursorLocation(editor.dom.select('span')[0].firstChild, 2);
+	editor.dom.fire(editor.getBody(), 'mouseup');
+	
+	type('yes'); 
+
+	// Set the cursor position after the typed letters
+	editor.selection.setCursorLocation(editor.dom.select('span')[1].firstChild, 4);
+
+	// Delete the last letter only
+	type({keyCode: 8});
+
+	equal(editor.getContent(), '<p><span class="mceNonEditable">no</span>ye</p>', 'Should have deleted only the last char "s"');
+	equal(editor.dom.select('#mce_noneditablecaret').length, 1, 'There should be only one noneditable caret in the editor');
+	equal(editor.dom.select('#mce_noneditablecaret')[0].innerHTML.match(/[\uFEFF]/).length, 1 , 'Caret container should contain non editable char.');
+});
+
 
 tinyMCE.init({
 	mode : "exact",
