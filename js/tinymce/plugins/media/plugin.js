@@ -61,6 +61,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 	}
 
 	function showDialog() {
+		var selectedNode = editor.selection.getNode(), currRNG = editor.selection.getRng();
 		var win, width, height, data;
 		var generalFormItems = [
 			{name: 'source1', type: 'filepicker', filetype: 'media', size: 40, autofocus: true, label: 'Source'}
@@ -162,7 +163,14 @@ tinymce.PluginManager.add('media', function(editor, url) {
 				}
 			],
 			onSubmit: function() {
-				editor.insertContent(dataToHtml(this.toJSON()));
+				if (selectedNode && selectedNode.getAttribute('data-mce-object')) {
+					editor.selection.select(selectedNode);
+					editor.insertContent(dataToHtml(this.toJSON()));
+				} else {
+					editor.focus();
+					editor.selection.setRng(currRNG);
+					editor.execCommand('mceInsertContent', false, dataToHtml(this.toJSON()), {skip_focus: true});
+				}
 			}
 		});
 	}
