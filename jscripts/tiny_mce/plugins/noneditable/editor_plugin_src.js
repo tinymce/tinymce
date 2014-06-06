@@ -368,7 +368,7 @@
                         // If the caret contains something, for example typing right after
                         // a nonEditable element I don't want to remove the nonEditable token when
                         // I press backSpace.
-                        if (keyCode === action && (caretContainer.innerHTML === invisibleChar || !tinymce.trim(caretContainer.innerText)) ) {
+                        if (keyCode === action && (caretContainer.innerHTML === invisibleChar || !tinymce.trim(caretContainer.innerText || caretContainer.textContent)) ) {
                             e.preventDefault();
                             positionCaretOnElement(nonEditableParent, next);
                             dom.remove(nonEditableParent);

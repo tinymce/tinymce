@@ -165,6 +165,10 @@ function type(chr) {
 
 	evt = evt || {keyCode: keyCode, charCode: charCode};
 
+	if (evt.keyCode) {
+		keyCode = evt.keyCode;
+	}
+
 	startElm = editor.selection.getStart();
 	fakeEvent(startElm, 'keydown', evt);
 	fakeEvent(startElm, 'keypress', evt);

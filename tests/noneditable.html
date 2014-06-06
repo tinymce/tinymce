@@ -211,7 +211,7 @@ test('type after non editable and then pressing backspace should only remove las
 	// Set the cursor position after the typed letters
 	editor.selection.setCursorLocation(editor.dom.select('span')[1].firstChild, 4);
 
-	// Delete the last letter only
+	// Delete the last letter only	
 	type({keyCode: 8});
 
 	equal(editor.getContent(), '<p><span class="mceNonEditable">no</span>ye</p>', 'Should have deleted only the last char "s"');
