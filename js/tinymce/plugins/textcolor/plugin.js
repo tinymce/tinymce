@@ -109,12 +109,12 @@ tinymce.PluginManager.add('textcolor', function(editor, url) {
 		}
 
 		if (editor.settings.textcolor_enable_hex) {
-			var hexIdN = last+1;
-			var hexInputColSpan = cols-1;
+			var hexIdN = last + 1;
+			var hexInputColSpan = cols - 1;
 			html += (
 				'<tr>' + 
 					'<td>' + 
-						'<div id="'+ ctrl._id + '-' + hexIdN +'"' + 
+						'<div id="' + ctrl._id + '-' + hexIdN + '"' + 
 							'data-mce-color=""' + 
 							'style="background-color: #FFFFFF"' + 
 							'data-mce-hex-picker="true"' +
@@ -122,8 +122,10 @@ tinymce.PluginManager.add('textcolor', function(editor, url) {
 							'>' + 
 						'</div>' + 
 					'</td>' + 
-					'<td colspan="'+ hexInputColSpan +'">' + 
-						'# <input type="text" class="mce-textcolor-hexpicker" role="textbox" name="mce-hexcolorpicker" id="'+ ctrl._id + '-hexcolorpicker" maxlength="6" >' + 
+					'<td colspan="' + hexInputColSpan + '">' + 
+						'# <input type="text" class="mce-textcolor-hexpicker"' + 
+						'role="textbox" name="mce-hexcolorpicker"' + 
+						'id="' + ctrl._id + '-hexcolorpicker" maxlength="6" >' + 
 					'</td>' + 
 				'</tr>'
 			);
@@ -201,8 +203,9 @@ tinymce.PluginManager.add('textcolor', function(editor, url) {
 	}
 
 	function initHexPicker(e) {
-		if (!editor.settings.textcolor_enable_hex)
+		if (!editor.settings.textcolor_enable_hex) {
 			return;
+		}
 
 		var wrapper = document.querySelector('#' + e.target._id);
 		var input = wrapper.querySelector('[name="mce-hexcolorpicker"]');
