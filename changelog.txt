@@ -1,4 +1,5 @@
 Version 4.0.29 (2014-06-xx)
+	Added new option to text color plugin to allow input using hex color.
 	Added new resize helper element that shows the current width & height while resizing.
 	Added new "once" method to Editor and EventDispatcher enables since callback execution events.
 	Fixed so the default resize method for images are proportional shift/ctrl can be used to make an unproportional size.
