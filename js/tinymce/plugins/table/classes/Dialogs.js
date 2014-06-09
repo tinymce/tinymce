@@ -151,7 +151,7 @@ define("tinymce/tableplugin/Dialogs", [
 		};
 
 		self.table = function(isProps) {
-			var dom = editor.dom, tableElm, colsCtrl, rowsCtrl, classListCtrl, data = {}, win, generalTableForm;
+			var dom = editor.dom, tableElm, colsCtrl, rowsCtrl, classListCtrl, data = {}, generalTableForm;
 
 			function onSubmitTableForm() {
 				var captionElm;
@@ -304,7 +304,7 @@ define("tinymce/tableplugin/Dialogs", [
 			if (editor.settings.table_adv_tab !== false) {
 				appendStylesToData(dom, data, tableElm);
 
-				win = editor.windowManager.open({
+				editor.windowManager.open({
 					title: "Table properties",
 					data: data,
 					bodyType: 'tabpanel',
@@ -347,7 +347,7 @@ define("tinymce/tableplugin/Dialogs", [
 		};
 
 		self.cell = function() {
-			var dom = editor.dom, cellElm, data, classListCtrl, cells = [], win;
+			var dom = editor.dom, cellElm, data, classListCtrl, cells = [];
 
 			function onSubmitCellForm() {
 				updateStyle(dom, this);
@@ -526,7 +526,7 @@ define("tinymce/tableplugin/Dialogs", [
 			if (editor.settings.table_cell_adv_tab !== false) {
 				appendStylesToData(dom, data, cellElm);
 
-				win = editor.windowManager.open({
+				editor.windowManager.open({
 					title: "Cell properties",
 					bodyType: 'tabpanel',
 					data: data,
@@ -553,7 +553,7 @@ define("tinymce/tableplugin/Dialogs", [
 		};
 
 		self.row = function() {
-			var dom = editor.dom, tableElm, cellElm, rowElm, classListCtrl, data, rows = [], win, generalRowForm;
+			var dom = editor.dom, tableElm, cellElm, rowElm, classListCtrl, data, rows = [], generalRowForm;
 
 			function onSubmitRowForm() {
 				var tableElm, oldParentElm, parentElm;
@@ -698,7 +698,7 @@ define("tinymce/tableplugin/Dialogs", [
 			if (editor.settings.table_row_adv_tab !== false) {
 				appendStylesToData(dom, data, rowElm);
 
-				win = editor.windowManager.open({
+				editor.windowManager.open({
 					title: "Row properties",
 					data: data,
 					bodyType: 'tabpanel',
