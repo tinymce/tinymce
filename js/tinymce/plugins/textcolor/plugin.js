@@ -11,8 +11,7 @@
 /*global tinymce:true */
 /*eslint consistent-this:0 */
 
-tinymce.PluginManager.add('textcolor', function(editor, url) {
-	var csslink;
+tinymce.PluginManager.add('textcolor', function(editor) {
 	var VK = tinymce.util.VK;
 
 	function mapColors() {
@@ -112,21 +111,21 @@ tinymce.PluginManager.add('textcolor', function(editor, url) {
 			var hexIdN = last + 1;
 			var hexInputColSpan = cols - 1;
 			html += (
-				'<tr>' + 
-					'<td>' + 
-						'<div id="' + ctrl._id + '-' + hexIdN + '"' + 
-							'data-mce-color=""' + 
-							'style="background-color: #FFFFFF"' + 
+				'<tr>' +
+					'<td>' +
+						'<div id="' + ctrl._id + '-' + hexIdN + '"' +
+							'data-mce-color=""' +
+							'style="background-color: #FFFFFF"' +
 							'data-mce-hex-picker="true"' +
-							'role="option" ' + 
-							'>' + 
-						'</div>' + 
-					'</td>' + 
-					'<td colspan="' + hexInputColSpan + '">' + 
-						'# <input type="text" class="mce-textcolor-hexpicker"' + 
-						'role="textbox" name="mce-hexcolorpicker"' + 
-						'id="' + ctrl._id + '-hexcolorpicker" maxlength="6" >' + 
-					'</td>' + 
+							'role="option" ' +
+							'>' +
+						'</div>' +
+					'</td>' +
+					'<td colspan="' + hexInputColSpan + '">' +
+						'# <input type="text" class="mce-textcolor-hexpicker"' +
+						'role="textbox" name="mce-hexcolorpicker"' +
+						'id="' + ctrl._id + '-hexcolorpicker" maxlength="6" >' +
+					'</td>' +
 				'</tr>'
 			);
 		}
@@ -167,6 +166,7 @@ tinymce.PluginManager.add('textcolor', function(editor, url) {
 
 	/**
 	 * isValidHex checks if the provided string is valid hex color string
+	 *
 	 * @param  {string}   hexString 3 or 6 chars string representing a color.
 	 * @return {Boolean}  [true]  the string is valid hex color
 	 *                    [false] the string is not valid hex color        
@@ -176,9 +176,10 @@ tinymce.PluginManager.add('textcolor', function(editor, url) {
 	}
 
 	/**
-	 * isSpecialStroke 	checks if the keyCode is currently a special one:
-	 * 					backspace, delete, arrow keys (left/right)
-	 * 					or if it's a special ctrl+x/c/v
+	 * isSpecialStroke checks if the keyCode is currently a special one:
+	 *  backspace, delete, arrow keys (left/right)
+	 *  or if it's a special ctrl+x/c/v
+	 *
 	 * @param  {string}  keyCode 
 	 * @return {Boolean}  
 	 */
@@ -251,13 +252,6 @@ tinymce.PluginManager.add('textcolor', function(editor, url) {
 		});
 
 	}
-
-	csslink = document.createElement('link');
-	csslink.setAttribute('rel', 'stylesheet');
-	csslink.setAttribute('href', url + '/textcolor.css');
-	
-
-	document.getElementsByTagName('head')[0].appendChild(csslink);
 
 	editor.addButton('forecolor', {
 		type: 'colorbutton',
