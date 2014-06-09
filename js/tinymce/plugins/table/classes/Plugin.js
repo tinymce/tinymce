@@ -222,7 +222,7 @@ define("tinymce/tableplugin/Plugin", [
 			text: 'Table properties',
 			context: 'table',
 			onPostRender: postRender,
-			onclick: dialogs.table
+			onclick: dialogs.tableProps
 		});
 
 		editor.addMenuItem('deletetable', {
@@ -377,10 +377,10 @@ define("tinymce/tableplugin/Plugin", [
 
 		// Register dialog commands
 		each({
-			mceInsertTable: function() {
-				dialogs.table();
+			mceInsertTable: dialogs.table,
+			mceTableProps: function() {
+				dialogs.table(true);
 			},
-
 			mceTableRowProps: dialogs.row,
 			mceTableCellProps: dialogs.cell
 		}, function(func, name) {

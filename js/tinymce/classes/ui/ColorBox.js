@@ -38,8 +38,24 @@ define("tinymce/ui/ColorBox", [
 
 			self.addClass('colorbox');
 			self.on('change keyup postrender', function() {
-				self.getEl().getElementsByTagName('i')[0].style.background = self.value();
+				self.repaintColor(self.value());
 			});
+		},
+
+		repaintColor: function(value) {
+			this.getEl().getElementsByTagName('i')[0].style.background = value;
+		},
+
+		value: function(value) {
+			var self = this;
+
+			if (typeof value != "undefined") {
+				if (self._rendered) {
+					self.repaintColor(value);
+				}
+			}
+
+			return self._super(value);
 		}
 	});
 });
