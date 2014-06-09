@@ -435,6 +435,11 @@ define("tinymce/util/Quirks", [
 		function removeHrOnBackspace() {
 			editor.on('keydown', function(e) {
 				if (!isDefaultPrevented(e) && e.keyCode === BACKSPACE) {
+					// Check if there is any HR elements this is faster since getRng on IE 7 & 8 is slow
+					if (!editor.getBody().getElementsByTagName('hr').length) {
+						return;
+					}
+
 					if (selection.isCollapsed() && selection.getRng(true).startOffset === 0) {
 						var node = selection.getNode();
 						var previousSibling = node.previousSibling;
@@ -1128,7 +1133,6 @@ define("tinymce/util/Quirks", [
 		}
 
 		// All browsers
-		disableBackspaceIntoATable();
 		removeBlockQuoteOnBackSpace();
 		emptyEditorWhenDeleting();
 		normalizeSelection();
@@ -1140,6 +1144,7 @@ define("tinymce/util/Quirks", [
 			selectControlElements();
 			setDefaultBlockType();
 			blockFormSubmitInsideEditor();
+			disableBackspaceIntoATable();
 
 			// iOS
 			if (Env.iOS) {
@@ -1167,6 +1172,7 @@ define("tinymce/util/Quirks", [
 		if (Env.ie >= 11) {
 			bodyHeight();
 			doubleTrailingBrElements();
+			disableBackspaceIntoATable();
 		}
 
 		if (Env.ie) {
@@ -1184,6 +1190,7 @@ define("tinymce/util/Quirks", [
 			removeGhostSelection();
 			showBrokenImageIcon();
 			blockCmdArrowNavigation();
+			disableBackspaceIntoATable();
 		}
 	};
 });
