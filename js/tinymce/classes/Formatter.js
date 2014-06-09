@@ -2112,7 +2112,16 @@ define("tinymce/Formatter", [
 						child = findFirstTextNode(node);
 
 						if (child.nodeValue.charAt(0) === INVISIBLE_CHAR) {
-							child = child.deleteData(0, 1);
+							child.deleteData(0, 1);
+
+							// Fix for bug #6976
+							if (rng.startContainer == child) {
+								rng.startOffset--;
+							}
+
+							if (rng.endContainer == child) {
+								rng.endOffset--;
+							}
 						}
 
 						dom.remove(node, 1);
