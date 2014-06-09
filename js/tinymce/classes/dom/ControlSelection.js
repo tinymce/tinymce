@@ -261,6 +261,7 @@ define("tinymce/dom/ControlSelection", [
 
 						selectedElmGhost = selectedElm.cloneNode(true);
 						dom.addClass(selectedElmGhost, 'mce-clonedresizable');
+						dom.setAttrib(selectedElmGhost, 'data-mce-bogus', 'all');
 						selectedElmGhost.contentEditable = false; // Hides IE move layer cursor
 						selectedElmGhost.unSelectabe = true;
 						dom.setStyles(selectedElmGhost, {
