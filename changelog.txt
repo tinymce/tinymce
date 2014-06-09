@@ -8,6 +8,7 @@ Version 4.0.29 (2014-06-xx)
 	Fixed bug where Safari on Mac would produce webkit-fake-url for pasted images so these are now removed.
 	Fixed bug where the nodeChange event would get fired before the selection was changed when clicking inside the current selection range.
 	Fixed bug where valid_classes option would cause exception when it removed internal prefixed classes like mce-item-.
+	Fixed so placeholder images produced by the media plugin gets selected when inserted/edited.
 	Fixed so it's possible to drag in images when the paste_data_images option is enabled. Might be useful for mail clients.
 	Fixed so images doesn't get a width/height applied if the image_dimensions option is set to false useful for responsive contents.
 	Fixed so it's possible to pass in an optional arguments object for the nodeChanged function to be passed to all nodechange event listeners.
