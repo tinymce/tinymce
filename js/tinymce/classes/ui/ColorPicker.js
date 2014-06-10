@@ -18,139 +18,10 @@
 define("tinymce/ui/ColorPicker", [
 	"tinymce/ui/Widget",
 	"tinymce/ui/DragHelper",
-	"tinymce/ui/DomUtils"
-], function(Widget, DragHelper, DomUtils) {
+	"tinymce/ui/DomUtils",
+	"tinymce/util/Color"
+], function(Widget, DragHelper, DomUtils, Color) {
 	"use strict";
-
-	function convertToRgb(str) {
-		var matches;
-
-		if (typeof str != "string") {
-			return str;
-		}
-
-		if ((matches = /rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)[^\)]*\)/gi.exec(str))) {
-			return {
-				r: parseInt(matches[1], 10),
-				g: parseInt(matches[2], 10),
-				b: parseInt(matches[3], 10)
-			};
-		}
-
-		if ((matches = /#([0-F]{2})([0-F]{2})([0-F]{2})/gi.exec(str))) {
-			return {
-				r: parseInt(matches[1], 16),
-				g: parseInt(matches[2], 16),
-				b: parseInt(matches[3], 16)
-			};
-		}
-
-		return {r: 0, g: 0, b: 0};
-	}
-
-	function toHex(rgb) {
-		function hex(val) {
-			val = parseInt(val, 10).toString(16);
-
-			return val.length > 1 ? val : '0' + val;
-		}
-
-		return '#' + hex(rgb.r) + hex(rgb.g) + hex(rgb.b);
-	}
-
-	function rgb2hsv(rgb) {
-		var h, s, v, r, g, b, d, minRGB, maxRGB;
-
-		h = 0;
-		s = 0;
-		v = 0;
-		r = rgb.r / 255;
-		g = rgb.g / 255;
-		b = rgb.b / 255;
-
-		minRGB = Math.min(r, Math.min(g, b));
-		maxRGB = Math.max(r, Math.max(g, b));
-
-		if (minRGB == maxRGB) {
-			v = minRGB;
-
-			return {
-				h: 0,
-				s: 0,
-				v: v
-			};
-		}
-
-		/*eslint no-nested-ternary:0 */
-		d = (r == minRGB) ? g - b : ((b == minRGB) ? r - g : b - r);
-		h = (r == minRGB) ? 3 : ((b == minRGB) ? 1 : 5);
-		h = 60 * (h - d / (maxRGB - minRGB));
-		s = (maxRGB - minRGB) / maxRGB;
-		v = maxRGB;
-
-		return {
-			h: h / 360,
-			s: s,
-			v: v
-		};
-	}
-
-	function hsvToRgb(hsv) {
-		var r, g, b, h, s, v, i, f, p, q, t;
-		
-		s = hsv.s;
-		v = hsv.v;
-		h = hsv.h;
-		i = Math.floor(h * 6);
-		f = h * 6 - i;
-		p = v * (1 - s);
-		q = v * (1 - f * s);
-		t = v * (1 - (1 - f) * s);
-
-		switch (i % 6) {
-			case 0:
-				r = v;
-				g = t;
-				b = p;
-				break;
-
-			case 1:
-				r = q;
-				g = v;
-				b = p;
-				break;
-
-			case 2:
-				r = p;
-				g = v;
-				b = t;
-				break;
-
-			case 3:
-				r = p;
-				g = q;
-				b = v;
-				break;
-
-			case 4:
-				r = t;
-				g = p;
-				b = v;
-				break;
-
-			case 5:
-				r = v;
-				g = p;
-				b = q;
-				break;
-		}
-
-		return {
-			r: Math.floor(r * 255),
-			g: Math.floor(g * 255),
-			b: Math.floor(b * 255)
-		};
-	}
 
 	return Widget.extend({
 		Defaults: {
@@ -166,11 +37,10 @@ define("tinymce/ui/ColorPicker", [
 		 */
 		init: function(settings) {
 			this._super(settings);
-			this.value(settings.color || '#000000');
 		},
 
 		postRender: function() {
-			var self = this, rgb = self._rgb, hsv, hueRootElm, huePointElm, svRootElm, svPointElm;
+			var self = this, color = self.color(), hsv, hueRootElm, huePointElm, svRootElm, svPointElm;
 
 			hueRootElm = self.getEl('h');
 			huePointElm = self.getEl('hp');
@@ -193,19 +63,21 @@ define("tinymce/ui/ColorPicker", [
 			}
 
 			function updateColor(hsv, hueUpdate) {
+				var hue = (360 - hsv.h) / 360;
+
 				DomUtils.css(huePointElm, {
-					top: ((1 - hsv.h) * 100) + '%'
+					top: (hue * 100) + '%'
 				});
 
 				if (!hueUpdate) {
 					DomUtils.css(svPointElm, {
-						left: (hsv.s * 100) + '%',
-						top: ((1 - hsv.v) * 100) + '%'
+						left: hsv.s + '%',
+						top: (100 - hsv.v) + '%'
 					});
 				}
 
-				svRootElm.style.background = toHex(hsvToRgb({s: 1, v: 1, h: hsv.h}));
-				self._rgb = rgb = hsvToRgb(hsv);
+				svRootElm.style.background = new Color({s: 100, v: 100, h: hsv.h}).toHex();
+				self.color().parse({s: hsv.s, v: hsv.v, h: hsv.h});
 
 				self.fire('update');
 			}
@@ -214,8 +86,8 @@ define("tinymce/ui/ColorPicker", [
 				var pos;
 
 				pos = getPos(svRootElm, e);
-				hsv.s = pos.x;
-				hsv.v = 1 - pos.y;
+				hsv.s = pos.x * 100;
+				hsv.v = (1 - pos.y) * 100;
 
 				updateColor(hsv);
 			}
@@ -224,13 +96,13 @@ define("tinymce/ui/ColorPicker", [
 				var pos;
 
 				pos = getPos(hueRootElm, e);
-				hsv = rgb2hsv(rgb);
-				hsv.h = 1 - pos.y;
+				hsv = color.toHsv();
+				hsv.h = (1 - pos.y) * 360;
 				updateColor(hsv, true);
 			}
 
-			self._repaint = function(rgb) {
-				hsv = rgb2hsv(rgb);
+			self._repaint = function() {
+				hsv = color.toHsv();
 				updateColor(hsv);
 			};
 
@@ -246,25 +118,33 @@ define("tinymce/ui/ColorPicker", [
 				drag: updateHue
 			});
 
-			self._repaint(rgb);
+			self._repaint();
 		},
 
 		rgb: function() {
-			return this._rgb;
+			return this.color().toRgb();
 		},
 
 		value: function(value) {
 			var self = this;
 
 			if (arguments.length) {
-				value = self._rgb = convertToRgb(value);
+				self.color().parse(value);
 
 				if (self._rendered) {
-					self._repaint(value);
+					self._repaint();
 				}
 			} else {
-				return toHex(self._rgb);
+				return self.color().toHex();
 			}
+		},
+
+		color: function() {
+			if (!this._color) {
+				this._color = new Color();
+			}
+
+			return this._color;
 		},
 
 		/**
