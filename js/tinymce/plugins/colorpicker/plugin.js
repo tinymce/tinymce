@@ -50,6 +50,7 @@ tinymce.PluginManager.add('colorpicker', function(editor) {
 							size: 7,
 							value: '0',
 							flex: 1,
+							spellcheck: false,
 							onchange: function() {
 								var colorPickerCtrl = win.find('colorpicker')[0];
 
@@ -66,7 +67,7 @@ tinymce.PluginManager.add('colorpicker', function(editor) {
 							}
 						},
 						items: [
-							{name: 'r', label: 'R'},
+							{name: 'r', label: 'R', autofocus: 1},
 							{name: 'g', label: 'G'},
 							{name: 'b', label: 'B'},
 							{name: 'hex', label: '#', value: '000000'},

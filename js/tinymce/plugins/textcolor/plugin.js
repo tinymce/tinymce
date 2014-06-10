@@ -112,7 +112,7 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		if (editor.settings.color_picker_callback) {
 			html += (
 				'<tr>' +
-					'<td colspan="' + cols + '">' +
+					'<td colspan="' + cols + '" class="mce-custom-color-btn">' +
 						'<div id="' + id + '-c" class="mce-widget mce-btn mce-btn-small mce-btn-flat" ' +
 							'role="button" tabindex="-1" aria-labelledby="' + id + '-c" style="width: 100%">' +
 							'<button type="button" role="presentation" tabindex="-1">Custom...</button>' +
@@ -144,7 +144,7 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 			editor.execCommand(buttonCtrl.settings.selectcmd, false, value);
 		}
 
-		if (e.target.tagName == 'BUTTON') {
+		if (tinymce.DOM.getParent(e.target, '.mce-custom-color-btn')) {
 			buttonCtrl.hidePanel();
 
 			editor.settings.color_picker_callback.call(editor, {
