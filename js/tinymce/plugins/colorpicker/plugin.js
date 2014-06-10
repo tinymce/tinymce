@@ -43,13 +43,13 @@ tinymce.PluginManager.add('colorpicker', function(editor) {
 					},
 					{
 						type: 'form',
-						pack: 'center',
 						padding: 0,
 						labelGap: 5,
 						defaults: {
 							type: 'textbox',
 							size: 7,
 							value: '0',
+							flex: 1,
 							onchange: function() {
 								var colorPickerCtrl = win.find('colorpicker')[0];
 
@@ -66,11 +66,11 @@ tinymce.PluginManager.add('colorpicker', function(editor) {
 							}
 						},
 						items: [
-							{name: 'r', label: 'Red'},
-							{name: 'g', label: 'Green'},
-							{name: 'b', label: 'Blue'},
-							{name: 'hex', label: 'Hex', value: '000000'},
-							{name: 'preview', type: 'container', border: 1, minHeight: 25}
+							{name: 'r', label: 'R'},
+							{name: 'g', label: 'G'},
+							{name: 'b', label: 'B'},
+							{name: 'hex', label: '#', value: '000000'},
+							{name: 'preview', type: 'container', border: 1}
 						]
 					}
 				]
