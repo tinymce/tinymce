@@ -69,7 +69,21 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 	}
 
 	function renderColorPicker() {
-		var ctrl = this, colors, color, html, last, rows, cols, x, y, i;
+		var ctrl = this, colors, color, html, last, rows, cols, x, y, i, id = ctrl._id, count = 0;
+
+		function getColorCellHtml(color, title) {
+			return (
+				'<td class="mce-grid-cell">' +
+					'<div id="' + id + '-' + (count++) + '"' +
+						' data-mce-color="' + color + '"' +
+						' role="option"' +
+						' tabIndex="-1"' +
+						' style="' + (color ? 'background-color: #' + color : '') + '"' +
+						' title="' + title + '">' +
+					'</div>' +
+				'</td>'
+			);
+		}
 
 		colors = mapColors();
 
@@ -88,18 +102,29 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 					html += '<td></td>';
 				} else {
 					color = colors[i];
-					html += (
-						'<td>' +
-							'<div id="' + ctrl._id + '-' + i + '"' +
-								' data-mce-color="' + color.color + '"' +
-								' role="option"' +
-								' tabIndex="-1"' +
-								' style="' + (color ? 'background-color: #' + color.color : '') + '"' +
-								' title="' + color.text + '">' +
-							'</div>' +
-						'</td>'
-					);
+					html += getColorCellHtml(color.color, color.text);
 				}
+			}
+
+			html += '</tr>';
+		}
+
+		if (editor.settings.color_picker_callback) {
+			html += (
+				'<tr>' +
+					'<td colspan="' + cols + '">' +
+						'<div id="' + id + '-c" class="mce-widget mce-btn mce-btn-small mce-btn-flat" ' +
+							'role="button" tabindex="-1" aria-labelledby="' + id + '-c" style="width: 100%">' +
+							'<button type="button" role="presentation" tabindex="-1">Custom...</button>' +
+						'</div>' +
+					'</td>' +
+				'</tr>'
+			);
+
+			html += '<tr>';
+
+			for (x = 0; x < cols; x++) {
+				html += getColorCellHtml('', 'Custom color');
 			}
 
 			html += '</tr>';
@@ -113,7 +138,38 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 	function onPanelClick(e) {
 		var buttonCtrl = this.parent(), value;
 
-		if ((value = e.target.getAttribute('data-mce-color'))) {
+		function selectColor(value) {
+			buttonCtrl.hidePanel();
+			buttonCtrl.color(value);
+			editor.execCommand(buttonCtrl.settings.selectcmd, false, value);
+		}
+
+		if (e.target.tagName == 'BUTTON') {
+			buttonCtrl.hidePanel();
+
+			editor.settings.color_picker_callback.call(editor, {
+				success: function(value) {
+					var tableElm = buttonCtrl.panel.getEl().getElementsByTagName('table')[0];
+					var customColorCells = tableElm.rows[tableElm.rows.length - 1].childNodes;
+					var div, i;
+
+					for (i = 0; i < customColorCells.length; i++) {
+						div = customColorCells[i].firstChild;
+						if (!div.getAttribute('data-mce-color')) {
+							break;
+						}
+					}
+
+					div.style.background = value;
+					div.setAttribute('data-mce-color', value.substr(1));
+
+					selectColor(value);
+				}
+			});
+		}
+
+		value = e.target.getAttribute('data-mce-color');
+		if (value) {
 			if (this.lastId) {
 				document.getElementById(this.lastId).setAttribute('aria-selected', false);
 			}
@@ -121,10 +177,9 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 			e.target.setAttribute('aria-selected', true);
 			this.lastId = e.target.id;
 
+			selectColor('#' + value);
+		} else if (value !== null) {
 			buttonCtrl.hidePanel();
-			value = '#' + value;
-			buttonCtrl.color(value);
-			editor.execCommand(buttonCtrl.settings.selectcmd, false, value);
 		}
 	}
 

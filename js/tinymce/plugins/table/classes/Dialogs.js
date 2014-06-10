@@ -23,6 +23,20 @@ define("tinymce/tableplugin/Dialogs", [
 	return function(editor) {
 		var self = this;
 
+		function pickColorAction() {
+			var self = this, colorPickerCallback = editor.settings.color_picker_callback;
+
+			if (colorPickerCallback) {
+				colorPickerCallback.call(editor, {
+					success: function(value) {
+						self.value(value).fire('change');
+					},
+
+					value: self.value()
+				});
+			}
+		}
+
 		function createStyleForm(dom) {
 			return {
 				title: 'Advanced',
@@ -53,13 +67,15 @@ define("tinymce/tableplugin/Dialogs", [
 							{
 								label: 'Border color',
 								type: 'colorbox',
-								name: 'borderColor'
+								name: 'borderColor',
+								onaction: pickColorAction
 							},
 
 							{
 								label: 'Background color',
 								type: 'colorbox',
-								name: 'backgroundColor'
+								name: 'backgroundColor',
+								onaction: pickColorAction
 							}
 						]
 					}
