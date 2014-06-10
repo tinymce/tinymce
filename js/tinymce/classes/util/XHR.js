@@ -63,6 +63,9 @@ define("tinymce/util/XHR", [], function() {
 
 				xhr.open(settings.type || (settings.data ? 'POST' : 'GET'), settings.url, settings.async);
 
+				if (settings.crossDomain) {
+					xhr.withCredentials = true;
+				}
 				if (settings.content_type) {
 					xhr.setRequestHeader('Content-Type', settings.content_type);
 				}
