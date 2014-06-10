@@ -173,7 +173,7 @@ function type(chr) {
 	fakeEvent(startElm, 'keydown', evt);
 	fakeEvent(startElm, 'keypress', evt);
 
-	if (!evt.isDefaultPrevented() || tinymce.isIE10) {
+	if (!evt.isDefaultPrevented() || tinymce.isIE) {
 		if (keyCode == 8) {
 			if (editor.getDoc().selection) {
 				var rng = editor.getDoc().selection.createRange();
