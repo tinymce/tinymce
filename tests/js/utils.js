@@ -165,7 +165,7 @@ function type(chr) {
 
 	evt = evt || {keyCode: keyCode, charCode: charCode};
 
-	if (evt.keyCode) {
+	if (evt.keyCode && !keyCode) {
 		keyCode = evt.keyCode;
 	}
 
@@ -173,7 +173,7 @@ function type(chr) {
 	fakeEvent(startElm, 'keydown', evt);
 	fakeEvent(startElm, 'keypress', evt);
 
-	if (!evt.isDefaultPrevented()) {
+	if (!evt.isDefaultPrevented() || tinymce.isIE10) {
 		if (keyCode == 8) {
 			if (editor.getDoc().selection) {
 				var rng = editor.getDoc().selection.createRange();
@@ -182,8 +182,8 @@ function type(chr) {
 				rng.execCommand('Delete', false, null);
 			} else {
 				var rng = editor.selection.getRng();
-
 				if (rng.startContainer.nodeType == 1 && rng.collapsed) {
+
 					var nodes = rng.startContainer.childNodes, lastNode = nodes[nodes.length - 1];
 
 					// If caret is at <p>abc|</p> and after the abc text node then move it to the end of the text node
