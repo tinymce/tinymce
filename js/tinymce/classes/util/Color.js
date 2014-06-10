@@ -16,11 +16,18 @@
  * var white = new tinymce.util.Color({r: 255, g: 255, b: 255});
  * var red = new tinymce.util.Color('#FF0000');
  *
- * console.log(white.toHex(), red.toHsb());
+ * console.log(white.toHex(), red.toHsv());
  */
 define("tinymce/util/Color", [], function() {
 	var min = Math.min, max = Math.max, round = Math.round;
 
+	/**
+	 * Constructs a new color instance.
+	 *
+	 * @constructor
+	 * @method Color
+	 * @param {String} value Optional initial value to parse.
+	 */
 	function Color(value) {
 		var self = this, r = 0, g = 0, b = 0;
 
@@ -55,9 +62,9 @@ define("tinymce/util/Color", [], function() {
 			v = maxRGB;
 
 			return {
-				h: h,
-				s: s * 100,
-				v: v * 100
+				h: round(h),
+				s: round(s * 100),
+				v: round(v * 100)
 			};
 		}
 
@@ -126,6 +133,12 @@ define("tinymce/util/Color", [], function() {
 			b = round(255 * (b + match));
 		}
 
+		/**
+		 * Returns the hex string of the current color. For example: #ff00ff
+		 *
+		 * @method toHex
+		 * @return {String} Hex string of current color.
+		 */
 		function toHex() {
 			function hex(val) {
 				val = parseInt(val, 10).toString(16);
@@ -136,6 +149,12 @@ define("tinymce/util/Color", [], function() {
 			return '#' + hex(r) + hex(g) + hex(b);
 		}
 
+		/**
+		 * Returns the r, g, b values of the color. Each channel has a range from 0-255.
+		 *
+		 * @method toRgb
+		 * @return {Object} Object with r, g, b fields.
+		 */
 		function toRgb() {
 			return {
 				r: r,
@@ -144,10 +163,30 @@ define("tinymce/util/Color", [], function() {
 			};
 		}
 
+		/**
+		 * Returns the h, s, v values of the color. Ranges: h=0-360, s=0-100, v=0-100.
+		 *
+		 * @method toHsv
+		 * @return {Object} Object with h, s, v fields.
+		 */
 		function toHsv() {
 			return rgb2hsv(r, g, b);
 		}
-
+	
+		/**
+		 * Parses the specified value and populates the color instance.
+		 *
+		 * Supported format examples:
+		 *  * rbg(255,0,0)
+		 *  * #ff0000
+		 *  * #fff
+		 *  * {r: 255, g: 0, b: 0}
+		 *  * {h: 360, s: 100, v: 100}
+		 *
+		 * @method parse
+		 * @param {Object/String} value Color value to parse.
+		 * @return {tinymce.util.Color} Current color instance.
+		 */
 		function parse(value) {
 			var matches;
 
@@ -174,6 +213,10 @@ define("tinymce/util/Color", [], function() {
 					b = parseInt(matches[3] + matches[3], 16);
 				}
 			}
+
+			r = r < 0 ? 0 : (r > 255 ? 255 : r);
+			g = g < 0 ? 0 : (g > 255 ? 255 : g);
+			b = b < 0 ? 0 : (b > 255 ? 255 : b);
 
 			return self;
 		}
