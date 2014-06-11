@@ -677,6 +677,7 @@ define("tinymce/Editor", [
 
 			if (o.editorContainer) {
 				DOM.get(o.editorContainer).style.display = self.orgDisplay;
+				self.hidden = DOM.isHidden(o.editorContainer);
 			}
 
 			DOM.get(self.id).style.display = 'none';
