@@ -27,13 +27,13 @@ define("tinymce/tableplugin/Dialogs", [
 			var self = this, colorPickerCallback = editor.settings.color_picker_callback;
 
 			if (colorPickerCallback) {
-				colorPickerCallback.call(editor, {
-					success: function(value) {
+				colorPickerCallback.call(
+					editor,
+					function(value) {
 						self.value(value).fire('change');
 					},
-
-					value: self.value()
-				});
+					self.value()
+				);
 			}
 		}
 

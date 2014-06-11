@@ -147,24 +147,22 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		if (tinymce.DOM.getParent(e.target, '.mce-custom-color-btn')) {
 			buttonCtrl.hidePanel();
 
-			editor.settings.color_picker_callback.call(editor, {
-				success: function(value) {
-					var tableElm = buttonCtrl.panel.getEl().getElementsByTagName('table')[0];
-					var customColorCells = tableElm.rows[tableElm.rows.length - 1].childNodes;
-					var div, i;
+			editor.settings.color_picker_callback.call(editor, function(value) {
+				var tableElm = buttonCtrl.panel.getEl().getElementsByTagName('table')[0];
+				var customColorCells = tableElm.rows[tableElm.rows.length - 1].childNodes;
+				var div, i;
 
-					for (i = 0; i < customColorCells.length; i++) {
-						div = customColorCells[i].firstChild;
-						if (!div.getAttribute('data-mce-color')) {
-							break;
-						}
+				for (i = 0; i < customColorCells.length; i++) {
+					div = customColorCells[i].firstChild;
+					if (!div.getAttribute('data-mce-color')) {
+						break;
 					}
-
-					div.style.background = value;
-					div.setAttribute('data-mce-color', value.substr(1));
-
-					selectColor(value);
 				}
+
+				div.style.background = value;
+				div.setAttribute('data-mce-color', value.substr(1));
+
+				selectColor(value);
 			});
 		}
 

@@ -11,7 +11,7 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('colorpicker', function(editor) {
-	function colorPickerCallback(args) {
+	function colorPickerCallback(callback, value) {
 		function showPreview(hexColor) {
 			win.find('#preview')[0].getEl().style.background = hexColor;
 		}
@@ -28,7 +28,7 @@ tinymce.PluginManager.add('colorpicker', function(editor) {
 				items: [
 					{
 						type: 'colorpicker',
-						value: args.value,
+						value: value,
 						onupdate: function() {
 							var rgb = this.rgb();
 
@@ -77,11 +77,11 @@ tinymce.PluginManager.add('colorpicker', function(editor) {
 				]
 			},
 			onSubmit: function() {
-				args.success('#' + this.toJSON().hex);
+				callback('#' + this.toJSON().hex);
 			}
 		});
 
-		var color = new tinymce.util.Color(args.value), rgb = color.toRgb();
+		var color = new tinymce.util.Color(value), rgb = color.toRgb();
 
 		win.fromJSON({
 			r: rgb.r,
