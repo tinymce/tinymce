@@ -683,6 +683,12 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		}
 	});
 
+	editor.on('dblclick', function(e) {
+		if (editor.dom.is(e.target, ['img[data-mce-object=video]', 'img[data-mce-object=iframe]'])) {
+			showDialog();
+		}
+	});
+
 	editor.addButton('media', {
 		tooltip: 'Insert/edit video',
 		onclick: showDialog,
