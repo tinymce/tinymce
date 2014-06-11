@@ -98,13 +98,23 @@ tinymce.PluginManager.add('link', function(editor) {
 			}
 		}
 
-		function urlChange() {
+		function updateText() {
+			if (!initialText && data.text.length === 0 && onlyText) {
+				this.parent().parent().find('#text')[0].value(this.value());
+			}
+		}
+
+		function urlChange(e) {
 			if (linkListCtrl) {
 				linkListCtrl.value(editor.convertURL(this.value(), 'href'));
 			}
 
-			if (!initialText && data.text.length === 0 && onlyText) {
-				this.parent().parent().find('#text')[0].value(this.value());
+			tinymce.each(e.meta, function(value, key) {
+				win.find('#' + key).value(value);
+			});
+
+			if (!e.meta.text) {
+				updateText.call(this);
 			}
 		}
 
@@ -253,7 +263,7 @@ tinymce.PluginManager.add('link', function(editor) {
 					autofocus: true,
 					label: 'Url',
 					onchange: urlChange,
-					onkeyup: urlChange
+					onkeyup: updateText
 				},
 				textListCtrl,
 				linkTitleCtrl,

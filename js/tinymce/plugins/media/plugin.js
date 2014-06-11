@@ -62,8 +62,21 @@ tinymce.PluginManager.add('media', function(editor, url) {
 
 	function showDialog() {
 		var win, width, height, data;
+
 		var generalFormItems = [
-			{name: 'source1', type: 'filepicker', filetype: 'media', size: 40, autofocus: true, label: 'Source'}
+			{
+				name: 'source1',
+				type: 'filepicker',
+				filetype: 'media',
+				size: 40,
+				autofocus: true,
+				label: 'Source',
+				onchange: function(e) {
+					tinymce.each(e.meta, function(value, key) {
+						win.find('#' + key).value(value);
+					});
+				}
+			}
 		];
 
 		function recalcSize(e) {
@@ -223,7 +236,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 
 		if (data.embed) {
 			html = updateHtml(data.embed, data, true);
-		} else {	
+		} else {
 			var videoScript = getVideoScriptMatch(data.source1);
 			if (videoScript) {
 				data.type = 'script';
