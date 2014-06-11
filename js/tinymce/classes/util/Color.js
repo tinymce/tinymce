@@ -50,7 +50,7 @@ define("tinymce/util/Color", [], function() {
 				return {
 					h: 0,
 					s: 0,
-					v: v
+					v: v * 100
 				};
 			}
 
