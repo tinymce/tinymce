@@ -211,7 +211,7 @@ define("tinymce/ui/GridLayout", [
 					align = ctrlSettings.alignV || (alignV ? (alignV[x] || alignV[0]) : null);
 					if (align == "center") {
 						ctrlLayoutRect.y = posY + (height / 2) - (ctrlLayoutRect.h / 2);
-					} else  if (align == "bottom") {
+					} else if (align == "bottom") {
 						ctrlLayoutRect.y = posY + height - ctrlLayoutRect.h;
 					} else if (align == "stretch") {
 						ctrlLayoutRect.h = height;

@@ -23,7 +23,7 @@
  *  2. Wait for the browser to fire a "paste" event and get the contents out of the paste bin.
  *  3. Check if the paste was successful if true, process the HTML.
  *  (4). If the paste was unsuccessful use IE execCommand, Clipboard API, document.dataTransfer old WebKit API etc.
- * 
+ *
  * @class tinymce.pasteplugin.Clipboard
  * @private
  */

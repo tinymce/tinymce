@@ -71,7 +71,7 @@ define("tinymce/tableplugin/TableGrid", [
 								};
 							}
 						}
-						
+
 						gridWidth = Math.max(gridWidth, x + 1);
 					});
 				});

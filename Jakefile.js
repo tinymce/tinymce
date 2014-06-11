@@ -12,6 +12,7 @@ var fs = require("fs");
 var eslint = require('./tools/BuildTools').eslint;
 var nuget = require('./tools/BuildTools').nuget;
 var phantomjs = require('./tools/BuildTools').phantomjs;
+var jscs = require('./tools/BuildTools').jscs;
 var saucelabs = require('./tools/saucelabs').saucelabs;
 
 desc("Default build task");
@@ -336,6 +337,15 @@ task("eslint-plugins", [], function() {
 			"!js/tinymce/plugins/paste/plugin.js",
 			"!js/tinymce/plugins/spellchecker/plugin.js"
 		]
+	});
+});
+
+desc("Runs jscs on all source files");
+task("jscs", {async: true}, function() {
+	jscs({
+		src: 'js/tinymce',
+		configFile: '.jscsrc',
+		oncomplete: complete
 	});
 });
 

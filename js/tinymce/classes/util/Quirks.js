@@ -85,7 +85,7 @@ define("tinymce/util/Quirks", [
 		 *  7. Delete by selecting contents and writing a character.'
 		 *
 		 * This code is a ugly hack since writing full custom delete logic for just this bug
-		 * fix seemed like a huge task. I hope we can remove this before the year 2030. 
+		 * fix seemed like a huge task. I hope we can remove this before the year 2030.
 		 */
 		function cleanupStylesWhenDeleting() {
 			var doc = editor.getDoc(), urlPrefix = 'data:text/mce-internal,';

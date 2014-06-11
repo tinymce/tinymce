@@ -100,7 +100,7 @@ define("tinymce/tableplugin/Dialogs", [
 				editor.formatter.remove('align' + name, {}, elm);
 			});
 		}
-		
+
 		function unApplyVAlign(elm) {
 			each('top middle bottom'.split(' '), function(name) {
 				editor.formatter.remove('valign' + name, {}, elm);
@@ -622,7 +622,7 @@ define("tinymce/tableplugin/Dialogs", [
 					editor.focus();
 				});
 			}
-			
+
 			tableElm = editor.dom.getParent(editor.selection.getStart(), 'table');
 			cellElm = editor.dom.getParent(editor.selection.getStart(), 'td,th');
 

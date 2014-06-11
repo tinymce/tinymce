@@ -1,0 +1,29 @@
+{
+	"preset": "google",
+
+	"requireParenthesesAroundIIFE": true,
+	"validateIndentation": "\t",
+
+	"disallowKeywords": ["with"],
+	"disallowImplicitTypeConversion": ["string"],
+
+	"disallowSpacesInsideObjectBrackets": null,
+	"validateQuoteMarks": null,
+	"requireLineFeedAtFileEnd": null,
+	"disallowImplicitTypeConversion": null,
+	"validateJSDoc": null,
+	"disallowLeftStickedOperators": ["?", "/", "*", "=", "==", "===", "!=", "!==", ">", ">=", "<", "<="],
+	"disallowRightStickedOperators": ["?", "/", "*", ":", "=", "==", "===", "!=", "!==", ">", ">=", "<", "<="],
+
+	"excludeFiles": [
+		"tests/**",
+		"**/*.min.js",
+		"js/tinymce/*.js",
+		"js/tinymce/plugins/compat3x/**",
+		"js/tinymce/plugins/table/plugin.js",
+		"js/tinymce/plugins/spellchecker/plugin.js",
+		"js/tinymce/plugins/paste/plugin.js",
+		"js/tinymce/classes/dom/Sizzle.js",
+		"js/tinymce/classes/dom/DomQuery.js"
+	]
+}

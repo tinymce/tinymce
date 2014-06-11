@@ -417,7 +417,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 							width: data.width,
 							height: data.height
 						});
-					break;
+						break;
 				}
 
 				if (updateAll) {
@@ -433,13 +433,13 @@ tinymce.PluginManager.add('media', function(editor, url) {
 									src: ""
 								});
 							}
-						break;
+							break;
 
 						case "iframe":
 							setAttributes(attrs, {
 								src: data.source1
 							});
-						break;
+							break;
 
 						case "source":
 							sourceCount++;
@@ -454,7 +454,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 									return;
 								}
 							}
-						break;
+							break;
 
 						case "img":
 							if (!data.poster) {

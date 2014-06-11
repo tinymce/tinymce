@@ -319,7 +319,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 
 			return value;
 		}
-		
+
 		function findSpansByIndex(index) {
 			var nodes, spans = [];
 

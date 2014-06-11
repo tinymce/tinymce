@@ -172,7 +172,7 @@ define("tinymce/util/Color", [], function() {
 		function toHsv() {
 			return rgb2hsv(r, g, b);
 		}
-	
+
 		/**
 		 * Parses the specified value and populates the color instance.
 		 *
