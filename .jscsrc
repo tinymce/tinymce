@@ -3,11 +3,7 @@
 
 	"requireParenthesesAroundIIFE": true,
 	"validateIndentation": "\t",
-
 	"disallowKeywords": ["with"],
-	"disallowImplicitTypeConversion": ["string"],
-
-	"disallowSpacesInsideObjectBrackets": null,
 	"validateQuoteMarks": null,
 	"requireLineFeedAtFileEnd": null,
 	"disallowImplicitTypeConversion": null,
@@ -16,7 +12,10 @@
 	"disallowRightStickedOperators": ["?", "/", "*", ":", "=", "==", "===", "!=", "!==", ">", ">=", "<", "<="],
 
 	"excludeFiles": [
+		"Jakefile.js",
+		"node_modules/**",
 		"tests/**",
+		"tools/**",
 		"**/*.min.js",
 		"js/tinymce/*.js",
 		"js/tinymce/plugins/compat3x/**",

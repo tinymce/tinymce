@@ -343,7 +343,7 @@ task("eslint-plugins", [], function() {
 desc("Runs jscs on all source files");
 task("jscs", {async: true}, function() {
 	jscs({
-		src: 'js/tinymce',
+		src: '.',
 		configFile: '.jscsrc',
 		oncomplete: complete
 	});
