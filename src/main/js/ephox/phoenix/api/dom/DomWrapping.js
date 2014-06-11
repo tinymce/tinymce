@@ -32,12 +32,17 @@ define(
       return Wrapping.reuse(universe, base, baseOffset, end, endOffset, predicate, nu);
     };
 
+    var spans = function (base, baseOffset, end, endOffset) {
+      return Wrapping.spans(universe, base, baseOffset, end, endOffset);
+    };
+
     return {
       nu: nu,
       wrapWith: wrapWith,
       wrapper: wrapper,
       leaves: leaves,
-      reuse: reuse
+      reuse: reuse,
+      spans: spans
     };
   }
 );
