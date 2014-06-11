@@ -12,6 +12,19 @@
 
 tinymce.PluginManager.add('colorpicker', function(editor) {
 	function colorPickerCallback(callback, value) {
+		function setColor(value) {
+			var color = new tinymce.util.Color(value), rgb = color.toRgb();
+
+			win.fromJSON({
+				r: rgb.r,
+				g: rgb.g,
+				b: rgb.b,
+				hex: color.toHex().substr(1)
+			});
+
+			showPreview(color.toHex());
+		}
+
 		function showPreview(hexColor) {
 			win.find('#preview')[0].getEl().style.background = hexColor;
 		}
@@ -29,7 +42,7 @@ tinymce.PluginManager.add('colorpicker', function(editor) {
 					{
 						type: 'colorpicker',
 						value: value,
-						onupdate: function() {
+						onchange: function() {
 							var rgb = this.rgb();
 
 							if (win) {
@@ -53,17 +66,26 @@ tinymce.PluginManager.add('colorpicker', function(editor) {
 							spellcheck: false,
 							onchange: function() {
 								var colorPickerCtrl = win.find('colorpicker')[0];
+								var name, value;
 
-								if (this.name() == "hex") {
-									colorPickerCtrl.value('#' + win.find('#hex').value());
+								name = this.name();
+								value = this.value();
+
+								if (name == "hex") {
+									value = '#' + value;
+									setColor(value);
+									colorPickerCtrl.value(value);
 									return;
 								}
 
-								colorPickerCtrl.value({
+								value = {
 									r: win.find('#r').value(),
 									g: win.find('#g').value(),
 									b: win.find('#b').value()
-								});
+								};
+
+								colorPickerCtrl.value(value);
+								setColor(value);
 							}
 						},
 						items: [
@@ -81,16 +103,7 @@ tinymce.PluginManager.add('colorpicker', function(editor) {
 			}
 		});
 
-		var color = new tinymce.util.Color(value), rgb = color.toRgb();
-
-		win.fromJSON({
-			r: rgb.r,
-			g: rgb.g,
-			b: rgb.b,
-			hex: color.toHex().substr(1)
-		});
-
-		showPreview(color.toHex());
+		setColor(value);
 	}
 
 	if (!editor.settings.color_picker_callback) {

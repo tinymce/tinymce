@@ -78,8 +78,6 @@ define("tinymce/ui/ColorPicker", [
 
 				svRootElm.style.background = new Color({s: 100, v: 100, h: hsv.h}).toHex();
 				self.color().parse({s: hsv.s, v: hsv.v, h: hsv.h});
-
-				self.fire('update');
 			}
 
 			function updateSaturationAndValue(e) {
@@ -90,6 +88,7 @@ define("tinymce/ui/ColorPicker", [
 				hsv.v = (1 - pos.y) * 100;
 
 				updateColor(hsv);
+				self.fire('change');
 			}
 
 			function updateHue(e) {
@@ -99,6 +98,7 @@ define("tinymce/ui/ColorPicker", [
 				hsv = color.toHsv();
 				hsv.h = (1 - pos.y) * 360;
 				updateColor(hsv, true);
+				self.fire('change');
 			}
 
 			self._repaint = function() {
