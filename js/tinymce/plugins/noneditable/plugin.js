@@ -133,18 +133,18 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 			var rng, child, currentCaretContainer, lastContainer;
 
 			if (caretContainer) {
-					rng = selection.getRng(true);
-					rng.setStartBefore(caretContainer);
-					rng.setEndBefore(caretContainer);
+				rng = selection.getRng(true);
+				rng.setStartBefore(caretContainer);
+				rng.setEndBefore(caretContainer);
 
-					child = findFirstTextNode(caretContainer);
-					if (child && child.nodeValue.charAt(0) == invisibleChar) {
-						child = child.deleteData(0, 1);
-					}
+				child = findFirstTextNode(caretContainer);
+				if (child && child.nodeValue.charAt(0) == invisibleChar) {
+					child = child.deleteData(0, 1);
+				}
 
-					dom.remove(caretContainer, true);
+				dom.remove(caretContainer, true);
 
-					selection.setRng(rng);
+				selection.setRng(rng);
 			} else {
 				currentCaretContainer = getParentCaretContainer(selection.getStart());
 				while ((caretContainer = dom.get(caretContainerId)) && caretContainer !== lastContainer) {

@@ -669,7 +669,7 @@ define("tinymce/dom/DOMUtils", [
 			// W3C
 			if (this.doc.defaultView && computed) {
 				// Remove camelcase
-				name = name.replace(/[A-Z]/g, function(a){
+				name = name.replace(/[A-Z]/g, function(a) {
 					return '-' + a;
 				});
 

@@ -962,7 +962,7 @@ define("tinymce/ui/Control", [
 		 * @method encode
 		 * @param {String/Object/Array} text Text to entity encode.
 		 * @param {Boolean} [translate=true] False if the contents shouldn't be translated.
-		 * @return {String} Encoded and possible traslated string. 
+		 * @return {String} Encoded and possible traslated string.
 		 */
 		encode: function(text, translate) {
 			if (translate !== false) {

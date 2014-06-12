@@ -12,8 +12,6 @@
 /*eslint consistent-this:0 */
 
 tinymce.PluginManager.add('textcolor', function(editor) {
-	var VK = tinymce.util.VK;
-
 	function mapColors() {
 		var i, colors = [], colorMap;
 
@@ -71,7 +69,21 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 	}
 
 	function renderColorPicker() {
-		var ctrl = this, colors, color, html, last, rows, cols, x, y, i;
+		var ctrl = this, colors, color, html, last, rows, cols, x, y, i, id = ctrl._id, count = 0;
+
+		function getColorCellHtml(color, title) {
+			return (
+				'<td class="mce-grid-cell">' +
+					'<div id="' + id + '-' + (count++) + '"' +
+						' data-mce-color="' + color + '"' +
+						' role="option"' +
+						' tabIndex="-1"' +
+						' style="' + (color ? 'background-color: #' + color : '') + '"' +
+						' title="' + title + '">' +
+					'</div>' +
+				'</td>'
+			);
+		}
 
 		colors = mapColors();
 
@@ -90,44 +102,32 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 					html += '<td></td>';
 				} else {
 					color = colors[i];
-					html += (
-						'<td>' +
-							'<div id="' + ctrl._id + '-' + i + '"' +
-								' data-mce-color="' + color.color + '"' +
-								' role="option"' +
-								' tabIndex="-1"' +
-								' style="' + (color ? 'background-color: #' + color.color : '') + '"' +
-								' title="' + color.text + '">' +
-							'</div>' +
-						'</td>'
-					);
+					html += getColorCellHtml(color.color, color.text);
 				}
 			}
 
 			html += '</tr>';
 		}
 
-		if (editor.settings.textcolor_enable_hex) {
-			var hexIdN = last + 1;
-			var hexInputColSpan = cols - 1;
+		if (editor.settings.color_picker_callback) {
 			html += (
 				'<tr>' +
-					'<td>' +
-						'<div id="' + ctrl._id + '-' + hexIdN + '"' +
-							'data-mce-color=""' +
-							'style="background-color: #FFFFFF"' +
-							'data-mce-hex-picker="true"' +
-							'role="option" ' +
-							'>' +
+					'<td colspan="' + cols + '" class="mce-custom-color-btn">' +
+						'<div id="' + id + '-c" class="mce-widget mce-btn mce-btn-small mce-btn-flat" ' +
+							'role="button" tabindex="-1" aria-labelledby="' + id + '-c" style="width: 100%">' +
+							'<button type="button" role="presentation" tabindex="-1">Custom...</button>' +
 						'</div>' +
-					'</td>' +
-					'<td colspan="' + hexInputColSpan + '">' +
-						'# <input type="text" class="mce-textcolor-hexpicker"' +
-						'role="textbox" name="mce-hexcolorpicker"' +
-						'id="' + ctrl._id + '-hexcolorpicker" maxlength="6" >' +
 					'</td>' +
 				'</tr>'
 			);
+
+			html += '<tr>';
+
+			for (x = 0; x < cols; x++) {
+				html += getColorCellHtml('', 'Custom color');
+			}
+
+			html += '</tr>';
 		}
 
 		html += '</tbody></table>';
@@ -137,11 +137,37 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 
 	function onPanelClick(e) {
 		var buttonCtrl = this.parent(), value;
-		
-		if (e.target.getAttribute('disabled')) {
-			return;
+
+		function selectColor(value) {
+			buttonCtrl.hidePanel();
+			buttonCtrl.color(value);
+			editor.execCommand(buttonCtrl.settings.selectcmd, false, value);
 		}
-		if ((value = e.target.getAttribute('data-mce-color'))) {
+
+		if (tinymce.DOM.getParent(e.target, '.mce-custom-color-btn')) {
+			buttonCtrl.hidePanel();
+
+			editor.settings.color_picker_callback.call(editor, function(value) {
+				var tableElm = buttonCtrl.panel.getEl().getElementsByTagName('table')[0];
+				var customColorCells = tableElm.rows[tableElm.rows.length - 1].childNodes;
+				var div, i;
+
+				for (i = 0; i < customColorCells.length; i++) {
+					div = customColorCells[i].firstChild;
+					if (!div.getAttribute('data-mce-color')) {
+						break;
+					}
+				}
+
+				div.style.background = value;
+				div.setAttribute('data-mce-color', value.substr(1));
+
+				selectColor(value);
+			});
+		}
+
+		value = e.target.getAttribute('data-mce-color');
+		if (value) {
 			if (this.lastId) {
 				document.getElementById(this.lastId).setAttribute('aria-selected', false);
 			}
@@ -149,10 +175,9 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 			e.target.setAttribute('aria-selected', true);
 			this.lastId = e.target.id;
 
+			selectColor('#' + value);
+		} else if (value !== null) {
 			buttonCtrl.hidePanel();
-			value = '#' + value;
-			buttonCtrl.color(value);
-			editor.execCommand(buttonCtrl.settings.selectcmd, false, value);
 		}
 	}
 
@@ -164,95 +189,6 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		}
 	}
 
-	/**
-	 * isValidHex checks if the provided string is valid hex color string
-	 *
-	 * @param  {string}   hexString 3 or 6 chars string representing a color.
-	 * @return {Boolean}  [true]  the string is valid hex color
-	 *                    [false] the string is not valid hex color        
-	 */
-	function isValidHex(hexString) {
-		return /(^[0-9A-F]{3,6}$)/i.test(hexString);
-	}
-
-	/**
-	 * isSpecialStroke checks if the keyCode is currently a special one:
-	 *  backspace, delete, arrow keys (left/right)
-	 *  or if it's a special ctrl+x/c/v
-	 *
-	 * @param  {string}  keyCode 
-	 * @return {Boolean}  
-	 */
-	function isSpecialStroke(e) {
-		var keyCode = e.keyCode;
-		// Allow delete and backspace
-		if (keyCode === VK.BACKSPACE || keyCode === VK.DELETE ) {
-			return true;
-		}
-
-		// Allow arrow movements
-		if (keyCode === VK.LEFT || keyCode === VK.RIGHT) {
-			return true;
-		}
-
-		// Allow CTRL/CMD + C/V/X
-		if ((tinymce.isMac ? e.metaKey : e.ctrlKey) && (keyCode == 67 || keyCode == 88 || keyCode == 86)) {
-			return true;
-		}
-
-		return false;
-	}
-
-	function initHexPicker(e) {
-		if (!editor.settings.textcolor_enable_hex) {
-			return;
-		}
-
-		var wrapper = document.querySelector('#' + e.target._id);
-		var input = wrapper.querySelector('[name="mce-hexcolorpicker"]');
-		var hexcolorDiv = wrapper.querySelector('[data-mce-hex-picker]');
-		var inputEvent = 'input';
-
-		editor.dom.events.bind(input, 'keydown', function(e){
-			var keyCode = e.keyCode;
-
-			if (isSpecialStroke(e)) {
-				return;
-			}
-
-			// Look for anything which is not A-Z or 0-9 and it is not a special char.
-			if (!((keyCode >= 48 && keyCode <= 57) || (keyCode >= 65 && keyCode <= 70) || (keyCode >= 96 && keyCode <= 105)) ) {
-				e.preventDefault();
-			}
-
-			// On Enter, take it like a click on the hexcolorDiv
-			if ( (keyCode === VK.ENTER && isValidHex(input.value) ) ) {
-				hexcolorDiv.click();
-			}
-
-		});
-
-		// If IE8 we can't use the input event, so we have to
-		// listen for keypress and paste events.
-		// In IE9 the input implementation is buggy so
-		// we use the same events as we'd like on IE8
-		if (tinymce.Env.ie && tinymce.Env.ie <= 9) {
-			inputEvent = 'keypress paste blur keydown keyup propertychange';
-		}
-		
-		editor.dom.events.bind(input, inputEvent, function(){
-			if (isValidHex(input.value)) {
-				hexcolorDiv.setAttribute('data-mce-color', input.value);
-				hexcolorDiv.setAttribute('style', 'background-color:#' + input.value);
-				hexcolorDiv.removeAttribute('disabled');
-			} else {
-				hexcolorDiv.setAttribute('disabled', 'disabled');
-			}
-			
-		});
-
-	}
-
 	editor.addButton('forecolor', {
 		type: 'colorbutton',
 		tooltip: 'Text color',
@@ -261,8 +197,7 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 			role: 'application',
 			ariaRemember: true,
 			html: renderColorPicker,
-			onclick: onPanelClick,
-			onPostRender: initHexPicker
+			onclick: onPanelClick
 		},
 		onclick: onButtonClick
 	});
@@ -275,8 +210,7 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 			role: 'application',
 			ariaRemember: true,
 			html: renderColorPicker,
-			onclick: onPanelClick,
-			onPostRender: initHexPicker
+			onclick: onPanelClick
 		},
 		onclick: onButtonClick
 	});

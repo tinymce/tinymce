@@ -167,7 +167,7 @@ exports.yuidoc = function (sourceDir, outputDir, options) {
 };
 
 exports.jshint = function (options) {
-	var jshint = require('jshint').JSHINT, exclude;
+	var jshint = require('jshint').JSHINT, exclude, count = 0;
 
 	function removeComments(str) {
 		str = str || "";
@@ -222,6 +222,7 @@ exports.jshint = function (options) {
 					if (error) {
 						console.log('line: ' + error.line + ':' + error.character+ ' -> ' + error.reason );
 						console.log(color(error.evidence,'yellow'));
+						count++;
 					}
 				});
 			}
@@ -233,6 +234,10 @@ exports.jshint = function (options) {
 	patterns.forEach(function(filePath) {
 		require("glob").sync(filePath).forEach(process);
 	});
+
+	if (count > 0) {
+		process.exit(1);
+	}
 };
 
 exports.zip = function (options) {
@@ -466,5 +471,35 @@ exports.phantomjs = function(args) {
 	childProcess.execFile(binPath, args, function(err, stdout, stderr) {
 		console.log(stdout);
 		console.log(stderr);
+	});
+};
+
+exports.jscs = function(args) {
+	var Checker = require('jscs');
+	var checker = new Checker();
+
+	checker.registerDefaultRules();
+	checker.configure(JSON.parse(fs.readFileSync(args.configFile)));
+	checker.checkPath(args.src).then(function(results) {
+		var errorsCollection = [].concat.apply([], results);
+		var count = 0;
+
+		errorsCollection.forEach(function(errors) {
+			if (!errors.isEmpty()) {
+				errors.getErrorList().forEach(function(error) {
+					console.log(errors.explainError(error, true) + '\n');
+					count++;
+				});
+			}
+		});
+
+		if (count > 0) {
+			console.log("jscs errors found: " + count);
+			process.exit(1);
+		}
+
+		if (args.oncomplete) {
+			args.oncomplete();
+		}
 	});
 };

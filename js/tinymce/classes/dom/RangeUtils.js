@@ -24,7 +24,7 @@ define("tinymce/dom/RangeUtils", [
 		var childNodes = container.childNodes;
 
 		index--;
-		
+
 		if (index > childNodes.length - 1) {
 			index = childNodes.length - 1;
 		} else if (index < 0) {
@@ -119,7 +119,7 @@ define("tinymce/dom/RangeUtils", [
 					}
 
 					node = node.parentNode;
-				} while(node);
+				} while (node);
 			}
 
 			function walkBoundary(start_node, end_node, next) {

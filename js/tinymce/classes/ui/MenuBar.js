@@ -13,7 +13,7 @@
  *
  * @-x-less MenuBar.less
  * @class tinymce.ui.MenuBar
- * @extends tinymce.ui.Container
+ * @extends tinymce.ui.Toolbar
  */
 define("tinymce/ui/MenuBar", [
 	"tinymce/ui/Toolbar"

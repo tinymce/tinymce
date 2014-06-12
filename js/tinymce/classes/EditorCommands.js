@@ -677,7 +677,7 @@ define("tinymce/EditorCommands", [
 				editor.setContent('');
 			},
 
-			"InsertLineBreak": function (command, ui, value) {
+			InsertLineBreak: function(command, ui, value) {
 				// We load the current event in from EnterKey.js when appropriate to heed
 				// certain event-specific variations such as ctrl-enter in a list
 				var evt = value;

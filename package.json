@@ -26,9 +26,10 @@
 		"q": "~1.0.0",
 		"sauce-tunnel": ">= 2.0.2",
 		"mime": "~1.2.11",
-		"chalk": "~0.4.0"
+		"chalk": "~0.4.0",
+		"jscs": ">= 1.4.5"
 	},
 	"scripts": {
-		"test": "jake jshint eslint minify less phantomjs-tests"
+		"test": "jake jscs jshint eslint minify less phantomjs-tests"
 	}
 }

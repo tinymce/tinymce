@@ -13,7 +13,7 @@
  *
  * @-x-less SplitButton.less
  * @class tinymce.ui.SplitButton
- * @extends tinymce.ui.Button
+ * @extends tinymce.ui.MenuButton
  */
 define("tinymce/ui/SplitButton", [
 	"tinymce/ui/MenuButton",

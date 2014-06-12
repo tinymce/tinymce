@@ -24,8 +24,6 @@ define("tinymce/ui/TabPanel", [
 	"use strict";
 
 	return Panel.extend({
-		lastIdx: 0,
-
 		Defaults: {
 			layout: 'absolute',
 			defaults: {
@@ -54,13 +52,14 @@ define("tinymce/ui/TabPanel", [
 			activeTabElm.setAttribute('aria-selected', "true");
 			DomUtils.addClass(activeTabElm, this.classPrefix + 'active');
 
-			if (idx != this.lastIdx) {
-				this.items()[this.lastIdx].hide();
-				this.lastIdx = idx;
-			}
-
 			this.items()[idx].show().fire('showtab');
 			this.reflow();
+
+			this.items().each(function(item, i) {
+				if (idx != i) {
+					item.hide();
+				}
+			});
 		},
 
 		/**
@@ -143,12 +142,10 @@ define("tinymce/ui/TabPanel", [
 			minW = DomUtils.getSize(self.getEl('head')).width;
 			minW = minW < 0 ? 0 : minW;
 			minH = 0;
-			self.items().each(function(item, i) {
+
+			self.items().each(function(item) {
 				minW = Math.max(minW, item.layoutRect().minW);
 				minH = Math.max(minH, item.layoutRect().minH);
-				if (self.settings.activeTab != i) {
-					item.hide();
-				}
 			});
 
 			self.items().each(function(ctrl) {

@@ -11,8 +11,8 @@
 /**
  * This class is used to create MessageBoxes like alerts/confirms etc.
  *
- * @class tinymce.ui.Window
- * @extends tinymce.ui.FloatPanel
+ * @class tinymce.ui.MessageBox
+ * @extends tinymce.ui.Window
  */
 define("tinymce/ui/MessageBox", [
 	"tinymce/ui/Window"

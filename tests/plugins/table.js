@@ -10,13 +10,26 @@
 				indent: false,
 				plugins: 'table',
 				valid_styles: {
-					'*' : 'width,height,vertical-align,text-align,float'
+					'*' : 'width,height,vertical-align,text-align,float,border-color,background-color'
 				},
 				init_instance_callback: function(ed) {
 					window.editor = ed;
 					QUnit.start();
 				}
 			});
+		},
+		teardown: function() {
+			var win = Utils.getFontmostWindow();
+
+			if (win) {
+				win.close();
+			}
+			
+			delete editor.settings.table_adv_tab;
+			delete editor.settings.table_cell_adv_tab;
+			delete editor.settings.table_class_list;
+			delete editor.settings.table_cell_class_list;
+			delete editor.settings.table_row_class_list;
 		}
 	});
 
@@ -35,7 +48,28 @@
 	test("Table properties dialog (get data from plain table)", function() {
 		editor.setContent('<table><tr><td>X</td></tr></table>');
 		Utils.setSelection('td', 0);
-		editor.execCommand('mceInsertTable');
+		editor.execCommand('mceTableProps');
+
+		deepEqual(Utils.getFontmostWindow().toJSON(), {
+			"align": "",
+			"border": "",
+			"caption": false,
+			"cellpadding": "",
+			"cellspacing": "",
+			"height": "",
+			"width": "",
+			"backgroundColor": "",
+			"borderColor": "",
+			"style": ""
+		});
+	});
+
+	test("Table properties dialog (get/set data from/to plain table, no adv tab)", function() {
+		editor.settings.table_adv_tab = false;
+
+		editor.setContent('<table><tr><td>X</td></tr></table>');
+		Utils.setSelection('td', 0);
+		editor.execCommand('mceTableProps');
 
 		deepEqual(Utils.getFontmostWindow().toJSON(), {
 			"align": "",
@@ -47,7 +81,47 @@
 			"width": ""
 		});
 
-		Utils.getFontmostWindow().close();
+		fillAndSubmitWindowForm({
+			width: "100",
+			height: "101"
+		});
+
+		equal(
+			cleanTableHtml(editor.getContent()),
+			'<table style="width: 100px; height: 101px;"><tbody><tr><td>x</td></tr></tbody></table>'
+		);
+	});
+
+	test("Table properties dialog (get/set data from/to plain table, class list)", function() {
+		editor.settings.table_class_list = [{title: 'Class1', value: 'class1'}];
+
+		editor.setContent('<table><tr><td>X</td></tr></table>');
+		Utils.setSelection('td', 0);
+		editor.execCommand('mceTableProps');
+
+		deepEqual(Utils.getFontmostWindow().toJSON(), {
+			"align": "",
+			"border": "",
+			"caption": false,
+			"cellpadding": "",
+			"cellspacing": "",
+			"height": "",
+			"width": "",
+			"backgroundColor": "",
+			"borderColor": "",
+			"style": "",
+			"class": ""
+		});
+
+		fillAndSubmitWindowForm({
+			width: "100",
+			height: "101"
+		});
+
+		equal(
+			cleanTableHtml(editor.getContent()),
+			'<table style="width: 100px; height: 101px;"><tbody><tr><td>x</td></tr></tbody></table>'
+		);
 	});
 
 	test("Table properties dialog (get data from full table)", function() {
@@ -63,7 +137,7 @@
 		);
 
 		Utils.setSelection('td', 0);
-		editor.execCommand('mceInsertTable');
+		editor.execCommand('mceTableProps');
 
 		deepEqual(Utils.getFontmostWindow().toJSON(), {
 			"align": "",
@@ -72,16 +146,17 @@
 			"cellpadding": "3",
 			"cellspacing": "2",
 			"height": "101",
-			"width": "100"
+			"width": "100",
+			"backgroundColor": "",
+			"borderColor": "",
+			"style": "width: 100px; height: 101px;"
 		});
-
-		Utils.getFontmostWindow().close();
 	});
 
 	test("Table properties dialog (add caption)", function() {
 		editor.setContent('<table><tr><td>X</td></tr></table>');
 		Utils.setSelection('td', 0);
-		editor.execCommand('mceInsertTable');
+		editor.execCommand('mceTableProps');
 		fillAndSubmitWindowForm({
 			caption: true
 		});
@@ -95,7 +170,7 @@
 	test("Table properties dialog (remove caption)", function() {
 		editor.setContent('<table><caption>&nbsp;</caption><tr><td>X</td></tr></table>');
 		Utils.setSelection('td', 0);
-		editor.execCommand('mceInsertTable');
+		editor.execCommand('mceTableProps');
 		fillAndSubmitWindowForm({
 			caption: false
 		});
@@ -109,7 +184,7 @@
 	test("Table properties dialog (change size in pixels)", function() {
 		editor.setContent('<table><tr><td>X</td></tr></table>');
 		Utils.setSelection('td', 0);
-		editor.execCommand('mceInsertTable');
+		editor.execCommand('mceTableProps');
 		fillAndSubmitWindowForm({
 			width: 100,
 			height: 101
@@ -124,7 +199,7 @@
 	test("Table properties dialog (change size in %)", function() {
 		editor.setContent('<table><tr><td>X</td></tr></table>');
 		Utils.setSelection('td', 0);
-		editor.execCommand('mceInsertTable');
+		editor.execCommand('mceTableProps');
 		fillAndSubmitWindowForm({
 			width: "100%",
 			height: "101%"
@@ -136,10 +211,10 @@
 		);
 	});
 
-	test("Table properties dialog (change: border,cellpadding,cellspacing,align)", function() {
-		editor.setContent('<table><tr><td>X</td></tr></table>');
+	test("Table properties dialog (change: border,cellpadding,cellspacing,align,backgroundColor,borderColor)", function() {
+		editor.setContent('<table style="border-color: red; background-color: blue"><tr><td>X</td></tr></table>');
 		Utils.setSelection('td', 0);
-		editor.execCommand('mceInsertTable');
+		editor.execCommand('mceTableProps');
 		fillAndSubmitWindowForm({
 			border: "1",
 			cellpadding: "2",
@@ -149,7 +224,7 @@
 
 		equal(
 			cleanTableHtml(editor.getContent()),
-			'<table style="float: right;" border="1" cellspacing="3" cellpadding="2"><tbody><tr><td>x</td></tr></tbody></table>'
+			'<table style="float: right; border-color: red; background-color: blue;" border="1" cellspacing="3" cellpadding="2"><tbody><tr><td>x</td></tr></tbody></table>'
 		);
 	});
 
@@ -164,14 +239,42 @@
 			"height": "",
 			"scope": "",
 			"type": "td",
+			"width": "",
+			"backgroundColor": "",
+			"borderColor": "",
+			"style": ""
+		});
+	});
+
+	test("Table cell properties dialog (get/set data from/to plain cell, no adv tab)", function() {
+		editor.settings.table_cell_adv_tab = false;
+
+		editor.setContent('<table><tr><td>X</td></tr></table>');
+		Utils.setSelection('td', 0);
+		editor.execCommand('mceTableCellProps');
+
+		deepEqual(Utils.getFontmostWindow().toJSON(), {
+			"align": "",
+			"valign": "",
+			"height": "",
+			"scope": "",
+			"type": "td",
 			"width": ""
 		});
 
-		Utils.getFontmostWindow().close();
+		fillAndSubmitWindowForm({
+			width: 100,
+			height: 101
+		});
+
+		equal(
+			cleanTableHtml(editor.getContent()),
+			'<table><tbody><tr><td style="width: 100px; height: 101px;">x</td></tr></tbody></table>'
+		);
 	});
 
 	test("Table cell properties dialog (get data from complex cell)", function() {
-		editor.setContent('<table><tr><th style="text-align: right; vertical-align: top; width: 10px; height: 11px" scope="row">X</th></tr></table>');
+		editor.setContent('<table><tr><th style="text-align: right; vertical-align: top; width: 10px; height: 11px; border-color: red; background-color: blue" scope="row">X</th></tr></table>');
 		Utils.setSelection('th', 0);
 		editor.execCommand('mceTableCellProps');
 
@@ -181,10 +284,11 @@
 			"height": "11",
 			"scope": "row",
 			"type": "th",
-			"width": "10"
+			"width": "10",
+			"backgroundColor": "blue",
+			"borderColor": "red",
+			"style": "width: 10px; height: 11px; vertical-align: top; text-align: right; border-color: red; background-color: blue;"
 		});
-
-		Utils.getFontmostWindow().close();
 	});
 
 	test("Table cell properties dialog (update all)", function() {
@@ -214,24 +318,26 @@
 		deepEqual(Utils.getFontmostWindow().toJSON(), {
 			"align": "",
 			"height": "",
-			"type": "tbody"
+			"type": "tbody",
+			"backgroundColor": "",
+			"borderColor": "",
+			"style": ""
 		});
-
-		Utils.getFontmostWindow().close();
 	});
 
-	test("Table row properties dialog (get data from complex cell)", function() {
-		editor.setContent('<table><thead><tr style="height: 10px; text-align: right"><td>X</td></tr></thead></table>');
+	test("Table row properties dialog (get data from complex row)", function() {
+		editor.setContent('<table><thead><tr style="height: 10px; text-align: right; border-color: red; background-color: blue"><td>X</td></tr></thead></table>');
 		Utils.setSelection('td', 0);
 		editor.execCommand('mceTableRowProps');
 
 		deepEqual(Utils.getFontmostWindow().toJSON(), {
 			"align": "right",
 			"height": "10",
-			"type": "thead"
+			"type": "thead",
+			"backgroundColor": "blue",
+			"borderColor": "red",
+			"style": "height: 10px; text-align: right; border-color: red; background-color: blue;"
 		});
-
-		Utils.getFontmostWindow().close();
 	});
 
 	test("Table row properties dialog (update all)", function() {
