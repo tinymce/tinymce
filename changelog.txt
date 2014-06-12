@@ -6,6 +6,7 @@ Version 4.1.0 (2014-06-xx)
 	Added new colorpicker plugin that lets you select colors from a hsv color picker.
 	Added new tinymce.util.Color class to handle color parsing and converting.
 	Added new colorpicker UI widget element lets you add a hsv color picker to any form/window.
+	Added new textpattern plugin that allows you to use markdown like text patterns to format contents.
 	Added new resize helper element that shows the current width & height while resizing.
 	Added new "once" method to Editor and EventDispatcher enables since callback execution events.
 	Fixed so the default resize method for images are proportional shift/ctrl can be used to make an unproportional size.
