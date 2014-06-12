@@ -1,5 +1,11 @@
-Version 4.0.29 (2014-06-xx)
-	Added new option to text color plugin to allow input using hex color.
+Version 4.1.0 (2014-06-xx)
+	Added new file_picker_callback option to replace the old file_browser_callback the latter will still work though.
+	Added new custom colors to textcolor plugin will be displayed if a color picker is provided also shows the latest colors.
+	Added new color_picker_callback option to enable you to add custom color pickers to the editor.
+	Added new advanced tabs to table/cell/row dialogs to enable you to select colors for border/background.
+	Added new colorpicker plugin that lets you select colors from a hsv color picker.
+	Added new tinymce.util.Color class to handle color parsing and converting.
+	Added new colorpicker UI widget element lets you add a hsv color picker to any form/window.
 	Added new resize helper element that shows the current width & height while resizing.
 	Added new "once" method to Editor and EventDispatcher enables since callback execution events.
 	Fixed so the default resize method for images are proportional shift/ctrl can be used to make an unproportional size.
