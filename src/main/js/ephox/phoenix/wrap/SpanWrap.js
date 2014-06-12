@@ -14,7 +14,7 @@ define(
 
   function (Unicode, Fun, Option, Spot, Injection, Wrapper, Wraps, Struct) {
     var point = function (universe, start, soffset, finish, foffset, exclusions) {
-      var scanned = scan(universe, start, soffset, finish, foffset);
+      var scanned = scan(universe, start, soffset, finish, foffset, exclusions);
       var cursor = scanned.cursor();
       var range = Spot.points(
         Spot.point(cursor.element(), cursor.offset()),
