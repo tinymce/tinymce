@@ -31,8 +31,8 @@ define(
       return Wrapper.reuse(universe, base, baseOffset, end, endOffset, predicate, nu);
     };
 
-    var spans = function (universe, base, baseOffset, end, endOffset) {
-      return SpanWrap.spans(universe, base, baseOffset, end, endOffset);
+    var spans = function (universe, base, baseOffset, end, endOffset, exclusions) {
+      return SpanWrap.spans(universe, base, baseOffset, end, endOffset, exclusions);
     };
 
     return {
