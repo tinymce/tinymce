@@ -12,6 +12,11 @@
 /*eslint consistent-this:0 */
 
 tinymce.PluginManager.add('textcolor', function(editor) {
+	var cols, rows;
+
+	rows = editor.settings.textcolor_rows || 5;
+	cols = editor.settings.textcolor_cols || 8;
+
 	function mapColors() {
 		var i, colors = [], colorMap;
 
@@ -69,13 +74,13 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 	}
 
 	function renderColorPicker() {
-		var ctrl = this, colors, color, html, last, rows, cols, x, y, i, id = ctrl._id, count = 0;
+		var ctrl = this, colors, color, html, last, x, y, i, id = ctrl._id, count = 0;
 
 		function getColorCellHtml(color, title) {
 			return (
 				'<td class="mce-grid-cell">' +
 					'<div id="' + id + '-' + (count++) + '"' +
-						' data-mce-color="' + color + '"' +
+						' data-mce-color="' + (color ? '#' + color : '') + '"' +
 						' role="option"' +
 						' tabIndex="-1"' +
 						' style="' + (color ? 'background-color: #' + color : '') + '"' +
@@ -89,8 +94,6 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 
 		html = '<table class="mce-grid mce-grid-border mce-colorbutton-grid" role="list" cellspacing="0"><tbody>';
 		last = colors.length - 1;
-		rows = editor.settings.textcolor_rows || 5;
-		cols = editor.settings.textcolor_cols || 8;
 
 		for (y = 0; y < rows; y++) {
 			html += '<tr>';
@@ -144,24 +147,38 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 			editor.execCommand(buttonCtrl.settings.selectcmd, false, value);
 		}
 
+		function setDivColor(div, value) {
+			div.style.background = value;
+			div.setAttribute('data-mce-color', value);
+		}
+
 		if (tinymce.DOM.getParent(e.target, '.mce-custom-color-btn')) {
 			buttonCtrl.hidePanel();
 
 			editor.settings.color_picker_callback.call(editor, function(value) {
 				var tableElm = buttonCtrl.panel.getEl().getElementsByTagName('table')[0];
-				var customColorCells = tableElm.rows[tableElm.rows.length - 1].childNodes;
-				var div, i;
+				var customColorCells, div, i;
+
+				customColorCells = tinymce.map(tableElm.rows[tableElm.rows.length - 1].childNodes, function(elm) {
+					return elm.firstChild;
+				});
 
 				for (i = 0; i < customColorCells.length; i++) {
-					div = customColorCells[i].firstChild;
+					div = customColorCells[i];
 					if (!div.getAttribute('data-mce-color')) {
 						break;
 					}
 				}
 
-				div.style.background = value;
-				div.setAttribute('data-mce-color', value.substr(1));
+				// Shift colors to the right
+				// TODO: Might need to be the left on RTL
+				if (i == cols) {
+					for (i = 0; i < cols - 1; i++) {
+						setDivColor(customColorCells[i], customColorCells[i + 1].getAttribute('data-mce-color'));
+					}
+				}
 
+				setDivColor(div, value);
 				selectColor(value);
 			});
 		}
@@ -175,7 +192,7 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 			e.target.setAttribute('aria-selected', true);
 			this.lastId = e.target.id;
 
-			selectColor('#' + value);
+			selectColor(value);
 		} else if (value !== null) {
 			buttonCtrl.hidePanel();
 		}
