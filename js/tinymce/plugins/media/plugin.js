@@ -169,7 +169,12 @@ tinymce.PluginManager.add('media', function(editor, url) {
 							name: 'embed',
 							value: getSource(),
 							multiline: true,
-							label: 'Source'
+							label: 'Source',
+							onInput: function() {
+                            	data = htmlToData(this.value());
+                            	this.parent().parent().fromJSON(data);
+                        	}
+
 						}
 					]
 				}
