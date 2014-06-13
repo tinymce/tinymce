@@ -52,21 +52,20 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 			"00FFFF", "Aqua",
 			"00CCFF", "Sky blue",
 			"993366", "Red violet",
-			"C0C0C0", "Silver",
+			"FFFFFF", "White",
 			"FF99CC", "Pink",
 			"FFCC99", "Peach",
 			"FFFF99", "Light yellow",
 			"CCFFCC", "Pale green",
 			"CCFFFF", "Pale cyan",
 			"99CCFF", "Light sky blue",
-			"CC99FF", "Plum",
-			"FFFFFF", "White"
+			"CC99FF", "Plum"
 		];
 
 		for (i = 0; i < colorMap.length; i += 2) {
 			colors.push({
 				text: colorMap[i + 1],
-				color: colorMap[i]
+				color: '#' + colorMap[i]
 			});
 		}
 
@@ -77,20 +76,27 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		var ctrl = this, colors, color, html, last, x, y, i, id = ctrl._id, count = 0;
 
 		function getColorCellHtml(color, title) {
+			var isNoColor = color == 'transparent';
+
 			return (
-				'<td class="mce-grid-cell">' +
+				'<td class="mce-grid-cell' + (isNoColor ? ' mce-colorbtn-trans' : '') + '">' +
 					'<div id="' + id + '-' + (count++) + '"' +
-						' data-mce-color="' + (color ? '#' + color : '') + '"' +
+						' data-mce-color="' + (color ? color : '') + '"' +
 						' role="option"' +
 						' tabIndex="-1"' +
-						' style="' + (color ? 'background-color: #' + color : '') + '"' +
+						' style="' + (color ? 'background-color: ' + color : '') + '"' +
 						' title="' + title + '">' +
+						(isNoColor ? '&#215;' : '') +
 					'</div>' +
 				'</td>'
 			);
 		}
 
 		colors = mapColors();
+		colors.push({
+			text: "No color",
+			color: "transparent"
+		});
 
 		html = '<table class="mce-grid mce-grid-border mce-colorbutton-grid" role="list" cellspacing="0"><tbody>';
 		last = colors.length - 1;
@@ -138,13 +144,25 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		return html;
 	}
 
+	function applyFormat(format, value) {
+		editor.focus();
+		editor.formatter.apply(format, {value: value});
+		editor.nodeChanged();
+	}
+
+	function removeFormat(format) {
+		editor.focus();
+		editor.formatter.remove(format, {value: null}, null, true);
+		editor.nodeChanged();
+	}
+
 	function onPanelClick(e) {
 		var buttonCtrl = this.parent(), value;
 
 		function selectColor(value) {
 			buttonCtrl.hidePanel();
 			buttonCtrl.color(value);
-			editor.execCommand(buttonCtrl.settings.selectcmd, false, value);
+			applyFormat(buttonCtrl.settings.format, value);
 		}
 
 		function setDivColor(div, value) {
@@ -192,6 +210,12 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 			e.target.setAttribute('aria-selected', true);
 			this.lastId = e.target.id;
 
+			if (value == 'transparent') {
+				removeFormat(buttonCtrl.settings.format);
+				buttonCtrl.hidePanel();
+				return;
+			}
+
 			selectColor(value);
 		} else if (value !== null) {
 			buttonCtrl.hidePanel();
@@ -202,14 +226,14 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		var self = this;
 
 		if (self._color) {
-			editor.execCommand(self.settings.selectcmd, false, self._color);
+			applyFormat(self.settings.format, self._color);
 		}
 	}
 
 	editor.addButton('forecolor', {
 		type: 'colorbutton',
 		tooltip: 'Text color',
-		selectcmd: 'ForeColor',
+		format: 'forecolor',
 		panel: {
 			role: 'application',
 			ariaRemember: true,
@@ -222,7 +246,7 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 	editor.addButton('backcolor', {
 		type: 'colorbutton',
 		tooltip: 'Background color',
-		selectcmd: 'HiliteColor',
+		format: 'hilitecolor',
 		panel: {
 			role: 'application',
 			ariaRemember: true,
