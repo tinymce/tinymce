@@ -133,8 +133,8 @@ define("tinymce/Formatter", [
 					{inline: 'strike', remove: 'all'}
 				],
 
-				forecolor: {inline: 'span', styles: {color: '%value'}, wrap_links: false},
-				hilitecolor: {inline: 'span', styles: {backgroundColor: '%value'}, wrap_links: false},
+				forecolor: {inline: 'span', styles: {color: '%value'}, wrap_links: false, remove_similar: true},
+				hilitecolor: {inline: 'span', styles: {backgroundColor: '%value'}, wrap_links: false, remove_similar: true},
 				fontname: {inline: 'span', styles: {fontFamily: '%value'}},
 				fontsize: {inline: 'span', styles: {fontSize: '%value'}},
 				fontsize_class: {inline: 'span', attributes: {'class': '%value'}},
@@ -715,7 +715,7 @@ define("tinymce/Formatter", [
 		 * @param {Object} vars Optional list of variables to replace within format before removing it.
 		 * @param {Node/Range} node Optional node or DOM range to remove the format from defaults to current selection.
 		 */
-		function remove(name, vars, node) {
+		function remove(name, vars, node, similar) {
 			var formatList = get(name), format = formatList[0], bookmark, rng, contentEditable = true;
 
 			// Merges the styles for each node
@@ -765,7 +765,7 @@ define("tinymce/Formatter", [
 					// Find format root element
 					if (!formatRoot && parent.id != '_start' && parent.id != '_end') {
 						// Is the node matching the format we are looking for
-						format = matchNode(parent, name, vars);
+						format = matchNode(parent, name, vars, similar);
 						if (format && format.split !== false) {
 							formatRoot = parent;
 						}
@@ -940,7 +940,7 @@ define("tinymce/Formatter", [
 
 				ed.nodeChanged();
 			} else {
-				performCaretAction('remove', name, vars);
+				performCaretAction('remove', name, vars, similar);
 			}
 		}
 
@@ -1771,7 +1771,7 @@ define("tinymce/Formatter", [
 						compare_node = 0;
 					}
 
-					if (!compare_node || isEq(getStyle(compare_node, name), value)) {
+					if (format.remove_similar || (!compare_node || isEq(getStyle(compare_node, name), value))) {
 						dom.setStyle(node, name, '');
 					}
 
@@ -2029,7 +2029,7 @@ define("tinymce/Formatter", [
 			return container;
 		}
 
-		function performCaretAction(type, name, vars) {
+		function performCaretAction(type, name, vars, similar) {
 			var caretContainerId = '_mce_caret', debug = ed.settings.caret_debug;
 
 			// Creates a caret container bogus element
@@ -2197,7 +2197,7 @@ define("tinymce/Formatter", [
 				}
 
 				while (node) {
-					if (matchNode(node, name, vars)) {
+					if (matchNode(node, name, vars, similar)) {
 						formatNode = node;
 						break;
 					}
