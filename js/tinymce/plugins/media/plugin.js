@@ -20,6 +20,8 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		{regex: /maps\.google\.([a-z]{2,3})\/maps\/(.+)msid=(.+)/, type: 'iframe', w: 425, h: 350, url: '//maps.google.com/maps/ms?msid=$2&output=embed"'}
 	];
 
+	var embedChange = (tinymce.Env.ie && tinymce.Env.ie <= 8) ? 'onChange' : 'onInput';
+
 	function guessMime(url) {
 		if (url.indexOf('.mp3') != -1) {
 			return 'audio/mpeg';
@@ -130,6 +132,23 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		width = data.width;
 		height = data.height;
 
+		var embedTextBox = {
+								id: 'mcemediasource',
+								type: 'textbox',
+								flex: 1,
+								name: 'embed',
+								value: getSource(),
+								multiline: true,
+								label: 'Source'
+							};
+
+		function updateValueOnChange() {
+			data = htmlToData( this.value() );
+			this.parent().parent().fromJSON(data);
+		}
+
+		embedTextBox[embedChange] = updateValueOnChange;
+
 		win = editor.windowManager.open({
 			title: 'Insert/edit video',
 			data: data,
@@ -162,20 +181,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 							text: 'Paste your embed code below:',
 							forId: 'mcemediasource'
 						},
-						{
-							id: 'mcemediasource',
-							type: 'textbox',
-							flex: 1,
-							name: 'embed',
-							value: getSource(),
-							multiline: true,
-							label: 'Source',
-							onInput: function() {
-                            	data = htmlToData(this.value());
-                            	this.parent().parent().fromJSON(data);
-                        	}
-
-						}
+						embedTextBox
 					]
 				}
 			],
