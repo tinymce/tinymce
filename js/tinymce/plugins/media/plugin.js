@@ -133,14 +133,14 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		height = data.height;
 
 		var embedTextBox = {
-								id: 'mcemediasource',
-								type: 'textbox',
-								flex: 1,
-								name: 'embed',
-								value: getSource(),
-								multiline: true,
-								label: 'Source'
-							};
+			id: 'mcemediasource',
+			type: 'textbox',
+			flex: 1,
+			name: 'embed',
+			value: getSource(),
+			multiline: true,
+			label: 'Source'
+		};
 
 		function updateValueOnChange() {
 			data = htmlToData( this.value() );
