@@ -17,6 +17,20 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 	rows = editor.settings.textcolor_rows || 5;
 	cols = editor.settings.textcolor_cols || 8;
 
+	function getCurrentColor(format) {
+		var color;
+
+		editor.dom.getParents(editor.selection.getStart(), function(elm) {
+			var value;
+
+			if ((value = elm.style[format == 'forecolor' ? 'color' : 'background-color'])) {
+				color = value;
+			}
+		});
+
+		return color;
+	}
+	
 	function mapColors() {
 		var i, colors = [], colorMap;
 
@@ -198,7 +212,7 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 
 				setDivColor(div, value);
 				selectColor(value);
-			});
+			}, getCurrentColor(buttonCtrl.settings.format));
 		}
 
 		value = e.target.getAttribute('data-mce-color');
