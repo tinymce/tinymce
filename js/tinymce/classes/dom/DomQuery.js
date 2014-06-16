@@ -18,11 +18,12 @@
  */
 define("tinymce/dom/DomQuery", [
 	"tinymce/dom/EventUtils",
-	"tinymce/dom/Sizzle"
-], function(EventUtils, Sizzle) {
+	"tinymce/dom/Sizzle",
+	"tinymce/util/Tools"
+], function(EventUtils, Sizzle, Tools) {
 	var doc = document, push = Array.prototype.push, slice = Array.prototype.slice;
 	var rquickExpr = /^(?:[^#<]*(<[\w\W]+>)[^>]*$|#([\w\-]*)$)/;
-	var Event = EventUtils.Event;
+	var Event = EventUtils.Event, undef;
 
 	function isDefined(obj) {
 		return typeof obj !== "undefined";
@@ -32,11 +33,12 @@ define("tinymce/dom/DomQuery", [
 		return typeof obj === "string";
 	}
 
-	function createFragment(html) {
+	function createFragment(html, fragDoc) {
 		var frag, node, container;
 
-		container = doc.createElement("div");
-		frag = doc.createDocumentFragment();
+		fragDoc = fragDoc || doc;
+		container = fragDoc.createElement("div");
+		frag = fragDoc.createDocumentFragment();
 		container.innerHTML = html;
 
 		while ((node = container.firstChild)) {
@@ -46,14 +48,20 @@ define("tinymce/dom/DomQuery", [
 		return frag;
 	}
 
-	function domManipulate(targetNodes, sourceItem, callback) {
+	function domManipulate(targetNodes, sourceItem, callback, reverse) {
 		var i;
 
 		if (typeof sourceItem === "string") {
 			sourceItem = createFragment(sourceItem);
-		} else if (sourceItem.length) {
-			for (i = 0; i < sourceItem.length; i++) {
-				domManipulate(targetNodes, sourceItem[i], callback);
+		} else if (sourceItem.length && !sourceItem.nodeType) {
+			if (reverse) {
+				for (i = sourceItem.length - 1; i >= 0; i--) {
+					domManipulate(targetNodes, sourceItem[i], callback, reverse);
+				}
+			} else {
+				for (i = 0; i < sourceItem.length; i++) {
+					domManipulate(targetNodes, sourceItem[i], callback, reverse);
+				}
 			}
 
 			return targetNodes;
@@ -71,77 +79,11 @@ define("tinymce/dom/DomQuery", [
 		return node && className && (' ' + node.className + ' ').indexOf(' ' + className + ' ') !== -1;
 	}
 
-	/**
-	 * Makes a map object out of a string that gets separated by a delimiter.
-	 *
-	 * @method makeMap
-	 * @param {String} items Item string to split.
-	 * @param {Object} map Optional object to add items to.
-	 * @return {Object} name/value object with items as keys.
-	 */
-	function makeMap(items, map) {
-		var i;
-
-		items = items || [];
-
-		if (typeof(items) == "string") {
-			items = items.split(' ');
-		}
-
-		map = map || {};
-
-		i = items.length;
-		while (i--) {
-			map[items[i]] = {};
-		}
-
-		return map;
-	}
-
-	var numericCssMap = makeMap('fillOpacity fontWeight lineHeight opacity orphans widows zIndex zoom');
+	var numericCssMap = Tools.makeMap('fillOpacity fontWeight lineHeight opacity orphans widows zIndex zoom', ' ');
 
 	function DomQuery(selector, context) {
 		/*eslint new-cap:0 */
 		return new DomQuery.fn.init(selector, context);
-	}
-
-	/**
-	 * Extends the specified object with another object.
-	 *
-	 * @method extend
-	 * @param {Object} target Object to extend.
-	 * @param {Object..} obj Multiple objects to extend with.
-	 * @return {Object} Same as target, the extended object.
-	 */
-	function extend(target) {
-		var args = arguments, arg, i, key;
-
-		for (i = 1; i < args.length; i++) {
-			arg = args[i];
-
-			for (key in arg) {
-				target[key] = arg[key];
-			}
-		}
-
-		return target;
-	}
-
-	/**
-	 * Converts the specified object into a real JavaScript array.
-	 *
-	 * @method toArray
-	 * @param {Object} obj Object to convert into array.
-	 * @return {Array} Array object based in input.
-	 */
-	function toArray(obj) {
-		var array = [], i, l;
-
-		for (i = 0, l = obj.length; i < l; i++) {
-			array[i] = obj[i];
-		}
-
-		return array;
 	}
 
 	/**
@@ -169,17 +111,6 @@ define("tinymce/dom/DomQuery", [
 		return -1;
 	}
 
-	/**
-	 * Returns true/false if the specified object is an array.
-	 *
-	 * @method isArray
-	 * @param {Object} obj Object to check if it's an array.
-	 * @return {Boolean} true/false if the input object is array or not.
-	 */
-	var isArray = Array.isArray || function(obj) {
-		return Object.prototype.toString.call(obj) === "[object Array]";
-	};
-
 	var whiteSpaceRegExp = /^\s*|\s*$/g;
 
 	function trim(str) {
@@ -205,7 +136,7 @@ define("tinymce/dom/DomQuery", [
 				for (key in obj) {
 					if (obj.hasOwnProperty(key)) {
 						value = obj[key];
-						if (callback.call(value, value, key) === false) {
+						if (callback.call(value, key, value) === false) {
 							break;
 						}
 					}
@@ -214,7 +145,7 @@ define("tinymce/dom/DomQuery", [
 				// Loop array items
 				for (i = 0; i < length; i++) {
 					value = obj[i];
-					if (callback.call(value, value, key) === false) {
+					if (callback.call(value, i, value) === false) {
 						break;
 					}
 				}
@@ -243,7 +174,19 @@ define("tinymce/dom/DomQuery", [
 				return self;
 			}
 
+			if (context && context.nodeType) {
+				self.context = context;
+			} else {
+				if (context) {
+					return DomQuery(selector).attr(context);
+				} else {
+					self.context = context = document;
+				}
+			}
+
 			if (isString(selector)) {
+				self.selector = selector;
+
 				if (selector.charAt(0) === "<" && selector.charAt(selector.length - 1) === ">" && selector.length >= 3) {
 					match = [null, selector, null];
 				} else {
@@ -252,9 +195,10 @@ define("tinymce/dom/DomQuery", [
 
 				if (match) {
 					if (match[1]) {
-						node = createFragment(selector).firstChild;
+						node = createFragment(selector, context).firstChild;
+
 						while (node) {
-							this.add(node);
+							push.call(self, node);
 							node = node.nextSibling;
 						}
 					} else {
@@ -268,31 +212,38 @@ define("tinymce/dom/DomQuery", [
 						self[0] = node;
 					}
 				} else {
-					return DomQuery(context || document).find(selector);
+					return DomQuery(context).find(selector);
 				}
 			} else {
-				this.add(selector);
+				this.add(selector, false);
 			}
 
 			return self;
 		},
 
 		toArray: function() {
-			return toArray(this);
+			return Tools.toArray(this);
 		},
 
-		add: function(items) {
-			var self = this;
+		add: function(items, sort) {
+			var self = this, nodes, i;
 
-			// Force single item into array
-			if (!isArray(items)) {
-				if (items instanceof DomQuery) {
-					self.add(items.toArray());
-				} else {
-					push.call(self, items);
+			if (isString(items)) {
+				return self.add(DomQuery(items));
+			}
+
+			if (items.nodeType) {
+				return self.add([items]);
+			}
+
+			if (sort !== false) {
+				nodes = DomQuery.unique(self.toArray().concat(DomQuery.makeArray(items)));
+				self.length = nodes.length;
+				for (i = 0; i < nodes.length; i++) {
+					self[i] = nodes[i];
 				}
 			} else {
-				push.apply(self, items);
+				push.apply(self, DomQuery.makeArray(items));
 			}
 
 			return self;
@@ -302,27 +253,50 @@ define("tinymce/dom/DomQuery", [
 			var self = this;
 
 			if (typeof name === "object") {
-				each(name, function(value, name) {
+				each(name, function(name, value) {
 					self.attr(name, value);
 				});
 			} else if (isDefined(value)) {
-				this.each(function() {
-					if (this.nodeType === 1) {
-						this.setAttribute(name, value);
-					}
-				});
+				if (value === null) {
+					self.removeAttr(name);
+				} else if (typeof value == "function") {
+					self.each(function(i) {
+						self.attr(name, value(i, self.attr(name)));
+					});
+				} else {
+					this.each(function() {
+						if (this.nodeType === 1) {
+							this.setAttribute(name, value);
+						}
+					});
+				}
 			} else {
-				return self[0] && self[0].nodeType === 1 ? self[0].getAttribute(name) : undefined;
+				if (self[0] && self[0].nodeType === 1) {
+					value = self[0].getAttribute(name);
+					if (value === null) {
+						value = undef;
+					}
+				}
+
+				return value;
 			}
 
 			return self;
+		},
+
+		removeAttr: function(name) {
+			return this.each(function() {
+				if (this.nodeType === 1) {
+					this.removeAttribute(name, true);
+				}
+			});
 		},
 
 		css: function(name, value) {
 			var self = this;
 
 			if (typeof name === "object") {
-				each(name, function(value, name) {
+				each(name, function(name, value) {
 					self.css(name, value);
 				});
 			} else {
@@ -352,7 +326,20 @@ define("tinymce/dom/DomQuery", [
 						}
 					});
 				} else {
-					return self[0] ? self[0].style[name] : undefined;
+					if (self.context.defaultView) {
+						// Remove camelcase
+						name = name.replace(/[A-Z]/g, function(a) {
+							return '-' + a;
+						});
+
+						try {
+							return self.context.defaultView.getComputedStyle(self[0], null).getPropertyValue(name);
+						} catch (ex) {
+							return undef;
+						}
+					} else if (self[0].currentStyle) {
+						return self[0].currentStyle[name];
+					}
 				}
 			}
 
@@ -408,13 +395,17 @@ define("tinymce/dom/DomQuery", [
 			if (isDefined(value)) {
 				i = self.length;
 				while (i--) {
-					self[i].innerText = self[0].textContent = value;
+					if ("innerText" in self[i]) {
+						self[i].innerText = value;
+					} else {
+						self[0].textContent = value;
+					}
 				}
 
 				return self;
 			}
 
-			return self[0] ? self[0].innerText || self[0].textContent : '';
+			return self[0] ? (self[0].innerText || self[0].textContent) : '';
 		},
 
 		append: function() {
@@ -430,7 +421,7 @@ define("tinymce/dom/DomQuery", [
 				if (this.nodeType === 1) {
 					this.insertBefore(node, this.firstChild);
 				}
-			});
+			}, true);
 		},
 
 		before: function() {
@@ -463,6 +454,12 @@ define("tinymce/dom/DomQuery", [
 			return this;
 		},
 
+		prependTo: function(val) {
+			DomQuery(val).prepend(this);
+
+			return this;
+		},
+
 		addClass: function(className) {
 			return this.toggleClass(className, true);
 		},
@@ -479,7 +476,7 @@ define("tinymce/dom/DomQuery", [
 					self.toggleClass(this, state);
 				});
 			} else {
-				self.each(function(node) {
+				self.each(function(index, node) {
 					var existingClassName;
 
 					if (hasClass(node, className) !== state) {
@@ -599,21 +596,19 @@ define("tinymce/dom/DomQuery", [
 	};
 
 	// Static members
-	extend(DomQuery, {
-		extend: extend,
-		toArray: toArray,
+	Tools.extend(DomQuery, {
+		extend: Tools.extend,
+		makeArray: Tools.toArray,
 		inArray: inArray,
-		isArray: isArray,
+		isArray: Tools.isArray,
 		each: each,
 		trim: trim,
-		makeMap: makeMap,
 
 		// Sizzle
 		find: Sizzle,
 		expr: Sizzle.selectors,
 		unique: Sizzle.uniqueSort,
 		text: Sizzle.getText,
-		isXMLDoc: Sizzle.isXML,
 		contains: Sizzle.contains,
 		filter: function(expr, elems, not) {
 			if (not) {
@@ -647,7 +642,7 @@ define("tinymce/dom/DomQuery", [
 	function sibling(n, el, siblingName, nodeType) {
 		var r = [];
 
-		for(; n; n = n[siblingName]) {
+		for (; n; n = n[siblingName]) {
 			if ((!nodeType || n.nodeType === nodeType) && n !== el) {
 				r.push(n);
 			}
@@ -692,9 +687,9 @@ define("tinymce/dom/DomQuery", [
 		},
 
 		contents: function(node) {
-			return toArray((node.nodeName === "iframe" ? node.contentDocument || node.contentWindow.document : node).childNodes);
+			return Tools.toArray((node.nodeName === "iframe" ? node.contentDocument || node.contentWindow.document : node).childNodes);
 		}
-	}, function(name, fn){
+	}, function(name, fn) {
 		DomQuery.fn[name] = function(selector) {
 			var self = this, result;
 
