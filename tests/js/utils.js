@@ -144,6 +144,12 @@ function type(chr) {
 		editor.dom.fire(target, type, evt);
 	};
 
+	function selectLast(rng, node) {
+		rng.setStart(node, node.data.length - 1);
+		rng.setEnd(node, node.data.length);
+		editor.selection.setRng(rng);
+	}
+
 	// Numeric keyCode
 	if (typeof(chr) == "number") {
 		charCode = keyCode = chr;
@@ -189,10 +195,11 @@ function type(chr) {
 					// If caret is at <p>abc|</p> and after the abc text node then move it to the end of the text node
 					// Expand the range to include the last char <p>ab[c]</p> since IE 11 doesn't delete otherwise
 					if (rng.startOffset >= nodes.length - 1 && lastNode && lastNode.nodeType == 3 && lastNode.data.length > 0) {
-						rng.setStart(lastNode, lastNode.data.length - 1);
-						rng.setEnd(lastNode, lastNode.data.length);
-						editor.selection.setRng(rng);
+						selectLast(rng, lastNode)
 					}
+				} else if (rng.startContainer.nodeType === 3 && rng.collapsed) {
+					var node = rng.startContainer;
+					selectLast(rng, node);
 				}
 
 				editor.getDoc().execCommand('Delete', false, null);
