@@ -87,8 +87,8 @@ define("tinymce/spellcheckerplugin/Plugin", [
 				items.push({
 					text: suggestion,
 					onclick: function() {
-						editor.insertContent(editor.dom.encode(suggestion));
 						editor.dom.remove(spans);
+						editor.insertContent(editor.dom.encode(suggestion));
 						checkIfFinished();
 					}
 				});
