@@ -2,6 +2,7 @@ define(
   'ephox.phoenix.api.general.Wrapping',
 
   [
+    'ephox.phoenix.wrap.SpanWrap',
     'ephox.phoenix.wrap.Wrapper',
     'ephox.phoenix.wrap.Wraps'
   ],
@@ -9,7 +10,7 @@ define(
   /**
    * Documentation is in the actual implementations.
    */
-  function (Wrapper, Wraps) {
+  function (SpanWrap, Wrapper, Wraps) {
     var nu = function (universe, element) {
       return Wraps(universe, element);
     };
@@ -30,12 +31,17 @@ define(
       return Wrapper.reuse(universe, base, baseOffset, end, endOffset, predicate, nu);
     };
 
+    var spans = function (universe, base, baseOffset, end, endOffset, exclusions) {
+      return SpanWrap.spans(universe, base, baseOffset, end, endOffset, exclusions);
+    };
+
     return {
       nu: nu,
       wrapWith: wrapWith,
       wrapper: wrapper,
       leaves: leaves,
-      reuse: reuse
+      reuse: reuse,
+      spans: spans
     };
   }
 );
