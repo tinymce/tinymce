@@ -19,25 +19,26 @@
 define("tinymce/dom/DomQuery", [
 	"tinymce/dom/EventUtils",
 	"tinymce/dom/Sizzle",
-	"tinymce/util/Tools"
-], function(EventUtils, Sizzle, Tools) {
+	"tinymce/util/Tools",
+	"tinymce/Env"
+], function(EventUtils, Sizzle, Tools, Env) {
 	var doc = document, push = Array.prototype.push, slice = Array.prototype.slice;
 	var rquickExpr = /^(?:[^#<]*(<[\w\W]+>)[^>]*$|#([\w\-]*)$)/;
 	var Event = EventUtils.Event, undef;
 
 	function isDefined(obj) {
-		return typeof obj !== "undefined";
+		return typeof obj !== 'undefined';
 	}
 
 	function isString(obj) {
-		return typeof obj === "string";
+		return typeof obj === 'string';
 	}
 
 	function createFragment(html, fragDoc) {
 		var frag, node, container;
 
 		fragDoc = fragDoc || doc;
-		container = fragDoc.createElement("div");
+		container = fragDoc.createElement('div');
 		frag = fragDoc.createDocumentFragment();
 		container.innerHTML = html;
 
@@ -51,7 +52,7 @@ define("tinymce/dom/DomQuery", [
 	function domManipulate(targetNodes, sourceItem, callback, reverse) {
 		var i;
 
-		if (typeof sourceItem === "string") {
+		if (isString(sourceItem)) {
 			sourceItem = createFragment(sourceItem);
 		} else if (sourceItem.length && !sourceItem.nodeType) {
 			if (reverse) {
@@ -79,7 +80,90 @@ define("tinymce/dom/DomQuery", [
 		return node && className && (' ' + node.className + ' ').indexOf(' ' + className + ' ') !== -1;
 	}
 
+	function wrap(elements, wrapper, all) {
+		var lastParent, newWrapper;
+
+		wrapper = DomQuery(wrapper)[0];
+
+		elements.each(function() {
+			var self = this;
+
+			if (!all || lastParent != self.parentNode) {
+				lastParent = self.parentNode;
+				newWrapper = wrapper.cloneNode(false);
+				self.parentNode.insertBefore(newWrapper, self);
+				newWrapper.appendChild(self);
+			} else {
+				newWrapper.appendChild(self);
+			}
+		});
+
+		return elements;
+	}
+
 	var numericCssMap = Tools.makeMap('fillOpacity fontWeight lineHeight opacity orphans widows zIndex zoom', ' ');
+	var booleanMap = Tools.makeMap('checked compact declare defer disabled ismap multiple nohref noshade nowrap readonly selected', ' ');
+	var propFix = {
+		'for': 'htmlFor',
+		'class': 'className',
+		'readonly': 'readOnly'
+	};
+
+	var attrGetHooks = {}, attrSetHooks = {};
+
+	function appendHooks(target, hooks) {
+		each(hooks, function(key, value) {
+			each(key.split(' '), function() {
+				target[this] = value;
+			});
+		});
+	}
+
+	if (Env.ie && Env.ie <= 7) {
+		appendHooks(attrGetHooks, {
+			maxlength: function(elm, value) {
+				value = elm.maxLength;
+
+				if (value === 0x7fffffff) {
+					return undef;
+				}
+
+				return value;
+			},
+
+			size: function(elm, value) {
+				value = elm.size;
+
+				if (value === 20) {
+					return undef;
+				}
+
+				return value;
+			},
+
+			'class': function(elm) {
+				return elm.className;
+			},
+
+			style: function(elm) {
+				if (elm.style.cssText.length === 0) {
+					return undef;
+				}
+
+				return elm.style.cssText;
+			}
+		});
+
+		appendHooks(attrSetHooks, {
+			'class': function(elm, value) {
+				elm.className = value;
+			},
+
+			style: function(elm, value) {
+				elm.style.cssText = value;
+			}
+		});
+	}
 
 	function DomQuery(selector, context) {
 		/*eslint new-cap:0 */
@@ -114,7 +198,7 @@ define("tinymce/dom/DomQuery", [
 	var whiteSpaceRegExp = /^\s*|\s*$/g;
 
 	function trim(str) {
-		return (str === null || str === undefined) ? '' : ("" + str).replace(whiteSpaceRegExp, '');
+		return (str === null || str === undef) ? '' : ("" + str).replace(whiteSpaceRegExp, '');
 	}
 
 	/**
@@ -250,29 +334,42 @@ define("tinymce/dom/DomQuery", [
 		},
 
 		attr: function(name, value) {
-			var self = this;
+			var self = this, hook;
 
 			if (typeof name === "object") {
 				each(name, function(name, value) {
 					self.attr(name, value);
 				});
 			} else if (isDefined(value)) {
-				if (value === null) {
-					self.removeAttr(name);
-				} else if (typeof value == "function") {
-					self.each(function(i) {
-						self.attr(name, value(i, self.attr(name)));
-					});
-				} else {
-					this.each(function() {
-						if (this.nodeType === 1) {
-							this.setAttribute(name, value);
+				this.each(function() {
+					var hook;
+
+					if (this.nodeType === 1) {
+						hook = attrSetHooks[name];
+						if (hook) {
+							hook(this, value, name);
 						}
-					});
-				}
+
+						if (value === null) {
+							this.removeAttribute(name, 2);
+						} else {
+							this.setAttribute(name, value, 2);
+						}
+					}
+				});
 			} else {
 				if (self[0] && self[0].nodeType === 1) {
-					value = self[0].getAttribute(name);
+					if (booleanMap[name]) {
+						return self.prop(name) ? name : undef;
+					}
+
+					value = self[0].getAttribute(name, 2);
+
+					hook = attrGetHooks[name];
+					if (hook) {
+						return hook(self[0], value, name);
+					}
+
 					if (value === null) {
 						value = undef;
 					}
@@ -285,11 +382,33 @@ define("tinymce/dom/DomQuery", [
 		},
 
 		removeAttr: function(name) {
-			return this.each(function() {
-				if (this.nodeType === 1) {
-					this.removeAttribute(name, true);
+			return this.attr(name, null);
+		},
+
+		prop: function(name, value) {
+			var self = this;
+
+			name = propFix[name] || name;
+
+			if (typeof name === "object") {
+				each(name, function(name, value) {
+					self.prop(name, value);
+				});
+			} else if (isDefined(value)) {
+				this.each(function() {
+					if (this.nodeType == 1) {
+						this[name] = value;
+					}
+				});
+			} else {
+				if (self[0] && self[0].nodeType && name in self[0]) {
+					return self[0][name];
 				}
-			});
+
+				return value;
+			}
+
+			return self;
 		},
 
 		css: function(name, value) {
@@ -379,8 +498,14 @@ define("tinymce/dom/DomQuery", [
 
 			if (isDefined(value)) {
 				i = self.length;
-				while (i--) {
-					self[i].innerHTML = value;
+
+				try {
+					while (i--) {
+						self[i].innerHTML = value;
+					}
+				} catch (ex) {
+					// Workaround for "Unkown runtime error" when DIV is added to P on IE
+					DomQuery(self[i]).empty().append(value);
 				}
 
 				return self;
@@ -429,7 +554,7 @@ define("tinymce/dom/DomQuery", [
 
 			if (self[0] && self[0].parentNode) {
 				return domManipulate(self, arguments, function(node) {
-					this.parentNode.insertBefore(node, this.nextSibling);
+					this.parentNode.insertBefore(node, this);
 				});
 			}
 
@@ -441,8 +566,8 @@ define("tinymce/dom/DomQuery", [
 
 			if (self[0] && self[0].parentNode) {
 				return domManipulate(self, arguments, function(node) {
-					this.parentNode.insertBefore(node, this);
-				});
+					this.parentNode.insertBefore(node, this.nextSibling);
+				}, true);
 			}
 
 			return self;
@@ -471,21 +596,27 @@ define("tinymce/dom/DomQuery", [
 		toggleClass: function(className, state) {
 			var self = this;
 
+			// Functions are not supported
+			if (typeof className != 'string') {
+				return self;
+			}
+
 			if (className.indexOf(' ') !== -1) {
 				each(className.split(' '), function() {
 					self.toggleClass(this, state);
 				});
 			} else {
 				self.each(function(index, node) {
-					var existingClassName;
+					var existingClassName, classState;
 
-					if (hasClass(node, className) !== state) {
+					classState = hasClass(node, className);
+					if (classState !== state) {
 						existingClassName = node.className;
 
-						if (state) {
-							node.className += existingClassName ? ' ' + className : className;
-						} else {
+						if (classState) {
 							node.className = trim((" " + existingClassName + " ").replace(' ' + className + ' ', ' '));
+						} else {
+							node.className += existingClassName ? ' ' + className : className;
 						}
 					}
 				});
@@ -514,6 +645,16 @@ define("tinymce/dom/DomQuery", [
 			});
 		},
 
+		trigger: function(name) {
+			return this.each(function() {
+				if (typeof name == 'object') {
+					Event.fire(this, name.type, name);
+				} else {
+					Event.fire(this, name);
+				}
+			});
+		},
+
 		show: function() {
 			return this.css('display', '');
 		},
@@ -539,34 +680,30 @@ define("tinymce/dom/DomQuery", [
 		},
 
 		replaceWith: function(content) {
-			var self = this;
-
-			if (self[0]) {
-				self[0].parentNode.replaceChild(DomQuery(content)[0], self[0]);
-			}
-
-			return self;
+			return this.before(content).remove();
 		},
 
 		wrap: function(wrapper) {
-			wrapper = DomQuery(wrapper)[0];
+			return wrap(this, wrapper);
+		},
 
-			return this.each(function() {
-				var self = this, newWrapper = wrapper.cloneNode(false);
-				self.parentNode.insertBefore(newWrapper, self);
-				newWrapper.appendChild(self);
+		wrapAll: function(wrapper) {
+			return wrap(this, wrapper, true);
+		},
+
+		wrapInner: function(wrapper) {
+			this.each(function() {
+				DomQuery(this).contents().wrapAll(wrapper);
 			});
+
+			return this;
 		},
 
 		unwrap: function() {
 			return this.each(function() {
-				var self = this, node = self.firstChild, currentNode;
-
-				while (node) {
-					currentNode = node;
-					node = node.nextSibling;
-					self.parentNode.insertBefore(currentNode, self);
-				}
+				var parentNode = DomQuery(this.parentNode);
+				parentNode.before(parentNode.contents());
+				parentNode.remove();
 			});
 		},
 
@@ -588,6 +725,27 @@ define("tinymce/dom/DomQuery", [
 			}
 
 			return DomQuery(ret);
+		},
+
+		filter: function(selector) {
+			return DomQuery(DomQuery.filter(selector, this.toArray()));
+		},
+
+		closest: function(selector) {
+			var result = [];
+
+			this.each(function(i, node) {
+				while (node) {
+					if (selector.nodeType && node == selector || DomQuery(node).is(selector)) {
+						result.push(node);
+						break;
+					}
+
+					node = node.parentNode;
+				}
+			});
+
+			return DomQuery(result);
 		},
 
 		push: push,
@@ -639,16 +797,32 @@ define("tinymce/dom/DomQuery", [
 		return matched;
 	}
 
-	function sibling(n, el, siblingName, nodeType) {
-		var r = [];
+	function sibling(node, siblingName, nodeType, until) {
+		var result = [];
 
-		for (; n; n = n[siblingName]) {
-			if ((!nodeType || n.nodeType === nodeType) && n !== el) {
-				r.push(n);
+		for (; node; node = node[siblingName]) {
+			if (nodeType && node.nodeType !== nodeType) {
+				continue;
+			}
+
+			if (until && ((until.nodeType && node === until) || (DomQuery(node).is(until)))) {
+				break;
+			}
+
+			result.push(node);
+		}
+
+		return result;
+	}
+
+	function firstSibling(node, siblingName, nodeType) {
+		for (node = node[siblingName]; node; node = node[siblingName]) {
+			if (node.nodeType == nodeType) {
+				return node;
 			}
 		}
 
-		return r;
+		return null;
 	}
 
 	each({
@@ -667,19 +841,19 @@ define("tinymce/dom/DomQuery", [
 		},
 
 		next: function(node) {
-			return sibling(node, 'nextSibling', 1);
+			return firstSibling(node, 'nextSibling', 1);
 		},
 
 		prev: function(node) {
-			return sibling(node, 'previousSibling', 1);
+			return firstSibling(node, 'previousSibling', 1);
 		},
 
-		nextNodes: function(node) {
-			return sibling(node, 'nextSibling');
+		nextUntil: function(node, selector) {
+			return sibling(node, 'nextSibling', 1, selector).slice(1);
 		},
 
-		prevNodes: function(node) {
-			return sibling(node, 'previousSibling');
+		prevUntil: function(node, selector) {
+			return sibling(node, 'previousSibling', 1, selector).slice(1);
 		},
 
 		children: function(node) {
@@ -691,19 +865,29 @@ define("tinymce/dom/DomQuery", [
 		}
 	}, function(name, fn) {
 		DomQuery.fn[name] = function(selector) {
-			var self = this, result;
+			var self = this, result = [];
 
-			if (self.length > 1) {
-				throw new Error("DomQuery only supports traverse functions on a single node.");
-			}
+			self.each(function() {
+				var nodes = fn.call(result, this, selector, result);
 
-			if (self[0]) {
-				result = fn(self[0], selector);
+				if (nodes) {
+					if (DomQuery.isArray(nodes)) {
+						result.push.apply(result, nodes);
+					} else {
+						result.push(nodes);
+					}
+				}
+			});
+
+			result = DomQuery.unique(result);
+
+			if (name.indexOf('parents') === 0 || name === 'prevUntil') {
+				result = result.reverse();
 			}
 
 			result = DomQuery(result);
 
-			if (selector && name !== "parentsUntil") {
+			if (selector && name.indexOf("Until") == -1) {
 				return result.filter(selector);
 			}
 
@@ -711,15 +895,24 @@ define("tinymce/dom/DomQuery", [
 		};
 	});
 
-	DomQuery.fn.filter = function(selector) {
-		return DomQuery.filter(selector);
-	};
-
 	DomQuery.fn.is = function(selector) {
 		return !!selector && this.filter(selector).length > 0;
 	};
 
 	DomQuery.fn.init.prototype = DomQuery.fn;
+
+	DomQuery.overrideDefaults = function(callback) {
+		var defaults;
+
+		function jQuerySub(selector, context) {
+			defaults = defaults || callback();
+			return new jQuerySub.fn.init(selector || defaults.element, context || defaults.context);
+		}
+
+		DomQuery.extend(jQuerySub, this);
+
+		return jQuerySub;
+	};
 
 	return DomQuery;
 });

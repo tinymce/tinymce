@@ -21,6 +21,7 @@
  */
 define("tinymce/dom/DOMUtils", [
 	"tinymce/dom/Sizzle",
+	"tinymce/dom/DomQuery",
 	"tinymce/html/Styles",
 	"tinymce/dom/EventUtils",
 	"tinymce/dom/TreeWalker",
@@ -29,7 +30,7 @@ define("tinymce/dom/DOMUtils", [
 	"tinymce/Env",
 	"tinymce/util/Tools",
 	"tinymce/dom/StyleSheetLoader"
-], function(Sizzle, Styles, EventUtils, TreeWalker, Range, Entities, Env, Tools, StyleSheetLoader) {
+], function(Sizzle, DomQuery, Styles, EventUtils, TreeWalker, Range, Entities, Env, Tools, StyleSheetLoader) {
 	// Shorten names
 	var each = Tools.each, is = Tools.is, grep = Tools.grep, trim = Tools.trim, extend = Tools.extend;
 	var isWebKit = Env.webkit, isIE = Env.ie;
@@ -72,6 +73,12 @@ define("tinymce/dom/DOMUtils", [
 		self.fixDoc(doc);
 		self.events = settings.ownEvents ? new EventUtils(settings.proxy) : EventUtils.Event;
 		blockElementsMap = settings.schema ? settings.schema.getBlockElements() : {};
+		self.$ = DomQuery.overrideDefaults(function() {
+			return {
+				context: doc,
+				element: self.getRoot()
+			};
+		});
 
 		/**
 		 * Returns true/false if the specified element is a block element or not.

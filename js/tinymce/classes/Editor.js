@@ -42,6 +42,7 @@
  */
 define("tinymce/Editor", [
 	"tinymce/dom/DOMUtils",
+	"tinymce/dom/DomQuery",
 	"tinymce/AddOnManager",
 	"tinymce/html/Node",
 	"tinymce/dom/Serializer",
@@ -64,7 +65,7 @@ define("tinymce/Editor", [
 	"tinymce/EditorObservable",
 	"tinymce/Shortcuts"
 ], function(
-	DOMUtils, AddOnManager, Node, DomSerializer, Serializer,
+	DOMUtils, DomQuery, AddOnManager, Node, DomSerializer, Serializer,
 	Selection, Formatter, UndoManager, EnterKey, ForceBlocks, EditorCommands,
 	URI, ScriptLoader, EventUtils, WindowManager,
 	Schema, DomParser, Quirks, Env, Tools, EditorObservable, Shortcuts
@@ -250,6 +251,13 @@ define("tinymce/Editor", [
 		// Call setup
 		editorManager.fire('SetupEditor', self);
 		self.execCallback('setup', self);
+
+		self.$ = DomQuery.overrideDefaults(function() {
+			return {
+				context: self.getDoc(),
+				element: self.getBody()
+			};
+		});
 	}
 
 	Editor.prototype = {
@@ -476,7 +484,7 @@ define("tinymce/Editor", [
 					self.theme = new Theme(self, ThemeManager.urls[settings.theme]);
 
 					if (self.theme.init) {
-						self.theme.init(self, ThemeManager.urls[settings.theme] || self.documentBaseUrl.replace(/\/$/, ''));
+						self.theme.init(self, ThemeManager.urls[settings.theme] || self.documentBaseUrl.replace(/\/$/, ''), self.$);
 					}
 				} else {
 					self.theme = settings.theme;
@@ -493,7 +501,7 @@ define("tinymce/Editor", [
 						initPlugin(dep);
 					});
 
-					pluginInstance = new Plugin(self, pluginUrl);
+					pluginInstance = new Plugin(self, pluginUrl, self.$);
 
 					self.plugins[plugin] = pluginInstance;
 

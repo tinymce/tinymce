@@ -5,8 +5,28 @@
 		}
 	});
 
-	function addTests(name, $) {
-		test(name + ': Constructor HTML', function() {
+	function normalizeParentNode(parentNode) {
+		// IE 8 will return a document fragment as it's parent when nodes are removed
+		if (parentNode && parentNode.nodeType == 11) {
+			return null;
+		}
+
+		return parentNode;
+	}
+
+	function splitAtView(nodes) {
+		nodes.each(function(i) {
+			if (this.id == 'view') {
+				nodes = nodes.slice(0, i);
+				return false;
+			}
+		});
+
+		return nodes;
+	}
+
+	function addTests(prefix, $) {
+		test(prefix + 'Constructor HTML', function() {
 			var $html;
 
 			$html = $('<b>a</b><i>b</i>');
@@ -15,7 +35,7 @@
 			equal($html[1].tagName, 'I');
 		});
 
-		test(name + ': Constructor HTML with attributes', function() {
+		test(prefix + 'Constructor HTML with attributes', function() {
 			var $html;
 
 			$html = $('<b>', {id: 'id', title: 'title'});
@@ -25,7 +45,7 @@
 			equal($html[0].getAttribute('title'), 'title');
 		});
 
-		test(name + ': Constructor selector', function() {
+		test(prefix + 'Constructor selector', function() {
 			var $selector;
 
 			$selector = $('#view');
@@ -34,7 +54,7 @@
 			strictEqual($selector.context, document);
 		});
 
-		test(name + ': Constructor selector and context', function() {
+		test(prefix + 'Constructor selector and context', function() {
 			var $selector;
 
 			$selector = $('#view', document);
@@ -43,7 +63,7 @@
 			strictEqual($selector.context, document);
 		});
 
-		test(name + ': Constructor array', function() {
+		test(prefix + 'Constructor array', function() {
 			var $html;
 
 			$html = $([document.getElementById('view'), document.body]);
@@ -52,7 +72,7 @@
 			equal($html[1].tagName, 'BODY');
 		});
 
-		test(name + ': Constructor query instance', function() {
+		test(prefix + 'Constructor query instance', function() {
 			var $clone;
 
 			$clone = $($('#view'));
@@ -60,7 +80,7 @@
 			equal($clone[0].tagName, 'DIV');
 		});
 
-		test(name + ': static extend', function() {
+		test(prefix + 'static extend()', function() {
 			var data;
 
 			deepEqual($.extend({a: 1, b: 1}, {b: 2, c: 2}), {a: 1, b: 2, c: 2});
@@ -70,22 +90,22 @@
 			ok(data === $.extend(data, {b: 2, c: 2}, {c: 3, d: 3}), {a: 1, b: 2, c: 3, d: 3});
 		});
 
-		test(name + ': static makeArray', function() {
+		test(prefix + 'static makeArray()', function() {
 			deepEqual($.makeArray({'0': 'a', '1': 'b', length: 2}), ['a', 'b']);
 		});
 
-		test(name + ': static inArray', function() {
+		test(prefix + 'static inArray()', function() {
 			deepEqual($.inArray(1, [1, 2]), 0);
 			deepEqual($.inArray(2, [1, 2]), 1);
 			deepEqual($.inArray(3, [1, 2]), -1);
 		});
 
-		test(name + ': static isArray', function() {
+		test(prefix + 'static isArray()', function() {
 			ok($.isArray([]));
 			ok(!$.isArray({}));
 		});
 
-		test(name + ': static each', function() {
+		test(prefix + 'static each()', function() {
 			var data;
 
 			data = '';
@@ -114,13 +134,13 @@
 			equal(data, '1021');
 		});
 
-		test(name + ': static trim', function() {
+		test(prefix + 'static trim()', function() {
 			equal($.trim(' a '), 'a');
 			equal($.trim('a '), 'a');
 			equal($.trim(' a'), 'a');
 		});
 
-		test(name + ': static unique', function() {
+		test(prefix + 'static unique()', function() {
 			var nodes;
 
 			nodes = $.unique([document.getElementById('view'), document.getElementById('view'), document.body]);
@@ -129,26 +149,26 @@
 			equal(nodes[1].tagName, 'DIV');
 		});
 
-		test(name + ': toArray', function() {
+		test(prefix + 'toArray()', function() {
 			ok($.isArray($('#view').toArray()));
 			equal($('#view').toArray().length, 1);
 		});
 
-		test(name + ': add single element', function() {
+		test(prefix + 'add() single element', function() {
 			var $nodes = $('#view').add(document.body);
 			equal($nodes.length, 2);
 			equal($nodes[0].tagName, 'BODY');
 			equal($nodes[1].tagName, 'DIV');
 		});
 
-		test(name + ': add multiple elements (duplicates)', function() {
+		test(prefix + 'add() multiple elements (duplicates)', function() {
 			var $nodes = $('#view,#view').add([document.body, document.body]);
 			equal($nodes.length, 2);
 			equal($nodes[0].tagName, 'BODY');
 			equal($nodes[1].tagName, 'DIV');
 		});
 
-		test(name + ': add multiple elements (non duplicates)', function() {
+		test(prefix + 'add() multiple elements (non duplicates)', function() {
 			var $nodes = $('#view').add([$('<b/>')[0], $('<i/>')[0]]);
 			equal($nodes.length, 3);
 			equal($nodes[0].tagName, 'DIV');
@@ -156,27 +176,68 @@
 			equal($nodes[2].tagName, 'I');
 		});
 
-		test(name + ': add selector', function() {
+		test(prefix + 'add() selector', function() {
 			var $nodes = $().add('#view');
 			equal($nodes.length, 1);
 			equal($nodes[0].tagName, 'DIV');
 		});
 
-		test(name + ': attr set/get attr on element', function() {
+		test(prefix + 'attr() set/get attr on element', function() {
 			var $elm;
 
 			$elm = $('<b/>').attr('id', 'x');
 			equal($elm.attr('id'), 'x');
-			equal(typeof $elm.attr('noattr'), 'undefined');
+			equal(typeof $elm.attr('noattr'), 'undefined', 'Undefined attribute shouldn\'t have a value');
 
-			$elm = $('<b/>').attr('id', null);
-			equal(typeof $elm.attr('id'), 'undefined');
+			$elm = $('<b/>').attr('attr', null);
+			equal(typeof $elm.attr('attr'), 'undefined', 'Deleted attribute shouldn\'t have a value (1)');
 
 			$elm = $('<b/>').attr('id', 1);
 			strictEqual($elm.attr('id'), '1');
 		});
 
-		test(name + ': attr set/get attrs on element', function() {
+		test(prefix + 'attr() set/get style attr on element (IE 7)', function() {
+			$elm = $('<b style="font-size: 10px" />').attr('style', 'font-size: 43px');
+			equal($elm.attr('style').toLowerCase().split(';')[0], 'font-size: 43px');
+		});
+
+		test(prefix + 'attr() set/get checked attr on element (IE 7)', function() {
+			$elm = $('<input type="checkbox" />').attr('checked', 'checked');
+			equal($elm.attr('checked').toLowerCase(), 'checked');
+		});
+
+		test(prefix + 'attr() get special attrs on element (IE 7)', function() {
+			$elm = $('<input type="checkbox" />');
+			equal(typeof $elm.attr('maxlength'), 'undefined', 'Undefined maxlength');
+			equal(typeof $elm.attr('size'), 'undefined', 'Undefined size');
+			equal(typeof $elm.attr('checked'), 'undefined', 'Undefined checked');
+			equal(typeof $elm.attr('readonly'), 'undefined', 'Undefined readonly');
+			equal(typeof $elm.attr('disabled'), 'undefined', 'Undefined disabled');
+
+			$elm = $('<input type="text" />');
+			equal(typeof $elm.attr('maxlength'), 'undefined', 'Undefined maxlength');
+			equal(typeof $elm.attr('size'), 'undefined', 'Undefined size');
+			equal(typeof $elm.attr('checked'), 'undefined', 'Undefined checked');
+			equal(typeof $elm.attr('readonly'), 'undefined', 'Undefined readonly');
+			equal(typeof $elm.attr('disabled'), 'undefined', 'Undefined disabled');
+
+			$elm = $('<input type="text" size="11" maxlength="21" disabled="disabled" />');
+			equal($elm.attr('maxlength'), '21', 'maxlength');
+			equal($elm.attr('size'), '11', 'size');
+			equal($elm.attr('disabled'), 'disabled', 'disabled');
+
+			$elm = $('<textarea></textarea>');
+			equal(typeof $elm.attr('maxlength'), 'undefined', 'Undefined maxlength');
+			equal(typeof $elm.attr('size'), 'undefined', 'Undefined size');
+			equal(typeof $elm.attr('checked'), 'undefined', 'Undefined checked');
+			equal(typeof $elm.attr('readonly'), 'undefined', 'Undefined readonly');
+			equal(typeof $elm.attr('disabled'), 'undefined', 'Undefined disabled');
+
+			$elm = $('<textarea readonly="readonly"></textarea>');
+			equal($elm.attr('readonly'), 'readonly', 'readonly');
+		});
+
+		test(prefix + 'attr() set/get attrs on element', function() {
 			var $elm;
 
 			$elm = $('<b/>').attr({id: 'x', title: 'y'});
@@ -184,31 +245,48 @@
 			equal($elm.attr('title'), 'y');
 		});
 
-		test(name + ': attr set/get attr function on element', function() {
-			var $elm;
-
-			$elm = $('<b id="a" />').attr('id', function(i, value) {return i + value;});
-			equal($elm.attr('id'), '0a');
-		});
-
-		test(name + ': attr set/get on non element', function() {
+		test(prefix + 'attr() set/get on non element', function() {
 			var $elm;
 
 			$elm = $([document.createTextNode('x')]).attr('id', 'x');
 			equal(typeof $elm.attr('id'), 'undefined');
 		});
 
-		test(name + ': removeAttr on element', function() {
+		test(prefix + 'removeAttr() on element', function() {
 			var $elm;
 
-			$elm = $('<b id="a" />').removeAttr('id');
-			equal(typeof $elm.attr('id'), 'undefined');
+			$elm = $('<b attr="a" />').removeAttr('AttR');
+			equal(typeof $elm.attr('attr'), 'undefined');
 
 			$elm = $([document.createTextNode('x')]).removeAttr('id');
 			equal(typeof $elm.attr('id'), 'undefined');
 		});
 
-		test(name + ': css get/set single item on element', function() {
+		test(prefix + 'prop() set/get attr on element', function() {
+			var $elm;
+
+			$elm = $('<b/>').prop('id', 'x');
+			equal($elm.prop('id'), 'x');
+			equal(typeof $elm.prop('noprop'), 'undefined');
+
+			$elm = $('<b class="x"/>');
+			equal($elm.prop('class'), 'x');
+			equal($elm.prop('className'), 'x');
+
+			$elm = $('<label for="x"/>');
+			equal($elm.prop('for'), 'x');
+			equal($elm.prop('htmlFor'), 'x');
+		});
+
+		test(prefix + 'prop() set/get attrs on element', function() {
+			var $elm;
+
+			$elm = $('<b/>').prop({id: 'x', title: 'y'});
+			equal($elm.prop('id'), 'x');
+			equal($elm.prop('title'), 'y');
+		});
+
+		test(prefix + 'css() get/set single item on element', function() {
 			var $elm;
 
 			$elm = $('<b />').appendTo('#view').css('font-size', 42);
@@ -218,7 +296,7 @@
 			equal($elm.css('fontSize'), '42px');
 		});
 
-		test(name + ': css get/set items on element', function() {
+		test(prefix + 'css() get/set items on element', function() {
 			var $elm;
 
 			$elm = $('<b>x</b>').appendTo('#view').css({'font-size': 42, 'text-indent': 42});
@@ -226,60 +304,515 @@
 			equal($elm.css('text-indent'), '42px');
 		});
 
-		test(name + ': remove single element', function() {
+		test(prefix + 'remove() single element', function() {
 			var $elm;
 
 			$elm = $('<b>x</b>').appendTo('#view').remove();
-			strictEqual($elm[0].parentNode, null);
+			strictEqual(normalizeParentNode($elm[0].parentNode), null);
 		});
 
-		test(name + ': remove multiple elements', function() {
+		test(prefix + 'remove() multiple elements', function() {
 			var $elm;
 
 			$elm = $('<b>x</b><em>x</em>').appendTo('#view').remove();
-			strictEqual($elm[0].parentNode, null);
-			strictEqual($elm[1].parentNode, null);
+			strictEqual(normalizeParentNode($elm[0].parentNode), null);
+			strictEqual(normalizeParentNode($elm[1].parentNode), null);
 		});
 
-		test(name + ': remove unappended element', function() {
+		test(prefix + 'remove() unappended element', function() {
 			var $elm;
 
 			$elm = $('<b>x</b>').remove();
-			strictEqual($elm[0].parentNode, null);
+			strictEqual(normalizeParentNode($elm[0].parentNode), null);
 		});
 
-		test(name + ': empty single element', function() {
+		test(prefix + 'empty() single element', function() {
 			var $elm;
 
 			$elm = $('<b><i>x<i>y</b>').empty();
 			strictEqual($elm[0].firstChild, null);
 		});
 
-		test(name + ': html set on single element', function() {
+		test(prefix + 'html() set on single element', function() {
 			var $elm;
 
 			$elm = $('<b></b>').html('<i>x</i>');
 			strictEqual($elm[0].firstChild.tagName, 'I');
 		});
 
-		test(name + ': html get on element/elements', function() {
+		test(prefix + 'html() get on element/elements', function() {
 			strictEqual($('<b><i>x</i></b>').html().toLowerCase(), '<i>x</i>');
 			strictEqual($('<b><i>x</i></b><i>a</i>').html().toLowerCase(), '<i>x</i>');
 		});
 
-		test(name + ': text set on single element', function() {
+		/*
+		test(prefix + 'html() set comment as first child (IE)', function() {
+			$('#view').html('<!-- x -->y');
+			strictEqual($('#view').html(), '<!-- x -->y');
+		});
+		*/
+
+		test(prefix + 'html() set DIV as child of P (IE 8)', function() {
+			$('<p></p>').appendTo('#view');
+			$('#view p').html('<div>x</div>');
+			strictEqual($('#view').html().toLowerCase().replace(/[\r\n]/g, ''), '<p><div>x</div></p>');
+		});
+
+		test(prefix + 'text() set on single element', function() {
 			var $elm;
 
 			$elm = $('<b></b>').text('<i>x</i>');
 			strictEqual($elm[0].firstChild.data, '<i>x</i>');
 		});
 
-		test(name + ': text get on element', function() {
+		test(prefix + 'text() get on element', function() {
 			strictEqual($('<b><i>x</i>y</b>').text().toLowerCase(), 'xy');
+		});
+
+		test(prefix + 'append() to element', function() {
+			var $elm;
+
+			$elm = $('<b>a</b>');
+			$elm.append($('<i>b</i>'));
+			strictEqual($elm.html().toLowerCase(), 'a<i>b</i>');
+
+			$elm = $('<b>a</b>');
+			$elm.append($('<i>b</i><b>c</b>'));
+			strictEqual($elm.html().toLowerCase(), 'a<i>b</i><b>c</b>');
+
+			$elm = $('<b></b>');
+			$elm.append($('<i>b</i>'));
+			strictEqual($elm.html().toLowerCase(), '<i>b</i>');
+		});
+
+		test(prefix + 'prepend() to element', function() {
+			var $elm;
+
+			$elm = $('<b>a</b>');
+			$elm.prepend($('<i>b</i>'));
+			strictEqual($elm.html().toLowerCase(), '<i>b</i>a');
+
+			$elm = $('<b>a</b>');
+			$elm.prepend($('<i>b</i><b>c</b>'));
+			strictEqual($elm.html().toLowerCase(), '<i>b</i><b>c</b>a');
+
+			$elm = $('<b></b>');
+			$elm.prepend($('<i>b</i>'));
+			strictEqual($elm.html().toLowerCase(), '<i>b</i>');
+		});
+
+		test(prefix + 'before() element', function() {
+			var $elm;
+
+			$elm = $('<b><i>a</i></b>');
+			$elm.children().before($('<i>b</i>'));
+			strictEqual($elm.html().toLowerCase(), '<i>b</i><i>a</i>');
+
+			$elm = $('<b><i>a</i></b>');
+			$elm.children().before($('<i>b</i><i>c</i>'));
+			strictEqual($elm.html().toLowerCase(), '<i>b</i><i>c</i><i>a</i>');
+		});
+
+		test(prefix + 'after() element', function() {
+			var $elm;
+
+			$elm = $('<b><i>a</i></b>');
+			$elm.children().after($('<i>b</i>'));
+			strictEqual($elm.html().toLowerCase(), '<i>a</i><i>b</i>');
+
+			$elm = $('<b><i>a</i></b>');
+			$elm.children().after($('<i>b</i><i>c</i>'));
+			strictEqual($elm.html().toLowerCase(), '<i>a</i><i>b</i><i>c</i>');
+		});
+
+		test(prefix + 'appendTo() to element', function() {
+			var $elm;
+
+			$elm = $('<b>a</b>');
+			$('<i>b</i>').appendTo($elm);
+			strictEqual($elm.html().toLowerCase(), 'a<i>b</i>');
+
+			$elm = $('<b>a</b>');
+			$('<i>b</i><b>c</b>').appendTo($elm);
+			strictEqual($elm.html().toLowerCase(), 'a<i>b</i><b>c</b>');
+
+			$elm = $('<b></b>');
+			$('<i>b</i>').appendTo($elm);
+			strictEqual($elm.html().toLowerCase(), '<i>b</i>');
+		});
+
+		test(prefix + 'prependTo() to element', function() {
+			var $elm;
+
+			$elm = $('<b>a</b>');
+			$('<i>b</i>').prependTo($elm);
+			strictEqual($elm.html().toLowerCase(), '<i>b</i>a');
+
+			$elm = $('<b>a</b>');
+			$('<i>b</i><b>c</b>').prependTo($elm);
+			strictEqual($elm.html().toLowerCase(), '<i>b</i><b>c</b>a');
+
+			$elm = $('<b></b>');
+			$('<i>b</i>').prependTo($elm);
+			strictEqual($elm.html().toLowerCase(), '<i>b</i>');
+		});
+
+		test(prefix + 'addClass() to element', function() {
+			var $elm;
+
+			$elm = $('<b></b>').addClass('a');
+			strictEqual($elm.attr('class'), 'a');
+
+			$elm = $('<b class="a"></b>').addClass('b');
+			strictEqual($elm.attr('class'), 'a b');
+		});
+
+		test(prefix + 'removeClass() from element', function() {
+			var $elm;
+
+			$elm = $('<b class="x"></b>').removeClass('a');
+			strictEqual($elm.attr('class'), 'x');
+
+			$elm = $('<b class="a b"></b>').removeClass('b');
+			strictEqual($elm.attr('class'), 'a');
+
+			$elm = $('<b class="a"></b>').removeClass('a');
+			strictEqual($elm.attr('class'), '');
+		});
+
+		test(prefix + 'toggleClass() on element', function() {
+			var $elm;
+
+			$elm = $('<b class="x"></b>').toggleClass('a');
+			strictEqual($elm.attr('class'), 'x a');
+
+			$elm = $('<b class="a b"></b>').toggleClass('b');
+			strictEqual($elm.attr('class'), 'a');
+
+			$elm = $('<b class="a"></b>').toggleClass('a', true);
+			strictEqual($elm.attr('class'), 'a');
+
+			$elm = $('<b class="a b"></b>').toggleClass('a', false);
+			strictEqual($elm.attr('class'), 'b');
+		});
+
+		test(prefix + 'toggleClass() on element', function() {
+			strictEqual($('<b class="a"></b>').hasClass('a'), true);
+			strictEqual($('<b class="a"></b>').hasClass('b'), false);
+			strictEqual($('<b class="a b"></b>').hasClass('b'), true);
+			strictEqual($('<b class="a b"></b>').hasClass('a'), true);
+		});
+
+		test(prefix + 'each() collection', function() {
+			var $html = $('<b>a</b><i>b</i>'), data;
+
+			data = '';
+			$html.each(function(index, elm) {
+				data += index + elm.innerHTML + this.innerHTML;
+			});
+			strictEqual(data, '0aa1bb');
+
+			data = '';
+			$html.each(function(index, elm) {
+				data += index + elm.innerHTML + this.innerHTML;
+
+				if (index === 0) {
+					return false;
+				}
+			});
+			strictEqual(data, '0aa');
+		});
+
+		test(prefix + 'on()/off()/trigger()', function() {
+			var $elm = $('<b />'), lastArgs1, lastArgs2;
+
+			// Single listener
+			$elm.on('click', function(e) {
+				lastArgs1 = e;
+			});
+			$elm.trigger('click');
+			strictEqual(lastArgs1.type, 'click');
+
+			// Single listener trigger object
+			$elm.off().on('click', function(e) {
+				lastArgs1 = e;
+			});
+			$elm.trigger({type: 'click', custom: 'x'});
+			strictEqual(lastArgs1.type, 'click');
+			strictEqual(lastArgs1.custom, 'x');
+
+			// Unbind listeners
+			lastArgs1 = null;
+			$elm.off('click');
+			$elm.trigger('click');
+			strictEqual(lastArgs1, null);
+
+			// Bind two listeners
+			$elm.on('click', function(e) {
+				lastArgs1 = e;
+			});
+			$elm.on('click', function(e) {
+				lastArgs2 = e;
+			});
+			$elm.trigger('click');
+			strictEqual(lastArgs1.type, 'click');
+			strictEqual(lastArgs2.type, 'click');
+
+			// Bind two listeners and stop propagation
+			lastArgs1 = lastArgs2 = null;
+			$elm.off('click');
+			$elm.on('click', function(e) {
+				lastArgs1 = e;
+				e.stopImmediatePropagation();
+			});
+			$elm.on('click', function(e) {
+				lastArgs2 = e;
+			});
+			$elm.trigger('click');
+			strictEqual(lastArgs1.type, 'click');
+			strictEqual(lastArgs2, null);
+		});
+
+		test(prefix + 'show()/hide() element', function() {
+			equal($('<b></b>').hide().attr('style').toLowerCase().split(';')[0], 'display: none');
+			ok(!$('<b></b>').show().attr('style'));
+		});
+
+		test(prefix + 'slice/eq/first/last() on collection', function() {
+			var $html = $('<b>1</b><i>2</i><em>3</em>');
+
+			strictEqual($html.slice(1).length, 2);
+			strictEqual($html.slice(1)[0].tagName, 'I');
+			strictEqual($html.slice(1)[1].tagName, 'EM');
+
+			strictEqual($html.slice(1, 2).length, 1);
+			strictEqual($html.slice(1, 2)[0].tagName, 'I');
+
+			strictEqual($html.slice(-2, -1).length, 1);
+			strictEqual($html.slice(-2, -1)[0].tagName, 'I');
+
+			strictEqual($html.eq(1).length, 1);
+			strictEqual($html.eq(1)[0].tagName, 'I');
+
+			strictEqual($html.eq(-1).length, 1);
+			strictEqual($html.eq(-1)[0].tagName, 'EM');
+
+			strictEqual($html.eq(1).length, 1);
+			strictEqual($html.eq(1)[0].tagName, 'I');
+
+			strictEqual($html.first().length, 1);
+			strictEqual($html.first()[0].tagName, 'B');
+
+			strictEqual($html.last().length, 1);
+			strictEqual($html.last()[0].tagName, 'EM');
+		});
+
+		test(prefix + 'replaceWith() on single element with single element', function() {
+			var $result;
+
+			$('<b>1</b>').appendTo('#view');
+			$result = $('#view b').replaceWith('<i>2</i>');
+			strictEqual($('#view').html().toLowerCase(), '<i>2</i>');
+			strictEqual($result.length, 1);
+			strictEqual($result[0].tagName, 'B');
+		});
+
+		test(prefix + 'replaceWith() on single element with multiple elements', function() {
+			var $result;
+
+			$('<b>1</b>').appendTo('#view');
+			$result = $('#view b').replaceWith('<i>2</i><i>3</i>');
+			strictEqual($('#view').html().toLowerCase(), '<i>2</i><i>3</i>');
+			strictEqual($result.length, 1);
+			strictEqual($result[0].tagName, 'B');
+		});
+/*
+		test(prefix + 'replaceWith() on multiple elements with multiple elements', function() {
+			var $result;
+
+			$('<b>1</b><i>2</i>').appendTo('#view');
+			$result = $('#view b, #view i').replaceWith('<i>3</i><i>4</i>');
+			strictEqual($('#view').html().toLowerCase(), '<i>3</i><i>4</i>');
+			strictEqual($result.length, 2);
+			strictEqual($result[0].tagName, 'B');
+			strictEqual($result[1].tagName, 'I');
+		});
+*/
+		test(prefix + 'wrap() single element', function() {
+			$('<b>1</b>').appendTo('#view').wrap('<i>');
+			strictEqual($('#view').html().toLowerCase(), '<i><b>1</b></i>');
+		});
+
+		test(prefix + 'wrap() multiple element', function() {
+			$('<b>1</b><b>2</b>').appendTo('#view').wrap('<i>');
+			strictEqual($('#view').html().toLowerCase(), '<i><b>1</b></i><i><b>2</b></i>');
+		});
+
+		test(prefix + 'wrapAll() multiple element', function() {
+			$('<b>1</b><b>2</b>').appendTo('#view').wrapAll('<i>');
+			strictEqual($('#view').html().toLowerCase(), '<i><b>1</b><b>2</b></i>');
+		});
+
+		test(prefix + 'wrapInner() multiple element', function() {
+			$('<b>1<i>a</i></b><b>2<i>b</i></b>').appendTo('#view').wrapInner('<i>');
+			strictEqual($('#view').html().toLowerCase(), '<b><i>1<i>a</i></i></b><b><i>2<i>b</i></i></b>');
+		});
+
+		test(prefix + 'unwrap() single element', function() {
+			$('<b>1</b>').appendTo('#view').contents().unwrap();
+			strictEqual($('#view').html().toLowerCase(), '1');
+		});
+
+		test(prefix + 'clone() single element', function() {
+			$('<b>1</b>').appendTo('#view').clone().appendTo('#view');
+			strictEqual($('#view').html().toLowerCase(), '<b>1</b><b>1</b>');
+		});
+
+		test(prefix + 'find()', function() {
+			var $result;
+
+			$('#view').append('<em><i>1</i></em><strong><b>2</b></strong>');
+
+			$result = $('#view').find('*');
+			strictEqual($result.length, 4);
+
+			$result = $('#view em').find('*');
+			strictEqual($result.length, 1);
+			strictEqual($result[0].tagName, 'I');
+
+			$result = $('#view em, #view strong').find('*');
+			strictEqual($result.length, 2);
+			strictEqual($result[0].tagName, 'I');
+			strictEqual($result[1].tagName, 'B');
+		});
+
+		test(prefix + 'parent()', function() {
+			var $result;
+
+			$('#view').append('<em><i>1</i></em><strong><b>2</b></strong>');
+
+			$result = $('#view i, #view b').parent();
+			strictEqual($result.length, 2);
+			strictEqual($result[0].tagName, 'EM');
+			strictEqual($result[1].tagName, 'STRONG');
+
+			$result = $('#view i, #view b').parent('em');
+			strictEqual($result.length, 1);
+			strictEqual($result[0].tagName, 'EM');
+
+			$result = $('#view i, #view b').parent('div');
+			strictEqual($result.length, 0);
+		});
+
+		test(prefix + 'parents()', function() {
+			var $result, html;
+
+			html = $('<div><em><i>1</i></em><strong><b>2</b></strong></div>').appendTo('#view');
+
+			$result = splitAtView($('#view i, #view b').parents());
+			strictEqual($result.length, 3);
+			strictEqual($result[0].tagName, 'STRONG');
+			strictEqual($result[1].tagName, 'EM');
+			strictEqual($result[2].tagName, 'DIV');
+
+			$result = splitAtView($('#view i, #view b').parents('em'));
+			strictEqual($result.length, 1);
+			strictEqual($result[0].tagName, 'EM');
+
+			$result = splitAtView($('#view i, #view b').parents('p'));
+			strictEqual($result.length, 0);
+		});
+
+		test(prefix + 'parentsUntil()', function() {
+			var $result, html;
+
+			html = $('<div><em><i>1</i></em><strong><b>2</b></strong></div>').appendTo('#view');
+
+			$result = $('#view i, #view b').parentsUntil('#view');
+			strictEqual($result.length, 3);
+			strictEqual($result[0].tagName, 'STRONG');
+			strictEqual($result[1].tagName, 'EM');
+			strictEqual($result[2].tagName, 'DIV');
+		});
+
+		test(prefix + 'next()', function() {
+			var $result, html;
+
+			html = $('<b>1</b>2<i>3</i>');
+
+			$result = html.next();
+			strictEqual($result.length, 1);
+			strictEqual($result[0].tagName, 'I');
+		});
+
+		test(prefix + 'prev()', function() {
+			var $result, html;
+
+			html = $('<b>1</b>2<i>3</i>');
+
+			$result = $(html).prev();
+			strictEqual($result.length, 1);
+			strictEqual($result[0].tagName, 'B');
+		});
+
+		test(prefix + 'nextUntil()', function() {
+			var $result, html;
+
+			html = $('<b>1</b><i>2</i><em>3</em><span>3</span>');
+
+			$result = html.first().nextUntil('span');
+			strictEqual($result.length, 2);
+			strictEqual($result[0].tagName, 'I');
+			strictEqual($result[1].tagName, 'EM');
+		});
+
+		test(prefix + 'prevUntil()', function() {
+			var $result, html;
+
+			html = $('<b>1</b><i>2</i><em>3</em><span>3</span>');
+
+			$result = html.prevUntil('b');
+			strictEqual($result.length, 2);
+			strictEqual($result[0].tagName, 'EM');
+			strictEqual($result[1].tagName, 'I');
+		});
+
+		test(prefix + 'children()', function() {
+			var $result, html;
+
+			html = $('<b>1<i>2</i><b>3</b></b>');
+
+			$result = html.children();
+			strictEqual($result.length, 2);
+			strictEqual($result[0].tagName, 'I');
+			strictEqual($result[1].tagName, 'B');
+		});
+
+		test(prefix + 'contents()', function() {
+			var $result, html;
+
+			html = $('<b>1<i>2</i><b>3</b></b>');
+
+			$result = html.contents();
+			strictEqual($result.length, 3);
+			strictEqual($result[0].nodeName, '#text');
+			strictEqual($result[1].tagName, 'I');
+			strictEqual($result[2].tagName, 'B');
+		});
+
+		test(prefix + 'closest()', function() {
+			var innerMost, html;
+
+			html = $('<b><i><em><b>x</b></em></i></b>');
+			innerMost = $(html[0].firstChild.firstChild.firstChild);
+
+			strictEqual(innerMost.closest('b').html(), 'x');
+			strictEqual(innerMost.closest(innerMost[0]).html(), 'x');
+			strictEqual(innerMost.closest('b i').html().toLowerCase(), '<em><b>x</b></em>');
 		});
 	}
 
 	// Run tests against jQuery/DomQuery so we know that we are compatible
-	addTests('DomQuery', tinymce.dom.DomQuery);
-	addTests('jQuery', jQuery);
+	addTests('DomQuery: ', tinymce.dom.DomQuery);
+	addTests('jQuery: ', jQuery);
 })();
