@@ -244,9 +244,9 @@ define("tinymce/spellcheckerplugin/DomTextMatcher", [], function() {
 			index = typeof(index) == "number" ? "" + index : null;
 
 			for (var i = 0; i < elements.length; i++) {
-				var element = elements[i], dataIndex = element.getAttribute('data-mce-index');
+				var element = elements[i], dataIndex = (window.attachEvent && !window.addEventListener) ? element['data-mce-index'] : element.getAttribute('data-mce-index');
 
-				if (dataIndex !== null && dataIndex.length) {
+				if (dataIndex !== null && dataIndex !== undefined) {
 					if (dataIndex === index || index === null) {
 						wrappers.push(element);
 					}
