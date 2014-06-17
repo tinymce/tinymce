@@ -399,7 +399,7 @@ define("tinymce/html/Schema", [
 										'dfn code mark q sup sub samp');
 
 		each((settings.special || 'script noscript style textarea').split(' '), function(name) {
-			specialElements[name] = new RegExp('<\/' + name + '[^>]*>','gi');
+			specialElements[name] = new RegExp('<\/' + name + '[^>]*>', 'gi');
 		});
 
 		// Converts a wildcard expression string to a regexp for example *a will become /.*a/.

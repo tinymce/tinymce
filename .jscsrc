@@ -8,8 +8,8 @@
 	"requireLineFeedAtFileEnd": null,
 	"disallowImplicitTypeConversion": null,
 	"validateJSDoc": null,
-	"disallowLeftStickedOperators": ["?", "/", "*", "=", "==", "===", "!=", "!==", ">", ">=", "<", "<="],
-	"disallowRightStickedOperators": ["?", "/", "*", ":", "=", "==", "===", "!=", "!==", ">", ">=", "<", "<="],
+	"requireCamelCaseOrUpperCaseIdentifiers": null,
+	"maximumLineLength": 255,
 
 	"excludeFiles": [
 		"Jakefile.js",
@@ -17,6 +17,7 @@
 		"tests/**",
 		"tools/**",
 		"**/*.min.js",
+		"**/*.dev.js",
 		"js/tinymce/*.js",
 		"js/tinymce/plugins/compat3x/**",
 		"js/tinymce/plugins/table/plugin.js",

@@ -547,7 +547,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		// Make sure that any messy HTML is retained inside these
 		var specialElements = editor.schema.getSpecialElements();
 		tinymce.each('video audio iframe object'.split(' '), function(name) {
-			specialElements[name] = new RegExp('<\/' + name + '[^>]*>','gi');
+			specialElements[name] = new RegExp('<\/' + name + '[^>]*>', 'gi');
 		});
 
 		// Allow elements
