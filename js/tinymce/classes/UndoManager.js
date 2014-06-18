@@ -35,6 +35,7 @@ define("tinymce/UndoManager", [
 		 * It will keep all data-mce-bogus="1" elements since these can be used to place the caret etc and will
 		 * be removed by the serialization logic when you save.
 		 *
+		 * @private
 		 * @return {String} HTML contents of the editor excluding some internal bogus elements.
 		 */
 		function getContent() {

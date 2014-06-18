@@ -63,6 +63,14 @@
 			strictEqual($selector.context, document);
 		});
 
+		test(prefix + 'Constructor selector and context', function() {
+			var $selector;
+
+			$('#view').html('<div><b>a</b></div><div><b>b</b></div>');
+			$('b', $('#view div')[0]).html('x');
+			equal($('#view').html().toLowerCase(), '<div><b>x</b></div><div><b>b</b></div>');
+		});
+
 		test(prefix + 'Constructor array', function() {
 			var $html;
 
@@ -375,6 +383,14 @@
 			$elm = $('<b>a</b>');
 			$elm.append($('<i>b</i>'));
 			strictEqual($elm.html().toLowerCase(), 'a<i>b</i>');
+
+			$elm = $('<b>a</b>');
+			$elm.append('<i>b</i>');
+			strictEqual($elm.html().toLowerCase(), 'a<i>b</i>');
+
+			$elm = $('<b>a</b>');
+			$elm.append('b');
+			strictEqual($elm.html().toLowerCase(), 'ab');
 
 			$elm = $('<b>a</b>');
 			$elm.append($('<i>b</i><b>c</b>'));
