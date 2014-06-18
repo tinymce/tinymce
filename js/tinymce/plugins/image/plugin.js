@@ -203,7 +203,7 @@ tinymce.PluginManager.add('image', function(editor) {
 		}
 
 		function srcChange(e) {
-			var meta = e.meta;
+			var meta = e.meta || {};
 
 			if (imageListCtrl) {
 				imageListCtrl.value(editor.convertURL(this.value(), 'src'));

@@ -105,6 +105,8 @@ tinymce.PluginManager.add('link', function(editor) {
 		}
 
 		function urlChange(e) {
+			var meta = e.meta || {};
+
 			if (linkListCtrl) {
 				linkListCtrl.value(editor.convertURL(this.value(), 'href'));
 			}
@@ -113,7 +115,7 @@ tinymce.PluginManager.add('link', function(editor) {
 				win.find('#' + key).value(value);
 			});
 
-			if (!e.meta.text) {
+			if (!meta.text) {
 				updateText.call(this);
 			}
 		}
