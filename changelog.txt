@@ -1,4 +1,4 @@
-Version 4.1.0 (2014-06-xx)
+Version 4.1.0 (2014-06-18)
 	Added new file_picker_callback option to replace the old file_browser_callback the latter will still work though.
 	Added new custom colors to textcolor plugin will be displayed if a color picker is provided also shows the latest colors.
 	Added new color_picker_callback option to enable you to add custom color pickers to the editor.
@@ -9,6 +9,7 @@ Version 4.1.0 (2014-06-xx)
 	Added new textpattern plugin that allows you to use markdown like text patterns to format contents.
 	Added new resize helper element that shows the current width & height while resizing.
 	Added new "once" method to Editor and EventDispatcher enables since callback execution events.
+	Added new jQuery like class under tinymce.dom.DomQuery it's exposed on editor instances (editor.$) and globally under (tinymce.$).
 	Fixed so the default resize method for images are proportional shift/ctrl can be used to make an unproportional size.
 	Fixed bug where the image_dimensions option of the image plugin would cause exceptions when it tried to update the size.
 	Fixed bug where table cell dialog class field wasn't properly updated when editing an a table cell with an existing class.

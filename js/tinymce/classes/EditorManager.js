@@ -20,6 +20,7 @@
  */
 define("tinymce/EditorManager", [
 	"tinymce/Editor",
+	"tinymce/dom/DomQuery",
 	"tinymce/dom/DOMUtils",
 	"tinymce/util/URI",
 	"tinymce/Env",
@@ -27,7 +28,7 @@ define("tinymce/EditorManager", [
 	"tinymce/util/Observable",
 	"tinymce/util/I18n",
 	"tinymce/FocusManager"
-], function(Editor, DOMUtils, URI, Env, Tools, Observable, I18n, FocusManager) {
+], function(Editor, DomQuery, DOMUtils, URI, Env, Tools, Observable, I18n, FocusManager) {
 	var DOM = DOMUtils.DOM;
 	var explode = Tools.explode, each = Tools.each, extend = Tools.extend;
 	var instanceCounter = 0, beforeUnloadDelegate, EditorManager;
@@ -71,12 +72,20 @@ define("tinymce/EditorManager", [
 
 	EditorManager = {
 		/**
+		 * Dom query instance.
+		 *
+		 * @property $
+		 * @type tinymce.dom.DomQuery
+		 */
+		$: DomQuery,
+
+		/**
 		 * Major version of TinyMCE build.
 		 *
 		 * @property majorVersion
 		 * @type String
 		 */
-		majorVersion : '@@majorVersion@@',
+		majorVersion: '@@majorVersion@@',
 
 		/**
 		 * Minor version of TinyMCE build.
@@ -84,7 +93,7 @@ define("tinymce/EditorManager", [
 		 * @property minorVersion
 		 * @type String
 		 */
-		minorVersion : '@@minorVersion@@',
+		minorVersion: '@@minorVersion@@',
 
 		/**
 		 * Release date of TinyMCE build.
