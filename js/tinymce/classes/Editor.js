@@ -252,9 +252,18 @@ define("tinymce/Editor", [
 		editorManager.fire('SetupEditor', self);
 		self.execCallback('setup', self);
 
+		/**
+		 * Dom query instance with default scope to the editor document and default element is the body of the editor.
+		 *
+		 * @property $
+		 * @type tinymce.dom.DomQuery
+		 * @example
+		 * tinymce.activeEditor.$('p').css('color', 'red');
+		 * tinymce.activeEditor.$().append('<p>new</p>');
+		 */
 		self.$ = DomQuery.overrideDefaults(function() {
 			return {
-				context: self.getDoc(),
+				context: self.inline ? self.getBody() : self.getDoc(),
 				element: self.getBody()
 			};
 		});
