@@ -68,7 +68,7 @@
 
 			$('#view').html('<div><b>a</b></div><div><b>b</b></div>');
 			$('b', $('#view div')[0]).html('x');
-			equal($('#view').html().toLowerCase(), '<div><b>x</b></div><div><b>b</b></div>');
+			equal($('#view').html().toLowerCase().replace(/[\r\n]/g, ''), '<div><b>x</b></div><div><b>b</b></div>');
 		});
 
 		test(prefix + 'Constructor array', function() {
