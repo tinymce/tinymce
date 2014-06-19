@@ -30,13 +30,61 @@ define("tinymce/dom/DOMUtils", [
 	"tinymce/Env",
 	"tinymce/util/Tools",
 	"tinymce/dom/StyleSheetLoader"
-], function(Sizzle, DomQuery, Styles, EventUtils, TreeWalker, Range, Entities, Env, Tools, StyleSheetLoader) {
+], function(Sizzle, $, Styles, EventUtils, TreeWalker, Range, Entities, Env, Tools, StyleSheetLoader) {
 	// Shorten names
-	var each = Tools.each, is = Tools.is, grep = Tools.grep, trim = Tools.trim, extend = Tools.extend;
-	var isWebKit = Env.webkit, isIE = Env.ie;
+	var each = Tools.each, is = Tools.is, grep = Tools.grep, trim = Tools.trim;
+	var isIE = Env.ie;
 	var simpleSelectorRe = /^([a-z0-9],?)+$/i;
 	var whiteSpaceRegExp = /^[ \t\r\n]*$/;
-	var numericCssMap = Tools.makeMap('fillOpacity fontWeight lineHeight opacity orphans widows zIndex zoom', ' ');
+
+	function setupAttrHooks(domUtils, settings) {
+		var attrHooks = {}, keepValues = settings.keep_values, keepUrlHook;
+
+		keepUrlHook = {
+			set: function($elm, value, name) {
+				if (settings.url_converter) {
+					value = settings.url_converter.call(settings.url_converter_scope || domUtils, value, name, $elm[0]);
+				}
+
+				$elm.attr('data-mce-' + name, value).attr(name, value);
+			},
+
+			get: function($elm, name) {
+				return $elm.attr('data-mce-' + name) || $elm.attr(name);
+			}
+		};
+
+		attrHooks = {
+			style: {
+				set: function($elm, value) {
+					if (value !== null && typeof value === 'object') {
+						$elm.css(value);
+						return;
+					}
+
+					if (keepValues) {
+						$elm.attr('data-mce-style', value);
+					}
+
+					$elm.attr('style', value);
+				},
+
+				get: function($elm) {
+					var value = $elm.attr('data-mce-style') || $elm.attr('style');
+
+					value = domUtils.serializeStyle(domUtils.parseStyle(value), $elm[0].nodeName);
+
+					return value;
+				}
+			}
+		};
+
+		if (keepValues) {
+			attrHooks.href = attrHooks.src = keepUrlHook;
+		}
+
+		return attrHooks;
+	}
 
 	/**
 	 * Constructs a new DOMUtils instance. Consult the Wiki for more details on settings etc for this class.
@@ -55,15 +103,9 @@ define("tinymce/dom/DOMUtils", [
 		self.counter = 0;
 		self.stdMode = !isIE || doc.documentMode >= 8;
 		self.boxModel = !isIE || doc.compatMode == "CSS1Compat" || self.stdMode;
-		self.hasOuterHTML = "outerHTML" in doc.createElement("a");
 		self.styleSheetLoader = new StyleSheetLoader(doc);
-		this.boundEvents = [];
-
-		self.settings = settings = extend({
-			keep_values: false,
-			hex_colors: 1
-		}, settings);
-
+		self.boundEvents = [];
+		self.settings = settings = settings || {};
 		self.schema = settings.schema;
 		self.styles = new Styles({
 			url_converter: settings.url_converter,
@@ -72,8 +114,9 @@ define("tinymce/dom/DOMUtils", [
 
 		self.fixDoc(doc);
 		self.events = settings.ownEvents ? new EventUtils(settings.proxy) : EventUtils.Event;
+		self.attrHooks = setupAttrHooks(self, settings);
 		blockElementsMap = settings.schema ? settings.schema.getBlockElements() : {};
-		self.$ = DomQuery.overrideDefaults(function() {
+		self.$ = $.overrideDefaults(function() {
 			return {
 				context: doc,
 				element: self.getRoot()
@@ -106,21 +149,15 @@ define("tinymce/dom/DOMUtils", [
 	}
 
 	DOMUtils.prototype = {
-		root: null,
-		props: {
-			"for": "htmlFor",
-			"class": "className",
-			className: "className",
-			checked: "checked",
-			disabled: "disabled",
-			maxlength: "maxLength",
-			readonly: "readOnly",
-			selected: "selected",
-			value: "value",
-			id: "id",
-			name: "name",
-			type: "type"
+		$$: function(elm) {
+			if (typeof elm == 'string') {
+				elm = this.get(elm);
+			}
+
+			return this.$(elm);
 		},
+
+		root: null,
 
 		fixDoc: function(doc) {
 			var settings = this.settings, name;
@@ -163,19 +200,7 @@ define("tinymce/dom/DOMUtils", [
 
 				return clone;
 			}
-/*
-			// Setup HTML5 patched document fragment
-			if (!self.frag) {
-				self.frag = doc.createDocumentFragment();
-				self.fixDoc(self.frag);
-			}
 
-			// Make a deep copy by adding it to the document fragment then removing it this removed the :section
-			clone = doc.createElement('div');
-			self.frag.appendChild(clone);
-			clone.innerHTML = node.outerHTML;
-			self.frag.removeChild(clone);
-*/
 			return clone.firstChild;
 		},
 
@@ -573,26 +598,25 @@ define("tinymce/dom/DOMUtils", [
 		 * tinymce.DOM.remove('mydiv');
 		 */
 		remove: function(node, keep_children) {
-			return this.run(node, function(node) {
-				var child, parent = node.parentNode;
+			node = this.$$(node);
 
-				if (!parent) {
-					return null;
-				}
+			if (keep_children) {
+				node.each(function() {
+					var child;
 
-				if (keep_children) {
-					while ((child = node.firstChild)) {
-						// IE 8 will crash if you don't remove completely empty text nodes
-						if (!isIE || child.nodeType !== 3 || child.nodeValue) {
-							parent.insertBefore(child, node);
+					while ((child = this.firstChild)) {
+						if (child.nodeType == 3 && child.data.length === 0) {
+							this.removeChild(child);
 						} else {
-							node.removeChild(child);
+							this.parentNode.insertBefore(child, this);
 						}
 					}
-				}
+				}).remove();
+			} else {
+				node.remove();
+			}
 
-				return parent.removeChild(node);
-			});
+			return node.length > 1 ? node.toArray() : node[0];
 		},
 
 		/**
@@ -611,50 +635,15 @@ define("tinymce/dom/DOMUtils", [
 		 * tinymce.DOM.setStyle('mydiv', 'background-color', 'red');
 		 */
 		setStyle: function(elm, name, value) {
-			return this.run(elm, function(elm) {
-				var self = this, style, key;
+			if (value === '') {
+				value = null;
+			}
 
-				if (name) {
-					if (typeof(name) === 'string') {
-						style = elm.style;
+			elm = this.$$(elm).css(name, value);
 
-						// Camelcase it, if needed
-						name = name.replace(/-(\D)/g, function(a, b) {
-							return b.toUpperCase();
-						});
-
-						// Default px suffix on these
-						if (((typeof(value) === 'number') || /^[\-0-9\.]+$/.test(value)) && !numericCssMap[name]) {
-							value += 'px';
-						}
-
-						// IE specific opacity
-						if (name === "opacity" && elm.runtimeStyle && typeof(elm.runtimeStyle.opacity) === "undefined") {
-							style.filter = value === '' ? '' : "alpha(opacity=" + (value * 100) + ")";
-						}
-
-						if (name == "float") {
-							// Old IE vs modern browsers
-							name = "cssFloat" in elm.style ? "cssFloat" : "styleFloat";
-						}
-
-						try {
-							style[name] = value;
-						} catch (ex) {
-							// Ignore IE errors
-						}
-
-						// Force update of the style data
-						if (self.settings.update_styles) {
-							elm.removeAttribute('data-mce-style');
-						}
-					} else {
-						for (key in name) {
-							self.setStyle(elm, key, name[key]);
-						}
-					}
-				}
-			});
+			if (this.settings.update_styles) {
+				elm.attr('data-mce-style', null);
+			}
 		},
 
 		/**
@@ -667,25 +656,10 @@ define("tinymce/dom/DOMUtils", [
 		 * @return {String} Current style or computed style value of an element.
 		 */
 		getStyle: function(elm, name, computed) {
-			elm = this.get(elm);
+			elm = this.$$(elm);
 
-			if (!elm) {
-				return;
-			}
-
-			// W3C
-			if (this.doc.defaultView && computed) {
-				// Remove camelcase
-				name = name.replace(/[A-Z]/g, function(a) {
-					return '-' + a;
-				});
-
-				try {
-					return this.doc.defaultView.getComputedStyle(elm, null).getPropertyValue(name);
-				} catch (ex) {
-					// Old safari might fail
-					return null;
-				}
+			if (computed) {
+				return elm.css(name);
 			}
 
 			// Camelcase it, if needed
@@ -697,12 +671,7 @@ define("tinymce/dom/DOMUtils", [
 				name = isIE ? 'styleFloat' : 'cssFloat';
 			}
 
-			// IE & Opera
-			if (elm.currentStyle && computed) {
-				return elm.currentStyle[name];
-			}
-
-			return elm.style ? elm.style[name] : undefined;
+			return elm[0].style ? elm[0].style[name] : undefined;
 		},
 
 		/**
@@ -719,11 +688,7 @@ define("tinymce/dom/DOMUtils", [
 		 * tinymce.DOM.setStyles('mydiv', {'background-color': 'red', 'color': 'green'});
 		 */
 		setStyles: function(elm, styles) {
-			this.setStyle(elm, styles);
-		},
-
-		css: function(elm, name, value) {
-			this.setStyle(elm, name, value);
+			this.$$(elm).css(styles);
 		},
 
 		/**
@@ -756,73 +721,29 @@ define("tinymce/dom/DOMUtils", [
 		 * tinymce.dom.setAttrib('mydiv', 'class', 'myclass');
 		 */
 		setAttrib: function(elm, name, value) {
-			var self = this;
+			var self = this, originalValue, hook, settings = self.settings;
 
-			// What's the point
-			if (!elm || !name) {
-				return;
+			if (value === '') {
+				value = null;
 			}
 
-			return this.run(elm, function(elm) {
-				var settings = self.settings;
-				var originalValue = elm.getAttribute(name);
+			elm = self.$$(elm);
+			originalValue = elm.attr(name);
 
-				if (value !== null) {
-					switch (name) {
-						case "style":
-							if (!is(value, 'string')) {
-								each(value, function(value, name) {
-									self.setStyle(elm, name, value);
-								});
+			hook = self.attrHooks[name];
+			if (hook && hook.set) {
+				hook.set(elm, value, name);
+			} else {
+				elm.attr(name, value);
+			}
 
-								return;
-							}
-
-							// No mce_style for elements with these since they might get resized by the user
-							if (settings.keep_values) {
-								if (value) {
-									elm.setAttribute('data-mce-style', value, 2);
-								} else {
-									elm.removeAttribute('data-mce-style', 2);
-								}
-							}
-
-							elm.style.cssText = value;
-							break;
-
-						case "class":
-							elm.className = value || ''; // Fix IE null bug
-							break;
-
-						case "src":
-						case "href":
-							if (settings.keep_values) {
-								if (settings.url_converter) {
-									value = settings.url_converter.call(settings.url_converter_scope || self, value, name, elm);
-								}
-
-								self.setAttrib(elm, 'data-mce-' + name, value, 2);
-							}
-
-							break;
-
-						case "shape":
-							elm.setAttribute('data-mce-style', value);
-							break;
-					}
-				}
-
-				if (is(value) && value !== null && value.length !== 0) {
-					elm.setAttribute(name, '' + value, 2);
-				} else {
-					elm.removeAttribute(name, 2);
-				}
-
-				// fire onChangeAttrib event for attributes that have changed
-				if (originalValue != value && settings.onSetAttrib) {
-					settings.onSetAttrib({attrElm: elm, attrName: name, attrValue: value});
-				}
-			});
+			if (originalValue != value && settings.onSetAttrib) {
+				settings.onSetAttrib({
+					attrElm: elm,
+					attrName: name,
+					attrValue: value
+				});
+			}
 		},
 
 		/**
@@ -841,9 +762,9 @@ define("tinymce/dom/DOMUtils", [
 		setAttribs: function(elm, attrs) {
 			var self = this;
 
-			return this.run(elm, function(elm) {
+			self.$$(elm).each(function(i, node) {
 				each(attrs, function(value, name) {
-					self.setAttrib(elm, name, value);
+					self.setAttrib(node, name, value);
 				});
 			});
 		},
@@ -858,139 +779,22 @@ define("tinymce/dom/DOMUtils", [
 		 * @return {String} Attribute value string, default value or null if the attribute wasn't found.
 		 */
 		getAttrib: function(elm, name, defaultVal) {
-			var value, self = this, undef;
+			var self = this, hook, value;
 
-			elm = self.get(elm);
+			elm = self.$$(elm);
 
-			if (!elm || elm.nodeType !== 1) {
-				return defaultVal === undef ? false : defaultVal;
+			hook = self.attrHooks[name];
+			if (hook && hook.get) {
+				value = hook.get(elm, name);
+			} else {
+				value = elm.attr(name);
 			}
 
-			if (!is(defaultVal)) {
-				defaultVal = '';
+			if (typeof value == 'undefined') {
+				value = defaultVal || '';
 			}
 
-			// Try the mce variant for these
-			if (/^(src|href|style|coords|shape)$/.test(name)) {
-				value = elm.getAttribute("data-mce-" + name);
-
-				if (value) {
-					return value;
-				}
-			}
-
-			if (isIE && self.props[name]) {
-				value = elm[self.props[name]];
-				value = value && value.nodeValue ? value.nodeValue : value;
-			}
-
-			if (!value) {
-				value = elm.getAttribute(name, 2);
-			}
-
-			// Check boolean attribs
-			if (/^(checked|compact|declare|defer|disabled|ismap|multiple|nohref|noshade|nowrap|readonly|selected)$/.test(name)) {
-				if (elm[self.props[name]] === true && value === '') {
-					return name;
-				}
-
-				return value ? name : '';
-			}
-
-			// Inner input elements will override attributes on form elements
-			if (elm.nodeName === "FORM" && elm.getAttributeNode(name)) {
-				return elm.getAttributeNode(name).nodeValue;
-			}
-
-			if (name === 'style') {
-				value = value || elm.style.cssText;
-
-				if (value) {
-					value = self.serializeStyle(self.parseStyle(value), elm.nodeName);
-
-					if (self.settings.keep_values) {
-						elm.setAttribute('data-mce-style', value);
-					}
-				}
-			}
-
-			// Remove Apple and WebKit stuff
-			if (isWebKit && name === "class" && value) {
-				value = value.replace(/(apple|webkit)\-[a-z\-]+/gi, '');
-			}
-
-			// Handle IE issues
-			if (isIE) {
-				switch (name) {
-					case 'rowspan':
-					case 'colspan':
-						// IE returns 1 as default value
-						if (value === 1) {
-							value = '';
-						}
-
-						break;
-
-					case 'size':
-						// IE returns +0 as default value for size
-						if (value === '+0' || value === 20 || value === 0) {
-							value = '';
-						}
-
-						break;
-
-					case 'width':
-					case 'height':
-					case 'vspace':
-					case 'checked':
-					case 'disabled':
-					case 'readonly':
-						if (value === 0) {
-							value = '';
-						}
-
-						break;
-
-					case 'hspace':
-						// IE returns -1 as default value
-						if (value === -1) {
-							value = '';
-						}
-
-						break;
-
-					case 'maxlength':
-					case 'tabindex':
-						// IE returns default value
-						if (value === 32768 || value === 2147483647 || value === '32768') {
-							value = '';
-						}
-
-						break;
-
-					case 'multiple':
-					case 'compact':
-					case 'noshade':
-					case 'nowrap':
-						if (value === 65535) {
-							return name;
-						}
-
-						return defaultVal;
-
-					case 'shape':
-						value = value.toLowerCase();
-						break;
-
-					default:
-						// IE has odd anonymous function for event attributes
-						if (name.indexOf('on') === 0 && value) {
-							value = ('' + value).replace(/^function\s+\w+\(\)\s+\{\s+(.*)\s+\}$/, '$1');
-						}
-				}
-			}
-
-			return (value !== undef && value !== null && value !== '') ? '' + value : defaultVal;
+			return value;
 		},
 
 		/**
@@ -1184,22 +988,7 @@ define("tinymce/dom/DOMUtils", [
 		 * tinymce.DOM.addClass('mydiv', 'myclass');
 		 */
 		addClass: function(elm, cls) {
-			return this.run(elm, function(elm) {
-				var clsVal;
-
-				if (!cls) {
-					return 0;
-				}
-
-				if (this.hasClass(elm, cls)) {
-					return elm.className;
-				}
-
-				clsVal = this.removeClass(elm, cls);
-				elm.className = clsVal = (clsVal !== '' ? (clsVal + ' ') : '') + cls;
-
-				return clsVal;
-			});
+			this.$$(elm).addClass(cls);
 		},
 
 		/**
@@ -1218,32 +1007,7 @@ define("tinymce/dom/DOMUtils", [
 		 * tinymce.DOM.removeClass('mydiv', 'myclass');
 		 */
 		removeClass: function(elm, cls) {
-			var self = this, re;
-
-			return self.run(elm, function(elm) {
-				var val;
-
-				if (self.hasClass(elm, cls)) {
-					if (!re) {
-						re = new RegExp("(^|\\s+)" + cls + "(\\s+|$)", "g");
-					}
-
-					val = elm.className.replace(re, ' ');
-					val = trim(val != ' ' ? val : '');
-
-					elm.className = val;
-
-					// Empty class attr
-					if (!val) {
-						elm.removeAttribute('class');
-						elm.removeAttribute('className');
-					}
-
-					return val;
-				}
-
-				return elm.className;
-			});
+			this.$$(elm).removeClass(cls);
 		},
 
 		/**
@@ -1255,13 +1019,7 @@ define("tinymce/dom/DOMUtils", [
 		 * @return {Boolean} true/false if the specified element has the specified class.
 		 */
 		hasClass: function(elm, cls) {
-			elm = this.get(elm);
-
-			if (!elm || !cls) {
-				return false;
-			}
-
-			return (' ' + elm.className + ' ').indexOf(' ' + cls + ' ') !== -1;
+			return this.$$(elm).hasClass(cls);
 		},
 
 		/**
@@ -1273,15 +1031,7 @@ define("tinymce/dom/DOMUtils", [
 		 * @param {[type]} state Optional state to set.
 		 */
 		toggleClass: function(elm, cls, state) {
-			state = state === undefined ? !this.hasClass(elm, cls) : state;
-
-			if (this.hasClass(elm, cls) !== state) {
-				if (state) {
-					this.addClass(elm, cls);
-				} else {
-					this.removeClass(elm, cls);
-				}
-			}
+			this.$$(elm).toggleClass(cls, state);
 		},
 
 		/**
@@ -1291,7 +1041,7 @@ define("tinymce/dom/DOMUtils", [
 		 * @param {String/Element/Array} elm ID of DOM element or DOM element or array with elements or IDs to show.
 		 */
 		show: function(elm) {
-			return this.setStyle(elm, 'display', 'block');
+			this.$$(elm).show();
 		},
 
 		/**
@@ -1304,7 +1054,7 @@ define("tinymce/dom/DOMUtils", [
 		 * tinymce.DOM.hide('myid');
 		 */
 		hide: function(elm) {
-			return this.setStyle(elm, 'display', 'none');
+			this.$$(elm).hide();
 		},
 
 		/**
@@ -1315,9 +1065,7 @@ define("tinymce/dom/DOMUtils", [
 		 * @return {Boolean} true/false if the element is hidden or not.
 		 */
 		isHidden: function(elm) {
-			elm = this.get(elm);
-
-			return !elm || elm.style.display == 'none' || this.getStyle(elm, 'display') == 'none';
+			return this.$$(elm).css('display') == 'none';
 		},
 
 		/**
@@ -1337,7 +1085,7 @@ define("tinymce/dom/DOMUtils", [
 		 * URLs will get converted, hex color values fixed etc. Check processHTML for details.
 		 *
 		 * @method setHTML
-		 * @param {Element/String/Array} e DOM element, element id string or array of elements/ids to set HTML inside of.
+		 * @param {Element/String/Array} elm DOM element, element id string or array of elements/ids to set HTML inside of.
 		 * @param {String} h HTML content to set as inner HTML of the element.
 		 * @example
 		 * // Sets the inner HTML of all paragraphs in the active editor
@@ -1346,44 +1094,35 @@ define("tinymce/dom/DOMUtils", [
 		 * // Sets the inner HTML of an element by id in the document
 		 * tinymce.DOM.setHTML('mydiv', 'some inner html');
 		 */
-		setHTML: function(element, html) {
-			var self = this;
+		setHTML: function(elm, html) {
+			elm = this.$$(elm);
 
-			return self.run(element, function(element) {
-				if (isIE) {
+			if (isIE) {
+				elm.each(function(i, target) {
+					if (target.canHaveHTML === false) {
+						return;
+					}
+
 					// Remove all child nodes, IE keeps empty text nodes in DOM
-					while (element.firstChild) {
-						element.removeChild(element.firstChild);
+					while (target.firstChild) {
+						target.removeChild(target.firstChild);
 					}
 
 					try {
 						// IE will remove comments from the beginning
 						// unless you padd the contents with something
-						element.innerHTML = '<br />' + html;
-						element.removeChild(element.firstChild);
+						target.innerHTML = '<br>' + html;
+						target.removeChild(target.firstChild);
 					} catch (ex) {
-						// IE sometimes produces an unknown runtime error on innerHTML if it's a block element
-						// within a block element for example a div inside a p
-						// This seems to fix this problem
-
-						// Create new div with HTML contents and a BR in front to keep comments
-						var newElement = self.create('div');
-						newElement.innerHTML = '<br />' + html;
-
-						// Add all children from div to target
-						each(grep(newElement.childNodes), function(node, i) {
-							// Skip br element
-							if (i && element.canHaveHTML) {
-								element.appendChild(node);
-							}
-						});
+						// IE sometimes produces an unknown runtime error on innerHTML if it's a div inside a p
+						$('<div>').html('<br>' + html).contents().slice(1).appendTo(target);
 					}
-				} else {
-					element.innerHTML = html;
-				}
 
-				return html;
-			});
+					return html;
+				});
+			} else {
+				elm.html(html);
+			}
 		},
 
 		/**
@@ -1397,22 +1136,8 @@ define("tinymce/dom/DOMUtils", [
 		 * tinymce.activeEditor.getOuterHTML(tinymce.activeEditor.getBody());
 		 */
 		getOuterHTML: function(elm) {
-			var doc, self = this;
-
-			elm = self.get(elm);
-
-			if (!elm) {
-				return null;
-			}
-
-			if (elm.nodeType === 1 && self.hasOuterHTML) {
-				return elm.outerHTML;
-			}
-
-			doc = (elm.ownerDocument || self.doc).createElement("body");
-			doc.appendChild(elm.cloneNode(true));
-
-			return doc.innerHTML;
+			elm = this.get(elm);
+			return elm.nodeType == 1 ? elm.outerHTML : elm.data;
 		},
 
 		/**
@@ -1429,44 +1154,15 @@ define("tinymce/dom/DOMUtils", [
 		 * // Sets the outer HTML of an element by id in the document
 		 * tinymce.DOM.setOuterHTML('mydiv', '<div>some html</div>');
 		 */
-		setOuterHTML: function(elm, html, doc) {
+		setOuterHTML: function(elm, html) {
 			var self = this;
 
-			return self.run(elm, function(elm) {
-				function set() {
-					var node, tempElm;
-
-					tempElm = doc.createElement("body");
-					tempElm.innerHTML = html;
-
-					node = tempElm.lastChild;
-					while (node) {
-						self.insertAfter(node.cloneNode(true), elm);
-						node = node.previousSibling;
-					}
-
-					self.remove(elm);
-				}
-
-				// Only set HTML on elements
-				if (elm.nodeType == 1) {
-					doc = doc || elm.ownerDocument || self.doc;
-
-					if (isIE) {
-						try {
-							// Try outerHTML for IE it sometimes produces an unknown runtime error
-							if (elm.nodeType == 1 && self.hasOuterHTML) {
-								elm.outerHTML = html;
-							} else {
-								set();
-							}
-						} catch (ex) {
-							// Fix for unknown runtime error
-							set();
-						}
-					} else {
-						set();
-					}
+			self.$$(elm).each(function() {
+				try {
+					this.outerHTML = html;
+				} catch (ex) {
+					// OuterHTML for IE it sometimes produces an "unknown runtime error"
+					self.remove($(this).html(html), true);
 				}
 			});
 		},

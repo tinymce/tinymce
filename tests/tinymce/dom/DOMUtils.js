@@ -62,29 +62,18 @@
 		DOM.remove('test');
 	});
 
-	test('addClass', 10, function() {
+	test('addClass', function() {
 		DOM.add(document.body, 'div', {id : 'test'});
 
 		DOM.get('test').className = '';
 		DOM.addClass('test', 'abc');
 		equal(DOM.get('test').className, 'abc');
 
-		DOM.get('test').className = '';
-		equal(DOM.addClass('test', 'abc'), 'abc');
-		equal(DOM.addClass(null, 'abc'), false);
-
 		DOM.addClass('test', '123');
 		equal(DOM.get('test').className, 'abc 123');
 
 		DOM.get('test').innerHTML = '<span id="test2"></span><span id="test3"></span><span id="test4"></span>';
 		DOM.addClass(DOM.select('span', 'test'), 'abc');
-		equal(DOM.get('test2').className, 'abc');
-		equal(DOM.get('test3').className, 'abc');
-		equal(DOM.get('test4').className, 'abc');
-		DOM.get('test').innerHTML = '';
-
-		DOM.get('test').innerHTML = '<span id="test2"></span><span id="test3"></span><span id="test4"></span>';
-		DOM.addClass(['test2', 'test3', 'test4'], 'abc');
 		equal(DOM.get('test2').className, 'abc');
 		equal(DOM.get('test3').className, 'abc');
 		equal(DOM.get('test4').className, 'abc');
@@ -185,28 +174,16 @@
 		equal(DOM.uniqueId(), 'mce_2');
 	});
 
-	test('showHide', 10, function() {
+	test('showHide', function() {
 		DOM.add(document.body, 'div', {id : 'test'});
 
 		DOM.show('test');
-		equal(DOM.get('test').style.display, 'block');
+		equal(DOM.get('test').style.display, '');
 		ok(!DOM.isHidden('test'));
 
 		DOM.hide('test');
 		equal(DOM.get('test').style.display, 'none');
 		ok(DOM.isHidden('test'));
-
-		DOM.get('test').innerHTML = '<span id="test2"></span><span id="test3"></span><span id="test4"></span>';
-		DOM.hide(['test2', 'test3', 'test4'], 'test');
-		equal(DOM.get('test2').style.display, 'none');
-		equal(DOM.get('test3').style.display, 'none');
-		equal(DOM.get('test4').style.display, 'none');
-
-		DOM.get('test').innerHTML = '<span id="test2"></span><span id="test3"></span><span id="test4"></span>';
-		DOM.show(['test2', 'test3', 'test4'], 'test');
-		equal(DOM.get('test2').style.display, 'block');
-		equal(DOM.get('test3').style.display, 'block');
-		equal(DOM.get('test4').style.display, 'block');
 
 		// Cleanup
 		DOM.setAttrib('test', 'style', '');
@@ -246,7 +223,7 @@
 		equal(DOM.encode('abc<>"&\'\u00e5\u00e4\u00f6'), 'abc&lt;&gt;&quot;&amp;&#39;\u00e5\u00e4\u00f6');
 	});
 
-	test('setGetAttrib', 16, function() {
+	test('setGetAttrib', function() {
 		var dom;
 
 		DOM.add(document.body, 'div', {id : 'test'});
@@ -274,12 +251,6 @@
 		dom.setAttribs('test', {src : '123', href : 'abc'});
 		equal(DOM.getAttrib('test', 'src'), '&<>"123&<>"src');
 		equal(DOM.getAttrib('test', 'href'), '&<>"abc&<>"href');
-
-		DOM.get('test').innerHTML = '<span id="test2"></span><span id="test3"></span><span id="test4"></span>';
-		DOM.setAttribs(['test2', 'test3', 'test4'], {test1 : "1", test2 : "2"});
-		equal(DOM.getAttrib('test2', 'test1'), '1');
-		equal(DOM.getAttrib('test3', 'test2'), '2');
-		equal(DOM.getAttrib('test4', 'test1'), '1');
 
 		equal(DOM.getAttrib(document, 'test'), false);
 		equal(DOM.getAttrib(document, 'test', ''), '');
@@ -314,30 +285,21 @@
 		DOM.remove('test');
 	});
 
-	test('setGetStyles', 9, function() {
+	test('setGetStyles', function() {
 		DOM.add(document.body, 'div', {id : 'test'});
 
 		DOM.setStyle('test', 'font-size', '20px');
-		equal(DOM.getStyle('test', 'font-size'), '20px', null, tinymce.isWebKit);
+		equal(DOM.getStyle('test', 'font-size'), '20px');
 
 		DOM.setStyle('test', 'fontSize', '21px');
-		equal(DOM.getStyle('test', 'fontSize'), '21px', null, tinymce.isWebKit);
+		equal(DOM.getStyle('test', 'fontSize'), '21px');
 
 		DOM.setStyles('test', {fontSize : '22px', display : 'inline'});
-		equal(DOM.getStyle('test', 'fontSize'), '22px', null, tinymce.isWebKit);
-		equal(DOM.getStyle('test', 'display'), 'inline', null, tinymce.isWebKit);
-
-		DOM.get('test').innerHTML = '<span id="test2"></span><span id="test3"></span><span id="test4"></span>';
-		DOM.setStyles(['test2', 'test3', 'test4'], {fontSize : "22px"});
-		equal(DOM.getStyle('test2', 'fontSize'), '22px');
-		equal(DOM.getStyle('test3', 'fontSize'), '22px');
-		equal(DOM.getStyle('test4', 'fontSize'), '22px');
+		equal(DOM.getStyle('test', 'fontSize'), '22px');
+		equal(DOM.getStyle('test', 'display'), 'inline');
 
 		DOM.setStyle('test', 'fontSize', 23);
-		equal(DOM.getStyle('test', 'fontSize'), '23px', null, tinymce.isWebKit);
-
-		DOM.setStyle('test', 'fontSize', '24');
-		equal(DOM.getStyle('test', 'fontSize'), '24px', null, tinymce.isWebKit);
+		equal(DOM.getStyle('test', 'fontSize'), '23px');
 
 		DOM.setAttrib('test', 'style', '');
 
@@ -503,7 +465,7 @@
 		ok(DOM.isBlock('div'));
 	});
 
-	test('remove', 3, function() {
+	test('remove', 2, function() {
 		DOM.add(document.body, 'div', {id : 'test'});
 
 		DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
@@ -512,10 +474,6 @@
 
 		DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
 		equal(DOM.remove('test2').nodeName, 'SPAN');
-
-		DOM.get('test').innerHTML = '<span id="test2"></span><span id="test3"></span><span id="test4"></span>';
-		DOM.remove(['test2', 'test4']);
-		equal(DOM.select('span', 'test').length, 1);
 
 		DOM.remove('test');
 	});
