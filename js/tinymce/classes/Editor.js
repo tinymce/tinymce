@@ -553,12 +553,6 @@ define("tinymce/Editor", [
 
 					// Resize editor
 					if (!settings.content_editable) {
-						DOM.setStyles(o.sizeContainer || o.editorContainer, {
-							wi2dth: w,
-							// TODO: Fix this
-							h2eight: h
-						});
-
 						h = (o.iframeHeight || h) + (typeof(h) == 'number' ? (o.deltaHeight || 0) : '');
 						if (h < minHeight) {
 							h = minHeight;
