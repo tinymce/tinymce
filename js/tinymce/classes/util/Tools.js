@@ -67,10 +67,13 @@ define("tinymce/util/Tools", [], function() {
 	 * @return {Array} Array object based in input.
 	 */
 	function toArray(obj) {
-		var array = [], i, l;
+		var array = obj, i, l;
 
-		for (i = 0, l = obj.length; i < l; i++) {
-			array[i] = obj[i];
+		if (!isArray(obj)) {
+			array = [];
+			for (i = 0, l = obj.length; i < l; i++) {
+				array[i] = obj[i];
+			}
 		}
 
 		return array;
