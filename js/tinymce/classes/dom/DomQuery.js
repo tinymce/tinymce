@@ -72,6 +72,8 @@ define("tinymce/dom/DomQuery", [
 		if (isString(sourceItem)) {
 			sourceItem = createFragment(sourceItem);
 		} else if (sourceItem.length && !sourceItem.nodeType) {
+			sourceItem = DomQuery.makeArray(sourceItem);
+
 			if (reverse) {
 				for (i = sourceItem.length - 1; i >= 0; i--) {
 					domManipulate(targetNodes, sourceItem[i], callback, reverse);
@@ -85,9 +87,11 @@ define("tinymce/dom/DomQuery", [
 			return targetNodes;
 		}
 
-		i = targetNodes.length;
-		while (i--) {
-			callback.call(targetNodes[i], sourceItem.parentNode ? sourceItem : sourceItem);
+		if (sourceItem.nodeType) {
+			i = targetNodes.length;
+			while (i--) {
+				callback.call(targetNodes[i], sourceItem);
+			}
 		}
 
 		return targetNodes;
@@ -125,62 +129,11 @@ define("tinymce/dom/DomQuery", [
 		'class': 'className',
 		'readonly': 'readOnly'
 	};
+	var cssFix = {
+		float: 'cssFloat'
+	};
 
-	var attrGetHooks = {}, attrSetHooks = {};
-
-	function appendHooks(target, hooks) {
-		each(hooks, function(key, value) {
-			each(key.split(' '), function() {
-				target[this] = value;
-			});
-		});
-	}
-
-	if (Env.ie && Env.ie <= 7) {
-		appendHooks(attrGetHooks, {
-			maxlength: function(elm, value) {
-				value = elm.maxLength;
-
-				if (value === 0x7fffffff) {
-					return undef;
-				}
-
-				return value;
-			},
-
-			size: function(elm, value) {
-				value = elm.size;
-
-				if (value === 20) {
-					return undef;
-				}
-
-				return value;
-			},
-
-			'class': function(elm) {
-				return elm.className;
-			},
-
-			style: function(elm) {
-				if (elm.style.cssText.length === 0) {
-					return undef;
-				}
-
-				return elm.style.cssText;
-			}
-		});
-
-		appendHooks(attrSetHooks, {
-			'class': function(elm, value) {
-				elm.className = value;
-			},
-
-			style: function(elm, value) {
-				elm.style.cssText = value;
-			}
-		});
-	}
+	var attrHooks = {}, cssHooks = {};
 
 	function DomQuery(selector, context) {
 		/*eslint new-cap:0 */
@@ -397,9 +350,10 @@ define("tinymce/dom/DomQuery", [
 					var hook;
 
 					if (this.nodeType === 1) {
-						hook = attrSetHooks[name];
-						if (hook) {
-							hook(this, value, name);
+						hook = attrHooks[name];
+						if (hook && hook.set) {
+							hook.set(this, value);
+							return;
 						}
 
 						if (value === null) {
@@ -411,16 +365,16 @@ define("tinymce/dom/DomQuery", [
 				});
 			} else {
 				if (self[0] && self[0].nodeType === 1) {
+					hook = attrHooks[name];
+					if (hook && hook.get) {
+						return hook.get(self[0], name);
+					}
+
 					if (booleanMap[name]) {
 						return self.prop(name) ? name : undef;
 					}
 
 					value = self[0].getAttribute(name, 2);
-
-					hook = attrGetHooks[name];
-					if (hook) {
-						return hook(self[0], value, name);
-					}
 
 					if (value === null) {
 						value = undef;
@@ -487,19 +441,30 @@ define("tinymce/dom/DomQuery", [
 		 * @return {tinymce.dom.DomQuery/String} Current set or the specified style when only the name is specified.
 		 */
 		css: function(name, value) {
-			var self = this;
+			var self = this, elm, hook;
+
+			function camel(name) {
+				return name.replace(/-(\D)/g, function(a, b) {
+					return b.toUpperCase();
+				});
+			}
+
+			function dashed(name) {
+				return name.replace(/[A-Z]/g, function(a) {
+					return '-' + a;
+				});
+			}
 
 			if (typeof name === "object") {
 				each(name, function(name, value) {
 					self.css(name, value);
 				});
 			} else {
-				// Camelcase it, if needed
-				name = name.replace(/-(\D)/g, function(a, b) {
-					return b.toUpperCase();
-				});
+				name = cssFix[name] || name;
 
 				if (isDefined(value)) {
+					name = camel(name);
+
 					// Default px suffix on these
 					if (typeof(value) === 'number' && !numericCssMap[name]) {
 						value += 'px';
@@ -508,31 +473,42 @@ define("tinymce/dom/DomQuery", [
 					self.each(function() {
 						var style = this.style;
 
-						// IE specific opacity
-						if (name === "opacity" && this.runtimeStyle && typeof(this.runtimeStyle.opacity) === "undefined") {
-							style.filter = value === '' ? '' : "alpha(opacity=" + (value * 100) + ")";
+						hook = cssHooks[name];
+						if (hook && hook.set) {
+							hook.set(this, value);
+							return;
 						}
 
-						try {
-							style[name] = value;
-						} catch (ex) {
-							// Ignore
+						if (value === null || value === '') {
+							if (style.removeProperty) {
+								style.removeProperty(dashed(name));
+							} else {
+								style.removeAttribute(name);
+							}
+						} else {
+							try {
+								this.style[name] = value;
+							} catch (ex) {
+								// Ignore
+							}
 						}
 					});
 				} else {
-					if (self.context.defaultView) {
-						// Remove camelcase
-						name = name.replace(/[A-Z]/g, function(a) {
-							return '-' + a;
-						});
+					elm = self[0];
 
+					hook = cssHooks[name];
+					if (hook && hook.get) {
+						return hook.get(elm);
+					}
+
+					if (elm.ownerDocument.defaultView) {
 						try {
-							return self.context.defaultView.getComputedStyle(self[0], null).getPropertyValue(name);
+							return elm.ownerDocument.defaultView.getComputedStyle(elm, null).getPropertyValue(dashed(name));
 						} catch (ex) {
 							return undef;
 						}
-					} else if (self[0].currentStyle) {
-						return self[0].currentStyle[name];
+					} else if (elm.currentStyle) {
+						return elm.currentStyle[camel(name)];
 					}
 				}
 			}
@@ -784,10 +760,8 @@ define("tinymce/dom/DomQuery", [
 		 * @return {tinymce.dom.DomQuery} Set with unwrapped nodes.
 		 */
 		unwrap: function() {
-			return this.each(function() {
-				var parentNode = DomQuery(this.parentNode);
-				parentNode.before(parentNode.contents());
-				parentNode.remove();
+			return this.parent().each(function() {
+				DomQuery(this).replaceWith(this.childNodes);
 			});
 		},
 
@@ -1302,10 +1276,13 @@ define("tinymce/dom/DomQuery", [
 				}
 			});
 
-			result = DomQuery.unique(result);
+			// If traversing on multiple elements we might get the same elements twice
+			if (this.length > 1) {
+				result = DomQuery.unique(result);
 
-			if (name.indexOf('parents') === 0 || name === 'prevUntil') {
-				result = result.reverse();
+				if (name.indexOf('parents') === 0 || name === 'prevUntil') {
+					result = result.reverse();
+				}
 			}
 
 			result = DomQuery(result);
@@ -1336,13 +1313,97 @@ define("tinymce/dom/DomQuery", [
 
 		function jQuerySub(selector, context) {
 			defaults = defaults || callback();
-			return new jQuerySub.fn.init(selector || defaults.element, context || defaults.context);
+
+			if (arguments.length === 0) {
+				selector = defaults.element;
+			}
+
+			if (!context) {
+				context = defaults.context;
+			}
+
+			return new jQuerySub.fn.init(selector, context);
 		}
 
 		DomQuery.extend(jQuerySub, this);
 
 		return jQuerySub;
 	};
+
+	function appendHooks(targetHooks, prop, hooks) {
+		each(hooks, function(name, func) {
+			targetHooks[name] = targetHooks[name] || {};
+			targetHooks[name][prop] = func;
+		});
+	}
+
+	if (Env.ie && Env.ie < 8) {
+		appendHooks(attrHooks, 'get', {
+			maxlength: function(elm) {
+				var value = elm.maxLength;
+
+				if (value === 0x7fffffff) {
+					return undef;
+				}
+
+				return value;
+			},
+
+			size: function(elm) {
+				var value = elm.size;
+
+				if (value === 20) {
+					return undef;
+				}
+
+				return value;
+			},
+
+			'class': function(elm) {
+				return elm.className;
+			},
+
+			style: function(elm) {
+				var value = elm.style.cssText;
+
+				if (value.length === 0) {
+					return undef;
+				}
+
+				return value;
+			}
+		});
+
+		appendHooks(attrHooks, 'set', {
+			'class': function(elm, value) {
+				elm.className = value;
+			},
+
+			style: function(elm, value) {
+				elm.style.cssText = value;
+			}
+		});
+	}
+
+	if (Env.ie && Env.ie < 9) {
+		cssFix.float = 'styleFloat';
+
+		appendHooks(cssHooks, 'set', {
+			opacity: function(elm, value) {
+				var style = elm.style;
+
+				if (value === null || value === '') {
+					style.removeAttribute('filter');
+				} else {
+					style.zoom = 1;
+					style.filter = 'alpha(opacity=' + (value * 100) + ')';
+				}
+			}
+		});
+	}
+
+	DomQuery.attrHooks = attrHooks;
+	DomQuery.cssHooks = cssHooks;
 
 	return DomQuery;
 });

@@ -14,6 +14,14 @@
 		return parentNode;
 	}
 
+	function normalizeStyleValue(value) {
+		if (typeof value == 'string') {
+			return value.toLowerCase().replace(/\s+/g, ' ').replace(/;\s*$/, '');
+		}
+
+		return value;
+	}
+
 	function splitAtView(nodes) {
 		nodes.each(function(i) {
 			if (this.id == 'view') {
@@ -206,7 +214,7 @@
 
 		test(prefix + 'attr() set/get style attr on element (IE 7)', function() {
 			$elm = $('<b style="font-size: 10px" />').attr('style', 'font-size: 43px');
-			equal($elm.attr('style').toLowerCase().split(';')[0], 'font-size: 43px');
+			equal(normalizeStyleValue($elm.attr('style')), 'font-size: 43px');
 		});
 
 		test(prefix + 'attr() set/get checked attr on element (IE 7)', function() {
@@ -310,6 +318,23 @@
 			$elm = $('<b>x</b>').appendTo('#view').css({'font-size': 42, 'text-indent': 42});
 			equal($elm.css('font-size'), '42px');
 			equal($elm.css('text-indent'), '42px');
+		});
+
+		test(prefix + 'css() set opacity', function() {
+			if (tinymce.Env.ie && tinymce.Env.ie < 9) {
+				// jQuery has a slightly different output but basically the same
+				strictEqual(normalizeStyleValue($('<b></b>').css('opacity', 0.5).attr('style')), 'filter: alpha(opacity=50); zoom: 1');
+				strictEqual(typeof $('<b></b>').css('opacity', null).attr('style'), 'undefined');
+			} else {
+				strictEqual(normalizeStyleValue($('<b></b>').css('opacity', 0.5).attr('style')), 'opacity: 0.5');
+				strictEqual(typeof $('<b></b>').css('opacity', null).attr('style'), 'undefined');
+				strictEqual(typeof $('<b></b>').css('opacity', '').attr('style'), 'undefined');
+			}
+		});
+
+		test(prefix + 'css() set float', function() {
+			strictEqual(normalizeStyleValue($('<b></b>').css('float', 'right').attr('style')), 'float: right');
+			strictEqual(typeof $('<b></b>').css('float', null).attr('style'), 'undefined');
 		});
 
 		test(prefix + 'remove() single element', function() {
@@ -590,7 +615,7 @@
 		});
 
 		test(prefix + 'show()/hide() element', function() {
-			equal($('<b></b>').hide().attr('style').toLowerCase().split(';')[0], 'display: none');
+			equal(normalizeStyleValue($('<b></b>').hide().attr('style')), 'display: none');
 			ok(!$('<b></b>').show().attr('style'));
 		});
 
@@ -674,9 +699,16 @@
 			strictEqual($('#view').html().toLowerCase(), '<b><i>1<i>a</i></i></b><b><i>2<i>b</i></i></b>');
 		});
 
-		test(prefix + 'unwrap() single element', function() {
-			$('<b>1</b>').appendTo('#view').contents().unwrap();
-			strictEqual($('#view').html().toLowerCase(), '1');
+		test(prefix + 'unwrap() single element with no siblings', function() {
+			$('#view').html('<b><i>1</i></b>');
+			$('#view i').unwrap();
+			strictEqual($('#view').html().toLowerCase(), '<i>1</i>');
+		});
+
+		test(prefix + 'unwrap() single element with siblings', function() {
+			$('#view').html('<b><i>1</i><i>2</i></b>');
+			$('#view i').unwrap();
+			strictEqual($('#view').html().toLowerCase(), '<i>1</i><i>2</i>');
 		});
 
 		test(prefix + 'clone() single element', function() {
