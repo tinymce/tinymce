@@ -4,6 +4,8 @@
 	QUnit.config.reorder = false;
 	QUnit.config.hidepassed = true;
 
+	window.editor = window.inlineEditor = null; 
+
 	var oldModule = module;
 
 	QUnit.moduleStart(function(details) {
