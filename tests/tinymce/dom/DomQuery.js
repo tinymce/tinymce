@@ -328,7 +328,7 @@
 			} else {
 				strictEqual(normalizeStyleValue($('<b></b>').css('opacity', 0.5).attr('style')), 'opacity: 0.5');
 				strictEqual(typeof $('<b></b>').css('opacity', null).attr('style'), 'undefined');
-				strictEqual(typeof $('<b></b>').css('opacity', '').attr('style'), 'undefined');
+				ok(!$('<b></b>').css('opacity', '').attr('style'));
 			}
 		});
 
