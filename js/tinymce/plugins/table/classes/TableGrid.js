@@ -380,6 +380,50 @@ define("tinymce/tableplugin/TableGrid", [
 			}
 		}
 
+
+		function splitTableAfterRow() {
+			var cell, x, y, rowElm, tableElm, newTableElm, newRow, brElm, thead, newThead, bodyElm;
+			// Find first/last row
+			each(grid, function(row, y) {
+				each(row, function(cell, x) {
+					if (isCellSelected(cell)) {
+						cell = cell.elm;
+						rowElm = cell.parentNode;
+					}
+				});
+			});
+		
+			// Get this row's parent table element 
+			tableElm = dom.getParent(rowElm, 'table');
+
+			// Insert a blank row to split on (Tiny will clean this up)
+			newRow = cloneNode(rowElm, false);
+			rowElm.parentNode.insertBefore(newRow, rowElm);
+
+			// If original table has a thead row, copy that here
+			thead = dom.select('thead', tableElm);
+			if (thead.length > 0) {
+				newThead = cloneNode(thead[0], true);
+			} 
+
+			// Create new table splitting on current row
+			dom.split(tableElm, newRow); 
+
+			newTableElm = dom.getParent(rowElm, 'table');
+
+			// If original table has a thead row, copy that here
+			if (newThead) {
+				bodyElm = dom.select('tbody', newTableElm);
+				if (bodyElm.length > 0) {
+					bodyElm[0].parentNode.insertBefore(newThead, bodyElm[0]);
+				}
+			}
+
+			// Insert BR before tableElm
+			brElm = editor.getDoc().createElement('BR');
+			newTableElm.parentNode.insertBefore(brElm, newTableElm);
+ 		}
+
 		function insertRow(before) {
 			var posY, cell, lastCell, x, rowElm, newRow, newCell, otherCell, rowSpan;
 
