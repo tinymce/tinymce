@@ -516,7 +516,7 @@ define("tinymce/ui/FormatControls", [
 					text = values[0];
 					value = values[1];
 				}
-				items.push({text: text, value: value});
+				items.push({text: text, value: value, textStyle: 'font-size:' + value});
 			});
 
 			return {
