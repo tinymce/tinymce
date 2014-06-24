@@ -381,7 +381,7 @@ define("tinymce/tableplugin/TableGrid", [
 		}
 
 
-		function splitTableAfterRow() {
+		function splitTableBeforeRow() {
 			var cell, x, y, rowElm, tableElm, newTableElm, newRow, brElm, thead, newThead, bodyElm;
 			// Find first/last row
 			each(grid, function(row, y) {
@@ -892,6 +892,7 @@ define("tinymce/tableplugin/TableGrid", [
 			split: split,
 			merge: merge,
 			insertRow: insertRow,
+			splitTableBeforeRow: splitTableBeforeRow,
 			insertCol: insertCol,
 			deleteCols: deleteCols,
 			deleteRows: deleteRows,

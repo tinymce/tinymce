@@ -423,10 +423,10 @@
 		);
 	});
 
-	test("mceTableSplitTableAfterRow command", function() {
+	test("mceTableSplitTableBeforeRow command", function() {
 		editor.setContent('<table><thead><tr><td>1</td><td>2</td></tr></thead><tbody><tr><td>3</td><td>4</td></tr></tbody></table>');
 		Utils.setSelection('tbody tr', 0);
-		editor.execCommand('mceTableSplitTableAfterRow');
+		editor.execCommand('mceTableSplitTableBeforeRow');
 		equal(cleanTableHtml(editor.getContent()), '<table><thead><tr><td>1</td><td>2</td></tr></thead></table><p>&nbsp;</p><table><thead><tr><td>1</td><td>2</td></tr></thead><tbody><tr><td>3</td><td>4</td></tr></tbody></table>');
 	});
 
