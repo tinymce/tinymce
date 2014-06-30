@@ -1,3 +1,5 @@
+Version 4.1.1 (2014-07-xx)
+	Fixed bug where pasting plain text on some WebKit versions would result in an empty line.
 Version 4.1.0 (2014-06-18)
 	Added new file_picker_callback option to replace the old file_browser_callback the latter will still work though.
 	Added new custom colors to textcolor plugin will be displayed if a color picker is provided also shows the latest colors.
