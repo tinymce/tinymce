@@ -1120,7 +1120,21 @@ define("tinymce/dom/DomQuery", [
 	function dir(el, prop, until) {
 		var matched = [], cur = el[prop];
 
-		while (cur && cur.nodeType !== 9 && (until === undefined || cur.nodeType !== 1 || !DomQuery(cur).is(until))) {
+		if (typeof until != 'string' && until instanceof DomQuery) {
+			until = until[0];
+		}
+
+		while (cur && cur.nodeType !== 9) {
+			if (until !== undefined) {
+				if (cur === until) {
+					break;
+				}
+
+				if (typeof until == 'string' && DomQuery(cur).is(until)) {
+					break;
+				}
+			}
+
 			if (cur.nodeType === 1) {
 				matched.push(cur);
 			}
@@ -1134,13 +1148,23 @@ define("tinymce/dom/DomQuery", [
 	function sibling(node, siblingName, nodeType, until) {
 		var result = [];
 
+		if (typeof until != 'string' && until instanceof DomQuery) {
+			until = until[0];
+		}
+
 		for (; node; node = node[siblingName]) {
 			if (nodeType && node.nodeType !== nodeType) {
 				continue;
 			}
 
-			if (until && ((until.nodeType && node === until) || (DomQuery(node).is(until)))) {
-				break;
+			if (until !== undefined) {
+				if (node === until) {
+					break;
+				}
+
+				if (typeof until == 'string' && DomQuery(node).is(until)) {
+					break;
+				}
 			}
 
 			result.push(node);
@@ -1185,18 +1209,6 @@ define("tinymce/dom/DomQuery", [
 		},
 
 		/**
-		 * Returns a new collection with the all the parents until the matching selector/element
-		 * of each item in current collection matching the optional selector.
-		 *
-		 * @method parentsUntil
-		 * @param {String/Element} until Until the matching selector or element.
-		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching parents.
-		 */
-		parentsUntil: function(node, until) {
-			return dir(node, "parentNode", until);
-		},
-
-		/**
 		 * Returns a new collection with next sibling of each item in current collection matching the optional selector.
 		 *
 		 * @method next
@@ -1216,28 +1228,6 @@ define("tinymce/dom/DomQuery", [
 		 */
 		prev: function(node) {
 			return firstSibling(node, 'previousSibling', 1);
-		},
-
-		/**
-		 * Returns a new collection with all next siblings of each item in current collection matching the optional selector.
-		 *
-		 * @method nextUntil
-		 * @param {String/Element} until Until the matching selector or element.
-		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
-		 */
-		nextUntil: function(node, selector) {
-			return sibling(node, 'nextSibling', 1, selector).slice(1);
-		},
-
-		/**
-		 * Returns a new collection with all previous siblings of each item in current collection matching the optional selector.
-		 *
-		 * @method prevUntil
-		 * @param {String/Element} until Until the matching selector or element.
-		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
-		 */
-		prevUntil: function(node, selector) {
-			return sibling(node, 'previousSibling', 1, selector).slice(1);
 		},
 
 		/**
@@ -1287,8 +1277,77 @@ define("tinymce/dom/DomQuery", [
 
 			result = DomQuery(result);
 
-			if (selector && name.indexOf("Until") == -1) {
+			if (selector) {
 				return result.filter(selector);
+			}
+
+			return result;
+		};
+	});
+
+	each({
+		/**
+		 * Returns a new collection with the all the parents until the matching selector/element
+		 * of each item in current collection matching the optional selector.
+		 *
+		 * @method parentsUntil
+		 * @param {String/Element} until Until the matching selector or element.
+		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching parents.
+		 */
+		parentsUntil: function(node, until) {
+			return dir(node, "parentNode", until);
+		},
+
+		/**
+		 * Returns a new collection with all next siblings of each item in current collection matching the optional selector.
+		 *
+		 * @method nextUntil
+		 * @param {String/Element} until Until the matching selector or element.
+		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
+		 */
+		nextUntil: function(node, until) {
+			return sibling(node, 'nextSibling', 1, until).slice(1);
+		},
+
+		/**
+		 * Returns a new collection with all previous siblings of each item in current collection matching the optional selector.
+		 *
+		 * @method prevUntil
+		 * @param {String/Element} until Until the matching selector or element.
+		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
+		 */
+		prevUntil: function(node, until) {
+			return sibling(node, 'previousSibling', 1, until).slice(1);
+		}
+	}, function(name, fn) {
+		DomQuery.fn[name] = function(selector, filter) {
+			var self = this, result = [];
+
+			self.each(function() {
+				var nodes = fn.call(result, this, selector, result);
+
+				if (nodes) {
+					if (DomQuery.isArray(nodes)) {
+						result.push.apply(result, nodes);
+					} else {
+						result.push(nodes);
+					}
+				}
+			});
+
+			// If traversing on multiple elements we might get the same elements twice
+			if (this.length > 1) {
+				result = DomQuery.unique(result);
+
+				if (name.indexOf('parents') === 0 || name === 'prevUntil') {
+					result = result.reverse();
+				}
+			}
+
+			result = DomQuery(result);
+
+			if (filter) {
+				return result.filter(filter);
 			}
 
 			return result;

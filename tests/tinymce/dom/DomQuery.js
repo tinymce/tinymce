@@ -771,7 +771,7 @@
 			strictEqual($result.length, 0);
 		});
 
-		test(prefix + 'parentsUntil()', function() {
+		test(prefix + 'parentsUntil(selector)', function() {
 			var $result, html;
 
 			html = $('<div><em><i>1</i></em><strong><b>2</b></strong></div>').appendTo('#view');
@@ -781,6 +781,42 @@
 			strictEqual($result[0].tagName, 'STRONG');
 			strictEqual($result[1].tagName, 'EM');
 			strictEqual($result[2].tagName, 'DIV');
+
+			$result = $('#view i, #view b').parentsUntil('#view', 'div');
+			strictEqual($result.length, 1);
+			strictEqual($result[0].tagName, 'DIV');
+		});
+
+		test(prefix + 'parentsUntil(element)', function() {
+			var $result, html;
+
+			html = $('<div><em><i>1</i></em><strong><b>2</b></strong></div>').appendTo('#view');
+
+			$result = $('#view i, #view b').parentsUntil(document.getElementById('view'));
+			strictEqual($result.length, 3);
+			strictEqual($result[0].tagName, 'STRONG');
+			strictEqual($result[1].tagName, 'EM');
+			strictEqual($result[2].tagName, 'DIV');
+
+			$result = $('#view i, #view b').parentsUntil(document.getElementById('view'), 'div');
+			strictEqual($result.length, 1);
+			strictEqual($result[0].tagName, 'DIV');
+		});
+
+		test(prefix + 'parentsUntil(query)', function() {
+			var $result, html;
+
+			html = $('<div><em><i>1</i></em><strong><b>2</b></strong></div>').appendTo('#view');
+
+			$result = $('#view i, #view b').parentsUntil($('#view'));
+			strictEqual($result.length, 3);
+			strictEqual($result[0].tagName, 'STRONG');
+			strictEqual($result[1].tagName, 'EM');
+			strictEqual($result[2].tagName, 'DIV');
+
+			$result = $('#view i, #view b').parentsUntil($('#view'), 'div');
+			strictEqual($result.length, 1);
+			strictEqual($result[0].tagName, 'DIV');
 		});
 
 		test(prefix + 'next()', function() {
@@ -803,7 +839,7 @@
 			strictEqual($result[0].tagName, 'B');
 		});
 
-		test(prefix + 'nextUntil()', function() {
+		test(prefix + 'nextUntil(selector)', function() {
 			var $result, html;
 
 			html = $('<b>1</b><i>2</i><em>3</em><span>3</span>');
@@ -812,19 +848,87 @@
 			strictEqual($result.length, 2);
 			strictEqual($result[0].tagName, 'I');
 			strictEqual($result[1].tagName, 'EM');
+
+			$result = html.first().nextUntil('span', 'i');
+			strictEqual($result.length, 1);
+			strictEqual($result[0].tagName, 'I');
 		});
 
-		test(prefix + 'prevUntil()', function() {
+		test(prefix + 'nextUntil(element)', function() {
 			var $result, html;
 
 			html = $('<b>1</b><i>2</i><em>3</em><span>3</span>');
 
-			$result = html.prevUntil('b');
+			$result = html.first().nextUntil(html.last()[0]);
+			strictEqual($result.length, 2);
+			strictEqual($result[0].tagName, 'I');
+			strictEqual($result[1].tagName, 'EM');
+
+			$result = html.first().nextUntil(html.last()[0], 'i');
+			strictEqual($result.length, 1);
+			strictEqual($result[0].tagName, 'I');
+		});
+
+		test(prefix + 'nextUntil(query)', function() {
+			var $result, html;
+
+			html = $('<b>1</b><i>2</i><em>3</em><span>3</span>');
+
+			$result = html.first().nextUntil(html.last());
+			strictEqual($result.length, 2);
+			strictEqual($result[0].tagName, 'I');
+			strictEqual($result[1].tagName, 'EM');
+
+			$result = html.first().nextUntil(html.last(), 'i');
+			strictEqual($result.length, 1);
+			strictEqual($result[0].tagName, 'I');
+		});
+
+		test(prefix + 'prevUntil(selector)', function() {
+			var $result, html;
+
+			html = $('<b>1</b><i>2</i><em>3</em><span>3</span>');
+
+			$result = html.last().prevUntil('b');
 			strictEqual($result.length, 2);
 			strictEqual($result[0].tagName, 'EM');
 			strictEqual($result[1].tagName, 'I');
+
+			$result = html.last().prevUntil('b', 'i');
+			strictEqual($result.length, 1);
+			strictEqual($result[0].tagName, 'I');
 		});
 
+		test(prefix + 'prevUntil(element)', function() {
+			var $result, html;
+
+			html = $('<b>1</b><i>2</i><em>3</em><span>3</span>');
+
+			$result = html.last().prevUntil(html.first()[0]);
+			strictEqual($result.length, 2);
+			strictEqual($result[0].tagName, 'EM');
+			strictEqual($result[1].tagName, 'I');
+
+			$result = html.last().prevUntil(html.first()[0], 'i');
+			strictEqual($result.length, 1);
+			strictEqual($result[0].tagName, 'I');
+		});
+
+		test(prefix + 'prevUntil(query)', function() {
+			var $result, html;
+
+			html = $('<b>1</b><i>2</i><em>3</em><span>3</span>');
+
+			$result = html.last().prevUntil(html.first());
+			strictEqual($result.length, 2);
+			strictEqual($result[0].tagName, 'EM');
+			strictEqual($result[1].tagName, 'I');
+
+			$result = html.last().prevUntil(html.first(), 'i');
+			strictEqual($result.length, 1);
+			strictEqual($result[0].tagName, 'I');
+		});
+		
 		test(prefix + 'children()', function() {
 			var $result, html;
 
