@@ -1132,6 +1132,26 @@ define("tinymce/util/Quirks", [
 			});
 		}
 
+		/**
+		 * Sometimes WebKit/Blink generates BR elements with the Apple-interchange-newline class.
+		 *
+		 * Scenario:
+		 *  1) Create a table 2x2.
+		 *  2) Select and copy cells A2-B2.
+		 *  3) Paste and it will add BR element to table cell.
+		 */
+		function removeAppleInterchangeBrs() {
+			parser.addNodeFilter('br', function(nodes) {
+				var i = nodes.length;
+
+				while (i--) {
+					if (nodes[i].attr('class') == 'Apple-interchange-newline') {
+						nodes[i].remove();
+					}
+				}
+			});
+		}
+
 		// All browsers
 		removeBlockQuoteOnBackSpace();
 		emptyEditorWhenDeleting();
@@ -1145,6 +1165,7 @@ define("tinymce/util/Quirks", [
 			setDefaultBlockType();
 			blockFormSubmitInsideEditor();
 			disableBackspaceIntoATable();
+			removeAppleInterchangeBrs();
 
 			// iOS
 			if (Env.iOS) {
