@@ -208,7 +208,7 @@ function runTask(arg, framework, callback) {
 	var webserver = new WebServer();
 
 	webserver.start(function() {
-		var tunnel = new SauceTunnel(arg.username, arg.key, arg.identifier, arg.tunneled);
+		var tunnel = new SauceTunnel(arg.username, arg.key, arg.identifier, arg.tunneled, ["-l sc.log"]);
 		log("Starting Tunnel to Sauce Labs");
 		configureLogEvents(tunnel);
 
