@@ -86,7 +86,7 @@ define("tinymce/FocusManager", [
 				if (editor.inline || Env.ie) {
 					// On other browsers take snapshot on nodechange in inline mode since they have Ghost selections for iframes
 					editor.on('nodechange keyup', function() {
-						var node = document.activeElement;
+						var node = getActiveElement();
 
 						// IE 11 reports active element as iframe not body of iframe
 						if (node && node.id == editor.id + '_ifr') {

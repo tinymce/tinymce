@@ -26,7 +26,13 @@ define("tinymce/ui/KeyboardNavigation", [
 	return function(settings) {
 		var root = settings.root, focusedElement, focusedControl;
 
-		focusedElement = document.activeElement;
+		try {
+			focusedElement = document.activeElement;
+		} catch (ex) {
+			// IE sometimes fails to return a proper element
+			focusedElement = document.body;
+		}
+
 		focusedControl = root.getParentCtrl(focusedElement);
 
 		/**
