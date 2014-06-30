@@ -952,15 +952,18 @@
 			strictEqual($result[2].tagName, 'B');
 		});
 
-		test(prefix + 'closest()', function() {
+		test(prefix + 'closest(selector/element/query)', function() {
 			var innerMost, html;
 
 			html = $('<b><i><em><b>x</b></em></i></b>');
 			innerMost = $(html[0].firstChild.firstChild.firstChild);
 
+			strictEqual(innerMost.closest(null).length, 0);
 			strictEqual(innerMost.closest('b').html(), 'x');
 			strictEqual(innerMost.closest(innerMost[0]).html(), 'x');
 			strictEqual(innerMost.closest('b i').html().toLowerCase(), '<em><b>x</b></em>');
+			strictEqual(innerMost.closest($(html[0].firstChild.firstChild)).html().toLowerCase(), '<b>x</b>');
+			strictEqual(innerMost.closest($(html[0].firstChild.firstChild)[0]).html().toLowerCase(), '<b>x</b>');
 		});
 	}
 
