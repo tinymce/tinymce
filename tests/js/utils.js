@@ -182,20 +182,17 @@ function type(chr) {
 	startElm = editor.selection.getStart();
 	fakeEvent(startElm, 'keydown', evt);
 	fakeEvent(startElm, 'keypress', evt);
-
 	if (!evt.isDefaultPrevented() || tinymce.isIE) {
 		if (keyCode == 8) {
-			if (editor.getDoc().selection) {
+			if (editor.getDoc().selection && !editor.getDoc().selection.type==="None") {
 				var rng = editor.getDoc().selection.createRange();
 				rng.moveStart('character', -1);
 				rng.select();
 				rng.execCommand('Delete', false, null);
 			} else {
-				var rng = editor.selection.getRng();
+				var rng = editor.selection.getRng(true);
 				if (rng.startContainer.nodeType == 1 && rng.collapsed) {
-
 					var nodes = rng.startContainer.childNodes, lastNode = nodes[nodes.length - 1];
-
 					// If caret is at <p>abc|</p> and after the abc text node then move it to the end of the text node
 					// Expand the range to include the last char <p>ab[c]</p> since IE 11 doesn't delete otherwise
 					if (rng.startOffset >= nodes.length - 1 && lastNode && lastNode.nodeType == 3 && lastNode.data.length > 0) {
@@ -205,7 +202,6 @@ function type(chr) {
 					var node = rng.startContainer;
 					selectLast(rng, node);
 				}
-
 				editor.getDoc().execCommand('Delete', false, null);
 			}
 		} else if (typeof(chr) == 'string') {

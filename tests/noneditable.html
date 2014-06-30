@@ -68,6 +68,10 @@ function fixOffsetUp (node, offset) {
 	return { node: node, offset: offset };
 }
 
+function triggerCaret () {
+	editor.dom.fire(editor.getBody(), 'mouseup');
+}
+
 
 test('expand to noneditable (start)', function() {
 	editor.setContent('<p><span class="mceNonEditable">no</span>yes</p>');
@@ -77,7 +81,7 @@ test('expand to noneditable (start)', function() {
 	rng.setEnd(editor.getBody().firstChild.lastChild, 1);
 	editor.selection.setRng(rng);
 
-	editor.dom.fire(editor.getBody(), 'mouseup');
+	triggerCaret();
 
 	rng = normalizeRng(editor.selection.getRng(true));
 	
@@ -97,7 +101,7 @@ test('expand to noneditable (end)', function() {
 	rng.setEnd(editor.getBody().firstChild.lastChild.firstChild, 1);
 	editor.selection.setRng(rng);
 
-	editor.dom.fire(editor.getBody(), 'mouseup');
+	triggerCaret();
 	rng = normalizeRng(editor.selection.getRng(true));
 	normalizeRng2(rng);
 
@@ -115,7 +119,7 @@ test('expand to noneditable (start/end)', function() {
 	rng.setEnd(editor.dom.select('span')[0].firstChild, 2);
 	editor.selection.setRng(rng);
 
-	editor.dom.fire(editor.getBody(), 'mouseup');
+	triggerCaret();
 	rng = normalizeRng(editor.selection.getRng(true));
 
 	var end = fixOffsetUp(rng.endContainer, rng.endOffset);
@@ -135,7 +139,7 @@ test('type after non editable', function() {
 	rng.setEnd(editor.dom.select('span')[0].firstChild, 2);
 	editor.selection.setRng(rng);
 
-	editor.dom.fire(editor.getBody(), 'mouseup');
+	triggerCaret();
 	type('X');
 	rng = normalizeRng(editor.selection.getRng(true));
 
@@ -155,7 +159,7 @@ test('type between non editable', function() {
 	rng.setEnd(editor.dom.select('span')[0].firstChild, 2);
 	editor.selection.setRng(rng);
 
-	editor.dom.fire(editor.getBody(), 'mouseup');
+	triggerCaret();
 	type('X');
 	rng = normalizeRng(editor.selection.getRng(true));
 
@@ -175,7 +179,7 @@ test('type after last non editable', function() {
 	rng.setEnd(editor.dom.select('span')[0].firstChild, 2);
 	editor.selection.setRng(rng);
 
-	editor.dom.fire(editor.getBody(), 'mouseup');
+	triggerCaret();
 	type('X');
 	rng = normalizeRng(editor.selection.getRng(true));
 
@@ -202,7 +206,6 @@ test('escape noneditable inline element (left)', function() {
 	}
 	rng = normalizeRng(editor.selection.getRng(true));
 	startCnt = fixOffsetUp(rng.startContainer, rng.startOffset);
-	
 
 	equal(startCnt.node.nodeName, 'P');
 	equal(startCnt.offset, 1);
@@ -276,15 +279,18 @@ test('A non editable text token is selected without including the parent node, p
 });
 
 module("nondeletable not setted");
-test('noneditable_prevent_delete is not setted. Token is used as a whole block char. ', function() {
+test('noneditable_prevent_delete is not set. Token is used as a whole block char. ', function() {
 	var editorContent = '<p>E<span class="mceNonEditable">Z <a>X</a> W</span></p><h1><span class="mceNonEditable">G </span>A</h1>';
 	editor.setContent(editorContent);
 	rng = editor.dom.createRng();
-	rng.selectNode(editor.dom.select('p>span')[0]);
-	rng.collapsed = true;
+	rng.setStart(editor.dom.select('p')[0],2);
+	rng.setEnd(editor.dom.select('p')[0],2);
+	
 	editor.selection.setRng(rng);
+	triggerCaret();
 	type({keyCode: 8});
 	equal(editor.getContent(), "<p>E</p><h1><span class=\"mceNonEditable\">G </span>A</h1>");
+	
 });
 
 
@@ -292,7 +298,8 @@ test('type after non editable and then pressing backspace should only remove las
 	editor.setContent('<p><span class="mceNonEditable">no</span></p>');
 
 	editor.selection.setCursorLocation(editor.dom.select('span')[0].firstChild, 2);
-	editor.dom.fire(editor.getBody(), 'mouseup');
+	// Move this into a function to say 'trigger the generation of the container nicely'
+	triggerCaret();
 	
 	type('yes'); 
 
