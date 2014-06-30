@@ -118,12 +118,15 @@ function fakeKeyEvent(e, na, o) {
 	e.dispatchEvent(ev);
 }
 
+
 function normalizeRng(rng) {
+
 	if (rng.startContainer.nodeType == 3) {
 		if (rng.startOffset == 0)
 			rng.setStartBefore(rng.startContainer);
-		else if (rng.startOffset >= rng.startContainer.nodeValue.length - 1)
+		else if (rng.startContainer.nodeValue && rng.startOffset >= rng.startContainer.nodeValue.length - 1){
 			rng.setStartAfter(rng.startContainer);
+		}
 	}
 
 	if (rng.endContainer.nodeType == 3) {
@@ -132,6 +135,7 @@ function normalizeRng(rng) {
 		else if (rng.endOffset >= rng.endContainer.nodeValue.length - 1)
 			rng.setEndAfter(rng.endContainer);
 	}
+
 
 	return rng;
 }
