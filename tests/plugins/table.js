@@ -407,7 +407,7 @@
 	});
 
 	test("mceTableMergeCells command with cell selection", function() {
-		editor.setContent('<table><tr><td class="mce-item-selected">1</td><td class="mce-item-selected">2</td></tr></table>');
+		editor.getBody().innerHTML = '<table><tr><td class="mce-item-selected">1</td><td class="mce-item-selected">2</td></tr></table>';
 		Utils.setSelection('td', 0);
 		editor.execCommand('mceTableMergeCells');
 		equal(cleanTableHtml(editor.getContent()), '<table><tbody><tr><td colspan="2">12</td></tr></tbody></table>');
