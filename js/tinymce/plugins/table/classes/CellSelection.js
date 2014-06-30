@@ -23,11 +23,11 @@ define("tinymce/tableplugin/CellSelection", [
 	return function(editor) {
 		var dom = editor.dom, tableGrid, startCell, startTable, hasCellSelection = true;
 
-		function clear() {
+		function clear(force) {
 			// Restore selection possibilities
 			editor.getBody().style.webkitUserSelect = '';
 
-			if (hasCellSelection) {
+			if (force || hasCellSelection) {
 				editor.dom.removeClass(
 					editor.dom.select('td.mce-item-selected,th.mce-item-selected'),
 					'mce-item-selected'
@@ -155,8 +155,8 @@ define("tinymce/tableplugin/CellSelection", [
 			}
 		});
 
-		editor.on('KeyUp Drop', function() {
-			clear();
+		editor.on('KeyUp Drop SetContent', function(e) {
+			clear(e.type == 'setcontent');
 			startCell = tableGrid = startTable = null;
 		});
 
