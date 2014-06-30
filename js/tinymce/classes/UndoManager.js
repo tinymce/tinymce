@@ -26,7 +26,7 @@ define("tinymce/UndoManager", [
 	].join('|'), 'gi');
 
 	return function(editor) {
-		var self = this, index = 0, data = [], beforeBookmark, isFirstTypedCharacter, locks = 0;
+		var self = this, index = 0, data = [], beforeBookmark, isFirstTypedCharacter, locks = 0, lastPath = [];
 
 		/**
 		 * Returns a trimmed version of the editor contents to be used for the undo level. This
@@ -166,6 +166,33 @@ define("tinymce/UndoManager", [
 			}
 		});
 
+		/**
+		 * Returns true/false if the current element path has been changed or not.
+		 *
+		 * @return {Boolean} True if the element path is the same false if it's not.
+		 */
+		function isSameElementPath(startElm) {
+			var i, currentPath;
+
+			currentPath = editor.$(startElm).parentsUntil(editor.getBody());
+			if (currentPath.length === lastPath.length) {
+				for (i = currentPath.length; i >= 0; i--) {
+					if (currentPath[i] !== lastPath[i]) {
+						break;
+					}
+				}
+
+				if (i === -1) {
+					lastPath = currentPath;
+					return true;
+				}
+			}
+
+			lastPath = currentPath;
+
+			return false;
+		}
+
 		// Selection range isn't updated until after the click events default handler is executed
 		// so we need to wait for the selection to update on Gecko/WebKit it happens right away.
 		// On IE it might take a while so we listen for the SelectionChange event.
@@ -175,8 +202,10 @@ define("tinymce/UndoManager", [
 			editor.on('MouseUp', function(e) {
 				if (!e.isDefaultPrevented()) {
 					editor.once('SelectionChange', function() {
+						var startElm = editor.selection.getStart();
+
 						// Selection change might fire when focus is lost
-						if (editor.dom.isChildOf(editor.selection.getStart(), editor.getBody())) {
+						if (!isSameElementPath(startElm) && editor.dom.isChildOf(startElm, editor.getBody())) {
 							editor.nodeChanged();
 						}
 					});

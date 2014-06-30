@@ -378,7 +378,7 @@ define("tinymce/dom/ControlSelection", [
 			});
 
 			controlElm = e.type == 'mousedown' ? e.target : selection.getNode();
-			controlElm = dom.getParent(controlElm, isIE ? 'table' : 'table,img,hr');
+			controlElm = dom.$(controlElm).closest(isIE ? 'table' : 'table,img,hr')[0];
 
 			if (isChildOrEqual(controlElm, rootElement)) {
 				disableGeckoResize();

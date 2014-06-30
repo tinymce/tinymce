@@ -1,5 +1,6 @@
 Version 4.1.1 (2014-07-xx)
 	Fixed bug where pasting plain text on some WebKit versions would result in an empty line.
+	Fixed bug where resizing images inside tables on IE 11 wouldn't work properly.
 	Fixed so DomQuery parentsUntil/prevUntil/nextUntil supports selectors/elements/filters etc.
 Version 4.1.0 (2014-06-18)
 	Added new file_picker_callback option to replace the old file_browser_callback the latter will still work though.
