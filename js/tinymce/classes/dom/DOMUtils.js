@@ -1137,7 +1137,7 @@ define("tinymce/dom/DOMUtils", [
 		 */
 		getOuterHTML: function(elm) {
 			elm = this.get(elm);
-			return elm.nodeType == 1 ? elm.outerHTML : elm.data;
+			return elm.nodeType == 1 ? elm.outerHTML : $('<div>').append($(elm).clone()).html();
 		},
 
 		/**
