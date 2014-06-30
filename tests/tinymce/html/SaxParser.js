@@ -84,7 +84,7 @@
 	test('Parse elements', function() {
 		var counter, parser;
 
-		expect(46);
+		expect(48);
 
 		counter = createCounter(writer);
 		parser = new tinymce.html.SaxParser(counter, schema);
@@ -162,6 +162,13 @@
 		parser.parse('<myns-mytag>text</myns-mytag>');
 		equal(writer.getContent(), '<myns-mytag>text</myns-mytag>', 'Parse element with dash name.');
 		deepEqual(counter.counts, {start:1, text:1, end:1}, 'Parse element with dash name counts.');
+
+		counter = createCounter(writer);
+		parser = new tinymce.html.SaxParser(counter, schema);
+		writer.reset();
+		parser.parse('<myns_mytag>text</myns_mytag>');
+		equal(writer.getContent(), '<myns_mytag>text</myns_mytag>', 'Parse element with underscore name.');
+		deepEqual(counter.counts, {start:1, text:1, end:1}, 'Parse element with underscore name counts.');
 
 		counter = createCounter(writer);
 		parser = new tinymce.html.SaxParser(counter, schema);
