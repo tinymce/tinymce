@@ -1007,7 +1007,7 @@ define("tinymce/dom/DOMUtils", [
 		 * tinymce.DOM.removeClass('mydiv', 'myclass');
 		 */
 		removeClass: function(elm, cls) {
-			this.$$(elm).removeClass(cls);
+			this.toggleClass(elm, cls, false);
 		},
 
 		/**
@@ -1031,7 +1031,11 @@ define("tinymce/dom/DOMUtils", [
 		 * @param {[type]} state Optional state to set.
 		 */
 		toggleClass: function(elm, cls, state) {
-			this.$$(elm).toggleClass(cls, state);
+			this.$$(elm).toggleClass(cls, state).each(function() {
+				if (this.className === '') {
+					$(this).attr('class', null);
+				}
+			});
 		},
 
 		/**
