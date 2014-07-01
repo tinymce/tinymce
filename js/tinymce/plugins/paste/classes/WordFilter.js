@@ -51,9 +51,57 @@ define("tinymce/pasteplugin/WordFilter", [
 			 */
 			function convertFakeListsToProperLists(node) {
 				var currentListNode, prevListNode, lastLevel = 1;
+	
+				function getText(node) {
+					var txt = '';
 
-				function convertParagraphToLi(paragraphNode, listStartTextNode, listName, start) {
-					var level = paragraphNode._listLevel || lastLevel;
+					if (node.type === 3) {
+						return node.value;
+					}
+
+					if ((node = node.firstChild)) {
+						do {
+							txt += getText(node);
+						} while ((node = node.next));
+					}
+
+					return txt;
+				}
+
+				function trimListStart(node, regExp) {
+					if (node.type === 3) {
+						if (regExp.test(node.value)) {
+							node.value = node.value.replace(regExp, '');
+							return false;
+						}
+					}
+
+					if ((node = node.firstChild)) {
+						do {
+							if (!trimListStart(node, regExp)) {
+								return false;
+							}
+						} while ((node = node.next));
+					}
+
+					return true;
+				}
+
+				function removeIgnoredNodes(node) {
+					if (node._listIgnore) {
+						node.remove();
+						return;
+					}
+
+					if ((node = node.firstChild)) {
+						do {
+							removeIgnoredNodes(node);
+						} while ((node = node.next));
+					}
+				}
+				
+				function convertParagraphToLi(paragraphNode, listName, start) {
+					var nextNode, level = paragraphNode._listLevel || lastLevel;
 
 					// Handle list nesting
 					if (level != lastLevel) {
@@ -83,12 +131,6 @@ define("tinymce/pasteplugin/WordFilter", [
 					}
 
 					paragraphNode.name = 'li';
-					listStartTextNode.value = '';
-
-					var nextNode = listStartTextNode.next;
-					if (nextNode && nextNode.type == 3) {
-						nextNode.value = nextNode.value.replace(/^\u00a0+/, '');
-					}
 
 					// Append list to previous list if it exists
 					if (level > lastLevel && prevListNode) {
@@ -96,6 +138,12 @@ define("tinymce/pasteplugin/WordFilter", [
 					}
 
 					lastLevel = level;
+
+					// Remove start of list item "1. " or "&middot; " etc
+					removeIgnoredNodes(paragraphNode);
+					trimListStart(paragraphNode, /^\u00a0+/);
+					trimListStart(paragraphNode, /^\s*([\u2022\u00b7\u00a7\u00d8\u25CF]|\w+\.)/);
+					trimListStart(paragraphNode, /^\u00a0+/);
 				}
 
 				var paragraphs = node.getAll('p');
@@ -105,26 +153,17 @@ define("tinymce/pasteplugin/WordFilter", [
 
 					if (node.name == 'p' && node.firstChild) {
 						// Find first text node in paragraph
-						var nodeText = '';
+						var nodeText = getText(node);
 						var listStartTextNode = node.firstChild;
 
-						while (listStartTextNode) {
-							nodeText = listStartTextNode.value;
-							if (nodeText) {
-								break;
-							}
-
-							listStartTextNode = listStartTextNode.firstChild;
-						}
-
 						// Detect unordered lists look for bullets
-						if (/^\s*[\u2022\u00b7\u00a7\u00d8\u25CF]\s*$/.test(nodeText)) {
-							convertParagraphToLi(node, listStartTextNode, 'ul');
+						if (/^\s*[\u2022\u00b7\u00a7\u00d8\u25CF]\s*/.test(nodeText)) {
+							convertParagraphToLi(node, 'ul');
 							continue;
 						}
 
 						// Detect ordered lists 1., a. or ixv.
-						if (/^\s*\w+\.$/.test(nodeText)) {
+						if (/^\s*\w+\./.test(nodeText) && !/^\s*\w+\.\s*[^\s]+/.test(listStartTextNode.value)) {
 							// Parse OL start number
 							var matches = /([0-9])\./.exec(nodeText);
 							var start = 1;
@@ -132,7 +171,13 @@ define("tinymce/pasteplugin/WordFilter", [
 								start = parseInt(matches[1], 10);
 							}
 
-							convertParagraphToLi(node, listStartTextNode, 'ol', start);
+							convertParagraphToLi(node, 'ol', start);
+							continue;
+						}
+
+						// Convert paragraphs marked as lists but doesn't look like anything
+						if (node._listLevel) {
+							convertParagraphToLi(node, 'ul', 1);
 							continue;
 						}
 
@@ -142,20 +187,27 @@ define("tinymce/pasteplugin/WordFilter", [
 			}
 
 			function filterStyles(node, styleValue) {
-				var outputStyles = {}, styles = editor.dom.parseStyle(styleValue);
-
-				// Parse out list indent level for lists
-				if (node.name === 'p') {
-					var matches = /mso-list:\w+ \w+([0-9]+)/.exec(styleValue);
-
-					if (matches) {
-						node._listLevel = parseInt(matches[1], 10);
-					}
-				}
+				var outputStyles = {}, matches, styles = editor.dom.parseStyle(styleValue);
 
 				Tools.each(styles, function(value, name) {
 					// Convert various MS styles to W3C styles
 					switch (name) {
+						case 'mso-list':
+							// Parse out list indent level for lists
+							matches = /\w+ \w+([0-9]+)/i.exec(styleValue);
+							if (matches) {
+								node._listLevel = parseInt(matches[1], 10);
+							}
+
+							// Remove these nodes <span style="mso-list:Ignore">o</span>
+							// Since the span gets removed we mark the text node and the span
+							if (/Ignore/i.test(value) && node.firstChild) {
+								node._listIgnore = true;
+								node.firstChild._listIgnore = true;
+							}
+
+							break;
+
 						case "horiz-align":
 							name = "text-align";
 							break;
