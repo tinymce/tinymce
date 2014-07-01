@@ -126,6 +126,8 @@
 						fontElm = editor.dom.getParent(editor.selection.getNode(), 'font');
 						if (fontElm) {
 							self.value(fontElm.size);
+						} else {
+							self.value('');
 						}
 					});
 				},
@@ -193,54 +195,14 @@
 						fontElm = editor.dom.getParent(editor.selection.getNode(), 'font');
 						if (fontElm) {
 							self.value(fontElm.face);
+						} else {
+							self.value('');
 						}
 					});
 				},
 				onselect: function(e) {
 					if (e.control.settings.value) {
 						editor.execCommand('FontName', false, e.control.settings.value);
-					}
-				}
-			};
-		});
-
-		editor.addButton('fontname', function() {
-			var items = [], defaultFontsizeFormats = '8pt=1 10pt=2 12pt=3 14pt=4 18pt=5 24pt=6 36pt=7';
-			var fontsize_formats = editor.settings.fontsize_formats || defaultFontsizeFormats;
-
-			$.each(fontsize_formats.split(' '), function(i, item) {
-				var text = item, value = item;
-				var values = item.split('=');
-
-				if (values.length > 1) {
-					text = values[0];
-					value = values[1];
-				}
-
-				items.push({text: text, value: value});
-			});
-
-			return {
-				type: 'listbox',
-				text: 'Font Sizes',
-				tooltip: 'Font Sizes',
-				values: items,
-				fixedWidth: true,
-				onPostRender: function() {
-					var self = this;
-
-					editor.on('NodeChange', function() {
-						var fontElm;
-
-						fontElm = editor.dom.getParent(editor.selection.getNode(), 'font');
-						if (fontElm) {
-							self.value(fontElm.size);
-						}
-					});
-				},
-				onclick: function(e) {
-					if (e.control.settings.value) {
-						editor.execCommand('FontSize', false, e.control.settings.value);
 					}
 				}
 			};
