@@ -98,10 +98,20 @@ define("tinymce/pasteplugin/Utils", [
 	 * @return {String} Html contents that got trimmed.
 	 */
 	function trimHtml(html) {
+		function trimSpaces(all, s1, s2) {
+			// WebKit &nbsp; meant to preserve multiple spaces but instead inserted around all inline tags,
+			// including the spans with inline styles created on paste
+			if (!s1 && !s2) {
+				return ' ';
+			}
+
+			return '\u00a0';
+		}
+
 		html = filter(html, [
 			/^[\s\S]*<body[^>]*>\s*|\s*<\/body[^>]*>[\s\S]*$/g, // Remove anything but the contents within the BODY element
 			/<!--StartFragment-->|<!--EndFragment-->/g, // Inner fragments (tables from excel on mac)
-			[/<span class="Apple-converted-space">\u00a0<\/span>/g, '\u00a0'], // WebKit &nbsp;
+			[/( ?)<span class="Apple-converted-space">\u00a0<\/span>( ?)/g, trimSpaces],
 			/<br>$/i // Trailing BR elements
 		]);
 
