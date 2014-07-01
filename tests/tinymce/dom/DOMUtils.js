@@ -82,7 +82,7 @@
 		DOM.remove('test');
 	});
 
-	test('removeClass', 4, function() {
+	test('removeClass', 5, function() {
 		DOM.add(document.body, 'div', {id : 'test'});
 
 		DOM.get('test').className = 'abc 123 xyz';
@@ -94,7 +94,10 @@
 		equal(DOM.get('test2').className, '');
 		equal(DOM.get('test3').className, 'test test');
 		equal(DOM.get('test4').className, 'test');
-		DOM.get('test').innerHTML = '';
+
+		DOM.get('test').innerHTML = '<span id="test2" class="test"></span>';
+		DOM.removeClass('test2', 'test');
+		equal(Utils.normalizeHtml(DOM.get('test').innerHTML), '<span id="test2"></span>');
 
 		DOM.remove('test');
 	});
