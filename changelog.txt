@@ -5,6 +5,7 @@ Version 4.1.1 (2014-07-xx)
 	Fixed bug where document.activeElement would throw exceptions on IE 9 when that element was hidden or removed from dom.
 	Fixed bug where WebKit/Blink sometimes produced br elements with the Apple-interchange-newline class.
 	Fixed bug where table cell selection wasn't properly removed when copy/pasting table cells.
+	Fixed so empty inline elements inside empty block elements doesn't get removed if configured to be kept intact.
 	Fixed so DomQuery parentsUntil/prevUntil/nextUntil supports selectors/elements/filters etc.
 	Fixed bug where custom elements with underscores in the name wasn't properly parsed/serialized.
 Version 4.1.0 (2014-06-18)

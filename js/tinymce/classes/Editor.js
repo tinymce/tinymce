@@ -843,7 +843,7 @@ define("tinymce/Editor", [
 					node = nodes[i];
 
 					if (node.isEmpty(nonEmptyElements)) {
-						node.empty().append(new Node('br', 1)).shortEnded = true;
+						node.append(new Node('br', 1)).shortEnded = true;
 					}
 				}
 			});
