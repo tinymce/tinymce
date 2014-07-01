@@ -51,7 +51,7 @@ define("tinymce/pasteplugin/WordFilter", [
 			 */
 			function convertFakeListsToProperLists(node) {
 				var currentListNode, prevListNode, lastLevel = 1;
-	
+
 				function getText(node) {
 					var txt = '';
 
@@ -99,9 +99,9 @@ define("tinymce/pasteplugin/WordFilter", [
 						} while ((node = node.next));
 					}
 				}
-				
+
 				function convertParagraphToLi(paragraphNode, listName, start) {
-					var nextNode, level = paragraphNode._listLevel || lastLevel;
+					var level = paragraphNode._listLevel || lastLevel;
 
 					// Handle list nesting
 					if (level != lastLevel) {
