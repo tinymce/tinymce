@@ -2017,12 +2017,10 @@ define("tinymce/Editor", [
 						cls = settings.visual_table_class || 'mce-item-table';
 						value = dom.getAttrib(elm, 'border');
 
-						if (!value || value == '0') {
-							if (self.hasVisual) {
-								dom.addClass(elm, cls);
-							} else {
-								dom.removeClass(elm, cls);
-							}
+						if ((!value || value == '0') && self.hasVisual) {
+							dom.addClass(elm, cls);
+						} else {
+							dom.removeClass(elm, cls);
 						}
 
 						return;
@@ -2032,12 +2030,10 @@ define("tinymce/Editor", [
 							value = dom.getAttrib(elm, 'name') || elm.id;
 							cls = settings.visual_anchor_class || 'mce-item-anchor';
 
-							if (value) {
-								if (self.hasVisual) {
-									dom.addClass(elm, cls);
-								} else {
-									dom.removeClass(elm, cls);
-								}
+							if (value && self.hasVisual) {
+								dom.addClass(elm, cls);
+							} else {
+								dom.removeClass(elm, cls);
 							}
 						}
 
