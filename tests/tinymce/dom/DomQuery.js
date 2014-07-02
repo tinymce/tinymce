@@ -321,13 +321,15 @@
 		});
 
 		test(prefix + 'css() set opacity', function() {
+			var styles = new tinymce.html.Styles();
+
 			if (tinymce.Env.ie && tinymce.Env.ie < 9) {
 				// jQuery has a slightly different output but basically the same
-				strictEqual(normalizeStyleValue($('<b></b>').css('opacity', 0.5).attr('style')), 'filter: alpha(opacity=50); zoom: 1');
+				deepEqual(styles.parse($('<b></b>').css('opacity', 0.5).attr('style')), {filter: 'alpha(opacity=50)', 'zoom': '1'});
 				strictEqual(typeof $('<b></b>').css('opacity', null).attr('style'), 'undefined');
 			} else {
 				strictEqual(normalizeStyleValue($('<b></b>').css('opacity', 0.5).attr('style')), 'opacity: 0.5');
-				strictEqual(typeof $('<b></b>').css('opacity', null).attr('style'), 'undefined');
+				ok(!$('<b></b>').css('opacity', null).attr('style'));
 				ok(!$('<b></b>').css('opacity', '').attr('style'));
 			}
 		});
@@ -335,6 +337,7 @@
 		test(prefix + 'css() set float', function() {
 			strictEqual(normalizeStyleValue($('<b></b>').css('float', 'right').attr('style')), 'float: right');
 			ok(!$('<b style="float: left"></b>').css('float', '').attr('style'));
+			ok(!$('<b></b>').css('float', null).attr('style'));
 		});
 
 		test(prefix + 'remove() single element', function() {

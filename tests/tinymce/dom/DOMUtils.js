@@ -304,6 +304,14 @@
 		DOM.setStyle('test', 'fontSize', 23);
 		equal(DOM.getStyle('test', 'fontSize'), '23px');
 
+		DOM.setStyle('test', 'fontSize', 23);
+		DOM.setStyle('test', 'fontSize', '');
+		equal(DOM.getStyle('test', 'fontSize'), '');
+
+		DOM.setStyle('test', 'fontSize', 23);
+		DOM.setStyle('test', 'fontSize', null);
+		equal(DOM.getStyle('test', 'fontSize'), '');
+
 		DOM.setAttrib('test', 'style', '');
 
 		DOM.remove('test');
