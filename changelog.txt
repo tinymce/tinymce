@@ -9,6 +9,7 @@ Version 4.1.1 (2014-07-xx)
 	Fixed bug where right clicking using the contextmenu plugin on WebKit/Blink on Mac OS X would select the target current word or line.
 	Fixed bug where it wasn't possible to alter table cell properties on IE 8 using the context menu.
 	Fixed bug where the resize helper wouldn't be correctly positioned on older IE versions.
+	Fixed bug where fullpage plugin would produce an error if you didn't specify a doctype encoding.
 	Fixed so empty inline elements inside empty block elements doesn't get removed if configured to be kept intact.
 	Fixed so DomQuery parentsUntil/prevUntil/nextUntil supports selectors/elements/filters etc.
 	Fixed so legacyoutput plugin overrides fontselect and fontsizeselect controls and handles font elements properly.

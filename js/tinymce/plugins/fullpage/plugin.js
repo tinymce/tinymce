@@ -194,7 +194,7 @@ tinymce.PluginManager.add('fullpage', function(editor) {
 			}
 
 			elm.attr('content', 'text/html; charset=' + data.docencoding);
-		} else {
+		} else if (elm) {
 			elm.remove();
 		}
 
