@@ -27,8 +27,9 @@ define("tinymce/EditorManager", [
 	"tinymce/util/Tools",
 	"tinymce/util/Observable",
 	"tinymce/util/I18n",
-	"tinymce/FocusManager"
-], function(Editor, DomQuery, DOMUtils, URI, Env, Tools, Observable, I18n, FocusManager) {
+	"tinymce/FocusManager",
+	"tinymce/ProxyEditor"
+], function(Editor, DomQuery, DOMUtils, URI, Env, Tools, Observable, I18n, FocusManager, ProxyEditor) {
 	var DOM = DOMUtils.DOM;
 	var explode = Tools.explode, each = Tools.each, extend = Tools.extend;
 	var instanceCounter = 0, beforeUnloadDelegate, EditorManager;
@@ -262,8 +263,15 @@ define("tinymce/EditorManager", [
 			}
 
 			function createEditor(id, settings) {
+				var editor;
+
 				if (!purgeDestroyedEditor(self.get(id))) {
-					var editor = new Editor(id, settings, self);
+					if (settings.sandbox && Env.postMessage) {
+						editor = new ProxyEditor(id, settings, self);
+					} else {
+						editor = new Editor(id, settings, self);
+					}
+
 					editors.push(editor);
 					editor.render();
 				}

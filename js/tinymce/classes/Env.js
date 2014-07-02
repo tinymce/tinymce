@@ -130,6 +130,14 @@ define("tinymce/Env", [], function() {
 		 * @property documentMode
 		 * @type Number
 		 */
-		documentMode: ie ? (document.documentMode || 7) : 10
+		documentMode: ie ? (document.documentMode || 7) : 10,
+
+		/**
+		 * Returns true/false if the browser supports message passing between iframe.
+		 *
+		 * @property postMessage
+		 * @type Boolean
+		 */
+		postMessage: !!window.postMessage
 	};
 });

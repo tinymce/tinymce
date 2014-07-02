@@ -1,0 +1,35 @@
+<html>
+<head>
+	<script type="text/javascript" src="tinymce/js/tinymce/tinymce.min.js"></script>
+	<script type="text/javascript">
+		(function () {
+			var proxy = new tinymce.Proxy(parent, "*", false);
+
+			proxy.on("init", function (settings, content) {
+				document.getElementById("content").value = content;
+				document.getElementById("content").style.height = document.body.offsetHeight + "px";
+
+				tinymce.init(tinymce.extend(settings, {
+					selector: "textarea",
+					setup: function(ed) {
+						ed.on('change', function(e) {
+							proxy.send("newContent", [ed.getContent()]);
+						});
+
+						ed.on('loadContent', function (e) {
+							proxy.send("setHeight", [document.body.offsetHeight + "px"]);
+						})
+					},
+					sandbox: false,
+					content_element: "content"
+				}));
+
+
+			});
+		}());
+	</script>
+</head>
+<body>
+<textarea id="content"></textarea>
+</body>
+</html>
