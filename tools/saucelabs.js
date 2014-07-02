@@ -251,6 +251,14 @@ function runTask(arg, framework, callback) {
 	});
 }
 
+function getBrowsers(callback) {
+	request('http://saucelabs.com/rest/v1/info/browsers/selenium-rc', function(error, response, body) {
+		if (!error && response.statusCode == 200) {
+			callback(JSON.parse(body));
+		}
+	});
+}
+
 function qunit(settings) {
 	var defaults = {
 		username: process.env.SAUCE_USERNAME,
@@ -269,15 +277,44 @@ function qunit(settings) {
 		browsers: []
 	};
 
-	for (var name in defaults) {
-		if (name in settings) {
-			continue;
+	getBrowsers(function(allBrowsers) {
+		allBrowsers.sort(function(a, b) {
+			a = parseInt(a.short_version, 10);
+			b = parseInt(b.short_version, 10);
+
+			if (a < b) {
+				return 1;
+			}
+
+			if (a > b) {
+				return -1;
+			}
+
+			return 0;
+		});
+
+		settings.browsers.forEach(function(browser) {
+			// Find latest browser and use that
+			if (browser.version == 'latest') {
+				for (var i = 0; i < allBrowsers.length; i++) {
+					if (allBrowsers[i].api_name == browser.browserName) {
+						browser.version = allBrowsers[i].short_version;
+						break;
+					}
+				}
+			}
+		});
+
+		for (var name in defaults) {
+			if (name in settings) {
+				continue;
+			}
+
+			settings[name] = defaults[name];
 		}
 
-		settings[name] = defaults[name];
-	}
-
-	runTask(settings, 'qunit', function() {});
+		runTask(settings, 'qunit', function() {});
+	});
 }
 
 function WebServer(settings) {
