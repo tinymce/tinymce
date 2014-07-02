@@ -255,7 +255,11 @@ define("tinymce/dom/ControlSelection", [
 						ratio = startH / startW;
 						selectedHandle = handle;
 
-						handle.startPos = dom.getPos(handle.elm, rootElement);
+						handle.startPos = {
+							x: targetWidth * handle[0] + selectedElmX,
+							y: targetHeight * handle[1] + selectedElmY
+						};
+
 						startScrollWidth = rootElement.scrollWidth;
 						startScrollHeight = rootElement.scrollHeight;
 
