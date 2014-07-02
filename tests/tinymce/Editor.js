@@ -324,10 +324,10 @@ asyncTest('remove editor', function() {
 });
 
 test('insertContent', function() {
-	editor.setContent('<p>a</p>');
+	editor.setContent('<p>ab</p>');
 	Utils.setSelection('p', 1);
-	editor.insertContent('b');
-	equal(editor.getContent(), '<p>ab</p>');
+	editor.insertContent('c');
+	equal(editor.getContent(), '<p>acb</p>');
 });
 
 test('insertContent merge', function() {

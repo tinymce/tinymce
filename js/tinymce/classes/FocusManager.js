@@ -85,7 +85,7 @@ define("tinymce/FocusManager", [
 				// Gecko/WebKit has ghost selections in iframes and IE only has one selection per browser tab
 				if (editor.inline || Env.ie) {
 					// Use the onbeforedeactivate event when available since it works better see #7023
-					if ("onbeforedeactivate" in document && Env.ie < 11) {
+					if ("onbeforedeactivate" in document && Env.ie < 9) {
 						editor.dom.bind(editor.getBody(), 'beforedeactivate', function() {
 							try {
 								editor.lastRng = editor.selection.getRng();
