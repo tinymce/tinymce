@@ -460,8 +460,6 @@ define("tinymce/dom/DomQuery", [
 					self.css(name, value);
 				});
 			} else {
-				name = cssFix[name] || name;
-
 				if (isDefined(value)) {
 					name = camel(name);
 
@@ -480,7 +478,7 @@ define("tinymce/dom/DomQuery", [
 						}
 
 						try {
-							this.style[name] = value;
+							this.style[cssFix[name] || name] = value;
 						} catch (ex) {
 							// Ignore
 						}
