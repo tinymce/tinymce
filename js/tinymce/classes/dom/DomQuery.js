@@ -479,17 +479,17 @@ define("tinymce/dom/DomQuery", [
 							return;
 						}
 
+						try {
+							this.style[name] = value;
+						} catch (ex) {
+							// Ignore
+						}
+
 						if (value === null || value === '') {
 							if (style.removeProperty) {
 								style.removeProperty(dashed(name));
 							} else {
 								style.removeAttribute(name);
-							}
-						} else {
-							try {
-								this.style[name] = value;
-							} catch (ex) {
-								// Ignore
 							}
 						}
 					});

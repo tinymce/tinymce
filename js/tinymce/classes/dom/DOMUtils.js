@@ -635,10 +635,6 @@ define("tinymce/dom/DOMUtils", [
 		 * tinymce.DOM.setStyle('mydiv', 'background-color', 'red');
 		 */
 		setStyle: function(elm, name, value) {
-			if (value === '') {
-				value = null;
-			}
-
 			elm = this.$$(elm).css(name, value);
 
 			if (this.settings.update_styles) {

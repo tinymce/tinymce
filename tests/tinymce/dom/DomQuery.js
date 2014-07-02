@@ -334,7 +334,7 @@
 
 		test(prefix + 'css() set float', function() {
 			strictEqual(normalizeStyleValue($('<b></b>').css('float', 'right').attr('style')), 'float: right');
-			strictEqual(typeof $('<b></b>').css('float', null).attr('style'), 'undefined');
+			ok(!$('<b style="float: left"></b>').css('float', '').attr('style'));
 		});
 
 		test(prefix + 'remove() single element', function() {
