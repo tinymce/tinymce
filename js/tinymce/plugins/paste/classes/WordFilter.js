@@ -157,13 +157,13 @@ define("tinymce/pasteplugin/WordFilter", [
 						var listStartTextNode = node.firstChild;
 
 						// Detect unordered lists look for bullets
-						if (/^\s*[\u2022\u00b7\u00a7\u00d8\u25CF]\s*/.test(nodeText)) {
+						if (/^[\s\u00a0]*[\u2022\u00b7\u00a7\u00d8\u25CF]\s*/.test(nodeText)) {
 							convertParagraphToLi(node, 'ul');
 							continue;
 						}
 
 						// Detect ordered lists 1., a. or ixv.
-						if (/^\s*\w+\./.test(nodeText) && !/^\s*\w+\.\s*[^\s]+/.test(listStartTextNode.value)) {
+						if (/^[\s\u00a0]*\w+\./.test(nodeText) && !/^[\s\u00a0]*\w+\.\s*[^\s]+/.test(listStartTextNode.value)) {
 							// Parse OL start number
 							var matches = /([0-9])\./.exec(nodeText);
 							var start = 1;
