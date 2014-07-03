@@ -37,7 +37,7 @@
 			selection = ed.selection,
 			TreeWalker = tinymce.dom.TreeWalker,
 			rangeUtils = new tinymce.dom.RangeUtils(dom),
-			isValid = ed.schema.isValidChild,
+			isValidChild = ed.schema.isValidChild,
 			isArray = tinymce.isArray,
 			isBlock = dom.isBlock,
 			forcedRootBlock = ed.settings.forced_root_block,
@@ -306,11 +306,10 @@
 
 				return rng;
 			}
-			
-			function applyStyleToList(node, bookmark, wrapElm, newWrappers, process){
-				var nodes = [], listIndex = -1, list, startIndex = -1, endIndex = -1, currentWrapElm;
-				
-				// find the index of the first child list.
+
+			function findNestedList(node) {
+				var listIndex = -1;
+				var list;
 				each(node.childNodes, function(n, index) {
 					if (n.nodeName === "UL" || n.nodeName === "OL") {
 						listIndex = index;
@@ -318,8 +317,15 @@
 						return false;
 					}
 				});
-				
-				// get the index of the bookmarks
+				return {
+					listIndex: listIndex,
+					list: list
+				};
+			}
+
+			function getBookmarkIndex(node, bookmark) {
+				var startIndex = -1;
+				var endIndex = -1;
 				each(node.childNodes, function(n, index) {
 					if (n.nodeName === "SPAN" && dom.getAttrib(n, "data-mce-type") == "bookmark") {
 						if (n.id == bookmark.id + "_start") {
@@ -329,6 +335,25 @@
 						}
 					}
 				});
+
+				return {
+					startIndex : startIndex,
+					endIndex : endIndex
+				};
+			}
+			
+			function applyStyleToList(node, bookmark, wrapElm, newWrappers, process){
+				var nodes = [], listIndex = -1, list, startIndex = -1, endIndex = -1, currentWrapElm, newWrapElement = [];
+				
+				// find the index of the first child list.
+				var nestedList = findNestedList(node);
+				listIndex = nestedList.listIndex;
+				list = nestedList.list;
+				
+				// get the index of the bookmarks
+				var bookmarkIndex = getBookmarkIndex(node, bookmark);
+				startIndex = bookmarkIndex.startIndex;
+				endIndex = bookmarkIndex.endIndex;
 				
 				// if the selection spans across an embedded list, or there isn't an embedded list - handle processing normally
 				if (listIndex <= 0 || (startIndex < listIndex && endIndex > listIndex)) {
@@ -359,8 +384,9 @@
 						currentWrapElm.appendChild(node);
 					});
 
-					return currentWrapElm;
 				}
+				return currentWrapElm;
+				
 			};
 
 			function applyRngStyle(rng, bookmark, node_specific) {
@@ -439,9 +465,13 @@
 							}
 						}
 
+						function isZWNBS(node) {
+							return node.nodeType === 3 && node.nodeValue.length === 1 && node.nodeValue.charCodeAt(0) === 65279;
+						}
+
 						// Is it valid to wrap this item
-						if (contentEditable && !hasContentEditableState && isValid(wrapName, nodeName) && isValid(parentName, wrapName) &&
-								!(!node_specific && node.nodeType === 3 && node.nodeValue.length === 1 && node.nodeValue.charCodeAt(0) === 65279) && !isCaretNode(node) && (!format.inline || !isBlock(node))) {
+						if (contentEditable && !hasContentEditableState && isValidChild(wrapName, nodeName) && isValidChild(parentName, wrapName) &&
+								!(!node_specific && isZWNBS(node)) && !isCaretNode(node) && (!format.inline || !isBlock(node))) {
 							// Start wrapping
 							if (!currentWrapElm) {
 								// Wrap the node
@@ -453,7 +483,11 @@
 							currentWrapElm.appendChild(node);
 						} else if (nodeName == 'li' && bookmark) {
 							// Start wrapping - if we are in a list node and have a bookmark, then we will always begin by wrapping in a new element.
-							currentWrapElm = applyStyleToList(node, bookmark, wrapElm, newWrappers, process);
+							var listStyle = applyStyleToList(node, bookmark, wrapElm, newWrappers, process);
+							currentWrapElm = listStyle;
+							listStyle ? newWrappers.push(listStyle) : '';
+							currentWrapElm = 0;
+
 						} else {
 							// Start a new wrapper for possible children
 							currentWrapElm = 0;
@@ -634,8 +668,9 @@
 						selection.moveToBookmark(bookmark);
 						moveStart(selection.getRng(TRUE));
 						ed.nodeChanged();
-					} else
+					} else {
 						performCaretAction('apply', name, vars);
+					}
 				}
 			}
 		};
@@ -1711,7 +1746,7 @@
 					if (parentNode == dom.getRoot()) {
 						if (!format.list_block || !isEq(node, format.list_block)) {
 							each(tinymce.grep(node.childNodes), function(node) {
-								if (isValid(forcedRootBlock, node.nodeName.toLowerCase())) {
+								if (isValidChild(forcedRootBlock, node.nodeName.toLowerCase())) {
 									if (!rootBlockElm)
 										rootBlockElm = wrap(node, forcedRootBlock);
 									else
