@@ -409,16 +409,16 @@ define("tinymce/html/Schema", [
 
 		// Parses the specified valid_elements string and adds to the current rules
 		// This function is a bit hard to read since it's heavily optimized for speed
-		function addValidElements(valid_elements) {
+		function addValidElements(validElements) {
 			var ei, el, ai, al, matches, element, attr, attrData, elementName, attrName, attrType, attributes, attributesOrder,
 				prefix, outputName, globalAttributes, globalAttributesOrder, key, value,
 				elementRuleRegExp = /^([#+\-])?([^\[!\/]+)(?:\/([^\[!]+))?(?:(!?)\[([^\]]+)\])?$/,
 				attrRuleRegExp = /^([!\-])?(\w+::\w+|[^=:<]+)?(?:([=:<])(.*))?$/,
 				hasPatternsRegExp = /[*?+]/;
 
-			if (valid_elements) {
+			if (validElements) {
 				// Split valid elements into an array with rules
-				valid_elements = split(valid_elements, ',');
+				validElements = split(validElements, ',');
 
 				if (elements['@']) {
 					globalAttributes = elements['@'].attributes;
@@ -426,9 +426,9 @@ define("tinymce/html/Schema", [
 				}
 
 				// Loop all rules
-				for (ei = 0, el = valid_elements.length; ei < el; ei++) {
+				for (ei = 0, el = validElements.length; ei < el; ei++) {
 					// Parse element rule
-					matches = elementRuleRegExp.exec(valid_elements[ei]);
+					matches = elementRuleRegExp.exec(validElements[ei]);
 					if (matches) {
 						// Setup local names for matches
 						prefix = matches[1];
@@ -558,11 +558,11 @@ define("tinymce/html/Schema", [
 			}
 		}
 
-		function setValidElements(valid_elements) {
+		function setValidElements(validElements) {
 			elements = {};
 			patternElements = [];
 
-			addValidElements(valid_elements);
+			addValidElements(validElements);
 
 			each(schemaItems, function(element, name) {
 				children[name] = element.children;
@@ -570,14 +570,14 @@ define("tinymce/html/Schema", [
 		}
 
 		// Adds custom non HTML elements to the schema
-		function addCustomElements(custom_elements) {
+		function addCustomElements(customElements) {
 			var customElementRegExp = /^(~)?(.+)$/;
 
-			if (custom_elements) {
+			if (customElements) {
 				// Flush cached items since we are altering the default maps
 				mapCache.text_block_elements = mapCache.block_elements = null;
 
-				each(split(custom_elements, ','), function(rule) {
+				each(split(customElements, ','), function(rule) {
 					var matches = customElementRegExp.exec(rule),
 						inline = matches[1] === '~',
 						cloneName = inline ? 'span' : 'div',
@@ -615,11 +615,11 @@ define("tinymce/html/Schema", [
 		}
 
 		// Adds valid children to the schema object
-		function addValidChildren(valid_children) {
+		function addValidChildren(validChildren) {
 			var childRuleRegExp = /^([+\-]?)(\w+)\[([^\]]+)\]$/;
 
-			if (valid_children) {
-				each(split(valid_children, ','), function(rule) {
+			if (validChildren) {
+				each(split(validChildren, ','), function(rule) {
 					var matches = childRuleRegExp.exec(rule), parent, prefix;
 
 					if (matches) {

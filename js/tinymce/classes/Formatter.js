@@ -775,12 +775,12 @@ define("tinymce/Formatter", [
 				return formatRoot;
 			}
 
-			function wrapAndSplit(format_root, container, target, split) {
+			function wrapAndSplit(formatRoot, container, target, split) {
 				var parent, clone, lastClone, firstClone, i, formatRootParent;
 
 				// Format root found then clone formats and split it
-				if (format_root) {
-					formatRootParent = format_root.parentNode;
+				if (formatRoot) {
+					formatRootParent = formatRoot.parentNode;
 
 					for (parent = container.parentNode; parent && parent != formatRootParent; parent = parent.parentNode) {
 						clone = dom.clone(parent, FALSE);
@@ -807,8 +807,8 @@ define("tinymce/Formatter", [
 					}
 
 					// Never split block elements if the format is mixed
-					if (split && (!format.mixed || !isBlock(format_root))) {
-						container = dom.split(format_root, container);
+					if (split && (!format.mixed || !isBlock(formatRoot))) {
+						container = dom.split(formatRoot, container);
 					}
 
 					// Wrap container in cloned formats

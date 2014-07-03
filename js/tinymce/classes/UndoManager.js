@@ -169,6 +169,7 @@ define("tinymce/UndoManager", [
 		/**
 		 * Returns true/false if the current element path has been changed or not.
 		 *
+		 * @private
 		 * @return {Boolean} True if the element path is the same false if it's not.
 		 */
 		function isSameElementPath(startElm) {

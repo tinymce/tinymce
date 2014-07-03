@@ -586,7 +586,7 @@ define("tinymce/dom/DOMUtils", [
 		 *
 		 * @method remove
 		 * @param {String/Element/Array} node ID of element or DOM element object or array containing multiple elements/ids.
-		 * @param {Boolean} keep_children Optional state to keep children or not. If set to true all children will be
+		 * @param {Boolean} keepChildren Optional state to keep children or not. If set to true all children will be
 		 * placed at the location of the removed element.
 		 * @return {Element/Array} HTML DOM element that got removed, or an array of removed elements if multiple input elements
 		 * were passed in.
@@ -597,10 +597,10 @@ define("tinymce/dom/DOMUtils", [
 		 * // Removes an element by id in the document
 		 * tinymce.DOM.remove('mydiv');
 		 */
-		remove: function(node, keep_children) {
+		remove: function(node, keepChildren) {
 			node = this.$$(node);
 
-			if (keep_children) {
+			if (keepChildren) {
 				node.each(function() {
 					var child;
 
@@ -1193,14 +1193,14 @@ define("tinymce/dom/DOMUtils", [
 		 * @param {Element/String/Array} reference_node Reference element, element id or array of elements to insert after.
 		 * @return {Element/Array} Element that got added or an array with elements.
 		 */
-		insertAfter: function(node, reference_node) {
-			reference_node = this.get(reference_node);
+		insertAfter: function(node, referenceNode) {
+			referenceNode = this.get(referenceNode);
 
 			return this.run(node, function(node) {
 				var parent, nextSibling;
 
-				parent = reference_node.parentNode;
-				nextSibling = reference_node.nextSibling;
+				parent = referenceNode.parentNode;
+				nextSibling = referenceNode.nextSibling;
 
 				if (nextSibling) {
 					parent.insertBefore(node, nextSibling);
@@ -1255,8 +1255,8 @@ define("tinymce/dom/DOMUtils", [
 				newElm = self.create(name);
 
 				// Copy attribs to new block
-				each(self.getAttribs(elm), function(attr_node) {
-					self.setAttrib(newElm, attr_node.nodeName, self.getAttrib(elm, attr_node.nodeName));
+				each(self.getAttribs(elm), function(attrNode) {
+					self.setAttrib(newElm, attrNode.nodeName, self.getAttrib(elm, attrNode.nodeName));
 				});
 
 				// Replace block

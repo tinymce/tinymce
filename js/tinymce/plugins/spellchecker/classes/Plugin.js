@@ -58,16 +58,14 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			'Spanish=es,Swedish=sv';
 
 		languageMenuItems = buildMenuItems('Language',
-			Tools.map(languagesString.split(','),
-				function(lang_pair) {
-					var lang = lang_pair.split('=');
+			Tools.map(languagesString.split(','), function(langPair) {
+				langPair = langPair.split('=');
 
-					return {
-						name: lang[0],
-						value: lang[1]
-					};
-				}
-			)
+				return {
+					name: langPair[0],
+					value: langPair[1]
+				};
+			})
 		);
 
 		function isEmpty(obj) {

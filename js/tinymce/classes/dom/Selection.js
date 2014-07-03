@@ -430,9 +430,9 @@ define("tinymce/dom/Selection", [
 		 * Collapse the selection to start or end of range.
 		 *
 		 * @method collapse
-		 * @param {Boolean} to_start Optional boolean state if to collapse to end or not. Defaults to start.
+		 * @param {Boolean} toStart Optional boolean state if to collapse to end or not. Defaults to start.
 		 */
-		collapse: function(to_start) {
+		collapse: function(toStart) {
 			var self = this, rng = self.getRng(), node;
 
 			// Control range on IE
@@ -442,7 +442,7 @@ define("tinymce/dom/Selection", [
 				rng.moveToElementText(node);
 			}
 
-			rng.collapse(!!to_start);
+			rng.collapse(!!toStart);
 			self.setRng(rng);
 		},
 

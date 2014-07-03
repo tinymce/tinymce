@@ -1000,13 +1000,13 @@ define("tinymce/Editor", [
 		 * it will also place DOM focus inside the editor.
 		 *
 		 * @method focus
-		 * @param {Boolean} skip_focus Skip DOM focus. Just set is as the active editor.
+		 * @param {Boolean} skipFocus Skip DOM focus. Just set is as the active editor.
 		 */
-		focus: function(skip_focus) {
+		focus: function(skipFocus) {
 			var oed, self = this, selection = self.selection, contentEditable = self.settings.content_editable, rng;
 			var controlElm, doc = self.getDoc(), body;
 
-			if (!skip_focus) {
+			if (!skipFocus) {
 				// Get selected control element
 				rng = selection.getRng();
 				if (rng.item) {
