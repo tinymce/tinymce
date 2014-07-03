@@ -383,7 +383,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 					deltaY = Math.max(0, scrollContainerPos.y - bodyPos.y);
 				}
 
-				panel.fixed(false).moveRel(body, editor.rtl ? ['tr-br', 'br-tr'] : ['tl-bl', 'bl-tl']).moveBy(deltaX, deltaY);
+				panel.fixed(false).moveRel(body, editor.rtl ? ['tr-br', 'br-tr'] : ['tl-bl', 'bl-tl', 'tr-br']).moveBy(deltaX, deltaY);
 			}
 		}
 
