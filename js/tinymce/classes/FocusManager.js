@@ -185,8 +185,9 @@ define("tinymce/FocusManager", [
 					var activeEditor = editorManager.activeEditor;
 
 					if (activeEditor && e.target.ownerDocument == document) {
-						// Check to make sure we have a valid selection
-						if (activeEditor.selection) {
+						// Check to make sure we have a valid selection don't update the bookmark if it's
+						// a focusin to the body of the editor see #7025
+						if (activeEditor.selection && e.target != activeEditor.getBody()) {
 							activeEditor.selection.lastFocusBookmark = createBookmark(activeEditor.dom, activeEditor.lastRng);
 						}
 
