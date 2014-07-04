@@ -432,6 +432,11 @@ define("tinymce/dom/ControlSelection", [
 
 			// Remove native selection and let the magic begin
 			resizeStarted = true;
+			editor.fire('ObjectResizeStart', {
+				target: selectedElm,
+				width: selectedElm.clientWidth,
+				height: selectedElm.clientHeight
+			});
 			editor.getDoc().selection.empty();
 			showResizeRect(target, name, lastMouseDownEvent);
 		}
@@ -440,6 +445,7 @@ define("tinymce/dom/ControlSelection", [
 			var target = e.srcElement;
 
 			if (target != selectedElm) {
+				editor.fire('ObjectSelected', {target: target});
 				detachResizeStartListener();
 
 				if (target.id.indexOf('mceResizeHandle') === 0) {
