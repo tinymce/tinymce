@@ -13,6 +13,7 @@ Version 4.1.1 (2014-07-xx)
 	Fixed bug where anchor plugin would get the name/id of the current element even if it wasn't anchor element.
 	Fixed bug where visual aids for tables wouldn't be properly disabled when changing the border size.
 	Fixed bug where some control selection events wasn't properly fired on older IE versions.
+	Fixed bug where table cell selection on older IE versions would prevent resizing of images.
 	Fixed so inline mode toolbar gets rendered right aligned if the editable element positioned to the documents right edge.
 	Fixed so empty inline elements inside empty block elements doesn't get removed if configured to be kept intact.
 	Fixed so DomQuery parentsUntil/prevUntil/nextUntil supports selectors/elements/filters etc.
