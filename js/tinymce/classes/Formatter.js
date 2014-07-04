@@ -1172,6 +1172,11 @@ define("tinymce/Formatter", [
 				ed.on('NodeChange', function(e) {
 					var parents = getParents(e.element), matchedFormats = {};
 
+					// Ignore bogus nodes like the <a> tag created by moveStart()
+					parents = Tools.grep(parents, function(node) {
+						return !node.getAttribute('data-mce-bogus');
+					});
+
 					// Check for new formats
 					each(formatChangeData, function(callbacks, format) {
 						each(parents, function(node) {
@@ -2356,7 +2361,7 @@ define("tinymce/Formatter", [
 					if (node.nodeType == 3 && !isWhiteSpaceNode(node)) {
 						// IE has a "neat" feature where it moves the start node into the closest element
 						// we can avoid this by inserting an element before it and then remove it after we set the selection
-						tmpNode = dom.create('a', null, INVISIBLE_CHAR);
+						tmpNode = dom.create('a', {'data-mce-bogus': 'all'}, INVISIBLE_CHAR);
 						node.parentNode.insertBefore(tmpNode, node);
 
 						// Set selection and remove tmpNode

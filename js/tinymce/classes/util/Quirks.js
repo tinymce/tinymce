@@ -501,8 +501,6 @@ define("tinymce/util/Quirks", [
 				if (e.nodeName == 'A' && dom.hasClass(e, 'mce-item-anchor')) {
 					selection.select(e);
 				}
-
-				editor.nodeChanged();
 			});
 		}
 

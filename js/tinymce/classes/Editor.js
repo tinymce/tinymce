@@ -44,6 +44,7 @@ define("tinymce/Editor", [
 	"tinymce/dom/DOMUtils",
 	"tinymce/dom/DomQuery",
 	"tinymce/AddOnManager",
+	"tinymce/NodeChange",
 	"tinymce/html/Node",
 	"tinymce/dom/Serializer",
 	"tinymce/html/Serializer",
@@ -65,7 +66,7 @@ define("tinymce/Editor", [
 	"tinymce/EditorObservable",
 	"tinymce/Shortcuts"
 ], function(
-	DOMUtils, DomQuery, AddOnManager, Node, DomSerializer, Serializer,
+	DOMUtils, DomQuery, AddOnManager, NodeChange, Node, DomSerializer, Serializer,
 	Selection, Formatter, UndoManager, EnterKey, ForceBlocks, EditorCommands,
 	URI, ScriptLoader, EventUtils, WindowManager,
 	Schema, DomParser, Quirks, Env, Tools, EditorObservable, Shortcuts
@@ -898,6 +899,7 @@ define("tinymce/Editor", [
 			self.forceBlocks = new ForceBlocks(self);
 			self.enterKey = new EnterKey(self);
 			self.editorCommands = new EditorCommands(self);
+			self._nodeChangeDispatcher = new NodeChange(self);
 
 			self.fire('PreInit');
 
@@ -1183,36 +1185,7 @@ define("tinymce/Editor", [
 		 * @param {Object} args Optional args to pass to NodeChange event handlers.
 		 */
 		nodeChanged: function(args) {
-			var self = this, selection = self.selection, node, parents, root;
-
-			// Fix for bug #1896577 it seems that this can not be fired while the editor is loading
-			if (self.initialized && !self.settings.disable_nodechange && !self.settings.readonly) {
-				// Get start node
-				root = self.getBody();
-				node = selection.getStart() || root;
-				node = ie && node.ownerDocument != self.getDoc() ? self.getBody() : node; // Fix for IE initial state
-
-				// Edge case for <p>|<img></p>
-				if (node.nodeName == 'IMG' && selection.isCollapsed()) {
-					node = node.parentNode;
-				}
-
-				// Get parents and add them to object
-				parents = [];
-				self.dom.getParent(node, function(node) {
-					if (node === root) {
-						return true;
-					}
-
-					parents.push(node);
-				});
-
-				args = args || {};
-				args.element = node;
-				args.parents = parents;
-
-				self.fire('NodeChange', args);
-			}
+			this._nodeChangeDispatcher.nodeChanged(args);
 		},
 
 		/**
