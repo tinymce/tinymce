@@ -29,7 +29,7 @@ define("tinymce/NodeChange", [
 		function isSameElementPath(startElm) {
 			var i, currentPath;
 
-			currentPath = editor.$(startElm).parentsUntil(editor.getBody());
+			currentPath = editor.$(startElm).parentsUntil(editor.getBody()).add(startElm);
 			if (currentPath.length === lastPath.length) {
 				for (i = currentPath.length; i >= 0; i--) {
 					if (currentPath[i] !== lastPath[i]) {
