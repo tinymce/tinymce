@@ -50,7 +50,7 @@ define("tinymce/NodeChange", [
 
 		// Gecko doesn't support the "selectionchange" event
 		if (!('onselectionchange' in editor.getDoc())) {
-			editor.on('NodeChange Click MouseUp KeyUp', function() {
+			editor.on('NodeChange Click MouseUp KeyUp', function(e) {
 				var nativeRng, fakeRng;
 
 				// Since DOM Ranges mutate on modification
@@ -63,7 +63,9 @@ define("tinymce/NodeChange", [
 					endOffset: nativeRng.endOffset
 				};
 
-				if (!RangeUtils.compareRanges(fakeRng, lastRng)) {
+				// Always treat nodechange as a selectionchange since applying
+				// formatting to the current range wouldn't update the range but it's parent
+				if (e.type == 'nodechange' || !RangeUtils.compareRanges(fakeRng, lastRng)) {
 					editor.fire('SelectionChange');
 				}
 
