@@ -32,8 +32,13 @@ define(
       });
     };
 
+    var ancestors = function (start, finish, isRoot) {
+      return Parent.ancestors(universe, start, finish, isRoot);
+    };
+
     return {
       sharedOne: sharedOne,
+      ancestors: ancestors,
       subset: subset,
       breakAt: breakAt,
       breakPath: breakPath
