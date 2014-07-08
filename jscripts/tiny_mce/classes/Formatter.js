@@ -2130,7 +2130,23 @@
 					selection.setRng(rng);
 				}
 			}
-			
+
+			function rangeParentBody(rngContainer) {
+				var name = rngContainer.nodeName.toLowerCase();
+				switch (name) {
+					case 'html', '#document':
+						return false;
+					case 'body':
+						return true;
+					default:
+						return rangeParentBody(rngContainer.parentNode);
+				}
+			}
+
+			function rangeInBody(rng) {
+				return rangeParentBody(rng.startContainer) || rangeParentBody(rng.endContainer);
+			}
+
 			// Applies formatting to the caret postion
 			function applyCaretFormat() {
 				var rng, caretContainer, textNode, offset, bookmark, container, text;
@@ -2167,7 +2183,12 @@
 						caretContainer = createCaretContainer(true);
 						textNode = caretContainer.firstChild;
 
-						rng.insertNode(caretContainer);
+						if (rangeInBody(rng)) {
+							rng.insertNode(caretContainer);	
+						} else {
+							rng.startContainer.ownerDocument.body.appendChild(caretContainer);
+						}
+						
 						offset = 1;
 
 						apply(name, vars, caretContainer);
