@@ -427,7 +427,7 @@ define("tinymce/dom/DOMUtils", [
 		select: function(selector, scope) {
 			var self = this;
 
-			//Sizzle.selectors.cacheLength = 0;
+			/*eslint new-cap:0 */
 			return Sizzle(selector, self.get(scope) || self.get(self.settings.root_element) || self.doc, []);
 		},
 
@@ -469,6 +469,8 @@ define("tinymce/dom/DOMUtils", [
 			}
 
 			var elms = elm.nodeType ? [elm] : elm;
+
+			/*eslint new-cap:0 */
 			return Sizzle(selector, elms[0].ownerDocument || elms[0], null, elms).length > 0;
 		},
 

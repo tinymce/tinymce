@@ -910,7 +910,7 @@ define("tinymce/Editor", [
 
 			self.fire('PostRender');
 
-			self.quirks = Quirks(self);
+			self.quirks = new Quirks(self);
 
 			if (settings.directionality) {
 				body.dir = settings.directionality;
