@@ -17,6 +17,7 @@ Version 4.1.1 (2014-07-08)
 	Fixed bug with paste_data_images paste option not working properly on modern IE versions.
 	Fixed bug where custom elements with underscores in the name wasn't properly parsed/serialized.
 	Fixed bug where applying inline formats to nested list elements would produce an incorrect formatting result.
+	Fixed so it's possible to hide items from elements path by using preventDefault/stopPropagation.
 	Fixed so inline mode toolbar gets rendered right aligned if the editable element positioned to the documents right edge.
 	Fixed so empty inline elements inside empty block elements doesn't get removed if configured to be kept intact.
 	Fixed so DomQuery parentsUntil/prevUntil/nextUntil supports selectors/elements/filters etc.
