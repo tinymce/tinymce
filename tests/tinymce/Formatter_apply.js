@@ -1086,6 +1086,17 @@ test("Applying formats in lists", function() {
 	equal(editor.getContent(), '<ul><li><h1>text</h1><ul><li>nested</li></ul></li></ul>', "heading should not automatically apply to sublists");
 });
 
+test("Applying formats on a list including child nodes", function(){
+	editor.formatter.register('format', {inline: 'strong'});
+	editor.setContent('<ol><li>a</li><li>b<ul><li>c</li><li>d<br /><ol><li>e</li><li>f</li></ol></li></ul></li><li>g</li></ol>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('li')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('li')[6].firstChild, 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply("format");
+	equal(editor.getContent(), '<ol><li><strong>a</strong></li><li><strong>b</strong><ul><li><strong>c</strong></li><li><strong>d</strong><br /><ol><li><strong>e</strong></li><li><strong>f</strong></li></ol></li></ul></li><li><strong>g</strong></li></ol>', "should be applied to all sublists");
+});
+
 test('Block format on li element', function() {
 	editor.setContent('<ul><li>text<ul><li>nested</li></ul></li></ul>');
 	var rng = editor.dom.createRng();
