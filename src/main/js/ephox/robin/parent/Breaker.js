@@ -40,22 +40,28 @@ define(
      * Using the breaker, break from the child up to the top element defined by the predicate
      */
     var breakPath  = function (universe, item, isTop, breaker) {
-      var result = Struct.immutable('first', 'second');
+      var result = Struct.immutable('first', 'second', 'splits');
 
-      var next = function (child, group) {
-        var fallback = result(child, Option.none());
-        if (isTop(child)) return result(child, group);
+      var next = function (child, group, splits) {
+        var fallback = result(child, Option.none(), splits);
+        if (isTop(child)) return result(child, group, splits);
         else {
           return universe.property().parent(child).fold(function () {
             return fallback;
           }, function (parent) {
             var second = breaker(universe, parent, child);
-            return next(parent, second);
+            var extra = second.fold(Fun.constant([]), function (sec) {
+              return [{
+                first: parent.dom(),
+                second: sec.dom()
+              }];
+            });
+            return next(parent, second, splits.concat(extra));
           });
         }
       };
 
-      return next(item, Option.none());
+      return next(item, Option.none(), []);
     };
 
     return {
