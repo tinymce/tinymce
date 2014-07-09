@@ -116,6 +116,10 @@
 			deepEqual($.inArray(3, [1, 2]), -1);
 		});
 
+		test(prefix + 'static grep()', function() {
+			deepEqual($.grep([1, 2, 3], function(v) {return v > 1;}), [2, 3]);
+		});
+
 		test(prefix + 'static isArray()', function() {
 			ok($.isArray([]));
 			ok(!$.isArray({}));
@@ -547,6 +551,16 @@
 			strictEqual($('<b class="a b"></b>').hasClass('a'), true);
 		});
 
+		test(prefix + 'filter()', function() {
+			strictEqual($('<b></b><i></i><u></u>').filter('b,i').length, 2);
+			strictEqual($('<b></b><i></i><u></u>').filter(function(i, elm) {
+				return  elm.tagName != 'U';
+			}).length, 2);
+			strictEqual($('<b></b><i></i><u></u>').filter(function(i, elm) {
+				return i != 2;
+			}).length, 2);
+		});
+
 		test(prefix + 'each() collection', function() {
 			var $html = $('<b>a</b><i>b</i>'), data;
 
@@ -967,6 +981,20 @@
 			strictEqual(innerMost.closest('b i').html().toLowerCase(), '<em><b>x</b></em>');
 			strictEqual(innerMost.closest($(html[0].firstChild.firstChild)).html().toLowerCase(), '<b>x</b>');
 			strictEqual(innerMost.closest($(html[0].firstChild.firstChild)[0]).html().toLowerCase(), '<b>x</b>');
+		});
+
+		test(prefix + 'offset()', function() {			
+			var testElm = $('<b></b>').offset({top: 10, left: 20});
+			strictEqual(testElm[0].style.top, '10px');
+			strictEqual(testElm[0].style.left, '20px');
+
+			var viewOffset = $('#view').offset();
+			var testElmOffset = $('<b></b>').css({position: 'absolute', top: 10, left: 20}).prependTo('#view').offset();
+
+			testElmOffset.left -= viewOffset.left;
+			testElmOffset.top -= viewOffset.top;
+
+			deepEqual(testElmOffset, {top: 10, left: 20});
 		});
 	}
 
