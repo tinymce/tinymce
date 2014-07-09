@@ -6,6 +6,7 @@ Version 3.5.11 (2014-05-08)
 	Fixed bug where input method would produce new lines when inserting contents to an empty editor.
 	Fixed bug in non-editable plugin where backspace deletes too much text.
 	Fixed bug where formatting a nested list would break the list moving list items.
+	Fixed bug where the caret were not appended as child of the body but as sibling.
 Version 3.5.10 (2013-10-24)
 	Fixed bug where dialogs using inlinepopups plugin would display incorrectly sometimes
 	Fixed bug in paste plugin word import that was removing type from lists
