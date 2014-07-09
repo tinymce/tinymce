@@ -342,6 +342,11 @@ tinymce.PluginManager.add('fullpage', function(editor) {
 			return;
 		}
 
+		// Fixed so new document/setContent('') doesn't remove existing header/footer except when it's in source code view
+		if (content.length === 0 && !evt.source_view) {
+			content = tinymce.trim(head) + '\n' + tinymce.trim(content) + '\n' + tinymce.trim(foot);
+		}
+
 		// Parse out head, body and footer
 		content = content.replace(/<(\/?)BODY/gi, '<$1body');
 		startPos = content.indexOf('<body');
