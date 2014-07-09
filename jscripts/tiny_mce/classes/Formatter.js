@@ -345,53 +345,6 @@
 					endIndex : endIndex
 				};
 			}
-			
-			function applyStyleToList(node, bookmark, wrapElm, newWrappers, process){
-				var nodes = [], listIndex = -1, list, startIndex = -1, endIndex = -1, currentWrapElm, newWrapElement = [];
-				
-				// find the index of the first child list.
-				var nestedList = findNestedList(node);
-				listIndex = nestedList.listIndex;
-				list = nestedList.list;
-				
-				// get the index of the bookmarks
-				var bookmarkIndex = getBookmarkIndex(node, bookmark);
-				startIndex = bookmarkIndex.startIndex;
-				endIndex = bookmarkIndex.endIndex;
-				
-				// if the selection spans across an embedded list, or there isn't an embedded list - handle processing normally
-				if (listIndex <= 0 || (startIndex < listIndex && endIndex > listIndex)) {
-					each(tinymce.grep(node.childNodes), process);
-					return 0;
-				} else {
-					currentWrapElm = dom.clone(wrapElm, FALSE);
-
-					// create a list of the nodes on the same side of the list as the selection
-					each(tinymce.grep(node.childNodes), function(n, index) {
-						if ((startIndex < listIndex && index < listIndex) || (startIndex > listIndex && index > listIndex)) {
-							nodes.push(n); 
-							n.parentNode.removeChild(n);
-						}
-					});
-
-					// insert the wrapping element either before or after the list.
-					if (startIndex < listIndex) {
-						node.insertBefore(currentWrapElm, list);
-					} else if (startIndex > listIndex) {
-						node.insertBefore(currentWrapElm, list.nextSibling);
-					}
-					
-					// add the new nodes to the list.
-					newWrappers.push(currentWrapElm);
-
-					each(nodes, function(node) {
-						currentWrapElm.appendChild(node);
-					});
-
-				}
-				return currentWrapElm;
-				
-			};
 
 			function applyRngStyle(rng, bookmark, node_specific) {
 				var newWrappers = [], wrapName, wrapElm, contentEditable = true;
@@ -486,12 +439,6 @@
 							}
 
 							currentWrapElm.appendChild(node);
-						} else if (nodeName == 'li' && bookmark) {
-							// Start wrapping - if we are in a list node and have a bookmark, then we will always begin by wrapping in a new element.
-							var listStyle = applyStyleToList(node, bookmark, wrapElm, newWrappers, process);
-							currentWrapElm = listStyle;
-							listStyle ? newWrappers.push(listStyle) : '';
-							currentWrapElm = 0;
 
 						} else {
 							// Start a new wrapper for possible children
