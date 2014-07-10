@@ -66,7 +66,7 @@ define("tinymce/dom/DomQuery", [
 		var i;
 
 		if (isString(sourceItem)) {
-			sourceItem = createFragment(sourceItem);
+			sourceItem = createFragment(sourceItem, getElementDocument(targetNodes[0]));
 		} else if (sourceItem.length && !sourceItem.nodeType) {
 			sourceItem = DomQuery.makeArray(sourceItem);
 
@@ -201,6 +201,18 @@ define("tinymce/dom/DomQuery", [
 		return out;
 	}
 
+	function getElementDocument(element) {
+		if (!element) {
+			return doc;
+		}
+
+		if (element.nodeType == 9) {
+			return element;
+		}
+
+		return element.ownerDocument;
+	}
+
 	DomQuery.fn = DomQuery.prototype = {
 		constructor: DomQuery,
 
@@ -271,14 +283,18 @@ define("tinymce/dom/DomQuery", [
 
 				if (match) {
 					if (match[1]) {
-						node = createFragment(selector, context).firstChild;
+						node = createFragment(selector, getElementDocument(context)).firstChild;
 
 						while (node) {
 							push.call(self, node);
 							node = node.nextSibling;
 						}
 					} else {
-						node = doc.getElementById(match[2]);
+						node = getElementDocument(context).getElementById(match[2]);
+
+						if (!node) {
+							return self;
+						}
 
 						if (node.id !== match[2]) {
 							return self.find(selector);
