@@ -41,6 +41,7 @@ define(
       return startIndex > -1 && endIndex > -1 ? Option.some(children.slice(first, last + 1)) : Option.none();
     };
 
+    // Note: this can be exported if it is required in the future.
     var ancestors = function (universe, start, end, _isRoot) {
       // Inefficient if no isRoot is supplied.
       var isRoot = _isRoot !== undefined ? _isRoot : Fun.constant(false);
@@ -83,8 +84,7 @@ define(
     };
 
     return {
-      subset: subset,
-      ancestors: ancestors
+      subset: subset
     };
   }
 );

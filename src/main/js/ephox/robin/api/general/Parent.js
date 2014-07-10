@@ -27,16 +27,11 @@ define(
       return Breaker.breakPath(universe, child, isTop, breaker);
     };
 
-    var ancestors = function (universe, start, finish, isRoot) {
-      return Subset.ancestors(universe, start, finish, isRoot);
-    };
-
     return {
       sharedOne: sharedOne,
       subset: subset,
       breakAt: breakAt,
-      breakPath: breakPath,
-      ancestors: ancestors
+      breakPath: breakPath
     };
   }
 );
