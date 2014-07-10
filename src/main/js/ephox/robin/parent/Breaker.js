@@ -37,7 +37,11 @@ define(
 
 
     /*
-     * Using the breaker, break from the child up to the top element defined by the predicate
+     * Using the breaker, break from the child up to the top element defined by the predicate.
+     * It returns three values:
+     *   first: the top level element that completed the break
+     *   second: the optional element representing second part of the top-level split if the breaking completed successfully to the top
+     *   splits: a list of (Element, Element) pairs that represent the splits that have occurred on the way to the top.
      */
     var breakPath = function (universe, item, isTop, breaker) {
       var result = Struct.immutable('first', 'second', 'splits');
