@@ -50,11 +50,10 @@ define(
             return fallback;
           }, function (parent) {
             var second = breaker(universe, parent, child);
+
+            // Store the splits up the path break.
             var extra = second.fold(Fun.constant([]), function (sec) {
-              return [{
-                first: parent.dom(),
-                second: sec.dom()
-              }];
+              return [{ first: parent.dom(), second: sec.dom() }];
             });
             return next(parent, second, splits.concat(extra));
           });
