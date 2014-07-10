@@ -491,7 +491,11 @@ define("tinymce/EditorManager", [
 				selector = selector.selector || selector;
 
 				each(DOM.select(selector), function(elm) {
-					self.remove(editors[elm.id]);
+					editor = editors[elm.id];
+
+					if (editor) {
+						self.remove(editor);
+					}
 				});
 
 				return;
