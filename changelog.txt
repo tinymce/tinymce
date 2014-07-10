@@ -2,6 +2,7 @@ Version 4.1.2 (2014-07-xx)
 	Added offset/grep to DomQuery class works basically the same as it's jQuery equivalent.
 	Fixed bug where backspace/delete or setContent with an empty string would remove header data when using the fullpage plugin.
 	Fixed bug where tinymce.remove with a selector not matching any editors would remove all editors.
+	Fixed bug where resizing of the editor didn't work since the theme was calling setStyles instead of setStyle.
 Version 4.1.1 (2014-07-08)
 	Fixed bug where pasting plain text on some WebKit versions would result in an empty line.
 	Fixed bug where resizing images inside tables on IE 11 wouldn't work properly.

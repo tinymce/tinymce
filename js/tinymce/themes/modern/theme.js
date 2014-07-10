@@ -342,13 +342,13 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			width = Math.max(settings.min_width || 100, width);
 			width = Math.min(settings.max_width || 0xFFFF, width);
 
-			DOM.setStyles(containerElm, 'width', width + (containerSize.width - iframeSize.width));
-			DOM.setStyles(iframeElm, 'width', width);
+			DOM.setStyle(containerElm, 'width', width + (containerSize.width - iframeSize.width));
+			DOM.setStyle(iframeElm, 'width', width);
 		}
 
 		height = Math.max(settings.min_height || 100, height);
 		height = Math.min(settings.max_height || 0xFFFF, height);
-		DOM.setStyles(iframeElm, 'height', height);
+		DOM.setStyle(iframeElm, 'height', height);
 
 		editor.fire('ResizeEditor');
 	}
