@@ -39,7 +39,7 @@ define(
     /*
      * Using the breaker, break from the child up to the top element defined by the predicate
      */
-    var breakPath  = function (universe, item, isTop, breaker) {
+    var breakPath = function (universe, item, isTop, breaker) {
       var result = Struct.immutable('first', 'second', 'splits');
 
       var next = function (child, group, splits) {
@@ -53,7 +53,7 @@ define(
 
             // Store the splits up the path break.
             var extra = second.fold(Fun.constant([]), function (sec) {
-              return [{ first: parent.dom(), second: sec.dom() }];
+              return [{ first: Fun.constant(parent), second: Fun.constant(sec) }];
             });
             return next(parent, second, splits.concat(extra));
           });
