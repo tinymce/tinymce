@@ -61,9 +61,9 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 		paddingBottom = editor.dom.getStyle(body, 'padding-bottom', true);
 		borderTop = editor.dom.getStyle(body, 'border-top-width', true);
 		borderBottom = editor.dom.getStyle(body, 'border-bottom-width', true);
-		myHeight = body.offsetHeight + parseInt(marginTop, 10) + parseInt(marginBottom, 10)
-			+ parseInt(paddingTop, 10) + parseInt(paddingBottom, 10)
-			+ parseInt(borderTop, 10) + parseInt(borderBottom, 10);
+		myHeight = body.offsetHeight + parseInt(marginTop, 10) + parseInt(marginBottom, 10) +
+			parseInt(paddingTop, 10) + parseInt(paddingBottom, 10) +
+			parseInt(borderTop, 10) + parseInt(borderBottom, 10);
 
 		// Make sure we have a valid height
 		if (isNaN(myHeight) || myHeight <= 0) {

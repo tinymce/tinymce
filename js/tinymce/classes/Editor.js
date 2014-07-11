@@ -663,7 +663,9 @@ define("tinymce/Editor", [
 					display: 'block' // Important for Gecko to render the iframe correctly
 				}
 			});
-			ifr.onload = function(){
+
+			ifr.onload = function() {
+				ifr.onload = null;
 				self.fire("load");
 			};
 
