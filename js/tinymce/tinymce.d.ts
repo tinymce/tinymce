@@ -1,0 +1,1 @@
+../../../DefinitelyTyped/tinymce/tinymce.d.ts

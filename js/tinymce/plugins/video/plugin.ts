@@ -1,20 +1,22 @@
 /// <reference path="../../tinymce.d.ts" />
+
 /*
-* plugin.ts / plugin.js
-*
-* Copyright, Fusonic GmbH
-* Released under LGPL License.
-*
-* License: http://www.tinymce.com/license
-* Contributing: http://www.tinymce.com/contributing
-*/
+ * plugin.ts / plugin.js
+ *
+ * Copyright, Fusonic GmbH
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
+ */
+
 tinymce.PluginManager.requireLangPack('video');
 
-tinymce.PluginManager.add('video', function (editor, url) {
-    editor.addButton('video', {
+tinymce.PluginManager.add('video', function(editor: tinymce.Editor, url) {
+	editor.addButton('video', {
         icon: 'media',
-        onClick: function () {
-            var parent;
+        onClick: () => {
+            var parent: any;
             editor.windowManager.open({
                 title: parent.tinymce.util.I18n.translate('Insert video'),
                 width: 500,
@@ -31,14 +33,14 @@ tinymce.PluginManager.add('video', function (editor, url) {
                         name: 'size',
                         label: parent.tinymce.util.I18n.translate('Format'),
                         'values': [
-                            { text: '560 x 315', value: '560' },
-                            { text: '640 x 360', value: '640' },
-                            { text: '853 x 480', value: '853' },
-                            { text: '1280 x 720', value: '1280' }
+                            {text: '560 x 315', value:'560'},
+                            {text: '640 x 360', value:'640'},
+                            {text: '853 x 480', value:'853'},
+                            {text: '1280 x 720', value:'1280'}
                         ]
                     }
                 ],
-                onSubmit: function (e) {
+                onSubmit: (e) => {
                     var videoId = getVideoId(e.data.url);
 
                     if (videoId == null) {
@@ -52,15 +54,16 @@ tinymce.PluginManager.add('video', function (editor, url) {
                 }
             });
         }
-    });
+	});
 
     /**
-    * Generates the HTML Iframe Markup to include the YouTube Video.
-    * @param           string      videoId
-    * @param           number      size - Video Size
-    * @return          string      Iframe HTML-Code
-    */
-    function generateIframeCode(videoId, size) {
+     * Generates the HTML Iframe Markup to include the YouTube Video.
+     * @param           string      videoId
+     * @param           number      size - Video Size
+     * @return          string      Iframe HTML-Code
+     */
+    function generateIframeCode(videoId: string, size: number)
+    {
         var factor = 0.5625;
         var x = size;
         var y = Math.round(x * factor);
@@ -69,12 +72,13 @@ tinymce.PluginManager.add('video', function (editor, url) {
     }
 
     /**
-    * Returns the video id from a Youtube URL
-    * @param       string          url
-    * @return      string          Video ID
-    * @example    https://www.youtube.com/watch?v=RVjYaFlPv-8 returns RVjYaFlPv-8
-    */
-    function getVideoId(url) {
+     * Returns the video id from a Youtube URL
+     * @param       string          url
+     * @return      string          Video ID
+     * @example    https://www.youtube.com/watch?v=RVjYaFlPv-8 returns RVjYaFlPv-8
+     */
+    function getVideoId(url: string)
+    {
         var regex = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
         var match = url.match(regex);
 
@@ -85,4 +89,3 @@ tinymce.PluginManager.add('video', function (editor, url) {
         }
     }
 });
-//# sourceMappingURL=plugin.js.map
