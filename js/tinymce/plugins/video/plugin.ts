@@ -16,22 +16,21 @@ tinymce.PluginManager.add('video', function(editor: tinymce.Editor, url) {
 	editor.addButton('video', {
         icon: 'media',
         onClick: () => {
-            var parent: any;
             editor.windowManager.open({
-                title: parent.tinymce.util.I18n.translate('Insert video'),
+                title: (<any>parent).tinymce.util.I18n.translate('Insert video'),
                 width: 500,
                 height: 100,
                 body: [
                     {
                         type: 'combobox',
                         name: 'url',
-                        label: parent.tinymce.util.I18n.translate('Url'),
-                        tooltip: parent.tinymce.util.I18n.translate('youtube_example')
+                        label: (<any>parent).tinymce.util.I18n.translate('Url'),
+                        tooltip: (<any>parent).tinymce.util.I18n.translate('youtube_example')
                     },
                     {
                         type: 'listbox',
                         name: 'size',
-                        label: parent.tinymce.util.I18n.translate('Format'),
+                        label: (<any>parent).tinymce.util.I18n.translate('Format'),
                         'values': [
                             {text: '560 x 315', value:'560'},
                             {text: '640 x 360', value:'640'},
@@ -44,7 +43,7 @@ tinymce.PluginManager.add('video', function(editor: tinymce.Editor, url) {
                     var videoId = getVideoId(e.data.url);
 
                     if (videoId == null) {
-                        editor.windowManager.alert(parent.tinymce.util.I18n.translate('youtube_invalidUrl'));
+                        editor.windowManager.alert((<any>parent).tinymce.util.I18n.translate('youtube_invalidUrl'));
                         return;
                     }
 

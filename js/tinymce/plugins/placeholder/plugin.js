@@ -35,7 +35,7 @@ tinymce.PluginManager.add('placeholder', function (editor) {
                 }
             });
         },
-        onselect: function (e) {
+        onSelect: function (e) {
             editor.insertContent(e.control.settings.id);
         }
     });

@@ -14,7 +14,6 @@ tinymce.PluginManager.add('video', function (editor, url) {
     editor.addButton('video', {
         icon: 'media',
         onClick: function () {
-            var parent;
             editor.windowManager.open({
                 title: parent.tinymce.util.I18n.translate('Insert video'),
                 width: 500,

@@ -954,9 +954,20 @@ declare module tinymce {
         }
 
         interface XHR_Static {
-            send(settings: Object): void;
+            send(settings: XHRSettings): void;
         }
         export var XHR: XHR_Static;
+        export interface XHRSettings {
+            async?: boolean;
+            content_type?: string;
+            data?: string;
+            error?: (error: string, request: XMLHttpRequest, settings: XHRSettings) => void;
+            error_scope?: Object;
+            scope?: Object;
+            success?: (responseText: string, request: XMLHttpRequest, settings: XHRSettings) => void;
+            success_scope?: Object;
+            url: string;
+        }
 
         interface JSON_Static {
             parse(value: string): Object;
