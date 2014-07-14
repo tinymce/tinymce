@@ -786,7 +786,7 @@ define("tinymce/Editor", [
 				hex_colors: settings.force_hex_style_colors,
 				class_filter: settings.class_filter,
 				update_styles: true,
-				root_element: settings.content_editable ? self.getElement() : null,
+				root_element: self.inline ? self.getBody() : null,
 				collect: settings.content_editable,
 				schema: self.schema,
 				onSetAttrib: function(e) {

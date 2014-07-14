@@ -214,7 +214,7 @@ define("tinymce/dom/DOMUtils", [
 		getRoot: function() {
 			var self = this;
 
-			return self.get(self.settings.root_element) || self.doc.body;
+			return self.settings.root_element || self.doc.body;
 		},
 
 		/**
@@ -428,7 +428,7 @@ define("tinymce/dom/DOMUtils", [
 			var self = this;
 
 			/*eslint new-cap:0 */
-			return Sizzle(selector, self.get(scope) || self.get(self.settings.root_element) || self.doc, []);
+			return Sizzle(selector, self.get(scope) || self.settings.root_element || self.doc, []);
 		},
 
 		/**
