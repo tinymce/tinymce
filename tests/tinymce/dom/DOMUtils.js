@@ -313,6 +313,7 @@
 		equal(DOM.getStyle('test', 'fontSize'), '');
 
 		DOM.setAttrib('test', 'style', '');
+		equal(typeof DOM.getStyle(null, 'fontSize'), 'undefined');
 
 		DOM.remove('test');
 	});

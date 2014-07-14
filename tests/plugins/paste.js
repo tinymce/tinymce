@@ -652,6 +652,13 @@ if (tinymce.Env.webkit) {
 		equal(editor.getContent(), '<p><span style="font-family: Arial;">Test</span></p>');
 	});
 
+	test('paste webkit remove runtime styles font-family allowed but not specified', function() {
+		editor.settings.paste_webkit_styles = 'font-family';
+		editor.setContent('');
+		editor.execCommand('mceInsertClipboardContent', false, {content: '<p title="x" style="text-indent: 10px">Test</p>'});
+		equal(editor.getContent(), '<p title="x">Test</p>');
+	});
+
 	test('paste webkit remove runtime styles (custom styles)', function() {
 		editor.settings.paste_webkit_styles = 'color font-style';
 		editor.setContent('');

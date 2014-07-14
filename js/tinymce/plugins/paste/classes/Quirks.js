@@ -132,7 +132,7 @@ define("tinymce/pasteplugin/Quirks", [
 						return before + ' style="' + outputStyles + '"' + after;
 					}
 
-					return '';
+					return before + after;
 				});
 			} else {
 				// Remove all external styles

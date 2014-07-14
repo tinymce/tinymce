@@ -669,7 +669,7 @@ define("tinymce/dom/DOMUtils", [
 				name = isIE ? 'styleFloat' : 'cssFloat';
 			}
 
-			return elm[0].style ? elm[0].style[name] : undefined;
+			return elm[0] && elm[0].style ? elm[0].style[name] : undefined;
 		},
 
 		/**
