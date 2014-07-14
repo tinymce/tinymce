@@ -37,25 +37,34 @@ define(
 
 
     /*
-     * Using the breaker, break from the child up to the top element defined by the predicate
+     * Using the breaker, break from the child up to the top element defined by the predicate.
+     * It returns three values:
+     *   first: the top level element that completed the break
+     *   second: the optional element representing second part of the top-level split if the breaking completed successfully to the top
+     *   splits: a list of (Element, Element) pairs that represent the splits that have occurred on the way to the top.
      */
-    var breakPath  = function (universe, item, isTop, breaker) {
-      var result = Struct.immutable('first', 'second');
+    var breakPath = function (universe, item, isTop, breaker) {
+      var result = Struct.immutable('first', 'second', 'splits');
 
-      var next = function (child, group) {
-        var fallback = result(child, Option.none());
-        if (isTop(child)) return result(child, group);
+      var next = function (child, group, splits) {
+        var fallback = result(child, Option.none(), splits);
+        if (isTop(child)) return result(child, group, splits);
         else {
           return universe.property().parent(child).fold(function () {
             return fallback;
           }, function (parent) {
             var second = breaker(universe, parent, child);
-            return next(parent, second);
+
+            // Store the splits up the path break.
+            var extra = second.fold(Fun.constant([]), function (sec) {
+              return [{ first: Fun.constant(parent), second: Fun.constant(sec) }];
+            });
+            return next(parent, second, splits.concat(extra));
           });
         }
       };
 
-      return next(item, Option.none());
+      return next(item, Option.none(), []);
     };
 
     return {
