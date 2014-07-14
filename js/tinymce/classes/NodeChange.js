@@ -73,6 +73,12 @@ define("tinymce/NodeChange", [
 			});
 		}
 
+		// IE has a bug where it fires a selectionchange on right click that has a range at the start of the body
+		// When the contextmenu event fires the selection is located at the right location
+		editor.on('contextmenu', function() {
+			editor.fire('SelectionChange');
+		});
+
 		editor.on('SelectionChange', function() {
 			var startElm = editor.selection.getStart();
 

@@ -6,6 +6,7 @@ Version 4.1.2 (2014-07-xx)
 	Fixed bug where IE 7 would fail to append html fragments to iframe document when using DomQuery.
 	Fixed bug where the getStyle DOMUtils method would produce an exception if it was called with null as it's element.
 	Fixed bug where the paste plugin would remove the element if the none of the paste_webkit_styles rules matched the current style.
+	Fixed bug where contextmenu table items wouldn't work properly on IE since it would some times fire an incorrect selection change.
 	Fixed bug where the padding/border values wasn't used in the size calculation for the body size when using autoresize. Patch contributed by Matt Whelan.
 	Fixed so the iframe gets initialized without any inline event handlers for better CSP support. Patch contributed by Matt Whelan.
 Version 4.1.1 (2014-07-08)
