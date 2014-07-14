@@ -242,7 +242,15 @@ function Sizzle( selector, context, results, seed ) {
 		// QSA vars
 		i, groups, old, nid, newContext, newSelector;
 
-	if ( ( context ? context.ownerDocument || context : preferredDoc ) !== document ) {
+	try{
+		if ( ( context ? context.ownerDocument || context : preferredDoc ) !== document ) {
+			setDocument( context );
+		}
+	}
+	catch(e){
+		/*On IE, if document references a document of a removed iframe, 
+			any access to document can cause a permission denied error*/
+		document=null;
 		setDocument( context );
 	}
 
