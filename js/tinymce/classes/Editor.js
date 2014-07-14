@@ -245,6 +245,10 @@ define("tinymce/Editor", [
 		self.queryValueCommands = {};
 		self.loadedCSS = {};
 
+		if (settings.target) {
+			self.targetElm = settings.target;
+		}
+
 		self.suffix = editorManager.suffix;
 		self.editorManager = editorManager;
 		self.inline = settings.inline;
@@ -684,13 +688,14 @@ define("tinymce/Editor", [
 			}
 
 			self.contentAreaContainer = o.iframeContainer;
+			self.iframeElement = ifr;
 
 			if (o.editorContainer) {
 				DOM.get(o.editorContainer).style.display = self.orgDisplay;
 				self.hidden = DOM.isHidden(o.editorContainer);
 			}
 
-			DOM.get(self.id).style.display = 'none';
+			self.getElement().style.display = 'none';
 			DOM.setAttrib(self.id, 'aria-hidden', true);
 
 			if (!url) {
@@ -708,7 +713,7 @@ define("tinymce/Editor", [
 		 * @private
 		 */
 		initContentBody: function(skipWrite) {
-			var self = this, settings = self.settings, targetElm = DOM.get(self.id), doc = self.getDoc(), body, contentCssText;
+			var self = this, settings = self.settings, targetElm = self.getElement(), doc = self.getDoc(), body, contentCssText;
 
 			// Restore visibility on target element
 			if (!settings.inline) {
@@ -781,7 +786,7 @@ define("tinymce/Editor", [
 				hex_colors: settings.force_hex_style_colors,
 				class_filter: settings.class_filter,
 				update_styles: true,
-				root_element: settings.content_editable ? self.id : null,
+				root_element: settings.content_editable ? self.getElement() : null,
 				collect: settings.content_editable,
 				schema: self.schema,
 				onSetAttrib: function(e) {
@@ -1890,7 +1895,11 @@ define("tinymce/Editor", [
 		 * @return {Element} HTML DOM element for the replaced element.
 		 */
 		getElement: function() {
-			return DOM.get(this.settings.content_element || this.id);
+			if (!this.targetElm) {
+				this.targetElm = DOM.get(this.id);
+			}
+
+			return this.targetElm;
 		},
 
 		/**
@@ -1903,7 +1912,7 @@ define("tinymce/Editor", [
 			var self = this, elm;
 
 			if (!self.contentWindow) {
-				elm = DOM.get(self.id + "_ifr");
+				elm = self.iframeElement;
 
 				if (elm) {
 					self.contentWindow = elm.contentWindow;
@@ -2128,7 +2137,8 @@ define("tinymce/Editor", [
 			}
 
 			self.contentAreaContainer = self.formElement = self.container = self.editorContainer = null;
-			self.settings.content_element = self.bodyElement = self.contentDocument = self.contentWindow = null;
+			self.bodyElement = self.contentDocument = self.contentWindow = null;
+			self.iframeElement = self.targetElm = null;
 
 			if (self.selection) {
 				self.selection = self.selection.win = self.selection.dom = self.selection.dom.doc = null;

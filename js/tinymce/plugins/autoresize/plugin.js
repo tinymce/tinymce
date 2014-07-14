@@ -90,7 +90,7 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 		// Resize content element
 		if (resizeHeight !== oldSize) {
 			deltaSize = resizeHeight - oldSize;
-			DOM.setStyle(DOM.get(editor.id + '_ifr'), 'height', resizeHeight + 'px');
+			DOM.setStyle(editor.iframeElement, 'height', resizeHeight + 'px');
 			oldSize = resizeHeight;
 
 			// WebKit doesn't decrease the size of the body element until the iframe gets resized
