@@ -86,6 +86,10 @@ define("tinymce/pasteplugin/Utils", [
 			}
 		}
 
+		html = filter(html, [
+			/<!\[[^\]]+\]>/g // Conditional comments
+		]);
+
 		walk(domParser.parse(html));
 
 		return text;

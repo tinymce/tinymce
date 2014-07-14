@@ -540,6 +540,10 @@ test('paste post process (event)', function() {
 	equal(editor.getContent(), '<p><em>c</em></p>');
 });
 
+test('paste innerText of conditional comments', function() {
+	equal(tinymce.pasteplugin.Utils.innerText('<![if !supportLists]>X<![endif]>'), 'X');
+});
+
 test('paste innerText of single P', function() {
 	editor.setContent('<p>a</p>');
 	equal(tinymce.pasteplugin.Utils.innerText(editor.getBody().innerHTML), 'a');
