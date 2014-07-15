@@ -526,7 +526,7 @@ define("tinymce/dom/ControlSelection", [
 					editor.on('mouseup', function(e) {
 						var nodeName = e.target.nodeName;
 
-						if (/^(TABLE|IMG|HR)$/.test(nodeName)) {
+						if (!resizeStarted && /^(TABLE|IMG|HR)$/.test(nodeName)) {
 							editor.selection.select(e.target, nodeName == 'TABLE');
 							editor.nodeChanged();
 						}

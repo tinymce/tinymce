@@ -9,6 +9,7 @@ Version 4.1.2 (2014-07-xx)
 	Fixed bug where contextmenu table items wouldn't work properly on IE since it would some times fire an incorrect selection change.
 	Fixed bug where the padding/border values wasn't used in the size calculation for the body size when using autoresize. Patch contributed by Matt Whelan.
 	Fixed bug where conditional word comments wouldn't be properly removed when pasting plain text.
+	Fixed bug where resizing would sometime fail on IE 11 when the mouseup occurred inside the resizable element.
 	Fixed so the iframe gets initialized without any inline event handlers for better CSP support. Patch contributed by Matt Whelan.
 	Fixed so the tinymce.dom.Sizzle is the latest version of sizzle this resolves the document context bug.
 Version 4.1.1 (2014-07-08)
