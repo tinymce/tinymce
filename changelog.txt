@@ -1,4 +1,4 @@
-Version 4.1.2 (2014-07-xx)
+Version 4.1.2 (2014-07-15)
 	Added offset/grep to DomQuery class works basically the same as it's jQuery equivalent.
 	Fixed bug where backspace/delete or setContent with an empty string would remove header data when using the fullpage plugin.
 	Fixed bug where tinymce.remove with a selector not matching any editors would remove all editors.
