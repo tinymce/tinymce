@@ -94,44 +94,41 @@ define("tinymce/ui/MessageBox", [
 			msgBox: function(settings) {
 				var buttons, callback = settings.callback || function() {};
 
+				function createButton(text, status, primary) {
+					return {
+						type: "button",
+						text: text,
+						subtype: primary ? 'primary' : '',
+						onClick: function(e) {
+							e.control.parents()[1].close();
+							callback(status);
+						}
+					};
+				}
+
 				switch (settings.buttons) {
 					case MessageBox.OK_CANCEL:
 						buttons = [
-							{type: "button", text: "Ok", subtype: "primary", onClick: function(e) {
-								e.control.parents()[1].close();
-								callback(true);
-							}},
-
-							{type: "button", text: "Cancel", onClick: function(e) {
-								e.control.parents()[1].close();
-								callback(false);
-							}}
+							createButton('Ok', true, true),
+							createButton('Cancel', false)
 						];
 						break;
 
 					case MessageBox.YES_NO:
-						buttons = [
-							{type: "button", text: "Ok", subtype: "primary", onClick: function(e) {
-								e.control.parents()[1].close();
-								callback(true);
-							}}
-						];
-						break;
-
 					case MessageBox.YES_NO_CANCEL:
 						buttons = [
-							{type: "button", text: "Ok", subtype: "primary", onClick: function(e) {
-								e.control.parents()[1].close();
-							}}
+							createButton('Yes', 1, true),
+							createButton('No', 0)
 						];
+
+						if (settings.buttons == MessageBox.YES_NO_CANCEL) {
+							buttons.push(createButton('Cancel', -1));
+						}
 						break;
 
 					default:
 						buttons = [
-							{type: "button", text: "Ok", subtype: "primary", onClick: function(e) {
-								e.control.parents()[1].close();
-								callback(true);
-							}}
+							createButton('Ok', true, true)
 						];
 						break;
 				}
