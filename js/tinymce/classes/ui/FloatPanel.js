@@ -88,8 +88,15 @@ define("tinymce/ui/FloatPanel", [
 
 	function bindWindowResizeHandler() {
 		if (!windowResizeHandler) {
+			var docElm = document.documentElement, clientWidth = docElm.clientWidth, clientHeight = docElm.clientHeight;
+
 			windowResizeHandler = function() {
-				FloatPanel.hideAll();
+				// Workaround for #7065 IE 7 fires resize events event though the window wasn't resized
+				if (!document.all || clientWidth != docElm.clientWidth || clientHeight != docElm.clientHeight) {
+					clientWidth = docElm.clientWidth;
+					clientHeight = docElm.clientHeight;
+					FloatPanel.hideAll();
+				}
 			};
 
 			DomUtils.on(window, 'resize', windowResizeHandler);
