@@ -162,10 +162,11 @@ define("tinymce/tableplugin/CellSelection", [
 		editor.on('KeyUp Drop SetContent', function(e) {
 			clear(e.type == 'setcontent');
 			startCell = tableGrid = startTable = null;
+			resizing = false;
 		});
 
 		editor.on('ObjectResizeStart ObjectResized', function(e) {
-			resizing = e.type != 'ObjectResized';
+			resizing = e.type != 'objectresized';
 		});
 
 		return {
