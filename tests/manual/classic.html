@@ -43,7 +43,24 @@
 		templates: [
 			{title: 'My template 1', description: 'Some fancy template 1', content: 'My html'},
 			{title: 'My template 2', description: 'Some fancy template 2', url: 'development.html'}
-		]
+		],
+
+        spellchecker_callback: function(method, data, success) {
+			if (method == "spellcheck") {
+				var words = data.match(this.getWordCharPattern());
+				var suggestions = {};
+
+				for (var i = 0; i < words.length; i++) {
+					suggestions[words[i]] = ["First", "second"];
+				}
+
+				success({words: suggestions, dictionary: true});
+			}
+
+			if (method == "addToDictionary") {
+				success();
+			}
+		}
 	});
 </script>
 </head>
