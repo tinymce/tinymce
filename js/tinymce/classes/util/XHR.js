@@ -11,6 +11,7 @@
 /**
  * This class enables you to send XMLHTTPRequests cross browser.
  * @class tinymce.util.XHR
+ * @mixes tinymce.util.Observable
  * @static
  * @example
  * // Sends a low level Ajax request
@@ -20,9 +21,17 @@
  *       console.debug(text);
  *    }
  * });
+ *
+ * // Add custom header to XHR request
+ * tinymce.util.XHR.on('beforeSend', function(e) {
+ *     e.xhr.setRequestHeader('X-Requested-With', 'Something');
+ * });
  */
-define("tinymce/util/XHR", [], function() {
-	return {
+define("tinymce/util/XHR", [
+	"tinymce/util/Observable",
+	"tinymce/util/Tools"
+], function(Observable, Tools) {
+	var XHR = {
 		/**
 		 * Sends a XMLHTTPRequest.
 		 * Consult the Wiki for details on what settings this method takes.
@@ -66,12 +75,14 @@ define("tinymce/util/XHR", [], function() {
 				if (settings.crossDomain) {
 					xhr.withCredentials = true;
 				}
+
 				if (settings.content_type) {
 					xhr.setRequestHeader('Content-Type', settings.content_type);
 				}
 
 				xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
+				xhr = XHR.fire('beforeSend', {xhr: xhr, settings: settings}).xhr;
 				xhr.send(settings.data);
 
 				// Syncronous request
@@ -84,4 +95,8 @@ define("tinymce/util/XHR", [], function() {
 			}
 		}
 	};
+
+	Tools.extend(XHR, Observable);
+
+	return XHR;
 });
