@@ -107,9 +107,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 
 				{text: 'Ignore all', onclick: function() {
 					ignoreWord(word, spans, true);
-				}},
-
-				{text: 'Finish', onclick: finish}
+				}}
 			]);
 
 			// Render menu
