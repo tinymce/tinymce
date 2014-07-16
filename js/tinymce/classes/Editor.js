@@ -1241,6 +1241,8 @@ define("tinymce/Editor", [
 				settings.icon = name;
 			}
 
+			settings.name = settings.name || name;
+
 			self.buttons = self.buttons || {};
 			settings.tooltip = settings.tooltip || settings.title;
 			self.buttons[name] = settings;
@@ -1277,15 +1279,28 @@ define("tinymce/Editor", [
 		 *    }
 		 * });
 		 */
-	    addButtons: function(name, buttonsSettings){
-	      var self = this;
+		addButtons: function(name, buttonsSettings){
+			var self = this;
+			var buttonConfigs = [];
 
-	      each(buttonsSettings, function(settings, idx){
-	      	settings.name = settings.name || String(idx);
+			self.buttons = self.buttons || {};
 
-	        self.addButton(name + settings.name, settings);
-	      });
-	    },
+			each(buttonsSettings, function(settings, idx){
+				settings.name = settings.name || (name + String(idx));
+
+				if(!self.buttons[settings.name]){
+					self.addButton(settings.name, settings)
+				} else {
+					settings = self.buttons[settings.name];
+				}
+
+				buttonConfigs.push(settings);
+			});
+
+			self.addButton(name, function(){
+				return buttonConfigs.slice();
+			});
+		},
 
 		/**
 		 * Adds a menu item to be used in the menus of the theme. There might be multiple instances
