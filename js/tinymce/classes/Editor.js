@@ -1250,17 +1250,17 @@ define("tinymce/Editor", [
 		 * Adds various buttons at once to the same button group that later gets created by the theme in the editors toolbars.
 		 *
 		 * @method addButtons
-		 * @param {String} name Button namespace to add.
+		 * @param {String} name Namespace to add to buttons.
 		 * @param {Array} settings Array of settings objects with title, cmd etc.
 		 * @example
-		 * // Adds a custom button to the editor that inserts contents when clicked
+		 * // Adds custom buttons to the editor that inserts contents when clicked
 		 * tinymce.init({
 		 *    ...
 		 *
-		 *    toolbar: 'example'
+		 *    toolbar: 'examples'
 		 *
 		 *    setup: function(ed) {
-		 *       ed.addButtons('example', [
+		 *       ed.addButtons('examples', [
 		 *          {
 		 *             title: 'First',
 		 *             onclick: function(){
