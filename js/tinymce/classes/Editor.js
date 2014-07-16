@@ -1283,7 +1283,7 @@ define("tinymce/Editor", [
 	      each(buttonsSettings, function(settings, idx){
 	      	settings.name = settings.name || String(idx);
 
-	        this.addButton(name + settings.name, settings);
+	        self.addButton(name + settings.name, settings);
 	      });
 	    },
 
