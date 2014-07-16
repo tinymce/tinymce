@@ -1280,10 +1280,10 @@ define("tinymce/Editor", [
 	    addButtons: function(name, buttonsSettings){
 	      var self = this;
 
-	      each(buttonsSettings, function(buttonSetting, idx){
-	      	buttonSetting.name = buttonSetting.name || String(idx);
+	      each(buttonsSettings, function(settings, idx){
+	      	settings.name = settings.name || String(idx);
 
-	        this.addButton(name + buttonSetting.name, buttonSetting);
+	        this.addButton(name + settings.name, settings);
 	      });
 	    },
 
