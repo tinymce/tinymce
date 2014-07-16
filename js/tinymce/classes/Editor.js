@@ -1247,6 +1247,47 @@ define("tinymce/Editor", [
 		},
 
 		/**
+		 * Adds various buttons at once to the same button group that later gets created by the theme in the editors toolbars.
+		 *
+		 * @method addButtons
+		 * @param {String} name Button namespace to add.
+		 * @param {Array} settings Array of settings objects with title, cmd etc.
+		 * @example
+		 * // Adds a custom button to the editor that inserts contents when clicked
+		 * tinymce.init({
+		 *    ...
+		 *
+		 *    toolbar: 'example'
+		 *
+		 *    setup: function(ed) {
+		 *       ed.addButtons('example', [
+		 *          {
+		 *             title: 'First',
+		 *             onclick: function(){
+		 *                ed.insertContent('First hello world!!');
+		 *             }
+		 *          },
+		 *          {
+		 *             title: 'Second',
+		 *             onclick: function(){
+		 *                ed.insertContent('Second hello world!!');
+		 *             }
+		 *          }
+		 *       ]);
+		 *    }
+		 * });
+		 */
+	    addButtons: function(name, buttonsSettings){
+	      var self = this;
+
+	      each(buttonsSettings, function(buttonSetting, idx){
+	      	buttonSetting.name = buttonSetting.name || String(idx);
+
+	        this.addButton(name + buttonSetting.name, buttonSetting);
+	      });
+	    },
+
+		/**
 		 * Adds a menu item to be used in the menus of the theme. There might be multiple instances
 		 * of this menu item for example it might be used in the main menus of the theme but also in
 		 * the context menu so make sure that it's self contained and supports multiple instances.
