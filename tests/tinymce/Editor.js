@@ -350,3 +350,20 @@ test('execCommand return values for native commands', function() {
 	strictEqual(editor.execCommand("ExistingCommand"), true, "Return value for an editor handled command");
 	strictEqual(lastCmd, "ExistingCommand");
 });
+
+asyncTest('initialize with comments', function() {
+	// Create a textarea with a comment in it
+	document.getElementById('view').appendChild(tinymce.DOM.create('textarea', {id: 'elmcomment'}, '<!-- comment -->'));
+
+	// initialize tinymce on that test area
+	tinymce.init({
+		selector: "#elmcomment",
+		init_instance_callback: function(editor) {
+			window.setTimeout(function() {
+				QUnit.start();
+				// we should be able to load the comment out of the tinymce editor
+				strictEqual(document.getElementById('elmcomment').value, '<!-- comment -->');
+			}, 0);
+		}
+	});
+});
