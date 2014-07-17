@@ -1114,7 +1114,7 @@ define("tinymce/Formatter", [
 
 					// Ignore bogus nodes like the <a> tag created by moveStart()
 					parents = Tools.grep(parents, function(node) {
-						return !node.getAttribute('data-mce-bogus');
+						return node.nodeType == 1 && !node.getAttribute('data-mce-bogus');
 					});
 
 					// Check for new formats

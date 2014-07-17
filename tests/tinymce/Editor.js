@@ -214,6 +214,14 @@ test('setContent', function() {
 	equal(count, 0);
 });
 
+test('setContent with comment bug #4409', function() {
+	editor.setContent('<!-- x -->');
+	editor.settings.disable_nodechange = false;
+	editor.nodeChanged();
+	editor.settings.disable_nodechange = true;
+	equal(editor.getContent(), "<!-- x -->");
+});
+
 test('custom elements', function() {
 	editor.setContent('<custom1>c1</custom1><custom2>c1</custom2>');
 	equal(editor.getContent(), '<custom1>c1</custom1><p><custom2>c1</custom2></p>');
