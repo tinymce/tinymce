@@ -88,6 +88,13 @@ define("tinymce/NodeChange", [
 			}
 		});
 
+		// Fire an extra nodeChange on mouseup for compatibility reasons
+		editor.on('MouseUp', function(e) {
+			if (!e.isDefaultPrevented()) {
+				editor.nodeChanged();
+			}
+		});
+
 		/**
 		 * Distpaches out a onNodeChange event to all observers. This method should be called when you
 		 * need to update the UI states or element path etc.

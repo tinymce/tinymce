@@ -3,6 +3,7 @@ Version 4.1.3 (2014-07-xx)
 	Fixed bug where drag events wasn't fireing properly on older IE versions since the event handlers where bound to document.
 	Fixed bug where drag/dropping contents within the editor on IE would force the contents into plain text mode even if it was internal content.
 	Fixed bug where IE 7 wouldn't open menus properly due to a resize bug in the browser auto closing them immediately.
+	Fixed so nodeChange gets fired on mouseup as it used to before 4.1.1 we optimized that event to fire less often.
 	Removed the finish menu item from spellchecker menu since it's redundant you can stop spellchecking by toggling menu item or button.
 Version 4.1.2 (2014-07-15)
 	Added offset/grep to DomQuery class works basically the same as it's jQuery equivalent.
