@@ -677,7 +677,7 @@ define("tinymce/Editor", [
 
 			self.contentAreaContainer = o.iframeContainer;
 			self.iframeElement = ifr;
-			
+
 			n = DOM.add(o.iframeContainer, ifr);
 
 			// Try accessing the document this will fail on IE when document.domain is set to the same as location.hostname
