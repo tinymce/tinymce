@@ -675,6 +675,9 @@ define("tinymce/Editor", [
 
 			DOM.setAttrib("src", url || 'javascript:""');
 
+			self.contentAreaContainer = o.iframeContainer;
+			self.iframeElement = ifr;
+			
 			n = DOM.add(o.iframeContainer, ifr);
 
 			// Try accessing the document this will fail on IE when document.domain is set to the same as location.hostname
@@ -686,9 +689,6 @@ define("tinymce/Editor", [
 					n.src = url = domainRelaxUrl;
 				}
 			}
-
-			self.contentAreaContainer = o.iframeContainer;
-			self.iframeElement = ifr;
 
 			if (o.editorContainer) {
 				DOM.get(o.editorContainer).style.display = self.orgDisplay;
