@@ -728,6 +728,10 @@ define("tinymce/dom/DOMUtils", [
 			elm = self.$$(elm);
 			originalValue = elm.attr(name);
 
+			if (!elm.length) {
+				return;
+			}
+
 			hook = self.attrHooks[name];
 			if (hook && hook.set) {
 				hook.set(elm, value, name);
@@ -781,11 +785,14 @@ define("tinymce/dom/DOMUtils", [
 
 			elm = self.$$(elm);
 
-			hook = self.attrHooks[name];
-			if (hook && hook.get) {
-				value = hook.get(elm, name);
-			} else {
-				value = elm.attr(name);
+			if (elm.length) {
+				hook = self.attrHooks[name];
+
+				if (hook && hook.get) {
+					value = hook.get(elm, name);
+				} else {
+					value = elm.attr(name);
+				}
 			}
 
 			if (typeof value == 'undefined') {

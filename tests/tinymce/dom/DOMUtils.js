@@ -262,6 +262,11 @@
 		DOM.remove('test');
 	});
 
+	test('setGetAttrib on null', function() {
+		strictEqual(DOM.getAttrib(null, 'test'), '');
+		DOM.setAttrib(null, 'test');
+	});
+
 	test('getAttribs', 2, function() {
 		function check(obj, val) {
 			var count = 0;
