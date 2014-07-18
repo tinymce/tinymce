@@ -126,7 +126,7 @@ define("tinymce/dom/DomQuery", [
 		'readonly': 'readOnly'
 	};
 	var cssFix = {
-		float: 'cssFloat'
+		'float': 'cssFloat'
 	};
 
 	var attrHooks = {}, cssHooks = {};
