@@ -43,7 +43,7 @@ module("tinymce.Editor", {
 	},
 
 	teardown: function() {
-		Utils.unpatch(editor.getDoc()); 
+		Utils.unpatch(editor.getDoc());
 		inlineEditor.show();
 		editor.show();
 	}
@@ -169,7 +169,6 @@ test('WebKit Serialization range bug', function() {
 	}
 });
 
-
 test('editor_methods - getParam', function() {
 	expect(5);
 
@@ -215,11 +214,11 @@ test('setContent', function() {
 });
 
 test('setContent with comment bug #4409', function() {
-	editor.setContent('<!-- x -->');
+	editor.setContent('<!-- x --><br>');
 	editor.settings.disable_nodechange = false;
 	editor.nodeChanged();
 	editor.settings.disable_nodechange = true;
-	equal(editor.getContent(), "<!-- x -->");
+	equal(editor.getContent(), "<!-- x --><p>\u00a0</p>");
 });
 
 test('custom elements', function() {
@@ -229,7 +228,7 @@ test('custom elements', function() {
 
 test('Store/restore tabindex', function() {
 	editor.setContent('<span tabindex="42">abc</span>');
-	equal(editor.getContent({format:'raw'}).toLowerCase(), '<p><span data-mce-tabindex="42">abc</span></p>');
+	equal(editor.getContent({format: 'raw'}).toLowerCase(), '<p><span data-mce-tabindex="42">abc</span></p>');
 	equal(editor.getContent(), '<p><span tabindex="42">abc</span></p>');
 });
 
