@@ -19,6 +19,7 @@
 		"**/*.min.js",
 		"**/*.dev.js",
 		"js/tinymce/*.js",
+		"js/tinymce/langs/**",
 		"js/tinymce/plugins/compat3x/**",
 		"js/tinymce/plugins/table/plugin.js",
 		"js/tinymce/plugins/spellchecker/plugin.js",
