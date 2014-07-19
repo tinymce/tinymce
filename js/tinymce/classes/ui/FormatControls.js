@@ -271,7 +271,6 @@ define("tinymce/ui/FormatControls", [
 			paste: ['Paste', 'Paste'],
 			help: ['Help', 'mceHelp'],
 			selectall: ['Select all', 'SelectAll'],
-			hr: ['Insert horizontal rule', 'InsertHorizontalRule'],
 			removeformat: ['Clear formatting', 'RemoveFormat'],
 			visualaid: ['Visual aids', 'mceToggleVisualAid'],
 			newdocument: ['New document', 'mceNewDocument']
