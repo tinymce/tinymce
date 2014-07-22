@@ -1529,6 +1529,8 @@ define("tinymce/dom/DomQuery", [
 	}
 
 	if (Env.ie && Env.ie < 9) {
+		/*jshint sub:true */
+		/*eslint dot-notation: 0*/
 		cssFix['float'] = 'styleFloat';
 
 		appendHooks(cssHooks, 'set', {
