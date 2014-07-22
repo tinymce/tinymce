@@ -462,6 +462,11 @@ define("tinymce/pasteplugin/Clipboard", [
 
 					removePasteBin();
 
+					// If we got nothing from clipboard API and pastebin then we could try the last resort: plain/text
+					if (!content.length) {
+						plainTextMode = true;
+					}
+
 					// Grab plain text from Clipboard API or convert existing HTML to plain text
 					if (plainTextMode) {
 						// Use plain text contents from Clipboard API unless the HTML contains paragraphs then

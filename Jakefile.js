@@ -13,7 +13,7 @@ var eslint = require('./tools/BuildTools').eslint;
 var nuget = require('./tools/BuildTools').nuget;
 var phantomjs = require('./tools/BuildTools').phantomjs;
 var jscs = require('./tools/BuildTools').jscs;
-var saucelabs = require('./tools/saucelabs').saucelabs;
+var saucelabs = require('./tools/saucelabs/saucelabs').saucelabs;
 
 desc("Default build task");
 task("default", ["minify", "less"], function () {});
