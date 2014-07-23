@@ -1454,7 +1454,7 @@ define("tinymce/dom/DomQuery", [
 	DomQuery.overrideDefaults = function(callback) {
 		var defaults;
 
-		function jQuerySub(selector, context) {
+		function sub(selector, context) {
 			defaults = defaults || callback();
 
 			if (arguments.length === 0) {
@@ -1465,12 +1465,12 @@ define("tinymce/dom/DomQuery", [
 				context = defaults.context;
 			}
 
-			return new jQuerySub.fn.init(selector, context);
+			return new sub.fn.init(selector, context);
 		}
 
-		DomQuery.extend(jQuerySub, this);
+		DomQuery.extend(sub, this);
 
-		return jQuerySub;
+		return sub;
 	};
 
 	function appendHooks(targetHooks, prop, hooks) {
