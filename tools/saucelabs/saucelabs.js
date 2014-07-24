@@ -7,6 +7,11 @@ var chalk = require('chalk');
 
 function getBrowsers(browsers, callback) {
 	request('http://saucelabs.com/rest/v1/info/browsers/selenium-rc', function(error, response, body) {
+		var platformLookup = {
+			'XP': 'Windows 2012',
+			'Windows 7': 'Windows 2008'
+		};
+
 		if (!error && response.statusCode == 200) {
 			var allBrowsers = JSON.parse(body);
 
@@ -29,11 +34,15 @@ function getBrowsers(browsers, callback) {
 				// Find latest browser and use that
 				if (browser.version == 'latest') {
 					for (var i = 0; i < allBrowsers.length; i++) {
-						if (allBrowsers[i].api_name == browser.browserName) {
+						var os = platformLookup[browser.platform] || allBrowsers[i].os;
+
+						if (allBrowsers[i].api_name == browser.browserName && os == allBrowsers[i].os) {
 							browser.version = allBrowsers[i].short_version;
-							break;
+							return;
 						}
 					}
+
+					delete browser.version;
 				}
 			});
 
@@ -43,7 +52,7 @@ function getBrowsers(browsers, callback) {
 }
 
 function log() {
-	console.log.apply(this, arguments); 
+	console.log.apply(this, arguments);
 }
 
 function reportProgress(notification) {
@@ -137,7 +146,14 @@ function runTask(arg, framework, callback) {
 			tunnel = createTunnel(arg);
 			tunnel.start(function (succeeded) {
 				if (!succeeded) {
-					deferred.reject('Could not create tunnel to Sauce Labs');
+					if (!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY) {
+						deferred.reject(
+							'Could not create tunnel to Sauce Labs. ' +
+							'Could be the missing SAUCE_USERNAME/SAUCE_ACCESS_KEY environment variables.'
+						);
+					} else {
+						deferred.reject('Could not create tunnel to Sauce Labs');
+					}
 				} else {
 					reportProgress({
 						type: 'tunnelOpened'
@@ -150,16 +166,21 @@ function runTask(arg, framework, callback) {
 			return deferred.promise;
 		}
 	})
-	.then(function () {
-		var testRunner = new TestRunner(arg, framework, reportProgress);
-		return testRunner.runTests();
-	})
+	.then(
+		function () {
+			var testRunner = new TestRunner(arg, framework, reportProgress);
+			return testRunner.runTests();
+		}, function (error) {
+			log(error.toString());
+			callback(false);
+		}
+	)
 	.fin(function () {
 		var deferred;
 
 		if (tunnel) {
 			deferred = Q.defer();
-		
+
 			reportProgress({
 				type: 'tunnelClose'
 			});
@@ -218,4 +239,4 @@ function qunit(settings) {
 
 module.exports.saucelabs = {
 	qunit: qunit
-}; 
+};

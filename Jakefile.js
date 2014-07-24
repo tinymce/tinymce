@@ -667,15 +667,14 @@ task("saucelabs-tests", [], function(pluginName) {
 		testname: 'TinyMCE QUnit Tests',
 		urls: ['http://127.0.0.1:9999/tests/index.html?min=true'],
 		browsers: [
-			{browserName: 'firefox', platform: 'XP', version: 'latest'},
-			{browserName: 'googlechrome', platform: 'XP', version: 'latest'},
+			{browserName: 'firefox', version: 'latest', platform: 'XP'},
+			{browserName: 'googlechrome', version: 'latest', platform: 'XP'},
 			{browserName: 'internet explorer', version: '8', platform: 'XP'},
 			{browserName: 'internet explorer', version: '9', platform: 'Windows 7'},
 			{browserName: 'internet explorer', version: '10', platform: 'Windows 7'},
 			{browserName: 'internet explorer', version: '11', platform: 'Windows 7'},
 			{browserName: 'safari', version: '7', platform: 'OS X 10.9'},
 			{browserName: "safari", version: "6", platform: "OS X 10.8"},
-			//{browserName: "ipad", version: "7", platform: "OS X 10.9"},
 			{browserName: 'firefox', platform: 'Linux', version: 'latest'},
 			{browserName: 'googlechrome', platform: 'Linux', version: 'latest'}
 		]
