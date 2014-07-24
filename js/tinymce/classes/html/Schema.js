@@ -25,7 +25,7 @@
 define("tinymce/html/Schema", [
 	"tinymce/util/Tools"
 ], function(Tools) {
-	var mapCache = {};
+	var mapCache = {}, dummyObj = {};
 	var makeMap = Tools.makeMap, each = Tools.each, extend = Tools.extend, explode = Tools.explode, inArray = Tools.inArray;
 
 	function split(items, delim) {
@@ -46,11 +46,11 @@ define("tinymce/html/Schema", [
 		function add(name, attributes, children) {
 			var ni, i, attributesOrder, args = arguments;
 
-			function arrayToMap(array) {
+			function arrayToMap(array, obj) {
 				var map = {}, i, l;
 
 				for (i = 0, l = array.length; i < l; i++) {
-					map[array[i]] = {};
+					map[array[i]] = obj || {};
 				}
 
 				return map;
@@ -79,7 +79,7 @@ define("tinymce/html/Schema", [
 				schema[name[ni]] = {
 					attributes: arrayToMap(attributesOrder),
 					attributesOrder: attributesOrder,
-					children: arrayToMap(children)
+					children: arrayToMap(children, dummyObj)
 				};
 			}
 		}
