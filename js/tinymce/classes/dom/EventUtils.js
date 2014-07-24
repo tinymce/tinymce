@@ -342,6 +342,7 @@ define("tinymce/dom/EventUtils", [], function() {
 					events[id][name] = callbackList = [{func: callback, scope: scope}];
 					callbackList.fakeName = fakeName;
 					callbackList.capture = capture;
+					//callbackList.callback = callback;
 
 					// Add the nativeHandler to the callback list so that we can later unbind it
 					callbackList.nativeHandler = nativeHandler;

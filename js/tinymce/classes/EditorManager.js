@@ -63,6 +63,7 @@ define("tinymce/EditorManager", [
 		// User has manually destroyed the editor lets clean up the mess
 		if (editor && !(editor.getContainer() || editor.getBody()).parentNode) {
 			removeEditorFromList(editor);
+			editor.unbindAllNativeEvents();
 			editor.destroy(true);
 			editor = null;
 		}

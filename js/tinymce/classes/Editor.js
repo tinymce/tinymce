@@ -2048,6 +2048,7 @@ define("tinymce/Editor", [
 			if (!self.removed) {
 				self.save();
 				self.removed = 1;
+				self.unbindAllNativeEvents();
 
 				// Remove any hidden input
 				if (self.hasHiddenInput) {
@@ -2063,21 +2064,12 @@ define("tinymce/Editor", [
 
 					DOM.setStyle(self.id, 'display', self.orgDisplay);
 					self.getBody().onload = null; // Prevent #6816
-
-					// Don't clear the window or document if content editable
-					// is enabled since other instances might still be present
-					Event.unbind(self.getWin());
-					Event.unbind(self.getDoc());
 				}
-
-				var elm = self.getContainer();
-				Event.unbind(self.getBody());
-				Event.unbind(elm);
 
 				self.fire('remove');
 
 				self.editorManager.remove(self);
-				DOM.remove(elm);
+				DOM.remove(self.getContainer());
 				self.destroy();
 			}
 		},
@@ -2103,14 +2095,6 @@ define("tinymce/Editor", [
 			if (!automatic && !self.removed) {
 				self.remove();
 				return;
-			}
-
-			// We must unbind on Gecko since it would otherwise produce the pesky "attempt
-			// to run compile-and-go script on a cleared scope" message
-			if (automatic && isGecko) {
-				Event.unbind(self.getDoc());
-				Event.unbind(self.getWin());
-				Event.unbind(self.getBody());
 			}
 
 			if (!automatic) {
