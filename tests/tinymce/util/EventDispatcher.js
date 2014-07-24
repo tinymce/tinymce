@@ -175,7 +175,7 @@ test("off (all specific observer)", function() {
 
 test("scope setting", function() {
 	var lastScope, lastEvent, dispatcher;
-		
+
 	dispatcher = new tinymce.util.EventDispatcher();
 	dispatcher.on('click', function() {
 		lastScope = this;
@@ -194,7 +194,7 @@ test("scope setting", function() {
 
 test("beforeFire setting", function() {
 	var lastArgs, dispatcher, args;
-		
+
 	dispatcher = new tinymce.util.EventDispatcher({
 		beforeFire: function(args) {
 			lastArgs = args;

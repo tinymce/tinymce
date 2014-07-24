@@ -1,4 +1,6 @@
 (function() {
+	var menuCtrl;
+
 	module("tinymce.plugins.ImportCSS", {
 		setupModule: function() {
 			QUnit.stop();
@@ -16,6 +18,11 @@
 		},
 
 		teardown: function() {
+			if (menuCtrl) {
+				menuCtrl.remove();
+				menuCtrl = null;
+			}
+
 			editor.contentCSS = [];
 			delete editor.settings.importcss_file_filter;
 			delete editor.settings.importcss_merge_classes;
@@ -26,8 +33,12 @@
 	});
 
 	function fireFormatsMenuEvent(styleSheets, items) {
+		menuCtrl = tinymce.ui.Factory.create('menu', {
+			items: items
+		}).renderTo(document.getElementById('view'));
+
 		return editor.fire('renderFormatsMenu', {
-			control: tinymce.ui.Factory.create('menu', {items: items}).renderTo(document.getElementById('view')),
+			control: menuCtrl,
 			doc: {
 				styleSheets: styleSheets
 			}

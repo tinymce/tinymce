@@ -1,5 +1,9 @@
 (function() {
-	module("tinymce.dom.DOMUtils");
+	module("tinymce.dom.DOMUtils", {
+		teardownModule: function() {
+			DOM = null;
+		}
+	});
 
 	var DOM = new tinymce.dom.DOMUtils(document, {keep_values : true, schema : new tinymce.html.Schema()});
 
