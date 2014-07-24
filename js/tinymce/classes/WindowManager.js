@@ -49,6 +49,14 @@ define("tinymce/WindowManager", [
 
 		self.windows = windows;
 
+		editor.on('remove', function() {
+			var i = windows.length;
+
+			while (i--) {
+				windows[i].close();
+			}
+		});
+
 		/**
 		 * Opens a new window.
 		 *
