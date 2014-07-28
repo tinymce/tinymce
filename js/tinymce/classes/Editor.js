@@ -1000,12 +1000,15 @@ define("tinymce/Editor", [
 			// Handle auto focus
 			if (settings.auto_focus) {
 				setTimeout(function() {
-					var ed = self.editorManager.get(settings.auto_focus);
+					var editor;
 
-					ed.selection.select(ed.getBody(), 1);
-					ed.selection.collapse(1);
-					ed.getBody().focus();
-					ed.getWin().focus();
+					if (settings.auto_focus === true) {
+						editor = self;
+					} else {
+						editor = self.editorManager.get(settings.auto_focus);
+					}
+
+					editor.focus();
 				}, 100);
 			}
 
