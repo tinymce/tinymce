@@ -42,12 +42,10 @@ define(
      */
     var endPoints = function (universe, wrapped) {
       return Option.from(wrapped[0]).map(function (first) {
-        var last = Navigation.toLast(universe, wrapped[wrapped.length - 1]);
+        // INVESTIGATE: Should this one navigate to the next child when first isn't navigating down a level?
+        var last = Navigation.toLower(universe, wrapped[wrapped.length - 1]);
         return Spot.points(
           Spot.point(first, 0),
-    /**
-     *
-     */
           Spot.point(last.element(), last.offset())
         );
       });
@@ -59,7 +57,6 @@ define(
     var leaves = function (universe, base, baseOffset, end, endOffset, nu) {
       var start = Navigation.toLeaf(universe, base, baseOffset);
       var finish = Navigation.toLeaf(universe, end, endOffset);
-
       var wrapped = wrapWith(universe, start.element(), start.offset(), finish.element(), finish.offset(), nu);
       return endPoints(universe, wrapped);
     };

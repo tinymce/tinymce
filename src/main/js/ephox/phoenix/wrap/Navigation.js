@@ -19,6 +19,13 @@ define(
       }
     };
 
+    var toLower = function (universe, node) {
+      var lastOffset = universe.property().isText(node) ?
+        universe.property().getText(node).length :
+        universe.property().children(node).length;
+      return Spot.point(node, lastOffset);
+    };
+
     /**
      * Descend down to a leaf node at the given offset.
      */
@@ -35,7 +42,8 @@ define(
 
     return {
       toLast: toLast,
-      toLeaf: toLeaf
+      toLeaf: toLeaf,
+      toLower: toLower
     };
   }
 );

@@ -44,7 +44,7 @@ test(
       assert.eq(expected.offset, actual.offset());
     };
 
-    checkLast({ element: '1', offset: 2 }, '1');
+    checkLast({ element: '1.2.5', offset: 'Last piece of text'.length }, '1');
     checkLast({ element: '1.2.5', offset: 'Last piece of text'.length }, '1.2.5');
 
     checkLeaf({ element: '1.1.2', offset: 0 }, '1.1', 1);
