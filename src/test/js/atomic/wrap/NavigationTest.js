@@ -38,11 +38,20 @@ test(
       assert.eq(expected.offset, actual.offset());
     };
 
+    var checkLower = function (expected, id) {
+      var actual = Navigation.toLower(doc, Finder.get(doc, id));
+      assert.eq(expected.element, actual.element().id);
+      assert.eq(expected.offset, actual.offset());
+    };
+
     var checkLeaf = function (expected, id, offset) {
       var actual = Navigation.toLeaf(doc, Finder.get(doc, id), offset);
       assert.eq(expected.element, actual.element().id);
       assert.eq(expected.offset, actual.offset());
     };
+
+    checkLower({ element: '1', offset: 2 }, '1');
+    checkLower({ element: '1.2.5', offset: 'Last piece of text'.length }, '1.2.5');
 
     checkLast({ element: '1.2.5', offset: 'Last piece of text'.length }, '1');
     checkLast({ element: '1.2.5', offset: 'Last piece of text'.length }, '1.2.5');
