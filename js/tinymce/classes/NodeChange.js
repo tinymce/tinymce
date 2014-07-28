@@ -50,7 +50,7 @@ define("tinymce/NodeChange", [
 
 		// Gecko doesn't support the "selectionchange" event
 		if (!('onselectionchange' in editor.getDoc())) {
-			editor.on('NodeChange Click MouseUp KeyUp', function(e) {
+			editor.on('NodeChange Click MouseUp KeyUp Focus', function(e) {
 				var nativeRng, fakeRng;
 
 				// Since DOM Ranges mutate on modification
