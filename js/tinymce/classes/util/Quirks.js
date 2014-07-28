@@ -141,7 +141,7 @@ define("tinymce/util/Quirks", [
 
 					// Make sure all elements has a data-mce-style attribute
 					if (!elm.hasAttribute('data-mce-style') && elm.hasAttribute('style')) {
-						editor.dom.setAttrib(elm, 'style', elm.getAttribute('style'));
+						editor.dom.setAttrib(elm, 'style', editor.dom.getAttrib(elm, 'style'));
 					}
 				});
 
