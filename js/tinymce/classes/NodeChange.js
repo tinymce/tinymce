@@ -80,7 +80,7 @@ define("tinymce/NodeChange", [
 		});
 
 		editor.on('SelectionChange', function() {
-			var startElm = editor.selection.getStart();
+			var startElm = editor.selection.getStart(true);
 
 			// Selection change might fire when focus is lost so check if the start is still within the body
 			if (!isSameElementPath(startElm) && editor.dom.isChildOf(startElm, editor.getBody())) {

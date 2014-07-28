@@ -440,7 +440,7 @@
 
 		Utils.setSelection('tr:nth-child(2) td:nth-child(2)', 0);
 		editor.fire('keydown', {keyCode: 9});
-		equal(editor.selection.getStart().nodeName, 'TD');
+		equal(editor.selection.getStart(true).nodeName, 'TD');
 		equal(
 			editor.getContent(),
 			'<table><tbody><tr><td>A1</td><td>A2</td></tr><tr><td>B1</td><td>B2</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table><p>x</p>'

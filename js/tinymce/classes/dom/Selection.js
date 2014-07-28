@@ -239,9 +239,10 @@ define("tinymce/dom/Selection", [
 		 * node the parent element will be returned.
 		 *
 		 * @method getStart
+		 * @param {Boolean} real Optional state to get the real parent when the selection is collapsed not the closest element.
 		 * @return {Element} Start element of selection range.
 		 */
-		getStart: function() {
+		getStart: function(real) {
 			var self = this, rng = self.getRng(), startElement, parentElement, checkRng, node;
 
 			if (rng.duplicate || rng.item) {
@@ -273,7 +274,9 @@ define("tinymce/dom/Selection", [
 				startElement = rng.startContainer;
 
 				if (startElement.nodeType == 1 && startElement.hasChildNodes()) {
-					startElement = startElement.childNodes[Math.min(startElement.childNodes.length - 1, rng.startOffset)];
+					if (!real || !rng.collapsed) {
+						startElement = startElement.childNodes[Math.min(startElement.childNodes.length - 1, rng.startOffset)];
+					}
 				}
 
 				if (startElement && startElement.nodeType == 3) {
@@ -289,9 +292,10 @@ define("tinymce/dom/Selection", [
 		 * node the parent element will be returned.
 		 *
 		 * @method getEnd
+		 * @param {Boolean} real Optional state to get the real parent when the selection is collapsed not the closest element.
 		 * @return {Element} End element of selection range.
 		 */
-		getEnd: function() {
+		getEnd: function(real) {
 			var self = this, rng = self.getRng(), endElement, endOffset;
 
 			if (rng.duplicate || rng.item) {
@@ -316,7 +320,9 @@ define("tinymce/dom/Selection", [
 				endOffset = rng.endOffset;
 
 				if (endElement.nodeType == 1 && endElement.hasChildNodes()) {
-					endElement = endElement.childNodes[endOffset > 0 ? endOffset - 1 : endOffset];
+					if (!real || !rng.collapsed) {
+						endElement = endElement.childNodes[endOffset > 0 ? endOffset - 1 : endOffset];
+					}
 				}
 
 				if (endElement && endElement.nodeType == 3) {
@@ -908,8 +914,8 @@ define("tinymce/dom/Selection", [
 					return;
 				}
 
-				// BR/IMG/INPUT elements
-				if (nonEmptyElementsMap[node.nodeName]) {
+				// BR/IMG/INPUT elements but not table cells
+				if (nonEmptyElementsMap[node.nodeName] && !/^(TD|TH)$/.test(node.nodeName)) {
 					if (start) {
 						rng.setStartBefore(node);
 					} else {

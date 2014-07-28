@@ -365,7 +365,7 @@ define("tinymce/dom/ControlSelection", [
 		}
 
 		function updateResizeRect(e) {
-			var controlElm;
+			var startElm, controlElm;
 
 			function isChildOrEqual(node, parent) {
 				if (node) {
@@ -387,9 +387,10 @@ define("tinymce/dom/ControlSelection", [
 
 			if (isChildOrEqual(controlElm, rootElement)) {
 				disableGeckoResize();
+				startElm = selection.getStart(true);
 
-				if (isChildOrEqual(selection.getStart(), controlElm) && isChildOrEqual(selection.getEnd(), controlElm)) {
-					if (!isIE || (controlElm != selection.getStart() && selection.getStart().nodeName !== 'IMG')) {
+				if (isChildOrEqual(startElm, controlElm) && isChildOrEqual(selection.getEnd(true), controlElm)) {
+					if (!isIE || (controlElm != startElm && startElm.nodeName !== 'IMG')) {
 						showResizeRect(controlElm);
 						return;
 					}
@@ -549,7 +550,7 @@ define("tinymce/dom/ControlSelection", [
 				}
 			}
 
-			editor.on('nodechange mousedown mouseup ResizeEditor', updateResizeRect);
+			editor.on('nodechange ResizeEditor', updateResizeRect);
 
 			// Update resize rect while typing in a table
 			editor.on('keydown keyup', function(e) {
