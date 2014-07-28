@@ -12,6 +12,7 @@ Version 4.1.3 (2014-07-xx)
 	Fixed bug where the width attribute wasn't updated on tables if you changed the size inside the table dialog.
 	Fixed bug where control selection wasn't properly handled when the caret was placed directly after an image.
 	Fixed bug where selecting the contents of table cells using the selection.select method wouldn't place the caret properly.
+	Fixed so word auto detect lists logic works better for faked lists that doesn't have specific markup.
 	Fixed so nodeChange gets fired on mouseup as it used to before 4.1.1 we optimized that event to fire less often.
 	Removed the finish menu item from spellchecker menu since it's redundant you can stop spellchecking by toggling menu item or button.
 Version 4.1.2 (2014-07-15)

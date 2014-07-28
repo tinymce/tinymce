@@ -33,6 +33,38 @@ define("tinymce/pasteplugin/WordFilter", [
 		);
 	}
 
+	/**
+	 * Checks if the specified text starts with "1. " or "a. " etc.
+	 */
+	function isNumericList(text) {
+		var found, patterns;
+
+		patterns = [
+			/^[IVXLMCD]{1,2}\.[ \u00a0]/,  // Roman upper case
+			/^[ivxlmcd]{1,2}\.[ \u00a0]/,  // Roman lower case
+			/^[a-z]{1,2}[\.\)][ \u00a0]/,  // Alphabetical a-z
+			/^[A-Z]{1,2}[\.\)][ \u00a0]/,  // Alphabetical A-Z
+			/^[0-9]+\.[ \u00a0]/,          // Numeric lists
+			/^[\u3007\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d]+\.[ \u00a0]/, // Japanese
+			/^[\u58f1\u5f10\u53c2\u56db\u4f0d\u516d\u4e03\u516b\u4e5d\u62fe]+\.[ \u00a0]/  // Chinese
+		];
+
+		text = Tools.trim(text);
+
+		Tools.each(patterns, function(pattern) {
+			if (pattern.test(text)) {
+				found = true;
+				return false;
+			}
+		});
+
+		return found;
+	}
+
+	function isBulletList(text) {
+		return /^[\s\u00a0]*[\u2022\u00b7\u00a7\u00d8\u25CF]\s*/.test(text);
+	}
+
 	function WordFilter(editor) {
 		var settings = editor.settings;
 
@@ -154,16 +186,15 @@ define("tinymce/pasteplugin/WordFilter", [
 					if (node.name == 'p' && node.firstChild) {
 						// Find first text node in paragraph
 						var nodeText = getText(node);
-						var listStartTextNode = node.firstChild;
 
 						// Detect unordered lists look for bullets
-						if (/^[\s\u00a0]*[\u2022\u00b7\u00a7\u00d8\u25CF]\s*/.test(nodeText)) {
+						if (isBulletList(nodeText)) {
 							convertParagraphToLi(node, 'ul');
 							continue;
 						}
 
 						// Detect ordered lists 1., a. or ixv.
-						if (/^[\s\u00a0]*\w+\./.test(nodeText) && !/^[\s\u00a0]*\w+\.\s*[^\s]+/.test(listStartTextNode.value)) {
+						if (isNumericList(nodeText)) {
 							// Parse OL start number
 							var matches = /([0-9])\./.exec(nodeText);
 							var start = 1;
