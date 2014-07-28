@@ -217,6 +217,7 @@ define("tinymce/dom/ControlSelection", [
 			}
 
 			editor.fire('ObjectResized', {target: selectedElm, width: width, height: height});
+			dom.setAttrib(selectedElm, 'style', dom.getAttrib(selectedElm, 'style'));
 			editor.nodeChanged();
 		}
 
