@@ -163,7 +163,7 @@ define("tinymce/pasteplugin/WordFilter", [
 						}
 
 						// Detect ordered lists 1., a. or ixv.
-						if (/^[\s\u00a0]*\w+\./.test(nodeText) && !/^[\s\u00a0]*\w+\.\s*[^\s]+/.test(listStartTextNode.value)) {
+						if (/^[\s\u00a0]*\w+?[.)][\s\u00a0]+\S*/.test(nodeText) && !/^[\s\u00a0]*\w+[.)]\s*[^\s]+/.test(listStartTextNode.value)) {
 							// Parse OL start number
 							var matches = /([0-9])\./.exec(nodeText);
 							var start = 1;
