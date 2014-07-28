@@ -6,10 +6,14 @@ var WebServer = require('./WebServer');
 var chalk = require('chalk');
 
 function getBrowsers(browsers, callback) {
-	request('http://saucelabs.com/rest/v1/info/browsers/selenium-rc', function(error, response, body) {
+	request('http://saucelabs.com/rest/v1/info/browsers/webdriver', function(error, response, body) {
 		var platformLookup = {
 			'XP': 'Windows 2012',
 			'Windows 7': 'Windows 2008'
+		};
+
+		var browserLookup = {
+			'googlechrome': 'chrome'
 		};
 
 		if (!error && response.statusCode == 200) {
@@ -34,9 +38,10 @@ function getBrowsers(browsers, callback) {
 				// Find latest browser and use that
 				if (browser.version == 'latest') {
 					for (var i = 0; i < allBrowsers.length; i++) {
-						var os = platformLookup[browser.platform] || allBrowsers[i].os;
+						var os = platformLookup[browser.platform] || browser.platform;
+						var apiName = browserLookup[browser.browserName] || browser.browserName;
 
-						if (allBrowsers[i].api_name == browser.browserName && os == allBrowsers[i].os) {
+						if (allBrowsers[i].api_name == apiName && allBrowsers[i].os == os) {
 							browser.version = allBrowsers[i].short_version;
 							return;
 						}
