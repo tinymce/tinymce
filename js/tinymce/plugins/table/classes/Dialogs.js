@@ -196,10 +196,13 @@ define("tinymce/tableplugin/Dialogs", [
 						'class': data['class']
 					});
 
-					editor.dom.setStyles(tableElm, {
-						width: addSizeSuffix(data.width),
-						height: addSizeSuffix(data.height)
-					});
+					if (dom.getAttrib(tableElm, 'width')) {
+						dom.setAttrib(tableElm, 'width', removePxSuffix(data.width));
+					} else {
+						dom.setStyle(tableElm, 'width', addSizeSuffix(data.width));
+					}
+
+					dom.setStyle(tableElm, 'height', addSizeSuffix(data.height));
 
 					// Toggle caption on/off
 					captionElm = dom.select('caption', tableElm)[0];
