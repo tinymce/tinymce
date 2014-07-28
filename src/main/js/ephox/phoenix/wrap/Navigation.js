@@ -6,15 +6,17 @@ define(
   ],
 
   function (Spot) {
-
     /**
      * Return the last available cursor position in the node.
      */
     var toLast = function (universe, node) {
-      var lastOffset = universe.property().isText(node) ?
-        universe.property().getText(node).length :
-        universe.property().children(node).length;
-      return Spot.point(node, lastOffset);
+      if (universe.property().isText(node)) {
+        return Spot.point(node, universe.property().getText(node).length);
+      } else {
+        var children = universe.property().children(node);
+        // keep descending if there are children.
+        return children.length > 0 ? toLast(universe, children[children.length - 1]) : Spot.point(node, children.length);
+      }
     };
 
     /**
