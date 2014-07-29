@@ -49,7 +49,7 @@ define("tinymce/pasteplugin/WordFilter", [
 			/^[\u58f1\u5f10\u53c2\u56db\u4f0d\u516d\u4e03\u516b\u4e5d\u62fe]+\.[ \u00a0]/  // Chinese
 		];
 
-		text = Tools.trim(text);
+		text = text.replace(/^[\u00a0 ]+/, '');
 
 		Tools.each(patterns, function(pattern) {
 			if (pattern.test(text)) {
