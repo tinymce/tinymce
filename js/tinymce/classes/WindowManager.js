@@ -74,7 +74,7 @@ define("tinymce/WindowManager", [
 		self.open = function(args, params) {
 			var win;
 
-			editor.editorManager.activeEditor = editor;
+			editor.editorManager.setActive(editor);
 
 			args.title = args.title || ' ';
 

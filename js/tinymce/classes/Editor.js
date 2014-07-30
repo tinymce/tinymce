@@ -1024,7 +1024,7 @@ define("tinymce/Editor", [
 		 * @param {Boolean} skipFocus Skip DOM focus. Just set is as the active editor.
 		 */
 		focus: function(skipFocus) {
-			var oed, self = this, selection = self.selection, contentEditable = self.settings.content_editable, rng;
+			var self = this, selection = self.selection, contentEditable = self.settings.content_editable, rng;
 			var controlElm, doc = self.getDoc(), body;
 
 			if (!skipFocus) {
@@ -1077,16 +1077,6 @@ define("tinymce/Editor", [
 					rng.select();
 				}
 			}
-
-			if (self.editorManager.activeEditor != self) {
-				if ((oed = self.editorManager.activeEditor)) {
-					oed.fire('deactivate', {relatedTarget: self});
-				}
-
-				self.fire('activate', {relatedTarget: oed});
-			}
-
-			self.editorManager.activeEditor = self;
 		},
 
 		/**

@@ -240,7 +240,7 @@ define("tinymce/EditorManager", [
 		 * });
 		 */
 		init: function(settings) {
-			var self = this, editors = [], editor;
+			var self = this, editors = [];
 
 			function createId(elm) {
 				var id = elm.id;
@@ -265,6 +265,7 @@ define("tinymce/EditorManager", [
 			function createEditor(id, settings, targetElm) {
 				if (!purgeDestroyedEditor(self.get(id))) {
 					var editor = new Editor(id, settings, self);
+
 					editor.targetElm = editor.targetElm || targetElm;
 					editors.push(editor);
 					editor.render();
@@ -318,18 +319,18 @@ define("tinymce/EditorManager", [
 						l = settings.elements || '';
 
 						if (l.length > 0) {
-							each(explode(l), function(v) {
-								if (DOM.get(v)) {
-									editor = new Editor(v, settings, self);
-									editors.push(editor);
-									editor.render();
+							each(explode(l), function(id) {
+								var elm;
+
+								if ((elm = DOM.get(id))) {
+									createEditor(id, settings, elm);
 								} else {
 									each(document.forms, function(f) {
 										each(f.elements, function(e) {
-											if (e.name === v) {
-												v = 'mce_editor_' + instanceCounter++;
-												DOM.setAttrib(e, 'id', v);
-												createEditor(v, settings, e);
+											if (e.name === id) {
+												id = 'mce_editor_' + instanceCounter++;
+												DOM.setAttrib(e, 'id', id);
+												createEditor(id, settings, e);
 											}
 										});
 									});
@@ -425,6 +426,8 @@ define("tinymce/EditorManager", [
 			editors[editor.id] = editor;
 			editors.push(editor);
 
+			// Doesn't call setActive method since we don't want
+			// to fire a bunch of activate/deactivate calls while initializing
 			self.activeEditor = editor;
 
 			/**
@@ -617,6 +620,26 @@ define("tinymce/EditorManager", [
 		 */
 		translate: function(text) {
 			return I18n.translate(text);
+		},
+
+		/**
+		 * Sets the active editor instance and fires the deactivate/activate events.
+		 *
+		 * @method setActive
+		 * @param {tinymce.Editor} editor Editor instance to set as the active instance.
+		 */
+		setActive: function(editor) {
+			var activeEditor = this.activeEditor;
+
+			if (this.activeEditor != editor) {
+				if (activeEditor) {
+					activeEditor.fire('deactivate', {relatedTarget: editor});
+				}
+
+				editor.fire('activate', {relatedTarget: activeEditor});
+			}
+
+			this.activeEditor = editor;
 		}
 	};
 

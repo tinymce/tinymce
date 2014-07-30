@@ -157,7 +157,7 @@ define("tinymce/FocusManager", [
 						focusedEditor.fire('blur', {focusedEditor: editor});
 					}
 
-					editorManager.activeEditor = editor;
+					editorManager.setActive(editor);
 					editorManager.focusedEditor = editor;
 					editor.fire('focus', {blurredEditor: focusedEditor});
 					editor.focus(true);

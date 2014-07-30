@@ -27,7 +27,7 @@
 		toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table",
 
 		setup: function(ed) {
-			ed.on('focus blur', function(e) {
+			ed.on('focus blur activate deactivate', function(e) {
 				console.log(e.type + ':' + ed.id);
 			});
 		}
@@ -47,7 +47,7 @@
 		toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table",
 
 		setup: function(ed) {
-			ed.on('focus blur', function(e) {
+			ed.on('focus blur activate deactivate', function(e) {
 				console.log(e.type + ':' + ed.id);
 			});
 		}
@@ -87,7 +87,12 @@
 				<p>abc<span tabindex="1">Inline with tabindex:1</span>123</p>
 			</textarea>
 
-			<button type="button">Button</button> <a href="#">Link</a> <button type="button" onclick="tinymce.activeEditor.execCommand('Bold');">Bold</button>
+			<div>
+				<button type="button">Button</button>
+				<a href="#">Link</a>
+				<button type="button" onclick="tinymce.activeEditor.execCommand('Bold');">Bold:active</button>
+				<button type="button" onclick="tinymce.get('e1').execCommand('Bold');">Bold:e1</button>
+			</div>
 
 			<textarea id="e2" class="editor">
 				<p>e2</p>
