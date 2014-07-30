@@ -66,8 +66,8 @@ define("tinymce/dom/ControlSelection", [
 				'z-index: 10000' +
 			'}' +
 			rootClass + ' .mce-resize-helper {' +
-				'background-color: #555;' +
-				'background-color: rgba(0,0,0,0.75);' +
+				'background: #555;' +
+				'background: rgba(0,0,0,0.75);' +
 				'border-radius: 3px;' +
 				'border: 1px;' +
 				'color: white;' +
