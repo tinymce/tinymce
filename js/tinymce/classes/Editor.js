@@ -1077,6 +1077,8 @@ define("tinymce/Editor", [
 					rng.select();
 				}
 			}
+
+			self.editorManager.setActive(self);
 		},
 
 		/**
