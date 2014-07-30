@@ -377,6 +377,11 @@ define("tinymce/dom/ControlSelection", [
 				}
 			}
 
+			// Ignore all events while resizing
+			if (resizeStarted) {
+				return;
+			}
+
 			// Remove data-mce-selected from all elements since they might have been copied using Ctrl+c/v
 			each(dom.select('img[data-mce-selected],hr[data-mce-selected]'), function(img) {
 				img.removeAttribute('data-mce-selected');
