@@ -332,6 +332,13 @@ test('mceInsertContent - span in span different style color', function() {
 	equal(editor.getContent(), '<p><span style="color: #ff0000;">a<span style="color: #00ff00;">b</span>c</span></p>');
 });
 
+test('mceInsertContent - select with option element', function() {
+	editor.getBody().innerHTML = '<p>1</p>';
+	Utils.setSelection('p', 1);
+	editor.execCommand('mceInsertContent', false, '2<select><option>3</option></select>');
+	equal(editor.getContent(), '<p>12<select><option>3</option></select></p>');
+});
+
 test('InsertHorizontalRule', function() {
 	var rng;
 	
