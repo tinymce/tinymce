@@ -144,7 +144,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		};
 
 		function updateValueOnChange() {
-			data = htmlToData( this.value() );
+			data = htmlToData(this.value());
 			this.parent().parent().fromJSON(data);
 		}
 

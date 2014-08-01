@@ -1376,7 +1376,7 @@ define("tinymce/Formatter", [
 						offset = node.nodeType === 3 ? node.length : node.childNodes.length;
 					}
 				}
-				return { node: node, offset: offset };
+				return {node: node, offset: offset};
 			}
 
 			// If index based start position then resolve it

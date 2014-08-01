@@ -229,7 +229,7 @@ define("tinymce/html/Node", [], function() {
 		unwrap: function() {
 			var self = this, node, next;
 
-			for (node = self.firstChild; node; ) {
+			for (node = self.firstChild; node;) {
 				next = node.next;
 				self.insert(node, self, true);
 				node = next;
