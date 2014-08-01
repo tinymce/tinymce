@@ -5,6 +5,7 @@ Version 4.1.4 (2014-xx-xx)
 	Fixed bug where resizing images inside tables on older IE versions would sometimes fail depending mouse position.
 	Fixed bug where editor.insertContent would produce an exception when inserting select/option elements.
 	Fixed bug where extra empty paragraphs would be produced if block elements where inserted inside span elements.
+	Fixed bug where the spellchecker menu item wouldn't be properly checked if spell checking was started before it was rendered.
 	Fixed so activate/deactivate events fire when windowManager opens a window since.
 Version 4.1.3 (2014-07-29)
 	Added event binding logic to tinymce.util.XHR making it possible to override headers and settings before any request is made.

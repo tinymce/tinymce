@@ -214,8 +214,6 @@ define("tinymce/spellcheckerplugin/Plugin", [
 				finish();
 			}
 
-			started = true;
-
 			function errorCallback(message) {
 				editor.windowManager.alert(message);
 				editor.setProgressState(false);
@@ -329,6 +327,8 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			onPostRender: function() {
 				var self = this;
 
+				self.active(started);
+
 				editor.on('SpellcheckStart SpellcheckEnd', function() {
 					self.active(started);
 				});
@@ -386,6 +386,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 				});
 			});
 
+			started = true;
 			editor.fire('SpellcheckStart');
 		}
 
