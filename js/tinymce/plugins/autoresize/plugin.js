@@ -25,6 +25,15 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 		return editor.plugins.fullscreen && editor.plugins.fullscreen.isFullscreen();
 	}
 
+    function getScrollPosition() {
+        // From the Mozilla docs:
+        // https://developer.mozilla.org/en-US/docs/Web/API/window.scrollY?redirectlocale=en-US&redirectslug=DOM/window.scrollY
+        return {
+            x: (window.pageXOffset !== undefined) ? window.pageXOffset : (document.documentElement || document.body.parentNode || document.body).scrollLeft,
+            y: (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop
+        };
+    }
+
 	if (editor.settings.inline) {
 		return;
 	}
@@ -76,9 +85,18 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 			resizeHeight = myHeight;
 		}
 
+        // Determine max height
+        var maxHeight = null;
+        if (settings.autoresize_max_height) {
+            maxHeight = settings.autoresize_max_height;
+        } else if (settings.autoresize_full_height) {
+            var borderHeight = tinymce.DOM.getSize(editor.getContainer()).h - tinymce.DOM.getSize(editor.iframeElement).h;
+            maxHeight = window.innerHeight - borderHeight - 20;
+        }
+
 		// If a maximum height has been defined don't exceed this height
-		if (settings.autoresize_max_height && myHeight > settings.autoresize_max_height) {
-			resizeHeight = settings.autoresize_max_height;
+		if (maxHeight && myHeight > maxHeight) {
+			resizeHeight = maxHeight;
 			body.style.overflowY = "auto";
 			docElm.style.overflowY = "auto"; // Old IE
 		} else {
@@ -99,6 +117,22 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 				resize(e);
 			}
 		}
+
+        // Scroll whole editor into view when using full height
+        if (settings.autoresize_full_height) {
+            var scrollPosition = getScrollPosition();
+
+            var containerPosition = tinymce.DOM.getPos(editor.getContainer());
+            var size = tinymce.DOM.getSize(editor.getContainer());
+            var fromTop = containerPosition.y - scrollPosition.y;
+            var fromBottom = window.innerHeight - fromTop - size.h;
+
+            if (fromTop < 0) {
+                window.scrollTo(scrollPosition.x, scrollPosition.y + fromTop - 10);
+            } else if (fromBottom < 0) {
+                window.scrollTo(scrollPosition.x, scrollPosition.y - fromBottom + 10);
+            }
+        }
 	}
 
 	/**
@@ -122,6 +156,9 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 
 	// Define maximum height
 	settings.autoresize_max_height = parseInt(editor.getParam('autoresize_max_height', 0), 10);
+
+    // Define full height
+    settings.autoresize_full_height = editor.getParam('autoresize_full_height', false);
 
 	// Add padding at the bottom for better UX
 	editor.on("init", function() {
