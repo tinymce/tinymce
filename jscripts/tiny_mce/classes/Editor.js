@@ -217,17 +217,20 @@
 			tinyMCE.settings = s;
 
 			// Element not found, then skip initialization
-			if (!t.getElement())
+			if (!t.getElement()) {
 				return;
+			}
 
 			// Is a iPad/iPhone and not on iOS5, then skip initialization. We need to sniff 
 			// here since the browser says it has contentEditable support but there is no visible caret.
-			if (tinymce.isIDevice && !tinymce.isIOS5)
+			if (tinymce.isIDevice && !tinymce.isIOS5) {
 				return;
+			}
 
 			// Add hidden input for non input elements inside form elements
-			if (!/TEXTAREA|INPUT/i.test(t.getElement().nodeName) && s.hidden_input && DOM.getParent(id, 'form'))
+			if (!/TEXTAREA|INPUT/i.test(t.getElement().nodeName) && s.hidden_input && DOM.getParent(id, 'form')) {
 				DOM.insertAfter(DOM.create('input', {type : 'hidden', name : id}), id);
+			}
 
 			// Hide target element early to prevent content flashing
 			if (!s.content_editable) {
@@ -254,13 +257,15 @@
 			 *    custom_param : 1
 			 * });
 			 */
-			if (tinymce.WindowManager)
+			if (tinymce.WindowManager) {
 				t.windowManager = new tinymce.WindowManager(t);
+			}
 
 			if (s.encoding == 'xml') {
 				t.onGetContent.add(function(ed, o) {
-					if (o.save)
+					if (o.save) {
 						o.content = DOM.encode(o.content);
+					}
 				});
 			}
 
@@ -275,8 +280,9 @@
 
 			if (s.add_unload_trigger) {
 				t._beforeUnload = tinyMCE.onBeforeUnload.add(function() {
-					if (t.initialized && !t.destroyed && !t.isHidden())
+					if (t.initialized && !t.destroyed && !t.isHidden()) {
 						t.save({format : 'raw', no_events : true});
+					}
 				});
 			}
 
@@ -286,12 +292,14 @@
 				t.onBeforeRenderUI.add(function() {
 					var n = t.getElement().form;
 
-					if (!n)
+					if (!n) {
 						return;
+					}
 
 					// Already patched
-					if (n._mceOldSubmit)
+					if (n._mceOldSubmit) {
 						return;
+					}
 
 					// Check page uses id="submit" or name="submit" for it's submit button
 					if (!n.submit.nodeType && !n.submit.length) {
@@ -312,11 +320,13 @@
 
 			// Load scripts
 			function loadScripts() {
-				if (s.language && s.language_load !== false)
+				if (s.language && s.language_load !== false) {
 					sl.add(tinymce.baseURL + '/langs/' + s.language + '.js');
+				}
 
-				if (s.theme && typeof s.theme != "function" && s.theme.charAt(0) != '-' && !ThemeManager.urls[s.theme])
+				if (s.theme && typeof s.theme != "function" && s.theme.charAt(0) != '-' && !ThemeManager.urls[s.theme]) {
 					ThemeManager.load(s.theme, 'themes/' + s.theme + '/editor_template' + tinymce.suffix + '.js');
+				}
 
 				each(explode(s.plugins), function(p) {
 					if (p &&!PluginManager.urls[p]) {
@@ -340,10 +350,11 @@
 
 				// Init when que is loaded
 				sl.loadQueue(function() {
-					if (!t.removed)
+					if (!t.removed) {
 						t.init();
+					}
 				});
-			};
+			}
 
 			loadScripts();
 		},
@@ -377,8 +388,9 @@
 					o = ThemeManager.get(s.theme);
 					t.theme = new o();
 
-					if (t.theme.init)
+					if (t.theme.init) {
 						t.theme.init(t, ThemeManager.urls[s.theme] || tinymce.documentBaseURL.replace(/\/$/, ''));
+					}
 				} else {
 					t.theme = s.theme;
 				}
@@ -406,14 +418,16 @@
 
 			// Setup popup CSS path(s)
 			if (s.popup_css !== false) {
-				if (s.popup_css)
+				if (s.popup_css) {
 					s.popup_css = t.documentBaseURI.toAbsolute(s.popup_css);
-				else
+				} else {
 					s.popup_css = t.baseURI.toAbsolute("themes/" + s.theme + "/skins/" + s.skin + "/dialog.css");
+				}
 			}
 
-			if (s.popup_css_add)
+			if (s.popup_css_add) {
 				s.popup_css += ',' + t.documentBaseURI.toAbsolute(s.popup_css_add);
+			}
 
 			/**
 			 * Control manager instance for the editor. Will enables you to create new UI elements and change their states etc.
@@ -439,11 +453,13 @@
 					mh = s.min_height || 100;
 					re = /^[0-9\.]+(|px)$/i;
 
-					if (re.test('' + w))
+					if (re.test('' + w)) {
 						w = Math.max(parseInt(w, 10) + (o.deltaWidth || 0), 100);
+					}
 
-					if (re.test('' + h))
+					if (re.test('' + h)) {
 						h = Math.max(parseInt(h, 10) + (o.deltaHeight || 0), mh);
+					}
 
 					// Render UI
 					o = t.theme.renderUI({
@@ -461,8 +477,9 @@
 					});
 
 					h = (o.iframeHeight || h) + (typeof(h) == 'number' ? (o.deltaHeight || 0) : '');
-					if (h < mh)
+					if (h < mh) {
 						h = mh;
+					}
 				} else {
 					o = s.theme(t, e);
 
@@ -517,22 +534,25 @@
 			}
 
 			// User specified a document.domain value
-			if (document.domain && location.hostname != document.domain)
+			if (document.domain && location.hostname != document.domain) {
 				tinymce.relaxedDomain = document.domain;
+			}
 
 			t.iframeHTML = s.doctype + '<html><head xmlns="http://www.w3.org/1999/xhtml">';
 
 			// We only need to override paths if we have to
 			// IE has a bug where it remove site absolute urls to relative ones if this is specified
-			if (s.document_base_url != tinymce.documentBaseURL)
+			if (s.document_base_url != tinymce.documentBaseURL) {
 				t.iframeHTML += '<base href="' + t.documentBaseURI.getURI() + '" />';
+			}
 
 			// IE8 doesn't support carets behind images setting ie7_compat would force IE8+ to run in IE7 compat mode.
 			if (tinymce.isIE8) {
-				if (s.ie7_compat)
+				if (s.ie7_compat) {
 					t.iframeHTML += '<meta http-equiv="X-UA-Compatible" content="IE=7" />';
-				else
+				} else {
 					t.iframeHTML += '<meta http-equiv="X-UA-Compatible" content="IE=edge" />';
+				}
 			}
 
 			t.iframeHTML += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
@@ -591,8 +611,9 @@
 			DOM.get(t.id).style.display = 'none';
 			DOM.setAttrib(t.id, 'aria-hidden', true);
 
-			if (!tinymce.relaxedDomain || !u)
+			if (!tinymce.relaxedDomain || !u) {
 				t.initContentBody();
+			}
 
 			e = n = o = null; // Cleanup
 		},
@@ -613,8 +634,9 @@
 				doc.write(self.iframeHTML);
 				doc.close();
 
-				if (tinymce.relaxedDomain)
+				if (tinymce.relaxedDomain) {
 					doc.domain = tinymce.relaxedDomain;
+				}
 			}
 
 			if (settings.content_editable) {
@@ -631,8 +653,9 @@
 			body = self.getBody();
 			body.disabled = true;
 
-			if (!settings.readonly)
+			if (!settings.readonly) {
 				body.contentEditable = self.getParam('content_editable_state', true);
+			}
 
 			body.disabled = false;
 
@@ -683,10 +706,11 @@
 
 					// Add internal attribute if we need to we don't on a refresh of the document
 					if (!node.attributes.map[internalName]) {	
-						if (name === "style")
+						if (name === "style") {
 							node.attr(internalName, dom.serializeStyle(dom.parseStyle(value), node.name));
-						else
+						} else {
 							node.attr(internalName, self.convertURL(value, name, node.name));
+						}
 					}
 				}
 			});
@@ -718,8 +742,9 @@
 				while (i--) {
 					node = nodes[i];
 
-					if (node.isEmpty(nonEmptyElements))
+					if (node.isEmpty(nonEmptyElements)) {
 						node.empty().append(new tinymce.html.Node('br', 1)).shortEnded = true;
+					}
 				}
 			});
 
@@ -776,8 +801,9 @@
 
 			self.onExecCommand.add(function(editor, command) {
 				// Don't refresh the select lists until caret move
-				if (!/^(FontName|FontSize)$/.test(command))
+				if (!/^(FontName|FontSize)$/.test(command)) {
 					self.nodeChanged();
+				}
 			});
 
 			// Pass through
@@ -791,8 +817,9 @@
 
 			self.onPreInit.dispatch(self);
 
-			if (!settings.browser_spellcheck && !settings.gecko_spellcheck)
+			if (!settings.browser_spellcheck && !settings.gecko_spellcheck) {
 				doc.body.spellcheck = false;
+			}
 
 			if (!settings.readonly) {
 				self.bindNativeEvents();
@@ -803,11 +830,13 @@
 
 			self.quirks = tinymce.util.Quirks(self);
 
-			if (settings.directionality)
+			if (settings.directionality) {
 				body.dir = settings.directionality;
+			}
 
-			if (settings.nowrap)
+			if (settings.nowrap) {
 				body.style.whiteSpace = "nowrap";
+			}
 
 			if (settings.protect) {
 				self.onBeforeSetContent.add(function(ed, o) {
@@ -940,8 +969,9 @@
 			}
 
 			if (tinymce.activeEditor != self) {
-				if ((oed = tinymce.activeEditor) != null)
+				if ((oed = tinymce.activeEditor) != null) {
 					oed.onDeactivate.dispatch(oed, self);
+				}
 
 				self.onActivate.dispatch(self, oed);
 			}
@@ -960,8 +990,9 @@
 		execCallback : function(n) {
 			var t = this, f = t.settings[n], s;
 
-			if (!f)
+			if (!f) {
 				return;
+			}
 
 			// Look through lookup
 			if (t.callbackLookup && (s = t.callbackLookup[n])) {
@@ -991,8 +1022,9 @@
 		translate : function(s) {
 			var c = this.settings.language || 'en', i18n = tinymce.i18n;
 
-			if (!s)
+			if (!s) {
 				return '';
+			}
 
 			return i18n[c + '.' + s] || s.replace(/\{\#([^\}]+)\}/g, function(a, b) {
 				return i18n[c + '.' + b] || '{#' + b + '}';
@@ -1035,13 +1067,15 @@
 					each(v.indexOf('=') > 0 ? v.split(/[;,](?![^=;,]*(?:[;,]|$))/) : v.split(','), function(v) {
 						v = v.split('=');
 
-						if (v.length > 1)
+						if (v.length > 1) {
 							o[tr(v[0])] = tr(v[1]);
-						else
+						} else {
 							o[tr(v[0])] = tr(v);
+						}
 					});
-				} else
+				} else {
 					o = v;
+				}
 
 				return o;
 			}
@@ -1070,8 +1104,9 @@
 				// Get parents and add them to object
 				o.parents = [];
 				self.dom.getParent(node, function(node) {
-					if (node.nodeName == 'BODY')
+					if (node.nodeName == 'BODY') {
 						return true;
+					}
 
 					o.parents.push(node);
 				});
@@ -1205,8 +1240,9 @@
 		addShortcut : function(pa, desc, cmd_func, sc) {
 			var t = this, c;
 
-			if (t.settings.custom_shortcuts === false)
+			if (t.settings.custom_shortcuts === false) {
 				return false;
+			}
 
 			t.shortcuts = t.shortcuts || {};
 
@@ -1272,13 +1308,15 @@
 		execCommand : function(cmd, ui, val, a) {
 			var t = this, s = 0, o, st;
 
-			if (!/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel|mceRepaint|SelectAll)$/.test(cmd) && (!a || !a.skip_focus))
+			if (!/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel|mceRepaint|SelectAll)$/.test(cmd) && (!a || !a.skip_focus)) {
 				t.focus();
+			}
 
 			a = extend({}, a);
 			t.onBeforeExecCommand.dispatch(t, cmd, ui, val, a);
-			if (a.terminate)
+			if (a.terminate) {
 				return false;
+			}
 
 			// Command callback
 			if (t.execCallback('execcommand_callback', t.id, t.selection.getNode(), cmd, ui, val)) {
@@ -1306,8 +1344,9 @@
 				}
 			});
 
-			if (s)
+			if (s) {
 				return true;
+			}
 
 			// Theme commands
 			if (t.theme && t.theme.execCommand && t.theme.execCommand(cmd, ui, val)) {
@@ -1337,22 +1376,25 @@
 			var t = this, o, s;
 
 			// Is hidden then return undefined
-			if (t._isHidden())
+			if (t._isHidden()) {
 				return;
+			}
 
 			// Registred commands
 			if (o = t.queryStateCommands[cmd]) {
 				s = o.func.call(o.scope);
 
 				// Fall though on true
-				if (s !== true)
+				if (s !== true) {
 					return s;
+				}
 			}
 
 			// Registred commands
 			o = t.editorCommands.queryCommandState(cmd);
-			if (o !== -1)
+			if (o !== -1) {
 				return o;
+			}
 
 			// Browser commands
 			try {
@@ -1373,22 +1415,25 @@
 			var t = this, o, s;
 
 			// Is hidden then return undefined
-			if (t._isHidden())
+			if (t._isHidden()) {
 				return;
+			}
 
 			// Registred commands
 			if (o = t.queryValueCommands[c]) {
 				s = o.func.call(o.scope);
 
 				// Fall though on true
-				if (s !== true)
+				if (s !== true) {
 					return s;
+				}
 			}
 
 			// Registred commands
 			o = t.editorCommands.queryCommandValue(c);
-			if (is(o))
+			if (is(o)) {
 				return o;
+			}
 
 			// Browser commands
 			try {
@@ -1420,8 +1465,9 @@
 			var self = this, doc = self.getDoc();
 
 			// Fixed bug where IE has a blinking cursor left from the editor
-			if (isIE && doc)
+			if (isIE && doc) {
 				doc.execCommand('SelectAll');
+			}
 
 			// We must save before we hide so Safari doesn't crash
 			self.save();
@@ -1486,8 +1532,9 @@
 				h = t.setContent(is(e.value) ? e.value : e.innerHTML, o);
 				o.element = e;
 
-				if (!o.no_events)
+				if (!o.no_events) {
 					t.onLoadContent.dispatch(t, o);
+				}
 
 				o.element = e = null;
 
@@ -1507,8 +1554,9 @@
 		save : function(o) {
 			var t = this, e = t.getElement(), h, f;
 
-			if (!e || !t.initialized)
+			if (!e || !t.initialized) {
 				return;
+			}
 
 			o = o || {};
 			o.save = true;
@@ -1516,8 +1564,9 @@
 			o.element = e;
 			h = o.content = t.getContent(o);
 
-			if (!o.no_events)
+			if (!o.no_events) {
 				t.onSaveContent.dispatch(t, o);
+			}
 
 			h = o.content;
 
@@ -1533,8 +1582,9 @@
 						}
 					});
 				}
-			} else
+			} else {
 				e.value = h;
+			}
 
 			o.element = e = null;
 
@@ -1563,7 +1613,7 @@
 		 * tinyMCE.activeEditor.setContent('[b]some[/b] html', {format : 'bbcode'});
 		 */
 		setContent : function(content, args) {
-			var self = this, rootNode, body = self.getBody(), forcedRootBlockName;
+			var self = this, body = self.getBody(), forcedRootBlockName;
 
 			// Setup args object
 			args = args || {};
@@ -1572,8 +1622,9 @@
 			args.content = content;
 
 			// Do preprocessing
-			if (!args.no_events)
+			if (!args.no_events) {
 				self.onBeforeSetContent.dispatch(self, args);
+			}
 
 			content = args.content;
 
@@ -1613,8 +1664,9 @@
 			self.dom.setHTML(body, args.content);
 
 			// Do post processing
-			if (!args.no_events)
+			if (!args.no_events) {
 				self.onSetContent.dispatch(self, args);
+			}
 
 			// Don't normalize selection if the focused element isn't the body in content editable mode since it will steal focus otherwise
 			if (!self.settings.content_editable || document.activeElement === self.getBody()) {
@@ -1651,16 +1703,18 @@
 			args.getInner = true;
 
 			// Do preprocessing
-			if (!args.no_events)
+			if (!args.no_events) {
 				self.onBeforeGetContent.dispatch(self, args);
+			}
 
 			// Get raw contents or by default the cleaned contents
-			if (args.format == 'raw')
+			if (args.format == 'raw') {
 				content = body.innerHTML;
-			else if (args.format == 'text')
+			} else if (args.format == 'text') {
 				content = body.innerText || body.textContent;
-			else
+			} else {
 				content = self.serializer.serialize(body, args);
+			}
 
 			// Trim whitespace in beginning/end of HTML
 			if (args.format != 'text') {
@@ -1670,8 +1724,9 @@
 			}
 
 			// Do post processing
-			if (!args.no_events)
+			if (!args.no_events) {
 				self.onGetContent.dispatch(self, args);
+			}
 
 			return args.content;
 		},
@@ -1688,7 +1743,7 @@
 		isDirty : function() {
 			var self = this;
 
-			return tinymce.trim(self.startContent) != tinymce.trim(self.getContent({format : 'raw', no_events : 1})) && !self.isNotDirty;
+			return tinymce.trim(self.startContent) !== tinymce.trim(self.getContent({format : 'raw'})) && !self.isNotDirty;
 		},
 
 		/**
@@ -1701,8 +1756,9 @@
 		getContainer : function() {
 			var self = this;
 
-			if (!self.container)
+			if (!self.container) {
 				self.container = DOM.get(self.editorContainer || self.id + '_parent');
+			}
 
 			return self.container;
 		},
@@ -1740,8 +1796,9 @@
 			if (!self.contentWindow) {
 				elm = DOM.get(self.id + "_ifr");
 
-				if (elm)
+				if (elm) {
 					self.contentWindow = elm.contentWindow;
+				}
 			}
 
 			return self.contentWindow;
@@ -1759,8 +1816,9 @@
 			if (!self.contentDocument) {
 				win = self.getWin();
 
-				if (win)
+				if (win) {
 					self.contentDocument = win.document;
+				}
 			}
 
 			return self.contentDocument;
@@ -1795,12 +1853,14 @@
 				return self.execCallback('urlconverter_callback', url, elm, true, name);
 
 			// Don't convert link href since thats the CSS files that gets loaded into the editor also skip local file URLs
-			if (!settings.convert_urls || (elm && elm.nodeName == 'LINK') || url.indexOf('file:') === 0)
+			if (!settings.convert_urls || (elm && elm.nodeName == 'LINK') || url.indexOf('file:') === 0) {
 				return url;
+			}
 
 			// Convert to relative
-			if (settings.relative_urls)
+			if (settings.relative_urls) {
 				return self.documentBaseURI.toRelative(url);
+			}
 
 			// Convert to absolute
 			url = self.documentBaseURI.toAbsolute(url, settings.remove_script_host);
@@ -1831,10 +1891,11 @@
 						value = dom.getAttrib(elm, 'border');
 
 						if (!value || value == '0') {
-							if (self.hasVisual)
+							if (self.hasVisual) {
 								dom.addClass(elm, cls);
-							else
+							} else {
 								dom.removeClass(elm, cls);
+							}
 						}
 
 						return;
@@ -1845,10 +1906,11 @@
 							cls = 'mceItemAnchor';
 
 							if (value) {
-								if (self.hasVisual)
+								if (self.hasVisual) {
 									dom.addClass(elm, cls);
-								else
+								} else {
 									dom.removeClass(elm, cls);
+								}
 							}
 						}
 
@@ -1871,8 +1933,9 @@
 				self.removed = 1; // Cancels post remove event execution
 
 				// Fixed bug where IE has a blinking cursor left from the editor
-				if (isIE && doc)
+				if (isIE && doc) {
 					doc.execCommand('SelectAll');
+				}
 
 				// We must save before we hide so Safari doesn't crash
 				self.save();
@@ -1912,8 +1975,9 @@
 			var t = this;
 
 			// One time is enough
-			if (t.destroyed)
+			if (t.destroyed) {
 				return;
+			}
 
 			// We must unbind on Gecko since it would otherwise produce the pesky "attempt to run compile-and-go script on a cleared scope" message
 			if (isGecko) {
@@ -1927,8 +1991,9 @@
 				tinyMCE.onBeforeUnload.remove(t._beforeUnload);
 
 				// Manual destroy
-				if (t.theme && t.theme.destroy)
+				if (t.theme && t.theme.destroy) {
 					t.theme.destroy();
+				}
 
 				// Destroy controls, selection and dom
 				t.controlManager.destroy();
@@ -1943,8 +2008,9 @@
 
 			t.contentAreaContainer = t.formElement = t.container = t.settings.content_element = t.bodyElement = t.contentDocument = t.contentWindow = null;
 
-			if (t.selection)
+			if (t.selection) {
 				t.selection = t.selection.win = t.selection.dom = t.selection.dom.doc = null;
+			}
 
 			t.destroyed = 1;
 		},
@@ -1969,8 +2035,9 @@
 		_isHidden : function() {
 			var s;
 
-			if (!isGecko)
+			if (!isGecko) {
 				return 0;
+			}
 
 			// Weird, wheres that cursor selection?
 			s = this.selection.getSel();

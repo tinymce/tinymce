@@ -40,26 +40,29 @@
 		if (elm) {
 			value = value || '';
 
-			if (elm.nodeName == "SELECT")
+			if (elm.nodeName == "SELECT") {
 				selectByValue(document.forms[0], id, value);
-			else if (elm.type == "checkbox")
+			} else if (elm.type == "checkbox") {
 				elm.checked = !!value;
-			else
+			} else {
 				elm.value = value;
+			}
 		}
-	};
+	}
 
 	function getVal(id) {
 		var elm = document.getElementById(id);
 
-		if (elm.nodeName == "SELECT")
+		if (elm.nodeName == "SELECT") {
 			return elm.options[elm.selectedIndex].value;
+		}
 
-		if (elm.type == "checkbox")
+		if (elm.type == "checkbox") {
 			return elm.checked;
+		}
 
 		return elm.value;
-	};
+	}
 
 	window.FullPageDialog = {
 		changedStyle : function() {
@@ -69,10 +72,11 @@
 			setVal('fontsize', styles['font-size']);
 			setVal('textcolor', styles['color']);
 
-			if (val = styles['background-image'])
+			if (val = styles['background-image']) {
 				setVal('bgimage', val.replace(new RegExp("url\\('?([^']*)'?\\)", 'gi'), "$1"));
-			else
+			} else {
 				setVal('bgimage', '');
+			}
 
 			setVal('bgcolor', styles['background-color']);
 
@@ -91,17 +95,21 @@
 				styles['margin-left'] = val[3] || val[0] || '';
 			}
 
-			if (val = styles['margin-top'])
+			if (val = styles['margin-top']) {
 				setVal('topmargin', val.replace(/px/, ''));
+			}
 
-			if (val = styles['margin-right'])
+			if (val = styles['margin-right']) {
 				setVal('rightmargin', val.replace(/px/, ''));
+			}
 
-			if (val = styles['margin-bottom'])
+			if (val = styles['margin-bottom']) {
 				setVal('bottommargin', val.replace(/px/, ''));
+			}
 
-			if (val = styles['margin-left'])
+			if (val = styles['margin-left']) {
 				setVal('leftmargin', val.replace(/px/, ''));
+			}
 
 			updateColor('bgcolor_pick', 'bgcolor');
 			updateColor('textcolor_pick', 'textcolor');

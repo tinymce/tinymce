@@ -50,13 +50,13 @@
 		// Private plugin internal methods
 
 		_htmlToData : function() {
-			var headerFragment = this._parseHeader(), data = {}, nodes, elm, matches, editor = this.editor;
+			var headerFragment = this._parseHeader(), data = {}, elm, matches, editor = this.editor;
 
 			function getAttr(elm, name) {
 				var value = elm.attr(name);
 
 				return value || '';
-			};
+			}
 
 			// Default some values
 			data.fontface = editor.getParam("fullpage_default_fontface", "");
@@ -67,14 +67,16 @@
 			if (elm.type == 7) {
 				data.xml_pi = true;
 				matches = /encoding="([^"]+)"/.exec(elm.value);
-				if (matches)
+				if (matches) {
 					data.docencoding = matches[1];
+				}
 			}
 
 			// Parse doctype
 			elm = headerFragment.getAll('#doctype')[0];
-			if (elm)
+			if (elm) {
 				data.doctype = '<!DOCTYPE' + elm.value + ">"; 
+			}
 
 			// Parse title element
 			elm = headerFragment.getAll('title')[0];
@@ -86,25 +88,28 @@
 			each(headerFragment.getAll('meta'), function(meta) {
 				var name = meta.attr('name'), httpEquiv = meta.attr('http-equiv'), matches;
 
-				if (name)
+				if (name) {
 					data['meta' + name.toLowerCase()] = meta.attr('content');
-				else if (httpEquiv == "Content-Type") {
+				} else if (httpEquiv == "Content-Type") {
 					matches = /charset\s*=\s*(.*)\s*/gi.exec(meta.attr('content'));
 
-					if (matches)
+					if (matches) {
 						data.docencoding = matches[1];
+					}
 				}
 			});
 
 			// Parse html attribs
 			elm = headerFragment.getAll('html')[0];
-			if (elm)
+			if (elm) {
 				data.langcode = getAttr(elm, 'lang') || getAttr(elm, 'xml:lang');
+			}
 	
 			// Parse stylesheet
 			elm = headerFragment.getAll('link')[0];
-			if (elm && elm.attr('rel') == 'stylesheet')
+			if (elm && elm.attr('rel') == 'stylesheet') {
 				data.stylesheet = elm.attr('href');
+			}
 
 			// Parse body parts
 			elm = headerFragment.getAll('body')[0];
@@ -124,14 +129,15 @@
 
 			function setAttr(elm, name, value) {
 				elm.attr(name, value ? value : undefined);
-			};
+			}
 
 			function addHeadNode(node) {
-				if (headElement.firstChild)
+				if (headElement.firstChild) {
 					headElement.insert(node, headElement.firstChild);
-				else
+				} else {
 					headElement.append(node);
-			};
+				}
+			}
 
 			headerFragment = this._parseHeader();
 			headElement = headerFragment.getAll('head')[0];
@@ -139,10 +145,11 @@
 				elm = headerFragment.getAll('html')[0];
 				headElement = new Node('head', 1);
 
-				if (elm.firstChild)
+				if (elm.firstChild) {
 					elm.insert(headElement, elm.firstChild, true);
-				else
+				} else {
 					elm.append(headElement);
+				}
 			}
 
 			// Add/update/remove XML-PI
@@ -150,8 +157,9 @@
 			if (data.xml_pi) {
 				value = 'version="1.0"';
 
-				if (data.docencoding)
+				if (data.docencoding) {
 					value += ' encoding="' + data.docencoding + '"';
+				}
 
 				if (elm.type != 7) {
 					elm = new Node('xml', 7);
@@ -159,8 +167,9 @@
 				}
 
 				elm.value = value;
-			} else if (elm && elm.type == 7)
+			} else if (elm && elm.type == 7) {
 				elm.remove();
+			}
 
 			// Add/update/remove doctype
 			elm = headerFragment.getAll('#doctype')[0];
@@ -168,15 +177,17 @@
 				if (!elm) {
 					elm = new Node('#doctype', 10);
 
-					if (data.xml_pi)
+					if (data.xml_pi) {
 						headerFragment.insert(elm, headerFragment.firstChild);
-					else
+					} else {
 						addHeadNode(elm);
+					}
 				}
 
 				elm.value = data.doctype.substring(9, data.doctype.length - 1);
-			} else if (elm)
+			} else if (elm) {
 				elm.remove();
+			}
 
 			// Add/update/remove title
 			elm = headerFragment.getAll('title')[0];
@@ -192,8 +203,9 @@
 			if (data.docencoding) {
 				elm = null;
 				each(headerFragment.getAll('meta'), function(meta) {
-					if (meta.attr('http-equiv') == 'Content-Type')
+					if (meta.attr('http-equiv') == 'Content-Type') {
 						elm = meta;
+					}
 				});
 
 				if (!elm) {
@@ -214,10 +226,11 @@
 					meta = nodes[i];
 
 					if (meta.attr('name') == name) {
-						if (value)
+						if (value) {
 							meta.attr('content', value);
-						else
+						} else {
 							meta.remove();
+						}
 
 						return;
 					}
@@ -236,10 +249,11 @@
 			// Add/update/delete link
 			elm = headerFragment.getAll('link')[0];
 			if (elm && elm.attr('rel') == 'stylesheet') {
-				if (data.stylesheet)
+				if (data.stylesheet) {
 					elm.attr('href', data.stylesheet);
-				else
+				} else {
 					elm.remove();
+				}
 			} else if (data.stylesheet) {
 				elm = new Node('link', 1);
 				elm.attr({
@@ -304,15 +318,17 @@
 			function low(s) {
 				return s.replace(/<\/?[A-Z]+/g, function(a) {
 					return a.toLowerCase();
-				})
-			};
+				});
+			}
 
 			// Ignore raw updated if we already have a head, this will fix issues with undo/redo keeping the head/foot separate
-			if (o.format == 'raw' && self.head)
+			if (o.format == 'raw' && self.head) {
 				return;
+			}
 
-			if (o.source_view && ed.getParam('fullpage_hide_in_source_view'))
+			if (o.source_view && ed.getParam('fullpage_hide_in_source_view')) {
 				return;
+			}
 
 			// Parse out head, body and footer
 			content = content.replace(/<(\/?)BODY/gi, '<$1body');
@@ -323,8 +339,9 @@
 				self.head = low(content.substring(0, startPos + 1));
 
 				endPos = content.indexOf('</body', startPos);
-				if (endPos == -1)
+				if (endPos == -1) {
 					endPos = content.length;
+				}
 
 				o.content = content.substring(startPos + 1, endPos);
 				self.foot = low(content.substring(endPos));
@@ -336,8 +353,9 @@
 			// Parse header and update iframe
 			headerFragment = self._parseHeader();
 			each(headerFragment.getAll('style'), function(node) {
-				if (node.firstChild)
+				if (node.firstChild) {
 					styles += node.firstChild.value;
+				}
 			});
 
 			elm = headerFragment.getAll('body')[0];
@@ -358,34 +376,41 @@
 
 				// Needed for IE 6/7
 				elm = dom.get('fullpage_styles');
-				if (elm.styleSheet)
+				if (elm.styleSheet) {
 					elm.styleSheet.cssText = styles;
+				}
 			}
 		},
 
 		_getDefaultHeader : function() {
 			var header = '', editor = this.editor, value, styles = '';
 
-			if (editor.getParam('fullpage_default_xml_pi'))
+			if (editor.getParam('fullpage_default_xml_pi')) {
 				header += '<?xml version="1.0" encoding="' + editor.getParam('fullpage_default_encoding', 'ISO-8859-1') + '" ?>\n';
+			}
 
 			header += editor.getParam('fullpage_default_doctype', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">');
 			header += '\n<html>\n<head>\n';
 
-			if (value = editor.getParam('fullpage_default_title'))
+			if (value = editor.getParam('fullpage_default_title')) {
 				header += '<title>' + value + '</title>\n';
+			}
 
-			if (value = editor.getParam('fullpage_default_encoding'))
+			if (value = editor.getParam('fullpage_default_encoding')) {
 				header += '<meta http-equiv="Content-Type" content="text/html; charset=' + value + '" />\n';
+			}
 
-			if (value = editor.getParam('fullpage_default_font_family'))
+			if (value = editor.getParam('fullpage_default_font_family')) {
 				styles += 'font-family: ' + value + ';';
+			}
 
-			if (value = editor.getParam('fullpage_default_font_size'))
+			if (value = editor.getParam('fullpage_default_font_size')) {
 				styles += 'font-size: ' + value + ';';
+			}
 
-			if (value = editor.getParam('fullpage_default_text_color'))
+			if (value = editor.getParam('fullpage_default_text_color')) {
 				styles += 'color: ' + value + ';';
+			}
 
 			header += '</head>\n<body' + (styles ? ' style="' + styles + '"' : '') + '>\n';
 
@@ -395,8 +420,9 @@
 		_getContent : function(ed, o) {
 			var self = this;
 
-			if (!o.source_view || !ed.getParam('fullpage_hide_in_source_view'))
+			if (!o.source_view || !ed.getParam('fullpage_hide_in_source_view')) {
 				o.content = tinymce.trim(self.head) + '\n' + tinymce.trim(o.content) + '\n' + tinymce.trim(self.foot);
+			}
 		}
 	});
 
