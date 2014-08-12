@@ -105,7 +105,7 @@ tinymce.PluginManager.add('autolink', function(editor) {
 			rng.setEnd(endContainer, end >= 1 ? end - 1 : 0);
 			end -= 1;
 
-			// Loop until one of the following is found: a blank space, &nbsp;, delimeter, (end-2) >= 0
+			// Loop until one of the following is found: a blank space, &nbsp;, delimiter, (end-2) >= 0
 		} while (rng.toString() != ' ' && rng.toString() !== '' &&
 			rng.toString().charCodeAt(0) != 160 && (end -2) >= 0 && rng.toString() != delimiter);
 

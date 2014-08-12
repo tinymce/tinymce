@@ -11,7 +11,7 @@
 /**
  * Text formatter engine class. This class is used to apply formats like bold, italic, font size
  * etc to the current selection or specific nodes. This engine was build to replace the browsers
- * default formatting logic for execCommand due to it's inconsistant and buggy behavior.
+ * default formatting logic for execCommand due to it's inconsistent and buggy behavior.
  *
  * @class tinymce.Formatter
  * @example
@@ -1576,14 +1576,14 @@ define("tinymce/Formatter", [
 
 			if (format[0].inline) {
 				if (rng.collapsed) {
-					// Expand left to closest word boundery
+					// Expand left to closest word boundary
 					endPoint = findWordEndPoint(startContainer, startOffset, true);
 					if (endPoint) {
 						startContainer = endPoint.container;
 						startOffset = endPoint.offset;
 					}
 
-					// Expand right to closest word boundery
+					// Expand right to closest word boundary
 					endPoint = findWordEndPoint(endContainer, endOffset);
 					if (endPoint) {
 						endContainer = endPoint.container;

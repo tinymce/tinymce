@@ -210,7 +210,7 @@ tinyMCEPopup = {
 	},
 
 	/**
-	 * Loads a specific dialog language pack. If you pass in plugin_url as a arugment
+	 * Loads a specific dialog language pack. If you pass in plugin_url as a argument
 	 * when you open the window it will load the <plugin url>/langs/<code>_dlg.js lang pack file.
 	 *
 	 * @method requireLangPack

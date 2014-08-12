@@ -339,7 +339,7 @@ var config = {
 	blocking: true
 };
 
-// Load paramaters
+// Load parameters
 (function() {
 	var location = window.location || { search: "", protocol: "file:" },
 		GETParams = location.search.slice(1).split('&');

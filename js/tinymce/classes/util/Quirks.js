@@ -340,7 +340,7 @@ define("tinymce/util/Quirks", [
 		 * Instead of:
 		 * <p style="color:red">bla|ed</p>
 		 */
-		function removeStylesWhenDeletingAccrossBlockElements() {
+		function removeStylesWhenDeletingAcrossBlockElements() {
 			function getAttributeApplyFunction() {
 				var template = dom.getAttribs(selection.getStart().cloneNode(false));
 
@@ -938,7 +938,7 @@ define("tinymce/util/Quirks", [
 		if (isGecko) {
 			removeHrOnBackspace();
 			focusBody();
-			removeStylesWhenDeletingAccrossBlockElements();
+			removeStylesWhenDeletingAcrossBlockElements();
 			setGeckoEditingOptions();
 			addBrAfterLastLinks();
 			removeGhostSelection();
