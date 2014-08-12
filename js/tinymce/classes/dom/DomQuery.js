@@ -596,7 +596,7 @@ define("tinymce/dom/DomQuery", [
 						self[i].innerHTML = value;
 					}
 				} catch (ex) {
-					// Workaround for "Unkown runtime error" when DIV is added to P on IE
+					// Workaround for "Unknown runtime error" when DIV is added to P on IE
 					DomQuery(self[i]).empty().append(value);
 				}
 
