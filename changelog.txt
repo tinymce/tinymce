@@ -8,6 +8,7 @@ Version 3.5.11 (2014-05-08)
 	Fixed bug where formatting a nested list would break the list moving list items.
 	Fixed bug where the caret were not appended as child of the body but as sibling.
 	Fixed bug where nested lists did not get the style updated.
+	Fixed bug where the isDirty method would report a false positive when a plugin modifies the initial content.
 Version 3.5.10 (2013-10-24)
 	Fixed bug where dialogs using inlinepopups plugin would display incorrectly sometimes
 	Fixed bug in paste plugin word import that was removing type from lists
