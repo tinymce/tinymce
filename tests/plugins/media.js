@@ -17,6 +17,10 @@ module("tinymce.plugins.Media", {
 				QUnit.start();
 			}
 		});
+	},
+	
+	teardown: function() {
+		delete editor.settings.media_filter_html;
 	}
 });
 
@@ -31,8 +35,8 @@ test("Object retain as is", function() {
 
 	equal(editor.getContent(),
 		'<p><object width="425" height="355" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000">' +
-			'<param name="movie" value="someurl">' +
-			'<param name="wmode" value="transparent">' +
+			'<param name="movie" value="someurl" />' +
+			'<param name="wmode" value="transparent" />' +
 			'<embed src="someurl" type="application/x-shockwave-flash" wmode="transparent" width="425" height="355" />' +
 		'</object></p>'
 	);
@@ -82,8 +86,8 @@ test("Audio retain as is", function() {
 	equal(editor.getContent(),
 		'<p>' +
 			'<audio src="sound.mp3">' +
-				'<track kind="captions" src="foo.en.vtt" srclang="en" label="English">' +
-				'<track kind="captions" src="foo.sv.vtt" srclang="sv" label="Svenska">' +
+				'<track kind="captions" src="foo.en.vtt" srclang="en" label="English" />' +
+				'<track kind="captions" src="foo.sv.vtt" srclang="sv" label="Svenska" />' +
 				'text<a href="#">link</a>' +
 			'</audio>' +
 		'</p>'
@@ -107,6 +111,7 @@ test("Resize complex object", function() {
 	placeholderElm.width = 100;
 	placeholderElm.height = 200;
 	editor.fire('objectResized', {target: placeholderElm, width: placeholderElm.width, height: placeholderElm.height});
+	editor.settings.media_filter_html = false;
 
 	equal(editor.getContent(),
 		'<p>' +
@@ -144,4 +149,16 @@ test("Media script elements", function() {
 			'<script src="http://media2.tinymce.com/123456" type="text/javascript"></sc'+'ript>\n' +
 		'</p>'
 	);
+});
+
+test("XSS content", function() {
+	function testXss(input, expectedOutput) {
+		editor.setContent(input);
+		equal(editor.getContent(), expectedOutput);
+	}
+
+	testXss('<video><a href="javascript:alert(1);">a</a></video>', '<p><video width="300" height="150"><a>a</a></video></p>');
+	testXss('<video><img src="x" onload="alert(1)"></video>', '<p><video width="300" height=\"150\"></video></p>');
+	testXss('<video><img src="x"></video>', '<p><video width="300" height="150"><img src="x" /></video></p>');
+	testXss('<video><!--[if IE]><img src="x"><![endif]--></video>', '<p><video width="300" height="150"><!-- [if IE]><img src="x"><![endif]--></video></p>');
 });
