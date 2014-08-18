@@ -636,7 +636,7 @@ define("tinymce/Editor", [
 			}
 
 			if (settings.content_security_policy) {
-				self.iframeHTML += '<meta http-equiv="Content-Security-Policy" content="' + settings.content_security_policy +'" />'
+				self.iframeHTML += '<meta http-equiv="Content-Security-Policy" content="' + settings.content_security_policy + '" />';
 			}
 
 			self.iframeHTML += '</head><body id="' + bodyId +
