@@ -25,8 +25,8 @@
 				win.close();
 			}
 			
-			delete editor.settings.table_adv_tab;
-			delete editor.settings.table_cell_adv_tab;
+			delete editor.settings.table_advtab;
+			delete editor.settings.table_cell_advtab;
 			delete editor.settings.table_class_list;
 			delete editor.settings.table_cell_class_list;
 			delete editor.settings.table_row_class_list;
@@ -65,7 +65,7 @@
 	});
 
 	test("Table properties dialog (get/set data from/to plain table, no adv tab)", function() {
-		editor.settings.table_adv_tab = false;
+		editor.settings.table_advtab = false;
 
 		editor.setContent('<table><tr><td>X</td></tr></table>');
 		Utils.setSelection('td', 0);
@@ -247,7 +247,7 @@
 	});
 
 	test("Table cell properties dialog (get/set data from/to plain cell, no adv tab)", function() {
-		editor.settings.table_cell_adv_tab = false;
+		editor.settings.table_cell_advtab = false;
 
 		editor.setContent('<table><tr><td>X</td></tr></table>');
 		Utils.setSelection('td', 0);
