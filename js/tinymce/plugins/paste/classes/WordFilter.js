@@ -196,7 +196,7 @@ define("tinymce/pasteplugin/WordFilter", [
 						// Detect ordered lists 1., a. or ixv.
 						if (isNumericList(nodeText)) {
 							// Parse OL start number
-							var matches = /([0-9])\./.exec(nodeText);
+							var matches = /([0-9]+)\./.exec(nodeText);
 							var start = 1;
 							if (matches) {
 								start = parseInt(matches[1], 10);
