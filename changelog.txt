@@ -10,6 +10,7 @@ Version 4.1.4 (2014-xx-xx)
 	Fixed bug where the spellchecker menu item wouldn't be properly checked if spell checking was started before it was rendered.
 	Fixed bug where the DomQuery filter function wouldn't remove non elements from collection.
 	Fixed bug where document with custom document.domain wouldn't properly render the editor.
+	Fixed so the color picker button in table dialog isn't shown unless you include the colorpicker plugin or add your own custom color picker.
 	Fixed so activate/deactivate events fire when windowManager opens a window since.
 	Fixed so the table advtab options isn't separated by an underscore to normalize naming with image_advtab option.
 Version 4.1.3 (2014-07-29)

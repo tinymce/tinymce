@@ -23,17 +23,21 @@ define("tinymce/tableplugin/Dialogs", [
 	return function(editor) {
 		var self = this;
 
-		function pickColorAction() {
-			var self = this, colorPickerCallback = editor.settings.color_picker_callback;
+		function createColorPickAction() {
+			var colorPickerCallback = editor.settings.color_picker_callback;
 
 			if (colorPickerCallback) {
-				colorPickerCallback.call(
-					editor,
-					function(value) {
-						self.value(value).fire('change');
-					},
-					self.value()
-				);
+				return function() {
+					var self = this;
+
+					colorPickerCallback.call(
+						editor,
+						function(value) {
+							self.value(value).fire('change');
+						},
+						self.value()
+					);
+				};
 			}
 		}
 
@@ -68,14 +72,14 @@ define("tinymce/tableplugin/Dialogs", [
 								label: 'Border color',
 								type: 'colorbox',
 								name: 'borderColor',
-								onaction: pickColorAction
+								onaction: createColorPickAction()
 							},
 
 							{
 								label: 'Background color',
 								type: 'colorbox',
 								name: 'backgroundColor',
-								onaction: pickColorAction
+								onaction: createColorPickAction()
 							}
 						]
 					}
