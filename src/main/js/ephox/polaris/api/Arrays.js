@@ -11,7 +11,6 @@ define(
    * Documentation is in the actual implementations.
    */
   function (Boundaries, Slice, Split) {
-
     var boundAt = function (xs, left, right, comparator) {
       return Boundaries.boundAt(xs, left, right, comparator);
     };

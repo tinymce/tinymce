@@ -18,5 +18,10 @@ test(
     check(['a', 'b', 'c', 'd', 'e'], 'a', 'e', comparator, ['a', 'b', 'c', 'd', 'e']);
     check(['a'], 'a', 'a', comparator, ['a']);
     check([], '1', '3', comparator, []);
+    check(['a','b','c'], 'd', 'e', comparator, ['a','b','c']);
+    check(['a','b','c'], 'd', 'b', comparator, ['a','b']);
+    check(['a','b','c'], 'b', 'g', comparator, ['b','c']);
+    check(['a','b','c'], 'b', 'b', comparator, ['b']);
+
   }
 );
