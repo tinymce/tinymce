@@ -320,7 +320,7 @@ define("tinymce/tableplugin/Dialogs", [
 				]
 			};
 
-			if (editor.settings.table_adv_tab !== false) {
+			if (editor.settings.table_advtab !== false) {
 				appendStylesToData(dom, data, tableElm);
 
 				editor.windowManager.open({
@@ -542,7 +542,7 @@ define("tinymce/tableplugin/Dialogs", [
 				]
 			};
 
-			if (editor.settings.table_cell_adv_tab !== false) {
+			if (editor.settings.table_cell_advtab !== false) {
 				appendStylesToData(dom, data, cellElm);
 
 				editor.windowManager.open({
@@ -714,7 +714,7 @@ define("tinymce/tableplugin/Dialogs", [
 				]
 			};
 
-			if (editor.settings.table_row_adv_tab !== false) {
+			if (editor.settings.table_row_advtab !== false) {
 				appendStylesToData(dom, data, rowElm);
 
 				editor.windowManager.open({
