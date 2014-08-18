@@ -403,7 +403,7 @@ define("tinymce/pasteplugin/Clipboard", [
 			});
 
 			editor.on('paste', function(e) {
-				// Getting content from the Clipboard can take some time 
+				// Getting content from the Clipboard can take some time
 				var clipboardTimer = new Date().getTime();
 				var clipboardContent = getClipboardContent(e);
 				var clipboardDelay = new Date().getTime() - clipboardTimer;
