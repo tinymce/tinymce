@@ -566,6 +566,8 @@
 			strictEqual($('<b></b><i></i><u></u>').filter(function(i, elm) {
 				return i != 2;
 			}).length, 2);
+			strictEqual($([document, window, document.createTextNode('x')]).filter('*').length, 0);
+			strictEqual($.filter('*', [document, window, document.createTextNode('x')]).length, 0);
 		});
 
 		test(prefix + 'each() collection', function() {
