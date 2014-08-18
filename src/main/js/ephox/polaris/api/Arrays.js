@@ -2,6 +2,7 @@ define(
   'ephox.polaris.api.Arrays',
 
   [
+    'ephox.polaris.array.Boundaries',
     'ephox.polaris.array.Slice',
     'ephox.polaris.array.Split'
   ],
@@ -9,7 +10,11 @@ define(
   /**
    * Documentation is in the actual implementations.
    */
-  function (Slice, Split) {
+  function (Boundaries, Slice, Split) {
+
+    var boundAt = function (xs, left, right, comparator) {
+      return Boundaries.boundAt(xs, left, right, comparator);
+    };
 
     var splitby = function (array, predicate) {
       return Split.splitby(array, predicate);
@@ -21,7 +26,8 @@ define(
 
     return {
       splitby: splitby,
-      sliceby: sliceby
+      sliceby: sliceby,
+      boundAt: boundAt
     };
 
   }

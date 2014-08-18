@@ -2,7 +2,7 @@ test(
   'BoundariesTest',
 
   [
-  	'ephox.polaris.api.Boundaries'
+  	'ephox.polaris.array.Boundaries'
   ],
 
   function (Boundaries) {

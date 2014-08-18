@@ -1,5 +1,5 @@
 define(
-  'ephox.polaris.api.Boundaries',
+  'ephox.polaris.array.Boundaries',
 
   [
     'ephox.compass.Arr',
