@@ -148,7 +148,7 @@ define("tinymce/ui/KeyboardNavigation", [
 		/**
 		 * Returns the navigation root control for the specified control. The navigation root
 		 * is the control that the keyboard navigation gets scoped to for example a menubar or toolbar group.
-		 * It will look for parents of the specified target control or the currenty focused control if this option is omitted.
+		 * It will look for parents of the specified target control or the currently focused control if this option is omitted.
 		 *
 		 * @private
 		 * @param {tinymce.ui.Control} targetControl Optional target control to find root of.
