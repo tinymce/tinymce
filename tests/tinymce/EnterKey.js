@@ -35,7 +35,7 @@ test('Enter at end of H1', function() {
 	editor.setContent('<h1>abc</h1>');
 	Utils.setSelection('h1', 3);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<h1>abc</h1><p>\u00a0</p>');
+	equal(editor.getContent(),'<h1>abc</h1><p></p>');
 	equal(editor.selection.getRng(true).startContainer.nodeName, 'P');
 });
 
@@ -60,7 +60,7 @@ test('Enter before first IMG in P', function() {
 	editor.setContent('<p><img alt="" src="about:blank" /></p>');
 	editor.selection.setCursorLocation(editor.getBody().firstChild, 0);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<p>\u00a0</p><p><img src="about:blank" alt="" /></p>');
+	equal(editor.getContent(),'<p></p><p><img src="about:blank" alt="" /></p>');
 });
 
 test('Enter before last IMG in P with text', function() {
@@ -87,7 +87,7 @@ test('Enter after last IMG in P', function() {
 	editor.setContent('<p>abc<img alt="" src="about:blank" /></p>');
 	editor.selection.setCursorLocation(editor.getBody().firstChild, 2);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<p>abc<img src="about:blank" alt="" /></p><p>\u00a0</p>');
+	equal(editor.getContent(),'<p>abc<img src="about:blank" alt="" /></p><p></p>');
 });
 
 test('Enter before last INPUT in P with text', function() {
@@ -114,14 +114,14 @@ test('Enter after last INPUT in P', function() {
 	editor.setContent('<p>abc<input type="text" /></p>');
 	editor.selection.setCursorLocation(editor.getBody().firstChild, 2);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<p>abc<input type="text" /></p><p>\u00a0</p>');
+	equal(editor.getContent(),'<p>abc<input type="text" /></p><p></p>');
 });
 
 test('Enter at end of P', function() {
 	editor.setContent('<p>abc</p>');
 	Utils.setSelection('p', 3);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<p>abc</p><p>\u00a0</p>');
+	equal(editor.getContent(),'<p>abc</p><p></p>');
 	equal(editor.selection.getRng(true).startContainer.nodeName, 'P');
 });
 
@@ -177,7 +177,7 @@ test('Enter at beginning of P', function() {
 	editor.setContent('<p>abc</p>');
 	Utils.setSelection('p', 0);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<p>\u00a0</p><p>abc</p>');
+	equal(editor.getContent(),'<p></p><p>abc</p>');
 	equal(editor.selection.getRng(true).startContainer.nodeValue, 'abc');
 });
 
@@ -201,7 +201,7 @@ test('Enter at end of H1 in HGROUP', function() {
 	editor.setContent('<hgroup><h1>abc</h1></hgroup>');
 	Utils.setSelection('h1', 3);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<hgroup><h1>abc</h1><h1>\u00a0</h1></hgroup>');
+	equal(editor.getContent(),'<hgroup><h1>abc</h1><h1></h1></hgroup>');
 	equal(editor.selection.getRng(true).startContainer.nodeName, 'H1');
 });
 
@@ -233,7 +233,7 @@ test('Enter inside at beginning of text node in body', function() {
 	editor.getBody().innerHTML = 'abcd';
 	Utils.setSelection('body', 0);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<p>\u00a0</p><p>abcd</p>');
+	equal(editor.getContent(),'<p></p><p>abcd</p>');
 	equal(editor.selection.getNode().nodeName, 'P');
 });
 
@@ -241,7 +241,7 @@ test('Enter inside at end of text node in body', function() {
 	editor.getBody().innerHTML = 'abcd';
 	Utils.setSelection('body', 4);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<p>abcd</p><p>\u00a0</p>');
+	equal(editor.getContent(),'<p>abcd</p><p></p>');
 	equal(editor.selection.getNode().nodeName, 'P');
 });
 
@@ -249,7 +249,7 @@ test('Enter inside empty body', function() {
 	editor.getBody().innerHTML = '';
 	Utils.setSelection('body', 0);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<p>\u00a0</p><p>\u00a0</p>');
+	equal(editor.getContent(),'<p></p><p></p>');
 	equal(editor.selection.getNode().nodeName, 'P');
 });
 
@@ -257,7 +257,7 @@ test('Enter inside empty li in beginning of ol', function() {
 	editor.getBody().innerHTML = (tinymce.isIE && tinymce.Env.ie < 11) ? '<ol><li></li><li>a</li></ol>': '<ol><li><br></li><li>a</li></ol>';
 	Utils.setSelection('li', 0);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<p>\u00a0</p><ol><li>a</li></ol>');
+	equal(editor.getContent(),'<p></p><ol><li>a</li></ol>');
 	equal(editor.selection.getNode().nodeName, 'P');
 });
 
@@ -265,7 +265,7 @@ test('Enter inside empty li at the end of ol', function() {
 	editor.getBody().innerHTML = (tinymce.isIE && tinymce.Env.ie < 11) ? '<ol><li>a</li><li></li></ol>': '<ol><li>a</li><li><br></li></ol>';
 	Utils.setSelection('li:last', 0);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<ol><li>a</li></ol><p>\u00a0</p>');
+	equal(editor.getContent(),'<ol><li>a</li></ol><p></p>');
 	equal(editor.selection.getNode().nodeName, 'P');
 });
 
@@ -273,7 +273,7 @@ test('Shift+Enter inside empty li in the middle of ol', function() {
 	editor.getBody().innerHTML = (tinymce.isIE && tinymce.Env.ie < 11) ? '<ol><li>a</li><li></li><li>b</li></ol>':  '<ol><li>a</li><li><br></li><li>b</li></ol>';
 	Utils.setSelection('li:nth-child(2)', 0);
 	Utils.pressEnter({shiftKey: true});
-	equal(editor.getContent(),'<ol><li>a</li></ol><p>\u00a0</p><ol><li>b</li></ol>');
+	equal(editor.getContent(),'<ol><li>a</li></ol><p></p><ol><li>b</li></ol>');
 	equal(editor.selection.getNode().nodeName, 'P');
 });
 
@@ -281,7 +281,7 @@ test('Shift+Enter inside empty li in beginning of ol', function() {
 	editor.getBody().innerHTML = (tinymce.isIE && tinymce.Env.ie < 11) ? '<ol><li></li><li>a</li></ol>': '<ol><li><br></li><li>a</li></ol>';
 	Utils.setSelection('li', 0);
 	Utils.pressEnter({shiftKey: true});
-	equal(editor.getContent(),'<p>\u00a0</p><ol><li>a</li></ol>');
+	equal(editor.getContent(),'<p></p><ol><li>a</li></ol>');
 	equal(editor.selection.getNode().nodeName, 'P');
 });
 
@@ -289,7 +289,7 @@ test('Shift+Enter inside empty li at the end of ol', function() {
 	editor.getBody().innerHTML = (tinymce.isIE && tinymce.Env.ie < 11) ? '<ol><li>a</li><li></li></ol>': '<ol><li>a</li><li><br></li></ol>';
 	Utils.setSelection('li:last', 0);
 	Utils.pressEnter({shiftKey: true});
-	equal(editor.getContent(),'<ol><li>a</li></ol><p>\u00a0</p>');
+	equal(editor.getContent(),'<ol><li>a</li></ol><p></p>');
 	equal(editor.selection.getNode().nodeName, 'P');
 });
 
@@ -324,7 +324,7 @@ test('Enter inside empty li in the middle of ol', function() {
 	editor.getBody().innerHTML = (tinymce.isIE && tinymce.Env.ie < 11) ? '<ol><li>a</li><li></li><li>b</li></ol>':  '<ol><li>a</li><li><br></li><li>b</li></ol>';
 	Utils.setSelection('li:nth-child(2)', 0);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<ol><li>a</li></ol><p>\u00a0</p><ol><li>b</li></ol>');
+	equal(editor.getContent(),'<ol><li>a</li></ol><p></p><ol><li>b</li></ol>');
 	equal(editor.selection.getNode().nodeName, 'P');
 });
 
@@ -384,7 +384,7 @@ test('Enter inside empty LI in middle of OL in LI', function() {
 					'<li>a</li>' +
 				'</ol>' +
 			'</li>' +
-			'<li>\u00a0' +
+			'<li>' +
 				'<ol>' +
 					'<li>b</li>' +
 				'</ol>' +
@@ -451,7 +451,7 @@ if (!tinymce.Env.ie || tinymce.Env.ie > 8) {
 		equal(editor.getContent(),
 			'<ol>' +
 				'<li>a</li>' +
-				'<li>\u00a0' +
+				'<li>' +
 					'<ul>' +
 						'<li>b</li>' +
 						'<li>c</li>' +
@@ -556,7 +556,7 @@ test('Enter at beginning of first DT inside DL', function() {
 	editor.getBody().innerHTML = '<dl><dt>a</dt></dl>';
 	Utils.setSelection('dt', 0);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<dl><dt>\u00a0</dt><dt>a</dt></dl>');
+	equal(editor.getContent(),'<dl><dt></dt><dt>a</dt></dl>');
 	equal(editor.selection.getNode().nodeName, 'DT');
 });
 
@@ -564,7 +564,7 @@ test('Enter at beginning of first DD inside DL', function() {
 	editor.getBody().innerHTML = '<dl><dd>a</dd></dl>';
 	Utils.setSelection('dd', 0);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<dl><dd>\u00a0</dd><dd>a</dd></dl>');
+	equal(editor.getContent(),'<dl><dd></dd><dd>a</dd></dl>');
 	equal(editor.selection.getNode().nodeName, 'DD');
 });
 
@@ -572,7 +572,7 @@ test('Enter at beginning of middle DT inside DL', function() {
 	editor.getBody().innerHTML = '<dl><dt>a</dt><dt>b</dt><dt>c</dt></dl>';
 	Utils.setSelection('dt:nth-child(2)', 0);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<dl><dt>a</dt><dt>\u00a0</dt><dt>b</dt><dt>c</dt></dl>');
+	equal(editor.getContent(),'<dl><dt>a</dt><dt></dt><dt>b</dt><dt>c</dt></dl>');
 	equal(editor.selection.getNode().nodeName, 'DT');
 });
 
@@ -580,7 +580,7 @@ test('Enter at beginning of middle DD inside DL', function() {
 	editor.getBody().innerHTML = '<dl><dd>a</dd><dd>b</dd><dd>c</dd></dl>';
 	Utils.setSelection('dd:nth-child(2)', 0);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<dl><dd>a</dd><dd>\u00a0</dd><dd>b</dd><dd>c</dd></dl>');
+	equal(editor.getContent(),'<dl><dd>a</dd><dd></dd><dd>b</dd><dd>c</dd></dl>');
 	equal(editor.selection.getNode().nodeName, 'DD');
 });
 
@@ -588,7 +588,7 @@ test('Enter at end of last DT inside DL', function() {
 	editor.getBody().innerHTML = '<dl><dt>a</dt></dl>';
 	Utils.setSelection('dt', 1);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<dl><dt>a</dt><dt>\u00a0</dt></dl>');
+	equal(editor.getContent(),'<dl><dt>a</dt><dt></dt></dl>');
 	equal(editor.selection.getNode().nodeName, 'DT');
 });
 
@@ -596,7 +596,7 @@ test('Enter at end of last DD inside DL', function() {
 	editor.getBody().innerHTML = '<dl><dd>a</dd></dl>';
 	Utils.setSelection('dd', 1);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<dl><dd>a</dd><dd>\u00a0</dd></dl>');
+	equal(editor.getContent(),'<dl><dd>a</dd><dd></dd></dl>');
 	equal(editor.selection.getNode().nodeName, 'DD');
 });
 
@@ -604,7 +604,7 @@ test('Enter at end of last empty DT inside DL', function() {
 	editor.getBody().innerHTML = '<dl><dt>a</dt><dt></dt></dl>';
 	Utils.setSelection('dt:nth-child(2)', 0);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<dl><dt>a</dt></dl><p>\u00a0</p>');
+	equal(editor.getContent(),'<dl><dt>a</dt></dl><p></p>');
 	equal(editor.selection.getNode().nodeName, 'P');
 });
 
@@ -612,7 +612,7 @@ test('Enter at end of last empty DD inside DL', function() {
 	editor.getBody().innerHTML = '<dl><dd>a</dd><dd></dd></dl>';
 	Utils.setSelection('dd:nth-child(2)', 0);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<dl><dd>a</dd></dl><p>\u00a0</p>');
+	equal(editor.getContent(),'<dl><dd>a</dd></dl><p></p>');
 	equal(editor.selection.getNode().nodeName, 'P');
 });
 
@@ -674,7 +674,7 @@ test('Ctrl+Enter at beginning of P inside LI', function() {
 	editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
 	Utils.setSelection('p', 0);
 	Utils.pressEnter({ctrlKey: true});
-	equal(editor.getContent(),'<ol><li><p>\u00a0</p><p>abcd</p></li></ol>');
+	equal(editor.getContent(),'<ol><li><p></p><p>abcd</p></li></ol>');
 	equal(editor.selection.getNode().nodeName, 'P');
 });
 
@@ -690,7 +690,7 @@ test('Ctrl+Enter at end of P inside LI', function() {
 	editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
 	Utils.setSelection('p', 4);
 	Utils.pressEnter({ctrlKey: true});
-	equal(editor.getContent(),'<ol><li><p>abcd</p><p>\u00a0</p></li></ol>');
+	equal(editor.getContent(),'<ol><li><p>abcd</p><p></p></li></ol>');
 	equal(editor.selection.getNode().nodeName, 'P');
 });
 
@@ -743,7 +743,7 @@ test('Enter in empty P at the end of a blockquote and end_container_on_empty_blo
 	editor.getBody().innerHTML = (tinymce.isIE && tinymce.Env.ie < 11) ? '<blockquote><p>abc</p><p></p></blockquote>': '<blockquote><p>abc</p><p><br></p></blockquote>';
 	Utils.setSelection('p:last', 0);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<blockquote><p>abc</p></blockquote><p>\u00a0</p>');
+	equal(editor.getContent(),'<blockquote><p>abc</p></blockquote><p></p>');
 });
 
 test('Enter in empty P at the beginning of a blockquote and end_container_on_empty_block: true', function() {
@@ -751,7 +751,7 @@ test('Enter in empty P at the beginning of a blockquote and end_container_on_emp
 	editor.getBody().innerHTML = (tinymce.isIE && tinymce.Env.ie < 11) ? '<blockquote><p></p><p>abc</p></blockquote>': '<blockquote><p><br></p><p>abc</p></blockquote>';
 	Utils.setSelection('p', 0);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<p>\u00a0</p><blockquote><p>abc</p></blockquote>');
+	equal(editor.getContent(),'<p></p><blockquote><p>abc</p></blockquote>');
 });
 
 test('Enter in empty P at in the middle of a blockquote and end_container_on_empty_block: true', function() {
@@ -759,7 +759,7 @@ test('Enter in empty P at in the middle of a blockquote and end_container_on_emp
 	editor.getBody().innerHTML = (tinymce.isIE && tinymce.Env.ie < 11) ? '<blockquote><p>abc</p><p></p><p>123</p></blockquote>': '<blockquote><p>abc</p><p><br></p><p>123</p></blockquote>';
 	Utils.setSelection('p:nth-child(2)', 0);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<blockquote><p>abc</p></blockquote><p>\u00a0</p><blockquote><p>123</p></blockquote>');
+	equal(editor.getContent(),'<blockquote><p>abc</p></blockquote><p></p><blockquote><p>123</p></blockquote>');
 });
 
 test('Enter inside empty P with empty P siblings', function() {
@@ -767,7 +767,7 @@ test('Enter inside empty P with empty P siblings', function() {
 	editor.getBody().innerHTML = '<p></p><p></p><p>X</p>';
 	Utils.setSelection('p', 0);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<p>\u00a0</p><p>\u00a0</p><p>\u00a0</p><p>X</p>');
+	equal(editor.getContent(),'<p></p><p></p><p></p><p>X</p>');
 });
 
 test('Enter at end of H1 with forced_root_block_attrs', function() {
@@ -775,7 +775,7 @@ test('Enter at end of H1 with forced_root_block_attrs', function() {
 	editor.getBody().innerHTML = '<h1>a</h1>';
 	Utils.setSelection('h1', 1);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<h1>a</h1><p class="class1">\u00a0</p>');
+	equal(editor.getContent(),'<h1>a</h1><p class="class1"></p>');
 });
 
 test('Shift+Enter at beginning of P', function() {
@@ -839,7 +839,7 @@ test('Enter in beginning of PRE and br_in_pre: false', function() {
 	editor.getBody().innerHTML = '<pre>abc</pre>';
 	Utils.setSelection('pre', 0);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<pre>\u00a0</pre><pre>abc</pre>');
+	equal(editor.getContent(),'<pre></pre><pre>abc</pre>');
 });
 
 test('Enter in the middle of PRE and br_in_pre: false', function() {
@@ -855,14 +855,14 @@ test('Enter at the end of PRE and br_in_pre: false', function() {
 	editor.getBody().innerHTML = '<pre>abcd</pre>';
 	Utils.setSelection('pre', 4);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<pre>abcd</pre><p>\u00a0</p>');
+	equal(editor.getContent(),'<pre>abcd</pre><p></p>');
 });
 
 test('Shift+Enter in beginning of PRE', function() {
 	editor.getBody().innerHTML = '<pre>abc</pre>';
 	Utils.setSelection('pre', 0);
 	Utils.pressEnter({shiftKey: true});
-	equal(editor.getContent(),'<pre>\u00a0</pre><pre>abc</pre>');
+	equal(editor.getContent(),'<pre></pre><pre>abc</pre>');
 });
 
 test('Shift+Enter in the middle of PRE', function() {
@@ -876,7 +876,7 @@ test('Shift+Enter at the end of PRE', function() {
 	editor.getBody().innerHTML = '<pre>abcd</pre>';
 	Utils.setSelection('pre', 4);
 	Utils.pressEnter({shiftKey: true});
-	equal(editor.getContent(),'<pre>abcd</pre><p>\u00a0</p>');
+	equal(editor.getContent(),'<pre>abcd</pre><p></p>');
 });
 
 test('Shift+Enter in beginning of P with forced_root_block set to false', function() {
@@ -884,7 +884,7 @@ test('Shift+Enter in beginning of P with forced_root_block set to false', functi
 	editor.getBody().innerHTML = '<p>abc</p>';
 	Utils.setSelection('p', 0);
 	Utils.pressEnter({shiftKey: true});
-	equal(editor.getContent(),'<p>\u00a0</p><p>abc</p>');
+	equal(editor.getContent(),'<p></p><p>abc</p>');
 });
 
 test('Shift+Enter in middle of P with forced_root_block set to false', function() {
@@ -900,7 +900,7 @@ test('Shift+Enter at the end of P with forced_root_block set to false', function
 	editor.getBody().innerHTML = '<p>abc</p>';
 	Utils.setSelection('p', 3);
 	Utils.pressEnter({shiftKey: true});
-	equal(editor.getContent(),'<p>abc</p><p>\u00a0</p>');
+	equal(editor.getContent(),'<p>abc</p><p></p>');
 });
 
 test('Shift+Enter in body with forced_root_block set to false', function() {
@@ -919,7 +919,7 @@ test('Enter at the end of DIV layer', function() {
 	editor.setContent('<div style="position: absolute; top: 1px; left: 2px;">abcd</div>');
 	Utils.setSelection('div', 4);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<div style="position: absolute; top: 1px; left: 2px;"><p>abcd</p><p>\u00a0</p></div>');
+	equal(editor.getContent(),'<div style="position: absolute; top: 1px; left: 2px;"><p>abcd</p><p></p></div>');
 });
 
 test('Enter in div inside contentEditable:false div', function() {
@@ -970,7 +970,7 @@ test('Enter at end of text in a span inside a P and keep_styles: false', functio
 	editor.getBody().innerHTML = '<p><em><span style="font-size: 13px;">X</span></em></p>';
 	Utils.setSelection('span', 1);
 	Utils.pressEnter();
-	equal(editor.getContent(),'<p><em><span style="font-size: 13px;">X</span></em></p><p>\u00a0</p>');
+	equal(editor.getContent(),'<p><em><span style="font-size: 13px;">X</span></em></p><p></p>');
 });
 
 test('Shift+enter in LI when forced_root_block: false', function() {
@@ -1012,7 +1012,7 @@ if (!tinymce.Env.ie || tinymce.Env.ie > 8) {
 		rng.setEndBefore(editor.dom.select('br')[0]);
 		editor.selection.setRng(rng);
 		Utils.pressEnter();
-		equal(editor.getContent(),'<div>a<span>b</span>c</div><p>\u00a0</p><p>\u00a0</p><div>d</div>');
+		equal(editor.getContent(),'<div>a<span>b</span>c</div><p></p><p></p><div>d</div>');
 	});
 }
 
@@ -1027,7 +1027,7 @@ if (window.getSelection) {
 		editor.selection.setRng(rng);
 
 		Utils.pressEnter();
-		equal(editor.getContent(),'<table><tbody><tr><td>x</td></tr></tbody></table><p>\u00a0</p>');
+		equal(editor.getContent(),'<table><tbody><tr><td>x</td></tr></tbody></table><p></p>');
 	});
 
 	test('Enter before table element', function() {
@@ -1039,7 +1039,7 @@ if (window.getSelection) {
 		editor.selection.setRng(rng);
 
 		Utils.pressEnter();
-		equal(editor.getContent(),'<p>\u00a0</p><table><tbody><tr><td>x</td></tr></tbody></table>');
+		equal(editor.getContent(),'<p></p><table><tbody><tr><td>x</td></tr></tbody></table>');
 	});
 
 	test('Enter behind table followed by a p', function() {
@@ -1051,7 +1051,7 @@ if (window.getSelection) {
 		editor.selection.setRng(rng);
 
 		Utils.pressEnter();
-		equal(editor.getContent(),'<table><tbody><tr><td>x</td></tr></tbody></table><p>\u00a0</p><p>x</p>');
+		equal(editor.getContent(),'<table><tbody><tr><td>x</td></tr></tbody></table><p></p><p>x</p>');
 	});
 
 	test('Enter before table element preceded by a p', function() {
@@ -1063,6 +1063,6 @@ if (window.getSelection) {
 		editor.selection.setRng(rng);
 
 		Utils.pressEnter();
-		equal(editor.getContent(),'<p>x</p><p>\u00a0</p><table><tbody><tr><td>x</td></tr></tbody></table>');
+		equal(editor.getContent(),'<p>x</p><p></p><table><tbody><tr><td>x</td></tr></tbody></table>');
 	});
 }

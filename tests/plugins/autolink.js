@@ -70,11 +70,11 @@
 	});
 
 	test("Urls ended with new line", function() {
-		equal(typeNewlineURL('http://www.domain.com'), '<p><a href="http://www.domain.com">http://www.domain.com</a></p><p>&nbsp;</p>');
-		equal(typeNewlineURL('https://www.domain.com'), '<p><a href="https://www.domain.com">https://www.domain.com</a></p><p>&nbsp;</p>');
-		equal(typeNewlineURL('ssh://www.domain.com'), '<p><a href="ssh://www.domain.com">ssh://www.domain.com</a></p><p>&nbsp;</p>');
-		equal(typeNewlineURL('ftp://www.domain.com'), '<p><a href="ftp://www.domain.com">ftp://www.domain.com</a></p><p>&nbsp;</p>');
-		equal(typeNewlineURL('www.domain.com'), '<p><a href="http://www.domain.com">www.domain.com</a></p><p>&nbsp;</p>');
-		equal(typeNewlineURL('www.domain.com.'), '<p><a href="http://www.domain.com">www.domain.com</a>.</p><p>&nbsp;</p>');
+		equal(typeNewlineURL('http://www.domain.com'), '<p><a href="http://www.domain.com">http://www.domain.com</a></p><p></p>');
+		equal(typeNewlineURL('https://www.domain.com'), '<p><a href="https://www.domain.com">https://www.domain.com</a></p><p></p>');
+		equal(typeNewlineURL('ssh://www.domain.com'), '<p><a href="ssh://www.domain.com">ssh://www.domain.com</a></p><p></p>');
+		equal(typeNewlineURL('ftp://www.domain.com'), '<p><a href="ftp://www.domain.com">ftp://www.domain.com</a></p><p></p>');
+		equal(typeNewlineURL('www.domain.com'), '<p><a href="http://www.domain.com">www.domain.com</a></p><p></p>');
+		equal(typeNewlineURL('www.domain.com.'), '<p><a href="http://www.domain.com">www.domain.com</a>.</p><p></p>');
 	});
 })();

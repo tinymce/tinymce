@@ -89,7 +89,7 @@
 	test('Whitespace before/after invalid element whitespace element in block', function() {
 		parser = new tinymce.html.DomParser({}, new tinymce.html.Schema({invalid_elements : 'span'}));
 		root = parser.parse('<p> <span></span> </p>');
-		equal(serializer.serialize(root), '<p>\u00a0</p>');
+		equal(serializer.serialize(root), '<p></p>');
 	});
 
 	test('Whitespace preserved in PRE', function() {
@@ -322,7 +322,8 @@
 		equal(serializer.serialize(root), '<ul><li>1</li><li><strong>2</strong></li><li><em><strong>3</strong></em></li></ul>', 'Split out LI elements in LI elements.');
 	});
 
-	test('Remove redundant br elements', function() {
+	/* Skip this test as contradictory to https://github.com/Shopify/shopify/pull/8208 */
+	/*test('Remove redundant br elements', function() {
 		var parser, root, schema = new tinymce.html.Schema();
 
 		expect(1);
@@ -335,7 +336,7 @@
 			'<p>a<span data-mce-type="bookmark"></span><br></p>'
 		);
 		equal(serializer.serialize(root), '<p>a</p><p>a<br />b</p><p>a<br /><br /></p><p>a<br /><br /></p><p>a</p>', 'Remove traling br elements.');
-	});
+	});*/
 
 	test('Replace br with nbsp when wrapped in two inline elements and one block', function() {
 		var parser, root, schema = new tinymce.html.Schema();
@@ -478,13 +479,14 @@
 		equal(serializer.serialize(root), '<ul><li>12</li><li>ab</li><li>c</li></ul>');
 	});
 
-	test('Invalid inline element with space before', function() {
+	/* Skip this test as contradictory to https://github.com/Shopify/shopify/pull/8208 */
+	/*test('Invalid inline element with space before', function() {
 		var parser, root, schema = new tinymce.html.Schema();
 
 		parser = new tinymce.html.DomParser({}, schema);
 		root = parser.parse('<p><span>1</span> <strong>2</strong></p>');
 		equal(serializer.serialize(root), '<p>1 <strong>2</strong></p>');
-	});
+	});*/
 
 	test('Valid classes', function() {
 		var parser, root, schema = new tinymce.html.Schema({valid_classes: 'classA classB'});

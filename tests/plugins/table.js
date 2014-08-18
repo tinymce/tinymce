@@ -163,7 +163,7 @@
 
 		equal(
 			cleanTableHtml(editor.getContent()),
-			'<table><caption>&nbsp;</caption><tbody><tr><td>x</td></tr></tbody></table>'
+			'<table><caption></caption><tbody><tr><td>x</td></tr></tbody></table>'
 		);
 	});
 
@@ -382,28 +382,28 @@
 		editor.setContent('<table><tr><td>1</td></tr><tr><td>2</td></tr></table>');
 		Utils.setSelection('td', 0);
 		editor.execCommand('mceTableInsertColAfter');
-		equal(cleanTableHtml(editor.getContent()), '<table><tbody><tr><td>1</td><td>&nbsp;</td></tr><tr><td>2</td><td>&nbsp;</td></tr></tbody></table>');
+		equal(cleanTableHtml(editor.getContent()), '<table><tbody><tr><td>1</td><td></td></tr><tr><td>2</td><td></td></tr></tbody></table>');
 	});
 
 	test("mceTableInsertColBefore command", function() {
 		editor.setContent('<table><tr><td>1</td></tr><tr><td>2</td></tr></table>');
 		Utils.setSelection('td', 0);
 		editor.execCommand('mceTableInsertColBefore');
-		equal(cleanTableHtml(editor.getContent()), '<table><tbody><tr><td>&nbsp;</td><td>1</td></tr><tr><td>&nbsp;</td><td>2</td></tr></tbody></table>');
+		equal(cleanTableHtml(editor.getContent()), '<table><tbody><tr><td></td><td>1</td></tr><tr><td></td><td>2</td></tr></tbody></table>');
 	});
 
 	test("mceTableInsertRowAfter command", function() {
 		editor.setContent('<table><tr><td>1</td><td>2</td></tr></table>');
 		Utils.setSelection('td', 0);
 		editor.execCommand('mceTableInsertRowAfter');
-		equal(cleanTableHtml(editor.getContent()), '<table><tbody><tr><td>1</td><td>2</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>');
+		equal(cleanTableHtml(editor.getContent()), '<table><tbody><tr><td>1</td><td>2</td></tr><tr><td></td><td></td></tr></tbody></table>');
 	});
 
 	test("mceTableInsertRowBefore command", function() {
 		editor.setContent('<table><tr><td>1</td><td>2</td></tr></table>');
 		Utils.setSelection('td', 0);
 		editor.execCommand('mceTableInsertRowBefore');
-		equal(cleanTableHtml(editor.getContent()), '<table><tbody><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>1</td><td>2</td></tr></tbody></table>');
+		equal(cleanTableHtml(editor.getContent()), '<table><tbody><tr><td></td><td></td></tr><tr><td>1</td><td>2</td></tr></tbody></table>');
 	});
 
 	test("mceTableMergeCells command with cell selection", function() {
@@ -419,7 +419,7 @@
 		editor.execCommand('mceTableSplitCells');
 		equal(
 			cleanTableHtml(editor.getContent()),
-			'<table><tbody><tr><td>12</td><td>&nbsp;</td></tr></tbody></table>'
+			'<table><tbody><tr><td>12</td><td></td></tr></tbody></table>'
 		);
 	});
 
@@ -443,7 +443,7 @@
 		equal(editor.selection.getStart(true).nodeName, 'TD');
 		equal(
 			editor.getContent(),
-			'<table><tbody><tr><td>A1</td><td>A2</td></tr><tr><td>B1</td><td>B2</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table><p>x</p>'
+			'<table><tbody><tr><td>A1</td><td>A2</td></tr><tr><td>B1</td><td>B2</td></tr><tr><td></td><td></td></tr></tbody></table><p>x</p>'
 		);
 	});
 })();

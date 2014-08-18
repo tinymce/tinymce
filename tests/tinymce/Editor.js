@@ -218,7 +218,7 @@ test('setContent with comment bug #4409', function() {
 	editor.settings.disable_nodechange = false;
 	editor.nodeChanged();
 	editor.settings.disable_nodechange = true;
-	equal(editor.getContent(), "<!-- x --><p>\u00a0</p>");
+	equal(editor.getContent(), "<!-- x --><p></p>");
 });
 
 test('custom elements', function() {

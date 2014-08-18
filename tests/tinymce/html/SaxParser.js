@@ -565,7 +565,8 @@
 		equal(writer.getContent(), '<a title="\\" href="h">x</a>');
 	});
 
-	test('Parse no attributes span before strong', function() {
+	/* Skip this test as contradictory to https://github.com/Shopify/shopify/pull/8208 */
+	/*test('Parse no attributes span before strong', function() {
 		var counter, parser;
 
 		counter = createCounter(writer);
@@ -574,7 +575,7 @@
 		writer.reset();
 		parser.parse('<p><span>A</span> <strong>B</strong></p>');
 		equal(writer.getContent(), '<p>A <strong>B</strong></p>');
-	});
+	});*/
 
 	test('Conditional comments (allowed)', function() {
 		var counter, parser;
