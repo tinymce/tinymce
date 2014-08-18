@@ -714,7 +714,7 @@ if (tinymce.Env.webkit) {
 			)
 		});
 
-		equal(editor.getContent(), '<p style="color: #ff0000;"><span>a</span><span>b</span><span>c</span></p></p>');
+		equal(editor.getContent(), '<p style="color: #ff0000;"><span>a</span><span>b</span><span>c</span></p>');
 	});
 
 	test('paste webkit remove runtime styles (color) in the same (color) (rgb)', function() {

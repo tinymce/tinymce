@@ -61,7 +61,7 @@
 
 		equal(
 			editor.getContent(),
-			'<p><strong>abc</strong></p><p></p>'
+			'<p><strong>abc</strong></p><p><strong></strong></p>'
 		);
 	});
 
