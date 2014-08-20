@@ -569,7 +569,7 @@ define("tinymce/tableplugin/Dialogs", [
 				editor.windowManager.open({
 					title: "Cell properties",
 					data: data,
-					items: generalCellForm,
+					body: generalCellForm,
 					onsubmit: onSubmitCellForm
 				});
 			}
