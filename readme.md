@@ -1,6 +1,8 @@
-TinyMCE for Shopify 
+[![Circle CI](https://circleci.com/gh/Shopify/tinymce/tree/master.png?style=badge)](https://circleci.com/gh/Shopify/tinymce/tree/master)
+
+TinyMCE for Shopify
 ==========================================
-This is a fork of [https://github.com/tinymce/tinymce](TinyMCE) customized to suit Shopify's specific needs. 
+This is a fork of [https://github.com/tinymce/tinymce](TinyMCE) customized to suit Shopify's specific needs.
 
 Building TinyMCE
 -----------------

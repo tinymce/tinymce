@@ -1,0 +1,7 @@
+machine:
+  node:
+    version: v0.10.26
+
+dependencies:
+  pre:
+    - npm install -g phantomjs

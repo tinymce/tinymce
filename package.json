@@ -31,6 +31,6 @@
 		"jscs": ">= 1.4.5"
 	},
 	"scripts": {
-		"test": "jake jscs jshint eslint minify less phantomjs-tests"
+		"test": "jake minify less phantomjs-tests"
 	}
 }
