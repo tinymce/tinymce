@@ -22,6 +22,8 @@ define(
 
   function (Arr, Fun, Attr, Compare, Css, Element, Insert, InsertAll, Node, PredicateFilter, PredicateFind, Remove, SelectorFilter, SelectorFind, Text, Traverse) {
     return function () {
+      var boundaries = [ 'ul', 'table', 'li', 'td', 'th', 'tr', 'ol' ];
+
       var clone = function (element) {
         return Element.fromDom(element.dom().cloneNode(false));
       };
@@ -30,8 +32,11 @@ define(
         if (!Node.isElement(element)) return false;
         if (Node.name(element) === 'body') return true;
         var display = Css.get(element, 'display');
-        return Arr.contains(['block', 'table-cell', 'table-row', 'table', 'list-item'], display);
+        return display !== undefined && display.length > 0 ?
+          Arr.contains(['block', 'table-cell', 'table-row', 'table', 'list-item'], display) :
+          Arr.contains(boundaries, Node.name(element));
       };
+
 
       var isEmptyTag = function (element) {
         if (!Node.isElement(element)) return false;
