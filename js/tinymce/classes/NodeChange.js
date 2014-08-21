@@ -82,8 +82,8 @@ define("tinymce/NodeChange", [
 		editor.on('SelectionChange', function() {
 			var startElm = editor.selection.getStart(true);
 
-			// Selection change might fire when focus is lost so check if the start is still within the body
-			if (!isSameElementPath(startElm) && editor.dom.isChildOf(startElm, editor.getBody())) {
+			// Fire a nodechange only when the selection isn't collapsed since focusout will collapse and remove the selection
+			if (!editor.selection.isCollapsed() && !isSameElementPath(startElm) && editor.dom.isChildOf(startElm, editor.getBody())) {
 				editor.nodeChanged({selectionChange: true});
 			}
 		});
