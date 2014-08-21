@@ -49,7 +49,11 @@ define("tinymce/ui/ColorBox", [
 			var elm = this.getEl().getElementsByTagName('i')[0];
 
 			if (elm) {
-				elm.style.background = value;
+				try {
+					elm.style.background = value;
+				} catch (ex) {
+					// Ignore
+				}
 			}
 		},
 
