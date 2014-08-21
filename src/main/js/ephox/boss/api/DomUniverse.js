@@ -61,6 +61,7 @@ define(
         if (!Node.isElement(element)) return false;
         if (Node.name(element) === 'body') return true;
         var display = Css.get(element, 'display');
+        // When the read display value is empty, we need to check the node name.
         return display !== undefined && display.length > 0 ?
           Arr.contains(['block', 'table-cell', 'table-row', 'table', 'list-item'], display) :
           Arr.contains(boundaries, Node.name(element));
