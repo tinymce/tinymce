@@ -1,5 +1,6 @@
 Version 4.1.5 (2014-08-xx)
 	Fixed bug where sometimes the resize rectangles wouldn't properly render on images on WebKit/Blink.
+	Fixed bug in list plugin where delete/backspace would merge empty LI elements in lists incorrectly.
 Version 4.1.4 (2014-08-21)
 	Added new media_filter_html option to media plugin that blocks any conditional comments, scripts etc within a video element.
 	Added new content_security_policy option allows you to set custom policy for iframe contents. Patch contributed by Francois Chagnon.
