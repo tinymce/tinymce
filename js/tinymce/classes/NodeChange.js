@@ -91,7 +91,11 @@ define("tinymce/NodeChange", [
 		// Fire an extra nodeChange on mouseup for compatibility reasons
 		editor.on('MouseUp', function(e) {
 			if (!e.isDefaultPrevented()) {
-				editor.nodeChanged();
+				// Delay nodeChanged call for WebKit edge case issue where the range
+				// isn't updated until after you click outside a selected image
+				setTimeout(function() {
+					editor.nodeChanged();
+				}, 0);
 			}
 		});
 
@@ -106,7 +110,7 @@ define("tinymce/NodeChange", [
 			var selection = editor.selection, node, parents, root;
 
 			// Fix for bug #1896577 it seems that this can not be fired while the editor is loading
-			if (editor.initialized && !editor.settings.disable_nodechange && !editor.settings.readonly) {
+			if (editor.initialized && selection && !editor.settings.disable_nodechange && !editor.settings.readonly) {
 				// Get start node
 				root = editor.getBody();
 				node = selection.getStart() || root;
