@@ -6,11 +6,10 @@ define(
     'ephox.peanut.Fun',
     'ephox.phoenix.api.general.Extract',
     'ephox.phoenix.family.Parents',
-    'ephox.sugar.api.Node',
-    'ephox.sugar.api.Traverse'
+    'ephox.phoenix.wrap.Awareness'
   ],
 
-  function (Arr, Fun, Extract, Parents, Node, Traverse) {
+  function (Arr, Fun, Extract, Parents, Awareness) {
     var index = function (universe, items, item) {
       return Arr.findIndex(items, Fun.curry(universe.eq, item));
     };
@@ -25,17 +24,6 @@ define(
      * Deltas are a broken concept. They control whether the item passed is included in the result.
      */
     var range = function (universe, item1, delta1, item2, delta2) {
-      var validParents = function (element) {
-        // textnodes can't be children of
-        var blacklist = [ 'table', 'tbody', 'tr', 'ul', 'ol' ];
-
-        return universe.property().isText(element) && Traverse.parent(element).map(function (parent) {
-          return Arr.forall(blacklist, function (tag) {
-            return tag !== Node.name(parent);
-          });
-        }).getOr(false);
-      };
-
       if (universe.eq(item1, item2)) return [item1];
 
       return Parents.common(universe, item1, item2).fold(function () {
@@ -45,7 +33,8 @@ define(
         var start = index(universe, items, item1);
         var finish = index(universe, items, item2);
         var result = start > -1 && finish > -1 ? order(items, start, delta1, finish, delta2) : [];
-        return Arr.filter(result, validParents);
+        var awareness = Awareness(universe);
+        return Arr.filter(result, awareness.validateText);
       });
     };
 
