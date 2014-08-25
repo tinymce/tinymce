@@ -7,7 +7,7 @@ define(
 
   function (Arr) {
     // Textnodes cannot be children of these tags
-    var textBlacklist = [ 'table', 'tbody', 'tr', 'ul', 'ol' ];
+    var textBlacklist = [ 'table', 'tbody', 'thead', 'tfoot', 'tr', 'ul', 'ol' ];
 
     return function (universe) {
       var domUtils = universe.property();
@@ -20,20 +20,12 @@ define(
       };
 
       var validateText = function (textNode) {
-        var isVisibleText = function (textNode) {
-          var newLineChars = [ 13, 10 ]; // Bud? &#13; carriage return, & &#10; line feed
-          return domUtils.isText(textNode) && Arr.forall(newLineChars, function (charCode) {
-            return charCode !== domUtils.getText(textNode).charCodeAt(0);
-          });
-        };
-        return isVisibleText(textNode) && validateParent(textNode, textBlacklist);
+        return domUtils.isText(textNode) && validateParent(textNode, textBlacklist);
       };
 
       return {
-        validateParent: validateParent,
         validateText: validateText
       };
-
     };
   }
 );
