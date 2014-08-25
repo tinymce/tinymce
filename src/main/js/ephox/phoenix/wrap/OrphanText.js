@@ -12,10 +12,8 @@ define(
     return function (universe) {
       var domUtils = universe.property();
       var validateParent = function (node, blacklist) {
-        return domUtils.parent(node).map(function (parent) {
-          return Arr.forall(blacklist, function (tag) {
-            return tag !== domUtils.name(parent);
-          });
+        return domUtils.parent(node).map(domUtils.name).map(function (name) {
+          return !Arr.contains(blacklist, name);
         }).getOr(false);
       };
 
