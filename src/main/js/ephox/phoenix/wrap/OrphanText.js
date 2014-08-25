@@ -1,5 +1,5 @@
 define(
-  'ephox.phoenix.wrap.Awareness',
+  'ephox.phoenix.wrap.OrphanText',
 
   [
     'ephox.compass.Arr'

@@ -6,10 +6,10 @@ define(
     'ephox.peanut.Fun',
     'ephox.phoenix.api.general.Extract',
     'ephox.phoenix.family.Parents',
-    'ephox.phoenix.wrap.Awareness'
+    'ephox.phoenix.wrap.OrphanText'
   ],
 
-  function (Arr, Fun, Extract, Parents, Awareness) {
+  function (Arr, Fun, Extract, Parents, OrphanText) {
     var index = function (universe, items, item) {
       return Arr.findIndex(items, Fun.curry(universe.eq, item));
     };
@@ -33,8 +33,8 @@ define(
         var start = index(universe, items, item1);
         var finish = index(universe, items, item2);
         var result = start > -1 && finish > -1 ? order(items, start, delta1, finish, delta2) : [];
-        var awareness = Awareness(universe);
-        return Arr.filter(result, awareness.validateText);
+        var orphanText = OrphanText(universe);
+        return Arr.filter(result, orphanText.validateText);
       });
     };
 
