@@ -306,7 +306,7 @@
 		parser = new tinymce.html.DomParser({}, new tinymce.html.Schema({valid_elements: 'span,a[name],img'}));
 		root = parser.parse('<span></span><a name="anchor"></a>');
 		equal(serializer.serialize(root), '<span></span><a name="anchor"></a>', 'Leave a with name attribute');
-		
+
 		parser = new tinymce.html.DomParser({}, new tinymce.html.Schema({valid_elements: 'span,a[href],img[src]'}));
 		root = parser.parse('<span></span><a href="#"><img src="about:blank" /></a>');
 		equal(serializer.serialize(root), '<span></span><a href="#"><img src="about:blank" /></a>', 'Leave elements with img in it');
@@ -501,5 +501,20 @@
 		root = parser.parse('<p class="classA classB classC"><strong class="classA classB classC">a</strong></p>');
 		equal(serializer.serialize(root), '<p class="classA classB"><strong class="classA classB">a</strong></p>');
 	});
-})();
 
+	test('Remove empty list blocks', function() {
+		var parser, root, schema = new tinymce.html.Schema();
+
+		parser = new tinymce.html.DomParser({}, schema);
+		root = parser.parse('<ul><li></li></ul><ul><li> </li></ul>');
+		equal(serializer.serialize(root), '');
+	});
+
+	test('Preserve space in inline span', function() {
+		var parser, root, schema = new tinymce.html.Schema();
+
+		parser = new tinymce.html.DomParser({}, schema);
+		root = parser.parse('a<span> </span>b');
+		equal(serializer.serialize(root), 'a b');
+	});
+})();
