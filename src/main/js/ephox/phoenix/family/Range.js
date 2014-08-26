@@ -5,10 +5,11 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.phoenix.api.general.Extract',
-    'ephox.phoenix.family.Parents'
+    'ephox.phoenix.family.Parents',
+    'ephox.phoenix.wrap.OrphanText'
   ],
 
-  function (Arr, Fun, Extract, Parents) {
+  function (Arr, Fun, Extract, Parents, OrphanText) {
     var index = function (universe, items, item) {
       return Arr.findIndex(items, Fun.curry(universe.eq, item));
     };
@@ -32,7 +33,8 @@ define(
         var start = index(universe, items, item1);
         var finish = index(universe, items, item2);
         var result = start > -1 && finish > -1 ? order(items, start, delta1, finish, delta2) : [];
-        return Arr.filter(result, universe.property().isText);
+        var orphanText = OrphanText(universe);
+        return Arr.filter(result, orphanText.validateText);
       });
     };
 
