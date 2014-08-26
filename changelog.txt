@@ -3,6 +3,7 @@ Version 4.1.5 (2014-08-xx)
 	Fixed bug in list plugin where delete/backspace would merge empty LI elements in lists incorrectly.
 	Fixed bug where empty list elements would result in empty LI elements without it's parent container.
 	Fixed bug where backspace in empty caret formated element could produce an type error exception of Gecko.
+	Fixed bug where lists pasted from word with a custom start index above 9 wouldn't be properly handled.
 Version 4.1.4 (2014-08-21)
 	Added new media_filter_html option to media plugin that blocks any conditional comments, scripts etc within a video element.
 	Added new content_security_policy option allows you to set custom policy for iframe contents. Patch contributed by Francois Chagnon.

@@ -356,6 +356,22 @@ test('paste nested (OL) word list', function() {
 	);
 });
 
+test("Paste list start index", function() {
+	editor.settings.paste_merge_formats = true;
+
+	editor.setContent('');
+
+	editor.execCommand('mceInsertClipboardContent', false, {
+		content: (
+			'<p class=MsoListParagraphCxSpMiddle style="text-indent:-18.0pt;mso-list:l0 level1 lfo1">' +
+			'<![if !supportLists]><span style="mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin;' +
+			'mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin"><span style="mso-list:Ignore">10.' +
+			'<span style="font:7.0pt Times>&nbsp;&nbsp;</span></span></span><![endif]>J<o:p></o:p></p>'
+		)
+	});
+	equal(editor.getContent(), '<ol start="10"><li>J</li></ol>');
+})
+
 test("Paste paste_merge_formats: true", function() {
 	editor.settings.paste_merge_formats = true;
 
