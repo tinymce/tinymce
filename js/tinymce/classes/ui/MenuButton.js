@@ -148,27 +148,28 @@ define("tinymce/ui/MenuButton", [
 		 * @return {String} HTML representing the control.
 		 */
 		renderHtml: function () {
-		    var self = this, id = self._id, prefix = self.classPrefix;
-		    var icon = self.settings.icon, image;
+			var self = this, id = self._id, prefix = self.classPrefix;
+			var icon = self.settings.icon, image;
 
-		    image = self.settings.image;
-		    if (image) {
-		        icon = 'none';
+			image = self.settings.image;
+			if (image) {
+				icon = 'none';
 
-		        // Support for [high dpi, low dpi] image sources
-		        if (typeof image != "string") {
-		            image = window.getSelection ? image[0] : image[1];
-		        }
+				// Support for [high dpi, low dpi] image sources
+				if (typeof image != "string") {
+					image = window.getSelection ? image[0] : image[1];
+				}
 
-		        image = ' style="background-image: url(\'' + image + '\')"';
-		    } else {
-		        image = '';
-		    }
-		    icon = self.settings.icon ? prefix + 'ico ' + prefix + 'i-' + icon : '';
+				image = ' style="background-image: url(\'' + image + '\')"';
+			} else {
+				image = '';
+			}
 
-		    self.aria('role', self.parent() instanceof MenuBar ? 'menuitem' : 'button');
+			icon = self.settings.icon ? prefix + 'ico ' + prefix + 'i-' + icon : '';
 
-		    return (
+			self.aria('role', self.parent() instanceof MenuBar ? 'menuitem' : 'button');
+
+			return (
 				'<div id="' + id + '" class="' + self.classes() + '" tabindex="-1" aria-labelledby="' + id + '">' +
 					'<button id="' + id + '-open" role="presentation" type="button" tabindex="-1">' +
 						(icon ? '<i class="' + icon + '"' + image + '></i>' : '') +
