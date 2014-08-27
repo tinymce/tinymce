@@ -629,6 +629,18 @@
 		DOM.remove('test');
 	});
 
+	test('isEmpty with list of elements considered non-empty', function() {
+		var elm = DOM.create('p', null, '<img>');
+		equal(false, DOM.isEmpty(elm, {img: true}));
+	});
+
+	test('isEmpty with list of elements considered non-empty without schema', function() {
+		var domWithoutSchema = new tinymce.dom.DOMUtils(document, {keep_values: true});
+
+		var elm = domWithoutSchema.create('p', null, '<img>');
+		equal(false, domWithoutSchema.isEmpty(elm, {img: true}));
+	});
+
 	test('isEmpty on P with BR in EM', function() {
 		var elm = DOM.create('p', null, '<em><br></em>');
 		ok(DOM.isEmpty(elm, 'No children'));
