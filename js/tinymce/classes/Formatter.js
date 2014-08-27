@@ -259,6 +259,19 @@ define("tinymce/Formatter", [
 			}
 		}
 
+        /**
+		 * Unregister a specific format by name.
+		 *
+		 * @method unregister
+		 * @param {String} name Name of the format for example "bold".
+		 */
+		function unregister(name) {
+		    if (name && formats[name]) {
+		        delete formats[name];
+		    }
+		    return formats;
+		}
+
 		function getTextDecoration(node) {
 			var decoration;
 
@@ -1156,6 +1169,7 @@ define("tinymce/Formatter", [
 		extend(this, {
 			get: get,
 			register: register,
+			unregister: unregister,
 			apply: apply,
 			remove: remove,
 			toggle: toggle,
