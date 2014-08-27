@@ -13,6 +13,7 @@
 		"node" : ">=0.10.26"
 	},
 	"devDependencies": {
+		"phantomjs": "~1.9.7-15",
 		"jake": ">= 0.7.0",
 		"amdlc": ">= 0.0.2",
 		"jshint": ">= 2.1.4",
