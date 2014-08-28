@@ -3,10 +3,9 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.scullion.Struct',
-    'global!Array'
+    'ephox.scullion.Struct'
   ],
-  function (Arr, Struct, Array) {
+  function (Arr, Struct) {
 
     /** :: ([String]) -> Event */
     return function (fields) {
@@ -28,17 +27,9 @@ define(
         }
       };
 
-      var mkevent = function (values) {
-        try {
-          return struct.apply(null, values);
-        } catch (e) {
-          throw 'Unable to create struct for event. ' + e;
-        }
-      };
-
       var trigger = function (/* values */) {
-        var values = Array.prototype.slice.call(arguments);
-        var event = mkevent(values);
+        // scullion does Array prototype slice, we don't need to as well
+        var event = struct.apply(null, arguments);
         Arr.each(handlers, function (handler) {
           handler(event);
         });
