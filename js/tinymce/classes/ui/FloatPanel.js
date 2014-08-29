@@ -330,9 +330,15 @@ define("tinymce/ui/FloatPanel", [
 		close: function() {
 			var self = this;
 
-			self.fire('close');
+			var evt = self.fire('closequery');
 
-			return self.remove();
+			if (!evt.isDefaultPrevented()) {
+
+				self.fire('close');
+
+				return self.remove();
+
+			}
 		},
 
 		/**
