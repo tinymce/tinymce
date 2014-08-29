@@ -6,12 +6,11 @@ define(
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.operate.Redraw',
-    'ephox.snooker.resize.Adjustments',
     'ephox.snooker.resize.Bars'
   ],
 
-  function (TagLookup, DetailsList, Warehouse, Redraw, Adjustments, Bars) {
-    var run = function (container, table, cell, operation) {
+  function (TagLookup, DetailsList, Warehouse, Redraw, Bars) {
+    var run = function (container, table, cell, operation, adjustment) {
       TagLookup.detect(cell).each(function (dompos) {
         var list = DetailsList.fromTable(table);
 
@@ -19,7 +18,7 @@ define(
         var post = operation(warehouse, dompos);
 
         Redraw.render(table, post);
-        Adjustments.adjustTo(post);
+        adjustment(post);
         Bars.refresh(container, table);
       });
     };
