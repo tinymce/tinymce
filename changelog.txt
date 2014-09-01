@@ -4,6 +4,8 @@ Version 4.1.5 (2014-08-xx)
 	Fixed bug where empty list elements would result in empty LI elements without it's parent container.
 	Fixed bug where backspace in empty caret formated element could produce an type error exception of Gecko.
 	Fixed bug where lists pasted from word with a custom start index above 9 wouldn't be properly handled.
+	Fixed bug where tabfocus plugin would tab out of the editor instance even if the default action was prevented.
+	Fixed bug where tabfocus wouldn't tab properly to other adjacent editor instances.
 	Fixed so custom images for menubutton/splitbutton can be provided. Patch contributed by Naim Hammadi.
 Version 4.1.4 (2014-08-21)
 	Added new media_filter_html option to media plugin that blocks any conditional comments, scripts etc within a video element.
