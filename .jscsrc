@@ -9,6 +9,7 @@
 	"disallowImplicitTypeConversion": null,
 	"validateJSDoc": null,
 	"requireCamelCaseOrUpperCaseIdentifiers": null,
+	"disallowMultipleVarDecl": null,
 	"maximumLineLength": 255,
 
 	"excludeFiles": [

@@ -67,7 +67,7 @@ define("tinymce/ui/SplitButton", [
 		 * @method renderHtml
 		 * @return {String} HTML representing the control.
 		 */
-		renderHtml: function () {
+		renderHtml: function() {
 			var self = this, id = self._id, prefix = self.classPrefix, image;
 			var icon = self.settings.icon;
 
