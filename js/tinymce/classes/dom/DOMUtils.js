@@ -686,7 +686,11 @@ define("tinymce/dom/DOMUtils", [
 		 * tinymce.DOM.setStyles('mydiv', {'background-color': 'red', 'color': 'green'});
 		 */
 		setStyles: function(elm, styles) {
-			this.$$(elm).css(styles);
+			elm = this.$$(elm).css(styles);
+
+			if (this.settings.update_styles) {
+				elm.attr('data-mce-style', null);
+			}
 		},
 
 		/**
