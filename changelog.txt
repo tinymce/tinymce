@@ -7,6 +7,7 @@ Version 4.1.5 (2014-08-xx)
 	Fixed bug where tabfocus plugin would tab out of the editor instance even if the default action was prevented.
 	Fixed bug where tabfocus wouldn't tab properly to other adjacent editor instances.
 	Fixed bug where the DOMUtils setStyles wouldn't properly removed or update the data-mce-style attribute.
+	Fixed bug where dialog select boxes would be placed incorrectly if document.body wasn't statically positioned.
 	Fixed so custom images for menubutton/splitbutton can be provided. Patch contributed by Naim Hammadi.
 Version 4.1.4 (2014-08-21)
 	Added new media_filter_html option to media plugin that blocks any conditional comments, scripts etc within a video element.

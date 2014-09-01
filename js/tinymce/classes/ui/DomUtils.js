@@ -77,6 +77,10 @@ define("tinymce/ui/DomUtils", [
 			return DOMUtils.DOM.setStyle(elm, name, value);
 		},
 
+		getRuntimeStyle: function(elm, name) {
+			return DOMUtils.DOM.getStyle(elm, name, true);
+		},
+
 		on: function(target, name, callback, scope) {
 			return DOMUtils.DOM.bind(target, name, callback, scope);
 		},
