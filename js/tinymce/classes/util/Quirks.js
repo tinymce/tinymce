@@ -1141,6 +1141,7 @@ define("tinymce/util/Quirks", [
 						// you bind touch events so we need to do this manually
 						// TODO: Expand to the closest word? Touble tap still works.
 						editor.selection.placeCaretAt(endTouch.clientX, endTouch.clientY);
+						editor.nodeChanged();
 					}
 				});
 			});
