@@ -8,6 +8,7 @@ Version 4.1.5 (2014-08-xx)
 	Fixed bug where tabfocus wouldn't tab properly to other adjacent editor instances.
 	Fixed bug where the DOMUtils setStyles wouldn't properly removed or update the data-mce-style attribute.
 	Fixed bug where dialog select boxes would be placed incorrectly if document.body wasn't statically positioned.
+	Fixed bug where pasting would sometimes scroll to the top of page if the user was using the autoresize plugin.
 	Fixed so custom images for menubutton/splitbutton can be provided. Patch contributed by Naim Hammadi.
 	Fixed so the default action of windows closing can be prevented by blocking the default action of the close event.
 	Fixed so nodeChange and focus of the editor isn't automatically performed when opening sub dialogs.
