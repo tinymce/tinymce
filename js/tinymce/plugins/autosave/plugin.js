@@ -13,6 +13,7 @@
 // Internal unload handler will be called before the page is unloaded
 // Needs to be outside the plugin since it would otherwise keep
 // a reference to editor in closue scope
+/*eslint no-func-assign:0 */
 tinymce._beforeUnloadHandler = function() {
 	var msg;
 
