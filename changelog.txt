@@ -1,4 +1,4 @@
-Version 4.1.5 (2014-08-xx)
+Version 4.1.5 (2014-09-09)
 	Fixed bug where sometimes the resize rectangles wouldn't properly render on images on WebKit/Blink.
 	Fixed bug in list plugin where delete/backspace would merge empty LI elements in lists incorrectly.
 	Fixed bug where empty list elements would result in empty LI elements without it's parent container.

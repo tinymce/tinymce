@@ -35,7 +35,9 @@ exports.uglify = function(options) {
 		mangle : true,
 		toplevel : false,
 		no_functions : false,
-		ascii_only: true
+		output: {
+			ascii_only: true
+		}
 	}, options);
 
 	var toFileModTime = getFileModTime(options.to);
@@ -58,8 +60,7 @@ exports.uglify = function(options) {
 	}
 
 	if (options.force === true || fromFileModTime !== toFileModTime) {
-		var result = UglifyJS.minify(filePaths, {
-		});
+		var result = UglifyJS.minify(filePaths, options);
 
 		fs.writeFileSync(options.to, result.code);
 		setFileModTime(options.to, fromFileModTime);
