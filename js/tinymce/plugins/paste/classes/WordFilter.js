@@ -181,12 +181,12 @@ define("tinymce/pasteplugin/WordFilter", [
 				// Build a list of all root level elements before we start
 				// altering them in the loop below.
 				var elements = [], child = node.firstChild;
-				while ( typeof child !== 'undefined' && child !== null ) {
+				while (typeof child !== 'undefined' && child !== null) {
 					elements.push(child);
 
 					child = child.walk();
-					if ( child !== null ) {
-						while ( typeof child !== 'undefined' && child.parent !== node ) {
+					if (child !== null) {
+						while (typeof child !== 'undefined' && child.parent !== node) {
 							child = child.walk();
 						}
 					}
