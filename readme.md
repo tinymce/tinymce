@@ -23,9 +23,6 @@ Runs all qunit tests on PhantomJS.
 `grunt lint`
 Runs all source files though various JS linters.
 
-`grunt jshint`
-Runs all js code though jshint.
-
 `grunt sc-test`
 Runs all qunit tests on Saucelabs.
 
