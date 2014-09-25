@@ -1,9 +1,7 @@
 root = true
 
-[*]
-end_of_line = lf
-charset = utf-8
-trim_trailing_whitespace = true
-
 [**.js]
+charset = utf-8
 indent_style = tab
+trim_trailing_whitespace = true
+end_of_line = lf
