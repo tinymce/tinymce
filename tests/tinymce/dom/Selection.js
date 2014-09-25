@@ -962,3 +962,19 @@ test('selectorChanged', function() {
 	equal(newArgs.parents.length, 1);
 });
 
+test('setRng', function() {
+	var rng = editor.dom.createRng();
+
+	editor.setContent('<p>x</p>');
+	rng.setStart(editor.$('p')[0].firstChild, 0);
+	rng.setEnd(editor.$('p')[0].firstChild, 1);
+
+	editor.selection.setRng(rng);
+	editor.selection.setRng(null);
+
+	rng = editor.selection.getRng(true);
+	equal(rng.startContainer.nodeName, '#text');
+	equal(rng.startOffset, 0);
+	equal(rng.endContainer.nodeName, '#text');
+	equal(rng.endOffset, 1);
+});

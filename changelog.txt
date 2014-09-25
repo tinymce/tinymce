@@ -1,3 +1,8 @@
+Version 4.1.6 (2014-09-xx)
+	Fixed bug with clicking on the scrollbar of the iframe would cause a JS error to be thrown.
+	Fixed bug where null would produce an exception if you passed it to selection.setRng.
+	Fixed bug where Ctrl/Cmd+Tab would indent the current list item if you switched tabs in the browser.
+	Fixed issue where the select all quirk fix would fire for other modifiers than Ctrl/Cmd combinations.
 Version 4.1.5 (2014-09-09)
 	Fixed bug where sometimes the resize rectangles wouldn't properly render on images on WebKit/Blink.
 	Fixed bug in list plugin where delete/backspace would merge empty LI elements in lists incorrectly.

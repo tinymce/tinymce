@@ -579,6 +579,10 @@ define("tinymce/dom/Selection", [
 		setRng: function(rng, forward) {
 			var self = this, sel;
 
+			if (!rng) {
+				return;
+			}
+
 			// Is IE specific range
 			if (rng.select) {
 				try {
