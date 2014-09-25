@@ -383,7 +383,10 @@ module.exports = function(grunt) {
 					"LICENSE.TXT",
 					"Gruntfile.js",
 					"readme.md",
-					"package.json"
+					"package.json",
+					".eslintrc",
+					".jscsrc",
+					".jshintrc"
 				]
 			},
 
