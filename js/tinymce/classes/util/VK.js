@@ -26,7 +26,7 @@ define("tinymce/util/VK", [
 		UP: 38,
 
 		modifierPressed: function(e) {
-			return e.shiftKey || e.ctrlKey || e.altKey;
+			return e.shiftKey || e.ctrlKey || e.altKey || this.metaKeyPressed(e);
 		},
 
 		metaKeyPressed: function(e) {
