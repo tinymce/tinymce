@@ -89,12 +89,22 @@ test('Typing state', function() {
 	editor.undoManager.clear();
 	editor.setContent('test');
 
-	expect(2);
+	expect(4);
+
+	ok(!editor.undoManager.typing);
 
 	editor.dom.fire(editor.getBody(), 'keydown', {keyCode: 65});
 	ok(editor.undoManager.typing);
 
 	editor.dom.fire(editor.getBody(), 'keyup', {keyCode: 13});
+	ok(!editor.undoManager.typing);
+
+	selectAllFlags = {keyCode: 65, ctrlKey: false, altKey: false, shiftKey: false};
+	if (tinymce.Env.mac) {
+			selectAllFlags.metaKey = true;
+			selectAllFlags.ctrlKey = false;
+	}
+	editor.dom.fire(editor.getBody(), 'keydown', selectAllFlags);
 	ok(!editor.undoManager.typing);
 });
 
