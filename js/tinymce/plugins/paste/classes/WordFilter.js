@@ -366,7 +366,7 @@ define("tinymce/pasteplugin/WordFilter", [
 				var validElements = settings.paste_word_valid_elements;
 				if (!validElements) {
 					validElements = (
-						'-strong/b,-em/i,-span,-p,-ol,-ul,-li,-h1,-h2,-h3,-h4,-h5,-h6,' +
+						'-strong/b,-em/i,-u,-span,-p,-ol,-ul,-li,-h1,-h2,-h3,-h4,-h5,-h6,' +
 						'-p/div,-a[href|name],sub,sup,strike,br,del,table[width],tr,' +
 						'td[colspan|rowspan|width],th[colspan|rowspan|width],thead,tfoot,tbody'
 					);
