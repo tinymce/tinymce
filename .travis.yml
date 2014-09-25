@@ -1,4 +1,6 @@
 language: node_js
 node_js:
   - "0.10"
-script: "jake jscs jshint eslint minify less && phantomjs tests/js/runner.js tests/index.html"
+before_script:
+  - npm install -g grunt-cli
+script: "grunt"

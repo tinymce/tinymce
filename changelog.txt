@@ -4,6 +4,7 @@ Version 4.1.6 (2014-09-xx)
 	Fixed bug where Ctrl/Cmd+Tab would indent the current list item if you switched tabs in the browser.
 	Fixed bug where pasting empty cells from Excel would result in a broken table.
 	Fixed issue where the select all quirk fix would fire for other modifiers than Ctrl/Cmd combinations.
+    Replaced jake with grunt since it is more mainstream and has better plugin support.
 Version 4.1.5 (2014-09-09)
 	Fixed bug where sometimes the resize rectangles wouldn't properly render on images on WebKit/Blink.
 	Fixed bug in list plugin where delete/backspace would merge empty LI elements in lists incorrectly.
