@@ -185,7 +185,7 @@ define("tinymce/html/Schema", [
 		add("a", "href target rel media hreflang type", phrasingContent);
 		add("q", "cite", phrasingContent);
 		add("ins del", "cite datetime", flowContent);
-		add("img", "src alt usemap ismap width height");
+		add("img", "src srcset alt usemap ismap width height");
 		add("iframe", "src name width height", flowContent);
 		add("embed", "src type width height");
 		add("object", "data type typemustmatch name usemap form width height", flowContent, "param");
