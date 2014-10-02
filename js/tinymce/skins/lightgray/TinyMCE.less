@@ -1,6 +1,6 @@
 .@{prefix}-tinymce {
 	// Avoid FOUC
-	visibility: visible !important;
+	visibility: inherit !important;
 	position: relative;
 }
 
@@ -72,14 +72,18 @@ div.@{prefix}-edit-area {
 	background: @btn-bg-hlight;
 }
 
-.@{prefix}-grid td div {
+.@{prefix}-grid td.@{prefix}-grid-cell div {
 	border: 1px solid @grid-border;
-	width: 12px; height: 12px;
-	margin: 2px;
+	width: 15px; height: 15px;
+	margin: 0px;
 	cursor: pointer;
 
 	&:focus {
 		border-color: @grid-border-active;
+	}
+
+	&[disabled] {
+		cursor: not-allowed;
 	}
 }
 
@@ -118,6 +122,15 @@ div.@{prefix}-edit-area {
 div.@{prefix}-tinymce-inline {
 	width: 100%;
 	.box-shadow(none);
+}
+
+.@{prefix}-colorbtn-trans div {
+	text-align: center;
+	vertical-align: middle;
+	font-weight: bold;
+	font-size: 20px;
+	line-height: 16px;
+	color: mix(@text, #fff, 70%);
 }
 
 // Reduce double margins between toolbar rows

@@ -96,8 +96,12 @@ define("tinymce/dom/Serializer", [
 
 			while (i--) {
 				node = nodes[i];
-				value = node.attr('class').replace(/(?:^|\s)mce-item-\w+(?!\S)/g, '');
-				node.attr('class', value.length > 0 ? value : null);
+				value = node.attr('class');
+
+				if (value) {
+					value = node.attr('class').replace(/(?:^|\s)mce-item-\w+(?!\S)/g, '');
+					node.attr('class', value.length > 0 ? value : null);
+				}
 			}
 		});
 
@@ -111,15 +115,6 @@ define("tinymce/dom/Serializer", [
 				if (node.attributes.map['data-mce-type'] === 'bookmark' && !args.cleanup) {
 					node.remove();
 				}
-			}
-		});
-
-		// Remove expando attributes
-		htmlParser.addAttributeFilter('data-mce-expando', function(nodes, name) {
-			var i = nodes.length;
-
-			while (i--) {
-				nodes[i].attr(name, null);
 			}
 		});
 
@@ -137,7 +132,7 @@ define("tinymce/dom/Serializer", [
 
 		// Force script into CDATA sections and remove the mce- prefix also add comments around styles
 		htmlParser.addNodeFilter('script,style', function(nodes, name) {
-			var i = nodes.length, node, value;
+			var i = nodes.length, node, value, type;
 
 			function trim(value) {
 				/*jshint maxlen:255 */
@@ -153,9 +148,12 @@ define("tinymce/dom/Serializer", [
 				value = node.firstChild ? node.firstChild.value : '';
 
 				if (name === "script") {
-					// Remove mce- prefix from script elements and remove default text/javascript mime type (HTML5)
-					var type = (node.attr('type') || 'text/javascript').replace(/^mce\-/, '');
-					node.attr('type', type === 'text/javascript' ? null : type);
+					// Remove mce- prefix from script elements and remove default type since the user specified
+					// a script element without type attribute
+					type = node.attr('type');
+					if (type) {
+						node.attr('type', type == 'mce-no/type' ? null : type.replace(/^mce\-/, ''));
+					}
 
 					if (value.length > 0) {
 						node.firstChild.value = '// <![CDATA[\n' + trim(value) + '\n// ]]>';
@@ -222,13 +220,19 @@ define("tinymce/dom/Serializer", [
 		}
 
 		// Remove internal data attributes
-		htmlParser.addAttributeFilter('data-mce-src,data-mce-href,data-mce-style,data-mce-selected', function(nodes, name) {
-			var i = nodes.length;
+		htmlParser.addAttributeFilter(
+			'data-mce-src,data-mce-href,data-mce-style,' +
+			'data-mce-selected,data-mce-expando,' +
+			'data-mce-type,data-mce-resize',
 
-			while (i--) {
-				nodes[i].attr(name, null);
+			function(nodes, name) {
+				var i = nodes.length;
+
+				while (i--) {
+					nodes[i].attr(name, null);
+				}
 			}
-		});
+		);
 
 		// Return public methods
 		return {

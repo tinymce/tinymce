@@ -1,9 +1,10 @@
 module("tinymce.Editor", {
 	setupModule: function() {
+		document.getElementById('view').innerHTML = '<textarea id="elm1"></textarea><div id="elm2"></div>';
 		QUnit.stop();
 
 		tinymce.init({
-			selector: "textarea",
+			selector: "#elm1",
 			add_unload_trigger: false,
 			disable_nodechange: true,
 			skin: false,
@@ -16,9 +17,35 @@ module("tinymce.Editor", {
 			extended_valid_elements: 'custom1,custom2',
 			init_instance_callback: function(ed) {
 				window.editor = ed;
-				QUnit.start();
+
+				if (window.inlineEditor) {
+					QUnit.start();
+				}
 			}
 		});
+
+		tinymce.init({
+			selector: "#elm2",
+			add_unload_trigger: false,
+			disable_nodechange: true,
+			skin: false,
+			entities: 'raw',
+			indent: false,
+			inline: true,
+			init_instance_callback: function(ed) {
+				window.inlineEditor = ed;
+
+				if (window.editor) {
+					QUnit.start();
+				}
+			}
+		});
+	},
+
+	teardown: function() {
+		Utils.unpatch(editor.getDoc());
+		inlineEditor.show();
+		editor.show();
 	}
 });
 
@@ -142,7 +169,6 @@ test('WebKit Serialization range bug', function() {
 	}
 });
 
-
 test('editor_methods - getParam', function() {
 	expect(5);
 
@@ -187,6 +213,14 @@ test('setContent', function() {
 	equal(count, 0);
 });
 
+test('setContent with comment bug #4409', function() {
+	editor.setContent('<!-- x --><br>');
+	editor.settings.disable_nodechange = false;
+	editor.nodeChanged();
+	editor.settings.disable_nodechange = true;
+	equal(editor.getContent(), "<!-- x --><p>\u00a0</p>");
+});
+
 test('custom elements', function() {
 	editor.setContent('<custom1>c1</custom1><custom2>c1</custom2>');
 	equal(editor.getContent(), '<custom1>c1</custom1><p><custom2>c1</custom2></p>');
@@ -194,6 +228,132 @@ test('custom elements', function() {
 
 test('Store/restore tabindex', function() {
 	editor.setContent('<span tabindex="42">abc</span>');
-	equal(editor.getContent({format:'raw'}).toLowerCase(), '<p><span data-mce-tabindex="42">abc</span></p>');
+	equal(editor.getContent({format: 'raw'}).toLowerCase(), '<p><span data-mce-tabindex="42">abc</span></p>');
 	equal(editor.getContent(), '<p><span tabindex="42">abc</span></p>');
+});
+
+test('show/hide/isHidden and events', function() {
+	var lastEvent;
+
+	editor.on('show hide', function(e) {
+		lastEvent = e;
+	});
+
+	equal(editor.isHidden(), false, 'Initial isHidden state');
+
+	editor.hide();
+	equal(editor.isHidden(), true, 'After hide isHidden state');
+	equal(lastEvent.type, "hide");
+
+	lastEvent = null;
+	editor.hide();
+	strictEqual(lastEvent, null);
+
+	editor.show();
+	equal(editor.isHidden(), false, 'After show isHidden state');
+	equal(lastEvent.type, "show");
+
+	lastEvent = null;
+	editor.show();
+	strictEqual(lastEvent, null);
+});
+
+test('show/hide/isHidden and events (inline)', function() {
+	var lastEvent;
+
+	inlineEditor.on('show hide', function(e) {
+		lastEvent = e;
+	});
+
+	equal(inlineEditor.isHidden(), false, 'Initial isHidden state');
+
+	inlineEditor.hide();
+	equal(inlineEditor.isHidden(), true, 'After hide isHidden state');
+	equal(lastEvent.type, "hide");
+	strictEqual(inlineEditor.getBody().contentEditable, "false", "ContentEditable after hide");
+
+	lastEvent = null;
+	inlineEditor.hide();
+	strictEqual(lastEvent, null);
+
+	inlineEditor.show();
+	equal(inlineEditor.isHidden(), false, 'After show isHidden state');
+	equal(lastEvent.type, "show");
+	strictEqual(inlineEditor.getBody().contentEditable, "true", "ContentEditable after show");
+
+	lastEvent = null;
+	inlineEditor.show();
+	strictEqual(lastEvent, null);
+});
+
+test('hide save content and hidden state while saving', function() {
+	var lastEvent, hiddenStateWhileSaving;
+
+	editor.on('SaveContent', function(e) {
+		lastEvent = e;
+		hiddenStateWhileSaving = editor.isHidden();
+	});
+
+	editor.setContent('xyz');
+	editor.hide();
+
+	strictEqual(hiddenStateWhileSaving, false, 'False isHidden state while saving');
+	strictEqual(lastEvent.content, '<p>xyz</p>');
+	strictEqual(document.getElementById('elm1').value, '<p>xyz</p>');
+});
+
+asyncTest('remove editor', function() {
+	document.getElementById('view').appendChild(tinymce.DOM.create('textarea', {id: 'elmx'}));
+
+	tinymce.init({
+		selector: "#elmx",
+		add_unload_trigger: false,
+		disable_nodechange: true,
+		skin: false,
+		init_instance_callback: function(editor) {
+			window.setTimeout(function() {
+				var lastEvent;
+
+				editor.on('SaveContent', function(e) {
+					lastEvent = e;
+				});
+
+				editor.setContent('xyz');
+				editor.remove();
+
+				QUnit.start();
+
+				strictEqual(lastEvent.content, '<p>xyz</p>');
+				strictEqual(document.getElementById('elmx').value, '<p>xyz</p>');
+			}, 0);
+		}
+	});
+});
+
+test('insertContent', function() {
+	editor.setContent('<p>ab</p>');
+	Utils.setSelection('p', 1);
+	editor.insertContent('c');
+	equal(editor.getContent(), '<p>acb</p>');
+});
+
+test('insertContent merge', function() {
+	editor.setContent('<p><strong>a</strong></p>');
+	Utils.setSelection('p', 1);
+	editor.insertContent('<em><strong>b</strong></em>', {merge: true});
+	equal(editor.getContent(), '<p><strong>a<em>b</em></strong></p>');
+});
+
+test('execCommand return values for native commands', function() {
+	var lastCmd;
+
+	strictEqual(editor.execCommand("NonExistingCommand"), false, "Return value for a completely unhandled command");
+
+	Utils.patch(editor.getDoc(), 'execCommand', function(orgFunc, cmd) {
+		lastCmd = cmd;
+		return true;
+	});
+
+	strictEqual(editor.execCommand("ExistingCommand"), true, "Return value for an editor handled command");
+	strictEqual(lastCmd, "ExistingCommand");
 });

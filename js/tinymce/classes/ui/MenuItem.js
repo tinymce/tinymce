@@ -13,7 +13,7 @@
  *
  * @-x-less MenuItem.less
  * @class tinymce.ui.MenuItem
- * @extends tinymce.ui.Control
+ * @extends tinymce.ui.Widget
  */
 define("tinymce/ui/MenuItem", [
 	"tinymce/ui/Widget",
@@ -127,12 +127,16 @@ define("tinymce/ui/MenuItem", [
 
 					menu = self.menu = Factory.create(menu).parent(self).renderTo();
 					menu.reflow();
-					menu.fire('show');
 					menu.on('cancel', function(e) {
 						e.stopPropagation();
 						self.focus();
 						menu.hide();
 					});
+					menu.on('show hide', function(e) {
+						e.control.items().each(function(ctrl) {
+							ctrl.active(ctrl.settings.selected);
+						});
+					}).fire('show');
 
 					menu.on('hide', function(e) {
 						if (e.control === menu) {

@@ -194,7 +194,7 @@ tinymce.PluginManager.add('fullpage', function(editor) {
 			}
 
 			elm.attr('content', 'text/html; charset=' + data.docencoding);
-		} else {
+		} else if (elm) {
 			elm.remove();
 		}
 
@@ -340,6 +340,11 @@ tinymce.PluginManager.add('fullpage', function(editor) {
 
 		if (evt.source_view && editor.getParam('fullpage_hide_in_source_view')) {
 			return;
+		}
+
+		// Fixed so new document/setContent('') doesn't remove existing header/footer except when it's in source code view
+		if (content.length === 0 && !evt.source_view) {
+			content = tinymce.trim(head) + '\n' + tinymce.trim(content) + '\n' + tinymce.trim(foot);
 		}
 
 		// Parse out head, body and footer

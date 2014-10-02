@@ -72,9 +72,14 @@ test('Remove empty root text nodes', function() {
 
 	editor.settings.forced_root_block = 'div';
 	editor.getBody().innerHTML = 'abcd<div>abcd</div>';
-	Utils.setSelection('body', 2);
 	body.insertBefore(editor.getDoc().createTextNode(''), body.firstChild);
 	body.appendChild(editor.getDoc().createTextNode(''));
+
+	var rng = editor.dom.createRng();
+	rng.setStart(editor.getBody().childNodes[1], 1);
+	rng.setEnd(editor.getBody().childNodes[1], 1);
+	editor.selection.setRng(rng);
+
 	Utils.pressArrowKey();
 	equal(Utils.cleanHtml(body.innerHTML), '<div>abcd</div><div>abcd</div>');
 	equal(editor.selection.getNode().nodeName, 'DIV');

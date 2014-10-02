@@ -19,7 +19,7 @@ define("tinymce/ui/Resizable", [
 	"use strict";
 
 	return {
-		/** 
+		/**
 		 * Resizes the control to contents.
 		 *
 		 * @method resizeToContent
@@ -30,7 +30,7 @@ define("tinymce/ui/Resizable", [
 			this.reflow();
 		},
 
-		/** 
+		/**
 		 * Resizes the control to a specific width/height.
 		 *
 		 * @method resizeTo
@@ -51,7 +51,7 @@ define("tinymce/ui/Resizable", [
 			return this.layoutRect({minW: w, minH: h, w: w, h: h}).reflow();
 		},
 
-		/** 
+		/**
 		 * Resizes the control to a specific relative width/height.
 		 *
 		 * @method resizeBy

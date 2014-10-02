@@ -13,7 +13,7 @@
  *
  * @-x-less SplitButton.less
  * @class tinymce.ui.SplitButton
- * @extends tinymce.ui.Button
+ * @extends tinymce.ui.MenuButton
  */
 define("tinymce/ui/SplitButton", [
 	"tinymce/ui/MenuButton",
@@ -68,13 +68,29 @@ define("tinymce/ui/SplitButton", [
 		 * @return {String} HTML representing the control.
 		 */
 		renderHtml: function() {
-			var self = this, id = self._id, prefix = self.classPrefix;
-			var icon = self.settings.icon ? prefix + 'ico ' + prefix + 'i-' + self.settings.icon : '';
+			var self = this, id = self._id, prefix = self.classPrefix, image;
+			var icon = self.settings.icon;
+
+			image = self.settings.image;
+			if (image) {
+				icon = 'none';
+
+				// Support for [high dpi, low dpi] image sources
+				if (typeof image != "string") {
+					image = window.getSelection ? image[0] : image[1];
+				}
+
+				image = ' style="background-image: url(\'' + image + '\')"';
+			} else {
+				image = '';
+			}
+
+			icon = self.settings.icon ? prefix + 'ico ' + prefix + 'i-' + icon : '';
 
 			return (
 				'<div id="' + id + '" class="' + self.classes() + '" role="button" tabindex="-1">' +
 					'<button type="button" hidefocus="1" tabindex="-1">' +
-						(icon ? '<i class="' + icon + '"></i>' : '') +
+						(icon ? '<i class="' + icon + '"' + image + '></i>' : '') +
 						(self._text ? (icon ? ' ' : '') + self._text : '') +
 					'</button>' +
 					'<button type="button" class="' + prefix + 'open" hidefocus="1" tabindex="-1">' +

@@ -467,6 +467,12 @@ test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside complex html'
 	equal(rng.endOffset, 2);
 });
 
+test('select empty TD', function() {
+	editor.getBody().innerHTML = '<table><tr><td><br></td></tr></table>';
+	editor.selection.select(editor.dom.select('td')[0], true);
+	equal(editor.selection.getRng(true).startContainer.nodeName, 'TD');
+});
+
 test('select first p', 2, function() {
 	editor.setContent('<p>text1</p><p>text2</p>');
 	editor.selection.select(editor.dom.select('p')[0]);
@@ -956,3 +962,19 @@ test('selectorChanged', function() {
 	equal(newArgs.parents.length, 1);
 });
 
+test('setRng', function() {
+	var rng = editor.dom.createRng();
+
+	editor.setContent('<p>x</p>');
+	rng.setStart(editor.$('p')[0].firstChild, 0);
+	rng.setEnd(editor.$('p')[0].firstChild, 1);
+
+	editor.selection.setRng(rng);
+	editor.selection.setRng(null);
+
+	rng = editor.selection.getRng(true);
+	equal(rng.startContainer.nodeName, '#text');
+	equal(rng.startOffset, 0);
+	equal(rng.endContainer.nodeName, '#text');
+	equal(rng.endOffset, 1);
+});

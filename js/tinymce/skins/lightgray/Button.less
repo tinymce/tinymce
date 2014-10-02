@@ -27,7 +27,7 @@
 		.box-shadow(@btn-box-shadow-active);
 	}
 
-	&:not(.@{prefix}-disabled):active {
+	&:active {
 		.vertical-gradient(darken(@btn-bg, 10%), darken(@btn-bg-hlight, 10%));
 		.box-shadow(@btn-box-shadow-active);
 	}
@@ -133,6 +133,21 @@
 .@{prefix}-caret.@{prefix}-up {
 	border-bottom: 4px solid @btn-caret-border;
 	border-top: 0;
+}
+
+.@{prefix}-btn-flat {
+	border: 0;
+	background: transparent;
+	.border-radius(0);
+	.box-shadow(none);
+	filter: none;
+}
+
+.@{prefix}-btn-flat:hover, .@{prefix}-btn-flat.@{prefix}-active, .@{prefix}-btn-flat:focus, .@{prefix}-btn-flat:active {
+	border: 0;
+	background: @menubar-bg-active;
+	filter: none;
+	.box-shadow(none);
 }
 
 // RTL

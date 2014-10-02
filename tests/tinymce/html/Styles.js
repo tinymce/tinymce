@@ -122,12 +122,19 @@ test('Font weight', function() {
 });
 
 test('Valid styles', function() {
-	var styles = new tinymce.html.Styles({}, new tinymce.html.Schema({valid_styles : {'*' : 'color,font-size', 'a' : 'margin-left'}}));
+	var styles = new tinymce.html.Styles({}, new tinymce.html.Schema({valid_styles : {'*': 'color,font-size', 'a': 'margin-left'}}));
 
 	expect(2);
 
 	equal(styles.serialize(styles.parse('color: #ff0000; font-size: 10px; margin-left: 10px; invalid: 1;'), 'b'), "color: #ff0000; font-size: 10px;");
 	equal(styles.serialize(styles.parse('color: #ff0000; font-size: 10px; margin-left: 10px; invalid: 2;'), 'a'), "color: #ff0000; font-size: 10px; margin-left: 10px;");
+});
+
+test('Invalid styles', function() {
+	var styles = new tinymce.html.Styles({}, new tinymce.html.Schema({invalid_styles : {'*': 'color,font-size', 'a': 'margin-left'}}));
+
+	equal(styles.serialize(styles.parse('color: #ff0000; font-size: 10px; margin-left: 10px'), 'b'), "margin-left: 10px;");
+	equal(styles.serialize(styles.parse('color: #ff0000; font-size: 10px; margin-left: 10px; margin-right: 10px;'), 'a'), "margin-right: 10px;");
 });
 
 test('Script urls denied', function() {

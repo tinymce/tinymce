@@ -1,0 +1,30 @@
+{
+	"preset": "google",
+
+	"requireParenthesesAroundIIFE": true,
+	"validateIndentation": "\t",
+	"disallowKeywords": ["with"],
+	"validateQuoteMarks": null,
+	"requireLineFeedAtFileEnd": null,
+	"disallowImplicitTypeConversion": null,
+	"validateJSDoc": null,
+	"requireCamelCaseOrUpperCaseIdentifiers": null,
+	"disallowMultipleVarDecl": null,
+	"maximumLineLength": 255,
+
+	"excludeFiles": [
+		"Jakefile.js",
+		"node_modules/**",
+		"tests/**",
+		"tools/**",
+		"**/*.min.js",
+		"**/*.dev.js",
+		"js/tinymce/*.js",
+		"js/tinymce/langs/**",
+		"js/tinymce/plugins/compat3x/**",
+		"js/tinymce/plugins/table/plugin.js",
+		"js/tinymce/plugins/spellchecker/plugin.js",
+		"js/tinymce/plugins/paste/plugin.js",
+		"js/tinymce/classes/dom/Sizzle.js"
+	]
+}

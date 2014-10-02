@@ -25,7 +25,7 @@
 define("tinymce/html/Schema", [
 	"tinymce/util/Tools"
 ], function(Tools) {
-	var mapCache = {};
+	var mapCache = {}, dummyObj = {};
 	var makeMap = Tools.makeMap, each = Tools.each, extend = Tools.extend, explode = Tools.explode, inArray = Tools.inArray;
 
 	function split(items, delim) {
@@ -46,11 +46,11 @@ define("tinymce/html/Schema", [
 		function add(name, attributes, children) {
 			var ni, i, attributesOrder, args = arguments;
 
-			function arrayToMap(array) {
+			function arrayToMap(array, obj) {
 				var map = {}, i, l;
 
 				for (i = 0, l = array.length; i < l; i++) {
-					map[array[i]] = {};
+					map[array[i]] = obj || {};
 				}
 
 				return map;
@@ -79,7 +79,7 @@ define("tinymce/html/Schema", [
 				schema[name[ni]] = {
 					attributes: arrayToMap(attributesOrder),
 					attributesOrder: attributesOrder,
-					children: arrayToMap(children)
+					children: arrayToMap(children, dummyObj)
 				};
 			}
 		}
@@ -244,7 +244,8 @@ define("tinymce/html/Schema", [
 		if (type != "html5-strict") {
 			addAttrs("script", "language xml:space");
 			addAttrs("style", "xml:space");
-			addAttrs("object", "declare classid codebase codetype archive standby align border hspace vspace");
+			addAttrs("object", "declare classid code codebase codetype archive standby align border hspace vspace");
+			addAttrs("embed", "align name hspace vspace");
 			addAttrs("param", "valuetype type");
 			addAttrs("a", "charset name rev shape coords");
 			addAttrs("br", "clear");
@@ -313,6 +314,27 @@ define("tinymce/html/Schema", [
 		return schema;
 	}
 
+	function compileElementMap(value, mode) {
+		var styles;
+
+		if (value) {
+			styles = {};
+
+			if (typeof value == 'string') {
+				value = {
+					'*': value
+				};
+			}
+
+			// Convert styles into a rule list
+			each(value, function(value, key) {
+				styles[key] = mode == 'map' ? makeMap(value, /[, ]/) : explode(value, /[, ]/);
+			});
+		}
+
+		return styles;
+	}
+
 	/**
 	 * Constructs a new Schema instance.
 	 *
@@ -321,9 +343,10 @@ define("tinymce/html/Schema", [
 	 * @param {Object} settings Name/value settings object.
 	 */
 	return function(settings) {
-		var self = this, elements = {}, children = {}, patternElements = [], validStyles, schemaItems;
-		var whiteSpaceElementsMap, selfClosingElementsMap, shortEndedElementsMap, boolAttrMap;
-		var blockElementsMap, nonEmptyElementsMap, textBlockElementsMap, customElementsMap = {}, specialElements = {};
+		var self = this, elements = {}, children = {}, patternElements = [], validStyles, invalidStyles, schemaItems;
+		var whiteSpaceElementsMap, selfClosingElementsMap, shortEndedElementsMap, boolAttrMap, validClasses;
+		var blockElementsMap, nonEmptyElementsMap, textBlockElementsMap, textInlineElementsMap;
+		var customElementsMap = {}, specialElements = {};
 
 		// Creates an lookup table map object for the specified option or the default value
 		function createLookupTable(option, default_value, extendWith) {
@@ -355,15 +378,9 @@ define("tinymce/html/Schema", [
 			settings.valid_elements = '*[*]';
 		}
 
-		// Build styles list
-		if (settings.valid_styles) {
-			validStyles = {};
-
-			// Convert styles into a rule list
-			each(settings.valid_styles, function(value, key) {
-				validStyles[key] = explode(value);
-			});
-		}
+		validStyles = compileElementMap(settings.valid_styles);
+		invalidStyles = compileElementMap(settings.invalid_styles, 'map');
+		validClasses = compileElementMap(settings.valid_classes, 'map');
 
 		// Setup map objects
 		whiteSpaceElementsMap = createLookupTable('whitespace_elements', 'pre script noscript style textarea video audio iframe object');
@@ -378,9 +395,11 @@ define("tinymce/html/Schema", [
 		blockElementsMap = createLookupTable('block_elements', 'hr table tbody thead tfoot ' +
 						'th tr td li ol ul caption dl dt dd noscript menu isindex option ' +
 						'datalist select optgroup', textBlockElementsMap);
+		textInlineElementsMap = createLookupTable('text_inline_elements', 'span strong b em i font strike u var cite ' +
+										'dfn code mark q sup sub samp');
 
 		each((settings.special || 'script noscript style textarea').split(' '), function(name) {
-			specialElements[name] = new RegExp('<\/' + name + '[^>]*>','gi');
+			specialElements[name] = new RegExp('<\/' + name + '[^>]*>', 'gi');
 		});
 
 		// Converts a wildcard expression string to a regexp for example *a will become /.*a/.
@@ -390,16 +409,16 @@ define("tinymce/html/Schema", [
 
 		// Parses the specified valid_elements string and adds to the current rules
 		// This function is a bit hard to read since it's heavily optimized for speed
-		function addValidElements(valid_elements) {
+		function addValidElements(validElements) {
 			var ei, el, ai, al, matches, element, attr, attrData, elementName, attrName, attrType, attributes, attributesOrder,
 				prefix, outputName, globalAttributes, globalAttributesOrder, key, value,
 				elementRuleRegExp = /^([#+\-])?([^\[!\/]+)(?:\/([^\[!]+))?(?:(!?)\[([^\]]+)\])?$/,
 				attrRuleRegExp = /^([!\-])?(\w+::\w+|[^=:<]+)?(?:([=:<])(.*))?$/,
 				hasPatternsRegExp = /[*?+]/;
 
-			if (valid_elements) {
+			if (validElements) {
 				// Split valid elements into an array with rules
-				valid_elements = split(valid_elements, ',');
+				validElements = split(validElements, ',');
 
 				if (elements['@']) {
 					globalAttributes = elements['@'].attributes;
@@ -407,9 +426,9 @@ define("tinymce/html/Schema", [
 				}
 
 				// Loop all rules
-				for (ei = 0, el = valid_elements.length; ei < el; ei++) {
+				for (ei = 0, el = validElements.length; ei < el; ei++) {
 					// Parse element rule
-					matches = elementRuleRegExp.exec(valid_elements[ei]);
+					matches = elementRuleRegExp.exec(validElements[ei]);
 					if (matches) {
 						// Setup local names for matches
 						prefix = matches[1];
@@ -539,11 +558,11 @@ define("tinymce/html/Schema", [
 			}
 		}
 
-		function setValidElements(valid_elements) {
+		function setValidElements(validElements) {
 			elements = {};
 			patternElements = [];
 
-			addValidElements(valid_elements);
+			addValidElements(validElements);
 
 			each(schemaItems, function(element, name) {
 				children[name] = element.children;
@@ -551,14 +570,14 @@ define("tinymce/html/Schema", [
 		}
 
 		// Adds custom non HTML elements to the schema
-		function addCustomElements(custom_elements) {
+		function addCustomElements(customElements) {
 			var customElementRegExp = /^(~)?(.+)$/;
 
-			if (custom_elements) {
+			if (customElements) {
 				// Flush cached items since we are altering the default maps
 				mapCache.text_block_elements = mapCache.block_elements = null;
 
-				each(split(custom_elements, ','), function(rule) {
+				each(split(customElements, ','), function(rule) {
 					var matches = customElementRegExp.exec(rule),
 						inline = matches[1] === '~',
 						cloneName = inline ? 'span' : 'div',
@@ -596,11 +615,11 @@ define("tinymce/html/Schema", [
 		}
 
 		// Adds valid children to the schema object
-		function addValidChildren(valid_children) {
+		function addValidChildren(validChildren) {
 			var childRuleRegExp = /^([+\-]?)(\w+)\[([^\]]+)\]$/;
 
-			if (valid_children) {
-				each(split(valid_children, ','), function(rule) {
+			if (validChildren) {
+				each(split(validChildren, ','), function(rule) {
 					var matches = childRuleRegExp.exec(rule), parent, prefix;
 
 					if (matches) {
@@ -734,10 +753,32 @@ define("tinymce/html/Schema", [
 		/**
 		 * Name/value map object with valid styles for each element.
 		 *
-		 * @field styles
+		 * @method getValidStyles
 		 * @type Object
 		 */
-		self.styles = validStyles;
+		self.getValidStyles = function() {
+			return validStyles;
+		};
+
+		/**
+		 * Name/value map object with valid styles for each element.
+		 *
+		 * @method getInvalidStyles
+		 * @type Object
+		 */
+		self.getInvalidStyles = function() {
+			return invalidStyles;
+		};
+
+		/**
+		 * Name/value map object with valid classes for each element.
+		 *
+		 * @method getValidClasses
+		 * @type Object
+		 */
+		self.getValidClasses = function() {
+			return validClasses;
+		};
 
 		/**
 		 * Returns a map with boolean attributes.
@@ -767,6 +808,16 @@ define("tinymce/html/Schema", [
 		 */
 		self.getTextBlockElements = function() {
 			return textBlockElementsMap;
+		};
+
+		/**
+		 * Returns a map of inline text format nodes for example strong/span or ins.
+		 *
+		 * @method getTextInlineElements
+		 * @return {Object} Name/value lookup map for text format elements.
+		 */
+		self.getTextInlineElements = function() {
+			return textInlineElementsMap;
 		};
 
 		/**

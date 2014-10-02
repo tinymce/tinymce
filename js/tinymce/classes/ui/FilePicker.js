@@ -17,8 +17,9 @@
  * @extends tinymce.ui.ComboBox
  */
 define("tinymce/ui/FilePicker", [
-	"tinymce/ui/ComboBox"
-], function(ComboBox) {
+	"tinymce/ui/ComboBox",
+	"tinymce/util/Tools"
+], function(ComboBox, Tools) {
 	"use strict";
 
 	return ComboBox.extend({
@@ -29,22 +30,53 @@ define("tinymce/ui/FilePicker", [
 		 * @param {Object} settings Name/value object with settings.
 		 */
 		init: function(settings) {
-			var self = this, editor = tinymce.activeEditor, fileBrowserCallback;
+			var self = this, editor = tinymce.activeEditor, editorSettings = editor.settings;
+			var actionCallback, fileBrowserCallback, fileBrowserCallbackTypes;
 
 			settings.spellcheck = false;
 
-			fileBrowserCallback = editor.settings.file_browser_callback;
-			if (fileBrowserCallback) {
-				settings.icon = 'browse';
+			fileBrowserCallbackTypes = editorSettings.file_picker_types || editorSettings.file_browser_callback_types;
+			if (fileBrowserCallbackTypes) {
+				fileBrowserCallbackTypes = Tools.makeMap(fileBrowserCallbackTypes, /[, ]/);
+			}
 
-				settings.onaction = function() {
-					fileBrowserCallback(
-						self.getEl('inp').id,
-						self.getEl('inp').value,
-						settings.filetype,
-						window
-					);
-				};
+			if (!fileBrowserCallbackTypes || fileBrowserCallbackTypes[settings.filetype]) {
+				fileBrowserCallback = editorSettings.file_picker_callback;
+				if (fileBrowserCallback && (!fileBrowserCallbackTypes || fileBrowserCallbackTypes[settings.filetype])) {
+					actionCallback = function() {
+						var meta = self.fire('beforecall').meta;
+
+						meta = Tools.extend({filetype: settings.filetype}, meta);
+
+						// file_picker_callback(callback, currentValue, metaData)
+						fileBrowserCallback.call(
+							editor,
+							function(value, meta) {
+								self.value(value).fire('change', {meta: meta});
+							},
+							self.value(),
+							meta
+						);
+					};
+				} else {
+					// Legacy callback: file_picker_callback(id, currentValue, filetype, window)
+					fileBrowserCallback = editorSettings.file_browser_callback;
+					if (fileBrowserCallback && (!fileBrowserCallbackTypes || fileBrowserCallbackTypes[settings.filetype])) {
+						actionCallback = function() {
+							fileBrowserCallback(
+								self.getEl('inp').id,
+								self.value(),
+								settings.filetype,
+								window
+							);
+						};
+					}
+				}
+			}
+
+			if (actionCallback) {
+				settings.icon = 'browse';
+				settings.onaction = actionCallback;
 			}
 
 			self._super(settings);

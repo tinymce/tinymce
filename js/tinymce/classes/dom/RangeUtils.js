@@ -1,5 +1,5 @@
 /**
- * Range.js
+ * RangeUtils.js
  *
  * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
@@ -9,7 +9,7 @@
  */
 
 /**
- * RangeUtils
+ * This class contains a few utility methods for ranges.
  *
  * @class tinymce.dom.RangeUtils
  * @private
@@ -19,6 +19,20 @@ define("tinymce/dom/RangeUtils", [
 	"tinymce/dom/TreeWalker"
 ], function(Tools, TreeWalker) {
 	var each = Tools.each;
+
+	function getEndChild(container, index) {
+		var childNodes = container.childNodes;
+
+		index--;
+
+		if (index > childNodes.length - 1) {
+			index = childNodes.length - 1;
+		} else if (index < 0) {
+			index = 0;
+		}
+
+		return childNodes[index] || container;
+	}
 
 	function RangeUtils(dom) {
 		/**
@@ -105,7 +119,7 @@ define("tinymce/dom/RangeUtils", [
 					}
 
 					node = node.parentNode;
-				} while(node);
+				} while (node);
 			}
 
 			function walkBoundary(start_node, end_node, next) {
@@ -132,7 +146,7 @@ define("tinymce/dom/RangeUtils", [
 
 			// If index based end position then resolve it
 			if (endContainer.nodeType == 1 && endContainer.hasChildNodes()) {
-				endContainer = endContainer.childNodes[Math.min(endOffset - 1, endContainer.childNodes.length - 1)];
+				endContainer = getEndChild(endContainer, endOffset);
 			}
 
 			// Same container

@@ -27,8 +27,9 @@
  */
 define("tinymce/ui/Form", [
 	"tinymce/ui/Container",
-	"tinymce/ui/FormItem"
-], function(Container, FormItem) {
+	"tinymce/ui/FormItem",
+	"tinymce/util/Tools"
+], function(Container, FormItem, Tools) {
 	"use strict";
 
 	return Container.extend({
@@ -56,19 +57,29 @@ define("tinymce/ui/Form", [
 		preRender: function() {
 			var self = this, items = self.items();
 
+			if (!self.settings.formItemDefaults) {
+				self.settings.formItemDefaults = {
+					layout: 'flex',
+					autoResize: "overflow",
+					defaults: {flex: 1}
+				};
+			}
+
 			// Wrap any labeled items in FormItems
 			items.each(function(ctrl) {
 				var formItem, label = ctrl.settings.label;
 
 				if (label) {
-					formItem = new FormItem({
-						layout: 'flex',
-						autoResize: "overflow",
-						defaults: {flex: 1},
-						items: [
-							{type: 'label', id: ctrl._id + '-l', text: label, flex: 0, forId: ctrl._id, disabled: ctrl.disabled()}
-						]
-					});
+					formItem = new FormItem(Tools.extend({
+						items: {
+							type: 'label',
+							id: ctrl._id + '-l',
+							text: label,
+							flex: 0,
+							forId: ctrl._id,
+							disabled: ctrl.disabled()
+						}
+					}, self.settings.formItemDefaults));
 
 					formItem.type = 'formitem';
 					ctrl.aria('labelledby', ctrl._id + '-l');
@@ -89,13 +100,19 @@ define("tinymce/ui/Form", [
 		 * @private
 		 */
 		recalcLabels: function() {
-			var self = this, maxLabelWidth = 0, labels = [], i, labelGap;
+			var self = this, maxLabelWidth = 0, labels = [], i, labelGap, items;
 
 			if (self.settings.labelGapCalc === false) {
 				return;
 			}
 
-			self.items().filter('formitem').each(function(item) {
+			if (self.settings.labelGapCalc == "children") {
+				items = self.find('formitem');
+			} else {
+				items = self.items();
+			}
+
+			items.filter('formitem').each(function(item) {
 				var labelCtrl = item.items()[0], labelWidth = labelCtrl.getEl().clientWidth;
 
 				maxLabelWidth = labelWidth > maxLabelWidth ? labelWidth : maxLabelWidth;

@@ -55,23 +55,23 @@ define("tinymce/util/JSON", [], function() {
 
 		if (t == 'object') {
 			if (o.hasOwnProperty && Object.prototype.toString.call(o) === '[object Array]') {
-					for (i = 0, v = '['; i < o.length; i++) {
-						v += (i > 0 ? ',' : '') + serialize(o[i], quote);
-					}
-
-					return v + ']';
+				for (i = 0, v = '['; i < o.length; i++) {
+					v += (i > 0 ? ',' : '') + serialize(o[i], quote);
 				}
 
-				v = '{';
+				return v + ']';
+			}
 
-				for (name in o) {
-					if (o.hasOwnProperty(name)) {
-						v += typeof o[name] != 'function' ? (v.length > 1 ? ',' + quote : quote) + name +
-							quote + ':' + serialize(o[name], quote) : '';
-					}
+			v = '{';
+
+			for (name in o) {
+				if (o.hasOwnProperty(name)) {
+					v += typeof o[name] != 'function' ? (v.length > 1 ? ',' + quote : quote) + name +
+						quote + ':' + serialize(o[name], quote) : '';
 				}
+			}
 
-				return v + '}';
+			return v + '}';
 		}
 
 		return '' + o;

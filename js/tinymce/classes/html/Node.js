@@ -229,7 +229,7 @@ define("tinymce/html/Node", [], function() {
 		unwrap: function() {
 			var self = this, node, next;
 
-			for (node = self.firstChild; node; ) {
+			for (node = self.firstChild; node;) {
 				next = node.next;
 				self.insert(node, self, true);
 				node = next;
@@ -431,11 +431,11 @@ define("tinymce/html/Node", [], function() {
 							return false;
 						}
 
-						// Keep elements with data attributes or name attribute like <a name="1"></a>
+						// Keep bookmark nodes and name attribute like <a name="1"></a>
 						i = node.attributes.length;
 						while (i--) {
 							name = node.attributes[i].name;
-							if (name === "name" || name.indexOf('data-mce-') === 0) {
+							if (name === "name" || name.indexOf('data-mce-bookmark') === 0) {
 								return false;
 							}
 						}

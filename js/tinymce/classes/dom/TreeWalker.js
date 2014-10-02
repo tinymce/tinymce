@@ -12,30 +12,44 @@
  * TreeWalker class enables you to walk the DOM in a linear manner.
  *
  * @class tinymce.dom.TreeWalker
+ * @example
+ * var walker = new tinymce.dom.TreeWalker(startNode);
+ *
+ * do {
+ *     console.log(walker.current());
+ * } while (walker.next());
  */
 define("tinymce/dom/TreeWalker", [], function() {
-	return function(start_node, root_node) {
-		var node = start_node;
+	/**
+	 * Constructs a new TreeWalker instance.
+	 *
+	 * @constructor
+	 * @method TreeWalker
+	 * @param {Node} startNode Node to start walking from.
+	 * @param {node} rootNode Optional root node to never walk out of.
+	 */
+	return function(startNode, rootNode) {
+		var node = startNode;
 
-		function findSibling(node, start_name, sibling_name, shallow) {
+		function findSibling(node, startName, siblingName, shallow) {
 			var sibling, parent;
 
 			if (node) {
 				// Walk into nodes if it has a start
-				if (!shallow && node[start_name]) {
-					return node[start_name];
+				if (!shallow && node[startName]) {
+					return node[startName];
 				}
 
 				// Return the sibling if it has one
-				if (node != root_node) {
-					sibling = node[sibling_name];
+				if (node != rootNode) {
+					sibling = node[siblingName];
 					if (sibling) {
 						return sibling;
 					}
 
 					// Walk up the parents to look for siblings
-					for (parent = node.parentNode; parent && parent != root_node; parent = parent.parentNode) {
-						sibling = parent[sibling_name];
+					for (parent = node.parentNode; parent && parent != rootNode; parent = parent.parentNode) {
+						sibling = parent[siblingName];
 						if (sibling) {
 							return sibling;
 						}

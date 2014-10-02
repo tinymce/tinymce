@@ -62,7 +62,7 @@ define("tinymce/util/Class", [
 		// Creates a overloaded method for the class
 		// this enables you to use this._super(); to call the super function
 		function createMethod(name, fn) {
-			return function(){
+			return function() {
 				var self = this, tmp = self._super, ret;
 
 				self._super = _super[name];
@@ -76,6 +76,8 @@ define("tinymce/util/Class", [
 		// Instantiate a base class (but only create the instance,
 		// don't run the init constructor)
 		initializing = true;
+
+		/*eslint new-cap:0 */
 		prototype = new self();
 		initializing = false;
 
