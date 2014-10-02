@@ -25,9 +25,11 @@
 define("tinymce/Formatter", [
 	"tinymce/dom/TreeWalker",
 	"tinymce/dom/RangeUtils",
+	"tinymce/dom/BookmarkManager",
+	"tinymce/dom/ElementUtils",
 	"tinymce/util/Tools",
 	"tinymce/fmt/Preview"
-], function(TreeWalker, RangeUtils, Tools, Preview) {
+], function(TreeWalker, RangeUtils, BookmarkManager, ElementUtils, Tools, Preview) {
 	/**
 	 * Constructs a new formatter instance.
 	 *
@@ -51,7 +53,8 @@ define("tinymce/Formatter", [
 			undef,
 			getContentEditable = dom.getContentEditable,
 			disableCaretContainer,
-			markCaretContainersBogus;
+			markCaretContainersBogus,
+			isBookmarkNode = BookmarkManager.isBookmarkNode;
 
 		var each = Tools.each,
 			grep = Tools.grep,
@@ -76,7 +79,6 @@ define("tinymce/Formatter", [
 
 		function defaultFormats() {
 			register({
-				
 				valigntop: [
 					{selector: 'td,th', styles: {'verticalAlign': 'top'}}
 				],
@@ -84,11 +86,11 @@ define("tinymce/Formatter", [
 				valignmiddle: [
 					{selector: 'td,th', styles: {'verticalAlign': 'middle'}}
 				],
-				
+
 				valignbottom: [
 					{selector: 'td,th', styles: {'verticalAlign': 'bottom'}}
-				],				
-				
+				],
+
 				alignleft: [
 					{selector: 'figure,p,h1,h2,h3,h4,h5,h6,td,th,tr,div,ul,ol,li', styles: {textAlign: 'left'}, defaultBlock: 'div'},
 					{selector: 'img,table', collapsed: false, styles: {'float': 'left'}}
@@ -131,8 +133,8 @@ define("tinymce/Formatter", [
 					{inline: 'strike', remove: 'all'}
 				],
 
-				forecolor: {inline: 'span', styles: {color: '%value'}, wrap_links: false},
-				hilitecolor: {inline: 'span', styles: {backgroundColor: '%value'}, wrap_links: false},
+				forecolor: {inline: 'span', styles: {color: '%value'}, links: true, remove_similar: true},
+				hilitecolor: {inline: 'span', styles: {backgroundColor: '%value'}, links: true, remove_similar: true},
 				fontname: {inline: 'span', styles: {fontFamily: '%value'}},
 				fontsize: {inline: 'span', styles: {fontSize: '%value'}},
 				fontsize_class: {inline: 'span', attributes: {'class': '%value'}},
@@ -257,6 +259,20 @@ define("tinymce/Formatter", [
 			}
 		}
 
+		/**
+		 * Unregister a specific format by name.
+		 *
+		 * @method unregister
+		 * @param {String} name Name of the format for example "bold".
+		 */
+		function unregister(name) {
+			if (name && formats[name]) {
+				delete formats[name];
+			}
+
+			return formats;
+		}
+
 		function getTextDecoration(node) {
 			var decoration;
 
@@ -303,6 +319,16 @@ define("tinymce/Formatter", [
 						dom.setStyle(elm, name, replaceVars(value, vars));
 					});
 
+					// Needed for the WebKit span spam bug
+					// TODO: Remove this once WebKit/Blink fixes this
+					if (fmt.styles) {
+						var styleVal = dom.getAttrib(elm, 'style');
+
+						if (styleVal) {
+							elm.setAttribute('data-mce-style', styleVal);
+						}
+					}
+
 					each(fmt.attributes, function(value, name) {
 						dom.setAttrib(elm, name, replaceVars(value, vars));
 					});
@@ -341,62 +367,6 @@ define("tinymce/Formatter", [
 				}
 
 				return rng;
-			}
-
-			function applyStyleToList(node, bookmark, wrapElm, newWrappers, process){
-				var nodes = [], listIndex = -1, list, startIndex = -1, endIndex = -1, currentWrapElm;
-
-				// find the index of the first child list.
-				each(node.childNodes, function(n, index) {
-					if (n.nodeName === "UL" || n.nodeName === "OL") {
-						listIndex = index;
-						list = n;
-						return false;
-					}
-				});
-
-				// get the index of the bookmarks
-				each(node.childNodes, function(n, index) {
-					if (n.nodeName === "SPAN" && dom.getAttrib(n, "data-mce-type") == "bookmark") {
-						if (n.id == bookmark.id + "_start") {
-							startIndex = index;
-						} else if (n.id == bookmark.id + "_end") {
-							endIndex = index;
-						}
-					}
-				});
-
-				// if the selection spans across an embedded list, or there isn't an embedded list - handle processing normally
-				if (listIndex <= 0 || (startIndex < listIndex && endIndex > listIndex)) {
-					each(grep(node.childNodes), process);
-					return 0;
-				} else {
-					currentWrapElm = dom.clone(wrapElm, FALSE);
-
-					// create a list of the nodes on the same side of the list as the selection
-					each(grep(node.childNodes), function(n, index) {
-						if ((startIndex < listIndex && index < listIndex) || (startIndex > listIndex && index > listIndex)) {
-							nodes.push(n);
-							n.parentNode.removeChild(n);
-						}
-					});
-
-					// insert the wrapping element either before or after the list.
-					if (startIndex < listIndex) {
-						node.insertBefore(currentWrapElm, list);
-					} else if (startIndex > listIndex) {
-						node.insertBefore(currentWrapElm, list.nextSibling);
-					}
-
-					// add the new nodes to the list.
-					newWrappers.push(currentWrapElm);
-
-					each(nodes, function(node) {
-						currentWrapElm.appendChild(node);
-					});
-
-					return currentWrapElm;
-				}
 			}
 
 			function applyRngStyle(rng, bookmark, node_specific) {
@@ -495,10 +465,6 @@ define("tinymce/Formatter", [
 							}
 
 							currentWrapElm.appendChild(node);
-						} else if (nodeName == 'li' && bookmark) {
-							// Start wrapping - if we are in a list node and have a bookmark, then
-							// we will always begin by wrapping in a new element.
-							currentWrapElm = applyStyleToList(node, bookmark, wrapElm, newWrappers, process);
 						} else {
 							// Start a new wrapper for possible children
 							currentWrapElm = 0;
@@ -518,22 +484,12 @@ define("tinymce/Formatter", [
 					each(nodes, process);
 				});
 
-				// Wrap links inside as well, for example color inside a link when the wrapper is around the link
-				if (format.wrap_links === false) {
+				// Apply formats to links as well to get the color of the underline to change as well
+				if (format.links === true) {
 					each(newWrappers, function(node) {
 						function process(node) {
-							var i, currentWrapElm, children;
-
 							if (node.nodeName === 'A') {
-								currentWrapElm = dom.clone(wrapElm, FALSE);
-								newWrappers.push(currentWrapElm);
-
-								children = grep(node.childNodes);
-								for (i = 0; i < children.length; i++) {
-									currentWrapElm.appendChild(children[i]);
-								}
-
-								node.appendChild(currentWrapElm);
+								setElementFormat(node, format);
 							}
 
 							each(grep(node.childNodes), process);
@@ -603,22 +559,8 @@ define("tinymce/Formatter", [
 							// this: <span style="color:red"><b><span style="color:red; font-size:10px">text</span></b></span>
 							// will become: <span style="color:red"><b><span style="font-size:10px">text</span></b></span>
 							each(dom.select(format.inline, node), function(child) {
-								var parent;
-
 								if (isBookmarkNode(child)) {
 									return;
-								}
-
-								// When wrap_links is set to false we don't want
-								// to remove the format on children within links
-								if (format.wrap_links === false) {
-									parent = child.parentNode;
-
-									do {
-										if (parent.nodeName === 'A') {
-											return;
-										}
-									} while ((parent = parent.parentNode));
 								}
 
 								removeFormat(format, vars, child, format.exact ? child : null);
@@ -703,7 +645,7 @@ define("tinymce/Formatter", [
 		 * @param {Object} vars Optional list of variables to replace within format before removing it.
 		 * @param {Node/Range} node Optional node or DOM range to remove the format from defaults to current selection.
 		 */
-		function remove(name, vars, node) {
+		function remove(name, vars, node, similar) {
 			var formatList = get(name), format = formatList[0], bookmark, rng, contentEditable = true;
 
 			// Merges the styles for each node
@@ -753,7 +695,7 @@ define("tinymce/Formatter", [
 					// Find format root element
 					if (!formatRoot && parent.id != '_start' && parent.id != '_end') {
 						// Is the node matching the format we are looking for
-						format = matchNode(parent, name, vars);
+						format = matchNode(parent, name, vars, similar);
 						if (format && format.split !== false) {
 							formatRoot = parent;
 						}
@@ -763,12 +705,12 @@ define("tinymce/Formatter", [
 				return formatRoot;
 			}
 
-			function wrapAndSplit(format_root, container, target, split) {
+			function wrapAndSplit(formatRoot, container, target, split) {
 				var parent, clone, lastClone, firstClone, i, formatRootParent;
 
 				// Format root found then clone formats and split it
-				if (format_root) {
-					formatRootParent = format_root.parentNode;
+				if (formatRoot) {
+					formatRootParent = formatRoot.parentNode;
 
 					for (parent = container.parentNode; parent && parent != formatRootParent; parent = parent.parentNode) {
 						clone = dom.clone(parent, FALSE);
@@ -795,8 +737,8 @@ define("tinymce/Formatter", [
 					}
 
 					// Never split block elements if the format is mixed
-					if (split && (!format.mixed || !isBlock(format_root))) {
-						container = dom.split(format_root, container);
+					if (split && (!format.mixed || !isBlock(formatRoot))) {
+						container = dom.split(formatRoot, container);
 					}
 
 					// Wrap container in cloned formats
@@ -928,7 +870,7 @@ define("tinymce/Formatter", [
 
 				ed.nodeChanged();
 			} else {
-				performCaretAction('remove', name, vars);
+				performCaretAction('remove', name, vars, similar);
 			}
 		}
 
@@ -1160,6 +1102,11 @@ define("tinymce/Formatter", [
 				ed.on('NodeChange', function(e) {
 					var parents = getParents(e.element), matchedFormats = {};
 
+					// Ignore bogus nodes like the <a> tag created by moveStart()
+					parents = Tools.grep(parents, function(node) {
+						return node.nodeType == 1 && !node.getAttribute('data-mce-bogus');
+					});
+
 					// Check for new formats
 					each(formatChangeData, function(callbacks, format) {
 						each(parents, function(node) {
@@ -1223,6 +1170,7 @@ define("tinymce/Formatter", [
 		extend(this, {
 			get: get,
 			register: register,
+			unregister: unregister,
 			apply: apply,
 			remove: remove,
 			toggle: toggle,
@@ -1237,8 +1185,8 @@ define("tinymce/Formatter", [
 		// Initialize
 		defaultFormats();
 		addKeyboardShortcuts();
-		ed.on('BeforeGetContent', function() {
-			if (markCaretContainersBogus) {
+		ed.on('BeforeGetContent', function(e) {
+			if (markCaretContainersBogus && e.format != 'raw') {
 				markCaretContainersBogus();
 			}
 		});
@@ -1443,7 +1391,7 @@ define("tinymce/Formatter", [
 						offset = node.nodeType === 3 ? node.length : node.childNodes.length;
 					}
 				}
-				return { node: node, offset: offset };
+				return {node: node, offset: offset};
 			}
 
 			// If index based start position then resolve it
@@ -1728,6 +1676,10 @@ define("tinymce/Formatter", [
 			};
 		}
 
+		function isColorFormatAndAnchor(node, format) {
+			return format.links && node.tagName == 'A';
+		}
+
 		/**
 		 * Removes the specified format for the specified node. It will also remove the node if it doesn't have
 		 * any attributes if the format specifies it to do so.
@@ -1743,7 +1695,7 @@ define("tinymce/Formatter", [
 			var i, attrs, stylesModified;
 
 			// Check if node matches format
-			if (!matchName(node, format)) {
+			if (!matchName(node, format) && !isColorFormatAndAnchor(node, format)) {
 				return FALSE;
 			}
 
@@ -1759,7 +1711,7 @@ define("tinymce/Formatter", [
 						compare_node = 0;
 					}
 
-					if (!compare_node || isEq(getStyle(compare_node, name), value)) {
+					if (format.remove_similar || (!compare_node || isEq(getStyle(compare_node, name), value))) {
 						dom.setStyle(node, name, '');
 					}
 
@@ -1934,17 +1886,6 @@ define("tinymce/Formatter", [
 		}
 
 		/**
-		 * Checks if the specified node is a bookmark node or not.
-		 *
-		 * @private
-		 * @param {Node} node Node to check if it's a bookmark node or not.
-		 * @return {Boolean} true/false if the node is a bookmark node.
-		 */
-		function isBookmarkNode(node) {
-			return node && node.nodeType == 1 && node.getAttribute('data-mce-type') == 'bookmark';
-		}
-
-		/**
 		 * Merges the next/previous sibling element if they match.
 		 *
 		 * @private
@@ -1953,99 +1894,7 @@ define("tinymce/Formatter", [
 		 * @return {Node} Next node if we didn't merge and prev node if we did.
 		 */
 		function mergeSiblings(prev, next) {
-			var sibling, tmpSibling;
-
-			/**
-			 * Compares two nodes and checks if it's attributes and styles matches.
-			 * This doesn't compare classes as items since their order is significant.
-			 *
-			 * @private
-			 * @param {Node} node1 First node to compare with.
-			 * @param {Node} node2 Second node to compare with.
-			 * @return {boolean} True/false if the nodes are the same or not.
-			 */
-			function compareElements(node1, node2) {
-				// Not the same name
-				if (node1.nodeName != node2.nodeName) {
-					return FALSE;
-				}
-
-				/**
-				 * Returns all the nodes attributes excluding internal ones, styles and classes.
-				 *
-				 * @private
-				 * @param {Node} node Node to get attributes from.
-				 * @return {Object} Name/value object with attributes and attribute values.
-				 */
-				function getAttribs(node) {
-					var attribs = {};
-
-					each(dom.getAttribs(node), function(attr) {
-						var name = attr.nodeName.toLowerCase();
-
-						// Don't compare internal attributes or style
-						if (name.indexOf('_') !== 0 && name !== 'style' && name !== 'data-mce-style') {
-							attribs[name] = dom.getAttrib(node, name);
-						}
-					});
-
-					return attribs;
-				}
-
-				/**
-				 * Compares two objects checks if it's key + value exists in the other one.
-				 *
-				 * @private
-				 * @param {Object} obj1 First object to compare.
-				 * @param {Object} obj2 Second object to compare.
-				 * @return {boolean} True/false if the objects matches or not.
-				 */
-				function compareObjects(obj1, obj2) {
-					var value, name;
-
-					for (name in obj1) {
-						// Obj1 has item obj2 doesn't have
-						if (obj1.hasOwnProperty(name)) {
-							value = obj2[name];
-
-							// Obj2 doesn't have obj1 item
-							if (value === undef) {
-								return FALSE;
-							}
-
-							// Obj2 item has a different value
-							if (obj1[name] != value) {
-								return FALSE;
-							}
-
-							// Delete similar value
-							delete obj2[name];
-						}
-					}
-
-					// Check if obj 2 has something obj 1 doesn't have
-					for (name in obj2) {
-						// Obj2 has item obj1 doesn't have
-						if (obj2.hasOwnProperty(name)) {
-							return FALSE;
-						}
-					}
-
-					return TRUE;
-				}
-
-				// Attribs are not the same
-				if (!compareObjects(getAttribs(node1), getAttribs(node2))) {
-					return FALSE;
-				}
-
-				// Styles are not the same
-				if (!compareObjects(dom.parseStyle(dom.getAttrib(node1, 'style')), dom.parseStyle(dom.getAttrib(node2, 'style')))) {
-					return FALSE;
-				}
-
-				return !isBookmarkNode(node1) && !isBookmarkNode(node2);
-			}
+			var sibling, tmpSibling, elementUtils = new ElementUtils(dom);
 
 			function findElementSibling(node, sibling_name) {
 				for (sibling = node; sibling; sibling = sibling[sibling_name]) {
@@ -2068,7 +1917,7 @@ define("tinymce/Formatter", [
 				next = findElementSibling(next, 'nextSibling');
 
 				// Compare next and previous nodes
-				if (compareElements(prev, next)) {
+				if (elementUtils.compare(prev, next)) {
 					// Append nodes between
 					for (sibling = prev.nextSibling; sibling && sibling != next;) {
 						tmpSibling = sibling;
@@ -2120,7 +1969,7 @@ define("tinymce/Formatter", [
 			return container;
 		}
 
-		function performCaretAction(type, name, vars) {
+		function performCaretAction(type, name, vars, similar) {
 			var caretContainerId = '_mce_caret', debug = ed.settings.caret_debug;
 
 			// Creates a caret container bogus element
@@ -2203,7 +2052,16 @@ define("tinymce/Formatter", [
 						child = findFirstTextNode(node);
 
 						if (child.nodeValue.charAt(0) === INVISIBLE_CHAR) {
-							child = child.deleteData(0, 1);
+							child.deleteData(0, 1);
+
+							// Fix for bug #6976
+							if (rng.startContainer == child && rng.startOffset > 0) {
+								rng.setStart(child, rng.startOffset - 1);
+							}
+
+							if (rng.endContainer == child && rng.endOffset > 0) {
+								rng.setEnd(child, rng.endOffset - 1);
+							}
 						}
 
 						dom.remove(node, 1);
@@ -2271,7 +2129,7 @@ define("tinymce/Formatter", [
 				node = container;
 
 				if (container.nodeType == 3) {
-					if (offset != container.nodeValue.length || container.nodeValue === INVISIBLE_CHAR) {
+					if (offset != container.nodeValue.length) {
 						hasContentAfter = true;
 					}
 
@@ -2279,7 +2137,7 @@ define("tinymce/Formatter", [
 				}
 
 				while (node) {
-					if (matchNode(node, name, vars)) {
+					if (matchNode(node, name, vars, similar)) {
 						formatNode = node;
 						break;
 					}
@@ -2340,7 +2198,7 @@ define("tinymce/Formatter", [
 					// Move selection to text node
 					selection.setCursorLocation(node, 1);
 
-					// If the formatNode is empty, we can remove it safely. 
+					// If the formatNode is empty, we can remove it safely.
 					if (dom.isEmpty(formatNode)) {
 						dom.remove(formatNode);
 					}
@@ -2438,7 +2296,7 @@ define("tinymce/Formatter", [
 					if (node.nodeType == 3 && !isWhiteSpaceNode(node)) {
 						// IE has a "neat" feature where it moves the start node into the closest element
 						// we can avoid this by inserting an element before it and then remove it after we set the selection
-						tmpNode = dom.create('a', null, INVISIBLE_CHAR);
+						tmpNode = dom.create('a', {'data-mce-bogus': 'all'}, INVISIBLE_CHAR);
 						node.parentNode.insertBefore(tmpNode, node);
 
 						// Set selection and remove tmpNode

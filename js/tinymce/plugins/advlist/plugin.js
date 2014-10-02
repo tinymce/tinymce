@@ -18,7 +18,9 @@ tinymce.PluginManager.add('advlist', function(editor) {
 
 		tinymce.each(styleValues.split(/[ ,]/), function(styleValue) {
 			items.push({
-				text: styleValue.replace(/\-/g, ' ').replace(/\b\w/g, function(chr) {return chr.toUpperCase();}),
+				text: styleValue.replace(/\-/g, ' ').replace(/\b\w/g, function(chr) {
+					return chr.toUpperCase();
+				}),
 				data: styleValue == 'default' ? '' : styleValue
 			});
 		});
@@ -49,7 +51,7 @@ tinymce.PluginManager.add('advlist', function(editor) {
 		lastStyles[listName] = styleValue;
 
 		list = dom.getParent(sel.getNode(), 'ol,ul');
-		if (list) {
+		if (list && styleValue) {
 			dom.setStyle(list, 'listStyleType', styleValue);
 			list.removeAttribute('data-mce-style');
 		}

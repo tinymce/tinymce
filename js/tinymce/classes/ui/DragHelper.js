@@ -85,7 +85,6 @@ define("tinymce/ui/DragHelper", [
 				height: docSize.height,
 				zIndex: 0x7FFFFFFF,
 				opacity: 0.0001,
-				background: 'red',
 				cursor: cursor
 			});
 

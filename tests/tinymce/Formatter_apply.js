@@ -1038,7 +1038,7 @@ test('Bold and italics is applied to text that is not highlighted', function() {
 	equal(editor.getContent(), '<p><span style="font-family: Arial;"><strong>test1 <em>test2</em></strong> test3 test4 test5 test6</span></p>', 'Selected text should be bold.');
 });
 
-test('No wrapping of links', function() {
+test('Apply color format to links as well', function() {
 	editor.setContent('<p>123<a href="#">abc</a>456</p>');
 	var rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
@@ -1050,11 +1050,15 @@ test('No wrapping of links', function() {
 		styles: {
 			color: '#FF0000'
 		},
-		wrap_links: false
+		links: true
 	});
 	editor.formatter.apply('format');
 
-	equal(editor.getContent(), '<p><span style="color: #ff0000;">123<a href="#"><span style="color: #ff0000;">abc</span></a>456</span></p>', 'Link should have it\'s own span.');
+	equal(
+		editor.getContent(),
+		'<p><span style="color: #ff0000;">123<a style="color: #ff0000;" href="#">abc</a>456</span></p>',
+		'Link should have it\'s own color.'
+	);
 });
 
 test('Color on link element', function() {
@@ -1069,11 +1073,15 @@ test('Color on link element', function() {
 		styles: {
 			color: '#FF0000'
 		},
-		wrap_links: false
+		links: true
 	});
 	editor.formatter.apply('format');
 
-	equal(editor.getContent(), '<p><span style="color: #ff0000; font-size: 10px;">123<a href="#"><span style="color: #ff0000;">abc</span></a>456</span></p>', 'Link should have it\'s own span.');
+	equal(
+		editor.getContent(),
+		'<p><span style="color: #ff0000; font-size: 10px;">123<a style="color: #ff0000;" href="#">abc</a>456</span></p>',
+		'Link should have it\'s own color.'
+	);
 });
 
 test("Applying formats in lists", function() {
@@ -1084,6 +1092,17 @@ test("Applying formats in lists", function() {
 	editor.selection.setRng(rng);
 	editor.formatter.apply("h1");
 	equal(editor.getContent(), '<ul><li><h1>text</h1><ul><li>nested</li></ul></li></ul>', "heading should not automatically apply to sublists");
+});
+
+test("Applying formats on a list including child nodes", function(){
+	editor.formatter.register('format', {inline: 'strong'});
+	editor.setContent('<ol><li>a</li><li>b<ul><li>c</li><li>d<br /><ol><li>e</li><li>f</li></ol></li></ul></li><li>g</li></ol>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('li')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('li')[6].firstChild, 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply("format");
+	equal(editor.getContent(), '<ol><li><strong>a</strong></li><li><strong>b</strong><ul><li><strong>c</strong></li><li><strong>d</strong><br /><ol><li><strong>e</strong></li><li><strong>f</strong></li></ol></li></ul></li><li><strong>g</strong></li></ol>', "should be applied to all sublists");
 });
 
 test('Block format on li element', function() {

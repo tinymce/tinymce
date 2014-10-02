@@ -1,6 +1,8 @@
 {
 	"predef": {
-		"define": true
+		"define": true,
+		"require": true,
+		"module": true
 	},
 	"passfail": false,
 	"maxerr": 50,

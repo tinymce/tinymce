@@ -20,7 +20,7 @@
 		plugins: [
 			"advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
 			"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-			"save table contextmenu directionality emoticons template paste textcolor importcss"
+			"save table contextmenu directionality emoticons template paste textcolor importcss colorpicker textpattern"
 		],
 		external_plugins: {
 			//"moxiemanager": "/moxiemanager-php/plugin.js"
@@ -74,15 +74,20 @@
 			});*/
 		},
 
-		spellchecker_callback: function(method, words, callback) {
+		spellchecker_callback: function(method, data, success) {
 			if (method == "spellcheck") {
+				var words = data.match(this.getWordCharPattern());
 				var suggestions = {};
 
 				for (var i = 0; i < words.length; i++) {
 					suggestions[words[i]] = ["First", "second"];
 				}
 
-				callback(suggestions);
+				success({words: suggestions, dictionary: true});
+			}
+
+			if (method == "addToDictionary") {
+				success();
 			}
 		}
 	});

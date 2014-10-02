@@ -17,12 +17,15 @@
 define("tinymce/EditorCommands", [
 	"tinymce/html/Serializer",
 	"tinymce/Env",
-	"tinymce/util/Tools"
-], function(Serializer, Env, Tools) {
+	"tinymce/util/Tools",
+	"tinymce/dom/ElementUtils",
+	"tinymce/dom/RangeUtils",
+	"tinymce/dom/TreeWalker"
+], function(Serializer, Env, Tools, ElementUtils, RangeUtils, TreeWalker) {
 	// Added for compression purposes
 	var each = Tools.each, extend = Tools.extend;
 	var map = Tools.map, inArray = Tools.inArray, explode = Tools.explode;
-	var isGecko = Env.gecko, isIE = Env.ie;
+	var isGecko = Env.gecko, isIE = Env.ie, isOldIE = Env.ie && Env.ie < 11;
 	var TRUE = true, FALSE = false;
 
 	return function(editor) {
@@ -313,7 +316,8 @@ define("tinymce/EditorCommands", [
 
 			mceInsertContent: function(command, ui, value) {
 				var parser, serializer, parentNode, rootNode, fragment, args;
-				var marker, rng, node, node2, bookmarkHtml;
+				var marker, rng, node, node2, bookmarkHtml, merge;
+				var textInlineElements = editor.schema.getTextInlineElements();
 
 				function trimOrPaddLeftRight(html) {
 					var rng, container, offset;
@@ -343,6 +347,37 @@ define("tinymce/EditorCommands", [
 					return html;
 				}
 
+				function markInlineFormatElements(fragment) {
+					if (merge) {
+						for (node = fragment.firstChild; node; node = node.walk(true)) {
+							if (textInlineElements[node.name]) {
+								node.attr('data-mce-new', "true");
+							}
+						}
+					}
+				}
+
+				function reduceInlineTextElements() {
+					if (merge) {
+						var root = editor.getBody(), elementUtils = new ElementUtils(dom);
+
+						each(dom.select('*[data-mce-new]'), function(node) {
+							node.removeAttribute('data-mce-new');
+
+							for (var testNode = node.parentNode; testNode && testNode != root; testNode = testNode.parentNode) {
+								if (elementUtils.compare(testNode, node)) {
+									dom.remove(node, true);
+								}
+							}
+						});
+					}
+				}
+
+				if (typeof(value) != 'string') {
+					merge = value.merge;
+					value = value.content;
+				}
+
 				// Check for whitespace before/after value
 				if (/^ | $/.test(value)) {
 					value = trimOrPaddLeftRight(value);
@@ -351,7 +386,7 @@ define("tinymce/EditorCommands", [
 				// Setup parser and serializer
 				parser = editor.parser;
 				serializer = new Serializer({}, editor.schema);
-				bookmarkHtml = '<span id="mce_marker" data-mce-type="bookmark">&#xFEFF;&#200B;</span>';
+				bookmarkHtml = '<span id="mce_marker" data-mce-type="bookmark">&#xFEFF;&#x200B;</span>';
 
 				// Run beforeSetContent handlers on the HTML to be inserted
 				args = {content: value, format: 'html', selection: true};
@@ -390,6 +425,8 @@ define("tinymce/EditorCommands", [
 				var parserArgs = {context: parentNode.nodeName.toLowerCase()};
 				fragment = parser.parse(value, parserArgs);
 
+				markInlineFormatElements(fragment);
+
 				// Move the caret to a more suitable location
 				node = fragment.lastChild;
 				if (node.attr('id') == 'mce_marker') {
@@ -397,7 +434,9 @@ define("tinymce/EditorCommands", [
 
 					for (node = node.prev; node; node = node.walk(true)) {
 						if (node.type == 3 || !dom.isBlock(node.name)) {
-							node.parent.insert(marker, node, node.name === 'br');
+							if (editor.schema.isValidChild(node.parent.name, 'span')) {
+								node.parent.insert(marker, node, node.name === 'br');
+							}
 							break;
 						}
 					}
@@ -455,6 +494,8 @@ define("tinymce/EditorCommands", [
 						dom.setOuterHTML(parentNode, value);
 					}
 				}
+
+				reduceInlineTextElements();
 
 				marker = dom.get('mce_marker');
 				selection.scrollIntoView(marker);
@@ -636,6 +677,93 @@ define("tinymce/EditorCommands", [
 
 			mceNewDocument: function() {
 				editor.setContent('');
+			},
+
+			InsertLineBreak: function(command, ui, value) {
+				// We load the current event in from EnterKey.js when appropriate to heed
+				// certain event-specific variations such as ctrl-enter in a list
+				var evt = value;
+				var brElm, extraBr, marker;
+				var rng = selection.getRng(true);
+				new RangeUtils(dom).normalize(rng);
+
+				var offset = rng.startOffset;
+				var container = rng.startContainer;
+
+				// Resolve node index
+				if (container.nodeType == 1 && container.hasChildNodes()) {
+					var isAfterLastNodeInContainer = offset > container.childNodes.length - 1;
+
+					container = container.childNodes[Math.min(offset, container.childNodes.length - 1)] || container;
+					if (isAfterLastNodeInContainer && container.nodeType == 3) {
+						offset = container.nodeValue.length;
+					} else {
+						offset = 0;
+					}
+				}
+
+				var parentBlock = dom.getParent(container, dom.isBlock);
+				var parentBlockName = parentBlock ? parentBlock.nodeName.toUpperCase() : ''; // IE < 9 & HTML5
+				var containerBlock = parentBlock ? dom.getParent(parentBlock.parentNode, dom.isBlock) : null;
+				var containerBlockName = containerBlock ? containerBlock.nodeName.toUpperCase() : ''; // IE < 9 & HTML5
+
+				// Enter inside block contained within a LI then split or insert before/after LI
+				var isControlKey = evt && evt.ctrlKey;
+				if (containerBlockName == 'LI' && !isControlKey) {
+					parentBlock = containerBlock;
+					parentBlockName = containerBlockName;
+				}
+
+				// Walks the parent block to the right and look for BR elements
+				function hasRightSideContent() {
+					var walker = new TreeWalker(container, parentBlock), node;
+					var nonEmptyElementsMap = editor.schema.getNonEmptyElements();
+
+					while ((node = walker.next())) {
+						if (nonEmptyElementsMap[node.nodeName.toLowerCase()] || node.length > 0) {
+							return true;
+						}
+					}
+				}
+
+				if (container && container.nodeType == 3 && offset >= container.nodeValue.length) {
+					// Insert extra BR element at the end block elements
+					if (!isOldIE && !hasRightSideContent()) {
+						brElm = dom.create('br');
+						rng.insertNode(brElm);
+						rng.setStartAfter(brElm);
+						rng.setEndAfter(brElm);
+						extraBr = true;
+					}
+				}
+
+				brElm = dom.create('br');
+				rng.insertNode(brElm);
+
+				// Rendering modes below IE8 doesn't display BR elements in PRE unless we have a \n before it
+				var documentMode = dom.doc.documentMode;
+				if (isOldIE && parentBlockName == 'PRE' && (!documentMode || documentMode < 8)) {
+					brElm.parentNode.insertBefore(dom.doc.createTextNode('\r'), brElm);
+				}
+
+				// Insert temp marker and scroll to that
+				marker = dom.create('span', {}, '&nbsp;');
+				brElm.parentNode.insertBefore(marker, brElm);
+				selection.scrollIntoView(marker);
+				dom.remove(marker);
+
+				if (!extraBr) {
+					rng.setStartAfter(brElm);
+					rng.setEndAfter(brElm);
+				} else {
+					rng.setStartBefore(brElm);
+					rng.setEndBefore(brElm);
+				}
+
+				selection.setRng(rng);
+				editor.undoManager.add();
+
+				return TRUE;
 			}
 		});
 

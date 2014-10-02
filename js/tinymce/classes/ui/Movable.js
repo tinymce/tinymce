@@ -28,7 +28,7 @@ define("tinymce/ui/Movable", [
 		x = pos.x;
 		y = pos.y;
 
-		if (ctrl._fixed) {
+		if (ctrl._fixed && DomUtils.getRuntimeStyle(document.body, 'position') == 'static') {
 			x -= viewport.x;
 			y -= viewport.y;
 		}

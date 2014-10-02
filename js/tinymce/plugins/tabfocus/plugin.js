@@ -22,7 +22,7 @@ tinymce.PluginManager.add('tabfocus', function(editor) {
 	function tabHandler(e) {
 		var x, el, v, i;
 
-		if (e.keyCode !== 9 || e.ctrlKey || e.altKey || e.metaKey) {
+		if (e.keyCode !== 9 || e.ctrlKey || e.altKey || e.metaKey || e.isDefaultPrevented()) {
 			return;
 		}
 
@@ -35,12 +35,8 @@ tinymce.PluginManager.add('tabfocus', function(editor) {
 					e.style.visibility != "hidden" && canSelectRecursive(e.parentNode));
 			}
 
-			function canSelectInOldIe(el) {
-				return el.tabIndex || el.nodeName == "INPUT" || el.nodeName == "TEXTAREA";
-			}
-
 			function canSelect(el) {
-				return ((!canSelectInOldIe(el))) && el.getAttribute("tabindex") != '-1' && canSelectRecursive(el);
+				return /INPUT|TEXTAREA|BUTTON/.test(el.tagName) && tinymce.get(e.id)  && el.tabIndex != -1 && canSelectRecursive(el);
 			}
 
 			each(el, function(e, i) {
@@ -112,13 +108,13 @@ tinymce.PluginManager.add('tabfocus', function(editor) {
 			// Remove default tabIndex in inline mode
 			tinymce.DOM.setAttrib(editor.getBody(), 'tabIndex', null);
 		}
+
+		editor.on('keyup', tabCancel);
+
+		if (tinymce.Env.gecko) {
+			editor.on('keypress keydown', tabHandler);
+		} else {
+			editor.on('keydown', tabHandler);
+		}
 	});
-
-	editor.on('keyup', tabCancel);
-
-	if (tinymce.Env.gecko) {
-		editor.on('keypress keydown', tabHandler);
-	} else {
-		editor.on('keydown', tabHandler);
-	}
 });

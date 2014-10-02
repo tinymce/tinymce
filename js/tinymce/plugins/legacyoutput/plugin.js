@@ -22,7 +22,7 @@
 		e.editor.settings.inline_styles = false;
 	});
 
-	tinymce.PluginManager.add('legacyoutput', function(editor) {
+	tinymce.PluginManager.add('legacyoutput', function(editor, url, $) {
 		editor.on('init', function() {
 			var alignElements = 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img',
 				fontSizes = tinymce.explode(editor.settings.font_size_style_values),
@@ -93,18 +93,119 @@
 					}
 				}
 			});
+		});
 
-			// Listen for the onNodeChange event so that we can do special logic for the font size and font name drop boxes
-			/*editor.on('NodeChange', function() {
-				var fontElm, fontName, fontSize;
+		editor.addButton('fontsizeselect', function() {
+			var items = [], defaultFontsizeFormats = '8pt=1 10pt=2 12pt=3 14pt=4 18pt=5 24pt=6 36pt=7';
+			var fontsize_formats = editor.settings.fontsize_formats || defaultFontsizeFormats;
 
-				// Find font element get it's name and size
-				fontElm = editor.dom.getParent(editor.selection.getNode(), 'font');
-				if (fontElm) {
-					fontName = fontElm.face;
-					fontSize = fontElm.size;
+			editor.$.each(fontsize_formats.split(' '), function(i, item) {
+				var text = item, value = item;
+				var values = item.split('=');
+
+				if (values.length > 1) {
+					text = values[0];
+					value = values[1];
 				}
-			});*/
+
+				items.push({text: text, value: value});
+			});
+
+			return {
+				type: 'listbox',
+				text: 'Font Sizes',
+				tooltip: 'Font Sizes',
+				values: items,
+				fixedWidth: true,
+				onPostRender: function() {
+					var self = this;
+
+					editor.on('NodeChange', function() {
+						var fontElm;
+
+						fontElm = editor.dom.getParent(editor.selection.getNode(), 'font');
+						if (fontElm) {
+							self.value(fontElm.size);
+						} else {
+							self.value('');
+						}
+					});
+				},
+				onclick: function(e) {
+					if (e.control.settings.value) {
+						editor.execCommand('FontSize', false, e.control.settings.value);
+					}
+				}
+			};
+		});
+
+		editor.addButton('fontselect', function() {
+			function createFormats(formats) {
+				formats = formats.replace(/;$/, '').split(';');
+
+				var i = formats.length;
+				while (i--) {
+					formats[i] = formats[i].split('=');
+				}
+
+				return formats;
+			}
+
+			var defaultFontsFormats =
+				'Andale Mono=andale mono,times;' +
+				'Arial=arial,helvetica,sans-serif;' +
+				'Arial Black=arial black,avant garde;' +
+				'Book Antiqua=book antiqua,palatino;' +
+				'Comic Sans MS=comic sans ms,sans-serif;' +
+				'Courier New=courier new,courier;' +
+				'Georgia=georgia,palatino;' +
+				'Helvetica=helvetica;' +
+				'Impact=impact,chicago;' +
+				'Symbol=symbol;' +
+				'Tahoma=tahoma,arial,helvetica,sans-serif;' +
+				'Terminal=terminal,monaco;' +
+				'Times New Roman=times new roman,times;' +
+				'Trebuchet MS=trebuchet ms,geneva;' +
+				'Verdana=verdana,geneva;' +
+				'Webdings=webdings;' +
+				'Wingdings=wingdings,zapf dingbats';
+
+			var items = [], fonts = createFormats(editor.settings.font_formats || defaultFontsFormats);
+
+			$.each(fonts, function(i, font) {
+				items.push({
+					text: {raw: font[0]},
+					value: font[1],
+					textStyle: font[1].indexOf('dings') == -1 ? 'font-family:' + font[1] : ''
+				});
+			});
+
+			return {
+				type: 'listbox',
+				text: 'Font Family',
+				tooltip: 'Font Family',
+				values: items,
+				fixedWidth: true,
+				onPostRender: function() {
+					var self = this;
+
+					editor.on('NodeChange', function() {
+						var fontElm;
+
+						fontElm = editor.dom.getParent(editor.selection.getNode(), 'font');
+						if (fontElm) {
+							self.value(fontElm.face);
+						} else {
+							self.value('');
+						}
+					});
+				},
+				onselect: function(e) {
+					if (e.control.settings.value) {
+						editor.execCommand('FontName', false, e.control.settings.value);
+					}
+				}
+			};
 		});
 	});
 })(tinymce);

@@ -224,7 +224,7 @@ test('getNonEmptyElements', function() {
 		"embed": {}, "param": {}, "meta": {}, "link": {}, "isindex": {},
 		"input": {}, "img": {}, "hr": {}, "frame": {}, "col": {}, "br": {},
 		"basefont": {}, "base": {}, "area": {}, "source" : {},
-		"td": {}, "th": {}, "iframe": {}, "video": {}, "audio": {}, "object": {}, "wbr" : {}, "track" : {},  "script" : {},
+		"td": {}, "th": {}, "iframe": {}, "video": {}, "audio": {}, "object": {}, "wbr" : {}, "track" : {},  "script" : {}
 	});
 });
 
@@ -253,6 +253,20 @@ test('getTextBlockElements', function() {
 		"H1": {}, "H2": {}, "H3": {}, "H4": {}, "H5": {}, "H6": {}, "HEADER": {}, "HGROUP": {}, "NAV": {}, "P": {}, "PRE": {}, "SECTION": {},
 		"address": {}, "article": {}, "aside": {}, "blockquote": {}, "center": {}, "dir": {}, "div": {}, "fieldset": {}, "figure": {}, "footer": {}, "form": {},
 		"h1": {}, "h2": {}, "h3": {}, "h4": {}, "h5": {}, "h6": {}, "header": {}, "hgroup": {}, "nav": {}, "p": {}, "pre": {}, "section": {}
+	});
+});
+
+test('getTextInlineElements', function() {
+	var schema;
+
+	expect(1);
+
+	schema = new tinymce.html.Schema();
+	deepEqual(schema.getTextInlineElements(), {
+		"B": {}, "CITE": {}, "CODE": {}, "DFN": {},	"EM": {}, "FONT": {}, "I": {}, "MARK": {}, "Q": {},
+		"SAMP": {}, "SPAN": {}, "STRIKE": {}, "STRONG": {}, "SUB": {}, "SUP": {}, "U": {}, "VAR": {},
+		"b": {}, "cite": {}, "code": {}, "dfn": {}, "em": {}, "font": {}, "i": {}, "mark": {}, "q": {},
+		"samp": {}, "span": {}, "strike": {}, "strong": {}, "sub": {}, "sup": {}, "u": {}, "var": {}
 	});
 });
 
@@ -407,3 +421,116 @@ test('isValid', function() {
 	ok(schema.isValid('i', 'id'));
 });
 
+test('validStyles', function() {
+	var schema;
+
+	schema = new tinymce.html.Schema({valid_styles: 'color,font-size'});
+	deepEqual(schema.getValidStyles(), {
+		"*": [
+			"color",
+			"font-size"
+		]
+	});
+
+	schema = new tinymce.html.Schema({valid_styles: 'color font-size'});
+	deepEqual(schema.getValidStyles(), {
+		"*": [
+			"color",
+			"font-size"
+		]
+	});
+
+	schema = new tinymce.html.Schema({
+		valid_styles: {
+			'*': 'color font-size',
+			'a': 'background font-family'
+		}
+	});
+	deepEqual(schema.getValidStyles(), {
+		"*": [
+			"color",
+			"font-size"
+		],
+
+		"a": [
+			"background",
+			"font-family"
+		]
+	});
+});
+
+test('invalidStyles', function() {
+	var schema;
+
+	schema = new tinymce.html.Schema({invalid_styles: 'color,font-size'});
+	deepEqual(schema.getInvalidStyles(), {
+		'*': {
+			'color': {},
+			'font-size': {}
+		}
+	});
+
+	schema = new tinymce.html.Schema({invalid_styles: 'color font-size'});
+	deepEqual(schema.getInvalidStyles(), {
+		'*': {
+			'color': {},
+			'font-size': {}
+		}
+	});
+
+	schema = new tinymce.html.Schema({
+		invalid_styles: {
+			'*': 'color font-size',
+			'a': 'background font-family'
+		}
+	});
+	deepEqual(schema.getInvalidStyles(), {
+		'*': {
+			'color': {},
+			'font-size': {}
+		},
+
+		'a': {
+			'background': {},
+			'font-family': {}
+		}
+	});
+});
+
+test('validClasses', function() {
+	var schema;
+
+	schema = new tinymce.html.Schema({valid_classes: 'classA,classB'});
+	deepEqual(schema.getValidClasses(), {
+		'*': {
+			'classA': {},
+			'classB': {}
+		}
+	});
+
+	schema = new tinymce.html.Schema({valid_classes: 'classA classB'});
+	deepEqual(schema.getValidClasses(), {
+		'*': {
+			'classA': {},
+			'classB': {}
+		}
+	});
+
+	schema = new tinymce.html.Schema({
+		valid_classes: {
+			'*': 'classA classB',
+			'a': 'classC classD'
+		}
+	});
+	deepEqual(schema.getValidClasses(), {
+		'*': {
+			'classA': {},
+			'classB': {}
+		},
+
+		'a': {
+			'classC': {},
+			'classD': {}
+		}
+	});
+});

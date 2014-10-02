@@ -23,6 +23,7 @@ module("tinymce.plugins.Paste", {
 		delete editor.settings.paste_retain_style_properties;
 		delete editor.settings.paste_enable_default_filters;
 		delete editor.settings.paste_data_images;
+		delete editor.settings.paste_webkit_styles;
 	}
 });
 
@@ -43,6 +44,7 @@ test("Paste styled text content", function() {
 	var rng = editor.dom.createRng();
 
 	editor.settings.paste_remove_styles_if_webkit = false;
+
 	editor.setContent('<p>1234</p>');
 	rng.setStart(editor.getBody().firstChild.firstChild, 1);
 	rng.setEnd(editor.getBody().firstChild.firstChild, 3);
@@ -88,7 +90,7 @@ test("Paste Word fake list", function() {
 	equal(editor.getContent(), '<ul><li>Item 1</li><li>Item 2</li><li>Item 3</li><li>Item 4</li><li>Item 5</li><li>Item 6</li></ul>');
 
 	editor.settings.paste_retain_style_properties = 'border';
-	
+
 	rng = editor.dom.createRng();
 	editor.setContent('<p>1234</p>');
 	rng.setStart(editor.getBody().firstChild.firstChild, 0);
@@ -126,14 +128,26 @@ test("Paste Word fake list before BR", function() {
 	equal(editor.getContent(), '<ul><li>Item 1</li><li>Item 2</li><li>Item 3</li><li>Item 4</li><li>Item 5</li><li>Item 6</li></ul><p><br />a</p>');
 });
 
+test("Paste Word fake lists interrupted by header", function() {
+	var rng = editor.dom.createRng();
+
+	editor.setContent('<p>1234</p>');
+	rng.setStart(editor.getBody().firstChild.firstChild, 0);
+	rng.setEnd(editor.getBody().firstChild.firstChild, 4);
+	editor.selection.setRng(rng);
+
+	editor.execCommand('mceInsertClipboardContent', false, {content: '<p class=MsoListParagraphCxSpFirst style=\'text-indent:-.25in;mso-list:l0 level1 lfo1\'><![if !supportLists]><span style=\'font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family: Symbol\'><span style=\'mso-list:Ignore\'>·<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>List before heading A<o:p></o:p></p>  <p class=MsoListParagraphCxSpLast style=\'text-indent:-.25in;mso-list:l0 level1 lfo1\'><![if !supportLists]><span style=\'font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family: Symbol\'><span style=\'mso-list:Ignore\'>·<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>List before heading B<o:p></o:p></p>  <h1>heading<o:p></o:p></h1>  <p class=MsoListParagraphCxSpFirst style=\'text-indent:-.25in;mso-list:l0 level1 lfo1\'><![if !supportLists]><span style=\'font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family: Symbol\'><span style=\'mso-list:Ignore\'>·<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>List after heading A<o:p></o:p></p>  <p class=MsoListParagraphCxSpLast style=\'text-indent:-.25in;mso-list:l0 level1 lfo1\'><![if !supportLists]><span style=\'font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family: Symbol\'><span style=\'mso-list:Ignore\'>·<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>List after heading B<o:p></o:p></p>'});
+	equal(editor.getContent(), '<ul><li>List before heading A</li><li>List before heading B</li></ul><h1>heading</h1><ul><li>List after heading A</li><li>List after heading B</li></ul>');
+});
+
 test("Paste list like paragraph and list", function() {
 	editor.setContent('');
 
 	editor.execCommand('mceInsertClipboardContent', false, {
-		content: '<p class=MsoNormal><span style=\'font-size:10.0pt;line-height:115%;font-family:"Trebuchet MS","sans-serif";color:#666666\'>A. X<o:p></o:p></span></p><p class=MsoListParagraph style=\'text-indent:-.25in;mso-list:l0 level1 lfo1\'><![if !supportLists]><span style=\'mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin\'><span style=\'mso-list:Ignore\'>1.<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></span><![endif]>Y</p>'
+		content: '<p class=MsoNormal><span style=\'font-size:10.0pt;line-height:115%;font-family:"Trebuchet MS","sans-serif";color:#666666\'>ABC. X<o:p></o:p></span></p><p class=MsoListParagraph style=\'text-indent:-.25in;mso-list:l0 level1 lfo1\'><![if !supportLists]><span style=\'mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin\'><span style=\'mso-list:Ignore\'>1.<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></span><![endif]>Y</p>'
 	});
 
-	equal(editor.getContent(), '<p>A. X</p><ol><li>Y</li></ol>');
+	equal(editor.getContent(), '<p>ABC. X</p><ol><li>Y</li></ol>');
 });
 
 test("Paste Word table", function() {
@@ -198,7 +212,13 @@ test("Paste Word links", function() {
 				'<a href="#_Toc238571849">2</a>' +
 				'<a name="Toc238571849">3</a>' +
 				'<a name="_Toc238571849">4</a>' +
-				'<a href="http://www.tinymce.com/someurl">4</a>' +
+				'<a href="#_ftn238571849" name="_ftnref238571849">[5]</a>' +
+				'<a href="#_ftnref238571849" name="_ftn238571849">[5]</a>' +
+				'<a href="#_edn238571849" name="_ednref238571849">[6]</a>' +
+				'<a href="#_ednref238571849" name="_edn238571849">[7]</a>' +
+				'<a href="http://domain.tinymce.com/someurl">8</a>' +
+				'<a name="#unknown">9</a>' +
+				'<a href="http://domain.tinymce.com/someurl" name="named_link">named_link</a>' +
 				'<a>5</a>' +
 			'</p>'
 		)
@@ -210,7 +230,13 @@ test("Paste Word links", function() {
 			'<a href="#_Toc238571849">2</a>' +
 			'<a name="Toc238571849"></a>3' +
 			'<a name="_Toc238571849"></a>4' +
-			'<a href="http://www.tinymce.com/someurl">4</a>' +
+			'<a href="#_ftn238571849" name="_ftnref238571849">[5]</a>' +
+			'<a href="#_ftnref238571849" name="_ftn238571849">[5]</a>' +
+			'<a href="#_edn238571849" name="_ednref238571849">[6]</a>' +
+			'<a href="#_ednref238571849" name="_edn238571849">[7]</a>' +
+			'<a href="http://domain.tinymce.com/someurl">8</a>' +
+			'9' +
+			'named_link' +
 			'5' +
 		'</p>'
 	));
@@ -266,6 +292,116 @@ test('paste track changes comment', function() {
 	equal(editor.getContent(), '<p>1</p>');
 });
 
+test('paste nested (UL) word list', function() {
+	editor.setContent('');
+
+	editor.execCommand('mceInsertClipboardContent', false, {
+		content: (
+			"<p class=MsoListParagraphCxSpFirst style='text-indent:-18.0pt;mso-list:l0 level1 lfo1'>" +
+			"<![if !supportLists]><span	style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol'>" +
+			"<span style='mso-list:Ignore'>·<span style='font:7.0pt \"Times New Roman\"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+			"</span></span></span><![endif]>a</p>" +
+
+			"<p class=MsoListParagraphCxSpMiddle style='margin-left:72.0pt;mso-add-space:auto;text-indent:-18.0pt;mso-list:l0 level2 lfo1'>" +
+			"<![if !supportLists]><span style='font-family:\"Courier New\";mso-fareast-font-family:\"Courier New\"'>" +
+			"<span style='mso-list:Ignore'>o<span style='font:7.0pt \"Times New Roman\"'>&nbsp;&nbsp;</span></span></span><![endif]>b</p>" +
+
+			"<p class=MsoListParagraphCxSpLast style='margin-left:108.0pt;mso-add-space:auto;text-indent:-18.0pt;mso-list:l0 level3 lfo1'>" +
+			"<![if !supportLists]><span style='font-family:Wingdings;mso-fareast-font-family:Wingdings;mso-bidi-font-family:Wingdings'>" +
+			"<span style='mso-list:Ignore'>§<span style='font:7.0pt \"Times New Roman\"'>&nbsp;</span></span></span><![endif]>c 1. x</p>"
+		)
+	});
+
+	equal(
+		editor.getContent(),
+		'<ul>'+
+			'<li>a' +
+				'<ul>' +
+					'<li>b' +
+						'<ul>' +
+							'<li>c 1. x</li>' +
+						'</ul>' +
+					'</li>' +
+				'</ul>' +
+			'</li>' +
+		'</ul>'
+	);
+});
+
+test('paste nested (OL) word list', function() {
+	editor.setContent('');
+
+	editor.execCommand('mceInsertClipboardContent', false, {
+		content: (
+			"<p class=MsoListParagraphCxSpFirst style='text-indent:-18.0pt;mso-list:l0 level1 lfo1'>" +
+			"<![if !supportLists]><span style='mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin'>" +
+			"<span style='mso-list:Ignore'>1.<span style='font:7.0pt \"Times New Roman\"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>" +
+			"</span></span><![endif]>a</p>" +
+
+			"<p class=MsoListParagraphCxSpMiddle style='margin-left:72.0pt;mso-add-space:auto;text-indent:-18.0pt;mso-list:l0 level2 lfo1'>" +
+			"<![if !supportLists]><span style='mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin'><span style='mso-list:Ignore'>a." +
+			"<span style='font:7.0pt \"Times New Roman\"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></span><![endif]>b</p>" +
+
+			"<p class=MsoListParagraphCxSpLast style='margin-left:108.0pt;mso-add-space:auto;text-indent:-108.0pt;mso-text-indent-alt:-9.0pt;mso-list:l0 level3 lfo1'>" +
+			"<![if !supportLists]><span style='mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin'><span style='mso-list:Ignore'>" +
+			"<span style='font:7.0pt \"Times New Roman\"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+			"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+			"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+			"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>i.<span style='font:7.0pt \"Times New Roman\"'>" +
+			"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></span><![endif]>c</p>"
+		)
+	});
+
+	equal(
+		editor.getContent(),
+		'<ol>'+
+			'<li>a' +
+				'<ol>' +
+					'<li>b' +
+						'<ol>' +
+							'<li>c</li>' +
+						'</ol>' +
+					'</li>' +
+				'</ol>' +
+			'</li>' +
+		'</ol>'
+	);
+});
+
+test("Paste list start index", function() {
+	editor.settings.paste_merge_formats = true;
+
+	editor.setContent('');
+
+	editor.execCommand('mceInsertClipboardContent', false, {
+		content: (
+			'<p class=MsoListParagraphCxSpMiddle style="text-indent:-18.0pt;mso-list:l0 level1 lfo1">' +
+			'<![if !supportLists]><span style="mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin;' +
+			'mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin"><span style="mso-list:Ignore">10.' +
+			'<span style="font:7.0pt Times>&nbsp;&nbsp;</span></span></span><![endif]>J<o:p></o:p></p>'
+		)
+	});
+	equal(editor.getContent(), '<ol start="10"><li>J</li></ol>');
+})
+
+test("Paste paste_merge_formats: true", function() {
+	editor.settings.paste_merge_formats = true;
+
+	editor.setContent('<p><strong>a</strong></p>');
+	Utils.setSelection('p', 1);
+	editor.execCommand('mceInsertClipboardContent', false, {content: '<em><strong>b</strong></em>'});
+	equal(editor.getContent(), '<p><strong>a<em>b</em></strong></p>');
+});
+
+test("Paste paste_merge_formats: false", function() {
+	editor.settings.paste_merge_formats = false;
+
+	editor.setContent('<p><strong>a</strong></p>');
+	Utils.setSelection('p', 1);
+	editor.execCommand('mceInsertClipboardContent', false, {content: '<em><strong>b</strong></em>'});
+	equal(editor.getContent(), '<p><strong>a<em><strong>b</strong></em></strong></p>');
+});
+
 test("Paste word DIV as P", function() {
 	editor.setContent('');
 	editor.execCommand('SelectAll');
@@ -286,7 +422,7 @@ test("Disable default filters", function() {
 	// Test color
 	editor.setContent('');
 	editor.execCommand('SelectAll');
-	
+
 	editor.execCommand('mceInsertClipboardContent', false, {content: '<p class="MsoNormal" style="color: #ff0000;">Test</p>'});
 	equal(editor.getContent(), '<p class="MsoNormal" style="color: #ff0000;">Test</p>');
 });
@@ -432,6 +568,10 @@ test('paste post process (event)', function() {
 	equal(editor.getContent(), '<p><em>c</em></p>');
 });
 
+test('paste innerText of conditional comments', function() {
+	equal(tinymce.pasteplugin.Utils.innerText('<![if !supportLists]>X<![endif]>'), 'X');
+});
+
 test('paste innerText of single P', function() {
 	editor.setContent('<p>a</p>');
 	equal(tinymce.pasteplugin.Utils.innerText(editor.getBody().innerHTML), 'a');
@@ -472,29 +612,83 @@ test('paste innerText of textnode with whitespace', function() {
 	equal(tinymce.pasteplugin.Utils.innerText(editor.getBody().firstChild.innerHTML), ' a ');
 });
 
+test('trim html from clipboard fragments', function() {
+	equal(tinymce.pasteplugin.Utils.trimHtml('<!--StartFragment-->a<!--EndFragment-->'), 'a');
+	equal(tinymce.pasteplugin.Utils.trimHtml('a\n<body>\n<!--StartFragment-->\nb\n<!--EndFragment-->\n</body>\nc'), '\nb\n');
+	equal(tinymce.pasteplugin.Utils.trimHtml('a<!--StartFragment-->b<!--EndFragment-->c'), 'abc');
+	equal(tinymce.pasteplugin.Utils.trimHtml('a<body>b</body>c'), 'b');
+	equal(tinymce.pasteplugin.Utils.trimHtml('a<span class="Apple-converted-space">\u00a0<\/span>b'), 'a b');
+	equal(tinymce.pasteplugin.Utils.trimHtml('<span class="Apple-converted-space">\u00a0<\/span>b'), ' b');
+	equal(tinymce.pasteplugin.Utils.trimHtml('a<span class="Apple-converted-space">\u00a0<\/span>'), 'a ');
+	equal(tinymce.pasteplugin.Utils.trimHtml('<span class="Apple-converted-space">\u00a0<\/span>'), ' ');
+});
+
 if (tinymce.Env.webkit) {
+	test('paste webkit retains text styles runtime styles internal', function() {
+		editor.settings.paste_webkit_styles = 'color';
+		editor.setContent('');
+		editor.execCommand('mceInsertClipboardContent', false, {content: '&lt;span style="color:red"&gt;&lt;span data-mce-style="color:red"&gt;'});
+		equal(editor.getContent(), '<p>&lt;span style="color:red"&gt;&lt;span data-mce-style="color:red"&gt;</p>');
+	});
+
+	test('paste webkit remove runtime styles internal', function() {
+		editor.settings.paste_webkit_styles = 'color';
+		editor.setContent('');
+		editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="color:red; font-size: 42px" data-mce-style="color: red;">Test</span>'});
+		equal(editor.getContent(), '<p><span style="color: red;">Test</span></p>');
+	});
+
 	test('paste webkit remove runtime styles (color)', function() {
+		editor.settings.paste_webkit_styles = 'color';
 		editor.setContent('');
 		editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="color:red; text-indent: 10px">Test</span>'});
 		equal(editor.getContent(), '<p><span style="color: red;">Test</span></p>');
 	});
 
+	test('paste webkit remove runtime styles keep before attr', function() {
+		editor.setContent('');
+		editor.execCommand('mceInsertClipboardContent', false, {content: '<span class="c" style="color:red; text-indent: 10px">Test</span>'});
+		equal(editor.getContent(), '<p><span class="c">Test</span></p>');
+	});
+
+	test('paste webkit remove runtime styles keep after attr', function() {
+		editor.setContent('');
+		editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="color:red; text-indent: 10px" title="t">Test</span>'});
+		equal(editor.getContent(), '<p><span title="t">Test</span></p>');
+	});
+
+	test('paste webkit remove runtime styles keep before/after attr', function() {
+		editor.setContent('');
+		editor.execCommand('mceInsertClipboardContent', false, {content: '<span class="c" style="color:red; text-indent: 10px" title="t">Test</span>'});
+		equal(editor.getContent(), '<p><span class="c" title="t">Test</span></p>');
+	});
+
 	test('paste webkit remove runtime styles (background-color)', function() {
+		editor.settings.paste_webkit_styles = 'background-color';
 		editor.setContent('');
 		editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="background-color:red; text-indent: 10px">Test</span>'});
 		equal(editor.getContent(), '<p><span style="background-color: red;">Test</span></p>');
 	});
 
 	test('paste webkit remove runtime styles (font-size)', function() {
+		editor.settings.paste_webkit_styles = 'font-size';
 		editor.setContent('');
 		editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="font-size:42px; text-indent: 10px">Test</span>'});
 		equal(editor.getContent(), '<p><span style="font-size: 42px;">Test</span></p>');
 	});
 
 	test('paste webkit remove runtime styles (font-family)', function() {
+		editor.settings.paste_webkit_styles = 'font-family';
 		editor.setContent('');
 		editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="font-family:Arial; text-indent: 10px">Test</span>'});
 		equal(editor.getContent(), '<p><span style="font-family: Arial;">Test</span></p>');
+	});
+
+	test('paste webkit remove runtime styles font-family allowed but not specified', function() {
+		editor.settings.paste_webkit_styles = 'font-family';
+		editor.setContent('');
+		editor.execCommand('mceInsertClipboardContent', false, {content: '<p title="x" style="text-indent: 10px">Test</p>'});
+		equal(editor.getContent(), '<p title="x">Test</p>');
 	});
 
 	test('paste webkit remove runtime styles (custom styles)', function() {
@@ -519,18 +713,19 @@ if (tinymce.Env.webkit) {
 	});
 
 	test('paste webkit remove runtime styles (color) in the same (color) (named)', function() {
+		editor.settings.paste_webkit_styles = 'color';
+
 		editor.setContent('<p style="color:red">Test</span>');
 		Utils.setSelection('p', 0, 'p', 4);
 
 		editor.execCommand('mceInsertClipboardContent', false, {
 			content: (
-				'<span style="color:red; text-indent: 10px">a</span>' +
-				'<span style="color:#ff0000; text-indent: 10px">b</span>' +
-				'<span style="color:rgb(255, 0, 0); text-indent: 10px">c</span>'
+				'<span style="color:#ff0000; text-indent: 10px">a</span>' +
+				'<span style="color:rgb(255, 0, 0); text-indent: 10px">b</span>'
 			)
 		});
 
-		equal(editor.getContent(), '<p style="color: red;">abc</p>');
+		equal(editor.getContent(), '<p style="color: red;">ab</p>');
 	});
 
 	test('paste webkit remove runtime styles (color) in the same (color) (hex)', function() {

@@ -100,6 +100,15 @@ define("tinymce/ui/PanelButton", [
 			});
 
 			return self._super();
+		},
+
+		remove: function() {
+			if (this.panel) {
+				this.panel.remove();
+				this.panel = null;
+			}
+
+			return this._super();
 		}
 	});
 });

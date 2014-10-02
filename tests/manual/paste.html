@@ -10,7 +10,7 @@
 <script src="../../js/tinymce/plugins/spellchecker/plugin.dev.js"></script>
 <script>
 	tinymce.init({
-		selector: "textarea",
+		selector: "#elm1",
 		theme: "modern",
 		plugins: [
 			"advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
@@ -58,6 +58,11 @@
 		}
 	});
 </script>
+<style>
+#styles b {
+	font-weight: 700;
+}
+</style>
 </head>
 <body>
 <form method="post" action="http://www.tinymce.com/dump.php?example=true">
@@ -127,6 +132,27 @@
 		<p><strong>abc</strong>def</p>
 		<p><strong>abc</strong>def</p>
 		<p><strong>abc</strong>def</p>
+	</div>
+	
+	<div>
+<textarea style="height: 140px">
+a
+b
+c
+
+d
+
+e
+</textarea>
+	<div id="styles" style="width: 200px">
+		<p>
+			<i>italic</i><b>bold</b>
+			<img style="float: right" src="data:image/gif;base64,R0lGODlhIAAgAIAAAGB7/wAAACH5BAAAAAAALAAAAAAgACAAAAIehI+py+0Po5y02ouz3rz7D4biSJbmiabqyrbuC5sFADs=">
+		</p>
+		<p>
+			abc
+		</p>
+	</div>
 	</div>
 </form>
 

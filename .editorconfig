@@ -1,0 +1,7 @@
+root = true
+
+[**.js]
+charset = utf-8
+indent_style = tab
+trim_trailing_whitespace = true
+end_of_line = lf

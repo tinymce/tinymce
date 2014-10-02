@@ -43,38 +43,32 @@ define("tinymce/ui/ElementPath", [
 			}
 
 			self.on('select', function(e) {
-				var parents = [], node, body = editor.getBody();
-
 				editor.focus();
-
-				node = editor.selection.getStart();
-				while (node && node != body) {
-					if (!isHidden(node)) {
-						parents.push(node);
-					}
-
-					node = node.parentNode;
-				}
-
-				editor.selection.select(parents[parents.length - 1 - e.index]);
+				editor.selection.select(this.data()[e.index].element);
 				editor.nodeChanged();
 			});
 
 			editor.on('nodeChange', function(e) {
-				var parents = [], selectionParents = e.parents, i = selectionParents.length;
+				var outParents = [], parents = e.parents, i = parents.length;
 
 				while (i--) {
-					if (selectionParents[i].nodeType == 1 && !isHidden(selectionParents[i])) {
+					if (parents[i].nodeType == 1 && !isHidden(parents[i])) {
 						var args = editor.fire('ResolveName', {
-							name: selectionParents[i].nodeName.toLowerCase(),
-							target: selectionParents[i]
+							name: parents[i].nodeName.toLowerCase(),
+							target: parents[i]
 						});
 
-						parents.push({name: args.name});
+						if (!args.isDefaultPrevented()) {
+							outParents.push({name: args.name, element: parents[i]});
+						}
+
+						if (args.isPropagationStopped()) {
+							break;
+						}
 					}
 				}
 
-				self.data(parents);
+				self.data(outParents);
 			});
 
 			return self._super();

@@ -43,7 +43,7 @@ if (tinymce.isWebKit) {
 		editor.getBody().innerHTML ='<h1>a</h1><p>b<span style="color:red">c</span></p>';
 		Utils.setSelection('p', 0);
 		editor.execCommand('Delete');
-		equal(Utils.normalizeHtml(Utils.cleanHtml(editor.getBody().innerHTML)), '<h1>ab<span data-mce-style="color:red" style="color: red;">c</span></h1>');
+		equal(Utils.normalizeHtml(Utils.cleanHtml(editor.getBody().innerHTML)), '<h1>ab<span data-mce-style="color: red;" style="color: red;">c</span></h1>');
 		equal(editor.selection.getStart().nodeName, 'H1');
 	});
 
@@ -69,10 +69,10 @@ if (tinymce.isWebKit) {
 	});
 
 	test('ForwardDelete from end of H1 into P with style span inside', function() {
-		editor.getBody().innerHTML ='<h1>a</h1><p>b<span style="color:red">c</span></p>';
+		editor.getBody().innerHTML ='<h1>a</h1><p>b<span style="color: #010203">c</span></p>';
 		Utils.setSelection('h1', 1);
 		editor.execCommand('ForwardDelete');
-		equal(Utils.normalizeHtml(Utils.cleanHtml(editor.getBody().innerHTML)), '<h1>ab<span data-mce-style="color:red" style="color: red;">c</span></h1>');
+		equal(editor.getContent(), '<h1>ab<span style="color: #010203;">c</span></h1>');
 		equal(editor.selection.getStart().nodeName, 'H1');
 	});
 

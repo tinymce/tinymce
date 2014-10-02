@@ -27,12 +27,13 @@ define("tinymce/tableplugin/TableGrid", [
 	}
 
 	return function(editor, table) {
-		var grid, startPos, endPos, selectedCell, selection = editor.selection, dom = selection.dom;
+		var grid, gridWidth, startPos, endPos, selectedCell, selection = editor.selection, dom = selection.dom;
 
 		function buildGrid() {
 			var startY = 0;
 
 			grid = [];
+			gridWidth = 0;
 
 			each(['thead', 'tbody', 'tfoot'], function(part) {
 				var rows = dom.select('> ' + part + ' tr', table);
@@ -70,6 +71,8 @@ define("tinymce/tableplugin/TableGrid", [
 								};
 							}
 						}
+
+						gridWidth = Math.max(gridWidth, x + 1);
 					});
 				});
 
@@ -182,7 +185,7 @@ define("tinymce/tableplugin/TableGrid", [
 			if (formatNode) {
 				cell.appendChild(formatNode);
 			} else {
-				if (!Env.ie) {
+				if (!Env.ie || Env.ie > 10) {
 					cell.innerHTML = '<br data-mce-bogus="1" />';
 				}
 			}
@@ -348,7 +351,7 @@ define("tinymce/tableplugin/TableGrid", [
 						cell = grid[y][x].elm;
 
 						/*jshint loopfunc:true */
-						/*eslint loop-func:0 */
+						/*eslint no-loop-func:0 */
 						if (cell != startCell) {
 							// Move children to startCell
 							children = Tools.grep(cell.childNodes);
@@ -531,9 +534,7 @@ define("tinymce/tableplugin/TableGrid", [
 			var rows;
 
 			function deleteRow(tr) {
-				var nextTr, pos, lastCell;
-
-				nextTr = dom.getNext(tr, 'tr');
+				var pos, lastCell;
 
 				// Move down row spanned cells
 				each(tr.cells, function(cell) {
@@ -803,6 +804,34 @@ define("tinymce/tableplugin/TableGrid", [
 			}
 		}
 
+		function moveRelIdx(cellElm, delta) {
+			var pos, index, cell;
+
+			pos = getPos(cellElm);
+			index = pos.y * gridWidth + pos.x;
+
+			do {
+				index += delta;
+				cell = getCell(index % gridWidth, Math.floor(index / gridWidth));
+
+				if (!cell) {
+					break;
+				}
+
+				if (cell.elm != cellElm) {
+					selection.select(cell.elm, true);
+
+					if (dom.isEmpty(cell.elm)) {
+						selection.collapse(true);
+					}
+
+					return true;
+				}
+			} while (cell.elm == cellElm);
+
+			return false;
+		}
+
 		table = table || dom.getParent(selection.getStart(), 'table');
 
 		buildGrid();
@@ -827,7 +856,9 @@ define("tinymce/tableplugin/TableGrid", [
 			pasteRows: pasteRows,
 			getPos: getPos,
 			setStartCell: setStartCell,
-			setEndCell: setEndCell
+			setEndCell: setEndCell,
+			moveRelIdx: moveRelIdx,
+			refresh: buildGrid
 		});
 	};
 });

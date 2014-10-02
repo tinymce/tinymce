@@ -5,54 +5,34 @@ Building TinyMCE
 -----------------
 1. Install Node.js
 2. Open a console and go to the project directory
-3. Write "npm i -g jake" to install the jake tool globally.
-4. Write "npm i" to install all package dependencies
-4. Build TinyMCE by writing "jake"
+3. Write "npm i -g grunt-cli" to install the grunt command line tool globally.
+4. Write "npm i" to install all package dependencies.
+4. Build TinyMCE by writing "grunt"
 
 Build tasks
 ------------
-`jake`
-Runs the minifyjs, less, jshint build tasks.
+`grunt`
+Lints, minified, unit tests and creates release packages for TinyMCE.
 
-`jake -T`
-List all build tasks.
+`grunt minify`
+Minifies all JS and CSS files.
 
-`jake minify`
-Compiles the core classes, plugins and themes into minified versions.
+`grunt test`
+Runs all qunit tests on PhantomJS.
 
-`jake less`
-Compiles all LESS based skins into css files that can be included in the browser.
+`grunt lint`
+Runs all source files though various JS linters.
 
-`jake jshint`
-Runs all js code though jshint.
+`grunt sc-test`
+Runs all qunit tests on Saucelabs.
 
-`jake eslint`
-Runs all js code though eslint.
+`grunt --help`
+Displays the various build tasks.
 
-`jake release`
-Builds release packages with the version specified in changelog.txt.
-
-`jake bundle[themes:*]`
-Bundles all themes into the tinymce core js files.
-
-`jake bundle[plugins:*]`
-Bundles all plugins into the tinymce core js files.
-
-`jake phantomjs-tests`
-Runs all qunit tests in a headless WebKit.
-
-Bundle themes and plugins into core example
--------------------------------------------
-`jake minify bundle[themes:modern,plugins:table,paste]`
+Bundle themes and plugins into a single file
+---------------------------------------------
+`grunt bundle --themes modern --plugins table,paste`
 Minifies the core, adds the modern theme and adds the table and paste plugin into tinymce.min.js.
-
-Run code coverage on TinyMCE core
-----------------------------------
-`jake minify-core[coverage]`
-Compiles the core classes with jscoverage data.
-
-Run the unit tests on the minified TinyMCE core and click the coverage report button.
-`tests/index.html?min=true`
 
 Contributing to the TinyMCE project
 ------------------------------------
