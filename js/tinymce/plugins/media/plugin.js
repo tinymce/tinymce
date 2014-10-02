@@ -150,42 +150,59 @@ tinymce.PluginManager.add('media', function(editor, url) {
 
 		embedTextBox[embedChange] = updateValueOnChange;
 
+		var tabs = [
+			{
+				title: 'General',
+				type: "form",
+				onShowTab: function() {
+					data = htmlToData(this.parent().find('#embed').value());
+					this.fromJSON(data);
+				},
+				items: generalFormItems
+			},
+
+			{
+				title: 'Embed',
+				type: "panel",
+				layout: 'flex',
+				direction: 'column',
+				align: 'stretch',
+				padding: 10,
+				spacing: 10,
+				onShowTab: function() {
+					this.find('#embed').value(dataToHtml(this.parent().toJSON()));
+          if (editor.settings.media_general_tab === false){
+						this.active(true);
+            var _id = this.parent()._id+'-t1';
+            var element = document.getElementById(_id);
+            var classes = element.getAttribute('class');
+            if (classes.indexOf('hidden') < 0){
+              element.setAttribute('class','hidden '+classes);
+            }
+          }
+				},
+				items: [
+					{
+						type: 'label',
+						text: 'Paste your embed code below:',
+						forId: 'mcemediasource'
+					},
+					embedTextBox
+				]
+			}
+		];
+
+		if (editor.settings.media_general_tab === false) {
+			var gen_tab = tabs[0];
+			tabs.splice(0, 1);
+			tabs.push(gen_tab);
+		}
+
 		win = editor.windowManager.open({
 			title: 'Insert/edit video',
 			data: data,
 			bodyType: 'tabpanel',
-			body: [
-				{
-					title: 'General',
-					type: "form",
-					onShowTab: function() {
-						data = htmlToData(this.next().find('#embed').value());
-						this.fromJSON(data);
-					},
-					items: generalFormItems
-				},
-
-				{
-					title: 'Embed',
-					type: "panel",
-					layout: 'flex',
-					direction: 'column',
-					align: 'stretch',
-					padding: 10,
-					spacing: 10,
-					onShowTab: function() {
-						this.find('#embed').value(dataToHtml(this.parent().toJSON()));
-					},
-					items: [
-						{
-							type: 'label',
-							text: 'Paste your embed code below:',
-							forId: 'mcemediasource'
-						},
-						embedTextBox
-					]
-				}
-			],
+			body: tabs,
 			onSubmit: function() {
 				var beforeObjects, afterObjects, i, y;
 
