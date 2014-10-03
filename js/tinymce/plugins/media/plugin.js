@@ -170,16 +170,18 @@ tinymce.PluginManager.add('media', function(editor, url) {
 				padding: 10,
 				spacing: 10,
 				onShowTab: function() {
+					var _id = this.parent()._id + '-t1',
+					element = document.getElementById(_id),
+					classes = element.getAttribute('class');
+
 					this.find('#embed').value(dataToHtml(this.parent().toJSON()));
-          if (editor.settings.media_general_tab === false){
+
+					if (editor.settings.media_general_tab === false) {
 						this.active(true);
-            var _id = this.parent()._id+'-t1';
-            var element = document.getElementById(_id);
-            var classes = element.getAttribute('class');
-            if (classes.indexOf('hidden') < 0){
-              element.setAttribute('class','hidden '+classes);
-            }
-          }
+						if (classes.indexOf('hidden') < 0) {
+							element.setAttribute('class', 'hidden ' + classes);
+						}
+					}
 				},
 				items: [
 					{
