@@ -395,10 +395,18 @@ define("tinymce/Editor", [
 
 			// Load scripts
 			function loadScripts() {
-				var scriptLoader = ScriptLoader.ScriptLoader;
+				var scriptLoader = ScriptLoader.ScriptLoader, cacheString = '', langCache = '?='+settings.language;
+				
+				if(settings.cacheString){
+					cacheString = settings.cacheString;
+					if(cacheString.indexOf('?=') != 0){
+						cacheString = '?='+cacheString;	
+						langCache = '&'+settings.language;
+					}
+				}
 
 				if (settings.language && settings.language != 'en' && !settings.language_url) {
-					settings.language_url = self.editorManager.baseURL + '/langs/' + settings.language + '.js';
+					settings.language_url = self.editorManager.baseURL + '/langs/' + settings.language + '.js' + cacheString + langCache;
 				}
 
 				if (settings.language_url) {
@@ -412,7 +420,7 @@ define("tinymce/Editor", [
 					if (themeUrl) {
 						themeUrl = self.documentBaseURI.toAbsolute(themeUrl);
 					} else {
-						themeUrl = 'themes/' + settings.theme + '/theme' + suffix + '.js';
+						themeUrl = 'themes/' + settings.theme + '/theme' + suffix + '.js' + cacheString;
 					}
 
 					ThemeManager.load(settings.theme, themeUrl);
@@ -440,7 +448,7 @@ define("tinymce/Editor", [
 								var defaultSettings = {
 									prefix: 'plugins/',
 									resource: dep,
-									suffix: '/plugin' + suffix + '.js'
+									suffix: '/plugin' + suffix + '.js' + cacheString
 								};
 
 								dep = PluginManager.createUrl(defaultSettings, dep);
@@ -450,7 +458,7 @@ define("tinymce/Editor", [
 							PluginManager.load(plugin, {
 								prefix: 'plugins/',
 								resource: plugin,
-								suffix: '/plugin' + suffix + '.js'
+								suffix: '/plugin' + suffix + '.js' + cacheString
 							});
 						}
 					}
