@@ -150,48 +150,83 @@ tinymce.PluginManager.add('media', function(editor, url) {
 
 		embedTextBox[embedChange] = updateValueOnChange;
 
+		var tabs = [
+			{
+				title: 'General',
+				type: "form",
+				onShowTab: function() {
+					data = htmlToData(this.parent().find('#embed').value());
+					this.fromJSON(data);
+				},
+				items: generalFormItems
+			},
+
+			{
+				title: 'Embed',
+				type: "panel",
+				layout: 'flex',
+				direction: 'column',
+				align: 'stretch',
+				padding: 10,
+				spacing: 10,
+				onShowTab: function() {
+					var _id = this.parent()._id + '-t1',
+					element = document.getElementById(_id),
+					classes = element.getAttribute('class');
+					//on open
+					this.find('#embed').value(dataToHtml(this.parent().toJSON(), false ));
+
+					if (editor.settings.media_general_tab === false) {
+						this.active(true);
+						if (classes.indexOf('hidden') < 0) {
+							element.setAttribute('class', 'hidden ' + classes);
+						}
+					}
+				},
+				items: [
+					{
+						type: 'label',
+						text: 'Paste your embed code below:',
+						forId: 'mcemediasource'
+					},
+					embedTextBox
+				]
+			}
+		];
+
+		if (editor.settings.media_general_tab === false) {
+			var gen_tab = tabs[0];
+			tabs.splice(0, 1);
+			tabs.push(gen_tab);
+		}
+
 		win = editor.windowManager.open({
 			title: 'Insert/edit video',
 			data: data,
 			bodyType: 'tabpanel',
-			body: [
-				{
-					title: 'General',
-					type: "form",
-					onShowTab: function() {
-						data = htmlToData(this.next().find('#embed').value());
-						this.fromJSON(data);
-					},
-					items: generalFormItems
-				},
-
-				{
-					title: 'Embed',
-					type: "panel",
-					layout: 'flex',
-					direction: 'column',
-					align: 'stretch',
-					padding: 10,
-					spacing: 10,
-					onShowTab: function() {
-						this.find('#embed').value(dataToHtml(this.parent().toJSON()));
-					},
-					items: [
-						{
-							type: 'label',
-							text: 'Paste your embed code below:',
-							forId: 'mcemediasource'
-						},
-						embedTextBox
-					]
-				}
-			],
+			body: tabs,
 			onSubmit: function() {
-				var beforeObjects, afterObjects, i, y;
+				var beforeObjects,
+				afterObjects,
+				i,
+				y,
+				selector,
+				hasWrapper = function ( $e ) {
+					if (!$e) { return false; }
+					return ($e.getAttribute('class') === 'video') ? true : false;
+				};
 
-				beforeObjects = editor.dom.select('img[data-mce-object]');
-				editor.insertContent(dataToHtml(this.toJSON()));
-				afterObjects = editor.dom.select('img[data-mce-object]');
+				//on close
+				if ( editor.settings.imager_wrapper ) {
+					selector = '.video';
+				}
+				else{
+					selector = 'img[data-mce-object]';
+				}
+
+				beforeObjects = editor.dom.select(selector);
+				editor.insertContent(dataToHtml(this.toJSON(), editor.settings.imager_wrapper && !hasWrapper(beforeObjects[0])));
+				afterObjects = editor.dom.select(selector);
 
 				// Find new image placeholder so we can select it
 				for (i = 0; i < beforeObjects.length; i++) {
@@ -202,7 +237,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 					}
 				}
 
-				editor.selection.select(afterObjects[0]);
+				editor.selection.select(afterObjects[0].nextSibling);
 				editor.nodeChanged();
 			}
 		});
@@ -216,8 +251,13 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		}
 	}
 
-	function dataToHtml(data) {
+	function dataToHtml(data, hasWrapper) {
 		var html = '';
+
+		if (hasWrapper) {
+			html += '<div class="video mceNonEditable">';
+		}
+
 
 		if (!data.source1) {
 			tinymce.extend(data, htmlToData(data.embed));
@@ -263,7 +303,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		});
 
 		if (data.embed) {
-			html = updateHtml(data.embed, data, true);
+			html += updateHtml(data.embed, data, true);
 		} else {
 			var videoScript = getVideoScriptMatch(data.source1);
 			if (videoScript) {
@@ -313,6 +353,10 @@ tinymce.PluginManager.add('media', function(editor, url) {
 					);
 				}
 			}
+		}
+
+		if (hasWrapper) {
+			html += '</div><p></p>';
 		}
 
 		return html;
@@ -770,5 +814,14 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		onclick: showDialog,
 		context: 'insert',
 		prependToContext: true
+	});
+
+	editor.on('NodeChange', function(e) {
+		var _videoTags = editor.dom.select('.video');
+		tinymce.each( _videoTags, function (tag) {
+			if (tag.firstChild.nodeName !== 'IMG' ) {
+				tag.remove();
+			}
+		});
 	});
 });
