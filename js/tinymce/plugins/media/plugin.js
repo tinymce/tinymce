@@ -253,7 +253,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		}
 		
 		if(!data.autoplay || data.autoplay === "false") {
-		    data.autoplay = false
+		    data.autoplay = false;
 	    }
 	    
 	    if(data.controls !== false && data.controls !== "false") {
@@ -607,7 +607,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 					setAttributes(imgAttrs, {
 						src: data.poster,
 						width: data.width,
-						height: data.height,
+						height: data.height
 					});
 
 					writer.start("img", imgAttrs, true);
