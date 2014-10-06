@@ -18,7 +18,7 @@ module("tinymce.plugins.Media", {
 			}
 		});
 	},
-	
+
 	teardown: function() {
 		delete editor.settings.media_filter_html;
 	}
@@ -161,4 +161,15 @@ test("XSS content", function() {
 	testXss('<video><img src="x" onload="alert(1)"></video>', '<p><video width="300" height=\"150\"></video></p>');
 	testXss('<video><img src="x"></video>', '<p><video width="300" height="150"><img src="x" /></video></p>');
 	testXss('<video><!--[if IE]><img src="x"><![endif]--></video>', '<p><video width="300" height="150"><!-- [if IE]><img src="x"><![endif]--></video></p>');
+});
+
+
+test("Wraps with .video" , function () {
+	editor.setContent(
+		'<iframe src="320x240.ogg" allowfullscreen>text<a href="#">link</a></iframe>'
+	);
+
+	equal(editor.getContent(),
+		'<p><div class="video"><iframe src="320x240.ogg" width="300" height="150" allowfullscreen="allowfullscreen">text<a href="#">link</a></iframe></div></p>'
+	);
 });
