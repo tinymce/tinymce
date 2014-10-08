@@ -1,8 +1,9 @@
-Version 4.1.6 (2014-09-xx)
+Version 4.1.6 (2014-10-08)
 	Fixed bug with clicking on the scrollbar of the iframe would cause a JS error to be thrown.
 	Fixed bug where null would produce an exception if you passed it to selection.setRng.
 	Fixed bug where Ctrl/Cmd+Tab would indent the current list item if you switched tabs in the browser.
 	Fixed bug where pasting empty cells from Excel would result in a broken table.
+    Fixed bug where it wasn't possible to switch back to default list style type.
 	Fixed issue where the select all quirk fix would fire for other modifiers than Ctrl/Cmd combinations.
 	Replaced jake with grunt since it is more mainstream and has better plugin support.
 Version 4.1.5 (2014-09-09)

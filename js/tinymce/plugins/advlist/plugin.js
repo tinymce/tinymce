@@ -51,8 +51,8 @@ tinymce.PluginManager.add('advlist', function(editor) {
 		lastStyles[listName] = styleValue;
 
 		list = dom.getParent(sel.getNode(), 'ol,ul');
-		if (list && styleValue) {
-			dom.setStyle(list, 'listStyleType', styleValue);
+		if (list) {
+			dom.setStyle(list, 'listStyleType', styleValue ? styleValue : null);
 			list.removeAttribute('data-mce-style');
 		}
 
