@@ -16,7 +16,6 @@ tinymce.PluginManager.add('shy', function(editor) {
 
 	editor.addButton('shy', {
 		title: 'Soft hyphen',
-		image: tinyMCE.baseURL + '/plugins/shy/icon.png',
 		cmd: 'mceShy'
 	});
 
