@@ -3,8 +3,6 @@
  *
  */
 
-tinymce.PluginManager.requireLangPack('shy', 'de');
-
 tinymce.PluginManager.add('shy', function(editor) {
 	editor.addCommand('mceShy', function() {
 		editor.insertContent(
