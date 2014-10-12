@@ -24,6 +24,7 @@ tinymce.PluginManager.add('wordcount', function(editor) {
 
 	editor.on('init', function() {
 		var statusbar = editor.theme.panel && editor.theme.panel.find('#statusbar')[0];
+		var offset = editor.settings.statusbar_size == 'small' && editor.settings.resize !== false;
 
 		if (statusbar) {
 			window.setTimeout(function() {
@@ -31,7 +32,7 @@ tinymce.PluginManager.add('wordcount', function(editor) {
 					type: 'label',
 					name: 'wordcount',
 					text: ['Words: {0}', self.getCount()],
-					classes: 'wordcount',
+					classes: 'wordcount' + ((offset) ? ' offset' : ''),
 					disabled: editor.settings.readonly
 				}, 0);
 
