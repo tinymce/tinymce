@@ -1,5 +1,6 @@
 Version 4.1.7 (2014-10-xx)
 	Added new cache_suffix setting to enable cache busting by producing unique urls.
+	Fixed so advlist style changes adds undo levels for each change.
 Version 4.1.6 (2014-10-08)
 	Fixed bug with clicking on the scrollbar of the iframe would cause a JS error to be thrown.
 	Fixed bug where null would produce an exception if you passed it to selection.setRng.
