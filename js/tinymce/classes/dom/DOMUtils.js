@@ -944,8 +944,6 @@ define("tinymce/dom/DOMUtils", [
 		loadCSS: function(url) {
 			var self = this, doc = self.doc, head;
 
-			url = Tools._addCacheSuffix(url);
-
 			// Prevent inline from loading the same CSS file twice
 			if (self !== DOMUtils.DOM && doc === document) {
 				DOMUtils.DOM.loadCSS(url);
@@ -960,6 +958,8 @@ define("tinymce/dom/DOMUtils", [
 
 			each(url.split(','), function(url) {
 				var link;
+
+				url = Tools._addCacheSuffix(url);
 
 				if (self.files[url]) {
 					return;
