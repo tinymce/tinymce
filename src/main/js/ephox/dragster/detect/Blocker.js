@@ -4,15 +4,13 @@ define(
   [
     'ephox.dragster.style.Styles',
     'ephox.highway.Merger',
-    'ephox.sugar.api.Attr',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Remove'
   ],
 
-  function (Styles, Merger, Attr, Class, Css, Element, Remove) {
-
+  function (Styles, Merger, Class, Css, Element, Remove) {
     return function (options) {
       var settings = Merger.merge({
         'layerClass': Styles.resolve('blocker')
@@ -30,8 +28,6 @@ define(
       Class.add(div, Styles.resolve('blocker'));
       Class.add(div, settings.layerClass);
 
-      Attr.set(div, 'tabindex', -1);
-
       var element = function () {
         return div;
       };
@@ -45,7 +41,5 @@ define(
         destroy: destroy
       };
     };
-
-
   }
 );

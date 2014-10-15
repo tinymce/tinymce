@@ -10,10 +10,12 @@ define(
     'ephox.sugar.api.Focus',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Remove',
-    'global!Array'
+    'global!Array',
+    'global!clearTimeout',
+    'global!setTimeout'
   ],
 
-  function (Blocker, Movement, Event, Events, DomEvent, Focus, Insert, Remove, Array) {
+  function (Blocker, Movement, Event, Events, DomEvent, Focus, Insert, Remove, Array, clearTimeout, setTimeout) {
 
     var transform = function (mutation, options) {
       var settings = options !== undefined ? options : {};
