@@ -7,16 +7,18 @@ define(
     'ephox.porkbun.Event',
     'ephox.porkbun.Events',
     'ephox.sugar.api.DomEvent',
+    'ephox.sugar.api.Focus',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Remove',
     'global!Array'
   ],
 
-  function (Blocker, Movement, Event, Events, DomEvent, Insert, Remove, Array) {
+  function (Blocker, Movement, Event, Events, DomEvent, Focus, Insert, Remove, Array) {
 
     var transform = function (mutation, options) {
       var settings = options !== undefined ? options : {};
       var active = false;
+      var over = false;
 
       var events = Events.create({
         start: Event([]),
@@ -26,7 +28,14 @@ define(
       var blocker = Blocker(settings);
       var movement = Movement();
 
-      var drop = function () {
+      var dropItFlag = null;
+      var timedDrop = function () {
+        return setTimeout(function() {
+          drop();
+        }, 200);
+      };
+
+      var drop = function (event) {
         Remove.remove(blocker.element());
         if (movement.isOn()) {
           movement.off();
@@ -35,7 +44,8 @@ define(
       };
 
       var go = function (parent) {
-        Insert.prepend(parent, blocker.element());
+        Insert.append(parent, blocker.element());
+        Focus.focus(blocker.element());
         movement.on();
         events.trigger.start();
       };
@@ -45,6 +55,7 @@ define(
       };
 
       var mousemove = function (event, ui) {
+        clearTimeout(dropItFlag);
         movement.onEvent(event);
       };
 
@@ -61,6 +72,10 @@ define(
         // acivate some events here?
       };
 
+      var delayDrop = function (event) {
+        dropItFlag = timedDrop();
+      };
+
       var runIfActive = function (f) {
         return function () {
           var args = Array.prototype.slice.call(arguments, 0);
@@ -75,7 +90,7 @@ define(
       var mdown = DomEvent.bind(blocker.element(), 'mousedown', drop);
       var mup = DomEvent.bind(blocker.element(), 'mouseup', runIfActive(mouseup));
       var mmove = DomEvent.bind(blocker.element(), 'mousemove', runIfActive(mousemove));
-      var mout = DomEvent.bind(blocker.element(), 'mouseout', runIfActive(drop));
+      var mout = DomEvent.bind(blocker.element(), 'mouseout', runIfActive(delayDrop));
 
       var destroy = function () {
         blocker.destroy();
