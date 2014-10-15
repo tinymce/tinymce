@@ -13,7 +13,7 @@ define(
   ],
 
   function (Blocker, Movement, Event, Events, DomEvent, Insert, Remove, Array) {
-    
+
     var transform = function (mutation, options) {
       var settings = options !== undefined ? options : {};
       var active = false;
@@ -35,7 +35,7 @@ define(
       };
 
       var go = function (parent) {
-        Insert.append(parent, blocker.element());
+        Insert.prepend(parent, blocker.element());
         movement.on();
         events.trigger.start();
       };
@@ -94,7 +94,7 @@ define(
         events: events.registry
       };
     };
-    
+
     return {
       transform: transform
     };
