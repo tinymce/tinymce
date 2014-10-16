@@ -27,7 +27,7 @@ define(
       var blocker = Blocker(settings);
       var movement = Movement();
 
-      var drop = function (event) {
+      var drop = function () {
         Remove.remove(blocker.element());
         if (movement.isOn()) {
           movement.off();
