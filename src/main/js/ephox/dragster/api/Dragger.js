@@ -10,12 +10,10 @@ define(
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Remove',
     'ephox.peanut.DelayedFunction',
-    'global!Array',
-    'global!clearTimeout',
-    'global!setTimeout'
+    'global!Array'
   ],
 
-  function (Blocker, Movement, Event, Events, DomEvent, Insert, Remove, DelayedFunction, Array, clearTimeout, setTimeout) {
+  function (Blocker, Movement, Event, Events, DomEvent, Insert, Remove, DelayedFunction, Array) {
 
     var transform = function (mutation, options) {
       var settings = options !== undefined ? options : {};
