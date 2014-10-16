@@ -9,11 +9,12 @@ define(
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Remove',
+    'ephox.peanut.DelayedFunction',
     'global!Array'
   ],
 
-  function (Blocker, Movement, Event, Events, DomEvent, Insert, Remove, Array) {
-    
+  function (Blocker, Movement, Event, Events, DomEvent, Insert, Remove, DelayedFunction, Array) {
+
     var transform = function (mutation, options) {
       var settings = options !== undefined ? options : {};
       var active = false;
@@ -34,6 +35,8 @@ define(
         }
       };
 
+      var delayDrop = DelayedFunction(drop, 200);
+
       var go = function (parent) {
         Insert.append(parent, blocker.element());
         movement.on();
@@ -45,6 +48,7 @@ define(
       };
 
       var mousemove = function (event, ui) {
+        delayDrop.cancel();
         movement.onEvent(event);
       };
 
@@ -75,7 +79,7 @@ define(
       var mdown = DomEvent.bind(blocker.element(), 'mousedown', drop);
       var mup = DomEvent.bind(blocker.element(), 'mouseup', runIfActive(mouseup));
       var mmove = DomEvent.bind(blocker.element(), 'mousemove', runIfActive(mousemove));
-      var mout = DomEvent.bind(blocker.element(), 'mouseout', runIfActive(drop));
+      var mout = DomEvent.bind(blocker.element(), 'mouseout', runIfActive(delayDrop.schedule));
 
       var destroy = function () {
         blocker.destroy();
@@ -94,7 +98,7 @@ define(
         events: events.registry
       };
     };
-    
+
     return {
       transform: transform
     };

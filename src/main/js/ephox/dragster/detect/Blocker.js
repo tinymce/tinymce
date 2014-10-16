@@ -11,7 +11,6 @@ define(
   ],
 
   function (Styles, Merger, Class, Css, Element, Remove) {
-
     return function (options) {
       var settings = Merger.merge({
         'layerClass': Styles.resolve('blocker')
@@ -42,7 +41,5 @@ define(
         destroy: destroy
       };
     };
-
-
   }
 );
