@@ -63,6 +63,13 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		}
 	}
 
+	function hasWrapper($e) {
+		if (!$e) {
+			return false;
+		}
+		return ($e.getAttribute('class') === 'video') ? true : false;
+	}
+
 	function showDialog() {
 		var win, width, height, data;
 
@@ -174,7 +181,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 					element = document.getElementById(_id),
 					classes = element.getAttribute('class');
 					//on open
-					this.find('#embed').value(dataToHtml(this.parent().toJSON(), false ));
+					this.find('#embed').value(dataToHtml(this.parent().toJSON(), false));
 
 					if (editor.settings.media_general_tab === false) {
 						this.active(true);
@@ -210,17 +217,12 @@ tinymce.PluginManager.add('media', function(editor, url) {
 				afterObjects,
 				i,
 				y,
-				selector,
-				hasWrapper = function ( $e ) {
-					if (!$e) { return false; }
-					return ($e.getAttribute('class') === 'video') ? true : false;
-				};
+				selector;
 
 				//on close
-				if ( editor.settings.imager_wrapper ) {
+				if (editor.settings.imager_wrapper) {
 					selector = '.video';
-				}
-				else{
+				} else {
 					selector = 'img[data-mce-object]';
 				}
 
@@ -257,7 +259,6 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		if (hasWrapper) {
 			html += '<div class="video mceNonEditable">';
 		}
-
 
 		if (!data.source1) {
 			tinymce.extend(data, htmlToData(data.embed));
@@ -816,10 +817,10 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		prependToContext: true
 	});
 
-	editor.on('NodeChange', function(e) {
+	editor.on('NodeChange', function() {
 		var _videoTags = editor.dom.select('.video');
-		tinymce.each( _videoTags, function (tag) {
-			if (tag.firstChild.nodeName !== 'IMG' ) {
+		tinymce.each(_videoTags, function (tag) {
+			if (tag.firstChild.nodeName !== 'IMG') {
 				tag.remove();
 			}
 		});
