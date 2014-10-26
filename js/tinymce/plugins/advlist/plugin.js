@@ -36,27 +36,29 @@ tinymce.PluginManager.add('advlist', function(editor) {
 	ulMenuItems = buildMenuItems('UL', editor.getParam("advlist_bullet_styles", "default,circle,disc,square"));
 
 	function applyListFormat(listName, styleValue) {
-		var list, dom = editor.dom, sel = editor.selection;
+		editor.undoManager.transact(function() {
+			var list, dom = editor.dom, sel = editor.selection;
 
-		// Check for existing list element
-		list = dom.getParent(sel.getNode(), 'ol,ul');
+			// Check for existing list element
+			list = dom.getParent(sel.getNode(), 'ol,ul');
 
-		// Switch/add list type if needed
-		if (!list || list.nodeName != listName || styleValue === false) {
-			editor.execCommand(listName == 'UL' ? 'InsertUnorderedList' : 'InsertOrderedList');
-		}
+			// Switch/add list type if needed
+			if (!list || list.nodeName != listName || styleValue === false) {
+				editor.execCommand(listName == 'UL' ? 'InsertUnorderedList' : 'InsertOrderedList');
+			}
 
-		// Set style
-		styleValue = styleValue === false ? lastStyles[listName] : styleValue;
-		lastStyles[listName] = styleValue;
+			// Set style
+			styleValue = styleValue === false ? lastStyles[listName] : styleValue;
+			lastStyles[listName] = styleValue;
 
-		list = dom.getParent(sel.getNode(), 'ol,ul');
-		if (list && styleValue) {
-			dom.setStyle(list, 'listStyleType', styleValue);
-			list.removeAttribute('data-mce-style');
-		}
+			list = dom.getParent(sel.getNode(), 'ol,ul');
+			if (list) {
+				dom.setStyle(list, 'listStyleType', styleValue ? styleValue : null);
+				list.removeAttribute('data-mce-style');
+			}
 
-		editor.focus();
+			editor.focus();
+		});
 	}
 
 	function updateSelection(e) {

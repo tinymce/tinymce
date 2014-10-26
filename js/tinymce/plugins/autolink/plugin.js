@@ -80,11 +80,19 @@ tinymce.PluginManager.add('autolink', function(editor) {
 		}
 
 		function setStart(container, offset) {
-			rng.setStart(container, scopeIndex(container, offset));
+			if (container.nodeType != 1 || container.hasChildNodes()) {
+				rng.setStart(container, scopeIndex(container, offset));
+			} else {
+				rng.setStartBefore(container);
+			}
 		}
 
 		function setEnd(container, offset) {
-			rng.setEnd(container, scopeIndex(container, offset));
+			if (container.nodeType != 1 || container.hasChildNodes()) {
+				rng.setEnd(container, scopeIndex(container, offset));
+			} else {
+				rng.setEndAfter(container);
+			}
 		}
 
 		// We need at least five characters to form a URL,

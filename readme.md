@@ -26,6 +26,9 @@ Runs all source files though various JS linters.
 `grunt sc-test`
 Runs all qunit tests on Saucelabs.
 
+`grunt watch`
+Watches for source code changes and triggers rebuilds and linting.
+
 `grunt --help`
 Displays the various build tasks.
 

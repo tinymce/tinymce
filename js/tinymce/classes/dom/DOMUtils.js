@@ -959,6 +959,8 @@ define("tinymce/dom/DOMUtils", [
 			each(url.split(','), function(url) {
 				var link;
 
+				url = Tools._addCacheSuffix(url);
+
 				if (self.files[url]) {
 					return;
 				}
