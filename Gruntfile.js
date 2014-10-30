@@ -219,8 +219,9 @@ module.exports = function(grunt) {
 
 			ie7: {
 				options: {
-					cleancss: true,
-					strictImports: true
+					compress: true,
+					strictImports: true,
+					ieCompat: true
 				},
 
 				expand: true,
