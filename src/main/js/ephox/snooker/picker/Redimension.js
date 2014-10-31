@@ -34,7 +34,7 @@ define(
         return Structs.coords(position.left(), position.top());
       };
 
-      /* 
+      /*
        * Based on the mouse position (x, y), identify whether the picker table needs to be resized
        * and update its selection
        */

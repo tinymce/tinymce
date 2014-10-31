@@ -12,7 +12,7 @@ define(
      * on position being the (x, y) coordinate of the picker component.
      */
     var findCell = function (position, dimensions, grid, mouse) {
-      var deltaX = mouse.x() - position.x();
+      var deltaX =  document.dir === 'rtl' ? position.x() + dimensions.width() - mouse.x() : mouse.x() - position.x();
       var deltaY = mouse.y() - position.y();
 
       var cellWidth = dimensions.width()/grid.columns();
