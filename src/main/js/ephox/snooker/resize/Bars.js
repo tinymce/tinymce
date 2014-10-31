@@ -21,7 +21,7 @@ define(
   function (Arr, Struct, Blocks, DetailsList, Warehouse, Bar, Styles, Class, Css, Height, Insert, Location, Remove, SelectorFilter) {
     var resizeBar = Styles.resolve('resizer-bar');
     var BAR_WIDTH = 3;
-    
+
     var clear = function (container, table) {
       var previous = SelectorFilter.descendants(container, '.' + resizeBar);
       Arr.each(previous, Remove.remove);
