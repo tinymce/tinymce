@@ -18,8 +18,8 @@ define(
       return Structs.address(row, col);
     };
 
-    /* 
-     * Given a (row, column) address of the current mouse, identify the table size 
+    /*
+     * Given a (row, column) address of the current mouse, identify the table size
      * and current selection.
      */
     var resize = function (address, settings) {

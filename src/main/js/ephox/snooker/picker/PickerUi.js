@@ -104,7 +104,6 @@ define(
           setSelection: setSelection,
           setSize: setSize
         };
-
         redimension.handle(bridge, Structs.grid(size.height, size.width), event.raw().pageX, event.raw().pageY);
       });
 

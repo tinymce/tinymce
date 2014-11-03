@@ -17,7 +17,7 @@ define(
 
     var recalculate = function (warehouse, widths) {
       var all = Warehouse.justCells(warehouse);
-      
+
       var total = function (start, end) {
         var r = 0;
         for (var i = start; i < end; i++) {
