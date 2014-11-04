@@ -1,15 +1,16 @@
 define(
-  'ephox.snooker.demo.PickerDemo',
+  'ephox.snooker.demo.PickerDemoRtl',
 
   [
     'ephox.snooker.picker.PickerUi',
+    'ephox.sugar.api.Attr',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Remove',
     'global!Math'
   ],
 
-  function (PickerUi, Element, Insert, Remove, Math) {
+  function (PickerUi, Attr, Element, Insert, Remove, Math) {
     return function () {
 
       var picker = PickerUi({
@@ -17,10 +18,11 @@ define(
         maxRows: 5,
         minCols: 1,
         minRows: 1
-      }, 'ltr');
+      }, 'rtl');
       var ephoxUi = Element.fromDom(document.getElementById('ephox-ui'));
       Remove.empty(ephoxUi);
       Insert.append(ephoxUi, picker.element());
+      Attr.set(ephoxUi, 'dir', 'rtl');
 
       var val = 3;
 

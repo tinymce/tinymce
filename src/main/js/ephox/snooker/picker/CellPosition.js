@@ -3,23 +3,31 @@ define(
 
   [
     'ephox.snooker.api.Structs',
-    'ephox.sugar.api.Direction',
-    'ephox.sugar.api.Element',
     'global!Math'
   ],
 
-  function (Structs, Direction, Element, Math) {
+  function (Structs, Math) {
     /*
      * Determine the address(row, column) of a mouse position on the entire document based
      * on position being the (x, y) coordinate of the picker component.
      */
-    var findCell = function (position, dimensions, grid, mouse) {
-      var doc = Element.fromDom(document.documentElement);
-      var calcRtl = position.x() + dimensions.width() - mouse.x();
-      var calcLtr =  mouse.x() - position.x();
-      var calcDeltaX = Direction.onDirection(calcLtr,calcRtl);
+    var findCellRtl = function (position, dimensions, grid, mouse) {
+      console.log('RTL FIND CELL');
+      var deltaX = position.x() + dimensions.width() - mouse.x();
+      var deltaY = mouse.y() - position.y();
 
-      var deltaX = calcDeltaX(doc);
+      var cellWidth = dimensions.width()/grid.columns();
+      var cellHeight = dimensions.height()/grid.rows();
+
+      var col = Math.floor(deltaX/cellWidth);
+      var row = Math.floor(deltaY/cellHeight);
+
+      return Structs.address(row, col);
+    };
+
+    var findCellLtr = function (position, dimensions, grid, mouse) {
+      console.log('LTR FIND CELL');
+      var deltaX = mouse.x() - position.x();
       var deltaY = mouse.y() - position.y();
 
       var cellWidth = dimensions.width()/grid.columns();
@@ -32,7 +40,8 @@ define(
     };
 
     return {
-      findCell: findCell
+      findCellRtl: findCellRtl,
+      findCellLtr: findCellLtr
     };
   }
 );

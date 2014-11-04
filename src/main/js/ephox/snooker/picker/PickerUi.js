@@ -22,7 +22,7 @@ define(
   ],
 
   function (Arr, Fun, Event, Events, Structs, TableLookup, Redimension, Util, Styles, Attr, Class, Classes, DomEvent, Element, Insert, InsertAll, Remove) {
-    return function (settings) {
+    return function (settings, direction) {
       var events = Events.create({
         select: Event(['rows', 'cols', 'rowHeaders', 'columnHeaders'])
       });
@@ -97,7 +97,7 @@ define(
         Attr.set(table, 'data-picker-row', numRows - 1);
       };
 
-      var redimension = Redimension(settings);
+      var redimension = Redimension(settings, direction);
       var mover = DomEvent.bind(table, 'mousemove', function (event) {
         var bridge = {
           element: Fun.constant(table),

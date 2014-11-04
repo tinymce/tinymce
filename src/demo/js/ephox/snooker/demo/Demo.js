@@ -11,7 +11,8 @@ define(
     return function () {
       var examples = Examples.add([
         { name: 'Detect Demo', module: 'ephox.snooker.demo.DetectDemo' },
-        { name: 'Picker Demo', module: 'ephox.snooker.demo.PickerDemo' }
+        { name: 'Picker Demo', module: 'ephox.snooker.demo.PickerDemo' },
+        { name: 'Picker Demo Rtl', module: 'ephox.snooker.demo.PickerDemoRtl' }
       ]);
 
       var consoleUI = Console.use();

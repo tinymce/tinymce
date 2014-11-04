@@ -12,7 +12,7 @@ define(
   ],
 
   function (Structs, CellPosition, Sizing, Height, Location, Width, Math) {
-    return function (settings) {
+    return function (settings, direction) {
       var active = false;
 
       var on = function () {
@@ -43,7 +43,8 @@ define(
           var dimensions = getDimensions(table);
           var position = getPosition(table);
           var mouse = Structs.coords(x, y);
-          var address = CellPosition.findCell(position, dimensions, grid, mouse);
+          var choice = direction === 'ltr' ? CellPosition.findCellLtr : CellPosition.findCellRtl;
+          var address = choice(position, dimensions, grid, mouse);
           var changes = Sizing.resize(address, settings);
           var full = changes.full();
           if (full.row() !== grid.rows() || full.column() !== grid.columns()) table.setSize(full.row(), full.column());
