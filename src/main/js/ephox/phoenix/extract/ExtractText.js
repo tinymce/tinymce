@@ -16,9 +16,7 @@ define(
     };
       
     var from = function (universe, item) {
-      console.log('item: ', item.dom());
       var typed = Extract.typed(universe, item);
-      console.log('typed: ', typed.length);
       return Arr.map(typed, function (t) {
         return t.fold(Fun.constant(newline), onEmpty, universe.property().getText);
       }).join('');
