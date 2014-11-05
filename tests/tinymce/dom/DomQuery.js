@@ -103,6 +103,22 @@
 			equal($clone[0].tagName, 'DIV');
 		});
 
+		test(prefix + 'Constructor window', function() {
+			var $win;
+
+			$win = $(window);
+			equal($win.length, 1);
+			strictEqual($win[0], window);
+		});
+
+		test(prefix + 'Constructor window', function() {
+			var $elm;
+
+			$elm = $(document.body);
+			equal($elm.length, 1);
+			strictEqual($elm[0], document.body);
+		});
+
 		test(prefix + 'static extend()', function() {
 			var data;
 
@@ -114,6 +130,7 @@
 		});
 
 		test(prefix + 'static makeArray()', function() {
+			strictEqual($.makeArray(window)[0], window);
 			deepEqual($.makeArray({'0': 'a', '1': 'b', length: 2}), ['a', 'b']);
 		});
 
