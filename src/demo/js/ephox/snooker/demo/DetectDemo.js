@@ -15,12 +15,13 @@ define(
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
+    'ephox.sugar.api.InsertAll',
     'ephox.sugar.api.Ready',
     'ephox.sugar.api.Replication',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Option, ResizeDirection, Structs, TableOperations, TableResize, Attr, Class, Compare, Css, DomEvent, Element, Insert, Ready, Replication, SelectorFind) {
+  function (Arr, Option, ResizeDirection, Structs, TableOperations, TableResize, Attr, Class, Compare, Css, DomEvent, Element, Insert, InsertAll, Ready, Replication, SelectorFind) {
     return function () {
       var subject = Element.fromHtml(
         '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
@@ -87,16 +88,16 @@ define(
       var subject3 = Element.fromHtml('<table contenteditable="true" width="100%" cellpadding="0" border="1" cellspacing="0"> <tbody><tr> <td rowspan="2" width="34%">&nbsp;a</td> <td width="33%">&nbsp;b</td> <td width="33%">&nbsp;c</td> </tr> <tr> <td width="33%">&nbsp;d</td> <td rowspan="2" width="33%">&nbsp;e</td> </tr> <tr> <td width="34%">&nbsp;f</td> <td width="33%">&nbsp;g</td> </tr> <tr> <td width="34%">&nbsp;h</td> <td width="33%">&nbsp;i</td> <td width="33%">j&nbsp;</td> </tr> </tbody></table>');
 
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
-      Insert.append(ephoxUi, subject);
-      Insert.append(ephoxUi, Element.fromTag('p'));
-      Insert.append(ephoxUi, subject2);
-      Insert.append(ephoxUi, Element.fromTag('p'));
-      Insert.append(ephoxUi, subject3);
+      var ltrs = Element.fromHtml('<div></div>');
+      InsertAll.append(ltrs, [ Element.fromHtml('<p>Left to Right tables</p>'), subject, Element.fromTag('p'), subject2 ]);
+      var rtls = Element.fromHtml('<div dir="rtl"></div>');
+      InsertAll.append(rtls, [ Element.fromHtml('<p>Right to Left table</p>'), subject3 ]);
+      InsertAll.append(ephoxUi, [ ltrs, rtls ]);
 
-      var manager = TableResize(ephoxUi, ResizeDirection.rtl);
-      manager.on();
-
-      // manager.refresh(subject);
+      var ltrManager = TableResize(ltrs, ResizeDirection.ltr);
+      ltrManager.on();
+      var rtlManager = TableResize(rtls, ResizeDirection.rtl);
+      rtlManager.on();
 
       // For firefox.
       Ready.execute(function () {
