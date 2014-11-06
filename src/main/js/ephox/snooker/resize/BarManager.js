@@ -86,11 +86,12 @@ define(
         mousedown.unbind();
         mouseover.unbind();
         mouseout.unbind();
+        firefoxDrag.unbind();
         resizing.destroy();
       };
 
       /* This is required on Firefox to stop the default drag behaviour interfering with dragster */
-      DomEvent.bind(container, 'dragstart', function (event) {
+      var firefoxDrag = DomEvent.bind(container, 'dragstart', function (event) {
         event.raw().preventDefault();
       });
 

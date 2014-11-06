@@ -3,6 +3,8 @@ define(
 
   [
     'ephox.compass.Arr',
+    'ephox.peanut.Fun',
+    'ephox.scullion.Struct',
     'ephox.snooker.lookup.Blocks',
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
@@ -18,29 +20,48 @@ define(
     'ephox.sugar.api.Width'
   ],
 
-  function (Arr, Blocks, DetailsList, Warehouse, Bar, Styles, Class, Css, Height, Insert, Location, Remove, SelectorFilter, Width) {
+  function (Arr, Fun, Struct, Blocks, DetailsList, Warehouse, Bar, Styles, Class, Css, Height, Insert, Location, Remove, SelectorFilter, Width) {
     var resizeBar = Styles.resolve('resizer-bar');
+    var BAR_WIDTH = 3;
+    var colInfo = Struct.immutable('col', 'x');
 
     var clear = function (container, table) {
       var previous = SelectorFilter.descendants(container, '.' + resizeBar);
       Arr.each(previous, Remove.remove);
     };
 
+    var ltrPositions = function (cols) {
+      var lines = Arr.map(cols.slice(1), function (cell, col) {
+        var pos = Location.absolute(cell);
+        return colInfo(col, pos.left());
+      });
+
+      var lastCol = cols[cols.length - 1];
+      var lastX = Location.absolute(lastCol).left() + Width.getOuter(lastCol);
+      return lines.concat[ colInfo(cols.length - 1, lastX) ];
+    };
+
+    var rtlPositions = function (cols) {
+      var lines = Arr.map(cols.slice(0, cols.length - 1), function (cell, col) {
+        var pos = Location.absolute(cell);
+        return colInfo(col, pos.left());
+      });
+
+      var lastCol = cols[cols.length - 1];
+      var lastX = Location.absolute(lastCol).left();
+      return lines.concat([ colInfo(cols.length - 1, lastX) ]);
+    };
+
     var refreshCols = function (container, table, cols) {
       var position = Location.absolute(table);
-     
-      Arr.each(cols.slice(1), function (cell, col) {
-        var pos = Location.absolute(cell);
-        var bar = Bar(col, pos.left(), position.top(), 3, Height.getOuter(table));
+      var tableHeight = Height.getOuter(table);
+
+      var colPositions = rtlPositions(cols);
+      Arr.each(colPositions, function (cp) {
+        var bar = Bar(cp.col(), cp.x(), position.top(), BAR_WIDTH, tableHeight);
         Class.add(bar, resizeBar);
         Insert.append(container, bar);
       });
-
-      var lastLeft = Location.absolute(cols[cols.length - 1]).left() + Width.getOuter(cols[cols.length - 1]);
-      var lastTop = position.top();
-      var rightBar = Bar(cols.length - 1, lastLeft, lastTop, 3, Height.getOuter(table));
-      Class.add(rightBar, resizeBar);
-      Insert.append(container, rightBar);
     };
 
     var refresh = function (container, table) {
@@ -55,7 +76,7 @@ define(
     var hide = function (container) {
       var bars = SelectorFilter.descendants(container, '.' + resizeBar);
       Arr.each(bars, function (bar) {
-        Css.set(bar, 'display', 'none');
+        // Css.set(bar, 'display', 'none');
       });
     };
 
