@@ -12,6 +12,7 @@ define(
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Css',
+    'ephox.sugar.api.Direction',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
@@ -21,7 +22,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Option, ResizeDirection, Structs, TableOperations, TableResize, Attr, Class, Compare, Css, DomEvent, Element, Insert, InsertAll, Ready, Replication, SelectorFind) {
+  function (Arr, Option, ResizeDirection, Structs, TableOperations, TableResize, Attr, Class, Compare, Css, Direction, DomEvent, Element, Insert, InsertAll, Ready, Replication, SelectorFind) {
     return function () {
       var subject = Element.fromHtml(
         '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
@@ -182,7 +183,9 @@ define(
       var runOperation = function (operation) {
         return function (event) {
           detection().each(function (start) {
-            operation(ephoxUi, start, generators);
+            var dir = Direction.getDirection(start);
+            var direction = dir === 'rtl' ? ResizeDirection.rtl : ResizeDirection.ltr;
+            operation(ephoxUi, start, generators, direction);
           });
         };
       };
