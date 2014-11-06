@@ -12,8 +12,8 @@ define(
     /* 
      * Creates and sets up a bar-based column resize manager 
      */
-    return function (container) {
-      var manager = BarManager(container);
+    return function (container, direction) {
+      var manager = BarManager(container, direction);
 
       var events = Events.create({
         beforeResize: Event([]),
@@ -23,7 +23,9 @@ define(
 
       manager.events.adjustWidth.bind(function (event) {
         events.trigger.beforeResize();
-        Adjustments.adjust(event.table(), event.delta(), event.column());
+        var delta = direction.delta(event.delta());
+        console.log('delta: ', delta);
+        Adjustments.adjust(event.table(), delta, event.column());
         events.trigger.afterResize();
       });
 

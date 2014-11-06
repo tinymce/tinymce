@@ -20,8 +20,8 @@ define(
   ],
 
   function (Dragger, Option, Event, Events, BarMutation, Bars, Styles, Attr, Class, Css, DomEvent, Node, SelectorExists, SelectorFind, parseInt) {
-    return function (container) {
-      var mutation = BarMutation();
+    return function (container, direction) {
+      var mutation = BarMutation(direction);
       var resizing = Dragger.transform(mutation, {});
 
       var hoverTable = Option.none();
@@ -49,7 +49,7 @@ define(
             var delta = newX - oldX;
             Attr.remove(target, 'data-initial-left');
             if (column !== undefined) events.trigger.adjustWidth(table, delta, parseInt(column, 10));
-            Bars.refresh(container, table);
+            Bars.refresh(container, table, direction);
           });
         });
       });
@@ -71,7 +71,7 @@ define(
       var mouseover = DomEvent.bind(container, 'mouseover', function (event) {
         if (Node.name(event.target()) === 'table' || SelectorExists.ancestor(event.target(), 'table')) {
           hoverTable = Node.name(event.target()) === 'table' ? Option.some(event.target()) : SelectorFind.ancestor(event.target(), 'table');
-          Bars.refresh(container, hoverTable.getOrDie());
+          Bars.refresh(container, hoverTable.getOrDie(), direction);
         }
       });
 
@@ -96,7 +96,7 @@ define(
       });
 
       var refresh = function (tbl) {
-        Bars.refresh(container, tbl);
+        Bars.refresh(container, tbl, direction);
       };
 
       var events = Events.create({

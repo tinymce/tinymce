@@ -4,6 +4,7 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.perhaps.Option',
+    'ephox.snooker.api.ResizeDirection',
     'ephox.snooker.api.Structs',
     'ephox.snooker.api.TableOperations',
     'ephox.snooker.api.TableResize',
@@ -19,7 +20,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Option, Structs, TableOperations, TableResize, Attr, Class, Compare, Css, DomEvent, Element, Insert, Ready, Replication, SelectorFind) {
+  function (Arr, Option, ResizeDirection, Structs, TableOperations, TableResize, Attr, Class, Compare, Css, DomEvent, Element, Insert, Ready, Replication, SelectorFind) {
     return function () {
       var subject = Element.fromHtml(
         '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
@@ -92,7 +93,7 @@ define(
       Insert.append(ephoxUi, Element.fromTag('p'));
       Insert.append(ephoxUi, subject3);
 
-      var manager = TableResize(ephoxUi);
+      var manager = TableResize(ephoxUi, ResizeDirection.rtl);
       manager.on();
 
       // manager.refresh(subject);

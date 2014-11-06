@@ -10,7 +10,7 @@ define(
   ],
 
   function (TagLookup, DetailsList, Warehouse, Redraw, Bars) {
-    var run = function (container, table, cell, operation, adjustment) {
+    var run = function (container, table, cell, operation, adjustment, direction) {
       TagLookup.detect(cell).each(function (dompos) {
         var list = DetailsList.fromTable(table);
 
@@ -19,7 +19,7 @@ define(
 
         Redraw.render(table, post);
         adjustment(post);
-        Bars.refresh(container, table);
+        Bars.refresh(container, table, direction);
       });
     };
 

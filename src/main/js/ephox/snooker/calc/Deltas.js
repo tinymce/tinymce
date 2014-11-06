@@ -26,7 +26,6 @@ define(
      * based on a resize at column: column of step: step. The minimum column width allowed is min
      */
     var determine = function (input, column, step, min) {
-      step = -step;
       var result = input.slice(0);
       var context = neighbours(input, column);
 

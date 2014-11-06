@@ -30,29 +30,11 @@ define(
       Arr.each(previous, Remove.remove);
     };
 
-    var ltrPositions = function (cols) {
-      var lines = Arr.map(cols.slice(1), function (cell, col) {
-        var pos = Location.absolute(cell);
-        return colInfo(col, pos.left());
-      });
-
-      var lastCol = cols[cols.length - 1];
-      var lastX = Location.absolute(lastCol).left() + Width.getOuter(lastCol);
-      return lines.concat[ colInfo(cols.length - 1, lastX) ];
-    };
-
-    var rtlPositions = function (cols) {
-      return Arr.map(cols, function (cell, col) {
-        var pos = Location.absolute(cell);
-        return colInfo(col, pos.left());
-      });
-    };
-
-    var refreshCols = function (container, table, cols) {
+    var refreshCols = function (container, table, cols, direction) {
       var position = Location.absolute(table);
       var tableHeight = Height.getOuter(table);
 
-      var colPositions = rtlPositions(cols);
+      var colPositions = direction.positions(cols);
       Arr.each(colPositions, function (cp) {
         var bar = Bar(cp.col(), cp.x(), position.top(), BAR_WIDTH, tableHeight);
         Class.add(bar, resizeBar);
@@ -60,13 +42,13 @@ define(
       });
     };
 
-    var refresh = function (container, table) {
+    var refresh = function (container, table, direction) {
       clear(container, table);
 
       var list = DetailsList.fromTable(table);
       var warehouse = Warehouse.generate(list);
       var cols = Blocks.columns(warehouse);
-      if (cols.length > 0) refreshCols(container, table, cols);
+      if (cols.length > 0) refreshCols(container, table, cols, direction);
     };
 
     var hide = function (container) {

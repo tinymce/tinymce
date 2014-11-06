@@ -18,12 +18,12 @@ define(
      * Using the current element, execute operation on the table.
      */
     var modify = function (operation, adjustment, post) {
-      return function (container, element, generators) {
+      return function (container, element, generators, direction) {
         TableLookup.cell(element).each(function (cell) {
           SelectorFind.ancestor(cell, 'table').each(function (table) {
             TableOperation.run(container, table, cell, function (warehouse, dompos) {
               return operation(warehouse, dompos.row(), dompos.column(), generators, Compare.eq);
-            }, adjustment);
+            }, adjustment, direction);
 
             post(table);
           });
