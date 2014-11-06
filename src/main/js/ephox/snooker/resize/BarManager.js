@@ -21,7 +21,7 @@ define(
 
   function (Dragger, Option, Event, Events, BarMutation, Bars, Styles, Attr, Class, Css, DomEvent, Node, SelectorExists, SelectorFind, parseInt) {
     return function (container, direction) {
-      var mutation = BarMutation(direction);
+      var mutation = BarMutation();
       var resizing = Dragger.transform(mutation, {});
 
       var hoverTable = Option.none();

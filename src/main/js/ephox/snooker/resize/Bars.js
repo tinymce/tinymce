@@ -3,7 +3,6 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.peanut.Fun',
     'ephox.scullion.Struct',
     'ephox.snooker.lookup.Blocks',
     'ephox.snooker.model.DetailsList',
@@ -16,15 +15,13 @@ define(
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Location',
     'ephox.sugar.api.Remove',
-    'ephox.sugar.api.SelectorFilter',
-    'ephox.sugar.api.Width'
+    'ephox.sugar.api.SelectorFilter'
   ],
 
-  function (Arr, Fun, Struct, Blocks, DetailsList, Warehouse, Bar, Styles, Class, Css, Height, Insert, Location, Remove, SelectorFilter, Width) {
+  function (Arr, Struct, Blocks, DetailsList, Warehouse, Bar, Styles, Class, Css, Height, Insert, Location, Remove, SelectorFilter) {
     var resizeBar = Styles.resolve('resizer-bar');
     var BAR_WIDTH = 3;
-    var colInfo = Struct.immutable('col', 'x');
-
+    
     var clear = function (container, table) {
       var previous = SelectorFilter.descendants(container, '.' + resizeBar);
       Arr.each(previous, Remove.remove);
@@ -54,7 +51,7 @@ define(
     var hide = function (container) {
       var bars = SelectorFilter.descendants(container, '.' + resizeBar);
       Arr.each(bars, function (bar) {
-        // Css.set(bar, 'display', 'none');
+        Css.set(bar, 'display', 'none');
       });
     };
 
