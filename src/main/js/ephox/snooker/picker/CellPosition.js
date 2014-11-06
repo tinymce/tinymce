@@ -12,7 +12,6 @@ define(
      * on position being the (x, y) coordinate of the picker component.
      */
     var findCellRtl = function (position, dimensions, grid, mouse) {
-      console.log('RTL FIND CELL');
       var deltaX = position.x() + dimensions.width() - mouse.x();
       var deltaY = mouse.y() - position.y();
 
@@ -26,7 +25,6 @@ define(
     };
 
     var findCellLtr = function (position, dimensions, grid, mouse) {
-      console.log('LTR FIND CELL');
       var deltaX = mouse.x() - position.x();
       var deltaY = mouse.y() - position.y();
 
