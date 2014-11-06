@@ -42,14 +42,10 @@ define(
     };
 
     var rtlPositions = function (cols) {
-      var lines = Arr.map(cols.slice(0, cols.length - 1), function (cell, col) {
+      return Arr.map(cols, function (cell, col) {
         var pos = Location.absolute(cell);
         return colInfo(col, pos.left());
       });
-
-      var lastCol = cols[cols.length - 1];
-      var lastX = Location.absolute(lastCol).left();
-      return lines.concat([ colInfo(cols.length - 1, lastX) ]);
     };
 
     var refreshCols = function (container, table, cols) {
