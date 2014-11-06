@@ -31,7 +31,7 @@ define(
       var position = Location.absolute(table);
       var tableHeight = Height.getOuter(table);
 
-      var colPositions = direction.positions(cols);
+      var colPositions = direction.positions(cols, table);
       Arr.each(colPositions, function (cp) {
         var bar = Bar(cp.col(), cp.x(), position.top(), BAR_WIDTH, tableHeight);
         Class.add(bar, resizeBar);

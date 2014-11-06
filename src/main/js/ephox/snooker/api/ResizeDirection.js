@@ -12,7 +12,7 @@ define(
   function (Arr, Fun, Struct, Location, Width) {
     var colInfo = Struct.immutable('col', 'x');
 
-    var ltrPositions = function (cols) {
+    var ltrPositions = function (cols, _table) {
       var lines = Arr.map(cols.slice(1), function (cell, col) {
         var pos = Location.absolute(cell);
         return colInfo(col, pos.left());
@@ -23,14 +23,14 @@ define(
       return lines.concat([ colInfo(cols.length - 1, lastX) ]);
     };
 
-    var rtlPositions = function (cols) {
+    var rtlPositions = function (cols, _table) {
       return Arr.map(cols, function (cell, col) {
         var pos = Location.absolute(cell);
         return colInfo(col, pos.left());
       });
     };
 
-    var negate = function (step) {
+    var negate = function (step, _table) {
       return -step;
     };
 
