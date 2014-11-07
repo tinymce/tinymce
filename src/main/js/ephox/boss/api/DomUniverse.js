@@ -2,6 +2,7 @@ define(
   'ephox.boss.api.DomUniverse',
 
   [
+    'ephox.boss.common.TagBoundaries',
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.sugar.api.Attr',
@@ -20,38 +21,7 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Arr, Fun, Attr, Compare, Css, Element, Insert, InsertAll, Node, PredicateFilter, PredicateFind, Remove, SelectorFilter, SelectorFind, Text, Traverse) {
-    // TODO: We need to consolidate this list. I think when we get rid of boss/universe, we can do it then.
-    var boundaries = [
-      'body',
-      'p',
-      'div',
-      'article',
-      'aside',
-      'figcaption',
-      'figure',
-      'footer',
-      'header',
-      'nav',
-      'section',
-      'ol',
-      'ul',
-      'li',
-      'table',
-      'tr',
-      'td',
-      'th',
-      'h1',
-      'h2',
-      'h3',
-      'h4',
-      'h5',
-      'h6',
-      'blockquote',
-      'pre',
-      'address'
-    ];
-
+  function (TagBoundaries, Arr, Fun, Attr, Compare, Css, Element, Insert, InsertAll, Node, PredicateFilter, PredicateFind, Remove, SelectorFilter, SelectorFind, Text, Traverse) {
     return function () {
       var clone = function (element) {
         return Element.fromDom(element.dom().cloneNode(false));
@@ -64,12 +34,12 @@ define(
         // When the read display value is empty, we need to check the node name.
         return display !== undefined && display.length > 0 ?
           Arr.contains(['block', 'table-cell', 'table-row', 'table', 'list-item'], display) :
-          Arr.contains(boundaries, Node.name(element));
+          Arr.contains(TagBoundaries, Node.name(element));
       };
 
       var isEmptyTag = function (element) {
         if (!Node.isElement(element)) return false;
-        return Arr.contains(['br', 'img'], Node.name(element));
+        return Arr.contains(['br', 'img', 'hr'], Node.name(element));
       };
 
       var comparePosition = function (element, other) {
