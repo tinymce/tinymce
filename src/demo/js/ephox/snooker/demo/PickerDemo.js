@@ -10,16 +10,19 @@ define(
 
   function (PickerUi, Element, Insert, Math) {
     return function () {
-      
+
       var picker = PickerUi({
-        maxCols: 6,
-        maxRows: 5,
+        maxCols: 10,
+        maxRows: 10,
         minCols: 1,
         minRows: 1
       });
       var ephoxUi = Element.fromDom(document.getElementById('ephox-ui'));
 
-      Insert.append(ephoxUi, picker.element());
+      var wrap = Element.fromTag('div');
+
+      Insert.append(ephoxUi, wrap);
+      Insert.append(wrap, picker.element());
 
       var val = 3;
 
