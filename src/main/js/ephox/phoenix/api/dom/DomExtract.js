@@ -33,13 +33,17 @@ define(
       return Extract.find(universe, parent, offset);
     };
 
+    var toText = function (element) {
+      return Extract.toText(universe, element);
+    };
+
     return {
       extract: extract,
       extractTo: extractTo,
       all: all,
       from: from,
-      find: find
+      find: find,
+      toText: toText
     };
-
   }
 );

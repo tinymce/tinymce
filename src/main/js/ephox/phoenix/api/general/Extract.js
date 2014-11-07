@@ -3,13 +3,14 @@ define(
 
   [
     'ephox.phoenix.extract.Extract',
+    'ephox.phoenix.extract.ExtractText',
     'ephox.phoenix.extract.Find'
   ],
 
   /**
    * Documentation is in the actual implementations.
    */
-  function (Extract, Find) {
+  function (Extract, ExtractText, Find) {
 
     var from = function (universe, item) {
       return Extract.typed(universe, item);
@@ -31,12 +32,17 @@ define(
       return Find.find(universe, parent, offset);
     };
 
+    var toText = function (universe, item) {
+      return ExtractText.from(universe, item);
+    };
+
     return {
       extract: extract,
       extractTo: extractTo,
       all: all,
       from: from,
-      find: find
+      find: find,
+      toText: toText
     };
   }
 );
