@@ -20,7 +20,7 @@ define(
   ],
 
   function (Dragger, Option, Event, Events, BarMutation, Bars, Styles, Attr, Class, Css, DomEvent, Node, SelectorExists, SelectorFind, parseInt) {
-    return function (container) {
+    return function (container, direction) {
       var mutation = BarMutation();
       var resizing = Dragger.transform(mutation, {});
 
@@ -49,7 +49,7 @@ define(
             var delta = newX - oldX;
             Attr.remove(target, 'data-initial-left');
             if (column !== undefined) events.trigger.adjustWidth(table, delta, parseInt(column, 10));
-            Bars.refresh(container, table);
+            Bars.refresh(container, table, direction);
           });
         });
       });
@@ -71,7 +71,7 @@ define(
       var mouseover = DomEvent.bind(container, 'mouseover', function (event) {
         if (Node.name(event.target()) === 'table' || SelectorExists.ancestor(event.target(), 'table')) {
           hoverTable = Node.name(event.target()) === 'table' ? Option.some(event.target()) : SelectorFind.ancestor(event.target(), 'table');
-          Bars.refresh(container, hoverTable.getOrDie());
+          Bars.refresh(container, hoverTable.getOrDie(), direction);
         }
       });
 
@@ -86,16 +86,17 @@ define(
         mousedown.unbind();
         mouseover.unbind();
         mouseout.unbind();
+        firefoxDrag.unbind();
         resizing.destroy();
       };
 
       /* This is required on Firefox to stop the default drag behaviour interfering with dragster */
-      DomEvent.bind(container, 'dragstart', function (event) {
+      var firefoxDrag = DomEvent.bind(container, 'dragstart', function (event) {
         event.raw().preventDefault();
       });
 
       var refresh = function (tbl) {
-        Bars.refresh(container, tbl);
+        Bars.refresh(container, tbl, direction);
       };
 
       var events = Events.create({

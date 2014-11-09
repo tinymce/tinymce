@@ -13,7 +13,6 @@ define(
   function (TableLookup, Css, Node, Width, Strings, Math) {
     var setWidth = function (cell, amount) {
       cell.dom().style.setProperty('width', amount + 'px');
-
     };
 
     var getWidthValue = function (cell) {

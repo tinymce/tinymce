@@ -46,7 +46,7 @@ define(
       return Warehouse.generate(list);
     };
 
-    var adjust = function (table, delta, index, direction) {
+    var adjust = function (table, delta, index) {
       var list = DetailsList.fromTable(table);
       var warehouse = getWarehouse(list);
       var widths = getWidths(warehouse);
