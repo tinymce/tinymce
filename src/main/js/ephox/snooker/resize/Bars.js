@@ -3,7 +3,6 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.scullion.Struct',
     'ephox.snooker.lookup.Blocks',
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
@@ -18,7 +17,7 @@ define(
     'ephox.sugar.api.SelectorFilter'
   ],
 
-  function (Arr, Struct, Blocks, DetailsList, Warehouse, Bar, Styles, Class, Css, Height, Insert, Location, Remove, SelectorFilter) {
+  function (Arr, Blocks, DetailsList, Warehouse, Bar, Styles, Class, Css, Height, Insert, Location, Remove, SelectorFilter) {
     var resizeBar = Styles.resolve('resizer-bar');
     var BAR_WIDTH = 3;
 
