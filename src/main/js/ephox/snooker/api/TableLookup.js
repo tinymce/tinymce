@@ -6,7 +6,6 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.snooker.api.Structs',
-    'ephox.snooker.picker.PickerStyles',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.SelectorFilter',
@@ -15,20 +14,20 @@ define(
     'global!parseInt'
   ],
 
-  function (Arr, Fun, Option, Structs, PickerStyles, Attr, Node, SelectorFilter, SelectorFind, Traverse, parseInt) {
-    var CELL_SELECTOR = '.' + PickerStyles.cell();
-    var ROW_SELECTOR = '.' + PickerStyles.row();
-    var TABLE_SELECTOR = '.' + PickerStyles.table();
+  function (Arr, Fun, Option, Structs, Attr, Node, SelectorFilter, SelectorFind, Traverse, parseInt) {
+    var lookup = function (tags, element) {
+      return Arr.contains(tags, Node.name(element)) ? Option.some(element) : SelectorFind.ancestor(element, tags.join(','));
+    };
 
     /*
      * Identify the optional cell that element represents.
      */
     var cell = function (element) {
-      return SelectorFind.closest(element, CELL_SELECTOR);
+      return lookup([ 'td', 'th' ], element);
     };
 
     var cells = function (ancestor) {
-      return SelectorFilter.descendants(ancestor, CELL_SELECTOR);
+      return SelectorFilter.descendants(ancestor, 'th,td');
     };
 
     var neighbours = function (selector, element) {
@@ -37,23 +36,23 @@ define(
       });
     };
 
-    var neighbourCells = Fun.curry(neighbours, CELL_SELECTOR);
-    var neighbourRows  = Fun.curry(neighbours, ROW_SELECTOR);
+    var neighbourCells = Fun.curry(neighbours, 'th,td');
+    var neighbourRows  = Fun.curry(neighbours, 'tr');
 
     var firstCell = function (ancestor) {
-      return SelectorFind.descendant(ancestor, CELL_SELECTOR);
+      return SelectorFind.descendant(ancestor, 'th,td');
     };
 
     var table = function (element) {
-      return SelectorFind.closest(element, TABLE_SELECTOR);
+      return lookup([ 'table' ], element);
     };
 
     var row = function (element) {
-      return SelectorFind.closest(element, ROW_SELECTOR);
+      return lookup([ 'tr' ], element);
     };
 
     var rows = function (ancestor) {
-      return SelectorFilter.descendants(ancestor, ROW_SELECTOR);
+      return SelectorFilter.descendants(ancestor, 'tr');
     };
 
     var attr = function (element, property) {

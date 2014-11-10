@@ -7,7 +7,7 @@ define(
     'ephox.porkbun.Event',
     'ephox.porkbun.Events',
     'ephox.snooker.api.Structs',
-    'ephox.snooker.api.TableLookup',
+    'ephox.snooker.picker.PickerLookup',
     'ephox.snooker.picker.PickerStyles',
     'ephox.snooker.picker.Redimension',
     'ephox.snooker.style.Styles',
@@ -22,10 +22,8 @@ define(
     'ephox.sugar.api.Remove'
   ],
 
-
-  function (Arr, Fun, Event, Events, Structs, TableLookup, PickerStyles, Redimension, Styles, Util, Attr, Class, Classes, DomEvent, Element, Insert, InsertAll, Remove) {
+  function (Arr, Fun, Event, Events, Structs, PickerLookup, PickerStyles, Redimension, Styles, Util, Attr, Class, Classes, DomEvent, Element, Insert, InsertAll, Remove) {
     return function (settings, direction) {
-
       var events = Events.create({
         select: Event(['rows', 'cols', 'rowHeaders', 'columnHeaders'])
       });
@@ -77,19 +75,19 @@ define(
       };
 
       var inHeader = function (row, column) {
-        var headers = TableLookup.grid(table, 'data-picker-header-row', 'data-picker-header-col');
+        var headers = PickerLookup.grid(table, 'data-picker-header-row', 'data-picker-header-col');
         return row < headers.rows() || column < headers.columns();
       };
 
       var setSelection = function(numRows, numCols) {
-        var allCells = TableLookup.cells(table);
+        var allCells = PickerLookup.cells(table);
         Arr.each(allCells, function(cell) {
           Class.remove(cell, Styles.resolve('picker-selected'));
         });
 
-        var rows = TableLookup.rows(table).slice(0, numRows);
+        var rows = PickerLookup.rows(table).slice(0, numRows);
         Arr.each(rows, function (row, rindex) {
-          var cells = TableLookup.cells(row).slice(0, numCols);
+          var cells = PickerLookup.cells(row).slice(0, numCols);
           Arr.each(cells, function (cell, cindex) {
             var classes = inHeader(rindex, cindex) ? [ Styles.resolve('picker-selected'), Styles.resolve('picker-header') ] : [ Styles.resolve('picker-selected') ];
             Classes.add(cell, classes);
@@ -111,8 +109,8 @@ define(
       });
 
       var clicker = DomEvent.bind(table, 'click', function (event) {
-        var result = TableLookup.grid(table, 'data-picker-row', 'data-picker-col');
-        var headers = TableLookup.grid(table, 'data-picker-header-row', 'data-picker-header-col');
+        var result = PickerLookup.grid(table, 'data-picker-row', 'data-picker-col');
+        var headers = PickerLookup.grid(table, 'data-picker-header-row', 'data-picker-header-col');
         events.trigger.select(result.rows() + 1, result.columns() + 1, headers.rows(), headers.columns());
         event.raw().preventDefault();
       });
