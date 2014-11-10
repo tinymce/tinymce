@@ -8,9 +8,10 @@ define(
     'ephox.porkbun.Events',
     'ephox.snooker.api.Structs',
     'ephox.snooker.api.TableLookup',
+    'ephox.snooker.picker.PickerStyles',
     'ephox.snooker.picker.Redimension',
-    'ephox.snooker.util.Util',
     'ephox.snooker.style.Styles',
+    'ephox.snooker.util.Util',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Classes',
@@ -21,16 +22,14 @@ define(
     'ephox.sugar.api.Remove'
   ],
 
-  function (Arr, Fun, Event, Events, Structs, TableLookup, Redimension, Util, Styles, Attr, Class, Classes, DomEvent, Element, Insert, InsertAll, Remove) {
+  function (Arr, Fun, Event, Events, Structs, TableLookup, PickerStyles, Redimension, Styles, Util, Attr, Class, Classes, DomEvent, Element, Insert, InsertAll, Remove) {
     return function (settings) {
       var events = Events.create({
         select: Event(['rows', 'cols', 'rowHeaders', 'columnHeaders'])
       });
 
-      var table = Element.fromTag('table');
-      Class.add(table, Styles.resolve('table-picker'));
-      var tbody = Element.fromTag('tbody');
-      Insert.append(table, tbody);
+      var table = Element.fromTag('div');
+      Class.add(table, PickerStyles.table());
 
       var size = { width: 0, height: 0};
 
@@ -50,21 +49,23 @@ define(
       };
 
       var refresh = function () {
-        Remove.empty(tbody);
+        Remove.empty(table);
         //create a set of trs, then for each tr, insert numCols tds
-        var rows = Util.repeat(size.height, function (r) {
-          return Element.fromTag('tr');
+        var rows = Util.repeat(size.height, function () {
+          var row = Element.fromTag('div');
+          Class.set(row, PickerStyles.row());
+          return row;
         });
 
-        Arr.each(rows, function (row, rindex) {
-          var cells = Util.repeat(size.width, function (cindex) {
-            var td = Element.fromTag('td');
-            Class.add(td, Styles.resolve('table-picker-cell'));
+        Arr.each(rows, function (row) {
+          var cells = Util.repeat(size.width, function () {
+            var td = Element.fromTag('span');
+            Class.add(td, PickerStyles.cell());
             return td;
           });
 
           InsertAll.append(row, cells);
-          Insert.append(tbody, row);
+          Insert.append(table, row);
         });
       };
 
@@ -79,12 +80,12 @@ define(
       };
 
       var setSelection = function(numRows, numCols) {
-        var allCells = TableLookup.cells(tbody);
+        var allCells = TableLookup.cells(table);
         Arr.each(allCells, function(cell) {
           Class.remove(cell, Styles.resolve('picker-selected'));
         });
 
-        var rows = TableLookup.rows(tbody).slice(0, numRows);
+        var rows = TableLookup.rows(table).slice(0, numRows);
         Arr.each(rows, function (row, rindex) {
           var cells = TableLookup.cells(row).slice(0, numCols);
           Arr.each(cells, function (cell, cindex) {
@@ -109,7 +110,6 @@ define(
       });
 
       var clicker = DomEvent.bind(table, 'click', function (event) {
-        var target = event.target();
         var result = TableLookup.grid(table, 'data-picker-row', 'data-picker-col');
         var headers = TableLookup.grid(table, 'data-picker-header-row', 'data-picker-header-col');
         events.trigger.select(result.rows() + 1, result.columns() + 1, headers.rows(), headers.columns());
