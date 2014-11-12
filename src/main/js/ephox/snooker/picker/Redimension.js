@@ -11,7 +11,7 @@ define(
   ],
 
   function (Structs, Sizing, Height, Location, Width, Math) {
-    return function (settings, direction) {
+    return function (direction, settings) {
       var active = false;
 
       var on = function () {

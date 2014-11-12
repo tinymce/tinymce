@@ -13,12 +13,12 @@ define(
   function (PickerDirection, PickerUi, Element, Insert, Remove, Math) {
     return function () {
 
-      var picker = PickerUi({
+      var picker = PickerUi(PickerDirection.ltr, {
         maxCols: 10,
         maxRows: 10,
         minCols: 1,
         minRows: 1
-      }, PickerDirection.ltr);
+      });
 
       var ephoxUi = Element.fromDom(document.getElementById('ephox-ui'));
       var wrap = Element.fromTag('div');

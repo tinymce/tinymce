@@ -14,12 +14,12 @@ define(
   function (PickerDirection, PickerUi, Attr, Element, Insert, Remove, Math) {
     return function () {
 
-      var picker = PickerUi({
+      var picker = PickerUi(PickerDirection.rtl, {
         maxCols: 34,
         maxRows: 34,
         minCols: 1,
         minRows: 1
-      }, PickerDirection.rtl);
+      });
 
       var ephoxUi = Element.fromDom(document.getElementById('ephox-ui'));
       Remove.empty(ephoxUi);
