@@ -43,8 +43,7 @@ define(
           var dimensions = getDimensions(table);
           var position = getPosition(table);
           var mouse = Structs.coords(x, y);
-          var choice = direction === 'ltr' ? CellPosition.findCellLtr : CellPosition.findCellRtl;
-          var address = choice(position, dimensions, grid, mouse);
+          var address = direction.pickerCell(position, dimensions, grid, mouse);
           var changes = Sizing.resize(address, settings);
           var full = changes.full();
           if (full.row() !== grid.rows() || full.column() !== grid.columns()) table.setSize(full.row(), full.column());
