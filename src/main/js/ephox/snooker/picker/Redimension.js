@@ -3,7 +3,6 @@ define(
 
   [
     'ephox.snooker.api.Structs',
-    'ephox.snooker.picker.CellPosition',
     'ephox.snooker.picker.Sizing',
     'ephox.sugar.api.Height',
     'ephox.sugar.api.Location',
@@ -11,7 +10,7 @@ define(
     'global!Math'
   ],
 
-  function (Structs, CellPosition, Sizing, Height, Location, Width, Math) {
+  function (Structs, Sizing, Height, Location, Width, Math) {
     return function (settings, direction) {
       var active = false;
 

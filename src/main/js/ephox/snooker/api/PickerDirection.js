@@ -17,6 +17,6 @@ define(
     return {
       ltr: ltr,
       rtl: rtl
-    }
+    };
   }
 );

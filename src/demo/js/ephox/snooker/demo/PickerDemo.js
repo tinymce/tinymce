@@ -2,6 +2,7 @@ define(
   'ephox.snooker.demo.PickerDemo',
 
   [
+    'ephox.snooker.api.PickerDirection',
     'ephox.snooker.picker.PickerUi',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
@@ -9,7 +10,7 @@ define(
     'global!Math'
   ],
 
-  function (PickerUi, Element, Insert, Remove, Math) {
+  function (PickerDirection, PickerUi, Element, Insert, Remove, Math) {
     return function () {
 
       var picker = PickerUi({
@@ -17,7 +18,7 @@ define(
         maxRows: 10,
         minCols: 1,
         minRows: 1
-      }, 'ltr');
+      }, PickerDirection.ltr);
 
       var ephoxUi = Element.fromDom(document.getElementById('ephox-ui'));
       var wrap = Element.fromTag('div');

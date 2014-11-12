@@ -2,6 +2,7 @@ define(
   'ephox.snooker.demo.PickerDemoRtl',
 
   [
+    'ephox.snooker.api.PickerDirection',
     'ephox.snooker.picker.PickerUi',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Element',
@@ -10,15 +11,16 @@ define(
     'global!Math'
   ],
 
-  function (PickerUi, Attr, Element, Insert, Remove, Math) {
+  function (PickerDirection, PickerUi, Attr, Element, Insert, Remove, Math) {
     return function () {
 
       var picker = PickerUi({
-        maxCols: 6,
-        maxRows: 5,
+        maxCols: 34,
+        maxRows: 34,
         minCols: 1,
         minRows: 1
-      }, 'rtl');
+      }, PickerDirection.rtl);
+
       var ephoxUi = Element.fromDom(document.getElementById('ephox-ui'));
       Remove.empty(ephoxUi);
       Insert.append(ephoxUi, picker.element());
