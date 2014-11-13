@@ -22,7 +22,7 @@ define(
     };
 
     /*
-     * Calculate the offsets to apply to each column width (not the absolute widths themselves) 
+     * Calculate the offsets to apply to each column width (not the absolute widths themselves)
      * based on a resize at column: column of step: step. The minimum column width allowed is min
      */
     var determine = function (input, column, step, min) {
@@ -38,7 +38,7 @@ define(
         var newNext = Math.max(min, result[index] + step);
         return [ newNext - result[index] ];
       };
-     
+
       var onChange = function (index, next) {
         if (step >= 0) {
           var newNext = Math.max(min, result[next] - step);
@@ -64,7 +64,7 @@ define(
           return zero(result.slice(0, index)).concat([ size - result[index] ]);
         }
       };
-      
+
       return context.fold(onNone, onOnly, onLeft, onMiddle, onRight);
     };
 

@@ -28,8 +28,8 @@ define(
       });
     };
 
-    /* 
-     * From a list of list of Detail, generate three pieces of information: 
+    /*
+     * From a list of list of Detail, generate three pieces of information:
      *  1. the grid size
      *  2. a data structure which can efficiently identify which cell is in which row,column position
      *  3. a list of all cells in order left-to-right, top-to-bottom

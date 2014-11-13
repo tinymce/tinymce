@@ -40,7 +40,7 @@ define(
       });
 
       /* Resize the column once the user releases the mouse */
-      resizing.events.stop.bind(function (event) {
+      resizing.events.stop.bind(function () {
         mutation.get().each(function (target) {
           hoverTable.each(function (table) {
             var column = Attr.get(target, 'data-column');

@@ -13,7 +13,7 @@ define(
   function (Arr, Merger, Fun, Structs, Blocks, Warehouse) {
     // Returns a list of RowData. [(element: Element, cells: List[Extended])]
     var operate = function (warehouse, rowIndex, colIndex, operation) {
-      /* 
+      /*
          The process:
 
          Identify which cell has selection focus
@@ -49,12 +49,12 @@ define(
     };
 
     var insertAfter = function (warehouse, rowIndex, colIndex, generators, eq) {
-      /* Situations: 
-           None => there is no cell in this particular column on this row, but if there is one 
+      /* Situations:
+           None => there is no cell in this particular column on this row, but if there is one
                    that spans here from another row, create a new cell to represent this inserted
                    column (same as insertBefore)
            Whole => Insert a cell after the whole cell, and return the whole cell as well in (current, new) order.
-           Partial => Insert a cell after the partial cell if we are the last offset of the partial cell, 
+           Partial => Insert a cell after the partial cell if we are the last offset of the partial cell,
                       otherwise, adjust its colspan so that it spans an extra column.
        */
       var operation = function (on) {
@@ -80,12 +80,12 @@ define(
       // Returns a list of extended cell information to be inserted within the before and after
       // for the row.
       var operation = function (on) {
-        /* Situations: 
-           None => there is no cell in this particular column on this row, but if there is one 
+        /* Situations:
+           None => there is no cell in this particular column on this row, but if there is one
                    that spans here from another row, create a new cell to represent this inserted
                    column
            Whole => Insert a cell before the whole cell, and return the whole cell as well in (new, current) order
-           Partial => Insert a cell before the partial cell if we are at the start of the partial cell, 
+           Partial => Insert a cell before the partial cell if we are at the start of the partial cell,
                       otherwise, adjust its colspan so that it spans an extra column.
          */
         return on.fold(function () {
@@ -106,7 +106,7 @@ define(
     };
 
     var erase = function (warehouse, rowIndex, colIndex, generators, eq) {
-      /* Situations: 
+      /* Situations:
            None => there is no cell in this particular column on this row, don't do anything
            Whole => remove the cell
            Partial => remove 1 from the colspan
@@ -169,7 +169,7 @@ return Arr.bind(cells, function (row) {
     else {
       if isEndedSpan(cell) [ /// yeah, that approach won't work for spanning ... I need to know that I'm on a span row.
       // How do I know when to insert another cell?]
-      else if (cell.column() === target) [ nu, this ]  
+      else if (cell.column() === target) [ nu, this ]
     }
   });
 })
