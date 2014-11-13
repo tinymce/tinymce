@@ -1,5 +1,5 @@
 test(
-  'CellPositionTest',
+  'CellPositionLtrTest',
 
   [
     'ephox.snooker.api.Structs',
@@ -12,7 +12,7 @@ test(
     var dimensions = Structs.dimensions(width, height);
     var grid = Structs.grid(rows, cols);
     var mouse = Structs.coords(x, y);
-    var actual = CellPosition.findCell(position, dimensions, grid, mouse);
+    var actual = CellPosition.findCellLtr(position, dimensions, grid, mouse);
     assert.eq(expected.col, actual.column());
     assert.eq(expected.row, actual.row());
    };
