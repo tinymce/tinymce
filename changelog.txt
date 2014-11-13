@@ -1,10 +1,11 @@
 Version 4.1.7 (2014-10-xx)
-	Added HTML5 schema support for srcset, source and picture patch contributed by mattheu.
+	Added HTML5 schema support for srcset, source and picture. Patch contributed by mattheu.
 	Added new cache_suffix setting to enable cache busting by producing unique urls.
 	Fixed so advlist style changes adds undo levels for each change.
 	Fixed bug where WebKit would sometimes produce an exception when the autolink plugin where looking for URLs.
 	Fixed bug where IE 7 wouldn't be rendered properly due to to aggressive css compression.
 	Fixed bug where DomQuery wouldn't accept window as constructor element.
+	Fixed bug where the color picker in 3.x dialogs wouldn't work properly. Patch contributed by Callidior.
 Version 4.1.6 (2014-10-08)
 	Fixed bug with clicking on the scrollbar of the iframe would cause a JS error to be thrown.
 	Fixed bug where null would produce an exception if you passed it to selection.setRng.
