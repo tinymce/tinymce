@@ -476,7 +476,7 @@ define("tinymce/pasteplugin/WordFilter", [
 				// Parse into DOM structure
 				var rootNode = domParser.parse(content);
 
-                // Process DOM
+				// Process DOM
 				if (settings.paste_skip_convert_word_fake_lists !== true) {
 					convertFakeListsToProperLists(rootNode);
 				}
