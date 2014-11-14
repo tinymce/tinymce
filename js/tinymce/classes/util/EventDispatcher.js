@@ -97,11 +97,11 @@ define("tinymce/util/EventDispatcher", [
 			handlers = bindings[name];
 			if (handlers) {
 				for (i = 0, l = handlers.length; i < l; i++) {
-					handlers[i] = callback = handlers[i];
+					callback = handlers[i];
 
 					// Unbind handlers marked with "once"
 					if (callback.once) {
-						off(name, callback);
+						off(name, callback.func);
 					}
 
 					// Stop immediate propagation if needed
@@ -111,7 +111,7 @@ define("tinymce/util/EventDispatcher", [
 					}
 
 					// If callback returns false then prevent default and stop all propagation
-					if (callback.call(scope, args) === false) {
+					if (callback.func.call(scope, args) === false) {
 						args.preventDefault();
 						return args;
 					}
@@ -134,7 +134,7 @@ define("tinymce/util/EventDispatcher", [
 		 *     // Callback logic
 		 * });
 		 */
-		function on(name, callback, prepend) {
+		function on(name, callback, prepend, extra) {
 			var handlers, names, i;
 
 			if (callback === false) {
@@ -142,6 +142,14 @@ define("tinymce/util/EventDispatcher", [
 			}
 
 			if (callback) {
+				callback = {
+					func: callback
+				};
+
+				if (extra) {
+					Tools.extend(callback, extra);
+				}
+
 				names = name.toLowerCase().split(' ');
 				i = names.length;
 				while (i--) {
@@ -208,7 +216,7 @@ define("tinymce/util/EventDispatcher", [
 							// Unbind specific ones
 							hi = handlers.length;
 							while (hi--) {
-								if (handlers[hi] === callback) {
+								if (handlers[hi].func === callback) {
 									handlers = handlers.slice(0, hi).concat(handlers.slice(hi + 1));
 									bindings[name] = handlers;
 								}
@@ -247,8 +255,7 @@ define("tinymce/util/EventDispatcher", [
 		 * });
 		 */
 		function once(name, callback, prepend) {
-			callback.once = true;
-			return on(name, callback, prepend);
+			return on(name, callback, prepend, {once: true});
 		}
 
 		/**
