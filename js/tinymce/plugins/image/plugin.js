@@ -357,7 +357,7 @@ tinymce.PluginManager.add('image', function(editor) {
 
 			// Advanced dialog shows general+advanced tabs
 			win = editor.windowManager.open({
-				title: 'Insert/edit image',
+				title: data.src ? 'Edit image' : 'Insert image',
 				data: data,
 				bodyType: 'tabpanel',
 				body: [
