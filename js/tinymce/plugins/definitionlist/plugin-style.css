@@ -1,0 +1,6 @@
+/* plugin-style.css */
+/* for definitionlist plugin */
+
+dt::before { content:"dt: "; color:#aaa; font-size:8px; }
+dd::before { content:"dd: "; color:#aaa; font-size:8px; }
+dl { border-left: dotted #aaa 2px; padding: 3px; }
