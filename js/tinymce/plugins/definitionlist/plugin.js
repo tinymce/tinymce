@@ -30,9 +30,9 @@ function definitionListPlugin(editor, url) {
 		icon: false,
 		cmd: 'ToggleDefinitionItem',
 		onPostRender: function() {
-			var ctrl = this;
+			var self = this;
 			editor.on('NodeChange', function(e) {
-					ctrl.disabled(!editor.dom.getParent(e.element, 'dl>dt,dl>dd'));
+				self.disabled(!editor.dom.getParent(e.element, 'dl>dt,dl>dd'));
 			});
 		}
 	});
@@ -49,9 +49,11 @@ function definitionListPlugin(editor, url) {
 	 * Change tab key and enter key behavior when editing definition lists.
 	 */
 	function changeKeyBehavior(e) {
+		var defItem;
+
 		if (e.keyCode == 13) {
 			// consecutive enter keys will split definition lists
-			var defItem = editor.dom.getParent(editor.selection.getNode(), 'dt, dd');
+			defItem = editor.dom.getParent(editor.selection.getNode(), 'dt, dd');
 			if (defItem && editor.dom.isEmpty(defItem)) {
 				e.preventDefault();
 				var dl = editor.dom.getParent(editor.selection.getNode(), 'dl');
@@ -61,7 +63,7 @@ function definitionListPlugin(editor, url) {
 		}
 		if (e.keyCode == 9) {
 			// tab key will toggle dt and dd
-			var defItem = editor.dom.getParent(editor.selection.getNode(), 'dt, dd');
+			defItem = editor.dom.getParent(editor.selection.getNode(), 'dt, dd');
 			if (defItem) {
 				e.preventDefault();
 				editor.execCommand('ToggleDefinitionItem');
@@ -69,7 +71,6 @@ function definitionListPlugin(editor, url) {
 			}
 		}
 	}
-
 
 	/**
 	 * If the selection is in a DT make it a DD and viceversa.
@@ -79,12 +80,15 @@ function definitionListPlugin(editor, url) {
 		var dom = editor.dom;
 		var bookmark;
 
-		var p;
-		if (p = dom.getParent(sel.getNode(),'dt')) {
+		var p = dom.getParent(sel.getNode(), 'dt');
+		if (p) {
 			bookmark = sel.getBookmark();
 			dom.rename(p, 'dd');
 			sel.moveToBookmark(bookmark);
-		} else if (p = dom.getParent(sel.getNode(), 'dd')) {
+			return;
+		}
+		p = dom.getParent(sel.getNode(), 'dd');
+		if (p) {
 			bookmark = sel.getBookmark();
 			dom.rename(p, 'dt');
 			sel.moveToBookmark(bookmark);
@@ -123,7 +127,7 @@ function definitionListPlugin(editor, url) {
 			} else if (!sel.isCollapsed()) {
 				// We will walk over the nodes intersecting the range. We want p, ul>li, and ol>li
 				var nodes = getIntersectingNodes(rng, true);
-				var listElem = dom.getParent(nodes[0], 'dl');
+				listElem = dom.getParent(nodes[0], 'dl');
 				if (!listElem) {
 					listElem = dom.create('dl');
 					dom.insertAfter(listElem, nodes[0]);
@@ -138,8 +142,7 @@ function definitionListPlugin(editor, url) {
 					}
 					try {
 						dom.add(listElem, dt);
-					}
-					catch(e) {} // we sometimes get errors when adding an element that is contained in the original list
+					} catch (e) { } // we sometimes get errors when adding an element that is contained in the original list
 					sel.setCursorLocation(dt);
 				});
 
@@ -241,7 +244,7 @@ function definitionListPlugin(editor, url) {
 		// Here we manipulate the dom
 		var firstDT = dom.rename(nodes.shift(), 'dt');
 		dom.split(listElem, firstDT);
-		defList = wrap(firstDT, 'dl');
+		var defList = wrap(firstDT, 'dl');
 		tinymce.each(nodes, function(node) {
 			var dt = dom.rename(node, 'dt');
 			dom.add(defList, dt);
