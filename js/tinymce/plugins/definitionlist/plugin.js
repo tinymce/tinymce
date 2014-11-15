@@ -57,14 +57,16 @@ function definitionListPlugin(editor, url) {
 				var dl = editor.dom.getParent(editor.selection.getNode(), 'dl');
 				var p = editor.dom.rename(defItem, 'p');
 				editor.dom.split(dl, p);
+				return false;
 			}
 		}
 		if (e.keyCode == 9) {
 			// tab key will toggle dt and dd
 			var defItem = editor.dom.getParent(editor.selection.getNode(), 'dt, dd');
 			if (defItem) {
-				 e.preventDefault();
-				 editor.execCommand('ToggleDefinitionItem');
+				e.preventDefault();
+				editor.execCommand('ToggleDefinitionItem');
+				return false;
 			}
 		}
 	}
