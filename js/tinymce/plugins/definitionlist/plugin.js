@@ -57,7 +57,6 @@ function definitionListPlugin(editor, url) {
 				var dl = editor.dom.getParent(editor.selection.getNode(), 'dl');
 				var p = editor.dom.rename(defItem, 'p');
 				editor.dom.split(dl, p);
-				return false;
 			}
 		}
 		if (e.keyCode == 9) {
@@ -78,14 +77,15 @@ function definitionListPlugin(editor, url) {
 	function toggleDefinitionItem() {
 		var sel = editor.selection;
 		var dom = editor.dom;
+		var bookmark;
 
 		var p;
 		if (p = dom.getParent(sel.getNode(),'dt')) {
-			var bookmark = sel.getBookmark();
+			bookmark = sel.getBookmark();
 			dom.rename(p, 'dd');
 			sel.moveToBookmark(bookmark);
 		} else if (p = dom.getParent(sel.getNode(), 'dd')) {
-			var bookmark = sel.getBookmark();
+			bookmark = sel.getBookmark();
 			dom.rename(p, 'dt');
 			sel.moveToBookmark(bookmark);
 		}
@@ -98,13 +98,14 @@ function definitionListPlugin(editor, url) {
 		var sel = editor.selection;
 		var rng = sel.getRng();
 		var dom = editor.dom;
+		var bookmark;
 
 		var listElem = dom.getParent(sel.getNode(), 'dl,ul,ol');
 
 		if (listElem) {
 			// We are in an existing list.
 			if (listElem.nodeName.toUpperCase() == 'DL') {
-				var bookmark = sel.getBookmark();
+				bookmark = sel.getBookmark();
 				demoteDefListItems(listElem, rng);
 				sel.moveToBookmark(bookmark);
 			} else {
@@ -115,7 +116,7 @@ function definitionListPlugin(editor, url) {
 			var p = dom.getParent(sel.getNode(), 'p');
 			if (p) {
 				// Selection contained in a paragraph. We will make it the first term of a new list.
-				var bookmark = sel.getBookmark();
+				bookmark = sel.getBookmark();
 				var dt = dom.rename(p, 'dt');
 				listElem = wrap(dt, 'dl');
 				sel.moveToBookmark(bookmark);
@@ -135,15 +136,17 @@ function definitionListPlugin(editor, url) {
 					} else {
 						dt = wrap(node, 'dt');
 					}
-					try {dom.add(listElem, dt);} catch(e) {}; // we sometimes get errors when adding an element that is contained in the original list
+					try {
+						dom.add(listElem, dt);
+					}
+					catch(e) {} // we sometimes get errors when adding an element that is contained in the original list
 					sel.setCursorLocation(dt);
 				});
 
 				//sel.setCursorLocation(0);
-			} else {
+			} // otherwise
 				// selection is collapsed but not in a listitem or p
 				// do nothing
-			}
 		}
 		dom.remove(dom.select('dl:empty'));
 	}
@@ -196,9 +199,10 @@ function definitionListPlugin(editor, url) {
 	function demoteDefListItems(listElem, range) {
 		var dom = editor.dom;
 		var nodes = [];
+		var listItem = dom.getParent(range.commonAncestorContainer, 'dt,dd');
 
 		// Here we select nodes to split on
-		if (listItem = dom.getParent(range.commonAncestorContainer, 'dt,dd')) {
+		if (listItem) {
 			// Range is entirely within a list item
 			nodes.push(listItem);
 		} else {
@@ -223,9 +227,10 @@ function definitionListPlugin(editor, url) {
 	function convertListItemsToDefTerms(listElem, range) {
 		var dom = editor.dom;
 		var nodes = [];
+		var listItem = dom.getParent(range.commonAncestorContainer, 'li');
 
 		// Here we select nodes to split on
-		if (listItem = dom.getParent(range.commonAncestorContainer, 'li')) {
+		if (listItem) {
 			// Range is entirely within a list item
 			nodes.push(listItem);
 		} else {
