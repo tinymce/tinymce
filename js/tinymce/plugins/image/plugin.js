@@ -214,6 +214,18 @@ tinymce.PluginManager.add('image', function(editor) {
 			});
 
 			if (!meta.width && !meta.height) {
+
+				//new code
+				var srcURL = this.value(),
+				absoluteURLPattern = new RegExp('^(?:[a-z]+:)?//', 'i'),
+				baseURL = editor.settings.document_base_url;
+
+				//Pattern test the image url and make sure we haven't already prepended the url
+				if (baseURL && !absoluteURLPattern.test(srcURL) && !(srcURL.substring(0, baseURL.length) === baseURL)){
+					this.value(baseURL + srcURL);
+				}
+				//end new code
+
 				getImageSize(this.value(), function(data) {
 					if (data.width && data.height && imageDimensions) {
 						width = data.width;

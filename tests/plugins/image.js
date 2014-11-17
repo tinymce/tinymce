@@ -9,6 +9,7 @@
 				skin: false,
 				plugins: "image",
 				disable_nodechange: true,
+				document_base_url: '/tinymce/tinymce/trunk/tests/',
 				init_instance_callback: function(ed) {
 					window.editor = ed;
 					QUnit.start();
@@ -123,6 +124,22 @@
 		equal(
 			cleanHtml(editor.getContent()),
 			'<p><img class="class1" src="src" alt="alt" width="100" height="200" /></p>'
+		);
+	});	
+
+	test("Image recognizes relative url and prepends document_base_url setting.", function () {
+
+		editor.setContent('');
+		editor.execCommand('mceImage', true);
+
+		fillAndSubmitWindowForm({
+			"src": "src",
+			"alt": "alt"
+		});
+
+		equal(
+			cleanHtml(editor.getContent()),
+			'<p><img src="' + editor.settings.document_base_url + 'src" alt="alt"/></p>'
 		);
 	});
 })();
