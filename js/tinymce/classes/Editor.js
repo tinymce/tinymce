@@ -1978,8 +1978,8 @@ define("tinymce/Editor", [
 				return self.execCallback('urlconverter_callback', url, elm, true, name);
 			}
 
-			// Don't convert link href since thats the CSS files that gets loaded into the editor also skip local file URLs
-			if (!settings.convert_urls || (elm && elm.nodeName == 'LINK') || url.indexOf('file:') === 0 || url.length === 0) {
+			// Don't convert link href since thats the CSS files that gets loaded into the editor, also skip local file URLs and data: (embedded image) urls
+			if (!settings.convert_urls || (elm && elm.nodeName == 'LINK') || url.indexOf('file:') === 0 || url.indexOf('data:') === 0 || url.length === 0) {
 				return url;
 			}
 
