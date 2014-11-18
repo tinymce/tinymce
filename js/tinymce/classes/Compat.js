@@ -24,7 +24,7 @@ define("tinymce/Compat", [
 	"tinymce/util/Tools",
 	"tinymce/Env"
 ], function(DOMUtils, EventUtils, ScriptLoader, AddOnManager, Tools, Env) {
-	var tinymce = exports.tinymce;
+	var tinymce = exports.tinymce || window.tinymce;
 
 	/**
 	 * @property {tinymce.dom.DOMUtils} DOM Global DOM instance.

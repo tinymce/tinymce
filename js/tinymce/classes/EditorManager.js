@@ -151,7 +151,7 @@ define("tinymce/EditorManager", [
 			}
 
 			// If tinymce is defined and has a base use that or use the old tinyMCEPreInit
-			preInit = exports.tinymce || exports.tinyMCEPreInit;
+			preInit = exports.tinymce || exports.tinyMCEPreInit || window.tinymce || window.tinyMCEPreInit;
 			if (preInit) {
 				baseURL = preInit.base || preInit.baseURL;
 				suffix = preInit.suffix;
