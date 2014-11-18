@@ -9,7 +9,6 @@
 				skin: false,
 				plugins: "image",
 				disable_nodechange: true,
-				document_base_url: '/tinymce/tinymce/trunk/tests/',
 				init_instance_callback: function(ed) {
 					window.editor = ed;
 					QUnit.start();
@@ -22,6 +21,7 @@
 			delete editor.settings.file_browser_callback;
 			delete editor.settings.image_list;
 			delete editor.settings.image_class_list;
+			delete editor.settings.document_base_url;
 
 			var win = Utils.getFontmostWindow();
 
@@ -125,21 +125,41 @@
 			cleanHtml(editor.getContent()),
 			'<p><img class="class1" src="src" alt="alt" width="100" height="200" /></p>'
 		);
-	});	
+	});
 
 	test("Image recognizes relative url and prepends document_base_url setting.", function () {
-
+		editor.settings.document_base_url = 'testing/images/';
 		editor.setContent('');
 		editor.execCommand('mceImage', true);
 
-		fillAndSubmitWindowForm({
+		var data = {
 			"src": "src",
 			"alt": "alt"
-		});
+		};
+
+
+		var win = Utils.getFontmostWindow();
+		var elementId = win.find('#src')[0]._id;
+		var element = document.getElementById(elementId).childNodes[0];
+
+		win.fromJSON(data);
+
+		if ("createEvent" in document) {
+			var evt = document.createEvent("HTMLEvents");
+			evt.initEvent("change", false, true);
+			element.dispatchEvent(evt);
+		} else {
+			element.fireEvent("onchange");
+		}
+
+		win.find('form')[0].submit();
+		win.close();
 
 		equal(
 			cleanHtml(editor.getContent()),
-			'<p><img src="' + editor.settings.document_base_url + 'src" alt="alt"/></p>'
+			'<p><img src="' + editor.settings.document_base_url + 'src" alt="alt" /></p>'
 		);
-	});
+
+
+ 	});
 })();
