@@ -151,7 +151,7 @@ define("tinymce/EditorManager", [
 			}
 
 			// If tinymce is defined and has a base use that or use the old tinyMCEPreInit
-			preInit = window.tinymce || window.tinyMCEPreInit;
+			preInit = exports.tinymce || exports.tinyMCEPreInit;
 			if (preInit) {
 				baseURL = preInit.base || preInit.baseURL;
 				suffix = preInit.suffix;
@@ -648,7 +648,7 @@ define("tinymce/EditorManager", [
 	EditorManager.setup();
 
 	// Export EditorManager as tinymce/tinymce in global namespace
-	window.tinymce = window.tinyMCE = EditorManager;
+	exports.tinymce = exports.tinyMCE = EditorManager;
 
 	return EditorManager;
 });
