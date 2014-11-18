@@ -16,6 +16,8 @@
  * @borrow-members tinymce.EditorManager
  * @borrow-members tinymce.util.Tools
  */
+
+/*global exports:false */
 define("tinymce/Compat", [
 	"tinymce/dom/DOMUtils",
 	"tinymce/dom/EventUtils",
