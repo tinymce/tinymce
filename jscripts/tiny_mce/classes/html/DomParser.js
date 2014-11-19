@@ -378,7 +378,7 @@
 
 				doctype: function(text) {
 					var newNode;
-		
+
 					newNode = node.append(createNode('#doctype', 10));
 					newNode.value = text;
 					removeWhitespaceBefore(node);
@@ -450,20 +450,21 @@
 										sibling = textNode.next;
 										textNode.remove();
 										textNode = sibling;
-									}
 
-									// Remove any pure whitespace siblings
-									while (textNode && textNode.type === 3) {
-										text = textNode.value;
-										sibling = textNode.next;
 
-										if (text.length === 0 || isAllWhiteSpaceRegExp.test(text)) {
-											textNode.remove();
-											textNode = sibling;
-										}
+                                        // Remove any pure whitespace siblings
+                                        while (textNode && textNode.type === 3) {
+                                            text = textNode.value;
+                                            sibling = textNode.next;
 
-										textNode = sibling;
-									}
+                                            if (text.length === 0 || isAllWhiteSpaceRegExp.test(text)) {
+                                                textNode.remove();
+                                                textNode = sibling;
+                                            }
+
+                                            textNode = sibling;
+                                        }
+                                    }
 								}
 
 								// Trim whitespace of the last node in a block
@@ -479,34 +480,23 @@
 										sibling = textNode.prev;
 										textNode.remove();
 										textNode = sibling;
-									}
 
-									// Remove any pure whitespace siblings
-									while (textNode && textNode.type === 3) {
-										text = textNode.value;
-										sibling = textNode.prev;
 
-										if (text.length === 0 || isAllWhiteSpaceRegExp.test(text)) {
-											textNode.remove();
+										// Remove any pure whitespace siblings
+										while (textNode && textNode.type === 3) {
+											text = textNode.value;
+											sibling = textNode.prev;
+
+											if (text.length === 0 || isAllWhiteSpaceRegExp.test(text)) {
+												textNode.remove();
+												textNode = sibling;
+											}
+
 											textNode = sibling;
 										}
-
-										textNode = sibling;
 									}
 								}
 							}
-
-							// Trim start white space
-							// Removed due to: #5424
-							/*textNode = node.prev;
-							if (textNode && textNode.type === 3) {
-								text = textNode.value.replace(startWhiteSpaceRegExp, '');
-
-								if (text.length > 0)
-									textNode.value = text;
-								else
-									textNode.remove();
-							}*/
 						}
 
 						// Check if we exited a whitespace preserved element
@@ -523,7 +513,14 @@
 									// Leave nodes that have a name like <a name="name">
 									if (!node.attributes.map.name && !node.attributes.map.id) {
 										tempNode = node.parent;
-										node.empty().remove();
+
+
+										if (blockElements[node.name]) {
+											node.empty().remove();
+										} else {
+											node.unwrap();
+										}
+
 										node = tempNode;
 										return;
 									}
@@ -621,7 +618,7 @@
 								// Found a non BR element
 								if (prevName !== "br")
 									break;
-	
+
 								// Found another br it's a <br><br> structure then don't remove anything
 								if (prevName === 'br') {
 									node = null;
@@ -649,7 +646,7 @@
 							}
 						}
 					} else {
-						// Replaces BR elements inside inline elements like <p><b><i><br></i></b></p> so they become <p><b><i>&nbsp;</i></b></p> 
+						// Replaces BR elements inside inline elements like <p><b><i><br></i></b></p> so they become <p><b><i>&nbsp;</i></b></p>
 						lastParent = node;
 						while (parent.firstChild === lastParent && parent.lastChild === lastParent) {
 							lastParent = parent;
