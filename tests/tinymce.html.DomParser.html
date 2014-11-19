@@ -302,20 +302,20 @@ test('Fix orphan LI elements', function() {
 test('Remove empty elements', function() {
 	var parser, result, schema = new tinymce.html.Schema({valid_elements: 'span,-a,img'});
 
-	expect(3);
+	expect(4);
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('<span></span><a href="#"></a>');
 	equal(serializer.serialize(root), '<span></span>', 'Remove empty a element');
 
-/*	parser = new tinymce.html.DomParser({}, schema);
-	root = parser.parse('<span></span><a href="#"><!-'+'- x -'+'-></a>');
-	equal(serializer.serialize(root), '<span></span>', 'Remove empty a element containing comment');*/
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<span><a href="#"> </a></span>');
+	equal(serializer.serialize(root), '<span> </span>', 'Remove empty a element preserving whitespace');
 
 	parser = new tinymce.html.DomParser({}, new tinymce.html.Schema({valid_elements: 'span,a[name],img'}));
 	root = parser.parse('<span></span><a name="anchor"></a>');
 	equal(serializer.serialize(root), '<span></span><a name="anchor"></a>', 'Leave a with name attribute');
-	
+
 	parser = new tinymce.html.DomParser({}, new tinymce.html.Schema({valid_elements: 'span,a[href],img[src]'}));
 	root = parser.parse('<span></span><a href="#"><img src="about:blank" /></a>');
 	equal(serializer.serialize(root), '<span></span><a href="#"><img src="about:blank" /></a>', 'Leave elements with img in it');
