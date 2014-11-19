@@ -458,7 +458,6 @@
                                             sibling = textNode.next;
 
                                             if (text.length === 0 || isAllWhiteSpaceRegExp.test(text)) {
-                                                console.log('removing::: ', textNode);
                                                 textNode.remove();
                                                 textNode = sibling;
                                             }
@@ -489,7 +488,6 @@
 											sibling = textNode.prev;
 
 											if (text.length === 0 || isAllWhiteSpaceRegExp.test(text)) {
-												console.log('removing::: ', textNode);
 												textNode.remove();
 												textNode = sibling;
 											}
