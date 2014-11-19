@@ -127,7 +127,9 @@
 		);
 	});
 
-	test("Image recognizes relative url and prepends document_base_url setting.", function () {
+	test("Image recognizes relative src url and prepends relative document_base_url setting.", function () {
+		var win, elementId, element;
+
 		editor.settings.document_base_url = 'testing/images/';
 		editor.setContent('');
 		editor.execCommand('mceImage', true);
@@ -137,20 +139,42 @@
 			"alt": "alt"
 		};
 
-
-		var win = Utils.getFontmostWindow();
-		var elementId = win.find('#src')[0]._id;
-		var element = document.getElementById(elementId).childNodes[0];
+		win = Utils.getFontmostWindow();
+		elementId = win.find('#src')[0]._id;
+		element = document.getElementById(elementId).childNodes[0];
 
 		win.fromJSON(data);
+		Utils.triggerElementChange(element);
 
-		if ("createEvent" in document) {
-			var evt = document.createEvent("HTMLEvents");
-			evt.initEvent("change", false, true);
-			element.dispatchEvent(evt);
-		} else {
-			element.fireEvent("onchange");
-		}
+		win.find('form')[0].submit();
+		win.close();
+
+		equal(
+			cleanHtml(editor.getContent()),
+			'<p><img src="' + editor.settings.document_base_url + 'src" alt="alt" /></p>'
+		);
+
+
+ 	});
+
+ 	test("Image recognizes relative src url and prepends absolute document_base_url setting.", function () {
+		var win, elementId, element;
+
+		editor.settings.document_base_url = 'http://testing.com/images/';
+		editor.setContent('');
+		editor.execCommand('mceImage', true);
+
+		var data = {
+			"src": "src",
+			"alt": "alt"
+		};
+
+		win = Utils.getFontmostWindow();
+		elementId = win.find('#src')[0]._id;
+		element = document.getElementById(elementId).childNodes[0];
+
+		win.fromJSON(data);
+		Utils.triggerElementChange(element);
 
 		win.find('form')[0].submit();
 		win.close();

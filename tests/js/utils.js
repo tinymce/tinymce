@@ -360,6 +360,18 @@
 		}
 	}
 
+	function triggerElementChange(element){
+		var evt;
+
+		if ("createEvent" in document) {
+			evt = document.createEvent("HTMLEvents");
+			evt.initEvent("change", false, true);
+			element.dispatchEvent(evt);
+		} else {
+			element.fireEvent("onchange");
+		}
+	}
+
 	window.Utils = {
 		fontFace: fontFace,
 		findContainer: findContainer,
@@ -379,6 +391,7 @@
 		pressEnter: pressEnter,
 		trimBrsOnIE: trimBrsOnIE,
 		patch: patch,
-		unpatch: unpatch
+		unpatch: unpatch,
+		triggerElementChange: triggerElementChange
 	};
 })();
