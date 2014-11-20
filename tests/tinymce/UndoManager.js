@@ -100,10 +100,13 @@ test('Typing state', function() {
 	ok(!editor.undoManager.typing);
 
 	selectAllFlags = {keyCode: 65, ctrlKey: false, altKey: false, shiftKey: false};
+
 	if (tinymce.Env.mac) {
-			selectAllFlags.metaKey = true;
-			selectAllFlags.ctrlKey = false;
+		selectAllFlags.metaKey = true;
+	} else {
+		selectAllFlags.ctrlKey = true;
 	}
+
 	editor.dom.fire(editor.getBody(), 'keydown', selectAllFlags);
 	ok(!editor.undoManager.typing);
 });
