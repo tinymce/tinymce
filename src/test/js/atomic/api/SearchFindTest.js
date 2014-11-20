@@ -47,6 +47,8 @@ test(
     checkAll([[0, 3], [4, 7], [8, 11]], 'sre sre sre ', Pattern.unsafeword('sre'));
     checkAll([[1, 4], [5, 8], [9, 12]], ' sre sre sre ', Pattern.unsafeword('sre'));
 
+    checkAll([['this '.length, 'this e\uFEFFnds'.length ]], 'this e\uFEFFnds here', Pattern.unsafeword('e\uFEFFnds'));
+
     var prefix = Safe.sanitise('[');
     var suffix = Safe.sanitise(']');
     checkAll([[1, 5]], ' [wo] and more', Pattern.unsafetoken(prefix + '[^' + suffix + ']*' + suffix));

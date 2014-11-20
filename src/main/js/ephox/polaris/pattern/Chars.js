@@ -6,7 +6,7 @@ define(
   ],
 
   function (Fun) {
-    var chars = '\\w\'\\-\\u00C0-\\u00FF';
+    var chars = '\\w\'\\-\\u00C0-\\u00FF\\uFEFF';
     var wordbreak = '[^' + chars + ']';
     var wordchar = '[' + chars + ']';
 
