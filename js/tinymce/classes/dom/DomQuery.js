@@ -1069,7 +1069,7 @@ define("tinymce/dom/DomQuery", [
 		 * @return {Object/tinymce.dom.DomQuery} Returns the first element offset or the current set if you specified an offset.
 		 */
 		offset: function(offset) {
-			var elm, doc, docElm;
+			var elm, doc, docElm, docBody;
 			var x = 0, y = 0, pos;
 
 			if (!offset) {
@@ -1078,11 +1078,12 @@ define("tinymce/dom/DomQuery", [
 				if (elm) {
 					doc = elm.ownerDocument;
 					docElm = doc.documentElement;
+					docBody = doc.getElementsByTagName('body')[0] || doc.body;
 
 					if (elm.getBoundingClientRect) {
 						pos = elm.getBoundingClientRect();
-						x = pos.left + (docElm.scrollLeft || doc.body.scrollLeft) - docElm.clientLeft;
-						y = pos.top + (docElm.scrollTop || doc.body.scrollTop) - docElm.clientTop;
+						x = pos.left + (docElm.scrollLeft || docBody.scrollLeft) - docElm.clientLeft;
+						y = pos.top + (docElm.scrollTop || docBody.scrollTop) - docElm.clientTop;
 					}
 				}
 

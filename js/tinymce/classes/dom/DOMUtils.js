@@ -214,7 +214,7 @@ define("tinymce/dom/DOMUtils", [
 		getRoot: function() {
 			var self = this;
 
-			return self.settings.root_element || self.doc.body;
+			return self.settings.root_element || self.doc.getElementsByTagName('body')[0] || self.doc.body;
 		},
 
 		/**
@@ -229,7 +229,7 @@ define("tinymce/dom/DOMUtils", [
 
 			win = !win ? this.win : win;
 			doc = win.document;
-			rootElm = this.boxModel ? doc.documentElement : doc.body;
+			rootElm = this.boxModel ? doc.documentElement : (document.getElementsByTagName('body')[0] || doc.body);
 
 			// Returns viewport size excluding scrollbars
 			return {
@@ -815,7 +815,7 @@ define("tinymce/dom/DOMUtils", [
 		 * @return {object} Absolute position of the specified element object with x, y fields.
 		 */
 		getPos: function(elm, rootElm) {
-			var self = this, x = 0, y = 0, offsetParent, doc = self.doc, body = doc.body, pos;
+			var self = this, x = 0, y = 0, offsetParent, doc = self.doc, body = (doc.getElementsByTagName('body')[0] || doc.body), pos;
 
 			elm = self.get(elm);
 			rootElm = rootElm || body;

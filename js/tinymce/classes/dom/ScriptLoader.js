@@ -112,7 +112,7 @@ define("tinymce/dom/ScriptLoader", [
 			elm.onerror = error;
 
 			// Add script to document
-			(document.getElementsByTagName('head')[0] || document.body).appendChild(elm);
+			(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0] || document.body).appendChild(elm);
 		}
 
 		/**

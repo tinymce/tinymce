@@ -20,7 +20,7 @@ tinymce.PluginManager.add('fullscreen', function(editor) {
 
 	function getWindowSize() {
 		var w, h, win = window, doc = document;
-		var body = doc.body;
+		var body = doc.getElementsByTagName('body')[0] || doc.body;
 
 		// Old IE
 		if (body.offsetWidth) {
@@ -38,8 +38,8 @@ tinymce.PluginManager.add('fullscreen', function(editor) {
 	}
 
 	function toggleFullscreen() {
-		var body = document.body, documentElement = document.documentElement, editorContainerStyle;
-		var editorContainer, iframe, iframeStyle;
+		var body = document.getElementsByTagName('body')[0] || document.body, documentElement = document.documentElement;
+		var editorContainerStyle, editorContainer, iframe, iframeStyle;
 
 		function resize() {
 			DOM.setStyle(iframe, 'height', getWindowSize().h - (editorContainer.clientHeight - iframe.clientHeight));

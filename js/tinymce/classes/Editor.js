@@ -1948,7 +1948,7 @@ define("tinymce/Editor", [
 		 * @return {Element} Iframe body element.
 		 */
 		getBody: function() {
-			return this.bodyElement || this.getDoc().body;
+			return this.bodyElement || this.getDoc().getElementsByTagName('body')[0] || this.getDoc().body;
 		},
 
 		/**

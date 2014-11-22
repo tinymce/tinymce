@@ -41,7 +41,7 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 			return;
 		}
 
-		body = doc.body;
+		body = editor.getBody();
 		docElm = doc.documentElement;
 		resizeHeight = settings.autoresize_min_height;
 
