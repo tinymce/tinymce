@@ -87,7 +87,6 @@ define("tinymce/ui/Checkbox", [
 			var self = this;
 
 			if (typeof state != "undefined") {
-				self.removeClass('indeterminate');
 				if ((state === null) && self.settings.tristate) {
 					self.addClass('indeterminate');
 					self.addClass('checked');
