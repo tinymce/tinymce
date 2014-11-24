@@ -3,18 +3,29 @@ define(
 
   [
     'ephox.peanut.Fun',
-    'ephox.scullion.Struct'
+    'ephox.scullion.Struct',
+    'ephox.sugar.alien.Position',
+    'ephox.sugar.api.Element',
+    'ephox.sugar.api.Location'
   ],
 
-  function (Fun, Struct) {
-    var wire = Struct.immutable('parent', 'view');
-
+  function (Fun, Struct, Position, Element, Location) {
     var only = function (element) {
-      return wire(element, element);
+      var parent = element.dom().documentElement ? Element.fromDom(element.dom().documentElement) : element;
+      return {
+        parent: Fun.constant(parent),
+        view: Fun.constant(element),
+        origin: Fun.constant(Position(0, 0))
+      };
     };
 
     var detached = function (editable, chrome) {
-      return wire(chrome, editable);
+      var origin = Fun.curry(Location.absolute, chrome);
+      return {
+        parent: Fun.constant(chrome),
+        view: Fun.constant(editable),
+        origin: origin
+      };
     };
 
     return {

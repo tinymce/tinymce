@@ -21,41 +21,42 @@ define(
     var resizeBar = Styles.resolve('resizer-bar');
     var BAR_WIDTH = 3;
 
-    var clear = function (parent, table) {
-      var previous = SelectorFilter.descendants(parent, '.' + resizeBar);
+    var clear = function (wire, table) {
+      var previous = SelectorFilter.descendants(wire.parent(), '.' + resizeBar);
       Arr.each(previous, Remove.remove);
     };
 
-    var refreshCols = function (parent, table, cols, direction) {
+    var refreshCols = function (wire, table, cols, direction) {
       var position = Location.absolute(table);
       var tableHeight = Height.getOuter(table);
 
       var colPositions = direction.positions(cols, table);
       Arr.each(colPositions, function (cp) {
-        var bar = Bar(cp.col(), cp.x(), position.top(), BAR_WIDTH, tableHeight);
+        var origin = wire.origin();
+        var bar = Bar(cp.col(), cp.x() - origin.left(), position.top() - origin.top(), BAR_WIDTH, tableHeight);
         Class.add(bar, resizeBar);
-        Insert.append(parent, bar);
+        Insert.append(wire.parent(), bar);
       });
     };
 
-    var refresh = function (parent, table, direction) {
-      clear(parent, table);
+    var refresh = function (wire, table, direction) {
+      clear(wire, table);
 
       var list = DetailsList.fromTable(table);
       var warehouse = Warehouse.generate(list);
       var cols = Blocks.columns(warehouse);
-      if (cols.length > 0) refreshCols(parent, table, cols, direction);
+      if (cols.length > 0) refreshCols(wire, table, cols, direction);
     };
 
-    var hide = function (parent) {
-      var bars = SelectorFilter.descendants(parent, '.' + resizeBar);
+    var hide = function (wire) {
+      var bars = SelectorFilter.descendants(wire.parent(), '.' + resizeBar);
       Arr.each(bars, function (bar) {
         Css.set(bar, 'display', 'none');
       });
     };
 
-    var show = function (parent) {
-      var bars = SelectorFilter.descendants(parent, '.' + resizeBar);
+    var show = function (wire) {
+      var bars = SelectorFilter.descendants(wire.parent(), '.' + resizeBar);
       Arr.each(bars, function (bar) {
         Css.set(bar, 'display', 'block');
       });

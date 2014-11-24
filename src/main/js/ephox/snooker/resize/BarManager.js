@@ -49,13 +49,13 @@ define(
             var delta = newX - oldX;
             Attr.remove(target, 'data-initial-left');
             if (column !== undefined) events.trigger.adjustWidth(table, delta, parseInt(column, 10));
-            Bars.refresh(wire.parent(), table, direction);
+            Bars.refresh(wire, table, direction);
           });
         });
       });
 
       /* Start the dragging when the bar is clicked, storing the initial position. */
-      var mousedown = DomEvent.bind(wire.view(), 'mousedown', function (event) {
+      var mousedown = DomEvent.bind(wire.parent(), 'mousedown', function (event) {
         if (Bars.isBar(event.target())) {
           events.trigger.startAdjust();
           var column = Attr.get(event.target(), 'data-column');
@@ -71,14 +71,16 @@ define(
       var mouseover = DomEvent.bind(wire.view(), 'mouseover', function (event) {
         if (Node.name(event.target()) === 'table' || SelectorExists.ancestor(event.target(), 'table')) {
           hoverTable = Node.name(event.target()) === 'table' ? Option.some(event.target()) : SelectorFind.ancestor(event.target(), 'table');
-          Bars.refresh(wire.parent(), hoverTable.getOrDie(), direction);
+          hoverTable.each(function (ht) {
+            Bars.refresh(wire, ht, direction);
+          });          
         }
       });
 
       /* When the mouse moves out of the table, hide the bars */
       var mouseout = DomEvent.bind(wire.view(), 'mouseout', function (event) {
         if (Node.name(event.target()) === 'table') {
-          Bars.hide(wire.parent());
+          Bars.hide(wire);
         }
       });
 
@@ -96,7 +98,7 @@ define(
       });
 
       var refresh = function (tbl) {
-        Bars.refresh(wire.parent(), tbl, direction);
+        Bars.refresh(wire, tbl, direction);
       };
 
       var events = Events.create({

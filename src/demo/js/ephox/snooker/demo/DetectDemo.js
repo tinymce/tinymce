@@ -168,7 +168,7 @@ define(
       };
 
       var replace = function (cell, tag, attrs) {
-        var replica = Replication.change(cell, tag);
+        var replica = Replication.copy(cell, tag);
         Attr.setAll(replica, attrs);
         return replica;
       };
@@ -186,7 +186,7 @@ define(
           detection().each(function (start) {
             var dir = Direction.getDirection(start);
             var direction = dir === 'rtl' ? ResizeDirection.rtl : ResizeDirection.ltr;
-            operation(ephoxUi, start, generators, direction);
+            operation(ResizeWire.only(ephoxUi), start, generators, direction);
           });
         };
       };
