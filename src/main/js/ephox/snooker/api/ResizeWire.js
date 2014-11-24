@@ -10,6 +10,10 @@ define(
   ],
 
   function (Fun, Option, Position, Element, Location) {
+    // parent: the container for adding the resize bars
+    // view: the container who listens to mouse events designed to show and hide the bars
+    // origin: the offset for the point to display the bars in the appropriate position
+
     var only = function (element) {
       // If we are a document, use the document element for appending.
       var parent = Option.from(element.dom().documentElement).map(Element.fromDom).getOr(element);
