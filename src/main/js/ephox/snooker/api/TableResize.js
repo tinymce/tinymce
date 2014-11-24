@@ -12,8 +12,8 @@ define(
     /*
      * Creates and sets up a bar-based column resize manager
      */
-    return function (container, direction) {
-      var manager = BarManager(container, direction);
+    return function (hookin, direction) {
+      var manager = BarManager(hookin, direction);
 
       var events = Events.create({
         beforeResize: Event([]),

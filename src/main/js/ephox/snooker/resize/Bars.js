@@ -21,12 +21,12 @@ define(
     var resizeBar = Styles.resolve('resizer-bar');
     var BAR_WIDTH = 3;
 
-    var clear = function (container, table) {
-      var previous = SelectorFilter.descendants(container, '.' + resizeBar);
+    var clear = function (parent, table) {
+      var previous = SelectorFilter.descendants(parent, '.' + resizeBar);
       Arr.each(previous, Remove.remove);
     };
 
-    var refreshCols = function (container, table, cols, direction) {
+    var refreshCols = function (parent, table, cols, direction) {
       var position = Location.absolute(table);
       var tableHeight = Height.getOuter(table);
 
@@ -34,28 +34,28 @@ define(
       Arr.each(colPositions, function (cp) {
         var bar = Bar(cp.col(), cp.x(), position.top(), BAR_WIDTH, tableHeight);
         Class.add(bar, resizeBar);
-        Insert.append(container, bar);
+        Insert.append(parent, bar);
       });
     };
 
-    var refresh = function (container, table, direction) {
-      clear(container, table);
+    var refresh = function (parent, table, direction) {
+      clear(parent, table);
 
       var list = DetailsList.fromTable(table);
       var warehouse = Warehouse.generate(list);
       var cols = Blocks.columns(warehouse);
-      if (cols.length > 0) refreshCols(container, table, cols, direction);
+      if (cols.length > 0) refreshCols(parent, table, cols, direction);
     };
 
-    var hide = function (container) {
-      var bars = SelectorFilter.descendants(container, '.' + resizeBar);
+    var hide = function (parent) {
+      var bars = SelectorFilter.descendants(parent, '.' + resizeBar);
       Arr.each(bars, function (bar) {
         Css.set(bar, 'display', 'none');
       });
     };
 
-    var show = function (container) {
-      var bars = SelectorFilter.descendants(container, '.' + resizeBar);
+    var show = function (parent) {
+      var bars = SelectorFilter.descendants(parent, '.' + resizeBar);
       Arr.each(bars, function (bar) {
         Css.set(bar, 'display', 'block');
       });
