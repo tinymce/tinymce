@@ -429,7 +429,7 @@ tinymce.PluginManager.add('image', function(editor) {
 
 	editor.addMenuItem('image', {
 		icon: 'image',
-		text: 'Insert image',
+		text: 'Insert/edit image',
 		onclick: createImageList(showDialog),
 		context: 'insert',
 		prependToContext: true
