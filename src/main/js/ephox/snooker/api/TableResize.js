@@ -10,10 +10,11 @@ define(
 
   function (Event, Events, Adjustments, BarManager) {
     /*
-     * Creates and sets up a bar-based column resize manager
+     * Creates and sets up a bar-based column resize manager.
+     * Wire is used to provide the parent, view, and origin
      */
-    return function (hookin, direction) {
-      var manager = BarManager(hookin, direction);
+    return function (wire, direction) {
+      var manager = BarManager(wire, direction);
 
       var events = Events.create({
         beforeResize: Event([]),
