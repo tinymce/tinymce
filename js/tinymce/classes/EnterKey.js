@@ -20,7 +20,8 @@ define("tinymce/EnterKey", [
 
 	return function(editor) {
 		var dom = editor.dom, selection = editor.selection, settings = editor.settings;
-		var undoManager = editor.undoManager, schema = editor.schema, nonEmptyElementsMap = schema.getNonEmptyElements(), moveCaretBeforeOnEnterElementsMap = schema.getMoveCaretBeforeOnEnterElements();
+		var undoManager = editor.undoManager, schema = editor.schema, nonEmptyElementsMap = schema.getNonEmptyElements(),
+			moveCaretBeforeOnEnterElementsMap = schema.getMoveCaretBeforeOnEnterElements();
 
 		function handleEnterKey(evt) {
 			var rng, tmpRng, editableRoot, container, offset, parentBlock, documentMode, shiftKey,

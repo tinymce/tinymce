@@ -1069,7 +1069,7 @@ if (window.getSelection) {
 	test('Enter twice before table element', function(){
 		var rng = editor.dom.createRng();
 
-		editor.getBody().innerHTML = '<table><tbody><td>x</td></tbody></table>';
+		editor.getBody().innerHTML = '<table><tbody><tr><td>x</td></tr></tbody></table>';
 		rng.setStartBefore(editor.getBody().lastChild);
 		rng.setEndBefore(editor.getBody().lastChild);
 		editor.selection.setRng(rng);
