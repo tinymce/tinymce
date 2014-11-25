@@ -20,7 +20,7 @@ define("tinymce/EnterKey", [
 
 	return function(editor) {
 		var dom = editor.dom, selection = editor.selection, settings = editor.settings;
-		var undoManager = editor.undoManager, schema = editor.schema, nonEmptyElementsMap = schema.getNonEmptyElements();
+		var undoManager = editor.undoManager, schema = editor.schema, nonEmptyElementsMap = schema.getNonEmptyElements(), moveCaretBeforeOnEnterElementsMap = schema.getMoveCaretBeforeOnEnterElements();
 
 		function handleEnterKey(evt) {
 			var rng, tmpRng, editableRoot, container, offset, parentBlock, documentMode, shiftKey,
@@ -85,7 +85,6 @@ define("tinymce/EnterKey", [
 			// pure whitespace text node or before an image
 			function moveToCaretPosition(root) {
 				var walker, node, rng, lastNode = root, tempElm;
-
 				function firstNonWhiteSpaceNodeSibling(node) {
 					while (node) {
 						if (node.nodeType == 1 || (node.nodeType == 3 && node.data && /[\r\n\s]/.test(node.data))) {
@@ -136,7 +135,7 @@ define("tinymce/EnterKey", [
 							break;
 						}
 
-						if (nonEmptyElementsMap[node.nodeName.toLowerCase()]) {
+						if (moveCaretBeforeOnEnterElementsMap[node.nodeName.toLowerCase()]) {
 							rng.setStartBefore(node);
 							rng.setEndBefore(node);
 							break;
