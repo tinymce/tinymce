@@ -20,7 +20,7 @@ define(
   ],
 
   function (Dragger, Option, Event, Events, BarMutation, Bars, Styles, Attr, Class, Css, DomEvent, Node, SelectorExists, SelectorFind, parseInt) {
-    return function (container, direction) {
+    return function (wire, direction) {
       var mutation = BarMutation();
       var resizing = Dragger.transform(mutation, {});
 
@@ -49,13 +49,13 @@ define(
             var delta = newX - oldX;
             Attr.remove(target, 'data-initial-left');
             if (column !== undefined) events.trigger.adjustWidth(table, delta, parseInt(column, 10));
-            Bars.refresh(container, table, direction);
+            Bars.refresh(wire, table, direction);
           });
         });
       });
 
       /* Start the dragging when the bar is clicked, storing the initial position. */
-      var mousedown = DomEvent.bind(container, 'mousedown', function (event) {
+      var mousedown = DomEvent.bind(wire.parent(), 'mousedown', function (event) {
         if (Bars.isBar(event.target())) {
           events.trigger.startAdjust();
           var column = Attr.get(event.target(), 'data-column');
@@ -63,22 +63,24 @@ define(
           Attr.set(event.target(), 'data-initial-left', parseInt(Css.get(event.target(), 'left'), 10));
           Class.add(event.target(), Styles.resolve('resizer-bar-dragging'));
           Css.set(event.target(), 'opacity', 0.2);
-          resizing.go(container);
+          resizing.go(wire.parent());
         }
       });
 
       /* When the mouse moves within the table, refresh the bars. */
-      var mouseover = DomEvent.bind(container, 'mouseover', function (event) {
+      var mouseover = DomEvent.bind(wire.view(), 'mouseover', function (event) {
         if (Node.name(event.target()) === 'table' || SelectorExists.ancestor(event.target(), 'table')) {
           hoverTable = Node.name(event.target()) === 'table' ? Option.some(event.target()) : SelectorFind.ancestor(event.target(), 'table');
-          Bars.refresh(container, hoverTable.getOrDie(), direction);
+          hoverTable.each(function (ht) {
+            Bars.refresh(wire, ht, direction);
+          });          
         }
       });
 
       /* When the mouse moves out of the table, hide the bars */
-      var mouseout = DomEvent.bind(container, 'mouseout', function (event) {
+      var mouseout = DomEvent.bind(wire.view(), 'mouseout', function (event) {
         if (Node.name(event.target()) === 'table') {
-          Bars.hide(container);
+          Bars.hide(wire);
         }
       });
 
@@ -91,12 +93,12 @@ define(
       };
 
       /* This is required on Firefox to stop the default drag behaviour interfering with dragster */
-      var firefoxDrag = DomEvent.bind(container, 'dragstart', function (event) {
+      var firefoxDrag = DomEvent.bind(wire.view(), 'dragstart', function (event) {
         event.raw().preventDefault();
       });
 
       var refresh = function (tbl) {
-        Bars.refresh(container, tbl, direction);
+        Bars.refresh(wire, tbl, direction);
       };
 
       var events = Events.create({

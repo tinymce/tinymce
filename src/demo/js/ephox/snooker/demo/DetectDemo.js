@@ -5,6 +5,7 @@ define(
     'ephox.compass.Arr',
     'ephox.perhaps.Option',
     'ephox.snooker.api.ResizeDirection',
+    'ephox.snooker.api.ResizeWire',
     'ephox.snooker.api.Structs',
     'ephox.snooker.api.TableOperations',
     'ephox.snooker.api.TableResize',
@@ -22,7 +23,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Option, ResizeDirection, Structs, TableOperations, TableResize, Attr, Class, Compare, Css, Direction, DomEvent, Element, Insert, InsertAll, Ready, Replication, SelectorFind) {
+  function (Arr, Option, ResizeDirection, ResizeWire, Structs, TableOperations, TableResize, Attr, Class, Compare, Css, Direction, DomEvent, Element, Insert, InsertAll, Ready, Replication, SelectorFind) {
     return function () {
       var subject = Element.fromHtml(
         '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
@@ -95,9 +96,9 @@ define(
       InsertAll.append(rtls, [ Element.fromHtml('<p>Right to Left table</p>'), subject3 ]);
       InsertAll.append(ephoxUi, [ ltrs, rtls ]);
 
-      var ltrManager = TableResize(ltrs, ResizeDirection.ltr);
+      var ltrManager = TableResize(ResizeWire.only(ltrs), ResizeDirection.ltr);
       ltrManager.on();
-      var rtlManager = TableResize(rtls, ResizeDirection.rtl);
+      var rtlManager = TableResize(ResizeWire.only(rtls), ResizeDirection.rtl);
       rtlManager.on();
 
       // For firefox.
@@ -167,7 +168,7 @@ define(
       };
 
       var replace = function (cell, tag, attrs) {
-        var replica = Replication.change(cell, tag);
+        var replica = Replication.copy(cell, tag);
         Attr.setAll(replica, attrs);
         return replica;
       };
@@ -185,7 +186,7 @@ define(
           detection().each(function (start) {
             var dir = Direction.getDirection(start);
             var direction = dir === 'rtl' ? ResizeDirection.rtl : ResizeDirection.ltr;
-            operation(ephoxUi, start, generators, direction);
+            operation(ResizeWire.only(ephoxUi), start, generators, direction);
           });
         };
       };
