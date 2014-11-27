@@ -150,6 +150,20 @@ test("Paste list like paragraph and list", function() {
 	equal(editor.getContent(), '<p>ABC. X</p><ol><li>Y</li></ol>');
 });
 
+test("Paste list like paragraph and list (disabled)", function() {
+	editor.setContent('');
+
+	editor.settings.paste_convert_word_fake_lists = false;
+
+	editor.execCommand('mceInsertClipboardContent', false, {
+		content: '<p class=MsoNormal><span style=\'font-size:10.0pt;line-height:115%;font-family:"Trebuchet MS","sans-serif";color:#666666\'>ABC. X<o:p></o:p></span></p><p class=MsoListParagraph style=\'text-indent:-.25in;mso-list:l0 level1 lfo1\'><![if !supportLists]><span style=\'mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin\'><span style=\'mso-list:Ignore\'>1.<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></span><![endif]>Y</p>'
+	});
+
+	delete editor.settings.paste_convert_word_fake_lists;
+
+	equal(editor.getContent(), '<p>ABC. X</p><p>1.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Y</p>');
+});
+
 test("Paste Word table", function() {
 	var rng = editor.dom.createRng();
 
