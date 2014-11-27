@@ -8,6 +8,7 @@ Version 4.1.7 (2014-11-27)
 	Fixed bug where DomQuery wouldn't accept window as constructor element.
 	Fixed bug where the color picker in 3.x dialogs wouldn't work properly. Patch contributed by Callidior.
 	Fixed bug where the image plugin wouldn't respect the document_base_url.
+	Fixed bug where the jQuery plugin would fail to append to elements named array prototype names.
 Version 4.1.6 (2014-10-08)
 	Fixed bug with clicking on the scrollbar of the iframe would cause a JS error to be thrown.
 	Fixed bug where null would produce an exception if you passed it to selection.setRng.
