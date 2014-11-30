@@ -22,6 +22,7 @@
 			delete editor.settings.image_list;
 			delete editor.settings.image_class_list;
 			delete editor.settings.document_base_url;
+			delete editor.settings.image_advtab;
 
 			var win = Utils.getFontmostWindow();
 
@@ -186,4 +187,414 @@
 
 
  	});
+
+	test('Advanced image dialog border option on empty editor', function(){
+		editor.settings.image_advtab = true;
+		editor.settings.image_dimensions = false;
+
+		editor.setContent('');
+		editor.execCommand('mceImage', true);
+
+		deepEqual(Utils.getFontmostWindow().toJSON(), {
+			"alt": "",
+			"border": "",
+			"hspace": "",
+			"src": "",
+			"style": "",
+			"vspace": ""
+		});
+
+		fillAndSubmitWindowForm({
+			"alt": "alt",
+			"border": "10px",
+			"src": "src"
+		});
+
+		equal(
+			cleanHtml(editor.getContent()),
+			'<p><img style="border-width: 10px;" src="src" alt="alt" /></p>'
+		);
+
+	});
+
+	test('Advanced image dialog margin space options on empty editor', function(){
+		editor.settings.image_advtab = true;
+		editor.settings.image_dimensions = false;
+
+		editor.setContent('');
+		editor.execCommand('mceImage', true);
+
+		deepEqual(Utils.getFontmostWindow().toJSON(), {
+			"alt": "",
+			"border": "",
+			"hspace": "",
+			"src": "",
+			"style": "",
+			"vspace": ""
+		});
+
+		fillAndSubmitWindowForm({
+			"alt": "alt",
+			"hspace": "10",
+			"src": "src",
+			"vspace": "10"
+		});
+
+		equal(
+			cleanHtml(editor.getContent()),
+			'<p><img style="margin: 10px;" src="src" alt="alt" /></p>'
+		);
+
+	});
+
+	test('Advanced image dialog border style only options on empty editor', function(){
+		editor.settings.image_advtab = true;
+		editor.settings.image_dimensions = false;
+
+		editor.setContent('');
+		editor.execCommand('mceImage', true);
+
+		deepEqual(Utils.getFontmostWindow().toJSON(), {
+			"alt": "",
+			"border": "",
+			"hspace": "",
+			"src": "",
+			"style": "",
+			"vspace": ""
+		});
+
+		fillAndSubmitWindowForm({
+			"alt": "alt",
+			"src": "src",
+			"style": "border-width: 10px;"
+		});
+
+		equal(
+			cleanHtml(editor.getContent()),
+			'<p><img style="border-width: 10px;" src="src" alt="alt" /></p>'
+		);
+
+	});
+
+	test('Advanced image dialog margin style only options on empty editor', function(){
+		editor.settings.image_advtab = true;
+		editor.settings.image_dimensions = false;
+
+		editor.setContent('');
+		editor.execCommand('mceImage', true);
+
+		deepEqual(Utils.getFontmostWindow().toJSON(), {
+			"alt": "",
+			"border": "",
+			"hspace": "",
+			"src": "",
+			"style": "",
+			"vspace": ""
+		});
+
+		fillAndSubmitWindowForm({
+			"alt": "alt",
+			"src": "src",
+			"style": "margin: 10px;"
+		});
+
+		equal(
+			cleanHtml(editor.getContent()),
+			'<p><img style="margin: 10px;" src="src" alt="alt" /></p>'
+		);
+
+	});
+
+	test('Advanced image dialog overriden border style options on empty editor', function(){
+		editor.settings.image_advtab = true;
+		editor.settings.image_dimensions = false;
+
+		editor.setContent('');
+		editor.execCommand('mceImage', true);
+
+		deepEqual(Utils.getFontmostWindow().toJSON(), {
+			"alt": "",
+			"border": "",
+			"hspace": "",
+			"src": "",
+			"style": "",
+			"vspace": ""
+		});
+
+		fillAndSubmitWindowForm({
+			"alt": "alt",
+			"border": "10",
+			"src": "src",
+			"style": "border-width: 15px;",
+		});
+
+		equal(
+			cleanHtml(editor.getContent()),
+			'<p><img style="border-width: 10px;" src="src" alt="alt" /></p>'
+		);
+
+	});
+
+	test('Advanced image dialog overriden margin style options on empty editor', function(){
+		editor.settings.image_advtab = true;
+		editor.settings.image_dimensions = false;
+
+		editor.setContent('');
+		editor.execCommand('mceImage', true);
+
+		deepEqual(Utils.getFontmostWindow().toJSON(), {
+			"alt": "",
+			"border": "",
+			"hspace": "",
+			"src": "",
+			"style": "",
+			"vspace": ""
+		});
+
+		fillAndSubmitWindowForm({
+			"alt": "alt",
+			"hspace": "10",
+			"src": "src",
+			"style": "margin-left: 15px; margin-top: 20px;",
+			"vspace": "10"
+		});
+
+		equal(
+			cleanHtml(editor.getContent()),
+			'<p><img style="margin: 10px;" src="src" alt="alt" /></p>'
+		);
+
+	});
+
+	test('Advanced image dialog non-shorthand horizontal margin style change test', function(){
+		editor.settings.image_advtab = true;
+		editor.settings.image_dimensions = false;
+
+		editor.setContent('');
+		editor.execCommand('mceImage', true);
+
+		deepEqual(Utils.getFontmostWindow().toJSON(), {
+			"alt": "",
+			"border": "",
+			"hspace": "",
+			"src": "",
+			"style": "",
+			"vspace": ""
+		});
+
+		Utils.getFontmostWindow().find('#style').value('margin-left: 15px; margin-right: 15px;').fire('change');
+
+		deepEqual(Utils.getFontmostWindow().toJSON(), {
+			"alt": "",
+			"border": "",
+			"hspace": "15",
+			"src": "",
+			"style": "margin-left: 15px; margin-right: 15px;",
+			"vspace": ""
+		});
+
+	});
+
+	test('Advanced image dialog non-shorthand vertical margin style change test', function(){
+		editor.settings.image_advtab = true;
+		editor.settings.image_dimensions = false;
+
+		editor.setContent('');
+		editor.execCommand('mceImage', true);
+
+		deepEqual(Utils.getFontmostWindow().toJSON(), {
+			"alt": "",
+			"border": "",
+			"hspace": "",
+			"src": "",
+			"style": "",
+			"vspace": ""
+		});
+
+		Utils.getFontmostWindow().find('#style').value('margin-top: 15px; margin-bottom: 15px;').fire('change');
+
+		deepEqual(Utils.getFontmostWindow().toJSON(), {
+			"alt": "",
+			"border": "",
+			"hspace": "",
+			"src": "",
+			"style": "margin-top: 15px; margin-bottom: 15px;",
+			"vspace": "15"
+		});
+
+	});
+
+	test('Advanced image dialog shorthand margin 1 value style change test', function(){
+		editor.settings.image_advtab = true;
+		editor.settings.image_dimensions = false;
+
+		editor.setContent('');
+		editor.execCommand('mceImage', true);
+
+		deepEqual(Utils.getFontmostWindow().toJSON(), {
+			"alt": "",
+			"border": "",
+			"hspace": "",
+			"src": "",
+			"style": "",
+			"vspace": ""
+		});
+
+		Utils.getFontmostWindow().find('#style').value('margin: 5px;').fire('change');
+
+		deepEqual(Utils.getFontmostWindow().toJSON(), {
+			"alt": "",
+			"border": "",
+			"hspace": "5",
+			"src": "",
+			"style": "margin: 5px;",
+			"vspace": "5"
+		});
+
+	});
+
+	test('Advanced image dialog shorthand margin 2 value style change test', function(){
+		editor.settings.image_advtab = true;
+		editor.settings.image_dimensions = false;
+
+		editor.setContent('');
+		editor.execCommand('mceImage', true);
+
+		deepEqual(Utils.getFontmostWindow().toJSON(), {
+			"alt": "",
+			"border": "",
+			"hspace": "",
+			"src": "",
+			"style": "",
+			"vspace": ""
+		});
+
+		Utils.getFontmostWindow().find('#style').value('margin: 5px 10px;').fire('change');
+
+		deepEqual(Utils.getFontmostWindow().toJSON(), {
+			"alt": "",
+			"border": "",
+			"hspace": "10",
+			"src": "",
+			"style": "margin: 5px 10px 5px 10px;",
+			"vspace": "5"
+		});
+
+	});
+
+	test('Advanced image dialog shorthand margin 2 value style change test', function(){
+		editor.settings.image_advtab = true;
+		editor.settings.image_dimensions = false;
+
+		editor.setContent('');
+		editor.execCommand('mceImage', true);
+
+		deepEqual(Utils.getFontmostWindow().toJSON(), {
+			"alt": "",
+			"border": "",
+			"hspace": "",
+			"src": "",
+			"style": "",
+			"vspace": ""
+		});
+
+		Utils.getFontmostWindow().find('#style').value('margin: 5px 10px;').fire('change');
+
+		deepEqual(Utils.getFontmostWindow().toJSON(), {
+			"alt": "",
+			"border": "",
+			"hspace": "10",
+			"src": "",
+			"style": "margin: 5px 10px 5px 10px;",
+			"vspace": "5"
+		});
+
+	});
+
+	test('Advanced image dialog shorthand margin 3 value style change test', function(){
+		editor.settings.image_advtab = true;
+		editor.settings.image_dimensions = false;
+
+		editor.setContent('');
+		editor.execCommand('mceImage', true);
+
+		deepEqual(Utils.getFontmostWindow().toJSON(), {
+			"alt": "",
+			"border": "",
+			"hspace": "",
+			"src": "",
+			"style": "",
+			"vspace": ""
+		});
+
+		Utils.getFontmostWindow().find('#style').value('margin: 5px 10px 15px;').fire('change');
+
+		deepEqual(Utils.getFontmostWindow().toJSON(), {
+			"alt": "",
+			"border": "",
+			"hspace": "10",
+			"src": "",
+			"style": "margin: 5px 10px 15px 10px;",
+			"vspace": ""
+		});
+
+	});
+
+	test('Advanced image dialog shorthand margin 4 value style change test', function(){
+		editor.settings.image_advtab = true;
+		editor.settings.image_dimensions = false;
+
+		editor.setContent('');
+		editor.execCommand('mceImage', true);
+
+		deepEqual(Utils.getFontmostWindow().toJSON(), {
+			"alt": "",
+			"border": "",
+			"hspace": "",
+			"src": "",
+			"style": "",
+			"vspace": ""
+		});
+
+		Utils.getFontmostWindow().find('#style').value('margin: 5px 10px 15px 20px;').fire('change');
+
+		deepEqual(Utils.getFontmostWindow().toJSON(), {
+			"alt": "",
+			"border": "",
+			"hspace": "",
+			"src": "",
+			"style": "margin: 5px 10px 15px 20px;",
+			"vspace": ""
+		});
+
+	});
+
+	test('Advanced image dialog shorthand margin 4 value style change test', function(){
+		editor.settings.image_advtab = true;
+		editor.settings.image_dimensions = false;
+
+		editor.setContent('');
+		editor.execCommand('mceImage', true);
+
+		deepEqual(Utils.getFontmostWindow().toJSON(), {
+			"alt": "",
+			"border": "",
+			"hspace": "",
+			"src": "",
+			"style": "",
+			"vspace": ""
+		});
+
+		Utils.getFontmostWindow().find('#style').value('margin: 5px 10px 15px 20px; margin-top: 15px;').fire('change');
+
+		deepEqual(Utils.getFontmostWindow().toJSON(), {
+			"alt": "",
+			"border": "",
+			"hspace": "",
+			"src": "",
+			"style": "margin: 15px 10px 15px 20px;",
+			"vspace": "15"
+		});
+
+	});
 })();

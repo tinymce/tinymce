@@ -331,6 +331,41 @@ tinymce.PluginManager.add('image', function(editor) {
 
 		generalFormItems.push(classListCtrl);
 
+		function mergeMargins(css) {
+			if (css.margin) {
+
+				var splitMargin = css.margin.split(" ");
+
+				switch (splitMargin.length) {
+					case 1: //margin: toprightbottomleft;
+						css['margin-top'] = css['margin-top'] || splitMargin[0];
+						css['margin-right'] = css['margin-right'] || splitMargin[0];
+						css['margin-bottom'] = css['margin-bottom'] || splitMargin[0];
+						css['margin-left'] = css['margin-left'] || splitMargin[0];
+						break;
+					case 2: //margin: topbottom rightleft;
+						css['margin-top'] = css['margin-top'] || splitMargin[0];
+						css['margin-right'] = css['margin-right'] || splitMargin[1];
+						css['margin-bottom'] = css['margin-bottom'] || splitMargin[0];
+						css['margin-left'] = css['margin-left'] || splitMargin[1];
+						break;
+					case 3: //margin: top rightleft bottom;
+						css['margin-top'] = css['margin-top'] || splitMargin[0];
+						css['margin-right'] = css['margin-right'] || splitMargin[1];
+						css['margin-bottom'] = css['margin-bottom'] || splitMargin[2];
+						css['margin-left'] = css['margin-left'] || splitMargin[1];
+						break;
+					case 4: //margin: top right bottom left;
+						css['margin-top'] = css['margin-top'] || splitMargin[0];
+						css['margin-right'] = css['margin-right'] || splitMargin[1];
+						css['margin-bottom'] = css['margin-bottom'] || splitMargin[2];
+						css['margin-left'] = css['margin-left'] || splitMargin[3];
+				}
+				delete css.margin;
+			}
+			return css;
+		}
+
 		function updateStyle() {
 			function addPixelSuffix(value) {
 				if (value.length > 0 && /^[0-9]+$/.test(value)) {
@@ -344,23 +379,74 @@ tinymce.PluginManager.add('image', function(editor) {
 				return;
 			}
 
-			var data = win.toJSON();
-			var css = dom.parseStyle(data.style);
+			var data = win.toJSON(),
+				css = dom.parseStyle(data.style);
 
-			delete css.margin;
-			css['margin-top'] = css['margin-bottom'] = addPixelSuffix(data.vspace);
-			css['margin-left'] = css['margin-right'] = addPixelSuffix(data.hspace);
-			css['border-width'] = addPixelSuffix(data.border);
+			css = mergeMargins(css);
+
+			if (data.vspace) {
+				css['margin-top'] = css['margin-bottom'] = addPixelSuffix(data.vspace);
+			}
+			if (data.hspace) {
+				css['margin-left'] = css['margin-right'] = addPixelSuffix(data.hspace);
+			}
+			if (data.border) {
+				css['border-width'] = addPixelSuffix(data.border);
+			}
 
 			win.find('#style').value(dom.serializeStyle(dom.parseStyle(dom.serializeStyle(css))));
+		}
+
+		function updateVSpaceHSpaceBorder() {
+
+			if (!editor.settings.image_advtab) {
+				return;
+			}
+
+			var data = win.toJSON(),
+				css = dom.parseStyle(data.style);
+
+			win.find('#vspace').value("");
+			win.find('#hspace').value("");
+
+			css = mergeMargins(css);
+
+			//Move opposite equal margins to vspace/hspace field
+			if ((css['margin-top'] && css['margin-bottom']) ||  (css['margin-right'] && css['margin-left'])) {
+				if (css['margin-top'] === css['margin-bottom']) {
+					win.find('#vspace').value(removePixelSuffix(css['margin-top']));
+				} else {
+					win.find('#vspace').value('');
+				}
+				if (css['margin-right'] === css['margin-left']) {
+					win.find('#hspace').value(removePixelSuffix(css['margin-right']));
+				} else {
+					win.find('#hspace').value('');
+				}
+			}
+
+			//Move border-width
+			if (css['border-width']) {
+				win.find('#border').value(removePixelSuffix(css['border-width']));
+			}
+
+			win.find('#style').value(dom.serializeStyle(dom.parseStyle(dom.serializeStyle(css))));
+
 		}
 
 		if (editor.settings.image_advtab) {
 			// Parse styles from img
 			if (imgElm) {
-				data.hspace = removePixelSuffix(imgElm.style.marginLeft || imgElm.style.marginRight);
-				data.vspace = removePixelSuffix(imgElm.style.marginTop || imgElm.style.marginBottom);
-				data.border = removePixelSuffix(imgElm.style.borderWidth);
+				if (imgElm.style.marginLeft && imgElm.style.marginRight && imgElm.style.marginLeft === imgElm.style.marginRight) {
+					data.hspace = removePixelSuffix(imgElm.style.marginLeft);
+				}
+				if (imgElm.style.marginTop && imgElm.style.marginBottom && imgElm.style.marginTop === imgElm.style.marginBottom) {
+					data.vspace = removePixelSuffix(imgElm.style.marginTop);
+				}
+				if (imgElm.style.borderWidth) {
+					data.border = removePixelSuffix(imgElm.style.borderWidth);
+				}
+
 				data.style = editor.dom.serializeStyle(editor.dom.parseStyle(editor.dom.getAttrib(imgElm, 'style')));
 			}
 
@@ -384,7 +470,8 @@ tinymce.PluginManager.add('image', function(editor) {
 							{
 								label: 'Style',
 								name: 'style',
-								type: 'textbox'
+								type: 'textbox',
+								onchange: updateVSpaceHSpaceBorder
 							},
 							{
 								type: 'form',
