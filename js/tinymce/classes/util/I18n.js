@@ -17,7 +17,7 @@
 define("tinymce/util/I18n", [], function() {
 	"use strict";
 
-	var data = {};
+	var data = {}, lastAddedCode = null;
 
 	return {
 		/**
@@ -37,10 +37,11 @@ define("tinymce/util/I18n", [], function() {
 		 */
 		add: function(code, items) {
 			for (var name in items) {
-				data[name] = items[name];
+				data[code + '.' + name] = items[name];
 			}
 
 			this.rtl = this.rtl || data._dir === 'rtl';
+			lastAddedCode = code;
 		},
 
 		/**
@@ -55,7 +56,9 @@ define("tinymce/util/I18n", [], function() {
 		 * @param {String/Object/Array} text Text to translate.
 		 * @return {String} String that got translated.
 		 */
-		translate: function(text) {
+		translate: function(text, code) {
+			code = code || lastAddedCode || 'en';
+
 			if (typeof(text) == "undefined") {
 				return text;
 			}
@@ -67,12 +70,12 @@ define("tinymce/util/I18n", [], function() {
 			if (text.push) {
 				var values = text.slice(1);
 
-				text = (data[text[0]] || text[0]).replace(/\{([^\}]+)\}/g, function(match1, match2) {
+				text = (data[code + '.' + text[0]] || text[0]).replace(/\{([^\}]+)\}/g, function(match1, match2) {
 					return values[match2];
 				});
 			}
 
-			return data[text] || text;
+			return data[code + '.' + text] || text;
 		},
 
 		data: data

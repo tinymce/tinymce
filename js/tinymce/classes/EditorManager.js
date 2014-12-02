@@ -619,7 +619,8 @@ define("tinymce/EditorManager", [
 		 * @return {String} Translated string.
 		 */
 		translate: function(text) {
-			return I18n.translate(text);
+			var code = (this.activeEditor ? this.activeEditor.settings.language : null) || 'en';
+			return I18n.translate(text, code);
 		},
 
 		/**
