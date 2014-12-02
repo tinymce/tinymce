@@ -44,18 +44,21 @@ module.exports = function(grunt) {
 		var options = grunt.config([this.name, this.target]).options;
 
 		fs.readdirSync(options.path).forEach(function(dirName) {
-			var lessFiles = options.prepend || [];
 			var skinDirPath = path.join(options.path, dirName);
 
-			if (options.importFrom) {
-				lessFiles = lessFiles.concat(parseLessDocs(options.importFrom));
-			}
+			if (fs.statSync(skinDirPath).isDirectory()) {
+				var lessFiles = options.prepend || [];
 
-			if (options.append) {
-				lessFiles = lessFiles.concat(options.append);
-			}
+				if (options.importFrom) {
+					lessFiles = lessFiles.concat(parseLessDocs(options.importFrom));
+				}
 
-			compileLessFile(lessFiles, path.join(skinDirPath, 'skin' + (options.ext || '.dev.less')));
+				if (options.append) {
+					lessFiles = lessFiles.concat(options.append);
+				}
+
+				compileLessFile(lessFiles, path.join(skinDirPath, 'skin' + (options.ext || '.dev.less')));
+			}
 		});
 	});
 };
