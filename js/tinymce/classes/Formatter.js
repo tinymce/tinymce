@@ -791,6 +791,11 @@ define("tinymce/Formatter", [
 							} else {
 								startContainer = startContainer.firstChild || startContainer;
 							}
+							// later, "unwrap" will clean an empty text node and we will stay with a detached reference,
+							// if this is the case, get the next element.
+							if (!startContainer.textContent) {
+								startContainer = startContainer.nextSibling;
+							}
 						}
 
 						// Try to adjust endContainer as well if cells on the same row were selected - bug #6410
