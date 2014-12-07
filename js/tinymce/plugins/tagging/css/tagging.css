@@ -1,0 +1,54 @@
+.sidediv {
+	margin: initial; 
+
+	align: right; 
+	display: inline-block;
+	overflow-y: hidden;
+	overflow-x: auto;
+	border-left: gray thin solid;
+}
+
+.sidebar {
+	font-family:Verdana,Arial,Helvetica,sans-serif;
+	line-height: 14px;
+	font-size:11px;
+	margin: 0px;
+}
+
+.textbar {
+	display: inline-block;
+	transform: rotate(90deg);
+	font-family:Verdana,Arial,Helvetica,sans-serif;
+	font-size:9px;
+	margin-top:10px;
+	width: 13px;
+}
+
+.verticalbar {
+	border-left: thick solid;
+	color: inherit;
+	position: absolute;
+}
+
+.tempbar {
+	border-left: thick solid;
+	color: inherit;
+	position: absolute;
+	z-index: 1;
+	opacity: 0;
+}
+
+.tagbar {
+	display: inline-block;
+	width: 6px;
+	position: relative;
+}
+
+.selection {
+}
+
+.mce-i-toolbartagging {
+	background: url('../img/Ecommerce-Price-Tag-icon.png');
+	height: 16px;
+	width: 16px;
+}
