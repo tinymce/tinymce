@@ -11,6 +11,7 @@
 /*eslint consistent-this:0 */
 tinymce.PluginManager.add('tagging', function(editor, url) {
 
+// From http://godsnotwheregodsnot.blogspot.ru/2013/11/kmeans-color-quantization-seeding.html
 	var indexcolors = [
 
 		/* "#000000", */ "#FFFF00", "#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
@@ -505,7 +506,7 @@ tinymce.PluginManager.add('tagging', function(editor, url) {
 	});
 	
 	editor.on('init', function() {
-        var cssURL = url + '/css/content.css';
+        var cssURL = url + '/css/tagging.css';
         if(document.createStyleSheet){
             document.createStyleSheet(cssURL);
         } else {
