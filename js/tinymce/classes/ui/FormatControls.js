@@ -428,14 +428,13 @@ define("tinymce/ui/FormatControls", [
 		editor.addButton('formatselect', function() {
 			var items = [], blocks = createFormats(editor.settings.block_formats ||
 				'Paragraph=p;' +
-				'Address=address;' +
-				'Pre=pre;' +
 				'Heading 1=h1;' +
 				'Heading 2=h2;' +
 				'Heading 3=h3;' +
 				'Heading 4=h4;' +
 				'Heading 5=h5;' +
-				'Heading 6=h6'
+				'Heading 6=h6;' +
+				'Preformatted=pre'
 			);
 
 			each(blocks, function(block) {

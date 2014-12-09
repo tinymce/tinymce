@@ -1,6 +1,9 @@
 Version 4.1.8 (2014-12-xx)
+	Added new html5 sizes attribute to img elements used together with srcset.
 	Fixed bug where pressing enter twice before a table moves the cursor in the table and causes a javascript error.
 	Fixed bug where advanced image styles were not respected.
+	Removed address from the default list of block formats since it tends to be missused.
+	Fixed so the pre block format is called preformatted to make it more verbose.
 Version 4.1.7 (2014-11-27)
 	Added HTML5 schema support for srcset, source and picture. Patch contributed by mattheu.
 	Added new cache_suffix setting to enable cache busting by producing unique urls.
