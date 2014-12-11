@@ -178,14 +178,13 @@ define("tinymce/tableplugin/Dialogs", [
 			function onSubmitTableForm() {
 
 				//Explore the layers of the table till we find the first layer of tds or ths
-				function styleTDTH (elm, border, cellpadding) {
+				function styleTDTH (elm, name, value) {
 					if (elm.tagName === "TD" || elm.tagName === "TH") {
-						dom.setStyle(elm, 'border', border);
-						dom.setStyle(elm, 'padding', cellpadding);
+						dom.setStyle(elm, name, value);
 					} else {
 						if (elm.children) {
 							for (var i = 0; i < elm.children.length; i++) {
-								styleTDTH(elm.children[i], border, cellpadding);
+								styleTDTH(elm.children[i], name, value);
 							}
 						}
 					}
@@ -195,10 +194,6 @@ define("tinymce/tableplugin/Dialogs", [
 
 				updateStyle(dom, this);
 				data = Tools.extend(data, this.toJSON());
-
-				Tools.each('backgroundColor borderColor'.split(' '), function(name) {
-					delete data[name];
-				});
 
 				if (data["class"] === false) {
 					delete data["class"];
@@ -216,13 +211,24 @@ define("tinymce/tableplugin/Dialogs", [
 
 					if (editor.settings.style_table_by_css) {
 						//style table only by using the style property or table and cells by using border property
-						dom.setStyle(tableElm, 'border', (data.border || dom.parseStyle(data.style).border));
+						dom.setStyle(tableElm, 'border', (data.border || dom.parseStyle(data.style).border) || "");
 						dom.setAttrib(tableElm, 'data-border', data.border);
 						dom.setStyle(tableElm, 'border-spacing', addSizeSuffix(data.cellspacing));
 						dom.setAttrib(tableElm, 'data-cell-padding', data.cellpadding);
+						if (data.borderColor) {
+							//Combine styles and re set the data-border attribute
+							dom.setStyle(tableElm, 'border-color', data.borderColor);
+							dom.setAttrib(tableElm, 'data-border', dom.getStyle(tableElm, 'border'));
+						}
+						dom.setAttrib(tableElm, 'data-border-color', data.borderColor);
+						dom.setStyle(tableElm, 'background-color', data.backgroundColor);
 						if (tableElm.children) {
 							for (var i = 0; i < tableElm.children.length; i++) {
-								styleTDTH(tableElm.children[i], data.border, addSizeSuffix(data.cellpadding));
+								styleTDTH(tableElm.children[i], 'border', data.border);
+								styleTDTH(tableElm.children[i], 'padding', addSizeSuffix(data.cellpadding));
+								if (data.borderColor) {
+									styleTDTH(tableElm.children[i], 'border-color', data.borderColor);
+								}
 							}
 						}
 					} else {
@@ -274,7 +280,9 @@ define("tinymce/tableplugin/Dialogs", [
 						cellspacing: removePxSuffix(dom.getStyle(tableElm, 'border-spacing') ||
 							dom.getAttrib(tableElm, 'cellspacing')),
 						cellpadding: dom.getAttrib(tableElm, 'data-cell-padding') || dom.getAttrib(tableElm, 'cellpadding'),
-						border: dom.getAttrib(tableElm, 'data-border') || dom.getAttrib(tableElm, 'border'),
+						border: dom.getAttrib(tableElm, 'data-border') || dom.getStyle(tableElm, 'border') ||
+							dom.getAttrib(tableElm, 'border') ,
+						borderColor: dom.getAttrib(tableElm, 'data-border-color') || dom.getStyle(tableElm, 'border-color'),
 						caption: !!dom.select('caption', tableElm)[0],
 						'class': dom.getAttrib(tableElm, 'class')
 					};
