@@ -211,16 +211,20 @@ define("tinymce/tableplugin/Dialogs", [
 
 					if (editor.settings.table_style_by_css) {
 						//style table only by using the style property or table and cells by using border property
-						dom.setStyle(tableElm, 'border', (data.border || dom.parseStyle(data.style).border) || "");
-						dom.setAttrib(tableElm, 'data-border', data.border);
-						dom.setStyle(tableElm, 'border-spacing', addSizeSuffix(data.cellspacing));
-						dom.setAttrib(tableElm, 'data-cell-padding', data.cellpadding);
+						dom.setStyles(tableElm, {
+							'border': data.border || dom.parseStyle(data.style).border || "",
+							'border-spacing': addSizeSuffix(data.cellspacing),
+							'background-color': data.backgroundColor
+						});
+						dom.setAttribs(tableElm, {
+							'data-border': data.border,
+							'data-cell-padding': data.cellpadding,
+							'data-border-color': data.borderColor
+						});
 						if (data.borderColor) {
 							//Combine styles
 							dom.setStyle(tableElm, 'border-color', data.borderColor);
 						}
-						dom.setAttrib(tableElm, 'data-border-color', data.borderColor);
-						dom.setStyle(tableElm, 'background-color', data.backgroundColor);
 						if (tableElm.children) {
 							for (var i = 0; i < tableElm.children.length; i++) {
 								styleTDTH(tableElm.children[i], 'border', data.border);
