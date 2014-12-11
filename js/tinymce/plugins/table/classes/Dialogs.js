@@ -216,7 +216,7 @@ define("tinymce/tableplugin/Dialogs", [
 						dom.setStyle(tableElm, 'border-spacing', addSizeSuffix(data.cellspacing));
 						dom.setAttrib(tableElm, 'data-cell-padding', data.cellpadding);
 						if (data.borderColor) {
-							//Combine styles and re set the data-border attribute
+							//Combine styles
 							dom.setStyle(tableElm, 'border-color', data.borderColor);
 						}
 						dom.setAttrib(tableElm, 'data-border-color', data.borderColor);

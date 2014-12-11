@@ -24,12 +24,13 @@
 			if (win) {
 				win.close();
 			}
-			
+
 			delete editor.settings.table_advtab;
 			delete editor.settings.table_cell_advtab;
 			delete editor.settings.table_class_list;
 			delete editor.settings.table_cell_class_list;
 			delete editor.settings.table_row_class_list;
+			delete editor.settings.table_style_by_css;
 		}
 	});
 
@@ -212,6 +213,25 @@
 	});
 
 	test("Table properties dialog (change: border,cellpadding,cellspacing,align,backgroundColor,borderColor)", function() {
+		editor.setContent('<table style="border-color: red; background-color: blue"><tr><td>X</td></tr></table>');
+		Utils.setSelection('td', 0);
+		editor.execCommand('mceTableProps');
+		fillAndSubmitWindowForm({
+			border: "1",
+			cellpadding: "2",
+			cellspacing: "3",
+			align: "right"
+		});
+
+		equal(
+			cleanTableHtml(editor.getContent()),
+			'<table style="float: right; border-color: red; background-color: blue;" border="1" cellspacing="3" cellpadding="2"><tbody><tr><td>x</td></tr></tbody></table>'
+		);
+	});
+
+	test("Table properties dialog css border, cell spacing, cell padding (change: border,cellpadding,cellspacing)", function() {
+		editor.settings.table_style_by_css = true;
+
 		editor.setContent('<table style="border-color: red; background-color: blue"><tr><td>X</td></tr></table>');
 		Utils.setSelection('td', 0);
 		editor.execCommand('mceTableProps');
