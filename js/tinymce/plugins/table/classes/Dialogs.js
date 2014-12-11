@@ -209,7 +209,7 @@ define("tinymce/tableplugin/Dialogs", [
 						'class': data['class']
 					});
 
-					if (editor.settings.style_table_by_css) {
+					if (editor.settings.table_style_by_css) {
 						//style table only by using the style property or table and cells by using border property
 						dom.setStyle(tableElm, 'border', (data.border || dom.parseStyle(data.style).border) || "");
 						dom.setAttrib(tableElm, 'data-border', data.border);
@@ -218,7 +218,6 @@ define("tinymce/tableplugin/Dialogs", [
 						if (data.borderColor) {
 							//Combine styles and re set the data-border attribute
 							dom.setStyle(tableElm, 'border-color', data.borderColor);
-							dom.setAttrib(tableElm, 'data-border', dom.getStyle(tableElm, 'border'));
 						}
 						dom.setAttrib(tableElm, 'data-border-color', data.borderColor);
 						dom.setStyle(tableElm, 'background-color', data.backgroundColor);
@@ -226,9 +225,6 @@ define("tinymce/tableplugin/Dialogs", [
 							for (var i = 0; i < tableElm.children.length; i++) {
 								styleTDTH(tableElm.children[i], 'border', data.border);
 								styleTDTH(tableElm.children[i], 'padding', addSizeSuffix(data.cellpadding));
-								if (data.borderColor) {
-									styleTDTH(tableElm.children[i], 'border-color', data.borderColor);
-								}
 							}
 						}
 					} else {
@@ -239,7 +235,7 @@ define("tinymce/tableplugin/Dialogs", [
 						});
 					}
 
-					if (dom.getAttrib(tableElm, 'width') && !editor.settings.style_table_by_css) {
+					if (dom.getAttrib(tableElm, 'width') && !editor.settings.table_style_by_css) {
 						dom.setAttrib(tableElm, 'width', removePxSuffix(data.width));
 					} else {
 						dom.setStyle(tableElm, 'width', addSizeSuffix(data.width));
