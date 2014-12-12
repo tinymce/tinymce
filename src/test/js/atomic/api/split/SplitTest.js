@@ -50,11 +50,14 @@ test(
         return item.name === 'TEXT_GENE' ? 'text("' + item.text + '")' : item.id;
       }));
     };
+    // probably never happens, but just in case
+    checkSplit(Option.none(), Option.some('apple'), 'apple', -1);
 
     checkSplit(Option.some('a '), Option.some('cat'), 'a cat', 2);
     checkSplit(Option.none(), Option.some('apple'), 'apple', 0);
     checkSplit(Option.some('car'), Option.some('t'), 'cart', 3);
     checkSplit(Option.some('cart'), Option.none(), 'cart', 4);
+    checkSplit(Option.some('cart'), Option.none(), 'cart', 5);
 
     checkPair('root(text("apples"))', 'apples', 'apples', 0, 0);
     checkPair('root(text("apples"))', 'apples', 'apples', 0, 6);
