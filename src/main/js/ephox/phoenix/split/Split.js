@@ -24,8 +24,8 @@ define(
      */
     var split = function (universe, item, position) {
       if (!universe.property().isText(item)) return TextSplit(Option.none(), Option.some(item));
-      if (position === 0) return TextSplit(Option.none(), Option.some(item));
-      if (position === universe.property().getText(item).length) return TextSplit(Option.some(item), Option.none());
+      if (position <= 0) return TextSplit(Option.none(), Option.some(item));
+      if (position >= universe.property().getText(item).length) return TextSplit(Option.some(item), Option.none());
 
       var parts = tokens(universe, item, [position]);
       universe.property().setText(item, parts[0]);
