@@ -14,7 +14,7 @@
 define("tinymce/Shortcuts", [
 	"tinymce/util/Tools",
 	"tinymce/Env"
-], function(Tools, Env) {
+], function (Tools, Env) {
 	var each = Tools.each, explode = Tools.explode;
 
 	var keyCodeLookup = {
@@ -23,12 +23,43 @@ define("tinymce/Shortcuts", [
 		"f11": 122
 	};
 
-	return function(editor) {
+	return function (editor) {
 		var self = this, shortcuts = {};
 
-		editor.on('keyup keypress keydown', function(e) {
+		function createShortcut(pattern, desc, cmdFunc, scope) {
+			var shortcut = {
+				func: cmdFunc,
+				scope: scope || editor,
+				desc: editor.translate(desc),
+				alt: false,
+				ctrl: false,
+				shift: false
+			};
+
+			each(explode(pattern, '+'), function (value) {
+				switch (value) {
+					case 'alt':
+					case 'ctrl':
+					case 'shift':
+						shortcut[value] = true;
+						break;
+
+					default:
+						// Allow numeric keycodes like ctrl+219 for ctrl+[
+						if (/^[0-9]{2,}$/.test(value)) {
+							shortcut.keyCode = parseInt(value, 10);
+						} else {
+							shortcut.charCode = value.charCodeAt(0);
+							shortcut.keyCode = keyCodeLookup[value] || value.toUpperCase().charCodeAt(0);
+						}
+				}
+			});
+			return shortcut;
+		}
+
+		editor.on('keyup keypress keydown', function (e) {
 			if ((e.altKey || e.ctrlKey || e.metaKey) && !e.isDefaultPrevented()) {
-				each(shortcuts, function(shortcut) {
+				each(shortcuts, function (shortcut) {
 					var ctrlKey = Env.mac ? e.metaKey : e.ctrlKey;
 
 					if (shortcut.ctrl != ctrlKey || shortcut.alt != e.altKey || shortcut.shift != e.shiftKey) {
@@ -49,68 +80,61 @@ define("tinymce/Shortcuts", [
 		});
 
 		/**
-		 * Adds a keyboard shortcut for some command or function.
-		 *
-		 * @method addShortcut
-		 * @param {String} pattern Shortcut pattern. Like for example: ctrl+alt+o.
-		 * @param {String} desc Text description for the command.
-		 * @param {String/Function} cmdFunc Command name string or function to execute when the key is pressed.
-		 * @param {Object} sc Optional scope to execute the function in.
-		 * @return {Boolean} true/false state if the shortcut was added or not.
-		 */
-		self.add = function(pattern, desc, cmdFunc, scope) {
-			var cmd;
+         * Adds a keyboard shortcut for some command or function.
+         *
+         * @method addShortcut
+         * @param {String} pattern Shortcut pattern. Like for example: ctrl+alt+o.
+         * @param {String} desc Text description for the command.
+         * @param {String/Function} cmdFunc Command name string or function to execute when the key is pressed.
+         * @param {Object} sc Optional scope to execute the function in.
+         * @return {Boolean} true/false state if the shortcut was added or not.
+         */
+		self.add = function (pattern, desc, cmdFunc, scope) {
+			var cmd, shortcut;
 
 			cmd = cmdFunc;
 
-			if (typeof(cmdFunc) === 'string') {
-				cmdFunc = function() {
+			if (typeof (cmdFunc) === 'string') {
+				cmdFunc = function () {
 					editor.execCommand(cmd, false, null);
 				};
 			} else if (Tools.isArray(cmd)) {
-				cmdFunc = function() {
+				cmdFunc = function () {
 					editor.execCommand(cmd[0], cmd[1], cmd[2]);
 				};
 			}
 
-			each(explode(pattern.toLowerCase()), function(pattern) {
-				var shortcut = {
-					func: cmdFunc,
-					scope: scope || editor,
-					desc: editor.translate(desc),
-					alt: false,
-					ctrl: false,
-					shift: false
-				};
-
-				each(explode(pattern, '+'), function(value) {
-					switch (value) {
-						case 'alt':
-						case 'ctrl':
-						case 'shift':
-							shortcut[value] = true;
-							break;
-
-						default:
-							// Allow numeric keycodes like ctrl+219 for ctrl+[
-							if (/^[0-9]{2,}$/.test(value)) {
-								shortcut.keyCode = parseInt(value, 10);
-							} else {
-								shortcut.charCode = value.charCodeAt(0);
-								shortcut.keyCode = keyCodeLookup[value] || value.toUpperCase().charCodeAt(0);
-							}
-					}
-				});
-
+			each(explode(pattern.toLowerCase()), function (pattern) {
+				shortcut = createShortcut(pattern, desc, cmdFunc, scope);
 				shortcuts[
-					(shortcut.ctrl ? 'ctrl' : '') + ',' +
-					(shortcut.alt ? 'alt' : '') + ',' +
-					(shortcut.shift ? 'shift' : '') + ',' +
-					shortcut.keyCode
+                    (shortcut.ctrl ? 'ctrl' : '') + ',' +
+                    (shortcut.alt ? 'alt' : '') + ',' +
+                    (shortcut.shift ? 'shift' : '') + ',' +
+                    shortcut.keyCode
 				] = shortcut;
 			});
 
 			return true;
+		};
+
+		/**
+         * remove a keyboard shortcut.
+         *
+         * @method remove
+         * @param {String} pattern Shortcut pattern. Like for example: ctrl+alt+o.
+         * @return {Boolean} true/false state if the shortcut was removed or not.
+         */
+		self.remove = function (pattern) {
+			var shortcut = createShortcut(pattern),
+                id = (shortcut.ctrl ? 'ctrl' : '') + ','
+                    + (shortcut.alt ? 'alt' : '') + ','
+                    + (shortcut.shift ? 'shift' : '') + ','
+                    + shortcut.keyCode;
+			if (shortcuts[id]) {
+				delete shortcuts[id];
+				return true;
+			}
+			return false;
 		};
 	};
 });
