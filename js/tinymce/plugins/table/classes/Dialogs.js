@@ -168,12 +168,22 @@ define("tinymce/tableplugin/Dialogs", [
 			data.style = dom.serializeStyle(css);
 		}
 
+		function mergeStyles(dom, elm, styles) {
+			var css = dom.parseStyle(dom.getAttrib(elm, 'style'));
+
+			each(styles, function(style) {
+				css[style.name] = style.value;
+			});
+
+			dom.setAttrib(elm, 'style', dom.serializeStyle(dom.parseStyle(dom.serializeStyle(css))));
+		}
+
 		self.tableProps = function() {
 			self.table(true);
 		};
 
 		self.table = function(isProps) {
-			var dom = editor.dom, tableElm, colsCtrl, rowsCtrl, classListCtrl, data = {}, generalTableForm;
+			var dom = editor.dom, tableElm, colsCtrl, rowsCtrl, classListCtrl, data = {}, generalTableForm, stylesToMerge;
 
 			function onSubmitTableForm() {
 
@@ -210,21 +220,15 @@ define("tinymce/tableplugin/Dialogs", [
 					});
 
 					if (editor.settings.table_style_by_css) {
-						//style table only by using the style property or table and cells by using border property
-						dom.setStyles(tableElm, {
-							'border': data.border || dom.parseStyle(data.style).border || "",
-							'border-spacing': addSizeSuffix(data.cellspacing),
-							'background-color': data.backgroundColor
-						});
+						stylesToMerge = [];
+						stylesToMerge.push({name:'border', value: data.border});
+						stylesToMerge.push({name:'border-spacing', value: addSizeSuffix(data.cellspacing)});
+						mergeStyles(dom, tableElm, stylesToMerge);
 						dom.setAttribs(tableElm, {
-							'data-border': data.border,
+							'data-border-color': data.borderColor,
 							'data-cell-padding': data.cellpadding,
-							'data-border-color': data.borderColor
+							'data-border': data.border
 						});
-						if (data.borderColor) {
-							//Combine styles
-							dom.setStyle(tableElm, 'border-color', data.borderColor);
-						}
 						if (tableElm.children) {
 							for (var i = 0; i < tableElm.children.length; i++) {
 								styleTDTH(tableElm.children[i], 'border', data.border);
@@ -259,7 +263,6 @@ define("tinymce/tableplugin/Dialogs", [
 						captionElm.innerHTML = !Env.ie ? '<br data-mce-bogus="1"/>' : '\u00a0';
 						tableElm.insertBefore(captionElm, tableElm.firstChild);
 					}
-
 					unApplyAlign(tableElm);
 					if (data.align) {
 						editor.formatter.apply('align' + data.align, {}, tableElm);
@@ -282,7 +285,7 @@ define("tinymce/tableplugin/Dialogs", [
 						cellpadding: dom.getAttrib(tableElm, 'data-cell-padding') || dom.getAttrib(tableElm, 'cellpadding'),
 						border: dom.getAttrib(tableElm, 'data-border') || dom.getStyle(tableElm, 'border') ||
 							dom.getAttrib(tableElm, 'border') ,
-						borderColor: dom.getAttrib(tableElm, 'data-border-color') || dom.getStyle(tableElm, 'border-color'),
+						borderColor: dom.getAttrib(tableElm, 'data-border-color'),
 						caption: !!dom.select('caption', tableElm)[0],
 						'class': dom.getAttrib(tableElm, 'class')
 					};
