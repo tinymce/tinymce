@@ -9,7 +9,7 @@ module.exports = function(grunt) {
 
 		eslint: {
 			options: {
-				config: ".eslintrc",
+				config: ".eslintrc"
 			},
 
 			core: ["js/tinymce/classes/**/*.js"],
@@ -41,7 +41,7 @@ module.exports = function(grunt) {
 
 		jscs: {
 			options: {
-				config: ".jscsrc",
+				config: ".jscsrc"
 			},
 
 			core: ["js/tinymce/**/*.js"],
@@ -151,7 +151,7 @@ module.exports = function(grunt) {
 					expose: "public",
 					compress: true,
 
-					from: "Plugin.js",
+					from: "Plugin.js"
 				}
 			},
 
@@ -262,7 +262,7 @@ module.exports = function(grunt) {
 
 		uglify: {
 			options: {
-				beautify : {
+				beautify: {
 					ascii_only: true
 				}
 			},
@@ -446,7 +446,22 @@ module.exports = function(grunt) {
 							"license": ["LGPL-2.1"],
 							"keywords": ["editor", "wysiwyg", "tinymce", "richtext", "javascript", "html"],
 							"homepage": "http://www.tinymce.com",
-							"type": "library",
+							"type": "component",
+							"extra": {
+								"component": {
+									"scripts": [
+										"tinymce.js",
+										"plugins/*/plugin.js",
+										"themes/*/theme.js"
+									],
+									"files": [
+										"tinymce.min.js",
+										"plugins/*/plugin.min.js",
+										"themes/*/theme.min.js",
+										"skins/**"
+									]
+								}
+							},
 							"archive": {
 								"exclude": ["readme.md", "bower.js", "package.json"]
 							}
@@ -677,7 +692,7 @@ module.exports = function(grunt) {
 					spawn: false
 				}
 			}
-		},
+		}
 	});
 
 	require("load-grunt-tasks")(grunt);
