@@ -67,12 +67,12 @@ define("tinymce/util/I18n", [], function() {
 			if (text.push) {
 				var values = text.slice(1);
 
-				text = (data[text[0]] || text[0]).replace(/\{([^\}]+)\}/g, function(match1, match2) {
+				text = (data[text[0]] || text[0]).replace(/\{([0-9]+)\}/g, function(match1, match2) {
 					return values[match2];
 				});
 			}
 
-			return data[text] || text;
+			return (data[text] || text).replace(/{context:\w+}$/, '');
 		},
 
 		data: data
