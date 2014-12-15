@@ -1,5 +1,6 @@
 Version 4.1.8 (2014-12-xx)
 	Added new html5 sizes attribute to img elements used together with srcset.
+	Added new elementpath option that makes it possible to disable the element path but keep the statusbar.
 	Fixed bug where pressing enter twice before a table moves the cursor in the table and causes a javascript error.
 	Fixed bug where advanced image styles were not respected.
 	Removed address from the default list of block formats since it tends to be missused.

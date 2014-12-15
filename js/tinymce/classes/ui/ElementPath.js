@@ -42,34 +42,36 @@ define("tinymce/ui/ElementPath", [
 				return false;
 			}
 
-			self.on('select', function(e) {
-				editor.focus();
-				editor.selection.select(this.data()[e.index].element);
-				editor.nodeChanged();
-			});
+			if (editor.settings.elementpath !== false) {
+				self.on('select', function(e) {
+					editor.focus();
+					editor.selection.select(this.data()[e.index].element);
+					editor.nodeChanged();
+				});
 
-			editor.on('nodeChange', function(e) {
-				var outParents = [], parents = e.parents, i = parents.length;
+				editor.on('nodeChange', function(e) {
+					var outParents = [], parents = e.parents, i = parents.length;
 
-				while (i--) {
-					if (parents[i].nodeType == 1 && !isHidden(parents[i])) {
-						var args = editor.fire('ResolveName', {
-							name: parents[i].nodeName.toLowerCase(),
-							target: parents[i]
-						});
+					while (i--) {
+						if (parents[i].nodeType == 1 && !isHidden(parents[i])) {
+							var args = editor.fire('ResolveName', {
+								name: parents[i].nodeName.toLowerCase(),
+								target: parents[i]
+							});
 
-						if (!args.isDefaultPrevented()) {
-							outParents.push({name: args.name, element: parents[i]});
-						}
+							if (!args.isDefaultPrevented()) {
+								outParents.push({name: args.name, element: parents[i]});
+							}
 
-						if (args.isPropagationStopped()) {
-							break;
+							if (args.isPropagationStopped()) {
+								break;
+							}
 						}
 					}
-				}
 
-				self.data(outParents);
-			});
+					self.data(outParents);
+				});
+			}
 
 			return self._super();
 		}
