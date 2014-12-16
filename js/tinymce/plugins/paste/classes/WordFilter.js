@@ -11,7 +11,7 @@
 /**
  * This class parses word HTML into proper TinyMCE markup.
  *
- * @class tinymce.pasteplugin.Quirks
+ * @class tinymce.pasteplugin.WordFilter
  * @private
  */
 define("tinymce/pasteplugin/WordFilter", [
