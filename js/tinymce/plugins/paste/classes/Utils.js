@@ -11,7 +11,7 @@
 /**
  * This class contails various utility functions for the paste plugin.
  *
- * @class tinymce.pasteplugin.Clipboard
+ * @class tinymce.pasteplugin.Utils
  * @private
  */
 define("tinymce/pasteplugin/Utils", [

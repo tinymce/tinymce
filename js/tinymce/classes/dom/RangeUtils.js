@@ -12,7 +12,6 @@
  * This class contains a few utility methods for ranges.
  *
  * @class tinymce.dom.RangeUtils
- * @private
  */
 define("tinymce/dom/RangeUtils", [
 	"tinymce/util/Tools",
@@ -488,6 +487,41 @@ define("tinymce/dom/RangeUtils", [
 		}
 
 		return false;
+	};
+
+	/**
+	 * Gets the caret range for the given x/y location.
+	 *
+	 * @static
+	 * @method getCaretRangeFromPoint
+	 * @param {Number} x X coordinate for range
+	 * @param {Number} y Y coordinate for range
+	 * @param {Document} doc Document that x/y are relative to
+	 * @returns {Range} caret range
+	 */
+	RangeUtils.getCaretRangeFromPoint = function(x, y, doc) {
+		var rng, point;
+
+		if (doc.caretPositionFromPoint) {
+			point = doc.caretPositionFromPoint(x, y);
+			rng = doc.createRange();
+			rng.setStart(point.offsetNode, point.offset);
+			rng.collapse(true);
+		} else if (doc.caretRangeFromPoint) {
+			rng = doc.caretRangeFromPoint(x, y);
+		} else if (doc.body.createTextRange) {
+			rng = doc.body.createTextRange();
+
+			try {
+				rng.moveToPoint(x, y);
+				rng.collapse(true);
+			} catch (ex) {
+				// Append to top or bottom depending on drop location
+				rng.collapse(y < doc.body.clientHeight);
+			}
+		}
+
+		return rng;
 	};
 
 	return RangeUtils;
