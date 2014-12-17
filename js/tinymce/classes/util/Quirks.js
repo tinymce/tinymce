@@ -111,6 +111,21 @@ define("tinymce/util/Quirks", [
 		}
 
 		/**
+		 * Inserts contents using the paste clipboard command if it's available if it isn't it will fallback
+		 * to the core command.
+		 *
+		 * @private
+		 * @param {String} content Content to insert at selection.
+		 */
+		function insertClipboardContents(content) {
+			if (editor.queryCommandSupported('mceInsertClipboardContent')) {
+				editor.execCommand('mceInsertClipboardContent', false, {content: content});
+			} else {
+				editor.execCommand('mceInsertContent', false, content);
+			}
+		}
+
+		/**
 		 * Fixes a WebKit bug when deleting contents using backspace or delete key.
 		 * WebKit will produce a span element if you delete across two block elements.
 		 *
@@ -312,7 +327,7 @@ define("tinymce/util/Quirks", [
 						// produces a green plus icon. When this happens the caretRangeFromPoint
 						// will return "null" even though the x, y coordinate is correct.
 						// But if we detach the insert from the drop event we will get a proper range
-						window.setTimeout(function () {
+						window.setTimeout(function() {
 							var pointRng = RangeUtils.getCaretRangeFromPoint(e.x, e.y, doc);
 
 							if (dragStartRng) {
@@ -321,9 +336,8 @@ define("tinymce/util/Quirks", [
 							}
 
 							customDelete();
-
 							selection.setRng(pointRng);
-							editor.execCommand('mceInsertClipboardContent', false, {content: internalContent});
+							insertClipboardContents(internalContent);
 						}, 0);
 					}
 				}
@@ -1230,7 +1244,7 @@ define("tinymce/util/Quirks", [
 
 						var rng = RangeUtils.getCaretRangeFromPoint(e.x, e.y, editor.getDoc());
 						selection.setRng(rng);
-						editor.execCommand('mceInsertClipboardContent', false, {content: internalContent});
+						insertClipboardContents(internalContent);
 					}
 				}
 			});
