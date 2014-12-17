@@ -57,9 +57,9 @@ function trimBrs(html) {
 }
 
 function execCommand(cmd) {
-	// Make sure we execute custom execCommands not browser commands
-	var cmdItem = editor.execCommands[cmd];
-	return cmdItem.func.call(cmdItem.scope, false, null);
+	if (editor.editorCommands.hasCustomCommand(cmd)) {
+		editor.execCommand(cmd);
+	}
 }
 
 test('Apply UL list to single P', function() {

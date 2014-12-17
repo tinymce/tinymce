@@ -29,12 +29,17 @@ define("tinymce/EditorCommands", [
 	var TRUE = true, FALSE = false;
 
 	return function(editor) {
-		var dom = editor.dom,
-			selection = editor.selection,
+		var dom, selection, formatter,
 			commands = {state: {}, exec: {}, value: {}},
 			settings = editor.settings,
-			formatter = editor.formatter,
 			bookmark;
+
+		editor.on('PreInit', function() {
+			dom = editor.dom;
+			selection = editor.selection;
+			settings = editor.settings;
+			formatter = editor.formatter;
+		});
 
 		/**
 		 * Executes the specified command.
@@ -45,16 +50,58 @@ define("tinymce/EditorCommands", [
 		 * @param {Object} value Optional value for command.
 		 * @return {Boolean} true/false if the command was found or not.
 		 */
-		function execCommand(command, ui, value) {
-			var func;
+		function execCommand(command, ui, value, args) {
+			var func, customCommand, state = 0;
 
-			command = command.toLowerCase();
-			if ((func = commands.exec[command])) {
-				func(command, ui, value);
-				return TRUE;
+			if (!/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel|mceRepaint)$/.test(command) && (!args || !args.skip_focus)) {
+				editor.focus();
 			}
 
-			return FALSE;
+			args = extend({}, args);
+			args = editor.fire('BeforeExecCommand', {command: command, ui: ui, value: value});
+			if (args.isDefaultPrevented()) {
+				return false;
+			}
+
+			customCommand = command.toLowerCase();
+			if ((func = commands.exec[customCommand])) {
+				func(customCommand, ui, value);
+				editor.fire('ExecCommand', {command: command, ui: ui, value: value});
+				return true;
+			}
+
+			// Plugin commands
+			each(editor.plugins, function(p) {
+				if (p.execCommand && p.execCommand(command, ui, value)) {
+					editor.fire('ExecCommand', {command: command, ui: ui, value: value});
+					state = true;
+					return false;
+				}
+			});
+
+			if (state) {
+				return state;
+			}
+
+			// Theme commands
+			if (editor.theme && editor.theme.execCommand && editor.theme.execCommand(command, ui, value)) {
+				editor.fire('ExecCommand', {command: command, ui: ui, value: value});
+				return true;
+			}
+
+			// Browser commands
+			try {
+				state = editor.getDoc().execCommand(command, ui, value);
+			} catch (ex) {
+				// Ignore old IE errors
+			}
+
+			if (state) {
+				editor.fire('ExecCommand', {command: command, ui: ui, value: value});
+				return true;
+			}
+
+			return false;
 		}
 
 		/**
@@ -67,12 +114,24 @@ define("tinymce/EditorCommands", [
 		function queryCommandState(command) {
 			var func;
 
+			// Is hidden then return undefined
+			if (editor._isHidden()) {
+				return;
+			}
+
 			command = command.toLowerCase();
 			if ((func = commands.state[command])) {
 				return func(command);
 			}
 
-			return -1;
+			// Browser commands
+			try {
+				return editor.getDoc().queryCommandState(command);
+			} catch (ex) {
+				// Fails sometimes see bug: 1896577
+			}
+
+			return false;
 		}
 
 		/**
@@ -85,12 +144,22 @@ define("tinymce/EditorCommands", [
 		function queryCommandValue(command) {
 			var func;
 
+			// Is hidden then return undefined
+			if (editor._isHidden()) {
+				return;
+			}
+
 			command = command.toLowerCase();
 			if ((func = commands.value[command])) {
 				return func(command);
 			}
 
-			return FALSE;
+			// Browser commands
+			try {
+				return editor.getDoc().queryCommandValue(command);
+			} catch (ex) {
+				// Fails sometimes see bug: 1896577
+			}
 		}
 
 		/**
@@ -110,12 +179,67 @@ define("tinymce/EditorCommands", [
 			});
 		}
 
+		function addCommand(command, callback, scope) {
+			command = command.toLowerCase();
+			commands.exec[command] = function(command, ui, value, args) {
+				return callback.call(scope || editor, ui, value, args);
+			};
+		}
+
+		/**
+		 * Returns true/false if the command is supported or not.
+		 *
+		 * @method queryCommandSupported
+		 * @param {String} cmd Command that we check support for.
+		 * @return {Boolean} true/false if the command is supported or not.
+		 */
+		function queryCommandSupported(command) {
+			command = command.toLowerCase();
+
+			if (commands.exec[command]) {
+				return true;
+			}
+
+			// Browser commands
+			try {
+				return editor.getDoc().queryCommandSupported(command);
+			} catch (ex) {
+				// Fails sometimes see bug: 1896577
+			}
+
+			return false;
+		}
+
+		function addQueryStateHandler(command, callback, scope) {
+			command = command.toLowerCase();
+			commands.state[command] = function() {
+				return callback.call(scope || editor);
+			};
+		}
+
+		function addQueryValueHandler(command, callback, scope) {
+			command = command.toLowerCase();
+			commands.value[command] = function() {
+				return callback.call(scope || editor);
+			};
+		}
+
+		function hasCustomCommand(command) {
+			command = command.toLowerCase();
+			return !!commands.exec[command];
+		}
+
 		// Expose public methods
 		extend(this, {
 			execCommand: execCommand,
 			queryCommandState: queryCommandState,
 			queryCommandValue: queryCommandValue,
-			addCommands: addCommands
+			queryCommandSupported: queryCommandSupported,
+			addCommands: addCommands,
+			addCommand: addCommand,
+			addQueryStateHandler: addQueryStateHandler,
+			addQueryValueHandler: addQueryValueHandler,
+			hasCustomCommand: hasCustomCommand
 		});
 
 		// Private methods

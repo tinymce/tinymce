@@ -238,12 +238,8 @@ define("tinymce/Editor", [
 
 		// Creates all events like onClick, onSetContent etc see Editor.Events.js for the actual logic
 		self.shortcuts = new Shortcuts(self);
-
-		// Internal command handler objects
-		self.execCommands = {};
-		self.queryStateCommands = {};
-		self.queryValueCommands = {};
 		self.loadedCSS = {};
+		self.editorCommands = new EditorCommands(self);
 
 		if (settings.target) {
 			self.targetElm = settings.target;
@@ -926,7 +922,6 @@ define("tinymce/Editor", [
 
 			self.forceBlocks = new ForceBlocks(self);
 			self.enterKey = new EnterKey(self);
-			self.editorCommands = new EditorCommands(self);
 			self._nodeChangeDispatcher = new NodeChange(self);
 
 			self.fire('PreInit');
@@ -1321,7 +1316,7 @@ define("tinymce/Editor", [
 			 * @param {Object} value Optional value for command.
 			 * @return {Boolean} True/false state if the command was handled or not.
 			 */
-			this.execCommands[name] = {func: callback, scope: scope || this};
+			this.editorCommands.addCommand(name, callback, scope);
 		},
 
 		/**
@@ -1340,7 +1335,7 @@ define("tinymce/Editor", [
 			 * @callback addQueryStateHandlerCallback
 			 * @return {Boolean} True/false state if the command is enabled or not like is it bold.
 			 */
-			this.queryStateCommands[name] = {func: callback, scope: scope || this};
+			this.editorCommands.addQueryStateHandler(name, callback, scope);
 		},
 
 		/**
@@ -1359,7 +1354,7 @@ define("tinymce/Editor", [
 			 * @callback addQueryValueHandlerCallback
 			 * @return {Object} Value of the command or undefined.
 			 */
-			this.queryValueCommands[name] = {func: callback, scope: scope || this};
+			this.editorCommands.addQueryValueHandler(name, callback, scope);
 		},
 
 		/**
@@ -1386,68 +1381,10 @@ define("tinymce/Editor", [
 		 * @param {String} cmd Command name to execute, for example mceLink or Bold.
 		 * @param {Boolean} ui True/false state if a UI (dialog) should be presented or not.
 		 * @param {mixed} value Optional command value, this can be anything.
-		 * @param {Object} a Optional arguments object.
+		 * @param {Object} args Optional arguments object.
 		 */
 		execCommand: function(cmd, ui, value, args) {
-			var self = this, state = 0, cmdItem;
-
-			if (!/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel|mceRepaint)$/.test(cmd) && (!args || !args.skip_focus)) {
-				self.focus();
-			}
-
-			args = extend({}, args);
-			args = self.fire('BeforeExecCommand', {command: cmd, ui: ui, value: value});
-			if (args.isDefaultPrevented()) {
-				return false;
-			}
-
-			// Registred commands
-			if ((cmdItem = self.execCommands[cmd])) {
-				// Fall through on true
-				if (cmdItem.func.call(cmdItem.scope, ui, value) !== true) {
-					self.fire('ExecCommand', {command: cmd, ui: ui, value: value});
-					return true;
-				}
-			}
-
-			// Plugin commands
-			each(self.plugins, function(p) {
-				if (p.execCommand && p.execCommand(cmd, ui, value)) {
-					self.fire('ExecCommand', {command: cmd, ui: ui, value: value});
-					state = true;
-					return false;
-				}
-			});
-
-			if (state) {
-				return state;
-			}
-
-			// Theme commands
-			if (self.theme && self.theme.execCommand && self.theme.execCommand(cmd, ui, value)) {
-				self.fire('ExecCommand', {command: cmd, ui: ui, value: value});
-				return true;
-			}
-
-			// Editor commands
-			if (self.editorCommands.execCommand(cmd, ui, value)) {
-				self.fire('ExecCommand', {command: cmd, ui: ui, value: value});
-				return true;
-			}
-
-			// Browser commands
-			try {
-				state = self.getDoc().execCommand(cmd, ui, value);
-			} catch (ex) {
-				// Ignore old IE errors
-			}
-
-			if (state) {
-				self.fire('ExecCommand', {command: cmd, ui: ui, value: value});
-				return true;
-			}
-
-			return false;
+			return this.editorCommands.execCommand(cmd, ui, value, args);
 		},
 
 		/**
@@ -1458,35 +1395,7 @@ define("tinymce/Editor", [
 		 * @return {Boolean} Command specific state, for example if bold is enabled or not.
 		 */
 		queryCommandState: function(cmd) {
-			var self = this, queryItem, returnVal;
-
-			// Is hidden then return undefined
-			if (self._isHidden()) {
-				return;
-			}
-
-			// Registred commands
-			if ((queryItem = self.queryStateCommands[cmd])) {
-				returnVal = queryItem.func.call(queryItem.scope);
-
-				// Fall though on non boolean returns
-				if (returnVal === true || returnVal === false) {
-					return returnVal;
-				}
-			}
-
-			// Editor commands
-			returnVal = self.editorCommands.queryCommandState(cmd);
-			if (returnVal !== -1) {
-				return returnVal;
-			}
-
-			// Browser commands
-			try {
-				return self.getDoc().queryCommandState(cmd);
-			} catch (ex) {
-				// Fails sometimes see bug: 1896577
-			}
+			return this.editorCommands.queryCommandState(cmd);
 		},
 
 		/**
@@ -1497,35 +1406,18 @@ define("tinymce/Editor", [
 		 * @return {Object} Command specific value, for example the current font size.
 		 */
 		queryCommandValue: function(cmd) {
-			var self = this, queryItem, returnVal;
+			return this.editorCommands.queryCommandValue(cmd);
+		},
 
-			// Is hidden then return undefined
-			if (self._isHidden()) {
-				return;
-			}
-
-			// Registred commands
-			if ((queryItem = self.queryValueCommands[cmd])) {
-				returnVal = queryItem.func.call(queryItem.scope);
-
-				// Fall though on true
-				if (returnVal !== true) {
-					return returnVal;
-				}
-			}
-
-			// Editor commands
-			returnVal = self.editorCommands.queryCommandValue(cmd);
-			if (returnVal !== undefined) {
-				return returnVal;
-			}
-
-			// Browser commands
-			try {
-				return self.getDoc().queryCommandValue(cmd);
-			} catch (ex) {
-				// Fails sometimes see bug: 1896577
-			}
+		/**
+		 * Returns true/false if the command is supported or not.
+		 *
+		 * @method queryCommandSupported
+		 * @param {String} cmd Command that we check support for.
+		 * @return {Boolean} true/false if the command is supported or not.
+		 */
+		queryCommandSupported: function(cmd) {
+			return this.editorCommands.queryCommandSupported(cmd);
 		},
 
 		/**
