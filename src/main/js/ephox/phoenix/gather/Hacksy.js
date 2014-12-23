@@ -55,8 +55,9 @@ define(
 
       var substring = function (text) {
         // Will need to generalise the word breaks.
-        return RobinWord.rightBreak(text).map(function (index) {
-          return text.substring(index + 1);
+        return RobinWord.leftBreak(text).map(function (index) {
+          console.log('r-index at: ', index, '[' + text + ']');
+          return [ index + 1, text.length ];
         });
       };
 
@@ -83,8 +84,9 @@ define(
 
       var substring = function (text) {
         // Will need to generalise the word breaks.
-        return RobinWord.leftBreak(text).map(function (index) {
-          return text.substring(0, index);
+        return RobinWord.rightBreak(text).map(function (index) {
+          console.log('l-index at: ', index, '[' + text + ']');
+          return [ 0, index ];
         });
       };
 

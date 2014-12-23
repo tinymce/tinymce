@@ -26,8 +26,10 @@ define(
         else if (universe.property().isText(n.item())) {
           var text = universe.property().getText(n.item());
           return direction.substring(text).fold(function () {
+            console.log('no word break in: [' + text + ']');
             return [ sss(n.item(), 0, text.length) ].concat(words(universe, n.item(), n.mode(), direction));
           }, function (subs) {
+            console.log('word break in: [' + text + ']', subs);
             return subs[0] !== subs[1] ? [ sss(n.item(), subs[0], subs[1]) ] : [];
           });
         } else {
