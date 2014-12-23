@@ -29,7 +29,7 @@ define(
           if (space > -1) {
             var subs = direction.substring(universe, n.item(), space);
             console.log('subs: ', subs);
-            return [ sss(n.item(), subs[0], subs[1]) ];
+            return subs[0] !== subs[1] ? [ sss(n.item(), subs[0], subs[1]) ] : [];
           } else {
             return [ sss(n.item(), 0, text.length) ].concat(words(universe, n.item(), n.mode(), direction));
           }
@@ -39,7 +39,7 @@ define(
         }
       }).getOr([]);
 
-      return base.concat(rest);
+      return direction.concat(base, rest);
     };
 
     return {

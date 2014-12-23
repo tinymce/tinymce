@@ -54,13 +54,18 @@ define(
 
       var substring = function (universe, item, index) {
         var text = universe.property().getText(item);
-        return [ index, text.length ];
+        return [ index + 1, text.length ];
+      };
+
+      var concat = function (start, rest) {
+        return rest.concat(start);
       };
 
       return {
         sibling: sibling,
         first: first,
-        substring: substring
+        substring: substring,
+        concat: concat
       };
     };
 
@@ -77,10 +82,15 @@ define(
         return [ 0, index ];
       };
 
+      var concat = function (start, rest) {
+        return start.concat(rest);
+      };
+
       return {
         sibling: sibling,
         first: first,
-        substring: substring
+        substring: substring,
+        concat: concat
       };
     };
 
