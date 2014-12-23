@@ -5,12 +5,14 @@ test(
     'ephox.boss.api.Gene',
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
+    'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.phoenix.gather.HacksyLeft',
     'ephox.phoenix.gather.HacksyRight',
     'ephox.phoenix.test.Finder'
   ],
 
-  function (Gene, TestUniverse, TextGene, HacksyLeft, HacksyRight, Finder) {
+  function (Gene, TestUniverse, TextGene, Fun, Option, HacksyLeft, HacksyRight, Finder) {
     var universe = TestUniverse(
       Gene('root', 'root', [
         Gene('a', 'node', [
@@ -58,6 +60,16 @@ test(
     check('d', 'c', HacksyRight.advance);
     checkNone('d', HacksyRight.advance);
     checkNone('e', HacksyRight.advance);
+
+
+    // Testing some hackery
+    var start = Finder.get(universe, 'a');
+    var current = Option.some({ item: Fun.constant(start), mode: Fun.constant(HacksyRight.advance) });
+    while (current.isSome()) {
+      var c = current.getOrDie();
+      current = HacksyRight.go(universe, c.item(), c.mode());
+      console.log('c: ', c.item().id);
+    }
 
   }
 );

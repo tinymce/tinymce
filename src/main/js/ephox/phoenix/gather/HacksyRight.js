@@ -33,7 +33,7 @@ define(
           return go(universe, item, backtrack);
         });
       } else {
-        return go(universe, item, backtrack);
+        return backtrack(universe, item);
       }
     };
 
