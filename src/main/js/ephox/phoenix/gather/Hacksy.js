@@ -22,6 +22,7 @@ define(
     };
 
     var advance = function (universe, item, direction) {
+      console.log('args: ', arguments);
       var children = universe.property().children(item);
       var result = direction.first(children);
       return result.map(function (r) {

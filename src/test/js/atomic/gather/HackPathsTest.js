@@ -65,7 +65,7 @@ test(
 
 
     var checkPath = function (expected, id, direction) {
-      var act = HackPaths.words(universe, Finder.get(universe, id), Hacksy.advance, direction);
+      var act = HackPaths.words(universe, Finder.get(universe, id), direction);
       assert.eq(expected, Arr.map(act, function (a) {
         var text = universe.property().getText(a.item());
         return text.substring(a.start(), a.finish());
