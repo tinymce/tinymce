@@ -7,12 +7,10 @@ test(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.phoenix.gather.Hacksy',
-    'ephox.phoenix.gather.HacksyLeft',
-    'ephox.phoenix.gather.HacksyRight',
     'ephox.phoenix.test.Finder'
   ],
 
-  function (Gene, TestUniverse, Fun, Option, Hacksy, HacksyLeft, HacksyRight, Finder) {
+  function (Gene, TestUniverse, Fun, Option, Hacksy, Finder) {
     var universe = TestUniverse(
       Gene('a', 'node', [
         Gene('b', 'node', [ ]),
@@ -105,14 +103,10 @@ test(
       ])
     );
 
-    // Testing some hackery
-    var start = Finder.get(multiverse, '3');
-    var current = Option.some({ item: Fun.constant(start), mode: Fun.constant(HacksyLeft.advance) });
-
     var checkPath = function (expected, id, direction) {
       var start = Finder.get(multiverse, id);
       var path = [];
-      var current = Option.some({ item: Fun.constant(start), mode: Fun.constant(HacksyLeft.advance) });
+      var current = Option.some({ item: Fun.constant(start), mode: Fun.constant(Hacksy.advance) });
       while (current.isSome()) {
         var c = current.getOrDie();
         path = path.concat(c.item().id);
