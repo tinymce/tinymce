@@ -75,5 +75,6 @@ test(
     checkPath([ 'This is ', 'going' ], 'this_is_', Hacksy.right());
     checkPath([ 'to' ], 'to', Hacksy.left());
     checkPath([ 'to' ], 'to', Hacksy.right());
+    checkPath([  ], 'going_', Hacksy.left());
   }
 );

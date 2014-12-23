@@ -25,14 +25,11 @@ define(
         // If there is a space in the word, split
         else if (universe.property().isText(n.item())) {
           var text = universe.property().getText(n.item());
-          var space = text.indexOf(' ');
-          if (space > -1) {
-            var subs = direction.substring(universe, n.item(), space);
-            console.log('subs: ', subs);
-            return subs[0] !== subs[1] ? [ sss(n.item(), subs[0], subs[1]) ] : [];
-          } else {
+          return direction.substring(text).fold(function () {
             return [ sss(n.item(), 0, text.length) ].concat(words(universe, n.item(), n.mode(), direction));
-          }
+          }, function (subs) {
+            return subs[0] !== subs[1] ? [ sss(n.item(), subs[0], subs[1]) ] : [];
+          });
         } else {
           // keeping going.
           return words(universe, n.item(), n.mode(), direction);

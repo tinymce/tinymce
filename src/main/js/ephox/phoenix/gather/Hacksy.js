@@ -3,10 +3,11 @@ define(
 
   [
     'ephox.perhaps.Option',
+    'ephox.phoenix.gather.RobinWord',
     'ephox.scullion.Struct'
   ],
 
-  function (Option, Struct) {
+  function (Option, RobinWord, Struct) {
     var traverse = Struct.immutable('item', 'mode');
     var backtrack = function (universe, item, direction) {
       return universe.property().parent(item).map(function (p) {
@@ -52,9 +53,11 @@ define(
         return children.length > 0 ? Option.some(children[children.length - 1]) : Option.none();
       };
 
-      var substring = function (universe, item, index) {
-        var text = universe.property().getText(item);
-        return [ index + 1, text.length ];
+      var substring = function (text) {
+        // Will need to generalise the word breaks.
+        return RobinWord.rightBreak(text).map(function (index) {
+          return text.substring(index + 1);
+        });
       };
 
       var concat = function (start, rest) {
@@ -78,8 +81,11 @@ define(
         return children.length > 0 ? Option.some(children[0]) : Option.none();
       };
 
-      var substring = function (universe, item, index) {
-        return [ 0, index ];
+      var substring = function (text) {
+        // Will need to generalise the word breaks.
+        return RobinWord.leftBreak(text).map(function (index) {
+          return text.substring(0, index);
+        });
       };
 
       var concat = function (start, rest) {
