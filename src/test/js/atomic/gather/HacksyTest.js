@@ -4,7 +4,6 @@ test(
   [
     'ephox.boss.api.Gene',
     'ephox.boss.api.TestUniverse',
-    'ephox.boss.api.TextGene',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.phoenix.gather.HacksyLeft',
@@ -12,7 +11,7 @@ test(
     'ephox.phoenix.test.Finder'
   ],
 
-  function (Gene, TestUniverse, TextGene, Fun, Option, HacksyLeft, HacksyRight, Finder) {
+  function (Gene, TestUniverse, Fun, Option, HacksyLeft, HacksyRight, Finder) {
     var universe = TestUniverse(
       Gene('root', 'root', [
         Gene('a', 'node', [
@@ -61,13 +60,47 @@ test(
     checkNone('d', HacksyRight.advance);
     checkNone('e', HacksyRight.advance);
 
+    var multiverse = TestUniverse(
+      Gene('root', 'root', [
+        Gene('1', 'node', [
+          Gene('1.1', 'node', [
+            Gene('1.1.1', 'node', [])
+          ]),
+          Gene('1.2', 'node', [
+            Gene('1.2.1', 'node', [
+              Gene('1.2.1.1', 'node', []),
+              Gene('1.2.1.2', 'node', [])
+            ])
+          ]),
+          Gene('1.3', 'node', [])
+        ]),
+        Gene('2', 'node', [
+          Gene('2.1', 'node', []),
+          Gene('2.2', 'node', [
+            Gene('2.2.1', 'node', []),
+            Gene('2.2.2', 'node', [])
+          ])
+        ]),
+        Gene('3', 'node', [
+          Gene('3.1', 'node', []),
+          Gene('3.2', 'node', [
+            Gene('3.2.1', 'node', [
+              Gene('3.2.1.1', 'node', []),
+              Gene('3.2.1.2', 'node', [])
+            ]),
+            Gene('3.2.2', 'node', []),
+          ]),
+          Gene('3.3', 'node', [])
+        ])
+      ])
+    );
 
     // Testing some hackery
-    var start = Finder.get(universe, 'a');
-    var current = Option.some({ item: Fun.constant(start), mode: Fun.constant(HacksyRight.advance) });
+    var start = Finder.get(multiverse, '3');
+    var current = Option.some({ item: Fun.constant(start), mode: Fun.constant(HacksyLeft.advance) });
     while (current.isSome()) {
       var c = current.getOrDie();
-      current = HacksyRight.go(universe, c.item(), c.mode());
+      current = HacksyLeft.go(multiverse, c.item(), c.mode());
       console.log('c: ', c.item().id);
     }
 

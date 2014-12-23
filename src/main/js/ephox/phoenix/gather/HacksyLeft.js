@@ -39,7 +39,8 @@ define(
 
     return {
       backtrack: backtrack,
-      advance: advance
+      advance: advance,
+      go: go
     };
   }
 );
