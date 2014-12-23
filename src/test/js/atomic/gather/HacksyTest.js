@@ -40,6 +40,12 @@ test(
     check('c', 'd', Hacksy.backtrack, Hacksy.left());
     check('c', 'e', Hacksy.backtrack, Hacksy.left());
 
+    checkNone('a', Hacksy.sidestep, Hacksy.left());
+    checkNone('b', Hacksy.sidestep, Hacksy.left());
+    check('b', 'c', Hacksy.sidestep, Hacksy.left());
+    checkNone('d', Hacksy.sidestep, Hacksy.left());
+    check('d', 'e', Hacksy.sidestep, Hacksy.left());
+
     check('c', 'a', Hacksy.advance, Hacksy.left());
     checkNone('b', Hacksy.advance, Hacksy.left());
     check('e', 'c', Hacksy.advance, Hacksy.left());
@@ -52,11 +58,17 @@ test(
     check('c', 'd', Hacksy.backtrack, Hacksy.right());
     check('c', 'e', Hacksy.backtrack, Hacksy.right());
 
-    // check('b', 'a', Hacksy.advance, Hacksy.right());
-    // checkNone('b', Hacksy.advance, Hacksy.right());
-    // check('d', 'c', Hacksy.advance, Hacksy.right());
-    // checkNone('d', Hacksy.advance, Hacksy.right());
-    // checkNone('e', Hacksy.advance, Hacksy.right());
+    checkNone('a', Hacksy.sidestep, Hacksy.right());
+    check('c', 'b', Hacksy.sidestep, Hacksy.right());
+    checkNone('c', Hacksy.sidestep, Hacksy.right());
+    check('e', 'd', Hacksy.sidestep, Hacksy.right());
+    checkNone('e', Hacksy.sidestep, Hacksy.right());
+
+    check('b', 'a', Hacksy.advance, Hacksy.right());
+    checkNone('b', Hacksy.advance, Hacksy.right());
+    check('d', 'c', Hacksy.advance, Hacksy.right());
+    checkNone('d', Hacksy.advance, Hacksy.right());
+    checkNone('e', Hacksy.advance, Hacksy.right());
 
     var multiverse = TestUniverse(
       Gene('root', 'root', [
