@@ -9,12 +9,14 @@ define(
   function (Option, Struct) {
     var traverse = Struct.immutable('item', 'mode');
     var backtrack = function (universe, item) {
-      return universe.query().prevSibling(item).fold(function () {
-        return universe.property().parent(item).bind(function (parent) {
-          return backtrack(universe, parent);
-        });
-      }, function (p) {
-        return Option.some(traverse(p, advance));
+      return universe.property().parent(item).map(function (p) {
+        return traverse(p, sidestep);
+      });
+    };
+
+    var sidestep = function (universe, item) {
+      return universe.query().prevSibling(item).map(function (p) {
+        return traverse(p, advance);
       });
     };
 
@@ -30,8 +32,12 @@ define(
       if (mode === advance) {
         // try to advance, and if not, backtrack
         return advance(universe, item).orThunk(function () {
-          return go(universe, item, backtrack);
+          return go(universe, item, sidestep);
         });
+      } else if (mode === sidestep) {
+        return sidestep(universe, item).orThunk(function () {
+          return backtrack(universe, item);
+        })
       } else {
         return backtrack(universe, item);
       }
@@ -39,6 +45,7 @@ define(
 
     return {
       backtrack: backtrack,
+      sidestep: sidestep,
       advance: advance,
       go: go
     };

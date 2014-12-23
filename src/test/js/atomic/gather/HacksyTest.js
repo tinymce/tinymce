@@ -6,59 +6,57 @@ test(
     'ephox.boss.api.TestUniverse',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.phoenix.gather.Hacksy',
     'ephox.phoenix.gather.HacksyLeft',
     'ephox.phoenix.gather.HacksyRight',
     'ephox.phoenix.test.Finder'
   ],
 
-  function (Gene, TestUniverse, Fun, Option, HacksyLeft, HacksyRight, Finder) {
+  function (Gene, TestUniverse, Fun, Option, Hacksy, HacksyLeft, HacksyRight, Finder) {
     var universe = TestUniverse(
-      Gene('root', 'root', [
-        Gene('a', 'node', [
-          Gene('b', 'node', [ ]),
-          Gene('c', 'node', [
-            Gene('d', 'node', []),
-            Gene('e', 'node', [])
-          ])
+      Gene('a', 'node', [
+        Gene('b', 'node', [ ]),
+        Gene('c', 'node', [
+          Gene('d', 'node', []),
+          Gene('e', 'node', [])
         ])
       ])
     );
 
-    var checkNone = function (id, traverse) {
+    var checkNone = function (id, traverse, direction) {
       var item = Finder.get(universe, id);
-      assert.eq(true, traverse(universe, item).isNone());
+      assert.eq(true, traverse(universe, item, direction).isNone());
     };
 
-    var check = function (expected, id, traverse) {
+    var check = function (expected, id, traverse, direction) {
       var item = Finder.get(universe, id);
-      var actual = traverse(universe, item).getOrDie();
-      console.log('actual: ', actual.item().id);
+      var actual = traverse(universe, item, direction).getOrDie();
       assert.eq(expected, actual.item().id);
     };
 
-    checkNone('a', HacksyLeft.backtrack);
-    checkNone('b', HacksyLeft.backtrack);
-    check('b', 'c', HacksyLeft.backtrack);
-    check('b', 'd', HacksyLeft.backtrack);
-    check('d', 'e', HacksyLeft.backtrack);
+    checkNone('a', Hacksy.backtrack, Hacksy.left());
+    check('a', 'b', Hacksy.backtrack, Hacksy.left());
+    check('a', 'c', Hacksy.backtrack, Hacksy.left());
+    check('c', 'd', Hacksy.backtrack, Hacksy.left());
+    check('c', 'e', Hacksy.backtrack, Hacksy.left());
 
-    check('c', 'a', HacksyLeft.advance);
-    checkNone('b', HacksyLeft.advance);
-    check('e', 'c', HacksyLeft.advance);
-    checkNone('d', HacksyLeft.advance);
-    checkNone('e', HacksyLeft.advance);
+    check('c', 'a', Hacksy.advance, Hacksy.left());
+    checkNone('b', Hacksy.advance, Hacksy.left());
+    check('e', 'c', Hacksy.advance, Hacksy.left());
+    checkNone('d', Hacksy.advance, Hacksy.left());
+    checkNone('e', Hacksy.advance, Hacksy.left());
 
-    checkNone('a', HacksyRight.backtrack);
-    check('c', 'b', HacksyRight.backtrack);
-    checkNone('c', HacksyRight.backtrack);
-    check('e', 'd', HacksyRight.backtrack);
-    checkNone('e', HacksyRight.backtrack);
+    checkNone('a', Hacksy.backtrack, Hacksy.right());
+    check('a', 'b', Hacksy.backtrack, Hacksy.right());
+    check('a', 'c', Hacksy.backtrack, Hacksy.right());
+    check('c', 'd', Hacksy.backtrack, Hacksy.right());
+    check('c', 'e', Hacksy.backtrack, Hacksy.right());
 
-    check('b', 'a', HacksyRight.advance);
-    checkNone('b', HacksyRight.advance);
-    check('d', 'c', HacksyRight.advance);
-    checkNone('d', HacksyRight.advance);
-    checkNone('e', HacksyRight.advance);
+    // check('b', 'a', Hacksy.advance, Hacksy.right());
+    // checkNone('b', Hacksy.advance, Hacksy.right());
+    // check('d', 'c', Hacksy.advance, Hacksy.right());
+    // checkNone('d', Hacksy.advance, Hacksy.right());
+    // checkNone('e', Hacksy.advance, Hacksy.right());
 
     var multiverse = TestUniverse(
       Gene('root', 'root', [
@@ -98,11 +96,15 @@ test(
     // Testing some hackery
     var start = Finder.get(multiverse, '3');
     var current = Option.some({ item: Fun.constant(start), mode: Fun.constant(HacksyLeft.advance) });
+
+    var path = [];
     while (current.isSome()) {
       var c = current.getOrDie();
+      path = path.concat(c.item().id);
       current = HacksyLeft.go(multiverse, c.item(), c.mode());
-      console.log('c: ', c.item().id);
     }
+
+    assert.eq(10, path);
 
   }
 );
