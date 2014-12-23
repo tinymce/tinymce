@@ -52,9 +52,15 @@ define(
         return children.length > 0 ? Option.some(children[children.length - 1]) : Option.none();
       };
 
+      var substring = function (universe, item, index) {
+        var text = universe.property().getText(item);
+        return [ index, text.length ];
+      };
+
       return {
         sibling: sibling,
-        first: first
+        first: first,
+        substring: substring
       };
     };
 
@@ -67,9 +73,14 @@ define(
         return children.length > 0 ? Option.some(children[0]) : Option.none();
       };
 
+      var substring = function (universe, item, index) {
+        return [ 0, index ];
+      };
+
       return {
         sibling: sibling,
-        first: first
+        first: first,
+        substring: substring
       };
     };
 
