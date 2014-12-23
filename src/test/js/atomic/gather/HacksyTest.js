@@ -29,8 +29,10 @@ test(
     };
 
     var check = function (expected, id, traverse) {
-      var item = Finder.get(universe, id)
-      assert.eq(expected, traverse(universe, item).getOrDie().id);
+      var item = Finder.get(universe, id);
+      var actual = traverse(universe, item).getOrDie();
+      console.log('actual: ', actual.item().id);
+      assert.eq(expected, actual.item().id);
     };
 
     checkNone('a', HacksyLeft.backtrack);
