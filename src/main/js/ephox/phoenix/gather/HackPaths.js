@@ -65,7 +65,6 @@ define(
         return info.items().concat(recursive);
       }).getOr([]);
 
-console.log('dierction: ', direction);
       return direction.concat(initial, rest);
     };
 
