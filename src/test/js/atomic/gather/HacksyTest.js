@@ -109,14 +109,19 @@ test(
     var start = Finder.get(multiverse, '3');
     var current = Option.some({ item: Fun.constant(start), mode: Fun.constant(HacksyLeft.advance) });
 
-    var path = [];
-    while (current.isSome()) {
-      var c = current.getOrDie();
-      path = path.concat(c.item().id);
-      current = HacksyLeft.go(multiverse, c.item(), c.mode());
-    }
+    var checkPath = function (expected, id, direction) {
+      var start = Finder.get(multiverse, id);
+      var path = [];
+      var current = Option.some({ item: Fun.constant(start), mode: Fun.constant(HacksyLeft.advance) });
+      while (current.isSome()) {
+        var c = current.getOrDie();
+        path = path.concat(c.item().id);
+        current = Hacksy.go(multiverse, c.item(), c.mode(), direction);
+      }
 
-    assert.eq(10, path);
+      assert.eq(expected, path);
+    };
 
+    checkPath(11, '3.1', Hacksy.left());
   }
 );
