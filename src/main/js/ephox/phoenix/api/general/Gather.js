@@ -2,26 +2,29 @@ define(
   'ephox.phoenix.api.general.Gather',
 
   [
-    'ephox.perhaps.Option',
-    'ephox.phoenix.gather.Gather'
+    'ephox.phoenix.gather.LeafGather',
+    'ephox.sugar.api.Traverse'
   ],
 
   /**
    * Documentation is in the actual implementations.
    */
-  function (Option, Gather) {
+  function (LeafGather, Traverse) {
     var gather = function (universe, item, prune, transform) {
-      return Gather.gather(universe, item, prune, transform);
+      return [];
+      // return Gather.gather(universe, item, prune, transform);
+    };
+
+    var isLeaf = function (element) {
+      return Traverse.chlidren(element).length === 0;
     };
 
     var before = function (universe, item, isRoot) {
-      return Option.none();
-      // return Neighbour.before(universe, item, isRoot);
+      return LeafGather.before(universe, item, isLeaf);
     };
 
     var after = function (universe, item, isRoot) {
-      return Option.none();
-      // return Neighbour.after(universe, item, isRoot);
+      return LeafGather.after(universe, item, isLeaf);
     };
 
     return {

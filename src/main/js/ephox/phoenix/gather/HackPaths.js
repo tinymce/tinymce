@@ -2,11 +2,12 @@ define(
   'ephox.phoenix.gather.HackPaths',
 
   [
+    'ephox.compass.Arr',
     'ephox.phoenix.gather.Hacksy',
     'ephox.scullion.Struct'
   ],
 
-  function (Hacksy, Struct) {
+  function (Arr, Hacksy, Struct) {
     var sss = Struct.immutable('item', 'start', 'finish', 'text');
     var decision = Struct.immutable('items', 'abort');
 
@@ -66,11 +67,10 @@ define(
     };
 
     var words = function (universe, item) {
-      var initial = universe.property().isText(item) ? [ all(universe, item) ] : [];
       var toLeft = doWords(universe, item, Hacksy.advance, Hacksy.left());
       var toRight = doWords(universe, item, Hacksy.advance, Hacksy.right());
       var middle = universe.property().isText(item) ? [ all(universe, item) ] : [];
-      return toLeft.concat(middle).concat(toRight);
+      return Arr.reverse(toLeft).concat(middle).concat(toRight);
     };
 
     return {
