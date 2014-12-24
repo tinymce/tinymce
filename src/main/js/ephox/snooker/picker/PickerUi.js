@@ -53,7 +53,7 @@ define(
         //create a set of trs, then for each tr, insert numCols tds
         var rows = Util.repeat(size.height, function () {
           var row = Element.fromTag('div');
-          Class.set(row, PickerStyles.row());
+          Class.add(row, PickerStyles.row());
           return row;
         });
 
