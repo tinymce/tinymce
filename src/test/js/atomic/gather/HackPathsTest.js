@@ -72,9 +72,8 @@ test(
       }));
     };
 
-    checkPath([ 'This is ', 'going' ], 'this_is_', Hacksy.right());
-    checkPath([ 'to' ], 'to', Hacksy.left());
-    checkPath([ 'to' ], 'to', Hacksy.right());
-    checkPath([ 'going ' ], 'going_', Hacksy.left());
+    checkPath([ 'This is ', 'going' ], 'this_is_');
+    checkPath([ 'to' ], 'to');
+    checkPath([ 'going ', 'to' ], 'going_');
   }
 );

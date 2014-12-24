@@ -61,15 +61,10 @@ define(
         });
       };
 
-      var concat = function (start, rest) {
-        return rest.concat(start);
-      };
-
       return {
         sibling: sibling,
         first: first,
-        substring: substring,
-        concat: concat
+        substring: substring
       };
     };
 
@@ -90,15 +85,10 @@ define(
         });
       };
 
-      var concat = function (start, rest) {
-        return start.concat(rest);
-      };
-
       return {
         sibling: sibling,
         first: first,
-        substring: substring,
-        concat: concat
+        substring: substring
       };
     };
 

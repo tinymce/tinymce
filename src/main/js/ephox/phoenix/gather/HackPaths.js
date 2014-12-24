@@ -56,20 +56,20 @@ define(
      * For others, keep gathering and do not include
      */
     var doWords = function (universe, item, mode, direction) {
-      var initial = universe.property().isText(item) ? [ all(universe, item) ] : [];
-
       var next = Hacksy.go(universe, item, mode, direction);
-      var rest = next.map(function (n) {
+      return next.map(function (n) {
         var info = decider(universe, n.item(), direction);
         var recursive = info.abort() ? [] : doWords(universe, n.item(), n.mode(), direction);
         return info.items().concat(recursive);
       }).getOr([]);
-
-      return direction.concat(initial, rest);
     };
 
-    var words = function (universe, item, direction) {
-      return doWords(universe, item, Hacksy.advance, direction);
+    var words = function (universe, item) {
+      var initial = universe.property().isText(item) ? [ all(universe, item) ] : [];
+      var toLeft = doWords(universe, item, Hacksy.advance, Hacksy.left());
+      var toRight = doWords(universe, item, Hacksy.advance, Hacksy.right());
+      var middle = universe.property().isText(item) ? [ all(universe, item) ] : [];
+      return toLeft.concat(middle).concat(toRight);
     };
 
     return {
