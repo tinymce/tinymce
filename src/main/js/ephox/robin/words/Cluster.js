@@ -6,17 +6,13 @@ define(
     'ephox.peanut.Fun',
     'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.api.general.Extract',
-    'ephox.phoenix.api.general.Gather',
     'ephox.phoenix.gather.HackPaths',
-    'ephox.phoenix.gather.Hacksy',
     'ephox.polaris.api.Arrays',
     'ephox.robin.api.general.Zone',
-    'ephox.robin.words.Identify',
-    'ephox.robin.words.Prune',
-    'ephox.robin.words.Transform'
+    'ephox.robin.words.Identify'
   ],
 
-  function (Arr, Fun, Spot, Extract, Gather, HackPaths, Hacksy, Arrays, Zone, Identify, Prune, Transform) {
+  function (Arr, Fun, Spot, Extract, HackPaths, Arrays, Zone, Identify) {
     var extract = function (universe, element) {
       var children = Extract.all(universe, element);
       return Arr.map(children, function (x) {

@@ -6,12 +6,13 @@ define(
     'ephox.perhaps.Option',
     'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.api.general.Gather',
+    'ephox.phoenix.gather.HackPaths',
     'ephox.robin.smartselect.EndofWord',
     'ephox.robin.smartselect.Prune',
     'ephox.robin.smartselect.Transform'
   ],
 
-  function (Arr, Option, Spot, Gather, EndofWord, Prune, Transform) {
+  function (Arr, Option, Spot, Gather, HackPaths, EndofWord, Prune, Transform) {
     var gather = function (universe, item) {
       var prune = Prune(universe);
       var transform = Transform(universe);
@@ -34,9 +35,9 @@ define(
         return Spot.point(point.element(), point.offset().getOr(text.length));
       };
 
-      var gathered = gather(universe, item);
-      var left = Arr.map(gathered.left(), defaultLeft);
-      var right = Arr.map(gathered.right(), defaultRight);
+
+      // This needs to be more selective. I shouldn't have to gather both left and right every time.
+      var cluster = HackPaths.words(universe, item);
       return EndofWord.select(universe, item, offset, left, right);
     };
 

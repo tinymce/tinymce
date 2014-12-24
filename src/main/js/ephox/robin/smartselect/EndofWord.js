@@ -2,19 +2,18 @@ define(
   'ephox.robin.smartselect.EndofWord',
 
   [
-    'ephox.compass.Arr',
     'ephox.perhaps.Option',
-    'ephox.phoenix.api.data.Spot',
     'ephox.robin.data.WordRange',
-    'ephox.robin.util.CurrentWord'
+    'ephox.robin.util.CurrentWord',
+    'ephox.sugar.api.Compare'
   ],
 
-  function (Arr, Option, Spot, WordRange, CurrentWord) {
+  function (Option, WordRange, CurrentWord, Compare) {
     /*
      * Returns an optional range which represents the selection of an entire word which may span 
      * several elements.
      */
-    var select = function (universe, textitem, offset, left, right) {
+    var select = function (universe, textitem, offset, cluster) {
       var getText = function (target) {
         return universe.property().isText(target) ? universe.property().getText(target) : '';
       };
@@ -22,19 +21,12 @@ define(
       var text = universe.property().getText(textitem);
       var parts = CurrentWord.around(text, offset);
 
-      var leftText = Arr.map(left, function (l) {
-        return getText(l.element()).substring(l.offset());
-      }).join('');
+      var isLeftEdge = cluster.length > 0 && Compare.eq(cluster[0].item(), textitem);
+      var isRightEdge = cluster.length > 0 && Compare.eq(cluster[cluster.length - 1].item(), textitem);
 
-      var rightText = Arr.map(right, function (r) {
-        return getText(r.element()).substring(0, r.offset());
-      }).join('');
+      var leftmost = parts.before().fold(function () {
 
-      var leftmost = Option.from(left[0]).getOr(Spot.point(textitem, 0));
-      var rightmost = Option.from(right[right.length - 1]).getOr(Spot.point(textitem, text.length));
-      
-      var isLeftEdge = leftText.length === 0 && offset === 0;
-      var isRightEdge = rightText.length === 0 && offset === text.length;
+      });
 
       var neither = function () {
         return isLeftEdge || isRightEdge ? Option.none() :
