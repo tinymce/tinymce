@@ -7,11 +7,12 @@ define(
   ],
 
   function (Hacksy, Struct) {
-    var sss = Struct.immutable('item', 'start', 'finish');
+    var sss = Struct.immutable('item', 'start', 'finish', 'text');
     var decision = Struct.immutable('items', 'abort');
 
     var all = function (universe, item) {
-      return sss(item, 0, universe.property().getText(item).length);
+      var text = universe.property().getText(item);
+      return sss(item, 0, text.length, text);
     };
 
     var onEdge = function (universe, item, direction) {
@@ -25,9 +26,9 @@ define(
     var onText = function (universe, item, direction) {
       var text = universe.property().getText(item);
       return direction.substring(text).fold(function () {
-        return decision([ sss(item, 0, text.length) ], false);
+        return decision([ sss(item, 0, text.length, text) ], false);
       }, function (splits) {
-        var items = splits[0] === splits[1] ? [] : [ sss(item, splits[0], splits[1]) ];
+        var items = splits[0] === splits[1] ? [] : [ sss(item, splits[0], splits[1], text.substring(splits[0], splits[1])) ];
         return decision(items, true);
       });
     };

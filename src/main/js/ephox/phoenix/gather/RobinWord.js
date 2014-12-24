@@ -15,24 +15,6 @@ define(
 
     var zero = Fun.constant(0);
 
-    /**
-     * Returns optional text after the last word break character
-     */
-    var lastWord = function (text) {
-      return leftBreak(text).map(function (index) {
-        return text.substring(index);
-      });
-    };
-
-    /**
-     * Returns optional text up to the first word break character
-     */
-    var firstWord = function (text) {
-      return rightBreak(text).map(function (index) {
-        return text.substring(0, index + 1);
-      });
-    };
-
     /*
      * Returns the index position of a break when going left (i.e. last word break)
      */
@@ -52,16 +34,9 @@ define(
       return index > -1 ? Option.some(index) : Option.none();
     };
 
-    var hasBreak = function (text) {
-      return rightBreak(text).isSome();
-    };
-
     return {
-      firstWord: firstWord,
-      lastWord: lastWord,
       leftBreak: leftBreak,
-      rightBreak: rightBreak,
-      hasBreak: hasBreak
+      rightBreak: rightBreak
     };
 
   }
