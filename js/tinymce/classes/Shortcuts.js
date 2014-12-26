@@ -26,7 +26,7 @@ define("tinymce/Shortcuts", [
 	return function(editor) {
 		var self = this, shortcuts = {};
 
-			function createShortcut(pattern, desc, cmdFunc, scope) {
+		function createShortcut(pattern, desc, cmdFunc, scope) {
 			var shortcut = {
 				func: cmdFunc,
 				scope: scope || editor,
