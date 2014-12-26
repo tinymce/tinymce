@@ -26,6 +26,37 @@ define("tinymce/Shortcuts", [
 	return function(editor) {
 		var self = this, shortcuts = {};
 
+			function createShortcut(pattern, desc, cmdFunc, scope) {
+			var shortcut = {
+				func: cmdFunc,
+				scope: scope || editor,
+				desc: editor.translate(desc),
+				alt: false,
+				ctrl: false,
+				shift: false
+			};
+
+			each(explode(pattern, '+'), function (value) {
+				switch (value) {
+					case 'alt':
+					case 'ctrl':
+					case 'shift':
+						shortcut[value] = true;
+						break;
+
+					default:
+						// Allow numeric keycodes like ctrl+219 for ctrl+[
+						if (/^[0-9]{2,}$/.test(value)) {
+							shortcut.keyCode = parseInt(value, 10);
+						} else {
+							shortcut.charCode = value.charCodeAt(0);
+							shortcut.keyCode = keyCodeLookup[value] || value.toUpperCase().charCodeAt(0);
+						}
+				}
+			});
+			return shortcut;
+		}
+
 		editor.on('keyup keypress keydown', function(e) {
 			if ((e.altKey || e.ctrlKey || e.metaKey) && !e.isDefaultPrevented()) {
 				each(shortcuts, function(shortcut) {
@@ -59,7 +90,7 @@ define("tinymce/Shortcuts", [
 		 * @return {Boolean} true/false state if the shortcut was added or not.
 		 */
 		self.add = function(pattern, desc, cmdFunc, scope) {
-			var cmd;
+			var cmd, shortcut;
 
 			cmd = cmdFunc;
 
@@ -73,44 +104,37 @@ define("tinymce/Shortcuts", [
 				};
 			}
 
-			each(explode(pattern.toLowerCase()), function(pattern) {
-				var shortcut = {
-					func: cmdFunc,
-					scope: scope || editor,
-					desc: editor.translate(desc),
-					alt: false,
-					ctrl: false,
-					shift: false
-				};
-
-				each(explode(pattern, '+'), function(value) {
-					switch (value) {
-						case 'alt':
-						case 'ctrl':
-						case 'shift':
-							shortcut[value] = true;
-							break;
-
-						default:
-							// Allow numeric keycodes like ctrl+219 for ctrl+[
-							if (/^[0-9]{2,}$/.test(value)) {
-								shortcut.keyCode = parseInt(value, 10);
-							} else {
-								shortcut.charCode = value.charCodeAt(0);
-								shortcut.keyCode = keyCodeLookup[value] || value.toUpperCase().charCodeAt(0);
-							}
-					}
-				});
-
+			each(explode(pattern.toLowerCase()), function (pattern) {
+				shortcut = createShortcut(pattern, desc, cmdFunc, scope);
 				shortcuts[
-					(shortcut.ctrl ? 'ctrl' : '') + ',' +
-					(shortcut.alt ? 'alt' : '') + ',' +
-					(shortcut.shift ? 'shift' : '') + ',' +
-					shortcut.keyCode
+                    (shortcut.ctrl ? 'ctrl' : '') + ',' +
+                    (shortcut.alt ? 'alt' : '') + ',' +
+                    (shortcut.shift ? 'shift' : '') + ',' +
+                    shortcut.keyCode
 				] = shortcut;
 			});
 
 			return true;
+		};
+
+		/**
+         * remove a keyboard shortcut.
+         *
+         * @method remove
+         * @param {String} pattern Shortcut pattern. Like for example: ctrl+alt+o.
+         * @return {Boolean} true/false state if the shortcut was removed or not.
+         */
+		self.remove = function (pattern) {
+			var shortcut = createShortcut(pattern),
+                id = (shortcut.ctrl ? 'ctrl' : '') + ','
+                    + (shortcut.alt ? 'alt' : '') + ','
+                    + (shortcut.shift ? 'shift' : '') + ','
+                    + shortcut.keyCode;
+			if (shortcuts[id]) {
+				delete shortcuts[id];
+				return true;
+			}
+			return false;
 		};
 	};
 });
