@@ -222,9 +222,10 @@ tinymce.PluginManager.add('image', function(editor) {
 				var srcURL = this.value(),
 				absoluteURLPattern = new RegExp('^(?:[a-z]+:)?//', 'i'),
 				baseURL = editor.settings.document_base_url;
+				removeScriptHost = editor.settings.remove_script_host;
 
-				//Pattern test the src url and make sure we haven't already prepended the url
-				if (baseURL && !absoluteURLPattern.test(srcURL) && srcURL.substring(0, baseURL.length) !== baseURL) {
+				//Pattern test the src url and make sure we haven't already prepended the url, also checking if baseURL should be appended
+				if (baseURL && !absoluteURLPattern.test(srcURL) && srcURL.substring(0, baseURL.length) !== baseURL && !removeScriptHost) {
 					this.value(baseURL + srcURL);
 				}
 
