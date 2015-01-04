@@ -11,6 +11,8 @@
 /*eslint consistent-this:0 */
 tinymce.PluginManager.add('tagging', function(editor, url) {
 
+// ----------------------------  Global constants  ----------------------------
+
 // From http://godsnotwheregodsnot.blogspot.ru/2013/11/kmeans-color-quantization-seeding.html
 	var indexcolors = [
 
@@ -54,81 +56,127 @@ tinymce.PluginManager.add('tagging', function(editor, url) {
 		"#2F5D9B", "#6C5E46", "#D25B88", "#5B656C", "#00B57F", "#545C46", "#866097", "#365D25",
 		"#252F99", "#00CCFF", "#674E60", "#FC009C", "#92896B"
 	];
-
-
-	var tagNodes = [{
-		name: "First tag",
-		color: indexcolors[0]
-	}, {
-		name: "Six",
-		color: indexcolors[1]
-	}];
 	
-	var sidebarWidth = 100;
+	var sideBarWidth = 100;
 
-	var sidebar = new Array(tagNodes.length),
-		tagbar = new Array(tagNodes.length),
-		tempbar = new Array(tagNodes.length),
-		bars,
-		sidediv,
-		contentareacontainer,
-		selSpan, selTop, selHeight, unselTop, unselHeight;
+// ----------------------------  Global variables  ----------------------------
 
-	function update() {
-		var spans = editor.dom.select('span');
-		var divheight, div, gap, lastspan;
+	var tagNodes = [];
 
-		function findNextSibling(node, span) {
+	var sideBar = [],
+		tagBar = [],
+		maskBar = [],
+		barRefs,
+		sideDiv;
+		
+	var
+		selTop,
+		selHeight,
+		unselTop,
+		unselHeight;
+
+	function updateBars() {
+		var
+			spans = editor.dom.select('span');
+		var
+			divheight, 
+			div, 
+			gap, 
+			lastspan;
+		var
+			barTop,
+			barSpans;
+		var
+			tagNum,
+			spanIndex;
+		var
+			span;
+
+		//  Function to navigate editor text
+		function nextSibling(node, end) {
+			var
+				result;
+				
 			if (node.nodeName == "BODY") {
 				return null;
 			} else {
-				var next = node.nextSibling;
-				if (!next) {
-					return findNextSibling(node.parentNode, span);
+				result = node.nextSibling;
+				if (!result) {
+					return nextSibling(node.parentNode, end);
 				} else {
-					var nextChild = next.firstChild;
-					while (nextChild && next != span) {
-						next = nextChild;
-						nextChild = next.firstChild;
+					while (result.firstChild && result != end) {
+						result = result.firstChild;
 					}
-					return next;
+					return result;
 				}
 			}
 		}
+		
+		function appendVerticalBar() {
+			var 
+				div = editor.dom.create('div', {
+					id: editor.dom.uniqueId(),
+					"data-divindex": barRefs.length,
+					class: "verticalbar",
+					style: "top: " + barTop + "px; height: " + divheight + "px;"
+				});
+				
+			//  For some reason if you define these when creating the div, they don't work.
+			div.onmouseover = highlight;
+			div.onmouseleave = unhighlight;
+	
+			tagBar[tagNum].appendChild(div);
+			barRefs.push(barSpans);
+		}
+		
+		function highlight(div) {
+			var barSpans = barRefs[div.target.getAttribute("data-divindex")];
+			for (var i = 0; i < barSpans.length; i++) {
+				barSpans[i].style.color = this.parentNode.style.color;
+			}
+		}
 
-		bars = [];
-		for (var tagnum = 0; tagnum < tagNodes.length; tagnum++) {
-			sidebar[tagnum].style.height = editor.getBody().offsetHeight + 24; /* Add a bit to compensate for margin ?!# */
+		function unhighlight(div) {
+			var barSpans = barRefs[div.target.getAttribute("data-divindex")];
+			for (var i = 0; i < barSpans.length; i++) {
+				barSpans[i].style.color = null;
+			}
+		}
 
-			tempbar[tagnum].remove();
-			tagbar[tagnum].remove();
-			tagbar[tagnum] = editor.dom.create('div', {
+		barRefs = [];
+		for (tagNum = 0; tagNum < tagNodes.length; tagNum++) {
+			sideBar[tagNum].style.height = editor.getBody().offsetHeight + 24; /* Add a bit to compensate for margin ?!# */
+
+			tagBar[tagNum].remove();
+			tagBar[tagNum] = editor.dom.create('div', {
 				id: editor.dom.uniqueId(),
-				class: "tagbar"
+				class: "tagbar",
+				style: "color: " + tagNodes[tagNum].color
 			});
-			tagbar[tagnum].style.color = tagNodes[tagnum].color;
-			sidebar[tagnum].insertBefore(tagbar[tagnum], sidebar[tagnum].firstChild);
+			sideBar[tagNum].insertBefore(tagBar[tagNum], sideBar[tagNum].firstChild);
 
-			tempbar[tagnum] = editor.dom.create('div', {
+			maskBar[tagNum].remove();
+			maskBar[tagNum] = editor.dom.create('div', {
 				id: editor.dom.uniqueId(),
-				class: "tempbar"
+				class: "maskbar"
 			});
-			tagbar[tagnum].appendChild(tempbar[tagnum]);
+			tagBar[tagNum].appendChild(maskBar[tagNum]);
 			
-			var bartop = null;
-			var barspans = [];
-			for (var spanindex = 0; spanindex < spans.length; spanindex++) {
-				var span = spans[spanindex];
-				if (span.getAttribute('data-tag') == tagnum) {
-					if (bartop === null) {
-						bartop = span.offsetTop;
+			//  Build the actual tag bars. If two spans have no text (ie only paragraph breaks) between them then make a single bar.
+			barTop = null;
+			barSpans = [];
+			for (spanIndex = 0; spanIndex < spans.length; spanIndex++) {
+				var span = spans[spanIndex];
+				if (span.getAttribute('data-tag') === tagNodes[tagNum].name) {
+					if (barTop === null) {
+						barTop = span.offsetTop;
 						divheight = span.offsetHeight;
-						barspans.push(span);
+						barSpans.push(span);
 					} else {
 						gap = false;
-						if ((span.offsetTop - (bartop + divheight)) > 0) {
+						if ((span.offsetTop - (barTop + divheight)) > 0) {
 							for (
-								var iterspan = findNextSibling(lastspan, span);
+								var iterspan = nextSibling(lastspan, span);
 								iterspan && iterspan != span;
 								iterspan = iterspan.nextSibling
 								) {
@@ -139,81 +187,86 @@ tinymce.PluginManager.add('tagging', function(editor, url) {
 							}
 						}
 						if (!gap) {
-							divheight = span.offsetTop + span.offsetHeight - bartop;
-							barspans.push(span);
+							divheight = span.offsetTop + span.offsetHeight - barTop;
+							barSpans.push(span);
 						} else {
-							div = editor.dom.create('div', {
-								id: editor.dom.uniqueId(),
-								"data-divindex": bars.length,
-								class: "verticalbar",
-								style: "top: " + bartop + "px; height: " + divheight + "px;"
-							});
-							tagbar[tagnum].appendChild(div);
-
-							bars.push(barspans);
-							barspans = [];
-							barspans.push(span);
-
-							div.onmouseover = Highlight;
-							div.onmouseleave = UnHighlight;
-							bartop = span.offsetTop;
+							appendVerticalBar();
+							barRefs.push(barSpans);
+							
+							barSpans = [];
+							barSpans.push(span);
+							barTop = span.offsetTop;
 							divheight = span.offsetHeight;
 						}
 					}
 					lastspan = span;
 				}
 			}
-			if (bartop !== null) {
-				div = editor.dom.create('div', {
-					id: editor.dom.uniqueId(),
-					"data-divindex": bars.length,
-					class: "verticalbar",
-					style: "top: " + bartop + "px; height: " + divheight + "px;"
-				});
-				tagbar[tagnum].appendChild(div);
-
-				bars.push(barspans);
-
-				div.onmouseover = Highlight;
-				div.onmouseleave = UnHighlight;
+			if (barTop !== null) {
+				appendVerticalBar();
 			}
 		}
 		
-		// Work out whether scroll bar is visible. Why is the figure 22?
-		if (editor.getBody().offsetHeight + 22 >= contentareacontainer.offsetHeight) {
-			sidediv.style.width = (sidebarWidth - 16) + "px";
+		// Work out whether scroll bar is visible - if so then reduce widebar width to allow room for it.
+		// Why is the figure 22?
+		if (editor.getBody().offsetHeight + 22 >= editor.getContentAreaContainer().offsetHeight) {
+			sideDiv.style.width = (sideBarWidth - 16) + "px";
 		} else {
-			sidediv.style.width = sidebarWidth + "px";
+			sideDiv.style.width = sideBarWidth + "px";
 		}
-		scroll_sidediv();
-
+		scroll_sideDiv();
 	}
 
-	function Highlight(div) {
-		var barspans = bars[div.target.getAttribute("data-divindex")];
-		for (var i = 0; i < barspans.length; i++) {
-			barspans[i].style.color = this.parentNode.style.color;
-		}
-	}
-
-	function UnHighlight(div) {
-		var barspans = bars[div.target.getAttribute("data-divindex")];
-		for (var i = 0; i < barspans.length; i++) {
-			barspans[i].style.color = null;
-		}
-	}
-
-	function scroll_sidediv() {
+	function scroll_sideDiv() {
 		var scroll = editor.dom.getViewPort(editor.getWin()).y;
-//		sidediv.scrollTop = scroll;
-		for (var tagnum = 0; tagnum < tagNodes.length; tagnum++) {
-			tagbar[tagnum].style.marginTop = -scroll;
+		for (var tagNum = 0; tagNum < tagNodes.length; tagNum++) {
+			tagBar[tagNum].style.marginTop = -scroll;
 		}
 	}
 
 	function resize() {
-		sidediv.style.height = editor.iframeElement.style.height;
-		update();
+		sideDiv.style.height = editor.iframeElement.style.height;
+		updateBars();
+	}
+	
+	function appendTagNode(name, tagNum) {
+		var
+			textBar;
+			
+		tagNodes[tagNum] = {
+			name:  name,
+			color: indexcolors[tagNum]
+		};
+		
+		sideBar[tagNum] = editor.dom.create('div', {
+			id: editor.dom.uniqueId(),
+			class: "sidebar",
+			style: "width:20px; display: inline-block;"
+		});
+		sideDiv.appendChild(sideBar[tagNum]);
+
+		textBar = editor.dom.create('div', {
+			id: editor.dom.uniqueId(),
+			class: "textbar",
+			style: "color: " + tagNodes[tagNum].color
+		},
+			tagNodes[tagNum].name
+		);
+		sideBar[tagNum].appendChild(textBar);
+
+		tagBar[tagNum] = editor.dom.create('div', {
+			id: editor.dom.uniqueId(),
+			class: "tagbar",
+			style: "color: " + tagNodes[tagNum].color
+		});
+		sideBar[tagNum].insertBefore(tagBar[tagNum], sideBar[tagNum].firstChild);
+
+		maskBar[tagNum] = editor.dom.create('div', {
+			id: editor.dom.uniqueId(),
+			class: "maskbar",
+			style: { top: selTop, height: selHeight, color: 'inherit', opacity: 1 }
+		});
+		tagBar[tagNum].appendChild(maskBar[tagNum]);
 	}
 
 	function tagwindow() {
@@ -226,27 +279,36 @@ tinymce.PluginManager.add('tagging', function(editor, url) {
 		var inspan = new Array(tagNodes.length), tagged = new Array(tagNodes.length), untagged = new Array(tagNodes.length);
 		var checked = new Array(tagNodes.length);
 		var textbar;
-		var tagnum;
+		var tagNum;
 
+		//  Function to determine whether a selection is already entirely/partially/not tagged.
 		function walkSelectionTree(node) {
-			var tag, tagnum, childNode;
+			var 
+				tagNum,
+				tagName,
+				childNode;
 
 			if (node.type === 3) {	// Text node
-				for (tagnum = 0; tagnum < tagNodes.length; tagnum++) {
-					if (inspan[tagnum]) {
-						tagged[tagnum] = true;
+				for (tagNum = 0; tagNum < tagNodes.length; tagNum++) {
+					if (inspan[tagNum]) {
+						tagged[tagNum] = true;
 					} else {
-						untagged[tagnum] = true;
+						untagged[tagNum] = true;
 					}
 				}
-			} else if ((node.name === "span") && ((tag = node.attr("data-tag")) !== undefined)) {
-				inspan[tag] = true;
+			} else if ((node.name === "span") && ((tagName = node.attr("data-tag")) !== undefined)) {
+				for (tagNum = 0; tagNum < tagNodes.length; tagNum++) {
+					if (tagNodes[tagNum].name === tagName) {
+						break;
+					}
+				}
+				inspan[tagNum] = true;
 				childNode = node.firstChild;
 				while (childNode !== undefined && childNode !== null) {
 					walkSelectionTree(childNode);
 					childNode = childNode.next;
 				}
-				inspan[tag] = false;
+				inspan[tagNum] = false;
 			} else {
 				childNode = node.firstChild;
 				while (childNode !== undefined && childNode !== null) {
@@ -256,34 +318,54 @@ tinymce.PluginManager.add('tagging', function(editor, url) {
 			}
 		}
 		
-		function tagWindowClose(e) {
-			for (var tagnum = 0; tagnum < tagNodes.length; tagnum++) {
-				tempbar[tagnum].style.opacity = 0;
+		function clickCheckBox() {
+			var tagNum = Number(this.name());
+			var value = this.value();
+			
+			if (value === true) {
+				maskBar[tagNum].style.top = selTop;
+				maskBar[tagNum].style.height = selHeight;
+				maskBar[tagNum].style.color = 'inherit';
+				maskBar[tagNum].style.opacity = 1;
+			} else if (value === false && unselHeight !== undefined) {
+				maskBar[tagNum].style.top = unselTop;
+				maskBar[tagNum].style.height = unselHeight;
+				maskBar[tagNum].style.color = 'white';
+				maskBar[tagNum].style.opacity = 1;
+			} else {
+				maskBar[tagNum].style.opacity = 0;
 			}
+		}
+			
+		function tagWindowClose() {
+			for (var tagNum = 0; tagNum < tagNodes.length; tagNum++) {
+				maskBar[tagNum].style.opacity = 0;
+			}
+			updateBars();
 		}
 
 		function tagWindowSubmit(e) {
 			var change = false;
-			for (var tagnum = 0; tagnum < tagNodes.length; tagnum++) {
-				if (e.data[tagnum] !== null) {
-					if (e.data[tagnum]) {
-						if (checked[tagnum] != true) {
+			for (var tagNum = 0; tagNum < tagNodes.length; tagNum++) {
+				if (e.data[tagNum] !== null) {
+					if (e.data[tagNum]) {
+						if (checked[tagNum] != true) {
 							if (!change) {
 								change = true;
 								editor.undoManager.beforeChange();
 							}
 							editor.formatter.apply('tag', {
-								tag: tagnum.toString()
+								tag: tagNodes[tagNum].name
 							});
 						}
 					} else {
-						if (checked[tagnum] != false) {
+						if (checked[tagNum] != false) {
 							if (!change) {
 								change = true;
 								editor.undoManager.beforeChange();
 							}
 							editor.formatter.remove('tag', {
-								tag: tagnum.toString()
+								tag: tagNodes[tagNum].name
 							});
 						}
 					}
@@ -294,8 +376,7 @@ tinymce.PluginManager.add('tagging', function(editor, url) {
 			}
 		}
 		
-		function newTagCancel(e) {
-			console.log('newTagCancel');
+		function newTagCancel() {
 			editor.windowManager.open({
 				body: body,
 				onsubmit: tagWindowSubmit,
@@ -303,71 +384,19 @@ tinymce.PluginManager.add('tagging', function(editor, url) {
 			});
 		}
 		
-		function clickCheckBox(e) {
-			var tagnum = Number(this.name());
-			var value = this.value();
-			
-			if (value === true) {
-				tempbar[tagnum].style.top = selTop;
-				tempbar[tagnum].style.height = selHeight;
-				tempbar[tagnum].style.color = 'inherit';
-				tempbar[tagnum].style.opacity = 1;
-			} else if (value === false && unselHeight !== undefined) {
-				tempbar[tagnum].style.top = unselTop;
-				tempbar[tagnum].style.height = unselHeight;
-				tempbar[tagnum].style.color = 'white';
-				tempbar[tagnum].style.opacity = 1;
-			} else {
-				tempbar[tagnum].style.opacity = 0;
-			}
-		}
-			
 		function newTagSubmit(e) {
 			var value = e.data.name;
 			var dom = editor.dom;
 			
 			if (value !== '') {
-				tagnum = tagNodes.length;
-				tagNodes.push({
-					name:  value,
-					color: indexcolors[tagnum]
-				});
-				checked[tagnum] = false;
-				sidebar[tagnum] = dom.create('div', {
-					id: dom.uniqueId(),
-					class: "sidebar",
-					style: "width:20px; display: inline-block;"
-				});
-				sidediv.appendChild(sidebar[tagnum]);
-
-				textbar = dom.create('div', {
-					id: dom.uniqueId(),
-					class: "textbar"
-				},
-					tagNodes[tagnum].name
-				);
-				textbar.style.color = tagNodes[tagnum].color;
-				sidebar[tagnum].appendChild(textbar);
-
-				tagbar[tagnum] = dom.create('div', {
-					id: dom.uniqueId(),
-					class: "tagbar"
-				});
-				tagbar[tagnum].style.color = tagNodes[tagnum].color;
-				sidebar[tagnum].insertBefore(tagbar[tagnum], sidebar[tagnum].firstChild);
-
-				tempbar[tagnum] = editor.dom.create('div', {
-					id: editor.dom.uniqueId(),
-					class: "tempbar",
-					style: { top: selTop, height: selHeight, color: 'inherit', opacity: 1 }
-				});
-				tagbar[tagnum].appendChild(tempbar[tagnum]);
-				
-				body.splice(tagnum, 0, {
+				tagNum = tagNodes.length;
+				appendTagNode (value, tagNum);
+				checked[tagNum] = false;
+				body.splice(tagNum, 0, {
 					type: 'checkbox',
 					tristate: false,
 					checked: true,
-					name: tagnum.toString(),
+					name: tagNum.toString(),
 					label: value,
 					onclick: clickCheckBox
 				});
@@ -451,26 +480,26 @@ tinymce.PluginManager.add('tagging', function(editor, url) {
 // Then we need to find out whether the selection is all/some/none tagged at each of the tags. 
 
 			var selectionRoot = editor.parser.parse(editor.selection.getContent());
-			for (tagnum = 0; tagnum < tagNodes.length; tagnum++) {
-				inspan[tagnum]   = false;
-				tagged[tagnum]   = false;
-				untagged[tagnum] = false;
+			for (tagNum = 0; tagNum < tagNodes.length; tagNum++) {
+				inspan[tagNum]   = false;
+				tagged[tagNum]   = false;
+				untagged[tagNum] = false;
 			}
 			walkSelectionTree(selectionRoot);
-			for (tagnum = 0; tagnum < tagNodes.length; tagnum++) {
-				if (tagged[tagnum] && !untagged[tagnum]) {
-					checked[tagnum] = true;
-				} else if (untagged[tagnum] && !tagged[tagnum]) {
-					checked[tagnum] = editor.formatter.match('tag', {"tag": tagnum.toString()});
+			for (tagNum = 0; tagNum < tagNodes.length; tagNum++) {
+				if (tagged[tagNum] && !untagged[tagNum]) {
+					checked[tagNum] = true;
+				} else if (untagged[tagNum] && !tagged[tagNum]) {
+					checked[tagNum] = editor.formatter.match('tag', {tag : tagNodes[tagNum].name});
 				} else {
-					checked[tagnum] = null;
+					checked[tagNum] = null;
 				}
 				body.push({
 					type: 'checkbox',
-					tristate: (checked[tagnum] === null),
-					checked: checked[tagnum],
-					name: tagnum.toString(),
-					label: tagNodes[tagnum].name,
+					tristate: (checked[tagNum] === null),
+					checked: checked[tagNum],
+					name: tagNum.toString(),
+					label: tagNodes[tagNum].name,
 					onclick: clickCheckBox
 				});
 			}
@@ -491,6 +520,9 @@ tinymce.PluginManager.add('tagging', function(editor, url) {
 		}
 	}
 
+	
+//	Editor customisation code - is this the right place for it?
+
 	editor.addButton('tag', {
 		icon: 'toolbartagging',
 		tooltip: 'Tag/untag selection',
@@ -507,6 +539,9 @@ tinymce.PluginManager.add('tagging', function(editor, url) {
 	
 	editor.on('init', function() {
         var cssURL = url + '/css/tagging.css';
+		var
+			tagName;
+		
         if(document.createStyleSheet){
             document.createStyleSheet(cssURL);
         } else {
@@ -522,9 +557,10 @@ tinymce.PluginManager.add('tagging', function(editor, url) {
 			inline: 'span',
 			exact: true,
 			attributes: {
-				"data-tag": "%tag"
+				"data-tag": "%tag",
 			},
 		}); /* Undocumented! */
+		
 		editor.formatter.register('selection', {
 			inline: 'span',
 			exact: true,
@@ -532,59 +568,45 @@ tinymce.PluginManager.add('tagging', function(editor, url) {
 				class: "selection"
 			},
 		}); /* Undocumented! */
+		
 		var dom = editor.dom;
 		contentareacontainer = editor.getContentAreaContainer();
 		var style = contentareacontainer.getAttribute("style") + " width:100%; display: inline-block;";
 		contentareacontainer.setAttribute("style", style);
 
 		var body = editor.getBody();
-		body.style.marginRight = sidebarWidth + "px";
+		body.style.marginRight = sideBarWidth + "px";
 
 		var contentareaiframe = contentareacontainer.firstChild;
 		style = contentareaiframe.getAttribute("style") + " line-height: normal; display: inline-block;";
 		contentareaiframe.setAttribute("style", style);
 
-		sidediv = dom.create('div', {
+		sideDiv = dom.create('div', {
 			id: dom.uniqueId(),
 			class: "sidediv",
-			style: "margin-left: " + -sidebarWidth + "px"
+			style: "margin-left: " + -sideBarWidth + "px"
 		});
-		contentareacontainer.appendChild(sidediv);
+		contentareacontainer.appendChild(sideDiv);
+		
+		var
+			spans = editor.dom.select('span');
 
-		for (var tagnum = 0; tagnum < tagNodes.length; tagnum++) {
-			sidebar[tagnum] = dom.create('div', {
-				id: dom.uniqueId(),
-				class: "sidebar",
-				style: "width:20px; display: inline-block;"
-			});
-			sidediv.appendChild(sidebar[tagnum]);
-
-			textbar = dom.create('div', {
-				id: dom.uniqueId(),
-				class: "textbar"
-			},
-				tagNodes[tagnum].name
-			);
-			textbar.style.color = tagNodes[tagnum].color;
-			sidebar[tagnum].appendChild(textbar);
-
-			tagbar[tagnum] = dom.create('div', {
-				id: dom.uniqueId(),
-				class: "tagbar"
-			});
-			tagbar[tagnum].style.color = tagNodes[tagnum].color;
-			sidebar[tagnum].insertBefore(tagbar[tagnum], sidebar[tagnum].firstChild);
-			
-			tempbar[tagnum] = editor.dom.create('div', {
-				id: editor.dom.uniqueId(),
-				class: "tempbar"
-			});
-			tagbar[tagnum].appendChild(tempbar[tagnum]);
+		for (spanIndex = 0; spanIndex < spans.length; spanIndex++) {
+			var span = spans[spanIndex];
+			tagName = span.getAttribute('data-tag');
+			for (tagNum = 0; tagNum < tagNodes.length; tagNum++) {
+				if (tagNodes[tagNum].name === tagName) {
+					break;
+				}
+			}
+			if (tagNum === tagNodes.length) {
+				appendTagNode (tagName, tagNum)
+			}
 		}
 
-		editor.on('setcontent beforeaddundo keyup nodechange', update);
+		editor.on('setcontent', updateBars);
 		editor.on('load ResizeEditor', resize);
-		editor.on('load', scroll_sidediv); /* Doesn't seem to work? */
-		editor.getWin().onscroll = scroll_sidediv;
+		editor.on('load', scroll_sideDiv); /* Doesn't seem to work? */
+		editor.getWin().onscroll = scroll_sideDiv;
 	});
 });
