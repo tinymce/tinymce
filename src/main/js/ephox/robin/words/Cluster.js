@@ -32,7 +32,7 @@ define(
       });
 
       return Arr.bind(groups, function (x) {
-        var text = Arr.bind(x, function (y) {
+        var text = Arr.map(x, function (y) {
           return y.text();
         }).join('');
         return Identify.words(text);
