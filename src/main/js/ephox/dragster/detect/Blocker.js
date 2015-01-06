@@ -19,8 +19,8 @@ define(
       var div = Element.fromTag('div');
       Css.setAll(div, {
         position: 'fixed',
-        left: 0,
-        top: 0,
+        left: '0px',
+        top: '0px',
         width: '100%',
         height: '100%'
       });
