@@ -12,10 +12,10 @@ define(
       var blocker = Element.fromTag('div');
       Css.setAll(blocker, {
         position: 'absolute',
-        left: x - w/2,
-        top: y,
-        height: h,
-        width: w
+        left: x - w/2 + 'px',
+        top: y + 'px',
+        height: h + 'px',
+        width: w + 'px'
       });
 
       Attr.set(blocker, 'data-column', column);

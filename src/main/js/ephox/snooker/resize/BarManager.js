@@ -58,11 +58,10 @@ define(
       var mousedown = DomEvent.bind(wire.parent(), 'mousedown', function (event) {
         if (Bars.isBar(event.target())) {
           events.trigger.startAdjust();
-          var column = Attr.get(event.target(), 'data-column');
           mutation.assign(event.target());
           Attr.set(event.target(), 'data-initial-left', parseInt(Css.get(event.target(), 'left'), 10));
           Class.add(event.target(), Styles.resolve('resizer-bar-dragging'));
-          Css.set(event.target(), 'opacity', 0.2);
+          Css.set(event.target(), 'opacity', '0.2');
           resizing.go(wire.parent());
         }
       });
@@ -73,7 +72,7 @@ define(
           hoverTable = Node.name(event.target()) === 'table' ? Option.some(event.target()) : SelectorFind.ancestor(event.target(), 'table');
           hoverTable.each(function (ht) {
             Bars.refresh(wire, ht, direction);
-          });          
+          });
         }
       });
 
