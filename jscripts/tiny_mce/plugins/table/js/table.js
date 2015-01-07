@@ -59,7 +59,7 @@ function insertTable() {
 	// Update table
 	if (action == "update") {
 		dom.setAttrib(elm, 'cellPadding', cellpadding, true);
-		dom.setAttrib(elm, 'cellSpacing', cellspacing, true);
+		dom.setStyle(elm, 'border-spacing', cssSize(cellspacing));
 
 		if (!isCssSize(border)) {
 			dom.setAttrib(elm, 'border', border);
@@ -163,7 +163,7 @@ function insertTable() {
 	}
 
 	html += makeAttrib('cellpadding', cellpadding);
-	html += makeAttrib('cellspacing', cellspacing);
+	//html += makeAttrib('cellspacing', cellspacing);
 	html += makeAttrib('data-mce-new', '1');
 
 	if (width && inst.settings.inline_styles) {
@@ -178,6 +178,12 @@ function insertTable() {
 	} else
 		html += makeAttrib('width', width);
 
+	if (cellspacing) {
+		if (style)
+			style += '; ';
+
+		style += 'border-spacing: ' + cellspacing;
+	}
 /*	if (height) {
 		if (style)
 			style += '; ';
@@ -334,7 +340,7 @@ function init() {
 		st = dom.parseStyle(dom.getAttrib(elm, "style"));
 		border = trimSize(getStyle(elm, 'border', 'borderWidth'));
 		cellpadding = dom.getAttrib(elm, 'cellpadding', "");
-		cellspacing = dom.getAttrib(elm, 'cellspacing', "");
+		cellspacing = trimSize(getStyle(elm, 'border-spacing'));
 		width = trimSize(getStyle(elm, 'width', 'width'));
 		height = trimSize(getStyle(elm, 'height', 'height'));
 		bordercolor = convertRGBToHex(getStyle(elm, 'bordercolor', 'borderLeftColor'));
