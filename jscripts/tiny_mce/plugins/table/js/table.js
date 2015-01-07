@@ -254,7 +254,7 @@ function insertTable() {
 		}
 
 		try {
-			// IE9 might fail to do this selection 
+			// IE9 might fail to do this selection
 			inst.selection.setCursorLocation(tdorth[0], 0);
 		} catch (ex) {
 			// Ignore

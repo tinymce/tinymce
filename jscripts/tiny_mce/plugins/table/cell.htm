@@ -35,7 +35,7 @@
 									<option value="right">{#table_dlg.align_right}</option>
 								</select>
 							</td>
-		
+
 							<td><label for="celltype">{#table_dlg.cell_type}</label></td>
 							<td>
 								<select id="celltype" name="celltype">
@@ -76,7 +76,13 @@
 							<td><label for="height">{#table_dlg.height}</label></td>
 							<td><input id="height" name="height" type="text" value="" size="7" maxlength="7" onchange="changedSize();" class="size" /></td>
 						</tr>
+						<tr>
+							<td><label id="borderlabel" for="border">{#table_dlg.border}</label></td>
+							<td><input id="border" name="border" type="text" value="" size="3" maxlength="5" onchange="changedBorder();" class="size" /></td>
 
+							<td><label id="paddinglabel" for="padding">{#table_dlg.cellpadding}</label></td>
+							<td><input id="padding" name="padding" type="text" value="" size="3" maxlength="5" onchange="changedPadding();" class="size" /></td>
+						</tr>
 						<tr id="styleSelectRow">
 							<td><label for="class">{#class_name}</label></td>
 							<td colspan="3">
@@ -95,8 +101,8 @@
 
 					<table role="presentation" border="0" cellpadding="0" cellspacing="4">
 						<tr>
-							<td class="column1"><label for="id">{#table_dlg.id}</label></td> 
-							<td><input id="id" name="id" type="text" value="" style="width: 200px" /></td> 
+							<td class="column1"><label for="id">{#table_dlg.id}</label></td>
+							<td><input id="id" name="id" type="text" value="" style="width: 200px" /></td>
 						</tr>
 
 						<tr>
@@ -105,25 +111,25 @@
 						</tr>
 
 						<tr>
-							<td class="column1"><label for="dir">{#table_dlg.langdir}</label></td> 
+							<td class="column1"><label for="dir">{#table_dlg.langdir}</label></td>
 							<td>
-								<select id="dir" name="dir" style="width: 200px"> 
-										<option value="">{#not_set}</option> 
-										<option value="ltr">{#table_dlg.ltr}</option> 
-										<option value="rtl">{#table_dlg.rtl}</option> 
+								<select id="dir" name="dir" style="width: 200px">
+										<option value="">{#not_set}</option>
+										<option value="ltr">{#table_dlg.ltr}</option>
+										<option value="rtl">{#table_dlg.rtl}</option>
 								</select>
-							</td> 
+							</td>
 						</tr>
 
 						<tr>
-							<td class="column1"><label for="lang">{#table_dlg.langcode}</label></td> 
+							<td class="column1"><label for="lang">{#table_dlg.langcode}</label></td>
 							<td>
 								<input id="lang" name="lang" type="text" value="" style="width: 200px" />
-							</td> 
+							</td>
 						</tr>
 
 						<tr>
-							<td class="column1"><label for="backgroundimage">{#table_dlg.bgimage}</label></td> 
+							<td class="column1"><label for="backgroundimage">{#table_dlg.bgimage}</label></td>
 							<td>
 								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
@@ -131,11 +137,11 @@
 										<td id="backgroundimagebrowsercontainer">&nbsp;</td>
 									</tr>
 								</table>
-							</td> 
+							</td>
 						</tr>
 
 						<tr role="group" aria-labelledby="bordercolor_label">
-							<td class="column1"><label id="bordercolor_label" for="bordercolor">{#table_dlg.bordercolor}</label></td> 
+							<td class="column1"><label id="bordercolor_label" for="bordercolor">{#table_dlg.bordercolor}</label></td>
 							<td>
 								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
@@ -143,11 +149,11 @@
 										<td id="bordercolor_pickcontainer">&nbsp;</td>
 									</tr>
 								</table>
-							</td> 
+							</td>
 						</tr>
 
 						<tr role="group" aria-labelledby="bgcolor_label">
-							<td class="column1"><label id="bgcolor_label" for="bgcolor">{#table_dlg.bgcolor}</label></td> 
+							<td class="column1"><label id="bgcolor_label" for="bgcolor">{#table_dlg.bgcolor}</label></td>
 							<td>
 								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
@@ -155,7 +161,7 @@
 										<td id="bgcolor_pickcontainer">&nbsp;</td>
 									</tr>
 								</table>
-							</td> 
+							</td>
 						</tr>
 					</table>
 				</fieldset>
