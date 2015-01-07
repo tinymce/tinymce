@@ -307,7 +307,7 @@ function changedBorder() {
 	if (formObj.border.value != "")
 		st['border-width'] = cssSize(formObj.border.value);
 	else {
-			st['border-width'] = '';
+		st['border-width'] = '';
 	}
 
 	formObj.style.value = ed.dom.serializeStyle(st);

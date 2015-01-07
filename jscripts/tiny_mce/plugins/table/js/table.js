@@ -59,7 +59,7 @@ function insertTable() {
 	// Update table
 	if (action == "update") {
 		dom.setAttrib(elm, 'cellPadding', cellpadding, true);
-		dom.setStyle(elm, 'border-spacing', cssSize(cellspacing));
+		elm.style.borderSpacing = cssSize(cellspacing);
 
 		if (!isCssSize(border)) {
 			dom.setAttrib(elm, 'border', border);
@@ -178,12 +178,6 @@ function insertTable() {
 	} else
 		html += makeAttrib('width', width);
 
-	if (cellspacing) {
-		if (style)
-			style += '; ';
-
-		style += 'border-spacing: ' + cellspacing;
-	}
 /*	if (height) {
 		if (style)
 			style += '; ';
@@ -456,6 +450,19 @@ function changedBorder() {
 			st['border'] = '';
 			st['border-width'] = '';
 		}
+	}
+
+	formObj.style.value = dom.serializeStyle(st);
+}
+
+function changedCellSpacing() {
+	var formObj = document.forms[0];
+	var st = dom.parseStyle(formObj.style.value);
+
+	if (formObj.cellspacing.value != "")
+		st['border-spacing'] = cssSize(formObj.cellspacing.value);
+	else {
+		st['border-spacing'] = '';
 	}
 
 	formObj.style.value = dom.serializeStyle(st);
