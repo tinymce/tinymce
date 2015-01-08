@@ -271,7 +271,7 @@ define("tinymce/util/Quirks", [
 			editor.on('keydown', function(e) {
 				var isForward = e.keyCode == DELETE, isMeta = VK.metaKeyPressed(e);
 
-				if (!isDefaultPrevented(e) && (isForward || e.keyCode == BACKSPACE)) {
+				if (!isDefaultPrevented(e) && (isForward || e.keyCode == BACKSPACE) && !VK.modifierPressed(e)) {
 					var rng = editor.selection.getRng(), container = rng.startContainer, offset = rng.startOffset;
 
 					// Ignore non meta delete in the where there is text before/after the caret
