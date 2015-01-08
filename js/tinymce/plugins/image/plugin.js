@@ -412,7 +412,7 @@ tinymce.PluginManager.add('image', function(editor) {
 			css = mergeMargins(css);
 
 			//Move opposite equal margins to vspace/hspace field
-			if ((css['margin-top'] && css['margin-bottom']) ||  (css['margin-right'] && css['margin-left'])) {
+			if ((css['margin-top'] && css['margin-bottom']) || (css['margin-right'] && css['margin-left'])) {
 				if (css['margin-top'] === css['margin-bottom']) {
 					win.find('#vspace').value(removePixelSuffix(css['margin-top']));
 				} else {

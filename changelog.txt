@@ -6,6 +6,7 @@ Version 4.1.8 (2014-12-xx)
 	Removed address from the default list of block formats since it tends to be missused.
 	Fixed so the pre block format is called preformatted to make it more verbose.
 	Fixed so it's possible to context scope translation strings this isn't needed most of the time.
+	Fixed so the max length of the width/height input fields of the media dialog is 5 instead of 3.
 	Fixed so drag/dropped contents gets properly processed by paste plugin since it's basically a paste. Patch contributed by Greg Fairbanks.
 	Fixed bug where the less common Shift+Delete didn't produce a proper cut operation on WebKit browsers.
 Version 4.1.7 (2014-11-27)
