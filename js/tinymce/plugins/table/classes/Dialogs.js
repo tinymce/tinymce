@@ -8,6 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+/*eslint dot-notation:0*/
+
 /**
  * ...
  *

@@ -84,7 +84,7 @@ define("tinymce/ui/Form", [
 					formItem.type = 'formitem';
 					ctrl.aria('labelledby', ctrl._id + '-l');
 
-					if (typeof(ctrl.settings.flex) == "undefined") {
+					if (typeof ctrl.settings.flex == "undefined") {
 						ctrl.settings.flex = 1;
 					}
 

@@ -63,7 +63,7 @@ define("tinymce/Shortcuts", [
 
 			cmd = cmdFunc;
 
-			if (typeof(cmdFunc) === 'string') {
+			if (typeof cmdFunc === 'string') {
 				cmdFunc = function() {
 					editor.execCommand(cmd, false, null);
 				};

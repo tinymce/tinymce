@@ -17,7 +17,7 @@ tinymce.PluginManager.add('template', function(editor) {
 		return function() {
 			var templateList = editor.settings.templates;
 
-			if (typeof(templateList) == "string") {
+			if (typeof templateList == "string") {
 				tinymce.util.XHR.send({
 					url: templateList,
 					success: function(text) {
@@ -173,7 +173,7 @@ tinymce.PluginManager.add('template', function(editor) {
 		each(dom.select('*', e), function(e) {
 			each(vl, function(v, k) {
 				if (dom.hasClass(e, k)) {
-					if (typeof(vl[k]) == 'function') {
+					if (typeof vl[k] == 'function') {
 						vl[k](e);
 					}
 				}
@@ -183,7 +183,7 @@ tinymce.PluginManager.add('template', function(editor) {
 
 	function replaceTemplateValues(html, templateValuesOptionName) {
 		each(editor.getParam(templateValuesOptionName), function(v, k) {
-			if (typeof(v) != 'function') {
+			if (typeof v != 'function') {
 				html = html.replace(new RegExp('\\{\\$' + k + '\\}', 'g'), v);
 			}
 		});

@@ -76,7 +76,7 @@ define("tinymce/ui/Factory", [], function() {
 			}
 
 			// If string is specified then use it as the type
-			if (typeof(type) == 'string') {
+			if (typeof type == 'string') {
 				settings = settings || {};
 				settings.type = type;
 			} else {

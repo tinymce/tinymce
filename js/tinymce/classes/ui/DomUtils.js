@@ -57,15 +57,15 @@ define("tinymce/ui/DomUtils", [
 			return document.getElementById(id);
 		},
 
-		addClass : function(elm, cls) {
+		addClass: function(elm, cls) {
 			return DOMUtils.DOM.addClass(elm, cls);
 		},
 
-		removeClass : function(elm, cls) {
+		removeClass: function(elm, cls) {
 			return DOMUtils.DOM.removeClass(elm, cls);
 		},
 
-		hasClass : function(elm, cls) {
+		hasClass: function(elm, cls) {
 			return DOMUtils.DOM.hasClass(elm, cls);
 		},
 

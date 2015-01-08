@@ -66,9 +66,6 @@ define("tinymce/WindowManager", [
 		 * @option {String} file URL of the file to open in the window.
 		 * @option {Number} width Width in pixels.
 		 * @option {Number} height Height in pixels.
-		 * @option {Boolean} resizable Specifies whether the popup window is resizable or not.
-		 * @option {Boolean} maximizable Specifies whether the popup window has a "maximize" button and can get maximized or not.
-		 * @option {String/Boolean} scrollbars Specifies whether the popup window can have scrollbars if required (i.e. content
 		 * larger than the popup size specified).
 		 */
 		self.open = function(args, params) {

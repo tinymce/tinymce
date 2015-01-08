@@ -74,9 +74,9 @@ define("tinymce/util/JSONRequest", [
 			args.success = function(c, x) {
 				c = JSON.parse(c);
 
-				if (typeof(c) == 'undefined') {
+				if (typeof c == 'undefined') {
 					c = {
-						error : 'JSON Parse error.'
+						error: 'JSON Parse error.'
 					};
 				}
 

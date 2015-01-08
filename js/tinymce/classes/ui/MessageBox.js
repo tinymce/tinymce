@@ -170,7 +170,7 @@ define("tinymce/ui/MessageBox", [
 			 * @param {function} [callback] Callback to execute when the user makes a choice.
 			 */
 			alert: function(settings, callback) {
-				if (typeof(settings) == "string") {
+				if (typeof settings == "string") {
 					settings = {text: settings};
 				}
 
@@ -186,7 +186,7 @@ define("tinymce/ui/MessageBox", [
 			 * @param {function} [callback] Callback to execute when the user makes a choice.
 			 */
 			confirm: function(settings, callback) {
-				if (typeof(settings) == "string") {
+				if (typeof settings == "string") {
 					settings = {text: settings};
 				}
 

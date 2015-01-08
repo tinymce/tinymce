@@ -105,7 +105,7 @@ define("tinymce/ui/Collection", [
 			var self = this, i, l, matches = [], item, match;
 
 			// Compile string into selector expression
-			if (typeof(selector) === "string") {
+			if (typeof selector === "string") {
 				selector = new Selector(selector);
 
 				match = function(item) {

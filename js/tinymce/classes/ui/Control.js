@@ -205,7 +205,7 @@ define("tinymce/ui/Control", [
 				return;
 			}
 
-			if (typeof(value) === "number") {
+			if (typeof value === "number") {
 				value = value || 0;
 
 				return {
@@ -305,7 +305,7 @@ define("tinymce/ui/Control", [
 			width = settings.width;
 			height = settings.height;
 			autoResize = settings.autoResize;
-			autoResize = typeof(autoResize) != "undefined" ? autoResize : !width && !height;
+			autoResize = typeof autoResize != "undefined" ? autoResize : !width && !height;
 
 			width = width || minWidth;
 			height = height || minHeight;
@@ -530,7 +530,7 @@ define("tinymce/ui/Control", [
 			function resolveCallbackName(name) {
 				var callback, scope;
 
-				if (typeof(name) != 'string') {
+				if (typeof name != 'string') {
 					return name;
 				}
 
@@ -860,7 +860,7 @@ define("tinymce/ui/Control", [
 		visible: function(state) {
 			var self = this, parentCtrl;
 
-			if (typeof(state) !== "undefined") {
+			if (typeof state !== "undefined") {
 				if (self._visible !== state) {
 					if (self._rendered) {
 						self.getEl().style.display = state ? '' : 'none';
@@ -942,7 +942,7 @@ define("tinymce/ui/Control", [
 		aria: function(name, value) {
 			var self = this, elm = self.getEl(self.ariaTarget);
 
-			if (typeof(value) === "undefined") {
+			if (typeof value === "undefined") {
 				return self._aria[name];
 			} else {
 				self._aria[name] = value;
@@ -1266,7 +1266,7 @@ define("tinymce/ui/Control", [
 						for (i = lastParents.length - 1; i >= idx; i--) {
 							lastCtrl = lastParents[i];
 							lastCtrl.fire("mouseleave", {
-								target : lastCtrl.getEl()
+								target: lastCtrl.getEl()
 							});
 						}
 					}
@@ -1274,7 +1274,7 @@ define("tinymce/ui/Control", [
 					for (i = idx; i < parents.length; i++) {
 						ctrl = parents[i];
 						ctrl.fire("mouseenter", {
-							target : ctrl.getEl()
+							target: ctrl.getEl()
 						});
 					}
 				}

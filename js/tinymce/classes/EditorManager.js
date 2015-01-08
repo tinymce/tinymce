@@ -494,7 +494,7 @@ define("tinymce/EditorManager", [
 			}
 
 			// Remove editors by selector
-			if (typeof(selector) == "string") {
+			if (typeof selector == "string") {
 				selector = selector.selector || selector;
 
 				each(DOM.select(selector), function(elm) {

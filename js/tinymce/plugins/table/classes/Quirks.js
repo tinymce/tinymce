@@ -106,7 +106,7 @@ define("tinymce/tableplugin/Quirks", [
 				}
 
 				function getChildForDirection(parent, up) {
-					var child =  parent && parent[up ? 'lastChild' : 'firstChild'];
+					var child = parent && parent[up ? 'lastChild' : 'firstChild'];
 					// BR is not a valid table child to return in this case we return the table cell
 					return child && child.nodeName === 'BR' ? editor.dom.getParent(child, 'td,th') : child;
 				}

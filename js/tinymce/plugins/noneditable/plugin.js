@@ -46,7 +46,7 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 		while (node) {
 			state = getContentEditable(node);
 			if (state) {
-				return state  === "false" ? node : null;
+				return state === "false" ? node : null;
 			}
 
 			node = node.parentNode;
@@ -461,7 +461,7 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 
 				return (
 					'<span class="' + cls + '" data-mce-content="' + editor.dom.encode(args[0]) + '">' +
-					editor.dom.encode(typeof(args[1]) === "string" ? args[1] : args[0]) + '</span>'
+					editor.dom.encode(typeof args[1] === "string" ? args[1] : args[0]) + '</span>'
 				);
 			});
 		}

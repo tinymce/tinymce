@@ -45,7 +45,7 @@ define("tinymce/fmt/Preview", [
 		}
 
 		// Create block/inline element to use for preview
-		if (typeof(format) == "string") {
+		if (typeof format == "string") {
 			format = editor.formatter.get(format);
 			if (!format) {
 				return;

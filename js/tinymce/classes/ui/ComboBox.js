@@ -167,7 +167,7 @@ define("tinymce/ui/ComboBox", [
 		value: function(value) {
 			var self = this;
 
-			if (typeof(value) != "undefined") {
+			if (typeof value != "undefined") {
 				self._value = value;
 				self.removeClass('placeholder');
 
@@ -201,7 +201,7 @@ define("tinymce/ui/ComboBox", [
 		disabled: function(state) {
 			var self = this;
 
-			if (self._rendered && typeof(state) != 'undefined') {
+			if (self._rendered && typeof state != 'undefined') {
 				self.getEl('inp').disabled = state;
 			}
 

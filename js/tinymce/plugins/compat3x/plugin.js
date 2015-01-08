@@ -271,7 +271,7 @@
 	tinymce.addI18n = function(prefix, o) {
 		var I18n = tinymce.util.I18n, each = tinymce.each;
 
-		if (typeof(prefix) == "string" && prefix.indexOf('.') === -1) {
+		if (typeof prefix == "string" && prefix.indexOf('.') === -1) {
 			I18n.add(prefix, o);
 			return;
 		}

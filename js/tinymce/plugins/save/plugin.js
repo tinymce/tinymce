@@ -36,7 +36,7 @@ tinymce.PluginManager.add('save', function(editor) {
 			editor.isNotDirty = true;
 
 			if (!formObj.onsubmit || formObj.onsubmit()) {
-				if (typeof(formObj.submit) == "function") {
+				if (typeof formObj.submit == "function") {
 					formObj.submit();
 				} else {
 					editor.windowManager.alert("Error: Form submit field collision.");

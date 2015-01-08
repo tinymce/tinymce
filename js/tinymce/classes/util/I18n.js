@@ -56,11 +56,11 @@ define("tinymce/util/I18n", [], function() {
 		 * @return {String} String that got translated.
 		 */
 		translate: function(text) {
-			if (typeof(text) == "undefined") {
+			if (typeof text == "undefined") {
 				return text;
 			}
 
-			if (typeof(text) != "string" && text.raw) {
+			if (typeof text != "string" && text.raw) {
 				return text.raw;
 			}
 

@@ -369,7 +369,7 @@ define("tinymce/dom/DOMUtils", [
 		get: function(elm) {
 			var name;
 
-			if (elm && this.doc && typeof(elm) == 'string') {
+			if (elm && this.doc && typeof elm == 'string') {
 				name = elm;
 				elm = this.doc.getElementById(elm);
 
@@ -552,7 +552,7 @@ define("tinymce/dom/DOMUtils", [
 			}
 
 			// A call to tinymce.is doesn't work for some odd reason on IE9 possible bug inside their JS runtime
-			if (typeof(html) != "undefined") {
+			if (typeof html != "undefined") {
 				return outHtml + '>' + html + '</' + name + '>';
 			}
 
@@ -1337,7 +1337,7 @@ define("tinymce/dom/DOMUtils", [
 		run: function(elm, func, scope) {
 			var self = this, result;
 
-			if (typeof(elm) === 'string') {
+			if (typeof elm === 'string') {
 				elm = self.get(elm);
 			}
 
@@ -1351,7 +1351,7 @@ define("tinymce/dom/DOMUtils", [
 
 				each(elm, function(elm, i) {
 					if (elm) {
-						if (typeof(elm) == 'string') {
+						if (typeof elm == 'string') {
 							elm = self.get(elm);
 						}
 
@@ -1793,7 +1793,7 @@ define("tinymce/dom/DOMUtils", [
 
 			if (node) {
 				// If expression make a function of it using is
-				if (typeof(func) == 'string') {
+				if (typeof func == 'string') {
 					func = function(node) {
 						return self.is(node, selector);
 					};

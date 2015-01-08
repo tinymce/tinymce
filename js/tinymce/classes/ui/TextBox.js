@@ -68,7 +68,7 @@ define("tinymce/ui/TextBox", [
 		disabled: function(state) {
 			var self = this;
 
-			if (self._rendered && typeof(state) != 'undefined') {
+			if (self._rendered && typeof state != 'undefined') {
 				self.getEl().disabled = state;
 			}
 
@@ -85,7 +85,7 @@ define("tinymce/ui/TextBox", [
 		value: function(value) {
 			var self = this;
 
-			if (typeof(value) != "undefined") {
+			if (typeof value != "undefined") {
 				self._value = value;
 
 				if (self._rendered) {

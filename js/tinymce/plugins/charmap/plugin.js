@@ -225,9 +225,9 @@ tinymce.PluginManager.add('charmap', function(editor) {
 		['969', 'omega'],
 	// symbols
 		['8501', 'alef symbol'],
-		['982',  'pi symbol'],
+		['982', 'pi symbol'],
 		['8476', 'real part symbol'],
-		['978',  'upsilon - hook symbol'],
+		['978', 'upsilon - hook symbol'],
 		['8472', 'Weierstrass p'],
 		['8465', 'imaginary part'],
 	// arrows
@@ -270,7 +270,7 @@ tinymce.PluginManager.add('charmap', function(editor) {
 		['8205', 'zero width joiner'],
 		['8206', 'left-to-right mark'],
 		['8207', 'right-to-left mark'],
-		['173',  'soft hyphen']
+		['173', 'soft hyphen']
 	];
 
 	function showDialog() {

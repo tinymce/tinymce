@@ -71,7 +71,7 @@ define("tinymce/ui/Path", [
 		data: function(data) {
 			var self = this;
 
-			if (typeof(data) !== "undefined") {
+			if (typeof data !== "undefined") {
 				self._data = data;
 				self.update();
 

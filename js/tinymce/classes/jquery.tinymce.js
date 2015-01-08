@@ -69,7 +69,7 @@
 					if (oninit) {
 						// Fire the oninit event ones each editor instance is initialized
 						if (++initCount == editors.length) {
-							if (typeof(func) === "string") {
+							if (typeof func === "string") {
 								scope = (func.indexOf(".") === -1) ? null : tinymce.resolve(func.replace(/\.\w+$/, ""));
 								func = tinymce.resolve(func);
 							}

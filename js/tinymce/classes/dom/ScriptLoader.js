@@ -79,7 +79,7 @@ define("tinymce/dom/ScriptLoader", [
 				/*eslint no-console:0 */
 
 				// Report the error so it's easier for people to spot loading errors
-				if (typeof(console) !== "undefined" && console.log) {
+				if (typeof console !== "undefined" && console.log) {
 					console.log("Failed to load: " + url);
 				}
 

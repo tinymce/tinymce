@@ -221,7 +221,7 @@ define("tinymce/ui/FlexLayout", [
 					);
 					rect[alignAxisName] = contPaddingBox[alignBeforeName];
 				} else if (align === "end") {
-					rect[alignAxisName] = contLayoutRect[alignInnerSizeName]  - ctrlLayoutRect[alignSizeName]  - contPaddingBox.top;
+					rect[alignAxisName] = contLayoutRect[alignInnerSizeName] - ctrlLayoutRect[alignSizeName] - contPaddingBox.top;
 				}
 
 				// Calculate new size based on flex

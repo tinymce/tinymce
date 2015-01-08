@@ -24,7 +24,7 @@ define("tinymce/ui/StackLayout", [
 		Defaults: {
 			containerClass: 'stack-layout',
 			controlClass: 'stack-layout-item',
-			endClass : 'break'
+			endClass: 'break'
 		}
 	});
 });

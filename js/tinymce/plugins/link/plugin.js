@@ -15,14 +15,14 @@ tinymce.PluginManager.add('link', function(editor) {
 		return function() {
 			var linkList = editor.settings.link_list;
 
-			if (typeof(linkList) == "string") {
+			if (typeof linkList == "string") {
 				tinymce.util.XHR.send({
 					url: linkList,
 					success: function(text) {
 						callback(tinymce.util.JSON.parse(text));
 					}
 				});
-			} else if (typeof(linkList) == "function") {
+			} else if (typeof linkList == "function") {
 				linkList(callback);
 			} else {
 				callback(linkList);
@@ -276,6 +276,7 @@ tinymce.PluginManager.add('link', function(editor) {
 				classListCtrl
 			],
 			onSubmit: function(e) {
+				/*eslint dot-notation: 0*/
 				var href;
 
 				data = tinymce.extend(data, e.data);

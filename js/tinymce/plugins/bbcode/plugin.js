@@ -12,7 +12,7 @@
 
 (function() {
 	tinymce.create('tinymce.plugins.BBCodePlugin', {
-		init : function(ed) {
+		init: function(ed) {
 			var self = this, dialect = ed.getParam('bbcode_dialect', 'punbb').toLowerCase();
 
 			ed.on('beforeSetContent', function(e) {
@@ -42,7 +42,7 @@
 		// Private methods
 
 		// HTML -> BBCode in PunBB dialect
-		_punbb_html2bbcode : function(s) {
+		_punbb_html2bbcode: function(s) {
 			s = tinymce.trim(s);
 
 			function rep(re, str) {
@@ -92,7 +92,7 @@
 		},
 
 		// BBCode -> HTML from PunBB dialect
-		_punbb_bbcode2html : function(s) {
+		_punbb_bbcode2html: function(s) {
 			s = tinymce.trim(s);
 
 			function rep(re, str) {

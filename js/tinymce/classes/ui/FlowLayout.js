@@ -22,7 +22,7 @@ define("tinymce/ui/FlowLayout", [
 		Defaults: {
 			containerClass: 'flow-layout',
 			controlClass: 'flow-layout-item',
-			endClass : 'break'
+			endClass: 'break'
 		},
 
 		/**

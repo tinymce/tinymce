@@ -45,20 +45,20 @@ define("tinymce/util/Tools", [
 	 * Checks if a object is of a specific type for example an array.
 	 *
 	 * @method is
-	 * @param {Object} o Object to check type of.
-	 * @param {string} t Optional type to check for.
+	 * @param {Object} obj Object to check type of.
+	 * @param {string} type Optional type to check for.
 	 * @return {Boolean} true/false if the object is of the specified type.
 	 */
-	function is(o, t) {
-		if (!t) {
-			return o !== undefined;
+	function is(obj, type) {
+		if (!type) {
+			return obj !== undefined;
 		}
 
-		if (t == 'array' && isArray(o)) {
+		if (type == 'array' && isArray(obj)) {
 			return true;
 		}
 
-		return typeof(o) == t;
+		return typeof obj == type;
 	}
 
 	/**
@@ -96,7 +96,7 @@ define("tinymce/util/Tools", [
 		items = items || [];
 		delim = delim || ',';
 
-		if (typeof(items) == "string") {
+		if (typeof items == "string") {
 			items = items.split(delim);
 		}
 
@@ -329,6 +329,7 @@ define("tinymce/util/Tools", [
 
 		// Add static methods
 		/*jshint sub:true*/
+		/*eslint dot-notation:0*/
 		self.each(p['static'], function(f, n) {
 			ns[cn][n] = f;
 		});

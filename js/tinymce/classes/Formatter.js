@@ -217,7 +217,7 @@ define("tinymce/Formatter", [
 		 */
 		function register(name, format) {
 			if (name) {
-				if (typeof(name) !== 'string') {
+				if (typeof name !== 'string') {
 					each(name, function(format, name) {
 						register(name, format);
 					});
@@ -249,7 +249,7 @@ define("tinymce/Formatter", [
 						}
 
 						// Split classes if needed
-						if (typeof(format.classes) === 'string') {
+						if (typeof format.classes === 'string') {
 							format.classes = format.classes.split(/\s+/);
 						}
 					});
@@ -1291,7 +1291,7 @@ define("tinymce/Formatter", [
 		 * @return {String} New value with replaced variables.
 		 */
 		function replaceVars(value, vars) {
-			if (typeof(value) != "string") {
+			if (typeof value != "string") {
 				value = value(vars);
 			} else if (vars) {
 				value = value.replace(/%(\w+)/g, function(str, name) {
@@ -1435,7 +1435,7 @@ define("tinymce/Formatter", [
 				function findSpace(node, offset) {
 					var pos, pos2, str = node.nodeValue;
 
-					if (typeof(offset) == "undefined") {
+					if (typeof offset == "undefined") {
 						offset = start ? str.length : 0;
 					}
 
@@ -1706,7 +1706,7 @@ define("tinymce/Formatter", [
 					value = normalizeStyleValue(replaceVars(value, vars), name);
 
 					// Indexed array
-					if (typeof(name) === 'number') {
+					if (typeof name === 'number') {
 						name = value;
 						compare_node = 0;
 					}
@@ -1731,7 +1731,7 @@ define("tinymce/Formatter", [
 					value = replaceVars(value, vars);
 
 					// Indexed array
-					if (typeof(name) === 'number') {
+					if (typeof name === 'number') {
 						name = value;
 						compare_node = 0;
 					}

@@ -42,14 +42,14 @@ define("tinymce/ui/Panel", [
 			self.preRender();
 			layout.preRender(self);
 
-			if (typeof(innerHtml) == "undefined") {
+			if (typeof innerHtml == "undefined") {
 				innerHtml = (
 					'<div id="' + self._id + '-body" class="' + self.classes('body') + '">' +
 						layout.renderHtml(self) +
 					'</div>'
 				);
 			} else {
-				if (typeof(innerHtml) == 'function') {
+				if (typeof innerHtml == 'function') {
 					innerHtml = innerHtml.call(self);
 				}
 

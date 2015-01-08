@@ -52,11 +52,11 @@ define("tinymce/ui/GridLayout", [
 			contPaddingBox = container._paddingBox;
 			reverseRows = 'reverseRows' in settings ? settings.reverseRows : container.isRtl();
 
-			if (alignH && typeof(alignH) == "string") {
+			if (alignH && typeof alignH == "string") {
 				alignH = [alignH];
 			}
 
-			if (alignV && typeof(alignV) == "string") {
+			if (alignV && typeof alignV == "string") {
 				alignV = [alignV];
 			}
 

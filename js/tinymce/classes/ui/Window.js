@@ -208,7 +208,7 @@ define("tinymce/ui/Window", [
 				html = '<iframe src="' + settings.url + '" tabindex="-1"></iframe>';
 			}
 
-			if (typeof(html) == "undefined") {
+			if (typeof html == "undefined") {
 				html = layout.renderHtml(self);
 			}
 

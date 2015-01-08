@@ -241,7 +241,7 @@ define("tinymce/ui/MenuItem", [
 			var self = this, settings = self.settings;
 
 			var textStyle = settings.textStyle;
-			if (typeof(textStyle) == "function") {
+			if (typeof textStyle == "function") {
 				textStyle = textStyle.call(this);
 			}
 
@@ -273,7 +273,7 @@ define("tinymce/ui/MenuItem", [
 		},
 
 		active: function(state) {
-			if (typeof(state) != "undefined") {
+			if (typeof state != "undefined") {
 				this.aria('checked', state);
 			}
 

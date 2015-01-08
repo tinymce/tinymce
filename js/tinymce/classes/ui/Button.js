@@ -71,7 +71,7 @@ define("tinymce/ui/Button", [
 		icon: function(icon) {
 			var self = this, prefix = self.classPrefix;
 
-			if (typeof(icon) == 'undefined') {
+			if (typeof icon == 'undefined') {
 				return self.settings.icon;
 			}
 

@@ -37,7 +37,7 @@ define("tinymce/ui/Tooltip", [
 		text: function(value) {
 			var self = this;
 
-			if (typeof(value) != "undefined") {
+			if (typeof value != "undefined") {
 				self._value = value;
 
 				if (self._rendered) {

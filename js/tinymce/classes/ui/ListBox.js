@@ -128,7 +128,7 @@ define("tinymce/ui/ListBox", [
 				}
 			}
 
-			if (typeof(value) != "undefined") {
+			if (typeof value != "undefined") {
 				if (self.menu) {
 					activateByValue(self.menu, value);
 				} else {

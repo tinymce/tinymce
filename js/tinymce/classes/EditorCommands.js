@@ -497,7 +497,7 @@ define("tinymce/EditorCommands", [
 					}
 				}
 
-				if (typeof(value) != 'string') {
+				if (typeof value != 'string') {
 					merge = value.merge;
 					value = value.content;
 				}
@@ -739,7 +739,7 @@ define("tinymce/EditorCommands", [
 			mceInsertLink: function(command, ui, value) {
 				var anchor;
 
-				if (typeof(value) == 'string') {
+				if (typeof value == 'string') {
 					value = {href: value};
 				}
 

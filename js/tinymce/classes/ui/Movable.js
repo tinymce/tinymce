@@ -128,7 +128,7 @@ define("tinymce/ui/Movable", [
 		 * @return {tinymce.ui.Control} Current control instance.
 		 */
 		moveRel: function(elm, rel) {
-			if (typeof(rel) != 'string') {
+			if (typeof rel != 'string') {
 				rel = this.testMoveRel(elm, rel);
 			}
 

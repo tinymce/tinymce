@@ -14,7 +14,7 @@ tinymce.PluginManager.add('importcss', function(editor) {
 	var self = this, each = tinymce.each;
 
 	function compileFilter(filter) {
-		if (typeof(filter) == "string") {
+		if (typeof filter == "string") {
 			return function(value) {
 				return value.indexOf(filter) !== -1;
 			};

@@ -67,14 +67,14 @@ tinymce.PluginManager.add('image', function(editor) {
 		return function() {
 			var imageList = editor.settings.image_list;
 
-			if (typeof(imageList) == "string") {
+			if (typeof imageList == "string") {
 				tinymce.util.XHR.send({
 					url: imageList,
 					success: function(text) {
 						callback(tinymce.util.JSON.parse(text));
 					}
 				});
-			} else if (typeof(imageList) == "function") {
+			} else if (typeof imageList == "function") {
 				imageList(callback);
 			} else {
 				callback(imageList);
@@ -166,6 +166,7 @@ tinymce.PluginManager.add('image', function(editor) {
 			}
 
 			// Setup new data excluding style properties
+			/*eslint dot-notation: 0*/
 			data = {
 				src: data.src,
 				alt: data.alt,

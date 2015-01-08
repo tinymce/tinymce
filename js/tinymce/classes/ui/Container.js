@@ -214,7 +214,7 @@ define("tinymce/ui/Container", [
 					// Construct item if needed
 					if (!(item instanceof Control)) {
 						// Name only then convert it to an object
-						if (typeof(item) == "string") {
+						if (typeof item == "string") {
 							item = {type: item};
 						}
 
@@ -352,7 +352,7 @@ define("tinymce/ui/Container", [
 			self.find('*').each(function(ctrl) {
 				var name = ctrl.name(), value = ctrl.value();
 
-				if (name && typeof(value) != "undefined") {
+				if (name && typeof value != "undefined") {
 					data[name] = value;
 				}
 			});
