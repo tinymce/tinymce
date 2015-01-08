@@ -94,10 +94,16 @@ tinymce.PluginManager.add('media', function(editor, url) {
 			if (win.find('#constrain')[0].checked() && width && height && newWidth && newHeight) {
 				if (e.control == widthCtrl) {
 					newHeight = Math.round((newWidth / width) * newHeight);
-					heightCtrl.value(newHeight);
+
+					if (!isNaN(newHeight)) {
+						heightCtrl.value(newHeight);
+					}
 				} else {
 					newWidth = Math.round((newHeight / height) * newWidth);
-					widthCtrl.value(newWidth);
+
+					if (!isNaN(newWidth)) {
+						widthCtrl.value(newWidth);
+					}
 				}
 			}
 
