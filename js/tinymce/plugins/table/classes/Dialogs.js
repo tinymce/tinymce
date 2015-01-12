@@ -221,8 +221,8 @@ define("tinymce/tableplugin/Dialogs", [
 
 					if (editor.settings.table_style_by_css) {
 						stylesToMerge = [];
-						stylesToMerge.push({name:'border', value: data.border});
-						stylesToMerge.push({name:'border-spacing', value: addSizeSuffix(data.cellspacing)});
+						stylesToMerge.push({name: 'border', value: data.border});
+						stylesToMerge.push({name: 'border-spacing', value: addSizeSuffix(data.cellspacing)});
 						mergeStyles(dom, tableElm, stylesToMerge);
 						dom.setAttribs(tableElm, {
 							'data-mce-border-color': data.borderColor,
@@ -280,7 +280,7 @@ define("tinymce/tableplugin/Dialogs", [
 
 					for (var i = 0; i < elms.length; i++) {
 						var currentStyle = dom.getStyle(elms[i], name);
-						if (typeof(firstChildStyle) === "undefined") {
+						if (typeof firstChildStyle === "undefined") {
 							firstChildStyle = currentStyle;
 						}
 						if (firstChildStyle != currentStyle) {
