@@ -241,7 +241,7 @@
 		});
 		equal(
 			cleanTableHtml(editor.getContent()),
-			'<table style=\"border: 1px solid green;\" data-border=\"1px solid green\"><tbody><tr><td style=\"border: 1px solid green;\">x</td><td style=\"border: 1px solid green;\">z</td></tr></tbody></table>'
+			'<table style=\"border: 1px solid green;\"><tbody><tr><td style=\"border: 1px solid green;\">x</td><td style=\"border: 1px solid green;\">z</td></tr></tbody></table>'
 		);
 	});
 
@@ -257,7 +257,7 @@
 		});
 		equal(
 			cleanTableHtml(editor.getContent()),
-			'<table data-cell-padding=\"2\"><tbody><tr><td style=\"padding: 2px;\">x</td><td style=\"padding: 2px;\">z</td></tr></tbody></table>'
+			'<table><tbody><tr><td style=\"padding: 2px;\">x</td><td style=\"padding: 2px;\">z</td></tr></tbody></table>'
 		);
 	});
 
@@ -289,7 +289,7 @@
 		});
 		equal(
 			cleanTableHtml(editor.getContent()),
-			'<table style=\"border-color: green;\" data-border-color=\"green\"><tbody><tr><td>x</td><td>z</td></tr></tbody></table>'
+			'<table style=\"border-color: green;\"><tbody><tr><td>x</td><td>z</td></tr></tbody></table>'
 		);
 	});
 
@@ -306,7 +306,7 @@
 		});
 		equal(
 			cleanTableHtml(editor.getContent()),
-			'<table style=\"border: 1px solid green; border-collapse: collapse;\" data-border=\"1px solid green\"><tbody><tr><td style=\"border: 1px solid green;\">x</td><td style=\"border: 1px solid green;\">z</td></tr></tbody></table>'
+			'<table style=\"border: 1px solid green; border-collapse: collapse;\"><tbody><tr><td style=\"border: 1px solid green;\">x</td><td style=\"border: 1px solid green;\">z</td></tr></tbody></table>'
 		);
 	});
 

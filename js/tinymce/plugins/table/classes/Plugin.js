@@ -302,6 +302,20 @@ define("tinymce/tableplugin/Plugin", [
 			self.cellSelection = new CellSelection(editor);
 		});
 
+		editor.on('PreInit', function() {
+			// Remove internal data attributes
+			editor.serializer.addAttributeFilter(
+				'data-mce-cell-padding,data-mce-border,data-mce-border-color',
+				function(nodes, name) {
+
+					var i = nodes.length;
+
+					while (i--) {
+						nodes[i].attr(name, null);
+					}
+				});
+		});
+
 		// Register action commands
 		each({
 			mceTableSplitCells: function(grid) {
