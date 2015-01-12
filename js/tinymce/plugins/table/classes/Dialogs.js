@@ -274,6 +274,7 @@ define("tinymce/tableplugin/Dialogs", [
 			}
 
 			function getTDTHOverallStyle (elm, name) {
+				var cells = elm.querySelectorAll("TD,TH"), firstChildStyle;
 
 				function checkChildren(firstChildStyle, elms) {
 
@@ -283,7 +284,7 @@ define("tinymce/tableplugin/Dialogs", [
 							firstChildStyle = currentStyle;
 						}
 						if (firstChildStyle != currentStyle) {
-							firstChildStyle = "";
+							return "";
 						}
 					}
 
@@ -291,13 +292,7 @@ define("tinymce/tableplugin/Dialogs", [
 
 				}
 
-				var tds = elm.getElementsByTagName("TD");
-				var ths = elm.getElementsByTagName("TH");
-
-				var firstChildStyle;
-
-				firstChildStyle = checkChildren(firstChildStyle, ths);
-				firstChildStyle = checkChildren(firstChildStyle, tds);
+				firstChildStyle = checkChildren(firstChildStyle, cells);
 
 				return firstChildStyle;
 			}
