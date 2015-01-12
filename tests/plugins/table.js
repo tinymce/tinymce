@@ -10,7 +10,7 @@
 				indent: false,
 				plugins: 'table',
 				valid_styles: {
-					'*' : 'width,height,vertical-align,text-align,float,border-color,background-color'
+					'*' : 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
 				},
 				init_instance_callback: function(ed) {
 					window.editor = ed;
@@ -24,12 +24,13 @@
 			if (win) {
 				win.close();
 			}
-			
+
 			delete editor.settings.table_advtab;
 			delete editor.settings.table_cell_advtab;
 			delete editor.settings.table_class_list;
 			delete editor.settings.table_cell_class_list;
 			delete editor.settings.table_row_class_list;
+			delete editor.settings.table_style_by_css;
 		}
 	});
 
@@ -225,6 +226,87 @@
 		equal(
 			cleanTableHtml(editor.getContent()),
 			'<table style="float: right; border-color: red; background-color: blue;" border="1" cellspacing="3" cellpadding="2"><tbody><tr><td>x</td></tr></tbody></table>'
+		);
+	});
+
+	test("Table properties dialog css border", function() {
+		editor.settings.table_style_by_css = true;
+
+		editor.setContent('<table><tr><td>X</td><td>Z</td></tr></table>');
+
+		Utils.setSelection('td', 0);
+		editor.execCommand('mceTableProps');
+		fillAndSubmitWindowForm({
+			border: "1px solid green"
+		});
+		equal(
+			cleanTableHtml(editor.getContent()),
+			'<table style=\"border: 1px solid green;\"><tbody><tr><td style=\"border: 1px solid green;\">x</td><td style=\"border: 1px solid green;\">z</td></tr></tbody></table>'
+		);
+	});
+
+	test("Table properties dialog css cell padding", function() {
+		editor.settings.table_style_by_css = true;
+
+		editor.setContent('<table><tr><td>X</td><td>Z</td></tr></table>');
+
+		Utils.setSelection('td', 0);
+		editor.execCommand('mceTableProps');
+		fillAndSubmitWindowForm({
+			cellpadding: "2"
+		});
+		equal(
+			cleanTableHtml(editor.getContent()),
+			'<table><tbody><tr><td style=\"padding: 2px;\">x</td><td style=\"padding: 2px;\">z</td></tr></tbody></table>'
+		);
+	});
+
+	test("Table properties dialog cell spacing", function() {
+		editor.settings.table_style_by_css = true;
+
+		editor.setContent('<table><tr><td>X</td><td>Z</td></tr></table>');
+
+		Utils.setSelection('td', 0);
+		editor.execCommand('mceTableProps');
+		fillAndSubmitWindowForm({
+			cellspacing: "3"
+		});
+		equal(
+			cleanTableHtml(editor.getContent()),
+			'<table style=\"border-spacing: 3px;\"><tbody><tr><td>x</td><td>z</td></tr></tbody></table>'
+		);
+	});
+
+	test("Table properties dialog border-color", function() {
+		editor.settings.table_style_by_css = true;
+
+		editor.setContent('<table><tr><td>X</td><td>Z</td></tr></table>');
+
+		Utils.setSelection('td', 0);
+		editor.execCommand('mceTableProps');
+		fillAndSubmitWindowForm({
+			borderColor: "green"
+		});
+		equal(
+			cleanTableHtml(editor.getContent()),
+			'<table style=\"border-color: green;\"><tbody><tr><td>x</td><td>z</td></tr></tbody></table>'
+		);
+	});
+
+	test("Table properties dialog css border, style", function() {
+		editor.settings.table_style_by_css = true;
+
+		editor.setContent('<table><tr><td>X</td><td>Z</td></tr></table>');
+
+		Utils.setSelection('td', 0);
+		editor.execCommand('mceTableProps');
+		fillAndSubmitWindowForm({
+			border: "1px solid green",
+			style: "border-collapse: collapse"
+		});
+		equal(
+			cleanTableHtml(editor.getContent()),
+			'<table style=\"border: 1px solid green; border-collapse: collapse;\"><tbody><tr><td style=\"border: 1px solid green;\">x</td><td style=\"border: 1px solid green;\">z</td></tr></tbody></table>'
 		);
 	});
 

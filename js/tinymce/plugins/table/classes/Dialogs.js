@@ -168,22 +168,42 @@ define("tinymce/tableplugin/Dialogs", [
 			data.style = dom.serializeStyle(css);
 		}
 
+		function mergeStyles(dom, elm, styles) {
+			var css = dom.parseStyle(dom.getAttrib(elm, 'style'));
+
+			each(styles, function(style) {
+				css[style.name] = style.value;
+			});
+
+			dom.setAttrib(elm, 'style', dom.serializeStyle(dom.parseStyle(dom.serializeStyle(css))));
+		}
+
 		self.tableProps = function() {
 			self.table(true);
 		};
 
 		self.table = function(isProps) {
-			var dom = editor.dom, tableElm, colsCtrl, rowsCtrl, classListCtrl, data = {}, generalTableForm;
+			var dom = editor.dom, tableElm, colsCtrl, rowsCtrl, classListCtrl, data = {}, generalTableForm, stylesToMerge;
 
 			function onSubmitTableForm() {
+
+				//Explore the layers of the table till we find the first layer of tds or ths
+				function styleTDTH (elm, name, value) {
+					if (elm.tagName === "TD" || elm.tagName === "TH") {
+						dom.setStyle(elm, name, value);
+					} else {
+						if (elm.children) {
+							for (var i = 0; i < elm.children.length; i++) {
+								styleTDTH(elm.children[i], name, value);
+							}
+						}
+					}
+				}
+
 				var captionElm;
 
 				updateStyle(dom, this);
 				data = Tools.extend(data, this.toJSON());
-
-				Tools.each('backgroundColor borderColor'.split(' '), function(name) {
-					delete data[name];
-				});
 
 				if (data["class"] === false) {
 					delete data["class"];
@@ -195,14 +215,35 @@ define("tinymce/tableplugin/Dialogs", [
 					}
 
 					editor.dom.setAttribs(tableElm, {
-						cellspacing: data.cellspacing,
-						cellpadding: data.cellpadding,
-						border: data.border,
 						style: data.style,
 						'class': data['class']
 					});
 
-					if (dom.getAttrib(tableElm, 'width')) {
+					if (editor.settings.table_style_by_css) {
+						stylesToMerge = [];
+						stylesToMerge.push({name:'border', value: data.border});
+						stylesToMerge.push({name:'border-spacing', value: addSizeSuffix(data.cellspacing)});
+						mergeStyles(dom, tableElm, stylesToMerge);
+						dom.setAttribs(tableElm, {
+							'data-mce-border-color': data.borderColor,
+							'data-mce-cell-padding': data.cellpadding,
+							'data-mce-border': data.border
+						});
+						if (tableElm.children) {
+							for (var i = 0; i < tableElm.children.length; i++) {
+								styleTDTH(tableElm.children[i], 'border', data.border);
+								styleTDTH(tableElm.children[i], 'padding', addSizeSuffix(data.cellpadding));
+							}
+						}
+					} else {
+						editor.dom.setAttribs(tableElm, {
+							border: data.border,
+							cellpadding: data.cellpadding,
+							cellspacing: data.cellspacing
+						});
+					}
+
+					if (dom.getAttrib(tableElm, 'width') && !editor.settings.table_style_by_css) {
 						dom.setAttrib(tableElm, 'width', removePxSuffix(data.width));
 					} else {
 						dom.setStyle(tableElm, 'width', addSizeSuffix(data.width));
@@ -222,7 +263,6 @@ define("tinymce/tableplugin/Dialogs", [
 						captionElm.innerHTML = !Env.ie ? '<br data-mce-bogus="1"/>' : '\u00a0';
 						tableElm.insertBefore(captionElm, tableElm.firstChild);
 					}
-
 					unApplyAlign(tableElm);
 					if (data.align) {
 						editor.formatter.apply('align' + data.align, {}, tableElm);
@@ -233,6 +273,30 @@ define("tinymce/tableplugin/Dialogs", [
 				});
 			}
 
+			function getTDTHOverallStyle (elm, name) {
+				var cells = editor.dom.select("TD,TH"), firstChildStyle;
+
+				function checkChildren(firstChildStyle, elms) {
+
+					for (var i = 0; i < elms.length; i++) {
+						var currentStyle = dom.getStyle(elms[i], name);
+						if (typeof(firstChildStyle) === "undefined") {
+							firstChildStyle = currentStyle;
+						}
+						if (firstChildStyle != currentStyle) {
+							return "";
+						}
+					}
+
+					return firstChildStyle;
+
+				}
+
+				firstChildStyle = checkChildren(firstChildStyle, cells);
+
+				return firstChildStyle;
+			}
+
 			if (isProps === true) {
 				tableElm = dom.getParent(editor.selection.getStart(), 'table');
 
@@ -240,9 +304,13 @@ define("tinymce/tableplugin/Dialogs", [
 					data = {
 						width: removePxSuffix(dom.getStyle(tableElm, 'width') || dom.getAttrib(tableElm, 'width')),
 						height: removePxSuffix(dom.getStyle(tableElm, 'height') || dom.getAttrib(tableElm, 'height')),
-						cellspacing: tableElm ? dom.getAttrib(tableElm, 'cellspacing') : '',
-						cellpadding: tableElm ? dom.getAttrib(tableElm, 'cellpadding') : '',
-						border: tableElm ? dom.getAttrib(tableElm, 'border') : '',
+						cellspacing: removePxSuffix(dom.getStyle(tableElm, 'border-spacing') ||
+							dom.getAttrib(tableElm, 'cellspacing')),
+						cellpadding: dom.getAttrib(tableElm, 'data-mce-cell-padding') || dom.getAttrib(tableElm, 'cellpadding') ||
+							getTDTHOverallStyle(tableElm, 'padding'),
+						border: dom.getAttrib(tableElm, 'data-mce-border') || dom.getAttrib(tableElm, 'border') ||
+							getTDTHOverallStyle(tableElm, 'border'),
+						borderColor: dom.getAttrib(tableElm, 'data-mce-border-color'),
 						caption: !!dom.select('caption', tableElm)[0],
 						'class': dom.getAttrib(tableElm, 'class')
 					};
