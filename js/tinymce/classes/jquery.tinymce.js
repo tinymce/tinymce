@@ -13,11 +13,12 @@
 (function($) {
 	var undef,
 		lazyLoading,
+		patchApplied,
 		delayedInits = [],
 		win = window;
 
 	$.fn.tinymce = function(settings) {
-		var self = this, url, base, lang, suffix = "", patchApplied;
+		var self = this, url, base, lang, suffix = "";
 
 		// No match then just ignore the call
 		if (!self.length) {
