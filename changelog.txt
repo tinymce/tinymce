@@ -1,6 +1,7 @@
 Version 4.1.8 (2014-12-xx)
 	Added new html5 sizes attribute to img elements used together with srcset.
 	Added new elementpath option that makes it possible to disable the element path but keep the statusbar.
+	Added new option table_style_by_css for the table plugin to set table styling with css rather than table attributes.
 	Fixed bug where pressing enter twice before a table moves the cursor in the table and causes a javascript error.
 	Fixed bug where advanced image styles were not respected.
 	Fixed bug where the less common Shift+Delete didn't produce a proper cut operation on WebKit browsers.
