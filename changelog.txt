@@ -6,6 +6,9 @@ Version 4.1.8 (2014-12-xx)
 	Fixed bug where advanced image styles were not respected.
 	Fixed bug where the less common Shift+Delete didn't produce a proper cut operation on WebKit browsers.
 	Fixed bug where image/media size constrain logic would produce NaN when handling non number values.
+	Fixed bug where internal classes where removed by the removeformat command.
+	Fixed bug with creating links table cell contents with a specific selection would throw a exceptions on WebKit/Blink.
+	Fixed so removeformat removes ins/del by default since these might be used for strikethough.
 	Removed address from the default list of block formats since it tends to be missused.
 	Fixed so the pre block format is called preformatted to make it more verbose.
 	Fixed so it's possible to context scope translation strings this isn't needed most of the time.

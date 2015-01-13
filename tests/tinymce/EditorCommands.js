@@ -27,7 +27,7 @@ function getContent() {
 
 test('mceInsertContent - p inside text of p', function() {
 	var rng;
-	
+
 	expect(7);
 
 	editor.setContent('<p>1234</p>');
@@ -70,7 +70,7 @@ test('mceInsertContent - p inside whole p', function() {
 
 test('mceInsertContent - pre in text of pre', function() {
 	var rng;
-	
+
 	expect(7);
 
 	editor.setContent('<pre>1234</pre>');
@@ -91,7 +91,7 @@ test('mceInsertContent - pre in text of pre', function() {
 
 test('mceInsertContent - h1 in text of h1', function() {
 	var rng;
-	
+
 	expect(7);
 
 	editor.setContent('<h1>1234</h1>');
@@ -112,7 +112,7 @@ test('mceInsertContent - h1 in text of h1', function() {
 
 test('mceInsertContent - li inside li', function() {
 	var rng;
-	
+
 	expect(7);
 
 	editor.setContent('<ul><li>1234</li></ul>');
@@ -189,7 +189,7 @@ test('mceInsertContent - text inside empty p with br caret node', function() {
 
 test('mceInsertContent - image inside p', function() {
 	var rng;
-	
+
 	expect(6);
 
 	editor.setContent('<p>1</p>');
@@ -209,7 +209,7 @@ test('mceInsertContent - image inside p', function() {
 
 test('mceInsertContent - legacy content', function() {
 	var rng;
-	
+
 	expect(1);
 
 	// Convert legacy content
@@ -224,7 +224,7 @@ test('mceInsertContent - legacy content', function() {
 
 test('mceInsertContent - hr', function() {
 	var rng;
-	
+
 	expect(7);
 
 	editor.setContent('<p>123</p>');
@@ -348,7 +348,7 @@ test('mceInsertContent - insert P in span style element #7090', function() {
 
 test('InsertHorizontalRule', function() {
 	var rng;
-	
+
 	expect(7);
 
 	editor.setContent('<p>123</p>');
@@ -671,6 +671,16 @@ test('mceInsertLink (link text inside link)', function() {
 
 	editor.execCommand('mceInsertLink', false, 'link');
 	equal(editor.getContent(), '<p><a href="link">test</a></p>');
+});
+
+test('mceInsertLink bug #7331', function() {
+	editor.setContent('<table><tbody><tr><td>A</td></tr><tr><td>B</td></tr></tbody></table>');
+	var rng = editor.dom.createRng();
+	rng.setStart(editor.$('td')[1].firstChild, 0);
+	rng.setEnd(editor.getBody(), 1);
+	editor.selection.setRng(rng);
+	editor.execCommand('mceInsertLink', false, {href: 'x'});
+	equal(editor.getContent(), '<table><tbody><tr><td>A</td></tr><tr><td><a href=\"x\">B</a></td></tr></tbody></table>');
 });
 
 test('unlink', function() {

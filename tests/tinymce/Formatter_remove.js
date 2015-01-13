@@ -364,6 +364,27 @@ test('remove format block on contentEditable: false block', function() {
 	equal(editor.getContent(), '<p>abc</p><h1>def</h1>', 'H1 is still not h1');
 });
 
+test('remove format on del using removeformat format', function() {
+	editor.getBody().innerHTML = '<p><del>abc</del></p>';
+	Utils.setSelection('del', 0, 'del', 3);
+	editor.formatter.remove('removeformat');
+	equal(Utils.cleanHtml(editor.getBody().innerHTML), '<p>abc</p>');
+});
+
+test('remove format on span with class using removeformat format', function() {
+	editor.getBody().innerHTML = '<p><span class="x">abc</span></p>';
+	Utils.setSelection('span', 0, 'span', 3);
+	editor.formatter.remove('removeformat');
+	equal(Utils.cleanHtml(editor.getBody().innerHTML), '<p>abc</p>');
+});
+
+test('remove format on span with internal class using removeformat format', function() {
+	editor.getBody().innerHTML = '<p><span class="mce-item-internal">abc</span></p>';
+	Utils.setSelection('span', 0, 'span', 3);
+	editor.formatter.remove('removeformat');
+	equal(Utils.cleanHtml(editor.getBody().innerHTML), '<p><span class="mce-item-internal">abc</span></p>');
+});
+
 /*
 test('Remove format bug 1', function() {
 	editor.setContent('<p><b>ab<em>cde</em>fgh</b></p>');
