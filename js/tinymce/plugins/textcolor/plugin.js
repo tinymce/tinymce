@@ -159,15 +159,19 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 	}
 
 	function applyFormat(format, value) {
-		editor.focus();
-		editor.formatter.apply(format, {value: value});
-		editor.nodeChanged();
+		editor.undoManager.transact(function() {
+			editor.focus();
+			editor.formatter.apply(format, {value: value});
+			editor.nodeChanged();
+		});
 	}
 
 	function removeFormat(format) {
-		editor.focus();
-		editor.formatter.remove(format, {value: null}, null, true);
-		editor.nodeChanged();
+		editor.undoManager.transact(function() {
+			editor.focus();
+			editor.formatter.remove(format, {value: null}, null, true);
+			editor.nodeChanged();
+		});
 	}
 
 	function onPanelClick(e) {
