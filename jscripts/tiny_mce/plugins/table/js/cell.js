@@ -21,8 +21,6 @@ function init() {
 	var valign = getStyle(tdElm, 'vertical-align');
 	var width = trimSize(getStyle(tdElm, 'width', 'width'));
 	var height = trimSize(getStyle(tdElm, 'height', 'height'));
-	var border = trimSize(getStyle(tdElm, 'border', 'borderWidth'));
-	var padding = trimSize(getStyle(tdElm, 'padding'));
 	var bordercolor = convertRGBToHex(getStyle(tdElm, 'bordercolor', 'borderLeftColor'));
 	var bgcolor = convertRGBToHex(getStyle(tdElm, 'bgcolor', 'backgroundColor'));
 	var className = ed.dom.getAttrib(tdElm, 'class');
@@ -42,8 +40,6 @@ function init() {
 		formObj.backgroundimage.value = backgroundimage;
 		formObj.width.value = width;
 		formObj.height.value = height;
-		formObj.border.value = border;
-		formObj.padding.value = padding;
 		formObj.id.value = id;
 		formObj.lang.value = lang;
 		formObj.style.value = ed.dom.serializeStyle(st);
@@ -62,20 +58,6 @@ function init() {
 		updateColor('bgcolor_pick', 'bgcolor');
 	} else
 		tinyMCEPopup.dom.hide('action');
-}
-
-function isCssSize(value) {
-	return /^[0-9.]+(%|in|cm|mm|em|ex|pt|pc|px)$/.test(value);
-}
-
-function cssSize(value, def) {
-	value = tinymce.trim(value || def);
-
-	if (!isCssSize(value)) {
-		return parseInt(value, 10) + 'px';
-	}
-
-	return value;
 }
 
 function updateAction() {
@@ -239,8 +221,6 @@ function updateCell(td, skip_id) {
 	td.style.height = getCSSSize(formObj.height.value);
 	dom.setStyle(td, 'text-align', formObj.align.value);
 	dom.setStyle(td ,'vertical-align', formObj.valign.value);
-	td.style['border-width'] = getCSSSize(formObj.border.value);
-	td.style.padding = getCSSSize(formObj.padding.value);
 	if (formObj.bordercolor.value != "") {
 		td.style.borderColor = formObj.bordercolor.value;
 		td.style.borderStyle = td.style.borderStyle == "" ? "solid" : td.style.borderStyle;
@@ -302,30 +282,6 @@ function changedSize() {
 	formObj.style.value = ed.dom.serializeStyle(st);
 }
 
-function changedBorder() {
-	var formObj = document.forms[0];
-	var st = ed.dom.parseStyle(formObj.style.value);
-
-	if (formObj.border.value != "")
-		st['border-width'] = cssSize(formObj.border.value);
-	else
-		st['border-width'] = '';
-
-	formObj.style.value = ed.dom.serializeStyle(st);
-}
-
-function changedPadding() {
-	var formObj = document.forms[0];
-	var st = ed.dom.parseStyle(formObj.style.value);
-
-	if (formObj.padding.value != "")
-		st.padding = cssSize(formObj.padding.value);
-	else
-		st.padding = '';
-
-	formObj.style.value = ed.dom.serializeStyle(st);
-}
-
 function changedColor() {
 	var formObj = document.forms[0];
 	var st = ed.dom.parseStyle(formObj.style.value);
@@ -360,9 +316,6 @@ function changedStyle() {
 		formObj.bordercolor.value = st['border-color'];
 		updateColor('bordercolor_pick','bordercolor');
 	}
-
-	if (st.padding)
-		formObj.padding.value = trimSize(st.padding);
 
 	if (st['text-align'])
 		formObj.align.value = st['text-align'];
