@@ -69,11 +69,13 @@ tinymce.PluginManager.add('tagging', function(editor, url) {
 		barRefs,
 		sideDiv;
 		
-	var
-		selTop,
+	var	selTop,
 		selHeight,
 		unselTop,
 		unselHeight;
+		
+	var contentAreaContainer;
+		
 
 	function updateBars() {
 		var
@@ -207,9 +209,9 @@ tinymce.PluginManager.add('tagging', function(editor, url) {
 			}
 		}
 		
-		// Work out whether scroll bar is visible - if so then reduce widebar width to allow room for it.
+		// Work out whether scroll bar is visible - if so then reduce sidebar width to allow room for it.
 		// Why is the figure 22?
-		if (editor.getBody().offsetHeight + 22 >= editor.getContentAreaContainer().offsetHeight) {
+		if (editor.getBody().offsetHeight + 22 >= contentAreaContainer.offsetHeight) {
 			sideDiv.style.width = (sideBarWidth - 16) + "px";
 		} else {
 			sideDiv.style.width = sideBarWidth + "px";
@@ -378,6 +380,7 @@ tinymce.PluginManager.add('tagging', function(editor, url) {
 		
 		function newTagCancel() {
 			editor.windowManager.open({
+				title: 'Tag',
 				body: body,
 				onsubmit: tagWindowSubmit,
 				scrollbars: true,
@@ -406,6 +409,7 @@ tinymce.PluginManager.add('tagging', function(editor, url) {
 		function newtag() {
 			editor.windowManager.close();
 			editor.windowManager.open ({
+				title: 'New Tag',
 				body: newtagbody,
 				onsubmit: newTagSubmit,
 				onclose: newTagCancel
@@ -512,6 +516,7 @@ tinymce.PluginManager.add('tagging', function(editor, url) {
 			});
 
 			editor.windowManager.open({
+				title: 'Tag',
 				body: body,
 				onsubmit: tagWindowSubmit,
 				onclose: tagWindowClose,
@@ -541,6 +546,8 @@ tinymce.PluginManager.add('tagging', function(editor, url) {
         var cssURL = url + '/css/tagging.css';
 		var
 			tagName;
+		var dom = editor.dom;
+		var body = editor.getBody();
 		
         if(document.createStyleSheet){
             document.createStyleSheet(cssURL);
@@ -569,24 +576,24 @@ tinymce.PluginManager.add('tagging', function(editor, url) {
 			},
 		}); /* Undocumented! */
 		
-		var dom = editor.dom;
-		contentareacontainer = editor.getContentAreaContainer();
-		var style = contentareacontainer.getAttribute("style") + " width:100%; display: inline-block;";
-		contentareacontainer.setAttribute("style", style);
+		contentAreaContainer = editor.getContentAreaContainer();
+		contentAreaContainer.style.width = '100%';
+		contentAreaContainer.style.display = 'inline-block';
 
-		var body = editor.getBody();
 		body.style.marginRight = sideBarWidth + "px";
 
-		var contentareaiframe = contentareacontainer.firstChild;
-		style = contentareaiframe.getAttribute("style") + " line-height: normal; display: inline-block;";
-		contentareaiframe.setAttribute("style", style);
+		var contentAreaIframe = contentAreaContainer.firstChild;
+		contentAreaIframe.style.lineHeight = 'normal';
+		contentAreaIframe.style.display = 'inline-block';
 
 		sideDiv = dom.create('div', {
 			id: dom.uniqueId(),
 			class: "sidediv",
 			style: "margin-left: " + -sideBarWidth + "px"
 		});
-		contentareacontainer.appendChild(sideDiv);
+		contentAreaContainer.appendChild(sideDiv);
+		
+		// Load up tags from existing content
 		
 		var
 			spans = editor.dom.select('span');
