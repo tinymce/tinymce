@@ -33,7 +33,7 @@
 						</tr>
 						<tr>
 							<td><label id="cellpaddinglabel" for="cellpadding">{#table_dlg.cellpadding}</label></td>
-							<td><input id="cellpadding" name="cellpadding" type="text" value="" size="3" maxlength="3" class="number" /></td>
+							<td><input id="cellpadding" name="cellpadding" type="text" value="" size="3" maxlength="5" class="size" /></td>
 							<td><label id="cellspacinglabel" for="cellspacing">{#table_dlg.cellspacing}</label></td>
 							<td><input id="cellspacing" name="cellspacing" type="text" value="" size="3" maxlength="5" onchange="changedCellSpacing();" class="size" /></td>
 						</tr>
@@ -64,6 +64,10 @@
 						<tr>
 							<td class="column1" ><label for="caption">{#table_dlg.caption}</label></td>
 							<td><input id="caption" name="caption" type="checkbox" class="checkbox" value="true" /></td>
+							<td><label id="styleCellslabel" for="styleCells">{#table_dlg.style_cells}</label></td>
+							<td>
+								<input id="styleCells" name="styleCells" type="checkbox" class="checkbox" value="true" onclick="changedStyleCells();"/>
+							</td>
 						</tr>
 					</table>
 				</fieldset>
