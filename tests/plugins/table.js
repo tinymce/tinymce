@@ -310,6 +310,28 @@
 		);
 	});
 
+	test("Table properties dialog (get cell padding from styled cells)", function() {
+		editor.settings.table_style_by_css = true;
+
+		editor.setContent('<table><tr><td style="padding: 5px">X</td></tr><tr><td style="padding: 5px">X</td></tr></table>' +
+			'<table><tr><td style="padding: 15px">X</td></tr><tr><td style="padding: 15px">X</td></tr></table>');
+		Utils.setSelection('td', 0);
+		editor.execCommand('mceTableProps');
+
+		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		"align": "",
+		"backgroundColor": "",
+		"border": "",
+		"borderColor": "",
+		"caption": false,
+		"cellpadding": "5px",
+		"cellspacing": "",
+		"height": "",
+		"style": "",
+		"width": ""
+		});
+	});
+
 	test("Table cell properties dialog (get data from plain cell)", function() {
 		editor.setContent('<table><tr><td>X</td></tr></table>');
 		Utils.setSelection('td', 0);

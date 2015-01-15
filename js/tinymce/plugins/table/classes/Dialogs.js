@@ -274,7 +274,7 @@ define("tinymce/tableplugin/Dialogs", [
 			}
 
 			function getTDTHOverallStyle (elm, name) {
-				var cells = editor.dom.select("TD,TH"), firstChildStyle;
+				var cells = editor.dom.select("td,th", elm), firstChildStyle;
 
 				function checkChildren(firstChildStyle, elms) {
 
