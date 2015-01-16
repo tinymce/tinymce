@@ -22,7 +22,7 @@ function insertTable() {
 	// Get form data
 	cols = formObj.elements['cols'].value;
 	rows = formObj.elements['rows'].value;
-	border = formObj.elements['border'].value != "" ? formObj.elements['border'].value : 0;
+	border = formObj.elements['border'].value != "" ? formObj.elements['border'].value : "";
 	cellpadding = formObj.elements['cellpadding'].value != "" ? formObj.elements['cellpadding'].value : "";
 	cellspacing = formObj.elements['cellspacing'].value != "" ? formObj.elements['cellspacing'].value : "";
 	align = getSelectValue(formObj, "align");
@@ -163,9 +163,7 @@ function insertTable() {
 				newCellStyles["border-style"] = elm.style.borderStyle;
 			}
 
-			if (dom.serializeStyle(newCellStyles) !== "") {
-				styleTDTH(elm, dom.serializeStyle(newCellStyles));
-			}
+			styleTDTH(elm, dom.serializeStyle(newCellStyles));
 		}
 
 		elm.style.backgroundColor = bgcolor;
