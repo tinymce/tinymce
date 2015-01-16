@@ -913,6 +913,16 @@
 				cm.setDisabled('merge_cells', !p);
 			});
 
+			ed.onPreInit.add(function() {
+				// Remove internal name
+				ed.serializer.addAttributeFilter('data-mce-style-cells', function(nodes) {
+					var i = nodes.length, node;
+					while (i--) {
+						nodes[i].attr('data-mce-style-cells', null);
+					}
+				});
+			});
+
 			ed.onInit.add(function(ed) {
 				var startTable, startCell, dom = ed.dom, tableGrid;
 
