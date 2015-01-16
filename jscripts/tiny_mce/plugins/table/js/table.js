@@ -143,10 +143,7 @@ function insertTable() {
 			dom.setAttrib(elm, 'border', '');
 		}
 
-		if (bordercolor != "") {
-			elm.style.borderColor = bordercolor;
-		} else
-			elm.style.borderColor = '';
+		elm.style.borderColor = bordercolor;
 
 		if (styleCells) {
 
