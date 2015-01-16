@@ -145,8 +145,6 @@ function insertTable() {
 
 		if (bordercolor != "") {
 			elm.style.borderColor = bordercolor;
-			//elm.style.borderStyle = elm.style.borderStyle == "" ? "solid" : elm.style.borderStyle;
-			//elm.style.borderWidth = cssSize(border);
 		} else
 			elm.style.borderColor = '';
 
