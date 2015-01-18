@@ -148,19 +148,17 @@ function insertTable() {
 		if (styleCells) {
 
 			if (border !== "") {
-				newCellStyles["border-width"] = cssSize(border);
+				styleTDTH(elm, "border-width", cssSize(border));
+			} else {
+				styleTDTH(elm, "border-width", '');
 			}
 			if (cellpadding !== "") {
-				newCellStyles.padding = cssSize(cellpadding);
+				styleTDTH(elm, "padding", cssSize(cellpadding));
+			} else {
+				styleTDTH(elm, "padding", '');
 			}
-			if (bordercolor !== "") {
-				newCellStyles["border-color"] = elm.style.borderColor;
-			}
-			if (elm.style.borderStyle) {
-				newCellStyles["border-style"] = elm.style.borderStyle;
-			}
-
-			styleTDTH(elm, dom.serializeStyle(newCellStyles));
+			styleTDTH(elm, "border-color", bordercolor);
+			styleTDTH(elm, "border-style", elm.style.borderStyle);
 		}
 
 		elm.style.backgroundColor = bgcolor;
@@ -330,13 +328,13 @@ function insertTable() {
 	tinyMCEPopup.close();
 }
 
-function styleTDTH (elm, style) {
+function styleTDTH (elm, name, value) {
 	if (elm.tagName === "TD" || elm.tagName === "TH") {
-		dom.setAttrib(elm, 'style', style);
+		dom.setStyle(elm, name, value);
 	} else {
 		if (elm.children) {
 			for (var i = 0; i < elm.children.length; i++) {
-				styleTDTH(elm.children[i], style);
+				styleTDTH(elm.children[i], name, value);
 			}
 		}
 	}
