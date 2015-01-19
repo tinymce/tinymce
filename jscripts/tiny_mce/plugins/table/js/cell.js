@@ -221,13 +221,7 @@ function updateCell(td, skip_id) {
 	td.style.height = getCSSSize(formObj.height.value);
 	dom.setStyle(td, 'text-align', formObj.align.value);
 	dom.setStyle(td ,'vertical-align', formObj.valign.value);
-	if (formObj.bordercolor.value != "") {
-		td.style.borderColor = formObj.bordercolor.value;
-		td.style.borderStyle = td.style.borderStyle == "" ? "solid" : td.style.borderStyle;
-		td.style.borderWidth = td.style.borderWidth == "" ? "1px" : td.style.borderWidth;
-	} else
-		td.style.borderColor = '';
-
+	td.style.borderColor = formObj.bordercolor.value;
 	td.style.backgroundColor = formObj.bgcolor.value;
 
 	if (formObj.backgroundimage.value != "")
