@@ -5,10 +5,30 @@ define(
     'ephox.perhaps.Option',
     'ephox.robin.data.WordRange',
     'ephox.robin.util.CurrentWord',
-    'ephox.sugar.api.Compare'
+    'ephox.sugar.api.Text'
   ],
 
-  function (Option, WordRange, CurrentWord, Compare) {
+  function (Option, WordRange, CurrentWord, Text) {
+    var toEnd = function (cluster, start, soffset) {
+      if (cluster.length === 0) return Option.none();
+      var last = cluster[cluster.length - 1];
+      return Option.some(WordRange(start, soffset, last.item(), last.finish()));
+    };
+
+    var fromStart = function (cluster, finish, foffset) {
+      if (cluster.length === 0) return Option.none();
+      var first = cluster[0];
+      return Option.some(WordRange(first.item(), first.start(), finish, foffset));
+    };
+
+    var all = function (cluster) {
+      if (cluster.length === 0) return Option.none();
+      var first = cluster[0];
+      var last = cluster[cluster.length - 1];
+      console.log('first: ', first.text(), 'last', last.text());
+      return Option.some(WordRange(first.item(), first.start(), last.item(), last.finish()));
+    };
+
     /*
      * Returns an optional range which represents the selection of an entire word which may span 
      * several elements.
@@ -19,29 +39,26 @@ define(
       };
 
       var text = universe.property().getText(textitem);
+      console.log('textitem: ', Text.get(textitem), offset);
       var parts = CurrentWord.around(text, offset);
 
-      var isLeftEdge = cluster.length > 0 && Compare.eq(cluster[0].item(), textitem);
-      var isRightEdge = cluster.length > 0 && Compare.eq(cluster[cluster.length - 1].item(), textitem);
-
-      var leftmost = parts.before().fold(function () {
-
-      });
-
       var neither = function () {
-        return isLeftEdge || isRightEdge ? Option.none() :
-          Option.some(WordRange(leftmost.element(), leftmost.offset(), rightmost.element(), rightmost.offset()));
+        console.log('use all of cluster', cluster);
+        return all(cluster);
       };
 
       var justBefore = function (bindex) {
-        return isRightEdge ? Option.none() : Option.some(WordRange(textitem, bindex, rightmost.element(), rightmost.offset()));
+        console.log('use end of cluster');
+        return toEnd(cluster, textitem, bindex);
       };
 
       var justAfter = function (aindex) {
-        return isLeftEdge ? Option.none() : Option.some(WordRange(leftmost.element(), leftmost.offset(), textitem, aindex));
+        console.log('use start of cluster');
+        return fromStart(cluster, textitem, aindex);
       };
 
       var both = function (bindex, aindex) {
+        console.log('just use node');
         return bindex === aindex ? Option.none() : Option.some(WordRange(textitem, bindex, textitem, aindex));
       };
 
