@@ -8,7 +8,7 @@ function insertTable() {
 	var cols = 2, rows = 2, border = 0, cellpadding = -1, cellspacing = -1, align, width, height, className, caption, frame, rules;
 	var html = '', capEl, elm;
 	var cellLimit, rowLimit, colLimit;
-	var cellStyles, newCellStyles;
+	var cellStyles, newCellStyles, parsedStyles;
 
 	tinyMCEPopup.restoreSelection();
 
@@ -127,9 +127,11 @@ function insertTable() {
 			dom.setAttrib(elm, 'cellPadding', '');
 		}
 
-		elm.style.borderSpacing = cssSize(cellspacing);
-
-		newCellStyles = {};
+		if (cellspacing !== "") {
+			elm.style.borderSpacing = cssSize(cellspacing);
+		} else {
+			elm.style.borderSpacing = "";
+		}
 
 		if (!styleCells && !isCssSize(border)) {
 			dom.setAttrib(elm, 'border', border);
@@ -145,6 +147,8 @@ function insertTable() {
 
 		elm.style.borderColor = bordercolor;
 
+		parsedStyles = dom.parseStyle(style);
+
 		if (styleCells) {
 
 			if (border !== "") {
@@ -158,7 +162,8 @@ function insertTable() {
 				styleTDTH(elm, "padding", '');
 			}
 			styleTDTH(elm, "border-color", bordercolor);
-			styleTDTH(elm, "border-style", elm.style.borderStyle);
+
+			styleTDTH(elm, "border-style", parsedStyles['border-style']);
 		}
 
 		elm.style.backgroundColor = bgcolor;
@@ -237,7 +242,7 @@ function insertTable() {
 
 	if (styleCells) {
 
-		cellStyles = dom.parseStyle(style);
+		parsedStyles = dom.parseStyle(style);
 
 		newCellStyles = {};
 
@@ -248,10 +253,10 @@ function insertTable() {
 			newCellStyles.padding = cssSize(cellpadding);
 		}
 		if (bordercolor !== "") {
-			newCellStyles["border-color"] = cellStyles["border-color"];
+			newCellStyles["border-color"] = bordercolor;
 		}
-		if (cellStyles["border-style"]) {
-			newCellStyles["border-style"] = cellStyles["border-style"];
+		if (parsedStyles["border-style"]) {
+			newCellStyles["border-style"] = parsedStyles["border-style"];
 		}
 
 		if (dom.serializeStyle(newCellStyles) !== "") {
@@ -577,7 +582,7 @@ function changedCellSpacing() {
 	var formObj = document.forms[0];
 	var st = dom.parseStyle(formObj.style.value);
 
-	if (formObj.cellspacing.value != "")
+	if (formObj.cellspacing.value !== "")
 		st['border-spacing'] = cssSize(formObj.cellspacing.value);
 	else {
 		st['border-spacing'] = '';
