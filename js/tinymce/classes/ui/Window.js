@@ -91,7 +91,7 @@ define("tinymce/ui/Window", [
 				self.close();
 			});
 
-			self.aria('describedby', self.describedBy || self._id + '-none');
+			self.aria('describedby', self.describedBy || self._id + '-title');
 			self.aria('label', settings.title);
 			self._fullscreen = false;
 		},
