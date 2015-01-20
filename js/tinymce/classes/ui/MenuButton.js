@@ -89,6 +89,7 @@ define("tinymce/ui/MenuButton", [
 				self.menu.on('cancel', function(e) {
 					if (e.control.parent() === self.menu) {
 						e.stopPropagation();
+						e.preventDefault();
 						self.focus();
 						self.hideMenu();
 					}
