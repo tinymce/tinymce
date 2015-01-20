@@ -309,7 +309,7 @@ define("tinymce/ui/ComboBox", [
 
 			if (icon || text) {
 				openBtnHtml = (
-					'<div id="' + id + '-open" class="' + prefix + 'btn ' + prefix + 'open" tabIndex="-1" role="button">' +
+					'<div id="' + id + '-open" class="' + prefix + 'btn ' + prefix + 'open" tabIndex="-1" role="combobox">' +
 						'<button id="' + id + '-action" type="button" hidefocus="1" tabindex="-1">' +
 							(icon != 'caret' ? '<i class="' + icon + '"></i>' : '<i class="' + prefix + 'caret"></i>') +
 							(text ? (icon ? ' ' : '') + text : '') +
