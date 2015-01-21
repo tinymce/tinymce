@@ -40,7 +40,6 @@ function insertTable() {
 	lang = formObj.elements['lang'].value;
 	background = formObj.elements['backgroundimage'].value;
 	caption = formObj.elements['caption'].checked;
-	styleCells = formObj.elements['styleCells'].checked;
 
 	cellLimit = tinyMCEPopup.getParam('table_cell_limit', false);
 	rowLimit = tinyMCEPopup.getParam('table_row_limit', false);
@@ -70,7 +69,7 @@ function insertTable() {
 		dom.setAttrib(elm, 'summary', summary);
 		dom.setAttrib(elm, 'dir', dir);
 		dom.setAttrib(elm, 'lang', lang);
-		if (styleCells) {
+		if (inst.settings.table_style_by_css) {
 			dom.setAttrib(elm, 'data-mce-style-cells', 'true');
 		} else {
 			dom.setAttrib(elm, 'data-mce-style-cells', '');
@@ -121,7 +120,7 @@ function insertTable() {
 				elm.style.width = getCSSSize(width);
 		}*/
 
-		if (!styleCells) {
+		if (!inst.settings.table_style_by_css) {
 			dom.setAttrib(elm, 'cellPadding', nonCssSize(cellpadding), true);
 		} else {
 			dom.setAttrib(elm, 'cellPadding', '');
@@ -133,9 +132,9 @@ function insertTable() {
 			elm.style.borderSpacing = "";
 		}
 
-		if (!styleCells && !isCssSize(border)) {
+		if (!inst.settings.table_style_by_css && !isCssSize(border)) {
 			dom.setAttrib(elm, 'border', border);
-		} else if (styleCells || (border !== '' && isCssSize(border))) {
+		} else if (inst.settings.table_style_by_css || (border !== '' && isCssSize(border))) {
 			dom.setAttrib(elm, 'border', '');
 		}
 
@@ -149,7 +148,7 @@ function insertTable() {
 
 		parsedStyles = dom.parseStyle(style);
 
-		if (styleCells) {
+		if (inst.settings.table_style_by_css) {
 
 			if (border !== "") {
 				styleTDTH(elm, "border-width", cssSize(border));
@@ -189,11 +188,11 @@ function insertTable() {
 	html += '<table';
 
 	html += makeAttrib('id', id);
-	if (!styleCells && !isCssSize(border)) {
+	if (!inst.settings.table_style_by_css && !isCssSize(border)) {
 		html += makeAttrib('border', border);
 	}
 
-	if (!styleCells) {
+	if (!inst.settings.table_style_by_css) {
 		html += makeAttrib('cellpadding', nonCssSize(cellpadding));
 	} else {
 		html += makeAttrib('data-mce-style-cells', 'true');
@@ -240,7 +239,7 @@ function insertTable() {
 			html += '<caption></caption>';
 	}
 
-	if (styleCells) {
+	if (inst.settings.table_style_by_css) {
 
 		parsedStyles = dom.parseStyle(style);
 
@@ -402,7 +401,7 @@ function init() {
 
 	var cols = 2, rows = 2, border = tinyMCEPopup.getParam('table_default_border', '0'), cellpadding = tinyMCEPopup.getParam('table_default_cellpadding', ''), cellspacing = tinyMCEPopup.getParam('table_default_cellspacing', '');
 	var align = "", width = "", height = "", bordercolor = "", bgcolor = "", className = "";
-	var id = "", summary = "", style = "", dir = "", lang = "", background = "", bgcolor = "", bordercolor = "", rules = "", frame = "";
+	var id = "", summary = "", style = "", dir = "", lang = "", background = "", rules = "", frame = "";
 	var inst = tinyMCEPopup.editor, dom = inst.dom;
 	var formObj = document.forms[0];
 	var elm = dom.getParent(inst.selection.getNode(), "table");
@@ -423,7 +422,7 @@ function init() {
 
 	if (elm && action != "insert") {
 		var rowsAr = elm.rows;
-		var cols = 0;
+		cols = 0;
 		for (var i=0; i<rowsAr.length; i++)
 			if (rowsAr[i].cells.length > cols)
 				cols = rowsAr[i].cells.length;
@@ -433,8 +432,8 @@ function init() {
 
 		st = dom.parseStyle(dom.getAttrib(elm, "style"));
 		border = trimSize(getStyle(elm, 'border', 'borderWidth'));
-		cellpadding = dom.getAttrib(elm, 'cellpadding', "") || getTDTHOverallStyle(elm, 'padding');
-		cellspacing = trimSize(getStyle(elm, 'border-spacing'));
+		cellpadding = dom.getAttrib(elm, 'cellpadding', '') || getTDTHOverallStyle(elm, 'padding');
+		cellspacing = dom.getAttrib(elm, 'cellspacing', '') || trimSize(getStyle(elm, 'border-spacing'));
 		width = trimSize(getStyle(elm, 'width', 'width'));
 		height = trimSize(getStyle(elm, 'height', 'height'));
 		bordercolor = convertRGBToHex(getStyle(elm, 'bordercolor', 'borderLeftColor'));
@@ -450,7 +449,6 @@ function init() {
 		lang = dom.getAttrib(elm, 'lang');
 		background = getStyle(elm, 'background', 'backgroundImage').replace(new RegExp("url\\(['\"]?([^'\"]*)['\"]?\\)", 'gi'), "$1");
 		formObj.caption.checked = elm.getElementsByTagName('caption').length > 0;
-		formObj.styleCells.checked = dom.getAttrib(elm, 'data-mce-style-cells');
 
 		orgTableWidth = width;
 		orgTableHeight = height;
@@ -549,24 +547,7 @@ function changedBorder() {
 	var st = dom.parseStyle(formObj.style.value);
 
 	// Update border width if the element has a color
-	if (formObj.border.value !== "" && (formObj.styleCells.checked || isCssSize(formObj.border.value)))
-		st['border-width'] = cssSize(formObj.border.value);
-	else {
-		if (!formObj.border.value) {
-			st['border'] = '';
-			st['border-width'] = '';
-		}
-	}
-
-	formObj.style.value = dom.serializeStyle(st);
-}
-
-function changedStyleCells() {
-	var formObj = document.forms[0];
-	var st = dom.parseStyle(formObj.style.value);
-
-	// Update border width if the element has a color
-	if (formObj.border.value !== "" && (formObj.styleCells.checked || isCssSize(formObj.border.value)))
+	if (formObj.border.value !== "" && (tinyMCEPopup.editor.settings.table_style_by_css || isCssSize(formObj.border.value)))
 		st['border-width'] = cssSize(formObj.border.value);
 	else {
 		if (!formObj.border.value) {

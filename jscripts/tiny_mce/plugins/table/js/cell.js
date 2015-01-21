@@ -17,8 +17,8 @@ function init() {
 
 	// Get table cell data
 	var celltype = tdElm.nodeName.toLowerCase();
-	var align = getStyle(tdElm, 'text-align');
-	var valign = getStyle(tdElm, 'vertical-align');
+	var align = ed.dom.getAttrib(tdElm, 'align') || getStyle(tdElm, 'text-align');
+	var valign = ed.dom.getAttrib(tdElm, 'valign') || getStyle(tdElm, 'vertical-align');
 	var width = trimSize(getStyle(tdElm, 'width', 'width'));
 	var height = trimSize(getStyle(tdElm, 'height', 'height'));
 	var bordercolor = convertRGBToHex(getStyle(tdElm, 'bordercolor', 'borderLeftColor'));
