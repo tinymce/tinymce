@@ -51,7 +51,7 @@ define(
         });
       } else if (mode === sidestep) {
         return sidestep(universe, item, direction).orThunk(function () {
-          return backtrack(universe, item, direction);
+          return go(universe, item, backtrack, direction);
         })
       } else {
         return backtrack(universe, item, direction);
