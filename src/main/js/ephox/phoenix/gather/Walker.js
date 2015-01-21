@@ -2,11 +2,18 @@ define(
   'ephox.phoenix.gather.Walker',
 
   [
+    'ephox.perhaps.Option',
     'ephox.scullion.Struct'
   ],
 
-  function (Struct) {
+  function (Option, Struct) {
     var traverse = Struct.immutable('item', 'mode');
+
+    var successors = [
+      { current: backtrack, next: sidestep, fallback: Option.none() },
+      { current: sidestep, next: advance, fallback: Option.some(backtrack) },
+      { current: advance, next: advance, fallback: Option.some(sidestep) }
+    ];
 
     // Jump back to the parent, with sidestep the next action.
     var backtrack = function (universe, item, direction) {

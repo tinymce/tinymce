@@ -35,6 +35,15 @@ test(
      *     "graph"
      *   </i>
      * </p>
+     * <p>
+     *   <span>
+     *     <span>
+     *       <span>
+     *         "end"
+     *       </span>
+     *     </span>
+     *   </span>
+     * </p>
      */
     var universe = TestUniverse(
       Gene('root', 'root', [
@@ -59,13 +68,22 @@ test(
             TextGene('para', 'para'),
             TextGene('graph', 'graph')
           ])
+        ]),
+        Gene('p3', 'p', [
+          Gene('p3s1', 'span', [
+            Gene('p3s2', 'span', [
+              Gene('p3s3', 'span', [
+                TextGene('end', 'end')
+              ])
+            ])
+          ])
         ])
       ])
     );
 
 
-    var checkPath = function (expected, id, direction) {
-      var act = HackPaths.words(universe, Finder.get(universe, id), direction);
+    var checkPath = function (expected, id) {
+      var act = HackPaths.words(universe, Finder.get(universe, id));
       assert.eq(expected, Arr.map(act, function (a) {
         var text = universe.property().getText(a.item());
         return text.substring(a.start(), a.finish());
@@ -75,5 +93,6 @@ test(
     checkPath([ 'This is ', 'going' ], 'this_is_');
     checkPath([ 'to' ], 'to');
     checkPath([ 'going ', 'to' ], 'going_');
+    checkPath([ 'end' ], 'end')
   }
 );
