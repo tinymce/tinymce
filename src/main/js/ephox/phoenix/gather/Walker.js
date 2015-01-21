@@ -12,6 +12,7 @@ define(
 
     // Jump back to the parent, with sidestep the next action.
     var backtrack = function (universe, item, direction, _transition) {
+      console.log('backtracking');
       var transition = _transition !== undefined ? _transition : sidestep;
       return universe.property().parent(item).map(function (p) {
         return traverse(p, transition);
@@ -20,6 +21,7 @@ define(
 
     // Jump to the sibling, with advance the next action
     var sidestep = function (universe, item, direction, _transition) {
+      console.log('sidestepping from', item.dom(), _transition);
       var transition = _transition !== undefined ? _transition : advance;
       return direction.sibling(universe, item).map(function (p) {
         return traverse(p, transition);
@@ -28,6 +30,7 @@ define(
 
     // Jump to the child, with advance the next action
     var advance = function (universe, item, direction, _transition) {
+      console.log('advancing inside', item.dom());
       var transition = _transition !== undefined ? _transition : advance;
       var children = universe.property().children(item);
       var result = direction.first(children);
@@ -47,11 +50,13 @@ define(
     //   then we try again with mode = sidestep
     // - if we are sidestepping ... try to sidestep, but jump back to the parent if we can't.
     // - if we are backtracking, jump back to the parent
-    var go = function (universe, item, mode, direction) {
+    var go = function (universe, item, mode, direction, _rules) {
+      var rules = _rules !== undefined ? _rules : successors;
       // Perhaps an immediate index in might be better.
-      var rule = Arr.find(successors, function (succ) {
+      var rule = Arr.find(rules, function (succ) {
         return succ.current === mode;
       });
+      console.log('trying rule: ', rule);
 
       if (rule === undefined || rule === null) return Option.none();
       else {
