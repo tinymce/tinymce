@@ -21,6 +21,10 @@ define(
         { current: Hacksy.advance, next: Hacksy.sidestep, fallback: Option.some(Hacksy.sidestep) }
       ],
       inclusion: function (universe, next, item) {
+        // You can't just check the mode, because it may have fallen back to backtracking, 
+        // even though mode was sidestep. Therefore, to see if a node is something that was
+        // the parent of a previously traversed item, we have to do this. Very hacky... find a 
+        // better way.
         var isParent = universe.property().parent(item).exists(function (p) {
           return universe.eq(p, next.item());
         });
