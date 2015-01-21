@@ -17,9 +17,8 @@
  */
 define("tinymce/ui/MenuButton", [
 	"tinymce/ui/Button",
-	"tinymce/ui/Factory",
-	"tinymce/ui/MenuBar"
-], function(Button, Factory, MenuBar) {
+	"tinymce/ui/Factory"
+], function(Button, Factory) {
 	"use strict";
 
 	// TODO: Maybe add as some global function
@@ -89,6 +88,7 @@ define("tinymce/ui/MenuButton", [
 				self.menu.on('cancel', function(e) {
 					if (e.control.parent() === self.menu) {
 						e.stopPropagation();
+						e.preventDefault();
 						self.focus();
 						self.hideMenu();
 					}
@@ -167,10 +167,15 @@ define("tinymce/ui/MenuButton", [
 
 			icon = self.settings.icon ? prefix + 'ico ' + prefix + 'i-' + icon : '';
 
-			self.aria('role', self.parent() instanceof MenuBar ? 'menuitem' : 'button');
+			var parentrolemap = {
+				buttongroup: 'button',
+				toolbar: 'button',
+				menubar: 'menuitem'
+			};
+			self.aria('role', parentrolemap[self.parent().type] || 'combobox');
 
 			return (
-				'<div id="' + id + '" class="' + self.classes() + '" tabindex="-1" aria-labelledby="' + id + '">' +
+				'<div id="' + id + '" class="' + self.classes() + '" tabindex="-1">' +
 					'<button id="' + id + '-open" role="presentation" type="button" tabindex="-1">' +
 						(icon ? '<i class="' + icon + '"' + image + '></i>' : '') +
 						'<span>' + (self._text ? (icon ? '\u00a0' : '') + self.encode(self._text) : '') + '</span>' +

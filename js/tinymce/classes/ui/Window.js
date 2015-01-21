@@ -31,6 +31,8 @@ define("tinymce/ui/Window", [
 			layout: 'flex',
 			containerCls: 'panel',
 			role: 'dialog',
+			ariaRoot: true,
+			wrapFocus: true,
 			callbacks: {
 				submit: function() {
 					this.fire('submit', {data: this.toJSON()});
@@ -85,11 +87,13 @@ define("tinymce/ui/Window", [
 				}
 			});
 
-			self.on('cancel', function() {
+			self.on('cancel', function(e) {
+				e.preventDefault();
+				e.stopPropagation();
 				self.close();
 			});
 
-			self.aria('describedby', self.describedBy || self._id + '-none');
+			self.aria('describedby', self.describedBy || self._id + '-title');
 			self.aria('label', settings.title);
 			self._fullscreen = false;
 		},

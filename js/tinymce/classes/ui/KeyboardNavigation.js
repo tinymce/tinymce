@@ -219,6 +219,8 @@ define("tinymce/ui/KeyboardNavigation", [
 		 * @private
 		 * @param {Number} dir Direction to move in positive means forward, negative means backwards.
 		 * @param {Array} elements Optional array of elements to move within defaults to the current navigation roots elements.
+		 *
+		 * @return {Boolean} Whether focus moved.
 		 */
 		function moveFocus(dir, elements) {
 			var idx = -1, navigationRoot = getNavigationRoot();
@@ -232,7 +234,14 @@ define("tinymce/ui/KeyboardNavigation", [
 			}
 
 			idx += dir;
+
+			if (!navigationRoot.settings.wrapFocus && (idx < 0 || idx >= elements.length)) {
+				return false;
+			}
+
 			navigationRoot.lastAriaIndex = moveFocusToIndex(idx, elements);
+
+			return true;
 		}
 
 		/**
@@ -310,8 +319,10 @@ define("tinymce/ui/KeyboardNavigation", [
 				if (elm) {
 					elm.focus();
 				}
+
+				return true;
 			} else {
-				moveFocus(e.shiftKey ? -1 : 1);
+				return moveFocus(e.shiftKey ? -1 : 1);
 			}
 		}
 
@@ -321,7 +332,7 @@ define("tinymce/ui/KeyboardNavigation", [
 		 * @private
 		 */
 		function cancel() {
-			focusedControl.fire('cancel');
+			return focusedControl.fire('cancel');
 		}
 
 		/**
@@ -369,7 +380,14 @@ define("tinymce/ui/KeyboardNavigation", [
 					break;
 
 				case 27: // DOM_VK_ESCAPE
-					cancel();
+					var cancelEv = cancel();
+					if (cancelEv.isDefaultPrevented()) {
+						e.preventDefault();
+						e.stopPropagation();
+					}
+					if (cancelEv.isPropagationStopped()) {
+						e.stopPropagation();
+					}
 					break;
 
 				case 14: // DOM_VK_ENTER
@@ -381,6 +399,7 @@ define("tinymce/ui/KeyboardNavigation", [
 				case 9: // DOM_VK_TAB
 					if (tab(e) !== false) {
 						e.preventDefault();
+						e.stopPropagation();
 					}
 					break;
 			}

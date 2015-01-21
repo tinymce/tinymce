@@ -67,16 +67,24 @@ define("tinymce/ui/Form", [
 
 			// Wrap any labeled items in FormItems
 			items.each(function(ctrl) {
-				var formItem, label = ctrl.settings.label;
+				var formItem, inputId, label = ctrl.settings.label;
 
 				if (label) {
+					inputId = ctrl._id;
+
+					// point to the INPUTs of comboxes
+					// see the corresbonding TODO in ComboBox.js
+					if (ctrl.subinput) {
+						inputId += '-' + ctrl.ariaTarget;
+					}
+
 					formItem = new FormItem(Tools.extend({
 						items: {
 							type: 'label',
 							id: ctrl._id + '-l',
 							text: label,
 							flex: 0,
-							forId: ctrl._id,
+							forId: inputId,
 							disabled: ctrl.disabled()
 						}
 					}, self.settings.formItemDefaults));
