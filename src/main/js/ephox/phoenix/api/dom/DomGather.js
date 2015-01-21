@@ -24,10 +24,20 @@ define(
       return Gather.after(universe, element, isRoot);
     };
 
+    var seekLeft = function (element, isRoot) {
+      return Gather.seekLeft(universe, element, isRoot);
+    };
+
+    var seekRight = function (element, isRoot) {
+      return Gather.seekRight(universe, element, isRoot);
+    };
+
     return {
       gather: gather,
       before: before,
-      after: after
+      after: after,
+      seekLeft: seekLeft,
+      seekRight: seekRight
     };
   }
 );

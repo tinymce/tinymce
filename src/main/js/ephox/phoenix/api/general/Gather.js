@@ -2,16 +2,16 @@ define(
   'ephox.phoenix.api.general.Gather',
 
   [
-    'ephox.phoenix.gather.LeafGather'
+    'ephox.peanut.Fun',
+    'ephox.phoenix.gather.Seeker'
   ],
 
   /**
    * Documentation is in the actual implementations.
    */
-  function (LeafGather) {
+  function (Fun, Seeker) {
     var gather = function (universe, item, prune, transform) {
       return [];
-      // return Gather.gather(universe, item, prune, transform);
     };
 
     var isLeaf = function (universe, element) {
@@ -19,21 +19,19 @@ define(
     };
 
     var before = function (universe, item, isRoot) {
-      return LeafGather.before(universe, item, function (elem) {
-        return isLeaf(universe, elem);
-      });
+      return Seeker.left(universe, item, Fun.curry(isLeaf, universe), isRoot);
     };
 
     var after = function (universe, item, isRoot) {
-      return LeafGather.after(universe, item, function (elem) {
-        return isLeaf(universe, elem);
-      });
+      return Seeker.right(universe, item, Fun.curry(isLeaf, universe), isRoot);
     };
 
     return {
       gather: gather,
       before: before,
-      after: after
+      after: after,
+      seekLeft: Seeker.left,
+      seekRight: Seeker.right
     };
   }
 );
