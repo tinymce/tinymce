@@ -16,11 +16,11 @@ define(
     };
 
     var left = function (universe, item, predicate, isRoot) {
-      return hone(universe, item, predicate, Hacksy.advance, Hacksy.left(), isRoot);
+      return hone(universe, item, predicate, Hacksy.sidestep, Hacksy.left(), isRoot);
     };
 
     var right = function (universe, item, predicate, isRoot) {
-      return hone(universe, item, predicate, Hacksy.advance, Hacksy.right(), isRoot);
+      return hone(universe, item, predicate, Hacksy.sidestep, Hacksy.right(), isRoot);
     };
 
     return {
