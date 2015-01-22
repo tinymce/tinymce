@@ -3,13 +3,12 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.perhaps.Option',
     'ephox.phoenix.gather.Walker',
     'ephox.phoenix.gather.Walking',
     'ephox.robin.leftblock.Walks'
   ],
 
-  function (Arr, Option, Walker, Walking, Walks) {
+  function (Arr, Walker, Walking, Walks) {
     var goLeft = function (universe, item, mode, direction, strategy) {
       var next = Walker.go(universe, item, mode, Walking.left(), strategy.rules);
       return next.map(function (n) {

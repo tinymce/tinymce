@@ -2,11 +2,10 @@ define(
   'ephox.robin.api.general.Pathway',
 
   [
-    'ephox.robin.pathway.Simplify',
-    'ephox.robin.pathway.Transform'
+    'ephox.robin.pathway.Simplify'
   ],
 
-  function (Simplify, Transform) {
+  function (Simplify) {
     /**
      * @see Simplify.simplify()
      */
@@ -14,13 +13,8 @@ define(
       return Simplify.simplify(universe, elements);
     };
 
-    var transform = function (universe) {
-      return Transform(universe);
-    };
-
     return {
-      simplify: simplify,
-      transform: transform
+      simplify: simplify
     };
   }
 );
