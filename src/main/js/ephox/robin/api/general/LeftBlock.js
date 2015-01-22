@@ -40,10 +40,8 @@ define(
     };
 
     var goLeft = function (universe, item, mode, direction, strategy) {
-      console.log('item', item.dom());
       var next = Hacksy.go(universe, item, mode, Hacksy.left(), strategy.rules);
       return next.map(function (n) {
-        console.log('moved to: ', n.item().dom(), ' and now the mode is: ', n.mode());
         var isBlock = universe.property().isEmptyTag(n.item()) || universe.property().isBoundary(n.item());
         if (isBlock) return [];
         var inclusions = strategy.inclusion(universe, n, item) ? [ n.item() ] : [];
@@ -52,7 +50,6 @@ define(
     };
 
     var top = function (universe, item) {
-      console.log('Top', item.dom());
       var lefts = goLeft(universe, item, Hacksy.sidestep, Hacksy.left(), topStrategy);
       return Arr.reverse(lefts).concat([ item ]);
     };
@@ -61,7 +58,6 @@ define(
      * Gather leaves left to the edge of the block item is in
      */
     var all = function (universe, item) {
-      console.log('All: ', item.dom());
       var lefts = goLeft(universe, item, Hacksy.sidestep, Hacksy.left(), allStrategy);
       return Arr.reverse(lefts).concat([ item ]);
     };

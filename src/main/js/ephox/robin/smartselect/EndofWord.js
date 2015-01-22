@@ -25,7 +25,6 @@ define(
       if (cluster.length === 0) return Option.none();
       var first = cluster[0];
       var last = cluster[cluster.length - 1];
-      console.log('first: ', first.text(), 'last', last.text());
       return Option.some(WordRange(first.item(), first.start(), last.item(), last.finish()));
     };
 
@@ -39,26 +38,28 @@ define(
       };
 
       var text = universe.property().getText(textitem);
-      console.log('textitem: ', Text.get(textitem), offset);
       var parts = CurrentWord.around(text, offset);
 
       var neither = function () {
-        console.log('use all of cluster', cluster);
-        return all(cluster);
+        console.log('offset: ', offset, text.length, cluster.left().length, cluster.right().length);
+        var atEdge = offset === 0 || offset === text.length;
+        var hasMore = cluster.left().length > 0 || cluster.right().length > 0;
+        return atEdge && !hasMore ? Option.none() : all(cluster.all());
       };
 
       var justBefore = function (bindex) {
-        console.log('use end of cluster');
-        return toEnd(cluster, textitem, bindex);
+        console.log(bindex + '..');
+        // If at the end of the node, and no break
+        return cluster.right().length > 0 || offset < text.length ? toEnd(cluster.all(), textitem, bindex) : Option.none();
       };
 
       var justAfter = function (aindex) {
-        console.log('use start of cluster');
-        return fromStart(cluster, textitem, aindex);
+        console.log('..' + aindex);
+        return fromStart(cluster.all(), textitem, aindex);
       };
 
       var both = function (bindex, aindex) {
-        console.log('just use node');
+        console.log(bindex + '..' + aindex);
         return bindex === aindex ? Option.none() : Option.some(WordRange(textitem, bindex, textitem, aindex));
       };
 

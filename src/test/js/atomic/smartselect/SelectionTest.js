@@ -59,8 +59,9 @@ test(
     check({
       startContainer: 'b',
       startOffset: 's '.length,
-      endContainer: 'c',
-      endOffset: ''.length
+      // Note, this changed to end of node rather than start of new node.
+      endContainer: 'b',
+      endOffset: 's something'.length
     }, doc1, 'b', 's so'.length);
 
     check({
@@ -92,8 +93,8 @@ test(
     }, doc1, 'g', ' it\'s driving me i'.length);
 
     check({
-      startContainer: 'a',
-      startOffset: 'This is '.length,
+      startContainer: 'c',
+      startOffset: ''.length,
       endContainer: 'f',
       endOffset: 'ing'.length
     }, doc2, 'f', 'i'.length);
