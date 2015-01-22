@@ -59,7 +59,6 @@ define(
       };
 
       var both = function (bindex, aindex) {
-        console.log(bindex + '..' + aindex);
         return bindex === aindex ? Option.none() : Option.some(WordRange(textitem, bindex, textitem, aindex));
       };
 
