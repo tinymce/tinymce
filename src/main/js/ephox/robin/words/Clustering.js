@@ -14,9 +14,6 @@ define(
     /*
      * Identification of words:
      *
-     * - if we start on a text node, include it and advance in the appropriate direction
-     * - if we don't start on a text node, advance but don't include the current node.
-     *
      * For boundaries, stop the gathering process and do not include
      * For empty tags, stop the gathering process and do not include
      * For text nodes:
@@ -33,6 +30,7 @@ define(
       }).getOr([]);
     };
 
+    // Represent all the text nodes within item.
     var extract = function (universe, item) {
       if (universe.property().isText(item)) return [ WordDecision.detail(universe, item) ];
       var children = Extract.all(universe, item);
