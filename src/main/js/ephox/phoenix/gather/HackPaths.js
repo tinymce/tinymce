@@ -3,12 +3,13 @@ define(
 
   [
     'ephox.compass.Arr',
+    'ephox.peanut.Fun',
     'ephox.phoenix.api.general.Extract',
     'ephox.phoenix.gather.Hacksy',
     'ephox.scullion.Struct'
   ],
 
-  function (Arr, Extract, Hacksy, Struct) {
+  function (Arr, Fun, Extract, Hacksy, Struct) {
     var sss = Struct.immutable('item', 'start', 'finish', 'text');
     var decision = Struct.immutable('items', 'abort');
 
@@ -79,7 +80,12 @@ define(
       var toLeft = doWords(universe, item, Hacksy.sidestep, Hacksy.left());
       var toRight = doWords(universe, item, Hacksy.sidestep, Hacksy.right());
       var middle = extract(universe, item);
-      return Arr.reverse(toLeft).concat(middle).concat(toRight);
+      return {
+        all: Fun.constant(Arr.reverse(toLeft).concat(middle).concat(toRight)),
+        left: Fun.constant(toLeft),
+        middle: Fun.constant(middle),
+        right: Fun.constant(toRight)
+      };
     };
 
     return {
