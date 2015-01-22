@@ -3,12 +3,13 @@ define(
 
   [
     'ephox.perhaps.Option',
-    'ephox.phoenix.gather.Hacksy'
+    'ephox.phoenix.gather.Walker',
+    'ephox.phoenix.gather.Walking'
   ],
 
-  function (Option, Hacksy) {
+  function (Option, Walker, Walking) {
     var hone = function (universe, item, predicate, mode, direction, isRoot) {
-      var next = Hacksy.go(universe, item, mode, direction);
+      var next = Walker.go(universe, item, mode, direction);
       return next.bind(function (n) {
         if (isRoot(n.item())) return Option.none();
         else return predicate(n.item()) ? Option.some(n.item()) : hone(universe, n.item(), predicate, n.mode(), direction, isRoot);
@@ -16,11 +17,11 @@ define(
     };
 
     var left = function (universe, item, predicate, isRoot) {
-      return hone(universe, item, predicate, Hacksy.sidestep, Hacksy.left(), isRoot);
+      return hone(universe, item, predicate, Walker.sidestep, Walking.left(), isRoot);
     };
 
     var right = function (universe, item, predicate, isRoot) {
-      return hone(universe, item, predicate, Hacksy.sidestep, Hacksy.right(), isRoot);
+      return hone(universe, item, predicate, Walker.sidestep, Walking.right(), isRoot);
     };
 
     return {
