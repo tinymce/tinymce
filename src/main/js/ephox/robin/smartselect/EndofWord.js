@@ -51,14 +51,11 @@ define(
       };
 
       var justBefore = function (bindex) {
-        console.log(bindex + '..');
-        // If at the end of the node, and no break
-        return cluster.right().length > 0 || offset < text.length ? toEnd(cluster.all(), textitem, bindex) : Option.none();
+        return atRightEdge ? Option.none() : toEnd(cluster.all(), textitem, bindex);
       };
 
       var justAfter = function (aindex) {
-        console.log('..' + aindex);
-        return fromStart(cluster.all(), textitem, aindex);
+        return atLeftEdge ? Option.none() : fromStart(cluster.all(), textitem, aindex);
       };
 
       var both = function (bindex, aindex) {
