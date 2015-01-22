@@ -3,11 +3,12 @@ define(
 
   [
     'ephox.compass.Arr',
+    'ephox.peanut.Fun',
     'ephox.phoenix.api.general.Gather',
     'ephox.robin.leftblock.Walks'
   ],
 
-  function (Arr, Gather, Walks) {
+  function (Arr, Fun, Gather, Walks) {
     var walkers = Gather.walkers();
 
     var goLeft = function (universe, item, mode, strategy) {
@@ -20,22 +21,14 @@ define(
       }).getOr([]);
     };
 
-    var top = function (universe, item) {
-      var lefts = goLeft(universe, item, Gather.sidestep, Walks.top);
-      return Arr.reverse(lefts).concat([ item ]);
-    };
-
-    /**
-     * Gather leaves left to the edge of the block item is in
-     */
-    var all = function (universe, item) {
-      var lefts = goLeft(universe, item, Gather.sidestep, Walks.all);
+    var run = function (strategy, universe, item) {
+      var lefts = goLeft(universe, item, Gather.sidestep, strategy);
       return Arr.reverse(lefts).concat([ item ]);
     };
 
     return {
-      top: top,
-      all: all
+      top: Fun.curry(run, Walks.top),
+      all: Fun.curry(run, Walks.all)
     };
   }
 );
