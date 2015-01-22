@@ -6,13 +6,13 @@ define(
     'ephox.peanut.Fun',
     'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.api.general.Extract',
-    'ephox.phoenix.gather.HackPaths',
     'ephox.polaris.api.Arrays',
     'ephox.robin.api.general.Zone',
+    'ephox.robin.words.Clustering',
     'ephox.robin.words.Identify'
   ],
 
-  function (Arr, Fun, Spot, Extract, HackPaths, Arrays, Zone, Identify) {
+  function (Arr, Fun, Spot, Extract, Arrays, Zone, Clustering, Identify) {
     var extract = function (universe, element) {
       var children = Extract.all(universe, element);
       return Arr.map(children, function (x) {
@@ -44,7 +44,7 @@ define(
      * Returns the words found and the elements that contain the words (not split on word boundaries).
      */
     var generate = function (universe, element) {
-      var cluster = HackPaths.words(universe, element).all();
+      var cluster = Clustering.words(universe, element).all();
       var items = Arr.map(cluster, function (c) { return c.item(); });      
       var zone = Zone.constant(items);
       var words = findWords(universe, cluster);
