@@ -3,12 +3,12 @@ define(
 
   [
     'ephox.perhaps.Option',
-    'ephox.phoenix.gather.HackPaths',
     'ephox.robin.data.WordRange',
-    'ephox.robin.util.CurrentWord'
+    'ephox.robin.util.CurrentWord',
+    'ephox.robin.words.Clustering'
   ],
 
-  function (Option, HackPaths, WordRange, CurrentWord) {
+  function (Option, WordRange, CurrentWord, Clustering) {
     var toEnd = function (cluster, start, soffset) {
       if (cluster.length === 0) return Option.none();
       var last = cluster[cluster.length - 1];
@@ -41,20 +41,20 @@ define(
       var parts = CurrentWord.around(text, offset);
 
       var neither = function () {
-        var cluster = HackPaths.words(universe, textitem);
+        var cluster = Clustering.words(universe, textitem);
         var atRightEdge = offset === text.length && cluster.right().length === 0;
         var atLeftEdge = offset === 0 && cluster.left().length === 0;
         return atLeftEdge || atRightEdge ? Option.none() : all(cluster.all());
       };
 
       var justBefore = function (bindex) {
-        var cluster = HackPaths.words(universe, textitem);
+        var cluster = Clustering.words(universe, textitem);
         var atRightEdge = offset === text.length && cluster.right().length === 0;
         return atRightEdge ? Option.none() : toEnd(cluster.all(), textitem, bindex);
       };
 
       var justAfter = function (aindex) {
-        var cluster = HackPaths.words(universe, textitem);
+        var cluster = Clustering.words(universe, textitem);
         var atLeftEdge = offset === 0 && cluster.left().length === 0;
         return atLeftEdge ? Option.none() : fromStart(cluster.all(), textitem, aindex);
       };
