@@ -2,13 +2,13 @@ define(
   'ephox.robin.smartselect.EndofWord',
 
   [
+    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.robin.data.WordRange',
-    'ephox.robin.util.CurrentWord',
     'ephox.robin.words.Clustering'
   ],
 
-  function (Option, WordRange, CurrentWord, Clustering) {
+  function (Fun, Option, WordRange, Clustering) {
     var toEnd = function (cluster, start, soffset) {
       if (cluster.length === 0) return Option.none();
       var last = cluster[cluster.length - 1];
@@ -28,58 +28,54 @@ define(
       return Option.some(WordRange(first.item(), first.start(), last.item(), last.finish()));
     };
 
-    /*
-     * Returns an optional range which represents the selection of an entire word which may span 
-     * several elements.
-     */
-    var select = function (universe, textitem, offset) {
-      var getText = function (target) {
-        return universe.property().isText(target) ? universe.property().getText(target) : '';
+    var scan = function (universe, item, offset) {
+      var text = universe.property().getText(item);
+      var cluster = Clustering.words(universe, item);
+      var atLeftEdge = offset === 0 && cluster.left().length === 0;
+      var atRightEdge = offset === text.length && cluster.right().length === 0;
+      return {
+        all: cluster.all,
+        leftEdge: Fun.constant(offset === 0 && cluster.left().length === 0),
+        rightEdge: Fun.constant(offset === text.length && cluster.right().length === 0),
+        text: Fun.constant(text)
       };
+    };
 
-      var text = universe.property().getText(textitem);
-      var parts = CurrentWord.around(text, offset);
 
-      var neither = function () {
-        var cluster = Clustering.words(universe, textitem);
-        var atRightEdge = offset === text.length && cluster.right().length === 0;
-        var atLeftEdge = offset === 0 && cluster.left().length === 0;
-        return atLeftEdge || atRightEdge ? Option.none() : all(cluster.all());
-      };
+    // There was only a break in the node before the current position, so
+    // as long as we are not already at the right edge of the node AND cluster, we extend to the 
+    // end of the cluster.
+    var before = function (universe, item, offset, bindex) {
+      var info = scan(universe, item, offset);
+      return info.rightEdge() ? Option.none() : toEnd(info.all(), item, bindex);
+    };
 
-      var justBefore = function (bindex) {
-        var cluster = Clustering.words(universe, textitem);
-        var atRightEdge = offset === text.length && cluster.right().length === 0;
-        return atRightEdge ? Option.none() : toEnd(cluster.all(), textitem, bindex);
-      };
+    // There was only a break in the node after the current position, so
+    // as long as we are not already at the left edge of the node AND cluster, we extend from the
+    // start of the cluster to the index.
+    var after = function (universe, item, offset, aindex) {
+      var info = scan(universe, item, offset);
+      return info.leftEdge() ? Option.none() : fromStart(info.all(), item, aindex);
+    };
 
-      var justAfter = function (aindex) {
-        var cluster = Clustering.words(universe, textitem);
-        var atLeftEdge = offset === 0 && cluster.left().length === 0;
-        return atLeftEdge ? Option.none() : fromStart(cluster.all(), textitem, aindex);
-      };
+    // We don't need to use the cluster, because we are in the middle of two breaks. Only return something 
+    // if the breaks aren't at the same position.
+    var both = function (universe, item, offset, bindex, aindex) {
+      return bindex === aindex ? Option.none() : Option.some(WordRange(item, bindex, item, aindex));
+    };
 
-      var both = function (bindex, aindex) {
-        return bindex === aindex ? Option.none() : Option.some(WordRange(textitem, bindex, textitem, aindex));
-      };
-
-      return parts.before().fold(function () {
-        return parts.after().fold(function () {
-          return neither();
-        }, function (a) {
-          return justAfter(a);
-        });
-      }, function (b) {
-        return parts.after().fold(function () {
-          return justBefore(b);
-        }, function (a) {
-          return both(b, a);
-        });
-      });
+    // There are no breaks in the current node, so as long as we aren't at either edge of node/cluster, 
+    // then we extend the length of the cluster.
+    var neither = function (universe, item, offset) {
+      var info = scan(universe, item, offset);
+      return info.leftEdge() || info.rightEdge() ? Option.none() : all(info.all());
     };
 
     return {
-      select: select
+      before: before,
+      after: after,
+      both: both,
+      neither: neither
     };
   }
 );
