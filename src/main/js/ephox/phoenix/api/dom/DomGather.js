@@ -32,12 +32,37 @@ define(
       return Gather.seekRight(universe, element, isRoot);
     };
 
+    var walkers = function () {
+      return Gather.walkers();
+    };
+
+    var walk = function (item, mode, direction, _rules) {
+      return Gather.walk(universe, item, mode, direction, _rules);
+    };
+
+    var backtrack = function (item, direction, _transition) {
+      return Gather.backtrack(universe, item, direction, _transition);
+    };
+
+    var sidestep = function (item, direction, _transition) {
+      return Gather.sidestep(universe, item, direction, _transition);
+    };
+
+    var advance = function (item, direction, _transition) {
+      return Gather.advance(universe, item, direction, _transition);
+    };
+
     return {
       gather: gather,
       before: before,
       after: after,
       seekLeft: seekLeft,
-      seekRight: seekRight
+      seekRight: seekRight,
+      walkers: walkers,
+      walk: walk,
+      backtrack: backtrack,
+      sidestep: sidestep,
+      advance: advance
     };
   }
 );

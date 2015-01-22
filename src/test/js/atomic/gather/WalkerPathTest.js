@@ -7,11 +7,11 @@ test(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.phoenix.gather.Walker',
-    'ephox.phoenix.gather.Walking',
+    'ephox.phoenix.gather.Walkers',
     'ephox.phoenix.test.Finder'
   ],
 
-  function (Gene, TestUniverse, Fun, Option, Walker, Walking, Finder) {
+  function (Gene, TestUniverse, Fun, Option, Walker, Walkers, Finder) {
     var universe = TestUniverse(
       Gene('root', 'root', [
         Gene('1', 'node', [
@@ -63,11 +63,11 @@ test(
     checkPath([
       '3.1', '3', '2', '2.2', '2.2.2', '2.2.1', '2.2', '2.1', '2', '1', '1.3', '1.2', '1.2.1', '1.2.1.2', '1.2.1.1',
       '1.2.1', '1.2', '1.1', '1.1.1', '1.1', '1', 'root'
-    ], '3.1', Walking.left());
+    ], '3.1', Walkers.left());
 
     checkPath([
       '1.2', '1.2.1', '1.2.1.1', '1.2.1.2', '1.2.1', '1.2', '1.3', '1', '2', '2.1', '2.2', '2.2.1', '2.2.2', '2.2', '2', '3',
       '3.1', '3.2', '3.2.1', '3.2.1.1', '3.2.1.2', '3.2.1', '3.2.2', '3.2', '3.3', '3', 'root'
-    ], '1.2', Walking.right());
+    ], '1.2', Walkers.right());
   }
 );

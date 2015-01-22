@@ -1,5 +1,5 @@
 define(
-  'ephox.phoenix.gather.Walking',
+  'ephox.phoenix.gather.Walkers',
 
   [
     'ephox.perhaps.Option'

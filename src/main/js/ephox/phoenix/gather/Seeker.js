@@ -4,10 +4,10 @@ define(
   [
     'ephox.perhaps.Option',
     'ephox.phoenix.gather.Walker',
-    'ephox.phoenix.gather.Walking'
+    'ephox.phoenix.gather.Walkers'
   ],
 
-  function (Option, Walker, Walking) {
+  function (Option, Walker, Walkers) {
     var hone = function (universe, item, predicate, mode, direction, isRoot) {
       var next = Walker.go(universe, item, mode, direction);
       return next.bind(function (n) {
@@ -17,11 +17,11 @@ define(
     };
 
     var left = function (universe, item, predicate, isRoot) {
-      return hone(universe, item, predicate, Walker.sidestep, Walking.left(), isRoot);
+      return hone(universe, item, predicate, Walker.sidestep, Walkers.left(), isRoot);
     };
 
     var right = function (universe, item, predicate, isRoot) {
-      return hone(universe, item, predicate, Walker.sidestep, Walking.right(), isRoot);
+      return hone(universe, item, predicate, Walker.sidestep, Walkers.right(), isRoot);
     };
 
     return {

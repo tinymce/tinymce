@@ -5,11 +5,11 @@ test(
     'ephox.boss.api.Gene',
     'ephox.boss.api.TestUniverse',
     'ephox.phoenix.gather.Walker',
-    'ephox.phoenix.gather.Walking',
+    'ephox.phoenix.gather.Walkers',
     'ephox.phoenix.test.Finder'
   ],
 
-  function (Gene, TestUniverse, Walker, Walking, Finder) {
+  function (Gene, TestUniverse, Walker, Walkers, Finder) {
     var universe = TestUniverse(
       Gene('a', 'node', [
         Gene('b', 'node', [ ]),
@@ -31,40 +31,40 @@ test(
       assert.eq(expected, actual.item().id);
     };
 
-    checkNone('a', Walker.backtrack, Walking.left());
-    check('a', 'b', Walker.backtrack, Walking.left());
-    check('a', 'c', Walker.backtrack, Walking.left());
-    check('c', 'd', Walker.backtrack, Walking.left());
-    check('c', 'e', Walker.backtrack, Walking.left());
+    checkNone('a', Walker.backtrack, Walkers.left());
+    check('a', 'b', Walker.backtrack, Walkers.left());
+    check('a', 'c', Walker.backtrack, Walkers.left());
+    check('c', 'd', Walker.backtrack, Walkers.left());
+    check('c', 'e', Walker.backtrack, Walkers.left());
 
-    checkNone('a', Walker.sidestep, Walking.left());
-    checkNone('b', Walker.sidestep, Walking.left());
-    check('b', 'c', Walker.sidestep, Walking.left());
-    checkNone('d', Walker.sidestep, Walking.left());
-    check('d', 'e', Walker.sidestep, Walking.left());
+    checkNone('a', Walker.sidestep, Walkers.left());
+    checkNone('b', Walker.sidestep, Walkers.left());
+    check('b', 'c', Walker.sidestep, Walkers.left());
+    checkNone('d', Walker.sidestep, Walkers.left());
+    check('d', 'e', Walker.sidestep, Walkers.left());
 
-    check('c', 'a', Walker.advance, Walking.left());
-    checkNone('b', Walker.advance, Walking.left());
-    check('e', 'c', Walker.advance, Walking.left());
-    checkNone('d', Walker.advance, Walking.left());
-    checkNone('e', Walker.advance, Walking.left());
+    check('c', 'a', Walker.advance, Walkers.left());
+    checkNone('b', Walker.advance, Walkers.left());
+    check('e', 'c', Walker.advance, Walkers.left());
+    checkNone('d', Walker.advance, Walkers.left());
+    checkNone('e', Walker.advance, Walkers.left());
 
-    checkNone('a', Walker.backtrack, Walking.right());
-    check('a', 'b', Walker.backtrack, Walking.right());
-    check('a', 'c', Walker.backtrack, Walking.right());
-    check('c', 'd', Walker.backtrack, Walking.right());
-    check('c', 'e', Walker.backtrack, Walking.right());
+    checkNone('a', Walker.backtrack, Walkers.right());
+    check('a', 'b', Walker.backtrack, Walkers.right());
+    check('a', 'c', Walker.backtrack, Walkers.right());
+    check('c', 'd', Walker.backtrack, Walkers.right());
+    check('c', 'e', Walker.backtrack, Walkers.right());
 
-    checkNone('a', Walker.sidestep, Walking.right());
-    check('c', 'b', Walker.sidestep, Walking.right());
-    checkNone('c', Walker.sidestep, Walking.right());
-    check('e', 'd', Walker.sidestep, Walking.right());
-    checkNone('e', Walker.sidestep, Walking.right());
+    checkNone('a', Walker.sidestep, Walkers.right());
+    check('c', 'b', Walker.sidestep, Walkers.right());
+    checkNone('c', Walker.sidestep, Walkers.right());
+    check('e', 'd', Walker.sidestep, Walkers.right());
+    checkNone('e', Walker.sidestep, Walkers.right());
 
-    check('b', 'a', Walker.advance, Walking.right());
-    checkNone('b', Walker.advance, Walking.right());
-    check('d', 'c', Walker.advance, Walking.right());
-    checkNone('d', Walker.advance, Walking.right());
-    checkNone('e', Walker.advance, Walking.right());
+    check('b', 'a', Walker.advance, Walkers.right());
+    checkNone('b', Walker.advance, Walkers.right());
+    check('d', 'c', Walker.advance, Walkers.right());
+    checkNone('d', Walker.advance, Walkers.right());
+    checkNone('e', Walker.advance, Walkers.right());
   }
 );
