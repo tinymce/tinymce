@@ -146,10 +146,13 @@ function insertTable() {
 
 		elm.style.borderColor = bordercolor;
 
-		parsedStyles = dom.parseStyle(style);
-
 		if (inst.settings.table_style_by_css) {
 
+			parsedStyles = dom.parseStyle(style);
+
+			if (parsedStyles.border) {
+				styleTDTH(elm, "border", parsedStyles.border);
+			}
 			if (border !== "") {
 				styleTDTH(elm, "border-width", cssSize(border));
 			} else {
@@ -160,9 +163,10 @@ function insertTable() {
 			} else {
 				styleTDTH(elm, "padding", '');
 			}
+
 			styleTDTH(elm, "border-color", bordercolor);
 
-			styleTDTH(elm, "border-style", parsedStyles['border-style']);
+			styleTDTH(elm, "border-style", elm.style.borderStyle);
 		}
 
 		elm.style.backgroundColor = bgcolor;
@@ -244,7 +248,9 @@ function insertTable() {
 		parsedStyles = dom.parseStyle(style);
 
 		newCellStyles = {};
-
+		if (parsedStyles.border) {
+			newCellStyles.border = parsedStyles.border;
+		}
 		if (border !== "") {
 			newCellStyles["border-width"] = cssSize(border);
 		}
