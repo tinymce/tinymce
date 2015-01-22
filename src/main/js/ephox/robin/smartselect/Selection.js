@@ -15,16 +15,19 @@ define(
     var word = function (universe, item, offset) {
       if (!universe.property().isText(item)) return Option.none();      
       var text = universe.property().getText(item);
-      var parts = CurrentWord.around(text, offset);
 
-      return parts.before().fold(function () {
-        return parts.after().fold(function () {
+      // Identify the index of a word break before the current offset and after the current offset
+      // if possible.
+      var breaks = CurrentWord.around(text, offset);
+
+      return breaks.before().fold(function () {
+        return breaks.after().fold(function () {
           return EndofWord.neither(universe, item, offset);
         }, function (a) {
           return EndofWord.after(universe, item, offset, a);
         });
       }, function (b) {
-        return parts.after().fold(function () {
+        return breaks.after().fold(function () {
           return EndofWord.before(universe, item, offset, b);
         }, function (a) {
           return EndofWord.both(universe, item, offset, b, a);

@@ -31,7 +31,9 @@ define(
     var scan = function (universe, item, offset) {
       var text = universe.property().getText(item);
       var cluster = Clustering.words(universe, item);
+      // We are at the left edge of the cluster.
       var atLeftEdge = offset === 0 && cluster.left().length === 0;
+      // We are at the right edge of the cluster.
       var atRightEdge = offset === text.length && cluster.right().length === 0;
       return {
         all: cluster.all,

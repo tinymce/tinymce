@@ -8,6 +8,7 @@ define(
 
   function (Option, Gather) {
     var top = {
+      // The top strategy ignores children.
       rules: [
         { current: Gather.backtrack, next: Gather.sidestep, fallback: Option.none() },
         { current: Gather.sidestep, next: Gather.sidestep, fallback: Option.some(Gather.backtrack) },
@@ -27,6 +28,7 @@ define(
 
     var all = {
       // rules === undefined, so use default.
+      rules: undefined,
       inclusion: function (universe, next, item) {
         return universe.property().isText(next.item());
       }
