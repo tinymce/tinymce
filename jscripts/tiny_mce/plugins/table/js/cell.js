@@ -219,8 +219,8 @@ function updateCell(td, skip_id) {
 	// Set styles
 	td.style.width = getCSSSize(formObj.width.value);
 	td.style.height = getCSSSize(formObj.height.value);
-	dom.setStyle(td, 'text-align', formObj.align.value);
-	dom.setStyle(td ,'vertical-align', formObj.valign.value);
+	td.style.textAlign = formObj.align.value;
+	td.style.verticalAlign = formObj.valign.value;
 	td.style.borderColor = formObj.bordercolor.value;
 	td.style.backgroundColor = formObj.bgcolor.value;
 

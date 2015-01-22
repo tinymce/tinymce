@@ -22,9 +22,9 @@ function insertTable() {
 	// Get form data
 	cols = formObj.elements['cols'].value;
 	rows = formObj.elements['rows'].value;
-	border = formObj.elements['border'].value != "" ? formObj.elements['border'].value : "";
-	cellpadding = formObj.elements['cellpadding'].value != "" ? formObj.elements['cellpadding'].value : "";
-	cellspacing = formObj.elements['cellspacing'].value != "" ? formObj.elements['cellspacing'].value : "";
+	border = formObj.elements['border'].value !== "" ? formObj.elements['border'].value : "";
+	cellpadding = formObj.elements['cellpadding'].value !== "" ? formObj.elements['cellpadding'].value : "";
+	cellspacing = formObj.elements['cellspacing'].value !== "" ? formObj.elements['cellspacing'].value : "";
 	align = getSelectValue(formObj, "align");
 	frame = getSelectValue(formObj, "tframe");
 	rules = getSelectValue(formObj, "rules");
@@ -133,7 +133,7 @@ function insertTable() {
 			dom.setAttrib(elm, 'border', '');
 		}
 
-		if (border == '') {
+		if (border === "") {
 			dom.setStyle(elm, 'border-width', '');
 			dom.setStyle(elm, 'border', '');
 			dom.setAttrib(elm, 'border', '');
