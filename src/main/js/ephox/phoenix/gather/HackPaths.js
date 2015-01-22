@@ -3,11 +3,12 @@ define(
 
   [
     'ephox.compass.Arr',
+    'ephox.phoenix.api.general.Extract',
     'ephox.phoenix.gather.Hacksy',
     'ephox.scullion.Struct'
   ],
 
-  function (Arr, Hacksy, Struct) {
+  function (Arr, Extract, Hacksy, Struct) {
     var sss = Struct.immutable('item', 'start', 'finish', 'text');
     var decision = Struct.immutable('items', 'abort');
 
@@ -66,10 +67,18 @@ define(
       }).getOr([]);
     };
 
+    var extract = function (universe, item) {
+      if (universe.property().isText(item)) return [ all(universe, item) ];
+      var children = Extract.all(universe, item);
+      return Arr.bind(children, function (ch) {
+        return universe.property().isText(ch) ? [ all(universe, ch) ] : [];
+      });
+    }
+
     var words = function (universe, item) {
-      var toLeft = doWords(universe, item, Hacksy.advance, Hacksy.left());
-      var toRight = doWords(universe, item, Hacksy.advance, Hacksy.right());
-      var middle = universe.property().isText(item) ? [ all(universe, item) ] : [];
+      var toLeft = doWords(universe, item, Hacksy.sidestep, Hacksy.left());
+      var toRight = doWords(universe, item, Hacksy.sidestep, Hacksy.right());
+      var middle = extract(universe, item);
       return Arr.reverse(toLeft).concat(middle).concat(toRight);
     };
 
