@@ -40,11 +40,14 @@ define(
       var text = universe.property().getText(textitem);
       var parts = CurrentWord.around(text, offset);
 
+      var atRightEdge = offset === text.length && cluster.right().length === 0;
+      var atLeftEdge = offset === 0 && cluster.left().length === 0;
+
       var neither = function () {
         console.log('offset: ', offset, text.length, cluster.left().length, cluster.right().length);
-        var atEdge = offset === 0 || offset === text.length;
-        var hasMore = cluster.left().length > 0 || cluster.right().length > 0;
-        return atEdge && !hasMore ? Option.none() : all(cluster.all());
+        // var atEdge = offset === 0 || offset === text.length;
+        // var hasMore = cluster.left().length > 0 || cluster.right().length > 0;
+        return atLeftEdge || atRightEdge ? Option.none() : all(cluster.all());
       };
 
       var justBefore = function (bindex) {
