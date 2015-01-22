@@ -69,11 +69,6 @@ function insertTable() {
 		dom.setAttrib(elm, 'summary', summary);
 		dom.setAttrib(elm, 'dir', dir);
 		dom.setAttrib(elm, 'lang', lang);
-		if (inst.settings.table_style_by_css) {
-			dom.setAttrib(elm, 'data-mce-style-cells', 'true');
-		} else {
-			dom.setAttrib(elm, 'data-mce-style-cells', '');
-		}
 
 		capEl = inst.dom.select('caption', elm)[0];
 
@@ -198,8 +193,6 @@ function insertTable() {
 
 	if (!inst.settings.table_style_by_css) {
 		html += makeAttrib('cellpadding', nonCssSize(cellpadding));
-	} else {
-		html += makeAttrib('data-mce-style-cells', 'true');
 	}
 
 	html += makeAttrib('data-mce-new', '1');
