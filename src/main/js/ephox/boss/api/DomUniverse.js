@@ -78,7 +78,6 @@ define(
         }),
         remove: Fun.constant({
           unwrap: Remove.unwrap,
-          detach: Remove.detach,
           remove: Remove.remove
         }),
         create: Fun.constant({
