@@ -367,7 +367,7 @@
 		self.init = function(ed) {
 			ed.addMenuItem('searchreplace', {
 				text: 'Find and replace',
-				shortcut: 'Ctrl+F',
+				shortcut: 'Meta+F',
 				onclick: showDialog,
 				separator: 'before',
 				context: 'edit'
@@ -375,12 +375,12 @@
 
 			ed.addButton('searchreplace', {
 				tooltip: 'Find and replace',
-				shortcut: 'Ctrl+F',
+				shortcut: 'Meta+F',
 				onclick: showDialog
 			});
 
 			ed.addCommand("SearchReplace", showDialog);
-			ed.shortcuts.add('Ctrl+F', '', showDialog);
+			ed.shortcuts.add('Meta+F', '', showDialog);
 		};
 
 		function getElmIndex(elm) {

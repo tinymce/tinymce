@@ -356,7 +356,6 @@ define("tinymce/ui/FormatControls", [
 
 		editor.addMenuItem('newdocument', {
 			text: 'New document',
-			shortcut: 'Ctrl+N',
 			icon: 'newdocument',
 			cmd: 'mceNewDocument'
 		});
@@ -364,7 +363,7 @@ define("tinymce/ui/FormatControls", [
 		editor.addMenuItem('undo', {
 			text: 'Undo',
 			icon: 'undo',
-			shortcut: 'Ctrl+Z',
+			shortcut: 'Meta+Z',
 			onPostRender: toggleUndoRedoState('undo'),
 			cmd: 'undo'
 		});
@@ -372,7 +371,7 @@ define("tinymce/ui/FormatControls", [
 		editor.addMenuItem('redo', {
 			text: 'Redo',
 			icon: 'redo',
-			shortcut: 'Ctrl+Y',
+			shortcut: 'Meta+Y',
 			onPostRender: toggleUndoRedoState('redo'),
 			cmd: 'redo'
 		});
@@ -385,12 +384,12 @@ define("tinymce/ui/FormatControls", [
 		});
 
 		each({
-			cut: ['Cut', 'Cut', 'Ctrl+X'],
-			copy: ['Copy', 'Copy', 'Ctrl+C'],
-			paste: ['Paste', 'Paste', 'Ctrl+V'],
-			selectall: ['Select all', 'SelectAll', 'Ctrl+A'],
-			bold: ['Bold', 'Bold', 'Ctrl+B'],
-			italic: ['Italic', 'Italic', 'Ctrl+I'],
+			cut: ['Cut', 'Cut', 'Meta+X'],
+			copy: ['Copy', 'Copy', 'Meta+C'],
+			paste: ['Paste', 'Paste', 'Meta+V'],
+			selectall: ['Select all', 'SelectAll', 'Meta+A'],
+			bold: ['Bold', 'Bold', 'Meta+B'],
+			italic: ['Italic', 'Italic', 'Meta+I'],
 			underline: ['Underline', 'Underline'],
 			strikethrough: ['Strikethrough', 'Strikethrough'],
 			subscript: ['Subscript', 'Subscript'],

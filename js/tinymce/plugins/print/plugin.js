@@ -20,13 +20,13 @@ tinymce.PluginManager.add('print', function(editor) {
 		cmd: 'mcePrint'
 	});
 
-	editor.addShortcut('Ctrl+P', '', 'mcePrint');
+	editor.addShortcut('Meta+P', '', 'mcePrint');
 
 	editor.addMenuItem('print', {
 		text: 'Print',
 		cmd: 'mcePrint',
 		icon: 'print',
-		shortcut: 'Ctrl+P',
+		shortcut: 'Meta+P',
 		context: 'file'
 	});
 });

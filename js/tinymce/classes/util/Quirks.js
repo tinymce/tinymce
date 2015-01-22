@@ -433,7 +433,7 @@ define("tinymce/util/Quirks", [
 		 * This selects the whole body so that backspace/delete logic will delete everything
 		 */
 		function selectAll() {
-			editor.shortcuts.add('ctrl+a', null, 'SelectAll');
+			editor.shortcuts.add('meta+a', null, 'SelectAll');
 		}
 
 		/**

@@ -90,5 +90,5 @@ tinymce.PluginManager.add('save', function(editor) {
 		onPostRender: stateToggle
 	});
 
-	editor.addShortcut('ctrl+s', '', 'mceSave');
+	editor.addShortcut('Meta+S', '', 'mceSave');
 });

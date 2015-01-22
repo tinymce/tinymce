@@ -180,18 +180,18 @@ define("tinymce/Formatter", [
 
 		function addKeyboardShortcuts() {
 			// Add some inline shortcuts
-			ed.addShortcut('ctrl+b', 'bold_desc', 'Bold');
-			ed.addShortcut('ctrl+i', 'italic_desc', 'Italic');
-			ed.addShortcut('ctrl+u', 'underline_desc', 'Underline');
+			ed.addShortcut('meta+b', 'bold_desc', 'Bold');
+			ed.addShortcut('meta+i', 'italic_desc', 'Italic');
+			ed.addShortcut('meta+u', 'underline_desc', 'Underline');
 
 			// BlockFormat shortcuts keys
 			for (var i = 1; i <= 6; i++) {
-				ed.addShortcut('ctrl+' + i, '', ['FormatBlock', false, 'h' + i]);
+				ed.addShortcut('meta+' + i, '', ['FormatBlock', false, 'h' + i]);
 			}
 
-			ed.addShortcut('ctrl+7', '', ['FormatBlock', false, 'p']);
-			ed.addShortcut('ctrl+8', '', ['FormatBlock', false, 'div']);
-			ed.addShortcut('ctrl+9', '', ['FormatBlock', false, 'address']);
+			ed.addShortcut('meta+7', '', ['FormatBlock', false, 'p']);
+			ed.addShortcut('meta+8', '', ['FormatBlock', false, 'div']);
+			ed.addShortcut('meta+9', '', ['FormatBlock', false, 'address']);
 		}
 
 		// Public functions

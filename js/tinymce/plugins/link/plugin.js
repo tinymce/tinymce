@@ -372,7 +372,7 @@ tinymce.PluginManager.add('link', function(editor) {
 	editor.addButton('link', {
 		icon: 'link',
 		tooltip: 'Insert/edit link',
-		shortcut: 'Ctrl+K',
+		shortcut: 'Meta+K',
 		onclick: createLinkList(showDialog),
 		stateSelector: 'a[href]'
 	});
@@ -384,7 +384,7 @@ tinymce.PluginManager.add('link', function(editor) {
 		stateSelector: 'a[href]'
 	});
 
-	editor.addShortcut('Ctrl+K', '', createLinkList(showDialog));
+	editor.addShortcut('Meta+K', '', createLinkList(showDialog));
 	editor.addCommand('mceLink', createLinkList(showDialog));
 
 	this.showDialog = showDialog;
@@ -392,7 +392,7 @@ tinymce.PluginManager.add('link', function(editor) {
 	editor.addMenuItem('link', {
 		icon: 'link',
 		text: 'Insert/edit link',
-		shortcut: 'Ctrl+K',
+		shortcut: 'Meta+K',
 		onclick: createLinkList(showDialog),
 		stateSelector: 'a[href]',
 		context: 'insert',

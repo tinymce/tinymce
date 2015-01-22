@@ -203,6 +203,36 @@ define("tinymce/ui/MenuItem", [
 			var self = this, id = self._id, settings = self.settings, prefix = self.classPrefix, text = self.encode(self._text);
 			var icon = self.settings.icon, image = '', shortcut = settings.shortcut;
 
+			// Converts shortcut format to Mac/PC variants
+			function convertShortcut(shortcut) {
+				var i, value, replace = {};
+
+				if (Env.mac) {
+					replace = {
+						alt: '&#x2325;',
+						ctrl: '&#x2318;',
+						shift: '&#x21E7;',
+						meta: '&#x2318;'
+					};
+				} else {
+					replace = {
+						meta: 'Ctrl'
+					};
+				}
+
+				shortcut = shortcut.split('+');
+
+				for (i = 0; i < shortcut.length; i++) {
+					value = replace[shortcut[i].toLowerCase()];
+
+					if (value) {
+						shortcut[i] = value;
+					}
+				}
+
+				return shortcut.join('+');
+			}
+
 			if (icon) {
 				self.parent().addClass('menu-has-icons');
 			}
@@ -212,12 +242,8 @@ define("tinymce/ui/MenuItem", [
 				image = ' style="background-image: url(\'' + settings.image + '\')"';
 			}
 
-			if (shortcut && Env.mac) {
-				// format shortcut for Mac
-				shortcut = shortcut.replace(/ctrl\+alt\+/i, '&#x2325;&#x2318;'); // ctrl+cmd
-				shortcut = shortcut.replace(/ctrl\+/i, '&#x2318;'); // ctrl symbol
-				shortcut = shortcut.replace(/alt\+/i, '&#x2325;'); // cmd symbol
-				shortcut = shortcut.replace(/shift\+/i, '&#x21E7;'); // shift symbol
+			if (shortcut) {
+				shortcut = convertShortcut(shortcut);
 			}
 
 			icon = prefix + 'ico ' + prefix + 'i-' + (self.settings.icon || 'none');
