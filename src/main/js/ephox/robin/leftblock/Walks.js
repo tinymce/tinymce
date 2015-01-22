@@ -3,15 +3,15 @@ define(
 
   [
     'ephox.perhaps.Option',
-    'ephox.phoenix.gather.Walker'
+    'ephox.phoenix.api.general.Gather'
   ],
 
-  function (Option, Walker) {
+  function (Option, Gather) {
     var top = {
       rules: [
-        { current: Walker.backtrack, next: Walker.sidestep, fallback: Option.none() },
-        { current: Walker.sidestep, next: Walker.sidestep, fallback: Option.some(Walker.backtrack) },
-        { current: Walker.advance, next: Walker.sidestep, fallback: Option.some(Walker.sidestep) }
+        { current: Gather.backtrack, next: Gather.sidestep, fallback: Option.none() },
+        { current: Gather.sidestep, next: Gather.sidestep, fallback: Option.some(Gather.backtrack) },
+        { current: Gather.advance, next: Gather.sidestep, fallback: Option.some(Gather.sidestep) }
       ],
       inclusion: function (universe, next, item) {
         // You can't just check the mode, because it may have fallen back to backtracking, 

@@ -5,13 +5,12 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.phoenix.api.general.Extract',
-    'ephox.phoenix.gather.Walker',
-    'ephox.phoenix.gather.Walking',
+    'ephox.phoenix.api.general.Gather',
     'ephox.robin.words.WordDecision',
     'ephox.robin.words.WordWalking'
   ],
 
-  function (Arr, Fun, Extract, Walker, Walking, WordDecision, WordWalking) {
+  function (Arr, Fun, Extract, Gather, WordDecision, WordWalking) {
     /*
      * Identification of words:
      *
@@ -26,7 +25,7 @@ define(
      * For others, keep gathering and do not include
      */
     var doWords = function (universe, item, mode, direction) {
-      var destination = Walker.go(universe, item, mode, direction);
+      var destination = Gather.walk(universe, item, mode, direction);
       return destination.map(function (dest) {
         var decision = WordDecision.decide(universe, dest.item(), direction.slicer);
         var recursive = decision.abort() ? [] : doWords(universe, dest.item(), dest.mode(), direction);
@@ -43,9 +42,9 @@ define(
     };
 
     var words = function (universe, item) {
-      var toLeft = doWords(universe, item, Walker.sidestep, WordWalking.left);
+      var toLeft = doWords(universe, item, Gather.sidestep, WordWalking.left);
       var middle = extract(universe, item);
-      var toRight = doWords(universe, item, Walker.sidestep, WordWalking.right);
+      var toRight = doWords(universe, item, Gather.sidestep, WordWalking.right);
       return {
         all: Fun.constant(Arr.reverse(toLeft).concat(middle).concat(toRight)),
         left: Fun.constant(toLeft),

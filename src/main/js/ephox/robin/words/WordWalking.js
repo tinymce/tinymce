@@ -2,13 +2,15 @@ define(
   'ephox.robin.words.WordWalking',
 
   [
-    'ephox.phoenix.gather.Walking',
+    'ephox.phoenix.api.general.Gather',
     'ephox.robin.util.WordUtil'
   ],
 
-  function (Walking, WordUtil) {
-    var left = Walking.left();
-    var right = Walking.right();
+  function (Gather, WordUtil) {
+    var walkers = Gather.walkers();
+
+    var left = walkers.left();
+    var right = walkers.right();
 
     var breakToLeft = function (text) {
       return WordUtil.leftBreak(text).map(function (index) {
