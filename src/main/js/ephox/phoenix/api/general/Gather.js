@@ -43,18 +43,6 @@ define(
       return Walker.go(universe, item, mode, direction, _rules);
     };
 
-    var backtrack = function (universe, item, direction, _transition) {
-      return Walker.backtrack(universe, item, direction, _transition);
-    };
-
-    var sidestep = function (universe, item, direction, _transition) {
-      return Walker.sidestep(universe, item, direction, _transition);
-    };
-
-    var advance = function (universe, item, direction, _transition) {
-      return Walker.advance(universe, item, direction, _transition);
-    };
-
     return {
       before: before,
       after: after,
@@ -62,9 +50,10 @@ define(
       seekRight: seekRight,
       walkers: walkers,
       walk: walk,
-      backtrack: backtrack,
-      sidestep: sidestep,
-      advance: advance
+      // These have to be direct references.
+      backtrack: Walker.backtrack,
+      sidestep: Walker.sidestep,
+      advance: Walker.advance
     };
   }
 );

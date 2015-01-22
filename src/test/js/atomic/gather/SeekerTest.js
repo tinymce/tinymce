@@ -54,7 +54,6 @@ test(
         assert.eq(true, expected.isNone());
       }, function (act) {
         expected.fold(function () {
-          console.log('act', act);
           assert.fail('Expected none, Actual: ' + act);
         }, function (exp) {
           assert.eq(exp, act.id);
@@ -63,14 +62,12 @@ test(
     };
 
     var checkBefore = function (expected, id) {
-      console.log('before.' + id);
       var item = Finder.get(universe, id);
       var actual = Gather.before(universe, item, isRoot);
       check(expected, actual);
     };
 
     var checkAfter = function (expected, id) {
-      console.log('after.' + id);
       var item = Finder.get(universe, id);
       var actual = Gather.after(universe, item, isRoot);
       check(expected, actual);
