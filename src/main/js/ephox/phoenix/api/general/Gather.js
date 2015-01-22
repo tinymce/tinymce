@@ -17,19 +17,19 @@ define(
     };
 
     var before = function (universe, item, isRoot) {
-      return Seeker.left(universe, item, Fun.curry(isLeaf, universe), isRoot);
+      return seekLeft(universe, item, Fun.curry(isLeaf, universe), isRoot);
     };
 
     var after = function (universe, item, isRoot) {
-      return Seeker.right(universe, item, Fun.curry(isLeaf, universe), isRoot);
+      return seekRight(universe, item, Fun.curry(isLeaf, universe), isRoot);
     };
 
     var seekLeft = function (universe, item, predicate, isRoot) {
-      return hone(universe, item, predicate, Walker.sidestep, Walkers.left(), isRoot);
+      return Seeker.left(universe, item, predicate, isRoot);
     };
 
     var seekRight = function (universe, item, predicate, isRoot) {
-      return hone(universe, item, predicate, Walker.sidestep, Walkers.right(), isRoot);
+      return Seeker.right(universe, item, predicate, isRoot);
     };
 
     var walkers = function () {
