@@ -78,6 +78,10 @@ define("tinymce/util/Quirks", [
 					selection.select(e.target);
 				}
 
+				if (e.target.tagName == 'IMG' && e.target.parentNode.tagName == 'A') {
+					selection.select(e.target.parentNode);
+				}
+
 				selectionHtml = editor.selection.getContent();
 
 				// Safari/IE doesn't support custom dataTransfer items so we can only use URL and Text
