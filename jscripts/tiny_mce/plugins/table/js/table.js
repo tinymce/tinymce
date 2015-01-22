@@ -398,7 +398,7 @@ function init() {
 	document.getElementById('bordercolor_pickcontainer').innerHTML = getColorPickerHTML('bordercolor_pick','bordercolor');
 	document.getElementById('bgcolor_pickcontainer').innerHTML = getColorPickerHTML('bgcolor_pick','bgcolor');
 
-	var cols = 2, rows = 2, border = tinyMCEPopup.getParam('table_default_border', '0'), cellpadding = tinyMCEPopup.getParam('table_default_cellpadding', ''), cellspacing = tinyMCEPopup.getParam('table_default_cellspacing', '');
+	var cols = 2, rows = 2, border = tinyMCEPopup.getParam('table_default_border', ''), cellpadding = tinyMCEPopup.getParam('table_default_cellpadding', ''), cellspacing = tinyMCEPopup.getParam('table_default_cellspacing', '');
 	var align = "", width = "", height = "", bordercolor = "", bgcolor = "", className = "";
 	var id = "", summary = "", style = "", dir = "", lang = "", background = "", rules = "", frame = "";
 	var inst = tinyMCEPopup.editor, dom = inst.dom;
