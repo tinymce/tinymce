@@ -3,12 +3,12 @@ define(
 
   [
     'ephox.perhaps.Option',
+    'ephox.phoenix.gather.HackPaths',
     'ephox.robin.data.WordRange',
-    'ephox.robin.util.CurrentWord',
-    'ephox.sugar.api.Text'
+    'ephox.robin.util.CurrentWord'
   ],
 
-  function (Option, WordRange, CurrentWord, Text) {
+  function (Option, HackPaths, WordRange, CurrentWord) {
     var toEnd = function (cluster, start, soffset) {
       if (cluster.length === 0) return Option.none();
       var last = cluster[cluster.length - 1];
@@ -32,7 +32,7 @@ define(
      * Returns an optional range which represents the selection of an entire word which may span 
      * several elements.
      */
-    var select = function (universe, textitem, offset, cluster) {
+    var select = function (universe, textitem, offset) {
       var getText = function (target) {
         return universe.property().isText(target) ? universe.property().getText(target) : '';
       };
@@ -40,21 +40,22 @@ define(
       var text = universe.property().getText(textitem);
       var parts = CurrentWord.around(text, offset);
 
-      var atRightEdge = offset === text.length && cluster.right().length === 0;
-      var atLeftEdge = offset === 0 && cluster.left().length === 0;
-
       var neither = function () {
-        console.log('offset: ', offset, text.length, cluster.left().length, cluster.right().length);
-        // var atEdge = offset === 0 || offset === text.length;
-        // var hasMore = cluster.left().length > 0 || cluster.right().length > 0;
+        var cluster = HackPaths.words(universe, textitem);
+        var atRightEdge = offset === text.length && cluster.right().length === 0;
+        var atLeftEdge = offset === 0 && cluster.left().length === 0;
         return atLeftEdge || atRightEdge ? Option.none() : all(cluster.all());
       };
 
       var justBefore = function (bindex) {
+        var cluster = HackPaths.words(universe, textitem);
+        var atRightEdge = offset === text.length && cluster.right().length === 0;
         return atRightEdge ? Option.none() : toEnd(cluster.all(), textitem, bindex);
       };
 
       var justAfter = function (aindex) {
+        var cluster = HackPaths.words(universe, textitem);
+        var atLeftEdge = offset === 0 && cluster.left().length === 0;
         return atLeftEdge ? Option.none() : fromStart(cluster.all(), textitem, aindex);
       };
 

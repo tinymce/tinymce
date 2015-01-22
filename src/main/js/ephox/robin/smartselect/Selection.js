@@ -25,9 +25,8 @@ define(
     var word = function (universe, item, offset) {
       if (!universe.property().isText(item)) return Option.none();
       
-      // This needs to be more selective. I shouldn't have to gather both left and right every time.
       var cluster = HackPaths.words(universe, item);
-      return EndofWord.select(universe, item, offset, cluster);
+      return EndofWord.select(universe, item, offset);
     };
 
     return {
