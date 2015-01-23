@@ -55,6 +55,7 @@ define(
         return canReuse ? Option.some({
           cursor: Fun.constant(cursor),
           temporary: Fun.constant(false),
+          // FIX: This should be an array !!!!!!!!!!!!!!!!!!!
           wrappers: Fun.constant(parent)
         }) : Option.none();
       }).getOrThunk(function () {
