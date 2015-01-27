@@ -129,12 +129,42 @@ if (true) {
       [ 0, 0 ], 'T'.length, [ 0, 1, 0 ], 'bold'.length
     );
 
-    console.log('last test');
     container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
     check(
       '<p>This is <b>bold text</b><strong> and </strong><i>italic text</i> here.</p>',
       [ 0 ], 2, [ 0 ], 3
     );
+
+    container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+    check(
+      '<p>This is <b>bold text</b> and <strong><i>italic text</i></strong> here.</p>',
+      [ 0 ], 3, [ 0 ], 4
+    );
+
+    container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+    check(
+      '<p>This is <b>bold text</b> and <i>italic text</i><strong> here.</strong></p>',
+      [ 0 ], 4, [ 0 ], 5
+    );
+
+    container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+    check(
+      '<p>This is <b>bold text</b> and <i>italic text</i><strong> he</strong>re.</p>',
+      [ 0 ], 4, [ 0, 4 ], ' he'.length
+    );
+
+    container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+    check(
+      '<p>This is <b>b</b><strong><b>old text</b> and <i>italic text</i> he</strong>re.</p>',
+      [ 0, 1, 0 ], 'b'.length, [ 0, 4 ], ' he'.length
+    );
+
+    container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+    check(
+      '<p>This is <b>b<strong>o</strong>ld text</b> and <i>italic text</i> here.</p>',
+      [ 0, 1, 0 ], 'b'.length, [ 0, 1, 0 ], 'bo'.length
+    );
+
 
     /*
     var reset = function () {

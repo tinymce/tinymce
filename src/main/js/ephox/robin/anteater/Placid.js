@@ -2,12 +2,13 @@ define(
   'ephox.robin.anteater.Placid',
 
   [
+    'ephox.perhaps.Option',
     'ephox.phoenix.api.general.Split',
     'ephox.robin.anteater.Anteater',
     'ephox.scullion.ADT'
   ],
 
-  function (Split, Anteater, ADT) {
+  function (Option, Split, Anteater, ADT) {
     var adt = ADT.generate([
       { left: [ 'element' ] },
       { between: [ 'before', 'after' ] },
@@ -41,7 +42,15 @@ define(
       return handler(universe, element, offset);
     };
 
+    var lake = function (universe, isRoot, element, soffset, foffset) {
+      var middle = Split.splitByPair(universe, element, soffset, foffset);
+      return Option.some([ middle ]);
+    };
+
+
+    // TODO: Handle backwards selections !
     var placid = function (universe, isRoot, start, soffset, finish, foffset) {
+      if (universe.property().isText(start) && universe.eq(start, finish)) return lake(universe, isRoot, start, soffset, foffset);
       var leftSide = analyse(universe, start, soffset).fold(function (l) {
         return l;
         // really not sure what to do here.
