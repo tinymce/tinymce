@@ -110,6 +110,7 @@ if (true) {
       [ 0 ], 1, [ 0, 1 ], 1
     );
 
+    // This test doesn't really make sense ... it is a collapsed selection essentially.
     // container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
     // check(
     //   '<p>This is <strong><b>bold text</b></strong> and <i>italic text</i> here.</p>',

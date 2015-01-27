@@ -55,7 +55,7 @@ define(
       if (universe.property().isText(start) && universe.eq(start, finish)) return lake(universe, isRoot, start, soffset, foffset);
       var leftSide = analyse(universe, start, soffset).fold(function (l) {
         console.log('************************', 'original.left: ', l.dom());
-        return Gather.seekRight(universe, l, Fun.constant(true), isRoot).getOr(l);
+        return Gather.after(universe, l, isRoot).getOr(l);
         // really not sure what to do here.
       }, function (b, a) {
         return a;
@@ -70,7 +70,7 @@ define(
       }, function (r) {
         console.log('*************************', 'original.right: ', r.dom(), finish.dom(), foffset);
         // really not sure what to do here.
-        return Gather.seekLeft(universe, r, Fun.constant(true), isRoot).getOr(r);
+        return Gather.before(universe, r, isRoot).getOr(r);
       });
 
       console.log('leftSide: ', leftSide.dom(), 'rightSide: ', rightSide.dom());
