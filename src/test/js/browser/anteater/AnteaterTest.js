@@ -100,20 +100,19 @@ if (true) {
 
     container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
     check(
-      '<p>This is <b><strong>bold text</strong></b> and <i>italic text</i> here.</p>',
+      '<p>This is <strong><b>bold text</b></strong> and <i>italic text</i> here.</p>',
       [ 0 ], 1, [ 0 ], 2
     );
 
     container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
     check(
-      '<p>This is <b><strong>bold text</strong></b> and <i>italic text</i> here.</p>',
+      '<p>This is <strong><b>bold text</b></strong> and <i>italic text</i> here.</p>',
       [ 0 ], 1, [ 0, 1 ], 1
     );
 
-    // This is an incorrect answer !!!!!
     container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
     check(
-      '<p>This is <b><strong>bold text</strong></b> and <i>italic text</i> here.</p>',
+      '<p>This is <strong><b>bold text</b></strong> and <i>italic text</i> here.</p>',
       [ 0 ], 1, [ 0, 1 ], 0
     );
 
@@ -130,7 +129,12 @@ if (true) {
       [ 0, 0 ], 'T'.length, [ 0, 1, 0 ], 'bold'.length
     );
 
-
+    console.log('last test');
+    container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+    check(
+      '<p>This is <b>bold text</b><strong> and </strong><i>italic text</i> here.</p>',
+      [ 0 ], 2, [ 0 ], 3
+    );
 
     /*
     var reset = function () {

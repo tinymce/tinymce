@@ -33,6 +33,8 @@ define(
     var slice = function (universe, parent, first, last) {
       var children = universe.property().children(parent);
 
+
+
       var fi = first.fold(function () {
         console.log('left point is the parent');
         return 0;
@@ -85,6 +87,18 @@ define(
     };
 
     var fossil = function (universe, isRoot, start, finish) {
+      if (universe.eq(start, finish)) {
+        var children = universe.property().parent(start).fold(Fun.constant([]), function (parent) {
+          return universe.property().children(parent);
+        });
+
+        var index = Arr.findIndex(children, Fun.curry(universe.eq, start));
+        console.log('index: ', children.slice(index, index + 1));
+        if (index > -1) return Option.some(children.slice(index, index + 1));
+        else return Option.none();
+      }
+
+
       var subset = Subset.ancestors(universe, start, finish, isRoot);
       var shared = subset.shared().fold(function () {
         return Parent.sharedOne(universe, function (_, elem) {
