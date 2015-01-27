@@ -45,8 +45,6 @@ define(
         var secondBreak = Parent.breakPath(universe, finish, isTop, Parent.breakAt);
         var firstBreak = Parent.breakPath(universe, start, isTop, breaker);
 
-        // console.log('universe after break: ', )
-
 
         var fb = firstBreak.second().getOr(start);
         var sb = secondBreak.first();
