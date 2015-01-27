@@ -1,0 +1,68 @@
+test(
+  'AnteaterTest',
+
+  [
+    'ephox.boss.api.Gene',
+    'ephox.boss.api.TestUniverse',
+    'ephox.boss.api.TextGene',
+    'ephox.robin.anteater.Anteater'
+  ],
+
+  function (Gene, TestUniverse, TextGene, Anteater) {
+    var doc = TestUniverse(Gene('root', 'root', [
+      Gene('a', 'span', [
+        Gene('aa', 'span', [
+          TextGene('aaa', 'aaa'),
+          TextGene('aab', 'aab'),
+          TextGene('aac', 'aac')
+        ]),
+        TextGene('ab', 'ab'),
+        Gene('ac', 'span', [
+          TextGene('aca', 'aca'),
+          Gene('acb', 'span', [
+            TextGene('acba', 'acba'),
+            Gene('acbb', 'span', [
+              TextGene('acbba', 'acbba')
+            ])
+          ])
+        ])
+      ]),
+      TextGene('b', 'b'),
+      Gene('c', 'span', [
+        TextGene('ca', 'ca'),
+        Gene('cb', 'span', [
+          Gene('c', 'span', [
+            TextGene('cbaa', 'cbaa'),
+            TextGene('cbab', 'cbab')
+          ]),
+          TextGene('cbb', 'cbb')
+        ])
+      ])
+    ]));
+
+    var logger = function (item) {
+      return doc.property().isText(item) ? '"' + item.text + '"' : item.name;
+    };
+
+    var isRoot = function (item) {
+      return item.name === 'root';
+    };
+
+    var check = function (expected, startId, finishId) {
+      var start = doc.find(doc.get(), startId).getOrDie();
+      var finish = doc.find(doc.get(), finishId).getOrDie();
+      var actual = Anteater.fossil(doc, isRoot, start, finish);
+      actual.each(function (act) {
+        var wrapper = doc.create().nu('bold');
+        doc.insert().before(act[0], wrapper);
+        doc.insert().appendAll(wrapper, act);
+      });
+      assert.eq(expected, doc.shortlog(logger));
+    };
+
+    check(
+      'root(span(span(bold("aaa","aab"),"aac"),"ab",span("aca",span("acba",span("acbba")))),"b",span("ca",span(span("cbaa","cbab"),"cbb")))',
+      'aaa', 'aac'
+    );
+  }
+);
