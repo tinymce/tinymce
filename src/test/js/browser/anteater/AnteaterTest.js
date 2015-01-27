@@ -110,11 +110,11 @@ if (true) {
       [ 0 ], 1, [ 0, 1 ], 1
     );
 
-    container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
-    check(
-      '<p>This is <strong><b>bold text</b></strong> and <i>italic text</i> here.</p>',
-      [ 0 ], 1, [ 0, 1 ], 0
-    );
+    // container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+    // check(
+    //   '<p>This is <strong><b>bold text</b></strong> and <i>italic text</i> here.</p>',
+    //   [ 0 ], 1, [ 0, 1 ], 0
+    // );
 
     container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
     check(
@@ -165,10 +165,32 @@ if (true) {
       [ 0, 1, 0 ], 'b'.length, [ 0, 1, 0 ], 'bo'.length
     );
 
+    // Bring this back
+
     container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
     check(
-      '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>',
+      '<p>This is <b>bold text</b><strong> and </strong><i>italic text</i> here.</p>',
       [ 0, 1 ], 1, [ 0, 3 ], 0
+    );
+
+    container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+    check(
+      // Remove the empty formatting element.
+      '<p>This is <b></b><strong><b>bold text</b> a</strong>nd <i>italic text</i> here.</p>',
+      [ 0, 1, 0 ], ''.length, [ 0, 2 ], ' a'.length
+    );
+
+    container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+    check(
+      '<p>This is <b><strong>bold text</strong></b> and <i>italic text</i> here.</p>',
+      [ 0, 1, 0 ], ''.length, [ 0, 1, 0 ], 'bold text'.length
+    );
+
+    console.log('LAST');
+    container.dom().innerHTML = '<p>This <span>new <u>words</u></span> is <b>bold text</b> and <i>italic text</i> here.</p>';
+    check(
+      '<p>This <span>new <u>words</u></span><strong> is <b>bo</b></strong><b>ld text</b> and <i>italic text</i> here.</p>',
+      [ 0, 1 ], 2, [ 0, 3, 0 ], 'bo'.length
     );
 
 

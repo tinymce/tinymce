@@ -58,9 +58,6 @@ define(
       var pruned1 = prune(ps1);
       var pruned2 = prune(ps2);
 
-      console.log("pruned 1", Arr.map(pruned1, function (p) { return p.dom(); }));
-      console.log("pruned 2", Arr.map(pruned2, function (p) { return p.dom(); }));
-
       var shared = Arr.find(pruned1, function (x) {
         return Arr.exists(pruned2, eq(universe, x));
       });

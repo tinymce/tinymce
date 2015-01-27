@@ -2,13 +2,15 @@ define(
   'ephox.robin.anteater.Placid',
 
   [
+    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.phoenix.api.general.Gather',
     'ephox.phoenix.api.general.Split',
     'ephox.robin.anteater.Anteater',
     'ephox.scullion.ADT'
   ],
 
-  function (Option, Split, Anteater, ADT) {
+  function (Fun, Option, Gather, Split, Anteater, ADT) {
     var adt = ADT.generate([
       { left: [ 'element' ] },
       { between: [ 'before', 'after' ] },
@@ -52,8 +54,8 @@ define(
     var placid = function (universe, isRoot, start, soffset, finish, foffset) {
       if (universe.property().isText(start) && universe.eq(start, finish)) return lake(universe, isRoot, start, soffset, foffset);
       var leftSide = analyse(universe, start, soffset).fold(function (l) {
-        console.log('hMMM');
-        return l;
+        console.log('************************', 'original.left: ', l.dom());
+        return Gather.seekRight(universe, l, Fun.constant(true), isRoot).getOr(l);
         // really not sure what to do here.
       }, function (b, a) {
         return a;
@@ -66,9 +68,9 @@ define(
       }, function (b, a) {
         return b;
       }, function (r) {
-        console.log('hMMM');
+        console.log('*************************', 'original.right: ', r.dom(), finish.dom(), foffset);
         // really not sure what to do here.
-        return r;
+        return Gather.seekLeft(universe, r, Fun.constant(true), isRoot).getOr(r);
       });
 
       console.log('leftSide: ', leftSide.dom(), 'rightSide: ', rightSide.dom());
