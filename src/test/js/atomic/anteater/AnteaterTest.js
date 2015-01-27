@@ -50,12 +50,12 @@ test(
       var doc = regen();
       var start = doc.find(doc.get(), startId).getOrDie();
       var finish = doc.find(doc.get(), finishId).getOrDie();
-      // var actual = Anteater.fossil(doc, isRoot, start, finish);
-      // actual.each(function (act) {
-      //   var wrapper = doc.create().nu('bold');
-      //   doc.insert().before(act[0], wrapper);
-      //   doc.insert().appendAll(wrapper, act);
-      // });
+      var actual = Anteater.fossil(doc, isRoot, start, finish);
+      actual.each(function (act) {
+        var wrapper = doc.create().nu('bold');
+        doc.insert().before(act[0], wrapper);
+        doc.insert().appendAll(wrapper, act);
+      });
       assert.eq(expected, doc.shortlog(function (item) {
         return doc.property().isText(item) ? '"' + item.text + '"' : item.name;
       }));
@@ -104,9 +104,11 @@ test(
       'root(' +
         'span(' +
           'span(' +
-            '"aaa",' +
-            '"aab",' +
-            '"aac"' +
+            'bold(' +
+              '"aaa",' +
+              '"aab",' +
+              '"aac"' +
+            ')' +
           '),' +
           '"ab",' +
           'span(' +
@@ -131,6 +133,6 @@ test(
           ')' +
         ')' +
       ')',
-      'aaa', 'acbba');
+      'aaa', 'aac');
   }
 );
