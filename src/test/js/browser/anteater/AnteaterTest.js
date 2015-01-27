@@ -91,7 +91,6 @@ test(
     //   '<p>Last one, I promise</p>', paths.p1, paths.underline
     // );
 
-if (true) {
     container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
     check(
       '<p>This<strong> is <b>bold text</b> an</strong>d <i>italic text</i> here.</p>',
@@ -110,19 +109,11 @@ if (true) {
       [ 0 ], 1, [ 0, 1 ], 1
     );
 
-    // This test doesn't really make sense ... it is a collapsed selection essentially.
-    // container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
-    // check(
-    //   '<p>This is <strong><b>bold text</b></strong> and <i>italic text</i> here.</p>',
-    //   [ 0 ], 1, [ 0, 1 ], 0
-    // );
-
     container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
     check(
       '<p>This is <b><strong>bold</strong> text</b> and <i>italic text</i> here.</p>',
       [ 0 ], 1, [ 0, 1, 0 ], 'bold'.length
     );
-}
 
     container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
     check(
