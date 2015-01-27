@@ -10,6 +10,14 @@ define(
   ],
 
   function (Arr, Fun, Option, Parent, Subset) {
+    var breaker = function (universe, parent, child) {
+      var brk = Parent.breakAt(universe, parent, child);
+      brk.each(function (b) {
+        // Move the child into the second part of the break.
+        universe.insert().prepend(b, child);
+      });
+      return brk;
+    };
     var fossil = function (universe, isRoot, start, finish) {
       var subset = Subset.ancestors(universe, start, finish, isRoot);
       return subset.shared().bind(function (common) {
@@ -18,23 +26,14 @@ define(
         var isTop = function (elem) {
           return universe.property().parent(elem).fold(
             Fun.constant(true),
-            function (e) {
-              return universe.eq(common, e);
-            }
+            Fun.curry(universe.eq, common)
           );
         };
 
         // Break from the first node to the common parent AFTER the second break as the first
         // will impact the second (assuming LEFT to RIGHT) and not vice versa.
         var secondBreak = Parent.breakPath(universe, finish, isTop, Parent.breakAt);
-        var firstBreak = Parent.breakPath(universe, start, isTop, function (universe, parent, child) {
-          var res = Parent.breakAt(universe, parent, child);
-          // Move to the second part of the break.
-          res.each(function (r) {
-            universe.insert().prepend(r, child);
-          });
-          return res;
-        });
+        var firstBreak = Parent.breakPath(universe, start, isTop, breaker);
 
         // console.log('universe after break: ', )
 
