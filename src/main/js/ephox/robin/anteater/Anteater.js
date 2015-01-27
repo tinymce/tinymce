@@ -18,6 +18,16 @@ define(
       });
       return brk;
     };
+
+    // Find the subsection of DIRECT children of parent from [first, last])
+    var slice = function (universe, parent, first, last) {
+      var children = universe.property().children(parent);
+          
+      var fi = Arr.findIndex(children, Fun.curry(universe.eq, first));
+      var li = Arr.findIndex(children, Fun.curry(universe.eq, last));
+      return fi > -1 && li > -1 ? Option.some(children.slice(fi, li + 1)) : Option.none();
+    };
+
     var fossil = function (universe, isRoot, start, finish) {
       var subset = Subset.ancestors(universe, start, finish, isRoot);
       return subset.shared().bind(function (common) {
@@ -37,16 +47,10 @@ define(
 
         // console.log('universe after break: ', )
 
+
         var fb = firstBreak.second().getOr(start);
         var sb = secondBreak.first();
-        
-        var children = universe.property().children(common);
-            
-        var firstIndex = Arr.findIndex(children, Fun.curry(universe.eq, fb));
-        var secondIndex = Arr.findIndex(children, Fun.curry(universe.eq, sb));
-
-        var chillin = children.slice(firstIndex, secondIndex + 1);
-        return firstIndex > -1 && secondIndex > -1 ? Option.some(children.slice(firstIndex, secondIndex + 1)) : Option.none();
+        return slice(universe, common, fb, sb);
       });
     };
 
