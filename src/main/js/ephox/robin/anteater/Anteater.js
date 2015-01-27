@@ -28,7 +28,16 @@ define(
         // Break from the first node to the common parent AFTER the second break as the first
         // will impact the second (assuming LEFT to RIGHT) and not vice versa.
         var secondBreak = Parent.breakPath(universe, finish, isTop, Parent.breakAt);
-        var firstBreak = Parent.breakPath(universe, start, isTop, Parent.breakAt);
+        console.log('first break');
+        var firstBreak = Parent.breakPath(universe, start, isTop, function (universe, parent, child) {
+          var res = Parent.breakAt(universe, parent, child);
+          // Move to the second part of the break.
+          res.each(function (r) {
+            universe.insert().prepend(r, child);
+          });
+          console.log('res: ', res.getOrDie());
+          return res;
+        });
 
         // console.log('universe after break: ', )
 
@@ -49,6 +58,8 @@ define(
         });
 
         console.log('indices: ', firstIndex, secondIndex + 1);
+        var chillin = children.slice(firstIndex, secondIndex + 1);
+        console.log('chillin: ', Arr.map(chillin, function (ch) { return ch.id }));
         return firstIndex > -1 && secondIndex > -1 ? Option.some(children.slice(firstIndex, secondIndex + 1)) : Option.none();
       });
     };

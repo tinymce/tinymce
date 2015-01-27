@@ -48,6 +48,8 @@ define(
 
       var next = function (child, group, splits) {
         var fallback = result(child, Option.none(), splits);
+        // Found the top
+        if (isTop(child)) console.log('found the top', group.isSome());
         if (isTop(child)) return result(child, group, splits);
         else {
           return universe.property().parent(child).fold(function () {
