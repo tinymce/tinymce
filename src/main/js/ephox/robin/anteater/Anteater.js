@@ -6,10 +6,12 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.robin.api.general.Parent',
-    'ephox.robin.parent.Subset'
+    'ephox.robin.parent.Shared',
+    'ephox.robin.parent.Subset',
+    'ephox.sugar.api.PredicateFind'
   ],
 
-  function (Arr, Fun, Option, Parent, Subset) {
+  function (Arr, Fun, Option, Parent, Shared, Subset, PredicateFind) {
     var breaker = function (universe, parent, child) {
       var brk = Parent.breakAt(universe, parent, child);
       brk.each(function (b) {
@@ -30,7 +32,18 @@ define(
 
     var fossil = function (universe, isRoot, start, finish) {
       var subset = Subset.ancestors(universe, start, finish, isRoot);
-      return subset.shared().bind(function (common) {
+      var shared = subset.shared().fold(function () {
+        return Parent.sharedOne(universe, function (_, elem) {
+          return PredicateFind.closest(elem, isRoot);
+        }, [ start, finish ]);
+      }, function (sh) {
+        console.log('sh', sh);
+        return Option.some(sh);
+      });
+
+
+      return shared.bind(function (common) {
+        console.log('A common parent', common.dom());
         // We have the shared parent, we now have to split from the start and finish up
         // to the shared parent.
         var isTop = function (elem) {
