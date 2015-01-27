@@ -76,6 +76,7 @@ test(
     // console.log('start: ', Hierarchy.follow(container, [ 0, 1, 0 ]).getOrDie().dom());
     var check = function (expected, start, soffset, finish, foffset) {
       var actual = Placid.placid(DomUniverse(), isRoot, find(start), soffset, find(finish), foffset);
+      console.log('placid.done');
       mark(actual);
       assert.eq(expected, Html.get(container));
     };
@@ -90,6 +91,12 @@ test(
     check(
       '<p>This<strong> is <b>bold text</b> an</strong>d <i>italic text</i> here.</p>',
       [ 0, 0 ], 'This'.length, [ 0, 2 ], ' an'.length
+    );
+
+    container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+    check(
+      '<p>This is <b><strong>bold text</strong></b> and <i>italic text</i> here.</p>',
+      [ 0 ], 1, [ 0 ], 2
     );
 
 
