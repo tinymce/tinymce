@@ -37,9 +37,9 @@ test(
       assert.eq(expected.items, Arr.map(actual.zone().elements(), function (x) { return x.id; }));
     };
 
-    check({ words: [ 'determined', 'and'], items: [ 'd', 'e', 'f', 'g' ] }, 'e');
+    check({ words: [ 'determined', 'and'], items: [ 'd', 'e', 'f' ] }, 'e');
     check({ words: [ 'again' ], items: [ 'i' ] }, 'i');
-    check({ words: [ 'and', 'it\'s', 'driving', 'me', 'insane' ], items: [ 'e', 'f', 'g', 'h' ] }, 'g');
+    check({ words: [ 'and', 'it\'s', 'driving', 'me', 'insane' ], items: [ 'f', 'g', 'h' ] }, 'g');
     check({ words: [ 'What', 'now' ], items: [ 'j' ] }, 'j');
   }
 );
