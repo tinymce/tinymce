@@ -42,13 +42,8 @@ define(
         
         var children = universe.property().children(common);
             
-        var firstIndex = Arr.findIndex(children, function (child) {
-          return universe.eq(child, fb);
-        });
-
-        var secondIndex = Arr.findIndex(children, function (child) {
-          return universe.eq(child, sb);
-        });
+        var firstIndex = Arr.findIndex(children, Fun.curry(universe.eq, fb));
+        var secondIndex = Arr.findIndex(children, Fun.curry(universe.eq, sb));
 
         var chillin = children.slice(firstIndex, secondIndex + 1);
         return firstIndex > -1 && secondIndex > -1 ? Option.some(children.slice(firstIndex, secondIndex + 1)) : Option.none();
