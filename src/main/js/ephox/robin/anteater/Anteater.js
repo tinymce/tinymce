@@ -45,7 +45,6 @@ define(
         var secondBreak = Parent.breakPath(universe, finish, isTop, Parent.breakAt);
         var firstBreak = Parent.breakPath(universe, start, isTop, breaker);
 
-
         var fb = firstBreak.second().getOr(start);
         var sb = secondBreak.first();
         return slice(universe, common, fb, sb);
