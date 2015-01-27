@@ -91,7 +91,7 @@ test(
     //   '<p>Last one, I promise</p>', paths.p1, paths.underline
     // );
 
-if (false) {
+if (true) {
     container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
     check(
       '<p>This<strong> is <b>bold text</b> an</strong>d <i>italic text</i> here.</p>',
@@ -126,7 +126,7 @@ if (false) {
 
     container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
     check(
-      '<p>This is <b><strong>bold</strong> text</b> and <i>italic text</i> here.</p>',
+      '<p>T<strong>his is <b>bold</b></strong><b> text</b> and <i>italic text</i> here.</p>',
       [ 0, 0 ], 'T'.length, [ 0, 1, 0 ], 'bold'.length
     );
 
