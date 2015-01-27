@@ -22,7 +22,6 @@ define(
       });
     };
 
-
     /**
      * Flattens the item list into just the top-most elements in the tree.
      *

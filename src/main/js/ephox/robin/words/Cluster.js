@@ -6,15 +6,13 @@ define(
     'ephox.peanut.Fun',
     'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.api.general.Extract',
-    'ephox.phoenix.api.general.Gather',
     'ephox.polaris.api.Arrays',
     'ephox.robin.api.general.Zone',
-    'ephox.robin.words.Identify',
-    'ephox.robin.words.Prune',
-    'ephox.robin.words.Transform'
+    'ephox.robin.words.Clustering',
+    'ephox.robin.words.Identify'
   ],
 
-  function (Arr, Fun, Spot, Extract, Gather, Arrays, Zone, Identify, Prune, Transform) {
+  function (Arr, Fun, Spot, Extract, Arrays, Zone, Clustering, Identify) {
     var extract = function (universe, element) {
       var children = Extract.all(universe, element);
       return Arr.map(children, function (x) {
@@ -25,9 +23,10 @@ define(
     /**
      * Finds words in groups of text (each HTML text node can have multiple words).
      */
-    var findWords = function (universe, elements) {
-      var groups = Arrays.splitby(elements, function (x) {
-        var elem = x.element();
+    var findWords = function (universe, cluster) {
+      var groups = Arrays.splitby(cluster, function (c) {
+        // I really don't think this can happen ... given that the cluster is specifically excluding these.
+        var elem = c.item();
         return universe.property().isBoundary(elem) || universe.property().isEmptyTag(elem);
       });
 
@@ -45,20 +44,10 @@ define(
      * Returns the words found and the elements that contain the words (not split on word boundaries).
      */
     var generate = function (universe, element) {
-      var prune = Prune(universe);
-      var transform = Transform(universe);
-      var gathered = Gather.gather(universe, element, prune, transform);
-
-      var left = gathered.left();
-      var right = gathered.right();
-      var middle = extract(universe, element);
-
-      var elements = left.concat(middle).concat(right);
-
-      var baseElements = Arr.map(elements, function (x) { return x.element(); });
-      var zone = Zone.constant(baseElements);
-
-      var words = findWords(universe, elements);
+      var cluster = Clustering.words(universe, element).all();
+      var items = Arr.map(cluster, function (c) { return c.item(); });      
+      var zone = Zone.constant(items);
+      var words = findWords(universe, cluster);
 
       return {
         zone: Fun.constant(zone),
