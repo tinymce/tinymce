@@ -48,8 +48,8 @@ define(
           return universe.eq(child, sb);
         });
 
-        console.log('indices: ', firstIndex, secondIndex);
-        return firstIndex > -1 && secondIndex > -1 ? Option.some(children.slice(firstIndex, secondIndex)) : Option.none();
+        console.log('indices: ', firstIndex, secondIndex + 1);
+        return firstIndex > -1 && secondIndex > -1 ? Option.some(children.slice(firstIndex, secondIndex + 1)) : Option.none();
       });
     };
 
