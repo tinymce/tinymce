@@ -52,19 +52,12 @@ define(
 
     var isTop = function (universe) {
       return function (common) {
-        var iiser = universe.property().parent(elem).fold(
+        return universe.property().parent(elem).fold(
           Fun.constant(true),
-          // Fun.curry(universe.eq, common)
-          function (el) {
-            console.log('universe.eq', common.dom(), el.dom());
-            return universe.eq(common, el);
-          }
+          Fun.curry(universe.eq, common)
         );
-        console.log('isTop result', iiser);
-        return iiser;
       };
     };
-
 
     var breakLeft = function (universe, element, common) {
       // If we are the top and we are the left, return index 0.
@@ -78,11 +71,9 @@ define(
     };
 
     var breakRight = function (universe, element, common) {
-      console.log('element: ', element.dom(), element.dom().parentNode, isTop(element));
       // If we are the top and we are the right, return child.length
       if (universe.eq(common, element)) return adt.parent(element);
       else {
-        console.log('we should be getting here');
         var breakage = Parent.breakPath(universe, element, isTop, Parent.breakAt);
         return adt.descendant(breakage.first());
       }
@@ -95,7 +86,6 @@ define(
           return PredicateFind.closest(elem, isRoot);
         }, [ start, finish ]);
       }, function (sh) {
-        console.log('sh', sh);
         return Option.some(sh);
       });
 

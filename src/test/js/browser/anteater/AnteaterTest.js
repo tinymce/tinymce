@@ -64,9 +64,12 @@ test(
 
     var mark = function (result) {
       result.each(function (res) {
-        var strong = Element.fromTag('strong');
-        Insert.before(res[0], strong);
-        InsertAll.append(strong, res);
+        if (res.length > 0) {
+          var strong = Element.fromTag('strong');
+          console.log('res: ', res);
+          Insert.before(res[0], strong);
+          InsertAll.append(strong, res);
+        }
       });
     };
 
@@ -87,6 +90,8 @@ test(
     //   '<p>Plus one more.</p>' +
     //   '<p>Last one, I promise</p>', paths.p1, paths.underline
     // );
+
+if (false) {
     container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
     check(
       '<p>This<strong> is <b>bold text</b> an</strong>d <i>italic text</i> here.</p>',
@@ -98,6 +103,33 @@ test(
       '<p>This is <b><strong>bold text</strong></b> and <i>italic text</i> here.</p>',
       [ 0 ], 1, [ 0 ], 2
     );
+
+    container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+    check(
+      '<p>This is <b><strong>bold text</strong></b> and <i>italic text</i> here.</p>',
+      [ 0 ], 1, [ 0, 1 ], 1
+    );
+
+    // This is an incorrect answer !!!!!
+    container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+    check(
+      '<p>This is <b><strong>bold text</strong></b> and <i>italic text</i> here.</p>',
+      [ 0 ], 1, [ 0, 1 ], 0
+    );
+
+    container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+    check(
+      '<p>This is <b><strong>bold</strong> text</b> and <i>italic text</i> here.</p>',
+      [ 0 ], 1, [ 0, 1, 0 ], 'bold'.length
+    );
+}
+
+    container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+    check(
+      '<p>This is <b><strong>bold</strong> text</b> and <i>italic text</i> here.</p>',
+      [ 0, 0 ], 'T'.length, [ 0, 1, 0 ], 'bold'.length
+    );
+
 
 
     /*
