@@ -165,6 +165,12 @@ if (true) {
       [ 0, 1, 0 ], 'b'.length, [ 0, 1, 0 ], 'bo'.length
     );
 
+    container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+    check(
+      '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>',
+      [ 0, 1 ], 1, [ 0, 3 ], 0
+    );
+
 
     /*
     var reset = function () {

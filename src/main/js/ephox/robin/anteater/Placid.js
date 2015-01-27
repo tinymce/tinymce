@@ -52,6 +52,7 @@ define(
     var placid = function (universe, isRoot, start, soffset, finish, foffset) {
       if (universe.property().isText(start) && universe.eq(start, finish)) return lake(universe, isRoot, start, soffset, foffset);
       var leftSide = analyse(universe, start, soffset).fold(function (l) {
+        console.log('hMMM');
         return l;
         // really not sure what to do here.
       }, function (b, a) {
@@ -65,6 +66,7 @@ define(
       }, function (b, a) {
         return b;
       }, function (r) {
+        console.log('hMMM');
         // really not sure what to do here.
         return r;
       });
