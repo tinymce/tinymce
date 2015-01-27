@@ -66,7 +66,6 @@ test(
       result.each(function (res) {
         if (res.length > 0) {
           var strong = Element.fromTag('strong');
-          console.log('res: ', res);
           Insert.before(res[0], strong);
           InsertAll.append(strong, res);
         }

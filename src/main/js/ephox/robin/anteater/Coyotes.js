@@ -22,9 +22,10 @@ define(
       return next.fold(function () {
         return adt.none(element);
       }, function (n) {
-        if (universe.eq(n.item(), target)) return adt.finished(target);
-        else if (Structure.isBlock(universe, n.item())) return adt.split(n.item(), element);
-        else return adt.running(n.item());
+        console.log('NEXT: ', n.dom());
+        if (universe.eq(n, target)) return adt.finished(target);
+        else if (Structure.isBlock(universe, n)) return adt.split(n, element);
+        else return adt.running(n);
       });
     };
 
@@ -50,13 +51,13 @@ define(
         return yeti(universe, isRoot, beginning, next, target);
       }, function (boundary, last) {
         var current = { start: beginning, end: last };
-        return getNextStartingPoint(universe, isRoot, boundary).fold(function () {
+        return getNextStartingPoint(universe, isRoot, boundary, target).fold(function () {
           return [ current, { start: target, end: target } ];
         }, function (n) {
           return [ current ].concat(yeti(universe, isRoot, n, n, target));
         });
       }, function (element) {
-        return [{ start: beginning: end: element }]
+        return [{ start: beginning, end: element }];
       });
     };
 
