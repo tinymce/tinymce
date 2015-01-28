@@ -17,20 +17,6 @@ define(
       { descendant: [ 'element' ] }
     ]);
 
-    var breaker = function () {
-      // horrible, horrible hack ... will need to get rid of before setting up pull request.
-      var used = false;
-      return function (universe, parent, child) {
-        var brk = Parent.breakAt(universe, parent, child);
-        brk.each(function (b) {
-          // Move the child into the second part of the break.
-          // if (!used) universe.insert().prepend(b, child);
-          used = true;
-        });
-        return brk;
-      };
-    };
-
     // Find the subsection of DIRECT children of parent from [first, last])
     var slice = function (universe, parent, first, last) {
       var children = universe.property().children(parent);
@@ -70,9 +56,8 @@ define(
       else {
         // Break from the first node to the common parent AFTER the second break as the first
         // will impact the second (assuming LEFT to RIGHT) and not vice versa.
-        var breakage = Parent.breakPath(universe, element, Fun.curry(isTop, universe, common), breaker());
-        // Move the first element into the second section of the split because we want to include element in the formatting.
-        
+        var breakage = Parent.breakPath(universe, element, Fun.curry(isTop, universe, common), Parent.breakAt);
+        // Move the first element into the second section of the split because we want to include element in the formatting.        
         if (breakage.splits().length > 0) {
           universe.insert().prepend(breakage.splits()[0].second(), element);
         }
