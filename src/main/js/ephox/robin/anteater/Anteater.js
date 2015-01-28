@@ -17,13 +17,18 @@ define(
       { descendant: [ 'element' ] }
     ]);
 
-    var breaker = function (universe, parent, child) {
-      var brk = Parent.breakAt(universe, parent, child);
-      brk.each(function (b) {
-        // Move the child into the second part of the break.
-        universe.insert().prepend(b, child);
-      });
-      return brk;
+    var breaker = function () {
+      // horrible, horrible hack ... will need to get rid of before setting up pull request.
+      var used = false;
+      return function (universe, parent, child) {
+        var brk = Parent.breakAt(universe, parent, child);
+        brk.each(function (b) {
+          // Move the child into the second part of the break.
+          if (!used) universe.insert().prepend(b, child);
+          used = true;
+        });
+        return brk;
+      };
     };
 
     // Find the subsection of DIRECT children of parent from [first, last])
@@ -65,7 +70,7 @@ define(
       else {
         // Break from the first node to the common parent AFTER the second break as the first
         // will impact the second (assuming LEFT to RIGHT) and not vice versa.
-        var breakage = Parent.breakPath(universe, element, Fun.curry(isTop, universe, common), breaker);
+        var breakage = Parent.breakPath(universe, element, Fun.curry(isTop, universe, common), breaker());
         return adt.descendant(breakage.second().getOr(element));
       }
     };
