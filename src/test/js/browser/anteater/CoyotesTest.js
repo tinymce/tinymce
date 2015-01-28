@@ -9,10 +9,11 @@ test(
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Hierarchy',
-    'ephox.sugar.api.Insert'
+    'ephox.sugar.api.Insert',
+    'ephox.sugar.api.Remove'
   ],
 
-  function (DomUniverse, Arr, Coyotes, Body, Compare, Element, Hierarchy, Insert) {
+  function (DomUniverse, Arr, Coyotes, Body, Compare, Element, Hierarchy, Insert, Remove) {
     var find = function (path) {
       return Hierarchy.follow(container, path).getOrDie('Could not find the path: ' + path.join(','));
     };
@@ -94,5 +95,7 @@ test(
       { start: [ 0, 1, 1, 1, 0 ], end: [ 0, 1 ] },
       { start: [ 1, 0 ], end: [ 1, 1, 1, 0 ] }
     ], [ 0, 1, 1, 1, 0 ], 't'.length, [ 1, 1, 1, 0 ], 'h'.length);
+
+    Remove.remove(container);
   }
 );
