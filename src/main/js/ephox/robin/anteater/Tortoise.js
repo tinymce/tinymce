@@ -6,11 +6,11 @@ define(
     'ephox.perhaps.Option',
     'ephox.phoenix.api.general.Split',
     'ephox.robin.anteater.Anteater',
-    'ephox.robin.anteater.Coyotes',
+    'ephox.robin.anteater.Clumps',
     'ephox.robin.anteater.EntryPoints'
   ],
 
-  function (Arr, Option, Split, Anteater, Coyotes, EntryPoints) {
+  function (Arr, Option, Split, Anteater, Clumps, EntryPoints) {
     var same = function (universe, element, soffset, foffset) {
       var middle = Split.splitByPair(universe, element, soffset, foffset);
       return Option.some([ middle ]);
@@ -28,10 +28,11 @@ define(
       return sameText ? same(universe, start, soffset, foffset) : diff(universe, isRoot, start, soffset, finish, foffset);
     };
 
+    // TODO: Handle backwards selections ! Maybe higher up when we definitely have the DOM.
     var tortoise = function (universe, isRoot, start, soffset, finish, foffset) {
-      var coyotes = Coyotes.wile(universe, isRoot, start, soffset, finish, foffset);
-      return Arr.bind(coyotes, function (coyote) {
-        return placid(universe, isRoot, coyote.start, coyote.soffset, coyote.end, coyote.eoffset);
+      var clumps = Clumps.collect(universe, isRoot, start, soffset, finish, foffset);
+      return Arr.bind(clumps, function (clump) {
+        return placid(universe, isRoot, clump.start, clump.soffset, clump.end, clump.eoffset);
       });
     };
 

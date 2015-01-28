@@ -1,5 +1,5 @@
 define(
-  'ephox.robin.anteater.Coyotes',
+  'ephox.robin.anteater.Clumps',
 
   [
     'ephox.compass.Arr',
@@ -11,15 +11,15 @@ define(
     'ephox.scullion.ADT'
   ],
 
-  function (Arr, Fun, Option, Gather, Navigation, Structure, ADT) {
-    var adt = ADT.generate([
+  function (Arr, Fun, Option, Gather, Navigation, Structure, Adt) {
+    var adt = Adt.generate([
       { none: [ 'last', 'mode' ] },
       { running: [ 'next', 'mode' ] },
       { split: [ 'boundary', 'last', 'mode' ] },
       { finished: [ 'element', 'mode' ] }
     ]);
 
-    var doWile = function (universe, isRoot, mode, element, target) {
+    var walk = function (universe, isRoot, mode, element, target) {
       var next = Gather.walk(universe, element, mode, Gather.walkers().right());
       return next.fold(function () {
         return adt.none(element, Gather.sidestep);
@@ -30,12 +30,7 @@ define(
       });
     };
 
-    //var walk = function (universe, item, mode, direction, _rules) {
-    //   return Walker.go(universe, item, mode, direction, _rules);
-    // };
-
-
-    var getNextStartingPoint = function (universe, isRoot, current, target) {
+    var resume = function (universe, isRoot, current, target) {
       // I have to sidestep here so I don't descend down the same boundary.
       var next = Gather.seekRight(universe, current, Fun.constant(true), isRoot);
       return next.fold(function () {
@@ -50,19 +45,19 @@ define(
       });
     };
 
-    var yeti = function (universe, isRoot, mode, beginning, element, target) {
-      var result = doWile(universe, isRoot, mode, element, target);
-      return result.fold(function (last, _mode) {
+    var scan = function (universe, isRoot, mode, beginning, element, target) {
+      var step = walk(universe, isRoot, mode, element, target);
+      return step.fold(function (last, _mode) {
         return [{ start: beginning, end: last }];
       }, function (next, mode) {
         // Keep going.
-        return yeti(universe, isRoot, mode, beginning, next, target);
+        return scan(universe, isRoot, mode, beginning, next, target);
       }, function (boundary, last, _mode) {
         var current = { start: beginning, end: last };
-        return getNextStartingPoint(universe, isRoot, boundary, target).fold(function () {
+        return resume(universe, isRoot, boundary, target).fold(function () {
           return [ current ];
         }, function (n) {
-          return [ current ].concat(yeti(universe, isRoot, Gather.sidestep, n, n, target));
+          return [ current ].concat(scan(universe, isRoot, Gather.sidestep, n, n, target));
         });
       }, function (element, _mode) {
         return [{ start: beginning, end: element }];
@@ -74,22 +69,22 @@ define(
     };
 
     var pluck = function (universe, isRoot, start, soffset, finish, foffset) {
-      var raw = yeti(universe, isRoot, Gather.sidestep, start, start, finish);
+      var raw = scan(universe, isRoot, Gather.sidestep, start, start, finish);
       return Arr.map(raw, function (r, i) {
         var soff = universe.eq(r.start, start) ? soffset : 0;
         var eoff = universe.eq(r.end, finish) ? foffset : getEnd(universe, r.end);
         return { start: r.start, soffset: soff, end: r.end, eoffset: eoff };
       });
-    }
+    };
 
-    var wile = function (universe, isRoot, start, soffset, finish, foffset) {
+    var collect = function (universe, isRoot, start, soffset, finish, foffset) {
       return universe.eq(start, finish) ?
         [ { start: start, soffset: soffset, end: finish, eoffset: foffset } ] : 
         pluck(universe, isRoot, start, soffset, finish, foffset);
     };
 
     return {
-      wile: wile
+      collect: collect
     };
   }
 );

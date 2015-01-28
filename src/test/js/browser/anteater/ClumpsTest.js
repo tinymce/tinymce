@@ -1,10 +1,10 @@
 test(
-  'CoyotesTest',
+  'ClumpsTest',
 
   [
     'ephox.boss.api.DomUniverse',
     'ephox.compass.Arr',
-    'ephox.robin.anteater.Coyotes',
+    'ephox.robin.anteater.Clumps',
     'ephox.sugar.api.Body',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Element',
@@ -13,7 +13,7 @@ test(
     'ephox.sugar.api.Remove'
   ],
 
-  function (DomUniverse, Arr, Coyotes, Body, Compare, Element, Hierarchy, Insert, Remove) {
+  function (DomUniverse, Arr, Clumps, Body, Compare, Element, Hierarchy, Insert, Remove) {
     var find = function (path) {
       return Hierarchy.follow(container, path).getOrDie('Could not find the path: ' + path.join(','));
     };
@@ -34,12 +34,12 @@ test(
     };
 
     var check = function (expected, start, soffset, finish, foffset) {
-      var actual = Coyotes.wile(DomUniverse(), isRoot, find(start), soffset, find(finish), foffset);
-      console.log('Coyotes for test.');
+      var actual = Clumps.collect(DomUniverse(), isRoot, find(start), soffset, find(finish), foffset);
+      console.log('Clumps for test.');
       Arr.each(actual, function (act, i) {
-        console.log('Coyote ' + i + ': ', act.start.dom(), act.end.dom());
+        console.log('Clump ' + i + ': ', act.start.dom(), act.end.dom());
       });
-      assert.eq(expected.length, actual.length, 'The length of coyotes was different. Expected: ' + expected.length + ', actual: ' + actual.length);
+      assert.eq(expected.length, actual.length, 'The length of Clumps was different. Expected: ' + expected.length + ', actual: ' + actual.length);
       Arr.each(expected, function (exp, i) {
         console.log('check: ' + i);
         var act = actual[i];
