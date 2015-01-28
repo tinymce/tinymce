@@ -6,41 +6,24 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.robin.api.general.Parent',
-    'ephox.robin.parent.Shared',
-    'ephox.robin.parent.Subset',
-    'ephox.scullion.ADT'
+    'ephox.robin.parent.Subset'
   ],
 
-  function (Arr, Fun, Option, Parent, Shared, Subset, ADT) {
-    var adt = ADT.generate([
-      { parent: [ 'element' ] },
-      { descendant: [ 'element' ] }
-    ]);
-
+  function (Arr, Fun, Option, Parent, Subset) {
     // Find the subsection of DIRECT children of parent from [first, last])
     var slice = function (universe, parent, first, last) {
       var children = universe.property().children(parent);
 
+      var finder = function (elem) {
+        var index = Arr.findIndex(children, Fun.curry(universe.eq, elem));
+        return index > -1 ? Option.some(index) : Option.none();
+      };
 
-
-      var fi = first.fold(function () {
-        console.log('left point is the parent');
-        return 0;
-      }, function (f) {
-        return Arr.findIndex(children, Fun.curry(universe.eq, f));
-      });
-
-      var li = last.fold(function () {
-        console.log('right point is the parent');
-        return children.length;
-      }, function (l) {
-        var rawIndex = Arr.findIndex(children, Fun.curry(universe.eq, l));
-        return rawIndex > -1 ? rawIndex + 1 : -1;
-      });
-
-      console.log('indices: ', fi, li);
-          
-      return fi > -1 && li > -1 ? Option.some(children.slice(fi, li)) : Option.none();
+      // Default to the start of the common parent.
+      var firstIndex = first.bind(finder).getOr(0);
+      // Default to the end of the common parent.
+      var lastIndex = last.bind(finder).getOr(children.length - 1);
+      return firstIndex > -1 && lastIndex > -1 ? Option.some(children.slice(firstIndex, lastIndex + 1)) : Option.none();
     };
 
     var isTop = function (universe, common, elem) {
@@ -50,27 +33,25 @@ define(
       );
     };
 
+    // Break from the first node to the common parent AFTER the second break as the first
+    // will impact the second (assuming LEFT to RIGHT) and not vice versa.
     var breakLeft = function (universe, element, common) {
-      // If we are the top and we are the left, return index 0.
-      if (universe.eq(common, element)) return adt.parent(element);
+      // If we are the top and we are the left, use default value
+      if (universe.eq(common, element)) return Option.none();
       else {
-        // Break from the first node to the common parent AFTER the second break as the first
-        // will impact the second (assuming LEFT to RIGHT) and not vice versa.
         var breakage = Parent.breakPath(universe, element, Fun.curry(isTop, universe, common), Parent.breakAt);
         // Move the first element into the second section of the split because we want to include element in the formatting.        
-        if (breakage.splits().length > 0) {
-          universe.insert().prepend(breakage.splits()[0].second(), element);
-        }
-        return adt.descendant(breakage.second().getOr(element));
+        if (breakage.splits().length > 0) universe.insert().prepend(breakage.splits()[0].second(), element);
+        return Option.some(breakage.second().getOr(element));
       }
     };
 
     var breakRight = function (universe, element, common) {
-      // If we are the top and we are the right, return child.length
-      if (universe.eq(common, element)) return adt.parent(element);
+      // If we are the top and we are the right, use default value
+      if (universe.eq(common, element)) return Option.none();
       else {
         var breakage = Parent.breakPath(universe, element, Fun.curry(isTop, universe, common), Parent.breakAt);
-        return adt.descendant(breakage.first());
+        return Option.some(breakage.first());
       }
     };
 
