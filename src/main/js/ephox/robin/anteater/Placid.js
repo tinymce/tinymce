@@ -7,10 +7,11 @@ define(
     'ephox.phoenix.api.general.Gather',
     'ephox.phoenix.api.general.Split',
     'ephox.robin.anteater.Anteater',
+    'ephox.robin.anteater.EntryPoints',
     'ephox.scullion.ADT'
   ],
 
-  function (Fun, Option, Gather, Split, Anteater, ADT) {
+  function (Fun, Option, Gather, Split, Anteater, EntryPoints, ADT) {
     var adt = ADT.generate([
       { left: [ 'element' ] },
       { between: [ 'before', 'after' ] },
@@ -53,15 +54,7 @@ define(
     // TODO: Handle backwards selections !
     var placid = function (universe, isRoot, start, soffset, finish, foffset) {
       if (universe.property().isText(start) && universe.eq(start, finish)) return lake(universe, isRoot, start, soffset, foffset);
-      var leftSide = analyse(universe, start, soffset).fold(function (l) {
-        console.log('************************', 'original.left: ', l.dom());
-        return Gather.after(universe, l, isRoot).getOr(l);
-        // really not sure what to do here.
-      }, function (b, a) {
-        return a;
-      }, function (r) {
-        return r;
-      });
+      var leftSide = EntryPoints.toLeft(universe, isRoot, start, soffset);
 
       var rightSide = analyse(universe, finish, foffset).fold(function (l) {
         return l;

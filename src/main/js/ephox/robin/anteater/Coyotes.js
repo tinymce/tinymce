@@ -16,7 +16,7 @@ define(
       { none: [ 'last', 'mode' ] },
       { running: [ 'next', 'mode' ] },
       { split: [ 'boundary', 'last', 'mode' ] },
-      { finished: [ 'element', 'mode' ] },
+      { finished: [ 'element', 'mode' ] }
     ]);
 
     var doWile = function (universe, isRoot, mode, element, target) {
