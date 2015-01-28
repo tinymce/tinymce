@@ -1,5 +1,6 @@
 Version 3.5.x (2015-xx-xx)
 	Added new option table_style_by_css for the table plugin to set table styling with css rather than table attributes.
+	Fixed font families in order to provide appropriate web-safe fonts.
 Version 3.5.11 (2014-05-08)
 	Added new option noneditable_prevent_delete to the non-editable plugin to prevent deletion of non-editable text.
 	Added functionality to the media plugin to handle objects without source attributes correctly.
