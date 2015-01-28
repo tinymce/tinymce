@@ -2,14 +2,13 @@ define(
   'ephox.robin.anteater.EntryPoints',
 
   [
-    'ephox.peanut.Fun',
     'ephox.phoenix.api.general.Gather',
     'ephox.phoenix.api.general.Split',
     'ephox.scullion.ADT'
   ],
 
-  function (Fun, Gather, Split, ADT) {
-    var adt = ADT.generate([
+  function (Gather, Split, Adt) {
+    var adt = Adt.generate([
       { leftEdge: [ 'element' ] },
       { between: [ 'before', 'after' ] },
       { rightEdge: [ 'element' ] }
