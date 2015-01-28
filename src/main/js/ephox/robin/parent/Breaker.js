@@ -49,18 +49,18 @@ define(
       var next = function (child, group, splits) {
         var fallback = result(child, Option.none(), splits);
         // Found the top
-        if (isTop(child)) console.log('found the top', group.isSome());
         if (isTop(child)) return result(child, group, splits);
         else {
           return universe.property().parent(child).fold(function () {
             return fallback;
           }, function (parent) {
             var second = breaker(universe, parent, child);
-
             // Store the splits up the path break.
             var extra = second.fold(Fun.constant([]), function (sec) {
               return [{ first: Fun.constant(parent), second: Fun.constant(sec) }];
             });
+
+            // THIS NEEDS TO BE INVESTIGATED ... second.getOr(parent) works for one of the tests, but will break others.
             return next(parent, second, splits.concat(extra));
           });
         }

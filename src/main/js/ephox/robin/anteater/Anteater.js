@@ -8,21 +8,18 @@ define(
     'ephox.robin.api.general.Parent',
     'ephox.robin.parent.Shared',
     'ephox.robin.parent.Subset',
-    'ephox.scullion.ADT',
-    'ephox.sugar.api.PredicateFind'
+    'ephox.scullion.ADT'
   ],
 
-  function (Arr, Fun, Option, Parent, Shared, Subset, ADT, PredicateFind) {
+  function (Arr, Fun, Option, Parent, Shared, Subset, ADT) {
     var adt = ADT.generate([
       { parent: [ 'element' ] },
       { descendant: [ 'element' ] }
     ]);
 
     var breaker = function (universe, parent, child) {
-      console.log('initial break', parent.dom(), child.dom());
       var brk = Parent.breakAt(universe, parent, child);
       brk.each(function (b) {
-        console.log('breaking here.', b.dom(), child.dom());
         // Move the child into the second part of the break.
         universe.insert().prepend(b, child);
       });
@@ -39,7 +36,6 @@ define(
         console.log('left point is the parent');
         return 0;
       }, function (f) {
-        console.log('left point is: ', f.dom());
         return Arr.findIndex(children, Fun.curry(universe.eq, f));
       });
 
@@ -47,12 +43,9 @@ define(
         console.log('right point is the parent');
         return children.length;
       }, function (l) {
-        console.log('right point is: ', l.dom());
         var rawIndex = Arr.findIndex(children, Fun.curry(universe.eq, l));
         return rawIndex > -1 ? rawIndex + 1 : -1;
       });
-
-      console.log('children: ', Arr.map(children, function (child) { return child.dom(); }));
 
       console.log('indices: ', fi, li);
           
@@ -102,7 +95,7 @@ define(
       var subset = Subset.ancestors(universe, start, finish, isRoot);
       var shared = subset.shared().fold(function () {
         return Parent.sharedOne(universe, function (_, elem) {
-          return PredicateFind.closest(elem, isRoot);
+          return isRoot(elem) ? Option.some(elem) : universe.up().predicate(elem, isRoot);
         }, [ start, finish ]);
       }, function (sh) {
         return Option.some(sh);
@@ -110,14 +103,12 @@ define(
 
 
       return shared.bind(function (common) {
-        console.log('A common parent', common.dom(), 'start: ', start.dom(), 'finish: ', finish.dom());
         // We have the shared parent, we now have to split from the start and finish up
         // to the shared parent.
+
         
         var secondBreak = breakRight(universe, finish, common);
         var firstBreak = breakLeft(universe, start, common);
-        console.log('Slicing time');
-
         return slice(universe, common, firstBreak, secondBreak);
       });
     };

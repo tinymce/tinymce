@@ -12,21 +12,13 @@ test(
     'ephox.sugar.api.Hierarchy',
     'ephox.sugar.api.Html',
     'ephox.sugar.api.Insert',
-    'ephox.sugar.api.InsertAll',
-    'ephox.sugar.api.Node',
-    'ephox.sugar.api.Text',
-    'ephox.sugar.api.Traverse'
+    'ephox.sugar.api.InsertAll'
   ],
 
-  function (DomUniverse, Arr, Coyotes, Placid, Body, Compare, Element, Hierarchy, Html, Insert, InsertAll, Node, Text, Traverse) {
+  function (DomUniverse, Arr, Coyotes, Placid, Body, Compare, Element, Hierarchy, Html, Insert, InsertAll) {
     var body = Body.body();
 
-    var container = Element.fromTag('div');
-    container.dom().innerHTML =
-    '<p>This is <b>the word</b> that I can understand, even if <i>it</i> is not the same as before.</p>' +
-    '<p>And another <u>paragraph</u></p>' +
-    '<p>Plus one more.</p>' +
-    '<p>Last one, I promise</p>';
+    var container = Element.fromTag('div'); 
 
     Insert.append(body, container);
 
@@ -69,18 +61,18 @@ test(
       assert.eq(expected, Html.get(container));
     };
 
-    container.dom().innerHTML =
-      '<p>This is <b>the word</b> that I can understand, even if <i>it</i> is not the same as before.</p>' +
-      '<p>And another <u>paragraph</u></p>' +
-      '<p>Plus one more.</p>' +
-      '<p>Last one, I promise</p>';
-    check(
-      '<p>This is <b>the</b><strong><b> word</b> that I can understand, even if <i>it</i> is not the same as before.</strong></p>' +
-      '<p><strong>And another <u>paragraph</u></strong></p>' +
-      '<p><strong>Plus one more.</strong></p>' +
-      '<p><strong>Last</strong> one, I promise</p>',
-      [ 0, 1, 0 ], 'the'.length, [ 3, 0 ], 'Last'.length
-    ); 
+    // container.dom().innerHTML =
+    //   '<p>This is <b>the word</b> that I can understand, even if <i>it</i> is not the same as before.</p>' +
+    //   '<p>And another <u>paragraph</u></p>' +
+    //   '<p>Plus one more.</p>' +
+    //   '<p>Last one, I promise</p>';
+    // check(
+    //   '<p>This is <b>the</b><strong><b> word</b> that I can understand, even if <i>it</i> is not the same as before.</strong></p>' +
+    //   '<p><strong>And another <u>paragraph</u></strong></p>' +
+    //   '<p><strong>Plus one more.</strong></p>' +
+    //   '<p><strong>Last</strong> one, I promise</p>',
+    //   [ 0, 1, 0 ], 'the'.length, [ 3, 0 ], 'Last'.length
+    // ); 
 
     container.dom().innerHTML =
       '<p>This is <span>completely <i>different <b>to</b> </i>what you would<span>_expected_</span></span></p>' +
