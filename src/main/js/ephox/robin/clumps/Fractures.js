@@ -1,5 +1,5 @@
   define(
-  'ephox.robin.anteater.Anteater',
+  'ephox.robin.clumps.Fractures',
 
   [
     'ephox.compass.Arr',
@@ -91,12 +91,12 @@
       });
     };
 
-    var fossil = function (universe, isRoot, start, finish) {
+    var fracture = function (universe, isRoot, start, finish) {
       return universe.eq(start, finish) ? same(universe, isRoot, start) : diff(universe, isRoot, start, finish);     
     };
 
     return {
-      fossil: fossil
+      fracture: fracture
     };
   }
 );

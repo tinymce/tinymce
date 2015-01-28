@@ -1,5 +1,5 @@
 define(
-  'ephox.robin.anteater.Clumps',
+  'ephox.robin.clumps.Clumps',
 
   [
     'ephox.compass.Arr',

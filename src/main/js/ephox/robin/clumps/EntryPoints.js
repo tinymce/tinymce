@@ -1,5 +1,5 @@
 define(
-  'ephox.robin.anteater.EntryPoints',
+  'ephox.robin.clumps.EntryPoints',
 
   [
     'ephox.phoenix.api.general.Gather',

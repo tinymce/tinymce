@@ -5,10 +5,10 @@ test(
     'ephox.boss.api.Gene',
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
-    'ephox.robin.anteater.Anteater'
+    'ephox.robin.clumps.Fractures'
   ],
 
-  function (Gene, TestUniverse, TextGene, Anteater) {
+  function (Gene, TestUniverse, TextGene, Fractures) {
     var regen = function () {
       return TestUniverse(Gene('root', 'root', [
         Gene('a', 'span', [
@@ -50,7 +50,7 @@ test(
       var doc = regen();
       var start = doc.find(doc.get(), startId).getOrDie();
       var finish = doc.find(doc.get(), finishId).getOrDie();
-      var actual = Anteater.fossil(doc, isRoot, start, finish);
+      var actual = Fractures.fracture(doc, isRoot, start, finish);
       actual.each(function (act) {
         var wrapper = doc.create().nu('bold');
         doc.insert().before(act[0], wrapper);
