@@ -5,11 +5,12 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.phoenix.api.general.Gather',
+    'ephox.phoenix.wrap.Navigation',
     'ephox.robin.api.general.Structure',
     'ephox.scullion.ADT'
   ],
 
-  function (Fun, Option, Gather, Structure, ADT) {
+  function (Fun, Option, Gather, Navigation, Structure, ADT) {
     var adt = ADT.generate([
       { none: [ 'last' ] },
       { running: [ 'next' ] },
@@ -18,11 +19,12 @@ define(
     ]);
 
     var doWile = function (universe, isRoot, element, target) {
+      console.log('current: ', element.dom());
       var next = Gather.seekRight(universe, element, Fun.constant(true), isRoot);
       return next.fold(function () {
         return adt.none(element);
       }, function (n) {
-        console.log('NEXT: ', n.dom());
+        console.log('next: ', n.dom());
         if (universe.eq(n, target)) return adt.finished(target);
         else if (Structure.isBlock(universe, n)) return adt.split(n, element);
         else return adt.running(n);
@@ -35,7 +37,14 @@ define(
       }, function (next) {
         return Option.some(next);
       }, function (boundary, last) {
-        return getNextStartingPoint(universe, isRoot, boundary, target);
+        // Jump to the leaf. This will only work if the current isn't inside the boundary.
+
+        // I can do this because I am sidestepping from the previous boundary on the first
+        // line of this function.
+        var leaf = Navigation.toLeaf(universe, boundary, 0);
+        console.log('leaf: ', leaf.element().dom());
+        return Option.some(leaf.element());
+        // return getNextStartingPoint(universe, isRoot, boundary, target);
       }, function (target) {
         // should I just include target for this?
         return Option.none();
