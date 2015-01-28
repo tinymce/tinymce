@@ -42,13 +42,10 @@ test(
       })
     };
 
-    var result = Coyotes.wile(DomUniverse(), isRoot, find([ 0, 1, 0 ]), 'the'.length, find([ 3, 0 ]), 'Last'.length);
-    
-    check([
+   check([
       { start: [ 0, 1, 0 ], end: [ 0, 4 ] },
       { start: [ 1, 0 ], end: [ 1, 1 ] },
       { start: [ 2, 0 ], end: [ 2, 0 ] },
-      { start: [ 3, 0 ], end: [ 3, 0 ] },
       { start: [ 3, 0 ], end: [ 3, 0 ] }
     ], [ 0, 1, 0 ], 'the'.length, [ 3, 0 ], 'Last'.length);
   }

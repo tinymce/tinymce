@@ -19,12 +19,10 @@ define(
     ]);
 
     var doWile = function (universe, isRoot, element, target) {
-      console.log('current: ', element.dom());
       var next = Gather.seekRight(universe, element, Fun.constant(true), isRoot);
       return next.fold(function () {
         return adt.none(element);
       }, function (n) {
-        console.log('next: ', n.dom());
         if (universe.eq(n, target)) return adt.finished(target);
         else if (Structure.isBlock(universe, n)) return adt.split(n, element);
         else return adt.running(n);
@@ -42,7 +40,6 @@ define(
         // I can do this because I am sidestepping from the previous boundary on the first
         // line of this function.
         var leaf = Navigation.toLeaf(universe, boundary, 0);
-        console.log('leaf: ', leaf.element().dom());
         return Option.some(leaf.element());
         // return getNextStartingPoint(universe, isRoot, boundary, target);
       }, function (target) {
@@ -54,6 +51,7 @@ define(
     var yeti = function (universe, isRoot, beginning, element, target) {
       var result = doWile(universe, isRoot, element, target);
       return result.fold(function (last) {
+        console.log('NONE => ', beginning.dom(), last.dom());
         return [{ start: beginning, end: last }];
       }, function (next) {
         // Keep going.
@@ -61,11 +59,14 @@ define(
       }, function (boundary, last) {
         var current = { start: beginning, end: last };
         return getNextStartingPoint(universe, isRoot, boundary, target).fold(function () {
-          return [ current, { start: target, end: target } ];
+          console.log('NO RESTARTING POINT => ', current.start.dom(), current.end.dom(), target.dom());
+          return [ current ];
         }, function (n) {
+          console.log('RESTARTING POINT => ', current.start.dom(), current.end.dom());
           return [ current ].concat(yeti(universe, isRoot, n, n, target));
         });
       }, function (element) {
+        console.log('DONE => ', beginning.dom(), end.dom());
         return [{ start: beginning, end: element }];
       });
     };

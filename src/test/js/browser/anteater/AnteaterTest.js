@@ -13,10 +13,11 @@ test(
     'ephox.sugar.api.Hierarchy',
     'ephox.sugar.api.Html',
     'ephox.sugar.api.Insert',
-    'ephox.sugar.api.InsertAll'
+    'ephox.sugar.api.InsertAll',
+    'ephox.sugar.api.Remove'
   ],
 
-  function (DomUniverse, Obj, Fun, Anteater, Placid, Body, Compare, Element, Hierarchy, Html, Insert, InsertAll) {
+  function (DomUniverse, Obj, Fun, Anteater, Placid, Body, Compare, Element, Hierarchy, Html, Insert, InsertAll, Remove) {
     var body = Body.body();
 
     var container = Element.fromTag('div');
@@ -185,6 +186,8 @@ if (false) {
       [ 0, 1 ], 2, [ 0, 3, 0 ], 'bo'.length
     );
   }
+
+  Remove.remove(container);
 
 /* REINSTATE LATER 
   container.dom().innerHTML =
