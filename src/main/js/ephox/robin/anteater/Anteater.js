@@ -1,4 +1,4 @@
-define(
+  define(
   'ephox.robin.anteater.Anteater',
 
   [
@@ -26,11 +26,15 @@ define(
       return firstIndex > -1 && lastIndex > -1 ? Option.some(children.slice(firstIndex, lastIndex + 1)) : Option.none();
     };
 
-    var isTop = function (universe, common, elem) {
-      return universe.property().parent(elem).fold(
-        Fun.constant(true),
-        Fun.curry(universe.eq, common)
-      );
+    var breakPath = function (universe, element, common) {
+      var isTop = function (elem) {
+        return universe.property().parent(elem).fold(
+          Fun.constant(true),
+          Fun.curry(universe.eq, common)
+        );
+      };
+
+      return Parent.breakPath(universe, element, isTop, Parent.breakAt);
     };
 
     // Break from the first node to the common parent AFTER the second break as the first
@@ -39,7 +43,7 @@ define(
       // If we are the top and we are the left, use default value
       if (universe.eq(common, element)) return Option.none();
       else {
-        var breakage = Parent.breakPath(universe, element, Fun.curry(isTop, universe, common), Parent.breakAt);
+        var breakage = breakPath(universe, element, common);
         // Move the first element into the second section of the split because we want to include element in the formatting.        
         if (breakage.splits().length > 0) universe.insert().prepend(breakage.splits()[0].second(), element);
         return Option.some(breakage.second().getOr(element));
@@ -50,7 +54,7 @@ define(
       // If we are the top and we are the right, use default value
       if (universe.eq(common, element)) return Option.none();
       else {
-        var breakage = Parent.breakPath(universe, element, Fun.curry(isTop, universe, common), Parent.breakAt);
+        var breakage = breakPath(universe, element, common);
         return Option.some(breakage.first());
       }
     };
