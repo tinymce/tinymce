@@ -40,6 +40,7 @@ test(
       });
       assert.eq(expected.length, actual.length, 'The length of coyotes was different. Expected: ' + expected.length + ', actual: ' + actual.length);
       Arr.each(expected, function (exp, i) {
+        console.log('check: ' + i);
         var act = actual[i];
         assert.eq(true, Compare.eq(find(exp.start), act.start));
         assert.eq(true, Compare.eq(find(exp.end), act.end));
@@ -76,5 +77,22 @@ test(
     check([
       { start: [ 0, 1, 0 ], end: [ 0, 1, 0 ] }
     ], [ 0, 1, 0 ], 'the'.length, [ 0, 1, 0 ], 'the wor'.length);
+
+    container.dom().innerHTML =
+    '<p>This is <b>the word</b> that I can understand, even if <i>it</i> is not the same as before.</p>' +
+    '<p>And another <u>paragraph</u></p>' +
+    '<p>Plus one more.</p>' +
+    '<p>Last one, I promise</p>';
+    check([
+      { start: [ 0, 1, 0 ], end: [ 0, 3, 0 ] }
+    ], [ 0, 1, 0 ], 'the'.length, [ 0, 3, 0 ], 'i'.length);
+
+    container.dom().innerHTML =
+      '<p>This is <span>completely <i>different <b>to</b> </i>what you would<span>_expected_</span></span></p>' +
+      '<p>And more <u>of this is <span>here</span> again</u>.</p>';
+    check([
+      { start: [ 0, 1, 1, 1, 0 ], end: [ 0, 1 ] },
+      { start: [ 1, 0 ], end: [ 1, 1, 1, 0 ] }
+    ], [ 0, 1, 1, 1, 0 ], 't'.length, [ 1, 1, 1, 0 ], 'h'.length);
   }
 );
