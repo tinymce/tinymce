@@ -4,8 +4,7 @@ test(
   [
     'ephox.boss.api.DomUniverse',
     'ephox.compass.Arr',
-    'ephox.robin.anteater.Coyotes',
-    'ephox.robin.anteater.Placid',
+    'ephox.robin.anteater.Tortoise',
     'ephox.sugar.api.Body',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Element',
@@ -15,7 +14,7 @@ test(
     'ephox.sugar.api.InsertAll'
   ],
 
-  function (DomUniverse, Arr, Coyotes, Placid, Body, Compare, Element, Hierarchy, Html, Insert, InsertAll) {
+  function (DomUniverse, Arr, Tortoise, Body, Compare, Element, Hierarchy, Html, Insert, InsertAll) {
     var body = Body.body();
 
     var container = Element.fromTag('div'); 
@@ -41,38 +40,24 @@ test(
       });
     };
 
-    // Obj.each(paths, function (path, value) {
-    //   console.log('path of: ' + value, path, find(path).dom());
-    // });
-    // console.log('start: ', Hierarchy.follow(container, [ 0, 1, 0 ]).getOrDie().dom());
     var check = function (expected, start, soffset, finish, foffset) {
-      // Ok, so firstly, we need to get the coyotes
-      var coyotes = Coyotes.wile(DomUniverse(), isRoot, find(start), soffset, find(finish), foffset);
-
-      Arr.each(coyotes, function (coyote) {
-        console.log('****************** coyote', coyote.start.dom(), coyote.soffset, coyote.end.dom(), coyote.eoffset);
-        var actual = Placid.placid(DomUniverse(), isRoot, coyote.start, coyote.soffset, coyote.end, coyote.eoffset);
-        console.log('placid.done');
-        mark(actual);  
-      })
-
-
-      
+      var premark = Tortoise.tortoise(DomUniverse(), isRoot, find(start), soffset, find(finish), foffset);
+      Arr.each(premark, mark);
       assert.eq(expected, Html.get(container));
     };
 
-    // container.dom().innerHTML =
-    //   '<p>This is <b>the word</b> that I can understand, even if <i>it</i> is not the same as before.</p>' +
-    //   '<p>And another <u>paragraph</u></p>' +
-    //   '<p>Plus one more.</p>' +
-    //   '<p>Last one, I promise</p>';
-    // check(
-    //   '<p>This is <b>the</b><strong><b> word</b> that I can understand, even if <i>it</i> is not the same as before.</strong></p>' +
-    //   '<p><strong>And another <u>paragraph</u></strong></p>' +
-    //   '<p><strong>Plus one more.</strong></p>' +
-    //   '<p><strong>Last</strong> one, I promise</p>',
-    //   [ 0, 1, 0 ], 'the'.length, [ 3, 0 ], 'Last'.length
-    // ); 
+    container.dom().innerHTML =
+      '<p>This is <b>the word</b> that I can understand, even if <i>it</i> is not the same as before.</p>' +
+      '<p>And another <u>paragraph</u></p>' +
+      '<p>Plus one more.</p>' +
+      '<p>Last one, I promise</p>';
+    check(
+      '<p>This is <b>the</b><strong><b> word</b> that I can understand, even if <i>it</i> is not the same as before.</strong></p>' +
+      '<p><strong>And another <u>paragraph</u></strong></p>' +
+      '<p><strong>Plus one more.</strong></p>' +
+      '<p><strong>Last</strong> one, I promise</p>',
+      [ 0, 1, 0 ], 'the'.length, [ 3, 0 ], 'Last'.length
+    ); 
 
     container.dom().innerHTML =
       '<p>This is <span>completely <i>different <b>to</b> </i>what you would<span>_expected_</span></span></p>' +
