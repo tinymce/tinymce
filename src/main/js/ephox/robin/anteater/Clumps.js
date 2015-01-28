@@ -49,20 +49,26 @@ define(
     };
 
     var scan = function (universe, isRoot, mode, beginning, element, target) {
+      // Keep walking the tree.
       var step = walk(universe, isRoot, mode, element, target);
       return step.fold(function (last, _mode) {
+        // Hit the last element in the tree, so just stop.
         return [{ start: beginning, finish: last }];
       }, function (next, mode) {
-        // Keep going.
+        // Keep going. We haven't finished this clump yet.
         return scan(universe, isRoot, mode, beginning, next, target);
       }, function (boundary, last, _mode) {
+        // We have hit a boundary, so stop the current clump, and start a new from the next starting point.
         var current = { start: beginning, finish: last };
         return resume(universe, isRoot, boundary, target).fold(function () {
+          // There was no new starting point, so just return the newly created clump
           return [ current ];
         }, function (n) {
+          // There was a new starting point, so scan for more clumps and accumulate the result.
           return [ current ].concat(scan(universe, isRoot, Gather.sidestep, n, n, target));
         });
       }, function (element, _mode) {
+        // We hit the final destination, so finish our current clump
         return [{ start: beginning, finish: element }];
       });
     };
@@ -71,9 +77,10 @@ define(
       return universe.property().isText(item) ? universe.property().getText(item).length : universe.property().children(item).length;
     };
 
-    var pluck = function (universe, isRoot, start, soffset, finish, foffset) {
+    var doCollect = function (universe, isRoot, start, soffset, finish, foffset) {
       var raw = scan(universe, isRoot, Gather.sidestep, start, start, finish);
       return Arr.map(raw, function (r, i) {
+        // Incorporate any offsets that were required.
         var soff = universe.eq(r.start, start) ? soffset : 0;
         var foff = universe.eq(r.finish, finish) ? foffset : getEnd(universe, r.finish);
         return clump(r.start, soff, r.finish, foff);
@@ -83,7 +90,7 @@ define(
     var collect = function (universe, isRoot, start, soffset, finish, foffset) {
       return universe.eq(start, finish) ?
         [ clump(start, soffset, finish, foffset) ] : 
-        pluck(universe, isRoot, start, soffset, finish, foffset);
+        doCollect(universe, isRoot, start, soffset, finish, foffset);
     };
 
     return {
