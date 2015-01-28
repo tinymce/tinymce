@@ -69,8 +69,9 @@ define(
     };
 
     var wile = function (universe, isRoot, start, soffset, finish, foffset) {
-      // I need to store a list of coyotes; Will use fold later (probably).
-      return yeti(universe, isRoot, Gather.sidestep, start, start, finish);
+      return universe.eq(start, finish) ?
+        [ { start: start, end: finish } ] : 
+        yeti(universe, isRoot, Gather.sidestep, start, start, finish);
     };
 
     return {

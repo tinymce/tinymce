@@ -34,6 +34,10 @@ test(
 
     var check = function (expected, start, soffset, finish, foffset) {
       var actual = Coyotes.wile(DomUniverse(), isRoot, find(start), soffset, find(finish), foffset);
+      console.log('Coyotes for test.');
+      Arr.each(actual, function (act, i) {
+        console.log('Coyote ' + i + ': ', act.start.dom(), act.end.dom());
+      });
       assert.eq(expected.length, actual.length, 'The length of coyotes was different. Expected: ' + expected.length + ', actual: ' + actual.length);
       Arr.each(expected, function (exp, i) {
         var act = actual[i];
@@ -70,8 +74,7 @@ test(
     '<p>Plus one more.</p>' +
     '<p>Last one, I promise</p>';
     check([
-      { start: [ 0, 1, 0 ], end: [ 0, 4 ] },
-      { start: [ 1, 0 ], end: [ 1, 1, 0 ] }
-    ], [ 0, 1, 0 ], 'the'.length, [ 1, 1, 0 ], 'par'.length);
+      { start: [ 0, 1, 0 ], end: [ 0, 1, 0 ] }
+    ], [ 0, 1, 0 ], 'the'.length, [ 0, 1, 0 ], 'the wor'.length);
   }
 );
