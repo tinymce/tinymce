@@ -41,6 +41,7 @@ test(
     var mark = function (result) {
       result.each(function (res) {
         if (res.length > 0) {
+          console.log('Things getting wrapped: ', Arr.map(res, function (r) { return r.dom(); }));
           var strong = Element.fromTag('strong');
           Insert.before(res[0], strong);
           InsertAll.append(strong, res);
@@ -57,6 +58,7 @@ test(
       var coyotes = Coyotes.wile(DomUniverse(), isRoot, find(start), soffset, find(finish), foffset);
 
       Arr.each(coyotes, function (coyote) {
+        console.log('****************** coyote', coyote.start.dom(), coyote.soffset, coyote.end.dom(), coyote.eoffset);
         var actual = Placid.placid(DomUniverse(), isRoot, coyote.start, coyote.soffset, coyote.end, coyote.eoffset);
         console.log('placid.done');
         mark(actual);  
@@ -79,5 +81,14 @@ test(
       '<p><strong>Last</strong> one, I promise</p>',
       [ 0, 1, 0 ], 'the'.length, [ 3, 0 ], 'Last'.length
     ); 
+
+    container.dom().innerHTML =
+      '<p>This is <span>completely <i>different <b>to</b> </i>what you would<span>_expected_</span></span></p>' +
+      '<p>And more <u>of this is <span>here</span> again</u>.</p>';
+    check(
+      '<p>This is <span>completely <i>different <b>to</b> </i>what you would<span>_expected_</span></span></p>' +
+      '<p>And more <u>of this is <span>here</span> again</u>.</p>',
+      [ 0, 1, 1, 1, 0 ], 't'.length, [ 1, 1, 1, 0 ], 'h'.length
+    );
   }
 );
