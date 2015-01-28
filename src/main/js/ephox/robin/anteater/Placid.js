@@ -20,12 +20,7 @@ define(
       return Anteater.fossil(universe, isRoot, leftSide, rightSide);
     };
 
-    
-    var safeBias = function (universe, isRoot, start, soffset, finish, foffset) {
-
-    };
-
-    // TODO: Handle backwards selections !
+    // TODO: Handle backwards selections ! Maybe higher up when we definitely have the DOM.
     var placid = function (universe, isRoot, start, soffset, finish, foffset) {
       var sameText = universe.property().isText(start) && universe.eq(start, finish);
       return sameText ? same(universe, start, soffset, foffset) : diff(universe, isRoot, start, soffset, finish, foffset);
