@@ -29,33 +29,30 @@ test(
       return Compare.eq(elem, container);
     };
 
-    var mark = function (result) {
-      result.each(function (res) {
-        if (res.length > 0) {
-          console.log('Things getting wrapped: ', Arr.map(res, function (r) { return r.dom(); }));
-          var strong = Element.fromTag('strong');
-          Insert.before(res[0], strong);
-          InsertAll.append(strong, res);
-        }
-      });
+    var mark = function (res) {
+      if (res.length > 0) {
+        console.log('Things getting wrapped: ', Arr.map(res, function (r) { return r.dom(); }));
+        var strong = Element.fromTag('strong');
+        Insert.before(res[0], strong);
+        InsertAll.append(strong, res);
+      }
     };
 
     var checkFracture = function (expected, start, soffset, finish, foffset) {
       console.log("check.fracture: ", container.dom().innerHTML);
-      var premark = DomClumps.fracture(isRoot, {
+      DomClumps.fracture(isRoot, {
         start: Fun.constant(find(start)),
         soffset: Fun.constant(soffset),
         finish: Fun.constant(find(finish)),
         foffset: Fun.constant(foffset)
-      });
-      mark(premark);
+      }).each(mark);
       assert.eq(expected, Html.get(container));
     };
 
     var check = function (expected, start, soffset, finish, foffset) {
       console.log("check.discover: ", container.dom().innerHTML);
-      var premark = DomClumps.discover(isRoot, find(start), soffset, find(finish), foffset);
-      Arr.each(premark, mark);
+      var sections = DomClumps.discover(isRoot, find(start), soffset, find(finish), foffset);
+      Arr.each(sections, mark);
       assert.eq(expected, Html.get(container));
     };
 

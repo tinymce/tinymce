@@ -32,7 +32,7 @@ define(
     var discover = function (universe, isRoot, start, soffset, finish, foffset) {
       var clumps = Clumps.collect(universe, isRoot, start, soffset, finish, foffset);
       return Arr.bind(clumps, function (clump) {
-        return fracture(universe, isRoot, clump);
+        return fracture(universe, isRoot, clump).toArray();
       });
     };
 
