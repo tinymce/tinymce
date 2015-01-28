@@ -1,5 +1,5 @@
 test(
-  'AnteaterTest',
+  'FracturesTest',
 
   [
     'ephox.boss.api.Gene',
