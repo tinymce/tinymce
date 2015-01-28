@@ -48,10 +48,6 @@ test(
       });
     };
 
-    var getEnd = function (element) {
-      return Node.isText(element) ? Text.get(element).length : Traverse.children(element).length;
-    }
-
     // Obj.each(paths, function (path, value) {
     //   console.log('path of: ' + value, path, find(path).dom());
     // });
@@ -61,7 +57,7 @@ test(
       var coyotes = Coyotes.wile(DomUniverse(), isRoot, find(start), soffset, find(finish), foffset);
 
       Arr.each(coyotes, function (coyote) {
-        var actual = Placid.placid(DomUniverse(), isRoot, coyote.start, 0, coyote.end, getEnd(coyote.end));
+        var actual = Placid.placid(DomUniverse(), isRoot, coyote.start, coyote.soffset, coyote.end, coyote.eoffset);
         console.log('placid.done');
         mark(actual);  
       })
