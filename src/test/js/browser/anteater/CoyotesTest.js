@@ -33,7 +33,7 @@ test(
     };
 
     var check = function (expected, start, soffset, finish, foffset) {
-      var actual = Coyotes.wile(DomUniverse(), isRoot, find(start) , soffset, find(finish), foffset);
+      var actual = Coyotes.wile(DomUniverse(), isRoot, find(start), soffset, find(finish), foffset);
       assert.eq(expected.length, actual.length, 'The length of coyotes was different. Expected: ' + expected.length + ', actual: ' + actual.length);
       Arr.each(expected, function (exp, i) {
         var act = actual[i];
@@ -42,11 +42,36 @@ test(
       })
     };
 
-   check([
+    container.dom().innerHTML =
+    '<p>This is <b>the word</b> that I can understand, even if <i>it</i> is not the same as before.</p>' +
+    '<p>And another <u>paragraph</u></p>' +
+    '<p>Plus one more.</p>' +
+    '<p>Last one, I promise</p>';
+    check([
       { start: [ 0, 1, 0 ], end: [ 0, 4 ] },
       { start: [ 1, 0 ], end: [ 1, 1 ] },
       { start: [ 2, 0 ], end: [ 2, 0 ] },
       { start: [ 3, 0 ], end: [ 3, 0 ] }
     ], [ 0, 1, 0 ], 'the'.length, [ 3, 0 ], 'Last'.length);
+
+    container.dom().innerHTML =
+    '<p>This is <b>the word</b> that I can understand, even if <i>it</i> is not the same as before.</p>' +
+    '<p>And another <u>paragraph</u></p>' +
+    '<p>Plus one more.</p>' +
+    '<p>Last one, I promise</p>';
+    check([
+      { start: [ 0, 1, 0 ], end: [ 0, 4 ] },
+      { start: [ 1, 0 ], end: [ 1, 1, 0 ] }
+    ], [ 0, 1, 0 ], 'the'.length, [ 1, 1, 0 ], 'par'.length);
+
+    container.dom().innerHTML =
+    '<p>This is <b>the word</b> that I can understand, even if <i>it</i> is not the same as before.</p>' +
+    '<p>And another <u>paragraph</u></p>' +
+    '<p>Plus one more.</p>' +
+    '<p>Last one, I promise</p>';
+    check([
+      { start: [ 0, 1, 0 ], end: [ 0, 4 ] },
+      { start: [ 1, 0 ], end: [ 1, 1, 0 ] }
+    ], [ 0, 1, 0 ], 'the'.length, [ 1, 1, 0 ], 'par'.length);
   }
 );

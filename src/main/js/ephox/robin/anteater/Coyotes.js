@@ -12,68 +12,65 @@ define(
 
   function (Fun, Option, Gather, Navigation, Structure, ADT) {
     var adt = ADT.generate([
-      { none: [ 'last' ] },
-      { running: [ 'next' ] },
-      { split: [ 'boundary', 'last' ] },
-      { finished: [ 'element' ] },
+      { none: [ 'last', 'mode' ] },
+      { running: [ 'next', 'mode' ] },
+      { split: [ 'boundary', 'last', 'mode' ] },
+      { finished: [ 'element', 'mode' ] },
     ]);
 
-    var doWile = function (universe, isRoot, element, target) {
-      var next = Gather.seekRight(universe, element, Fun.constant(true), isRoot);
+    var doWile = function (universe, isRoot, mode, element, target) {
+      var next = Gather.walk(universe, element, mode, Gather.walkers().right());
       return next.fold(function () {
-        return adt.none(element);
+        return adt.none(element, Gather.sidestep);
       }, function (n) {
-        if (universe.eq(n, target)) return adt.finished(target);
-        else if (Structure.isBlock(universe, n)) return adt.split(n, element);
-        else return adt.running(n);
+        if (universe.eq(n.item(), target)) return adt.finished(target, n.mode());
+        else if (Structure.isBlock(universe, n.item())) return adt.split(n.item(), element, n.mode());
+        else return adt.running(n.item(), n.mode());
       });
     };
+
+    //var walk = function (universe, item, mode, direction, _rules) {
+    //   return Walker.go(universe, item, mode, direction, _rules);
+    // };
+
 
     var getNextStartingPoint = function (universe, isRoot, current, target) {
-      return doWile(universe, isRoot, current, target).fold(function (last) {
+      // I have to sidestep here so I don't descend down the same boundary.
+      var next = Gather.seekRight(universe, current, Fun.constant(true), isRoot);
+      return next.fold(function () {
         return Option.none();
-      }, function (next) {
-        return Option.some(next);
-      }, function (boundary, last) {
-        // Jump to the leaf. This will only work if the current isn't inside the boundary.
-
-        // I can do this because I am sidestepping from the previous boundary on the first
-        // line of this function.
-        var leaf = Navigation.toLeaf(universe, boundary, 0);
-        return Option.some(leaf.element());
-        // return getNextStartingPoint(universe, isRoot, boundary, target);
-      }, function (target) {
-        // should I just include target for this?
-        return Option.none();
+      }, function (n) {
+        if (universe.eq(n, target)) return Option.none();
+        else if (Structure.isBlock(universe, n)) {
+          var leaf = Navigation.toLeaf(universe, n, 0);
+          return Option.some(leaf.element());
+        } 
+        else return Option.none();
       });
     };
 
-    var yeti = function (universe, isRoot, beginning, element, target) {
-      var result = doWile(universe, isRoot, element, target);
-      return result.fold(function (last) {
-        console.log('NONE => ', beginning.dom(), last.dom());
+    var yeti = function (universe, isRoot, mode, beginning, element, target) {
+      var result = doWile(universe, isRoot, mode, element, target);
+      return result.fold(function (last, _mode) {
         return [{ start: beginning, end: last }];
-      }, function (next) {
+      }, function (next, mode) {
         // Keep going.
-        return yeti(universe, isRoot, beginning, next, target);
-      }, function (boundary, last) {
+        return yeti(universe, isRoot, mode, beginning, next, target);
+      }, function (boundary, last, _mode) {
         var current = { start: beginning, end: last };
         return getNextStartingPoint(universe, isRoot, boundary, target).fold(function () {
-          console.log('NO RESTARTING POINT => ', current.start.dom(), current.end.dom(), target.dom());
           return [ current ];
         }, function (n) {
-          console.log('RESTARTING POINT => ', current.start.dom(), current.end.dom());
-          return [ current ].concat(yeti(universe, isRoot, n, n, target));
+          return [ current ].concat(yeti(universe, isRoot, Gather.sidestep, n, n, target));
         });
-      }, function (element) {
-        console.log('DONE => ', beginning.dom(), end.dom());
+      }, function (element, _mode) {
         return [{ start: beginning, end: element }];
       });
     };
 
     var wile = function (universe, isRoot, start, soffset, finish, foffset) {
       // I need to store a list of coyotes; Will use fold later (probably).
-      return yeti(universe, isRoot, start, start, finish);
+      return yeti(universe, isRoot, Gather.sidestep, start, start, finish);
     };
 
     return {
