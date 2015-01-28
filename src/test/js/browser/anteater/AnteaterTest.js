@@ -3,10 +3,8 @@ test(
 
   [
     'ephox.boss.api.DomUniverse',
-    'ephox.compass.Obj',
     'ephox.peanut.Fun',
-    'ephox.robin.anteater.Anteater',
-    'ephox.robin.anteater.Placid',
+    'ephox.robin.anteater.Tortoise',
     'ephox.sugar.api.Body',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Element',
@@ -17,7 +15,7 @@ test(
     'ephox.sugar.api.Remove'
   ],
 
-  function (DomUniverse, Obj, Fun, Anteater, Placid, Body, Compare, Element, Hierarchy, Html, Insert, InsertAll, Remove) {
+  function (DomUniverse, Fun, Tortoise, Body, Compare, Element, Hierarchy, Html, Insert, InsertAll, Remove) {
     var body = Body.body();
 
     var container = Element.fromTag('div');
@@ -78,7 +76,7 @@ test(
     // });
     // console.log('start: ', Hierarchy.follow(container, [ 0, 1, 0 ]).getOrDie().dom());
     var check = function (expected, start, soffset, finish, foffset) {
-      var actual = Placid.placid(DomUniverse(), isRoot, find(start), soffset, find(finish), foffset);
+      var actual = Tortoise.placid(DomUniverse(), isRoot, find(start), soffset, find(finish), foffset);
       console.log('placid.done');
       mark(actual);
       assert.eq(expected, Html.get(container));
