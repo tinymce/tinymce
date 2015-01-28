@@ -11,33 +11,34 @@ define(
   ],
 
   function (Arr, Option, Split, Clumps, EntryPoints, Fractures) {
-    var same = function (universe, clump) {
-      var middle = Split.splitByPair(universe, clump.start(), clump.soffset(), clump.foffset());
+    var same = function (universe, start, soffset, foffset) {
+      var middle = Split.splitByPair(universe, start, soffset, foffset);
       return Option.some([ middle ]);
     };
 
-    var diff = function (universe, isRoot, clump) {
-      var leftSide = EntryPoints.toLeft(universe, isRoot, clump.start(), clump.soffset());
-      var rightSide = EntryPoints.toRight(universe, isRoot, clump.finish(), clump.foffset());
+    var diff = function (universe, isRoot, start, soffset, finish, foffset) {
+      var leftSide = EntryPoints.toLeft(universe, isRoot, start, soffset);
+      var rightSide = EntryPoints.toRight(universe, isRoot, finish, foffset);
       return Fractures.fracture(universe, isRoot, leftSide, rightSide);
     };
 
     // TODO: Handle backwards selections ! Maybe higher up when we definitely have the DOM.
-    var fracture = function (universe, isRoot, clump) {
-      var sameText = universe.property().isText(clump.start()) && universe.eq(clump.start(), clump.finish());
-      return sameText ? same(universe, clump) : diff(universe, isRoot, clump);
+    var fracture = function (universe, isRoot, start, soffset, finish, foffset) {
+      console.log('stuff', arguments);
+      var sameText = universe.property().isText(start) && universe.eq(start, finish);
+      return sameText ? same(universe, start, soffset, foffset) : diff(universe, isRoot, start, soffset, finish, foffset);
     };
 
     // TODO: Handle backwards selections ! Maybe higher up when we definitely have the DOM.
-    var discover = function (universe, isRoot, start, soffset, finish, foffset) {
+    var fractures = function (universe, isRoot, start, soffset, finish, foffset) {
       var clumps = Clumps.collect(universe, isRoot, start, soffset, finish, foffset);
       return Arr.bind(clumps, function (clump) {
-        return fracture(universe, isRoot, clump).toArray();
+        return fracture(universe, isRoot, clump.start(), clump.soffset(), clump.finish(), clump.foffset()).toArray();
       });
     };
 
     return {
-      discover: discover,
+      fractures: fractures,
       fracture: fracture
     };
   }

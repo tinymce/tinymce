@@ -40,18 +40,13 @@ test(
 
     var checkFracture = function (expected, start, soffset, finish, foffset) {
       console.log("check.fracture: ", container.dom().innerHTML);
-      DomClumps.fracture(isRoot, {
-        start: Fun.constant(find(start)),
-        soffset: Fun.constant(soffset),
-        finish: Fun.constant(find(finish)),
-        foffset: Fun.constant(foffset)
-      }).each(mark);
+      DomClumps.fracture(isRoot, find(start), soffset, find(finish), foffset).each(mark);
       assert.eq(expected, Html.get(container));
     };
 
     var check = function (expected, start, soffset, finish, foffset) {
       console.log("check.discover: ", container.dom().innerHTML);
-      var sections = DomClumps.discover(isRoot, find(start), soffset, find(finish), foffset);
+      var sections = DomClumps.fractures(isRoot, find(start), soffset, find(finish), foffset);
       Arr.each(sections, mark);
       assert.eq(expected, Html.get(container));
     };
