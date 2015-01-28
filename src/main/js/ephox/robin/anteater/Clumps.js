@@ -8,16 +8,19 @@ define(
     'ephox.phoenix.api.general.Gather',
     'ephox.phoenix.wrap.Navigation',
     'ephox.robin.api.general.Structure',
-    'ephox.scullion.ADT'
+    'ephox.scullion.ADT',
+    'ephox.scullion.Struct'
   ],
 
-  function (Arr, Fun, Option, Gather, Navigation, Structure, Adt) {
+  function (Arr, Fun, Option, Gather, Navigation, Structure, Adt, Struct) {
     var adt = Adt.generate([
       { none: [ 'last', 'mode' ] },
       { running: [ 'next', 'mode' ] },
       { split: [ 'boundary', 'last', 'mode' ] },
       { finished: [ 'element', 'mode' ] }
     ]);
+
+    var clump = Struct.immutable('start', 'soffset', 'finish', 'foffset');
 
     var walk = function (universe, isRoot, mode, element, target) {
       var next = Gather.walk(universe, element, mode, Gather.walkers().right());
@@ -48,19 +51,19 @@ define(
     var scan = function (universe, isRoot, mode, beginning, element, target) {
       var step = walk(universe, isRoot, mode, element, target);
       return step.fold(function (last, _mode) {
-        return [{ start: beginning, end: last }];
+        return [{ start: beginning, finish: last }];
       }, function (next, mode) {
         // Keep going.
         return scan(universe, isRoot, mode, beginning, next, target);
       }, function (boundary, last, _mode) {
-        var current = { start: beginning, end: last };
+        var current = { start: beginning, finish: last };
         return resume(universe, isRoot, boundary, target).fold(function () {
           return [ current ];
         }, function (n) {
           return [ current ].concat(scan(universe, isRoot, Gather.sidestep, n, n, target));
         });
       }, function (element, _mode) {
-        return [{ start: beginning, end: element }];
+        return [{ start: beginning, finish: element }];
       });
     };
 
@@ -72,14 +75,14 @@ define(
       var raw = scan(universe, isRoot, Gather.sidestep, start, start, finish);
       return Arr.map(raw, function (r, i) {
         var soff = universe.eq(r.start, start) ? soffset : 0;
-        var eoff = universe.eq(r.end, finish) ? foffset : getEnd(universe, r.end);
-        return { start: r.start, soffset: soff, end: r.end, eoffset: eoff };
+        var foff = universe.eq(r.finish, finish) ? foffset : getEnd(universe, r.finish);
+        return clump(r.start, soff, r.finish, foff);
       });
     };
 
     var collect = function (universe, isRoot, start, soffset, finish, foffset) {
       return universe.eq(start, finish) ?
-        [ { start: start, soffset: soffset, end: finish, eoffset: foffset } ] : 
+        [ clump(start, soffset, finish, foffset) ] : 
         pluck(universe, isRoot, start, soffset, finish, foffset);
     };
 

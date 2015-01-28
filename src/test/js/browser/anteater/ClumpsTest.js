@@ -37,14 +37,14 @@ test(
       var actual = Clumps.collect(DomUniverse(), isRoot, find(start), soffset, find(finish), foffset);
       console.log('Clumps for test.');
       Arr.each(actual, function (act, i) {
-        console.log('Clump ' + i + ': ', act.start.dom(), act.end.dom());
+        console.log('Clump ' + i + ': ', act.start().dom(), act.finish().dom());
       });
       assert.eq(expected.length, actual.length, 'The length of Clumps was different. Expected: ' + expected.length + ', actual: ' + actual.length);
       Arr.each(expected, function (exp, i) {
         console.log('check: ' + i);
         var act = actual[i];
-        assert.eq(true, Compare.eq(find(exp.start), act.start));
-        assert.eq(true, Compare.eq(find(exp.end), act.end));
+        assert.eq(true, Compare.eq(find(exp.start), act.start()));
+        assert.eq(true, Compare.eq(find(exp.end), act.finish()));
       })
     };
 
