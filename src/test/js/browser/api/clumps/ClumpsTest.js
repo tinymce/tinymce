@@ -51,6 +51,15 @@ test(
       assert.eq(expected, Html.get(container));
     };
 
+    /*
+     * Things to check / handle / note:
+     *   - empty tags created
+     *   - list items
+     *   - tables
+     *   - whitespace
+     *   - left and right bias
+     */
+
     container.dom().innerHTML =
       '<p>One</p>' +
       '<table><tbody><tr><th>Heading</th></tr><tr><td>Data</td></tr></tbody></table>' +

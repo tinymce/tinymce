@@ -13,7 +13,6 @@ define(
   ],
 
   function (Arr, Fun, Option, Gather, Navigation, Structure, Adt, Struct) {
-    var counter = 0;
     var adt = Adt.generate([
       { none: [ 'last', 'mode' ] },
       { running: [ 'next', 'mode' ] },
@@ -39,7 +38,7 @@ define(
     };
 
     var resume = function (universe, isRoot, boundary, target) {
-      console.log('Attempting to resume', boundary.dom());
+      console.log('Attempting to resume', boundary.dom(), arguments);
       // I have to sidestep here so I don't descend down the same boundary.
       var next = Gather.seekRight(universe, boundary, Fun.constant(true), isRoot);
       return next.fold(function () {
@@ -63,8 +62,6 @@ define(
     };
 
     var scan = function (universe, isRoot, mode, beginning, element, target) {
-      counter++;
-      if (counter > 1000) throw 'brick';
       // Keep walking the tree.
       console.log('Scanning: ', element.dom());
       var step = walk(universe, isRoot, mode, element, target);
