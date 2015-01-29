@@ -33,14 +33,15 @@ define(
       else return adt.rightEdge(element);
     };
 
-    var analyse = function (universe, element, offset) {
-      var handler = universe.property().isText(element) ? onText : onElement;
-      return handler(universe, element, offset);
+    var analyse = function (universe, element, offset, fallback) {
+      if (universe.property().isText(element)) return onText(universe, element, offset);
+      else if (universe.property().isEmptyTag(element)) return fallback(element);
+      else return onElement(universe, element, offset);
     };
 
     // When breaking to the left, we will want to include the 'right' section of the split.
     var toLeft = function (universe, isRoot, element, offset) {
-      return analyse(universe, element, offset).fold(function (e) {
+      return analyse(universe, element, offset, adt.leftEdge).fold(function (e) {
         // We are at the left edge of the element, so take the whole element
         return e;
       }, function (b, a) {
@@ -55,7 +56,7 @@ define(
 
     // When breaking to the right, we will want to include the 'left' section of the split.
     var toRight = function (universe, isRoot, element, offset) {
-      return analyse(universe, element, offset).fold(function (e) {
+      return analyse(universe, element, offset, adt.rightEdge).fold(function (e) {
         // We are at the left edge of the finishing element, so gather the previous element.
         return Gather.before(universe, e, isRoot).getOr(e);
       }, function (b, a) {
