@@ -4,4 +4,4 @@ machine:
 
 dependencies:
   pre:
-    - npm install -g phantomjs
+    - npm install phantomjs

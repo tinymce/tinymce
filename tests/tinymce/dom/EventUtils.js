@@ -366,7 +366,7 @@ test("bind ready when page is loaded", function() {
 		ready = true;
 	});
 
-	ok(eventUtils.domLoaded, "DomLoaded state true");
+	ok(eventUtils.isDomLoaded(), "DomLoaded state true");
 	ok(ready, "Window is ready.");
 });
 
@@ -414,7 +414,7 @@ test("unbind inside callback", function() {
 	equal(data, 'ac');
 });
 
-test("ready/DOMContentLoaded (domLoaded = true)", function() {
+test("ready/DOMContentLoaded (isDomLoaded() == true)", function() {
 	var evt;
 
 	eventUtils.bind(window, "ready", function(e) {evt = e;});
@@ -431,12 +431,10 @@ test("ready/DOMContentLoaded (document.readyState check)", function() {
 		return;
 	}
 
-	eventUtils.domLoaded = false;
 	document.readyState = "loading";
 	eventUtils.bind(window, "ready", function(e) {evt = e;});
 	ok(typeof(evt) !== "undefined");
 
-	eventUtils.domLoaded = false;
 	document.readyState = "complete";
 	eventUtils.bind(window, "ready", function(e) {evt = e;});
 	equal(evt.type, "ready");
