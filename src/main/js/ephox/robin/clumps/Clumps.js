@@ -13,6 +13,7 @@ define(
   ],
 
   function (Arr, Fun, Option, Gather, Navigation, Structure, Adt, Struct) {
+    var counter = 0;
     var adt = Adt.generate([
       { none: [ 'last', 'mode' ] },
       { running: [ 'next', 'mode' ] },
@@ -28,9 +29,13 @@ define(
         return adt.none(element, Gather.sidestep);
       }, function (n) {
         if (universe.eq(n.item(), target)) return adt.finished(target, n.mode());
-        else if (Structure.isBlock(universe, n.item()) || universe.property().name(n.item()) === 'li') return adt.split(n.item(), element, n.mode());
+        else if (Structure.isBlock(universe, n.item()) || isOtherBlock(universe, n.item())) return adt.split(n.item(), element, n.mode());
         else return adt.running(n.item(), n.mode());
       });
+    };
+
+    var isOtherBlock = function (universe, element) {
+      return Arr.contains([ 'li' ], universe.property().name(element));
     };
 
     var resume = function (universe, isRoot, boundary, target) {
@@ -41,7 +46,8 @@ define(
         return Option.none();
       }, function (n) {
         if (universe.eq(n, target)) return Option.some(target);
-        else if (Structure.isBlock(universe, n) || universe.property().name(n) === 'li') {
+        else if (isParent(universe, boundary, n)) return resume(universe, isRoot, n, target);
+        else if (Structure.isBlock(universe, n) || isOtherBlock(universe, n)) {
           var leaf = Navigation.toLeaf(universe, n, 0);
           return Option.some(leaf.element());
         } 
@@ -57,6 +63,8 @@ define(
     };
 
     var scan = function (universe, isRoot, mode, beginning, element, target) {
+      counter++;
+      if (counter > 1000) throw 'brick';
       // Keep walking the tree.
       console.log('Scanning: ', element.dom());
       var step = walk(universe, isRoot, mode, element, target);
