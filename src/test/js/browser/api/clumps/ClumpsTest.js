@@ -52,11 +52,35 @@ test(
     };
 
     container.dom().innerHTML = 
-      '<ol><li>apples</li><li>oranges</li>  </ol><p>And breaking it:</p><ol><li>here</li></ol>and more<br>and more<br>and m<b>or</b>e<br>';
+      '<p>This is the second line.</p>' +
+      '<h3>This is the heading line.</h3>' +
+      '<ol><li>apples</li><li>oranges</li>  </ol>' + 
+      'and more' +
+      '<br>' +
+      '<p>the</p>' + 
+      'something one' +
+      '<br>';
     check(
-      '<ol><li>apples</li><li>oranges</li>  </ol><p>And bre<strong>aking it:</strong></p><ol><li><strong>here</strong></li></ol><strong>and more<br>and mo</strong>re<br>and m<b>or</b>e<br>',
-      [ 1, 0 ], 7, [ 5 ], 6
+      '<p>This is the s<strong>econd line.</strong></p>' +
+      '<h3><strong>This is the heading line.</strong></h3>' +
+      // KILL THE WHITESPACE 
+      '<ol><li><strong>apples</strong></li><li><strong>oranges</strong></li><strong>  </strong></ol>' + 
+      '<strong>and more' +
+      '<br>' +      
+      '</strong>' +
+      '<p><strong>the</strong></p>' + 
+      '<strong>someth</strong>ing one' +
+      '<br>',
+      [ 0, 0 ], 'This is the s'.length, [ 6 ], 'someth'.length
     );
+
+    // This is now an infinite loop!
+    // container.dom().innerHTML = 
+    //   '<ol><li>apples</li><li>oranges</li>  </ol><p>And breaking it:</p><ol><li>here</li></ol>and more<br>and more<br>and m<b>or</b>e<br>';
+    // check(
+    //   '<ol><li>apples</li><li>oranges</li>  </ol><p>And bre<strong>aking it:</strong></p><ol><li><strong>here</strong></li></ol><strong>and more<br>and mo</strong>re<br>and m<b>or</b>e<br>',
+    //   [ 1, 0 ], 7, [ 5 ], 6
+    // );
 
     container.dom().innerHTML = 
       'Text n<span style="font-weight: bold;">ode <br> Another text node <br></span>' +

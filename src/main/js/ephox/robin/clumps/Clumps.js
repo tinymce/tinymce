@@ -28,7 +28,7 @@ define(
         return adt.none(element, Gather.sidestep);
       }, function (n) {
         if (universe.eq(n.item(), target)) return adt.finished(target, n.mode());
-        else if (Structure.isBlock(universe, n.item())) return adt.split(n.item(), element, n.mode());
+        else if (Structure.isBlock(universe, n.item()) || universe.property().name(n.item()) === 'li') return adt.split(n.item(), element, n.mode());
         else return adt.running(n.item(), n.mode());
       });
     };
@@ -40,8 +40,8 @@ define(
       return next.fold(function () {
         return Option.none();
       }, function (n) {
-        if (universe.eq(n, target)) return Option.none();
-        else if (Structure.isBlock(universe, n)) {
+        if (universe.eq(n, target)) return Option.some(target);
+        else if (Structure.isBlock(universe, n) || universe.property().name(n) === 'li') {
           var leaf = Navigation.toLeaf(universe, n, 0);
           return Option.some(leaf.element());
         } 
@@ -82,9 +82,9 @@ define(
 
         // We have hit a boundary, so stop the current clump, and start a new from the next starting point.
         return resumption.fold(function () {
-          console.log('No point to resume');
           // There was no new starting point, so just return the newly created clump
           return [ current ];
+
         }, function (n) {
           if (universe.eq(n, target)) return [ current ].concat({ start: target, finish: target });
           // There was a new starting point, so scan for more clumps and accumulate the result.
