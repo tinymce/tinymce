@@ -51,6 +51,17 @@ test(
       assert.eq(expected, Html.get(container));
     };
 
+    container.dom().innerHTML =
+      '<p>One</p>' +
+      '<table><tbody><tr><th>Heading</th></tr><tr><td>Data</td></tr></tbody></table>' +
+      '<p>Two</p>';
+    check(
+      '<p>O<strong>ne</strong></p>' +
+      '<table><tbody><tr><th><strong>Heading</strong></th></tr><tr><td><strong>Data</strong></td></tr></tbody></table>' +
+      '<p><strong>T</strong>wo</p>',
+      [ 0, 0 ], 'O'.length, [ 2, 0 ], 'T'.length
+    );
+
     container.dom().innerHTML = 
       '<p>This is the second line.</p>' +
       '<h3>This is the heading line.</h3>' +
