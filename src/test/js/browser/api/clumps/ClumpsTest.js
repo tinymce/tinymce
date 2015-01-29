@@ -52,6 +52,13 @@ test(
     };
 
     container.dom().innerHTML = 
+      '<ol><li>apples</li><li>oranges</li>  </ol><p>And breaking it:</p><ol><li>here</li></ol>and more<br>and more<br>and m<b>or</b>e<br>';
+    check(
+      '<ol><li>apples</li><li>oranges</li>  </ol><p>And bre<strong>aking it:</strong></p><ol><li><strong>here</strong></li></ol><strong>and more<br>and mo</strong>re<br>and m<b>or</b>e<br>',
+      [ 1, 0 ], 7, [ 5 ], 6
+    );
+
+    container.dom().innerHTML = 
       'Text n<span style="font-weight: bold;">ode <br> Another text node <br></span>' +
       '<h3><span style="font-weight: bold;">This is the heading line.</span></h3>';
     check(

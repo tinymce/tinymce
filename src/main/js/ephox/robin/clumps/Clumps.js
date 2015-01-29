@@ -34,6 +34,7 @@ define(
     };
 
     var resume = function (universe, isRoot, boundary, target) {
+      console.log('Attempting to resume', boundary.dom());
       // I have to sidestep here so I don't descend down the same boundary.
       var next = Gather.seekRight(universe, boundary, Fun.constant(true), isRoot);
       return next.fold(function () {
@@ -44,7 +45,8 @@ define(
           var leaf = Navigation.toLeaf(universe, n, 0);
           return Option.some(leaf.element());
         } 
-        else return Option.none();
+        // else return Option.none();
+        return Option.some(n);
       });
     };
 
@@ -73,12 +75,14 @@ define(
         // Logic .. if this boundary was a parent, then sidestep.
 
         var resumption = isParent(universe, element, boundary) ? resume(universe, isRoot, boundary, target) : (function () {
+          console.log('Not a parent.');
           var leaf = Navigation.toLeaf(universe, boundary, 0);
           return !universe.eq(leaf.element(), boundary) ? Option.some(leaf.element()) : Gather.walk(universe, boundary, Gather.advance, Gather.walkers().right()).map(function (g) { return g.item(); });
         })();
 
         // We have hit a boundary, so stop the current clump, and start a new from the next starting point.
         return resumption.fold(function () {
+          console.log('No point to resume');
           // There was no new starting point, so just return the newly created clump
           return [ current ];
         }, function (n) {
