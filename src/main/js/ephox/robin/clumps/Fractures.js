@@ -23,7 +23,7 @@
       var firstIndex = first.bind(finder).getOr(0);
       // Default to the end of the common parent.
       var lastIndex = last.bind(finder).getOr(children.length - 1);
-      console.log('indices: ', firstIndex, lastIndex);
+      console.log('indices: ', firstIndex, lastIndex + 1);
       return firstIndex > -1 && lastIndex > -1 ? Option.some(children.slice(firstIndex, lastIndex + 1)) : Option.none();
     };
 
@@ -104,8 +104,10 @@
 
 
       return shared.map(function (sh) {
+        // I need this line or the robin browser tests break. I need to think about this. Home time.
+        return sh;
         // Firstly, let's go up again and see if there is anything more we will need to split.
-        return universe.property().isBoundary ? sh : universe.up().predicate(sh, function (elem) {
+        return universe.property().isBoundary(sh) ? sh : universe.up().predicate(sh, function (elem) {
           return universe.property().parent(elem).fold(Fun.constant(true), function (p) {
             return universe.property().isBoundary(p);
           });
