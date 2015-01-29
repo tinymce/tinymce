@@ -23,6 +23,7 @@
       var firstIndex = first.bind(finder).getOr(0);
       // Default to the end of the common parent.
       var lastIndex = last.bind(finder).getOr(children.length - 1);
+      console.log('indices: ', firstIndex, lastIndex);
       return firstIndex > -1 && lastIndex > -1 ? Option.some(children.slice(firstIndex, lastIndex + 1)) : Option.none();
     };
 
@@ -79,7 +80,14 @@
       });
 
 
-      return shared.bind(function (common) {
+      return shared.map(function (sh) {
+        // Firstly, let's go up again and see if there is anything more we will need to split.
+        return universe.up().predicate(sh, function (elem) {
+          return universe.property().parent(elem).fold(Fun.constant(true), function (p) {
+            return universe.property().isBoundary(p);
+          });
+        }).getOr(sh);
+      }).bind(function (common) {
         // We have the shared parent, we now have to split from the start and finish up
         // to the shared parent.
 
