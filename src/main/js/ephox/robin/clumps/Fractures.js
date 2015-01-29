@@ -27,7 +27,7 @@
       return firstIndex > -1 && lastIndex > -1 ? Option.some(children.slice(firstIndex, lastIndex + 1)) : Option.none();
     };
 
-    var breakPath = function (universe, element, common) {
+    var breakPath = function (universe, element, common, breaker) {
       var isTop = function (elem) {
         return universe.property().parent(elem).fold(
           Fun.constant(true),
@@ -35,6 +35,7 @@
         );
       };
 
+      // IGNORING breaker for the time being ... because it is breaking everything else.
       return Parent.breakPath(universe, element, isTop, Parent.breakAt);
     };
 
@@ -43,7 +44,29 @@
       // If we are the top and we are the left, use default value
       if (universe.eq(common, element)) return Option.none();
       else {
-        var breakage = breakPath(universe, element, common);
+        var breakage = breakPath(universe, element, common, function (universe, parent, child) {
+          var bisect = function (universe, parent, child) {
+            var children = universe.property().children(parent);
+            var index = Arr.findIndex(children, Fun.curry(universe.eq, child));
+            return index > -1 ? Option.some({
+              before: Fun.constant(children.slice(0, index)),
+              after: Fun.constant(children.slice(index + 1))
+            }) : Option.none();
+          };
+
+          var unsafeBreakAt = function (universe, parent, parts) {
+            var prior = universe.create().clone(parent);
+            universe.insert().appendAll(prior, parts.before().concat([ child ]));
+            // universe.insert().appendAll(parent, parts.after());
+            universe.insert().before(parent, prior);
+            return parent;
+          };
+
+          var parts = bisect(universe, parent, child);
+          return parts.map(function (ps) {
+            return unsafeBreakAt(universe, parent, ps);
+          });
+        });
         // Move the first element into the second section of the split because we want to include element in the section.        
         if (breakage.splits().length > 0) universe.insert().prepend(breakage.splits()[0].second(), element);
         return Option.some(breakage.second().getOr(element));
@@ -82,7 +105,7 @@
 
       return shared.map(function (sh) {
         // Firstly, let's go up again and see if there is anything more we will need to split.
-        return universe.up().predicate(sh, function (elem) {
+        return universe.property().isBoundary ? sh : universe.up().predicate(sh, function (elem) {
           return universe.property().parent(elem).fold(Fun.constant(true), function (p) {
             return universe.property().isBoundary(p);
           });
