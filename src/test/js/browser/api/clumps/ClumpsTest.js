@@ -52,6 +52,15 @@ test(
     };
 
     container.dom().innerHTML = 
+      'Text n<span style="font-weight: bold;">ode <br> Another text node <br></span>' +
+      '<h3><span style="font-weight: bold;">This is the heading line.</span></h3>';
+    check(
+      'Text n<span style="font-weight: bold;">ode <br> Anot<strong>her text node <br></strong></span>' +
+      '<h3><span style="font-weight: bold;"><strong>Thi</strong>s is the heading line.</span></h3>',
+      [ 1, 2 ], 5, [ 2, 0, 0 ], 3
+    );
+
+    container.dom().innerHTML = 
       'Text node <br> Another text node <br><p>This is the first line of what I am typing</p><p>This is the second line.</p>';
     check(
       'Text n<strong>ode <br> Another text node <br></strong><p><strong>This is the first line of what I am typing</strong></p>' +

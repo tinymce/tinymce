@@ -17,8 +17,10 @@ define(
     };
 
     var diff = function (universe, isRoot, start, soffset, finish, foffset) {
-      var leftSide = EntryPoints.toLeft(universe, isRoot, start, soffset);
       var rightSide = EntryPoints.toRight(universe, isRoot, finish, foffset);
+      var leftSide = EntryPoints.toLeft(universe, isRoot, start, soffset);
+      console.log('leftSide: ', leftSide.dom());
+      console.log('rightSide: ', rightSide.dom());
       return Fractures.fracture(universe, isRoot, leftSide, rightSide);
     };
 
@@ -32,7 +34,7 @@ define(
     var fractures = function (universe, isRoot, start, soffset, finish, foffset) {
       var clumps = Clumps.collect(universe, isRoot, start, soffset, finish, foffset);
       return Arr.bind(clumps, function (clump, i) {
-        console.log('Clumps [' + i + ']', clump.start().dom(), clump.soffset(), clump.finish().dom(), clump.foffset());
+        console.log('Clumps [' + i + ']', clump.start().dom().cloneNode(true), clump.soffset(), clump.finish().dom().cloneNode(true), clump.foffset());
         return fracture(universe, isRoot, clump.start(), clump.soffset(), clump.finish(), clump.foffset()).toArray();
       });
     };

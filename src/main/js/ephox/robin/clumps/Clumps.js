@@ -73,7 +73,8 @@ define(
         // Logic .. if this boundary was a parent, then sidestep.
 
         var resumption = isParent(universe, element, boundary) ? resume(universe, isRoot, boundary, target) : (function () {
-          return Gather.walk(universe, boundary, Gather.advance, Gather.walkers().right()).map(function (g) { return g.item(); });
+          var leaf = Navigation.toLeaf(universe, boundary, 0);
+          return !universe.eq(leaf.element(), boundary) ? Option.some(leaf.element()) : Gather.walk(universe, boundary, Gather.advance, Gather.walkers().right()).map(function (g) { return g.item(); });
         })();
 
         // We have hit a boundary, so stop the current clump, and start a new from the next starting point.
@@ -81,6 +82,7 @@ define(
           // There was no new starting point, so just return the newly created clump
           return [ current ];
         }, function (n) {
+          if (universe.eq(n, target)) return [ current ].concat({ start: target, finish: target });
           // There was a new starting point, so scan for more clumps and accumulate the result.
           return [ current ].concat(scan(universe, isRoot, Gather.sidestep, n, n, target));
         });
