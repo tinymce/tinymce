@@ -24,7 +24,6 @@ define(
 
     // TODO: Handle backwards selections ! Maybe higher up when we definitely have the DOM.
     var fracture = function (universe, isRoot, start, soffset, finish, foffset) {
-      console.log('stuff', arguments);
       var sameText = universe.property().isText(start) && universe.eq(start, finish);
       return sameText ? same(universe, start, soffset, foffset) : diff(universe, isRoot, start, soffset, finish, foffset);
     };
@@ -32,7 +31,8 @@ define(
     // TODO: Handle backwards selections ! Maybe higher up when we definitely have the DOM.
     var fractures = function (universe, isRoot, start, soffset, finish, foffset) {
       var clumps = Clumps.collect(universe, isRoot, start, soffset, finish, foffset);
-      return Arr.bind(clumps, function (clump) {
+      return Arr.bind(clumps, function (clump, i) {
+        console.log('Clumps [' + i + ']', clump.start().dom(), clump.soffset(), clump.finish().dom(), clump.foffset());
         return fracture(universe, isRoot, clump.start(), clump.soffset(), clump.finish(), clump.foffset()).toArray();
       });
     };

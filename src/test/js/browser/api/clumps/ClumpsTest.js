@@ -51,6 +51,13 @@ test(
       assert.eq(expected, Html.get(container));
     };
 
+    // container.dom().innerHTML = 
+    //   'Text node <br> Another text node <br><p>This is the first line of what I am typing</p><p>This is the second line.</p>';
+    // check(
+    //   'Text n<strong>ode <br> Another text node <br></strong><p><strong>This is the first line of what I am typing</strong></p>' +
+    //   '<p><strong>This is th</strong>e second line.</p>',
+    //   [ 0 ], 'Text n'.length, [ 5, 0 ], 'This is th'.length);
+
     container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
     checkFracture(
       '<p>This<strong> is <b>bold text</b> an</strong>d <i>italic text</i> here.</p>',
