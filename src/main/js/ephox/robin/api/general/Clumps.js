@@ -16,26 +16,26 @@ define(
       return Option.some([ middle ]);
     };
 
-    var diff = function (universe, isRoot, start, soffset, finish, foffset) {
+    var diff = function (universe, isRoot, start, soffset, finish, foffset, ceiling) {
       var rightSide = EntryPoints.toRight(universe, isRoot, finish, foffset);
       var leftSide = EntryPoints.toLeft(universe, isRoot, start, soffset);
       console.log('leftSide: ', leftSide.dom());
       console.log('rightSide: ', rightSide.dom());
-      return Fractures.fracture(universe, isRoot, leftSide, rightSide);
+      return Fractures.fracture(universe, isRoot, leftSide, rightSide, ceiling);
     };
 
     // TODO: Handle backwards selections ! Maybe higher up when we definitely have the DOM.
-    var fracture = function (universe, isRoot, start, soffset, finish, foffset) {
+    var fracture = function (universe, isRoot, start, soffset, finish, foffset, ceiling) {
       var sameText = universe.property().isText(start) && universe.eq(start, finish);
-      return sameText ? same(universe, start, soffset, foffset) : diff(universe, isRoot, start, soffset, finish, foffset);
+      return sameText ? same(universe, start, soffset, foffset) : diff(universe, isRoot, start, soffset, finish, foffset, ceiling);
     };
 
     // TODO: Handle backwards selections ! Maybe higher up when we definitely have the DOM.
-    var fractures = function (universe, isRoot, start, soffset, finish, foffset) {
+    var fractures = function (universe, isRoot, start, soffset, finish, foffset, ceiling) {
       var clumps = Clumps.collect(universe, isRoot, start, soffset, finish, foffset);
       return Arr.bind(clumps, function (clump, i) {
         console.log('Clumps [' + i + ']', clump.start().dom().cloneNode(true), clump.soffset(), clump.finish().dom().cloneNode(true), clump.foffset());
-        return fracture(universe, isRoot, clump.start(), clump.soffset(), clump.finish(), clump.foffset()).toArray();
+        return fracture(universe, isRoot, clump.start(), clump.soffset(), clump.finish(), clump.foffset(), ceiling).toArray();
       });
     };
 

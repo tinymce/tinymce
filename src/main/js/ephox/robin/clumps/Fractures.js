@@ -26,9 +26,6 @@
       var lastIndex = last.bind(finder).getOr(children.length - 1);
       console.log('indices: ', firstIndex, lastIndex + 1);
 
-      console.log('first: ', first.map(function (f) { return f.dom(); }).getOr('none'));
-      console.log('last: ', last.map(function (l) { return l.dom(); }).getOr('none'));
-
       return firstIndex > -1 && lastIndex > -1 ? Option.some(children.slice(firstIndex, lastIndex + 1)) : Option.none();
     };
 
@@ -39,7 +36,7 @@
           Fun.curry(universe.eq, common)
         );
       };
-console.log('breaker: ', breaker);
+
       // IGNORING breaker for the time being ... because it is breaking everything else.
       return Parent.breakPath(universe, element, isTop, breaker || Parent.breakAt);
     };
@@ -75,6 +72,7 @@ console.log('breaker: ', breaker);
       }
     };
 
+    // This will probably need to consider ceiling.
     var same = function (universe, isRoot, element) {
       var children = universe.property().parent(element).fold(Fun.constant([]), function (parent) {
         return universe.property().children(parent);
@@ -85,7 +83,7 @@ console.log('breaker: ', breaker);
       else return Option.none();
     };
 
-    var up = function (universe, element) {
+    var up = function (universe, ceiling, element) {
       // if (universe.property().isBoundary(element)) return Option.some(element);
       // else return universe.property().parent(element).bind(function (parent) {
       //   return universe.property().isBoundary(parent) ? Option.some(element) : universe.up().predicate(parent, function (sh) {
@@ -95,14 +93,16 @@ console.log('breaker: ', breaker);
       //   });
       // });
 
+
+
+
+
       // Let's just try we are the boundary
-      if (universe.property().isBoundary(element)) return Option.some(element);
-      else return universe.up().predicate(element, function (elem) {
-        return universe.property().isBoundary(elem);
-      });
+      return ceiling(element) ? Option.some(element) : universe.up().predicate(element, ceiling);
     };
 
-    var diff = function (universe, isRoot, start, finish) {
+    var diff = function (universe, isRoot, start, finish, _ceiling) {
+      var ceiling = _ceiling !== undefined ? _ceiling : Fun.identity;
       var subset = Subset.ancestors(universe, start, finish, isRoot);
       var shared = subset.shared().fold(function () {
         return Parent.sharedOne(universe, function (_, elem) {
@@ -113,11 +113,7 @@ console.log('breaker: ', breaker);
       });
 
 
-      return shared.map(function (sh) {
-        console.log('sh: ', sh.dom(), start.dom(), finish.dom());
-        return up(universe, sh).getOr(sh);
-      }).bind(function (common) {
-        console.log('common: ', common.dom(), common.dom().cloneNode(true));
+      return shared.map(ceiling).bind(function (common) {
         // We have the shared parent, we now have to split from the start and finish up
         // to the shared parent.
 
@@ -125,13 +121,12 @@ console.log('breaker: ', breaker);
         // will impact the second (assuming LEFT to RIGHT) and not vice versa.
         var secondBreak = breakRight(universe, finish, common);
         var firstBreak = breakLeft(universe, start, common);
-        console.log('post-break:', common.dom().parentNode.parentNode.innerHTML);
         return slice(universe, common, firstBreak, secondBreak);
       });
     };
 
-    var fracture = function (universe, isRoot, start, finish) {
-      return universe.eq(start, finish) ? same(universe, isRoot, start) : diff(universe, isRoot, start, finish);     
+    var fracture = function (universe, isRoot, start, finish, ceiling) {
+      return universe.eq(start, finish) ? same(universe, isRoot, start) : diff(universe, isRoot, start, finish, ceiling);     
     };
 
     return {

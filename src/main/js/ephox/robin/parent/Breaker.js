@@ -5,11 +5,10 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.scullion.Struct',
-    'ephox.sugar.api.Traverse'
+    'ephox.scullion.Struct'
   ],
 
-  function (Arr, Fun, Option, Struct, Traverse) {
+  function (Arr, Fun, Option, Struct) {
     var bisect = function (universe, parent, child) {
       var children = universe.property().children(parent);
       var index = Arr.findIndex(children, Fun.curry(universe.eq, child));
@@ -41,18 +40,10 @@ define(
       return bisect(universe, parent, child).map(function (parts) {
         // console.log('html before', container.dom().innerHTML);
         var prior = universe.create().clone(parent);
-        console.log('clone: ', 'was: ', prior.dom().cloneNode(true), 'now: ', prior.dom());
-        console.log('child: ', 'was: ', child.dom().cloneNode(true), 'now: ', child.dom());
-        console.log('parent: ', 'was: ', parent.dom().cloneNode(true), 'now: ', parent.dom());
-        console.log('parts.before: ', 'were: ', Arr.map(parts.before(), function (p) { return p.dom().cloneNode(true); }), 
-          'now: ', Arr.map(parts.before(), function (p) { return p.dom(); }));
-        console.log('parts.after: ', 'were: ', Arr.map(parts.after(), function (p) { return p.dom().cloneNode(true); }), 
-          'now: ', Arr.map(parts.after(), function (p) { return p.dom(); }));
+        
         universe.insert().appendAll(prior, parts.before().concat([ child ]));
         universe.insert().appendAll(parent, parts.after());
         universe.insert().before(parent, prior);
-        console.log('post.clone: ', 'was: ', prior.dom().cloneNode(true), 'now: ', prior.dom());
-        console.log('post.parent: ', 'was: ', parent.dom().cloneNode(true), 'now: ', parent.dom());
         // console.log('html after: ', container.dom().innerHTML);
         return parent;
       });
@@ -73,7 +64,6 @@ define(
         //   return universe.property().isText(item) ? '"' + item.text + '"' : item.name;
         // }));
 
-        console.log('Attempting to split: ', child.dom().cloneNode(true), isTop(child));
         var fallback = result(child, Option.none(), splits);
         // Found the top
         if (isTop(child)) return result(child, group, splits);
@@ -81,7 +71,6 @@ define(
           return universe.property().parent(child).fold(function () {
             return fallback;
           }, function (parent) {
-            console.log('we had a parent');
             var second = breaker(universe, parent, child);
             // Store the splits up the path break.
             var extra = second.fold(Fun.constant([]), function (sec) {
@@ -89,9 +78,8 @@ define(
             });
 
             // THIS NEEDS TO BE INVESTIGATED ... second.getOr(parent) works for one of the tests, but will break others.
-            console.log('next child: ', parent.dom());
             // Changed this from just parent.
-            var nextChild = isTop(parent) ? parent : second.bind(Traverse.prevSibling).getOr(parent);
+            var nextChild = isTop(parent) ? parent : second.bind(universe.query().prevSibling).getOr(parent);
             return next(nextChild, second, splits.concat(extra));
           });
         }
