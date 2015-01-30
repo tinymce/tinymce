@@ -47,6 +47,11 @@ define(
       var result = Struct.immutable('first', 'second', 'splits');
 
       var next = function (child, group, splits) {
+        // console.log('log: ' + universe.shortlog(function (item) {
+        //   return universe.property().isText(item) ? '"' + item.text + '"' : item.name;
+        // }));
+
+        console.log('Attempting to split: ' + universe.property().isText(child) ? '"' + child.text + '"' : child.name);
         var fallback = result(child, Option.none(), splits);
         // Found the top
         if (isTop(child)) return result(child, group, splits);

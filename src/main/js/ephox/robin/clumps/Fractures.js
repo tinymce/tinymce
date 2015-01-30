@@ -24,6 +24,10 @@
       // Default to the end of the common parent.
       var lastIndex = last.bind(finder).getOr(children.length - 1);
       console.log('indices: ', firstIndex, lastIndex + 1);
+
+      console.log('first: ', first.map(function (f) { return f.dom(); }).getOr('none'));
+      console.log('last: ', last.map(function (l) { return l.dom(); }).getOr('none'));
+
       return firstIndex > -1 && lastIndex > -1 ? Option.some(children.slice(firstIndex, lastIndex + 1)) : Option.none();
     };
 
@@ -41,6 +45,7 @@
 
     
     var breakLeft = function (universe, element, common) {
+      console.log('BREAKING LEFT');
       // If we are the top and we are the left, use default value
       if (universe.eq(common, element)) return Option.none();
       else {
@@ -67,13 +72,21 @@
             return unsafeBreakAt(universe, parent, ps);
           });
         });
+
+        // console.log('post.split: ', universe.shortlog(function (item) {
+        //   return universe.property().isText(item) ? '"' + item.text + '"' : item.name;
+        // }));
         // Move the first element into the second section of the split because we want to include element in the section.        
         if (breakage.splits().length > 0) universe.insert().prepend(breakage.splits()[0].second(), element);
+        // console.log('post.fix: ', universe.shortlog(function (item) {
+        //   return universe.property().isText(item) ? '"' + item.text + '"' : item.name;
+        // }));
         return Option.some(breakage.second().getOr(element));
       }
     };
 
     var breakRight = function (universe, element, common) {
+      console.log('BREAKING RIGHT');
       // If we are the top and we are the right, use default value
       if (universe.eq(common, element)) return Option.none();
       else {
@@ -92,6 +105,17 @@
       else return Option.none();
     };
 
+    var up = function (universe, element) {
+      if (universe.property().isBoundary(element)) return Option.some(element);
+      else return universe.property().parent(element).bind(function (parent) {
+        return universe.property().isBoundary(parent) ? Option.some(element) : universe.up().predicate(parent, function (sh) {
+          return universe.property().parent(sh).fold(Fun.constant(true), function (p) {
+            return universe.property().isBoundary(p);
+          });
+        });
+      });
+    };
+
     var diff = function (universe, isRoot, start, finish) {
       var subset = Subset.ancestors(universe, start, finish, isRoot);
       var shared = subset.shared().fold(function () {
@@ -104,15 +128,10 @@
 
 
       return shared.map(function (sh) {
-        // I need this line or the robin browser tests break. I need to think about this. Home time.
-        return sh;
-        // Firstly, let's go up again and see if there is anything more we will need to split.
-        return universe.property().isBoundary(sh) ? sh : universe.up().predicate(sh, function (elem) {
-          return universe.property().parent(elem).fold(Fun.constant(true), function (p) {
-            return universe.property().isBoundary(p);
-          });
-        }).getOr(sh);
+        console.log('sh: ', sh.dom(), start.dom(), finish.dom());
+        return up(universe, sh).getOr(sh);
       }).bind(function (common) {
+        console.log('common: ', common.dom(), common.dom().cloneNode(true), common.dom().parentNode.parentNode.innerHTML);
         // We have the shared parent, we now have to split from the start and finish up
         // to the shared parent.
 
@@ -120,6 +139,7 @@
         // will impact the second (assuming LEFT to RIGHT) and not vice versa.
         var secondBreak = breakRight(universe, finish, common);
         var firstBreak = breakLeft(universe, start, common);
+        console.log('post-break:', common.dom().parentNode.parentNode.innerHTML);
         return slice(universe, common, firstBreak, secondBreak);
       });
     };
