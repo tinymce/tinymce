@@ -49,6 +49,22 @@ define("tinymce/ui/Button", [
 				e.preventDefault();
 			});
 
+			self.on('mouseover', function() {
+				var el = self.getEl();
+				var i;
+				for (i = 0; i < el.children.length; i++)	{
+					el.children[i].title = "";
+				}
+			});
+
+			self.on('mouseleave', function() {
+				var el = self.getEl();
+				var i;
+				for (i = 0; i < el.children.length; i++) {
+					el.children[i].title = self.encode(self._text || self.settings.tooltip);
+				}
+			});
+
 			self._super(settings);
 			size = settings.size;
 
