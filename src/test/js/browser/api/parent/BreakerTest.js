@@ -93,47 +93,7 @@ test(
       var parent = Hierarchy.follow(container, p).getOrDie();
       var child = Hierarchy.follow(container, c).getOrDie();
       var isTop = Fun.curry(Compare.eq, parent);
-      DomParent.breakPath(child, isTop, function (parent, child) {
-        var bisect = function (universe, parent, child) {
-          var children = universe.property().children(parent);
-          var index = Arr.findIndex(children, Fun.curry(universe.eq, child));
-          return index > -1 ? Option.some({
-            before: Fun.constant(children.slice(0, index)),
-            after: Fun.constant(children.slice(index + 1))
-          }) : Option.none();
-        };
-
-        // var unsafeBreakAt = function (universe, parents, parts) {
-        //   var second = universe.create().clone(parent);
-        //   universe.insert().appendAll(second, parts.after());
-        //   universe.insert().after(parent, second);
-        //   return second;
-        // };
-
-        var unsafeBreakAt = function (universe, parent, parts) {
-          console.log('html before', container.dom().innerHTML);
-          var prior = universe.create().clone(parent);
-          console.log('clone: ', 'was: ', prior.dom().cloneNode(true), 'now: ', prior.dom());
-          console.log('child: ', 'was: ', child.dom().cloneNode(true), 'now: ', child.dom());
-          console.log('parent: ', 'was: ', parent.dom().cloneNode(true), 'now: ', parent.dom());
-          console.log('parts.before: ', 'were: ', Arr.map(parts.before(), function (p) { return p.dom().cloneNode(true); }), 
-            'now: ', Arr.map(parts.before(), function (p) { return p.dom(); }));
-          console.log('parts.after: ', 'were: ', Arr.map(parts.after(), function (p) { return p.dom().cloneNode(true); }), 
-            'now: ', Arr.map(parts.after(), function (p) { return p.dom(); }));
-          universe.insert().appendAll(prior, parts.before().concat([ child ]));
-          universe.insert().appendAll(parent, parts.after());
-          universe.insert().before(parent, prior);
-          console.log('post.clone: ', 'was: ', prior.dom().cloneNode(true), 'now: ', prior.dom());
-          console.log('post.parent: ', 'was: ', parent.dom().cloneNode(true), 'now: ', parent.dom());
-          console.log('html after: ', container.dom().innerHTML);
-          return parent;
-        };
-
-        var parts = bisect(DomUniverse(), parent, child);
-        return parts.map(function (ps) {
-          return unsafeBreakAt(DomUniverse(), parent, ps);
-        });
-      });
+      DomParent.breakPath(child, isTop, DomParent.breakAtLeft);
       assert.eq(expected, Html.get(container));
     };
 
