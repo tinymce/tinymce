@@ -38,7 +38,6 @@ define(
     };
 
     var resume = function (universe, isRoot, boundary, target) {
-      console.log('Attempting to resume', boundary.dom(), arguments);
       // I have to sidestep here so I don't descend down the same boundary.
       var next = Gather.seekRight(universe, boundary, Fun.constant(true), isRoot);
       return next.fold(function () {
@@ -63,24 +62,19 @@ define(
 
     var scan = function (universe, isRoot, mode, beginning, element, target) {
       // Keep walking the tree.
-      console.log('Scanning: ', element.dom());
       var step = walk(universe, isRoot, mode, element, target);
       return step.fold(function (last, _mode) {
         // Hit the last element in the tree, so just stop.
-        console.log('Hit the last element in the tree: ', last.dom());
         return [{ start: beginning, finish: last }];
       }, function (next, mode) {
         // Keep going. We haven't finished this clump yet.
-        console.log('Proceed to: ', next.dom());
         return scan(universe, isRoot, mode, beginning, next, target);
       }, function (boundary, last, _mode) {
-        console.log('Boundary: ', boundary.dom(), last.dom(), beginning.dom(), isParent(universe, element, boundary));
-
+      
         var current = { start: beginning, finish: last };
         // Logic .. if this boundary was a parent, then sidestep.
 
         var resumption = isParent(universe, element, boundary) ? resume(universe, isRoot, boundary, target) : (function () {
-          console.log('Not a parent.');
           var leaf = Navigation.toLeaf(universe, boundary, 0);
           return !universe.eq(leaf.element(), boundary) ? Option.some(leaf.element()) : Gather.walk(universe, boundary, Gather.advance, Gather.walkers().right()).map(function (g) { return g.item(); });
         })();
@@ -96,7 +90,6 @@ define(
           return [ current ].concat(scan(universe, isRoot, Gather.sidestep, n, n, target));
         });
       }, function (elem, _mode) {
-        console.log('Target: ', elem.dom());
         // We hit the final destination, so finish our current clump
         return [{ start: beginning, finish: elem }];
       });

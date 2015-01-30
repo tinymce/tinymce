@@ -24,7 +24,6 @@
       var firstIndex = first.bind(finder).getOr(0);
       // Default to the end of the common parent.
       var lastIndex = last.bind(finder).getOr(children.length - 1);
-      console.log('indices: ', firstIndex, lastIndex + 1);
 
       return firstIndex > -1 && lastIndex > -1 ? Option.some(children.slice(firstIndex, lastIndex + 1)) : Option.none();
     };
@@ -43,11 +42,9 @@
 
     
     var breakLeft = function (universe, element, common) {
-      console.log('BREAKING LEFT');
       // If we are the top and we are the left, use default value
       if (universe.eq(common, element)) return Option.none();
       else {
-        console.log('so path break time');
         var breakage = breakPath(universe, element, common, Breaker.breakAtLeft);
 
         // console.log('post.split: ', universe.shortlog(function (item) {
@@ -63,7 +60,6 @@
     };
 
     var breakRight = function (universe, element, common) {
-      console.log('BREAKING RIGHT');
       // If we are the top and we are the right, use default value
       if (universe.eq(common, element)) return Option.none();
       else {

@@ -36,7 +36,6 @@ define(
     };
 
     var breakAtLeft = function (universe, parent, child) {
-      console.log('breaking at left [special]');
       return bisect(universe, parent, child).map(function (parts) {
         // console.log('html before', container.dom().innerHTML);
         var prior = universe.create().clone(parent);
