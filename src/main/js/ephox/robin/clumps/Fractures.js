@@ -6,10 +6,11 @@
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.robin.api.general.Parent',
+    'ephox.robin.parent.Breaker',
     'ephox.robin.parent.Subset'
   ],
 
-  function (Arr, Fun, Option, Parent, Subset) {
+  function (Arr, Fun, Option, Parent, Breaker, Subset) {
     // Find the subsection of DIRECT children of parent from [first, last])
     var slice = function (universe, parent, first, last) {
       var children = universe.property().children(parent);
@@ -38,9 +39,9 @@
           Fun.curry(universe.eq, common)
         );
       };
-
+console.log('breaker: ', breaker);
       // IGNORING breaker for the time being ... because it is breaking everything else.
-      return Parent.breakPath(universe, element, isTop, Parent.breakAt);
+      return Parent.breakPath(universe, element, isTop, breaker || Parent.breakAt);
     };
 
     
@@ -49,29 +50,8 @@
       // If we are the top and we are the left, use default value
       if (universe.eq(common, element)) return Option.none();
       else {
-        var breakage = breakPath(universe, element, common, function (universe, parent, child) {
-          var bisect = function (universe, parent, child) {
-            var children = universe.property().children(parent);
-            var index = Arr.findIndex(children, Fun.curry(universe.eq, child));
-            return index > -1 ? Option.some({
-              before: Fun.constant(children.slice(0, index)),
-              after: Fun.constant(children.slice(index + 1))
-            }) : Option.none();
-          };
-
-          var unsafeBreakAt = function (universe, parent, parts) {
-            var prior = universe.create().clone(parent);
-            universe.insert().appendAll(prior, parts.before().concat([ child ]));
-            // universe.insert().appendAll(parent, parts.after());
-            universe.insert().before(parent, prior);
-            return parent;
-          };
-
-          var parts = bisect(universe, parent, child);
-          return parts.map(function (ps) {
-            return unsafeBreakAt(universe, parent, ps);
-          });
-        });
+        console.log('so path break time');
+        var breakage = breakPath(universe, element, common, Breaker.breakAtLeft);
 
         // console.log('post.split: ', universe.shortlog(function (item) {
         //   return universe.property().isText(item) ? '"' + item.text + '"' : item.name;
@@ -106,13 +86,19 @@
     };
 
     var up = function (universe, element) {
+      // if (universe.property().isBoundary(element)) return Option.some(element);
+      // else return universe.property().parent(element).bind(function (parent) {
+      //   return universe.property().isBoundary(parent) ? Option.some(element) : universe.up().predicate(parent, function (sh) {
+      //     return universe.property().parent(sh).fold(Fun.constant(true), function (p) {
+      //       return universe.property().isBoundary(p);
+      //     });
+      //   });
+      // });
+
+      // Let's just try we are the boundary
       if (universe.property().isBoundary(element)) return Option.some(element);
-      else return universe.property().parent(element).bind(function (parent) {
-        return universe.property().isBoundary(parent) ? Option.some(element) : universe.up().predicate(parent, function (sh) {
-          return universe.property().parent(sh).fold(Fun.constant(true), function (p) {
-            return universe.property().isBoundary(p);
-          });
-        });
+      else return universe.up().predicate(element, function (elem) {
+        return universe.property().isBoundary(elem);
       });
     };
 
@@ -131,7 +117,7 @@
         console.log('sh: ', sh.dom(), start.dom(), finish.dom());
         return up(universe, sh).getOr(sh);
       }).bind(function (common) {
-        console.log('common: ', common.dom(), common.dom().cloneNode(true), common.dom().parentNode.parentNode.innerHTML);
+        console.log('common: ', common.dom(), common.dom().cloneNode(true));
         // We have the shared parent, we now have to split from the start and finish up
         // to the shared parent.
 
