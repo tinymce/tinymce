@@ -37,7 +37,7 @@
       };
 
       // IGNORING breaker for the time being ... because it is breaking everything else.
-      return Parent.breakPath(universe, element, isTop, breaker || Parent.breakAt);
+      return Parent.breakPath(universe, element, isTop, breaker || Parent.breakToRight);
     };
 
     
@@ -45,7 +45,7 @@
       // If we are the top and we are the left, use default value
       if (universe.eq(common, element)) return Option.none();
       else {
-        var breakage = breakPath(universe, element, common, Breaker.breakAtLeft);
+        var breakage = breakPath(universe, element, common, Breaker.breakToLeft);
 
         // console.log('post.split: ', universe.shortlog(function (item) {
         //   return universe.property().isText(item) ? '"' + item.text + '"' : item.name;

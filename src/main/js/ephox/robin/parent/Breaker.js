@@ -18,7 +18,7 @@ define(
       }) : Option.none();
     };
 
-    var unsafeBreakAt = function (universe, parent, parts) {
+    var unsafeBreakRight = function (universe, parent, parts) {
       var second = universe.create().clone(parent);
       universe.insert().appendAll(second, parts.after());
       universe.insert().after(parent, second);
@@ -26,24 +26,26 @@ define(
     };
 
     /**
-     * Move everything after child in the parent element into a clone of the parent (placed after parent).
+     * Clone parent to the RIGHT and move everything after child in the parent element into 
+     * a clone of the parent (placed after parent).
      */
-    var breakAt = function (universe, parent, child) {
+    var breakToRight = function (universe, parent, child) {
       var parts = bisect(universe, parent, child);
       return parts.map(function (ps) {
-        return unsafeBreakAt(universe, parent, ps);
+        return unsafeBreakRight(universe, parent, ps);
       });
     };
 
-    var breakAtLeft = function (universe, parent, child) {
+    /**
+     * Clone parent to the LEFT and move everything before and including child into
+     * the a clone of the parent (placed before parent)
+     */
+    var breakToLeft = function (universe, parent, child) {
       return bisect(universe, parent, child).map(function (parts) {
-        // console.log('html before', container.dom().innerHTML);
-        var prior = universe.create().clone(parent);
-        
+        var prior = universe.create().clone(parent);        
         universe.insert().appendAll(prior, parts.before().concat([ child ]));
         universe.insert().appendAll(parent, parts.after());
         universe.insert().before(parent, prior);
-        // console.log('html after: ', container.dom().innerHTML);
         return parent;
       });
     };
@@ -59,10 +61,6 @@ define(
       var result = Struct.immutable('first', 'second', 'splits');
 
       var next = function (child, group, splits) {
-        // console.log('log: ' + universe.shortlog(function (item) {
-        //   return universe.property().isText(item) ? '"' + item.text + '"' : item.name;
-        // }));
-
         var fallback = result(child, Option.none(), splits);
         // Found the top
         if (isTop(child)) return result(child, group, splits);
@@ -76,8 +74,9 @@ define(
               return [{ first: Fun.constant(parent), second: Fun.constant(sec) }];
             });
 
-            // THIS NEEDS TO BE INVESTIGATED ... second.getOr(parent) works for one of the tests, but will break others.
-            // Changed this from just parent.
+            // Note, this confusion is caused by the fact that breaks can be left or right, so the easiest
+            // way to identify what the left side of the split was is to get the previous sibling of the 
+            // right side of the split. We could also make DOMParent
             var nextChild = isTop(parent) ? parent : second.bind(universe.query().prevSibling).getOr(parent);
             return next(nextChild, second, splits.concat(extra));
           });
@@ -88,8 +87,8 @@ define(
     };
 
     return {
-      breakAt: breakAt,
-      breakAtLeft: breakAtLeft,
+      breakToLeft: breakToLeft,
+      breakToRight: breakToRight,
       breakPath: breakPath
     };
   }

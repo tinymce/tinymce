@@ -39,7 +39,7 @@ test(
 
       var parent = SelectorFind.descendant(container, '.' + p).getOrDie();
       var child = SelectorFind.descendant(container, '.' + c).getOrDie();
-      DomParent.breakAt(parent, child);
+      DomParent.breakToRight(parent, child);
       assert.eq(expected, Html.get(container));
     };
 
@@ -61,7 +61,7 @@ test(
             '</ol>' +
             '<li class="nine">nine</li>' +
           '</ol>' +
-        '</ol>', 'three-five', 'five', DomParent.breakAt);
+        '</ol>', 'three-five', 'five', DomParent.breakToRight);
 
     check(
         '<ol class="one-nine" style="list-style-type: decimal;">' +
@@ -82,7 +82,7 @@ test(
             '</ol>' +
             '<li class="nine">nine</li>' +
           '</ol>' +
-        '</ol>', 'one-nine', 'six', DomParent.breakAt);
+        '</ol>', 'one-nine', 'six', DomParent.breakToRight);
 
 
     var checkPath = function (expected, input, p, c) {
@@ -93,7 +93,7 @@ test(
       var parent = Hierarchy.follow(container, p).getOrDie();
       var child = Hierarchy.follow(container, c).getOrDie();
       var isTop = Fun.curry(Compare.eq, parent);
-      DomParent.breakPath(child, isTop, DomParent.breakAtLeft);
+      DomParent.breakPath(child, isTop, DomParent.breakToLeft);
       assert.eq(expected, Html.get(container));
     };
 
