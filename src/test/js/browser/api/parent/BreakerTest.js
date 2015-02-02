@@ -86,7 +86,6 @@ test(
 
 
     var checkPath = function (expected, input, p, c) {
-      console.log('TEST');
       var container = Element.fromTag('div');
       container.dom().innerHTML = input;
 

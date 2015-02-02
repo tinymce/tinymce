@@ -31,7 +31,6 @@ test(
 
     var mark = function (res) {
       if (res.length > 0) {
-        console.log('Things getting wrapped: ', Arr.map(res, function (r) { return r.dom(); }));
         var strong = Element.fromTag('strong');
         Insert.before(res[0], strong);
         InsertAll.append(strong, res);
@@ -39,13 +38,11 @@ test(
     };
 
     var checkFracture = function (expected, start, soffset, finish, foffset) {
-      console.log("check.fracture: ", container.dom().innerHTML);
       DomClumps.fracture(isRoot, find(start), soffset, find(finish), foffset).each(mark);
       assert.eq(expected, Html.get(container));
     };
 
     var check = function (expected, start, soffset, finish, foffset) {
-      console.log("check.discover: ", container.dom().innerHTML);
       var sections = DomClumps.fractures(isRoot, find(start), soffset, find(finish), foffset);
       Arr.each(sections, mark);
       assert.eq(expected, Html.get(container));

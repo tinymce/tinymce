@@ -46,7 +46,6 @@ define(
     var fractures = function (universe, isRoot, start, soffset, finish, foffset, ceiling) {
       var clumps = Clumps.collect(universe, isRoot, start, soffset, finish, foffset);
       return Arr.bind(clumps, function (clump, i) {
-        // console.log('Clumps [' + i + ']', clump.start().dom().cloneNode(true), clump.soffset(), clump.finish().dom().cloneNode(true), clump.foffset());
         return fracture(universe, isRoot, clump.start(), clump.soffset(), clump.finish(), clump.foffset(), ceiling).toArray();
       });
     };
