@@ -37,6 +37,11 @@ define(
       return Arr.contains([ 'li' ], universe.property().name(element));
     };
 
+    /*
+     * Resuming is used to find a new starting point for the next clump. It will aim
+     * to hit the target or a leaf. Note, resuming should not start again from the same
+     * boundary that the previous clump finished within.
+     */
     var resume = function (universe, isRoot, boundary, target) {
       // I have to sidestep here so I don't descend down the same boundary.
       var next = Gather.seekRight(universe, boundary, Fun.constant(true), isRoot);
@@ -49,7 +54,6 @@ define(
           var leaf = Navigation.toLeaf(universe, n, 0);
           return Option.some(leaf.element());
         } 
-        // else return Option.none();
         return Option.some(n);
       });
     };
@@ -73,7 +77,6 @@ define(
       
         var current = { start: beginning, finish: last };
         // Logic .. if this boundary was a parent, then sidestep.
-
         var resumption = isParent(universe, element, boundary) ? resume(universe, isRoot, boundary, target) : (function () {
           var leaf = Navigation.toLeaf(universe, boundary, 0);
           return !universe.eq(leaf.element(), boundary) ? Option.some(leaf.element()) : Gather.walk(universe, boundary, Gather.advance, Gather.walkers().right()).map(function (g) { return g.item(); });

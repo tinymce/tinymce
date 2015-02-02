@@ -37,7 +37,6 @@
 
       return Parent.breakPath(universe, element, isTop, breaker);
     };
-
     
     var breakLeft = function (universe, element, common) {
       // If we are the top and we are the left, use default value
@@ -59,7 +58,7 @@
       }
     };
 
-    // This will probably need to consider ceiling.
+    // NOTE: In the future, this will probably need to consider ceiling.
     var same = function (universe, isRoot, element) {
       var children = universe.property().parent(element).fold(Fun.constant([]), function (parent) {
         return universe.property().children(parent);
@@ -81,7 +80,6 @@
       }, function (sh) {
         return Option.some(sh);
       });
-
 
       return shared.map(ceiling).bind(function (common) {
         // We have the important top-level shared ancestor, we now have to split from the start and finish up
