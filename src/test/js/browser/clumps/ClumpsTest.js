@@ -84,7 +84,7 @@ test(
     ], [ 0, 1, 0 ], 'the'.length, [ 0, 3, 0 ], 'i'.length);
 
     container.dom().innerHTML =
-      '<p>This is <span>completely <i>different <b>to</b> </i>what you would<span>_expected_</span></span></p>' +
+      '<p>This is <span>completely <i>different <b>to</b> </i>what you would<span>_expect_</span></span></p>' +
       '<p>And more <u>of this is <span>here</span> again</u>.</p>';
     check([
       { start: [ 0, 1, 1, 1, 0 ], end: [ 0, 1 ] },

@@ -222,10 +222,10 @@ test(
     ); 
 
     container.dom().innerHTML =
-      '<p>This is <span>completely <i>different <b>to</b> </i>what you would<span>_expected_</span></span></p>' +
+      '<p>This is <span>completely <i>different <b>to</b> </i>what you would<span>_expect_</span></span></p>' +
       '<p>And more <u>of this is <span>here</span> again</u>.</p>';
     check(
-      '<p>This is <span>completely <i>different <b>t</b></i><strong><i><b>o</b> </i>what you would<span>_expected_</span></strong></span></p>' +
+      '<p>This is <span>completely <i>different <b>t</b></i><strong><i><b>o</b> </i>what you would<span>_expect_</span></strong></span></p>' +
       '<p><strong>And more <u>of this is <span>h</span></u></strong><u><span>ere</span> again</u>.</p>',
       [ 0, 1, 1, 1, 0 ], 't'.length, [ 1, 1, 1, 0 ], 'h'.length
     );
