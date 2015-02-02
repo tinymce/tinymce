@@ -84,12 +84,12 @@ test(
     ], [ 0, 1, 0 ], 'the'.length, [ 0, 3, 0 ], 'i'.length);
 
     container.dom().innerHTML =
-      '<p>This is <span>completely <i>different <b>to</b> </i>what you would<span>_expect_</span></span></p>' +
+      '<p>This is <span>completely <i>different <b>from</b> </i>what you would<span>_expect_</span></span></p>' +
       '<p>And more <u>of this is <span>here</span> again</u>.</p>';
     check([
       { start: [ 0, 1, 1, 1, 0 ], end: [ 0, 1 ] },
       { start: [ 1, 0 ], end: [ 1, 1, 1, 0 ] }
-    ], [ 0, 1, 1, 1, 0 ], 't'.length, [ 1, 1, 1, 0 ], 'h'.length);
+    ], [ 0, 1, 1, 1, 0 ], 'f'.length, [ 1, 1, 1, 0 ], 'h'.length);
 
     Remove.remove(container);
   }
