@@ -85,7 +85,6 @@ define(
 
     return {
       subset: subset,
-      // We do need this for inline formatting.
       ancestors: ancestors
     };
   }
