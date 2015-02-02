@@ -1,4 +1,7 @@
 (function() {
+
+	var nonRelativeRegex = /^\w+:/i;
+
 	module("tinymce.plugins.Link", {
 		setupModule: function() {
 			QUnit.stop();
@@ -158,5 +161,22 @@
 			cleanHtml(editor.getContent()),
 			'<p><a class="class1" title="title" href="href" target="target1" rel="rel1">text</a></p>'
 		);
+	});
+
+	//Since there's no capability to use the confirm dialog with unit tests, simply test the regex we're using
+	test('Test new regex for non relative link setting ftp', function() {
+		equal(nonRelativeRegex.test('ftp://testftp.com'), true);
+	});
+
+	test('Test new regex for non relative link setting http', function() {
+		equal(nonRelativeRegex.test('http://testhttp.com'), true);
+	});
+
+	test('Test new regex for non relative link setting relative', function() {
+		equal(nonRelativeRegex.test('testhttp.com'), false);
+	});
+
+	test('Test new regex for non relative link setting relative base', function() {
+		equal(nonRelativeRegex.test('/testjpg.jpg'), false);
 	});
 })();
