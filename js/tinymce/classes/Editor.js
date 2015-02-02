@@ -289,7 +289,7 @@ define("tinymce/Editor", [
 			}
 
 			// Page is not loaded yet, wait for it
-			if (!Event.domLoaded) {
+			if (!Event.isDomLoaded()) {
 				DOM.bind(window, 'ready', readyHandler);
 				return;
 			}

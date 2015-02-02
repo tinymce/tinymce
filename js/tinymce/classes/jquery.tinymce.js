@@ -151,7 +151,6 @@
 				e = e || window.event;
 
 				if (lazyLoading !== 2 && (e.type == 'load' || /complete|loaded/.test(script.readyState))) {
-					tinymce.dom.Event.domLoaded = 1;
 					lazyLoading = 2;
 
 					// Execute callback after mainscript has been loaded and before the initialization occurs

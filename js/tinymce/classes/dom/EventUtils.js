@@ -138,23 +138,22 @@ define("tinymce/dom/EventUtils", [], function() {
 	function bindOnReady(win, callback, eventUtils) {
 		var doc = win.document, event = {type: 'ready'};
 
-		if (eventUtils.domLoaded) {
+		if (eventUtils.isDomLoaded()) {
 			callback(event);
 			return;
 		}
 
 		// Gets called when the DOM is ready
+		// the domLoaded avoids getting the callback being called multiple times
 		function readyHandler() {
-			if (!eventUtils.domLoaded) {
-				eventUtils.domLoaded = true;
+			if (!eventUtils.domReadyEventCalled) {
+				eventUtils.domReadyEventCalled = true
 				callback(event);
 			}
 		}
 
 		function waitForDomLoaded() {
-			// Check complete or interactive state if there is a body
-			// element on some iframes IE 8 will produce a null body
-			if (doc.readyState === "complete" || (doc.readyState === "interactive" && doc.body)) {
+			if (eventUtils.isDomLoaded()) {
 				removeEvent(doc, "readystatechange", waitForDomLoaded);
 				readyHandler();
 			}
@@ -206,8 +205,7 @@ define("tinymce/dom/EventUtils", [], function() {
 		mouseEnterLeave = {mouseenter: 'mouseover', mouseleave: 'mouseout'};
 		count = 1;
 
-		// State if the DOMContentLoaded was executed or not
-		self.domLoaded = false;
+		self.domReadyEventCalled = false
 		self.events = events;
 
 		/**
@@ -236,6 +234,18 @@ define("tinymce/dom/EventUtils", [], function() {
 					}
 				}
 			}
+		}
+
+  	/**
+  	 * Checks if the DOM has completely loaded
+     *
+     * @method isDomLoaded
+     * @return {Boolean} True/false if the DOM is loaded or not
+     */
+    self.isDomLoaded = function () {
+			// Check complete or interactive state if there is a body
+			// element on some iframes IE 8 will produce a null body
+			return !!(document.readyState === "complete" || (document.readyState === "interactive" && document.body))
 		}
 
 		/**
@@ -287,7 +297,7 @@ define("tinymce/dom/EventUtils", [], function() {
 				}
 
 				// DOM is already ready
-				if (self.domLoaded && name === "ready" && target.readyState == 'complete') {
+				if (self.isDomLoaded() && name === "ready" && target.readyState == 'complete') {
 					callback.call(scope, fix({type: name}));
 					continue;
 				}
@@ -355,7 +365,7 @@ define("tinymce/dom/EventUtils", [], function() {
 						addEvent(target, fakeName || name, nativeHandler, capture);
 					}
 				} else {
-					if (name === "ready" && self.domLoaded) {
+					if (name === "ready" && self.isDomLoaded()) {
 						callback({type: name});
 					} else {
 						// If it already has an native handler then just push the callback
