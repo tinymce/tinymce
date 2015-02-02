@@ -24,7 +24,6 @@
       var firstIndex = first.bind(finder).getOr(0);
       // Default to the end of the common parent.
       var lastIndex = last.bind(finder).getOr(children.length - 1);
-
       return firstIndex > -1 && lastIndex > -1 ? Option.some(children.slice(firstIndex, lastIndex + 1)) : Option.none();
     };
 
@@ -36,8 +35,7 @@
         );
       };
 
-      // IGNORING breaker for the time being ... because it is breaking everything else.
-      return Parent.breakPath(universe, element, isTop, breaker || Parent.breakToRight);
+      return Parent.breakPath(universe, element, isTop, breaker);
     };
 
     
@@ -46,15 +44,8 @@
       if (universe.eq(common, element)) return Option.none();
       else {
         var breakage = breakPath(universe, element, common, Breaker.breakToLeft);
-
-        // console.log('post.split: ', universe.shortlog(function (item) {
-        //   return universe.property().isText(item) ? '"' + item.text + '"' : item.name;
-        // }));
         // Move the first element into the second section of the split because we want to include element in the section.        
         if (breakage.splits().length > 0) universe.insert().prepend(breakage.splits()[0].second(), element);
-        // console.log('post.fix: ', universe.shortlog(function (item) {
-        //   return universe.property().isText(item) ? '"' + item.text + '"' : item.name;
-        // }));
         return Option.some(breakage.second().getOr(element));
       }
     };
@@ -63,7 +54,7 @@
       // If we are the top and we are the right, use default value
       if (universe.eq(common, element)) return Option.none();
       else {
-        var breakage = breakPath(universe, element, common);
+        var breakage = breakPath(universe, element, common, Breaker.breakToRight);
         return Option.some(breakage.first());
       }
     };
@@ -79,28 +70,11 @@
       else return Option.none();
     };
 
-    var up = function (universe, ceiling, element) {
-      // if (universe.property().isBoundary(element)) return Option.some(element);
-      // else return universe.property().parent(element).bind(function (parent) {
-      //   return universe.property().isBoundary(parent) ? Option.some(element) : universe.up().predicate(parent, function (sh) {
-      //     return universe.property().parent(sh).fold(Fun.constant(true), function (p) {
-      //       return universe.property().isBoundary(p);
-      //     });
-      //   });
-      // });
-
-
-
-
-
-      // Let's just try we are the boundary
-      return ceiling(element) ? Option.some(element) : universe.up().predicate(element, ceiling);
-    };
-
     var diff = function (universe, isRoot, start, finish, _ceiling) {
       var ceiling = _ceiling !== undefined ? _ceiling : Fun.identity;
       var subset = Subset.ancestors(universe, start, finish, isRoot);
       var shared = subset.shared().fold(function () {
+        // Default to shared root, if we don't have a shared ancestor.
         return Parent.sharedOne(universe, function (_, elem) {
           return isRoot(elem) ? Option.some(elem) : universe.up().predicate(elem, isRoot);
         }, [ start, finish ]);
@@ -110,10 +84,8 @@
 
 
       return shared.map(ceiling).bind(function (common) {
-        // We have the shared parent, we now have to split from the start and finish up
-        // to the shared parent.
-
-        // Break from the first node to the common parent AFTER the second break as the first
+        // We have the important top-level shared ancestor, we now have to split from the start and finish up
+        // to the shared parent. Break from the first node to the common parent AFTER the second break as the first
         // will impact the second (assuming LEFT to RIGHT) and not vice versa.
         var secondBreak = breakRight(universe, finish, common);
         var firstBreak = breakLeft(universe, start, common);
