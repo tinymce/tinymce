@@ -42,7 +42,6 @@ define(
       return sameText ? same(universe, start, soffset, foffset) : diff(universe, isRoot, start, soffset, finish, foffset, ceiling);
     };
 
-    // TODO: Handle backwards selections ! Maybe higher up when we definitely have the DOM.
     var fractures = function (universe, isRoot, start, soffset, finish, foffset, ceiling) {
       var clumps = Clumps.collect(universe, isRoot, start, soffset, finish, foffset);
       return Arr.bind(clumps, function (clump, i) {
