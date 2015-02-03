@@ -35,7 +35,7 @@ define(
     };
 
     var toolbarGroup = function (element, label) {
-      // TODO: duplicated from 'ephox.polish.alien.Query', consolidate this
+      // TODO: duplicated from 'ephox.polish.alien.Query', consolidate isEmpty();
       var isEmpty = function (val) {
         // TODO: Move to compass Arr and violin Strings
         return (val === null) || (val === undefined) || (val === '') || (Type.isArray(val) && val.length === 0);
