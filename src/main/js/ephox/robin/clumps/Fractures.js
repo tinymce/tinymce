@@ -59,17 +59,32 @@
     };
 
     // NOTE: In the future, this will probably need to consider ceiling.
-    var same = function (universe, isRoot, element) {
-      var children = universe.property().parent(element).fold(Fun.constant([]), function (parent) {
-        return universe.property().children(parent);
-      });
+    var same = function (universe, isRoot, element, _ceiling) {
+      console.log('no ceiling for you', _ceiling);
+      var ceiling = _ceiling !== undefined ? _ceiling : Fun.identity;
+      var common = ceiling(element);
 
-      var index = Arr.findIndex(children, Fun.curry(universe.eq, element));
-      if (index > -1) return Option.some(children.slice(index, index + 1));
-      else return Option.none();
+      if (universe.eq(common, element)) {
+        console.log('common is element', element.dom());
+        return Option.some([ element ]);
+      } else {
+        console.log('split time');
+        var secondBreak = breakRight(universe, element, common);
+        var firstBreak = breakLeft(universe, element, common);
+        return slice(universe, common, firstBreak, secondBreak);
+      }
+      // console.log('We should be considering ceiling');
+      // var children = universe.property().parent(element).fold(Fun.constant([]), function (parent) {
+      //   return universe.property().children(parent);
+      // });
+
+      // var index = Arr.findIndex(children, Fun.curry(universe.eq, element));
+      // if (index > -1) return Option.some(children.slice(index, index + 1));
+      // else return Option.none();
     };
 
     var diff = function (universe, isRoot, start, finish, _ceiling) {
+      console.log('We are considering ceiling', start.dom(), finish.dom());
       var ceiling = _ceiling !== undefined ? _ceiling : Fun.identity;
       var subset = Subset.ancestors(universe, start, finish, isRoot);
       var shared = subset.shared().fold(function () {
@@ -92,7 +107,7 @@
     };
 
     var fracture = function (universe, isRoot, start, finish, ceiling) {
-      return universe.eq(start, finish) ? same(universe, isRoot, start) : diff(universe, isRoot, start, finish, ceiling);     
+      return universe.eq(start, finish) ? same(universe, isRoot, start, ceiling) : diff(universe, isRoot, start, finish, ceiling);     
     };
 
     return {

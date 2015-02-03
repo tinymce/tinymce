@@ -17,9 +17,9 @@ define(
      *    clumps based on boundary tags. Each clump (which will NOT HAVE block elements) is 
      *    then fractured via *fracture* and the resulting list/array is returned.
      */
-    var same = function (universe, start, soffset, foffset) {
+    var same = function (universe, isRoot, start, soffset, foffset, ceiling) {
       var middle = Split.splitByPair(universe, start, soffset, foffset);
-      return Option.some([ middle ]);
+      return Fractures.fracture(universe, isRoot, middle, middle, ceiling);
     };
 
     var diff = function (universe, isRoot, start, soffset, finish, foffset, ceiling) {
@@ -39,7 +39,7 @@ define(
      */
     var fracture = function (universe, isRoot, start, soffset, finish, foffset, ceiling) {
       var sameText = universe.property().isText(start) && universe.eq(start, finish);
-      return sameText ? same(universe, start, soffset, foffset) : diff(universe, isRoot, start, soffset, finish, foffset, ceiling);
+      return sameText ? same(universe, isRoot, start, soffset, foffset, ceiling) : diff(universe, isRoot, start, soffset, finish, foffset, ceiling);
     };
 
     var fractures = function (universe, isRoot, start, soffset, finish, foffset, ceiling) {
