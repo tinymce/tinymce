@@ -58,55 +58,41 @@
       }
     };
 
-    // NOTE: In the future, this will probably need to consider ceiling.
-    var same = function (universe, isRoot, element, _ceiling) {
-      console.log('no ceiling for you', _ceiling);
-      var ceiling = _ceiling !== undefined ? _ceiling : Fun.identity;
+    var same = function (universe, isRoot, element, ceiling) {
       var common = ceiling(element);
-
-      if (universe.eq(common, element)) {
-        console.log('common is element', element.dom());
-        return Option.some([ element ]);
-      } else {
-        console.log('split time');
-        var secondBreak = breakRight(universe, element, common);
-        var firstBreak = breakLeft(universe, element, common);
-        return slice(universe, common, firstBreak, secondBreak);
-      }
-      // console.log('We should be considering ceiling');
-      // var children = universe.property().parent(element).fold(Fun.constant([]), function (parent) {
-      //   return universe.property().children(parent);
-      // });
-
-      // var index = Arr.findIndex(children, Fun.curry(universe.eq, element));
-      // if (index > -1) return Option.some(children.slice(index, index + 1));
-      // else return Option.none();
+      // If there are no important formatting elements above, just return element, otherwise split to important element above.
+      return universe.eq(common, element) ? Option.some([ element ]) : breakToCommon(universe, common, element, element);
     };
 
-    var diff = function (universe, isRoot, start, finish, _ceiling) {
-      console.log('We are considering ceiling', start.dom(), finish.dom());
+    var breakToCommon = function (universe, common, start, finish) {
+      // We have the important top-level shared ancestor, we now have to split from the start and finish up
+      // to the shared parent. Break from the first node to the common parent AFTER the second break as the first
+      // will impact the second (assuming LEFT to RIGHT) and not vice versa.
+      var secondBreak = breakRight(universe, finish, common);
+      var firstBreak = breakLeft(universe, start, common);
+      return slice(universe, common, firstBreak, secondBreak);
+    };
+
+    // Find the shared ancestor that we are going to split up to.
+    var shared = function (universe, isRoot, start, finish, _ceiling) {
       var ceiling = _ceiling !== undefined ? _ceiling : Fun.identity;
       var subset = Subset.ancestors(universe, start, finish, isRoot);
-      var shared = subset.shared().fold(function () {
+      return subset.shared().orThunk(function () {
         // Default to shared root, if we don't have a shared ancestor.
         return Parent.sharedOne(universe, function (_, elem) {
           return isRoot(elem) ? Option.some(elem) : universe.up().predicate(elem, isRoot);
         }, [ start, finish ]);
-      }, function (sh) {
-        return Option.some(sh);
-      });
+      }).map(ceiling);
+    };
 
-      return shared.map(ceiling).bind(function (common) {
-        // We have the important top-level shared ancestor, we now have to split from the start and finish up
-        // to the shared parent. Break from the first node to the common parent AFTER the second break as the first
-        // will impact the second (assuming LEFT to RIGHT) and not vice versa.
-        var secondBreak = breakRight(universe, finish, common);
-        var firstBreak = breakLeft(universe, start, common);
-        return slice(universe, common, firstBreak, secondBreak);
+    var diff = function (universe, isRoot, start, finish, ceiling) {
+      return shared(universe, isRoot, start, finish, ceiling).bind(function (common) {
+        return breakToCommon(universe, common, start, finish);
       });
     };
 
-    var fracture = function (universe, isRoot, start, finish, ceiling) {
+    var fracture = function (universe, isRoot, start, finish, _ceiling) {
+      var ceiling = _ceiling !== undefined ? _ceiling : Fun.identity;
       return universe.eq(start, finish) ? same(universe, isRoot, start, ceiling) : diff(universe, isRoot, start, finish, ceiling);     
     };
 
