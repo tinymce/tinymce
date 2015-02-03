@@ -13,17 +13,19 @@ test(
   ],
 
   function (AriaState, Button, Fun, Attr, Class, Element, Insert, assert) {
-    var element = Element.fromTag('div');
+    var element = function() {
+      return Element.fromTag('div');
+    };
 
     var test = function (method, element, attribute, expected) {
       method(element);
       assert.eq(Attr.get(element, attribute), expected);
     };
 
-    test(AriaState.expanded, element, 'aria-expanded', 'true');
-    test(AriaState.collapsed, element, 'aria-expanded', 'false');
-    test(AriaState.enable, element, 'aria-disabled', 'false');
-    test(AriaState.disable, element, 'aria-disabled', 'true');
+    test(AriaState.expanded, element(), 'aria-expanded', 'true');
+    test(AriaState.collapsed, element(), 'aria-expanded', 'false');
+    test(AriaState.enable, element(), 'aria-disabled', 'false');
+    test(AriaState.disable, element(), 'aria-disabled', 'true');
 
     var button = Button.toggle();
 

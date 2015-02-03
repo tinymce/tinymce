@@ -8,9 +8,6 @@ define(
   ],
 
   function (Type, Id, Attr) {
-
-    // THis could be a core aria think
-
     var editor = function (element) {
       Attr.set(element, 'role', 'application');
       var id = Id.generate('');
