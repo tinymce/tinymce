@@ -74,8 +74,7 @@
     };
 
     // Find the shared ancestor that we are going to split up to.
-    var shared = function (universe, isRoot, start, finish, _ceiling) {
-      var ceiling = _ceiling !== undefined ? _ceiling : Fun.identity;
+    var shared = function (universe, isRoot, start, finish, ceiling) {
       var subset = Subset.ancestors(universe, start, finish, isRoot);
       return subset.shared().orThunk(function () {
         // Default to shared root, if we don't have a shared ancestor.
