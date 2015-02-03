@@ -10,17 +10,33 @@ var cleanDirs = [ lib ];
 
 var dependencies = [
 
-  /**** demo dependencies ****/
   {
-    name: 'exhibition',
+    name: 'sugar',
     repository: 'buildrepo2',
-    version: 'latest',
-    source: 'exhibition.zip',
+    source: 'sugar.zip',
     targets: [
-      { name: 'module/*.js', path: demo },
-      { name: 'depend/*.js', path: demo },
-      { name: 'exhibition.js', path: config }
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
+  {
+    name: 'epithet',
+    repository: 'buildrepo2',
+    source: 'epithet.zip',
+    targets: [
+      { name: 'module/*.js', path: depend }
+    ]
+  },
+
+  {
+    name: 'classify',
+    repository: 'buildrepo2',
+    source: 'classify.zip',
+    targets: [
+      { name: 'module/*.js', path: depend }
     ]
   }
+
 ];
 
