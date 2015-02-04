@@ -183,6 +183,12 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 			applyFormat(buttonCtrl.settings.format, value);
 		}
 
+		function resetColor() {
+			buttonCtrl.hidePanel();
+			buttonCtrl.resetColor();
+			removeFormat(buttonCtrl.settings.format);
+		}
+
 		function setDivColor(div, value) {
 			div.style.background = value;
 			div.setAttribute('data-mce-color', value);
@@ -229,12 +235,10 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 			this.lastId = e.target.id;
 
 			if (value == 'transparent') {
-				removeFormat(buttonCtrl.settings.format);
-				buttonCtrl.hidePanel();
-				return;
+				resetColor();
+			} else {
+				selectColor(value);
 			}
-
-			selectColor(value);
 		} else if (value !== null) {
 			buttonCtrl.hidePanel();
 		}
@@ -245,6 +249,8 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 
 		if (self._color) {
 			applyFormat(self.settings.format, self._color);
+		} else {
+			removeFormat(self.settings.format);
 		}
 	}
 

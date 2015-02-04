@@ -55,6 +55,18 @@ define("tinymce/ui/ColorButton", [
 		},
 
 		/**
+		 * Resets the current color.
+		 *
+		 * @method resetColor
+		 * @return {tinymce.ui.ColorButton} Current instance.
+		 */
+		resetColor: function() {
+			this._color = null;
+			this.getEl('preview').style.backgroundColor = null;
+			return this;
+		},
+
+		/**
 		 * Renders the control as a HTML string.
 		 *
 		 * @method renderHtml
