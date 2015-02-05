@@ -102,8 +102,22 @@ define(
       return universe.property().isText(item) ? universe.property().getText(item).length : universe.property().children(item).length;
     };
 
+    var drop = function (universe, item, offset) {
+      if (Structure.isBlock(universe, item)) {
+        var children = universe.property().children(item);
+        if (offset >= 0 && offset < children.length) return drop(universe, children[offset], 0);
+        else if (offset === children.length) return drop(universe, children[children.length - 1], 0);
+        else return item;
+      } else {
+        return item;
+      }
+    };
+
     var doCollect = function (universe, isRoot, start, soffset, finish, foffset) {
-      var raw = scan(universe, isRoot, Gather.sidestep, start, start, finish);
+      // We can't wrap block elements, so descend if we start on a block.
+      var droppedStart = drop(universe, start, soffset);
+      var droppedFinish = drop(universe, finish, foffset);
+      var raw = scan(universe, isRoot, Gather.sidestep, droppedStart, droppedStart, droppedFinish);
       return Arr.map(raw, function (r, i) {
         // Incorporate any offsets that were required.
         var soff = universe.eq(r.start, start) ? soffset : 0;
