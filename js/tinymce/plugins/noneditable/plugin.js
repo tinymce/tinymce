@@ -356,6 +356,7 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 			// Disable all key presses in contentEditable=false except delete or backspace
 			nonEditableParent = getNonEditableParent(startElement) || getNonEditableParent(endElement);
 			if (nonEditableParent && (keyCode < 112 || keyCode > 124) && keyCode != VK.DELETE && keyCode != VK.BACKSPACE) {
+
 				// Is Ctrl+c, Ctrl+v or Ctrl+x then use default browser behavior
 				if ((tinymce.isMac ? e.metaKey : e.ctrlKey) && (keyCode == 67 || keyCode == 88 || keyCode == 86)) {
 					return;
@@ -364,8 +365,8 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 				e.preventDefault();
 
 				// Arrow left/right select the element and collapse left/right
-				if (keyCode == VK.LEFT || keyCode == VK.RIGHT) {
-					var left = keyCode == VK.LEFT;
+				if (keyCode == VK.LEFT || keyCode == VK.RIGHT || keyCode == VK.UP || keyCode == VK.DOWN) {
+					var left = keyCode == VK.LEFT || keyCode == VK.UP;
 					// If a block element find previous or next element to position the caret
 					if (editor.dom.isBlock(nonEditableParent)) {
 						var targetElement = left ? nonEditableParent.previousSibling : nonEditableParent.nextSibling;
@@ -379,6 +380,7 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 			} else {
 				// Is arrow left/right, backspace or delete
 				if (keyCode == VK.LEFT || keyCode == VK.RIGHT || keyCode == VK.BACKSPACE || keyCode == VK.DELETE) {
+
 					caretContainer = getParentCaretContainer(startElement);
 					if (caretContainer) {
 						// Arrow left or backspace
@@ -401,7 +403,7 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 
 						// Arrow right or delete
 						if (keyCode == VK.RIGHT || keyCode == VK.DELETE) {
-							nonEditableParent = getNonEmptyTextNodeSibling(caretContainer);
+							nonEditableParent = getNonEmptyTextNodeSibling(caretContainer, true);
 
 							if (nonEditableParent && getContentEditable(nonEditableParent) === "false") {
 								e.preventDefault();
