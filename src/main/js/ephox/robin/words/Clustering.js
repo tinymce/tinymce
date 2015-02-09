@@ -2,6 +2,7 @@ define(
   'ephox.robin.words.Clustering',
 
   [
+    'ephox.bud.Unicode',
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.phoenix.api.general.Extract',
@@ -10,7 +11,7 @@ define(
     'ephox.robin.words.WordWalking'
   ],
 
-  function (Arr, Fun, Extract, Gather, WordDecision, WordWalking) {
+  function (Unicode, Arr, Fun, Extract, Gather, WordDecision, WordWalking) {
     /*
      * Identification of words:
      *
@@ -23,11 +24,17 @@ define(
      */
     var doWords = function (universe, item, mode, direction) {
       var destination = Gather.walk(universe, item, mode, direction);
-      return destination.map(function (dest) {
+      var result = destination.map(function (dest) {
         var decision = WordDecision.decide(universe, dest.item(), direction.slicer);
         var recursive = decision.abort() ? [] : doWords(universe, dest.item(), dest.mode(), direction);
         return decision.items().concat(recursive);
       }).getOr([]);
+
+      return Arr.filter(result, function (res) {
+        // Removing the unicode characters that mess up with words. This won't be sufficient, but 
+        // we'll have to look at handling this later.
+        return res.text().replace(Unicode.zeroWidth(), '') !== '';
+      });
     };
 
     // Represent all the text nodes within item.

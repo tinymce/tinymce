@@ -38,7 +38,9 @@ test(
       Gene('e', 'b', [
         TextGene('f', 'ing that you should')
       ]),
-      TextGene('g', ' see.')
+      TextGene('g', ' see.'),
+      TextGene('h', 'plus again'),
+      TextGene('i', '\uFEFF')
     ]));
 
     var check = function (expected, doc, id, offset) {
@@ -102,5 +104,7 @@ test(
     checkNone(doc2, 'f', 'ing that you should'.length);
 
     checkNone(doc2, 'b', 0);
+
+    checkNone(doc2, 'h', 'plus again'.length);
   }
 );
