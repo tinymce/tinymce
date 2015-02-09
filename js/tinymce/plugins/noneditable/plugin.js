@@ -418,6 +418,13 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 								removeCaretContainer(caretContainer);
 							}
 						}
+					} else {
+						// remove block-level domNode but no container around on delete/backspace
+						if (nonEditableParent && (keyCode == VK.DELETE || keyCode == VK.BACKSPACE) && dom.isBlock(nonEditableParent)) {
+							e.preventDefault();
+							dom.remove(nonEditableParent);
+							return;
+						}
 					}
 
 					if ((keyCode == VK.BACKSPACE || keyCode == VK.DELETE) && !canDelete(keyCode == VK.BACKSPACE)) {
