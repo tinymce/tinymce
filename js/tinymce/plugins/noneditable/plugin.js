@@ -419,7 +419,16 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 							}
 						}
 					} else {
-						// remove block-level domNode but no container around on delete/backspace
+						var rng = selection.getRng(true);
+						var container = rng.endContainer;
+
+						// FIX: If end of node is selected, check wether next sibling is nonEditable to correctly remove it
+						// 			(else would break for more complex nonEditables, their content would get moved to the current node)
+						if (dom.isBlock(container) && dom.isBlock(container.nextSibling) && rng.endOffset == 1 && keyCode == VK.DELETE) {
+							nonEditableParent = getNonEditableParent(container.nextSibling);
+						}
+
+						// correctly remove block-level nonEditable domNode on delete/backspace
 						if (nonEditableParent && (keyCode == VK.DELETE || keyCode == VK.BACKSPACE) && dom.isBlock(nonEditableParent)) {
 							e.preventDefault();
 							dom.remove(nonEditableParent);
