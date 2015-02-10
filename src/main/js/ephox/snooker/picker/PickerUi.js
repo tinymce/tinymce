@@ -121,11 +121,15 @@ define(
       };
 
       var clicker = DomEvent.bind(table, 'click', function (event) {
+        execute();
+        event.raw().preventDefault();
+      });
+
+      var execute = function () {
         var result = PickerLookup.grid(table, 'data-picker-row', 'data-picker-col');
         var headers = PickerLookup.grid(table, 'data-picker-header-row', 'data-picker-header-col');
         events.trigger.select(result.rows() + 1, result.columns() + 1, headers.rows(), headers.columns());
-        event.raw().preventDefault();
-      });
+      };
 
       var reset = function () {
         setSize(settings.minRows, settings.minCols);
@@ -147,7 +151,8 @@ define(
         sendLeft: Fun.curry(resize, -1, 0),
         sendRight: Fun.curry(resize, +1, 0),
         sendUp: Fun.curry(resize, 0, -1),
-        sendDown: Fun.curry(resize, 0, +1)
+        sendDown: Fun.curry(resize, 0, +1),
+        sendExecute: execute
       };
     };
   }
