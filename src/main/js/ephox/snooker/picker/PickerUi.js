@@ -46,10 +46,10 @@ define(
 
       var setSize = function (numRows, numCols) {
         size = { width: numCols, height: numRows };
-        refresh();
+        recreate();
       };
 
-      var refresh = function () {
+      var recreate = function () {
         Remove.empty(table);
         //create a set of trs, then for each tr, insert numCols tds
         var rows = Util.repeat(size.height, function () {
@@ -68,6 +68,12 @@ define(
           InsertAll.append(row, cells);
           Insert.append(table, row);
         });
+      };
+
+      var refresh = function () {
+        var selected = getSelection();
+        recreate();
+        setSelection(selected.rows(), selected.columns());
       };
 
       var setHeaders = function (headerRows, headerCols) {
