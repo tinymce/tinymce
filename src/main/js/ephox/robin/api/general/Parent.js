@@ -19,8 +19,12 @@ define(
       return Subset.subset(universe, start, finish);
     };
 
-    var breakAt = function (universe, parent, child) {
-      return Breaker.breakAt(universe, parent, child);
+    var breakToLeft = function (universe, parent, child) {
+      return Breaker.breakToLeft(universe, parent, child);
+    };
+
+    var breakToRight = function (universe, parent, child) {
+      return Breaker.breakToRight(universe, parent, child);
     };
 
     var breakPath = function (universe, child, isTop, breaker) {
@@ -30,7 +34,8 @@ define(
     return {
       sharedOne: sharedOne,
       subset: subset,
-      breakAt: breakAt,
+      breakToLeft: breakToLeft,
+      breakToRight: breakToRight,
       breakPath: breakPath
     };
   }

@@ -84,7 +84,8 @@ define(
     };
 
     return {
-      subset: subset
+      subset: subset,
+      ancestors: ancestors
     };
   }
 );

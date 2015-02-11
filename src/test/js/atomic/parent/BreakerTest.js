@@ -34,7 +34,7 @@ test(
     };
 
     var doc1 = generator();
-    Breaker.breakAt(doc1, doc1.find(doc1.get(), 'ol1').getOrDie(), doc1.find(doc1.get(), 'li3').getOrDie());
+    Breaker.breakToRight(doc1, doc1.find(doc1.get(), 'ol1').getOrDie(), doc1.find(doc1.get(), 'li3').getOrDie());
     assert.eq(
       'root(' +
         'd1(' +
@@ -52,7 +52,7 @@ test(
     var doc2 = generator();
     var result = Breaker.breakPath(doc2, doc2.find(doc2.get(), 'li2_text').getOrDie(), function (item) {
       return item.name === 'ol';
-    }, Breaker.breakAt);
+    }, Breaker.breakToRight);
 
     assert.eq('ol1', result.first().id);
     assert.eq('clone**<ol1>', result.second().getOrDie().id);

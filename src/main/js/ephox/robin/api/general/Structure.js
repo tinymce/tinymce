@@ -48,10 +48,15 @@ define(
       return Arr.contains([ 'div', 'li', 'td', 'th', 'blockquote', 'body' ], universe.property().name(item));
     };
 
+    var isEmptyTag = function (universe, item) {
+      return Arr.contains(['br', 'img', 'hr'], universe.property().name(item));
+    };
+
     return {
       isBlock: isBlock,
       isFormatting: isFormatting,
-      isContainer: isContainer
+      isContainer: isContainer,
+      isEmptyTag: isEmptyTag
     };
   }
 );

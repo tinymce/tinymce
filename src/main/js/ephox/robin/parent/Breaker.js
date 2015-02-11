@@ -9,6 +9,8 @@ define(
   ],
 
   function (Arr, Fun, Option, Struct) {
+    var leftRight = Struct.immutable('left', 'right');
+
     var bisect = function (universe, parent, child) {
       var children = universe.property().children(parent);
       var index = Arr.findIndex(children, Fun.curry(universe.eq, child));
@@ -18,23 +20,32 @@ define(
       }) : Option.none();
     };
 
-    var unsafeBreakAt = function (universe, parent, parts) {
-      var second = universe.create().clone(parent);
-      universe.insert().appendAll(second, parts.after());
-      universe.insert().after(parent, second);
-      return second;
-    };
-
     /**
-     * Move everything after child in the parent element into a clone of the parent (placed after parent).
+     * Clone parent to the RIGHT and move everything after child in the parent element into 
+     * a clone of the parent (placed after parent).
      */
-    var breakAt = function (universe, parent, child) {
-      var parts = bisect(universe, parent, child);
-      return parts.map(function (ps) {
-        return unsafeBreakAt(universe, parent, ps);
+    var breakToRight = function (universe, parent, child) {
+      return bisect(universe, parent, child).map(function (parts) {
+        var second = universe.create().clone(parent);
+        universe.insert().appendAll(second, parts.after());
+        universe.insert().after(parent, second);
+        return leftRight(parent, second);
       });
     };
 
+    /**
+     * Clone parent to the LEFT and move everything before and including child into
+     * the a clone of the parent (placed before parent)
+     */
+    var breakToLeft = function (universe, parent, child) {
+      return bisect(universe, parent, child).map(function (parts) {
+        var prior = universe.create().clone(parent);        
+        universe.insert().appendAll(prior, parts.before().concat([ child ]));
+        universe.insert().appendAll(parent, parts.after());
+        universe.insert().before(parent, prior);
+        return leftRight(prior, parent);
+      });
+    };
 
     /*
      * Using the breaker, break from the child up to the top element defined by the predicate.
@@ -48,18 +59,17 @@ define(
 
       var next = function (child, group, splits) {
         var fallback = result(child, Option.none(), splits);
+        // Found the top, so stop.
         if (isTop(child)) return result(child, group, splits);
         else {
-          return universe.property().parent(child).fold(function () {
-            return fallback;
-          }, function (parent) {
-            var second = breaker(universe, parent, child);
-
-            // Store the splits up the path break.
-            var extra = second.fold(Fun.constant([]), function (sec) {
-              return [{ first: Fun.constant(parent), second: Fun.constant(sec) }];
-            });
-            return next(parent, second, splits.concat(extra));
+          // Split the child at parent, and keep going
+          return universe.property().parent(child).bind(function (parent) {
+            return breaker(universe, parent, child).map(function (breakage) {
+              var extra = [{ first: breakage.left, second: breakage.right }];
+              // Our isTop is based on the left-side parent, so keep it regardless of split.
+              var nextChild = isTop(parent) ? parent : breakage.left();
+              return next(nextChild, Option.some(breakage.right()), splits.concat(extra));
+            }).getOr(fallback);
           });
         }
       };
@@ -68,7 +78,8 @@ define(
     };
 
     return {
-      breakAt: breakAt,
+      breakToLeft: breakToLeft,
+      breakToRight: breakToRight,
       breakPath: breakPath
     };
   }

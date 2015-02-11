@@ -21,5 +21,15 @@
     "tab_size": 2,
     "translate_tabs_to_spaces": true,
     "use_tab_stops": true
-  }
+  },
+  "build_systems":
+  [
+    {
+      "name": "Lint",
+      "selector": "source.js",
+      "working_dir": "$project_path",
+      "file_regex": "(.*): line ([0-9]*), col ([0-9]*), (.*)$",
+      "cmd": ["make", "lint", "js"]
+    }
+  ],
 }

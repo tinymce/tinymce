@@ -24,10 +24,15 @@ define(
       return Structure.isContainer(universe, element);
     };
 
+    var isEmptyTag = function (element) {
+      return Structure.isEmptyTag(universe, element);
+    };
+
     return {
       isBlock: isBlock,
       isFormatting: isFormatting,
-      isContainer: isContainer
+      isContainer: isContainer,
+      isEmptyTag: isEmptyTag
     };
   }
 );
