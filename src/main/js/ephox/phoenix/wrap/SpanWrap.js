@@ -33,7 +33,7 @@ define(
     var temporary = function (universe, start, soffset, finish, foffset) {
       var doc = start.dom().ownerDocument;
       var span = universe.create().nu('span', doc);
-      
+
       var cursor = universe.create().text(Unicode.zeroWidth(), doc);
       universe.insert().append(span, cursor);
 
@@ -45,7 +45,7 @@ define(
       };
     };
 
-    /* 
+    /*
      * The point approach needs to reuse a temporary span (if we already have one) or create one if we don't.
      */
     var scan = function (universe, start, soffset, finish, foffset, exclusions) {
@@ -55,7 +55,7 @@ define(
         return canReuse ? Option.some({
           cursor: Fun.constant(cursor),
           temporary: Fun.constant(false),
-          wrappers: Fun.constant(parent)
+          wrappers: Fun.constant([ parent ])
         }) : Option.none();
       }).getOrThunk(function () {
         return temporary(universe, start, soffset, finish, foffset);
