@@ -355,6 +355,11 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 
 			// Disable all key presses in contentEditable=false except delete or backspace
 			nonEditableParent = getNonEditableParent(startElement) || getNonEditableParent(endElement);
+			var currentNode = editor.selection.getNode();
+
+			var isDirectionKey = keyCode == VK.LEFT || keyCode == VK.RIGHT || keyCode == VK.UP || keyCode == VK.DOWN;
+			var left = keyCode == VK.LEFT || keyCode == VK.UP;
+
 			if (nonEditableParent && (keyCode < 112 || keyCode > 124) && keyCode != VK.DELETE && keyCode != VK.BACKSPACE) {
 
 				// Is Ctrl+c, Ctrl+v or Ctrl+x then use default browser behavior
@@ -365,13 +370,33 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 				e.preventDefault();
 
 				// Arrow left/right select the element and collapse left/right
-				if (keyCode == VK.LEFT || keyCode == VK.RIGHT || keyCode == VK.UP || keyCode == VK.DOWN) {
-					var left = keyCode == VK.LEFT || keyCode == VK.UP;
+				if (isDirectionKey) {
+
 					// If a block element find previous or next element to position the caret
 					if (editor.dom.isBlock(nonEditableParent)) {
 						var targetElement = left ? nonEditableParent.previousSibling : nonEditableParent.nextSibling;
+
+						// Handling for edge-cases:
+						// 	- two nonEditables in a row -> no way to get between them
+						// 	- nonEditable as the first/last element -> no way to get before/behind it
+						if (!targetElement || targetElement && getContentEditable(targetElement) === 'false') {
+							var p = dom.create('p', null, '&nbsp;');
+							p.className = 'mceTmpParagraph';
+
+							var insertElement = left ? editor.selection.getNode() : targetElement;
+
+							if (insertElement && insertElement.parentNode) {
+								insertElement.parentNode.insertBefore(p, insertElement);
+							} else if (!targetElement && !left) {
+								currentNode.parentNode.appendChild(p);
+							}
+
+							targetElement = p;
+						}
+
 						var walker = new TreeWalker(targetElement, targetElement);
 						var caretElement = left ? walker.prev() : walker.next();
+
 						positionCaretOnElement(caretElement, !left);
 					} else {
 						positionCaretOnElement(nonEditableParent, left);
@@ -379,9 +404,9 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 				}
 			} else {
 				// Is arrow left/right, backspace or delete
-				if (keyCode == VK.LEFT || keyCode == VK.RIGHT || keyCode == VK.BACKSPACE || keyCode == VK.DELETE) {
-
+				if (isDirectionKey || keyCode == VK.BACKSPACE || keyCode == VK.DELETE) {
 					caretContainer = getParentCaretContainer(startElement);
+
 					if (caretContainer) {
 						// Arrow left or backspace
 						if (keyCode == VK.LEFT || keyCode == VK.BACKSPACE) {
@@ -419,6 +444,26 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 							}
 						}
 					} else {
+
+						if (isDirectionKey) {
+							// Removal of separator paragraphs between two nonEditables
+							// and before/after a nonEditable as the first/last element
+							if (currentNode && currentNode.className.indexOf('mceTmpParagraph') !== -1 &&
+									currentNode[left ? 'previousSibling' : 'nextSibling']) {
+								var jumpTarget = currentNode[left ? 'previousSibling' : 'nextSibling'];
+
+								// current node is still empty and a separator -> remove it
+								// else: remove the separator class, as it now includes content
+								if (currentNode.innerHTML === '&nbsp;' || currentNode.innerHTML === '' || currentNode.innerHTML === ' ') {
+									dom.remove(currentNode);
+								} else {
+									currentNode.className = currentNode.className.replace('mceTmpParagraph', '');
+								}
+
+								positionCaretOnElement(jumpTarget, !left);
+							}
+						}
+
 						var rng = selection.getRng(true);
 						var container = rng.endContainer;
 
