@@ -492,6 +492,17 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 		editor.on('mousedown', function(e) {
 			var node = editor.selection.getNode();
 
+			// Also remove separator lines when clicking on another node
+			if (node && node.className.indexOf('mceTmpParagraph') !== -1 && node !== e.target) {
+				// current node is still empty and a separator -> remove it
+				// else: remove the separator class, as it now includes content
+				if (node.innerHTML === '&nbsp;' || node.innerHTML === '' || node.innerHTML === ' ') {
+					dom.remove(node);
+				} else {
+					node.className = node.className.replace('mceTmpParagraph', '');
+				}
+			}
+
 			if (getContentEditable(node) === "false" && node == e.target) {
 				// Expand selection on mouse down we can't block the default event since it's used for drag/drop
 				moveSelection();
