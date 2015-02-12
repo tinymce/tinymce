@@ -374,7 +374,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			if (panel && panel.moveRel && panel.visible() && !panel._fixed) {
 				// TODO: This is kind of ugly and doesn't handle multiple scrollable elements
 				var scrollContainer = editor.selection.getScrollContainer(), body = editor.getBody();
-				var deltaX = 0, deltaY = 0;
+				var deltaX = 0, deltaY = 0, rel;
 
 				if (scrollContainer) {
 					var bodyPos = DOM.getPos(body), scrollContainerPos = DOM.getPos(scrollContainer);
@@ -383,7 +383,13 @@ tinymce.ThemeManager.add('modern', function(editor) {
 					deltaY = Math.max(0, scrollContainerPos.y - bodyPos.y);
 				}
 
-				panel.fixed(false).moveRel(body, editor.rtl ? ['tr-br', 'br-tr'] : ['tl-bl', 'bl-tl', 'tr-br']).moveBy(deltaX, deltaY);
+				if (settings.toolbar_at_the_bottom) {
+					rel = editor.rtl ? ['br-tr', 'tr-br'] : ['bl-tl', 'tl-bl', 'tr-br'];
+				} else {
+					rel = editor.rtl ? ['tr-br', 'br-tr'] : ['tl-bl', 'bl-tl', 'tr-br'];
+				}
+
+				panel.fixed(false).moveRel(body, rel).moveBy(deltaX, deltaY);
 			}
 		}
 
