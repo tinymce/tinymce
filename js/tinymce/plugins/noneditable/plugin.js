@@ -383,12 +383,12 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 							var p = dom.create('p', null, '&nbsp;');
 							p.className = 'mceTmpParagraph';
 
-							var insertElement = left ? editor.selection.getNode() : targetElement;
+							var insertElement = left ? nonEditableParent : targetElement;
 
 							if (insertElement && insertElement.parentNode) {
 								insertElement.parentNode.insertBefore(p, insertElement);
 							} else if (!targetElement && !left) {
-								currentNode.parentNode.appendChild(p);
+								nonEditableParent.parentNode.appendChild(p);
 							}
 
 							targetElement = p;
