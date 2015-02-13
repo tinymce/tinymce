@@ -365,7 +365,7 @@ define("tinymce/tableplugin/Dialogs", [
 							type: 'textbox',
 							maxWidth: 50
 						},
-						items: [
+						items: (editor.settings.table_appearance_options !== false) ? [
 							colsCtrl,
 							rowsCtrl,
 							{label: 'Width', name: 'width'},
@@ -374,6 +374,11 @@ define("tinymce/tableplugin/Dialogs", [
 							{label: 'Cell padding', name: 'cellpadding'},
 							{label: 'Border', name: 'border'},
 							{label: 'Caption', name: 'caption', type: 'checkbox'}
+						] : [
+							colsCtrl,
+							rowsCtrl,
+							{label: 'Width', name: 'width'},
+							{label: 'Height', name: 'height'}
 						]
 					},
 
