@@ -8,15 +8,14 @@ define(
   ],
 
   function (Type, Id, Attr) {
-    var editor = function (element) {
+    var editor = function (element, label) {
       Attr.set(element, 'role', 'application');
-      var id = Id.generate('');
-      Attr.set(element, 'aria-label', 'Textbox.io Rich Text Editor - ' + id);
+      Attr.set(element, 'aria-label', label);
     };
 
-    var toolbar = function (element) {
+    var toolbar = function (element, label) {
       Attr.set(element, 'role', 'toolbar');
-      Attr.set(element, 'aria-label', 'Rich Text Editor Toolbar');
+      Attr.set(element, 'aria-label', label);
     };
 
     var menu = function (element, label) {
