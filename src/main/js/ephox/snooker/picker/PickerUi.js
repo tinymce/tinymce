@@ -154,8 +154,8 @@ define(
         refresh: refresh,
         events: events.registry,
 
-        sendLeft: Fun.curry(resize, -1, 0),
-        sendRight: Fun.curry(resize, +1, 0),
+        sendLeft: Fun.curry(resize, direction.isRtl() ? +1 : -1, 0),
+        sendRight: Fun.curry(resize, direction.isRtl() ? -1 : +1, 0),
         sendUp: Fun.curry(resize, 0, -1),
         sendDown: Fun.curry(resize, 0, +1),
         sendExecute: execute

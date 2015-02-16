@@ -2,16 +2,19 @@ define(
   'ephox.snooker.api.PickerDirection',
 
   [
+    'ephox.peanut.Fun',
     'ephox.snooker.picker.CellPosition'
   ],
 
-  function (CellPosition) {
+  function (Fun, CellPosition) {
     var ltr = {
-      pickerCell: CellPosition.findCellLtr
+      pickerCell: CellPosition.findCellLtr,
+      isRtl: Fun.constant(false)
     };
 
     var rtl = {
-      pickerCell: CellPosition.findCellRtl
+      pickerCell: CellPosition.findCellRtl,
+      isRtl: Fun.constant(true)
     };
 
     return {
