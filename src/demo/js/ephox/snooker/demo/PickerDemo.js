@@ -32,30 +32,6 @@ define(
       Insert.append(ephoxUi, wrap);
       Insert.append(wrap, picker.element());
 
-/*
-BACKSPACE : getConstant([8]),
-      TAB : getConstant([9]),
-      ENTER : getConstant([13]),
-      SHIFT : getConstant([16]),
-      CTRL : getConstant([17]),
-      ALT : getConstant([18]),
-      CAPSLOCK : getConstant([20]),
-      ESCAPE : getConstant([27]),
-      SPACE: getConstant([32]),
-      PAGEUP: getConstant([33]),
-      PAGEDOWN: getConstant([34]),
-      END: getConstant([35]),
-      HOME: getConstant([36]),
-      LEFT: getConstant([37]),
-      UP: getConstant([38]),
-      RIGHT: getConstant([39]),
-      DOWN: getConstant([40]),
-      INSERT: getConstant([45]),
-      DEL: getConstant([46]),
-      META: getConstant([91, 93, 224]),
-      F10: getConstant([121])
-      */
-
       DomEvent.bind(ephoxUi, 'keydown', function (event) {
         var key = event.raw().which;
         if (key === 37) picker.sendLeft();
@@ -66,9 +42,6 @@ BACKSPACE : getConstant([8]),
         event.kill();
       });
 
-
-      var val = 3;
-
       picker.setSize(10, 10);
       picker.setHeaders(1, 1);
       picker.setSelection(2, 2);
@@ -77,8 +50,6 @@ BACKSPACE : getConstant([8]),
         console.log('need to create table with ', event.cols(), 'columns and ', event.rows(), 'rows' );
         console.log('headers: ', event.rowHeaders() + ' x ' + event.columnHeaders());
       });
-
-
 
       picker.on();
 
