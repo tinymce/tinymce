@@ -56,7 +56,6 @@ define(
 
       var manual = function (table, selected, xDelta, yDelta) {
         if (active) {
-          console.log('selected:', selected.rows(), selected.columns());
           var changes = Sizing.grow(selected, xDelta, yDelta, settings);
           updateSelection(table, selected, changes);
         }
