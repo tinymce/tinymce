@@ -5,13 +5,15 @@ define(
     'ephox.snooker.api.PickerDirection',
     'ephox.snooker.picker.PickerUi',
     'ephox.sugar.api.Attr',
+    'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
+    'ephox.sugar.api.Focus',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Remove',
     'global!Math'
   ],
 
-  function (PickerDirection, PickerUi, Attr, Element, Insert, Remove, Math) {
+  function (PickerDirection, PickerUi, Attr, DomEvent, Element, Focus, Insert, Remove, Math) {
     return function () {
 
       var picker = PickerUi(PickerDirection.rtl, {
@@ -39,6 +41,19 @@ define(
 
 
       picker.on();
+
+      DomEvent.bind(ephoxUi, 'keydown', function (event) {
+        var key = event.raw().which;
+        if (key === 37) picker.sendLeft();
+        else if (key === 39) picker.sendRight();
+        else if (key === 40) picker.sendDown();
+        else if (key === 38) picker.sendUp();
+        else if (key === 32 || key === 13) picker.sendExecute();
+        event.kill();
+      });
+
+      Attr.set(ephoxUi, 'tabIndex', '-1');
+      Focus.focus(ephoxUi);
     };
   }
 );

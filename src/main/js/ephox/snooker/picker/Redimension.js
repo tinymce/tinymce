@@ -33,29 +33,40 @@ define(
         return Structs.coords(position.left(), position.top());
       };
 
+      var updateSelection = function (table, grid, changes) {
+        var full = changes.full();
+        if (full.row() !== grid.rows() || full.column() !== grid.columns()) table.setSize(full.row(), full.column());
+        table.setSelection(changes.selection().row(), changes.selection().column());
+      };
+
       /*
        * Based on the mouse position (x, y), identify whether the picker table needs to be resized
        * and update its selection
        */
-      var handle = function (table, grid, x, y) {
+      var mousemove = function (table, grid, x, y) {
         if (active) {
           var dimensions = getDimensions(table);
           var position = getPosition(table);
           var mouse = Structs.coords(x, y);
           var address = direction.pickerCell(position, dimensions, grid, mouse);
           var changes = Sizing.resize(address, settings);
-          var full = changes.full();
-          if (full.row() !== grid.rows() || full.column() !== grid.columns()) table.setSize(full.row(), full.column());
-          table.setSelection(changes.selection().row(), changes.selection().column());
+          updateSelection(table, grid, changes);
+        }
+      };
+
+      var manual = function (table, selected, xDelta, yDelta) {
+        if (active) {
+          var changes = Sizing.grow(selected, xDelta, yDelta, settings);
+          updateSelection(table, selected, changes);
         }
       };
 
       return {
         on: on,
         off: off,
-        handle: handle
+        mousemove: mousemove,
+        manual: manual
       };
     };
-
   }
 );

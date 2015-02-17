@@ -4,13 +4,17 @@ define(
   [
     'ephox.snooker.api.PickerDirection',
     'ephox.snooker.picker.PickerUi',
+    'ephox.sugar.api.Attr',
+    'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
+    'ephox.sugar.api.Focus',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Remove',
-    'global!Math'
+    'global!Math',
+    'global!document'
   ],
 
-  function (PickerDirection, PickerUi, Element, Insert, Remove, Math) {
+  function (PickerDirection, PickerUi, Attr, DomEvent, Element, Focus, Insert, Remove, Math, document) {
     return function () {
 
       var picker = PickerUi(PickerDirection.ltr, {
@@ -28,8 +32,15 @@ define(
       Insert.append(ephoxUi, wrap);
       Insert.append(wrap, picker.element());
 
-
-      var val = 3;
+      DomEvent.bind(ephoxUi, 'keydown', function (event) {
+        var key = event.raw().which;
+        if (key === 37) picker.sendLeft();
+        else if (key === 39) picker.sendRight();
+        else if (key === 40) picker.sendDown();
+        else if (key === 38) picker.sendUp();
+        else if (key === 32 || key === 13) picker.sendExecute();
+        event.kill();
+      });
 
       picker.setSize(10, 10);
       picker.setHeaders(1, 1);
@@ -40,8 +51,10 @@ define(
         console.log('headers: ', event.rowHeaders() + ' x ' + event.columnHeaders());
       });
 
-
       picker.on();
+
+      Attr.set(ephoxUi, 'tabIndex', '-1');
+      Focus.focus(ephoxUi);
     };
   }
 );
