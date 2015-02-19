@@ -209,12 +209,14 @@ tinymce.PluginManager.add('link', function(editor) {
 				];
 			}
 
-			targetListCtrl = {
-				name: 'target',
-				type: 'listbox',
-				label: 'Target',
-				values: buildListItems(editor.settings.target_list)
-			};
+			if (editor.settings.show_link_target !== false) {
+				targetListCtrl = {
+					name: 'target',
+					type: 'listbox',
+					label: 'Target',
+					values: buildListItems(editor.settings.target_list)
+				};
+			}
 		}
 
 		if (editor.settings.rel_list) {
