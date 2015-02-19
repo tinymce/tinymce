@@ -779,7 +779,7 @@ define("tinymce/html/DomParser", [
 						}
 
 						validClassesMap = validClasses[node.name];
-						if (!valid && validClassesMap && !validClassesMap[className]) {
+						if (!valid && validClassesMap && validClassesMap[className]) {
 							valid = true;
 						}
 

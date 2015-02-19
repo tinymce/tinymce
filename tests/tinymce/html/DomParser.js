@@ -498,8 +498,8 @@
 		var parser, root, schema = new tinymce.html.Schema({valid_classes: {'*': 'classA classB', 'strong': 'classC'}});
 
 		parser = new tinymce.html.DomParser({}, schema);
-		root = parser.parse('<p class="classA classB classC"><strong class="classA classB classC">a</strong></p>');
-		equal(serializer.serialize(root), '<p class="classA classB"><strong class="classA classB">a</strong></p>');
+		root = parser.parse('<p class="classA classB classC"><strong class="classA classB classC classD">a</strong></p>');
+		equal(serializer.serialize(root), '<p class="classA classB"><strong class="classA classB classC">a</strong></p>');
 	});
 
 	test('Remove empty list blocks', function() {
