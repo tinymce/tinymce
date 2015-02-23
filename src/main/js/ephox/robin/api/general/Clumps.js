@@ -43,8 +43,10 @@ define(
     };
 
     var fractures = function (universe, isRoot, start, soffset, finish, foffset, ceiling) {
+      console.log('start', start.dom(), soffset, 'finish', finish.dom(), foffset);
       var clumps = Clumps.collect(universe, isRoot, start, soffset, finish, foffset);
       return Arr.bind(clumps, function (clump, i) {
+        console.log('clumping: ', clump.start().dom(), clump.soffset(), clump.finish().dom(), clump.foffset());
         return fracture(universe, isRoot, clump.start(), clump.soffset(), clump.finish(), clump.foffset(), ceiling).toArray();
       });
     };

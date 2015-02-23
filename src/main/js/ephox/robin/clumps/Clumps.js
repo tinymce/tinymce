@@ -5,6 +5,7 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.phoenix.api.general.Descent',
     'ephox.phoenix.api.general.Gather',
     'ephox.phoenix.wrap.Navigation',
     'ephox.robin.api.general.Structure',
@@ -12,7 +13,7 @@ define(
     'ephox.scullion.Struct'
   ],
 
-  function (Arr, Fun, Option, Gather, Navigation, Structure, Adt, Struct) {
+  function (Arr, Fun, Option, Descent, Gather, Navigation, Structure, Adt, Struct) {
     var adt = Adt.generate([
       { none: [ 'last', 'mode' ] },
       { running: [ 'next', 'mode' ] },
@@ -126,9 +127,20 @@ define(
       });
     };
 
+    var single = function (universe, isRoot, item, soffset, foffset) {
+      if (! Structure.isBlock(universe, item)) return [ clump(item, soffset, item, foffset) ];
+      var start = Descent.toLeaf(universe, item, soffset);
+      var finish = Descent.toLeaf(universe, item, foffset);
+
+      // Now, if these values have changed, I need to call collect again.
+      if (!universe.eq(start.element(), item) || !universe.eq(finish.element(), item)) return collect(universe, isRoot, start.element(), start.offset(), finish.element(), finish.offset());
+      // console.log('******** START', start.element().dom());
+      return [ clump(start.element(), start.offset(), finish.element(), finish.offset()) ];
+    };
+
     var collect = function (universe, isRoot, start, soffset, finish, foffset) {
       return universe.eq(start, finish) ?
-        [ clump(start, soffset, finish, foffset) ] : 
+        single(universe, isRoot, start, soffset, foffset) : 
         doCollect(universe, isRoot, start, soffset, finish, foffset);
     };
 
