@@ -5,15 +5,15 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.api.general.Descent',
     'ephox.phoenix.api.general.Gather',
-    'ephox.phoenix.wrap.Navigation',
     'ephox.robin.api.general.Structure',
     'ephox.scullion.ADT',
     'ephox.scullion.Struct'
   ],
 
-  function (Arr, Fun, Option, Descent, Gather, Navigation, Structure, Adt, Struct) {
+  function (Arr, Fun, Option, Spot, Descent, Gather, Structure, Adt, Struct) {
     var adt = Adt.generate([
       { none: [ 'last', 'mode' ] },
       { running: [ 'next', 'mode' ] },
@@ -22,6 +22,21 @@ define(
     ]);
 
     var clump = Struct.immutable('start', 'soffset', 'finish', 'foffset');
+
+    var descendBlock = function (universe, isRoot, block) {
+      var leaf = Descent.toLeaf(universe, block, 0);
+      if (! skip(universe, leaf.element())) return leaf;
+      else return skipToRight(universe, isRoot, leaf.element()).map(function (next) {
+        return Spot.point(next, 0);
+      }).getOr(leaf);
+
+    };
+
+    var skipToRight = function (universe, isRoot, item) {
+      return Gather.seekRight(universe, item, function (i) {
+        return !skip(universe, i) && !Structure.isBlock(universe, i);
+      }, isRoot);
+    };
 
     var skip = function (universe, item) {
       if (! universe.property().isText(item)) return false;
@@ -65,7 +80,8 @@ define(
         if (universe.eq(n, target)) return Option.some(target);
         else if (isParent(universe, boundary, n)) return resume(universe, isRoot, n, target);
         else if (Structure.isBlock(universe, n) || isOtherBlock(universe, n)) {
-          var leaf = Navigation.toLeaf(universe, n, 0);
+          console.log('hitting block so here');
+          var leaf = descendBlock(universe, isRoot, n);
           return Option.some(leaf.element());
         }
         return Option.some(n);
@@ -92,8 +108,7 @@ define(
         var current = { start: beginning, finish: last };
         // Logic .. if this boundary was a parent, then sidestep.
         var resumption = isParent(universe, element, boundary) ? resume(universe, isRoot, boundary, target) : (function () {
-          var leaf = Navigation.toLeaf(universe, boundary, 0);
-          console.log("LEAF-ing", leaf.element().dom(), leaf.element().dom().parentNode);
+          var leaf = descendBlock(universe, isRoot, boundary);
           return !universe.eq(leaf.element(), boundary) ? Option.some(leaf.element()) : Gather.walk(universe, boundary, Gather.advance, Gather.walkers().right()).map(function (g) { return g.item(); });
         })();
 
@@ -133,9 +148,7 @@ define(
 
     var hackxy = function (universe, isRoot, item) {
       if (! skip(universe, item)) return item;
-      return Gather.seekRight(universe, item, function (i) {
-        return !skip(universe, i) && !Structure.isBlock(universe, i);
-      }, isRoot).getOr(item);
+      return skipToRight(universe, isRoot, item).getOr(item);
     };
 
     var doCollect = function (universe, isRoot, start, soffset, finish, foffset) {
@@ -161,6 +174,7 @@ define(
 
     var single = function (universe, isRoot, item, soffset, foffset) {
       if (! Structure.isBlock(universe, item)) return [ clump(item, soffset, item, foffset) ];
+      // This probably needs to include the skipping invalid text nodes part.
       var start = Descent.toLeaf(universe, item, soffset);
       var finish = Descent.toLeaf(universe, item, foffset);
 
