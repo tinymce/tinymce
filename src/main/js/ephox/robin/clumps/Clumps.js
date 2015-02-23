@@ -78,7 +78,6 @@ define(
         if (universe.eq(n, target)) return Option.some(target);
         else if (isParent(universe, boundary, n)) return resume(universe, isRoot, n, target);
         else if (isBlock(universe, n)) {
-          console.log('hitting block so here');
           var leaf = descendBlock(universe, isRoot, n);
           return Option.some(leaf.element());
         }
@@ -102,7 +101,6 @@ define(
         // Keep going. We haven't finished this clump yet.
         return scan(universe, isRoot, mode, beginning, next, target);
       }, function (boundary, last, _mode) {
-      console.log('hit boundary: ', boundary.dom());
         var current = { start: beginning, finish: last };
         // Logic .. if this boundary was a parent, then sidestep.
         var resumption = isParent(universe, element, boundary) ? resume(universe, isRoot, boundary, target) : (function () {
@@ -112,18 +110,15 @@ define(
 
         // We have hit a boundary, so stop the current clump, and start a new from the next starting point.
         return resumption.fold(function () {
-          console.log('no new starting point');
           // There was no new starting point, so just return the newly created clump
           return [ current ];
 
         }, function (n) {
-          console.log('resuming to > ', n.dom(), 'bundling', current.start.dom(), current.start.dom().parentNode);
           if (universe.eq(n, target)) return [ current ].concat({ start: target, finish: target });
           // There was a new starting point, so scan for more clumps and accumulate the result.
           return [ current ].concat(scan(universe, isRoot, Gather.sidestep, n, n, target));
         });
       }, function (elem, _mode) {
-        console.log('finalising clump');
         // We hit the final destination, so finish our current clump
         return [{ start: beginning, finish: elem }];
       });
@@ -134,7 +129,6 @@ define(
     };
 
     var drop = function (universe, item, offset) {
-      console.log('dropping', item.dom(), offset);
       if (isBlock(universe, item)) {
         var children = universe.property().children(item);
         if (offset >= 0 && offset < children.length) return drop(universe, children[offset], 0);
@@ -157,12 +151,7 @@ define(
       var droppedFinish = h(drop(universe, finish, foffset));
 
       // If the dropped start should be skipped, find the thing to the right of it.
-
-
-      console.log('dropped', droppedStart.dom(), droppedStart.dom().parentNode, droppedFinish.dom(), droppedFinish.dom().parentNode);
-      console.log('droppedx', hackxy(universe, isRoot, droppedStart).dom());
       var raw = scan(universe, isRoot, Gather.sidestep, droppedStart, droppedStart, droppedFinish);
-      console.log('raw clumps', raw.length);
       return Arr.map(raw, function (r, i) {
         // Incorporate any offsets that were required.
         var soff = universe.eq(r.start, start) ? soffset : 0;
@@ -184,7 +173,6 @@ define(
     };
 
     var collect = function (universe, isRoot, start, soffset, finish, foffset) {
-      console.log('collecting: ', start.dom(), finish.dom());
       return universe.eq(start, finish) ?
         single(universe, isRoot, start, soffset, foffset) : 
         doCollect(universe, isRoot, start, soffset, finish, foffset);
