@@ -23,12 +23,23 @@ define(
 
     var clump = Struct.immutable('start', 'soffset', 'finish', 'foffset');
 
+    var skip = function (universe, item) {
+      if (! universe.property().isText(item)) return false;
+      return universe.property().parent(item).exists(function (p) {
+        return Arr.contains([ 'tr', 'td' ], universe.property().name(p));
+      });
+    };
+
     var walk = function (universe, isRoot, mode, element, target) {
+      console.log('element: ', element.dom());
       var next = Gather.walk(universe, element, mode, Gather.walkers().right());
       return next.fold(function () {
         return adt.none(element, Gather.sidestep);
       }, function (n) {
+        // if invalid text, walk again
+        console.log('skip: ', skip(universe, n.item()), '[', n.item().dom(), ']');
         if (universe.eq(n.item(), target)) return adt.finished(target, n.mode());
+        // else if (skip(universe, n.item())) return walk(universe, isRoot, n.mode(), n.item(), target);
         else if (Structure.isBlock(universe, n.item()) || isOtherBlock(universe, n.item())) return adt.split(n.item(), element, n.mode());
         else return adt.running(n.item(), n.mode());
       });
@@ -45,7 +56,9 @@ define(
      */
     var resume = function (universe, isRoot, boundary, target) {
       // I have to sidestep here so I don't descend down the same boundary.
-      var next = Gather.seekRight(universe, boundary, Fun.constant(true), isRoot);
+      var next = Gather.seekRight(universe, boundary, function (elem) {
+        return !skip(universe, elem);
+      }, isRoot);
       return next.fold(function () {
         return Option.none();
       }, function (n) {
@@ -54,7 +67,7 @@ define(
         else if (Structure.isBlock(universe, n) || isOtherBlock(universe, n)) {
           var leaf = Navigation.toLeaf(universe, n, 0);
           return Option.some(leaf.element());
-        } 
+        }
         return Option.some(n);
       });
     };
@@ -85,15 +98,18 @@ define(
 
         // We have hit a boundary, so stop the current clump, and start a new from the next starting point.
         return resumption.fold(function () {
+          console.log('no new starting point');
           // There was no new starting point, so just return the newly created clump
           return [ current ];
 
         }, function (n) {
+          console.log('resuming');
           if (universe.eq(n, target)) return [ current ].concat({ start: target, finish: target });
           // There was a new starting point, so scan for more clumps and accumulate the result.
           return [ current ].concat(scan(universe, isRoot, Gather.sidestep, n, n, target));
         });
       }, function (elem, _mode) {
+        console.log('finalising clump');
         // We hit the final destination, so finish our current clump
         return [{ start: beginning, finish: elem }];
       });
@@ -119,6 +135,7 @@ define(
       var droppedStart = drop(universe, start, soffset);
       var droppedFinish = drop(universe, finish, foffset);
       var raw = scan(universe, isRoot, Gather.sidestep, droppedStart, droppedStart, droppedFinish);
+      console.log('raw clumps', raw.length);
       return Arr.map(raw, function (r, i) {
         // Incorporate any offsets that were required.
         var soff = universe.eq(r.start, start) ? soffset : 0;
