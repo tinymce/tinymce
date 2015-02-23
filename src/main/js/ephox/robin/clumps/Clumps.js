@@ -33,13 +33,11 @@ define(
     };
 
     var walk = function (universe, isRoot, mode, element, target) {
-      console.log('element: ', element.dom());
       var next = Gather.walk(universe, element, mode, Gather.walkers().right());
       return next.fold(function () {
         return adt.none(element, Gather.sidestep);
       }, function (n) {
         // if invalid text, walk again
-        console.log('skip: ', skip(universe, n.item()), '[', n.item().dom(), ']');
         if (universe.eq(n.item(), target)) return adt.finished(target, n.mode());
         // else if (skip(universe, n.item())) return walk(universe, isRoot, n.mode(), n.item(), target);
         else if (Structure.isBlock(universe, n.item()) || isOtherBlock(universe, n.item())) return adt.split(n.item(), element, n.mode());
@@ -90,11 +88,12 @@ define(
         // Keep going. We haven't finished this clump yet.
         return scan(universe, isRoot, mode, beginning, next, target);
       }, function (boundary, last, _mode) {
-      
+      console.log('hit boundary: ', boundary.dom());
         var current = { start: beginning, finish: last };
         // Logic .. if this boundary was a parent, then sidestep.
         var resumption = isParent(universe, element, boundary) ? resume(universe, isRoot, boundary, target) : (function () {
           var leaf = Navigation.toLeaf(universe, boundary, 0);
+          console.log("LEAF-ing", leaf.element().dom(), leaf.element().dom().parentNode);
           return !universe.eq(leaf.element(), boundary) ? Option.some(leaf.element()) : Gather.walk(universe, boundary, Gather.advance, Gather.walkers().right()).map(function (g) { return g.item(); });
         })();
 
@@ -105,7 +104,7 @@ define(
           return [ current ];
 
         }, function (n) {
-          console.log('resuming');
+          console.log('resuming to > ', n.dom(), 'bundling', current.start.dom(), current.start.dom().parentNode);
           if (universe.eq(n, target)) return [ current ].concat({ start: target, finish: target });
           // There was a new starting point, so scan for more clumps and accumulate the result.
           return [ current ].concat(scan(universe, isRoot, Gather.sidestep, n, n, target));
@@ -132,10 +131,24 @@ define(
       }
     };
 
+    var hackxy = function (universe, isRoot, item) {
+      if (! skip(universe, item)) return item;
+      return Gather.seekRight(universe, item, function (i) {
+        return !skip(universe, i) && !Structure.isBlock(universe, i);
+      }, isRoot).getOr(item);
+    };
+
     var doCollect = function (universe, isRoot, start, soffset, finish, foffset) {
+      var h = Fun.curry(hackxy, universe, isRoot);
       // We can't wrap block elements, so descend if we start on a block.
-      var droppedStart = drop(universe, start, soffset);
-      var droppedFinish = drop(universe, finish, foffset);
+      var droppedStart = h(drop(universe, start, soffset));
+      var droppedFinish = h(drop(universe, finish, foffset));
+
+      // If the dropped start should be skipped, find the thing to the right of it.
+
+
+      console.log('dropped', droppedStart.dom(), droppedStart.dom().parentNode, droppedFinish.dom(), droppedFinish.dom().parentNode);
+      console.log('droppedx', hackxy(universe, isRoot, droppedStart).dom());
       var raw = scan(universe, isRoot, Gather.sidestep, droppedStart, droppedStart, droppedFinish);
       console.log('raw clumps', raw.length);
       return Arr.map(raw, function (r, i) {
