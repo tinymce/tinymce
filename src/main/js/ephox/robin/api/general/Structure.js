@@ -20,6 +20,7 @@ define(
       'section',
       'ol',
       'ul',
+      // --- NOTE, TagBoundaries has li here. That means universe.isBoundary => true for li tags.
       'table',
       'thead',
       'tbody',
@@ -34,7 +35,8 @@ define(
       'h5',
       'h6',
       'blockquote',
-      'pre'
+      'pre',
+      'address'
     ];
 
     var isBlock = function (universe, item) {
