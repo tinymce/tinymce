@@ -44,7 +44,7 @@ define(
       if (! universe.property().isText(item)) return false;
       return universe.property().parent(item).exists(function (p) {
         // Text nodes of these children should be ignored when adding tags.
-        // Dupe from phoenix OrphanText.
+        // Dupe from phoenix OrphanText. We'll need a better solution for this.
         return Arr.contains([ 'table', 'tbody', 'thead', 'tfoot', 'tr', 'ul', 'ol' ], universe.property().name(p));
       });
     };
@@ -54,7 +54,6 @@ define(
       return next.fold(function () {
         return adt.none(element, Gather.sidestep);
       }, function (n) {
-        // if invalid text, walk again
         if (universe.eq(n.item(), target)) return adt.finished(target, n.mode());
         else if (isBlock(universe, n.item())) return adt.split(n.item(), element, n.mode());
         else return adt.running(n.item(), n.mode());
