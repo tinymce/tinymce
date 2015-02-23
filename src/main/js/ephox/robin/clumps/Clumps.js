@@ -3,7 +3,6 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.api.general.Descent',
@@ -13,7 +12,7 @@ define(
     'ephox.scullion.Struct'
   ],
 
-  function (Arr, Fun, Option, Spot, Descent, Gather, Structure, Adt, Struct) {
+  function (Arr, Option, Spot, Descent, Gather, Structure, Adt, Struct) {
     var adt = Adt.generate([
       { none: [ 'last', 'mode' ] },
       { running: [ 'next', 'mode' ] },
@@ -37,7 +36,7 @@ define(
 
     var skipToRight = function (universe, isRoot, item) {
       return Gather.seekRight(universe, item, function (i) {
-        return !skip(universe, i) && !Structure.isBlock(universe, i);
+        return !skip(universe, i) && !isBlock(universe, i);
       }, isRoot);
     };
 
@@ -137,16 +136,16 @@ define(
       }
     };
 
-    var hackxy = function (universe, isRoot, item) {
-      if (! skip(universe, item)) return item;
-      return skipToRight(universe, isRoot, item).getOr(item);
+    var skipInBlock = function (universe, isRoot, item, offset) {
+      var dropped = drop(universe, item, offset);
+      if (! skip(universe, dropped)) return dropped;
+      return skipToRight(universe, isRoot, dropped).getOr(dropped);
     };
 
     var doCollect = function (universe, isRoot, start, soffset, finish, foffset) {
-      var h = Fun.curry(hackxy, universe, isRoot);
       // We can't wrap block elements, so descend if we start on a block.
-      var droppedStart = h(drop(universe, start, soffset));
-      var droppedFinish = h(drop(universe, finish, foffset));
+      var droppedStart = skipInBlock(universe, isRoot, start, soffset);
+      var droppedFinish = skipInBlock(universe, isRoot, finish, foffset);
 
       // If the dropped start should be skipped, find the thing to the right of it.
       var raw = scan(universe, isRoot, Gather.sidestep, droppedStart, droppedStart, droppedFinish);
@@ -159,15 +158,15 @@ define(
     };
 
     var single = function (universe, isRoot, item, soffset, foffset) {
+      // If we aren't on blocks, just span a clump from start to finish.
       if (! isBlock(universe, item)) return [ clump(item, soffset, item, foffset) ];
-      // This probably needs to include the skipping invalid text nodes part.
+
+      // Jump to the leaves and try again if we have changed.
       var start = Descent.toLeaf(universe, item, soffset);
       var finish = Descent.toLeaf(universe, item, foffset);
-
-      // Now, if these values have changed, I need to call collect again.
-      if (!universe.eq(start.element(), item) || !universe.eq(finish.element(), item)) return collect(universe, isRoot, start.element(), start.offset(), finish.element(), finish.offset());
-      // console.log('******** START', start.element().dom());
-      return [ clump(start.element(), start.offset(), finish.element(), finish.offset()) ];
+      var changed = !universe.eq(start.element(), item) || !universe.eq(finish.element(), item);
+      return changed ? collect(universe, isRoot, start.element(), start.offset(), finish.element(), finish.offset())
+                     : [ clump(start.element(), start.offset(), finish.element(), finish.offset()) ];
     };
 
     var collect = function (universe, isRoot, start, soffset, finish, foffset) {
