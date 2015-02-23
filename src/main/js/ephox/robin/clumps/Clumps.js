@@ -26,7 +26,9 @@ define(
     var skip = function (universe, item) {
       if (! universe.property().isText(item)) return false;
       return universe.property().parent(item).exists(function (p) {
-        return Arr.contains([ 'tr', 'td' ], universe.property().name(p));
+        // Text nodes of these children should be ignored when adding tags.
+        // Dupe from phoenix OrphanText.
+        return Arr.contains([ 'table', 'tbody', 'thead', 'tfoot', 'tr', 'ul', 'ol' ], universe.property().name(p));
       });
     };
 
