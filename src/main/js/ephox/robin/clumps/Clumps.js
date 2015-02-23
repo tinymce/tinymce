@@ -69,9 +69,7 @@ define(
      */
     var resume = function (universe, isRoot, boundary, target) {
       // I have to sidestep here so I don't descend down the same boundary.
-      var next = Gather.seekRight(universe, boundary, function (elem) {
-        return !skip(universe, elem);
-      }, isRoot);
+      var next = skipToRight(universe, isRoot, boundary);
       return next.fold(function () {
         return Option.none();
       }, function (n) {
