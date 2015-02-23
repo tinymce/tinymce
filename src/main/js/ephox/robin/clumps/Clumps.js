@@ -29,7 +29,10 @@ define(
       else return skipToRight(universe, isRoot, leaf.element()).map(function (next) {
         return Spot.point(next, 0);
       }).getOr(leaf);
+    };
 
+    var isBlock = function (universe, item) {
+      return Structure.isBlock(universe, item) || Arr.contains([ 'li' ], universe.property().name(item));
     };
 
     var skipToRight = function (universe, isRoot, item) {
@@ -54,14 +57,9 @@ define(
       }, function (n) {
         // if invalid text, walk again
         if (universe.eq(n.item(), target)) return adt.finished(target, n.mode());
-        // else if (skip(universe, n.item())) return walk(universe, isRoot, n.mode(), n.item(), target);
-        else if (Structure.isBlock(universe, n.item()) || isOtherBlock(universe, n.item())) return adt.split(n.item(), element, n.mode());
+        else if (isBlock(universe, n.item())) return adt.split(n.item(), element, n.mode());
         else return adt.running(n.item(), n.mode());
       });
-    };
-
-    var isOtherBlock = function (universe, element) {
-      return Arr.contains([ 'li' ], universe.property().name(element));
     };
 
     /*
@@ -79,7 +77,7 @@ define(
       }, function (n) {
         if (universe.eq(n, target)) return Option.some(target);
         else if (isParent(universe, boundary, n)) return resume(universe, isRoot, n, target);
-        else if (Structure.isBlock(universe, n) || isOtherBlock(universe, n)) {
+        else if (isBlock(universe, n)) {
           console.log('hitting block so here');
           var leaf = descendBlock(universe, isRoot, n);
           return Option.some(leaf.element());
@@ -136,7 +134,8 @@ define(
     };
 
     var drop = function (universe, item, offset) {
-      if (Structure.isBlock(universe, item)) {
+      console.log('dropping', item.dom(), offset);
+      if (isBlock(universe, item)) {
         var children = universe.property().children(item);
         if (offset >= 0 && offset < children.length) return drop(universe, children[offset], 0);
         else if (offset === children.length) return drop(universe, children[children.length - 1], 0);
@@ -173,7 +172,7 @@ define(
     };
 
     var single = function (universe, isRoot, item, soffset, foffset) {
-      if (! Structure.isBlock(universe, item)) return [ clump(item, soffset, item, foffset) ];
+      if (! isBlock(universe, item)) return [ clump(item, soffset, item, foffset) ];
       // This probably needs to include the skipping invalid text nodes part.
       var start = Descent.toLeaf(universe, item, soffset);
       var finish = Descent.toLeaf(universe, item, foffset);
@@ -185,6 +184,7 @@ define(
     };
 
     var collect = function (universe, isRoot, start, soffset, finish, foffset) {
+      console.log('collecting: ', start.dom(), finish.dom());
       return universe.eq(start, finish) ?
         single(universe, isRoot, start, soffset, foffset) : 
         doCollect(universe, isRoot, start, soffset, finish, foffset);
