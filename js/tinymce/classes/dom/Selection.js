@@ -782,7 +782,7 @@ define("tinymce/dom/Selection", [
 		normalize: function() {
 			var self = this, rng = self.getRng();
 
-			if (!isIE && new RangeUtils(self.dom).normalize(rng)) {
+			if (Env.range && new RangeUtils(self.dom).normalize(rng)) {
 				self.setRng(rng, self.isForward());
 			}
 
