@@ -24,12 +24,17 @@ define(
       return Structure.isContainer(universe, element);
     };
 
+    var isTable = function (element) {
+      return Structure.isTable(universe, element);
+    };
+
     var isEmptyTag = function (element) {
       return Structure.isEmptyTag(universe, element);
     };
 
     return {
       isBlock: isBlock,
+      isTable: isTable,
       isFormatting: isFormatting,
       isContainer: isContainer,
       isEmptyTag: isEmptyTag

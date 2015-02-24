@@ -39,6 +39,11 @@ define(
       'address'
     ];
 
+    var isTable = function (universe, item) {
+      var tagName = universe.property().name(item);
+      return Arr.contains(['table', 'tbody', 'thead', 'tfoot', 'tr'], tagName);
+    };
+
     var isBlock = function (universe, item) {
       var tagName = universe.property().name(item);
       return Arr.contains(blockList, tagName);
@@ -59,6 +64,7 @@ define(
 
     return {
       isBlock: isBlock,
+      isTable: isTable,
       isFormatting: isFormatting,
       isContainer: isContainer,
       isEmptyTag: isEmptyTag
