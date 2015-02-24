@@ -91,6 +91,30 @@ if (tinymce.isWebKit) {
 		equal(Utils.cleanHtml(editor.getBody().innerHTML), '<h1>ab</h1>');
 		equal(editor.selection.getStart().nodeName, 'H1');
 	});
+
+	test('Type over bold text in fully selected block and keep bold', function() {
+		editor.getBody().innerHTML ='<p><i><b>x</b></i></p>';
+		Utils.setSelection('b', 0, 'b', 1);
+		editor.fire("keypress", {keyCode: 65, charCode: 65});
+		equal(Utils.cleanHtml(editor.getBody().innerHTML), '<p><i><b>a</b></i></p>');
+		equal(editor.selection.getStart().nodeName, 'B');
+	});
+
+	test('Type over partial bold text and keep bold', function() {
+		editor.getBody().innerHTML ='<p><b>xy</b></p>';
+		Utils.setSelection('b', 0, 'b', 1);
+		editor.fire("keypress", {keyCode: 65, charCode: 65});
+		equal(Utils.cleanHtml(editor.getBody().innerHTML), '<p><b>ay</b></p>');
+		equal(editor.selection.getStart().nodeName, 'B');
+	});
+
+	test('Type over bold text wrapped inside other formats', function() {
+		editor.getBody().innerHTML ='<p><i>1<b>2</b>3</i></p>';
+		Utils.setSelection('b', 0, 'b', 1);
+		editor.fire("keypress", {keyCode: 65, charCode: 65});
+		equal(Utils.cleanHtml(editor.getBody().innerHTML), '<p><i>1<b>a</b>3</i></p>');
+		equal(editor.selection.getStart().nodeName, 'B');
+	});
 } else {
 	test("Skipped since the browser isn't WebKit", function() {
 		ok(true, "Skipped");
