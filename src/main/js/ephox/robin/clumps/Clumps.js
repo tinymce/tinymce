@@ -3,16 +3,16 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.phoenix.api.data.Spot',
+    'ephox.phoenix.api.general.Descent',
     'ephox.phoenix.api.general.Gather',
-    'ephox.phoenix.wrap.Navigation',
     'ephox.robin.api.general.Structure',
     'ephox.scullion.ADT',
     'ephox.scullion.Struct'
   ],
 
-  function (Arr, Fun, Option, Gather, Navigation, Structure, Adt, Struct) {
+  function (Arr, Option, Spot, Descent, Gather, Structure, Adt, Struct) {
     var adt = Adt.generate([
       { none: [ 'last', 'mode' ] },
       { running: [ 'next', 'mode' ] },
@@ -22,19 +22,42 @@ define(
 
     var clump = Struct.immutable('start', 'soffset', 'finish', 'foffset');
 
+    var descendBlock = function (universe, isRoot, block) {
+      var leaf = Descent.toLeaf(universe, block, 0);
+      if (! skip(universe, leaf.element())) return leaf;
+      else return skipToRight(universe, isRoot, leaf.element()).map(function (next) {
+        return Spot.point(next, 0);
+      }).getOr(leaf);
+    };
+
+    var isBlock = function (universe, item) {
+      return Structure.isBlock(universe, item) || Arr.contains([ 'li' ], universe.property().name(item));
+    };
+
+    var skipToRight = function (universe, isRoot, item) {
+      return Gather.seekRight(universe, item, function (i) {
+        return !skip(universe, i) && !isBlock(universe, i);
+      }, isRoot);
+    };
+
+    var skip = function (universe, item) {
+      if (! universe.property().isText(item)) return false;
+      return universe.property().parent(item).exists(function (p) {
+        // Text nodes of these children should be ignored when adding tags.
+        // Dupe from phoenix OrphanText. We'll need a better solution for this.
+        return Arr.contains([ 'table', 'tbody', 'thead', 'tfoot', 'tr', 'ul', 'ol' ], universe.property().name(p));
+      });
+    };
+
     var walk = function (universe, isRoot, mode, element, target) {
       var next = Gather.walk(universe, element, mode, Gather.walkers().right());
       return next.fold(function () {
         return adt.none(element, Gather.sidestep);
       }, function (n) {
         if (universe.eq(n.item(), target)) return adt.finished(target, n.mode());
-        else if (Structure.isBlock(universe, n.item()) || isOtherBlock(universe, n.item())) return adt.split(n.item(), element, n.mode());
+        else if (isBlock(universe, n.item())) return adt.split(n.item(), element, n.mode());
         else return adt.running(n.item(), n.mode());
       });
-    };
-
-    var isOtherBlock = function (universe, element) {
-      return Arr.contains([ 'li' ], universe.property().name(element));
     };
 
     /*
@@ -44,16 +67,16 @@ define(
      */
     var resume = function (universe, isRoot, boundary, target) {
       // I have to sidestep here so I don't descend down the same boundary.
-      var next = Gather.seekRight(universe, boundary, Fun.constant(true), isRoot);
+      var next = skipToRight(universe, isRoot, boundary);
       return next.fold(function () {
         return Option.none();
       }, function (n) {
         if (universe.eq(n, target)) return Option.some(target);
         else if (isParent(universe, boundary, n)) return resume(universe, isRoot, n, target);
-        else if (Structure.isBlock(universe, n) || isOtherBlock(universe, n)) {
-          var leaf = Navigation.toLeaf(universe, n, 0);
+        else if (isBlock(universe, n)) {
+          var leaf = descendBlock(universe, isRoot, n);
           return Option.some(leaf.element());
-        } 
+        }
         return Option.some(n);
       });
     };
@@ -74,11 +97,10 @@ define(
         // Keep going. We haven't finished this clump yet.
         return scan(universe, isRoot, mode, beginning, next, target);
       }, function (boundary, last, _mode) {
-      
         var current = { start: beginning, finish: last };
         // Logic .. if this boundary was a parent, then sidestep.
         var resumption = isParent(universe, element, boundary) ? resume(universe, isRoot, boundary, target) : (function () {
-          var leaf = Navigation.toLeaf(universe, boundary, 0);
+          var leaf = descendBlock(universe, isRoot, boundary);
           return !universe.eq(leaf.element(), boundary) ? Option.some(leaf.element()) : Gather.walk(universe, boundary, Gather.advance, Gather.walkers().right()).map(function (g) { return g.item(); });
         })();
 
@@ -103,7 +125,7 @@ define(
     };
 
     var drop = function (universe, item, offset) {
-      if (Structure.isBlock(universe, item)) {
+      if (isBlock(universe, item)) {
         var children = universe.property().children(item);
         if (offset >= 0 && offset < children.length) return drop(universe, children[offset], 0);
         else if (offset === children.length) return drop(universe, children[children.length - 1], 0);
@@ -113,10 +135,18 @@ define(
       }
     };
 
+    var skipInBlock = function (universe, isRoot, item, offset) {
+      var dropped = drop(universe, item, offset);
+      if (! skip(universe, dropped)) return dropped;
+      return skipToRight(universe, isRoot, dropped).getOr(dropped);
+    };
+
     var doCollect = function (universe, isRoot, start, soffset, finish, foffset) {
       // We can't wrap block elements, so descend if we start on a block.
-      var droppedStart = drop(universe, start, soffset);
-      var droppedFinish = drop(universe, finish, foffset);
+      var droppedStart = skipInBlock(universe, isRoot, start, soffset);
+      var droppedFinish = skipInBlock(universe, isRoot, finish, foffset);
+
+      // If the dropped start should be skipped, find the thing to the right of it.
       var raw = scan(universe, isRoot, Gather.sidestep, droppedStart, droppedStart, droppedFinish);
       return Arr.map(raw, function (r, i) {
         // Incorporate any offsets that were required.
@@ -126,9 +156,21 @@ define(
       });
     };
 
+    var single = function (universe, isRoot, item, soffset, foffset) {
+      // If we aren't on blocks, just span a clump from start to finish.
+      if (! isBlock(universe, item)) return [ clump(item, soffset, item, foffset) ];
+
+      // Jump to the leaves and try again if we have changed.
+      var start = Descent.toLeaf(universe, item, soffset);
+      var finish = Descent.toLeaf(universe, item, foffset);
+      var changed = !universe.eq(start.element(), item) || !universe.eq(finish.element(), item);
+      return changed ? collect(universe, isRoot, start.element(), start.offset(), finish.element(), finish.offset())
+                     : [ clump(start.element(), start.offset(), finish.element(), finish.offset()) ];
+    };
+
     var collect = function (universe, isRoot, start, soffset, finish, foffset) {
       return universe.eq(start, finish) ?
-        [ clump(start, soffset, finish, foffset) ] : 
+        single(universe, isRoot, start, soffset, foffset) : 
         doCollect(universe, isRoot, start, soffset, finish, foffset);
     };
 
