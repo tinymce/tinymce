@@ -269,13 +269,13 @@ define("tinymce/util/Quirks", [
 			}
 
 			editor.on('keydown', function(e) {
-				var isForward = e.keyCode == DELETE, isMeta = VK.metaKeyPressed(e);
+				var isForward = e.keyCode == DELETE, isMetaOrCtrl = e.ctrlKey || e.metaKey;
 
-				if (!isDefaultPrevented(e) && (isForward || e.keyCode == BACKSPACE) && !VK.modifierPressed(e)) {
+				if (!isDefaultPrevented(e) && (isForward || e.keyCode == BACKSPACE)) {
 					var rng = editor.selection.getRng(), container = rng.startContainer, offset = rng.startOffset;
 
 					// Ignore non meta delete in the where there is text before/after the caret
-					if (!isMeta && rng.collapsed && container.nodeType == 3) {
+					if (!isMetaOrCtrl && rng.collapsed && container.nodeType == 3) {
 						if (isForward ? offset < container.data.length : offset > 0) {
 							return;
 						}
@@ -283,8 +283,8 @@ define("tinymce/util/Quirks", [
 
 					e.preventDefault();
 
-					if (isMeta) {
-						editor.selection.getSel().modify("extend", isForward ? "forward" : "backward", "word");
+					if (isMetaOrCtrl) {
+						editor.selection.getSel().modify("extend", isForward ? "forward" : "backward", e.metaKey ? "lineboundary" : "word");
 					}
 
 					customDelete(isForward);

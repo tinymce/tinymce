@@ -92,6 +92,40 @@ if (tinymce.isWebKit) {
 		equal(editor.selection.getStart().nodeName, 'H1');
 	});
 
+	test('Backspace previous word', function() {
+		editor.getBody().innerHTML ='<p>abc 123</p>';
+		Utils.setSelection('p', 7);
+		editor.fire("keydown", {keyCode: 8, ctrlKey: true});
+		equal(Utils.cleanHtml(editor.getBody().innerHTML), '<p>abc&nbsp;</p>');
+		equal(editor.selection.getStart().nodeName, 'P');
+	});
+
+	test('Backspace previous line', function() {
+		editor.getBody().innerHTML ='<p>abc 123</p>';
+		Utils.setSelection('p', 7);
+		editor.fire("keydown", {keyCode: 8, metaKey: true});
+		equal(Utils.cleanHtml(editor.getBody().innerHTML), '<p><br></p>');
+		equal(editor.selection.getStart().nodeName, 'BR');
+	});
+
+	test('Delete next word', function() {
+		editor.getBody().innerHTML ='<p>abc 123</p>';
+		Utils.setSelection('p', 0);
+		editor.fire("keydown", {keyCode: 46, ctrlKey: true});
+
+		// Remove nbsp since very old WebKit has an slight issue
+		equal(Utils.cleanHtml(editor.getBody().innerHTML).replace('&nbsp;', ''), '<p>123</p>');
+		equal(editor.selection.getStart().nodeName, 'P');
+	});
+
+	test('Delete next line', function() {
+		editor.getBody().innerHTML ='<p>abc 123</p>';
+		Utils.setSelection('p', 0);
+		editor.fire("keydown", {keyCode: 46, metaKey: true});
+		equal(Utils.cleanHtml(editor.getBody().innerHTML), '<p><br></p>');
+		equal(editor.selection.getStart().nodeName, 'BR');
+	});
+
 	test('Type over bold text in fully selected block and keep bold', function() {
 		editor.getBody().innerHTML ='<p><i><b>x</b></i></p>';
 		Utils.setSelection('b', 0, 'b', 1);

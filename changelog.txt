@@ -14,6 +14,7 @@ Version 4.1.8 (2014-12-xx)
 	Fixed bug where jQuery plugin would patch the internal methods multiple times. Patch provided by Drew Martin.
 	Fixed bug where backspace key wouldn't delete the current selection of newly formatted content.
 	Fixed bug where type over of inline formatting elements wouldn't properly keep the format on WebKit/Blink.
+	Fixed bug where Command+Backspace didn't properly delete the whole line of text but the previous word.
 	Fixed a bug where applying a color to text did not update the undo/redo history.
 	Fixed so removeformat removes ins/del by default since these might be used for strikethough.
 	Removed address from the default list of block formats since it tends to be missused.
