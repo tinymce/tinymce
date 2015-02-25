@@ -15,8 +15,9 @@
  * @private
  */
 define("tinymce/NodeChange", [
-	"tinymce/dom/RangeUtils"
-], function(RangeUtils) {
+	"tinymce/dom/RangeUtils",
+	"tinymce/Env"
+], function(RangeUtils, Env) {
 	return function(editor) {
 		var lastRng, lastPath = [];
 
@@ -82,6 +83,12 @@ define("tinymce/NodeChange", [
 		// Selection change is delayed ~200ms on IE when you click inside the current range
 		editor.on('SelectionChange', function() {
 			var startElm = editor.selection.getStart(true);
+
+			// IE 8 will fire a selectionchange event with an incorrect selection
+			// when focusing out of table cells. Click inside cell -> toolbar = Invalid SelectionChange event
+			if (!Env.range && editor.selection.isCollapsed()) {
+				return;
+			}
 
 			if (!isSameElementPath(startElm) && editor.dom.isChildOf(startElm, editor.getBody())) {
 				editor.nodeChanged({selectionChange: true});
