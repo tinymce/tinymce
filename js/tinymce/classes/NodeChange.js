@@ -79,11 +79,11 @@ define("tinymce/NodeChange", [
 			editor.fire('SelectionChange');
 		});
 
+		// Selection change is delayed ~200ms on IE when you click inside the current range
 		editor.on('SelectionChange', function() {
 			var startElm = editor.selection.getStart(true);
 
-			// Fire a nodechange only when the selection isn't collapsed since focusout will collapse and remove the selection
-			if (!editor.selection.isCollapsed() && !isSameElementPath(startElm) && editor.dom.isChildOf(startElm, editor.getBody())) {
+			if (!isSameElementPath(startElm) && editor.dom.isChildOf(startElm, editor.getBody())) {
 				editor.nodeChanged({selectionChange: true});
 			}
 		});
@@ -93,9 +93,13 @@ define("tinymce/NodeChange", [
 			if (!e.isDefaultPrevented()) {
 				// Delay nodeChanged call for WebKit edge case issue where the range
 				// isn't updated until after you click outside a selected image
-				setTimeout(function() {
+				if (editor.selection.getNode().nodeName == 'IMG') {
+					setTimeout(function() {
+						editor.nodeChanged();
+					}, 0);
+				} else {
 					editor.nodeChanged();
-				}, 0);
+				}
 			}
 		});
 
