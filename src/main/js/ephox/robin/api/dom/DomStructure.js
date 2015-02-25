@@ -28,10 +28,6 @@ define(
       return Structure.isContainer(universe, element);
     };
 
-    var isTable = function (element) {
-      return Structure.isTable(universe, element);
-    };
-
     var isEmptyTag = function (element) {
       return Structure.isEmptyTag(universe, element);
     };
@@ -39,7 +35,6 @@ define(
     return {
       isBlock: isBlock,
       isList: isList,
-      isTable: isTable,
       isFormatting: isFormatting,
       isContainer: isContainer,
       isEmptyTag: isEmptyTag
