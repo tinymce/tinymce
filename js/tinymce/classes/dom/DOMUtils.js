@@ -1153,7 +1153,7 @@ define("tinymce/dom/DOMUtils", [
 		 */
 		getOuterHTML: function(elm) {
 			elm = this.get(elm);
-			return elm.nodeType == 1 ? elm.outerHTML : $('<div>').append($(elm).clone()).html();
+			return elm.nodeType == 1 && elm.outerHTML !== undefined ? elm.outerHTML : $('<div>').append($(elm).clone()).html();
 		},
 
 		/**
@@ -1175,11 +1175,15 @@ define("tinymce/dom/DOMUtils", [
 
 			self.$$(elm).each(function() {
 				try {
-					this.outerHTML = html;
-				} catch (ex) {
-					// OuterHTML for IE it sometimes produces an "unknown runtime error"
-					self.remove($(this).html(html), true);
-				}
+					if (this.outerHTML !== undefined) {
+						this.outerHTML = html;
+						return;
+					}
+				} catch (ex) { }
+
+				// OuterHTML for IE sometimes produces an "unknown runtime error"
+				// Also browsers without Element.outerHTML support will hit this line
+				self.remove($(this).html(html), true);
 			});
 		},
 
