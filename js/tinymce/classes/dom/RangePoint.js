@@ -22,7 +22,7 @@ define("tinymce/dom/RangePoint", [
 			function updateContainerAndOffset() {
 				if (current.nodeType == 3) {
 					container = current;
-					offset = forward ? 0 : current.data.length - 1;
+					offset = forward ? 0 : current.data.length;
 				} else {
 					container = current.parentNode;
 					offset = dom.nodeIndex(current);
@@ -34,7 +34,7 @@ define("tinymce/dom/RangePoint", [
 			}
 
 			if (container.nodeType == 1 && container.hasChildNodes()) {
-				if (offset > container.childNodes.length) {
+				if (offset >= container.childNodes.length) {
 					offset = container.childNodes.length - 1;
 				}
 
@@ -43,13 +43,15 @@ define("tinymce/dom/RangePoint", [
 				current = container;
 			}
 
-			walker = new TreeWalker(current);
+			walker = new TreeWalker(current, dom.getRoot());
 
 			if (current.nodeType == 3) {
-				if (forward && offset < current.data.length) {
-					offset++;
-					return true;
-				} else if (offset > 1) {
+				if (forward) {
+					if (offset < current.data.length) {
+						offset++;
+						return true;
+					}
+				} else if (offset > 0) {
 					offset--;
 					return true;
 				}

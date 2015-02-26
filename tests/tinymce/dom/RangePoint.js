@@ -45,6 +45,7 @@
 		rangePoint = editor.selection.getStartRangePoint();
 		assert.equal(rangePoint.next(), true);
 		assert.equal(rangePoint.getContainer().nodeType, 3);
+		assert.equal(rangePoint.getContainer().data, 'b');
 		assert.equal(rangePoint.getOffset(), 0);
 	});
 
@@ -100,4 +101,108 @@
 		assert.equal(rangePoint.getContainer().nodeName, 'P');
 		assert.equal(rangePoint.getOffset(), 0);
 	});
+
+	test("next caret position from one line to another", function(assert) {
+		editor.getBody().innerHTML = '<p>a<br>b</p>';
+
+		Utils.setSelection(editor.$('p')[0].firstChild, 1);
+		rangePoint = editor.selection.getStartRangePoint();
+		assert.equal(rangePoint.next(), true);
+		assert.equal(rangePoint.getContainer().data, 'b');
+		assert.equal(rangePoint.getOffset(), 0);
+	});
+
+	test("prev caret position in text node that exists", function(assert) {
+		editor.getBody().innerHTML = '<p>a</p>';
+
+		Utils.setSelection('p', 1);
+		rangePoint = editor.selection.getStartRangePoint();
+		assert.equal(rangePoint.prev(), true);
+		assert.equal(rangePoint.getContainer().nodeType, 3);
+		assert.equal(rangePoint.getOffset(), 0);
+	});
+
+	test("prev caret postion in text node that doesn't exist", function(assert) {
+		editor.getBody().innerHTML = '<p>a</p>';
+
+		rangePoint = editor.dom.createRangePoint(editor.$('p')[0].firstChild, 0);
+		assert.equal(rangePoint.prev(), false);
+		assert.equal(rangePoint.getContainer().nodeType, 3);
+		assert.equal(rangePoint.getOffset(), 0);
+	});
+
+	test("prev caret position from one inline element to another", function(assert) {
+		editor.getBody().innerHTML = '<p><i>a</i><b>b</b></p>';
+
+		Utils.setSelection('b', 0);
+		rangePoint = editor.selection.getStartRangePoint();
+		assert.equal(rangePoint.prev(), true);
+		assert.equal(rangePoint.getContainer().nodeType, 3);
+		assert.equal(rangePoint.getContainer().data, 'a');
+		assert.equal(rangePoint.getOffset(), 1);
+	});
+
+	test("prev caret position from text to before inline block", function(assert) {
+		editor.getBody().innerHTML = '<p><input>a</p>';
+
+		Utils.setSelection(editor.$('p')[0].lastChild, 0);
+		rangePoint = editor.selection.getStartRangePoint();
+		assert.equal(rangePoint.prev(), true);
+		assert.equal(rangePoint.getContainer().nodeName, 'P');
+		assert.equal(rangePoint.getOffset(), 0);
+	});
+
+	test("prev caret position from after inline block to before inline block", function(assert) {
+		editor.getBody().innerHTML = '<p><input></p>';
+
+		editor.selection.select(editor.$('input')[0]);
+		editor.selection.collapse(false);
+		rangePoint = editor.selection.getStartRangePoint();
+		assert.equal(rangePoint.prev(), true);
+		assert.equal(rangePoint.getContainer().nodeName, 'P');
+		assert.equal(rangePoint.getOffset(), 0);
+	});
+
+	test("prev caret position from after inline block to before prev inline block", function(assert) {
+		editor.getBody().innerHTML = '<p><input><input></p>';
+
+		editor.selection.select(editor.$('input').last()[0]);
+		editor.selection.collapse(false);
+		rangePoint = editor.selection.getStartRangePoint();
+		assert.equal(rangePoint.prev(), true);
+		assert.equal(rangePoint.getContainer().nodeName, 'P');
+		assert.equal(rangePoint.getOffset(), 1);
+	});
+
+	test("prev caret position from one block to another", function(assert) {
+		editor.getBody().innerHTML = '<p>a</p><p>b</p>';
+
+		Utils.setSelection('p:nth-child(2)', 0);
+		rangePoint = editor.selection.getStartRangePoint();
+		assert.equal(rangePoint.prev(), true);
+		assert.equal(rangePoint.getContainer().data, 'a');
+		assert.equal(rangePoint.getOffset(), 1);
+	});
+
+	test("prev caret position from one block to empty block", function(assert) {
+		editor.getBody().innerHTML = '<p><br></p><p>b</p>';
+
+		Utils.setSelection('p:nth-child(2)', 0);
+		rangePoint = editor.selection.getStartRangePoint();
+		assert.equal(rangePoint.prev(), true);
+		assert.equal(rangePoint.getContainer().firstChild.nodeName, 'BR');
+		assert.equal(rangePoint.getContainer().nodeName, 'P');
+		assert.equal(rangePoint.getOffset(), 0);
+	});
+
+	test("prev caret position from one line to another", function(assert) {
+		editor.getBody().innerHTML = '<p>a<br>b</p>';
+
+		Utils.setSelection(editor.$('p')[0].lastChild, 0);
+		rangePoint = editor.selection.getStartRangePoint();
+		assert.equal(rangePoint.next(), true);
+		assert.equal(rangePoint.getContainer().data, 'a');
+		assert.equal(rangePoint.getOffset(), 1);
+	});
+
 })();
