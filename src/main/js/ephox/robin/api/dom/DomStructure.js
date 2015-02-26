@@ -16,6 +16,10 @@ define(
       return Structure.isBlock(universe, element);
     };
 
+    var isList = function (element) {
+      return Structure.isList(universe, element);
+    };
+
     var isFormatting = function (element) {
       return Structure.isFormatting(universe, element);
     };
@@ -30,6 +34,7 @@ define(
 
     return {
       isBlock: isBlock,
+      isList: isList,
       isFormatting: isFormatting,
       isContainer: isContainer,
       isEmptyTag: isEmptyTag
