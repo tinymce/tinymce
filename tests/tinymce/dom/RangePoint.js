@@ -48,7 +48,7 @@
 		assert.equal(rangePoint.getOffset(), 0);
 	});
 
-	test("next caret position from text to before inline block", function(assert) {
+	test("next caret position from text to after inline block", function(assert) {
 		editor.getBody().innerHTML = '<p>a<input></p>';
 
 		Utils.setSelection('p', 1);
