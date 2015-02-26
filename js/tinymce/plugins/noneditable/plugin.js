@@ -434,6 +434,8 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 			}
 		});
 
+		editor.on('mouseup', moveSelection);
+
 		editor.on('keydown', handleKey);
 	}
 

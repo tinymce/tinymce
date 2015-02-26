@@ -33,7 +33,7 @@ if (!tinymce.Env.ie || tinymce.Env.ie > 8) {
 		rng.setEnd(editor.getBody().firstChild.lastChild, 1);
 		editor.selection.setRng(rng);
 
-		Utils.type({keyCode: 18}); // ALT
+		editor.dom.fire(editor.getBody(), 'mouseup');
 		rng = Utils.normalizeRng(editor.selection.getRng(true));
 
 		equal(rng.startContainer.nodeName, 'P');
@@ -50,7 +50,7 @@ if (!tinymce.Env.ie || tinymce.Env.ie > 8) {
 		rng.setEnd(editor.getBody().firstChild.lastChild.firstChild, 1);
 		editor.selection.setRng(rng);
 
-		Utils.type({keyCode: 18}); // ALT
+		editor.dom.fire(editor.getBody(), 'mouseup');
 		rng = Utils.normalizeRng(editor.selection.getRng(true));
 
 		equal(rng.startContainer.nodeName, '#text');
@@ -67,7 +67,7 @@ if (!tinymce.Env.ie || tinymce.Env.ie > 8) {
 		rng.setEnd(editor.dom.select('span')[0].firstChild, 2);
 		editor.selection.setRng(rng);
 
-		Utils.type({keyCode: 18}); // ALT
+		editor.dom.fire(editor.getBody(), 'mouseup');
 		rng = Utils.normalizeRng(editor.selection.getRng(true));
 
 		equal(rng.startContainer.nodeName, 'P');
@@ -84,7 +84,6 @@ if (!tinymce.Env.ie || tinymce.Env.ie > 8) {
 		rng.setEnd(editor.dom.select('span')[0].firstChild, 2);
 		editor.selection.setRng(rng);
 
-		editor.dom.fire(editor.getBody(), 'mouseup');
 		Utils.type('X');
 		rng = Utils.normalizeRng(editor.selection.getRng(true));
 
@@ -105,7 +104,6 @@ test('type between non editable', function() {
 	rng.setEnd(editor.dom.select('span')[0].firstChild, 2);
 	editor.selection.setRng(rng);
 
-	editor.dom.fire(editor.getBody(), 'mouseup');
 	Utils.type('X');
 	rng = Utils.normalizeRng(editor.selection.getRng(true));
 
@@ -125,7 +123,6 @@ test('type after last non editable', function() {
 	rng.setEnd(editor.dom.select('span')[0].firstChild, 2);
 	editor.selection.setRng(rng);
 
-	editor.dom.fire(editor.getBody(), 'mouseup');
 	Utils.type('X');
 	rng = Utils.normalizeRng(editor.selection.getRng(true));
 
