@@ -9,6 +9,11 @@
 
 	function findContainer(selector) {
 		var container;
+
+		if (selector && selector.nodeType) {
+			return selector;
+		}
+
 		if (tinymce.is(selector, 'string')) {
 			container = editor.dom.select(selector)[0];
 		} else {
