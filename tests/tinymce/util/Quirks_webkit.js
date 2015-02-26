@@ -39,11 +39,56 @@ if (tinymce.isWebKit) {
 		equal(editor.selection.getStart().nodeName, 'H1');
 	});
 
+	test('Delete range from middle of H1 to middle of span in P', function() {
+		editor.getBody().innerHTML ='<h1>ab</h1><p>b<span style="color:red">cd</span></p>';
+		Utils.setSelection('h1', 1, 'span', 1);
+		editor.execCommand('Delete');
+		equal(Utils.normalizeHtml(Utils.cleanHtml(editor.getBody().innerHTML)), '<h1>a<span style="color: red;">d</span></h1>');
+		equal(editor.selection.getStart().nodeName, 'H1');
+	});
+
 	test('Delete from beginning of P with style span inside into H1', function() {
 		editor.getBody().innerHTML ='<h1>a</h1><p>b<span style="color:red">c</span></p>';
 		Utils.setSelection('p', 0);
 		editor.execCommand('Delete');
-		equal(Utils.normalizeHtml(Utils.cleanHtml(editor.getBody().innerHTML)), '<h1>ab<span data-mce-style="color: red;" style="color: red;">c</span></h1>');
+		equal(Utils.normalizeHtml(Utils.cleanHtml(editor.getBody().innerHTML)), '<h1>a</h1><p>b<span style="color:red">c</span></p>');
+		equal(editor.selection.getStart().nodeName, 'H1');
+	});
+
+	test('Delete from beginning of P with span style to H1', function() {
+		editor.getBody().innerHTML ='<h1>a</h1><p><span style="color:red">b</span></p>';
+		Utils.setSelection('span', 0);
+		editor.execCommand('Delete');
+		equal(Utils.normalizeHtml(Utils.cleanHtml(editor.getBody().innerHTML)), '<h1>a<span style="color:red">b</span></h1>');
+		equal(editor.selection.getStart().nodeName, 'H1');
+	});
+
+	test('Delete from beginning of P with BR line to H1', function() {
+		editor.getBody().innerHTML ='<h1>a</h1><p>b<br>c</p>';
+		Utils.setSelection('p', 0);
+		editor.execCommand('Delete');
+		equal(Utils.normalizeHtml(Utils.cleanHtml(editor.getBody().innerHTML)), '<h1>ab<br>c</h1>');
+		equal(editor.selection.getStart().nodeName, 'H1');
+	});
+
+	test('ForwardDelete from end of of H1 with span style to P', function() {
+		editor.getBody().innerHTML ='<h1>a</h1><p><span style="color:red">b</span></p>';
+		Utils.setSelection('h1', 1);
+		editor.execCommand('ForwardDelete');
+		equal(Utils.normalizeHtml(Utils.cleanHtml(editor.getBody().innerHTML)), '<h1>a<span style="color:red">b</span></p>');
+		equal(editor.selection.getStart().nodeName, 'H1');
+	});
+
+	test('ForwardDelete from end of H1 with BR line to P', function() {
+		editor.getBody().innerHTML ='<h1>a<br>b</h1><p>c</p>';
+
+		var rng = editor.selection.getRng();
+		rng.setStart(editor.$('h1')[0].lastChild, 1);
+		rng.setEnd(editor.$('h1')[0].lastChild, 1);
+		editor.selection.setRng(rng);
+
+		editor.execCommand('ForwardDelete');
+		equal(Utils.normalizeHtml(Utils.cleanHtml(editor.getBody().innerHTML)), '<h1>a<br />bc</h1>');
 		equal(editor.selection.getStart().nodeName, 'H1');
 	});
 
