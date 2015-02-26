@@ -26,11 +26,12 @@ define("tinymce/dom/DOMUtils", [
 	"tinymce/dom/EventUtils",
 	"tinymce/dom/TreeWalker",
 	"tinymce/dom/Range",
+	"tinymce/dom/RangePoint",
 	"tinymce/html/Entities",
 	"tinymce/Env",
 	"tinymce/util/Tools",
 	"tinymce/dom/StyleSheetLoader"
-], function(Sizzle, $, Styles, EventUtils, TreeWalker, Range, Entities, Env, Tools, StyleSheetLoader) {
+], function(Sizzle, $, Styles, EventUtils, TreeWalker, Range, RangePoint, Entities, Env, Tools, StyleSheetLoader) {
 	// Shorten names
 	var each = Tools.each, is = Tools.is, grep = Tools.grep, trim = Tools.trim;
 	var isIE = Env.ie;
@@ -1773,6 +1774,10 @@ define("tinymce/dom/DOMUtils", [
 			}
 
 			return false;
+		},
+
+		createRangePoint: function(container, offset) {
+			return new RangePoint(container, offset, this);
 		},
 
 		// #ifdef debug

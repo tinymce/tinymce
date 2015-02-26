@@ -926,6 +926,16 @@ define("tinymce/dom/Selection", [
 			this.setRng(rng);
 		},
 
+		getStartRangePoint: function() {
+			var rng = this.getRng(true);
+			return this.dom.createRangePoint(rng.startContainer, rng.startOffset, this);
+		},
+
+		getEndRangePoint: function() {
+			var rng = this.getRng(true);
+			return this.dom.createRangePoint(rng.endContainer, rng.endOffset, this);
+		},
+
 		_moveEndPoint: function(rng, node, start) {
 			var root = node, walker = new TreeWalker(node, root);
 			var nonEmptyElementsMap = this.dom.schema.getNonEmptyElements();
