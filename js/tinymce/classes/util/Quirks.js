@@ -147,7 +147,7 @@ define("tinymce/util/Quirks", [
 		 *  4. Delete by pressing delete key with ctrl/cmd (Word delete).
 		 *  5. Delete by drag/dropping contents inside the editor.
 		 *  6. Delete by using Cut Ctrl+X/Cmd+X.
-		 *  7. Delete by selecting contents and writing a character.'
+		 *  7. Delete by selecting contents and writing a character.
 		 *
 		 * This code is a ugly hack since writing full custom delete logic for just this bug
 		 * fix seemed like a huge task. I hope we can remove this before the year 2030.
@@ -196,7 +196,7 @@ define("tinymce/util/Quirks", [
 			}
 
 			function customDelete(isForward) {
-				var mutationObserver = new MutationObserver(function() {});
+				var mutationObserver, rng, caretElement;
 
 				Tools.each(editor.getBody().getElementsByTagName('*'), function(elm) {
 					// Mark existing spans
@@ -211,6 +211,7 @@ define("tinymce/util/Quirks", [
 				});
 
 				// Observe added nodes and style attribute changes
+				mutationObserver = new MutationObserver(function() {});
 				mutationObserver.observe(editor.getDoc(), {
 					childList: true,
 					attributes: true,
@@ -220,8 +221,8 @@ define("tinymce/util/Quirks", [
 
 				editor.getDoc().execCommand(isForward ? 'ForwardDelete' : 'Delete', false, null);
 
-				var rng = editor.selection.getRng();
-				var caretElement = rng.startContainer.parentNode;
+				rng = editor.selection.getRng();
+				caretElement = rng.startContainer.parentNode;
 
 				Tools.each(mutationObserver.takeRecords(), function(record) {
 					if (!dom.isChildOf(record.target, editor.getBody())) {
