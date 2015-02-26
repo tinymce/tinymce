@@ -128,9 +128,9 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 			return caretContainer;
 		}
 
-		// Removes any caret container except the one we might be in
+		// Removes any caret container
 		function removeCaretContainer(caretContainer) {
-			var rng, child, currentCaretContainer, lastContainer;
+			var rng, child, lastContainer;
 
 			if (caretContainer) {
 				rng = selection.getRng(true);
@@ -146,16 +146,13 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 
 				selection.setRng(rng);
 			} else {
-				currentCaretContainer = getParentCaretContainer(selection.getStart());
 				while ((caretContainer = dom.get(caretContainerId)) && caretContainer !== lastContainer) {
-					if (currentCaretContainer !== caretContainer) {
-						child = findFirstTextNode(caretContainer);
-						if (child && child.nodeValue.charAt(0) == invisibleChar) {
-							child = child.deleteData(0, 1);
-						}
-
-						dom.remove(caretContainer, true);
+					child = findFirstTextNode(caretContainer);
+					if (child && child.nodeValue.charAt(0) == invisibleChar) {
+						child = child.deleteData(0, 1);
 					}
+
+					dom.remove(caretContainer, true);
 
 					lastContainer = caretContainer;
 				}
@@ -350,6 +347,8 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 				return true;
 			}
 
+			moveSelection();
+
 			startElement = selection.getStart();
 			endElement = selection.getEnd();
 
@@ -435,7 +434,6 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 			}
 		});
 
-		editor.on('mouseup keyup', moveSelection);
 		editor.on('keydown', handleKey);
 	}
 
