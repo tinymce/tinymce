@@ -60,6 +60,14 @@ if (tinymce.isWebKit) {
 		equal(editor.selection.getStart().nodeName, 'H1');
 	});
 
+	test('Delete from beginning of P with style span inside into H1 with inline block', function() {
+		editor.getBody().innerHTML = '<h1>a<input type="text"></h1><p>b<span style="color:red">c</span></p>';
+		Utils.setSelection('p', 0);
+		editor.execCommand('Delete');
+		equal(editor.getContent(), '<h1>a<input type="text" />b<span style="color: red;">c</span></h1>');
+		equal(editor.selection.getStart().nodeName, 'H1');
+	});
+
 	test('Delete from beginning of P with style span inside into H1', function() {
 		editor.getBody().innerHTML = '<h1>a</h1><p>b<span style="color:red">c</span></p>';
 		Utils.setSelection('p', 0);
@@ -108,11 +116,19 @@ if (tinymce.isWebKit) {
 		equal(editor.selection.getStart().nodeName, 'H1');
 	});
 
-	test('ForwardDelete from end of of H1 with span style to P', function() {
+	test('ForwardDelete from end of H1 to P with style span', function() {
 		editor.getBody().innerHTML = '<h1>a</h1><p><span style="color:red">b</span></p>';
 		Utils.setSelection('h1', 1);
 		editor.execCommand('ForwardDelete');
 		equal(editor.getContent(), '<h1>a<span style="color: red;">b</span></h1>');
+		equal(editor.selection.getStart().nodeName, 'H1');
+	});
+
+	test('ForwardDelete from end of H1 to P with style and inline block element', function() {
+		editor.getBody().innerHTML = '<h1>a</h1><p><input type="text"><span style="color:red">b</span></p>';
+		Utils.setSelection('h1', 1);
+		editor.execCommand('ForwardDelete');
+		equal(editor.getContent(), '<h1>a<input type="text" /><span style="color: red;">b</span></h1>');
 		equal(editor.selection.getStart().nodeName, 'H1');
 	});
 
