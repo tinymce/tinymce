@@ -16,7 +16,9 @@ Version 4.1.8 (2014-12-xx)
 	Fixed bug where type over of inline formatting elements wouldn't properly keep the format on WebKit/Blink.
 	Fixed bug where selection needed to be properly normalized on modern IE versions.
 	Fixed bug where Command+Backspace didn't properly delete the whole line of text but the previous word.
-	Fixed bug where UI active states wheren't properly updated on IE if you placed caret within the current rage.
+	Fixed bug where UI active states wheren't properly updated on IE if you placed caret within the current range.
+	Fixed bug where delete/backspace on WebKit/Blink would remove span elements created by the user.
+	Fixed bug where delete/backspace would produce incorrect results when deleting between two text blocks with br elements.
 	Fixed a bug where applying a color to text did not update the undo/redo history.
 	Fixed so removeformat removes ins/del by default since these might be used for strikethough.
 	Removed address from the default list of block formats since it tends to be missused.
