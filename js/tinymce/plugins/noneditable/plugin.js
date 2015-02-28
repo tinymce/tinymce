@@ -28,7 +28,7 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 			if (contentEditable && contentEditable !== "inherit") {
 				return contentEditable;
 			}
-
+			
 			// Check for real content editable
 			contentEditable = node.contentEditable;
 			if (contentEditable !== "inherit") {
@@ -355,7 +355,7 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 
 			// Disable all key presses in contentEditable=false except delete or backspace
 			nonEditableParent = getNonEditableParent(startElement) || getNonEditableParent(endElement);
-			if (nonEditableParent && (keyCode < 112 || keyCode > 124) && keyCode != VK.DELETE && keyCode != VK.BACKSPACE) {
+			if (nonEditableParent && (keyCode < 112 || keyCode > 124)) {
 				// Is Ctrl+c, Ctrl+v or Ctrl+x then use default browser behavior
 				if ((tinymce.isMac ? e.metaKey : e.ctrlKey) && (keyCode == 67 || keyCode == 88 || keyCode == 86)) {
 					return;
@@ -378,11 +378,11 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 				}
 			} else {
 				// Is arrow left/right, backspace or delete
-				if (keyCode == VK.LEFT || keyCode == VK.RIGHT || keyCode == VK.BACKSPACE || keyCode == VK.DELETE) {
+				if (keyCode == VK.LEFT || keyCode == VK.RIGHT) {
 					caretContainer = getParentCaretContainer(startElement);
 					if (caretContainer) {
 						// Arrow left or backspace
-						if (keyCode == VK.LEFT || keyCode == VK.BACKSPACE) {
+						if (keyCode == VK.LEFT) {
 							nonEditableParent = getNonEmptyTextNodeSibling(caretContainer, true);
 
 							if (nonEditableParent && getContentEditable(nonEditableParent) === "false") {
@@ -400,7 +400,7 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 						}
 
 						// Arrow right or delete
-						if (keyCode == VK.RIGHT || keyCode == VK.DELETE) {
+						if (keyCode == VK.RIGHT) {
 							nonEditableParent = getNonEmptyTextNodeSibling(caretContainer);
 
 							if (nonEditableParent && getContentEditable(nonEditableParent) === "false") {
@@ -416,11 +416,6 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 								removeCaretContainer(caretContainer);
 							}
 						}
-					}
-
-					if ((keyCode == VK.BACKSPACE || keyCode == VK.DELETE) && !canDelete(keyCode == VK.BACKSPACE)) {
-						e.preventDefault();
-						return false;
 					}
 				}
 			}
