@@ -72,7 +72,7 @@ define("tinymce/dom/DOMUtils", [
 				get: function($elm) {
 					var value = $elm.attr('data-mce-style') || $elm.attr('style');
 
-					value = domUtils.serializeStyle(domUtils.parseStyle(value), $elm[0].nodeName);
+					value = domUtils.serializeStyle(domUtils.parseStyle(value), $elm[0].nodeName.toLowerCase());
 
 					return value;
 				}
