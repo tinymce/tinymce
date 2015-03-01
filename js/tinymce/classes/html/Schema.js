@@ -329,7 +329,7 @@ define("tinymce/html/Schema", [
 
 			// Convert styles into a rule list
 			each(value, function(value, key) {
-				styles[key] = mode == 'map' ? makeMap(value, /[, ]/) : explode(value, /[, ]/);
+				styles[key] = styles[key.toUpperCase()] = mode == 'map' ? makeMap(value, /[, ]/) : explode(value, /[, ]/);
 			});
 		}
 
