@@ -152,6 +152,10 @@ tinymce.PluginManager.add('image', function(editor) {
 			if (!data.alt) {
 				data.alt = '';
 			}
+			
+			if (!data.title) {
+				data.title = '';
+			}
 
 			if (data.width === '') {
 				data.width = null;
@@ -170,6 +174,7 @@ tinymce.PluginManager.add('image', function(editor) {
 			data = {
 				src: data.src,
 				alt: data.alt,
+				title: data.title,
 				width: data.width,
 				height: data.height,
 				style: data.style,
@@ -224,9 +229,10 @@ tinymce.PluginManager.add('image', function(editor) {
 				var srcURL = this.value(),
 				absoluteURLPattern = new RegExp('^(?:[a-z]+:)?//', 'i'),
 				baseURL = editor.settings.document_base_url;
+				removeScriptHost = editor.settings.remove_script_host;
 
-				//Pattern test the src url and make sure we haven't already prepended the url
-				if (baseURL && !absoluteURLPattern.test(srcURL) && srcURL.substring(0, baseURL.length) !== baseURL) {
+				//Pattern test the src url and make sure we haven't already prepended the url, also checking if baseURL should be appended
+				if (baseURL && !absoluteURLPattern.test(srcURL) && srcURL.substring(0, baseURL.length) !== baseURL && !removeScriptHost) {
 					this.value(baseURL + srcURL);
 				}
 
@@ -249,6 +255,7 @@ tinymce.PluginManager.add('image', function(editor) {
 			data = {
 				src: dom.getAttrib(imgElm, 'src'),
 				alt: dom.getAttrib(imgElm, 'alt'),
+				title: dom.getAttrib(imgElm, 'title'),
 				"class": dom.getAttrib(imgElm, 'class'),
 				width: width,
 				height: height
@@ -317,6 +324,7 @@ tinymce.PluginManager.add('image', function(editor) {
 
 		if (editor.settings.image_description !== false) {
 			generalFormItems.push({name: 'alt', type: 'textbox', label: 'Image description'});
+			generalFormItems.push({name: 'title', type: 'textbox', label: 'Image Title'});
 		}
 
 		if (imageDimensions) {
