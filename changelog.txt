@@ -4,6 +4,7 @@ Version 4.1.8 (2014-12-xx)
 	Added new option table_style_by_css for the table plugin to set table styling with css rather than table attributes.
 	Added new link_assume_external_targets option to prompt the user to prepend http:// prefix if the supplied link does not contain a protocol prefix.
 	Added new image_prepend_url option to allow a custom base path/url to be added to images.
+	Added new table_appearance_options option to make it possible to disable some options.
 	Fixed bug where selection starting from out side of the body wouldn't produce a proper selection range on IE 11.
 	Fixed bug where pressing enter twice before a table moves the cursor in the table and causes a javascript error.
 	Fixed bug where advanced image styles were not respected.
@@ -20,8 +21,10 @@ Version 4.1.8 (2014-12-xx)
 	Fixed bug where UI active states wheren't properly updated on IE if you placed caret within the current range.
 	Fixed bug where delete/backspace on WebKit/Blink would remove span elements created by the user.
 	Fixed bug where delete/backspace would produce incorrect results when deleting between two text blocks with br elements.
+	Fixed bug where captions where removed when pasting from MS Office.
 	Fixed a bug where applying a color to text did not update the undo/redo history.
 	Fixed so removeformat removes ins/del by default since these might be used for strikethough.
+	Fixed so transparent color selection gets treated as a normal color selection. Patch contributed by Alexander Hofbauer.
 	Removed address from the default list of block formats since it tends to be missused.
 	Fixed so the pre block format is called preformatted to make it more verbose.
 	Fixed so it's possible to context scope translation strings this isn't needed most of the time.
