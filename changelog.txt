@@ -24,6 +24,7 @@ Version 4.1.8 (2014-12-xx)
 	Fixed bug where captions where removed when pasting from MS Office.
 	Fixed a bug where applying a color to text did not update the undo/redo history.
 	Fixed so removeformat removes ins/del by default since these might be used for strikethough.
+	Fixed so multiple language packs can be loaded and added to the global I18n data structure.
 	Fixed so transparent color selection gets treated as a normal color selection. Patch contributed by Alexander Hofbauer.
 	Removed address from the default list of block formats since it tends to be missused.
 	Fixed so the pre block format is called preformatted to make it more verbose.

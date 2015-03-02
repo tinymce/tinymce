@@ -17,9 +17,31 @@
 define("tinymce/util/I18n", [], function() {
 	"use strict";
 
-	var data = {};
+	var data = {}, code = "en";
 
 	return {
+		/**
+		 * Sets the current language code.
+		 *
+		 * @method setCode
+		 * @param {String} newCode Current language code.
+		 */
+		setCode: function(newCode) {
+			if (newCode) {
+				code = newCode;
+				this.rtl = this.data[newCode] ? this.data[newCode]._dir === 'rtl' : false;
+			}
+		},
+
+		/**
+		 * Returns the current language code.
+		 *
+		 * @return {String} Current language code.
+		 */
+		getCode: function() {
+			return code;
+		},
+
 		/**
 		 * Property gets set to true if a RTL language pack was loaded.
 		 *
@@ -36,11 +58,17 @@ define("tinymce/util/I18n", [], function() {
 		 * @param {Array} items Name/value array with English en_US to sv_SE.
 		 */
 		add: function(code, items) {
-			for (var name in items) {
-				data[name] = items[name];
+			var langData = data[code];
+
+			if (!langData) {
+				data[code] = langData = {};
 			}
 
-			this.rtl = this.rtl || data._dir === 'rtl';
+			for (var name in items) {
+				langData[name] = items[name];
+			}
+
+			this.setCode(code);
 		},
 
 		/**
@@ -56,6 +84,13 @@ define("tinymce/util/I18n", [], function() {
 		 * @return {String} String that got translated.
 		 */
 		translate: function(text) {
+			var langData;
+
+			langData = data[code];
+			if (!langData) {
+				langData = {};
+			}
+
 			if (typeof text == "undefined") {
 				return text;
 			}
@@ -67,12 +102,12 @@ define("tinymce/util/I18n", [], function() {
 			if (text.push) {
 				var values = text.slice(1);
 
-				text = (data[text[0]] || text[0]).replace(/\{([0-9]+)\}/g, function(match1, match2) {
+				text = (langData[text[0]] || text[0]).replace(/\{([0-9]+)\}/g, function(match1, match2) {
 					return values[match2];
 				});
 			}
 
-			return (data[text] || text).replace(/{context:\w+}$/, '');
+			return (langData[text] || text).replace(/{context:\w+}$/, '');
 		},
 
 		data: data

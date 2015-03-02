@@ -477,6 +477,7 @@ define("tinymce/Editor", [
 			var self = this, settings = self.settings, elm = self.getElement();
 			var w, h, minHeight, n, o, Theme, url, bodyId, bodyClass, re, i, initializedPlugins = [];
 
+			this.editorManager.i18n.setCode(settings.language);
 			self.rtl = this.editorManager.i18n.rtl;
 			self.editorManager.add(self);
 
