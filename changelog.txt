@@ -22,6 +22,7 @@ Version 4.1.8 (2014-12-xx)
 	Fixed bug where delete/backspace on WebKit/Blink would remove span elements created by the user.
 	Fixed bug where delete/backspace would produce incorrect results when deleting between two text blocks with br elements.
 	Fixed bug where captions where removed when pasting from MS Office.
+	Fixed bug where lists plugin wouldn't properly remove fully selected nested lists.
 	Fixed a bug where applying a color to text did not update the undo/redo history.
 	Fixed so removeformat removes ins/del by default since these might be used for strikethough.
 	Fixed so multiple language packs can be loaded and added to the global I18n data structure.

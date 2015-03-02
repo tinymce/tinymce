@@ -841,6 +841,65 @@ test('Remove empty UL between two textblocks', function() {
 	equal(editor.selection.getNode().nodeName, 'P');
 });
 
+test('Remove indented list with single item', function() {
+	editor.getBody().innerHTML = trimBrs(
+		'<ul>' +
+			'<li>a' +
+				'<ul>' +
+					'<li>b</li>' +
+				'</ul>' +
+			'</li>' +
+			'<li>c</li>' +
+		'</ul>'
+	);
+
+	editor.focus();
+	Utils.setSelection('li li', 0, 'li li', 1);
+	execCommand('InsertUnorderedList');
+
+	equal(editor.getContent(),
+		'<ul>' +
+			'<li>a</li>' +
+		'</ul>' +
+		'<p>b</p>' +
+		'<ul>' +
+			'<li>c</li>' +
+		'</ul>'
+	);
+	equal(editor.selection.getNode().nodeName, 'P');
+});
+
+test('Remove indented list with multiple items', function() {
+	editor.getBody().innerHTML = trimBrs(
+		'<ul>' +
+			'<li>a' +
+				'<ul>' +
+					'<li>b</li>' +
+					'<li>c</li>' +
+				'</ul>' +
+			'</li>' +
+			'<li>d</li>' +
+		'</ul>'
+	);
+
+	editor.focus();
+	Utils.setSelection('li li:first', 0, 'li li:last', 1);
+	execCommand('InsertUnorderedList');
+
+	equal(editor.getContent(),
+		'<ul>' +
+			'<li>a</li>' +
+		'</ul>' +
+		'<p>b</p>' +
+	 	'<p>c</p>' +
+		'<ul>' +
+			'<li>d</li>' +
+		'</ul>'
+	);
+	equal(editor.selection.getStart().firstChild.data, 'b');
+	equal(editor.selection.getEnd().firstChild.data, 'c');
+});
+
 // Ignore on IE 7, 8 this is a known bug not worth fixing
 if (!tinymce.Env.ie || tinymce.Env.ie > 8) {
 	test('Remove empty UL between two textblocks in BR mode', function() {
