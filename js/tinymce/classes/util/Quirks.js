@@ -196,6 +196,22 @@ define("tinymce/util/Quirks", [
 				};
 			}
 
+			function isTrailingBr(node) {
+				var blockElements = dom.schema.getBlockElements(), rootNode = editor.getBody();
+
+				if (node.nodeName != 'BR') {
+					return false;
+				}
+
+				for (node = node; node != rootNode && !blockElements[node.nodeName]; node = node.parentNode) {
+					if (node.nextSibling) {
+						return false;
+					}
+				}
+
+				return true;
+			}
+
 			function findCaretNode(node, forward, startNode) {
 				var walker, current, nonEmptyElements;
 
@@ -204,7 +220,7 @@ define("tinymce/util/Quirks", [
 				walker = new TreeWalker(startNode || node, node);
 
 				while ((current = walker[forward ? 'next' : 'prev']())) {
-					if (nonEmptyElements[current.nodeName]) {
+					if (nonEmptyElements[current.nodeName] && !isTrailingBr(current)) {
 						return current;
 					}
 
