@@ -221,14 +221,7 @@ tinymce.PluginManager.add('image', function(editor) {
 			});
 
 			if (!meta.width && !meta.height) {
-				var srcURL = this.value(),
-				absoluteURLPattern = new RegExp('^(?:[a-z]+:)?//', 'i'),
-				baseURL = editor.settings.document_base_url;
-
-				//Pattern test the src url and make sure we haven't already prepended the url
-				if (baseURL && !absoluteURLPattern.test(srcURL) && srcURL.substring(0, baseURL.length) !== baseURL) {
-					this.value(baseURL + srcURL);
-				}
+				this.value(editor.convertURL(this.value(), 'src'));
 
 				getImageSize(this.value(), function(data) {
 					if (data.width && data.height && imageDimensions) {
