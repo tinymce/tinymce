@@ -128,10 +128,10 @@
 		);
 	});
 
-	test("Image recognizes relative src url and prepends relative document_base_url setting.", function () {
+	test("Image recognizes relative src url and prepends relative image_prepend_url setting.", function () {
 		var win, elementId, element;
 
-		editor.settings.document_base_url = 'testing/images/';
+		editor.settings.image_prepend_url = 'testing/images/';
 		editor.setContent('');
 		editor.execCommand('mceImage', true);
 
@@ -152,16 +152,16 @@
 
 		equal(
 			cleanHtml(editor.getContent()),
-			'<p><img src="' + editor.settings.document_base_url + 'src" alt="alt" /></p>'
+			'<p><img src="' + editor.settings.image_prepend_url + 'src" alt="alt" /></p>'
 		);
 
 
  	});
 
- 	test("Image recognizes relative src url and prepends absolute document_base_url setting.", function () {
+ 	test("Image recognizes relative src url and prepends absolute image_prepend_url setting.", function () {
 		var win, elementId, element;
 
-		editor.settings.document_base_url = 'http://testing.com/images/';
+		editor.settings.image_prepend_url = 'http://testing.com/images/';
 		editor.setContent('');
 		editor.execCommand('mceImage', true);
 
@@ -182,10 +182,8 @@
 
 		equal(
 			cleanHtml(editor.getContent()),
-			'<p><img src="' + editor.settings.document_base_url + 'src" alt="alt" /></p>'
+			'<p><img src="' + editor.settings.image_prepend_url + 'src" alt="alt" /></p>'
 		);
-
-
  	});
 
 	test('Advanced image dialog border option on empty editor', function(){
@@ -214,7 +212,6 @@
 			cleanHtml(editor.getContent()),
 			'<p><img style="border-width: 10px;" src="src" alt="alt" /></p>'
 		);
-
 	});
 
 	test('Advanced image dialog margin space options on empty editor', function(){

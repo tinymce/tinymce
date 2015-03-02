@@ -3,6 +3,7 @@ Version 4.1.8 (2014-12-xx)
 	Added new elementpath option that makes it possible to disable the element path but keep the statusbar.
 	Added new option table_style_by_css for the table plugin to set table styling with css rather than table attributes.
 	Added new link_assume_external_targets option to prompt the user to prepend http:// prefix if the supplied link does not contain a protocol prefix.
+	Added new image_prepend_url option to allow a custom base path/url to be added to images.
 	Fixed bug where selection starting from out side of the body wouldn't produce a proper selection range on IE 11.
 	Fixed bug where pressing enter twice before a table moves the cursor in the table and causes a javascript error.
 	Fixed bug where advanced image styles were not respected.
