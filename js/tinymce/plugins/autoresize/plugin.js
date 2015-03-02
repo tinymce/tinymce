@@ -64,6 +64,7 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 		myHeight = body.offsetHeight + parseInt(marginTop, 10) + parseInt(marginBottom, 10) +
 			parseInt(paddingTop, 10) + parseInt(paddingBottom, 10) +
 			parseInt(borderTop, 10) + parseInt(borderBottom, 10);
+		//myHeight = body.offsetHeight;
 
 		// Make sure we have a valid height
 		if (isNaN(myHeight) || myHeight <= 0) {
@@ -127,11 +128,13 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 	editor.on("init", function() {
 		var overflowPadding = editor.getParam('autoresize_overflow_padding', 1);
 
-		editor.dom.setStyles(editor.getBody(), {
-			paddingBottom: editor.getParam('autoresize_bottom_margin', 50),
-			paddingLeft: overflowPadding,
-			paddingRight: overflowPadding
-		});
+		if (editor.getParam('autoresize_bottom_margin', false)) {
+			editor.dom.setStyles(editor.getBody(), {
+				paddingBottom: editor.getParam('autoresize_bottom_margin', 50),
+				paddingLeft: overflowPadding,
+				paddingRight: overflowPadding
+			});
+		}
 	});
 
 	// Add appropriate listeners for resizing content area
