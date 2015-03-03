@@ -18,9 +18,10 @@
  */
 define("tinymce/Env", [], function() {
 	var nav = navigator, userAgent = nav.userAgent;
-	var opera, webkit, ie, ie11, gecko, mac, iDevice;
+	var opera, webkit, ie, ie11, gecko, mac, iDevice, android;
 
 	opera = window.opera && window.opera.buildNumber;
+	android = /Android/.test(userAgent);
 	webkit = /WebKit/.test(userAgent);
 	ie = !webkit && !opera && (/MSIE/gi).test(userAgent) && (/Explorer/gi).test(nav.appName);
 	ie = ie && /MSIE (\w+)\./.exec(userAgent)[1];
@@ -88,6 +89,15 @@ define("tinymce/Env", [], function() {
 		 * @final
 		 */
 		iOS: iDevice,
+
+		/**
+		 * Constant that is true if the os is android.
+		 *
+		 * @property android
+		 * @type Boolean
+		 * @final
+		 */
+		android: android,
 
 		/**
 		 * Constant that is true if the browser supports editing.
