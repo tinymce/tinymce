@@ -493,13 +493,14 @@ define("tinymce/dom/ControlSelection", [
 		}
 
 		function controlSelect(elm) {
-			var ctrlRng;
+			var editableBody, ctrlRng;
 
 			if (!isIE) {
 				return;
 			}
 
-			ctrlRng = editableDoc.body.createControlRange();
+			editableBody = editableDoc.getElementsByTagName('body')[0] || editableDoc.body;
+			ctrlRng = editableBody.createControlRange();
 
 			try {
 				ctrlRng.addElement(elm);

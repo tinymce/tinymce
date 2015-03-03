@@ -78,7 +78,7 @@ define("tinymce/dom/EventUtils", [], function() {
 		if (originalEvent && mouseEventRe.test(originalEvent.type) && originalEvent.pageX === undef && originalEvent.clientX !== undef) {
 			var eventDoc = event.target.ownerDocument || document;
 			var doc = eventDoc.documentElement;
-			var body = eventDoc.body;
+			var body = eventDoc.getElementsByTagName('body')[0] || eventDoc.body;
 
 			event.pageX = originalEvent.clientX + (doc && doc.scrollLeft || body && body.scrollLeft || 0) -
 				(doc && doc.clientLeft || body && body.clientLeft || 0);

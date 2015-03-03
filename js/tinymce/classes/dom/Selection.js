@@ -151,7 +151,8 @@ define("tinymce/dom/Selection", [
 		 * tinymce.activeEditor.selection.setContent('<strong>Some contents</strong>');
 		 */
 		setContent: function(content, args) {
-			var self = this, rng = self.getRng(), caretNode, doc = self.win.document, frag, temp;
+			var self = this, rng = self.getRng(), caretNode, doc = self.win.document,
+				body = (doc.getElementsByTagName('body')[0] || doc.body), frag, temp;
 
 			args = args || {format: 'html'};
 			args.set = true;
@@ -172,12 +173,12 @@ define("tinymce/dom/Selection", [
 				// Delete and insert new node
 				if (rng.startContainer == doc && rng.endContainer == doc) {
 					// WebKit will fail if the body is empty since the range is then invalid and it can't insert contents
-					doc.body.innerHTML = content;
+					body.innerHTML = content;
 				} else {
 					rng.deleteContents();
 
-					if (doc.body.childNodes.length === 0) {
-						doc.body.innerHTML = content;
+					if (body.childNodes.length === 0) {
+						body.innerHTML = content;
 					} else {
 						// createContextualFragment doesn't exists in IE 9 DOMRanges
 						if (rng.createContextualFragment) {
@@ -545,7 +546,7 @@ define("tinymce/dom/Selection", [
 			// This can occur when the editor is placed in a hidden container element on Gecko
 			// Or on IE when there was an exception
 			if (!rng) {
-				rng = doc.createRange ? doc.createRange() : doc.body.createTextRange();
+				rng = doc.createRange ? doc.createRange() : (doc.getElementsByTagName('body')[0] || doc.body).createTextRange();
 			}
 
 			// If range is at start of document then move it to start of body
@@ -903,7 +904,7 @@ define("tinymce/dom/Selection", [
 		},
 
 		placeCaretAt: function(clientX, clientY) {
-			var doc = this.editor.getDoc(), rng, point;
+			var doc = this.editor.getDoc(), body = this.editor.getBody(), rng, point;
 
 			if (doc.caretPositionFromPoint) {
 				point = doc.caretPositionFromPoint(clientX, clientY);
@@ -912,14 +913,14 @@ define("tinymce/dom/Selection", [
 				rng.collapse(true);
 			} else if (doc.caretRangeFromPoint) {
 				rng = doc.caretRangeFromPoint(clientX, clientY);
-			} else if (doc.body.createTextRange) {
-				rng = doc.body.createTextRange();
+			} else if (body.createTextRange) {
+				rng = body.createTextRange();
 
 				try {
 					rng.moveToPoint(clientX, clientY);
 					rng.collapse(true);
 				} catch (ex) {
-					rng.collapse(clientY < doc.body.clientHeight);
+					rng.collapse(clientY < body.clientHeight);
 				}
 			}
 

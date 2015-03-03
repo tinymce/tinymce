@@ -284,7 +284,7 @@ define("tinymce/dom/Serializer", [
 			 * @param {Object} args Arguments option that gets passed to event handlers.
 			 */
 			serialize: function(node, args) {
-				var self = this, impl, doc, oldDoc, htmlSerializer, content;
+				var self = this, impl, doc, docBody, oldDoc, htmlSerializer, content;
 
 				// Explorer won't clone contents of script and style and the
 				// selected index of select elements are cleared on a clone operation.
@@ -302,17 +302,18 @@ define("tinymce/dom/Serializer", [
 				if (impl.createHTMLDocument) {
 					// Create an empty HTML document
 					doc = impl.createHTMLDocument("");
+					docBody = doc.body;
 
 					// Add the element or it's children if it's a body element to the new document
 					each(node.nodeName == 'BODY' ? node.childNodes : [node], function(node) {
-						doc.body.appendChild(doc.importNode(node, true));
+						docBody.appendChild(doc.importNode(node, true));
 					});
 
 					// Grab first child or body element for serialization
 					if (node.nodeName != 'BODY') {
-						node = doc.body.firstChild;
+						node = docBody.firstChild;
 					} else {
-						node = doc.body;
+						node = docBody;
 					}
 
 					// set the new document in DOMUtils so createElement etc works

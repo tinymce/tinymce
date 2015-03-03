@@ -51,7 +51,7 @@ define("tinymce/ForceBlocks", [], function() {
 				// Force control range into text range
 				if (rng.item) {
 					node = rng.item(0);
-					rng = editor.getDoc().body.createTextRange();
+					rng = editor.getBody().createTextRange();
 					rng.moveToElementText(node);
 				}
 
@@ -105,7 +105,7 @@ define("tinymce/ForceBlocks", [], function() {
 				} else {
 					// Only select if the previous selection was inside the document to prevent auto focus in quirks mode
 					try {
-						rng = editor.getDoc().body.createTextRange();
+						rng = editor.getBody().createTextRange();
 						rng.moveToElementText(rootNode);
 						rng.collapse(true);
 						rng.moveStart('character', startOffset);
