@@ -27,14 +27,17 @@ tinymce.PluginManager.add('visualchars', function(editor) {
 		if (state) {
 			nodeList = [];
 			tinymce.walk(body, function(n) {
-				if (n.nodeType == 3 && n.nodeValue && n.nodeValue.indexOf('\u00a0') != -1) {
+				if (n.nodeType == 3 && n.nodeValue && n.nodeValue.indexOf('\u00A0') != -1) {
+					nodeList.push(n);
+				} else if (n.nodeType == 3 && n.nodeValue && n.nodeValue.indexOf('\u00AD') != -1) {
 					nodeList.push(n);
 				}
 			}, 'childNodes');
 
 			for (i = 0; i < nodeList.length; i++) {
 				nodeValue = nodeList[i].nodeValue;
-				nodeValue = nodeValue.replace(/(\u00a0)/g, '<span data-mce-bogus="1" class="mce-nbsp">$1</span>');
+				console.log(nodeValue);
+				nodeValue = nodeValue.replace(/(\u00A0)/g, '<span data-mce-bogus="1" class="mce-nbsp">$1</span>').replace(/(\u00AD)/g, '<span data-mce-bogus="1" class="mce-shy">$1</span>');
 
 				div = editor.dom.create('div', null, nodeValue);
 				while ((node = div.lastChild)) {
@@ -44,7 +47,7 @@ tinymce.PluginManager.add('visualchars', function(editor) {
 				editor.dom.remove(nodeList[i]);
 			}
 		} else {
-			nodeList = editor.dom.select('span.mce-nbsp', body);
+			nodeList = editor.dom.select('span.mce-nbsp, span.mce-shy', body);
 
 			for (i = nodeList.length - 1; i >= 0; i--) {
 				editor.dom.remove(nodeList[i], 1);
