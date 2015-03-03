@@ -532,10 +532,12 @@ tinymce.ThemeManager.add('modern', function(editor) {
 
 		// Add statusbar if needed
 		if (settings.statusbar !== false) {
-			panel.add({type: 'panel', name: 'statusbar', classes: 'statusbar', layout: 'flow', border: '1 0 0 0', ariaRoot: true, items: [
-				{type: 'elementpath'},
-				resizeHandleCtrl
-			]});
+			panel.add({type: 'panel', name: 'statusbar', layout: 'flow', border: '1 0 0 0', ariaRoot: true,
+				classes: 'statusbar' + ((settings.statusbar_size) ? ' ' + settings.statusbar_size : ''), items: [
+					{type: 'elementpath'},
+					resizeHandleCtrl
+				]
+			});
 		}
 
 		if (settings.readonly) {
