@@ -186,12 +186,12 @@ define("tinymce/Formatter", [
 
 			// BlockFormat shortcuts keys
 			for (var i = 1; i <= 6; i++) {
-				ed.addShortcut('meta+' + i, '', ['FormatBlock', false, 'h' + i]);
+				ed.addShortcut('meta+alt+' + i, '', ['FormatBlock', false, 'h' + i]);
 			}
 
-			ed.addShortcut('meta+7', '', ['FormatBlock', false, 'p']);
-			ed.addShortcut('meta+8', '', ['FormatBlock', false, 'div']);
-			ed.addShortcut('meta+9', '', ['FormatBlock', false, 'address']);
+			ed.addShortcut('meta+alt+7', '', ['FormatBlock', false, 'p']);
+			ed.addShortcut('meta+alt+8', '', ['FormatBlock', false, 'div']);
+			ed.addShortcut('meta+alt+9', '', ['FormatBlock', false, 'address']);
 		}
 
 		// Public functions
