@@ -16,6 +16,7 @@
  * tinymce.ui.Factory.create({
  *     type: 'checkbox',
  *     checked: true,
+ *     tristate: false,
  *     text: 'My checkbox'
  * }).renderTo(document.body);
  *
@@ -32,7 +33,8 @@ define("tinymce/ui/Checkbox", [
 		Defaults: {
 			classes: "checkbox",
 			role: "checkbox",
-			checked: false
+			checked: false,
+			tristate: false
 		},
 
 		/**
@@ -55,7 +57,19 @@ define("tinymce/ui/Checkbox", [
 				e.preventDefault();
 
 				if (!self.disabled()) {
-					self.checked(!self.checked());
+					var checked = self.checked();
+					if (self.settings.tristate) {
+						if (checked === null) {
+							checked = true;
+						} else if (checked) {
+							checked = false;
+						} else {
+							checked = null;
+						}
+					} else {
+						checked = !checked;
+					}
+					self.checked(checked);
 				}
 			});
 
@@ -73,9 +87,14 @@ define("tinymce/ui/Checkbox", [
 			var self = this;
 
 			if (typeof state != "undefined") {
-				if (state) {
+				if ((state === null) && self.settings.tristate) {
+					self.addClass('indeterminate');
+					self.addClass('checked');
+				} else if (state) {
+					self.removeClass('indeterminate');
 					self.addClass('checked');
 				} else {
+					self.removeClass('indeterminate');
 					self.removeClass('checked');
 				}
 
