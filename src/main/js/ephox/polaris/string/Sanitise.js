@@ -6,6 +6,9 @@ define(
   ],
 
   function () {
+    /**
+     * Sanitises a string for use in a CSS class name
+     */
     var css = function (str) {
       var r = '';
 
@@ -20,6 +23,6 @@ define(
 
     return {
       css: css
-    }
+    };
   }
 );
