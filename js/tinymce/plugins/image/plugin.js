@@ -192,6 +192,10 @@ tinymce.PluginManager.add('image', function(editor) {
 					return;
 				}
 
+				if (data.title === "") {
+					data.title = null;
+				}
+
 				if (!imgElm) {
 					data.id = '__mcenew';
 					editor.focus();
@@ -417,7 +421,6 @@ tinymce.PluginManager.add('image', function(editor) {
 		}
 
 		function updateVSpaceHSpaceBorder() {
-
 			if (!editor.settings.image_advtab) {
 				return;
 			}
