@@ -621,7 +621,35 @@ module.exports = function(grunt) {
 				src: [
 					"js/tinymce/tinymce.js"
 				]
-			}
+			},
+
+			jquery_minified: {
+				options: {
+					themesDir: "js/tinymce/themes",
+					pluginsDir: "js/tinymce/plugins",
+					pluginFileName: "plugin.min.js",
+					themeFileName: "theme.min.js",
+					outputPath: "js/tinymce/tinymce.jquery.full.min.js"
+				},
+
+				src: [
+					"js/tinymce/tinymce.jquery.min.js"
+				]
+			},
+
+			jquery_source: {
+				options: {
+					themesDir: "js/tinymce/themes",
+					pluginsDir: "js/tinymce/plugins",
+					pluginFileName: "plugin.js",
+					themeFileName: "theme.js",
+					outputPath: "js/tinymce/tinymce.jquery.full.js"
+				},
+
+				src: [
+					"js/tinymce/tinymce.jquery.js"
+				]
+			},
 		},
 
 		clean: {
@@ -639,6 +667,10 @@ module.exports = function(grunt) {
 				"js/tinymce/plugins/table/plugin.js",
 				"js/tinymce/plugins/paste/plugin.js",
 				"js/tinymce/plugins/spellchecker/plugin.js"
+			],
+
+			themes: [
+				"js/tinymce/themes/*/*.min.js"
 			],
 
 			skins: [
