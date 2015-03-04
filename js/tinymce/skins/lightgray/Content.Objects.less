@@ -37,8 +37,12 @@
 	background: #D5D5D5 url(img/anchor.gif) no-repeat center;
 }
 
-.mce-nbsp {
+.mce-nbsp, .mce-shy {
 	background: #AAA;
+}
+
+.mce-shy::after {
+	content: '-';
 }
 
 hr {
