@@ -289,14 +289,21 @@ tinymce.PluginManager.add('charmap', function(editor) {
 		gridHtml = '<table role="presentation" cellspacing="0" class="mce-charmap"><tbody>';
 
 		var width = 25;
-		for (y = 0; y < 10; y++) {
+		var height = ((charmap.length + (width - 1)) / width);
+		for (y = 0; y < height; y++) {
 			gridHtml += '<tr>';
 
 			for (x = 0; x < width; x++) {
-				var chr = charmap[y * width + x];
+				var index = y * width + x;
+				if (index < charmap.length) {
+					var chr = charmap[index];
 
-				gridHtml += '<td title="' + chr[1] + '"><div tabindex="-1" title="' + chr[1] + '" role="button">' +
-					(chr ? String.fromCharCode(parseInt(chr[0], 10)) : '&nbsp;') + '</div></td>';
+					gridHtml += '<td title="' + chr[1] + '"><div tabindex="-1" title="' + chr[1] + '" role="button">' +
+						(chr ? String.fromCharCode(parseInt(chr[0], 10)) : '&nbsp;') + '</div></td>';
+				}
+				else {
+					gridHtml += '<td />';
+				}
 			}
 
 			gridHtml += '</tr>';
@@ -309,24 +316,26 @@ tinymce.PluginManager.add('charmap', function(editor) {
 			html: gridHtml,
 			onclick: function(e) {
 				var target = e.target;
+				if (/^(TD|DIV)$/.test(target.nodeName)) {
+					if (getParentTd(target).firstChild) {
+						editor.execCommand('mceInsertContent', false, tinymce.trim(target.innerText || target.textContent));
 
-				if (target.tagName == 'TD') {
-					target = target.firstChild;
-				}
-
-				if (target.tagName == 'DIV') {
-					editor.execCommand('mceInsertContent', false, target.firstChild.data);
-
-					if (!e.ctrlKey) {
-						win.close();
+						if (!e.ctrlKey) {
+							win.close();
+						}
 					}
 				}
 			},
 			onmouseover: function(e) {
 				var td = getParentTd(e.target);
 
-				if (td) {
+				if (td && td.firstChild) {
 					win.find('#preview').text(td.firstChild.firstChild.data);
+					win.find('#previewTitle').text(td.title);
+				}
+				else {
+					win.find('#preview').text(' ');
+					win.find('#previewTitle').text(' ');
 				}
 			}
 		};
@@ -338,13 +347,33 @@ tinymce.PluginManager.add('charmap', function(editor) {
 			items: [
 				charMapPanel,
 				{
-					type: 'label',
-					name: 'preview',
-					text: ' ',
-					style: 'font-size: 40px; text-align: center',
-					border: 1,
-					minWidth: 100,
-					minHeight: 80
+					type: 'container',
+					layout: 'flex',
+					direction: 'column',
+					align: 'center',
+					spacing: 5,
+					minWidth: 160,
+					minHeight: 160,
+					items: [
+						{
+							type: 'label',
+							name: 'preview',
+							text: ' ',
+							style: 'font-size: 40px; text-align: center',
+							border: 1,
+							minWidth: 140,
+							minHeight: 80
+						},
+						{
+							type: 'label',
+							name: 'previewTitle',
+							text: ' ',
+							style: 'text-align: center',
+							border: 1,
+							minWidth: 140,
+							minHeight: 80
+						}
+					]
 				}
 			],
 			buttons: [
