@@ -29,6 +29,7 @@ Version 4.1.8 (2014-12-xx)
 	Fixed so multiple language packs can be loaded and added to the global I18n data structure.
 	Fixed so transparent color selection gets treated as a normal color selection. Patch contributed by Alexander Hofbauer.
 	Fixed so it's possible to disable autoresize_overflow_padding, autoresize_bottom_margin options by setting them to false.
+	Fixed so the charmap plugin shows the description of the character in the dialog. Patch contributed by Jelle Hissink.
 	Removed address from the default list of block formats since it tends to be missused.
 	Fixed so the pre block format is called preformatted to make it more verbose.
 	Fixed so it's possible to context scope translation strings this isn't needed most of the time.

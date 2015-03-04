@@ -13,7 +13,7 @@
 tinymce.PluginManager.add('charmap', function(editor) {
 	var charmap = [
 		['160', 'no-break space'],
-		['38', 'ampersand'],
+		['173', 'soft hyphen'],
 		['34', 'quotation mark'],
 	// finance
 		['162', 'cent sign'],
@@ -269,8 +269,7 @@ tinymce.PluginManager.add('charmap', function(editor) {
 		['8204', 'zero width non-joiner'],
 		['8205', 'zero width joiner'],
 		['8206', 'left-to-right mark'],
-		['8207', 'right-to-left mark'],
-		['173', 'soft hyphen']
+		['8207', 'right-to-left mark']
 	];
 
 	function showDialog() {
@@ -289,7 +288,7 @@ tinymce.PluginManager.add('charmap', function(editor) {
 		gridHtml = '<table role="presentation" cellspacing="0" class="mce-charmap"><tbody>';
 
 		var width = 25;
-		var height = ((charmap.length + (width - 1)) / width);
+		var height = Math.ceil(charmap.length / width);
 		for (y = 0; y < height; y++) {
 			gridHtml += '<tr>';
 
@@ -300,8 +299,7 @@ tinymce.PluginManager.add('charmap', function(editor) {
 
 					gridHtml += '<td title="' + chr[1] + '"><div tabindex="-1" title="' + chr[1] + '" role="button">' +
 						(chr ? String.fromCharCode(parseInt(chr[0], 10)) : '&nbsp;') + '</div></td>';
-				}
-				else {
+				} else {
 					gridHtml += '<td />';
 				}
 			}
@@ -332,8 +330,7 @@ tinymce.PluginManager.add('charmap', function(editor) {
 				if (td && td.firstChild) {
 					win.find('#preview').text(td.firstChild.firstChild.data);
 					win.find('#previewTitle').text(td.title);
-				}
-				else {
+				} else {
 					win.find('#preview').text(' ');
 					win.find('#previewTitle').text(' ');
 				}
