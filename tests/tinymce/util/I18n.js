@@ -1,4 +1,8 @@
-module("tinymce.util.I18n");
+module("tinymce.util.I18n", {
+	teardown: function() {
+		tinymce.util.I18n.rtl = false;
+	}
+});
 
 test("Translate strings", function() {
 	tinymce.util.I18n.add("code", {

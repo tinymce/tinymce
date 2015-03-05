@@ -382,7 +382,7 @@ test('remove format on span with internal class using removeformat format', func
 	editor.getBody().innerHTML = '<p><span class="mce-item-internal">abc</span></p>';
 	Utils.setSelection('span', 0, 'span', 3);
 	editor.formatter.remove('removeformat');
-	equal(Utils.cleanHtml(editor.getBody().innerHTML), '<p><span class="mce-item-internal">abc</span></p>');
+	equal(Utils.normalizeHtml(Utils.cleanHtml(editor.getBody().innerHTML)), '<p><span class="mce-item-internal">abc</span></p>');
 });
 
 /*
