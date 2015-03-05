@@ -241,7 +241,7 @@ tinymce.PluginManager.add('image', function(editor) {
 
 				this.value(srcURL);
 
-				getImageSize(this.value(), function(data) {
+				getImageSize(editor.documentBaseURI.toAbsolute(this.value()), function(data) {
 					if (data.width && data.height && imageDimensions) {
 						width = data.width;
 						height = data.height;
