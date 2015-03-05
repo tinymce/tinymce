@@ -24,6 +24,7 @@ Version 4.1.8 (2014-12-xx)
 	Fixed bug where delete/backspace would produce incorrect results when deleting between two text blocks with br elements.
 	Fixed bug where captions where removed when pasting from MS Office.
 	Fixed bug where lists plugin wouldn't properly remove fully selected nested lists.
+	Fixed bug where the ttf font used for icons would throw an warning message on Gecko on Mac OS X.
 	Fixed a bug where applying a color to text did not update the undo/redo history.
 	Fixed so shy entities gets displayed when using the visualchars plugin.
 	Fixed so removeformat removes ins/del by default since these might be used for strikethough.
