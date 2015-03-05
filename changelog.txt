@@ -1,4 +1,4 @@
-Version 4.1.8 (2014-12-xx)
+Version 4.1.8 (2015-03-05)
 	Added new html5 sizes attribute to img elements used together with srcset.
 	Added new elementpath option that makes it possible to disable the element path but keep the statusbar.
 	Added new option table_style_by_css for the table plugin to set table styling with css rather than table attributes.
