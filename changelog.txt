@@ -1,3 +1,5 @@
+Version 4.1.9 (2015-03-xx)
+	Fixed bug where indentation wouldn't work properly for non list elements.
 Version 4.1.8 (2015-03-05)
 	Added new html5 sizes attribute to img elements used together with srcset.
 	Added new elementpath option that makes it possible to disable the element path but keep the statusbar.
