@@ -54,9 +54,12 @@ define("tinymce/LegacyInput", [
 					},
 
 					u: function(dom, node) {
-						replaceWithSpan(node, {
-							textDecoration: 'underline'
-						});
+						// HTML5 allows U element
+						if (editor.settings.schema === "html4") {
+							replaceWithSpan(node, {
+								textDecoration: 'underline'
+							});
+						}
 					},
 
 					strike: function(dom, node) {
