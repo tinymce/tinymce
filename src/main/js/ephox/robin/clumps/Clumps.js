@@ -112,7 +112,7 @@ define(
         }, function (n) {
           if (universe.eq(n, target)) return [ current ].concat({ start: target, finish: target });
           // There was a new starting point, so scan for more clumps and accumulate the result.
-          return [ current ].concat(scan(universe, isRoot, Gather.sidestep, n, n, target));
+          return [ current ].concat(scan(universe, isRoot, Gather.advance, n, n, target));
         });
       }, function (elem, _mode) {
         // We hit the final destination, so finish our current clump
