@@ -3,6 +3,7 @@ Version 4.1.9 (2015-03-xx)
 	Fixed bug with image plugin not pulling the image dimensions out correctly if a custom document_base_url was used.
 	Fixed bug where ctrl+alt+[1-9] would conflict with the AltGr+[1-9] on Windows. New shortcuts is ctrl+shift+[1-9].
 	Fixed bug with removing formatting on nodes in inline mode would sometimes include nodes outside the editor body.
+	Fixed bug where extra nbsp:s would be inserted when you replaced a word surronded by spaces using insertContent.
 Version 4.1.8 (2015-03-05)
 	Added new html5 sizes attribute to img elements used together with srcset.
 	Added new elementpath option that makes it possible to disable the element path but keep the statusbar.

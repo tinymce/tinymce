@@ -471,6 +471,31 @@ define("tinymce/EditorCommands", [
 					return html;
 				}
 
+				// Removes &nbsp; from a [b] c -> a &nbsp;c -> a c
+				function trimNbspAfterDeleteAndPaddValue() {
+					var rng, container, offset;
+
+					rng = selection.getRng(true);
+					container = rng.startContainer;
+					offset = rng.startOffset;
+
+					if (container.nodeType == 3 && rng.collapsed) {
+						if (container.data[offset] === '\u00a0') {
+							container.deleteData(offset, 1);
+
+							if (!/[\u00a0| ]$/.test(value)) {
+								value += ' ';
+							}
+						} else if (container.data[offset - 1] === '\u00a0') {
+							container.deleteData(offset - 1, 1);
+
+							if (!/[\u00a0| ]$/.test(value)) {
+								value = ' ' + value;
+							}
+						}
+					}
+				}
+
 				function markInlineFormatElements(fragment) {
 					if (merge) {
 						for (node = fragment.firstChild; node; node = node.walk(true)) {
@@ -541,6 +566,7 @@ define("tinymce/EditorCommands", [
 				// Insert node maker where we will insert the new HTML and get it's parent
 				if (!selection.isCollapsed()) {
 					editor.getDoc().execCommand('Delete', false, null);
+					trimNbspAfterDeleteAndPaddValue();
 				}
 
 				parentNode = selection.getNode();

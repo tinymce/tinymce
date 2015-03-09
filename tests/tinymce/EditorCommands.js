@@ -346,6 +346,13 @@ test('mceInsertContent - insert P in span style element #7090', function() {
 	equal(editor.getContent(), '<p><span style="color: red;">1</span></p><p>2</p><p>3</p>');
 });
 
+test('mceInsertContent - insert char at char surrounded by spaces', function() {
+	editor.setContent('<p>a b c</p>');
+	Utils.setSelection('p', 2, 'p', 3);
+	editor.execCommand('mceInsertContent', false, 'X');
+	equal(tinymce.util.JSON.serialize(editor.getContent()), '"<p>a X c</p>"');
+});
+
 test('InsertHorizontalRule', function() {
 	var rng;
 
