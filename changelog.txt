@@ -1,4 +1,4 @@
-Version 4.1.9 (2015-03-xx)
+Version 4.1.9 (2015-03-10)
 	Fixed bug where indentation wouldn't work properly for non list elements.
 	Fixed bug with image plugin not pulling the image dimensions out correctly if a custom document_base_url was used.
 	Fixed bug where ctrl+alt+[1-9] would conflict with the AltGr+[1-9] on Windows. New shortcuts is ctrl+shift+[1-9].
