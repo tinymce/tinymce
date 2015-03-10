@@ -8,6 +8,11 @@ define(
   ],
 
   function (Type, Id, Attr) {
+    var presentation = function (element) {
+      Attr.set(element, 'role', 'presentation');
+      Attr.set(element, 'aria-hidden', 'true');
+    };
+
     var editor = function (element, label) {
       Attr.set(element, 'role', 'application');
       Attr.set(element, 'aria-label', label);
@@ -41,8 +46,12 @@ define(
       };
       // End TODO
 
-      if (!isEmpty(label))
+      Attr.set(element, 'role', 'group');
+
+      // customer groups may have empty label, don't use it
+      if (!isEmpty(label)) {
         Attr.set(element, 'aria-label', label);
+      }
     };
 
     var menuItem = function (element, label, hasPopup) {
@@ -61,7 +70,7 @@ define(
     //   throw 'Form ARIA support not implemented yet.';
     // };
 
-    var input = function (element, label, required) {
+    var input = function (element, label) {
       Attr.set(element, 'aria-label', label);
     };
 
@@ -81,6 +90,7 @@ define(
     // };
 
     return {
+      presentation: presentation,
       editor: editor,
       toolbar: toolbar,
       toolbarGroup: toolbarGroup,
