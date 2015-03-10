@@ -14,8 +14,11 @@ define(
     };
 
     var editor = function (element, label) {
-      Attr.set(element, 'role', 'application');
-      Attr.set(element, 'aria-label', label);
+      Attr.setAll(element, {
+        'role': 'application',
+        'aria-label': label,
+        'title': label
+      });
     };
 
     var toolbar = function (element, label) {
