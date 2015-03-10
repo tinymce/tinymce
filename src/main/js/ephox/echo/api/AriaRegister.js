@@ -9,8 +9,10 @@ define(
 
   function (Type, Id, Attr) {
     var presentation = function (element) {
-      Attr.set(element, 'role', 'presentation');
-      Attr.set(element, 'aria-hidden', 'true');
+      Attr.setAll(element, {
+        'role': 'presentation',
+        'aria-hidden': 'true'
+      });
     };
 
     var editor = function (element, label) {
@@ -22,23 +24,27 @@ define(
     };
 
     var toolbar = function (element, label) {
-      Attr.set(element, 'role', 'toolbar');
-      Attr.set(element, 'aria-label', label);
+      Attr.setAll(element, {
+        'role': 'toolbar',
+        'aria-label': label
+      });
     };
 
     var menu = function (element, label) {
-      Attr.set(element, 'role', 'menu');
-      Attr.set(element, 'aria-label', label);
+      Attr.setAll(element, {
+        'role': 'menu',
+        'aria-label': label
+      });
     };
 
     var toolbarButton = function (element, label, hasPopup, isToggle) {
-      Attr.set(element, 'role', 'button');
-      Attr.set(element, 'aria-label', label);
+      Attr.setAll(element, {
+        'role': 'button',
+        'aria-label': label,
+        'aria-haspopup': '' + hasPopup
+      });
       if (isToggle) Attr.set(element, 'aria-pressed', 'false');
-      Attr.set(element, 'aria-haspopup', '' + hasPopup);
-      if (hasPopup) {
-        Attr.set(element, 'aria-expanded', 'false');
-      }
+      if (hasPopup) Attr.set(element, 'aria-expanded', 'false');
     };
 
     var toolbarGroup = function (element, label) {
@@ -58,14 +64,18 @@ define(
     };
 
     var menuItem = function (element, label, hasPopup) {
-      Attr.set(element, 'role', 'menuitem');
-      Attr.set(element, 'aria-label', label);
-      Attr.set(element, 'aria-haspopup', hasPopup === true ? 'true' : 'false');
+      Attr.setAll(element, {
+        'role': 'menuitem',
+        'aria-label': label,
+        'aria-haspopup': hasPopup === true ? 'true' : 'false'
+      });
     };
 
     var dialog = function (element, label) {
-      Attr.set(element, 'role', 'dialog');
-      Attr.set(element, 'aria-label', label);
+      Attr.setAll(element, {
+        'role': 'dialog',
+        'aria-label': label
+      });
     };
 
     // TODO: Implement form ARIA support
