@@ -8,29 +8,43 @@ define(
   ],
 
   function (Type, Id, Attr) {
+    var presentation = function (element) {
+      Attr.setAll(element, {
+        'role': 'presentation',
+        'aria-hidden': 'true'
+      });
+    };
+
     var editor = function (element, label) {
-      Attr.set(element, 'role', 'application');
-      Attr.set(element, 'aria-label', label);
+      Attr.setAll(element, {
+        'role': 'application',
+        'aria-label': label,
+        'title': label
+      });
     };
 
     var toolbar = function (element, label) {
-      Attr.set(element, 'role', 'toolbar');
-      Attr.set(element, 'aria-label', label);
+      Attr.setAll(element, {
+        'role': 'toolbar',
+        'aria-label': label
+      });
     };
 
     var menu = function (element, label) {
-      Attr.set(element, 'role', 'menu');
-      Attr.set(element, 'aria-label', label);
+      Attr.setAll(element, {
+        'role': 'menu',
+        'aria-label': label
+      });
     };
 
     var toolbarButton = function (element, label, hasPopup, isToggle) {
-      Attr.set(element, 'role', 'button');
-      Attr.set(element, 'aria-label', label);
+      Attr.setAll(element, {
+        'role': 'button',
+        'aria-label': label,
+        'aria-haspopup': '' + hasPopup
+      });
       if (isToggle) Attr.set(element, 'aria-pressed', 'false');
-      Attr.set(element, 'aria-haspopup', '' + hasPopup);
-      if (hasPopup) {
-        Attr.set(element, 'aria-expanded', 'false');
-      }
+      if (hasPopup) Attr.set(element, 'aria-expanded', 'false');
     };
 
     var toolbarGroup = function (element, label) {
@@ -41,19 +55,27 @@ define(
       };
       // End TODO
 
-      if (!isEmpty(label))
+      Attr.set(element, 'role', 'group');
+
+      // customer groups may have empty label, don't use it
+      if (!isEmpty(label)) {
         Attr.set(element, 'aria-label', label);
+      }
     };
 
     var menuItem = function (element, label, hasPopup) {
-      Attr.set(element, 'role', 'menuitem');
-      Attr.set(element, 'aria-label', label);
-      Attr.set(element, 'aria-haspopup', hasPopup === true ? 'true' : 'false');
+      Attr.setAll(element, {
+        'role': 'menuitem',
+        'aria-label': label,
+        'aria-haspopup': hasPopup === true ? 'true' : 'false'
+      });
     };
 
     var dialog = function (element, label) {
-      Attr.set(element, 'role', 'dialog');
-      Attr.set(element, 'aria-label', label);
+      Attr.setAll(element, {
+        'role': 'dialog',
+        'aria-label': label
+      });
     };
 
     // TODO: Implement form ARIA support
@@ -61,7 +83,7 @@ define(
     //   throw 'Form ARIA support not implemented yet.';
     // };
 
-    var input = function (element, label, required) {
+    var input = function (element, label) {
       Attr.set(element, 'aria-label', label);
     };
 
@@ -81,6 +103,7 @@ define(
     // };
 
     return {
+      presentation: presentation,
       editor: editor,
       toolbar: toolbar,
       toolbarGroup: toolbarGroup,
