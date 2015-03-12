@@ -42,13 +42,25 @@ define(
       });
     };
 
+    var showPanel = function (element) {
+      Attr.set(element, 'aria-selected', 'true');
+      Attr.set(element, 'aria-hidden', 'false');
+    };
+
+    var hidePanel = function (element) {
+      Attr.set(element, 'aria-selected', 'false');
+      Attr.set(element, 'aria-hidden', 'true');
+    };
+
     return {
       expanded: expanded,
       collapsed: collapsed,
       pressed: pressed,
       enable: enable,
       disable: disable,
-      tabSelected: tabSelected
+      tabSelected: tabSelected,
+      showPanel: showPanel,
+      hidePanel: hidePanel
     };
   }
 );
