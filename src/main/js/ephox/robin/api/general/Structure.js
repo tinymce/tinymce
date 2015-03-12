@@ -55,7 +55,7 @@ define(
     };
 
     var isContainer = function (universe, item) {
-      return Arr.contains([ 'div', 'li', 'td', 'th', 'blockquote', 'body' ], universe.property().name(item));
+      return Arr.contains([ 'div', 'li', 'td', 'th', 'blockquote', 'body', 'caption' ], universe.property().name(item));
     };
 
     var isEmptyTag = function (universe, item) {
