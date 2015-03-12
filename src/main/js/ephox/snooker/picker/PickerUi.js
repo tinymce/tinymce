@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.compass.Arr',
+    'ephox.echo.api.AriaGrid',
     'ephox.peanut.Fun',
     'ephox.porkbun.Event',
     'ephox.porkbun.Events',
@@ -23,14 +24,16 @@ define(
     'global!parseInt'
   ],
 
-  function (Arr, Fun, Event, Events, Structs, PickerLookup, PickerStyles, Redimension, Styles, Util, Attr, Class, Classes, DomEvent, Element, Insert, InsertAll, Remove, parseInt) {
-    return function (direction, settings) {
+  function (Arr, AriaGrid, Fun, Event, Events, Structs, PickerLookup, PickerStyles, Redimension, Styles, Util, Attr, Class, Classes, DomEvent, Element, Insert, InsertAll, Remove, parseInt) {
+    return function (direction, settings, fixme) {
       var events = Events.create({
         select: Event(['rows', 'cols', 'rowHeaders', 'columnHeaders'])
       });
 
       var table = Element.fromTag('div');
       Class.add(table, PickerStyles.table());
+
+      AriaGrid.base(table, fixme);
 
       var size = { width: 0, height: 0};
 
@@ -51,17 +54,18 @@ define(
 
       var recreate = function () {
         Remove.empty(table);
+        var helpReference = AriaGrid.createHelp(table, size.height, size.width);
+
         //create a set of trs, then for each tr, insert numCols tds
-        var rows = Util.repeat(size.height, function () {
+        Util.repeat(size.height, function (rowNum) {
           var row = Element.fromTag('div');
           Class.add(row, PickerStyles.row());
-          return row;
-        });
+          AriaGrid.row(row);
 
-        Arr.each(rows, function (row) {
-          var cells = Util.repeat(size.width, function () {
+          var cells = Util.repeat(size.width, function (colNum) {
             var td = Element.fromTag('span');
             Class.add(td, PickerStyles.cell());
+            AriaGrid.cell(td, helpReference[rowNum][colNum]);
             return td;
           });
 

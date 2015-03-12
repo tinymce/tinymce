@@ -6,8 +6,8 @@ define(
   ],
 
   function (PickerUi) {
-    return function (direction, settings) {
-      return PickerUi(direction, settings);
+    return function (direction, settings, fixme) {
+      return PickerUi(direction, settings, fixme);
     };
   }
 );

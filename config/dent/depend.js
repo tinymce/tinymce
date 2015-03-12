@@ -30,6 +30,16 @@ var dependencies = [
   },
 
   {
+    name: 'echo',
+    repository: 'buildrepo2',
+    source: 'echo.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
+  {
     name: 'dragster',
     repository: 'buildrepo2',
     source: 'dragster.zip',
