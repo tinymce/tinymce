@@ -33,6 +33,8 @@ define(
       var table = Element.fromTag('div');
       Class.add(table, PickerStyles.table());
 
+      var fixme = "forRealFixMe";
+
       AriaGrid.base(table, fixme);
 
       var size = { width: 0, height: 0};
@@ -63,7 +65,8 @@ define(
           AriaGrid.row(row);
 
           var cells = Util.repeat(size.width, function (colNum) {
-            var td = Element.fromTag('span');
+            var td = Element.fromTag('button');
+            Attr.set(td, 'id', 'cell-' + colNum + '-' + rowNum);
             Class.add(td, PickerStyles.cell());
             AriaGrid.cell(td, helpReference[rowNum][colNum]);
             return td;
