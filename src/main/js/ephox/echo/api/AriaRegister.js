@@ -78,6 +78,50 @@ define(
       });
     };
 
+    var widget = function (element) {
+      Attr.set(element, 'role', 'widget');
+    };
+
+    var listBox = function (element) {
+      Attr.set(element, 'role', 'listbox');
+    };
+
+    var tabList = function (element) {
+      Attr.set(element, 'role', 'tablist');
+    };
+
+    var tabButton = function (element, label) {
+      Attr.setAll(element, {
+        'aria-label': label,
+        'role': 'tab'
+      });
+    };
+
+    var tabPanel = function (element /*, label */) {
+      Attr.setAll(element, {
+        'role': 'tabpanel'
+        // 'aria-label': label // Doesn't seem to be read by JAWS or VoiceOver, so giving up
+      });
+    };
+
+    var linkTabToPanel = function (tab, panel) {
+      // I couldn't hear any difference with this, but the concept is linking buttons to the panel that will show
+      var id = Id.generate('ephox-aria');
+      Attr.set(panel, 'id', id);
+      Attr.setAll(tab, {
+        'aria-controls': id,
+        'aria-owns': id
+      });
+    };
+
+    // TODO: Pass in the entire grid, if we can
+    var grid = function (element, label) {
+      Attr.setAll(element, {
+        'aria-label': label,
+        'role': 'grid'
+      });
+    };
+
     // TODO: Implement form ARIA support
     // var form = function (element, label) {
     //   throw 'Form ARIA support not implemented yet.';
@@ -111,7 +155,14 @@ define(
       menu: menu,
       menuItem: menuItem,
       dialog: dialog,
-      input: input
+      input: input,
+      widget: widget,
+      listBox: listBox,
+      tabList: tabList,
+      tabButton: tabButton,
+      tabPanel: tabPanel,
+      linkTabToPanel: linkTabToPanel,
+      grid: grid
     };
   }
 );
