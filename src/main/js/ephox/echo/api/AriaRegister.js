@@ -18,8 +18,7 @@ define(
     var editor = function (element, label) {
       Attr.setAll(element, {
         'role': 'application',
-        'aria-label': label,
-        'title': label
+        'aria-label': label
       });
     };
 
