@@ -146,14 +146,6 @@ define(
       });
     };
 
-    // TODO: Pass in the entire grid, if we can
-    var grid = function (element, label) {
-      Attr.setAll(element, {
-        'aria-label': label,
-        'role': 'grid'
-      });
-    };
-
     // TODO: Implement form ARIA support
     // var form = function (element, label) {
     //   throw 'Form ARIA support not implemented yet.';
@@ -193,8 +185,7 @@ define(
       tabList: tabList,
       tabButton: tabButton,
       tabPanel: tabPanel,
-      linkTabToPanel: linkTabToPanel,
-      grid: grid
+      linkTabToPanel: linkTabToPanel
     };
   }
 );
