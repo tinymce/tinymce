@@ -44,7 +44,7 @@ define(
         var rowHelp = Element.fromTag('span');
         Attr.set(rowHelp, 'id', rowId);
         Class.add(rowHelp, Styles.resolve('aria-help'));
-        Insert.append(rowHelp, Element.fromText(translations('table.picker.rows', (rowNum + 1))));
+        Insert.append(rowHelp, Element.fromText(translations.row(rowNum + 1)));
         Insert.append(gridHelp, rowHelp);
 
         // TODO: snooker util.repeat instead of mutation
@@ -55,7 +55,7 @@ define(
           var cellHelp = Element.fromTag('span');
           Attr.set(cellHelp, 'id', colId);
           Class.add(cellHelp, Styles.resolve('aria-help'));
-          Insert.append(cellHelp, Element.fromText(translations('table.picker.cols', (colNum + 1))));
+          Insert.append(cellHelp, Element.fromText(translations.col(colNum + 1)));
           Insert.append(gridHelp, cellHelp);
 
           ids[rowNum][colNum] = colId + ' ' + rowId;
