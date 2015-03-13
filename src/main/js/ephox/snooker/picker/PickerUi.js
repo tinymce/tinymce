@@ -34,8 +34,6 @@ define(
       var table = Element.fromTag('div');
       Class.add(table, PickerStyles.table());
 
-
-
       var size = { width: 0, height: 0};
 
       var element = function() {
@@ -64,7 +62,8 @@ define(
 
           var cells = Util.repeat(size.width, function (colNum) {
             var td = Element.fromTag('button');
-            Attr.set(td, 'id', 'cell-' + colNum + '-' + rowNum);
+            // this is mostly for debugging, but it's nice to have
+            Class.add(td, Styles.resolve('cell-' + colNum + '-' + rowNum));
             Class.add(td, PickerStyles.cell());
             AriaGrid.cell(td, ids[rowNum][colNum]);
             return td;
