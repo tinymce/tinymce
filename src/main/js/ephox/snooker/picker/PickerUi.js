@@ -18,13 +18,14 @@ define(
     'ephox.sugar.api.Classes',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
+    'ephox.sugar.api.Focus',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.InsertAll',
     'ephox.sugar.api.Remove',
     'global!parseInt'
   ],
 
-  function (Arr, AriaGrid, Fun, Event, Events, Structs, PickerLookup, PickerStyles, Redimension, Styles, Util, Attr, Class, Classes, DomEvent, Element, Insert, InsertAll, Remove, parseInt) {
+  function (Arr, AriaGrid, Fun, Event, Events, Structs, PickerLookup, PickerStyles, Redimension, Styles, Util, Attr, Class, Classes, DomEvent, Element, Focus, Insert, InsertAll, Remove, parseInt) {
     return function (direction, settings, fixme) {
       var events = Events.create({
         select: Event(['rows', 'cols', 'rowHeaders', 'columnHeaders'])
@@ -105,6 +106,10 @@ define(
             Classes.add(cell, classes);
           });
         });
+
+        var cells = PickerLookup.cells(rows[rows.length-1]).slice(0, numCols);
+        var target = cells[cells.length-1];
+        Focus.focus(target);
 
         Attr.set(table, 'data-picker-col', numCols - 1);
         Attr.set(table, 'data-picker-row', numRows - 1);
