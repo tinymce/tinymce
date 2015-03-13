@@ -33,8 +33,6 @@ define(
       var table = Element.fromTag('div');
       Class.add(table, PickerStyles.table());
 
-      var fixme = "forRealFixMe";
-
       AriaGrid.base(table, fixme);
 
       var size = { width: 0, height: 0};

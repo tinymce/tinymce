@@ -22,7 +22,7 @@ define(
         maxRows: 10,
         minCols: 1,
         minRows: 1
-      });
+      }, 'Picker Demo');
 
       var ephoxUi = Element.fromDom(document.getElementById('ephox-ui'));
       var wrap = Element.fromTag('div');

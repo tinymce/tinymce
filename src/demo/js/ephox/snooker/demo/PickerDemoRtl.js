@@ -21,7 +21,7 @@ define(
         maxRows: 34,
         minCols: 1,
         minRows: 1
-      });
+      }, 'Picker Right To Left Demo');
 
       var ephoxUi = Element.fromDom(document.getElementById('ephox-ui'));
       Remove.empty(ephoxUi);
