@@ -36,6 +36,20 @@ define(
       var gridHelp = Element.fromTag('div');
       Class.add(gridHelp, Styles.resolve('aria-help'));
 
+      var colIds = [];
+      // TODO: snooker util.repeat instead of mutation
+      for (var colHelp = 0; colHelp < cols; colHelp++) {
+        // Temporary non-random number until we get it right
+        var colId = Id.generate('ephox-aria');
+        var cellHelp = Element.fromTag('span');
+        Attr.set(cellHelp, 'id', colId);
+        Class.add(cellHelp, Styles.resolve('aria-help'));
+        Insert.append(cellHelp, Element.fromText(translations.col(colHelp + 1)));
+        Insert.append(gridHelp, cellHelp);
+
+        colIds[colHelp] = colId;
+      }
+
       // TODO: snooker util.repeat instead of mutation
       var ids = [];
       for (var rowNum = 0; rowNum < rows; rowNum++) {
@@ -47,19 +61,12 @@ define(
         Insert.append(rowHelp, Element.fromText(translations.row(rowNum + 1)));
         Insert.append(gridHelp, rowHelp);
 
-        // TODO: snooker util.repeat instead of mutation
         ids[rowNum] = [];
+        // TODO: snooker util.repeat instead of mutation
         for (var colNum = 0; colNum < cols; colNum++) {
-          // Temporary non-random number until we get it right
-          var colId = Id.generate('ephox-aria');
-          var cellHelp = Element.fromTag('span');
-          Attr.set(cellHelp, 'id', colId);
-          Class.add(cellHelp, Styles.resolve('aria-help'));
-          Insert.append(cellHelp, Element.fromText(translations.col(colNum + 1)));
-          Insert.append(gridHelp, cellHelp);
-
-          ids[rowNum][colNum] = colId + ' ' + rowId;
+          ids[rowNum][colNum] = colIds[colNum] + ' ' + rowId;
         }
+
       }
       return help(gridHelp, ids);
     };
