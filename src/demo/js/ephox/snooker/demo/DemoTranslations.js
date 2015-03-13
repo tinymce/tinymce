@@ -7,9 +7,8 @@ define(
 
   function (Array) {
     var keys = {
-      'table.picker.label': 'Table Picker Demo',
-      'table.picker.rowid': '{0} high',
-      'table.picker.colid': '{0} wide'
+      'table.picker.rows': '{0} high',
+      'table.picker.cols': '{0} wide'
     };
 
     return function (key) {

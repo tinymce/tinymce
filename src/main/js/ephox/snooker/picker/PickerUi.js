@@ -26,7 +26,7 @@ define(
   ],
 
   function (Arr, AriaGrid, Fun, Event, Events, Structs, PickerLookup, PickerStyles, Redimension, Styles, Util, Attr, Class, Classes, DomEvent, Element, Focus, Insert, InsertAll, Remove, parseInt) {
-    return function (direction, settings, fixme) {
+    return function (direction, settings, helpReference) {
       var events = Events.create({
         select: Event(['rows', 'cols', 'rowHeaders', 'columnHeaders'])
       });
@@ -34,7 +34,7 @@ define(
       var table = Element.fromTag('div');
       Class.add(table, PickerStyles.table());
 
-      AriaGrid.base(table, fixme);
+
 
       var size = { width: 0, height: 0};
 
@@ -55,8 +55,7 @@ define(
 
       var recreate = function () {
         Remove.empty(table);
-        var helpReference = AriaGrid.createHelp(table, size.height, size.width);
-
+        var ids = helpReference.ids();
         //create a set of trs, then for each tr, insert numCols tds
         Util.repeat(size.height, function (rowNum) {
           var row = Element.fromTag('div');
@@ -67,13 +66,14 @@ define(
             var td = Element.fromTag('button');
             Attr.set(td, 'id', 'cell-' + colNum + '-' + rowNum);
             Class.add(td, PickerStyles.cell());
-            AriaGrid.cell(td, helpReference[rowNum][colNum]);
+            AriaGrid.cell(td, ids[rowNum][colNum]);
             return td;
           });
 
           InsertAll.append(row, cells);
           Insert.append(table, row);
         });
+        Insert.append(table, helpReference.help());
       };
 
       var refresh = function () {

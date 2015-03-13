@@ -2,7 +2,9 @@ define(
   'ephox.snooker.demo.PickerDemo',
 
   [
+    'ephox.echo.api.AriaGrid',
     'ephox.snooker.api.PickerDirection',
+    'ephox.snooker.demo.DemoTranslations',
     'ephox.snooker.picker.PickerUi',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.DomEvent',
@@ -14,7 +16,7 @@ define(
     'global!document'
   ],
 
-  function (PickerDirection, PickerUi, Attr, DomEvent, Element, Focus, Insert, Remove, Math, document) {
+  function (AriaGrid, PickerDirection, DemoTranslations, PickerUi, Attr, DomEvent, Element, Focus, Insert, Remove, Math, document) {
     return function () {
 
       var picker = PickerUi(PickerDirection.ltr, {
@@ -22,7 +24,7 @@ define(
         maxRows: 10,
         minCols: 1,
         minRows: 1
-      }, 'Picker Demo');
+      }, AriaGrid.createHelp(10, 10, DemoTranslations));
 
       var ephoxUi = Element.fromDom(document.getElementById('ephox-ui'));
       var wrap = Element.fromTag('div');
