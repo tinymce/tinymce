@@ -3,13 +3,17 @@ define(
 
   [
     'ephox.echo.api.Styles',
+    'ephox.epithet.Id',
+    'ephox.scullion.Struct',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert'
   ],
 
-  function (Styles, Attr, Class, Element, Insert) {
+  function (Styles, Id, Struct, Attr, Class, Element, Insert) {
+    var help = Struct.immutable('help', 'ids');
+
     var base = function (element, label) {
       Attr.setAll(element, {
         'aria-label': label,
@@ -28,32 +32,36 @@ define(
       });
     };
 
-    var createHelp = function (grid, rows, cols) {
-      var r = [];
+    var createHelp = function (rows, cols, translations) {
+      var gridHelp = Element.fromTag('div');
+      Class.add(gridHelp, Styles.resolve('aria-help'));
+
+      // TODO: snooker util.repeat instead of mutation
+      var ids = [];
       for (var rowNum = 0; rowNum < rows; rowNum++) {
         // Temporary non-random number until we get it right
-        var rowId = rowNum + 'h';//Id.generate('ephox-aria');
+        var rowId = Id.generate('ephox-aria');
         var rowHelp = Element.fromTag('span');
         Attr.set(rowHelp, 'id', rowId);
         Class.add(rowHelp, Styles.resolve('aria-help'));
-        Insert.append(rowHelp, Element.fromText((rowNum + 1) + ' high'));
-        Insert.append(grid, rowHelp);
+        Insert.append(rowHelp, Element.fromText(translations('table.picker.rows', (rowNum + 1))));
+        Insert.append(gridHelp, rowHelp);
 
-        r[rowNum] = [];
-
+        // TODO: snooker util.repeat instead of mutation
+        ids[rowNum] = [];
         for (var colNum = 0; colNum < cols; colNum++) {
           // Temporary non-random number until we get it right
-          var colId = colNum + 'w';//Id.generate('ephox-aria');
+          var colId = Id.generate('ephox-aria');
           var cellHelp = Element.fromTag('span');
           Attr.set(cellHelp, 'id', colId);
           Class.add(cellHelp, Styles.resolve('aria-help'));
-          Insert.append(cellHelp, Element.fromText((colNum + 1) + ' wide'));
-          Insert.append(grid, cellHelp);
+          Insert.append(cellHelp, Element.fromText(translations('table.picker.cols', (colNum + 1))));
+          Insert.append(gridHelp, cellHelp);
 
-          r[rowNum][colNum] = colId + ' ' + rowId;
+          ids[rowNum][colNum] = colId + ' ' + rowId;
         }
       }
-      return r;
+      return help(gridHelp, ids);
     };
 
     return {
