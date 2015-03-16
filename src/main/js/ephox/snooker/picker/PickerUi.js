@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.compass.Arr',
+    'ephox.echo.api.AriaGrid',
     'ephox.peanut.Fun',
     'ephox.porkbun.Event',
     'ephox.porkbun.Events',
@@ -17,14 +18,15 @@ define(
     'ephox.sugar.api.Classes',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
+    'ephox.sugar.api.Focus',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.InsertAll',
     'ephox.sugar.api.Remove',
     'global!parseInt'
   ],
 
-  function (Arr, Fun, Event, Events, Structs, PickerLookup, PickerStyles, Redimension, Styles, Util, Attr, Class, Classes, DomEvent, Element, Insert, InsertAll, Remove, parseInt) {
-    return function (direction, settings) {
+  function (Arr, AriaGrid, Fun, Event, Events, Structs, PickerLookup, PickerStyles, Redimension, Styles, Util, Attr, Class, Classes, DomEvent, Element, Focus, Insert, InsertAll, Remove, parseInt) {
+    return function (direction, settings, helpReference) {
       var events = Events.create({
         select: Event(['rows', 'cols', 'rowHeaders', 'columnHeaders'])
       });
@@ -51,23 +53,26 @@ define(
 
       var recreate = function () {
         Remove.empty(table);
+        var ids = helpReference.ids();
         //create a set of trs, then for each tr, insert numCols tds
-        var rows = Util.repeat(size.height, function () {
+        Util.repeat(size.height, function (rowNum) {
           var row = Element.fromTag('div');
           Class.add(row, PickerStyles.row());
-          return row;
-        });
+          AriaGrid.row(row);
 
-        Arr.each(rows, function (row) {
-          var cells = Util.repeat(size.width, function () {
-            var td = Element.fromTag('span');
+          var cells = Util.repeat(size.width, function (colNum) {
+            var td = Element.fromTag('button');
+            // this is mostly for debugging, but it's nice to have
+            Class.add(td, Styles.resolve('cell-' + colNum + '-' + rowNum));
             Class.add(td, PickerStyles.cell());
+            AriaGrid.cell(td, ids[rowNum][colNum]);
             return td;
           });
 
           InsertAll.append(row, cells);
           Insert.append(table, row);
         });
+        Insert.append(table, helpReference.help());
       };
 
       var refresh = function () {
@@ -100,6 +105,10 @@ define(
             Classes.add(cell, classes);
           });
         });
+
+        var cells = PickerLookup.cells(rows[rows.length-1]).slice(0, numCols);
+        var target = cells[cells.length-1];
+        Focus.focus(target);
 
         Attr.set(table, 'data-picker-col', numCols - 1);
         Attr.set(table, 'data-picker-row', numRows - 1);
