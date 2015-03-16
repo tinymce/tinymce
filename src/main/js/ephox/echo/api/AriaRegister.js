@@ -3,11 +3,17 @@ define(
 
   [
     'ephox.classify.Type',
+    'ephox.compass.Arr',
+    'ephox.compass.Obj',
+    'ephox.echo.api.Styles',
     'ephox.epithet.Id',
-    'ephox.sugar.api.Attr'
+    'ephox.peanut.Fun',
+    'ephox.sugar.api.Attr',
+    'ephox.sugar.api.Element',
+    'ephox.sugar.api.Insert'
   ],
 
-  function (Type, Id, Attr) {
+  function (Type, Arr, Obj, Styles, Id, Fun, Attr, Element, Insert) {
     var presentation = function (element) {
       Attr.setAll(element, {
         'role': 'presentation',
@@ -15,12 +21,38 @@ define(
       });
     };
 
-    var editor = function (element, label) {
-      Attr.setAll(element, {
+    var editor = function (container, editor, label, ariaHelp) {
+      Attr.setAll(container, {
         'role': 'application',
-        'aria-label': label,
-        'title': label
+        'aria-label': label
       });
+
+      var labelId = Id.generate('ephox-aria');
+      var aria = Element.fromTag('span');
+      Insert.append(aria, Element.fromText(ariaHelp));
+      Attr.setAll(aria, {
+        'class': Styles.resolve('aria-help'),
+        id: labelId
+      });
+      Insert.append(container, aria);
+
+      // content attributes - surprisingly helps in both classic and inline
+      var attrs = {
+        role: 'textbox',
+        'aria-multiline': 'true',
+        'aria-label': label,
+        'aria-describedby': labelId
+      };
+
+      Attr.setAll(editor, attrs);
+
+      var destroy = function () {
+        Arr.each(Obj.keys(attrs), Fun.curry(Attr.remove, editor));
+      };
+
+      return {
+        destroy: destroy
+      };
     };
 
     var toolbar = function (element, label) {
@@ -78,6 +110,42 @@ define(
       });
     };
 
+    var widget = function (element) {
+      Attr.set(element, 'role', 'widget');
+    };
+
+    var listBox = function (element) {
+      Attr.set(element, 'role', 'listbox');
+    };
+
+    var tabList = function (element) {
+      Attr.set(element, 'role', 'tablist');
+    };
+
+    var tabButton = function (element, label) {
+      Attr.setAll(element, {
+        'aria-label': label,
+        'role': 'tab'
+      });
+    };
+
+    var tabPanel = function (element /*, label */) {
+      Attr.setAll(element, {
+        'role': 'tabpanel'
+        // 'aria-label': label // Doesn't seem to be read by JAWS or VoiceOver, so giving up
+      });
+    };
+
+    var linkTabToPanel = function (tab, panel) {
+      // I couldn't hear any difference with this, but the concept is linking buttons to the panel that will show
+      var id = Id.generate('ephox-aria');
+      Attr.set(panel, 'id', id);
+      Attr.setAll(tab, {
+        'aria-controls': id,
+        'aria-owns': id
+      });
+    };
+
     // TODO: Implement form ARIA support
     // var form = function (element, label) {
     //   throw 'Form ARIA support not implemented yet.';
@@ -111,7 +179,13 @@ define(
       menu: menu,
       menuItem: menuItem,
       dialog: dialog,
-      input: input
+      input: input,
+      widget: widget,
+      listBox: listBox,
+      tabList: tabList,
+      tabButton: tabButton,
+      tabPanel: tabPanel,
+      linkTabToPanel: linkTabToPanel
     };
   }
 );
