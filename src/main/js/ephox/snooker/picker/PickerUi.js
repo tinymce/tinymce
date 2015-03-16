@@ -78,7 +78,7 @@ define(
       var refresh = function () {
         var selected = getSelection();
         recreate();
-        setSelection(selected.rows(), selected.columns());
+        return setSelection(selected.rows(), selected.columns());
       };
 
       var setHeaders = function (headerRows, headerCols) {
@@ -106,12 +106,12 @@ define(
           });
         });
 
-        var cells = PickerLookup.cells(rows[rows.length-1]).slice(0, numCols);
-        var target = cells[cells.length-1];
-        Focus.focus(target);
-
         Attr.set(table, 'data-picker-col', numCols - 1);
         Attr.set(table, 'data-picker-row', numRows - 1);
+
+        var cells = PickerLookup.cells(rows[rows.length-1]).slice(0, numCols);
+        var target = cells[cells.length-1];
+        return target;
       };
 
       var getSelection = function () {
@@ -148,7 +148,8 @@ define(
 
       var reset = function () {
         setSize(settings.minRows, settings.minCols);
-        setSelection(1, 1);
+        var last = setSelection(1, 1);
+        Focus.focus(last);
       };
 
       return {
