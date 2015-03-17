@@ -46,6 +46,11 @@ define(
         return element.dom().compareDocumentPosition(other.dom());
       };
 
+      var copyAttributesTo = function (source, destination) {
+        var as = Attr.clone(source);
+        Attr.setAll(destination, as);
+      };
+
       return {
         up: Fun.constant({
           selector: SelectorFind.ancestor,
@@ -65,7 +70,8 @@ define(
         attrs: Fun.constant({
           get: Attr.get,
           set: Attr.set,
-          remove: Attr.remove
+          remove: Attr.remove,
+          copyTo: copyAttributesTo
         }),
         insert: Fun.constant({
           before: Insert.before,
