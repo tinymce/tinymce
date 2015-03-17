@@ -212,6 +212,22 @@ define("tinymce/util/Quirks", [
 				return true;
 			}
 
+			function isSiblingsIgnoreWhiteSpace(node1, node2) {
+				var node;
+
+				for (node = node1.nextSibling; node && node != node2; node = node.nextSibling) {
+					if (node.nodeType == 3 && $.trim(node.data).length === 0) {
+						continue;
+					}
+
+					if (node !== node2) {
+						return false;
+					}
+				}
+
+				return node === node2;
+			}
+
 			function findCaretNode(node, forward, startNode) {
 				var walker, current, nonEmptyElements;
 
@@ -323,8 +339,12 @@ define("tinymce/util/Quirks", [
 					return rng;
 				}
 
-				if (textBlock != targetTextBlock) {
+				if (targetTextBlock && textBlock != targetTextBlock) {
 					if (!isForward) {
+						if (!isSiblingsIgnoreWhiteSpace(targetTextBlock, textBlock)) {
+							return rng;
+						}
+
 						if (targetCaretNode.nodeType == 1) {
 							if (targetCaretNode.nodeName == "BR") {
 								rng.setStartBefore(targetCaretNode);
@@ -341,6 +361,10 @@ define("tinymce/util/Quirks", [
 							rng.setEndBefore(caretNode);
 						}
 					} else {
+						if (!isSiblingsIgnoreWhiteSpace(textBlock, targetTextBlock)) {
+							return rng;
+						}
+
 						if (caretNode.nodeType == 1) {
 							if (caretNode.nodeName == "BR") {
 								rng.setStartBefore(caretNode);

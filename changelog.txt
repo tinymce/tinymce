@@ -1,3 +1,5 @@
+Version 4.1.10 (2015-03-xx)
+	Fixed bug where extra empty paragraphs would get deleted in WebKit/Blink due to recent Quriks fix.
 Version 4.1.9 (2015-03-10)
 	Fixed bug where indentation wouldn't work properly for non list elements.
 	Fixed bug with image plugin not pulling the image dimensions out correctly if a custom document_base_url was used.

@@ -52,6 +52,15 @@ if (tinymce.isWebKit) {
 		equal(editor.selection.getStart().nodeName, 'H1');
 	});
 */
+
+	test('Delete between empty paragraphs', function() {
+		editor.getBody().innerHTML = '<p>a</p><p><br></p><p><br></p><p>b</p>';
+		Utils.setSelection('p:last', 0);
+		editor.execCommand('Delete');
+		equal(Utils.normalizeHtml(Utils.cleanHtml(editor.getBody().innerHTML)), '<p>a</p><p><br /></p><p>b<br /></p>');
+		equal(editor.selection.getStart().nodeName, 'P');
+	});
+
 	test('Delete range from middle of H1 to middle of span in P', function() {
 		editor.getBody().innerHTML = '<h1>ab</h1><p>b<span style="color:red">cd</span></p>';
 		Utils.setSelection('h1', 1, 'span', 1);
