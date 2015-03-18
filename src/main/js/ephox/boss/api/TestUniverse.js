@@ -63,7 +63,8 @@ define(
         attrs: Fun.constant({
           get: Attribution.get,
           set: Attribution.set,
-          remove: Attribution.remove
+          remove: Attribution.remove,
+          copyTo: Attribution.copyTo
         }),
         insert: Fun.constant({
           before: Insertion.before,

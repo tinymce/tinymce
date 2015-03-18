@@ -22,10 +22,17 @@ define(
       item.attrs = rest;
     };
 
+    var copyTo = function (source, destination) {
+      var sourceAttrs = source.attrs !== undefined ? source.attrs : {};
+      var destAttrs = destination.attrs !== undefined ? destination.attrs : {};
+      destination.attrs = Merger.merge(destAttrs, sourceAttrs);
+    };
+
     return {
       get: get,
       set: set,
-      remove: remove
+      remove: remove,
+      copyTo: copyTo
     };
   }
 );
