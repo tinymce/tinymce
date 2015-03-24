@@ -2,10 +2,11 @@ test(
   'Word Util',
 
   [
+    'ephox.perhaps.Option',
     'ephox.robin.util.WordUtil'
   ],
 
-  function (WordUtil) {
+  function (Option, WordUtil) {
 
     var checkNone = function (text, word) {
       var actual = word(text);
@@ -15,7 +16,7 @@ test(
     var check = function (expected, text, word) {
       var actual = word(text);
       actual.fold(function () {
-        assert.fail('Expected: ' + expected + ' but received nothing.');
+        actual.equals(expected) ? true : assert.fail('Expected: ' + expected + ' but received nothing.');
       }, function (v) {
         assert.eq(expected, v);
       });
@@ -24,6 +25,15 @@ test(
     var checkBreak = function (expected, text) {
       var actual = WordUtil.hasBreak(text);
       assert.eq(expected, actual);
+    };
+
+    var checkBreakPosition = function (expected, text, direction) {
+      var actual = direction(text);
+      actual.fold(function () {
+        actual.equals(expected) ? true : assert.fail('Expected: ' + expected + ' and got none.');
+      }, function (i) {
+        assert.eq(expected, i);
+      });
     };
 
     checkNone('ballast', WordUtil.firstWord);
@@ -43,5 +53,15 @@ test(
     checkBreak(true, 'apples and oranges');
     checkBreak(false, '');
     checkBreak(false, 'applesandoranges');
+
+    checkBreakPosition(Option.none(), '', WordUtil.leftBreak);
+    checkBreakPosition(Option.none(), 'word', WordUtil.leftBreak);
+    checkBreakPosition(0, ' ', WordUtil.leftBreak);
+    checkBreakPosition(0, ' word', WordUtil.leftBreak);
+    checkBreakPosition(4, 'word ', WordUtil.leftBreak);
+    checkBreakPosition(4, 'word \uFEFF', WordUtil.leftBreak);
+    checkBreakPosition(0, ' \uFEFFword', WordUtil.leftBreak);
+    checkBreakPosition(0, ' \uFEFF\uFEFFword', WordUtil.leftBreak);
+    checkBreakPosition(0, ' \uFEFFwo\uFEFFrd', WordUtil.leftBreak);
   }
 );

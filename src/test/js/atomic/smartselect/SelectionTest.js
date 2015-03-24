@@ -106,5 +106,9 @@ test(
     checkNone(doc2, 'b', 0);
 
     checkNone(doc2, 'h', 'plus again'.length);
+
+    checkNone(TestUniverse(Gene('root', 'root', [
+      TextGene('alpha', '\uFEFFfeff')
+    ])), 'alpha', '\uFEFF'.length);
   }
 );
