@@ -2,6 +2,7 @@ define(
   'ephox.robin.smartselect.EndofWord',
 
   [
+    'ephox.bud.Unicode',
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
@@ -9,7 +10,7 @@ define(
     'ephox.robin.words.Clustering'
   ],
 
-  function (Arr, Fun, Option, WordRange, Clustering) {
+  function (Unicode, Arr, Fun, Option, WordRange, Clustering) {
     var toEnd = function (cluster, start, soffset) {
       if (cluster.length === 0) return Option.none();
       var last = cluster[cluster.length - 1];
@@ -32,14 +33,17 @@ define(
     var scan = function (universe, item, offset) {
       var text = universe.property().getText(item);
       var preLength = Arr.filter(text.substring(0, offset), function (s) {
-        return s !== '\uFEFF';
+        return s !== Unicode.zeroWidth();
+      }).length;
+      var postLength = Arr.filter(text.substring(offset, text.length), function (c) {
+        return c === Unicode.zeroWidth();
       }).length;
 
       var cluster = Clustering.words(universe, item);
       // We are at the left edge of the cluster.
       var atLeftEdge = preLength === 0 && cluster.left().length === 0;
       // We are at the right edge of the cluster.
-      var atRightEdge = preLength === text.length && cluster.right().length === 0;
+      var atRightEdge = (offset + postLength) === text.length && cluster.right().length === 0;
 
       return {
         all: cluster.all,
