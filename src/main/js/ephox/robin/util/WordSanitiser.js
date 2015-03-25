@@ -8,21 +8,25 @@ define(
   ],
 
   function (Arr, Option, WordScope) {
-
-    var whitelist = ['\'twas'];
+    var quoteList = ['\'', '\u2018', '\u2019' ];
+    var whitelist = Arr.bind(quoteList, function (q) { 
+      return Arr.map([ 'twas' ], function (t) {
+        return q + t;
+      });
+    });
 
     var trimStart = function (ws) {
       var word = ws.word();
-      return WordScope(word.substring(1), Option.some('\''), ws.right());
+      return WordScope(word.substring(1), Option.some(word.charAt(0)), ws.right());
     };
 
     var trimEnd = function (ws) {
       var word = ws.word();
-      return WordScope(word.substring(0, word.length - 1), ws.left(), Option.some('\''));
+      return WordScope(word.substring(0, word.length - 1), ws.left(), Option.some(word.charAt(word.length - 1)));
     };
 
     var isQuote = function (s) {
-      return s === '\'';
+      return Arr.contains(quoteList, s);
     };
 
     var rhs = function (ws) {
