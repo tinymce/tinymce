@@ -30,14 +30,11 @@ define(
         return universe.property().isBoundary(elem) || universe.property().isEmptyTag(elem);
       });
 
-      console.log('grouping');
       return Arr.bind(groups, function (x) {
         var text = Arr.map(x, function (y) {
           return y.text();
         }).join('');
-        var ws = Identify.words(text);
-        console.log('finding words in text', text, Arr.map(ws, function (w) { return w.word(); }));
-        return ws;
+        return Identify.words(text);
       });
     };
 

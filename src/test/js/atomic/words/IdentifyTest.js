@@ -22,11 +22,6 @@ test(
       });
     };
 
-    var checkWords = function (expected, input) {
-      var actual = Identify.words(input);
-      assert.eq(expected, Arr.map(actual, function (a) { return a.word(); }));
-    };
-
     check([], '');
     check([], ' ');
     check([WordScope('one', none, none)], 'one');
@@ -55,7 +50,5 @@ test(
       WordScope('before', some(' '), none)
       ], ' \'this the night before');
 
-    checkWords([ 'Tale', 'is', 'about', 'an', 'adorable', 'mouse', 'with', 'a', 'lute', 'fighting', 'giant', 'crabs', 'Really', 'I’d', 'hope', 'that', 'was', 'enough', 'for', 'you', 'but', 'I\u2019ll', 'throw' ], 'Tale is about an adorable mouse with a lute fighting giant crabs. Really I’d hope that was enough for you, but I\u2019ll throw');
   }
 );
-// Tale is about an adorable mouse with a lute fighting giant crabs. Really I'd hope that was enough for you, but I’ll throw in some more info as a bonus. It’s set in a medieval fantasy entirely inhabited by animals, explored in third person with inspiration from the likes of Zelda and Ico. There’s a balance struck between the cute central character and a very dark, ruined world with sometimes terrifying enemies. Along with the aforementioned crabs, hero Tilo will find skeletal rats three times his height, hawks, badgers and spear-wielding frogs to contend with.
