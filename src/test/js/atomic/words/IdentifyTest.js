@@ -22,6 +22,11 @@ test(
       });
     };
 
+    var checkWords = function (expected, input) {
+      var actual = Identify.words(input);
+      assert.eq(expected, Arr.map(actual, function (a) { return a.word(); }));
+    };
+
     check([], '');
     check([], ' ');
     check([WordScope('one', none, none)], 'one');
@@ -50,5 +55,7 @@ test(
       WordScope('before', some(' '), none)
       ], ' \'this the night before');
 
+    // Note, the smart quotes.
+    checkWords([ 'Tale', 'is', 'about', 'an', 'adorable', 'mouse', 'with', 'a', 'lute', 'fighting', 'giant', 'crabs', 'Really', 'I’d', 'hope', 'that', 'was', 'enough', 'for', 'you', 'but', 'I\u2019ll', 'throw' ], 'Tale is about an adorable mouse with a lute fighting giant crabs. Really I’d hope that was enough for you, but I\u2019ll throw');
   }
 );

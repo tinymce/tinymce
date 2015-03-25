@@ -4,22 +4,13 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
-    'ephox.phoenix.api.data.Spot',
-    'ephox.phoenix.api.general.Extract',
     'ephox.polaris.api.Arrays',
     'ephox.robin.api.general.Zone',
     'ephox.robin.words.Clustering',
     'ephox.robin.words.Identify'
   ],
 
-  function (Arr, Fun, Spot, Extract, Arrays, Zone, Clustering, Identify) {
-    var extract = function (universe, element) {
-      var children = Extract.all(universe, element);
-      return Arr.map(children, function (x) {
-        return Spot.text(x, universe.property().isText(x) ? universe.property().getText(x) : '');
-      });
-    };
-
+  function (Arr, Fun, Arrays, Zone, Clustering, Identify) {
     /**
      * Finds words in groups of text (each HTML text node can have multiple words).
      */
