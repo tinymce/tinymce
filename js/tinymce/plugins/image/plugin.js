@@ -157,16 +157,20 @@ tinymce.PluginManager.add('image', function(editor) {
 				data.title = '';
 			}
 
-			if (data.width === '') {
+			if (data.width === '' || data.width === undefined) {
 				data.width = null;
 			}
 
-			if (data.height === '') {
+			if (data.height === '' || data.height === undefined) {
 				data.height = null;
 			}
 
 			if (!data.style) {
 				data.style = null;
+			}
+
+			if (data["class"] === undefined) {
+				data["class"]= null;
 			}
 
 			// Setup new data excluding style properties
