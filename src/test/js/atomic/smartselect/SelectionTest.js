@@ -32,7 +32,7 @@ test(
     var doc2 = TestUniverse(Gene('root', 'root', [
       TextGene('a', 'This is '),
       Gene('b', 'span', [
-        TextGene('c', 'som'),
+        TextGene('c', 'som')
       ]),
       TextGene('d', 'eth'),
       Gene('e', 'b', [
@@ -41,6 +41,12 @@ test(
       TextGene('g', ' see.'),
       TextGene('h', 'plus again'),
       TextGene('i', '\uFEFF')
+    ]));
+
+    var doc3 =  TestUniverse(Gene('root', 'root', [
+      TextGene('a', ' \uFEFF'),
+      TextGene('b', '\uFEFF\uFEFF'),
+      TextGene('c', '\uFEFF ')
     ]));
 
     var check = function (expected, doc, id, offset) {
@@ -106,5 +112,13 @@ test(
     checkNone(doc2, 'b', 0);
 
     checkNone(doc2, 'h', 'plus again'.length);
+
+    checkNone(TestUniverse(Gene('root', 'root', [
+      TextGene('alpha', '\uFEFFfeff')
+    ])), 'alpha', '\uFEFF'.length);
+
+    checkNone(doc3, 'b', ''.length);
+    checkNone(doc3, 'b', '\uFEFF'.length);
+    checkNone(doc3, 'b', '\uFEFF\uFEFF'.length);
   }
 );
