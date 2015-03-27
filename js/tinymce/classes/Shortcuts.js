@@ -32,7 +32,7 @@ define("tinymce/Shortcuts", [
 	var modifierNames = Tools.makeMap('alt,ctrl,shift,meta,access');
 
 	return function(editor) {
-		var self = this, shortcuts = {};
+		var self = this, shortcuts = {}, enabled = editor.settings.shortcuts;
 
 		function createShortcut(pattern, desc, cmdFunc, scope) {
 			var id, key, shortcut;
@@ -93,29 +93,31 @@ define("tinymce/Shortcuts", [
 			return shortcut;
 		}
 
-		editor.on('keyup keypress keydown', function(e) {
-			if ((e.altKey || e.ctrlKey || e.metaKey) && !e.isDefaultPrevented()) {
-				each(shortcuts, function(shortcut) {
-					if (shortcut.ctrl != e.ctrlKey || shortcut.meta != e.metaKey) {
-						return;
-					}
-
-					if (shortcut.alt != e.altKey || shortcut.shift != e.shiftKey) {
-						return;
-					}
-
-					if (e.keyCode == shortcut.keyCode || (e.charCode && e.charCode == shortcut.charCode)) {
-						e.preventDefault();
-
-						if (e.type == "keydown") {
-							shortcut.func.call(shortcut.scope);
+		if (enabled === true) {
+			editor.on('keyup keypress keydown', function(e) {
+				if ((e.altKey || e.ctrlKey || e.metaKey) && !e.isDefaultPrevented()) {
+					each(shortcuts, function(shortcut) {
+						if (shortcut.ctrl != e.ctrlKey || shortcut.meta != e.metaKey) {
+							return;
 						}
 
-						return true;
-					}
-				});
-			}
-		});
+						if (shortcut.alt != e.altKey || shortcut.shift != e.shiftKey) {
+							return;
+						}
+
+						if (e.keyCode == shortcut.keyCode || (e.charCode && e.charCode == shortcut.charCode)) {
+							e.preventDefault();
+
+							if (e.type == "keydown") {
+								shortcut.func.call(shortcut.scope);
+							}
+
+							return true;
+						}
+					});
+				}
+			});
+		}
 
 		/**
 		 * Adds a keyboard shortcut for some command or function.
@@ -124,12 +126,15 @@ define("tinymce/Shortcuts", [
 		 * @param {String} pattern Shortcut pattern. Like for example: ctrl+alt+o.
 		 * @param {String} desc Text description for the command.
 		 * @param {String/Function} cmdFunc Command name string or function to execute when the key is pressed.
-		 * @param {Object} sc Optional scope to execute the function in.
+		 * @param {Object} scope Optional scope to execute the function in.
 		 * @return {Boolean} true/false state if the shortcut was added or not.
 		 */
 		self.add = function(pattern, desc, cmdFunc, scope) {
-			var cmd;
+			if (enabled === false) {
+				return false;
+			}
 
+			var cmd;
 			cmd = cmdFunc;
 
 			if (typeof cmdFunc === 'string') {
