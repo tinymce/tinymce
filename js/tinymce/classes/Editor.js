@@ -147,7 +147,7 @@ define("tinymce/Editor", [
 			url_converter: self.convertURL,
 			url_converter_scope: self,
 			ie7_compat: true,
-            shortcuts: true
+			shortcuts: true
 		}, settings);
 
 		AddOnManager.language = settings.language || 'en';
