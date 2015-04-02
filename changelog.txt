@@ -1,6 +1,7 @@
 Version 4.1.10 (2015-03-xx)
 	Fixed bug where extra empty paragraphs would get deleted in WebKit/Blink due to recent Quriks fix.
 	Fixed bug where the editor wouldn't work properly on IE 12 due to some required browser sniffing.
+	Fixed bug where formatting shortcut keys where interfering with Mac OS X screenshot keys.
 Version 4.1.9 (2015-03-10)
 	Fixed bug where indentation wouldn't work properly for non list elements.
 	Fixed bug with image plugin not pulling the image dimensions out correctly if a custom document_base_url was used.
