@@ -13,6 +13,56 @@
 tinymce.PluginManager.add('advlist', function(editor) {
 	var olMenuItems, ulMenuItems, lastStyles = {};
 
+	function setStart() {
+		return function() {
+			var win, v, list, data = {}, dom = editor.dom, sel = editor.selection;
+
+			// Check for existing list element
+			list = dom.getParent(sel.getNode(), 'ol');
+			if (list) {
+				v = editor.dom.getAttrib(list, "start", 1);
+			} else {
+				v = 1;
+			}
+
+			data = {start: v};
+
+			win = editor.windowManager.open({
+				title: "List numbering",
+				data: data,
+				body: [
+					{
+						label: 'Start From',
+						name: 'start',
+						type: 'textbox',
+						minWidth: 50,
+						maxWidth: 50
+					}
+				],
+				buttons: [
+					{
+						text: "Ok",
+						subtype: "primary",
+						onclick: function() {
+							var list = dom.getParent(editor.selection.getNode(), 'ol');
+							if (list) {
+								data = tinymce.extend(data, win.toJSON());
+								editor.dom.setAttrib(list, "start", data.start);
+							}
+							win.close();
+						}
+					},
+					{
+						text: "Cancel",
+						onclick: function() {
+							win.close();
+						}
+					}
+				]
+			});
+		};
+	}
+
 	function buildMenuItems(listName, styleValues) {
 		var items = [];
 
@@ -32,6 +82,10 @@ tinymce.PluginManager.add('advlist', function(editor) {
 		"advlist_number_styles",
 		"default,lower-alpha,lower-greek,lower-roman,upper-alpha,upper-roman"
 	));
+	olMenuItems.push({
+		text: 'Start Number',
+		onclick: setStart()
+	});
 
 	ulMenuItems = buildMenuItems('UL', editor.getParam("advlist_bullet_styles", "default,circle,disc,square"));
 
