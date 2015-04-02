@@ -168,6 +168,13 @@
 			 */
 			t.isIOS5 = t.isIDevice && ua.match(/AppleWebKit\/(\d*)/)[1]>=534;
 
+			// Handle IE 12 sniffing
+			t.isIE12 = (document.msElementsFromPoint && !t.isIE && !t.isIE11);
+			if (t.isIE12) {
+				t.isIE11 = true;
+				t.isWebKit = false;
+			}
+
 			// TinyMCE .NET webcontrol might be setting the values for TinyMCE
 			if (win.tinyMCEPreInit) {
 				t.suffix = tinyMCEPreInit.suffix;
