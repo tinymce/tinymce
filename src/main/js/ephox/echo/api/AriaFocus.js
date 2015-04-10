@@ -6,22 +6,10 @@ define(
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Focus',
     'ephox.sugar.api.PredicateFind',
-    'ephox.sugar.api.SelectorExists',
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Option, Compare, Focus, PredicateFind, SelectorExists, Traverse) {
-    // ASSUMPTION: If the focus has transferred to a panel or a dialog, keep it there
-    var keepers = '.ephox-pastry-panel, .ephox-polish-dialog';
-
-    var refresh = function (toolbar) {
-      Focus.active().each(function (focused) {
-        if (!SelectorExists.closest(focused, keepers)) {
-          if (toolbar.focused()) toolbar.restore();
-        }
-      });
-    };
-
+  function (Option, Compare, Focus, PredicateFind, Traverse) {
     var preserve = function (f, container) {
       var ownerDoc = Traverse.owner(container);
 
@@ -39,7 +27,6 @@ define(
     };
 
     return {
-      refresh: refresh,
       preserve: preserve
     };
   }
