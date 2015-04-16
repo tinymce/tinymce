@@ -62,6 +62,8 @@ define(
 
           var cells = Util.repeat(size.width, function (colNum) {
             var td = Element.fromTag('button');
+            // Make the button a "button" so that firefox does not have problems with defaulting to submit: "TBIO-2560"
+            Attr.set(td, 'type', 'button');
             // this is mostly for debugging, but it's nice to have
             Class.add(td, Styles.resolve('cell-' + colNum + '-' + rowNum));
             Class.add(td, PickerStyles.cell());
