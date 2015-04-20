@@ -1349,7 +1349,7 @@ define("tinymce/util/Quirks", [
 				editor.on('keydown', function(e) {
 					if (VK.metaKeyPressed(e) && (e.keyCode == 37 || e.keyCode == 39)) {
 						e.preventDefault();
-						editor.selection.getSel().modify('move', e.keyCode == 37 ? 'backward' : 'forward', 'word');
+						editor.selection.getSel().modify('move', e.keyCode == 37 ? 'backward' : 'forward', 'lineboundary');
 					}
 				});
 			}
