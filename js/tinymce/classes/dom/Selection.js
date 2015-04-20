@@ -790,7 +790,8 @@ define("tinymce/dom/Selection", [
 		},
 
 		/**
-		 * Executes callback of the current selection matches the specified selector or not and passes the state and args to the callback.
+		 * Executes callback when the current selection starts/stops matching the specified selector. The current
+		 * state will be passed to the callback as it's first argument.
 		 *
 		 * @method selectorChanged
 		 * @param {String} selector CSS selector to check for.
