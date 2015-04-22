@@ -6,7 +6,6 @@ define(
     'ephox.fussy.api.Point',
     'ephox.fussy.api.WindowSelection',
     'ephox.oath.proximity.Awareness',
-    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Css',
@@ -20,7 +19,7 @@ define(
     'global!Math'
   ],
 
-  function (PlatformDetection, Point, WindowSelection, Awareness, Fun, Option, Attr, Css, DomEvent, Element, Html, Insert, Node, SelectorFind, Date, Math) {
+  function (PlatformDetection, Point, WindowSelection, Awareness, Option, Attr, Css, DomEvent, Element, Html, Insert, Node, SelectorFind, Date, Math) {
     return function () {
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
@@ -62,16 +61,19 @@ define(
       // In Firefox, it isn't giving you the next element ... it's giving you the current element. So if the box of where it gives you has the same y value 
       // minus some error, try again with a bigger jump.
       var firefoxAgain = function (spot) {
-        var box = getBox(element, offset);
-        if (Math.abs(box.top - spot.top) < 10) {
-          return Point.find(window, spot.left, box.top + 5).bind(function (s) {
-            return  pt.start().fold(Option.none, function (e, eo) {
-              return firefoxAgain(s, e, eo);
-            }, Option.none);
-          });
-        } else {
-          return Option.some();
-        }
+        return Point.find(window, spot.left, spot.bottom + 5).bind(function (pt) {
+          return pt.start().fold(Option.none, function (e, eo) {
+            var box = getBox(e, eo);
+            if (Math.abs(box.top - spot.top) < 10) {
+              return firefoxAgain({ left: spot.left, bottom: spot.bottom + 5, top: spot.top + 5 }).orThunk(function () {
+                return Option.some(pt);
+              });
+            } else if (box.top > spot.bottom + 5) {
+              return Point.find(window, spot.left, box.top + 1).orThunk(function () { return Option.some(pt); });
+            }
+            else return Option.some(pt);
+          }, Option.none);          
+        });
       };
 
       // The process is that you incrementally go down ... if you find the next element, but your top is not at that element's bounding rect.
@@ -94,7 +96,7 @@ define(
 
       var calc = function (spot) {
         if (platform.browser.isChrome() || platform.browser.isSafari()) return webkitAgain(spot);
-        else if (platform.browser.isFirefox()) return Option.none();
+        else if (platform.browser.isFirefox()) return firefoxAgain(spot);
       };
 
       var getBox = function (element, offset) {
