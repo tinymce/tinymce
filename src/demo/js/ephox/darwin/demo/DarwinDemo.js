@@ -2,6 +2,7 @@ define(
   'ephox.darwin.demo.DarwinDemo',
 
   [
+    'ephox.fred.PlatformDetection',
     'ephox.fussy.api.Point',
     'ephox.fussy.api.WindowSelection',
     'ephox.oath.proximity.Awareness',
@@ -18,9 +19,11 @@ define(
     'global!Date'
   ],
 
-  function (Point, WindowSelection, Awareness, Fun, Option, Attr, Css, DomEvent, Element, Html, Insert, Node, SelectorFind, Date) {
+  function (PlatformDetection, Point, WindowSelection, Awareness, Fun, Option, Attr, Css, DomEvent, Element, Html, Insert, Node, SelectorFind, Date) {
     return function () {
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
+
+      var platform = PlatformDetection.detect();
 
       var editor = Element.fromTag('div');
       Attr.set(editor, 'contenteditable', 'true');
@@ -55,18 +58,21 @@ define(
         });
       };
 
+      var webkitAgain = function (spot, element, offset) {
+        var box = getBox(element, offset);
+        if (box.top > spot.bottom + 5) {
+          return Point.find(window, spot.left, box.top + 1);
+        } else {
+          return Option.none();
+        }
+      };
+
       var calc = function (spot) {
         // The process is that you incrementally go down ... if you find the next element, but your top is not at that element's bounding rect.
         // then try again with the same y, but 
         return Point.find(window, spot.left, spot.bottom + 5).bind(function (pt) {
           return pt.start().fold(Option.none, function (e, eo) {
-            // Try again with the bounding client rectangle.
-            var box = getBox(e, eo);
-            if (box.top > spot.bottom + 5) {
-              return Point.find(window, spot.left, box.top + 1);
-            } else {
-              return Option.some(pt);
-            }
+            if (platform.browser.isChrome() || platform.browser.isSafari()) return webkitAgain(spot, e, eo).orThunk(function () { return Option.some(pt); });
           }, Option.none);
         });
       };
@@ -120,6 +126,7 @@ define(
 
       console.log('p-range', paragraphRange);
 
+      // some success on all browsers except for Chrome.
       updateLogbook('ranged br: height: ' + paragraphRange.getBoundingClientRect().height +  ' top: ' + paragraphRange.getBoundingClientRect().top);
       updateLogbook('br: height: ' + paragraph.childNodes[1].getBoundingClientRect().height +  ' top: ' + paragraph.childNodes[1].getBoundingClientRect().top);
 
