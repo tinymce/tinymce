@@ -16,10 +16,11 @@ define(
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.SelectorFind',
-    'global!Date'
+    'global!Date',
+    'global!Math'
   ],
 
-  function (PlatformDetection, Point, WindowSelection, Awareness, Fun, Option, Attr, Css, DomEvent, Element, Html, Insert, Node, SelectorFind, Date) {
+  function (PlatformDetection, Point, WindowSelection, Awareness, Fun, Option, Attr, Css, DomEvent, Element, Html, Insert, Node, SelectorFind, Date, Math) {
     return function () {
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
@@ -58,23 +59,42 @@ define(
         });
       };
 
-      var webkitAgain = function (spot, element, offset) {
+      // In Firefox, it isn't giving you the next element ... it's giving you the current element. So if the box of where it gives you has the same y value 
+      // minus some error, try again with a bigger jump.
+      var firefoxAgain = function (spot) {
         var box = getBox(element, offset);
-        if (box.top > spot.bottom + 5) {
-          return Point.find(window, spot.left, box.top + 1);
+        if (Math.abs(box.top - spot.top) < 10) {
+          return Point.find(window, spot.left, box.top + 5).bind(function (s) {
+            return  pt.start().fold(Option.none, function (e, eo) {
+              return firefoxAgain(s, e, eo);
+            }, Option.none);
+          });
         } else {
-          return Option.none();
+          return Option.some();
         }
       };
 
-      var calc = function (spot) {
-        // The process is that you incrementally go down ... if you find the next element, but your top is not at that element's bounding rect.
-        // then try again with the same y, but 
+      // The process is that you incrementally go down ... if you find the next element, but your top is not at that element's bounding rect.
+      // then try again with the same x but the box's y
+      var webkitAgain = function (spot) {
         return Point.find(window, spot.left, spot.bottom + 5).bind(function (pt) {
           return pt.start().fold(Option.none, function (e, eo) {
-            if (platform.browser.isChrome() || platform.browser.isSafari()) return webkitAgain(spot, e, eo).orThunk(function () { return Option.some(pt); });
+            var box = getBox(e, eo);
+            // If the box that it returned does not contain the spot, move the spot to within the box and try again
+            // this is an attempt to get a more reliable offset
+            if (box.top > spot.bottom + 5) {
+              return Point.find(window, spot.left, box.top + 1).orThunk(function () { return Option.some(pt); });
+            } else {
+              return Option.some(pt);
+            }
           }, Option.none);
+          
         });
+      };
+
+      var calc = function (spot) {
+        if (platform.browser.isChrome() || platform.browser.isSafari()) return webkitAgain(spot);
+        else if (platform.browser.isFirefox()) return Option.none();
       };
 
       var getBox = function (element, offset) {
