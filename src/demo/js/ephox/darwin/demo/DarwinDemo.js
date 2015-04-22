@@ -94,9 +94,15 @@ define(
         });
       };
 
+      var ieAgain = function (spot) {
+        return Point.find(window, spot.left, spot.bottom + 5);
+      };
+
       var calc = function (spot) {
         if (platform.browser.isChrome() || platform.browser.isSafari()) return webkitAgain(spot);
         else if (platform.browser.isFirefox()) return firefoxAgain(spot);
+        else if (platform.browser.isIE()) return ieAgain(spot);
+        else return Option.none();
       };
 
       var getBox = function (element, offset) {
