@@ -32,12 +32,12 @@ define(
             });
           }
 
-          return mogel(box, spot);
+          return mogel(pt, box, spot);
         }, Option.none);
       });
     };
 
-    var mogel = function (box, spot) {
+    var mogel = function (pt, box, spot) {
       if (box.top <= ((spot.top + spot.bottom) / 2) && box.bottom >= ((spot.top + spot.bottom) / 2)) {
         console.log('try again lower down');
         return webkitAgain({ left: spot.left, bottom: spot.bottom + 5 });
@@ -63,7 +63,7 @@ define(
           console.log('box: ', box);
 
           // If we are at the same point that we started ... then we have to keep looking lower down.
-          return mogel(box, spot);
+          return mogel(pt, box, spot);
           // if (box.top <= ((spot.top + spot.bottom) / 2) && box.bottom >= ((spot.top + spot.bottom) / 2)) {
           //   console.log('try again lower down');
           //   return webkitAgain({ left: spot.left, bottom: spot.bottom + 5 });
