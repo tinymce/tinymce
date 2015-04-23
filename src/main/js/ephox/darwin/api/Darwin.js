@@ -30,10 +30,9 @@ define(
             return firefoxAgain({ left: spot.left, bottom: spot.bottom + 5, top: spot.top + 5 }).orThunk(function () {
               return Option.some(pt);
             });
-          } else if (box.top > spot.bottom + 5) {
-            return Point.find(window, spot.left, box.top + 1).orThunk(function () { return Option.some(pt); });
           }
-          else return Option.some(pt);
+
+          return mogel(box, spot);
         }, Option.none);
       });
     };
@@ -49,7 +48,6 @@ define(
       } else {
         return Option.some(pt);
       }
-      return Option.none();
     };
 
     // The process is that you incrementally go down ... if you find the next element, but your top is not at that element's bounding rect.
@@ -65,8 +63,7 @@ define(
           console.log('box: ', box);
 
           // If we are at the same point that we started ... then we have to keep looking lower down.
-          var mogelled = mogel(box, spot);
-          if (mogelled.isSome()) return mogelled;
+          return mogel(box, spot);
           // if (box.top <= ((spot.top + spot.bottom) / 2) && box.bottom >= ((spot.top + spot.bottom) / 2)) {
           //   console.log('try again lower down');
           //   return webkitAgain({ left: spot.left, bottom: spot.bottom + 5 });
