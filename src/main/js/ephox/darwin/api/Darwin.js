@@ -38,6 +38,20 @@ define(
       });
     };
 
+    var mogel = function (box, spot) {
+      if (box.top <= ((spot.top + spot.bottom) / 2) && box.bottom >= ((spot.top + spot.bottom) / 2)) {
+        console.log('try again lower down');
+        return webkitAgain({ left: spot.left, bottom: spot.bottom + 5 });
+      }
+
+      if (box.top > spot.bottom + 5) {
+        return Point.find(window, spot.left, box.top + 1).orThunk(function () { return Option.some(pt); });
+      } else {
+        return Option.some(pt);
+      }
+      return Option.none();
+    };
+
     // The process is that you incrementally go down ... if you find the next element, but your top is not at that element's bounding rect.
     // then try again with the same x but the box's y
     var webkitAgain = function (spot) {
@@ -46,11 +60,23 @@ define(
           var box = getBox(e, eo);
           // If the box that it returned does not contain the spot, move the spot to within the box and try again
           // this is an attempt to get a more reliable offset
-          if (box.top > spot.bottom + 5) {
-            return Point.find(window, spot.left, box.top + 1).orThunk(function () { return Option.some(pt); });
-          } else {
-            return Option.some(pt);
-          }
+
+          console.log('comparison of (box.top= ' + box.top + ') to (spot.bottom=' + spot.bottom + ')');
+          console.log('box: ', box);
+
+          // If we are at the same point that we started ... then we have to keep looking lower down.
+          var mogelled = mogel(box, spot);
+          if (mogelled.isSome()) return mogelled;
+          // if (box.top <= ((spot.top + spot.bottom) / 2) && box.bottom >= ((spot.top + spot.bottom) / 2)) {
+          //   console.log('try again lower down');
+          //   return webkitAgain({ left: spot.left, bottom: spot.bottom + 5 });
+          // }
+
+          // if (box.top > spot.bottom + 5) {
+          //   return Point.find(window, spot.left, box.top + 1).orThunk(function () { return Option.some(pt); });
+          // } else {
+          //   return Option.some(pt);
+          // }
         }, Option.none);
 
       });
