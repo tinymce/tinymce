@@ -4,14 +4,17 @@ define(
   [
     'ephox.fred.PlatformDetection',
     'ephox.fussy.api.Point',
+    'ephox.fussy.api.SelectionRange',
+    'ephox.fussy.api.Situ',
     'ephox.fussy.api.WindowSelection',
     'ephox.oath.proximity.Awareness',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Node',
+    'ephox.sugar.api.Traverse',
     'global!Math'
   ],
 
-  function (PlatformDetection, Point, WindowSelection, Awareness, Option, Node, Math) {
+  function (PlatformDetection, Point, SelectionRange, Situ, WindowSelection, Awareness, Option, Node, Traverse, Math) {
     var platform = PlatformDetection.detect();
 
     var getSpot = function () {
@@ -115,14 +118,24 @@ define(
       });
 
       if (event.raw().which === 40) {
-        getSpot().bind(function (spot) {
-          return calc(spot);
+        WindowSelection.get(window).bind(function (sel) {
+          return Node.isElement(sel.start()) ? Traverse.child(sel.start(), sel.soffset()).filter(function (child) { return Node.name(child) === 'br'; }) :Option.none();
         }).fold(function () {
-          console.log('did not handle');
-        }, function (pt) {
-          console.log('handled: ', pt);
-          WindowSelection.set(window, pt);
-          // updateLogbook(10);
+
+
+          getSpot().bind(function (spot) {
+            return calc(spot);
+          }).fold(function () {
+            console.log('did not handle');
+          }, function (pt) {
+            console.log('handled: ', pt);
+            WindowSelection.set(window, pt);
+            // updateLogbook(10);
+          });
+
+        }, function (child) {
+          console.log("handling br");
+          WindowSelection.set(window, SelectionRange.write(Situ.after(child), Situ.after(child)));
         });
         // down
         event.kill();
