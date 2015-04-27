@@ -2,6 +2,7 @@ define(
   'ephox.darwin.api.Darwin',
 
   [
+    'ephox.darwin.keyboard.Rectangles',
     'ephox.fred.PlatformDetection',
     'ephox.fussy.api.Point',
     'ephox.fussy.api.SelectionRange',
@@ -18,7 +19,7 @@ define(
     'global!Math'
   ],
 
-  function (PlatformDetection, Point, SelectionRange, Situ, WindowSelection, Awareness, Option, Spot, DomDescent, DomGather, Attr, Node, Traverse, Math) {
+  function (Rectangles, PlatformDetection, Point, SelectionRange, Situ, WindowSelection, Awareness, Option, Spot, DomDescent, DomGather, Attr, Node, Traverse, Math) {
     var platform = PlatformDetection.detect();
 
     var getSpot = function () {
@@ -35,7 +36,7 @@ define(
     var firefoxAgain = function (spot) {
       return Point.find(window, spot.left, spot.bottom + 5).bind(function (pt) {
         return pt.start().fold(Option.none, function (e, eo) {
-          var box = getBox(e, eo);
+          var box = Rectangles.getBox(window, e, eo);
           if (Math.abs(box.top - spot.top) < 10) {
             return firefoxAgain({ left: spot.left, bottom: spot.bottom + 5, top: spot.top + 5 }).orThunk(function () {
               return Option.some(pt);
@@ -65,7 +66,7 @@ define(
     var webkitAgain = function (spot) {
       return Point.find(window, spot.left, spot.bottom + 5).bind(function (pt) {
         return pt.start().fold(Option.none, function (e, eo) {
-          var box = getBox(e, eo);
+          var box = Rectangles.getBox(window, e, eo);
           // If the box that it returned does not contain the spot, move the spot to within the box and try again
           // this is an attempt to get a more reliable offset
 
@@ -98,25 +99,6 @@ define(
       else if (platform.browser.isFirefox()) return firefoxAgain(spot);
       else if (platform.browser.isIE()) return ieAgain(spot);
       else return Option.none();
-    };
-
-    var getBox = function (element, offset) {
-      if (Node.isElement(element)) return element.dom().getBoundingClientRect();
-      else {
-        if (offset === 0 && offset < Awareness.getEnd(element)) {
-          var rng = document.createRange();
-          rng.setStart(element.dom(), offset);
-          rng.setEnd(element.dom(), offset + 1);
-          return rng.getBoundingClientRect();
-        } else if (offset > 1) {
-          var rng2 = document.createRange();
-          rng2.setStart(element.dom(), offset - 1);
-          rng2.setEnd(element.dom(), offset);
-          return rng2.getBoundingClientRect();
-        } else {
-          throw 'cattle';
-        }
-      }
     };
 
     var handler = function (event) {

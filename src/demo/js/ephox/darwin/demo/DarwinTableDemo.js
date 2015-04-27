@@ -33,7 +33,7 @@ define(
       );
 
       var table = Element.fromHtml(
-        '<table>' +
+        '<table contenteditable="true">' +
           '<tbody>' +
             '<tr>' +
               '<td style="min-width: 100px;">A1</td>' +
@@ -141,21 +141,21 @@ define(
               Class.remove(td, 'selected');
             });
 
-            return SelectorFind.closest(event.target(), 'td,th').bind(function (finish) {
+            var boxes = SelectorFind.closest(event.target(), 'td,th').bind(function (finish) {
               console.log('start', cur.dom(), 'finish', finish.dom());
               return boxIt(cur, finish);
-            });
-          }).getOr([]);
+            }).getOr([]);
 
-          if (boxes.length > 0) {
-            console.log('boxing');
-            Arr.each(boxes, function (box) {
-              Class.add(box, 'selected');
-            });
+            if (boxes.length > 0) {
+              console.log('boxing');
+              Arr.each(boxes, function (box) {
+                Class.add(box, 'selected');
+              });
 
-            window.getSelection().removeAllRanges();
-          }
-          console.log('mouseover', boxes);
+              window.getSelection().removeAllRanges();
+            }
+            console.log('mouseover', boxes);
+          });
         });
 
         DomEvent.bind(table, 'mouseup', function (event) {
