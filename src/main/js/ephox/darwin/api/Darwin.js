@@ -36,14 +36,15 @@ define(
     var firefoxAgain = function (spot) {
       return Point.find(window, spot.left, spot.bottom + 5).bind(function (pt) {
         return pt.start().fold(Option.none, function (e, eo) {
-          var box = Rectangles.getBox(window, e, eo);
-          if (Math.abs(box.top - spot.top) < 10) {
-            return firefoxAgain({ left: spot.left, bottom: spot.bottom + 5, top: spot.top + 5 }).orThunk(function () {
-              return Option.some(pt);
-            });
-          }
+          return Rectangles.getBox(window, e, eo).bind(function (box) {
+            if (Math.abs(box.top - spot.top) < 10) {
+              return firefoxAgain({ left: spot.left, bottom: spot.bottom + 5, top: spot.top + 5 }).orThunk(function () {
+                return Option.some(pt);
+              });
+            }
 
-          return mogel(pt, box, spot);
+            return mogel(pt, box, spot);
+          });
         }, Option.none);
       });
     };
@@ -66,25 +67,26 @@ define(
     var webkitAgain = function (spot) {
       return Point.find(window, spot.left, spot.bottom + 5).bind(function (pt) {
         return pt.start().fold(Option.none, function (e, eo) {
-          var box = Rectangles.getBox(window, e, eo);
-          // If the box that it returned does not contain the spot, move the spot to within the box and try again
-          // this is an attempt to get a more reliable offset
+          return Rectangles.getBox(window, e, eo).bind(function (box) {
+            // If the box that it returned does not contain the spot, move the spot to within the box and try again
+            // this is an attempt to get a more reliable offset
 
-          console.log('comparison of (box.top= ' + box.top + ') to (spot.bottom=' + spot.bottom + ')');
-          console.log('box: ', box);
+            console.log('comparison of (box.top= ' + box.top + ') to (spot.bottom=' + spot.bottom + ')');
+            console.log('box: ', box);
 
-          // If we are at the same point that we started ... then we have to keep looking lower down.
-          return mogel(pt, box, spot);
-          // if (box.top <= ((spot.top + spot.bottom) / 2) && box.bottom >= ((spot.top + spot.bottom) / 2)) {
-          //   console.log('try again lower down');
-          //   return webkitAgain({ left: spot.left, bottom: spot.bottom + 5 });
-          // }
+            // If we are at the same point that we started ... then we have to keep looking lower down.
+            return mogel(pt, box, spot);
+            // if (box.top <= ((spot.top + spot.bottom) / 2) && box.bottom >= ((spot.top + spot.bottom) / 2)) {
+            //   console.log('try again lower down');
+            //   return webkitAgain({ left: spot.left, bottom: spot.bottom + 5 });
+            // }
 
-          // if (box.top > spot.bottom + 5) {
-          //   return Point.find(window, spot.left, box.top + 1).orThunk(function () { return Option.some(pt); });
-          // } else {
-          //   return Option.some(pt);
-          // }
+            // if (box.top > spot.bottom + 5) {
+            //   return Point.find(window, spot.left, box.top + 1).orThunk(function () { return Option.some(pt); });
+            // } else {
+            //   return Option.some(pt);
+            // }
+          });
         }, Option.none);
 
       });
