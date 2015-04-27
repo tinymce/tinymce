@@ -9,17 +9,24 @@ define(
     'ephox.fussy.api.WindowSelection',
     'ephox.oath.proximity.Awareness',
     'ephox.perhaps.Option',
+    'ephox.phoenix.api.data.Spot',
+    'ephox.phoenix.api.dom.DomDescent',
+    'ephox.phoenix.api.dom.DomGather',
+    'ephox.sugar.api.Attr',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.Traverse',
     'global!Math'
   ],
 
-  function (PlatformDetection, Point, SelectionRange, Situ, WindowSelection, Awareness, Option, Node, Traverse, Math) {
+  function (PlatformDetection, Point, SelectionRange, Situ, WindowSelection, Awareness, Option, Spot, DomDescent, DomGather, Attr, Node, Traverse, Math) {
     var platform = PlatformDetection.detect();
 
     var getSpot = function () {
 	    return WindowSelection.get(window).bind(function (sel) {
-	      return WindowSelection.rectangleAt(window, sel.start(), sel.soffset(), sel.finish(), sel.foffset());
+        var start = DomDescent.toLeaf(sel.start(), sel.soffset());
+        var finish = DomDescent.toLeaf(sel.finish(), sel.foffset());
+        console.log('range: ', start.element().dom(), start.offset(), finish.element().dom(), finish.offset());
+	      return WindowSelection.rectangleAt(window, start.element(), start.offset(), finish.element(), finish.offset());
 	    });
 	  };
 
@@ -135,7 +142,15 @@ define(
 
         }, function (child) {
           console.log("handling br");
-          WindowSelection.set(window, SelectionRange.write(Situ.after(child), Situ.after(child)));
+          DomGather.after(child, function (elem) {
+            return Attr.has(elem, 'contenteditable');
+          }).fold(function () {
+            console.log('*************************************************** nope *******************');
+          }, function (next) {
+            console.log('after ', child.dom(), ' was ', next.dom());
+            WindowSelection.set(window, SelectionRange.write(Situ.before(next), Situ.before(next)));
+          })
+
         });
         // down
         event.kill();
