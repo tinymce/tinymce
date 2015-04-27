@@ -21,6 +21,26 @@ var dependencies = [
   },
 
   {
+    name: 'phoenix',
+    repository: 'buildrepo2',
+    source: 'phoenix.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
+  {
+    name: 'robin',
+    repository: 'buildrepo2',
+    source: 'robin.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
+  {
     name: 'fussy',
     repository: 'buildrepo2',
     source: 'fussy.zip',

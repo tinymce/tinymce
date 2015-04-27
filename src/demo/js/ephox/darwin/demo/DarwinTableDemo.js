@@ -122,8 +122,8 @@ define(
 
       var magic = function () {
         var cursor = Option.none();
-        DomEvent.bind(table, 'mousedown', function () {
-          cursor = WindowSelection.get(window);
+        DomEvent.bind(table, 'mousedown', function (event) {
+          cursor = SelectorFind.closest(event.target(), 'td,th');
           console.log('mousedown');
         });
 
@@ -134,12 +134,10 @@ define(
           });
 
 
-          var boxes = WindowSelection.get(window).bind(function (sel) {
-            return SelectorFind.closest(sel.start(), 'td,th').bind(function (start) {
-              return SelectorFind.closest(event.target(), 'td,th').bind(function (finish) {
-                console.log('start', start.dom(), 'finish', finish.dom());
-                return boxIt(start, finish);
-              });
+          var boxes = cursor.bind(function (cur) {
+            return SelectorFind.closest(event.target(), 'td,th').bind(function (finish) {
+              console.log('start', cur.dom(), 'finish', finish.dom());
+              return boxIt(cur, finish);
             });
           }).getOr([]);
 
@@ -148,6 +146,8 @@ define(
             Arr.each(boxes, function (box) {
               Class.add(box, 'selected');
             });
+
+            window.getSelection().removeAllRanges();
           }
           console.log('mouseover', boxes);
         });
