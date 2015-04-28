@@ -21,25 +21,13 @@ define(
     var platform = PlatformDetection.detect();
 
     var getSpot = function () {
-	    // return WindowSelection.get(window).bind(function (sel) {
-     //    var start = DomDescent.toLeaf(sel.start(), sel.soffset());
-     //    var finish = DomDescent.toLeaf(sel.finish(), sel.foffset());
-     //    console.log('range: ', start.element().dom(), start.offset(), finish.element().dom(), finish.offset());
-	    //   return WindowSelection.rectangleAt(window, start.element(), start.offset(), finish.element(), finish.offset());
-	    // });
-      return WindowSelection.get(window).bind(function (sel) {
+	    return WindowSelection.get(window).bind(function (sel) {
         if (WindowSelection.isCollapsed(sel.start(), sel.soffset(), sel.finish(), sel.foffset())) {
           return Rectangles.getBox(window, sel.start(), sel.soffset());
         } else {
           var start = DomDescent.toLeaf(sel.start(), sel.soffset());
           var finish = DomDescent.toLeaf(sel.finish(), sel.foffset());
-          console.log('range: ', start.element().dom(), start.offset(), finish.element().dom(), finish.offset());
-          var answer = WindowSelection.rectangleAt(window, start.element(), start.offset(), finish.element(), finish.offset());
-          answer.each(function (ans) {
-            console.log('------------------------------');
-            console.log('descended: ', ans);
-          });
-          return answer;
+          return WindowSelection.rectangleAt(window, start.element(), start.offset(), finish.element(), finish.offset());
         }
       });
 	  };

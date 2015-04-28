@@ -27,7 +27,7 @@ define(
         console.log('guessBox.bottom', guessBox.bottom, 'caret.bottom', caret.bottom);
       }
 
-      if (guessBox.top > caret.bottom + JUMP_SIZE) {
+      if (guessBox.top > caret.bottom) {
         // The returned guessBox based on the guess actually doesn't include the initial caret. So we search again
         // where we adjust the caret so that it is inside the returned guessBox. This means that the offset calculation
         // will be more accurate.
