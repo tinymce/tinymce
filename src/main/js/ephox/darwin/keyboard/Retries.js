@@ -29,17 +29,17 @@ define(
     // minus some error, try again with a bigger jump.
     var firefoxAgain = function (win, caret, _adjustedCaret) {
       var adjustedCaret = _adjustedCaret !== undefined ? _adjustedCaret : caret;
-      return Point.find(win, adjustedCaret.left, adjustedCaret.bottom + JUMP_SIZE).bind(function (pt) {
-        return pt.start().fold(Option.none, function (e, eo) {
+      return Point.find(win, adjustedCaret.left, adjustedCaret.bottom + JUMP_SIZE).bind(function (guess) {
+        return guess.start().fold(Option.none, function (e, eo) {
           console.log('e: ', e.dom());
-          return Rectangles.getBox(win, e, eo).bind(function (box) {
-            if (Math.abs(box.top - caret.top) < (2 * JUMP_SIZE)) {
+          return Rectangles.getBox(win, e, eo).bind(function (guessBox) {
+            if (guessBox.bottom === caret.bottom) {
               return firefoxAgain(win, caret, { left: adjustedCaret.left, bottom: adjustedCaret.bottom + JUMP_SIZE, top: adjustedCaret.top + JUMP_SIZE }).orThunk(function () {
-                return Option.some(pt);
+                return Option.some(guess);
               });
             }
 
-            return mogel(win, pt, box, caret);
+            return mogel(win, guess, guessBox, caret);
           });
         }, Option.none);
       });
