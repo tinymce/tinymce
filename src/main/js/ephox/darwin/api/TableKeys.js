@@ -85,7 +85,7 @@ define(
       var candidate = isBr(element) ? Option.some(element) : Traverse.child(element, offset).filter(isBr);
 
       return candidate.bind(function (cand) {
-        console.log('candidate for br: ', cand.dom());
+        console.log('candidate for br.down: ', cand.dom());
         return DomGather.after(cand, isRoot).map(function (next) {
           return SelectionRange.write(
             Situ.before(next),
@@ -96,8 +96,17 @@ define(
     };
 
     var tryBrUp = function (win, isRoot, element, offset) {
-       var candidate = isBr(element) ? Option.some(element) : Traverse.child(element, offset).filter(isBr);
-       return Option.none();
+      var candidate = isBr(element) ? Option.some(element) : Traverse.child(element, offset).filter(isBr);
+      return candidate.bind(function (cand) {
+        console.log('candidate for br.up: ', cand.dom());
+        return DomGather.before(cand, isRoot).map(function (next) {
+          console.log('br.up.next: ', next.dom());
+          return SelectionRange.write(
+            Node.name(next) === 'br' ? Situ.on(next, 0) : Situ.after(next),
+            Node.name(next) === 'br' ? Situ.on(next, 0) : Situ.after(next)
+          );
+        });
+      });
     };
 
     var tryDown = function (win, isRoot, element, offset) {
