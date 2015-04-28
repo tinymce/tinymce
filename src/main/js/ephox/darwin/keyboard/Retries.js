@@ -17,10 +17,14 @@ define(
     var mogel = function (win, guess, guessBox, caret) {
       // We haven't dropped vertically, so we need to look down and try again. Note, this is not going to
       // work for containers. Yeah, I think this approach is significantly flawed.
-      if (guessBox.top <= ((caret.top + caret.bottom) / 2) && guessBox.bottom >= ((caret.top + caret.bottom) / 2)) {
+      // if (guessBox.top <= ((caret.top + caret.bottom) / 2) && guessBox.bottom >= ((caret.top + caret.bottom) / 2) && false) {
+      if (guessBox.bottom === caret.bottom) {
         console.log('try again lower down');
         var newCaret = { left: caret.left, bottom: caret.bottom + JUMP_SIZE };
         return webkitAgain(win, newCaret);
+      } else {
+        console.log('firefox failure' ,guessBox.top, guessBox.bottom, 'middle', (caret.top + caret.bottom)/2);
+        console.log('guessBox.bottom', guessBox.bottom, 'caret.bottom', caret.bottom);
       }
 
       if (guessBox.top > caret.bottom + JUMP_SIZE) {
@@ -36,12 +40,14 @@ define(
 
      // In Firefox, it isn't giving you the next element ... it's giving you the current element. So if the box of where it gives you has the same y value
     // minus some error, try again with a bigger jump.
-    var firefoxAgain = function (win, caret) {
-      return Point.find(win, caret.left, caret.bottom + JUMP_SIZE).bind(function (pt) {
+    var firefoxAgain = function (win, caret, _adjustedCaret) {
+      var adjustedCaret = _adjustedCaret !== undefined ? _adjustedCaret : caret;
+      return Point.find(win, adjustedCaret.left, adjustedCaret.bottom + JUMP_SIZE).bind(function (pt) {
         return pt.start().fold(Option.none, function (e, eo) {
+          console.log('e: ', e.dom());
           return Rectangles.getBox(win, e, eo).bind(function (box) {
             if (Math.abs(box.top - caret.top) < (2 * JUMP_SIZE)) {
-              return firefoxAgain(win, { left: caret.left, bottom: caret.bottom + JUMP_SIZE, top: caret.top + JUMP_SIZE }).orThunk(function () {
+              return firefoxAgain(win, caret, { left: adjustedCaret.left, bottom: adjustedCaret.bottom + JUMP_SIZE, top: adjustedCaret.top + JUMP_SIZE }).orThunk(function () {
                 return Option.some(pt);
               });
             }
