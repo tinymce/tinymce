@@ -18,9 +18,9 @@ define(
       return nu(caret.left(), caret.top() - JUMP_SIZE, caret.right(), caret.bottom() - JUMP_SIZE);
     };
 
-    var moveTopTo = function (caret, top) {
+    var moveBottomTo = function (caret, bottom) {
       var height = caret.bottom() - caret.top();
-      return nu(caret.left(), top, caret.right(), top + height);
+      return nu(caret.left(), bottom - height, caret.right(), bottom);
     };
 
     var translate = function (caret, xDelta, yDelta) {
@@ -35,7 +35,7 @@ define(
       nu: nu,
       moveUp: moveUp,
       moveDown: moveDown,
-      moveTopTo: moveTopTo,
+      moveBottomTo: moveBottomTo,
       translate: translate
     };
   }
