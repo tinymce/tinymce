@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.compass.Arr',
+    'ephox.darwin.api.Darwin',
     'ephox.fussy.api.WindowSelection',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
@@ -18,7 +19,7 @@ define(
     'global!document'
   ],
 
-  function (Arr, WindowSelection, Fun, Option, DomParent, Class, Compare, DomEvent, Element, Insert, SelectorFilter, SelectorFind, Math, document) {
+  function (Arr, Darwin, WindowSelection, Fun, Option, DomParent, Class, Compare, DomEvent, Element, Insert, SelectorFilter, SelectorFind, Math, document) {
     return function () {
       console.log('darwin table');
 
@@ -160,6 +161,24 @@ define(
 
         DomEvent.bind(table, 'mouseup', function (event) {
           cursor = Option.none();
+        });
+
+        DomEvent.bind(table, 'keydown', function (event) {
+          WindowSelection.get(window).each(function (sel) {
+            Darwin.tryDown(window, Fun.constant(false), sel.start(), sel.soffset()).each(function (next) {
+              var exact = WindowSelection.deriveExact(window, next);
+              SelectorFind.closest(exact.start(), 'td,th').each(function (newCell) {
+                SelectorFind.closest(sel.start(), 'td,th').each(function (oldCell) {
+                  if (! Compare.eq(newCell, oldCell)) {
+                    WindowSelection.set(window, next);
+                    event.kill();
+                  }
+                });
+              });
+
+              console.log('next', exact.start().dom());
+            });
+          });
         });
 
       };

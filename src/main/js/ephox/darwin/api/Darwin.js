@@ -39,6 +39,13 @@ define(
       else return Option.none();
     };
 
+
+    var tryDown = function (win, isRoot, element, offset) {
+      return Rectangles.getBox(win, element, offset).bind(function (box) {
+        return calc(box);
+      });
+    };
+
     var handler = function (event) {
       getSpot().each(function (spot) {
         // updateLogbook('x: ' + spot.left + ', y: ' + spot.bottom);
@@ -79,7 +86,8 @@ define(
     };
 
     return {
-      handler: handler
+      handler: handler,
+      tryDown: tryDown
     };
   }
 );
