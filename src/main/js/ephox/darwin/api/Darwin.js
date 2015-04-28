@@ -33,9 +33,9 @@ define(
 	  };
 
     var calc = function (spot) {
-      if (platform.browser.isChrome() || platform.browser.isSafari()) return Retries.webkitAgain(window, spot);
-      else if (platform.browser.isFirefox()) return Retries.firefoxAgain(window, spot);
-      else if (platform.browser.isIE()) return Retries.ieAgain(window, spot);
+      if (platform.browser.isChrome() || platform.browser.isSafari()) return Retries.tryDown(window, spot);
+      else if (platform.browser.isFirefox()) return Retries.tryDown(window, spot);
+      else if (platform.browser.isIE()) return Retries.ieTryDown(window, spot);
       else return Option.none();
     };
 
