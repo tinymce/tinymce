@@ -59,13 +59,16 @@ define(
       gather: DomGather.after
     };
 
-    var adjustTil = function (win, direction, original, caret) {
+    var adjustTil = function (win, direction, original, caret, counter) {
+      if (counter === 0) return Option.some(caret);
+      console.log('Searching', caret.left(), direction.point(caret), caret.top(), caret.bottom());
       return Point.find(win, caret.left(), direction.point(caret)).bind(function (guess) {
         return guess.start().fold(Option.none, function (element, offset) {
+          console.log('immediate guess', element.dom(), offset);
           return Rectangles.getBox(win, element, offset).bind(function (guessBox) {
             return direction.adjuster(guessBox, original, caret).fold(Option.none, function (newCaret) {
               console.log('still adjusting', newCaret.top());
-              return adjustTil(win, direction, original, newCaret);
+              return adjustTil(win, direction, original, newCaret, counter-1);
             }, function (newCaret) {
               console.log('finished at', newCaret, ' which is ', element.dom(), offset);
               return Option.some(newCaret);
@@ -86,7 +89,7 @@ define(
     var retry = function (direction, win, caret) {
       var c = Carets.nu(caret.left, caret.top, caret.right, caret.bottom);
       var moved = direction.move(c, JUMP_SIZE);
-      var adjusted = adjustTil(win, direction, c, moved).getOr(moved);
+      var adjusted = adjustTil(win, direction, c, moved, 100).getOr(moved);
       console.log('adjusted caret', c.bottom());
       return Point.find(win, adjusted.left(), direction.point(adjusted));
     };

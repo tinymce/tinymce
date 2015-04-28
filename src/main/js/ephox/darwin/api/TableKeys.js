@@ -24,7 +24,7 @@ define(
 
     var handle = function (mover, win, isRoot) {
       return WindowSelection.get(win).bind(function (sel) {
-        return hacker(win, mover, isRoot, sel.finish(), sel.foffset()).map(function (next) {
+        return hacker(win, mover, isRoot, sel.finish(), sel.foffset(), 1000).map(function (next) {
           return WindowSelection.deriveExact(win, next);
         });
       });
@@ -34,7 +34,8 @@ define(
       return SelectorFind.closest(elem, 'tr');
     };
 
-    var hacker = function (win, mover, isRoot, element, offset) {
+    var hacker = function (win, mover, isRoot, element, offset, counter) {
+      if (counter === 0) return Option.none();
       return mover(win, isRoot, element, offset).bind(function (next) {
         var exact = WindowSelection.deriveExact(win, next);
           // Note, this will only work if we are staying in a table.
@@ -44,7 +45,8 @@ define(
               return DomParent.sharedOne(isRow, [ newCell, oldCell ]).fold(function () {
                 return Option.some(next);
               }, function (sharedRow) {
-                return hacker(win, mover, isRoot, oldCell, mover === tryDown ? Awareness.getEnd(oldCell) : 0);
+                console.log('because of this ... ignoring ', newCell.dom());
+                return hacker(win, mover, isRoot, oldCell, mover === tryDown ? Awareness.getEnd(oldCell) : 0, counter - 1);
               });
             } else {
               return Option.none();
