@@ -37,7 +37,9 @@ define(
     var hacker = function (win, mover, isRoot, element, offset, counter) {
       if (counter === 0) return Option.none();
       return mover(win, isRoot, element, offset).bind(function (next) {
+
         var exact = WindowSelection.deriveExact(win, next);
+        console.log('before hackery', next, exact.start().dom(), exact.soffset());
           // Note, this will only work if we are staying in a table.
         return SelectorFind.closest(exact.start(), 'td,th').bind(function (newCell) {
           return SelectorFind.closest(element, 'td,th').bind(function (oldCell) {

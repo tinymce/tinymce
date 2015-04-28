@@ -67,13 +67,13 @@ define(
           console.log('immediate guess', element.dom(), offset);
           return Rectangles.getBox(win, element, offset).bind(function (guessBox) {
             return direction.adjuster(guessBox, original, caret).fold(Option.none, function (newCaret) {
-              console.log('still adjusting', newCaret.top());
+              console.log('still adjusting', direction.point(newCaret));
               return adjustTil(win, direction, original, newCaret, counter-1);
             }, function (newCaret) {
               console.log('finished at', newCaret, ' which is ', element.dom(), offset);
               return Option.some(newCaret);
             });
-          });
+          }).orThunk(function () { return Option.some(caret); });
         }, Option.none);
       });
     };
@@ -90,7 +90,7 @@ define(
       var c = Carets.nu(caret.left, caret.top, caret.right, caret.bottom);
       var moved = direction.move(c, JUMP_SIZE);
       var adjusted = adjustTil(win, direction, c, moved, 100).getOr(moved);
-      console.log('adjusted caret', c.bottom());
+      console.log('adjusted caret', adjusted.left(), direction.point(adjusted));
       return Point.find(win, adjusted.left(), direction.point(adjusted));
     };
 

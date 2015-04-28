@@ -17,11 +17,12 @@ define(
     };
 
     var getElemBox = function (win, element, offset) {
+      return Option.some(element.dom().getBoundingClientRect());
       return Traverse.child(element, offset).fold(function () {
         return Option.some(element.dom().getBoundingClientRect());
       }, function (child) {
         if (Node.name(child) === 'br') return getPartialBox(win, element, offset);
-        else return Option.some(child.dom().getBoundingClientRect());
+        else return Option.some(element.dom().getBoundingClientRect());
       });
     };
 
