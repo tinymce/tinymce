@@ -165,19 +165,21 @@ define(
 
         DomEvent.bind(table, 'keydown', function (event) {
           WindowSelection.get(window).each(function (sel) {
-            Darwin.tryDown(window, Fun.constant(false), sel.start(), sel.soffset()).each(function (next) {
-              var exact = WindowSelection.deriveExact(window, next);
-              SelectorFind.closest(exact.start(), 'td,th').each(function (newCell) {
-                SelectorFind.closest(sel.start(), 'td,th').each(function (oldCell) {
-                  if (! Compare.eq(newCell, oldCell)) {
-                    WindowSelection.set(window, next);
-                    event.kill();
-                  }
+            if (event.raw().which === 40) {
+              Darwin.tryDown(window, Fun.constant(false), sel.start(), sel.soffset()).each(function (next) {
+                var exact = WindowSelection.deriveExact(window, next);
+                SelectorFind.closest(exact.start(), 'td,th').each(function (newCell) {
+                  SelectorFind.closest(sel.start(), 'td,th').each(function (oldCell) {
+                    if (! Compare.eq(newCell, oldCell)) {
+                      WindowSelection.set(window, next);
+                      event.kill();
+                    }
+                  });
                 });
-              });
 
-              console.log('next', exact.start().dom());
-            });
+                console.log('next', exact.start().dom());
+              });
+            }
           });
         });
 
