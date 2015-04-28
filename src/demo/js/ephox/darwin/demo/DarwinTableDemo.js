@@ -4,6 +4,8 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.darwin.api.Darwin',
+    'ephox.fussy.api.SelectionRange',
+    'ephox.fussy.api.Situ',
     'ephox.fussy.api.WindowSelection',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
@@ -19,7 +21,7 @@ define(
     'global!document'
   ],
 
-  function (Arr, Darwin, WindowSelection, Fun, Option, DomParent, Class, Compare, DomEvent, Element, Insert, SelectorFilter, SelectorFind, Math, document) {
+  function (Arr, Darwin, SelectionRange, Situ, WindowSelection, Fun, Option, DomParent, Class, Compare, DomEvent, Element, Insert, SelectorFilter, SelectorFind, Math, document) {
     return function () {
       console.log('darwin table');
 
@@ -166,12 +168,15 @@ define(
         DomEvent.bind(table, 'keydown', function (event) {
           WindowSelection.get(window).each(function (sel) {
             if (event.raw().which === 40) {
-              Darwin.tryDown(window, Fun.constant(false), sel.start(), sel.soffset()).each(function (next) {
+              Darwin.tryDown(window, Fun.constant(false), sel.finish(), sel.foffset()).each(function (next) {
                 var exact = WindowSelection.deriveExact(window, next);
                 SelectorFind.closest(exact.start(), 'td,th').each(function (newCell) {
                   SelectorFind.closest(sel.start(), 'td,th').each(function (oldCell) {
                     if (! Compare.eq(newCell, oldCell)) {
-                      WindowSelection.set(window, next);
+                      WindowSelection.set(window, SelectionRange.write(
+                        event.raw().shiftKey ? Situ.on(sel.start(), sel.soffset()) : Situ.on(exact.start(), exact.soffset()),
+                        Situ.on(exact.start(), exact.soffset())
+                      ));
                       event.kill();
                     }
                   });
