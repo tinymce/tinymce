@@ -49,8 +49,16 @@ define(
               return DomParent.sharedOne(isRow, [ newCell, oldCell ]).fold(function () {
                 return Option.some(next);
               }, function (sharedRow) {
-                console.log('because of this ... ignoring ', newCell.dom());
-                return hacker(win, mover, isRoot, oldCell, mover === tryDown ? Awareness.getEnd(oldCell) : 0, counter - 1);
+                console.log('Different cells in the same row ... so it failed', newCell.dom(), oldCell.dom(), exact.start().dom(), exact.soffset(), element.dom(), offset);
+
+                if (mover === tryDown && offset < Awareness.getEnd(oldCell)) {
+
+                  return hacker(win, mover, isRoot, oldCell, Awareness.getEnd(oldCell), counter - 1);
+                } else if (mover === tryUp && offset > 0) {
+                  return hacker(win, mover, isRoot, oldCell, 0, counter - 1);
+                } else {
+                  return Option.none();
+                }
               });
             } else {
               var inNewPosition = PredicateExists.ancestor(element, function (elem) {

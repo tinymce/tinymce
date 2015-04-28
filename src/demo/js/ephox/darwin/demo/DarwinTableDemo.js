@@ -50,7 +50,7 @@ define(
               '<td style="min-width: 100px;">A2</td>' +
               '<td style="min-width: 100px;">B2</td>' +
               '<td style="min-width: 100px;"><p>C2</p><p>More</p></td>' +
-              '<td style="min-width: 100px;">D2</td>' +
+              '<td style="min-width: 100px;"><br />D2</td>' +
             '</tr>' +
             '<tr>' +
               '<td style="min-width: 100px;">A3</td>' +
