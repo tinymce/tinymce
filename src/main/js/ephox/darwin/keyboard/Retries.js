@@ -15,27 +15,14 @@ define(
      */
 
     var mogel = function (win, guess, guessBox, caret) {
-      // We haven't dropped vertically, so we need to look down and try again. Note, this is not going to
-      // work for containers. Yeah, I think this approach is significantly flawed.
-      // if (guessBox.top <= ((caret.top + caret.bottom) / 2) && guessBox.bottom >= ((caret.top + caret.bottom) / 2) && false) {
-      if (guessBox.bottom === caret.bottom) {
-        console.log('try again lower down');
-        var newCaret = { left: caret.left, bottom: caret.bottom + JUMP_SIZE };
-        return webkitAgain(win, newCaret);
-      } else {
-        console.log('firefox failure' ,guessBox.top, guessBox.bottom, 'middle', (caret.top + caret.bottom)/2);
-        console.log('guessBox.bottom', guessBox.bottom, 'caret.bottom', caret.bottom);
-      }
-
-      if (guessBox.top > caret.bottom) {
-        // The returned guessBox based on the guess actually doesn't include the initial caret. So we search again
-        // where we adjust the caret so that it is inside the returned guessBox. This means that the offset calculation
-        // will be more accurate.
-        return Point.find(win, caret.left, guessBox.top + 1).orThunk(function () { return Option.some(guess); });
-      } else {
-        // We couldn't find any better way to improve our guess.
-        return Option.some(guess);
-      }
+      // We haven't dropped vertically, so we need to look down and try again.
+      if (guessBox.bottom === caret.bottom) return webkitAgain(win, { left: caret.left, bottom: caret.bottom + JUMP_SIZE });
+      // The returned guessBox based on the guess actually doesn't include the initial caret. So we search again
+      // where we adjust the caret so that it is inside the returned guessBox. This means that the offset calculation
+      // will be more accurate.
+      else if (guessBox.top > caret.bottom) return Point.find(win, caret.left, guessBox.top + 1).orThunk(function () { return Option.some(guess); });
+      // We couldn't find any better way to improve our guess.
+      else return Option.some(guess);
     };
 
      // In Firefox, it isn't giving you the next element ... it's giving you the current element. So if the box of where it gives you has the same y value
