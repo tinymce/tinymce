@@ -1,5 +1,5 @@
 define(
-  'ephox.darwin.keyboard.Caret',
+  'ephox.darwin.keyboard.Carets',
 
   [
     'ephox.scullion.Struct'
@@ -18,6 +18,15 @@ define(
       return nu(caret.left(), caret.top() - JUMP_SIZE, caret.right(), caret.bottom() - JUMP_SIZE);
     };
 
+    var moveTopTo = function (caret, top) {
+      var height = caret.bottom() - caret.top();
+      return nu(caret.left(), top, caret.right(), top + height);
+    };
+
+    var translate = function (caret, xDelta, yDelta) {
+      return nu(caret.left() + xDelta, caret.top() + yDelta, caret.right() + xDelta, caret.bottom() + yDelta);
+    };
+
     // if (guessBox.top > caret.bottom + JUMP_SIZE) {
     // return null;
 
@@ -25,7 +34,9 @@ define(
     return {
       nu: nu,
       moveUp: moveUp,
-      moveDown: moveDown
+      moveDown: moveDown,
+      moveTopTo: moveTopTo,
+      translate: translate
     };
   }
 );

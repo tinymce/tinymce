@@ -2,17 +2,24 @@ define(
   'ephox.darwin.keyboard.Retries',
 
   [
+    'ephox.darwin.keyboard.Carets',
     'ephox.darwin.keyboard.Rectangles',
     'ephox.fussy.api.Point',
     'ephox.perhaps.Option',
     'global!Math'
   ],
 
-  function (Rectangles, Point, Option, Math) {
+  function (Carets, Rectangles, Point, Option, Math) {
     var JUMP_SIZE = 5;
     /*
      * This isn't right ... but let's just hook it up first.
      */
+
+    var adjustCaret = function (guessBox, caret) {
+      if (guessBox.bottom === caret.bottom) return Option.some(Carets.moveDown(caret));
+      else if (guessBox.top > caret.bottom) return Option.some(Carets.moveTopTo(caret, guessBox.top + 1));
+      else return Option.none();
+    };
 
     var mogel = function (win, guessBox, caret) {
       // We haven't dropped vertically, so we need to look down and try again.
