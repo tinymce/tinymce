@@ -30,7 +30,7 @@ define(
       var style = Element.fromHtml(
         '<style>' +
           'table { border-collapse: collapse; }\n' +
-          'td { text-align: center; border: 1px solid #aaa; font-size: 20px; padding: 100px; }\n' +
+          'td { text-align: center; border: 1px solid #aaa; font-size: 20px; padding: 10px; }\n' +
           'td.selected { background: #cadbee; }\n' +
         '</style>'
       );
@@ -167,8 +167,9 @@ define(
 
         DomEvent.bind(table, 'keydown', function (event) {
           WindowSelection.get(window).each(function (sel) {
-            if (event.raw().which === 40) {
-              Darwin.tryDown(window, Fun.constant(false), sel.finish(), sel.foffset()).each(function (next) {
+            if (event.raw().which === 40 || event.raw().which === 38) {
+              var mover = event.raw().which === 40 ? Darwin.tryDown : Darwin.tryUp;
+              mover(window, Fun.constant(false), sel.finish(), sel.foffset()).each(function (next) {
                 var exact = WindowSelection.deriveExact(window, next);
                 SelectorFind.closest(exact.start(), 'td,th').each(function (newCell) {
                   SelectorFind.closest(sel.start(), 'td,th').each(function (oldCell) {

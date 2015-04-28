@@ -46,6 +46,15 @@ define(
       });
     };
 
+    var tryUp = function (win, isRoot, element, offset) {
+      return Rectangles.getBox(win, element, offset).bind(function (box) {
+        if (platform.browser.isChrome() || platform.browser.isSafari()) return Retries.tryUp(window, box);
+        else if (platform.browser.isFirefox()) return Retries.tryUp(window, box);
+        else if (platform.browser.isIE()) return Retries.ieTryUp(window, box);
+        else return Option.none();
+      });
+    };
+
     var handler = function (event) {
       getSpot().each(function (spot) {
         // updateLogbook('x: ' + spot.left + ', y: ' + spot.bottom);
@@ -87,7 +96,8 @@ define(
 
     return {
       handler: handler,
-      tryDown: tryDown
+      tryDown: tryDown,
+      tryUp: tryUp
     };
   }
 );
