@@ -7,6 +7,7 @@ define(
     'ephox.fussy.api.SelectionRange',
     'ephox.fussy.api.Situ',
     'ephox.fussy.api.WindowSelection',
+    'ephox.oath.proximity.Awareness',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.robin.api.dom.DomParent',
@@ -21,7 +22,7 @@ define(
     'global!document'
   ],
 
-  function (Arr, Darwin, SelectionRange, Situ, WindowSelection, Fun, Option, DomParent, Class, Compare, DomEvent, Element, Insert, SelectorFilter, SelectorFind, Math, document) {
+  function (Arr, Darwin, SelectionRange, Situ, WindowSelection, Awareness, Fun, Option, DomParent, Class, Compare, DomEvent, Element, Insert, SelectorFilter, SelectorFind, Math, document) {
     return function () {
       console.log('darwin table');
 
@@ -165,25 +166,57 @@ define(
           cursor = Option.none();
         });
 
+        var haxy = function (newCell, oldCell) {
+          SelectorFind.closest(newCell, 'tr').bind(function (r1) {
+            SelectorFind.closest(oldCell, 'tr').bind(function (r2) {
+              // If we are in the same row, then we need to jump down.
+              if (Compare.eq(r1, r2)) {
+                // the rows are the same ... so find the equivalent cell.
+                // trigger down again on row.
+                return Darwin.tryDonw(window, Fun.constant(false), oldCell, Awareness.getEnd(oldCell));
+              } else {
+                // We don't need to do any jumping.
+                return Option.none();
+              }
+            });
+          });
+        };
+
+        var isRow = function (elem) {
+          return SelectorFind.closest(elem, 'tr');
+        };
+
+        var hacker = function (mover, element, offset) {
+          return mover(window, Fun.constant(false), element, offset).bind(function (next) {
+            var exact = WindowSelection.deriveExact(window, next);
+              // Note, this will only work if we are staying in a table.
+            return SelectorFind.closest(exact.start(), 'td,th').bind(function (newCell) {
+              return SelectorFind.closest(element, 'td,th').bind(function (oldCell) {
+                if (! Compare.eq(newCell, oldCell)) {
+                  return DomParent.sharedOne(isRow, [ newCell, oldCell ]).fold(function () {
+                    return Option.some(next);
+                  }, function (sharedRow) {
+                    return hacker(mover, oldCell, mover === Darwin.tryDown ? Awareness.getEnd(oldCell) : 0);
+                  });
+                } else {
+                  return Option.none();
+                }
+              });
+            });
+          });
+        };
+
         DomEvent.bind(table, 'keydown', function (event) {
           WindowSelection.get(window).each(function (sel) {
             if (event.raw().which === 40 || event.raw().which === 38) {
               var mover = event.raw().which === 40 ? Darwin.tryDown : Darwin.tryUp;
-              mover(window, Fun.constant(false), sel.finish(), sel.foffset()).each(function (next) {
+              hacker(mover, sel.finish(), sel.foffset()).each(function (next) {
                 var exact = WindowSelection.deriveExact(window, next);
-                // Note, this will only work if we are staying in a table.
-                SelectorFind.closest(exact.start(), 'td,th').each(function (newCell) {
-                  SelectorFind.closest(sel.start(), 'td,th').each(function (oldCell) {
-                    if (! Compare.eq(newCell, oldCell)) {
-                      WindowSelection.set(window, SelectionRange.write(
-                        event.raw().shiftKey ? Situ.on(sel.start(), sel.soffset()) : Situ.on(exact.start(), exact.soffset()),
-                        Situ.on(exact.start(), exact.soffset())
-                      ));
-                      event.kill();
-                    }
-                  });
-                });
-
+                WindowSelection.set(window, SelectionRange.write(
+                  event.raw().shiftKey ? Situ.on(sel.start(), sel.soffset()) : Situ.on(exact.start(), exact.soffset()),
+                  Situ.on(exact.start(), exact.soffset())
+                ));
+                event.kill();
                 console.log('next', exact.start().dom(), exact.soffset(), exact.start().dom().childNodes.length);
               });
             }
