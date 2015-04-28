@@ -25,6 +25,10 @@ define(
       else return Option.some(guess);
     };
 
+    var sameBottom = function (guessBox, caret) {
+      return guessBox.bottom === caret.bottom;
+    };
+
      // In Firefox, it isn't giving you the next element ... it's giving you the current element. So if the box of where it gives you has the same y value
     // minus some error, try again with a bigger jump.
     var firefoxAgain = function (win, caret, _adjustedCaret) {
@@ -33,13 +37,15 @@ define(
         return guess.start().fold(Option.none, function (e, eo) {
           console.log('e: ', e.dom());
           return Rectangles.getBox(win, e, eo).bind(function (guessBox) {
-            if (guessBox.bottom === caret.bottom) {
+            if (sameBottom(guessBox, caret)) {
               return firefoxAgain(win, caret, { left: adjustedCaret.left, bottom: adjustedCaret.bottom + JUMP_SIZE, top: adjustedCaret.top + JUMP_SIZE }).orThunk(function () {
                 return Option.some(guess);
               });
             }
 
             return mogel(win, guess, guessBox, caret);
+          }).orThunk(function () {
+            return Option.some(guess);
           });
         }, Option.none);
       });
@@ -51,7 +57,9 @@ define(
       return Point.find(win, caret.left, caret.bottom + JUMP_SIZE).bind(function (guess) {
         return guess.start().fold(Option.none, function (e, eo) {
           return Rectangles.getBox(win, e, eo).bind(function (guessBox) {
-            return mogel(win, guess, guessBox, caret);
+            return mogel(win, guess, guessBox, caret).orThunk(function () {
+              return Option.some(guess);
+            });
           });
         }, Option.none);
       });
