@@ -34,6 +34,7 @@ define(
     };
 
     var adjustUp = function (guessBox, original, caret) {
+      console.log('guessBox', guessBox.top, guessBox.bottom, 'original', original.top(), 'caret', caret.top());
       // We haven't ascended vertically, so we need to look up and try again.
       if (guessBox.top === original.top()) return adt.retry(Carets.moveUp(caret, JUMP_SIZE));
       // The returned guessBox based on the guess actually doesn't include the initial caret. So we search again
@@ -60,8 +61,10 @@ define(
         return guess.start().fold(Option.none, function (element, offset) {
           return Rectangles.getBox(win, element, offset).bind(function (guessBox) {
             return direction.adjuster(guessBox, original, caret).fold(Option.none, function (newCaret) {
+              console.log('still adjusting', newCaret.top());
               return adjustTil(win, direction, original, newCaret);
             }, function (newCaret) {
+              console.log('finished at', newCaret, ' which is ', element.dom(), offset);
               return Option.some(newCaret);
             });
           });
@@ -81,7 +84,7 @@ define(
       var c = Carets.nu(caret.left, caret.top, caret.right, caret.bottom);
       var moved = direction.move(c, JUMP_SIZE);
       var adjusted = adjustTil(win, direction, c, moved).getOr(moved);
-      return Point.find(win, adjusted.left(), adjusted.bottom());
+      return Point.find(win, adjusted.left(), direction.point(adjusted));
     };
 
     return {
