@@ -87,6 +87,7 @@ define(
       var c = Carets.nu(caret.left, caret.top, caret.right, caret.bottom);
       var moved = direction.move(c, JUMP_SIZE);
       var adjusted = adjustTil(win, direction, c, moved).getOr(moved);
+      console.log('adjusted caret', c.bottom());
       return Point.find(win, adjusted.left(), direction.point(adjusted));
     };
 
