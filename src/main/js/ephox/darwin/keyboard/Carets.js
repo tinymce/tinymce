@@ -27,10 +27,6 @@ define(
       return nu(caret.left() + xDelta, caret.top() + yDelta, caret.right() + xDelta, caret.bottom() + yDelta);
     };
 
-    // if (guessBox.top > caret.bottom + JUMP_SIZE) {
-    // return null;
-
-
     return {
       nu: nu,
       moveUp: moveUp,
