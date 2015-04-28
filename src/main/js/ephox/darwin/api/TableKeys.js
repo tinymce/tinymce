@@ -15,11 +15,12 @@ define(
     'ephox.robin.api.dom.DomParent',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Node',
+    'ephox.sugar.api.PredicateExists',
     'ephox.sugar.api.SelectorFind',
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Rectangles, Retries, PlatformDetection, SelectionRange, Situ, WindowSelection, Awareness, Fun, Option, DomGather, DomParent, Compare, Node, SelectorFind, Traverse) {
+  function (Rectangles, Retries, PlatformDetection, SelectionRange, Situ, WindowSelection, Awareness, Fun, Option, DomGather, DomParent, Compare, Node, PredicateExists, SelectorFind, Traverse) {
     var platform = PlatformDetection.detect();
 
     var handle = function (mover, win, isRoot) {
@@ -43,6 +44,7 @@ define(
           // Note, this will only work if we are staying in a table.
         return SelectorFind.closest(exact.start(), 'td,th').bind(function (newCell) {
           return SelectorFind.closest(element, 'td,th').bind(function (oldCell) {
+            console.log('we have a new cell, oldCell');
             if (! Compare.eq(newCell, oldCell)) {
               return DomParent.sharedOne(isRow, [ newCell, oldCell ]).fold(function () {
                 return Option.some(next);
@@ -51,7 +53,19 @@ define(
                 return hacker(win, mover, isRoot, oldCell, mover === tryDown ? Awareness.getEnd(oldCell) : 0, counter - 1);
               });
             } else {
-              return Option.none();
+              var inNewPosition = PredicateExists.ancestor(element, function (elem) {
+                return Compare.eq(elem, exact.start());
+              });
+
+              // If we have moved to the containing cell.
+              // Note, will have to put (AND LAST POSITION) here, otherwise br tags will be skipped (May have already been done)
+              if (inNewPosition && mover === tryDown && exact.soffset() === Awareness.getEnd(exact.start())) {
+                return hacker(win, mover, isRoot, exact.start(), exact.soffset(), counter - 1);
+              } else if (inNewPosition && mover === tryUp && exact.soffset() === 0) {
+                return hacker(win, mover, isRoot, exact.start(), exact.soffset(), counter - 1);
+              } else {
+                return Option.none();
+              }
             }
           });
         });
