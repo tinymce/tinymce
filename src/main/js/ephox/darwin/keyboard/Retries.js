@@ -14,15 +14,15 @@ define(
      * This isn't right ... but let's just hook it up first.
      */
 
-    var mogel = function (win, guess, guessBox, caret) {
+    var mogel = function (win, guessBox, caret) {
       // We haven't dropped vertically, so we need to look down and try again.
       if (guessBox.bottom === caret.bottom) return webkitAgain(win, { left: caret.left, bottom: caret.bottom + JUMP_SIZE });
       // The returned guessBox based on the guess actually doesn't include the initial caret. So we search again
       // where we adjust the caret so that it is inside the returned guessBox. This means that the offset calculation
       // will be more accurate.
-      else if (guessBox.top > caret.bottom) return Point.find(win, caret.left, guessBox.top + 1).orThunk(function () { return Option.some(guess); });
+      else if (guessBox.top > caret.bottom) return Point.find(win, caret.left, guessBox.top + 1);
       // We couldn't find any better way to improve our guess.
-      else return Option.some(guess);
+      else return Option.none();
     };
 
     var sameBottom = function (guessBox, caret) {
@@ -37,13 +37,8 @@ define(
         return guess.start().fold(Option.none, function (e, eo) {
           console.log('e: ', e.dom());
           return Rectangles.getBox(win, e, eo).bind(function (guessBox) {
-            if (sameBottom(guessBox, caret)) {
-              return firefoxAgain(win, caret, { left: adjustedCaret.left, bottom: adjustedCaret.bottom + JUMP_SIZE, top: adjustedCaret.top + JUMP_SIZE }).orThunk(function () {
-                return Option.some(guess);
-              });
-            }
-
-            return mogel(win, guess, guessBox, caret);
+            if (sameBottom(guessBox, caret)) return firefoxAgain(win, caret, { left: adjustedCaret.left, bottom: adjustedCaret.bottom + JUMP_SIZE, top: adjustedCaret.top + JUMP_SIZE });
+            return mogel(win, guessBox, caret);
           }).orThunk(function () {
             return Option.some(guess);
           });
@@ -57,7 +52,7 @@ define(
       return Point.find(win, caret.left, caret.bottom + JUMP_SIZE).bind(function (guess) {
         return guess.start().fold(Option.none, function (e, eo) {
           return Rectangles.getBox(win, e, eo).bind(function (guessBox) {
-            return mogel(win, guess, guessBox, caret).orThunk(function () {
+            return mogel(win, guessBox, caret).orThunk(function () {
               return Option.some(guess);
             });
           });
