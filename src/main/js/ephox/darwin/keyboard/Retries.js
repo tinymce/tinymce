@@ -7,11 +7,12 @@ define(
     'ephox.fussy.api.Point',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.phoenix.api.dom.DomGather',
     'ephox.scullion.ADT',
     'global!Math'
   ],
 
-  function (Carets, Rectangles, Point, Fun, Option, Adt, Math) {
+  function (Carets, Rectangles, Point, Fun, Option, DomGather, Adt, Math) {
     var JUMP_SIZE = 5;
     /*
      * This isn't right ... but let's just hook it up first.
@@ -47,13 +48,15 @@ define(
     var upMovement = {
       point: Carets.getTop,
       adjuster: adjustUp,
-      move: Carets.moveUp
+      move: Carets.moveUp,
+      gather: DomGather.before
     };
 
     var downMovement = {
       point: Carets.getBottom,
       adjuster: adjustDown,
-      move: Carets.moveDown
+      move: Carets.moveDown,
+      gather: DomGather.after
     };
 
     var adjustTil = function (win, direction, original, caret) {

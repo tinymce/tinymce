@@ -40,13 +40,14 @@ define(
     };
 
 
-    var tryDown = function (win, isRoot, element, offset) {
+    var tryCursorDown = function (win, isRoot, element, offset) {
+      console.log('element', element.dom());
       return Rectangles.getBox(win, element, offset).bind(function (box) {
         return calc(box);
       });
     };
 
-    var tryUp = function (win, isRoot, element, offset) {
+    var tryCursorUp = function (win, isRoot, element, offset) {
       return Rectangles.getBox(win, element, offset).bind(function (box) {
         if (platform.browser.isChrome() || platform.browser.isSafari()) return Retries.tryUp(window, box);
         else if (platform.browser.isFirefox()) return Retries.tryUp(window, box);
@@ -55,11 +56,41 @@ define(
       });
     };
 
-    var handler = function (event) {
-      getSpot().each(function (spot) {
-        // updateLogbook('x: ' + spot.left + ', y: ' + spot.bottom);
-      });
+    var isBr = function (elem) {
+      return Node.name(elem) === 'br';
+    };
 
+    var tryBrDown = function (win, isRoot, element, offset) {
+      var candidate = isBr(element) ? Option.some(element) : Traverse.child(element, offset).filter(isBr);
+
+      return candidate.bind(function (cand) {
+        return DomGather.after(cand, isRoot).map(function (next) {
+          return SelectionRange.write(
+            Situ.before(next),
+            Situ.before(next)
+          );
+        });
+      });
+    };
+
+    var tryBrUp = function (win, isRoot, element, offset) {
+       var candidate = isBr(element) ? Option.some(element) : Traverse.child(element, offset).filter(isBr);
+       return Option.none();
+    };
+
+    var tryDown = function (win, isRoot, element, offset) {
+      return tryBrDown(win, isRoot, element, offset).orThunk(function () {
+        return tryCursorDown(win, isRoot, element, offset);
+      });
+    };
+
+    var tryUp = function (win, isRoot, element, offset) {
+      return tryBrUp(win, isRoot, element, offset).orThunk(function () {
+        return tryCursorUp(win, isRoot, element, offset);
+      });
+    };
+
+    var handler = function (event) {
       if (event.raw().which === 40) {
         WindowSelection.get(window).bind(function (sel) {
           return Node.isElement(sel.start()) ? Traverse.child(sel.start(), sel.soffset()).filter(function (child) { return Node.name(child) === 'br'; }) :Option.none();

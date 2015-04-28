@@ -40,8 +40,8 @@ define(
           '<tbody>' +
             '<tr>' +
               '<td style="min-width: 100px;">A1</td>' +
-              '<td style="min-width: 100px;">B1</td>' +
-              '<td style="min-width: 100px;">C1</td>' +
+              '<td style="min-width: 100px;">B1<br /></td>' +
+              '<td style="min-width: 100px;">C1<br /><br /><br /></td>' +
               '<td style="min-width: 100px;">D1</td>' +
             '</tr>' +
             '<tr>' +
@@ -171,6 +171,7 @@ define(
               var mover = event.raw().which === 40 ? Darwin.tryDown : Darwin.tryUp;
               mover(window, Fun.constant(false), sel.finish(), sel.foffset()).each(function (next) {
                 var exact = WindowSelection.deriveExact(window, next);
+                // Note, this will only work if we are staying in a table.
                 SelectorFind.closest(exact.start(), 'td,th').each(function (newCell) {
                   SelectorFind.closest(sel.start(), 'td,th').each(function (oldCell) {
                     if (! Compare.eq(newCell, oldCell)) {
@@ -183,7 +184,7 @@ define(
                   });
                 });
 
-                console.log('next', exact.start().dom());
+                console.log('next', exact.start().dom(), exact.soffset(), exact.start().dom().childNodes.length);
               });
             }
           });
