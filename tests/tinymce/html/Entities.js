@@ -56,7 +56,9 @@ test('getEncodeFunc', function() {
 });
 
 test('decode', function() {
-	equal(tinymce.html.Entities.decode('&lt;&gt;&quot;&#39;&amp;&aring;&auml;&ouml;&unknown;&#039;&#x27;'), '<>"\'&\u00e5\u00e4\u00f6&unknown;\'\'', 'Decode text with various entities');
+	equal(tinymce.html.Entities.decode('&lt;&gt;&quot;&#39;&amp;&aring;&auml;&ouml;&unknown;'), '<>"\'&\u00e5\u00e4\u00f6&unknown;', 'Decode text with various entities');
+	equal(tinymce.html.Entities.decode('&#65;&#66;&#039;'), 'AB\'', 'Decode numeric entities');
+	equal(tinymce.html.Entities.decode('&#x4F;&#X4F;&#x27;'), 'OO\'', 'Decode hexanumeric entities');
 	equal(tinymce.html.Entities.decode('&#65&#66&#x43'), 'ABC', 'Decode numeric entities with no semicolon');
 	equal(tinymce.html.Entities.decode('&test'), '&test', 'Dont decode invalid entity name without semicolon');
 

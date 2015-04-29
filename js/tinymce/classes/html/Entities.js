@@ -243,7 +243,7 @@ define("tinymce/html/Entities", [
 		decode: function(text) {
 			return text.replace(entityRegExp, function(all, numeric) {
 				if (numeric) {
-					if (numeric.charAt(0) === 'x') {
+					if (numeric.charAt(0).toLowerCase() === 'x') {
 						numeric = parseInt(numeric.substr(1), 16);
 					} else {
 						numeric = parseInt(numeric, 10);
