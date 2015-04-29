@@ -162,7 +162,9 @@ define(
 
     var tryBrDown = function (win, isRoot, element, offset) {
       console.log('br.down', element.dom(), offset);
-      var candidate = isBr(element) ? Option.some(element) : Traverse.child(element, offset).filter(isBr);
+      var candidate = isBr(element) ? Option.some(element) : Traverse.child(element, offset).filter(isBr).orThunk(function () {
+        return Traverse.child(element, offset-1).filter(isBr);
+      });
 
       return candidate.bind(function (cand) {
         console.log('candidate for br.down: ', cand.dom());
@@ -176,7 +178,9 @@ define(
     };
 
     var tryBrUp = function (win, isRoot, element, offset) {
-      var candidate = isBr(element) ? Option.some(element) : Traverse.child(element, offset).filter(isBr);
+      var candidate = isBr(element) ? Option.some(element) : Traverse.child(element, offset).filter(isBr).orThunk(function () {
+        return Traverse.child(element, offset-1).filter(isBr);
+      });
       return candidate.bind(function (cand) {
         console.log('candidate for br.up: ', cand.dom());
         return DomGather.before(cand, isRoot).map(function (next) {

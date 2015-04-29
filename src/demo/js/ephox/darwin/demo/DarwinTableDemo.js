@@ -35,7 +35,7 @@ define(
       var style = Element.fromHtml(
         '<style>' +
           'table { border-collapse: collapse; }\n' +
-          'td { text-align: center; border: 1px solid #aaa; font-size: 20px; padding: 100px; }\n' +
+          'td { text-align: center; border: 1px solid #aaa; font-size: 20px; padding: 10px; }\n' +
           'td.ephox-darwin-selected { background: #cadbee; }\n' +
           '#coords { position: fixed; right: 0px; bottom: 0px; background: #ddd }' +
         '</style>'
@@ -52,7 +52,7 @@ define(
             '</tr>' +
             '<tr>' +
               '<td style="min-width: 100px;">A2</td>' +
-              '<td style="min-width: 100px;">B2</td>' +
+              '<td style="min-width: 100px;">B2<br /><br /></td>' +
               '<td style="min-width: 100px;"><p>C2</p><p>More</p></td>' +
               '<td style="min-width: 100px;"><br />D2</td>' +
             '</tr>' +
