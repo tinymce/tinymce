@@ -8,6 +8,7 @@ define(
     'ephox.fussy.api.SelectionRange',
     'ephox.fussy.api.Situ',
     'ephox.fussy.api.WindowSelection',
+    'ephox.oath.proximity.Awareness',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Compare',
@@ -19,7 +20,7 @@ define(
     'global!document'
   ],
 
-  function (TableKeys, TableMouse, CellSelection, SelectionRange, Situ, WindowSelection, Fun, Option, Compare, DomEvent, Element, Insert, SelectorFind, Math, document) {
+  function (TableKeys, TableMouse, CellSelection, SelectionRange, Situ, WindowSelection, Awareness, Fun, Option, Compare, DomEvent, Element, Insert, SelectorFind, Math, document) {
     return function () {
       console.log('darwin table');
 
@@ -67,6 +68,35 @@ define(
       DomEvent.bind(ephoxUi, 'mouseover', handlers.mouseover);
       DomEvent.bind(ephoxUi, 'mouseup', handlers.mouseup);
 
+      DomEvent.bind(ephoxUi, 'keyup', function (event) {
+        if (event.raw().which === 37 || event.raw().which === 39) {
+          console.log('keyup');
+          CellSelection.retrieve(ephoxUi).fold(function () {
+            WindowSelection.get(window).each(function (sel) {
+              console.log('has selection');
+              if (! WindowSelection.isCollapsed(sel.start(), sel.soffset(), sel.finish(), sel.foffset())) {
+                console.log('ranged', sel.start(), sel.finish());
+                // we aren't collapsed ... so see if we are in two different cells.
+                SelectorFind.closest(sel.start(), 'td,th').each(function (s) {
+                  console.log('s', s.dom());
+                  SelectorFind.closest(sel.finish(), 'td,th').each(function (f) {
+                    console.log('f', f.dom());
+                    if (! Compare.eq(s, f)) {
+                      var boxes = CellSelection.identify(s, f).getOr([]);
+                      console.log('boxes:' , boxes);
+                      if (boxes.length > 0) {
+                        CellSelection.clear(ephoxUi);
+                        CellSelection.select(boxes);
+                        WindowSelection.setExact(window, s, 0, s, Awareness.getEnd(s));
+                      }
+                    }
+                  });
+                });
+              }
+            });
+          }, function () { });
+        }
+      });
 
       DomEvent.bind(table, 'keydown', function (event) {
         WindowSelection.get(window).each(function (sel) {
