@@ -75,7 +75,7 @@ define(
 
       DomEvent.bind(ephoxUi, 'keyup', function (event) {
         console.log('keyup: ', event.raw().which);
-        if (event.raw().which === 37 || event.raw().which === 39 || (detection.browser.isIE() && (event.raw().which === 38 || event.raw().which === 40))) {
+        if (event.raw().which === 37 || event.raw().which === 39 || event.raw().which === 38 || event.raw().which === 40) {
           console.log('keyup');
           CellSelection.retrieve(ephoxUi).fold(function () {
             WindowSelection.get(window).each(function (sel) {
