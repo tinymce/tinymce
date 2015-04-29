@@ -5,12 +5,14 @@ define(
     'ephox.darwin.api.TableKeys',
     'ephox.darwin.api.TableMouse',
     'ephox.darwin.mouse.CellSelection',
+    'ephox.fred.PlatformDetection',
     'ephox.fussy.api.SelectionRange',
     'ephox.fussy.api.Situ',
     'ephox.fussy.api.WindowSelection',
     'ephox.oath.proximity.Awareness',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.sugar.api.Attr',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
@@ -20,11 +22,14 @@ define(
     'global!document'
   ],
 
-  function (TableKeys, TableMouse, CellSelection, SelectionRange, Situ, WindowSelection, Awareness, Fun, Option, Compare, DomEvent, Element, Insert, SelectorFind, Math, document) {
+  function (TableKeys, TableMouse, CellSelection, PlatformDetection, SelectionRange, Situ, WindowSelection, Awareness, Fun, Option, Attr, Compare, DomEvent, Element, Insert, SelectorFind, Math, document) {
     return function () {
       console.log('darwin table');
 
+      var detection = PlatformDetection.detect();
+
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
+      Attr.set(ephoxUi, 'contenteditable', 'true');
 
       var style = Element.fromHtml(
         '<style>' +
@@ -69,11 +74,12 @@ define(
       DomEvent.bind(ephoxUi, 'mouseup', handlers.mouseup);
 
       DomEvent.bind(ephoxUi, 'keyup', function (event) {
-        if (event.raw().which === 37 || event.raw().which === 39) {
+        console.log('keyup: ', event.raw().which);
+        if (event.raw().which === 37 || event.raw().which === 39 || (detection.browser.isIE() && (event.raw().which === 38 || event.raw().which === 40))) {
           console.log('keyup');
           CellSelection.retrieve(ephoxUi).fold(function () {
             WindowSelection.get(window).each(function (sel) {
-              console.log('has selection');
+              console.log('has selection: ', sel.start().dom(), ' ', sel.soffset(), ' ', sel.finish().dom(), ' ', sel.foffset());
               if (! WindowSelection.isCollapsed(sel.start(), sel.soffset(), sel.finish(), sel.foffset())) {
                 console.log('ranged', sel.start(), sel.finish());
                 // we aren't collapsed ... so see if we are in two different cells.
@@ -97,11 +103,17 @@ define(
         }
       });
 
-      DomEvent.bind(table, 'keydown', function (event) {
+      DomEvent.bind(ephoxUi, 'keydown', function (event) {
         WindowSelection.get(window).each(function (sel) {
           // Let's branch on whether or not we have a table selection mode.
           CellSelection.retrieve(ephoxUi).fold(function () {
+            // IE handles this properly ... so let's just exit.
+
+
             if (event.raw().which === 40 || event.raw().which === 38) {
+              if (detection.browser.isIE()) return Option.none();
+
+
               var mover = event.raw().which === 40 ? TableKeys.handleDown : TableKeys.handleUp;
               mover(window, Fun.constant(false), sel.finish(), sel.foffset()).each(function (exact) {
 
