@@ -13,6 +13,7 @@ define(
     'ephox.perhaps.Option',
     'ephox.phoenix.api.dom.DomGather',
     'ephox.robin.api.dom.DomParent',
+    'ephox.scullion.ADT',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.PredicateExists',
@@ -20,15 +21,57 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Rectangles, Retries, PlatformDetection, SelectionRange, Situ, WindowSelection, Awareness, Fun, Option, DomGather, DomParent, Compare, Node, PredicateExists, SelectorFind, Traverse) {
+  function (Rectangles, Retries, PlatformDetection, SelectionRange, Situ, WindowSelection, Awareness, Fun, Option, DomGather, DomParent, Adt, Compare, Node, PredicateExists, SelectorFind, Traverse) {
     var platform = PlatformDetection.detect();
 
-    var handle = function (mover, win, isRoot) {
+    var adt = Adt.generate([
+      { 'none' : [] },
+      { 'success': [ ] },
+      { 'failedUp': [ 'cell' ] },
+      { 'failedDown': [ 'cell' ] },
+      { 'startSection' : [ 'section' ] },
+      { 'finishSection': [ 'section' ] }
+    ]);
+
+    var handle = function (brMover, cursorMover, win, isRoot) {
       return WindowSelection.get(win).bind(function (sel) {
-        return hacker(win, mover, isRoot, sel.finish(), sel.foffset(), 1000).map(function (next) {
+        return brMover(win, isRoot, sel.finish(), sel.foffset()).orThunk(function () {
+          return hacker(win, cursorMover, isRoot, sel.finish(), sel.foffset(), 1000);
+        }).map(function (next) {
           return WindowSelection.deriveExact(win, next);
         });
       });
+    };
+
+    var typewriter = function (mover, result, element, offset) {
+      // Identify the cells that the before and after are in.
+      return SelectorFind.closest(result.start(), 'td,th').bind(function (newCell) {
+        return SelectorFind.closest(element, 'td,th').map(function (oldCell) {
+          // If they are not in the same cell
+          if (! Compare.eq(newCell, oldCell)) {
+
+            return DomParent.sharedOne(isRow, [ newCell, oldCell ]).fold(function () {
+              // And they are not in the same row, all good.
+              return adt.success();
+            }, function (sharedRow) {
+              // Same row, different cell (failure): We are moving down, so try the end of the original cell
+              if (mover === tryCursorDown && offset < Awareness.getEnd(oldCell)) return adt.failedDown(oldCell);
+              else if (mover === tryCursorUp && offset > 0) return adt.failedUp(oldCell);
+              else return adt.none();
+            });
+          } else {
+            var inNewPosition = PredicateExists.ancestor(element, function (elem) {
+              return Compare.eq(elem, result.start());
+            });
+
+            // If we have moved to the containing cell.
+            // Note, will have to put (AND LAST POSITION) here, otherwise br tags will be skipped (May have already been done)
+            if (inNewPosition && mover === tryCursorDown && result.soffset() === Awareness.getEnd(result.start())) return adt.finishSection(result.start());
+            else if (inNewPosition && mover === tryCursorUp && result.soffset() === 0) return adt.startSection(result.start());
+            else return adt.none();
+          }
+        });
+      }).getOr(adt.none());
     };
 
     var isRow = function (elem) {
@@ -40,42 +83,19 @@ define(
       return mover(win, isRoot, element, offset).bind(function (next) {
 
         var exact = WindowSelection.deriveExact(win, next);
-        console.log('before hackery', next, exact.start().dom(), exact.soffset());
-          // Note, this will only work if we are staying in a table.
-        return SelectorFind.closest(exact.start(), 'td,th').bind(function (newCell) {
-          return SelectorFind.closest(element, 'td,th').bind(function (oldCell) {
-            console.log('we have a new cell, oldCell');
-            if (! Compare.eq(newCell, oldCell)) {
-              return DomParent.sharedOne(isRow, [ newCell, oldCell ]).fold(function () {
-                return Option.some(next);
-              }, function (sharedRow) {
-                console.log('Different cells in the same row ... so it failed', newCell.dom(), oldCell.dom(), exact.start().dom(), exact.soffset(), element.dom(), offset);
 
-                if (mover === tryDown && offset < Awareness.getEnd(oldCell)) {
-
-                  return hacker(win, mover, isRoot, oldCell, Awareness.getEnd(oldCell), counter - 1);
-                } else if (mover === tryUp && offset > 0) {
-                  return hacker(win, mover, isRoot, oldCell, 0, counter - 1);
-                } else {
-                  return Option.none();
-                }
-              });
-            } else {
-              var inNewPosition = PredicateExists.ancestor(element, function (elem) {
-                return Compare.eq(elem, exact.start());
-              });
-
-              // If we have moved to the containing cell.
-              // Note, will have to put (AND LAST POSITION) here, otherwise br tags will be skipped (May have already been done)
-              if (inNewPosition && mover === tryDown && exact.soffset() === Awareness.getEnd(exact.start())) {
-                return hacker(win, mover, isRoot, exact.start(), exact.soffset(), counter - 1);
-              } else if (inNewPosition && mover === tryUp && exact.soffset() === 0) {
-                return hacker(win, mover, isRoot, exact.start(), exact.soffset(), counter - 1);
-              } else {
-                return Option.none();
-              }
-            }
-          });
+        return typewriter(mover, exact, element, offset).fold(function () {
+          return Option.none();
+        }, function () {
+          return Option.some(next);
+        }, function (cell) {
+          return hacker(win, mover, isRoot, oldCell, 0, counter - 1);
+        }, function (cell) {
+          return hacker(win, mover, isRoot, oldCell, Awareness.getEnd(oldCell), counter - 1);
+        }, function (section) {
+          return hacker(win, mover, isRoot, section, 0, counter - 1);
+        }, function (section) {
+          return hacker(win, mover, isRoot, section, Awareness.getEnd(section), counter - 1);
         });
       });
     };
@@ -92,6 +112,7 @@ define(
     };
 
     var tryCursorUp = function (win, isRoot, element, offset) {
+      console.log('cursor.up.element', element.dom());
       return Rectangles.getBox(win, element, offset).bind(function (box) {
         if (platform.browser.isChrome() || platform.browser.isSafari()) return Retries.tryUp(window, box);
         else if (platform.browser.isFirefox()) return Retries.tryUp(window, box);
@@ -133,22 +154,9 @@ define(
       });
     };
 
-    var tryDown = function (win, isRoot, element, offset) {
-      return tryBrDown(win, isRoot, element, offset).orThunk(function () {
-        return tryCursorDown(win, isRoot, element, offset);
-      });
-    };
-
-    var tryUp = function (win, isRoot, element, offset) {
-      return tryBrUp(win, isRoot, element, offset).orThunk(function () {
-        return tryCursorUp(win, isRoot, element, offset);
-      });
-    };
-
-
     return {
-      handleUp: Fun.curry(handle, tryUp),
-      handleDown: Fun.curry(handle, tryDown)
+      handleUp: Fun.curry(handle, tryBrUp, tryCursorUp),
+      handleDown: Fun.curry(handle, tryBrDown, tryCursorDown)
     };
   }
 );
