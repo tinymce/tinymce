@@ -35,8 +35,11 @@ define(
 
     var handle = function (brMover, cursorMover, win, isRoot) {
       return WindowSelection.get(win).bind(function (sel) {
-        return brMover(win, isRoot, sel.finish(), sel.foffset()).orThunk(function () {
+        return brMover(win, isRoot, sel.finish(), sel.foffset()).fold(function () {
           return hacker(win, cursorMover, isRoot, sel.finish(), sel.foffset(), 1000);
+        }, function (next) {
+          var exact = WindowSelection.deriveExact(win, next);
+          return hacker(win, cursorMover, isRoot, exact.finish(), exact.foffset(), 1000);
         }).map(function (next) {
           return WindowSelection.deriveExact(win, next);
         });
