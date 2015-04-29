@@ -24,9 +24,9 @@ define(
           CellSelection.clear(container);
           var finish = SelectorFind.closest(event.target(), 'td,th');
           var boxes = finish.bind(Fun.curry(CellSelection.identify, start)).getOr([]);
-          console.log('boxes', boxes);
+          console.log('mouse.boxes', boxes);
           if (boxes.length > 0) {
-            CellSelection.select(boxes);
+            CellSelection.selectRange(container, boxes, start, event.target());
             window.getSelection().removeAllRanges();
           }
         });

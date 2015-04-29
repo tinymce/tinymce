@@ -85,8 +85,7 @@ define(
                       var boxes = CellSelection.identify(s, f).getOr([]);
                       console.log('boxes:' , boxes);
                       if (boxes.length > 0) {
-                        CellSelection.clear(ephoxUi);
-                        CellSelection.select(boxes);
+                        CellSelection.selectRange(ephoxUi, boxes, s, f);
                         WindowSelection.setExact(window, s, 0, s, Awareness.getEnd(s));
                       }
                     }
@@ -112,7 +111,13 @@ define(
                   SelectorFind.closest(sel.start(), 'td,th').bind(function (startCell) {
                     return SelectorFind.closest(exact.start(), 'td,th').bind(function (finishCell) {
                       if (! Compare.eq(startCell, finishCell)) {
-                        return CellSelection.identify(startCell, finishCell);
+                        return CellSelection.identify(startCell, finishCell).map(function (bb) {
+                          return {
+                            boxes: Fun.constant(bb),
+                            finish: Fun.constant(finishCell),
+                            start: Fun.constant(startCell)
+                          };
+                        });
                       } else {
                         return Option.none();
                       }
@@ -122,10 +127,9 @@ define(
                       Situ.on(sel.start(), sel.soffset()),
                       Situ.on(exact.start(), exact.soffset())
                     ));
-                  }, function (boxes) {
+                  }, function (info) {
                     // Maybe care about boxes.length > 0
-                    CellSelection.clear(ephoxUi);
-                    CellSelection.select(boxes);
+                    CellSelection.selectRange(ephoxUi, info.boxes(), info.start(), info.finish());
                     WindowSelection.set(window, SelectionRange.write(
                       Situ.on(exact.start(), exact.soffset()),
                       Situ.on(exact.start(), exact.soffset())
@@ -145,7 +149,7 @@ define(
 
             var update = function (newSels) {
               CellSelection.clear(ephoxUi);
-              CellSelection.select(newSels);
+              CellSelection.selectRange(ephoxUi, newSels.boxes(), newSels.start(), newSels.finish());
             };
 
             // ignoring bias for the time being.

@@ -17,11 +17,15 @@ define(
 
   function (Arr, Styles, Fun, Option, DomParent, Class, Compare, SelectorFilter, SelectorFind, Traverse, Math) {
     var selected = Styles.resolve('selected');
+    var lastSelected = Styles.resolve('last-selected');
+    var firstSelected = Styles.resolve('first-selected');
 
     var clear = function (container) {
       var sels = SelectorFilter.descendants(container, '.' + selected);
       Arr.each(sels, function (sel) {
         Class.remove(sel, selected);
+        Class.remove(sel, lastSelected);
+        Class.remove(sel, firstSelected);
       });
     };
 
@@ -99,60 +103,62 @@ define(
       return sels.length > 0 ? Option.some(sels) : Option.none();
     };
 
+    var getLast = function (boxes) {
+      var raw = Arr.find(boxes, function (box) {
+        return Class.has(box, lastSelected);
+      });
+      return Option.from(raw);
+    };
+
+    var mogel = function (finish) {
+      return SelectorFind.ancestor(finish, 'table').bind(function (table) {
+        return SelectorFind.descendant(table, '.' + firstSelected).bind(function (start) {
+          return identify(start, finish).map(function (boxes) {
+            return {
+              boxes: Fun.constant(boxes),
+              start: Fun.constant(start),
+              finish: Fun.constant(finish)
+            };
+          });
+        });
+      });
+    };
+
     var shiftRight = function (boxes) {
       // Assume that the last cell is the one to shift right.
-      return Option.from(boxes[boxes.length - 1]).bind(Traverse.nextSibling).bind(function (finish) {
-        return identify(boxes[0], finish);
-      });
+      return getLast(boxes).bind(Traverse.nextSibling).bind(mogel);
     };
 
     var shiftLeft = function (boxes) {
       // Assume that the last cell is the one to shift right.
-      return Option.from(boxes[boxes.length - 1]).bind(Traverse.prevSibling).bind(function (finish) {
-        return Option.some(finish);
-        return Compare.eq(finish, boxes[0]) ? Traverse.prevSibling(finish) : Option.some(finish);
-      }).bind(function (finish) {
-        return identify(boxes[0], finish);
-      });
+      return getLast(boxes).bind(Traverse.prevSibling).bind(mogel);
     };
 
-    var shiftUp = function (boxes) {
-      // Assume that the last cell is the one to shift right.
-      return Option.from(boxes[boxes.length - 1]).bind(findInTable).bind(function (position) {
+    var shiftRow = function (delta, boxes) {
+      return getLast(boxes).bind(findInTable).bind(function (position) {
         console.log('shiftUp.position', position);
         return SelectorFind.ancestor(boxes[0], 'table').bind(function (table) {
-          return gotoCell(table, position.rowIndex() - 1, position.colIndex()).bind(function (target) {
-            console.log('target', target.dom());
-            return Option.some(target);
-            return Compare.eq(target, boxes[0]) ? gotoCell(table, position.rowIndex() - 2, position.colIndex()) : Option.some(target);
-          });
+          return gotoCell(table, position.rowIndex() + delta, position.colIndex()).bind(mogel);
         });
-      }).bind(function (finish) {
-        console.log('shiftUp.finish: ', finish.dom());
-        return identify(boxes[0], finish);
       });
     };
 
-    var shiftDown = function (boxes) {
-      // Assume that the last cell is the one to shift right.
-      return Option.from(boxes[boxes.length - 1]).bind(findInTable).bind(function (position) {
-        console.log('shiftDown.position', position);
-        return SelectorFind.ancestor(boxes[0], 'table').bind(function (table) {
-          return gotoCell(table, position.rowIndex() + 1, position.colIndex()).bind(function (target) {
-            console.log('target', target.dom());
-            return Option.some(target);
-            return Compare.eq(target, boxes[0]) ? gotoCell(table, position.rowIndex() + 2, position.colIndex()) : Option.some(target);
-          });
-        });
-      }).bind(function (finish) {
-        console.log('shiftDown.finish: ', finish.dom());
-        return identify(boxes[0], finish);
-      });
+    var shiftUp = Fun.curry(shiftRow, -1);
+
+    var shiftDown = Fun.curry(shiftRow, +1);
+
+    var selectRange = function (container, cells, start, finish) {
+      console.log('cells: ', cells);
+      clear(container);
+      select(cells);
+      Class.add(start, firstSelected);
+      Class.add(finish, lastSelected);
+      console.log('container: ', container.dom().innerHTML);
     };
 
     // var shiftDown = function (boxes) {
     //   // Assume that the last cell is the one to shift right.
-    //   return Option.from(boxes[boxes.length - 1]).bind(Traverse.prevSibling).bind(function (finish) {
+    //   return getLast(boxes).bind(Traverse.prevSibling).bind(function (finish) {
     //     return Compare.eq(finish, boxes[0]) ? Traverse.prevSibling(finish) : Option.some(finish);
     //   }).bind(function (finish) {
     //     return identify(boxes[0], finish);
@@ -161,13 +167,13 @@ define(
 
     return {
       clear: clear,
-      select: select,
       identify: identify,
       retrieve: retrieve,
       shiftRight: shiftRight,
       shiftLeft: shiftLeft,
       shiftUp: shiftUp,
-      shiftDown: shiftDown
+      shiftDown: shiftDown,
+      selectRange: selectRange
     };
   }
 );
