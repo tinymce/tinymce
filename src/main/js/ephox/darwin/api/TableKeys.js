@@ -119,10 +119,10 @@ define(
           return Option.some(next);
         }, function (cell) {
           console.log('ADT: retry because moved to earlier column');
-          return hacker(win, mover, isRoot, oldCell, 0, counter - 1);
+          return hacker(win, mover, isRoot, cell, 0, counter - 1);
         }, function (cell) {
           console.log('ADT: retry because moved to later column');
-          return hacker(win, mover, isRoot, oldCell, Awareness.getEnd(oldCell), counter - 1);
+          return hacker(win, mover, isRoot, cell, Awareness.getEnd(cell), counter - 1);
         }, function (section) {
           console.log('ADT: retry because moved to start of outer container');
           console.log('******** Cancelled ********');

@@ -31,8 +31,8 @@ define(
 
       var style = Element.fromHtml(
         '<style>' +
-          'table { border-collapse: collapse; }\n' +
-          'td { text-align: center; border: 1px solid #aaa; font-size: 20px; padding: 10px; }\n' +
+          // 'table { border-collapse: collapse; }\n' +
+          // 'td { text-align: center; border: 1px solid #aaa; font-size: 20px; padding: 10px; }\n' +
           'td.selected { background: #cadbee; }\n' +
         '</style>'
       );
