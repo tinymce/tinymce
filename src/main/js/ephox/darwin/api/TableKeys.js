@@ -179,6 +179,7 @@ define(
 
     var tryBrUp = function (win, isRoot, element, offset) {
       var candidate = isBr(element) ? Option.some(element) : Traverse.child(element, offset).filter(isBr).orThunk(function () {
+        // Can be either side of the br, and still be a br.
         return Traverse.child(element, offset-1).filter(isBr);
       });
       return candidate.bind(function (cand) {
@@ -186,8 +187,8 @@ define(
         return DomGather.before(cand, isRoot).map(function (next) {
           console.log('br.up.next: ', next.dom());
           return SelectionRange.write(
-            Node.name(next) === 'br' ? Situ.on(next, 0) : Situ.after(next),
-            Node.name(next) === 'br' ? Situ.on(next, 0) : Situ.after(next)
+            Situ.after(next),
+            Situ.after(next)
           );
         });
       });
