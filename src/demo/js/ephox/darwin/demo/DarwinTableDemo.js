@@ -2,29 +2,21 @@ define(
   'ephox.darwin.demo.DarwinTableDemo',
 
   [
-    'ephox.compass.Arr',
-    'ephox.darwin.api.Darwin',
     'ephox.darwin.api.TableKeys',
-    'ephox.darwin.mouse.CellSelection',
+    'ephox.darwin.api.TableMouse',
     'ephox.fussy.api.SelectionRange',
     'ephox.fussy.api.Situ',
     'ephox.fussy.api.WindowSelection',
-    'ephox.oath.proximity.Awareness',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.robin.api.dom.DomParent',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.Compare',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
-    'ephox.sugar.api.SelectorFilter',
     'ephox.sugar.api.SelectorFind',
     'global!Math',
     'global!document'
   ],
 
-  function (Arr, Darwin, TableKeys, CellSelection, SelectionRange, Situ, WindowSelection, Awareness, Fun, Option, DomParent, Class, Compare, DomEvent, Element, Insert, SelectorFilter, SelectorFind, Math, document) {
+  function (TableKeys, TableMouse, SelectionRange, Situ, WindowSelection, Fun, DomEvent, Element, Insert, SelectorFind, Math, document) {
     return function () {
       console.log('darwin table');
 
@@ -66,53 +58,28 @@ define(
       Insert.append(ephoxUi, table);
       Insert.append(Element.fromDom(document.head), style);
 
+      var handlers = TableMouse(ephoxUi);
 
-      var magic = function () {
-        var cursor = Option.none();
-        DomEvent.bind(table, 'mousedown', function (event) {
-          CellSelection.clear(table);
-          cursor = SelectorFind.closest(event.target(), 'td,th');
+      DomEvent.bind(ephoxUi, 'mousedown', handlers.mousedown);
+      DomEvent.bind(ephoxUi, 'mouseover', handlers.mouseover);
+      DomEvent.bind(ephoxUi, 'mouseup', handlers.mouseup);
+
+
+      DomEvent.bind(table, 'keydown', function (event) {
+        WindowSelection.get(window).each(function (sel) {
+          if (event.raw().which === 40 || event.raw().which === 38) {
+            var mover = event.raw().which === 40 ? TableKeys.handleDown : TableKeys.handleUp;
+            mover(window, Fun.constant(false), sel.finish(), sel.foffset()).each(function (exact) {
+              WindowSelection.set(window, SelectionRange.write(
+                event.raw().shiftKey ? Situ.on(sel.start(), sel.soffset()) : Situ.on(exact.start(), exact.soffset()),
+                Situ.on(exact.start(), exact.soffset())
+              ));
+              event.kill();
+              console.log('next', exact.start().dom(), exact.soffset(), exact.start().dom().childNodes.length);
+            });
+          }
         });
-
-        DomEvent.bind(table, 'mouseover', function (event) {
-
-          var boxes = cursor.bind(function (cur) {
-            CellSelection.clear(table);
-
-            var boxes = SelectorFind.closest(event.target(), 'td,th').bind(function (finish) {
-              return CellSelection.identify(cur, finish);
-            }).getOr([]);
-
-            if (boxes.length > 0) {
-              CellSelection.select(boxes);
-              window.getSelection().removeAllRanges();
-            }
-          });
-        });
-
-        DomEvent.bind(table, 'mouseup', function (event) {
-          cursor = Option.none();
-        });
-
-        DomEvent.bind(table, 'keydown', function (event) {
-          WindowSelection.get(window).each(function (sel) {
-            if (event.raw().which === 40 || event.raw().which === 38) {
-              var mover = event.raw().which === 40 ? TableKeys.handleDown : TableKeys.handleUp;
-              mover(window, Fun.constant(false), sel.finish(), sel.foffset()).each(function (exact) {
-                WindowSelection.set(window, SelectionRange.write(
-                  event.raw().shiftKey ? Situ.on(sel.start(), sel.soffset()) : Situ.on(exact.start(), exact.soffset()),
-                  Situ.on(exact.start(), exact.soffset())
-                ));
-                event.kill();
-                console.log('next', exact.start().dom(), exact.soffset(), exact.start().dom().childNodes.length);
-              });
-            }
-          });
-        });
-
-      };
-
-      magic();
+      });
     };
   }
 );
