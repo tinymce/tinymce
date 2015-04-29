@@ -90,8 +90,16 @@ define(
       var c = Carets.nu(caret.left, caret.top, caret.right, caret.bottom);
       var moved = direction.move(c, JUMP_SIZE);
       var adjusted = adjustTil(win, direction, c, moved, 100).getOr(moved);
-      console.log('adjusted caret', adjusted.left(), direction.point(adjusted));
-      return Point.find(win, adjusted.left(), direction.point(adjusted));
+      console.log('adjusted caret', adjusted.left(), direction.point(adjusted), win.innerHeight);
+      if (direction.point(adjusted) > win.innerHeight) {
+        console.log('************ offscreen *************');
+        var delta = direction.point(adjusted) - (win.innerHeight + win.scrollY) + 10;
+        win.scrollBy(0, delta);
+        console.log('xx.adjusted: ', direction.point(adjusted), direction.point(adjusted) - delta);
+        return Point.find(win, adjusted.left(), direction.point(adjusted) - delta);
+      } else {
+        return Point.find(win, adjusted.left(), direction.point(adjusted));
+      }
     };
 
     return {

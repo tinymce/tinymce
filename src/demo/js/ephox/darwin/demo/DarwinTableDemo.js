@@ -13,6 +13,7 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Attr',
+    'ephox.sugar.api.Body',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
@@ -22,7 +23,7 @@ define(
     'global!document'
   ],
 
-  function (TableKeys, TableMouse, CellSelection, PlatformDetection, SelectionRange, Situ, WindowSelection, Awareness, Fun, Option, Attr, Compare, DomEvent, Element, Insert, SelectorFind, Math, document) {
+  function (TableKeys, TableMouse, CellSelection, PlatformDetection, SelectionRange, Situ, WindowSelection, Awareness, Fun, Option, Attr, Body, Compare, DomEvent, Element, Insert, SelectorFind, Math, document) {
     return function () {
       console.log('darwin table');
 
@@ -34,8 +35,9 @@ define(
       var style = Element.fromHtml(
         '<style>' +
           'table { border-collapse: collapse; }\n' +
-          'td { text-align: center; border: 1px solid #aaa; font-size: 20px; padding: 10px; }\n' +
+          'td { text-align: center; border: 1px solid #aaa; font-size: 20px; padding: 100px; }\n' +
           'td.ephox-darwin-selected { background: #cadbee; }\n' +
+          '#coords { position: fixed; right: 0px; bottom: 0px; background: #ddd }' +
         '</style>'
       );
 
@@ -66,6 +68,11 @@ define(
 
       Insert.append(ephoxUi, table);
       Insert.append(Element.fromDom(document.head), style);
+
+      Insert.append(Body.body(), Element.fromHtml('<span id="coords">(0, 0)</span>'));
+      DomEvent.bind(Body.body(), 'mousemove', function (event) {
+        document.querySelector('#coords').innerHTML = '(' + event.raw().clientX + ', ' + event.raw().clientY + ')';
+      });
 
       var handlers = TableMouse(ephoxUi);
 
