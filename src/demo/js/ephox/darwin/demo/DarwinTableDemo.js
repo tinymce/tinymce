@@ -4,10 +4,13 @@ define(
   [
     'ephox.darwin.api.TableKeys',
     'ephox.darwin.api.TableMouse',
+    'ephox.darwin.mouse.CellSelection',
     'ephox.fussy.api.SelectionRange',
     'ephox.fussy.api.Situ',
     'ephox.fussy.api.WindowSelection',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
+    'ephox.sugar.api.Compare',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
@@ -16,7 +19,7 @@ define(
     'global!document'
   ],
 
-  function (TableKeys, TableMouse, SelectionRange, Situ, WindowSelection, Fun, DomEvent, Element, Insert, SelectorFind, Math, document) {
+  function (TableKeys, TableMouse, CellSelection, SelectionRange, Situ, WindowSelection, Fun, Option, Compare, DomEvent, Element, Insert, SelectorFind, Math, document) {
     return function () {
       console.log('darwin table');
 
@@ -67,17 +70,56 @@ define(
 
       DomEvent.bind(table, 'keydown', function (event) {
         WindowSelection.get(window).each(function (sel) {
-          if (event.raw().which === 40 || event.raw().which === 38) {
-            var mover = event.raw().which === 40 ? TableKeys.handleDown : TableKeys.handleUp;
-            mover(window, Fun.constant(false), sel.finish(), sel.foffset()).each(function (exact) {
-              WindowSelection.set(window, SelectionRange.write(
-                event.raw().shiftKey ? Situ.on(sel.start(), sel.soffset()) : Situ.on(exact.start(), exact.soffset()),
-                Situ.on(exact.start(), exact.soffset())
-              ));
+          // Let's branch on whether or not we have a table selection mode.
+          CellSelection.retrieve(ephoxUi).fold(function () {
+            if (event.raw().which === 40 || event.raw().which === 38) {
+              var mover = event.raw().which === 40 ? TableKeys.handleDown : TableKeys.handleUp;
+              mover(window, Fun.constant(false), sel.finish(), sel.foffset()).each(function (exact) {
+
+                // Let's just try and intercept it here.
+                if (event.raw().shiftKey) {
+                  // We are doing selection ... so let's select.
+                  SelectorFind.closest(sel.start(), 'td,th').bind(function (startCell) {
+                    return SelectorFind.closest(exact.start(), 'td,th').bind(function (finishCell) {
+                      if (! Compare.eq(startCell, finishCell)) {
+                        return CellSelection.identify(startCell, finishCell);
+                      } else {
+                        return Option.none();
+                      }
+                    });
+                  }).fold(function () {
+                    WindowSelection.set(window, SelectionRange.write(
+                      Situ.on(sel.start(), sel.soffset()),
+                      Situ.on(exact.start(), exact.soffset())
+                    ));
+                  }, function (boxes) {
+                    // Maybe care about boxes.length > 0
+                    CellSelection.clear(ephoxUi);
+                    CellSelection.select(boxes);
+                    WindowSelection.set(window, SelectionRange.write(
+                      Situ.on(exact.start(), exact.soffset()),
+                      Situ.on(exact.start(), exact.soffset())
+                    ));
+                  });
+                } else {
+                  WindowSelection.set(window, SelectionRange.write(
+                    Situ.on(exact.start(), exact.soffset()),
+                    Situ.on(exact.start(), exact.soffset())
+                  ));
+                }
+                event.kill();
+                console.log('next', exact.start().dom(), exact.soffset(), exact.start().dom().childNodes.length);
+              });
+            }
+          }, function (selected) {
+            // ignoring bias for the time being.
+            if (event.raw().shiftKey && event.raw().which >= 37 && event.raw().which <= 40) {
+              console.log('this is where you would handle expanding the table selection');
               event.kill();
-              console.log('next', exact.start().dom(), exact.soffset(), exact.start().dom().childNodes.length);
-            });
-          }
+            } else if (event.raw().shiftKey === false) {
+              CellSelection.clear(ephoxUi);
+            }
+          });
         });
       });
     };

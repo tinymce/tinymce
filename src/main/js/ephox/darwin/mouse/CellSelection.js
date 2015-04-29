@@ -86,10 +86,16 @@ define(
       });
     };
 
+    var retrieve = function (container) {
+      var sels = SelectorFilter.descendants(container, '.' + selected);
+      return sels.length > 0 ? Option.some(sels) : Option.none();
+    };
+
     return {
       clear: clear,
       select: select,
-      identify: identify
+      identify: identify,
+      retrieve: retrieve
     };
   }
 );

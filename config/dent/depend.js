@@ -41,6 +41,16 @@ var dependencies = [
   },
 
   {
+    name: 'flour',
+    repository: 'buildrepo2',
+    source: 'flour.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
+  {
     name: 'fussy',
     repository: 'buildrepo2',
     source: 'fussy.zip',

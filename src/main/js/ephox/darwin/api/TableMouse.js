@@ -13,6 +13,7 @@ define(
       var cursor = Option.none();
 
       var mousedown = function (event) {
+        if (event.raw().button !== 0) return;
         cursor = SelectorFind.closest(event.target(), 'td,th');
         CellSelection.clear(container);
       };
