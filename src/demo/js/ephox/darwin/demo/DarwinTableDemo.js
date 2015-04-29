@@ -5,6 +5,7 @@ define(
     'ephox.compass.Arr',
     'ephox.darwin.api.Darwin',
     'ephox.darwin.api.TableKeys',
+    'ephox.darwin.mouse.CellSelection',
     'ephox.fussy.api.SelectionRange',
     'ephox.fussy.api.Situ',
     'ephox.fussy.api.WindowSelection',
@@ -23,7 +24,7 @@ define(
     'global!document'
   ],
 
-  function (Arr, Darwin, TableKeys, SelectionRange, Situ, WindowSelection, Awareness, Fun, Option, DomParent, Class, Compare, DomEvent, Element, Insert, SelectorFilter, SelectorFind, Math, document) {
+  function (Arr, Darwin, TableKeys, CellSelection, SelectionRange, Situ, WindowSelection, Awareness, Fun, Option, DomParent, Class, Compare, DomEvent, Element, Insert, SelectorFilter, SelectorFind, Math, document) {
     return function () {
       console.log('darwin table');
 
@@ -33,7 +34,7 @@ define(
         '<style>' +
           'table { border-collapse: collapse; }\n' +
           'td { text-align: center; border: 1px solid #aaa; font-size: 20px; padding: 10px; }\n' +
-          'td.selected { background: #cadbee; }\n' +
+          'td.ephox-darwin-selected { background: #cadbee; }\n' +
         '</style>'
       );
 
@@ -65,101 +66,27 @@ define(
       Insert.append(ephoxUi, table);
       Insert.append(Element.fromDom(document.head), style);
 
-      var findInTable = function (container, cell) {
-        return findColumn(cell).bind(function (colIndex) {
-          return findRow(cell).map(function (rowIndex) {
-            return {
-              rowIndex: Fun.constant(rowIndex),
-              colIndex: Fun.constant(colIndex),
-            };
-          });
-        });
-      };
-
-      var findColumn = function (cell) {
-        return SelectorFind.ancestor(cell, 'tr').bind(function (tr) {
-          var cells = SelectorFilter.descendants(tr, 'td,th');
-          var isElem = Fun.curry(Compare.eq, cell);
-          var index = Arr.findIndex(cells, isElem);
-          return index !== -1 ? Option.some(index) : Option.none();
-        });
-      };
-
-      var findRow = function (cell) {
-        return SelectorFind.ancestor(cell, 'tbody,thead').bind(function (section) {
-          return SelectorFind.ancestor(cell, 'tr').bind(function (row) {
-            var rows = SelectorFilter.descendants(section, 'tr');
-            var isRow = Fun.curry(Compare.eq, row);
-            var index = Arr.findIndex(rows, isRow);
-            return index !== -1 ? Option.some(index) : Option.none();
-          });
-        });
-      };
-
-      var lookupTable = function (scope) {
-        return SelectorFind.ancestor(scope, 'table');
-      };
-
-      var boxIt = function (start, finish) {
-        // Check they have the same table.
-        return DomParent.sharedOne(lookupTable, [ start, finish ]).bind(function (tbl) {
-          // For all the rows, identify the information.
-          var rows = SelectorFilter.descendants(tbl, 'tr');
-          return findInTable(tbl, start).bind(function (startData) {
-            return findInTable(tbl, finish).map(function (finishData) {
-              console.log('startData', startData, 'finishData', finishData);
-              var minRowIndex = Math.min(startData.rowIndex(), finishData.rowIndex());
-              var maxRowIndex = Math.max(startData.rowIndex(), finishData.rowIndex());
-              var subrows = rows.slice(minRowIndex, maxRowIndex + 1);
-              console.log('subrows', Arr.map(subrows, function (r) { return r.dom(); }));
-              return Arr.bind(subrows, function (r) {
-                var cells = SelectorFilter.children(r, 'td,th');
-                var minCellIndex = Math.min(startData.colIndex(), finishData.colIndex());
-                var maxCellIndex = Math.max(startData.colIndex(), finishData.colIndex());
-                var blah = cells.slice(minCellIndex, maxCellIndex + 1);
-                console.log('blah', Arr.map(blah, function (b) { return b.dom(); }));
-                return blah;
-              });
-            });
-          });
-        });
-      };
 
       var magic = function () {
         var cursor = Option.none();
         DomEvent.bind(table, 'mousedown', function (event) {
-          var selected = SelectorFilter.descendants(table, '.selected');
-          Arr.each(selected, function (td) {
-            Class.remove(td, 'selected');
-          });
-
-
+          CellSelection.clear(table);
           cursor = SelectorFind.closest(event.target(), 'td,th');
-          console.log('mousedown');
         });
 
         DomEvent.bind(table, 'mouseover', function (event) {
 
           var boxes = cursor.bind(function (cur) {
-            var selected = SelectorFilter.descendants(table, '.selected');
-            Arr.each(selected, function (td) {
-              Class.remove(td, 'selected');
-            });
+            CellSelection.clear(table);
 
             var boxes = SelectorFind.closest(event.target(), 'td,th').bind(function (finish) {
-              console.log('start', cur.dom(), 'finish', finish.dom());
-              return boxIt(cur, finish);
+              return CellSelection.identify(cur, finish);
             }).getOr([]);
 
             if (boxes.length > 0) {
-              console.log('boxing');
-              Arr.each(boxes, function (box) {
-                Class.add(box, 'selected');
-              });
-
+              CellSelection.select(boxes);
               window.getSelection().removeAllRanges();
             }
-            console.log('mouseover', boxes);
           });
         });
 
