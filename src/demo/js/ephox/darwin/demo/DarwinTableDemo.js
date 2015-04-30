@@ -2,6 +2,7 @@ define(
   'ephox.darwin.demo.DarwinTableDemo',
 
   [
+    'ephox.darwin.api.Beta',
     'ephox.darwin.api.TableKeys',
     'ephox.darwin.api.TableMouse',
     'ephox.darwin.mouse.CellSelection',
@@ -24,7 +25,7 @@ define(
     'global!document'
   ],
 
-  function (TableKeys, TableMouse, CellSelection, PlatformDetection, SelectionRange, Situ, WindowSelection, Awareness, Fun, Option, Attr, Body, Compare, DomEvent, Element, Insert, Replication, SelectorFind, Math, document) {
+  function (Beta, TableKeys, TableMouse, CellSelection, PlatformDetection, SelectionRange, Situ, WindowSelection, Awareness, Fun, Option, Attr, Body, Compare, DomEvent, Element, Insert, Replication, SelectorFind, Math, document) {
     return function () {
       console.log('darwin table');
 
@@ -172,22 +173,21 @@ define(
               });
             }
           }, function (selected) {
-
-            var update = function (newSels) {
-              CellSelection.clear(ephoxUi);
-              CellSelection.selectRange(ephoxUi, newSels.boxes(), newSels.start(), newSels.finish());
-            };
-
             // ignoring bias for the time being.
             if (event.raw().shiftKey && event.raw().which >= 37 && event.raw().which <= 40) {
-              if (event.raw().which === 39) CellSelection.shiftSelection(selected, 0, +1).each(update);
-              else if (event.raw().which === 37) CellSelection.shiftSelection(selected, 0, -1).each(update);
-              else if (event.raw().which === 38) CellSelection.shiftSelection(selected, -1, 0).each(update);
-              else if (event.raw().which === 40) CellSelection.shiftSelection(selected, +1, 0).each(update);
-              console.log('this is where you would handle expanding the table selection');
-              event.kill();
+
+              var diagnose = (function () {
+                if (event.raw().which === 39) return Beta.shiftRight;
+                else if (event.raw().which === 37) return Beta.shiftLeft;
+                else if (event.raw().which === 38) return Beta.shiftUp;
+                else return Beta.shiftDown;
+              })();
+
+              diagnose(ephoxUi, selected).each(function (_) {
+                event.kill();
+              });
             } else if (event.raw().shiftKey === false) {
-              CellSelection.clear(ephoxUi);
+              Beta.clearSelection(ephoxUi);
             }
           });
         });

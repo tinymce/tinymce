@@ -2,28 +2,31 @@ define(
   'ephox.darwin.api.Beta',
 
   [
-
+    'ephox.darwin.mouse.CellSelection',
+    'ephox.peanut.Fun'
   ],
 
-  function () {
-    var updateSelection = function (container, selected, rows, columns) {
+  function (CellSelection, Fun) {
+    var updateSelection = function (rows, columns, container, selected) {
       var update = function (newSels) {
-        CellSelection.clear(ephoxUi);
-        CellSelection.selectRange(ephoxUi, newSels.boxes(), newSels.start(), newSels.finish());
+        CellSelection.clear(container);
+        CellSelection.selectRange(container, newSels.boxes(), newSels.start(), newSels.finish());
+        return newSels.boxes();
       };
-    }
 
+      return CellSelection.shiftSelection(selected, rows, columns).map(update);
+    };
 
-      // ignoring bias for the time being.
-      if (event.raw().shiftKey && event.raw().which >= 37 && event.raw().which <= 40) {
-        if (event.raw().which === 39) CellSelection.shiftRight(selected).each(update);
-        else if (event.raw().which === 37) CellSelection.shiftLeft(selected).each(update);
-        else if (event.raw().which === 38) CellSelection.shiftUp(selected).each(update);
-        else if (event.raw().which === 40) CellSelection.shiftDown(selected).each(update);
-        console.log('this is where you would handle expanding the table selection');
-        event.kill();
-      } else if (event.raw().shiftKey === false) {
-        CellSelection.clear(ephoxUi);
-      }
+    var clearSelection = function (container) {
+      CellSelection.clear(container);
+    };
+
+    return {
+      clearSelection: clearSelection,
+      shiftLeft: Fun.curry(updateSelection, 0, -1),
+      shiftRight: Fun.curry(updateSelection, 0, +1),
+      shiftUp: Fun.curry(updateSelection, -1, 0),
+      shiftDown: Fun.curry(updateSelection, +1, 0)
+    };
   }
 );
