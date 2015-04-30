@@ -20,11 +20,9 @@ define(
 
       var mouseover = function (event) {
         cursor.each(function (start) {
-          console.log('start', start.dom());
           CellSelection.clear(container);
           var finish = SelectorFind.closest(event.target(), 'td,th');
           var boxes = finish.bind(Fun.curry(CellSelection.identify, start)).getOr([]);
-          console.log('mouse.boxes', boxes);
           if (boxes.length > 0) {
             CellSelection.selectRange(container, boxes, start, event.target());
             window.getSelection().removeAllRanges();

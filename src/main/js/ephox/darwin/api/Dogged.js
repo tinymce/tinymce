@@ -40,7 +40,7 @@ define(
     var handleVertical = function (simulate, win, container, isRoot, element, offset) {
       return CellSelection.retrieve(container).fold(function () {
         // On Webkit, we need to handle this.
-        return detection.browser.isWebkit() ? correctVertical(simulate, win, isRoot, element, offset) : Option.none();
+        return detection.browser.isSafari() || detection.browser.isChrome() ? correctVertical(simulate, win, isRoot, element, offset) : Option.none();
       }, function (selected) {
         return clearToNavigate(container);
       });
@@ -61,7 +61,6 @@ define(
           return SelectorFind.closest(element, 'td,th').bind(function (startCell) {
             return SelectorFind.closest(range.finish(), 'td,th').bind(function (finishCell) {
               // For a spanning selection, the cells must be different.
-              console.log('h.s.v', startCell.dom(), finishCell.dom());
               if (! Compare.eq(startCell, finishCell)) {
                 return CellSelection.identify(startCell, finishCell).map(function (boxes) {
                   CellSelection.selectRange(container, boxes, startCell, finishCell);

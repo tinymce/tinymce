@@ -41,7 +41,6 @@ define(
 
 
     var tryCursorDown = function (win, isRoot, element, offset) {
-      console.log('element', element.dom());
       return Rectangles.getBox(win, element, offset).bind(function (box) {
         return calc(box);
       });
@@ -61,11 +60,9 @@ define(
     };
 
     var tryBrDown = function (win, isRoot, element, offset) {
-      console.log('br.down', element.dom(), offset);
       var candidate = isBr(element) ? Option.some(element) : Traverse.child(element, offset).filter(isBr);
 
       return candidate.bind(function (cand) {
-        console.log('candidate for br: ', cand.dom());
         return DomGather.after(cand, isRoot).map(function (next) {
           return SelectionRange.write(
             Situ.before(next),

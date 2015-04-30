@@ -126,7 +126,6 @@ define(
 
     var shiftSelection = function (boxes, deltaRow, deltaColumn) {
       return getLast(boxes).bind(findInTable).bind(function (position) {
-        console.log('shiftUp.position', position);
         return SelectorFind.ancestor(boxes[0], 'table').bind(function (table) {
           return gotoCell(table, position.rowIndex() + deltaRow, position.colIndex() + deltaColumn).bind(mogel);
         });
@@ -134,12 +133,10 @@ define(
     };
 
     var selectRange = function (container, cells, start, finish) {
-      console.log('cells: ', cells);
       clear(container);
       select(cells);
       Class.add(start, firstSelected);
       Class.add(finish, lastSelected);
-      console.log('container: ', container.dom().innerHTML);
     };
 
     // var shiftDown = function (boxes) {

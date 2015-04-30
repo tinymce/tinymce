@@ -39,25 +39,18 @@ define(
           return hacker(win, cursorMover, isRoot, sel.finish(), sel.foffset(), 1000);
         }, function (next) {
           var exact = WindowSelection.deriveExact(win, next);
-          console.log('br exact', exact.start().dom(), exact.soffset());
           return typewriter(cursorMover, exact, sel.finish(), sel.foffset()).fold(function (message) {
-            console.log('BR ADT: none', message);
-            return Option.none();
+            return Option.none('BR ADT: none');
           }, function () {
-            console.log('BR ADT: success', exact.start().dom());
-            return Option.none();
+            return Option.none('BR ADT: success');
           }, function (cell) {
-            console.log('BR ADT: retry because moved to earlier column');
             return hacker(win, cursorMover, isRoot, cell, 0, 1000);
           }, function (cell) {
-            console.log('BR ADT: retry because moved to later column');
             return hacker(win, cursorMover, isRoot, cell, Awareness.getEnd(cell), 1000);
           }, function (section) {
-            console.log('BR ADT: retry because moved to start of outer container');
-            return Option.none();
+            return Option.none('BR ADT: retry because moved to start of outer container');
           }, function (section) {
-            console.log('BR ADT: retry because moved to finish of outer container');
-            return Option.none();
+            return Option.none('BR ADT: retry because moved to finish of outer container');
           });
         }).map(function (next) {
           return WindowSelection.deriveExact(win, next);
@@ -76,7 +69,6 @@ define(
               // And they are not in the same row, all good.
               return adt.success();
             }, function (sharedRow) {
-              console.log('newCell' ,newCell.dom(), result.start().dom(), result.soffset());
               // Same row, different cell (failure): We are moving down, so try the end of the original cell
               // if (mover === tryCursorDown && offset < Awareness.getEnd(oldCell)) return adt.failedDown(oldCell);
               // else if (mover === tryCursorUp && offset > 0) return adt.failedUp(oldCell);
@@ -103,6 +95,7 @@ define(
 
     var isRow = function (elem) {
       return SelectorFind.closest(elem, 'tr');
+      return SelectorFind.closest(elem, 'tr');
     };
 
     var hacker = function (win, mover, isRoot, element, offset, counter) {
@@ -112,24 +105,16 @@ define(
         var exact = WindowSelection.deriveExact(win, next);
 
         return typewriter(mover, exact, element, offset).fold(function () {
-          console.log('ADT: none');
-          return Option.none();
+          return Option.none('ADT: none');
         }, function () {
-          console.log('ADT: success', exact.start().dom());
           return Option.some(next);
         }, function (cell) {
-          console.log('ADT: retry because moved to earlier column');
           return hacker(win, mover, isRoot, cell, 0, counter - 1);
         }, function (cell) {
-          console.log('ADT: retry because moved to later column');
           return hacker(win, mover, isRoot, cell, Awareness.getEnd(cell), counter - 1);
         }, function (section) {
-          console.log('ADT: retry because moved to start of outer container');
-          console.log('******** Cancelled ********');
-          return Option.none();
-          return hacker(win, mover, isRoot, section, 0, counter - 1);
+          return Option.none('ADT: retry because moved to start of outer container :: CANCELLED');
         }, function (section) {
-          console.log('ADT: retry because moved to finish of outer container');
           return hacker(win, mover, isRoot, section, Awareness.getEnd(section), counter - 1);
         });
       });
@@ -137,7 +122,6 @@ define(
 
 
     var tryCursorDown = function (win, isRoot, element, offset) {
-      console.log('element', element.dom());
       return Rectangles.getBox(win, element, offset).bind(function (box) {
         if (platform.browser.isChrome() || platform.browser.isSafari()) return Retries.tryDown(window, box);
         else if (platform.browser.isFirefox()) return Retries.tryDown(window, box);
@@ -147,7 +131,6 @@ define(
     };
 
     var tryCursorUp = function (win, isRoot, element, offset) {
-      console.log('cursor.up.element', element.dom());
       return Rectangles.getBox(win, element, offset).bind(function (box) {
         if (platform.browser.isChrome() || platform.browser.isSafari()) return Retries.tryUp(window, box);
         else if (platform.browser.isFirefox()) return Retries.tryUp(window, box);
@@ -167,7 +150,6 @@ define(
       });
 
       return candidate.bind(function (cand) {
-        console.log('candidate for br.down: ', cand.dom());
         return gather(cand, isRoot).map(function (target) {
           return SelectionRange.write(
             situ(target),

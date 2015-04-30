@@ -5,6 +5,7 @@ define(
     'ephox.darwin.api.Dogged',
     'ephox.darwin.api.TableMouse',
     'ephox.darwin.mouse.CellSelection',
+    'ephox.darwin.util.Logger',
     'ephox.fred.PlatformDetection',
     'ephox.fussy.api.WindowSelection',
     'ephox.oath.proximity.Awareness',
@@ -22,9 +23,8 @@ define(
     'global!document'
   ],
 
-  function (Dogged, TableMouse, CellSelection, PlatformDetection, WindowSelection, Awareness, Fun, Option, Attr, Body, Compare, DomEvent, Element, Insert, Replication, SelectorFind, Math, document) {
+  function (Dogged, TableMouse, CellSelection, Logger, PlatformDetection, WindowSelection, Awareness, Fun, Option, Attr, Body, Compare, DomEvent, Element, Insert, Replication, SelectorFind, Math, document) {
     return function () {
-      console.log('darwin table');
 
       var detection = PlatformDetection.detect();
 
@@ -86,37 +86,35 @@ define(
       DomEvent.bind(ephoxUi, 'mouseup', handlers.mouseup);
 
       DomEvent.bind(ephoxUi, 'keyup', function (event) {
-        console.log('keyup: ', event.raw().which);
         if (event.raw().which === 37 || event.raw().which === 39 || event.raw().which === 38 || event.raw().which === 40) {
-          console.log('keyup');
           CellSelection.retrieve(ephoxUi).fold(function () {
-
+            WindowSelection.get(window).each(function (sel) {
+              Logger.log('IE.keyup', 'has selection: ', sel.start().dom(), ' ', sel.soffset(), ' ', sel.finish().dom(), ' ', sel.foffset());
+              if (! WindowSelection.isCollapsed(sel.start(), sel.soffset(), sel.finish(), sel.foffset())) {
+                Logger.log('IE.keyup', 'ranged', sel.start(), sel.finish());
+                // we aren't collapsed ... so see if we are in two different cells.
+                SelectorFind.closest(sel.start(), 'td,th').each(function (s) {
+                  Logger.log('IE.keyup', 's', s.dom());
+                  SelectorFind.closest(sel.finish(), 'td,th').each(function (f) {
+                    Logger.log('IE.keyup', 'f', f.dom());
+                    if (! Compare.eq(s, f)) {
+                      var boxes = CellSelection.identify(s, f).getOr([]);
+                      Logger.log('IE.keyup', 'boxes:' , boxes);
+                      if (boxes.length > 0) {
+                        CellSelection.selectRange(ephoxUi, boxes, s, f);
+                        WindowSelection.setExact(window, s, 0, s, Awareness.getEnd(s));
+                      }
+                    }
+                  });
+                });
+              }
+            });
           }, function () { });
         }
       });
 
       var changeToSelection = function () {
-        WindowSelection.get(window).each(function (sel) {
-          console.log('has selection: ', sel.start().dom(), ' ', sel.soffset(), ' ', sel.finish().dom(), ' ', sel.foffset());
-          if (! WindowSelection.isCollapsed(sel.start(), sel.soffset(), sel.finish(), sel.foffset())) {
-            console.log('ranged', sel.start(), sel.finish());
-            // we aren't collapsed ... so see if we are in two different cells.
-            SelectorFind.closest(sel.start(), 'td,th').each(function (s) {
-              console.log('s', s.dom());
-              SelectorFind.closest(sel.finish(), 'td,th').each(function (f) {
-                console.log('f', f.dom());
-                if (! Compare.eq(s, f)) {
-                  var boxes = CellSelection.identify(s, f).getOr([]);
-                  console.log('boxes:' , boxes);
-                  if (boxes.length > 0) {
-                    CellSelection.selectRange(ephoxUi, boxes, s, f);
-                    WindowSelection.setExact(window, s, 0, s, Awareness.getEnd(s));
-                  }
-                }
-              });
-            });
-          }
-        });
+
       };
 
       DomEvent.bind(ephoxUi, 'keydown', function (event) {
@@ -136,7 +134,6 @@ define(
           })();
 
           var maxx = handler(window, ephoxUi, Fun.constant(false), sel.finish(), sel.foffset());
-          console.log('maxx', maxx);
           maxx.each(function (response) {
             if (response.kill()) event.kill();
             response.selection().each(function (sel) {

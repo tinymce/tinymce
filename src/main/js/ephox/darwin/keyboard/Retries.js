@@ -35,7 +35,6 @@ define(
     };
 
     var adjustUp = function (guessBox, original, caret) {
-      console.log('guessBox', guessBox.top, guessBox.bottom, 'original', original.top(), 'caret', caret.top());
       // We haven't ascended vertically, so we need to look up and try again.
       if (guessBox.top === original.top()) return adt.retry(Carets.moveUp(caret, JUMP_SIZE));
       // The returned guessBox based on the guess actually doesn't include the initial caret. So we search again
@@ -61,16 +60,12 @@ define(
 
     var adjustTil = function (win, direction, original, caret, counter) {
       if (counter === 0) return Option.some(caret);
-      console.log('Searching', caret.left(), direction.point(caret), caret.top(), caret.bottom());
       return Point.find(win, caret.left(), direction.point(caret)).bind(function (guess) {
         return guess.start().fold(Option.none, function (element, offset) {
-          console.log('immediate guess', element.dom(), offset);
           return Rectangles.getBox(win, element, offset).bind(function (guessBox) {
             return direction.adjuster(guessBox, original, caret).fold(Option.none, function (newCaret) {
-              console.log('still adjusting', direction.point(newCaret));
               return adjustTil(win, direction, original, newCaret, counter-1);
             }, function (newCaret) {
-              console.log('finished at', newCaret, ' which is ', element.dom(), offset);
               return Option.some(newCaret);
             });
           }).orThunk(function () { return Option.some(caret); });
@@ -90,12 +85,9 @@ define(
       var c = Carets.nu(caret.left, caret.top, caret.right, caret.bottom);
       var moved = direction.move(c, JUMP_SIZE);
       var adjusted = adjustTil(win, direction, c, moved, 100).getOr(moved);
-      console.log('adjusted caret', adjusted.left(), direction.point(adjusted), win.innerHeight);
       if (direction.point(adjusted) > win.innerHeight) {
-        console.log('************ offscreen *************');
         var delta = direction.point(adjusted) - (win.innerHeight + win.scrollY) + 10;
         win.scrollBy(0, delta);
-        console.log('xx.adjusted: ', direction.point(adjusted), direction.point(adjusted) - delta);
         return Point.find(win, adjusted.left(), direction.point(adjusted) - delta);
       } else {
         return Point.find(win, adjusted.left(), direction.point(adjusted));
