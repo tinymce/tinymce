@@ -135,6 +135,7 @@ define(
 
           var maxx = handler(window, ephoxUi, Fun.constant(false), sel.finish(), sel.foffset());
           maxx.each(function (response) {
+            Logger.log('IE.keyup', 'responding to keydown', '');
             if (response.kill()) event.kill();
             response.selection().each(function (sel) {
               WindowSelection.set(window, sel);

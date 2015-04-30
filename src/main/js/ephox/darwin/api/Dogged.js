@@ -31,6 +31,28 @@ define(
       });
     };
 
+    var correctShiftVertical = function (simulate, win, container, isRoot, element, offset) {
+      // We are not in table selection mode, so predict the movement and see if we have to pick up the selection.
+      return simulate(win, isRoot, element, offset).bind(function (range) {
+        return SelectorFind.closest(element, 'td,th').bind(function (startCell) {
+          return SelectorFind.closest(range.finish(), 'td,th').bind(function (finishCell) {
+            // For a spanning selection, the cells must be different.
+            if (! Compare.eq(startCell, finishCell)) {
+              return CellSelection.identify(startCell, finishCell).map(function (boxes) {
+                CellSelection.selectRange(container, boxes, startCell, finishCell);
+                return response(
+                  Option.some(SelectionRange.write(Situ.on(element, offset), Situ.on(element, offset))),
+                  true
+                );
+              });
+            } else {
+              return Option.none();
+            }
+          });
+        });
+      });
+    };
+
     // Pressing left or right (without shift) clears any table selection and lets the browser handle it.
     var clearToNavigate = function (win, container/*, _isRoot, _element, _offset*/) {
       Beta.clearSelection(container);
@@ -56,26 +78,7 @@ define(
 
     var handleShiftVertical = function (simulate, shifter, rows, cols, win, container, isRoot, element, offset) {
       return CellSelection.retrieve(container).fold(function () {
-        // We are not in table selection mode, so predict the movement and see if we have to pick up the selection.
-        return simulate(win, isRoot, element, offset).bind(function (range) {
-          return SelectorFind.closest(element, 'td,th').bind(function (startCell) {
-            return SelectorFind.closest(range.finish(), 'td,th').bind(function (finishCell) {
-              // For a spanning selection, the cells must be different.
-              if (! Compare.eq(startCell, finishCell)) {
-                return CellSelection.identify(startCell, finishCell).map(function (boxes) {
-                  CellSelection.selectRange(container, boxes, startCell, finishCell);
-                  return response(
-                    Option.some(SelectionRange.write(Situ.on(element, offset), Situ.on(element, offset))),
-                    true
-                  );
-                });
-              } else {
-                return Option.none();
-              }
-            });
-          });
-          // I used to do something here about setting the selection to the range. May need to do that later.
-        });
+        return detection.browser.isSafari() || detection.browser.isChrome() ? correctShiftVertical(simulate, win, container, isRoot, element, offset) : Option.none();
       }, function (selected) {
         // Expanding the selection.
         return shifter(container, selected).map(function () {
