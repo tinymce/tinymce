@@ -85,7 +85,7 @@ define(
 
     var handleShiftVertical = function (simulate, shifter, rows, cols, win, container, isRoot, element, offset) {
       return CellSelection.retrieve(container).fold(function () {
-        return detection.browser.isSafari() || detection.browser.isChrome() || detection.browser.isFirefox() ? correctShiftVertical(simulate, win, container, isRoot, element, offset) : Option.none();
+        return detection.browser.isSafari() || detection.browser.isChrome() ? correctShiftVertical(simulate, win, container, isRoot, element, offset) : Option.none();
       }, function (selected) {
         // Expanding the selection.
         return shifter(container, selected).map(function () {
