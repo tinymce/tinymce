@@ -2,13 +2,10 @@ define(
   'ephox.darwin.demo.DarwinTableDemo',
 
   [
-    'ephox.darwin.api.Beta',
-    'ephox.darwin.api.TableKeys',
+    'ephox.darwin.api.Dogged',
     'ephox.darwin.api.TableMouse',
     'ephox.darwin.mouse.CellSelection',
     'ephox.fred.PlatformDetection',
-    'ephox.fussy.api.SelectionRange',
-    'ephox.fussy.api.Situ',
     'ephox.fussy.api.WindowSelection',
     'ephox.oath.proximity.Awareness',
     'ephox.peanut.Fun',
@@ -25,7 +22,7 @@ define(
     'global!document'
   ],
 
-  function (Beta, TableKeys, TableMouse, CellSelection, PlatformDetection, SelectionRange, Situ, WindowSelection, Awareness, Fun, Option, Attr, Body, Compare, DomEvent, Element, Insert, Replication, SelectorFind, Math, document) {
+  function (Dogged, TableMouse, CellSelection, PlatformDetection, WindowSelection, Awareness, Fun, Option, Attr, Body, Compare, DomEvent, Element, Insert, Replication, SelectorFind, Math, document) {
     return function () {
       console.log('darwin table');
 
@@ -93,102 +90,58 @@ define(
         if (event.raw().which === 37 || event.raw().which === 39 || event.raw().which === 38 || event.raw().which === 40) {
           console.log('keyup');
           CellSelection.retrieve(ephoxUi).fold(function () {
-            WindowSelection.get(window).each(function (sel) {
-              console.log('has selection: ', sel.start().dom(), ' ', sel.soffset(), ' ', sel.finish().dom(), ' ', sel.foffset());
-              if (! WindowSelection.isCollapsed(sel.start(), sel.soffset(), sel.finish(), sel.foffset())) {
-                console.log('ranged', sel.start(), sel.finish());
-                // we aren't collapsed ... so see if we are in two different cells.
-                SelectorFind.closest(sel.start(), 'td,th').each(function (s) {
-                  console.log('s', s.dom());
-                  SelectorFind.closest(sel.finish(), 'td,th').each(function (f) {
-                    console.log('f', f.dom());
-                    if (! Compare.eq(s, f)) {
-                      var boxes = CellSelection.identify(s, f).getOr([]);
-                      console.log('boxes:' , boxes);
-                      if (boxes.length > 0) {
-                        CellSelection.selectRange(ephoxUi, boxes, s, f);
-                        WindowSelection.setExact(window, s, 0, s, Awareness.getEnd(s));
-                      }
-                    }
-                  });
-                });
-              }
-            });
+
           }, function () { });
         }
       });
 
+      var changeToSelection = function () {
+        WindowSelection.get(window).each(function (sel) {
+          console.log('has selection: ', sel.start().dom(), ' ', sel.soffset(), ' ', sel.finish().dom(), ' ', sel.foffset());
+          if (! WindowSelection.isCollapsed(sel.start(), sel.soffset(), sel.finish(), sel.foffset())) {
+            console.log('ranged', sel.start(), sel.finish());
+            // we aren't collapsed ... so see if we are in two different cells.
+            SelectorFind.closest(sel.start(), 'td,th').each(function (s) {
+              console.log('s', s.dom());
+              SelectorFind.closest(sel.finish(), 'td,th').each(function (f) {
+                console.log('f', f.dom());
+                if (! Compare.eq(s, f)) {
+                  var boxes = CellSelection.identify(s, f).getOr([]);
+                  console.log('boxes:' , boxes);
+                  if (boxes.length > 0) {
+                    CellSelection.selectRange(ephoxUi, boxes, s, f);
+                    WindowSelection.setExact(window, s, 0, s, Awareness.getEnd(s));
+                  }
+                }
+              });
+            });
+          }
+        });
+      };
+
       DomEvent.bind(ephoxUi, 'keydown', function (event) {
         WindowSelection.get(window).each(function (sel) {
-          // Let's branch on whether or not we have a table selection mode.
-          CellSelection.retrieve(ephoxUi).fold(function () {
-            // IE handles this properly ... so let's just exit.
+          var handler = (function () {
+            var keycode = event.raw().which;
+            var shiftKey = event.raw().shiftKey === true;
+            if (keycode === 40 && shiftKey) return Dogged.shiftDown;
+            else if (keycode === 38 && shiftKey) return Dogged.shiftUp;
+            else if (keycode === 37 && shiftKey) return Dogged.shiftLeft;
+            else if (keycode === 39 && shiftKey) return Dogged.shiftRight;
+            else if (keycode === 40) return Dogged.down;
+            else if (keycode === 38) return Dogged.up;
+            else if (keycode === 37) return Dogged.left;
+            else if (keycode === 39) return Dogged.right;
+            else return Option.none;
+          })();
 
-
-            if (event.raw().which === 40 || event.raw().which === 38) {
-              if (detection.browser.isIE()) return Option.none();
-
-
-              var mover = event.raw().which === 40 ? TableKeys.handleDown : TableKeys.handleUp;
-              mover(window, Fun.constant(false), sel.finish(), sel.foffset()).each(function (exact) {
-
-                // Let's just try and intercept it here.
-                if (event.raw().shiftKey) {
-                  // We are doing selection ... so let's select.
-                  SelectorFind.closest(sel.start(), 'td,th').bind(function (startCell) {
-                    return SelectorFind.closest(exact.start(), 'td,th').bind(function (finishCell) {
-                      if (! Compare.eq(startCell, finishCell)) {
-                        return CellSelection.identify(startCell, finishCell).map(function (bb) {
-                          return {
-                            boxes: Fun.constant(bb),
-                            finish: Fun.constant(finishCell),
-                            start: Fun.constant(startCell)
-                          };
-                        });
-                      } else {
-                        return Option.none();
-                      }
-                    });
-                  }).fold(function () {
-                    WindowSelection.set(window, SelectionRange.write(
-                      Situ.on(sel.start(), sel.soffset()),
-                      Situ.on(exact.start(), exact.soffset())
-                    ));
-                  }, function (info) {
-                    // Maybe care about boxes.length > 0
-                    CellSelection.selectRange(ephoxUi, info.boxes(), info.start(), info.finish());
-                    WindowSelection.set(window, SelectionRange.write(
-                      Situ.on(exact.start(), exact.soffset()),
-                      Situ.on(exact.start(), exact.soffset())
-                    ));
-                  });
-                } else {
-                  WindowSelection.set(window, SelectionRange.write(
-                    Situ.on(exact.start(), exact.soffset()),
-                    Situ.on(exact.start(), exact.soffset())
-                  ));
-                }
-                event.kill();
-                console.log('next', exact.start().dom(), exact.soffset(), exact.start().dom().childNodes.length);
-              });
-            }
-          }, function (selected) {
-            // ignoring bias for the time being.
-            if (event.raw().shiftKey && event.raw().which >= 37 && event.raw().which <= 40) {
-
-              var diagnose = (function () {
-                if (event.raw().which === 39) return Beta.shiftRight;
-                else if (event.raw().which === 37) return Beta.shiftLeft;
-                else if (event.raw().which === 38) return Beta.shiftUp;
-                else return Beta.shiftDown;
-              })();
-
-              diagnose(ephoxUi, selected).each(function (_) {
-                event.kill();
-              });
-            } else if (event.raw().shiftKey === false) {
-              Beta.clearSelection(ephoxUi);
-            }
+          var maxx = handler(window, ephoxUi, Fun.constant(false), sel.finish(), sel.foffset());
+          console.log('maxx', maxx);
+          maxx.each(function (response) {
+            if (response.kill()) event.kill();
+            response.selection().each(function (sel) {
+              WindowSelection.set(window, sel);
+            });
           });
         });
       });
