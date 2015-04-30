@@ -18,12 +18,13 @@ define(
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
+    'ephox.sugar.api.Replication',
     'ephox.sugar.api.SelectorFind',
     'global!Math',
     'global!document'
   ],
 
-  function (TableKeys, TableMouse, CellSelection, PlatformDetection, SelectionRange, Situ, WindowSelection, Awareness, Fun, Option, Attr, Body, Compare, DomEvent, Element, Insert, SelectorFind, Math, document) {
+  function (TableKeys, TableMouse, CellSelection, PlatformDetection, SelectionRange, Situ, WindowSelection, Awareness, Fun, Option, Attr, Body, Compare, DomEvent, Element, Insert, Replication, SelectorFind, Math, document) {
     return function () {
       console.log('darwin table');
 
@@ -42,7 +43,7 @@ define(
       );
 
       var table = Element.fromHtml(
-        '<table contenteditable="true">' +
+        '<table>' +
           '<tbody>' +
             '<tr>' +
               '<td style="min-width: 100px;">A1</td>' +
@@ -68,6 +69,12 @@ define(
 
       Insert.append(ephoxUi, table);
       Insert.append(Element.fromDom(document.head), style);
+
+      var cloneDiv = Element.fromTag('div');
+      Attr.set(cloneDiv, 'contenteditable', 'true');
+      var clone = Replication.deep(table);
+      Insert.append(cloneDiv, clone);
+      Insert.append(Body.body(), cloneDiv);
 
       Insert.append(Body.body(), Element.fromHtml('<span id="coords">(0, 0)</span>'));
       DomEvent.bind(Body.body(), 'mousemove', function (event) {
@@ -173,10 +180,10 @@ define(
 
             // ignoring bias for the time being.
             if (event.raw().shiftKey && event.raw().which >= 37 && event.raw().which <= 40) {
-              if (event.raw().which === 39) CellSelection.shiftRight(selected).each(update);
-              else if (event.raw().which === 37) CellSelection.shiftLeft(selected).each(update);
-              else if (event.raw().which === 38) CellSelection.shiftUp(selected).each(update);
-              else if (event.raw().which === 40) CellSelection.shiftDown(selected).each(update);
+              if (event.raw().which === 39) CellSelection.shiftSelection(selected, 0, +1).each(update);
+              else if (event.raw().which === 37) CellSelection.shiftSelection(selected, 0, -1).each(update);
+              else if (event.raw().which === 38) CellSelection.shiftSelection(selected, -1, 0).each(update);
+              else if (event.raw().which === 40) CellSelection.shiftSelection(selected, +1, 0).each(update);
               console.log('this is where you would handle expanding the table selection');
               event.kill();
             } else if (event.raw().shiftKey === false) {

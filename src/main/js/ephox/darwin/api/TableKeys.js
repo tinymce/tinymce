@@ -160,38 +160,29 @@ define(
       return Node.name(elem) === 'br';
     };
 
-    var tryBrDown = function (win, isRoot, element, offset) {
-      console.log('br.down', element.dom(), offset);
+    var tryBr = function (win, isRoot, element, offset, gather, situ) {
       var candidate = isBr(element) ? Option.some(element) : Traverse.child(element, offset).filter(isBr).orThunk(function () {
+        // Can be either side of the br, and still be a br.
         return Traverse.child(element, offset-1).filter(isBr);
       });
 
       return candidate.bind(function (cand) {
         console.log('candidate for br.down: ', cand.dom());
-        return DomGather.after(cand, isRoot).map(function (next) {
+        return gather(cand, isRoot).map(function (target) {
           return SelectionRange.write(
-            Situ.before(next),
-            Situ.before(next)
+            situ(target),
+            situ(target)
           );
         });
       });
     };
 
+    var tryBrDown = function (win, isRoot, element, offset) {
+      return tryBr(win, isRoot, element, offset, DomGather.after, Situ.before);
+    };
+
     var tryBrUp = function (win, isRoot, element, offset) {
-      var candidate = isBr(element) ? Option.some(element) : Traverse.child(element, offset).filter(isBr).orThunk(function () {
-        // Can be either side of the br, and still be a br.
-        return Traverse.child(element, offset-1).filter(isBr);
-      });
-      return candidate.bind(function (cand) {
-        console.log('candidate for br.up: ', cand.dom());
-        return DomGather.before(cand, isRoot).map(function (next) {
-          console.log('br.up.next: ', next.dom());
-          return SelectionRange.write(
-            Situ.after(next),
-            Situ.after(next)
-          );
-        });
-      });
+      return tryBr(win, isRoot, element, offset, DomGather.before, Situ.after);
     };
 
     return {

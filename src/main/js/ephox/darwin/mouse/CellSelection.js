@@ -124,28 +124,14 @@ define(
       });
     };
 
-    var shiftRight = function (boxes) {
-      // Assume that the last cell is the one to shift right.
-      return getLast(boxes).bind(Traverse.nextSibling).bind(mogel);
-    };
-
-    var shiftLeft = function (boxes) {
-      // Assume that the last cell is the one to shift right.
-      return getLast(boxes).bind(Traverse.prevSibling).bind(mogel);
-    };
-
-    var shiftRow = function (delta, boxes) {
+    var shiftSelection = function (boxes, deltaRow, deltaColumn) {
       return getLast(boxes).bind(findInTable).bind(function (position) {
         console.log('shiftUp.position', position);
         return SelectorFind.ancestor(boxes[0], 'table').bind(function (table) {
-          return gotoCell(table, position.rowIndex() + delta, position.colIndex()).bind(mogel);
+          return gotoCell(table, position.rowIndex() + deltaRow, position.colIndex() + deltaColumn).bind(mogel);
         });
       });
     };
-
-    var shiftUp = Fun.curry(shiftRow, -1);
-
-    var shiftDown = Fun.curry(shiftRow, +1);
 
     var selectRange = function (container, cells, start, finish) {
       console.log('cells: ', cells);
@@ -169,10 +155,7 @@ define(
       clear: clear,
       identify: identify,
       retrieve: retrieve,
-      shiftRight: shiftRight,
-      shiftLeft: shiftLeft,
-      shiftUp: shiftUp,
-      shiftDown: shiftDown,
+      shiftSelection: shiftSelection,
       selectRange: selectRange
     };
   }
