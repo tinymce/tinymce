@@ -5,9 +5,12 @@ define(
     'ephox.darwin.api.Beta',
     'ephox.darwin.api.TableKeys',
     'ephox.darwin.mouse.CellSelection',
+    'ephox.darwin.util.Logger',
     'ephox.fred.PlatformDetection',
     'ephox.fussy.api.SelectionRange',
     'ephox.fussy.api.Situ',
+    'ephox.fussy.api.WindowSelection',
+    'ephox.oath.proximity.Awareness',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.scullion.Struct',
@@ -15,7 +18,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Beta, TableKeys, CellSelection, PlatformDetection, SelectionRange, Situ, Fun, Option, Struct, Compare, SelectorFind) {
+  function (Beta, TableKeys, CellSelection, Logger, PlatformDetection, SelectionRange, Situ, WindowSelection, Awareness, Fun, Option, Struct, Compare, SelectorFind) {
     var response = Struct.immutable('selection', 'kill');
     var detection = PlatformDetection.detect();
 
@@ -33,7 +36,9 @@ define(
 
     var correctShiftVertical = function (simulate, win, container, isRoot, element, offset) {
       // We are not in table selection mode, so predict the movement and see if we have to pick up the selection.
+      Logger.log('FIREFOX.shiftUp', 'correctShiftVertical', element.dom());
       return simulate(win, isRoot, element, offset).bind(function (range) {
+        Logger.log('FIREFOX.shiftUp', 'post-simulate', range.finish().dom(), range.foffset());
         return SelectorFind.closest(element, 'td,th').bind(function (startCell) {
           return SelectorFind.closest(range.finish(), 'td,th').bind(function (finishCell) {
             // For a spanning selection, the cells must be different.
@@ -72,19 +77,49 @@ define(
       return CellSelection.retrieve(container).bind(function (selected) {
         return shifter(container, selected).map(function () {
           return response(Option.none(), true);
+        }).orThunk(function () {
+          return Option.some(response(Option.none(), true));
         });
       });
     };
 
     var handleShiftVertical = function (simulate, shifter, rows, cols, win, container, isRoot, element, offset) {
       return CellSelection.retrieve(container).fold(function () {
-        return detection.browser.isSafari() || detection.browser.isChrome() ? correctShiftVertical(simulate, win, container, isRoot, element, offset) : Option.none();
+        return detection.browser.isSafari() || detection.browser.isChrome() || detection.browser.isFirefox() ? correctShiftVertical(simulate, win, container, isRoot, element, offset) : Option.none();
       }, function (selected) {
         // Expanding the selection.
         return shifter(container, selected).map(function () {
           return response(Option.none(), true);
+        }).orThunk(function () {
+          return Option.some(response(Option.none(), true));
         });
       });
+    };
+
+    var syncSelection = function (win, container, isRoot, start, soffset, finish, foffset) {
+      if (! WindowSelection.isCollapsed(start, soffset, finish, foffset)) {
+        return SelectorFind.closest(start, 'td,th').bind(function (s) {
+          return SelectorFind.closest(finish, 'td,th').bind(function (f) {
+            if (! Compare.eq(s, f)) {
+              var boxes = CellSelection.identify(s, f).getOr([]);
+              if (boxes.length > 0) {
+                CellSelection.selectRange(container, boxes, s, f);
+                WindowSelection.setExact(win, s, 0, s, Awareness.getEnd(s));
+                return Option.some(response(
+                  Option.some(SelectionRange.write(Situ.on(s, 0), Situ.on(s, Awareness.getEnd(s)))),
+                  true
+                ));
+              } else {
+                return Option.none();
+              }
+            } else {
+              return Option.none();
+            }
+          });
+        });
+      } else {
+        return Option.none();
+      }
     };
 
     return {
@@ -92,6 +127,8 @@ define(
       shiftRight: Fun.curry(handleShiftHorizontal, Beta.shiftRight),
       shiftUp: Fun.curry(handleShiftVertical, TableKeys.handleUp, Beta.shiftUp, -1, 0),
       shiftDown: Fun.curry(handleShiftVertical, TableKeys.handleDown, Beta.shiftDown, +1, 0),
+
+      syncSelection: syncSelection,
 
       left: clearToNavigate,
       right: clearToNavigate,

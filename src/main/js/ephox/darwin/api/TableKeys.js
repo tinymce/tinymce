@@ -4,6 +4,7 @@ define(
   [
     'ephox.darwin.keyboard.Rectangles',
     'ephox.darwin.keyboard.Retries',
+    'ephox.darwin.util.Logger',
     'ephox.fred.PlatformDetection',
     'ephox.fussy.api.SelectionRange',
     'ephox.fussy.api.Situ',
@@ -21,7 +22,7 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Rectangles, Retries, PlatformDetection, SelectionRange, Situ, WindowSelection, Awareness, Fun, Option, DomGather, DomParent, Adt, Compare, Node, PredicateExists, SelectorFind, Traverse) {
+  function (Rectangles, Retries, Logger, PlatformDetection, SelectionRange, Situ, WindowSelection, Awareness, Fun, Option, DomGather, DomParent, Adt, Compare, Node, PredicateExists, SelectorFind, Traverse) {
     var platform = PlatformDetection.detect();
 
     var adt = Adt.generate([
@@ -95,7 +96,6 @@ define(
 
     var isRow = function (elem) {
       return SelectorFind.closest(elem, 'tr');
-      return SelectorFind.closest(elem, 'tr');
     };
 
     var hacker = function (win, mover, isRoot, element, offset, counter) {
@@ -144,6 +144,7 @@ define(
     };
 
     var tryBr = function (win, isRoot, element, offset, gather, situ) {
+      Logger.log('FIREFOX.shiftUp', 'tryBr', element.dom());
       var candidate = isBr(element) ? Option.some(element) : Traverse.child(element, offset).filter(isBr).orThunk(function () {
         // Can be either side of the br, and still be a br.
         return Traverse.child(element, offset-1).filter(isBr);
@@ -151,6 +152,7 @@ define(
 
       return candidate.bind(function (cand) {
         return gather(cand, isRoot).map(function (target) {
+          Logger.log('FIREFOX.shiftUp', 'tryBr.target', target.dom());
           return SelectionRange.write(
             situ(target),
             situ(target)

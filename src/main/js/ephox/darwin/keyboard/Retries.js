@@ -4,6 +4,7 @@ define(
   [
     'ephox.darwin.keyboard.Carets',
     'ephox.darwin.keyboard.Rectangles',
+    'ephox.darwin.util.Logger',
     'ephox.fussy.api.Point',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
@@ -12,7 +13,7 @@ define(
     'global!Math'
   ],
 
-  function (Carets, Rectangles, Point, Fun, Option, DomGather, Adt, Math) {
+  function (Carets, Rectangles, Logger, Point, Fun, Option, DomGather, Adt, Math) {
     var JUMP_SIZE = 5;
     /*
      * This isn't right ... but let's just hook it up first.
@@ -82,6 +83,7 @@ define(
     };
 
     var retry = function (direction, win, caret) {
+      Logger.log('FIREFOX.shiftUp', 'retry', caret.top, caret.bottom);
       var c = Carets.nu(caret.left, caret.top, caret.right, caret.bottom);
       var moved = direction.move(c, JUMP_SIZE);
       var adjusted = adjustTil(win, direction, c, moved, 100).getOr(moved);

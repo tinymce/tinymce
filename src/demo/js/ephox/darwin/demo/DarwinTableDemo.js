@@ -89,33 +89,18 @@ define(
         if (event.raw().which === 37 || event.raw().which === 39 || event.raw().which === 38 || event.raw().which === 40) {
           CellSelection.retrieve(ephoxUi).fold(function () {
             WindowSelection.get(window).each(function (sel) {
-              Logger.log('IE.keyup', 'has selection: ', sel.start().dom(), ' ', sel.soffset(), ' ', sel.finish().dom(), ' ', sel.foffset());
-              if (! WindowSelection.isCollapsed(sel.start(), sel.soffset(), sel.finish(), sel.foffset())) {
-                Logger.log('IE.keyup', 'ranged', sel.start(), sel.finish());
-                // we aren't collapsed ... so see if we are in two different cells.
-                SelectorFind.closest(sel.start(), 'td,th').each(function (s) {
-                  Logger.log('IE.keyup', 's', s.dom());
-                  SelectorFind.closest(sel.finish(), 'td,th').each(function (f) {
-                    Logger.log('IE.keyup', 'f', f.dom());
-                    if (! Compare.eq(s, f)) {
-                      var boxes = CellSelection.identify(s, f).getOr([]);
-                      Logger.log('IE.keyup', 'boxes:' , boxes);
-                      if (boxes.length > 0) {
-                        CellSelection.selectRange(ephoxUi, boxes, s, f);
-                        WindowSelection.setExact(window, s, 0, s, Awareness.getEnd(s));
-                      }
-                    }
-                  });
+              var synced = Dogged.syncSelection(window, ephoxUi, Fun.constant(false), sel.start(), sel.soffset(), sel.finish(), sel.foffset());
+              console.log('synced', synced);
+              synced.each(function (response) {
+                if (response.kill()) event.kill();
+                response.selection().each(function (ns) {
+                  WindowSelection.set(window, ns);
                 });
-              }
+              });
             });
-          }, function () { });
+          }, Fun.noop);
         }
       });
-
-      var changeToSelection = function () {
-
-      };
 
       DomEvent.bind(ephoxUi, 'keydown', function (event) {
         WindowSelection.get(window).each(function (sel) {
@@ -135,7 +120,7 @@ define(
 
           var maxx = handler(window, ephoxUi, Fun.constant(false), sel.finish(), sel.foffset());
           maxx.each(function (response) {
-            Logger.log('IE.keyup', 'responding to keydown', '');
+            Logger.log('FIREFOX.shiftUp', 'responding to keydown', '');
             if (response.kill()) event.kill();
             response.selection().each(function (sel) {
               WindowSelection.set(window, sel);
