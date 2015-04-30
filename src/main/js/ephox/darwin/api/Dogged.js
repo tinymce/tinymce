@@ -122,6 +122,23 @@ define(
       }
     };
 
+    var releaseShift = function (getSelection, win, container) {
+       // if (event.raw().which === 37 || event.raw().which === 39 || event.raw().which === 38 || event.raw().which === 40) {
+       //    CellSelection.retrieve(ephoxUi).fold(function () {
+       //      WindowSelection.get(window).each(function (sel) {
+       //        var synced = Dogged.syncSelection(window, ephoxUi, Fun.constant(false), sel.start(), sel.soffset(), sel.finish(), sel.foffset());
+       //        console.log('synced', synced);
+       //        synced.each(function (response) {
+       //          if (response.kill()) event.kill();
+       //          response.selection().each(function (ns) {
+       //            WindowSelection.set(window, ns);
+       //          });
+       //        });
+       //      });
+       //    }, Fun.noop);
+       //  }
+    };
+
     return {
       shiftLeft: Fun.curry(handleShiftHorizontal, Beta.shiftLeft),
       shiftRight: Fun.curry(handleShiftHorizontal, Beta.shiftRight),
@@ -134,6 +151,8 @@ define(
       right: clearToNavigate,
       up: Fun.curry(handleVertical, TableKeys.handleUp),
       down: Fun.curry(handleVertical, TableKeys.handleDown),
+
+      releaseShift: releaseShift
     };
   }
 );

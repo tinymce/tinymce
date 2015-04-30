@@ -8,12 +8,10 @@ define(
     'ephox.darwin.util.Logger',
     'ephox.fred.PlatformDetection',
     'ephox.fussy.api.WindowSelection',
-    'ephox.oath.proximity.Awareness',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Body',
-    'ephox.sugar.api.Compare',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
@@ -23,7 +21,7 @@ define(
     'global!document'
   ],
 
-  function (Dogged, TableMouse, CellSelection, Logger, PlatformDetection, WindowSelection, Awareness, Fun, Option, Attr, Body, Compare, DomEvent, Element, Insert, Replication, SelectorFind, Math, document) {
+  function (Dogged, TableMouse, CellSelection, Logger, PlatformDetection, WindowSelection, Fun, Option, Attr, Body, DomEvent, Element, Insert, Replication, SelectorFind, Math, document) {
     return function () {
 
       var detection = PlatformDetection.detect();
@@ -86,7 +84,7 @@ define(
       DomEvent.bind(ephoxUi, 'mouseup', handlers.mouseup);
 
       DomEvent.bind(ephoxUi, 'keyup', function (event) {
-        if (event.raw().which === 37 || event.raw().which === 39 || event.raw().which === 38 || event.raw().which === 40) {
+        if (event.raw().shiftKey && (event.raw().which === 37 || event.raw().which === 39 || event.raw().which === 38 || event.raw().which === 40)) {
           CellSelection.retrieve(ephoxUi).fold(function () {
             WindowSelection.get(window).each(function (sel) {
               var synced = Dogged.syncSelection(window, ephoxUi, Fun.constant(false), sel.start(), sel.soffset(), sel.finish(), sel.foffset());
