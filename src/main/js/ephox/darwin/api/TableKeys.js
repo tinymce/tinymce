@@ -19,10 +19,11 @@ define(
     'ephox.sugar.api.Node',
     'ephox.sugar.api.PredicateExists',
     'ephox.sugar.api.SelectorFind',
+    'ephox.sugar.api.Text',
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Rectangles, Retries, Logger, PlatformDetection, SelectionRange, Situ, WindowSelection, Awareness, Fun, Option, DomGather, DomParent, Adt, Compare, Node, PredicateExists, SelectorFind, Traverse) {
+  function (Rectangles, Retries, Logger, PlatformDetection, SelectionRange, Situ, WindowSelection, Awareness, Fun, Option, DomGather, DomParent, Adt, Compare, Node, PredicateExists, SelectorFind, Text, Traverse) {
     var platform = PlatformDetection.detect();
 
     var adt = Adt.generate([
@@ -102,7 +103,9 @@ define(
       if (counter === 0) return Option.none();
       return mover(win, isRoot, element, offset).bind(function (next) {
 
+
         var exact = WindowSelection.deriveExact(win, next);
+        console.log('exact', exact.start().dom(), exact.soffset(), exact.finish().dom(), exact.foffset());
 
         return typewriter(mover, exact, element, offset).fold(function () {
           return Option.none('ADT: none');
@@ -143,6 +146,13 @@ define(
       return Node.name(elem) === 'br';
     };
 
+    var gatherer = function (cand, gather, isRoot) {
+      return gather(cand, isRoot).bind(function (target) {
+        console.log('gather');
+        return Node.isText(target) && Text.get(target).trim().length === 0 ? gatherer(target, gather, isRoot) : Option.some(target);
+      });
+    };
+
     var tryBr = function (win, isRoot, element, offset, gather, situ) {
       Logger.log('FIREFOX.shiftUp', 'tryBr', element.dom());
       var candidate = isBr(element) ? Option.some(element) : Traverse.child(element, offset).filter(isBr).orThunk(function () {
@@ -151,7 +161,7 @@ define(
       });
 
       return candidate.bind(function (cand) {
-        return gather(cand, isRoot).map(function (target) {
+        return gatherer(cand, gather, isRoot).map(function (target) {
           Logger.log('FIREFOX.shiftUp', 'tryBr.target', target.dom());
           return SelectionRange.write(
             situ(target),

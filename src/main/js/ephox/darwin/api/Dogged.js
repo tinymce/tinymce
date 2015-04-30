@@ -22,9 +22,12 @@ define(
     var detection = PlatformDetection.detect();
 
     var correctVertical = function (simulate, win, isRoot, element, offset) {
+      console.log('correcting vertical');
       // Ensure that it only operates in cells.
       return SelectorFind.closest(element, 'td,th').bind(function (_cell) {
+        console.log('in cell', _cell.dom());
         return simulate(win, isRoot, element, offset).map(function (range) {
+          console.log('range: ', range.start().dom(), range.soffset());
           return response(
             Option.some(SelectionRange.write(
               Situ.on(range.start(), range.soffset()),
