@@ -4,8 +4,6 @@ define(
   [
     'ephox.darwin.api.Dogged',
     'ephox.darwin.api.TableMouse',
-    'ephox.darwin.mouse.CellSelection',
-    'ephox.darwin.util.Logger',
     'ephox.fred.PlatformDetection',
     'ephox.fussy.api.WindowSelection',
     'ephox.peanut.Fun',
@@ -21,7 +19,7 @@ define(
     'global!document'
   ],
 
-  function (Dogged, TableMouse, CellSelection, Logger, PlatformDetection, WindowSelection, Fun, Option, Attr, Body, DomEvent, Element, Insert, Replication, SelectorFind, Math, document) {
+  function (Dogged, TableMouse, PlatformDetection, WindowSelection, Fun, Option, Attr, Body, DomEvent, Element, Insert, Replication, SelectorFind, Math, document) {
     return function () {
 
       var detection = PlatformDetection.detect();
@@ -83,24 +81,25 @@ define(
       DomEvent.bind(ephoxUi, 'mouseover', handlers.mouseover);
       DomEvent.bind(ephoxUi, 'mouseup', handlers.mouseup);
 
+      var handleResponse = function (event, response) {
+        if (response.kill()) event.kill();
+        response.selection().each(function (ns) {
+          WindowSelection.set(window, ns);
+        });
+      };
+
       DomEvent.bind(ephoxUi, 'keyup', function (event) {
-        if (event.raw().shiftKey && (event.raw().which === 37 || event.raw().which === 39 || event.raw().which === 38 || event.raw().which === 40)) {
-          CellSelection.retrieve(ephoxUi).fold(function () {
-            WindowSelection.get(window).each(function (sel) {
-              var synced = Dogged.syncSelection(window, ephoxUi, Fun.constant(false), sel.start(), sel.soffset(), sel.finish(), sel.foffset());
-              console.log('synced', synced);
-              synced.each(function (response) {
-                if (response.kill()) event.kill();
-                response.selection().each(function (ns) {
-                  WindowSelection.set(window, ns);
-                });
-              });
+        if (event.raw().shiftKey && event.raw().which >= 37 && event.raw().which <= 40) {
+          WindowSelection.get(window).each(function (sel) {
+            Dogged.releaseShift(window, ephoxUi, Fun.constant(false), sel.start(), sel.soffset(), sel.finish(), sel.foffset()).each(function (response) {
+              handleResponse(event, response);
             });
           }, Fun.noop);
         }
       });
 
       DomEvent.bind(ephoxUi, 'keydown', function (event) {
+        // This might get expensive.
         WindowSelection.get(window).each(function (sel) {
           var handler = (function () {
             var keycode = event.raw().which;
@@ -116,13 +115,8 @@ define(
             else return Option.none;
           })();
 
-          var maxx = handler(window, ephoxUi, Fun.constant(false), sel.finish(), sel.foffset());
-          maxx.each(function (response) {
-            Logger.log('FIREFOX.shiftUp', 'responding to keydown', '');
-            if (response.kill()) event.kill();
-            response.selection().each(function (sel) {
-              WindowSelection.set(window, sel);
-            });
+          handler(window, ephoxUi, Fun.constant(false), sel.finish(), sel.foffset()).each(function (response) {
+            handleResponse(event, response);
           });
         });
       });

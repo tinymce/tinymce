@@ -122,21 +122,10 @@ define(
       }
     };
 
-    var releaseShift = function (getSelection, win, container) {
-       // if (event.raw().which === 37 || event.raw().which === 39 || event.raw().which === 38 || event.raw().which === 40) {
-       //    CellSelection.retrieve(ephoxUi).fold(function () {
-       //      WindowSelection.get(window).each(function (sel) {
-       //        var synced = Dogged.syncSelection(window, ephoxUi, Fun.constant(false), sel.start(), sel.soffset(), sel.finish(), sel.foffset());
-       //        console.log('synced', synced);
-       //        synced.each(function (response) {
-       //          if (response.kill()) event.kill();
-       //          response.selection().each(function (ns) {
-       //            WindowSelection.set(window, ns);
-       //          });
-       //        });
-       //      });
-       //    }, Fun.noop);
-       //  }
+    var releaseShift = function (win, container, isRoot, start, soffset, finish, foffset) {
+      return CellSelection.retrieve(container).fold(function () {
+        return syncSelection(win, container, isRoot, start, soffset, finish, foffset);
+      }, Option.none);
     };
 
     return {
@@ -144,8 +133,6 @@ define(
       shiftRight: Fun.curry(handleShiftHorizontal, Beta.shiftRight),
       shiftUp: Fun.curry(handleShiftVertical, TableKeys.handleUp, Beta.shiftUp, -1, 0),
       shiftDown: Fun.curry(handleShiftVertical, TableKeys.handleDown, Beta.shiftDown, +1, 0),
-
-      syncSelection: syncSelection,
 
       left: clearToNavigate,
       right: clearToNavigate,
