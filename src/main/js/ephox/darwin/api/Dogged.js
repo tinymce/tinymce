@@ -5,7 +5,6 @@ define(
     'ephox.darwin.api.Beta',
     'ephox.darwin.api.TableKeys',
     'ephox.darwin.mouse.CellSelection',
-    'ephox.darwin.util.Logger',
     'ephox.fred.PlatformDetection',
     'ephox.fussy.api.SelectionRange',
     'ephox.fussy.api.Situ',
@@ -18,28 +17,29 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Beta, TableKeys, CellSelection, Logger, PlatformDetection, SelectionRange, Situ, WindowSelection, Awareness, Fun, Option, Struct, Compare, SelectorFind) {
+  function (Beta, TableKeys, CellSelection, PlatformDetection, SelectionRange, Situ, WindowSelection, Awareness, Fun, Option, Struct, Compare, SelectorFind) {
     var response = Struct.immutable('selection', 'kill');
     var detection = PlatformDetection.detect();
 
     var correctVertical = function (simulate, win, isRoot, element, offset) {
-      return simulate(win, isRoot, element, offset).map(function (range) {
-        return response(
-          Option.some(SelectionRange.write(
-            Situ.on(range.start(), range.soffset()),
-            Situ.on(range.finish(), range.foffset())
-          )),
-          true
-        );
+      // Ensure that it only operates in cells.
+      return SelectorFind.closest(element, 'td,th').bind(function (_cell) {
+        return simulate(win, isRoot, element, offset).map(function (range) {
+          return response(
+            Option.some(SelectionRange.write(
+              Situ.on(range.start(), range.soffset()),
+              Situ.on(range.finish(), range.foffset())
+            )),
+            true
+          );
+        });
       });
     };
 
     var correctShiftVertical = function (simulate, win, container, isRoot, element, offset) {
       // We are not in table selection mode, so predict the movement and see if we have to pick up the selection.
-      Logger.log('FIREFOX.shiftUp', 'correctShiftVertical', element.dom());
-      return simulate(win, isRoot, element, offset).bind(function (range) {
-        Logger.log('FIREFOX.shiftUp', 'post-simulate', range.finish().dom(), range.foffset());
-        return SelectorFind.closest(element, 'td,th').bind(function (startCell) {
+      return SelectorFind.closest(element, 'td,th').bind(function (startCell) {
+        return simulate(win, isRoot, element, offset).bind(function (range) {
           return SelectorFind.closest(range.finish(), 'td,th').bind(function (finishCell) {
             // For a spanning selection, the cells must be different.
             if (! Compare.eq(startCell, finishCell)) {
