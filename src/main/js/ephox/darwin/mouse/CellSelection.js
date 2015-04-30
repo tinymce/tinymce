@@ -40,6 +40,7 @@ define(
     };
 
     var identify = function (start, finish) {
+      console.log('branching', start.dom(), finish.dom());
       // So ignore the colspan, rowspan for the time being.
       return DomParent.sharedOne(lookupTable, [ start, finish ]).bind(function (tbl) {
         // For all the rows, identify the information.
@@ -61,6 +62,7 @@ define(
     };
 
     var findInTable = function (cell) {
+      console.log('locating', cell.dom());
       return findColumn(cell).bind(function (colIndex) {
         return findRow(cell).map(function (rowIndex) {
           return {
@@ -94,7 +96,8 @@ define(
     var gotoCell = function (table, rowIndex, colIndex) {
       var rows = SelectorFilter.descendants(table, 'tr');
       return Option.from(rows[rowIndex]).bind(function (row) {
-        return Traverse.child(row, colIndex);
+        var cells = SelectorFilter.children(row, 'td,th');
+        return Option.from(cells[colIndex]);
       });
     };
 
@@ -111,6 +114,7 @@ define(
     };
 
     var mogel = function (finish) {
+      console.log('mogelling', finish.dom());
       return SelectorFind.ancestor(finish, 'table').bind(function (table) {
         return SelectorFind.descendant(table, '.' + firstSelected).bind(function (start) {
           return identify(start, finish).map(function (boxes) {
@@ -125,8 +129,11 @@ define(
     };
 
     var shiftSelection = function (boxes, deltaRow, deltaColumn) {
+      console.log('shifting selection', deltaRow, deltaColumn);
       return getLast(boxes).bind(findInTable).bind(function (position) {
+        console.log('found last', position);
         return SelectorFind.ancestor(boxes[0], 'table').bind(function (table) {
+          console.log('found table');
           return gotoCell(table, position.rowIndex() + deltaRow, position.colIndex() + deltaColumn).bind(mogel);
         });
       });

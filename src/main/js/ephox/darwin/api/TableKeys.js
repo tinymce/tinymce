@@ -123,18 +123,18 @@ define(
 
     var tryCursorDown = function (win, isRoot, element, offset) {
       return Rectangles.getBox(win, element, offset).bind(function (box) {
-        if (platform.browser.isChrome() || platform.browser.isSafari()) return Retries.tryDown(window, box);
-        else if (platform.browser.isFirefox()) return Retries.tryDown(window, box);
-        else if (platform.browser.isIE()) return Retries.ieTryDown(window, box);
+        if (platform.browser.isChrome() || platform.browser.isSafari()) return Retries.tryDown(win, box);
+        else if (platform.browser.isFirefox()) return Retries.tryDown(win, box);
+        else if (platform.browser.isIE()) return Retries.ieTryDown(win, box);
         else return Option.none();
       });
     };
 
     var tryCursorUp = function (win, isRoot, element, offset) {
       return Rectangles.getBox(win, element, offset).bind(function (box) {
-        if (platform.browser.isChrome() || platform.browser.isSafari()) return Retries.tryUp(window, box);
-        else if (platform.browser.isFirefox()) return Retries.tryUp(window, box);
-        else if (platform.browser.isIE()) return Retries.ieTryUp(window, box);
+        if (platform.browser.isChrome() || platform.browser.isSafari()) return Retries.tryUp(win, box);
+        else if (platform.browser.isFirefox()) return Retries.tryUp(win, box);
+        else if (platform.browser.isIE()) return Retries.ieTryUp(win, box);
         else return Option.none();
       });
     };

@@ -2,13 +2,15 @@ define(
   'ephox.darwin.api.TableMouse',
 
   [
+    'ephox.compass.Arr',
     'ephox.darwin.mouse.CellSelection',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.sugar.api.SelectorFind',
+    'ephox.sugar.api.Traverse'
   ],
 
-  function (CellSelection, Fun, Option, SelectorFind) {
+  function (Arr, CellSelection, Fun, Option, SelectorFind, Traverse) {
     return function (container) {
       var cursor = Option.none();
 
@@ -24,8 +26,11 @@ define(
           var finish = SelectorFind.closest(event.target(), 'td,th');
           var boxes = finish.bind(Fun.curry(CellSelection.identify, start)).getOr([]);
           if (boxes.length > 0) {
-            CellSelection.selectRange(container, boxes, start, event.target());
-            window.getSelection().removeAllRanges();
+            console.log('boxes', Arr.map(boxes, function (b) { return b.dom().innerHTML; }));
+            CellSelection.selectRange(container, boxes, start, finish.getOrDie());
+
+            // Do this elsewhere.
+            Traverse.defaultView(container).dom().getSelection().removeAllRanges();
           }
         });
       };
