@@ -68,11 +68,13 @@ define(
     };
 
     var handleVertical = function (simulate, win, container, isRoot, element, offset) {
+      console.log('handling vertical');
       return CellSelection.retrieve(container).fold(function () {
         // On Webkit, we need to handle this.
         return detection.browser.isSafari() || detection.browser.isChrome() ? correctVertical(simulate, win, isRoot, element, offset) : Option.none();
       }, function (selected) {
-        return clearToNavigate(container);
+        console.log('clearing selection', container.dom());
+        return clearToNavigate(win, container, isRoot, element, offset);
       });
     };
 

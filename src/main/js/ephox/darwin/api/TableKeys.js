@@ -38,21 +38,29 @@ define(
     var handle = function (brMover, cursorMover, win, isRoot) {
       return WindowSelection.get(win).bind(function (sel) {
         return brMover(win, isRoot, sel.finish(), sel.foffset()).fold(function () {
+          console.log('not a br option');
           return hacker(win, cursorMover, isRoot, sel.finish(), sel.foffset(), 1000);
         }, function (next) {
           var exact = WindowSelection.deriveExact(win, next);
+          console.log('exact (for br)', exact.finish().dom(), exact.foffset());
           return typewriter(cursorMover, exact, sel.finish(), sel.foffset()).fold(function (message) {
+            console.log('BR ADT: none');
             return Option.none('BR ADT: none');
           }, function () {
-            return Option.none('BR ADT: success');
+            console.log('BR ADT: success');
+            return Option.none();
           }, function (cell) {
+            console.log('BR ADT: failedUp');
             return hacker(win, cursorMover, isRoot, cell, 0, 1000);
           }, function (cell) {
+            console.log('BR ADT: failedDown');
             return hacker(win, cursorMover, isRoot, cell, Awareness.getEnd(cell), 1000);
           }, function (section) {
-            return Option.none('BR ADT: retry because moved to start of outer container');
+            console.log('BR ADT: retry because moved to start of outer container');
+            return Option.none();
           }, function (section) {
-            return Option.none('BR ADT: retry because moved to finish of outer container');
+            console.log('BR ADT: retry because moved to finish of outer container');
+            return Option.none();
           });
         }).map(function (next) {
           return WindowSelection.deriveExact(win, next);
@@ -69,7 +77,13 @@ define(
 
             return DomParent.sharedOne(isRow, [ newCell, oldCell ]).fold(function () {
               // And they are not in the same row, all good.
-              return adt.success();
+              // Let's get some bounding rects, and see if they overlap (x-wise)
+              var newCellBounds = newCell.dom().getBoundingClientRect();
+              var oldCellBounds = oldCell.dom().getBoundingClientRect();
+              console.log('newcell', newCellBounds, 'oldcell', oldCellBounds);
+
+              var overlapping = newCellBounds.right >= oldCellBounds.left && newCellBounds.left <= oldCellBounds.right;
+              return overlapping ? adt.success() : (mover === tryCursorDown ? adt.failedDown(oldCell) : adt.failedUp(oldCell));
             }, function (sharedRow) {
               // Same row, different cell (failure): We are moving down, so try the end of the original cell
               // if (mover === tryCursorDown && offset < Awareness.getEnd(oldCell)) return adt.failedDown(oldCell);

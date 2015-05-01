@@ -18,6 +18,7 @@ define(
     };
 
     var clearSelection = function (container) {
+      console.log('clearing', container);
       CellSelection.clear(container);
     };
 

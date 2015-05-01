@@ -22,6 +22,7 @@ define(
 
     var clear = function (container) {
       var sels = SelectorFilter.descendants(container, '.' + selected);
+      console.log('sels', sels.length, sels, '.' + selected, container.dom());
       Arr.each(sels, function (sel) {
         Class.remove(sel, selected);
         Class.remove(sel, lastSelected);
