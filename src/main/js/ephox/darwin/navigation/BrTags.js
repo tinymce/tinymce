@@ -54,6 +54,7 @@ define(
       // 1. Has no neighbouring sibling, position relative to gathered element
       // 2. Has a neighbouring sibling, position at the neighbouring sibling with respect to parent
       return findBr(element, offset).bind(function (br) {
+        console.log('br', br.dom());
         return traverse(br).fold(function () {
           return gatherer(br, gather, isRoot).map(relative);
         }, function (adjacent) {
@@ -101,15 +102,8 @@ define(
           return Option.some({ element: Fun.constant(cell), offset: Fun.constant(0) });
         },
         function (cell) {
-          console.log('>> br.failedUp => box-hitting');
+          console.log('>> br.failedDown => box-hitting');
           return Option.some({ element: Fun.constant(cell), offset: Fun.constant(Awareness.getEnd(cell)) });
-        },
-        function (section) {
-          console.log('>> br.upSection => browser');
-          return Option.none();
-        }, function (section) {
-          console.log('>> br.downSection => browser');
-          return Option.none();
         }
       );
     };

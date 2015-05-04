@@ -13,26 +13,23 @@ define(
     'ephox.robin.api.dom.DomParent',
     'ephox.scullion.ADT',
     'ephox.sugar.api.Compare',
-    'ephox.sugar.api.PredicateExists',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Rectangles, Retries, BrTags, PlatformDetection, WindowSelection, Awareness, Fun, Option, DomParent, Adt, Compare, PredicateExists, SelectorFind) {
+  function (Rectangles, Retries, BrTags, PlatformDetection, WindowSelection, Awareness, Fun, Option, DomParent, Adt, Compare, SelectorFind) {
     var platform = PlatformDetection.detect();
 
     var adt = Adt.generate([
       { 'none' : [ 'message'] },
       { 'success': [ ] },
       { 'failedUp': [ 'cell' ] },
-      { 'failedDown': [ 'cell' ] },
-      { 'startSection' : [ 'section' ] },
-      { 'finishSection': [ 'section' ] }
+      { 'failedDown': [ 'cell' ] }
     ]);
 
     var handle = function (brMover, cursorMover, win, isRoot) {
       return WindowSelection.get(win).bind(function (sel) {
         return brMover(win, isRoot, sel.finish(), sel.foffset()).fold(function () {
-          console.log('>> Could not find an anchor for an initial br. Using box-hitting.');
+          console.log('>> Could not find an anchor for an initial br (or an initial br). Using box-hitting.');
           return Option.some({
             element: sel.finish,
             offset: sel.foffset
@@ -43,9 +40,7 @@ define(
           var analysis = typewriter(cursorMover, exact, sel.finish(), sel.foffset());
           return BrTags.process(analysis);
         }).bind(function (info) {
-          console.log('info', info);
           return hacker(win, cursorMover, isRoot, info.element(), info.offset(), 1000).map(function (tgt) {
-            console.log('tgt', tgt);
             return WindowSelection.deriveExact(win, tgt);
           });
         });
@@ -53,8 +48,7 @@ define(
     };
 
     var typewriter = function (mover, result, element, offset) {
-      console.log('initial element', element.dom(), offset);
-      console.log('at anchor', result.start().dom(), result.soffset(), result.finish().dom(), result.foffset());
+      console.log('initial element (', element.dom(), offset, ') with neighbour: ', result.start().dom(), result.soffset(), result.finish().dom(), result.foffset());
       // Identify the cells that the before and after are in.
       return SelectorFind.closest(result.start(), 'td,th').bind(function (newCell) {
         return SelectorFind.closest(element, 'td,th').map(function (oldCell) {
@@ -80,15 +74,9 @@ define(
               else return adt.none('not right');
             });
           } else {
-            var inNewPosition = PredicateExists.ancestor(element, function (elem) {
-              return Compare.eq(elem, result.start());
-            });
-
-            // If we have moved to the containing cell.
-            // Note, will have to put (AND LAST POSITION) here, otherwise br tags will be skipped (May have already been done)
-            if (inNewPosition && mover === tryCursorDown && result.soffset() === Awareness.getEnd(result.start())) return adt.finishSection(result.start());
-            else if (inNewPosition && mover === tryCursorUp && result.soffset() === 0) return adt.startSection(result.start());
-            else return adt.none('same cell, not within result + at edge');
+            // Note, there used to be two different types here: finishSection and startSection .. only finishSection (offset = end of result)
+            // had different behaviour. They would be triggered when we were ending up (result) in a container than contained initial (element)
+            return adt.none('in same cell');
           }
         });
       }).getOr(adt.none('default'));
@@ -113,10 +101,6 @@ define(
           return hacker(win, mover, isRoot, cell, 0, counter - 1);
         }, function (cell) {
           return hacker(win, mover, isRoot, cell, Awareness.getEnd(cell), counter - 1);
-        }, function (section) {
-          return Option.none('ADT: retry because moved to start of outer container :: CANCELLED');
-        }, function (section) {
-          return hacker(win, mover, isRoot, section, Awareness.getEnd(section), counter - 1);
         });
       });
     };
