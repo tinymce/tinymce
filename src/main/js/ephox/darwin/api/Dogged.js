@@ -144,6 +144,8 @@ define(
       up: Fun.curry(handleVertical, TableKeys.handleUp),
       down: Fun.curry(handleVertical, TableKeys.handleDown),
 
+      retrieve: CellSelection.retrieve,
+
       releaseShift: releaseShift
     };
   }
