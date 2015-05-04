@@ -82,7 +82,7 @@ define(
               var oldCellBounds = oldCell.dom().getBoundingClientRect();
               console.log('newcell', newCellBounds, 'oldcell', oldCellBounds);
 
-              var overlapping = newCellBounds.right >= oldCellBounds.left && newCellBounds.left <= oldCellBounds.right;
+              var overlapping = newCellBounds.right > oldCellBounds.left && newCellBounds.left < oldCellBounds.right;
               return overlapping ? adt.success() : (mover === tryCursorDown ? adt.failedDown(oldCell) : adt.failedUp(oldCell));
             }, function (sharedRow) {
               // Same row, different cell (failure): We are moving down, so try the end of the original cell
