@@ -4,26 +4,20 @@ define(
   [
     'ephox.darwin.keyboard.Rectangles',
     'ephox.darwin.keyboard.Retries',
-    'ephox.darwin.util.Logger',
+    'ephox.darwin.navigation.BrTags',
     'ephox.fred.PlatformDetection',
-    'ephox.fussy.api.SelectionRange',
-    'ephox.fussy.api.Situ',
     'ephox.fussy.api.WindowSelection',
     'ephox.oath.proximity.Awareness',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.phoenix.api.dom.DomGather',
     'ephox.robin.api.dom.DomParent',
     'ephox.scullion.ADT',
     'ephox.sugar.api.Compare',
-    'ephox.sugar.api.Node',
     'ephox.sugar.api.PredicateExists',
-    'ephox.sugar.api.SelectorFind',
-    'ephox.sugar.api.Text',
-    'ephox.sugar.api.Traverse'
+    'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Rectangles, Retries, Logger, PlatformDetection, SelectionRange, Situ, WindowSelection, Awareness, Fun, Option, DomGather, DomParent, Adt, Compare, Node, PredicateExists, SelectorFind, Text, Traverse) {
+  function (Rectangles, Retries, BrTags, PlatformDetection, WindowSelection, Awareness, Fun, Option, DomParent, Adt, Compare, PredicateExists, SelectorFind) {
     var platform = PlatformDetection.detect();
 
     var adt = Adt.generate([
@@ -39,36 +33,28 @@ define(
       return WindowSelection.get(win).bind(function (sel) {
         return brMover(win, isRoot, sel.finish(), sel.foffset()).fold(function () {
           console.log('>> Could not find an anchor for an initial br. Using box-hitting.');
-          return hacker(win, cursorMover, isRoot, sel.finish(), sel.foffset(), 1000);
+          return Option.some({
+            element: sel.finish,
+            offset: sel.foffset
+          });
         }, function (next) {
           var exact = WindowSelection.deriveExact(win, next);
           console.log('<< Found an anchor point for an initial br', exact.finish().dom(), exact.foffset());
-          return typewriter(cursorMover, exact, sel.finish(), sel.foffset()).fold(function (message) {
-            console.log('>> br.none => browser');
-            return Option.none('BR ADT: none');
-          }, function () {
-            console.log('>> br.success => browser');
-            return Option.none();
-          }, function (cell) {
-            console.log('>> br.failedUp => box-hitting');
-            return hacker(win, cursorMover, isRoot, cell, 0, 1000);
-          }, function (cell) {
-            console.log('>> br.failedDown => box-hitting');
-            return hacker(win, cursorMover, isRoot, cell, Awareness.getEnd(cell), 1000);
-          }, function (section) {
-            console.log('>> br.upSection => browser');
-            return Option.none();
-          }, function (section) {
-            console.log('>> br.downSection => browser');
-            return Option.none();
+          var analysis = typewriter(cursorMover, exact, sel.finish(), sel.foffset());
+          return BrTags.process(analysis);
+        }).bind(function (info) {
+          console.log('info', info);
+          return hacker(win, cursorMover, isRoot, info.element(), info.offset(), 1000).map(function (tgt) {
+            console.log('tgt', tgt);
+            return WindowSelection.deriveExact(win, tgt);
           });
-        }).map(function (next) {
-          return WindowSelection.deriveExact(win, next);
         });
       });
     };
 
     var typewriter = function (mover, result, element, offset) {
+      console.log('initial element', element.dom(), offset);
+      console.log('at anchor', result.start().dom(), result.soffset(), result.finish().dom(), result.foffset());
       // Identify the cells that the before and after are in.
       return SelectorFind.closest(result.start(), 'td,th').bind(function (newCell) {
         return SelectorFind.closest(element, 'td,th').map(function (oldCell) {
@@ -154,38 +140,12 @@ define(
       });
     };
 
-    var isBr = function (elem) {
-      return Node.name(elem) === 'br';
-    };
-
-    var gatherer = function (cand, gather, isRoot) {
-      return gather(cand, isRoot).bind(function (target) {
-        return Node.isText(target) && Text.get(target).trim().length === 0 ? gatherer(target, gather, isRoot) : Option.some(target);
-      });
-    };
-
-    var tryBr = function (win, isRoot, element, offset, gather, situ) {
-      var candidate = isBr(element) ? Option.some(element) : Traverse.child(element, offset).filter(isBr).orThunk(function () {
-        // Can be either side of the br, and still be a br.
-        return Traverse.child(element, offset-1).filter(isBr);
-      });
-
-      return candidate.bind(function (cand) {
-        return gatherer(cand, gather, isRoot).map(function (target) {
-          return SelectionRange.write(
-            situ(target),
-            situ(target)
-          );
-        });
-      });
-    };
-
     var tryBrDown = function (win, isRoot, element, offset) {
-      return tryBr(win, isRoot, element, offset, DomGather.after, Situ.before);
+      return BrTags.tryBrDown(win, isRoot, element, offset);
     };
 
     var tryBrUp = function (win, isRoot, element, offset) {
-      return tryBr(win, isRoot, element, offset, DomGather.before, Situ.after);
+      return BrTags.tryBrUp(win, isRoot, element, offset);
     };
 
     return {
