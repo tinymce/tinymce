@@ -40,6 +40,8 @@ define(
       return {
         on: manager.on,
         off: manager.off,
+        hideBars: manager.hideBars,
+        showBars: manager.showBars,
         destroy: destroy,
         events: events.registry
       };
