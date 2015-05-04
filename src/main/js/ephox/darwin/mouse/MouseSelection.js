@@ -1,16 +1,15 @@
 define(
-  'ephox.darwin.api.TableMouse',
+  'ephox.darwin.mouse.MouseSelection',
 
   [
-    'ephox.compass.Arr',
-    'ephox.darwin.mouse.CellSelection',
+    'ephox.darwin.selection.CellSelection',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.sugar.api.SelectorFind',
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Arr, CellSelection, Fun, Option, SelectorFind, Traverse) {
+  function (CellSelection, Fun, Option, SelectorFind, Traverse) {
     return function (container) {
       var cursor = Option.none();
 
@@ -26,10 +25,9 @@ define(
           var finish = SelectorFind.closest(event.target(), 'td,th');
           var boxes = finish.bind(Fun.curry(CellSelection.identify, start)).getOr([]);
           if (boxes.length > 0) {
-            console.log('boxes', Arr.map(boxes, function (b) { return b.dom().innerHTML; }));
             CellSelection.selectRange(container, boxes, start, finish.getOrDie());
 
-            // Do this elsewhere.
+            // Do this elsewhere. Fussy should have a remove all ranges method.
             Traverse.defaultView(container).dom().getSelection().removeAllRanges();
           }
         });
