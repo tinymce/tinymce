@@ -54,11 +54,11 @@ define(
       // 1. Has no neighbouring sibling, position relative to gathered element
       // 2. Has a neighbouring sibling, position at the neighbouring sibling with respect to parent
       return findBr(element, offset).bind(function (br) {
-        return locate(br).bind(function (info) {
-          return traverse(br).fold(function () {
-            return gatherer(br, gather, isRoot).map(relative);
-          }, function (_) {
-            return Option.some(Situ.on(info.parent(), info.index()));
+        return traverse(br).fold(function () {
+          return gatherer(br, gather, isRoot).map(relative);
+        }, function (adjacent) {
+          return locate(adjacent).map(function (info) {
+            return Situ.on(info.parent(), info.index());
           });
         });
       });
