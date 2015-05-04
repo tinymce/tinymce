@@ -4,6 +4,7 @@ Version 4.1.10 (2015-03-xx)
 	Fixed bug where the editor wouldn't work properly on IE 12 due to some required browser sniffing.
 	Fixed bug where formatting shortcut keys where interfering with Mac OS X screenshot keys.
 	Fixed bug where the caret wouldn't move to the next/previous line boundary on Cmd+Left/Right on Gecko.
+	Fixed bug where it wasn't possible to remove formats from very specific nested contents.
 	Fixed issue with entity decoder not handling incorrectly written numeric entities.
 	Fixed issue where some PI element values wouldn't be properly encoded.
 Version 4.1.9 (2015-03-10)

@@ -69,6 +69,10 @@ define("tinymce/Formatter", [
 			return !!ed.schema.getTextBlockElements()[name.toLowerCase()];
 		}
 
+		function isTableCell(node) {
+			return /^(TH|TD)$/.test(node.nodeName);
+		}
+
 		function getParents(node, selector) {
 			return dom.getParents(node, selector, dom.getRoot());
 		}
@@ -801,21 +805,28 @@ define("tinymce/Formatter", [
 						// Try to adjust endContainer as well if cells on the same row were selected - bug #6410
 						if (commonAncestorContainer &&
 							/^T(HEAD|BODY|FOOT|R)$/.test(commonAncestorContainer.nodeName) &&
-							/^(TH|TD)$/.test(endContainer.nodeName) && endContainer.firstChild) {
+							isTableCell(endContainer) && endContainer.firstChild) {
 							endContainer = endContainer.firstChild || endContainer;
 						}
 
-						// Wrap start/end nodes in span element since these might be cloned/moved
-						startContainer = wrap(startContainer, 'span', {id: '_start', 'data-mce-type': 'bookmark'});
-						endContainer = wrap(endContainer, 'span', {id: '_end', 'data-mce-type': 'bookmark'});
+						if (dom.isChildOf(startContainer, endContainer) && !isTableCell(startContainer) && !isTableCell(endContainer)) {
+							startContainer = wrap(startContainer, 'span', {id: '_start', 'data-mce-type': 'bookmark'});
+							splitToFormatRoot(startContainer);
+							startContainer = unwrap(TRUE);
+							return;
+						} else {
+							// Wrap start/end nodes in span element since these might be cloned/moved
+							startContainer = wrap(startContainer, 'span', {id: '_start', 'data-mce-type': 'bookmark'});
+							endContainer = wrap(endContainer, 'span', {id: '_end', 'data-mce-type': 'bookmark'});
 
-						// Split start/end
-						splitToFormatRoot(startContainer);
-						splitToFormatRoot(endContainer);
+							// Split start/end
+							splitToFormatRoot(startContainer);
+							splitToFormatRoot(endContainer);
 
-						// Unwrap start/end to get real elements again
-						startContainer = unwrap(TRUE);
-						endContainer = unwrap();
+							// Unwrap start/end to get real elements again
+							startContainer = unwrap(TRUE);
+							endContainer = unwrap();
+						}
 					} else {
 						startContainer = endContainer = splitToFormatRoot(startContainer);
 					}
