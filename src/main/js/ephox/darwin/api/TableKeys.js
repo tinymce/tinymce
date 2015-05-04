@@ -4,6 +4,7 @@ define(
   [
     'ephox.darwin.keyboard.Rectangles',
     'ephox.darwin.keyboard.Retries',
+    'ephox.darwin.navigation.BeforeAfter',
     'ephox.darwin.navigation.BrTags',
     'ephox.fred.PlatformDetection',
     'ephox.fussy.api.WindowSelection',
@@ -17,7 +18,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Rectangles, Retries, BrTags, PlatformDetection, WindowSelection, Awareness, Fun, Option, Spot, DomParent, Adt, Compare, SelectorFind) {
+  function (Rectangles, Retries, BeforeAfter, BrTags, PlatformDetection, WindowSelection, Awareness, Fun, Option, Spot, DomParent, Adt, Compare, SelectorFind) {
     var platform = PlatformDetection.detect();
 
     var adt = Adt.generate([
@@ -36,7 +37,8 @@ define(
         }, function (brNeighbour) {
           var range = WindowSelection.deriveExact(win, brNeighbour);
           console.log('<< Found an anchor point for an initial br', range.finish().dom(), range.foffset());
-          var analysis = typewriter(cursorMover, range, sel.finish(), sel.foffset());
+          var failure = cursorMover === tryCursorDown ? BeforeAfter.adt.failedDown : BeforeAfter.adt.failedUp;
+          var analysis = BeforeAfter.verify(sel.finish(), range.finish(), failure);
           return BrTags.process(analysis);
         });
       });
