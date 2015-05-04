@@ -33,6 +33,7 @@ define(
               // No shared row, and they overlap x-wise -> success, otherwise: failed
               return isOverlapping(beforeCell, afterCell) ? adt.success() : failure(beforeCell);
             }, function (sharedRow) {
+              // In the same row, so it failed.
               return failure(beforeCell);
             });
           } else {

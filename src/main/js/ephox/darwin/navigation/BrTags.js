@@ -2,6 +2,7 @@ define(
   'ephox.darwin.navigation.BrTags',
 
   [
+    'ephox.darwin.navigation.BeforeAfter',
     'ephox.fussy.api.SelectionRange',
     'ephox.fussy.api.Situ',
     'ephox.oath.proximity.Awareness',
@@ -14,7 +15,7 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (SelectionRange, Situ, Awareness, Fun, Option, Spot, DomGather, Node, Text, Traverse) {
+  function (BeforeAfter, SelectionRange, Situ, Awareness, Fun, Option, Spot, DomGather, Node, Text, Traverse) {
     var isBr = function (elem) {
       return Node.name(elem) === 'br';
     };
@@ -89,7 +90,7 @@ define(
     };
 
     var process = function (analysis) {
-      return analysis.fold(
+      return BeforeAfter.cata(analysis,
         function (message) {
           console.log('>> br.none => browser (' + message + ')');
           return Option.none('BR ADT: none');
