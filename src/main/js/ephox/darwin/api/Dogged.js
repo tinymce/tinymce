@@ -22,12 +22,9 @@ define(
     var detection = PlatformDetection.detect();
 
     var correctVertical = function (simulate, win, isRoot, element, offset) {
-      console.log('correcting vertical');
       // Ensure that it only operates in cells.
       return SelectorFind.closest(element, 'td,th').bind(function (_cell) {
-        console.log('in cell', _cell.dom());
         return simulate(win, isRoot, element, offset).map(function (range) {
-          console.log('range: ', range.start().dom(), range.soffset());
           return response(
             Option.some(SelectionRange.write(
               Situ.on(range.start(), range.soffset()),
@@ -68,12 +65,10 @@ define(
     };
 
     var handleVertical = function (simulate, win, container, isRoot, element, offset) {
-      console.log('handling vertical');
       return CellSelection.retrieve(container).fold(function () {
         // On Webkit, we need to handle this.
         return detection.browser.isSafari() || detection.browser.isChrome() ? correctVertical(simulate, win, isRoot, element, offset) : Option.none();
       }, function (selected) {
-        console.log('clearing selection', container.dom());
         return clearToNavigate(win, container, isRoot, element, offset);
       });
     };

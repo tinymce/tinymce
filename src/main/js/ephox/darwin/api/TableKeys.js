@@ -38,28 +38,28 @@ define(
     var handle = function (brMover, cursorMover, win, isRoot) {
       return WindowSelection.get(win).bind(function (sel) {
         return brMover(win, isRoot, sel.finish(), sel.foffset()).fold(function () {
-          console.log('not a br option');
+          console.log('>> Could not find an anchor for an initial br. Using box-hitting.');
           return hacker(win, cursorMover, isRoot, sel.finish(), sel.foffset(), 1000);
         }, function (next) {
           var exact = WindowSelection.deriveExact(win, next);
-          console.log('exact (for br)', exact.finish().dom(), exact.foffset());
+          console.log('<< Found an anchor point for an initial br', exact.finish().dom(), exact.foffset());
           return typewriter(cursorMover, exact, sel.finish(), sel.foffset()).fold(function (message) {
-            console.log('BR ADT: none');
+            console.log('>> br.none => browser');
             return Option.none('BR ADT: none');
           }, function () {
-            console.log('BR ADT: success');
+            console.log('>> br.success => browser');
             return Option.none();
           }, function (cell) {
-            console.log('BR ADT: failedUp');
+            console.log('>> br.failedUp => box-hitting');
             return hacker(win, cursorMover, isRoot, cell, 0, 1000);
           }, function (cell) {
-            console.log('BR ADT: failedDown');
+            console.log('>> br.failedDown => box-hitting');
             return hacker(win, cursorMover, isRoot, cell, Awareness.getEnd(cell), 1000);
           }, function (section) {
-            console.log('BR ADT: retry because moved to start of outer container');
+            console.log('>> br.upSection => browser');
             return Option.none();
           }, function (section) {
-            console.log('BR ADT: retry because moved to finish of outer container');
+            console.log('>> br.downSection => browser');
             return Option.none();
           });
         }).map(function (next) {
@@ -80,7 +80,6 @@ define(
               // Let's get some bounding rects, and see if they overlap (x-wise)
               var newCellBounds = newCell.dom().getBoundingClientRect();
               var oldCellBounds = oldCell.dom().getBoundingClientRect();
-              console.log('newcell', newCellBounds, 'oldcell', oldCellBounds);
 
               var overlapping = newCellBounds.right > oldCellBounds.left && newCellBounds.left < oldCellBounds.right;
               return overlapping ? adt.success() : (mover === tryCursorDown ? adt.failedDown(oldCell) : adt.failedUp(oldCell));
@@ -119,7 +118,6 @@ define(
 
 
         var exact = WindowSelection.deriveExact(win, next);
-        console.log('exact', exact.start().dom(), exact.soffset(), exact.finish().dom(), exact.foffset());
 
         return typewriter(mover, exact, element, offset).fold(function () {
           return Option.none('ADT: none');
@@ -162,13 +160,11 @@ define(
 
     var gatherer = function (cand, gather, isRoot) {
       return gather(cand, isRoot).bind(function (target) {
-        console.log('gather');
         return Node.isText(target) && Text.get(target).trim().length === 0 ? gatherer(target, gather, isRoot) : Option.some(target);
       });
     };
 
     var tryBr = function (win, isRoot, element, offset, gather, situ) {
-      Logger.log('FIREFOX.shiftUp', 'tryBr', element.dom());
       var candidate = isBr(element) ? Option.some(element) : Traverse.child(element, offset).filter(isBr).orThunk(function () {
         // Can be either side of the br, and still be a br.
         return Traverse.child(element, offset-1).filter(isBr);
@@ -176,7 +172,6 @@ define(
 
       return candidate.bind(function (cand) {
         return gatherer(cand, gather, isRoot).map(function (target) {
-          Logger.log('FIREFOX.shiftUp', 'tryBr.target', target.dom());
           return SelectionRange.write(
             situ(target),
             situ(target)
