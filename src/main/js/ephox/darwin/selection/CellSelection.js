@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.compass.Arr',
+    'ephox.darwin.navigation.CellFinder',
     'ephox.darwin.style.Styles',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
@@ -13,7 +14,7 @@ define(
     'global!Math'
   ],
 
-  function (Arr, Styles, Fun, Option, DomParent, Class, SelectorFilter, SelectorFind, Math) {
+  function (Arr, CellFinder, Styles, Fun, Option, DomParent, Class, SelectorFilter, SelectorFind, Math) {
     var selected = Styles.resolve('selected');
     var lastSelected = Styles.resolve('last-selected');
     var firstSelected = Styles.resolve('first-selected');
@@ -44,8 +45,8 @@ define(
       return DomParent.sharedOne(lookupTable, [ start, finish ]).bind(function (tbl) {
         // For all the rows, identify the information.
         var rows = SelectorFilter.descendants(tbl, 'tr');
-        return findInTable(start).bind(function (startData) {
-          return findInTable(finish).map(function (finishData) {
+        return CellFinder.findInTable(start).bind(function (startData) {
+          return CellFinder.findInTable(finish).map(function (finishData) {
             var minRowIndex = Math.min(startData.rowIndex(), finishData.rowIndex());
             var maxRowIndex = Math.max(startData.rowIndex(), finishData.rowIndex());
             var subrows = rows.slice(minRowIndex, maxRowIndex + 1);
@@ -87,9 +88,9 @@ define(
     };
 
     var shiftSelection = function (boxes, deltaRow, deltaColumn) {
-      return getLast(boxes).bind(findInTable).bind(function (position) {
+      return getLast(boxes).bind(CellFinder.findInTable).bind(function (position) {
         return SelectorFind.ancestor(boxes[0], 'table').bind(function (table) {
-          return gotoCell(table, position.rowIndex() + deltaRow, position.colIndex() + deltaColumn).bind(expandTo);
+          return CellFinder.gotoCell(table, position.rowIndex() + deltaRow, position.colIndex() + deltaColumn).bind(expandTo);
         });
       });
     };
