@@ -7,13 +7,14 @@ define(
     'ephox.oath.proximity.Awareness',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.api.dom.DomGather',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.Text',
     'ephox.sugar.api.Traverse'
   ],
 
-  function (SelectionRange, Situ, Awareness, Fun, Option, DomGather, Node, Text, Traverse) {
+  function (SelectionRange, Situ, Awareness, Fun, Option, Spot, DomGather, Node, Text, Traverse) {
     var isBr = function (elem) {
       return Node.name(elem) === 'br';
     };
@@ -99,11 +100,11 @@ define(
         },
         function (cell) {
           console.log('>> br.failedUp => box-hitting');
-          return Option.some({ element: Fun.constant(cell), offset: Fun.constant(0) });
+          return Option.some(Spot.point(cell, 0));
         },
         function (cell) {
           console.log('>> br.failedDown => box-hitting');
-          return Option.some({ element: Fun.constant(cell), offset: Fun.constant(Awareness.getEnd(cell)) });
+          return Option.some(Spot.point(cell, Awareness.getEnd(cell)));
         }
       );
     };

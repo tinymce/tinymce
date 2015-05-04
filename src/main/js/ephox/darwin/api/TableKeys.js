@@ -10,13 +10,14 @@ define(
     'ephox.oath.proximity.Awareness',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.phoenix.api.data.Spot',
     'ephox.robin.api.dom.DomParent',
     'ephox.scullion.ADT',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Rectangles, Retries, BrTags, PlatformDetection, WindowSelection, Awareness, Fun, Option, DomParent, Adt, Compare, SelectorFind) {
+  function (Rectangles, Retries, BrTags, PlatformDetection, WindowSelection, Awareness, Fun, Option, Spot, DomParent, Adt, Compare, SelectorFind) {
     var platform = PlatformDetection.detect();
 
     var adt = Adt.generate([
@@ -26,29 +27,38 @@ define(
       { 'failedDown': [ 'cell' ] }
     ]);
 
-    var handle = function (brMover, cursorMover, win, isRoot) {
+    var findSpot = function (brMover, cursorMover, win, isRoot) {
+      console.log('finding spot');
       return WindowSelection.get(win).bind(function (sel) {
         return brMover(win, isRoot, sel.finish(), sel.foffset()).fold(function () {
           console.log('>> Could not find an anchor for an initial br (or an initial br). Using box-hitting.');
-          return Option.some({
-            element: sel.finish,
-            offset: sel.foffset
-          });
-        }, function (next) {
-          var exact = WindowSelection.deriveExact(win, next);
-          console.log('<< Found an anchor point for an initial br', exact.finish().dom(), exact.foffset());
-          var analysis = typewriter(cursorMover, exact, sel.finish(), sel.foffset());
+          return Option.some(Spot.point(sel.finish(), sel.foffset()));
+        }, function (brNeighbour) {
+          var range = WindowSelection.deriveExact(win, brNeighbour);
+          console.log('<< Found an anchor point for an initial br', range.finish().dom(), range.foffset());
+          var analysis = typewriter(cursorMover, range, sel.finish(), sel.foffset());
           return BrTags.process(analysis);
-        }).bind(function (info) {
-          return hacker(win, cursorMover, isRoot, info.element(), info.offset(), 1000).map(function (tgt) {
-            return WindowSelection.deriveExact(win, tgt);
-          });
         });
       });
     };
 
+    var handle = function (brMover, cursorMover, win, isRoot) {
+      return findSpot(brMover, cursorMover, win, isRoot).bind(function (spot) {
+        // There is a point to start doing box-hitting from
+        return hacker(win, cursorMover, isRoot, spot.element(), spot.offset(), 1000).map(function (tgt) {
+          return WindowSelection.deriveExact(win, tgt);
+        });
+      });
+    };
+
+    // Let's get some bounding rects, and see if they overlap (x-wise)
+    var isOverlapping = function (a, b) {
+      var bBounds = b.dom().getBoundingClientRect();
+      var aBounds = a.dom().getBoundingClientRect();
+      return bBounds.right > aBounds.left && bBounds.left < aBounds.right;
+    };
+
     var typewriter = function (mover, result, element, offset) {
-      console.log('initial element (', element.dom(), offset, ') with neighbour: ', result.start().dom(), result.soffset(), result.finish().dom(), result.foffset());
       // Identify the cells that the before and after are in.
       return SelectorFind.closest(result.start(), 'td,th').bind(function (newCell) {
         return SelectorFind.closest(element, 'td,th').map(function (oldCell) {
@@ -56,19 +66,10 @@ define(
           if (! Compare.eq(newCell, oldCell)) {
 
             return DomParent.sharedOne(isRow, [ newCell, oldCell ]).fold(function () {
-              // And they are not in the same row, all good.
-              // Let's get some bounding rects, and see if they overlap (x-wise)
-              var newCellBounds = newCell.dom().getBoundingClientRect();
-              var oldCellBounds = oldCell.dom().getBoundingClientRect();
-
-              var overlapping = newCellBounds.right > oldCellBounds.left && newCellBounds.left < oldCellBounds.right;
-              return overlapping ? adt.success() : (mover === tryCursorDown ? adt.failedDown(oldCell) : adt.failedUp(oldCell));
+              // No shared row, and they overlap x-wise -> success, otherwise: failed
+              return isOverlapping(oldCell, newCell) ? adt.success() : (mover === tryCursorDown ? adt.failedDown(oldCell) : adt.failedUp(oldCell));
             }, function (sharedRow) {
-              // Same row, different cell (failure): We are moving down, so try the end of the original cell
-              // if (mover === tryCursorDown && offset < Awareness.getEnd(oldCell)) return adt.failedDown(oldCell);
-              // else if (mover === tryCursorUp && offset > 0) return adt.failedUp(oldCell);
-              // else return adt.none('same row, different cell, at edge: ' + offset + ' of (0, ' + Awareness.getEnd(oldCell) + ')');
-
+              // A shared row, but different cells, so the browser will be wrong. Try again.
               if (mover === tryCursorDown) return adt.failedDown(oldCell);
               else if (mover === tryCursorUp) return adt.failedUp(oldCell);
               else return adt.none('not right');
