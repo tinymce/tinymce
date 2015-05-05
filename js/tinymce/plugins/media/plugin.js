@@ -249,7 +249,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		data.poster = editor.convertURL(data.poster, "poster");
 		data.flashPlayerUrl = editor.convertURL(url + '/moxieplayer.swf', "movie");
 		if(!!editor.settings.media_urlPatterns){
-			if(Array.isArray(editor.settings.media_urlPatterns)){
+			if(Tools.isArray(editor.settings.media_urlPatterns)){
 				urlPatterns = urlPatterns.concat(editor.settings.media_urlPatterns);
 			}
 		}
