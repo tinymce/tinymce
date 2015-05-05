@@ -297,6 +297,10 @@ test('Undo added when typing and losing focus', function() {
 test('BeforeAddUndo event', function() {
 	var lastEvt, addUndoEvt;
 
+	function blockEvent(e) {
+		e.preventDefault();
+	}
+
 	editor.on('BeforeAddUndo', function(e) {
 		lastEvt = e;
 	});
@@ -314,9 +318,7 @@ test('BeforeAddUndo event', function() {
 	equal(Utils.cleanHtml(lastEvt.lastLevel.content), "<p>a</p>");
 	equal(Utils.cleanHtml(lastEvt.level.content), "<p>b</p>");
 
-	editor.on('BeforeAddUndo', function(e) {
-		e.preventDefault();
-	});
+	editor.on('BeforeAddUndo', blockEvent);
 
 	editor.on('AddUndo', function(e) {
 		addUndoEvt = e;
@@ -329,4 +331,42 @@ test('BeforeAddUndo event', function() {
 	equal(Utils.cleanHtml(lastEvt.level.content), "<p>c</p>");
 	equal(lastEvt.originalEvent.data, 1);
 	ok(!addUndoEvt, "Event level produced when it should be blocked");
+
+	editor.off('BeforeAddUndo', blockEvent);
+});
+
+test('Dirty state type letter', function() {
+	editor.undoManager.clear();
+	editor.isNotDirty = true;
+	editor.setContent("<p>a</p>");
+	Utils.setSelection('p', 1);
+
+	ok(!editor.isDirty(), "Dirty state should be false");
+	Utils.type('b');
+	equal(editor.getContent(), "<p>ab</p>");
+	ok(editor.isDirty(), "Dirty state should be true");
+});
+
+test('Dirty state type shift+letter', function() {
+	editor.undoManager.clear();
+	editor.isNotDirty = true;
+	editor.setContent("<p>a</p>");
+	Utils.setSelection('p', 1);
+
+	ok(!editor.isDirty(), "Dirty state should be false");
+	Utils.type({keyCode: 65, charCode: 66, shiftKey: true});
+	equal(editor.getContent(), "<p>aB</p>");
+	ok(editor.isDirty(), "Dirty state should be true");
+});
+
+test('Dirty state type AltGr+letter', function() {
+	editor.undoManager.clear();
+	editor.isNotDirty = true;
+	editor.setContent("<p>a</p>");
+	Utils.setSelection('p', 1);
+
+	ok(!editor.isDirty(), "Dirty state should be false");
+	Utils.type({keyCode: 65, charCode: 66, ctrlKey: true, altKey: true});
+	equal(editor.getContent(), "<p>aB</p>");
+	ok(editor.isDirty(), "Dirty state should be true");
 });

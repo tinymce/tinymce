@@ -154,6 +154,14 @@
 			}
 		} else {
 			evt = chr;
+
+			if (evt.charCode) {
+				chr = String.fromCharCode(evt.charCode);
+			}
+
+			if (evt.keyCode) {
+				keyCode = evt.keyCode;
+			}
 		}
 
 		evt = evt || {keyCode: keyCode, charCode: charCode};
