@@ -7,6 +7,7 @@ Version 4.1.10 (2015-05-xx)
 	Fixed bug where it wasn't possible to remove formats from very specific nested contents.
 	Fixed bug where undo levels wasn't produced when typing letters using the shift or alt+ctrl modifiers.
 	Fixed bug where the dirty state wasn't properly updated when typing using the shift or alt+ctrl modifiers.
+	Fixed bug where an error would be thrown if an autofocused editor was destroyed quickly after its initialization. Patch provided by thorn0.
 	Fixed issue with dirty state not being properly updated on redo operation.
 	Fixed issue with entity decoder not handling incorrectly written numeric entities.
 	Fixed issue where some PI element values wouldn't be properly encoded.
