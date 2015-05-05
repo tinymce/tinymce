@@ -19,7 +19,7 @@
 			});
 		},
 		teardown: function() {
-			var win = Utils.getFontmostWindow();
+			var win = Utils.getFrontmostWindow();
 
 			if (win) {
 				win.close();
@@ -35,7 +35,7 @@
 	});
 
 	function fillAndSubmitWindowForm(data) {
-		var win = Utils.getFontmostWindow();
+		var win = Utils.getFrontmostWindow();
 
 		win.fromJSON(data);
 		win.find('form')[0].submit();
@@ -51,7 +51,7 @@
 		Utils.setSelection('td', 0);
 		editor.execCommand('mceTableProps');
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"align": "",
 			"border": "",
 			"caption": false,
@@ -72,7 +72,7 @@
 		Utils.setSelection('td', 0);
 		editor.execCommand('mceTableProps');
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"align": "",
 			"border": "",
 			"caption": false,
@@ -100,7 +100,7 @@
 		Utils.setSelection('td', 0);
 		editor.execCommand('mceTableProps');
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"align": "",
 			"border": "",
 			"caption": false,
@@ -140,7 +140,7 @@
 		Utils.setSelection('td', 0);
 		editor.execCommand('mceTableProps');
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"align": "",
 			"border": "4",
 			"caption": true,
@@ -318,7 +318,7 @@
 		Utils.setSelection('td', 0);
 		editor.execCommand('mceTableProps');
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 		"align": "",
 		"backgroundColor": "",
 		"border": "",
@@ -337,7 +337,7 @@
 		Utils.setSelection('td', 0);
 		editor.execCommand('mceTableCellProps');
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"align": "",
 			"valign": "",
 			"height": "",
@@ -357,7 +357,7 @@
 		Utils.setSelection('td', 0);
 		editor.execCommand('mceTableCellProps');
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"align": "",
 			"valign": "",
 			"height": "",
@@ -382,7 +382,7 @@
 		Utils.setSelection('th', 0);
 		editor.execCommand('mceTableCellProps');
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"align": "right",
 			"valign": "top",
 			"height": "11",
@@ -419,7 +419,7 @@
 		Utils.setSelection('td', 0);
 		editor.execCommand('mceTableRowProps');
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"align": "",
 			"height": "",
 			"type": "tbody",
@@ -434,7 +434,7 @@
 		Utils.setSelection('td', 0);
 		editor.execCommand('mceTableRowProps');
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"align": "right",
 			"height": "10",
 			"type": "thead",

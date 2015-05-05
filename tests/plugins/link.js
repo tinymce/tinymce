@@ -26,7 +26,7 @@
 			delete editor.settings.link_target_list;
 			delete editor.settings.rel_list;
 
-			var win = Utils.getFontmostWindow();
+			var win = Utils.getFrontmostWindow();
 
 			if (win) {
 				win.close();
@@ -39,7 +39,7 @@
 	}
 
 	function fillAndSubmitWindowForm(data) {
-		var win = Utils.getFontmostWindow();
+		var win = Utils.getFrontmostWindow();
 
 		win.fromJSON(data);
 		win.find('form')[0].submit();
@@ -50,7 +50,7 @@
 		editor.setContent('');
 		editor.execCommand('mceLink', true);
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"href": "",
 			"target": "",
 			"text": "",
@@ -75,7 +75,7 @@
 		Utils.setSelection('p', 1, 'p', 2);
 		editor.execCommand('mceLink', true);
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"href": "",
 			"target": "",
 			"text": "b",
@@ -99,7 +99,7 @@
 		Utils.setSelection('p:nth-child(1)', 0, 'p:nth-child(2)', 2);
 		editor.execCommand('mceLink', true);
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"href": "",
 			"target": "",
 			"title": ""
@@ -142,7 +142,7 @@
 		editor.setContent('');
 		editor.execCommand('mceLink', true);
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"class": "class1",
 			"href": "",
 			"rel": "rel1",
