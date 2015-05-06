@@ -55,8 +55,6 @@ define("tinymce/util/XHR", [
 					setTimeout(ready, 10);
 				}
 			}
-			
-			
 
 			// Default settings
 			settings.scope = settings.scope || this;
