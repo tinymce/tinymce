@@ -527,6 +527,13 @@
 		);
 	});
 
+	test("mceTableSplitTableBeforeRow command", function() {
+		editor.setContent('<table><thead><tr><td>1</td><td>2</td></tr></thead><tbody><tr><td rowspan="2">3</td><td>4</td></tr><tr><td>5</td></tr></tbody></table>');
+		Utils.setSelection('tbody tr:nth-child(2)', 0);
+		editor.execCommand('mceTableSplitTableBeforeRow');
+		equal(cleanTableHtml(editor.getContent()), '<table><thead><tr><td>1</td><td>2</td></tr></thead><tbody><tr><td>3</td><td>4</td></tr></tbody></table><p>&nbsp;</p><table><thead><tr><td>1</td><td>2</td></tr></thead><tbody><tr><td>3</td><td>5</td></tr></tbody></table>');
+	});
+
 	test("Tab key navigation", function() {
 		editor.setContent('<table><tbody><tr><td>A1</td><td>A2</td></tr><tr><td>B1</td><td>B2</td></tr></tbody></table><p>x</p>');
 
