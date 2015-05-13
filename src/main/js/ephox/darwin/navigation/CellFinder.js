@@ -14,7 +14,6 @@ define(
     // TODO: Implement colspans and rowspans. Note, this will probably interact with snooker.
 
     var findInTable = function (cell) {
-      console.log('locating', cell.dom());
       return findColumn(cell).bind(function (colIndex) {
         return findRow(cell).map(function (rowIndex) {
           return {

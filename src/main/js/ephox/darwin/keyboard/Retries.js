@@ -60,6 +60,7 @@ define(
     };
 
     var adjustTil = function (win, direction, original, caret, counter) {
+      console.log('adjusting ....', direction.point(caret));
       if (counter === 0) return Option.some(caret);
       return Point.find(win, caret.left(), direction.point(caret)).bind(function (guess) {
         return guess.start().fold(Option.none, function (element, offset) {

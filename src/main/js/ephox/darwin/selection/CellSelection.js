@@ -21,7 +21,6 @@ define(
 
     var clear = function (container) {
       var sels = SelectorFilter.descendants(container, '.' + selected);
-      console.log('sels', sels.length, sels, '.' + selected, container.dom());
       Arr.each(sels, function (sel) {
         Class.remove(sel, selected);
         Class.remove(sel, lastSelected);
@@ -40,7 +39,6 @@ define(
     };
 
     var identify = function (start, finish) {
-      console.log('branching', start.dom(), finish.dom());
       // So ignore the colspan, rowspan for the time being.
       return DomParent.sharedOne(lookupTable, [ start, finish ]).bind(function (tbl) {
         // For all the rows, identify the information.

@@ -16,10 +16,8 @@ define(
   function (Responses, CellSelection, SelectionRange, Situ, WindowSelection, Awareness, Option, Compare, SelectorFind) {
     var sync = function (win, container, isRoot, start, soffset, finish, foffset) {
       if (! WindowSelection.isCollapsed(start, soffset, finish, foffset)) {
-        console.log('here we are', arguments);
         return SelectorFind.closest(start, 'td,th').bind(function (s) {
           return SelectorFind.closest(finish, 'td,th').bind(function (f) {
-            console.log('we have detected: ', s.dom(), 'to', f.dom());
             return detect(win, container, isRoot, s, f);
           });
         });
@@ -32,7 +30,6 @@ define(
     var detect = function (win, container, isRoot, start, finish) {
       if (! Compare.eq(start, finish)) {
         var boxes = CellSelection.identify(start, finish).getOr([]);
-        console.log('boxes', boxes.length);
         if (boxes.length > 0) {
           CellSelection.selectRange(container, boxes, start, finish);
           return Option.some(Responses.response(

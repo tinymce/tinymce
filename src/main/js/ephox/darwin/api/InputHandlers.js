@@ -69,7 +69,6 @@ define(
 
       var keyup = function (event, start, soffset, finish, foffset) {
         return CellSelection.retrieve(container).fold(function () {
-          console.log('firing keyup');
           var keycode = event.raw().which;
           var shiftKey = event.raw().shiftKey === true;
           if (shiftKey === false) return Option.none();

@@ -36,6 +36,7 @@ define(
     };
 
     var scan = function (win, isRoot, element, offset, direction, counter) {
+      console.log('scanning');
       if (counter === 0) return Option.none();
       // Firstly, move the (x, y) and see what element we end up on.
       return tryCursor(win, isRoot, element, offset, direction).bind(function (next) {
