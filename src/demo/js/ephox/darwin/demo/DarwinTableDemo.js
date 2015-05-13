@@ -2,14 +2,14 @@ define(
   'ephox.darwin.demo.DarwinTableDemo',
 
   [
-    'ephox.darwin.api.Dogged',
-    'ephox.darwin.api.TableMouse',
+    'ephox.darwin.api.InputHandlers',
     'ephox.fred.PlatformDetection',
     'ephox.fussy.api.WindowSelection',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Body',
+    'ephox.sugar.api.Compare',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
@@ -19,7 +19,7 @@ define(
     'global!document'
   ],
 
-  function (Dogged, TableMouse, PlatformDetection, WindowSelection, Fun, Option, Attr, Body, DomEvent, Element, Insert, Replication, SelectorFind, Math, document) {
+  function (InputHandlers, PlatformDetection, WindowSelection, Fun, Option, Attr, Body, Compare, DomEvent, Element, Insert, Replication, SelectorFind, Math, document) {
     return function () {
 
       var detection = PlatformDetection.detect();
@@ -75,11 +75,12 @@ define(
         document.querySelector('#coords').innerHTML = '(' + event.raw().clientX + ', ' + event.raw().clientY + ')';
       });
 
-      var handlers = TableMouse(ephoxUi);
+      var mouseHandlers = InputHandlers.mouse(ephoxUi);
+      var keyHandlers = InputHandlers.keyboard(window, ephoxUi, Fun.curry(Compare.eq, table));
 
-      DomEvent.bind(ephoxUi, 'mousedown', handlers.mousedown);
-      DomEvent.bind(ephoxUi, 'mouseover', handlers.mouseover);
-      DomEvent.bind(ephoxUi, 'mouseup', handlers.mouseup);
+      DomEvent.bind(ephoxUi, 'mousedown', mouseHandlers.mousedown);
+      DomEvent.bind(ephoxUi, 'mouseover', mouseHandlers.mouseover);
+      DomEvent.bind(ephoxUi, 'mouseup', mouseHandlers.mouseup);
 
       var handleResponse = function (event, response) {
         if (response.kill()) event.kill();
@@ -89,9 +90,10 @@ define(
       };
 
       DomEvent.bind(ephoxUi, 'keyup', function (event) {
+        // Note, this is an optimisation.
         if (event.raw().shiftKey && event.raw().which >= 37 && event.raw().which <= 40) {
           WindowSelection.get(window).each(function (sel) {
-            Dogged.releaseShift(window, ephoxUi, Fun.constant(false), sel.start(), sel.soffset(), sel.finish(), sel.foffset()).each(function (response) {
+            keyHandlers.keyup(event, sel.start(), sel.soffset(), sel.finish(), sel.foffset()).each(function (response) {
               handleResponse(event, response);
             });
           }, Fun.noop);
@@ -101,21 +103,7 @@ define(
       DomEvent.bind(ephoxUi, 'keydown', function (event) {
         // This might get expensive.
         WindowSelection.get(window).each(function (sel) {
-          var handler = (function () {
-            var keycode = event.raw().which;
-            var shiftKey = event.raw().shiftKey === true;
-            if (keycode === 40 && shiftKey) return Dogged.shiftDown;
-            else if (keycode === 38 && shiftKey) return Dogged.shiftUp;
-            else if (keycode === 37 && shiftKey) return Dogged.shiftLeft;
-            else if (keycode === 39 && shiftKey) return Dogged.shiftRight;
-            else if (keycode === 40) return Dogged.down;
-            else if (keycode === 38) return Dogged.up;
-            else if (keycode === 37) return Dogged.left;
-            else if (keycode === 39) return Dogged.right;
-            else return Option.none;
-          })();
-
-          handler(window, ephoxUi, Fun.constant(false), sel.finish(), sel.foffset()).each(function (response) {
+          keyHandlers.keydown(event, sel.finish(), sel.foffset()).each(function (response) {
             handleResponse(event, response);
           });
         });
