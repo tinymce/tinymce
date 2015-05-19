@@ -60,7 +60,7 @@ define(
     };
 
     var adjustTil = function (win, direction, original, caret, counter) {
-      console.log('adjusting ....', direction.point(caret));
+      Logger.log('B1.down', 'Retries.adjustTil ....', direction.point(caret));
       if (counter === 0) return Option.some(caret);
       return Point.find(win, caret.left(), direction.point(caret)).bind(function (guess) {
         return guess.start().fold(Option.none, function (element, offset) {
@@ -84,7 +84,6 @@ define(
     };
 
     var retry = function (direction, win, caret) {
-      Logger.log('FIREFOX.shiftUp', 'retry', caret.top, caret.bottom);
       var c = Carets.nu(caret.left, caret.top, caret.right, caret.bottom);
       var moved = direction.move(c, JUMP_SIZE);
       var adjusted = adjustTil(win, direction, c, moved, 100).getOr(moved);

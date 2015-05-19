@@ -56,7 +56,6 @@ define(
       // 1. Has no neighbouring sibling, position relative to gathered element
       // 2. Has a neighbouring sibling, position at the neighbouring sibling with respect to parent
       return findBr(element, offset).bind(function (br) {
-        console.log('br', br.dom());
         return direction.traverse(br).fold(function () {
           return gatherer(br, direction.gather, isRoot).map(direction.relative);
         }, function (adjacent) {

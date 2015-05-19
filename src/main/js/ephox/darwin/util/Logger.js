@@ -6,8 +6,10 @@ define(
   ],
 
   function (Array) {
+    var active = 'B1.down';
+
     var log = function (category, label) {
-      if (category === 'FIREFOX.shiftUp') {
+      if (category === active) {
         console.log.apply(console, [ label ].concat(Array.prototype.slice.call(arguments, 2)));
       }
     };
