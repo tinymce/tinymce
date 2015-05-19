@@ -82,19 +82,15 @@ define(
     var process = function (analysis) {
       return BeforeAfter.cata(analysis,
         function (message) {
-          console.log('>> br.none => browser (' + message + ')');
           return Option.none('BR ADT: none');
         },
         function () {
-          console.log('>> br.success => browser');
           return Option.none();
         },
         function (cell) {
-          console.log('>> br.failedUp => box-hitting');
           return Option.some(Spot.point(cell, 0));
         },
         function (cell) {
-          console.log('>> br.failedDown => box-hitting');
           return Option.some(Spot.point(cell, Awareness.getEnd(cell)));
         }
       );

@@ -57,6 +57,12 @@ define(
               '<td style="min-width: 100px;"><br /></td>' +
               '<td style="min-width: 100px;">D3</td>' +
             '</tr>' +
+            '<tr>' +
+              '<td style="padding-top: 100px;" style="min-width: 100px;">A4</td>' +
+              '<td style="padding-top: 100px;" style="min-width: 100px;"><br /></td>' +
+              '<td style="padding-top: 100px;" style="min-width: 100px;"><br /></td>' +
+              '<td style="padding-top: 100px;" style="min-width: 100px;">D4</td>' +
+            '</tr>' +
           '</tbody>' +
         '</table>'
       );
