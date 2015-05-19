@@ -38,8 +38,6 @@ define(
               return failure(beforeCell);
             });
           } else {
-            // Note, there used to be two different types here: finishSection and startSection .. only finishSection (offset = end of result)
-            // had different behaviour. They would be triggered when we were ending up (result) in a container than contained initial (element)
             return Compare.eq(after, afterCell) && Awareness.getEnd(afterCell) === afterOffset ? failure(beforeCell) : adt.none('in same cell');
           }
         });
