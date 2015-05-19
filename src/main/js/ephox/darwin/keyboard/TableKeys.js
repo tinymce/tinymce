@@ -30,7 +30,7 @@ define(
           return Option.some(Spot.point(sel.finish(), sel.foffset()));
         }, function (brNeighbour) {
           var range = WindowSelection.deriveExact(win, brNeighbour);
-          var analysis = BeforeAfter.verify(sel.finish(), range.finish(), direction.failure);
+          var analysis = BeforeAfter.verify(sel.finish(), sel.foffset(), range.finish(), range.foffset(), direction.failure);
           return BrTags.process(analysis);
         });
       });
@@ -45,7 +45,7 @@ define(
         var range = WindowSelection.deriveExact(win, next);
         Logger.log('B1.down', 'TableKeys.scan => tryCursor => range', range.start().dom(), range.soffset(), range.finish().dom(), range.foffset());
         // Now, check to see if the element is a new cell.
-        var analysis = BeforeAfter.verify(element, range.finish(), direction.failure);
+        var analysis = BeforeAfter.verify(element, offset, range.finish(), range.foffset(), direction.failure);
         return BeforeAfter.cata(analysis, function () {
           Logger.log('B1.down', 'TableKeys.scan => tryCursor => none');
           return Option.none();

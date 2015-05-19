@@ -2,13 +2,15 @@ define(
   'ephox.darwin.navigation.BeforeAfter',
 
   [
+    'ephox.darwin.util.Logger',
+    'ephox.oath.proximity.Awareness',
     'ephox.robin.api.dom.DomParent',
     'ephox.scullion.ADT',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (DomParent, Adt, Compare, SelectorFind) {
+  function (Logger, Awareness, DomParent, Adt, Compare, SelectorFind) {
     var adt = Adt.generate([
       { 'none' : [ 'message'] },
       { 'success': [ ] },
@@ -23,10 +25,13 @@ define(
       return afterBounds.right > beforeBounds.left && afterBounds.left < beforeBounds.right;
     };
 
-    var verify = function (before, after, failure) {
+    var verify = function (before, beforeOffset, after, afterOffset, failure) {
       // Identify the cells that the before and after are in.
+      Logger.log('B1.down', 'after', after.dom());
       return SelectorFind.closest(after, 'td,th').bind(function (afterCell) {
+        Logger.log('B1.down', 'after.closest =>', afterCell.dom());
         return SelectorFind.closest(before, 'td,th').map(function (beforeCell) {
+          Logger.log('B1.down', 'before.closest =>', beforeCell.dom());
           // If they are not in the same cell
           if (! Compare.eq(afterCell, beforeCell)) {
             return DomParent.sharedOne(isRow, [ afterCell, beforeCell ]).fold(function () {
@@ -37,8 +42,10 @@ define(
               return failure(beforeCell);
             });
           } else {
+            return Awareness.getEnd(after) === afterOffset ? failure(beforeCell) : adt.none('in same cell');
             // Note, there used to be two different types here: finishSection and startSection .. only finishSection (offset = end of result)
             // had different behaviour. They would be triggered when we were ending up (result) in a container than contained initial (element)
+            Logger.log('B1.down', 'None', beforeCell.dom());
             return adt.none('in same cell');
           }
         });

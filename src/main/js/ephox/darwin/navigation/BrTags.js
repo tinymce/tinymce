@@ -9,13 +9,12 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.phoenix.api.data.Spot',
-    'ephox.phoenix.api.dom.DomGather',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.Text',
     'ephox.sugar.api.Traverse'
   ],
 
-  function (BeforeAfter, SelectionRange, Situ, Awareness, Fun, Option, Spot, DomGather, Node, Text, Traverse) {
+  function (BeforeAfter, SelectionRange, Situ, Awareness, Fun, Option, Spot, Node, Text, Traverse) {
     var isBr = function (elem) {
       return Node.name(elem) === 'br';
     };
