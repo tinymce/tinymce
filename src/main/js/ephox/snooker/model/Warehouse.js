@@ -35,6 +35,13 @@ define(
      *  3. a list of all cells in order left-to-right, top-to-bottom
      */
     var generate = function (list) {
+      // list is an array of objects, made by cells and elements
+      // elements: is the TR
+      // cells: is an array of objects representing the cells in the row.
+      //        It is made of:
+      //          colspan (merge cell)
+      //          element
+      //          rowspan (merge cols)
       var access = {};
       var cells = [];
 
@@ -70,6 +77,9 @@ define(
 
         cells.push(Structs.rowdata(details.element(), currentRow));
       });
+
+
+      //
 
       var grid = Structs.grid(maxRows, maxColumns);
 

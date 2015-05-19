@@ -10,10 +10,10 @@ define(
   ],
 
   function (Arr, Fun, CellType, Warehouse, Util) {
-    /* 
+    /*
      * Identify for each column, a cell that has colspan 1. Note, this
      * may actually fail, and future work will be to calculate column
-     * sizes that are only available through the difference of two 
+     * sizes that are only available through the difference of two
      * spanning columns.
      */
     var columns = function (warehouse) {
@@ -42,7 +42,6 @@ define(
      */
     var column = function (warehouse, colId) {
       /* Return a list of before, on, after */
-      var r = [];
       var all = warehouse.all();
       return Arr.map(all, function (row) {
         var cellsInRow = row.cells();

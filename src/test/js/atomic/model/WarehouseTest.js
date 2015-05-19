@@ -14,7 +14,7 @@ test(
       assert.eq(expected, Obj.map(actual.access(), function (x) { return x.element(); }));
     };
 
-    var s = Structs.detail;
+    var s = Structs.detail; // 'element', 'rowspan', 'colspan'
     var f = Struct.immutable('element', 'cells');
 
     var testTable = [
