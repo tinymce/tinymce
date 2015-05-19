@@ -41,17 +41,22 @@ define(
       // Firstly, move the (x, y) and see what element we end up on.
       return tryCursor(win, isRoot, element, offset, direction).bind(function (next) {
         var range = WindowSelection.deriveExact(win, next);
+        console.log('tried: ', range.start().dom(), range.soffset(), range.finish().dom(), range.foffset());
         // Now, check to see if the element is a new cell.
         var analysis = BeforeAfter.verify(element, offset, range.finish(), range.foffset(), direction.failure);
         return BeforeAfter.cata(analysis, function () {
+          console.log('Analysis: none');
           return Option.none();
         }, function () {
+          console.log('Analysis: success');
           // We have a new cell, so we stop looking.
           return Option.some(next);
         }, function (cell) {
+          console.log('Analyis: failed up');
           // We need to look again from the start of our current cell
           return scan(win, isRoot, cell, 0, direction, counter - 1);
         }, function (cell) {
+          console.log('Analysis: failed down');
           // We need to look again from the end of our current cell
           return scan(win, isRoot, cell, Awareness.getEnd(cell), direction, counter - 1);
         });
