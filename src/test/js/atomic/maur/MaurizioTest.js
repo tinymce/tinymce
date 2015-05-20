@@ -32,7 +32,7 @@ test(
       {
         element: 'row',
         cells: [
-          { element: 'a', colspan: 3, rowspan: 1 }
+          { element: 'a', colspan: 3  , rowspan: 1 }
         ]
       }
     ], [

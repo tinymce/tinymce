@@ -3,10 +3,11 @@ define(
 
   [
     'ephox.peanut.Fun',
-    'ephox.snooker.model.Warehouse'
+    'ephox.snooker.model.Warehouse',
+    'ephox.sugar.api.Compare'
   ],
 
-  function (Fun, Warehouse) {
+  function (Fun, Warehouse, Compare) {
     // This needs to a return a list of:
     //
     //   element: TR DOM elements,
@@ -14,36 +15,52 @@ define(
     //     colspan: Int,
     //     rowspan: Int,
     //     element: TD/TH DOM element
-    var render = function (warehouse) {
-      // warehouse.all() should not be used, and will probably be removed if we can.
-      //Warehouse.getAt(warehouse, row, column)
-      //warehouse.grid()
+    var render = function (structure) {
+      // var fakeStructure = {
+      //   rows: 3,
+      //   cols: 3,
+      //   grid: [
+      //     [ (0,0)cellA, (0,1)cellA, (0,2)cellA ],
+      //     [ (1,0)cellB, (1,1)cellC, (1,2)cellC ],
+      //     [ (2,0)cellB, (2,1)cellD, (2,2)cellE ]
+      //   ]
+      // };
+      //
+      var scanRow = function (row) {
+          var i = 0,
+              seq = 0,
+              results = [];
 
+          while (i < row.length) {
+              var current = row[i],
+                  next = row[i + 1];
 
-      var rows = [];
+              if (typeof results[seq] === 'undefined') {
+                  results[seq] = [current, 0];
+              }
 
-      for (var r = 0; r < warehouse.grid().rows(); r++) {
-        var builder = {};
-        builder.element = Fun.constant('row');
-        builder.cells = Fun.constant([]);
-        for (var c = 0; c < warehouse.grid().columns(); c++) {
-          Warehouse.getAt(warehouse, r, c).fold(function () {
-            // not there.
-          }, function (detail) {
-            var cell = {};
-            cell.element = detail.element;
-            cell.colspan = detail.colspan;
-            cell.rowspan = detail.rowspan;
-            builder.cells().push(cell);
-          });
-        }
-        rows.push(builder);
+              results[seq][1]++;
+
+              if (current !== next) {
+                  seq++;
+              }
+
+              i++;
+          }
+
+          return results;
+      };
+
+      for (var i = 0; i<structure.rows; i++) {
+
+        var rowStruct = scanRow(structure.grid[i]);
+        console.log('rowStruct',rowStruct);
       }
 
 
 
 
-      return rows;
+
     };
 
     return {
