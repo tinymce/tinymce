@@ -45,26 +45,16 @@ define(
 
 
       for (var i=0; i<structure.length; i++) {
-        var rowToAnalise = getRow(structure, i);
-        var colToAnalise = getColumn(structure, i);
+        var rowToAnalyse = getRow(structure, i);
+        var colToAnalyse = getColumn(structure, i);
 
-
-      }
-
-
-
-      var row = extract(getRow(structure, 0), 'rowspan');
-      var col = extract(getColumn(structure, 0), 'cellspan');
+      var row = extract(rowToAnalyse, 'colspan');
+      var col = extract(colToAnalyse, 'rowspan');
 
       console.log('row',row);
       console.log('col',col);
 
-
-
-
-
-
-
+      }
 
     };
 
