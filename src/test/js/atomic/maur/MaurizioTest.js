@@ -35,6 +35,41 @@ test(
       ]
     }];
 
+    var testB = [
+      [ 'td1', 'td1', 'td1', 'td2', 'td3' ],
+      [ 'td1', 'td1', 'td1', 'td2', 'td4' ]
+    ];
+
+    var expectedB = [{
+      element: 'tr',
+      cells: [
+        {
+          element: 'td1',
+          colspan: 3,
+          rowspan: 2
+        },
+        {
+          element: 'td2',
+          colspan: 1,
+          rowspan: 2
+        },
+        {
+          element: 'td3',
+          colspan: 1,
+          rowspan: 2
+        }
+      ]
+    },{
+      element: 'tr',
+      cells: [
+      {
+          element: 'td4',
+          colspan: 1,
+          rowspan: 1
+        }
+      ]
+    }];
+
 
 
 
