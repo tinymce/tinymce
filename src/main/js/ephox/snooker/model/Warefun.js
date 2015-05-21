@@ -53,23 +53,22 @@ define(
 
         var row = extract(rowToAnalyse, 'colspan');
         var col = extract(colToAnalyse, 'rowspan');
-        console.log('row',row);
+
         // Qui abbiamo row X / col X.
         // So we can merge them together.
 
 
         for (var rowIndex = 0; rowIndex<row.length; rowIndex++) {
           result[rowIndex] = {};
+          result[rowIndex].element = 'Row';
+          result[rowIndex].cells = [];
           for (var colIndex = 0; colIndex<col.length; colIndex++) {
 
-
-            // We are in the same row
-
-
-
-              result[rowIndex].element = row[rowIndex].element;
-              result[rowIndex].colspan = row[rowIndex].colspan;
-              result[colIndex].rowspan = col[colIndex].rowspan;
+              var cell = { element : row[rowIndex].element,
+                colspan : row[rowIndex].colspan,
+                rowspan : col[colIndex].rowspan
+              };
+              result[rowIndex].cells.push(cell);
           }
         }
 

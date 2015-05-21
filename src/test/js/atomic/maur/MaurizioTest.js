@@ -10,18 +10,46 @@ test(
 
 
     var structure = [
-      [ 1, 1, 1, 4, 5 ],
-      [ 1, 1, 1, 4, 5 ],
-      [ 1, 1, 1, 4, 5 ],
-      [ 1, 1, 1, 4, 5 ],
-      [ 1, 1, 1, 4, 5 ],
-      [ 1, 1, 1, 4, 5 ],
+      [ 1, 1, 1, 2, 3 ],
+      [ 1, 1, 1, 4, 5 ]
     ];
 
-    var structure2 = [
-      [ 1, 2, 3 ],
-      [ 4, 5, 3 ]
-    ];
+
+    var result = [{
+      element: 'row',
+      cells: [
+        {
+          element: 1,
+          colspan: 2,
+          rowspan: 3
+        },
+        {
+          element: 2,
+          colspan: 1,
+          rowspan: 1
+        },
+        {
+          element: 3,
+          colspan: 1,
+          rowspan: 1
+        }
+      ]
+    },
+    {
+      element: 'row',
+      cells: [
+        {
+          element: 4,
+          colspan: 1,
+          rowspan: 1
+        },
+        {
+          element: 5,
+          colspan: 1,
+          rowspan: 1
+        }
+      ]
+    }];
 
 
 
