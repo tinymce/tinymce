@@ -1,0 +1,41 @@
+How would I break up merge cells?
+
+
+1. Get the range of the selected cells.
+2. Count how many cells are in the selection (cols and rows)
+3. Replace all of them but the first one with rowspan and colspan
+
+
+A. Gotcha: merging cells that are already spanning.
+
+---------------
+| | | | | | | |
+---------------
+| | | | | | | |
+---------------
+| | | | | | | |
+---------------
+
+
+How would I break up split cells?
+
+
+---------------
+| | | | | | | |
+---------------
+| | | | | | | |
+---------------
+| | | | | | | |
+---------------
+
+
+
+
+
+
+
+
+We have something like this:
+
+
+

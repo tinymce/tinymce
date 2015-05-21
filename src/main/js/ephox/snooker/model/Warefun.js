@@ -2,12 +2,14 @@ define(
   'ephox.snooker.model.Warefun',
 
   [
-    'ephox.compass.Arr'
+    'ephox.compass.Arr',
+    'global!Array'
   ],
 
-  function (Arr) {
+  function (Arr, Array) {
 
     var render = function (structure) {
+
       var getColumn = function (grid, index) {
         return Arr.map(grid, function (row) {
           return row[index];
@@ -36,6 +38,7 @@ define(
           var span = findDiff(slice, function (x, y) { return x === y; });
           var res = {};
           res[what] = span;
+          res.element = line[current];
           cells.push(res);
           current += span;
         }
@@ -43,18 +46,45 @@ define(
       };
 
 
-
+      var result = {};
       for (var i=0; i<structure.length; i++) {
         var rowToAnalyse = getRow(structure, i);
         var colToAnalyse = getColumn(structure, i);
 
-      var row = extract(rowToAnalyse, 'colspan');
-      var col = extract(colToAnalyse, 'rowspan');
+        var row = extract(rowToAnalyse, 'colspan');
+        var col = extract(colToAnalyse, 'rowspan');
+        console.log('row',row);
+        // Qui abbiamo row X / col X.
+        // So we can merge them together.
 
-      console.log('row',row);
-      console.log('col',col);
+
+        for (var rowIndex = 0; rowIndex<row.length; rowIndex++) {
+          result[rowIndex] = {};
+          for (var colIndex = 0; colIndex<col.length; colIndex++) {
+
+
+            // We are in the same row
+
+
+
+              result[rowIndex].element = row[rowIndex].element;
+              result[rowIndex].colspan = row[rowIndex].colspan;
+              result[colIndex].rowspan = col[colIndex].rowspan;
+          }
+        }
+
+
+
+
 
       }
+
+      return result;
+
+
+
+
+
 
     };
 
