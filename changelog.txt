@@ -1,3 +1,5 @@
+Version 4.2.0 (2015-05-xx)
+	Added new promise feature fill as tinymce.util.Promise.
 Version 4.1.11 (2015-05-xx)
 	Fixed bug where cut command on Chrome would thrown a browser security exception.
 	Fixed bug where IE 11 sometimes would report an incorrect size for images in the image dialog.

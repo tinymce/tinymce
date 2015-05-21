@@ -25,6 +25,7 @@
 		"js/tinymce/plugins/table/plugin.js",
 		"js/tinymce/plugins/spellchecker/plugin.js",
 		"js/tinymce/plugins/paste/plugin.js",
-		"js/tinymce/classes/dom/Sizzle.js"
+		"js/tinymce/classes/dom/Sizzle.js",
+		"js/tinymce/classes/util/Promise.js"
 	]
 }
