@@ -15,12 +15,12 @@ test(
     ];
 
     var expectedA = [{
-      element: 'row',
+      element: 'tr',
       cells: [
         {
           element: 'td1',
-          colspan: 1,
-          rowspan: 3
+          colspan: 3,
+          rowspan: 1
         },
         {
           element: 'td2',
@@ -44,7 +44,7 @@ test(
     console.dir(resultA)
     console.log('resultA', resultA);
     // console.log('expectedA', expectedA);
-    // assert.eq(resultA, expectedA);
+    assert.eq(resultA, expectedA);
 
     console.log('resultA',resultA);
 

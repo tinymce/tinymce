@@ -62,7 +62,7 @@ define(
 
 
         var currentRow = {};
-        currentRow.element = 'Row';
+        currentRow.element = 'tr';
         currentRow.cells = [];
 
         for (var rowIndex = 0; rowIndex<row.length; rowIndex++) {
