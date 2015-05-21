@@ -2,49 +2,33 @@ test(
   'MaurizioTest',
 
   [
+    'ephox.compass.Obj',
     'ephox.snooker.model.Warefun'
   ],
 
-  function (Warefun) {
+  function (Obj, Warefun) {
     /* global assert */
 
 
-    var structure = [
-      [ 1, 1, 1, 2, 3 ],
-      [ 1, 1, 1, 4, 5 ]
+    var testA = [
+      [ 'td1', 'td1', 'td1', 'td2', 'td3' ]
     ];
 
-
-    var result = [{
+    var expectedA = [{
       element: 'row',
       cells: [
         {
-          element: 1,
-          colspan: 2,
+          element: 'td1',
+          colspan: 1,
           rowspan: 3
         },
         {
-          element: 2,
+          element: 'td2',
           colspan: 1,
           rowspan: 1
         },
         {
-          element: 3,
-          colspan: 1,
-          rowspan: 1
-        }
-      ]
-    },
-    {
-      element: 'row',
-      cells: [
-        {
-          element: 4,
-          colspan: 1,
-          rowspan: 1
-        },
-        {
-          element: 5,
+          element: 'td3',
           colspan: 1,
           rowspan: 1
         }
@@ -56,9 +40,13 @@ test(
 
 
 
-    var something = Warefun.render(structure);
+    var resultA = Warefun.render(testA);
+    console.dir(resultA)
+    console.log('resultA', resultA);
+    // console.log('expectedA', expectedA);
+    // assert.eq(resultA, expectedA);
 
-    console.log('something',something);
+    console.log('resultA',resultA);
 
 
 

@@ -45,39 +45,49 @@ define(
         return cells;
       };
 
+      console.time('superLooper');
+      var result = [];
 
-      var result = {};
+
+
       for (var i=0; i<structure.length; i++) {
         var rowToAnalyse = getRow(structure, i);
         var colToAnalyse = getColumn(structure, i);
 
+        console.log('rowToAnalyse',rowToAnalyse);
+        console.log('colToAnalyse',colToAnalyse);
+
         var row = extract(rowToAnalyse, 'colspan');
         var col = extract(colToAnalyse, 'rowspan');
 
-        // Qui abbiamo row X / col X.
-        // So we can merge them together.
 
+        var currentRow = {};
+        currentRow.element = 'Row';
+        currentRow.cells = [];
 
         for (var rowIndex = 0; rowIndex<row.length; rowIndex++) {
-          result[rowIndex] = {};
-          result[rowIndex].element = 'Row';
-          result[rowIndex].cells = [];
+
+          console.log('creating new row');
+
           for (var colIndex = 0; colIndex<col.length; colIndex++) {
 
               var cell = { element : row[rowIndex].element,
                 colspan : row[rowIndex].colspan,
                 rowspan : col[colIndex].rowspan
               };
-              result[rowIndex].cells.push(cell);
+              currentRow.cells.push(cell);
           }
-        }
 
+
+
+        }
+        result.push(currentRow);
 
 
 
 
       }
-
+      console.timeEnd('superLooper');
       return result;
 
 
