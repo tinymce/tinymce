@@ -1152,7 +1152,7 @@ define("tinymce/Editor", [
 		 */
 		getLang: function(name, defaultVal) {
 			return (
-				this.editorManager.i18n.data[(this.settings.language || 'en') + '.' + name] ||
+				(this.editorManager.i18n.data[(this.settings.language || 'en')] && this.editorManager.i18n.data[(this.settings.language || 'en')][name]) ||
 				(defaultVal !== undefined ? defaultVal : '{#' + name + '}')
 			);
 		},
