@@ -45,17 +45,11 @@ define(
         return cells;
       };
 
-      console.time('superLooper');
       var result = [];
-
-
 
       for (var i=0; i<structure.length; i++) {
         var rowToAnalyse = getRow(structure, i);
         var colToAnalyse = getColumn(structure, i);
-
-        console.log('rowToAnalyse',rowToAnalyse);
-        console.log('colToAnalyse',colToAnalyse);
 
         var row = extract(rowToAnalyse, 'colspan');
         var col = extract(colToAnalyse, 'rowspan');
@@ -66,20 +60,13 @@ define(
         currentRow.cells = [];
 
         for (var rowIndex = 0; rowIndex<row.length; rowIndex++) {
-
-          console.log('creating new row');
-
           for (var colIndex = 0; colIndex<col.length; colIndex++) {
-
               var cell = { element : row[rowIndex].element,
                 colspan : row[rowIndex].colspan,
                 rowspan : col[colIndex].rowspan
               };
               currentRow.cells.push(cell);
           }
-
-
-
         }
         result.push(currentRow);
 
@@ -87,7 +74,7 @@ define(
 
 
       }
-      console.timeEnd('superLooper');
+
       return result;
 
 

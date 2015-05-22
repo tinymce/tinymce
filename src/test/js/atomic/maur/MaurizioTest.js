@@ -76,12 +76,10 @@ test(
 
 
     var resultA = Warefun.render(testA);
-    console.dir(resultA)
-    console.log('resultA', resultA);
-    // console.log('expectedA', expectedA);
     assert.eq(resultA, expectedA);
 
-    console.log('resultA',resultA);
+    var resutlB = Warefun.render(testB);
+    console.log('resutlB',resutlB);
 
 
 
