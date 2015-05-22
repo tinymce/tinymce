@@ -47,6 +47,18 @@ define(
 
       var result = [];
 
+      var rows = structure.length;
+      var cols = structure[0].length;
+
+
+      var checkMatrix = new Array(cols);
+
+
+      for (var m = 0; m<cols; m++) {
+        checkMatrix[m] = new Array(rows);
+      }
+
+
       for (var i=0; i<structure.length; i++) {
         var rowToAnalyse = getRow(structure, i);
         var colToAnalyse = getColumn(structure, i);
@@ -54,26 +66,28 @@ define(
         var row = extract(rowToAnalyse, 'colspan');
         var col = extract(colToAnalyse, 'rowspan');
 
-
         var currentRow = {};
         currentRow.element = 'tr';
         currentRow.cells = [];
 
         for (var rowIndex = 0; rowIndex<row.length; rowIndex++) {
-          for (var colIndex = 0; colIndex<col.length; colIndex++) {
-              var cell = { element : row[rowIndex].element,
-                colspan : row[rowIndex].colspan,
-                rowspan : col[colIndex].rowspan
-              };
-              currentRow.cells.push(cell);
+          for (var colIndex = i; colIndex<col.length; colIndex++) {
+            if (!checkMatrix[rowIndex][colIndex])  currentRow.cells.push({
+              element : row[rowIndex].element,
+              colspan : row[rowIndex].colspan,
+              rowspan : col[colIndex].rowspan
+            });
+
+            checkMatrix[rowIndex][colIndex] = true;
+
+
           }
         }
+
         result.push(currentRow);
-
-
-
-
       }
+
+
 
       return result;
 

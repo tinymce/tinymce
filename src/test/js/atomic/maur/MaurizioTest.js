@@ -2,11 +2,10 @@ test(
   'MaurizioTest',
 
   [
-    'ephox.compass.Obj',
     'ephox.snooker.model.Warefun'
   ],
 
-  function (Obj, Warefun) {
+  function (Warefun) {
     /* global assert */
 
 
@@ -36,52 +35,102 @@ test(
     }];
 
     var testB = [
-      [ 'td1', 'td1', 'td1', 'td2', 'td3' ],
-      [ 'td1', 'td1', 'td1', 'td2', 'td4' ]
+      [ 'td1', 'td1', 'td1' ],
+      [ 'td1', 'td1', 'td1' ],
+      [ 'td1', 'td1', 'td1' ],
+      [ 'td1', 'td1', 'td1' ]
     ];
 
-    var expectedB = [{
-      element: 'tr',
-      cells: [
-        {
-          element: 'td1',
-          colspan: 3,
-          rowspan: 2
-        },
-        {
-          element: 'td2',
-          colspan: 1,
-          rowspan: 2
-        },
-        {
-          element: 'td3',
-          colspan: 1,
-          rowspan: 2
-        }
-      ]
-    },{
-      element: 'tr',
-      cells: [
+    var expectedB = [
       {
-          element: 'td4',
-          colspan: 1,
-          rowspan: 1
-        }
-      ]
-    }];
+        element: 'tr',
+        cells: [
+          {
+            element: 'td1',
+            colspan: 3,
+            rowspan: 4
+          }
+        ]
+      },
 
+      {
+        element: 'tr',
+        cells: []
+      },
+      {
+        element: 'tr',
+        cells: []
+      },
+      {
+        element: 'tr',
+        cells: []
+      }
+    ];
 
+    var testC = [
+      [ 'td1', 'td1', 'td1' ],
+      [ 'td1', 'td1', 'td1' ]
+    ];
 
+    var expectedC = [
+      {
+        element: 'tr',
+        cells: [
+          {
+            element: 'td1',
+            colspan: 3,
+            rowspan: 2
+          }
+        ]
+      },
 
+      {
+        element: 'tr',
+        cells: []
+      }
+    ];
+
+    var testD = [
+      [ 'td1', 'td1', 'td3' ],
+      [ 'td1', 'td1', 'td4' ]
+    ];
+
+    var expectedD = [
+      {
+        element: 'tr',
+        cells: [{
+            element: 'td1',
+            colspan: 2,
+            rowspan: 2
+          },
+          {
+            element: 'td3',
+            colspan: 1,
+            rowspan: 1
+          }]
+      },
+      {
+        element: 'tr',
+        cells: [{
+            element: 'td4',
+            colspan: 1,
+            rowspan: 1
+        }]
+      }
+    ];
 
 
     var resultA = Warefun.render(testA);
     assert.eq(resultA, expectedA);
 
-    var resutlB = Warefun.render(testB);
-    console.log('resutlB',resutlB);
+    var resultB = Warefun.render(testB);
+    assert.eq(resultB, expectedB);
 
+    var resultC = Warefun.render(testC);
+    assert.eq(resultC, expectedC);
 
+    var resultD = Warefun.render(testD);
+    assert.eq(resultD, expectedD);
 
   }
 );
