@@ -58,34 +58,51 @@ define(
         checkMatrix[m] = new Array(rows);
       }
 
-
+      var row;
       for (var i=0; i<structure.length; i++) {
         var rowToAnalyse = getRow(structure, i);
-        var colToAnalyse = getColumn(structure, i);
-
-        var row = extract(rowToAnalyse, 'colspan');
-        var col = extract(colToAnalyse, 'rowspan');
-
-        var currentRow = {};
-        currentRow.element = 'tr';
-        currentRow.cells = [];
-
-        for (var rowIndex = 0; rowIndex<row.length; rowIndex++) {
-          for (var colIndex = i; colIndex<col.length; colIndex++) {
-            if (!checkMatrix[rowIndex][colIndex])  currentRow.cells.push({
-              element : row[rowIndex].element,
-              colspan : row[rowIndex].colspan,
-              rowspan : col[colIndex].rowspan
-            });
-
-            checkMatrix[rowIndex][colIndex] = true;
-
-
-          }
-        }
-
-        result.push(currentRow);
+        row = extract(rowToAnalyse, 'colspan');
       }
+
+      console.log('row',row);
+
+      var col;
+      for (var j=0; j<structure[0].length; j++) {
+        var colToAnalyse = getColumn(structure, i);
+        col = extract(colToAnalyse, 'rowspan');
+      }
+
+
+      // for (var rowIndex = 0)
+
+
+
+
+      // var currentRow = {};
+      // currentRow.element = 'tr';
+      // currentRow.cells = [];
+      // for (var rowIndex = 0; rowIndex<row.length; rowIndex++) {
+      //   console.log('checking row: ', row[rowIndex], rowIndex);
+      //   for (var colIndex = 0; colIndex<col.length; colIndex++) {
+      //     console.log('checking col: ', col[colIndex], colIndex);
+      //     if (!checkMatrix[rowIndex][colIndex]) {
+      //       currentRow.cells.push({
+      //         element : row[rowIndex].element,
+      //         colspan : row[rowIndex].colspan,
+      //         rowspan : col[colIndex].rowspan
+      //       });
+      //     }
+
+      //       // console.log('row[rowIndex].element', row[rowIndex].element, 'col[colIndex].rowspan',col[colIndex].rowspan);
+      //       checkMatrix[rowIndex][colIndex] = true;
+      //     }
+      //   }
+
+      //   result.push(currentRow);
+
+
+      // Analyse the current row.
+      // Analyse the elements in the row, analysing the
 
 
 
