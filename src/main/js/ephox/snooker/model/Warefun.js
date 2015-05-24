@@ -49,8 +49,6 @@ define(
 
       var rows = structure.length;
       var cols = structure[0].length;
-
-
       var checkMatrix = new Array(cols);
 
 
@@ -58,20 +56,42 @@ define(
         checkMatrix[m] = new Array(rows);
       }
 
-      var row;
-      for (var i=0; i<structure.length; i++) {
-        var rowToAnalyse = getRow(structure, i);
-        row = extract(rowToAnalyse, 'colspan');
+      // var row;
+      // for (var i=0; i<structure.length; i++) {
+      //   var rowToAnalyse = getRow(structure, i);
+      //   row = extract(rowToAnalyse, 'colspan');
+      // }
+
+      // console.log('row',row);
+
+
+      for (var rowIndex = 0; rowIndex<structure.length; rowIndex++) {
+        var currentRow = {};
+        currentRow.element = 'tr';
+        currentRow.cells = [];
+        var rowToAnalyse = getRow(structure, rowIndex);
+        var row = extract(rowToAnalyse, 'colspan');
+
+        for (var colIndex=0; colIndex<structure[0].length; colIndex++) {
+          var colToAnalyse = getColumn(structure, colIndex);
+          var col = extract(colToAnalyse, 'rowspan');
+
+          console.log('col',col);
+          console.log('colIndex', colIndex);
+          console.log('col[colIndex]',col[colIndex]);
+
+          if (!checkMatrix[rowIndex][colIndex]) {
+            currentRow.cells.push({
+              element : row[rowIndex].element,
+              colspan : row[rowIndex].colspan,
+              rowspan : col[colIndex].rowspan
+            });
+          }
+          checkMatrix[rowIndex][colIndex] = true;
+        }
+        result.push(currentRow);
+
       }
-
-      console.log('row',row);
-
-      var col;
-      for (var j=0; j<structure[0].length; j++) {
-        var colToAnalyse = getColumn(structure, i);
-        col = extract(colToAnalyse, 'rowspan');
-      }
-
 
       // for (var rowIndex = 0)
 
