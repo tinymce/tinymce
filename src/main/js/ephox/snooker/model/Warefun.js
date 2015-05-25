@@ -86,6 +86,12 @@ define(
 
           var rowIndex = 0;
           while(rows>rowIndex) {
+            console.log('row[counter].element',row[counter].element);
+            console.log('col',col);
+            console.log('rowIndex',rowIndex);
+            console.log('rows',rows);
+            console.log('col[rowIndex]',col[rowIndex]);
+
             if (!checkMatrix[cellIndex][rowIndex] && row[counter].element === col[rowIndex].element){
 
               currentRow.cells.push({
