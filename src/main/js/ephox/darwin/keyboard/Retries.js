@@ -27,7 +27,7 @@ define(
 
     var adjustDown = function (guessBox, original, caret) {
       // We haven't dropped vertically, so we need to look down and try again.
-      if (guessBox.bottom === original.bottom()) return adt.retry(Carets.moveDown(caret, JUMP_SIZE));
+      if (Math.abs(guessBox.bottom - original.bottom() < 1)) return adt.retry(Carets.moveDown(caret, JUMP_SIZE));
       // The returned guessBox based on the guess actually doesn't include the initial caret. So we search again
       // where we adjust the caret so that it is inside the returned guessBox. This means that the offset calculation
       // will be more accurate.
@@ -36,12 +36,17 @@ define(
     };
 
     var adjustUp = function (guessBox, original, caret) {
+      console.log('guessBox', guessBox.top, 'caret.top', caret.top(), 'original', original.top());
+
+
       // We haven't ascended vertically, so we need to look up and try again.
-      if (guessBox.top === original.top()) return adt.retry(Carets.moveUp(caret, JUMP_SIZE));
+      if (Math.abs(guessBox.top - original.top()) < 1) return adt.retry(Carets.moveUp(caret, JUMP_SIZE));
       // The returned guessBox based on the guess actually doesn't include the initial caret. So we search again
       // where we adjust the caret so that it is inside the returned guessBox. This means that the offset calculation
       // will be more accurate.
       else if (guessBox.bottom < caret.top()) return adt.adjusted(Carets.moveTopTo(caret, guessBox.bottom - 1));
+
+
       else return adt.none();
     };
 
@@ -65,13 +70,19 @@ define(
         return guess.start().fold(Option.none, function (element, offset) {
           console.log('guess:' , element.dom(), offset);
           return Rectangles.getBox(win, element, offset).bind(function (guessBox) {
+            console.log('*************************************', guessBox);
+            // guessBox = Carets.nu(guessBox.left, guessBox.top, guessBox.right, guessBox.bottom);
             return direction.adjuster(guessBox, original, caret).fold(Option.none, function (newCaret) {
               console.log('Hit target moving from: ', direction.point(caret), ' to ', direction.point(newCaret));
               return adjustTil(win, direction, original, newCaret, counter-1);
             }, function (newCaret) {
+              console.log('Adjusted to: ', direction.point(newCaret));
               return Option.some(newCaret);
             });
-          }).orThunk(function () { return Option.some(caret); });
+          }).orThunk(function () {
+            console.log('falling back to: ', direction.point(caret));
+            return Option.some(caret);
+          });
         }, Option.none);
       });
     };
@@ -87,13 +98,17 @@ define(
     var retry = function (direction, win, caret) {
       console.log('Executing retry');
       var c = Carets.nu(caret.left, caret.top, caret.right, caret.bottom);
+      console.log('start: ', direction.point(c));
       var moved = direction.move(c, JUMP_SIZE);
+      console.log('moved: ', direction.point(moved));
       var adjusted = adjustTil(win, direction, c, moved, 100).getOr(moved);
+      console.log('adjusted: ', direction.point(adjusted));
       if (direction.point(adjusted) > win.innerHeight) {
         var delta = direction.point(adjusted) - (win.innerHeight + win.scrollY) + 10;
         win.scrollBy(0, delta);
         return Point.find(win, adjusted.left(), direction.point(adjusted) - delta);
       } else {
+        console.log('not scrolling');
         return Point.find(win, adjusted.left(), direction.point(adjusted));
       }
     };
