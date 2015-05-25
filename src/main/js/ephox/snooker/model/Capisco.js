@@ -36,12 +36,12 @@ define(
      *   colspan: column span of the cell at (row, column)
      *   rowspan: row span of the cell at (row, column)
      */
-    var capisco = function (row, column, grid) {
+    var capisco = function (row, column, grid, comparator) {
       var restOfRow = getRow(grid, row).slice(column);
-      var endColIndex = findDiff(restOfRow, Fun.tripleEquals);
+      var endColIndex = findDiff(restOfRow, comparator);
 
       var restOfColumn = getColumn(grid, column).slice(row);
-      var endRowIndex = findDiff(restOfColumn, Fun.tripleEquals);
+      var endRowIndex = findDiff(restOfColumn, comparator);
 
       return {
         colspan: endColIndex,

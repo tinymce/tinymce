@@ -2,10 +2,11 @@ test(
   'MaurizioTest',
 
   [
+    'ephox.peanut.Fun',
     'ephox.snooker.model.Warefun'
   ],
 
-  function (Warefun) {
+  function (Fun, Warefun) {
     /* global assert */
 
     var testA = [
@@ -172,7 +173,7 @@ test(
 
 
     var checkRender = function (expected, input) {
-      var actual = Warefun.render(input);
+      var actual = Warefun.render(input, Fun.tripleEquals);
       assert.eq(expected, actual);
     };
 

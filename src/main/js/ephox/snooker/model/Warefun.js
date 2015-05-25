@@ -9,7 +9,7 @@ define(
 
   function (Arr, Fun, Capisco) {
 
-    var render = function (structure) {
+    var render = function (structure, comparator) {
       var seen = Arr.map(structure, function (row, ri) {
         return Arr.map(row, function (col, ci) {
           return false;
@@ -28,7 +28,7 @@ define(
         var cells = Arr.bind(row, function (cell, ci) {
           // if we have seen this one, then skip it.
           if (seen[ri][ci] === false) {
-            var result = Capisco.capisco(ri, ci, structure);
+            var result = Capisco.capisco(ri, ci, structure, comparator);
             updateSeen(ri, ci, result.rowspan, result.colspan);
 
             return [ {

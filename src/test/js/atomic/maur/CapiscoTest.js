@@ -2,12 +2,13 @@ test(
   'CapiscoTest',
 
   [
+    'ephox.peanut.Fun',
     'ephox.snooker.model.Capisco'
   ],
 
-  function (Capisco) {
+  function (Fun, Capisco) {
     var check = function (expected, row, column, grid) {
-      var actual = Capisco.capisco(row, column, grid);
+      var actual = Capisco.capisco(row, column, grid, Fun.tripleEquals);
       assert.eq(expected.rowspan, actual.rowspan);
       assert.eq(expected.colspan, actual.colspan);
     };
