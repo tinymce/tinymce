@@ -8,7 +8,6 @@ test(
   function (Warefun) {
     /* global assert */
 
-
     var testA = [
       [ 'td1', 'td1', 'td1', 'td2', 'td3' ]
     ];
@@ -172,20 +171,17 @@ test(
     ];
 
 
-    var resultA = Warefun.render(testA);
-    assert.eq(resultA, expectedA);
+    var checkRender = function (expected, input) {
+      var actual = Warefun.render(input);
+      assert.eq(expected, actual);
+    };
 
-    var resultB = Warefun.render(testB);
-    assert.eq(resultB, expectedB);
+    checkRender(expectedA, testA);
+    checkRender(expectedB, testB);
+    checkRender(expectedC, testC);
+    checkRender(expectedD, testD);
+    checkRender(expectedE, testE);
 
-    var resultC = Warefun.render(testC);
-    assert.eq(resultC, expectedC);
-
-    var resultD = Warefun.render(testD);
-    assert.eq(resultD, expectedD);
-
-    var resultE = Warefun.render(testE);
-    assert.eq(resultE, expectedE);
 
   }
 );
