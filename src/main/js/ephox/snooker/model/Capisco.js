@@ -38,7 +38,7 @@ define(
      *   rowspan: row span of the cell at (row, column)
      *   seen: a new grid with additional booleans saying which things have already been seen
      */
-    var capisco = function (row, column, grid, seen) {
+    var capisco = function (row, column, grid) {
       var restOfRow = getRow(grid, row).slice(column);
       var endColIndex = findDiff(restOfRow, Fun.tripleEquals);
       console.log('ending index', endColIndex);
@@ -46,6 +46,16 @@ define(
       var restOfColumn = getColumn(grid, column).slice(row);
       var endRowIndex = findDiff(restOfColumn, Fun.tripleEquals);
       console.log('restOfColumn', restOfColumn, 'endRowIndex:', endRowIndex);
+
+
+      var seen = Arr.map(grid, function (r, ri) {
+        return Arr.map(r, function (c, ci) {
+          // console.log('r: ', ri, 'row: ', row, 'row+endRowIndex', (row+endRowIndex));
+          // console.log('c: ', ci, 'column', column, 'col+endColIndex', (column+endColIndex));
+          return ri >= row && ri < (row + endRowIndex) && ci >= column && ci < (column + endColIndex);
+        });
+      });
+
 
       return {
         colspan: endColIndex,
