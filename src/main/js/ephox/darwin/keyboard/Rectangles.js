@@ -2,17 +2,22 @@ define(
   'ephox.darwin.keyboard.Rectangles',
 
   [
+    'ephox.darwin.keyboard.Carets',
     'ephox.fussy.api.WindowSelection',
     'ephox.oath.proximity.Awareness',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Node'
   ],
 
-  function (WindowSelection, Awareness, Option, Node) {
+  function (Carets, WindowSelection, Awareness, Option, Node) {
     var getPartialBox = function (win, element, offset) {
       if (offset >= 0 && offset < Awareness.getEnd(element)) return WindowSelection.rectangleAt(win, element, offset, element, offset + 1);
       else if (offset > 0) return WindowSelection.rectangleAt(win, element, offset - 1, element, offset);
       return Option.none();
+    };
+
+    var toCaret = function (rect) {
+      return Carets.nu(rect.left, rect.top, rect.right, rect.bottom);
     };
 
     var getElemBox = function (win, element, offset) {
@@ -20,8 +25,8 @@ define(
     };
 
     var getBox = function (win, element, offset) {
-      if (Node.isElement(element)) return getElemBox(win, element, offset);
-      else if (Node.isText(element)) return getPartialBox(win, element, offset);
+      if (Node.isElement(element)) return getElemBox(win, element, offset).map(toCaret);
+      else if (Node.isText(element)) return getPartialBox(win, element, offset).map(toCaret);
       else return Option.none();
     };
 
