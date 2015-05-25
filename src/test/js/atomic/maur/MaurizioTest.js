@@ -129,8 +129,8 @@ test(
     var resultC = Warefun.render(testC);
     assert.eq(resultC, expectedC);
 
-    // var resultD = Warefun.render(testD);
-    // assert.eq(resultD, expectedD);
+    var resultD = Warefun.render(testD);
+    assert.eq(resultD, expectedD);
 
   }
 );

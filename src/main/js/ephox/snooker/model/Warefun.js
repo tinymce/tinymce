@@ -49,6 +49,8 @@ define(
 
       var rows = structure.length;
       var cols = structure[0].length;
+
+
       var checkMatrix = new Array(cols);
 
 
@@ -56,73 +58,57 @@ define(
         checkMatrix[m] = new Array(rows);
       }
 
-      // var row;
-      // for (var i=0; i<structure.length; i++) {
-      //   var rowToAnalyse = getRow(structure, i);
-      //   row = extract(rowToAnalyse, 'colspan');
-      // }
 
-      // console.log('row',row);
+      for (var i=0; i<structure.length; i++) {
+        var rowToAnalyse = getRow(structure, i);
+        var row = extract(rowToAnalyse, 'colspan');
+
+        // We get the row here.
+        // each row object is made of:
+        //    - element,
+        //    - colspan
 
 
-      for (var rowIndex = 0; rowIndex<structure.length; rowIndex++) {
         var currentRow = {};
         currentRow.element = 'tr';
         currentRow.cells = [];
-        var rowToAnalyse = getRow(structure, rowIndex);
-        var row = extract(rowToAnalyse, 'colspan');
 
-        for (var colIndex=0; colIndex<structure[0].length; colIndex++) {
-          var colToAnalyse = getColumn(structure, colIndex);
+        // Loop through the elements
+        // CellIndex represents the position in the row here I am.
+        var cellIndex = 0;
+        var counter = 0;
+
+        while (cols>cellIndex) {
+
+
+          var colToAnalyse = getColumn(structure, cellIndex);
           var col = extract(colToAnalyse, 'rowspan');
 
-          console.log('col',col);
-          console.log('colIndex', colIndex);
-          console.log('col[colIndex]',col[colIndex]);
+          var rowIndex = 0;
+          while(rows>rowIndex) {
+            if (!checkMatrix[cellIndex][rowIndex] && row[counter].element === col[rowIndex].element){
 
-          if (!checkMatrix[rowIndex][colIndex]) {
-            currentRow.cells.push({
-              element : row[rowIndex].element,
-              colspan : row[rowIndex].colspan,
-              rowspan : col[colIndex].rowspan
-            });
+              currentRow.cells.push({
+                element: row[counter].element,
+                colspan: row[counter].colspan,
+                rowspan: col[rowIndex].rowspan
+              });
+              checkMatrix[cellIndex][rowIndex] = true;
+            }
+
+            rowIndex += col[rowIndex].rowspan;
           }
-          checkMatrix[rowIndex][colIndex] = true;
+
+
+          cellIndex += row[counter].colspan;
+          counter++;
+
         }
+
+
+
         result.push(currentRow);
-
       }
-
-      // for (var rowIndex = 0)
-
-
-
-
-      // var currentRow = {};
-      // currentRow.element = 'tr';
-      // currentRow.cells = [];
-      // for (var rowIndex = 0; rowIndex<row.length; rowIndex++) {
-      //   console.log('checking row: ', row[rowIndex], rowIndex);
-      //   for (var colIndex = 0; colIndex<col.length; colIndex++) {
-      //     console.log('checking col: ', col[colIndex], colIndex);
-      //     if (!checkMatrix[rowIndex][colIndex]) {
-      //       currentRow.cells.push({
-      //         element : row[rowIndex].element,
-      //         colspan : row[rowIndex].colspan,
-      //         rowspan : col[colIndex].rowspan
-      //       });
-      //     }
-
-      //       // console.log('row[rowIndex].element', row[rowIndex].element, 'col[colIndex].rowspan',col[colIndex].rowspan);
-      //       checkMatrix[rowIndex][colIndex] = true;
-      //     }
-      //   }
-
-      //   result.push(currentRow);
-
-
-      // Analyse the current row.
-      // Analyse the elements in the row, analysing the
 
 
 
