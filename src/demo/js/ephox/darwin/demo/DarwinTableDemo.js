@@ -42,8 +42,8 @@ define(
             '<tr>' +
               '<td style="min-width: 100px;">A1</td>' +
               '<td style="min-width: 100px;">B1<br /></td>' +
-              '<td style="min-width: 100px;">C1<br /><br /><br /></td>' +
-              '<td style="min-width: 100px;">D1</td>' +
+              '<td style="min-width: 100px;" colspan=2>C1<br /><br /><br /></td>' +
+              // '<td style="min-width: 100px;">D1</td>' +
             '</tr>' +
             '<tr>' +
               '<td style="min-width: 100px;">A2</td>' +
