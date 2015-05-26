@@ -34,9 +34,6 @@ define(
     };
 
     var adjustUp = function (guessBox, original, caret) {
-      console.log('guessBox', guessBox.top, 'caret.top', caret.top(), 'original', original.top());
-
-
       // We haven't ascended vertically, so we need to look up and try again.
       if (Math.abs(guessBox.top() - original.top()) < 1) return adt.retry(Carets.moveUp(caret, JUMP_SIZE));
       // The returned guessBox based on the guess actually doesn't include the initial caret. So we search again
@@ -66,18 +63,13 @@ define(
       if (counter === 0) return Option.some(caret);
       return bridge.situsFromPoint(caret.left(), direction.point(caret)).bind(function (guess) {
         return guess.start().fold(Option.none, function (element, offset) {
-          console.log('guess:' , element.dom(), offset);
           return Rectangles.getBox(bridge, element, offset).bind(function (guessBox) {
-            console.log('*************************************', guessBox);
             return direction.adjuster(guessBox, original, caret).fold(Option.none, function (newCaret) {
-              console.log('Hit target moving from: ', direction.point(caret), ' to ', direction.point(newCaret));
               return adjustTil(bridge, direction, original, newCaret, counter-1);
             }, function (newCaret) {
-              console.log('Adjusted to: ', direction.point(newCaret));
               return Option.some(newCaret);
             });
           }).orThunk(function () {
-            console.log('falling back to: ', direction.point(caret));
             return Option.some(caret);
           });
         }, Option.none);
@@ -93,19 +85,13 @@ define(
     };
 
     var retry = function (direction, bridge, caret) {
-      console.log('caret: ', caret);
-      console.log('Executing retry');
-      console.log('start: ', direction.point(caret));
       var moved = direction.move(caret, JUMP_SIZE);
-      console.log('moved: ', direction.point(moved));
       var adjusted = adjustTil(bridge, direction, caret, moved, 100).getOr(moved);
-      console.log('adjusted: ', direction.point(adjusted));
       if (direction.point(adjusted) > bridge.innerHeight) {
         var delta = direction.point(adjusted) - (bridge.innerHeight + bridge.scrollY) + 10;
         bridge.scrollBy(0, delta);
         return bridge.situsFromPoint(adjusted.left(), direction.point(adjusted) - delta);
       } else {
-        console.log('not scrolling');
         return bridge.situsFromPoint(adjusted.left(), direction.point(adjusted));
       }
     };

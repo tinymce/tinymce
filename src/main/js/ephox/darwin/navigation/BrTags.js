@@ -6,15 +6,15 @@ define(
     'ephox.fussy.api.SelectionRange',
     'ephox.fussy.api.Situ',
     'ephox.oath.proximity.Awareness',
-    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.phoenix.api.data.Spot',
+    'ephox.sugar.api.ElementFind',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.Text',
     'ephox.sugar.api.Traverse'
   ],
 
-  function (BeforeAfter, SelectionRange, Situ, Awareness, Fun, Option, Spot, Node, Text, Traverse) {
+  function (BeforeAfter, SelectionRange, Situ, Awareness, Option, Spot, ElementFind, Node, Text, Traverse) {
     var isBr = function (elem) {
       return Node.name(elem) === 'br';
     };
@@ -22,17 +22,6 @@ define(
     var gatherer = function (cand, gather, isRoot) {
       return gather(cand, isRoot).bind(function (target) {
         return Node.isText(target) && Text.get(target).trim().length === 0 ? gatherer(target, gather, isRoot) : Option.some(target);
-      });
-    };
-
-    var locate = function (element) {
-      return Traverse.parent(element).bind(function (parent) {
-        return Traverse.findIndex(element).map(function (index) {
-          return {
-            parent: Fun.constant(parent),
-            index: Fun.constant(index)
-          };
-        });
       });
     };
 
@@ -58,7 +47,7 @@ define(
         return direction.traverse(br).fold(function () {
           return gatherer(br, direction.gather, isRoot).map(direction.relative);
         }, function (adjacent) {
-          return locate(adjacent).map(function (info) {
+          return ElementFind.inParentOfAny(adjacent).map(function (info) {
             return Situ.on(info.parent(), info.index());
           });
         });
