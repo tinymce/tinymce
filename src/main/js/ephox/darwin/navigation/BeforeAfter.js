@@ -18,13 +18,13 @@ define(
     ]);
 
     // Let's get some bounding rects, and see if they overlap (x-wise)
-    var isOverlapping = function (before, after) {
-      var beforeBounds = before.dom().getBoundingClientRect();
-      var afterBounds = after.dom().getBoundingClientRect();
+    var isOverlapping = function (bridge, before, after) {
+      var beforeBounds = bridge.getRect(before);
+      var afterBounds = bridge.getRect(after);
       return afterBounds.right > beforeBounds.left && afterBounds.left < beforeBounds.right;
     };
 
-    var verify = function (before, beforeOffset, after, afterOffset, failure) {
+    var verify = function (bridge, before, beforeOffset, after, afterOffset, failure) {
       // Identify the cells that the before and after are in.
       return SelectorFind.closest(after, 'td,th').bind(function (afterCell) {
         return SelectorFind.closest(before, 'td,th').map(function (beforeCell) {
@@ -32,7 +32,7 @@ define(
           if (! Compare.eq(afterCell, beforeCell)) {
             return DomParent.sharedOne(isRow, [ afterCell, beforeCell ]).fold(function () {
               // No shared row, and they overlap x-wise -> success, otherwise: failed
-              return isOverlapping(beforeCell, afterCell) ? adt.success() : failure(beforeCell);
+              return isOverlapping(bridge, beforeCell, afterCell) ? adt.success() : failure(beforeCell);
             }, function (sharedRow) {
               // In the same row, so it failed.
               return failure(beforeCell);

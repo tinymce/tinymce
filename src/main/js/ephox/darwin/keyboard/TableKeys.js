@@ -28,7 +28,7 @@ define(
           return Option.some(Spot.point(sel.finish(), sel.foffset()));
         }, function (brNeighbour) {
           var range = bridge.fromSitus(brNeighbour);
-          var analysis = BeforeAfter.verify(sel.finish(), sel.foffset(), range.finish(), range.foffset(), direction.failure);
+          var analysis = BeforeAfter.verify(bridge, sel.finish(), sel.foffset(), range.finish(), range.foffset(), direction.failure);
           return BrTags.process(analysis);
         });
       });
@@ -41,7 +41,7 @@ define(
         var range = bridge.fromSitus(situs);
         console.log('tried: ', range.start().dom(), range.soffset(), range.finish().dom(), range.foffset());
         // Now, check to see if the element is a new cell.
-        var analysis = BeforeAfter.verify(element, offset, range.finish(), range.foffset(), direction.failure);
+        var analysis = BeforeAfter.verify(bridge, element, offset, range.finish(), range.foffset(), direction.failure);
         return BeforeAfter.cata(analysis, function () {
           console.log('Analysis: none');
           return Option.none();
