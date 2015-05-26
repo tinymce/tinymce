@@ -35,7 +35,7 @@ define(
     };
 
     var lookupTable = function (container) {
-      return SelectorFind.ancestor(container, 'tbody,thead');
+      return SelectorFind.ancestor(container, 'table');
     };
 
     var identify = function (start, finish) {
@@ -89,8 +89,9 @@ define(
 
     var shiftSelection = function (boxes, deltaRow, deltaColumn) {
       return getLast(boxes).bind(CellFinder.findInTable).bind(function (position) {
-        return SelectorFind.ancestor(boxes[0], 'tbody,thead').bind(function (table) {
-          return CellFinder.gotoCell(table, position.rowIndex() + deltaRow, position.colIndex() + deltaColumn).bind(expandTo);
+        return SelectorFind.ancestor(boxes[0], 'table').bind(function (section) {
+
+          return CellFinder.gotoCell(section, position.rowIndex() + deltaRow, position.colIndex() + deltaColumn).bind(expandTo);
         });
       });
     };

@@ -34,9 +34,9 @@ define(
     };
 
     var findRow = function (cell) {
-      return SelectorFind.ancestor(cell, 'tbody,thead').bind(function (section) {
+      return SelectorFind.ancestor(cell, 'table').bind(function (table) {
         return SelectorFind.ancestor(cell, 'tr').bind(function (row) {
-          var rows = SelectorFilter.descendants(section, 'tr');
+          var rows = SelectorFilter.descendants(table, 'tr');
           var isRow = Fun.curry(Compare.eq, row);
           var index = Arr.findIndex(rows, isRow);
           return index !== -1 ? Option.some(index) : Option.none();
@@ -51,6 +51,9 @@ define(
         return Option.from(cells[colIndex]);
       });
     };
+
+
+
 
     return {
       findInTable: findInTable,
