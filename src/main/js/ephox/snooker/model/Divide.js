@@ -6,28 +6,23 @@ define(
   ],
 
   function () {
-    /*
-
-      [
-        [ 1, 1, 3 ]
-      ]
-      el: 1,
-      comp: Fun.tripleEquals
-
-      [
-        [ 1, nu, 3 ]
-      ]
-     */
-
-    var generate = function (structure, element, comparator, substitution) {
+    var generate = function (structure, target, comparator, substitution) {
+      var first = true;
       for (var i=0; i<structure.length; i++) {
         for (var j=0; j<structure[0].length; j++) {
           var current = structure[i][j];
-          var isToReplace = comparator(current, element);
-          if (isToReplace)
+          var isToReplace = comparator(current, target);
+          if (isToReplace && !first)
             structure[i][j] = substitution;
+
+          if (isToReplace && first) {
+            structure[i][j] = target;
+            first = false;
+          }
+
         }
       }
+      return structure;
     };
 
     return {
