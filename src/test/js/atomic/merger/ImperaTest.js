@@ -2,39 +2,30 @@ test(
   'ImperaTest',
 
   [
-    'ephox.peanut.Fun',
     'ephox.scullion.Struct',
     'ephox.snooker.model.Impera'
   ],
 
-  function (Fun, Struct, Impera) {
-    var comparator = Fun.tripeEquals;
+  function (Struct, Impera) {
+
     var inputRangeStruct = Struct.immutableBag([ 'startCol', 'startRow', 'endCol', 'endRow' ], []);
 
 
-    var structureA = [ [ 'a', 'b', 'c' ] ];
+    var structureA = [ [ 'a', 'b', 'c' ], [ 'd', 'e', 'f'] ];
     var rangeA = inputRangeStruct({
       startCol: 0,
       startRow: 0,
-      endCol: 2,
+      endCol: 1,
       endRow: 0
     });
-
-
     var leadCellA = 'a';
 
 
-    var resultA = Impera.render(structureA, rangeA, leadCellA, comparator);
-    var expectedA = {
-      element: 'tr',
-      cells: [
-        {
-          element: 'a',
-          colspan: 3,
-          rowspan: 1
-        }
-      ]
-    };
+    var resultA = Impera.render(structureA, rangeA, leadCellA);
+    var expectedA = [
+      [ 'a', 'a', 'c' ],
+      [ 'd', 'e', 'f' ]
+    ];
     assert.eq(expectedA, resultA);
   }
 );
