@@ -14,9 +14,9 @@ define(
   ],
 
   function (Responses, KeySelection, TableKeys, Logger, SelectionRange, Situ, Fun, Option, SelectorFind) {
-    var simulate = function (win, isRoot, direction, initial) {
+    var simulate = function (bridge, isRoot, direction, initial) {
       return SelectorFind.closest(initial, 'td,th').bind(function (start) {
-        return TableKeys.handle(win, isRoot, direction).bind(function (range) {
+        return TableKeys.handle(bridge, isRoot, direction).bind(function (range) {
           return SelectorFind.closest(range.finish(), 'td,th').map(function (finish) {
             return {
               start: Fun.constant(start),
@@ -28,8 +28,8 @@ define(
       });
     };
 
-    var navigate = function (win, isRoot, direction, initial) {
-      return simulate(win, isRoot, direction, initial).map(function (info) {
+    var navigate = function (bridge, isRoot, direction, initial) {
+      return simulate(bridge, isRoot, direction, initial).map(function (info) {
         var range = info.range();
         return Responses.response(
           Option.some(SelectionRange.write(
@@ -41,9 +41,9 @@ define(
       });
     };
 
-    var select = function (win, container, isRoot, direction, initial) {
-      return simulate(win, isRoot, direction, initial).bind(function (info) {
-        return KeySelection.detect(win, container, isRoot, info.start(), info.finish());
+    var select = function (bridge, container, isRoot, direction, initial) {
+      return simulate(bridge, isRoot, direction, initial).bind(function (info) {
+        return KeySelection.detect(container, isRoot, info.start(), info.finish());
       });
     };
 

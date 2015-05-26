@@ -14,11 +14,11 @@ define(
   ],
 
   function (Responses, CellSelection, SelectionRange, Situ, WindowSelection, Awareness, Option, Compare, SelectorFind) {
-    var sync = function (win, container, isRoot, start, soffset, finish, foffset) {
+    var sync = function (container, isRoot, start, soffset, finish, foffset) {
       if (! WindowSelection.isCollapsed(start, soffset, finish, foffset)) {
         return SelectorFind.closest(start, 'td,th').bind(function (s) {
           return SelectorFind.closest(finish, 'td,th').bind(function (f) {
-            return detect(win, container, isRoot, s, f);
+            return detect(container, isRoot, s, f);
           });
         });
       } else {
@@ -27,7 +27,7 @@ define(
     };
 
     // If the cells are different, and there is a rectangle to connect them, select the cells.
-    var detect = function (win, container, isRoot, start, finish) {
+    var detect = function (container, isRoot, start, finish) {
       if (! Compare.eq(start, finish)) {
         var boxes = CellSelection.identify(start, finish).getOr([]);
         if (boxes.length > 0) {

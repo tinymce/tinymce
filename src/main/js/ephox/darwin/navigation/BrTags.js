@@ -66,7 +66,7 @@ define(
     };
 
 
-    var tryBr = function (win, isRoot, element, offset, direction) {
+    var tryBr = function (isRoot, element, offset, direction) {
       // Three different situations
       // 1. the br is the child, and it has a previous sibling. Use parent, index-1)
       // 2. the br is the child and it has no previous sibling, set to before the previous gather result

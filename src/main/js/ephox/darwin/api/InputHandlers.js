@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.darwin.api.Responses',
+    'ephox.darwin.api.WindowBridge',
     'ephox.darwin.keyboard.KeySelection',
     'ephox.darwin.keyboard.VerticalMovement',
     'ephox.darwin.mouse.MouseSelection',
@@ -12,7 +13,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (Responses, KeySelection, VerticalMovement, MouseSelection, KeyDirection, CellSelection, Fun, Option) {
+  function (Responses, WindowBridge, KeySelection, VerticalMovement, MouseSelection, KeyDirection, CellSelection, Fun, Option) {
     var mouse = function (container) {
       var handlers = MouseSelection(container);
 
@@ -24,6 +25,8 @@ define(
     };
 
     var keyboard = function (win, container, isRoot) {
+      var bridge = WindowBridge(win);
+
       var clearToNavigate = function () {
         CellSelection.clear(container);
         return Option.none();
@@ -35,13 +38,13 @@ define(
 
         var handler = CellSelection.retrieve(container).fold(function () {
           // Shift down should predict the movement and set the selection.
-          if (keycode === 40 && shiftKey) return Fun.curry(VerticalMovement.select, win, container, isRoot, KeyDirection.down, element);
+          if (keycode === 40 && shiftKey) return Fun.curry(VerticalMovement.select, bridge, container, isRoot, KeyDirection.down, element);
           // Shift up should predict the movement and set the selection.
-          else if (keycode === 38 && shiftKey) return Fun.curry(VerticalMovement.select, win, container, isRoot, KeyDirection.up, element);
+          else if (keycode === 38 && shiftKey) return Fun.curry(VerticalMovement.select, bridge, container, isRoot, KeyDirection.up, element);
           // Down should predict the movement and set the cursor
-          else if (keycode === 40) return Fun.curry(VerticalMovement.navigate, win, isRoot, KeyDirection.down, element);
+          else if (keycode === 40) return Fun.curry(VerticalMovement.navigate, bridge, isRoot, KeyDirection.down, element);
           // Up should predict the movement and set the cursor
-          else if (keycode === 38) return Fun.curry(VerticalMovement.navigate, win, isRoot, KeyDirection.up, element);
+          else if (keycode === 38) return Fun.curry(VerticalMovement.navigate, bridge, isRoot, KeyDirection.up, element);
           else return Option.none;
         }, function (selected) {
 
@@ -72,7 +75,7 @@ define(
           var keycode = event.raw().which;
           var shiftKey = event.raw().shiftKey === true;
           if (shiftKey === false) return Option.none();
-          if (keycode >= 37 && keycode <= 40) return KeySelection.sync(win, container, isRoot, start, soffset, finish, foffset);
+          if (keycode >= 37 && keycode <= 40) return KeySelection.sync(container, isRoot, start, soffset, finish, foffset);
           else return Option.none();
         }, Option.none);
       };

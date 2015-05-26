@@ -4,8 +4,6 @@ define(
   [
     'ephox.darwin.keyboard.Carets',
     'ephox.darwin.keyboard.Rectangles',
-    'ephox.darwin.util.Logger',
-    'ephox.fussy.api.Point',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.phoenix.api.dom.DomGather',
@@ -13,7 +11,7 @@ define(
     'global!Math'
   ],
 
-  function (Carets, Rectangles, Logger, Point, Fun, Option, DomGather, Adt, Math) {
+  function (Carets, Rectangles, Fun, Option, DomGather, Adt, Math) {
     var JUMP_SIZE = 5;
     /*
      * This isn't right ... but let's just hook it up first.
@@ -64,16 +62,16 @@ define(
       gather: DomGather.after
     };
 
-    var adjustTil = function (win, direction, original, caret, counter) {
+    var adjustTil = function (bridge, direction, original, caret, counter) {
       if (counter === 0) return Option.some(caret);
-      return Point.find(win, caret.left(), direction.point(caret)).bind(function (guess) {
+      return bridge.situsFromPoint(caret.left(), direction.point(caret)).bind(function (guess) {
         return guess.start().fold(Option.none, function (element, offset) {
           console.log('guess:' , element.dom(), offset);
-          return Rectangles.getBox(win, element, offset).bind(function (guessBox) {
+          return Rectangles.getBox(bridge, element, offset).bind(function (guessBox) {
             console.log('*************************************', guessBox);
             return direction.adjuster(guessBox, original, caret).fold(Option.none, function (newCaret) {
               console.log('Hit target moving from: ', direction.point(caret), ' to ', direction.point(newCaret));
-              return adjustTil(win, direction, original, newCaret, counter-1);
+              return adjustTil(bridge, direction, original, newCaret, counter-1);
             }, function (newCaret) {
               console.log('Adjusted to: ', direction.point(newCaret));
               return Option.some(newCaret);
@@ -86,29 +84,29 @@ define(
       });
     };
 
-    var ieTryDown = function (win, caret) {
-      return Point.find(win, caret.left(), caret.bottom() + JUMP_SIZE);
+    var ieTryDown = function (bridge, caret) {
+      return bridge.situsFromPoint(caret.left(), caret.bottom() + JUMP_SIZE);
     };
 
-    var ieTryUp = function (win, caret) {
-      return Point.find(win, caret.left(), caret.top() - JUMP_SIZE);
+    var ieTryUp = function (bridge, caret) {
+      return bridge.situsFromPoint(caret.left(), caret.top() - JUMP_SIZE);
     };
 
-    var retry = function (direction, win, caret) {
+    var retry = function (direction, bridge, caret) {
       console.log('caret: ', caret);
       console.log('Executing retry');
       console.log('start: ', direction.point(caret));
       var moved = direction.move(caret, JUMP_SIZE);
       console.log('moved: ', direction.point(moved));
-      var adjusted = adjustTil(win, direction, caret, moved, 100).getOr(moved);
+      var adjusted = adjustTil(bridge, direction, caret, moved, 100).getOr(moved);
       console.log('adjusted: ', direction.point(adjusted));
-      if (direction.point(adjusted) > win.innerHeight) {
-        var delta = direction.point(adjusted) - (win.innerHeight + win.scrollY) + 10;
-        win.scrollBy(0, delta);
-        return Point.find(win, adjusted.left(), direction.point(adjusted) - delta);
+      if (direction.point(adjusted) > bridge.innerHeight) {
+        var delta = direction.point(adjusted) - (bridge.innerHeight + bridge.scrollY) + 10;
+        bridge.scrollBy(0, delta);
+        return bridge.situsFromPoint(adjusted.left(), direction.point(adjusted) - delta);
       } else {
         console.log('not scrolling');
-        return Point.find(win, adjusted.left(), direction.point(adjusted));
+        return bridge.situsFromPoint(adjusted.left(), direction.point(adjusted));
       }
     };
 
