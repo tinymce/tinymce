@@ -1,12 +1,11 @@
 define(
-  'ephox.snooker.model.Capisco',
+  'ephox.snooker.model.TableGroup',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun'
+    'ephox.compass.Arr'
   ],
 
-  function (Arr, Fun) {
+  function (Arr) {
     var getColumn = function (grid, index) {
       return Arr.map(grid, function (row) {
         return row[index];
@@ -36,7 +35,7 @@ define(
      *   colspan: column span of the cell at (row, column)
      *   rowspan: row span of the cell at (row, column)
      */
-    var capisco = function (row, column, grid, comparator) {
+    var subGrid = function (row, column, grid, comparator) {
       var restOfRow = getRow(grid, row).slice(column);
       var endColIndex = findDiff(restOfRow, comparator);
 
@@ -50,7 +49,7 @@ define(
     };
 
     return {
-      capisco: capisco
+      subGrid: subGrid
     };
   }
 );

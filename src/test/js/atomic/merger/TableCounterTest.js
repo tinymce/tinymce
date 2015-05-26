@@ -1,12 +1,13 @@
 test(
-  'MaurizioTest',
+  'TableCounterTest',
 
   [
+    'ephox.compass.Obj',
     'ephox.peanut.Fun',
     'ephox.snooker.model.Warefun'
   ],
 
-  function (Fun, Warefun) {
+  function (Obj, Fun, Warefun) {
     /* global assert */
 
     var testA = [

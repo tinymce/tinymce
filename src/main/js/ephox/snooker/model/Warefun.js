@@ -4,10 +4,10 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
-    'ephox.snooker.model.Capisco'
+    'ephox.snooker.model.TableGroup'
   ],
 
-  function (Arr, Fun, Capisco) {
+  function (Arr, Fun, TableGroup) {
 
     var render = function (structure, comparator) {
       var seen = Arr.map(structure, function (row, ri) {
@@ -28,21 +28,21 @@ define(
         var cells = Arr.bind(row, function (cell, ci) {
           // if we have seen this one, then skip it.
           if (seen[ri][ci] === false) {
-            var result = Capisco.capisco(ri, ci, structure, comparator);
+            var result = TableGroup.subGrid(ri, ci, structure, comparator);
             updateSeen(ri, ci, result.rowspan, result.colspan);
 
             return [ {
-              element: Fun.constant(cell),
-              rowspan: Fun.constant(result.rowspan),
-              colspan: Fun.constant(result.colspan)
+              element: Fun.identity(cell),
+              rowspan: Fun.identity(result.rowspan),
+              colspan: Fun.identity(result.colspan)
             } ];
           } else {
             return [];
           }
         });
         return {
-          element: Fun.constant('tr'),
-          cells: Fun.constant(cells)
+          element: Fun.identity('tr'),
+          cells: Fun.identity(cells)
         };
       });
     };

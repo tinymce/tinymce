@@ -1,14 +1,14 @@
 test(
-  'CapiscoTest',
+  'TableGroupTest',
 
   [
     'ephox.peanut.Fun',
-    'ephox.snooker.model.Capisco'
+    'ephox.snooker.model.TableGroup'
   ],
 
-  function (Fun, Capisco) {
+  function (Fun, TableGroup) {
     var check = function (expected, row, column, grid) {
-      var actual = Capisco.capisco(row, column, grid, Fun.tripleEquals);
+      var actual = TableGroup.subGrid(row, column, grid, Fun.tripleEquals);
       assert.eq(expected.rowspan, actual.rowspan);
       assert.eq(expected.colspan, actual.colspan);
     };
