@@ -151,6 +151,10 @@ define(
       Insert.append(eraseColumn, Element.fromText('Erase column'));
       Insert.append(ephoxUi, eraseColumn);
 
+      var mergeCells = Element.fromTag('button');
+      Insert.append(mergeCells, Element.fromText('Merge cells'));
+      Insert.append(ephoxUi, mergeCells);
+
       var makeButton = function (desc) {
         var button = Element.fromTag('button');
         Insert.append(button, Element.fromText(desc));
@@ -223,6 +227,8 @@ define(
       DomEvent.bind(unmakeColumnHeader, 'click', runOperation(TableOperations.unmakeColumnHeader));
       DomEvent.bind(makeRowHeader, 'click', runOperation(TableOperations.makeRowHeader));
       DomEvent.bind(unmakeRowHeader, 'click', runOperation(TableOperations.unmakeRowHeader));
+
+      DomEvent.bind(mergeCells, 'click', runOperation(TableOperations.mergeCells));
     };
   }
 );

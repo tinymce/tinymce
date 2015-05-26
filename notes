@@ -20,13 +20,13 @@ A. Gotcha: merging cells that are already spanning.
 How would I break up split cells?
 
 
----------------
-| | | | | | | |
----------------
-| | | | | | | |
----------------
-| | | | | | | |
----------------
+  ---------------
+  | | | | | | | |
+  ---------------
+  | | | | | | | |
+  ---------------
+  | | | | | | | |
+  ---------------
 
 
 
@@ -35,7 +35,4 @@ How would I break up split cells?
 
 
 
-We have something like this:
-
-
-
+Given a table and a starting cell and a finishing cell determine whether or not that selection is rectangular.

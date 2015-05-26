@@ -2,8 +2,11 @@ define(
   'ephox.snooker.api.TableOperations',
 
   [
+    'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.snooker.api.TableLookup',
+    'ephox.snooker.model.Warefun',
+    'ephox.snooker.model.Warehouse',
     'ephox.snooker.operate.ColumnModification',
     'ephox.snooker.operate.RowModification',
     'ephox.snooker.operate.TableOperation',
@@ -13,7 +16,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Fun, TableLookup, ColumnModification, RowModification, TableOperation, Adjustments, Compare, Remove, SelectorFind) {
+  function (Arr, Fun, TableLookup, Warefun, Warehouse, ColumnModification, RowModification, TableOperation, Adjustments, Compare, Remove, SelectorFind) {
     /*
      * Using the current element, execute operation on the table.
      */
@@ -26,6 +29,46 @@ define(
             }, adjustment, direction);
 
             post(table);
+          });
+        });
+      };
+    };
+
+    var getElementGrid = function (warehouse) {
+      var grid = [];
+      for (var r = 0; r < warehouse.grid().rows(); r++) {
+        grid[r] = [];
+        for (var c = 0; c < warehouse.grid().columns(); c++) {
+          grid[r][c] = Warehouse.getAt(warehouse, r, c).map(function (e) { return e.element(); }).getOr(undefined);
+        }
+      }
+      return grid;
+    };
+
+    var multi = function (_operation, _adjustment, _post) {
+      return function (wire, element, generators, direction) {
+        TableLookup.cell(element).each(function (cell) {
+          SelectorFind.ancestor(cell, 'table').each(function (table) {
+            // var colspan = prompt('Colspan: ');
+            // var rowspan = prompt('Rowspan: ');
+            //
+            var colspan = 2;
+            var rowspan = 2 ;
+            TableOperation.run(wire, table, cell, function (warehouse, dompos) {
+              var grid = getElementGrid(warehouse);
+              var fun = Warefun.render(grid, Compare.eq);
+
+              // now we have to correlate the rows
+              var lists = warehouse.all();
+              var hackedFun = Arr.map(fun, function (f, fi) {
+                return {
+                  element: lists[fi].element,
+                  cells: f.cells
+                };
+              });
+
+              return hackedFun;
+            }, adjustment, direction);
           });
         });
       };
@@ -49,7 +92,8 @@ define(
       makeColumnHeader: modify(ColumnModification.makeHeader, Fun.noop, Fun.noop),
       unmakeColumnHeader: modify(ColumnModification.unmakeHeader, Fun.noop, Fun.noop),
       makeRowHeader: modify(RowModification.makeHeader, Fun.noop, Fun.noop),
-      unmakeRowHeader: modify(RowModification.unmakeHeader, Fun.noop, Fun.noop)
+      unmakeRowHeader: modify(RowModification.unmakeHeader, Fun.noop, Fun.noop),
+      mergeCells: multi(Fun.noop, Fun.noop)
     };
   }
 );
