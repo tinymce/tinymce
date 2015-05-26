@@ -12,13 +12,11 @@ define(
         for (var j=0; j<structure[0].length; j++) {
           var current = structure[i][j];
           var isToReplace = comparator(current, target);
-          if (isToReplace && !first)
-            structure[i][j] = substitution;
 
-          if (isToReplace && first) {
-            structure[i][j] = target;
+          if (isToReplace === true && first === false)
+            structure[i][j] = substitution;
+          else if (isToReplace === true)
             first = false;
-          }
 
         }
       }
