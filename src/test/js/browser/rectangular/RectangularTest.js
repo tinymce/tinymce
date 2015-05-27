@@ -46,10 +46,18 @@ test(
         '</table>'
       );
     Insert.append(div, table);
-    var startCell = SelectorFilter.descendants(table, 'td#B1')[0];
-    var endCell = SelectorFilter.descendants(table, 'td#C3')[0];
+    var startCellA = SelectorFilter.descendants(table, 'td#B1')[0];
+    var endCellA = SelectorFilter.descendants(table, 'td#C3')[0];
 
-    Rectangular.isRectangular(table, startCell, endCell);
+    var checkA = Rectangular.isRectangular(table, startCellA, endCellA);
+    assert.eq(false, checkA.isRect());
+
+
+    var startCellB = SelectorFilter.descendants(table, 'td#A1')[0];
+    var endCellB = SelectorFilter.descendants(table, 'td#B3')[0];
+
+    var checkB = Rectangular.isRectangular(table, startCellB, endCellB);
+    assert.eq(true, checkB.isRect());
 
     // Remove.remove(div);
   }
