@@ -2,45 +2,33 @@ define(
   'ephox.darwin.navigation.CellFinder',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.sugar.api.Compare',
+    'ephox.sugar.api.ElementFind',
     'ephox.sugar.api.SelectorFilter',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Fun, Option, Compare, SelectorFilter, SelectorFind) {
-    // TODO: Implement colspans and rowspans. Note, this will probably interact with snooker.
+  function (Option, ElementFind, SelectorFilter, SelectorFind) {
+    // IMPROVEMENT: Implement colspans and rowspans. Note, this will probably interact with snooker.
 
     var findInTable = function (cell) {
-      return findColumn(cell).bind(function (colIndex) {
-        return findRow(cell).map(function (rowIndex) {
+      return findColumn(cell).bind(function (cellInfo) {
+        return findRow(cell).map(function (rowInfo) {
           return {
-            rowIndex: Fun.constant(rowIndex),
-            colIndex: Fun.constant(colIndex),
+            rowIndex: rowInfo.index,
+            colIndex: cellInfo.index,
           };
         });
       });
     };
 
     var findColumn = function (cell) {
-      return SelectorFind.ancestor(cell, 'tr').bind(function (tr) {
-        var cells = SelectorFilter.descendants(tr, 'td,th');
-        var isElem = Fun.curry(Compare.eq, cell);
-        var index = Arr.findIndex(cells, isElem);
-        return index !== -1 ? Option.some(index) : Option.none();
-      });
+      return ElementFind.inAncestorOfSelector(cell, 'tr', 'td,th');
     };
 
     var findRow = function (cell) {
-      return SelectorFind.ancestor(cell, 'table').bind(function (table) {
-        return SelectorFind.ancestor(cell, 'tr').bind(function (row) {
-          var rows = SelectorFilter.descendants(table, 'tr');
-          var isRow = Fun.curry(Compare.eq, row);
-          var index = Arr.findIndex(rows, isRow);
-          return index !== -1 ? Option.some(index) : Option.none();
-        });
+      return SelectorFind.ancestor(cell, 'tr').bind(function (row) {
+        return ElementFind.inAncestorOfSelector(row, 'table', 'tr');
       });
     };
 
@@ -51,9 +39,6 @@ define(
         return Option.from(cells[colIndex]);
       });
     };
-
-
-
 
     return {
       findInTable: findInTable,
