@@ -65,7 +65,7 @@ define("tinymce/pasteplugin/Clipboard", [
 				}
 
 				if (!args.isDefaultPrevented()) {
-					editor.insertContent(html, {merge: editor.settings.paste_merge_formats !== false});
+					editor.insertContent(html, {merge: editor.settings.paste_merge_formats !== false, data: {paste: true}});
 				}
 			}
 		}
@@ -589,19 +589,40 @@ define("tinymce/pasteplugin/Clipboard", [
 
 			// Remove all data images from paste for example from Gecko
 			// except internal images like video elements
-			editor.parser.addNodeFilter('img', function(nodes) {
-				if (!editor.settings.paste_data_images) {
+			editor.parser.addNodeFilter('img', function(nodes, name, args) {
+				function isPasteInsert(args) {
+					return args.data && args.data.paste === true;
+				}
+
+				function remove(node) {
+					if (!node.attr('data-mce-object') && src !== Env.transparentSrc) {
+						node.remove();
+					}
+				}
+
+				function isWebKitFakeUrl(src) {
+					return src.indexOf("webkit-fake-url") === 0;
+				}
+
+				function isDataUri(src) {
+					return src.indexOf("data:") === 0;
+				}
+
+				if (!editor.settings.paste_data_images && isPasteInsert(args)) {
 					var i = nodes.length;
 
 					while (i--) {
 						var src = nodes[i].attributes.map.src;
 
-						// Some browsers automatically produce data uris on paste
+						if (!src) {
+							continue;
+						}
+
 						// Safari on Mac produces webkit-fake-url see: https://bugs.webkit.org/show_bug.cgi?id=49141
-						if (src && /^(data:image|webkit\-fake\-url)/.test(src)) {
-							if (!nodes[i].attr('data-mce-object') && src !== Env.transparentSrc) {
-								nodes[i].remove();
-							}
+						if (isWebKitFakeUrl(src)) {
+							remove(nodes[i]);
+						} else if (!editor.settings.allow_html_data_urls && isDataUri(src)) {
+							remove(nodes[i]);
 						}
 					}
 				}
