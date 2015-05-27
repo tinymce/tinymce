@@ -7,10 +7,11 @@ define(
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.selection.SpanningCells',
-    'ephox.sugar.api.Compare'
+    'ephox.sugar.api.Compare',
+    'global!Math'
   ],
 
-  function (Fun, Structs, DetailsList, Warehouse, SpanningCells, Compare) {
+  function (Fun, Structs, DetailsList, Warehouse, SpanningCells, Compare, Math) {
     var getBox = function (table, startCell, finishCell) {
       var list = DetailsList.fromTable(table);
       var warehouse = Warehouse.generate(list);
@@ -33,10 +34,15 @@ define(
     var isRectangular = function (table, startCell, finishCell) {
       var result = getBox(table, startCell, finishCell).map(function (info) {
 
-        var isRect = true;
-        for (var i = info.startRow(); i<=info.finishRow(); i++) {
-          for (var j = info.startCol(); j<=info.finishCol(); j++ ) {
+        var startRow = Math.min(info.startRow(), info.finishRow());
+        var finishRow = Math.max(info.startRow(), info.finishRow());
 
+        var startCol = Math.min(info.startCol(), info.finishCol());
+        var finishCol = Math.max(info.startCol(), info.finishCol());
+
+        var isRect = true;
+        for (var i = startRow; i<=finishRow; i++) {
+          for (var j = startCol; j<=finishCol; j++ ) {
             var boundingBox = Structs.bounds({
               startRow: info.startRow(),
               startCol : info.startCol(),
@@ -44,12 +50,12 @@ define(
               finishCol : info.finishCol()
             });
 
-            var feedA = Structs.cell({
+            var cell = Structs.cell({
               row : i,
               col : j
             });
 
-            isRect = isRect && SpanningCells.isSpanning(info.warehouse.access(), feedA, boundingBox);
+            isRect = isRect && SpanningCells.isSpanning(info.warehouse.access(), cell, boundingBox);
           }
         }
 
