@@ -35,7 +35,6 @@ define(
     };
 
     var identify = function (start, finish) {
-      console.log('identifying: ', start.dom(), finish.dom());
       // So ignore the colspan, rowspan for the time being.
       return DomParent.sharedOne(lookupTable, [ start, finish ]).bind(function (tbl) {
         // For all the rows, identify the information.
@@ -44,7 +43,6 @@ define(
           return CellFinder.findInTable(finish).map(function (finishData) {
             var minRowIndex = Math.min(startData.rowIndex(), finishData.rowIndex());
             var maxRowIndex = Math.max(startData.rowIndex(), finishData.rowIndex());
-            console.log('minRow', minRowIndex, 'maxRow', maxRowIndex, start.dom(), finish.dom());
             var subrows = rows.slice(minRowIndex, maxRowIndex + 1);
             return Arr.bind(subrows, function (r) {
               var cells = SelectorFilter.children(r, 'td,th');

@@ -5,12 +5,11 @@ define(
     'ephox.darwin.selection.CellSelection',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.sugar.api.SelectorFind',
-    'ephox.sugar.api.Traverse'
+    'ephox.sugar.api.SelectorFind'
   ],
 
-  function (CellSelection, Fun, Option, SelectorFind, Traverse) {
-    return function (container) {
+  function (CellSelection, Fun, Option, SelectorFind) {
+    return function (bridge, container) {
       var cursor = Option.none();
 
       var mousedown = function (event) {
@@ -28,7 +27,7 @@ define(
             CellSelection.selectRange(container, boxes, start, finish.getOrDie());
 
             // Do this elsewhere. Fussy should have a remove all ranges method.
-            Traverse.defaultView(container).dom().getSelection().removeAllRanges();
+            bridge.clearSelection();
           }
         });
       };

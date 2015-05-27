@@ -8,19 +8,13 @@ define(
     'ephox.fred.PlatformDetection',
     'ephox.oath.proximity.Awareness',
     'ephox.perhaps.Option',
-    'ephox.phoenix.api.data.Spot',
-    'ephox.scullion.ADT'
+    'ephox.phoenix.api.data.Spot'
   ],
 
-  function (Rectangles, BeforeAfter, BrTags, PlatformDetection, Awareness, Option, Spot, Adt) {
-    var platform = PlatformDetection.detect();
+  function (Rectangles, BeforeAfter, BrTags, PlatformDetection, Awareness, Option, Spot) {
+    var MAX_RETRIES = 1000;
 
-    var adt = Adt.generate([
-      { 'none' : [ 'message'] },
-      { 'success': [ ] },
-      { 'failedUp': [ 'cell' ] },
-      { 'failedDown': [ 'cell' ] }
-    ]);
+    var platform = PlatformDetection.detect();
 
     var findSpot = function (bridge, isRoot, direction) {
       return bridge.getSelection().bind(function (sel) {
@@ -68,7 +62,7 @@ define(
     var handle = function (bridge, isRoot, direction) {
       return findSpot(bridge, isRoot, direction).bind(function (spot) {
         // There is a point to start doing box-hitting from
-        return scan(bridge, isRoot, spot.element(), spot.offset(), direction, 1000).map(bridge.fromSitus);
+        return scan(bridge, isRoot, spot.element(), spot.offset(), direction, MAX_RETRIES).map(bridge.fromSitus);
       });
     };
 

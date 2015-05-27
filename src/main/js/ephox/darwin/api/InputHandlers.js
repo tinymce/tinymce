@@ -14,8 +14,10 @@ define(
   ],
 
   function (Responses, WindowBridge, KeySelection, VerticalMovement, MouseSelection, KeyDirection, CellSelection, Fun, Option) {
-    var mouse = function (container) {
-      var handlers = MouseSelection(container);
+    var mouse = function (win, container) {
+      var bridge = WindowBridge(win);
+
+      var handlers = MouseSelection(bridge, container);
 
       return {
         mousedown: handlers.mousedown,

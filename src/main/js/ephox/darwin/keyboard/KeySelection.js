@@ -15,7 +15,6 @@ define(
 
   function (Responses, CellSelection, SelectionRange, Situ, WindowSelection, Awareness, Option, Compare, SelectorFind) {
     var sync = function (container, isRoot, start, soffset, finish, foffset) {
-      console.log('syncing: ', start.dom(), 'finish', finish.dom());
       if (! WindowSelection.isCollapsed(start, soffset, finish, foffset)) {
         return SelectorFind.closest(start, 'td,th').bind(function (s) {
           return SelectorFind.closest(finish, 'td,th').bind(function (f) {

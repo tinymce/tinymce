@@ -13,9 +13,6 @@ define(
 
   function (Carets, Rectangles, Fun, Option, DomGather, Adt, Math) {
     var JUMP_SIZE = 5;
-    /*
-     * This isn't right ... but let's just hook it up first.
-     */
 
     var adt = Adt.generate([
       { 'none' : [] },

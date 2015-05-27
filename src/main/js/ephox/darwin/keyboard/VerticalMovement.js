@@ -5,7 +5,6 @@ define(
     'ephox.darwin.api.Responses',
     'ephox.darwin.keyboard.KeySelection',
     'ephox.darwin.keyboard.TableKeys',
-    'ephox.darwin.util.Logger',
     'ephox.fussy.api.SelectionRange',
     'ephox.fussy.api.Situ',
     'ephox.peanut.Fun',
@@ -13,7 +12,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Responses, KeySelection, TableKeys, Logger, SelectionRange, Situ, Fun, Option, SelectorFind) {
+  function (Responses, KeySelection, TableKeys, SelectionRange, Situ, Fun, Option, SelectorFind) {
     var simulate = function (bridge, isRoot, direction, initial) {
       return SelectorFind.closest(initial, 'td,th').bind(function (start) {
         return TableKeys.handle(bridge, isRoot, direction).bind(function (range) {

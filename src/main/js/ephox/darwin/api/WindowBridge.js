@@ -28,12 +28,17 @@ define(
         return Point.find(win, x, y);
       };
 
+      var clearSelection = function () {
+        WindowSelection.clearAll(win);
+      };
+
       return {
         getRect: getRect,
         getRangedRect: getRangedRect,
         getSelection: getSelection,
         fromSitus: fromSitus,
-        situsFromPoint: situsFromPoint
+        situsFromPoint: situsFromPoint,
+        clearSelection: clearSelection
       };
     };
   }
