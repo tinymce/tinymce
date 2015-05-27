@@ -145,6 +145,8 @@ define("tinymce/Env", [], function() {
 		 * @property documentMode
 		 * @type Number
 		 */
-		documentMode: ie && !ie12 ? (document.documentMode || 7) : 10
+		documentMode: ie && !ie12 ? (document.documentMode || 7) : 10,
+
+		fileApi: "FormData" in window && "FileReader" in window
 	};
 });
