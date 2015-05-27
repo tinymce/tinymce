@@ -14,6 +14,7 @@ define(
     var extended = Struct.immutable('element', 'rowspan', 'colspan', 'row', 'column');
     var context = Struct.immutable('before', 'on', 'after');
     var rowdata = Struct.immutable('element', 'cells');
+    var spanningCell = Struct.immutableBag([ 'structure', 'startRow', 'startCol', 'finishRow', 'finishCol', 'cellRow', 'cellCol' ],[]);
 
     return {
       dimensions: dimensions,
@@ -23,7 +24,8 @@ define(
       extended: extended,
       detail: detail,
       context: context,
-      rowdata: rowdata
+      rowdata: rowdata,
+      spanningCell: spanningCell
     };
   }
 );
