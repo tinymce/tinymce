@@ -37,18 +37,6 @@ test(
     var resultA = SpanningCells.isSpanning(feedA);
     assert.eq(false, resultA);
 
-    var feedC = Structs.spanningCell({
-      structure : inputA.all(),
-      startRow: 1,
-      startCol : 1,
-      finishRow : 3,
-      finishCol : 3,
-      cellRow : 0,
-      cellCol : 0
-    });
-    var resultC = SpanningCells.isSpanning(feedC);
-    assert.eq(false, resultC);
-
     var feedB = Structs.spanningCell({
       structure : inputA.all(),
       startRow: 1,
@@ -61,6 +49,31 @@ test(
 
     var resultB = SpanningCells.isSpanning(feedB);
     assert.eq(false, resultB);
+
+    var feedC = Structs.spanningCell({
+      structure : inputA.all(),
+      startRow: 1,
+      startCol : 1,
+      finishRow : 3,
+      finishCol : 3,
+      cellRow : 0,
+      cellCol : 0
+    });
+    var resultC = SpanningCells.isSpanning(feedC);
+    assert.eq(false, resultC);
+
+
+    var feedD = Structs.spanningCell({
+      structure : inputA.all(),
+      startRow: 1,
+      startCol : 1,
+      finishRow : 3,
+      finishCol : 3,
+      cellRow : 3,
+      cellCol : 1
+    });
+    var resultD = SpanningCells.isSpanning(feedD);
+    assert.eq(true, resultD);
 
   }
 );

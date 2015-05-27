@@ -34,7 +34,7 @@ define(
       return  cellStartCol >= check.startCol() &&
               cellFinishCol <= check.finishCol() &&
               cellStartRow >= check.startRow() &&
-              cellFinishCol >= check.finishRow();
+              cellFinishRow >= check.finishRow();
     };
 
     return {
