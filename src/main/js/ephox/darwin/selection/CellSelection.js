@@ -3,8 +3,8 @@ define(
 
   [
     'ephox.compass.Arr',
+    'ephox.darwin.api.Ephemera',
     'ephox.darwin.navigation.CellFinder',
-    'ephox.darwin.style.Styles',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.robin.api.dom.DomParent',
@@ -14,23 +14,19 @@ define(
     'global!Math'
   ],
 
-  function (Arr, CellFinder, Styles, Fun, Option, DomParent, Class, SelectorFilter, SelectorFind, Math) {
-    var selected = Styles.resolve('selected');
-    var lastSelected = Styles.resolve('last-selected');
-    var firstSelected = Styles.resolve('first-selected');
-
+  function (Arr, Ephemera, CellFinder, Fun, Option, DomParent, Class, SelectorFilter, SelectorFind, Math) {
     var clear = function (container) {
-      var sels = SelectorFilter.descendants(container, '.' + selected);
+      var sels = SelectorFilter.descendants(container, '.' + Ephemera.selectedClass());
       Arr.each(sels, function (sel) {
-        Class.remove(sel, selected);
-        Class.remove(sel, lastSelected);
-        Class.remove(sel, firstSelected);
+        Class.remove(sel, Ephemera.selectedClass());
+        Class.remove(sel, Ephemera.lastSelectedClass());
+        Class.remove(sel, Ephemera.firstSelectedClass());
       });
     };
 
     var select = function (cells) {
       Arr.each(cells, function (cell) {
-        Class.add(cell, selected);
+        Class.add(cell, Ephemera.selectedClass());
       });
     };
 
@@ -62,20 +58,20 @@ define(
     };
 
     var retrieve = function (container) {
-      var sels = SelectorFilter.descendants(container, '.' + selected);
+      var sels = SelectorFilter.descendants(container, '.' + Ephemera.selectedClass());
       return sels.length > 0 ? Option.some(sels) : Option.none();
     };
 
     var getLast = function (boxes) {
       var raw = Arr.find(boxes, function (box) {
-        return Class.has(box, lastSelected);
+        return Class.has(box, Ephemera.lastSelectedClass());
       });
       return Option.from(raw);
     };
 
     var expandTo = function (finish) {
       return SelectorFind.ancestor(finish, 'table').bind(function (table) {
-        return SelectorFind.descendant(table, '.' + firstSelected).bind(function (start) {
+        return SelectorFind.descendant(table, '.' + Ephemera.firstSelectedClass()).bind(function (start) {
           return identify(start, finish).map(function (boxes) {
             return {
               boxes: Fun.constant(boxes),
@@ -99,8 +95,8 @@ define(
     var selectRange = function (container, cells, start, finish) {
       clear(container);
       select(cells);
-      Class.add(start, firstSelected);
-      Class.add(finish, lastSelected);
+      Class.add(start, Ephemera.firstSelectedClass());
+      Class.add(finish, Ephemera.lastSelectedClass());
     };
 
     return {
