@@ -11,21 +11,21 @@ test(
   function (Struct, Structs, Warehouse, SpanningCells) {
 
 
-    var s = Structs.detail; // 'element', 'rowspan', 'colspan'
+    var s = Structs.detail;  // 'element', 'rowspan', 'colspan'
     var f = Struct.immutable('element', 'cells');
 
-    var testTable = [
+    var testTableA = [
       f('r1', [ s('a',1,1), s('b',1,1), s('c',1,1), s('d',1,1), s('e',1,1) ]),
       f('r2', [ s('f',1,1), s('g',1,1), s('h',1,2), s('i',1,1) ]),
       f('r3', [ s('l',1,1), s('m',1,1), s('n',1,3)]),
       f('r4', [ s('o',1,1), s('p',1,1), s('q',1,2), s('r',1,1) ]),
       f('r5', [ s('s',1,1), s('t',1,1), s('u',1,1), s('v',1,1), s('z',1,1)])
     ];
-    var inputA = Warehouse.generate(testTable);
+    var inputA = Warehouse.generate(testTableA);
 
     // We are checking if the cell in position 2,2 is within the rectangle
     var feedA = Structs.spanningCell({
-      structure : inputA.all(),
+      structure : inputA.access(),
       startRow: 1,
       startCol : 1,
       finishRow : 3,
@@ -38,7 +38,7 @@ test(
     assert.eq(false, resultA);
 
     var feedB = Structs.spanningCell({
-      structure : inputA.all(),
+      structure : inputA.access(),
       startRow: 1,
       startCol : 1,
       finishRow : 3,
@@ -48,10 +48,10 @@ test(
     });
 
     var resultB = SpanningCells.isSpanning(feedB);
-    assert.eq(false, resultB);
+    assert.eq(true, resultB);
 
     var feedC = Structs.spanningCell({
-      structure : inputA.all(),
+      structure : inputA.access(),
       startRow: 1,
       startCol : 1,
       finishRow : 3,
@@ -64,7 +64,7 @@ test(
 
 
     var feedD = Structs.spanningCell({
-      structure : inputA.all(),
+      structure : inputA.access(),
       startRow: 1,
       startCol : 1,
       finishRow : 3,
@@ -74,6 +74,27 @@ test(
     });
     var resultD = SpanningCells.isSpanning(feedD);
     assert.eq(true, resultD);
+
+    // 'element', 'rowspan', 'colspan'
+    var testTableB = [
+      f('r1', [ s('a',3,1), s('b',1,1), s('c',1,1), s('d',2,1) ]),
+      f('r2', [ s('e',2,2) ]),
+      f('r3', [ s('f',2,1) ]),
+      f('r4', [ s('g',1,3) ])
+    ];
+    var inputB = Warehouse.generate(testTableB);
+
+    var feedE = Structs.spanningCell({
+      structure : inputB.access(),
+      startRow: 0,
+      startCol : 0,
+      finishRow : 2,
+      finishCol : 2,
+      cellRow : 3,
+      cellCol : 0
+    });
+    var resultE = SpanningCells.isSpanning(feedE);
+    assert.eq(false, resultE);
 
   }
 );
