@@ -489,6 +489,12 @@ define("tinymce/util/Tools", [
 		return map(s.split(d || ','), trim);
 	}
 
+	function constant(value) {
+		return function() {
+			return value;
+		};
+	}
+
 	function _addCacheSuffix(url) {
 		var cacheSuffix = Env.cacheSuffix;
 
@@ -508,6 +514,7 @@ define("tinymce/util/Tools", [
 		each: each,
 		map: map,
 		grep: grep,
+		filter: grep,
 		inArray: inArray,
 		extend: extend,
 		create: create,
@@ -515,6 +522,7 @@ define("tinymce/util/Tools", [
 		createNS: createNS,
 		resolve: resolve,
 		explode: explode,
+		constant: constant,
 		_addCacheSuffix: _addCacheSuffix
 	};
 });
