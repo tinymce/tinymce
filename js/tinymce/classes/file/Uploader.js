@@ -28,14 +28,77 @@
  * });
  */
 define("tinymce/file/Uploader", [
-	"tinymce/util/Promise"
-], function(Promise) {
+	"tinymce/util/Promise",
+	"tinymce/util/Tools"
+], function(Promise, Tools) {
 	return function(settings) {
+		function defaultHandler(blobInfo, success, failure) {
+			var xhr, formData;
+
+			xhr = new XMLHttpRequest();
+			xhr.withCredentials = settings.credentials;
+			xhr.open('POST', settings.url);
+
+			xhr.onload = function() {
+				var json;
+
+				if (xhr.status != 200) {
+					failure("HTTP Error: " + xhr.status);
+					return;
+				}
+
+				json = JSON.parse(xhr.responseText);
+
+				if (!json || typeof json.location != "string") {
+					failure("Invalid JSON: " + xhr.responseText);
+					return;
+				}
+
+				success(json.location);
+			};
+
+			formData = new FormData();
+			formData.append('file', blobInfo.blob());
+
+			xhr.send(formData);
+		}
+
 		function upload(blobInfos) {
 			return new Promise(function(resolve) {
-				resolve("blob data");
+				var handler = settings.handler, queue, index = 0;
+
+				queue = Tools.map(blobInfos, function(blobInfo) {
+					return {
+						status: false,
+						blobInfo: blobInfo,
+						url: ''
+					};
+				});
+
+				function uploadNext() {
+					var queueItem = queue[index++];
+
+					if (!queueItem) {
+						resolve(queue);
+						return;
+					}
+
+					handler(queueItem.blobInfo, function(url) {
+						queueItem.url = url;
+						queueItem.status = true;
+					}, function() {
+						queueItem.status = false;
+					});
+				}
+
+				uploadNext();
 			});
 		}
+
+		settings = Tools.extend({
+			credentials: false,
+			handler: defaultHandler
+		}, settings);
 
 		return {
 			upload: upload
