@@ -827,6 +827,11 @@ define("tinymce/Editor", [
 
 					// Add internal attribute if we need to we don't on a refresh of the document
 					if (!node.attributes.map[internalName]) {
+						// Don't duplicate these since they won't get modified by any browser
+						if (value.indexOf('data:') === 0 || value.indexOf('blob:') === 0) {
+							continue;
+						}
+
 						if (name === "style") {
 							value = dom.serializeStyle(dom.parseStyle(value), node.name);
 
@@ -2069,10 +2074,12 @@ define("tinymce/Editor", [
 		// Internal functions
 
 		_scanForImages: function() {
-			return ImageScanner.findAll(this.getBody(), this.blobCache).then(function(blobInfos) {
-				// TODO: Replace blob data uris in undo levels
+			return ImageScanner.findAll(this.getBody(), this.blobCache).then(function(result) {
+				Tools.each(result, function(resultItem) {
+					resultItem.image.src = resultItem.blobInfo.blobUri();
+				});
 
-				return blobInfos;
+				return result;
 			});
 		},
 
