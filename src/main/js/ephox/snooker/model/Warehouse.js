@@ -28,6 +28,17 @@ define(
       });
     };
 
+    var findItem = function (warehouse, item, comparator) {
+      var rowData = warehouse.all();
+      // There would be a more efficient way of doing this, but we can keep this for the time being.
+      var flattened = Arr.flatten(Arr.map(rowData, function (row) { return row.cells(); }));
+      var raw = Arr.find(flattened, function (cell) {
+        return comparator(item, cell.element());
+      });
+
+      return raw !== undefined ? Option.some(raw) : Option.none();
+    };
+
     /*
      * From a list of list of Detail, generate three pieces of information:
      *  1. the grid size
@@ -78,7 +89,6 @@ define(
         cells.push(Structs.rowdata(details.element(), currentRow));
       });
 
-
       //
 
       var grid = Structs.grid(maxRows, maxColumns);
@@ -102,6 +112,7 @@ define(
       generate: generate,
       getAt: getAt,
       domAt: domAt,
+      findItem: findItem,
       justCells: justCells
     };
   }

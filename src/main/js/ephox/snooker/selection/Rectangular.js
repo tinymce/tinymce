@@ -2,9 +2,8 @@ define(
   'ephox.snooker.selection.Rectangular',
 
   [
-    'ephox.compass.Obj',
     'ephox.peanut.Fun',
-    'ephox.scullion.Struct',
+    'ephox.perhaps.Option',
     'ephox.snooker.api.Structs',
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
@@ -12,59 +11,53 @@ define(
     'ephox.sugar.api.Compare'
   ],
 
-  function (Obj, Fun, Struct, Structs, DetailsList, Warehouse, SpanningCells, Compare) {
-    var coords = Struct.immutableBag([ 'row', 'col' ], []);
-    var getCoords = function (pair) {
-      var row = pair.split(',')[0];
-      var col = pair.split(',')[1];
-      return coords({
-        row: row,
-        col: col
+  function (Fun, Option, Structs, DetailsList, Warehouse, SpanningCells, Compare) {
+    var getBox = function (table, startCell, finishCell) {
+      var list = DetailsList.fromTable(table);
+      var warehouse = Warehouse.generate(list);
+
+      var startCoords = Warehouse.findItem(warehouse, startCell, Compare.eq);
+      var finishCoords = Warehouse.findItem(warehouse, finishCell, Compare.eq);
+      return startCoords.bind(function (sc) {
+        return finishCoords.map(function (fc) {
+          return {
+            startCol: Fun.constant(sc.column()),
+            finishRow: Fun.constant(fc.row() + fc.rowspan() - 1),
+            finishCol: Fun.constant(fc.column() + fc.colspan() - 1),
+            startRow: Fun.constant(sc.row()),
+            warehouse: warehouse
+          };
+        });
       });
     };
 
     var isRectangular = function (table, startCell, finishCell) {
-      var list = DetailsList.fromTable(table);
-      var warehouse = Warehouse.generate(list);
+      var result = getBox(table, startCell, finishCell).map(function (info) {
 
-      var comparatorS = Fun.curry(Compare.eq, startCell);
-      var comparatorF = Fun.curry(Compare.eq, finishCell);
-      var startCoords;
-      var finishCoords;
+        var isRect = true;
+        for (var i = info.startRow(); i<=info.finishRow(); i++) {
+          for (var j = info.startCol(); j<=info.finishCol(); j++ ) {
 
-      Obj.each(warehouse.access(), function (current, coords) {
-        if (comparatorS(current.element()) === true)
-          startCoords = getCoords(coords);
-        else if (comparatorF(current.element()) === true)
-          finishCoords = getCoords(coords);
-        else { /* skip */ }
-      });
+            var feedA = Structs.spanningCell({
+              structure : info.warehouse.access(),
+              startRow: info.startRow(),
+              startCol : info.startCol(),
+              finishRow : info.finishRow(),
+              finishCol : info.finishCol(),
+              cellRow : i,
+              cellCol : j
+            });
 
-      var isRect = true;
-      for (var i = startCoords.row(); i<finishCoords.row(); i++) {
-        for (var j = startCoords.col(); j<finishCoords.col(); j++ ) {
-          var feedA = Structs.spanningCell({
-            structure : warehouse.access(),
-            startRow: 1,
-            startCol : 1,
-            finishRow : 3,
-            finishCol : 3,
-            cellRow : i,
-            cellCol : j
-          });
-
-          isRect = isRect && SpanningCells.isSpanning(feedA);
+            isRect = isRect && SpanningCells.isSpanning(feedA);
+          }
         }
-      }
+
+        return isRect;
+      }).getOr(false);
 
       return {
-        isRect: Fun.constant(isRect)
+        isRect: Fun.constant(result)
       };
-
-      // Scan the outside of the grid
-
-
-
     };
 
     return {
