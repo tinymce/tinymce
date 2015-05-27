@@ -59,6 +59,6 @@ test(
     var checkB = Rectangular.isRectangular(table, startCellB, endCellB);
     assert.eq(true, checkB.isRect());
 
-    // Remove.remove(div);
+    Remove.remove(div);
   }
 );

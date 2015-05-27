@@ -3,7 +3,6 @@ define(
 
   [
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
     'ephox.snooker.api.Structs',
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
@@ -11,7 +10,7 @@ define(
     'ephox.sugar.api.Compare'
   ],
 
-  function (Fun, Option, Structs, DetailsList, Warehouse, SpanningCells, Compare) {
+  function (Fun, Structs, DetailsList, Warehouse, SpanningCells, Compare) {
     var getBox = function (table, startCell, finishCell) {
       var list = DetailsList.fromTable(table);
       var warehouse = Warehouse.generate(list);
@@ -38,17 +37,19 @@ define(
         for (var i = info.startRow(); i<=info.finishRow(); i++) {
           for (var j = info.startCol(); j<=info.finishCol(); j++ ) {
 
-            var feedA = Structs.spanningCell({
-              structure : info.warehouse.access(),
+            var boundingBox = Structs.bounds({
               startRow: info.startRow(),
               startCol : info.startCol(),
               finishRow : info.finishRow(),
-              finishCol : info.finishCol(),
-              cellRow : i,
-              cellCol : j
+              finishCol : info.finishCol()
             });
 
-            isRect = isRect && SpanningCells.isSpanning(feedA);
+            var feedA = Structs.cell({
+              row : i,
+              col : j
+            });
+
+            isRect = isRect && SpanningCells.isSpanning(info.warehouse.access(), feedA, boundingBox);
           }
         }
 
