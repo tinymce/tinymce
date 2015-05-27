@@ -23,57 +23,46 @@ test(
     ];
     var inputA = Warehouse.generate(testTableA);
 
-    // We are checking if the cell in position 2,2 is within the rectangle
-    var feedA = Structs.spanningCell({
-      structure : inputA.access(),
+    // var bounds = Struct.immutableBag([ 'startRow', 'startCol', 'finishRow', 'finishCol'], []);
+    // var cell = Struct.immutableBag([ 'row', 'col'], [] );
+
+    var baseBound = Structs.bounds({
       startRow: 1,
-      startCol : 1,
-      finishRow : 3,
-      finishCol : 3,
-      cellRow : 2,
-      cellCol : 2
+      startCol: 1,
+      finishRow: 3,
+      finishCol: 3
+    });
+    var cellA = Structs.cell({
+      row: 2,
+      col: 2
     });
 
-    var resultA = SpanningCells.isSpanning(feedA);
+    var resultA = SpanningCells.isSpanning(inputA.access(), cellA, baseBound);
     assert.eq(false, resultA);
 
-    var feedB = Structs.spanningCell({
-      structure : inputA.access(),
-      startRow: 1,
-      startCol : 1,
-      finishRow : 3,
-      finishCol : 3,
-      cellRow : 3,
-      cellCol : 3
+    var cellB = Structs.cell({
+      row: 3,
+      col: 3
     });
-
-    var resultB = SpanningCells.isSpanning(feedB);
+    var resultB = SpanningCells.isSpanning(inputA.access(), cellB, baseBound);
     assert.eq(true, resultB);
 
-    var feedC = Structs.spanningCell({
-      structure : inputA.access(),
-      startRow: 1,
-      startCol : 1,
-      finishRow : 3,
-      finishCol : 3,
-      cellRow : 0,
-      cellCol : 0
+    var cellC = Structs.cell({
+      row: 0,
+      col: 0
     });
-    var resultC = SpanningCells.isSpanning(feedC);
+    var resultC = SpanningCells.isSpanning(inputA.access(), cellC, baseBound);
     assert.eq(false, resultC);
 
 
-    var feedD = Structs.spanningCell({
-      structure : inputA.access(),
-      startRow: 1,
-      startCol : 1,
-      finishRow : 3,
-      finishCol : 3,
-      cellRow : 3,
-      cellCol : 1
+    var cellD = Structs.cell({
+      row: 3,
+      col: 1
     });
-    var resultD = SpanningCells.isSpanning(feedD);
+    var resultD = SpanningCells.isSpanning(inputA.access(), cellD, baseBound);
     assert.eq(true, resultD);
+
+
 
     // 'element', 'rowspan', 'colspan'
     var testTableB = [
@@ -84,65 +73,45 @@ test(
     ];
     var inputB = Warehouse.generate(testTableB);
 
-    var feedE = Structs.spanningCell({
-      structure : inputB.access(),
+    var baseBoundB = Structs.bounds({
       startRow: 0,
-      startCol : 0,
-      finishRow : 2,
-      finishCol : 2,
-      cellRow : 3,
-      cellCol : 0
+      startCol: 0,
+      finishRow: 2,
+      finishCol: 2
     });
-    var resultE = SpanningCells.isSpanning(feedE);
+    var cellE = Structs.cell({
+      row: 3,
+      col: 0
+    });
+    var resultE = SpanningCells.isSpanning(inputB.access(), cellE, baseBoundB);
     assert.eq(false, resultE);
 
-    var feedF = Structs.spanningCell({
-      structure : inputB.access(),
-      startRow: 0,
-      startCol : 0,
-      finishRow : 2,
-      finishCol : 2,
-      cellRow : 0,
-      cellCol : 1
+    var cellF = Structs.cell({
+      row: 0,
+      col: 1
     });
-    var resultF = SpanningCells.isSpanning(feedF);
+    var resultF = SpanningCells.isSpanning(inputB.access(), cellF, baseBoundB);
     assert.eq(true, resultF);
 
-
-    var feedG = Structs.spanningCell({
-      structure : inputB.access(),
-      startRow: 0,
-      startCol : 0,
-      finishRow : 2,
-      finishCol : 2,
-      cellRow : 1,
-      cellCol : 1
+    var cellG = Structs.cell({
+      row: 1,
+      col: 1
     });
-    var resultG = SpanningCells.isSpanning(feedG);
+    var resultG = SpanningCells.isSpanning(inputB.access(), cellG, baseBoundB);
     assert.eq(true, resultG);
 
-    var feedH = Structs.spanningCell({
-      structure : inputB.access(),
-      startRow: 0,
-      startCol : 0,
-      finishRow : 2,
-      finishCol : 2,
-      cellRow : 2,
-      cellCol : 2
+    var cellH = Structs.cell({
+      row: 2,
+      col: 2
     });
-    var resultH = SpanningCells.isSpanning(feedH);
+    var resultH = SpanningCells.isSpanning(inputB.access(), cellH, baseBoundB);
     assert.eq(true, resultH);
 
-    var feedI = Structs.spanningCell({
-      structure : inputB.access(),
-      startRow: 0,
-      startCol : 0,
-      finishRow : 2,
-      finishCol : 2,
-      cellRow : 1,
-      cellCol : 3
+    var cellI = Structs.cell({
+      row: 1,
+      col: 3
     });
-    var resultI = SpanningCells.isSpanning(feedI);
+    var resultI = SpanningCells.isSpanning(inputB.access(), cellI, baseBoundB);
     assert.eq(false, resultI);
   }
 );
