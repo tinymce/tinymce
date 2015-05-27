@@ -4,31 +4,19 @@ define(
   [
     'ephox.perhaps.Option',
     'ephox.sugar.api.ElementFind',
-    'ephox.sugar.api.SelectorFilter',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.sugar.api.SelectorFilter'
   ],
 
-  function (Option, ElementFind, SelectorFilter, SelectorFind) {
+  function (Option, ElementFind, SelectorFilter) {
     // IMPROVEMENT: Implement colspans and rowspans. Note, this will probably interact with snooker.
-
     var findInTable = function (cell) {
-      return findColumn(cell).bind(function (cellInfo) {
-        return findRow(cell).map(function (rowInfo) {
+      return ElementFind.inAncestorOfSelector(cell, 'tr', 'td,th').bind(function (cellInfo) {
+        return ElementFind.inAncestorOfSelector(cellInfo.ancestor(), 'table', 'tr').map(function (rowInfo) {
           return {
             rowIndex: rowInfo.index,
             colIndex: cellInfo.index,
           };
         });
-      });
-    };
-
-    var findColumn = function (cell) {
-      return ElementFind.inAncestorOfSelector(cell, 'tr', 'td,th');
-    };
-
-    var findRow = function (cell) {
-      return SelectorFind.ancestor(cell, 'tr').bind(function (row) {
-        return ElementFind.inAncestorOfSelector(row, 'table', 'tr');
       });
     };
 
