@@ -7,38 +7,47 @@ define(
 
   function () {
     var getCell = function (structure, row, col) {
-      return structure[row][col];
+      var cellRow = structure()[row()];
+      var cell = cellRow.cells()[col()];
+      return cell;
     };
 
-    // 1. Take the position of the cell within the grid
-    //    by counting
-    var cellPosition = function (structure, row, col) {
-      // var rowStart =
-    };
-    // 'startRow', 'startCol', 'finishRow', 'finishCol', 'cellRow', 'cellCol'
-    // A cell is spanning if:
-    //  1. Given its position within the grid in terms of row,col,
-    //     one of the following conditions is true:
-    //     a. check.cellRow() + cell.rowspan() > check.finishRow()
-    //     b. check.cellCol() + cell.colspan() > check.finishCol()
-    //     c. check.cellRow() - cell.rowspan() < check.startRow()
-    //     d. check.cellCol() - cell.colspan() < check.startCol()
     var isSpanning = function (check) {
-      var cell = getCell(check.structure(), check.cellRow(), check.cellCol());
-      console.log('bounds:', check.startRow(), check.startCol(), ',', check.finishRow(), check.finishCol());
+      var cell = getCell(check.structure, check.cellRow, check.cellCol);
 
-      var cellFinishRow = check.cellRow() + cell.rowspan()-1;
-      var cellFinishCol = check.cellCol() + cell.colspan()-1;
-      var cellStartRow = check.cellRow() - cell.rowspan()-1;
-      var cellStartCol = check.cellCol() - cell.colspan()-1;
+      var cellFinishRow = cell.row() + cell.rowspan()-1;
+      var cellFinishCol = cell.column() + cell.colspan()-1;
+      var cellStartRow = cell.row();
+      var cellStartCol = cell.column();
 
-      console.log('cellFinishRow',cellFinishRow);
-      console.log('cellFinishCol', cellFinishCol);
+      console.log('cellFinishRow', cellFinishRow, 'check.finishRow()', check.finishRow());
+      console.log('cellFinishCol',cellFinishCol, 'check.finishCol()', check.finishCol());
+      console.log('cellStartRow',cellStartRow, 'check.startRow()', check.startRow());
+      console.log('cellStartCol',cellStartCol, 'check.startCol()', check.startCol());
 
-      return  cellFinishRow > check.finishRow() ||
-              cellFinishCol > check.finishCol()||
-              cellStartRow < check.startRow()  ||
-              cellStartCol < check.startCol();
+      console.log('cellStartCol >= check.startCol',cellStartCol >= check.startCol);
+      console.log('cellFinishCol <= check.finishCol()',cellFinishCol <= check.finishCol());
+      console.log('cellStartRow >= check.startRow()',cellStartRow >= check.startRow());
+      console.log('cellFinishCol >= check.finishRow()',cellFinishCol >= check.finishRow());
+      return  cellStartCol >= check.startCol() &&
+              cellFinishCol <= check.finishCol() &&
+              cellStartRow >= check.startRow() &&
+              cellFinishCol >= check.finishRow();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     };
 
     return {
