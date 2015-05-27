@@ -23,7 +23,7 @@ test(
     ];
     var inputA = Warehouse.generate(testTable);
 
-    // We are checking if the cell in position 2,2 is outside of the rectangle.
+    // We are checking if the cell in position 2,2 is within the rectangle
     var feedA = Structs.spanningCell({
       structure : inputA.all(),
       startRow: 1,
@@ -35,7 +35,7 @@ test(
     });
 
     var resultA = SpanningCells.isSpanning(feedA);
-    assert.eq(true, resultA);
+    assert.eq(false, resultA);
 
     var feedC = Structs.spanningCell({
       structure : inputA.all(),
@@ -46,8 +46,8 @@ test(
       cellRow : 0,
       cellCol : 0
     });
-    // var resultC = SpanningCells.isSpanning(feedC);
-    // assert.eq(false, resultC);
+    var resultC = SpanningCells.isSpanning(feedC);
+    assert.eq(false, resultC);
 
     var feedB = Structs.spanningCell({
       structure : inputA.all(),
@@ -59,8 +59,8 @@ test(
       cellCol : 3
     });
 
-    // var resultB = SpanningCells.isSpanning(feedB);
-    // assert.eq(false, resultB);
+    var resultB = SpanningCells.isSpanning(feedB);
+    assert.eq(false, resultB);
 
   }
 );
