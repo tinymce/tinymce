@@ -156,7 +156,7 @@ define("tinymce/html/Writer", [
 			 */
 			pi: function(name, text) {
 				if (text) {
-					html.push('<?', name, ' ', text, '?>');
+					html.push('<?', name, ' ', encode(text), '?>');
 				} else {
 					html.push('<?', name, '?>');
 				}

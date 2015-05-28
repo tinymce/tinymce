@@ -23,7 +23,7 @@ tinymce.PluginManager.add('image', function(editor) {
 		}
 
 		img.onload = function() {
-			done(img.clientWidth, img.clientHeight);
+			done(Math.max(img.width, img.clientWidth), Math.max(img.height, img.clientHeight));
 		};
 
 		img.onerror = function() {
@@ -291,6 +291,7 @@ tinymce.PluginManager.add('image', function(editor) {
 					win.find('#src').value(e.control.value()).fire('change');
 				},
 				onPostRender: function() {
+					/*eslint consistent-this: 0*/
 					imageListCtrl = this;
 				}
 			};

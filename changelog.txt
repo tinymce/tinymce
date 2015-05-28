@@ -1,7 +1,20 @@
-Version 4.1.10 (2015-03-xx)
+Version 4.1.11 (2015-05-xx)
+	Fixed bug where floating panels would remain open when focus was lost on inline editors.
+	Fixed bug where cut command on Chrome would thrown a browser security exception.
+	Fixed bug where IE 11 sometimes would report an incorrect size for images in the image dialog.
+Version 4.1.10 (2015-05-05)
+	Fixed bug where plugins loaded with compat3x would sometimes throw errors when loading using the jQuery version.
 	Fixed bug where extra empty paragraphs would get deleted in WebKit/Blink due to recent Quriks fix.
 	Fixed bug where the editor wouldn't work properly on IE 12 due to some required browser sniffing.
 	Fixed bug where formatting shortcut keys where interfering with Mac OS X screenshot keys.
+	Fixed bug where the caret wouldn't move to the next/previous line boundary on Cmd+Left/Right on Gecko.
+	Fixed bug where it wasn't possible to remove formats from very specific nested contents.
+	Fixed bug where undo levels wasn't produced when typing letters using the shift or alt+ctrl modifiers.
+	Fixed bug where the dirty state wasn't properly updated when typing using the shift or alt+ctrl modifiers.
+	Fixed bug where an error would be thrown if an autofocused editor was destroyed quickly after its initialization. Patch provided by thorn0.
+	Fixed issue with dirty state not being properly updated on redo operation.
+	Fixed issue with entity decoder not handling incorrectly written numeric entities.
+	Fixed issue where some PI element values wouldn't be properly encoded.
 Version 4.1.9 (2015-03-10)
 	Fixed bug where indentation wouldn't work properly for non list elements.
 	Fixed bug with image plugin not pulling the image dimensions out correctly if a custom document_base_url was used.

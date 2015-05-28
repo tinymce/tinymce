@@ -24,7 +24,7 @@
 			delete editor.settings.document_base_url;
 			delete editor.settings.image_advtab;
 
-			var win = Utils.getFontmostWindow();
+			var win = Utils.getFrontmostWindow();
 
 			if (win) {
 				win.close();
@@ -37,7 +37,7 @@
 	}
 
 	function fillAndSubmitWindowForm(data) {
-		var win = Utils.getFontmostWindow();
+		var win = Utils.getFrontmostWindow();
 
 		win.fromJSON(data);
 		win.find('form')[0].submit();
@@ -48,7 +48,7 @@
 		editor.setContent('');
 		editor.execCommand('mceImage', true);
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"constrain": true,
 			"height": "",
@@ -74,7 +74,7 @@
 		editor.setContent('');
 		editor.execCommand('mceImage', true);
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"src": ""
 		});
@@ -104,7 +104,7 @@
 		editor.setContent('');
 		editor.execCommand('mceImage', true);
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"class": "class1",
 			"constrain": true,
@@ -140,7 +140,7 @@
 			"alt": "alt"
 		};
 
-		win = Utils.getFontmostWindow();
+		win = Utils.getFrontmostWindow();
 		elementId = win.find('#src')[0]._id;
 		element = document.getElementById(elementId).childNodes[0];
 
@@ -170,7 +170,7 @@
 			"alt": "alt"
 		};
 
-		win = Utils.getFontmostWindow();
+		win = Utils.getFrontmostWindow();
 		elementId = win.find('#src')[0]._id;
 		element = document.getElementById(elementId).childNodes[0];
 
@@ -193,7 +193,7 @@
 		editor.setContent('');
 		editor.execCommand('mceImage', true);
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
 			"hspace": "",
@@ -221,7 +221,7 @@
 		editor.setContent('');
 		editor.execCommand('mceImage', true);
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
 			"hspace": "",
@@ -251,7 +251,7 @@
 		editor.setContent('');
 		editor.execCommand('mceImage', true);
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
 			"hspace": "",
@@ -280,7 +280,7 @@
 		editor.setContent('');
 		editor.execCommand('mceImage', true);
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
 			"hspace": "",
@@ -309,7 +309,7 @@
 		editor.setContent('');
 		editor.execCommand('mceImage', true);
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
 			"hspace": "",
@@ -339,7 +339,7 @@
 		editor.setContent('');
 		editor.execCommand('mceImage', true);
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
 			"hspace": "",
@@ -370,7 +370,7 @@
 		editor.setContent('');
 		editor.execCommand('mceImage', true);
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
 			"hspace": "",
@@ -379,9 +379,9 @@
 			"vspace": ""
 		});
 
-		Utils.getFontmostWindow().find('#style').value('margin-left: 15px; margin-right: 15px;').fire('change');
+		Utils.getFrontmostWindow().find('#style').value('margin-left: 15px; margin-right: 15px;').fire('change');
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
 			"hspace": "15",
@@ -399,7 +399,7 @@
 		editor.setContent('');
 		editor.execCommand('mceImage', true);
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
 			"hspace": "",
@@ -408,9 +408,9 @@
 			"vspace": ""
 		});
 
-		Utils.getFontmostWindow().find('#style').value('margin-top: 15px; margin-bottom: 15px;').fire('change');
+		Utils.getFrontmostWindow().find('#style').value('margin-top: 15px; margin-bottom: 15px;').fire('change');
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
 			"hspace": "",
@@ -428,7 +428,7 @@
 		editor.setContent('');
 		editor.execCommand('mceImage', true);
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
 			"hspace": "",
@@ -437,9 +437,9 @@
 			"vspace": ""
 		});
 
-		Utils.getFontmostWindow().find('#style').value('margin: 5px;').fire('change');
+		Utils.getFrontmostWindow().find('#style').value('margin: 5px;').fire('change');
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
 			"hspace": "5",
@@ -457,7 +457,7 @@
 		editor.setContent('');
 		editor.execCommand('mceImage', true);
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
 			"hspace": "",
@@ -466,9 +466,9 @@
 			"vspace": ""
 		});
 
-		Utils.getFontmostWindow().find('#style').value('margin: 5px 10px;').fire('change');
+		Utils.getFrontmostWindow().find('#style').value('margin: 5px 10px;').fire('change');
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
 			"hspace": "10",
@@ -486,7 +486,7 @@
 		editor.setContent('');
 		editor.execCommand('mceImage', true);
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
 			"hspace": "",
@@ -495,9 +495,9 @@
 			"vspace": ""
 		});
 
-		Utils.getFontmostWindow().find('#style').value('margin: 5px 10px;').fire('change');
+		Utils.getFrontmostWindow().find('#style').value('margin: 5px 10px;').fire('change');
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
 			"hspace": "10",
@@ -515,7 +515,7 @@
 		editor.setContent('');
 		editor.execCommand('mceImage', true);
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
 			"hspace": "",
@@ -524,9 +524,9 @@
 			"vspace": ""
 		});
 
-		Utils.getFontmostWindow().find('#style').value('margin: 5px 10px 15px;').fire('change');
+		Utils.getFrontmostWindow().find('#style').value('margin: 5px 10px 15px;').fire('change');
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
 			"hspace": "10",
@@ -544,7 +544,7 @@
 		editor.setContent('');
 		editor.execCommand('mceImage', true);
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
 			"hspace": "",
@@ -553,9 +553,9 @@
 			"vspace": ""
 		});
 
-		Utils.getFontmostWindow().find('#style').value('margin: 5px 10px 15px 20px;').fire('change');
+		Utils.getFrontmostWindow().find('#style').value('margin: 5px 10px 15px 20px;').fire('change');
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
 			"hspace": "",
@@ -573,7 +573,7 @@
 		editor.setContent('');
 		editor.execCommand('mceImage', true);
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
 			"hspace": "",
@@ -582,9 +582,9 @@
 			"vspace": ""
 		});
 
-		Utils.getFontmostWindow().find('#style').value('margin: 5px 10px 15px 20px; margin-top: 15px;').fire('change');
+		Utils.getFrontmostWindow().find('#style').value('margin: 5px 10px 15px 20px; margin-top: 15px;').fire('change');
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
 			"hspace": "",

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dirty state</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
+<script src="../../js/tinymce/tinymce.dev.js"></script>
+<script src="../../js/tinymce/plugins/table/plugin.dev.js"></script>
+<script src="../../js/tinymce/plugins/paste/plugin.dev.js"></script>
+<script src="../../js/tinymce/plugins/spellchecker/plugin.dev.js"></script>
+<script>
+	tinymce.init({
+		selector: "textarea#elm1",
+		theme: "modern",
+		plugins: [
+			"advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+			"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+			"save table contextmenu directionality emoticons template paste textcolor importcss colorpicker textpattern"
+		],
+		
+		setup: function(ed) {
+			ed.on('Change Undo Redo', logDirty);
+		}
+	});
+
+	function setNotDirty() {
+		tinymce.activeEditor.isNotDirty = true;
+		logDirty();
+	}
+
+	function logDirty() {
+		var isDirty = tinymce.activeEditor.isDirty();
+
+		tinymce.$('#status').text('isDirty: ' + isDirty);
+		console.log('isDirty: ' + isDirty);
+	}
+</script>
+</head>
+<body>
+<form method="post" action="http://www.tinymce.com/dump.php?example=true">
+	<div>
+		<div>
+			<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%">Some text</textarea>
+			<button onclick="setNotDirty()" type="button">setNotDirty</button>
+			<button onclick="logDirty()" type="button">logDirty</button>
+			<span id="status">isDirty: false</span>
+	</div>
+</form>
+
+</body>
+</html>

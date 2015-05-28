@@ -718,4 +718,21 @@
 		testFindEndTag('<b><!-- </b> --></b>', 3, 20);
 		testFindEndTag('<span><b><i>a<img>b</i><b>c</b></b></span>', 9, 35);
 	});
+
+	test('parse XSS PI', function() {
+		var counter, parser;
+
+		counter = createCounter(writer);
+		counter.validate = false;
+		parser = new tinymce.html.SaxParser(counter, schema);
+
+		writer.reset();
+		parser.parse('<?xml><iframe SRC=&#106&#97&#118&#97&#115&#99&#114&#105&#112&#116&#58&#97&#108&#101&#114&#116&#40&#39&#88&#83&#83&#39&#41>?>');
+
+		equal(
+			writer.getContent(),
+			'<?xml &gt;&lt;iframe SRC=&amp;#106&amp;#97&amp;#118&amp;#97&amp;#115&amp;#99&amp;#114&amp;#105&amp;#112&amp;' +
+			'#116&amp;#58&amp;#97&amp;#108&amp;#101&amp;#114&amp;#116&amp;#40&amp;#39&amp;#88&amp;#83&amp;#83&amp;#39&amp;#41&gt;?>'
+		);
+	});
 })();

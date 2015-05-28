@@ -385,12 +385,10 @@ test('remove format on span with internal class using removeformat format', func
 	equal(Utils.normalizeHtml(Utils.cleanHtml(editor.getBody().innerHTML)), '<p><span class="mce-item-internal">abc</span></p>');
 });
 
-/*
 test('Remove format bug 1', function() {
-	editor.setContent('<p><b>ab<em>cde</em>fgh</b></p>');
+	editor.setContent('<p><b><i>ab</i>c</b></p>');
 	editor.formatter.register('format', {inline: 'b'});
-	Utils.setSelection('em', 0, 'em', 2);
+	Utils.setSelection('i', 1, 'i', 2);
 	editor.formatter.remove('format');
-	equal(editor.getContent(), '<p><b>ab</b><em>cd</em><b><em>e</em>fgh</b></p>');
+	equal(editor.getContent(), '<p><b><i>a</i></b><i>b</i><b>c</b></p>');
 });
-*/

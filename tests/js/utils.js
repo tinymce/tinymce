@@ -133,13 +133,25 @@
 	function type(chr) {
 		var editor = tinymce.activeEditor, keyCode, charCode, evt, startElm, rng;
 
+		function charCodeToKeyCode(charCode) {
+			var lookup = {
+				'0': 48, '1': 49, '2': 50, '3': 51, '4': 52, '5': 53, '6': 54, '7': 55, '8': 56, '9': 57,'a': 65, 'b': 66, 'c': 67,
+				'd': 68, 'e': 69, 'f': 70, 'g': 71, 'h': 72, 'i': 73, 'j': 74, 'k': 75, 'l': 76, 'm': 77, 'n': 78, 'o': 79, 'p': 80, 'q': 81,
+				'r': 82, 's': 83, 't': 84, 'u': 85,	'v': 86, 'w': 87, 'x': 88, 'y': 89, ' ': 32, ',': 188, '-': 189, '.': 190, '/': 191, '\\': 220,
+				'[': 219, ']': 221, '\'': 222, ';': 186, '=': 187, ')': 41
+			};
+
+			return lookup[String.fromCharCode(charCode)];
+		}
+
 		function fakeEvent(target, type, evt) {
 			editor.dom.fire(target, type, evt);
 		}
 
 		// Numeric keyCode
 		if (typeof(chr) == "number") {
-			charCode = keyCode = chr;
+			charCode = chr;
+			keyCode = charCodeToKeyCode(charCode);
 		} else if (typeof(chr) == "string") {
 			// String value
 			if (chr == '\b') {
@@ -150,10 +162,18 @@
 				charCode = chr.charCodeAt(0);
 			} else {
 				charCode = chr.charCodeAt(0);
-				keyCode = charCode;
+				keyCode = charCodeToKeyCode(charCode);
 			}
 		} else {
 			evt = chr;
+
+			if (evt.charCode) {
+				chr = String.fromCharCode(evt.charCode);
+			}
+
+			if (evt.keyCode) {
+				keyCode = evt.keyCode;
+			}
 		}
 
 		evt = evt || {keyCode: keyCode, charCode: charCode};
@@ -292,7 +312,7 @@
 		ok(true);
 	}
 
-	function getFontmostWindow() {
+	function getFrontmostWindow() {
 		return editor.windowManager.windows[editor.windowManager.windows.length - 1];
 	}
 
@@ -386,7 +406,7 @@
 		size: size,
 		resetScroll: resetScroll,
 		nearlyEqualRects: nearlyEqualRects,
-		getFontmostWindow: getFontmostWindow,
+		getFrontmostWindow: getFrontmostWindow,
 		pressArrowKey: pressArrowKey,
 		pressEnter: pressEnter,
 		trimBrsOnIE: trimBrsOnIE,
