@@ -1,5 +1,5 @@
 define(
-  'ephox.darwin.api.SelectionDirection',
+  'ephox.darwin.api.SelectionKeys',
 
   [
 
@@ -12,6 +12,12 @@ define(
       };
     };
 
+    var isUp = isKey(38);
+    var isDown = isKey(40);
+    var isNavigation = function (keycode) {
+      return keycode >= 37 && keycode <= 40;
+    };
+
     return {
       ltr: {
         // We need to move KEYS out of keytar and into something much more low-level.
@@ -21,7 +27,10 @@ define(
       rtl: {
         isBackward: isKey(39),
         isForward: isKey(37)
-      }
+      },
+      isUp: isUp,
+      isDown: isDown,
+      isNavigation: isNavigation
     };
   }
 );

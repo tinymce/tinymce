@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.darwin.api.Responses',
+    'ephox.darwin.api.SelectionKeys',
     'ephox.darwin.api.WindowBridge',
     'ephox.darwin.keyboard.KeySelection',
     'ephox.darwin.keyboard.VerticalMovement',
@@ -13,7 +14,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (Responses, WindowBridge, KeySelection, VerticalMovement, MouseSelection, KeyDirection, CellSelection, Fun, Option) {
+  function (Responses, SelectionKeys, WindowBridge, KeySelection, VerticalMovement, MouseSelection, KeyDirection, CellSelection, Fun, Option) {
     var mouse = function (win, container) {
       var bridge = WindowBridge(win);
 
@@ -40,13 +41,13 @@ define(
 
         var handler = CellSelection.retrieve(container).fold(function () {
           // Shift down should predict the movement and set the selection.
-          if (keycode === 40 && shiftKey) return Fun.curry(VerticalMovement.select, bridge, container, isRoot, KeyDirection.down, element);
+          if (SelectionKeys.isDown(keycode) && shiftKey) return Fun.curry(VerticalMovement.select, bridge, container, isRoot, KeyDirection.down, element);
           // Shift up should predict the movement and set the selection.
-          else if (keycode === 38 && shiftKey) return Fun.curry(VerticalMovement.select, bridge, container, isRoot, KeyDirection.up, element);
+          else if (SelectionKeys.isUp(keycode) && shiftKey) return Fun.curry(VerticalMovement.select, bridge, container, isRoot, KeyDirection.up, element);
           // Down should predict the movement and set the cursor
-          else if (keycode === 40) return Fun.curry(VerticalMovement.navigate, bridge, isRoot, KeyDirection.down, element);
+          else if (SelectionKeys.isDown(keycode)) return Fun.curry(VerticalMovement.navigate, bridge, isRoot, KeyDirection.down, element);
           // Up should predict the movement and set the cursor
-          else if (keycode === 38) return Fun.curry(VerticalMovement.navigate, bridge, isRoot, KeyDirection.up, element);
+          else if (SelectionKeys.isUp(keycode)) return Fun.curry(VerticalMovement.navigate, bridge, isRoot, KeyDirection.up, element);
           else return Option.none;
         }, function (selected) {
 
@@ -59,13 +60,12 @@ define(
             };
           };
 
-          // Note, this will need to work for RTL.
-          if (keycode === 40 && shiftKey) return update(+1, 0);
-          else if (keycode === 38 && shiftKey) return update(-1, 0);
+          if (SelectionKeys.isDown(keycode) && shiftKey) return update(+1, 0);
+          else if (SelectionKeys.isUp(keycode) && shiftKey) return update(-1, 0);
           else if (direction.isBackward(keycode) && shiftKey) return update(0, -1);
           else if (direction.isForward(keycode) && shiftKey) return update(0, +1);
           // Clear the selection on normal arrow keys.
-          else if (keycode >= 37 && keycode <= 40 && shiftKey === false) return clearToNavigate;
+          else if (SelectionKeys.isNavigation(keycode) && shiftKey === false) return clearToNavigate;
           else return Option.none;
         });
 
@@ -77,7 +77,7 @@ define(
           var keycode = event.raw().which;
           var shiftKey = event.raw().shiftKey === true;
           if (shiftKey === false) return Option.none();
-          if (keycode >= 37 && keycode <= 40) return KeySelection.sync(container, isRoot, start, soffset, finish, foffset);
+          if (SelectionKeys.isNavigation(keycode)) return KeySelection.sync(container, isRoot, start, soffset, finish, foffset);
           else return Option.none();
         }, Option.none);
       };
