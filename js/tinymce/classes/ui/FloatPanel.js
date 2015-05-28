@@ -38,6 +38,30 @@ define("tinymce/ui/FloatPanel", [
 		}
 	}
 
+	function skipOrHidePanels(e){
+		// Hide any float panel when a click/focus out is out side that float panel and the
+		// float panels direct parent for example a click on a menu button
+		var i = visiblePanels.length;
+
+		while (i--) {
+			var panel = visiblePanels[i], clickCtrl = panel.getParentCtrl(e.target);
+
+			if (panel.settings.autohide) {
+				if (clickCtrl) {
+					if (isChildOf(clickCtrl, panel) || panel.parent() === clickCtrl) {
+						continue;
+					}
+				}
+
+				e = panel.fire('autohide', {target: e.target});
+				if (!e.isDefaultPrevented()) {
+					panel.hide();
+				}
+			}
+		}
+	}
+
+
 	function bindDocumentClickHandler() {
 
 		if (!documentClickHandler) {
@@ -47,25 +71,7 @@ define("tinymce/ui/FloatPanel", [
 					return;
 				}
 
-				// Hide any float panel when a click is out side that float panel and the
-				// float panels direct parent for example a click on a menu button
-				var i = visiblePanels.length;
-				while (i--) {
-					var panel = visiblePanels[i], clickCtrl = panel.getParentCtrl(e.target);
-
-					if (panel.settings.autohide) {
-						if (clickCtrl) {
-							if (isChildOf(clickCtrl, panel) || panel.parent() === clickCtrl) {
-								continue;
-							}
-						}
-
-						e = panel.fire('autohide', {target: e.target});
-						if (!e.isDefaultPrevented()) {
-							panel.hide();
-						}
-					}
-				}
+				skipOrHidePanels(e);
 			};
 
 			DomUtils.on(document, 'click', documentClickHandler);
@@ -90,25 +96,7 @@ define("tinymce/ui/FloatPanel", [
 	function bindDocumentFocusOutHandler() {
 		if (!documentFocusOutHandler) {
 			documentFocusOutHandler = function(e) {
-				var i = visiblePanels.length;
-
-				while (i--) {
-					var panel = visiblePanels[i], parentCtrl = panel.getParentCtrl(e.target);
-
-					if (panel.settings.autohide) {
-						if (parentCtrl) {
-							if (isChildOf(parentCtrl, panel) || panel.parent() === parentCtrl) {
-								continue;
-							}
-						}
-
-						e = panel.fire('autohide', {target: e.target});
-
-						if (!e.isDefaultPrevented()) {
-							panel.hide();
-						}
-					}
-				}
+				skipOrHidePanels(e);
 			};
 
 			DomUtils.on(document, 'focusout', documentFocusOutHandler);
