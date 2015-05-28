@@ -16,9 +16,6 @@ define(
       var list = DetailsList.fromTable(table);
       var warehouse = Warehouse.generate(list);
 
-      // window.warehousdebug = warehouse.access();
-      console.log("warehous ", warehouse.access());
-
       var startCoords = Warehouse.findItem(warehouse, startCell, Compare.eq);
       var finishCoords = Warehouse.findItem(warehouse, finishCell, Compare.eq);
       return startCoords.bind(function (sc) {
