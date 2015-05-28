@@ -61,7 +61,6 @@ define("tinymce/ui/FloatPanel", [
 		}
 	}
 
-
 	function bindDocumentClickHandler() {
 
 		if (!documentClickHandler) {
