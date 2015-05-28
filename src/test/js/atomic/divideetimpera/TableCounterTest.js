@@ -2,13 +2,13 @@ test(
   'TableCounterTest',
 
   [
+    'ephox.compass.Obj',
     'ephox.peanut.Fun',
     'ephox.snooker.model.Warefun'
   ],
 
-  function (Fun, Warefun) {
+  function (Obj, Fun, Warefun) {
     /* global assert */
-
     var testA = [
       [ 'td1', 'td1', 'td1', 'td2', 'td3' ]
     ];

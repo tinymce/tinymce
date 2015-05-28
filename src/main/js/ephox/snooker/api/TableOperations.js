@@ -39,7 +39,9 @@ define(
       for (var r = 0; r < warehouse.grid().rows(); r++) {
         grid[r] = [];
         for (var c = 0; c < warehouse.grid().columns(); c++) {
-          grid[r][c] = Warehouse.getAt(warehouse, r, c).map(function (e) { return e.element(); }).getOr(undefined);
+          var normal = Warehouse.getAt(warehouse, r, c).map(function (e) { return e.element(); }).getOr(undefined);
+
+          grid[r][c] = r>=0&&r<=0&&c>=0&&c<=2 ? Warehouse.getAt(warehouse, 0, 0).map(function (e) { return e.element(); }).getOr(undefined) : normal;
         }
       }
       return grid;
@@ -49,12 +51,13 @@ define(
       return function (wire, element, generators, direction) {
         TableLookup.cell(element).each(function (cell) {
           SelectorFind.ancestor(cell, 'table').each(function (table) {
-            // var colspan = prompt('Colspan: ');
-            // var rowspan = prompt('Rowspan: ');
-            //
-            var colspan = 2;
+
+
+
+            var colspan = 1;
             var rowspan = 2 ;
             TableOperation.run(wire, table, cell, function (warehouse, dompos) {
+              console.log('cell.dom()',cell.dom());
               var grid = getElementGrid(warehouse);
               var fun = Warefun.render(grid, Compare.eq);
 
@@ -67,8 +70,11 @@ define(
                 };
               });
 
+
               return hackedFun;
-            }, adjustment, direction);
+            }, function (warehouse, rowIndex, colIndex, generators, eq)  {
+              console.log('warehouse',warehouse);
+            }, direction);
           });
         });
       };

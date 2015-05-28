@@ -32,17 +32,17 @@ define(
             updateSeen(ri, ci, result.rowspan, result.colspan);
 
             return [ {
-              element: Fun.identity(cell),
-              rowspan: Fun.identity(result.rowspan),
-              colspan: Fun.identity(result.colspan)
+              element: Fun.constant(cell),
+              rowspan: Fun.constant(result.rowspan),
+              colspan: Fun.constant(result.colspan)
             } ];
           } else {
             return [];
           }
         });
         return {
-          element: Fun.identity('tr'),
-          cells: Fun.identity(cells)
+          element: Fun.constant('tr'),
+          cells: Fun.constant(cells)
         };
       });
     };

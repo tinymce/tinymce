@@ -3,22 +3,23 @@ test(
 
   [
     'ephox.scullion.Struct',
+    'ephox.snooker.api.Structs',
     'ephox.snooker.model.Impera'
   ],
 
-  function (Struct, Impera) {
-    var inputRangeStruct = Struct.immutableBag([ 'startCol', 'startRow', 'endCol', 'endRow' ], []);
+  function (Struct, Structs, Impera) {
+    var inputRangeStruct = Struct.immutableBag([ 'startCol', 'startRow', 'finishCol', 'finishRow' ], []);
 
     var structureA = [
       [ 'a', 'b', 'c' ],
       [ 'd', 'e', 'f']
     ];
 
-    var rangeA = inputRangeStruct({
+    var rangeA = Structs.bounds({
       startCol: 0,
       startRow: 0,
-      endCol: 1,
-      endRow: 0
+      finishCol: 1,
+      finishRow: 0
     });
 
     var leadCellA = 'a';
@@ -35,11 +36,11 @@ test(
       [ 'd', 'e', 'f']
     ];
 
-    var rangeB = inputRangeStruct({
+    var rangeB = Structs.bounds({
       startCol: 0,
       startRow: 0,
-      endCol: 2,
-      endRow: 1
+      finishCol: 2,
+      finishRow: 1
     });
 
     var leadCellB = 'a';
