@@ -34,7 +34,7 @@ define(
         return Option.none();
       };
 
-      var keydown = function (event, element, offset) {
+      var keydown = function (event, element, offset, direction) {
         var keycode = event.raw().which;
         var shiftKey = event.raw().shiftKey === true;
 
@@ -62,8 +62,8 @@ define(
           // Note, this will need to work for RTL.
           if (keycode === 40 && shiftKey) return update(+1, 0);
           else if (keycode === 38 && shiftKey) return update(-1, 0);
-          else if (keycode === 37 && shiftKey) return update(0, -1);
-          else if (keycode === 39 && shiftKey) return update(0, +1);
+          else if (direction.isLeft(keycode) && shiftKey) return update(0, -1);
+          else if (direction.isRight(keycode) && shiftKey) return update(0, +1);
           // Clear the selection on normal arrow keys.
           else if (keycode >= 37 && keycode <= 40 && shiftKey === false) return clearToNavigate;
           else return Option.none;

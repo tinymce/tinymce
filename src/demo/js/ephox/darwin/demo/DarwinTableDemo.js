@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.darwin.api.InputHandlers',
+    'ephox.darwin.api.SelectionDirection',
     'ephox.fred.PlatformDetection',
     'ephox.fussy.api.WindowSelection',
     'ephox.peanut.Fun',
@@ -18,7 +19,7 @@ define(
     'global!document'
   ],
 
-  function (InputHandlers, PlatformDetection, WindowSelection, Fun, Attr, Body, Compare, DomEvent, Element, Insert, Replication, SelectorFind, Math, document) {
+  function (InputHandlers, SelectionDirection, PlatformDetection, WindowSelection, Fun, Attr, Body, Compare, DomEvent, Element, Insert, Replication, SelectorFind, Math, document) {
     return function () {
 
       var detection = PlatformDetection.detect();
@@ -108,7 +109,7 @@ define(
       DomEvent.bind(ephoxUi, 'keydown', function (event) {
         // This might get expensive.
         WindowSelection.get(window).each(function (sel) {
-          keyHandlers.keydown(event, sel.finish(), sel.foffset()).each(function (response) {
+          keyHandlers.keydown(event, sel.finish(), sel.foffset(), SelectionDirection.ltr).each(function (response) {
             handleResponse(event, response);
           });
         });
