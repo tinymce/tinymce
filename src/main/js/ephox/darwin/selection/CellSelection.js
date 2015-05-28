@@ -9,20 +9,20 @@ define(
     'ephox.perhaps.Option',
     'ephox.robin.api.dom.DomParent',
     'ephox.sugar.api.Class',
-    'ephox.sugar.api.NodeOperations',
+    'ephox.sugar.api.OnNode',
     'ephox.sugar.api.SelectorFilter',
     'ephox.sugar.api.SelectorFind',
     'global!Math'
   ],
 
-  function (Arr, Ephemera, CellFinder, Fun, Option, DomParent, Class, NodeOperations, SelectorFilter, SelectorFind, Math) {
+  function (Arr, Ephemera, CellFinder, Fun, Option, DomParent, Class, OnNode, SelectorFilter, SelectorFind, Math) {
     var clear = function (container) {
       var sels = SelectorFilter.descendants(container, '.' + Ephemera.selectedClass());
-      Arr.each(sels, NodeOperations.removeClasses([ Ephemera.selectedClass(), Ephemera.lastSelectedClass(), Ephemera.firstSelectedClass() ]));
+      Arr.each(sels, OnNode.removeClasses([ Ephemera.selectedClass(), Ephemera.lastSelectedClass(), Ephemera.firstSelectedClass() ]));
     };
 
     var select = function (cells) {
-      Arr.each(cells, NodeOperations.addClass(Ephemera.selectedClass()));
+      Arr.each(cells, OnNode.addClass(Ephemera.selectedClass()));
     };
 
     var lookupTable = function (container) {
@@ -59,7 +59,7 @@ define(
     };
 
     var getLast = function (boxes) {
-      var raw = Arr.find(boxes, NodeOperations.hasClass(Ephemera.lastSelectedClass()));
+      var raw = Arr.find(boxes, OnNode.hasClass(Ephemera.lastSelectedClass()));
       return Option.from(raw);
     };
 
