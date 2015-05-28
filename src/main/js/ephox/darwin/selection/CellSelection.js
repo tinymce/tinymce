@@ -34,6 +34,13 @@ define(
       return SelectorFind.ancestor(container, 'table');
     };
 
+    // Note, bIndex is not necessarily higher than aIndex
+    var sliceInterval = function (xs, aIndex, bIndex) {
+      var minRowIndex = Math.min(aIndex, bIndex);
+      var maxRowIndex = Math.max(aIndex, bIndex);
+      return xs.slice(minRowIndex, maxRowIndex + 1);
+    };
+
     var identify = function (start, finish) {
       // So ignore the colspan, rowspan for the time being.
       return DomParent.sharedOne(lookupTable, [ start, finish ]).bind(function (tbl) {
@@ -41,14 +48,10 @@ define(
         var rows = SelectorFilter.descendants(tbl, 'tr');
         return CellFinder.findInTable(start).bind(function (startData) {
           return CellFinder.findInTable(finish).map(function (finishData) {
-            var minRowIndex = Math.min(startData.rowIndex(), finishData.rowIndex());
-            var maxRowIndex = Math.max(startData.rowIndex(), finishData.rowIndex());
-            var subrows = rows.slice(minRowIndex, maxRowIndex + 1);
+            var subrows = sliceInterval(rows, startData.rowIndex(), finishData.rowIndex());
             return Arr.bind(subrows, function (r) {
               var cells = SelectorFilter.children(r, 'td,th');
-              var minCellIndex = Math.min(startData.colIndex(), finishData.colIndex());
-              var maxCellIndex = Math.max(startData.colIndex(), finishData.colIndex());
-              return cells.slice(minCellIndex, maxCellIndex + 1);
+              return sliceInterval(cells, startData.colIndex(), finishData.colIndex());
             });
           });
         });
@@ -83,9 +86,8 @@ define(
 
     var shiftSelection = function (boxes, deltaRow, deltaColumn) {
       return getLast(boxes).bind(CellFinder.findInTable).bind(function (position) {
-        return SelectorFind.ancestor(boxes[0], 'table').bind(function (section) {
-
-          return CellFinder.gotoCell(section, position.rowIndex() + deltaRow, position.colIndex() + deltaColumn).bind(expandTo);
+        return SelectorFind.ancestor(boxes[0], 'table').bind(function (table) {
+          return CellFinder.gotoCell(table, position.rowIndex() + deltaRow, position.colIndex() + deltaColumn).bind(expandTo);
         });
       });
     };
