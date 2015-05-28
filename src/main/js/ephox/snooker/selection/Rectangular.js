@@ -16,15 +16,27 @@ define(
       var list = DetailsList.fromTable(table);
       var warehouse = Warehouse.generate(list);
 
+      // window.warehousdebug = warehouse.access();
+      console.log("warehous ", warehouse.access());
+
       var startCoords = Warehouse.findItem(warehouse, startCell, Compare.eq);
       var finishCoords = Warehouse.findItem(warehouse, finishCell, Compare.eq);
       return startCoords.bind(function (sc) {
         return finishCoords.map(function (fc) {
+
+          var leftCol = Math.min(sc.column(), fc.column());
+          var rightCol = Math.max(sc.column() + sc.colspan() - 1, fc.column() + fc.colspan() - 1);
+
+          var topRow = Math.min(sc.row(), fc.row());
+          var bottomRow = Math.max(sc.row() + sc.rowspan() - 1 , fc.row() + fc.rowspan() - 1);
+
+
           return {
-            startCol: Fun.constant(sc.column()),
-            finishRow: Fun.constant(fc.row() + fc.rowspan() - 1),
-            finishCol: Fun.constant(fc.column() + fc.colspan() - 1),
-            startRow: Fun.constant(sc.row()),
+            startCol: Fun.constant(leftCol),
+            finishCol: Fun.constant(rightCol),
+
+            startRow: Fun.constant(topRow),
+            finishRow: Fun.constant(bottomRow),
             warehouse: warehouse
           };
         });
@@ -34,27 +46,20 @@ define(
     var isRectangular = function (table, startCell, finishCell) {
       var result = getBox(table, startCell, finishCell).map(function (info) {
 
-        var startRow = Math.min(info.startRow(), info.finishRow());
-        var finishRow = Math.max(info.startRow(), info.finishRow());
-
-        var startCol = Math.min(info.startCol(), info.finishCol());
-        var finishCol = Math.max(info.startCol(), info.finishCol());
+        var boundingBox = Structs.bounds({
+          startRow: info.startRow(),
+          startCol : info.startCol(),
+          finishRow : info.finishRow(),
+          finishCol : info.finishCol()
+        });
 
         var isRect = true;
-        for (var i = startRow; i<=finishRow; i++) {
-          for (var j = startCol; j<=finishCol; j++ ) {
-            var boundingBox = Structs.bounds({
-              startRow: info.startRow(),
-              startCol : info.startCol(),
-              finishRow : info.finishRow(),
-              finishCol : info.finishCol()
-            });
-
+        for (var i = info.startRow(); i<=info.finishRow(); i++) {
+          for (var j = info.startCol(); j<=info.finishCol(); j++ ) {
             var cell = Structs.cell({
               row : i,
               col : j
             });
-
             isRect = isRect && SpanningCells.isSpanning(info.warehouse.access(), cell, boundingBox);
           }
         }
