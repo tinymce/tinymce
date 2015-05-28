@@ -25,19 +25,20 @@ define("tinymce/ui/FloatPanel", [
 ], function(Panel, Movable, Resizable, DomUtils) {
 	"use strict";
 
-	var documentClickHandler, documentScrollHandler, windowResizeHandler, visiblePanels = [];
+	var documentClickHandler, documentScrollHandler, documentFocusOutHandler, windowResizeHandler, visiblePanels = [];
 	var zOrder = [], hasModal;
 
-	function bindDocumentClickHandler() {
-		function isChildOf(ctrl, parent) {
-			while (ctrl) {
-				if (ctrl == parent) {
-					return true;
-				}
-
-				ctrl = ctrl.parent();
+	function isChildOf(ctrl, parent) {
+		while (ctrl) {
+			if (ctrl == parent) {
+				return true;
 			}
+
+			ctrl = ctrl.parent();
 		}
+	}
+
+	function bindDocumentClickHandler() {
 
 		if (!documentClickHandler) {
 			documentClickHandler = function(e) {
@@ -83,6 +84,34 @@ define("tinymce/ui/FloatPanel", [
 			};
 
 			DomUtils.on(window, 'scroll', documentScrollHandler);
+		}
+	}
+
+	function bindDocumentFocusOutHandler() {
+		if (!documentFocusOutHandler) {
+			documentFocusOutHandler = function(e) {
+				var i = visiblePanels.length;
+
+				while (i--) {
+					var panel = visiblePanels[i], parentCtrl = panel.getParentCtrl(e.target);
+
+					if (panel.settings.autohide) {
+						if (parentCtrl) {
+							if (isChildOf(parentCtrl, panel) || panel.parent() === parentCtrl) {
+								continue;
+							}
+						}
+
+						e = panel.fire('autohide', {target: e.target});
+
+						if (!e.isDefaultPrevented()) {
+							panel.hide();
+						}
+					}
+				}
+			};
+
+			DomUtils.on(document, 'focusout', documentFocusOutHandler);
 		}
 	}
 
@@ -205,6 +234,7 @@ define("tinymce/ui/FloatPanel", [
 			if (settings.autohide) {
 				bindDocumentClickHandler();
 				bindWindowResizeHandler();
+				bindDocumentFocusOutHandler();
 				visiblePanels.push(self);
 			}
 
