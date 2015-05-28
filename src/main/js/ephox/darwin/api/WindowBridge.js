@@ -32,13 +32,18 @@ define(
         WindowSelection.clearAll(win);
       };
 
+      var setSelection = function (start, soffset, finish, foffset) {
+        WindowSelection.setExact(win, start, soffset, finish, foffset);
+      };
+
       return {
         getRect: getRect,
         getRangedRect: getRangedRect,
         getSelection: getSelection,
         fromSitus: fromSitus,
         situsFromPoint: situsFromPoint,
-        clearSelection: clearSelection
+        clearSelection: clearSelection,
+        setSelection: setSelection
       };
     };
   }

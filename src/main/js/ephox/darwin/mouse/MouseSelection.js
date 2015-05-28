@@ -2,13 +2,17 @@ define(
   'ephox.darwin.mouse.MouseSelection',
 
   [
+    'ephox.compass.Arr',
     'ephox.darwin.selection.CellSelection',
+    'ephox.oath.proximity.Awareness',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.phoenix.api.data.Spot',
+    'ephox.sugar.api.ElementFind',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (CellSelection, Fun, Option, SelectorFind) {
+  function (Arr, CellSelection, Awareness, Fun, Option, Spot, ElementFind, SelectorFind) {
     return function (bridge, container) {
       var cursor = Option.none();
 
@@ -32,7 +36,23 @@ define(
         });
       };
 
+      // Identify the range of contiguous cells from a starting point. Does not keep bias.
+      var connected = function (start) {
+        return ElementFind.inAncestorOfSelector(start, 'table', 'td,th').map(function (info) {
+          var others = info.descendants().slice(info.index());
+          var index = Arr.findIndex(others, Fun.not(CellSelection.isSelected));
+          var finishCell = index > 0 ? others[index - 1] : others[others.length - 1];
+          return Spot.point(finishCell, Awareness.getEnd(finishCell));
+        });
+      };
+
       var mouseup = function (event) {
+        CellSelection.retrieve(container).each(function (cells) {
+          connected(cells[0]).each(function (finish) {
+            bridge.setSelection(cells[0], 0, finish.element(), finish.offset());
+          });
+        });
+
         cursor = Option.none();
       };
 

@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.darwin.api.InputHandlers',
-    'ephox.darwin.api.SelectionDirection',
+    'ephox.darwin.api.SelectionKeys',
     'ephox.fred.PlatformDetection',
     'ephox.fussy.api.WindowSelection',
     'ephox.peanut.Fun',
@@ -23,7 +23,7 @@ define(
     'global!document'
   ],
 
-  function (InputHandlers, SelectionDirection, PlatformDetection, WindowSelection, Fun, Option, Attr, Body, Compare, Direction, DomEvent, Element, Insert, Node, Replication, SelectorFind, Traverse, Math, document) {
+  function (InputHandlers, SelectionKeys, PlatformDetection, WindowSelection, Fun, Option, Attr, Body, Compare, Direction, DomEvent, Element, Insert, Node, Replication, SelectorFind, Traverse, Math, document) {
     return function () {
 
       var detection = PlatformDetection.detect();
@@ -119,7 +119,7 @@ define(
         WindowSelection.get(window).each(function (sel) {
           var target = Node.isText(sel.start()) ? Traverse.parent(sel.start()) : Option.some(sel.start());
           var direction = target.map(Direction.getDirection).getOr('ltr');
-          keyHandlers.keydown(event, sel.finish(), sel.foffset(), direction === 'ltr' ? SelectionDirection.ltr : SelectionDirection.rtl).each(function (response) {
+          keyHandlers.keydown(event, sel.finish(), sel.foffset(), direction === 'ltr' ? SelectionKeys.ltr : SelectionKeys.rtl).each(function (response) {
             handleResponse(event, response);
           });
         });

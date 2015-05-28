@@ -85,6 +85,10 @@ define(
       });
     };
 
+    var isSelected = function (cell) {
+      return Class.has(cell, Ephemera.selectedClass());
+    };
+
     var selectRange = function (container, cells, start, finish) {
       clear(container);
       select(cells);
@@ -97,6 +101,7 @@ define(
       identify: identify,
       retrieve: retrieve,
       shiftSelection: shiftSelection,
+      isSelected: isSelected,
       selectRange: selectRange
     };
   }
