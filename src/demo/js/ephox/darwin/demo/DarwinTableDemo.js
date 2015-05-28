@@ -10,16 +10,19 @@ define(
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Body',
     'ephox.sugar.api.Compare',
+    'ephox.sugar.api.Direction',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
+    'ephox.sugar.api.Node',
     'ephox.sugar.api.Replication',
     'ephox.sugar.api.SelectorFind',
+    'ephox.sugar.api.Traverse',
     'global!Math',
     'global!document'
   ],
 
-  function (InputHandlers, SelectionDirection, PlatformDetection, WindowSelection, Fun, Attr, Body, Compare, DomEvent, Element, Insert, Replication, SelectorFind, Math, document) {
+  function (InputHandlers, SelectionDirection, PlatformDetection, WindowSelection, Fun, Attr, Body, Compare, Direction, DomEvent, Element, Insert, Node, Replication, SelectorFind, Traverse, Math, document) {
     return function () {
 
       var detection = PlatformDetection.detect();
@@ -70,6 +73,10 @@ define(
       Insert.append(ephoxUi, table);
       Insert.append(Element.fromDom(document.head), style);
 
+      var rtlTable = Replication.deep(table);
+      Attr.set(rtlTable, 'dir', 'rtl');
+      Insert.append(ephoxUi, rtlTable);
+
       var cloneDiv = Element.fromTag('div');
       Attr.set(cloneDiv, 'contenteditable', 'true');
       var clone = Replication.deep(table);
@@ -109,7 +116,9 @@ define(
       DomEvent.bind(ephoxUi, 'keydown', function (event) {
         // This might get expensive.
         WindowSelection.get(window).each(function (sel) {
-          keyHandlers.keydown(event, sel.finish(), sel.foffset(), SelectionDirection.ltr).each(function (response) {
+          console.log('sel', sel.start().dom());
+          var direction = Node.isText(sel.start()) ? Traverse.parent(sel.start()).map(Direction.getDirection).getOr('ltr') : 'ltr';
+          keyHandlers.keydown(event, sel.finish(), sel.foffset(), direction === 'ltr' ? SelectionDirection.ltr : SelectionDirection.rtl).each(function (response) {
             handleResponse(event, response);
           });
         });
