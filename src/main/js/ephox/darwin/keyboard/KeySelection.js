@@ -14,6 +14,7 @@ define(
   ],
 
   function (Responses, CellSelection, SelectionRange, Situ, WindowSelection, Awareness, Option, Compare, SelectorFind) {
+    // Based on a start and finish, select the appropriate box of cells
     var sync = function (container, isRoot, start, soffset, finish, foffset) {
       if (! WindowSelection.isCollapsed(start, soffset, finish, foffset)) {
         return SelectorFind.closest(start, 'td,th').bind(function (s) {
