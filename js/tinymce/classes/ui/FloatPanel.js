@@ -38,7 +38,7 @@ define("tinymce/ui/FloatPanel", [
 		}
 	}
 
-	function skipOrHidePanels(e){
+	function skipOrHidePanels(e) {
 		// Hide any float panel when a click/focus out is out side that float panel and the
 		// float panels direct parent for example a click on a menu button
 		var i = visiblePanels.length;
