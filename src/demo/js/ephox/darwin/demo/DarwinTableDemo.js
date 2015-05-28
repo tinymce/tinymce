@@ -7,6 +7,7 @@ define(
     'ephox.fred.PlatformDetection',
     'ephox.fussy.api.WindowSelection',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Body',
     'ephox.sugar.api.Compare',
@@ -22,7 +23,7 @@ define(
     'global!document'
   ],
 
-  function (InputHandlers, SelectionDirection, PlatformDetection, WindowSelection, Fun, Attr, Body, Compare, Direction, DomEvent, Element, Insert, Node, Replication, SelectorFind, Traverse, Math, document) {
+  function (InputHandlers, SelectionDirection, PlatformDetection, WindowSelection, Fun, Option, Attr, Body, Compare, Direction, DomEvent, Element, Insert, Node, Replication, SelectorFind, Traverse, Math, document) {
     return function () {
 
       var detection = PlatformDetection.detect();
@@ -116,8 +117,8 @@ define(
       DomEvent.bind(ephoxUi, 'keydown', function (event) {
         // This might get expensive.
         WindowSelection.get(window).each(function (sel) {
-          console.log('sel', sel.start().dom());
-          var direction = Node.isText(sel.start()) ? Traverse.parent(sel.start()).map(Direction.getDirection).getOr('ltr') : 'ltr';
+          var target = Node.isText(sel.start()) ? Traverse.parent(sel.start()) : Option.some(sel.start());
+          var direction = target.map(Direction.getDirection).getOr('ltr');
           keyHandlers.keydown(event, sel.finish(), sel.foffset(), direction === 'ltr' ? SelectionDirection.ltr : SelectionDirection.rtl).each(function (response) {
             handleResponse(event, response);
           });

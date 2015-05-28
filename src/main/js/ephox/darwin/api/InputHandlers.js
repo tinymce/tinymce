@@ -62,8 +62,8 @@ define(
           // Note, this will need to work for RTL.
           if (keycode === 40 && shiftKey) return update(+1, 0);
           else if (keycode === 38 && shiftKey) return update(-1, 0);
-          else if (direction.isLeft(keycode) && shiftKey) return update(0, -1);
-          else if (direction.isRight(keycode) && shiftKey) return update(0, +1);
+          else if (direction.isBackward(keycode) && shiftKey) return update(0, -1);
+          else if (direction.isForward(keycode) && shiftKey) return update(0, +1);
           // Clear the selection on normal arrow keys.
           else if (keycode >= 37 && keycode <= 40 && shiftKey === false) return clearToNavigate;
           else return Option.none;

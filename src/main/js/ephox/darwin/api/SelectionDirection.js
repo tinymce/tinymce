@@ -15,12 +15,12 @@ define(
     return {
       ltr: {
         // We need to move KEYS out of keytar and into something much more low-level.
-        isLeft: isKey(37),
-        isRight: isKey(39)
+        isBackward: isKey(37),
+        isForward: isKey(39)
       },
       rtl: {
-        isLeft: isKey(39),
-        isRight: isKey(37)
+        isBackward: isKey(39),
+        isForward: isKey(37)
       }
     };
   }
