@@ -30,15 +30,21 @@ define(
             '<th>A0</th>'+
             '<th>A1</th>'+
             '<th>A2</th>'+
+            '<th>A3</th>'+
+            '<th>A4</th>'+
           '</tr>'+
           '<tr>'+
             '<td>B0</td>'+
             '<td>B1</td>'+
+            '<td>B2</td>'+
+            '<td>B3</td>'+
             '<td rowspan="2">B3</td>'+
           '</tr>'+
           '<tr>'+
             '<td>C0</td>'+
             '<td>C1</td>'+
+            '<td>C2</td>'+
+            '<td>C3</td>'+
           '</tr>'+
         '</table>'
       );
