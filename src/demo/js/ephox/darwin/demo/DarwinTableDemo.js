@@ -6,7 +6,6 @@ define(
     'ephox.fred.PlatformDetection',
     'ephox.fussy.api.WindowSelection',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Body',
     'ephox.sugar.api.Compare',
@@ -19,7 +18,7 @@ define(
     'global!document'
   ],
 
-  function (InputHandlers, PlatformDetection, WindowSelection, Fun, Option, Attr, Body, Compare, DomEvent, Element, Insert, Replication, SelectorFind, Math, document) {
+  function (InputHandlers, PlatformDetection, WindowSelection, Fun, Attr, Body, Compare, DomEvent, Element, Insert, Replication, SelectorFind, Math, document) {
     return function () {
 
       var detection = PlatformDetection.detect();
@@ -81,7 +80,7 @@ define(
         document.querySelector('#coords').innerHTML = '(' + event.raw().clientX + ', ' + event.raw().clientY + ')';
       });
 
-      var mouseHandlers = InputHandlers.mouse(ephoxUi);
+      var mouseHandlers = InputHandlers.mouse(window, ephoxUi);
       var keyHandlers = InputHandlers.keyboard(window, ephoxUi, Fun.curry(Compare.eq, table));
 
       DomEvent.bind(ephoxUi, 'mousedown', mouseHandlers.mousedown);
