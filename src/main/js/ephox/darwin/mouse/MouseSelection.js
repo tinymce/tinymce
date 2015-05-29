@@ -38,7 +38,7 @@ define(
 
       // Identify the range of contiguous cells from a starting point. Does not keep bias.
       var connected = function (start) {
-        return ElementFind.inAncestorOfSelector(start, 'table', 'td,th').map(function (info) {
+        return ElementFind.descendantsInAncestor(start, 'table', 'td,th').map(function (info) {
           var others = info.descendants().slice(info.index());
           var index = Arr.findIndex(others, Fun.not(CellSelection.isSelected));
           var finishCell = index > 0 ? others[index - 1] : others[others.length - 1];
