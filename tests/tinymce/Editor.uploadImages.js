@@ -1,6 +1,10 @@
 (function() {
 	var testBlob, testBlobDataUri;
 
+	if (!tinymce.Env.fileApi) {
+		return;
+	}
+
 	module("tinymce.Editor.uploadImages", {
 		setupModule: function() {
 			QUnit.stop();
@@ -39,19 +43,15 @@
 					});
 				}
 			});
+		},
+
+		teardown: function() {
+			editor.blobCache.destroy();
 		}
 	});
 
 	function imageHtml(uri) {
 		return tinymce.DOM.createHTML('img', {src: uri});
-	}
-
-	if (!tinymce.Env.fileApi) {
-		test("File API not supported by browser.", function() {
-			QUnit.ok(true);
-		});
-
-		return;
 	}
 
 	asyncTest('_scanForImages', function() {
@@ -63,6 +63,33 @@
 			QUnit.equal("data:" + blobInfo.blob().type + ";base64," + blobInfo.base64(), testBlobDataUri);
 			QUnit.equal('<p><img src="' + blobInfo.blobUri() + '" alt=""></p>', editor.getBody().innerHTML);
 			QUnit.strictEqual(editor.blobCache.get(blobInfo.id()), blobInfo);
+		}).then(QUnit.start);
+	});
+
+	asyncTest('uploadImages', function() {
+		var uploadedBlobInfo;
+
+		function assertResult(result) {
+			QUnit.strictEqual(result[0].status, true);
+			QUnit.ok(result[0].image.src.indexOf(uploadedBlobInfo.id() + '.png') !== -1);
+
+			return result;
+		}
+
+		editor.setContent(imageHtml(testBlobDataUri));
+
+		editor.settings.upload_handler = function(data, success) {
+			uploadedBlobInfo = data;
+			success(data.id() + '.png');
+		};
+
+		editor.uploadImages(assertResult).then(assertResult).then(function() {
+			uploadedBlobInfo = null;
+
+			return editor.uploadImages(function() {}).then(function(result) {
+				QUnit.strictEqual(result.length, 0);
+				QUnit.strictEqual(uploadedBlobInfo, null);
+			});
 		}).then(QUnit.start);
 	});
 })();
