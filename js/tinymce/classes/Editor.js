@@ -2053,14 +2053,36 @@ define("tinymce/Editor", [
 		 * @return {tinymce.util.Promise} Promise instance.
 		 */
 		uploadImages: function(callback) {
-			var uploader = new Uploader({
+			var self = this,
+				uploader = new Uploader({
 				url: this.settings.upload_url,
 				basePath: this.settings.upload_base_path,
 				credentials: this.settings.upload_credentials,
 				handler: this.settings.upload_handler
 			});
 
-			return this._scanForImages().then(uploader.upload).then(function(result) {
+			function imageInfosToBlobInfos(imageInfos) {
+				return Tools.map(imageInfos, function(imageInfo) {
+					return imageInfo.blobInfo;
+				});
+			}
+
+			return self._scanForImages().then(imageInfosToBlobInfos).then(uploader.upload).then(function(result) {
+				result = Tools.map(result, function(uploadInfo) {
+					var image;
+
+					image = self.dom.select('img[src="' + uploadInfo.blobInfo.blobUri() + '"]')[0];
+
+					if (image) {
+						image.src = uploadInfo.url;
+					}
+
+					return {
+						image: image,
+						status: uploadInfo.status
+					};
+				});
+
 				// TODO: Replace urls in undo levels with new url
 
 				if (callback) {
