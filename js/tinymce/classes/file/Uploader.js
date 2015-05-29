@@ -32,6 +32,17 @@ define("tinymce/file/Uploader", [
 	"tinymce/util/Tools"
 ], function(Promise, Tools) {
 	return function(settings) {
+		function blobInfoToData(blobInfo) {
+			var fileName = "x";
+
+			return {
+				id: blobInfo.id,
+				blob: blobInfo.blob,
+				base64: blobInfo.base64,
+				filename: Tools.constant(fileName)
+			};
+		}
+
 		function defaultHandler(blobInfo, success, failure) {
 			var xhr, formData;
 
@@ -83,11 +94,13 @@ define("tinymce/file/Uploader", [
 						return;
 					}
 
-					handler(queueItem.blobInfo, function(url) {
+					handler(blobInfoToData(queueItem.blobInfo), function(url) {
 						queueItem.url = url;
 						queueItem.status = true;
+						uploadNext();
 					}, function() {
 						queueItem.status = false;
+						uploadNext();
 					});
 				}
 
