@@ -147,6 +147,12 @@ define("tinymce/Env", [], function() {
 		 */
 		documentMode: ie && !ie12 ? (document.documentMode || 7) : 10,
 
-		fileApi: "FormData" in window && "FileReader" in window
+		/**
+		 * Constant that is true if the browser has a modern file api.
+		 *
+		 * @property fileApi
+		 * @type Boolean
+		 */
+		fileApi: "FormData" in window && "FileReader" in window && "URL" in window && URL.createObjectURL
 	};
 });
