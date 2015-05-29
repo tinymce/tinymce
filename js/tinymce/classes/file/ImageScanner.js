@@ -19,6 +19,8 @@ define("tinymce/file/ImageScanner", [
 	"tinymce/util/Tools",
 	"tinymce/file/Conversions"
 ], function(Promise, Tools, Conversions) {
+	var count = 0;
+
 	function mapAsync(array, fn) {
 		return new Promise(function(resolve) {
 			var result = [];
@@ -46,7 +48,7 @@ define("tinymce/file/ImageScanner", [
 	return {
 		findAll: function(elm, blobCache) {
 			function imageToBlobInfo(img, resolve) {
-				var base64, blobInfo, blobInfoId = 'id';
+				var base64, blobInfo, blobInfoId = 'blobid' + (count++);
 
 				base64 = Conversions.parseDataUri(img.src).data;
 				blobInfo = blobCache.findFirst(function(cachedBlobInfo) {
