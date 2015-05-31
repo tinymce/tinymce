@@ -28,8 +28,8 @@ define(
       });
     };
 
-    var scan = function (bridge, isRoot, element, offset, direction, counter) {
-      if (counter === 0) return Option.none();
+    var scan = function (bridge, isRoot, element, offset, direction, numRetries) {
+      if (numRetries === 0) return Option.none();
       // Firstly, move the (x, y) and see what element we end up on.
       return tryCursor(bridge, isRoot, element, offset, direction).bind(function (situs) {
         var range = bridge.fromSitus(situs);
@@ -42,10 +42,10 @@ define(
           return Option.some(situs);
         }, function (cell) {
           // We need to look again from the start of our current cell
-          return scan(bridge, isRoot, cell, 0, direction, counter - 1);
+          return scan(bridge, isRoot, cell, 0, direction, numRetries - 1);
         }, function (cell) {
           // We need to look again from the end of our current cell
-          return scan(bridge, isRoot, cell, Awareness.getEnd(cell), direction, counter - 1);
+          return scan(bridge, isRoot, cell, Awareness.getEnd(cell), direction, numRetries - 1);
         });
       });
     };

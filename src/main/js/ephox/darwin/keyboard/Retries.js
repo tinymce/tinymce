@@ -13,6 +13,7 @@ define(
 
   function (Carets, Rectangles, Fun, Option, DomGather, Adt, Math) {
     var JUMP_SIZE = 5;
+    var NUM_RETRIES = 100;
 
     var adt = Adt.generate([
       { 'none' : [] },
@@ -83,7 +84,7 @@ define(
 
     var retry = function (movement, bridge, caret) {
       var moved = movement.move(caret, JUMP_SIZE);
-      var adjusted = adjustTil(bridge, movement, caret, moved, 100).getOr(moved);
+      var adjusted = adjustTil(bridge, movement, caret, moved, NUM_RETRIES).getOr(moved);
       if (movement.point(adjusted) > bridge.getInnerHeight()) {
         var delta = movement.point(adjusted) - (bridge.getInnerHeight() + bridge.getScrollY()) + 10;
         bridge.scrollBy(0, delta);
