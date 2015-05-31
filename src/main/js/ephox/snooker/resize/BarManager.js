@@ -105,11 +105,21 @@ define(
         startAdjust: Event([])
       });
 
+      var hideBars = function () {
+        Bars.hide(wire);
+      };
+
+      var showBars = function () {
+        Bars.show(wire);
+      };
+
       return {
         destroy: destroy,
         refresh: refresh,
         on: resizing.on,
         off: resizing.off,
+        hideBars: hideBars,
+        showBars: showBars,
         events: events.registry
       };
     };
