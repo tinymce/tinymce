@@ -10,11 +10,11 @@ define(
   function (Option, ElementFind, SelectorFilter) {
     // IMPROVEMENT: Implement colspans and rowspans. Note, this will probably interact with snooker.
     var findInTable = function (cell) {
-      return ElementFind.inAncestorOfSelector(cell, 'tr', 'td,th').bind(function (cellInfo) {
-        return ElementFind.inAncestorOfSelector(cellInfo.ancestor(), 'table', 'tr').map(function (rowInfo) {
+      return ElementFind.descendantsInAncestor(cell, 'tr', 'td,th').bind(function (cellInfo) {
+        return ElementFind.descendantsInAncestor(cellInfo.ancestor(), 'table', 'tr').map(function (rowInfo) {
           return {
             rowIndex: rowInfo.index,
-            colIndex: cellInfo.index,
+            colIndex: cellInfo.index
           };
         });
       });
