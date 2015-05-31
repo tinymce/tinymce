@@ -20,16 +20,53 @@ var dependencies = [
     ]
   },
 
-  /**** demo dependencies ****/
   {
-    name: 'exhibition',
+    name: 'phoenix',
     repository: 'buildrepo2',
-    version: 'latest',
-    source: 'exhibition.zip',
+    source: 'phoenix.zip',
     targets: [
-      { name: 'module/*.js', path: demo },
-      { name: 'depend/*.js', path: demo },
-      { name: 'exhibition.js', path: config }
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
+  {
+    name: 'robin',
+    repository: 'buildrepo2',
+    source: 'robin.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
+  {
+    name: 'flour',
+    repository: 'buildrepo2',
+    source: 'flour.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
+  {
+    name: 'fussy',
+    repository: 'buildrepo2',
+    source: 'fussy.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
+  {
+    name: 'fred',
+    repository: 'buildrepo2',
+    source: 'fred.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
     ]
   }
 ];
