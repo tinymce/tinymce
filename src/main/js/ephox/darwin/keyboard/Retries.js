@@ -56,13 +56,13 @@ define(
       gather: DomGather.after
     };
 
-    var adjustTil = function (bridge, direction, original, caret, counter) {
-      if (counter === 0) return Option.some(caret);
-      return bridge.situsFromPoint(caret.left(), direction.point(caret)).bind(function (guess) {
+    var adjustTil = function (bridge, movement, original, caret, numRetries) {
+      if (numRetries === 0) return Option.some(caret);
+      return bridge.situsFromPoint(caret.left(), movement.point(caret)).bind(function (guess) {
         return guess.start().fold(Option.none, function (element, offset) {
           return Rectangles.getBox(bridge, element, offset).bind(function (guessBox) {
-            return direction.adjuster(guessBox, original, caret).fold(Option.none, function (newCaret) {
-              return adjustTil(bridge, direction, original, newCaret, counter-1);
+            return movement.adjuster(guessBox, original, caret).fold(Option.none, function (newCaret) {
+              return adjustTil(bridge, movement, original, newCaret, numRetries-1);
             }, function (newCaret) {
               return Option.some(newCaret);
             });
@@ -81,15 +81,15 @@ define(
       return bridge.situsFromPoint(caret.left(), caret.top() - JUMP_SIZE);
     };
 
-    var retry = function (direction, bridge, caret) {
-      var moved = direction.move(caret, JUMP_SIZE);
-      var adjusted = adjustTil(bridge, direction, caret, moved, 100).getOr(moved);
-      if (direction.point(adjusted) > bridge.innerHeight) {
-        var delta = direction.point(adjusted) - (bridge.innerHeight + bridge.scrollY) + 10;
+    var retry = function (movement, bridge, caret) {
+      var moved = movement.move(caret, JUMP_SIZE);
+      var adjusted = adjustTil(bridge, movement, caret, moved, 100).getOr(moved);
+      if (movement.point(adjusted) > bridge.getInnerHeight()) {
+        var delta = movement.point(adjusted) - (bridge.getInnerHeight() + bridge.getScrollY()) + 10;
         bridge.scrollBy(0, delta);
-        return bridge.situsFromPoint(adjusted.left(), direction.point(adjusted) - delta);
+        return bridge.situsFromPoint(adjusted.left(), movement.point(adjusted) - delta);
       } else {
-        return bridge.situsFromPoint(adjusted.left(), direction.point(adjusted));
+        return bridge.situsFromPoint(adjusted.left(), movement.point(adjusted));
       }
     };
 

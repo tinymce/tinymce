@@ -6,28 +6,53 @@ define(
   ],
 
   function (Struct) {
-    var nu = Struct.immutable('left', 'top', 'right', 'bottom');
+    var nu = Struct.immutableBag([ 'left', 'top', 'right', 'bottom' ], []);
 
     var moveDown = function (caret, amount) {
-      return nu(caret.left(), caret.top() + amount, caret.right(), caret.bottom() + amount);
+      return nu({
+        left: caret.left(),
+        top: caret.top() + amount,
+        right: caret.right(),
+        bottom: caret.bottom() + amount
+      });
     };
 
     var moveUp = function (caret, amount) {
-      return nu(caret.left(), caret.top() - amount, caret.right(), caret.bottom() - amount);
+      return nu({
+        left: caret.left(),
+        top: caret.top() - amount,
+        right: caret.right(),
+        bottom: caret.bottom() - amount
+      });
     };
 
     var moveBottomTo = function (caret, bottom) {
       var height = caret.bottom() - caret.top();
-      return nu(caret.left(), bottom - height, caret.right(), bottom);
+      return nu({
+        left: caret.left(),
+        top: bottom - height,
+        right: caret.right(),
+        bottom: bottom
+      });
     };
 
     var moveTopTo = function (caret, top) {
       var height = caret.bottom() - caret.top();
-      return nu(caret.left(), top, caret.right(), top + height);
+      return nu({
+        left: caret.left(),
+        top: top,
+        right: caret.right(),
+        bottom: top + height
+      });
     };
 
     var translate = function (caret, xDelta, yDelta) {
-      return nu(caret.left() + xDelta, caret.top() + yDelta, caret.right() + xDelta, caret.bottom() + yDelta);
+      return nu({
+        left: caret.left() + xDelta,
+        top: caret.top() + yDelta,
+        right: caret.right() + xDelta,
+        bottom: caret.bottom() + yDelta
+      });
     };
 
     var getTop = function (caret) {

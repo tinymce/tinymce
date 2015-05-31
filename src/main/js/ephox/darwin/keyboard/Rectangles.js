@@ -16,7 +16,12 @@ define(
     };
 
     var toCaret = function (rect) {
-      return Carets.nu(rect.left, rect.top, rect.right, rect.bottom);
+      return Carets.nu({
+        left: rect.left,
+        top: rect.top,
+        right: rect.right,
+        bottom: rect.bottom
+      });
     };
 
     var getElemBox = function (bridge, element, offset) {

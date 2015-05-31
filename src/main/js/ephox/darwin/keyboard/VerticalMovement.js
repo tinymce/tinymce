@@ -5,6 +5,7 @@ define(
     'ephox.darwin.api.Responses',
     'ephox.darwin.keyboard.KeySelection',
     'ephox.darwin.keyboard.TableKeys',
+    'ephox.fred.PlatformDetection',
     'ephox.fussy.api.SelectionRange',
     'ephox.fussy.api.Situ',
     'ephox.peanut.Fun',
@@ -12,7 +13,9 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Responses, KeySelection, TableKeys, SelectionRange, Situ, Fun, Option, SelectorFind) {
+  function (Responses, KeySelection, TableKeys, PlatformDetection, SelectionRange, Situ, Fun, Option, SelectorFind) {
+    var detection = PlatformDetection.detect();
+
     var simulate = function (bridge, isRoot, direction, initial) {
       return SelectorFind.closest(initial, 'td,th').bind(function (start) {
         return TableKeys.handle(bridge, isRoot, direction).bind(function (range) {
@@ -28,6 +31,8 @@ define(
     };
 
     var navigate = function (bridge, isRoot, direction, initial) {
+      // Do not override the up/down keys on Firefox or IE.
+      if (detection.browser.isFirefox() || detection.browser.isIE()) return Option.none();
       return simulate(bridge, isRoot, direction, initial).map(function (info) {
         var range = info.range();
         return Responses.response(
