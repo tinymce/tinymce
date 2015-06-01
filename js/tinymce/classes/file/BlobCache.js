@@ -45,6 +45,12 @@ define("tinymce/file/BlobCache", [
 			return Tools.grep(cache, predicate)[0];
 		}
 
+		function getByUri(blobUri) {
+			return findFirst(function(blobInfo) {
+				return blobInfo.blobUri() == blobUri;
+			});
+		}
+
 		function destroy() {
 			Tools.each(cache, function(cachedBlobInfo) {
 				URL.revokeObjectURL(cachedBlobInfo.blobUri());
@@ -57,6 +63,7 @@ define("tinymce/file/BlobCache", [
 			create: create,
 			add: add,
 			get: get,
+			getByUri: getByUri,
 			findFirst: findFirst,
 			destroy: destroy
 		};

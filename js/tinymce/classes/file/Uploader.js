@@ -32,14 +32,27 @@ define("tinymce/file/Uploader", [
 	"tinymce/util/Tools"
 ], function(Promise, Tools) {
 	return function(settings) {
-		function blobInfoToData(blobInfo) {
-			var fileName = "x";
+		function fileName(blobInfo) {
+			var ext, extensions;
 
+			extensions = {
+				'image/jpeg': 'jpg',
+				'image/jpg': 'jpg',
+				'image/gif': 'gif',
+				'image/png': 'png'
+			};
+
+			ext = extensions[blobInfo.blob().type.toLowerCase()] || 'dat';
+
+			return blobInfo.id() + '.' + ext;
+		}
+
+		function blobInfoToData(blobInfo) {
 			return {
 				id: blobInfo.id,
 				blob: blobInfo.blob,
 				base64: blobInfo.base64,
-				filename: Tools.constant(fileName)
+				filename: Tools.constant(fileName(blobInfo))
 			};
 		}
 
@@ -69,7 +82,7 @@ define("tinymce/file/Uploader", [
 			};
 
 			formData = new FormData();
-			formData.append('file', blobInfo.blob());
+			formData.append('file', blobInfo.blob(), fileName(blobInfo));
 
 			xhr.send(formData);
 		}

@@ -46,7 +46,7 @@
 		},
 
 		teardown: function() {
-			editor.blobCache.destroy();
+			editor.editorUpload.destroy();
 		}
 	});
 
@@ -62,7 +62,7 @@
 
 			QUnit.equal("data:" + blobInfo.blob().type + ";base64," + blobInfo.base64(), testBlobDataUri);
 			QUnit.equal('<p><img src="' + blobInfo.blobUri() + '" alt=""></p>', editor.getBody().innerHTML);
-			QUnit.strictEqual(editor.blobCache.get(blobInfo.id()), blobInfo);
+			QUnit.strictEqual(editor.editorUpload.blobCache.get(blobInfo.id()), blobInfo);
 		}).then(QUnit.start);
 	});
 

@@ -48,8 +48,22 @@ define("tinymce/file/ImageScanner", [
 	return {
 		findAll: function(elm, blobCache) {
 			function imageToBlobInfo(img, resolve) {
-				var base64, blobInfo, blobInfoId = 'blobid' + (count++);
+				var base64, blobInfo, blobInfoId;
 
+				if (img.src.indexOf('blob:') === 0) {
+					blobInfo = blobCache.getByUri(img.src);
+
+					if (blobInfo) {
+						resolve({
+							image: img,
+							blobInfo: blobInfo
+						});
+					}
+
+					return;
+				}
+
+				blobInfoId = 'blobid' + (count++);
 				base64 = Conversions.parseDataUri(img.src).data;
 				blobInfo = blobCache.findFirst(function(cachedBlobInfo) {
 					return cachedBlobInfo.base64() === base64;
@@ -75,7 +89,7 @@ define("tinymce/file/ImageScanner", [
 			}
 
 			return mapAsync(Tools.filter(elm.getElementsByTagName('img'), function(img) {
-				return img.src && img.src.indexOf('data:') === 0;
+				return img.src && (img.src.indexOf('data:') === 0 || img.src.indexOf('blob:') === 0);
 			}), imageToBlobInfo);
 		}
 	};

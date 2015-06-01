@@ -65,14 +65,12 @@ define("tinymce/Editor", [
 	"tinymce/util/Tools",
 	"tinymce/EditorObservable",
 	"tinymce/Shortcuts",
-	"tinymce/file/Uploader",
-	"tinymce/file/ImageScanner",
-	"tinymce/file/BlobCache"
+	"tinymce/EditorUpload"
 ], function(
 	DOMUtils, DomQuery, AddOnManager, NodeChange, Node, DomSerializer, Serializer,
 	Selection, Formatter, UndoManager, EnterKey, ForceBlocks, EditorCommands,
 	URI, ScriptLoader, EventUtils, WindowManager,
-	Schema, DomParser, Quirks, Env, Tools, EditorObservable, Shortcuts, Uploader, ImageScanner, BlobCache
+	Schema, DomParser, Quirks, Env, Tools, EditorObservable, Shortcuts, EditorUpload
 ) {
 	// Shorten these names
 	var DOM = DOMUtils.DOM, ThemeManager = AddOnManager.ThemeManager, PluginManager = AddOnManager.PluginManager;
@@ -774,7 +772,7 @@ define("tinymce/Editor", [
 
 			body.disabled = false;
 
-			self.blobCache = new BlobCache();
+			self.editorUpload = new EditorUpload(self);
 
 			/**
 			 * Schema instance, enables you to validate elements and it's children.
@@ -1983,7 +1981,7 @@ define("tinymce/Editor", [
 
 				self.editorManager.remove(self);
 				DOM.remove(self.getContainer());
-				self.blobCache.destroy();
+				self.editorUpload.destroy();
 				self.destroy();
 			}
 		},
@@ -2053,56 +2051,13 @@ define("tinymce/Editor", [
 		 * @return {tinymce.util.Promise} Promise instance.
 		 */
 		uploadImages: function(callback) {
-			var self = this,
-				uploader = new Uploader({
-				url: this.settings.upload_url,
-				basePath: this.settings.upload_base_path,
-				credentials: this.settings.upload_credentials,
-				handler: this.settings.upload_handler
-			});
-
-			function imageInfosToBlobInfos(imageInfos) {
-				return Tools.map(imageInfos, function(imageInfo) {
-					return imageInfo.blobInfo;
-				});
-			}
-
-			return self._scanForImages().then(imageInfosToBlobInfos).then(uploader.upload).then(function(result) {
-				result = Tools.map(result, function(uploadInfo) {
-					var image;
-
-					image = self.dom.select('img[src="' + uploadInfo.blobInfo.blobUri() + '"]')[0];
-
-					if (image) {
-						image.src = uploadInfo.url;
-					}
-
-					return {
-						image: image,
-						status: uploadInfo.status
-					};
-				});
-
-				// TODO: Replace urls in undo levels with new url
-
-				if (callback) {
-					callback(result);
-				}
-
-				return result;
-			});
+			return this.editorUpload.uploadImages(callback);
 		},
 
 		// Internal functions
 
 		_scanForImages: function() {
-			return ImageScanner.findAll(this.getBody(), this.blobCache).then(function(result) {
-				Tools.each(result, function(resultItem) {
-					resultItem.image.src = resultItem.blobInfo.blobUri();
-				});
-
-				return result;
-			});
+			return this.editorUpload.scanForImages();
 		},
 
 		_refreshContentEditable: function() {

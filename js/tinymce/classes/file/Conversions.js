@@ -52,7 +52,15 @@ define("tinymce/file/Conversions", [
 			var str, arr, i;
 
 			uri = parseDataUri(uri);
-			str = atob(uri.data);
+
+			// Might throw error if data isn't proper base64
+			try {
+				str = atob(uri.data);
+			} catch (e) {
+				resolve(new Blob([]));
+				return;
+			}
+
 			arr = new Uint8Array(str.length);
 
 			for (i = 0; i < arr.length; i++) {
