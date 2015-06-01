@@ -303,24 +303,24 @@ define("tinymce/dom/ControlSelection", [
 
 					// Get existing or render resize handle
 					handleElm = dom.get('mceResizeHandle' + name);
-					if (!handleElm) {
-						handlerContainerElm = rootElement;
+					if (handleElm) {
+						dom.remove(handleElm);
+					}
 
-						handleElm = dom.add(handlerContainerElm, 'div', {
-							id: 'mceResizeHandle' + name,
-							'data-mce-bogus': 'all',
-							'class': 'mce-resizehandle',
-							unselectable: true,
-							style: 'cursor:' + name + '-resize; margin:0; padding:0'
-						});
+					handlerContainerElm = rootElement;
 
-						// Hides IE move layer cursor
-						// If we set it on Chrome we get this wounderful bug: #6725
-						if (Env.ie) {
-							handleElm.contentEditable = false;
-						}
-					} else {
-						dom.show(handleElm);
+					handleElm = dom.add(handlerContainerElm, 'div', {
+						id: 'mceResizeHandle' + name,
+						'data-mce-bogus': 'all',
+						'class': 'mce-resizehandle',
+						unselectable: true,
+						style: 'cursor:' + name + '-resize; margin:0; padding:0'
+					});
+
+					// Hides IE move layer cursor
+					// If we set it on Chrome we get this wounderful bug: #6725
+					if (Env.ie) {
+						handleElm.contentEditable = false;
 					}
 
 					if (!handle.elm) {
@@ -332,7 +332,6 @@ define("tinymce/dom/ControlSelection", [
 
 						handle.elm = handleElm;
 					}
-
 					// Position element
 					dom.setStyles(handleElm, {
 						left: (targetWidth * handle[0] + selectedElmX) - (handleElm.offsetWidth / 2),
