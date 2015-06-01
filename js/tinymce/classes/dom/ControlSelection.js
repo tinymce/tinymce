@@ -246,7 +246,7 @@ define("tinymce/dom/ControlSelection", [
 
 			if (isResizable(targetElm) && !e.isDefaultPrevented()) {
 				each(resizeHandles, function(handle, name) {
-					var handleElm, handlerContainerElm;
+					var handleElm;
 
 					function startDrag(e) {
 						startX = e.screenX;
@@ -307,9 +307,7 @@ define("tinymce/dom/ControlSelection", [
 						dom.remove(handleElm);
 					}
 
-					handlerContainerElm = rootElement;
-
-					handleElm = dom.add(handlerContainerElm, 'div', {
+					handleElm = dom.add(rootElement, 'div', {
 						id: 'mceResizeHandle' + name,
 						'data-mce-bogus': 'all',
 						'class': 'mce-resizehandle',
@@ -323,15 +321,14 @@ define("tinymce/dom/ControlSelection", [
 						handleElm.contentEditable = false;
 					}
 
-					if (!handle.elm) {
-						dom.bind(handleElm, 'mousedown', function(e) {
-							e.stopImmediatePropagation();
-							e.preventDefault();
-							startDrag(e);
-						});
+					dom.bind(handleElm, 'mousedown', function(e) {
+						e.stopImmediatePropagation();
+						e.preventDefault();
+						startDrag(e);
+					});
 
-						handle.elm = handleElm;
-					}
+					handle.elm = handleElm;
+
 					// Position element
 					dom.setStyles(handleElm, {
 						left: (targetWidth * handle[0] + selectedElmX) - (handleElm.offsetWidth / 2),
