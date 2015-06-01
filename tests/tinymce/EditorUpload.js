@@ -62,6 +62,7 @@
 
 			QUnit.equal("data:" + blobInfo.blob().type + ";base64," + blobInfo.base64(), testBlobDataUri);
 			QUnit.equal('<p><img src="' + blobInfo.blobUri() + '" alt=""></p>', editor.getBody().innerHTML);
+			QUnit.equal('<p><img src="data:' + blobInfo.blob().type + ';base64,' + blobInfo.base64() + '" alt="" /></p>', editor.getContent());
 			QUnit.strictEqual(editor.editorUpload.blobCache.get(blobInfo.id()), blobInfo);
 		}).then(QUnit.start);
 	});
@@ -72,6 +73,7 @@
 		function assertResult(result) {
 			QUnit.strictEqual(result[0].status, true);
 			QUnit.ok(result[0].image.src.indexOf(uploadedBlobInfo.id() + '.png') !== -1);
+			QUnit.equal('<p><img src="' + uploadedBlobInfo.filename() + '" alt="" /></p>', editor.getContent());
 
 			return result;
 		}
