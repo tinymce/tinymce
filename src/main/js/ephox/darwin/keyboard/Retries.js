@@ -22,8 +22,10 @@ define(
     ]);
 
     var adjustDown = function (guessBox, original, caret) {
+      // If the guess is to the right of the original left, move to the right and try again.
+      if (guessBox.right() <= original.left() || Math.abs(guessBox.right() - original.left()) < 1) return adt.retry(Carets.translate(caret, JUMP_SIZE, 0));
       // We haven't dropped vertically, so we need to look down and try again.
-      if (Math.abs(guessBox.bottom() - original.bottom() < 1)) return adt.retry(Carets.moveDown(caret, JUMP_SIZE));
+      else if (Math.abs(guessBox.bottom() - original.bottom() < 1)) return adt.retry(Carets.moveDown(caret, JUMP_SIZE));
       // The returned guessBox based on the guess actually doesn't include the initial caret. So we search again
       // where we adjust the caret so that it is inside the returned guessBox. This means that the offset calculation
       // will be more accurate.
@@ -32,8 +34,11 @@ define(
     };
 
     var adjustUp = function (guessBox, original, caret) {
+      // If the guess is to the right of the original left, move to the right and try again.
+      if (guessBox.right() <= original.left() || Math.abs(guessBox.right() - original.left()) < 1) return adt.retry(Carets.translate(caret, JUMP_SIZE, 0));
+
       // We haven't ascended vertically, so we need to look up and try again.
-      if (Math.abs(guessBox.top() - original.top()) < 1) return adt.retry(Carets.moveUp(caret, JUMP_SIZE));
+      else if (Math.abs(guessBox.top() - original.top()) < 1) return adt.retry(Carets.moveUp(caret, JUMP_SIZE));
       // The returned guessBox based on the guess actually doesn't include the initial caret. So we search again
       // where we adjust the caret so that it is inside the returned guessBox. This means that the offset calculation
       // will be more accurate.
