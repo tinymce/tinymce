@@ -82,16 +82,22 @@ define(
       return bridge.situsFromPoint(caret.left(), caret.top() - JUMP_SIZE);
     };
 
+    var checkScroll = function (movement, adjusted, bridge) {
+      // I'm not convinced that this is right. Let's re-examine it later.
+      if (movement.point(adjusted) > bridge.getInnerHeight()) return Option.some(movement.point(adjusted) - bridge.getInnerHeight());
+      else if (movement.point(adjusted) < 0) return Option.some(-movement.point(adjusted));
+      else return Option.none();
+    };
+
     var retry = function (movement, bridge, caret) {
       var moved = movement.move(caret, JUMP_SIZE);
       var adjusted = adjustTil(bridge, movement, caret, moved, NUM_RETRIES).getOr(moved);
-      if (movement.point(adjusted) > bridge.getInnerHeight()) {
-        var delta = movement.point(adjusted) - (bridge.getInnerHeight() + bridge.getScrollY()) + 10;
+      return checkScroll(movement, adjusted, bridge).fold(function () {
+        return bridge.situsFromPoint(adjusted.left(), movement.point(adjusted));
+      }, function (delta) {
         bridge.scrollBy(0, delta);
         return bridge.situsFromPoint(adjusted.left(), movement.point(adjusted) - delta);
-      } else {
-        return bridge.situsFromPoint(adjusted.left(), movement.point(adjusted));
-      }
+      });
     };
 
     return {

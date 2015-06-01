@@ -44,6 +44,10 @@ define(
         return win.scrollY;
       };
 
+      var scrollBy = function (x, y) {
+        win.scrollBy(x, y);
+      };
+
       return {
         getRect: getRect,
         getRangedRect: getRangedRect,
@@ -53,7 +57,8 @@ define(
         clearSelection: clearSelection,
         setSelection: setSelection,
         getInnerHeight: getInnerHeight,
-        getScrollY: getScrollY
+        getScrollY: getScrollY,
+        scrollBy: scrollBy
       };
     };
   }
