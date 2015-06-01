@@ -89,7 +89,7 @@ define("tinymce/file/Uploader", [
 
 		function upload(blobInfos) {
 			return new Promise(function(resolve) {
-				var handler = settings.handler, queue, index = 0;
+				var handler = settings.handler, queue, index = 0, uploadedIdMap = {};
 
 				queue = Tools.map(blobInfos, function(blobInfo) {
 					return {
@@ -100,14 +100,24 @@ define("tinymce/file/Uploader", [
 				});
 
 				function uploadNext() {
-					var queueItem = queue[index++];
+					var previousResult, queueItem = queue[index++];
 
 					if (!queueItem) {
 						resolve(queue);
 						return;
 					}
 
+					// Only upload unique blob once
+					previousResult = uploadedIdMap[queueItem.blobInfo.id()];
+					if (previousResult) {
+						queueItem.url = previousResult;
+						queueItem.status = true;
+						uploadNext();
+						return;
+					}
+
 					handler(blobInfoToData(queueItem.blobInfo), function(url) {
+						uploadedIdMap[queueItem.blobInfo.id()] = url;
 						queueItem.url = url;
 						queueItem.status = true;
 						uploadNext();
