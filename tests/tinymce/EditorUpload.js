@@ -5,7 +5,7 @@
 		return;
 	}
 
-	module("tinymce.Editor.uploadImages", {
+	module("tinymce.EditorUpload", {
 		setupModule: function() {
 			QUnit.stop();
 
