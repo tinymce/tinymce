@@ -44,6 +44,7 @@ define(
     };
 
     var update = function (rows, columns, container, selected) {
+      console.log('rows: ', rows);
       var update = function (newSels) {
         CellSelection.clear(container);
         CellSelection.selectRange(container, newSels.boxes(), newSels.start(), newSels.finish());
