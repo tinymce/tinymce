@@ -72,7 +72,7 @@
 
 		function assertResult(result) {
 			QUnit.strictEqual(result[0].status, true);
-			QUnit.ok(result[0].image.src.indexOf(uploadedBlobInfo.id() + '.png') !== -1);
+			QUnit.ok(result[0].element.src.indexOf(uploadedBlobInfo.id() + '.png') !== -1);
 			QUnit.equal('<p><img src="' + uploadedBlobInfo.filename() + '" alt="" /></p>', editor.getContent());
 
 			return result;

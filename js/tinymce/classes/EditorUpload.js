@@ -68,7 +68,7 @@ define("tinymce/EditorUpload", [
 					}
 
 					return {
-						image: image,
+						element: image,
 						status: uploadInfo.status
 					};
 				});
