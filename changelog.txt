@@ -1,4 +1,5 @@
 Version 4.1.11 (2015-05-xx)
+	Fixed bug where tables would not be inserted in inline mode due to previous float panel fix.
 	Fixed bug where floating panels would remain open when focus was lost on inline editors.
 	Fixed bug where cut command on Chrome would thrown a browser security exception.
 	Fixed bug where IE 11 sometimes would report an incorrect size for images in the image dialog.
