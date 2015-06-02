@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.snooker.api.Structs',
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
@@ -11,7 +12,7 @@ define(
     'global!Math'
   ],
 
-  function (Fun, Structs, DetailsList, Warehouse, SpanningCells, Compare, Math) {
+  function (Fun, Option, Structs, DetailsList, Warehouse, SpanningCells, Compare, Math) {
     var getBox = function (table, startCell, finishCell) {
       var list = DetailsList.fromTable(table);
       var warehouse = Warehouse.generate(list);
@@ -34,6 +35,7 @@ define(
 
             startRow: Fun.constant(topRow),
             finishRow: Fun.constant(bottomRow),
+            // This will need to be a fun constant.
             warehouse: warehouse
           };
         });
@@ -41,7 +43,7 @@ define(
     };
 
     var isRectangular = function (table, startCell, finishCell) {
-      var result = getBox(table, startCell, finishCell).map(function (info) {
+      return getBox(table, startCell, finishCell).bind(function (info) {
 
         var boundingBox = Structs.bounds({
           startRow: info.startRow(),
@@ -61,12 +63,8 @@ define(
           }
         }
 
-        return isRect;
-      }).getOr(false);
-
-      return {
-        isRect: Fun.constant(result)
-      };
+        return isRect ? Option.some(info) : Option.none();
+      });
     };
 
     return {
