@@ -54,8 +54,13 @@ define(
       //         cellFinishCol <= check.finishCol() &&
       //         cellStartRow >= check.startRow() &&
       //         cellFinishRow <= check.finishRow();
-            return detail.column() >= info.startCol() && detail.column()  <= info.finishCol() &&
-              detail.row() >= info.startRow() && detail.row() <= info.finishRow();
+            return (
+              (detail.column() >= info.startCol() && detail.column()  <= info.finishCol()) ||
+              (detail.column() + detail.colspan() - 1 >= info.startCol() && detail.column() + detail.colspan() - 1 <= info.finishCol())
+            ) && (
+              (detail.row() >= info.startRow() && detail.row() <= info.finishRow()) ||
+              (detail.row() + detail.rowspan() - 1 >= info.startRow() && detail.row() + detail.rowspan() - 1 <= info.finishRow())
+            );
           });
 
           return Arr.map(filtered, function (f) { return f.element(); });
