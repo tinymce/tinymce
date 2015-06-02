@@ -25,7 +25,7 @@ define("tinymce/ui/FloatPanel", [
 ], function(Panel, Movable, Resizable, DomUtils) {
 	"use strict";
 
-	var documentClickHandler, documentScrollHandler, documentFocusOutHandler, windowResizeHandler, visiblePanels = [];
+	var documentClickHandler, documentScrollHandler, windowResizeHandler, visiblePanels = [];
 	var zOrder = [], hasModal;
 
 	function isChildOf(ctrl, parent) {
@@ -89,16 +89,6 @@ define("tinymce/ui/FloatPanel", [
 			};
 
 			DomUtils.on(window, 'scroll', documentScrollHandler);
-		}
-	}
-
-	function bindDocumentFocusOutHandler() {
-		if (!documentFocusOutHandler) {
-			documentFocusOutHandler = function(e) {
-				skipOrHidePanels(e);
-			};
-
-			DomUtils.on(document, 'focusout', documentFocusOutHandler);
 		}
 	}
 
@@ -221,7 +211,6 @@ define("tinymce/ui/FloatPanel", [
 			if (settings.autohide) {
 				bindDocumentClickHandler();
 				bindWindowResizeHandler();
-				bindDocumentFocusOutHandler();
 				visiblePanels.push(self);
 			}
 
