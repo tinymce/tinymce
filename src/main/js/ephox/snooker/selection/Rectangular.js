@@ -70,6 +70,7 @@ define(
     };
 
     return {
+      getBox: getBox,
       isRectangular: isRectangular
     };
   }
