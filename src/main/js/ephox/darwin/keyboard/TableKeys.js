@@ -51,7 +51,7 @@ define(
     };
 
     var tryCursor = function (bridge, isRoot, element, offset, direction) {
-      return Rectangles.getBox(bridge, element, offset).bind(function (box) {
+      return Rectangles.getBoxAt(bridge, element, offset).bind(function (box) {
         // NOTE: As we attempt to take over selection everywhere, we'll probably need to separate these again.
         if (platform.browser.isChrome() || platform.browser.isSafari() || platform.browser.isFirefox()) return direction.otherRetry(bridge, box);
         else if (platform.browser.isIE()) return direction.ieRetry(bridge, box);

@@ -28,14 +28,22 @@ define(
       return Option.some(bridge.getRect(element));
     };
 
-    var getBox = function (bridge, element, offset) {
+    var getBoxAt = function (bridge, element, offset) {
+      // Note, we might need to consider this offset and descend.
       if (Node.isElement(element)) return getElemBox(bridge, element, offset).map(toCaret);
       else if (Node.isText(element)) return getPartialBox(bridge, element, offset).map(toCaret);
       else return Option.none();
     };
 
+    var getEntireBox = function (bridge, element, offset) {
+      if (Node.isElement(element)) return getElemBox(bridge, element, offset).map(toCaret);
+      else if (Node.isText(element)) return bridge.getRangedRect(element, 0, element, Awareness.getEnd(element)).map(toCaret);
+      else return Option.none();
+    };
+
     return {
-      getBox: getBox
+      getBoxAt: getBoxAt,
+      getEntireBox: getEntireBox
     };
   }
 );

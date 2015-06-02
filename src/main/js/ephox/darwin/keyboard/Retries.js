@@ -23,7 +23,7 @@ define(
 
     var adjustDown = function (guessBox, original, caret) {
       // If the guess is to the right of the original left, move to the right and try again.
-      if (guessBox.right() <= original.left() || Math.abs(guessBox.right() - original.left()) < 1) return adt.retry(Carets.translate(caret, JUMP_SIZE, 0));
+      if (guessBox.right() <= caret.left() || Math.abs(guessBox.right() - caret.left()) < 1) return adt.retry(Carets.translate(caret, JUMP_SIZE, 0));
       // We haven't dropped vertically, so we need to look down and try again.
       else if (Math.abs(guessBox.bottom() - original.bottom() < 1)) return adt.retry(Carets.moveDown(caret, JUMP_SIZE));
       // The returned guessBox based on the guess actually doesn't include the initial caret. So we search again
@@ -35,16 +35,13 @@ define(
 
     var adjustUp = function (guessBox, original, caret) {
       // If the guess is to the right of the original left, move to the right and try again.
-      if (guessBox.right() <= original.left() || Math.abs(guessBox.right() - original.left()) < 1) return adt.retry(Carets.translate(caret, JUMP_SIZE, 0));
-
+      if (guessBox.right() <= caret.left() || Math.abs(guessBox.right() - caret.left()) < 1) return adt.retry(Carets.translate(caret, JUMP_SIZE * 2, 0));
       // We haven't ascended vertically, so we need to look up and try again.
       else if (Math.abs(guessBox.top() - original.top()) < 1) return adt.retry(Carets.moveUp(caret, JUMP_SIZE));
       // The returned guessBox based on the guess actually doesn't include the initial caret. So we search again
       // where we adjust the caret so that it is inside the returned guessBox. This means that the offset calculation
       // will be more accurate.
       else if (guessBox.bottom() < caret.top()) return adt.adjusted(Carets.moveTopTo(caret, guessBox.bottom() - 1));
-
-
       else return adt.none();
     };
 
@@ -66,7 +63,7 @@ define(
       if (numRetries === 0) return Option.some(caret);
       return bridge.situsFromPoint(caret.left(), movement.point(caret)).bind(function (guess) {
         return guess.start().fold(Option.none, function (element, offset) {
-          return Rectangles.getBox(bridge, element, offset).bind(function (guessBox) {
+          return Rectangles.getEntireBox(bridge, element, offset).bind(function (guessBox) {
             return movement.adjuster(guessBox, original, caret).fold(Option.none, function (newCaret) {
               return adjustTil(bridge, movement, original, newCaret, numRetries-1);
             }, function (newCaret) {
