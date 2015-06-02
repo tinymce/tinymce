@@ -1,4 +1,5 @@
 Version 4.1.11 (2015-05-xx)
+	Fixed bug where resize handles would appear in the right position in the wrong editor when switching between resizable content in different inline editors.
 	Fixed bug where tables would not be inserted in inline mode due to previous float panel fix.
 	Fixed bug where floating panels would remain open when focus was lost on inline editors.
 	Fixed bug where cut command on Chrome would thrown a browser security exception.
