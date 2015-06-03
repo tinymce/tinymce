@@ -38,9 +38,9 @@ define(
 
       // content attributes - surprisingly helps in both classic and inline
       var attrs = {
-        role: 'textbox',
         'aria-multiline': 'true',
         'aria-label': label,
+        title: label,
         'aria-describedby': labelId
       };
 
