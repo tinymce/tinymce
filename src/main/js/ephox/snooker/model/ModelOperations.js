@@ -43,6 +43,7 @@ define(
       if (grid.length === 0) return grid;
       for (var i = bounds.startRow(); i <= bounds.finishRow(); i++) {
         for (var j = bounds.startCol(); j <= bounds.finishCol(); j++) {
+          // We can probably simplify this again now that we aren't reusing merge.
           grid[i][j] = substitution(grid[i][j], comparator);
         }
       }

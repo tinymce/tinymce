@@ -168,13 +168,17 @@ define(
     };
 
     var unmergeCells = function (grid, unmergable, comparator, generators) {
-      return ModelOperations.unmerge(grid, unmergable[0], comparator, function (elem) {
-        return generators.cell({
-          element: Fun.constant(unmergable[0]),
-          colspan: Fun.constant(1),
-          rowspan: Fun.constant(1)
+      console.log('unmergable', unmergable[0]);
+
+      return Arr.foldr(unmergable, function (b, cell) {
+        return ModelOperations.unmerge(b, cell, comparator, function (elem) {
+          return generators.cell({
+            element: Fun.constant(cell),
+            colspan: Fun.constant(1),
+            rowspan: Fun.constant(1)
+          });
         });
-      });
+      }, grid);
     };
 
     /* END HACKING */

@@ -18,6 +18,7 @@ define(
 
     var render = function (table, list) {
       var tbody = SelectorFind.child(table, 'tbody').getOrDie();
+      // ****************************8 NOTE: This isn't going to work if there are theads?
       Remove.empty(tbody);
 
       var rows = Arr.map(list, function (row) {
