@@ -57,7 +57,7 @@ define(
 
     var toolbar = function (element, label) {
       Attr.setAll(element, {
-        'role': 'toolbar',
+        'role': 'group',
         'aria-label': label
       });
     };
@@ -87,7 +87,7 @@ define(
       };
       // End TODO
 
-      Attr.set(element, 'role', 'group');
+      Attr.set(element, 'role', 'toolbar');
 
       // customer groups may have empty label, don't use it
       if (!isEmpty(label)) {
