@@ -149,16 +149,16 @@ define(
 
     return {
       //operation, adjustment, postAction, genWrappers
-      insertRowBefore: RunOperation.run(insertRowBefore, Fun.noop, Fun.noop, hackGenerators),
-      insertRowAfter:  RunOperation.run(insertRowAfter, Fun.noop, Fun.noop, hackGenerators),
-      insertColumnBefore:  RunOperation.run(insertColumnBefore, resize, Fun.noop, hackGenerators),
-      insertColumnAfter:  RunOperation.run(insertColumnAfter, resize, Fun.noop, hackGenerators),
-      eraseColumn:  RunOperation.run(eraseColumn, resize, prune, hackGenerators),
-      eraseRow:  RunOperation.run(eraseRow, Fun.noop, prune, hackGenerators),
-      makeColumnHeader:  RunOperation.run(makeColumnHeader, Fun.noop, Fun.noop, Fun.curry(headerGenerators, Compare.eq, 'row', 'th')),
-      unmakeColumnHeader:  RunOperation.run(unmakeColumnHeader, Fun.noop, Fun.noop, Fun.curry(headerGenerators, Compare.eq, null, 'td')),
-      makeRowHeader:  RunOperation.run(makeRowHeader, Fun.noop, Fun.noop, Fun.curry(headerGenerators, Compare.eq, 'col', 'th')),
-      unmakeRowHeader:  RunOperation.run(unmakeRowHeader, Fun.noop, Fun.noop, Fun.curry(headerGenerators, Compare.eq, null, 'td')),
+      insertRowBefore: RunOperation.run(insertRowBefore, RunOperation.onCell, Fun.noop, Fun.noop, hackGenerators),
+      insertRowAfter:  RunOperation.run(insertRowAfter, RunOperation.onCell, Fun.noop, Fun.noop, hackGenerators),
+      insertColumnBefore:  RunOperation.run(insertColumnBefore, RunOperation.onCell, resize, Fun.noop, hackGenerators),
+      insertColumnAfter:  RunOperation.run(insertColumnAfter, RunOperation.onCell, resize, Fun.noop, hackGenerators),
+      eraseColumn:  RunOperation.run(eraseColumn, RunOperation.onCell, resize, prune, hackGenerators),
+      eraseRow:  RunOperation.run(eraseRow, RunOperation.onCell, Fun.noop, prune, hackGenerators),
+      makeColumnHeader:  RunOperation.run(makeColumnHeader, RunOperation.onCell, Fun.noop, Fun.noop, Fun.curry(headerGenerators, Compare.eq, 'row', 'th')),
+      unmakeColumnHeader:  RunOperation.run(unmakeColumnHeader, RunOperation.onCell, Fun.noop, Fun.noop, Fun.curry(headerGenerators, Compare.eq, null, 'td')),
+      makeRowHeader:  RunOperation.run(makeRowHeader, RunOperation.onCell, Fun.noop, Fun.noop, Fun.curry(headerGenerators, Compare.eq, 'col', 'th')),
+      unmakeRowHeader:  RunOperation.run(unmakeRowHeader, RunOperation.onCell, Fun.noop, Fun.noop, Fun.curry(headerGenerators, Compare.eq, null, 'td')),
       mergeCells: Fun.identity
     };
   }

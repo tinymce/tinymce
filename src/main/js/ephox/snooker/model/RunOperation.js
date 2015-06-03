@@ -14,10 +14,11 @@ define(
     'ephox.snooker.resize.Bars',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Element',
+    'ephox.sugar.api.Node',
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Arr, Fun, Option, Options, TableLookup, DetailsList, Warefun, Warehouse, Redraw, Bars, Compare, Element, Traverse) {
+  function (Arr, Fun, Option, Options, TableLookup, DetailsList, Warefun, Warehouse, Redraw, Bars, Compare, Element, Node, Traverse) {
     var fromWarehouse = function (warehouse) {
       var grid = [];
       for (var i = 0; i < warehouse.grid().rows(); i++) {
@@ -51,36 +52,54 @@ define(
     var findInWarehouse = function (warehouse, element) {
       var all = Arr.flatten(Arr.map(warehouse.all(), function (r) { return r.cells(); }));
       var raw = Arr.find(all, function (e) {
+        console.log('e', e.element().dom(), 'elem', element.dom());
         return Compare.eq(element, e.element());
       });
 
       return Option.from(raw);
     };
 
-    var run = function (operation, adjustment, postAction, genWrappers) {
-      return function (wire, element, generators, direction) { 
-        TableLookup.cell(element).each(function (cell) {
-          TableLookup.table(element).each(function (table) {
-            var input = DetailsList.fromTable(table);  
-            var warehouse = Warehouse.generate(input);
-            
-            var output = findInWarehouse(warehouse, cell).map(function (detail) {
-              var model = fromWarehouse(warehouse);
-              var result = operation(model, detail, Compare.eq, genWrappers(generators));
-              return toDetailList(result);
-            }).getOr(input);
+    var run = function (operation, extract, adjustment, postAction, genWrappers) {
+      return function (wire, table, target, generators, direction) { 
+        var input = DetailsList.fromTable(table);  
+        var warehouse = Warehouse.generate(input);
+        var output = extract(warehouse, target).map(function (info) {
+          console.log('extracting worked');
+          var model = fromWarehouse(warehouse);
+          var result = operation(model, info, Compare.eq, genWrappers(generators));
+          return toDetailList(result);
+        });
 
-            Redraw.render(table, output);
-            adjustment(output);
-            postAction(table);
-            Bars.refresh(wire, table, direction);
-          });
+        output.each(function (out) {
+          Redraw.render(table, out);
+          adjustment(out);
+          postAction(table);
+          Bars.refresh(wire, table, direction);
         });
       };
     };
 
+    var onCell = function (warehouse, target) {
+      console.log('target', target);
+      return TableLookup.cell(target.element()).bind(function (cell) {
+        console.log('cell: ', cell);
+        return findInWarehouse(warehouse, cell);
+      });
+    };
+
+    var onMergable = function (warehouse, target) {
+      return target.mergable();
+    };
+
+    var onUnmergable = function (warehouse, target) {
+      return target.unmergable();
+    };
+
     return {
-      run: run
+      run: run,
+      onCell: onCell,
+      onMergable: onMergable,
+      onUnmergable: onUnmergable
     };
   }
 );

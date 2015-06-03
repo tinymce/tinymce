@@ -39,6 +39,60 @@ define(
       return raw !== undefined ? Option.some(raw) : Option.none();
     };
 
+
+    var gridFrom = function (list, f) {
+      // list is an array of objects, made by cells and elements
+      // elements: is the TR
+      // cells: is an array of objects representing the cells in the row.
+      //        It is made of:
+      //          colspan (merge cell)
+      //          element
+      //          rowspan (merge cols)
+      var access = {};
+      var cells = [];
+
+      Arr.each(list, function (details, r) {
+        var currentRow = [];
+        Arr.each(details.cells(), function (detail, c) {
+          var start = 0;
+
+          // If this spot has been taken by a previous rowspan, skip it.
+          while (access[key(r, start)] !== undefined) {
+            start++;
+          }
+
+          var current = Structs.extended(detail.element(), detail.rowspan(), detail.colspan(), r, start);
+
+          // Occupy all the (row, column) positions that this cell spans for.
+          for (var i = 0; i < detail.colspan(); i++) {
+            for (var j = 0; j < detail.rowspan(); j++) {
+              var cr = r + j;
+              var cc = start + i;
+              var newpos = key(cr, cc);
+              access[newpos] = current;
+              maxRows = Math.max(maxRows, cr + 1);
+              maxColumns = Math.max(maxColumns, cc + 1);
+            }
+          }
+
+          currentRow.push(current);
+        });
+
+        cells.push(Structs.rowdata(details.element(), currentRow));
+      });
+
+      //
+
+      var grid = Structs.grid(maxRows, maxColumns);
+
+      return {
+        grid: Fun.constant(grid),
+        access: Fun.constant(access),
+        all: Fun.constant(cells)
+      };
+
+    };
+
     /*
      * From a list of list of Detail, generate three pieces of information:
      *  1. the grid size
