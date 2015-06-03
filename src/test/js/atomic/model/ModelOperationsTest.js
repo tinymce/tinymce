@@ -3,14 +3,46 @@ test(
 
   [
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.scullion.Struct',
     'ephox.snooker.model.ModelOperations'
   ],
 
-  function (Fun, Struct, ModelOperations) {
+  function (Fun, Option, Struct, ModelOperations) {
     var nu = {
       lead: Struct.immutable('cell', 'rowspan', 'colspan'),
       bounds: Struct.immutable('startRow', 'startCol', 'finishRow', 'finishCol')
+    };
+
+    var generators = function () {
+      var counter = 0;
+      var prior = Option.none();
+      var getOrInit = function (element, comparator) {
+        return prior.fold(function () {
+          var r = '?_' + counter;
+          counter++;
+          prior = Option.some({ item: element, sub: r });
+          return r;
+        }, function (p) {
+          if (comparator(element, p.item)) {
+            return p.sub;
+          } else {
+            var r = '?_' + counter;
+            counter++;
+            prior = Option.some({ item: element, sub: r });
+            return r;
+          }
+        });
+      };
+
+      var nu = function () {
+        return '?';
+      };
+
+      return {
+        getOrInit: getOrInit,
+        nu: nu
+      };
     };
 
     // Test basic merge.
@@ -56,61 +88,73 @@ test(
 
     // Test basic insert column
     (function () {
-      var check = function (expected, grid, index) {
-        var actual = ModelOperations.insertColumnAt(grid, index, Fun.tripleEquals, Fun.constant('?'));
+      var check = function (expected, grid, example, index) {
+        var actual = ModelOperations.insertColumnAt(grid, index, example, Fun.tripleEquals, generators());
         assert.eq(expected, actual);
       };
 
-      check([], [], 0);
-      check([[ '?' ]], [[ ]], 0);
-      check([[ '?', 'a' ]], [[ 'a' ]], 0);
-      check([[ 'a', '?' ]], [[ 'a' ]], 1);
+      check([], [], 0, 0);
+      check([[ '?_0' ]], [[ ]], 0, 0);
+      check([[ '?_0', 'a' ]], [[ 'a' ]], 0, 0);
+      check([[ 'a', '?_0' ]], [[ 'a' ]], 0, 1);
       check(
         [
-          [ 'a', '?' ],
-          [ 'b', '?' ]
+          [ 'a', '?_0' ],
+          [ 'b', '?_1' ]
         ],
         [
           [ 'a' ],
           [ 'b' ]
-        ], 1
+        ], 0, 1
       );
       check(
         [
-          [ '?', 'a' ],
-          [ '?', 'b' ]
+          [ '?_0', 'a' ],
+          [ '?_1', 'b' ]
         ],
         [
           [ 'a' ],
           [ 'b' ]
-        ], 0
+        ], 0, 0
       );
       // Spanning check.
       check(
         [
           [ 'a', 'a', 'a' ],
-          [ 'b', '?', 'c' ]
+          [ 'b', '?_0', 'c' ]
         ],
         [
           [ 'a', 'a' ],
           [ 'b', 'c' ]
-        ], 1
+        ], 0, 1
       );
       check(
         [
-          [ 'a', 'a', '?' ],
-          [ 'b', 'c', '?' ]
+          [ 'a', 'b', '?_0' ],
+          [ 'c', 'b', '?_0' ],
+          [ 'c', 'd', '?_1' ]
         ],
         [
-          [ 'a', 'a' ],
-          [ 'b', 'c' ]
-        ], 2
+          [ 'a', 'b' ],
+          [ 'c', 'b' ],
+          [ 'c', 'd' ]
+        ], 1, 2
       );
+
+      // Copying the target row with a column
     })();
 
     // Test basic insert row
     (function () {
+      // var check = function (expected, grid, index) {
+      //   var actual = ModelOperations.insertRowAt(grid, index, Fun.tripleEquals, Fun.constant('?'));
+      //   assert.eq(expected, actual);
+      // };
 
+      // check([], [], 0);
+      // check([[ '?' ], [ 'a' ]], [[ 'a' ]], 0);
+      // check([[ 'a' ], [ '?' ]], [[ 'a' ]], 1);
+      // check([[ 'a', '?' ]], [[ 'a' ]], 1);
     })();
 
     // Test basic delete column

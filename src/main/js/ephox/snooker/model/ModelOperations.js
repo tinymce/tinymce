@@ -9,14 +9,21 @@ define(
   ],
 
   function (Arr, Fun, Divide, Impera) {
-    var insertRowAt = function (grid, index, substitution) {
+    var insertRowAt = function (grid, index, example, substitution) {
+      var before = grid.slice(0, index);
 
+      var after = grid.slice(index);
+      // return Arr.map(grid, function (row) {
+      //   var withinSpan = index > 0 && index < row.length && comparator(row[index - 1], row[index]);
+      //   var sub = withinSpan ? row[index] : substitution();
+      //   return row.slice(0, index).concat([ sub ]).concat(row.slice(index));
+      // });
     };
 
-    var insertColumnAt = function (grid, index, comparator, substitution) {
+    var insertColumnAt = function (grid, index, example, comparator, substitution) {
       return Arr.map(grid, function (row) {
         var withinSpan = index > 0 && index < row.length && comparator(row[index - 1], row[index]);
-        var sub = withinSpan ? row[index] : substitution();
+        var sub = withinSpan ? row[index] : substitution.getOrInit(row[example], comparator);
         return row.slice(0, index).concat([ sub ]).concat(row.slice(index));
       });
     };
@@ -40,7 +47,7 @@ define(
     return {
       merge: Impera.render,
       unmerge: Divide.generate,
-      insertRowAt: Fun.noop,
+      insertRowAt: insertRowAt,
       insertColumnAt: insertColumnAt,
       deleteColumnAt: Fun.noop,
       deleteRowAt: Fun.noop
