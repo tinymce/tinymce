@@ -3,10 +3,10 @@ test(
 
   [
     'ephox.peanut.Fun',
-    'ephox.snooker.model.Divide'
+    'ephox.snooker.model.ModelOperations'
   ],
 
-  function (Fun, Divide) {
+  function (Fun, ModelOperations) {
 
     var comparator = Fun.tripleEquals;
     var substitution = Fun.constant('nu');
@@ -19,7 +19,7 @@ test(
     ];
 
 
-    var resultA = Divide.generate(structureA, targetA, comparator, substitution);
+    var resultA = ModelOperations.unmerge(structureA, targetA, comparator, substitution);
     assert.eq(expectedA, resultA);
 
     var structureB = [
@@ -32,7 +32,7 @@ test(
       [ 'a', 'nu', 'nu', 'd' ],
       [ 'f', 'nu', 'nu', 'e' ]
     ];
-    var resultB = Divide.generate(structureB, targetA, comparator, substitution);
+    var resultB = ModelOperations.unmerge(structureB, targetA, comparator, substitution);
     assert.eq(expectedB, resultB);
 
     var structureC = [
@@ -46,7 +46,7 @@ test(
       [ 'nu', 'b', 'b', 'd' ],
       [ 'f', 'b', 'b', 'e' ]
     ];
-    var resultC = Divide.generate(structureC, 'a', comparator, substitution);
+    var resultC = ModelOperations.unmerge(structureC, 'a', comparator, substitution);
     assert.eq(expectedC, resultC);
   }
 );

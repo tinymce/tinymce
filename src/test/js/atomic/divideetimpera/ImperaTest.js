@@ -5,10 +5,10 @@ test(
     'ephox.peanut.Fun',
     'ephox.scullion.Struct',
     'ephox.snooker.api.Structs',
-    'ephox.snooker.model.Impera'
+    'ephox.snooker.model.ModelOperations'
   ],
 
-  function (Fun, Struct, Structs, Impera) {
+  function (Fun, Struct, Structs, ModelOperations) {
     var inputRangeStruct = Struct.immutableBag([ 'startCol', 'startRow', 'finishCol', 'finishRow' ], []);
 
     var structureA = [
@@ -24,7 +24,7 @@ test(
     });
 
     var leadCellA = 'a';
-    var resultA = Impera.render(structureA, rangeA, Fun.constant(leadCellA), Fun.tripleEquals);
+    var resultA = ModelOperations.merge(structureA, rangeA, Fun.tripleEquals, Fun.constant(leadCellA));
     var expectedA = [
       [ 'a', 'a', 'c' ],
       [ 'd', 'e', 'f' ]
@@ -45,7 +45,7 @@ test(
     });
 
     var leadCellB = 'a';
-    var resultB = Impera.render(structureB, rangeB, Fun.constant(leadCellB), Fun.tripleEquals);
+    var resultB = ModelOperations.merge(structureB, rangeB, Fun.tripleEquals, Fun.constant(leadCellB));
     var expectedB = [
       [ 'a', 'a', 'a' ],
       [ 'a', 'a', 'a' ]

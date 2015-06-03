@@ -77,7 +77,7 @@ test(
     // Test basic merge.
     (function () {
       var check = function (expected, grid, bounds, lead) {
-        var actual = ModelOperations.merge(grid, bounds, lead, Fun.tripleEquals);
+        var actual = ModelOperations.merge(grid, bounds, Fun.tripleEquals, Fun.constant(lead));
         assert.eq(expected, actual);
       };
 
