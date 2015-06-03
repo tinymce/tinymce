@@ -55,14 +55,15 @@ define(
         return row[index] !== undefined && (i === 0 || !(comparator(grid[i - 1][index], row[index]))) ? [ row[index] ] : [];
       });
 
-      return Arr.foldr(targets, function (b, a) {
-        return Impera.render(b, {
-          startRow: Fun.constant(a.row()),
-          finishRow: Fun.constant(a.row() + a.rowspan() - 1),
-          startCol: Fun.constant(a.column()),
-          finishCol: Fun.constant(a.column() + a.colspan() - 1)
-        }, function () { }, comparator);
-      }, grid);
+      var isTarget = function (elem) {
+        return Arr.exists(targets, Fun.curry(comparator, elem));
+      };
+
+      return Arr.map(grid, function (row) {
+        return Arr.map(row, function (cell) {
+          return isTarget(cell) ? substitution.replaceOrInit(cell) : cell;
+        });
+      });
     };
 
     return {

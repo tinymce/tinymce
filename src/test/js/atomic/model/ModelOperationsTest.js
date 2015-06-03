@@ -45,6 +45,29 @@ test(
       };
     };
 
+    var headerGenerators = function () {
+      var prior = Option.none();
+      var replaceOrInit = function (element, comparator) {
+        return prior.fold(function () {
+          var r = 'h(' + element + ')';
+          prior = Option.some({ item: element, sub: r });
+          return r;
+        }, function (p) {
+          if (comparator(element, p.item)) {
+            return p.sub;
+          } else {
+            var r = '?_' + counter;
+            prior = Option.some({ item: element, sub: r });
+            return r;
+          }
+        });
+      };
+
+      return {
+        replaceOrInit: replaceOrInit
+      };
+    };
+
     // Test basic merge.
     (function () {
       var check = function (expected, grid, bounds, lead) {
@@ -212,11 +235,16 @@ test(
     // Test basic changing to header (column)
     (function () {
       var check = function (expected, grid, index) {
-        var actual = ModelOperations.replaceColumn(grid, index, Fun.tripleEquals, generators());
+        var actual = ModelOperations.replaceColumn(grid, index, Fun.tripleEquals, headerGenerators());
         assert.eq(expected, actual);
       };
 
       check([[]], [[]], 0);
+      check([
+        [ 'h(a)' ]
+      ], [
+        [ 'a' ]
+      ], 0);
     })();
   }
 );
