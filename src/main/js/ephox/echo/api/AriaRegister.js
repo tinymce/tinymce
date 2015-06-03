@@ -103,6 +103,13 @@ define(
       });
     };
 
+    var menuItemCheckbox = function (element, label) {
+      Attr.setAll(element, {
+        'role': 'menuitemcheckbox',
+        'aria-label': label
+      });
+    };
+
     var dialog = function (element, label) {
       Attr.setAll(element, {
         'role': 'dialog',
@@ -178,6 +185,7 @@ define(
       toolbarButton: toolbarButton,
       menu: menu,
       menuItem: menuItem,
+      menuItemCheckbox: menuItemCheckbox,
       dialog: dialog,
       input: input,
       widget: widget,
