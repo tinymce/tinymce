@@ -146,8 +146,8 @@ define(
       return ModelOperations.deleteRowAt(grid, detail.row());
     };
 
-    var mergeCells = function (grid, mergable, comparator, _generators) {
-      var readContent = function (cells) {
+    var mergeContent = function (cells) {
+      var readContent = function () {
         var kin = Arr.bind(cells, function (cell) {
           var children = Traverse.children(cell);
           // Exclude empty cells.
@@ -158,13 +158,15 @@ define(
         });
       };
 
-      var cells = mergable.cells();
-      var contents = Arr.flatten(readContent(cells));
-
-      var result = ModelOperations.merge(grid, mergable, comparator, Fun.constant(cells[0]));
+      var contents = Arr.flatten(readContent());
       Remove.empty(cells[0]);
       InsertAll.append(cells[0], contents);
-      return result;
+    };
+
+    var mergeCells = function (grid, mergable, comparator, _generators) {
+      var cells = mergable.cells();
+      mergeContent(cells);
+      return ModelOperations.merge(grid, mergable, comparator, Fun.constant(cells[0]));
     };
 
     var unmergeCells = function (grid, unmergable, comparator, generators) {
