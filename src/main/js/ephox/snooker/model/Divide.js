@@ -14,7 +14,7 @@ define(
           var isToReplace = comparator(current, target);
 
           if (isToReplace === true && first === false)
-            structure[i][j] = substitution;
+            structure[i][j] = substitution();
           else if (isToReplace === true)
             first = false;
 
