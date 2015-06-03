@@ -5,24 +5,17 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.perhaps.Options',
     'ephox.snooker.api.TableLookup',
     'ephox.snooker.model.ModelOperations',
     'ephox.snooker.model.RunOperation',
-    'ephox.snooker.model.Warefun',
-    'ephox.snooker.model.Warehouse',
-    'ephox.snooker.operate.TableOperation',
     'ephox.snooker.resize.Adjustments',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Compare',
-    'ephox.sugar.api.Element',
     'ephox.sugar.api.Remove',
-    'ephox.sugar.api.SelectorFind',
-    'ephox.sugar.api.Traverse',
     'global!parseInt'
   ],
 
-  function (Arr, Fun, Option, Options, TableLookup, ModelOperations, RunOperation, Warefun, Warehouse, TableOperation, Adjustments, Attr, Compare, Element, Remove, SelectorFind, Traverse, parseInt) {
+  function (Arr, Fun, Option, TableLookup, ModelOperations, RunOperation, Adjustments, Attr, Compare, Remove, parseInt) {
     var prune = function (table) {
       var cells = TableLookup.cells(table);
       if (cells.length === 0) Remove.remove(table);
