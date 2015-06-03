@@ -200,13 +200,48 @@ define(
       return ModelOperations.insertColumnAt(grid, targetIndex, example, comparator, generators);
     };
 
+    var makeRowHeader = function (grid, detail, comparator, generators) {
+      var gens = function () {
+        var list = [];
+
+        var find = function (element) {
+          var raw = Arr.find(list, function (x) { return comparator(x.item, element); });
+          return Option.from(raw);
+        };
+
+        var makeNew = function (element) {
+          console.log('element: ', element, generators);
+          var cell = generators.replace(element, 'th', {
+            scope: 'row'
+          });
+          list.push({ item: element, sub: cell });
+          return cell;
+        };
+      
+        var replaceOrInit = function (element, comparator) {
+          return find(element).fold(function () {
+            return makeNew(element);
+          }, function (p) {
+            return comparator(element, p.item) ? p.sub : makeNew(element);
+          });
+        };
+
+        return {
+          replaceOrInit: replaceOrInit
+        };
+      };
+
+      return ModelOperations.replaceRow(grid, detail.row(), comparator, gens());
+    };
+
     /* END HACKING */
 
 
 
 
 
-    var modify2 = function (operation, adjustment, post) {
+    var modify2 = function (operation, adjustment, post, _genbuilder) {
+      var genbuilder = _genbuilder !== undefined ? _genbuilder : hackGenerators;
       return function (wire, element, generators, direction) {
         TableLookup.cell(element).each(function (cell) {
           SelectorFind.ancestor(cell, 'table').each(function (table) {
@@ -218,7 +253,7 @@ define(
                 // find the bounds of the rowspan.
                 var index = info.row();
                 var insertAt = info.row();
-                return operation(hack, info, Compare.eq, hackGenerators(generators));
+                return operation(hack, info, Compare.eq, genbuilder(generators));
               }).getOr(hack);
 
               console.log('afterOp', afterOp);
@@ -244,7 +279,7 @@ define(
       eraseRow: modify(RowModification.erase, Fun.noop, prune),
       makeColumnHeader: modify(ColumnModification.makeHeader, Fun.noop, Fun.noop),
       unmakeColumnHeader: modify(ColumnModification.unmakeHeader, Fun.noop, Fun.noop),
-      makeRowHeader: modify(RowModification.makeHeader, Fun.noop, Fun.noop),
+      makeRowHeader: modify2(makeRowHeader, Fun.noop, Fun.noop, Fun.identity),
       unmakeRowHeader: modify(RowModification.unmakeHeader, Fun.noop, Fun.noop),
       mergeCells: Fun.identity
     };
