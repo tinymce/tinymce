@@ -14,14 +14,16 @@ define(
     'ephox.snooker.operate.RowModification',
     'ephox.snooker.operate.TableOperation',
     'ephox.snooker.resize.Adjustments',
+    'ephox.sugar.api.Attr',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Remove',
     'ephox.sugar.api.SelectorFind',
-    'ephox.sugar.api.Traverse'
+    'ephox.sugar.api.Traverse',
+    'global!parseInt'
   ],
 
-  function (Arr, Fun, Option, Options, TableLookup, ModelOperations, Warefun, Warehouse, ColumnModification, RowModification, TableOperation, Adjustments, Compare, Element, Remove, SelectorFind, Traverse) {
+  function (Arr, Fun, Option, Options, TableLookup, ModelOperations, Warefun, Warehouse, ColumnModification, RowModification, TableOperation, Adjustments, Attr, Compare, Element, Remove, SelectorFind, Traverse, parseInt) {
     /*
      * Using the current element, execute operation on the table.
      */
@@ -140,18 +142,28 @@ define(
         return generators.cell(element).element();
       };
 
+      var _nu = function (element) {
+        var colspan = Attr.has(element, 'colspan') ? parseInt(Attr.get(element, 'colspan')) : 1;
+        var rowspan = Attr.has(element, 'rowspan') ? parseInt(Attr.get(element, 'rowspan')) : 1;
+        return nu({
+          element: Fun.constant(element),
+          colspan: Fun.constant(colspan),
+          rowspan: Fun.constant(rowspan)
+        });
+      };
+
       var prior = Option.none();
 
       var getOrInit = function (element, comparator) {
         return prior.fold(function () {
-          var r = nu({ element: Fun.constant(element) });
+          var r = _nu(element);
           prior = Option.some({ item: element, sub: r });
           return r;
         }, function (p) {
           if (comparator(element, p.item)) {
             return p.sub;
           } else {
-            var r = nu({ element: Fun.constant(element) });
+            var r = _nu(element);
             prior = Option.some({ item: element, sub: r });
             return r;
           }
@@ -176,6 +188,11 @@ define(
       return ModelOperations.insertRowAt(grid, targetIndex, example, comparator, generators);
     };
 
+    var insertColumnAfter = function (grid, detail, comparator, generators) {
+      var example = detail.column();
+      var targetIndex = detail.column() + detail.colspan();
+      return ModelOperations.insertColumnAt(grid, targetIndex, example, comparator, generators);
+    };
 
     /* END HACKING */
 
@@ -216,7 +233,7 @@ define(
       insertRowBefore: modify2(insertRowBefore, Fun.noop, Fun.noop),
       insertRowAfter: modify2(insertRowAfter, Fun.noop, Fun.noop),
       insertColumnBefore: modify(ColumnModification.insertBefore, resize, Fun.noop),
-      insertColumnAfter: modify(ColumnModification.insertAfter, resize, Fun.noop),
+      insertColumnAfter: modify2(insertColumnAfter, resize, Fun.noop),
       eraseColumn: modify(ColumnModification.erase, resize, prune),
       eraseRow: modify(RowModification.erase, Fun.noop, prune),
       makeColumnHeader: modify(ColumnModification.makeHeader, Fun.noop, Fun.noop),
