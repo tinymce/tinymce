@@ -172,7 +172,22 @@ test(
 
     // Test basic delete column
     (function () {
+      var check = function (expected, grid, index) {
+        var actual = ModelOperations.deleteColumnAt(grid, index, Fun.tripleEquals);
+        assert.eq(expected, actual);
+      };
 
+      check([[ ]], [[ 'a' ]], 0);
+      check([[ 'b' ]], [[ 'a', 'b' ]], 0);
+      check(
+        [
+          [ 'a', 'b' ], 
+          [ 'c', 'c' ]
+        ], 
+        [
+          [ 'a', 'b', 'b' ],
+          [ 'c', 'c', 'c' ]
+        ], 1);
     })();
 
     // Test basic delete row

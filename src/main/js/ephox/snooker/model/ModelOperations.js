@@ -31,7 +31,9 @@ define(
     };
 
     var deleteColumnAt = function (grid, index) {
-
+      return Arr.map(grid, function (row) {
+        return row.slice(0, index).concat(row.slice(index + 1));
+      });
     };
 
     var deleteRowAt = function (grid, index) {
@@ -51,7 +53,7 @@ define(
       unmerge: Divide.generate,
       insertRowAt: insertRowAt,
       insertColumnAt: insertColumnAt,
-      deleteColumnAt: Fun.noop,
+      deleteColumnAt: deleteColumnAt,
       deleteRowAt: Fun.noop
     };
   }
