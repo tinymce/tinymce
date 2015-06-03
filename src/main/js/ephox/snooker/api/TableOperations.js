@@ -168,6 +168,17 @@ define(
       return result;
     };
 
+    var unmergeCells = function (grid, unmergable, comparator, generators) {
+      return ModelOperations.unmerge(grid, unmergable[0], comparator, function (elem) {
+        console.log('generators: ', generators);
+        return generators.cell({
+          element: Fun.constant(unmergable[0]),
+          colspan: Fun.constant(1),
+          rowspan: Fun.constant(1)
+        }).element();
+      });
+    };
+
     /* END HACKING */
 
     // Only column modifications force a resizing. Everything else just tries to preserve the table as is.
@@ -185,7 +196,8 @@ define(
       unmakeColumnHeader:  RunOperation.run(unmakeColumnHeader, RunOperation.onCell, Fun.noop, Fun.noop, Fun.curry(headerGenerators, Compare.eq, null, 'td')),
       makeRowHeader:  RunOperation.run(makeRowHeader, RunOperation.onCell, Fun.noop, Fun.noop, Fun.curry(headerGenerators, Compare.eq, 'col', 'th')),
       unmakeRowHeader:  RunOperation.run(unmakeRowHeader, RunOperation.onCell, Fun.noop, Fun.noop, Fun.curry(headerGenerators, Compare.eq, null, 'td')),
-      mergeCells: RunOperation.run(mergeCells, RunOperation.onMergable, Fun.noop, Fun.noop, hackGenerators)
+      mergeCells: RunOperation.run(mergeCells, RunOperation.onMergable, Fun.noop, Fun.noop, hackGenerators),
+      unmergeCells: RunOperation.run(unmergeCells, RunOperation.onUnmergable, Fun.noop, Fun.noop, Fun.identity)
     };
   }
 );
