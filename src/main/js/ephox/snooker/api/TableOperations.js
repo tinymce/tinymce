@@ -31,7 +31,7 @@ define(
     var hackGenerators = function (generators) {
       console.log('generators', generators);
       var nu = function (element) {
-        return generators.cell(element).element();
+        return generators.cell(element);
       };
 
       var _nu = function (element) {
@@ -102,7 +102,6 @@ define(
       };
 
       var makeNew = function (element) {
-        console.log('element: ', element, generators);
         var cell = generators.replace(element, tag, {
           scope: scope
         });
@@ -170,12 +169,11 @@ define(
 
     var unmergeCells = function (grid, unmergable, comparator, generators) {
       return ModelOperations.unmerge(grid, unmergable[0], comparator, function (elem) {
-        console.log('generators: ', generators);
         return generators.cell({
           element: Fun.constant(unmergable[0]),
           colspan: Fun.constant(1),
           rowspan: Fun.constant(1)
-        }).element();
+        });
       });
     };
 
