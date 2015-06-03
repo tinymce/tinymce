@@ -52,7 +52,6 @@ define(
     var findInWarehouse = function (warehouse, element) {
       var all = Arr.flatten(Arr.map(warehouse.all(), function (r) { return r.cells(); }));
       var raw = Arr.find(all, function (e) {
-        console.log('e', e.element().dom(), 'elem', element.dom());
         return Compare.eq(element, e.element());
       });
 
@@ -64,7 +63,6 @@ define(
         var input = DetailsList.fromTable(table);  
         var warehouse = Warehouse.generate(input);
         var output = extract(warehouse, target).map(function (info) {
-          console.log('extracting worked');
           var model = fromWarehouse(warehouse);
           var result = operation(model, info, Compare.eq, genWrappers(generators));
           return toDetailList(result);
@@ -80,9 +78,7 @@ define(
     };
 
     var onCell = function (warehouse, target) {
-      console.log('target', target);
       return TableLookup.cell(target.element()).bind(function (cell) {
-        console.log('cell: ', cell);
         return findInWarehouse(warehouse, cell);
       });
     };

@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.compass.Arr',
+    'ephox.lid.Jam',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.snooker.api.TableLookup',
@@ -11,11 +12,15 @@ define(
     'ephox.snooker.resize.Adjustments',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Compare',
+    'ephox.sugar.api.Element',
+    'ephox.sugar.api.InsertAll',
+    'ephox.sugar.api.Node',
     'ephox.sugar.api.Remove',
+    'ephox.sugar.api.Traverse',
     'global!parseInt'
   ],
 
-  function (Arr, Fun, Option, TableLookup, ModelOperations, RunOperation, Adjustments, Attr, Compare, Remove, parseInt) {
+  function (Arr, Jam, Fun, Option, TableLookup, ModelOperations, RunOperation, Adjustments, Attr, Compare, Element, InsertAll, Node, Remove, Traverse, parseInt) {
     var prune = function (table) {
       var cells = TableLookup.cells(table);
       if (cells.length === 0) Remove.remove(table);
@@ -142,6 +147,27 @@ define(
       return ModelOperations.deleteRowAt(grid, detail.row());
     };
 
+    var mergeCells = function (grid, mergable, comparator, _generators) {
+      var readContent = function (cells) {
+        var kin = Arr.bind(cells, function (cell) {
+          var children = Traverse.children(cell);
+          // Exclude empty cells.
+          return children.length > 1 || (children.length == 1 && Node.name(children[0]) !== 'br') ? [ children ] : [];
+        });
+        return Jam.intersperseThunk(kin, function () {
+          return [ Element.fromTag('br') ];
+        });
+      };
+
+      var cells = mergable.cells();
+      var contents = Arr.flatten(readContent(cells));
+
+      var result = ModelOperations.merge(grid, mergable, comparator, Fun.constant(cells[0]));
+      Remove.empty(cells[0]);
+      InsertAll.append(cells[0], contents);
+      return result;
+    };
+
     /* END HACKING */
 
     // Only column modifications force a resizing. Everything else just tries to preserve the table as is.
@@ -159,7 +185,7 @@ define(
       unmakeColumnHeader:  RunOperation.run(unmakeColumnHeader, RunOperation.onCell, Fun.noop, Fun.noop, Fun.curry(headerGenerators, Compare.eq, null, 'td')),
       makeRowHeader:  RunOperation.run(makeRowHeader, RunOperation.onCell, Fun.noop, Fun.noop, Fun.curry(headerGenerators, Compare.eq, 'col', 'th')),
       unmakeRowHeader:  RunOperation.run(unmakeRowHeader, RunOperation.onCell, Fun.noop, Fun.noop, Fun.curry(headerGenerators, Compare.eq, null, 'td')),
-      mergeCells: Fun.identity
+      mergeCells: RunOperation.run(mergeCells, RunOperation.onMergable, Fun.noop, Fun.noop, hackGenerators)
     };
   }
 );
