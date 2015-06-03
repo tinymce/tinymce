@@ -56,7 +56,56 @@ test(
 
     // Test basic insert column
     (function () {
+      var check = function (expected, grid, index) {
+        var actual = ModelOperations.insertColumnAt(grid, index, Fun.tripleEquals, Fun.constant('?'));
+        assert.eq(expected, actual);
+      };
 
+      check([], [], 0);
+      check([[ '?' ]], [[ ]], 0);
+      check([[ '?', 'a' ]], [[ 'a' ]], 0);
+      check([[ 'a', '?' ]], [[ 'a' ]], 1);
+      check(
+        [
+          [ 'a', '?' ],
+          [ 'b', '?' ]
+        ],
+        [
+          [ 'a' ],
+          [ 'b' ]
+        ], 1
+      );
+      check(
+        [
+          [ '?', 'a' ],
+          [ '?', 'b' ]
+        ],
+        [
+          [ 'a' ],
+          [ 'b' ]
+        ], 0
+      );
+      // Spanning check.
+      check(
+        [
+          [ 'a', 'a', 'a' ],
+          [ 'b', '?', 'c' ]
+        ],
+        [
+          [ 'a', 'a' ],
+          [ 'b', 'c' ]
+        ], 1
+      );
+      check(
+        [
+          [ 'a', 'a', '?' ],
+          [ 'b', 'c', '?' ]
+        ],
+        [
+          [ 'a', 'a' ],
+          [ 'b', 'c' ]
+        ], 2
+      );
     })();
 
     // Test basic insert row
