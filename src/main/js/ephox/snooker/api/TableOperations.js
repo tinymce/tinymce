@@ -212,7 +212,7 @@ define(
         var makeNew = function (element) {
           console.log('element: ', element, generators);
           var cell = generators.replace(element, 'th', {
-            scope: 'row'
+            scope: 'col'
           });
           list.push({ item: element, sub: cell });
           return cell;
