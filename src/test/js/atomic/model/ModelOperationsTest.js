@@ -46,13 +46,16 @@ test(
     };
 
     var headerGenerators = function () {
-      var prior = Option.none();
       var counter = 0;
+
+      // We need a store so row processing.
+      var store = {};
+
       var replaceOrInit = function (element, comparator) {
-        return prior.fold(function () {
+        return Option.from(store[element]).fold(function () {
           var r = 'h(' + element + ')_' + counter;
           counter++;
-          prior = Option.some({ item: element, sub: r });
+          store[element] = { item: element, sub: r };
           return r;
         }, function (p) {
           if (comparator(element, p.item)) {
@@ -60,7 +63,7 @@ test(
           } else {
             var r = 'h(' + element + ')_' + counter;
             counter++;
-            prior = Option.some({ item: element, sub: r });
+            store[element] = { item: element, sub: r };
             return r;
           }
         });
@@ -290,6 +293,63 @@ test(
         [ 'b', 'c', 'd' ],
         [ 'f', 'f', 'f' ]
       ], 0);
+    })();
+
+    // Test basic changing to header (row)
+    (function () {
+      var check = function (expected, grid, index) {
+        var actual = ModelOperations.replaceRow(grid, index, Fun.tripleEquals, headerGenerators());
+        assert.eq(expected, actual);
+      };
+
+      check([[]], [[]], 0);
+      check([
+        [ 'h(a)_0' ]
+      ], [
+        [ 'a' ]
+      ], 0);
+
+      check([
+        [ 'a', 'b', 'e' ],
+        [ 'a', 'h(c)_0', 'h(f)_1' ],
+        [ 'a', 'd', 'h(f)_1' ]
+      ], [
+        [ 'a', 'b', 'e' ],
+        [ 'a', 'c', 'f' ],
+        [ 'a', 'd', 'f' ]
+      ], 1);
+
+      check([
+        [ 'a', 'b', 'f' ],
+        [ 'a', 'h(c)_0', 'f' ],
+        [ 'a', 'd', 'f' ]
+      ], [
+        [ 'a', 'b', 'f' ],
+        [ 'a', 'c', 'f' ],
+        [ 'a', 'd', 'f' ]
+      ], 1);
+
+     check([
+        [ 'h(a)_0', 'h(b)_1', 'h(f)_2' ],
+        [ 'h(a)_0', 'c', 'h(f)_2' ],
+        [ 'h(a)_0', 'd', 'h(f)_2' ]
+      ], [
+        [ 'a', 'b', 'f' ],
+        [ 'a', 'c', 'f' ],
+        [ 'a', 'd', 'f' ]
+      ], 0);
+
+      // check([
+      //   [ 'h(a)_0', 'h(a)_0', 'h(a)_0' ],
+      //   [ 'h(a)_0', 'h(a)_0', 'h(a)_0' ],
+      //   [ 'h(b)_1', 'c', 'd' ],
+      //   [ 'h(f)_2', 'h(f)_2', 'h(f)_2' ]
+      // ], [
+      //   [ 'a', 'a', 'a' ],
+      //   [ 'a', 'a', 'a' ],
+      //   [ 'b', 'c', 'd' ],
+      //   [ 'f', 'f', 'f' ]
+      // ], 0);
     })();
   }
 );
