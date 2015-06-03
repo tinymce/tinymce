@@ -10,8 +10,6 @@ define(
     'ephox.snooker.model.ModelOperations',
     'ephox.snooker.model.Warefun',
     'ephox.snooker.model.Warehouse',
-    'ephox.snooker.operate.ColumnModification',
-    'ephox.snooker.operate.RowModification',
     'ephox.snooker.operate.TableOperation',
     'ephox.snooker.resize.Adjustments',
     'ephox.sugar.api.Attr',
@@ -23,72 +21,7 @@ define(
     'global!parseInt'
   ],
 
-  function (Arr, Fun, Option, Options, TableLookup, ModelOperations, Warefun, Warehouse, ColumnModification, RowModification, TableOperation, Adjustments, Attr, Compare, Element, Remove, SelectorFind, Traverse, parseInt) {
-    /*
-     * Using the current element, execute operation on the table.
-     */
-    var modify = function (operation, adjustment, post) {
-      return function (wire, element, generators, direction) {
-        TableLookup.cell(element).each(function (cell) {
-          SelectorFind.ancestor(cell, 'table').each(function (table) {
-            TableOperation.run(wire, table, cell, function (warehouse, dompos) {
-              return operation(warehouse, dompos.row(), dompos.column(), generators, Compare.eq);
-            }, adjustment, direction);
-
-            post(table);
-          });
-        });
-      };
-    };
-
-    var getElementGrid = function (warehouse, sColspan, sRowspan, fColspan, fRowspan, leadCol, leadRow) {
-
-      var grid = [];
-      for (var r = 0; r < warehouse.rows(); r++) {
-        grid[r] = [];
-        for (var c = 0; c < warehouse.columns(); c++) {
-          var normal = Warehouse.getAt(warehouse, r, c).map(function (e) { return e.element(); }).getOr(undefined);
-          grid[r][c] = r>=sRowspan&&r<=fRowspan&&c>=sColspan&&c<=fColspan ? Warehouse.getAt(warehouse, leadRow, leadRow).map(function (e) { return e.element(); }).getOr(undefined) : normal;
-        }
-      }
-      return grid;
-    };
-
-    var multi = function (_operation, _adjustment, _post) {
-      return function (wire, element, generators, direction) {
-        TableLookup.cell(element).each(function (cell) {
-          SelectorFind.ancestor(cell, 'table').each(function (table) {
-
-            var sColspan = 0;
-            var sRowspan = 1;
-            var fColspan = 2;
-            var fRowspan = 2;
-
-            var leadCol = 1;
-            var leadRow = 2;
-
-            TableOperation.run(wire, table, cell, function (warehouse, dompos) {
-              var grid = getElementGrid(warehouse.grid(), sColspan, sRowspan, fColspan, fRowspan, leadCol, leadRow);
-              var fun = Warefun.render(grid, Compare.eq);
-
-              // now we have to correlate the rows
-              var lists = warehouse.all();
-              var hackedFun = Arr.map(fun, function (f, fi) {
-                return {
-                  element: lists[fi].element,
-                  cells: f.cells
-                };
-              });
-
-
-              return hackedFun;
-            }, _adjustment,
-            direction);
-          });
-        });
-      };
-    };
-
+  function (Arr, Fun, Option, Options, TableLookup, ModelOperations, Warefun, Warehouse, TableOperation, Adjustments, Attr, Compare, Element, Remove, SelectorFind, Traverse, parseInt) {
     var prune = function (table) {
       var cells = TableLookup.cells(table);
       if (cells.length === 0) Remove.remove(table);
@@ -247,6 +180,14 @@ define(
       return ModelOperations.replaceColumn(grid, detail.column(), comparator, headerGenerators(comparator, generators, null, 'td'));
     };
 
+    var eraseColumn = function (grid, detail, comparator, generators) {
+      return ModelOperations.deleteColumnAt(grid, detail.column());
+    };
+
+    var eraseRow = function (grid, detail, comparator, generators) {
+      return ModelOperations.deleteRowAt(grid, detail.row());
+    };
+
     /* END HACKING */
 
 
@@ -288,8 +229,8 @@ define(
       insertRowAfter: modify2(insertRowAfter, Fun.noop, Fun.noop),
       insertColumnBefore: modify2(insertColumnBefore, resize, Fun.noop),
       insertColumnAfter: modify2(insertColumnAfter, resize, Fun.noop),
-      eraseColumn: modify(ColumnModification.erase, resize, prune),
-      eraseRow: modify(RowModification.erase, Fun.noop, prune),
+      eraseColumn: modify2(eraseColumn, resize, prune),
+      eraseRow: modify2(eraseRow, Fun.noop, prune),
       makeColumnHeader: modify2(makeColumnHeader, Fun.noop, Fun.noop, Fun.identity),
       unmakeColumnHeader: modify2(unmakeColumnHeader, Fun.noop, Fun.noop, Fun.identity),
       makeRowHeader: modify2(makeRowHeader, Fun.noop, Fun.noop, Fun.identity),
