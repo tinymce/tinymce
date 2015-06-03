@@ -35,7 +35,23 @@ test(
 
     // Test basic unmerge.
     (function () {
+      var check = function (expected, grid, target) {
+        var actual = ModelOperations.unmerge(grid, target, Fun.tripleEquals, Fun.constant('?'));
+        assert.eq(expected, actual);
+      };
 
+      check([], [], 'a');
+      check([[ 'a', '?' ]], [[ 'a', 'a' ]], 'a');
+      check(
+        [
+          [ 'a', '?' ],
+          [ '?', '?' ]
+        ],
+        [
+          [ 'a', 'a' ],
+          [ 'a', 'a' ]
+        ], 'a'
+      );
     })();
 
     // Test basic insert column
