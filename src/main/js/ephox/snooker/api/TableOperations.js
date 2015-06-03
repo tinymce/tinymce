@@ -125,10 +125,6 @@ define(
       return newFun;
     };
 
-    var insertBefore = function () {
-
-    };
-
     var findMe = function (warehouse, element) {
       var all = Arr.flatten(Arr.map(warehouse.all(), function (r) { return r.cells(); }));
       var raw = Arr.find(all, function (e) {
@@ -168,6 +164,18 @@ define(
       };
     };
 
+    var insertRowBefore = function (grid, detail, comparator, generators) {
+      var example = detail.row();
+      var targetIndex = detail.row();
+      return ModelOperations.insertRowAt(grid, targetIndex, example, comparator, generators);
+    };
+
+    var insertRowAfter = function (grid, detail, comparator, generators) {
+      var example = detail.row();
+      var targetIndex = detail.row() + detail.rowspan();
+      return ModelOperations.insertRowAt(grid, targetIndex, example, comparator, generators);
+    };
+
 
     /* END HACKING */
 
@@ -187,7 +195,7 @@ define(
                 // find the bounds of the rowspan.
                 var index = info.row();
                 var insertAt = info.row();
-                return ModelOperations.insertRowAt(hack, insertAt, index, Compare.eq, hackGenerators(generators));
+                return operation(hack, info, Compare.eq, hackGenerators(generators));
               }).getOr(hack);
 
               console.log('afterOp', afterOp);
@@ -205,8 +213,8 @@ define(
     var resize = Adjustments.adjustTo;
 
     return {
-      insertRowBefore: modify2(insertBefore, Fun.noop, Fun.noop),
-      insertRowAfter: modify(RowModification.insertAfter, Fun.noop, Fun.noop),
+      insertRowBefore: modify2(insertRowBefore, Fun.noop, Fun.noop),
+      insertRowAfter: modify2(insertRowAfter, Fun.noop, Fun.noop),
       insertColumnBefore: modify(ColumnModification.insertBefore, resize, Fun.noop),
       insertColumnAfter: modify(ColumnModification.insertAfter, resize, Fun.noop),
       eraseColumn: modify(ColumnModification.erase, resize, prune),
