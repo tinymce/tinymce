@@ -8,6 +8,7 @@ define(
     'ephox.perhaps.Options',
     'ephox.snooker.api.TableLookup',
     'ephox.snooker.model.ModelOperations',
+    'ephox.snooker.model.RunOperation',
     'ephox.snooker.model.Warefun',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.operate.TableOperation',
@@ -21,53 +22,13 @@ define(
     'global!parseInt'
   ],
 
-  function (Arr, Fun, Option, Options, TableLookup, ModelOperations, Warefun, Warehouse, TableOperation, Adjustments, Attr, Compare, Element, Remove, SelectorFind, Traverse, parseInt) {
+  function (Arr, Fun, Option, Options, TableLookup, ModelOperations, RunOperation, Warefun, Warehouse, TableOperation, Adjustments, Attr, Compare, Element, Remove, SelectorFind, Traverse, parseInt) {
     var prune = function (table) {
       var cells = TableLookup.cells(table);
       if (cells.length === 0) Remove.remove(table);
     };
 
     /* HACKING */
-
-    var hackety = function (warehouse) {
-      console.log('warehouse', warehouse);
-      var hackhack = [];
-      for (var i = 0; i < warehouse.grid().rows(); i++) {
-        var h = [];
-        for (var j = 0; j < warehouse.grid().columns(); j++) {
-          h.push(Warehouse.getAt(warehouse, i, j).getOrDie('hacky').element());
-        }
-        hackhack.push(h);
-      }
-      return hackhack;
-    };
-
-    var posthackety = function (hack) {
-      var fun = Warefun.render(hack, Compare.eq);
-
-      // Add rows.
-      var newFun = Arr.map(fun, function (f) {
-        var rowOfCells = Options.findMap(f.cells(), function (c) { return Traverse.parent(c.element()); });
-        var tr = rowOfCells.getOrThunk(function () {
-          return Element.fromTag('tr');
-        });
-        return {
-          element: Fun.constant(tr),
-          cells: f.cells
-        };
-      });
-
-      return newFun;
-    };
-
-    var findMe = function (warehouse, element) {
-      var all = Arr.flatten(Arr.map(warehouse.all(), function (r) { return r.cells(); }));
-      var raw = Arr.find(all, function (e) {
-        return Compare.eq(element, e.element());
-      });
-
-      return Option.from(raw);
-    };
 
     var hackGenerators = function (generators) {
       console.log('generators', generators);
@@ -109,31 +70,31 @@ define(
       };
     };
 
-    var insertRowBefore = function (grid, detail, comparator, generators) {
+    var insertRowBefore = function (grid, detail, comparator, genWrappers) {
       var example = detail.row();
       var targetIndex = detail.row();
-      return ModelOperations.insertRowAt(grid, targetIndex, example, comparator, generators);
+      return ModelOperations.insertRowAt(grid, targetIndex, example, comparator, genWrappers);
     };
 
-    var insertRowAfter = function (grid, detail, comparator, generators) {
+    var insertRowAfter = function (grid, detail, comparator, genWrappers) {
       var example = detail.row();
       var targetIndex = detail.row() + detail.rowspan();
-      return ModelOperations.insertRowAt(grid, targetIndex, example, comparator, generators);
+      return ModelOperations.insertRowAt(grid, targetIndex, example, comparator, genWrappers);
     };
 
-    var insertColumnAfter = function (grid, detail, comparator, generators) {
+    var insertColumnAfter = function (grid, detail, comparator, genWrappers) {
       var example = detail.column();
       var targetIndex = detail.column() + detail.colspan();
-      return ModelOperations.insertColumnAt(grid, targetIndex, example, comparator, generators);
+      return ModelOperations.insertColumnAt(grid, targetIndex, example, comparator, genWrappers);
     };
 
-    var insertColumnBefore = function (grid, detail, comparator, generators) {
+    var insertColumnBefore = function (grid, detail, comparator, genWrappers) {
       var example = detail.column();
       var targetIndex = detail.column();
-      return ModelOperations.insertColumnAt(grid, targetIndex, example, comparator, generators);
+      return ModelOperations.insertColumnAt(grid, targetIndex, example, comparator, genWrappers);
     };
 
-    var headerGenerators = function (comparator, generators, scope, tag) {
+    var headerGenerators = function (comparator, scope, tag, generators) {
     
       var list = [];
 
@@ -164,20 +125,20 @@ define(
       };
     };
 
-    var makeRowHeader = function (grid, detail, comparator, generators) {     
-      return ModelOperations.replaceRow(grid, detail.row(), comparator, headerGenerators(comparator, generators, 'col', 'th'));
+    var makeRowHeader = function (grid, detail, comparator, genWrappers) {     
+      return ModelOperations.replaceRow(grid, detail.row(), comparator, genWrappers);
     };
 
-    var makeColumnHeader = function (grid, detail, comparator, generators) {     
-      return ModelOperations.replaceColumn(grid, detail.column(), comparator, headerGenerators(comparator, generators, 'row', 'th'));
+    var makeColumnHeader = function (grid, detail, comparator, genWrappers) {     
+      return ModelOperations.replaceColumn(grid, detail.column(), comparator, genWrappers);
     };
 
-    var unmakeRowHeader = function (grid, detail, comparator, generators) {     
-      return ModelOperations.replaceRow(grid, detail.row(), comparator, headerGenerators(comparator, generators, null, 'td'));
+    var unmakeRowHeader = function (grid, detail, comparator, genWrappers) {     
+      return ModelOperations.replaceRow(grid, detail.row(), comparator, genWrappers);
     };
 
-    var unmakeColumnHeader = function (grid, detail, comparator, generators) {     
-      return ModelOperations.replaceColumn(grid, detail.column(), comparator, headerGenerators(comparator, generators, null, 'td'));
+    var unmakeColumnHeader = function (grid, detail, comparator, genWrappers) {     
+      return ModelOperations.replaceColumn(grid, detail.column(), comparator, genWrappers);
     };
 
     var eraseColumn = function (grid, detail, comparator, generators) {
@@ -190,51 +151,21 @@ define(
 
     /* END HACKING */
 
-
-
-
-
-    var modify2 = function (operation, adjustment, post, _genbuilder) {
-      var genbuilder = _genbuilder !== undefined ? _genbuilder : hackGenerators;
-      return function (wire, element, generators, direction) {
-        TableLookup.cell(element).each(function (cell) {
-          SelectorFind.ancestor(cell, 'table').each(function (table) {
-            TableOperation.run(wire, table, cell, function (warehouse, dompos) {
-              var hack = hackety(warehouse);
-
-              var afterOp = findMe(warehouse, cell).map(function (info) {
-                // we are doing insert after, therefore ...
-                // find the bounds of the rowspan.
-                var index = info.row();
-                var insertAt = info.row();
-                return operation(hack, info, Compare.eq, genbuilder(generators));
-              }).getOr(hack);
-
-              console.log('afterOp', afterOp);
-
-              return posthackety(afterOp);
-            }, adjustment, direction);
-
-            post(table);
-          });
-        });
-      };
-    };
-
     // Only column modifications force a resizing. Everything else just tries to preserve the table as is.
     var resize = Adjustments.adjustTo;
 
     return {
-      insertRowBefore: modify2(insertRowBefore, Fun.noop, Fun.noop),
-      insertRowAfter: modify2(insertRowAfter, Fun.noop, Fun.noop),
-      insertColumnBefore: modify2(insertColumnBefore, resize, Fun.noop),
-      insertColumnAfter: modify2(insertColumnAfter, resize, Fun.noop),
-      eraseColumn: modify2(eraseColumn, resize, prune),
-      eraseRow: modify2(eraseRow, Fun.noop, prune),
-      makeColumnHeader: modify2(makeColumnHeader, Fun.noop, Fun.noop, Fun.identity),
-      unmakeColumnHeader: modify2(unmakeColumnHeader, Fun.noop, Fun.noop, Fun.identity),
-      makeRowHeader: modify2(makeRowHeader, Fun.noop, Fun.noop, Fun.identity),
-      unmakeRowHeader: modify2(unmakeRowHeader, Fun.noop, Fun.noop, Fun.identity),
+      //operation, adjustment, postAction, genWrappers
+      insertRowBefore: RunOperation.run(insertRowBefore, Fun.noop, Fun.noop, hackGenerators),
+      insertRowAfter:  RunOperation.run(insertRowAfter, Fun.noop, Fun.noop, hackGenerators),
+      insertColumnBefore:  RunOperation.run(insertColumnBefore, resize, Fun.noop, hackGenerators),
+      insertColumnAfter:  RunOperation.run(insertColumnAfter, resize, Fun.noop, hackGenerators),
+      eraseColumn:  RunOperation.run(eraseColumn, resize, prune, hackGenerators),
+      eraseRow:  RunOperation.run(eraseRow, Fun.noop, prune, hackGenerators),
+      makeColumnHeader:  RunOperation.run(makeColumnHeader, Fun.noop, Fun.noop, Fun.curry(headerGenerators, Compare.eq, 'row', 'th')),
+      unmakeColumnHeader:  RunOperation.run(unmakeColumnHeader, Fun.noop, Fun.noop, Fun.curry(headerGenerators, Compare.eq, null, 'td')),
+      makeRowHeader:  RunOperation.run(makeRowHeader, Fun.noop, Fun.noop, Fun.curry(headerGenerators, Compare.eq, 'col', 'th')),
+      unmakeRowHeader:  RunOperation.run(unmakeRowHeader, Fun.noop, Fun.noop, Fun.curry(headerGenerators, Compare.eq, null, 'td')),
       mergeCells: Fun.identity
     };
   }
