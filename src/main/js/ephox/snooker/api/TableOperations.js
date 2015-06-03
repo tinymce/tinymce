@@ -194,6 +194,12 @@ define(
       return ModelOperations.insertColumnAt(grid, targetIndex, example, comparator, generators);
     };
 
+    var insertColumnBefore = function (grid, detail, comparator, generators) {
+      var example = detail.column();
+      var targetIndex = detail.column();
+      return ModelOperations.insertColumnAt(grid, targetIndex, example, comparator, generators);
+    };
+
     /* END HACKING */
 
 
@@ -232,7 +238,7 @@ define(
     return {
       insertRowBefore: modify2(insertRowBefore, Fun.noop, Fun.noop),
       insertRowAfter: modify2(insertRowAfter, Fun.noop, Fun.noop),
-      insertColumnBefore: modify(ColumnModification.insertBefore, resize, Fun.noop),
+      insertColumnBefore: modify2(insertColumnBefore, resize, Fun.noop),
       insertColumnAfter: modify2(insertColumnAfter, resize, Fun.noop),
       eraseColumn: modify(ColumnModification.erase, resize, prune),
       eraseRow: modify(RowModification.erase, Fun.noop, prune),

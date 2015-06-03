@@ -208,5 +208,15 @@ test(
           [ 'c', 'c', 'c' ]
         ], 1);
     })();
+
+    // Test basic changing to header (column)
+    (function () {
+      var check = function (expected, grid, index) {
+        var actual = ModelOperations.replaceColumn(grid, index, Fun.tripleEquals, generators());
+        assert.eq(expected, actual);
+      };
+
+      check([[]], [[]], 0);
+    })();
   }
 );

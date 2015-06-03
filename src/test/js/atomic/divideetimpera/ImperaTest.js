@@ -2,12 +2,13 @@ test(
   'ImperaTest',
 
   [
+    'ephox.peanut.Fun',
     'ephox.scullion.Struct',
     'ephox.snooker.api.Structs',
     'ephox.snooker.model.Impera'
   ],
 
-  function (Struct, Structs, Impera) {
+  function (Fun, Struct, Structs, Impera) {
     var inputRangeStruct = Struct.immutableBag([ 'startCol', 'startRow', 'finishCol', 'finishRow' ], []);
 
     var structureA = [
@@ -23,7 +24,7 @@ test(
     });
 
     var leadCellA = 'a';
-    var resultA = Impera.render(structureA, rangeA, leadCellA);
+    var resultA = Impera.render(structureA, rangeA, Fun.constant(leadCellA), Fun.tripleEquals);
     var expectedA = [
       [ 'a', 'a', 'c' ],
       [ 'd', 'e', 'f' ]
@@ -44,7 +45,7 @@ test(
     });
 
     var leadCellB = 'a';
-    var resultB = Impera.render(structureB, rangeB, leadCellB);
+    var resultB = Impera.render(structureB, rangeB, Fun.constant(leadCellB), Fun.tripleEquals);
     var expectedB = [
       [ 'a', 'a', 'a' ],
       [ 'a', 'a', 'a' ]

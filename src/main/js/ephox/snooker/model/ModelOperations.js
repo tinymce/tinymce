@@ -41,20 +41,38 @@ define(
     };
 
     var merge = function (grid, bounds, lead, comparator) {
-      return Impera.render(grid, bounds, lead, comparator);
+      console.log('lead: ', lead);
+      return Impera.render(grid, bounds, Fun.constant(lead), comparator);
     };
 
     var unmerge = function (grid, target, comparator, substitution) {
       return Divide.generate(grid, target, comparator, substitution);
     };
 
+    var replaceColumn = function (grid, index, comparator, substitution) {
+      // Make this efficient later.
+      var targets = Arr.bind(grid, function (row, i) { 
+        return row[index] !== undefined && (i === 0 || !(comparator(grid[i - 1][index], row[index]))) ? [ row[index] ] : [];
+      });
+
+      return Arr.foldr(targets, function (b, a) {
+        return Impera.render(b, {
+          startRow: Fun.constant(a.row()),
+          finishRow: Fun.constant(a.row() + a.rowspan() - 1),
+          startCol: Fun.constant(a.column()),
+          finishCol: Fun.constant(a.column() + a.colspan() - 1)
+        }, function () { }, comparator);
+      }, grid);
+    };
+
     return {
-      merge: Impera.render,
-      unmerge: Divide.generate,
+      merge: merge,
+      unmerge: unmerge,
       insertRowAt: insertRowAt,
       insertColumnAt: insertColumnAt,
       deleteColumnAt: deleteColumnAt,
-      deleteRowAt: deleteRowAt
+      deleteRowAt: deleteRowAt,
+      replaceColumn: replaceColumn
     };
   }
 );
