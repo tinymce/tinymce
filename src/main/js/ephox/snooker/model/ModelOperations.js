@@ -37,7 +37,7 @@ define(
     };
 
     var deleteRowAt = function (grid, index) {
-
+      return grid.slice(0, index).concat(grid.slice(index + 1));
     };
 
     var merge = function (grid, bounds, lead, comparator) {
@@ -54,7 +54,7 @@ define(
       insertRowAt: insertRowAt,
       insertColumnAt: insertColumnAt,
       deleteColumnAt: deleteColumnAt,
-      deleteRowAt: Fun.noop
+      deleteRowAt: deleteRowAt
     };
   }
 );

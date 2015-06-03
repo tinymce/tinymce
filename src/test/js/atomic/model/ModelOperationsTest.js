@@ -166,8 +166,6 @@ test(
           [ 'a', 'a', 'b' ],
           [ 'c', 'd', 'b' ]
         ], 0, 1);
-
-      // check([[ 'a', '?_0' ]], [[ 'a' ]], 0, 1);
     })();
 
     // Test basic delete column
@@ -192,7 +190,23 @@ test(
 
     // Test basic delete row
     (function () {
+      var check = function (expected, grid, index) {
+        var actual = ModelOperations.deleteRowAt(grid, index, Fun.tripleEquals);
+        assert.eq(expected, actual);
+      };
 
+      check([], [[ 'a' ]], 0);
+      check([[ 'b' ]], [[ 'a' ], [ 'b' ]], 0);
+      check(
+        [
+          [ 'a', 'b', 'b' ], 
+          [ 'c', 'c', 'c' ]
+        ], 
+        [
+          [ 'a', 'b', 'b' ],
+          [ 'a', 'b', 'b' ],
+          [ 'c', 'c', 'c' ]
+        ], 1);
     })();
   }
 );
