@@ -9,7 +9,7 @@ test(
   function (Fun, Divide) {
 
     var comparator = Fun.tripleEquals;
-    var substitution = 'nu';
+    var substitution = Fun.constant('nu');
     var structureA = [
       [ 'a', 'b', 'b', 'c']
     ];
