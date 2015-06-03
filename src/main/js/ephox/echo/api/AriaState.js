@@ -3,16 +3,21 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.sugar.api.Attr'
+    'ephox.sugar.api.Attr',
+    'global!String'
   ],
 
-  function (Arr, Attr) {
+  function (Arr, Attr, String) {
     var expanded = function (element) {
       Attr.set(element, 'aria-expanded', 'true');
     };
 
     var collapsed = function (element) {
       Attr.set(element, 'aria-expanded', 'false');
+    };
+
+    var checked = function (element, state) {
+      Attr.set(element, 'aria-checked', String(state));
     };
 
     var pressed = function (button) {
@@ -55,6 +60,7 @@ define(
     return {
       expanded: expanded,
       collapsed: collapsed,
+      checked: checked,
       pressed: pressed,
       enable: enable,
       disable: disable,
