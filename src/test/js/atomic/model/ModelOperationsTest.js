@@ -146,15 +146,28 @@ test(
 
     // Test basic insert row
     (function () {
-      // var check = function (expected, grid, index) {
-      //   var actual = ModelOperations.insertRowAt(grid, index, Fun.tripleEquals, Fun.constant('?'));
-      //   assert.eq(expected, actual);
-      // };
+      var check = function (expected, grid, example, index) {
+        var actual = ModelOperations.insertRowAt(grid, index, example, Fun.tripleEquals, generators());
+        assert.eq(expected, actual);
+      };
 
-      // check([], [], 0);
-      // check([[ '?' ], [ 'a' ]], [[ 'a' ]], 0);
-      // check([[ 'a' ], [ '?' ]], [[ 'a' ]], 1);
-      // check([[ 'a', '?' ]], [[ 'a' ]], 1);
+      check([[ '?_0' ], [ 'a' ]], [[ 'a' ]], 0, 0);
+      check([[ 'a' ], [ '?_0' ]], [[ 'a' ]], 0, 1);
+      check([[ 'a', 'b' ], [ '?_0', '?_1' ]], [[ 'a', 'b' ]], 0, 1);
+      check([[ 'a', 'a' ], [ '?_0', '?_0' ]], [[ 'a', 'a' ]], 0, 1);
+
+      check(
+        [
+          [ 'a', 'a', 'b' ],
+          [ '?_0', '?_0', 'b' ],
+          [ 'c', 'd', 'b' ]
+        ],
+        [
+          [ 'a', 'a', 'b' ],
+          [ 'c', 'd', 'b' ]
+        ], 0, 1);
+
+      // check([[ 'a', '?_0' ]], [[ 'a' ]], 0, 1);
     })();
 
     // Test basic delete column

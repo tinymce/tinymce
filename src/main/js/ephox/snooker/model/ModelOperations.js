@@ -9,15 +9,17 @@ define(
   ],
 
   function (Arr, Fun, Divide, Impera) {
-    var insertRowAt = function (grid, index, example, substitution) {
+    var insertRowAt = function (grid, index, example, comparator, substitution) {
       var before = grid.slice(0, index);
 
       var after = grid.slice(index);
-      // return Arr.map(grid, function (row) {
-      //   var withinSpan = index > 0 && index < row.length && comparator(row[index - 1], row[index]);
-      //   var sub = withinSpan ? row[index] : substitution();
-      //   return row.slice(0, index).concat([ sub ]).concat(row.slice(index));
-      // });
+      console.log('index: ', index, 'example', example);
+      var nu = Arr.map(grid[example], function (ex, c) {
+        var withinSpan = index > 0 && index < grid.length && comparator(grid[index - 1][c], grid[index][c]);
+        return withinSpan ? grid[index][c] : substitution.getOrInit(ex, comparator);
+      });
+
+      return before.concat([ nu ]).concat(after);
     };
 
     var insertColumnAt = function (grid, index, example, comparator, substitution) {
