@@ -59,6 +59,7 @@ test(
             return p.sub;
           } else {
             var r = 'h(' + element + ')_' + counter;
+            counter++;
             prior = Option.some({ item: element, sub: r });
             return r;
           }
@@ -257,6 +258,26 @@ test(
         [ 'b', 'c', 'd' ],
         [ 'e', 'f', 'f' ]
       ], 1);
+
+      check([
+        [ 'a', 'a', 'a' ],
+        [ 'b', 'h(c)_0', 'd' ],
+        [ 'f', 'f', 'f' ]
+      ], [
+        [ 'a', 'a', 'a' ],
+        [ 'b', 'c', 'd' ],
+        [ 'f', 'f', 'f' ]
+      ], 1);
+
+      check([
+        [ 'h(a)_0', 'h(a)_0', 'h(a)_0' ],
+        [ 'h(b)_1', 'c', 'd' ],
+        [ 'h(f)_2', 'h(f)_2', 'h(f)_2' ]
+      ], [
+        [ 'a', 'a', 'a' ],
+        [ 'b', 'c', 'd' ],
+        [ 'f', 'f', 'f' ]
+      ], 0);
     })();
   }
 );
