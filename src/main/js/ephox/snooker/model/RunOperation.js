@@ -19,20 +19,19 @@ define(
 
   function (Arr, Fun, Option, Options, TableLookup, DetailsList, Warefun, Warehouse, Redraw, Bars, Compare, Element, Traverse) {
     var fromWarehouse = function (warehouse) {
-      console.log('warehouse', warehouse);
-      var hackhack = [];
+      var grid = [];
       for (var i = 0; i < warehouse.grid().rows(); i++) {
         var h = [];
         for (var j = 0; j < warehouse.grid().columns(); j++) {
           h.push(Warehouse.getAt(warehouse, i, j).getOrDie('hacky').element());
         }
-        hackhack.push(h);
+        grid.push(h);
       }
-      return hackhack;
+      return grid;
     };
 
-    var toDetailList = function (hack) {
-      var fun = Warefun.render(hack, Compare.eq);
+    var toDetailList = function (grid) {
+      var fun = Warefun.render(grid, Compare.eq);
 
       // Add rows.
       var newFun = Arr.map(fun, function (f) {
