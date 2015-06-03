@@ -243,6 +243,10 @@ define(
       return ModelOperations.replaceRow(grid, detail.row(), comparator, headerGenerators(comparator, generators, null, 'td'));
     };
 
+    var unmakeColumnHeader = function (grid, detail, comparator, generators) {     
+      return ModelOperations.replaceColumn(grid, detail.column(), comparator, headerGenerators(comparator, generators, null, 'td'));
+    };
+
     /* END HACKING */
 
 
@@ -287,7 +291,7 @@ define(
       eraseColumn: modify(ColumnModification.erase, resize, prune),
       eraseRow: modify(RowModification.erase, Fun.noop, prune),
       makeColumnHeader: modify2(makeColumnHeader, Fun.noop, Fun.noop, Fun.identity),
-      unmakeColumnHeader: modify(ColumnModification.unmakeHeader, Fun.noop, Fun.noop),
+      unmakeColumnHeader: modify2(unmakeColumnHeader, Fun.noop, Fun.noop, Fun.identity),
       makeRowHeader: modify2(makeRowHeader, Fun.noop, Fun.noop, Fun.identity),
       unmakeRowHeader: modify2(unmakeRowHeader, Fun.noop, Fun.noop, Fun.identity),
       mergeCells: Fun.identity
