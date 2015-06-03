@@ -200,38 +200,43 @@ define(
       return ModelOperations.insertColumnAt(grid, targetIndex, example, comparator, generators);
     };
 
-    var makeRowHeader = function (grid, detail, comparator, generators) {
-      var gens = function () {
-        var list = [];
+    var headerGenerators = function (comparator, generators, scope) {
+    
+      var list = [];
 
-        var find = function (element) {
-          var raw = Arr.find(list, function (x) { return comparator(x.item, element); });
-          return Option.from(raw);
-        };
-
-        var makeNew = function (element) {
-          console.log('element: ', element, generators);
-          var cell = generators.replace(element, 'th', {
-            scope: 'col'
-          });
-          list.push({ item: element, sub: cell });
-          return cell;
-        };
-      
-        var replaceOrInit = function (element, comparator) {
-          return find(element).fold(function () {
-            return makeNew(element);
-          }, function (p) {
-            return comparator(element, p.item) ? p.sub : makeNew(element);
-          });
-        };
-
-        return {
-          replaceOrInit: replaceOrInit
-        };
+      var find = function (element) {
+        var raw = Arr.find(list, function (x) { return comparator(x.item, element); });
+        return Option.from(raw);
       };
 
-      return ModelOperations.replaceRow(grid, detail.row(), comparator, gens());
+      var makeNew = function (element) {
+        console.log('element: ', element, generators);
+        var cell = generators.replace(element, 'th', {
+          scope: scope
+        });
+        list.push({ item: element, sub: cell });
+        return cell;
+      };
+    
+      var replaceOrInit = function (element, comparator) {
+        return find(element).fold(function () {
+          return makeNew(element);
+        }, function (p) {
+          return comparator(element, p.item) ? p.sub : makeNew(element);
+        });
+      };
+
+      return {
+        replaceOrInit: replaceOrInit
+      };
+    };
+
+    var makeRowHeader = function (grid, detail, comparator, generators) {     
+      return ModelOperations.replaceRow(grid, detail.row(), comparator, headerGenerators(comparator, generators, 'col'));
+    };
+
+    var makeColumnHeader = function (grid, detail, comparator, generators) {     
+      return ModelOperations.replaceColumn(grid, detail.column(), comparator, headerGenerators(comparator, generators, 'row'));
     };
 
     /* END HACKING */
@@ -277,7 +282,7 @@ define(
       insertColumnAfter: modify2(insertColumnAfter, resize, Fun.noop),
       eraseColumn: modify(ColumnModification.erase, resize, prune),
       eraseRow: modify(RowModification.erase, Fun.noop, prune),
-      makeColumnHeader: modify(ColumnModification.makeHeader, Fun.noop, Fun.noop),
+      makeColumnHeader: modify2(makeColumnHeader, Fun.noop, Fun.noop, Fun.identity),
       unmakeColumnHeader: modify(ColumnModification.unmakeHeader, Fun.noop, Fun.noop),
       makeRowHeader: modify2(makeRowHeader, Fun.noop, Fun.noop, Fun.identity),
       unmakeRowHeader: modify(RowModification.unmakeHeader, Fun.noop, Fun.noop),
