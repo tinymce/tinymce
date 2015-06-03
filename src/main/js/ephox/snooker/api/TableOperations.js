@@ -200,7 +200,7 @@ define(
       return ModelOperations.insertColumnAt(grid, targetIndex, example, comparator, generators);
     };
 
-    var headerGenerators = function (comparator, generators, scope) {
+    var headerGenerators = function (comparator, generators, scope, tag) {
     
       var list = [];
 
@@ -211,7 +211,7 @@ define(
 
       var makeNew = function (element) {
         console.log('element: ', element, generators);
-        var cell = generators.replace(element, 'th', {
+        var cell = generators.replace(element, tag, {
           scope: scope
         });
         list.push({ item: element, sub: cell });
@@ -232,11 +232,15 @@ define(
     };
 
     var makeRowHeader = function (grid, detail, comparator, generators) {     
-      return ModelOperations.replaceRow(grid, detail.row(), comparator, headerGenerators(comparator, generators, 'col'));
+      return ModelOperations.replaceRow(grid, detail.row(), comparator, headerGenerators(comparator, generators, 'col', 'th'));
     };
 
     var makeColumnHeader = function (grid, detail, comparator, generators) {     
-      return ModelOperations.replaceColumn(grid, detail.column(), comparator, headerGenerators(comparator, generators, 'row'));
+      return ModelOperations.replaceColumn(grid, detail.column(), comparator, headerGenerators(comparator, generators, 'row', 'th'));
+    };
+
+    var unmakeRowHeader = function (grid, detail, comparator, generators) {     
+      return ModelOperations.replaceRow(grid, detail.row(), comparator, headerGenerators(comparator, generators, null, 'td'));
     };
 
     /* END HACKING */
@@ -285,7 +289,7 @@ define(
       makeColumnHeader: modify2(makeColumnHeader, Fun.noop, Fun.noop, Fun.identity),
       unmakeColumnHeader: modify(ColumnModification.unmakeHeader, Fun.noop, Fun.noop),
       makeRowHeader: modify2(makeRowHeader, Fun.noop, Fun.noop, Fun.identity),
-      unmakeRowHeader: modify(RowModification.unmakeHeader, Fun.noop, Fun.noop),
+      unmakeRowHeader: modify2(unmakeRowHeader, Fun.noop, Fun.noop, Fun.identity),
       mergeCells: Fun.identity
     };
   }
