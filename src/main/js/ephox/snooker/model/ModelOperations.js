@@ -51,8 +51,12 @@ define(
 
     var replaceColumn = function (grid, index, comparator, substitution) {
       // Make this efficient later.
-      var targets = Arr.bind(grid, function (row, i) { 
-        return row[index] !== undefined && (i === 0 || !(comparator(grid[i - 1][index], row[index]))) ? [ row[index] ] : [];
+      var targets = Arr.bind(grid, function (row, i) {
+        if (row[index] !== undefined && (i === 0 || !(comparator(grid[i - 1][index], row[index])))) {
+          return index === 0 || !(comparator(row[index], row[index-1])) ? [ row[index] ] : [];
+        } else {
+          return [];
+        }
       });
 
       var isTarget = function (elem) {
@@ -61,7 +65,7 @@ define(
 
       return Arr.map(grid, function (row) {
         return Arr.map(row, function (cell) {
-          return isTarget(cell) ? substitution.replaceOrInit(cell) : cell;
+          return isTarget(cell) ? substitution.replaceOrInit(cell, comparator) : cell;
         });
       });
     };

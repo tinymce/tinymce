@@ -47,16 +47,18 @@ test(
 
     var headerGenerators = function () {
       var prior = Option.none();
+      var counter = 0;
       var replaceOrInit = function (element, comparator) {
         return prior.fold(function () {
-          var r = 'h(' + element + ')';
+          var r = 'h(' + element + ')_' + counter;
+          counter++;
           prior = Option.some({ item: element, sub: r });
           return r;
         }, function (p) {
           if (comparator(element, p.item)) {
             return p.sub;
           } else {
-            var r = '?_' + counter;
+            var r = 'h(' + element + ')_' + counter;
             prior = Option.some({ item: element, sub: r });
             return r;
           }
@@ -241,10 +243,20 @@ test(
 
       check([[]], [[]], 0);
       check([
-        [ 'h(a)' ]
+        [ 'h(a)_0' ]
       ], [
         [ 'a' ]
       ], 0);
+
+      check([
+        [ 'a', 'a', 'a' ],
+        [ 'b', 'h(c)_0', 'd' ],
+        [ 'e', 'h(f)_1', 'h(f)_1' ]
+      ], [
+        [ 'a', 'a', 'a' ],
+        [ 'b', 'c', 'd' ],
+        [ 'e', 'f', 'f' ]
+      ], 1);
     })();
   }
 );
