@@ -49,16 +49,7 @@ define(
       return Divide.generate(grid, target, comparator, substitution);
     };
 
-    var replaceColumn = function (grid, index, comparator, substitution) {
-      // Make this efficient later.
-      var targets = Arr.bind(grid, function (row, i) {
-        if (row[index] !== undefined && (i === 0 || !(comparator(grid[i - 1][index], row[index])))) {
-          return index === 0 || !(comparator(row[index], row[index-1])) ? [ row[index] ] : [];
-        } else {
-          return [];
-        }
-      });
-
+    var replaceIn = function (grid, targets, comparator, substitution) {
       var isTarget = function (elem) {
         return Arr.exists(targets, Fun.curry(comparator, elem));
       };
@@ -70,6 +61,36 @@ define(
       });
     };
 
+    var replaceColumn = function (grid, index, comparator, substitution) {
+      // Make this efficient later.
+      var targets = Arr.bind(grid, function (row, i) {
+        // check if already added.
+        if (row[index] !== undefined && (i === 0 || !(comparator(grid[i - 1][index], row[index])))) {
+          // check if starting at the this column
+          return index === 0 || !(comparator(row[index], row[index-1])) ? [ row[index] ] : [];
+        } else {
+          return [];
+        }
+      });
+
+      return replaceIn(grid, targets, comparator, substitution);
+    };
+
+    var replaceRow = function (grid, index, comparator, substitution) {
+      var targetRow = grid[index];
+      var targets = Arr.bind(targetRow, function (item, i) {
+        // Check that we haven't already added this one.
+        if (i === 0 || !(comparator(item, targetRow[i - 1]))) {
+          // check if starting at this row.
+          return index === 0 || !(comparator(grid[index - 1][i], item)) ? [ item ] : [];
+        } else {
+          return [];
+        }
+      });
+
+      return replaceIn(grid, targets, comparator, substitution);
+    };
+
     return {
       merge: merge,
       unmerge: unmerge,
@@ -77,7 +98,8 @@ define(
       insertColumnAt: insertColumnAt,
       deleteColumnAt: deleteColumnAt,
       deleteRowAt: deleteRowAt,
-      replaceColumn: replaceColumn
+      replaceColumn: replaceColumn,
+      replaceRow: replaceRow
     };
   }
 );
