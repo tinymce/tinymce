@@ -29,68 +29,16 @@ define(
     };
 
     var findItem = function (warehouse, item, comparator) {
-      var rowData = warehouse.all();
-      // There would be a more efficient way of doing this, but we can keep this for the time being.
-      var flattened = Arr.flatten(Arr.map(rowData, function (row) { return row.cells(); }));
-      var raw = Arr.find(flattened, function (cell) {
-        return comparator(item, cell.element());
+      var filtered = filterItems(warehouse, function (detail) {
+        return comparator(item, detail.element());
       });
 
-      return raw !== undefined ? Option.some(raw) : Option.none();
+      return filtered.length > 0 ? Option.some(filtered[0]) : Option.none();
     };
 
-
-    var gridFrom = function (list, f) {
-      // list is an array of objects, made by cells and elements
-      // elements: is the TR
-      // cells: is an array of objects representing the cells in the row.
-      //        It is made of:
-      //          colspan (merge cell)
-      //          element
-      //          rowspan (merge cols)
-      var access = {};
-      var cells = [];
-
-      Arr.each(list, function (details, r) {
-        var currentRow = [];
-        Arr.each(details.cells(), function (detail, c) {
-          var start = 0;
-
-          // If this spot has been taken by a previous rowspan, skip it.
-          while (access[key(r, start)] !== undefined) {
-            start++;
-          }
-
-          var current = Structs.extended(detail.element(), detail.rowspan(), detail.colspan(), r, start);
-
-          // Occupy all the (row, column) positions that this cell spans for.
-          for (var i = 0; i < detail.colspan(); i++) {
-            for (var j = 0; j < detail.rowspan(); j++) {
-              var cr = r + j;
-              var cc = start + i;
-              var newpos = key(cr, cc);
-              access[newpos] = current;
-              maxRows = Math.max(maxRows, cr + 1);
-              maxColumns = Math.max(maxColumns, cc + 1);
-            }
-          }
-
-          currentRow.push(current);
-        });
-
-        cells.push(Structs.rowdata(details.element(), currentRow));
-      });
-
-      //
-
-      var grid = Structs.grid(maxRows, maxColumns);
-
-      return {
-        grid: Fun.constant(grid),
-        access: Fun.constant(access),
-        all: Fun.constant(cells)
-      };
-
+    var filterItems = function (warehouse, predicate) {
+      var all = Arr.bind(warehouse.all(), function (r) { return r.cells(); });
+      return Arr.filter(all, predicate);
     };
 
     /*
@@ -167,6 +115,7 @@ define(
       getAt: getAt,
       domAt: domAt,
       findItem: findItem,
+      filterItems: filterItems,
       justCells: justCells
     };
   }
