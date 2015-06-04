@@ -525,7 +525,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			}
 		});
 
-		editor.on('nodeChange', repositionHandler);
+		editor.on('nodeChange ResizeEditor', repositionHandler);
 
 		editor.on('remove', function() {
 			tinymce.each(contextToolbars, function(toolbar) {
