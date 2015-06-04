@@ -30,13 +30,6 @@ define(
       return SelectorFind.ancestor(container, 'table');
     };
 
-    // Note, bIndex is not necessarily higher than aIndex
-    var sliceInterval = function (xs, aIndex, bIndex) {
-      var minRowIndex = Math.min(aIndex, bIndex);
-      var maxRowIndex = Math.max(aIndex, bIndex);
-      return xs.slice(minRowIndex, maxRowIndex + 1);
-    };
-
     var identify = function (start, finish) {
       // So ignore the colspan, rowspan for the time being.
       return DomParent.sharedOne(lookupTable, [ start, finish ]).bind(function (tbl) {
@@ -44,16 +37,6 @@ define(
         return Rectangular.getBox(tbl, start, finish).map(function (info) {
           var all = Arr.bind(info.warehouse.all(), function (r) { return r.cells(); });
           var filtered = Arr.filter(all, function (detail) {
-            // Taken from spanning cells.
-      //       var cellFinishRow = cell.row() + cell.rowspan()-1;
-      // var cellFinishCol = cell.column() + cell.colspan()-1;
-      // var cellStartRow = cell.row();
-      // var cellStartCol = cell.column();
-
-      // return  cellStartCol >= check.startCol() &&
-      //         cellFinishCol <= check.finishCol() &&
-      //         cellStartRow >= check.startRow() &&
-      //         cellFinishRow <= check.finishRow();
             return (
               (detail.column() >= info.startCol() && detail.column()  <= info.finishCol()) ||
               (detail.column() + detail.colspan() - 1 >= info.startCol() && detail.column() + detail.colspan() - 1 <= info.finishCol())
@@ -65,39 +48,6 @@ define(
 
           return Arr.map(filtered, function (f) { return f.element(); });
         });
-
-        // var findInWarehouse = function (cell) {
-        //   return Option.from(Arr.find(Obj.values(access), function (a) {
-        //     return Compare.eq(a.element(), cell);
-        //   }));
-        // }
-
-        // var list = DetailsList.fromTable(tbl);
-
-        // var warehouse = Warehouse.generate(list);
-
-        // var startDetail = findInWarehouse(start);
-        // var finishDetail = findInWarehouse(finish);
-
-        // return startDetail.bind(function (sDetail) {
-        //   return finishDetail.bind(function (fDetail) {
-        //     var minRow = Math.min(sDetail.row(), fDetail.row());
-        //     var maxRow = Math.max(sDetail.row() + sDetail.rowspan()
-        //   });
-        // });
-
-
-        // // For all the rows, identify the information.
-        // var rows = SelectorFilter.descendants(tbl, 'tr');
-        // return CellFinder.findInTable(start).bind(function (startData) {
-        //   return CellFinder.findInTable(finish).map(function (finishData) {
-        //     var subrows = sliceInterval(rows, startData.rowIndex(), finishData.rowIndex());
-        //     return Arr.bind(subrows, function (r) {
-        //       var cells = SelectorFilter.children(r, 'td,th');
-        //       return sliceInterval(cells, startData.colIndex(), finishData.colIndex());
-        //     });
-        //   });
-        // });
       });
     };
 
