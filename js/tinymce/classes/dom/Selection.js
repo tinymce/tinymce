@@ -387,6 +387,13 @@ define("tinymce/dom/Selection", [
 		select: function(node, content) {
 			var self = this, dom = self.dom, rng = dom.createRng(), idx;
 
+			if (!content && self.getSel().setBaseAndExtent) {
+				if (node.nodeName == "IMG") {
+					self.getSel().setBaseAndExtent(node, 0, node, 1);
+					return;
+				}
+			}
+
 			// Clear stored range set by FocusManager
 			self.lastFocusBookmark = null;
 
