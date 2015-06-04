@@ -73,6 +73,10 @@ define("tinymce/Formatter", [
 			return /^(TH|TD)$/.test(node.nodeName);
 		}
 
+		function isInlineBlock(node) {
+			return node && /^(IMG)$/.test(node.nodeName);
+		}
+
 		function getParents(node, selector) {
 			return dom.getParents(node, selector, dom.getRoot());
 		}
@@ -2289,6 +2293,12 @@ define("tinymce/Formatter", [
 			var container = rng.startContainer,
 					offset = rng.startOffset, isAtEndOfText,
 					walker, node, nodes, tmpNode;
+
+			if (rng.startContainer == rng.endContainer) {
+				if (isInlineBlock(rng.startContainer.childNodes[rng.startOffset])) {
+					return;
+				}
+			}
 
 			// Convert text node into index if possible
 			if (container.nodeType == 3 && offset >= container.nodeValue.length) {
