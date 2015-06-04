@@ -6,6 +6,7 @@ define(
     'ephox.lid.Jam',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.snooker.api.Generators',
     'ephox.snooker.api.TableLookup',
     'ephox.snooker.model.RunOperation',
     'ephox.snooker.operate.MergingOperations',
@@ -22,7 +23,7 @@ define(
     'global!parseInt'
   ],
 
-  function (Arr, Jam, Fun, Option, TableLookup, RunOperation, MergingOperations, ModificationOperations, TransformOperations, Adjustments, Attr, Compare, Element, InsertAll, Node, Remove, Traverse, parseInt) {
+  function (Arr, Jam, Fun, Option, Generators, TableLookup, RunOperation, MergingOperations, ModificationOperations, TransformOperations, Adjustments, Attr, Compare, Element, InsertAll, Node, Remove, Traverse, parseInt) {
     var prune = function (table) {
       var cells = TableLookup.cells(table);
       if (cells.length === 0) Remove.remove(table);
@@ -192,17 +193,17 @@ define(
 
     return {
       //operation, adjustment, postAction, genWrappers
-      insertRowBefore: RunOperation.run(insertRowBefore, RunOperation.onCell, Fun.noop, Fun.noop, hackGenerators),
-      insertRowAfter:  RunOperation.run(insertRowAfter, RunOperation.onCell, Fun.noop, Fun.noop, hackGenerators),
-      insertColumnBefore:  RunOperation.run(insertColumnBefore, RunOperation.onCell, resize, Fun.noop, hackGenerators),
-      insertColumnAfter:  RunOperation.run(insertColumnAfter, RunOperation.onCell, resize, Fun.noop, hackGenerators),
-      eraseColumn:  RunOperation.run(eraseColumn, RunOperation.onCell, resize, prune, hackGenerators),
-      eraseRow:  RunOperation.run(eraseRow, RunOperation.onCell, Fun.noop, prune, hackGenerators),
+      insertRowBefore: RunOperation.run(insertRowBefore, RunOperation.onCell, Fun.noop, Fun.noop, Generators.cached),
+      insertRowAfter:  RunOperation.run(insertRowAfter, RunOperation.onCell, Fun.noop, Fun.noop, Generators.cached),
+      insertColumnBefore:  RunOperation.run(insertColumnBefore, RunOperation.onCell, resize, Fun.noop, Generators.cached),
+      insertColumnAfter:  RunOperation.run(insertColumnAfter, RunOperation.onCell, resize, Fun.noop, Generators.cached),
+      eraseColumn:  RunOperation.run(eraseColumn, RunOperation.onCell, resize, prune, Generators.cached),
+      eraseRow:  RunOperation.run(eraseRow, RunOperation.onCell, Fun.noop, prune, Generators.cached),
       makeColumnHeader:  RunOperation.run(makeColumnHeader, RunOperation.onCell, Fun.noop, Fun.noop, Fun.curry(headerGenerators, Compare.eq, 'row', 'th')),
       unmakeColumnHeader:  RunOperation.run(unmakeColumnHeader, RunOperation.onCell, Fun.noop, Fun.noop, Fun.curry(headerGenerators, Compare.eq, null, 'td')),
       makeRowHeader:  RunOperation.run(makeRowHeader, RunOperation.onCell, Fun.noop, Fun.noop, Fun.curry(headerGenerators, Compare.eq, 'col', 'th')),
       unmakeRowHeader:  RunOperation.run(unmakeRowHeader, RunOperation.onCell, Fun.noop, Fun.noop, Fun.curry(headerGenerators, Compare.eq, null, 'td')),
-      mergeCells: RunOperation.run(mergeCells, RunOperation.onMergable, Fun.noop, Fun.noop, hackGenerators),
+      mergeCells: RunOperation.run(mergeCells, RunOperation.onMergable, Fun.noop, Fun.noop, Generators.cached),
       unmergeCells: RunOperation.run(unmergeCells, RunOperation.onUnmergable, Fun.noop, Fun.noop, Fun.identity)
     };
   }
