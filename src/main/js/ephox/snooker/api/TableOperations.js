@@ -30,47 +30,6 @@ define(
     };
 
     /* HACKING */
-
-    var hackGenerators = function (generators) {
-      console.log('generators', generators);
-      var nu = function (element) {
-        return generators.cell(element);
-      };
-
-      var _nu = function (element) {
-        var colspan = Attr.has(element, 'colspan') ? parseInt(Attr.get(element, 'colspan')) : 1;
-        var rowspan = Attr.has(element, 'rowspan') ? parseInt(Attr.get(element, 'rowspan')) : 1;
-        return nu({
-          element: Fun.constant(element),
-          colspan: Fun.constant(colspan),
-          rowspan: Fun.constant(rowspan)
-        });
-      };
-
-      var prior = Option.none();
-
-      var getOrInit = function (element, comparator) {
-        return prior.fold(function () {
-          var r = _nu(element);
-          prior = Option.some({ item: element, sub: r });
-          return r;
-        }, function (p) {
-          if (comparator(element, p.item)) {
-            return p.sub;
-          } else {
-            var r = _nu(element);
-            prior = Option.some({ item: element, sub: r });
-            return r;
-          }
-        });
-      };
-
-      return {
-        nu: nu,
-        getOrInit: getOrInit
-      };
-    };
-
     var insertRowBefore = function (grid, detail, comparator, genWrappers) {
       var example = detail.row();
       var targetIndex = detail.row();
@@ -176,13 +135,7 @@ define(
       console.log('unmergable', unmergable[0]);
 
       return Arr.foldr(unmergable, function (b, cell) {
-        return MergingOperations.unmerge(b, cell, comparator, function (elem) {
-          return generators.cell({
-            element: Fun.constant(cell),
-            colspan: Fun.constant(1),
-            rowspan: Fun.constant(1)
-          });
-        });
+        return MergingOperations.unmerge(b, cell, comparator, generators(cell));
       }, grid);
     };
 
@@ -193,18 +146,18 @@ define(
 
     return {
       //operation, adjustment, postAction, genWrappers
-      insertRowBefore: RunOperation.run(insertRowBefore, RunOperation.onCell, Fun.noop, Fun.noop, Generators.cached),
-      insertRowAfter:  RunOperation.run(insertRowAfter, RunOperation.onCell, Fun.noop, Fun.noop, Generators.cached),
-      insertColumnBefore:  RunOperation.run(insertColumnBefore, RunOperation.onCell, resize, Fun.noop, Generators.cached),
-      insertColumnAfter:  RunOperation.run(insertColumnAfter, RunOperation.onCell, resize, Fun.noop, Generators.cached),
-      eraseColumn:  RunOperation.run(eraseColumn, RunOperation.onCell, resize, prune, Generators.cached),
-      eraseRow:  RunOperation.run(eraseRow, RunOperation.onCell, Fun.noop, prune, Generators.cached),
-      makeColumnHeader:  RunOperation.run(makeColumnHeader, RunOperation.onCell, Fun.noop, Fun.noop, Fun.curry(headerGenerators, Compare.eq, 'row', 'th')),
-      unmakeColumnHeader:  RunOperation.run(unmakeColumnHeader, RunOperation.onCell, Fun.noop, Fun.noop, Fun.curry(headerGenerators, Compare.eq, null, 'td')),
-      makeRowHeader:  RunOperation.run(makeRowHeader, RunOperation.onCell, Fun.noop, Fun.noop, Fun.curry(headerGenerators, Compare.eq, 'col', 'th')),
-      unmakeRowHeader:  RunOperation.run(unmakeRowHeader, RunOperation.onCell, Fun.noop, Fun.noop, Fun.curry(headerGenerators, Compare.eq, null, 'td')),
-      mergeCells: RunOperation.run(mergeCells, RunOperation.onMergable, Fun.noop, Fun.noop, Generators.cached),
-      unmergeCells: RunOperation.run(unmergeCells, RunOperation.onUnmergable, Fun.noop, Fun.noop, Fun.identity)
+      insertRowBefore: RunOperation.run(insertRowBefore, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification),
+      insertRowAfter:  RunOperation.run(insertRowAfter, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification),
+      insertColumnBefore:  RunOperation.run(insertColumnBefore, RunOperation.onCell, resize, Fun.noop, Generators.modification),
+      insertColumnAfter:  RunOperation.run(insertColumnAfter, RunOperation.onCell, resize, Fun.noop, Generators.modification),
+      eraseColumn:  RunOperation.run(eraseColumn, RunOperation.onCell, resize, prune, Generators.modification),
+      eraseRow:  RunOperation.run(eraseRow, RunOperation.onCell, Fun.noop, prune, Generators.modification),
+      makeColumnHeader:  RunOperation.run(makeColumnHeader, RunOperation.onCell, Fun.noop, Fun.noop, Generators.transform('row', 'th')),
+      unmakeColumnHeader:  RunOperation.run(unmakeColumnHeader, RunOperation.onCell, Fun.noop, Fun.noop, Generators.transform(null, 'td')),
+      makeRowHeader:  RunOperation.run(makeRowHeader, RunOperation.onCell, Fun.noop, Fun.noop, Generators.transform('col', 'th')),
+      unmakeRowHeader:  RunOperation.run(unmakeRowHeader, RunOperation.onCell, Fun.noop, Fun.noop, Generators.transform(null, 'td')),
+      mergeCells: RunOperation.run(mergeCells, RunOperation.onMergable, Fun.noop, Fun.noop, Generators.merging),
+      unmergeCells: RunOperation.run(unmergeCells, RunOperation.onUnmergable, Fun.noop, Fun.noop, Generators.merging)
     };
   }
 );

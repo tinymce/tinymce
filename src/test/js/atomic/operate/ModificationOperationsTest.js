@@ -4,45 +4,29 @@ test(
   [
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.snooker.api.Generators',
     'ephox.snooker.operate.ModificationOperations'
   ],
 
-  function (Fun, Option, ModificationOperations) {
-    var generators = function () {
+  function (Fun, Option, Generators, ModificationOperations) {
+    var rawGenerator = function () {
       var counter = 0;
-      var prior = Option.none();
-      var getOrInit = function (element, comparator) {
-        return prior.fold(function () {
-          var r = '?_' + counter;
-          counter++;
-          prior = Option.some({ item: element, sub: r });
-          return r;
-        }, function (p) {
-          if (comparator(element, p.item)) {
-            return p.sub;
-          } else {
-            var r = '?_' + counter;
-            counter++;
-            prior = Option.some({ item: element, sub: r });
-            return r;
-          }
-        });
-      };
 
-      var nu = function () {
-        return '?';
+      var cell = function () {
+        var r = '?_' + counter;
+        counter++;
+        return r;
       };
 
       return {
-        getOrInit: getOrInit,
-        nu: nu
+        cell: cell
       };
     };
-    
+
     // Test basic insert column
     (function () {
       var check = function (expected, grid, example, index) {
-        var actual = ModificationOperations.insertColumnAt(grid, index, example, Fun.tripleEquals, generators());
+        var actual = ModificationOperations.insertColumnAt(grid, index, example, Fun.tripleEquals, Generators.modification(rawGenerator(), Fun.identity));
         assert.eq(expected, actual);
       };
 
@@ -100,7 +84,7 @@ test(
     // Test basic insert row
     (function () {
       var check = function (expected, grid, example, index) {
-        var actual = ModificationOperations.insertRowAt(grid, index, example, Fun.tripleEquals, generators());
+        var actual = ModificationOperations.insertRowAt(grid, index, example, Fun.tripleEquals, Generators.modification(rawGenerator(), Fun.identity));
         assert.eq(expected, actual);
       };
 

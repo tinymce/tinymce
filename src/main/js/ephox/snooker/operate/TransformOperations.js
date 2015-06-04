@@ -15,7 +15,7 @@ define(
 
       return Arr.map(grid, function (row) {
         return Arr.map(row, function (cell) {
-          return isTarget(cell) ? substitution.replaceOrInit(cell, comparator) : cell;
+          return isTarget(cell) ? substitution(cell, comparator) : cell;
         });
       });
     };

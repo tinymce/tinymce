@@ -2,13 +2,14 @@ define(
   'ephox.snooker.api.Generators',
 
   [
+    'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Attr'
   ],
 
-  function (Fun, Option, Attr) {
-    var toData = function (element) {
+  function (Arr, Fun, Option, Attr) {
+    var elementToData = function (element) {
       var colspan = Attr.has(element, 'colspan') ? parseInt(Attr.get(element, 'colspan')) : 1;
       var rowspan = Attr.has(element, 'rowspan') ? parseInt(Attr.get(element, 'rowspan')) : 1;
       return {
@@ -18,7 +19,10 @@ define(
       };
     };
 
-    var cached = function (generators) {
+    var modification = function (generators, _toData) {
+      console.log('generators in modification', generators);
+      var toData = _toData !== undefined ? _toData : elementToData;
+
       var nu = function (data) {
         return generators.cell(data);
       };
@@ -43,19 +47,57 @@ define(
         });
       };
 
-      return {
-        getOrInit: getOrInit,
-        nu: nu
+      return getOrInit;
+    };
+
+    var transform = function (scope, tag) {
+      return function (generators) {
+        var list = [];
+
+        var find = function (element, comparator) {
+          var raw = Arr.find(list, function (x) { return comparator(x.item, element); });
+          return Option.from(raw);
+        };
+
+        var makeNew = function (element) {
+          console.log('generators in transform', generators);
+          var cell = generators.replace(element, tag, {
+            scope: scope
+          });
+          console.log('done');
+          list.push({ item: element, sub: cell });
+          return cell;
+        };
+      
+        var replaceOrInit = function (element, comparator) {
+          console.log('here', replaceOrInit);
+          return find(element, comparator).fold(function () {
+            return makeNew(element);
+          }, function (p) {
+            return comparator(element, p.item) ? p.sub : makeNew(element);
+          });
+        };
+
+        return replaceOrInit;
       };
     };
 
-    var memoized = function (generators) {
-
+    var merging = function (generators) {
+      return function (cell) {
+        return function () {
+          return generators.cell({
+            element: Fun.constant(cell),
+            colspan: Fun.constant(1),
+            rowspan: Fun.constant(1)
+          });
+        };
+      };
     };
 
     return {
-      cached: cached,
-      memoized: memoized
+      modification: modification,
+      transform: transform,
+      merging: merging
     };
   }
 );

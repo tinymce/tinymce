@@ -3,44 +3,29 @@ test(
 
   [
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
+    'ephox.snooker.api.Generators',
     'ephox.snooker.operate.TransformOperations'
   ],
 
-  function (Fun, Option, TransformOperations) {
-    var headerGenerators = function () {
+  function (Fun, Generators, TransformOperations) {
+    var rawGenerator = function () {
       var counter = 0;
 
-      // We need a store so row processing.
-      var store = {};
-
-      var replaceOrInit = function (element, comparator) {
-        return Option.from(store[element]).fold(function () {
-          var r = 'h(' + element + ')_' + counter;
-          counter++;
-          store[element] = { item: element, sub: r };
-          return r;
-        }, function (p) {
-          if (comparator(element, p.item)) {
-            return p.sub;
-          } else {
-            var r = 'h(' + element + ')_' + counter;
-            counter++;
-            store[element] = { item: element, sub: r };
-            return r;
-          }
-        });
+      var replace = function (name) {
+        var r = 'h(' + name + ')_' + counter;
+        counter++;
+        return r;
       };
 
       return {
-        replaceOrInit: replaceOrInit
+        replace: replace
       };
     };
 
     // Test basic changing to header (column)
     (function () {
       var check = function (expected, grid, index) {
-        var actual = TransformOperations.replaceColumn(grid, index, Fun.tripleEquals, headerGenerators());
+        var actual = TransformOperations.replaceColumn(grid, index, Fun.tripleEquals, Generators.transform('scope', 'tag')(rawGenerator(), Fun.identity));
         assert.eq(expected, actual);
       };
 
@@ -97,7 +82,7 @@ test(
     // Test basic changing to header (row)
     (function () {
       var check = function (expected, grid, index) {
-        var actual = TransformOperations.replaceRow(grid, index, Fun.tripleEquals, headerGenerators());
+        var actual = TransformOperations.replaceRow(grid, index, Fun.tripleEquals, Generators.transform('scope', 'tag')(rawGenerator(), Fun.identity));
         assert.eq(expected, actual);
       };
 

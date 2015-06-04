@@ -13,7 +13,7 @@ define(
 
       var between = Arr.map(grid[example], function (ex, c) {
         var withinSpan = index > 0 && index < grid.length && comparator(grid[index - 1][c], grid[index][c]);
-        return withinSpan ? grid[index][c] : substitution.getOrInit(ex, comparator);
+        return withinSpan ? grid[index][c] : substitution(ex, comparator);
       });
 
       return before.concat([ between ]).concat(after);
@@ -23,7 +23,7 @@ define(
     var insertColumnAt = function (grid, index, example, comparator, substitution) {
       return Arr.map(grid, function (row) {
         var withinSpan = index > 0 && index < row.length && comparator(row[index - 1], row[index]);
-        var sub = withinSpan ? row[index] : substitution.getOrInit(row[example], comparator);
+        var sub = withinSpan ? row[index] : substitution(row[example], comparator);
         return row.slice(0, index).concat([ sub ]).concat(row.slice(index));
       });
     };
