@@ -45,6 +45,20 @@ define(
       return Option.from(raw);
     };
 
+    var getEdges = function (container) {
+      return SelectorFind.descendant(container, '.' + Ephemera.firstSelectedClass()).bind(function (first) {
+        return SelectorFind.descendant(container, '.' + Ephemera.lastSelectedClass()).bind(function (last) {
+          return DomParent.sharedOne(lookupTable, [ first, last ]).map(function (tbl) {
+            return {
+              first: Fun.constant(first),
+              last: Fun.constant(last),
+              table: Fun.constant(tbl)
+            };
+          });
+        });
+      });
+    };
+
     var expandTo = function (finish) {
       return SelectorFind.ancestor(finish, 'table').bind(function (table) {
         return SelectorFind.descendant(table, '.' + Ephemera.firstSelectedClass()).bind(function (start) {
@@ -82,7 +96,8 @@ define(
       retrieve: retrieve,
       shiftSelection: shiftSelection,
       isSelected: isSelected,
-      selectRange: selectRange
+      selectRange: selectRange,
+      getEdges: getEdges
     };
   }
 );
