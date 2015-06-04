@@ -9,39 +9,16 @@ define(
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
     'ephox.sugar.api.Compare',
-    'ephox.sugar.api.ElementFind',
-    'ephox.sugar.api.SelectorFilter',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Obj, Fun, Option, DetailsList, Warehouse, Compare, ElementFind, SelectorFilter, SelectorFind) {
-    // IMPROVEMENT: Implement colspans and rowspans. Note, this will probably interact with snooker.
-    var findInTable = function (cell) {
-      return ElementFind.descendantsInAncestor(cell, 'tr', 'td,th').bind(function (cellInfo) {
-        return ElementFind.descendantsInAncestor(cellInfo.ancestor(), 'table', 'tr').map(function (rowInfo) {
-          return {
-            rowIndex: rowInfo.index,
-            colIndex: cellInfo.index
-          };
-        });
-      });
-    };
-
+  function (Arr, Obj, Fun, Option, DetailsList, Warehouse, Compare, SelectorFind) {
     var findCell = function (cell) {
       return SelectorFind.ancestor(cell, 'table').bind(function (table) {
         var list = DetailsList.fromTable(table);
 
         var warehouse = Warehouse.generate(list);
-        // console.log('warehouse', warehouse.access());
-
-
-        var access = warehouse.access();
-
-        var findMe = Arr.find(Obj.values(access), function (a) {
-          return Compare.eq(a.element(), cell);
-        });
-
-        return Option.from(findMe).map(function (detail) {
+        return Warehouse.findItem(warehouse, cell, Compare.eq).map(function (detail) {
           return {
             detail: Fun.constant(detail),
             warehouse: Fun.constant(warehouse)
@@ -63,17 +40,7 @@ define(
       });
     };
 
-    var gotoCell = function (table, rowIndex, colIndex) {
-      var rows = SelectorFilter.descendants(table, 'tr');
-      return Option.from(rows[rowIndex]).bind(function (row) {
-        var cells = SelectorFilter.children(row, 'td,th');
-        return Option.from(cells[colIndex]);
-      });
-    };
-
     return {
-      findInTable: findInTable,
-      gotoCell: gotoCell,
       moveBy: moveBy
     };
   }
