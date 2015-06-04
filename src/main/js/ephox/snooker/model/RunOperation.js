@@ -27,7 +27,7 @@ define(
           console.log('i', i, 'j', j, warehouse.access());
           h.push(Warehouse.getAt(warehouse, i, j).map(function (item) {
             return item.element();
-          }).getOrThunk(generators.hack));
+          }).getOrThunk(generators.gap));
         }
         grid.push(h);
       }
