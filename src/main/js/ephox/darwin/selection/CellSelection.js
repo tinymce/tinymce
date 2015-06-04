@@ -31,21 +31,21 @@ define(
     };
 
     var identify = function (start, finish) {
+      var inSelection = function (bounds, detail) {
+        return (
+          (detail.column() >= bounds.startCol() && detail.column()  <= bounds.finishCol()) ||
+          (detail.column() + detail.colspan() - 1 >= bounds.startCol() && detail.column() + detail.colspan() - 1 <= bounds.finishCol())
+        ) && (
+          (detail.row() >= bounds.startRow() && detail.row() <= bounds.finishRow()) ||
+          (detail.row() + detail.rowspan() - 1 >= bounds.startRow() && detail.row() + detail.rowspan() - 1 <= bounds.finishRow())
+        );
+      };
+
       // So ignore the colspan, rowspan for the time being.
       return DomParent.sharedOne(lookupTable, [ start, finish ]).bind(function (tbl) {
-        console.log('table', tbl);
         return Rectangular.getBox(tbl, start, finish).map(function (info) {
           var all = Arr.bind(info.warehouse.all(), function (r) { return r.cells(); });
-          var filtered = Arr.filter(all, function (detail) {
-            return (
-              (detail.column() >= info.startCol() && detail.column()  <= info.finishCol()) ||
-              (detail.column() + detail.colspan() - 1 >= info.startCol() && detail.column() + detail.colspan() - 1 <= info.finishCol())
-            ) && (
-              (detail.row() >= info.startRow() && detail.row() <= info.finishRow()) ||
-              (detail.row() + detail.rowspan() - 1 >= info.startRow() && detail.row() + detail.rowspan() - 1 <= info.finishRow())
-            );
-          });
-
+          var filtered = Arr.filter(all, Fun.curry(inSelection, info));
           return Arr.map(filtered, function (f) { return f.element(); });
         });
       });
