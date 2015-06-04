@@ -5,10 +5,11 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.scullion.FunctionBag',
     'ephox.sugar.api.Attr'
   ],
 
-  function (Arr, Fun, Option, Attr) {
+  function (Arr, Fun, Option, FunctionBag, Attr) {
     var elementToData = function (element) {
       var colspan = Attr.has(element, 'colspan') ? parseInt(Attr.get(element, 'colspan')) : 1;
       var rowspan = Attr.has(element, 'rowspan') ? parseInt(Attr.get(element, 'rowspan')) : 1;
@@ -20,6 +21,7 @@ define(
     };
 
     var modification = function (generators, _toData) {
+      contract(generators);
       console.log('generators in modification', generators);
       var toData = _toData !== undefined ? _toData : elementToData;
 
@@ -52,6 +54,7 @@ define(
 
     var transform = function (scope, tag) {
       return function (generators) {
+        contract(generators);
         var list = [];
 
         var find = function (element, comparator) {
@@ -83,6 +86,7 @@ define(
     };
 
     var merging = function (generators) {
+      contract(generators);
       return function (cell) {
         return function () {
           return generators.cell({
@@ -93,6 +97,8 @@ define(
         };
       };
     };
+
+    var contract = FunctionBag([ 'cell', 'row', 'replace', 'gap' ]);
 
     return {
       modification: modification,

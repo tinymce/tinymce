@@ -5,28 +5,15 @@ test(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.snooker.api.Generators',
-    'ephox.snooker.operate.ModificationOperations'
+    'ephox.snooker.operate.ModificationOperations',
+    'ephox.snooker.test.TestGenerator'
   ],
 
-  function (Fun, Option, Generators, ModificationOperations) {
-    var rawGenerator = function () {
-      var counter = 0;
-
-      var cell = function () {
-        var r = '?_' + counter;
-        counter++;
-        return r;
-      };
-
-      return {
-        cell: cell
-      };
-    };
-
+  function (Fun, Option, Generators, ModificationOperations, TestGenerator) {
     // Test basic insert column
     (function () {
       var check = function (expected, grid, example, index) {
-        var actual = ModificationOperations.insertColumnAt(grid, index, example, Fun.tripleEquals, Generators.modification(rawGenerator(), Fun.identity));
+        var actual = ModificationOperations.insertColumnAt(grid, index, example, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity));
         assert.eq(expected, actual);
       };
 
@@ -84,7 +71,7 @@ test(
     // Test basic insert row
     (function () {
       var check = function (expected, grid, example, index) {
-        var actual = ModificationOperations.insertRowAt(grid, index, example, Fun.tripleEquals, Generators.modification(rawGenerator(), Fun.identity));
+        var actual = ModificationOperations.insertRowAt(grid, index, example, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity));
         assert.eq(expected, actual);
       };
 
