@@ -2,17 +2,14 @@ define(
   'ephox.darwin.navigation.CellFinder',
 
   [
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Obj, Fun, Option, DetailsList, Warehouse, Compare, SelectorFind) {
+  function (Fun, DetailsList, Warehouse, Compare, SelectorFind) {
     var findCell = function (cell) {
       return SelectorFind.ancestor(cell, 'table').bind(function (table) {
         var list = DetailsList.fromTable(table);
