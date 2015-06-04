@@ -63,30 +63,6 @@ define(
       });
     };
 
-    var avocado = function (cell, deltaRow, deltaColumn) {
-      return SelectorFind.ancestor(cell, 'table').bind(function (table) {
-        var list = DetailsList.fromTable(table);
-
-        var warehouse = Warehouse.generate(list);
-        // console.log('warehouse', warehouse.access());
-
-
-        var access = warehouse.access();
-
-        var findMe = Arr.find(Obj.values(access), function (a) {
-          return Compare.eq(a.element(), cell);
-        });
-
-        console.log('findMe: ', findMe.element().dom());
-
-        moveBy(findMe.element(), 1, 0).each(function (m) {
-          console.log("lower: ", m.dom());
-        });
-
-        return moveBy(findMe.element(), deltaRow, deltaColumn);
-      });
-    };
-
     var gotoCell = function (table, rowIndex, colIndex) {
       var rows = SelectorFilter.descendants(table, 'tr');
       return Option.from(rows[rowIndex]).bind(function (row) {
@@ -98,7 +74,7 @@ define(
     return {
       findInTable: findInTable,
       gotoCell: gotoCell,
-      avocado: avocado
+      moveBy: moveBy
     };
   }
 );

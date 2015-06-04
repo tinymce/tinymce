@@ -127,14 +127,8 @@ define(
     };
 
     var shiftSelection = function (boxes, deltaRow, deltaColumn) {
-      console.log('shifting');
       return getLast(boxes).bind(function (last) {
-        return CellFinder.avocado(last, deltaRow, deltaColumn).bind(expandTo);
-        // return CellFinder.findInTable).bind(function (position) {
-        // console.log('position: ', position.rowIndex(), position.colIndex());
-        // return SelectorFind.ancestor(boxes[0], 'table').bind(function (table) {
-        //   return CellFinder.gotoCell(table, position.rowIndex() + deltaRow, position.colIndex() + deltaColumn).bind(expandTo);
-        // });
+        return CellFinder.moveBy(last, deltaRow, deltaColumn).bind(expandTo);
       });
     };
 
