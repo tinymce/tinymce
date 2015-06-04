@@ -5,10 +5,10 @@ test(
     'ephox.peanut.Fun',
     'ephox.scullion.Struct',
     'ephox.snooker.api.Structs',
-    'ephox.snooker.model.ModelOperations'
+    'ephox.snooker.operate.MergingOperations'
   ],
 
-  function (Fun, Struct, Structs, ModelOperations) {
+  function (Fun, Struct, Structs, MergingOperations) {
     var inputRangeStruct = Struct.immutableBag([ 'startCol', 'startRow', 'finishCol', 'finishRow' ], []);
 
     var structureA = [
@@ -24,7 +24,7 @@ test(
     });
 
     var leadCellA = 'a';
-    var resultA = ModelOperations.merge(structureA, rangeA, Fun.tripleEquals, Fun.constant(leadCellA));
+    var resultA = MergingOperations.merge(structureA, rangeA, Fun.tripleEquals, Fun.constant(leadCellA));
     var expectedA = [
       [ 'a', 'a', 'c' ],
       [ 'd', 'e', 'f' ]
@@ -45,7 +45,7 @@ test(
     });
 
     var leadCellB = 'a';
-    var resultB = ModelOperations.merge(structureB, rangeB, Fun.tripleEquals, Fun.constant(leadCellB));
+    var resultB = MergingOperations.merge(structureB, rangeB, Fun.tripleEquals, Fun.constant(leadCellB));
     var expectedB = [
       [ 'a', 'a', 'a' ],
       [ 'a', 'a', 'a' ]

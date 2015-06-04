@@ -7,8 +7,10 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.snooker.api.TableLookup',
-    'ephox.snooker.model.ModelOperations',
     'ephox.snooker.model.RunOperation',
+    'ephox.snooker.operate.MergingOperations',
+    'ephox.snooker.operate.ModificationOperations',
+    'ephox.snooker.operate.TransformOperations',
     'ephox.snooker.resize.Adjustments',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Compare',
@@ -20,7 +22,7 @@ define(
     'global!parseInt'
   ],
 
-  function (Arr, Jam, Fun, Option, TableLookup, ModelOperations, RunOperation, Adjustments, Attr, Compare, Element, InsertAll, Node, Remove, Traverse, parseInt) {
+  function (Arr, Jam, Fun, Option, TableLookup, RunOperation, MergingOperations, ModificationOperations, TransformOperations, Adjustments, Attr, Compare, Element, InsertAll, Node, Remove, Traverse, parseInt) {
     var prune = function (table) {
       var cells = TableLookup.cells(table);
       if (cells.length === 0) Remove.remove(table);
@@ -71,25 +73,25 @@ define(
     var insertRowBefore = function (grid, detail, comparator, genWrappers) {
       var example = detail.row();
       var targetIndex = detail.row();
-      return ModelOperations.insertRowAt(grid, targetIndex, example, comparator, genWrappers);
+      return ModificationOperations.insertRowAt(grid, targetIndex, example, comparator, genWrappers);
     };
 
     var insertRowAfter = function (grid, detail, comparator, genWrappers) {
       var example = detail.row();
       var targetIndex = detail.row() + detail.rowspan();
-      return ModelOperations.insertRowAt(grid, targetIndex, example, comparator, genWrappers);
+      return ModificationOperations.insertRowAt(grid, targetIndex, example, comparator, genWrappers);
     };
 
     var insertColumnAfter = function (grid, detail, comparator, genWrappers) {
       var example = detail.column();
       var targetIndex = detail.column() + detail.colspan();
-      return ModelOperations.insertColumnAt(grid, targetIndex, example, comparator, genWrappers);
+      return ModificationOperations.insertColumnAt(grid, targetIndex, example, comparator, genWrappers);
     };
 
     var insertColumnBefore = function (grid, detail, comparator, genWrappers) {
       var example = detail.column();
       var targetIndex = detail.column();
-      return ModelOperations.insertColumnAt(grid, targetIndex, example, comparator, genWrappers);
+      return ModificationOperations.insertColumnAt(grid, targetIndex, example, comparator, genWrappers);
     };
 
     var headerGenerators = function (comparator, scope, tag, generators) {
@@ -123,27 +125,27 @@ define(
     };
 
     var makeRowHeader = function (grid, detail, comparator, genWrappers) {     
-      return ModelOperations.replaceRow(grid, detail.row(), comparator, genWrappers);
+      return TransformOperations.replaceRow(grid, detail.row(), comparator, genWrappers);
     };
 
     var makeColumnHeader = function (grid, detail, comparator, genWrappers) {     
-      return ModelOperations.replaceColumn(grid, detail.column(), comparator, genWrappers);
+      return TransformOperations.replaceColumn(grid, detail.column(), comparator, genWrappers);
     };
 
     var unmakeRowHeader = function (grid, detail, comparator, genWrappers) {     
-      return ModelOperations.replaceRow(grid, detail.row(), comparator, genWrappers);
+      return TransformOperations.replaceRow(grid, detail.row(), comparator, genWrappers);
     };
 
     var unmakeColumnHeader = function (grid, detail, comparator, genWrappers) {     
-      return ModelOperations.replaceColumn(grid, detail.column(), comparator, genWrappers);
+      return TransformOperations.replaceColumn(grid, detail.column(), comparator, genWrappers);
     };
 
     var eraseColumn = function (grid, detail, comparator, generators) {
-      return ModelOperations.deleteColumnAt(grid, detail.column());
+      return ModificationOperations.deleteColumnAt(grid, detail.column());
     };
 
     var eraseRow = function (grid, detail, comparator, generators) {
-      return ModelOperations.deleteRowAt(grid, detail.row());
+      return ModificationOperations.deleteRowAt(grid, detail.row());
     };
 
     var mergeContent = function (cells) {
@@ -166,14 +168,14 @@ define(
     var mergeCells = function (grid, mergable, comparator, _generators) {
       var cells = mergable.cells();
       mergeContent(cells);
-      return ModelOperations.merge(grid, mergable, comparator, Fun.constant(cells[0]));
+      return MergingOperations.merge(grid, mergable, comparator, Fun.constant(cells[0]));
     };
 
     var unmergeCells = function (grid, unmergable, comparator, generators) {
       console.log('unmergable', unmergable[0]);
 
       return Arr.foldr(unmergable, function (b, cell) {
-        return ModelOperations.unmerge(b, cell, comparator, function (elem) {
+        return MergingOperations.unmerge(b, cell, comparator, function (elem) {
           return generators.cell({
             element: Fun.constant(cell),
             colspan: Fun.constant(1),
