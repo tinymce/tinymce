@@ -8,7 +8,7 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.robin.api.dom.DomParent',
-    'ephox.snooker.selection.Rectangular',
+    'ephox.snooker.api.TablePositions',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.OnNode',
     'ephox.sugar.api.SelectorFilter',
@@ -16,7 +16,7 @@ define(
     'global!Math'
   ],
 
-  function (Arr, Ephemera, CellFinder, Fun, Option, DomParent, Rectangular, Class, OnNode, SelectorFilter, SelectorFind, Math) {
+  function (Arr, Ephemera, CellFinder, Fun, Option, DomParent, TablePositions, Class, OnNode, SelectorFilter, SelectorFind, Math) {
     var clear = function (container) {
       var sels = SelectorFilter.descendants(container, '.' + Ephemera.selectedClass());
       Arr.each(sels, OnNode.removeClasses([ Ephemera.selectedClass(), Ephemera.lastSelectedClass(), Ephemera.firstSelectedClass() ]));
@@ -43,11 +43,7 @@ define(
 
       // So ignore the colspan, rowspan for the time being.
       return DomParent.sharedOne(lookupTable, [ start, finish ]).bind(function (tbl) {
-        return Rectangular.getBox(tbl, start, finish).map(function (info) {
-          var all = Arr.bind(info.warehouse.all(), function (r) { return r.cells(); });
-          var filtered = Arr.filter(all, Fun.curry(inSelection, info));
-          return Arr.map(filtered, function (f) { return f.element(); });
-        });
+        return TablePositions.intercepts(tbl, start, finish);
       });
     };
 
