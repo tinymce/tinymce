@@ -6,6 +6,7 @@ define(
   ],
 
   function (Arr) {
+    // substitution :: (item, comparator) -> item
     var insertRowAt = function (grid, index, example, comparator, substitution) {
       var before = grid.slice(0, index);
       var after = grid.slice(index);
@@ -18,6 +19,7 @@ define(
       return before.concat([ between ]).concat(after);
     };
 
+    // substitution :: (item, comparator) -> item
     var insertColumnAt = function (grid, index, example, comparator, substitution) {
       return Arr.map(grid, function (row) {
         var withinSpan = index > 0 && index < row.length && comparator(row[index - 1], row[index]);

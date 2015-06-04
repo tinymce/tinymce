@@ -7,6 +7,7 @@ define(
   ],
 
   function (Arr, Fun) {
+    // substitution :: (item, comparator) -> item
     var replaceIn = function (grid, targets, comparator, substitution) {
       var isTarget = function (elem) {
         return Arr.exists(targets, Fun.curry(comparator, elem));
@@ -27,6 +28,7 @@ define(
       return index > 0 && comparator(row[index-1], row[index]);
     };
 
+    // substitution :: (item, comparator) -> item
     var replaceColumn = function (grid, index, comparator, substitution) {
       // Make this efficient later.
       var targets = Arr.bind(grid, function (row, i) {
@@ -38,6 +40,7 @@ define(
       return replaceIn(grid, targets, comparator, substitution);
     };
 
+    // substitution :: (item, comparator) -> item
     var replaceRow = function (grid, index, comparator, substitution) {
       var targetRow = grid[index];
       var targets = Arr.bind(targetRow, function (item, i) {

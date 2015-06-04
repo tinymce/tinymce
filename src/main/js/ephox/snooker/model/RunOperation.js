@@ -34,14 +34,14 @@ define(
       return grid;
     };
 
-    var toDetailList = function (grid) {
+    var toDetailList = function (grid, generators) {
       var fun = Warefun.render(grid, Compare.eq);
 
       // Add rows.
       var newFun = Arr.map(fun, function (f) {
         var rowOfCells = Options.findMap(f.cells(), function (c) { return Traverse.parent(c.element()); });
         var tr = rowOfCells.getOrThunk(function () {
-          return Element.fromTag('tr');
+          return generators.row();
         });
         return {
           element: Fun.constant(tr),
@@ -68,7 +68,7 @@ define(
         var output = extract(warehouse, target).map(function (info) {
           var model = fromWarehouse(warehouse, generators);
           var result = operation(model, info, Compare.eq, genWrappers(generators));
-          return toDetailList(result);
+          return toDetailList(result, generators);
         });
 
         output.each(function (out) {
