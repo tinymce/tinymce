@@ -19,13 +19,15 @@ define(
   ],
 
   function (Arr, Fun, Option, Options, TableLookup, DetailsList, Warefun, Warehouse, Redraw, Bars, Compare, Element, Node, Traverse) {
-    var fromWarehouse = function (warehouse) {
+    var fromWarehouse = function (warehouse, generators) {
       var grid = [];
       for (var i = 0; i < warehouse.grid().rows(); i++) {
         var h = [];
         for (var j = 0; j < warehouse.grid().columns(); j++) {
           console.log('i', i, 'j', j, warehouse.access());
-          h.push(Warehouse.getAt(warehouse, i, j).getOrDie('hacky').element());
+          h.push(Warehouse.getAt(warehouse, i, j).map(function (item) {
+            return item.element();
+          }).getOrThunk(generators.hack));
         }
         grid.push(h);
       }
@@ -64,7 +66,7 @@ define(
         var input = DetailsList.fromTable(table);  
         var warehouse = Warehouse.generate(input);
         var output = extract(warehouse, target).map(function (info) {
-          var model = fromWarehouse(warehouse);
+          var model = fromWarehouse(warehouse, generators);
           var result = operation(model, info, Compare.eq, genWrappers(generators));
           return toDetailList(result);
         });

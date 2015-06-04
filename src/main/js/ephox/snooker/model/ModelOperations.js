@@ -77,16 +77,20 @@ define(
       });
     };
 
+    var isBetweenRow = function (grid, rowIndex, colIndex, comparator) {
+      return grid[rowIndex][colIndex] !== undefined && (rowIndex > 0 && comparator(grid[rowIndex - 1][colIndex], grid[rowIndex][colIndex]));
+    };
+
+    var isBetweenColumn = function (row, index, comparator) {
+      return index > 0 && comparator(row[index-1], row[index]);
+    };
+
     var replaceColumn = function (grid, index, comparator, substitution) {
       // Make this efficient later.
       var targets = Arr.bind(grid, function (row, i) {
         // check if already added.
-        if (row[index] !== undefined && (i === 0 || !(comparator(grid[i - 1][index], row[index])))) {
-          // check if starting at the this column
-          return index === 0 || !(comparator(row[index], row[index-1])) ? [ row[index] ] : [];
-        } else {
-          return [];
-        }
+        var alreadyAdded = isBetweenRow(grid, i, index, comparator) || isBetweenColumn(row, index, comparator);
+        return alreadyAdded ? [] : [ row[index] ];
       });
 
       return replaceIn(grid, targets, comparator, substitution);
