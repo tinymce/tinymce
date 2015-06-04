@@ -393,46 +393,44 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		}
 
 		function reposition(match) {
-			var rect, panelRect, contentAreaRect, panel;
+			var relPos, panelRect, elementRect, contentAreaRect, panel, relRect;
 
-			if (!match) {
+			if (!match || !match.toolbar.panel) {
 				return;
 			}
 
 			panel = match.toolbar.panel;
-			rect = getElementRect(match.element);
+			panel.show();
+
+			elementRect = getElementRect(match.element);
+			elementRect.y -= 7;
+			elementRect.h += 14;
+
+			panelRect = tinymce.DOM.getRect(panel.getEl());
 			contentAreaRect = tinymce.DOM.getRect(editor.getContentAreaContainer() || editor.getBody());
 
-			if (rect.y > contentAreaRect.y + contentAreaRect.h) {
+			relPos = tinymce.ui.Rect.findBestRelativePosition(panelRect, elementRect, contentAreaRect, [
+				'tc-bc', 'bc-tc',
+				'tl-bl', 'bl-tl',
+				'tr-br', 'br-tr'
+			]);
+
+			if (relPos) {
+				relRect = tinymce.ui.Rect.relativePosition(panelRect, elementRect, relPos);
+				panel.moveTo(relRect.x, relRect.y);
+			} else {
 				panel.hide();
-				return;
 			}
-
-			panel.show();
-			panelRect = tinymce.DOM.getRect(panel.getEl());
-
-			if (rect.y + rect.h < contentAreaRect.y) {
-				panel.hide();
-				return;
-			}
-
-			rect.y -= panelRect.h;
-
-			if (rect.y < contentAreaRect.y) {
-				rect.y = contentAreaRect.y;
-			}
-
-			panel.moveTo(rect.x, rect.y);
 		}
 
-		function scrollReposition() {
+		function repositionHandler() {
 			reposition(findFrontMostMatch(editor.selection.getNode()));
 		}
 
 		function bindScrollEvent() {
 			if (!scrollContainer) {
 				scrollContainer = editor.selection.getScrollContainer() || editor.getWin();
-				tinymce.$(scrollContainer).on('scroll', scrollReposition);
+				tinymce.$(scrollContainer).on('scroll', repositionHandler);
 
 				editor.on('remove', function() {
 					tinymce.$(scrollContainer).off('scroll');
@@ -498,7 +496,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		}
 
 		contextToolbars.img = {
-			items: 'bold italic styleselect'
+			items: 'bold italic underline | alignleft aligncenter alignright alignfull'
 		};
 
 		editor.on('click keyup blur', function() {
@@ -518,6 +516,8 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				}
 			}, 0);
 		});
+
+		editor.on('execCommand', repositionHandler);
 
 		editor.on('remove', function() {
 			tinymce.each(contextToolbars, function(toolbar) {
