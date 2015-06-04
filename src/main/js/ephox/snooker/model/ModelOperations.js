@@ -100,12 +100,8 @@ define(
       var targetRow = grid[index];
       var targets = Arr.bind(targetRow, function (item, i) {
         // Check that we haven't already added this one.
-        if (i === 0 || !(comparator(item, targetRow[i - 1]))) {
-          // check if starting at this row.
-          return index === 0 || !(comparator(grid[index - 1][i], item)) ? [ item ] : [];
-        } else {
-          return [];
-        }
+        var alreadyAdded = isBetweenRow(grid, index, i, comparator) || isBetweenColumn(targetRow, i, comparator);
+        return alreadyAdded ? [] : [ item ];
       });
 
       return replaceIn(grid, targets, comparator, substitution);
