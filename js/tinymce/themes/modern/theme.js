@@ -517,7 +517,15 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			}, 0);
 		});
 
-		editor.on('execCommand', repositionHandler);
+		editor.on('ObjectResizeStart', function() {
+			var match = findFrontMostMatch(editor.selection.getNode());
+
+			if (match && match.toolbar.panel) {
+				match.toolbar.panel.hide();
+			}
+		});
+
+		editor.on('nodeChange', repositionHandler);
 
 		editor.on('remove', function() {
 			tinymce.each(contextToolbars, function(toolbar) {
