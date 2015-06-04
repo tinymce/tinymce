@@ -5,7 +5,6 @@ define(
     'ephox.compass.Arr',
     'ephox.lid.Jam',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
     'ephox.snooker.api.Generators',
     'ephox.snooker.api.TableLookup',
     'ephox.snooker.model.RunOperation',
@@ -13,8 +12,6 @@ define(
     'ephox.snooker.operate.ModificationOperations',
     'ephox.snooker.operate.TransformOperations',
     'ephox.snooker.resize.Adjustments',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Compare',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.InsertAll',
     'ephox.sugar.api.Node',
@@ -23,13 +20,12 @@ define(
     'global!parseInt'
   ],
 
-  function (Arr, Jam, Fun, Option, Generators, TableLookup, RunOperation, MergingOperations, ModificationOperations, TransformOperations, Adjustments, Attr, Compare, Element, InsertAll, Node, Remove, Traverse, parseInt) {
+  function (Arr, Jam, Fun, Generators, TableLookup, RunOperation, MergingOperations, ModificationOperations, TransformOperations, Adjustments, Element, InsertAll, Node, Remove, Traverse, parseInt) {
     var prune = function (table) {
       var cells = TableLookup.cells(table);
       if (cells.length === 0) Remove.remove(table);
     };
 
-    /* HACKING */
     var insertRowBefore = function (grid, detail, comparator, genWrappers) {
       var example = detail.row();
       var targetIndex = detail.row();
@@ -52,36 +48,6 @@ define(
       var example = detail.column();
       var targetIndex = detail.column();
       return ModificationOperations.insertColumnAt(grid, targetIndex, example, comparator, genWrappers);
-    };
-
-    var headerGenerators = function (comparator, scope, tag, generators) {
-    
-      var list = [];
-
-      var find = function (element) {
-        var raw = Arr.find(list, function (x) { return comparator(x.item, element); });
-        return Option.from(raw);
-      };
-
-      var makeNew = function (element) {
-        var cell = generators.replace(element, tag, {
-          scope: scope
-        });
-        list.push({ item: element, sub: cell });
-        return cell;
-      };
-    
-      var replaceOrInit = function (element, comparator) {
-        return find(element).fold(function () {
-          return makeNew(element);
-        }, function (p) {
-          return comparator(element, p.item) ? p.sub : makeNew(element);
-        });
-      };
-
-      return {
-        replaceOrInit: replaceOrInit
-      };
     };
 
     var makeRowHeader = function (grid, detail, comparator, genWrappers) {     
@@ -139,13 +105,10 @@ define(
       }, grid);
     };
 
-    /* END HACKING */
-
     // Only column modifications force a resizing. Everything else just tries to preserve the table as is.
     var resize = Adjustments.adjustTo;
 
     return {
-      //operation, adjustment, postAction, genWrappers
       insertRowBefore: RunOperation.run(insertRowBefore, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification),
       insertRowAfter:  RunOperation.run(insertRowAfter, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification),
       insertColumnBefore:  RunOperation.run(insertColumnBefore, RunOperation.onCell, resize, Fun.noop, Generators.modification),
