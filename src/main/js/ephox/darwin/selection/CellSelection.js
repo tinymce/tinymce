@@ -31,17 +31,6 @@ define(
     };
 
     var identify = function (start, finish) {
-      var inSelection = function (bounds, detail) {
-        return (
-          (detail.column() >= bounds.startCol() && detail.column()  <= bounds.finishCol()) ||
-          (detail.column() + detail.colspan() - 1 >= bounds.startCol() && detail.column() + detail.colspan() - 1 <= bounds.finishCol())
-        ) && (
-          (detail.row() >= bounds.startRow() && detail.row() <= bounds.finishRow()) ||
-          (detail.row() + detail.rowspan() - 1 >= bounds.startRow() && detail.row() + detail.rowspan() - 1 <= bounds.finishRow())
-        );
-      };
-
-      // So ignore the colspan, rowspan for the time being.
       return DomParent.sharedOne(lookupTable, [ start, finish ]).bind(function (tbl) {
         return TablePositions.intercepts(tbl, start, finish);
       });
@@ -61,7 +50,6 @@ define(
       return SelectorFind.ancestor(finish, 'table').bind(function (table) {
         return SelectorFind.descendant(table, '.' + Ephemera.firstSelectedClass()).bind(function (start) {
           return identify(start, finish).map(function (boxes) {
-            console.log('boxes: ', boxes);
             return {
               boxes: Fun.constant(boxes),
               start: Fun.constant(start),
