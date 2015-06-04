@@ -4,7 +4,6 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.darwin.api.Ephemera',
-    'ephox.darwin.navigation.CellFinder',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.robin.api.dom.DomParent',
@@ -16,7 +15,7 @@ define(
     'global!Math'
   ],
 
-  function (Arr, Ephemera, CellFinder, Fun, Option, DomParent, TablePositions, Class, OnNode, SelectorFilter, SelectorFind, Math) {
+  function (Arr, Ephemera, Fun, Option, DomParent, TablePositions, Class, OnNode, SelectorFilter, SelectorFind, Math) {
     var clear = function (container) {
       var sels = SelectorFilter.descendants(container, '.' + Ephemera.selectedClass());
       Arr.each(sels, OnNode.removeClasses([ Ephemera.selectedClass(), Ephemera.lastSelectedClass(), Ephemera.firstSelectedClass() ]));
@@ -62,7 +61,7 @@ define(
 
     var shiftSelection = function (boxes, deltaRow, deltaColumn) {
       return getLast(boxes).bind(function (last) {
-        return CellFinder.moveBy(last, deltaRow, deltaColumn).bind(expandTo);
+        return TablePositions.moveBy(last, deltaRow, deltaColumn).bind(expandTo);
       });
     };
 
