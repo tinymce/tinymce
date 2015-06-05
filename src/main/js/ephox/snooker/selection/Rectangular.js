@@ -38,7 +38,7 @@ define(
             startRow: Fun.constant(topRow),
             finishRow: Fun.constant(bottomRow),
             // This will need to be a fun constant.
-            warehouse: warehouse
+            warehouse: Fun.constant(warehouse)
           };
         });
       });
@@ -61,7 +61,7 @@ define(
               row : i,
               col : j
             });
-            isRect = isRect && SpanningCells.isSpanning(info.warehouse.access(), cell, boundingBox);
+            isRect = isRect && SpanningCells.isSpanning(info.warehouse().access(), cell, boundingBox);
           }
         }
 

@@ -13,32 +13,33 @@ define(
     'ephox.snooker.operate.Redraw',
     'ephox.snooker.resize.Bars',
     'ephox.sugar.api.Compare',
-    'ephox.sugar.api.Element',
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Arr, Fun, Option, Options, TableLookup, DetailsList, Warefun, Warehouse, Redraw, Bars, Compare, Element, Traverse) {
-    var fromWarehouse = function (warehouse) {
+  function (Arr, Fun, Option, Options, TableLookup, DetailsList, Warefun, Warehouse, Redraw, Bars, Compare, Traverse) {
+    var fromWarehouse = function (warehouse, generators) {
       var grid = [];
       for (var i = 0; i < warehouse.grid().rows(); i++) {
         var h = [];
         for (var j = 0; j < warehouse.grid().columns(); j++) {
           console.log('i', i, 'j', j, warehouse.access());
-          h.push(Warehouse.getAt(warehouse, i, j).getOrDie('hacky').element());
+          h.push(Warehouse.getAt(warehouse, i, j).map(function (item) {
+            return item.element();
+          }).getOrThunk(generators.gap));
         }
         grid.push(h);
       }
       return grid;
     };
 
-    var toDetailList = function (grid) {
+    var toDetailList = function (grid, generators) {
       var fun = Warefun.render(grid, Compare.eq);
 
       // Add rows.
       var newFun = Arr.map(fun, function (f) {
         var rowOfCells = Options.findMap(f.cells(), function (c) { return Traverse.parent(c.element()); });
         var tr = rowOfCells.getOrThunk(function () {
-          return Element.fromTag('tr');
+          return generators.row();
         });
         return {
           element: Fun.constant(tr),
@@ -59,13 +60,13 @@ define(
     };
 
     var run = function (operation, extract, adjustment, postAction, genWrappers) {
-      return function (wire, table, target, generators, direction) {
-        var input = DetailsList.fromTable(table);
+      return function (wire, table, target, generators, direction) { 
+        var input = DetailsList.fromTable(table);  
         var warehouse = Warehouse.generate(input);
         var output = extract(warehouse, target).map(function (info) {
-          var model = fromWarehouse(warehouse);
+          var model = fromWarehouse(warehouse, generators);
           var result = operation(model, info, Compare.eq, genWrappers(generators));
-          return toDetailList(result);
+          return toDetailList(result, generators);
         });
 
         output.each(function (out) {
