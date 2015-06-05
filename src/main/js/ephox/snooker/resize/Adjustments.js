@@ -37,7 +37,8 @@ define(
 
     var getWidths = function (warehouse) {
       var columns = Blocks.columns(warehouse);
-      return Arr.map(columns, function (cell) {
+      return Arr.map(columns, function (cell, c) {
+        console.log('sizing column ', c, ' by ', cell.dom());
         return Sizes.getWidth(cell);
       });
     };
@@ -72,6 +73,8 @@ define(
     var adjustTo = function (list) {
       var warehouse = getWarehouse(list);
       var widths = getWidths(warehouse);
+
+      console.log('widths', widths);
 
       // Set the width of each cell based on the column widths
       var newSizes = recalculate(warehouse, widths);

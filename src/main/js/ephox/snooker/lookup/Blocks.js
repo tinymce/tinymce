@@ -3,11 +3,14 @@ define(
 
   [
     'ephox.compass.Arr',
+    'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
+    'ephox.perhaps.Options',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.util.Util'
   ],
 
-  function (Arr, Warehouse, Util) {
+  function (Arr, Fun, Option, Options, Warehouse, Util) {
     /*
      * Identify for each column, a cell that has colspan 1. Note, this
      * may actually fail, and future work will be to calculate column
@@ -20,17 +23,25 @@ define(
       var rows = Util.range(0, grid.rows());
 
       return Arr.map(cols, function (col) {
-        var rawRow = Arr.find(rows, function (r) {
-          var cell = Warehouse.getAt(warehouse, r, col);
-          return cell.exists(function (cl) {
-            return cl.colspan() === 1;
-          });
+
+        // Firstly, find the cells that start on that column.
+        var onColumn = Arr.bind(rows, function (r) {
+          return Warehouse.getAt(warehouse, r, col).filter(function (detail) {
+            return detail.column() === col;
+          }).fold(Fun.constant([]), function (detail) { return [ detail ]; });
         });
 
-        var row = rawRow > -1 ? rawRow : 0;
-        // This may not be safe because of the defaulting of row above.
-        var result = Warehouse.getAt(warehouse, row, col).getOrDie();
-        return result.element();
+        var singleOnColumn = Arr.find(onColumn, function (detail) {
+          return detail.colspan() === 1;
+        });
+
+        return Option.from(singleOnColumn).orThunk(function () {
+          return Option.from(onColumn[0]);
+        }).fold(function () {
+          return Warehouse.getAt(warehouse, 0, col).getOrDie().element();
+        }, function (detail) {
+          return detail.element();
+        });
       });
     };
 
