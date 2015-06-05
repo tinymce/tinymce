@@ -23,10 +23,15 @@ define(
     ]);
 
     var isOutside = function (caret, box) {
-      return caret.left() < box.left() || Math.abs(box.right() - caret.left()) < 1;
+      console.log(box.left(), '<-', caret.left(), '->', box.right());
+      return caret.left() < box.left() || Math.abs(box.right() - caret.left()) < 1 || caret.left() > box.right();
     };
 
+    // Find the block based on a selector, and determine whether or not that block is outside. If it is outside, move up/down and right.
+
+
     var adjustDown = function (bridge, element, guessBox, original, caret) {
+      console.log('element', element.dom());
       // We are moving down. The browser will say that we have 'hit' something that is miles away horizontally, so we need to check
       // if the thing that we have hit is remotely close to where we are. Now, we can't just use our guessBox, because that might
       // be text, and we'll need to know where the cell is in relation to where we are. Hmm.
@@ -36,13 +41,13 @@ define(
       // The returned guessBox based on the guess actually doesn't include the initial caret. So we search again
       // where we adjust the caret so that it is inside the returned guessBox. This means that the offset calculation
       // will be more accurate.
-      else if (guessBox.top() > caret.bottom()) return adt.retry(Carets.moveBottomTo(caret, guessBox.top() + 1));
+      else if (guessBox.top() > caret.bottom()) return adt.retry(Carets.moveDown(caret, JUMP_SIZE));
 
 
       else return SelectorFind.closest(element, 'td,th').bind(function (cell) {
         return Rectangles.getEntireBox(bridge, cell).map(function (box) {
           var moveCaret = Carets.moveDown(caret, JUMP_SIZE);
-          var outside =  caret.left() < box.left() || Math.abs(box.right() - caret.left()) < 1;
+          var outside =  isOutside(caret, box);
           console.log('outside', outside, element.dom(), cell.dom(), box.left(), box.right(), caret.left());
           return outside ? adt.retry(Carets.translate(moveCaret, JUMP_SIZE, 0)) : adt.none();
         });
@@ -62,7 +67,7 @@ define(
       else return SelectorFind.closest(element, 'td,th').bind(function (cell) {
         return Rectangles.getEntireBox(bridge, cell).map(function (box) {
           var moveCaret = Carets.moveUp(caret, JUMP_SIZE);
-          var outside =  caret.left() < box.left() || Math.abs(box.right() - caret.left()) < 1;
+          var outside =  isOutside(caret, box);
           console.log('outside', outside, element.dom(), cell.dom(), box.left(), box.right(), caret.left());
           return outside ? adt.retry(Carets.translate(moveCaret, JUMP_SIZE, 0)) : adt.none();
         });
@@ -85,6 +90,7 @@ define(
 
     var adjustTil = function (bridge, movement, original, caret, numRetries) {
       if (numRetries === 0) return Option.some(caret);
+      console.log('searching (', caret.left() + ', ' + movement.point(caret) + ')');
       return bridge.situsFromPoint(caret.left(), movement.point(caret)).bind(function (guess) {
         return guess.start().fold(Option.none, function (element, offset) {
           return Rectangles.getEntireBox(bridge, element, offset).bind(function (guessBox) {
