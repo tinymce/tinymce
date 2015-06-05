@@ -28,50 +28,50 @@ define(
     };
 
     // Find the block based on a selector, and determine whether or not that block is outside. If it is outside, move up/down and right.
-
+    var inOutsideBlock = function (bridge, element, selector, caret) {
+      return SelectorFind.closest(element, selector).bind(function (cell) {
+        return Rectangles.getEntireBox(bridge, cell).exists(function (box) {
+          return isOutside(caret, box);
+        });
+      });
+    };
 
     var adjustDown = function (bridge, element, guessBox, original, caret) {
+      var lowerCaret = Carets.moveDown(caret, JUMP_SIZE);
+
       console.log('element', element.dom());
       // We are moving down. The browser will say that we have 'hit' something that is miles away horizontally, so we need to check
       // if the thing that we have hit is remotely close to where we are. Now, we can't just use our guessBox, because that might
       // be text, and we'll need to know where the cell is in relation to where we are. Hmm.
       // if (guessBox.right() <= caret.left() || Math.abs(guessBox.right() - caret.left()) < 1) return adt.retry(Carets.translate(caret, JUMP_SIZE, 0));
       // We haven't dropped vertically, so we need to look down and try again.
-      if (Math.abs(guessBox.bottom() - original.bottom()) < 1) return adt.retry(Carets.moveDown(caret, JUMP_SIZE));
+      if (Math.abs(guessBox.bottom() - original.bottom()) < 1) return adt.retry(lowerCaret);
+
       // The returned guessBox based on the guess actually doesn't include the initial caret. So we search again
       // where we adjust the caret so that it is inside the returned guessBox. This means that the offset calculation
       // will be more accurate.
-      else if (guessBox.top() > caret.bottom()) return adt.retry(Carets.moveDown(caret, JUMP_SIZE));
+      // We can't just jump to it, because it might skip over things that are valid. We can't jump at all, because it says
+      // we are near things that we aren't even remotely close to (i.e. text nodes inside giant cells). We are inside the giant
+      // cell, but not the text node, so jumping to the text node makes no sense. The old jumping code here probably works
+      // for block elements, but not text nodes.
+      else if (guessBox.top() > caret.bottom()) return adt.retry(lowerCaret);
 
-
-      else return SelectorFind.closest(element, 'td,th').bind(function (cell) {
-        return Rectangles.getEntireBox(bridge, cell).map(function (box) {
-          var moveCaret = Carets.moveDown(caret, JUMP_SIZE);
-          var outside =  isOutside(caret, box);
-          console.log('outside', outside, element.dom(), cell.dom(), box.left(), box.right(), caret.left());
-          return outside ? adt.retry(Carets.translate(moveCaret, JUMP_SIZE, 0)) : adt.none();
-        });
-      }).getOrThunk(adt.none);
+      // We are all good, but perhaps in a non-horizontally aligned area, if so ... retry with x adjustment. or all good.
+      else return inOutsideBlock(bridge, element, 'td,th', caret) ? adt.retry(Carets.translate(lowerCaret, JUMP_SIZE, 0)) : adt.none();
     };
 
     var adjustUp = function (bridge, element, guessBox, original, caret) {
+      var higherCaret = Carets.moveUp(caret, JUMP_SIZE);
       // If the guess is to the right of the original left, move to the right and try again.
       // if (guessBox.right() <= caret.left() || Math.abs(guessBox.right() - caret.left()) < 1) return adt.retry(Carets.translate(caret, JUMP_SIZE, 0));
       // We haven't ascended vertically, so we need to look up and try again.
-      if (Math.abs(guessBox.top() - original.top()) < 1) return adt.retry(Carets.moveUp(caret, JUMP_SIZE));
+      if (Math.abs(guessBox.top() - original.top()) < 1) return adt.retry(higherCaret);
       // The returned guessBox based on the guess actually doesn't include the initial caret. So we search again
       // where we adjust the caret so that it is inside the returned guessBox. This means that the offset calculation
       // will be more accurate.
-      else if (guessBox.bottom() < caret.top()) return adt.retry(Carets.moveTopTo(caret, guessBox.bottom() - 1));
+      else if (guessBox.bottom() < caret.top()) return adt.retry(higherCaret);
 
-      else return SelectorFind.closest(element, 'td,th').bind(function (cell) {
-        return Rectangles.getEntireBox(bridge, cell).map(function (box) {
-          var moveCaret = Carets.moveUp(caret, JUMP_SIZE);
-          var outside =  isOutside(caret, box);
-          console.log('outside', outside, element.dom(), cell.dom(), box.left(), box.right(), caret.left());
-          return outside ? adt.retry(Carets.translate(moveCaret, JUMP_SIZE, 0)) : adt.none();
-        });
-      }).getOrThunk(adt.none);
+      else return inOutsideBlock(bridge, element, 'td,th', caret) ? adt.retry(Carets.translate(higherCaret, JUMP_SIZE, 0)) : adt.none();
     };
 
     var upMovement = {
