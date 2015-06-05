@@ -77,8 +77,6 @@ define(
     };
 
     var unmergeCells = function (grid, unmergable, comparator, generators) {
-      console.log('unmergable', unmergable[0]);
-
       return Arr.foldr(unmergable, function (b, cell) {
         return MergingOperations.unmerge(b, cell, comparator, generators(cell));
       }, grid);

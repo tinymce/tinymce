@@ -22,7 +22,7 @@ define(
       var markCell = function (cell) {
         return Descend.lastCursor(cell).bind(function (rightEdge) {
           return Traverse.parent(rightEdge).map(function (parent) {
-            return DomStructure.isBlock(parent) && !Compare.eq(cell, parent) ? [] :  [ Element.fromTag('br') ];
+            return isBr(rightEdge) || (DomStructure.isBlock(parent) && !Compare.eq(cell, parent)) ? [] :  [ Element.fromTag('br') ];
           });
         }).getOr([]);
       };
