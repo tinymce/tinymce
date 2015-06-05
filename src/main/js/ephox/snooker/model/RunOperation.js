@@ -14,11 +14,10 @@ define(
     'ephox.snooker.resize.Bars',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Element',
-    'ephox.sugar.api.Node',
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Arr, Fun, Option, Options, TableLookup, DetailsList, Warefun, Warehouse, Redraw, Bars, Compare, Element, Node, Traverse) {
+  function (Arr, Fun, Option, Options, TableLookup, DetailsList, Warefun, Warehouse, Redraw, Bars, Compare, Element, Traverse) {
     var fromWarehouse = function (warehouse) {
       var grid = [];
       for (var i = 0; i < warehouse.grid().rows(); i++) {
@@ -60,8 +59,8 @@ define(
     };
 
     var run = function (operation, extract, adjustment, postAction, genWrappers) {
-      return function (wire, table, target, generators, direction) { 
-        var input = DetailsList.fromTable(table);  
+      return function (wire, table, target, generators, direction) {
+        var input = DetailsList.fromTable(table);
         var warehouse = Warehouse.generate(input);
         var output = extract(warehouse, target).map(function (info) {
           var model = fromWarehouse(warehouse);
