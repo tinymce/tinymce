@@ -28,13 +28,11 @@ define(
       };
 
       var markContent = function () {
-        var kin = Arr.bind(cells, function (cell) {
+        return Arr.bind(cells, function (cell) {
           var children = Traverse.children(cell);
           // When the last element within the cell is an inline element, we mark it by adding a <br> to the end of its children.
           return children.length > 1 || (children.length == 1 && !isBr(children[0])) ? children.concat(markCell(cell)) : [];
         });
-
-        return kin;
       };
 
       var contents = markContent();
