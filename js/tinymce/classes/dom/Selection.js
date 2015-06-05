@@ -387,13 +387,6 @@ define("tinymce/dom/Selection", [
 		select: function(node, content) {
 			var self = this, dom = self.dom, rng = dom.createRng(), idx;
 
-			if (!content && self.getSel().setBaseAndExtent) {
-				if (node.nodeName == "IMG") {
-					self.getSel().setBaseAndExtent(node, 0, node, 1);
-					return;
-				}
-			}
-
 			// Clear stored range set by FocusManager
 			self.lastFocusBookmark = null;
 
@@ -584,7 +577,7 @@ define("tinymce/dom/Selection", [
 		 * @param {Range} rng Range to select.
 		 */
 		setRng: function(rng, forward) {
-			var self = this, sel;
+			var self = this, sel, node;
 
 			if (!rng) {
 				return;
@@ -622,6 +615,18 @@ define("tinymce/dom/Selection", [
 
 					// adding range isn't always successful so we need to check range count otherwise an exception can occur
 					self.selectedRange = sel.rangeCount > 0 ? sel.getRangeAt(0) : null;
+				}
+
+				// WebKit egde case selecting images works better using setBaseAndExtent
+				if (!rng.collapsed && rng.startContainer == rng.endContainer && sel.setBaseAndExtent) {
+					if (rng.endOffset - rng.startOffset < 2) {
+						if (rng.startContainer.hasChildNodes()) {
+							node = rng.startContainer.childNodes[rng.startOffset];
+							if (node && node.tagName == 'IMG') {
+								self.getSel().setBaseAndExtent(node, 0, node, 1);
+							}
+						}
+					}
 				}
 			} else {
 				// Is W3C Range fake range on IE
