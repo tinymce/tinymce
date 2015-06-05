@@ -63,6 +63,10 @@ define(
       return caret.bottom();
     };
 
+    var toString = function (caret) {
+      return '(' + caret.left() + ', ' + caret.top() + ') -> (' + caret.right() + ', ' + caret.bottom() + ')';
+    };
+
     return {
       nu: nu,
       moveUp: moveUp,
@@ -71,7 +75,8 @@ define(
       moveTopTo: moveTopTo,
       getTop: getTop,
       getBottom: getBottom,
-      translate: translate
+      translate: translate,
+      toString: toString
     };
   }
 );

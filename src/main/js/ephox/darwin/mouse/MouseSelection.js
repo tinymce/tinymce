@@ -27,7 +27,8 @@ define(
           CellSelection.clear(container);
           var finish = SelectorFind.closest(event.target(), 'td,th');
           var boxes = finish.bind(Fun.curry(CellSelection.identify, start)).getOr([]);
-          if (boxes.length > 0) {
+          // Otherwise, you can't do small selections inside a cell.
+          if (boxes.length > 1) {
             CellSelection.selectRange(container, boxes, start, finish.getOrDie());
 
             // Do this elsewhere. Fussy should have a remove all ranges method.

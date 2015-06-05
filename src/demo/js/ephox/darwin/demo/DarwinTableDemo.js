@@ -2,6 +2,7 @@ define(
   'ephox.darwin.demo.DarwinTableDemo',
 
   [
+    'ephox.compass.Arr',
     'ephox.darwin.api.InputHandlers',
     'ephox.darwin.api.SelectionKeys',
     'ephox.fred.PlatformDetection',
@@ -17,13 +18,14 @@ define(
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.Replication',
+    'ephox.sugar.api.SelectorFilter',
     'ephox.sugar.api.SelectorFind',
     'ephox.sugar.api.Traverse',
     'global!Math',
     'global!document'
   ],
 
-  function (InputHandlers, SelectionKeys, PlatformDetection, WindowSelection, Fun, Option, Attr, Body, Compare, Direction, DomEvent, Element, Insert, Node, Replication, SelectorFind, Traverse, Math, document) {
+  function (Arr, InputHandlers, SelectionKeys, PlatformDetection, WindowSelection, Fun, Option, Attr, Body, Compare, Direction, DomEvent, Element, Insert, Node, Replication, SelectorFilter, SelectorFind, Traverse, Math, document) {
     return function () {
 
       var detection = PlatformDetection.detect();
@@ -33,7 +35,7 @@ define(
 
       var style = Element.fromHtml(
         '<style>' +
-          'table { border-collapse: collapse; }\n' +
+          'table { border-collapse: separate; border-spacing: 30px; }\n' +
           'td { text-align: left; border: 1px solid #aaa; font-size: 20px; }\n' +
           'td.ephox-darwin-selected { background: #cadbee; }\n' +
           '#coords { position: fixed; right: 0px; bottom: 0px; background: #ddd }' +

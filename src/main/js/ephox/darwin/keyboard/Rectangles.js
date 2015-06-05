@@ -24,7 +24,7 @@ define(
       });
     };
 
-    var getElemBox = function (bridge, element, offset) {
+    var getElemBox = function (bridge, element) {
       return Option.some(bridge.getRect(element));
     };
 
@@ -35,8 +35,8 @@ define(
       else return Option.none();
     };
 
-    var getEntireBox = function (bridge, element, offset) {
-      if (Node.isElement(element)) return getElemBox(bridge, element, offset).map(toCaret);
+    var getEntireBox = function (bridge, element) {
+      if (Node.isElement(element)) return getElemBox(bridge, element).map(toCaret);
       else if (Node.isText(element)) return bridge.getRangedRect(element, 0, element, Awareness.getEnd(element)).map(toCaret);
       else return Option.none();
     };
