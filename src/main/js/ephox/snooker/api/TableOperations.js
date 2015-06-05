@@ -3,24 +3,20 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.lid.Jam',
     'ephox.peanut.Fun',
     'ephox.snooker.api.Generators',
+    'ephox.snooker.api.TableContent',
     'ephox.snooker.api.TableLookup',
     'ephox.snooker.model.RunOperation',
     'ephox.snooker.operate.MergingOperations',
     'ephox.snooker.operate.ModificationOperations',
     'ephox.snooker.operate.TransformOperations',
     'ephox.snooker.resize.Adjustments',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.InsertAll',
-    'ephox.sugar.api.Node',
     'ephox.sugar.api.Remove',
-    'ephox.sugar.api.Traverse',
     'global!parseInt'
   ],
 
-  function (Arr, Jam, Fun, Generators, TableLookup, RunOperation, MergingOperations, ModificationOperations, TransformOperations, Adjustments, Element, InsertAll, Node, Remove, Traverse, parseInt) {
+  function (Arr, Fun, Generators, TableContent, TableLookup, RunOperation, MergingOperations, ModificationOperations, TransformOperations, Adjustments, Remove, parseInt) {
     var prune = function (table) {
       var cells = TableLookup.cells(table);
       if (cells.length === 0) Remove.remove(table);
@@ -50,19 +46,19 @@ define(
       return ModificationOperations.insertColumnAt(grid, targetIndex, example, comparator, genWrappers);
     };
 
-    var makeRowHeader = function (grid, detail, comparator, genWrappers) {     
+    var makeRowHeader = function (grid, detail, comparator, genWrappers) {
       return TransformOperations.replaceRow(grid, detail.row(), comparator, genWrappers);
     };
 
-    var makeColumnHeader = function (grid, detail, comparator, genWrappers) {     
+    var makeColumnHeader = function (grid, detail, comparator, genWrappers) {
       return TransformOperations.replaceColumn(grid, detail.column(), comparator, genWrappers);
     };
 
-    var unmakeRowHeader = function (grid, detail, comparator, genWrappers) {     
+    var unmakeRowHeader = function (grid, detail, comparator, genWrappers) {
       return TransformOperations.replaceRow(grid, detail.row(), comparator, genWrappers);
     };
 
-    var unmakeColumnHeader = function (grid, detail, comparator, genWrappers) {     
+    var unmakeColumnHeader = function (grid, detail, comparator, genWrappers) {
       return TransformOperations.replaceColumn(grid, detail.column(), comparator, genWrappers);
     };
 
@@ -74,32 +70,13 @@ define(
       return ModificationOperations.deleteRowAt(grid, detail.row());
     };
 
-    var mergeContent = function (cells) {
-      var readContent = function () {
-        var kin = Arr.bind(cells, function (cell) {
-          var children = Traverse.children(cell);
-          // Exclude empty cells.
-          return children.length > 1 || (children.length == 1 && Node.name(children[0]) !== 'br') ? [ children ] : [];
-        });
-        return Jam.intersperseThunk(kin, function () {
-          return [ Element.fromTag('br') ];
-        });
-      };
-
-      var contents = Arr.flatten(readContent());
-      Remove.empty(cells[0]);
-      InsertAll.append(cells[0], contents);
-    };
-
     var mergeCells = function (grid, mergable, comparator, _generators) {
       var cells = mergable.cells();
-      mergeContent(cells);
+      TableContent.merge(cells);
       return MergingOperations.merge(grid, mergable, comparator, Fun.constant(cells[0]));
     };
 
     var unmergeCells = function (grid, unmergable, comparator, generators) {
-      console.log('unmergable', unmergable[0]);
-
       return Arr.foldr(unmergable, function (b, cell) {
         return MergingOperations.unmerge(b, cell, comparator, generators(cell));
       }, grid);
