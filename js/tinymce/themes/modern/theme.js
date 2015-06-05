@@ -11,7 +11,8 @@
 /*global tinymce:true */
 
 tinymce.ThemeManager.add('modern', function(editor) {
-	var self = this, settings = editor.settings, Factory = tinymce.ui.Factory, each = tinymce.each, DOM = tinymce.DOM;
+	var self = this, settings = editor.settings, Factory = tinymce.ui.Factory,
+		each = tinymce.each, DOM = tinymce.DOM, Rect = tinymce.ui.Rect;
 
 	// Default menus
 	var defaultMenus = {
@@ -403,24 +404,44 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			panel.show();
 
 			elementRect = getElementRect(match.element);
-			elementRect.y -= 7;
-			elementRect.h += 14;
-
 			panelRect = tinymce.DOM.getRect(panel.getEl());
 			contentAreaRect = tinymce.DOM.getRect(editor.getContentAreaContainer() || editor.getBody());
 
-			relPos = tinymce.ui.Rect.findBestRelativePosition(panelRect, elementRect, contentAreaRect, [
+			if (!editor.inline) {
+				contentAreaRect.w = editor.getDoc().documentElement.offsetWidth;
+			}
+
+			relPos = Rect.findBestRelativePosition(panelRect, Rect.inflate(elementRect, 0, 7), contentAreaRect, [
 				'tc-bc', 'bc-tc',
 				'tl-bl', 'bl-tl',
 				'tr-br', 'br-tr'
 			]);
 
 			if (relPos) {
-				relRect = tinymce.ui.Rect.relativePosition(panelRect, elementRect, relPos);
+				relRect = Rect.relativePosition(panelRect, Rect.inflate(elementRect, 0, 7), relPos);
 				panel.moveTo(relRect.x, relRect.y);
 			} else {
-				panel.hide();
+				elementRect = Rect.intersect(contentAreaRect, elementRect);
+
+				if (elementRect) {
+					relPos = Rect.findBestRelativePosition(panelRect, elementRect, contentAreaRect, [
+						'tc-tc', 'tl-tl', 'tr-tr'
+					]);
+
+					if (relPos) {
+						relRect = Rect.relativePosition(panelRect, elementRect, relPos);
+						panel.moveTo(relRect.x, relRect.y);
+					} else {
+						panel.moveTo(elementRect.x, elementRect.y);
+					}
+				} else {
+					panel.hide();
+				}
 			}
+
+			//drawRect(contentAreaRect, 'blue');
+			//drawRect(elementRect, 'red');
+			//drawRect(panelRect, 'green');
 		}
 
 		function repositionHandler() {
