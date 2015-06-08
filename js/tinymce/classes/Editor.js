@@ -1298,6 +1298,20 @@ define("tinymce/Editor", [
 		},
 
 		/**
+		 * Adds a contextual toolbar to be rendered when the selector matches.
+		 *
+		 * @method addContextToolbar
+		 * @param {String} selector CSS selector to match elements against.
+		 * @param {String/Array} items String or array with items to add to the context toolbar.
+		 */
+		addContextToolbar: function(selector, items) {
+			this.contextToolbars = this.contextToolbars || {};
+			this.contextToolbars[selector] = {
+				items: items
+			};
+		},
+
+		/**
 		 * Adds a custom command to the editor, you can also override existing commands with this method.
 		 * The command that you add can be executed with execCommand.
 		 *

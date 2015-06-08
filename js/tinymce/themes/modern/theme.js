@@ -372,7 +372,11 @@ tinymce.ThemeManager.add('modern', function(editor) {
 	 * Handles contextual toolbars.
 	 */
 	function addContextualToolbars() {
-		var scrollContainer, contextToolbars = {};
+		var scrollContainer;
+
+		function getContextToolbars() {
+			return editor.contextToolbars || {};
+		}
 
 		function getElementRect(elm) {
 			var pos, targetRect, root;
@@ -484,13 +488,13 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				items: createToolbar(match.toolbar.items)
 			});
 
-			contextToolbars[match.selector].panel = panel;
+			getContextToolbars()[match.selector].panel = panel;
 			panel.renderTo(document.body).reflow();
 			reposition(match);
 		}
 
 		function hideAllContextToolbars() {
-			tinymce.each(contextToolbars, function(toolbar) {
+			tinymce.each(getContextToolbars(), function(toolbar) {
 				if (toolbar.panel) {
 					toolbar.panel.hide();
 				}
@@ -502,10 +506,10 @@ tinymce.ThemeManager.add('modern', function(editor) {
 
 			parentsAndSelf = editor.$(targetElm).parents().add(targetElm);
 			for (i = parentsAndSelf.length - 1; i >= 0; i--) {
-				for (selector in contextToolbars) {
+				for (selector in getContextToolbars()) {
 					if (editor.dom.is(parentsAndSelf[i], selector)) {
 						return {
-							toolbar: contextToolbars[selector],
+							toolbar: getContextToolbars()[selector],
 							selector: selector,
 							element: parentsAndSelf[i]
 						};
@@ -515,10 +519,6 @@ tinymce.ThemeManager.add('modern', function(editor) {
 
 			return null;
 		}
-
-		contextToolbars.img = {
-			items: 'bold italic underline | alignleft aligncenter alignright alignfull'
-		};
 
 		editor.on('click keyup blur', function() {
 			// Needs to be delayed to avoid Chrome img focus out bug
@@ -549,13 +549,13 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		editor.on('nodeChange ResizeEditor', repositionHandler);
 
 		editor.on('remove', function() {
-			tinymce.each(contextToolbars, function(toolbar) {
+			tinymce.each(getContextToolbars(), function(toolbar) {
 				if (toolbar.panel) {
 					toolbar.panel.remove();
 				}
 			});
 
-			contextToolbars = [];
+			editor.contextToolbars = {};
 		});
 	}
 
