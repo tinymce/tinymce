@@ -25,7 +25,7 @@ define(
       manager.events.adjustWidth.bind(function (event) {
         events.trigger.beforeResize();
         var delta = direction.delta(event.delta(), event.table());
-        Adjustments.adjust(event.table(), delta, event.column());
+        Adjustments.adjust(event.table(), delta, event.column(), direction);
         events.trigger.afterResize();
       });
 

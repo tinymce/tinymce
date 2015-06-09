@@ -71,7 +71,7 @@ define(
 
         output.each(function (out) {
           Redraw.render(table, out);
-          adjustment(out);
+          adjustment(out, direction);
           postAction(table);
           Bars.refresh(wire, table, direction);
         });

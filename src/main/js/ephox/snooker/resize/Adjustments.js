@@ -10,11 +10,12 @@ define(
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.resize.Sizes',
     'ephox.snooker.util.CellSpans',
+    'ephox.snooker.util.Util',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Fun, Deltas, Blocks, DetailsList, Warehouse, Sizes, CellSpans, Attr, SelectorFind) {
+  function (Arr, Fun, Deltas, Blocks, DetailsList, Warehouse, Sizes, CellSpans, Util, Attr, SelectorFind) {
     var minWidth = 10;
 
     var recalculate = function (warehouse, widths) {
@@ -38,17 +39,21 @@ define(
       });
     };
 
-    var getWidths = function (warehouse) {
+    var getWidths = function (warehouse, direction) {
       var columns = Blocks.columns(warehouse);
+
+      var backups = Arr.map(columns, function (cellOption) {
+        console.log('direction', direction);
+        return cellOption.map(direction.edge);
+      });
+
       return Arr.map(columns, function (cellOption, c) {
         return cellOption.fold(function () {
-          return 10;
+          // Default column size when all else fails.
+          return Util.deduce(backups, c).getOr(10);
         }, function (cell) {
-          if (CellSpans.hasColspan(cell))  { console.log('h'); }
-
-
-          console.log('using cell: ', cell.dom(), 'for column', c);
-          return Sizes.getWidth(cell);
+          if (! CellSpans.hasColspan(cell)) return Sizes.getWidth(cell);
+          else return Util.deduce(backups, c).getOr(10);
         });
       });
     };
@@ -57,10 +62,10 @@ define(
       return Warehouse.generate(list);
     };
 
-    var adjust = function (table, delta, index) {
+    var adjust = function (table, delta, index, direction) {
       var list = DetailsList.fromTable(table);
       var warehouse = getWarehouse(list);
-      var widths = getWidths(warehouse);
+      var widths = getWidths(warehouse, direction);
 
       console.log('old widths: ', widths.join(', '));
 
@@ -92,9 +97,9 @@ define(
     };
 
     // Ensure that the width of table cells match the passed in table information.
-    var adjustTo = function (list) {
+    var adjustTo = function (list, direction) {
       var warehouse = getWarehouse(list);
-      var widths = getWidths(warehouse);
+      var widths = getWidths(warehouse, direction);
 
       console.log('widths', widths);
 
