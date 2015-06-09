@@ -23,7 +23,6 @@ define(
     ]);
 
     var isOutside = function (caret, box) {
-      console.log(box.left(), '<-', caret.left(), '->', box.right());
       return caret.left() < box.left() || Math.abs(box.right() - caret.left()) < 1 || caret.left() > box.right();
     };
 
@@ -36,41 +35,36 @@ define(
       });
     };
 
+    /*
+     * The approach is as follows.
+     *
+     * The browser APIs for caret ranges return elements that are the closest text elements to your (x, y) position, even if those
+     * closest elements are miles away. This causes problems when you are trying to identify what is immediately above or below
+     * a cell, because often the closest text is in a cell that is in a completely different column. Therefore, the approach needs
+     * to keep moving down until the thing that we are hitting is likely to be a true positive.
+     *
+     * Steps:
+     *
+     * 1. If the y position of the next guess is not different from the original, keep going.
+     * 2. If the guess box doesn't actually include the position looked for, then the browser has returned a node that does not have
+     *    a rectangle which truly intercepts the point. So, keep going. Note, we used to jump straight away here, but that means that
+     *    we might skip over something that wasn't considered close enough but was a better guess than just making the y value skip.
+     * 3. if the guess box does include the caret, but the guess box's parent cell does not *really* contain the caret, try again shifting
+     *    only the x value. If the guess box's parent cell does *really* contain the caret (i.e. it is horizontally-aligned), then stop
+     *    because the guess is GOOD.
+     */
+
     var adjustDown = function (bridge, element, guessBox, original, caret) {
       var lowerCaret = Carets.moveDown(caret, JUMP_SIZE);
-
-      console.log('element', element.dom());
-      // We are moving down. The browser will say that we have 'hit' something that is miles away horizontally, so we need to check
-      // if the thing that we have hit is remotely close to where we are. Now, we can't just use our guessBox, because that might
-      // be text, and we'll need to know where the cell is in relation to where we are. Hmm.
-      // if (guessBox.right() <= caret.left() || Math.abs(guessBox.right() - caret.left()) < 1) return adt.retry(Carets.translate(caret, JUMP_SIZE, 0));
-      // We haven't dropped vertically, so we need to look down and try again.
       if (Math.abs(guessBox.bottom() - original.bottom()) < 1) return adt.retry(lowerCaret);
-
-      // The returned guessBox based on the guess actually doesn't include the initial caret. So we search again
-      // where we adjust the caret so that it is inside the returned guessBox. This means that the offset calculation
-      // will be more accurate.
-      // We can't just jump to it, because it might skip over things that are valid. We can't jump at all, because it says
-      // we are near things that we aren't even remotely close to (i.e. text nodes inside giant cells). We are inside the giant
-      // cell, but not the text node, so jumping to the text node makes no sense. The old jumping code here probably works
-      // for block elements, but not text nodes.
       else if (guessBox.top() > caret.bottom()) return adt.retry(lowerCaret);
-
-      // We are all good, but perhaps in a non-horizontally aligned area, if so ... retry with x adjustment. or all good.
       else return inOutsideBlock(bridge, element, 'td,th', caret) ? adt.retry(Carets.translate(lowerCaret, JUMP_SIZE, 0)) : adt.none();
     };
 
     var adjustUp = function (bridge, element, guessBox, original, caret) {
       var higherCaret = Carets.moveUp(caret, JUMP_SIZE);
-      // If the guess is to the right of the original left, move to the right and try again.
-      // if (guessBox.right() <= caret.left() || Math.abs(guessBox.right() - caret.left()) < 1) return adt.retry(Carets.translate(caret, JUMP_SIZE, 0));
-      // We haven't ascended vertically, so we need to look up and try again.
       if (Math.abs(guessBox.top() - original.top()) < 1) return adt.retry(higherCaret);
-      // The returned guessBox based on the guess actually doesn't include the initial caret. So we search again
-      // where we adjust the caret so that it is inside the returned guessBox. This means that the offset calculation
-      // will be more accurate.
       else if (guessBox.bottom() < caret.top()) return adt.retry(higherCaret);
-
       else return inOutsideBlock(bridge, element, 'td,th', caret) ? adt.retry(Carets.translate(higherCaret, JUMP_SIZE, 0)) : adt.none();
     };
 
@@ -90,7 +84,6 @@ define(
 
     var adjustTil = function (bridge, movement, original, caret, numRetries) {
       if (numRetries === 0) return Option.some(caret);
-      console.log('searching (', caret.left() + ', ' + movement.point(caret) + ')');
       return bridge.situsFromPoint(caret.left(), movement.point(caret)).bind(function (guess) {
         return guess.start().fold(Option.none, function (element, offset) {
           return Rectangles.getEntireBox(bridge, element, offset).bind(function (guessBox) {
