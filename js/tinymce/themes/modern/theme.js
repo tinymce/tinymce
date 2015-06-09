@@ -547,8 +547,11 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		});
 
 		editor.on('nodeChange ResizeEditor', repositionHandler);
+		tinymce.$(window).on('resize', repositionHandler);
 
 		editor.on('remove', function() {
+			tinymce.$(window).off('resize', repositionHandler);
+
 			tinymce.each(getContextToolbars(), function(toolbar) {
 				if (toolbar.panel) {
 					toolbar.panel.remove();
