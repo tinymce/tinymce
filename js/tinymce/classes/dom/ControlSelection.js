@@ -30,10 +30,10 @@ define("tinymce/dom/ControlSelection", [
 		// Details about each resize handle how to scale etc
 		resizeHandles = {
 			// Name: x multiplier, y multiplier, delta size x, delta size y
-			n: [0.5, 0, 0, -1],
+			/*n: [0.5, 0, 0, -1],
 			e: [1, 0.5, 1, 0],
 			s: [0.5, 1, 0, 1],
-			w: [0, 0.5, -1, 0],
+			w: [0, 0.5, -1, 0],*/
 			nw: [0, 0, -1, -1],
 			ne: [1, 0, 1, -1],
 			se: [1, 1, 1, 1],
@@ -47,8 +47,8 @@ define("tinymce/dom/ControlSelection", [
 				'position: absolute;' +
 				'border: 1px solid black;' +
 				'background: #FFF;' +
-				'width: 5px;' +
-				'height: 5px;' +
+				'width: 7px;' +
+				'height: 7px;' +
 				'z-index: 10000' +
 			'}' +
 			rootClass + ' .mce-resizehandle:hover {' +
