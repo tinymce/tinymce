@@ -29,12 +29,20 @@ define(
     };
 
     var rtlPositions = function (cols, _table) {
-      return Arr.map(cols, function (cellOption, col) {
+      var lines = Arr.map(cols.slice(1), function (cellOption, col) {
         return cellOption.map(function (cell) {
+          console.log('cell: ', cell.dom(), col);
           var pos = Location.absolute(cell);
-          return colInfo(col, pos.left());
+          return colInfo(col, pos.left() + Width.getOuter(cell));
         });
       });
+
+      var lastLine = cols[cols.length - 1].map(function (lastCol) {
+        var lastX = Location.absolute(lastCol).left();
+        return colInfo(cols.length - 1, lastX);
+      });
+
+      return lines.concat([ lastLine ]);
     };
 
     var rtlEdge = function (cell) {

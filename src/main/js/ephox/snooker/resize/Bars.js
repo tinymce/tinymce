@@ -31,10 +31,11 @@ define(
       var tableHeight = Height.getOuter(table);
 
       var colPositions = direction.positions(cols, table);
-      Arr.each(colPositions, function (cpOption) {
+      Arr.each(colPositions, function (cpOption, i) {
         cpOption.each(function (cp) {
           var origin = wire.origin();
           var bar = Bar(cp.col(), cp.x() - origin.left(), position.top() - origin.top(), BAR_WIDTH, tableHeight);
+          console.log('bar: ', cp.x(), i);
           Class.add(bar, resizeBar);
           Insert.append(wire.parent(), bar);
         });
