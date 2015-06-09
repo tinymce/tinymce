@@ -17,6 +17,6 @@ test(
       f('r3', [ s('f', 1, 2) ])
     ]);
   
-    assert.eq(['a', 'd', 'e'], Blocks.columns(warehouse));
+    assert.eq(['a', 'd', 'e'], Blocks.columns(warehouse).map(function (c) { return c.getOrDie(); }));
   }
 );

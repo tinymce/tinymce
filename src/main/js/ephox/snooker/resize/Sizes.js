@@ -43,7 +43,6 @@ define(
     var getWidth = function (cell) {
       var w = getTotalWidth(cell);
       var span = Attr.has(cell, 'colspan') ? parseInt(Attr.get(cell, 'colspan'), 10) : 1;
-      console.log('w/span', w/span);
       return w / span;
     };
 

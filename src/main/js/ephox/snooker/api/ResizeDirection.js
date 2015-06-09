@@ -13,14 +13,19 @@ define(
     var colInfo = Struct.immutable('col', 'x');
 
     var ltrPositions = function (cols, _table) {
-      var lines = Arr.map(cols.slice(1), function (cell, col) {
-        var pos = Location.absolute(cell);
-        return colInfo(col, pos.left());
+      var lines = Arr.map(cols.slice(1), function (cellOption, col) {
+        return cellOption.map(function (cell) {
+          var pos = Location.absolute(cell);
+          return colInfo(col, pos.left());
+        });
       });
 
-      var lastCol = cols[cols.length - 1];
-      var lastX = Location.absolute(lastCol).left() + Width.getOuter(lastCol);
-      return lines.concat([ colInfo(cols.length - 1, lastX) ]);
+      var lastLine = cols[cols.length - 1].map(function (lastCol) {
+        var lastX = Location.absolute(lastCol).left() + Width.getOuter(lastCol);
+        return colInfo(cols.length - 1, lastX);
+      });
+      
+      return lines.concat([ lastLine ]);
     };
 
     var rtlPositions = function (cols, _table) {

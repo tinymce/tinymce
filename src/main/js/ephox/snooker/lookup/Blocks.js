@@ -38,9 +38,9 @@ define(
         return Option.from(singleOnColumn).orThunk(function () {
           return Option.from(onColumn[0]);
         }).fold(function () {
-          return Warehouse.getAt(warehouse, 0, col).getOrDie().element();
+          return Warehouse.getAt(warehouse, 0, col).map(function (detail) { return detail.element(); });
         }, function (detail) {
-          return detail.element();
+          return Option.some(detail.element());
         });
       });
     };
