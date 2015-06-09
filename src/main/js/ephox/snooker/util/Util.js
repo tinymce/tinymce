@@ -55,7 +55,6 @@ define(
         var rest = xs.slice(index + 1);
         return Options.findMap(rest, function (a, i) {
           return a.map(function (aa) {
-            console.log('i', i);
             return { value: aa, delta: i + 1 };
           });
         });
@@ -66,9 +65,7 @@ define(
 
       return current.bind(function (c) {
         return next.map(function (n) {
-          console.log('c: ', c, 'n', n);
           var extras = n.delta + c.delta;
-          console.log('delta: ', extras, n.value - c.value);
           return Math.abs(n.value - c.value) / extras;
         });
       });
