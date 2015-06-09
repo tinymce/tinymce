@@ -9,20 +9,35 @@ define(
     'ephox.sugar.api.Element',
     'ephox.sugar.api.InsertAll',
     'ephox.sugar.api.Node',
+    'ephox.sugar.api.PredicateFind',
     'ephox.sugar.api.Remove',
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Arr, Descend, DomStructure, Compare, Element, InsertAll, Node, Remove, Traverse) {
+  function (Arr, Descend, DomStructure, Compare, Element, InsertAll, Node, PredicateFind, Remove, Traverse) {
     var merge = function (cells) {
       var isBr = function (el) {
         return Node.name(el) === 'br';
       };
 
+      var isListItem = function (el) {
+        return Node.name(el) === 'li' || PredicateFind.ancestor(el, DomStructure.isList).isSome();
+      };
+
+      var siblingIsBlock = function (el) {
+        return Traverse.nextSibling(el).each(function (rightSibling) {
+          if (DomStructure.isBlock(rightSibling)) return true;
+          if (DomStructure.isEmptyTag(rightSibling)) {
+            return Node.name(rightSibling) === 'img' ? false : true;
+          }
+        }).getOr(false);
+      };
+
       var markCell = function (cell) {
         return Descend.lastCursor(cell).bind(function (rightEdge) {
+          var rightSiblingIsBlock = siblingIsBlock(rightEdge);
           return Traverse.parent(rightEdge).map(function (parent) {
-            return isBr(rightEdge) || (DomStructure.isBlock(parent) && !Compare.eq(cell, parent)) ? [] :  [ Element.fromTag('br') ];
+            return rightSiblingIsBlock === true || isListItem(parent) || isBr(rightEdge) || (DomStructure.isBlock(parent) && !Compare.eq(cell, parent)) ? [] :  [ Element.fromTag('br') ];
           });
         }).getOr([]);
       };
