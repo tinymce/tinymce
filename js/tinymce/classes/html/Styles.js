@@ -120,9 +120,9 @@ define("tinymce/html/Styles", [], function() {
 					}
 
 					var sty_str = box.join(' ');
-                    if(/!important/i.test(sty_str)){
-                    	sty_str = sty_str.replace(/!important/gi, '').replace(/\s{2,}/, ' ').replace(/^\s+|\s+$/, '') + ' !important';
-                    }	
+                                        if(/!important/i.test(sty_str)){
+                                            sty_str = sty_str.replace(/!important/gi, '').replace(/\s{2,}/, ' ').replace(/^\s+|\s+$/, '') + ' !important';
+                                        }
 					styles[prefix + suffix] = i == -1 ? box[0] : sty_str;
 					delete styles[prefix + '-top' + suffix];
 					delete styles[prefix + '-right' + suffix];
