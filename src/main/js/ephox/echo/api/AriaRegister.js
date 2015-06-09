@@ -9,11 +9,16 @@ define(
     'ephox.epithet.Id',
     'ephox.peanut.Fun',
     'ephox.sugar.api.Attr',
+    'ephox.sugar.api.Class',
+    'ephox.sugar.api.Classes',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert'
   ],
 
-  function (Type, Arr, Obj, Styles, Id, Fun, Attr, Element, Insert) {
+  function (Type, Arr, Obj, Styles, Id, Fun, Attr, Class, Classes, Element, Insert) {
+    var helpStyle = Styles.resolve('aria-help');
+    var helpVisibleStyle = Styles.resolve('aria-help-visible');
+
     var presentation = function (element) {
       Attr.setAll(element, {
         'role': 'presentation',
@@ -21,7 +26,7 @@ define(
       });
     };
 
-    var editor = function (container, editor, label, ariaHelp) {
+    var editor = function (container, editor, label, ariaHelp, showHelpHint) {
       Attr.setAll(container, {
         'role': 'application',
         'aria-label': label
@@ -30,10 +35,9 @@ define(
       var labelId = Id.generate('ephox-aria');
       var aria = Element.fromTag('span');
       Insert.append(aria, Element.fromText(ariaHelp));
-      Attr.setAll(aria, {
-        'class': Styles.resolve('aria-help'),
-        id: labelId
-      });
+      Attr.set(aria, 'id', labelId);
+      Class.add(aria, helpStyle);
+      if (showHelpHint === true) Class.add(aria, helpVisibleStyle);
       Insert.append(container, aria);
 
       // content attributes - surprisingly helps in both classic and inline
