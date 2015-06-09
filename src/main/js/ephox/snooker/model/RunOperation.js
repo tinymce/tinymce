@@ -66,14 +66,22 @@ define(
         var output = extract(warehouse, target).map(function (info) {
           var model = fromWarehouse(warehouse, generators);
           var result = operation(model, info, Compare.eq, genWrappers(generators));
-          return toDetailList(result, generators);
+          var grid = toDetailList(result.grid(), generators);
+          return {
+            grid: Fun.constant(grid),
+            cursor: result.cursor
+          };
         });
 
-        output.each(function (out) {
-          Redraw.render(table, out);
-          adjustment(out, direction);
+        return output.fold(function () {
+          return Option.none();
+        }, function (out) {
+          Redraw.render(table, out.grid());
+          adjustment(out.grid(), direction);
           postAction(table);
-          Bars.refresh(wire, table, direction);
+          Bars.refresh(wire, table, direction);        
+          console.log("post.redraw", out);
+          return out.cursor && out.cursor();
         });
       };
     };

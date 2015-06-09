@@ -5,12 +5,13 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.scullion.Cell',
     'ephox.scullion.FunctionBag',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Css'
   ],
 
-  function (Arr, Fun, Option, FunctionBag, Attr, Css) {
+  function (Arr, Fun, Option, Cell, FunctionBag, Attr, Css) {
     var elementToData = function (element) {
       var colspan = Attr.has(element, 'colspan') ? parseInt(Attr.get(element, 'colspan')) : 1;
       var rowspan = Attr.has(element, 'rowspan') ? parseInt(Attr.get(element, 'rowspan')) : 1;
@@ -23,7 +24,7 @@ define(
 
     var modification = function (generators, _toData) {
       contract(generators);
-      console.log('generators in modification', generators);
+      var position = Cell(Option.none());
       var toData = _toData !== undefined ? _toData : elementToData;
 
       var nu = function (data) {
@@ -37,6 +38,7 @@ define(
 
       var add = function (element) {
         var replacement = nuFrom(element);
+        if (position.get().isNone()) position.set(Option.some(replacement));
         recent = Option.some({ item: element, replacement: replacement });
         return replacement;
       };
@@ -50,11 +52,15 @@ define(
         });
       };
 
-      return getOrInit;
+      return {
+        getOrInit: getOrInit,
+        cursor: position.get
+      } ;
     };
 
     var transform = function (scope, tag) {
       return function (generators) {
+        var position = Cell(Option.none());
         contract(generators);
         var list = [];
 
@@ -64,17 +70,15 @@ define(
         };
 
         var makeNew = function (element) {
-          console.log('generators in transform', generators);
           var cell = generators.replace(element, tag, {
             scope: scope
           });
-          console.log('done');
           list.push({ item: element, sub: cell });
+          if (position.get().isNone()) position.set(Option.some(cell));
           return cell;
         };
       
         var replaceOrInit = function (element, comparator) {
-          console.log('here', replaceOrInit);
           return find(element, comparator).fold(function () {
             return makeNew(element);
           }, function (p) {
@@ -82,13 +86,19 @@ define(
           });
         };
 
-        return replaceOrInit;
+        return {
+          replaceOrInit: replaceOrInit,
+          cursor: position.get
+        };
       };
     };
 
     var merging = function (generators) {
       contract(generators);
-      return function (cell) {
+      var position = Cell(Option.none());
+
+      var combine = function (cell) {
+        if (position.get().isNone()) position.set(Option.some(cell));
         return function () {
           var raw = generators.cell({
             element: Fun.constant(cell),
@@ -99,7 +109,12 @@ define(
           Css.remove(raw, 'width');
           Css.remove(cell, 'width');
           return raw;
-        };
+        };       
+      };
+
+      return {
+        combine: combine,
+        cursor: position.get
       };
     };
 
