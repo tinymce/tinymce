@@ -1,19 +1,23 @@
 test(
   'ModificationOperationsTest',
 
+  {
+    'ephox.sugar.api.Css': '../mock/ephox/sugar/api/Css',
+    'ephox.sugar.api.Attr': '../mock/ephox/sugar/api/Attr'
+  },
+
   [
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
     'ephox.snooker.api.Generators',
     'ephox.snooker.operate.ModificationOperations',
     'ephox.snooker.test.TestGenerator'
   ],
 
-  function (Fun, Option, Generators, ModificationOperations, TestGenerator) {
+  function (Fun, Generators, ModificationOperations, TestGenerator) {
     // Test basic insert column
     (function () {
       var check = function (expected, grid, example, index) {
-        var actual = ModificationOperations.insertColumnAt(grid, index, example, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity));
+        var actual = ModificationOperations.insertColumnAt(grid, index, example, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity).getOrInit);
         assert.eq(expected, actual);
       };
 
@@ -71,7 +75,7 @@ test(
     // Test basic insert row
     (function () {
       var check = function (expected, grid, example, index) {
-        var actual = ModificationOperations.insertRowAt(grid, index, example, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity));
+        var actual = ModificationOperations.insertRowAt(grid, index, example, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity).getOrInit);
         assert.eq(expected, actual);
       };
 

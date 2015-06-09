@@ -1,6 +1,11 @@
 test(
   'TransformOperationsTest',
 
+  {
+    'ephox.sugar.api.Css': '../mock/ephox/sugar/api/Css',
+    'ephox.sugar.api.Attr': '../mock/ephox/sugar/api/Attr'
+  },
+
   [
     'ephox.peanut.Fun',
     'ephox.snooker.api.Generators',
@@ -13,7 +18,7 @@ test(
     // Test basic changing to header (column)
     (function () {
       var check = function (expected, grid, index) {
-        var actual = TransformOperations.replaceColumn(grid, index, Fun.tripleEquals, Generators.transform('scope', 'tag')(TestGenerator(), Fun.identity));
+        var actual = TransformOperations.replaceColumn(grid, index, Fun.tripleEquals, Generators.transform('scope', 'tag')(TestGenerator(), Fun.identity).replaceOrInit);
         assert.eq(expected, actual);
       };
 
@@ -70,7 +75,7 @@ test(
     // Test basic changing to header (row)
     (function () {
       var check = function (expected, grid, index) {
-        var actual = TransformOperations.replaceRow(grid, index, Fun.tripleEquals, Generators.transform('scope', 'tag')(TestGenerator(), Fun.identity));
+        var actual = TransformOperations.replaceRow(grid, index, Fun.tripleEquals, Generators.transform('scope', 'tag')(TestGenerator(), Fun.identity).replaceOrInit);
         assert.eq(expected, actual);
       };
 

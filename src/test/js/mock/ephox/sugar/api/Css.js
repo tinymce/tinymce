@@ -2,9 +2,12 @@ define(
   'ephox.sugar.api.Css',
 
   [
+    'ephox.peanut.Fun'
   ],
 
-  function () {
-    return null;
+  function (Fun) {
+    return {
+      remove: Fun.noop
+    };
   }
 );
