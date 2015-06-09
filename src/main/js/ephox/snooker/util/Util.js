@@ -4,10 +4,11 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.perhaps.Option',
-    'ephox.perhaps.Options'
+    'ephox.perhaps.Options',
+    'global!Math'
   ],
 
-  function (Arr, Option, Options) {
+  function (Arr, Option, Options, Math) {
     // Rename this module, and repeat should be in Arr.
     var repeat = function(repititions, f) {
       var r = [];
@@ -68,7 +69,7 @@ define(
           console.log('c: ', c, 'n', n);
           var extras = n.delta + c.delta;
           console.log('delta: ', extras, n.value - c.value);
-          return (n.value - c.value) / extras;
+          return Math.abs(n.value - c.value) / extras;
         });
       });
     };

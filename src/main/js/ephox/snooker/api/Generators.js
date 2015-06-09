@@ -6,10 +6,11 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.scullion.FunctionBag',
-    'ephox.sugar.api.Attr'
+    'ephox.sugar.api.Attr',
+    'ephox.sugar.api.Css'
   ],
 
-  function (Arr, Fun, Option, FunctionBag, Attr) {
+  function (Arr, Fun, Option, FunctionBag, Attr, Css) {
     var elementToData = function (element) {
       var colspan = Attr.has(element, 'colspan') ? parseInt(Attr.get(element, 'colspan')) : 1;
       var rowspan = Attr.has(element, 'rowspan') ? parseInt(Attr.get(element, 'rowspan')) : 1;
@@ -89,11 +90,15 @@ define(
       contract(generators);
       return function (cell) {
         return function () {
-          return generators.cell({
+          var raw = generators.cell({
             element: Fun.constant(cell),
             colspan: Fun.constant(1),
             rowspan: Fun.constant(1)
           });
+          // Remove any width calculations because they are no longer relevant.
+          Css.remove(raw, 'width');
+          Css.remove(cell, 'width');
+          return raw;
         };
       };
     };
