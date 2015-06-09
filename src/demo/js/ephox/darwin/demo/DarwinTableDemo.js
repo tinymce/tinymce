@@ -56,6 +56,7 @@ define(
         '</table>'
       );
 
+/* Uncomment for normal table with no colspans.
       // var table = Element.fromHtml(
       //   '<table>' +
       //     '<tbody>' +
@@ -66,8 +67,8 @@ define(
       //         // '<td style="min-width: 100px;">D1</td>' +
       //       '</tr>' +
       //       '<tr>' +
-      //         '<td style="min-width: 100px;" colspan="2">A2</td>' +
-      //         // '<td style="min-width: 100px;">B2<br /><br /></td>' +
+      //         '<td style="min-width: 100px;">A2</td>' +
+      //         '<td style="min-width: 100px;">B2<br /><br /></td>' +
       //         '<td style="min-width: 100px;"><p>C2</p><p>More</p></td>' +
       //         '<td style="min-width: 100px;"><br />D2</td>' +
       //       '</tr>' +
@@ -86,6 +87,7 @@ define(
       //     '</tbody>' +
       //   '</table>'
       // );
+*/
 
       Insert.append(ephoxUi, table);
       Insert.append(Element.fromDom(document.head), style);
