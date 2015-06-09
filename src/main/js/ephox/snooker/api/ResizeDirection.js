@@ -31,7 +31,6 @@ define(
     var rtlPositions = function (cols, _table) {
       var lines = Arr.map(cols.slice(1), function (cellOption, col) {
         return cellOption.map(function (cell) {
-          console.log('cell: ', cell.dom(), col);
           var pos = Location.absolute(cell);
           return colInfo(col, pos.left() + Width.getOuter(cell));
         });

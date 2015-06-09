@@ -2,7 +2,7 @@ define(
   'ephox.snooker.operate.MergingOperations',
 
   [
-
+    
   ],
 
   function () {
@@ -21,7 +21,6 @@ define(
 
     // substitution: () -> item
     var unmerge = function (grid, target, comparator, substitution) {
-      console.log('substitution', substitution);
       // Mutating. Do we care about the efficiency gain?
       var first = true;
       for (var i = 0; i < grid.length; i++) {

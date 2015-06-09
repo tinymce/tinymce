@@ -28,9 +28,6 @@ define(
           var topRow = Math.min(sc.row(), fc.row());
           var bottomRow = Math.max(sc.row() + sc.rowspan() - 1 , fc.row() + fc.rowspan() - 1);
 
-          console.log('leftCol', leftCol, 'rightCol', rightCol);
-
-
           return {
             startCol: Fun.constant(leftCol),
             finishCol: Fun.constant(rightCol),

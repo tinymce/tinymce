@@ -43,7 +43,6 @@ define(
       var columns = Blocks.columns(warehouse);
 
       var backups = Arr.map(columns, function (cellOption) {
-        console.log('direction', direction);
         return cellOption.map(direction.edge);
       });
 
@@ -67,32 +66,21 @@ define(
       var warehouse = getWarehouse(list);
       var widths = getWidths(warehouse, direction);
 
-      console.log('old widths: ', widths.join(', '));
-
       // Calculate all of the new widths for columns
       var deltas = Deltas.determine(widths, index, delta, minWidth);
-
-      console.log('deltas: ', deltas.join(', '));
 
       var newWidths = Arr.map(deltas, function (dx, i) {
         return dx + widths[i];
       });
 
-      console.log('new widths: ', newWidths.join(', '));
-
       // Set the width of each cell based on the column widths
       var newSizes = recalculate(warehouse, newWidths);
       Arr.each(newSizes, function (cell) {
-        
-        // if (cell.colspan() === 1) {
-          console.log('cell.element()', cell.element().dom(), cell.width(), cell.colspan() === 1);
-          Sizes.setWidth(cell.element(), cell.width());
-        // }
+        Sizes.setWidth(cell.element(), cell.width());
       });
 
       // Set the overall width of the table.
       var total = Arr.foldr(newWidths, function (b, a) { return b + a; }, 0);
-      console.log('total: ', total);
       Sizes.setWidth(table, total);
     };
 
@@ -100,8 +88,6 @@ define(
     var adjustTo = function (list, direction) {
       var warehouse = getWarehouse(list);
       var widths = getWidths(warehouse, direction);
-
-      console.log('widths', widths);
 
       // Set the width of each cell based on the column widths
       var newSizes = recalculate(warehouse, widths);
