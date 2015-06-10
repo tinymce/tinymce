@@ -10,12 +10,11 @@ define(
     'ephox.peanut.Fun',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Class',
-    'ephox.sugar.api.Classes',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert'
   ],
 
-  function (Type, Arr, Obj, Styles, Id, Fun, Attr, Class, Classes, Element, Insert) {
+  function (Type, Arr, Obj, Styles, Id, Fun, Attr, Class, Element, Insert) {
     var helpStyle = Styles.resolve('aria-help');
     var helpVisibleStyle = Styles.resolve('aria-help-visible');
 
