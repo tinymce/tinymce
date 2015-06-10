@@ -9,8 +9,6 @@ test(
   ],
 
   function (Struct, Structs, Warehouse, CellBounds) {
-
-
     var s = Structs.detail;  // 'element', 'rowspan', 'colspan'
     var f = Struct.immutable('element', 'cells');
 
@@ -22,15 +20,6 @@ test(
       f('r5', [ s('s',1,1), s('t',1,1), s('u',1,1), s('v',1,1), s('z',1,1)])
     ];
     var inputA = Warehouse.generate(testTableA);
-
-    // 'element', 'rowspan', 'colspan'
-    var testTableB = [
-      f('r1', [ s('a',3,1), s('b',1,1), s('c',1,1), s('d',2,1) ]),
-      f('r2', [ s('e',2,2) ]),
-      f('r3', [ s('f',2,1) ]),
-      f('r4', [ s('g',1,3) ])
-    ];
-    var inputB = Warehouse.generate(testTableB);
 
     var bounds1To3 = Structs.bounds({ startRow: 1, startCol: 1, finishRow: 3, finishCol: 3 });
     
@@ -44,6 +33,15 @@ test(
     check(true, inputA, bounds1To3, 3, 3);
     check(false, inputA, bounds1To3, 0, 0);
     check(true, inputA, bounds1To3, 3, 1);
+
+    // 'element', 'rowspan', 'colspan'
+    var testTableB = [
+      f('r1', [ s('a',3,1), s('b',1,1), s('c',1,1), s('d',2,1) ]),
+      f('r2', [ s('e',2,2) ]),
+      f('r3', [ s('f',2,1) ]),
+      f('r4', [ s('g',1,3) ])
+    ];
+    var inputB = Warehouse.generate(testTableB);
 
     var bounds0To2 = Structs.bounds({ startRow: 0, startCol: 0, finishRow: 2, finishCol: 2 });
 
