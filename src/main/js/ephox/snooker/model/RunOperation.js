@@ -8,7 +8,7 @@ define(
     'ephox.perhaps.Options',
     'ephox.snooker.api.TableLookup',
     'ephox.snooker.model.DetailsList',
-    'ephox.snooker.model.Warefun',
+    'ephox.snooker.model.Transitions',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.operate.Redraw',
     'ephox.snooker.resize.Bars',
@@ -16,39 +16,32 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Arr, Fun, Option, Options, TableLookup, DetailsList, Warefun, Warehouse, Redraw, Bars, Compare, Traverse) {
+  function (Arr, Fun, Option, Options, TableLookup, DetailsList, Transitions, Warehouse, Redraw, Bars, Compare, Traverse) {
     var fromWarehouse = function (warehouse, generators) {
-      var grid = [];
-      for (var i = 0; i < warehouse.grid().rows(); i++) {
-        var h = [];
-        for (var j = 0; j < warehouse.grid().columns(); j++) {
-          h.push(Warehouse.getAt(warehouse, i, j).map(function (item) {
-            return item.element();
-          }).getOrThunk(generators.gap));
-        }
-        grid.push(h);
-      }
-      return grid;
+      return Transitions.toGrid(warehouse, generators);
     };
 
-    var toDetailList = function (grid, generators) {
-      var rendered = Warefun.render(grid, Compare.eq);
-
+    var deriveRows = function (rendered, generators) {
       // The row is either going to be a new row, or the row of any of the cells.
-      var findRow = function (cells) {
-        var rowOfCells = Options.findMap(cells, function (c) { return Traverse.parent(c.element()); });
+      var findRow = function (details) {
+        var rowOfCells = Options.findMap(details, function (detail) { return Traverse.parent(detail.element()); });
         return rowOfCells.getOrThunk(function () {
           return generators.row();
         });
       };
 
-      return Arr.map(rendered, function (cells) {
-        var row = findRow(cells);
+      return Arr.map(rendered, function (details) {
+        var row = findRow(details);
         return {
           element: Fun.constant(row),
-          cells: Fun.constant(cells)
+          cells: Fun.constant(details)
         };
       });
+    };
+
+    var toDetailList = function (grid, generators) {
+      var rendered = Transitions.toDetails(grid, Compare.eq);
+      return deriveRows(rendered, generators);
     };
 
     var findInWarehouse = function (warehouse, element) {

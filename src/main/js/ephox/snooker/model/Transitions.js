@@ -1,14 +1,15 @@
 define(
-  'ephox.snooker.model.Warefun',
+  'ephox.snooker.model.Transitions',
 
   [
     'ephox.compass.Arr',
     'ephox.snooker.api.Structs',
-    'ephox.snooker.model.TableGrid'
+    'ephox.snooker.model.TableGrid',
+    'ephox.snooker.model.Warehouse'
   ],
 
-  function (Arr, Structs, TableGrid) {
-    var render = function (grid, comparator) {
+  function (Arr, Structs, TableGrid, Warehouse) {
+    var toDetails = function (grid, comparator) {
       var seen = Arr.map(grid, function (row, ri) {
         return Arr.map(row, function (col, ci) {
           return false;
@@ -37,8 +38,25 @@ define(
       });
     };
 
+    var toGrid = function (warehouse, generators) {
+      var grid = [];
+      for (var i = 0; i < warehouse.grid().rows(); i++) {
+        var row = [];
+        for (var j = 0; j < warehouse.grid().columns(); j++) {
+          // The item is going to be the element at that position, or a newly generated gap.
+          var element = Warehouse.getAt(warehouse, i, j).map(function (item) {
+            return item.element();
+          }).getOrThunk(generators.gap);
+          row.push(element);
+        }
+        grid.push(row);
+      }
+      return grid;
+    };
+
     return {
-      render: render
+      toDetails: toDetails,
+      toGrid: toGrid
     };
   }
 );
