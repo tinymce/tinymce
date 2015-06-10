@@ -4,7 +4,6 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
     'ephox.snooker.calc.Deltas',
     'ephox.snooker.lookup.Blocks',
     'ephox.snooker.model.DetailsList',
@@ -15,7 +14,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Fun, Option, Deltas, Blocks, DetailsList, Warehouse, Sizes, CellUtils, Util, SelectorFind) {
+  function (Arr, Fun, Deltas, Blocks, DetailsList, Warehouse, Sizes, CellUtils, Util, SelectorFind) {
     var recalculate = function (warehouse, widths) {
       var all = Warehouse.justCells(warehouse);
 

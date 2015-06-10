@@ -4,21 +4,28 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.sugar.api.Attr',
+    'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.InsertAll',
     'ephox.sugar.api.Remove',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.sugar.api.SelectorFind',
+    'ephox.sugar.api.Traverse'
   ],
 
-  function (Arr, Attr, Insert, InsertAll, Remove, SelectorFind) {
+  function (Arr, Attr, Element, Insert, InsertAll, Remove, SelectorFind, Traverse) {
     var setIfNot = function (element, property, value, ignore) {
       if (value === ignore) Attr.remove(element, property);
       else Attr.set(element, property, value);
     };
 
     var render = function (table, list) {
-      var tbody = SelectorFind.child(table, 'tbody').getOrDie();
-      // ****************************8 NOTE: This isn't going to work if there are theads?
+      // NOTE: It is an accepted limitation that we are only dealing with tbodys and not thead/tfoot.
+      var tbody = SelectorFind.child(table, 'tbody').getOrThunk(function () {
+        var tb = Element.fromTag('tbody', Traverse.owner(table).dom());
+        Insert.append(table, tb);
+        return tb;
+      });
+
       Remove.empty(tbody);
 
       var rows = Arr.map(list, function (row) {
