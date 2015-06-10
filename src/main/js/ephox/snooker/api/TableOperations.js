@@ -110,7 +110,7 @@ define(
     var mergeCells = function (grid, mergable, comparator, _genWrappers) {
       var cells = mergable.cells();
       TableContent.merge(cells);
-      var newGrid = MergingOperations.merge(grid, mergable, comparator, Fun.constant(cells[0]));
+      var newGrid = MergingOperations.merge(grid, mergable.bounds(), comparator, Fun.constant(cells[0]));
       return outcome(newGrid, Option.from(cells[0]));
     };
 
