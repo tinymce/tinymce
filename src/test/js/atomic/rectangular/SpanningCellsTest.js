@@ -32,29 +32,25 @@ test(
     ];
     var inputB = Warehouse.generate(testTableB);
 
-    var baseBound = Structs.bounds({ startRow: 1, startCol: 1, finishRow: 3, finishCol: 3 });
-    var cellA = Structs.cell({
-      row: 2,
-      col: 2
-    });
-
+    var bounds1To3 = Structs.bounds({ startRow: 1, startCol: 1, finishRow: 3, finishCol: 3 });
+    
     var check = function (expected, warehouse, bounds, row, column) {
       var cell = Warehouse.getAt(warehouse, row, column).getOrDie();
       var actual = CellBounds.isWithin(bounds, cell);
       assert.eq(expected, actual);
     };
 
-    check(false, inputA, baseBound, 2, 2);
-    check(true, inputA, baseBound, 3, 3);
-    check(false, inputA, baseBound, 0, 0);
-    check(true, inputA, baseBound, 3, 1);
+    check(false, inputA, bounds1To3, 2, 2);
+    check(true, inputA, bounds1To3, 3, 3);
+    check(false, inputA, bounds1To3, 0, 0);
+    check(true, inputA, bounds1To3, 3, 1);
 
-    var baseBoundB = Structs.bounds({ startRow: 0, startCol: 0, finishRow: 2, finishCol: 2 });
+    var bounds0To2 = Structs.bounds({ startRow: 0, startCol: 0, finishRow: 2, finishCol: 2 });
 
-    check(false, inputB, baseBoundB, 3, 0);
-    check(true, inputB, baseBoundB, 0, 1);
-    check(true, inputB, baseBoundB, 1, 1);
-    check(true, inputB, baseBoundB, 2, 2);
-    check(false, inputB, baseBoundB, 1, 3);
+    check(false, inputB, bounds0To2, 3, 0);
+    check(true, inputB, bounds0To2, 0, 1);
+    check(true, inputB, bounds0To2, 1, 1);
+    check(true, inputB, bounds0To2, 2, 2);
+    check(false, inputB, bounds0To2, 1, 3);
   }
 );
