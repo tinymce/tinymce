@@ -10,8 +10,13 @@ define(
       return Attr.has(cell, 'colspan') && parseInt(Attr.get(cell, 'colspan'), 10) > 1;
     };
 
+    var minWidth = function () {
+      return 10;
+    };
+
     return {
-      hasColspan: hasColspan
+      hasColspan: hasColspan,
+      minWidth: minWidth
     };
   }
 );

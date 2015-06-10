@@ -4,6 +4,7 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.snooker.calc.Deltas',
     'ephox.snooker.lookup.Blocks',
     'ephox.snooker.model.DetailsList',
@@ -14,7 +15,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Fun, Deltas, Blocks, DetailsList, Warehouse, Sizes, CellUtils, Util, SelectorFind) {
+  function (Arr, Fun, Option, Deltas, Blocks, DetailsList, Warehouse, Sizes, CellUtils, Util, SelectorFind) {
     var minWidth = 10;
 
     var recalculate = function (warehouse, widths) {
@@ -46,12 +47,10 @@ define(
       });
 
       return Arr.map(columns, function (cellOption, c) {
-        return cellOption.fold(function () {
+        // Only use the width of cells that have no column span (or colspan 1)
+        return cellOption.filter(Fun.not(CellUtils.hasColspan)).map(Sizes.getWidth).getOrThunk(function () {
           // Default column size when all else fails.
-          return Util.deduce(backups, c).getOr(10);
-        }, function (cell) {
-          if (! CellUtils.hasColspan(cell)) return Sizes.getWidth(cell);
-          else return Util.deduce(backups, c).getOr(10);
+          return Util.deduce(backups, c).getOrThunk(CellUtils.minWidth);
         });
       });
     };

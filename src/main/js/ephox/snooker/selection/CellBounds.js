@@ -33,7 +33,6 @@ define(
       var isRect = true;
       var detailIsWithin = Fun.curry(isWithin, bounds);
 
-      
       for (var i = bounds.startRow(); i<=bounds.finishRow(); i++) {
         for (var j = bounds.startCol(); j<=bounds.finishCol(); j++) {
           isRect = isRect && Warehouse.getAt(warehouse, i, j).exists(detailIsWithin);
