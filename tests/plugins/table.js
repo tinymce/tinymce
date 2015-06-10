@@ -586,4 +586,21 @@
 			'<p>x</p>'
 		);
 	});
+
+	test("Delete empty like table cell contents", function() {
+		editor.getBody().innerHTML = (
+			'<table><tbody>' +
+			'<tr><td><p><br></p></td><td><p>a</p></td>' +
+			'</tbody></table>' +
+			'<p>x</p>'
+		);
+
+		Utils.setSelection('td', 0);
+		editor.fire('keydown', {keyCode: 46});
+
+		equal(
+			editor.getContent(),
+			'<table><tbody><tr><td>&nbsp;</td><td><p>a</p></td></tr></tbody></table><p>x</p>'
+		);
+	});
 })();

@@ -330,9 +330,19 @@ define("tinymce/tableplugin/Quirks", [
 		 * Delete table if all cells are selected.
 		 */
 		function deleteTable() {
+			function placeCaretInCell(cell) {
+				editor.selection.select(cell, true);
+				editor.selection.collapse(true);
+			}
+
+			function clearCell(cell) {
+				editor.$(cell).empty();
+				Utils.paddCell(cell);
+			}
+
 			editor.on('keydown', function(e) {
 				if ((e.keyCode == VK.DELETE || e.keyCode == VK.BACKSPACE) && !e.isDefaultPrevented()) {
-					var table, tableCells, selectedTableCells;
+					var table, tableCells, selectedTableCells, cell;
 
 					table = editor.dom.getParent(editor.selection.getStart(), 'table');
 					if (table) {
@@ -342,6 +352,14 @@ define("tinymce/tableplugin/Quirks", [
 						});
 
 						if (selectedTableCells.length === 0) {
+							// If caret is within an empty table cell then empty it for real
+							cell = editor.dom.getParent(editor.selection.getStart(), 'td,th');
+							if (editor.selection.isCollapsed() && cell && editor.dom.isEmpty(cell)) {
+								e.preventDefault();
+								clearCell(cell);
+								placeCaretInCell(cell);
+							}
+
 							return;
 						}
 
@@ -350,13 +368,8 @@ define("tinymce/tableplugin/Quirks", [
 						if (tableCells.length == selectedTableCells.length) {
 							editor.execCommand('mceTableDelete');
 						} else {
-							Tools.each(selectedTableCells, function(cell) {
-								editor.$(cell).empty();
-								Utils.paddCell(cell);
-							});
-
-							editor.selection.select(selectedTableCells[0], true);
-							editor.selection.collapse(true);
+							Tools.each(selectedTableCells, clearCell);
+							placeCaretInCell(selectedTableCells[0]);
 						}
 					}
 				}
