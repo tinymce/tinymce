@@ -9,13 +9,12 @@ define(
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.resize.Sizes',
-    'ephox.snooker.util.CellSpans',
+    'ephox.snooker.util.CellUtils',
     'ephox.snooker.util.Util',
-    'ephox.sugar.api.Attr',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Fun, Deltas, Blocks, DetailsList, Warehouse, Sizes, CellSpans, Util, Attr, SelectorFind) {
+  function (Arr, Fun, Deltas, Blocks, DetailsList, Warehouse, Sizes, CellUtils, Util, SelectorFind) {
     var minWidth = 10;
 
     var recalculate = function (warehouse, widths) {
@@ -51,7 +50,7 @@ define(
           // Default column size when all else fails.
           return Util.deduce(backups, c).getOr(10);
         }, function (cell) {
-          if (! CellSpans.hasColspan(cell)) return Sizes.getWidth(cell);
+          if (! CellUtils.hasColspan(cell)) return Sizes.getWidth(cell);
           else return Util.deduce(backups, c).getOr(10);
         });
       });

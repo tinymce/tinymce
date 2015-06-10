@@ -1,5 +1,5 @@
 define(
-  'ephox.snooker.util.CellSpans',
+  'ephox.snooker.util.CellUtils',
 
   [
     'ephox.sugar.api.Attr'

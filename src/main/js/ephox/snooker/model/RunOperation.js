@@ -34,6 +34,7 @@ define(
     var toDetailList = function (grid, generators) {
       var rendered = Warefun.render(grid, Compare.eq);
 
+      // The row is either going to be a new row, or the row of any of the cells.
       var findRow = function (cells) {
         var rowOfCells = Options.findMap(cells, function (c) { return Traverse.parent(c.element()); });
         return rowOfCells.getOrThunk(function () {
@@ -80,7 +81,7 @@ define(
           adjustment(out.grid(), direction);
           postAction(table);
           Bars.refresh(wire, table, direction);        
-          return out.cursor && out.cursor();
+          return out.cursor();
         });
       };
     };

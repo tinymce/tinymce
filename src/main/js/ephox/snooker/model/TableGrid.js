@@ -1,11 +1,12 @@
 define(
-  'ephox.snooker.model.TableGroup',
+  'ephox.snooker.model.TableGrid',
 
   [
-    'ephox.compass.Arr'
+    'ephox.compass.Arr',
+    'ephox.peanut.Fun'
   ],
 
-  function (Arr) {
+  function (Arr, Fun) {
     var getColumn = function (grid, index) {
       return Arr.map(grid, function (row) {
         return row[index];
@@ -27,15 +28,15 @@ define(
     };
 
     /*
+     * grid is the grid
      * row is the row index into the grid
      * column in the column index into the grid
-     * grid is the grid
      *
      * Return
      *   colspan: column span of the cell at (row, column)
      *   rowspan: row span of the cell at (row, column)
      */
-    var subgrid = function (row, column, grid, comparator) {
+    var subgrid = function (grid, row, column, comparator) {
       var restOfRow = getRow(grid, row).slice(column);
       var endColIndex = findDiff(restOfRow, comparator);
 
@@ -43,8 +44,8 @@ define(
       var endRowIndex = findDiff(restOfColumn, comparator);
 
       return {
-        colspan: endColIndex,
-        rowspan: endRowIndex
+        colspan: Fun.constant(endColIndex),
+        rowspan: Fun.constant(endRowIndex)
       };
     };
 
