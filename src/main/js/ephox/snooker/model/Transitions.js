@@ -43,7 +43,7 @@ define(
       for (var i = 0; i < warehouse.grid().rows(); i++) {
         var row = [];
         for (var j = 0; j < warehouse.grid().columns(); j++) {
-          // The item is going to be the element at that position, or a newly generated gap.
+          // The element is going to be the element at that position, or a newly generated gap.
           var element = Warehouse.getAt(warehouse, i, j).map(function (item) {
             return item.element();
           }).getOrThunk(generators.gap);
