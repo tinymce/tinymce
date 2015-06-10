@@ -2,6 +2,7 @@ test(
   'RectangularTest',
 
   [
+    'ephox.snooker.api.TableOperations',
     'ephox.snooker.selection.Rectangular',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
@@ -11,7 +12,7 @@ test(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Rectangular, Element, Insert, InsertAll, Remove, SelectorFilter, SelectorFind) {
+  function (TableOperations, Rectangular, Element, Insert, InsertAll, Remove, SelectorFilter, SelectorFind) {
     var body = SelectorFind.first('body').getOrDie();
     var div = Element.fromTag('div');
     Insert.append(body, div);
@@ -88,8 +89,8 @@ test(
       document.querySelector(to).style.background = '#5adb33';
       var start = SelectorFilter.descendants(tableTarget, from)[0];
       var finish = SelectorFilter.descendants(tableTarget, to)[0];
-      var check = Rectangular.isRectangular(tableTarget, start, finish);
-      assert.eq(expected, check.isRect());
+      var check = TableOperations.getBox(tableTarget, start, finish);
+      assert.eq(expected, check.isSome());
     };
 
     check(table, '#tableA td#B1', '#tableA td#C3', false);

@@ -2,21 +2,35 @@ define(
   'ephox.snooker.api.TablePositions',
 
   [
+    'ephox.snooker.api.TableLookup',
+    'ephox.snooker.model.DetailsList',
+    'ephox.snooker.model.Warehouse',
     'ephox.snooker.selection.CellFinder',
     'ephox.snooker.selection.Rectangular'
   ],
 
-  function (CellFinder, Rectangular) {
+  function (TableLookup, DetailsList, Warehouse, CellFinder, Rectangular) {
     var moveBy = function (cell, deltaRow, deltaColumn) {
-      return CellFinder.moveBy(cell, deltaRow, deltaColumn);
+      return TableLookup.table(cell).bind(function (table) {
+        var warehouse = getWarehouse(table);
+        return CellFinder.moveBy(warehouse, cell, deltaRow, deltaColumn);
+      });
     };
 
     var intercepts = function (table, first, last) {
-      return CellFinder.intercepts(table, first, last);
+      var warehouse = getWarehouse(table);
+      return CellFinder.intercepts(warehouse, first, last);
     };
 
     var getBox = function (table, first, last) {
-      return Rectangular.isRectangular(table, first, last);
+      var warehouse = getWarehouse(table);
+      return Rectangular.getBox(warehouse, first, last);
+    };
+
+    // Private method ... keep warehouse in snooker, please.
+    var getWarehouse = function (table) {
+      var list = DetailsList.fromTable(table);
+      return Warehouse.generate(list);
     };
 
     return {
