@@ -12,7 +12,7 @@ define(
 
   function (Arr, Fun, Warehouse, CellBounds, CellGroup, Compare) {
     var moveBy = function (warehouse, cell, row, column) {
-      return Warehouse.findItem(warehouse, cell, Compare.eq).bind(function (info) {
+      return Warehouse.findItem(warehouse, cell, Compare.eq).bind(function (detail) {
         var startRow = row > 0 ? detail.row() + detail.rowspan() - 1 : detail.row();
         var startCol = column > 0 ? detail.column() + detail.colspan() - 1 : detail.column();
         var dest = Warehouse.getAt(warehouse, startRow + row, startCol + column);
