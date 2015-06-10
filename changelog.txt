@@ -8,6 +8,7 @@ Version 4.1.11 (2015-05-xx)
 	Fixed bug where it wasn't possible to delete table cell contents when cell selection was vertical.
 	Fixed bug where table cell wasn't emptied from block elements if delete/backspace where pressed in empty cell.
 	Fixed bug where cmd+shift+arrow didn't work correctly on Firefox mac when selecting to start/end of line.
+	Fixed bug where removal of bogus elements would sometimes remove whitespace between nodes.
 	Fixed so script elements gets removed by default to prevent possible XSS issues in default config implementations.
 Version 4.1.10 (2015-05-05)
 	Fixed bug where plugins loaded with compat3x would sometimes throw errors when loading using the jQuery version.
