@@ -68,6 +68,27 @@ var dependencies = [
     ]
   },
 
+  {
+    name: 'robin',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'robin.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
+  {
+    name: 'oath',
+    repository: 'buildrepo2',
+    source: 'oath.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
   /**** demo dependencies ****/
   {
     name: 'exhibition',

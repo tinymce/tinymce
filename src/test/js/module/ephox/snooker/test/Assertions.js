@@ -8,7 +8,6 @@ define(
   function (Arr) {
     var assertInfo = function (expected, actual) {
       var cleaner = Arr.map(actual, function (row) {
-        console.log('JSON: ', JSON.stringify(row.cells()));
         var cells = Arr.map(row.cells(), function (c) {
           return { element: c.element(), rowspan: c.rowspan(), colspan: c.colspan() };
         });

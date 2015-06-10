@@ -2,9 +2,13 @@ define(
   'ephox.sugar.api.Attr',
 
   [
+    'ephox.peanut.Fun'
   ],
 
-  function () {
-    return null;
+  function (Fun) {
+    return {
+      has: Fun.constant(false),
+      get: Fun.constant(false)
+    };
   }
 );

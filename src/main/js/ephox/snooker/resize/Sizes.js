@@ -3,14 +3,16 @@ define(
 
   [
     'ephox.snooker.api.TableLookup',
+    'ephox.sugar.api.Attr',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.Width',
     'ephox.violin.Strings',
-    'global!Math'
+    'global!Math',
+    'global!parseInt'
   ],
 
-  function (TableLookup, Css, Node, Width, Strings, Math) {
+  function (TableLookup, Attr, Css, Node, Width, Strings, Math, parseInt) {
     var setWidth = function (cell, amount) {
       cell.dom().style.setProperty('width', amount + 'px');
     };
@@ -30,12 +32,18 @@ define(
       return newWidth;
     };
 
-    var getWidth = function (cell) {
+    var getTotalWidth = function (cell) {
       var value = getWidthValue(cell);
       // Note, Firefox doesn't calculate the width for you with Css.get
       if (!value) return Width.get(cell);
       var number = parseInt(value, 10);
       return Strings.endsWith(value, '%') && Node.name(cell) !== 'table' ? convert(cell, number) : number;
+    };
+
+    var getWidth = function (cell) {
+      var w = getTotalWidth(cell);
+      var span = Attr.has(cell, 'colspan') ? parseInt(Attr.get(cell, 'colspan'), 10) : 1;
+      return w / span;
     };
 
     return {

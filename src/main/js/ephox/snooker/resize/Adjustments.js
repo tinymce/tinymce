@@ -9,12 +9,12 @@ define(
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.resize.Sizes',
+    'ephox.snooker.util.CellUtils',
+    'ephox.snooker.util.Util',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Fun, Deltas, Blocks, DetailsList, Warehouse, Sizes, SelectorFind) {
-    var minWidth = 10;
-
+  function (Arr, Fun, Deltas, Blocks, DetailsList, Warehouse, Sizes, CellUtils, Util, SelectorFind) {
     var recalculate = function (warehouse, widths) {
       var all = Warehouse.justCells(warehouse);
 
@@ -30,15 +30,25 @@ define(
         var width = total(cell.column(), cell.column() + cell.colspan());
         return {
           element: cell.element,
-          width: Fun.constant(width)
+          width: Fun.constant(width),
+          colspan: cell.colspan
         };
       });
     };
 
-    var getWidths = function (warehouse) {
+    var getWidths = function (warehouse, direction) {
       var columns = Blocks.columns(warehouse);
-      return Arr.map(columns, function (cell) {
-        return Sizes.getWidth(cell);
+
+      var backups = Arr.map(columns, function (cellOption) {
+        return cellOption.map(direction.edge);
+      });
+
+      return Arr.map(columns, function (cellOption, c) {
+        // Only use the width of cells that have no column span (or colspan 1)
+        return cellOption.filter(Fun.not(CellUtils.hasColspan)).map(Sizes.getWidth).getOrThunk(function () {
+          // Default column size when all else fails.
+          return Util.deduce(backups, c).getOrThunk(CellUtils.minWidth);
+        });
       });
     };
 
@@ -46,13 +56,14 @@ define(
       return Warehouse.generate(list);
     };
 
-    var adjust = function (table, delta, index) {
+    var adjust = function (table, delta, index, direction) {
       var list = DetailsList.fromTable(table);
       var warehouse = getWarehouse(list);
-      var widths = getWidths(warehouse);
+      var widths = getWidths(warehouse, direction);
 
       // Calculate all of the new widths for columns
-      var deltas = Deltas.determine(widths, index, delta, minWidth);
+      var deltas = Deltas.determine(widths, index, delta, CellUtils.minWidth());
+
       var newWidths = Arr.map(deltas, function (dx, i) {
         return dx + widths[i];
       });
@@ -69,9 +80,9 @@ define(
     };
 
     // Ensure that the width of table cells match the passed in table information.
-    var adjustTo = function (list) {
+    var adjustTo = function (list, direction) {
       var warehouse = getWarehouse(list);
-      var widths = getWidths(warehouse);
+      var widths = getWidths(warehouse, direction);
 
       // Set the width of each cell based on the column widths
       var newSizes = recalculate(warehouse, widths);

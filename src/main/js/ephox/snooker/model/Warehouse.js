@@ -18,14 +18,18 @@ define(
       var raw = warehouse.access()[key(row, column)];
       return raw !== undefined ? Option.some(raw) : Option.none();
     };
-
-    // Identify extended by the dom position of the cell.
-    var domAt = function (warehouse, rowIndex, colIndex) {
-      var cells = warehouse.all();
-      // Identify the actual DOM position of the cell.
-      return Option.from(cells[rowIndex]).bind(function (row) {
-        return Option.from(row.cells()[colIndex]);
+    
+    var findItem = function (warehouse, item, comparator) {
+      var filtered = filterItems(warehouse, function (detail) {
+        return comparator(item, detail.element());
       });
+
+      return filtered.length > 0 ? Option.some(filtered[0]) : Option.none();
+    };
+
+    var filterItems = function (warehouse, predicate) {
+      var all = Arr.bind(warehouse.all(), function (r) { return r.cells(); });
+      return Arr.filter(all, predicate);
     };
 
     /*
@@ -35,6 +39,13 @@ define(
      *  3. a list of all cells in order left-to-right, top-to-bottom
      */
     var generate = function (list) {
+      // list is an array of objects, made by cells and elements
+      // elements: is the TR
+      // cells: is an array of objects representing the cells in the row.
+      //        It is made of:
+      //          colspan (merge cell)
+      //          element
+      //          rowspan (merge cols)
       var access = {};
       var cells = [];
 
@@ -91,7 +102,8 @@ define(
     return {
       generate: generate,
       getAt: getAt,
-      domAt: domAt,
+      findItem: findItem,
+      filterItems: filterItems,
       justCells: justCells
     };
   }

@@ -2,7 +2,6 @@ define(
   'ephox.snooker.demo.DetectDemo',
 
   [
-    'ephox.compass.Arr',
     'ephox.perhaps.Option',
     'ephox.snooker.api.ResizeDirection',
     'ephox.snooker.api.ResizeWire',
@@ -10,7 +9,6 @@ define(
     'ephox.snooker.api.TableOperations',
     'ephox.snooker.api.TableResize',
     'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Class',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.Direction',
@@ -23,10 +21,37 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Option, ResizeDirection, ResizeWire, Structs, TableOperations, TableResize, Attr, Class, Compare, Css, Direction, DomEvent, Element, Insert, InsertAll, Ready, Replication, SelectorFind) {
+  function (Option, ResizeDirection, ResizeWire, Structs, TableOperations, TableResize, Attr, Compare, Css, Direction, DomEvent, Element, Insert, InsertAll, Ready, Replication, SelectorFind) {
     return function () {
+
+      var tester = Element.fromHtml(
+        '<table border=1>'+
+          '<tr>'+
+            '<th>A0</th>'+
+            '<th>A1</th>'+
+            '<th>A2</th>'+
+            '<th>A3</th>'+
+            '<th>A4</th>'+
+          '</tr>'+
+          '<tr>'+
+            '<td>B0</td>'+
+            '<td>B1</td>'+
+            '<td>B2</td>'+
+            '<td>B3</td>'+
+            '<td rowspan="2">B3</td>'+
+          '</tr>'+
+          '<tr>'+
+            '<td>C0</td>'+
+            '<td>C1</td>'+
+            '<td>C2</td>'+
+            '<td>C3</td>'+
+          '</tr>'+
+        '</table>'
+      );
+
+
       var subject = Element.fromHtml(
-        '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
+        '<table contenteditable="true" style="border-collapse: collapse;" border="1"><tbody>' +
           '<tr>' +
             '<td style="width: 110px;">1</td>' +
             '<td colspan="5">.</td>' +
@@ -91,9 +116,9 @@ define(
 
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
       var ltrs = Element.fromHtml('<div></div>');
-      InsertAll.append(ltrs, [ Element.fromHtml('<p>Left to Right tables</p>'), subject, Element.fromTag('p'), subject2 ]);
+      InsertAll.append(ltrs, [ Element.fromHtml('<p>Left to Right tables</p>'), tester, Element.fromTag('p'), subject2 ]);
       var rtls = Element.fromHtml('<div dir="rtl"></div>');
-      InsertAll.append(rtls, [ Element.fromHtml('<p>Right to Left table</p>'), subject3 ]);
+      //  InsertAll.append(rtls, [ Element.fromHtml('<p>Right to Left table</p>'), subject3 ]);
       InsertAll.append(ephoxUi, [ ltrs, rtls ]);
 
       var ltrManager = TableResize(ResizeWire.only(ltrs), ResizeDirection.ltr);
@@ -132,6 +157,10 @@ define(
       Insert.append(eraseColumn, Element.fromText('Erase column'));
       Insert.append(ephoxUi, eraseColumn);
 
+      var mergeCells = Element.fromTag('button');
+      Insert.append(mergeCells, Element.fromText('Merge cells'));
+      Insert.append(ephoxUi, mergeCells);
+
       var makeButton = function (desc) {
         var button = Element.fromTag('button');
         Insert.append(button, Element.fromText(desc));
@@ -148,7 +177,8 @@ define(
         var selection = window.getSelection();
         if (selection.rangeCount > 0) {
           var range = selection.getRangeAt(0);
-          return Option.some(Element.fromDom(range.startContainer));
+          var fistElement = range.startContainer.nodeType === 3 ? range.startContainer.parentNode : range.startContainer;
+          return Option.some(Element.fromDom(fistElement));
         } else {
           return Option.none();
         }
@@ -203,6 +233,8 @@ define(
       DomEvent.bind(unmakeColumnHeader, 'click', runOperation(TableOperations.unmakeColumnHeader));
       DomEvent.bind(makeRowHeader, 'click', runOperation(TableOperations.makeRowHeader));
       DomEvent.bind(unmakeRowHeader, 'click', runOperation(TableOperations.unmakeRowHeader));
+
+      DomEvent.bind(mergeCells, 'click', runOperation(TableOperations.mergeCells));
     };
   }
 );
