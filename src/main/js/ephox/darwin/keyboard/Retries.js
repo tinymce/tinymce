@@ -7,42 +7,68 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.phoenix.api.dom.DomGather',
+    'ephox.robin.api.dom.DomStructure',
     'ephox.scullion.ADT',
+    'ephox.sugar.api.PredicateFind',
     'global!Math'
   ],
 
-  function (Carets, Rectangles, Fun, Option, DomGather, Adt, Math) {
+  function (Carets, Rectangles, Fun, Option, DomGather, DomStructure, Adt, PredicateFind, Math) {
     var JUMP_SIZE = 5;
     var NUM_RETRIES = 100;
 
     var adt = Adt.generate([
       { 'none' : [] },
-      { 'retry': [ 'caret' ] },
-      { 'adjusted': [ 'caret' ] }
+      { 'retry': [ 'caret' ] }
     ]);
 
-    var adjustDown = function (guessBox, original, caret) {
-      // If the guess is to the right of the original left, move to the right and try again.
-      if (guessBox.right() <= caret.left() || Math.abs(guessBox.right() - caret.left()) < 1) return adt.retry(Carets.translate(caret, JUMP_SIZE, 0));
-      // We haven't dropped vertically, so we need to look down and try again.
-      else if (Math.abs(guessBox.bottom() - original.bottom() < 1)) return adt.retry(Carets.moveDown(caret, JUMP_SIZE));
-      // The returned guessBox based on the guess actually doesn't include the initial caret. So we search again
-      // where we adjust the caret so that it is inside the returned guessBox. This means that the offset calculation
-      // will be more accurate.
-      else if (guessBox.top() > caret.bottom()) return adt.adjusted(Carets.moveBottomTo(caret, guessBox.top() + 1));
-      else return adt.none();
+    var isOutside = function (caret, box) {
+      return caret.left() < box.left() || Math.abs(box.right() - caret.left()) < 1 || caret.left() > box.right();
     };
 
-    var adjustUp = function (guessBox, original, caret) {
-      // If the guess is to the right of the original left, move to the right and try again.
-      if (guessBox.right() <= caret.left() || Math.abs(guessBox.right() - caret.left()) < 1) return adt.retry(Carets.translate(caret, JUMP_SIZE * 2, 0));
-      // We haven't ascended vertically, so we need to look up and try again.
-      else if (Math.abs(guessBox.top() - original.top()) < 1) return adt.retry(Carets.moveUp(caret, JUMP_SIZE));
-      // The returned guessBox based on the guess actually doesn't include the initial caret. So we search again
-      // where we adjust the caret so that it is inside the returned guessBox. This means that the offset calculation
-      // will be more accurate.
-      else if (guessBox.bottom() < caret.top()) return adt.adjusted(Carets.moveTopTo(caret, guessBox.bottom() - 1));
-      else return adt.none();
+    // Find the block and determine whether or not that block is outside. If it is outside, move up/down and right.
+    var inOutsideBlock = function (bridge, element, caret) {
+      return PredicateFind.closest(element, DomStructure.isBlock).fold(Fun.constant(false), function (cell) {
+        return Rectangles.getEntireBox(bridge, cell).exists(function (box) {
+          return isOutside(caret, box);
+        });
+      });
+    };
+
+    /*
+     * The approach is as follows.
+     *
+     * The browser APIs for caret ranges return elements that are the closest text elements to your (x, y) position, even if those
+     * closest elements are miles away. This causes problems when you are trying to identify what is immediately above or below
+     * a cell, because often the closest text is in a cell that is in a completely different column. Therefore, the approach needs
+     * to keep moving down until the thing that we are hitting is likely to be a true positive.
+     *
+     * Steps:
+     *
+     * 1. If the y position of the next guess is not different from the original, keep going.
+     * 2a. If the guess box doesn't actually include the position looked for, then the browser has returned a node that does not have
+     *    a rectangle which truly intercepts the point. So, keep going. Note, we used to jump straight away here, but that means that
+     *    we might skip over something that wasn't considered close enough but was a better guess than just making the y value skip.
+     * 2b. If the guess box exactly aligns with the caret, then adjust by 1 and go again. This is to get a more accurate offset.
+     * 3. if the guess box does include the caret, but the guess box's parent cell does not *really* contain the caret, try again shifting
+     *    only the x value. If the guess box's parent cell does *really* contain the caret (i.e. it is horizontally-aligned), then stop
+     *    because the guess is GOOD.
+     */
+
+    var adjustDown = function (bridge, element, guessBox, original, caret) {
+      var lowerCaret = Carets.moveDown(caret, JUMP_SIZE);
+      if (Math.abs(guessBox.bottom() - original.bottom()) < 1) return adt.retry(lowerCaret);
+      else if (guessBox.top() > caret.bottom()) return adt.retry(lowerCaret);
+      else if (guessBox.top() === caret.bottom()) return adt.retry(Carets.moveDown(caret, 1));
+      else return inOutsideBlock(bridge, element, caret) ? adt.retry(Carets.translate(lowerCaret, JUMP_SIZE, 0)) : adt.none();
+    };
+
+    var adjustUp = function (bridge, element, guessBox, original, caret) {
+      var higherCaret = Carets.moveUp(caret, JUMP_SIZE);
+      if (Math.abs(guessBox.top() - original.top()) < 1) return adt.retry(higherCaret);
+      else if (guessBox.bottom() < caret.top()) return adt.retry(higherCaret);
+      else if (guessBox.bottom() === caret.top()) return adt.retry(Carets.moveUp(caret, 1));
+      else return inOutsideBlock(bridge, element, caret) ? adt.retry(Carets.translate(higherCaret, JUMP_SIZE, 0)) : adt.none();
     };
 
     var upMovement = {
@@ -64,11 +90,12 @@ define(
       return bridge.situsFromPoint(caret.left(), movement.point(caret)).bind(function (guess) {
         return guess.start().fold(Option.none, function (element, offset) {
           return Rectangles.getEntireBox(bridge, element, offset).bind(function (guessBox) {
-            return movement.adjuster(guessBox, original, caret).fold(Option.none, function (newCaret) {
-              return adjustTil(bridge, movement, original, newCaret, numRetries-1);
-            }, function (newCaret) {
-              return Option.some(newCaret);
-            });
+            return movement.adjuster(bridge, element, guessBox, original, caret).fold(
+              Option.none,
+              function (newCaret) {
+                return adjustTil(bridge, movement, original, newCaret, numRetries-1);
+              }
+            );
           }).orThunk(function () {
             return Option.some(caret);
           });
@@ -106,7 +133,8 @@ define(
       tryUp: Fun.curry(retry, upMovement),
       tryDown: Fun.curry(retry, downMovement),
       ieTryUp: ieTryUp,
-      ieTryDown: ieTryDown
+      ieTryDown: ieTryDown,
+      getJumpSize: Fun.constant(JUMP_SIZE)
     };
   }
 );

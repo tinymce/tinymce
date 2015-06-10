@@ -2,6 +2,7 @@ define(
   'ephox.darwin.demo.DarwinTableDemo',
 
   [
+    'ephox.compass.Arr',
     'ephox.darwin.api.InputHandlers',
     'ephox.darwin.api.SelectionKeys',
     'ephox.fred.PlatformDetection',
@@ -17,13 +18,14 @@ define(
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.Replication',
+    'ephox.sugar.api.SelectorFilter',
     'ephox.sugar.api.SelectorFind',
     'ephox.sugar.api.Traverse',
     'global!Math',
     'global!document'
   ],
 
-  function (InputHandlers, SelectionKeys, PlatformDetection, WindowSelection, Fun, Option, Attr, Body, Compare, Direction, DomEvent, Element, Insert, Node, Replication, SelectorFind, Traverse, Math, document) {
+  function (Arr, InputHandlers, SelectionKeys, PlatformDetection, WindowSelection, Fun, Option, Attr, Body, Compare, Direction, DomEvent, Element, Insert, Node, Replication, SelectorFilter, SelectorFind, Traverse, Math, document) {
     return function () {
 
       var detection = PlatformDetection.detect();
@@ -33,7 +35,7 @@ define(
 
       var style = Element.fromHtml(
         '<style>' +
-          'table { border-collapse: collapse; }\n' +
+          'table { border-collapse: separate; border-spacing: 30px; }\n' +
           'td { text-align: left; border: 1px solid #aaa; font-size: 20px; }\n' +
           'td.ephox-darwin-selected { background: #cadbee; }\n' +
           '#coords { position: fixed; right: 0px; bottom: 0px; background: #ddd }' +
@@ -41,35 +43,51 @@ define(
       );
 
       var table = Element.fromHtml(
-        '<table>' +
+        '<table style="width: 400px;">' +
           '<tbody>' +
-            '<tr>' +
-              '<td style="min-width: 100px;">A1</td>' +
-              '<td style="min-width: 100px;">B1<br /></td>' +
-              '<td style="min-width: 100px;" colspan=2>C1<br /><br /><br /></td>' +
-              // '<td style="min-width: 100px;">D1</td>' +
-            '</tr>' +
-            '<tr>' +
-              '<td style="min-width: 100px;">A2</td>' +
-              '<td style="min-width: 100px;">B2<br /><br /></td>' +
-              '<td style="min-width: 100px;"><p>C2</p><p>More</p></td>' +
-              '<td style="min-width: 100px;"><br />D2</td>' +
-            '</tr>' +
-            '<tr>' +
-              '<td style="min-width: 100px;">A3</td>' +
-              '<td style="min-width: 100px;"><br /></td>' +
-              '<td style="min-width: 100px;"><br /></td>' +
-              '<td style="min-width: 100px;">D3</td>' +
-            '</tr>' +
-            '<tr>' +
-              '<td style="padding-top: 100px;" style="min-width: 100px;">A4</td>' +
-              '<td style="padding-top: 100px;" style="min-width: 100px;"><br /></td>' +
-              '<td style="padding-top: 100px;" style="min-width: 100px;"><br /></td>' +
-              '<td style="padding-top: 100px;" style="min-width: 100px;">D4</td>' +
-            '</tr>' +
+            '<tr style="height: 20px;"><td>A</td><td rowspan="2" colspan="2">B</td><td>C</td></tr>' +
+            '<tr style="height: 20px;"><td>D</td><td colspan="1" rowspan="2">E</td>' +
+            '<tr style="height: 20px;"><td colspan="3" rowspan="3">F</td></tr>' +
+            '<tr style="height: 20px;"><td>G</td></tr>' +
+            '<tr style="height: 20px;"><td>H</td></tr>' +
+            '<tr style="height: 20px;"><td rowspan="2" colspan="1">I</td><td>J</td><td colspan="2">K</td></tr>' +
+            '<tr style="height: 20px;"><td colspan="2">L</td><td>M</td></tr>' +
           '</tbody>' +
         '</table>'
       );
+
+/* Uncomment for normal table with no colspans.
+      // var table = Element.fromHtml(
+      //   '<table>' +
+      //     '<tbody>' +
+      //       '<tr>' +
+      //         '<td style="min-width: 100px;">A1</td>' +
+      //         '<td style="min-width: 100px;">B1<br /></td>' +
+      //         '<td style="min-width: 100px;" colspan=2>C1<br /><br /><br /></td>' +
+      //         // '<td style="min-width: 100px;">D1</td>' +
+      //       '</tr>' +
+      //       '<tr>' +
+      //         '<td style="min-width: 100px;">A2</td>' +
+      //         '<td style="min-width: 100px;">B2<br /><br /></td>' +
+      //         '<td style="min-width: 100px;"><p>C2</p><p>More</p></td>' +
+      //         '<td style="min-width: 100px;"><br />D2</td>' +
+      //       '</tr>' +
+      //       '<tr>' +
+      //         '<td style="min-width: 100px;">A3</td>' +
+      //         '<td style="min-width: 100px;"><br /></td>' +
+      //         '<td style="min-width: 100px;"><br /></td>' +
+      //         '<td style="min-width: 100px;">D3</td>' +
+      //       '</tr>' +
+      //       '<tr>' +
+      //         '<td style="padding-top: 100px;" style="min-width: 100px;">A4</td>' +
+      //         '<td style="padding-top: 100px;" style="min-width: 100px;"><br /></td>' +
+      //         '<td style="padding-top: 100px;" style="min-width: 100px;"><br /></td>' +
+      //         '<td style="padding-top: 100px;" style="min-width: 100px;">D4</td>' +
+      //       '</tr>' +
+      //     '</tbody>' +
+      //   '</table>'
+      // );
+*/
 
       Insert.append(ephoxUi, table);
       Insert.append(Element.fromDom(document.head), style);

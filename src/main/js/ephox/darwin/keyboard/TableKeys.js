@@ -2,17 +2,21 @@ define(
   'ephox.darwin.keyboard.TableKeys',
 
   [
+    'ephox.darwin.keyboard.Carets',
     'ephox.darwin.keyboard.Rectangles',
+    'ephox.darwin.keyboard.Retries',
     'ephox.darwin.navigation.BeforeAfter',
     'ephox.darwin.navigation.BrTags',
     'ephox.fred.PlatformDetection',
     'ephox.oath.proximity.Awareness',
     'ephox.perhaps.Option',
-    'ephox.phoenix.api.data.Spot'
+    'ephox.phoenix.api.data.Spot',
+    'ephox.sugar.api.Compare',
+    'ephox.sugar.api.Node'
   ],
 
-  function (Rectangles, BeforeAfter, BrTags, PlatformDetection, Awareness, Option, Spot) {
-    var MAX_RETRIES = 1000;
+  function (Carets, Rectangles, Retries, BeforeAfter, BrTags, PlatformDetection, Awareness, Option, Spot, Compare, Node) {
+    var MAX_RETRIES = 20;
 
     var platform = PlatformDetection.detect();
 
@@ -41,21 +45,34 @@ define(
           // We have a new cell, so we stop looking.
           return Option.some(situs);
         }, function (cell) {
+          if (Compare.eq(element, cell) && offset === 0) return tryAgain(bridge, element, offset, Carets.moveUp, direction);
           // We need to look again from the start of our current cell
-          return scan(bridge, isRoot, cell, 0, direction, numRetries - 1);
+          else return scan(bridge, isRoot, cell, 0, direction, numRetries - 1);
         }, function (cell) {
+          // If we were here last time, move and try again.
+          if (Compare.eq(element, cell) && offset === Awareness.getEnd(cell)) return tryAgain(bridge, element, offset, Carets.moveDown, direction);
           // We need to look again from the end of our current cell
-          return scan(bridge, isRoot, cell, Awareness.getEnd(cell), direction, numRetries - 1);
+          else return scan(bridge, isRoot, cell, Awareness.getEnd(cell), direction, numRetries - 1);
         });
       });
     };
 
-    var tryCursor = function (bridge, isRoot, element, offset, direction) {
+    var tryAgain = function (bridge, element, offset, move, direction) {
       return Rectangles.getBoxAt(bridge, element, offset).bind(function (box) {
-        // NOTE: As we attempt to take over selection everywhere, we'll probably need to separate these again.
+        return tryAt(bridge, direction, move(box, Retries.getJumpSize()));
+      });
+    };
+
+    var tryAt = function (bridge, direction, box) {
+      // NOTE: As we attempt to take over selection everywhere, we'll probably need to separate these again.
         if (platform.browser.isChrome() || platform.browser.isSafari() || platform.browser.isFirefox()) return direction.otherRetry(bridge, box);
         else if (platform.browser.isIE()) return direction.ieRetry(bridge, box);
         else return Option.none();
+    };
+
+    var tryCursor = function (bridge, isRoot, element, offset, direction) {
+      return Rectangles.getBoxAt(bridge, element, offset).bind(function (box) {
+        return tryAt(bridge, direction, box);
       });
     };
 

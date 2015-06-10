@@ -44,13 +44,13 @@ define(
     };
 
     var update = function (rows, columns, container, selected) {
-      var update = function (newSels) {
+      var updateSelection = function (newSels) {
         CellSelection.clear(container);
         CellSelection.selectRange(container, newSels.boxes(), newSels.start(), newSels.finish());
         return newSels.boxes();
       };
 
-      return CellSelection.shiftSelection(selected, rows, columns).map(update);
+      return CellSelection.shiftSelection(selected, rows, columns).map(updateSelection);
     };
 
     return {
