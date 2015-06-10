@@ -87,7 +87,6 @@ test(
       check(
         [
           [ 'a', 'a', 'b' ],
-          // *********** Should this really be ?_0 in the 2nd column? Shouldn't it be ?_1?
           [ '?_0', '?_0', 'b' ],
           [ 'c', 'd', 'b' ]
         ],
