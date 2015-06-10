@@ -7,12 +7,14 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.phoenix.api.dom.DomGather',
+    'ephox.robin.api.dom.DomStructure',
     'ephox.scullion.ADT',
+    'ephox.sugar.api.PredicateFind',
     'ephox.sugar.api.SelectorFind',
     'global!Math'
   ],
 
-  function (Carets, Rectangles, Fun, Option, DomGather, Adt, SelectorFind, Math) {
+  function (Carets, Rectangles, Fun, Option, DomGather, DomStructure, Adt, PredicateFind, SelectorFind, Math) {
     var JUMP_SIZE = 5;
     var NUM_RETRIES = 100;
 
@@ -26,9 +28,9 @@ define(
       return caret.left() < box.left() || Math.abs(box.right() - caret.left()) < 1 || caret.left() > box.right();
     };
 
-    // Find the block based on a selector, and determine whether or not that block is outside. If it is outside, move up/down and right.
-    var inOutsideBlock = function (bridge, element, selector, caret) {
-      return SelectorFind.closest(element, selector).bind(function (cell) {
+    // Find the block and determine whether or not that block is outside. If it is outside, move up/down and right.
+    var inOutsideBlock = function (bridge, element, caret) {
+      return PredicateFind.closest(element, DomStructure.isBlock).fold(Fun.constant(false), function (cell) {
         return Rectangles.getEntireBox(bridge, cell).exists(function (box) {
           return isOutside(caret, box);
         });
@@ -46,9 +48,10 @@ define(
      * Steps:
      *
      * 1. If the y position of the next guess is not different from the original, keep going.
-     * 2. If the guess box doesn't actually include the position looked for, then the browser has returned a node that does not have
+     * 2a. If the guess box doesn't actually include the position looked for, then the browser has returned a node that does not have
      *    a rectangle which truly intercepts the point. So, keep going. Note, we used to jump straight away here, but that means that
      *    we might skip over something that wasn't considered close enough but was a better guess than just making the y value skip.
+     * 2b. If the guess box exactly aligns with the caret, then adjust by 1 and go again. This is to get a more accurate offset.
      * 3. if the guess box does include the caret, but the guess box's parent cell does not *really* contain the caret, try again shifting
      *    only the x value. If the guess box's parent cell does *really* contain the caret (i.e. it is horizontally-aligned), then stop
      *    because the guess is GOOD.
@@ -58,14 +61,16 @@ define(
       var lowerCaret = Carets.moveDown(caret, JUMP_SIZE);
       if (Math.abs(guessBox.bottom() - original.bottom()) < 1) return adt.retry(lowerCaret);
       else if (guessBox.top() > caret.bottom()) return adt.retry(lowerCaret);
-      else return inOutsideBlock(bridge, element, 'td,th', caret) ? adt.retry(Carets.translate(lowerCaret, JUMP_SIZE, 0)) : adt.none();
+      else if (guessBox.top() === caret.bottom()) return adt.retry(Carets.moveDown(caret, 1));
+      else return inOutsideBlock(bridge, element, caret) ? adt.retry(Carets.translate(lowerCaret, JUMP_SIZE, 0)) : adt.none();
     };
 
     var adjustUp = function (bridge, element, guessBox, original, caret) {
       var higherCaret = Carets.moveUp(caret, JUMP_SIZE);
       if (Math.abs(guessBox.top() - original.top()) < 1) return adt.retry(higherCaret);
       else if (guessBox.bottom() < caret.top()) return adt.retry(higherCaret);
-      else return inOutsideBlock(bridge, element, 'td,th', caret) ? adt.retry(Carets.translate(higherCaret, JUMP_SIZE, 0)) : adt.none();
+      else if (guessBox.bottom() === caret.top()) return adt.retry(Carets.moveUp(caret, 1));
+      else return inOutsideBlock(bridge, element, caret) ? adt.retry(Carets.translate(higherCaret, JUMP_SIZE, 0)) : adt.none();
     };
 
     var upMovement = {
