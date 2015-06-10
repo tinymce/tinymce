@@ -5,6 +5,7 @@ Version 4.1.11 (2015-05-xx)
 	Fixed bug where cut command on Chrome would thrown a browser security exception.
 	Fixed bug where IE 11 sometimes would report an incorrect size for images in the image dialog.
 	Fixed bug where it wasn't possible to remove inline formatting at the end of block elements.
+	Fixed bug where it wasn't possible to delete table cell contents when cell selection was vertical.
 Version 4.1.10 (2015-05-05)
 	Fixed bug where plugins loaded with compat3x would sometimes throw errors when loading using the jQuery version.
 	Fixed bug where extra empty paragraphs would get deleted in WebKit/Blink due to recent Quriks fix.
