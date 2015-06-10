@@ -18,16 +18,7 @@ define(
       var raw = warehouse.access()[key(row, column)];
       return raw !== undefined ? Option.some(raw) : Option.none();
     };
-
-    // Identify extended by the dom position of the cell.
-    var domAt = function (warehouse, rowIndex, colIndex) {
-      var cells = warehouse.all();
-      // Identify the actual DOM position of the cell.
-      return Option.from(cells[rowIndex]).bind(function (row) {
-        return Option.from(row.cells()[colIndex]);
-      });
-    };
-
+    
     var findItem = function (warehouse, item, comparator) {
       var filtered = filterItems(warehouse, function (detail) {
         return comparator(item, detail.element());
@@ -91,8 +82,6 @@ define(
         cells.push(Structs.rowdata(details.element(), currentRow));
       });
 
-      //
-
       var grid = Structs.grid(maxRows, maxColumns);
 
       return {
@@ -113,7 +102,6 @@ define(
     return {
       generate: generate,
       getAt: getAt,
-      domAt: domAt,
       findItem: findItem,
       filterItems: filterItems,
       justCells: justCells
