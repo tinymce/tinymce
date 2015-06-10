@@ -10,18 +10,16 @@ define(
     'ephox.robin.api.dom.DomStructure',
     'ephox.scullion.ADT',
     'ephox.sugar.api.PredicateFind',
-    'ephox.sugar.api.SelectorFind',
     'global!Math'
   ],
 
-  function (Carets, Rectangles, Fun, Option, DomGather, DomStructure, Adt, PredicateFind, SelectorFind, Math) {
+  function (Carets, Rectangles, Fun, Option, DomGather, DomStructure, Adt, PredicateFind, Math) {
     var JUMP_SIZE = 5;
     var NUM_RETRIES = 100;
 
     var adt = Adt.generate([
       { 'none' : [] },
-      { 'retry': [ 'caret' ] },
-      { 'adjusted': [ 'caret' ] }
+      { 'retry': [ 'caret' ] }
     ]);
 
     var isOutside = function (caret, box) {
@@ -92,11 +90,12 @@ define(
       return bridge.situsFromPoint(caret.left(), movement.point(caret)).bind(function (guess) {
         return guess.start().fold(Option.none, function (element, offset) {
           return Rectangles.getEntireBox(bridge, element, offset).bind(function (guessBox) {
-            return movement.adjuster(bridge, element, guessBox, original, caret).fold(Option.none, function (newCaret) {
-              return adjustTil(bridge, movement, original, newCaret, numRetries-1);
-            }, function (newCaret) {
-              return Option.some(newCaret);
-            });
+            return movement.adjuster(bridge, element, guessBox, original, caret).fold(
+              Option.none,
+              function (newCaret) {
+                return adjustTil(bridge, movement, original, newCaret, numRetries-1);
+              }
+            );
           }).orThunk(function () {
             return Option.some(caret);
           });
