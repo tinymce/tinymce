@@ -110,7 +110,8 @@ define(
     var menuItemCheckbox = function (element, label) {
       Attr.setAll(element, {
         'role': 'menuitemcheckbox',
-        'aria-label': label
+        'aria-label': label,
+        'aria-checked': false
       });
     };
 
