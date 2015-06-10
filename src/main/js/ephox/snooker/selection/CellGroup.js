@@ -1,5 +1,5 @@
 define(
-  'ephox.snooker.selection.Rectangular',
+  'ephox.snooker.selection.CellGroup',
 
   [
     'ephox.snooker.api.Structs',

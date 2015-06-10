@@ -6,11 +6,11 @@ define(
     'ephox.peanut.Fun',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.selection.CellBounds',
-    'ephox.snooker.selection.Rectangular',
+    'ephox.snooker.selection.CellGroup',
     'ephox.sugar.api.Compare'
   ],
 
-  function (Arr, Fun, Warehouse, CellBounds, Rectangular, Compare) {
+  function (Arr, Fun, Warehouse, CellBounds, CellGroup, Compare) {
     var moveBy = function (warehouse, cell, row, column) {
       return Warehouse.findItem(warehouse, cell, Compare.eq).bind(function (info) {
         var startRow = row > 0 ? detail.row() + detail.rowspan() - 1 : detail.row();
@@ -21,7 +21,7 @@ define(
     };
     
     var intercepts = function (warehouse, start, finish) {
-      return Rectangular.getAnyBox(warehouse, start, finish).map(function (bounds) {
+      return CellGroup.getAnyBox(warehouse, start, finish).map(function (bounds) {
         var inside = Warehouse.filterItems(warehouse, Fun.curry(CellBounds.inSelection, bounds));
         return Arr.map(inside, function (detail) {
           return detail.element();

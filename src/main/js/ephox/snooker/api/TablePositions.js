@@ -6,10 +6,10 @@ define(
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.selection.CellFinder',
-    'ephox.snooker.selection.Rectangular'
+    'ephox.snooker.selection.CellGroup'
   ],
 
-  function (TableLookup, DetailsList, Warehouse, CellFinder, Rectangular) {
+  function (TableLookup, DetailsList, Warehouse, CellFinder, CellGroup) {
     var moveBy = function (cell, deltaRow, deltaColumn) {
       return TableLookup.table(cell).bind(function (table) {
         var warehouse = getWarehouse(table);
@@ -24,7 +24,7 @@ define(
 
     var getBox = function (table, first, last) {
       var warehouse = getWarehouse(table);
-      return Rectangular.getBox(warehouse, first, last);
+      return CellGroup.getBox(warehouse, first, last);
     };
 
     // Private method ... keep warehouse in snooker, please.
