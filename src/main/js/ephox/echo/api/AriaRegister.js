@@ -157,6 +157,18 @@ define(
       });
     };
 
+    var describedBy = function (element, id) {
+      Attr.set(element, 'aria-describedby', id);
+    };
+
+    var labelledBy = function (element, id) {
+      Attr.set(element, 'aria-labelledby', id);
+    };
+
+    var required = function (element) {
+      Attr.set(element, 'aria-required', 'true');
+    };
+
     // TODO: Implement form ARIA support
     // var form = function (element, label) {
     //   throw 'Form ARIA support not implemented yet.';
@@ -197,7 +209,10 @@ define(
       tabList: tabList,
       tabButton: tabButton,
       tabPanel: tabPanel,
-      linkTabToPanel: linkTabToPanel
+      linkTabToPanel: linkTabToPanel,
+      describedBy: describedBy,
+      labelledBy: labelledBy,
+      required: required
     };
   }
 );
