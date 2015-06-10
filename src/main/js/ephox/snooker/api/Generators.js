@@ -6,12 +6,12 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.scullion.Cell',
-    'ephox.scullion.FunctionBag',
+    'ephox.scullion.Contracts',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Css'
   ],
 
-  function (Arr, Fun, Option, Cell, FunctionBag, Attr, Css) {
+  function (Arr, Fun, Option, Cell, Contracts, Attr, Css) {
     var elementToData = function (element) {
       var colspan = Attr.has(element, 'colspan') ? parseInt(Attr.get(element, 'colspan')) : 1;
       var rowspan = Attr.has(element, 'rowspan') ? parseInt(Attr.get(element, 'rowspan')) : 1;
@@ -118,7 +118,7 @@ define(
       };
     };
 
-    var contract = FunctionBag([ 'cell', 'row', 'replace', 'gap' ]);
+    var contract = Contracts.exactly([ 'cell', 'row', 'replace', 'gap' ]);
 
     return {
       modification: modification,
