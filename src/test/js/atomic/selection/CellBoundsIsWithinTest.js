@@ -1,5 +1,5 @@
 test(
-  'SpanningCellsTest',
+  'CellBounds.isWithin Test',
 
   [
     'ephox.scullion.Struct',
