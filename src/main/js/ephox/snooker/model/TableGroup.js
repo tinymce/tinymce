@@ -35,7 +35,7 @@ define(
      *   colspan: column span of the cell at (row, column)
      *   rowspan: row span of the cell at (row, column)
      */
-    var subGrid = function (row, column, grid, comparator) {
+    var subgrid = function (row, column, grid, comparator) {
       var restOfRow = getRow(grid, row).slice(column);
       var endColIndex = findDiff(restOfRow, comparator);
 
@@ -49,7 +49,7 @@ define(
     };
 
     return {
-      subGrid: subGrid
+      subgrid: subgrid
     };
   }
 );

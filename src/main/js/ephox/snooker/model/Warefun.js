@@ -4,10 +4,11 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
+    'ephox.snooker.api.Structs',
     'ephox.snooker.model.TableGroup'
   ],
 
-  function (Arr, Fun, TableGroup) {
+  function (Arr, Fun, Structs, TableGroup) {
 
     var render = function (structure, comparator) {
       var seen = Arr.map(structure, function (row, ri) {
@@ -25,25 +26,16 @@ define(
       };
 
       return Arr.map(structure, function (row, ri) {
-        var cells = Arr.bind(row, function (cell, ci) {
+        return Arr.bind(row, function (cell, ci) {
           // if we have seen this one, then skip it.
           if (seen[ri][ci] === false) {
-            var result = TableGroup.subGrid(ri, ci, structure, comparator);
+            var result = TableGroup.subgrid(ri, ci, structure, comparator);
             updateSeen(ri, ci, result.rowspan, result.colspan);
-
-            return [ {
-              element: Fun.constant(cell),
-              rowspan: Fun.constant(result.rowspan),
-              colspan: Fun.constant(result.colspan)
-            } ];
+            return [ Structs.detail(cell, result.rowspan, result.colspan) ];
           } else {
             return [];
           }
         });
-        return {
-          element: Fun.constant('tr'),
-          cells: Fun.constant(cells)
-        };
       });
     };
 

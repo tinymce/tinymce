@@ -32,21 +32,22 @@ define(
     };
 
     var toDetailList = function (grid, generators) {
-      var fun = Warefun.render(grid, Compare.eq);
+      var rendered = Warefun.render(grid, Compare.eq);
 
-      // Add rows.
-      var newFun = Arr.map(fun, function (f) {
-        var rowOfCells = Options.findMap(f.cells(), function (c) { return Traverse.parent(c.element()); });
-        var tr = rowOfCells.getOrThunk(function () {
+      var findRow = function (cells) {
+        var rowOfCells = Options.findMap(cells, function (c) { return Traverse.parent(c.element()); });
+        return rowOfCells.getOrThunk(function () {
           return generators.row();
         });
+      };
+
+      return Arr.map(rendered, function (cells) {
+        var row = findRow(cells);
         return {
-          element: Fun.constant(tr),
-          cells: f.cells
+          element: Fun.constant(row),
+          cells: Fun.constant(cells)
         };
       });
-
-      return newFun;
     };
 
     var findInWarehouse = function (warehouse, element) {
