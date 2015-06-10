@@ -16,8 +16,6 @@ define(
   ],
 
   function (Arr, Fun, Option, Deltas, Blocks, DetailsList, Warehouse, Sizes, CellUtils, Util, SelectorFind) {
-    var minWidth = 10;
-
     var recalculate = function (warehouse, widths) {
       var all = Warehouse.justCells(warehouse);
 
@@ -65,7 +63,7 @@ define(
       var widths = getWidths(warehouse, direction);
 
       // Calculate all of the new widths for columns
-      var deltas = Deltas.determine(widths, index, delta, minWidth);
+      var deltas = Deltas.determine(widths, index, delta, CellUtils.minWidth());
 
       var newWidths = Arr.map(deltas, function (dx, i) {
         return dx + widths[i];
