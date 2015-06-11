@@ -68,6 +68,16 @@ var dependencies = [
       { name: 'module/*.js', path: depend },
       { name: 'depend/*.js', path: depend }
     ]
+  },
+
+  {
+    name: 'snooker',
+    repository: 'buildrepo2',
+    source: 'snooker.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
   }
 ];
 
