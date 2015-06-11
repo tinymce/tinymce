@@ -164,6 +164,18 @@ define(
       Attr.set(element, 'aria-labelledby', id);
     };
 
+    var live = function (element, id, _priority) {
+      var priority = _priority ? _priority : 'polite';
+      Attr.setAll(element, {
+        'aria-live': priority,
+        'id': id
+      });
+    };
+
+    var controls = function (element, id) {
+      Attr.set(element, 'aria-controls', id);
+    };
+
     var required = function (element) {
       Attr.set(element, 'aria-required', 'true');
     };
@@ -194,6 +206,7 @@ define(
 
     return {
       presentation: presentation,
+      controls: controls,
       editor: editor,
       toolbar: toolbar,
       toolbarGroup: toolbarGroup,
@@ -205,6 +218,7 @@ define(
       input: input,
       widget: widget,
       listBox: listBox,
+      live: live,
       tabList: tabList,
       tabButton: tabButton,
       tabPanel: tabPanel,
