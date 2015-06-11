@@ -602,7 +602,7 @@ define("tinymce/Editor", [
 				return self.initContentBody();
 			}
 
-			self.iframeHTML = settings.doctype + '<html><head>';
+			self.iframeHTML = settings.doctype + '<html lang="en"><head><title>TinyMCE Editor</title>';
 
 			// We only need to override paths if we have to
 			// IE has a bug where it remove site absolute urls to relative ones if this is specified

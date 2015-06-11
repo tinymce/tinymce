@@ -49,6 +49,22 @@ define("tinymce/ui/Button", [
 				e.preventDefault();
 			});
 
+			self.on('mouseover', function() {
+				var el = self.getEl();
+				var i;
+				for (i = 0; i < el.children.length; i++)	{
+					el.children[i].title = "";
+				}
+			});
+
+			self.on('mouseleave', function() {
+				var el = self.getEl();
+				var i;
+				for (i = 0; i < el.children.length; i++) {
+					el.children[i].title = self.encode(self._text || self.settings.tooltip);
+				}
+			});
+
 			self._super(settings);
 			size = settings.size;
 
@@ -159,7 +175,8 @@ define("tinymce/ui/Button", [
 
 			return (
 				'<div id="' + id + '" class="' + self.classes() + '" tabindex="-1" aria-labelledby="' + id + '">' +
-					'<button role="presentation" type="button" tabindex="-1">' +
+					'<button role="presentation" type="button" tabindex="-1" ' +
+					'title="' + self.encode(self._text || self.settings.tooltip) + '">' +
 						(icon ? '<i class="' + icon + '"' + image + '></i>' : '') +
 						(self._text ? (icon ? '\u00a0' : '') + self.encode(self._text) : '') +
 					'</button>' +
