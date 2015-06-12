@@ -18,7 +18,7 @@
  */
 define("tinymce/Env", [], function() {
 	var nav = navigator, userAgent = nav.userAgent;
-	var opera, webkit, ie, ie11, ie12, gecko, mac, iDevice, android;
+	var opera, webkit, ie, ie11, ie12, gecko, mac, iDevice, android, fileApi;
 
 	opera = window.opera && window.opera.buildNumber;
 	android = /Android/.test(userAgent);
@@ -31,6 +31,7 @@ define("tinymce/Env", [], function() {
 	gecko = !webkit && !ie11 && /Gecko/.test(userAgent);
 	mac = userAgent.indexOf('Mac') != -1;
 	iDevice = /(iPad|iPhone)/.test(userAgent);
+	fileApi = "FormData" in window && "FileReader" in window && "URL" in window && !!URL.createObjectURL;
 
 	if (ie12) {
 		webkit = false;
@@ -38,7 +39,7 @@ define("tinymce/Env", [], function() {
 
 	// Is a iPad/iPhone and not on iOS5 sniff the WebKit version since older iOS WebKit versions
 	// says it has contentEditable support but there is no visible caret.
-	var contentEditable = !iDevice || userAgent.match(/AppleWebKit\/(\d*)/)[1] >= 534;
+	var contentEditable = !iDevice || fileApi || userAgent.match(/AppleWebKit\/(\d*)/)[1] >= 534;
 
 	return {
 		/**
@@ -153,6 +154,6 @@ define("tinymce/Env", [], function() {
 		 * @property fileApi
 		 * @type Boolean
 		 */
-		fileApi: "FormData" in window && "FileReader" in window && "URL" in window && URL.createObjectURL
+		fileApi: fileApi
 	};
 });
