@@ -1,8 +1,8 @@
 /**
  * MenuItem.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -13,7 +13,7 @@
  *
  * @-x-less MenuItem.less
  * @class tinymce.ui.MenuItem
- * @extends tinymce.ui.Widget
+ * @extends tinymce.ui.Control
  */
 define("tinymce/ui/MenuItem", [
 	"tinymce/ui/Widget",
@@ -38,38 +38,37 @@ define("tinymce/ui/MenuItem", [
 		 * @setting {String} shortcut Shortcut to display for menu item. Example: Ctrl+X
 		 */
 		init: function(settings) {
-			var self = this;
-
-			self.hasPopup = true;
+			var self = this, text;
 
 			self._super(settings);
 
 			settings = self.settings;
 
-			self.addClass('menu-item');
+			self.classes.add('menu-item');
 
 			if (settings.menu) {
-				self.addClass('menu-item-expand');
+				self.classes.add('menu-item-expand');
 			}
 
 			if (settings.preview) {
-				self.addClass('menu-item-preview');
+				self.classes.add('menu-item-preview');
 			}
 
-			if (self._text === '-' || self._text === '|') {
-				self.addClass('menu-item-sep');
+			text = self.state.get('text');
+			if (text === '-' || text === '|') {
+				self.classes.add('menu-item-sep');
 				self.aria('role', 'separator');
-				self._text = '-';
+				self.state.set('text', '-');
 			}
 
 			if (settings.selectable) {
 				self.aria('role', 'menuitemcheckbox');
-				self.addClass('menu-item-checkbox');
+				self.classes.add('menu-item-checkbox');
 				settings.icon = 'selected';
 			}
 
 			if (!settings.preview && !settings.selectable) {
-				self.addClass('menu-item-normal');
+				self.classes.add('menu-item-normal');
 			}
 
 			self.on('mousedown', function(e) {
@@ -140,7 +139,7 @@ define("tinymce/ui/MenuItem", [
 
 					menu.on('hide', function(e) {
 						if (e.control === menu) {
-							self.removeClass('selected');
+							self.classes.remove('selected');
 						}
 					});
 
@@ -151,7 +150,7 @@ define("tinymce/ui/MenuItem", [
 
 				menu._parentMenu = parent;
 
-				menu.addClass('menu-sub');
+				menu.classes.add('menu-sub');
 
 				var rel = menu.testMoveRel(
 					self.getEl(),
@@ -162,11 +161,10 @@ define("tinymce/ui/MenuItem", [
 				menu.rel = rel;
 
 				rel = 'menu-sub-' + rel;
-				menu.removeClass(menu._lastRel);
-				menu.addClass(rel);
+				menu.classes.remove(menu._lastRel).add(rel);
 				menu._lastRel = rel;
 
-				self.addClass('selected');
+				self.classes.add('selected');
 				self.aria('expanded', true);
 			}
 		},
@@ -200,7 +198,7 @@ define("tinymce/ui/MenuItem", [
 		 * @return {String} HTML representing the control.
 		 */
 		renderHtml: function() {
-			var self = this, id = self._id, settings = self.settings, prefix = self.classPrefix, text = self.encode(self._text);
+			var self = this, id = self._id, settings = self.settings, prefix = self.classPrefix, text = self.encode(self.state.get('text'));
 			var icon = self.settings.icon, image = '', shortcut = settings.shortcut;
 
 			// Converts shortcut format to Mac/PC variants
@@ -234,7 +232,7 @@ define("tinymce/ui/MenuItem", [
 			}
 
 			if (icon) {
-				self.parent().addClass('menu-has-icons');
+				self.parent().classes.add('menu-has-icons');
 			}
 
 			if (settings.image) {
@@ -249,7 +247,7 @@ define("tinymce/ui/MenuItem", [
 			icon = prefix + 'ico ' + prefix + 'i-' + (self.settings.icon || 'none');
 
 			return (
-				'<div id="' + id + '" class="' + self.classes() + '" tabindex="-1">' +
+				'<div id="' + id + '" class="' + self.classes + '" tabindex="-1">' +
 					(text !== '-' ? '<i class="' + icon + '"' + image + '></i>\u00a0' : '') +
 					(text !== '-' ? '<span id="' + id + '-text" class="' + prefix + 'text">' + text + '</span>' : '') +
 					(shortcut ? '<div id="' + id + '-shortcut" class="' + prefix + 'menu-shortcut">' + shortcut + '</div>' : '') +

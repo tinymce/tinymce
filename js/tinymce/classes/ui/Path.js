@@ -1,8 +1,8 @@
 /**
  * Path.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -26,7 +26,7 @@ define("tinymce/ui/Path", [
 		 *
 		 * @constructor
 		 * @param {Object} settings Name/value object with settings.
-		 * @setting {String} delimiter Delimiter to display between items in path.
+		 * @setting {String} delimiter Delimiter to display between row in path.
 		 */
 		init: function(settings) {
 			var self = this;
@@ -36,16 +36,18 @@ define("tinymce/ui/Path", [
 			}
 
 			self._super(settings);
-			self.addClass('path');
+			self.classes.add('path');
 			self.canFocus = true;
 
 			self.on('click', function(e) {
 				var index, target = e.target;
 
 				if ((index = target.getAttribute('data-index'))) {
-					self.fire('select', {value: self.data()[index], index: index});
+					self.fire('select', {value: self.row()[index], index: index});
 				}
 			});
+
+			self.row(self.settings.row);
 		},
 
 		/**
@@ -65,42 +67,17 @@ define("tinymce/ui/Path", [
 		/**
 		 * Sets/gets the data to be used for the path.
 		 *
-		 * @method data
-		 * @param {Array} data Array with items name is rendered to path.
+		 * @method row
+		 * @param {Array} row Array with row name is rendered to path.
 		 */
-		data: function(data) {
-			var self = this;
-
-			if (typeof data !== "undefined") {
-				self._data = data;
-				self.update();
-
-				return self;
+		row: function(row) {
+			if (!arguments.length) {
+				return this.state.get('row');
 			}
 
-			return self._data;
-		},
+			this.state.set('row', row);
 
-		/**
-		 * Updated the path.
-		 *
-		 * @private
-		 */
-		update: function() {
-			this.innerHtml(this._getPathHtml());
-		},
-
-		/**
-		 * Called after the control has been rendered.
-		 *
-		 * @method postRender
-		 */
-		postRender: function() {
-			var self = this;
-
-			self._super();
-
-			self.data(self.settings.data);
+			return this;
 		},
 
 		/**
@@ -113,14 +90,24 @@ define("tinymce/ui/Path", [
 			var self = this;
 
 			return (
-				'<div id="' + self._id + '" class="' + self.classes() + '">' +
-					self._getPathHtml() +
+				'<div id="' + self._id + '" class="' + self.classes + '">' +
+					self._getDataPathHtml(self.state.get('row')) +
 				'</div>'
 			);
 		},
 
-		_getPathHtml: function() {
-			var self = this, parts = self._data || [], i, l, html = '', prefix = self.classPrefix;
+		bindStates: function() {
+			var self = this;
+
+			self.state.on('change:row', function(e) {
+				self.innerHtml(self._getDataPathHtml(e.value));
+			});
+
+			return self._super();
+		},
+
+		_getDataPathHtml: function(data) {
+			var self = this, parts = data || [], i, l, html = '', prefix = self.classPrefix;
 
 			for (i = 0, l = parts.length; i < l; i++) {
 				html += (

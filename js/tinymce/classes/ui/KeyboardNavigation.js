@@ -1,8 +1,8 @@
 /**
  * KeyboardNavigation.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -26,6 +26,10 @@ define("tinymce/ui/KeyboardNavigation", [
 	return function(settings) {
 		var root = settings.root, focusedElement, focusedControl;
 
+		function isElement(node) {
+			return node && node.nodeType === 1;
+		}
+
 		try {
 			focusedElement = document.activeElement;
 		} catch (ex) {
@@ -46,7 +50,11 @@ define("tinymce/ui/KeyboardNavigation", [
 		function getRole(elm) {
 			elm = elm || focusedElement;
 
-			return elm && elm.getAttribute('role');
+			if (isElement(elm)) {
+				return elm.getAttribute('role');
+			}
+
+			return null;
 		}
 
 		/**
@@ -77,7 +85,7 @@ define("tinymce/ui/KeyboardNavigation", [
 		function getAriaProp(name) {
 			var elm = focusedElement;
 
-			if (elm) {
+			if (isElement(elm)) {
 				return elm.getAttribute('aria-' + name);
 			}
 		}

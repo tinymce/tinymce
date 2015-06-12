@@ -1,8 +1,8 @@
 /**
  * TextBox.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -16,9 +16,8 @@
  * @extends tinymce.ui.Widget
  */
 define("tinymce/ui/TextBox", [
-	"tinymce/ui/Widget",
-	"tinymce/ui/DomUtils"
-], function(Widget, DomUtils) {
+	"tinymce/ui/Widget"
+], function(Widget) {
 	"use strict";
 
 	return Widget.extend({
@@ -36,70 +35,34 @@ define("tinymce/ui/TextBox", [
 
 			self._super(settings);
 
-			self._value = settings.value || '';
-			self.addClass('textbox');
+			self.classes.add('textbox');
 
 			if (settings.multiline) {
-				self.addClass('multiline');
+				self.classes.add('multiline');
 			} else {
-				// TODO: Rework this
 				self.on('keydown', function(e) {
-					if (e.keyCode == 13) {
-						self.parents().reverse().each(function(ctrl) {
-							e.preventDefault();
+					var rootControl;
 
-							if (ctrl.hasEventListeners('submit') && ctrl.toJSON) {
-								ctrl.fire('submit', {data: ctrl.toJSON()});
+					if (e.keyCode == 13) {
+						e.preventDefault();
+
+						// Find root control that we can do toJSON on
+						self.parents().reverse().each(function(ctrl) {
+							if (ctrl.toJSON) {
+								rootControl = ctrl;
 								return false;
 							}
 						});
+
+						// Fire event on current text box with the serialized data of the whole form
+						self.fire('submit', {data: rootControl.toJSON()});
 					}
 				});
+
+				self.on('keyup', function(e) {
+					self.state.set('value', e.target.value);
+				});
 			}
-		},
-
-		/**
-		 * Getter/setter function for the disabled state.
-		 *
-		 * @method value
-		 * @param {Boolean} [state] State to be set.
-		 * @return {Boolean|tinymce.ui.ComboBox} True/false or self if it's a set operation.
-		 */
-		disabled: function(state) {
-			var self = this;
-
-			if (self._rendered && typeof state != 'undefined') {
-				self.getEl().disabled = state;
-			}
-
-			return self._super(state);
-		},
-
-		/**
-		 * Getter/setter function for the control value.
-		 *
-		 * @method value
-		 * @param {String} [value] Value to be set.
-		 * @return {String|tinymce.ui.ComboBox} Value or self if it's a set operation.
-		 */
-		value: function(value) {
-			var self = this;
-
-			if (typeof value != "undefined") {
-				self._value = value;
-
-				if (self._rendered) {
-					self.getEl().value = value;
-				}
-
-				return self;
-			}
-
-			if (self._rendered) {
-				return self.getEl().value;
-			}
-
-			return self._value;
 		},
 
 		/**
@@ -120,7 +83,7 @@ define("tinymce/ui/TextBox", [
 				style.lineHeight = (rect.h - borderH) + 'px';
 			}
 
-			borderBox = self._borderBox;
+			borderBox = self.borderBox;
 			borderW = borderBox.left + borderBox.right + 8;
 			borderH = borderBox.top + borderBox.bottom + (self.settings.multiline ? 8 : 0);
 
@@ -157,7 +120,7 @@ define("tinymce/ui/TextBox", [
 		 * @return {String} HTML representing the control.
 		 */
 		renderHtml: function() {
-			var self = this, id = self._id, settings = self.settings, value = self.encode(self._value, false), extraAttrs = '';
+			var self = this, id = self._id, settings = self.settings, value = self.encode(self.state.get('value'), false), extraAttrs = '';
 
 			if ("spellcheck" in settings) {
 				extraAttrs += ' spellcheck="' + settings.spellcheck + '"';
@@ -181,14 +144,28 @@ define("tinymce/ui/TextBox", [
 
 			if (settings.multiline) {
 				return (
-					'<textarea id="' + id + '" class="' + self.classes() + '" ' +
+					'<textarea id="' + id + '" class="' + self.classes + '" ' +
 					(settings.rows ? ' rows="' + settings.rows + '"' : '') +
 					' hidefocus="1"' + extraAttrs + '>' + value +
 					'</textarea>'
 				);
 			}
 
-			return '<input id="' + id + '" class="' + self.classes() + '" value="' + value + '" hidefocus="1"' + extraAttrs + ' />';
+			return '<input id="' + id + '" class="' + self.classes + '" value="' + value + '" hidefocus="1"' + extraAttrs + ' />';
+		},
+
+		value: function(value) {
+			if (arguments.length) {
+				this.state.set('value', value);
+				return this;
+			}
+
+			// Make sure the real state is in sync
+			if (this.state.get('rendered')) {
+				this.state.set('value', this.getEl().value);
+			}
+
+			return this.state.get('value');
 		},
 
 		/**
@@ -199,15 +176,30 @@ define("tinymce/ui/TextBox", [
 		postRender: function() {
 			var self = this;
 
-			DomUtils.on(self.getEl(), 'change', function(e) {
+			self._super();
+
+			self.$el.on('change', function(e) {
+				self.state.set('value', e.target.value);
 				self.fire('change', e);
+			});
+		},
+
+		bindStates: function() {
+			var self = this;
+
+			self.state.on('change:value', function(e) {
+				self.getEl().value = e.value;
+			});
+
+			self.state.on('change:disabled', function(e) {
+				self.getEl().disabled = e.value;
 			});
 
 			return self._super();
 		},
 
 		remove: function() {
-			DomUtils.off(this.getEl());
+			this.$el.off();
 			this._super();
 		}
 	});

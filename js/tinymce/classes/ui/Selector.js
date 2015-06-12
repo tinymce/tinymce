@@ -1,8 +1,8 @@
 /**
  * Selector.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -116,7 +116,7 @@ define("tinymce/ui/Selector", [
 						var i = classes.length;
 
 						while (i--) {
-							if (!item.hasClass(classes[i])) {
+							if (!item.classes.contains(classes[i])) {
 								return false;
 							}
 						}

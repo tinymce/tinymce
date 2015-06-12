@@ -1,8 +1,8 @@
 /**
  * Button.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -45,19 +45,30 @@ define("tinymce/ui/Button", [
 		init: function(settings) {
 			var self = this, size;
 
+			self._super(settings);
+			settings = self.settings;
+
+			size = self.settings.size;
+
 			self.on('click mousedown', function(e) {
 				e.preventDefault();
 			});
 
-			self._super(settings);
-			size = settings.size;
+			self.on('touchstart', function(e) {
+				self.fire('click', e);
+				e.preventDefault();
+			});
 
 			if (settings.subtype) {
-				self.addClass(settings.subtype);
+				self.classes.add(settings.subtype);
 			}
 
 			if (size) {
-				self.addClass('btn-' + size);
+				self.classes.add('btn-' + size);
+			}
+
+			if (settings.icon) {
+				self.icon(settings.icon);
 			}
 		},
 
@@ -69,33 +80,13 @@ define("tinymce/ui/Button", [
 		 * @return {String|tinymce.ui.MenuButton} Current icon or current MenuButton instance.
 		 */
 		icon: function(icon) {
-			var self = this, prefix = self.classPrefix;
-
-			if (typeof icon == 'undefined') {
-				return self.settings.icon;
+			if (!arguments.length) {
+				return this.state.get('icon');
 			}
 
-			self.settings.icon = icon;
-			icon = icon ? prefix + 'ico ' + prefix + 'i-' + self.settings.icon : '';
+			this.state.set('icon', icon);
 
-			if (self._rendered) {
-				var btnElm = self.getEl().firstChild, iconElm = btnElm.getElementsByTagName('i')[0];
-
-				if (icon) {
-					if (!iconElm || iconElm != btnElm.firstChild) {
-						iconElm = document.createElement('i');
-						btnElm.insertBefore(iconElm, btnElm.firstChild);
-					}
-
-					iconElm.className = icon;
-				} else if (iconElm) {
-					btnElm.removeChild(iconElm);
-				}
-
-				self.text(self._text); // Set text again to fix whitespace between icon + text
-			}
-
-			return self;
+			return this;
 		},
 
 		/**
@@ -112,26 +103,6 @@ define("tinymce/ui/Button", [
 		},
 
 		/**
-		 * Sets/gets the current button text.
-		 *
-		 * @method text
-		 * @param {String} [text] New button text.
-		 * @return {String|tinymce.ui.Button} Current text or current Button instance.
-		 */
-		text: function(text) {
-			var self = this;
-
-			if (self._rendered) {
-				var textNode = self.getEl().lastChild.lastChild;
-				if (textNode) {
-					textNode.data = self.translate(text);
-				}
-			}
-
-			return self._super(text);
-		},
-
-		/**
 		 * Renders the control as a HTML string.
 		 *
 		 * @method renderHtml
@@ -139,7 +110,7 @@ define("tinymce/ui/Button", [
 		 */
 		renderHtml: function() {
 			var self = this, id = self._id, prefix = self.classPrefix;
-			var icon = self.settings.icon, image;
+			var icon = self.state.get('icon'), image, text = self.state.get('text');
 
 			image = self.settings.image;
 			if (image) {
@@ -158,13 +129,63 @@ define("tinymce/ui/Button", [
 			icon = self.settings.icon ? prefix + 'ico ' + prefix + 'i-' + icon : '';
 
 			return (
-				'<div id="' + id + '" class="' + self.classes() + '" tabindex="-1" aria-labelledby="' + id + '">' +
+				'<div id="' + id + '" class="' + self.classes + '" tabindex="-1" aria-labelledby="' + id + '">' +
 					'<button role="presentation" type="button" tabindex="-1">' +
 						(icon ? '<i class="' + icon + '"' + image + '></i>' : '') +
-						(self._text ? (icon ? '\u00a0' : '') + self.encode(self._text) : '') +
+						(text ? (icon ? '\u00a0' : '') + self.encode(text) : '') +
 					'</button>' +
 				'</div>'
 			);
+		},
+
+		bindStates: function() {
+			var self = this;
+
+			function setButtonText(text) {
+				var node = self.getEl().firstChild.firstChild;
+
+				for (; node; node = node.nextSibling) {
+					if (node.nodeType == 3) {
+						if (node.previousSibling) {
+							text = '\u00a0' + text;
+						}
+
+						if (node.nextSibling) {
+							text += '\u00a0';
+						}
+
+						node.data = self.translate(text);
+					}
+				}
+			}
+
+			self.state.on('change:text', function(e) {
+				setButtonText(e.value);
+			});
+
+			self.state.on('change:icon', function(e) {
+				var icon = e.value, prefix = self.classPrefix;
+
+				self.settings.icon = icon;
+				icon = icon ? prefix + 'ico ' + prefix + 'i-' + self.settings.icon : '';
+
+				var btnElm = self.getEl().firstChild, iconElm = btnElm.getElementsByTagName('i')[0];
+
+				if (icon) {
+					if (!iconElm || iconElm != btnElm.firstChild) {
+						iconElm = document.createElement('i');
+						btnElm.insertBefore(iconElm, btnElm.firstChild);
+					}
+
+					iconElm.className = icon;
+				} else if (iconElm) {
+					btnElm.removeChild(iconElm);
+				}
+
+				setButtonText(self.state.get('text'));
+			});
+
+			return self._super();
 		}
 	});
 });

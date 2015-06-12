@@ -1,8 +1,8 @@
 /**
  * StackLayout.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -25,6 +25,10 @@ define("tinymce/ui/StackLayout", [
 			containerClass: 'stack-layout',
 			controlClass: 'stack-layout-item',
 			endClass: 'break'
+		},
+
+		isNative: function() {
+			return true;
 		}
 	});
 });

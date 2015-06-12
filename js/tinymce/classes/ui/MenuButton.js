@@ -1,8 +1,8 @@
 /**
  * MenuButton.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -46,16 +46,19 @@ define("tinymce/ui/MenuButton", [
 			var self = this;
 
 			self._renderOpen = true;
-			self._super(settings);
 
-			self.addClass('menubtn');
+			self._super(settings);
+			settings = self.settings;
+
+			self.classes.add('menubtn');
 
 			if (settings.fixedWidth) {
-				self.addClass('fixed-width');
+				self.classes.add('fixed-width');
 			}
 
 			self.aria('haspopup', true);
-			self.hasPopup = true;
+
+			self.state.set('menu', settings.menu || self.render());
 		},
 
 		/**
@@ -64,14 +67,14 @@ define("tinymce/ui/MenuButton", [
 		 * @method showMenu
 		 */
 		showMenu: function() {
-			var self = this, settings = self.settings, menu;
+			var self = this, menu;
 
 			if (self.menu && self.menu.visible()) {
 				return self.hideMenu();
 			}
 
 			if (!self.menu) {
-				menu = settings.menu || [];
+				menu = self.state.get('menu') || [];
 
 				// Is menu array then auto constuct menu control
 				if (menu.length) {
@@ -83,7 +86,12 @@ define("tinymce/ui/MenuButton", [
 					menu.type = menu.type || 'menu';
 				}
 
-				self.menu = Factory.create(menu).parent(self).renderTo();
+				if (!menu.renderTo) {
+					self.menu = Factory.create(menu).parent(self).renderTo();
+				} else {
+					self.menu = menu.parent(self).show().renderTo();
+				}
+
 				self.fire('createmenu');
 				self.menu.reflow();
 				self.menu.on('cancel', function(e) {
@@ -138,7 +146,7 @@ define("tinymce/ui/MenuButton", [
 		 * @private
 		 */
 		activeMenu: function(state) {
-			this.toggleClass('active', state);
+			this.classes.toggle('active', state);
 		},
 
 		/**
@@ -149,7 +157,7 @@ define("tinymce/ui/MenuButton", [
 		 */
 		renderHtml: function() {
 			var self = this, id = self._id, prefix = self.classPrefix;
-			var icon = self.settings.icon, image;
+			var icon = self.settings.icon, image, text = self.state.get('text');
 
 			image = self.settings.image;
 			if (image) {
@@ -170,10 +178,10 @@ define("tinymce/ui/MenuButton", [
 			self.aria('role', self.parent() instanceof MenuBar ? 'menuitem' : 'button');
 
 			return (
-				'<div id="' + id + '" class="' + self.classes() + '" tabindex="-1" aria-labelledby="' + id + '">' +
+				'<div id="' + id + '" class="' + self.classes + '" tabindex="-1" aria-labelledby="' + id + '">' +
 					'<button id="' + id + '-open" role="presentation" type="button" tabindex="-1">' +
 						(icon ? '<i class="' + icon + '"' + image + '></i>' : '') +
-						'<span>' + (self._text ? (icon ? '\u00a0' : '') + self.encode(self._text) : '') + '</span>' +
+						(text ? (icon ? '\u00a0' : '') + self.encode(text) : '') +
 						' <i class="' + prefix + 'caret"></i>' +
 					'</button>' +
 				'</div>'
@@ -222,24 +230,18 @@ define("tinymce/ui/MenuButton", [
 			return self._super();
 		},
 
-		/**
-		 * Sets/gets the current button text.
-		 *
-		 * @method text
-		 * @param {String} [text] New button text.
-		 * @return {String|tinymce.ui.MenuButton} Current text or current MenuButton instance.
-		 */
-		text: function(text) {
-			var self = this, i, children;
+		bindStates: function() {
+			var self = this;
 
-			if (self._rendered) {
-				children = self.getEl('open').getElementsByTagName('span');
-				for (i = 0; i < children.length; i++) {
-					children[i].innerHTML = (self.settings.icon && text ? '\u00a0' : '') + self.encode(text);
+			self.state.on('change:menu', function() {
+				if (self.menu) {
+					self.menu.remove();
 				}
-			}
 
-			return this._super(text);
+				self.menu = null;
+			});
+
+			return self._super();
 		},
 
 		/**

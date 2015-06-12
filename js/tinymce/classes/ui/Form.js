@@ -1,8 +1,8 @@
 /**
  * Form.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -95,56 +95,6 @@ define("tinymce/ui/Form", [
 		},
 
 		/**
-		 * Recalcs label widths.
-		 *
-		 * @private
-		 */
-		recalcLabels: function() {
-			var self = this, maxLabelWidth = 0, labels = [], i, labelGap, items;
-
-			if (self.settings.labelGapCalc === false) {
-				return;
-			}
-
-			if (self.settings.labelGapCalc == "children") {
-				items = self.find('formitem');
-			} else {
-				items = self.items();
-			}
-
-			items.filter('formitem').each(function(item) {
-				var labelCtrl = item.items()[0], labelWidth = labelCtrl.getEl().clientWidth;
-
-				maxLabelWidth = labelWidth > maxLabelWidth ? labelWidth : maxLabelWidth;
-				labels.push(labelCtrl);
-			});
-
-			labelGap = self.settings.labelGap || 0;
-
-			i = labels.length;
-			while (i--) {
-				labels[i].settings.minWidth = maxLabelWidth + labelGap;
-			}
-		},
-
-		/**
-		 * Getter/setter for the visibility state.
-		 *
-		 * @method visible
-		 * @param {Boolean} [state] True/false state to show/hide.
-		 * @return {tinymce.ui.Form|Boolean} True/false state or current control.
-		 */
-		visible: function(state) {
-			var val = this._super(state);
-
-			if (state === true && this._rendered) {
-				this.recalcLabels();
-			}
-
-			return val;
-		},
-
-		/**
 		 * Fires a submit event with the serialized form.
 		 *
 		 * @method submit
@@ -164,8 +114,44 @@ define("tinymce/ui/Form", [
 			var self = this;
 
 			self._super();
-			self.recalcLabels();
 			self.fromJSON(self.settings.data);
+		},
+
+		bindStates: function() {
+			var self = this;
+
+			self._super();
+
+			function recalcLabels() {
+				var maxLabelWidth = 0, labels = [], i, labelGap, items;
+
+				if (self.settings.labelGapCalc === false) {
+					return;
+				}
+
+				if (self.settings.labelGapCalc == "children") {
+					items = self.find('formitem');
+				} else {
+					items = self.items();
+				}
+
+				items.filter('formitem').each(function(item) {
+					var labelCtrl = item.items()[0], labelWidth = labelCtrl.getEl().clientWidth;
+
+					maxLabelWidth = labelWidth > maxLabelWidth ? labelWidth : maxLabelWidth;
+					labels.push(labelCtrl);
+				});
+
+				labelGap = self.settings.labelGap || 0;
+
+				i = labels.length;
+				while (i--) {
+					labels[i].settings.minWidth = maxLabelWidth + labelGap;
+				}
+			}
+
+			self.on('show', recalcLabels);
+			recalcLabels();
 		}
 	});
 });

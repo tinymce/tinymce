@@ -1,8 +1,8 @@
 /**
  * Tooltip.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -28,29 +28,6 @@ define("tinymce/ui/Tooltip", [
 		},
 
 		/**
-		 * Sets/gets the current label text.
-		 *
-		 * @method text
-		 * @param {String} [text] New label text.
-		 * @return {String|tinymce.ui.Tooltip} Current text or current label instance.
-		 */
-		text: function(value) {
-			var self = this;
-
-			if (typeof value != "undefined") {
-				self._value = value;
-
-				if (self._rendered) {
-					self.getEl().lastChild.innerHTML = self.encode(value);
-				}
-
-				return self;
-			}
-
-			return self._value;
-		},
-
-		/**
 		 * Renders the control as a HTML string.
 		 *
 		 * @method renderHtml
@@ -60,11 +37,21 @@ define("tinymce/ui/Tooltip", [
 			var self = this, prefix = self.classPrefix;
 
 			return (
-				'<div id="' + self._id + '" class="' + self.classes() + '" role="presentation">' +
+				'<div id="' + self._id + '" class="' + self.classes + '" role="presentation">' +
 					'<div class="' + prefix + 'tooltip-arrow"></div>' +
-					'<div class="' + prefix + 'tooltip-inner">' + self.encode(self._text) + '</div>' +
+					'<div class="' + prefix + 'tooltip-inner">' + self.encode(self.state.get('text')) + '</div>' +
 				'</div>'
 			);
+		},
+
+		bindStates: function() {
+			var self = this;
+
+			self.state.on('change:text', function(e) {
+				self.getEl().lastChild.innerHTML = self.encode(e.value);
+			});
+
+			return self._super();
 		},
 
 		/**

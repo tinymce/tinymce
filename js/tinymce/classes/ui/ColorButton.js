@@ -1,8 +1,8 @@
 /**
  * ColorButton.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -34,7 +34,7 @@ define("tinymce/ui/ColorButton", [
 		 */
 		init: function(settings) {
 			this._super(settings);
-			this.addClass('colorbutton');
+			this.classes.add('colorbutton');
 		},
 
 		/**
@@ -73,16 +73,16 @@ define("tinymce/ui/ColorButton", [
 		 * @return {String} HTML representing the control.
 		 */
 		renderHtml: function() {
-			var self = this, id = self._id, prefix = self.classPrefix;
+			var self = this, id = self._id, prefix = self.classPrefix, text = self.state.get('text');
 			var icon = self.settings.icon ? prefix + 'ico ' + prefix + 'i-' + self.settings.icon : '';
 			var image = self.settings.image ? ' style="background-image: url(\'' + self.settings.image + '\')"' : '';
 
 			return (
-				'<div id="' + id + '" class="' + self.classes() + '" role="button" tabindex="-1" aria-haspopup="true">' +
+				'<div id="' + id + '" class="' + self.classes + '" role="button" tabindex="-1" aria-haspopup="true">' +
 					'<button role="presentation" hidefocus="1" type="button" tabindex="-1">' +
 						(icon ? '<i class="' + icon + '"' + image + '></i>' : '') +
 						'<span id="' + id + '-preview" class="' + prefix + 'preview"></span>' +
-						(self._text ? (icon ? ' ' : '') + (self._text) : '') +
+						(text ? (icon ? ' ' : '') + (text) : '') +
 					'</button>' +
 					'<button type="button" class="' + prefix + 'open" hidefocus="1" tabindex="-1">' +
 						' <i class="' + prefix + 'caret"></i>' +

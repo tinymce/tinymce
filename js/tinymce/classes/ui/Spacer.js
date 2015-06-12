@@ -1,8 +1,8 @@
 /**
  * Spacer.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -30,10 +30,10 @@ define("tinymce/ui/Spacer", [
 		renderHtml: function() {
 			var self = this;
 
-			self.addClass('spacer');
+			self.classes.add('spacer');
 			self.canFocus = false;
 
-			return '<div id="' + self._id + '" class="' + self.classes() + '"></div>';
+			return '<div id="' + self._id + '" class="' + self.classes + '"></div>';
 		}
 	});
 });

@@ -1,8 +1,8 @@
 /**
  * Label.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -34,16 +34,15 @@ define("tinymce/ui/Label", [
 			var self = this;
 
 			self._super(settings);
-			self.addClass('widget');
-			self.addClass('label');
+			self.classes.add('widget').add('label');
 			self.canFocus = false;
 
 			if (settings.multiline) {
-				self.addClass('autoscroll');
+				self.classes.add('autoscroll');
 			}
 
 			if (settings.strong) {
-				self.addClass('strong');
+				self.classes.add('strong');
 			}
 		},
 
@@ -64,7 +63,7 @@ define("tinymce/ui/Label", [
 				// Check if the text fits within maxW if not then try word wrapping it
 				if (size.width > layoutRect.maxW) {
 					layoutRect.minW = layoutRect.maxW;
-					self.addClass('multiline');
+					self.classes.add('multiline');
 				}
 
 				self.getEl().style.width = layoutRect.minW + 'px';
@@ -90,23 +89,6 @@ define("tinymce/ui/Label", [
 		},
 
 		/**
-		 * Sets/gets the current label text.
-		 *
-		 * @method text
-		 * @param {String} [text] New label text.
-		 * @return {String|tinymce.ui.Label} Current text or current label instance.
-		 */
-		text: function(text) {
-			var self = this;
-
-			if (self._rendered && text) {
-				this.innerHtml(self.encode(text));
-			}
-
-			return self._super(text);
-		},
-
-		/**
 		 * Renders the control as a HTML string.
 		 *
 		 * @method renderHtml
@@ -116,10 +98,20 @@ define("tinymce/ui/Label", [
 			var self = this, forId = self.settings.forId;
 
 			return (
-				'<label id="' + self._id + '" class="' + self.classes() + '"' + (forId ? ' for="' + forId + '"' : '') + '>' +
-					self.encode(self._text) +
+				'<label id="' + self._id + '" class="' + self.classes + '"' + (forId ? ' for="' + forId + '"' : '') + '>' +
+					self.encode(self.state.get('text')) +
 				'</label>'
 			);
+		},
+
+		bindStates: function() {
+			var self = this;
+
+			self.state.on('change:text', function(e) {
+				self.innerHtml(self.encode(e.value));
+			});
+
+			return self._super();
 		}
 	});
 });

@@ -1,8 +1,8 @@
 /**
  * GridLayout.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -49,7 +49,7 @@ define("tinymce/ui/GridLayout", [
 			spacingV = settings.spacingV || settings.spacing || 0;
 			alignH = settings.alignH || settings.align;
 			alignV = settings.alignV || settings.align;
-			contPaddingBox = container._paddingBox;
+			contPaddingBox = container.paddingBox;
 			reverseRows = 'reverseRows' in settings ? settings.reverseRows : container.isRtl();
 
 			if (alignH && typeof alignH == "string") {

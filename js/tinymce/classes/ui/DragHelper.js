@@ -1,8 +1,8 @@
 /**
  * DragHelper.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -26,8 +26,8 @@
  * @class tinymce.ui.DragHelper
  */
 define("tinymce/ui/DragHelper", [
-	"tinymce/ui/DomUtils"
-], function(DomUtils) {
+	"tinymce/dom/DomQuery"
+], function($) {
 	"use strict";
 
 	function getDocumentSize() {
@@ -51,8 +51,15 @@ define("tinymce/ui/DragHelper", [
 		};
 	}
 
+	function updateWithTouchData(e) {
+		if (e.changedTouches) {
+			e.screenX = e.changedTouches[0].screenX;
+			e.screenY = e.changedTouches[0].screenY;
+		}
+	}
+
 	return function(id, settings) {
-		var eventOverlayElm, doc = document, downButton, start, stop, drag, startX, startY;
+		var $eventOverlay, doc = document, downButton, start, stop, drag, startX, startY;
 
 		settings = settings || {};
 
@@ -63,22 +70,22 @@ define("tinymce/ui/DragHelper", [
 		start = function(e) {
 			var docSize = getDocumentSize(), handleElm, cursor;
 
+			updateWithTouchData(e);
+
 			e.preventDefault();
 			downButton = e.button;
 			handleElm = getHandleElm();
 			startX = e.screenX;
 			startY = e.screenY;
 
-			// Grab cursor from handle
+			// Grab cursor from handle so we can place it on overlay
 			if (window.getComputedStyle) {
 				cursor = window.getComputedStyle(handleElm, null).getPropertyValue("cursor");
 			} else {
 				cursor = handleElm.runtimeStyle.cursor;
 			}
 
-			// Create event overlay and add it to document
-			eventOverlayElm = doc.createElement('div');
-			DomUtils.css(eventOverlayElm, {
+			$eventOverlay = $('<div>').css({
 				position: "absolute",
 				top: 0, left: 0,
 				width: docSize.width,
@@ -86,19 +93,16 @@ define("tinymce/ui/DragHelper", [
 				zIndex: 0x7FFFFFFF,
 				opacity: 0.0001,
 				cursor: cursor
-			});
+			}).appendTo(doc.body);
 
-			doc.body.appendChild(eventOverlayElm);
+			$(doc).on('mousemove touchmove', drag).on('mouseup touchend', stop);
 
-			// Bind mouse events
-			DomUtils.on(doc, 'mousemove', drag);
-			DomUtils.on(doc, 'mouseup', stop);
-
-			// Begin drag
 			settings.start(e);
 		};
 
 		drag = function(e) {
+			updateWithTouchData(e);
+
 			if (e.button !== downButton) {
 				return stop(e);
 			}
@@ -111,10 +115,11 @@ define("tinymce/ui/DragHelper", [
 		};
 
 		stop = function(e) {
-			DomUtils.off(doc, 'mousemove', drag);
-			DomUtils.off(doc, 'mouseup', stop);
+			updateWithTouchData(e);
 
-			eventOverlayElm.parentNode.removeChild(eventOverlayElm);
+			$(doc).off('mousemove touchmove', drag).off('mouseup touchend', stop);
+
+			$eventOverlay.remove();
 
 			if (settings.stop) {
 				settings.stop(e);
@@ -127,9 +132,9 @@ define("tinymce/ui/DragHelper", [
 		 * @method destroy
 		 */
 		this.destroy = function() {
-			DomUtils.off(getHandleElm());
+			$(getHandleElm()).off();
 		};
 
-		DomUtils.on(getHandleElm(), 'mousedown', start);
+		$(getHandleElm()).on('mousedown touchstart', start);
 	};
 });

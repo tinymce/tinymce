@@ -1,8 +1,8 @@
 /**
  * Panel.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -44,7 +44,7 @@ define("tinymce/ui/Panel", [
 
 			if (typeof innerHtml == "undefined") {
 				innerHtml = (
-					'<div id="' + self._id + '-body" class="' + self.classes('body') + '">' +
+					'<div id="' + self._id + '-body" class="' + self.bodyClasses + '">' +
 						layout.renderHtml(self) +
 					'</div>'
 				);
@@ -57,7 +57,7 @@ define("tinymce/ui/Panel", [
 			}
 
 			return (
-				'<div id="' + self._id + '" class="' + self.classes() + '" hidefocus="1" tabindex="-1" role="group">' +
+				'<div id="' + self._id + '" class="' + self.classes + '" hidefocus="1" tabindex="-1" role="group">' +
 					(self._preBodyHtml || '') +
 					innerHtml +
 				'</div>'

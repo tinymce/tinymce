@@ -1,8 +1,8 @@
 /**
  * ListBox.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -16,8 +16,9 @@
  * @extends tinymce.ui.MenuButton
  */
 define("tinymce/ui/ListBox", [
-	"tinymce/ui/MenuButton"
-], function(MenuButton) {
+	"tinymce/ui/MenuButton",
+	"tinymce/ui/Menu"
+], function(MenuButton, Menu) {
 	"use strict";
 
 	return MenuButton.extend({
@@ -38,7 +39,7 @@ define("tinymce/ui/ListBox", [
 
 					if (selected) {
 						selectedText = selectedText || menuValues[i].text;
-						self._value = menuValues[i].value;
+						self.state.set('value', menuValues[i].value);
 						break;
 					}
 
@@ -49,23 +50,27 @@ define("tinymce/ui/ListBox", [
 				}
 			}
 
+			self._super(settings);
+			settings = self.settings;
+
 			self._values = values = settings.values;
 			if (values) {
-				setSelected(values);
+				if (typeof settings.value != "undefined") {
+					setSelected(values);
+				}
 
 				// Default with first item
 				if (!selected && values.length > 0) {
 					selectedText = values[0].text;
-					self._value = values[0].value;
+					self.state.set('value', values[0].value);
 				}
 
-				settings.menu = values;
+				self.state.set('menu', values);
 			}
 
-			settings.text = settings.text || selectedText || values[0].text;
+			self.state.set('text', settings.text || selectedText || values[0].text);
 
-			self._super(settings);
-			self.addClass('listbox');
+			self.classes.add('listbox');
 
 			self.on('select', function(e) {
 				var ctrl = e.control;
@@ -77,7 +82,7 @@ define("tinymce/ui/ListBox", [
 				if (settings.multiple) {
 					ctrl.active(!ctrl.active());
 				} else {
-					self.value(e.control.settings.value);
+					self.value(e.control.value());
 				}
 
 				lastItemCtrl = ctrl;
@@ -91,53 +96,53 @@ define("tinymce/ui/ListBox", [
 		 * @param {String} [value] Value to be set.
 		 * @return {Boolean/tinymce.ui.ListBox} Value or self if it's a set operation.
 		 */
-		value: function(value) {
-			var self = this, active, selectedText, menu;
+		bindStates: function() {
+			var self = this;
 
-			function activateByValue(menu, value) {
-				menu.items().each(function(ctrl) {
-					active = ctrl.value() === value;
-
-					if (active) {
-						selectedText = selectedText || ctrl.text();
-					}
-
-					ctrl.active(active);
-
-					if (ctrl.menu) {
-						activateByValue(ctrl.menu, value);
-					}
-				});
+			function activateMenuItemsByValue(menu, value) {
+				if (menu instanceof Menu) {
+					menu.items().each(function(ctrl) {
+						ctrl.active(ctrl.value() === value);
+					});
+				}
 			}
 
-			function setActiveValues(menuValues) {
+			function getSelectedItem(menuValues, value) {
+				var selectedItem;
+
+				if (!menuValues) {
+					return;
+				}
+
 				for (var i = 0; i < menuValues.length; i++) {
-					active = menuValues[i].value == value;
-
-					if (active) {
-						selectedText = selectedText || menuValues[i].text;
+					if (menuValues[i].value == value) {
+						return menuValues[i];
 					}
-
-					menuValues[i].active = active;
 
 					if (menuValues[i].menu) {
-						setActiveValues(menuValues[i].menu);
+						selectedItem = getSelectedItem(menuValues[i].menu);
+						if (selectedItem) {
+							return selectedItem;
+						}
 					}
 				}
 			}
 
-			if (typeof value != "undefined") {
-				if (self.menu) {
-					activateByValue(self.menu, value);
+			self.on('show', function(e) {
+				activateMenuItemsByValue(e.control, self.value());
+			});
+
+			self.state.on('change:value', function(e) {
+				var selectedItem = getSelectedItem(self.state.get('menu'), e.value);
+
+				if (selectedItem) {
+					self.text(selectedItem.text);
 				} else {
-					menu = self.settings.menu;
-					setActiveValues(menu);
+					self.text(self.settings.text);
 				}
+			});
 
-				self.text(selectedText || this.settings.text);
-			}
-
-			return self._super(value);
+			return self._super();
 		}
 	});
 });

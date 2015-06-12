@@ -1,8 +1,8 @@
 /**
  * ResizeHandle.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -31,7 +31,7 @@ define("tinymce/ui/ResizeHandle", [
 		renderHtml: function() {
 			var self = this, prefix = self.classPrefix;
 
-			self.addClass('resizehandle');
+			self.classes.add('resizehandle');
 
 			if (self.settings.direction == "both") {
 				self.addClass('resizehandle-both');
@@ -40,7 +40,7 @@ define("tinymce/ui/ResizeHandle", [
 			self.canFocus = false;
 
 			return (
-				'<div id="' + self._id + '" class="' + self.classes() + '">' +
+				'<div id="' + self._id + '" class="' + self.classes + '">' +
 					'<i class="' + prefix + 'ico ' + prefix + 'i-resize"></i>' +
 				'</div>'
 			);

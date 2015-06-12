@@ -1,8 +1,8 @@
 /**
  * FormItem.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -39,14 +39,14 @@ define("tinymce/ui/FormItem", [
 		renderHtml: function() {
 			var self = this, layout = self._layout, prefix = self.classPrefix;
 
-			self.addClass('formitem');
+			self.classes.add('formitem');
 			layout.preRender(self);
 
 			return (
-				'<div id="' + self._id + '" class="' + self.classes() + '" hidefocus="1" tabindex="-1">' +
+				'<div id="' + self._id + '" class="' + self.classes + '" hidefocus="1" tabindex="-1">' +
 					(self.settings.title ? ('<div id="' + self._id + '-title" class="' + prefix + 'title">' +
 						self.settings.title + '</div>') : '') +
-					'<div id="' + self._id + '-body" class="' + self.classes('body') + '">' +
+					'<div id="' + self._id + '-body" class="' + self.bodyClasses + '">' +
 						(self.settings.html || '') + layout.renderHtml(self) +
 					'</div>' +
 				'</div>'

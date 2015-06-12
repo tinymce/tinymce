@@ -1,8 +1,8 @@
 /**
  * FlexLayout.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -43,7 +43,7 @@ define("tinymce/ui/FlexLayout", [
 			// Get container items, properties and settings
 			items = container.items().filter(':visible');
 			contLayoutRect = container.layoutRect();
-			contPaddingBox = container._paddingBox;
+			contPaddingBox = container.paddingBox;
 			contSettings = container.settings;
 			direction = container.isRtl() ? (contSettings.direction || 'row-reversed') : contSettings.direction;
 			align = contSettings.align;
