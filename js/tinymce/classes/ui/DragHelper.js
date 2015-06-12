@@ -52,11 +52,13 @@ define("tinymce/ui/DragHelper", [
 	}
 
 	function updateWithTouchData(e) {
+		var keys, i;
+
 		if (e.changedTouches) {
-			e.screenX = e.changedTouches[0].screenX;
-			e.screenY = e.changedTouches[0].screenY;
-			e.pageX = e.changedTouches[0].pageX;
-			e.pageY = e.changedTouches[0].pageY;
+			keys = "screenX screenY pageX pageY clientX clientY".split(' ');
+			for (i = 0; i < keys.length; i++) {
+				e[keys[i]] = e.changedTouches[0][keys[i]];
+			}
 		}
 	}
 
