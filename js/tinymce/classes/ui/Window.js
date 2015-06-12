@@ -30,7 +30,7 @@ define("tinymce/ui/Window", [
 
 	function toggleFullScreenState(state) {
 		var noScaleMetaValue = 'width=device-width,initial-scale=1.0,user-scalable=0,minimum-scale=1.0,maximum-scale=1.0',
-			viewport = document.querySelector("meta[name=viewport]"),
+			viewport = $("meta[name=viewport]")[0],
 			contentValue;
 
 		if (!viewport) {
@@ -40,7 +40,7 @@ define("tinymce/ui/Window", [
 		}
 
 		contentValue = viewport.getAttribute('content');
-		if (contentValue && typeof oldMetaValue == 'undefined') {
+		if (contentValue && typeof oldMetaValue != 'undefined') {
 			oldMetaValue = contentValue;
 		}
 
