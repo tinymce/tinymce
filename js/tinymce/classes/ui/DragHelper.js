@@ -55,6 +55,8 @@ define("tinymce/ui/DragHelper", [
 		if (e.changedTouches) {
 			e.screenX = e.changedTouches[0].screenX;
 			e.screenY = e.changedTouches[0].screenY;
+			e.pageX = e.changedTouches[0].pageX;
+			e.pageY = e.changedTouches[0].pageY;
 		}
 	}
 
