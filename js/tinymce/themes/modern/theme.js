@@ -48,47 +48,49 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				function bindSelectorChanged() {
 					var selection = editor.selection;
 
-					if (itemName == "bullist") {
-						selection.selectorChanged('ul > li', function(state, args) {
-							var nodeName, i = args.parents.length;
+					each(tinymce.isArray(item) ? item : [item], function(item, j){
+						if (itemName == "bullist") {
+							selection.selectorChanged('ul > li', function(state, args) {
+								var nodeName, i = args.parents.length;
 
-							while (i--) {
-								nodeName = args.parents[i].nodeName;
-								if (nodeName == "OL" || nodeName == "UL") {
-									break;
+								while (i--) {
+									nodeName = args.parents[i].nodeName;
+									if (nodeName == "OL" || nodeName == "UL") {
+										break;
+									}
 								}
-							}
 
-							item.active(state && nodeName == "UL");
-						});
-					}
+								item.active(state && nodeName == "UL");
+							});
+						}
 
-					if (itemName == "numlist") {
-						selection.selectorChanged('ol > li', function(state, args) {
-							var nodeName, i = args.parents.length;
+						if (itemName == "numlist") {
+							selection.selectorChanged('ol > li', function(state, args) {
+								var nodeName, i = args.parents.length;
 
-							while (i--) {
-								nodeName = args.parents[i].nodeName;
-								if (nodeName == "OL" || nodeName == "UL") {
-									break;
+								while (i--) {
+									nodeName = args.parents[i].nodeName;
+									if (nodeName == "OL" || nodeName == "UL") {
+										break;
+									}
 								}
-							}
 
-							item.active(state && nodeName == "OL");
-						});
-					}
+								item.active(state && nodeName == "OL");
+							});
+						}
 
-					if (item.settings.stateSelector) {
-						selection.selectorChanged(item.settings.stateSelector, function(state) {
-							item.active(state);
-						}, true);
-					}
+						if (item.settings.stateSelector) {
+							selection.selectorChanged(item.settings.stateSelector, function(state) {
+								item.active(state);
+							}, true);
+						}
 
-					if (item.settings.disabledStateSelector) {
-						selection.selectorChanged(item.settings.disabledStateSelector, function(state) {
-							item.disabled(state);
-						});
-					}
+						if (item.settings.disabledStateSelector) {
+							selection.selectorChanged(item.settings.disabledStateSelector, function(state) {
+								item.disabled(state);
+							});
+						}
+					});
 				}
 
 				if (item == "|") {
@@ -118,14 +120,37 @@ tinymce.ThemeManager.add('modern', function(editor) {
 								item = item();
 							}
 
+							if(tinymce.isArray(item)){
+								item = {
+									type: 'buttongroup',
+									items: item
+								};
+							}
+
 							item.type = item.type || 'button';
 
 							if (settings.toolbar_items_size) {
 								item.size = settings.toolbar_items_size;
 							}
 
-							item = Factory.create(item);
-							buttonGroup.items.push(item);
+							if(item.type !== 'buttongroup'){
+								item = Factory.create(item);
+								buttonGroup.items.push(item);
+							} else {
+								each(item.items, function(it, j){
+									it.type = it.type || 'button';
+
+									if (settings.toolbar_items_size) {
+										it.size = settings.toolbar_items_size;
+									}
+
+									item.items[j] = Factory.create(it);
+
+									buttonGroup.items.push(item.items[j]);
+								})
+
+								item = item.items;
+							}
 
 							if (editor.initialized) {
 								bindSelectorChanged();

@@ -1246,9 +1246,65 @@ define("tinymce/Editor", [
 				settings.icon = name;
 			}
 
+			settings.name = settings.name || name;
+
 			self.buttons = self.buttons || {};
 			settings.tooltip = settings.tooltip || settings.title;
 			self.buttons[name] = settings;
+		},
+
+		/**
+		 * Adds various buttons at once to the same button group that later gets created by the theme in the editors toolbars.
+		 *
+		 * @method addButtons
+		 * @param {String} name Namespace to add to buttons.
+		 * @param {Array} settings Array of settings objects with title, cmd etc.
+		 * @example
+		 * // Adds custom buttons to the editor that inserts contents when clicked
+		 * tinymce.init({
+		 *    ...
+		 *
+		 *    toolbar: 'examples'
+		 *
+		 *    setup: function(ed) {
+		 *       ed.addButtons('examples', [
+		 *          {
+		 *             title: 'First',
+		 *             onclick: function(){
+		 *                ed.insertContent('First hello world!!');
+		 *             }
+		 *          },
+		 *          {
+		 *             title: 'Second',
+		 *             onclick: function(){
+		 *                ed.insertContent('Second hello world!!');
+		 *             }
+		 *          }
+		 *       ]);
+		 *    }
+		 * });
+		 */
+		addButtons: function(name, buttonsSettings){
+			var self = this;
+			var buttonConfigs = [];
+
+			self.buttons = self.buttons || {};
+
+			each(buttonsSettings, function(settings, idx){
+				settings.name = settings.name || (name + String(idx));
+
+				if(!self.buttons[settings.name]){
+					self.addButton(settings.name, settings)
+				} else {
+					settings = self.buttons[settings.name];
+				}
+
+				buttonConfigs.push(settings);
+			});
+
+			self.addButton(name, function(){
+				return buttonConfigs.slice();
+			});
 		},
 
 		/**
