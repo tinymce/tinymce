@@ -30,8 +30,8 @@ define("tinymce/ui/DragHelper", [
 ], function($) {
 	"use strict";
 
-	function getDocumentSize() {
-		var doc = document, documentElement, body, scrollWidth, clientWidth;
+	function getDocumentSize(doc) {
+		var documentElement, body, scrollWidth, clientWidth;
 		var offsetWidth, scrollHeight, clientHeight, offsetHeight, max = Math.max;
 
 		documentElement = doc.documentElement;
@@ -63,7 +63,7 @@ define("tinymce/ui/DragHelper", [
 	}
 
 	return function(id, settings) {
-		var $eventOverlay, doc = document, downButton, start, stop, drag, startX, startY;
+		var $eventOverlay, doc = settings.document || document, downButton, start, stop, drag, startX, startY;
 
 		settings = settings || {};
 
@@ -72,7 +72,7 @@ define("tinymce/ui/DragHelper", [
 		}
 
 		start = function(e) {
-			var docSize = getDocumentSize(), handleElm, cursor;
+			var docSize = getDocumentSize(doc), handleElm, cursor;
 
 			updateWithTouchData(e);
 
