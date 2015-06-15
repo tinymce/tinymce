@@ -18,9 +18,14 @@ define(
       });
     };
 
+    var clear = function (container) {
+      CellSelection.clear(container);
+    };
+
     return {
       retrieve: retrieve,
-      retrieveBox: retrieveBox
+      retrieveBox: retrieveBox,
+      clear: clear
     };
   }
 );
