@@ -126,13 +126,17 @@ define("tinymce/ui/Button", [
 				image = '';
 			}
 
+			if (text) {
+				self.classes.add('btn-has-text');
+			}
+
 			icon = self.settings.icon ? prefix + 'ico ' + prefix + 'i-' + icon : '';
 
 			return (
 				'<div id="' + id + '" class="' + self.classes + '" tabindex="-1" aria-labelledby="' + id + '">' +
 					'<button role="presentation" type="button" tabindex="-1">' +
 						(icon ? '<i class="' + icon + '"' + image + '></i>' : '') +
-						(text ? (icon ? '\u00a0' : '') + self.encode(text) : '') +
+						(text ? self.encode(text) : '') +
 					'</button>' +
 				'</div>'
 			);
@@ -146,17 +150,11 @@ define("tinymce/ui/Button", [
 
 				for (; node; node = node.nextSibling) {
 					if (node.nodeType == 3) {
-						if (node.previousSibling) {
-							text = '\u00a0' + text;
-						}
-
-						if (node.nextSibling) {
-							text += '\u00a0';
-						}
-
 						node.data = self.translate(text);
 					}
 				}
+
+				self.classes.toggle('btn-has-text', !!text);
 			}
 
 			self.state.on('change:text', function(e) {
