@@ -846,7 +846,7 @@ define("tinymce/ui/Control", [
 		},
 
 		renderHtml: function() {
-			return "";
+			return '<div id="' + this._id + '" class="' + this.classes + '"></div>';
 		},
 
 		/**
