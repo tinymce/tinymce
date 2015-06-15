@@ -17,6 +17,8 @@ define("tinymce/ui/Rect", [
 ], function() {
 	"use strict";
 
+	var min = Math.min, max = Math.max, round = Math.round;
+
 	/**
 	 * Returns the rect positioned based on the relative position name
 	 * to the target rect.
@@ -47,11 +49,11 @@ define("tinymce/ui/Rect", [
 		}
 
 		if (rel[0] === 'c') {
-			y += Math.round(targetH / 2);
+			y += round(targetH / 2);
 		}
 
 		if (rel[1] === 'c') {
-			x += Math.round(targetW / 2);
+			x += round(targetW / 2);
 		}
 
 		if (rel[3] === 'b') {
@@ -63,11 +65,11 @@ define("tinymce/ui/Rect", [
 		}
 
 		if (rel[3] === 'c') {
-			y -= Math.round(h / 2);
+			y -= round(h / 2);
 		}
 
 		if (rel[4] === 'c') {
-			x -= Math.round(w / 2);
+			x -= round(w / 2);
 		}
 
 		return {x: x, y: y, w: w, h: h};
@@ -124,10 +126,10 @@ define("tinymce/ui/Rect", [
 	function intersect(rect1, rect2) {
 		var x1, y1, x2, y2;
 
-		x1 = Math.max(rect1.x, rect2.x);
-		y1 = Math.max(rect1.y, rect2.y);
-		x2 = Math.min(rect1.x + rect1.w, rect2.x + rect2.w);
-		y2 = Math.min(rect1.y + rect1.h, rect2.y + rect2.h);
+		x1 = max(rect1.x, rect2.x);
+		y1 = max(rect1.y, rect2.y);
+		x2 = min(rect1.x + rect1.w, rect2.x + rect2.w);
+		y2 = min(rect1.y + rect1.h, rect2.y + rect2.h);
 
 		if (x2 - x1 < 0 || y2 - y1 < 0) {
 			return null;
@@ -136,10 +138,53 @@ define("tinymce/ui/Rect", [
 		return {x: x1, y: y1, w: x2 - x1, h: y2 - y1};
 	}
 
+	/**
+	 * Returns a rect clamped within the specified clamp rect. This forces the
+	 * rect to be inside the clamp rect.
+	 *
+	 * @method clamp
+	 * @param {Rect} rect Rectangle to force within clamp rect.
+	 * @param {Rect} clampRect Rectable to force within.
+	 * @param {Boolean} fixedSize True/false if size should be fixed.
+	 * @return {Rect} Clamped rect.
+	 */
+	function clamp(rect, clampRect, fixedSize) {
+		var underflowX1, underflowY1, overflowX2, overflowY2,
+			x1, y1, x2, y2, cx2, cy2;
+
+		x1 = rect.x;
+		y1 = rect.y;
+		x2 = rect.x + rect.w;
+		y2 = rect.y + rect.h;
+		cx2 = clampRect.x + clampRect.w;
+		cy2 = clampRect.y + clampRect.h;
+
+		underflowX1 = max(0, clampRect.x - x1);
+		underflowY1 = max(0, clampRect.y - y1);
+		overflowX2 = max(0, x2 - cx2);
+		overflowY2 = max(0, y2 - cy2);
+
+		x1 += underflowX1;
+		y1 += underflowY1;
+
+		if (fixedSize) {
+			x2 += underflowX1;
+			y2 += underflowY1;
+			x1 -= overflowX2;
+			y1 -= overflowY2;
+		}
+
+		x2 -= overflowX2;
+		y2 -= overflowY2;
+
+		return {x: x1, y: y1, w: x2 - x1, h: y2 - y1};
+	}
+
 	return {
 		inflate: inflate,
 		relativePosition: relativePosition,
 		findBestRelativePosition: findBestRelativePosition,
-		intersect: intersect
+		intersect: intersect,
+		clamp: clamp
 	};
 });
