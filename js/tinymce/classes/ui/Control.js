@@ -70,7 +70,16 @@ define("tinymce/ui/Control", [
 		 * @setting {String} name Name of the control instance.
 		 */
 		init: function(settings) {
-			var self = this, classes, i;
+			var self = this, classes, defaultClasses;
+
+			function applyClasses(classes) {
+				var i;
+
+				classes = classes.split(' ');
+				for (i = 0; i < classes.length; i++) {
+					self.classes.add(classes[i]);
+				}
+			}
 
 			self.settings = settings = Tools.extend({}, self.Defaults, settings);
 
@@ -99,10 +108,15 @@ define("tinymce/ui/Control", [
 			// Setup classes
 			classes = settings.classes;
 			if (classes) {
-				classes = classes.split(' ');
-				for (i = 0; i < classes.length; i++) {
-					self.classes.add(classes[i]);
+				if (self.Defaults) {
+					defaultClasses = self.Defaults.classes;
+
+					if (defaultClasses && classes != defaultClasses) {
+						applyClasses(defaultClasses);
+					}
 				}
+
+				applyClasses(classes);
 			}
 
 			Tools.each('title text name visible disabled active value'.split(' '), function(name) {
