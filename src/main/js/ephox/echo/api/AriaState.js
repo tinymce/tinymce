@@ -57,10 +57,6 @@ define(
       Attr.set(element, 'aria-hidden', 'true');
     };
 
-    var updateLabel = function (element, newLabel) {
-      Attr.set(element, 'aria-label', newLabel);
-    };
-
     return {
       expanded: expanded,
       collapsed: collapsed,
@@ -70,8 +66,7 @@ define(
       disable: disable,
       tabSelected: tabSelected,
       showPanel: showPanel,
-      hidePanel: hidePanel,
-      updateLabel: updateLabel
+      hidePanel: hidePanel
     };
   }
 );
