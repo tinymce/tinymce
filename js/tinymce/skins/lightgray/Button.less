@@ -63,11 +63,12 @@
 	min-width: 50px;
 	color: @btn-primary-text;
 	border: 1px solid mix(rgb(red(@btn-border-right), green(@btn-border-right), blue(@btn-border-right)), @panel-bg, 30%);
-	border-color: @btn-border-top @btn-border-right @btn-border-bottom @btn-border-left;
+	border-color: transparent;
 	.vertical-gradient(@btn-primary-bg, @btn-primary-bg-hlight);
 
 	&:hover, &:focus {
 		.vertical-gradient(darken(@btn-primary-bg, 5%), darken(@btn-primary-bg-hlight, 5%));
+		border-color: transparent;
 	}
 
 	&.@{prefix}-disabled button, &.@{prefix}-disabled:hover button {
