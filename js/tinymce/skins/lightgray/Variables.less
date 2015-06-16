@@ -8,9 +8,9 @@
 @font-family:                    "Helvetica Neue", Helvetica, Arial, sans-serif;
 @font-size:                      14px;
 @line-height:                    20px;
-@has-gradients:                  true;
-@has-radius:                     true;
-@has-boxshadow:                  true;
+@has-gradients:                  false;
+@has-radius:                     false;
+@has-boxshadow:                  false;
 
 // Text colors
 @text:                           #333;
@@ -21,13 +21,13 @@
 
 // Button
 @btn-text:                       @text;
-@btn-text-shadow:                @text-inverse;
-@btn-border-top:                 rgba(0, 0, 0, .1);
-@btn-border-right:               rgba(0, 0, 0, .1);
-@btn-border-bottom:              fadein(rgba(0, 0, 0, .1), 15%);
-@btn-border-left:                fadein(rgba(0, 0, 0, .1), 15%);
-@btn-split-border:               #bdbdbd;
-@btn-caret-border:               @btn-text;
+@btn-text-shadow:                none; 
+@btn-border-top:                 transparent;
+@btn-border-right:               transparent;
+@btn-border-bottom:              transparent;
+@btn-border-left:                transparent;
+@btn-split-border:               transparent; // hmmmmm ?
+@btn-caret-border:               @btn-text;   // This is the caret itself
 @btn-text-disabled:              @text-disabled;
 @btn-box-shadow:                 inset 0 1px 0 rgba(255, 255, 255, .2), 0 1px 2px rgba(0, 0, 0, .05);
 @btn-box-shadow-active:          inset 0 2px 4px rgba(0, 0, 0, .15), 0 1px 2px rgba(0, 0, 0, .05);
@@ -37,12 +37,12 @@
 @btn-bg-hover:                   darken(@btn-bg, 5%);
 @btn-bg-hlight-hover:            darken(@btn-bg-hlight, 5%);
 
-@btn-primary-bg:                 #0088cc;
+@btn-primary-bg:                 #0077b3;
 @btn-primary-bg-hlight:          #0044cc;
 @btn-primary-bg-hover:           darken(@btn-primary-bg, 5%);
 @btn-primary-bg-hover-hlight:    darken(@btn-primary-bg-hlight, 5%);
 @btn-primary-text:               #fff;
-@btn-primary-text-shadow:        #333;
+@btn-primary-text-shadow:        none;
 @btn-primary-border-top:         mix(@btn-border-top, @btn-primary-bg, 50%);
 @btn-primary-border-right:       mix(@btn-border-right, @btn-primary-bg, 50%);
 @btn-primary-border-bottom:      mix(@btn-border-bottom, @btn-primary-bg, 50%);
@@ -61,14 +61,14 @@
 @menuitem-bg-disabled:           #CCC;
 @menuitem-caret:                 @menuitem-text;
 @menuitem-caret-selected:        @menuitem-text-inverse;
-@menuitem-separator-top:         #CBCBCB;
-@menuitem-separator-bottom:      @menu-bg;
+@menuitem-separator-top:         rgba(0,0,0,0.1);
+@menuitem-separator-bottom:      transparent;
 @menuitem-bg-active:             #C8DEF4;
 @menuitem-text-active:           @text;
 @menuitem-preview-border-active: #aaa;
 
 // Panel
-@panel-border:                   #9E9E9E;
+@panel-border:                   rgba(0,0,0,.2);
 @panel-bg:                       #FDFDFD;
 @panel-bg-hlight:                #DDD;
 
@@ -145,3 +145,4 @@
 // Misc
 @colorbtn-backcolor-bg:          #BBB;
 @iframe-border:                  @panel-border;
+@flow-layout-spacing:            2px;
