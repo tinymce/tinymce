@@ -8,14 +8,14 @@ test(
 
   function (Structs, Fitment) {
 
-    var sel = Structs.address
+    var sel = Structs.address;
     var check = function (expected, selection, gridA, gridB) {
       var tux = Fitment.measure(selection, gridA, gridB);
       assert.eq(expected.rowDelta, tux.rowDelta(), 'rowDelta expected: ' + expected.rowDelta + ' actual: '+ tux.rowDelta());
       assert.eq(expected.colDelta, tux.colDelta(), 'colDelta expected: ' + expected.colDelta + ' actual: '+ tux.colDelta());
     };
 
-    // merge gridB goes into gridA
+    // merge gridB into gridA
     var gridA = [
       [ 'a', 'b', 'c' ],
       [ 'd', 'e', 'f' ],
@@ -27,11 +27,10 @@ test(
       [3, 4]
     ];
 
-    check({ rowDelta: 1, colDelta: 1 }, sel(0, 0), gridA, gridB);    // col and row are + meaning gridB fits into gridA, given the starting selection point
-    check({ rowDelta: 0, colDelta: 0 }, sel(1, 1), gridA, gridB);    // col and row are > -1 meaning gridB fits into gridA, given the starting selection point
-    check({ rowDelta: -1, colDelta: -1 }, sel(2, 2), gridA, gridB);  // row is 1 too short col is 1 too short
-    check({ rowDelta: 1, colDelta: -1 }, sel(0, 2), gridA, gridB);   // col is 1 too short
-    // check({ rowDelta: 1, colDelta: -1 }, sel(3, 3), gridA, gridB);
-
+    check({ rowDelta: 1, colDelta: 1 }, sel(0, 0), gridA, gridB);    // col and row are + meaning gridB fits into gridA, given the starting selection point 'a'
+    check({ rowDelta: 0, colDelta: 0 }, sel(1, 1), gridA, gridB);    // col and row are > -1 meaning gridB fits into gridA, given the starting selection point 'e'
+    check({ rowDelta: -1, colDelta: -1 }, sel(2, 2), gridA, gridB);  // row is 1 too short col is 1 too short, given the starting selection point 'i'
+    check({ rowDelta: 1, colDelta: -1 }, sel(0, 2), gridA, gridB);   // col is 1 too short, given the starting selection point 'c' (need to add another column)
+    // check({ rowDelta: null, colDelta: null }, sel(3, 3), gridA, gridB); // out of bounds selection, do we care?
   }
 );

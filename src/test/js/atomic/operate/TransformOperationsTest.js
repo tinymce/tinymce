@@ -14,7 +14,7 @@ test(
   ],
 
   function (Fun, Generators, TransformOperations, TestGenerator) {
-    
+
     // Test basic changing to header (column)
     (function () {
       var check = function (expected, grid, index) {
@@ -119,11 +119,11 @@ test(
       check([
         [ 'h(a)_0', 'h(a)_0', 'h(b)_1', 'h(f)_2' ],
         [ 'h(a)_0', 'h(a)_0', 'c', 'h(f)_2' ],
-        [ 'h(a)_0', 'h(a)_0', 'd', 'h(f)_2' ],
+        [ 'h(a)_0', 'h(a)_0', 'd', 'h(f)_2' ]
       ], [
         [ 'a', 'a', 'b', 'f' ],
         [ 'a', 'a', 'c', 'f' ],
-        [ 'a', 'a', 'd', 'f' ],
+        [ 'a', 'a', 'd', 'f' ]
       ], 0);
     })();
   }
