@@ -39,6 +39,7 @@ define(
       return form.invalid(value);
     };
 
+    // Convert all column widths to percent.
     var redistributeToPercent = function (widths, totalWidth) {
       return Arr.map(widths, function (w) {
         var colType = validate(w);
@@ -53,12 +54,26 @@ define(
       });
     };
 
+    var redistributeToPx = function (widths, totalWidth, newTotalWidth) {
+      var scale = newTotalWidth / totalWidth;
+      return Arr.map(widths, function (w) {
+        var colType = validate(w);
+        return colType.fold(function () {
+          return w;
+        }, function (px) {
+          return (px * scale) + 'px';
+        }, function (pc) {
+          return pc + '%';
+        });
+      });
+    };
+
     var redistribute = function (widths, totalWidth, newWidth) {
       var newType = validate(newWidth);
       return newType.fold(function () {
         return widths;
       }, function (px) {
-        return widths;
+        return redistributeToPx(widths, totalWidth, px);
       }, function (_pc) {
         return redistributeToPercent(widths, totalWidth);
       });
