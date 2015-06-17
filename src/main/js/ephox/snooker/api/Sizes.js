@@ -2,13 +2,16 @@ define(
   'ephox.snooker.api.Sizes',
 
   [
+    'ephox.compass.Arr',
     'ephox.snooker.resize.Adjustments',
     'ephox.snooker.resize.Redistribution',
     'ephox.snooker.resize.Sizes',
+    'ephox.snooker.util.CellUtils',
+    'ephox.sugar.api.Css',
     'ephox.sugar.api.Width'
   ],
 
-  function (Adjustments, Redistribution, Sizes, Width) {
+  function (Arr, Adjustments, Redistribution, Sizes, CellUtils, Css, Width) {
     var setWidth = function (cell, amount) {
      Sizes.setWidth(cell, amount);
     };
@@ -20,11 +23,14 @@ define(
     var redistributeWidth = function (table, newWidth, direction) {
       var totalWidth = Width.get(table);
       var callback = Adjustments.calculateWidths(table, direction);
-      callback(function (widths) {
-        console.log('widths', widths, 'totalWidth', totalWidth, 'newWidth', newWidth);
+      callback(function (widths, all) {
         var output = Redistribution.redistribute(widths, totalWidth, newWidth);
-        console.log('output', output);
-        return output;
+
+        Arr.each(all, function (cell) {
+          var slice = output.slice(cell.column(), cell.colspan() + cell.column());
+          var w = Redistribution.sum(slice, totalWidth, CellUtils.minWidth());
+          Css.set(cell.element(), 'width', w);
+        });
       });
     };
 

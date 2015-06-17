@@ -8,6 +8,7 @@ define(
     'ephox.snooker.lookup.Blocks',
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
+    'ephox.snooker.resize.Redistribution',
     'ephox.snooker.resize.Sizes',
     'ephox.snooker.util.CellUtils',
     'ephox.snooker.util.Util',
@@ -15,7 +16,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Fun, Deltas, Blocks, DetailsList, Warehouse, Sizes, CellUtils, Util, Css, SelectorFind) {
+  function (Arr, Fun, Deltas, Blocks, DetailsList, Warehouse, Redistribution, Sizes, CellUtils, Util, Css, SelectorFind) {
     var recalculate = function (warehouse, widths) {
       var all = Warehouse.justCells(warehouse);
 
@@ -84,10 +85,10 @@ define(
       };
 
       var widths = getActualWidths(warehouse, direction);
+      var all = Warehouse.justCells(warehouse);
       // CrazyAPI, but we'll fix it later.
-      return function (op) {
-        var newWidths = op(widths);
-        return recalculate(warehouse, newWidths);
+      return function (op) {        
+        op(widths, all);
       };
     };
 

@@ -30,6 +30,12 @@ test(
 
 
     check([ '20px', '50%' ], [ '10px', '50%' ], '20', '40px');
+
+
+
+    assert.eq('100px', Redistribution.sum([ '100px' ], '100', 10));
+    assert.eq('50%', Redistribution.sum([ '50%' ], '100', 10));
+    assert.eq('125px', Redistribution.sum([ '50%', '25px' ], '200', 10));
     
   }
 );
