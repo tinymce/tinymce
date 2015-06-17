@@ -3,10 +3,11 @@ test(
 
   [
     'ephox.snooker.api.Structs',
-    'ephox.snooker.model.Fitment'
+    'ephox.snooker.model.Fitment',
+    'ephox.snooker.test.TestGenerator'
   ],
 
-  function (Structs, Fitment) {
+  function (Structs, Fitment, TestGenerator) {
 
     var start = Structs.address;
     var measureTest = function (expected, startAddress, gridA, gridB) {
@@ -34,38 +35,39 @@ test(
     // // check({ rowDelta: null, colDelta: null }, start(3, 3), gridA, gridB); // out of bounds startAddress, do we care?
 
 
-    var tailorTest = function (expected, startAddress, gridA, gridB) {
-      var tux = Fitment.tailor(startAddress, gridA, gridB);
+    var tailorTest = function (expected, startAddress, gridA, gridB, generator) {
+      var tux = Fitment.tailor(startAddress, gridA, gridB, generator());
       assert.eq(expected, tux);
     };
 
+    var generator = TestGenerator;
 
     tailorTest(      [
         ['a', 'b', 'c'],
         ['d', 'e', 'f'],
         ['g', 'h', 'i']
-      ], start(0, 0), gridA, gridB);
+      ], start(0, 0), gridA, gridB, generator);
 
     tailorTest(
       [
         ['a', 'b', 'c'],
         ['d', 'e', 'f'],
         ['g', 'h', 'i']
-      ], start(1, 1), gridA, gridB);
+      ], start(1, 1), gridA, gridB, generator);
 
     tailorTest(
       [
-        ['a', 'b', 'c', '?'],
-        ['d', 'e', 'f', '?'],
-        ['g', 'h', 'i', '?'],
-        ['?', '?', '?', '?']
-      ], start(2, 2), gridA, gridB);
+        ['a', 'b', 'c', '?_0'],
+        ['d', 'e', 'f', '?_1'],
+        ['g', 'h', 'i', '?_2'],
+        ['?_3', '?_4', '?_5', '?_6']
+      ], start(2, 2), gridA, gridB, generator);
 
     tailorTest([
-        ['a', 'b', 'c', '?'],
-        ['d', 'e', 'f', '?'],
-        ['g', 'h', 'i', '?']
-      ], start(0, 2), gridA, gridB);
+        ['a', 'b', 'c', '?_0'],
+        ['d', 'e', 'f', '?_1'],
+        ['g', 'h', 'i', '?_2']
+      ], start(0, 2), gridA, gridB, generator);
 
 
   }

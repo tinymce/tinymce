@@ -23,14 +23,14 @@ define(
 
     var rowFill = function (grid, amount, generator) {
       var nuRow = Arr.map(grid[0], function (cell) {
-        return '?';
+        return generator.cell();
       });
       return grid.concat([nuRow]);
     };
 
     var colFill = function (grid, amount, generator) {
       return Arr.map(grid, function (rows) {
-        return rows.concat(['?']);
+        return rows.concat([generator.cell()]);
       });
     };
 
@@ -39,18 +39,15 @@ define(
       return posInt;
     };
 
-    var patch = function (current, ideal, generator) {
+    var tailor = function (startAddress, gridA, gridB, generator) {
+      var ideal = measure(startAddress, gridA, gridB);
+
       var patchCols = ideal.colDelta() < 0 ? colFill : Fun.identity;
       var patchRows = ideal.rowDelta() < 0 ? rowFill : Fun.identity;
 
-      var modifiedCols = patchCols(current, abs(ideal.colDelta()));
-      return patchRows(modifiedCols, abs(ideal.rowDelta()));
-    };
-
-    var tailor = function (startAddress, tableA, tableB, generator) {
-      var ideal = measure(startAddress, tableA, tableB);
-      var fitted = patch(tableA, ideal);
-      return fitted;
+      var modifiedCols = patchCols(gridA, abs(ideal.colDelta()), generator);
+      var tailoredGrid = patchRows(modifiedCols, abs(ideal.rowDelta()), generator);
+      return tailoredGrid;
     };
 
     return {
