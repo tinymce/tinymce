@@ -35,12 +35,10 @@
 .@{prefix}-colorbutton .@{prefix}-open {
 	padding-left: 4px;
 	border-left: 1px solid transparent;
-	border-right: 1px solid transparent;
 }
 
 .@{prefix}-colorbutton:hover .@{prefix}-open {
-	border-left-color: @btn-split-border;
-	border-right-color: @btn-split-border;
+	border-color: darken(@btn-bg, 20%);
 }
 
 .@{prefix}-colorbutton.@{prefix}-btn-small .@{prefix}-open {
@@ -75,4 +73,7 @@
 .@{prefix}-rtl .@{prefix}-colorbutton .@{prefix}-open {
 	padding-left: 4px;
 	padding-right: 4px;
+	border-left: 0;
+	border-right-width: 1px;
+	border-right-style: solid;
 }

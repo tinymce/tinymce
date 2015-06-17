@@ -2,12 +2,10 @@
 
 .@{prefix}-splitbtn .@{prefix}-open {
 	border-left: 1px solid transparent;
-	border-right: 1px solid transparent;
 }
 
 .@{prefix}-splitbtn:hover .@{prefix}-open {
-	border-left-color: @btn-split-border;
-	border-right-color: @btn-split-border;
+	border-left-color: darken(@btn-bg, 20%);
 }
 
 .@{prefix}-splitbtn button {
@@ -41,4 +39,6 @@
 .@{prefix}-rtl .@{prefix}-splitbtn .@{prefix}-open {
 	padding-left: 4px;
 	padding-right: 4px;
+	border-left: none;
+	border-right: 1px solid darken(@btn-bg, 20%);
 }
