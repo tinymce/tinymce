@@ -8,7 +8,7 @@ test(
   ],
 
   function (Structs, Fitment, TestGenerator) {
-
+    var generator = TestGenerator;
     var start = Structs.address;
     var measureTest = function (expected, startAddress, gridA, gridB) {
       var tux = Fitment.measure(startAddress, gridA, gridB);
@@ -40,9 +40,8 @@ test(
       assert.eq(expected, tux);
     };
 
-    var generator = TestGenerator;
-
-    tailorTest(      [
+    tailorTest(
+      [
         ['a', 'b', 'c'],
         ['d', 'e', 'f'],
         ['g', 'h', 'i']
@@ -57,17 +56,40 @@ test(
 
     tailorTest(
       [
-        ['a', 'b', 'c', '?_0'],
-        ['d', 'e', 'f', '?_1'],
-        ['g', 'h', 'i', '?_2'],
+        ['a',   'b',   'c',   '?_0'],
+        ['d',   'e',   'f',   '?_1'],
+        ['g',   'h',   'i',   '?_2'],
         ['?_3', '?_4', '?_5', '?_6']
       ], start(2, 2), gridA, gridB, generator);
 
-    tailorTest([
+    tailorTest(
+      [
         ['a', 'b', 'c', '?_0'],
         ['d', 'e', 'f', '?_1'],
         ['g', 'h', 'i', '?_2']
       ], start(0, 2), gridA, gridB, generator);
+
+
+    var mergeGridsTest = function (expected, startAddress, gridA, gridB, generator) {
+      var tux = Fitment.patch(startAddress, gridA, gridB, generator());
+      assert.eq(expected, tux);
+    };
+
+    mergeGridsTest(
+      [
+        ['h(1)_0', 'h(2)_1', 'c'],
+        ['h(3)_2', 'h(4)_3', 'f'],
+
+        ['g', 'h', 'i']
+      ], start(0, 0), gridA, gridB, generator);
+
+    mergeGridsTest(
+      [
+        ['a',   'b',   'c',        '?_0'],
+        ['d',   'e',   'f',        '?_1'],
+        ['g',   'h',   'h(1)_7',   'h(2)_8'],
+        ['?_3', '?_4', 'h(3)_9',   'h(4)_10']
+      ], start(2, 2), gridA, gridB, generator);
 
 
   }
