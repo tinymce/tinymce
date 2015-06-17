@@ -14,9 +14,14 @@ define(
       return Sizes.getWidth(cell);
     };
 
+    var redistributeWidth = function (table, newWidth) {
+
+    };
+
     return {
       setWidth: setWidth,
-      getWidth: getWidth
+      getWidth: getWidth,
+      redistributeWidth: redistributeWidth
     };
   }
 );
