@@ -20,9 +20,17 @@ define(
       Attr.set(element, 'aria-checked', String(state));
     };
 
+    /* aria-pressed */
+    var press = function (element) {
+      Attr.set(element, 'aria-pressed', 'true');
+    };
+
+    var release = function (element) {
+      Attr.set(element, 'aria-pressed', 'false');
+    };
+
     var pressed = function (button) {
-      var state = button.selected() ? 'true' : 'false';
-      Attr.set(button.element(), 'aria-pressed', state);
+      (button.selected() ? press : release)(button.element());
     };
 
     var enable = function (element) {
@@ -61,6 +69,8 @@ define(
       expanded: expanded,
       collapsed: collapsed,
       checked: checked,
+      press: press,
+      release: release,
       pressed: pressed,
       enable: enable,
       disable: disable,
