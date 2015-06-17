@@ -11,10 +11,11 @@ define(
     'ephox.snooker.resize.Sizes',
     'ephox.snooker.util.CellUtils',
     'ephox.snooker.util.Util',
+    'ephox.sugar.api.Css',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Fun, Deltas, Blocks, DetailsList, Warehouse, Sizes, CellUtils, Util, SelectorFind) {
+  function (Arr, Fun, Deltas, Blocks, DetailsList, Warehouse, Sizes, CellUtils, Util, Css, SelectorFind) {
     var recalculate = function (warehouse, widths) {
       var all = Warehouse.justCells(warehouse);
 
@@ -54,6 +55,40 @@ define(
 
     var getWarehouse = function (list) {
       return Warehouse.generate(list);
+    };
+
+    var calculateWidths = function (table, direction) {
+      var list = DetailsList.fromTable(table);
+      var warehouse = getWarehouse(list);
+
+      var getActualWidths = function () {
+        var columns = Blocks.columns(warehouse);
+
+        var backups = Arr.map(columns, function (cellOption) {
+          return cellOption.map(direction.edge);
+        });
+
+        return Arr.map(columns, function (cellOption, c) {
+          // Only use the width of cells that have no column span (or colspan 1)
+          return cellOption.filter(Fun.not(CellUtils.hasColspan)).map(function (cell) {
+            return Css.getRaw(cell, 'width').fold(function () {
+              return Sizes.getWidth(cell) + 'px';
+            }, function (raw) {
+              return raw;
+            });
+          }).getOrThunk(function () {
+            // Default column size when all else fails.
+            return Util.deduce(backups, c).getOrThunk(CellUtils.minWidth) + 'px';
+          });
+        });
+      };
+
+      var widths = getActualWidths(warehouse, direction);
+      // CrazyAPI, but we'll fix it later.
+      return function (op) {
+        var newWidths = op(widths);
+        return recalculate(warehouse, newWidths);
+      };
     };
 
     var adjust = function (table, delta, index, direction) {
@@ -101,7 +136,8 @@ define(
     return {
       adjust: adjust,
       recalculate: recalculate,
-      adjustTo: adjustTo
+      adjustTo: adjustTo,
+      calculateWidths: calculateWidths
     };
   }
 );
