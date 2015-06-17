@@ -39,9 +39,28 @@ define(
       return form.invalid(value);
     };
 
-    var redistribute = function (widths, totalWidth, newWidth) {
+    var redistributeToPercent = function (widths, totalWidth) {
       return Arr.map(widths, function (w) {
-        return toStr(validate(w));
+        var colType = validate(w);
+        return colType.fold(function () {
+          return w;
+        }, function (px) {
+          var ratio = px / totalWidth * 100;
+          return ratio + '%';
+        }, function (pc) {
+          return pc + '%';
+        });
+      });
+    };
+
+    var redistribute = function (widths, totalWidth, newWidth) {
+      var newType = validate(newWidth);
+      return newType.fold(function () {
+        return widths;
+      }, function (px) {
+        return widths;
+      }, function (_pc) {
+        return redistributeToPercent(widths, totalWidth);
       });
     };
 

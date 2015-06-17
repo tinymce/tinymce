@@ -20,8 +20,13 @@ test(
     checkValidate('invalid[10pxe]', '10pxe');
     checkValidate('percent[10]', '10%');
 
+    // Put more tests in when it becomes clear that I need them
+    checkValidate('pixels[10.5]', '10.5px');
 
-    // check([ '50%', '10%' ], [ '10px', '10px' ], '20', '200%');
+
+    check([ '50%', '50%' ], [ '10px', '10px' ], '20', '200%');
+
+    check([ '50%', '50%' ], [ '10px', '50%' ], '20', '200%');
     
   }
 );
