@@ -71,8 +71,8 @@ test(
 
 
     var mergeGridsTest = function (expected, startAddress, gridA, gridB, generator) {
-      var tux = Fitment.patch(startAddress, gridA, gridB, generator());
-      assert.eq(expected, tux);
+      var nuGrid = Fitment.patch(startAddress, gridA, gridB, generator());
+      assert.eq(expected, nuGrid);
     };
 
     mergeGridsTest(
@@ -85,12 +85,25 @@ test(
 
     mergeGridsTest(
       [
+        ['a', 'b', 'c'],
+        ['d', 'h(1)_0', 'h(2)_1'],
+        ['g', 'h(3)_2', 'h(4)_3']
+      ], start(1, 1), gridA, gridB, generator);
+
+    mergeGridsTest(
+      [
         ['a',   'b',   'c',        '?_0'],
         ['d',   'e',   'f',        '?_1'],
         ['g',   'h',   'h(1)_7',   'h(2)_8'],
         ['?_3', '?_4', 'h(3)_9',   'h(4)_10']
       ], start(2, 2), gridA, gridB, generator);
 
+    mergeGridsTest(
+      [
+        ['a', 'b', 'h(1)_3', 'h(2)_4'],
+        ['d', 'e', 'h(3)_5', 'h(4)_6'],
+        ['g', 'h', 'i', '?_2']
+      ], start(0, 2), gridA, gridB, generator);
 
   }
 );

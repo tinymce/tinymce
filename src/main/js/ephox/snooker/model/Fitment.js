@@ -51,21 +51,14 @@ define(
     };
 
     var skip = function (start, current, replacement, x) {
+      // If the current Position is before or after splice point skip over it.
       //               let,
       //                  listA = a, b, c, d, e
       //                  listB =       1, 2
       // merge gridB into listA = a, b, 1, 2, e
       // this fn will skip over a, b and e
       // same concept applies for both rows & columns
-
       var end = start + replacement;
-
-console.log('skip', start > current || end <= current);
-console.log(start > current, end <= current);
-console.log('args', start, current, replacement);
-console.log('==========================');
-
-
       return start > current || end <= current;
     };
 
