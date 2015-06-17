@@ -4,17 +4,18 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
-    'global!Math'
+    'global!Math',
+    'global!Array'
   ],
 
-  function (Arr, Fun, Math) {
+  function (Arr, Fun, Math, Array) {
     var measure = function (startAddress, gridA, gridB) {
       if(startAddress.row() >= gridA.length || startAddress.column() >= gridA[0].length) throw 'invalid startAddress out of bounds, do we care about this?';
       var rowRemainder = gridA.slice(startAddress.row());
       var colRemainder = rowRemainder[0].slice(startAddress.column());
 
-      var rowRequired = gridB[0].length;
-      var colRequired = gridB.length;
+      var colRequired= gridB[0].length;
+      var rowRequired= gridB.length;
       return {
         rowDelta: Fun.constant(rowRemainder.length - rowRequired),
         colDelta: Fun.constant(colRemainder.length - colRequired)
@@ -22,10 +23,12 @@ define(
     };
 
     var rowFill = function (grid, amount, generator) {
-      var nuRow = Arr.map(grid[0], function (cell) {
-        return generator.cell();
+      var nuRows = Arr.map(new Array(amount), function (row) {
+        return Arr.map(grid[0], function (cell) {
+          return generator.cell();
+        });
       });
-      return grid.concat([nuRow]);
+      return grid.concat(nuRows);
     };
 
     var colFill = function (grid, amount, generator) {
@@ -51,7 +54,7 @@ define(
     };
 
     var skip = function (start, current, replacement, x) {
-      // If the current Position is before or after splice point skip over it.
+      // If the current Position is before or after the insertion point skip over it.
       //               let,
       //                  listA = a, b, c, d, e
       //                  listB =       1, 2
@@ -66,11 +69,12 @@ define(
       var fittedGrid = tailor(startAddress, gridA, gridB, generator);
       var mergedTable = Arr.map(fittedGrid, function (row, r) {
         var repRow = r - startAddress.row();
-        var skipRow = skip(startAddress.row(), r, gridB[0].length);
+        var skipRow = skip(startAddress.row(), r, gridB.length);
         if (skipRow) return row;
+
         else return Arr.map(row, function (cell, c) {
           var repCol = c - startAddress.column();
-          var skipCell = skip(startAddress.column(), c, gridB.length);
+          var skipCell = skip(startAddress.column(), c, gridB[0].length);
 
           if (skipCell) return cell;
           else return generator.replace(gridB[repRow][repCol]);
