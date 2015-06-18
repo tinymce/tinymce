@@ -78,7 +78,7 @@ define(
       }, function (_pc) {
         return redistributeToPercent(widths, totalWidth);
       });
-      return integers(floats);
+      return toIntegers(floats);
     };
 
     var sum = function (values, fallback) {
@@ -101,7 +101,7 @@ define(
       });
     };
 
-    var integers = function (values) {
+    var toIntegers = function (values) {
       var scan = Arr.foldr(values, function (rest, value) {
         var info = validate(value).fold(
           function () { return { value: value, remainder: 0 }; },
@@ -121,7 +121,7 @@ define(
       redistribute: redistribute,
       toStr: toStr,
       sum: sum,
-      integers: integers
+      toIntegers: toIntegers
     };
   }
 );
