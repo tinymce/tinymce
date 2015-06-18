@@ -8,6 +8,7 @@ define(
     'ephox.snooker.lookup.Blocks',
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
+    'ephox.snooker.resize.ColumnWidths',
     'ephox.snooker.resize.Redistribution',
     'ephox.snooker.resize.Sizes',
     'ephox.snooker.util.CellUtils',
@@ -16,7 +17,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Fun, Deltas, Blocks, DetailsList, Warehouse, Redistribution, Sizes, CellUtils, Util, Css, SelectorFind) {
+  function (Arr, Fun, Deltas, Blocks, DetailsList, Warehouse, ColumnWidths, Redistribution, Sizes, CellUtils, Util, Css, SelectorFind) {
     var recalculate = function (warehouse, widths) {
       var all = Warehouse.justCells(warehouse);
 
@@ -61,30 +62,7 @@ define(
     var calculateWidths = function (table, direction) {
       var list = DetailsList.fromTable(table);
       var warehouse = getWarehouse(list);
-
-      var getActualWidths = function () {
-        var columns = Blocks.columns(warehouse);
-
-        var backups = Arr.map(columns, function (cellOption) {
-          return cellOption.map(direction.edge);
-        });
-
-        return Arr.map(columns, function (cellOption, c) {
-          // Only use the width of cells that have no column span (or colspan 1)
-          return cellOption.filter(Fun.not(CellUtils.hasColspan)).map(function (cell) {
-            return Css.getRaw(cell, 'width').fold(function () {
-              return Sizes.getWidth(cell) + 'px';
-            }, function (raw) {
-              return raw;
-            });
-          }).getOrThunk(function () {
-            // Default column size when all else fails.
-            return Util.deduce(backups, c).getOrThunk(CellUtils.minWidth) + 'px';
-          });
-        });
-      };
-
-      var widths = getActualWidths(warehouse, direction);
+      var widths = ColumnWidths.getRawWidths(warehouse, direction);
       var all = Warehouse.justCells(warehouse);
       // CrazyAPI, but we'll fix it later.
       return function (op) {        
