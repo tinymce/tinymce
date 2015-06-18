@@ -41,6 +41,12 @@ define(
       assert.eq(expected, nuGrid);
     };
 
+    var mergeGridsIVTest = function (asserter, startAddress, gridSpecA, gridSpecB, generator) {
+      // The last step, merge cells from gridB into gridA
+      var nuGrid = Fitment.mergeGrid(startAddress, gridSpecA.grid(), gridSpecB.grid(), generator());
+      asserter(nuGrid, startAddress, gridSpecA, gridSpecB);
+    };
+
     var suite = function (startAddress, gridA, gridB, generator, expectedMeasure, expectedTailor, expectedMergeGrids) {
       measureTest(expectedMeasure, startAddress, gridA, gridB, Fun.noop);
       tailorTest(expectedTailor, startAddress, gridA, {
@@ -54,6 +60,7 @@ define(
       tailorTest: tailorTest,
       tailorIVTest: tailorIVTest,
       mergeGridsTest: mergeGridsTest,
+      mergeGridsIVTest: mergeGridsIVTest,
       suite: suite
     };
   }

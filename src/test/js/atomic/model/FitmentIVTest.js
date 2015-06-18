@@ -6,25 +6,40 @@ test(
     'ephox.peanut.Fun',
     'ephox.snooker.api.Structs',
     'ephox.snooker.test.Fitment',
-    'ephox.snooker.test.TestGenerator',
     'global!Array',
     'global!Math'
   ],
 
-  function (Arr, Fun, Structs, Fitment, TestGenerator, Array, Math) {
+  function (Arr, Fun, Structs, Fitment, Array, Math) {
     var gridMin = 1;  // 1x1 grid is the min
     var gridMax = 150;
 
     var measureTest = Fitment.measureTest;
     var tailorIVTest = Fitment.tailorIVTest;
-    var mergeGridsTest = Fitment.mergeGridsTest;
-    var suite = Fitment.suite;
-    var generator = TestGenerator;
+    var mcGirdlesTest = Fitment.mergeGridsIVTest;
 
-    var grid = function (rows, cols) {
+    var generator = function () {
+      var cell = function () {
+        return '?';
+      };
+
+      var replace = function (name) {
+        return name;
+      };
+
+      return {
+        cell: cell,
+        gap: Fun.constant('*'),
+        row: Fun.constant('tr'),
+        replace: replace
+      };
+    };
+
+    var grid = function (rows, cols, _prefix) {
+      var prefix = _prefix ? _prefix : '';
       return Arr.map(new Array(rows), function (row, r) {
         return Arr.map(new Array(cols), function (cols, c) {
-          return r + '-' + c;
+          return prefix + '-' + r + '-' + c;
         });
       });
     };
@@ -41,13 +56,13 @@ test(
       }
     };
 
-    var gridGen = function () {
+    var gridGen = function (_prefix) {
       var cols = rand(gridMin, gridMax);
       var rows = rand(gridMin, gridMax);
       return {
         rows: Fun.constant(rows),
         cols: Fun.constant(cols),
-        grid: Fun.constant(grid(rows, cols))
+        grid: Fun.constant(grid(rows, cols, _prefix))
       };
     };
 
@@ -139,8 +154,59 @@ test(
       };
     };
 
-    inVariantRunner(measureIVTest, 1000);
-    inVariantRunner(tailorTestIVTest, 1000);
+    var mergeGridsIVTest = function () {
+      var gridSpecA = gridGen('a');
+      var gridSpecB = gridGen('b');
+      var start = startGen(gridSpecA);
+      var info = {
+        start: {
+          row: start.row(),
+          column: start.column()
+        },
+        gridA: {
+          rows: gridSpecA.rows(),
+          cols: gridSpecA.cols()
+        },
+        gridB: {
+          rows: gridSpecB.rows(),
+          cols: gridSpecB.cols()
+        }
+      };
+
+      var queryliser2000 = function (result, start, gridSpecA, gridSpecB) {
+        // expect to see some cell from specB at some address on specA
+        var offsetRow = start.row();
+        var offsetCol = start.column();
+
+        Arr.each(gridSpecB.grid(), function (row, r) {
+          Arr.each(row, function (col, c) {
+            // roo = row
+            // ar = r
+            // res = result
+            // offR = offsetRow
+            // offC = offsetCol
+
+            var expectedRow = r + offsetRow;
+            var expectedCol = c + offsetCol;
+            var expected = result[expectedRow][expectedCol];
+
+            assert.eq(expected, col);
+
+            // debugger
+          });
+        });
+      };
+      var test = Fun.curry(mcGirdlesTest, queryliser2000, start, gridSpecA, gridSpecB, generator);
+
+      return {
+        params: info,
+        test: test
+      };
+    };
+
+    inVariantRunner(mergeGridsIVTest, 100);
+    inVariantRunner(measureIVTest, 1);
+    inVariantRunner(tailorTestIVTest, 1);
 
   }
 );
