@@ -4,7 +4,9 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
-    'ephox.snooker.resize.Adjustments',
+    'ephox.snooker.model.DetailsList',
+    'ephox.snooker.model.Warehouse',
+    'ephox.snooker.resize.ColumnWidths',
     'ephox.snooker.resize.Redistribution',
     'ephox.snooker.resize.Sizes',
     'ephox.snooker.util.CellUtils',
@@ -12,7 +14,7 @@ define(
     'ephox.sugar.api.Width'
   ],
 
-  function (Arr, Fun, Adjustments, Redistribution, Sizes, CellUtils, Css, Width) {
+  function (Arr, Fun, DetailsList, Warehouse, ColumnWidths, Redistribution, Sizes, CellUtils, Css, Width) {
     var setWidth = function (cell, amount) {
      Sizes.setWidth(cell, amount);
     };
@@ -21,18 +23,25 @@ define(
       return Sizes.getWidth(cell);
     };
 
+    var redistributeTo = function (newWidths, cells, unit) {
+      Arr.each(cells, function (cell) {
+        var widths = newWidths.slice(cell.column(), cell.colspan() + cell.column());
+        var w = Redistribution.sum(widths, CellUtils.minWidth());
+        Css.set(cell.element(), 'width', w + unit);
+      });
+    };
+
     var redistributeWidth = function (table, newWidth, direction) {
       var totalWidth = Width.get(table);
       
       var unit = Redistribution.validate(newWidth).fold(Fun.constant('px'), Fun.constant('px'), Fun.constant('%'));
-      var calculation = Adjustments.calculateWidths(table, direction);
       
-      var output = Redistribution.redistribute(calculation.widths(), totalWidth, newWidth);
-      Arr.each(calculation.cells(), function (cell) {
-        var slice = output.slice(cell.column(), cell.colspan() + cell.column());
-        var w = Redistribution.sum(slice, CellUtils.minWidth());
-        Css.set(cell.element(), 'width', w + unit);
-      });
+      var list = DetailsList.fromTable(table);
+      var warehouse = Warehouse.generate(list);
+      var widths = ColumnWidths.getRawWidths(warehouse, direction);
+      var cells = Warehouse.justCells(warehouse);
+      var output = Redistribution.redistribute(widths, totalWidth, newWidth);
+      redistributeTo(output, cells, unit);
     };
 
     return {
