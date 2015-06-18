@@ -45,13 +45,12 @@ define(
       return posInt;
     };
 
-    var tailor = function (startAddress, gridA, gridB, generator) {
-      var ideal = measure(startAddress, gridA, gridB);
-      var fillCols = ideal.colDelta() < 0 ? colFill : Fun.identity;
-      var fillRows = ideal.rowDelta() < 0 ? rowFill : Fun.identity;
+    var tailor = function (startAddress, gridA, delta, generator) {
+      var fillCols = delta.colDelta() < 0 ? colFill : Fun.identity;
+      var fillRows = delta.rowDelta() < 0 ? rowFill : Fun.identity;
 
-      var modifiedCols = fillCols(gridA, abs(ideal.colDelta()), generator);
-      var tailoredGrid = fillRows(modifiedCols, abs(ideal.rowDelta()), generator);
+      var modifiedCols = fillCols(gridA, abs(delta.colDelta()), generator);
+      var tailoredGrid = fillRows(modifiedCols, abs(delta.rowDelta()), generator);
       return tailoredGrid;
     };
 
@@ -68,7 +67,9 @@ define(
     };
 
     var mergeGrid = function (startAddress, gridA, gridB, generator) {
-      var fittedGrid = tailor(startAddress, gridA, gridB, generator);
+      var delta = measure(startAddress, gridA, gridB);
+      var fittedGrid = tailor(startAddress, gridA, delta, generator);
+
       var mergedTable = Arr.map(fittedGrid, function (row, r) {
         var repRow = r - startAddress.row();
         var skipRow = skip(startAddress.row(), r, gridB.length);
@@ -88,7 +89,7 @@ define(
     return {
       measure: measure,
       tailor: tailor,
-      patch: mergeGrid
+      mergeGrid: mergeGrid
     };
   }
 );

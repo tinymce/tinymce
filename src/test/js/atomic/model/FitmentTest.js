@@ -23,23 +23,26 @@ test(
       assert.eq(expected.colDelta, tux.colDelta(), 'colDelta expected: ' + expected.colDelta + ' actual: '+ tux.colDelta());
     };
 
-    var tailorTest = function (expected, startAddress, gridA, gridB, generator) {
+    var tailorTest = function (expected, startAddress, gridA, delta, generator) {
       // Based on the Fitment.measure
-      // Increase gridA by the row/col delta values returned
+      // Increase gridA by the row/col delta values
       // The result is a new grid that will perfectly fit gridB into gridA
-      var tux = Fitment.tailor(startAddress, gridA, gridB, generator());
+      var tux = Fitment.tailor(startAddress, gridA, delta, generator());
       assert.eq(expected, tux);
     };
 
     var mergeGridsTest = function (expected, startAddress, gridA, gridB, generator) {
       // The last step, merge cells from gridB into gridA
-      var nuGrid = Fitment.patch(startAddress, gridA, gridB, generator());
+      var nuGrid = Fitment.mergeGrid(startAddress, gridA, gridB, generator());
       assert.eq(expected, nuGrid);
     };
 
     var suite = function (startAddress, gridA, gridB, generator, expectedMeasure, expectedTailor, expectedMergeGrids) {
       measureTest(expectedMeasure, startAddress, gridA, gridB, Fun.noop);
-      tailorTest(expectedTailor, startAddress, gridA, gridB, generator);
+      tailorTest(expectedTailor, startAddress, gridA, {
+        rowDelta: Fun.constant(expectedMeasure.rowDelta),
+        colDelta: Fun.constant(expectedMeasure.colDelta)
+      }, generator);
       mergeGridsTest(expectedMergeGrids, startAddress, gridA, gridB, generator);
     };
 
@@ -90,7 +93,10 @@ test(
         ['a', 'b', 'c'],
         ['d', 'e', 'f'],
         ['g', 'h', 'i']
-      ], start(0, 0), gridA, gridB, generator);
+      ], start(0, 0), gridA, {
+        rowDelta: Fun.constant(1),
+        colDelta: Fun.constant(1)
+      }, generator);
 
     check(
       tailorTest,
@@ -98,7 +104,10 @@ test(
         ['a', 'b', 'c'],
         ['d', 'e', 'f'],
         ['g', 'h', 'i']
-      ], start(1, 1), gridA, gridB, generator);
+      ], start(1, 1), gridA, {
+        rowDelta: Fun.constant(0),
+        colDelta: Fun.constant(0)
+      }, generator);
 
     check(
       tailorTest,
@@ -107,7 +116,10 @@ test(
         ['d',   'e',   'f',   '?_1'],
         ['g',   'h',   'i',   '?_2'],
         ['?_3', '?_4', '?_5', '?_6']
-      ], start(2, 2), gridA, gridB, generator);
+      ], start(2, 2), gridA, {
+        rowDelta: Fun.constant(-1),
+        colDelta: Fun.constant(-1)
+      }, generator);
 
     check(
       tailorTest,
@@ -115,7 +127,10 @@ test(
         ['a', 'b', 'c', '?_0'],
         ['d', 'e', 'f', '?_1'],
         ['g', 'h', 'i', '?_2']
-      ], start(0, 2), gridA, gridB, generator);
+      ], start(0, 2), gridA, {
+        rowDelta: Fun.constant(1),
+        colDelta: Fun.constant(-1)
+      }, generator);
 
     check(
       mergeGridsTest,
@@ -197,6 +212,27 @@ test(
         ['h(bee3)_14', '?_4', '?_5'],
         ['h(bee3)_15', '?_7', '?_8'],
         ['h(bee3)_16', '?_10', '?_11']
+      ]
+    );
+
+    // insert at 'd' a wide table
+    suite(
+      start(1, 0), gridAphid, gridCicada, generator,
+      {
+        rowDelta: 2,
+        colDelta: -5
+      },
+      [
+        ['a', 'b', 'c', '?_0',  '?_1',  '?_2',  '?_3',  '?_4'],
+        ['d', 'e', 'f', '?_5',  '?_6',  '?_7',  '?_8',  '?_9'],
+        ['g', 'h', 'i', '?_10', '?_11', '?_12', '?_13', '?_14'],
+        ['j', 'k', 'l', '?_15', '?_16', '?_17', '?_18', '?_19']
+      ],
+      [
+        ['a', 'b', 'c', '?_0',  '?_1',  '?_2',  '?_3',  '?_4'],
+        ['h(cicada1)_20', 'h(cicada2)_21', 'h(cicada3)_22', 'h(cicada3)_23', 'h(cicada3)_24', 'h(cicada4)_25',  'h(cicada4)_26', 'h(cicada4)_27'],
+        ['g', 'h', 'i', '?_10', '?_11', '?_12', '?_13', '?_14'],
+        ['j', 'k', 'l', '?_15', '?_16', '?_17', '?_18', '?_19']
       ]
     );
 
