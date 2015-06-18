@@ -113,7 +113,7 @@ define(
       }, { output: [], remainder: 0 });
 
       var r = scan.output;
-      return r.slice(0, r.length - 1).concat([ add(r[r.length - 1], Math.round(scan.remainder))]);
+      return r.length === 0 ? r : r.slice(0, r.length - 1).concat([ add(r[r.length - 1], Math.round(scan.remainder))]);
     };
 
     return {
