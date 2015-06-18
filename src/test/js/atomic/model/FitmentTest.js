@@ -16,7 +16,7 @@ test(
       // Try put gridB into gridA at the startAddress
       // returns a delta,
       // colDelta = -3 means gridA is 3 columns too short
-      // rowDelta = 3 means gridA can fit gridB with 3 columns to spare
+      // rowDelta = 3 means gridA can fit gridB with 3 rows to spare
 
       var tux = Fitment.measure(startAddress, gridA, gridB);
       assert.eq(expected.rowDelta, tux.rowDelta(), 'rowDelta expected: ' + expected.rowDelta + ' actual: '+ tux.rowDelta());
@@ -254,7 +254,6 @@ test(
         ['h(cicada1)_20', 'h(cicada2)_21', 'h(cicada3)_22', 'h(cicada3)_23', 'h(cicada3)_24', 'h(cicada4)_25',  'h(cicada4)_26', 'h(cicada4)_27'],
         ['g', 'h', 'i', '?_10', '?_11', '?_12', '?_13', '?_14'],
         ['j', 'k', 'l', '?_15', '?_16', '?_17', '?_18', '?_19']
-
       ]
     );
 
