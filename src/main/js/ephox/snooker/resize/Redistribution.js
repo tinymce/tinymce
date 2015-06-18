@@ -102,6 +102,7 @@ define(
     };
 
     var toIntegers = function (values) {
+      if (values.length === 0) return values;
       var scan = Arr.foldr(values, function (rest, value) {
         var info = validate(value).fold(
           function () { return { value: value, remainder: 0 }; },
@@ -113,7 +114,7 @@ define(
       }, { output: [], remainder: 0 });
 
       var r = scan.output;
-      return r.length === 0 ? r : r.slice(0, r.length - 1).concat([ add(r[r.length - 1], Math.round(scan.remainder))]);
+      return r.slice(0, r.length - 1).concat([ add(r[r.length - 1], Math.round(scan.remainder))]);
     };
 
     return {
