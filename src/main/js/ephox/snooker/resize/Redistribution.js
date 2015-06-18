@@ -6,11 +6,12 @@ define(
     'ephox.peanut.Fun',
     'ephox.scullion.ADT',
     'ephox.violin.Strings',
+    'global!Math',
     'global!parseFloat',
     'global!parseInt'
   ],
 
-  function (Arr, Fun, Adt, Strings, parseFloat, parseInt) {
+  function (Arr, Fun, Adt, Strings, Math, parseFloat, parseInt) {
     var form = Adt.generate([
       { invalid: [ 'raw' ] },
       { pixels: [ 'value' ] },
@@ -70,13 +71,14 @@ define(
 
     var redistribute = function (widths, totalWidth, newWidth) {
       var newType = validate(newWidth);
-      return newType.fold(function () {
+      var floats = newType.fold(function () {
         return widths;
       }, function (px) {
         return redistributeToPx(widths, totalWidth, px);
       }, function (_pc) {
         return redistributeToPercent(widths, totalWidth);
       });
+      return integers(floats);
     };
 
     var sum = function (values, fallback) {
@@ -86,11 +88,40 @@ define(
       }, 0);
     };
 
+    var roundDown = function (num, unit) {
+      var floored = Math.floor(num);
+      return { value: floored + unit, remainder: num - floored };
+    };
+
+    var add = function (value, amount) {
+      return validate(value).fold(Fun.constant(value), function (px) {
+        return (px + amount) + 'px';
+      }, function (pc) {
+        return (pc + amount) + '%';
+      });
+    };
+
+    var integers = function (values) {
+      var scan = Arr.foldr(values, function (rest, value) {
+        var info = validate(value).fold(
+          function () { return { value: value, remainder: 0 }; },
+          function (num) { return roundDown(num, 'px'); },
+          function (num) { return roundDown(num, '%'); }
+        );
+
+        return { output: [ info.value ].concat(rest.output), remainder: rest.remainder + info.remainder };
+      }, { output: [], remainder: 0 });
+
+      var r = scan.output;
+      return r.slice(0, r.length - 1).concat([ add(r[r.length - 1], Math.round(scan.remainder))]);
+    };
+
     return {
       validate: validate,
       redistribute: redistribute,
       toStr: toStr,
-      sum: sum
+      sum: sum,
+      integers: integers
     };
   }
 );
