@@ -22,6 +22,7 @@ define(
 
     var redistributeWidth = function (table, newWidth, direction) {
       var totalWidth = Width.get(table);
+      console.log('totalWidth', totalWidth);
       var callback = Adjustments.calculateWidths(table, direction);
       callback(function (widths, all) {
         var output = Redistribution.redistribute(widths, totalWidth, newWidth);

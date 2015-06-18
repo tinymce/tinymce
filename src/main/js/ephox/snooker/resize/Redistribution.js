@@ -63,7 +63,7 @@ define(
         }, function (px) {
           return (px * scale) + 'px';
         }, function (pc) {
-          return pc + '%';
+          return (pc / 100 * newTotalWidth) + 'px';
         });
       });
     };
