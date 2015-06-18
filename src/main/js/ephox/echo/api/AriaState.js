@@ -30,7 +30,8 @@ define(
     };
 
     var pressed = function (button) {
-      (button.selected() ? press : release)(button.element());
+      var action = button.selected() ? press : release;
+      action(button.element());
     };
 
     var enable = function (element) {
