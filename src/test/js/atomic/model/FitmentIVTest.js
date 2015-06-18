@@ -5,19 +5,21 @@ test(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.snooker.api.Structs',
-    'ephox.snooker.model.Fitment',
+    'ephox.snooker.test.Fitment',
+    'ephox.snooker.test.TestGenerator',
     'global!Array',
     'global!Math'
   ],
 
-  function (Arr, Fun, Structs, Fitment, Array, Math) {
+  function (Arr, Fun, Structs, Fitment, TestGenerator, Array, Math) {
     var gridMin = 1;  // 1x1 grid is the min
     var gridMax = 150;
 
     var measureTest = Fitment.measureTest;
-    var tailorTest = Fitment.tailorTest;
+    var tailorIVTest = Fitment.tailorIVTest;
     var mergeGridsTest = Fitment.mergeGridsTest;
     var suite = Fitment.suite;
+    var generator = TestGenerator;
 
     var grid = function (rows, cols) {
       return Arr.map(new Array(rows), function (row, r) {
@@ -56,6 +58,16 @@ test(
       return Structs.address(row, col);
     };
 
+    var deltaGen = function () {
+      var rowDelta = rand(-gridMax, gridMax);
+      var colDelta = rand(-gridMax, gridMax);
+      return {
+        rowDelta: Fun.constant(rowDelta),
+        colDelta: Fun.constant(colDelta)
+      };
+
+    };
+
     var measureIVTest = function () {
       var gridSpecA = gridGen();
       var gridSpecB = gridGen();
@@ -90,9 +102,45 @@ test(
       };
     };
 
+    var tailorTestIVTest = function () {
+      var gridSpecA = gridGen();
+      var start = startGen(gridSpecA);
+      var delta = deltaGen();
+      var expectedRows = delta.rowDelta() < 0 ? Math.abs(delta.rowDelta()) + gridSpecA.rows() : gridSpecA.rows();
+      var expectedCols = delta.colDelta() < 0 ? Math.abs(delta.colDelta()) + gridSpecA.cols() : gridSpecA.cols();
 
+      var info = {
+        start: {
+          row: start.row(),
+          column: start.column()
+        },
+        gridA: {
+          rows: gridSpecA.rows(),
+          cols: gridSpecA.cols()
+        },
+        delta: {
+          rowDelta: delta.rowDelta(),
+          colDelta: delta.colDelta()
+        },
+        expected: {
+          rows: expectedRows,
+          cols: expectedCols
+        }
+      };
 
+      var test = Fun.curry(tailorIVTest, {
+        rows: expectedRows,
+        cols: expectedCols
+      }, start, gridSpecA.grid(), delta, generator);
+
+      return {
+        params: info,
+        test: test
+      };
+    };
 
     inVariantRunner(measureIVTest, 1000);
+    inVariantRunner(tailorTestIVTest, 1000);
+
   }
 );

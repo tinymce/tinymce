@@ -27,6 +27,14 @@ define(
       assert.eq(expected, tux);
     };
 
+    var tailorIVTest = function (expected, startAddress, gridA, delta, generator) {
+      var tux = Fitment.tailor(startAddress, gridA, delta, generator());
+      var rows = tux.length;
+      var cols = tux[0].length;
+      assert.eq(expected.rows, rows);
+      assert.eq(expected.cols, cols);
+    };
+
     var mergeGridsTest = function (expected, startAddress, gridA, gridB, generator) {
       // The last step, merge cells from gridB into gridA
       var nuGrid = Fitment.mergeGrid(startAddress, gridA, gridB, generator());
@@ -44,6 +52,7 @@ define(
     return {
       measureTest: measureTest,
       tailorTest: tailorTest,
+      tailorIVTest: tailorIVTest,
       mergeGridsTest: mergeGridsTest,
       suite: suite
     };
