@@ -33,7 +33,10 @@ define(
 
     var colFill = function (grid, amount, generator) {
       return Arr.map(grid, function (row) {
-        return row.concat([generator.cell()]);
+        var fill = Arr.map(new Array(amount), function () {
+          return generator.cell();
+        });
+        return row.concat(fill);
       });
     };
 
@@ -44,7 +47,6 @@ define(
 
     var tailor = function (startAddress, gridA, gridB, generator) {
       var ideal = measure(startAddress, gridA, gridB);
-
       var fillCols = ideal.colDelta() < 0 ? colFill : Fun.identity;
       var fillRows = ideal.rowDelta() < 0 ? rowFill : Fun.identity;
 

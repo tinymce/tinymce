@@ -59,7 +59,7 @@ test(
       [1, 2],
       [3, 4]
     ];
-/*
+
     // col and row are + meaning gridB fits into gridA, given the starting selection point 'a'
     check(measureTest, {
       rowDelta: 1,
@@ -150,9 +150,7 @@ test(
         ['g', 'h', 'i', '?_2']
       ], start(0, 2), gridA, gridB, generator);
 
-*/
-
-    // START interesting cases
+    // START interesting cases, these are suites they combine all 3 tests in 1 spec
     // merge gridBee into gridAphid
     var gridAphid = [
       [ 'a', 'b', 'c' ],
@@ -169,7 +167,11 @@ test(
       ['bee3']
     ];
 
-    // insert at 'j'
+    var gridCicada = [
+      ['cicada1', 'cicada2', 'cicada3', 'cicada3', 'cicada3', 'cicada4', 'cicada4', 'cicada4']
+    ];
+
+    // insert at 'j' a long table
     suite(
       start(3, 0), gridAphid, gridBee, generator,
       {
@@ -198,6 +200,27 @@ test(
       ]
     );
 
+    // insert at 'd' a wide table
+    suite(
+      start(1, 0), gridAphid, gridCicada, generator,
+      {
+        rowDelta: 2,
+        colDelta: -5
+      },
+      [
+        ['a', 'b', 'c', '?_0',  '?_1',  '?_2',  '?_3',  '?_4'],
+        ['d', 'e', 'f', '?_5',  '?_6',  '?_7',  '?_8',  '?_9'],
+        ['g', 'h', 'i', '?_10', '?_11', '?_12', '?_13', '?_14'],
+        ['j', 'k', 'l', '?_15', '?_16', '?_17', '?_18', '?_19']
+      ],
+      [
+        ['a', 'b', 'c', '?_0',  '?_1',  '?_2',  '?_3',  '?_4'],
+        ['h(cicada1)_20', 'h(cicada2)_21', 'h(cicada3)_22', 'h(cicada3)_23', 'h(cicada3)_24', 'h(cicada4)_25',  'h(cicada4)_26', 'h(cicada4)_27'],
+        ['g', 'h', 'i', '?_10', '?_11', '?_12', '?_13', '?_14'],
+        ['j', 'k', 'l', '?_15', '?_16', '?_17', '?_18', '?_19']
+
+      ]
+    );
 
   }
 );
