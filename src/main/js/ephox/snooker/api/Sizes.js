@@ -23,18 +23,15 @@ define(
 
     var redistributeWidth = function (table, newWidth, direction) {
       var totalWidth = Width.get(table);
-      console.log('totalWidth', totalWidth);
-
+      
       var unit = Redistribution.validate(newWidth).fold(Fun.constant('px'), Fun.constant('px'), Fun.constant('%'));
-      var callback = Adjustments.calculateWidths(table, direction);
-      callback(function (widths, all) {
-        var output = Redistribution.redistribute(widths, totalWidth, newWidth);
-
-        Arr.each(all, function (cell) {
-          var slice = output.slice(cell.column(), cell.colspan() + cell.column());
-          var w = Redistribution.sum(slice, CellUtils.minWidth());
-          Css.set(cell.element(), 'width', w + unit);
-        });
+      var calculation = Adjustments.calculateWidths(table, direction);
+      
+      var output = Redistribution.redistribute(calculation.widths(), totalWidth, newWidth);
+      Arr.each(calculation.cells(), function (cell) {
+        var slice = output.slice(cell.column(), cell.colspan() + cell.column());
+        var w = Redistribution.sum(slice, CellUtils.minWidth());
+        Css.set(cell.element(), 'width', w + unit);
       });
     };
 
