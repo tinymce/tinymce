@@ -10,7 +10,7 @@ define(
 
   function (Arr, Fun, Math, Array) {
     var measure = function (startAddress, gridA, gridB) {
-      if(startAddress.row() >= gridA.length || startAddress.column() >= gridA[0].length) throw 'invalid startAddress out of table bounds';
+      if(startAddress.row() >= gridA.length || startAddress.column() > gridA[0].length) throw 'invalid startAddress out of table bounds';
       var rowRemainder = gridA.slice(startAddress.row());
       var colRemainder = rowRemainder[0].slice(startAddress.column());
 
