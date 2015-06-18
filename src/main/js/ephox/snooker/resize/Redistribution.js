@@ -79,15 +79,11 @@ define(
       });
     };
 
-    // We are deriving a pixel amount.
-    var sum = function (values, totalWidth, fallback) {
-      if (values.length === 0) return '0px';
-      if (values.length === 1) return values[0];
+    var sum = function (values, fallback) {
+      if (values.length === 0) return fallback;
       return Arr.foldr(values, function (rest, v) {
-        return validate(v).fold(Fun.constant(fallback), Fun.identity, function (pc) {
-          return (pc * totalWidth / 100);
-        }) + rest;
-      }, 0) + 'px';
+        return validate(v).fold(Fun.constant(fallback), Fun.identity, Fun.identity) + rest;
+      }, 0);
     };
 
     return {

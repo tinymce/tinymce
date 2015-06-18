@@ -33,9 +33,9 @@ test(
 
 
 
-    assert.eq('100px', Redistribution.sum([ '100px' ], '100', 10));
-    assert.eq('50%', Redistribution.sum([ '50%' ], '100', 10));
-    assert.eq('125px', Redistribution.sum([ '50%', '25px' ], '200', 10));
+    assert.eq(100, Redistribution.sum([ '100px' ], 10));
+    assert.eq(50, Redistribution.sum([ '50%' ], 10));
+    assert.eq(75, Redistribution.sum([ '50px', '25px' ], 10));
     
   }
 );
