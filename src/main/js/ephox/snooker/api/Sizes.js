@@ -38,10 +38,11 @@ define(
       
       var list = DetailsList.fromTable(table);
       var warehouse = Warehouse.generate(list);
-      var widths = ColumnWidths.getRawWidths(warehouse, direction);
+      var oldWidths = ColumnWidths.getRawWidths(warehouse, direction);
+      var newWidths = Redistribution.redistribute(oldWidths, totalWidth, newWidth);
+
       var cells = Warehouse.justCells(warehouse);
-      var output = Redistribution.redistribute(widths, totalWidth, newWidth);
-      redistributeTo(output, cells, unit);
+      redistributeTo(newWidths, cells, unit);
     };
 
     return {

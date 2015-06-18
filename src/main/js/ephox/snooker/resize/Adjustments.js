@@ -39,17 +39,6 @@ define(
       return Warehouse.generate(list);
     };
 
-    var calculateWidths = function (table, direction) {
-      var list = DetailsList.fromTable(table);
-      var warehouse = getWarehouse(list);
-      var widths = ColumnWidths.getRawWidths(warehouse, direction);
-      var cells = Warehouse.justCells(warehouse);
-      return {
-        widths: Fun.constant(widths),
-        cells: Fun.constant(cells)
-      };
-    };
-
     var adjust = function (table, delta, index, direction) {
       var list = DetailsList.fromTable(table);
       var warehouse = getWarehouse(list);
@@ -95,8 +84,7 @@ define(
     return {
       adjust: adjust,
       recalculate: recalculate,
-      adjustTo: adjustTo,
-      calculateWidths: calculateWidths
+      adjustTo: adjustTo
     };
   }
 );
