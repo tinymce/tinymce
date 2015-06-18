@@ -4,47 +4,17 @@ test(
   [
     'ephox.peanut.Fun',
     'ephox.snooker.api.Structs',
-    'ephox.snooker.model.Fitment',
+    'ephox.snooker.test.Fitment',
     'ephox.snooker.test.TestGenerator'
   ],
 
   function (Fun, Structs, Fitment, TestGenerator) {
     var generator = TestGenerator;
     var start = Structs.address;
-
-    var measureTest = function (expected, startAddress, gridA, gridB) {
-      // Try put gridB into gridA at the startAddress
-      // returns a delta,
-      // colDelta = -3 means gridA is 3 columns too short
-      // rowDelta = 3 means gridA can fit gridB with 3 rows to spare
-
-      var tux = Fitment.measure(startAddress, gridA, gridB);
-      assert.eq(expected.rowDelta, tux.rowDelta(), 'rowDelta expected: ' + expected.rowDelta + ' actual: '+ tux.rowDelta());
-      assert.eq(expected.colDelta, tux.colDelta(), 'colDelta expected: ' + expected.colDelta + ' actual: '+ tux.colDelta());
-    };
-
-    var tailorTest = function (expected, startAddress, gridA, delta, generator) {
-      // Based on the Fitment.measure
-      // Increase gridA by the row/col delta values
-      // The result is a new grid that will perfectly fit gridB into gridA
-      var tux = Fitment.tailor(startAddress, gridA, delta, generator());
-      assert.eq(expected, tux);
-    };
-
-    var mergeGridsTest = function (expected, startAddress, gridA, gridB, generator) {
-      // The last step, merge cells from gridB into gridA
-      var nuGrid = Fitment.mergeGrid(startAddress, gridA, gridB, generator());
-      assert.eq(expected, nuGrid);
-    };
-
-    var suite = function (startAddress, gridA, gridB, generator, expectedMeasure, expectedTailor, expectedMergeGrids) {
-      measureTest(expectedMeasure, startAddress, gridA, gridB, Fun.noop);
-      tailorTest(expectedTailor, startAddress, gridA, {
-        rowDelta: Fun.constant(expectedMeasure.rowDelta),
-        colDelta: Fun.constant(expectedMeasure.colDelta)
-      }, generator);
-      mergeGridsTest(expectedMergeGrids, startAddress, gridA, gridB, generator);
-    };
+    var measureTest = Fitment.measureTest;
+    var tailorTest = Fitment.tailorTest;
+    var mergeGridsTest = Fitment.mergeGridsTest;
+    var suite = Fitment.suite;
 
     var check = function (test, expected, startAddress, gridA, gridB, generator) {
       test(expected, startAddress, gridA, gridB, generator);

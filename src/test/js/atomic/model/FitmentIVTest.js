@@ -1,5 +1,5 @@
 test(
-  'FitmentMVTest',
+  'FitmentIVTest',
 
   [
     'ephox.compass.Arr',
@@ -11,8 +11,13 @@ test(
   ],
 
   function (Arr, Fun, Structs, Fitment, Array, Math) {
-    var gridMin = 0;
+    var gridMin = 1;  // 1x1 grid is the min
     var gridMax = 150;
+
+    var measureTest = Fitment.measureTest;
+    var tailorTest = Fitment.tailorTest;
+    var mergeGridsTest = Fitment.mergeGridsTest;
+    var suite = Fitment.suite;
 
     var grid = function (rows, cols) {
       return Arr.map(new Array(rows), function (row, r) {
@@ -26,11 +31,12 @@ test(
       return Math.floor(Math.random() * (max - min + 1)) + min;
     };
 
-    var run = function (mvTest, times) {
-      for (var i = 1; i < times; i++) {
-        mvTest();
-        console.log('testing: ', mvTest, i + ' / ' + times);
-      };
+    var inVariantRunner = function (mvTest, times) {
+      for (var i = 1, testSpec; i <= times; i++) {
+        testSpec = mvTest();
+        console.log('testing:', mvTest, i + ' / ' + times, ' params: ' + JSON.stringify(testSpec.params));
+        testSpec.test();
+      }
     };
 
     var gridGen = function () {
@@ -44,23 +50,13 @@ test(
     };
 
     var startGen = function (gridSpec) {
-      var row = rand(0, gridSpec.rows());
-      var col = rand(0, gridSpec.cols());
+      // because arrays start from 0 we -1
+      var row = rand(0, gridSpec.rows()-1);
+      var col = rand(0, gridSpec.cols()-1);
       return Structs.address(row, col);
     };
 
-    var measureTest = function (expected, startAddress, gridA, gridB) {
-      // Try put gridB into gridA at the startAddress
-      // returns a delta,
-      // colDelta = -3 means gridA is 3 columns too short
-      // rowDelta = 3 means gridA can fit gridB with 3 rows to spare
-
-      var tux = Fitment.measure(startAddress, gridA, gridB);
-      assert.eq(expected.rowDelta, tux.rowDelta(), 'rowDelta expected: ' + expected.rowDelta + ' actual: '+ tux.rowDelta());
-      assert.eq(expected.colDelta, tux.colDelta(), 'colDelta expected: ' + expected.colDelta + ' actual: '+ tux.colDelta());
-    };
-
-    var measureMVTest = function () {
+    var measureIVTest = function () {
       var gridSpecA = gridGen();
       var gridSpecB = gridGen();
       var start = startGen(gridSpecA);
@@ -68,16 +64,35 @@ test(
       var rowDelta = (gridSpecA.rows() - start.row()) - gridSpecB.rows();
       var colDelta = (gridSpecA.cols() - start.column()) - gridSpecB.cols();
 
-      measureTest({
+      var info = {
+        start: {
+          row: start.row(),
+          column: start.column()
+        },
+        gridA: {
+          rows: gridSpecA.rows(),
+          cols: gridSpecA.cols()
+        },
+        gridB: {
+          rows: gridSpecB.rows(),
+          cols: gridSpecB.cols()
+        }
+      };
+
+      var test = Fun.curry(measureTest, {
         rowDelta: rowDelta,
         colDelta: colDelta
       }, start, gridSpecA.grid(), gridSpecB.grid(), Fun.noop );
+
+      return {
+        params: info,
+        test: test
+      };
     };
 
 
-    run(measureMVTest, 100);
 
 
-
+    inVariantRunner(measureIVTest, 1000);
   }
 );
