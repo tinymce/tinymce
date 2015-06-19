@@ -5,13 +5,14 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.scullion.ADT',
+    'ephox.snooker.util.Util',
     'ephox.violin.Strings',
     'global!Math',
     'global!parseFloat',
     'global!parseInt'
   ],
 
-  function (Arr, Fun, Adt, Strings, Math, parseFloat, parseInt) {
+  function (Arr, Fun, Adt, Util, Strings, Math, parseFloat, parseInt) {
     var form = Adt.generate([
       { invalid: [ 'raw' ] },
       { pixels: [ 'value' ] },
@@ -69,22 +70,43 @@ define(
       });
     };
 
-    var redistribute = function (widths, totalWidth, newWidth) {
-      var newType = validate(newWidth);
-      var floats = newType.fold(function () {
+    var redistributeEmpty = function (newWidthType, columns) {
+      var f = newWidthType.fold(
+        function () {
+          return Fun.constant('');
+        },
+        function (px) {
+          var num = px / columns;
+          return Fun.constant(num + 'px');
+        },
+        function (pc) {
+          var num = pc / columns;
+          return Fun.constant(num + 'px');
+        }
+      );
+      return Util.repeat(columns, f);
+    };
+
+    var redistributeValues = function (newWidthType, widths, totalWidth) {
+      return newWidthType.fold(function () {
         return widths;
       }, function (px) {
         return redistributeToPx(widths, totalWidth, px);
       }, function (_pc) {
         return redistributeToPercent(widths, totalWidth);
       });
+    };
+
+    var redistribute = function (widths, totalWidth, newWidth) {
+      var newType = validate(newWidth);
+      var floats = Arr.forall(widths, function (s) { return s.length === 0; }) ? redistributeEmpty(newType, widths.length) : redistributeValues(newType, widths, totalWidth);
       return toIntegers(floats);
     };
 
     var sum = function (values, fallback) {
       if (values.length === 0) return fallback;
       return Arr.foldr(values, function (rest, v) {
-        return validate(v).fold(Fun.constant(fallback), Fun.identity, Fun.identity) + rest;
+        return validate(v).fold(Fun.constant(0), Fun.identity, Fun.identity) + rest;
       }, 0);
     };
 

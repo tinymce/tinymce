@@ -13,18 +13,14 @@ define(
 
   function (Arr, Fun, Blocks, Sizes, CellUtils, Util, Css) {
     var getRaw = function (cell) {
-      return Css.getRaw(cell, 'width').fold(function () {
-        return Sizes.getWidth(cell) + 'px';
-      }, function (raw) {
-        return raw;
-      });
+      return Css.getRaw(cell, 'width').getOr('');
     };
 
     var getPixels = function (cell) {
       return Sizes.getWidth(cell);
     };
 
-    var getWidthFrom = function (warehouse, direction, getWidth, suffix) {
+    var getWidthFrom = function (warehouse, direction, getWidth, fallback) {
       var columns = Blocks.columns(warehouse);
 
       var backups = Arr.map(columns, function (cellOption) {
@@ -33,19 +29,28 @@ define(
 
       return Arr.map(columns, function (cellOption, c) {
         // Only use the width of cells that have no column span (or colspan 1)
-        return cellOption.filter(Fun.not(CellUtils.hasColspan)).map(getWidth).getOrThunk(function () {
-          // Default column size when all else fails.
-          return Util.deduce(backups, c).getOrThunk(CellUtils.minWidth) + suffix;
+        var columnCell = cellOption.filter(Fun.not(CellUtils.hasColspan));
+        return columnCell.fold(function () {
+          // Can't just read the width of a cell, so calculate.
+          var deduced = Util.deduce(backups, c);
+          return fallback(deduced);
+        }, function (cell) {
+          return getWidth(cell);
         });
       });
     };
 
     var getRawWidths = function (warehouse, direction) {
-      return getWidthFrom(warehouse, direction, getRaw, 'px');
+      return getWidthFrom(warehouse, direction, getRaw, function (deduced) {
+        return deduced.map(function (d) { return d + 'px'; }).getOr('');
+      });
     };
 
     var getPixelWidths = function (warehouse, direction) {
-      return getWidthFrom(warehouse, direction, getPixels, '');
+      return getWidthFrom(warehouse, direction, getPixels, function (deduced) {
+        // Minimum cell width when all else fails.
+        return deduced.getOrThunk(CellUtils.minWidth);
+      });
     };
 
     return {
