@@ -13,7 +13,11 @@ define(
 
   function (Arr, Fun, Blocks, Sizes, CellUtils, Util, Css) {
     var getRaw = function (cell) {
-      return Css.getRaw(cell, 'width').getOr('');
+      return Css.getRaw(cell, 'width').fold(function () {
+        return Sizes.getWidth(cell) + 'px';
+      }, function (raw) {
+        return raw;
+      });
     };
 
     var getPixels = function (cell) {

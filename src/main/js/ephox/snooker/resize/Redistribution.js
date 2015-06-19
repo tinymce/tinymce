@@ -99,7 +99,7 @@ define(
 
     var redistribute = function (widths, totalWidth, newWidth) {
       var newType = validate(newWidth);
-      var floats = Arr.forall(widths, function (s) { return s.length === 0; }) ? redistributeEmpty(newType, widths.length) : redistributeValues(newType, widths, totalWidth);
+      var floats = Arr.forall(widths, function (s) { return s === '0px'; }) ? redistributeEmpty(newType, widths.length) : redistributeValues(newType, widths, totalWidth);
       return toIntegers(floats);
     };
 

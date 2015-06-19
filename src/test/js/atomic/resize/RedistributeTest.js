@@ -36,6 +36,10 @@ test(
 
     check([ '66px', '22px', '12px' ], [ '66.66%', '22.22%', '11.11%' ], '100', '100px');
 
+    check([ '20px', '', '20px' ], [ '20px', '', '20px' ], '60', '60px');
+    check([ '', '', '20px' ], [ '', '', '20px' ], '60', '60px');
+    check([ '20px', '20px', '20px' ], [ '', '', '' ], '60', '60px');
+
     assert.eq([ '10px', '10px', '11px' ], Redistribution.toIntegers([ '10.3px', '10.3px', '10.3px' ]));
 
     assert.eq(100, Redistribution.sum([ '100px' ], 10));
