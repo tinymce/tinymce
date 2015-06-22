@@ -51,10 +51,10 @@ define("tinymce/EditorUpload", [
 
 		function uploadImages(callback) {
 			var uploader = new Uploader({
-				url: editor.settings.upload_url,
-				basePath: editor.settings.upload_base_path,
-				credentials: editor.settings.upload_credentials,
-				handler: editor.settings.upload_handler
+				url: editor.settings.images_upload_url,
+				basePath: editor.settings.images_upload_base_path,
+				credentials: editor.settings.images_upload_credentials,
+				handler: editor.settings.images_upload_handler
 			});
 
 			function imageInfosToBlobInfos(imageInfos) {

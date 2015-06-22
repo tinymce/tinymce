@@ -80,7 +80,7 @@
 
 		editor.setContent(imageHtml(testBlobDataUri));
 
-		editor.settings.upload_handler = function(data, success) {
+		editor.settings.images_upload_handler = function(data, success) {
 			uploadedBlobInfo = data;
 			success(data.id() + '.png');
 		};
