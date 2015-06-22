@@ -334,6 +334,8 @@ define("tinymce/ui/Window", [
 					self.close();
 				}
 			});
+
+			self.addClass('window-body', 'body');
 		},
 
 		/**
