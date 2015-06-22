@@ -178,21 +178,18 @@ test(
         var offsetRow = start.row();
         var offsetCol = start.column();
 
-        Arr.each(gridSpecB.grid(), function (row, r) {
-          Arr.each(row, function (col, c) {
-            // roo = row
-            // ar = r
-            // res = result
-            // offR = offsetRow
-            // offC = offsetCol
-
-            var expectedRow = r + offsetRow;
-            var expectedCol = c + offsetCol;
-            var expected = result[expectedRow][expectedCol];
-
-            assert.eq(expected, col);
-
-            // debugger
+        var gridA = gridSpecA.grid();
+        var gridB = gridSpecB.grid();
+        
+        Arr.each(result, function (row, ri) {
+          Arr.each(row, function (cell, ci) {
+            var expected = (function () {
+              // Assumption: both gridA and gridB are rectangular.
+              if (ri >= offsetRow && ri <= offsetRow + gridB.length - 1 && ci >= offsetCol && ci <= offsetCol + gridB[0].length - 1) return gridB[ri - offsetRow][ci - offsetCol];
+              else if (ri >= 0 && ri < gridA.length && ci >= 0 && ci < gridA[0].length) return gridA[ri][ci];
+              else return '?';
+            })();
+            assert.eq(expected, cell);
           });
         });
       };
