@@ -38,7 +38,7 @@ test(
 
     check([ '20px', '', '20px' ], [ '20px', '', '20px' ], '60', '60px');
     check([ '', '', '20px' ], [ '', '', '20px' ], '60', '60px');
-    check([ '20px', '20px', '20px' ], [ '', '', '' ], '60', '60px');
+    check([ '', '', '' ], [ '', '', '' ], '60', '60px');
 
     assert.eq([ '10px', '10px', '11px' ], Redistribution.toIntegers([ '10.3px', '10.3px', '10.3px' ]));
 
