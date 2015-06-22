@@ -14,7 +14,7 @@
 	&:hover, &:focus {
 		color: @btn-text;
 		.vertical-gradient(darken(@btn-bg, 5%), darken(@btn-bg-hlight, 5%));
-		border-color: darken(@btn-bg, 20%);
+		border-color: @btn-border-hover;
 	}
 
 	&.@{prefix}-disabled button, &.@{prefix}-disabled:hover button {
@@ -32,7 +32,7 @@
 	&:active {
 		.vertical-gradient(darken(@btn-bg, 7%), darken(@btn-bg-hlight, 5%));
 		.box-shadow(@btn-box-shadow-active);
-		border-color: darken(@btn-bg, 20%);
+		border-color: @btn-border-active;
 
 	}
 }
@@ -62,13 +62,13 @@
 .@{prefix}-primary {
 	min-width: 50px;
 	color: @btn-primary-text;
-	border: 1px solid mix(rgb(red(@btn-border-right), green(@btn-border-right), blue(@btn-border-right)), @panel-bg, 30%);
-	border-color: transparent;
+	border: 1px solid transparent;
+	border-color: @btn-primary-border;
 	.vertical-gradient(@btn-primary-bg, @btn-primary-bg-hlight);
 
 	&:hover, &:focus {
 		.vertical-gradient(darken(@btn-primary-bg, 5%), darken(@btn-primary-bg-hlight, 5%));
-		border-color: transparent;
+		border-color: @btn-primary-border-hover;
 	}
 
 	&.@{prefix}-disabled button, &.@{prefix}-disabled:hover button {
