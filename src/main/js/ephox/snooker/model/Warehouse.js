@@ -100,14 +100,8 @@ define(
       return Arr.flatten(rows);
     };
 
-    var fromTable = function (table) {
-      var list = DetailsList.fromTable(table);
-      return generate(list);
-    };
-
     return {
       generate: generate,
-      fromTable: fromTable,
       getAt: getAt,
       findItem: findItem,
       filterItems: filterItems,
