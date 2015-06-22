@@ -6,13 +6,24 @@ test(
   ],
 
   function (Redistribution) {
+    var toStr = function (f) {
+      return f.fold(function (raw) {
+        return 'invalid[' + raw + ']';
+      }, function (pixels) {
+        return 'pixels[' + pixels + ']';
+      }, function (percent) {
+        return 'percent[' + percent + ']';
+      });
+    };
+
+
     var check = function (expected, input, originalWidth, newWidth) {
       assert.eq(expected, Redistribution.redistribute(input, originalWidth, newWidth));  
     };
 
 
     var checkValidate = function (expected, input) {
-      var actual = Redistribution.toStr(Redistribution.validate(input));
+      var actual = toStr(Redistribution.validate(input));
       assert.eq(expected, actual);
     };
 

@@ -19,16 +19,6 @@ define(
       { percent: [ 'value' ] }
     ]);
 
-    var toStr = function (f) {
-      return f.fold(function (raw) {
-        return 'invalid[' + raw + ']';
-      }, function (pixels) {
-        return 'pixels[' + pixels + ']';
-      }, function (percent) {
-        return 'percent[' + percent + ']';
-      });
-    };
-
     var validateFor = function (suffix, type, value) {
       var rawAmount = value.substring(0, value.length - suffix.length);
       var amount = parseFloat(rawAmount);
@@ -142,7 +132,6 @@ define(
     return {
       validate: validate,
       redistribute: redistribute,
-      toStr: toStr,
       sum: sum,
       toIntegers: toIntegers
     };
