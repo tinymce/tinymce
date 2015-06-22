@@ -6,10 +6,11 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.snooker.api.Structs',
+    'ephox.snooker.model.DetailsList',
     'global!Math'
   ],
 
-  function (Arr, Fun, Option, Structs, Math) {
+  function (Arr, Fun, Option, Structs, DetailsList, Math) {
     var key = function (row, column) {
       return row + ',' + column;
     };
@@ -18,7 +19,7 @@ define(
       var raw = warehouse.access()[key(row, column)];
       return raw !== undefined ? Option.some(raw) : Option.none();
     };
-    
+
     var findItem = function (warehouse, item, comparator) {
       var filtered = filterItems(warehouse, function (detail) {
         return comparator(item, detail.element());
@@ -99,8 +100,14 @@ define(
       return Arr.flatten(rows);
     };
 
+    var fromTable = function (table) {
+      var list = DetailsList.fromTable(table);
+      return generate(list);
+    };
+
     return {
       generate: generate,
+      fromTable: fromTable,
       getAt: getAt,
       findItem: findItem,
       filterItems: filterItems,

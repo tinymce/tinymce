@@ -11,8 +11,9 @@ test(
   ],
 
   function (Arr, Fun, Structs, Fitment, Array, Math) {
-    var gridMin = 1;  // 1x1 grid is the min
-    var gridMax = 150;
+    var CYCLES = 100;
+    var GRID_MIN = 1;  // 1x1 grid is the min
+    var GRID_MAX = 5;
 
     var measureTest = Fitment.measureTest;
     var tailorIVTest = Fitment.tailorIVTest;
@@ -57,8 +58,8 @@ test(
     };
 
     var gridGen = function (_prefix) {
-      var cols = rand(gridMin, gridMax);
-      var rows = rand(gridMin, gridMax);
+      var cols = rand(GRID_MIN, GRID_MAX);
+      var rows = rand(GRID_MIN, GRID_MAX);
       return {
         rows: Fun.constant(rows),
         cols: Fun.constant(cols),
@@ -74,8 +75,8 @@ test(
     };
 
     var deltaGen = function () {
-      var rowDelta = rand(-gridMax, gridMax);
-      var colDelta = rand(-gridMax, gridMax);
+      var rowDelta = rand(-GRID_MAX, GRID_MAX);
+      var colDelta = rand(-GRID_MAX, GRID_MAX);
       return {
         rowDelta: Fun.constant(rowDelta),
         colDelta: Fun.constant(colDelta)
@@ -201,9 +202,9 @@ test(
       };
     };
 
-    inVariantRunner(mergeGridsIVTest, 100);
-    inVariantRunner(measureIVTest, 1);
-    inVariantRunner(tailorTestIVTest, 1);
+    inVariantRunner(mergeGridsIVTest, CYCLES);
+    inVariantRunner(measureIVTest, CYCLES);
+    inVariantRunner(tailorTestIVTest, CYCLES);
 
   }
 );
