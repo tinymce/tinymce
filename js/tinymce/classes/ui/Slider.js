@@ -34,6 +34,26 @@ define("tinymce/ui/Slider", [
 		return value;
 	}
 
+	function updateSliderHandle(ctrl, value) {
+		var maxHandlePos, shortSizeName, sizeName, stylePosName, styleValue;
+
+		if (ctrl.settings.orientation == "v") {
+			stylePosName = "top";
+			sizeName = "height";
+			shortSizeName = "h";
+		} else {
+			stylePosName = "left";
+			sizeName = "width";
+			shortSizeName = "w";
+		}
+
+		maxHandlePos = (ctrl.layoutRect()[shortSizeName] || 100) - DomUtils.getSize(ctrl.getEl('handle'))[sizeName];
+
+		styleValue = (maxHandlePos * ((value - ctrl._minValue) / (ctrl._maxValue - ctrl._minValue))) + 'px';
+		ctrl.getEl('handle').style[stylePosName] = styleValue;
+		ctrl.getEl('handle').style.height = ctrl.layoutRect().h + 'px';
+	}
+
 	return Widget.extend({
 		init: function(settings) {
 			var self = this;
@@ -123,34 +143,17 @@ define("tinymce/ui/Slider", [
 			});
 		},
 
+		repaint: function() {
+			this._super();
+			updateSliderHandle(this, this.value());
+		},
+
 		bindStates: function() {
 			var self = this;
 
-			function update(value) {
-				var maxHandlePos, shortSizeName, sizeName, stylePosName, styleValue;
-
-				if (self.settings.orientation == "v") {
-					stylePosName = "top";
-					sizeName = "height";
-					shortSizeName = "h";
-				} else {
-					stylePosName = "left";
-					sizeName = "width";
-					shortSizeName = "w";
-				}
-
-				maxHandlePos = (self.layoutRect()[shortSizeName] || 100) - DomUtils.getSize(self.getEl('handle'))[sizeName];
-
-				styleValue = (maxHandlePos * ((value - self._minValue) / (self._maxValue - self._minValue))) + 'px';
-				self.getEl('handle').style[stylePosName] = styleValue;
-				self.getEl('handle').style.height = self.layoutRect().h + 'px';
-			}
-
 			self.state.on('change:value', function(e) {
-				update(e.value);
+				updateSliderHandle(self, e.value);
 			});
-
-			update(self.value());
 
 			return self._super();
 		}
