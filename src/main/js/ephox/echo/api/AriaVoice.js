@@ -10,6 +10,10 @@ define(
   ],
 
   function (Id, Attr, Css, Element, Insert) {
+    var tokenSelector = function () {
+      return 'span[id^="ephox-echo-voice"]';
+    };
+
     var describe = function (item, description) {
       var token = Element.fromTag('span');
       var text = Element.fromText(description);
@@ -27,7 +31,8 @@ define(
     };
 
     return {
-      describe: describe
+      describe: describe,
+      tokenSelector: tokenSelector
     };
   }
 );
