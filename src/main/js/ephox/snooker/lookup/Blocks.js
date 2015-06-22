@@ -5,12 +5,11 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.perhaps.Options',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.util.Util'
   ],
 
-  function (Arr, Fun, Option, Options, Warehouse, Util) {
+  function (Arr, Fun, Option, Warehouse, Util) {
     /*
      * Identify for each column, a cell that has colspan 1. Note, this
      * may actually fail, and future work will be to calculate column
