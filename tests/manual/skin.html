@@ -14,6 +14,8 @@
 <script src="../../js/tinymce/plugins/paste/plugin.dev.js"></script>
 <script src="../../js/tinymce/plugins/spellchecker/plugin.dev.js"></script>
 <script>
+	var RTL = false;
+
 	function mockSpellcheck(method, data, success) {
 		if (method == "spellcheck") {
 			var words = data.match(this.getWordCharPattern());
@@ -33,7 +35,7 @@
 
 	tinymce.init({
 		selector: "textarea#elm1",
-		rtl_ui: false,
+		rtl_ui: RTL,
 
 		theme: "modern",
 		plugins: [
@@ -90,7 +92,7 @@
 	tinymce.init({
 		selector: "textarea#small",
 		toolbar_items_size: 'small',
-		rtl_ui: false,
+		rtl_ui: RTL,
 
 		theme: "modern",
 		plugins: [
