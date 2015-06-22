@@ -27,13 +27,20 @@ define("tinymce/EditorUpload", [
 			return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 		}
 
-		function replaceImageUrl(content, targetUrl, replacementUrl) {
+		function replaceAttribValue(content, name, targetValue, newValue) {
 			return content.replace(
-				new RegExp('src="' + regExpEscape(targetUrl) + '"', 'g'),
+				new RegExp(name + '="' + regExpEscape(targetValue) + '"', 'g'),
 				function() {
-					return 'src="' + replacementUrl + '"';
+					return name + '="' + newValue + '"';
 				}
 			);
+		}
+
+		function replaceImageUrl(content, targetUrl, replacementUrl) {
+			content = replaceAttribValue(content, "src", targetUrl, replacementUrl);
+			content = replaceAttribValue(content, "data-mce-src", targetUrl, replacementUrl);
+
+			return content;
 		}
 
 		function replaceUrlInUndoStack(targetUrl, replacementUrl) {
