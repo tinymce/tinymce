@@ -39,7 +39,6 @@ define(
       var warehouse = Warehouse.generate(list);
       var oldWidths = ColumnWidths.getRawWidths(warehouse, direction);
       var newWidths = Redistribution.redistribute(oldWidths, totalWidth, newWidth);
-      console.log('oldWidths: ', oldWidths, 'newWidths', newWidths);
 
       var cells = Warehouse.justCells(warehouse);
       redistributeTo(newWidths, cells, unit);
