@@ -252,7 +252,7 @@ define("tinymce/imagetoolsplugin/Plugin", [
 			var toolbarItems = editor.settings.imagetools_toolbar;
 
 			if (!toolbarItems) {
-				toolbarItems = 'rotateleft rotateright | flipv fliph | crop editimage imageoptions remove';
+				toolbarItems = 'rotateleft rotateright | flipv fliph | crop editimage imageoptions';
 			}
 
 			editor.addContextToolbar(
