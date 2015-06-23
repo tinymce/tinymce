@@ -48,6 +48,66 @@ define("tinymce/imagetoolsplugin/Plugin", [
 		}
 		*/
 
+		function getImageSize(img) {
+			var width, height;
+
+			function isPxValue(value) {
+				return value.indexOf('px') == value.length - 2;
+			}
+
+			width = img.style.width;
+			height = img.style.height;
+			if (width || height) {
+				if (isPxValue(width) && isPxValue(height)) {
+					return {
+						w: parseInt(width, 10),
+						h: parseInt(height, 10)
+					};
+				}
+
+				return null;
+			}
+
+			width = img.width;
+			height = img.height;
+			if (width && height) {
+				return {
+					w: parseInt(width, 10),
+					h: parseInt(height, 10)
+				};
+			}
+
+			return null;
+		}
+
+		function setImageSize(img, size) {
+			var width, height;
+
+			if (size) {
+				width = img.style.width;
+				height = img.style.height;
+
+				if (width || height) {
+					editor.$(img).css({
+						width: size.w,
+						height: size.h
+					});
+				} else {
+					editor.$(img).attr({
+						width: size.w,
+						height: size.h
+					});
+				}
+			}
+		}
+
+		function getNaturalImageSize(img) {
+			return {
+				w: img.naturalWidth,
+				h: img.naturalHeight
+			};
+		}
+
 		function getSelectedImage() {
 			return editor.selection.getNode();
 		}
@@ -106,10 +166,14 @@ define("tinymce/imagetoolsplugin/Plugin", [
 		function rotate(angle) {
 			return function() {
 				return selectedImageOperation(function(blobInfo) {
-					editor.$(getSelectedImage()).attr({
-						width: getSelectedImage().height,
-						height: getSelectedImage().width
-					});
+					var size = getImageSize(getSelectedImage());
+
+					if (size) {
+						setImageSize(getSelectedImage(), {
+							w: size.h,
+							h: size.w
+						});
+					}
 
 					return ImageTools.rotate(blobInfo.blob(), angle);
 				})();
@@ -125,10 +189,22 @@ define("tinymce/imagetoolsplugin/Plugin", [
 		}
 
 		function editImageDialog() {
-			var img = getSelectedImage();
+			var img = getSelectedImage(), originalSize = getNaturalImageSize(img);
 
 			if (img) {
-				Dialog.edit(img.src).then(updateSelectedImage, function() {});
+				Dialog.edit(img.src).then(function(blob) {
+					return new Promise(function(resolve) {
+						Conversions.blobToImage(blob).then(function(newImage) {
+							var newSize = getNaturalImageSize(newImage);
+
+							if (originalSize.w != newSize.w || originalSize.h != newSize.h) {
+								setImageSize(img, newSize);
+							}
+
+							resolve(blob);
+						});
+					});
+				}).then(updateSelectedImage, function() {});
 			}
 		}
 
@@ -176,7 +252,7 @@ define("tinymce/imagetoolsplugin/Plugin", [
 			var toolbarItems = editor.settings.imagetools_toolbar;
 
 			if (!toolbarItems) {
-				toolbarItems = 'rotateleft rotateright | flipv fliph | crop editimage imageoptions';
+				toolbarItems = 'rotateleft rotateright | flipv fliph | crop editimage imageoptions remove';
 			}
 
 			editor.addContextToolbar(
