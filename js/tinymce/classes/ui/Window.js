@@ -128,6 +128,7 @@ define("tinymce/ui/Window", [
 			}
 
 			self.classes.add('window');
+			self.bodyClasses.add('window-body');
 			self.state.set('fixed', true);
 
 			// Create statusbar
