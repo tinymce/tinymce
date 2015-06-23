@@ -68,8 +68,8 @@ define("tinymce/imagetoolsplugin/Plugin", [
 				return null;
 			}
 
-			width = img.width;
-			height = img.height;
+			width = editor.$(img).attr('width');
+			height = editor.$(img).attr('height');
 			if (width && height) {
 				return {
 					w: parseInt(width, 10),
@@ -92,7 +92,12 @@ define("tinymce/imagetoolsplugin/Plugin", [
 						width: size.w,
 						height: size.h
 					});
-				} else {
+				}
+
+				width = img.width;
+				height = img.height;
+
+				if (width || height) {
 					editor.$(img).attr({
 						width: size.w,
 						height: size.h
