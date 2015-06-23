@@ -48,7 +48,7 @@ define(
       // no need to check bounds, as anything outside this index is removed in the nested for loop
       var row = list[rowIndex].element();
       var td = Element.fromTag('td');
-      Insert.append(td, Element.fromText('\u00A0'));
+      Insert.append(td, Element.fromTag('br'));
       var f = seenSelected ? Insert.append : Insert.prepend;
       f(row, td);
     };
