@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Imagetools plugin test</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<script src="../../js/tinymce/tinymce.dev.js"></script>
+<script src="../../js/tinymce/plugins/imagetools/plugin.dev.js"></script>
+<!-- <link rel="stylesheet" href="../../js/tinymce/skins/lightgray/skin.min.css"> -->
+<script>
+	tinymce.init({
+		selector: "textarea.tinymce",
+		theme: "modern",
+		plugins: [
+			"advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+			"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+			"save table contextmenu directionality emoticons template paste textcolor importcss colorpicker imagetools"
+		],
+		content_css: "css/development.css",
+		add_unload_trigger: false,
+		height: 600,
+		toolbar1: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table"
+	});
+
+</script>
+</head>
+<body>
+
+<form method="post" action="http://www.tinymce.com/dump.php?example=true">
+	<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%" class="tinymce">
+		<p>
+			<img src="img/dogleft.jpg" width="160" height="100">
+			<img src="img/dogleft.jpg" style="width: 160px; height: 100px">
+			<img src="img/dogleft.jpg" style="width: 20%">
+			<img src="img/dogleft.jpg">
+		</p>
+	</textarea>
+
+	<input type="submit" name="save" value="Submit" />
+	<input type="reset" name="reset" value="Reset" />
+</form>
+
+</body>
+</html>
