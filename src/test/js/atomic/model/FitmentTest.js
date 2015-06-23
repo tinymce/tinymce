@@ -16,10 +16,10 @@ test(
     var mergeGridsTest = Fitment.mergeGridsTest;
     var suite = Fitment.suite;
 
-    var check = function (test, expected, startAddress, gridA, gridB, generator) {
-      test(expected, startAddress, gridA, gridB, generator);
+    var check = function (test, expected, startAddress, gridA, gridB, generator, comparator) {
+      test(expected, startAddress, gridA, gridB, generator, comparator);
     };
-/*
+
     // Simple test data, 4 basic variants of merging:
     // gridB into gridA with different start points
     var gridA = [
@@ -37,25 +37,25 @@ test(
     check(measureTest, {
       rowDelta: 1,
       colDelta: 1
-    }, start(0, 0), gridA, gridB, Fun.noop);
+    }, start(0, 0), gridA, gridB, Fun.noop, Fun.noop);
 
     // col and row are > -1 meaning gridB fits into gridA, given the starting selection point 'e'
     check(measureTest, {
       rowDelta: 0,
       colDelta: 0
-    }, start(1, 1), gridA, gridB, Fun.noop);
+    }, start(1, 1), gridA, gridB, Fun.noop, Fun.noop);
 
     // row is 1 too short col is 1 too short, given the starting selection point 'i'
     check(measureTest, {
       rowDelta: -1,
       colDelta: -1
-    }, start(2, 2), gridA, gridB, Fun.noop);
+    }, start(2, 2), gridA, gridB, Fun.noop, Fun.noop);
 
     // col is 1 too short, given the starting selection point 'c' (need to add another column)
     check(measureTest, {
       rowDelta: 1,
       colDelta: -1
-     }, start(0, 2), gridA, gridB, Fun.noop);
+     }, start(0, 2), gridA, gridB, Fun.noop, Fun.noop);
 
     check(
       tailorTest,
@@ -66,7 +66,7 @@ test(
       ], start(0, 0), gridA, {
         rowDelta: Fun.constant(1),
         colDelta: Fun.constant(1)
-      }, generator);
+      }, generator, Fun.noop);
 
     check(
       tailorTest,
@@ -77,7 +77,7 @@ test(
       ], start(1, 1), gridA, {
         rowDelta: Fun.constant(0),
         colDelta: Fun.constant(0)
-      }, generator);
+      }, generator, Fun.noop);
 
     check(
       tailorTest,
@@ -89,7 +89,7 @@ test(
       ], start(2, 2), gridA, {
         rowDelta: Fun.constant(-1),
         colDelta: Fun.constant(-1)
-      }, generator);
+      }, generator, Fun.noop);
 
     check(
       tailorTest,
@@ -100,7 +100,7 @@ test(
       ], start(0, 2), gridA, {
         rowDelta: Fun.constant(1),
         colDelta: Fun.constant(-1)
-      }, generator);
+      }, generator, Fun.noop);
 
     check(
       mergeGridsTest,
@@ -134,6 +134,8 @@ test(
         ['d', 'e', 'h(3)_5', 'h(4)_6'],
         ['g', 'h', 'i', '?_2']
       ], start(0, 2), gridA, gridB, generator, Fun.tripleEquals);
+
+
 
     // START interesting cases, these are suites they combine all 3 tests in 1 spec
     // merge gridBee into gridAphid
@@ -225,9 +227,9 @@ test(
         ['g', 'h', 'i', '?_10', '?_11', '?_12', '?_13', '?_14'],
         ['j', 'k', 'l', '?_15', '?_16', '?_17', '?_18', '?_19']
       ]
-    );*/
+    );
 
-    // Advanced Spans
+/*    // Advanced Spans
     var gridAdvancedOne = [
       [ 'A', 'B', 'B', 'C' ],
       [ 'D', 'B', 'B', 'E' ],
@@ -268,7 +270,7 @@ test(
         [ 'I', 'J', 'K', 'K' ],
         [ 'I', 'L', 'L', 'M' ]
       ]
-    );
+    );*/
 
   }
 );
