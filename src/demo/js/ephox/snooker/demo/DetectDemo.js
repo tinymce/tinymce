@@ -2,6 +2,8 @@ define(
   'ephox.snooker.demo.DetectDemo',
 
   [
+    'ephox.compass.Obj',
+    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.snooker.api.ResizeDirection',
     'ephox.snooker.api.ResizeWire',
@@ -21,7 +23,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Option, ResizeDirection, ResizeWire, Structs, TableOperations, TableResize, Attr, Compare, Css, Direction, DomEvent, Element, Insert, InsertAll, Ready, Replication, SelectorFind) {
+  function (Obj, Fun, Option, ResizeDirection, ResizeWire, Structs, TableOperations, TableResize, Attr, Compare, Css, Direction, DomEvent, Element, Insert, InsertAll, Ready, Replication, SelectorFind) {
     return function () {
 
       var tester = Element.fromHtml(
@@ -157,10 +159,6 @@ define(
       Insert.append(eraseColumn, Element.fromText('Erase column'));
       Insert.append(ephoxUi, eraseColumn);
 
-      var mergeCells = Element.fromTag('button');
-      Insert.append(mergeCells, Element.fromText('Merge cells'));
-      Insert.append(ephoxUi, mergeCells);
-
       var makeButton = function (desc) {
         var button = Element.fromTag('button');
         Insert.append(button, Element.fromText(desc));
@@ -189,17 +187,25 @@ define(
         Insert.append(td, Element.fromText('?'));
         if (prev.colspan() === 1) Css.set(td, 'width', Css.get(prev.element(), 'width'));
         if (prev.rowspan() === 1) Css.set(td, 'height', Css.get(prev.element(), 'height'));
-        return Structs.detail(td, 1, 1);
+        return td;
+      };
+
+      var gap = function () {
+        var td = Element.fromTag('td');
+        Insert.append(td, Element.fromText('?'));
+        return td;
       };
 
       var newRow = function (prev) {
         var tr = Element.fromTag('tr');
-        return Structs.detail(tr, 1, 1);
+        return tr;
       };
 
       var replace = function (cell, tag, attrs) {
         var replica = Replication.copy(cell, tag);
-        Attr.setAll(replica, attrs);
+        Obj.each(attrs, function (v, k) {
+          if (v !== null) Attr.set(replica, k, v);
+        });
         return replica;
       };
 
@@ -208,7 +214,8 @@ define(
       var generators = {
         row: newRow,
         cell: newCell,
-        replace: replace
+        replace: replace,
+        gap: gap
       };
 
       var runOperation = function (operation) {
@@ -216,7 +223,14 @@ define(
           detection().each(function (start) {
             var dir = Direction.getDirection(start);
             var direction = dir === 'rtl' ? ResizeDirection.rtl : ResizeDirection.ltr;
-            operation(ResizeWire.only(ephoxUi), start, generators, direction);
+            var target = {
+              element: Fun.constant(start),
+              mergable: Option.none,
+              unmergable: Option.none
+            };
+
+            //wire, table, target, generators, direction
+            operation(ResizeWire.only(ephoxUi), SelectorFind.ancestor(start, 'table').getOrDie(), target, generators, direction);
           });
         };
       };
@@ -233,8 +247,6 @@ define(
       DomEvent.bind(unmakeColumnHeader, 'click', runOperation(TableOperations.unmakeColumnHeader));
       DomEvent.bind(makeRowHeader, 'click', runOperation(TableOperations.makeRowHeader));
       DomEvent.bind(unmakeRowHeader, 'click', runOperation(TableOperations.unmakeRowHeader));
-
-      DomEvent.bind(mergeCells, 'click', runOperation(TableOperations.mergeCells));
     };
   }
 );
