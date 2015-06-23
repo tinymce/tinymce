@@ -19,7 +19,7 @@ test(
     var check = function (test, expected, startAddress, gridA, gridB, generator) {
       test(expected, startAddress, gridA, gridB, generator);
     };
-
+/*
     // Simple test data, 4 basic variants of merging:
     // gridB into gridA with different start points
     var gridA = [
@@ -32,7 +32,7 @@ test(
       [1, 2],
       [3, 4]
     ];
-/*
+
     // col and row are + meaning gridB fits into gridA, given the starting selection point 'a'
     check(measureTest, {
       rowDelta: 1,
@@ -225,8 +225,8 @@ test(
         ['g', 'h', 'i', '?_10', '?_11', '?_12', '?_13', '?_14'],
         ['j', 'k', 'l', '?_15', '?_16', '?_17', '?_18', '?_19']
       ]
-    );
-*/
+    );*/
+
     // Advanced Spans
     var gridAdvancedOne = [
       [ 'A', 'B', 'B', 'C' ],
