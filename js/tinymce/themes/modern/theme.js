@@ -421,14 +421,19 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				contentAreaRect.w = editor.getDoc().documentElement.offsetWidth;
 			}
 
-			relPos = Rect.findBestRelativePosition(panelRect, Rect.inflate(elementRect, 0, 7), contentAreaRect, testPositions);
+			// Inflate the elementRect so it doesn't get placed above resize handles
+			if (editor.selection.controlSelection.isResizable(match.element)) {
+				elementRect = Rect.inflate(elementRect, 0, 7);
+			}
+
+			relPos = Rect.findBestRelativePosition(panelRect, elementRect, contentAreaRect, testPositions);
 
 			if (relPos) {
 				each(testPositions.concat('inside'), function(pos) {
 					panel.classes.toggle('tinymce-inline-' + pos, pos == relPos);
 				});
 
-				relRect = Rect.relativePosition(panelRect, Rect.inflate(elementRect, 0, 7), relPos);
+				relRect = Rect.relativePosition(panelRect, elementRect, relPos);
 				panel.moveTo(relRect.x, relRect.y);
 			} else {
 				each(testPositions, function(pos) {
