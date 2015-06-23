@@ -19,7 +19,8 @@ module.exports = function(grunt) {
 				"js/tinymce/plugins/*/classes/**/*.js",
 				"!js/tinymce/plugins/paste/plugin.js",
 				"!js/tinymce/plugins/table/plugin.js",
-				"!js/tinymce/plugins/spellchecker/plugin.js"
+				"!js/tinymce/plugins/spellchecker/plugin.js",
+				"!js/tinymce/plugins/imagetools/plugin.js"
 			],
 
 			themes: ["js/tinymce/themes/*/theme.js"]
@@ -33,7 +34,8 @@ module.exports = function(grunt) {
 				"js/tinymce/plugins/*/classes/**/*.js",
 				"!js/tinymce/plugins/paste/plugin.js",
 				"!js/tinymce/plugins/table/plugin.js",
-				"!js/tinymce/plugins/spellchecker/plugin.js"
+				"!js/tinymce/plugins/spellchecker/plugin.js",
+				"!js/tinymce/plugins/imagetools/plugin.js"
 			],
 
 			themes: ["js/tinymce/themes/*/theme.js"]
@@ -44,14 +46,15 @@ module.exports = function(grunt) {
 				config: ".jscsrc"
 			},
 
-			core: ["js/tinymce/**/*.js"],
+			core: ["js/tinymce/classes/**/*.js"],
 
 			plugins: [
 				"js/tinymce/plugins/*/plugin.js",
 				"js/tinymce/plugins/*/classes/**.js",
 				"!js/tinymce/plugins/paste/plugin.js",
 				"!js/tinymce/plugins/table/plugin.js",
-				"!js/tinymce/plugins/spellchecker/plugin.js"
+				"!js/tinymce/plugins/spellchecker/plugin.js",
+				"!js/tinymce/plugins/imagetools/plugin.js"
 			],
 
 			themes: ["js/tinymce/themes/*/theme.js"]
@@ -168,6 +171,21 @@ module.exports = function(grunt) {
 
 					from: "Plugin.js"
 				}
+			},
+
+			"imagetools-plugin": {
+				options: {
+					baseDir: "js/tinymce/plugins/imagetools/classes",
+					rootNS: "tinymce.imagetoolsplugin",
+					outputSource: "js/tinymce/plugins/imagetools/plugin.js",
+					outputMinified: "js/tinymce/plugins/imagetools/plugin.min.js",
+					outputDev: "js/tinymce/plugins/imagetools/plugin.dev.js",
+					verbose: false,
+					expose: "public",
+					compress: true,
+
+					from: "Plugin.js"
+				}
 			}
 		},
 
@@ -179,7 +197,9 @@ module.exports = function(grunt) {
 						"Reset.less",
 						"Mixins.less",
 						"Animations.less",
-						"TinyMCE.less"
+						"TinyMCE.less",
+						"CropRect.less",
+						"ImagePanel.less"
 					],
 					append: ["Icons.less"],
 					importFrom: "js/tinymce/tinymce.js",
@@ -195,7 +215,9 @@ module.exports = function(grunt) {
 						"Reset.less",
 						"Mixins.less",
 						"Animations.less",
-						"TinyMCE.less"
+						"TinyMCE.less",
+						"CropRect.less",
+						"ImagePanel.less"
 					],
 					append: ["Icons.Ie7.less"],
 					importFrom: "js/tinymce/tinymce.js",
@@ -669,8 +691,9 @@ module.exports = function(grunt) {
 			plugins: {
 				files: ["js/tinymce/plugins/**/*.js"],
 				tasks: [
-					"eslint:plugins", "jshint:plugins", "jscs:plugins", "amdlc:paste-plugin",
-					"amdlc:table-plugin", "amdlc:spellchecker-plugin", "uglify:plugins"
+					"amdlc:paste-plugin", "amdlc:imagetools-plugin",
+					"amdlc:table-plugin", "amdlc:spellchecker-plugin", "uglify:plugins",
+					"eslint:plugins", "jshint:plugins", "jscs:plugins"
 				],
 				options: {
 					spawn: false
