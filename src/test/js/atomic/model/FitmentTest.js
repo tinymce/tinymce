@@ -227,5 +227,48 @@ test(
       ]
     );
 
+    // Advanced Spans
+    var gridAdvancedOne = [
+      [ 'A', 'B', 'B', 'C' ],
+      [ 'D', 'B', 'B', 'E' ],
+      [ 'F', 'F', 'F', 'E' ],
+      [ 'F', 'F', 'F', 'G' ],
+      [ 'F', 'F', 'F', 'H' ],
+      [ 'I', 'J', 'K', 'K' ],
+      [ 'I', 'L', 'L', 'M' ]
+    ];
+
+    var gridSpanB = [
+      [ 'alpha', 'alpha'  ],
+      [ 'beta',  'charlie']
+    ];
+
+    suite(
+      // 'Merge gridSpanB, into gridAdvancedOne, at "D" on gridAdvancedOne',
+      start(1, 0), gridAdvancedOne, gridSpanB, generator,
+      {
+        rowDelta: 4,
+        colDelta: 2
+      },
+      [
+        [ 'A', 'B', 'B', 'C' ],
+        [ 'D', 'B', 'B', 'E' ],
+        [ 'F', 'F', 'F', 'E' ],
+        [ 'F', 'F', 'F', 'G' ],
+        [ 'F', 'F', 'F', 'H' ],
+        [ 'I', 'J', 'K', 'K' ],
+        [ 'I', 'L', 'L', 'M' ]
+      ],
+      [
+        [ 'A', 'B', 'B', 'C' ],
+        [ 'h(alpha)_0', 'h(alpha)_1', 'B', 'E' ],
+        [ 'h(beta)_2', 'h(charlie)_3', 'F', 'E' ],
+        [ 'F', 'F', 'F', 'G' ],
+        [ 'F', 'F', 'F', 'H' ],
+        [ 'I', 'J', 'K', 'K' ],
+        [ 'I', 'L', 'L', 'M' ]
+      ]
+    );
+
   }
 );
