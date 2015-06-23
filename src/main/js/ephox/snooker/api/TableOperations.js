@@ -130,13 +130,14 @@ define(
       var gridify = function (table, generators) {
         var list = DetailsList.fromTable(table);
         var wh = Warehouse.generate(list);
-        return Transitions.toGrid(wh, generators)
+        return Transitions.toGrid(wh, generators);
       };
 
       var gridB = gridify(mergable.clipboard(), mergable.generators());
       var startAddress = Structs.address(mergable.row(), mergable.column());
       var mergedGrid = Fitment.mergeGrid(startAddress, grid, gridB, mergable.generators());
-      return outcome(mergedGrid, Fun.noop);
+      var cursor = mergable.element();
+      return outcome(mergedGrid, Option.some(cursor));
     };
 
     // Only column modifications force a resizing. Everything else just tries to preserve the table as is.

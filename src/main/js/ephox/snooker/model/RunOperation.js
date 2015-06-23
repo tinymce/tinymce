@@ -70,10 +70,6 @@ define(
         return output.fold(function () {
           return Option.none();
         }, function (out) {
-
-
-          debugger
-
           Redraw.render(table, out.grid());
           adjustment(out.grid(), direction);
           postAction(table);
