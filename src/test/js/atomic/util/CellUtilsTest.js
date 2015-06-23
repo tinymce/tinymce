@@ -19,7 +19,7 @@ test(
 
     var expected = [ 'a', 'e', 'h' ];
 
-    var result = CellUtils.spanMap(grid, eq);
+    var result = CellUtils.cellSpan(grid, eq);
 
     assert.eq(expected, result);
 

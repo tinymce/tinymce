@@ -35,25 +35,25 @@ define(
       assert.eq(expected.cols, cols);
     };
 
-    var mergeGridsTest = function (expected, startAddress, gridA, gridB, generator) {
+    var mergeGridsTest = function (expected, startAddress, gridA, gridB, generator, comparator) {
       // The last step, merge cells from gridB into gridA
-      var nuGrid = Fitment.mergeGrid(startAddress, gridA, gridB, generator());
+      var nuGrid = Fitment.mergeGrid(startAddress, gridA, gridB, generator(), comparator);
       assert.eq(expected, nuGrid);
     };
 
-    var mergeGridsIVTest = function (asserter, startAddress, gridSpecA, gridSpecB, generator) {
+    var mergeGridsIVTest = function (asserter, startAddress, gridSpecA, gridSpecB, generator, comparator) {
       // The last step, merge cells from gridB into gridA
-      var nuGrid = Fitment.mergeGrid(startAddress, gridSpecA.grid(), gridSpecB.grid(), generator());
+      var nuGrid = Fitment.mergeGrid(startAddress, gridSpecA.grid(), gridSpecB.grid(), generator(), comparator);
       asserter(nuGrid, startAddress, gridSpecA, gridSpecB);
     };
 
-    var suite = function (startAddress, gridA, gridB, generator, expectedMeasure, expectedTailor, expectedMergeGrids) {
+    var suite = function (startAddress, gridA, gridB, generator, comparator, expectedMeasure, expectedTailor, expectedMergeGrids) {
       measureTest(expectedMeasure, startAddress, gridA, gridB, Fun.noop);
       tailorTest(expectedTailor, startAddress, gridA, {
         rowDelta: Fun.constant(expectedMeasure.rowDelta),
         colDelta: Fun.constant(expectedMeasure.colDelta)
       }, generator);
-      mergeGridsTest(expectedMergeGrids, startAddress, gridA, gridB, generator);
+      mergeGridsTest(expectedMergeGrids, startAddress, gridA, gridB, generator, comparator);
     };
     return {
       measureTest: measureTest,

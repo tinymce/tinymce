@@ -4,11 +4,17 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
-    'global!Math',
-    'global!Array'
+    'ephox.snooker.operate.MergingOperations',
+    'ephox.snooker.util.CellUtils',
+    'global!Array',
+    'global!Math'
   ],
 
-  function (Arr, Fun, Math, Array) {
+  function (Arr, Fun, MergingOperations, CellUtils, Array, Math) {
+    // an arbitary limit, to stop retrying incase we hit stack overflows.
+    // Its expected that most retries will be under 10 and thats for really edgy cases.
+    var RETRIES = 1000;
+
     var measure = function (startAddress, gridA, gridB) {
       if(startAddress.row() >= gridA.length || startAddress.column() > gridA[0].length) throw 'invalid startAddress out of table bounds';
       var rowRemainder = gridA.slice(startAddress.row());
@@ -66,21 +72,48 @@ define(
       return start > current || end <= current;
     };
 
-    var mergeGrid = function (startAddress, gridA, gridB, generator) {
+    var unmerge = function (startAddress, gridA, gridB, generator, comparator, target) {
+      var clean = MergingOperations.unmerge(gridA, target, Fun.tripleEquals, generator.cell);
+      return mergeGrid(startAddress, clean, gridB, generator, comparator);
+    };
+
+    var mergeGrid = function (startAddress, gridA, gridB, generator, comparator) {
       var delta = measure(startAddress, gridA, gridB);
       var fittedGrid = tailor(startAddress, gridA, delta, generator);
+      var knownSpans = CellUtils.cellSpan(gridA, comparator);
+
+
+// TODO: separate into 2 funcs arr each to try
+// then arr.map to actually merge successful grid
+
+
+
 
       var mergedTable = Arr.map(fittedGrid, function (row, r) {
         var repRow = r - startAddress.row();
         var skipRow = skip(startAddress.row(), r, gridB.length);
         if (skipRow) return row;
-
         else return Arr.map(row, function (cell, c) {
           var repCol = c - startAddress.column();
           var skipCell = skip(startAddress.column(), c, gridB[0].length);
 
-          if (skipCell) return cell;
-          else return generator.replace(gridB[repRow][repCol]);
+          if (skipCell) {
+            return cell;
+          } else {
+            var candidate = gridA[repRow][repCol];
+            // isSpan(spans, candidate);
+            // TODO check if this position is part of a span if so unmerged and do retry of the whole table
+
+            if (Arr.exists(knownSpans, Fun.curry(comparator, candidate))) {
+
+              console.log('skipping', candidate);
+              return unmerge(startAddress, gridA, gridB, generator, comparator, candidate);
+            }
+
+
+            console.log(r, c);
+            return generator.replace(gridB[repRow][repCol]);
+          }
         });
       });
       return mergedTable;

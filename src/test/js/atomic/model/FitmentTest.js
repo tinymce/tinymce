@@ -32,7 +32,7 @@ test(
       [1, 2],
       [3, 4]
     ];
-
+/*
     // col and row are + meaning gridB fits into gridA, given the starting selection point 'a'
     check(measureTest, {
       rowDelta: 1,
@@ -108,7 +108,7 @@ test(
         ['h(1)_0', 'h(2)_1', 'c'],
         ['h(3)_2', 'h(4)_3', 'f'],
         ['g', 'h', 'i']
-      ], start(0, 0), gridA, gridB, generator);
+      ], start(0, 0), gridA, gridB, generator, Fun.tripleEquals);
 
     check(
       mergeGridsTest,
@@ -116,7 +116,7 @@ test(
         ['a', 'b', 'c'],
         ['d', 'h(1)_0', 'h(2)_1'],
         ['g', 'h(3)_2', 'h(4)_3']
-      ], start(1, 1), gridA, gridB, generator);
+      ], start(1, 1), gridA, gridB, generator, Fun.tripleEquals);
 
     check(
       mergeGridsTest,
@@ -125,7 +125,7 @@ test(
         ['d',   'e',   'f',        '?_1'],
         ['g',   'h',   'h(1)_7',   'h(2)_8'],
         ['?_3', '?_4', 'h(3)_9',   'h(4)_10']
-      ], start(2, 2), gridA, gridB, generator);
+      ], start(2, 2), gridA, gridB, generator, Fun.tripleEquals);
 
     check(
       mergeGridsTest,
@@ -133,7 +133,7 @@ test(
         ['a', 'b', 'h(1)_3', 'h(2)_4'],
         ['d', 'e', 'h(3)_5', 'h(4)_6'],
         ['g', 'h', 'i', '?_2']
-      ], start(0, 2), gridA, gridB, generator);
+      ], start(0, 2), gridA, gridB, generator, Fun.tripleEquals);
 
     // START interesting cases, these are suites they combine all 3 tests in 1 spec
     // merge gridBee into gridAphid
@@ -158,7 +158,7 @@ test(
 
     // insert at 'j' a long table
     suite(
-      start(3, 0), gridAphid, gridBee, generator,
+      start(3, 0), gridAphid, gridBee, generator, Fun.tripleEquals,
       {
         rowDelta: -4,
         colDelta: 2
@@ -187,7 +187,7 @@ test(
 
     // insert at 'd' a wide table
     suite(
-      start(1, 0), gridAphid, gridCicada, generator,
+      start(1, 0), gridAphid, gridCicada, generator, Fun.tripleEquals,
       {
         rowDelta: 2,
         colDelta: -5
@@ -208,7 +208,7 @@ test(
 
     // insert at 'd' a wide table
     suite(
-      start(1, 0), gridAphid, gridCicada, generator,
+      start(1, 0), gridAphid, gridCicada, generator, Fun.tripleEquals,
       {
         rowDelta: 2,
         colDelta: -5
@@ -226,7 +226,7 @@ test(
         ['j', 'k', 'l', '?_15', '?_16', '?_17', '?_18', '?_19']
       ]
     );
-
+*/
     // Advanced Spans
     var gridAdvancedOne = [
       [ 'A', 'B', 'B', 'C' ],
@@ -245,7 +245,7 @@ test(
 
     suite(
       // 'Merge gridSpanB, into gridAdvancedOne, at "D" on gridAdvancedOne',
-      start(1, 0), gridAdvancedOne, gridSpanB, generator,
+      start(1, 0), gridAdvancedOne, gridSpanB, generator, Fun.tripleEquals,
       {
         rowDelta: 4,
         colDelta: 2
@@ -260,11 +260,11 @@ test(
         [ 'I', 'L', 'L', 'M' ]
       ],
       [
-        [ 'A', 'B', 'B', 'C' ],
-        [ 'h(alpha)_0', 'h(alpha)_1', 'B', 'E' ],
-        [ 'h(beta)_2', 'h(charlie)_3', 'F', 'E' ],
-        [ 'F', 'F', 'F', 'G' ],
-        [ 'F', 'F', 'F', 'H' ],
+        [ 'A', 'B', '?_1', 'C' ],
+        [ 'h(alpha)_0', 'h(alpha)_1', '?_1', 'E' ],
+        [ 'h(beta)_2', 'h(charlie)_3', '?_1', 'E' ],
+        [ '?', '?', '?', 'G' ],
+        [ '?', '?', '?', 'H' ],
         [ 'I', 'J', 'K', 'K' ],
         [ 'I', 'L', 'L', 'M' ]
       ]
