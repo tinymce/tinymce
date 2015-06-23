@@ -397,10 +397,19 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			return targetRect;
 		}
 
+		function hideAllFloatingPanels() {
+			each(editor.contextToolbars, function(toolbar) {
+				if (toolbar.panel) {
+					toolbar.panel.hide();
+				}
+			});
+		}
+
 		function reposition(match) {
 			var relPos, panelRect, elementRect, contentAreaRect, panel, relRect, testPositions;
 
 			if (!match || !match.toolbar.panel) {
+				hideAllFloatingPanels();
 				return;
 			}
 
