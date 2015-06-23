@@ -147,6 +147,13 @@ define("tinymce/imagetoolsplugin/Plugin", [
 				blobCache.add(blobInfo);
 
 				editor.undoManager.transact(function() {
+					function imageLoadedHandler() {
+						editor.$(selectedImage).off('load', imageLoadedHandler);
+						editor.nodeChanged();
+					}
+
+					editor.$(selectedImage).on('load', imageLoadedHandler);
+
 					editor.$(selectedImage).attr({
 						src: blobInfo.blobUri(),
 						"data-mce-src": blobInfo.blobUri()
