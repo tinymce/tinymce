@@ -49,17 +49,16 @@ define(
       var raw = Arr.find(all, function (e) {
         return Compare.eq(element, e.element());
       });
-
       return Option.from(raw);
     };
 
     var run = function (operation, extract, adjustment, postAction, genWrappers) {
-      return function (wire, table, target, generators, direction) {
+      return function (wire, table, target, generators, direction, extra) {
         var input = DetailsList.fromTable(table);
         var warehouse = Warehouse.generate(input);
         var output = extract(warehouse, target).map(function (info) {
           var model = fromWarehouse(warehouse, generators);
-          var result = operation(model, info, Compare.eq, genWrappers(generators));
+          var result = operation(model, info, Compare.eq, genWrappers(generators), extra);
           var grid = toDetailList(result.grid(), generators);
           return {
             grid: Fun.constant(grid),
