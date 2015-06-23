@@ -18,7 +18,10 @@
 		],
 		content_css: "css/development.css",
 		add_unload_trigger: false,
-		toolbar1: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table"
+		toolbar1: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table",
+		setup: function(ed) {
+			ed.addContextToolbar('img', 'alignleft aligncenter alignright alignjustify | image');
+		}
 	});
 
 	tinymce.init({
@@ -32,12 +35,14 @@
 		],
 		content_css: "css/development.css",
 		add_unload_trigger: false,
-		toolbar1: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table"
+		toolbar1: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table",
+		setup: function(ed) {
+			ed.addContextToolbar('img', 'alignleft aligncenter alignright alignjustify | image');
+		}
 	});
 
 	function drawRect(rect, color) {
 		var $elm = tinymce.$('#' + color);
-
 
 		if (!$elm.length) {
 			$elm = tinymce.$('<div id="' + color + '" class="rect hidden">').css('position', 'absolute').css('outline', '1px solid ' + color).appendTo(document.body);
