@@ -1,6 +1,9 @@
-Version 4.2.0 (2015-05-xx)
+Version 4.2.0 (2015-06-xx)
+	Added new flat default skin to make the UI more modern.
+	Added new imagetools plugin, lets you crop/resize and apply filters to images.
+	Added new contextual toolbars support to the API lets you add floating toolbars for specific CSS selectors.
 	Added new promise feature fill as tinymce.util.Promise.
-Version 4.1.11 (2015-05-xx)
+	Added new built in image upload feature lets you upload any base64 encoded image within the editor as files.
 	Fixed bug where resize handles would appear in the right position in the wrong editor when switching between resizable content in different inline editors.
 	Fixed bug where tables would not be inserted in inline mode due to previous float panel fix.
 	Fixed bug where floating panels would remain open when focus was lost on inline editors.
@@ -12,6 +15,8 @@ Version 4.1.11 (2015-05-xx)
 	Fixed bug where cmd+shift+arrow didn't work correctly on Firefox mac when selecting to start/end of line.
 	Fixed bug where removal of bogus elements would sometimes remove whitespace between nodes.
 	Fixed so script elements gets removed by default to prevent possible XSS issues in default config implementations.
+	Fixed so the UI doesn't need manual reflows when using non native layout managers.
+	Fixed so base64 encoded images doesn't slow down the editor on modern browsers while editing.
 Version 4.1.10 (2015-05-05)
 	Fixed bug where plugins loaded with compat3x would sometimes throw errors when loading using the jQuery version.
 	Fixed bug where extra empty paragraphs would get deleted in WebKit/Blink due to recent Quriks fix.
