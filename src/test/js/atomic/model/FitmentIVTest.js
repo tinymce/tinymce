@@ -6,18 +6,19 @@ test(
     'ephox.peanut.Fun',
     'ephox.snooker.api.Structs',
     'ephox.snooker.test.Fitment',
+    'ephox.snooker.test.TableMerge',
     'global!Array',
     'global!Math'
   ],
 
-  function (Arr, Fun, Structs, Fitment, Array, Math) {
+  function (Arr, Fun, Structs, Fitment, TableMerge, Array, Math) {
     var CYCLES = 100;
     var GRID_MIN = 1;  // 1x1 grid is the min
     var GRID_MAX = 5;
 
     var measureTest = Fitment.measureTest;
     var tailorIVTest = Fitment.tailorIVTest;
-    var mcGirdlesTest = Fitment.mergeGridsIVTest;
+    var mergeIVTest = TableMerge.mergeIVTest;
 
     var generator = function () {
       var cell = function () {
@@ -181,7 +182,7 @@ test(
 
         var gridA = gridSpecA.grid();
         var gridB = gridSpecB.grid();
-        
+
         Arr.each(result, function (row, ri) {
           Arr.each(row, function (cell, ci) {
             var expected = (function () {
@@ -194,7 +195,7 @@ test(
           });
         });
       };
-      var test = Fun.curry(mcGirdlesTest, queryliser2000, start, gridSpecA, gridSpecB, generator);
+      var test = Fun.curry(mergeIVTest, queryliser2000, start, gridSpecA, gridSpecB, generator, Fun.tripleEquals);
 
       return {
         params: info,
