@@ -398,11 +398,17 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		}
 
 		function reposition(match) {
-			var relPos, panelRect, elementRect, contentAreaRect, panel, relRect;
+			var relPos, panelRect, elementRect, contentAreaRect, panel, relRect, testPositions;
 
 			if (!match || !match.toolbar.panel) {
 				return;
 			}
+
+			testPositions = [
+				'tc-bc', 'bc-tc',
+				'tl-bl', 'bl-tl',
+				'tr-br', 'br-tr'
+			];
 
 			panel = match.toolbar.panel;
 			panel.show();
@@ -415,16 +421,22 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				contentAreaRect.w = editor.getDoc().documentElement.offsetWidth;
 			}
 
-			relPos = Rect.findBestRelativePosition(panelRect, Rect.inflate(elementRect, 0, 7), contentAreaRect, [
-				'tc-bc', 'bc-tc',
-				'tl-bl', 'bl-tl',
-				'tr-br', 'br-tr'
-			]);
+			relPos = Rect.findBestRelativePosition(panelRect, Rect.inflate(elementRect, 0, 7), contentAreaRect, testPositions);
 
 			if (relPos) {
+				each(testPositions.concat('inside'), function(pos) {
+					panel.classes.toggle('tinymce-inline-' + pos, pos == relPos);
+				});
+
 				relRect = Rect.relativePosition(panelRect, Rect.inflate(elementRect, 0, 7), relPos);
 				panel.moveTo(relRect.x, relRect.y);
 			} else {
+				each(testPositions, function(pos) {
+					panel.classes.toggle('tinymce-inline-' + pos, false);
+				});
+
+				panel.classes.toggle('tinymce-inline-inside', true);
+
 				elementRect = Rect.intersect(contentAreaRect, elementRect);
 
 				if (elementRect) {
