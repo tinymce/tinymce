@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.compass.Arr',
+    'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.perhaps.Options',
@@ -16,7 +17,7 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Arr, Fun, Option, Options, TableLookup, DetailsList, Transitions, Warehouse, Redraw, Bars, Compare, Traverse) {
+  function (Arr, Merger, Fun, Option, Options, TableLookup, DetailsList, Transitions, Warehouse, Redraw, Bars, Compare, Traverse) {
     var fromWarehouse = function (warehouse, generators) {
       return Transitions.toGrid(warehouse, generators);
     };
@@ -53,12 +54,12 @@ define(
     };
 
     var run = function (operation, extract, adjustment, postAction, genWrappers) {
-      return function (wire, table, target, generators, direction, extra) {
+      return function (wire, table, target, generators, direction) {
         var input = DetailsList.fromTable(table);
         var warehouse = Warehouse.generate(input);
         var output = extract(warehouse, target).map(function (info) {
           var model = fromWarehouse(warehouse, generators);
-          var result = operation(model, info, Compare.eq, genWrappers(generators), extra);
+          var result = operation(model, info, Compare.eq, genWrappers(generators));
           var grid = toDetailList(result.grid(), generators);
           return {
             grid: Fun.constant(grid),
@@ -69,6 +70,10 @@ define(
         return output.fold(function () {
           return Option.none();
         }, function (out) {
+
+
+          debugger
+
           Redraw.render(table, out.grid());
           adjustment(out.grid(), direction);
           postAction(table);
@@ -84,6 +89,18 @@ define(
       });
     };
 
+    var onPaste = function (warehouse, target) {
+      return TableLookup.cell(target.element()).bind(function (cell) {
+        var info = findInWarehouse(warehouse, cell).map(function (details) {
+          return Merger.merge(details, {
+            generators: target.generators,
+            clipboard: target.clipboard
+          });
+        });
+        return info;
+      });
+    };
+
     var onMergable = function (warehouse, target) {
       return target.mergable();
     };
@@ -95,6 +112,7 @@ define(
     return {
       run: run,
       onCell: onCell,
+      onPaste: onPaste,
       onMergable: onMergable,
       onUnmergable: onUnmergable
     };

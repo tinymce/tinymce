@@ -7,9 +7,14 @@ define(
     'ephox.perhaps.Option',
     'ephox.scullion.Struct',
     'ephox.snooker.api.Generators',
+    'ephox.snooker.api.Structs',
     'ephox.snooker.api.TableContent',
     'ephox.snooker.api.TableLookup',
+    'ephox.snooker.model.DetailsList',
+    'ephox.snooker.model.Fitment',
     'ephox.snooker.model.RunOperation',
+    'ephox.snooker.model.Transitions',
+    'ephox.snooker.model.Warehouse',
     'ephox.snooker.operate.MergingOperations',
     'ephox.snooker.operate.ModificationOperations',
     'ephox.snooker.operate.TransformOperations',
@@ -18,7 +23,7 @@ define(
     'global!parseInt'
   ],
 
-  function (Arr, Fun, Option, Struct, Generators, TableContent, TableLookup, RunOperation, MergingOperations, ModificationOperations, TransformOperations, Adjustments, Remove, parseInt) {
+  function (Arr, Fun, Option, Struct, Generators, Structs, TableContent, TableLookup, DetailsList, Fitment, RunOperation, Transitions, Warehouse, MergingOperations, ModificationOperations, TransformOperations, Adjustments, Remove, parseInt) {
     var prune = function (table) {
       var cells = TableLookup.cells(table);
       if (cells.length === 0) Remove.remove(table);
@@ -36,55 +41,55 @@ define(
       return outcome(grid, findIn(grid, row, column));
     };
 
-    var insertRowBefore = function (grid, detail, comparator, genWrappers, _extra) {
+    var insertRowBefore = function (grid, detail, comparator, genWrappers) {
       var example = detail.row();
       var targetIndex = detail.row();
       var newGrid = ModificationOperations.insertRowAt(grid, targetIndex, example, comparator, genWrappers.getOrInit);
       return bundle(newGrid, targetIndex, detail.column());
     };
 
-    var insertRowAfter = function (grid, detail, comparator, genWrappers, _extra) {
+    var insertRowAfter = function (grid, detail, comparator, genWrappers) {
       var example = detail.row();
       var targetIndex = detail.row() + detail.rowspan();
       var newGrid = ModificationOperations.insertRowAt(grid, targetIndex, example, comparator, genWrappers.getOrInit);
       return bundle(newGrid, targetIndex, detail.column());
     };
 
-    var insertColumnAfter = function (grid, detail, comparator, genWrappers, _extra) {
+    var insertColumnAfter = function (grid, detail, comparator, genWrappers) {
       var example = detail.column();
       var targetIndex = detail.column() + detail.colspan();
       var newGrid = ModificationOperations.insertColumnAt(grid, targetIndex, example, comparator, genWrappers.getOrInit);
       return bundle(newGrid, detail.row(), targetIndex);
     };
 
-    var insertColumnBefore = function (grid, detail, comparator, genWrappers, _extra) {
+    var insertColumnBefore = function (grid, detail, comparator, genWrappers) {
       var example = detail.column();
       var targetIndex = detail.column();
       var newGrid = ModificationOperations.insertColumnAt(grid, targetIndex, example, comparator, genWrappers.getOrInit);
       return bundle(newGrid, detail.row(), targetIndex);
     };
 
-    var makeRowHeader = function (grid, detail, comparator, genWrappers, _extra) {
+    var makeRowHeader = function (grid, detail, comparator, genWrappers) {
       var newGrid = TransformOperations.replaceRow(grid, detail.row(), comparator, genWrappers.replaceOrInit);
       return bundle(newGrid, detail.row(), detail.column());
     };
 
-    var makeColumnHeader = function (grid, detail, comparator, genWrappers, _extra) {
+    var makeColumnHeader = function (grid, detail, comparator, genWrappers) {
       var newGrid = TransformOperations.replaceColumn(grid, detail.column(), comparator, genWrappers.replaceOrInit);
       return bundle(newGrid, detail.row(), detail.column());
     };
 
-    var unmakeRowHeader = function (grid, detail, comparator, genWrappers, _extra) {
+    var unmakeRowHeader = function (grid, detail, comparator, genWrappers) {
       var newGrid =  TransformOperations.replaceRow(grid, detail.row(), comparator, genWrappers.replaceOrInit);
       return bundle(newGrid, detail.row(), detail.column());
     };
 
-    var unmakeColumnHeader = function (grid, detail, comparator, genWrappers, _extra) {
+    var unmakeColumnHeader = function (grid, detail, comparator, genWrappers) {
       var newGrid = TransformOperations.replaceColumn(grid, detail.column(), comparator, genWrappers.replaceOrInit);
       return bundle(newGrid, detail.row(), detail.column());
     };
 
-    var eraseColumn = function (grid, detail, comparator, _genWrappers, _extra) {
+    var eraseColumn = function (grid, detail, comparator, _genWrappers) {
       var getNext = function (g) {
         return findIn(g, detail.row(), detail.column()).orThunk(function () {
           return findIn(g, 0, 0);
@@ -95,7 +100,7 @@ define(
       return outcome(newGrid, getNext(newGrid));
     };
 
-    var eraseRow = function (grid, detail, comparator, _genWrappers, _extra) {
+    var eraseRow = function (grid, detail, comparator, _genWrappers) {
       var getNext = function (g) {
         return findIn(g, detail.row(), detail.column()).orThunk(function () {
           return findIn(g, 0, 0);
@@ -107,30 +112,31 @@ define(
       return outcome(newGrid, getNext(newGrid));
     };
 
-    var mergeCells = function (grid, mergable, comparator, _genWrappers, _extra) {
+    var mergeCells = function (grid, mergable, comparator, _genWrappers) {
       var cells = mergable.cells();
       TableContent.merge(cells);
       var newGrid = MergingOperations.merge(grid, mergable.bounds(), comparator, Fun.constant(cells[0]));
       return outcome(newGrid, Option.from(cells[0]));
     };
 
-    var unmergeCells = function (grid, unmergable, comparator, genWrappers, _extra) {
+    var unmergeCells = function (grid, unmergable, comparator, genWrappers) {
       var newGrid = Arr.foldr(unmergable, function (b, cell) {
         return MergingOperations.unmerge(b, cell, comparator, genWrappers.combine(cell));
       }, grid);
       return outcome(newGrid, Option.from(unmergable[0]));
     };
 
-    var pasteCells = function (grid, mergable, comparator, _genWrappers, extra) {
-      var clipboard = extra;
-      return clipboard.bind(function (tableElement) {
-        debugger
+    var pasteCells = function (grid, mergable, comparator, genWrappers) {
+      var gridify = function (table, generators) {
+        var list = DetailsList.fromTable(table);
+        var wh = Warehouse.generate(list);
+        return Transitions.toGrid(wh, generators)
+      };
 
-        // Todo: convert tableElement to grid and run Fitment
-
-
-
-      });
+      var gridB = gridify(mergable.clipboard(), mergable.generators());
+      var startAddress = Structs.address(mergable.row(), mergable.column());
+      var mergedGrid = Fitment.mergeGrid(startAddress, grid, gridB, mergable.generators());
+      return outcome(mergedGrid, Fun.noop);
     };
 
     // Only column modifications force a resizing. Everything else just tries to preserve the table as is.
@@ -149,7 +155,7 @@ define(
       unmakeRowHeader:  RunOperation.run(unmakeRowHeader, RunOperation.onCell, Fun.noop, Fun.noop, Generators.transform(null, 'td')),
       mergeCells: RunOperation.run(mergeCells, RunOperation.onMergable, Fun.noop, Fun.noop, Generators.merging),
       unmergeCells: RunOperation.run(unmergeCells, RunOperation.onUnmergable, resize, Fun.noop, Generators.merging),
-      pasteCells: RunOperation.run(pasteCells, RunOperation.onCell, resize, Fun.noop, Generators.modification)
+      pasteCells: RunOperation.run(pasteCells, RunOperation.onPaste, resize, Fun.noop, Generators.modification)
     };
   }
 );
