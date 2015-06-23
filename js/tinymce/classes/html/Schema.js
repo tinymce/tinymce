@@ -305,6 +305,9 @@ define("tinymce/html/Schema", [
 		// Caption can't have tables
 		delete schema.caption.children.table;
 
+		// Delete scripts by default due to possible XSS
+		delete schema.script;
+
 		// TODO: LI:s can only have value if parent is OL
 
 		// TODO: Handle transparent elements

@@ -17,13 +17,10 @@
 define("tinymce/tableplugin/Quirks", [
 	"tinymce/util/VK",
 	"tinymce/Env",
-	"tinymce/util/Tools"
-], function(VK, Env, Tools) {
-	var each = Tools.each;
-
-	function getSpanVal(td, name) {
-		return parseInt(td.getAttribute(name) || 1, 10);
-	}
+	"tinymce/util/Tools",
+	"tinymce/tableplugin/Utils"
+], function(VK, Env, Tools, Utils) {
+	var each = Tools.each, getSpanVal = Utils.getSpanVal;
 
 	return function(editor) {
 		/**
@@ -333,20 +330,47 @@ define("tinymce/tableplugin/Quirks", [
 		 * Delete table if all cells are selected.
 		 */
 		function deleteTable() {
+			function placeCaretInCell(cell) {
+				editor.selection.select(cell, true);
+				editor.selection.collapse(true);
+			}
+
+			function clearCell(cell) {
+				editor.$(cell).empty();
+				Utils.paddCell(cell);
+			}
+
 			editor.on('keydown', function(e) {
 				if ((e.keyCode == VK.DELETE || e.keyCode == VK.BACKSPACE) && !e.isDefaultPrevented()) {
-					var table = editor.dom.getParent(editor.selection.getStart(), 'table');
+					var table, tableCells, selectedTableCells, cell;
 
+					table = editor.dom.getParent(editor.selection.getStart(), 'table');
 					if (table) {
-						var cells = editor.dom.select('td,th', table), i = cells.length;
-						while (i--) {
-							if (!editor.dom.hasClass(cells[i], 'mce-item-selected')) {
-								return;
+						tableCells = editor.dom.select('td,th', table);
+						selectedTableCells = Tools.grep(tableCells, function(cell) {
+							return editor.dom.hasClass(cell, 'mce-item-selected');
+						});
+
+						if (selectedTableCells.length === 0) {
+							// If caret is within an empty table cell then empty it for real
+							cell = editor.dom.getParent(editor.selection.getStart(), 'td,th');
+							if (editor.selection.isCollapsed() && cell && editor.dom.isEmpty(cell)) {
+								e.preventDefault();
+								clearCell(cell);
+								placeCaretInCell(cell);
 							}
+
+							return;
 						}
 
 						e.preventDefault();
-						editor.execCommand('mceTableDelete');
+
+						if (tableCells.length == selectedTableCells.length) {
+							editor.execCommand('mceTableDelete');
+						} else {
+							Tools.each(selectedTableCells, clearCell);
+							placeCaretInCell(selectedTableCells[0]);
+						}
 					}
 				}
 			});

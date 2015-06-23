@@ -353,7 +353,7 @@ define("tinymce/html/DomParser", [
 			}
 
 			function removeWhitespaceBefore(node) {
-				var textNode, textVal, sibling;
+				var textNode, textNodeNext, textVal, sibling, blockElements = schema.getBlockElements();
 
 				for (textNode = node.prev; textNode && textNode.type === 3;) {
 					textVal = textNode.value.replace(endWhiteSpaceRegExp, '');
@@ -362,6 +362,22 @@ define("tinymce/html/DomParser", [
 						textNode.value = textVal;
 						textNode = textNode.prev;
 					} else {
+						textNodeNext = textNode.next;
+
+						// Fix for bug #7543 where bogus nodes would produce empty
+						// text nodes and these would be removed if a nested list was before it
+						if (textNodeNext) {
+							if (textNodeNext.type == 3 && textNodeNext.value.length) {
+								textNode = textNode.prev;
+								continue;
+							}
+
+							if (!blockElements[textNodeNext.name] && textNodeNext.name != 'script' && textNodeNext.name != 'style') {
+								textNode = textNode.prev;
+								continue;
+							}
+						}
+
 						sibling = textNode.prev;
 						textNode.remove();
 						textNode = sibling;

@@ -246,7 +246,7 @@ define("tinymce/dom/ControlSelection", [
 
 			if (isResizable(targetElm) && !e.isDefaultPrevented()) {
 				each(resizeHandles, function(handle, name) {
-					var handleElm, handlerContainerElm;
+					var handleElm;
 
 					function startDrag(e) {
 						startX = e.screenX;
@@ -303,35 +303,31 @@ define("tinymce/dom/ControlSelection", [
 
 					// Get existing or render resize handle
 					handleElm = dom.get('mceResizeHandle' + name);
-					if (!handleElm) {
-						handlerContainerElm = rootElement;
-
-						handleElm = dom.add(handlerContainerElm, 'div', {
-							id: 'mceResizeHandle' + name,
-							'data-mce-bogus': 'all',
-							'class': 'mce-resizehandle',
-							unselectable: true,
-							style: 'cursor:' + name + '-resize; margin:0; padding:0'
-						});
-
-						// Hides IE move layer cursor
-						// If we set it on Chrome we get this wounderful bug: #6725
-						if (Env.ie) {
-							handleElm.contentEditable = false;
-						}
-					} else {
-						dom.show(handleElm);
+					if (handleElm) {
+						dom.remove(handleElm);
 					}
 
-					if (!handle.elm) {
-						dom.bind(handleElm, 'mousedown', function(e) {
-							e.stopImmediatePropagation();
-							e.preventDefault();
-							startDrag(e);
-						});
+					handleElm = dom.add(rootElement, 'div', {
+						id: 'mceResizeHandle' + name,
+						'data-mce-bogus': 'all',
+						'class': 'mce-resizehandle',
+						unselectable: true,
+						style: 'cursor:' + name + '-resize; margin:0; padding:0'
+					});
 
-						handle.elm = handleElm;
+					// Hides IE move layer cursor
+					// If we set it on Chrome we get this wounderful bug: #6725
+					if (Env.ie) {
+						handleElm.contentEditable = false;
 					}
+
+					dom.bind(handleElm, 'mousedown', function(e) {
+						e.stopImmediatePropagation();
+						e.preventDefault();
+						startDrag(e);
+					});
+
+					handle.elm = handleElm;
 
 					// Position element
 					dom.setStyles(handleElm, {

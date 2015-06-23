@@ -813,7 +813,8 @@ define("tinymce/Formatter", [
 							endContainer = endContainer.firstChild || endContainer;
 						}
 
-						if (dom.isChildOf(startContainer, endContainer) && !isTableCell(startContainer) && !isTableCell(endContainer)) {
+						if (dom.isChildOf(startContainer, endContainer) && !isBlock(endContainer) &&
+							!isTableCell(startContainer) && !isTableCell(endContainer)) {
 							startContainer = wrap(startContainer, 'span', {id: '_start', 'data-mce-type': 'bookmark'});
 							splitToFormatRoot(startContainer);
 							startContainer = unwrap(TRUE);

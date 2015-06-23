@@ -550,4 +550,57 @@
 			'<table><tbody><tr><td>A1</td><td>A2</td></tr><tr><td>B1</td><td>B2</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table><p>x</p>'
 		);
 	});
+
+	test("Delete selected cells", function() {
+		editor.getBody().innerHTML = (
+			'<table><tbody>' +
+			'<tr><td class="mce-item-selected">A1</td><td>A2</td></tr>' +
+			'<tr><td class="mce-item-selected">B1</td><td>B2</td></tr>' +
+			'</tbody></table>' +
+			'<p>x</p>'
+		);
+
+		Utils.setSelection('td', 0, 'td', 2);
+		editor.fire('keydown', {keyCode: 46});
+
+		equal(
+			editor.getContent(),
+			'<table><tbody><tr><td>&nbsp;</td><td>A2</td></tr><tr><td>&nbsp;</td><td>B2</td></tr></tbody></table><p>x</p>'
+		);
+	});
+
+	test("Delete all cells", function() {
+		editor.getBody().innerHTML = (
+			'<table><tbody>' +
+			'<tr><td class="mce-item-selected">A1</td><td class="mce-item-selected">A2</td></tr>' +
+			'<tr><td class="mce-item-selected">B1</td><td class="mce-item-selected">B2</td></tr>' +
+			'</tbody></table>' +
+			'<p>x</p>'
+		);
+
+		Utils.setSelection('td', 0, 'td', 2);
+		editor.fire('keydown', {keyCode: 46});
+
+		equal(
+			editor.getContent(),
+			'<p>x</p>'
+		);
+	});
+
+	test("Delete empty like table cell contents", function() {
+		editor.getBody().innerHTML = (
+			'<table><tbody>' +
+			'<tr><td><p><br></p></td><td><p>a</p></td>' +
+			'</tbody></table>' +
+			'<p>x</p>'
+		);
+
+		Utils.setSelection('td', 0);
+		editor.fire('keydown', {keyCode: 46});
+
+		equal(
+			editor.getContent(),
+			'<table><tbody><tr><td>&nbsp;</td><td><p>a</p></td></tr></tbody></table><p>x</p>'
+		);
+	});
 })();

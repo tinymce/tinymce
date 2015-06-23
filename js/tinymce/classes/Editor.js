@@ -479,7 +479,7 @@ define("tinymce/Editor", [
 			var w, h, minHeight, n, o, Theme, url, bodyId, bodyClass, re, i, initializedPlugins = [];
 
 			this.editorManager.i18n.setCode(settings.language);
-			self.rtl = this.editorManager.i18n.rtl;
+			self.rtl = settings.rtl_ui || this.editorManager.i18n.rtl;
 			self.editorManager.add(self);
 
 			settings.aria_label = settings.aria_label || DOM.getAttrib(elm, 'aria-label', self.getLang('aria.rich_text_area'));

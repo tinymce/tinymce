@@ -8,6 +8,7 @@ module("tinymce.plugins.Media", {
 			skin: false,
 			plugins: 'media',
 			document_base_url: '/tinymce/tinymce/trunk/tests/',
+			extended_valid_elements: 'script[src|type]',
 			media_scripts: [
 				{filter: 'http://media1.tinymce.com'},
 				{filter: 'http://media2.tinymce.com', width: 100, height: 200}
@@ -18,7 +19,7 @@ module("tinymce.plugins.Media", {
 			}
 		});
 	},
-	
+
 	teardown: function() {
 		delete editor.settings.media_filter_html;
 	}

@@ -1,8 +1,17 @@
 Version 4.2.0 (2015-05-xx)
 	Added new promise feature fill as tinymce.util.Promise.
 Version 4.1.11 (2015-05-xx)
+	Fixed bug where resize handles would appear in the right position in the wrong editor when switching between resizable content in different inline editors.
+	Fixed bug where tables would not be inserted in inline mode due to previous float panel fix.
+	Fixed bug where floating panels would remain open when focus was lost on inline editors.
 	Fixed bug where cut command on Chrome would thrown a browser security exception.
 	Fixed bug where IE 11 sometimes would report an incorrect size for images in the image dialog.
+	Fixed bug where it wasn't possible to remove inline formatting at the end of block elements.
+	Fixed bug where it wasn't possible to delete table cell contents when cell selection was vertical.
+	Fixed bug where table cell wasn't emptied from block elements if delete/backspace where pressed in empty cell.
+	Fixed bug where cmd+shift+arrow didn't work correctly on Firefox mac when selecting to start/end of line.
+	Fixed bug where removal of bogus elements would sometimes remove whitespace between nodes.
+	Fixed so script elements gets removed by default to prevent possible XSS issues in default config implementations.
 Version 4.1.10 (2015-05-05)
 	Fixed bug where plugins loaded with compat3x would sometimes throw errors when loading using the jQuery version.
 	Fixed bug where extra empty paragraphs would get deleted in WebKit/Blink due to recent Quriks fix.
