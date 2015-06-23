@@ -15,7 +15,6 @@ define("tinymce/imagetoolsplugin/Dialog", [
 	"tinymce/util/Tools",
 	"tinymce/util/Promise",
 	"tinymce/ui/Factory",
-	"tinymce/ui/Panel",
 	"tinymce/ui/Form",
 	"tinymce/ui/Container",
 	"tinymce/imagetoolsplugin/ImagePanel",
@@ -23,7 +22,7 @@ define("tinymce/imagetoolsplugin/Dialog", [
 	"tinymce/imagetoolsplugin/Filters",
 	"tinymce/imagetoolsplugin/Conversions",
 	"tinymce/imagetoolsplugin/UndoStack"
-], function(Tools, Promise, Factory, Panel, Form, Container, ImagePanel, ImageTools, Filters, Conversions, UndoStack) {
+], function(Tools, Promise, Factory, Form, Container, ImagePanel, ImageTools, Filters, Conversions, UndoStack) {
 	function createState(blob) {
 		return {
 			blob: blob,
@@ -347,7 +346,7 @@ define("tinymce/imagetoolsplugin/Dialog", [
 			minHeight: 600
 		});
 
-		sidePanel = new Panel({
+		sidePanel = new Container({
 			layout: 'flex',
 			direction: 'column',
 			border: '0 1 0 0',
