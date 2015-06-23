@@ -2,11 +2,10 @@ define(
   'ephox.snooker.test.Fitment',
 
   [
-    'ephox.peanut.Fun',
     'ephox.snooker.model.Fitment'
   ],
 
-  function (Fun, Fitment) {
+  function (Fitment) {
 
     var measureTest = function (expected, startAddress, gridA, gridB) {
       // Try put gridB into gridA at the startAddress
@@ -35,33 +34,10 @@ define(
       assert.eq(expected.cols, cols);
     };
 
-    var mergeGridsTest = function (expected, startAddress, gridA, gridB, generator, comparator) {
-      // The last step, merge cells from gridB into gridA
-      var nuGrid = Fitment.mergeGrid(startAddress, gridA, gridB, generator(), comparator);
-      assert.eq(expected, nuGrid);
-    };
-
-    var mergeGridsIVTest = function (asserter, startAddress, gridSpecA, gridSpecB, generator, comparator) {
-      // The last step, merge cells from gridB into gridA
-      var nuGrid = Fitment.mergeGrid(startAddress, gridSpecA.grid(), gridSpecB.grid(), generator(), comparator);
-      asserter(nuGrid, startAddress, gridSpecA, gridSpecB);
-    };
-
-    var suite = function (startAddress, gridA, gridB, generator, comparator, expectedMeasure, expectedTailor, expectedMergeGrids) {
-      measureTest(expectedMeasure, startAddress, gridA, gridB, Fun.noop);
-      tailorTest(expectedTailor, startAddress, gridA, {
-        rowDelta: Fun.constant(expectedMeasure.rowDelta),
-        colDelta: Fun.constant(expectedMeasure.colDelta)
-      }, generator);
-      mergeGridsTest(expectedMergeGrids, startAddress, gridA, gridB, generator, comparator);
-    };
     return {
       measureTest: measureTest,
       tailorTest: tailorTest,
-      tailorIVTest: tailorIVTest,
-      mergeGridsTest: mergeGridsTest,
-      mergeGridsIVTest: mergeGridsIVTest,
-      suite: suite
+      tailorIVTest: tailorIVTest
     };
   }
 );

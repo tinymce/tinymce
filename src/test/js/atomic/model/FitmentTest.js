@@ -5,16 +5,17 @@ test(
     'ephox.peanut.Fun',
     'ephox.snooker.api.Structs',
     'ephox.snooker.test.Fitment',
+    'ephox.snooker.test.TableMerge',
     'ephox.snooker.test.TestGenerator'
   ],
 
-  function (Fun, Structs, Fitment, TestGenerator) {
+  function (Fun, Structs, Fitment, TableMerge, TestGenerator) {
     var generator = TestGenerator;
     var start = Structs.address;
     var measureTest = Fitment.measureTest;
     var tailorTest = Fitment.tailorTest;
-    var mergeGridsTest = Fitment.mergeGridsTest;
-    var suite = Fitment.suite;
+    var mergeGridsTest = TableMerge.mergeTest;
+    var suite = TableMerge.suite;
 
     var check = function (test, expected, startAddress, gridA, gridB, generator, comparator) {
       test(expected, startAddress, gridA, gridB, generator, comparator);
