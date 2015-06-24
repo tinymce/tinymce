@@ -319,25 +319,25 @@ define("tinymce/imagetoolsplugin/Dialog", [
 		filtersPanel = createPanel([
 			{text: 'Back', onclick: cancel},
 			{type: 'spacer', flex: 1},
-			{text: 'invert', icon: 'invert', onclick: switchPanel(invertPanel)},
 			{text: 'hue', icon: 'hue', onclick: switchPanel(huePanel)},
 			{text: 'saturate', icon: 'saturate', onclick: switchPanel(saturatePanel)},
 			{text: 'sepia', icon: 'sepia', onclick: switchPanel(sepiaPanel)},
 			{text: 'emboss', icon: 'emboss', onclick: switchPanel(embossPanel)},
-			{text: 'gamma', icon: 'gamma', onclick: switchPanel(gammaPanel)},
 			{text: 'exposure', icon: 'exposure', onclick: switchPanel(exposurePanel)},
 			{type: 'spacer', flex: 1}
 		]).hide();
 
 		mainPanel = createPanel([
-			{tooltip: 'Crop', text2: 'Crop', icon: 'crop', onclick: switchPanel(cropPanel)},
-			{tooltip: 'Resize', text2: 'Resize', icon: 'resize2', onclick: switchPanel(resizePanel)},
-			{tooltip: 'Orientation', text2: 'Resize', icon: 'options', onclick: switchPanel(flipRotatePanel)},
-			{tooltip: 'Brightness', text2: 'Brightness', icon: 'sun', onclick: switchPanel(brightnessPanel)},
-			{tooltip: 'Sharpen', text2: 'Sharpen', icon: 'sharpen', onclick: switchPanel(sharpenPanel)},
-			{tooltip: 'Contrast', text2: 'Contrast', icon: 'contrast', onclick: switchPanel(contrastPanel)},
-			{tooltip: 'Color levels', text2: 'Color levels', icon: 'drop', onclick: switchPanel(colorizePanel)},
-			{text: 'More', onclick: switchPanel(filtersPanel)}
+			{tooltip: 'Crop', icon: 'crop', onclick: switchPanel(cropPanel)},
+			{tooltip: 'Resize', icon: 'resize2', onclick: switchPanel(resizePanel)},
+			{tooltip: 'Orientation', icon: 'orientation', onclick: switchPanel(flipRotatePanel)},
+			{tooltip: 'Brightness', icon: 'sun', onclick: switchPanel(brightnessPanel)},
+			{tooltip: 'Sharpen', icon: 'sharpen', onclick: switchPanel(sharpenPanel)},
+			{tooltip: 'Contrast', icon: 'contrast', onclick: switchPanel(contrastPanel)},
+			{tooltip: 'Color levels', icon: 'drop', onclick: switchPanel(colorizePanel)},
+			{tooltip: 'Gamma', icon: 'gamma', onclick: switchPanel(gammaPanel)},
+			{tooltip: 'Invert', icon: 'invert', onclick: switchPanel(invertPanel)}
+			//{text: 'More', onclick: switchPanel(filtersPanel)}
 		]);
 
 		imagePanel = new ImagePanel({
