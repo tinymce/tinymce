@@ -210,7 +210,9 @@ define("tinymce/imagetoolsplugin/Plugin", [
 							var newSize = getNaturalImageSize(newImage);
 
 							if (originalSize.w != newSize.w || originalSize.h != newSize.h) {
-								setImageSize(img, newSize);
+								if (getImageSize(img)) {
+									setImageSize(img, newSize);
+								}
 							}
 
 							resolve(blob);
