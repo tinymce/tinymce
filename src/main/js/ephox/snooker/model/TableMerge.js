@@ -5,11 +5,10 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.snooker.model.Fitment',
-    'ephox.snooker.operate.MergingOperations',
-    'ephox.snooker.util.CellUtils'
+    'ephox.snooker.operate.MergingOperations'
   ],
 
-  function (Arr, Fun, Fitment, MergingOperations, CellUtils) {
+  function (Arr, Fun, Fitment, MergingOperations) {
     // an arbitary limit, to stop retrying incase we hit stack overflows.
     // Its expected that most retries will be under 3 and thats for really edgy cases.
     var RETRIES = 1000;
@@ -31,7 +30,7 @@ define(
       var matching = Fun.curry(comparator, candidate);
       var rowArray = grid[row];
 
-      // sanity check
+      // sanity check, 1x1 has no spans
       return grid.length > 1 && rowArray.length > 1 &&
       (
         // search left, if we're not on the left edge
@@ -48,30 +47,42 @@ define(
     var mergeTables = function (startAddress, gridA, gridB, generator, comparator) {
       // Assumes
       //  - gridA is square and gridB is square
-      //  - inserting gridB does not interesect any cell spans on gridA
       var startRow = startAddress.row();
       var startCol = startAddress.column();
-      var gridHeight = gridB.length;
-      var gridWidth = gridB[0].length;
+      var mergeHeight = gridB.length;
+      var mergeWidth = gridB[0].length;
+      var endRow = startRow + mergeHeight;
+      var endCol = startCol + mergeWidth;
 
-      return Arr.map(gridA, function (row, r) {
-        var repRow = r - startRow;
-        var skipRow = skip(startRow, r, gridHeight);
-        if (skipRow) return row;
-
-        else return Arr.map(row, function (cell, c) {
-          var repCol = c - startCol;
-          var skipCell = skip(startCol, c, gridWidth);
-
-          if (skipCell) return cell;
-          else {
-            if (isSpanning(gridA, r, c, cell, comparator)) {
-              MergingOperations.unmerge(gridA, cell, comparator, generator.cell);
-            }
-            return generator.replace(gridB[repRow][repCol]);
+      // embrace the mutation - I think this is easier to follow? To discuss.
+      for (var r = startRow; r < endRow; r++) {
+        for (var c = startCol; c < endCol; c++) {
+          var cell = gridA[r][c];
+          if (isSpanning(gridA, r, c, cell, comparator)) {
+            // mutation within mutation, it's mutatception
+            MergingOperations.unmerge(gridA, cell, comparator, generator.cell);
           }
-        });
-      });
+          gridA[r][c] = generator.replace(gridB[r - startRow][c - startCol]);
+        }
+      }
+      return gridA;
+      // return Arr.map(gridA, function (row, r) {
+      //   var repRow = r - startRow;
+      //   var skipRow = skip(startRow, r, mergeHeight);
+      //   if (skipRow) return row;
+
+      //   else return Arr.map(row, function (cell, c) {
+      //     var repCol = c - startCol;
+      //     var skipCell = skip(startCol, c, mergeWidth);
+      //     if (skipCell) return cell;
+      //     else {
+      //       if (isSpanning(gridA, r, c, cell, comparator)) {
+      //         MergingOperations.unmerge(gridA, cell, comparator, generator.cell);
+      //       }
+      //       return generator.replace(gridB[repRow][repCol]);
+      //     }
+      //   });
+      // });
     };
 
     var merge = function (startAddress, gridA, gridB, generator, comparator) {
