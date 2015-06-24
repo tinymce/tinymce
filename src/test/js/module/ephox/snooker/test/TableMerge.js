@@ -3,15 +3,20 @@ define(
 
   [
     'ephox.peanut.Fun',
+    'ephox.perhaps.Result',
     'ephox.snooker.model.TableMerge',
     'ephox.snooker.test.Fitment'
   ],
 
-  function (Fun, TableMerge, Fitment) {
+  function (Fun, Result, TableMerge, Fitment) {
     var mergeTest = function (expected, startAddress, gridA, gridB, generator, comparator) {
       // The last step, merge cells from gridB into gridA
       var nuGrid = TableMerge.merge(startAddress, gridA(), gridB(), generator(), comparator);
-      assert.eq(expected, nuGrid);
+      nuGrid.fold(function (err) {
+        assert.eq(expected, err);
+      }, function (grid) {
+        assert.eq(expected, grid);
+      });
     };
 
     var mergeIVTest = function (asserter, startAddress, gridSpecA, gridSpecB, generator, comparator) {
@@ -23,10 +28,10 @@ define(
     var suite = function (label, startAddress, gridA, gridB, generator, comparator, expectedMeasure, expectedTailor, expectedMergeGrids) {
       console.log(label);
       Fitment.measureTest(expectedMeasure, startAddress, gridA, gridB, Fun.noop);
-      Fitment.tailorTest(expectedTailor, startAddress, gridA, {
+      Fitment.tailorTest(expectedTailor, startAddress, gridA, Result.value({
         rowDelta: Fun.constant(expectedMeasure.rowDelta),
         colDelta: Fun.constant(expectedMeasure.colDelta)
-      }, generator);
+      }), generator);
       mergeTest(expectedMergeGrids, startAddress, gridA, gridB, generator, comparator);
     };
 

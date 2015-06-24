@@ -14,16 +14,21 @@ define(
       // rowDelta = 3 means gridA can fit gridB with 3 rows to spare
 
       var tux = Fitment.measure(startAddress, gridA(), gridB());
-      assert.eq(expected.rowDelta, tux.rowDelta(), 'rowDelta expected: ' + expected.rowDelta + ' actual: '+ tux.rowDelta());
-      assert.eq(expected.colDelta, tux.colDelta(), 'colDelta expected: ' + expected.colDelta + ' actual: '+ tux.colDelta());
+      assert.eq(true, tux.isValue());
+      var result = tux.getOr('out of bounds');
+      assert.eq(expected.rowDelta, result.rowDelta(), 'rowDelta expected: ' + expected.rowDelta + ' actual: '+ result.rowDelta());
+      assert.eq(expected.colDelta, result.colDelta(), 'colDelta expected: ' + expected.colDelta + ' actual: '+ result.colDelta());
     };
 
     var tailorTest = function (expected, startAddress, gridA, delta, generator) {
       // Based on the Fitment.measure
       // Increase gridA by the row/col delta values
       // The result is a new grid that will perfectly fit gridB into gridA
-      var tux = Fitment.tailor(startAddress, gridA(), delta, generator());
-      assert.eq(expected, tux);
+      Fitment.tailor(startAddress, gridA(), delta, generator()).fold(function (err) {
+        assert.eq(expected, err);
+      }, function (tailored) {
+        assert.eq(expected, tailored);
+      });
     };
 
     var tailorIVTest = function (expected, startAddress, gridA, delta, generator) {
