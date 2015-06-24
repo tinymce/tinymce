@@ -5,10 +5,11 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.snooker.model.Fitment',
-    'ephox.snooker.operate.MergingOperations'
+    'ephox.snooker.operate.MergingOperations',
+    'ephox.snooker.util.CellUtils'
   ],
 
-  function (Arr, Fun, Fitment, MergingOperations) {
+  function (Arr, Fun, Fitment, MergingOperations, CellUtils) {
     // an arbitary limit, to stop retrying incase we hit stack overflows.
     // Its expected that most retries will be under 3 and thats for really edgy cases.
     var RETRIES = 1000;
@@ -34,13 +35,13 @@ define(
       return grid.length > 1 && rowArray.length > 1 &&
       (
         // search left, if we're not on the left edge
-        (row > 0 && matching(grid[row-1][col])) ||
-        // search right, if we're not on the right edge
-        (row < grid.length - 1 && matching(grid[row+1][col])) ||
-        // search up, if we're not on the top edge
         (col > 0 && matching(rowArray[col-1])) ||
+        // search right, if we're not on the right edge
+        (col < rowArray.length - 1 && matching(rowArray[col+1])) ||
+        // search up, if we're not on the top edge
+        (row > 0 && matching(grid[row-1][col])) ||
         // search down, if we're not on the bottom edge
-        (col > row.length - 1 && matching(rowArray[col+1]))
+        (row < grid.length - 1 && matching(grid[row+1][col]))
       );
     };
 
@@ -57,7 +58,6 @@ define(
             skipCell = skip(startAddress.column(), c, gridB[0].length);
             var candidate = gridA[r][c];
             if (!skipCell && isSpanning(gridA, r, c, candidate, comparator)) {
-            // if (!skipCell && Arr.exists(knownSpans, Fun.curry(comparator, candidate))) {
               target = candidate;
             }
           }
