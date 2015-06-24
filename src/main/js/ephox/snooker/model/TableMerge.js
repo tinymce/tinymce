@@ -27,7 +27,6 @@ define(
     };
 
     var detectSpan = function (startAddress, gridA, gridB, comparator) {
-      // TODO: ATOMIC TEST THIS
       var knownSpans = CellUtils.cellSpan(gridA, comparator);
       var target = false;
 
@@ -44,8 +43,8 @@ define(
             cell = gridA[r][c];
             repCol = c - startAddress.column();
             skipCell = skip(startAddress.column(), c, gridB[0].length);
-            var candidate = gridA[repRow][repCol];
-
+            var candidate = gridA[r][c];
+            if (!skipCell) console.log(candidate);
             if (!skipCell && Arr.exists(knownSpans, Fun.curry(comparator, candidate))) {
               target = candidate;
             }
@@ -62,7 +61,7 @@ define(
 
       do {
         if (intersectsSpan !== false) {
-          unmergedGrid = MergingOperations.unmerge(gridA, intersectsSpan, comparator, generator.cell);
+          unmergedGrid = MergingOperations.unmerge(unmergedGrid, intersectsSpan, comparator, generator.cell);
         }
 
         intersectsSpan = detectSpan (startAddress, unmergedGrid, gridB, comparator);
@@ -70,6 +69,7 @@ define(
 console.log(intersectsSpan);
 
         attempts++;
+
       } while (attempts < RETRIES && intersectsSpan !== false);
 
       return unmergedGrid;
@@ -102,7 +102,9 @@ console.log(intersectsSpan);
     };
 
     return {
-      merge: merge
+      merge: merge,
+      detectSpan: detectSpan,
+      unmergeIntersections: unmergeIntersections
     };
   }
 );

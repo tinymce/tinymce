@@ -13,8 +13,8 @@ test(
 
   function (Arr, Fun, Structs, Fitment, TableMerge, Array, Math) {
     var CYCLES = 100;
-    var GRID_MIN = 1;  // 1x1 grid is the min
-    var GRID_MAX = 5;
+    var GRID_MIN = 1;   // 1x1 grid is the min
+    var GRID_MAX = 100;
 
     var measureTest = Fitment.measureTest;
     var tailorIVTest = Fitment.tailorIVTest;
@@ -202,6 +202,8 @@ test(
         test: test
       };
     };
+
+console.error('NOTE: the generator ? is causing our span detection to falsely fire todo: add ignore case')
 
     inVariantRunner(mergeGridsIVTest, CYCLES);
     inVariantRunner(measureIVTest, CYCLES);
