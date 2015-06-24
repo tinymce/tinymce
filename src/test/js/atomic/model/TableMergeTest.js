@@ -13,46 +13,52 @@ test(
     var start = Structs.address;
     var suite = TableMerge.suite;
 
-    var check = function (test, expected, startAddress, gridA, gridB, generator, comparator) {
-      test(expected, startAddress, gridA, gridB, generator, comparator);
+    // Advanced Spans
+    var gridAdvancedOne = function () {
+      return [
+        [ 'A', 'B', 'B', 'C' ],
+        [ 'D', 'B', 'B', 'E' ],
+        [ 'F', 'F', 'F', 'E' ],
+        [ 'F', 'F', 'F', 'G' ],
+        [ 'F', 'F', 'F', 'H' ],
+        [ 'I', 'J', 'K', 'K' ],
+        [ 'I', 'L', 'L', 'M' ]
+      ];
     };
 
-    // Advanced Spans
-    var gridAdvancedOne = [
-      [ 'A', 'B', 'B', 'C' ],
-      [ 'D', 'B', 'B', 'E' ],
-      [ 'F', 'F', 'F', 'E' ],
-      [ 'F', 'F', 'F', 'G' ],
-      [ 'F', 'F', 'F', 'H' ],
-      [ 'I', 'J', 'K', 'K' ],
-      [ 'I', 'L', 'L', 'M' ]
-    ];
-
-    var gridSpanB = [
-      [ 'alpha', 'alpha'  ],
-      [ 'beta',  'charlie']
-    ];
+    var gridSpanB = function () {
+      return [
+        [ 'alpha', 'alpha'  ],
+        [ 'beta',  'charlie']
+      ];
+    };
 
     // These are suites which combine all 3 tests in 1 spec (measure, tailor, merge)
     // merge gridBee into gridAphid
-    var gridAphid = [
-      [ 'a', 'b', 'c' ],
-      [ 'd', 'e', 'f' ],
-      [ 'g', 'h', 'i' ],
-      [ 'j', 'k', 'l' ]
-    ];
+    var gridAphid = function () {
+      return [
+        [ 'a', 'b', 'c' ],
+        [ 'd', 'e', 'f' ],
+        [ 'g', 'h', 'i' ],
+        [ 'j', 'k', 'l' ]
+      ];
+    };
 
-    var gridBee = [
-      ['bee1'],
-      ['bee2'],
-      ['bee3'],
-      ['bee3'],
-      ['bee3']
-    ];
+    var gridBee = function () {
+      return [
+        ['bee1'],
+        ['bee2'],
+        ['bee3'],
+        ['bee3'],
+        ['bee3']
+      ];
+    };
 
-    var gridCicada = [
-      ['cicada1', 'cicada2', 'cicada3', 'cicada3', 'cicada3', 'cicada4', 'cicada4', 'cicada4']
-    ];
+    var gridCicada = function () {
+      return [
+        ['cicada1', 'cicada2', 'cicada3', 'cicada3', 'cicada3', 'cicada4', 'cicada4', 'cicada4']
+      ];
+    };
 
     suite(
       'insert at "j" a long table',

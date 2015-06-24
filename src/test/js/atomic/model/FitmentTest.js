@@ -22,16 +22,20 @@ test(
 
     // Simple test data, 4 basic variants of merging:
     // gridB into gridA with different start points
-    var gridA = [
-      [ 'a', 'b', 'c' ],
-      [ 'd', 'e', 'f' ],
-      [ 'g', 'h', 'i' ]
-    ];
+    var gridA = function () {
+      return [
+        [ 'a', 'b', 'c' ],
+        [ 'd', 'e', 'f' ],
+        [ 'g', 'h', 'i' ]
+      ];
+    };
 
-    var gridB = [
-      [1, 2],
-      [3, 4]
-    ];
+    var gridB = function () {
+      return [
+        [1, 2],
+        [3, 4]
+      ];
+    };
 
     // col and row are + meaning gridB fits into gridA, given the starting selection point 'a'
     check(measureTest, {
