@@ -18,6 +18,7 @@ Version 4.2.0 (2015-06-xx)
 	Fixed so script elements gets removed by default to prevent possible XSS issues in default config implementations.
 	Fixed so the UI doesn't need manual reflows when using non native layout managers.
 	Fixed so base64 encoded images doesn't slow down the editor on modern browsers while editing.
+	Removed the non proportional resize handles since. Unproportional resize can still be done by holding the shift key.
 Version 4.1.10 (2015-05-05)
 	Fixed bug where plugins loaded with compat3x would sometimes throw errors when loading using the jQuery version.
 	Fixed bug where extra empty paragraphs would get deleted in WebKit/Blink due to recent Quriks fix.
