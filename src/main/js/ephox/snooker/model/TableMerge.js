@@ -28,7 +28,13 @@ define(
     };
 
     var detectSpan = function (startAddress, gridA, gridB, comparator) {
-      // var knownSpans = CellUtils.cellSpan(gridA, comparator);
+var start = new Date().getTime();
+      var knownSpans = CellUtils.cellSpan(gridA, comparator);
+var end = new Date().getTime();
+var time = end - start;
+console.log('Execution time: ' + time);
+
+
       var target = false;
 
       var rowsA = gridA.length;
@@ -40,7 +46,8 @@ define(
           for (var c = 0, skipCell; c < gridA[r].length && target === false; c++) {
             skipCell = skip(startAddress.column(), c, gridB[0].length);
             var candidate = gridA[r][c];
-            if (!skipCell && isSpanning(gridA, r, c, candidate, comparator)) {
+            // if (!skipCell && isSpanning(gridA, r, c, candidate, comparator)) {
+            if (!skipCell && Arr.exists(knownSpans, Fun.curry(comparator, candidate))) {
               target = candidate;
             }
           }
