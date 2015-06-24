@@ -204,11 +204,6 @@ define(
       Attr.set(element, 'aria-label', label);
     };
 
-    // TODO: Implement textarea ARIA support
-    // var textarea = function (element, label, required) {
-    //   throw 'Textarea ARIA support not implemented yet.';
-    // };
-
     // TODO: Implement link ARIA support
     // var link = function (element) {
     //   throw 'Link ARIA support not implemented yet.';
