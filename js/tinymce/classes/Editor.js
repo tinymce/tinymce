@@ -253,6 +253,10 @@ define("tinymce/Editor", [
 			Env.cacheSuffix = settings.cache_suffix.replace(/^[\?\&]+/, '');
 		}
 
+		if (settings.override_viewport === false) {
+			Env.overrideViewPort = false;
+		}
+
 		// Call setup
 		editorManager.fire('SetupEditor', self);
 		self.execCallback('setup', self);
