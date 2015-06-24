@@ -121,6 +121,20 @@ define(
       });
     };
 
+    var button = function (element, label) {
+      Attr.setAll(element, {
+        'aria-label': label,
+        'role': 'button'
+      });
+    };
+
+    var textarea = function (element) {
+      Attr.setAll(element, {
+        'aria-multiline': 'true',
+        'role': 'textbox'
+      });
+    };
+
     var widget = function (element) {
       Attr.set(element, 'role', 'widget');
     };
@@ -190,11 +204,6 @@ define(
       Attr.set(element, 'aria-label', label);
     };
 
-    // TODO: Implement textarea ARIA support
-    // var textarea = function (element, label, required) {
-    //   throw 'Textarea ARIA support not implemented yet.';
-    // };
-
     // TODO: Implement link ARIA support
     // var link = function (element) {
     //   throw 'Link ARIA support not implemented yet.';
@@ -216,6 +225,8 @@ define(
       menuItem: menuItem,
       menuItemCheckbox: menuItemCheckbox,
       dialog: dialog,
+      button: button,
+      textarea: textarea,
       input: input,
       widget: widget,
       listBox: listBox,
