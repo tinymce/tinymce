@@ -27,14 +27,25 @@ define(
       return start > current || end <= current;
     };
 
+    var isSpanning = function (grid, row, col, candidate, comparator) {
+      var matching = Fun.curry(comparator, candidate);
+      var rowArray = grid[row];
+
+      // sanity check
+      return grid.length > 1 && rowArray.length > 1 &&
+      (
+        // search left, if we're not on the left edge
+        (row > 0 && matching(grid[row-1][col])) ||
+        // search right, if we're not on the right edge
+        (row < grid.length - 1 && matching(grid[row+1][col])) ||
+        // search up, if we're not on the top edge
+        (col > 0 && matching(rowArray[col-1])) ||
+        // search down, if we're not on the bottom edge
+        (col > row.length - 1 && matching(rowArray[col+1]))
+      );
+    };
+
     var detectSpan = function (startAddress, gridA, gridB, comparator) {
-var start = new Date().getTime();
-      var knownSpans = CellUtils.cellSpan(gridA, comparator);
-var end = new Date().getTime();
-var time = end - start;
-console.log('Execution time: ' + time);
-
-
       var target = false;
 
       var rowsA = gridA.length;
@@ -46,8 +57,8 @@ console.log('Execution time: ' + time);
           for (var c = 0, skipCell; c < gridA[r].length && target === false; c++) {
             skipCell = skip(startAddress.column(), c, gridB[0].length);
             var candidate = gridA[r][c];
-            // if (!skipCell && isSpanning(gridA, r, c, candidate, comparator)) {
-            if (!skipCell && Arr.exists(knownSpans, Fun.curry(comparator, candidate))) {
+            if (!skipCell && isSpanning(gridA, r, c, candidate, comparator)) {
+            // if (!skipCell && Arr.exists(knownSpans, Fun.curry(comparator, candidate))) {
               target = candidate;
             }
           }
@@ -61,6 +72,7 @@ console.log('Execution time: ' + time);
       var attempts = 0;
       var intersectsSpan = false;
 
+var start = new Date().getTime();
       do {
         if (intersectsSpan !== false) {
           unmergedGrid = MergingOperations.unmerge(unmergedGrid, intersectsSpan, comparator, generator.cell);
@@ -69,6 +81,9 @@ console.log('Execution time: ' + time);
         attempts++;
       } while (attempts < RETRIES && intersectsSpan !== false);
 
+var end = new Date().getTime();
+var time = end - start;
+console.log('Execution time: ' + time);
       return unmergedGrid;
     };
 
