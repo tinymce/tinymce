@@ -20,7 +20,8 @@ define(
       asserter(nuGrid, startAddress, gridSpecA, gridSpecB);
     };
 
-    var suite = function (startAddress, gridA, gridB, generator, comparator, expectedMeasure, expectedTailor, expectedMergeGrids) {
+    var suite = function (label, startAddress, gridA, gridB, generator, comparator, expectedMeasure, expectedTailor, expectedMergeGrids) {
+      console.log(label);
       Fitment.measureTest(expectedMeasure, startAddress, gridA, gridB, Fun.noop);
       Fitment.tailorTest(expectedTailor, startAddress, gridA, {
         rowDelta: Fun.constant(expectedMeasure.rowDelta),
