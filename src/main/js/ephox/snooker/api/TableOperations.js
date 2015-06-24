@@ -13,6 +13,7 @@ define(
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Fitment',
     'ephox.snooker.model.RunOperation',
+    'ephox.snooker.model.TableMerge',
     'ephox.snooker.model.Transitions',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.operate.MergingOperations',
@@ -23,7 +24,7 @@ define(
     'global!parseInt'
   ],
 
-  function (Arr, Fun, Option, Struct, Generators, Structs, TableContent, TableLookup, DetailsList, Fitment, RunOperation, Transitions, Warehouse, MergingOperations, ModificationOperations, TransformOperations, Adjustments, Remove, parseInt) {
+  function (Arr, Fun, Option, Struct, Generators, Structs, TableContent, TableLookup, DetailsList, Fitment, RunOperation, TableMerge, Transitions, Warehouse, MergingOperations, ModificationOperations, TransformOperations, Adjustments, Remove, parseInt) {
     var prune = function (table) {
       var cells = TableLookup.cells(table);
       if (cells.length === 0) Remove.remove(table);
@@ -132,10 +133,9 @@ define(
         var wh = Warehouse.generate(list);
         return Transitions.toGrid(wh, generators);
       };
-
       var gridB = gridify(mergable.clipboard(), mergable.generators());
       var startAddress = Structs.address(mergable.row(), mergable.column());
-      var mergedGrid = Fitment.mergeGrid(startAddress, grid, gridB, mergable.generators());
+      var mergedGrid = TableMerge.merge(startAddress, grid, gridB, mergable.generators(), comparator);
       var cursor = mergable.element();
       return outcome(mergedGrid, Option.some(cursor));
     };
