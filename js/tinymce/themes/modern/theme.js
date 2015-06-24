@@ -375,7 +375,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		var scrollContainer;
 
 		function getContextToolbars() {
-			return editor.contextToolbars || {};
+			return editor.contextToolbars || [];
 		}
 
 		function getElementRect(elm) {
@@ -514,7 +514,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				items: createToolbar(match.toolbar.items)
 			});
 
-			getContextToolbars()[match.selector].panel = panel;
+			match.toolbar.panel = panel;
 			panel.renderTo(document.body).reflow();
 			reposition(match);
 		}
@@ -528,15 +528,14 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		}
 
 		function findFrontMostMatch(targetElm) {
-			var i, selector, parentsAndSelf;
+			var i, y, parentsAndSelf, toolbars = getContextToolbars();
 
 			parentsAndSelf = editor.$(targetElm).parents().add(targetElm);
 			for (i = parentsAndSelf.length - 1; i >= 0; i--) {
-				for (selector in getContextToolbars()) {
-					if (editor.dom.is(parentsAndSelf[i], selector)) {
+				for (y = toolbars.length - 1; y >= 0; y--) {
+					if (toolbars[y].predicate(parentsAndSelf[i])) {
 						return {
-							toolbar: getContextToolbars()[selector],
-							selector: selector,
+							toolbar: toolbars[y],
 							element: parentsAndSelf[i]
 						};
 					}
