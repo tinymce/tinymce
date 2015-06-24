@@ -30,16 +30,10 @@ define(
       mergeTest(expectedMergeGrids, startAddress, gridA, gridB, generator, comparator);
     };
 
-    var detectSpanTest = function (expected, startAddress, gridA, gridB, _generator, comparator) {
-      var nuGrid = TableMerge.detectSpan(startAddress, gridA, gridB, comparator);
-      assert.eq(expected, nuGrid);
-    };
-
     return {
       mergeTest: mergeTest,
       mergeIVTest: mergeIVTest,
-      suite: suite,
-      detectSpanTest: detectSpanTest
+      suite: suite
     };
   }
 );

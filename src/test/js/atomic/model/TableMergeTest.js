@@ -11,7 +11,6 @@ test(
   function (Fun, Structs, TableMerge, TestGenerator) {
     var generator = TestGenerator;
     var start = Structs.address;
-    var detectSpanTest = TableMerge.detectSpanTest;
     var suite = TableMerge.suite;
 
     var check = function (test, expected, startAddress, gridA, gridB, generator, comparator) {
@@ -33,13 +32,6 @@ test(
       [ 'alpha', 'alpha'  ],
       [ 'beta',  'charlie']
     ];
-
-
-    // detectSpan is none recursive, finds the first span intersection and returns it
-    check(detectSpanTest, 'B', /*start A*/ start(0, 0), gridAdvancedOne, gridSpanB, Fun.noop, Fun.tripleEquals);
-    check(detectSpanTest, 'F', /*start F*/ start(2, 0), gridAdvancedOne, gridSpanB, Fun.noop, Fun.tripleEquals);
-    check(detectSpanTest, 'K', /*start J*/ start(5, 1), gridAdvancedOne, gridSpanB, Fun.noop, Fun.tripleEquals);
-    check(detectSpanTest, 'K', /*start K*/ start(5, 2), gridAdvancedOne, gridSpanB, Fun.noop, Fun.tripleEquals);
 
     // These are suites which combine all 3 tests in 1 spec (measure, tailor, merge)
     // merge gridBee into gridAphid
