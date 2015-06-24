@@ -121,6 +121,20 @@ define(
       });
     };
 
+    var button = function (element, label) {
+      Attr.setAll(element, {
+        'aria-label': label,
+        'role': 'button'
+      });
+    };
+
+    var textarea = function (element) {
+      Attr.setAll(element, {
+        'aria-multiline': 'true',
+        'role': 'textbox'
+      });
+    };
+
     var widget = function (element) {
       Attr.set(element, 'role', 'widget');
     };
@@ -216,6 +230,8 @@ define(
       menuItem: menuItem,
       menuItemCheckbox: menuItemCheckbox,
       dialog: dialog,
+      button: button,
+      textarea: textarea,
       input: input,
       widget: widget,
       listBox: listBox,
