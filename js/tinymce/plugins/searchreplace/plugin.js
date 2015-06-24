@@ -323,7 +323,7 @@
 					};
 				},
 				buttons: [
-					{text: "Find", onclick: function() {
+					{text: "Find", subtype: 'primary', onclick: function() {
 						win.submit();
 					}},
 					{text: "Replace", disabled: true, onclick: function() {
