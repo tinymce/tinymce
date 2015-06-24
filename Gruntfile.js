@@ -542,15 +542,15 @@ module.exports = function(grunt) {
 				options: {
 					id: "TinyMCE",
 					version: packageData.version,
-					authors: "Moxiecode Systems AB",
-					owners: "Moxiecode Systems AB",
+					authors: "Ephox Corp",
+					owners: "Ephox Corp",
 					description: "The best WYSIWYG editor! TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor " +
-						"control released as Open Source under LGPL by Moxiecode Systems AB. TinyMCE has the ability to convert HTML " +
+						"control released as Open Source under LGPL by Ephox Corp. TinyMCE has the ability to convert HTML " +
 						"TEXTAREA fields or other HTML elements to editor instances. TinyMCE is very easy to integrate " +
 						"into other Content Management Systems.",
 					releaseNotes: "Release notes for my package.",
 					summary: "TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor " +
-						"control released as Open Source under LGPL by Moxiecode Systems AB.",
+						"control released as Open Source under LGPL by Ephox Corp.",
 					projectUrl: "http://www.tinymce.com/",
 					iconUrl: "http://www.tinymce.com/favicon.ico",
 					licenseUrl: "http://www.tinymce.com/license",
@@ -580,15 +580,15 @@ module.exports = function(grunt) {
 				options: {
 					id: "TinyMCE.jQuery",
 					version: packageData.version,
-					authors: "Moxiecode Systems AB",
-					owners: "Moxiecode Systems AB",
+					authors: "Ephox Corp",
+					owners: "Ephox Corp",
 					description: "The best WYSIWYG editor! TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor " +
-						"control released as Open Source under LGPL by Moxiecode Systems AB. TinyMCE has the ability to convert HTML " +
+						"control released as Open Source under LGPL by Ephox Corp. TinyMCE has the ability to convert HTML " +
 						"TEXTAREA fields or other HTML elements to editor instances. TinyMCE is very easy to integrate " +
 						"into other Content Management Systems.",
 					releaseNotes: "Release notes for my package.",
 					summary: "TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor " +
-						"control released as Open Source under LGPL by Moxiecode Systems AB.",
+						"control released as Open Source under LGPL by Ephox Corp.",
 					projectUrl: "http://www.tinymce.com/",
 					iconUrl: "http://www.tinymce.com/favicon.ico",
 					licenseUrl: "http://www.tinymce.com/license",

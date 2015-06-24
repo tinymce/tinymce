@@ -93,7 +93,6 @@ define("tinymce/Editor", [
 	 * @param {String} id Unique id for the editor.
 	 * @param {Object} settings Settings for the editor.
 	 * @param {tinymce.EditorManager} editorManager EditorManager instance.
-	 * @author Moxiecode
 	 */
 	function Editor(id, settings, editorManager) {
 		var self = this, documentBaseUrl, baseUri;
