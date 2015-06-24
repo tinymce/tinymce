@@ -5,12 +5,14 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'global!Array',
+    'global!Error',
     'global!Math'
   ],
 
-  function (Arr, Fun, Array, Math) {
+  function (Arr, Fun, Array, Error, Math) {
     var measure = function (startAddress, gridA, gridB) {
-      if(startAddress.row() >= gridA.length || startAddress.column() > gridA[0].length) throw 'invalid startAddress out of table bounds';
+      // TODO: avoid throw in production code
+      if(startAddress.row() >= gridA.length || startAddress.column() > gridA[0].length) throw new Error('invalid startAddress out of table bounds');
       var rowRemainder = gridA.slice(startAddress.row());
       var colRemainder = rowRemainder[0].slice(startAddress.column());
 
