@@ -5,11 +5,10 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.snooker.model.Fitment',
-    'ephox.snooker.operate.MergingOperations',
-    'ephox.snooker.util.CellUtils'
+    'ephox.snooker.operate.MergingOperations'
   ],
 
-  function (Arr, Fun, Fitment, MergingOperations, CellUtils) {
+  function (Arr, Fun, Fitment, MergingOperations) {
     // an arbitary limit, to stop retrying incase we hit stack overflows.
     // Its expected that most retries will be under 3 and thats for really edgy cases.
     var RETRIES = 1000;

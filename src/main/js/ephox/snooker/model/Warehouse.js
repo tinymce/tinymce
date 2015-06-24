@@ -6,11 +6,10 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.snooker.api.Structs',
-    'ephox.snooker.model.DetailsList',
     'global!Math'
   ],
 
-  function (Arr, Fun, Option, Structs, DetailsList, Math) {
+  function (Arr, Fun, Option, Structs, Math) {
     var key = function (row, column) {
       return row + ',' + column;
     };
