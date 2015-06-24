@@ -141,7 +141,9 @@ define("tinymce/imagetoolsplugin/Plugin", [
 		}
 
 		function isLocalImage(img) {
-			return new URI(img.src).host === editor.documentBaseURI.host;
+			var url = img.src;
+
+			return url.indexOf('data:') === 0 || url.indexOf('blob:') === 0 || new URI(url).host === editor.documentBaseURI.host;
 		}
 
 		function isCorsImage(img) {
