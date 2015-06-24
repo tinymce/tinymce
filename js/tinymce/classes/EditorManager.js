@@ -1,8 +1,8 @@
 /**
  * EditorManager.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -28,10 +28,28 @@ define("tinymce/EditorManager", [
 	"tinymce/util/Observable",
 	"tinymce/util/I18n",
 	"tinymce/FocusManager"
-], function(Editor, DomQuery, DOMUtils, URI, Env, Tools, Observable, I18n, FocusManager) {
+], function(Editor, $, DOMUtils, URI, Env, Tools, Observable, I18n, FocusManager) {
 	var DOM = DOMUtils.DOM;
 	var explode = Tools.explode, each = Tools.each, extend = Tools.extend;
-	var instanceCounter = 0, beforeUnloadDelegate, EditorManager;
+	var instanceCounter = 0, beforeUnloadDelegate, EditorManager, boundGlobalEvents = false;
+
+	function globalEventDelegate(e) {
+		each(EditorManager.editors, function(editor) {
+			editor.fire('ResizeWindow', e);
+		});
+	}
+
+	function toggleGlobalEvents(editors, state) {
+		if (state !== boundGlobalEvents) {
+			if (state) {
+				$(window).on('resize', globalEventDelegate);
+			} else {
+				$(window).off('resize', globalEventDelegate);
+			}
+
+			boundGlobalEvents = state;
+		}
+	}
 
 	function removeEditorFromList(editor) {
 		var editors = EditorManager.editors, removedFromList;
@@ -78,7 +96,7 @@ define("tinymce/EditorManager", [
 		 * @property $
 		 * @type tinymce.dom.DomQuery
 		 */
-		$: DomQuery,
+		$: $,
 
 		/**
 		 * Major version of TinyMCE build.
@@ -426,6 +444,8 @@ define("tinymce/EditorManager", [
 			editors[editor.id] = editor;
 			editors.push(editor);
 
+			toggleGlobalEvents(editors, true);
+
 			// Doesn't call setActive method since we don't want
 			// to fire a bunch of activate/deactivate calls while initializing
 			self.activeEditor = editor;
@@ -531,6 +551,8 @@ define("tinymce/EditorManager", [
 			}
 
 			editor.remove();
+
+			toggleGlobalEvents(editors, editors.length > 0);
 
 			return editor;
 		},

@@ -1,8 +1,8 @@
 /**
  * theme.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -571,12 +571,9 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			}
 		});
 
-		editor.on('nodeChange ResizeEditor', repositionHandler);
-		tinymce.$(window).on('resize', repositionHandler);
+		editor.on('nodeChange ResizeEditor ResizeWindow', repositionHandler);
 
 		editor.on('remove', function() {
-			tinymce.$(window).off('resize', repositionHandler);
-
 			tinymce.each(getContextToolbars(), function(toolbar) {
 				if (toolbar.panel) {
 					toolbar.panel.remove();
