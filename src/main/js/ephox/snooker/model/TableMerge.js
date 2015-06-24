@@ -29,6 +29,11 @@ define(
 
     var isSpanning = function (grid, row, col, candidate, comparator) {
       var matching = Fun.curry(comparator, candidate);
+      // var matching = function (x) {
+      //   var xx = comparator(x, candidate);
+      //   console.log('comparing', x, xx);
+      //   return xx;
+      // };
       var rowArray = grid[row];
 
       // sanity check
@@ -71,45 +76,65 @@ define(
       var attempts = 0;
       var intersectsSpan = false;
 
-var start = new Date().getTime();
       do {
         if (intersectsSpan !== false) {
+          // console.log('unmerge old before');
+          // console.log(unmergedGrid, intersectsSpan);
           unmergedGrid = MergingOperations.unmerge(unmergedGrid, intersectsSpan, comparator, generator.cell);
+          // console.log('unmerge old after');
+          // console.log(unmergedGrid, intersectsSpan);
         }
         intersectsSpan = detectSpan(startAddress, unmergedGrid, gridB, comparator);
         attempts++;
       } while (attempts < RETRIES && intersectsSpan !== false);
-
-var end = new Date().getTime();
-var time = end - start;
-console.log('Execution time: ' + time);
       return unmergedGrid;
     };
 
-    var mergeTables = function (startAddress, gridA, gridB, generator) {
+    var mergeTables = function (startAddress, gridA, gridB, generator, comparator) {
       // Assumes
       //  - gridA is square and gridB is square
       //  - inserting gridB does not interesect any cell spans on gridA
+      var startRow = startAddress.row();
+      var startCol = startAddress.column();
+      var gridHeight = gridB.length;
+      var gridWidth = gridB[0].length;
+
       return Arr.map(gridA, function (row, r) {
-        var repRow = r - startAddress.row();
-        var skipRow = skip(startAddress.row(), r, gridB.length);
+        var repRow = r - startRow;
+        var skipRow = skip(startRow, r, gridHeight);
         if (skipRow) return row;
 
         else return Arr.map(row, function (cell, c) {
-          var repCol = c - startAddress.column();
-          var skipCell = skip(startAddress.column(), c, gridB[0].length);
+          var repCol = c - startCol;
+          var skipCell = skip(startCol, c, gridWidth);
 
           if (skipCell) return cell;
-          else return generator.replace(gridB[repRow][repCol]);
+          else {
+            if (isSpanning(gridA, r, c, cell, comparator)) {
+              // console.log('unmerge new before');
+              // console.log(gridA, cell);
+              MergingOperations.unmerge(gridA, cell, comparator, generator.cell);
+              // console.log('unmerge new after');
+              // console.log(gridA, cell);
+            }
+            return generator.replace(gridB[repRow][repCol]);
+          }
         });
       });
     };
 
     var merge = function (startAddress, gridA, gridB, generator, comparator) {
+var start = new Date().getTime();
+
       var delta = Fitment.measure(startAddress, gridA, gridB);
       var fittedGrid = Fitment.tailor(startAddress, gridA, delta, generator);
-      var cleanGrid = unmergeIntersections(startAddress, fittedGrid, gridB, generator, comparator);
-      return mergeTables(startAddress, cleanGrid, gridB, generator);
+      // var cleanGrid = unmergeIntersections(startAddress, fittedGrid, gridB, generator, comparator);
+      var xx = mergeTables(startAddress, fittedGrid, gridB, generator, comparator);
+var end = new Date().getTime();
+var time = end - start;
+console.log('Execution time: ' + time);
+      return xx; // inline, only here for logging
+
     };
 
     return {
