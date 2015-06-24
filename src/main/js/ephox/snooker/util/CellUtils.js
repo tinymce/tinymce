@@ -24,7 +24,8 @@ define(
         if (Arr.exists(known, Fun.curry(comparator, cell))) duplicates.push(cell);
         known.push(cell);
       });
-      return Util.unique(duplicates, comparator);
+      // return Util.unique(duplicates, comparator);
+      return duplicates;
     };
 
     return {

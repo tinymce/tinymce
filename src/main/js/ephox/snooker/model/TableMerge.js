@@ -28,24 +28,19 @@ define(
     };
 
     var detectSpan = function (startAddress, gridA, gridB, comparator) {
-      var knownSpans = CellUtils.cellSpan(gridA, comparator);
+      // var knownSpans = CellUtils.cellSpan(gridA, comparator);
       var target = false;
 
       var rowsA = gridA.length;
       var rowsB = gridB.length;
 
-      for (var r = 0, row, repRow, skipRow; r < rowsA && target === false; r++) {
-        row = gridA[r];
-        repRow = r - startAddress.row();
+      for (var r = 0, skipRow; r < rowsA && target === false; r++) {
         skipRow = skip(startAddress.row(), r, rowsB);
-
         if (!skipRow) {
-          for (var c = 0, cell, repCol, skipCell; c < gridA[r].length && target === false; c++) {
-            cell = gridA[r][c];
-            repCol = c - startAddress.column();
+          for (var c = 0, skipCell; c < gridA[r].length && target === false; c++) {
             skipCell = skip(startAddress.column(), c, gridB[0].length);
             var candidate = gridA[r][c];
-            if (!skipCell && Arr.exists(knownSpans, Fun.curry(comparator, candidate))) {
+            if (!skipCell && isSpanning(gridA, r, c, candidate, comparator)) {
               target = candidate;
             }
           }
