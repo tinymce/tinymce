@@ -26,7 +26,8 @@ define(
       return start > current || end <= current;
     };
 
-    var isSpanning = function (grid, row, col, candidate, comparator) {
+    var isSpanning = function (grid, row, col, comparator) {
+      var candidate = grid[row][col];
       var matching = Fun.curry(comparator, candidate);
       var rowArray = grid[row];
 
@@ -57,10 +58,9 @@ define(
       // embrace the mutation - I think this is easier to follow? To discuss.
       for (var r = startRow; r < endRow; r++) {
         for (var c = startCol; c < endCol; c++) {
-          var cell = gridA[r][c];
-          if (isSpanning(gridA, r, c, cell, comparator)) {
+          if (isSpanning(gridA, r, c, comparator)) {
             // mutation within mutation, it's mutatception
-            MergingOperations.unmerge(gridA, cell, comparator, generator.cell);
+            MergingOperations.unmerge(gridA, gridA[r][c], comparator, generator.cell);
           }
           gridA[r][c] = generator.replace(gridB[r - startRow][c - startCol]);
         }
@@ -76,7 +76,7 @@ define(
       //     var skipCell = skip(startCol, c, mergeWidth);
       //     if (skipCell) return cell;
       //     else {
-      //       if (isSpanning(gridA, r, c, cell, comparator)) {
+      //       if (isSpanning(gridA, r, c, comparator)) {
       //         MergingOperations.unmerge(gridA, cell, comparator, generator.cell);
       //       }
       //       return generator.replace(gridB[repRow][repCol]);
