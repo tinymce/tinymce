@@ -53,6 +53,7 @@ define("tinymce/imagetoolsplugin/Dialog", [
 		function updateButtonUndoStates() {
 			win.find('#undo').disabled(!undoStack.canUndo());
 			win.find('#redo').disabled(!undoStack.canRedo());
+			win.statusbar.find('#save').disabled(!undoStack.canUndo());
 		}
 
 		function displayState(state) {
@@ -398,7 +399,7 @@ define("tinymce/imagetoolsplugin/Dialog", [
 			title: 'Edit image',
 			items: panels.concat([mainViewContainer]),
 			buttons: [
-				{text: 'Save', subtype: 'primary', onclick: save},
+				{text: 'Save', name: 'save', subtype: 'primary', onclick: save},
 				{text: 'Cancel', onclick: 'close'}
 			]
 		});
