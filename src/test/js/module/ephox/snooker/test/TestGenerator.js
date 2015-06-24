@@ -7,17 +7,18 @@ define(
 
   function (Fun) {
     return function () {
-      var counter = 0;
+      var cellCounter = 0;
+      var replaceCounter = 0;
 
       var cell = function () {
-        var r = '?_' + counter;
-        counter++;
+        var r = '?_' + cellCounter;
+        cellCounter++;
         return r;
       };
 
       var replace = function (name) {
-        var r = 'h(' + name + ')_' + counter;
-        counter++;
+        var r = 'h(' + name + ')_' + replaceCounter;
+        replaceCounter++;
         return r;
       };
 

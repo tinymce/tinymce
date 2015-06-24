@@ -123,15 +123,15 @@ test(
       [
         ['a',   'b',   'c',        '?_0'],
         ['d',   'e',   'f',        '?_1'],
-        ['g',   'h',   'h(1)_7',   'h(2)_8'],
-        ['?_3', '?_4', 'h(3)_9',   'h(4)_10']
+        ['g',   'h',   'h(1)_0',   'h(2)_1'],
+        ['?_3', '?_4', 'h(3)_2',   'h(4)_3']
       ], start(2, 2), gridA, gridB, generator, Fun.tripleEquals);
 
     check(
       mergeGridsTest,
       [
-        ['a', 'b', 'h(1)_3', 'h(2)_4'],
-        ['d', 'e', 'h(3)_5', 'h(4)_6'],
+        ['a', 'b', 'h(1)_0', 'h(2)_1'],
+        ['d', 'e', 'h(3)_2', 'h(4)_3'],
         ['g', 'h', 'i', '?_2']
       ], start(0, 2), gridA, gridB, generator, Fun.tripleEquals);
 
