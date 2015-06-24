@@ -1,11 +1,30 @@
+/**
+ * Plugin.js
+ *
+ * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
+ */
+
+/**
+ *
+ * Settings:
+ *  imagetools_cors_hosts - Array of remote domains that has CORS setup.
+ *  imagetools_proxy - Url to proxy that streams images from remote host to local host.
+ *  imagetools_toolbar - Toolbar items to render when an editable image is selected.
+ */
 define("tinymce/imagetoolsplugin/Plugin", [
 	"tinymce/PluginManager",
 	"tinymce/Env",
 	"tinymce/util/Promise",
+	"tinymce/util/URI",
+	"tinymce/util/Tools",
 	"tinymce/imagetoolsplugin/ImageTools",
 	"tinymce/imagetoolsplugin/Conversions",
 	"tinymce/imagetoolsplugin/Dialog"
-], function(PluginManager, Env, Promise, ImageTools, Conversions, Dialog) {
+], function(PluginManager, Env, Promise, URI, Tools, ImageTools, Conversions, Dialog) {
 	PluginManager.add('imagetools', function(editor) {
 		var count = 0;
 
@@ -121,6 +140,30 @@ define("tinymce/imagetoolsplugin/Plugin", [
 			return 'imagetools' + count++;
 		}
 
+		function isLocalImage(img) {
+			return new URI(img.src).host === editor.documentBaseURI.host;
+		}
+
+		function isCorsImage(img) {
+			return Tools.inArray(editor.settings.imagetools_cors_hosts, new URI(img.src).host) !== -1;
+		}
+
+		function proxyImage(img) {
+			var proxyUrl;
+
+			if (isLocalImage(img)) {
+				return img;
+			}
+
+			proxyUrl = editor.settings.imagetools_proxy;
+			proxyUrl += (proxyUrl.indexOf('?') === -1 ? '?' : '&') + 'url=' + encodeURIComponent(img.src);
+
+			img = new Image();
+			img.src = proxyUrl;
+
+			return img;
+		}
+
 		function findSelectedBlobInfo() {
 			var blobInfo;
 
@@ -129,7 +172,7 @@ define("tinymce/imagetoolsplugin/Plugin", [
 				return blobInfo;
 			}
 
-			return Conversions.imageToBlob(getSelectedImage()).then(function(blob) {
+			return Conversions.imageToBlob(proxyImage(getSelectedImage())).then(function(blob) {
 				return Conversions.blobToBase64(blob).then(function(base64) {
 					var blobCache = editor.editorUpload.blobCache;
 					var blobInfo = blobCache.create(createId(), blob, base64);
@@ -262,6 +305,12 @@ define("tinymce/imagetoolsplugin/Plugin", [
 			*/
 		}
 
+		function isEditableImage(img) {
+			var selectorMatched = editor.dom.is(img, 'img:not([data-mce-object],[data-mce-placeholder])');
+
+			return selectorMatched && (isLocalImage(img) || isCorsImage(img) || editor.settings.imagetools_proxy);
+		}
+
 		function addToolbars() {
 			var toolbarItems = editor.settings.imagetools_toolbar;
 
@@ -270,7 +319,7 @@ define("tinymce/imagetoolsplugin/Plugin", [
 			}
 
 			editor.addContextToolbar(
-				'img:not([data-mce-object],[data-mce-placeholder])',
+				isEditableImage,
 				toolbarItems
 			);
 		}
