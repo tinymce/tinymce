@@ -13,9 +13,10 @@ test(
   ],
 
   function (Arr, Fun, Structs, Fitment, TableMerge, Array, Date, Math) {
-    var CYCLES = 1;
+    // Note: cycles 500, min 1, max 200 ~ 22secs
+    var CYCLES = 500;
     var GRID_MIN = 1;   // 1x1 grid is the min
-    var GRID_MAX = 100; // don't run this in a browser with values over 25
+    var GRID_MAX = 200;
 
     var measureTest = Fitment.measureTest;
     var tailorIVTest = Fitment.tailorIVTest;
@@ -56,23 +57,16 @@ test(
     };
 
     var inVariantRunner = function (label, mvTest, times) {
-      // var start = new Date().getTime();
       for (var i = 1, testSpec; i <= times; i++) {
         testSpec = mvTest();
         console.log('testing:', label, i + ' / ' + times, ' params: ' + JSON.stringify(testSpec.params));
         testSpec.test();
       }
-      // var end = new Date().getTime();
-      // var time = end - start;
-      // console.log('Execution time: ' + time);
     };
 
     var gridGen = function (_prefix) {
-      // var cols = rand(GRID_MIN, GRID_MAX);
-      // var rows = rand(GRID_MIN, GRID_MAX);
-var foo = 75;
-      var cols = foo;
-      var rows = foo;
+      var cols = rand(GRID_MIN, GRID_MAX);
+      var rows = rand(GRID_MIN, GRID_MAX);
       return {
         rows: Fun.constant(rows),
         cols: Fun.constant(cols),
@@ -84,7 +78,7 @@ var foo = 75;
       // because arrays start from 0 we -1
       var row = rand(0, gridSpec.rows()-1);
       var col = rand(0, gridSpec.cols()-1);
-      return Structs.address(0, 0);
+      return Structs.address(row, col);
     };
 
     var deltaGen = function () {
@@ -123,7 +117,7 @@ var foo = 75;
       var test = Fun.curry(measureTest, {
         rowDelta: rowDelta,
         colDelta: colDelta
-      }, start, gridSpecA.grid(), gridSpecB.grid(), Fun.noop );
+      }, start, gridSpecA.grid, gridSpecB.grid, Fun.noop );
 
       return {
         params: info,
@@ -160,7 +154,7 @@ var foo = 75;
       var test = Fun.curry(tailorIVTest, {
         rows: expectedRows,
         cols: expectedCols
-      }, start, gridSpecA.grid(), delta, generator);
+      }, start, gridSpecA.grid, delta, generator);
 
       return {
         params: info,
@@ -220,10 +214,8 @@ var foo = 75;
       };
     };
 
-
-    // inVariantRunner('measure', measureIVTest, CYCLES);
-    // inVariantRunner('tailor', tailorTestIVTest, CYCLES);
+    inVariantRunner('measure', measureIVTest, CYCLES);
+    inVariantRunner('tailor', tailorTestIVTest, CYCLES);
     inVariantRunner('merge', mergeGridsIVTest, CYCLES);
-
   }
 );
