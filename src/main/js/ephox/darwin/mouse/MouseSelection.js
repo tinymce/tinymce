@@ -24,6 +24,7 @@ define(
 
       /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
       var mousedown = function (event) {
+        // do nothing if this is not the left button
         if (event.raw().button !== 0) return;
 
         cursor = SelectorFind.closest(event.target(), 'td,th');
@@ -32,6 +33,10 @@ define(
 
       /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
       var mouseover = function (event) {
+        // do nothing if the left button is not pressed (works around weird chrome border collapse issue where we never receive mouse up)
+        // and yes, that's only one & symbol (bitwise and)
+        if (event.raw().buttons & 1 !== 0) return;
+
         cursor.each(function (start) {
           CellSelection.clear(container);
           var finish = SelectorFind.closest(event.target(), 'td,th');
