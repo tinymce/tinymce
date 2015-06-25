@@ -35,7 +35,7 @@ define(
       var mouseover = function (event) {
         // do nothing if the left button is not pressed (works around weird chrome border collapse issue where we never receive mouse up)
         // and yes, that's only one & symbol (bitwise and)
-        if (event.raw().buttons & 1 !== 0) return;
+        if (event.raw().buttons & 1 === 0) return;
 
         cursor.each(function (start) {
           CellSelection.clear(container);
