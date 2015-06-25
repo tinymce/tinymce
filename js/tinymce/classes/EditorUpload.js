@@ -110,18 +110,26 @@ define("tinymce/EditorUpload", [
 			blobCache.destroy();
 		}
 
+		function replaceBlobWithBase64(content) {
+			return content.replace(/src="(blob:[^"]+)"/g, function(match, blobUri) {
+				var blobInfo = blobCache.getByUri(blobUri);
+
+				return 'src="data:' + blobInfo.blob().type + ';base64,' + blobInfo.base64() + '"';
+			});
+		}
+
 		editor.on('setContent paste', scanForImages);
+
+		editor.on('RawSaveContent', function(e) {
+			e.content = replaceBlobWithBase64(e.content);
+		});
 
 		editor.on('getContent', function(e) {
 			if (e.source_view || e.format == 'raw') {
 				return;
 			}
 
-			e.content = e.content.replace(/src="(blob:[^"]+)"/g, function(match, blobUri) {
-				var blobInfo = blobCache.getByUri(blobUri);
-
-				return 'src="data:' + blobInfo.blob().type + ';base64,' + blobInfo.base64() + '"';
-			});
+			e.content = replaceBlobWithBase64(e.content);
 		});
 
 		return {

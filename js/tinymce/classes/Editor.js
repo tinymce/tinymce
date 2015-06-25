@@ -1604,6 +1604,11 @@ define("tinymce/Editor", [
 				self.fire('SaveContent', args);
 			}
 
+			// Always run this internal event
+			if (args.format == 'raw') {
+				self.fire('RawSaveContent', args);
+			}
+
 			html = args.content;
 
 			if (!/TEXTAREA|INPUT/i.test(elm.nodeName)) {
