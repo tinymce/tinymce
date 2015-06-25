@@ -47,6 +47,14 @@ define("tinymce/file/Uploader", [
 			return blobInfo.id() + '.' + ext;
 		}
 
+		function pathJoin(path1, path2) {
+			if (path1) {
+				return path1.replace(/\/$/, '') + '/' + path2.replace(/^\//, '');
+			}
+
+			return path2;
+		}
+
 		function blobInfoToData(blobInfo) {
 			return {
 				id: blobInfo.id,
@@ -78,7 +86,7 @@ define("tinymce/file/Uploader", [
 					return;
 				}
 
-				success(json.location);
+				success(pathJoin(settings.basePath, json.location));
 			};
 
 			formData = new FormData();
@@ -88,8 +96,14 @@ define("tinymce/file/Uploader", [
 		}
 
 		function upload(blobInfos) {
-			return new Promise(function(resolve) {
+			return new Promise(function(resolve, reject) {
 				var handler = settings.handler, queue, index = 0, uploadedIdMap = {};
+
+				// If no url is configured then resolve
+				if (!settings.url) {
+					resolve([]);
+					return;
+				}
 
 				queue = Tools.map(blobInfos, function(blobInfo) {
 					return {
@@ -121,9 +135,9 @@ define("tinymce/file/Uploader", [
 						queueItem.url = url;
 						queueItem.status = true;
 						uploadNext();
-					}, function() {
+					}, function(failure) {
 						queueItem.status = false;
-						uploadNext();
+						reject(failure);
 					});
 				}
 
