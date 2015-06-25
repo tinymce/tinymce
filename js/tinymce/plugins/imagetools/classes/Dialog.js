@@ -422,11 +422,9 @@ define("tinymce/imagetoolsplugin/Dialog", [
 		});
 	}
 
-	function edit(img) {
+	function edit(blob) {
 		return new Promise(function(resolve, reject) {
-			Conversions.imageToBlob(img).then(function(blob) {
-				open(createState(blob), resolve, reject);
-			});
+			open(createState(blob), resolve, reject);
 		});
 	}
 

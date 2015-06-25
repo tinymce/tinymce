@@ -150,24 +150,35 @@ define("tinymce/imagetoolsplugin/Plugin", [
 			return Tools.inArray(editor.settings.imagetools_cors_hosts, new URI(img.src).host) !== -1;
 		}
 
-		function proxyImage(img) {
+		function requestUrlAsBlob(url) {
+			// Needs to be XHR for IE 10 compatibility
+			return new Promise(function(resolve) {
+				var xhr = new XMLHttpRequest();
+
+				xhr.onload = function() {
+					resolve(this.response);
+				};
+
+				xhr.open('GET', url, true);
+				xhr.responseType = 'blob';
+				xhr.send();
+			});
+		}
+
+		function imageToBlob(img) {
 			var src = img.src;
 
-			if (isLocalImage(img)) {
-				return img;
+			if (isCorsImage(img)) {
+				return requestUrlAsBlob(img.src);
 			}
 
-			if (isCorsImage(img)) {
-				img = new Image();
-				img.crossOrigin = "anonymous";
-				img.src = src;
-			} else {
+			if (!isLocalImage(img)) {
 				img = new Image();
 				src = editor.settings.imagetools_proxy;
 				img.src += (src.indexOf('?') === -1 ? '?' : '&') + 'url=' + encodeURIComponent(img.src);
 			}
 
-			return img;
+			return Conversions.imageToBlob(img);
 		}
 
 		function findSelectedBlobInfo() {
@@ -178,7 +189,7 @@ define("tinymce/imagetoolsplugin/Plugin", [
 				return blobInfo;
 			}
 
-			return Conversions.imageToBlob(proxyImage(getSelectedImage())).then(function(blob) {
+			return imageToBlob(getSelectedImage()).then(function(blob) {
 				return Conversions.blobToBase64(blob).then(function(base64) {
 					var blobCache = editor.editorUpload.blobCache;
 					var blobInfo = blobCache.create(createId(), blob, base64);
@@ -253,7 +264,7 @@ define("tinymce/imagetoolsplugin/Plugin", [
 			var img = getSelectedImage(), originalSize = getNaturalImageSize(img);
 
 			if (img) {
-				Dialog.edit(proxyImage(img)).then(function(blob) {
+				imageToBlob(img).then(Dialog.edit).then(function(blob) {
 					return new Promise(function(resolve) {
 						Conversions.blobToImage(blob).then(function(newImage) {
 							var newSize = getNaturalImageSize(newImage);
