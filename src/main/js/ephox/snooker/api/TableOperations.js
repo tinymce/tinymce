@@ -11,7 +11,6 @@ define(
     'ephox.snooker.api.TableContent',
     'ephox.snooker.api.TableLookup',
     'ephox.snooker.model.DetailsList',
-    'ephox.snooker.model.Fitment',
     'ephox.snooker.model.RunOperation',
     'ephox.snooker.model.TableMerge',
     'ephox.snooker.model.Transitions',
@@ -24,7 +23,7 @@ define(
     'global!parseInt'
   ],
 
-  function (Arr, Fun, Option, Struct, Generators, Structs, TableContent, TableLookup, DetailsList, Fitment, RunOperation, TableMerge, Transitions, Warehouse, MergingOperations, ModificationOperations, TransformOperations, Adjustments, Remove, parseInt) {
+  function (Arr, Fun, Option, Struct, Generators, Structs, TableContent, TableLookup, DetailsList, RunOperation, TableMerge, Transitions, Warehouse, MergingOperations, ModificationOperations, TransformOperations, Adjustments, Remove, parseInt) {
     var prune = function (table) {
       var cells = TableLookup.cells(table);
       if (cells.length === 0) Remove.remove(table);
@@ -136,8 +135,10 @@ define(
       var gridB = gridify(mergable.clipboard(), mergable.generators());
       var startAddress = Structs.address(mergable.row(), mergable.column());
       var mergedGrid = TableMerge.merge(startAddress, grid, gridB, mergable.generators(), comparator);
-      var cursor = mergable.element();
-      return outcome(mergedGrid, Option.some(cursor));
+      return mergedGrid.bind(function (nuGrid) {
+        var cursor = mergable.element();
+        return outcome(nuGrid, Option.some(cursor));
+      });
     };
 
     // Only column modifications force a resizing. Everything else just tries to preserve the table as is.
