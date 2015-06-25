@@ -11,6 +11,10 @@
 		//imagetools_cors_hosts: ["moxiecode.cachefly.net"],
 		//imagetools_proxy: "proxy.php",
 
+		//images_upload_url: 'postAcceptor.php',
+		//images_upload_base_path: 'base/path',
+		//images_upload_credentials: true,
+
 		selector: "textarea.tinymce",
 		theme: "modern",
 		plugins: [
@@ -24,6 +28,21 @@
 		toolbar1: "undo redo | styleselect | alignleft aligncenter alignright alignjustify | link image | media | emoticons"
 	});
 
+	function send() {
+		tinymce.activeEditor.uploadImages(function(success) {
+			document.forms[0].submit();
+		});
+	}
+
+	function upload() {
+		tinymce.activeEditor.uploadImages(function(success) {
+			console.log(success);
+		});
+	}
+
+	function dump() {
+		console.log(tinymce.activeEditor.getContent());
+	}
 </script>
 </head>
 <body>
@@ -39,8 +58,9 @@
 		</p>
 	</textarea>
 
-	<input type="submit" name="save" value="Submit" />
-	<input type="reset" name="reset" value="Reset" />
+	<input type="button"value="Submit" onclick="send()" />
+	<input type="button" value="Dump" onclick="dump()" />
+	<input type="button" value="Upload" onclick="upload()" />
 </form>
 
 </body>
