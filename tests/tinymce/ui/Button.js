@@ -18,7 +18,7 @@
 	test("button text, size default", function() {
 		var button = createButton({text: 'X'});
 
-		Utils.nearlyEqualRects(Utils.rect(button), [0, 0, 34, 30], 4);
+		Utils.nearlyEqualRects(Utils.rect(button), [0, 0, 27, 30], 4);
 	});
 
 	test("button text, size large", function() {
@@ -43,7 +43,7 @@
 	test("button icon, size default", function() {
 		var button = createButton({icon: 'test'});
 
-		Utils.nearlyEqualRects(Utils.rect(button), [0, 0, 40, 30], 4);
+		Utils.nearlyEqualRects(Utils.rect(button), [0, 0, 34, 30], 4);
 	});
 
 	test("button icon, size small", function() {
@@ -68,7 +68,7 @@
 	test("button text & icon, size default", function() {
 		var button = createButton({text: 'X', icon: 'test'});
 
-		Utils.nearlyEqualRects(Utils.rect(button), [0, 0, 52, 30], 4);
+		Utils.nearlyEqualRects(Utils.rect(button), [0, 0, 47, 30], 4);
 	});
 
 	test("button text & icon, size large", function() {
