@@ -87,13 +87,12 @@ define(
 
     var onPaste = function (warehouse, target) {
       return TableLookup.cell(target.element()).bind(function (cell) {
-        var info = findInWarehouse(warehouse, cell).map(function (details) {
+        return findInWarehouse(warehouse, cell).map(function (details) {
           return Merger.merge(details, {
             generators: target.generators,
             clipboard: target.clipboard
           });
         });
-        return info;
       });
     };
 

@@ -5,12 +5,13 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Result',
+    'ephox.snooker.util.Util',
     'global!Array',
     'global!Error',
     'global!Math'
   ],
 
-  function (Arr, Fun, Result, Array, Error, Math) {
+  function (Arr, Fun, Result, Util, Array, Error, Math) {
     /*
       Fitment, is a module used to ensure that the Inserted table (gridB) can fit squareley within the Host table (gridA).
         - measure returns a delta of rows and cols, eg:
@@ -20,6 +21,8 @@ define(
 
         - tailor, requires a delta and returns grid that is built to match the delta, tailored to fit.
           eg: 3x3 gridA, with a delta col: -3, row: 2 returns a new grid 3 rows x 6 cols
+
+        - assumptions: All grids used by this module should be rectangular
     */
 
     var measure = function (startAddress, gridA, gridB) {
@@ -36,21 +39,19 @@ define(
     };
 
     var rowFill = function (grid, amount, generator) {
-      var nuRows = Arr.map(new Array(amount), function (row) {
-        return Arr.map(grid[0], function (cell) {
-          return generator.cell();
-        });
-      });
-      return grid.concat(nuRows);
+      return grid.concat(Util.repeat(amount, function (row) {
+        return fill(row, generator);
+      }));
     };
 
     var colFill = function (grid, amount, generator) {
       return Arr.map(grid, function (row) {
-        var fill = Arr.map(new Array(amount), function () {
-          return generator.cell();
-        });
-        return row.concat(fill);
+        return row.concat(fill(Util.range(0, amount), generator));
       });
+    };
+
+    var fill = function (row, generator) {
+      return Arr.map(row, generator.cell);
     };
 
     var abs = function (negInt) {
