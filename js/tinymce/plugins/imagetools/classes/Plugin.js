@@ -110,7 +110,7 @@ define("tinymce/imagetoolsplugin/Plugin", [
 					editor.$(img).css({
 						width: size.w,
 						height: size.h
-					});
+					}).removeAttr('data-mce-style');
 				}
 
 				width = img.width;
@@ -206,7 +206,7 @@ define("tinymce/imagetoolsplugin/Plugin", [
 				selectedImage = getSelectedImage();
 				id = createId();
 				blobCache = editor.editorUpload.blobCache;
-				base64 = dataUri;
+				base64 = URI.parseDataUri(dataUri).data;
 
 				blobInfo = blobCache.create(id, blob, base64);
 				blobCache.add(blobInfo);
@@ -220,9 +220,8 @@ define("tinymce/imagetoolsplugin/Plugin", [
 					editor.$(selectedImage).on('load', imageLoadedHandler);
 
 					editor.$(selectedImage).attr({
-						src: blobInfo.blobUri(),
-						"data-mce-src": blobInfo.blobUri()
-					});
+						src: blobInfo.blobUri()
+					}).removeAttr('data-mce-src');
 				});
 
 				return blobInfo;
