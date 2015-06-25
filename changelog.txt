@@ -1,4 +1,4 @@
-Version 4.2.0 (2015-06-xx)
+Version 4.2.0 (2015-06-25)
 	Added new flat default skin to make the UI more modern.
 	Added new imagetools plugin, lets you crop/resize and apply filters to images.
 	Added new contextual toolbars support to the API lets you add floating toolbars for specific CSS selectors.
