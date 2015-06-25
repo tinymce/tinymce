@@ -11,8 +11,18 @@ define(
   ],
 
   function (Arr, Fun, Result, Array, Error, Math) {
+    /*
+      Fitment, is a module used to ensure that the Inserted table (gridB) can fit squareley within the Host table (gridA).
+        - measure returns a delta of rows and cols, eg:
+            - col: 3 means gridB can fit with 3 spaces to spare
+            - row: -5 means gridB can needs 5 more rows to completely fit into gridA
+            - col: 0, row: 0 depics perfect fitment
+
+        - tailor, requires a delta and returns grid that is built to match the delta
+          eg: 3x3 gridA, with a delta col: -3, row: 2 returns a new grid 3 rows x 6 cols
+    */
+
     var measure = function (startAddress, gridA, gridB) {
-      // TODO: avoid throw in production code
       if(startAddress.row() >= gridA.length || startAddress.column() > gridA[0].length) return Result.error('invalid start address out of table bounds, row: ' + startAddress.row() + ', column: ' + startAddress.column());
       var rowRemainder = gridA.slice(startAddress.row());
       var colRemainder = rowRemainder[0].slice(startAddress.column());
