@@ -124,6 +124,7 @@ define("tinymce/ui/Checkbox", [
 			});
 
 			self.state.on('change:checked change:value', function(e) {
+				self.fire('change');
 				checked(e.value);
 			});
 
