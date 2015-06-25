@@ -8,7 +8,6 @@ define(
   ],
 
   function (Fun, Option, Warehouse) {
-    // Note, something is considered within the selection if it overlaps any part of the bounds. It does not have to be completely within it.
     var inSelection = function (bounds, detail) {
       var leftEdge = detail.column();
       var rightEdge = detail.column() + detail.colspan() - 1;
@@ -24,7 +23,7 @@ define(
     // Note, something is *within* if it is completely contained within the bounds.
     var isWithin = function (bounds, detail) {
       return (
-        detail.column() >= bounds.startCol() && 
+        detail.column() >= bounds.startCol() &&
         (detail.column() + detail.colspan() - 1) <= bounds.finishCol() &&
         detail.row() >= bounds.startRow() &&
         (detail.row() + detail.rowspan() - 1) <= bounds.finishRow()
@@ -43,7 +42,7 @@ define(
 
       return isRect ? Option.some(bounds) : Option.none();
     };
-        
+
 
     return {
       inSelection: inSelection,
