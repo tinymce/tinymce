@@ -46,7 +46,7 @@ define(
             CellSelection.selectRange(container, boxes, start, finish.getOrDie());
 
             // stop the browser from creating a big text selection. Doesn't work in all cases, but it's nice when it does
-            startSelection.fold(bridge.clearSelection, bridge.setWinSelection);
+            startSelection.fold(bridge.clearSelection, bridge.setSelection);
           }
         });
       };
@@ -57,7 +57,7 @@ define(
           // if we have a multi cell selection, set the cursor back to collapsed at the start point
           CellSelection.retrieve(container).each(function (cells) {
             if (cells.length > 1) {
-              startSelection.fold(bridge.clearSelection, bridge.setWinSelection);
+              startSelection.fold(bridge.clearSelection, bridge.setSelection);
             }
           });
           // clear state
