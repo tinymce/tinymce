@@ -391,5 +391,21 @@ define("tinymce/util/URI", [
 		}
 	};
 
+	URI.parseDataUri = function(uri) {
+		var type, matches;
+
+		uri = decodeURIComponent(uri).split(',');
+
+		matches = /data:([^;]+)/.exec(uri[0]);
+		if (matches) {
+			type = matches[1];
+		}
+
+		return {
+			type: type,
+			data: uri[1]
+		};
+	};
+
 	return URI;
 });
