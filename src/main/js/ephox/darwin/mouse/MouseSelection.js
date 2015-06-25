@@ -10,9 +10,6 @@ define(
   ],
 
   function (CellSelection, Fun, Option, SelectorFind, setTimeout) {
-    var LEFT_EVENT = 0;
-    var LEFT_PRESSED = 1;
-
     return function (bridge, container) {
       var cursor = Option.none();
       var startSelection = Option.none();
@@ -31,19 +28,12 @@ define(
 
       /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
       var mousedown = function (event) {
-        // do nothing if this is not the left button
-        if (event.raw().button !== LEFT_EVENT) return;
-
         cursor = SelectorFind.closest(event.target(), 'td,th');
         cursor.each(beginTableSelection);
       };
 
       /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
       var mouseover = function (event) {
-        // do nothing if the left button is not pressed (works around weird chrome border collapse issue where we never receive mouse up)
-        // and yes, that's only one & symbol (bitwise and)
-        if (event.raw().buttons & LEFT_PRESSED === 0) return;
-
         cursor.each(function (start) {
           CellSelection.clear(container);
           var finish = SelectorFind.closest(event.target(), 'td,th');
