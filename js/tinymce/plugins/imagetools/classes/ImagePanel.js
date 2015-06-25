@@ -158,6 +158,13 @@ define("tinymce/imagetoolsplugin/ImagePanel", [
 					w: w,
 					h: h
 				});
+
+				this.cropRect.setViewPortRect({
+					x: x,
+					y: y,
+					w: w,
+					h: h
+				});
 			}
 		},
 
