@@ -373,8 +373,8 @@ define("tinymce/dom/ControlSelection", [
 				}
 			}
 
-			// Ignore all events while resizing
-			if (resizeStarted) {
+			// Ignore all events while resizing or if the editor instance was removed
+			if (resizeStarted || editor.removed) {
 				return;
 			}
 
@@ -551,7 +551,15 @@ define("tinymce/dom/ControlSelection", [
 				}
 			}
 
-			editor.on('nodechange ResizeEditor ResizeWindow', updateResizeRect);
+			editor.on('nodechange ResizeEditor ResizeWindow', function(e) {
+				if (window.requestAnimationFrame) {
+					window.requestAnimationFrame(function() {
+						updateResizeRect(e);
+					});
+				} else {
+					updateResizeRect(e);
+				}
+			});
 
 			// Update resize rect while typing in a table
 			editor.on('keydown keyup', function(e) {

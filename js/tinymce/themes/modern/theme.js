@@ -408,6 +408,10 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		function reposition(match) {
 			var relPos, panelRect, elementRect, contentAreaRect, panel, relRect, testPositions;
 
+			if (editor.removed) {
+				return;
+			}
+
 			if (!match || !match.toolbar.panel) {
 				hideAllFloatingPanels();
 				return;
@@ -475,7 +479,15 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		}
 
 		function repositionHandler() {
-			reposition(findFrontMostMatch(editor.selection.getNode()));
+			function execute() {
+				reposition(findFrontMostMatch(editor.selection.getNode()));
+			}
+
+			if (window.requestAnimationFrame) {
+				window.requestAnimationFrame(execute);
+			} else {
+				execute();
+			}
 		}
 
 		function bindScrollEvent() {
