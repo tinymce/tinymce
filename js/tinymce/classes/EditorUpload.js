@@ -23,17 +23,27 @@ define("tinymce/EditorUpload", [
 	return function(editor) {
 		var blobCache = new BlobCache();
 
-		function regExpEscape(str) {
-			return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-		}
-
+		// Replaces attribute values faster by not using regexps and also avoids FF regexp to big issue
 		function replaceAttribValue(content, name, targetValue, newValue) {
-			return content.replace(
-				new RegExp(name + '="' + regExpEscape(targetValue) + '"', 'g'),
-				function() {
-					return name + '="' + newValue + '"';
+			var index = 0, end, search;
+
+			search = name + '="' + targetValue;
+
+			do {
+				index = content.indexOf(search, index);
+
+				if (index !== -1) {
+					end = content.indexOf('"', index + search.length);
+					if (end !== -1) {
+						content = content.substring(0, index + name.length + 2) + newValue + content.substring(end);
+						end = end - targetValue.length + newValue.length;
+					}
+
+					index = end;
 				}
-			);
+			} while (index !== -1);
+
+			return content;
 		}
 
 		function replaceImageUrl(content, targetUrl, replacementUrl) {
