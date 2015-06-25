@@ -23,23 +23,16 @@ define("tinymce/EditorUpload", [
 	return function(editor) {
 		var blobCache = new BlobCache();
 
-		// Replaces attribute values faster by not using regexps and also avoids FF regexp to big issue
-		function replaceAttribValue(content, name, targetValue, newValue) {
-			var index = 0, end, search;
-
-			search = name + '="' + targetValue;
+		// Replaces strings without regexps to avoid FF regexp to big issue
+		function replaceString(content, search, replace) {
+			var index = 0;
 
 			do {
 				index = content.indexOf(search, index);
 
 				if (index !== -1) {
-					end = content.indexOf('"', index + search.length);
-					if (end !== -1) {
-						content = content.substring(0, index + name.length + 2) + newValue + content.substring(end);
-						end = end - targetValue.length + newValue.length;
-					}
-
-					index = end;
+					content = content.substring(0, index) + replace + content.substr(index + search.length);
+					index += replace.length - search.length + 1;
 				}
 			} while (index !== -1);
 
@@ -47,8 +40,8 @@ define("tinymce/EditorUpload", [
 		}
 
 		function replaceImageUrl(content, targetUrl, replacementUrl) {
-			content = replaceAttribValue(content, "src", targetUrl, replacementUrl);
-			content = replaceAttribValue(content, "data-mce-src", targetUrl, replacementUrl);
+			content = replaceString(content, 'src="' + targetUrl + '"', 'src="' + replacementUrl + '"');
+			content = replaceString(content, 'data-mce-src="' + targetUrl + '"', 'data-mce-src="' + replacementUrl + '"');
 
 			return content;
 		}
