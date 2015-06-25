@@ -151,17 +151,21 @@ define("tinymce/imagetoolsplugin/Plugin", [
 		}
 
 		function proxyImage(img) {
-			var proxyUrl;
+			var src = img.src;
 
 			if (isLocalImage(img)) {
 				return img;
 			}
 
-			proxyUrl = editor.settings.imagetools_proxy;
-			proxyUrl += (proxyUrl.indexOf('?') === -1 ? '?' : '&') + 'url=' + encodeURIComponent(img.src);
-
-			img = new Image();
-			img.src = proxyUrl;
+			if (isCorsImage(img)) {
+				img = new Image();
+				img.crossOrigin = "anonymous";
+				img.src = src;
+			} else {
+				img = new Image();
+				src = editor.settings.imagetools_proxy;
+				img.src += (src.indexOf('?') === -1 ? '?' : '&') + 'url=' + encodeURIComponent(img.src);
+			}
 
 			return img;
 		}
@@ -249,7 +253,7 @@ define("tinymce/imagetoolsplugin/Plugin", [
 			var img = getSelectedImage(), originalSize = getNaturalImageSize(img);
 
 			if (img) {
-				Dialog.edit(img.src).then(function(blob) {
+				Dialog.edit(proxyImage(img)).then(function(blob) {
 					return new Promise(function(resolve) {
 						Conversions.blobToImage(blob).then(function(newImage) {
 							var newSize = getNaturalImageSize(newImage);
@@ -260,6 +264,7 @@ define("tinymce/imagetoolsplugin/Plugin", [
 								}
 							}
 
+							URL.revokeObjectURL(newImage.src);
 							resolve(blob);
 						});
 					});
