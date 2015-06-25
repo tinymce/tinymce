@@ -100,7 +100,7 @@ define("tinymce/file/Uploader", [
 				var handler = settings.handler, queue, index = 0, uploadedIdMap = {};
 
 				// If no url is configured then resolve
-				if (!settings.url) {
+				if (!settings.url && handler === defaultHandler) {
 					resolve([]);
 					return;
 				}
