@@ -51,12 +51,11 @@ define(
     };
 
     var merge = function (startAddress, gridA, gridB, generator, comparator) {
-      var delta = Fitment.measure(startAddress, gridA, gridB);
-      var fitted = Fitment.tailor(startAddress, gridA, delta, generator);
-      var merged = fitted.map(function (fittedGrid) {
+      var result = Fitment.measure(startAddress, gridA, gridB);
+      return result.map(function (delta) {
+        var fittedGrid = Fitment.tailor(startAddress, gridA, delta, generator);
         return mergeTables(startAddress, fittedGrid, gridB, generator, comparator);
       });
-      return merged;
     };
 
     return {

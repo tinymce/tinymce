@@ -13,7 +13,7 @@ define(
       // The last step, merge cells from gridB into gridA
       var nuGrid = TableMerge.merge(startAddress, gridA(), gridB(), generator(), comparator);
       nuGrid.fold(function (err) {
-        assert.eq(expected, err);
+        assert.eq(expected.error, err);
       }, function (grid) {
         assert.eq(expected, grid);
       });
@@ -28,10 +28,10 @@ define(
     var suite = function (label, startAddress, gridA, gridB, generator, comparator, expectedMeasure, expectedTailor, expectedMergeGrids) {
       console.log(label);
       Fitment.measureTest(expectedMeasure, startAddress, gridA, gridB, Fun.noop);
-      Fitment.tailorTest(expectedTailor, startAddress, gridA, Result.value({
+      Fitment.tailorTest(expectedTailor, startAddress, gridA, {
         rowDelta: Fun.constant(expectedMeasure.rowDelta),
         colDelta: Fun.constant(expectedMeasure.colDelta)
-      }), generator);
+      }, generator);
       mergeTest(expectedMergeGrids, startAddress, gridA, gridB, generator, comparator);
     };
 

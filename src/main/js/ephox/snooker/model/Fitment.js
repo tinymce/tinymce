@@ -13,7 +13,7 @@ define(
   function (Arr, Fun, Result, Array, Error, Math) {
     var measure = function (startAddress, gridA, gridB) {
       // TODO: avoid throw in production code
-      if(startAddress.row() >= gridA.length || startAddress.column() > gridA[0].length) return Result.error('invalid startAddress out of table bounds');
+      if(startAddress.row() >= gridA.length || startAddress.column() > gridA[0].length) return Result.error('invalid start address out of table bounds, row: ' + startAddress.row() + ', column: ' + startAddress.column());
       var rowRemainder = gridA.slice(startAddress.row());
       var colRemainder = rowRemainder[0].slice(startAddress.column());
 
@@ -49,14 +49,12 @@ define(
     };
 
     var tailor = function (startAddress, gridA, delta, generator) {
-      return delta.map(function (d) {
-        var fillCols = d.colDelta() < 0 ? colFill : Fun.identity;
-        var fillRows = d.rowDelta() < 0 ? rowFill : Fun.identity;
+      var fillCols = delta.colDelta() < 0 ? colFill : Fun.identity;
+      var fillRows = delta.rowDelta() < 0 ? rowFill : Fun.identity;
 
-        var modifiedCols = fillCols(gridA, abs(d.colDelta()), generator);
-        var tailoredGrid = fillRows(modifiedCols, abs(d.rowDelta()), generator);
-        return tailoredGrid;
-      });
+      var modifiedCols = fillCols(gridA, abs(delta.colDelta()), generator);
+      var tailoredGrid = fillRows(modifiedCols, abs(delta.rowDelta()), generator);
+      return tailoredGrid;
     };
 
     return {

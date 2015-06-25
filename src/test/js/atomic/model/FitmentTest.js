@@ -61,6 +61,11 @@ test(
       colDelta: -1
      }, start(0, 2), gridA, gridB, Fun.noop, Fun.noop);
 
+    // the starting position is invalid, it should break expect an error
+    check(measureTest, {
+      error: 'invalid start address out of table bounds, row: 10, column: 66'
+     }, start(10, 66), gridA, gridB, Fun.noop, Fun.noop);
+
     check(
       tailorTest,
       [
@@ -138,6 +143,11 @@ test(
         ['d', 'e', 'h(3)_2', 'h(4)_3'],
         ['g', 'h', 'i', '?_2']
       ], start(0, 2), gridA, gridB, generator, Fun.tripleEquals);
+
+    check(
+      mergeGridsTest, {
+        error: 'invalid start address out of table bounds, row: 8, column: 1'
+      }, start(8, 1), gridA, gridB, generator, Fun.tripleEquals);
 
   }
 );
