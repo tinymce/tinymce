@@ -36,6 +36,10 @@ define(
         WindowSelection.setExact(win, start, soffset, finish, foffset);
       };
 
+      var setWinSelection = function (sel) {
+        setSelection(sel.start(), sel.soffset(), sel.finish(), sel.foffset());
+      };
+
       var getInnerHeight = function () {
         return win.innerHeight;
       };
@@ -56,6 +60,7 @@ define(
         situsFromPoint: situsFromPoint,
         clearSelection: clearSelection,
         setSelection: setSelection,
+        setWinSelection: setWinSelection,
         getInnerHeight: getInnerHeight,
         getScrollY: getScrollY,
         scrollBy: scrollBy
