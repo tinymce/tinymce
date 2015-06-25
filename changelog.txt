@@ -2,6 +2,7 @@ Version 4.2.1 (2015-06-xx)
 	Fixed bug where back/forward buttons in the browser would render blob images as broken images.
 	Fixed bug where Firefox would throw regexp to big error when replacing huge base64 chunks.
 	Fixed bug rendering issues with resize and context toolbars not being placed properly until next animation frame.
+	Fixed so the imagetools dialog is adaptive for smaller screen sizes.
 Version 4.2.0 (2015-06-25)
 	Added new flat default skin to make the UI more modern.
 	Added new imagetools plugin, lets you crop/resize and apply filters to images.
