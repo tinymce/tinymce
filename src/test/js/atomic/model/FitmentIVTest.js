@@ -4,6 +4,7 @@ test(
   [
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Result',
     'ephox.snooker.api.Structs',
     'ephox.snooker.test.Fitment',
     'ephox.snooker.test.TableMerge',
@@ -12,7 +13,7 @@ test(
     'global!Math'
   ],
 
-  function (Arr, Fun, Structs, Fitment, TableMerge, Array, Date, Math) {
+  function (Arr, Fun, Result, Structs, Fitment, TableMerge, Array, Date, Math) {
     // Note: cycles 500, min 1, max 200 ~ 22secs
     var CYCLES = 500;
     var GRID_MIN = 1;   // 1x1 grid is the min
@@ -88,7 +89,6 @@ test(
         rowDelta: Fun.constant(rowDelta),
         colDelta: Fun.constant(colDelta)
       };
-
     };
 
     var measureIVTest = function () {
@@ -154,7 +154,7 @@ test(
       var test = Fun.curry(tailorIVTest, {
         rows: expectedRows,
         cols: expectedCols
-      }, start, gridSpecA.grid, delta, generator);
+      }, start, gridSpecA.grid, Result.value(delta), generator);
 
       return {
         params: info,

@@ -26,17 +26,20 @@ define(
       // The result is a new grid that will perfectly fit gridB into gridA
       Fitment.tailor(startAddress, gridA(), delta, generator()).fold(function (err) {
         assert.eq(expected, err);
-      }, function (tailored) {
-        assert.eq(expected, tailored);
+      }, function (tailoredGrid) {
+        assert.eq(expected, tailoredGrid);
       });
     };
 
     var tailorIVTest = function (expected, startAddress, gridA, delta, generator) {
-      var tux = Fitment.tailor(startAddress, gridA(), delta, generator());
-      var rows = tux.length;
-      var cols = tux[0].length;
-      assert.eq(expected.rows, rows);
-      assert.eq(expected.cols, cols);
+      Fitment.tailor(startAddress, gridA(), delta, generator()).fold(function (err) {
+        assert.eq(expected, err);
+      }, function (tailoredGrid) {
+        var rows = tailoredGrid.length;
+        var cols = tailoredGrid[0].length;
+        assert.eq(expected.rows, rows);
+        assert.eq(expected.cols, cols);
+      });
     };
 
     return {
