@@ -1412,6 +1412,7 @@ define("tinymce/util/Quirks", [
 		 * a click event when a contentEditable is focused. This function fakes click events
 		 * by using touchstart/touchend and measuring the time and distance travelled.
 		 */
+		/*
 		function touchClickEvent() {
 			editor.on('touchstart', function(e) {
 				var elm, time, startTouch, changedTouches;
@@ -1461,6 +1462,7 @@ define("tinymce/util/Quirks", [
 				});
 			});
 		}
+		*/
 
 		/**
 		 * WebKit has a bug where it will allow forms to be submitted if they are inside a contentEditable element.
@@ -1531,7 +1533,7 @@ define("tinymce/util/Quirks", [
 			blockFormSubmitInsideEditor();
 			disableBackspaceIntoATable();
 			removeAppleInterchangeBrs();
-			touchClickEvent();
+			//touchClickEvent();
 
 			// iOS
 			if (Env.iOS) {
