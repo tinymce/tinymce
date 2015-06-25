@@ -8,10 +8,11 @@ define(
     'ephox.scullion.Cell',
     'ephox.scullion.Contracts',
     'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Css'
+    'ephox.sugar.api.Css',
+    'global!parseInt'
   ],
 
-  function (Arr, Fun, Option, Cell, Contracts, Attr, Css) {
+  function (Arr, Fun, Option, Cell, Contracts, Attr, Css, parseInt) {
     var elementToData = function (element) {
       var colspan = Attr.has(element, 'colspan') ? parseInt(Attr.get(element, 'colspan'), 10) : 1;
       var rowspan = Attr.has(element, 'rowspan') ? parseInt(Attr.get(element, 'rowspan'), 10) : 1;

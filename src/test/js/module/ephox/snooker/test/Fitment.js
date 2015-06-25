@@ -30,7 +30,7 @@ define(
     };
 
     var tailorIVTest = function (expected, startAddress, gridA, delta, generator) {
-      var tailoredGrid = Fitment.tailor(startAddress, gridA(), delta, generator())
+      var tailoredGrid = Fitment.tailor(startAddress, gridA(), delta, generator());
       var rows = tailoredGrid.length;
       var cols = tailoredGrid[0].length;
       assert.eq(expected.rows, rows);

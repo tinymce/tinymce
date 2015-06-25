@@ -121,17 +121,19 @@ define(
       return outcome(newGrid, Option.from(unmergable[0]));
     };
 
-    var pasteCells = function (grid, mergable, comparator, genWrappers) {
+    var pasteCells = function (grid, pasteDetails, comparator, genWrappers) {
       var gridify = function (table, generators) {
         var list = DetailsList.fromTable(table);
         var wh = Warehouse.generate(list);
         return Transitions.toGrid(wh, generators);
       };
-      var gridB = gridify(mergable.clipboard(), mergable.generators());
-      var startAddress = Structs.address(mergable.row(), mergable.column());
-      var mergedGrid = TableMerge.merge(startAddress, grid, gridB, mergable.generators(), comparator);
-      return mergedGrid.bind(function (nuGrid) {
-        var cursor = elementFromGrid(nuGrid, mergable.row(), mergable.column());
+      var gridB = gridify(pasteDetails.clipboard(), pasteDetails.generators());
+      var startAddress = Structs.address(pasteDetails.row(), pasteDetails.column());
+      var mergedGrid = TableMerge.merge(startAddress, grid, gridB, pasteDetails.generators(), comparator);
+      return mergedGrid.fold(function () {
+        return outcome(grid, Option.some(pasteDetails.element()));
+      }, function (nuGrid) {
+        var cursor = elementFromGrid(nuGrid, pasteDetails.row(), pasteDetails.column());
         return outcome(nuGrid, cursor);
       });
     };

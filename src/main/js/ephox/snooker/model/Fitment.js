@@ -26,7 +26,7 @@ define(
     */
 
     var measure = function (startAddress, gridA, gridB) {
-      if(startAddress.row() >= gridA.length || startAddress.column() > gridA[0].length) return Result.error('invalid start address out of table bounds, row: ' + startAddress.row() + ', column: ' + startAddress.column());
+      if (startAddress.row() >= gridA.length || startAddress.column() > gridA[0].length) return Result.error('invalid start address out of table bounds, row: ' + startAddress.row() + ', column: ' + startAddress.column());
       var rowRemainder = gridA.slice(startAddress.row());
       var colRemainder = rowRemainder[0].slice(startAddress.column());
 
@@ -38,9 +38,13 @@ define(
       });
     };
 
+    var fill = function (cells, generator) {
+      return Arr.map(cells, generator.cell);
+    };
+
     var rowFill = function (grid, amount, generator) {
-      return grid.concat(Util.repeat(amount, function (row) {
-        return fill(row, generator);
+      return grid.concat(Util.repeat(amount, function (_row) {
+        return fill(grid[0], generator);
       }));
     };
 
@@ -50,21 +54,12 @@ define(
       });
     };
 
-    var fill = function (row, generator) {
-      return Arr.map(row, generator.cell);
-    };
-
-    var abs = function (negInt) {
-      var posInt = Math.abs(negInt);
-      return posInt;
-    };
-
     var tailor = function (startAddress, gridA, delta, generator) {
       var fillCols = delta.colDelta() < 0 ? colFill : Fun.identity;
       var fillRows = delta.rowDelta() < 0 ? rowFill : Fun.identity;
 
-      var modifiedCols = fillCols(gridA, abs(delta.colDelta()), generator);
-      var tailoredGrid = fillRows(modifiedCols, abs(delta.rowDelta()), generator);
+      var modifiedCols = fillCols(gridA, Math.abs(delta.colDelta()), generator);
+      var tailoredGrid = fillRows(modifiedCols, Math.abs(delta.rowDelta()), generator);
       return tailoredGrid;
     };
 
