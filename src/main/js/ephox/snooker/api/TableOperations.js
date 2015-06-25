@@ -31,6 +31,12 @@ define(
 
     var outcome = Struct.immutable('grid', 'cursor');
 
+    var elementFromGrid = function (grid, row, column) {
+      return findIn(grid, row, column).orThunk(function () {
+        return findIn(grid, 0, 0);
+      });
+    };
+
     var findIn = function (grid, row, column) {
       return Option.from(grid[row]).bind(function (r) {
         return Option.from(r[column]);
@@ -90,26 +96,15 @@ define(
     };
 
     var eraseColumn = function (grid, detail, comparator, _genWrappers) {
-      var getNext = function (g) {
-        return findIn(g, detail.row(), detail.column()).orThunk(function () {
-          return findIn(g, 0, 0);
-        });
-      };
-
       var newGrid = ModificationOperations.deleteColumnAt(grid, detail.column());
-      return outcome(newGrid, getNext(newGrid));
+      var cursor = elementFromGrid(newGrid, detail.row(), detail.column());
+      return outcome(newGrid, cursor);
     };
 
     var eraseRow = function (grid, detail, comparator, _genWrappers) {
-      var getNext = function (g) {
-        return findIn(g, detail.row(), detail.column()).orThunk(function () {
-          return findIn(g, 0, 0);
-        });
-      };
-
       var newGrid = ModificationOperations.deleteRowAt(grid, detail.row());
-
-      return outcome(newGrid, getNext(newGrid));
+      var cursor = elementFromGrid(newGrid, detail.row(), detail.column());
+      return outcome(newGrid, cursor);
     };
 
     var mergeCells = function (grid, mergable, comparator, _genWrappers) {
@@ -136,8 +131,8 @@ define(
       var startAddress = Structs.address(mergable.row(), mergable.column());
       var mergedGrid = TableMerge.merge(startAddress, grid, gridB, mergable.generators(), comparator);
       return mergedGrid.bind(function (nuGrid) {
-        var cursor = mergable.element();
-        return outcome(nuGrid, Option.some(cursor));
+        var cursor = elementFromGrid(nuGrid, mergable.row(), mergable.column());
+        return outcome(nuGrid, cursor);
       });
     };
 
