@@ -44,7 +44,31 @@ define("tinymce/imagetoolsplugin/Dialog", [
 		var win, undoStack = new UndoStack(), mainPanel, filtersPanel, tempState,
 			cropPanel, resizePanel, flipRotatePanel, imagePanel, sidePanel, mainViewContainer,
 			invertPanel, brightnessPanel, huePanel, saturatePanel, contrastPanel, grayscalePanel,
-			sepiaPanel, colorizePanel, sharpenPanel, embossPanel, gammaPanel, exposurePanel, panels;
+			sepiaPanel, colorizePanel, sharpenPanel, embossPanel, gammaPanel, exposurePanel, panels,
+			width, height, ratioW, ratioH;
+
+		function recalcSize(e) {
+			var widthCtrl, heightCtrl, newWidth, newHeight;
+
+			widthCtrl = win.find('#w')[0];
+			heightCtrl = win.find('#h')[0];
+
+			newWidth = parseInt(widthCtrl.value(), 10);
+			newHeight = parseInt(heightCtrl.value(), 10);
+
+			if (win.find('#constrain')[0].checked() && width && height && newWidth && newHeight) {
+				if (e.control.settings.name == 'w') {
+					newHeight = Math.round(newWidth * ratioW);
+					heightCtrl.value(newHeight);
+				} else {
+					newWidth = Math.round(newHeight * ratioH);
+					widthCtrl.value(newWidth);
+				}
+			}
+
+			width = newWidth;
+			height = newHeight;
+		}
 
 		function floatToPercent(value) {
 			return Math.round(value * 100) + '%';
@@ -54,6 +78,11 @@ define("tinymce/imagetoolsplugin/Dialog", [
 			win.find('#undo').disabled(!undoStack.canUndo());
 			win.find('#redo').disabled(!undoStack.canRedo());
 			win.statusbar.find('#save').disabled(!undoStack.canUndo());
+		}
+
+		function disableUndoRedo() {
+			win.find('#undo').disabled(true);
+			win.find('#redo').disabled(true);
 		}
 
 		function displayState(state) {
@@ -119,6 +148,7 @@ define("tinymce/imagetoolsplugin/Dialog", [
 			displayState(currentState);
 			destroyState(tempState);
 			switchPanel(mainPanel)();
+			updateButtonUndoStates();
 		}
 
 		function applyTempState() {
@@ -185,16 +215,21 @@ define("tinymce/imagetoolsplugin/Dialog", [
 		}
 
 		function createFilterPanel(title, filter) {
-			function apply() {
-				action(filter)();
-				cancel();
-			}
-
 			return createPanel([
 				{text: 'Back', onclick: cancel},
 				{type: 'spacer', flex: 1},
-				{text: 'Apply', subtype: 'primary', onclick: apply}
-			]).hide();
+				{text: 'Apply', subtype: 'primary', onclick: applyTempState}
+			]).hide().on('show', function() {
+				disableUndoRedo();
+
+				filter(currentState.blob).then(function(blob) {
+					var newTempState = createState(blob);
+
+					displayState(newTempState);
+					destroyState(tempState);
+					tempState = newTempState;
+				});
+			});
 		}
 
 		function createVariableFilterPanel(title, filter, value, min, max) {
@@ -225,6 +260,7 @@ define("tinymce/imagetoolsplugin/Dialog", [
 				{text: 'Apply', subtype: 'primary', onclick: applyTempState}
 			]).hide().on('show', function() {
 				this.find('slider').value(value);
+				disableUndoRedo();
 			});
 		}
 
@@ -263,6 +299,7 @@ define("tinymce/imagetoolsplugin/Dialog", [
 				{text: 'Apply', subtype: 'primary', onclick: applyTempState}
 			]).hide().on('show', function() {
 				win.find('#r,#g,#b').value(1);
+				disableUndoRedo();
 			});
 		}
 
@@ -272,13 +309,21 @@ define("tinymce/imagetoolsplugin/Dialog", [
 			{text: 'Apply', subtype: 'primary', onclick: crop}
 		]).hide().on('show hide', function(e) {
 			imagePanel.toggleCropRect(e.type == 'show');
-		});
+		}).on('show', disableUndoRedo);
+
+		function toggleConstrain(e) {
+			if (e.control.value() === true) {
+				ratioW = height / width;
+				ratioH = width / height;
+			}
+		}
 
 		resizePanel = createPanel([
 			{text: 'Back', onclick: cancel},
 			{type: 'spacer', flex: 1},
-			{type: 'textbox', name: 'w', label: 'Width', size: 4},
-			{type: 'textbox', name: 'h', label: 'Height', size: 4},
+			{type: 'textbox', name: 'w', label: 'Width', size: 4, onkeyup: recalcSize},
+			{type: 'textbox', name: 'h', label: 'Height', size: 4, onkeyup: recalcSize},
+			{type: 'checkbox', name: 'constrain', text: 'Constrain proportions', checked: true, onchange: toggleConstrain},
 			{type: 'spacer', flex: 1},
 			{text: 'Apply', subtype: 'primary', onclick: 'submit'}
 		]).hide().on('submit', function(e) {
@@ -289,7 +334,7 @@ define("tinymce/imagetoolsplugin/Dialog", [
 
 			action(ImageTools.resize, width, height)();
 			cancel();
-		});
+		}).on('show', disableUndoRedo);
 
 		flipRotatePanel = createPanel([
 			{text: 'Back', onclick: cancel},
@@ -300,7 +345,7 @@ define("tinymce/imagetoolsplugin/Dialog", [
 			{icon: 'rotateright', tooltip: 'Rotate right', onclick: tempAction(ImageTools.rotate, 90)},
 			{type: 'spacer', flex: 1},
 			{text: 'Apply', subtype: 'primary', onclick: applyTempState}
-		]).hide();
+		]).hide().on('show', disableUndoRedo);
 
 		invertPanel = createFilterPanel("Invert", Filters.invert);
 		sharpenPanel = createFilterPanel("Sharpen", Filters.sharpen);
@@ -417,8 +462,13 @@ define("tinymce/imagetoolsplugin/Dialog", [
 		updateButtonUndoStates();
 
 		imagePanel.on('load', function() {
-			win.find('#w').value(imagePanel.imageSize().w);
-			win.find('#h').value(imagePanel.imageSize().h);
+			width = imagePanel.imageSize().w;
+			height = imagePanel.imageSize().h;
+			ratioW = height / width;
+			ratioH = width / height;
+
+			win.find('#w').value(width);
+			win.find('#h').value(height);
 		});
 	}
 
