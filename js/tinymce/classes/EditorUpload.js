@@ -71,7 +71,11 @@ define("tinymce/EditorUpload", [
 
 					if (image) {
 						replaceUrlInUndoStack(image.src, uploadInfo.url);
-						image.src = uploadInfo.url;
+
+						editor.$(image).attr({
+							src: uploadInfo.url,
+							'data-mce-src': editor.convertURL(uploadInfo.url, 'src')
+						});
 					}
 
 					return {
@@ -85,6 +89,9 @@ define("tinymce/EditorUpload", [
 				}
 
 				return result;
+			}, function() {
+				// Silent
+				// TODO: Maybe execute some failure callback here?
 			});
 		}
 
