@@ -8,13 +8,14 @@ define(
     'ephox.scullion.Cell',
     'ephox.scullion.Contracts',
     'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Css'
+    'ephox.sugar.api.Css',
+    'global!parseInt'
   ],
 
-  function (Arr, Fun, Option, Cell, Contracts, Attr, Css) {
+  function (Arr, Fun, Option, Cell, Contracts, Attr, Css, parseInt) {
     var elementToData = function (element) {
-      var colspan = Attr.has(element, 'colspan') ? parseInt(Attr.get(element, 'colspan')) : 1;
-      var rowspan = Attr.has(element, 'rowspan') ? parseInt(Attr.get(element, 'rowspan')) : 1;
+      var colspan = Attr.has(element, 'colspan') ? parseInt(Attr.get(element, 'colspan'), 10) : 1;
+      var rowspan = Attr.has(element, 'rowspan') ? parseInt(Attr.get(element, 'rowspan'), 10) : 1;
       return {
         element: Fun.constant(element),
         colspan: Fun.constant(colspan),
@@ -77,7 +78,7 @@ define(
           if (position.get().isNone()) position.set(Option.some(cell));
           return cell;
         };
-      
+
         var replaceOrInit = function (element, comparator) {
           return find(element, comparator).fold(function () {
             return makeNew(element);
@@ -109,7 +110,7 @@ define(
           Css.remove(raw, 'width');
           Css.remove(cell, 'width');
           return raw;
-        };       
+        };
       };
 
       return {

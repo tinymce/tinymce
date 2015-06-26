@@ -7,9 +7,14 @@ define(
     'ephox.perhaps.Option',
     'ephox.scullion.Struct',
     'ephox.snooker.api.Generators',
+    'ephox.snooker.api.Structs',
     'ephox.snooker.api.TableContent',
     'ephox.snooker.api.TableLookup',
+    'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.RunOperation',
+    'ephox.snooker.model.TableMerge',
+    'ephox.snooker.model.Transitions',
+    'ephox.snooker.model.Warehouse',
     'ephox.snooker.operate.MergingOperations',
     'ephox.snooker.operate.ModificationOperations',
     'ephox.snooker.operate.TransformOperations',
@@ -18,13 +23,19 @@ define(
     'global!parseInt'
   ],
 
-  function (Arr, Fun, Option, Struct, Generators, TableContent, TableLookup, RunOperation, MergingOperations, ModificationOperations, TransformOperations, Adjustments, Remove, parseInt) {
+  function (Arr, Fun, Option, Struct, Generators, Structs, TableContent, TableLookup, DetailsList, RunOperation, TableMerge, Transitions, Warehouse, MergingOperations, ModificationOperations, TransformOperations, Adjustments, Remove, parseInt) {
     var prune = function (table) {
       var cells = TableLookup.cells(table);
       if (cells.length === 0) Remove.remove(table);
     };
 
     var outcome = Struct.immutable('grid', 'cursor');
+
+    var elementFromGrid = function (grid, row, column) {
+      return findIn(grid, row, column).orThunk(function () {
+        return findIn(grid, 0, 0);
+      });
+    };
 
     var findIn = function (grid, row, column) {
       return Option.from(grid[row]).bind(function (r) {
@@ -85,26 +96,15 @@ define(
     };
 
     var eraseColumn = function (grid, detail, comparator, _genWrappers) {
-      var getNext = function (g) {
-        return findIn(g, detail.row(), detail.column()).orThunk(function () {
-          return findIn(g, 0, 0);
-        });
-      };
-
       var newGrid = ModificationOperations.deleteColumnAt(grid, detail.column());
-      return outcome(newGrid, getNext(newGrid));
+      var cursor = elementFromGrid(newGrid, detail.row(), detail.column());
+      return outcome(newGrid, cursor);
     };
 
     var eraseRow = function (grid, detail, comparator, _genWrappers) {
-      var getNext = function (g) {
-        return findIn(g, detail.row(), detail.column()).orThunk(function () {
-          return findIn(g, 0, 0);
-        });
-      };
-
       var newGrid = ModificationOperations.deleteRowAt(grid, detail.row());
-
-      return outcome(newGrid, getNext(newGrid));
+      var cursor = elementFromGrid(newGrid, detail.row(), detail.column());
+      return outcome(newGrid, cursor);
     };
 
     var mergeCells = function (grid, mergable, comparator, _genWrappers) {
@@ -119,6 +119,23 @@ define(
         return MergingOperations.unmerge(b, cell, comparator, genWrappers.combine(cell));
       }, grid);
       return outcome(newGrid, Option.from(unmergable[0]));
+    };
+
+    var pasteCells = function (grid, pasteDetails, comparator, genWrappers) {
+      var gridify = function (table, generators) {
+        var list = DetailsList.fromTable(table);
+        var wh = Warehouse.generate(list);
+        return Transitions.toGrid(wh, generators);
+      };
+      var gridB = gridify(pasteDetails.clipboard(), pasteDetails.generators());
+      var startAddress = Structs.address(pasteDetails.row(), pasteDetails.column());
+      var mergedGrid = TableMerge.merge(startAddress, grid, gridB, pasteDetails.generators(), comparator);
+      return mergedGrid.fold(function () {
+        return outcome(grid, Option.some(pasteDetails.element()));
+      }, function (nuGrid) {
+        var cursor = elementFromGrid(nuGrid, pasteDetails.row(), pasteDetails.column());
+        return outcome(nuGrid, cursor);
+      });
     };
 
     // Only column modifications force a resizing. Everything else just tries to preserve the table as is.
@@ -136,7 +153,8 @@ define(
       makeRowHeader:  RunOperation.run(makeRowHeader, RunOperation.onCell, Fun.noop, Fun.noop, Generators.transform('col', 'th')),
       unmakeRowHeader:  RunOperation.run(unmakeRowHeader, RunOperation.onCell, Fun.noop, Fun.noop, Generators.transform(null, 'td')),
       mergeCells: RunOperation.run(mergeCells, RunOperation.onMergable, Fun.noop, Fun.noop, Generators.merging),
-      unmergeCells: RunOperation.run(unmergeCells, RunOperation.onUnmergable, resize, Fun.noop, Generators.merging)
+      unmergeCells: RunOperation.run(unmergeCells, RunOperation.onUnmergable, resize, Fun.noop, Generators.merging),
+      pasteCells: RunOperation.run(pasteCells, RunOperation.onPaste, resize, Fun.noop, Generators.modification)
     };
   }
 );

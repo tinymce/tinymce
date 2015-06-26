@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.compass.Arr',
+    'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.perhaps.Options',
@@ -16,7 +17,7 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Arr, Fun, Option, Options, TableLookup, DetailsList, Transitions, Warehouse, Redraw, Bars, Compare, Traverse) {
+  function (Arr, Merger, Fun, Option, Options, TableLookup, DetailsList, Transitions, Warehouse, Redraw, Bars, Compare, Traverse) {
     var fromWarehouse = function (warehouse, generators) {
       return Transitions.toGrid(warehouse, generators);
     };
@@ -49,7 +50,6 @@ define(
       var raw = Arr.find(all, function (e) {
         return Compare.eq(element, e.element());
       });
-
       return Option.from(raw);
     };
 
@@ -73,7 +73,7 @@ define(
           Redraw.render(table, out.grid());
           adjustment(out.grid(), direction);
           postAction(table);
-          Bars.refresh(wire, table, direction);        
+          Bars.refresh(wire, table, direction);
           return out.cursor();
         });
       };
@@ -82,6 +82,17 @@ define(
     var onCell = function (warehouse, target) {
       return TableLookup.cell(target.element()).bind(function (cell) {
         return findInWarehouse(warehouse, cell);
+      });
+    };
+
+    var onPaste = function (warehouse, target) {
+      return TableLookup.cell(target.element()).bind(function (cell) {
+        return findInWarehouse(warehouse, cell).map(function (details) {
+          return Merger.merge(details, {
+            generators: target.generators,
+            clipboard: target.clipboard
+          });
+        });
       });
     };
 
@@ -96,6 +107,7 @@ define(
     return {
       run: run,
       onCell: onCell,
+      onPaste: onPaste,
       onMergable: onMergable,
       onUnmergable: onUnmergable
     };

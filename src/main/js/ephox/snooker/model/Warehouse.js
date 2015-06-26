@@ -18,7 +18,7 @@ define(
       var raw = warehouse.access()[key(row, column)];
       return raw !== undefined ? Option.some(raw) : Option.none();
     };
-    
+
     var findItem = function (warehouse, item, comparator) {
       var filtered = filterItems(warehouse, function (detail) {
         return comparator(item, detail.element());
