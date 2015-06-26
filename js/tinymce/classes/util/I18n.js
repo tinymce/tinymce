@@ -36,6 +36,7 @@ define("tinymce/util/I18n", [], function() {
 		/**
 		 * Returns the current language code.
 		 *
+		 * @method getCode
 		 * @return {String} Current language code.
 		 */
 		getCode: function() {

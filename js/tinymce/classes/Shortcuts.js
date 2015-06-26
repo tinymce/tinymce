@@ -11,6 +11,7 @@
 /**
  * Contains all logic for handling of keyboard shortcuts.
  *
+ * @class tinymce.Shortcuts
  * @example
  * editor.shortcuts.add('ctrl+a', function() {});
  * editor.shortcuts.add('meta+a', function() {}); // "meta" maps to Command on Mac and Ctrl on PC

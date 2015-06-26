@@ -37,6 +37,8 @@ define("tinymce/dom/RangeUtils", [
 		/**
 		 * Walks the specified range like object and executes the callback for each sibling collection it finds.
 		 *
+		 * @private
+		 * @method walk
 		 * @param {Object} rng Range like object.
 		 * @param {function} callback Callback function to execute for each sibling collection.
 		 */
