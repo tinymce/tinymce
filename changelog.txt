@@ -3,6 +3,7 @@ Version 4.2.1 (2015-06-xx)
 	Fixed bug where Firefox would throw regexp to big error when replacing huge base64 chunks.
 	Fixed bug rendering issues with resize and context toolbars not being placed properly until next animation frame.
 	Fixed bug where the rendering of the image while cropping would some times not be centered correctly.
+	Fixed bug where listbox items with submenus would me selected as active.
 	Fixed so the imagetools dialog is adaptive for smaller screen sizes.
 Version 4.2.0 (2015-06-25)
 	Added new flat default skin to make the UI more modern.

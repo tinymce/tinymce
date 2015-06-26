@@ -102,7 +102,9 @@ define("tinymce/ui/ListBox", [
 			function activateMenuItemsByValue(menu, value) {
 				if (menu instanceof Menu) {
 					menu.items().each(function(ctrl) {
-						ctrl.active(ctrl.value() === value);
+						if (!ctrl.hasMenus()) {
+							ctrl.active(ctrl.value() === value);
+						}
 					});
 				}
 			}
