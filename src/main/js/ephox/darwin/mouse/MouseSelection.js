@@ -2,59 +2,65 @@ define(
   'ephox.darwin.mouse.MouseSelection',
 
   [
-    'ephox.compass.Arr',
     'ephox.darwin.selection.CellSelection',
-    'ephox.oath.proximity.Awareness',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.phoenix.api.data.Spot',
-    'ephox.sugar.api.ElementFind',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.sugar.api.SelectorFind',
+    'global!setTimeout'
   ],
 
-  function (Arr, CellSelection, Awareness, Fun, Option, Spot, ElementFind, SelectorFind) {
+  function (CellSelection, Fun, Option, SelectorFind, setTimeout) {
     return function (bridge, container) {
       var cursor = Option.none();
+      var startSelection = Option.none();
 
-      var mousedown = function (event) {
-        if (event.raw().button !== 0) return;
-        cursor = SelectorFind.closest(event.target(), 'td,th');
+      var beginTableSelection = function () {
         CellSelection.clear(container);
+        // Store where the browser puts the selection after it happens
+        setTimeout(function () {
+          startSelection = bridge.getSelection();
+        });
       };
 
+      var restoreInitialSelection = function () {
+        startSelection.fold(bridge.clearSelection, bridge.setSelection);
+      };
+
+      /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
+      var mousedown = function (event) {
+        cursor = SelectorFind.closest(event.target(), 'td,th');
+        cursor.each(beginTableSelection);
+      };
+
+      /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
       var mouseover = function (event) {
         cursor.each(function (start) {
           CellSelection.clear(container);
           var finish = SelectorFind.closest(event.target(), 'td,th');
           var boxes = finish.bind(Fun.curry(CellSelection.identify, start)).getOr([]);
-          // Otherwise, you can't do small selections inside a cell.
+          // Wait until we have more than one, otherwise you can't do text selection inside a cell.
           if (boxes.length > 1) {
             CellSelection.selectRange(container, boxes, start, finish.getOrDie());
 
-            // Do this elsewhere. Fussy should have a remove all ranges method.
-            bridge.clearSelection();
+            // stop the browser from creating a big text selection. Doesn't work in all cases, but it's nice when it does
+            restoreInitialSelection();
           }
         });
       };
 
-      // Identify the range of contiguous cells from a starting point. Does not keep bias.
-      var connected = function (start) {
-        return ElementFind.descendantsInAncestor(start, 'table', 'td,th').map(function (info) {
-          var others = info.descendants().slice(info.index());
-          var index = Arr.findIndex(others, Fun.not(CellSelection.isSelected));
-          var finishCell = index > 0 ? others[index - 1] : others[others.length - 1];
-          return Spot.point(finishCell, Awareness.getEnd(finishCell));
-        });
-      };
-
-      var mouseup = function (event) {
-        CellSelection.retrieve(container).each(function (cells) {
-          connected(cells[0]).each(function (finish) {
-            bridge.setSelection(cells[0], 0, finish.element(), finish.offset());
+      /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
+      var mouseup = function () {
+        cursor.each(function () {
+          // if we have a multi cell selection, set the cursor back to collapsed at the start point
+          CellSelection.retrieve(container).each(function (cells) {
+            if (cells.length > 1) {
+              restoreInitialSelection();
+            }
           });
+          // clear state
+          cursor = Option.none();
+          startSelection = Option.none();
         });
-
-        cursor = Option.none();
       };
 
       return {

@@ -32,8 +32,8 @@ define(
         WindowSelection.clearAll(win);
       };
 
-      var setSelection = function (start, soffset, finish, foffset) {
-        WindowSelection.setExact(win, start, soffset, finish, foffset);
+      var setSelection = function (sel) {
+        WindowSelection.setExact(win, sel.start(), sel.soffset(), sel.finish(), sel.foffset());
       };
 
       var getInnerHeight = function () {
