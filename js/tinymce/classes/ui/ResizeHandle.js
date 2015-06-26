@@ -34,7 +34,7 @@ define("tinymce/ui/ResizeHandle", [
 			self.classes.add('resizehandle');
 
 			if (self.settings.direction == "both") {
-				self.addClass('resizehandle-both');
+				self.classes.add('resizehandle-both');
 			}
 
 			self.canFocus = false;
