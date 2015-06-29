@@ -1,4 +1,4 @@
-Version 4.2.1 (2015-06-xx)
+Version 4.2.1 (2015-06-29)
 	Fixed bug where back/forward buttons in the browser would render blob images as broken images.
 	Fixed bug where Firefox would throw regexp to big error when replacing huge base64 chunks.
 	Fixed bug rendering issues with resize and context toolbars not being placed properly until next animation frame.
