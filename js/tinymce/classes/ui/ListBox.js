@@ -40,12 +40,14 @@ define("tinymce/ui/ListBox", [
 					if (selected) {
 						selectedText = selectedText || menuValues[i].text;
 						self.state.set('value', menuValues[i].value);
-						break;
+						return true;
 					}
 
 					// If the value has a submenu, try to find the selected values in that menu
 					if (menuValues[i].menu) {
-						setSelected(menuValues[i].menu);
+						if (setSelected(menuValues[i].menu)) {
+							return true;
+						}
 					}
 				}
 			}
@@ -117,12 +119,12 @@ define("tinymce/ui/ListBox", [
 				}
 
 				for (var i = 0; i < menuValues.length; i++) {
-					if (menuValues[i].value == value) {
+					if (menuValues[i].value === value) {
 						return menuValues[i];
 					}
 
 					if (menuValues[i].menu) {
-						selectedItem = getSelectedItem(menuValues[i].menu);
+						selectedItem = getSelectedItem(menuValues[i].menu, value);
 						if (selectedItem) {
 							return selectedItem;
 						}
