@@ -5,25 +5,19 @@ define(
     'ephox.darwin.selection.CellSelection',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.sugar.api.SelectorFind',
-    'global!setTimeout'
+    'ephox.sugar.api.SelectorFind'
   ],
 
-  function (CellSelection, Fun, Option, SelectorFind, setTimeout) {
+  function (CellSelection, Fun, Option, SelectorFind) {
     return function (bridge, container) {
       var cursor = Option.none();
-      var startSelection = Option.none();
 
       var beginTableSelection = function () {
         CellSelection.clear(container);
-        // Store where the browser puts the selection after it happens
-        setTimeout(function () {
-          startSelection = bridge.getSelection();
-        });
       };
 
-      var restoreInitialSelection = function () {
-        startSelection.fold(bridge.clearSelection, bridge.setSelection);
+      var restoreInitialSelection = function (cell) {
+        bridge.selectContents(cell);
       };
 
       /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
@@ -43,23 +37,22 @@ define(
             CellSelection.selectRange(container, boxes, start, finish.getOrDie());
 
             // stop the browser from creating a big text selection. Doesn't work in all cases, but it's nice when it does
-            restoreInitialSelection();
+            restoreInitialSelection(start);
           }
         });
       };
 
       /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
       var mouseup = function () {
-        cursor.each(function () {
+        cursor.each(function (start) {
           // if we have a multi cell selection, set the cursor back to collapsed at the start point
           CellSelection.retrieve(container).each(function (cells) {
             if (cells.length > 1) {
-              restoreInitialSelection();
+              restoreInitialSelection(start);
             }
           });
           // clear state
           cursor = Option.none();
-          startSelection = Option.none();
         });
       };
 
