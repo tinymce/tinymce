@@ -12,10 +12,6 @@ define(
     return function (bridge, container) {
       var cursor = Option.none();
 
-      var beginTableSelection = function () {
-        CellSelection.clear(container);
-      };
-
       var restoreInitialSelection = function (cell) {
         bridge.selectContents(cell);
       };
@@ -23,7 +19,7 @@ define(
       /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
       var mousedown = function (event) {
         cursor = SelectorFind.closest(event.target(), 'td,th');
-        cursor.each(beginTableSelection);
+        CellSelection.clear(container);
       };
 
       /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */

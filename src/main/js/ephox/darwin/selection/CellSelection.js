@@ -16,9 +16,12 @@ define(
   ],
 
   function (Arr, Ephemera, Fun, Option, DomParent, TablePositions, Class, OnNode, SelectorFilter, SelectorFind, Math) {
+    var selectedClass = '.' + Ephemera.selectedClass();
+    var removeSelectionClasses = OnNode.removeClasses([ Ephemera.selectedClass(), Ephemera.lastSelectedClass(), Ephemera.firstSelectedClass() ]);
+
     var clear = function (container) {
-      var sels = SelectorFilter.descendants(container, '.' + Ephemera.selectedClass());
-      Arr.each(sels, OnNode.removeClasses([ Ephemera.selectedClass(), Ephemera.lastSelectedClass(), Ephemera.firstSelectedClass() ]));
+      var sels = SelectorFilter.descendants(container, selectedClass);
+      Arr.each(sels, removeSelectionClasses);
     };
 
     var select = function (cells) {
@@ -36,7 +39,7 @@ define(
     };
 
     var retrieve = function (container) {
-      var sels = SelectorFilter.descendants(container, '.' + Ephemera.selectedClass());
+      var sels = SelectorFilter.descendants(container, selectedClass);
       return sels.length > 0 ? Option.some(sels) : Option.none();
     };
 
