@@ -6,6 +6,7 @@ Version 4.2.1 (2015-06-xx)
 	Fixed bug where listbox items with submenus would me selected as active.
 	Fixed bug where context menu where throwing an error when rendering.
 	Fixed bug where resize both option wasn't working due to resent addClass API change. Patch contributed by Jogai.
+	Fixed bug where a hideAll call for container rendered inline toolbars would throw an error.
 	Fixed so the imagetools dialog is adaptive for smaller screen sizes.
 Version 4.2.0 (2015-06-25)
 	Added new flat default skin to make the UI more modern.

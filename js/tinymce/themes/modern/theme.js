@@ -635,10 +635,15 @@ tinymce.ThemeManager.add('modern', function(editor) {
 
 		function hide() {
 			if (panel) {
-				//We require two events as the inline float panel based toolbar does not have autohide=true
+				// We require two events as the inline float panel based toolbar does not have autohide=true
 				panel.hide();
-				//All other autohidden float panels will be closed below.
-				panel.hideAll();
+
+				// All other autohidden float panels will be closed below.
+				// Need to check for hideAll since it might be a normal panel
+				if (panel.hideAll) {
+					panel.hideAll();
+				}
+
 				DOM.removeClass(editor.getBody(), 'mce-edit-focus');
 			}
 		}
