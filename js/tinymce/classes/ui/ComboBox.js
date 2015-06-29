@@ -51,6 +51,10 @@ define("tinymce/ui/ComboBox", [
 			self.on('click', function(e) {
 				var elm = e.target, root = self.getEl();
 
+				if (!$.contains(root, elm) && elm != root) {
+					return;
+				}
+
 				while (elm && elm != root) {
 					if (elm.id && elm.id.indexOf('-open') != -1) {
 						self.fire('action');
