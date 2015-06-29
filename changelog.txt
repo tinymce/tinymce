@@ -9,6 +9,7 @@ Version 4.2.1 (2015-06-xx)
 	Fixed bug where a hideAll call for container rendered inline toolbars would throw an error.
 	Fixed bug where onclick event handler on combobox could cause issues if element.id was a function by some polluting libraries.
 	Fixed bug where listboxes wouldn't get proper selected sub menu item when using link_list or image_list.
+	Fixed so the UI controls are as wide as 4.1.x to avoid wrapping controls in toolbars.
 	Fixed so the imagetools dialog is adaptive for smaller screen sizes.
 Version 4.2.0 (2015-06-25)
 	Added new flat default skin to make the UI more modern.
