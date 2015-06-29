@@ -32,6 +32,10 @@ define(
         WindowSelection.clearAll(win);
       };
 
+      var selectContents = function (element) {
+        WindowSelection.selectElementContents(win, element);
+      };
+
       var setSelection = function (sel) {
         WindowSelection.setExact(win, sel.start(), sel.soffset(), sel.finish(), sel.foffset());
       };
@@ -56,6 +60,7 @@ define(
         situsFromPoint: situsFromPoint,
         clearSelection: clearSelection,
         setSelection: setSelection,
+        selectContents: selectContents,
         getInnerHeight: getInnerHeight,
         getScrollY: getScrollY,
         scrollBy: scrollBy
