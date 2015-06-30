@@ -16,7 +16,7 @@ define(
      */
     return function (wire, vdirection, hdirection) {
       var hmanager = HorizontalBarManager(wire, hdirection);
-      var vmanager = BarManager(wire, vdirection);
+      // var vmanager = BarManager(wire, vdirection);
 
       var events = Events.create({
         beforeResize: Event([]),
@@ -35,40 +35,40 @@ define(
         events.trigger.startDrag();
       });
 
-      vmanager.events.adjustWidth.bind(function (event) {
-        events.trigger.beforeResize();
-        var delta = vdirection.delta(event.delta(), event.table());
-        Adjustments.adjust(event.table(), delta, event.column(), vdirection);
-        events.trigger.afterResize();
-      });
+      // vmanager.events.adjustWidth.bind(function (event) {
+      //   events.trigger.beforeResize();
+      //   var delta = vdirection.delta(event.delta(), event.table());
+      //   Adjustments.adjust(event.table(), delta, event.column(), vdirection);
+      //   events.trigger.afterResize();
+      // });
 
-      vmanager.events.startAdjust.bind(function (event) {
-        events.trigger.startDrag();
-      });
+      // vmanager.events.startAdjust.bind(function (event) {
+      //   events.trigger.startDrag();
+      // });
 
       var destroy = function () {
         hmanager.destroy();
-        vmanager.destroy();
+        // vmanager.destroy();
       };
 
       var on = function () {
         hmanager.on();
-        vmanager.on();
+        // vmanager.on();
       };
 
       var off = function () {
         hmanager.off();
-        vmanager.off();
+        // vmanager.off();
       };
 
       var hideBars = function () {
         hmanager.hideBars();
-        vmanager.hideBars();
+        // vmanager.hideBars();
       };
 
       var showBars = function () {
         hmanager.showBars();
-        vmanager.showBars();
+        // vmanager.showBars();
       };
 
       return {
