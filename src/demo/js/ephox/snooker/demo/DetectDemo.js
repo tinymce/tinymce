@@ -7,7 +7,6 @@ define(
     'ephox.perhaps.Option',
     'ephox.snooker.api.ResizeDirection',
     'ephox.snooker.api.ResizeWire',
-    'ephox.snooker.api.Structs',
     'ephox.snooker.api.TableOperations',
     'ephox.snooker.api.TableResize',
     'ephox.sugar.api.Attr',
@@ -23,7 +22,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Obj, Fun, Option, ResizeDirection, ResizeWire, Structs, TableOperations, TableResize, Attr, Compare, Css, Direction, DomEvent, Element, Insert, InsertAll, Ready, Replication, SelectorFind) {
+  function (Obj, Fun, Option, ResizeDirection, ResizeWire, TableOperations, TableResize, Attr, Compare, Css, Direction, DomEvent, Element, Insert, InsertAll, Ready, Replication, SelectorFind) {
     return function () {
 
       var tester = Element.fromHtml(
@@ -117,17 +116,19 @@ define(
       var subject3 = Element.fromHtml('<table contenteditable="true" width="100%" cellpadding="0" border="1" cellspacing="0"> <tbody><tr> <td rowspan="2" width="34%">&nbsp;a</td> <td width="33%">&nbsp;b</td> <td width="33%">&nbsp;c</td> </tr> <tr> <td width="33%">&nbsp;d</td> <td rowspan="2" width="33%">&nbsp;e</td> </tr> <tr> <td width="34%">&nbsp;f</td> <td width="33%">&nbsp;g</td> </tr> <tr> <td width="34%">&nbsp;h</td> <td width="33%">&nbsp;i</td> <td width="33%">j&nbsp;</td> </tr> </tbody></table>');
 
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
-      var ltrs = Element.fromHtml('<div></div>');
+      var ltrs = Element.fromHtml('<div class="ltrs"></div>');
       InsertAll.append(ltrs, [ Element.fromHtml('<p>Left to Right tables</p>'), tester, Element.fromTag('p'), subject2 ]);
       var rtls = Element.fromHtml('<div dir="rtl"></div>');
       //  InsertAll.append(rtls, [ Element.fromHtml('<p>Right to Left table</p>'), subject3 ]);
       InsertAll.append(ephoxUi, [ ltrs, rtls ]);
 
-      var ltrManager = TableResize(ResizeWire.only(ltrs), ResizeDirection.ltr);
-      ltrManager.on();
-      var rtlManager = TableResize(ResizeWire.only(rtls), ResizeDirection.rtl);
-      rtlManager.on();
+      // var ltrManager = TableResize(ResizeWire.only(ltrs), ResizeDirection.ltr);
+      // ltrManager.on();
+      // var rtlManager = TableResize(ResizeWire.only(rtls), ResizeDirection.rtl);
+      // rtlManager.on();
 
+      var heightManager = TableResize(ResizeWire.only(ltrs), ResizeDirection.ltr, ResizeDirection.height);
+      heightManager.on();
       // For firefox.
       Ready.execute(function () {
         // document.execCommand("enableInlineTableEditing", null, false);
@@ -208,8 +209,6 @@ define(
         });
         return replica;
       };
-
-      var eq = Compare.eq;
 
       var generators = {
         row: newRow,

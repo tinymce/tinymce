@@ -14,10 +14,11 @@ define(
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Location',
     'ephox.sugar.api.Remove',
-    'ephox.sugar.api.SelectorFilter'
+    'ephox.sugar.api.SelectorFilter',
+    'ephox.sugar.api.Width'
   ],
 
-  function (Arr, Blocks, DetailsList, Warehouse, Bar, Styles, Class, Css, Height, Insert, Location, Remove, SelectorFilter) {
+  function (Arr, Blocks, DetailsList, Warehouse, Bar, Styles, Class, Css, Height, Insert, Location, Remove, SelectorFilter, Width) {
     var resizeBar = Styles.resolve('resizer-bar');
     var BAR_WIDTH = 3;
 
@@ -41,13 +42,39 @@ define(
       });
     };
 
+    var refreshRows = function (wire, table, rows, direction) {
+      var position = Location.absolute(table);
+      var tableWidth = Width.getOuter(table);
+
+      var colPositions = direction.positions(rows, table);
+      Arr.each(colPositions, function (cpOption, i) {
+        cpOption.each(function (cp) {
+          var origin = wire.origin();
+          var bar = Bar(cp.row(), cp.y() - origin.left(), position.top() - origin.top(), tableWidth, BAR_WIDTH);
+          Class.add(bar, resizeBar);
+          Insert.append(wire.parent(), bar);
+        });
+      });
+    };
+
     var refresh = function (wire, table, direction) {
       clear(wire, table);
 
       var list = DetailsList.fromTable(table);
       var warehouse = Warehouse.generate(list);
       var cols = Blocks.columns(warehouse);
+
       if (cols.length > 0) refreshCols(wire, table, cols, direction);
+    };
+
+    var rowRefresh = function (wire, table, direction) {
+      clear(wire, table);
+
+      var list = DetailsList.fromTable(table);
+      var warehouse = Warehouse.generate(list);
+      var rows = Blocks.rows(warehouse);
+
+      if (rows.length > 0) refreshRows(wire, table, rows, direction);
     };
 
     var hide = function (wire) {
@@ -70,6 +97,7 @@ define(
 
     return {
       refresh: refresh,
+      rowRefresh: rowRefresh,
       hide: hide,
       show: show,
       isBar: isBar

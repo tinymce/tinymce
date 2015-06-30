@@ -11,6 +11,7 @@ define(
 
   function (Arr, Fun, Struct, Location, Width) {
     var colInfo = Struct.immutable('col', 'x');
+    var rowInfo = Struct.immutable('row', 'y');
 
     var ltrPositions = function (cols, _table) {
       var lines = Arr.map(cols.slice(1), function (cellOption, col) {
@@ -24,7 +25,7 @@ define(
         var lastX = Location.absolute(lastCol).left() + Width.getOuter(lastCol);
         return colInfo(cols.length - 1, lastX);
       });
-      
+
       return lines.concat([ lastLine ]);
     };
 
@@ -44,6 +45,17 @@ define(
       return lines.concat([ lastLine ]);
     };
 
+    var heightPositions = function (rows, _table) {
+      var lines = Arr.map(rows, function (cellOption, row) {
+        return cellOption.map(function (cell) {
+          var pos = Location.absolute(cell);
+          return rowInfo(row, pos.top());
+        });
+      });
+
+      return lines;
+    };
+
     var rtlEdge = function (cell) {
       var pos = Location.absolute(cell);
       return pos.left() + Width.getOuter(cell);
@@ -51,6 +63,10 @@ define(
 
     var ltrEdge = function (cell) {
       return Location.absolute(cell).left();
+    };
+
+    var heightEdge = function (cell) {
+      return Location.absolute(cell).top() + Width.getOuter(cell);
     };
 
     var negate = function (step, _table) {
@@ -69,9 +85,16 @@ define(
       positions: rtlPositions
     };
 
+    var height = {
+      delta: Fun.identity,
+      positions: heightPositions,
+      edge: heightEdge
+    };
+
     return {
       ltr: ltr,
-      rtl: rtl
+      rtl: rtl,
+      height: height
     };
   }
 );

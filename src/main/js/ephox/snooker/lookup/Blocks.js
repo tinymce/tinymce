@@ -44,8 +44,43 @@ define(
       });
     };
 
+    var rows = function (warehouse) {
+      var grid = warehouse.grid();
+      // cols is an array, where each element represents the number of
+      // elements in the col.
+      var cols = Util.range(0, grid.columns());
+
+      var rows = Util.range(0, grid.rows());
+
+      // Arr.map()
+
+      return Arr.map(rows, function (row) {
+
+        // Firstly, find the cells that start on that column.
+        var onRow = Arr.bind(cols, function (r) {
+          return Warehouse.getAt(warehouse, r, row).filter(function (detail) {
+            return detail.row() === row;
+          }).fold(Fun.constant([]), function (detail) { return [ detail ]; });
+        });
+
+        var singleOnRow = Arr.find(onRow, function (detail) {
+          return detail.rowspan() === 1;
+        });
+
+        return Option.from(singleOnRow).orThunk(function () {
+          return Option.from(onRow[0]);
+        }).fold(function () {
+          return Warehouse.getAt(warehouse, 0, row).map(function (detail) { return detail.element(); });
+        }, function (detail) {
+          return Option.some(detail.element());
+        });
+      });
+
+    };
+
     return {
-      columns: columns
+      columns: columns,
+      rows: rows
     };
   }
 );

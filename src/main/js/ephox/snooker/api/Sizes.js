@@ -34,7 +34,7 @@ define(
     var redistributeWidth = function (table, newWidth, direction) {
       var totalWidth = Width.get(table);
       var unit = Redistribution.validate(newWidth).fold(Fun.constant('px'), Fun.constant('px'), Fun.constant('%'));
-      
+
       var list = DetailsList.fromTable(table);
       var warehouse = Warehouse.generate(list);
       var oldWidths = ColumnWidths.getRawWidths(warehouse, direction);
