@@ -2,6 +2,7 @@
   background-color: #500;
   opacity: 0.0;
 }
+
 .ephox-snooker-resizer-cols {
   cursor: ew-resize;
 }
@@ -9,6 +10,7 @@
 .ephox-snooker-resizer-rows {
   cursor: ns-resize;
 }
+
 .ephox-snooker-resizer-bar.ephox-snooker-resizer-bar-dragging {
   opacity: 0.2;
 }

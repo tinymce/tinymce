@@ -46,7 +46,6 @@ define(
 
       // Calculate all of the new widths for columns
       var deltas = Deltas.determine(widths, index, delta, CellUtils.minWidth());
-
       var newWidths = Arr.map(deltas, function (dx, i) {
         return dx + widths[i];
       });

@@ -54,10 +54,6 @@ define(
         cpOption.each(function (cp) {
           var origin = wire.origin();
 
-          console.log('origin.left()',origin.left());
-          console.log('position.left()',position.left());
-          console.log('cp.height() + cp.y() + origin.top()',cp.height() + cp.y() + origin.top());
-
           var bar = HorizontalBar(cp.row(),position.left() + origin.left(), cp.height() + cp.y() + origin.top(), tableWidth, BAR_THICKNESS);
 
           Classes.add(bar, [ resizeBar, Styles.resolve('resizer-rows')]);
