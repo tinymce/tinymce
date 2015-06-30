@@ -7,8 +7,10 @@ define(
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.resize.Bar',
+    'ephox.snooker.resize.HorizontalBar',
     'ephox.snooker.style.Styles',
     'ephox.sugar.api.Class',
+    'ephox.sugar.api.Classes',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.Height',
     'ephox.sugar.api.Insert',
@@ -18,9 +20,9 @@ define(
     'ephox.sugar.api.Width'
   ],
 
-  function (Arr, Blocks, DetailsList, Warehouse, Bar, Styles, Class, Css, Height, Insert, Location, Remove, SelectorFilter, Width) {
+  function (Arr, Blocks, DetailsList, Warehouse, Bar, HorizontalBar, Styles, Class, Classes, Css, Height, Insert, Location, Remove, SelectorFilter, Width) {
     var resizeBar = Styles.resolve('resizer-bar');
-    var BAR_WIDTH = 3;
+    var BAR_THICKNESS = 3;
 
     var clear = function (wire, table) {
       var previous = SelectorFilter.descendants(wire.parent(), '.' + resizeBar);
@@ -35,23 +37,30 @@ define(
       Arr.each(colPositions, function (cpOption, i) {
         cpOption.each(function (cp) {
           var origin = wire.origin();
-          var bar = Bar(cp.col(), cp.x() - origin.left(), position.top() - origin.top(), BAR_WIDTH, tableHeight);
-          Class.add(bar, resizeBar);
+          var bar = Bar(cp.col(), cp.x() - origin.left(), position.top() - origin.top(), BAR_THICKNESS, tableHeight);
+          Classes.add(bar, [ resizeBar, Styles.resolve('resizer-cols')]);
+
           Insert.append(wire.parent(), bar);
         });
       });
     };
 
     var refreshRows = function (wire, table, rows, direction) {
-      var position = Location.absolute(table);
       var tableWidth = Width.getOuter(table);
+      var position = Location.absolute(table);
 
-      var colPositions = direction.positions(rows, table);
-      Arr.each(colPositions, function (cpOption, i) {
+      var rowPositions = direction.positions(rows, table);
+      Arr.each(rowPositions, function (cpOption, _i) {
         cpOption.each(function (cp) {
           var origin = wire.origin();
-          var bar = Bar(cp.row(), cp.y() - origin.left(), position.top() - origin.top(), tableWidth, BAR_WIDTH);
-          Class.add(bar, resizeBar);
+
+          console.log('origin.left()',origin.left());
+          console.log('position.left()',position.left());
+          console.log('cp.height() + cp.y() + origin.top()',cp.height() + cp.y() + origin.top());
+
+          var bar = HorizontalBar(cp.row(),position.left() + origin.left(), cp.height() + cp.y() + origin.top(), tableWidth, BAR_THICKNESS);
+
+          Classes.add(bar, [ resizeBar, Styles.resolve('resizer-rows')]);
           Insert.append(wire.parent(), bar);
         });
       });

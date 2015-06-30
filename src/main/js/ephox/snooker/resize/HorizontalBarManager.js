@@ -35,7 +35,7 @@ define(
         var column = Attr.get(event.target(), 'data-column');
         if (column !== undefined) {
           var current = getInt(event.target(), 'top');
-          Css.set(event.target(), 'top', current + event.xDelta() + 'px');
+          Css.set(event.target(), 'top', current + event.yDelta() + 'px');
         }
       });
 

@@ -5,13 +5,14 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.scullion.Struct',
+    'ephox.sugar.api.Height',
     'ephox.sugar.api.Location',
     'ephox.sugar.api.Width'
   ],
 
-  function (Arr, Fun, Struct, Location, Width) {
+  function (Arr, Fun, Struct, Height, Location, Width) {
     var colInfo = Struct.immutable('col', 'x');
-    var rowInfo = Struct.immutable('row', 'y');
+    var rowInfo = Struct.immutable('row', 'y', 'height');
 
     var ltrPositions = function (cols, _table) {
       var lines = Arr.map(cols.slice(1), function (cellOption, col) {
@@ -49,7 +50,9 @@ define(
       var lines = Arr.map(rows, function (cellOption, row) {
         return cellOption.map(function (cell) {
           var pos = Location.absolute(cell);
-          return rowInfo(row, pos.top());
+          var height = Height.getOuter(cell);
+          // here I can get the height of the row
+          return rowInfo(row, pos.top(), height);
         });
       });
 
