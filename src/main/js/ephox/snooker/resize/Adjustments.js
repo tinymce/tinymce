@@ -14,7 +14,7 @@ define(
   ],
 
   function (Arr, Fun, Deltas, DetailsList, Warehouse, ColumnSizes, Sizes, CellUtils, SelectorFind) {
-    var recalculate = function (warehouse, widths) {
+    var recalculateWidth = function (warehouse, widths) {
       var all = Warehouse.justCells(warehouse);
 
       var total = function (start, end) {
@@ -35,6 +35,28 @@ define(
       });
     };
 
+    var recalculateHeight = function (warehouse, heights) {
+      var all = Warehouse.justCells(warehouse);
+
+      var total = function (start, end) {
+        var r = 0;
+        for (var i = start; i < end; i++) {
+          r += heights[i] !== undefined ? parseInt(heights[i], 10) : 0;
+        }
+        return r;
+      };
+
+      return Arr.map(all, function (cell) {
+        var height = total(cell.row(), cell.row() + cell.rowspan());
+        return {
+          element: cell.element,
+          height: Fun.constant(height),
+          rowspan: cell.colspan
+        };
+      });
+
+    };
+
     var getWarehouse = function (list) {
       return Warehouse.generate(list);
     };
@@ -51,7 +73,7 @@ define(
       });
 
       // Set the width of each cell based on the column widths
-      var newSizes = recalculate(warehouse, newWidths);
+      var newSizes = recalculateWidth(warehouse, newWidths);
       Arr.each(newSizes, function (cell) {
         Sizes.setWidth(cell.element(), cell.width());
       });
@@ -73,10 +95,11 @@ define(
       });
 
       // Set the width of each cell based on the column widths
-      var newSizes = recalculate(warehouse, newHeights);
+      var newSizes = recalculateHeight(warehouse, newHeights);
       Arr.each(newSizes, function (cell) {
+
         SelectorFind.closest(cell.element(), 'tr').bind(function (row) {
-          Sizes.setHeight(row, cell.width());
+          Sizes.setHeight(row, cell.height());
         });
       });
 
@@ -90,7 +113,7 @@ define(
       var widths = ColumnSizes.getPixelWidths(warehouse, direction);
 
       // Set the width of each cell based on the column widths
-      var newSizes = recalculate(warehouse, widths);
+      var newSizes = recalculateWidth(warehouse, widths);
       Arr.each(newSizes, function (cell) {
         Sizes.setWidth(cell.element(), cell.width());
       });
@@ -106,7 +129,6 @@ define(
     return {
       adjust: adjust,
       adjustHeight: adjustHeight,
-      recalculate: recalculate,
       adjustTo: adjustTo
     };
   }
