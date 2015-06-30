@@ -341,10 +341,10 @@ define("tinymce/imagetoolsplugin/Dialog", [
 		flipRotatePanel = createPanel([
 			{text: 'Back', onclick: cancel},
 			{type: 'spacer', flex: 1},
-			{icon: 'fliph', tooltip: 'Flip H', onclick: tempAction(ImageTools.flip, 'h')},
-			{icon: 'flipv', tooltip: 'Flip V', onclick: tempAction(ImageTools.flip, 'v')},
-			{icon: 'rotateleft', tooltip: 'Rotate left', onclick: tempAction(ImageTools.rotate, -90)},
-			{icon: 'rotateright', tooltip: 'Rotate right', onclick: tempAction(ImageTools.rotate, 90)},
+			{icon: 'fliph', tooltip: 'Flip horizontally', onclick: tempAction(ImageTools.flip, 'h')},
+			{icon: 'flipv', tooltip: 'Flip vertically', onclick: tempAction(ImageTools.flip, 'v')},
+			{icon: 'rotateleft', tooltip: 'Rotate counterclockwise', onclick: tempAction(ImageTools.rotate, -90)},
+			{icon: 'rotateright', tooltip: 'Rotate clockwise', onclick: tempAction(ImageTools.rotate, 90)},
 			{type: 'spacer', flex: 1},
 			{text: 'Apply', subtype: 'primary', onclick: applyTempState}
 		]).hide().on('show', disableUndoRedo);
