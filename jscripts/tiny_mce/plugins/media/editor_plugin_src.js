@@ -9,7 +9,8 @@
  */
 
 (function() {
-	var rootAttributes = tinymce.explode('id,name,width,height,style,align,class,hspace,vspace,bgcolor,type'), excludedAttrs = tinymce.makeMap(rootAttributes.join(',')), Node = tinymce.html.Node,
+	var subRootAttributes = tinymce.explode('id,name,style,align,class,hspace,vspace,bgcolor,type'), subExcludedAttrs = tinymce.makeMap(subRootAttributes.join(',')),
+		rootAttributes = subRootAttributes.concat(tinymce.explode('width, height')), excludedAttrs = tinymce.makeMap(rootAttributes.join(',')), Node = tinymce.html.Node,
 		mediaTypes, scriptRegExp, JSON = tinymce.util.JSON;
 
 	// Media types supported by this plugin
@@ -811,8 +812,6 @@
 
 			if (object) {
 				// Get width/height
-				width = width || object.attr('width');
-				height = height || object.attr('height');
 				style = style || object.attr('style');
 				id = id || object.attr('id');
 				hspace = hspace || object.attr('hspace');
@@ -829,10 +828,13 @@
 					param = params[i];
 					name = param.remove().attr('name');
 
-					if (!excludedAttrs[name]) {
+					if (!subExcludedAttrs[name]) {
 						data.params[name] = param.attr('value');
 					}
 				}
+
+				width = width || object.attr('width') || data.params.width;
+				height = height || object.attr('height') || data.params.height;
 
 				data.params.src = data.params.src || object.attr('data');
 			}

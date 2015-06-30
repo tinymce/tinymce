@@ -327,7 +327,7 @@ test("Non standard object kept", function() {
 	expect(1);
 
 	editor.setContent('<object id="myId" class="myClass"><param name="bgcolor" value="#FFFFFF" /> <param name="width" value="480" /> <param name="height" value="270" /> <param name="paramID" value="1234" /> <param name="key" value="abcd" /></object>');
-	equal(editor.getContent(), '<p><object id="myId" width="320" height="240" class="myClass"><param name="paramID" value="1234" /><param name="key" value="abcd" /></object></p>');
+	equal(editor.getContent(), '<p><object id="myId" width="480" height="270" class="myClass"><param name="width" value="480" /><param name="height" value="270" /><param name="paramID" value="1234" /><param name="key" value="abcd" /></object></p>');
 });
 
 test("Flash retain attribs", function() {
