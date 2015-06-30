@@ -5,6 +5,7 @@ define(
     'ephox.snooker.api.TableLookup',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Css',
+    'ephox.sugar.api.Height',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.Width',
     'ephox.violin.Strings',
@@ -12,15 +13,25 @@ define(
     'global!parseInt'
   ],
 
-  function (TableLookup, Attr, Css, Node, Width, Strings, Math, parseInt) {
+  function (TableLookup, Attr, Css, Height, Node, Width, Strings, Math, parseInt) {
     var setWidth = function (cell, amount) {
       cell.dom().style.setProperty('width', amount + 'px');
+    };
+
+    var setHeight = function (row, amount) {
+      row.dom().style.setProperty('height', amount + 'px');
     };
 
     var getWidthValue = function (cell) {
       var value = cell.dom().style.getPropertyValue('width');
       if (value !== null && value !== undefined) return value;
       else return Css.get(cell, 'width');
+    };
+
+    var getHeightValue = function (cell) {
+      var value = cell.dom().style.getPropertyValue('height');
+      if (value !== null && value !== undefined) return value;
+      else return Css.get(cell, 'height');
     };
 
     var convert = function (cell, number) {
@@ -46,9 +57,26 @@ define(
       return w / span;
     };
 
+    var getTotalHeight = function (cell) {
+      var value = getHeightValue(cell);
+      // TODO :::: TOCHECK Note, Firefox doesn't calculate the width for you with Css.get
+      if (!value) return Height.get(cell);
+      var number = parseInt(value, 10);
+      return Strings.endsWith(value, '%') && Node.name(cell) !== 'table' ? convert(cell, number) : number;
+    };
+
+    var getHeight = function (cell) {
+      var w = getTotalHeight(cell);
+      var span = Attr.has(cell, 'rowspan') ? parseInt(Attr.get(cell, 'rowspan'), 10) : 1;
+      return w / span;
+    };
+
+
     return {
       setWidth: setWidth,
-      getWidth: getWidth
+      setHeight: setHeight,
+      getWidth: getWidth,
+      getHeight: getHeight
     };
   }
 );

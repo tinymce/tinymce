@@ -6,7 +6,7 @@ define(
     'ephox.peanut.Fun',
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
-    'ephox.snooker.resize.ColumnWidths',
+    'ephox.snooker.resize.ColumnSizes',
     'ephox.snooker.resize.Redistribution',
     'ephox.snooker.resize.Sizes',
     'ephox.snooker.util.CellUtils',
@@ -14,7 +14,7 @@ define(
     'ephox.sugar.api.Width'
   ],
 
-  function (Arr, Fun, DetailsList, Warehouse, ColumnWidths, Redistribution, Sizes, CellUtils, Css, Width) {
+  function (Arr, Fun, DetailsList, Warehouse, ColumnSizes, Redistribution, Sizes, CellUtils, Css, Width) {
     var setWidth = function (cell, amount) {
      Sizes.setWidth(cell, amount);
     };
@@ -37,7 +37,7 @@ define(
 
       var list = DetailsList.fromTable(table);
       var warehouse = Warehouse.generate(list);
-      var oldWidths = ColumnWidths.getRawWidths(warehouse, direction);
+      var oldWidths = ColumnSizes.getRawWidths(warehouse, direction);
       var newWidths = Redistribution.redistribute(oldWidths, totalWidth, newWidth);
 
       var cells = Warehouse.justCells(warehouse);

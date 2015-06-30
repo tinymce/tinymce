@@ -1,5 +1,5 @@
 define(
-  'ephox.snooker.resize.ColumnWidths',
+  'ephox.snooker.resize.ColumnSizes',
 
   [
     'ephox.compass.Arr',
@@ -20,7 +20,7 @@ define(
       });
     };
 
-    var getPixels = function (cell) {
+    var getPixelsW = function (cell) {
       return Sizes.getWidth(cell);
     };
 
@@ -51,15 +51,47 @@ define(
     };
 
     var getPixelWidths = function (warehouse, direction) {
-      return getWidthFrom(warehouse, direction, getPixels, function (deduced) {
+      return getWidthFrom(warehouse, direction, getPixelsW, function (deduced) {
         // Minimum cell width when all else fails.
         return deduced.getOrThunk(CellUtils.minWidth);
       });
     };
 
+    var getPixelsH = function (cell) {
+      return Sizes.getHeight(cell);
+    };
+
+    var getHeightFrom = function (warehouse, direction, getHeight, fallback) {
+      var rows = Blocks.rows(warehouse);
+
+      var backups = Arr.map(rows, function (cellOption) {
+        return cellOption.map(direction.edge);
+      });
+
+      return Arr.map(rows, function (cellOption, c) {
+        // Only use the width of cells that have no column span (or colspan 1)
+        var rowCell = cellOption.filter(Fun.not(CellUtils.hasRowspan));
+        return rowCell.fold(function () {
+          // Can't just read the width of a cell, so calculate.
+          var deduced = Util.deduce(backups, c);
+          return fallback(deduced);
+        }, function (cell) {
+          return getHeight(cell);
+        });
+      });
+    };
+
+    var getPixelHeights = function (warehouse, direction) {
+      return getHeightFrom(warehouse, direction, getPixelsH, function (deduced) {
+        // Minimum cell width when all else fails.
+        return deduced.getOrThunk(CellUtils.minHeight);
+      });
+    };
+
     return {
       getRawWidths: getRawWidths,
-      getPixelWidths: getPixelWidths
+      getPixelWidths: getPixelWidths,
+      getPixelHeights: getPixelHeights
     };
   }
 );

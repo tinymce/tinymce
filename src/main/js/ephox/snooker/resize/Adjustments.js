@@ -7,13 +7,13 @@ define(
     'ephox.snooker.calc.Deltas',
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
-    'ephox.snooker.resize.ColumnWidths',
+    'ephox.snooker.resize.ColumnSizes',
     'ephox.snooker.resize.Sizes',
     'ephox.snooker.util.CellUtils',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Fun, Deltas, DetailsList, Warehouse, ColumnWidths, Sizes, CellUtils, SelectorFind) {
+  function (Arr, Fun, Deltas, DetailsList, Warehouse, ColumnSizes, Sizes, CellUtils, SelectorFind) {
     var recalculate = function (warehouse, widths) {
       var all = Warehouse.justCells(warehouse);
 
@@ -42,7 +42,7 @@ define(
     var adjust = function (table, delta, index, direction) {
       var list = DetailsList.fromTable(table);
       var warehouse = getWarehouse(list);
-      var widths = ColumnWidths.getPixelWidths(warehouse, direction);
+      var widths = ColumnSizes.getPixelWidths(warehouse, direction);
 
       // Calculate all of the new widths for columns
       var deltas = Deltas.determine(widths, index, delta, CellUtils.minWidth());
@@ -61,10 +61,33 @@ define(
       Sizes.setWidth(table, total);
     };
 
+    var adjustHeight = function (table, delta, index, direction) {
+      var list = DetailsList.fromTable(table);
+      var warehouse = getWarehouse(list);
+      var heights = ColumnSizes.getPixelHeights(warehouse, direction);
+
+      // Calculate all of the new widths for columns
+      var deltas = Deltas.determine(heights, index, delta, CellUtils.minWidth());
+      var newHeights = Arr.map(deltas, function (dx, i) {
+        return dx + heights[i];
+      });
+
+      // Set the width of each cell based on the column widths
+      var newSizes = recalculate(warehouse, newHeights);
+      Arr.each(newSizes, function (cell) {
+        SelectorFind.closest(cell.element(), 'tr').bind(function (row) {
+          Sizes.setHeight(row, cell.width());
+        });
+      });
+
+      // Set the overall width of the table.
+      var total = Arr.foldr(newHeights, function (b, a) { return b + a; }, 0);
+      Sizes.setHeight(table, total);
+    };
     // Ensure that the width of table cells match the passed in table information.
     var adjustTo = function (list, direction) {
       var warehouse = getWarehouse(list);
-      var widths = ColumnWidths.getPixelWidths(warehouse, direction);
+      var widths = ColumnSizes.getPixelWidths(warehouse, direction);
 
       // Set the width of each cell based on the column widths
       var newSizes = recalculate(warehouse, widths);
@@ -82,6 +105,7 @@ define(
 
     return {
       adjust: adjust,
+      adjustHeight: adjustHeight,
       recalculate: recalculate,
       adjustTo: adjustTo
     };

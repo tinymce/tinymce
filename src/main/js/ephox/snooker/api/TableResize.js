@@ -27,7 +27,7 @@ define(
       hmanager.events.adjustHeight.bind(function (event) {
         events.trigger.beforeResize();
         var delta = hdirection.delta(event.delta(), event.table());
-        Adjustments.adjust(event.table(), delta, event.row(), hdirection);
+        Adjustments.adjustHeight(event.table(), delta, event.row(), hdirection);
         events.trigger.afterResize();
       });
 
