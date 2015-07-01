@@ -1,5 +1,5 @@
 define(
-  'ephox.snooker.resize.BarManager',
+  'ephox.snooker.resize.ColBarManager',
 
   [
     'ephox.dragster.api.Dragger',

@@ -24,7 +24,7 @@ define(
     var resizeBar = Styles.resolve('resizer-bar');
     var resizeRowBar = Styles.resolve('resizer-rows');
     var resizeColBar = Styles.resolve('resizer-cols');
-    var BAR_THICKNESS = 10;
+    var BAR_THICKNESS = 3;
 
     var clear = function (wire, table, selector) {
       var previous = SelectorFilter.descendants(wire.parent(), '.' + resizeBar + selector);
