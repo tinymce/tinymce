@@ -46,8 +46,6 @@ define(
 
     var rows = function (warehouse) {
       var grid = warehouse.grid();
-      var cols = Util.range(0, grid.columns());
-
       var rows = Util.range(0, grid.rows());
 
       return Arr.map(rows, function (row) {
