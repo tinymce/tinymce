@@ -3,9 +3,11 @@ define(
 
   [
     'ephox.dragster.api.Dragger',
+    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.porkbun.Event',
     'ephox.porkbun.Events',
+    'ephox.snooker.resize.AssistantManager',
     'ephox.snooker.resize.BarMutation',
     'ephox.snooker.resize.Bars',
     'ephox.snooker.style.Styles',
@@ -19,22 +21,19 @@ define(
     'global!parseInt'
   ],
 
-  function (Dragger, Option, Event, Events, BarMutation, Bars, Styles, Attr, Class, Css, DomEvent, Node, SelectorExists, SelectorFind, parseInt) {
+  function (Dragger, Fun, Option, Event, Events, AssistantManager, BarMutation, Bars, Styles, Attr, Class, Css, DomEvent, Node, SelectorExists, SelectorFind, parseInt) {
     return function (wire, direction) {
       var mutation = BarMutation();
       var resizing = Dragger.transform(mutation, {});
 
       var hoverTable = Option.none();
 
-      var getInt = function (element, property) {
-        return parseInt(Css.get(element, property), 10);
-      };
 
       /* Reposition the bar as the user drags */
       mutation.events.drag.bind(function (event) {
         var column = Attr.get(event.target(), 'data-row');
         if (column !== undefined) {
-          var current = getInt(event.target(), 'top');
+          var current = AssistantManager.getInt(event.target(), 'top');
           Css.set(event.target(), 'top', current + event.yDelta() + 'px');
         }
       });
@@ -44,7 +43,7 @@ define(
         mutation.get().each(function (target) {
           hoverTable.each(function (table) {
             var column = Attr.get(target, 'data-row');
-            var newX = getInt(target, 'top');
+            var newX = AssistantManager.getInt(target, 'top');
             var oldX = parseInt(Attr.get(target, 'data-initial-top'), 10);
             var delta = newX - oldX;
             Attr.remove(target, 'data-initial-top');
@@ -105,21 +104,13 @@ define(
         startAdjust: Event([])
       });
 
-      var hideBars = function () {
-        Bars.hide(wire);
-      };
-
-      var showBars = function () {
-        Bars.show(wire);
-      };
-
       return {
         destroy: destroy,
         refresh: refresh,
         on: resizing.on,
         off: resizing.off,
-        hideBars: hideBars,
-        showBars: showBars,
+        hideBars: Fun.curry(AssistantManager.hideBars, wire),
+        showBars: Fun.curry(AssistantManager.showBars, wire),
         events: events.registry
       };
     };
