@@ -47,7 +47,7 @@ define(
           return a.map(function (aa) {
             return { value: aa, delta: i+1 };
           });
-        });        
+        });
       }, function (c) {
         return Option.some({ value: c, delta: 0 });
       });
@@ -58,8 +58,8 @@ define(
             return { value: aa, delta: i + 1 };
           });
         });
-      }, function (n) { 
-        
+      }, function (n) {
+
         return Option.some({ value: n, delta: 1 });
       });
 

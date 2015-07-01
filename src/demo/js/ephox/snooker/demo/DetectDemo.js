@@ -122,10 +122,10 @@ define(
       //  InsertAll.append(rtls, [ Element.fromHtml('<p>Right to Left table</p>'), subject3 ]);
       InsertAll.append(ephoxUi, [ ltrs, rtls ]);
 
-      // var ltrManager = TableResize(ResizeWire.only(ltrs), ResizeDirection.ltr);
-      // ltrManager.on();
-      // var rtlManager = TableResize(ResizeWire.only(rtls), ResizeDirection.rtl);
-      // rtlManager.on();
+      var ltrManager = TableResize(ResizeWire.only(ltrs), ResizeDirection.ltr, ResizeDirection.height);
+      ltrManager.on();
+      var rtlManager = TableResize(ResizeWire.only(rtls), ResizeDirection.rtl, ResizeDirection.height);
+      rtlManager.on();
 
       var heightManager = TableResize(ResizeWire.only(ltrs), ResizeDirection.ltr, ResizeDirection.height);
       heightManager.on();
