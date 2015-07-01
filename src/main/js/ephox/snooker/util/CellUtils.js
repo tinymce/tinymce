@@ -7,12 +7,16 @@ define(
   ],
 
   function (Fun, Attr) {
+    var getSpan = function (cell, type) {
+      return Attr.has(cell, type) && parseInt(Attr.get(cell, type), 10) > 1;
+    };
+
     var hasColspan = function (cell) {
-      return Attr.has(cell, 'colspan') && parseInt(Attr.get(cell, 'colspan'), 10) > 1;
+      return getSpan(cell, 'cellspan');
     };
 
     var hasRowspan = function (cell) {
-      return Attr.has(cell, 'rowspan') && parseInt(Attr.get(cell, 'rowspan'), 10) > 1;
+      return getSpan(cell, 'rowspan');
     };
 
     var minWidth = function () {

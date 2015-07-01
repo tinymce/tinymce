@@ -14,12 +14,13 @@ define(
   ],
 
   function (TableLookup, Attr, Css, Height, Node, Width, Strings, Math, parseInt) {
+
     var setWidth = function (cell, amount) {
-      cell.dom().style.setProperty('width', amount + 'px');
+      Css.set(cell, 'width', amount + 'px');
     };
 
-    var setHeight = function (row, amount) {
-      row.dom().style.setProperty('height', amount + 'px');
+    var setHeight = function (cell, amount) {
+      Css.set(cell, 'height', amount + 'px');
     };
 
     var getWidthValue = function (cell) {
@@ -34,41 +35,47 @@ define(
       else return Css.get(cell, 'height');
     };
 
-    var convert = function (cell, number) {
+    var convert = function (cell, number, setter) {
       var newWidth = TableLookup.table(cell).map(function (table) {
         var total = Width.get(table);
         return Math.floor((number / 100.0) * total);
       }).getOr(number);
-      setWidth(cell, newWidth);
+      setter(cell, newWidth);
       return newWidth;
+    };
+
+    var normalizeSize = function (value, cell, setter) {
+      var number = parseInt(value, 10);
+      return Strings.endsWith(value, '%') && Node.name(cell) !== 'table' ? convert(cell, number, setter) : number;
     };
 
     var getTotalWidth = function (cell) {
       var value = getWidthValue(cell);
       // Note, Firefox doesn't calculate the width for you with Css.get
       if (!value) return Width.get(cell);
-      var number = parseInt(value, 10);
-      return Strings.endsWith(value, '%') && Node.name(cell) !== 'table' ? convert(cell, number) : number;
-    };
-
-    var getWidth = function (cell) {
-      var w = getTotalWidth(cell);
-      var span = Attr.has(cell, 'colspan') ? parseInt(Attr.get(cell, 'colspan'), 10) : 1;
-      return w / span;
+      return normalizeSize(value, cell, setWidth);
     };
 
     var getTotalHeight = function (cell) {
       var value = getHeightValue(cell);
-      // TODO :::: TOCHECK Note, Firefox doesn't calculate the width for you with Css.get
       if (!value) return Height.get(cell);
-      var number = parseInt(value, 10);
-      return Strings.endsWith(value, '%') && Node.name(cell) !== 'table' ? convert(cell, number) : number;
+      return normalizeSize(value, cell, setHeight);
+    };
+
+    var getSpan = function (cell, type) {
+      return Attr.has(cell, type) ? parseInt(Attr.get(cell, type), 10) : 1;
+    };
+
+    var getWidth = function (cell) {
+      var w = getTotalWidth(cell);
+      var span = getSpan(cell, 'colspan');
+      return w / span;
     };
 
     var getHeight = function (cell) {
-      var w = getTotalHeight(cell);
-      var span = Attr.has(cell, 'rowspan') ? parseInt(Attr.get(cell, 'rowspan'), 10) : 1;
-      return w / span;
+      var h = getTotalHeight(cell);
+      var span = getSpan(cell, 'rowspan');
+      return h / span;
     };
 
 
