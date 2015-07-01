@@ -51,7 +51,6 @@ define(
       var lines = Arr.map(rows.slice(1), function (cellOption, row) {
         return cellOption.map(function (cell) {
           var pos = Location.absolute(cell);
-          // here I can get the height of the row
           return rowInfo(row, pos.top());
         });
       });
