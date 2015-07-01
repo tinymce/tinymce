@@ -14,7 +14,6 @@ define(
   ],
 
   function (TableLookup, Attr, Css, Height, Node, Width, Strings, Math, parseInt) {
-
     var setWidth = function (cell, amount) {
       Css.set(cell, 'width', amount + 'px');
     };
@@ -23,16 +22,18 @@ define(
       Css.set(cell, 'height', amount + 'px');
     };
 
-    var getWidthValue = function (cell) {
-      var value = cell.dom().style.getPropertyValue('width');
+    var getValue = function (cell, property) {
+      var value = cell.dom().style.getPropertyValue(property);
       if (value !== null && value !== undefined) return value;
-      else return Css.get(cell, 'width');
+      else return Css.get(cell, property);
+    };
+
+    var getWidthValue = function (cell) {
+      return getValue(cell, 'width');
     };
 
     var getHeightValue = function (cell) {
-      var value = cell.dom().style.getPropertyValue('height');
-      if (value !== null && value !== undefined) return value;
-      else return Css.get(cell, 'height');
+      return getValue(cell, 'height');
     };
 
     var convert = function (cell, number, setter) {
@@ -62,22 +63,23 @@ define(
       return normalizeSize(value, cell, setHeight);
     };
 
+    var get = function (cell, type, f) {
+      var v = f(cell);
+      var span = getSpan(cell, type);
+      return v / span;
+    };
+
     var getSpan = function (cell, type) {
       return Attr.has(cell, type) ? parseInt(Attr.get(cell, type), 10) : 1;
     };
 
     var getWidth = function (cell) {
-      var w = getTotalWidth(cell);
-      var span = getSpan(cell, 'colspan');
-      return w / span;
+      return get(cell, 'colspan', getTotalWidth);
     };
 
     var getHeight = function (cell) {
-      var h = getTotalHeight(cell);
-      var span = getSpan(cell, 'rowspan');
-      return h / span;
+      return get(cell, 'rowspan', getTotalHeight);
     };
-
 
     return {
       setWidth: setWidth,

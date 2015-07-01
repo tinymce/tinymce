@@ -40,7 +40,7 @@ define(
         cpOption.each(function (cp) {
           var origin = wire.origin();
           var bar = Bar(cp.col(), cp.x() - origin.left(), position.top() - origin.top(), BAR_THICKNESS, tableHeight);
-          Classes.add(bar, [ resizeBar, resizeColBar]);
+          Classes.add(bar, [ resizeBar, resizeColBar ]);
 
           Insert.append(wire.parent(), bar);
         });
@@ -58,7 +58,7 @@ define(
 
           var bar = HorizontalBar(cp.row(),position.left() + origin.left(), cp.height() + cp.y() + origin.top(), tableWidth, BAR_THICKNESS);
 
-          Classes.add(bar, [ resizeBar, resizeRowBar]);
+          Classes.add(bar, [ resizeBar, resizeRowBar ]);
           Insert.append(wire.parent(), bar);
         });
       });
