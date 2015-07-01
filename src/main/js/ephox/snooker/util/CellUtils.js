@@ -19,14 +19,10 @@ define(
       return getSpan(cell, 'rowspan');
     };
 
-    var minWidth = function () {
-      return 10;
-    };
-
     return {
       hasColspan: hasColspan,
       hasRowspan: hasRowspan,
-      minWidth: minWidth,
+      minWidth: Fun.constant(10),
       minHeight: Fun.constant(30)
     };
   }
