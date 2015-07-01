@@ -32,7 +32,7 @@ define(
 
       /* Reposition the bar as the user drags */
       mutation.events.drag.bind(function (event) {
-        var column = Attr.get(event.target(), 'data-column');
+        var column = Attr.get(event.target(), 'data-row');
         if (column !== undefined) {
           var current = getInt(event.target(), 'top');
           Css.set(event.target(), 'top', current + event.yDelta() + 'px');
@@ -43,7 +43,7 @@ define(
       resizing.events.stop.bind(function () {
         mutation.get().each(function (target) {
           hoverTable.each(function (table) {
-            var column = Attr.get(target, 'data-column');
+            var column = Attr.get(target, 'data-row');
             var newX = getInt(target, 'top');
             var oldX = parseInt(Attr.get(target, 'data-initial-top'), 10);
             var delta = newX - oldX;

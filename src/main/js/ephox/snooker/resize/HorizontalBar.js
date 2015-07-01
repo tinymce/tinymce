@@ -8,7 +8,7 @@ define(
   ],
 
   function (Attr, Css, Element) {
-    return function (column, x, y, w, h) {
+    return function (row, x, y, w, h) {
       var blocker = Element.fromTag('div');
       Css.setAll(blocker, {
         position: 'absolute',
@@ -18,7 +18,7 @@ define(
         width: w + 'px'
       });
 
-      Attr.set(blocker, 'data-column', column);
+      Attr.set(blocker, 'data-row', row);
       return blocker;
     };
   }
