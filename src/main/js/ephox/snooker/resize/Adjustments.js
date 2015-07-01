@@ -14,19 +14,19 @@ define(
   ],
 
   function (Arr, Fun, Deltas, DetailsList, Warehouse, ColumnSizes, Sizes, CellUtils, SelectorFind) {
+    var total = function (start, end, measures) {
+        var r = 0;
+        for (var i = start; i < end; i++) {
+          r += measures[i] !== undefined ? parseInt(measures[i], 10) : 0;
+        }
+        return r;
+    };
+
     var recalculateWidth = function (warehouse, widths) {
       var all = Warehouse.justCells(warehouse);
 
-      var total = function (start, end) {
-        var r = 0;
-        for (var i = start; i < end; i++) {
-          r += widths[i] !== undefined ? parseInt(widths[i], 10) : 0;
-        }
-        return r;
-      };
-
       return Arr.map(all, function (cell) {
-        var width = total(cell.column(), cell.column() + cell.colspan());
+        var width = total(cell.column(), cell.column() + cell.colspan(), widths);
         return {
           element: cell.element,
           width: Fun.constant(width),
@@ -38,16 +38,8 @@ define(
     var recalculateHeight = function (warehouse, heights) {
       var all = Warehouse.justCells(warehouse);
 
-      var total = function (start, end) {
-        var r = 0;
-        for (var i = start; i < end; i++) {
-          r += heights[i] !== undefined ? parseInt(heights[i], 10) : 0;
-        }
-        return r;
-      };
-
       return Arr.map(all, function (cell) {
-        var height = total(cell.row(), cell.row() + cell.rowspan());
+        var height = total(cell.row(), cell.row() + cell.rowspan(), heights);
         return {
           element: cell.element,
           height: Fun.constant(height),
@@ -140,6 +132,7 @@ define(
     return {
       adjust: adjust,
       adjustHeight: adjustHeight,
+      recalculateWidth: recalculateWidth,
       adjustTo: adjustTo
     };
   }

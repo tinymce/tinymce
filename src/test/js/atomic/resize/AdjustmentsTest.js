@@ -20,7 +20,7 @@ test(
   function (Arr, Struct, Structs, Warehouse, Adjustments) {
     var check = function (expected, input, widths) {
       var warehouse = Warehouse.generate(input);
-      var actual = Adjustments.recalculate(warehouse, widths);
+      var actual = Adjustments.recalculateWidth(warehouse, widths);
       assert.eq(expected, Arr.map(actual, function (cell) {
         return {
           element: cell.element(),
