@@ -54,7 +54,20 @@ define(
           rowspan: cell.colspan
         };
       });
+    };
 
+    var recalculateTableHeight = function (warehouse, heights) {
+
+    };
+
+    var recalculateRowHeight = function (warehouse, heights) {
+
+      return Arr.map(warehouse.all(), function (row, i) {
+        return {
+          element: row.element,
+          height: Fun.constant(heights[i])
+        };
+      });
     };
 
     var getWarehouse = function (list) {
@@ -95,12 +108,15 @@ define(
       });
 
       // Set the width of each cell based on the column widths
-      var newSizes = recalculateHeight(warehouse, newHeights);
-      Arr.each(newSizes, function (cell) {
+      var newCellSizes = recalculateHeight(warehouse, newHeights);
+      var newRowSizes = recalculateRowHeight(warehouse, newHeights);
 
-        SelectorFind.closest(cell.element(), 'tr').bind(function (row) {
-          Sizes.setHeight(row, cell.height());
-        });
+      Arr.each(newRowSizes, function (row) {
+        Sizes.setHeight(row.element(), row.height());
+      });
+
+      Arr.each(newCellSizes, function (cell) {
+        Sizes.setHeight(cell.element(), cell.height());
       });
 
       // Set the overall width of the table.
