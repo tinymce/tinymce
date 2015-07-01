@@ -50,7 +50,25 @@ define(
 
       return Arr.map(rows, function (row) {
 
-        return Warehouse.getAt(warehouse, row, 0).map(function (detail) { return detail.element(); });
+                // Firstly, find the cells that start on that column.
+        var onColumn = Arr.bind(rows, function (r) {
+          return Warehouse.getAt(warehouse, r, col).filter(function (detail) {
+            return detail.column() === col;
+          }).fold(Fun.constant([]), function (detail) { return [ detail ]; });
+        });
+
+        var singleOnColumn = Arr.find(onColumn, function (detail) {
+          return detail.colspan() === 1;
+        });
+
+        return Option.from(singleOnColumn).orThunk(function () {
+          return Option.from(onColumn[0]);
+        }).fold(function () {
+          return Warehouse.getAt(warehouse, 0, col).map(function (detail) { return detail.element(); });
+        }, function (detail) {
+          return Option.some(detail.element());
+        });
+      });
       });
 
     };

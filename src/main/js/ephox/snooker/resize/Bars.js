@@ -55,10 +55,7 @@ define(
       Arr.each(rowPositions, function (cpOption, _i) {
         cpOption.each(function (cp) {
           var origin = wire.origin();
-
-
-          var bar = HorizontalBar(cp.row(), position.left() + origin.left(), cp.height() + cp.y() + origin.top(), tableWidth, BAR_THICKNESS);
-
+          var bar = HorizontalBar(cp.row(), position.left() + origin.left(), cp.y() + origin.top(), tableWidth, BAR_THICKNESS);
           Classes.add(bar, [ resizeBar, resizeRowBar ]);
           Insert.append(wire.parent(), bar);
         });

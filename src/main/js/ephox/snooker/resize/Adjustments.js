@@ -88,21 +88,26 @@ define(
       var warehouse = getWarehouse(list);
       var heights = ColumnSizes.getPixelHeights(warehouse, direction);
 
-      // Calculate all of the new widths for columns
-      var deltas = Deltas.determine(heights, index, delta, CellUtils.minWidth());
+      console.log('heights',heights);
+      var deltas = Deltas.determine(heights, index, delta, CellUtils.minHeight());
+
       var newHeights = Arr.map(deltas, function (dx, i) {
         return dx + heights[i];
       });
+      Arr.each(newHeights, function (newH) {
+        console.log('newH',newH);
+      })
 
-      // Set the width of each cell based on the column widths
       var newCellSizes = recalculateHeight(warehouse, newHeights);
       var newRowSizes = recalculateRowHeight(warehouse, newHeights);
 
       Arr.each(newRowSizes, function (row) {
+        console.log('row.height()',row.height());
         Sizes.setHeight(row.element(), row.height());
       });
 
       Arr.each(newCellSizes, function (cell) {
+        console.log('cell.height()',cell.height());
         Sizes.setHeight(cell.element(), cell.height());
       });
 

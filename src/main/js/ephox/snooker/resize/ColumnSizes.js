@@ -8,10 +8,11 @@ define(
     'ephox.snooker.resize.Sizes',
     'ephox.snooker.util.CellUtils',
     'ephox.snooker.util.Util',
-    'ephox.sugar.api.Css'
+    'ephox.sugar.api.Css',
+    'ephox.sugar.api.Location'
   ],
 
-  function (Arr, Fun, Blocks, Sizes, CellUtils, Util, Css) {
+  function (Arr, Fun, Blocks, Sizes, CellUtils, Util, Css, Location) {
     var getRaw = function (cell) {
       return Css.getRaw(cell, 'width').fold(function () {
         return Sizes.getWidth(cell) + 'px';
@@ -65,8 +66,16 @@ define(
       var rows = Blocks.rows(warehouse);
 
       var backups = Arr.map(rows, function (cellOption) {
+        cellOption.each(function (c) {
+          console.log('cell: ', c.dom().cloneNode(true), Location.absolute(c).top());
+        });
         return cellOption.map(direction.edge);
       });
+
+
+  console.log('backed up positions', Arr.bind(backups, function (b) {
+    return b.toArray();
+  }));
 
       return Arr.map(rows, function (cellOption, c) {
         // Only use the width of cells that have no column span (or colspan 1)
@@ -74,14 +83,17 @@ define(
         return rowCell.fold(function () {
           // Can't just read the width of a cell, so calculate.
           var deduced = Util.deduce(backups, c);
+
           return fallback(deduced);
         }, function (cell) {
+          console.log('cell.dom().cloneNode(true)',cell.dom().cloneNode(true), getHeight(cell));
           return getHeight(cell);
         });
       });
     };
 
     var getPixelHeights = function (warehouse, direction) {
+
       return getHeightFrom(warehouse, direction, getPixelsH, function (deduced) {
         // Minimum cell width when all else fails.
         return deduced.getOrThunk(CellUtils.minHeight);

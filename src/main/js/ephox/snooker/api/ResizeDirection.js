@@ -12,7 +12,7 @@ define(
 
   function (Arr, Fun, Struct, Height, Location, Width) {
     var colInfo = Struct.immutable('col', 'x');
-    var rowInfo = Struct.immutable('row', 'y', 'height');
+    var rowInfo = Struct.immutable('row', 'y');
 
     var ltrPositions = function (cols, _table) {
       var lines = Arr.map(cols.slice(1), function (cellOption, col) {
@@ -48,16 +48,20 @@ define(
 
     var heightPositions = function (rows, _table) {
 
-      var lines = Arr.map(rows, function (cellOption, row) {
+      var lines = Arr.map(rows.slice(1), function (cellOption, row) {
         return cellOption.map(function (cell) {
           var pos = Location.absolute(cell);
-          var height = Height.getOuter(cell);
           // here I can get the height of the row
-          return rowInfo(row, pos.top(), height);
+          return rowInfo(row, pos.top());
         });
       });
 
-      return lines;
+      var lastLine = rows[rows.length - 1].map(function (lastRow) {
+        var lastY = Location.absolute(lastRow).top() + Height.getOuter(lastRow);
+        return rowInfo(rows.length - 1, lastY);
+      });
+
+      return lines.concat( [ lastLine ] );
     };
 
     var rtlEdge = function (cell) {
@@ -70,7 +74,7 @@ define(
     };
 
     var heightEdge = function (cell) {
-      return Location.absolute(cell).top() + Width.getOuter(cell);
+      return Location.absolute(cell).top();
     };
 
     var negate = function (step, _table) {
