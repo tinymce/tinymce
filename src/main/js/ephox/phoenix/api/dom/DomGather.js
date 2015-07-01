@@ -24,12 +24,12 @@ define(
       return Gather.after(universe, element, isRoot);
     };
 
-    var seekLeft = function (element, isRoot) {
-      return Gather.seekLeft(universe, element, isRoot);
+    var seekLeft = function (element, predicate, isRoot) {
+      return Gather.seekLeft(universe, element, predicate, isRoot);
     };
 
-    var seekRight = function (element, isRoot) {
-      return Gather.seekRight(universe, element, isRoot);
+    var seekRight = function (element, predicate, isRoot) {
+      return Gather.seekRight(universe, element, predicate, isRoot);
     };
 
     var walkers = function () {
