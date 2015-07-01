@@ -49,7 +49,7 @@ define(
             var delta = newX - oldX;
             Attr.remove(target, 'data-initial-left');
             if (column !== undefined) events.trigger.adjustWidth(table, delta, parseInt(column, 10));
-            Bars.refresh(wire, table, direction);
+            Bars.colRefresh(wire, table, direction);
           });
         });
       });
@@ -71,7 +71,7 @@ define(
         if (Node.name(event.target()) === 'table' || SelectorExists.ancestor(event.target(), 'table')) {
           hoverTable = Node.name(event.target()) === 'table' ? Option.some(event.target()) : SelectorFind.ancestor(event.target(), 'table');
           hoverTable.each(function (ht) {
-            Bars.refresh(wire, ht, direction);
+            Bars.colRefresh(wire, ht, direction);
           });
         }
       });
@@ -97,7 +97,7 @@ define(
       });
 
       var refresh = function (tbl) {
-        Bars.refresh(wire, tbl, direction);
+        Bars.colRefresh(wire, tbl, direction);
       };
 
       var events = Events.create({

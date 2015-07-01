@@ -73,7 +73,7 @@ define(
           Redraw.render(table, out.grid());
           adjustment(out.grid(), direction);
           postAction(table);
-          Bars.refresh(wire, table, direction);
+          Bars.colRefresh(wire, table, direction);
           return out.cursor();
         });
       };

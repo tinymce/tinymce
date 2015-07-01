@@ -62,7 +62,7 @@ define(
       });
     };
 
-    var refresh = function (wire, table, direction) {
+    var colRefresh = function (wire, table, direction) {
       clear(wire, table, '.' + Styles.resolve('resizer-cols'));
 
       var list = DetailsList.fromTable(table);
@@ -101,7 +101,7 @@ define(
     };
 
     return {
-      refresh: refresh,
+      colRefresh: colRefresh,
       rowRefresh: rowRefresh,
       hide: hide,
       show: show,
