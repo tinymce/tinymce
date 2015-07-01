@@ -56,12 +56,7 @@ define(
       });
     };
 
-    var recalculateTableHeight = function (warehouse, heights) {
-
-    };
-
     var recalculateRowHeight = function (warehouse, heights) {
-
       return Arr.map(warehouse.all(), function (row, i) {
         return {
           element: row.element,
