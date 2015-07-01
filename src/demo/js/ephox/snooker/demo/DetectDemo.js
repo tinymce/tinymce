@@ -15,6 +15,7 @@ define(
     'ephox.sugar.api.Direction',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
+    'ephox.sugar.api.Elements',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.InsertAll',
     'ephox.sugar.api.Ready',
@@ -22,33 +23,65 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Obj, Fun, Option, ResizeDirection, ResizeWire, TableOperations, TableResize, Attr, Compare, Css, Direction, DomEvent, Element, Insert, InsertAll, Ready, Replication, SelectorFind) {
+  function (Obj, Fun, Option, ResizeDirection, ResizeWire, TableOperations, TableResize, Attr, Compare, Css, Direction, DomEvent, Element, Elements, Insert, InsertAll, Ready, Replication, SelectorFind) {
     return function () {
 
-      var tester = Element.fromHtml(
-        '<table border=1>'+
-          '<tr>'+
-            '<th>A0</th>'+
-            '<th>A1</th>'+
-            '<th>A2</th>'+
-            '<th>A3</th>'+
-            '<th>A4</th>'+
-          '</tr>'+
-          '<tr>'+
-            '<td>B0</td>'+
-            '<td>B1</td>'+
-            '<td>B2</td>'+
-            '<td>B3</td>'+
-            '<td rowspan="2">B3</td>'+
-          '</tr>'+
-          '<tr>'+
-            '<td>C0</td>'+
-            '<td>C1</td>'+
-            '<td>C2</td>'+
-            '<td>C3</td>'+
-          '</tr>'+
-        '</table>'
-      );
+      // var tester = Element.fromHtml(
+      //   '<table border=1>'+
+      //     '<tr>'+
+      //       '<th>A0</th>'+
+      //       '<th>A1</th>'+
+      //       '<th>A2</th>'+
+      //       '<th>A3</th>'+
+      //       '<th>A4</th>'+
+      //     '</tr>'+
+      //     '<tr>'+
+      //       '<td>B0</td>'+
+      //       '<td>B1</td>'+
+      //       '<td>B2</td>'+
+      //       '<td>B3</td>'+
+      //       '<td rowspan="2">B3</td>'+
+      //     '</tr>'+
+      //     '<tr>'+
+      //       '<td>C0</td>'+
+      //       '<td>C1</td>'+
+      //       '<td>C2</td>'+
+      //       '<td>C3</td>'+
+      //     '</tr>'+
+      //   '</table>'
+      // );
+
+      var tester = Element.fromHtml('<table border="1" style="border-collapse: collapse; width: 100%;"><tbody><tr><td style="width: 100%;"><br /></td></tr><tr><td style="width: 100%;"><br /></td></tr><tr><td style="width: 100%;"><br /></td></tr><tr><td style="width: 100%;"><br /></td></tr><tr><td style="width: 100%;"><br /></td></tr><tr><td style="width: 100%;"><br /></td></tr><tr><td style="width: 100%;"><br /></td></tr><tr><td style="width: 100%;"><br /></td></tr><tr><td style="width: 100%;"><br /></td></tr><tr><td style="width: 100%;"><br /></td></tr></tbody></table>');
+      // var tester = Elements.fromHtml(
+      //               '<table border=1>' +
+      //                 '<tbody>' +
+      //                   '<tr>' +
+      //                     '<td>A</td>' +
+      //                     '<td rowspan="2" colspan="2">B</td>' +
+      //                     '<td>C</td>' +
+      //                   '</tr>' +
+      //                   '<tr>' +
+      //                     '<td>D</td>' +
+      //                     '<td colspan="1" rowspan="2">E</td>' +
+      //                   '</tr>' +
+      //                   '<tr>' +
+      //                     '<td colspan="3" rowspan="3">F</td>' +
+      //                   '</tr>' +
+      //                   '<tr>' +
+      //                     '<td>G</td>' +
+      //                   '</tr>' +
+      //                   '<tr>' +
+      //                     '<td>H</td>' +
+      //                   '</tr>' +
+      //                   '<tr>' +
+      //                     '<td rowspan="2" colspan="1">I</td><td>J</td><td colspan="2">K</td>' +
+      //                   '</tr>' +
+      //                   '<tr>' +
+      //                     '<td colspan="2">L</td><td>M</td>' +
+      //                   '</tr>' +
+      //                 '</tbody>' +
+      //               '</table>'
+      //               );
 
 
       var subject = Element.fromHtml(
@@ -119,7 +152,7 @@ define(
       var ltrs = Element.fromHtml('<div class="ltrs"></div>');
       InsertAll.append(ltrs, [ Element.fromHtml('<p>Left to Right tables</p>'), tester, Element.fromTag('p'), subject2 ]);
       var rtls = Element.fromHtml('<div dir="rtl"></div>');
-      //  InsertAll.append(rtls, [ Element.fromHtml('<p>Right to Left table</p>'), subject3 ]);
+       // InsertAll.append(rtls, [ Element.fromHtml('<p>Right to Left table</p>'), subject3 ]);
       InsertAll.append(ephoxUi, [ ltrs, rtls ]);
 
       var ltrManager = TableResize(ResizeWire.only(ltrs), ResizeDirection.ltr, ResizeDirection.height);
