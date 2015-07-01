@@ -24,8 +24,8 @@ define(
     var resizeBar = Styles.resolve('resizer-bar');
     var BAR_THICKNESS = 3;
 
-    var clear = function (wire, table) {
-      var previous = SelectorFilter.descendants(wire.parent(), '.' + resizeBar);
+    var clear = function (wire, table, selector) {
+      var previous = SelectorFilter.descendants(wire.parent(), '.' + resizeBar + selector);
       Arr.each(previous, Remove.remove);
     };
 
@@ -63,7 +63,7 @@ define(
     };
 
     var refresh = function (wire, table, direction) {
-      clear(wire, table);
+      clear(wire, table, '.' + Styles.resolve('resizer-cols'));
 
       var list = DetailsList.fromTable(table);
       var warehouse = Warehouse.generate(list);
@@ -73,7 +73,7 @@ define(
     };
 
     var rowRefresh = function (wire, table, direction) {
-      clear(wire, table);
+      clear(wire, table, '.' + Styles.resolve('resizer-rows'));
 
       var list = DetailsList.fromTable(table);
       var warehouse = Warehouse.generate(list);
