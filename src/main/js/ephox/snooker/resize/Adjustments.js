@@ -88,26 +88,18 @@ define(
       var warehouse = getWarehouse(list);
       var heights = ColumnSizes.getPixelHeights(warehouse, direction);
 
-      console.log('heights',heights);
-      var deltas = Deltas.determine(heights, index, delta, CellUtils.minHeight());
-
-      var newHeights = Arr.map(deltas, function (dx, i) {
-        return dx + heights[i];
+      var newHeights = Arr.map(heights, function (dy, i) {
+        return index === i ? delta + dy : dy;
       });
-      Arr.each(newHeights, function (newH) {
-        console.log('newH',newH);
-      })
 
       var newCellSizes = recalculateHeight(warehouse, newHeights);
       var newRowSizes = recalculateRowHeight(warehouse, newHeights);
 
       Arr.each(newRowSizes, function (row) {
-        console.log('row.height()',row.height());
         Sizes.setHeight(row.element(), row.height());
       });
 
       Arr.each(newCellSizes, function (cell) {
-        console.log('cell.height()',cell.height());
         Sizes.setHeight(cell.element(), cell.height());
       });
 
@@ -115,6 +107,7 @@ define(
       var total = Arr.foldr(newHeights, function (b, a) { return b + a; }, 0);
       Sizes.setHeight(table, total);
     };
+
     // Ensure that the width of table cells match the passed in table information.
     var adjustTo = function (list, direction) {
       var warehouse = getWarehouse(list);

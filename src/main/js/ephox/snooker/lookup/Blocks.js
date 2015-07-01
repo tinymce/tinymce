@@ -47,28 +47,27 @@ define(
     var rows = function (warehouse) {
       var grid = warehouse.grid();
       var rows = Util.range(0, grid.rows());
+      var cols = Util.range(0, grid.columns());
 
       return Arr.map(rows, function (row) {
 
-                // Firstly, find the cells that start on that column.
-        var onColumn = Arr.bind(rows, function (r) {
-          return Warehouse.getAt(warehouse, r, col).filter(function (detail) {
-            return detail.column() === col;
+        var onRow = Arr.bind(cols, function (c) {
+          return Warehouse.getAt(warehouse, row, c).filter(function (detail) {
+            return detail.row() === row;
           }).fold(Fun.constant([]), function (detail) { return [ detail ]; });
         });
 
-        var singleOnColumn = Arr.find(onColumn, function (detail) {
-          return detail.colspan() === 1;
+        var singleOnRow = Arr.find(onRow, function (detail) {
+          return detail.rowspan() === 1;
         });
 
-        return Option.from(singleOnColumn).orThunk(function () {
-          return Option.from(onColumn[0]);
+        return Option.from(singleOnRow).orThunk(function () {
+          return Option.from(onRow[0]);
         }).fold(function () {
-          return Warehouse.getAt(warehouse, 0, col).map(function (detail) { return detail.element(); });
+          return Warehouse.getAt(warehouse, row, 0).map(function (detail) { return detail.element(); });
         }, function (detail) {
           return Option.some(detail.element());
         });
-      });
       });
 
     };
