@@ -56,7 +56,7 @@ define(
 
       /* Start the dragging when the bar is clicked, storing the initial position. */
       var mousedown = DomEvent.bind(wire.parent(), 'mousedown', function (event) {
-        if (Bars.isBar(event.target())) {
+        if (Bars.isRowBar(event.target())) {
           events.trigger.startAdjust();
           mutation.assign(event.target());
           Attr.set(event.target(), 'data-initial-top', parseInt(Css.get(event.target(), 'top'), 10));
