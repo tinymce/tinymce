@@ -7,6 +7,7 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.perhaps.Options',
+    'ephox.snooker.api.ResizeDirection',
     'ephox.snooker.api.TableLookup',
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Transitions',
@@ -17,7 +18,7 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Arr, Merger, Fun, Option, Options, TableLookup, DetailsList, Transitions, Warehouse, Redraw, Bars, Compare, Traverse) {
+  function (Arr, Merger, Fun, Option, Options, ResizeDirection, TableLookup, DetailsList, Transitions, Warehouse, Redraw, Bars, Compare, Traverse) {
     var fromWarehouse = function (warehouse, generators) {
       return Transitions.toGrid(warehouse, generators);
     };
@@ -73,6 +74,7 @@ define(
           Redraw.render(table, out.grid());
           adjustment(out.grid(), direction);
           postAction(table);
+          Bars.rowRefresh(wire, table, ResizeDirection.height);
           Bars.colRefresh(wire, table, direction);
           return out.cursor();
         });

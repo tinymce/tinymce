@@ -10,12 +10,10 @@ define(
     'ephox.snooker.api.TableOperations',
     'ephox.snooker.api.TableResize',
     'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Compare',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.Direction',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
-    'ephox.sugar.api.Elements',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.InsertAll',
     'ephox.sugar.api.Ready',
@@ -23,7 +21,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Obj, Fun, Option, ResizeDirection, ResizeWire, TableOperations, TableResize, Attr, Compare, Css, Direction, DomEvent, Element, Elements, Insert, InsertAll, Ready, Replication, SelectorFind) {
+  function (Obj, Fun, Option, ResizeDirection, ResizeWire, TableOperations, TableResize, Attr, Css, Direction, DomEvent, Element, Insert, InsertAll, Ready, Replication, SelectorFind) {
     return function () {
 
       // var tester = Element.fromHtml(
@@ -155,12 +153,12 @@ define(
        // InsertAll.append(rtls, [ Element.fromHtml('<p>Right to Left table</p>'), subject3 ]);
       InsertAll.append(ephoxUi, [ ltrs, rtls ]);
 
-      var ltrManager = TableResize(ResizeWire.only(ltrs), ResizeDirection.ltr, ResizeDirection.height);
+      var ltrManager = TableResize(ResizeWire.only(ltrs), ResizeDirection.ltr);
       ltrManager.on();
-      var rtlManager = TableResize(ResizeWire.only(rtls), ResizeDirection.rtl, ResizeDirection.height);
+      var rtlManager = TableResize(ResizeWire.only(rtls), ResizeDirection.rtl);
       rtlManager.on();
 
-      var heightManager = TableResize(ResizeWire.only(ltrs), ResizeDirection.ltr, ResizeDirection.height);
+      var heightManager = TableResize(ResizeWire.only(ltrs), ResizeDirection.ltr);
       heightManager.on();
       // For firefox.
       Ready.execute(function () {
