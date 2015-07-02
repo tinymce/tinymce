@@ -12,12 +12,20 @@ define(
   ],
 
   function (Arr, Fun, Blocks, Sizes, CellUtils, Util, Css) {
-    var getRaw = function (cell) {
-      return Css.getRaw(cell, 'width').fold(function () {
-        return Sizes.getWidth(cell) + 'px';
+    var getRaw = function (cell, property, getter) {
+      return Css.getRaw(cell, property).fold(function () {
+        return getter(cell) + 'px';
       }, function (raw) {
         return raw;
       });
+    };
+
+    var getRawW = function (cell) {
+      return getRaw(cell, 'width', Sizes.getWidth);
+    };
+
+    var getRawH = function (cell) {
+      return getRaw(cell, 'height', Sizes.getHeight);
     };
 
     var getPixelsW = function (cell) {
@@ -45,7 +53,7 @@ define(
     };
 
     var getRawWidths = function (warehouse, direction) {
-      return getWidthFrom(warehouse, direction, getRaw, function (deduced) {
+      return getWidthFrom(warehouse, direction, getRawW, function (deduced) {
         return deduced.map(function (d) { return d + 'px'; }).getOr('');
       });
     };
@@ -84,17 +92,23 @@ define(
     };
 
     var getPixelHeights = function (warehouse, direction) {
-
       return getHeightFrom(warehouse, direction, getPixelsH, function (deduced) {
         // Minimum cell width when all else fails.
         return deduced.getOrThunk(CellUtils.minHeight);
       });
     };
 
+    var getRawHeights = function (warehouse, direction) {
+      return getHeightFrom(warehouse, direction, getRawH, function (deduced) {
+        return deduced.map(function (d) { return d + 'px'; }).getOr('');
+      });
+    };
+
     return {
       getRawWidths: getRawWidths,
       getPixelWidths: getPixelWidths,
-      getPixelHeights: getPixelHeights
+      getPixelHeights: getPixelHeights,
+      getRawHeights: getRawHeights
     };
   }
 );

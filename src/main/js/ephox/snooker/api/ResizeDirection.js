@@ -47,7 +47,6 @@ define(
     };
 
     var heightPositions = function (rows, _table) {
-
       var lines = Arr.map(rows.slice(1), function (cellOption, row) {
         return cellOption.map(function (cell) {
           var pos = Location.absolute(cell);
