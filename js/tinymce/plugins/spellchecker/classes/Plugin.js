@@ -451,6 +451,13 @@ define("tinymce/spellcheckerplugin/Plugin", [
 		});
 
 		editor.on('change', checkIfFinished);
+		
+		editor.on('init', function() {
+			// activate spellchecker
+			if (settings.spellchecker_state && hasBrowserSpellcheck) {
+				spellcheck();
+			}
+		});
 
 		this.getTextMatcher = getTextMatcher;
 		this.getWordCharPattern = getWordCharPattern;
@@ -461,10 +468,5 @@ define("tinymce/spellcheckerplugin/Plugin", [
 
 		// Set default spellchecker language if it's not specified
 		settings.spellchecker_language = settings.spellchecker_language || settings.language || 'en';
-		
-		// activate spellchecker
-		if (settings.spellchecker_state && hasBrowserSpellcheck) {
-			spellcheck();
-		}
 	});
 });
