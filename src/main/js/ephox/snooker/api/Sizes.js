@@ -16,7 +16,7 @@ define(
 
   function (Arr, Fun, DetailsList, Warehouse, ColumnSizes, Redistribution, Sizes, CellUtils, Css, Width) {
     var setWidth = function (cell, amount) {
-     Sizes.setWidth(cell, amount);
+      Sizes.setWidth(cell, amount);
     };
 
     var getWidth = function (cell) {

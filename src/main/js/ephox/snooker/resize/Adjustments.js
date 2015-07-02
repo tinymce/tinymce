@@ -103,7 +103,6 @@ define(
         Sizes.setHeight(cell.element(), cell.height());
       });
 
-      // Set the overall width of the table.
       var total = Arr.foldr(newHeights, function (b, a) { return b + a; }, 0);
       Sizes.setHeight(table, total);
     };
