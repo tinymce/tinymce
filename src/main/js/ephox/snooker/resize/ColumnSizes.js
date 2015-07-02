@@ -14,8 +14,10 @@ define(
   function (Arr, Fun, Blocks, Sizes, CellUtils, Util, Css) {
     var getRaw = function (cell, property, getter) {
       return Css.getRaw(cell, property).fold(function () {
+        console.log('%craw','font-size: 19px; color: #eda;',cell);
         return getter(cell) + 'px';
       }, function (raw) {
+
         return raw;
       });
     };
@@ -77,31 +79,35 @@ define(
       });
 
 
-      return Arr.map(rows, function (cellOption, c) {
-        // Only use the width of cells that have no column span (or colspan 1)
+      var xxx = Arr.map(rows, function (cellOption, c) {
         var rowCell = cellOption.filter(Fun.not(CellUtils.hasRowspan));
-        return rowCell.fold(function () {
-          // Can't just read the width of a cell, so calculate.
-          var deduced = Util.deduce(backups, c);
 
+        return rowCell.fold(function () {
+          var deduced = Util.deduce(backups, c);
           return fallback(deduced);
         }, function (cell) {
+          console.log('cell.dom().cloneNode(true)',cell.dom().cloneNode(true));
           return getHeight(cell);
         });
       });
+
+      return xxx;
     };
 
     var getPixelHeights = function (warehouse, direction) {
       return getHeightFrom(warehouse, direction, getPixelsH, function (deduced) {
-        // Minimum cell width when all else fails.
         return deduced.getOrThunk(CellUtils.minHeight);
       });
     };
 
     var getRawHeights = function (warehouse, direction) {
-      return getHeightFrom(warehouse, direction, getRawH, function (deduced) {
-        return deduced.map(function (d) { return d + 'px'; }).getOr('');
+      var r = getHeightFrom(warehouse, direction, getRawH, function (deduced) {
+        return deduced.map(function (d) {console.log('d' , d); return d + 'px'; }).getOr('');
       });
+
+      console.log('r',r);
+
+      return r;
     };
 
     return {

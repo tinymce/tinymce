@@ -58,9 +58,8 @@ define(
 
       var list = DetailsList.fromTable(table);
       var warehouse = Warehouse.generate(list);
-      var oldWidths = sizeGet(warehouse, direction);
-      var nuSizes = Redistribution.redistribute(oldWidths, total, nuSize);
-
+      var oldSizes = sizeGet(warehouse, direction);
+      var nuSizes = Redistribution.redistribute(oldSizes, total, nuSize);
       var cells = Warehouse.justCells(warehouse);
 
       return {
@@ -72,9 +71,10 @@ define(
     };
 
     var redistributeHeight = function (table, newHeight, direction) {
+      console.log('newHeight',newHeight);
       var calcs = redistribute(table, newHeight, direction, Height.get, ColumnSizes.getRawHeights);
-
       var rows = calcs.warehouse.all();
+      console.log('calcs.newSizes',calcs.newSizes);
       redistributeToH(calcs.newSizes, rows, calcs.cells, calcs.unit);
     };
 
