@@ -461,5 +461,10 @@ define("tinymce/spellcheckerplugin/Plugin", [
 
 		// Set default spellchecker language if it's not specified
 		settings.spellchecker_language = settings.spellchecker_language || settings.language || 'en';
+		
+		// activate spellchecker
+		if (settings.spellchecker_state && hasBrowserSpellcheck) {
+			spellcheck();
+		}
 	});
 });
