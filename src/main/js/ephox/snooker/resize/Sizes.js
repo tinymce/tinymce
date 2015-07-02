@@ -25,15 +25,7 @@ define(
     var getValue = function (cell, property) {
       var value = cell.dom().style.getPropertyValue(property);
       if (value !== null && value !== undefined) return value;
-      else {
-        var res = Css.get(cell, property);
-        console.log('cell CLONENODE',cell.dom().cloneNode(true));
-        console.log('cell.dom()',cell.dom());
-        var xxxx = Height.getOuter(cell);
-        console.log('xxxx',xxxx);
-        console.log('res',res);
-        return res;
-      }
+      else return Css.get(cell, property);
     };
 
     var getWidthValue = function (cell) {

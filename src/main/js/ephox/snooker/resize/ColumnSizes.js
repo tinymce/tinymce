@@ -14,10 +14,8 @@ define(
   function (Arr, Fun, Blocks, Sizes, CellUtils, Util, Css) {
     var getRaw = function (cell, property, getter) {
       return Css.getRaw(cell, property).fold(function () {
-        console.log('%craw','font-size: 19px; color: #eda;',cell);
         return getter(cell) + 'px';
       }, function (raw) {
-
         return raw;
       });
     };
@@ -78,20 +76,16 @@ define(
         return cellOption.map(direction.edge);
       });
 
-
-      var xxx = Arr.map(rows, function (cellOption, c) {
+      return Arr.map(rows, function (cellOption, c) {
         var rowCell = cellOption.filter(Fun.not(CellUtils.hasRowspan));
 
         return rowCell.fold(function () {
           var deduced = Util.deduce(backups, c);
           return fallback(deduced);
         }, function (cell) {
-          console.log('cell.dom().cloneNode(true)',cell.dom().cloneNode(true));
           return getHeight(cell);
         });
       });
-
-      return xxx;
     };
 
     var getPixelHeights = function (warehouse, direction) {
@@ -101,13 +95,9 @@ define(
     };
 
     var getRawHeights = function (warehouse, direction) {
-      var r = getHeightFrom(warehouse, direction, getRawH, function (deduced) {
-        return deduced.map(function (d) {console.log('d' , d); return d + 'px'; }).getOr('');
+      return getHeightFrom(warehouse, direction, getRawH, function (deduced) {
+        return deduced.map(function (d) { return d + 'px'; }).getOr('');
       });
-
-      console.log('r',r);
-
-      return r;
     };
 
     return {

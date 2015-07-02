@@ -71,10 +71,8 @@ define(
     };
 
     var redistributeHeight = function (table, newHeight, direction) {
-      console.log('newHeight',newHeight);
       var calcs = redistribute(table, newHeight, direction, Height.get, ColumnSizes.getRawHeights);
       var rows = calcs.warehouse.all();
-      console.log('calcs.newSizes',calcs.newSizes);
       redistributeToH(calcs.newSizes, rows, calcs.cells, calcs.unit);
     };
 
