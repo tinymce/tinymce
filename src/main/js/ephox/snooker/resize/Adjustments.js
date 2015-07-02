@@ -61,6 +61,10 @@ define(
       return Warehouse.generate(list);
     };
 
+    var getNewTableSize = function (newSize) {
+      return Arr.foldr(newSize, function (b, a) { return b + a; }, 0);
+    };
+
     var adjust = function (table, delta, index, direction) {
       var list = DetailsList.fromTable(table);
       var warehouse = getWarehouse(list);
@@ -79,7 +83,7 @@ define(
       });
 
       // Set the overall width of the table.
-      var total = Arr.foldr(newWidths, function (b, a) { return b + a; }, 0);
+      var total = getNewTableSize(newWidths);
       Sizes.setWidth(table, total);
     };
 
@@ -103,7 +107,7 @@ define(
         Sizes.setHeight(cell.element(), cell.height());
       });
 
-      var total = Arr.foldr(newHeights, function (b, a) { return b + a; }, 0);
+      var total = getNewTableSize(newHeights);
       Sizes.setHeight(table, total);
     };
 
