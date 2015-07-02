@@ -129,7 +129,8 @@ define(
     return {
       adjust: adjust,
       adjustHeight: adjustHeight,
-      recalculateWidth: recalculateWidth,
+      recalculateWidth: recalculateWidth, // These two methods are exposed because atomically
+      recalculateHeight: recalculateHeight, // tested, but these are not actually used directly
       adjustTo: adjustTo
     };
   }
