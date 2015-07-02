@@ -37,7 +37,6 @@ define(
 
     var recalculateHeight = function (warehouse, heights) {
       var all = Warehouse.justCells(warehouse);
-
       return Arr.map(all, function (cell) {
         var height = total(cell.row(), cell.row() + cell.rowspan(), heights);
         return {
