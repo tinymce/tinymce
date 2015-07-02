@@ -52,32 +52,35 @@ define(
       });
     };
 
-    var redistributeHeight = function (table, newHeight, direction) {
-      var totalHeight = Height.get(table);
-      var unit = Redistribution.validate(newHeight).fold(Fun.constant('px'), Fun.constant('px'), Fun.constant('%'));
+    var redistribute = function (table, nuSize, direction, getter, sizeGet) {
+      var total = getter(table);
+      var unit = Redistribution.validate(nuSize).fold(Fun.constant('px'), Fun.constant('px'), Fun.constant('%'));
 
       var list = DetailsList.fromTable(table);
       var warehouse = Warehouse.generate(list);
-      var oldHeights = ColumnSizes.getRawHeights(warehouse, direction);
-      var newHeights = Redistribution.redistribute(oldHeights, totalHeight, newHeight);
+      var oldWidths = sizeGet(warehouse, direction);
+      var nuSizes = Redistribution.redistribute(oldWidths, total, nuSize);
+
       var cells = Warehouse.justCells(warehouse);
-      var rows = warehouse.all();
-      redistributeToH(newHeights, rows, cells, unit);
+
+      return {
+        newSizes: nuSizes,
+        cells: cells,
+        unit: unit,
+        warehouse: warehouse
+      };
     };
 
+    var redistributeHeight = function (table, newHeight, direction) {
+      var calcs = redistribute(table, newHeight, direction, Height.get, ColumnSizes.getRawHeights);
+
+      var rows = calcs.warehouse.all();
+      redistributeToH(calcs.newSizes, rows, calcs.cells, calcs.unit);
+    };
 
     var redistributeWidth = function (table, newWidth, direction) {
-      var totalWidth = Width.get(table);
-      var unit = Redistribution.validate(newWidth).fold(Fun.constant('px'), Fun.constant('px'), Fun.constant('%'));
-
-      var list = DetailsList.fromTable(table);
-      var warehouse = Warehouse.generate(list);
-      var oldWidths = ColumnSizes.getRawWidths(warehouse, direction);
-      var newWidths = Redistribution.redistribute(oldWidths, totalWidth, newWidth);
-
-      var cells = Warehouse.justCells(warehouse);
-
-      redistributeToW(newWidths, cells, unit);
+      var calcs = redistribute(table, newWidth, direction, Width.get, ColumnSizes.getRawWidths);
+      redistributeToW(calcs.newSizes, calcs.cells, calcs.unit);
     };
 
     return {
