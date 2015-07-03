@@ -125,8 +125,6 @@ define(
       var rtlManager = TableResize(ResizeWire.only(rtls), ResizeDirection.rtl);
       rtlManager.on();
 
-      var heightManager = TableResize(ResizeWire.only(ltrs), ResizeDirection.ltr);
-      heightManager.on();
       // For firefox.
       Ready.execute(function () {
         // document.execCommand("enableInlineTableEditing", null, false);
