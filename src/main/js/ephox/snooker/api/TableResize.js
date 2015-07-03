@@ -42,41 +42,12 @@ define(
         events.trigger.afterResize();
       });
 
-      manager.events.startAdjust.bind(function (event) {
-        events.trigger.startDrag();
-      });
-
-      var destroy = function () {
-        manager.destroy();
-        // vmanager.destroy();
-      };
-
-      var on = function () {
-        manager.on();
-        // vmanager.on();
-      };
-
-      var off = function () {
-        manager.off();
-        // vmanager.off();
-      };
-
-      var hideBars = function () {
-        manager.hideBars();
-        // vmanager.hideBars();
-      };
-
-      var showBars = function () {
-        manager.showBars();
-        // vmanager.showBars();
-      };
-
       return {
-        on: on,
-        off: off,
-        hideBars: hideBars,
-        showBars: showBars,
-        destroy: destroy,
+        on: manager.on,
+        off: manager.off,
+        hideBars: manager.hideBars,
+        showBars: manager.showBars,
+        destroy: manager.destroy,
         events: events.registry
       };
     };
