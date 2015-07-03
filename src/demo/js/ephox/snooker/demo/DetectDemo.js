@@ -117,7 +117,7 @@ define(
       var ltrs = Element.fromHtml('<div class="ltrs"></div>');
       InsertAll.append(ltrs, [ Element.fromHtml('<p>Left to Right tables</p>'), tester, Element.fromTag('p'), subject2 ]);
       var rtls = Element.fromHtml('<div dir="rtl"></div>');
-       // InsertAll.append(rtls, [ Element.fromHtml('<p>Right to Left table</p>'), subject3 ]);
+       InsertAll.append(rtls, [ Element.fromHtml('<p>Right to Left table</p>'), subject3 ]);
       InsertAll.append(ephoxUi, [ ltrs, rtls ]);
 
       var ltrManager = TableResize(ResizeWire.only(ltrs), ResizeDirection.ltr);
