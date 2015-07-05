@@ -31,6 +31,7 @@ define(
     };
 
     var rtlPositions = function (cols, _table) {
+      if (cols.length === 0 ) return [];
       var lines = Arr.map(cols.slice(1), function (cellOption, col) {
         return cellOption.map(function (cell) {
           var pos = Location.absolute(cell);
@@ -47,6 +48,7 @@ define(
     };
 
     var heightPositions = function (rows, _table) {
+      if (rows.length === 0 ) return [];
       var lines = Arr.map(rows.slice(1), function (cellOption, row) {
         return cellOption.map(function (cell) {
           var pos = Location.absolute(cell);
