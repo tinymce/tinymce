@@ -81,6 +81,7 @@ define(
           Css.set(event.target(), 'opacity', '0.2');
           resizing.go(wire.parent());
         }
+
         if (Bars.isColBar(event.target())) {
           events.trigger.startAdjust();
           mutation.assign(event.target());
@@ -97,11 +98,6 @@ define(
           hoverTable = Node.name(event.target()) === 'table' ? Option.some(event.target()) : SelectorFind.ancestor(event.target(), 'table');
           hoverTable.each(function (ht) {
             Bars.rowRefresh(wire, ht, hdirection);
-          });
-        }
-        if (Node.name(event.target()) === 'table' || SelectorExists.ancestor(event.target(), 'table')) {
-          hoverTable = Node.name(event.target()) === 'table' ? Option.some(event.target()) : SelectorFind.ancestor(event.target(), 'table');
-          hoverTable.each(function (ht) {
             Bars.colRefresh(wire, ht, direction);
           });
         }
