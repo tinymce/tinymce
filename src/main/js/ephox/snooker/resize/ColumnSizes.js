@@ -52,10 +52,13 @@ define(
       });
     };
 
+    var getDeduced = function (deduced) {
+      console.log('deduced',deduced);
+      return deduced.map(function (d) { return d + 'px'; }).getOr('');
+    };
+
     var getRawWidths = function (warehouse, direction) {
-      return getWidthFrom(warehouse, direction, getRawW, function (deduced) {
-        return deduced.map(function (d) { return d + 'px'; }).getOr('');
-      });
+      return getWidthFrom(warehouse, direction, getRawW, getDeduced);
     };
 
     var getPixelWidths = function (warehouse, direction) {
@@ -95,9 +98,7 @@ define(
     };
 
     var getRawHeights = function (warehouse, direction) {
-      return getHeightFrom(warehouse, direction, getRawH, function (deduced) {
-        return deduced.map(function (d) { return d + 'px'; }).getOr('');
-      });
+      return getHeightFrom(warehouse, direction, getRawH, getDeduced);
     };
 
     return {
