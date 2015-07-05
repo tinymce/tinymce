@@ -16,22 +16,6 @@ define(
   ],
 
   function (Arr, Fun, DetailsList, Warehouse, ColumnSizes, Redistribution, Sizes, CellUtils, Css, Height, Width) {
-    var setWidth = function (cell, amount) {
-      Sizes.setWidth(cell, amount);
-    };
-
-    var getWidth = function (cell) {
-      return Sizes.getWidth(cell);
-    };
-
-    var setHeight = function (cell, amount) {
-      Sizes.setHeight(cell, amount);
-    };
-
-    var getHeight = function (cell) {
-      return Sizes.getHeight(cell);
-    };
-
     var redistributeToW = function (newWidths, cells, unit) {
       Arr.each(cells, function (cell) {
         var widths = newWidths.slice(cell.column(), cell.colspan() + cell.column());
@@ -82,10 +66,10 @@ define(
     };
 
     return {
-      setWidth: setWidth,
-      getWidth: getWidth,
-      setHeight: setHeight,
-      getHeight: getHeight,
+      setWidth: Sizes.setWidth,
+      getWidth: Sizes.getWidth,
+      setHeight: Sizes.setHeight,
+      getHeight: Sizes.getHeight,
       redistributeWidth: redistributeWidth,
       redistributeHeight: redistributeHeight
     };

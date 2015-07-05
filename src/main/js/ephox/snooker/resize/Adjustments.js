@@ -10,10 +10,11 @@ define(
     'ephox.snooker.resize.ColumnSizes',
     'ephox.snooker.resize.Sizes',
     'ephox.snooker.util.CellUtils',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.sugar.api.SelectorFind',
+    'global!Math'
   ],
 
-  function (Arr, Fun, Deltas, DetailsList, Warehouse, ColumnSizes, Sizes, CellUtils, SelectorFind) {
+  function (Arr, Fun, Deltas, DetailsList, Warehouse, ColumnSizes, Sizes, CellUtils, SelectorFind, Math) {
     var total = function (start, end, measures) {
         var r = 0;
         for (var i = start; i < end; i++) {
@@ -92,7 +93,7 @@ define(
       var heights = ColumnSizes.getPixelHeights(warehouse, direction);
 
       var newHeights = Arr.map(heights, function (dy, i) {
-        return index === i ? delta + dy : dy;
+        return index === i ? Math.max(delta + dy, CellUtils.minHeight()) : dy;
       });
 
       var newCellSizes = recalculateHeight(warehouse, newHeights);
