@@ -42,7 +42,7 @@ define(
         return {
           element: cell.element,
           height: Fun.constant(height),
-          rowspan: cell.colspan
+          rowspan: cell.rowspan
         };
       });
     };
