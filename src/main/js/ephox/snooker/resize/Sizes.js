@@ -23,9 +23,9 @@ define(
     };
 
     var getValue = function (cell, property) {
-      var value = cell.dom().style.getPropertyValue(property);
-      if (value !== null && value !== undefined) return value;
-      else return Css.get(cell, property);
+      return Css.getRaw(cell, property).getOrThunk(function () {
+        return Css.get(cell, property);
+      });
     };
 
     var getWidthValue = function (cell) {
