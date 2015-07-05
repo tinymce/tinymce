@@ -34,7 +34,7 @@ define(
       if (cols.length === 0 ) return [];
       var lines = Arr.map(cols.slice(1), function (cellOption, col) {
         return cellOption.map(function (cell) {
-          var pos = Location.absolute(cell);
+          var pos = Location.absolute(cell  );
           return colInfo(col, pos.left() + Width.getOuter(cell));
         });
       });
