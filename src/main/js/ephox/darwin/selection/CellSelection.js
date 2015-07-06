@@ -11,11 +11,10 @@ define(
     'ephox.sugar.api.Class',
     'ephox.sugar.api.OnNode',
     'ephox.sugar.api.SelectorFilter',
-    'ephox.sugar.api.SelectorFind',
-    'global!Math'
+    'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Ephemera, Fun, Option, DomParent, TablePositions, Class, OnNode, SelectorFilter, SelectorFind, Math) {
+  function (Arr, Ephemera, Fun, Option, DomParent, TablePositions, Class, OnNode, SelectorFilter, SelectorFind) {
     var selectedClass = '.' + Ephemera.selectedClass();
     var removeSelectionClasses = OnNode.removeClasses([ Ephemera.selectedClass(), Ephemera.lastSelectedClass(), Ephemera.firstSelectedClass() ]);
 

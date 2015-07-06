@@ -11,15 +11,15 @@ define(
   function (CellSelection, Fun, Option, SelectorFind) {
     return function (bridge, container) {
       var cursor = Option.none();
-
-      var restoreInitialSelection = function (cell) {
-        bridge.selectContents(cell);
+      var clearState = function () {
+        cursor = Option.none();
       };
 
       /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
       var mousedown = function (event) {
-        cursor = SelectorFind.closest(event.target(), 'td,th');
         CellSelection.clear(container);
+        cursor = SelectorFind.closest(event.target(), 'td,th');
+        cursor.each(storeInitialSelection);
       };
 
       /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
@@ -30,26 +30,18 @@ define(
           var boxes = finish.bind(Fun.curry(CellSelection.identify, start)).getOr([]);
           // Wait until we have more than one, otherwise you can't do text selection inside a cell.
           if (boxes.length > 1) {
-            CellSelection.selectRange(container, boxes, start, finish.getOrDie());
+            var mouseCell = finish.getOrDie();
+            CellSelection.selectRange(container, boxes, start, mouseCell);
 
-            // stop the browser from creating a big text selection. Doesn't work in all cases, but it's nice when it does
-            restoreInitialSelection(start);
+            // stop the browser from creating a big text selection, select the cell where the cursor is
+            bridge.selectContents(mouseCell);
           }
         });
       };
 
       /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
       var mouseup = function () {
-        cursor.each(function (start) {
-          // if we have a multi cell selection, set the cursor back to collapsed at the start point
-          CellSelection.retrieve(container).each(function (cells) {
-            if (cells.length > 1) {
-              restoreInitialSelection(start);
-            }
-          });
-          // clear state
-          cursor = Option.none();
-        });
+        cursor.each(clearState);
       };
 
       return {
