@@ -29,7 +29,8 @@ define(
       hasColspan: hasColspan,
       hasRowspan: hasRowspan,
       minWidth: Fun.constant(10),
-      minHeight: Fun.constant(10)
+      minHeight: Fun.constant(10),
+      getInt: getInt
     };
   }
 );
