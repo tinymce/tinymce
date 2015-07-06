@@ -26,31 +26,16 @@ define(
     var resizeColBar = Styles.resolve('resizer-cols');
     var BAR_THICKNESS = 7;
 
-    var clear = function (wire, table, selector) {
-      var previous = SelectorFilter.descendants(wire.parent(), '.' + resizeBar + selector);
+    var clear = function (wire, table) {
+      var previous = SelectorFilter.descendants(wire.parent(), '.' + resizeBar);
       Arr.each(previous, Remove.remove);
     };
 
-    var refreshCols = function (wire, table, cols, direction) {
-      var position = Location.absolute(table);
-      var tableHeight = Height.getOuter(table);
 
-      var colPositions = direction.positions(cols, table);
-      Arr.each(colPositions, function (cpOption, i) {
-        cpOption.each(function (cp) {
-          var origin = wire.origin();
-          var bar = Bar(cp.col(), cp.x() - origin.left(), position.top() - origin.top(), BAR_THICKNESS, tableHeight);
-          Classes.add(bar, [ resizeBar, resizeColBar ]);
-
-          Insert.append(wire.parent(), bar);
-        });
-      });
-    };
-
-
-    var refreshGrid = function (wire, table, rows, hdirection) {
+    var refreshGrid = function (wire, table, rows, cols, hdirection, vdirection) {
       var tableWidth = Width.getOuter(table);
       var position = Location.absolute(table);
+      var tableHeight = Height.getOuter(table);
       var rowPositions = hdirection.positions(rows, table);
 
       Arr.each(rowPositions, function (cpOption, _i) {
@@ -62,18 +47,32 @@ define(
         });
       });
 
+
+
+      var colPositions = vdirection.positions(cols, table);
+      Arr.each(colPositions, function (cpOption, i) {
+        cpOption.each(function (cp) {
+          var origin = wire.origin();
+          var bar = Bar(cp.col(), cp.x() - origin.left(), position.top() - origin.top(), BAR_THICKNESS, tableHeight);
+          Classes.add(bar, [ resizeBar, resizeColBar ]);
+
+          Insert.append(wire.parent(), bar);
+        });
+      });
+
+
     };
 
     var refresh = function (wire, table, hdirection, vdirection) {
-      clear(wire, table, '.' + resizeRowBar);
+      clear(wire, table);
 
       var list = DetailsList.fromTable(table);
       var warehouse = Warehouse.generate(list);
       var rows = Blocks.rows(warehouse);
       var cols = Blocks.columns(warehouse);
 
-      if (rows.length > 0) refreshGrid(wire, table, rows, hdirection);
-      if (cols.length > 0) refreshCols(wire, table, cols, vdirection);
+      if (rows.length > 0) refreshGrid(wire, table, rows, cols, hdirection, vdirection);
+
     };
 
     var hide = function (wire) {
