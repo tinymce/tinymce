@@ -16,6 +16,7 @@ define(
 
   function (Arr, Ephemera, Fun, Option, DomParent, TablePositions, Class, OnNode, SelectorFilter, SelectorFind) {
     var selectedClass = '.' + Ephemera.selectedClass();
+    var addSelectionClass = OnNode.addClass(Ephemera.selectedClass());
     var removeSelectionClasses = OnNode.removeClasses([ Ephemera.selectedClass(), Ephemera.lastSelectedClass(), Ephemera.firstSelectedClass() ]);
 
     var clear = function (container) {
@@ -24,7 +25,7 @@ define(
     };
 
     var select = function (cells) {
-      Arr.each(cells, OnNode.addClass(Ephemera.selectedClass()));
+      Arr.each(cells, addSelectionClass);
     };
 
     var lookupTable = function (container) {
