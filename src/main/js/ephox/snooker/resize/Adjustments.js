@@ -61,7 +61,7 @@ define(
       return Warehouse.generate(list);
     };
 
-    var getNewTableSize = function (newSize) {
+    var sumUp = function (newSize) {
       return Arr.foldr(newSize, function (b, a) { return b + a; }, 0);
     };
 
@@ -83,7 +83,7 @@ define(
       });
 
       // Set the overall width of the table.
-      var total = getNewTableSize(newWidths);
+      var total = sumUp(newWidths);
       Sizes.setWidth(table, total);
     };
 
@@ -107,7 +107,7 @@ define(
         Sizes.setHeight(cell.element(), cell.height());
       });
 
-      var total = getNewTableSize(newHeights);
+      var total = sumUp(newHeights);
       Sizes.setHeight(table, total);
     };
 

@@ -7,65 +7,69 @@ define(
     'ephox.perhaps.Option',
     'ephox.porkbun.Event',
     'ephox.porkbun.Events',
-    'ephox.snooker.resize.AssistantManager',
     'ephox.snooker.resize.BarMutation',
     'ephox.snooker.resize.Bars',
     'ephox.snooker.style.Styles',
+    'ephox.snooker.util.Util',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.SelectorExists',
-    'ephox.sugar.api.SelectorFind',
-    'global!parseInt'
+    'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Dragger, Fun, Option, Event, Events, AssistantManager, BarMutation, Bars, Styles, Attr, Class, Css, DomEvent, Node, SelectorExists, SelectorFind, parseInt) {
+  function (Dragger, Fun, Option, Event, Events, BarMutation, Bars, Styles, Util, Attr, Class, Css, DomEvent, Node, SelectorExists, SelectorFind) {
     return function (wire, direction, hdirection) {
       var mutation = BarMutation();
       var resizing = Dragger.transform(mutation, {});
 
       var hoverTable = Option.none();
 
+      var getResizer = function (element, type) {
+        return Option.from(Attr.get(element, type));
+      };
 
       /* Reposition the bar as the user drags */
       mutation.events.drag.bind(function (event) {
-        var row = Attr.get(event.target(), 'data-row');
-        if (row !== undefined) {
-          var currentRow = AssistantManager.getInt(event.target(), 'top');
+        getResizer(event.target(), 'data-row').each(function (_dataRow) {
+          var currentRow = Util.getInt(event.target(), 'top');
           Css.set(event.target(), 'top', currentRow + event.yDelta() + 'px');
-        }
+        });
 
-        var column = Attr.get(event.target(), 'data-column');
-        if (column !== undefined) {
-          var currentCol = AssistantManager.getInt(event.target(), 'left');
+        getResizer(event.target(), 'data-column').each(function (_dataCol) {
+          var currentCol = Util.getInt(event.target(), 'left');
           Css.set(event.target(), 'left', currentCol + event.xDelta() + 'px');
-        }
+        });
       });
 
       /* Resize the column once the user releases the mouse */
       resizing.events.stop.bind(function () {
         mutation.get().each(function (target) {
           hoverTable.each(function (table) {
-            var row = Attr.get(target, 'data-row');
-            var newY = AssistantManager.getInt(target, 'top');
-            var oldY = parseInt(Attr.get(target, 'data-initial-top'), 10);
-            var delta = newY - oldY;
-            Attr.remove(target, 'data-initial-top');
-            if (row !== undefined) events.trigger.adjustHeight(table, delta, parseInt(row, 10));
+            getResizer(target, 'data-row').each(function (row) {
+              var newY = Util.getInt(target, 'top');
+              var oldY = parseInt(Attr.get(target, 'data-initial-top'), 10);
+              var delta = newY - oldY;
+              Attr.remove(target, 'data-initial-top');
+              events.trigger.adjustHeight(table, delta, parseInt(row, 10));
+            });
+
             Bars.rowRefresh(wire, table, hdirection);
           });
         });
 
         mutation.get().each(function (target) {
           hoverTable.each(function (table) {
-            var column = Attr.get(target, 'data-column');
-            var newX = AssistantManager.getInt(target, 'left');
-            var oldX = parseInt(Attr.get(target, 'data-initial-left'), 10);
-            var delta = newX - oldX;
-            Attr.remove(target, 'data-initial-left');
-            if (column !== undefined) events.trigger.adjustWidth(table, delta, parseInt(column, 10));
+            getResizer(target, 'data-column').each(function (column) {
+              var newX = Util.getInt(target, 'left');
+              var oldX = parseInt(Attr.get(target, 'data-initial-left'), 10);
+              var delta = newX - oldX;
+              Attr.remove(target, 'data-initial-left');
+              events.trigger.adjustWidth(table, delta, parseInt(column, 10));
+            });
+
             Bars.colRefresh(wire, table, direction);
           });
         });
@@ -139,8 +143,8 @@ define(
         refresh: refresh,
         on: resizing.on,
         off: resizing.off,
-        hideBars: Fun.curry(AssistantManager.hideBars, wire),
-        showBars: Fun.curry(AssistantManager.showBars, wire),
+        hideBars: Fun.curry(Bars.hide, wire),
+        showBars: Fun.curry(Bars.show, wire),
         events: events.registry
       };
     };
