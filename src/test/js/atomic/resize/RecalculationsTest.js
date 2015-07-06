@@ -1,5 +1,5 @@
 test(
-  'AdjustmentsTest',
+  'RecalculationsTest',
 
   {
     'ephox.sugar.api.Css': '../mock/ephox/sugar/api/Css',
@@ -14,18 +14,18 @@ test(
     'ephox.scullion.Struct',
     'ephox.snooker.api.Structs',
     'ephox.snooker.model.Warehouse',
-    'ephox.snooker.resize.Adjustments'
+    'ephox.snooker.resize.Recalculations'
   ],
 
-  function (Arr, Struct, Structs, Warehouse, Adjustments) {
+  function (Arr, Struct, Structs, Warehouse, Recalculations) {
     var dimensions = Structs.dimensions;
 
     var assertParts = Struct.immutable('widths', 'heights');
 
     var check = function (expected, input, sizes) {
       var warehouse = Warehouse.generate(input);
-      var actualW = Adjustments.recalculateWidth(warehouse, sizes.width());
-      var actualH = Adjustments.recalculateHeight(warehouse, sizes.height());
+      var actualW = Recalculations.recalculateWidth(warehouse, sizes.width());
+      var actualH = Recalculations.recalculateHeight(warehouse, sizes.height());
 
       Arr.each(expected, function (expt) {
         assert.eq(expt.widths(), Arr.map(actualW, function (cell) {
