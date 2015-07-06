@@ -59,7 +59,6 @@ define(
           });
         });
       }, function (n) {
-
         return Option.some({ value: n, delta: 1 });
       });
 

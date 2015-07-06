@@ -7,7 +7,6 @@ define(
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.resize.Bar',
-    'ephox.snooker.resize.HorizontalBar',
     'ephox.snooker.style.Styles',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Classes',
@@ -20,7 +19,7 @@ define(
     'ephox.sugar.api.Width'
   ],
 
-  function (Arr, Blocks, DetailsList, Warehouse, Bar, HorizontalBar, Styles, Class, Classes, Css, Height, Insert, Location, Remove, SelectorFilter, Width) {
+  function (Arr, Blocks, DetailsList, Warehouse, Bar, Styles, Class, Classes, Css, Height, Insert, Location, Remove, SelectorFilter, Width) {
     var resizeBar = Styles.resolve('resizer-bar');
     var resizeRowBar = Styles.resolve('resizer-rows');
     var resizeColBar = Styles.resolve('resizer-cols');
@@ -40,7 +39,7 @@ define(
     var refreshCol = function (wire, colPositions, position, tableHeight) {
       process(colPositions, function (cp) {
         var origin = wire.origin();
-        var bar = Bar(cp.col(), cp.x() - origin.left(), position.top() - origin.top(), BAR_THICKNESS, tableHeight);
+        var bar = Bar.col(cp.col(), cp.x() - origin.left(), position.top() - origin.top(), BAR_THICKNESS, tableHeight);
         Classes.add(bar, [ resizeBar, resizeColBar ]);
         Insert.append(wire.parent(), bar);
       });
@@ -49,7 +48,7 @@ define(
     var refreshRow = function (wire, rowPositions, position, tableWidth) {
       process(rowPositions, function (cp) {
         var origin = wire.origin();
-        var horizontalBar = HorizontalBar(cp.row(), position.left() + origin.left(), cp.y() + origin.top(), tableWidth, BAR_THICKNESS);
+        var horizontalBar = Bar.row(cp.row(), position.left() + origin.left(), cp.y() + origin.top(), tableWidth, BAR_THICKNESS);
         Classes.add(horizontalBar, [ resizeBar, resizeRowBar ]);
         Insert.append(wire.parent(), horizontalBar);
       });
