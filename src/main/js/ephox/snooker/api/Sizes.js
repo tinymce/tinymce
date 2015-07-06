@@ -6,6 +6,7 @@ define(
     'ephox.peanut.Fun',
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
+    'ephox.snooker.resize.BarPositions',
     'ephox.snooker.resize.ColumnSizes',
     'ephox.snooker.resize.Redistribution',
     'ephox.snooker.resize.Sizes',
@@ -15,7 +16,7 @@ define(
     'ephox.sugar.api.Width'
   ],
 
-  function (Arr, Fun, DetailsList, Warehouse, ColumnSizes, Redistribution, Sizes, CellUtils, Css, Height, Width) {
+  function (Arr, Fun, DetailsList, Warehouse, BarPositions, ColumnSizes, Redistribution, Sizes, CellUtils, Css, Height, Width) {
     var redistributeToW = function (newWidths, cells, unit) {
       Arr.each(cells, function (cell) {
         var widths = newWidths.slice(cell.column(), cell.colspan() + cell.column());
@@ -54,8 +55,8 @@ define(
       };
     };
 
-    var redistributeHeight = function (table, newHeight, direction) {
-      var calcs = redistribute(table, newHeight, direction, Height.get, ColumnSizes.getRawHeights);
+    var redistributeHeight = function (table, newHeight) {
+      var calcs = redistribute(table, newHeight, BarPositions.height, Height.get, ColumnSizes.getRawHeights);
       var rows = calcs.warehouse.all();
       redistributeToH(calcs.newSizes, rows, calcs.cells, calcs.unit);
     };

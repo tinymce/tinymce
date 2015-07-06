@@ -31,12 +31,22 @@ define(
       Arr.each(previous, Remove.remove);
     };
 
+    var refreshCol = function (wire, colPositions, position, tableHeight) {
+      Arr.each(colPositions, function (cpOption, i) {
+        cpOption.each(function (cp) {
+          var origin = wire.origin();
+          var bar = Bar(cp.col(), cp.x() - origin.left(), position.top() - origin.top(), BAR_THICKNESS, tableHeight);
+          Classes.add(bar, [ resizeBar, resizeColBar ]);
+          Insert.append(wire.parent(), bar);
+        });
+      });
+    };
 
     var refreshGrid = function (wire, table, rows, cols, hdirection, vdirection) {
       var tableWidth = Width.getOuter(table);
       var position = Location.absolute(table);
       var tableHeight = Height.getOuter(table);
-      var rowPositions = hdirection.positions(rows, table);
+      var rowPositions = rows.length > 0 ? hdirection.positions(rows, table) : [];
 
       Arr.each(rowPositions, function (cpOption, _i) {
         cpOption.each(function (cp) {
@@ -47,20 +57,8 @@ define(
         });
       });
 
-
-
-      var colPositions = vdirection.positions(cols, table);
-      Arr.each(colPositions, function (cpOption, i) {
-        cpOption.each(function (cp) {
-          var origin = wire.origin();
-          var bar = Bar(cp.col(), cp.x() - origin.left(), position.top() - origin.top(), BAR_THICKNESS, tableHeight);
-          Classes.add(bar, [ resizeBar, resizeColBar ]);
-
-          Insert.append(wire.parent(), bar);
-        });
-      });
-
-
+      var colPositions = cols.length > 0 ? vdirection.positions(cols, table) : [];
+      refreshCol(wire, colPositions, position, tableHeight);
     };
 
     var refresh = function (wire, table, hdirection, vdirection) {
@@ -71,8 +69,7 @@ define(
       var rows = Blocks.rows(warehouse);
       var cols = Blocks.columns(warehouse);
 
-      if (rows.length > 0) refreshGrid(wire, table, rows, cols, hdirection, vdirection);
-
+      refreshGrid(wire, table, rows, cols, hdirection, vdirection);
     };
 
     var hide = function (wire) {

@@ -4,18 +4,18 @@ define(
   [
     'ephox.porkbun.Event',
     'ephox.porkbun.Events',
-    'ephox.snooker.api.ResizeDirection',
     'ephox.snooker.resize.Adjustments',
-    'ephox.snooker.resize.BarManager'
+    'ephox.snooker.resize.BarManager',
+    'ephox.snooker.resize.BarPositions'
   ],
 
-  function (Event, Events, ResizeDirection, Adjustments, BarManager) {
+  function (Event, Events, Adjustments, BarManager, BarPositions) {
     /*
      * Creates and sets up a bar-based column resize manager.
      * Wire is used to provide the parent, view, and origin
      */
     return function (wire, vdirection) {
-      var hdirection = ResizeDirection.height;
+      var hdirection = BarPositions.height;
       var manager = BarManager(wire, vdirection, hdirection);
 
       var events = Events.create({
