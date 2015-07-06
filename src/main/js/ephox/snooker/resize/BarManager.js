@@ -10,7 +10,7 @@ define(
     'ephox.snooker.resize.BarMutation',
     'ephox.snooker.resize.Bars',
     'ephox.snooker.style.Styles',
-    'ephox.snooker.util.Util',
+    'ephox.snooker.util.CellUtils',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Css',
@@ -21,7 +21,7 @@ define(
     'global!parseInt'
   ],
 
-  function (Dragger, Fun, Option, Event, Events, BarMutation, Bars, Styles, Util, Attr, Class, Css, DomEvent, Node, SelectorExists, SelectorFind, parseInt) {
+  function (Dragger, Fun, Option, Event, Events, BarMutation, Bars, Styles, CellUtils, Attr, Class, Css, DomEvent, Node, SelectorExists, SelectorFind, parseInt) {
     return function (wire, direction, hdirection) {
       var mutation = BarMutation();
       var resizing = Dragger.transform(mutation, {});
@@ -35,18 +35,18 @@ define(
       /* Reposition the bar as the user drags */
       mutation.events.drag.bind(function (event) {
         getResizer(event.target(), 'data-row').each(function (_dataRow) {
-          var currentRow = Util.getInt(event.target(), 'top');
+          var currentRow = CellUtils.getInt(event.target(), 'top');
           Css.set(event.target(), 'top', currentRow + event.yDelta() + 'px');
         });
 
         getResizer(event.target(), 'data-column').each(function (_dataCol) {
-          var currentCol = Util.getInt(event.target(), 'left');
+          var currentCol = CellUtils.getInt(event.target(), 'left');
           Css.set(event.target(), 'left', currentCol + event.xDelta() + 'px');
         });
       });
 
       var getDelta = function (target, direction) {
-        var newX = Util.getInt(target, direction);
+        var newX = CellUtils.getInt(target, direction);
         var oldX = parseInt(Attr.get(target, 'data-initial-' + direction), 10);
         return newX - oldX;
       };

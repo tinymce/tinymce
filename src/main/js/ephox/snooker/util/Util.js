@@ -5,11 +5,10 @@ define(
     'ephox.compass.Arr',
     'ephox.perhaps.Option',
     'ephox.perhaps.Options',
-    'ephox.sugar.api.Css',
     'global!Math'
   ],
 
-  function (Arr, Option, Options, Css, Math) {
+  function (Arr, Option, Options, Math) {
     // Rename this module, and repeat should be in Arr.
     var repeat = function(repititions, f) {
       var r = [];
@@ -72,16 +71,11 @@ define(
       });
     };
 
-    var getInt = function (element, property) {
-      return parseInt(Css.get(element, property), 10);
-    };
-
     return {
       repeat: repeat,
       range: range,
       unique: unique,
-      deduce: deduce,
-      getInt: getInt
+      deduce: deduce
     };
   }
 );
