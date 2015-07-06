@@ -31,14 +31,27 @@ define(
       Arr.each(previous, Remove.remove);
     };
 
+    var process = function (positions, f) {
+      Arr.each(positions, function (cpOption, i) {
+        cpOption.each(f);
+      });
+    };
+
     var refreshCol = function (wire, colPositions, position, tableHeight) {
-      Arr.each(colPositions, function (cpOption, i) {
-        cpOption.each(function (cp) {
-          var origin = wire.origin();
-          var bar = Bar(cp.col(), cp.x() - origin.left(), position.top() - origin.top(), BAR_THICKNESS, tableHeight);
-          Classes.add(bar, [ resizeBar, resizeColBar ]);
-          Insert.append(wire.parent(), bar);
-        });
+      process(colPositions, function (cp) {
+        var origin = wire.origin();
+        var bar = Bar(cp.col(), cp.x() - origin.left(), position.top() - origin.top(), BAR_THICKNESS, tableHeight);
+        Classes.add(bar, [ resizeBar, resizeColBar ]);
+        Insert.append(wire.parent(), bar);
+      });
+    };
+
+    var refreshRow = function (wire, rowPositions, position, tableWidth) {
+      process(rowPositions, function (cp) {
+        var origin = wire.origin();
+        var horizontalBar = HorizontalBar(cp.row(), position.left() + origin.left(), cp.y() + origin.top(), tableWidth, BAR_THICKNESS);
+        Classes.add(horizontalBar, [ resizeBar, resizeRowBar ]);
+        Insert.append(wire.parent(), horizontalBar);
       });
     };
 
@@ -47,15 +60,7 @@ define(
       var position = Location.absolute(table);
       var tableHeight = Height.getOuter(table);
       var rowPositions = rows.length > 0 ? hdirection.positions(rows, table) : [];
-
-      Arr.each(rowPositions, function (cpOption, _i) {
-        cpOption.each(function (cp) {
-          var origin = wire.origin();
-          var horizontalBar = HorizontalBar(cp.row(), position.left() + origin.left(), cp.y() + origin.top(), tableWidth, BAR_THICKNESS);
-          Classes.add(horizontalBar, [ resizeBar, resizeRowBar ]);
-          Insert.append(wire.parent(), horizontalBar);
-        });
-      });
+      refreshRow(wire, rowPositions, position, tableWidth);
 
       var colPositions = cols.length > 0 ? vdirection.positions(cols, table) : [];
       refreshCol(wire, colPositions, position, tableHeight);
