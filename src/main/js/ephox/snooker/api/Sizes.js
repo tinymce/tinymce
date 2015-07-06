@@ -37,33 +37,35 @@ define(
       });
     };
 
-    var redistribute = function (table, nuSize, direction, getter, sizeGet) {
-      var total = getter(table);
-      var unit = Redistribution.validate(nuSize).fold(Fun.constant('px'), Fun.constant('px'), Fun.constant('%'));
+    var getUnit = function (newSize) {
+      return Redistribution.validate(newSize).fold(Fun.constant('px'), Fun.constant('px'), Fun.constant('%'));
+    };
 
+
+    var redistribute = function (table, optWidth, optHeight, direction) {
       var list = DetailsList.fromTable(table);
       var warehouse = Warehouse.generate(list);
-      var oldSizes = sizeGet(warehouse, direction);
-      var nuSizes = Redistribution.redistribute(oldSizes, total, nuSize);
+      var rows = warehouse.all();
       var cells = Warehouse.justCells(warehouse);
 
-      return {
-        newSizes: nuSizes,
-        cells: cells,
-        unit: unit,
-        warehouse: warehouse
-      };
-    };
+      optWidth.each(function (newWidth) {
+        var wUnit = getUnit(newWidth);
+        var totalWidth = Width.get(table);
+        var oldWidths = ColumnSizes.getRawWidths(warehouse, direction);
+        var nuWidths = Redistribution.redistribute(oldWidths, totalWidth, newWidth);
+        redistributeToW(nuWidths, cells, wUnit);
+        Css.set(table, 'width', newWidth);
+      });
 
-    var redistributeHeight = function (table, newHeight) {
-      var calcs = redistribute(table, newHeight, BarPositions.height, Height.get, ColumnSizes.getRawHeights);
-      var rows = calcs.warehouse.all();
-      redistributeToH(calcs.newSizes, rows, calcs.cells, calcs.unit);
-    };
+      optHeight.each(function (newHeight) {
+        var totalHeight = Height.get(table);
+        var hUnit = getUnit(newHeight);
+        var oldHeights = ColumnSizes.getRawHeights(warehouse, BarPositions.height);
+        var nuHeights = Redistribution.redistribute(oldHeights, totalHeight, newHeight);
+        redistributeToH(nuHeights, rows, cells, hUnit);
+        Css.set(table, 'height', newHeight);
+      });
 
-    var redistributeWidth = function (table, newWidth, direction) {
-      var calcs = redistribute(table, newWidth, direction, Width.get, ColumnSizes.getRawWidths);
-      redistributeToW(calcs.newSizes, calcs.cells, calcs.unit);
     };
 
     return {
@@ -71,8 +73,7 @@ define(
       getWidth: Sizes.getWidth,
       setHeight: Sizes.setHeight,
       getHeight: Sizes.getHeight,
-      redistributeWidth: redistributeWidth,
-      redistributeHeight: redistributeHeight
+      redistribute: redistribute
     };
   }
 );
