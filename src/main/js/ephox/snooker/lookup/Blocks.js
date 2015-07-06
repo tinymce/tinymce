@@ -34,20 +34,20 @@ define(
           return detail.colspan() === 1;
         };
 
-        var getDefault = function () {
+        var getFallback = function () {
           Warehouse.getAt(warehouse, 0, col);
         };
 
-        return decide(getBlock, isSingle, getDefault);
+        return decide(getBlock, isSingle, getFallback);
       });
     };
 
-    var decide = function (getBlock, isSingle, getDefault) {
+    var decide = function (getBlock, isSingle, getFallback) {
       var inBlock = getBlock();
       var singleInBlock = Arr.find(inBlock, isSingle);
 
       var detailOption = Option.from(singleInBlock).orThunk(function () {
-        return Option.from(inBlock[0]).orThunk(getDefault);
+        return Option.from(inBlock[0]).orThunk(getFallback);
       });
 
       return detailOption.map(function (detail) { return detail.element(); });
@@ -73,11 +73,11 @@ define(
           return detail.rowspan() === 1;
         };
 
-        var getDefault = function () {
+        var getFallback = function () {
           return Warehouse.getAt(warehouse, row, 0);
         };
 
-        return decide(getBlock, isSingle, getDefault);
+        return decide(getBlock, isSingle, getFallback);
 
       });
 
