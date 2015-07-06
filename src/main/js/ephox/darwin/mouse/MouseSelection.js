@@ -19,7 +19,6 @@ define(
       var mousedown = function (event) {
         CellSelection.clear(container);
         cursor = SelectorFind.closest(event.target(), 'td,th');
-        cursor.each(storeInitialSelection);
       };
 
       /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
