@@ -17,10 +17,11 @@ define(
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.SelectorExists',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.sugar.api.SelectorFind',
+    'global!parseInt'
   ],
 
-  function (Dragger, Fun, Option, Event, Events, BarMutation, Bars, Styles, Util, Attr, Class, Css, DomEvent, Node, SelectorExists, SelectorFind) {
+  function (Dragger, Fun, Option, Event, Events, BarMutation, Bars, Styles, Util, Attr, Class, Css, DomEvent, Node, SelectorExists, SelectorFind, parseInt) {
     return function (wire, direction, hdirection) {
       var mutation = BarMutation();
       var resizing = Dragger.transform(mutation, {});

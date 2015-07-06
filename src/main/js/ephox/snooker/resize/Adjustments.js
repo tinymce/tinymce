@@ -65,9 +65,13 @@ define(
       return Arr.foldr(newSize, function (b, a) { return b + a; }, 0);
     };
 
-    var adjust = function (table, delta, index, direction) {
+    var getTableWarehouse = function (table) {
       var list = DetailsList.fromTable(table);
-      var warehouse = getWarehouse(list);
+      return getWarehouse(list);
+    };
+
+    var adjust = function (table, delta, index, direction) {
+      var warehouse = getTableWarehouse(table);
       var widths = ColumnSizes.getPixelWidths(warehouse, direction);
 
       // Calculate all of the new widths for columns
@@ -88,8 +92,7 @@ define(
     };
 
     var adjustHeight = function (table, delta, index, direction) {
-      var list = DetailsList.fromTable(table);
-      var warehouse = getWarehouse(list);
+      var warehouse = getTableWarehouse(table);
       var heights = ColumnSizes.getPixelHeights(warehouse, direction);
 
       var newHeights = Arr.map(heights, function (dy, i) {

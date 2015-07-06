@@ -3,10 +3,11 @@ define(
 
   [
     'ephox.peanut.Fun',
-    'ephox.sugar.api.Attr'
+    'ephox.sugar.api.Attr',
+    'global!parseInt'
   ],
 
-  function (Fun, Attr) {
+  function (Fun, Attr, parseInt) {
     var getSpan = function (cell, type) {
       return Attr.has(cell, type) && parseInt(Attr.get(cell, type), 10) > 1;
     };
