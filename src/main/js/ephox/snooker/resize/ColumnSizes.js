@@ -53,7 +53,6 @@ define(
     };
 
     var getDeduced = function (deduced) {
-      console.log('deduced',deduced);
       return deduced.map(function (d) { return d + 'px'; }).getOr('');
     };
 
