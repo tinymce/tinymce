@@ -120,8 +120,7 @@ define(
       });
 
       var refresh = function (tbl) {
-        Bars.rowRefresh(wire, tbl, hdirection);
-        Bars.colRefresh(wire, tbl, direction);
+        Bars.refresh(wire, tbl, hdirection, direction);
       };
 
       var events = Events.create({
