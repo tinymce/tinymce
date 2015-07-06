@@ -61,20 +61,16 @@ define(
               events.trigger.adjustHeight(table, delta, parseInt(row, 10));
             });
 
-            Bars.rowRefresh(wire, table, hdirection);
-          });
-        });
-
-        mutation.get().each(function (target) {
-          hoverTable.each(function (table) {
             getResizer(target, 'data-column').each(function (column) {
               var delta = getDelta(target, 'left');
               Attr.remove(target, 'data-initial-left');
               events.trigger.adjustWidth(table, delta, parseInt(column, 10));
             });
-            Bars.colRefresh(wire, table, direction);
+
+            Bars.refresh(wire, table, hdirection, direction);
           });
         });
+
       });
 
       var downUndler = function (target, direction) {
@@ -98,8 +94,7 @@ define(
         if (Node.name(event.target()) === 'table' || SelectorExists.ancestor(event.target(), 'table')) {
           hoverTable = Node.name(event.target()) === 'table' ? Option.some(event.target()) : SelectorFind.ancestor(event.target(), 'table');
           hoverTable.each(function (ht) {
-            Bars.rowRefresh(wire, ht, hdirection);
-            Bars.colRefresh(wire, ht, direction);
+            Bars.refresh(wire, ht, hdirection, direction);
           });
         }
       });

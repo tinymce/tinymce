@@ -62,24 +62,16 @@ define(
       });
     };
 
-    var colRefresh = function (wire, table, direction) {
-      clear(wire, table, '.' + resizeColBar);
-
-      var list = DetailsList.fromTable(table);
-      var warehouse = Warehouse.generate(list);
-      var cols = Blocks.columns(warehouse);
-
-      if (cols.length > 0) refreshCols(wire, table, cols, direction);
-    };
-
-    var rowRefresh = function (wire, table, direction) {
+    var refresh = function (wire, table, hdirection, vdirection) {
       clear(wire, table, '.' + resizeRowBar);
 
       var list = DetailsList.fromTable(table);
       var warehouse = Warehouse.generate(list);
       var rows = Blocks.rows(warehouse);
+      var cols = Blocks.columns(warehouse);
 
-      if (rows.length > 0) refreshRows(wire, table, rows, direction);
+      if (rows.length > 0) refreshRows(wire, table, rows, hdirection);
+      if (cols.length > 0) refreshCols(wire, table, cols, vdirection);
     };
 
     var hide = function (wire) {
@@ -105,8 +97,7 @@ define(
     };
 
     return {
-      colRefresh: colRefresh,
-      rowRefresh: rowRefresh,
+      refresh: refresh,
       hide: hide,
       show: show,
       isRowBar: isRowBar,
