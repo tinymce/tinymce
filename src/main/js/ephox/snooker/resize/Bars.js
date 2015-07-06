@@ -47,10 +47,11 @@ define(
       });
     };
 
-    var refreshRows = function (wire, table, rows, direction) {
+
+    var refreshGrid = function (wire, table, rows, hdirection) {
       var tableWidth = Width.getOuter(table);
       var position = Location.absolute(table);
-      var rowPositions = direction.positions(rows, table);
+      var rowPositions = hdirection.positions(rows, table);
 
       Arr.each(rowPositions, function (cpOption, _i) {
         cpOption.each(function (cp) {
@@ -60,6 +61,7 @@ define(
           Insert.append(wire.parent(), horizontalBar);
         });
       });
+
     };
 
     var refresh = function (wire, table, hdirection, vdirection) {
@@ -70,7 +72,7 @@ define(
       var rows = Blocks.rows(warehouse);
       var cols = Blocks.columns(warehouse);
 
-      if (rows.length > 0) refreshRows(wire, table, rows, hdirection);
+      if (rows.length > 0) refreshGrid(wire, table, rows, hdirection);
       if (cols.length > 0) refreshCols(wire, table, cols, vdirection);
     };
 
