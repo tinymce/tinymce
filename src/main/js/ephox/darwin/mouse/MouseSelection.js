@@ -5,10 +5,15 @@ define(
     'ephox.darwin.selection.CellSelection',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.sugar.api.Compare',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (CellSelection, Fun, Option, SelectorFind) {
+  function (CellSelection, Fun, Option, Compare, SelectorFind) {
+    var findCell = function (target) {
+      return SelectorFind.closest(target, 'td,th');
+    };
+
     return function (bridge, container) {
       var cursor = Option.none();
       var clearState = function () {
@@ -18,23 +23,23 @@ define(
       /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
       var mousedown = function (event) {
         CellSelection.clear(container);
-        cursor = SelectorFind.closest(event.target(), 'td,th');
+        cursor = findCell(event.target());
       };
 
       /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
       var mouseover = function (event) {
         cursor.each(function (start) {
           CellSelection.clear(container);
-          var finish = SelectorFind.closest(event.target(), 'td,th');
-          var boxes = finish.bind(Fun.curry(CellSelection.identify, start)).getOr([]);
-          // Wait until we have more than one, otherwise you can't do text selection inside a cell.
-          if (boxes.length > 1) {
-            var mouseCell = finish.getOrDie();
-            CellSelection.selectRange(container, boxes, start, mouseCell);
+          findCell(event.target()).each(function (finish) {
+            var boxes = CellSelection.identify(start, finish).getOr([]);
+            // Wait until we have more than one, otherwise you can't do text selection inside a cell.
+            if (boxes.length > 1) {
+              CellSelection.selectRange(container, boxes, start, finish);
 
-            // stop the browser from creating a big text selection, select the cell where the cursor is
-            bridge.selectContents(mouseCell);
-          }
+              // stop the browser from creating a big text selection, select the cell where the cursor is
+              bridge.selectContents(finish);
+            }
+          });
         });
       };
 
