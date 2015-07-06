@@ -44,14 +44,18 @@ define(
         });
       });
 
+      var getDelta = function (target, direction) {
+        var newX = Util.getInt(target, direction);
+        var oldX = parseInt(Attr.get(target, 'data-initial-' + direction), 10);
+        return newX - oldX;
+      };
+
       /* Resize the column once the user releases the mouse */
       resizing.events.stop.bind(function () {
         mutation.get().each(function (target) {
           hoverTable.each(function (table) {
             getResizer(target, 'data-row').each(function (row) {
-              var newY = Util.getInt(target, 'top');
-              var oldY = parseInt(Attr.get(target, 'data-initial-top'), 10);
-              var delta = newY - oldY;
+              var delta = getDelta(target, 'top');
               Attr.remove(target, 'data-initial-top');
               events.trigger.adjustHeight(table, delta, parseInt(row, 10));
             });
@@ -63,37 +67,29 @@ define(
         mutation.get().each(function (target) {
           hoverTable.each(function (table) {
             getResizer(target, 'data-column').each(function (column) {
-              var newX = Util.getInt(target, 'left');
-              var oldX = parseInt(Attr.get(target, 'data-initial-left'), 10);
-              var delta = newX - oldX;
+              var delta = getDelta(target, 'left');
               Attr.remove(target, 'data-initial-left');
               events.trigger.adjustWidth(table, delta, parseInt(column, 10));
             });
-
             Bars.colRefresh(wire, table, direction);
           });
         });
       });
 
+      var downUndler = function (target, direction) {
+        events.trigger.startAdjust();
+        mutation.assign(target);
+        Attr.set(target, 'data-initial-' + direction, parseInt(Css.get(target, direction), 10));
+        Class.add(target, Styles.resolve('resizer-bar-dragging'));
+        Css.set(target, 'opacity', '0.2');
+        resizing.go(wire.parent());
+      };
+
       /* Start the dragging when the bar is clicked, storing the initial position. */
       var mousedown = DomEvent.bind(wire.parent(), 'mousedown', function (event) {
-        if (Bars.isRowBar(event.target())) {
-          events.trigger.startAdjust();
-          mutation.assign(event.target());
-          Attr.set(event.target(), 'data-initial-top', parseInt(Css.get(event.target(), 'top'), 10));
-          Class.add(event.target(), Styles.resolve('resizer-bar-dragging'));
-          Css.set(event.target(), 'opacity', '0.2');
-          resizing.go(wire.parent());
-        }
+        if (Bars.isRowBar(event.target())) downUndler(event.target(), 'top');
 
-        if (Bars.isColBar(event.target())) {
-          events.trigger.startAdjust();
-          mutation.assign(event.target());
-          Attr.set(event.target(), 'data-initial-left', parseInt(Css.get(event.target(), 'left'), 10));
-          Class.add(event.target(), Styles.resolve('resizer-bar-dragging'));
-          Css.set(event.target(), 'opacity', '0.2');
-          resizing.go(wire.parent());
-        }
+        if (Bars.isColBar(event.target())) downUndler(event.target(), 'left');
       });
 
       /* When the mouse moves within the table, refresh the bars. */
