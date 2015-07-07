@@ -35,7 +35,7 @@ define(
         };
 
         var getFallback = function () {
-          Warehouse.getAt(warehouse, 0, col);
+          return Warehouse.getAt(warehouse, 0, col);
         };
 
         return decide(getBlock, isSingle, getFallback);
