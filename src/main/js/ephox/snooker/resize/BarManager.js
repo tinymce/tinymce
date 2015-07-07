@@ -73,7 +73,7 @@ define(
 
       });
 
-      var downUndler = function (target, direction) {
+      var handler = function (target, direction) {
         events.trigger.startAdjust();
         mutation.assign(target);
         Attr.set(target, 'data-initial-' + direction, parseInt(Css.get(target, direction), 10));
@@ -84,9 +84,9 @@ define(
 
       /* Start the dragging when the bar is clicked, storing the initial position. */
       var mousedown = DomEvent.bind(wire.parent(), 'mousedown', function (event) {
-        if (Bars.isRowBar(event.target())) downUndler(event.target(), 'top');
+        if (Bars.isRowBar(event.target())) handler(event.target(), 'top');
 
-        if (Bars.isColBar(event.target())) downUndler(event.target(), 'left');
+        if (Bars.isColBar(event.target())) handler(event.target(), 'left');
       });
 
       /* When the mouse moves within the table, refresh the bars. */

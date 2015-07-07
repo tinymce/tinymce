@@ -58,8 +58,8 @@ define(
       });
 
       optHeight.each(function (newHeight) {
-        var totalHeight = Height.get(table);
         var hUnit = getUnit(newHeight);
+        var totalHeight = Height.get(table);
         var oldHeights = ColumnSizes.getRawHeights(warehouse, BarPositions.height);
         var nuHeights = Redistribution.redistribute(oldHeights, totalHeight, newHeight);
         redistributeToH(nuHeights, rows, cells, hUnit);
