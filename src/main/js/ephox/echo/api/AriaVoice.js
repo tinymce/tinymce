@@ -6,18 +6,33 @@ define(
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert'
+    'ephox.sugar.api.Insert',
+    'ephox.sugar.api.Remove',
+    'ephox.sugar.api.Traverse',
+    'global!setTimeout'
   ],
 
-  function (Id, Attr, Css, Element, Insert) {
+  function (Id, Attr, Css, Element, Insert, Remove, Traverse, setTimeout) {
+    var offscreen = {
+      position: 'absolute',
+      left: '-9999px'
+    };
+
     var tokenSelector = function () {
       return 'span[id^="ephox-echo-voice"]';
     };
 
+    var create = function (doc, text) {
+      var span = Element.fromTag('span', doc.dom());
+      // This stops it saying other things (possibly blank) between transitions.
+      var contents = Element.fromText(text, doc.dom());
+      Insert.append(span, contents);
+      return span;
+    };
+
     var describe = function (item, description) {
-      var token = Element.fromTag('span');
-      var text = Element.fromText(description);
-      Insert.append(token, text);
+      var doc = Traverse.owner(item);
+      var token = create(doc, description);
       var id = Id.generate('ephox-echo-voice');
       Attr.set(token, 'id', id);
 
@@ -30,8 +45,31 @@ define(
       return token;
     };
 
+    var speak = function (parent, text) {
+      var doc = Traverse.owner(parent);
+      
+      var token = create(doc, text);
+
+      // Make it speak as soon as it is in the DOM (politely)
+      Attr.setAll(token, {
+        'aria-live': 'polite',
+        'aria-atomic': 'true',
+        'aria-label': text
+      });
+
+      Css.setAll(token, offscreen);
+
+      Insert.append(parent, token);
+
+      // Remove the token later.
+      setTimeout(function () {
+        Remove.remove(token);
+      }, 1000);
+    };
+
     return {
       describe: describe,
+      speak: speak,
       tokenSelector: tokenSelector
     };
   }
