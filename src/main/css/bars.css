@@ -4,11 +4,11 @@
 }
 
 .ephox-snooker-resizer-cols {
-  cursor: ew-resize;
+  cursor: col-resize;
 }
 
 .ephox-snooker-resizer-rows {
-  cursor: ns-resize;
+  cursor: row-resize;
 }
 
 .ephox-snooker-resizer-bar.ephox-snooker-resizer-bar-dragging {
