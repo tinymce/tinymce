@@ -9,14 +9,15 @@ define(
     'ephox.robin.api.dom.DomParent',
     'ephox.snooker.api.TablePositions',
     'ephox.sugar.api.Class',
+    'ephox.sugar.api.Compare',
     'ephox.sugar.api.OnNode',
     'ephox.sugar.api.SelectorFilter',
-    'ephox.sugar.api.SelectorFind',
-    'global!Math'
+    'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Arr, Ephemera, Fun, Option, DomParent, TablePositions, Class, OnNode, SelectorFilter, SelectorFind, Math) {
+  function (Arr, Ephemera, Fun, Option, DomParent, TablePositions, Class, Compare, OnNode, SelectorFilter, SelectorFind) {
     var selectedClass = '.' + Ephemera.selectedClass();
+    var addSelectionClass = OnNode.addClass(Ephemera.selectedClass());
     var removeSelectionClasses = OnNode.removeClasses([ Ephemera.selectedClass(), Ephemera.lastSelectedClass(), Ephemera.firstSelectedClass() ]);
 
     var clear = function (container) {
@@ -25,7 +26,7 @@ define(
     };
 
     var select = function (cells) {
-      Arr.each(cells, OnNode.addClass(Ephemera.selectedClass()));
+      Arr.each(cells, addSelectionClass);
     };
 
     var lookupTable = function (container) {
@@ -33,7 +34,8 @@ define(
     };
 
     var identify = function (start, finish) {
-      return DomParent.sharedOne(lookupTable, [ start, finish ]).bind(function (tbl) {
+      // Optimisation: If the cells are equal, it's a single cell array
+      return Compare.eq(start, finish) ? Option.some([ start ]) : DomParent.sharedOne(lookupTable, [ start, finish ]).bind(function (tbl) {
         return TablePositions.intercepts(tbl, start, finish);
       });
     };

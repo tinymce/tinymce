@@ -5,51 +5,47 @@ define(
     'ephox.darwin.selection.CellSelection',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.sugar.api.Compare',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (CellSelection, Fun, Option, SelectorFind) {
+  function (CellSelection, Fun, Option, Compare, SelectorFind) {
+    var findCell = function (target) {
+      return SelectorFind.closest(target, 'td,th');
+    };
+
     return function (bridge, container) {
       var cursor = Option.none();
-
-      var restoreInitialSelection = function (cell) {
-        bridge.selectContents(cell);
+      var clearState = function () {
+        cursor = Option.none();
       };
 
       /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
       var mousedown = function (event) {
-        cursor = SelectorFind.closest(event.target(), 'td,th');
         CellSelection.clear(container);
+        cursor = findCell(event.target());
       };
 
       /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
       var mouseover = function (event) {
         cursor.each(function (start) {
           CellSelection.clear(container);
-          var finish = SelectorFind.closest(event.target(), 'td,th');
-          var boxes = finish.bind(Fun.curry(CellSelection.identify, start)).getOr([]);
-          // Wait until we have more than one, otherwise you can't do text selection inside a cell.
-          if (boxes.length > 1) {
-            CellSelection.selectRange(container, boxes, start, finish.getOrDie());
+          findCell(event.target()).each(function (finish) {
+            var boxes = CellSelection.identify(start, finish).getOr([]);
+            // Wait until we have more than one, otherwise you can't do text selection inside a cell.
+            if (boxes.length > 1) {
+              CellSelection.selectRange(container, boxes, start, finish);
 
-            // stop the browser from creating a big text selection. Doesn't work in all cases, but it's nice when it does
-            restoreInitialSelection(start);
-          }
+              // stop the browser from creating a big text selection, select the cell where the cursor is
+              bridge.selectContents(finish);
+            }
+          });
         });
       };
 
       /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
       var mouseup = function () {
-        cursor.each(function (start) {
-          // if we have a multi cell selection, set the cursor back to collapsed at the start point
-          CellSelection.retrieve(container).each(function (cells) {
-            if (cells.length > 1) {
-              restoreInitialSelection(start);
-            }
-          });
-          // clear state
-          cursor = Option.none();
-        });
+        cursor.each(clearState);
       };
 
       return {
