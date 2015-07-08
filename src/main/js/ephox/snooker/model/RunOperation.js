@@ -12,12 +12,13 @@ define(
     'ephox.snooker.model.Transitions',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.operate.Redraw',
+    'ephox.snooker.resize.BarPositions',
     'ephox.snooker.resize.Bars',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Arr, Merger, Fun, Option, Options, TableLookup, DetailsList, Transitions, Warehouse, Redraw, Bars, Compare, Traverse) {
+  function (Arr, Merger, Fun, Option, Options, TableLookup, DetailsList, Transitions, Warehouse, Redraw, BarPositions, Bars, Compare, Traverse) {
     var fromWarehouse = function (warehouse, generators) {
       return Transitions.toGrid(warehouse, generators);
     };
@@ -73,7 +74,7 @@ define(
           Redraw.render(table, out.grid());
           adjustment(out.grid(), direction);
           postAction(table);
-          Bars.refresh(wire, table, direction);
+          Bars.refresh(wire, table, BarPositions.height, direction);
           return out.cursor();
         });
       };

@@ -139,7 +139,7 @@ define(
     };
 
     // Only column modifications force a resizing. Everything else just tries to preserve the table as is.
-    var resize = Adjustments.adjustTo;
+    var resize = Adjustments.adjustWidthTo;
 
     return {
       insertRowBefore: RunOperation.run(insertRowBefore, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification),

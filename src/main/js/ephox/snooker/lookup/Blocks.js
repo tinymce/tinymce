@@ -22,30 +22,70 @@ define(
       var rows = Util.range(0, grid.rows());
 
       return Arr.map(cols, function (col) {
+        var getBlock = function () {
+          return Arr.bind(rows, function (r) {
+            return Warehouse.getAt(warehouse, r, col).filter(function (detail) {
+              return detail.column() === col;
+            }).fold(Fun.constant([]), function (detail) { return [ detail ]; });
+          });
+        };
 
-        // Firstly, find the cells that start on that column.
-        var onColumn = Arr.bind(rows, function (r) {
-          return Warehouse.getAt(warehouse, r, col).filter(function (detail) {
-            return detail.column() === col;
-          }).fold(Fun.constant([]), function (detail) { return [ detail ]; });
-        });
-
-        var singleOnColumn = Arr.find(onColumn, function (detail) {
+        var isSingle = function (detail) {
           return detail.colspan() === 1;
-        });
+        };
 
-        return Option.from(singleOnColumn).orThunk(function () {
-          return Option.from(onColumn[0]);
-        }).fold(function () {
-          return Warehouse.getAt(warehouse, 0, col).map(function (detail) { return detail.element(); });
-        }, function (detail) {
-          return Option.some(detail.element());
-        });
+        var getFallback = function () {
+          return Warehouse.getAt(warehouse, 0, col);
+        };
+
+        return decide(getBlock, isSingle, getFallback);
       });
     };
 
+    var decide = function (getBlock, isSingle, getFallback) {
+      var inBlock = getBlock();
+      var singleInBlock = Arr.find(inBlock, isSingle);
+
+      var detailOption = Option.from(singleInBlock).orThunk(function () {
+        return Option.from(inBlock[0]).orThunk(getFallback);
+      });
+
+      return detailOption.map(function (detail) { return detail.element(); });
+    };
+
+
+    var rows = function (warehouse) {
+      var grid = warehouse.grid();
+      var rows = Util.range(0, grid.rows());
+      var cols = Util.range(0, grid.columns());
+
+      return Arr.map(rows, function (row) {
+
+        var getBlock = function () {
+          return Arr.bind(cols, function (c) {
+            return Warehouse.getAt(warehouse, row, c).filter(function (detail) {
+              return detail.row() === row;
+            }).fold(Fun.constant([]), function (detail) { return [ detail ]; });
+          });
+        };
+
+        var isSingle = function (detail) {
+          return detail.rowspan() === 1;
+        };
+
+        var getFallback = function () {
+          return Warehouse.getAt(warehouse, row, 0);
+        };
+
+        return decide(getBlock, isSingle, getFallback);
+
+      });
+
+    };
+
     return {
-      columns: columns
+      columns: columns,
+      rows: rows
     };
   }
 );

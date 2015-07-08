@@ -8,7 +8,7 @@ define(
   ],
 
   function (Attr, Css, Element) {
-    return function (column, x, y, w, h) {
+    var col = function (column, x, y, w, h) {
       var blocker = Element.fromTag('div');
       Css.setAll(blocker, {
         position: 'absolute',
@@ -20,6 +20,26 @@ define(
 
       Attr.set(blocker, 'data-column', column);
       return blocker;
+    };
+
+    var row = function (row, x, y, w, h) {
+      var blocker = Element.fromTag('div');
+      Css.setAll(blocker, {
+        position: 'absolute',
+        left: x + 'px',
+        top: y + 'px',
+        height: h + 'px',
+        width: w + 'px'
+      });
+
+      Attr.set(blocker, 'data-row', row);
+      return blocker;
+    };
+
+
+    return {
+      col: col,
+      row: row
     };
   }
 );

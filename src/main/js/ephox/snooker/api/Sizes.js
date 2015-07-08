@@ -6,24 +6,18 @@ define(
     'ephox.peanut.Fun',
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
-    'ephox.snooker.resize.ColumnWidths',
+    'ephox.snooker.resize.BarPositions',
+    'ephox.snooker.resize.ColumnSizes',
     'ephox.snooker.resize.Redistribution',
     'ephox.snooker.resize.Sizes',
     'ephox.snooker.util.CellUtils',
     'ephox.sugar.api.Css',
+    'ephox.sugar.api.Height',
     'ephox.sugar.api.Width'
   ],
 
-  function (Arr, Fun, DetailsList, Warehouse, ColumnWidths, Redistribution, Sizes, CellUtils, Css, Width) {
-    var setWidth = function (cell, amount) {
-     Sizes.setWidth(cell, amount);
-    };
-
-    var getWidth = function (cell) {
-      return Sizes.getWidth(cell);
-    };
-
-    var redistributeTo = function (newWidths, cells, unit) {
+  function (Arr, Fun, DetailsList, Warehouse, BarPositions, ColumnSizes, Redistribution, Sizes, CellUtils, Css, Height, Width) {
+    var redistributeToW = function (newWidths, cells, unit) {
       Arr.each(cells, function (cell) {
         var widths = newWidths.slice(cell.column(), cell.colspan() + cell.column());
         var w = Redistribution.sum(widths, CellUtils.minWidth());
@@ -31,23 +25,55 @@ define(
       });
     };
 
-    var redistributeWidth = function (table, newWidth, direction) {
-      var totalWidth = Width.get(table);
-      var unit = Redistribution.validate(newWidth).fold(Fun.constant('px'), Fun.constant('px'), Fun.constant('%'));
-      
+    var redistributeToH = function (newHeights, rows, cells, unit) {
+      Arr.each(cells, function (cell) {
+        var heights = newHeights.slice(cell.row(), cell.rowspan() + cell.row());
+        var h = Redistribution.sum(heights, CellUtils.minHeight());
+        Css.set(cell.element(), 'height', h + unit);
+      });
+
+      Arr.each(rows, function (row, i) {
+        Css.set(row.element(), 'height', newHeights[i]);
+      });
+    };
+
+    var getUnit = function (newSize) {
+      return Redistribution.validate(newSize).fold(Fun.constant('px'), Fun.constant('px'), Fun.constant('%'));
+    };
+
+
+    var redistribute = function (table, optWidth, optHeight, direction) {
       var list = DetailsList.fromTable(table);
       var warehouse = Warehouse.generate(list);
-      var oldWidths = ColumnWidths.getRawWidths(warehouse, direction);
-      var newWidths = Redistribution.redistribute(oldWidths, totalWidth, newWidth);
-
+      var rows = warehouse.all();
       var cells = Warehouse.justCells(warehouse);
-      redistributeTo(newWidths, cells, unit);
+
+      optWidth.each(function (newWidth) {
+        var wUnit = getUnit(newWidth);
+        var totalWidth = Width.get(table);
+        var oldWidths = ColumnSizes.getRawWidths(warehouse, direction);
+        var nuWidths = Redistribution.redistribute(oldWidths, totalWidth, newWidth);
+        redistributeToW(nuWidths, cells, wUnit);
+        Css.set(table, 'width', newWidth);
+      });
+
+      optHeight.each(function (newHeight) {
+        var hUnit = getUnit(newHeight);
+        var totalHeight = Height.get(table);
+        var oldHeights = ColumnSizes.getRawHeights(warehouse, BarPositions.height);
+        var nuHeights = Redistribution.redistribute(oldHeights, totalHeight, newHeight);
+        redistributeToH(nuHeights, rows, cells, hUnit);
+        Css.set(table, 'height', newHeight);
+      });
+
     };
 
     return {
-      setWidth: setWidth,
-      getWidth: getWidth,
-      redistributeWidth: redistributeWidth
+      setWidth: Sizes.setWidth,
+      getWidth: Sizes.getWidth,
+      setHeight: Sizes.setHeight,
+      getHeight: Sizes.getHeight,
+      redistribute: redistribute
     };
   }
 );

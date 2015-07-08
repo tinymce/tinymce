@@ -19,7 +19,7 @@ define(
         return dest.map(function (d) { return d.element(); });
       });
     };
-    
+
     var intercepts = function (warehouse, start, finish) {
       return CellGroup.getAnyBox(warehouse, start, finish).map(function (bounds) {
         var inside = Warehouse.filterItems(warehouse, Fun.curry(CellBounds.inSelection, bounds));
