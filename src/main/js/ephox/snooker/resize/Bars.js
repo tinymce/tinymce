@@ -77,16 +77,19 @@ define(
       refreshGrid(wire, table, rows, cols, hdirection, vdirection);
     };
 
-    var hide = function (wire) {
+    var appy = function (wire, f) {
       var bars = SelectorFilter.descendants(wire.parent(), '.' + resizeBar);
-      Arr.each(bars, function (bar) {
+      Arr.each(bars, f);
+    };
+
+    var hide = function (wire) {
+      appy(wire, function(bar) {
         Css.set(bar, 'display', 'none');
       });
     };
 
     var show = function (wire) {
-      var bars = SelectorFilter.descendants(wire.parent(), '.' + resizeBar);
-      Arr.each(bars, function (bar) {
+      appy(wire, function(bar) {
         Css.set(bar, 'display', 'block');
       });
     };
@@ -100,8 +103,7 @@ define(
     };
 
     var destroy = function (wire) {
-      var bars = SelectorFilter.descendants(wire.parent(), '.' + resizeBar);
-      Arr.each(bars, function (bar) {
+      appy(wire, function(bar) {
         Remove.remove(bar);
       });
     };
