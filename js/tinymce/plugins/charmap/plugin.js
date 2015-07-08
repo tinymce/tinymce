@@ -380,17 +380,19 @@ tinymce.PluginManager.add('charmap', function(editor) {
 			]
 		});
 	}
+	
+	editor.addCommand('mceShowCharmap', showDialog);
 
 	editor.addButton('charmap', {
 		icon: 'charmap',
 		tooltip: 'Special character',
-		onclick: showDialog
+		cmd: 'mceShowCharmap'
 	});
 
 	editor.addMenuItem('charmap', {
 		icon: 'charmap',
 		text: 'Special character',
-		onclick: showDialog,
+		cmd: 'mceShowCharmap',
 		context: 'insert'
 	});
 });
