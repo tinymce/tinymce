@@ -99,10 +99,18 @@ define(
       return Class.has(element, resizeColBar);
     };
 
+    var destroy = function (wire) {
+      var bars = SelectorFilter.descendants(wire.parent(), '.' + resizeBar);
+      Arr.each(bars, function (bar) {
+        Remove.remove(bar);
+      });
+    };
+
     return {
       refresh: refresh,
       hide: hide,
       show: show,
+      destroy: destroy,
       isRowBar: isRowBar,
       isColBar: isColBar
     };
