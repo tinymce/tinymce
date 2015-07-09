@@ -50,7 +50,7 @@ define(
 
     var refreshRow = function (wire, rowPositions, position, tableWidth) {
       drawBar(wire, rowPositions, function (origin, cp) {
-        var rowBar = Bar.row(cp.row(), position.left() + origin.left(), cp.y() + origin.top(), tableWidth, BAR_THICKNESS);
+        var rowBar = Bar.row(cp.row(), origin.left() - position.left(), cp.y() - origin.top(), tableWidth, BAR_THICKNESS);
         Class.add(rowBar, resizeRowBar);
         return rowBar;
       });
@@ -59,7 +59,6 @@ define(
     var refreshGrid = function (wire, table, rows, cols, hdirection, vdirection) {
       var position = Location.absolute(table);
       var rowPositions = rows.length > 0 ? hdirection.positions(rows, table) : [];
-
       refreshRow(wire, rowPositions, position, Width.getOuter(table));
 
       var colPositions = cols.length > 0 ? vdirection.positions(cols, table) : [];
