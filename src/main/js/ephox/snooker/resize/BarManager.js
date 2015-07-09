@@ -112,6 +112,7 @@ define(
         mouseout.unbind();
         firefoxDrag.unbind();
         resizing.destroy();
+        Bars.destroy(wire);
       };
 
       /* This is required on Firefox to stop the default drag behaviour interfering with dragster */

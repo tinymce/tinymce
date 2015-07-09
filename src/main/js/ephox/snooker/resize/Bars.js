@@ -24,7 +24,7 @@ define(
     var resizeColBar = Styles.resolve('resizer-cols');
     var BAR_THICKNESS = 7;
 
-    var clear = function (wire, table) {
+    var clear = function (wire) {
       var previous = SelectorFilter.descendants(wire.parent(), '.' + resizeBar);
       Arr.each(previous, Remove.remove);
     };
@@ -77,16 +77,19 @@ define(
       refreshGrid(wire, table, rows, cols, hdirection, vdirection);
     };
 
-    var hide = function (wire) {
+    var each = function (wire, f) {
       var bars = SelectorFilter.descendants(wire.parent(), '.' + resizeBar);
-      Arr.each(bars, function (bar) {
+      Arr.each(bars, f);
+    };
+
+    var hide = function (wire) {
+      each(wire, function(bar) {
         Css.set(bar, 'display', 'none');
       });
     };
 
     var show = function (wire) {
-      var bars = SelectorFilter.descendants(wire.parent(), '.' + resizeBar);
-      Arr.each(bars, function (bar) {
+      each(wire, function(bar) {
         Css.set(bar, 'display', 'block');
       });
     };
@@ -103,6 +106,7 @@ define(
       refresh: refresh,
       hide: hide,
       show: show,
+      destroy: clear,
       isRowBar: isRowBar,
       isColBar: isColBar
     };
