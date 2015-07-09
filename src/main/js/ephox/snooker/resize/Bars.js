@@ -24,7 +24,7 @@ define(
     var resizeColBar = Styles.resolve('resizer-cols');
     var BAR_THICKNESS = 7;
 
-    var clear = function (wire, table) {
+    var clear = function (wire) {
       var previous = SelectorFilter.descendants(wire.parent(), '.' + resizeBar);
       Arr.each(previous, Remove.remove);
     };
@@ -102,17 +102,11 @@ define(
       return Class.has(element, resizeColBar);
     };
 
-    var destroy = function (wire) {
-      each(wire, function(bar) {
-        Remove.remove(bar);
-      });
-    };
-
     return {
       refresh: refresh,
       hide: hide,
       show: show,
-      destroy: destroy,
+      destroy: clear,
       isRowBar: isRowBar,
       isColBar: isColBar
     };
