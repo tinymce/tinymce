@@ -27,7 +27,7 @@ define(
       Css.setAll(blocker, {
         position: 'absolute',
         left: x + 'px',
-        top: y + 'px',
+        top: y - h/2 + 'px',
         height: h + 'px',
         width: w + 'px'
       });
