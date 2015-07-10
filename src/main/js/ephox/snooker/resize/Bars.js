@@ -50,7 +50,7 @@ define(
 
     var refreshRow = function (wire, rowPositions, position, tableWidth) {
       drawBar(wire, rowPositions, function (origin, cp) {
-        var rowBar = Bar.row(cp.row(), origin.left() - position.left(), cp.y() - origin.top(), tableWidth, BAR_THICKNESS);
+        var rowBar = Bar.row(cp.row(), position.left() - origin.left(), cp.y() - origin.top(), tableWidth, BAR_THICKNESS);
         Class.add(rowBar, resizeRowBar);
         return rowBar;
       });
