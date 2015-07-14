@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.epithet.Id',
+    'ephox.peanut.Fun',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.Element',
@@ -12,7 +13,7 @@ define(
     'global!setTimeout'
   ],
 
-  function (Id, Attr, Css, Element, Insert, Remove, Traverse, setTimeout) {
+  function (Id, Fun, Attr, Css, Element, Insert, Remove, Traverse, setTimeout) {
     var offscreen = {
       position: 'absolute',
       left: '-9999px'
@@ -45,17 +46,13 @@ define(
       return token;
     };
 
-    var speak = function (parent, text) {
+    var base = function (getAttrs, parent, text) {
       var doc = Traverse.owner(parent);
       
       var token = create(doc, text);
 
       // Make it speak as soon as it is in the DOM (politely)
-      Attr.setAll(token, {
-        'aria-live': 'polite',
-        'aria-atomic': 'true',
-        'aria-label': text
-      });
+      Attr.setAll(token, getAttrs());
 
       Css.setAll(token, offscreen);
 
@@ -67,9 +64,26 @@ define(
       }, 1000);
     };
 
+    var speak = Fun.curry(base, function (text) {
+      return {
+        // Make it speak as soon as it is in the DOM (politely)
+        'aria-live': 'polite',
+        'aria-atomic': 'true',
+        'aria-label': text
+      };
+    });
+
+    var shout = Fun.curry(base, Fun.constant({
+      // Don't put aria-label in alerts. It will read it twice on JAWS+Firefox.
+      'aria-live': 'assertive',
+      'aria-atomic': 'true',
+      'role': 'alert'
+    }));
+
     return {
       describe: describe,
       speak: speak,
+      shout: shout,
       tokenSelector: tokenSelector
     };
   }
