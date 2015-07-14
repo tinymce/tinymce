@@ -52,7 +52,7 @@ define(
       var token = create(doc, text);
 
       // Make it speak as soon as it is in the DOM (politely)
-      Attr.setAll(token, getAttrs());
+      Attr.setAll(token, getAttrs(text));
 
       Css.setAll(token, offscreen);
 
