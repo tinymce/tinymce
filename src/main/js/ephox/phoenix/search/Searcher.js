@@ -62,9 +62,9 @@ define(
     /**
      * Runs a search for a single token
      */
-    var safeToken = function (universe, elements, token) {
+    var safeToken = function (universe, elements, token, optimise) {
       var pattern = namedPattern(token, Pattern.safetoken(token));
-      return run(universe, elements, [pattern]);
+      return run(universe, elements, [pattern], optimise);
     };
 
     return {
