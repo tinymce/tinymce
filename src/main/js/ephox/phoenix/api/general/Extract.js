@@ -12,8 +12,8 @@ define(
    */
   function (Extract, ExtractText, Find) {
 
-    var from = function (universe, item) {
-      return Extract.typed(universe, item);
+    var from = function (universe, item, optimise) {
+      return Extract.typed(universe, item, optimise);
     };
 
     var all = function (universe, item) {

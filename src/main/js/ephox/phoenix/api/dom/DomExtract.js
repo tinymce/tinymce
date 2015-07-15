@@ -13,8 +13,8 @@ define(
 
     var universe = DomUniverse();
 
-    var from = function (element) {
-      return Extract.from(universe, element);
+    var from = function (element, skipper) {
+      return Extract.from(universe, element, skipper);
     };
 
     var all = function (element) {

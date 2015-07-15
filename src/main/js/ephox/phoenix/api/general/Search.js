@@ -13,8 +13,8 @@ define(
       return Searcher.run(universe, items, patterns);
     };
 
-    var safeWords = function (universe, items, words) {
-      return Searcher.safeWords(universe, items, words);
+    var safeWords = function (universe, items, words, optimise) {
+      return Searcher.safeWords(universe, items, words, optimise);
     };
 
     var safeToken = function (universe, items, token) {

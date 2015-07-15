@@ -15,7 +15,8 @@ define(
      *
      * Boundaries are returned twice, before and after their children.
      */
-    var typed = function (universe, item) {
+    var typed = function (universe, item, optimise) {
+      if (optimise === undefined) console.trace();
       if (universe.property().isText(item)) {
         return [ TypedItem.text(item, universe) ];
       } else if (universe.property().isEmptyTag(item)) {
@@ -23,8 +24,8 @@ define(
       } else if (universe.property().isElement(item)) {
         var children = universe.property().children(item);
         var boundary = universe.property().isBoundary(item) ? [TypedItem.boundary(item, universe)] : [];
-        var rest = Arr.bind(children, function (child) {
-          return typed(universe, child);
+        var rest = optimise(item) ? [] : Arr.bind(children, function (child) {
+          return typed(universe, child, optimise);
         });
         return boundary.concat(rest).concat(boundary);
       } else {

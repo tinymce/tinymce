@@ -31,8 +31,8 @@ define(
      *
      * Returns a list of matches.
      */
-    var run = function (universe, elements, patterns) {
-      var sections = Family.group(universe, elements);
+    var run = function (universe, elements, patterns, optimise) {
+      var sections = Family.group(universe, elements, optimise);
       var result = Arr.bind(sections, function (x) {
         var input = TypedList.justText(x);
         var text = Arr.map(input, universe.property().getText).join('');
@@ -50,12 +50,12 @@ define(
     /**
      * Runs a search for one or more words
      */
-    var safeWords = function (universe, elements, words) {
+    var safeWords = function (universe, elements, words, optimise) {
       var patterns = Arr.map(words, function (word) {
         var pattern = Pattern.safeword(word);
         return namedPattern(word, pattern);
       });
-      return run(universe, elements, patterns);
+      return run(universe, elements, patterns, optimise);
     };
 
 

@@ -11,9 +11,9 @@ define(
     /**
      * Return an array of arrays split by boundaries
      */
-    var group = function (universe, items) {
+    var group = function (universe, items, optimise) {
       var extractions = Arr.bind(items, function (item) {
-        return Extract.from(universe, item);
+        return Extract.from(universe, item, optimise);
       });
 
       var segments = Arrays.splitby(extractions, function (item) {

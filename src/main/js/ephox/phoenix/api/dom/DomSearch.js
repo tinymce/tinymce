@@ -16,8 +16,8 @@ define(
       return Search.run(universe, elements, patterns);
     };
 
-    var safeWords = function (elements, words) {
-      return Search.safeWords(universe, elements, words);
+    var safeWords = function (elements, words, optimise) {
+      return Search.safeWords(universe, elements, words, optimise);
     };
 
     var safeToken = function (elements, token) {
