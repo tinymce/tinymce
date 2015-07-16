@@ -24,7 +24,7 @@ define(
       } else if (universe.property().isElement(item)) {
         var children = universe.property().children(item);
         var boundary = universe.property().isBoundary(item) ? [TypedItem.boundary(item, universe)] : [];
-        var rest = optimise(item) ? [] : Arr.bind(children, function (child) {
+        var rest = optimise !== undefined && optimise(item) ? [] : Arr.bind(children, function (child) {
           return typed(universe, child, optimise);
         });
         return boundary.concat(rest).concat(boundary);
