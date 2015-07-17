@@ -3,6 +3,8 @@ define(
 
   [
     'ephox.perhaps.Option',
+    'ephox.phoenix.api.data.Spot',
+    'ephox.phoenix.api.general.Descent',
     'ephox.phoenix.api.general.Gather',
     'ephox.robin.api.general.Structure',
     'ephox.robin.textdata.TextSearch',
@@ -10,7 +12,7 @@ define(
     'ephox.scullion.Struct'
   ],
 
-  function (Option, Gather, Structure, TextSearch, Adt, Struct) {
+  function (Option, Spot, Descent, Gather, Structure, TextSearch, Adt, Struct) {
     var walkLeft = Gather.walkers().left();
     var walkRight = Gather.walkers().right();
 
@@ -57,7 +59,8 @@ define(
     };
 
     var repeatLeft = function (universe, item, offset, process) {
-      return repeat(universe, item, Gather.sidestep, Option.some(offset), process, walkLeft, Option.none());
+      var descended = universe.property().isText(item) ? Spot.point(item, offset) : Descent.toLeaf(universe, item, offset);
+      return repeat(universe, descended.element(), Gather.sidestep, Option.some(descended.offset()), process, walkLeft, Option.none());
     };
 
     var repeatRight = function (universe, item, offset, process) {
