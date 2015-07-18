@@ -480,7 +480,9 @@ tinymce.ThemeManager.add('modern', function(editor) {
 
 		function repositionHandler() {
 			function execute() {
-				reposition(findFrontMostMatch(editor.selection.getNode()));
+				if (editor.selection) {
+					reposition(findFrontMostMatch(editor.selection.getNode()));
+				}
 			}
 
 			if (window.requestAnimationFrame) {
