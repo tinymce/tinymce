@@ -54,7 +54,7 @@ define(
       else if (! universe.property().isText(item)) return recurse(recent);
       else {
         var text = universe.property().getText(item);
-        return process(universe, item, text, offsetOption).fold(terminate, function () {
+        return process(universe, phase, item, text, offsetOption).fold(terminate, function () {
           return recurse(Option.some(item));
         }, outcome.success);
       }
@@ -99,13 +99,13 @@ define(
     var expandLeft = function (universe, item, offset, rawSeeker) {
       var seeker = seekerSig(rawSeeker);
 
-      var process = function (uni, pItem, pText, pOffset) {
+      var process = function (uni, phase, pItem, pText, pOffset) {
         var lastOffset = pOffset.getOr(pText.length);
         return TextSearch.rfind(pText.substring(0, lastOffset), seeker.regex()).fold(function () {
           // Did not find a word break, so continue;
           return phase.kontinue();
         }, function (index) {
-          return seeker.attempt()(pItem, pText, index);
+          return seeker.attempt()(phase, pItem, pText, index);
         });
       };
       return repeatLeft(universe, item, offset, process);
@@ -114,13 +114,13 @@ define(
     var expandRight = function (universe, item, offset, rawSeeker) {
       var seeker = seekerSig(rawSeeker);
 
-      var process = function (uni, pItem, pText, pOffset) {
+      var process = function (uni, phase, pItem, pText, pOffset) {
         var firstOffset = pOffset.getOr(0);
         return TextSearch.lfind(pText.substring(firstOffset), seeker.regex()).fold(function () {
           // Did not find a word break, so continue;
           return phase.kontinue();
         }, function (index) {
-          return seeker.attempt()(pItem, pText, firstOffset + index);
+          return seeker.attempt()(phase, pItem, pText, firstOffset + index);
         });
       };
 
@@ -130,7 +130,6 @@ define(
     return {
       repeatLeft: repeatLeft,
       repeatRight: repeatRight,
-      phase: phase,
       expandLeft: expandLeft,
       expandRight: expandRight
     };
