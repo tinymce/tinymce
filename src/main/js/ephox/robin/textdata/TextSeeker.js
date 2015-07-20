@@ -2,6 +2,7 @@ define(
   'ephox.robin.textdata.TextSeeker',
 
   [
+    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.api.general.Descent',
@@ -11,7 +12,7 @@ define(
     'ephox.scullion.ADT'
   ],
 
-  function (Option, Spot, Descent, Gather, Seeker, Structure, Adt) {
+  function (Fun, Option, Spot, Descent, Gather, Seeker, Structure, Adt) {
     var walkLeft = Gather.walkers().left();
     var walkRight = Gather.walkers().right();
 
@@ -75,19 +76,21 @@ define(
       }
     };
 
-    var findTextNeighbour = function (universe, item, offset, isRoot) {
-      return descendToLeft(universe, item, offset, isRoot).orThunk(function () {
-        return descendToRight(universe, item, offset, isRoot);
+    var findTextNeighbour = function (universe, item, offset) {
+      // You don't want to find a text neighbour if you have to pass through a block.
+      var stopAtBlocks = Fun.curry(Structure.isBlock, universe);
+      return descendToLeft(universe, item, offset, stopAtBlocks).orThunk(function () {
+        return descendToRight(universe, item, offset, stopAtBlocks);
       }).getOr(Spot.point(item, offset));
     };
 
-    var repeatLeft = function (universe, item, offset, process, isRoot) {
-      var initial = findTextNeighbour(universe, item, offset, isRoot);
+    var repeatLeft = function (universe, item, offset, process) {
+      var initial = findTextNeighbour(universe, item, offset);
       return repeat(universe, initial.element(), Gather.sidestep, Option.some(initial.offset()), process, walkLeft, Option.none());
     };
 
-    var repeatRight = function (universe, item, offset, process, isRoot) {
-      var initial = findTextNeighbour(universe, item, offset, isRoot);
+    var repeatRight = function (universe, item, offset, process) {
+      var initial = findTextNeighbour(universe, item, offset);
       return repeat(universe, initial.element(), Gather.sidestep, Option.some(initial.offset()), process, walkRight, Option.none());
     };
 

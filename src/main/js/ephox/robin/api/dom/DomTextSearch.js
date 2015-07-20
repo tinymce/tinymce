@@ -17,20 +17,20 @@ define(
       return TextSearch.nextChar(text, offset);
     };
 
-    var repeatLeft = function (item, offset, process, isRoot) {
-      return TextSearch.repeatLeft(universe, item, offset, process, isRoot);
+    var repeatLeft = function (item, offset, process) {
+      return TextSearch.repeatLeft(universe, item, offset, process);
     };
 
-    var repeatRight = function (item, offset, process, isRoot) {
-      return TextSearch.repeatRight(universe, item, offset, process, isRoot);
+    var repeatRight = function (item, offset, process) {
+      return TextSearch.repeatRight(universe, item, offset, process);
     };
 
-    var expandLeft = function (item, offset, rawSeeker, isRoot) {
-      return TextSearch.expandLeft(universe, item, offset, rawSeeker, isRoot);
+    var expandLeft = function (item, offset, rawSeeker) {
+      return TextSearch.expandLeft(universe, item, offset, rawSeeker);
     };
 
-    var expandRight = function (item, offset, rawSeeker, isRoot) {
-      return TextSearch.expandRight(universe, item, offset, rawSeeker, isRoot);
+    var expandRight = function (item, offset, rawSeeker) {
+      return TextSearch.expandRight(universe, item, offset, rawSeeker);
     };
 
     return {

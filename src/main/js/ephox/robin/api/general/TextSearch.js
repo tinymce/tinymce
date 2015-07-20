@@ -18,15 +18,15 @@ define(
       return TextSearch.next(text, offset);
     };
 
-    var repeatLeft = function (universe, item, offset, process, isRoot) {
-      return TextSeeker.repeatLeft(universe, item, offset, process, isRoot);
+    var repeatLeft = function (universe, item, offset, process) {
+      return TextSeeker.repeatLeft(universe, item, offset, process);
     };
 
-    var repeatRight = function (universe, item, offset, process, isRoot) {
-      return TextSeeker.repeatRight(universe, item, offset, process, isRoot);
+    var repeatRight = function (universe, item, offset, process) {
+      return TextSeeker.repeatRight(universe, item, offset, process);
     };
 
-    var expandLeft = function (universe, item, offset, rawSeeker, isRoot) {
+    var expandLeft = function (universe, item, offset, rawSeeker) {
       var seeker = seekerSig(rawSeeker);
 
       var process = function (uni, phase, pItem, pText, pOffset) {
@@ -38,10 +38,10 @@ define(
           return seeker.attempt(phase, pItem, pText, index);
         });
       };
-      return repeatLeft(universe, item, offset, process, isRoot);
+      return repeatLeft(universe, item, offset, process);
     };
 
-    var expandRight = function (universe, item, offset, rawSeeker, isRoot) {
+    var expandRight = function (universe, item, offset, rawSeeker) {
       var seeker = seekerSig(rawSeeker);
 
       var process = function (uni, phase, pItem, pText, pOffset) {
@@ -54,7 +54,7 @@ define(
         });
       };
 
-      return repeatRight(universe, item, offset, process, isRoot);
+      return repeatRight(universe, item, offset, process);
     };
 
     return {
