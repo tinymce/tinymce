@@ -2,17 +2,19 @@ define(
   'ephox.robin.textdata.TextSeeker',
 
   [
+    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.api.general.Descent',
     'ephox.phoenix.api.general.Gather',
+    'ephox.phoenix.gather.Seeker',
     'ephox.robin.api.general.Structure',
     'ephox.robin.textdata.TextSearch',
     'ephox.scullion.ADT',
     'ephox.scullion.Struct'
   ],
 
-  function (Option, Spot, Descent, Gather, Structure, TextSearch, Adt, Struct) {
+  function (Fun, Option, Spot, Descent, Gather, Seeker, Structure, TextSearch, Adt, Struct) {
     var walkLeft = Gather.walkers().left();
     var walkRight = Gather.walkers().right();
 
@@ -58,13 +60,40 @@ define(
       }
     };
 
+    var descendToLeft = function (universe, item, offset) {
+      var descended = Descent.toLeaf(universe, item, offset);
+      if (universe.property().isText(item)) return Option.none();
+      else {
+        return Seeker.left(universe, descended.element(), universe.property().isText, Fun.curry(Structure.isBlock, universe)).map(function (t) {
+          return Spot.point(t, universe.property().getText(t).length);
+        });
+      }
+    };
+
+    var descendToRight = function (universe, item, offset) {
+      var descended = Descent.toLeaf(universe, item, offset);
+      if (universe.property().isText(item)) return Option.none();
+      else {
+        return Seeker.right(universe, descended.element(), universe.property().isText, Fun.curry(Structure.isBlock, universe)).map(function (t) {
+          return Spot.point(t, 0);
+        });
+      }
+    };
+
+    var findTextNeighbour = function (universe, item, offset) {
+      return descendToLeft(universe, item, offset).orThunk(function () {
+        return descendToRight(universe, item, offset);
+      }).getOr(Spot.point(item, offset));
+    };
+
     var repeatLeft = function (universe, item, offset, process) {
-      var descended = universe.property().isText(item) ? Spot.point(item, offset) : Descent.toLeaf(universe, item, offset);
-      return repeat(universe, descended.element(), Gather.sidestep, Option.some(descended.offset()), process, walkLeft, Option.none());
+      var initial = findTextNeighbour(universe, item, offset);
+      return repeat(universe, initial.element(), Gather.sidestep, Option.some(initial.offset()), process, walkLeft, Option.none());
     };
 
     var repeatRight = function (universe, item, offset, process) {
-      return repeat(universe, item, Gather.sidestep, Option.some(offset), process, walkRight, Option.none());
+      var initial = findTextNeighbour(universe, item, offset);
+      return repeat(universe, initial.element(), Gather.sidestep, Option.some(initial.offset()), process, walkRight, Option.none());
     };
 
     var expandLeft = function (universe, item, offset, rawSeeker) {
