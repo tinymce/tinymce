@@ -2,23 +2,18 @@ define(
   'ephox.robin.textdata.TextSeeker',
 
   [
-    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.api.general.Descent',
     'ephox.phoenix.api.general.Gather',
     'ephox.phoenix.gather.Seeker',
     'ephox.robin.api.general.Structure',
-    'ephox.robin.textdata.TextSearch',
-    'ephox.scullion.ADT',
-    'ephox.scullion.Struct'
+    'ephox.scullion.ADT'
   ],
 
-  function (Fun, Option, Spot, Descent, Gather, Seeker, Structure, TextSearch, Adt, Struct) {
+  function (Option, Spot, Descent, Gather, Seeker, Structure, Adt) {
     var walkLeft = Gather.walkers().left();
     var walkRight = Gather.walkers().right();
-
-    var seekerSig = Struct.immutableBag([ 'regex', 'attempt' ], [ ]);
 
     var phase = Adt.generate([
       { abort: [  ] },
@@ -60,78 +55,45 @@ define(
       }
     };
 
-    var descendToLeft = function (universe, item, offset) {
+    var descendToLeft = function (universe, item, offset, isRoot) {
       var descended = Descent.toLeaf(universe, item, offset);
       if (universe.property().isText(item)) return Option.none();
       else {
-        return Seeker.left(universe, descended.element(), universe.property().isText, Fun.curry(Structure.isBlock, universe)).map(function (t) {
+        return Seeker.left(universe, descended.element(), universe.property().isText, isRoot).map(function (t) {
           return Spot.point(t, universe.property().getText(t).length);
         });
       }
     };
 
-    var descendToRight = function (universe, item, offset) {
+    var descendToRight = function (universe, item, offset, isRoot) {
       var descended = Descent.toLeaf(universe, item, offset);
       if (universe.property().isText(item)) return Option.none();
       else {
-        return Seeker.right(universe, descended.element(), universe.property().isText, Fun.curry(Structure.isBlock, universe)).map(function (t) {
+        return Seeker.right(universe, descended.element(), universe.property().isText, isRoot).map(function (t) {
           return Spot.point(t, 0);
         });
       }
     };
 
-    var findTextNeighbour = function (universe, item, offset) {
-      return descendToLeft(universe, item, offset).orThunk(function () {
-        return descendToRight(universe, item, offset);
+    var findTextNeighbour = function (universe, item, offset, isRoot) {
+      return descendToLeft(universe, item, offset, isRoot).orThunk(function () {
+        return descendToRight(universe, item, offset, isRoot);
       }).getOr(Spot.point(item, offset));
     };
 
-    var repeatLeft = function (universe, item, offset, process) {
-      var initial = findTextNeighbour(universe, item, offset);
+    var repeatLeft = function (universe, item, offset, process, isRoot) {
+      var initial = findTextNeighbour(universe, item, offset, isRoot);
       return repeat(universe, initial.element(), Gather.sidestep, Option.some(initial.offset()), process, walkLeft, Option.none());
     };
 
-    var repeatRight = function (universe, item, offset, process) {
-      var initial = findTextNeighbour(universe, item, offset);
+    var repeatRight = function (universe, item, offset, process, isRoot) {
+      var initial = findTextNeighbour(universe, item, offset, isRoot);
       return repeat(universe, initial.element(), Gather.sidestep, Option.some(initial.offset()), process, walkRight, Option.none());
-    };
-
-    var expandLeft = function (universe, item, offset, rawSeeker) {
-      var seeker = seekerSig(rawSeeker);
-
-      var process = function (uni, phase, pItem, pText, pOffset) {
-        var lastOffset = pOffset.getOr(pText.length);
-        return TextSearch.rfind(pText.substring(0, lastOffset), seeker.regex()).fold(function () {
-          // Did not find a word break, so continue;
-          return phase.kontinue();
-        }, function (index) {
-          return seeker.attempt()(phase, pItem, pText, index);
-        });
-      };
-      return repeatLeft(universe, item, offset, process);
-    };
-
-    var expandRight = function (universe, item, offset, rawSeeker) {
-      var seeker = seekerSig(rawSeeker);
-
-      var process = function (uni, phase, pItem, pText, pOffset) {
-        var firstOffset = pOffset.getOr(0);
-        return TextSearch.lfind(pText.substring(firstOffset), seeker.regex()).fold(function () {
-          // Did not find a word break, so continue;
-          return phase.kontinue();
-        }, function (index) {
-          return seeker.attempt()(phase, pItem, pText, firstOffset + index);
-        });
-      };
-
-      return repeatRight(universe, item, offset, process);
     };
 
     return {
       repeatLeft: repeatLeft,
-      repeatRight: repeatRight,
-      expandLeft: expandLeft,
-      expandRight: expandRight
+      repeatRight: repeatRight
     };
   }
 );
