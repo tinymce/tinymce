@@ -1,3 +1,6 @@
+Version 4.2.2 (2015-07-xx)
+	Fixed bug where combobox states wasn't properly updated if contents where updated without keyboard.
+	Fixed bug where pasting into textbox or combobox would move the caret to the end of text.
 Version 4.2.1 (2015-06-29)
 	Fixed bug where float panels were not being hidden on inline editor blur when fixed_toolbar_container config option was in use.
 	Fixed bug where back/forward buttons in the browser would render blob images as broken images.

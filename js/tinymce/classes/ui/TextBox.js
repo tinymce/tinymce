@@ -188,7 +188,9 @@ define("tinymce/ui/TextBox", [
 			var self = this;
 
 			self.state.on('change:value', function(e) {
-				self.getEl().value = e.value;
+				if (self.getEl().value != e.value) {
+					self.getEl().value = e.value;
+				}
 			});
 
 			self.state.on('change:disabled', function(e) {

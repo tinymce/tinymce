@@ -268,11 +268,27 @@ define("tinymce/ui/ComboBox", [
 			);
 		},
 
+		value: function(value) {
+			if (arguments.length) {
+				this.state.set('value', value);
+				return this;
+			}
+
+			// Make sure the real state is in sync
+			if (this.state.get('rendered')) {
+				this.state.set('value', this.getEl('inp').value);
+			}
+
+			return this.state.get('value');
+		},
+
 		bindStates: function() {
 			var self = this;
 
 			self.state.on('change:value', function(e) {
-				self.getEl('inp').value = e.value;
+				if (self.getEl('inp').value != e.value) {
+					self.getEl('inp').value = e.value;
+				}
 			});
 
 			self.state.on('change:disabled', function(e) {
