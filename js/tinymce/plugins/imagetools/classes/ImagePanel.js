@@ -130,8 +130,8 @@ define("tinymce/imagetoolsplugin/ImagePanel", [
 			zoom = this.zoom();
 			rect = this.state.get('rect');
 			$img = this.$el.find('img');
-			pw = elm.clientWidth;
-			ph = elm.clientHeight;
+			pw = elm.offsetWidth;
+			ph = elm.offsetHeight;
 			w = $img[0].naturalWidth * zoom;
 			h = $img[0].naturalHeight * zoom;
 			x = Math.max(0, pw / 2 - w / 2);
@@ -157,6 +157,13 @@ define("tinymce/imagetoolsplugin/ImagePanel", [
 					y: y,
 					w: w,
 					h: h
+				});
+
+				this.cropRect.setViewPortRect({
+					x: 0,
+					y: 0,
+					w: pw,
+					h: ph
 				});
 			}
 		},

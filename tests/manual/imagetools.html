@@ -41,7 +41,10 @@
 	}
 
 	function dump() {
-		console.log(tinymce.activeEditor.getContent());
+		var content = tinymce.activeEditor.getContent();
+
+		tinymce.$('#view').html(content);
+		console.log(content);
 	}
 </script>
 </head>
@@ -63,5 +66,7 @@
 	<input type="button" value="Upload" onclick="upload()" />
 </form>
 
+<div id="view"></div>
+	
 </body>
 </html>

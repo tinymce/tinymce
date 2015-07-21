@@ -80,6 +80,14 @@ define("tinymce/imagetoolsplugin/CropRect", [
 						w += e.deltaX * handle.deltaW;
 						h += e.deltaY * handle.deltaH;
 
+						if (w < 20) {
+							w = 20;
+						}
+
+						if (h < 20) {
+							h = 20;
+						}
+
 						rect = currentRect = Rect.clamp({x: x, y: y, w: w, h: h}, clampRect, handle.name == 'move');
 						rect = getRelativeRect(clampRect, rect);
 
@@ -167,6 +175,11 @@ define("tinymce/imagetoolsplugin/CropRect", [
 			repaint(currentRect);
 		}
 
+		function setViewPortRect(rect) {
+			viewPortRect = rect;
+			repaint(currentRect);
+		}
+
 		function setInnerRect(rect) {
 			setRect(getAbsoluteRect(clampRect, rect));
 		}
@@ -192,6 +205,7 @@ define("tinymce/imagetoolsplugin/CropRect", [
 			setRect: setRect,
 			getInnerRect: getInnerRect,
 			setInnerRect: setInnerRect,
+			setViewPortRect: setViewPortRect,
 			destroy: destroy
 		}, Observable);
 

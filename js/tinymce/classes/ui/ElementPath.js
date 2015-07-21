@@ -45,7 +45,7 @@ define("tinymce/ui/ElementPath", [
 			if (editor.settings.elementpath !== false) {
 				self.on('select', function(e) {
 					editor.focus();
-					editor.selection.select(this.data()[e.index].element);
+					editor.selection.select(this.row()[e.index].element);
 					editor.nodeChanged();
 				});
 

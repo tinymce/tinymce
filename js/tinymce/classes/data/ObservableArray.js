@@ -26,7 +26,7 @@ define("tinymce/data/ObservableArray", [
 		 * Number of items in array.
 		 *
 		 * @field length
-		 * @type {Number}
+		 * @type Number
 		 */
 		length: 0,
 
