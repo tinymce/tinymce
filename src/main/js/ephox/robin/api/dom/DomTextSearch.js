@@ -33,13 +33,18 @@ define(
       return TextSearch.expandRight(universe, item, offset, rawSeeker);
     };
 
+    var scanRight = function (item, offset) {
+      return TextSearch.scanRight(universe, item, offset);
+    };
+
     return {
       previousChar: previousChar,
       nextChar: nextChar,
       repeatLeft: repeatLeft,
       repeatRight: repeatRight,
       expandLeft: expandLeft,
-      expandRight: expandRight
+      expandRight: expandRight,
+      scanRight: scanRight
     };
   }
 );

@@ -2,12 +2,16 @@ define(
   'ephox.robin.api.general.TextSearch',
 
   [
+    'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
+    'ephox.phoenix.api.data.Spot',
+    'ephox.phoenix.api.general.Gather',
     'ephox.robin.textdata.TextSearch',
     'ephox.robin.textdata.TextSeeker',
     'ephox.scullion.Contracts'
   ],
 
-  function (TextSearch, TextSeeker, Contracts) {
+  function (Fun, Option, Spot, Gather, TextSearch, TextSeeker, Contracts) {
     var seekerSig = Contracts.exactly([ 'regex', 'attempt' ]);
 
     var previousChar = function (text, offset) {
@@ -57,13 +61,27 @@ define(
       return repeatRight(universe, item, offset, process);
     };
 
+    // Identify the (element, offset) pair ignoring potential fragmentation. Follow the offset
+    // through until the offset left is 0. This is designed to find text node positions that
+    // have been fragmented.
+    var scanRight = function (universe, item, originalOffset) {
+      var isRoot = Fun.constant(false);
+      if (! universe.property().isText(item)) return Option.none();
+      var text = universe.property().getText(item);
+      if (originalOffset <= text.length) return Option.none();
+      else return Gather.seekRight(universe, universe.property().isText, isRoot).bind(function (next) {
+        return scanRight(next, originalOffset - text.length);
+      });
+    };
+
     return {
       previousChar: previousChar,
       nextChar: nextChar,
       repeatLeft: repeatLeft,
       repeatRight: repeatRight,
       expandLeft: expandLeft,
-      expandRight: expandRight
+      expandRight: expandRight,
+      scanRight: scanRight
     };
   }
 );
