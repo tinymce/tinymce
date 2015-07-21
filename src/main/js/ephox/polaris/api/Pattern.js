@@ -12,24 +12,24 @@ define(
    * Documentation is in the actual implementations.
    */
   function (Chars, Custom, Safe, Unsafe) {
-    var safeword = function (input) {
-      return Safe.word(input);
+    var safeword = function (input, flags) {
+      return Safe.word(input, flags);
     };
 
-    var safetoken = function (input) {
-      return Safe.token(input);
+    var safetoken = function (input, flags) {
+      return Safe.token(input, flags);
     };
 
-    var custom = function (input, prefix, suffix) {
-      return Custom(input, prefix, suffix);
+    var custom = function (input, prefix, suffix, flags) {
+      return Custom(input, prefix, suffix, flags);
     };
 
-    var unsafeword = function (input) {
-      return Unsafe.word(input);
+    var unsafeword = function (input, flags) {
+      return Unsafe.word(input, flags);
     };
 
-    var unsafetoken = function (input) {
-      return Unsafe.token(input);
+    var unsafetoken = function (input, flags) {
+      return Unsafe.token(input, flags);
     };
 
     var sanitise = function (input) {

@@ -12,8 +12,8 @@ define(
     /**
      * Tokens have no prefix or suffix
      */
-    var token = function (input) {
-      return Custom(input, Fun.constant(0), Fun.constant(0));
+    var token = function (input, flags) {
+      return Custom(input, Fun.constant(0), Fun.constant(0), flags);
     };
 
     /**
@@ -21,7 +21,7 @@ define(
      *
      * These are consumed by the regex and then excluded by prefix/suffix lengths.
      */
-    var word = function (input) {
+    var word = function (input, flags) {
       var regex = '((?:^\'?)|(?:' + Chars.wordbreak() + '+\'?))' + input + '((?:\'?$)|(?:\'?' + Chars.wordbreak() + '+))';
 
       // ASSUMPTION: There are no groups in their input
@@ -33,7 +33,7 @@ define(
         return match.length > 2 ? match[2].length : 0;
       };
 
-      return Custom(regex, prefix, suffix);
+      return Custom(regex, prefix, suffix, flags);
     };
 
     return {

@@ -6,9 +6,9 @@ define(
   ],
 
   function (RegExp) {
-    return function (regex, prefix, suffix) {
+    return function (regex, prefix, suffix, flags) {
       var term = function () {
-        return new RegExp(regex, 'g');
+        return new RegExp(regex, flags.getOr('g'));
       };
 
       return {
