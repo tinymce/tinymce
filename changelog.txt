@@ -1,8 +1,11 @@
 Version 4.2.2 (2015-07-xx)
+	Fixed bug where float panels were not being hidden on inline editor blur when fixed_toolbar_container config option was in use.
 	Fixed bug where combobox states wasn't properly updated if contents where updated without keyboard.
 	Fixed bug where pasting into textbox or combobox would move the caret to the end of text.
+	Fixed bug where removal of bogus span elements before block elements would remove whitespace between nodes.
+	Fixed bug where repositioning of inline toolbars where async and producing errors if the editor was removed from DOM to early. Patch by iseulde.
+	Fixed bug where element path wasn't working correctly. Patch contributed by iseulde.
 Version 4.2.1 (2015-06-29)
-	Fixed bug where float panels were not being hidden on inline editor blur when fixed_toolbar_container config option was in use.
 	Fixed bug where back/forward buttons in the browser would render blob images as broken images.
 	Fixed bug where Firefox would throw regexp to big error when replacing huge base64 chunks.
 	Fixed bug rendering issues with resize and context toolbars not being placed properly until next animation frame.
