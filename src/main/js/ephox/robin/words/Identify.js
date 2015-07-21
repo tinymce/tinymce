@@ -13,7 +13,7 @@ define(
 
   function (Arr, Option, Pattern, Search, WordScope, WordSanitiser, RegExp) {
     var words = function (allText) {
-      var pattern = Pattern.unsafetoken(Pattern.wordchar() + '+');
+      var pattern = Pattern.unsafetoken(Pattern.wordchar() + '+', Option.none());
       var matches = Search.findall(allText, pattern);
 
       var len = allText.length;

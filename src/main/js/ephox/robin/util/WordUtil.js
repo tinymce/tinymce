@@ -38,7 +38,7 @@ define(
      * Returns the index position of a break when going left (i.e. last word break)
      */
     var leftBreak = function (text) {
-      var indices = Search.findall(text, Pattern.custom(Pattern.wordbreak(), zero, zero));
+      var indices = Search.findall(text, Pattern.custom(Pattern.wordbreak(), zero, zero, Option.none()));
       return Option.from(indices[indices.length - 1]).map(function (match) {
         return match.start();
       });
