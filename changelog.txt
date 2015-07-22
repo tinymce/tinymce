@@ -5,6 +5,7 @@ Version 4.2.2 (2015-07-xx)
 	Fixed bug where removal of bogus span elements before block elements would remove whitespace between nodes.
 	Fixed bug where repositioning of inline toolbars where async and producing errors if the editor was removed from DOM to early. Patch by iseulde.
 	Fixed bug where element path wasn't working correctly. Patch contributed by iseulde.
+	Fixed bug where menus wasn't rendered correctly when custom images where added to a menu. Patch contributed by Naim Hammadi.
 Version 4.2.1 (2015-06-29)
 	Fixed bug where back/forward buttons in the browser would render blob images as broken images.
 	Fixed bug where Firefox would throw regexp to big error when replacing huge base64 chunks.
