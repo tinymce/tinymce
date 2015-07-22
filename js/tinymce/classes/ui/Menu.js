@@ -108,7 +108,7 @@ define("tinymce/ui/Menu", [
 			self.items().each(function(ctrl) {
 				var settings = ctrl.settings;
 
-				if (settings.icon || settings.selectable) {
+				if (settings.icon || settings.image || settings.selectable) {
 					self._hasIcons = true;
 					return false;
 				}
