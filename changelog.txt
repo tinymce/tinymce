@@ -1,4 +1,4 @@
-Version 4.2.2 (2015-07-xx)
+Version 4.2.2 (2015-07-22)
 	Fixed bug where float panels were not being hidden on inline editor blur when fixed_toolbar_container config option was in use.
 	Fixed bug where combobox states wasn't properly updated if contents where updated without keyboard.
 	Fixed bug where pasting into textbox or combobox would move the caret to the end of text.
