@@ -56,7 +56,7 @@ test(
     var checkWords = function (expected, itemIds, words, input) {
       var universe = TestUniverse(input);
       var items = Finder.getAll(universe, itemIds);
-      var actual = Searcher.safeWords(universe, items, words, Fun.constant(false), Option.none());
+      var actual = Searcher.safeWords(universe, items, words, Fun.constant(false));
 
       var processed = Arr.map(actual, function (match) {
         return {

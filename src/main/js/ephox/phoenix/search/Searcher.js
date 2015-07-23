@@ -50,9 +50,9 @@ define(
     /**
      * Runs a search for one or more words
      */
-    var safeWords = function (universe, elements, words, optimise, flags) {
+    var safeWords = function (universe, elements, words, optimise) {
       var patterns = Arr.map(words, function (word) {
-        var pattern = Pattern.safeword(word, flags);
+        var pattern = Pattern.safeword(word);
         return namedPattern(word, pattern);
       });
       return run(universe, elements, patterns, optimise);
@@ -62,8 +62,8 @@ define(
     /**
      * Runs a search for a single token
      */
-    var safeToken = function (universe, elements, token, optimise, flags) {
-      var pattern = namedPattern(token, Pattern.safetoken(token, flags));
+    var safeToken = function (universe, elements, token, optimise) {
+      var pattern = namedPattern(token, Pattern.safetoken(token));
       return run(universe, elements, [pattern], optimise);
     };
 

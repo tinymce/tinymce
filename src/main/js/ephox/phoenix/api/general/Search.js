@@ -9,16 +9,16 @@ define(
    * Documentation is in the actual implementations.
    */
   function (Searcher) {
-    var run = function (universe, items, patterns, optimise, flags) {
-      return Searcher.run(universe, items, patterns, optimise, flags);
+    var run = function (universe, items, patterns, optimise) {
+      return Searcher.run(universe, items, patterns, optimise);
     };
 
-    var safeWords = function (universe, items, words, optimise, flags) {
-      return Searcher.safeWords(universe, items, words, optimise, flags);
+    var safeWords = function (universe, items, words, optimise) {
+      return Searcher.safeWords(universe, items, words, optimise);
     };
 
-    var safeToken = function (universe, items, token, optimise, flags) {
-      return Searcher.safeToken(universe, items, token, optimise, flags);
+    var safeToken = function (universe, items, token, optimise) {
+      return Searcher.safeToken(universe, items, token, optimise);
     };
 
     return {
