@@ -11,8 +11,8 @@ define(
    */
   function (DomUniverse, Grouping) {
     var universe = DomUniverse();
-    var text = function (element) {
-      return Grouping.text(universe, element);
+    var text = function (element, optimise) {
+      return Grouping.text(universe, element, optimise);
     };
 
     return {
