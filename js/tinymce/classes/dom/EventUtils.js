@@ -128,6 +128,11 @@ define("tinymce/dom/EventUtils", [], function() {
 			event.isImmediatePropagationStopped = returnFalse;
 		}
 
+		// Add missing metaKey for IE 8
+		if (typeof event.metaKey == 'undefined') {
+			event.metaKey = false;
+		}
+
 		return event;
 	}
 

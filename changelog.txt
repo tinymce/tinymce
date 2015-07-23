@@ -1,3 +1,5 @@
+Version 4.2.3 (2015-07-xx)
+	Fixed bug where keyboard shortcuts wasn't working correctly on IE 8.
 Version 4.2.2 (2015-07-22)
 	Fixed bug where float panels were not being hidden on inline editor blur when fixed_toolbar_container config option was in use.
 	Fixed bug where combobox states wasn't properly updated if contents where updated without keyboard.
