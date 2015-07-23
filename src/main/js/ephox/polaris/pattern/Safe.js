@@ -17,7 +17,7 @@ define(
       return Unsafe.word(value);
     };
 
-    var token = function (input, flags) {
+    var token = function (input) {
       var value = sanitise(input);
       return Unsafe.token(value);
     };
