@@ -3,17 +3,18 @@ define(
 
   [
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.polaris.pattern.Chars',
     'ephox.polaris.pattern.Custom'
   ],
 
-  function (Fun, Chars, Custom) {
+  function (Fun, Option, Chars, Custom) {
 
     /**
      * Tokens have no prefix or suffix
      */
-    var token = function (input, flags) {
-      return Custom(input, Fun.constant(0), Fun.constant(0), flags);
+    var token = function (input) {
+      return Custom(input, Fun.constant(0), Fun.constant(0), Option.none());
     };
 
     /**
@@ -21,7 +22,7 @@ define(
      *
      * These are consumed by the regex and then excluded by prefix/suffix lengths.
      */
-    var word = function (input, flags) {
+    var word = function (input) {
       var regex = '((?:^\'?)|(?:' + Chars.wordbreak() + '+\'?))' + input + '((?:\'?$)|(?:\'?' + Chars.wordbreak() + '+))';
 
       // ASSUMPTION: There are no groups in their input
@@ -33,7 +34,7 @@ define(
         return match.length > 2 ? match[2].length : 0;
       };
 
-      return Custom(regex, prefix, suffix, flags);
+      return Custom(regex, prefix, suffix, Option.none());
     };
 
     return {
