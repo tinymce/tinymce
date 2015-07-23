@@ -25,7 +25,7 @@ define(
     };
 
     var extractTo = function (universe, child, offset, pred, optimise) {
-      return Extract.extractTo(universe, child, offset, pred);
+      return Extract.extractTo(universe, child, offset, pred, optimise);
     };
 
     var find = function (universe, parent, offset, optimise) {
