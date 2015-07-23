@@ -29,7 +29,7 @@ define(
       return Parents.common(universe, item1, item2).fold(function () {
         return []; // no common parent, therefore no intervening path. How does this clash with Path in robin?
       }, function (parent) {
-        var items = [ parent ].concat(Extract.all(universe, parent));
+        var items = [ parent ].concat(Extract.all(universe, parent, Fun.constant(false)));
         var start = index(universe, items, item1);
         var finish = index(universe, items, item2);
         var result = start > -1 && finish > -1 ? order(items, start, delta1, finish, delta2) : [];

@@ -16,24 +16,24 @@ define(
       return Extract.typed(universe, item, optimise);
     };
 
-    var all = function (universe, item) {
-      return Extract.items(universe, item);
+    var all = function (universe, item, optimise) {
+      return Extract.items(universe, item, optimise);
     };
 
-    var extract = function (universe, child, offset) {
-      return Extract.extract(universe, child, offset);
+    var extract = function (universe, child, offset, optimise) {
+      return Extract.extract(universe, child, offset, optimise);
     };
 
-    var extractTo = function (universe, child, offset, pred) {
+    var extractTo = function (universe, child, offset, pred, optimise) {
       return Extract.extractTo(universe, child, offset, pred);
     };
 
-    var find = function (universe, parent, offset) {
-      return Find.find(universe, parent, offset);
+    var find = function (universe, parent, offset, optimise) {
+      return Find.find(universe, parent, offset, optimise);
     };
 
-    var toText = function (universe, item) {
-      return ExtractText.from(universe, item);
+    var toText = function (universe, item, optimise) {
+      return ExtractText.from(universe, item, optimise);
     };
 
     return {
