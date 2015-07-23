@@ -6,11 +6,10 @@ define(
     'ephox.perhaps.Option',
     'ephox.polaris.api.Pattern',
     'ephox.polaris.api.Search',
-    'ephox.robin.data.BeforeAfter',
     'global!RegExp'
   ],
 
-  function (Fun, Option, Pattern, Search, BeforeAfter, RegExp) {
+  function (Fun, Option, Pattern, Search, RegExp) {
 
     var wordstart = new RegExp(Pattern.wordbreak() + '+', 'g');
 
