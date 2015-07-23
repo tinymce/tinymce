@@ -21,8 +21,8 @@ define(
      *
      * Returns an array of array of text node.
      */
-    var text = function (universe, element) {
-      var extractions = Extract.from(universe, element);
+    var text = function (universe, element, optimise) {
+      var extractions = Extract.from(universe, element, optimise);
       var segments = Arrays.splitby(extractions, function (x) {
         return x.fold(Fun.constant(true), Fun.constant(true), Fun.constant(false));
       });

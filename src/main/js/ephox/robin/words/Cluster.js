@@ -34,8 +34,8 @@ define(
      *
      * Returns the words found and the elements that contain the words (not split on word boundaries).
      */
-    var generate = function (universe, element) {
-      var cluster = Clustering.words(universe, element).all();
+    var generate = function (universe, element, optimise) {
+      var cluster = Clustering.words(universe, element, optimise).all();
       var items = Arr.map(cluster, function (c) { return c.item(); });      
       var zone = Zone.constant(items);
       var words = findWords(universe, cluster);

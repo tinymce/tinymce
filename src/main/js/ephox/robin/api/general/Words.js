@@ -15,8 +15,8 @@ define(
       return Identify.words(allText);
     };
 
-    var cluster = function (universe, element) {
-      return universe.property().isBoundary(element) ? Cluster.empty() : Cluster.generate(universe, element);
+    var cluster = function (universe, element, optimise) {
+      return universe.property().isBoundary(element) ? Cluster.empty() : Cluster.generate(universe, element, optimise);
     };
 
     var isWord = function (_universe, text) {

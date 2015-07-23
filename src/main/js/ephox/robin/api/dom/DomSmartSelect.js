@@ -9,8 +9,8 @@ define(
   function (DomUniverse, SmartSelect) {
     var universe = DomUniverse();
 
-    var word = function (element, offset) {
-      return SmartSelect.word(universe, element, offset);
+    var word = function (element, offset, optimise) {
+      return SmartSelect.word(universe, element, offset, optimise);
     };
 
     return {
