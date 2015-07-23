@@ -91,6 +91,14 @@
 			}
 		}
 	});
+
+	if (!window.console) {
+		window.console = {
+			log: function() {
+				tinymce.$('<div></div>').text(tinymce.grep(arguments).join(' ')).appendTo(document.body);
+			}
+		};
+	}
 </script>
 </head>
 <body>
