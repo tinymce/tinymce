@@ -4,19 +4,17 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.perhaps.Option',
+    'ephox.phoenix.api.data.NamedPattern',
     'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.api.general.Family',
     'ephox.phoenix.extract.TypedList',
     'ephox.phoenix.search.MatchSplitter',
     'ephox.polaris.api.Pattern',
     'ephox.polaris.api.PositionArray',
-    'ephox.polaris.api.Search',
-    'ephox.scullion.Struct'
+    'ephox.polaris.api.Search'
   ],
 
-  function (Arr, Option, Spot, Family, TypedList, MatchSplitter, Pattern, PositionArray, Search, Struct) {
-    var namedPattern = Struct.immutable('word', 'pattern');
-
+  function (Arr, Option, NamedPattern, Spot, Family, TypedList, MatchSplitter, Pattern, PositionArray, Search) {
     var gen = function (universe, input) {
       return PositionArray.generate(input, function (unit, offset) {
         var finish = offset + universe.property().getText(unit).length;
@@ -53,7 +51,7 @@ define(
     var safeWords = function (universe, elements, words, optimise) {
       var patterns = Arr.map(words, function (word) {
         var pattern = Pattern.safeword(word);
-        return namedPattern(word, pattern);
+        return NamedPattern(word, pattern);
       });
       return run(universe, elements, patterns, optimise);
     };
@@ -63,7 +61,7 @@ define(
      * Runs a search for a single token
      */
     var safeToken = function (universe, elements, token, optimise) {
-      var pattern = namedPattern(token, Pattern.safetoken(token));
+      var pattern = NamedPattern(token, Pattern.safetoken(token));
       return run(universe, elements, [pattern], optimise);
     };
 
