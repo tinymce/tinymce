@@ -3,20 +3,18 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.peanut.Fun',
     'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.extract.TypedItem',
     'ephox.phoenix.extract.TypedList'
   ],
 
-  function (Arr, Fun, Spot, TypedItem, TypedList) {
+  function (Arr, Spot, TypedItem, TypedList) {
     /**
      * Flattens the item tree into TypedItem representations.
      *
      * Boundaries are returned twice, before and after their children.
      */
     var typed = function (universe, item, optimise) {
-      if (optimise === undefined) console.trace();
       if (universe.property().isText(item)) {
         return [ TypedItem.text(item, universe) ];
       } else if (universe.property().isEmptyTag(item)) {

@@ -7,13 +7,12 @@ test(
     'ephox.boss.api.TextGene',
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
     'ephox.phoenix.search.Searcher',
     'ephox.phoenix.test.Finder',
     'ephox.phoenix.test.TestRenders'
   ],
 
-  function (Gene, TestUniverse, TextGene, Arr, Fun, Option, Searcher, Finder, TestRenders) {
+  function (Gene, TestUniverse, TextGene, Arr, Fun, Searcher, Finder, TestRenders) {
     /*
       An example of some <b>test</b> data. The word being looked for will be word and for.
 
