@@ -20,8 +20,8 @@ define(
       return Safe.token(input);
     };
 
-    var custom = function (input, prefix, suffix) {
-      return Custom(input, prefix, suffix);
+    var custom = function (input, prefix, suffix, flags) {
+      return Custom(input, prefix, suffix, flags);
     };
 
     var unsafeword = function (input) {

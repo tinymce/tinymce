@@ -9,7 +9,7 @@ define(
   function (Unsafe) {
     /** Escapes regex characters in a string */
     var sanitise = function (input) {
-      return input.replace(/[-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&");
+      return input.replace(/[-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&');
     };
 
     var word = function (input) {
