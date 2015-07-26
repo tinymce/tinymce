@@ -6,11 +6,10 @@ define(
     'ephox.perhaps.Option',
     'ephox.polaris.api.Pattern',
     'ephox.polaris.api.Search',
-    'ephox.robin.data.BeforeAfter',
     'global!RegExp'
   ],
 
-  function (Fun, Option, Pattern, Search, BeforeAfter, RegExp) {
+  function (Fun, Option, Pattern, Search, RegExp) {
 
     var wordstart = new RegExp(Pattern.wordbreak() + '+', 'g');
 
@@ -38,7 +37,7 @@ define(
      * Returns the index position of a break when going left (i.e. last word break)
      */
     var leftBreak = function (text) {
-      var indices = Search.findall(text, Pattern.custom(Pattern.wordbreak(), zero, zero));
+      var indices = Search.findall(text, Pattern.custom(Pattern.wordbreak(), zero, zero, Option.none()));
       return Option.from(indices[indices.length - 1]).map(function (match) {
         return match.start();
       });

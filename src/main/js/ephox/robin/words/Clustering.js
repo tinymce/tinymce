@@ -38,17 +38,17 @@ define(
     };
 
     // Represent all the text nodes within item.
-    var extract = function (universe, item) {
+    var extract = function (universe, item, optimise) {
       if (universe.property().isText(item)) return [ WordDecision.detail(universe, item) ];
-      var children = Extract.all(universe, item);
+      var children = Extract.all(universe, item, optimise);
       return Arr.bind(children, function (child) {
         return universe.property().isText(child) ? [ WordDecision.detail(universe, child) ] : [];
       });
     };
 
-    var words = function (universe, item) {
+    var words = function (universe, item, optimise) {
       var toLeft = doWords(universe, item, Gather.sidestep, WordWalking.left);
-      var middle = extract(universe, item);
+      var middle = extract(universe, item, optimise);
       var toRight = doWords(universe, item, Gather.sidestep, WordWalking.right);
       return {
         all: Fun.constant(Arr.reverse(toLeft).concat(middle).concat(toRight)),

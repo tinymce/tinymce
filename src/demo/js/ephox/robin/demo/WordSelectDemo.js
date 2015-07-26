@@ -50,7 +50,7 @@ define(
       DomEvent.bind(editor, 'click', function (event) {
         var current = getSelection();
         if (current !== null && current.collapsed()) {
-          var wordRange = DomSmartSelect.word(current.startContainer(), current.startOffset());
+          var wordRange = DomSmartSelect.word(current.startContainer(), current.startOffset(), Fun.constant(false));
           wordRange.each(function (wr) {
             select(wr.startContainer(), wr.startOffset(), wr.endContainer(), wr.endOffset());
           });

@@ -30,7 +30,7 @@ define(
       return Option.some(WordRange(first.item(), first.start(), last.item(), last.finish()));
     };
 
-    var scan = function (universe, item, offset) {
+    var scan = function (universe, item, offset, optimise) {
       var text = universe.property().getText(item);
       var preLength = Arr.filter(text.substring(0, offset), function (s) {
         return s !== Unicode.zeroWidth();
@@ -39,7 +39,7 @@ define(
         return c === Unicode.zeroWidth();
       }).length;
 
-      var cluster = Clustering.words(universe, item);
+      var cluster = Clustering.words(universe, item, optimise);
       // We are at the left edge of the cluster.
       var atLeftEdge = preLength === 0 && cluster.left().length === 0;
       // We are at the right edge of the cluster.
@@ -57,29 +57,29 @@ define(
     // There was only a break in the node before the current position, so
     // as long as we are not already at the right edge of the node AND cluster, we extend to the 
     // end of the cluster.
-    var before = function (universe, item, offset, bindex) {
-      var info = scan(universe, item, offset);
+    var before = function (universe, item, offset, bindex, optimise) {
+      var info = scan(universe, item, offset, optimise);
       return info.rightEdge() ? Option.none() : toEnd(info.all(), item, bindex);
     };
 
     // There was only a break in the node after the current position, so
     // as long as we are not already at the left edge of the node AND cluster, we extend from the
     // start of the cluster to the index.
-    var after = function (universe, item, offset, aindex) {
-      var info = scan(universe, item, offset);
+    var after = function (universe, item, offset, aindex, optimise) {
+      var info = scan(universe, item, offset, optimise);
       return info.leftEdge() ? Option.none() : fromStart(info.all(), item, aindex);
     };
 
     // We don't need to use the cluster, because we are in the middle of two breaks. Only return something 
     // if the breaks aren't at the same position.
-    var both = function (universe, item, offset, bindex, aindex) {
+    var both = function (universe, item, offset, bindex, aindex, _optimise) {
       return bindex === aindex ? Option.none() : Option.some(WordRange(item, bindex, item, aindex));
     };
 
     // There are no breaks in the current node, so as long as we aren't at either edge of node/cluster, 
     // then we extend the length of the cluster.
-    var neither = function (universe, item, offset) {
-      var info = scan(universe, item, offset);
+    var neither = function (universe, item, offset, optimise) {
+      var info = scan(universe, item, offset, optimise);
       return info.leftEdge() || info.rightEdge() ? Option.none() : all(info.all());
     };
 

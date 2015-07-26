@@ -6,8 +6,8 @@ define(
   ],
 
   function (Selection) {
-    var word = function (universe, item, offset) {
-      return Selection.word(universe, item, offset);
+    var word = function (universe, item, offset, optimise) {
+      return Selection.word(universe, item, offset, optimise);
     };
 
     return {

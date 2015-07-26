@@ -6,10 +6,11 @@ test(
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
     'ephox.compass.Arr',
+    'ephox.peanut.Fun',
     'ephox.robin.words.Clustering'
   ],
 
-  function (Gene, TestUniverse, TextGene, Arr, Clustering) {
+  function (Gene, TestUniverse, TextGene, Arr, Fun, Clustering) {
     /*
      * <p>
      *   "This is"
@@ -81,7 +82,7 @@ test(
 
 
     var checkPath = function (expected, id) {
-      var act = Clustering.words(universe, universe.find(universe.get(), id).getOrDie()).all();
+      var act = Clustering.words(universe, universe.find(universe.get(), id).getOrDie(), Fun.constant(false)).all();
       assert.eq(expected, Arr.map(act, function (a) {
         var text = universe.property().getText(a.item());
         return text.substring(a.start(), a.finish());

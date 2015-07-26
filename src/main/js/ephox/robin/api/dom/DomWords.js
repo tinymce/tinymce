@@ -16,8 +16,8 @@ define(
       return Words.identify(allText);
     };
 
-    var cluster = function (element) {
-      return Words.cluster(universe, element);
+    var cluster = function (element, optimise) {
+      return Words.cluster(universe, element, optimise);
     };
 
     var isWord = function (text) {
