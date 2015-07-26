@@ -14,8 +14,8 @@ define(
       return Range.range(universe, start, startDelta, finish, finishDelta);
     };
 
-    var group = function (universe, items) {
-      return Group.group(universe, items);
+    var group = function (universe, items, optimise) {
+      return Group.group(universe, items, optimise);
     };
 
     return {

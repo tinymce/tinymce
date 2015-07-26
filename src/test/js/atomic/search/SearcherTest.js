@@ -6,12 +6,13 @@ test(
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
     'ephox.compass.Arr',
+    'ephox.peanut.Fun',
     'ephox.phoenix.search.Searcher',
     'ephox.phoenix.test.Finder',
     'ephox.phoenix.test.TestRenders'
   ],
 
-  function (Gene, TestUniverse, TextGene, Arr, Searcher, Finder, TestRenders) {
+  function (Gene, TestUniverse, TextGene, Arr, Fun, Searcher, Finder, TestRenders) {
     /*
       An example of some <b>test</b> data. The word being looked for will be word and for.
 
@@ -54,7 +55,7 @@ test(
     var checkWords = function (expected, itemIds, words, input) {
       var universe = TestUniverse(input);
       var items = Finder.getAll(universe, itemIds);
-      var actual = Searcher.safeWords(universe, items, words);
+      var actual = Searcher.safeWords(universe, items, words, Fun.constant(false));
 
       var processed = Arr.map(actual, function (match) {
         return {
@@ -66,7 +67,7 @@ test(
       assert.eq(expected, processed);
     };
 
-    //An example of some <test> data. The <word> being looked <for> will be <w_or_d> and <for>.|There will be some <tes_t> 
+    //An example of some <test> data. The <word> being looked <for> will be <w_or_d> and <for>.|There will be some <tes_t>
     //paragraphs. This one ends with a partial fo|r and more.
 
     checkWords( [

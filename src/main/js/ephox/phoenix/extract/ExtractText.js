@@ -14,9 +14,9 @@ define(
     var onEmpty = function (item, universe) {
       return universe.property().name(item) === 'img' ? space : newline;
     };
-      
-    var from = function (universe, item) {
-      var typed = Extract.typed(universe, item);
+
+    var from = function (universe, item, optimise) {
+      var typed = Extract.typed(universe, item, optimise);
       return Arr.map(typed, function (t) {
         return t.fold(Fun.constant(newline), onEmpty, universe.property().getText);
       }).join('');

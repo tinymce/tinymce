@@ -3,19 +3,18 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.peanut.Fun',
     'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.extract.TypedItem',
     'ephox.phoenix.extract.TypedList'
   ],
 
-  function (Arr, Fun, Spot, TypedItem, TypedList) {
+  function (Arr, Spot, TypedItem, TypedList) {
     /**
      * Flattens the item tree into TypedItem representations.
      *
      * Boundaries are returned twice, before and after their children.
      */
-    var typed = function (universe, item) {
+    var typed = function (universe, item, optimise) {
       if (universe.property().isText(item)) {
         return [ TypedItem.text(item, universe) ];
       } else if (universe.property().isEmptyTag(item)) {
@@ -23,8 +22,8 @@ define(
       } else if (universe.property().isElement(item)) {
         var children = universe.property().children(item);
         var boundary = universe.property().isBoundary(item) ? [TypedItem.boundary(item, universe)] : [];
-        var rest = Arr.bind(children, function (child) {
-          return typed(universe, child);
+        var rest = optimise !== undefined && optimise(item) ? [] : Arr.bind(children, function (child) {
+          return typed(universe, child, optimise);
         });
         return boundary.concat(rest).concat(boundary);
       } else {
@@ -35,8 +34,8 @@ define(
     /**
      * Returns just the actual elements from a call to typed().
      */
-    var items = function (universe, item) {
-      var typedItemList = typed(universe, item);
+    var items = function (universe, item, optimise) {
+      var typedItemList = typed(universe, item, optimise);
 
       var raw = function (item, universe) { return item; };
 
@@ -45,8 +44,8 @@ define(
       });
     };
 
-    var extractToElem = function (universe, child, offset, item) {
-      var extractions = typed(universe, item);
+    var extractToElem = function (universe, child, offset, item, optimise) {
+      var extractions = typed(universe, item, optimise);
       var prior = TypedList.dropUntil(extractions, child);
       var count = TypedList.count(prior);
       return Spot.point(item, count + offset);
@@ -58,11 +57,11 @@ define(
      *
      * To find the exact reference later, use Find.
      */
-    var extract = function (universe, child, offset) {
+    var extract = function (universe, child, offset, optimise) {
       return universe.property().parent(child).fold(function () {
         return Spot.point(child, offset);
       }, function (parent) {
-        return extractToElem(universe, child, offset, parent);
+        return extractToElem(universe, child, offset, parent, optimise);
       });
     };
 
@@ -72,11 +71,11 @@ define(
      *
      * To find the exact reference later, use Find.
      */
-    var extractTo = function (universe, child, offset, pred) {
+    var extractTo = function (universe, child, offset, pred, optimise) {
       return universe.up().predicate(child, pred).fold(function () {
         return Spot.point(child, offset);
       }, function (v) {
-        return extractToElem(universe, child, offset, v);
+        return extractToElem(universe, child, offset, v, optimise);
       });
     };
 
