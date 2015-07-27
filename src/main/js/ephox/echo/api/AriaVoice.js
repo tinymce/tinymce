@@ -40,7 +40,7 @@ define(
       // We may not be able to get rid of them, so we'll make them display: none;
       Css.set(token, 'display', 'none');
 
-      // Although described-by does not appear to work in IE10, we are currently only supporting JAWS in Firefox (and IE11), 
+      // Although described-by does not appear to work in IE10, we are currently only supporting JAWS in Firefox (and IE11),
       // and this does work for those browsers.
       Attr.set(item, 'aria-describedby', id);
       return token;
@@ -48,7 +48,7 @@ define(
 
     var base = function (getAttrs, parent, text) {
       var doc = Traverse.owner(parent);
-      
+
       var token = create(doc, text);
 
       // Make it speak as soon as it is in the DOM (politely)
@@ -60,6 +60,8 @@ define(
 
       // Remove the token later.
       setTimeout(function () {
+        // If you don't remove this attribute, IE11 speaks the removal
+        Attr.remove(token, 'aria-live');
         Remove.remove(token);
       }, 1000);
     };
