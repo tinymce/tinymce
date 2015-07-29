@@ -84,7 +84,7 @@ define("tinymce/ui/Control", [
 			self.settings = settings = Tools.extend({}, self.Defaults, settings);
 
 			// Initial states
-			self._id = settings.id || ("tinymce-" + (idCounter++));
+			self._id = settings.id || ('mceu-' + (idCounter++));
 			self._aria = {role: settings.role};
 			self._elmCache = {};
 			self.$ = $;
