@@ -618,7 +618,7 @@ define("tinymce/dom/Selection", [
 				}
 
 				// WebKit egde case selecting images works better using setBaseAndExtent
-				if (!rng.collapsed && rng.startContainer == rng.endContainer && sel.setBaseAndExtent) {
+				if (!rng.collapsed && rng.startContainer == rng.endContainer && sel.setBaseAndExtent && !Env.ie) {
 					if (rng.endOffset - rng.startOffset < 2) {
 						if (rng.startContainer.hasChildNodes()) {
 							node = rng.startContainer.childNodes[rng.startOffset];
