@@ -345,10 +345,23 @@ define("tinymce/pasteplugin/Clipboard", [
 						img = new Image();
 						img.src = reader.result;
 
-						maxPixels = max_image_size * max_image_size;
-						imagePixels = img.width * img.height;
+						if ((typeof max_image_size) === 'number') {
+							maxPixels = max_image_size * max_image_size;
+							imagePixels = img.width * img.height;
 
-						return imagePixels <= maxPixels;
+							return imagePixels <= maxPixels;
+						} else if ((typeof max_image_size) === 'object') {
+							return img.width <= max_image_size.width && img.height <= max_image_size.height;
+						}
+
+					}
+
+					function formatImageSize(max_image_size) {
+						if ((typeof max_image_size) === 'number') {
+							return max_image_size + 'x' + max_image_size;
+						} else if ((typeof max_image_size) === 'object') {
+							return max_image_size.width + 'x' + max_image_size.height;
+						}
 					}
 
 					if (rng) {
@@ -361,8 +374,7 @@ define("tinymce/pasteplugin/Clipboard", [
 							pasteHtml('<img src="' + reader.result + '">');
 						} else {
 							editor.windowManager.alert('The image you tried to insert is too large.\n' +
-								'The maximum limit is ' +
-								editor.settings.max_image_size + 'x' + editor.settings.max_image_size + ' pixels.');
+								'The maximum limit is ' + formatImageSize(editor.settings.max_image_size) + ' pixels.');
 						}
 					} else {
 						pasteHtml('<img src="' + reader.result + '">');
