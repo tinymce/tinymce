@@ -77,7 +77,6 @@ define(
     };
 
     var findTextNeighbour = function (universe, item, offset) {
-      // You don't want to find a text neighbour if you have to pass through a block.
       var stopAt = Fun.curry(isBoundary, universe);
       return descendToLeft(universe, item, offset, stopAt).orThunk(function () {
         return descendToRight(universe, item, offset, stopAt);
