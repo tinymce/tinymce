@@ -8,9 +8,14 @@
 	border-left-color: darken(@btn-bg, 20%);
 }
 
-.@{prefix}-splitbtn button {
+.@{prefix}-splitbtn button when (@has-button-borders = false) {
 	padding-right: 6px;
 	padding-left: 6px;
+}
+
+.@{prefix}-splitbtn button when (@has-button-borders = true) {
+	padding-right: 4px;
+	padding-left: 8px;
 }
 
 .@{prefix}-splitbtn .@{prefix}-open {

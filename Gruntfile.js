@@ -204,7 +204,8 @@ module.exports = function(grunt) {
 					append: ["Icons.less"],
 					importFrom: "js/tinymce/tinymce.js",
 					path: "js/tinymce/skins",
-					ext: ".modern.dev.less"
+					devLess: "skin.dev.less",
+					srcLess: "skin.less"
 				}
 			},
 
@@ -222,7 +223,8 @@ module.exports = function(grunt) {
 					append: ["Icons.Ie7.less"],
 					importFrom: "js/tinymce/tinymce.js",
 					path: "js/tinymce/skins",
-					ext: ".ie7.dev.less"
+					devLess: "skin.ie7.dev.less",
+					srcLess: "skin.ie7.less"
 				}
 			}
 		},
@@ -235,7 +237,7 @@ module.exports = function(grunt) {
 				},
 
 				expand: true,
-				src: ["js/tinymce/skins/**/skin.modern.dev.less"],
+				src: ["js/tinymce/skins/**/skin.dev.less"],
 				ext: ".min.css"
 			},
 
