@@ -29,7 +29,7 @@ define(
     ]);
 
     var isBoundary = function (universe, item) {
-      return Structure.isBlock(universe, item) || Structure.isEmptyTag(universe, item);
+      return Structure.isEmptyTag(universe, item) || universe.property().isBoundary(item);
     };
 
     var repeat = function (universe, item, mode, offsetOption, process, walking, recent) {
@@ -77,10 +77,9 @@ define(
     };
 
     var findTextNeighbour = function (universe, item, offset) {
-      // You don't want to find a text neighbour if you have to pass through a block.
-      var stopAtBlocks = Fun.curry(Structure.isBlock, universe);
-      return descendToLeft(universe, item, offset, stopAtBlocks).orThunk(function () {
-        return descendToRight(universe, item, offset, stopAtBlocks);
+      var stopAt = Fun.curry(isBoundary, universe);
+      return descendToLeft(universe, item, offset, stopAt).orThunk(function () {
+        return descendToRight(universe, item, offset, stopAt);
       }).getOr(Spot.point(item, offset));
     };
 
