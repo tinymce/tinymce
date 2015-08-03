@@ -29,7 +29,7 @@ define(
     ]);
 
     var isBoundary = function (universe, item) {
-      return Structure.isBlock(universe, item) || Structure.isEmptyTag(universe, item) || Structure.isContainer(universe, item);
+      return Structure.isEmptyTag(universe, item) || universe.property().isBoundary(item);
     };
 
     var repeat = function (universe, item, mode, offsetOption, process, walking, recent) {
