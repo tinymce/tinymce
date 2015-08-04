@@ -15,7 +15,7 @@ define(
   ],
 
   function (Id, PlatformDetection, Fun, Attr, Css, Element, Insert, Remove, Traverse, setTimeout) {
-    var platform = PlatformDetection.detect();
+    var isFirefox = PlatformDetection.detect().browser.isFirefox();
 
     var offscreen = {
       position: 'absolute',
@@ -53,7 +53,7 @@ define(
       var doc = Traverse.owner(parent);
 
       // firefox needs aria-describedby to speak a role=alert token, which causes IE11 to read twice
-      var createToken = platform.browser.isFirefox() ? Fun.curry(describe, parent) : Fun.curry(create, doc);
+      var createToken = isFirefox ? Fun.curry(describe, parent) : Fun.curry(create, doc);
       var token = createToken(text);
 
       // Make it speak as soon as it is in the DOM (politely)
