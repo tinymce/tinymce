@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.epithet.Id',
+    'ephox.fred.PlatformDetection',
     'ephox.peanut.Fun',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Css',
@@ -13,7 +14,9 @@ define(
     'global!setTimeout'
   ],
 
-  function (Id, Fun, Attr, Css, Element, Insert, Remove, Traverse, setTimeout) {
+  function (Id, PlatformDetection, Fun, Attr, Css, Element, Insert, Remove, Traverse, setTimeout) {
+    var platform = PlatformDetection.detect();
+
     var offscreen = {
       position: 'absolute',
       left: '-9999px'
@@ -49,7 +52,9 @@ define(
     var base = function (getAttrs, parent, text) {
       var doc = Traverse.owner(parent);
 
-      var token = create(doc, text);
+      // firefox needs aria-describedby to speak a role=alert token, which causes IE11 to read twice
+      var createToken = platform.browser.isFirefox() ? Fun.curry(describe, parent) : Fun.curry(create, doc);
+      var token = createToken(text);
 
       // Make it speak as soon as it is in the DOM (politely)
       Attr.setAll(token, getAttrs(text));

@@ -46,6 +46,16 @@ var dependencies = [
     targets: [
       { name: 'module/*.js', path: depend }
     ]
+  },
+
+  {
+    name: 'fred',
+    repository: 'buildrepo2',
+    source: 'fred.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
   }
 
 ];
