@@ -524,14 +524,20 @@ define("tinymce/dom/ControlSelection", [
 			} else {
 				disableGeckoResize();
 
+				// Sniff sniff, hard to feature detect this stuff
 				if (Env.ie >= 11) {
-					// TODO: Drag/drop doesn't work
-					editor.on('mouseup', function(e) {
+					// Needs to be mousedown for drag/drop to work on IE 11
+					// Needs to be click on Edge to properly select images
+					editor.on('mousedown click', function(e) {
 						var nodeName = e.target.nodeName;
 
 						if (!resizeStarted && /^(TABLE|IMG|HR)$/.test(nodeName)) {
 							editor.selection.select(e.target, nodeName == 'TABLE');
-							editor.nodeChanged();
+
+							// Only fire once since nodeChange is expensive
+							if (e.type == 'mousedown') {
+								editor.nodeChanged();
+							}
 						}
 					});
 

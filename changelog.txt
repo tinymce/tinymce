@@ -1,6 +1,8 @@
 Version 4.2.4 (2015-08-xx)
 	Fixed bug where contents would be duplicated on drag/drop within the same editor.
 	Fixed bug where floating/alignment of images on Edge wouldn't work properly.
+	Fixed bug where it wasn't possible to drag images on IE 11.
+	Fixed bug where image selection on Edge would sometimes fail.
 Version 4.2.3 (2015-07-30)
 	Fixed bug where image selection wasn't possible on Edge due to incompatible setBaseAndExtend API.
 	Fixed bug where image blobs urls where not properly destroyed by the imagetools plugin.
