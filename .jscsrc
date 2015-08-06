@@ -7,10 +7,12 @@
 	"validateQuoteMarks": null,
 	"requireLineFeedAtFileEnd": null,
 	"disallowImplicitTypeConversion": null,
-	"validateJSDoc": null,
+	"jsDoc": null,
 	"requireCamelCaseOrUpperCaseIdentifiers": null,
 	"disallowMultipleVarDecl": null,
 	"maximumLineLength": 255,
+	"requireDotNotation": null,
+	"requireCapitalizedConstructors": null,
 
 	"excludeFiles": [
 		"Jakefile.js",
