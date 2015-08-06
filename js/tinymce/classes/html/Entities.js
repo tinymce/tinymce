@@ -254,9 +254,9 @@ define("tinymce/html/Entities", [
 						numeric -= 0x10000;
 
 						return String.fromCharCode(0xD800 + (numeric >> 10), 0xDC00 + (numeric & 0x3FF));
-					} else {
-						return asciiMap[numeric] || String.fromCharCode(numeric);
 					}
+
+					return asciiMap[numeric] || String.fromCharCode(numeric);
 				}
 
 				return reverseEntities[all] || namedEntities[all] || nativeDecode(all);

@@ -288,22 +288,22 @@
 					origFn.apply(self.not(":tinymce"), arguments);
 
 					return self; // return original set for chaining
-				} else {
-					var ret = "";
-					var args = arguments;
-
-					(textProc ? self : self.eq(0)).each(function(i, node) {
-						var ed = tinyMCEInstance(node);
-
-						if (ed) {
-							ret += textProc ? ed.getContent().replace(/<(?:"[^"]*"|'[^']*'|[^'">])*>/g, "") : ed.getContent({save: true});
-						} else {
-							ret += origFn.apply($(node), args);
-						}
-					});
-
-					return ret;
 				}
+
+				var ret = "";
+				var args = arguments;
+
+				(textProc ? self : self.eq(0)).each(function(i, node) {
+					var ed = tinyMCEInstance(node);
+
+					if (ed) {
+						ret += textProc ? ed.getContent().replace(/<(?:"[^"]*"|'[^']*'|[^'">])*>/g, "") : ed.getContent({save: true});
+					} else {
+						ret += origFn.apply($(node), args);
+					}
+				});
+
+				return ret;
 			};
 		});
 
@@ -357,9 +357,9 @@
 			if ((!name) || (name !== "value") || (!containsTinyMCE(self))) {
 				if (value !== undef) {
 					return jQueryFn.attr.apply(self, args);
-				} else {
-					return jQueryFn.attr.apply(self, args);
 				}
+
+				return jQueryFn.attr.apply(self, args);
 			}
 
 			if (value !== undef) {
@@ -367,11 +367,11 @@
 				jQueryFn.attr.apply(self.not(":tinymce"), args);
 
 				return self; // return original set for chaining
-			} else {
-				var node = self[0], ed = tinyMCEInstance(node);
-
-				return ed ? ed.getContent({save: true}) : jQueryFn.attr.apply($(node), args);
 			}
+
+			var node = self[0], ed = tinyMCEInstance(node);
+
+			return ed ? ed.getContent({save: true}) : jQueryFn.attr.apply($(node), args);
 		};
 	}
 })(jQuery);

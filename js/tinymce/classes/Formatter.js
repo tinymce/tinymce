@@ -819,19 +819,19 @@ define("tinymce/Formatter", [
 							splitToFormatRoot(startContainer);
 							startContainer = unwrap(TRUE);
 							return;
-						} else {
-							// Wrap start/end nodes in span element since these might be cloned/moved
-							startContainer = wrap(startContainer, 'span', {id: '_start', 'data-mce-type': 'bookmark'});
-							endContainer = wrap(endContainer, 'span', {id: '_end', 'data-mce-type': 'bookmark'});
-
-							// Split start/end
-							splitToFormatRoot(startContainer);
-							splitToFormatRoot(endContainer);
-
-							// Unwrap start/end to get real elements again
-							startContainer = unwrap(TRUE);
-							endContainer = unwrap();
 						}
+
+						// Wrap start/end nodes in span element since these might be cloned/moved
+						startContainer = wrap(startContainer, 'span', {id: '_start', 'data-mce-type': 'bookmark'});
+						endContainer = wrap(endContainer, 'span', {id: '_end', 'data-mce-type': 'bookmark'});
+
+						// Split start/end
+						splitToFormatRoot(startContainer);
+						splitToFormatRoot(endContainer);
+
+						// Unwrap start/end to get real elements again
+						startContainer = unwrap(TRUE);
+						endContainer = unwrap();
 					} else {
 						startContainer = endContainer = splitToFormatRoot(startContainer);
 					}

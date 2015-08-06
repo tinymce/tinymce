@@ -158,9 +158,9 @@ define("tinymce/html/Node", [], function() {
 					attrs.map[name] = value;
 
 					return self;
-				} else {
-					return attrs.map[name];
 				}
+
+				return attrs.map[name];
 			}
 		},
 

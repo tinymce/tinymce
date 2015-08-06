@@ -160,14 +160,14 @@ define("tinymce/ui/Selector", [
 								item[name] ? item[name]() :
 								false;
 						};
-					} else {
-						// Compile not expression
-						notSelectors = parseChunks(name[1], []);
-
-						return function(item) {
-							return !match(item, notSelectors);
-						};
 					}
+
+					// Compile not expression
+					notSelectors = parseChunks(name[1], []);
+
+					return function(item) {
+						return !match(item, notSelectors);
+					};
 				}
 			}
 

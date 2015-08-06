@@ -174,10 +174,10 @@ define("tinymce/dom/StyleSheetLoader", [
 					waitForGeckoLinkLoaded();
 					appendToHead(style);
 					return;
-				} else {
-					// Use the id owner on older webkits
-					waitForWebKitLinkLoaded();
 				}
+
+				// Use the id owner on older webkits
+				waitForWebKitLinkLoaded();
 			}
 
 			appendToHead(link);

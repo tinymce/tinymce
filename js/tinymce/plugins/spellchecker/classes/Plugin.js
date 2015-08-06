@@ -207,11 +207,10 @@ define("tinymce/spellcheckerplugin/Plugin", [
 		}
 
 		function spellcheck() {
+			finish();
+
 			if (started) {
-				finish();
 				return;
-			} else {
-				finish();
 			}
 
 			function errorCallback(message) {

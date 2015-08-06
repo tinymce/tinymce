@@ -196,6 +196,7 @@ tinymce.PluginManager.add('link', function(editor) {
 				onselect: linkListChangeHandler,
 				value: editor.convertURL(data.href, 'href'),
 				onPostRender: function() {
+					/*eslint consistent-this:0*/
 					linkListCtrl = this;
 				}
 			};

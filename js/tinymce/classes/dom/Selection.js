@@ -270,21 +270,21 @@ define("tinymce/dom/Selection", [
 				}
 
 				return startElement;
-			} else {
-				startElement = rng.startContainer;
-
-				if (startElement.nodeType == 1 && startElement.hasChildNodes()) {
-					if (!real || !rng.collapsed) {
-						startElement = startElement.childNodes[Math.min(startElement.childNodes.length - 1, rng.startOffset)];
-					}
-				}
-
-				if (startElement && startElement.nodeType == 3) {
-					return startElement.parentNode;
-				}
-
-				return startElement;
 			}
+
+			startElement = rng.startContainer;
+
+			if (startElement.nodeType == 1 && startElement.hasChildNodes()) {
+				if (!real || !rng.collapsed) {
+					startElement = startElement.childNodes[Math.min(startElement.childNodes.length - 1, rng.startOffset)];
+				}
+			}
+
+			if (startElement && startElement.nodeType == 3) {
+				return startElement.parentNode;
+			}
+
+			return startElement;
 		},
 
 		/**
@@ -315,22 +315,22 @@ define("tinymce/dom/Selection", [
 				}
 
 				return endElement;
-			} else {
-				endElement = rng.endContainer;
-				endOffset = rng.endOffset;
-
-				if (endElement.nodeType == 1 && endElement.hasChildNodes()) {
-					if (!real || !rng.collapsed) {
-						endElement = endElement.childNodes[endOffset > 0 ? endOffset - 1 : endOffset];
-					}
-				}
-
-				if (endElement && endElement.nodeType == 3) {
-					return endElement.parentNode;
-				}
-
-				return endElement;
 			}
+
+			endElement = rng.endContainer;
+			endOffset = rng.endOffset;
+
+			if (endElement.nodeType == 1 && endElement.hasChildNodes()) {
+				if (!real || !rng.collapsed) {
+					endElement = endElement.childNodes[endOffset > 0 ? endOffset - 1 : endOffset];
+				}
+			}
+
+			if (endElement && endElement.nodeType == 3) {
+				return endElement.parentNode;
+			}
+
+			return endElement;
 		},
 
 		/**
@@ -530,7 +530,7 @@ define("tinymce/dom/Selection", [
 					// IE will sometimes throw an exception here
 					ieRng = doc.selection.createRange();
 				} catch (ex) {
-
+					// Ignore
 				}
 
 				if (ieRng && ieRng.item) {

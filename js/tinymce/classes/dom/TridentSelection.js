@@ -465,10 +465,10 @@ define("tinymce/dom/TridentSelection", [], function() {
 							sibling.innerHTML = '';
 						}
 						return;
-					} else {
-						startOffset = dom.nodeIndex(startContainer);
-						startContainer = startContainer.parentNode;
 					}
+
+					startOffset = dom.nodeIndex(startContainer);
+					startContainer = startContainer.parentNode;
 				}
 
 				if (startOffset == endOffset - 1) {

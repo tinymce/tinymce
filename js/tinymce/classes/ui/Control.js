@@ -687,9 +687,9 @@ define("tinymce/ui/Control", [
 
 			if (typeof value === "undefined") {
 				return self._aria[name];
-			} else {
-				self._aria[name] = value;
 			}
+
+			self._aria[name] = value;
 
 			if (self.state.get('rendered')) {
 				elm.setAttribute(name == 'role' ? name : 'aria-' + name, value);

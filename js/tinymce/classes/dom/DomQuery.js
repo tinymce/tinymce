@@ -271,9 +271,9 @@ define("tinymce/dom/DomQuery", [
 			} else {
 				if (context) {
 					return DomQuery(selector).attr(context);
-				} else {
-					self.context = context = document;
 				}
+
+				self.context = context = document;
 			}
 
 			if (isString(selector)) {
