@@ -557,7 +557,7 @@ define("tinymce/dom/ControlSelection", [
 				}
 			}
 
-			editor.on('nodechange ResizeEditor ResizeWindow', function(e) {
+			editor.on('nodechange ResizeEditor ResizeWindow drop', function(e) {
 				if (window.requestAnimationFrame) {
 					window.requestAnimationFrame(function() {
 						updateResizeRect(e);
