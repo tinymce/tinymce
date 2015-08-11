@@ -31,7 +31,7 @@ define(
     };
 
     var isBlock = function (universe, item) {
-      return Structure.isBlock(universe, item) || Arr.contains([ 'li' ], universe.property().name(item));
+      return Structure.isFrame(universe, item) || Structure.isBlock(universe, item) || Arr.contains([ 'li' ], universe.property().name(item));
     };
 
     var skipToRight = function (universe, isRoot, item) {
