@@ -32,12 +32,17 @@ define(
       return Structure.isEmptyTag(universe, element);
     };
 
+    var isFrame = function (element) {
+      return Structure.isFrame(universe, element);
+    };
+
     return {
       isBlock: isBlock,
       isList: isList,
       isFormatting: isFormatting,
       isContainer: isContainer,
-      isEmptyTag: isEmptyTag
+      isEmptyTag: isEmptyTag,
+      isFrame: isFrame
     };
   }
 );

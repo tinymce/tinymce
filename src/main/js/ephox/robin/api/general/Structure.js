@@ -62,12 +62,17 @@ define(
       return Arr.contains(['br', 'img', 'hr'], universe.property().name(item));
     };
 
+    var isFrame = function (universe, item) {
+      return universe.property().name(item) === 'iframe';
+    };
+
     return {
       isBlock: isBlock,
       isList: isList,
       isFormatting: isFormatting,
       isContainer: isContainer,
-      isEmptyTag: isEmptyTag
+      isEmptyTag: isEmptyTag,
+      isFrame: isFrame
     };
   }
 );
