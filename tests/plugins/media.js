@@ -162,4 +162,8 @@ test("XSS content", function() {
 	testXss('<video><img src="x" onload="alert(1)"></video>', '<p><video width="300" height=\"150\"></video></p>');
 	testXss('<video><img src="x"></video>', '<p><video width="300" height="150"><img src="x" /></video></p>');
 	testXss('<video><!--[if IE]><img src="x"><![endif]--></video>', '<p><video width="300" height="150"><!-- [if IE]><img src="x"><![endif]--></video></p>');
+	testXss('<p><p><audio><audio src=x onerror=alert(1)>', '<p><audio></audio></p>');
+	testXss('<p><html><audio><br /><audio src=x onerror=alert(1)></p>', '');
+	testXss('<p><audio><img src="javascript:alert(1)"></audio>', '<p><audio><img /></audio></p>');
+	testXss('<p><audio><img src="x" style="behavior:url(x); width: 1px"></audio>', '<p><audio><img src="x" style="width: 1px;" /></audio></p>');
 });

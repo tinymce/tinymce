@@ -394,7 +394,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 			return html;
 		}
 
-		var writer = new tinymce.html.Writer();
+		var writer = new tinymce.html.Writer(), blocked;
 
 		new tinymce.html.SaxParser({
 			validate: false,
@@ -414,6 +414,8 @@ tinymce.PluginManager.add('media', function(editor, url) {
 			},
 
 			start: function(name, attrs, empty) {
+				blocked = true;
+
 				if (name == 'script' || name == 'noscript') {
 					return;
 				}
@@ -422,13 +424,18 @@ tinymce.PluginManager.add('media', function(editor, url) {
 					if (attrs[i].name.indexOf('on') === 0) {
 						return;
 					}
+
+					if (attrs[i].name == 'style') {
+						attrs[i].value = editor.dom.serializeStyle(editor.dom.parseStyle(attrs[i].value), name);
+					}
 				}
 
 				writer.start(name, attrs, empty);
+				blocked = false;
 			},
 
 			end: function(name) {
-				if (name == 'script' || name == 'noscript') {
+				if (blocked) {
 					return;
 				}
 
