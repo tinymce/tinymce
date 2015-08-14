@@ -64,8 +64,6 @@ define(
     // Identify the (element, offset) pair ignoring potential fragmentation. Follow the offset
     // through until the offset left is 0. This is designed to find text node positions that
     // have been fragmented.
-
-    // THIS CODE WOULD NOT WORK. OBVIOUSLY, NOT USED!
     var scanRight = function (universe, item, originalOffset) {
       var isRoot = Fun.constant(false);
       if (! universe.property().isText(item)) return Option.none();
