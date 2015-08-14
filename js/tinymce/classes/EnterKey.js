@@ -473,6 +473,25 @@ define("tinymce/EnterKey", [
 				}
 			}
 
+			function insertNewBlockAfter() {
+				// If the caret is at the end of a header we produce a P tag after it similar to Word unless we are in a hgroup
+				if (/^(H[1-6]|PRE|FIGURE)$/.test(parentBlockName) && containerBlockName != 'HGROUP') {
+					newBlock = createNewBlock(newBlockName);
+				} else {
+					newBlock = createNewBlock();
+				}
+
+				// Split the current container block element if enter is pressed inside an empty inner block element
+				if (settings.end_container_on_empty_block && canSplitBlock(containerBlock) && dom.isEmpty(parentBlock)) {
+					// Split container block for example a BLOCKQUOTE at the current blockParent location for example a P
+					newBlock = dom.split(containerBlock, parentBlock);
+				} else {
+					dom.insertAfter(newBlock, parentBlock);
+				}
+
+				moveToCaretPosition(newBlock);
+			}
+
 			rng = selection.getRng(true);
 
 			// Event is blocked by some other handler for example the lists plugin
@@ -585,22 +604,7 @@ define("tinymce/EnterKey", [
 
 			// Insert new block before/after the parent block depending on caret location
 			if (isCaretAtStartOrEndOfBlock()) {
-				// If the caret is at the end of a header we produce a P tag after it similar to Word unless we are in a hgroup
-				if (/^(H[1-6]|PRE|FIGURE)$/.test(parentBlockName) && containerBlockName != 'HGROUP') {
-					newBlock = createNewBlock(newBlockName);
-				} else {
-					newBlock = createNewBlock();
-				}
-
-				// Split the current container block element if enter is pressed inside an empty inner block element
-				if (settings.end_container_on_empty_block && canSplitBlock(containerBlock) && dom.isEmpty(parentBlock)) {
-					// Split container block for example a BLOCKQUOTE at the current blockParent location for example a P
-					newBlock = dom.split(containerBlock, parentBlock);
-				} else {
-					dom.insertAfter(newBlock, parentBlock);
-				}
-
-				moveToCaretPosition(newBlock);
+				insertNewBlockAfter();
 			} else if (isCaretAtStartOrEndOfBlock(true)) {
 				// Insert new block before
 				newBlock = parentBlock.parentNode.insertBefore(createNewBlock(), parentBlock);
@@ -616,7 +620,14 @@ define("tinymce/EnterKey", [
 				dom.insertAfter(fragment, parentBlock);
 				trimInlineElementsOnLeftSideOfBlock(newBlock);
 				addBrToBlockIfNeeded(parentBlock);
-				moveToCaretPosition(newBlock);
+
+				// New block might become empty if it's <p><b>a |</b></p>
+				if (dom.isEmpty(newBlock)) {
+					dom.remove(newBlock);
+					insertNewBlockAfter();
+				} else {
+					moveToCaretPosition(newBlock);
+				}
 			}
 
 			dom.setAttrib(newBlock, 'id', ''); // Remove ID since it needs to be document unique
