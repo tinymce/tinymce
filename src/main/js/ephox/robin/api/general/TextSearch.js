@@ -4,13 +4,14 @@ define(
   [
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.api.general.Gather',
     'ephox.robin.textdata.TextSearch',
     'ephox.robin.textdata.TextSeeker',
     'ephox.scullion.Contracts'
   ],
 
-  function (Fun, Option, Gather, TextSearch, TextSeeker, Contracts) {
+  function (Fun, Option, Spot, Gather, TextSearch, TextSeeker, Contracts) {
     var seekerSig = Contracts.exactly([ 'regex', 'attempt' ]);
 
     var previousChar = function (text, offset) {
@@ -67,9 +68,9 @@ define(
       var isRoot = Fun.constant(false);
       if (! universe.property().isText(item)) return Option.none();
       var text = universe.property().getText(item);
-      if (originalOffset <= text.length) return Option.none();
-      else return Gather.seekRight(universe, universe.property().isText, isRoot).bind(function (next) {
-        return scanRight(next, originalOffset - text.length);
+      if (originalOffset <= text.length) return Option.some(Spot.point(item, originalOffset));
+      else return Gather.seekRight(universe, item, universe.property().isText, isRoot).bind(function (next) {
+        return scanRight(universe, next, originalOffset - text.length);
       });
     };
 
