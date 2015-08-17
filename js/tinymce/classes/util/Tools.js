@@ -496,7 +496,14 @@ define("tinymce/util/Tools", [
 	}
 
 	function reduce(collection, iteratee, accumulator, thisArg) {
-		for (var i = 0; i < collection.length; i++) {
+		var i = 0;
+
+		if (arguments.length < 3) {
+			accumulator = collection[0];
+			i = 1;
+		}
+
+		for (; i < collection.length; i++) {
 			accumulator = iteratee.call(thisArg, accumulator, collection[i], i);
 		}
 
