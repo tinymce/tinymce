@@ -1,4 +1,4 @@
-Version 4.2.4 (2015-08-xx)
+Version 4.2.4 (2015-08-17)
 	Added picture as a valid element to the HTML 5 schema. Patch contributed by Adam Taylor.
 	Fixed bug where contents would be duplicated on drag/drop within the same editor.
 	Fixed bug where floating/alignment of images on Edge wouldn't work properly.
