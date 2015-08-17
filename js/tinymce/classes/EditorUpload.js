@@ -117,7 +117,17 @@ define("tinymce/EditorUpload", [
 			return content.replace(/src="(blob:[^"]+)"/g, function(match, blobUri) {
 				var blobInfo = blobCache.getByUri(blobUri);
 
-				return 'src="data:' + blobInfo.blob().type + ';base64,' + blobInfo.base64() + '"';
+				if (!blobInfo) {
+					blobInfo = Tools.reduce(editor.editorManager.editors, function(result, editor) {
+						return result || editor.editorUpload.blobCache.getByUri(blobUri);
+					}, null);
+				}
+
+				if (blobInfo) {
+					return 'src="data:' + blobInfo.blob().type + ';base64,' + blobInfo.base64() + '"';
+				}
+
+				return match[0];
 			});
 		}
 
