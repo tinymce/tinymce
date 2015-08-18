@@ -18,7 +18,7 @@ tinymce.PluginManager.add('pagebreak', function(editor) {
 	}), 'gi');
 
 	var pageBreakPlaceHolderHtml = '<img src="' + tinymce.Env.transparentSrc + '" class="' +
-		pageBreakClass + '" data-mce-resize="false" />';
+		pageBreakClass + '" data-mce-resize="false" data-mce-placeholder />';
 
 	// Register commands
 	editor.addCommand('mcePageBreak', function() {
