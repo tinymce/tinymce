@@ -95,7 +95,7 @@ define("tinymce/dom/ControlSelection", [
 			}
 
 			if (typeof selector != 'string') {
-				selector = 'table,img,div';
+				selector = 'img,div';
 			}
 
 			if (elm.getAttribute('data-mce-resize') === 'false') {

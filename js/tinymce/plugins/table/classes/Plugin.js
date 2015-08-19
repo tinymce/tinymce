@@ -19,15 +19,18 @@ define("tinymce/tableplugin/Plugin", [
 	"tinymce/tableplugin/Quirks",
 	"tinymce/tableplugin/CellSelection",
 	"tinymce/tableplugin/Dialogs",
+	"tinymce/tableplugin/ResizeBars",
 	"tinymce/util/Tools",
 	"tinymce/dom/TreeWalker",
 	"tinymce/Env",
 	"tinymce/PluginManager"
-], function(TableGrid, Quirks, CellSelection, Dialogs, Tools, TreeWalker, Env, PluginManager) {
+], function(TableGrid, Quirks, CellSelection, Dialogs, ResizeBars, Tools, TreeWalker, Env, PluginManager) {
 	var each = Tools.each;
 
 	function Plugin(editor) {
 		var clipboardRows, self = this, dialogs = new Dialogs(editor);
+
+		ResizeBars(editor);
 
 		function cmd(command) {
 			return function() {
