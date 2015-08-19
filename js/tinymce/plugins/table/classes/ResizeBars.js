@@ -57,7 +57,7 @@ define("tinymce/tableplugin/ResizeBars", [
 		function findPositions(getInnerEdge, getOuterEdge, thingsToMeasure) {
 			var tablePositions = [];
 
-			//Skip the first item in the array
+			//Skip the first item in the array = no left (LTR), right (RTL) or top bars
 			for (var i = 1; i < thingsToMeasure.length; i++) {
 				var item = thingsToMeasure[i];
 				//We need to zero index this again
@@ -77,12 +77,12 @@ define("tinymce/tableplugin/ResizeBars", [
 			});
 		}
 
-		function generateBar(classToAdd, cursor, left, top, height, width) {
-			return {
-				'data-mce-bogus': true,
+		function generateBar(classToAdd, cursor, left, top, height, width, indexAttr, index) {
+			var bar = {
+				'data-mce-bogus': 'all',
 				'class': RESIZE_BAR_CLASS + ' ' + classToAdd,
 				unselectable: true,
-				style: 'cursor: row-resize; ' +
+				style: 'cursor: ' + cursor + '; ' +
 					'margin: 0; ' +
 					'padding: 0; ' +
 					'position: absolute; ' +
@@ -93,6 +93,10 @@ define("tinymce/tableplugin/ResizeBars", [
 					'background-color: blue; ' +
 					'opacity: 0.5'
 			};
+
+			bar[indexAttr] = index;
+
+			return bar;
 		}
 
 		function drawRows(rowPositions, tableWidth, tablePosition) {
@@ -102,10 +106,9 @@ define("tinymce/tableplugin/ResizeBars", [
 					height = RESIZE_BAR_THICKNESS,
 					width = tableWidth;
 
-				var bar = editor.dom.add(editor.getBody(), 'div',
-					generateBar(RESIZE_BAR_ROW_CLASS, RESIZE_BAR_ROW_CURSOR_CLASS, left, top, height, width));
-
-				bar.setAttribute('data-row', rowPosition.index);
+				editor.dom.add(editor.getBody(), 'div',
+					generateBar(RESIZE_BAR_ROW_CLASS, RESIZE_BAR_ROW_CURSOR_CLASS,
+						left, top, height, width, 'data-row', rowPosition.index));
 			});
 		}
 
@@ -116,30 +119,94 @@ define("tinymce/tableplugin/ResizeBars", [
 					height = tableHeight,
 					width = RESIZE_BAR_THICKNESS;
 
-				var bar = editor.dom.add(editor.getBody(), 'div',
-					generateBar(RESIZE_BAR_COL_CLASS, RESIZE_BAR_COL_CURSOR_CLASS, left, top, height, width));
+				editor.dom.add(editor.getBody(), 'div',
+					generateBar(RESIZE_BAR_COL_CLASS, RESIZE_BAR_COL_CURSOR_CLASS,
+						left, top, height, width, 'data-col', cellPosition.index));
+			});
+		}
 
-				bar.setAttribute('data-col', cellPosition.index);
+		function getTableDeets(table) {
+			return Tools.map(table.rows, function(row) {
+
+				var cells = Tools.map(row.cells, function(cell) {
+
+					var rowspan = cell.hasAttribute('rowspan') ? parseInt(cell.getAttribute('rowspan'), 10) : 1;
+					var colspan = cell.hasAttribute('colspan') ? parseInt(cell.getAttribute('colspan'), 10) : 1;
+
+					return {
+						element: cell,
+						rowspan: rowspan,
+						colspan: colspan
+					};
+				});
+
+				return {
+					element: row,
+					cells: cells
+				};
+
+			});
+
+		}
+
+		function getWarehouse(tableDetails) {
+			function key(rowIndex, colIndex) {
+				return rowIndex + ',' + colIndex;
+			}
+
+			window.console.log(tableDetails);
+			var access = {};
+			var cells = [];
+
+			var maxRows = 0;
+			var maxCols = 0;
+
+			Tools.each(tableDetails, function(row, rowIndex) {
+				var currentRow = [];
+
+				Tools.each(row.cells, function(cell, cellIndex) {
+
+					var start = 0;
+
+					while (access[key(rowIndex, cellIndex)] !== undefined) {
+						start++;
+					}
+
+					var current = {
+						cell: cell.element,
+						colspan: cell.colspan,
+						rowspan: cell.rowspan,
+						rowIndex: rowIndex,
+						start: start
+					};
+
+					for (var i = 0; i < cell.colspan; i ++) {
+						for (var j = 0; j < cell.rowspan; j ++) {
+							var cr = rowIndex + j;
+							var cc = start + i;
+							access[key(rowIndex, cellIndex)] = current;
+						}
+					}
+				});
 			});
 		}
 
 		function drawBars(table) {
-			var rows = table.rows;
-			var cells = [];
+			var tableDetails = getTableDeets(table);
+			var warehouse = getWarehouse(tableDetails);
+			tableDetails = warehouse;
 
-			Tools.each(rows, function(row) {
-				if (row.cells.length > cells.length) {
-					cells = row.cells;
-				}
-			});
+			var rows, cols;
+
+			rows = tableDetails;
 
 			var tablePosition = editor.dom.getPos(table);
 			var rowPositions = rows.length > 0 ? findPositions(getTopEdge, getBottomEdge, rows) : [];
 			//The below needs to be LTR/RTL
-			var cellPositions = cells.length > 0 ? findPositions(getLeftEdge, getRightEdge, cells) : [];
+			var colPositions = cols.length > 0 ? findPositions(getLeftEdge, getRightEdge, cols) : [];
 
 			drawRows(rowPositions, table.offsetWidth, tablePosition);
-			drawCols(cellPositions, table.offsetHeight, tablePosition);
+			drawCols(colPositions, table.offsetHeight, tablePosition);
 		}
 
 		// Add cell selection logic
@@ -166,6 +233,7 @@ define("tinymce/tableplugin/ResizeBars", [
 		});
 
 		return {
+			clear: clearBars
 		};
 	};
 });

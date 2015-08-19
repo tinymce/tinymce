@@ -28,9 +28,7 @@ define("tinymce/tableplugin/Plugin", [
 	var each = Tools.each;
 
 	function Plugin(editor) {
-		var clipboardRows, self = this, dialogs = new Dialogs(editor);
-
-		ResizeBars(editor);
+		var clipboardRows, self = this, dialogs = new Dialogs(editor), resizeBars = ResizeBars(editor);
 
 		function cmd(command) {
 			return function() {
@@ -378,6 +376,7 @@ define("tinymce/tableplugin/Plugin", [
 			},
 
 			mceTableDelete: function(grid) {
+				resizeBars.clear();
 				grid.deleteTable();
 			}
 		}, function(func, name) {
