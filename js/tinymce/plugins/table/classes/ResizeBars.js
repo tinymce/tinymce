@@ -126,7 +126,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			});
 		}
 
-		function getTableDeets(table) {
+		function getTableDetails(table) {
 			return Tools.map(table.rows, function(row) {
 
 				var cells = Tools.map(row.cells, function(cell) {
@@ -150,7 +150,7 @@ define("tinymce/tableplugin/ResizeBars", [
 
 		}
 
-		function getWarehouse(tableDetails) {
+		function getJengaGrid(tableDetails) {
 			function key(rowIndex, colIndex) {
 				return rowIndex + ',' + colIndex;
 			}
@@ -208,13 +208,11 @@ define("tinymce/tableplugin/ResizeBars", [
 					maxRows: maxRows,
 					maxCols: maxCols
 				},
-				access: access,
-				cells: cells,
 				getAt: getAt
 			};
 		}
 
-		function getBlocks(warehouse) {
+		function getStructuralBlocks(jenga) {
 			function range(start, end) {
 				var r = [];
 
@@ -239,15 +237,15 @@ define("tinymce/tableplugin/ResizeBars", [
 				return singleInBlock ? singleInBlock : getFallback();
 			}
 
-			function getCols(warehouse) {
-				var cols = range(0, warehouse.grid.maxCols);
-				var rows = range(0, warehouse.grid.maxRows);
+			function getCols(jenga) {
+				var cols = range(0, jenga.grid.maxCols);
+				var rows = range(0, jenga.grid.maxRows);
 
 				return Tools.map(cols, function(col) {
 
 					function getBlock() {
 						for (var i = 0; i < rows.length; i++) {
-							var detail = warehouse.getAt(i, col);
+							var detail = jenga.getAt(i, col);
 							if (detail.colIndex === col) {
 								return [detail];
 							}
@@ -259,7 +257,7 @@ define("tinymce/tableplugin/ResizeBars", [
 					}
 
 					function getFallback() {
-						return warehouse.getAt(0, col);
+						return jenga.getAt(0, col);
 					}
 
 					return decide(getBlock, isSingle, getFallback);
@@ -267,16 +265,16 @@ define("tinymce/tableplugin/ResizeBars", [
 				});
 			}
 
-			function getRows(warehouse) {
+			function getRows(jenga) {
 
-				var cols = range(0, warehouse.grid.maxCols);
-				var rows = range(0, warehouse.grid.maxRows);
+				var cols = range(0, jenga.grid.maxCols);
+				var rows = range(0, jenga.grid.maxRows);
 
 				return Tools.map(rows, function(row) {
 
 					function getBlock() {
 						for (var i = 0; i < cols.length; i++) {
-							var detail = warehouse.getAt(row, i);
+							var detail = jenga.getAt(row, i);
 							if (detail.rowIndex === row) {
 								return [detail];
 							}
@@ -288,33 +286,35 @@ define("tinymce/tableplugin/ResizeBars", [
 					}
 
 					function getFallback() {
-						warehouse.getAt(row, 0);
+						jenga.getAt(row, 0);
 					}
 
 					return decide(getBlock, isSingle, getFallback);
 				});
 			}
 			return {
-				rows: getRows(warehouse),
-				cols: getCols(warehouse)
+				rows: getRows(jenga),
+				cols: getCols(jenga)
 			};
 		}
 
 		function drawBars(table) {
-			var tableDetails = getTableDeets(table);
-			var warehouse = getWarehouse(tableDetails);
-			var blocks = getBlocks(warehouse);
+			var tableDetails = getTableDetails(table);
+			var jenga = getJengaGrid(tableDetails);
+			var blocks = getStructuralBlocks(jenga);
 
 			var tablePosition = editor.dom.getPos(table);
 			var rowPositions = blocks.rows.length > 0 ? findPositions(getTopEdge, getBottomEdge, blocks.rows) : [];
 			//The below needs to be LTR/RTL
-			var colPositions = blocks.cols.length > 0 ? findPositions(getLeftEdge, getRightEdge, blocks.cols) : [];
+			//TODO: Fix this since it doesn't work
+			var getInner = editor.rtl ? getRightEdge : getLeftEdge;
+			var getOuter = editor.rtl ? getLeftEdge : getRightEdge;
+			var colPositions = blocks.cols.length > 0 ? findPositions(getInner, getOuter, blocks.cols) : [];
 
 			drawRows(rowPositions, table.offsetWidth, tablePosition);
 			drawCols(colPositions, table.offsetHeight, tablePosition);
 		}
 
-		// Add cell selection logic
 		/*editor.on('MouseDown', function(e) {
 			window.console.log('mousedown', e);
 		});*/
