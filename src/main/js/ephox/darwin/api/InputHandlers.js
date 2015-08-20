@@ -77,7 +77,6 @@ define(
           var keycode = event.raw().which;
           var shiftKey = event.raw().shiftKey === true;
           if (shiftKey === false) return Option.none();
-          console.log('here');
           if (SelectionKeys.isNavigation(keycode)) return KeySelection.sync(container, isRoot, start, soffset, finish, foffset);
           else return Option.none();
         }, Option.none);

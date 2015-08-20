@@ -27,8 +27,8 @@ define(
       });
     };
 
-    // initial is finish
-    // anchor is start. All we care about for anchor is that it in the same table.
+    // Note: initial is the finishing element, because that's where the cursor starts from
+    // Anchor is the starting element, and is only used to work out if we are in the same table
     var simulate = function (bridge, isRoot, direction, initial, anchor) {
       return SelectorFind.closest(initial, 'td,th').bind(function (start) {
         return SelectorFind.closest(start, 'table').bind(function (table) {
