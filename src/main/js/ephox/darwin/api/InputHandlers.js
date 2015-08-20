@@ -35,19 +35,19 @@ define(
         return Option.none();
       };
 
-      var keydown = function (event, element, offset, direction) {
+      var keydown = function (event, start, soffset, finish, foffset, direction) {
         var keycode = event.raw().which;
         var shiftKey = event.raw().shiftKey === true;
 
         var handler = CellSelection.retrieve(container).fold(function () {
           // Shift down should predict the movement and set the selection.
-          if (SelectionKeys.isDown(keycode) && shiftKey) return Fun.curry(VerticalMovement.select, bridge, container, isRoot, KeyDirection.down, element);
+          if (SelectionKeys.isDown(keycode) && shiftKey) return Fun.curry(VerticalMovement.select, bridge, container, isRoot, KeyDirection.down, finish, start);
           // Shift up should predict the movement and set the selection.
-          else if (SelectionKeys.isUp(keycode) && shiftKey) return Fun.curry(VerticalMovement.select, bridge, container, isRoot, KeyDirection.up, element);
+          else if (SelectionKeys.isUp(keycode) && shiftKey) return Fun.curry(VerticalMovement.select, bridge, container, isRoot, KeyDirection.up, finish, start);
           // Down should predict the movement and set the cursor
-          else if (SelectionKeys.isDown(keycode)) return Fun.curry(VerticalMovement.navigate, bridge, isRoot, KeyDirection.down, element);
+          else if (SelectionKeys.isDown(keycode)) return Fun.curry(VerticalMovement.navigate, bridge, isRoot, KeyDirection.down, finish, start);
           // Up should predict the movement and set the cursor
-          else if (SelectionKeys.isUp(keycode)) return Fun.curry(VerticalMovement.navigate, bridge, isRoot, KeyDirection.up, element);
+          else if (SelectionKeys.isUp(keycode)) return Fun.curry(VerticalMovement.navigate, bridge, isRoot, KeyDirection.up, finish, start);
           else return Option.none;
         }, function (selected) {
 
@@ -77,6 +77,7 @@ define(
           var keycode = event.raw().which;
           var shiftKey = event.raw().shiftKey === true;
           if (shiftKey === false) return Option.none();
+          console.log('here');
           if (SelectionKeys.isNavigation(keycode)) return KeySelection.sync(container, isRoot, start, soffset, finish, foffset);
           else return Option.none();
         }, Option.none);

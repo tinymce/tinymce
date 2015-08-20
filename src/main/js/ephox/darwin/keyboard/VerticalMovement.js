@@ -16,7 +16,7 @@ define(
   function (Responses, KeySelection, TableKeys, PlatformDetection, SelectionRange, Situ, Fun, Option, SelectorFind) {
     var detection = PlatformDetection.detect();
 
-    var simulate = function (bridge, isRoot, direction, initial) {
+    var simulate = function (bridge, isRoot, direction, initial, anchor) {
       return SelectorFind.closest(initial, 'td,th').bind(function (start) {
         return TableKeys.handle(bridge, isRoot, direction).bind(function (range) {
           return SelectorFind.closest(range.finish(), 'td,th').map(function (finish) {
@@ -30,10 +30,10 @@ define(
       });
     };
 
-    var navigate = function (bridge, isRoot, direction, initial) {
+    var navigate = function (bridge, isRoot, direction, initial, anchor) {
       // Do not override the up/down keys on Firefox or IE.
       if (detection.browser.isFirefox() || detection.browser.isIE()) return Option.none();
-      return simulate(bridge, isRoot, direction, initial).map(function (info) {
+      return simulate(bridge, isRoot, direction, initial, anchor).map(function (info) {
         var range = info.range();
         return Responses.response(
           Option.some(SelectionRange.write(
@@ -45,8 +45,8 @@ define(
       });
     };
 
-    var select = function (bridge, container, isRoot, direction, initial) {
-      return simulate(bridge, isRoot, direction, initial).bind(function (info) {
+    var select = function (bridge, container, isRoot, direction, initial, anchor) {
+      return simulate(bridge, isRoot, direction, initial, anchor).bind(function (info) {
         return KeySelection.detect(container, isRoot, info.start(), info.finish());
       });
     };
