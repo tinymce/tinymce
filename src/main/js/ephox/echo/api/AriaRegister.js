@@ -114,6 +114,14 @@ define(
       });
     };
 
+    var checkbox = function (element, label) {
+      Attr.setAll(element, {
+        'role': 'checkbox',
+        'aria-label': label,
+        'aria-checked': false
+      });
+    };
+
     var dialog = function (element, label) {
       Attr.setAll(element, {
         'role': 'dialog',
@@ -224,6 +232,7 @@ define(
       menu: menu,
       menuItem: menuItem,
       menuItemCheckbox: menuItemCheckbox,
+      checkbox: checkbox,
       dialog: dialog,
       button: button,
       textarea: textarea,
