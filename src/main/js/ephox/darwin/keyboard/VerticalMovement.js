@@ -22,7 +22,7 @@ define(
     var inSameTable = function (elem, table) {
       return PredicateExists.ancestor(elem, function (e) {
         return Traverse.parent(e).exists(function (p) {
-          return Compare.eq(p, e);
+          return Compare.eq(p, table);
         });
       });
     };
