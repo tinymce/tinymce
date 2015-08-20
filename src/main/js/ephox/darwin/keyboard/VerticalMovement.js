@@ -10,21 +10,37 @@ define(
     'ephox.fussy.api.Situ',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.sugar.api.Compare',
+    'ephox.sugar.api.PredicateExists',
+    'ephox.sugar.api.SelectorFind',
+    'ephox.sugar.api.Traverse'
   ],
 
-  function (Responses, KeySelection, TableKeys, PlatformDetection, SelectionRange, Situ, Fun, Option, SelectorFind) {
+  function (Responses, KeySelection, TableKeys, PlatformDetection, SelectionRange, Situ, Fun, Option, Compare, PredicateExists, SelectorFind, Traverse) {
     var detection = PlatformDetection.detect();
 
+    var inSameTable = function (elem, table) {
+      return PredicateExists.ancestor(elem, function (e) {
+        return Traverse.parent(e).exists(function (p) {
+          return Compare.eq(p, e);
+        });
+      });
+    };
+
+    // initial is finish
+    // anchor is start. All we care about for anchor is that it in the same table.
     var simulate = function (bridge, isRoot, direction, initial, anchor) {
       return SelectorFind.closest(initial, 'td,th').bind(function (start) {
-        return TableKeys.handle(bridge, isRoot, direction).bind(function (range) {
-          return SelectorFind.closest(range.finish(), 'td,th').map(function (finish) {
-            return {
-              start: Fun.constant(start),
-              finish: Fun.constant(finish),
-              range: Fun.constant(range)
-            };
+        return SelectorFind.closest(start, 'table').bind(function (table) {
+          if (!inSameTable(anchor, table)) return Option.none();
+          return TableKeys.handle(bridge, isRoot, direction).bind(function (range) {
+            return SelectorFind.closest(range.finish(), 'td,th').map(function (finish) {
+              return {
+                start: Fun.constant(start),
+                finish: Fun.constant(finish),
+                range: Fun.constant(range)
+              };
+            });
           });
         });
       });
