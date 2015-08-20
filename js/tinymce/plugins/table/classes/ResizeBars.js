@@ -59,13 +59,14 @@ define("tinymce/tableplugin/ResizeBars", [
 
 			//Skip the first item in the array = no left (LTR), right (RTL) or top bars
 			for (var i = 1; i < thingsToMeasure.length; i++) {
-				var item = thingsToMeasure[i];
+				//Get the element from the details
+				var item = thingsToMeasure[i].element;
 				//We need to zero index this again
 				tablePositions.push(getInnerEdge(i - 1, item));
 			}
 
 			var lastTableLineToMake = thingsToMeasure[thingsToMeasure.length - 1];
-			tablePositions.push(getOuterEdge(thingsToMeasure.length - 1, lastTableLineToMake));
+			tablePositions.push(getOuterEdge(thingsToMeasure.length - 1, lastTableLineToMake.element));
 
 			return tablePositions;
 		}
@@ -154,7 +155,10 @@ define("tinymce/tableplugin/ResizeBars", [
 				return rowIndex + ',' + colIndex;
 			}
 
-			window.console.log(tableDetails);
+			function getAt(rowIndex, colIndex) {
+				return access[key(rowIndex, colIndex)];
+			}
+
 			var access = {};
 			var cells = [];
 
@@ -164,73 +168,173 @@ define("tinymce/tableplugin/ResizeBars", [
 			Tools.each(tableDetails, function(row, rowIndex) {
 				var currentRow = [];
 
-				Tools.each(row.cells, function(cell, cellIndex) {
+				Tools.each(row.cells, function(cell) {
 
 					var start = 0;
 
-					while (access[key(rowIndex, cellIndex)] !== undefined) {
+					while (access[key(rowIndex, start)] !== undefined) {
 						start++;
 					}
 
 					var current = {
-						cell: cell.element,
+						element: cell.element,
 						colspan: cell.colspan,
 						rowspan: cell.rowspan,
 						rowIndex: rowIndex,
-						start: start
+						colIndex: start
 					};
 
-					for (var i = 0; i < cell.colspan; i ++) {
-						for (var j = 0; j < cell.rowspan; j ++) {
+					for (var i = 0; i < cell.colspan; i++) {
+						for (var j = 0; j < cell.rowspan; j++) {
 							var cr = rowIndex + j;
 							var cc = start + i;
-							access[key(rowIndex, cellIndex)] = current;
+							access[key(cr, cc)] = current;
+							maxRows = Math.max(maxRows, cr + 1);
+							maxCols = Math.max(maxCols, cc + 1);
 						}
 					}
+
+					currentRow.push(current);
+				});
+
+				cells.push({
+					element: row.element,
+					row: currentRow
 				});
 			});
+
+			return {
+				grid: {
+					maxRows: maxRows,
+					maxCols: maxCols
+				},
+				access: access,
+				cells: cells,
+				getAt: getAt
+			};
+		}
+
+		function getBlocks(warehouse) {
+			function range(start, end) {
+				var r = [];
+
+				for (var i = start; i < end; i++) {
+					r.push(i);
+				}
+
+				return r;
+			}
+
+			function decide(getBlock, isSingle, getFallback) {
+				var inBlock = getBlock();
+				var singleInBlock;
+
+				for (var i = 0; i < inBlock.length; i++) {
+					if (isSingle(inBlock[i])) {
+						singleInBlock = inBlock[i];
+					}
+				}
+				//Is this necessary?  inblock[0] and getfallback should be the same thing?
+				singleInBlock = singleInBlock ? singleInBlock : inBlock[0];
+				return singleInBlock ? singleInBlock : getFallback();
+			}
+
+			function getCols(warehouse) {
+				var cols = range(0, warehouse.grid.maxCols);
+				var rows = range(0, warehouse.grid.maxRows);
+
+				return Tools.map(cols, function(col) {
+
+					function getBlock() {
+						for (var i = 0; i < rows.length; i++) {
+							var detail = warehouse.getAt(i, col);
+							if (detail.colIndex === col) {
+								return [detail];
+							}
+						}
+					}
+
+					function isSingle(detail) {
+						return detail.colspan === 1;
+					}
+
+					function getFallback() {
+						return warehouse.getAt(0, col);
+					}
+
+					return decide(getBlock, isSingle, getFallback);
+
+				});
+			}
+
+			function getRows(warehouse) {
+
+				var cols = range(0, warehouse.grid.maxCols);
+				var rows = range(0, warehouse.grid.maxRows);
+
+				return Tools.map(rows, function(row) {
+
+					function getBlock() {
+						for (var i = 0; i < cols.length; i++) {
+							var detail = warehouse.getAt(row, i);
+							if (detail.rowIndex === row) {
+								return [detail];
+							}
+						}
+					}
+
+					function isSingle(detail) {
+						return detail.rowspan === 1;
+					}
+
+					function getFallback() {
+						warehouse.getAt(row, 0);
+					}
+
+					return decide(getBlock, isSingle, getFallback);
+				});
+			}
+			return {
+				rows: getRows(warehouse),
+				cols: getCols(warehouse)
+			};
 		}
 
 		function drawBars(table) {
 			var tableDetails = getTableDeets(table);
 			var warehouse = getWarehouse(tableDetails);
-			tableDetails = warehouse;
-
-			var rows, cols;
-
-			rows = tableDetails;
+			var blocks = getBlocks(warehouse);
 
 			var tablePosition = editor.dom.getPos(table);
-			var rowPositions = rows.length > 0 ? findPositions(getTopEdge, getBottomEdge, rows) : [];
+			var rowPositions = blocks.rows.length > 0 ? findPositions(getTopEdge, getBottomEdge, blocks.rows) : [];
 			//The below needs to be LTR/RTL
-			var colPositions = cols.length > 0 ? findPositions(getLeftEdge, getRightEdge, cols) : [];
+			var colPositions = blocks.cols.length > 0 ? findPositions(getLeftEdge, getRightEdge, blocks.cols) : [];
 
 			drawRows(rowPositions, table.offsetWidth, tablePosition);
 			drawCols(colPositions, table.offsetHeight, tablePosition);
 		}
 
 		// Add cell selection logic
-		editor.on('MouseDown', function(e) {
+		/*editor.on('MouseDown', function(e) {
 			window.console.log('mousedown', e);
-		});
+		});*/
 
 		editor.on('mouseover', function(e) {
 			var tableElement = editor.dom.getParent(e.target, 'table');
 
 			if (e.target.nodeName === 'table' || tableElement) {
 				clearBars();
-				window.console.log('in table');
 				drawBars(tableElement);
 			}
 		});
 
-		editor.on('mouseout', function(e) {
+		/*editor.on('mouseout', function(e) {
 			var tableElement = editor.dom.getParent(e.target, 'table');
 
 			if (e.target.nodeName === 'table' || tableElement) {
 				window.console.log('out table');
 			}
-		});
+		});*/
 
 		return {
 			clear: clearBars
