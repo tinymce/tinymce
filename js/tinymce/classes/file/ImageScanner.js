@@ -16,9 +16,9 @@
  */
 define("tinymce/file/ImageScanner", [
 	"tinymce/util/Promise",
-	"tinymce/util/Tools",
+	"tinymce/util/Arr",
 	"tinymce/file/Conversions"
-], function(Promise, Tools, Conversions) {
+], function(Promise, Arr, Conversions) {
 	var count = 0;
 
 	function mapAsync(array, fn) {
@@ -88,7 +88,7 @@ define("tinymce/file/ImageScanner", [
 				}
 			}
 
-			return mapAsync(Tools.filter(elm.getElementsByTagName('img'), function(img) {
+			return mapAsync(Arr.filter(elm.getElementsByTagName('img'), function(img) {
 				return img.src && (img.src.indexOf('data:') === 0 || img.src.indexOf('blob:') === 0);
 			}), imageToBlobInfo);
 		}

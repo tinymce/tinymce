@@ -15,11 +15,11 @@
  * @class tinymce.EditorUpload
  */
 define("tinymce/EditorUpload", [
-	"tinymce/util/Tools",
+	"tinymce/util/Arr",
 	"tinymce/file/Uploader",
 	"tinymce/file/ImageScanner",
 	"tinymce/file/BlobCache"
-], function(Tools, Uploader, ImageScanner, BlobCache) {
+], function(Arr, Uploader, ImageScanner, BlobCache) {
 	return function(editor) {
 		var blobCache = new BlobCache();
 
@@ -47,7 +47,7 @@ define("tinymce/EditorUpload", [
 		}
 
 		function replaceUrlInUndoStack(targetUrl, replacementUrl) {
-			Tools.each(editor.undoManager.data, function(level) {
+			Arr.each(editor.undoManager.data, function(level) {
 				level.content = replaceImageUrl(level.content, targetUrl, replacementUrl);
 			});
 		}
@@ -61,13 +61,13 @@ define("tinymce/EditorUpload", [
 			});
 
 			function imageInfosToBlobInfos(imageInfos) {
-				return Tools.map(imageInfos, function(imageInfo) {
+				return Arr.map(imageInfos, function(imageInfo) {
 					return imageInfo.blobInfo;
 				});
 			}
 
 			return scanForImages().then(imageInfosToBlobInfos).then(uploader.upload).then(function(result) {
-				result = Tools.map(result, function(uploadInfo) {
+				result = Arr.map(result, function(uploadInfo) {
 					var image;
 
 					image = editor.dom.select('img[src="' + uploadInfo.blobInfo.blobUri() + '"]')[0];
@@ -100,7 +100,7 @@ define("tinymce/EditorUpload", [
 
 		function scanForImages() {
 			return ImageScanner.findAll(editor.getBody(), blobCache).then(function(result) {
-				Tools.each(result, function(resultItem) {
+				Arr.each(result, function(resultItem) {
 					replaceUrlInUndoStack(resultItem.image.src, resultItem.blobInfo.blobUri());
 					resultItem.image.src = resultItem.blobInfo.blobUri();
 				});
@@ -118,7 +118,7 @@ define("tinymce/EditorUpload", [
 				var blobInfo = blobCache.getByUri(blobUri);
 
 				if (!blobInfo) {
-					blobInfo = Tools.reduce(editor.editorManager.editors, function(result, editor) {
+					blobInfo = Arr.reduce(editor.editorManager.editors, function(result, editor) {
 						return result || editor.editorUpload.blobCache.getByUri(blobUri);
 					}, null);
 				}
