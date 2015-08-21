@@ -59,14 +59,13 @@ define(
           var update = function (attempts) {
             return function () {
               var navigation = Options.findMap(attempts, function (delta) {
-                console.log('delta', delta.rows(), delta.cols());
                 return KeySelection.update(delta.rows(), delta.cols(), container, selected);
               });
 
               // Shift the selected rows and update the selection.
               return navigation.fold(function () {
-                // The selection went outside the table, so clear it and bridge from the first box to after
-                // the container
+                // The cell selection went outside the table, so clear it and bridge from the first box to before/after
+                // the table
                 return CellSelection.getEdges(container).map(function (edges) {
                   var relative = SelectionKeys.isDown(keycode) || direction.isForward(keycode) ? Situ.after : Situ.before;
                   bridge.setRelativeSelection(Situ.on(edges.first(), 0), relative(edges.table()));
