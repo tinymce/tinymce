@@ -1094,31 +1094,33 @@
 			var self = this, selection = self.selection, node;
 
 			// Fix for bug #1896577 it seems that this can not be fired while the editor is loading
-			if (self.initialized) {
-				o = o || {};
-
-				// Get start node
-				node = selection.getStart() || self.getBody();
-				node = isIE && node.ownerDocument != self.getDoc() ? self.getBody() : node; // Fix for IE initial state
-
-				// Get parents and add them to object
-				o.parents = [];
-				self.dom.getParent(node, function(node) {
-					if (node.nodeName == 'BODY') {
-						return true;
-					}
-
-					o.parents.push(node);
-				});
-
-				self.onNodeChange.dispatch(
-					self,
-					o ? o.controlManager || self.controlManager : self.controlManager,
-					node,
-					selection.isCollapsed(),
-					o
-				);
+			if (!self.initialized) {
+				return;
 			}
+			
+			o = o || {};
+
+			// Get start node
+			node = selection.getStart() || self.getBody();
+			node = isIE && node.ownerDocument != self.getDoc() ? self.getBody() : node; // Fix for IE initial state
+
+			// Get parents and add them to object
+			o.parents = [];
+			self.dom.getParent(node, function(node) {
+				if (node.nodeName == 'BODY') {
+					return true;
+				}
+
+				o.parents.push(node);
+			});
+
+			self.onNodeChange.dispatch(
+				self,
+				o ? o.controlManager || self.controlManager : self.controlManager,
+				node,
+				selection.isCollapsed(),
+				o
+			);
 		},
 
 		/**
