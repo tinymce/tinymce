@@ -19,7 +19,7 @@
 		whiteSpaceRegExp = /^[ \t\r\n]*$/;
 
 	/**
-	 * Utility class for various DOM manipulation and retrival functions.
+	 * Utility class for various DOM manipulation and retrieval functions.
 	 *
 	 * @class tinymce.dom.DOMUtils
 	 * @example
