@@ -3,10 +3,11 @@ define(
 
   [
     'ephox.fussy.api.Point',
+    'ephox.fussy.api.SelectionRange',
     'ephox.fussy.api.WindowSelection'
   ],
 
-  function (Point, WindowSelection) {
+  function (Point, SelectionRange, WindowSelection) {
     return function (win) {
       var getRect = function (element) {
         return element.dom().getBoundingClientRect();
@@ -40,6 +41,10 @@ define(
         WindowSelection.setExact(win, sel.start(), sel.soffset(), sel.finish(), sel.foffset());
       };
 
+      var setRelativeSelection = function (start, finish) {
+        WindowSelection.set(win, SelectionRange.write(start, finish));
+      };
+
       var getInnerHeight = function () {
         return win.innerHeight;
       };
@@ -60,6 +65,7 @@ define(
         situsFromPoint: situsFromPoint,
         clearSelection: clearSelection,
         setSelection: setSelection,
+        setRelativeSelection: setRelativeSelection,
         selectContents: selectContents,
         getInnerHeight: getInnerHeight,
         getScrollY: getScrollY,

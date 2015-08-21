@@ -10,11 +10,16 @@ define(
     'ephox.darwin.mouse.MouseSelection',
     'ephox.darwin.navigation.KeyDirection',
     'ephox.darwin.selection.CellSelection',
+    'ephox.fussy.api.Situ',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option'
+    'ephox.perhaps.Option',
+    'ephox.perhaps.Options',
+    'ephox.scullion.Struct'
   ],
 
-  function (Responses, SelectionKeys, WindowBridge, KeySelection, VerticalMovement, MouseSelection, KeyDirection, CellSelection, Fun, Option) {
+  function (Responses, SelectionKeys, WindowBridge, KeySelection, VerticalMovement, MouseSelection, KeyDirection, CellSelection, Situ, Fun, Option, Options, Struct) {
+    var rc = Struct.immutable('rows', 'cols');
+
     var mouse = function (win, container) {
       var bridge = WindowBridge(win);
 
@@ -51,19 +56,34 @@ define(
           else return Option.none;
         }, function (selected) {
 
-          var update = function (rows, cols) {
+          var update = function (attempts) {
             return function () {
+              var navigation = Options.findMap(attempts, function (delta) {
+                console.log('delta', delta.rows(), delta.cols());
+                return KeySelection.update(delta.rows(), delta.cols(), container, selected);
+              });
+
               // Shift the selected rows and update the selection.
-              KeySelection.update(rows, cols, container, selected);
-              // Kill the event, even if no change to the selection is made.
-              return Option.some(Responses.response(Option.none(), true));
+              return navigation.fold(function () {
+                // The selection went outside the table, so clear it and bridge from the first box to after
+                // the container
+                return CellSelection.getEdges(container).map(function (edges) {
+                  var relative = SelectionKeys.isDown(keycode) || direction.isForward(keycode) ? Situ.after : Situ.before;
+                  bridge.setRelativeSelection(Situ.on(edges.first(), 0), relative(edges.table()));
+                  CellSelection.clear(container);
+                  return Responses.response(Option.none(), true);
+                });
+              }, function (_) {
+                return Option.some(Responses.response(Option.none(), true));
+              });
             };
           };
 
-          if (SelectionKeys.isDown(keycode) && shiftKey) return update(+1, 0);
-          else if (SelectionKeys.isUp(keycode) && shiftKey) return update(-1, 0);
-          else if (direction.isBackward(keycode) && shiftKey) return update(0, -1);
-          else if (direction.isForward(keycode) && shiftKey) return update(0, +1);
+          if (SelectionKeys.isDown(keycode) && shiftKey) return update([ rc(+1, 0) ]);
+          else if (SelectionKeys.isUp(keycode) && shiftKey) return update([ rc(-1, 0) ]);
+          // Left and right should try up/down respectively if they fail.
+          else if (direction.isBackward(keycode) && shiftKey) return update([ rc(0, -1), rc(-1, 0) ]);
+          else if (direction.isForward(keycode) && shiftKey) return update([ rc(0, +1), rc(+1, 0) ]);
           // Clear the selection on normal arrow keys.
           else if (SelectionKeys.isNavigation(keycode) && shiftKey === false) return clearToNavigate;
           else return Option.none;
