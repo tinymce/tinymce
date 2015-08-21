@@ -778,7 +778,7 @@ define("tinymce/Editor", [
 			self.editorUpload = new EditorUpload(self);
 
 			/**
-			 * Schema instance, enables you to validate elements and it's children.
+			 * Schema instance, enables you to validate elements and its children.
 			 *
 			 * @property schema
 			 * @type tinymce.html.Schema
