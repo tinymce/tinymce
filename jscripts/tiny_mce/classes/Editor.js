@@ -1124,7 +1124,7 @@
 		/**
 		 * Adds a button that later gets created by the ControlManager. This is a shorter and easier method
 		 * of adding buttons without the need to deal with the ControlManager directly. But it's also less
-		 * powerfull if you need more control use the ControlManagers factory methods instead.
+		 * powerful if you need more control use the ControlManagers factory methods instead.
 		 *
 		 * @method addButton
 		 * @param {String} name Button name to add.
