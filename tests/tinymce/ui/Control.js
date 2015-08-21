@@ -10,11 +10,9 @@
 		equal(ctrl.disabled(), false);
 		equal(ctrl.active(), false);
 		equal(ctrl.visible(), true);
-		equal(ctrl.text(), "");
-		equal(ctrl.width(), 0);
-		equal(ctrl.height(), 0);
-		equal(ctrl.name(), "");
-		equal(ctrl.title(), "");
+		equal(ctrl.text(), undefined);
+		equal(ctrl.name(), undefined);
+		equal(ctrl.title(), undefined);
 		equal(ctrl.parent(), undefined);
 		deepEqual(ctrl.settings, {});
 	});
@@ -26,8 +24,6 @@
 			visible: true,
 			text: 'Text',
 			title: 'Title',
-			width: 100,
-			height: 200,
 			name: 'Name'
 		});
 
@@ -36,8 +32,6 @@
 		equal(ctrl.active(), true);
 		equal(ctrl.visible(), true);
 		equal(ctrl.text(), "Text");
-		equal(ctrl.width(), 100);
-		equal(ctrl.height(), 200);
 		equal(ctrl.name(), "Name");
 		equal(ctrl.title(), "Title");
 		equal(ctrl.parent(), undefined);
@@ -47,8 +41,6 @@
 			visible: true,
 			text: 'Text',
 			title: 'Title',
-			width: 100,
-			height: 200,
 			name: 'Name'
 		});
 	});
@@ -66,8 +58,6 @@
 			visible(true).
 			text("Text").
 			title("Title").
-			width(100).
-			height(200).
 			name("Name").parent(cont);
 
 		// Check states
@@ -75,8 +65,6 @@
 		equal(ctrl.active(), true);
 		equal(ctrl.visible(), true);
 		equal(ctrl.text(), "Text");
-		equal(ctrl.width(), 100);
-		equal(ctrl.height(), 200);
 		equal(ctrl.name(), "Name");
 		equal(ctrl.title(), "Title");
 		equal(ctrl.parent(), cont);
@@ -168,37 +156,37 @@
 	test("hasClass,addClass,removeClass", function() {
 		var ctrl = new tinymce.ui.Control({classes: 'class1 class2 class3'});
 
-		equal(ctrl.classes(), 'mce-class1 mce-class2 mce-class3');
-		ok(ctrl.hasClass('class1'));
-		ok(ctrl.hasClass('class2'));
-		ok(ctrl.hasClass('class3'));
-		ok(!ctrl.hasClass('class4'));
+		equal(ctrl.classes, 'mce-class1 mce-class2 mce-class3');
+		ok(ctrl.classes.contains('class1'));
+		ok(ctrl.classes.contains('class2'));
+		ok(ctrl.classes.contains('class3'));
+		ok(!ctrl.classes.contains('class4'));
 
-		ctrl.addClass('class4');
-		equal(ctrl.classes(), 'mce-class1 mce-class2 mce-class3 mce-class4');
-		ok(ctrl.hasClass('class1'));
-		ok(ctrl.hasClass('class2'));
-		ok(ctrl.hasClass('class3'));
-		ok(ctrl.hasClass('class4'));
+		ctrl.classes.add('class4');
+		equal(ctrl.classes, 'mce-class1 mce-class2 mce-class3 mce-class4');
+		ok(ctrl.classes.contains('class1'));
+		ok(ctrl.classes.contains('class2'));
+		ok(ctrl.classes.contains('class3'));
+		ok(ctrl.classes.contains('class4'));
 
-		ctrl.removeClass('class4');
-		equal(ctrl.classes(), 'mce-class1 mce-class2 mce-class3');
-		ok(ctrl.hasClass('class1'));
-		ok(ctrl.hasClass('class2'));
-		ok(ctrl.hasClass('class3'));
-		ok(!ctrl.hasClass('class4'));
+		ctrl.classes.remove('class4');
+		equal(ctrl.classes, 'mce-class1 mce-class2 mce-class3');
+		ok(ctrl.classes.contains('class1'));
+		ok(ctrl.classes.contains('class2'));
+		ok(ctrl.classes.contains('class3'));
+		ok(!ctrl.classes.contains('class4'));
 
-		ctrl.removeClass('class3').removeClass('class2');
-		equal(ctrl.classes(), 'mce-class1');
-		ok(ctrl.hasClass('class1'));
-		ok(!ctrl.hasClass('class2'));
-		ok(!ctrl.hasClass('class3'));
+		ctrl.classes.remove('class3').remove('class2');
+		equal(ctrl.classes, 'mce-class1');
+		ok(ctrl.classes.contains('class1'));
+		ok(!ctrl.classes.contains('class2'));
+		ok(!ctrl.classes.contains('class3'));
 
-		ctrl.removeClass('class3').removeClass('class1');
-		equal(ctrl.classes(), '');
-		ok(!ctrl.hasClass('class1'));
-		ok(!ctrl.hasClass('class2'));
-		ok(!ctrl.hasClass('class3'));
+		ctrl.classes.remove('class3').remove('class1');
+		equal(ctrl.classes, '');
+		ok(!ctrl.classes.contains('class1'));
+		ok(!ctrl.classes.contains('class2'));
+		ok(!ctrl.classes.contains('class3'));
 	});
 
 	test("encode", function() {

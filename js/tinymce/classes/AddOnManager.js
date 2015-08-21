@@ -1,8 +1,8 @@
 /**
  * AddOnManager.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -38,9 +38,9 @@ define("tinymce/AddOnManager", [
 		get: function(name) {
 			if (this.lookup[name]) {
 				return this.lookup[name].instance;
-			} else {
-				return undefined;
 			}
+
+			return undefined;
 		},
 
 		dependencies: function(name) {
@@ -115,9 +115,9 @@ define("tinymce/AddOnManager", [
 		createUrl: function(baseUrl, dep) {
 			if (typeof dep === "object") {
 				return dep;
-			} else {
-				return {prefix: baseUrl.prefix, resource: dep, suffix: baseUrl.suffix};
 			}
+
+			return {prefix: baseUrl.prefix, resource: dep, suffix: baseUrl.suffix};
 		},
 
 		/**

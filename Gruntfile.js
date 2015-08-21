@@ -1,3 +1,5 @@
+/*eslint-env node */
+
 module.exports = function(grunt) {
 	var packageData = grunt.file.readJSON("package.json");
 	var changelogLine = grunt.file.read("changelog.txt").toString().split("\n")[0];
@@ -9,7 +11,7 @@ module.exports = function(grunt) {
 
 		eslint: {
 			options: {
-				config: ".eslintrc",
+				config: ".eslintrc"
 			},
 
 			core: ["js/tinymce/classes/**/*.js"],
@@ -19,21 +21,8 @@ module.exports = function(grunt) {
 				"js/tinymce/plugins/*/classes/**/*.js",
 				"!js/tinymce/plugins/paste/plugin.js",
 				"!js/tinymce/plugins/table/plugin.js",
-				"!js/tinymce/plugins/spellchecker/plugin.js"
-			],
-
-			themes: ["js/tinymce/themes/*/theme.js"]
-		},
-
-		jshint: {
-			core: ["js/tinymce/classes/**/*.js"],
-
-			plugins: [
-				"js/tinymce/plugins/*/plugin.js",
-				"js/tinymce/plugins/*/classes/**/*.js",
-				"!js/tinymce/plugins/paste/plugin.js",
-				"!js/tinymce/plugins/table/plugin.js",
-				"!js/tinymce/plugins/spellchecker/plugin.js"
+				"!js/tinymce/plugins/spellchecker/plugin.js",
+				"!js/tinymce/plugins/imagetools/plugin.js"
 			],
 
 			themes: ["js/tinymce/themes/*/theme.js"]
@@ -41,17 +30,18 @@ module.exports = function(grunt) {
 
 		jscs: {
 			options: {
-				config: ".jscsrc",
+				config: ".jscsrc"
 			},
 
-			core: ["js/tinymce/**/*.js"],
+			core: ["js/tinymce/classes/**/*.js"],
 
 			plugins: [
 				"js/tinymce/plugins/*/plugin.js",
 				"js/tinymce/plugins/*/classes/**.js",
 				"!js/tinymce/plugins/paste/plugin.js",
 				"!js/tinymce/plugins/table/plugin.js",
-				"!js/tinymce/plugins/spellchecker/plugin.js"
+				"!js/tinymce/plugins/spellchecker/plugin.js",
+				"!js/tinymce/plugins/imagetools/plugin.js"
 			],
 
 			themes: ["js/tinymce/themes/*/theme.js"]
@@ -151,7 +141,7 @@ module.exports = function(grunt) {
 					expose: "public",
 					compress: true,
 
-					from: "Plugin.js",
+					from: "Plugin.js"
 				}
 			},
 
@@ -162,6 +152,21 @@ module.exports = function(grunt) {
 					outputSource: "js/tinymce/plugins/spellchecker/plugin.js",
 					outputMinified: "js/tinymce/plugins/spellchecker/plugin.min.js",
 					outputDev: "js/tinymce/plugins/spellchecker/plugin.dev.js",
+					verbose: false,
+					expose: "public",
+					compress: true,
+
+					from: "Plugin.js"
+				}
+			},
+
+			"imagetools-plugin": {
+				options: {
+					baseDir: "js/tinymce/plugins/imagetools/classes",
+					rootNS: "tinymce.imagetoolsplugin",
+					outputSource: "js/tinymce/plugins/imagetools/plugin.js",
+					outputMinified: "js/tinymce/plugins/imagetools/plugin.min.js",
+					outputDev: "js/tinymce/plugins/imagetools/plugin.dev.js",
 					verbose: false,
 					expose: "public",
 					compress: true,
@@ -179,12 +184,15 @@ module.exports = function(grunt) {
 						"Reset.less",
 						"Mixins.less",
 						"Animations.less",
-						"TinyMCE.less"
+						"TinyMCE.less",
+						"CropRect.less",
+						"ImagePanel.less"
 					],
 					append: ["Icons.less"],
 					importFrom: "js/tinymce/tinymce.js",
 					path: "js/tinymce/skins",
-					ext: ".modern.dev.less"
+					devLess: "skin.dev.less",
+					srcLess: "skin.less"
 				}
 			},
 
@@ -195,12 +203,15 @@ module.exports = function(grunt) {
 						"Reset.less",
 						"Mixins.less",
 						"Animations.less",
-						"TinyMCE.less"
+						"TinyMCE.less",
+						"CropRect.less",
+						"ImagePanel.less"
 					],
 					append: ["Icons.Ie7.less"],
 					importFrom: "js/tinymce/tinymce.js",
 					path: "js/tinymce/skins",
-					ext: ".ie7.dev.less"
+					devLess: "skin.ie7.dev.less",
+					srcLess: "skin.ie7.less"
 				}
 			}
 		},
@@ -213,14 +224,15 @@ module.exports = function(grunt) {
 				},
 
 				expand: true,
-				src: ["js/tinymce/skins/**/skin.modern.dev.less"],
+				src: ["js/tinymce/skins/**/skin.dev.less"],
 				ext: ".min.css"
 			},
 
 			ie7: {
 				options: {
-					cleancss: true,
-					strictImports: true
+					compress: true,
+					strictImports: true,
+					ieCompat: true
 				},
 
 				expand: true,
@@ -261,7 +273,7 @@ module.exports = function(grunt) {
 
 		uglify: {
 			options: {
-				beautify : {
+				beautify: {
 					ascii_only: true
 				}
 			},
@@ -445,7 +457,22 @@ module.exports = function(grunt) {
 							"license": ["LGPL-2.1"],
 							"keywords": ["editor", "wysiwyg", "tinymce", "richtext", "javascript", "html"],
 							"homepage": "http://www.tinymce.com",
-							"type": "library",
+							"type": "component",
+							"extra": {
+								"component": {
+									"scripts": [
+										"tinymce.js",
+										"plugins/*/plugin.js",
+										"themes/*/theme.js"
+									],
+									"files": [
+										"tinymce.min.js",
+										"plugins/*/plugin.min.js",
+										"themes/*/theme.min.js",
+										"skins/**"
+									]
+								}
+							},
 							"archive": {
 								"exclude": ["readme.md", "bower.js", "package.json"]
 							}
@@ -504,15 +531,15 @@ module.exports = function(grunt) {
 				options: {
 					id: "TinyMCE",
 					version: packageData.version,
-					authors: "Moxiecode Systems AB",
-					owners: "Moxiecode Systems AB",
+					authors: "Ephox Corp",
+					owners: "Ephox Corp",
 					description: "The best WYSIWYG editor! TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor " +
-						"control released as Open Source under LGPL by Moxiecode Systems AB. TinyMCE has the ability to convert HTML " +
+						"control released as Open Source under LGPL by Ephox Corp. TinyMCE has the ability to convert HTML " +
 						"TEXTAREA fields or other HTML elements to editor instances. TinyMCE is very easy to integrate " +
 						"into other Content Management Systems.",
 					releaseNotes: "Release notes for my package.",
 					summary: "TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor " +
-						"control released as Open Source under LGPL by Moxiecode Systems AB.",
+						"control released as Open Source under LGPL by Ephox Corp.",
 					projectUrl: "http://www.tinymce.com/",
 					iconUrl: "http://www.tinymce.com/favicon.ico",
 					licenseUrl: "http://www.tinymce.com/license",
@@ -542,15 +569,15 @@ module.exports = function(grunt) {
 				options: {
 					id: "TinyMCE.jQuery",
 					version: packageData.version,
-					authors: "Moxiecode Systems AB",
-					owners: "Moxiecode Systems AB",
+					authors: "Ephox Corp",
+					owners: "Ephox Corp",
 					description: "The best WYSIWYG editor! TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor " +
-						"control released as Open Source under LGPL by Moxiecode Systems AB. TinyMCE has the ability to convert HTML " +
+						"control released as Open Source under LGPL by Ephox Corp. TinyMCE has the ability to convert HTML " +
 						"TEXTAREA fields or other HTML elements to editor instances. TinyMCE is very easy to integrate " +
 						"into other Content Management Systems.",
 					releaseNotes: "Release notes for my package.",
 					summary: "TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor " +
-						"control released as Open Source under LGPL by Moxiecode Systems AB.",
+						"control released as Open Source under LGPL by Ephox Corp.",
 					projectUrl: "http://www.tinymce.com/",
 					iconUrl: "http://www.tinymce.com/favicon.ico",
 					licenseUrl: "http://www.tinymce.com/license",
@@ -644,7 +671,7 @@ module.exports = function(grunt) {
 		watch: {
 			core: {
 				files: ["js/tinymce/classes/**/*.js"],
-				tasks: ["eslint:core", "jshint:core", "jscs:core", "amdlc:core", "amdlc:core-jquery", "skin"],
+				tasks: ["eslint:core", "jscs:core", "amdlc:core", "amdlc:core-jquery", "skin"],
 				options: {
 					spawn: false
 				}
@@ -653,8 +680,9 @@ module.exports = function(grunt) {
 			plugins: {
 				files: ["js/tinymce/plugins/**/*.js"],
 				tasks: [
-					"eslint:plugins", "jshint:plugins", "jscs:plugins", "amdlc:paste-plugin",
-					"amdlc:table-plugin", "amdlc:spellchecker-plugin", "uglify:plugins"
+					"amdlc:paste-plugin", "amdlc:imagetools-plugin",
+					"amdlc:table-plugin", "amdlc:spellchecker-plugin", "uglify:plugins",
+					"eslint:plugins", "jscs:plugins"
 				],
 				options: {
 					spawn: false
@@ -663,7 +691,7 @@ module.exports = function(grunt) {
 
 			themes: {
 				files: ["js/tinymce/themes/**/*.js"],
-				tasks: ["eslint:themes", "jshint:themes", "jscs:themes", "uglify:themes"],
+				tasks: ["eslint:themes", "jscs:themes", "uglify:themes"],
 				options: {
 					spawn: false
 				}
@@ -676,13 +704,13 @@ module.exports = function(grunt) {
 					spawn: false
 				}
 			}
-		},
+		}
 	});
 
 	require("load-grunt-tasks")(grunt);
 	grunt.loadTasks("tools/tasks");
 
-	grunt.registerTask("lint", ["eslint", "jshint", "jscs"]);
+	grunt.registerTask("lint", ["eslint", "jscs"]);
 	grunt.registerTask("minify", ["amdlc", "uglify", "skin", "less"]);
 	grunt.registerTask("test", ["qunit"]);
 	grunt.registerTask("sc-test", ["connect", "clean:saucelabs", "saucelabs-qunit"]);

@@ -1,8 +1,8 @@
 /**
  * plugin.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -136,7 +136,7 @@ tinymce.PluginManager.add('autosave', function(editor) {
 	function isEmpty(html) {
 		var forcedRootBlockName = editor.settings.forced_root_block;
 
-		html = tinymce.trim(typeof(html) == "undefined" ? editor.getBody().innerHTML : html);
+		html = tinymce.trim(typeof html == "undefined" ? editor.getBody().innerHTML : html);
 
 		return html === '' || new RegExp(
 			'^<' + forcedRootBlockName + '[^>]*>((\u00a0|&nbsp;|[ \t]|<br[^>]*>)+?|)<\/' + forcedRootBlockName + '>|<br>$', 'i'

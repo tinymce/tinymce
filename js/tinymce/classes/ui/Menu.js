@@ -1,8 +1,8 @@
 /**
  * Menu.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -53,7 +53,7 @@ define("tinymce/ui/Menu", [
 			}
 
 			self._super(settings);
-			self.addClass('menu');
+			self.classes.add('menu');
 		},
 
 		/**
@@ -62,7 +62,7 @@ define("tinymce/ui/Menu", [
 		 * @method repaint
 		 */
 		repaint: function() {
-			this.toggleClass('menu-align', true);
+			this.classes.toggle('menu-align', true);
 
 			this._super();
 
@@ -96,25 +96,7 @@ define("tinymce/ui/Menu", [
 
 			return self._super();
 		},
-/*
-		getContainerElm: function() {
-			var doc = document, id = this.classPrefix + 'menucontainer';
 
-			var elm = doc.getElementById(id);
-			if (!elm) {
-				elm = doc.createElement('div');
-				elm.id = id;
-				elm.setAttribute('role', 'application');
-				elm.className = this.classPrefix + '-reset';
-				elm.style.position = 'absolute';
-				elm.style.top = elm.style.left = '0';
-				elm.style.overflow = 'visible';
-				doc.body.appendChild(elm);
-			}
-
-			return elm;
-		},
-*/
 		/**
 		 * Invoked before the menu is rendered.
 		 *
@@ -126,7 +108,7 @@ define("tinymce/ui/Menu", [
 			self.items().each(function(ctrl) {
 				var settings = ctrl.settings;
 
-				if (settings.icon || settings.selectable) {
+				if (settings.icon || settings.image || settings.selectable) {
 					self._hasIcons = true;
 					return false;
 				}

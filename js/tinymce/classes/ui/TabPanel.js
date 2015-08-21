@@ -1,8 +1,8 @@
 /**
  * TabPanel.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -19,8 +19,9 @@
  */
 define("tinymce/ui/TabPanel", [
 	"tinymce/ui/Panel",
+	"tinymce/dom/DomQuery",
 	"tinymce/ui/DomUtils"
-], function(Panel, DomUtils) {
+], function(Panel, $, DomUtils) {
 	"use strict";
 
 	return Panel.extend({
@@ -42,7 +43,7 @@ define("tinymce/ui/TabPanel", [
 
 			if (this.activeTabId) {
 				activeTabElm = this.getEl(this.activeTabId);
-				DomUtils.removeClass(activeTabElm, this.classPrefix + 'active');
+				$(activeTabElm).removeClass(this.classPrefix + 'active');
 				activeTabElm.setAttribute('aria-selected', "false");
 			}
 
@@ -50,7 +51,7 @@ define("tinymce/ui/TabPanel", [
 
 			activeTabElm = this.getEl('t' + idx);
 			activeTabElm.setAttribute('aria-selected', "true");
-			DomUtils.addClass(activeTabElm, this.classPrefix + 'active');
+			$(activeTabElm).addClass(this.classPrefix + 'active');
 
 			this.items()[idx].show().fire('showtab');
 			this.reflow();
@@ -89,11 +90,11 @@ define("tinymce/ui/TabPanel", [
 			});
 
 			return (
-				'<div id="' + self._id + '" class="' + self.classes() + '" hidefocus="1" tabindex="-1">' +
+				'<div id="' + self._id + '" class="' + self.classes + '" hidefocus="1" tabindex="-1">' +
 					'<div id="' + self._id + '-head" class="' + prefix + 'tabs" role="tablist">' +
 						tabsHtml +
 					'</div>' +
-					'<div id="' + self._id + '-body" class="' + self.classes('body') + '">' +
+					'<div id="' + self._id + '-body" class="' + self.bodyClasses + '">' +
 						layout.renderHtml(self) +
 					'</div>' +
 				'</div>'

@@ -1,8 +1,8 @@
 /**
  * Plugin.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -300,6 +300,20 @@ define("tinymce/tableplugin/Plugin", [
 
 		editor.on('Init', function() {
 			self.cellSelection = new CellSelection(editor);
+		});
+
+		editor.on('PreInit', function() {
+			// Remove internal data attributes
+			editor.serializer.addAttributeFilter(
+				'data-mce-cell-padding,data-mce-border,data-mce-border-color',
+				function(nodes, name) {
+
+					var i = nodes.length;
+
+					while (i--) {
+						nodes[i].attr(name, null);
+					}
+				});
 		});
 
 		// Register action commands

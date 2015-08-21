@@ -14,6 +14,7 @@
 	&:hover, &:focus {
 		color: @btn-text;
 		.vertical-gradient(darken(@btn-bg, 5%), darken(@btn-bg-hlight, 5%));
+		border-color: @btn-border-hover;
 	}
 
 	&.@{prefix}-disabled button, &.@{prefix}-disabled:hover button {
@@ -23,18 +24,21 @@
 	}
 
 	&.@{prefix}-active, &.@{prefix}-active:hover {
-		.vertical-gradient(darken(@btn-bg, 10%), darken(@btn-bg-hlight, 10%));
+		.vertical-gradient(darken(@btn-bg, 10%), darken(@btn-bg-hlight, 5%));
 		.box-shadow(@btn-box-shadow-active);
+		border-color: darken(@btn-bg, 20%);
 	}
 
 	&:active {
-		.vertical-gradient(darken(@btn-bg, 10%), darken(@btn-bg-hlight, 10%));
+		.vertical-gradient(darken(@btn-bg, 7%), darken(@btn-bg-hlight, 5%));
 		.box-shadow(@btn-box-shadow-active);
+		border-color: @btn-border-active;
+
 	}
 }
 
 .@{prefix}-btn button {
-	padding: 4px 10px;
+	padding: @btn-padding;
 	font-size: @font-size;
 	line-height: @line-height;
 	*line-height: @line-height - 4px;
@@ -58,12 +62,13 @@
 .@{prefix}-primary {
 	min-width: 50px;
 	color: @btn-primary-text;
-	border: 1px solid mix(rgb(red(@btn-border-right), green(@btn-border-right), blue(@btn-border-right)), @panel-bg, 30%);
-	border-color: @btn-border-top @btn-border-right @btn-border-bottom @btn-border-left;
+	border: 1px solid transparent;
+	border-color: @btn-primary-border;
 	.vertical-gradient(@btn-primary-bg, @btn-primary-bg-hlight);
 
 	&:hover, &:focus {
 		.vertical-gradient(darken(@btn-primary-bg, 5%), darken(@btn-primary-bg-hlight, 5%));
+		border-color: @btn-primary-border-hover;
 	}
 
 	&.@{prefix}-disabled button, &.@{prefix}-disabled:hover button {
@@ -148,6 +153,10 @@
 	background: @menubar-bg-active;
 	filter: none;
 	.box-shadow(none);
+}
+
+.@{prefix}-btn-has-text .@{prefix}-ico {
+	padding-right: 5px;
 }
 
 // RTL

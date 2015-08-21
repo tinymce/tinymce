@@ -1,8 +1,8 @@
 /**
  * ButtonGroup.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -46,12 +46,12 @@ define("tinymce/ui/ButtonGroup", [
 		renderHtml: function() {
 			var self = this, layout = self._layout;
 
-			self.addClass('btn-group');
+			self.classes.add('btn-group');
 			self.preRender();
 			layout.preRender(self);
 
 			return (
-				'<div id="' + self._id + '" class="' + self.classes() + '">' +
+				'<div id="' + self._id + '" class="' + self.classes + '">' +
 					'<div id="' + self._id + '-body">' +
 						(self.settings.html || '') + layout.renderHtml(self) +
 					'</div>' +

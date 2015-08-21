@@ -1,8 +1,8 @@
 /**
  * SplitButton.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -13,12 +13,13 @@
  *
  * @-x-less SplitButton.less
  * @class tinymce.ui.SplitButton
- * @extends tinymce.ui.MenuButton
+ * @extends tinymce.ui.Button
  */
 define("tinymce/ui/SplitButton", [
 	"tinymce/ui/MenuButton",
-	"tinymce/ui/DomUtils"
-], function(MenuButton, DomUtils) {
+	"tinymce/ui/DomUtils",
+	"tinymce/dom/DomQuery"
+], function(MenuButton, DomUtils, $) {
 	return MenuButton.extend({
 		Defaults: {
 			classes: "widget btn splitbtn",
@@ -38,12 +39,12 @@ define("tinymce/ui/SplitButton", [
 			mainButtonElm = elm.firstChild;
 			menuButtonElm = elm.lastChild;
 
-			DomUtils.css(mainButtonElm, {
+			$(mainButtonElm).css({
 				width: rect.w - DomUtils.getSize(menuButtonElm).width,
 				height: rect.h - 2
 			});
 
-			DomUtils.css(menuButtonElm, {
+			$(menuButtonElm).css({
 				height: rect.h - 2
 			});
 
@@ -58,7 +59,7 @@ define("tinymce/ui/SplitButton", [
 		activeMenu: function(state) {
 			var self = this;
 
-			DomUtils.toggleClass(self.getEl().lastChild, self.classPrefix + 'active', state);
+			$(self.getEl().lastChild).toggleClass(self.classPrefix + 'active', state);
 		},
 
 		/**
@@ -69,7 +70,7 @@ define("tinymce/ui/SplitButton", [
 		 */
 		renderHtml: function() {
 			var self = this, id = self._id, prefix = self.classPrefix, image;
-			var icon = self.settings.icon;
+			var icon = self.state.get('icon'), text = self.state.get('text');
 
 			image = self.settings.image;
 			if (image) {
@@ -88,10 +89,10 @@ define("tinymce/ui/SplitButton", [
 			icon = self.settings.icon ? prefix + 'ico ' + prefix + 'i-' + icon : '';
 
 			return (
-				'<div id="' + id + '" class="' + self.classes() + '" role="button" tabindex="-1">' +
+				'<div id="' + id + '" class="' + self.classes + '" role="button" tabindex="-1">' +
 					'<button type="button" hidefocus="1" tabindex="-1">' +
 						(icon ? '<i class="' + icon + '"' + image + '></i>' : '') +
-						(self._text ? (icon ? ' ' : '') + self._text : '') +
+						(text ? (icon ? ' ' : '') + text : '') +
 					'</button>' +
 					'<button type="button" class="' + prefix + 'open" hidefocus="1" tabindex="-1">' +
 						//(icon ? '<i class="' + icon + '"></i>' : '') +
@@ -118,7 +119,11 @@ define("tinymce/ui/SplitButton", [
 					while (node) {
 						if ((e.aria && e.aria.key != 'down') || (node.nodeName == 'BUTTON' && node.className.indexOf('open') == -1)) {
 							e.stopImmediatePropagation();
-							onClickHandler.call(this, e);
+
+							if (onClickHandler) {
+								onClickHandler.call(this, e);
+							}
+
 							return;
 						}
 

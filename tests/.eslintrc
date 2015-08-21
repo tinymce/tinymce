@@ -1,0 +1,23 @@
+{
+	"env": {
+		"browser": true,
+		"amd": true,
+		"qunit": true
+	},
+
+	"globals": {
+		"tinymce": true,
+		"Utils": true,
+		"editor": true,
+		"inlineEditor": true,
+		"ModuleLoader": true
+	},
+
+	"rules": {
+		"max-len": 0,
+		"space-before-blocks": 0,
+		"consistent-this": 0
+	},
+
+	"extends": "../.eslintrc"
+}

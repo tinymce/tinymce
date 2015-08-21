@@ -5,11 +5,11 @@
 }
 
 .@{prefix}-flow-layout-item {
-	margin: 2px 0 2px 2px;	
+	margin: @flow-layout-spacing 0 @flow-layout-spacing @flow-layout-spacing;
 }
 
 .@{prefix}-flow-layout-item.@{prefix}-last {
-	margin-right: 2px;
+	margin-right: @flow-layout-spacing;
 }
 
 .@{prefix}-flow-layout {
@@ -28,9 +28,9 @@
 }
 
 .@{prefix}-rtl .@{prefix}-flow-layout-item {
-	margin: 2px 2px 2px 0;	
+	margin: @flow-layout-spacing @flow-layout-spacing @flow-layout-spacing 0;
 }
 
 .@{prefix}-rtl .@{prefix}-flow-layout-item.@{prefix}-last {
-	margin-left: 2px;
+	margin-left: @flow-layout-spacing;
 }

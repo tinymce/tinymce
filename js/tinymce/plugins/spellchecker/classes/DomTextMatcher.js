@@ -1,8 +1,8 @@
 /**
  * DomTextMatcher.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -201,34 +201,34 @@ define("tinymce/spellcheckerplugin/DomTextMatcher", [], function() {
 					node.parentNode.removeChild(node);
 
 					return el;
-				} else {
-					// Replace startNode -> [innerNodes...] -> endNode (in that order)
-					before = doc.createTextNode(startNode.data.substring(0, range.startNodeIndex));
-					after = doc.createTextNode(endNode.data.substring(range.endNodeIndex));
-					var elA = makeReplacementNode(startNode.data.substring(range.startNodeIndex), matchIndex);
-					var innerEls = [];
-
-					for (var i = 0, l = range.innerNodes.length; i < l; ++i) {
-						var innerNode = range.innerNodes[i];
-						var innerEl = makeReplacementNode(innerNode.data, matchIndex);
-						innerNode.parentNode.replaceChild(innerEl, innerNode);
-						innerEls.push(innerEl);
-					}
-
-					var elB = makeReplacementNode(endNode.data.substring(0, range.endNodeIndex), matchIndex);
-
-					parentNode = startNode.parentNode;
-					parentNode.insertBefore(before, startNode);
-					parentNode.insertBefore(elA, startNode);
-					parentNode.removeChild(startNode);
-
-					parentNode = endNode.parentNode;
-					parentNode.insertBefore(elB, endNode);
-					parentNode.insertBefore(after, endNode);
-					parentNode.removeChild(endNode);
-
-					return elB;
 				}
+
+				// Replace startNode -> [innerNodes...] -> endNode (in that order)
+				before = doc.createTextNode(startNode.data.substring(0, range.startNodeIndex));
+				after = doc.createTextNode(endNode.data.substring(range.endNodeIndex));
+				var elA = makeReplacementNode(startNode.data.substring(range.startNodeIndex), matchIndex);
+				var innerEls = [];
+
+				for (var i = 0, l = range.innerNodes.length; i < l; ++i) {
+					var innerNode = range.innerNodes[i];
+					var innerEl = makeReplacementNode(innerNode.data, matchIndex);
+					innerNode.parentNode.replaceChild(innerEl, innerNode);
+					innerEls.push(innerEl);
+				}
+
+				var elB = makeReplacementNode(endNode.data.substring(0, range.endNodeIndex), matchIndex);
+
+				parentNode = startNode.parentNode;
+				parentNode.insertBefore(before, startNode);
+				parentNode.insertBefore(elA, startNode);
+				parentNode.removeChild(startNode);
+
+				parentNode = endNode.parentNode;
+				parentNode.insertBefore(elB, endNode);
+				parentNode.insertBefore(after, endNode);
+				parentNode.removeChild(endNode);
+
+				return elB;
 			};
 		}
 
@@ -241,7 +241,7 @@ define("tinymce/spellcheckerplugin/DomTextMatcher", [], function() {
 		function getWrappersByIndex(index) {
 			var elements = node.getElementsByTagName('*'), wrappers = [];
 
-			index = typeof(index) == "number" ? "" + index : null;
+			index = typeof index == "number" ? "" + index : null;
 
 			for (var i = 0; i < elements.length; i++) {
 				var element = elements[i], dataIndex = element.getAttribute('data-mce-index');

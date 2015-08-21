@@ -1,8 +1,8 @@
 /**
  * Env.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -18,21 +18,28 @@
  */
 define("tinymce/Env", [], function() {
 	var nav = navigator, userAgent = nav.userAgent;
-	var opera, webkit, ie, ie11, gecko, mac, iDevice;
+	var opera, webkit, ie, ie11, ie12, gecko, mac, iDevice, android, fileApi;
 
 	opera = window.opera && window.opera.buildNumber;
+	android = /Android/.test(userAgent);
 	webkit = /WebKit/.test(userAgent);
 	ie = !webkit && !opera && (/MSIE/gi).test(userAgent) && (/Explorer/gi).test(nav.appName);
 	ie = ie && /MSIE (\w+)\./.exec(userAgent)[1];
 	ie11 = userAgent.indexOf('Trident/') != -1 && (userAgent.indexOf('rv:') != -1 || nav.appName.indexOf('Netscape') != -1) ? 11 : false;
-	ie = ie || ie11;
+	ie12 = (userAgent.indexOf('Edge/') != -1 && !ie && !ie11) ? 12 : false;
+	ie = ie || ie11 || ie12;
 	gecko = !webkit && !ie11 && /Gecko/.test(userAgent);
 	mac = userAgent.indexOf('Mac') != -1;
 	iDevice = /(iPad|iPhone)/.test(userAgent);
+	fileApi = "FormData" in window && "FileReader" in window && "URL" in window && !!URL.createObjectURL;
+
+	if (ie12) {
+		webkit = false;
+	}
 
 	// Is a iPad/iPhone and not on iOS5 sniff the WebKit version since older iOS WebKit versions
 	// says it has contentEditable support but there is no visible caret.
-	var contentEditable = !iDevice || userAgent.match(/AppleWebKit\/(\d*)/)[1] >= 534;
+	var contentEditable = !iDevice || fileApi || userAgent.match(/AppleWebKit\/(\d*)/)[1] >= 534;
 
 	return {
 		/**
@@ -90,6 +97,15 @@ define("tinymce/Env", [], function() {
 		iOS: iDevice,
 
 		/**
+		 * Constant that is true if the os is android.
+		 *
+		 * @property android
+		 * @type Boolean
+		 * @final
+		 */
+		android: android,
+
+		/**
 		 * Constant that is true if the browser supports editing.
 		 *
 		 * @property contentEditable
@@ -130,6 +146,14 @@ define("tinymce/Env", [], function() {
 		 * @property documentMode
 		 * @type Number
 		 */
-		documentMode: ie ? (document.documentMode || 7) : 10
+		documentMode: ie && !ie12 ? (document.documentMode || 7) : 10,
+
+		/**
+		 * Constant that is true if the browser has a modern file api.
+		 *
+		 * @property fileApi
+		 * @type Boolean
+		 */
+		fileApi: fileApi
 	};
 });

@@ -1,8 +1,8 @@
 /**
  * Selection.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -270,21 +270,21 @@ define("tinymce/dom/Selection", [
 				}
 
 				return startElement;
-			} else {
-				startElement = rng.startContainer;
-
-				if (startElement.nodeType == 1 && startElement.hasChildNodes()) {
-					if (!real || !rng.collapsed) {
-						startElement = startElement.childNodes[Math.min(startElement.childNodes.length - 1, rng.startOffset)];
-					}
-				}
-
-				if (startElement && startElement.nodeType == 3) {
-					return startElement.parentNode;
-				}
-
-				return startElement;
 			}
+
+			startElement = rng.startContainer;
+
+			if (startElement.nodeType == 1 && startElement.hasChildNodes()) {
+				if (!real || !rng.collapsed) {
+					startElement = startElement.childNodes[Math.min(startElement.childNodes.length - 1, rng.startOffset)];
+				}
+			}
+
+			if (startElement && startElement.nodeType == 3) {
+				return startElement.parentNode;
+			}
+
+			return startElement;
 		},
 
 		/**
@@ -315,22 +315,22 @@ define("tinymce/dom/Selection", [
 				}
 
 				return endElement;
-			} else {
-				endElement = rng.endContainer;
-				endOffset = rng.endOffset;
-
-				if (endElement.nodeType == 1 && endElement.hasChildNodes()) {
-					if (!real || !rng.collapsed) {
-						endElement = endElement.childNodes[endOffset > 0 ? endOffset - 1 : endOffset];
-					}
-				}
-
-				if (endElement && endElement.nodeType == 3) {
-					return endElement.parentNode;
-				}
-
-				return endElement;
 			}
+
+			endElement = rng.endContainer;
+			endOffset = rng.endOffset;
+
+			if (endElement.nodeType == 1 && endElement.hasChildNodes()) {
+				if (!real || !rng.collapsed) {
+					endElement = endElement.childNodes[endOffset > 0 ? endOffset - 1 : endOffset];
+				}
+			}
+
+			if (endElement && endElement.nodeType == 3) {
+				return endElement.parentNode;
+			}
+
+			return endElement;
 		},
 
 		/**
@@ -530,7 +530,7 @@ define("tinymce/dom/Selection", [
 					// IE will sometimes throw an exception here
 					ieRng = doc.selection.createRange();
 				} catch (ex) {
-
+					// Ignore
 				}
 
 				if (ieRng && ieRng.item) {
@@ -577,7 +577,7 @@ define("tinymce/dom/Selection", [
 		 * @param {Range} rng Range to select.
 		 */
 		setRng: function(rng, forward) {
-			var self = this, sel;
+			var self = this, sel, node;
 
 			if (!rng) {
 				return;
@@ -615,6 +615,18 @@ define("tinymce/dom/Selection", [
 
 					// adding range isn't always successful so we need to check range count otherwise an exception can occur
 					self.selectedRange = sel.rangeCount > 0 ? sel.getRangeAt(0) : null;
+				}
+
+				// WebKit egde case selecting images works better using setBaseAndExtent
+				if (!rng.collapsed && rng.startContainer == rng.endContainer && sel.setBaseAndExtent && !Env.ie) {
+					if (rng.endOffset - rng.startOffset < 2) {
+						if (rng.startContainer.hasChildNodes()) {
+							node = rng.startContainer.childNodes[rng.startOffset];
+							if (node && node.tagName == 'IMG') {
+								self.getSel().setBaseAndExtent(node, 0, node, 1);
+							}
+						}
+					}
 				}
 			} else {
 				// Is W3C Range fake range on IE
@@ -782,7 +794,7 @@ define("tinymce/dom/Selection", [
 		normalize: function() {
 			var self = this, rng = self.getRng();
 
-			if (!isIE && new RangeUtils(self.dom).normalize(rng)) {
+			if (Env.range && new RangeUtils(self.dom).normalize(rng)) {
 				self.setRng(rng, self.isForward());
 			}
 
@@ -790,7 +802,8 @@ define("tinymce/dom/Selection", [
 		},
 
 		/**
-		 * Executes callback of the current selection matches the specified selector or not and passes the state and args to the callback.
+		 * Executes callback when the current selection starts/stops matching the specified selector. The current
+		 * state will be passed to the callback as it's first argument.
 		 *
 		 * @method selectorChanged
 		 * @param {String} selector CSS selector to check for.

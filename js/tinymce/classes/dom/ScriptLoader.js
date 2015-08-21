@@ -1,8 +1,8 @@
 /**
  * ScriptLoader.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -79,7 +79,7 @@ define("tinymce/dom/ScriptLoader", [
 				/*eslint no-console:0 */
 
 				// Report the error so it's easier for people to spot loading errors
-				if (typeof(console) !== "undefined" && console.log) {
+				if (typeof console !== "undefined" && console.log) {
 					console.log("Failed to load: " + url);
 				}
 

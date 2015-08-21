@@ -2,24 +2,30 @@
 
 .@{prefix}-splitbtn .@{prefix}-open {
 	border-left: 1px solid transparent;
-	border-right: 1px solid transparent;
 }
 
 .@{prefix}-splitbtn:hover .@{prefix}-open {
-	border-left-color: @btn-split-border;
-	border-right-color: @btn-split-border;
+	border-left-color: darken(@btn-bg, 20%);
 }
 
-.@{prefix}-splitbtn button {
+.@{prefix}-splitbtn button when (@has-button-borders = false) {
+	padding-right: 6px;
+	padding-left: 6px;
+}
+
+.@{prefix}-splitbtn button when (@has-button-borders = true) {
 	padding-right: 4px;
+	padding-left: 8px;
 }
 
 .@{prefix}-splitbtn .@{prefix}-open {
+	padding-right: 4px;
 	padding-left: 4px;
 }
 
 .@{prefix}-splitbtn .@{prefix}-open.@{prefix}-active {
-	.box-shadow(inset 0 2px 4px rgba(0, 0, 0, .15), 0 1px 2px rgba(0, 0, 0 ,.05));
+	.vertical-gradient(darken(@btn-bg, 10%), darken(@btn-bg-hlight, 5%));
+	outline: 1px solid darken(@btn-bg, 20%);
 }
 
 .@{prefix}-splitbtn.@{prefix}-btn-small .@{prefix}-open {
@@ -34,11 +40,10 @@
 }
 
 .@{prefix}-rtl .@{prefix}-splitbtn button {
-	padding-right: 10px;
-	padding-left: 10px;
+	padding-right: 4px;
+	padding-left: 4px;
 }
 
 .@{prefix}-rtl .@{prefix}-splitbtn .@{prefix}-open {
-	padding-left: 4px;
-	padding-right: 4px;
+	border-left: 0;
 }

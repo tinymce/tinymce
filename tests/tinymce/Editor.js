@@ -357,3 +357,65 @@ test('execCommand return values for native commands', function() {
 	strictEqual(editor.execCommand("ExistingCommand"), true, "Return value for an editor handled command");
 	strictEqual(lastCmd, "ExistingCommand");
 });
+
+test('addCommand', function() {
+	var scope = {}, lastScope, lastArgs;
+
+	function callback() {
+		lastScope = this;
+		lastArgs = arguments;
+	}
+
+	editor.addCommand("CustomCommand1", callback, scope);
+	editor.addCommand("CustomCommand2", callback);
+
+	editor.execCommand("CustomCommand1", false, "value", {extra: true});
+	strictEqual(lastArgs[0], false);
+	strictEqual(lastArgs[1], "value");
+	ok(lastScope === scope);
+
+	editor.execCommand("CustomCommand2");
+	equal(typeof lastArgs[0], "undefined");
+	equal(typeof lastArgs[1], "undefined");
+	ok(lastScope === editor);
+});
+
+test('addQueryStateHandler', function() {
+	var scope = {}, lastScope, currentState;
+
+	function callback() {
+		lastScope = this;
+		return currentState;
+	}
+
+	editor.addQueryStateHandler("CustomCommand1", callback, scope);
+	editor.addQueryStateHandler("CustomCommand2", callback);
+
+	currentState = false;
+	ok(!editor.queryCommandState("CustomCommand1"));
+	ok(lastScope === scope, "Scope is not custom scope");
+
+	currentState = true;
+	ok(editor.queryCommandState("CustomCommand2"));
+	ok(lastScope === editor, "Scope is not editor");
+});
+
+test('addQueryValueHandler', function() {
+	var scope = {}, lastScope, currentValue;
+
+	function callback() {
+		lastScope = this;
+		return currentValue;
+	}
+
+	editor.addQueryValueHandler("CustomCommand1", callback, scope);
+	editor.addQueryValueHandler("CustomCommand2", callback);
+
+	currentValue = "a";
+	equal(editor.queryCommandValue("CustomCommand1"), "a");
+	ok(lastScope === scope, "Scope is not custom scope");
+
+	currentValue = "b";
+	ok(editor.queryCommandValue("CustomCommand2"), "b");
+	ok(lastScope === editor, "Scope is not editor");
+});

@@ -1,8 +1,8 @@
 /**
  * Control.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -20,39 +20,22 @@ define("tinymce/ui/Control", [
 	"tinymce/util/Class",
 	"tinymce/util/Tools",
 	"tinymce/util/EventDispatcher",
+	"tinymce/data/ObservableObject",
 	"tinymce/ui/Collection",
-	"tinymce/ui/DomUtils"
-], function(Class, Tools, EventDispatcher, Collection, DomUtils) {
+	"tinymce/ui/DomUtils",
+	"tinymce/dom/DomQuery",
+	"tinymce/ui/BoxUtils",
+	"tinymce/ui/ClassList",
+	"tinymce/ui/ReflowQueue"
+], function(Class, Tools, EventDispatcher, ObservableObject, Collection, DomUtils, $, BoxUtils, ClassList, ReflowQueue) {
 	"use strict";
 
 	var hasMouseWheelEventSupport = "onmousewheel" in document;
 	var hasWheelEventSupport = false;
 	var classPrefix = "mce-";
+	var Control, idCounter = 0;
 
-	function getEventDispatcher(obj) {
-		if (!obj._eventDispatcher) {
-			obj._eventDispatcher = new EventDispatcher({
-				scope: obj,
-				toggleEvent: function(name, state) {
-					if (state && EventDispatcher.isNative(name)) {
-						if (!obj._nativeEvents) {
-							obj._nativeEvents = {};
-						}
-
-						obj._nativeEvents[name] = true;
-
-						if (obj._rendered) {
-							obj.bindPendingEvents();
-						}
-					}
-				}
-			});
-		}
-
-		return obj._eventDispatcher;
-	}
-
-	var Control = Class.extend({
+	var proto = {
 		Statics: {
 			classPrefix: classPrefix
 		},
@@ -87,39 +70,58 @@ define("tinymce/ui/Control", [
 		 * @setting {String} name Name of the control instance.
 		 */
 		init: function(settings) {
-			var self = this, classes, i;
+			var self = this, classes, defaultClasses;
+
+			function applyClasses(classes) {
+				var i;
+
+				classes = classes.split(' ');
+				for (i = 0; i < classes.length; i++) {
+					self.classes.add(classes[i]);
+				}
+			}
 
 			self.settings = settings = Tools.extend({}, self.Defaults, settings);
 
 			// Initial states
-			self._id = settings.id || DomUtils.id();
-			self._text = self._name = '';
-			self._width = self._height = 0;
+			self._id = settings.id || ('mceu_' + (idCounter++));
 			self._aria = {role: settings.role};
-			this._elmCache = {};
+			self._elmCache = {};
+			self.$ = $;
+
+			self.state = new ObservableObject({
+				visible: true,
+				active: false,
+				disabled: false,
+				value: ''
+			});
+
+			self.data = new ObservableObject(settings.data);
+
+			self.classes = new ClassList(function() {
+				if (self.state.get('rendered')) {
+					self.getEl().className = this.toString();
+				}
+			});
+			self.classes.prefix = self.classPrefix;
 
 			// Setup classes
 			classes = settings.classes;
 			if (classes) {
-				classes = classes.split(' ');
-				classes.map = {};
-				i = classes.length;
-				while (i--) {
-					classes.map[classes[i]] = true;
+				if (self.Defaults) {
+					defaultClasses = self.Defaults.classes;
+
+					if (defaultClasses && classes != defaultClasses) {
+						applyClasses(defaultClasses);
+					}
 				}
+
+				applyClasses(classes);
 			}
 
-			self._classes = classes || [];
-			self.visible(true);
-
-			// Set some properties
-			Tools.each('title text width height name classes visible disabled active value'.split(' '), function(name) {
-				var value = settings[name], undef;
-
-				if (value !== undef) {
-					self[name](value);
-				} else if (self['_' + name] === undef) {
-					self['_' + name] = false;
+			Tools.each('title text name visible disabled active value'.split(' '), function(name) {
+				if (name in settings) {
+					self[name](settings[name]);
 				}
 			});
 
@@ -129,13 +131,6 @@ define("tinymce/ui/Control", [
 				}
 			});
 
-			// TODO: Is this needed duplicate code see above?
-			if (settings.classes) {
-				Tools.each(settings.classes.split(' '), function(cls) {
-					self.addClass(cls);
-				});
-			}
-
 			/**
 			 * Name/value object with settings for the current control.
 			 *
@@ -143,9 +138,9 @@ define("tinymce/ui/Control", [
 			 */
 			self.settings = settings;
 
-			self._borderBox = self.parseBox(settings.border);
-			self._paddingBox = self.parseBox(settings.padding);
-			self._marginBox = self.parseBox(settings.margin);
+			self.borderBox = BoxUtils.parseBox(settings.border);
+			self.paddingBox = BoxUtils.parseBox(settings.padding);
+			self.marginBox = BoxUtils.parseBox(settings.margin);
 
 			if (settings.hidden) {
 				self.hide();
@@ -153,10 +148,7 @@ define("tinymce/ui/Control", [
 		},
 
 		// Will generate getter/setter methods for these properties
-		Properties: 'parent,title,text,width,height,disabled,active,name,value',
-
-		// Will generate empty dummy functions for these
-		Methods: 'renderHtml',
+		Properties: 'parent,name',
 
 		/**
 		 * Returns the root element to render controls into.
@@ -191,94 +183,6 @@ define("tinymce/ui/Control", [
 		},
 
 		/**
-		 * Parses the specified box value. A box value contains 1-4 properties in clockwise order.
-		 *
-		 * @method parseBox
-		 * @param {String/Number} value Box value "0 1 2 3" or "0" etc.
-		 * @return {Object} Object with top/right/bottom/left properties.
-		 * @private
-		 */
-		parseBox: function(value) {
-			var len, radix = 10;
-
-			if (!value) {
-				return;
-			}
-
-			if (typeof(value) === "number") {
-				value = value || 0;
-
-				return {
-					top: value,
-					left: value,
-					bottom: value,
-					right: value
-				};
-			}
-
-			value = value.split(' ');
-			len = value.length;
-
-			if (len === 1) {
-				value[1] = value[2] = value[3] = value[0];
-			} else if (len === 2) {
-				value[2] = value[0];
-				value[3] = value[1];
-			} else if (len === 3) {
-				value[3] = value[1];
-			}
-
-			return {
-				top: parseInt(value[0], radix) || 0,
-				right: parseInt(value[1], radix) || 0,
-				bottom: parseInt(value[2], radix) || 0,
-				left: parseInt(value[3], radix) || 0
-			};
-		},
-
-		borderBox: function() {
-			return this._borderBox;
-		},
-
-		paddingBox: function() {
-			return this._paddingBox;
-		},
-
-		marginBox: function() {
-			return this._marginBox;
-		},
-
-		measureBox: function(elm, prefix) {
-			function getStyle(name) {
-				var defaultView = document.defaultView;
-
-				if (defaultView) {
-					// Remove camelcase
-					name = name.replace(/[A-Z]/g, function(a) {
-						return '-' + a;
-					});
-
-					return defaultView.getComputedStyle(elm, null).getPropertyValue(name);
-				}
-
-				return elm.currentStyle[name];
-			}
-
-			function getSide(name) {
-				var val = parseFloat(getStyle(name), 10);
-
-				return isNaN(val) ? 0 : val;
-			}
-
-			return {
-				top: getSide(prefix + "TopWidth"),
-				right: getSide(prefix + "RightWidth"),
-				bottom: getSide(prefix + "BottomWidth"),
-				left: getSide(prefix + "LeftWidth")
-			};
-		},
-
-		/**
 		 * Initializes the current controls layout rect.
 		 * This will be executed by the layout managers to determine the
 		 * default minWidth/minHeight etc.
@@ -292,9 +196,9 @@ define("tinymce/ui/Control", [
 			var startMinWidth, startMinHeight, initialSize;
 
 			// Measure the current element
-			borderBox = self._borderBox = self._borderBox || self.measureBox(elm, 'border');
-			self._paddingBox = self._paddingBox || self.measureBox(elm, 'padding');
-			self._marginBox = self._marginBox || self.measureBox(elm, 'margin');
+			borderBox = self.borderBox = self.borderBox || BoxUtils.measureBox(elm, 'border');
+			self.paddingBox = self.paddingBox || BoxUtils.measureBox(elm, 'padding');
+			self.marginBox = self.marginBox || BoxUtils.measureBox(elm, 'margin');
 			initialSize = DomUtils.getSize(elm);
 
 			// Setup minWidth/minHeight and width/height
@@ -305,7 +209,7 @@ define("tinymce/ui/Control", [
 			width = settings.width;
 			height = settings.height;
 			autoResize = settings.autoResize;
-			autoResize = typeof(autoResize) != "undefined" ? autoResize : !width && !height;
+			autoResize = typeof autoResize != "undefined" ? autoResize : !width && !height;
 
 			width = width || minWidth;
 			height = height || minHeight;
@@ -461,7 +365,8 @@ define("tinymce/ui/Control", [
 		 * @method repaint
 		 */
 		repaint: function() {
-			var self = this, style, bodyStyle, rect, borderBox, borderW = 0, borderH = 0, lastRepaintRect, round;
+			var self = this, style, bodyStyle, bodyElm, rect, borderBox;
+			var borderW = 0, borderH = 0, lastRepaintRect, round, value;
 
 			// Use Math.round on all values on IE < 9
 			round = !document.createRange ? Math.round : function(value) {
@@ -472,7 +377,7 @@ define("tinymce/ui/Control", [
 			rect = self._layoutRect;
 			lastRepaintRect = self._lastRepaintRect || {};
 
-			borderBox = self._borderBox;
+			borderBox = self.borderBox;
 			borderW = borderBox.left + borderBox.right;
 			borderH = borderBox.top + borderBox.bottom;
 
@@ -487,25 +392,39 @@ define("tinymce/ui/Control", [
 			}
 
 			if (rect.w !== lastRepaintRect.w) {
-				style.width = round(rect.w - borderW) + 'px';
+				value = round(rect.w - borderW);
+				style.width = (value >= 0 ? value : 0) + 'px';
 				lastRepaintRect.w = rect.w;
 			}
 
 			if (rect.h !== lastRepaintRect.h) {
-				style.height = round(rect.h - borderH) + 'px';
+				value = round(rect.h - borderH);
+				style.height = (value >= 0 ? value : 0) + 'px';
 				lastRepaintRect.h = rect.h;
 			}
 
 			// Update body if needed
 			if (self._hasBody && rect.innerW !== lastRepaintRect.innerW) {
-				bodyStyle = self.getEl('body').style;
-				bodyStyle.width = round(rect.innerW) + 'px';
+				value = round(rect.innerW);
+
+				bodyElm = self.getEl('body');
+				if (bodyElm) {
+					bodyStyle = bodyElm.style;
+					bodyStyle.width = (value >= 0 ? value : 0) + 'px';
+				}
+
 				lastRepaintRect.innerW = rect.innerW;
 			}
 
 			if (self._hasBody && rect.innerH !== lastRepaintRect.innerH) {
-				bodyStyle = bodyStyle || self.getEl('body').style;
-				bodyStyle.height = round(rect.innerH) + 'px';
+				value = round(rect.innerH);
+
+				bodyElm = bodyElm || self.getEl('body');
+				if (bodyElm) {
+					bodyStyle = bodyStyle || bodyElm.style;
+					bodyStyle.height = (value >= 0 ? value : 0) + 'px';
+				}
+
 				lastRepaintRect.innerH = rect.innerH;
 			}
 
@@ -530,7 +449,7 @@ define("tinymce/ui/Control", [
 			function resolveCallbackName(name) {
 				var callback, scope;
 
-				if (typeof(name) != 'string') {
+				if (typeof name != 'string') {
 					return name;
 				}
 
@@ -544,6 +463,12 @@ define("tinymce/ui/Control", [
 								return false;
 							}
 						});
+					}
+
+					if (!callback) {
+						e.action = name;
+						this.fire('execute', e);
+						return;
 					}
 
 					return callback.call(scope, e);
@@ -673,155 +598,6 @@ define("tinymce/ui/Control", [
 		},
 
 		/**
-		 * Find the common ancestor for two control instances.
-		 *
-		 * @method findCommonAncestor
-		 * @param {tinymce.ui.Control} ctrl1 First control.
-		 * @param {tinymce.ui.Control} ctrl2 Second control.
-		 * @return {tinymce.ui.Control} Ancestor control instance.
-		 */
-		findCommonAncestor: function(ctrl1, ctrl2) {
-			var parentCtrl;
-
-			while (ctrl1) {
-				parentCtrl = ctrl2;
-
-				while (parentCtrl && ctrl1 != parentCtrl) {
-					parentCtrl = parentCtrl.parent();
-				}
-
-				if (ctrl1 == parentCtrl) {
-					break;
-				}
-
-				ctrl1 = ctrl1.parent();
-			}
-
-			return ctrl1;
-		},
-
-		/**
-		 * Returns true/false if the specific control has the specific class.
-		 *
-		 * @method hasClass
-		 * @param {String} cls Class to check for.
-		 * @param {String} [group] Sub element group name.
-		 * @return {Boolean} True/false if the control has the specified class.
-		 */
-		hasClass: function(cls, group) {
-			var classes = this._classes[group || 'control'];
-
-			cls = this.classPrefix + cls;
-
-			return classes && !!classes.map[cls];
-		},
-
-		/**
-		 * Adds the specified class to the control
-		 *
-		 * @method addClass
-		 * @param {String} cls Class to check for.
-		 * @param {String} [group] Sub element group name.
-		 * @return {tinymce.ui.Control} Current control object.
-		 */
-		addClass: function(cls, group) {
-			var self = this, classes, elm;
-
-			cls = this.classPrefix + cls;
-			classes = self._classes[group || 'control'];
-
-			if (!classes) {
-				classes = [];
-				classes.map = {};
-				self._classes[group || 'control'] = classes;
-			}
-
-			if (!classes.map[cls]) {
-				classes.map[cls] = cls;
-				classes.push(cls);
-
-				if (self._rendered) {
-					elm = self.getEl(group);
-
-					if (elm) {
-						elm.className = classes.join(' ');
-					}
-				}
-			}
-
-			return self;
-		},
-
-		/**
-		 * Removes the specified class from the control.
-		 *
-		 * @method removeClass
-		 * @param {String} cls Class to remove.
-		 * @param {String} [group] Sub element group name.
-		 * @return {tinymce.ui.Control} Current control object.
-		 */
-		removeClass: function(cls, group) {
-			var self = this, classes, i, elm;
-
-			cls = this.classPrefix + cls;
-			classes = self._classes[group || 'control'];
-			if (classes && classes.map[cls]) {
-				delete classes.map[cls];
-
-				i = classes.length;
-				while (i--) {
-					if (classes[i] === cls) {
-						classes.splice(i, 1);
-					}
-				}
-			}
-
-			if (self._rendered) {
-				elm = self.getEl(group);
-
-				if (elm) {
-					elm.className = classes.join(' ');
-				}
-			}
-
-			return self;
-		},
-
-		/**
-		 * Toggles the specified class on the control.
-		 *
-		 * @method toggleClass
-		 * @param {String} cls Class to remove.
-		 * @param {Boolean} state True/false state to add/remove class.
-		 * @param {String} [group] Sub element group name.
-		 * @return {tinymce.ui.Control} Current control object.
-		 */
-		toggleClass: function(cls, state, group) {
-			var self = this;
-
-			if (state) {
-				self.addClass(cls, group);
-			} else {
-				self.removeClass(cls, group);
-			}
-
-			return self;
-		},
-
-		/**
-		 * Returns the class string for the specified group name.
-		 *
-		 * @method classes
-		 * @param {String} [group] Group to get clases by.
-		 * @return {String} Classes for the specified group.
-		 */
-		classes: function(group) {
-			var classes = this._classes[group || 'control'];
-
-			return classes ? classes.join(' ') : '';
-		},
-
-		/**
 		 * Sets the inner HTML of the control element.
 		 *
 		 * @method innerHtml
@@ -829,7 +605,7 @@ define("tinymce/ui/Control", [
 		 * @return {tinymce.ui.Control} Current control object.
 		 */
 		innerHtml: function(html) {
-			DomUtils.innerHtml(this.getEl(), html);
+			this.$el.html(html);
 			return this;
 		},
 
@@ -844,43 +620,10 @@ define("tinymce/ui/Control", [
 			var id = suffix ? this._id + '-' + suffix : this._id;
 
 			if (!this._elmCache[id]) {
-				this._elmCache[id] = DomUtils.get(id);
+				this._elmCache[id] = $('#' + id)[0];
 			}
 
 			return this._elmCache[id];
-		},
-
-		/**
-		 * Sets/gets the visible for the control.
-		 *
-		 * @method visible
-		 * @param {Boolean} state Value to set to control.
-		 * @return {Boolean/tinymce.ui.Control} Current control on a set operation or current state on a get.
-		 */
-		visible: function(state) {
-			var self = this, parentCtrl;
-
-			if (typeof(state) !== "undefined") {
-				if (self._visible !== state) {
-					if (self._rendered) {
-						self.getEl().style.display = state ? '' : 'none';
-					}
-
-					self._visible = state;
-
-					// Parent container needs to reflow
-					parentCtrl = self.parent();
-					if (parentCtrl) {
-						parentCtrl._lastRect = null;
-					}
-
-					self.fire(state ? 'show' : 'hide');
-				}
-
-				return self;
-			}
-
-			return self._visible;
 		},
 
 		/**
@@ -942,13 +685,13 @@ define("tinymce/ui/Control", [
 		aria: function(name, value) {
 			var self = this, elm = self.getEl(self.ariaTarget);
 
-			if (typeof(value) === "undefined") {
+			if (typeof value === "undefined") {
 				return self._aria[name];
-			} else {
-				self._aria[name] = value;
 			}
 
-			if (self._rendered) {
+			self._aria[name] = value;
+
+			if (self.state.get('rendered')) {
 				elm.setAttribute(name == 'role' ? name : 'aria-' + name, value);
 			}
 
@@ -1050,7 +793,7 @@ define("tinymce/ui/Control", [
 			}
 
 			if (self._eventsRoot && self._eventsRoot == self) {
-				DomUtils.off(elm);
+				$(elm).off();
 			}
 
 			var lookup = self.getRoot().controlIdLookup;
@@ -1062,7 +805,10 @@ define("tinymce/ui/Control", [
 				elm.parentNode.removeChild(elm);
 			}
 
-			self._rendered = false;
+			self.state.set('rendered', false);
+			self.state.destroy();
+
+			self.fire('remove');
 
 			return self;
 		},
@@ -1075,12 +821,9 @@ define("tinymce/ui/Control", [
 		 * @return {tinymce.ui.Control} Current control instance.
 		 */
 		renderBefore: function(elm) {
-			var self = this;
-
-			elm.parentNode.insertBefore(DomUtils.createFragment(self.renderHtml()), elm);
-			self.postRender();
-
-			return self;
+			$(elm).before(this.renderHtml());
+			this.postRender();
+			return this;
 		},
 
 		/**
@@ -1091,13 +834,19 @@ define("tinymce/ui/Control", [
 		 * @return {tinymce.ui.Control} Current control instance.
 		 */
 		renderTo: function(elm) {
-			var self = this;
+			$(elm || this.getContainerElm()).append(this.renderHtml());
+			this.postRender();
+			return this;
+		},
 
-			elm = elm || self.getContainerElm();
-			elm.appendChild(DomUtils.createFragment(self.renderHtml()));
-			self.postRender();
+		preRender: function() {
+		},
 
-			return self;
+		render: function() {
+		},
+
+		renderHtml: function() {
+			return '<div id="' + this._id + '" class="' + this.classes + '"></div>';
 		},
 
 		/**
@@ -1108,6 +857,9 @@ define("tinymce/ui/Control", [
 		 */
 		postRender: function() {
 			var self = this, settings = self.settings, elm, box, parent, name, parentEventsRoot;
+
+			self.$el = $(self.getEl());
+			self.state.set('rendered', true);
 
 			// Bind on<event> settings
 			for (name in settings) {
@@ -1128,7 +880,7 @@ define("tinymce/ui/Control", [
 				}
 			}
 
-			self.bindPendingEvents();
+			bindPendingEvents(self);
 
 			if (settings.style) {
 				elm = self.getEl();
@@ -1138,13 +890,9 @@ define("tinymce/ui/Control", [
 				}
 			}
 
-			if (!self._visible) {
-				DomUtils.css(self.getEl(), 'display', 'none');
-			}
-
 			if (self.settings.border) {
-				box = self.borderBox();
-				DomUtils.css(self.getEl(), {
+				box = self.borderBox;
+				self.$el.css({
 					'border-top-width': box.top,
 					'border-right-width': box.right,
 					'border-bottom-width': box.bottom,
@@ -1164,7 +912,37 @@ define("tinymce/ui/Control", [
 				self.aria(key, self._aria[key]);
 			}
 
+			if (self.state.get('visible') === false) {
+				self.getEl().style.display = 'none';
+			}
+
+			self.bindStates();
+
+			self.state.on('change:visible', function(e) {
+				var state = e.value, parentCtrl;
+
+				if (self.state.get('rendered')) {
+					self.getEl().style.display = state === false ? 'none' : '';
+
+					// Need to force a reflow here on IE 8
+					self.getEl().getBoundingClientRect();
+				}
+
+				// Parent container needs to reflow
+				parentCtrl = self.parent();
+				if (parentCtrl) {
+					parentCtrl._lastRect = null;
+				}
+
+				self.fire(state ? 'show' : 'hide');
+
+				ReflowQueue.add(self);
+			});
+
 			self.fire('postrender', {}, false);
+		},
+
+		bindStates: function() {
 		},
 
 		/**
@@ -1213,152 +991,6 @@ define("tinymce/ui/Control", [
 			return this;
 		},
 
-		/**
-		 * Binds pending DOM events.
-		 *
-		 * @private
-		 */
-		bindPendingEvents: function() {
-			var self = this, i, l, parents, eventRootCtrl, nativeEvents, name;
-
-			function delegate(e) {
-				var control = self.getParentCtrl(e.target);
-
-				if (control) {
-					control.fire(e.type, e);
-				}
-			}
-
-			function mouseLeaveHandler() {
-				var ctrl = eventRootCtrl._lastHoverCtrl;
-
-				if (ctrl) {
-					ctrl.fire("mouseleave", {target: ctrl.getEl()});
-
-					ctrl.parents().each(function(ctrl) {
-						ctrl.fire("mouseleave", {target: ctrl.getEl()});
-					});
-
-					eventRootCtrl._lastHoverCtrl = null;
-				}
-			}
-
-			function mouseEnterHandler(e) {
-				var ctrl = self.getParentCtrl(e.target), lastCtrl = eventRootCtrl._lastHoverCtrl, idx = 0, i, parents, lastParents;
-
-				// Over on a new control
-				if (ctrl !== lastCtrl) {
-					eventRootCtrl._lastHoverCtrl = ctrl;
-
-					parents = ctrl.parents().toArray().reverse();
-					parents.push(ctrl);
-
-					if (lastCtrl) {
-						lastParents = lastCtrl.parents().toArray().reverse();
-						lastParents.push(lastCtrl);
-
-						for (idx = 0; idx < lastParents.length; idx++) {
-							if (parents[idx] !== lastParents[idx]) {
-								break;
-							}
-						}
-
-						for (i = lastParents.length - 1; i >= idx; i--) {
-							lastCtrl = lastParents[i];
-							lastCtrl.fire("mouseleave", {
-								target : lastCtrl.getEl()
-							});
-						}
-					}
-
-					for (i = idx; i < parents.length; i++) {
-						ctrl = parents[i];
-						ctrl.fire("mouseenter", {
-							target : ctrl.getEl()
-						});
-					}
-				}
-			}
-
-			function fixWheelEvent(e) {
-				e.preventDefault();
-
-				if (e.type == "mousewheel") {
-					e.deltaY = -1 / 40 * e.wheelDelta;
-
-					if (e.wheelDeltaX) {
-						e.deltaX = -1 / 40 * e.wheelDeltaX;
-					}
-				} else {
-					e.deltaX = 0;
-					e.deltaY = e.detail;
-				}
-
-				e = self.fire("wheel", e);
-			}
-
-			self._rendered = true;
-
-			nativeEvents = self._nativeEvents;
-			if (nativeEvents) {
-				// Find event root element if it exists
-				parents = self.parents().toArray();
-				parents.unshift(self);
-				for (i = 0, l = parents.length; !eventRootCtrl && i < l; i++) {
-					eventRootCtrl = parents[i]._eventsRoot;
-				}
-
-				// Event root wasn't found the use the root control
-				if (!eventRootCtrl) {
-					eventRootCtrl = parents[parents.length - 1] || self;
-				}
-
-				// Set the eventsRoot property on children that didn't have it
-				self._eventsRoot = eventRootCtrl;
-				for (l = i, i = 0; i < l; i++) {
-					parents[i]._eventsRoot = eventRootCtrl;
-				}
-
-				var eventRootDelegates = eventRootCtrl._delegates;
-				if (!eventRootDelegates) {
-					eventRootDelegates = eventRootCtrl._delegates = {};
-				}
-
-				// Bind native event delegates
-				for (name in nativeEvents) {
-					if (!nativeEvents) {
-						return false;
-					}
-
-					if (name === "wheel" && !hasWheelEventSupport) {
-						if (hasMouseWheelEventSupport) {
-							DomUtils.on(self.getEl(), "mousewheel", fixWheelEvent);
-						} else {
-							DomUtils.on(self.getEl(), "DOMMouseScroll", fixWheelEvent);
-						}
-
-						continue;
-					}
-
-					// Special treatment for mousenter/mouseleave since these doesn't bubble
-					if (name === "mouseenter" || name === "mouseleave") {
-						// Fake mousenter/mouseleave
-						if (!eventRootCtrl._hasMouseEnter) {
-							DomUtils.on(eventRootCtrl.getEl(), "mouseleave", mouseLeaveHandler);
-							DomUtils.on(eventRootCtrl.getEl(), "mouseover", mouseEnterHandler);
-							eventRootCtrl._hasMouseEnter = 1;
-						}
-					} else if (!eventRootDelegates[name]) {
-						DomUtils.on(eventRootCtrl.getEl(), name, delegate);
-						eventRootDelegates[name] = true;
-					}
-
-					// Remove the event once it's bound
-					nativeEvents[name] = false;
-				}
-			}
-		},
-
 		getRoot: function() {
 			var ctrl = this, rootControl, parents = [];
 
@@ -1397,7 +1029,12 @@ define("tinymce/ui/Control", [
 		 * @return {tinymce.ui.Control} Current control instance.
 		 */
 		reflow: function() {
-			this.repaint();
+			ReflowQueue.remove(this);
+
+			var parent = this.parent();
+			if (parent._layout && !parent._layout.isNative()) {
+				parent.reflow();
+			}
 
 			return this;
 		}
@@ -1419,24 +1056,6 @@ define("tinymce/ui/Control", [
 		 * @return {String/tinymce.ui.Control} Current control on a set operation or current value on a get.
 		 */
 		// text: function(value) {} -- Generated
-
-		/**
-		 * Sets/gets the width for the control.
-		 *
-		 * @method width
-		 * @param {Number} value Value to set to control.
-		 * @return {Number/tinymce.ui.Control} Current control on a set operation or current value on a get.
-		 */
-		// width: function(value) {} -- Generated
-
-		/**
-		 * Sets/gets the height for the control.
-		 *
-		 * @method height
-		 * @param {Number} value Value to set to control.
-		 * @return {Number/tinymce.ui.Control} Current control on a set operation or current value on a get.
-		 */
-		// height: function(value) {} -- Generated
 
 		/**
 		 * Sets/gets the disabled state on the control.
@@ -1473,7 +1092,196 @@ define("tinymce/ui/Control", [
 		 * @return {String/tinymce.ui.Control} Current control on a set operation or current value on a get.
 		 */
 		// title: function(value) {} -- Generated
+
+		/**
+		 * Sets/gets the visible for the control.
+		 *
+		 * @method visible
+		 * @param {Boolean} state Value to set to control.
+		 * @return {Boolean/tinymce.ui.Control} Current control on a set operation or current state on a get.
+		 */
+		// visible: function(value) {} -- Generated
+	};
+
+	/**
+	 * Setup state properties.
+	 */
+	Tools.each('text title visible disabled active value'.split(' '), function(name) {
+		proto[name] = function(value) {
+			if (arguments.length === 0) {
+				return this.state.get(name);
+			}
+
+			if (typeof value != "undefined") {
+				this.state.set(name, value);
+			}
+
+			return this;
+		};
 	});
+
+	Control = Class.extend(proto);
+
+	function getEventDispatcher(obj) {
+		if (!obj._eventDispatcher) {
+			obj._eventDispatcher = new EventDispatcher({
+				scope: obj,
+				toggleEvent: function(name, state) {
+					if (state && EventDispatcher.isNative(name)) {
+						if (!obj._nativeEvents) {
+							obj._nativeEvents = {};
+						}
+
+						obj._nativeEvents[name] = true;
+
+						if (obj.state.get('rendered')) {
+							bindPendingEvents(obj);
+						}
+					}
+				}
+			});
+		}
+
+		return obj._eventDispatcher;
+	}
+
+	function bindPendingEvents(eventCtrl) {
+		var i, l, parents, eventRootCtrl, nativeEvents, name;
+
+		function delegate(e) {
+			var control = eventCtrl.getParentCtrl(e.target);
+
+			if (control) {
+				control.fire(e.type, e);
+			}
+		}
+
+		function mouseLeaveHandler() {
+			var ctrl = eventRootCtrl._lastHoverCtrl;
+
+			if (ctrl) {
+				ctrl.fire("mouseleave", {target: ctrl.getEl()});
+
+				ctrl.parents().each(function(ctrl) {
+					ctrl.fire("mouseleave", {target: ctrl.getEl()});
+				});
+
+				eventRootCtrl._lastHoverCtrl = null;
+			}
+		}
+
+		function mouseEnterHandler(e) {
+			var ctrl = eventCtrl.getParentCtrl(e.target), lastCtrl = eventRootCtrl._lastHoverCtrl, idx = 0, i, parents, lastParents;
+
+			// Over on a new control
+			if (ctrl !== lastCtrl) {
+				eventRootCtrl._lastHoverCtrl = ctrl;
+
+				parents = ctrl.parents().toArray().reverse();
+				parents.push(ctrl);
+
+				if (lastCtrl) {
+					lastParents = lastCtrl.parents().toArray().reverse();
+					lastParents.push(lastCtrl);
+
+					for (idx = 0; idx < lastParents.length; idx++) {
+						if (parents[idx] !== lastParents[idx]) {
+							break;
+						}
+					}
+
+					for (i = lastParents.length - 1; i >= idx; i--) {
+						lastCtrl = lastParents[i];
+						lastCtrl.fire("mouseleave", {
+							target: lastCtrl.getEl()
+						});
+					}
+				}
+
+				for (i = idx; i < parents.length; i++) {
+					ctrl = parents[i];
+					ctrl.fire("mouseenter", {
+						target: ctrl.getEl()
+					});
+				}
+			}
+		}
+
+		function fixWheelEvent(e) {
+			e.preventDefault();
+
+			if (e.type == "mousewheel") {
+				e.deltaY = -1 / 40 * e.wheelDelta;
+
+				if (e.wheelDeltaX) {
+					e.deltaX = -1 / 40 * e.wheelDeltaX;
+				}
+			} else {
+				e.deltaX = 0;
+				e.deltaY = e.detail;
+			}
+
+			e = eventCtrl.fire("wheel", e);
+		}
+
+		nativeEvents = eventCtrl._nativeEvents;
+		if (nativeEvents) {
+			// Find event root element if it exists
+			parents = eventCtrl.parents().toArray();
+			parents.unshift(eventCtrl);
+			for (i = 0, l = parents.length; !eventRootCtrl && i < l; i++) {
+				eventRootCtrl = parents[i]._eventsRoot;
+			}
+
+			// Event root wasn't found the use the root control
+			if (!eventRootCtrl) {
+				eventRootCtrl = parents[parents.length - 1] || eventCtrl;
+			}
+
+			// Set the eventsRoot property on children that didn't have it
+			eventCtrl._eventsRoot = eventRootCtrl;
+			for (l = i, i = 0; i < l; i++) {
+				parents[i]._eventsRoot = eventRootCtrl;
+			}
+
+			var eventRootDelegates = eventRootCtrl._delegates;
+			if (!eventRootDelegates) {
+				eventRootDelegates = eventRootCtrl._delegates = {};
+			}
+
+			// Bind native event delegates
+			for (name in nativeEvents) {
+				if (!nativeEvents) {
+					return false;
+				}
+
+				if (name === "wheel" && !hasWheelEventSupport) {
+					if (hasMouseWheelEventSupport) {
+						$(eventCtrl.getEl()).on("mousewheel", fixWheelEvent);
+					} else {
+						$(eventCtrl.getEl()).on("DOMMouseScroll", fixWheelEvent);
+					}
+
+					continue;
+				}
+
+				// Special treatment for mousenter/mouseleave since these doesn't bubble
+				if (name === "mouseenter" || name === "mouseleave") {
+					// Fake mousenter/mouseleave
+					if (!eventRootCtrl._hasMouseEnter) {
+						$(eventRootCtrl.getEl()).on("mouseleave", mouseLeaveHandler).on("mouseover", mouseEnterHandler);
+						eventRootCtrl._hasMouseEnter = 1;
+					}
+				} else if (!eventRootDelegates[name]) {
+					$(eventRootCtrl.getEl()).on(name, delegate);
+					eventRootDelegates[name] = true;
+				}
+
+				// Remove the event once it's bound
+				nativeEvents[name] = false;
+			}
+		}
+	}
 
 	return Control;
 });

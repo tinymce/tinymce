@@ -1,8 +1,8 @@
 /**
  * Utils.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -11,8 +11,7 @@
 /**
  * This class contails various utility functions for the paste plugin.
  *
- * @class tinymce.pasteplugin.Clipboard
- * @private
+ * @class tinymce.pasteplugin.Utils
  */
 define("tinymce/pasteplugin/Utils", [
 	"tinymce/util/Tools",

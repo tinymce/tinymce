@@ -57,9 +57,9 @@ function trimBrs(html) {
 }
 
 function execCommand(cmd) {
-	// Make sure we execute custom execCommands not browser commands
-	var cmdItem = editor.execCommands[cmd];
-	return cmdItem.func.call(cmdItem.scope, false, null);
+	if (editor.editorCommands.hasCustomCommand(cmd)) {
+		editor.execCommand(cmd);
+	}
 }
 
 test('Apply UL list to single P', function() {
@@ -839,6 +839,65 @@ test('Remove empty UL between two textblocks', function() {
 		'<div>b</div>'
 	);
 	equal(editor.selection.getNode().nodeName, 'P');
+});
+
+test('Remove indented list with single item', function() {
+	editor.getBody().innerHTML = trimBrs(
+		'<ul>' +
+			'<li>a' +
+				'<ul>' +
+					'<li>b</li>' +
+				'</ul>' +
+			'</li>' +
+			'<li>c</li>' +
+		'</ul>'
+	);
+
+	editor.focus();
+	Utils.setSelection('li li', 0, 'li li', 1);
+	execCommand('InsertUnorderedList');
+
+	equal(editor.getContent(),
+		'<ul>' +
+			'<li>a</li>' +
+		'</ul>' +
+		'<p>b</p>' +
+		'<ul>' +
+			'<li>c</li>' +
+		'</ul>'
+	);
+	equal(editor.selection.getNode().nodeName, 'P');
+});
+
+test('Remove indented list with multiple items', function() {
+	editor.getBody().innerHTML = trimBrs(
+		'<ul>' +
+			'<li>a' +
+				'<ul>' +
+					'<li>b</li>' +
+					'<li>c</li>' +
+				'</ul>' +
+			'</li>' +
+			'<li>d</li>' +
+		'</ul>'
+	);
+
+	editor.focus();
+	Utils.setSelection('li li:first', 0, 'li li:last', 1);
+	execCommand('InsertUnorderedList');
+
+	equal(editor.getContent(),
+		'<ul>' +
+			'<li>a</li>' +
+		'</ul>' +
+		'<p>b</p>' +
+	 	'<p>c</p>' +
+		'<ul>' +
+			'<li>d</li>' +
+		'</ul>'
+	);
+	equal(editor.selection.getStart().firstChild.data, 'b');
+	equal(editor.selection.getEnd().firstChild.data, 'c');
 });
 
 // Ignore on IE 7, 8 this is a known bug not worth fixing

@@ -23,7 +23,7 @@
 	test("menubutton text, size default", function() {
 		var menuButton = createMenuButton({text: 'X'});
 
-		Utils.nearlyEqualRects(Utils.rect(menuButton), [0, 0, 46, 30], 4);
+		Utils.nearlyEqualRects(Utils.rect(menuButton), [0, 0, 39, 30], 4);
 	});
 
 	test("menubutton text, size large", function() {
@@ -48,7 +48,7 @@
 	test("menubutton icon, size default", function() {
 		var menuButton = createMenuButton({icon: 'test'});
 
-		Utils.nearlyEqualRects(Utils.rect(menuButton), [0, 0, 52, 30], 4);
+		Utils.nearlyEqualRects(Utils.rect(menuButton), [0, 0, 46, 30], 4);
 	});
 
 	test("menubutton icon, size small", function() {
@@ -73,7 +73,7 @@
 	test("menubutton text & icon, size default", function() {
 		var menuButton = createMenuButton({text: 'X', icon: 'test'});
 
-		Utils.nearlyEqualRects(Utils.rect(menuButton), [0, 0, 64, 30], 4);
+		Utils.nearlyEqualRects(Utils.rect(menuButton), [0, 0, 59, 30], 4);
 	});
 
 	test("menubutton text & icon, size large", function() {

@@ -10,7 +10,7 @@
 				indent: false,
 				plugins: 'table',
 				valid_styles: {
-					'*' : 'width,height,vertical-align,text-align,float,border-color,background-color'
+					'*' : 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
 				},
 				init_instance_callback: function(ed) {
 					window.editor = ed;
@@ -19,22 +19,23 @@
 			});
 		},
 		teardown: function() {
-			var win = Utils.getFontmostWindow();
+			var win = Utils.getFrontmostWindow();
 
 			if (win) {
 				win.close();
 			}
-			
+
 			delete editor.settings.table_advtab;
 			delete editor.settings.table_cell_advtab;
 			delete editor.settings.table_class_list;
 			delete editor.settings.table_cell_class_list;
 			delete editor.settings.table_row_class_list;
+			delete editor.settings.table_style_by_css;
 		}
 	});
 
 	function fillAndSubmitWindowForm(data) {
-		var win = Utils.getFontmostWindow();
+		var win = Utils.getFrontmostWindow();
 
 		win.fromJSON(data);
 		win.find('form')[0].submit();
@@ -50,7 +51,7 @@
 		Utils.setSelection('td', 0);
 		editor.execCommand('mceTableProps');
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"align": "",
 			"border": "",
 			"caption": false,
@@ -71,7 +72,7 @@
 		Utils.setSelection('td', 0);
 		editor.execCommand('mceTableProps');
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"align": "",
 			"border": "",
 			"caption": false,
@@ -99,7 +100,7 @@
 		Utils.setSelection('td', 0);
 		editor.execCommand('mceTableProps');
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"align": "",
 			"border": "",
 			"caption": false,
@@ -139,7 +140,7 @@
 		Utils.setSelection('td', 0);
 		editor.execCommand('mceTableProps');
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"align": "",
 			"border": "4",
 			"caption": true,
@@ -228,12 +229,115 @@
 		);
 	});
 
+	test("Table properties dialog css border", function() {
+		editor.settings.table_style_by_css = true;
+
+		editor.setContent('<table><tr><td>X</td><td>Z</td></tr></table>');
+
+		Utils.setSelection('td', 0);
+		editor.execCommand('mceTableProps');
+		fillAndSubmitWindowForm({
+			border: "1px solid green"
+		});
+		equal(
+			cleanTableHtml(editor.getContent()),
+			'<table style=\"border: 1px solid green;\"><tbody><tr><td style=\"border: 1px solid green;\">x</td><td style=\"border: 1px solid green;\">z</td></tr></tbody></table>'
+		);
+	});
+
+	test("Table properties dialog css cell padding", function() {
+		editor.settings.table_style_by_css = true;
+
+		editor.setContent('<table><tr><td>X</td><td>Z</td></tr></table>');
+
+		Utils.setSelection('td', 0);
+		editor.execCommand('mceTableProps');
+		fillAndSubmitWindowForm({
+			cellpadding: "2"
+		});
+		equal(
+			cleanTableHtml(editor.getContent()),
+			'<table><tbody><tr><td style=\"padding: 2px;\">x</td><td style=\"padding: 2px;\">z</td></tr></tbody></table>'
+		);
+	});
+
+	test("Table properties dialog cell spacing", function() {
+		editor.settings.table_style_by_css = true;
+
+		editor.setContent('<table><tr><td>X</td><td>Z</td></tr></table>');
+
+		Utils.setSelection('td', 0);
+		editor.execCommand('mceTableProps');
+		fillAndSubmitWindowForm({
+			cellspacing: "3"
+		});
+		equal(
+			cleanTableHtml(editor.getContent()),
+			'<table style=\"border-spacing: 3px;\"><tbody><tr><td>x</td><td>z</td></tr></tbody></table>'
+		);
+	});
+
+	test("Table properties dialog border-color", function() {
+		editor.settings.table_style_by_css = true;
+
+		editor.setContent('<table><tr><td>X</td><td>Z</td></tr></table>');
+
+		Utils.setSelection('td', 0);
+		editor.execCommand('mceTableProps');
+		fillAndSubmitWindowForm({
+			borderColor: "green"
+		});
+		equal(
+			cleanTableHtml(editor.getContent()),
+			'<table style=\"border-color: green;\"><tbody><tr><td>x</td><td>z</td></tr></tbody></table>'
+		);
+	});
+
+	test("Table properties dialog css border, style", function() {
+		editor.settings.table_style_by_css = true;
+
+		editor.setContent('<table><tr><td>X</td><td>Z</td></tr></table>');
+
+		Utils.setSelection('td', 0);
+		editor.execCommand('mceTableProps');
+		fillAndSubmitWindowForm({
+			border: "1px solid green",
+			style: "border-collapse: collapse"
+		});
+		equal(
+			cleanTableHtml(editor.getContent()),
+			'<table style=\"border: 1px solid green; border-collapse: collapse;\"><tbody><tr><td style=\"border: 1px solid green;\">x</td><td style=\"border: 1px solid green;\">z</td></tr></tbody></table>'
+		);
+	});
+
+	test("Table properties dialog (get cell padding from styled cells)", function() {
+		editor.settings.table_style_by_css = true;
+
+		editor.setContent('<table><tr><td style="padding: 5px">X</td></tr><tr><td style="padding: 5px">X</td></tr></table>' +
+			'<table><tr><td style="padding: 15px">X</td></tr><tr><td style="padding: 15px">X</td></tr></table>');
+		Utils.setSelection('td', 0);
+		editor.execCommand('mceTableProps');
+
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
+		"align": "",
+		"backgroundColor": "",
+		"border": "",
+		"borderColor": "",
+		"caption": false,
+		"cellpadding": "5px",
+		"cellspacing": "",
+		"height": "",
+		"style": "",
+		"width": ""
+		});
+	});
+
 	test("Table cell properties dialog (get data from plain cell)", function() {
 		editor.setContent('<table><tr><td>X</td></tr></table>');
 		Utils.setSelection('td', 0);
 		editor.execCommand('mceTableCellProps');
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"align": "",
 			"valign": "",
 			"height": "",
@@ -253,7 +357,7 @@
 		Utils.setSelection('td', 0);
 		editor.execCommand('mceTableCellProps');
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"align": "",
 			"valign": "",
 			"height": "",
@@ -278,7 +382,7 @@
 		Utils.setSelection('th', 0);
 		editor.execCommand('mceTableCellProps');
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"align": "right",
 			"valign": "top",
 			"height": "11",
@@ -315,7 +419,7 @@
 		Utils.setSelection('td', 0);
 		editor.execCommand('mceTableRowProps');
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"align": "",
 			"height": "",
 			"type": "tbody",
@@ -330,7 +434,7 @@
 		Utils.setSelection('td', 0);
 		editor.execCommand('mceTableRowProps');
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"align": "right",
 			"height": "10",
 			"type": "thead",
@@ -444,6 +548,59 @@
 		equal(
 			editor.getContent(),
 			'<table><tbody><tr><td>A1</td><td>A2</td></tr><tr><td>B1</td><td>B2</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table><p>x</p>'
+		);
+	});
+
+	test("Delete selected cells", function() {
+		editor.getBody().innerHTML = (
+			'<table><tbody>' +
+			'<tr><td class="mce-item-selected">A1</td><td>A2</td></tr>' +
+			'<tr><td class="mce-item-selected">B1</td><td>B2</td></tr>' +
+			'</tbody></table>' +
+			'<p>x</p>'
+		);
+
+		Utils.setSelection('td', 0, 'td', 2);
+		editor.fire('keydown', {keyCode: 46});
+
+		equal(
+			editor.getContent(),
+			'<table><tbody><tr><td>&nbsp;</td><td>A2</td></tr><tr><td>&nbsp;</td><td>B2</td></tr></tbody></table><p>x</p>'
+		);
+	});
+
+	test("Delete all cells", function() {
+		editor.getBody().innerHTML = (
+			'<table><tbody>' +
+			'<tr><td class="mce-item-selected">A1</td><td class="mce-item-selected">A2</td></tr>' +
+			'<tr><td class="mce-item-selected">B1</td><td class="mce-item-selected">B2</td></tr>' +
+			'</tbody></table>' +
+			'<p>x</p>'
+		);
+
+		Utils.setSelection('td', 0, 'td', 2);
+		editor.fire('keydown', {keyCode: 46});
+
+		equal(
+			editor.getContent(),
+			'<p>x</p>'
+		);
+	});
+
+	test("Delete empty like table cell contents", function() {
+		editor.getBody().innerHTML = (
+			'<table><tbody>' +
+			'<tr><td><p><br></p></td><td><p>a</p></td>' +
+			'</tbody></table>' +
+			'<p>x</p>'
+		);
+
+		Utils.setSelection('td', 0);
+		editor.fire('keydown', {keyCode: 46});
+
+		equal(
+			editor.getContent(),
+			'<table><tbody><tr><td>&nbsp;</td><td><p>a</p></td></tr></tbody></table><p>x</p>'
 		);
 	});
 })();

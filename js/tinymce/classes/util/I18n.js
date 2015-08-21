@@ -1,8 +1,8 @@
 /**
  * I18n.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -17,9 +17,32 @@
 define("tinymce/util/I18n", [], function() {
 	"use strict";
 
-	var data = {};
+	var data = {}, code = "en";
 
 	return {
+		/**
+		 * Sets the current language code.
+		 *
+		 * @method setCode
+		 * @param {String} newCode Current language code.
+		 */
+		setCode: function(newCode) {
+			if (newCode) {
+				code = newCode;
+				this.rtl = this.data[newCode] ? this.data[newCode]._dir === 'rtl' : false;
+			}
+		},
+
+		/**
+		 * Returns the current language code.
+		 *
+		 * @method getCode
+		 * @return {String} Current language code.
+		 */
+		getCode: function() {
+			return code;
+		},
+
 		/**
 		 * Property gets set to true if a RTL language pack was loaded.
 		 *
@@ -36,11 +59,17 @@ define("tinymce/util/I18n", [], function() {
 		 * @param {Array} items Name/value array with English en_US to sv_SE.
 		 */
 		add: function(code, items) {
-			for (var name in items) {
-				data[name] = items[name];
+			var langData = data[code];
+
+			if (!langData) {
+				data[code] = langData = {};
 			}
 
-			this.rtl = this.rtl || data._dir === 'rtl';
+			for (var name in items) {
+				langData[name] = items[name];
+			}
+
+			this.setCode(code);
 		},
 
 		/**
@@ -56,23 +85,30 @@ define("tinymce/util/I18n", [], function() {
 		 * @return {String} String that got translated.
 		 */
 		translate: function(text) {
-			if (typeof(text) == "undefined") {
+			var langData;
+
+			langData = data[code];
+			if (!langData) {
+				langData = {};
+			}
+
+			if (typeof text == "undefined") {
 				return text;
 			}
 
-			if (typeof(text) != "string" && text.raw) {
+			if (typeof text != "string" && text.raw) {
 				return text.raw;
 			}
 
 			if (text.push) {
 				var values = text.slice(1);
 
-				text = (data[text[0]] || text[0]).replace(/\{([^\}]+)\}/g, function(match1, match2) {
+				text = (langData[text[0]] || text[0]).replace(/\{([0-9]+)\}/g, function(match1, match2) {
 					return values[match2];
 				});
 			}
 
-			return data[text] || text;
+			return (langData[text] || text).replace(/{context:\w+}$/, '');
 		},
 
 		data: data

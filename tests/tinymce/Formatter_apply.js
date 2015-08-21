@@ -1615,3 +1615,29 @@ test('Bug #6518 - Apply div blocks to inline editor paragraph', function() {
 	inlineEditor.formatter.apply('format');
 	equal(inlineEditor.getContent(), '<div>a</div><p>b</p>');
 });
+
+asyncTest('Bug #7412 - valid_styles affects the Bold and Italic buttons, although it shouldn\'t', function() {
+    tinymce.remove();
+
+    document.getElementById('view').innerHTML = '<textarea id="elm1"></textarea>';
+
+    tinymce.init({
+        selector: "#elm1",
+        add_unload_trigger: false,
+        valid_styles: {
+            span: 'color,background-color,font-size,text-decoration,padding-left'
+        },
+        init_instance_callback: function(ed) {
+            window.editor = ed;
+            QUnit.start();
+
+            editor.getBody().innerHTML = '<p>1 <span style="text-decoration: underline;">1234</span> 1</p>';
+            var rng = editor.dom.createRng();
+            rng.setStart(editor.dom.select('span')[0], 0);
+            rng.setEnd(editor.dom.select('span')[0], 1);
+            editor.selection.setRng(rng);
+            editor.formatter.toggle('bold');
+            equal(getContent(), '<p>1 <strong><span style="text-decoration: underline;">1234</span></strong> 1</p>');
+        }
+    });
+});

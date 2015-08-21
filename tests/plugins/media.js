@@ -8,6 +8,7 @@ module("tinymce.plugins.Media", {
 			skin: false,
 			plugins: 'media',
 			document_base_url: '/tinymce/tinymce/trunk/tests/',
+			extended_valid_elements: 'script[src|type]',
 			media_scripts: [
 				{filter: 'http://media1.tinymce.com'},
 				{filter: 'http://media2.tinymce.com', width: 100, height: 200}
@@ -18,7 +19,7 @@ module("tinymce.plugins.Media", {
 			}
 		});
 	},
-	
+
 	teardown: function() {
 		delete editor.settings.media_filter_html;
 	}
@@ -161,4 +162,8 @@ test("XSS content", function() {
 	testXss('<video><img src="x" onload="alert(1)"></video>', '<p><video width="300" height=\"150\"></video></p>');
 	testXss('<video><img src="x"></video>', '<p><video width="300" height="150"><img src="x" /></video></p>');
 	testXss('<video><!--[if IE]><img src="x"><![endif]--></video>', '<p><video width="300" height="150"><!-- [if IE]><img src="x"><![endif]--></video></p>');
+	testXss('<p><p><audio><audio src=x onerror=alert(1)>', '<p><audio></audio></p>');
+	testXss('<p><html><audio><br /><audio src=x onerror=alert(1)></p>', '');
+	testXss('<p><audio><img src="javascript:alert(1)"></audio>', '<p><audio><img /></audio></p>');
+	testXss('<p><audio><img src="x" style="behavior:url(x); width: 1px"></audio>', '<p><audio><img src="x" style="width: 1px;" /></audio></p>');
 });

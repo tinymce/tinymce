@@ -1,8 +1,8 @@
 /**
  * plugin.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -203,34 +203,34 @@
 					node.parentNode.removeChild(node);
 
 					return el;
-				} else {
-					// Replace startNode -> [innerNodes...] -> endNode (in that order)
-					before = doc.createTextNode(startNode.data.substring(0, range.startNodeIndex));
-					after = doc.createTextNode(endNode.data.substring(range.endNodeIndex));
-					var elA = makeReplacementNode(startNode.data.substring(range.startNodeIndex), matchIndex);
-					var innerEls = [];
-
-					for (var i = 0, l = range.innerNodes.length; i < l; ++i) {
-						var innerNode = range.innerNodes[i];
-						var innerEl = makeReplacementNode(innerNode.data, matchIndex);
-						innerNode.parentNode.replaceChild(innerEl, innerNode);
-						innerEls.push(innerEl);
-					}
-
-					var elB = makeReplacementNode(endNode.data.substring(0, range.endNodeIndex), matchIndex);
-
-					parentNode = startNode.parentNode;
-					parentNode.insertBefore(before, startNode);
-					parentNode.insertBefore(elA, startNode);
-					parentNode.removeChild(startNode);
-
-					parentNode = endNode.parentNode;
-					parentNode.insertBefore(elB, endNode);
-					parentNode.insertBefore(after, endNode);
-					parentNode.removeChild(endNode);
-
-					return elB;
 				}
+
+				// Replace startNode -> [innerNodes...] -> endNode (in that order)
+				before = doc.createTextNode(startNode.data.substring(0, range.startNodeIndex));
+				after = doc.createTextNode(endNode.data.substring(range.endNodeIndex));
+				var elA = makeReplacementNode(startNode.data.substring(range.startNodeIndex), matchIndex);
+				var innerEls = [];
+
+				for (var i = 0, l = range.innerNodes.length; i < l; ++i) {
+					var innerNode = range.innerNodes[i];
+					var innerEl = makeReplacementNode(innerNode.data, matchIndex);
+					innerNode.parentNode.replaceChild(innerEl, innerNode);
+					innerEls.push(innerEl);
+				}
+
+				var elB = makeReplacementNode(endNode.data.substring(0, range.endNodeIndex), matchIndex);
+
+				parentNode = startNode.parentNode;
+				parentNode.insertBefore(before, startNode);
+				parentNode.insertBefore(elA, startNode);
+				parentNode.removeChild(startNode);
+
+				parentNode = endNode.parentNode;
+				parentNode.insertBefore(elB, endNode);
+				parentNode.insertBefore(after, endNode);
+				parentNode.removeChild(endNode);
+
+				return elB;
 			};
 		}
 
@@ -260,7 +260,9 @@
 		var self = this, currentIndex = -1;
 
 		function showDialog() {
-			var last = {};
+			var last = {}, selectedText;
+
+			selectedText = tinymce.trim(editor.selection.getContent({format: 'text'}));
 
 			function updateButtonStates() {
 				win.statusbar.find('#next').disabled(!findSpansByIndex(currentIndex + 1).length);
@@ -323,7 +325,7 @@
 					};
 				},
 				buttons: [
-					{text: "Find", onclick: function() {
+					{text: "Find", subtype: 'primary', onclick: function() {
 						win.submit();
 					}},
 					{text: "Replace", disabled: true, onclick: function() {
@@ -355,7 +357,7 @@
 					labelGap: 30,
 					spacing: 10,
 					items: [
-						{type: 'textbox', name: 'find', size: 40, label: 'Find', value: editor.selection.getNode().src},
+						{type: 'textbox', name: 'find', size: 40, label: 'Find', value: selectedText},
 						{type: 'textbox', name: 'replace', size: 40, label: 'Replace with'},
 						{type: 'checkbox', name: 'case', text: 'Match case', label: ' '},
 						{type: 'checkbox', name: 'words', text: 'Whole words', label: ' '}
@@ -367,7 +369,7 @@
 		self.init = function(ed) {
 			ed.addMenuItem('searchreplace', {
 				text: 'Find and replace',
-				shortcut: 'Ctrl+F',
+				shortcut: 'Meta+F',
 				onclick: showDialog,
 				separator: 'before',
 				context: 'edit'
@@ -375,18 +377,18 @@
 
 			ed.addButton('searchreplace', {
 				tooltip: 'Find and replace',
-				shortcut: 'Ctrl+F',
+				shortcut: 'Meta+F',
 				onclick: showDialog
 			});
 
 			ed.addCommand("SearchReplace", showDialog);
-			ed.shortcuts.add('Ctrl+F', '', showDialog);
+			ed.shortcuts.add('Meta+F', '', showDialog);
 		};
 
 		function getElmIndex(elm) {
 			var value = elm.getAttribute('data-mce-index');
 
-			if (typeof(value) == "number") {
+			if (typeof value == "number") {
 				return "" + value;
 			}
 
@@ -463,7 +465,13 @@
 		}
 
 		function removeNode(node) {
-			node.parentNode.removeChild(node);
+			var dom = editor.dom, parent = node.parentNode;
+
+			dom.remove(node);
+
+			if (dom.isEmpty(parent)) {
+				dom.remove(parent);
+			}
 		}
 
 		self.find = function(text, matchCase, wholeWord) {
@@ -496,19 +504,21 @@
 			}
 		};
 
+		function isMatchSpan(node) {
+			var matchIndex = getElmIndex(node);
+
+			return matchIndex !== null && matchIndex.length > 0;
+		}
+
 		self.replace = function(text, forward, all) {
 			var i, nodes, node, matchIndex, currentMatchIndex, nextIndex = currentIndex, hasMore;
 
 			forward = forward !== false;
 
 			node = editor.getBody();
-			nodes = tinymce.toArray(node.getElementsByTagName('span'));
+			nodes = tinymce.grep(tinymce.toArray(node.getElementsByTagName('span')), isMatchSpan);
 			for (i = 0; i < nodes.length; i++) {
 				var nodeIndex = getElmIndex(nodes[i]);
-
-				if (nodeIndex === null || !nodeIndex.length) {
-					continue;
-				}
 
 				matchIndex = currentMatchIndex = parseInt(nodeIndex, 10);
 				if (all || matchIndex === currentIndex) {
@@ -520,11 +530,7 @@
 					}
 
 					while (nodes[++i]) {
-						matchIndex = getElmIndex(nodes[i]);
-
-						if (nodeIndex === null || !nodeIndex.length) {
-							continue;
-						}
+						matchIndex = parseInt(getElmIndex(nodes[i]), 10);
 
 						if (matchIndex === currentMatchIndex) {
 							removeNode(nodes[i]);

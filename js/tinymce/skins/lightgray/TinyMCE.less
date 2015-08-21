@@ -135,7 +135,11 @@ div.@{prefix}-tinymce-inline {
 
 // Reduce double margins between toolbar rows
 
-.@{prefix}-toolbar-grp {
+.@{prefix}-toolbar-grp when (@has-button-borders = false) {
+	padding: @flow-layout-spacing 0;
+}
+
+.@{prefix}-toolbar-grp when (@has-button-borders = true) {
 	padding-bottom: 2px;
 }
 

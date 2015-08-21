@@ -1,8 +1,8 @@
 /**
  * plugin.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -15,10 +15,45 @@ tinymce.PluginManager.add('visualchars', function(editor) {
 
 	function toggleVisualChars(addBookmark) {
 		var node, nodeList, i, body = editor.getBody(), nodeValue, selection = editor.selection, div, bookmark;
+		var charMap, visualCharsRegExp;
+
+		charMap = {
+			'\u00a0': 'nbsp',
+			'\u00ad': 'shy'
+		};
+
+		function wrapCharWithSpan(value) {
+			return '<span data-mce-bogus="1" class="mce-' + charMap[value] + '">' + value + '</span>';
+		}
+
+		function compileCharMapToRegExp() {
+			var key, regExp = '';
+
+			for (key in charMap) {
+				regExp += key;
+			}
+
+			return new RegExp('[' + regExp + ']', 'g');
+		}
+
+		function compileCharMapToCssSelector() {
+			var key, selector = '';
+
+			for (key in charMap) {
+				if (selector) {
+					selector += ',';
+				}
+
+				selector += 'span.mce-' + charMap[key];
+			}
+
+			return selector;
+		}
 
 		state = !state;
 		self.state = state;
 		editor.fire('VisualChars', {state: state});
+		visualCharsRegExp = compileCharMapToRegExp();
 
 		if (addBookmark) {
 			bookmark = selection.getBookmark();
@@ -27,14 +62,14 @@ tinymce.PluginManager.add('visualchars', function(editor) {
 		if (state) {
 			nodeList = [];
 			tinymce.walk(body, function(n) {
-				if (n.nodeType == 3 && n.nodeValue && n.nodeValue.indexOf('\u00a0') != -1) {
+				if (n.nodeType == 3 && n.nodeValue && visualCharsRegExp.test(n.nodeValue)) {
 					nodeList.push(n);
 				}
 			}, 'childNodes');
 
 			for (i = 0; i < nodeList.length; i++) {
 				nodeValue = nodeList[i].nodeValue;
-				nodeValue = nodeValue.replace(/(\u00a0)/g, '<span data-mce-bogus="1" class="mce-nbsp">$1</span>');
+				nodeValue = nodeValue.replace(visualCharsRegExp, wrapCharWithSpan);
 
 				div = editor.dom.create('div', null, nodeValue);
 				while ((node = div.lastChild)) {
@@ -44,7 +79,7 @@ tinymce.PluginManager.add('visualchars', function(editor) {
 				editor.dom.remove(nodeList[i]);
 			}
 		} else {
-			nodeList = editor.dom.select('span.mce-nbsp', body);
+			nodeList = editor.dom.select(compileCharMapToCssSelector(), body);
 
 			for (i = nodeList.length - 1; i >= 0; i--) {
 				editor.dom.remove(nodeList[i], 1);

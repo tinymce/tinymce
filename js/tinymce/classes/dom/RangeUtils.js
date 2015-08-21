@@ -1,8 +1,8 @@
 /**
  * RangeUtils.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -12,7 +12,6 @@
  * This class contains a few utility methods for ranges.
  *
  * @class tinymce.dom.RangeUtils
- * @private
  */
 define("tinymce/dom/RangeUtils", [
 	"tinymce/util/Tools",
@@ -38,6 +37,7 @@ define("tinymce/dom/RangeUtils", [
 		/**
 		 * Walks the specified range like object and executes the callback for each sibling collection it finds.
 		 *
+		 * @private
 		 * @method walk
 		 * @param {Object} rng Range like object.
 		 * @param {function} callback Callback function to execute for each sibling collection.
@@ -387,7 +387,7 @@ define("tinymce/dom/RangeUtils", [
 									container = node.parentNode;
 
 									// Put caret after image when moving the end point
-									if (node.nodeName ==  "IMG" && !directionLeft) {
+									if (node.nodeName == "IMG" && !directionLeft) {
 										offset++;
 									}
 
@@ -488,6 +488,53 @@ define("tinymce/dom/RangeUtils", [
 		}
 
 		return false;
+	};
+
+	/**
+	 * Gets the caret range for the given x/y location.
+	 *
+	 * @static
+	 * @method getCaretRangeFromPoint
+	 * @param {Number} x X coordinate for range
+	 * @param {Number} y Y coordinate for range
+	 * @param {Document} doc Document that x/y are relative to
+	 * @returns {Range} caret range
+	 */
+	RangeUtils.getCaretRangeFromPoint = function(x, y, doc) {
+		var rng, point;
+
+		if (doc.caretPositionFromPoint) {
+			point = doc.caretPositionFromPoint(x, y);
+			rng = doc.createRange();
+			rng.setStart(point.offsetNode, point.offset);
+			rng.collapse(true);
+		} else if (doc.caretRangeFromPoint) {
+			rng = doc.caretRangeFromPoint(x, y);
+		} else if (doc.body.createTextRange) {
+			rng = doc.body.createTextRange();
+
+			try {
+				rng.moveToPoint(x, y);
+				rng.collapse(true);
+			} catch (ex) {
+				// Append to top or bottom depending on drop location
+				rng.collapse(y < doc.body.clientHeight);
+			}
+		}
+
+		return rng;
+	};
+
+	RangeUtils.getNode = function(container, offset) {
+		if (container.nodeType == 1 && container.hasChildNodes()) {
+			if (offset >= container.childNodes.length) {
+				offset = container.childNodes.length - 1;
+			}
+
+			container = container.childNodes[offset];
+		}
+
+		return container;
 	};
 
 	return RangeUtils;

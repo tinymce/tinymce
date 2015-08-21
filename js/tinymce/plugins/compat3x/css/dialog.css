@@ -55,7 +55,7 @@ a.browse span {display:block; width:20px; height:18px; background:url(../img/ico
 a.browse:hover span {border:1px solid #0A246A; background-color:#B2BBD0;}
 a.browse span.disabled {border:1px solid white; opacity:0.3; -ms-filter:'alpha(opacity=30)'; filter:alpha(opacity=30)}
 a.browse:hover span.disabled {border:1px solid white; background-color:transparent;}
-a.pickcolor span {display:block; width:20px; height:16px; background:url(../img/icons.gif) 0 0; margin-left:2px;}
+a.pickcolor span {display:block; width:20px; height:16px; background:url(../img/icons.gif) -840px 0; margin-left:2px;}
 .mceOldBoxModel a.pickcolor span {width:21px; height:17px;}
 a.pickcolor:hover span {background-color:#B2BBD0;}
 a.pickcolor:hover span.disabled {}

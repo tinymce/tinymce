@@ -1,8 +1,8 @@
 /**
  * JSONRequest.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -74,9 +74,9 @@ define("tinymce/util/JSONRequest", [
 			args.success = function(c, x) {
 				c = JSON.parse(c);
 
-				if (typeof(c) == 'undefined') {
+				if (typeof c == 'undefined') {
 					c = {
-						error : 'JSON Parse error.'
+						error: 'JSON Parse error.'
 					};
 				}
 

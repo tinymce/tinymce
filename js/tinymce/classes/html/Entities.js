@@ -1,8 +1,8 @@
 /**
  * Entities.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -27,7 +27,7 @@ define("tinymce/html/Entities", [
 		attrsCharsRegExp = /[&<>\"\u0060\u007E-\uD7FF\uE000-\uFFEF]|[\uD800-\uDBFF][\uDC00-\uDFFF]/g,
 		textCharsRegExp = /[<>&\u007E-\uD7FF\uE000-\uFFEF]|[\uD800-\uDBFF][\uDC00-\uDFFF]/g,
 		rawCharsRegExp = /[<>&\"\']/g,
-		entityRegExp = /&(#x|#)?([\w]+);/g,
+		entityRegExp = /&#([a-z0-9]+);?|&([a-z0-9]+);/gi,
 		asciiMap = {
 			128: "\u20AC", 130: "\u201A", 131: "\u0192", 132: "\u201E", 133: "\u2026", 134: "\u2020",
 			135: "\u2021", 136: "\u02C6", 137: "\u2030", 138: "\u0160", 139: "\u2039", 140: "\u0152",
@@ -241,18 +241,22 @@ define("tinymce/html/Entities", [
 		 * @return {String} Entity decoded string.
 		 */
 		decode: function(text) {
-			return text.replace(entityRegExp, function(all, numeric, value) {
+			return text.replace(entityRegExp, function(all, numeric) {
 				if (numeric) {
-					value = parseInt(value, numeric.length === 2 ? 16 : 10);
+					if (numeric.charAt(0).toLowerCase() === 'x') {
+						numeric = parseInt(numeric.substr(1), 16);
+					} else {
+						numeric = parseInt(numeric, 10);
+					}
 
 					// Support upper UTF
-					if (value > 0xFFFF) {
-						value -= 0x10000;
+					if (numeric > 0xFFFF) {
+						numeric -= 0x10000;
 
-						return String.fromCharCode(0xD800 + (value >> 10), 0xDC00 + (value & 0x3FF));
-					} else {
-						return asciiMap[value] || String.fromCharCode(value);
+						return String.fromCharCode(0xD800 + (numeric >> 10), 0xDC00 + (numeric & 0x3FF));
 					}
+
+					return asciiMap[numeric] || String.fromCharCode(numeric);
 				}
 
 				return reverseEntities[all] || namedEntities[all] || nativeDecode(all);

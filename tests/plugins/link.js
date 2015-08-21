@@ -1,4 +1,7 @@
 (function() {
+
+	var nonRelativeRegex = /^\w+:/i;
+
 	module("tinymce.plugins.Link", {
 		setupModule: function() {
 			QUnit.stop();
@@ -23,7 +26,7 @@
 			delete editor.settings.link_target_list;
 			delete editor.settings.rel_list;
 
-			var win = Utils.getFontmostWindow();
+			var win = Utils.getFrontmostWindow();
 
 			if (win) {
 				win.close();
@@ -36,7 +39,7 @@
 	}
 
 	function fillAndSubmitWindowForm(data) {
-		var win = Utils.getFontmostWindow();
+		var win = Utils.getFrontmostWindow();
 
 		win.fromJSON(data);
 		win.find('form')[0].submit();
@@ -47,7 +50,7 @@
 		editor.setContent('');
 		editor.execCommand('mceLink', true);
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"href": "",
 			"target": "",
 			"text": "",
@@ -72,7 +75,7 @@
 		Utils.setSelection('p', 1, 'p', 2);
 		editor.execCommand('mceLink', true);
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"href": "",
 			"target": "",
 			"text": "b",
@@ -96,7 +99,7 @@
 		Utils.setSelection('p:nth-child(1)', 0, 'p:nth-child(2)', 2);
 		editor.execCommand('mceLink', true);
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"href": "",
 			"target": "",
 			"title": ""
@@ -139,7 +142,7 @@
 		editor.setContent('');
 		editor.execCommand('mceLink', true);
 
-		deepEqual(Utils.getFontmostWindow().toJSON(), {
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"class": "class1",
 			"href": "",
 			"rel": "rel1",
@@ -158,5 +161,22 @@
 			cleanHtml(editor.getContent()),
 			'<p><a class="class1" title="title" href="href" target="target1" rel="rel1">text</a></p>'
 		);
+	});
+
+	//Since there's no capability to use the confirm dialog with unit tests, simply test the regex we're using
+	test('Test new regex for non relative link setting ftp', function() {
+		equal(nonRelativeRegex.test('ftp://testftp.com'), true);
+	});
+
+	test('Test new regex for non relative link setting http', function() {
+		equal(nonRelativeRegex.test('http://testhttp.com'), true);
+	});
+
+	test('Test new regex for non relative link setting relative', function() {
+		equal(nonRelativeRegex.test('testhttp.com'), false);
+	});
+
+	test('Test new regex for non relative link setting relative base', function() {
+		equal(nonRelativeRegex.test('/testjpg.jpg'), false);
 	});
 })();

@@ -1,8 +1,8 @@
 /**
  * Iframe.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -34,12 +34,12 @@ define("tinymce/ui/Iframe", [
 		renderHtml: function() {
 			var self = this;
 
-			self.addClass('iframe');
+			self.classes.add('iframe');
 			self.canFocus = false;
 
 			/*eslint no-script-url:0 */
 			return (
-				'<iframe id="' + self._id + '" class="' + self.classes() + '" tabindex="-1" src="' +
+				'<iframe id="' + self._id + '" class="' + self.classes + '" tabindex="-1" src="' +
 				(self.settings.url || "javascript:\'\'") + '" frameborder="0"></iframe>'
 			);
 		},

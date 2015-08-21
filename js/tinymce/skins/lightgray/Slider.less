@@ -1,0 +1,29 @@
+// Slider
+
+.@{prefix}-slider {
+	.border-radius(3px);
+	border: 1px solid @slider-border;
+	background: @slider-bg;
+	width: 100px;
+	height: 10px;
+	position: relative;
+	display: block;
+}
+
+.@{prefix}-slider.@{prefix}-vertical {
+	width: 10px;
+	height: 100px;
+}
+
+.@{prefix}-slider-handle {
+	.border-radius(3px);
+	border: 1px solid @slider-handle-border;
+	background: @slider-handle-bg;
+	display: block;
+	width: 13px;
+	height: 13px;
+	position: absolute;
+	top: 0; left: 0;
+	margin-left: -1px;
+	margin-top: -2px;
+}

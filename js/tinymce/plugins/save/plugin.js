@@ -1,8 +1,8 @@
 /**
  * plugin.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -36,7 +36,7 @@ tinymce.PluginManager.add('save', function(editor) {
 			editor.isNotDirty = true;
 
 			if (!formObj.onsubmit || formObj.onsubmit()) {
-				if (typeof(formObj.submit) == "function") {
+				if (typeof formObj.submit == "function") {
 					formObj.submit();
 				} else {
 					editor.windowManager.alert("Error: Form submit field collision.");
@@ -90,5 +90,5 @@ tinymce.PluginManager.add('save', function(editor) {
 		onPostRender: stateToggle
 	});
 
-	editor.addShortcut('ctrl+s', '', 'mceSave');
+	editor.addShortcut('Meta+S', '', 'mceSave');
 });

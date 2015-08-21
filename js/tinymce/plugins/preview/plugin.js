@@ -1,8 +1,8 @@
 /**
  * plugin.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -16,8 +16,8 @@ tinymce.PluginManager.add('preview', function(editor) {
 	editor.addCommand('mcePreview', function() {
 		editor.windowManager.open({
 			title: 'Preview',
-			width : parseInt(editor.getParam("plugin_preview_width", "650"), 10),
-			height : parseInt(editor.getParam("plugin_preview_height", "500"), 10),
+			width: parseInt(editor.getParam("plugin_preview_width", "650"), 10),
+			height: parseInt(editor.getParam("plugin_preview_height", "500"), 10),
 			html: '<iframe src="javascript:\'\'" frameborder="0"' + (sandbox ? ' sandbox="allow-scripts"' : '') + '></iframe>',
 			buttons: {
 				text: 'Close',
@@ -76,13 +76,13 @@ tinymce.PluginManager.add('preview', function(editor) {
 	});
 
 	editor.addButton('preview', {
-		title : 'Preview',
-		cmd : 'mcePreview'
+		title: 'Preview',
+		cmd: 'mcePreview'
 	});
 
 	editor.addMenuItem('preview', {
-		text : 'Preview',
-		cmd : 'mcePreview',
+		text: 'Preview',
+		cmd: 'mcePreview',
 		context: 'view'
 	});
 });

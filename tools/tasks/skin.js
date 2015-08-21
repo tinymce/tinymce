@@ -22,6 +22,19 @@ module.exports = function(grunt) {
 	}
 
 	/**
+	 * Compiles a less source file from all the specified paths.
+	 */
+	function compileLessSourceFile(paths, lessFilePath) {
+		var lessSourceCode = "";
+
+		paths.forEach(function(filePath) {
+			lessSourceCode += "\n" + fs.readFileSync(path.join(path.dirname(lessFilePath), filePath)) + "\n";
+		});
+
+		fs.writeFileSync(lessFilePath, lessSourceCode);
+	}
+
+	/**
 	 * Parses the JS doc comments for -x-less items and include returns them as an array.
 	 */
 	function parseLessDocs(filePath) {
@@ -44,18 +57,22 @@ module.exports = function(grunt) {
 		var options = grunt.config([this.name, this.target]).options;
 
 		fs.readdirSync(options.path).forEach(function(dirName) {
-			var lessFiles = options.prepend || [];
 			var skinDirPath = path.join(options.path, dirName);
 
-			if (options.importFrom) {
-				lessFiles = lessFiles.concat(parseLessDocs(options.importFrom));
-			}
+			if (fs.statSync(skinDirPath).isDirectory()) {
+				var lessFiles = options.prepend || [];
 
-			if (options.append) {
-				lessFiles = lessFiles.concat(options.append);
-			}
+				if (options.importFrom) {
+					lessFiles = lessFiles.concat(parseLessDocs(options.importFrom));
+				}
 
-			compileLessFile(lessFiles, path.join(skinDirPath, 'skin' + (options.ext || '.dev.less')));
+				if (options.append) {
+					lessFiles = lessFiles.concat(options.append);
+				}
+
+				compileLessFile(lessFiles, path.join(skinDirPath, options.devLess));
+				compileLessSourceFile(lessFiles, path.join(skinDirPath, options.srcLess));
+			}
 		});
 	});
 };

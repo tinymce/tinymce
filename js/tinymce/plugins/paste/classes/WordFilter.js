@@ -1,8 +1,8 @@
 /**
  * WordFilter.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -11,7 +11,7 @@
 /**
  * This class parses word HTML into proper TinyMCE markup.
  *
- * @class tinymce.pasteplugin.Quirks
+ * @class tinymce.pasteplugin.WordFilter
  * @private
  */
 define("tinymce/pasteplugin/WordFilter", [
@@ -62,7 +62,7 @@ define("tinymce/pasteplugin/WordFilter", [
 	}
 
 	function isBulletList(text) {
-		return /^[\s\u00a0]*[\u2022\u00b7\u00a7\u00d8\u25CF]\s*/.test(text);
+		return /^[\s\u00a0]*[\u2022\u00b7\u00a7\u25CF]\s*/.test(text);
 	}
 
 	function WordFilter(editor) {
@@ -70,6 +70,10 @@ define("tinymce/pasteplugin/WordFilter", [
 
 		editor.on('BeforePastePreProcess', function(e) {
 			var content = e.content, retainStyleProperties, validStyles;
+
+			// Remove google docs internal guid markers
+			content = content.replace(/<b[^>]+id="?docs-internal-[^>]*>/gi, '');
+			content = content.replace(/<br class="?Apple-interchange-newline"?>/gi, '');
 
 			retainStyleProperties = settings.paste_retain_style_properties;
 			if (retainStyleProperties) {
@@ -174,7 +178,7 @@ define("tinymce/pasteplugin/WordFilter", [
 					// Remove start of list item "1. " or "&middot; " etc
 					removeIgnoredNodes(paragraphNode);
 					trimListStart(paragraphNode, /^\u00a0+/);
-					trimListStart(paragraphNode, /^\s*([\u2022\u00b7\u00a7\u00d8\u25CF]|\w+\.)/);
+					trimListStart(paragraphNode, /^\s*([\u2022\u00b7\u00a7\u25CF]|\w+\.)/);
 					trimListStart(paragraphNode, /^\u00a0+/);
 				}
 
@@ -381,6 +385,7 @@ define("tinymce/pasteplugin/WordFilter", [
 				// Add style/class attribute to all element rules since the user might have removed them from
 				// paste_word_valid_elements config option and we need to check them for properties
 				Tools.each(schema.elements, function(rule) {
+					/*eslint dot-notation:0*/
 					if (!rule.attributes["class"]) {
 						rule.attributes["class"] = {};
 						rule.attributesOrder.push("class");
@@ -418,7 +423,7 @@ define("tinymce/pasteplugin/WordFilter", [
 						node = nodes[i];
 
 						className = node.attr('class');
-						if (/^(MsoCommentReference|MsoCommentText|msoDel|MsoCaption)$/i.test(className)) {
+						if (/^(MsoCommentReference|MsoCommentText|msoDel)$/i.test(className)) {
 							node.remove();
 						}
 
@@ -477,7 +482,9 @@ define("tinymce/pasteplugin/WordFilter", [
 				var rootNode = domParser.parse(content);
 
 				// Process DOM
-				convertFakeListsToProperLists(rootNode);
+				if (settings.paste_convert_word_fake_lists !== false) {
+					convertFakeListsToProperLists(rootNode);
+				}
 
 				// Serialize DOM back to HTML
 				e.content = new Serializer({}, schema).serialize(rootNode);

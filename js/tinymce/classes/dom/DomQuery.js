@@ -1,8 +1,8 @@
 /**
  * DomQuery.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -45,6 +45,10 @@ define("tinymce/dom/DomQuery", [
 
 	function isString(obj) {
 		return typeof obj === 'string';
+	}
+
+	function isWindow(obj) {
+		return obj && obj == obj.window;
 	}
 
 	function createFragment(html, fragDoc) {
@@ -267,9 +271,9 @@ define("tinymce/dom/DomQuery", [
 			} else {
 				if (context) {
 					return DomQuery(selector).attr(context);
-				} else {
-					self.context = context = document;
 				}
+
+				self.context = context = document;
 			}
 
 			if (isString(selector)) {
@@ -335,10 +339,6 @@ define("tinymce/dom/DomQuery", [
 
 			if (isString(items)) {
 				return self.add(DomQuery(items));
-			}
-
-			if (items.nodeType) {
-				return self.add([items]);
 			}
 
 			if (sort !== false) {
@@ -488,7 +488,7 @@ define("tinymce/dom/DomQuery", [
 					name = camel(name);
 
 					// Default px suffix on these
-					if (typeof(value) === 'number' && !numericCssMap[name]) {
+					if (typeof value === 'number' && !numericCssMap[name]) {
 						value += 'px';
 					}
 
@@ -1121,7 +1121,13 @@ define("tinymce/dom/DomQuery", [
 		 * @param {Object} object Object to convert to array.
 		 * @return {Arrau} Array produced from object.
 		 */
-		makeArray: Tools.toArray,
+		makeArray: function(array) {
+			if (isWindow(array) || array.nodeType) {
+				return [array];
+			}
+
+			return Tools.toArray(array);
+		},
 
 		/**
 		 * Returns the index of the specified item inside the array.

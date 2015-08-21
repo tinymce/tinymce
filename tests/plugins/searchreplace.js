@@ -10,6 +10,7 @@ module("tinymce.plugins.SearchReplace", {
 			skin: false,
 			indent: false,
 			disable_nodechange: true,
+			valid_elements: 'b,i',
 			init_instance_callback : function(ed) {
 				window.editor = ed;
 				window.setTimeout(function() {
@@ -31,7 +32,7 @@ test('Find single match', function() {
 });
 
 test('Find single match in multiple elements', function() {
-	editor.getBody().innerHTML = 't<b>e</b><em>xt</em>';
+	editor.getBody().innerHTML = 't<b>e</b><i>xt</i>';
 	equal(1, editor.plugins.searchreplace.find('text'));
 });
 
@@ -77,6 +78,20 @@ test('Find multiple matches, move to next and replace', function() {
 	editor.plugins.searchreplace.next();
 	ok(!editor.plugins.searchreplace.replace('x'));
 	equal("<p>a x</p>", editor.getContent());
+});
+
+test('Find and replace fragmented match', function() {
+	editor.getBody().innerHTML = '<b>te<i>s</i>t</b><b>te<i>s</i>t</b>';
+	editor.plugins.searchreplace.find('test');
+	ok(editor.plugins.searchreplace.replace('abc'));
+	equal(editor.getContent(), "<p><b>abc</b><b>te<i>s</i>t</b></p>");
+});
+
+test('Find and replace all fragmented matches', function() {
+	editor.getBody().innerHTML = '<b>te<i>s</i>t</b><b>te<i>s</i>t</b>';
+	editor.plugins.searchreplace.find('test');
+	ok(!editor.plugins.searchreplace.replace('abc', true, true));
+	equal(editor.getContent(), "<p><b>abc</b><b>abc</b></p>");
 });
 
 test('Find multiple matches, move to next and replace backwards', function() {

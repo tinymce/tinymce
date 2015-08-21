@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Inline toolbars test</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<script src="../../js/tinymce/tinymce.dev.js"></script>
+<script src="../../js/tinymce/plugins/table/plugin.dev.js"></script>
+<script src="../../js/tinymce/plugins/paste/plugin.dev.js"></script>
+<script src="../../js/tinymce/plugins/spellchecker/plugin.dev.js"></script>
+<script>
+	tinymce.init({
+		selector: "textarea.tinymce",
+		theme: "modern",
+		plugins: [
+			"advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+			"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+			"save table contextmenu directionality emoticons template paste textcolor importcss"
+		],
+		content_css: "css/development.css",
+		add_unload_trigger: false,
+		toolbar1: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table",
+		setup: function(ed) {
+			ed.addContextToolbar('img', 'alignleft aligncenter alignright alignjustify | image remove');
+		}
+	});
+
+	tinymce.init({
+		selector: "div.tinymce",
+		theme: "modern",
+		inline: true,
+		plugins: [
+			"advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+			"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+			"save table contextmenu directionality emoticons template paste textcolor importcss"
+		],
+		content_css: "css/development.css",
+		add_unload_trigger: false,
+		toolbar1: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table",
+		setup: function(ed) {
+			ed.addContextToolbar('img', 'alignleft aligncenter alignright alignjustify | image');
+		}
+	});
+
+	function drawRect(rect, color) {
+		var $elm = tinymce.$('#' + color);
+
+		if (!$elm.length) {
+			$elm = tinymce.$('<div id="' + color + '" class="rect hidden">').css('position', 'absolute').css('outline', '1px solid ' + color).appendTo(document.body);
+		}
+
+		if (!rect) {
+			return;
+		}
+
+		$elm.css({
+			left: rect.x,
+			top: rect.y,
+			width: rect.w,
+			height: rect.h
+		});
+	}
+	
+	function toggleRects() {
+		tinymce.$('div.rect').toggleClass('hidden');
+	}
+</script>
+<style>
+.rect {
+	z-index: 9999999999;
+}
+
+.hidden {
+	display: none;
+}
+</style>
+</head>
+<body>
+
+<form method="post" action="http://www.tinymce.com/dump.php?example=true">
+	<button type="button" onclick="toggleRects()">Toggle rects</button>
+	<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%" class="tinymce">
+		<p><img src="../tinymce/ui/img/raster.gif" width="100" height="100">text<img src="../tinymce/ui/img/raster.gif" width="100" height="100" style="float: right"></p>
+		<p>text</p>
+		<p>text</p>
+		<p>text</p>
+		<p>text</p>
+		<p>text<img src="../tinymce/ui/img/raster.gif" width="213" height="213" style="float: right"></p>
+		<p>text</p>
+		<p>text</p>
+		<p>text</p>
+		<p>text</p>
+		<p>text</p>
+		<p>text</p>
+		<p>text</p>
+		<p>text</p>
+		<p><img src="../tinymce/ui/img/raster.gif" width="100" height="100">text<img src="../tinymce/ui/img/raster.gif" width="100" height="100" style="float: right"></p>
+	</textarea>
+
+	<div class="tinymce" style="overflow: auto; height: 300px; padding: 10px;">
+		<p><img src="../tinymce/ui/img/raster.gif" width="100" height="100">text<img src="../tinymce/ui/img/raster.gif" width="100" height="100" style="float: right"></p>
+		<p>text</p>
+		<p>text</p>
+		<p>text</p>
+		<p>text</p>
+		<p>text</p>
+		<p>text</p>
+		<p>text</p>
+		<p>text</p>
+		<p>text</p>
+		<p><img src="../tinymce/ui/img/raster.gif" width="100" height="100">text<img src="../tinymce/ui/img/raster.gif" width="100" height="100" style="float: right"></p>
+	</div>
+
+	<input type="submit" name="save" value="Submit" />
+	<input type="reset" name="reset" value="Reset" />
+</form>
+
+</body>
+</html>

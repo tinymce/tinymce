@@ -1,8 +1,8 @@
 /**
  * Checkbox.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -70,22 +70,13 @@ define("tinymce/ui/Checkbox", [
 		 * @return {Boolean|tinymce.ui.Checkbox} True/false or checkbox if it's a set operation.
 		 */
 		checked: function(state) {
-			var self = this;
-
-			if (typeof state != "undefined") {
-				if (state) {
-					self.addClass('checked');
-				} else {
-					self.removeClass('checked');
-				}
-
-				self._checked = state;
-				self.aria('checked', state);
-
-				return self;
+			if (!arguments.length) {
+				return this.state.get('checked');
 			}
 
-			return self._checked;
+			this.state.set('checked', state);
+
+			return this;
 		},
 
 		/**
@@ -96,6 +87,10 @@ define("tinymce/ui/Checkbox", [
 		 * @return {Boolean|tinymce.ui.Checkbox} True/false or checkbox if it's a set operation.
 		 */
 		value: function(state) {
+			if (!arguments.length) {
+				return this.checked();
+			}
+
 			return this.checked(state);
 		},
 
@@ -109,11 +104,59 @@ define("tinymce/ui/Checkbox", [
 			var self = this, id = self._id, prefix = self.classPrefix;
 
 			return (
-				'<div id="' + id + '" class="' + self.classes() + '" unselectable="on" aria-labelledby="' + id + '-al" tabindex="-1">' +
+				'<div id="' + id + '" class="' + self.classes + '" unselectable="on" aria-labelledby="' + id + '-al" tabindex="-1">' +
 					'<i class="' + prefix + 'ico ' + prefix + 'i-checkbox"></i>' +
-					'<span id="' + id + '-al" class="' + prefix + 'label">' + self.encode(self._text) + '</span>' +
+					'<span id="' + id + '-al" class="' + prefix + 'label">' + self.encode(self.state.get('text')) + '</span>' +
 				'</div>'
 			);
+		},
+
+		bindStates: function() {
+			var self = this;
+
+			function checked(state) {
+				self.classes.toggle("checked", state);
+				self.aria('checked', state);
+			}
+
+			self.state.on('change:text', function(e) {
+				self.getEl('al').firstChild.data = self.translate(e.value);
+			});
+
+			self.state.on('change:checked change:value', function(e) {
+				self.fire('change');
+				checked(e.value);
+			});
+
+			self.state.on('change:icon', function(e) {
+				var icon = e.value, prefix = self.classPrefix;
+
+				if (typeof icon == 'undefined') {
+					return self.settings.icon;
+				}
+
+				self.settings.icon = icon;
+				icon = icon ? prefix + 'ico ' + prefix + 'i-' + self.settings.icon : '';
+
+				var btnElm = self.getEl().firstChild, iconElm = btnElm.getElementsByTagName('i')[0];
+
+				if (icon) {
+					if (!iconElm || iconElm != btnElm.firstChild) {
+						iconElm = document.createElement('i');
+						btnElm.insertBefore(iconElm, btnElm.firstChild);
+					}
+
+					iconElm.className = icon;
+				} else if (iconElm) {
+					btnElm.removeChild(iconElm);
+				}
+			});
+
+			if (self.state.get('checked')) {
+				checked(true);
+			}
+
+			return self._super();
 		}
 	});
 });

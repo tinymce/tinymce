@@ -31,8 +31,6 @@ test('CDATA', function() {
 test('PI', function() {
 	var writer;
 
-	expect(2);
-
 	writer = new tinymce.html.Writer();
 	writer.pi('xml', 'someval');
 	equal(writer.getContent(), '<?xml someval?>');
@@ -40,6 +38,10 @@ test('PI', function() {
 	writer = new tinymce.html.Writer();
 	writer.pi('xml');
 	equal(writer.getContent(), '<?xml?>');
+
+	writer = new tinymce.html.Writer();
+	writer.pi('xml', 'encoding="UTF-8" < >');
+	equal(writer.getContent(), '<?xml encoding="UTF-8" &lt; &gt;?>');
 });
 
 test('Doctype', function() {

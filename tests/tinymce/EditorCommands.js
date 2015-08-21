@@ -27,7 +27,7 @@ function getContent() {
 
 test('mceInsertContent - p inside text of p', function() {
 	var rng;
-	
+
 	expect(7);
 
 	editor.setContent('<p>1234</p>');
@@ -70,7 +70,7 @@ test('mceInsertContent - p inside whole p', function() {
 
 test('mceInsertContent - pre in text of pre', function() {
 	var rng;
-	
+
 	expect(7);
 
 	editor.setContent('<pre>1234</pre>');
@@ -91,7 +91,7 @@ test('mceInsertContent - pre in text of pre', function() {
 
 test('mceInsertContent - h1 in text of h1', function() {
 	var rng;
-	
+
 	expect(7);
 
 	editor.setContent('<h1>1234</h1>');
@@ -112,7 +112,7 @@ test('mceInsertContent - h1 in text of h1', function() {
 
 test('mceInsertContent - li inside li', function() {
 	var rng;
-	
+
 	expect(7);
 
 	editor.setContent('<ul><li>1234</li></ul>');
@@ -189,7 +189,7 @@ test('mceInsertContent - text inside empty p with br caret node', function() {
 
 test('mceInsertContent - image inside p', function() {
 	var rng;
-	
+
 	expect(6);
 
 	editor.setContent('<p>1</p>');
@@ -209,7 +209,7 @@ test('mceInsertContent - image inside p', function() {
 
 test('mceInsertContent - legacy content', function() {
 	var rng;
-	
+
 	expect(1);
 
 	// Convert legacy content
@@ -218,13 +218,13 @@ test('mceInsertContent - legacy content', function() {
 	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 1);
 	editor.selection.setRng(rng);
-	editor.execCommand('mceInsertContent', false, '<u>u</u><strike>strike</strike><font size="7">font</font>');
-	equal(editor.getContent(), '<p><span style="text-decoration: underline;">u</span><span style="text-decoration: line-through;">strike</span><span style="font-size: 300%;">font</span></p>');
+	editor.execCommand('mceInsertContent', false, '<strike>strike</strike><font size="7">font</font>');
+	equal(editor.getContent(), '<p><span style="text-decoration: line-through;">strike</span><span style="font-size: 300%;">font</span></p>');
 });
 
 test('mceInsertContent - hr', function() {
 	var rng;
-	
+
 	expect(7);
 
 	editor.setContent('<p>123</p>');
@@ -346,9 +346,16 @@ test('mceInsertContent - insert P in span style element #7090', function() {
 	equal(editor.getContent(), '<p><span style="color: red;">1</span></p><p>2</p><p>3</p>');
 });
 
+test('mceInsertContent - insert char at char surrounded by spaces', function() {
+	editor.setContent('<p>a b c</p>');
+	Utils.setSelection('p', 2, 'p', 3);
+	editor.execCommand('mceInsertContent', false, 'X');
+	equal(tinymce.util.JSON.serialize(editor.getContent()), '"<p>a X c</p>"');
+});
+
 test('InsertHorizontalRule', function() {
 	var rng;
-	
+
 	expect(7);
 
 	editor.setContent('<p>123</p>');
@@ -375,7 +382,6 @@ test('Justify - multiple block elements selected - queryCommandState', function(
 });
 
 test('Formatting commands (xhtmlTextStyles)', function() {
-	expect(19);
 	editor.focus();
 	editor.setContent('test 123');
 	editor.execCommand('SelectAll');
@@ -428,9 +434,6 @@ test('Formatting commands (xhtmlTextStyles)', function() {
 
 	editor.setContent('<p><span style="font-size: xx-large;">test 123</span></p>');
 	equal(editor.getContent(), '<p><span style="font-size: xx-large;">test 123</span></p>');
-
-	editor.setContent('<p><u>test 123</u></p>');
-	equal(editor.getContent(), '<p><span style="text-decoration: underline;">test 123</span></p>');
 
 	editor.setContent('<p><strike>test 123</strike></p>');
 	equal(editor.getContent(), '<p><span style="text-decoration: line-through;">test 123</span></p>');
@@ -671,6 +674,16 @@ test('mceInsertLink (link text inside link)', function() {
 
 	editor.execCommand('mceInsertLink', false, 'link');
 	equal(editor.getContent(), '<p><a href="link">test</a></p>');
+});
+
+test('mceInsertLink bug #7331', function() {
+	editor.setContent('<table><tbody><tr><td>A</td></tr><tr><td>B</td></tr></tbody></table>');
+	var rng = editor.dom.createRng();
+	rng.setStart(editor.$('td')[1].firstChild, 0);
+	rng.setEnd(editor.getBody(), 1);
+	editor.selection.setRng(rng);
+	editor.execCommand('mceInsertLink', false, {href: 'x'});
+	equal(editor.getContent(), '<table><tbody><tr><td>A</td></tr><tr><td><a href=\"x\">B</a></td></tr></tbody></table>');
 });
 
 test('unlink', function() {

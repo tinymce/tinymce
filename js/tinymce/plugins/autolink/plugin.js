@@ -1,8 +1,8 @@
 /**
  * plugin.js
  *
- * Copyright 2011, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -93,6 +93,11 @@ tinymce.PluginManager.add('autolink', function(editor) {
 			} else {
 				rng.setEndAfter(container);
 			}
+		}
+
+		// Never create a link when we are inside a link
+		if (editor.selection.getNode().tagName == 'A') {
+			return;
 		}
 
 		// We need at least five characters to form a URL,

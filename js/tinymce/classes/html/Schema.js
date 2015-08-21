@@ -1,8 +1,8 @@
 /**
  * Schema.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -59,13 +59,13 @@ define("tinymce/html/Schema", [
 			children = children || [];
 			attributes = attributes || "";
 
-			if (typeof(children) === "string") {
+			if (typeof children === "string") {
 				children = split(children);
 			}
 
 			// Split string children
 			for (i = 3; i < args.length; i++) {
-				if (typeof(args[i]) === "string") {
+				if (typeof args[i] === "string") {
 					args[i] = split(args[i]);
 				}
 
@@ -133,8 +133,8 @@ define("tinymce/html/Schema", [
 			globalAttributes.push.apply(globalAttributes, split("contenteditable contextmenu draggable dropzone " +
 				"hidden spellcheck translate"));
 			blockContent.push.apply(blockContent, split("article aside details dialog figure header footer hgroup section nav"));
-			phrasingContent.push.apply(phrasingContent, split("audio canvas command datalist mark meter output progress time wbr " +
-				"video ruby bdi keygen"));
+			phrasingContent.push.apply(phrasingContent, split("audio canvas command datalist mark meter output picture " +
+				"progress time wbr video ruby bdi keygen"));
 		}
 
 		// Add HTML4 elements unless it's html5-strict
@@ -185,7 +185,7 @@ define("tinymce/html/Schema", [
 		add("a", "href target rel media hreflang type", phrasingContent);
 		add("q", "cite", phrasingContent);
 		add("ins del", "cite datetime", flowContent);
-		add("img", "src alt usemap ismap width height");
+		add("img", "src sizes srcset alt usemap ismap width height");
 		add("iframe", "src name width height", flowContent);
 		add("embed", "src type width height");
 		add("object", "data type typemustmatch name usemap form width height", flowContent, "param");
@@ -224,7 +224,8 @@ define("tinymce/html/Schema", [
 			add("video", "src crossorigin poster preload autoplay mediagroup loop " +
 				"muted controls width height buffered", flowContent, "track source");
 			add("audio", "src crossorigin preload autoplay mediagroup loop muted controls buffered volume", flowContent, "track source");
-			add("source", "src type media");
+			add("picture", "", "img source");
+			add("source", "src srcset type media sizes");
 			add("track", "kind src srclang label default");
 			add("datalist", "", phrasingContent, "option");
 			add("article section nav aside header footer", "", flowContent);
@@ -304,6 +305,9 @@ define("tinymce/html/Schema", [
 		// Caption can't have tables
 		delete schema.caption.children.table;
 
+		// Delete scripts by default due to possible XSS
+		delete schema.script;
+
 		// TODO: LI:s can only have value if parent is OL
 
 		// TODO: Handle transparent elements
@@ -328,7 +332,7 @@ define("tinymce/html/Schema", [
 
 			// Convert styles into a rule list
 			each(value, function(value, key) {
-				styles[key] = mode == 'map' ? makeMap(value, /[, ]/) : explode(value, /[, ]/);
+				styles[key] = styles[key.toUpperCase()] = mode == 'map' ? makeMap(value, /[, ]/) : explode(value, /[, ]/);
 			});
 		}
 
@@ -345,7 +349,7 @@ define("tinymce/html/Schema", [
 	return function(settings) {
 		var self = this, elements = {}, children = {}, patternElements = [], validStyles, invalidStyles, schemaItems;
 		var whiteSpaceElementsMap, selfClosingElementsMap, shortEndedElementsMap, boolAttrMap, validClasses;
-		var blockElementsMap, nonEmptyElementsMap, textBlockElementsMap, textInlineElementsMap;
+		var blockElementsMap, nonEmptyElementsMap, moveCaretBeforeOnEnterElementsMap, textBlockElementsMap, textInlineElementsMap;
 		var customElementsMap = {}, specialElements = {};
 
 		// Creates an lookup table map object for the specified option or the default value
@@ -390,6 +394,7 @@ define("tinymce/html/Schema", [
 		boolAttrMap = createLookupTable('boolean_attributes', 'checked compact declare defer disabled ismap multiple nohref noresize ' +
 			'noshade nowrap readonly selected autoplay loop controls');
 		nonEmptyElementsMap = createLookupTable('non_empty_elements', 'td th iframe video audio object script', shortEndedElementsMap);
+		moveCaretBeforeOnEnterElementsMap = createLookupTable('move_caret_before_on_enter_elements', 'table', nonEmptyElementsMap);
 		textBlockElementsMap = createLookupTable('text_block_elements', 'h1 h2 h3 h4 h5 h6 p div address pre form ' +
 						'blockquote center dir fieldset header footer article section hgroup aside nav figure');
 		blockElementsMap = createLookupTable('block_elements', 'hr table tbody thead tfoot ' +
@@ -618,6 +623,9 @@ define("tinymce/html/Schema", [
 		function addValidChildren(validChildren) {
 			var childRuleRegExp = /^([+\-]?)(\w+)\[([^\]]+)\]$/;
 
+			// Invalidate the schema cache if the schema is mutated
+			mapCache[settings.schema] = null;
+
 			if (validChildren) {
 				each(split(validChildren, ','), function(rule) {
 					var matches = childRuleRegExp.exec(rule), parent, prefix;
@@ -636,10 +644,6 @@ define("tinymce/html/Schema", [
 
 						each(split(matches[3], '|'), function(child) {
 							if (prefix === '-') {
-								// Clone the element before we delete
-								// things in it to not mess up default schemas
-								children[matches[2]] = parent = extend({}, children[matches[2]]);
-
 								delete parent[child];
 							} else {
 								parent[child] = {};
@@ -849,6 +853,17 @@ define("tinymce/html/Schema", [
 		 */
 		self.getNonEmptyElements = function() {
 			return nonEmptyElementsMap;
+		};
+
+		/**
+		 * Returns a map with elements that the caret should be moved in front of after enter is
+		 * pressed
+		 *
+		 * @method getMoveCaretBeforeOnEnterElements
+		 * @return {Object} Name/value lookup map for elements to place the caret in front of.
+		 */
+		self.getMoveCaretBeforeOnEnterElements = function() {
+			return moveCaretBeforeOnEnterElementsMap;
 		};
 
 		/**

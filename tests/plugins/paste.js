@@ -150,6 +150,20 @@ test("Paste list like paragraph and list", function() {
 	equal(editor.getContent(), '<p>ABC. X</p><ol><li>Y</li></ol>');
 });
 
+test("Paste list like paragraph and list (disabled)", function() {
+	editor.setContent('');
+
+	editor.settings.paste_convert_word_fake_lists = false;
+
+	editor.execCommand('mceInsertClipboardContent', false, {
+		content: '<p class=MsoNormal><span style=\'font-size:10.0pt;line-height:115%;font-family:"Trebuchet MS","sans-serif";color:#666666\'>ABC. X<o:p></o:p></span></p><p class=MsoListParagraph style=\'text-indent:-.25in;mso-list:l0 level1 lfo1\'><![if !supportLists]><span style=\'mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin\'><span style=\'mso-list:Ignore\'>1.<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></span><![endif]>Y</p>'
+	});
+
+	delete editor.settings.paste_convert_word_fake_lists;
+
+	equal(editor.getContent(), '<p>ABC. X</p><p>1.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Y</p>');
+});
+
 test("Paste Word table", function() {
 	var rng = editor.dom.createRng();
 
@@ -174,7 +188,7 @@ test("Paste Office 365", function() {
 	equal(editor.getContent(), '<p>Test</p>');
 });
 
-test("Paste Google Docs", function() {
+test("Paste Google Docs 1", function() {
 	var rng = editor.dom.createRng();
 
 	editor.setContent('<p>1234</p>');
@@ -184,6 +198,28 @@ test("Paste Google Docs", function() {
 
 	editor.execCommand('mceInsertClipboardContent', false, {content: '<span id="docs-internal-guid-94e46f1a-1c88-b42b-d502-1d19da30dde7"></span><p dir="ltr>Test</p>'});
 	equal(editor.getContent(), '<p>Test</p>');
+});
+
+test("Paste Google Docs 2", function() {
+	var rng = editor.dom.createRng();
+
+	editor.setContent('<p>1234</p>');
+	rng.setStart(editor.getBody().firstChild.firstChild, 0);
+	rng.setEnd(editor.getBody().firstChild.firstChild, 4);
+	editor.selection.setRng(rng);
+
+	editor.execCommand('mceInsertClipboardContent', false, {
+		content: (
+			'<meta charset="utf-8">' +
+			'<b style="font-weight:normal;" id="docs-internal-guid-adeb6845-fec6-72e6-6831-5e3ce002727c">' +
+			'<p dir="ltr">a</p>' +
+			'<p dir="ltr">b</p>' +
+			'<p dir="ltr">c</p>' +
+			'</b>' +
+			'<br class="Apple-interchange-newline">'
+		)
+	});
+	equal(editor.getContent(), '<p>a</p><p>b</p><p>c</p>');
 });
 
 test("Paste Word without mso markings", function() {
@@ -382,7 +418,7 @@ test("Paste list start index", function() {
 		)
 	});
 	equal(editor.getContent(), '<ol start="10"><li>J</li></ol>');
-})
+});
 
 test("Paste paste_merge_formats: true", function() {
 	editor.settings.paste_merge_formats = true;

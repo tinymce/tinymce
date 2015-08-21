@@ -1,8 +1,8 @@
 /**
  * Factory.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -76,7 +76,7 @@ define("tinymce/ui/Factory", [], function() {
 			}
 
 			// If string is specified then use it as the type
-			if (typeof(type) == 'string') {
+			if (typeof type == 'string') {
 				settings = settings || {};
 				settings.type = type;
 			} else {

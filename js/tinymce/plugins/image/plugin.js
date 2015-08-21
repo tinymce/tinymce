@@ -1,8 +1,8 @@
 /**
  * plugin.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -23,7 +23,7 @@ tinymce.PluginManager.add('image', function(editor) {
 		}
 
 		img.onload = function() {
-			done(img.clientWidth, img.clientHeight);
+			done(Math.max(img.width, img.clientWidth), Math.max(img.height, img.clientHeight));
 		};
 
 		img.onerror = function() {
@@ -67,14 +67,14 @@ tinymce.PluginManager.add('image', function(editor) {
 		return function() {
 			var imageList = editor.settings.image_list;
 
-			if (typeof(imageList) == "string") {
+			if (typeof imageList == "string") {
 				tinymce.util.XHR.send({
 					url: imageList,
 					success: function(text) {
 						callback(tinymce.util.JSON.parse(text));
 					}
 				});
-			} else if (typeof(imageList) == "function") {
+			} else if (typeof imageList == "function") {
 				imageList(callback);
 			} else {
 				callback(imageList);
@@ -102,10 +102,16 @@ tinymce.PluginManager.add('image', function(editor) {
 			if (win.find('#constrain')[0].checked() && width && height && newWidth && newHeight) {
 				if (width != newWidth) {
 					newHeight = Math.round((newWidth / width) * newHeight);
-					heightCtrl.value(newHeight);
+
+					if (!isNaN(newHeight)) {
+						heightCtrl.value(newHeight);
+					}
 				} else {
 					newWidth = Math.round((newHeight / height) * newWidth);
-					widthCtrl.value(newWidth);
+
+					if (!isNaN(newWidth)) {
+						widthCtrl.value(newWidth);
+					}
 				}
 			}
 
@@ -147,6 +153,10 @@ tinymce.PluginManager.add('image', function(editor) {
 				data.alt = '';
 			}
 
+			if (!data.title) {
+				data.title = '';
+			}
+
 			if (data.width === '') {
 				data.width = null;
 			}
@@ -160,9 +170,11 @@ tinymce.PluginManager.add('image', function(editor) {
 			}
 
 			// Setup new data excluding style properties
+			/*eslint dot-notation: 0*/
 			data = {
 				src: data.src,
 				alt: data.alt,
+				title: data.title,
 				width: data.width,
 				height: data.height,
 				style: data.style,
@@ -178,6 +190,10 @@ tinymce.PluginManager.add('image', function(editor) {
 					}
 
 					return;
+				}
+
+				if (data.title === "") {
+					data.title = null;
 				}
 
 				if (!imgElm) {
@@ -203,7 +219,7 @@ tinymce.PluginManager.add('image', function(editor) {
 		}
 
 		function srcChange(e) {
-			var meta = e.meta || {};
+			var srcURL, prependURL, absoluteURLPattern, meta = e.meta || {};
 
 			if (imageListCtrl) {
 				imageListCtrl.value(editor.convertURL(this.value(), 'src'));
@@ -214,7 +230,18 @@ tinymce.PluginManager.add('image', function(editor) {
 			});
 
 			if (!meta.width && !meta.height) {
-				getImageSize(this.value(), function(data) {
+				srcURL = editor.convertURL(this.value(), 'src');
+
+				// Pattern test the src url and make sure we haven't already prepended the url
+				prependURL = editor.settings.image_prepend_url;
+				absoluteURLPattern = new RegExp('^(?:[a-z]+:)?//', 'i');
+				if (prependURL && !absoluteURLPattern.test(srcURL) && srcURL.substring(0, prependURL.length) !== prependURL) {
+					srcURL = prependURL + srcURL;
+				}
+
+				this.value(srcURL);
+
+				getImageSize(editor.documentBaseURI.toAbsolute(this.value()), function(data) {
 					if (data.width && data.height && imageDimensions) {
 						width = data.width;
 						height = data.height;
@@ -233,6 +260,7 @@ tinymce.PluginManager.add('image', function(editor) {
 			data = {
 				src: dom.getAttrib(imgElm, 'src'),
 				alt: dom.getAttrib(imgElm, 'alt'),
+				title: dom.getAttrib(imgElm, 'title'),
 				"class": dom.getAttrib(imgElm, 'class'),
 				width: width,
 				height: height
@@ -263,6 +291,7 @@ tinymce.PluginManager.add('image', function(editor) {
 					win.find('#src').value(e.control.value()).fire('change');
 				},
 				onPostRender: function() {
+					/*eslint consistent-this: 0*/
 					imageListCtrl = this;
 				}
 			};
@@ -303,6 +332,10 @@ tinymce.PluginManager.add('image', function(editor) {
 			generalFormItems.push({name: 'alt', type: 'textbox', label: 'Image description'});
 		}
 
+		if (editor.settings.image_title) {
+			generalFormItems.push({name: 'title', type: 'textbox', label: 'Image Title'});
+		}
+
 		if (imageDimensions) {
 			generalFormItems.push({
 				type: 'container',
@@ -322,6 +355,41 @@ tinymce.PluginManager.add('image', function(editor) {
 
 		generalFormItems.push(classListCtrl);
 
+		function mergeMargins(css) {
+			if (css.margin) {
+
+				var splitMargin = css.margin.split(" ");
+
+				switch (splitMargin.length) {
+					case 1: //margin: toprightbottomleft;
+						css['margin-top'] = css['margin-top'] || splitMargin[0];
+						css['margin-right'] = css['margin-right'] || splitMargin[0];
+						css['margin-bottom'] = css['margin-bottom'] || splitMargin[0];
+						css['margin-left'] = css['margin-left'] || splitMargin[0];
+						break;
+					case 2: //margin: topbottom rightleft;
+						css['margin-top'] = css['margin-top'] || splitMargin[0];
+						css['margin-right'] = css['margin-right'] || splitMargin[1];
+						css['margin-bottom'] = css['margin-bottom'] || splitMargin[0];
+						css['margin-left'] = css['margin-left'] || splitMargin[1];
+						break;
+					case 3: //margin: top rightleft bottom;
+						css['margin-top'] = css['margin-top'] || splitMargin[0];
+						css['margin-right'] = css['margin-right'] || splitMargin[1];
+						css['margin-bottom'] = css['margin-bottom'] || splitMargin[2];
+						css['margin-left'] = css['margin-left'] || splitMargin[1];
+						break;
+					case 4: //margin: top right bottom left;
+						css['margin-top'] = css['margin-top'] || splitMargin[0];
+						css['margin-right'] = css['margin-right'] || splitMargin[1];
+						css['margin-bottom'] = css['margin-bottom'] || splitMargin[2];
+						css['margin-left'] = css['margin-left'] || splitMargin[3];
+				}
+				delete css.margin;
+			}
+			return css;
+		}
+
 		function updateStyle() {
 			function addPixelSuffix(value) {
 				if (value.length > 0 && /^[0-9]+$/.test(value)) {
@@ -335,23 +403,73 @@ tinymce.PluginManager.add('image', function(editor) {
 				return;
 			}
 
-			var data = win.toJSON();
-			var css = dom.parseStyle(data.style);
+			var data = win.toJSON(),
+				css = dom.parseStyle(data.style);
 
-			delete css.margin;
-			css['margin-top'] = css['margin-bottom'] = addPixelSuffix(data.vspace);
-			css['margin-left'] = css['margin-right'] = addPixelSuffix(data.hspace);
-			css['border-width'] = addPixelSuffix(data.border);
+			css = mergeMargins(css);
+
+			if (data.vspace) {
+				css['margin-top'] = css['margin-bottom'] = addPixelSuffix(data.vspace);
+			}
+			if (data.hspace) {
+				css['margin-left'] = css['margin-right'] = addPixelSuffix(data.hspace);
+			}
+			if (data.border) {
+				css['border-width'] = addPixelSuffix(data.border);
+			}
 
 			win.find('#style').value(dom.serializeStyle(dom.parseStyle(dom.serializeStyle(css))));
+		}
+
+		function updateVSpaceHSpaceBorder() {
+			if (!editor.settings.image_advtab) {
+				return;
+			}
+
+			var data = win.toJSON(),
+				css = dom.parseStyle(data.style);
+
+			win.find('#vspace').value("");
+			win.find('#hspace').value("");
+
+			css = mergeMargins(css);
+
+			//Move opposite equal margins to vspace/hspace field
+			if ((css['margin-top'] && css['margin-bottom']) || (css['margin-right'] && css['margin-left'])) {
+				if (css['margin-top'] === css['margin-bottom']) {
+					win.find('#vspace').value(removePixelSuffix(css['margin-top']));
+				} else {
+					win.find('#vspace').value('');
+				}
+				if (css['margin-right'] === css['margin-left']) {
+					win.find('#hspace').value(removePixelSuffix(css['margin-right']));
+				} else {
+					win.find('#hspace').value('');
+				}
+			}
+
+			//Move border-width
+			if (css['border-width']) {
+				win.find('#border').value(removePixelSuffix(css['border-width']));
+			}
+
+			win.find('#style').value(dom.serializeStyle(dom.parseStyle(dom.serializeStyle(css))));
+
 		}
 
 		if (editor.settings.image_advtab) {
 			// Parse styles from img
 			if (imgElm) {
-				data.hspace = removePixelSuffix(imgElm.style.marginLeft || imgElm.style.marginRight);
-				data.vspace = removePixelSuffix(imgElm.style.marginTop || imgElm.style.marginBottom);
-				data.border = removePixelSuffix(imgElm.style.borderWidth);
+				if (imgElm.style.marginLeft && imgElm.style.marginRight && imgElm.style.marginLeft === imgElm.style.marginRight) {
+					data.hspace = removePixelSuffix(imgElm.style.marginLeft);
+				}
+				if (imgElm.style.marginTop && imgElm.style.marginBottom && imgElm.style.marginTop === imgElm.style.marginBottom) {
+					data.vspace = removePixelSuffix(imgElm.style.marginTop);
+				}
+				if (imgElm.style.borderWidth) {
+					data.border = removePixelSuffix(imgElm.style.borderWidth);
+				}
+
 				data.style = editor.dom.serializeStyle(editor.dom.parseStyle(editor.dom.getAttrib(imgElm, 'style')));
 			}
 
@@ -375,7 +493,8 @@ tinymce.PluginManager.add('image', function(editor) {
 							{
 								label: 'Style',
 								name: 'style',
-								type: 'textbox'
+								type: 'textbox',
+								onchange: updateVSpaceHSpaceBorder
 							},
 							{
 								type: 'form',
@@ -420,7 +539,7 @@ tinymce.PluginManager.add('image', function(editor) {
 
 	editor.addMenuItem('image', {
 		icon: 'image',
-		text: 'Insert image',
+		text: 'Insert/edit image',
 		onclick: createImageList(showDialog),
 		context: 'insert',
 		prependToContext: true

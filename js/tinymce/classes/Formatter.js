@@ -1,8 +1,8 @@
 /**
  * Formatter.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -67,6 +67,14 @@ define("tinymce/Formatter", [
 			}
 
 			return !!ed.schema.getTextBlockElements()[name.toLowerCase()];
+		}
+
+		function isTableCell(node) {
+			return /^(TH|TD)$/.test(node.nodeName);
+		}
+
+		function isInlineBlock(node) {
+			return node && /^(IMG)$/.test(node.nodeName);
 		}
 
 		function getParents(node, selector) {
@@ -157,7 +165,7 @@ define("tinymce/Formatter", [
 
 				removeformat: [
 					{
-						selector: 'b,strong,em,i,font,u,strike,sub,sup,dfn,code,samp,kbd,var,cite,mark,q',
+						selector: 'b,strong,em,i,font,u,strike,sub,sup,dfn,code,samp,kbd,var,cite,mark,q,del,ins',
 						remove: 'all',
 						split: true,
 						expand: false,
@@ -180,18 +188,18 @@ define("tinymce/Formatter", [
 
 		function addKeyboardShortcuts() {
 			// Add some inline shortcuts
-			ed.addShortcut('ctrl+b', 'bold_desc', 'Bold');
-			ed.addShortcut('ctrl+i', 'italic_desc', 'Italic');
-			ed.addShortcut('ctrl+u', 'underline_desc', 'Underline');
+			ed.addShortcut('meta+b', 'bold_desc', 'Bold');
+			ed.addShortcut('meta+i', 'italic_desc', 'Italic');
+			ed.addShortcut('meta+u', 'underline_desc', 'Underline');
 
 			// BlockFormat shortcuts keys
 			for (var i = 1; i <= 6; i++) {
-				ed.addShortcut('ctrl+' + i, '', ['FormatBlock', false, 'h' + i]);
+				ed.addShortcut('access+' + i, '', ['FormatBlock', false, 'h' + i]);
 			}
 
-			ed.addShortcut('ctrl+7', '', ['FormatBlock', false, 'p']);
-			ed.addShortcut('ctrl+8', '', ['FormatBlock', false, 'div']);
-			ed.addShortcut('ctrl+9', '', ['FormatBlock', false, 'address']);
+			ed.addShortcut('access+7', '', ['FormatBlock', false, 'p']);
+			ed.addShortcut('access+8', '', ['FormatBlock', false, 'div']);
+			ed.addShortcut('access+9', '', ['FormatBlock', false, 'address']);
 		}
 
 		// Public functions
@@ -217,7 +225,7 @@ define("tinymce/Formatter", [
 		 */
 		function register(name, format) {
 			if (name) {
-				if (typeof(name) !== 'string') {
+				if (typeof name !== 'string') {
 					each(name, function(format, name) {
 						register(name, format);
 					});
@@ -249,7 +257,7 @@ define("tinymce/Formatter", [
 						}
 
 						// Split classes if needed
-						if (typeof(format.classes) === 'string') {
+						if (typeof format.classes === 'string') {
 							format.classes = format.classes.split(/\s+/);
 						}
 					});
@@ -290,7 +298,7 @@ define("tinymce/Formatter", [
 				textDecoration = getTextDecoration(node.parentNode);
 				if (ed.dom.getStyle(node, 'color') && textDecoration) {
 					ed.dom.setStyle(node, 'text-decoration', textDecoration);
-				} else if (ed.dom.getStyle(node, 'textdecoration') === textDecoration) {
+				} else if (ed.dom.getStyle(node, 'text-decoration') === textDecoration) {
 					ed.dom.setStyle(node, 'text-decoration', null);
 				}
 			}
@@ -766,6 +774,11 @@ define("tinymce/Formatter", [
 					out = out[start ? 'firstChild' : 'lastChild'];
 				}
 
+				// Since dom.remove removes empty text nodes then we need to try to find a better node
+				if (out.nodeType == 3 && out.data.length === 0) {
+					out = start ? node.previousSibling || node.nextSibling : node.nextSibling || node.previousSibling;
+				}
+
 				dom.remove(node, true);
 
 				return out;
@@ -796,8 +809,16 @@ define("tinymce/Formatter", [
 						// Try to adjust endContainer as well if cells on the same row were selected - bug #6410
 						if (commonAncestorContainer &&
 							/^T(HEAD|BODY|FOOT|R)$/.test(commonAncestorContainer.nodeName) &&
-							/^(TH|TD)$/.test(endContainer.nodeName) && endContainer.firstChild) {
+							isTableCell(endContainer) && endContainer.firstChild) {
 							endContainer = endContainer.firstChild || endContainer;
+						}
+
+						if (dom.isChildOf(startContainer, endContainer) && !isBlock(endContainer) &&
+							!isTableCell(startContainer) && !isTableCell(endContainer)) {
+							startContainer = wrap(startContainer, 'span', {id: '_start', 'data-mce-type': 'bookmark'});
+							splitToFormatRoot(startContainer);
+							startContainer = unwrap(TRUE);
+							return;
 						}
 
 						// Wrap start/end nodes in span element since these might be cloned/moved
@@ -816,9 +837,9 @@ define("tinymce/Formatter", [
 					}
 
 					// Update range positions since they might have changed after the split operations
-					rng.startContainer = startContainer.parentNode;
+					rng.startContainer = startContainer.parentNode ? startContainer.parentNode : startContainer;
 					rng.startOffset = nodeIndex(startContainer);
-					rng.endContainer = endContainer.parentNode;
+					rng.endContainer = endContainer.parentNode ? endContainer.parentNode : endContainer;
 					rng.endOffset = nodeIndex(endContainer) + 1;
 				}
 
@@ -1291,7 +1312,7 @@ define("tinymce/Formatter", [
 		 * @return {String} New value with replaced variables.
 		 */
 		function replaceVars(value, vars) {
-			if (typeof(value) != "string") {
+			if (typeof value != "string") {
 				value = value(vars);
 			} else if (vars) {
 				value = value.replace(/%(\w+)/g, function(str, name) {
@@ -1435,7 +1456,7 @@ define("tinymce/Formatter", [
 				function findSpace(node, offset) {
 					var pos, pos2, str = node.nodeValue;
 
-					if (typeof(offset) == "undefined") {
+					if (typeof offset == "undefined") {
 						offset = start ? str.length : 0;
 					}
 
@@ -1706,7 +1727,7 @@ define("tinymce/Formatter", [
 					value = normalizeStyleValue(replaceVars(value, vars), name);
 
 					// Indexed array
-					if (typeof(name) === 'number') {
+					if (typeof name === 'number') {
 						name = value;
 						compare_node = 0;
 					}
@@ -1731,7 +1752,7 @@ define("tinymce/Formatter", [
 					value = replaceVars(value, vars);
 
 					// Indexed array
-					if (typeof(name) === 'number') {
+					if (typeof name === 'number') {
 						name = value;
 						compare_node = 0;
 					}
@@ -1744,7 +1765,7 @@ define("tinymce/Formatter", [
 								// Build new class value where everything is removed except the internal prefixed classes
 								valueOut = '';
 								each(value.split(/\s+/), function(cls) {
-									if (/mce\w+/.test(cls)) {
+									if (/mce\-\w+/.test(cls)) {
 										valueOut += (valueOut ? ' ' : '') + cls;
 									}
 								});
@@ -2241,7 +2262,8 @@ define("tinymce/Formatter", [
 					removeCaretContainer();
 
 					// Remove caret container on keydown and it's a backspace, enter or left/right arrow keys
-					if (keyCode == 8 || keyCode == 37 || keyCode == 39) {
+					// Backspace key needs to check if the range is collapsed due to bug #6780
+					if ((keyCode == 8 && selection.isCollapsed()) || keyCode == 37 || keyCode == 39) {
 						removeCaretContainer(getParentCaretContainer(selection.getStart()));
 					}
 
@@ -2272,6 +2294,12 @@ define("tinymce/Formatter", [
 			var container = rng.startContainer,
 					offset = rng.startOffset, isAtEndOfText,
 					walker, node, nodes, tmpNode;
+
+			if (rng.startContainer == rng.endContainer) {
+				if (isInlineBlock(rng.startContainer.childNodes[rng.startOffset])) {
+					return;
+				}
+			}
 
 			// Convert text node into index if possible
 			if (container.nodeType == 3 && offset >= container.nodeValue.length) {

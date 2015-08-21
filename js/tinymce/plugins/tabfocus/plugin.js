@@ -1,8 +1,8 @@
 /**
  * plugin.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -36,7 +36,7 @@ tinymce.PluginManager.add('tabfocus', function(editor) {
 			}
 
 			function canSelect(el) {
-				return /INPUT|TEXTAREA|BUTTON/.test(el.tagName) && tinymce.get(e.id)  && el.tabIndex != -1 && canSelectRecursive(el);
+				return /INPUT|TEXTAREA|BUTTON/.test(el.tagName) && tinymce.get(e.id) && el.tabIndex != -1 && canSelectRecursive(el);
 			}
 
 			each(el, function(e, i) {
