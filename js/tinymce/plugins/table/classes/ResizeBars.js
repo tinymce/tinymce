@@ -24,7 +24,8 @@ define("tinymce/tableplugin/ResizeBars", [
 			RESIZE_BAR_ROW_CURSOR_CLASS = 'row-resize',
 			RESIZE_BAR_COL_CLASS = 'mce-resize-bar-col',
 			RESIZE_BAR_COL_CURSOR_CLASS = 'col-resize',
-			RESIZE_BAR_THICKNESS = 4;
+			RESIZE_BAR_THICKNESS = 4,
+			RESIZE_MINIMUM_WIDTH = 10;
 
 		function getTopEdge(index, row) {
 			return {
@@ -212,112 +213,190 @@ define("tinymce/tableplugin/ResizeBars", [
 			};
 		}
 
-		function getStructuralBlocks(jenga) {
-			function range(start, end) {
-				var r = [];
+		function range(start, end) {
+			var r = [];
 
-				for (var i = start; i < end; i++) {
-					r.push(i);
-				}
-
-				return r;
+			for (var i = start; i < end; i++) {
+				r.push(i);
 			}
 
-			function decide(getBlock, isSingle, getFallback) {
-				var inBlock = getBlock();
-				var singleInBlock;
+			return r;
+		}
 
-				for (var i = 0; i < inBlock.length; i++) {
-					if (isSingle(inBlock[i])) {
-						singleInBlock = inBlock[i];
-					}
+		function decide(getBlock, isSingle, getFallback) {
+			var inBlock = getBlock();
+			var singleInBlock;
+
+			for (var i = 0; i < inBlock.length; i++) {
+				if (isSingle(inBlock[i])) {
+					singleInBlock = inBlock[i];
 				}
-				//Is this necessary?  inblock[0] and getfallback should be the same thing?
-				singleInBlock = singleInBlock ? singleInBlock : inBlock[0];
-				return singleInBlock ? singleInBlock : getFallback();
 			}
+			//Is this necessary?  inblock[0] and getfallback should be the same thing?
+			singleInBlock = singleInBlock ? singleInBlock : inBlock[0];
+			return singleInBlock ? singleInBlock : getFallback();
+		}
 
-			function getCols(jenga) {
-				var cols = range(0, jenga.grid.maxCols);
-				var rows = range(0, jenga.grid.maxRows);
+		function getColumnBlocks(jenga) {
+			var cols = range(0, jenga.grid.maxCols);
+			var rows = range(0, jenga.grid.maxRows);
 
-				return Tools.map(cols, function(col) {
+			return Tools.map(cols, function(col) {
 
-					function getBlock() {
-						for (var i = 0; i < rows.length; i++) {
-							var detail = jenga.getAt(i, col);
-							if (detail.colIndex === col) {
-								return [detail];
-							}
+				function getBlock() {
+					for (var i = 0; i < rows.length; i++) {
+						var detail = jenga.getAt(i, col);
+						if (detail.colIndex === col) {
+							return [detail];
 						}
 					}
+				}
 
-					function isSingle(detail) {
-						return detail.colspan === 1;
-					}
+				function isSingle(detail) {
+					return detail.colspan === 1;
+				}
 
-					function getFallback() {
-						return jenga.getAt(0, col);
-					}
+				function getFallback() {
+					return jenga.getAt(0, col);
+				}
 
-					return decide(getBlock, isSingle, getFallback);
+				return decide(getBlock, isSingle, getFallback);
 
-				});
-			}
+			});
+		}
 
-			function getRows(jenga) {
+		function getRowBlocks(jenga) {
 
-				var cols = range(0, jenga.grid.maxCols);
-				var rows = range(0, jenga.grid.maxRows);
+			var cols = range(0, jenga.grid.maxCols);
+			var rows = range(0, jenga.grid.maxRows);
 
-				return Tools.map(rows, function(row) {
+			return Tools.map(rows, function(row) {
 
-					function getBlock() {
-						for (var i = 0; i < cols.length; i++) {
-							var detail = jenga.getAt(row, i);
-							if (detail.rowIndex === row) {
-								return [detail];
-							}
+				function getBlock() {
+					for (var i = 0; i < cols.length; i++) {
+						var detail = jenga.getAt(row, i);
+						if (detail.rowIndex === row) {
+							return [detail];
 						}
 					}
+				}
 
-					function isSingle(detail) {
-						return detail.rowspan === 1;
-					}
+				function isSingle(detail) {
+					return detail.rowspan === 1;
+				}
 
-					function getFallback() {
-						jenga.getAt(row, 0);
-					}
+				function getFallback() {
+					jenga.getAt(row, 0);
+				}
 
-					return decide(getBlock, isSingle, getFallback);
-				});
-			}
-			return {
-				rows: getRows(jenga),
-				cols: getCols(jenga)
-			};
+				return decide(getBlock, isSingle, getFallback);
+			});
 		}
 
 		function drawBars(table) {
 			var tableDetails = getTableDetails(table);
 			var jenga = getJengaGrid(tableDetails);
-			var blocks = getStructuralBlocks(jenga);
+			var rows = getRowBlocks(jenga);
+			var cols = getColumnBlocks(jenga);
 
 			var tablePosition = editor.dom.getPos(table);
-			var rowPositions = blocks.rows.length > 0 ? findPositions(getTopEdge, getBottomEdge, blocks.rows) : [];
+			var rowPositions = rows.length > 0 ? findPositions(getTopEdge, getBottomEdge, rows) : [];
 			//The below needs to be LTR/RTL
 			//TODO: Fix this since it doesn't work
 			var getInner = editor.rtl ? getRightEdge : getLeftEdge;
 			var getOuter = editor.rtl ? getLeftEdge : getRightEdge;
-			var colPositions = blocks.cols.length > 0 ? findPositions(getInner, getOuter, blocks.cols) : [];
+			var colPositions = cols.length > 0 ? findPositions(getInner, getOuter, cols) : [];
 
 			drawRows(rowPositions, table.offsetWidth, tablePosition);
 			drawCols(colPositions, table.offsetHeight, tablePosition);
 		}
 
-		/*editor.on('MouseDown', function(e) {
-			window.console.log('mousedown', e);
-		});*/
+		function deduceSize(deducables, index) {
+			if (index < 0 || index >= deducables.length - 1) {
+				return "";
+			}
+
+			var current = deducables[index];
+
+			if (current) {
+				current = {
+					value: current,
+					delta: 0
+				};
+			} else {
+				var reversedUpToIndex = deducables.slice(0, index).reverse();
+				for (var i = 0; i < reversedUpToIndex.length; i++) {
+					if (reversedUpToIndex[i]) {
+						current = {
+							value: reversedUpToIndex[i],
+							delta: i + 1
+						};
+					}
+				}
+			}
+
+			var next = deducables[index + 1];
+
+			if (next) {
+				next = {
+					value: next,
+					delta: 1
+				};
+			} else {
+				var rest = deducables.slice(index + 1);
+				for (var j = 0; j < rest.length; j++) {
+					if (rest[j]) {
+						next = {
+							value: rest[j],
+							delta: j + 1
+						};
+					}
+				}
+			}
+
+			var extras = next.delta - current.delta;
+			return Math.abs(next.value - current.value) / extras;
+		}
+
+		function getPixelWidths(jenga) {
+			var cols = getColumnBlocks(jenga);
+
+			var backups = Tools.map(cols, function(col) {
+				//TODO LTR RTL
+				return editor.rtl ? getRightEdge(col.colIndex, col.element).x : getLeftEdge(col.colIndex, col.element).x;
+			});
+
+			var widths = [];
+
+			for (var i = 0; i < cols.length; i++) {
+				var span = cols[i].element.hasAttribute('colspan') ? parseInt(cols[i].element.getAttribute('colspan'), 10) : 1;
+				//Deduce if the column has colspan of more than 1
+				var width = span > 1 ? deduceSize(backups, i) : cols[i].element.offsetWidth;
+				//If everything's failed and we still don't have a width
+				width = width ? width : RESIZE_MINIMUM_WIDTH;
+				widths.push(width);
+			}
+
+			return widths;
+		}
+
+		//function adjustWidth(table, delta, index) {
+		function adjustWidth(table) {
+			var tableDetails = getTableDetails(table);
+			var jenga = getJengaGrid(tableDetails);
+
+			var widths = getPixelWidths(jenga);
+			window.console.log(widths);
+			//var deltas =
+		}
+
+		editor.on('MouseDown', function(e) {
+			var tableElement = editor.dom.getParent(e.target, 'table');
+
+			if (e.target.nodeName === 'table' || tableElement) {
+				adjustWidth(tableElement);
+			}
+		});
 
 		editor.on('mouseover', function(e) {
 			var tableElement = editor.dom.getParent(e.target, 'table');
