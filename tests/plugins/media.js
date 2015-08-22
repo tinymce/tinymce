@@ -25,6 +25,38 @@ module("tinymce.plugins.Media", {
 	}
 });
 
+function fillAndSubmitWindowForm(data) {
+	var win = Utils.getFrontmostWindow();
+
+	win.fromJSON(data);
+	win.find('form')[0].submit();
+	win.close();
+}
+
+test('Default media dialog on empty editor', function() {
+	editor.setContent('');
+	editor.plugins.media.showDialog();
+
+	deepEqual(Utils.getFrontmostWindow().toJSON(), {
+		constrain: true,
+		embed: "",
+		height: "",
+		poster: "",
+		source1: "",
+		source2: "",
+		width: ""
+	});
+
+	fillAndSubmitWindowForm({
+		"source1": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+	});
+
+	equal(
+		editor.getContent(),
+		'<p><iframe src=\"//www.youtube.com/embed/dQw4w9WgXcQ\" width=\"425\" height=\"350\" allowfullscreen=\"allowfullscreen\"></iframe></p>'
+	);
+});
+
 test("Object retain as is", function() {
 	editor.setContent(
 		'<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="425" height="355">' +

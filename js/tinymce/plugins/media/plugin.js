@@ -788,4 +788,6 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		context: 'insert',
 		prependToContext: true
 	});
+
+	this.showDialog = showDialog;
 });
