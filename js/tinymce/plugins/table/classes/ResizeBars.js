@@ -380,6 +380,31 @@ define("tinymce/tableplugin/ResizeBars", [
 			return widths;
 		}
 
+		function determineDeltas(sizes, column, step, min) {
+
+			var result = sizes.slice(0);
+
+			function hurrDurr(index, next) {
+				if (step >= 0) {
+					var newNext = Math.max(min, result[index] - step);
+					var zeros = Tools.map(result, function() {return 0});
+
+					return zeros.concat([step, newNext - result[next]]).concat()
+				} else {
+
+				}
+			}
+
+			if (sizes.length === 0) { //No Columns
+				return [];
+			} else if (sizes.length === 1) { //One Column
+				var newNext = Math.max(min, result[0] + step);
+				return [newNext - result[0]];
+			} else if (column === 0) { //Left Column
+				return hurrDurr(0, 1);
+			}
+		}
+
 		//function adjustWidth(table, delta, index) {
 		function adjustWidth(table) {
 			var tableDetails = getTableDetails(table);
