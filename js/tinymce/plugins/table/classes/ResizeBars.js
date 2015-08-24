@@ -384,35 +384,77 @@ define("tinymce/tableplugin/ResizeBars", [
 
 			var result = sizes.slice(0);
 
-			function hurrDurr(index, next) {
+			function generateZeros(array) {
+				return Tools.map(array, function() {
+					return 0;
+				});
+			}
+
+			function onLeftOrMiddle(index, next) {
+
+				var startZeros = generateZeros(result.slice(0, index));
+				var endZeros = generateZeros(result.slice(next + 1));
+				var deltas;
+
 				if (step >= 0) {
 					var newNext = Math.max(min, result[index] - step);
-					var zeros = Tools.map(result, function() {return 0});
-
-					return zeros.concat([step, newNext - result[next]]).concat()
+					deltas = startZeros.concat([step, newNext - result[next]]).concat(endZeros);
 				} else {
-
+					var newThis = Math.max(min, result[index] + step);
+					var diffx = result[index] - newThis;
+					deltas = startZeros.concat([newThis - result[index], diffx]).concat(endZeros);
 				}
+
+				return deltas;
 			}
+
+			function onRight(previous, index) {
+				var startZeros = generateZeros(result.slice(0, index));
+				var deltas;
+
+				if (step >= 0) {
+					deltas = startZeros.concat([step]);
+				} else {
+					var size = Math.max(min, result[index] + step);
+					deltas = startZeros.concat([size - result[index]]);
+				}
+
+				return deltas;
+
+			}
+
+			var deltas;
 
 			if (sizes.length === 0) { //No Columns
-				return [];
+				deltas = [];
 			} else if (sizes.length === 1) { //One Column
 				var newNext = Math.max(min, result[0] + step);
-				return [newNext - result[0]];
+				deltas = [newNext - result[0]];
 			} else if (column === 0) { //Left Column
-				return hurrDurr(0, 1);
+				deltas = onLeftOrMiddle(0, 1);
+			} else if (column > 0 && column < sizes.length - 1) { //Middle Column
+				deltas = onLeftOrMiddle(column, column + 1);
+			} else if (column === sizes.length - 1) { // Right Column
+				deltas = onRight();
+			} else {
+				deltas = [];
 			}
+
+			return deltas;
 		}
 
 		//function adjustWidth(table, delta, index) {
-		function adjustWidth(table) {
+		function adjustWidth(table, delta, index) {
+			delta = delta ? delta : 25;
+			index = index ? index : 1;
+
 			var tableDetails = getTableDetails(table);
 			var jenga = getJengaGrid(tableDetails);
 
 			var widths = getPixelWidths(jenga);
 			window.console.log(widths);
-			//var deltas =
+			var deltas = determineDeltas(widths, index, delta, RESIZE_MINIMUM_WIDTH);
+			window.console.log(deltas);
 		}
 
 		editor.on('MouseDown', function(e) {
