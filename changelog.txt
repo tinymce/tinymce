@@ -1,5 +1,6 @@
 Version 4.2.5 (2015-08-xx)
 	Added fullscreen capability to embedded youtube and vimeo videos.
+	Fixed bug where the uploadImages call didn't work on IE 10.
 Version 4.2.4 (2015-08-17)
 	Added picture as a valid element to the HTML 5 schema. Patch contributed by Adam Taylor.
 	Fixed bug where contents would be duplicated on drag/drop within the same editor.

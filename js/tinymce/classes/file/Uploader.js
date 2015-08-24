@@ -69,8 +69,8 @@ define("tinymce/file/Uploader", [
 			var xhr, formData;
 
 			xhr = new XMLHttpRequest();
-			xhr.withCredentials = settings.credentials;
 			xhr.open('POST', settings.url);
+			xhr.withCredentials = settings.credentials;
 
 			xhr.onload = function() {
 				var json;
