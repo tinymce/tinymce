@@ -222,6 +222,10 @@ define(
     //   throw 'Other ARIA support not implemented yet.';
     // };
 
+    var hidden = function (element, status) {
+      Attr.set(element, 'aria-hidden', status);
+    };
+
     return {
       presentation: presentation,
       controls: controls,
@@ -246,7 +250,8 @@ define(
       linkTabToPanel: linkTabToPanel,
       describedBy: describedBy,
       labelledBy: labelledBy,
-      required: required
+      required: required,
+      hidden: hidden
     };
   }
 );
