@@ -208,6 +208,8 @@ tinymce.PluginManager.add('image', function(editor) {
 
 				waitLoad(imgElm);
 			});
+
+			editor.uploadImages();
 		}
 
 		function removePixelSuffix(value) {

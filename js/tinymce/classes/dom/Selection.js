@@ -228,6 +228,8 @@ define("tinymce/dom/Selection", [
 				}
 			}
 
+			self.editor.uploadImages();
+
 			// Dispatch set content event
 			if (!args.no_events) {
 				self.editor.fire('SetContent', args);

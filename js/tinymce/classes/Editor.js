@@ -1711,6 +1711,8 @@ define("tinymce/Editor", [
 					self.fire('SetContent', args);
 				}
 
+				self.uploadImages();
+
 				// Don't normalize selection if the focused element isn't the body in
 				// content editable mode since it will steal focus otherwise
 				/*if (!self.settings.content_editable || document.activeElement === self.getBody()) {

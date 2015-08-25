@@ -44,8 +44,9 @@ define("tinymce/pasteplugin/Clipboard", [
 		 * for custom user filtering.
 		 *
 		 * @param {String} html HTML code to paste into the current selection.
+		 * @param {Boolean} true/false if the editor should prevent uploading images after the paste event has occurred.
 		 */
-		function pasteHtml(html) {
+		function pasteHtml(html, preventUpload) {
 			var args, dom = editor.dom;
 
 			args = editor.fire('BeforePastePreProcess', {content: html}); // Internal event used by Quirks
@@ -66,6 +67,11 @@ define("tinymce/pasteplugin/Clipboard", [
 
 				if (!args.isDefaultPrevented()) {
 					editor.insertContent(html, {merge: editor.settings.paste_merge_formats !== false, data: {paste: true}});
+					//pasteImageData pastes html multiple times for each image.
+					//in this case, prevent uploading the images one at a time
+					if (!preventUpload) {
+						editor.uploadImages();
+					}
 				}
 			}
 		}
@@ -105,7 +111,7 @@ define("tinymce/pasteplugin/Clipboard", [
 				}
 			}
 
-			pasteHtml(text);
+			pasteHtml(text, false);
 		}
 
 		/**
@@ -333,7 +339,7 @@ define("tinymce/pasteplugin/Clipboard", [
 			var dataTransfer = e.clipboardData || e.dataTransfer;
 
 			function processItems(items) {
-				var i, item, reader, hadImage = false;
+				var i, item, reader, hadImage = false, currentImage, maxImages;
 
 				function pasteImage(reader) {
 					if (rng) {
@@ -341,16 +347,27 @@ define("tinymce/pasteplugin/Clipboard", [
 						rng = null;
 					}
 
-					pasteHtml('<img src="' + reader.result + '">');
+					pasteHtml('<img src="' + reader.result + '">', true);
+				}
+
+				function imageLoaded() {
+					currentImage++;
+					if (currentImage === maxImages) {
+						editor.uploadImages();
+					}
 				}
 
 				if (items) {
+
+					currentImage = 0;
+					maxImages = items.length;
+
 					for (i = 0; i < items.length; i++) {
 						item = items[i];
-
 						if (/^image\/(jpeg|png|gif|bmp)$/.test(item.type)) {
 							reader = new FileReader();
 							reader.onload = pasteImage.bind(null, reader);
+							reader.onloadend = imageLoaded; //Onloadend executes on success OR failure
 							reader.readAsDataURL(item.getAsFile ? item.getAsFile() : item);
 
 							e.preventDefault();
@@ -528,7 +545,7 @@ define("tinymce/pasteplugin/Clipboard", [
 					if (plainTextMode) {
 						pasteText(content);
 					} else {
-						pasteHtml(content);
+						pasteHtml(content, false);
 					}
 				}, 0);
 			});
@@ -567,7 +584,7 @@ define("tinymce/pasteplugin/Clipboard", [
 							if (!dropContent['text/html']) {
 								pasteText(content);
 							} else {
-								pasteHtml(content);
+								pasteHtml(content, false);
 							}
 						});
 					}
