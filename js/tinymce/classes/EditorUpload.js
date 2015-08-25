@@ -95,6 +95,12 @@ define("tinymce/EditorUpload", [
 			});
 		}
 
+		function uploadImagesAuto(callback) {
+			if (editor.settings.images_disable_automatic_uploads !== true) {
+				return uploadImages(callback);
+			}
+		}
+
 		function scanForImages() {
 			if (!imageScanner) {
 				imageScanner = new ImageScanner(blobCache);
@@ -133,7 +139,23 @@ define("tinymce/EditorUpload", [
 			});
 		}
 
-		editor.on('setContent paste', scanForImages);
+		var timer;
+
+		editor.on('setContent', function(args) {
+			if (editor.settings.images_disable_automatic_uploads !== true) {
+				if (args.uploadImagesImmediately) {
+					uploadImages();
+				} else {
+					scanForImages();
+					clearTimeout(timer);
+					timer = setTimeout(function() {
+						uploadImages();
+					}, 30000);
+				}
+			} else {
+				scanForImages();
+			}
+		});
 
 		editor.on('RawSaveContent', function(e) {
 			e.content = replaceBlobWithBase64(e.content);
@@ -150,6 +172,7 @@ define("tinymce/EditorUpload", [
 		return {
 			blobCache: blobCache,
 			uploadImages: uploadImages,
+			uploadImagesAuto: uploadImagesAuto,
 			scanForImages: scanForImages,
 			destroy: destroy
 		};

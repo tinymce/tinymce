@@ -441,7 +441,7 @@ define("tinymce/EditorCommands", [
 			},
 
 			mceInsertContent: function(command, ui, value) {
-				var parser, serializer, parentNode, rootNode, fragment, args;
+				var parser, serializer, parentNode, rootNode, fragment, args, setContentArgs;
 				var marker, rng, node, node2, bookmarkHtml, merge, data;
 				var textInlineElements = editor.schema.getTextInlineElements();
 
@@ -527,6 +527,7 @@ define("tinymce/EditorCommands", [
 				if (typeof value != 'string') {
 					merge = value.merge;
 					data = value.data;
+					setContentArgs = value.setContentArgs;
 					value = value.content;
 				}
 
@@ -541,7 +542,12 @@ define("tinymce/EditorCommands", [
 				bookmarkHtml = '<span id="mce_marker" data-mce-type="bookmark">&#xFEFF;&#x200B;</span>';
 
 				// Run beforeSetContent handlers on the HTML to be inserted
-				args = {content: value, format: 'html', selection: true};
+				args = setContentArgs ? setContentArgs : {};
+
+				args.content = value;
+				args.format = 'html';
+				args.selection = true;
+
 				editor.fire('BeforeSetContent', args);
 				value = args.content;
 

@@ -1711,8 +1711,6 @@ define("tinymce/Editor", [
 					self.fire('SetContent', args);
 				}
 
-				self.uploadImages();
-
 				// Don't normalize selection if the focused element isn't the body in
 				// content editable mode since it will steal focus otherwise
 				/*if (!self.settings.content_editable || document.activeElement === self.getBody()) {
@@ -2088,6 +2086,18 @@ define("tinymce/Editor", [
 		 */
 		uploadImages: function(callback) {
 			return this.editorUpload.uploadImages(callback);
+		},
+
+		/**
+		 * Uploads all data uri/blob uri images in the editor contents to server if the
+		 * images_disable_automatic_uploads setting is not true.
+		 *
+		 * @method uploadImages
+		 * @param {function} callback Optional callback with images and status for each image.
+		 * @return {tinymce.util.Promise} Promise instance.
+		 */
+		uploadImagesAuto: function(callback) {
+			return this.editorUpload.uploadImagesAuto(callback);
 		},
 
 		// Internal functions

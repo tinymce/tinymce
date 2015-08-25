@@ -199,17 +199,16 @@ tinymce.PluginManager.add('image', function(editor) {
 				if (!imgElm) {
 					data.id = '__mcenew';
 					editor.focus();
-					editor.selection.setContent(dom.createHTML('img', data));
+					editor.selection.setContent(dom.createHTML('img', data), {uploadImagesImmediately: true});
 					imgElm = dom.get('__mcenew');
 					dom.setAttrib(imgElm, 'id', null);
 				} else {
 					dom.setAttribs(imgElm, data);
+					editor.uploadImagesAuto();
 				}
 
 				waitLoad(imgElm);
 			});
-
-			editor.uploadImages();
 		}
 
 		function removePixelSuffix(value) {

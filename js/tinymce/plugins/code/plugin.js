@@ -30,7 +30,9 @@ tinymce.PluginManager.add('code', function(editor) {
 				editor.focus();
 
 				editor.undoManager.transact(function() {
-					editor.setContent(e.data.code);
+					editor.setContent(e.data.code, {
+						uploadImagesImmediately: true
+					});
 				});
 
 				editor.selection.setCursorLocation();

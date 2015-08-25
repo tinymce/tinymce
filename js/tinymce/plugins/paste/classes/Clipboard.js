@@ -44,9 +44,8 @@ define("tinymce/pasteplugin/Clipboard", [
 		 * for custom user filtering.
 		 *
 		 * @param {String} html HTML code to paste into the current selection.
-		 * @param {Boolean} true/false if the editor should prevent uploading images after the paste event has occurred.
 		 */
-		function pasteHtml(html, preventUpload) {
+		function pasteHtml(html) {
 			var args, dom = editor.dom;
 
 			args = editor.fire('BeforePastePreProcess', {content: html}); // Internal event used by Quirks
@@ -66,12 +65,11 @@ define("tinymce/pasteplugin/Clipboard", [
 				}
 
 				if (!args.isDefaultPrevented()) {
-					editor.insertContent(html, {merge: editor.settings.paste_merge_formats !== false, data: {paste: true}});
-					//pasteImageData pastes html multiple times for each image.
-					//in this case, prevent uploading the images one at a time
-					if (!preventUpload) {
-						editor.uploadImages();
-					}
+					editor.insertContent(html, {
+						merge: editor.settings.paste_merge_formats !== false,
+						data: {paste: true},
+						setContentArgs: {uploadImagesImmediately: true}
+					});
 				}
 			}
 		}
@@ -111,7 +109,7 @@ define("tinymce/pasteplugin/Clipboard", [
 				}
 			}
 
-			pasteHtml(text, false);
+			pasteHtml(text);
 		}
 
 		/**
@@ -339,7 +337,7 @@ define("tinymce/pasteplugin/Clipboard", [
 			var dataTransfer = e.clipboardData || e.dataTransfer;
 
 			function processItems(items) {
-				var i, item, reader, hadImage = false, currentImage, maxImages;
+				var i, item, reader, hadImage = false;
 
 				function pasteImage(reader) {
 					if (rng) {
@@ -347,27 +345,16 @@ define("tinymce/pasteplugin/Clipboard", [
 						rng = null;
 					}
 
-					pasteHtml('<img src="' + reader.result + '">', true);
-				}
-
-				function imageLoaded() {
-					currentImage++;
-					if (currentImage === maxImages) {
-						editor.uploadImages();
-					}
+					pasteHtml('<img src="' + reader.result + '">');
 				}
 
 				if (items) {
-
-					currentImage = 0;
-					maxImages = items.length;
 
 					for (i = 0; i < items.length; i++) {
 						item = items[i];
 						if (/^image\/(jpeg|png|gif|bmp)$/.test(item.type)) {
 							reader = new FileReader();
 							reader.onload = pasteImage.bind(null, reader);
-							reader.onloadend = imageLoaded; //Onloadend executes on success OR failure
 							reader.readAsDataURL(item.getAsFile ? item.getAsFile() : item);
 
 							e.preventDefault();
@@ -545,7 +532,7 @@ define("tinymce/pasteplugin/Clipboard", [
 					if (plainTextMode) {
 						pasteText(content);
 					} else {
-						pasteHtml(content, false);
+						pasteHtml(content);
 					}
 				}, 0);
 			});
@@ -584,7 +571,7 @@ define("tinymce/pasteplugin/Clipboard", [
 							if (!dropContent['text/html']) {
 								pasteText(content);
 							} else {
-								pasteHtml(content, false);
+								pasteHtml(content);
 							}
 						});
 					}
