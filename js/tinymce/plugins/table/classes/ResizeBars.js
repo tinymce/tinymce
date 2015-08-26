@@ -160,6 +160,14 @@ define("tinymce/tableplugin/ResizeBars", [
 				return access[key(rowIndex, colIndex)];
 			}
 
+			function getAllCells() {
+				var allCells = [];
+				Tools.each(cells, function(cell) {
+					allCells = allCells.concat(cell.cells);
+				});
+				return allCells;
+			}
+
 			var access = {};
 			var cells = [];
 
@@ -200,7 +208,7 @@ define("tinymce/tableplugin/ResizeBars", [
 
 				cells.push({
 					element: row.element,
-					row: currentRow
+					cells: currentRow
 				});
 			});
 
@@ -209,7 +217,8 @@ define("tinymce/tableplugin/ResizeBars", [
 					maxRows: maxRows,
 					maxCols: maxCols
 				},
-				getAt: getAt
+				getAt: getAt,
+				getAllCells: getAllCells
 			};
 		}
 
@@ -435,7 +444,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			} else if (column > 0 && column < sizes.length - 1) { //Middle Column
 				deltas = onLeftOrMiddle(column, column + 1);
 			} else if (column === sizes.length - 1) { // Right Column
-				deltas = onRight();
+				deltas = onRight(column - 1, column);
 			} else {
 				deltas = [];
 			}
@@ -443,18 +452,55 @@ define("tinymce/tableplugin/ResizeBars", [
 			return deltas;
 		}
 
-		//function adjustWidth(table, delta, index) {
+		function total(start, end, measures) {
+			var r = 0;
+			for (var i = start; i < end; i++) {
+				r += measures[i];
+			}
+			return r;
+		}
+
+		function recalculateWidths(jenga, widths) {
+			var allCells = jenga.getAllCells();
+			return Tools.map(allCells, function(cell) {
+				var width = total(cell.colIndex, cell.colIndex + cell.colspan, widths);
+				return {
+					element: cell.element,
+					width: width,
+					colspan: cell.colspan
+				};
+			});
+		}
+
 		function adjustWidth(table, delta, index) {
 			delta = delta ? delta : 25;
-			index = index ? index : 1;
+			index = index ? index : 3;
 
 			var tableDetails = getTableDetails(table);
 			var jenga = getJengaGrid(tableDetails);
 
 			var widths = getPixelWidths(jenga);
-			window.console.log(widths);
+			window.console.log('widths', widths);
 			var deltas = determineDeltas(widths, index, delta, RESIZE_MINIMUM_WIDTH);
-			window.console.log(deltas);
+			window.console.log('deltas', deltas);
+			var newWidths = [], oldTotalWidth = 0, newTotalWidth = 0;
+
+			for (var i = 0; i < deltas.length; i++) {
+				oldTotalWidth += widths[i];
+				newWidths.push(deltas[i] + widths[i]);
+				newTotalWidth += newWidths[i];
+			}
+			window.console.log('newWidths', newWidths);
+			var newSizes = recalculateWidths(jenga, newWidths);
+			window.console.log('newSizes', newSizes);
+
+			Tools.each(newSizes, function(cell) {
+				cell.element.style.width = cell.width + 'px';
+			});
+
+			table.style.width = newTotalWidth + 'px';
+
+			window.console.log('old', oldTotalWidth, 'new', newTotalWidth);
 		}
 
 		editor.on('MouseDown', function(e) {
