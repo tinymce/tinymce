@@ -368,6 +368,23 @@ define("tinymce/tableplugin/ResizeBars", [
 		}
 
 		function getPixelWidths(jenga) {
+
+			function convertFromPercent(element, cellWidth) {
+				var table = editor.dom.getParent(element, 'table');
+				var tableTotal = table.offsetWidth;
+				return Math.floor((cellWidth / 100) * tableTotal);
+			}
+
+			function getPixelWidth(element) {
+				var widthString = editor.dom.getStyle(element, 'width');
+				if (!widthString) {
+					widthString = editor.dom.getAttrib(element, 'width');
+				}
+				var widthNumber = parseInt(widthString, 10);
+				return widthString.indexOf('%', widthString.length - 1) > 0 ?
+					convertFromPercent(element, widthNumber) : widthNumber;
+			}
+
 			var cols = getColumnBlocks(jenga);
 
 			var backups = Tools.map(cols, function(col) {
@@ -380,7 +397,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			for (var i = 0; i < cols.length; i++) {
 				var span = cols[i].element.hasAttribute('colspan') ? parseInt(cols[i].element.getAttribute('colspan'), 10) : 1;
 				//Deduce if the column has colspan of more than 1
-				var width = span > 1 ? deduceSize(backups, i) : cols[i].element.offsetWidth;
+				var width = span > 1 ? deduceSize(backups, i) : getPixelWidth(cols[i].element);
 				//If everything's failed and we still don't have a width
 				width = width ? width : RESIZE_MINIMUM_WIDTH;
 				widths.push(width);
@@ -406,7 +423,7 @@ define("tinymce/tableplugin/ResizeBars", [
 				var deltas;
 
 				if (step >= 0) {
-					var newNext = Math.max(min, result[index] - step);
+					var newNext = Math.max(min, result[next] - step);
 					deltas = startZeros.concat([step, newNext - result[next]]).concat(endZeros);
 				} else {
 					var newThis = Math.max(min, result[index] + step);
@@ -473,14 +490,13 @@ define("tinymce/tableplugin/ResizeBars", [
 		}
 
 		function adjustWidth(table, delta, index) {
-			delta = delta ? delta : 25;
-			index = index ? index : 3;
+			index = index ? index : 0;
 
 			var tableDetails = getTableDetails(table);
 			var jenga = getJengaGrid(tableDetails);
 
 			var widths = getPixelWidths(jenga);
-			window.console.log('widths', widths);
+			window.console.log('old "pixel" widths', widths);
 			var deltas = determineDeltas(widths, index, delta, RESIZE_MINIMUM_WIDTH);
 			window.console.log('deltas', deltas);
 			var newWidths = [], oldTotalWidth = 0, newTotalWidth = 0;
@@ -492,13 +508,16 @@ define("tinymce/tableplugin/ResizeBars", [
 			}
 			window.console.log('newWidths', newWidths);
 			var newSizes = recalculateWidths(jenga, newWidths);
-			window.console.log('newSizes', newSizes);
 
 			Tools.each(newSizes, function(cell) {
-				cell.element.style.width = cell.width + 'px';
+				editor.dom.setStyle(cell.element, 'width', cell.width + 'px');
+				editor.dom.setAttrib(cell.element, 'width', null);
 			});
 
-			table.style.width = newTotalWidth + 'px';
+			editor.dom.setStyle(table, 'width', newTotalWidth + 'px');
+			editor.dom.setAttrib(table, 'width', null);
+
+			window.console.log('new "pixel" widths', getPixelWidths(jenga));
 
 			window.console.log('old', oldTotalWidth, 'new', newTotalWidth);
 		}
@@ -507,7 +526,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			var tableElement = editor.dom.getParent(e.target, 'table');
 
 			if (e.target.nodeName === 'table' || tableElement) {
-				adjustWidth(tableElement);
+				adjustWidth(tableElement, 50);
 			}
 		});
 
