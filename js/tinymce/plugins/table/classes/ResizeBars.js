@@ -568,6 +568,30 @@ define("tinymce/tableplugin/ResizeBars", [
 
 		}
 
+		function drop() {
+			editor.dom.remove(blockerElement);
+
+			if (dragging) {
+				dragging = false;
+
+				var index, delta;
+
+				if (isCol(dragBar)) {
+					var initialLeft = parseInt(editor.dom.getAttrib(dragBar, RESIZE_BAR_COL_DATA_INITIAL_LEFT_ATTRIBUTE), 10);
+					var newLeft = editor.dom.getPos(dragBar).x;
+					index = parseInt(editor.dom.getAttrib(dragBar, RESIZE_BAR_COL_DATA_ATTRIBUTE), 10);
+					delta = newLeft - initialLeft;
+					adjustWidth(hoverTable, delta, index);
+				} else if (isRow(dragBar)) {
+					var initialTop = parseInt(editor.dom.getAttrib(dragBar, RESIZE_BAR_ROW_DATA_INITIAL_TOP_ATTRIBUTE), 10);
+					var newTop = editor.dom.getPos(dragBar).y;
+					index = parseInt(editor.dom.getAttrib(dragBar, RESIZE_BAR_ROW_DATA_ATTRIBUTE), 10);
+					delta = newTop - initialTop;
+					adjustWidth(hoverTable, delta, index);
+				}
+			}
+		}
+
 		function colDragHandler(event) {
 			lastX = lastX !== undefined ? lastX : event.x; //we need a firstX
 			var deltaX = event.x - lastX;
@@ -579,52 +603,46 @@ define("tinymce/tableplugin/ResizeBars", [
 		function rowDragHandler(event) {
 			lastY = lastY !== undefined ? lastY : event.y;
 			var deltaY = event.y - lastY;
+			window.console.log(deltaY);
 			lastY = event.y;
 			var oldTop = editor.dom.getPos(dragBar).y;
 			editor.dom.setStyle(dragBar, 'top', oldTop + deltaY + 'px');
 		}
 
-		function drop() {
-			editor.dom.remove(blockerElement);
-
-			if (dragging) {
-				dragging = false;
-				if (editor.dom.hasClass(dragBar, RESIZE_BAR_COL_CLASS)) {
-					var initialLeft = parseInt(editor.dom.getAttrib(dragBar, RESIZE_BAR_COL_DATA_INITIAL_LEFT_ATTRIBUTE), 10);
-					var newLeft = editor.dom.getPos(dragBar).x;
-					var index = parseInt(editor.dom.getAttrib(dragBar, RESIZE_BAR_COL_DATA_ATTRIBUTE), 10);
-					var delta = newLeft - initialLeft;
-					adjustWidth(hoverTable, delta, index);
-				}
-			}
-		}
-
 		function setupColDrag(bar) {
-			blockerElement = blockerElement ? blockerElement : getBlockerElement();
 			lastX = undefined;
-			dragging = true;
-			dragBar = bar;
-			bindBlockerEvents(blockerElement, colDragHandler);
-			editor.dom.add(editor.getBody(), blockerElement);
+			setupBaseDrag(bar, colDragHandler);
 		}
 
 		function setupRowDrag(bar) {
+			lastY = undefined;
+			setupBaseDrag(bar, rowDragHandler);
+		}
+
+		function setupBaseDrag(bar, dragHandler) {
 			blockerElement = blockerElement ? blockerElement : getBlockerElement();
-			lastX = undefined;
 			dragging = true;
 			dragBar = bar;
-			bindBlockerEvents(blockerElement, rowDragHandler);
+			bindBlockerEvents(blockerElement, dragHandler);
 			editor.dom.add(editor.getBody(), blockerElement);
+		}
+
+		function isCol(target) {
+			return editor.dom.hasClass(target, RESIZE_BAR_COL_CLASS);
+		}
+
+		function isRow(target) {
+			return editor.dom.hasClass(target, RESIZE_BAR_ROW_CLASS);
 		}
 
 		editor.on('MouseDown', function(e) {
 			var target = e.target;
 
-			if (editor.dom.hasClass(target, RESIZE_BAR_COL_CLASS)) {
+			if (isCol(target)) {
 				var initialLeft = editor.dom.getPos(target).x;
 				editor.dom.setAttrib(target, RESIZE_BAR_COL_DATA_INITIAL_LEFT_ATTRIBUTE, initialLeft);
 				setupColDrag(target);
-			} else if (editor.dom.hasClass(target, RESIZE_BAR_ROW_CLASS)) {
+			} else if (isRow(target)) {
 				var initialTop = editor.dom.getPos(target).y;
 				editor.dom.setAttrib(target, RESIZE_BAR_ROW_DATA_INITIAL_TOP_ATTRIBUTE, initialTop);
 				setupRowDrag(target);
