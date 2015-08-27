@@ -21,9 +21,13 @@ define("tinymce/tableplugin/ResizeBars", [
 	return function(editor) {
 		var RESIZE_BAR_CLASS = 'mce-resize-bar',
 			RESIZE_BAR_ROW_CLASS = 'mce-resize-bar-row',
-			RESIZE_BAR_ROW_CURSOR_CLASS = 'row-resize',
+			RESIZE_BAR_ROW_CURSOR_STYLE = 'row-resize',
+			RESIZE_BAR_ROW_DATA_ATTRIBUTE = 'data-row',
+			RESIZE_BAR_ROW_DATA_INITIAL_TOP_ATTRIBUTE = 'data-initial-top',
 			RESIZE_BAR_COL_CLASS = 'mce-resize-bar-col',
-			RESIZE_BAR_COL_CURSOR_CLASS = 'col-resize',
+			RESIZE_BAR_COL_CURSOR_STYLE = 'col-resize',
+			RESIZE_BAR_COL_DATA_ATTRIBUTE = 'data-col',
+			RESIZE_BAR_COL_DATA_INITIAL_LEFT_ATTRIBUTE = 'data-initial-left',
 			RESIZE_BAR_THICKNESS = 4,
 			RESIZE_MINIMUM_WIDTH = 10;
 
@@ -109,8 +113,8 @@ define("tinymce/tableplugin/ResizeBars", [
 					width = tableWidth;
 
 				editor.dom.add(editor.getBody(), 'div',
-					generateBar(RESIZE_BAR_ROW_CLASS, RESIZE_BAR_ROW_CURSOR_CLASS,
-						left, top, height, width, 'data-row', rowPosition.index));
+					generateBar(RESIZE_BAR_ROW_CLASS, RESIZE_BAR_ROW_CURSOR_STYLE,
+						left, top, height, width, RESIZE_BAR_ROW_DATA_ATTRIBUTE, rowPosition.index));
 			});
 		}
 
@@ -122,8 +126,8 @@ define("tinymce/tableplugin/ResizeBars", [
 					width = RESIZE_BAR_THICKNESS;
 
 				editor.dom.add(editor.getBody(), 'div',
-					generateBar(RESIZE_BAR_COL_CLASS, RESIZE_BAR_COL_CURSOR_CLASS,
-						left, top, height, width, 'data-col', cellPosition.index));
+					generateBar(RESIZE_BAR_COL_CLASS, RESIZE_BAR_COL_CURSOR_STYLE,
+						left, top, height, width, RESIZE_BAR_COL_DATA_ATTRIBUTE, cellPosition.index));
 			});
 		}
 
@@ -370,12 +374,14 @@ define("tinymce/tableplugin/ResizeBars", [
 		function getPixelWidths(jenga) {
 
 			function convertFromPercent(element, cellWidth) {
+				window.console.log('convertFromPercent');
 				var table = editor.dom.getParent(element, 'table');
 				var tableTotal = table.offsetWidth;
 				return Math.floor((cellWidth / 100) * tableTotal);
 			}
 
 			function getPixelWidth(element) {
+				window.console.log('getpixelwidth');
 				var widthString = editor.dom.getStyle(element, 'width');
 				if (!widthString) {
 					widthString = editor.dom.getAttrib(element, 'width');
@@ -496,17 +502,14 @@ define("tinymce/tableplugin/ResizeBars", [
 			var jenga = getJengaGrid(tableDetails);
 
 			var widths = getPixelWidths(jenga);
-			window.console.log('old "pixel" widths', widths);
 			var deltas = determineDeltas(widths, index, delta, RESIZE_MINIMUM_WIDTH);
-			window.console.log('deltas', deltas);
-			var newWidths = [], oldTotalWidth = 0, newTotalWidth = 0;
+			var newWidths = [], newTotalWidth = 0;
 
 			for (var i = 0; i < deltas.length; i++) {
-				oldTotalWidth += widths[i];
 				newWidths.push(deltas[i] + widths[i]);
 				newTotalWidth += newWidths[i];
 			}
-			window.console.log('newWidths', newWidths);
+
 			var newSizes = recalculateWidths(jenga, newWidths);
 
 			Tools.each(newSizes, function(cell) {
@@ -517,23 +520,28 @@ define("tinymce/tableplugin/ResizeBars", [
 			editor.dom.setStyle(table, 'width', newTotalWidth + 'px');
 			editor.dom.setAttrib(table, 'width', null);
 
-			window.console.log('new "pixel" widths', getPixelWidths(jenga));
-
-			window.console.log('old', oldTotalWidth, 'new', newTotalWidth);
 		}
 
 		editor.on('MouseDown', function(e) {
-			var tableElement = editor.dom.getParent(e.target, 'table');
+			var target = e.target;
 
-			if (e.target.nodeName === 'table' || tableElement) {
-				adjustWidth(tableElement, 50);
+			if (editor.dom.hasClass(target, RESIZE_BAR_COL_CLASS)) {
+				var initialLeft = editor.dom.getPos(target).x;
+				editor.dom.setAttrib(target, RESIZE_BAR_COL_DATA_INITIAL_LEFT_ATTRIBUTE, initialLeft);
+			} else if (editor.dom.hasClass(target, RESIZE_BAR_ROW_CLASS)) {
+				var initialTop = editor.dom.getPos(target).y;
+				editor.dom.setAttrib(target, RESIZE_BAR_ROW_DATA_INITIAL_TOP_ATTRIBUTE, initialTop);
 			}
 		});
+
+		var hoverTable;
 
 		editor.on('mouseover', function(e) {
 			var tableElement = editor.dom.getParent(e.target, 'table');
 
 			if (e.target.nodeName === 'table' || tableElement) {
+				hoverTable = tableElement;
+				window.console.log(hoverTable);
 				clearBars();
 				drawBars(tableElement);
 			}
