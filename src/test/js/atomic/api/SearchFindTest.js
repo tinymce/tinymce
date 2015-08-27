@@ -33,6 +33,7 @@ test(
     checkAll([[1, 7]], ' cattle', Pattern.unsafetoken('cattle'));
     checkAll([], 'acattle', Pattern.unsafeword('cattle'));
     checkAll([[1, 7]], ' cattle', Pattern.unsafeword('cattle'));
+    checkAll([], '\uFEFFdog ', Pattern.safeword('dog'));
 
     checkAll([[3, 7], [10, 14]], 'no it\'s i it\'s done.', Pattern.unsafetoken('it\'s'));
     checkAll([[0, 12]], 'catastrophe\'', Pattern.unsafetoken('catastrophe\''));
