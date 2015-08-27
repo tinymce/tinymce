@@ -522,15 +522,112 @@ define("tinymce/tableplugin/ResizeBars", [
 
 		}
 
+		var blockerElement, dragBar, dragging, delayDrop, lastX, lastY;
+
+		function scheduleDelayedDropEvent() {
+			delayDrop = setTimeout(function() {
+				drop();
+			}, 200);
+		}
+
+		function cancelDelayedDropEvent() {
+			clearTimeout(delayDrop);
+		}
+
+		function getBlockerElement() {
+			var blocker = document.createElement('div');
+
+			blocker.setAttribute('style', 'margin: 0; ' +
+						'padding: 0; ' +
+						'position: fixed; ' +
+						'left: 0px; ' +
+						'top: 0px; ' +
+						'height: 100%; ' +
+						'width: 100%;');
+			blocker.setAttribute('data-mce-bogus', 'all');
+
+			return blocker;
+		}
+
+		function bindBlockerEvents(blocker, dragHandler) {
+			editor.dom.bind(blocker, 'mouseup', function() {
+				drop();
+			});
+
+			editor.dom.bind(blocker, 'mousemove', function(e) {
+				cancelDelayedDropEvent();
+
+				if (dragging) {
+					dragHandler(e);
+				}
+			});
+
+			editor.dom.bind(blocker, 'mouseout', function() {
+				scheduleDelayedDropEvent();
+			});
+
+		}
+
+		function colDragHandler(event) {
+			lastX = lastX !== undefined ? lastX : event.x; //we need a firstX
+			var deltaX = event.x - lastX;
+			lastX = event.x;
+			var oldLeft = editor.dom.getPos(dragBar).x;
+			editor.dom.setStyle(dragBar, 'left', oldLeft + deltaX + 'px');
+		}
+
+		function rowDragHandler(event) {
+			lastY = lastY !== undefined ? lastY : event.y;
+			var deltaY = event.y - lastY;
+			lastY = event.y;
+			var oldTop = editor.dom.getPos(dragBar).y;
+			editor.dom.setStyle(dragBar, 'top', oldTop + deltaY + 'px');
+		}
+
+		function drop() {
+			editor.dom.remove(blockerElement);
+
+			if (dragging) {
+				dragging = false;
+				if (editor.dom.hasClass(dragBar, RESIZE_BAR_COL_CLASS)) {
+					var initialLeft = parseInt(editor.dom.getAttrib(dragBar, RESIZE_BAR_COL_DATA_INITIAL_LEFT_ATTRIBUTE), 10);
+					var newLeft = editor.dom.getPos(dragBar).x;
+					var index = parseInt(editor.dom.getAttrib(dragBar, RESIZE_BAR_COL_DATA_ATTRIBUTE), 10);
+					var delta = newLeft - initialLeft;
+					adjustWidth(hoverTable, delta, index);
+				}
+			}
+		}
+
+		function setupColDrag(bar) {
+			blockerElement = blockerElement ? blockerElement : getBlockerElement();
+			lastX = undefined;
+			dragging = true;
+			dragBar = bar;
+			bindBlockerEvents(blockerElement, colDragHandler);
+			editor.dom.add(editor.getBody(), blockerElement);
+		}
+
+		function setupRowDrag(bar) {
+			blockerElement = blockerElement ? blockerElement : getBlockerElement();
+			lastX = undefined;
+			dragging = true;
+			dragBar = bar;
+			bindBlockerEvents(blockerElement, rowDragHandler);
+			editor.dom.add(editor.getBody(), blockerElement);
+		}
+
 		editor.on('MouseDown', function(e) {
 			var target = e.target;
 
 			if (editor.dom.hasClass(target, RESIZE_BAR_COL_CLASS)) {
 				var initialLeft = editor.dom.getPos(target).x;
 				editor.dom.setAttrib(target, RESIZE_BAR_COL_DATA_INITIAL_LEFT_ATTRIBUTE, initialLeft);
+				setupColDrag(target);
 			} else if (editor.dom.hasClass(target, RESIZE_BAR_ROW_CLASS)) {
 				var initialTop = editor.dom.getPos(target).y;
 				editor.dom.setAttrib(target, RESIZE_BAR_ROW_DATA_INITIAL_TOP_ATTRIBUTE, initialTop);
+				setupRowDrag(target);
 			}
 		});
 
@@ -541,19 +638,16 @@ define("tinymce/tableplugin/ResizeBars", [
 
 			if (e.target.nodeName === 'table' || tableElement) {
 				hoverTable = tableElement;
-				window.console.log(hoverTable);
 				clearBars();
 				drawBars(tableElement);
 			}
 		});
 
-		/*editor.on('mouseout', function(e) {
-			var tableElement = editor.dom.getParent(e.target, 'table');
-
-			if (e.target.nodeName === 'table' || tableElement) {
-				window.console.log('out table');
+		editor.on('mouseout', function(e) {
+			if (e.target.nodeName === 'table') {
+				clearBars();
 			}
-		});*/
+		});
 
 		return {
 			clear: clearBars
