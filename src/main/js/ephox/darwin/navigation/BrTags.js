@@ -2,6 +2,7 @@ define(
   'ephox.darwin.navigation.BrTags',
 
   [
+    'ephox.bud.Unicode',
     'ephox.darwin.navigation.BeforeAfter',
     'ephox.fussy.api.SelectionRange',
     'ephox.fussy.api.Situ',
@@ -14,14 +15,14 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (BeforeAfter, SelectionRange, Situ, Awareness, Option, Spot, ElementFind, Node, Text, Traverse) {
+  function (Unicode, BeforeAfter, SelectionRange, Situ, Awareness, Option, Spot, ElementFind, Node, Text, Traverse) {
     var isBr = function (elem) {
       return Node.name(elem) === 'br';
     };
 
     var gatherer = function (cand, gather, isRoot) {
       return gather(cand, isRoot).bind(function (target) {
-        return Node.isText(target) && Text.get(target).trim().length === 0 ? gatherer(target, gather, isRoot) : Option.some(target);
+        return Node.isText(target) && Unicode.trimNative(Text.get(target)).length === 0 ? gatherer(target, gather, isRoot) : Option.some(target);
       });
     };
 
