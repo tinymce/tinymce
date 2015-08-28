@@ -637,7 +637,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			editor.dom.setAttrib(table, 'height', null);
 		}
 
-		var blockerElement, dragBar, dragging, delayDrop, lastX, lastY;
+		var delayDrop;
 
 		function scheduleDelayedDropEvent() {
 			delayDrop = setTimeout(function() {
@@ -664,6 +664,8 @@ define("tinymce/tableplugin/ResizeBars", [
 			return blocker;
 		}
 
+		var dragging;
+
 		function bindBlockerEvents(blocker, dragHandler) {
 			editor.dom.bind(blocker, 'mouseup', function() {
 				drop();
@@ -682,6 +684,8 @@ define("tinymce/tableplugin/ResizeBars", [
 			});
 
 		}
+
+		var blockerElement, dragBar;
 
 		function drop() {
 			editor.dom.remove(blockerElement);
@@ -708,6 +712,24 @@ define("tinymce/tableplugin/ResizeBars", [
 			}
 		}
 
+		function setupBaseDrag(bar, dragHandler) {
+			blockerElement = blockerElement ? blockerElement : getBlockerElement();
+			dragging = true;
+			dragBar = bar;
+			bindBlockerEvents(blockerElement, dragHandler);
+			editor.dom.add(getBody(), blockerElement);
+		}
+
+		function isCol(target) {
+			return editor.dom.hasClass(target, RESIZE_BAR_COL_CLASS);
+		}
+
+		function isRow(target) {
+			return editor.dom.hasClass(target, RESIZE_BAR_ROW_CLASS);
+		}
+
+		var lastX;
+
 		function colDragHandler(event) {
 			lastX = lastX !== undefined ? lastX : event.clientX; //we need a firstX
 			var deltaX = event.clientX - lastX;
@@ -715,6 +737,8 @@ define("tinymce/tableplugin/ResizeBars", [
 			var oldLeft = editor.dom.getPos(dragBar).x;
 			editor.dom.setStyle(dragBar, 'left', oldLeft + deltaX + 'px');
 		}
+
+		var lastY;
 
 		function rowDragHandler(event) {
 			lastY = lastY !== undefined ? lastY : event.clientY;
@@ -732,22 +756,6 @@ define("tinymce/tableplugin/ResizeBars", [
 		function setupRowDrag(bar) {
 			lastY = undefined;
 			setupBaseDrag(bar, rowDragHandler);
-		}
-
-		function setupBaseDrag(bar, dragHandler) {
-			blockerElement = blockerElement ? blockerElement : getBlockerElement();
-			dragging = true;
-			dragBar = bar;
-			bindBlockerEvents(blockerElement, dragHandler);
-			editor.dom.add(getBody(), blockerElement);
-		}
-
-		function isCol(target) {
-			return editor.dom.hasClass(target, RESIZE_BAR_COL_CLASS);
-		}
-
-		function isRow(target) {
-			return editor.dom.hasClass(target, RESIZE_BAR_ROW_CLASS);
 		}
 
 		editor.on('init', function() {
@@ -770,17 +778,13 @@ define("tinymce/tableplugin/ResizeBars", [
 		var hoverTable;
 
 		editor.on('mouseover', function(e) {
-			var tableElement = editor.dom.getParent(e.target, 'table');
+			if (!dragging) {
+				var tableElement = editor.dom.getParent(e.target, 'table');
 
-			if (e.target.nodeName === 'table' || tableElement) {
-				hoverTable = tableElement;
-				refreshBars(tableElement);
-			}
-		});
-
-		editor.on('mouseout', function(e) {
-			if (e.target.nodeName === 'table') {
-				clearBars();
+				if (e.target.nodeName === 'table' || tableElement) {
+					hoverTable = tableElement;
+					refreshBars(tableElement);
+				}
 			}
 		});
 
