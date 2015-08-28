@@ -5,6 +5,7 @@ Version 4.2.5 (2015-08-xx)
 	Fixed bug where images marked with bogus would be uploaded by the uploadImages call.
 	Fixed bug where multiple calls to uploadImages would result in decreased performance.
 	Fixed so that the image uploads are concurrent for improved performance.
+	Fixed various grammar problems in inline documentation. Patches provided by nikolas.
 Version 4.2.4 (2015-08-17)
 	Added picture as a valid element to the HTML 5 schema. Patch contributed by Adam Taylor.
 	Fixed bug where contents would be duplicated on drag/drop within the same editor.
