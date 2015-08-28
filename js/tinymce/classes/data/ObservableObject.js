@@ -11,6 +11,7 @@
 /**
  * This class is a object that is observable when properties changes a change event gets emitted.
  *
+ * @private
  * @class tinymce.data.ObservableObject
  */
 define("tinymce/data/ObservableObject", [
@@ -19,6 +20,11 @@ define("tinymce/data/ObservableObject", [
 	"tinymce/util/Class",
 	"tinymce/util/Tools"
 ], function(Binding, Observable, Class, Tools) {
+	function isNode(node) {
+		return node.nodeType > 0;
+	}
+
+	// Todo: Maybe this should be shallow compare since it might be huge object references
 	function isEqual(a, b) {
 		var k, checked;
 
@@ -49,6 +55,11 @@ define("tinymce/data/ObservableObject", [
 					return false;
 				}
 			}
+		}
+
+		// Shallow compare nodes
+		if (isNode(a) || isNode(b)) {
+			return a === b;
 		}
 
 		// Compare objects

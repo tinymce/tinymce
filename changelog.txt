@@ -5,6 +5,7 @@ Version 4.2.5 (2015-08-xx)
 	Fixed bug where images marked with bogus would be uploaded by the uploadImages call.
 	Fixed bug where multiple calls to uploadImages would result in decreased performance.
 	Fixed bug where pagebreaks were editable to imagetools patch contributed by Rasmus Wallin.
+	Fixed bug where the element path could cause too much recursion exception.
 	Fixed bug for domains containing ".min". Patch contributed by Loïc Février.
 	Fixed so validation of external links to accept a number after www. Patch contributed by Victor Carvalho.
 	Fixed so the charmap is exposed though execCommand. Patch contributed by Matthew Will.
