@@ -429,7 +429,7 @@ define("tinymce/util/Tools", [
 		 * @param {Object} obj Object to check.
 		 * @return {boolean} true/false state if the object is an array or not.
 		 */
-		inArray: Arr.contains,
+		inArray: Arr.indexOf,
 
 		extend: extend,
 		create: create,

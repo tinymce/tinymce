@@ -8,6 +8,12 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+/**
+ * Old IE Range.
+ *
+ * @private
+ * @class tinymce.dom.Range
+ */
 define("tinymce/dom/Range", [
 	"tinymce/util/Tools"
 ], function(Tools) {

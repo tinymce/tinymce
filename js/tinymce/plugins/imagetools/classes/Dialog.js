@@ -13,7 +13,7 @@
  */
 define("tinymce/imagetoolsplugin/Dialog", [
 	"tinymce/dom/DOMUtils",
-	"tinymce/util/Arr",
+	"tinymce/util/Tools",
 	"tinymce/util/Promise",
 	"tinymce/ui/Factory",
 	"tinymce/ui/Form",
@@ -23,7 +23,7 @@ define("tinymce/imagetoolsplugin/Dialog", [
 	"tinymce/imagetoolsplugin/Filters",
 	"tinymce/imagetoolsplugin/Conversions",
 	"tinymce/imagetoolsplugin/UndoStack"
-], function(DOMUtils, Arr, Promise, Factory, Form, Container, ImagePanel, ImageTools, Filters, Conversions, UndoStack) {
+], function(DOMUtils, Tools, Promise, Factory, Form, Container, ImagePanel, ImageTools, Filters, Conversions, UndoStack) {
 	function createState(blob) {
 		return {
 			blob: blob,
@@ -38,7 +38,7 @@ define("tinymce/imagetoolsplugin/Dialog", [
 	}
 
 	function destroyStates(states) {
-		Arr.each(states, destroyState);
+		Tools.each(states, destroyState);
 	}
 
 	function open(currentState, resolve, reject) {
@@ -94,11 +94,11 @@ define("tinymce/imagetoolsplugin/Dialog", [
 
 		function switchPanel(targetPanel) {
 			return function() {
-				var hidePanels = Arr.filter(panels, function(panel) {
+				var hidePanels = Tools.grep(panels, function(panel) {
 					return panel.settings.name != targetPanel;
 				});
 
-				Arr.each(hidePanels, function(panel) {
+				Tools.each(hidePanels, function(panel) {
 					panel.hide();
 				});
 

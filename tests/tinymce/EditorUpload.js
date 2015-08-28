@@ -1,4 +1,4 @@
-(function() {
+ModuleLoader.require(["tinymce/file/Conversions"], function(Conversions) {
 	var testBlob, testBlobDataUri;
 
 	if (!tinymce.Env.fileApi) {
@@ -37,7 +37,7 @@
 
 					testBlobDataUri = canvas.toDataURL();
 
-					tinymce.file.Conversions.uriToBlob(testBlobDataUri).then(function(blob) {
+					Conversions.uriToBlob(testBlobDataUri).then(function(blob) {
 						testBlob = blob;
 						QUnit.start();
 					});
@@ -94,4 +94,4 @@
 			});
 		}).then(QUnit.start);
 	});
-})();
+});

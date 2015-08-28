@@ -12,6 +12,7 @@
  * Utility class for various element specific functions.
  *
  * @private
+ * @class tinymce.dom.ElementUtils
  */
 define("tinymce/dom/ElementUtils", [
 	"tinymce/dom/BookmarkManager",

@@ -8,6 +8,12 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+/**
+ * Private UI DomUtils proxy.
+ *
+ * @private
+ * @class tinymce.ui.DomUtils
+ */
 define("tinymce/ui/DomUtils", [
 	"tinymce/util/Tools",
 	"tinymce/dom/DOMUtils"

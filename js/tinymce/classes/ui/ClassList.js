@@ -11,6 +11,7 @@
 /**
  * Handles adding and removal of classes.
  *
+ * @private
  * @class tinymce.ui.ClassList
  */
 define("tinymce/ui/ClassList", [

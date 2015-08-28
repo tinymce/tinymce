@@ -10,6 +10,9 @@
 
 /**
  * Array utility class.
+ *
+ * @private
+ * @class tinymce.util.Arr
  */
 define("tinymce/util/Arr", [], function() {
 	var isArray = Array.isArray || function(obj) {
@@ -81,7 +84,7 @@ define("tinymce/util/Arr", [], function() {
 		return o;
 	}
 
-	function contains(a, v) {
+	function indexOf(a, v) {
 		var i, l;
 
 		if (a) {
@@ -116,7 +119,7 @@ define("tinymce/util/Arr", [], function() {
 		each: each,
 		map: map,
 		filter: filter,
-		contains: contains,
+		indexOf: indexOf,
 		reduce: reduce
 	};
 });

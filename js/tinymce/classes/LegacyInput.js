@@ -8,6 +8,12 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+/**
+ * Converts legacy input to modern HTML.
+ *
+ * @class tinymce.LegacyInput
+ * @private
+ */
 define("tinymce/LegacyInput", [
 	"tinymce/EditorManager",
 	"tinymce/util/Tools"

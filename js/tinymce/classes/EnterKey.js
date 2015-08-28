@@ -10,6 +10,9 @@
 
 /**
  * Contains logic for handling the enter key to split/generate block elements.
+ *
+ * @private
+ * @class tinymce.EnterKey
  */
 define("tinymce/EnterKey", [
 	"tinymce/dom/TreeWalker",

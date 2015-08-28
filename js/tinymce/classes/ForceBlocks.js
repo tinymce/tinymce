@@ -8,6 +8,12 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+/**
+ * Makes sure that everything gets wrapped in paragraphs.
+ *
+ * @private
+ * @class tinymce.ForceBlocks
+ */
 define("tinymce/ForceBlocks", [], function() {
 	return function(editor) {
 		var settings = editor.settings, dom = editor.dom, selection = editor.selection;
