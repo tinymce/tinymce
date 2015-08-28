@@ -448,7 +448,7 @@ define("tinymce/dom/Selection", [
 				rng.moveToElementText(node);
 			}
 
-			rng.collapse(!!toStart);
+			rng.collapse(toStart !== undefined ? toStart : true);
 			self.setRng(rng);
 		},
 
