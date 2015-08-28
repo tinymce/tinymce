@@ -21,7 +21,7 @@ define("tinymce/EditorUpload", [
 	"tinymce/file/BlobCache"
 ], function(Arr, Uploader, ImageScanner, BlobCache) {
 	return function(editor) {
-		var blobCache = new BlobCache();
+		var blobCache = new BlobCache(), uploader, imageScanner;
 
 		// Replaces strings without regexps to avoid FF regexp to big issue
 		function replaceString(content, search, replace) {
@@ -53,53 +53,54 @@ define("tinymce/EditorUpload", [
 		}
 
 		function uploadImages(callback) {
-			var uploader = new Uploader({
-				url: editor.settings.images_upload_url,
-				basePath: editor.settings.images_upload_base_path,
-				credentials: editor.settings.images_upload_credentials,
-				handler: editor.settings.images_upload_handler
-			});
-
-			function imageInfosToBlobInfos(imageInfos) {
-				return Arr.map(imageInfos, function(imageInfo) {
-					return imageInfo.blobInfo;
+			if (!uploader) {
+				uploader = new Uploader({
+					url: editor.settings.images_upload_url,
+					basePath: editor.settings.images_upload_base_path,
+					credentials: editor.settings.images_upload_credentials,
+					handler: editor.settings.images_upload_handler
 				});
 			}
 
-			return scanForImages().then(imageInfosToBlobInfos).then(uploader.upload).then(function(result) {
-				result = Arr.map(result, function(uploadInfo) {
-					var image;
+			return scanForImages().then(function(imageInfos) {
+				var blobInfos;
 
-					image = editor.dom.select('img[src="' + uploadInfo.blobInfo.blobUri() + '"]')[0];
+				blobInfos = Arr.map(imageInfos, function(imageInfo) {
+					return imageInfo.blobInfo;
+				});
 
-					if (image) {
+				return uploader.upload(blobInfos).then(function(result) {
+					result = Arr.map(result, function(uploadInfo, index) {
+						var image = imageInfos[index].image;
+
 						replaceUrlInUndoStack(image.src, uploadInfo.url);
 
 						editor.$(image).attr({
 							src: uploadInfo.url,
 							'data-mce-src': editor.convertURL(uploadInfo.url, 'src')
 						});
+
+						return {
+							element: image,
+							status: uploadInfo.status
+						};
+					});
+
+					if (callback) {
+						callback(result);
 					}
 
-					return {
-						element: image,
-						status: uploadInfo.status
-					};
+					return result;
 				});
-
-				if (callback) {
-					callback(result);
-				}
-
-				return result;
-			}, function() {
-				// Silent
-				// TODO: Maybe execute some failure callback here?
 			});
 		}
 
 		function scanForImages() {
-			return ImageScanner.findAll(editor.getBody(), blobCache).then(function(result) {
+			if (!imageScanner) {
+				imageScanner = new ImageScanner(blobCache);
+			}
+
+			return imageScanner.findAll(editor.getBody()).then(function(result) {
 				Arr.each(result, function(resultItem) {
 					replaceUrlInUndoStack(resultItem.image.src, resultItem.blobInfo.blobUri());
 					resultItem.image.src = resultItem.blobInfo.blobUri();
@@ -111,6 +112,7 @@ define("tinymce/EditorUpload", [
 
 		function destroy() {
 			blobCache.destroy();
+			imageScanner = uploader = null;
 		}
 
 		function replaceBlobWithBase64(content) {

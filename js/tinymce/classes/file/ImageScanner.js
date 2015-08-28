@@ -17,38 +17,19 @@
 define("tinymce/file/ImageScanner", [
 	"tinymce/util/Promise",
 	"tinymce/util/Arr",
-	"tinymce/file/Conversions"
-], function(Promise, Arr, Conversions) {
+	"tinymce/file/Conversions",
+	"tinymce/Env"
+], function(Promise, Arr, Conversions, Env) {
 	var count = 0;
 
-	function mapAsync(array, fn) {
-		return new Promise(function(resolve) {
-			var result = [];
+	return function(blobCache) {
+		var cachedPromises = {};
 
-			function next(index) {
-				fn(array[index], function(value) {
-					result.push(value);
+		function findAll(elm) {
+			var images, promises;
 
-					if (index < array.length - 1) {
-						next(index + 1);
-					} else {
-						resolve(result);
-					}
-				});
-			}
-
-			if (array.length === 0) {
-				resolve(result);
-			} else {
-				next(0);
-			}
-		});
-	}
-
-	return {
-		findAll: function(elm, blobCache) {
 			function imageToBlobInfo(img, resolve) {
-				var base64, blobInfo, blobInfoId;
+				var base64, blobInfo;
 
 				if (img.src.indexOf('blob:') === 0) {
 					blobInfo = blobCache.getByUri(img.src);
@@ -63,7 +44,6 @@ define("tinymce/file/ImageScanner", [
 					return;
 				}
 
-				blobInfoId = 'blobid' + (count++);
 				base64 = Conversions.parseDataUri(img.src).data;
 				blobInfo = blobCache.findFirst(function(cachedBlobInfo) {
 					return cachedBlobInfo.base64() === base64;
@@ -76,7 +56,8 @@ define("tinymce/file/ImageScanner", [
 					});
 				} else {
 					Conversions.uriToBlob(img.src).then(function(blob) {
-						var blobInfo = blobCache.create(blobInfoId, blob, base64);
+						var blobInfoId = 'blobid' + (count++),
+							blobInfo = blobCache.create(blobInfoId, blob, base64);
 
 						blobCache.add(blobInfo);
 
@@ -88,9 +69,56 @@ define("tinymce/file/ImageScanner", [
 				}
 			}
 
-			return mapAsync(Arr.filter(elm.getElementsByTagName('img'), function(img) {
-				return img.src && (img.src.indexOf('data:') === 0 || img.src.indexOf('blob:') === 0);
-			}), imageToBlobInfo);
+			images = Arr.filter(elm.getElementsByTagName('img'), function(img) {
+				var src = img.src;
+
+				if (img.getAttribute('data-mce-bogus')) {
+					return false;
+				}
+
+				if (!src || src == Env.transparentSrc) {
+					return false;
+				}
+
+				return src.indexOf('data:') === 0 || src.indexOf('blob:') === 0;
+			});
+
+			promises = Arr.map(images, function(img) {
+				var newPromise;
+
+				if (cachedPromises[img.src]) {
+					// Since the cached promise will return the cached image
+					// We need to wrap it and resolve with the actual image
+					return new Promise(function(resolve) {
+						cachedPromises[img.src].then(function(imageInfo) {
+							resolve({
+								image: img,
+								blobInfo: imageInfo.blobInfo
+							});
+						});
+					});
+				}
+
+				newPromise = new Promise(function(resolve) {
+					imageToBlobInfo(img, resolve);
+				}).then(function(result) {
+					delete cachedPromises[result.image.src];
+					return result;
+				})['catch'](function(error) {
+					delete cachedPromises[img.src];
+					return error;
+				});
+
+				cachedPromises[img.src] = newPromise;
+
+				return newPromise;
+			});
+
+			return Promise.all(promises);
 		}
+
+		return {
+			findAll: findAll
+		};
 	};
 });

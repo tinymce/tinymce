@@ -1,4 +1,7 @@
-ModuleLoader.require(["tinymce/file/Conversions"], function(Conversions) {
+ModuleLoader.require([
+	"tinymce/file/Conversions",
+	"tinymce/Env"
+], function(Conversions, Env) {
 	var testBlob, testBlobDataUri;
 
 	if (!tinymce.Env.fileApi) {
@@ -93,5 +96,62 @@ ModuleLoader.require(["tinymce/file/Conversions"], function(Conversions) {
 				QUnit.strictEqual(uploadedBlobInfo, null);
 			});
 		}).then(QUnit.start);
+	});
+
+	asyncTest('uploadConcurrentImages', function() {
+		var uploadCount = 0, callCount = 0;
+
+		function done() {
+			callCount++;
+
+			if (callCount == 2) {
+				QUnit.start();
+				equal(uploadCount, 1, 'Should only be one upload.');
+			}
+		}
+
+		editor.setContent(imageHtml(testBlobDataUri));
+
+		editor.settings.images_upload_handler = function(data, success) {
+			uploadCount++;
+			success(data.id() + '.png');
+		};
+
+		editor.uploadImages(done);
+		editor.uploadImages(done);
+	});
+
+	asyncTest('Don\'t upload transparent image', function() {
+		var uploadCount = 0;
+
+		function done() {
+			QUnit.start();
+			equal(uploadCount, 0, 'Should not upload.');
+		}
+
+		editor.setContent(imageHtml(Env.transparentSrc));
+
+		editor.settings.images_upload_handler = function(data, success) {
+			uploadCount++;
+		};
+
+		editor.uploadImages(done);
+	});
+
+	asyncTest('Don\'t upload bogus image', function() {
+		var uploadCount = 0;
+
+		function done() {
+			QUnit.start();
+			equal(uploadCount, 0, 'Should not upload.');
+		}
+
+		editor.getBody().innerHTML = '<img src="' + testBlobDataUri + '" data-mce-bogus="1">';
+
+		editor.settings.images_upload_handler = function(data, success) {
+			uploadCount++;
+		};
+
+		editor.uploadImages(done);
 	});
 });
