@@ -9,8 +9,8 @@
  */
 
 /**
- * This class handles table cell selection by faking it using a css class that gets applied
- * to cells when dragging the mouse from one cell to another.
+ * This class handles table column and row resizing by adding divs over the columns and rows of the table.
+ * These divs are then manipulated using mouse events to resize the underlying table.
  *
  * @class tinymce.tableplugin.ResizeBars
  * @private
