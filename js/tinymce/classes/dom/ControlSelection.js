@@ -220,7 +220,7 @@ define("tinymce/dom/ControlSelection", [
 			dom.remove(selectedElmGhost);
 			dom.remove(resizeHelper);
 
-			if (!isIE || selectedElm.nodeName == "TABLE") {
+			if (!isIE) {
 				showResizeRect(selectedElm);
 			}
 

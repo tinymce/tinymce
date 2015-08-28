@@ -122,9 +122,9 @@ define("tinymce/tableplugin/ResizeBars", [
 					'left: ' + left + 'px; ' +
 					'top: ' + top + 'px; ' +
 					'height: ' + height + 'px; ' +
-					'width: ' + width + 'px; ' +
+					'width: ' + width + 'px; '/* + //Useful if debugging
 					'background-color: blue; ' +
-					'opacity: 0.5'
+					'opacity: 0.5'*/
 			};
 
 			bar[indexAttr] = index;
