@@ -4,6 +4,7 @@ Version 4.2.5 (2015-08-xx)
 	Fixed bug where image place holders would be uploaded by uploadImages call.
 	Fixed bug where images marked with bogus would be uploaded by the uploadImages call.
 	Fixed bug where multiple calls to uploadImages would result in decreased performance.
+	Fixed bug where pagebreaks were editable to imagetools patch contributed by Rasmus Wallin.
 	Fixed so that the image uploads are concurrent for improved performance.
 	Fixed various grammar problems in inline documentation. Patches provided by nikolas.
 Version 4.2.4 (2015-08-17)

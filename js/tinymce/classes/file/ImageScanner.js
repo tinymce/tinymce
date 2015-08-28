@@ -72,7 +72,15 @@ define("tinymce/file/ImageScanner", [
 			images = Arr.filter(elm.getElementsByTagName('img'), function(img) {
 				var src = img.src;
 
-				if (img.getAttribute('data-mce-bogus')) {
+				if (!Env.fileApi) {
+					return false;
+				}
+
+				if (img.hasAttribute('data-mce-bogus')) {
+					return false;
+				}
+
+				if (img.hasAttribute('data-mce-placeholder')) {
 					return false;
 				}
 
