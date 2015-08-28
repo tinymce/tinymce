@@ -65,8 +65,8 @@ define("tinymce/util/Arr", [], function() {
 	function map(array, callback) {
 		var out = [];
 
-		each(array, function(item) {
-			out.push(callback(item));
+		each(array, function(item, index) {
+			out.push(callback(item, index, array));
 		});
 
 		return out;
