@@ -12,7 +12,7 @@
  * Functional utility class.
  *
  * @private
- * @clacc tinymce.util.Fun
+ * @class tinymce.util.Fun
  */
 define("tinymce/util/Fun", [], function() {
 	function constant(value) {
