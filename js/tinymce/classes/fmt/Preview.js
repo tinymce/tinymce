@@ -14,8 +14,8 @@
  * Example:
  *  Preview.getCssText(editor, 'bold');
  *
- * @class tinymce.fmt.Preview
  * @private
+ * @class tinymce.fmt.Preview
  */
 define("tinymce/fmt/Preview", [
 	"tinymce/util/Tools"

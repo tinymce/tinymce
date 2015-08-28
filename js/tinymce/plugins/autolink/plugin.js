@@ -95,6 +95,11 @@ tinymce.PluginManager.add('autolink', function(editor) {
 			}
 		}
 
+		// Never create a link when we are inside a link
+		if (editor.selection.getNode().tagName == 'A') {
+			return;
+		}
+
 		// We need at least five characters to form a URL,
 		// hence, at minimum, five characters from the beginning of the line.
 		rng = editor.selection.getRng(true).cloneRange();

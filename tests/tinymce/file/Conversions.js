@@ -1,4 +1,4 @@
-(function(Conversions) {
+ModuleLoader.require(["tinymce/file/Conversions"], function(Conversions) {
 	module("tinymce.file.Conversions");
 
 	if (!tinymce.Env.fileApi) {
@@ -14,4 +14,4 @@
 			QUnit.equal(dataUri, "data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==");
 		}).then(QUnit.start);
 	});
-})(tinymce.file.Conversions);
+});

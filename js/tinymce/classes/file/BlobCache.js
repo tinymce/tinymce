@@ -15,10 +15,11 @@
  * @class tinymce.file.BlobCache
  */
 define("tinymce/file/BlobCache", [
-	"tinymce/util/Tools"
-], function(Tools) {
+	"tinymce/util/Arr",
+	"tinymce/util/Fun"
+], function(Arr, Fun) {
 	return function() {
-		var cache = [], constant = Tools.constant;
+		var cache = [], constant = Fun.constant;
 
 		function create(id, blob, base64) {
 			return {
@@ -42,7 +43,7 @@ define("tinymce/file/BlobCache", [
 		}
 
 		function findFirst(predicate) {
-			return Tools.grep(cache, predicate)[0];
+			return Arr.filter(cache, predicate)[0];
 		}
 
 		function getByUri(blobUri) {
@@ -52,7 +53,7 @@ define("tinymce/file/BlobCache", [
 		}
 
 		function destroy() {
-			Tools.each(cache, function(cachedBlobInfo) {
+			Arr.each(cache, function(cachedBlobInfo) {
 				URL.revokeObjectURL(cachedBlobInfo.blobUri());
 			});
 

@@ -15,8 +15,9 @@
  * @class tinymce.util.Tools
  */
 define("tinymce/util/Tools", [
-	"tinymce/Env"
-], function(Env) {
+	"tinymce/Env",
+	"tinymce/util/Arr"
+], function(Env, Arr) {
 	/**
 	 * Removes whitespace from the beginning and end of a string.
 	 *
@@ -31,17 +32,6 @@ define("tinymce/util/Tools", [
 	}
 
 	/**
-	 * Returns true/false if the object is an array or not.
-	 *
-	 * @method isArray
-	 * @param {Object} obj Object to check.
-	 * @return {boolean} true/false state if the object is an array or not.
-	 */
-	var isArray = Array.isArray || function(obj) {
-		return Object.prototype.toString.call(obj) === "[object Array]";
-	};
-
-	/**
 	 * Checks if a object is of a specific type for example an array.
 	 *
 	 * @method is
@@ -54,31 +44,11 @@ define("tinymce/util/Tools", [
 			return obj !== undefined;
 		}
 
-		if (type == 'array' && isArray(obj)) {
+		if (type == 'array' && Arr.isArray(obj)) {
 			return true;
 		}
 
 		return typeof obj == type;
-	}
-
-	/**
-	 * Converts the specified object into a real JavaScript array.
-	 *
-	 * @method toArray
-	 * @param {Object} obj Object to convert into array.
-	 * @return {Array} Array object based in input.
-	 */
-	function toArray(obj) {
-		var array = obj, i, l;
-
-		if (!isArray(obj)) {
-			array = [];
-			for (i = 0, l = obj.length; i < l; i++) {
-				array[i] = obj[i];
-			}
-		}
-
-		return array;
 	}
 
 	/**
@@ -108,99 +78,6 @@ define("tinymce/util/Tools", [
 		}
 
 		return map;
-	}
-
-	/**
-	 * Performs an iteration of all items in a collection such as an object or array. This method will execure the
-	 * callback function for each item in the collection, if the callback returns false the iteration will terminate.
-	 * The callback has the following format: cb(value, key_or_index).
-	 *
-	 * @method each
-	 * @param {Object} o Collection to iterate.
-	 * @param {function} cb Callback function to execute for each item.
-	 * @param {Object} s Optional scope to execute the callback in.
-	 * @example
-	 * // Iterate an array
-	 * tinymce.each([1,2,3], function(v, i) {
-	 *     console.debug("Value: " + v + ", Index: " + i);
-	 * });
-	 *
-	 * // Iterate an object
-	 * tinymce.each({a: 1, b: 2, c: 3], function(v, k) {
-	 *     console.debug("Value: " + v + ", Key: " + k);
-	 * });
-	 */
-	function each(o, cb, s) {
-		var n, l;
-
-		if (!o) {
-			return 0;
-		}
-
-		s = s || o;
-
-		if (o.length !== undefined) {
-			// Indexed arrays, needed for Safari
-			for (n = 0, l = o.length; n < l; n++) {
-				if (cb.call(s, o[n], n, o) === false) {
-					return 0;
-				}
-			}
-		} else {
-			// Hashtables
-			for (n in o) {
-				if (o.hasOwnProperty(n)) {
-					if (cb.call(s, o[n], n, o) === false) {
-						return 0;
-					}
-				}
-			}
-		}
-
-		return 1;
-	}
-
-	/**
-	 * Creates a new array by the return value of each iteration function call. This enables you to convert
-	 * one array list into another.
-	 *
-	 * @method map
-	 * @param {Array} array Array of items to iterate.
-	 * @param {function} callback Function to call for each item. It's return value will be the new value.
-	 * @return {Array} Array with new values based on function return values.
-	 */
-	function map(array, callback) {
-		var out = [];
-
-		each(array, function(item) {
-			out.push(callback(item));
-		});
-
-		return out;
-	}
-
-	/**
-	 * Filters out items from the input array by calling the specified function for each item.
-	 * If the function returns false the item will be excluded if it returns true it will be included.
-	 *
-	 * @method grep
-	 * @param {Array} a Array of items to loop though.
-	 * @param {function} f Function to call for each item. Include/exclude depends on it's return value.
-	 * @return {Array} New array with values imported and filtered based in input.
-	 * @example
-	 * // Filter out some items, this will return an array with 4 and 5
-	 * var items = tinymce.grep([1,2,3,4,5], function(v) {return v > 3;});
-	 */
-	function grep(a, f) {
-		var o = [];
-
-		each(a, function(v) {
-			if (!f || f(v)) {
-				o.push(v);
-			}
-		});
-
-		return o;
 	}
 
 	/**
@@ -335,31 +212,6 @@ define("tinymce/util/Tools", [
 		});
 	}
 
-	/**
-	 * Returns the index of a value in an array, this method will return -1 if the item wasn't found.
-	 *
-	 * @method inArray
-	 * @param {Array} a Array/Object to search for value in.
-	 * @param {Object} v Value to check for inside the array.
-	 * @return {Number/String} Index of item inside the array inside an object. Or -1 if it wasn't found.
-	 * @example
-	 * // Get index of value in array this will alert 1 since 2 is at that index
-	 * alert(tinymce.inArray([1,2,3], 2));
-	 */
-	function inArray(a, v) {
-		var i, l;
-
-		if (a) {
-			for (i = 0, l = a.length; i < l; i++) {
-				if (a[i] === v) {
-					return i;
-				}
-			}
-		}
-
-		return -1;
-	}
-
 	function extend(obj, ext) {
 		var i, l, name, args = arguments, value;
 
@@ -396,7 +248,7 @@ define("tinymce/util/Tools", [
 				o = o[n];
 			}
 
-			each(o, function(o, i) {
+			Arr.each(o, function(o, i) {
 				if (f.call(s, o, i, n) === false) {
 					return false;
 				}
@@ -486,13 +338,7 @@ define("tinymce/util/Tools", [
 			return s;
 		}
 
-		return map(s.split(d || ','), trim);
-	}
-
-	function constant(value) {
-		return function() {
-			return value;
-		};
+		return Arr.map(s.split(d || ','), trim);
 	}
 
 	function _addCacheSuffix(url) {
@@ -507,22 +353,90 @@ define("tinymce/util/Tools", [
 
 	return {
 		trim: trim,
-		isArray: isArray,
+
+		/**
+		 * Returns true/false if the object is an array or not.
+		 *
+		 * @method isArray
+		 * @param {Object} obj Object to check.
+		 * @return {boolean} true/false state if the object is an array or not.
+		 */
+		isArray: Arr.isArray,
+
 		is: is,
-		toArray: toArray,
+
+		/**
+		 * Converts the specified object into a real JavaScript array.
+		 *
+		 * @method toArray
+		 * @param {Object} obj Object to convert into array.
+		 * @return {Array} Array object based in input.
+		 */
+		toArray: Arr.toArray,
 		makeMap: makeMap,
-		each: each,
-		map: map,
-		grep: grep,
-		filter: grep,
-		inArray: inArray,
+
+		/**
+		 * Performs an iteration of all items in a collection such as an object or array. This method will execure the
+		 * callback function for each item in the collection, if the callback returns false the iteration will terminate.
+		 * The callback has the following format: cb(value, key_or_index).
+		 *
+		 * @method each
+		 * @param {Object} o Collection to iterate.
+		 * @param {function} cb Callback function to execute for each item.
+		 * @param {Object} s Optional scope to execute the callback in.
+		 * @example
+		 * // Iterate an array
+		 * tinymce.each([1,2,3], function(v, i) {
+		 *     console.debug("Value: " + v + ", Index: " + i);
+		 * });
+		 *
+		 * // Iterate an object
+		 * tinymce.each({a: 1, b: 2, c: 3], function(v, k) {
+		 *     console.debug("Value: " + v + ", Key: " + k);
+		 * });
+		 */
+		each: Arr.each,
+
+		/**
+		 * Creates a new array by the return value of each iteration function call. This enables you to convert
+		 * one array list into another.
+		 *
+		 * @method map
+		 * @param {Array} array Array of items to iterate.
+		 * @param {function} callback Function to call for each item. It's return value will be the new value.
+		 * @return {Array} Array with new values based on function return values.
+		 */
+		map: Arr.map,
+
+		/**
+		 * Filters out items from the input array by calling the specified function for each item.
+		 * If the function returns false the item will be excluded if it returns true it will be included.
+		 *
+		 * @method grep
+		 * @param {Array} a Array of items to loop though.
+		 * @param {function} f Function to call for each item. Include/exclude depends on it's return value.
+		 * @return {Array} New array with values imported and filtered based in input.
+		 * @example
+		 * // Filter out some items, this will return an array with 4 and 5
+		 * var items = tinymce.grep([1,2,3,4,5], function(v) {return v > 3;});
+		 */
+		grep: Arr.filter,
+
+		/**
+		 * Returns true/false if the object is an array or not.
+		 *
+		 * @method isArray
+		 * @param {Object} obj Object to check.
+		 * @return {boolean} true/false state if the object is an array or not.
+		 */
+		inArray: Arr.indexOf,
+
 		extend: extend,
 		create: create,
 		walk: walk,
 		createNS: createNS,
 		resolve: resolve,
 		explode: explode,
-		constant: constant,
 		_addCacheSuffix: _addCacheSuffix
 	};
 });

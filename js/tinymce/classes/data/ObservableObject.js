@@ -11,6 +11,7 @@
 /**
  * This class is a object that is observable when properties changes a change event gets emitted.
  *
+ * @private
  * @class tinymce.data.ObservableObject
  */
 define("tinymce/data/ObservableObject", [

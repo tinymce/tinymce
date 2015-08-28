@@ -12,6 +12,7 @@
  * Selection class for old explorer versions. This one fakes the
  * native selection object available on modern browsers.
  *
+ * @private
  * @class tinymce.dom.TridentSelection
  */
 define("tinymce/dom/TridentSelection", [], function() {

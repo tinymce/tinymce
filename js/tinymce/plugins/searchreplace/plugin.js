@@ -260,7 +260,9 @@
 		var self = this, currentIndex = -1;
 
 		function showDialog() {
-			var last = {};
+			var last = {}, selectedText;
+
+			selectedText = tinymce.trim(editor.selection.getContent({format: 'text'}));
 
 			function updateButtonStates() {
 				win.statusbar.find('#next').disabled(!findSpansByIndex(currentIndex + 1).length);
@@ -355,7 +357,7 @@
 					labelGap: 30,
 					spacing: 10,
 					items: [
-						{type: 'textbox', name: 'find', size: 40, label: 'Find', value: editor.selection.getNode().src},
+						{type: 'textbox', name: 'find', size: 40, label: 'Find', value: selectedText},
 						{type: 'textbox', name: 'replace', size: 40, label: 'Replace with'},
 						{type: 'checkbox', name: 'case', text: 'Match case', label: ' '},
 						{type: 'checkbox', name: 'words', text: 'Whole words', label: ' '}
@@ -463,7 +465,13 @@
 		}
 
 		function removeNode(node) {
-			node.parentNode.removeChild(node);
+			var dom = editor.dom, parent = node.parentNode;
+
+			dom.remove(node);
+
+			if (dom.isEmpty(parent)) {
+				dom.remove(parent);
+			}
 		}
 
 		self.find = function(text, matchCase, wholeWord) {
@@ -496,19 +504,21 @@
 			}
 		};
 
+		function isMatchSpan(node) {
+			var matchIndex = getElmIndex(node);
+
+			return matchIndex !== null && matchIndex.length > 0;
+		}
+
 		self.replace = function(text, forward, all) {
 			var i, nodes, node, matchIndex, currentMatchIndex, nextIndex = currentIndex, hasMore;
 
 			forward = forward !== false;
 
 			node = editor.getBody();
-			nodes = tinymce.toArray(node.getElementsByTagName('span'));
+			nodes = tinymce.grep(tinymce.toArray(node.getElementsByTagName('span')), isMatchSpan);
 			for (i = 0; i < nodes.length; i++) {
 				var nodeIndex = getElmIndex(nodes[i]);
-
-				if (nodeIndex === null || !nodeIndex.length) {
-					continue;
-				}
 
 				matchIndex = currentMatchIndex = parseInt(nodeIndex, 10);
 				if (all || matchIndex === currentIndex) {
@@ -520,11 +530,7 @@
 					}
 
 					while (nodes[++i]) {
-						matchIndex = getElmIndex(nodes[i]);
-
-						if (nodeIndex === null || !nodeIndex.length) {
-							continue;
-						}
+						matchIndex = parseInt(getElmIndex(nodes[i]), 10);
 
 						if (matchIndex === currentMatchIndex) {
 							removeNode(nodes[i]);

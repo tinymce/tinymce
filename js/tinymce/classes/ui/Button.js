@@ -95,9 +95,13 @@ define("tinymce/ui/Button", [
 		 * @method repaint
 		 */
 		repaint: function() {
-			var btnStyle = this.getEl().firstChild.style;
+			var btnElm = this.getEl().firstChild,
+				btnStyle;
 
-			btnStyle.width = btnStyle.height = "100%";
+			if (btnElm) {
+				btnStyle = btnElm.style;
+				btnStyle.width = btnStyle.height = "100%";
+			}
 
 			this._super();
 		},

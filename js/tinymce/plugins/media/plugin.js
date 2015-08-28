@@ -14,11 +14,11 @@
 
 tinymce.PluginManager.add('media', function(editor, url) {
 	var urlPatterns = [
-		{regex: /youtu\.be\/([\w\-.]+)/, type: 'iframe', w: 425, h: 350, url: '//www.youtube.com/embed/$1'},
-		{regex: /youtube\.com(.+)v=([^&]+)/, type: 'iframe', w: 425, h: 350, url: '//www.youtube.com/embed/$2'},
-		{regex: /vimeo\.com\/([0-9]+)/, type: 'iframe', w: 425, h: 350, url: '//player.vimeo.com/video/$1?title=0&byline=0&portrait=0&color=8dc7dc'},
-		{regex: /vimeo\.com\/(.*)\/([0-9]+)/, type: "iframe", w: 425, h: 350, url: "//player.vimeo.com/video/$2?title=0&amp;byline=0"},
-		{regex: /maps\.google\.([a-z]{2,3})\/maps\/(.+)msid=(.+)/, type: 'iframe', w: 425, h: 350, url: '//maps.google.com/maps/ms?msid=$2&output=embed"'}
+		{regex: /youtu\.be\/([\w\-.]+)/, type: 'iframe', w: 425, h: 350, url: '//www.youtube.com/embed/$1', allowFullscreen: true},
+		{regex: /youtube\.com(.+)v=([^&]+)/, type: 'iframe', w: 425, h: 350, url: '//www.youtube.com/embed/$2', allowFullscreen: true},
+		{regex: /vimeo\.com\/([0-9]+)/, type: 'iframe', w: 425, h: 350, url: '//player.vimeo.com/video/$1?title=0&byline=0&portrait=0&color=8dc7dc', allowfullscreen: true},
+		{regex: /vimeo\.com\/(.*)\/([0-9]+)/, type: "iframe", w: 425, h: 350, url: "//player.vimeo.com/video/$2?title=0&amp;byline=0", allowfullscreen: true},
+		{regex: /maps\.google\.([a-z]{2,3})\/maps\/(.+)msid=(.+)/, type: 'iframe', w: 425, h: 350, url: '//maps.google.com/maps/ms?msid=$2&output=embed"', allowFullscreen: false}
 	];
 
 	var embedChange = (tinymce.Env.ie && tinymce.Env.ie <= 8) ? 'onChange' : 'onInput';
@@ -265,6 +265,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 
 				data.source1 = url;
 				data.type = pattern.type;
+				data.allowFullscreen = pattern.allowFullscreen;
 				data.width = data.width || pattern.w;
 				data.height = data.height || pattern.h;
 			}
@@ -288,7 +289,8 @@ tinymce.PluginManager.add('media', function(editor, url) {
 			});
 
 			if (data.type == "iframe") {
-				html += '<iframe src="' + data.source1 + '" width="' + data.width + '" height="' + data.height + '"></iframe>';
+				var allowFullscreen = data.allowFullscreen ? ' allowFullscreen="1"' : '';
+				html += '<iframe src="' + data.source1 + '" width="' + data.width + '" height="' + data.height + '"' + allowFullscreen + '></iframe>';
 			} else if (data.source1mime == "application/x-shockwave-flash") {
 				html += '<object data="' + data.source1 + '" width="' + data.width + '" height="' + data.height + '" type="application/x-shockwave-flash">';
 
@@ -786,4 +788,6 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		context: 'insert',
 		prependToContext: true
 	});
+
+	this.showDialog = showDialog;
 });

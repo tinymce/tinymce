@@ -8,7 +8,9 @@
 	"globals": {
 		"tinymce": true,
 		"Utils": true,
-		"editor": true
+		"editor": true,
+		"inlineEditor": true,
+		"ModuleLoader": true
 	},
 
 	"rules": {

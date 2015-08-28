@@ -11,6 +11,7 @@
 /**
  * This class is an array that emmits events when mutation occurs.
  *
+ * @private
  * @class tinymce.data.ObservableArray
  */
 define("tinymce/data/ObservableArray", [

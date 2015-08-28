@@ -1,8 +1,18 @@
-Version 4.2.4 (2015-08-xx)
+Version 4.2.5 (2015-08-xx)
+	Added fullscreen capability to embedded youtube and vimeo videos.
+	Fixed bug where the uploadImages call didn't work on IE 10.
+Version 4.2.4 (2015-08-17)
+	Added picture as a valid element to the HTML 5 schema. Patch contributed by Adam Taylor.
 	Fixed bug where contents would be duplicated on drag/drop within the same editor.
 	Fixed bug where floating/alignment of images on Edge wouldn't work properly.
 	Fixed bug where it wasn't possible to drag images on IE 11.
 	Fixed bug where image selection on Edge would sometimes fail.
+	Fixed bug where contextual toolbars icons wasn't rendered properly when using the toolbar_items_size.
+	Fixed bug where searchreplace dialog doesn't get prefilled with the selected text.
+	Fixed bug where fragmented matches wouldn't get properly replaced by the searchreplace plugin.
+	Fixed bug where enter key wouldn't place the caret if was after a trailing space within an inline element.
+	Fixed bug where the autolink plugin could produce multiple links for the same text on Gecko.
+	Fixed bug where EditorUpload could sometimes throw an exception if the blob wasn't found.
 	Fixed xss issues with media plugin not properly filtering out some script attributes.
 Version 4.2.3 (2015-07-30)
 	Fixed bug where image selection wasn't possible on Edge due to incompatible setBaseAndExtend API.

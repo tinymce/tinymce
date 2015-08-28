@@ -10,6 +10,9 @@
 
 /**
  * Converts blob/uris back and forth.
+ *
+ * @private
+ * @class tinymce.file.Conversions
  */
 define("tinymce/file/Conversions", [
 	"tinymce/util/Promise"

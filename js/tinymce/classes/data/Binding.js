@@ -12,6 +12,7 @@
  * This class gets dynamically extended to provide a binding between two models. This makes it possible to
  * sync the state of two properties in two models by a layer of abstraction.
  *
+ * @private
  * @class tinymce.data.Binding
  */
 define("tinymce/data/Binding", [], function() {

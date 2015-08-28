@@ -29,8 +29,9 @@
  */
 define("tinymce/file/Uploader", [
 	"tinymce/util/Promise",
-	"tinymce/util/Tools"
-], function(Promise, Tools) {
+	"tinymce/util/Tools",
+	"tinymce/util/Fun"
+], function(Promise, Tools, Fun) {
 	return function(settings) {
 		function fileName(blobInfo) {
 			var ext, extensions;
@@ -60,7 +61,7 @@ define("tinymce/file/Uploader", [
 				id: blobInfo.id,
 				blob: blobInfo.blob,
 				base64: blobInfo.base64,
-				filename: Tools.constant(fileName(blobInfo))
+				filename: Fun.constant(fileName(blobInfo))
 			};
 		}
 
@@ -68,8 +69,8 @@ define("tinymce/file/Uploader", [
 			var xhr, formData;
 
 			xhr = new XMLHttpRequest();
-			xhr.withCredentials = settings.credentials;
 			xhr.open('POST', settings.url);
+			xhr.withCredentials = settings.credentials;
 
 			xhr.onload = function() {
 				var json;

@@ -1,4 +1,4 @@
-(function() {
+ModuleLoader.require(["tinymce/file/Conversions"], function(Conversions) {
 	var testBlob, testBlobDataUri;
 
 	if (!tinymce.Env.fileApi) {
@@ -37,7 +37,7 @@
 
 					testBlobDataUri = canvas.toDataURL();
 
-					tinymce.file.Conversions.uriToBlob(testBlobDataUri).then(function(blob) {
+					Conversions.uriToBlob(testBlobDataUri).then(function(blob) {
 						testBlob = blob;
 						QUnit.start();
 					});
@@ -61,7 +61,7 @@
 			var blobInfo = result[0].blobInfo;
 
 			QUnit.equal("data:" + blobInfo.blob().type + ";base64," + blobInfo.base64(), testBlobDataUri);
-			QUnit.equal('<p><img src="' + blobInfo.blobUri() + '" alt=""></p>', editor.getBody().innerHTML);
+			QUnit.equal(Utils.normalizeHtml(editor.getBody().innerHTML), '<p><img alt="" src="' + blobInfo.blobUri() + '" /></p>');
 			QUnit.equal('<p><img src="data:' + blobInfo.blob().type + ';base64,' + blobInfo.base64() + '" alt="" /></p>', editor.getContent());
 			QUnit.strictEqual(editor.editorUpload.blobCache.get(blobInfo.id()), blobInfo);
 		}).then(QUnit.start);
@@ -94,4 +94,4 @@
 			});
 		}).then(QUnit.start);
 	});
-})();
+});

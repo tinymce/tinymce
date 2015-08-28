@@ -11,6 +11,7 @@
 /**
  * Utility class for box parsing and measuing.
  *
+ * @private
  * @class tinymce.ui.BoxUtils
  */
 define("tinymce/ui/BoxUtils", [
