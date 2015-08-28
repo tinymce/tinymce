@@ -380,7 +380,7 @@ tinymce.PluginManager.add('charmap', function(editor) {
 			]
 		});
 	}
-	
+
 	editor.addCommand('mceShowCharmap', showDialog);
 
 	editor.addButton('charmap', {
