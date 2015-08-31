@@ -33,7 +33,7 @@ test(
     checkAll([[1, 7]], ' cattle', Pattern.unsafetoken('cattle'));
     checkAll([], 'acattle', Pattern.unsafeword('cattle'));
     checkAll([[1, 7]], ' cattle', Pattern.unsafeword('cattle'));
-    checkAll([], '\uFEFFdog ', Pattern.safeword('dog'));
+    checkAll([], '\u200Bdog ', Pattern.safeword('dog'));
 
     checkAll([[3, 7], [10, 14]], 'no it\'s i it\'s done.', Pattern.unsafetoken('it\'s'));
     checkAll([[0, 12]], 'catastrophe\'', Pattern.unsafetoken('catastrophe\''));
@@ -48,7 +48,7 @@ test(
     checkAll([[0, 3], [4, 7], [8, 11]], 'sre sre sre ', Pattern.unsafeword('sre'));
     checkAll([[1, 4], [5, 8], [9, 12]], ' sre sre sre ', Pattern.unsafeword('sre'));
 
-    checkAll([['this '.length, 'this e\uFEFFnds'.length ]], 'this e\uFEFFnds here', Pattern.unsafeword('e\uFEFFnds'));
+    checkAll([['this '.length, 'this e\u200Bnds'.length ]], 'this e\u200Bnds here', Pattern.unsafeword('e\u200Bnds'));
 
     var prefix = Safe.sanitise('[');
     var suffix = Safe.sanitise(']');
