@@ -2,11 +2,12 @@ test(
   'Word Util',
 
   [
+    'ephox.bud.Unicode',
     'ephox.perhaps.Option',
     'ephox.robin.util.WordUtil'
   ],
 
-  function (Option, WordUtil) {
+  function (Unicode, Option, WordUtil) {
 
     var checkNone = function (text, word) {
       var actual = word(text);
@@ -59,9 +60,9 @@ test(
     checkBreakPosition(0, ' ', WordUtil.leftBreak);
     checkBreakPosition(0, ' word', WordUtil.leftBreak);
     checkBreakPosition(4, 'word ', WordUtil.leftBreak);
-    checkBreakPosition(4, 'word \uFEFF', WordUtil.leftBreak);
-    checkBreakPosition(0, ' \uFEFFword', WordUtil.leftBreak);
-    checkBreakPosition(0, ' \uFEFF\uFEFFword', WordUtil.leftBreak);
-    checkBreakPosition(0, ' \uFEFFwo\uFEFFrd', WordUtil.leftBreak);
+    checkBreakPosition(4, 'word ' + Unicode.zeroWidth() + '', WordUtil.leftBreak);
+    checkBreakPosition(0, ' ' + Unicode.zeroWidth() + 'word', WordUtil.leftBreak);
+    checkBreakPosition(0, ' ' + Unicode.zeroWidth() + '' + Unicode.zeroWidth() + 'word', WordUtil.leftBreak);
+    checkBreakPosition(0, ' ' + Unicode.zeroWidth() + 'wo' + Unicode.zeroWidth() + 'rd', WordUtil.leftBreak);
   }
 );
