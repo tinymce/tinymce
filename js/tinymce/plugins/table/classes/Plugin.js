@@ -376,7 +376,7 @@ define("tinymce/tableplugin/Plugin", [
 			},
 
 			mceTableDelete: function(grid) {
-				resizeBars.clear();
+				resizeBars.clearBars();
 				grid.deleteTable();
 			}
 		}, function(func, name) {
