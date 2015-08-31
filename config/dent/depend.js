@@ -21,6 +21,15 @@ var dependencies = [
   },
 
   {
+    name: 'bud',
+    repository: 'buildrepo2',
+    source: 'bud.zip',
+    targets: [
+      { name: 'module/*.js', path: depend }
+    ]
+  },
+
+  {
     name: 'highway',
     repository: 'buildrepo2',
     version: 'latest',
