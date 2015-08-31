@@ -125,7 +125,8 @@ define("tinymce/tableplugin/ResizeBars", [
 			var bar = {
 				'data-mce-bogus': 'all',
 				'class': RESIZE_BAR_CLASS + ' ' + classToAdd,
-				unselectable: true,
+				'unselectable': 'on',
+				'data-mce-resize': false,
 				style: 'cursor: ' + cursor + '; ' +
 					'margin: 0; ' +
 					'padding: 0; ' +

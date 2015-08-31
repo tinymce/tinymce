@@ -88,6 +88,7 @@ define("tinymce/dom/ControlSelection", [
 		);
 
 		function isResizable(elm) {
+			window.console.log('isresizable', elm);
 			var selector = editor.settings.object_resizing;
 
 			if (selector === false || Env.iOS) {
@@ -552,7 +553,7 @@ define("tinymce/dom/ControlSelection", [
 					editor.on('mousedown click', function(e) {
 						var nodeName = e.target.nodeName;
 
-						if (!resizeStarted && /^(TABLE|IMG|HR)$/.test(nodeName)) {
+						if (!resizeStarted && /^(IMG|HR)$/.test(nodeName)) {
 							editor.selection.select(e.target, nodeName == 'TABLE');
 
 							// Only fire once since nodeChange is expensive
