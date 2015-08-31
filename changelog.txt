@@ -1,4 +1,4 @@
-Version 4.2.5 (2015-08-xx)
+Version 4.2.5 (2015-08-31)
 	Added fullscreen capability to embedded youtube and vimeo videos.
 	Fixed bug where the uploadImages call didn't work on IE 10.
 	Fixed bug where image place holders would be uploaded by uploadImages call.
