@@ -301,6 +301,7 @@ define("tinymce/tableplugin/Plugin", [
 
 		editor.on('Init', function() {
 			self.cellSelection = new CellSelection(editor);
+			self.resizeBars = resizeBars;
 		});
 
 		editor.on('PreInit', function() {

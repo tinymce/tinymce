@@ -603,4 +603,312 @@
 			'<table><tbody><tr><td>&nbsp;</td><td><p>a</p></td></tr></tbody></table><p>x</p>'
 		);
 	});
+
+	var testResizeTable1 = '<table><tbody>' +
+			'<tr><td style="width: 200px;" colspan="2" data-mce-style="width: 200px;">A1</td><td style="width: 100px;" data-mce-style="width: 100px;">A2</td><td style="width: 100px;" data-mce-style="width: 100px;">A3</td></tr>' +
+			'<tr><td style="width: 100px;" data-mce-style="width: 100px;">B1</td><td style="width: 200px;" colspan="2" data-mce-style="width: 200px;">B2</td><td style="width: 100px;" data-mce-style="width: 100px;">B3</td></tr>' +
+			'<tr><td style="width: 100px;" data-mce-style="width: 100px;">C1</td><td style="width: 100px;" data-mce-style="width: 100px;">C2</td><td style="width: 200px;" colspan="2" data-mce-style="width: 200px;">C3</td></tr>' +
+			'<tr><td style="width: 400px;" colspan="4" data-mce-style="width: 400px;">D1</td></tr></tbody></table>';
+
+	var testResizeTable2 = '<table border="1"><tbody>' +
+	'<tr><th style="width: 20px;" data-mce-style="width: 20px;">A0</th><th style="width: 20px;" data-mce-style="width: 20px;">A1</th><th style="width: 20px;" data-mce-style="width: 20px;">A2</th>' +
+	'<th style="width: 40px;" data-mce-style="width: 40px;">A3</th><th style="width: 10px;" data-mce-style="width: 10px;">A4</th></tr><tr><td style="width: 20px;" data-mce-style="width: 20px;">B0</td><td style="width: 20px; "' +
+	'data-mce-style="width: 20px;">B1</td><td style="width: 20px;" data-mce-style="width: 20px;">B2</td><td style="width: 40px;" data-mce-style="width: 40px;">B3</td><td style="width: 10px;" rowspan="2" data-mce-style="width: 10px;">' +
+	'B3</td></tr><tr><td style="width: 20px;" data-mce-style="width: 20px;">C0</td><td style="width: 20px;" data-mce-style="width: 20px;">C1</td><td style="width: 20px;" data-mce-style="width: 20px;">C2</td><td style="width: 40px;" ' +
+	'data-mce-style="width: 40px;">C3</td></tr></tbody></table>';
+
+	test("Get pixel widths/heights", function() {
+		editor.setContent(testResizeTable1);
+
+		var table = editor.dom.select('table')[0];
+		var details = editor.plugins.table.resizeBars.getTableDetails(table);
+		var jenga  = editor.plugins.table.resizeBars.getJengaGrid(details);
+
+		deepEqual(
+			editor.plugins.table.resizeBars.getPixelWidths(jenga),
+			[100, 100, 100, 100]
+		);
+
+		deepEqual(
+			editor.plugins.table.resizeBars.getPixelHeights(jenga),
+			[10, 10, 10, 10]
+		);
+
+		editor.setContent(testResizeTable2);
+
+		table = editor.dom.select('table')[0];
+		details = editor.plugins.table.resizeBars.getTableDetails(table);
+		jenga  = editor.plugins.table.resizeBars.getJengaGrid(details);
+
+		deepEqual(
+			editor.plugins.table.resizeBars.getPixelWidths(jenga),
+			[20, 20, 20, 40, 10]
+		);
+
+		deepEqual(
+			editor.plugins.table.resizeBars.getPixelHeights(jenga),
+			[10, 10, 10]
+		);
+	});
+
+	test("Draw bars/clear bars", function() {
+		editor.setContent(testResizeTable1);
+
+		var table = editor.dom.select('table')[0];
+
+		editor.plugins.table.resizeBars.drawBars(table);
+
+		equal(editor.dom.select('.mce-resize-bar-row').length,
+			4);
+
+		equal(editor.dom.select('.mce-resize-bar-col').length,
+			4);
+
+		editor.plugins.table.resizeBars.clearBars();
+
+		equal(editor.dom.select('.mce-resize-bar-row').length,
+			0);
+
+		equal(editor.dom.select('.mce-resize-bar-col').length,
+			0);
+	});
+
+	test("Determine deltas", function() {
+		var deltas = editor.plugins.table.resizeBars.determineDeltas([100, 100, 100, 100], 0, 50, 10);
+
+		deepEqual(deltas, [50, -50, 0, 0]);
+
+		deltas = editor.plugins.table.resizeBars.determineDeltas([100, 100, 100, 100], 1, 50, 10);
+
+		deepEqual(deltas, [0, 50, -50, 0]);
+
+		deltas = editor.plugins.table.resizeBars.determineDeltas([100, 100, 100, 100], 2, 50, 10);
+
+		deepEqual(deltas, [0, 0, 50, -50]);
+
+		deltas = editor.plugins.table.resizeBars.determineDeltas([100, 100, 100, 100], 3, 50, 10);
+
+		deepEqual(deltas, [0, 0, 0, 50]);
+	});
+
+	test("Adjust width", function() {
+		editor.setContent(testResizeTable1);
+
+		var table = editor.dom.select('table')[0];
+
+		editor.plugins.table.resizeBars.adjustWidth(table, 50, 0);
+
+		equal(editor.getContent(),
+			'<table style="width: 400px;">' +
+			'<tbody>' +
+			'<tr>' +
+			'<td style="width: 200px;" colspan="2">A1</td>' +
+			'<td style="width: 100px;">A2</td>' +
+			'<td style="width: 100px;">A3</td>' +
+			'</tr>' +
+			'<tr>' +
+			'<td style="width: 150px;">B1</td>' +
+			'<td style="width: 150px;" colspan="2">B2</td>' +
+			'<td style="width: 100px;">B3</td>' +
+			'</tr>' +
+			'<tr>' +
+			'<td style="width: 150px;">C1</td>' +
+			'<td style="width: 50px;">C2</td>' +
+			'<td style="width: 200px;" colspan="2">C3</td>' +
+			'</tr>' +
+			'<tr>' +
+			'<td style="width: 400px;" colspan="4">D1</td>' +
+			'</tr>' +
+			'</tbody>' +
+			'</table>');
+
+		editor.setContent(testResizeTable1);
+
+		table = editor.dom.select('table')[0];
+
+		editor.plugins.table.resizeBars.adjustWidth(table, 50, 1);
+
+		equal(editor.getContent(),
+			'<table style="width: 400px;">' +
+			'<tbody>' +
+			'<tr>' +
+			'<td style="width: 250px;" colspan="2">A1</td>' +
+			'<td style="width: 50px;">A2</td>' +
+			'<td style="width: 100px;">A3</td>' +
+			'</tr>' +
+			'<tr>' +
+			'<td style="width: 100px;">B1</td>' +
+			'<td style="width: 200px;" colspan="2">B2</td>' +
+			'<td style="width: 100px;">B3</td>' +
+			'</tr>' +
+			'<tr>' +
+			'<td style="width: 100px;">C1</td>' +
+			'<td style="width: 150px;">C2</td>' +
+			'<td style="width: 150px;" colspan="2">C3</td>' +
+			'</tr>' +
+			'<tr>' +
+			'<td style="width: 400px;" colspan="4">D1</td>' +
+			'</tr>' +
+			'</tbody>' +
+			'</table>');
+
+		editor.setContent(testResizeTable1);
+
+		table = editor.dom.select('table')[0];
+
+		editor.plugins.table.resizeBars.adjustWidth(table, 50, 2);
+
+		equal(editor.getContent(),
+			'<table style="width: 400px;">' +
+			'<tbody>' +
+			'<tr>' +
+			'<td style="width: 200px;" colspan="2">A1</td>' +
+			'<td style="width: 150px;">A2</td>' +
+			'<td style="width: 50px;">A3</td>' +
+			'</tr>' +
+			'<tr>' +
+			'<td style="width: 100px;">B1</td>' +
+			'<td style="width: 250px;" colspan="2">B2</td>' +
+			'<td style="width: 50px;">B3</td>' +
+			'</tr>' +
+			'<tr>' +
+			'<td style="width: 100px;">C1</td>' +
+			'<td style="width: 100px;">C2</td>' +
+			'<td style="width: 200px;" colspan="2">C3</td>' +
+			'</tr>' +
+			'<tr>' +
+			'<td style="width: 400px;" colspan="4">D1</td>' +
+			'</tr>' +
+			'</tbody>' +
+			'</table>');
+
+		editor.setContent(testResizeTable1);
+
+		table = editor.dom.select('table')[0];
+
+		editor.plugins.table.resizeBars.adjustWidth(table, 50, 3);
+
+		equal(editor.getContent(),
+			'<table style="width: 450px;">' +
+			'<tbody>' +
+			'<tr>' +
+			'<td style="width: 200px;" colspan="2">A1</td>' +
+			'<td style="width: 100px;">A2</td>' +
+			'<td style="width: 150px;">A3</td>' +
+			'</tr>' +
+			'<tr>' +
+			'<td style="width: 100px;">B1</td>' +
+			'<td style="width: 200px;" colspan="2">B2</td>' +
+			'<td style="width: 150px;">B3</td>' +
+			'</tr>' +
+			'<tr>' +
+			'<td style="width: 100px;">C1</td>' +
+			'<td style="width: 100px;">C2</td>' +
+			'<td style="width: 250px;" colspan="2">C3</td>' +
+			'</tr>' +
+			'<tr>' +
+			'<td style="width: 450px;" colspan="4">D1</td>' +
+			'</tr>' +
+			'</tbody>' +
+			'</table>');
+	});
+
+	test("Adjust height", function() {
+		editor.setContent(testResizeTable2);
+
+		var table = editor.dom.select('table')[0];
+
+		editor.plugins.table.resizeBars.adjustHeight(table, 50, 0);
+
+		equal(editor.getContent(),
+			'<table border="1">' +
+			'<tbody>' +
+			'<tr style="height: 60px;">' +
+			'<th style="width: 20px; height: 60px;">A0</th>' +
+			'<th style="width: 20px; height: 60px;">A1</th>' +
+			'<th style="width: 20px; height: 60px;">A2</th>' +
+			'<th style="width: 40px; height: 60px;">A3</th>' +
+			'<th style="width: 10px; height: 60px;">A4</th>' +
+			'</tr>' +
+			'<tr style="height: 10px;">' +
+			'<td style="width: 20px; height: 10px;">B0</td>' +
+			'<td style="width: 20px; height: 10px;">B1</td>' +
+			'<td style="width: 20px; height: 10px;">B2</td>' +
+			'<td style="width: 40px; height: 10px;">B3</td>' +
+			'<td style="width: 10px; height: 20px;" rowspan="2">B3</td>' +
+			'</tr>' +
+			'<tr style="height: 10px;">' +
+			'<td style="width: 20px; height: 10px;">C0</td>' +
+			'<td style="width: 20px; height: 10px;">C1</td>' +
+			'<td style="width: 20px; height: 10px;">C2</td>' +
+			'<td style="width: 40px; height: 10px;">C3</td>' +
+			'</tr>' +
+			'</tbody>' +
+			'</table>');
+
+		editor.setContent(testResizeTable2);
+
+		table = editor.dom.select('table')[0];
+
+		editor.plugins.table.resizeBars.adjustHeight(table, 50, 1);
+
+		equal(editor.getContent(),
+			'<table border="1">' +
+			'<tbody>' +
+			'<tr style="height: 10px;">' +
+			'<th style="width: 20px; height: 10px;">A0</th>' +
+			'<th style="width: 20px; height: 10px;">A1</th>' +
+			'<th style="width: 20px; height: 10px;">A2</th>' +
+			'<th style="width: 40px; height: 10px;">A3</th>' +
+			'<th style="width: 10px; height: 10px;">A4</th>' +
+			'</tr>' +
+			'<tr style="height: 60px;">' +
+			'<td style="width: 20px; height: 60px;">B0</td>' +
+			'<td style="width: 20px; height: 60px;">B1</td>' +
+			'<td style="width: 20px; height: 60px;">B2</td>' +
+			'<td style="width: 40px; height: 60px;">B3</td>' +
+			'<td style="width: 10px; height: 70px;" rowspan="2">B3</td>' +
+			'</tr>' +
+			'<tr style="height: 10px;">' +
+			'<td style="width: 20px; height: 10px;">C0</td>' +
+			'<td style="width: 20px; height: 10px;">C1</td>' +
+			'<td style="width: 20px; height: 10px;">C2</td>' +
+			'<td style="width: 40px; height: 10px;">C3</td>' +
+			'</tr>' +
+			'</tbody>' +
+			'</table>');
+
+		editor.setContent(testResizeTable2);
+
+		table = editor.dom.select('table')[0];
+
+		editor.plugins.table.resizeBars.adjustHeight(table, 50, 2);
+
+		equal(editor.getContent(),
+			'<table border="1">' +
+			'<tbody>' +
+			'<tr style="height: 10px;">' +
+			'<th style="width: 20px; height: 10px;">A0</th>' +
+			'<th style="width: 20px; height: 10px;">A1</th>' +
+			'<th style="width: 20px; height: 10px;">A2</th>' +
+			'<th style="width: 40px; height: 10px;">A3</th>' +
+			'<th style="width: 10px; height: 10px;">A4</th>' +
+			'</tr>' +
+			'<tr style="height: 10px;">' +
+			'<td style="width: 20px; height: 10px;">B0</td>' +
+			'<td style="width: 20px; height: 10px;">B1</td>' +
+			'<td style="width: 20px; height: 10px;">B2</td>' +
+			'<td style="width: 40px; height: 10px;">B3</td>' +
+			'<td style="width: 10px; height: 70px;" rowspan="2">B3</td>' +
+			'</tr>' +
+			'<tr style="height: 60px;">' +
+			'<td style="width: 20px; height: 60px;">C0</td>' +
+			'<td style="width: 20px; height: 60px;">C1</td>' +
+			'<td style="width: 20px; height: 60px;">C2</td>' +
+			'<td style="width: 40px; height: 60px;">C3</td>' +
+			'</tr>' +
+			'</tbody>' +
+			'</table>');
+
+	});
 })();
