@@ -32,9 +32,10 @@ define("tinymce/tableplugin/ResizeBars", [
 			RESIZE_MINIMUM_WIDTH = 10,
 			RESIZE_MINIMUM_HEIGHT = 10;
 
-		var delayDrop, dragging, blockerElement, dragBar, lastX, lastY, hoverTable;
+		var delayDrop, dragging, blockerElement, dragBar, lastX, lastY, hoverTable,
+			objectResizeTarget, objectResizeStartWidth, objectResizeStartHeight;
 
-		//Get the absolute position's top edge.
+		// Get the absolute position's top edge.
 		function getTopEdge(index, row) {
 			return {
 				index: index,
@@ -42,7 +43,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			};
 		}
 
-		//Get the absolute position's bottom edge.
+		// Get the absolute position's bottom edge.
 		function getBottomEdge(index, row) {
 			return {
 				index: index,
@@ -50,7 +51,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			};
 		}
 
-		//Get the absolute position's left edge.
+		// Get the absolute position's left edge.
 		function getLeftEdge(index, cell) {
 			return {
 				index: index,
@@ -58,7 +59,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			};
 		}
 
-		//Get the absolute position's right edge.
+		// Get the absolute position's right edge.
 		function getRightEdge(index, cell) {
 			return {
 				index: index,
@@ -87,16 +88,16 @@ define("tinymce/tableplugin/ResizeBars", [
 			return isRtl() ? getLeftEdge(index, cell) : getRightEdge(index, cell);
 		}
 
-		//Find the left/right (ltr/rtl) or top side locations of the cells to measure.
-		//This is the location of the borders we need to draw over.
+		// Find the left/right (ltr/rtl) or top side locations of the cells to measure.
+		// This is the location of the borders we need to draw over.
 		function findPositions(getInner, getOuter, thingsToMeasure) {
 			var tablePositions = [];
 
-			//Skip the first item in the array = no left (LTR), right (RTL) or top bars
+			// Skip the first item in the array = no left (LTR), right (RTL) or top bars
 			for (var i = 1; i < thingsToMeasure.length; i++) {
-				//Get the element from the details
+				// Get the element from the details
 				var item = thingsToMeasure[i].element;
-				//We need to zero index this again
+				// We need to zero index this again
 				tablePositions.push(getInner(i - 1, item));
 			}
 
@@ -106,7 +107,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			return tablePositions;
 		}
 
-		//Clear the bars.
+		// Clear the bars.
 		function clearBars() {
 			var bars = editor.dom.select('.' + RESIZE_BAR_CLASS, getBody());
 			Tools.each(bars, function(bar) {
@@ -114,13 +115,13 @@ define("tinymce/tableplugin/ResizeBars", [
 			});
 		}
 
-		//Refresh the bars.
+		// Refresh the bars.
 		function refreshBars(tableElement) {
 			clearBars();
 			drawBars(tableElement);
 		}
 
-		//Generates a resize bar object for the editor to add.
+		// Generates a resize bar object for the editor to add.
 		function generateBar(classToAdd, cursor, left, top, height, width, indexAttr, index) {
 			var bar = {
 				'data-mce-bogus': 'all',
@@ -142,7 +143,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			return bar;
 		}
 
-		//Draw the row bars over the row borders.
+		// Draw the row bars over the row borders.
 		function drawRows(rowPositions, tableWidth, tablePosition) {
 			Tools.each(rowPositions, function(rowPosition) {
 				var left = tablePosition.x,
@@ -156,7 +157,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			});
 		}
 
-		//Draw the column bars over the column borders.
+		// Draw the column bars over the column borders.
 		function drawCols(cellPositions, tableHeight, tablePosition) {
 			Tools.each(cellPositions, function(cellPosition) {
 				var left = cellPosition.x - RESIZE_BAR_THICKNESS / 2,
@@ -170,7 +171,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			});
 		}
 
-		//Get a matrix of the cells in each row and the rows in the table.
+		// Get a matrix of the cells in each row and the rows in the table.
 		function getTableDetails(table) {
 			return Tools.map(table.rows, function(row) {
 
@@ -195,7 +196,7 @@ define("tinymce/tableplugin/ResizeBars", [
 
 		}
 
-		//Get a grid model of the table.
+		// Get a grid model of the table.
 		function getJengaGrid(tableDetails) {
 			function key(rowIndex, colIndex) {
 				return rowIndex + ',' + colIndex;
@@ -282,9 +283,9 @@ define("tinymce/tableplugin/ResizeBars", [
 			return r;
 		}
 
-		//Attempt to get a representative single block for this column.
-		//If we can't find a single block, all blocks in this row/column are spanned
-		//and we'll need to fallback to getting the first cell in the row/column.
+		// Attempt to get a representative single block for this column.
+		// If we can't find a single block, all blocks in this row/column are spanned
+		// and we'll need to fallback to getting the first cell in the row/column.
 		function decide(getBlock, isSingle, getFallback) {
 			var inBlock = getBlock();
 			var singleInBlock;
@@ -297,7 +298,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			return singleInBlock ? singleInBlock : getFallback();
 		}
 
-		//Attempt to get representative blocks for the width of each column.
+		// Attempt to get representative blocks for the width of each column.
 		function getColumnBlocks(jenga) {
 			var cols = range(0, jenga.grid.maxCols);
 			var rows = range(0, jenga.grid.maxRows);
@@ -328,7 +329,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			});
 		}
 
-		//Attempt to get representative blocks for the height of each row.
+		// Attempt to get representative blocks for the height of each row.
 		function getRowBlocks(jenga) {
 
 			var cols = range(0, jenga.grid.maxCols);
@@ -359,8 +360,8 @@ define("tinymce/tableplugin/ResizeBars", [
 			});
 		}
 
-		//Draw resize bars over the left/right (ltr/rtl) or top side locations of the cells to measure.
-		//This is the location of the borders we need to draw over.
+		// Draw resize bars over the left/right (ltr/rtl) or top side locations of the cells to measure.
+		// This is the location of the borders we need to draw over.
 		function drawBars(table) {
 			var tableDetails = getTableDetails(table);
 			var jenga = getJengaGrid(tableDetails);
@@ -375,7 +376,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			drawCols(colPositions, table.offsetHeight, tablePosition);
 		}
 
-		//Attempt to deduce the width/height of a column/row that has more than one cell spanned.
+		// Attempt to deduce the width/height of a column/row that has more than one cell spanned.
 		function deduceSize(deducables, index) {
 			if (index < 0 || index >= deducables.length - 1) {
 				return "";
@@ -423,8 +424,24 @@ define("tinymce/tableplugin/ResizeBars", [
 			return Math.abs(next.value - current.value) / extras;
 		}
 
-		//Attempt to get the css width from a cell.
-		function getPixelWidths(jenga) {
+		// Attempt to get the pixel width of a cell but only if it's a defined static value.
+		function getNonPercentagePixelWidth(element) {
+
+			var widthString = editor.dom.getStyle(element, 'width');
+
+			if (!widthString) {
+				widthString = editor.dom.getAttrib(element, 'width');
+			}
+			if (!widthString) {
+				return false;
+			}
+			var widthNumber = parseInt(widthString, 10);
+			return widthString.indexOf('%', widthString.length - 1) > 0 ?
+				false : widthNumber;
+		}
+
+		// Attempt to get the pixel width of a cell
+		function getPixelWidth(element) {
 
 			function convertFromPercent(element, cellWidth) {
 				var table = editor.dom.getParent(element, 'table');
@@ -432,15 +449,20 @@ define("tinymce/tableplugin/ResizeBars", [
 				return Math.floor((cellWidth / 100) * tableTotal);
 			}
 
-			function getPixelWidth(element) {
-				var widthString = editor.dom.getStyle(element, 'width');
-				if (!widthString) {
-					widthString = editor.dom.getAttrib(element, 'width');
-				}
-				var widthNumber = parseInt(widthString, 10);
-				return widthString.indexOf('%', widthString.length - 1) > 0 ?
-					convertFromPercent(element, widthNumber) : widthNumber;
+			var widthString = editor.dom.getStyle(element, 'width');
+			if (!widthString) {
+				widthString = editor.dom.getAttrib(element, 'width');
 			}
+			if (!widthString) {
+				widthString = editor.dom.getStyle(element, 'width', true);
+			}
+			var widthNumber = parseInt(widthString, 10);
+			return widthString.indexOf('%', widthString.length - 1) > 0 ?
+				convertFromPercent(element, widthNumber) : widthNumber;
+		}
+
+		// Attempt to get the css width from column representative cells.
+		function getPixelWidths(jenga) {
 
 			var cols = getColumnBlocks(jenga);
 
@@ -452,9 +474,9 @@ define("tinymce/tableplugin/ResizeBars", [
 
 			for (var i = 0; i < cols.length; i++) {
 				var span = cols[i].element.hasAttribute('colspan') ? parseInt(cols[i].element.getAttribute('colspan'), 10) : 1;
-				//Deduce if the column has colspan of more than 1
+				// Deduce if the column has colspan of more than 1
 				var width = span > 1 ? deduceSize(backups, i) : getPixelWidth(cols[i].element);
-				//If everything's failed and we still don't have a width
+				// If everything's failed and we still don't have a width
 				width = width ? width : RESIZE_MINIMUM_WIDTH;
 				widths.push(width);
 			}
@@ -462,8 +484,24 @@ define("tinymce/tableplugin/ResizeBars", [
 			return widths;
 		}
 
-		//Attempt to get the css height from a cell.
-		function getPixelHeights(jenga) {
+		// Attempt to get the pixel height from a cell.
+		function getNonPercentagePixelHeight(element) {
+
+			var widthString = editor.dom.getStyle(element, 'height');
+
+			if (!widthString) {
+				widthString = editor.dom.getAttrib(element, 'height');
+			}
+			if (!widthString) {
+				return false;
+			}
+			var widthNumber = parseInt(widthString, 10);
+			return widthString.indexOf('%', widthString.length - 1) > 0 ?
+				false : widthNumber;
+		}
+
+		// Attempt to get the pixel height from a cell.
+		function getPixelHeight(element) {
 
 			function convertFromPercent(element, cellWidth) {
 				var table = editor.dom.getParent(element, 'table');
@@ -471,15 +509,17 @@ define("tinymce/tableplugin/ResizeBars", [
 				return Math.floor((cellWidth / 100) * tableTotal);
 			}
 
-			function getPixelHeight(element) {
-				var widthString = editor.dom.getStyle(element, 'height');
-				if (!widthString) {
-					widthString = editor.dom.getAttrib(element, 'height');
-				}
-				var widthNumber = parseInt(widthString, 10);
-				return widthString.indexOf('%', widthString.length - 1) > 0 ?
-					convertFromPercent(element, widthNumber) : widthNumber;
+			var widthString = editor.dom.getStyle(element, 'height');
+			if (!widthString) {
+				widthString = editor.dom.getAttrib(element, 'height');
 			}
+			var widthNumber = parseInt(widthString, 10);
+			return widthString.indexOf('%', widthString.length - 1) > 0 ?
+				convertFromPercent(element, widthNumber) : widthNumber;
+		}
+
+		// Attempt to get the css height from row representative cells.
+		function getPixelHeights(jenga) {
 
 			var rows = getRowBlocks(jenga);
 
@@ -501,7 +541,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			return heights;
 		}
 
-		//Determine how much each column's css width will need to change.
+		// Determine how much each column's css width will need to change.
 		function determineDeltas(sizes, column, step, min) {
 
 			var result = sizes.slice(0);
@@ -547,14 +587,14 @@ define("tinymce/tableplugin/ResizeBars", [
 
 			var deltas;
 
-			if (sizes.length === 0) { //No Columns
+			if (sizes.length === 0) { // No Columns
 				deltas = [];
-			} else if (sizes.length === 1) { //One Column
+			} else if (sizes.length === 1) { // One Column
 				var newNext = Math.max(min, result[0] + step);
 				deltas = [newNext - result[0]];
-			} else if (column === 0) { //Left Column
+			} else if (column === 0) { // Left Column
 				deltas = onLeftOrMiddle(0, 1);
-			} else if (column > 0 && column < sizes.length - 1) { //Middle Column
+			} else if (column > 0 && column < sizes.length - 1) { // Middle Column
 				deltas = onLeftOrMiddle(column, column + 1);
 			} else if (column === sizes.length - 1) { // Right Column
 				deltas = onRight(column - 1, column);
@@ -573,7 +613,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			return r;
 		}
 
-		//Combine cell's css widths to determine widths of colspan'd cells.
+		// Combine cell's css widths to determine widths of colspan'd cells.
 		function recalculateWidths(jenga, widths) {
 			var allCells = jenga.getAllCells();
 			return Tools.map(allCells, function(cell) {
@@ -586,7 +626,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			});
 		}
 
-		//Combine cell's css heights to determine heights of rowspan'd cells.
+		// Combine cell's css heights to determine heights of rowspan'd cells.
 		function recalculateCellHeights(jenga, heights) {
 			var allCells = jenga.getAllCells();
 			return Tools.map(allCells, function(cell) {
@@ -599,7 +639,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			});
 		}
 
-		//Calculate row heights.
+		// Calculate row heights.
 		function recalculateRowHeights(jenga, heights) {
 			var allRows = jenga.getAllRows();
 			return Tools.map(allRows, function(row, i) {
@@ -610,7 +650,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			});
 		}
 
-		//Adjust the width of the column of table at index, with delta.
+		// Adjust the width of the column of table at index, with delta.
 		function adjustWidth(table, delta, index) {
 			var tableDetails = getTableDetails(table);
 			var jenga = getJengaGrid(tableDetails);
@@ -636,7 +676,7 @@ define("tinymce/tableplugin/ResizeBars", [
 
 		}
 
-		//Adjust the height of the row of table at index, with delta.
+		// Adjust the height of the row of table at index, with delta.
 		function adjustHeight(table, delta, index) {
 			var tableDetails = getTableDetails(table);
 			var jenga = getJengaGrid(tableDetails);
@@ -753,7 +793,7 @@ define("tinymce/tableplugin/ResizeBars", [
 		}
 
 		function colDragHandler(event) {
-			lastX = lastX !== undefined ? lastX : event.clientX; //we need a firstX
+			lastX = lastX !== undefined ? lastX : event.clientX; // we need a firstX
 			var deltaX = event.clientX - lastX;
 			lastX = event.clientX;
 			var oldLeft = editor.dom.getPos(dragBar).x;
@@ -779,20 +819,57 @@ define("tinymce/tableplugin/ResizeBars", [
 		}
 
 		editor.on('init', function() {
-			//Needs to be like this for inline mode, editor.on does not bind to elements in the document body otherwise
+			// Needs to be like this for inline mode, editor.on does not bind to elements in the document body otherwise
 			editor.dom.bind(getBody(), 'mousedown', function(e) {
 				var target = e.target;
 
 				if (isCol(target)) {
+					e.preventDefault();
 					var initialLeft = editor.dom.getPos(target).x;
 					editor.dom.setAttrib(target, RESIZE_BAR_COL_DATA_INITIAL_LEFT_ATTRIBUTE, initialLeft);
 					setupColDrag(target);
 				} else if (isRow(target)) {
+					e.preventDefault();
 					var initialTop = editor.dom.getPos(target).y;
 					editor.dom.setAttrib(target, RESIZE_BAR_ROW_DATA_INITIAL_TOP_ATTRIBUTE, initialTop);
 					setupRowDrag(target);
 				}
 			});
+		});
+
+		editor.on('ObjectResizeStart', function(e) {
+			if (e.target.nodeName === 'TABLE') {
+				objectResizeTarget = e.target;
+				objectResizeStartWidth = e.width;
+				objectResizeStartHeight = e.height;
+			}
+		});
+
+		// If we're updating the table width via the old mechanic, we need to update the constituent cells' widths/heights too.
+		editor.on('ObjectResized', function(e) {
+			if (objectResizeTarget === e.target) {
+				var objectResizeEndWidth = e.width,
+					objectResizeEndHeight = e.height,
+					widthRatio = objectResizeEndWidth / objectResizeStartWidth,
+					heightRatio = objectResizeEndHeight / objectResizeStartHeight;
+
+				Tools.each(objectResizeTarget.rows, function(row) {
+					Tools.each(row.cells, function(cell) {
+						var width = getNonPercentagePixelWidth(cell);
+						if (width) {
+							width = Math.round(width * widthRatio);
+							editor.dom.setStyle(cell, 'width', width + 'px');
+							editor.dom.setAttrib(cell, 'width', null);
+						}
+						var height = getNonPercentagePixelHeight(cell);
+						if (height) {
+							height = Math.round(height * heightRatio);
+							editor.dom.setStyle(cell, 'height', height + 'px');
+							editor.dom.setAttrib(cell, 'height', null);
+						}
+					});
+				});
+			}
 		});
 
 		editor.on('mouseover', function(e) {

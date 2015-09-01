@@ -88,7 +88,6 @@ define("tinymce/dom/ControlSelection", [
 		);
 
 		function isResizable(elm) {
-			window.console.log('isresizable', elm);
 			var selector = editor.settings.object_resizing;
 
 			if (selector === false || Env.iOS) {
@@ -96,7 +95,7 @@ define("tinymce/dom/ControlSelection", [
 			}
 
 			if (typeof selector != 'string') {
-				selector = 'img,div';
+				selector = 'table,img,div';
 			}
 
 			if (elm.getAttribute('data-mce-resize') === 'false') {
@@ -221,7 +220,7 @@ define("tinymce/dom/ControlSelection", [
 			dom.remove(selectedElmGhost);
 			dom.remove(resizeHelper);
 
-			if (!isIE) {
+			if (!isIE || selectedElm.nodeName == "TABLE") {
 				showResizeRect(selectedElm);
 			}
 
@@ -553,7 +552,7 @@ define("tinymce/dom/ControlSelection", [
 					editor.on('mousedown click', function(e) {
 						var nodeName = e.target.nodeName;
 
-						if (!resizeStarted && /^(IMG|HR)$/.test(nodeName)) {
+						if (!resizeStarted && /^(TABLE|IMG|HR)$/.test(nodeName)) {
 							editor.selection.select(e.target, nodeName == 'TABLE');
 
 							// Only fire once since nodeChange is expensive
