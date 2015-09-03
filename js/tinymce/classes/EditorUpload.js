@@ -129,7 +129,7 @@ define("tinymce/EditorUpload", [
 					return 'src="data:' + blobInfo.blob().type + ';base64,' + blobInfo.base64() + '"';
 				}
 
-				return match[0];
+				return match;
 			});
 		}
 

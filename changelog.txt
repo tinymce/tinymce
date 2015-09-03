@@ -1,3 +1,5 @@
+Version 4.2.6 (2015-09-xx)
+	Fixed bug where blob uris not produced by tinymce would produce HTML invalid markup.
 Version 4.2.5 (2015-08-31)
 	Added fullscreen capability to embedded youtube and vimeo videos.
 	Fixed bug where the uploadImages call didn't work on IE 10.

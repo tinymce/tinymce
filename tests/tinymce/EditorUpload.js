@@ -154,4 +154,9 @@ ModuleLoader.require([
 
 		editor.uploadImages(done);
 	});
+
+	test('Retain blobs not in blob cache', function() {
+		editor.getBody().innerHTML = '<img src="blob:http%3A//host/f8d1e462-8646-485f-87c5-f9bcee5873c6">';
+		QUnit.equal('<p><img src="blob:http%3A//host/f8d1e462-8646-485f-87c5-f9bcee5873c6" alt="" /></p>', editor.getContent());
+	});
 });
