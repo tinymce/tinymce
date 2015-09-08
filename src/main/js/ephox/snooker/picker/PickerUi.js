@@ -23,11 +23,10 @@ define(
     'ephox.sugar.api.InsertAll',
     'ephox.sugar.api.MouseEvent',
     'ephox.sugar.api.Remove',
-    'ephox.sugar.impl.FilteredEvent',
     'global!parseInt'
   ],
 
-  function (Arr, AriaGrid, Fun, Event, Events, Structs, PickerLookup, PickerStyles, Redimension, Styles, Util, Attr, Class, Classes, DomEvent, Element, Focus, Insert, InsertAll, MouseEvent, Remove, FilteredEvent, parseInt) {
+  function (Arr, AriaGrid, Fun, Event, Events, Structs, PickerLookup, PickerStyles, Redimension, Styles, Util, Attr, Class, Classes, DomEvent, Element, Focus, Insert, InsertAll, MouseEvent, Remove, parseInt) {
     return function (direction, settings, helpReference) {
       var events = Events.create({
         select: Event(['rows', 'cols', 'rowHeaders', 'columnHeaders'])
