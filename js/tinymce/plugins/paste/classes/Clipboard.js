@@ -65,11 +65,7 @@ define("tinymce/pasteplugin/Clipboard", [
 				}
 
 				if (!args.isDefaultPrevented()) {
-					editor.insertContent(html, {
-						merge: editor.settings.paste_merge_formats !== false,
-						data: {paste: true},
-						setContentArgs: {uploadImagesImmediately: true}
-					});
+					editor.insertContent(html, {merge: editor.settings.paste_merge_formats !== false, data: {paste: true}});
 				}
 			}
 		}

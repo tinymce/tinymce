@@ -26,7 +26,7 @@ define("tinymce/imagetoolsplugin/Plugin", [
 	"tinymce/imagetoolsplugin/Dialog"
 ], function(PluginManager, Env, Promise, URI, Tools, ImageTools, Conversions, Dialog) {
 	PluginManager.add('imagetools', function(editor) {
-		var count = 0;
+		var count = 0, imageUploadTimer;
 
 		if (!Env.fileApi) {
 			return;
@@ -218,6 +218,11 @@ define("tinymce/imagetoolsplugin/Plugin", [
 
 						if (uploadImmediately) {
 							editor.uploadImagesAuto();
+						} else {
+							clearTimeout(imageUploadTimer);
+							imageUploadTimer = setTimeout(function() {
+								editor.uploadImagesAuto();
+							}, 30000);
 						}
 					}
 

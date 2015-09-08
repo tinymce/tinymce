@@ -2090,7 +2090,7 @@ define("tinymce/Editor", [
 
 		/**
 		 * Uploads all data uri/blob uri images in the editor contents to server if the
-		 * images_disable_automatic_uploads setting is not true.
+		 * automatic_uploads setting is not true.
 		 *
 		 * @method uploadImages
 		 * @param {function} callback Optional callback with images and status for each image.

@@ -96,7 +96,7 @@ define("tinymce/EditorUpload", [
 		}
 
 		function uploadImagesAuto(callback) {
-			if (editor.settings.images_disable_automatic_uploads !== true) {
+			if (editor.settings.automatic_uploads !== false) {
 				return uploadImages(callback);
 			}
 		}
@@ -140,7 +140,7 @@ define("tinymce/EditorUpload", [
 		}
 
 		editor.on('setContent', function() {
-			if (editor.settings.images_disable_automatic_uploads !== true) {
+			if (editor.settings.automatic_uploads !== false) {
 				uploadImagesAuto();
 			} else {
 				scanForImages();
