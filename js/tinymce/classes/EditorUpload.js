@@ -139,19 +139,9 @@ define("tinymce/EditorUpload", [
 			});
 		}
 
-		var timer;
-
-		editor.on('setContent', function(args) {
+		editor.on('setContent', function() {
 			if (editor.settings.images_disable_automatic_uploads !== true) {
-				if (args.uploadImagesImmediately) {
-					uploadImages();
-				} else {
-					scanForImages();
-					clearTimeout(timer);
-					timer = setTimeout(function() {
-						uploadImages();
-					}, 30000);
-				}
+				uploadImagesAuto();
 			} else {
 				scanForImages();
 			}

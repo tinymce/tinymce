@@ -199,7 +199,7 @@ define("tinymce/imagetoolsplugin/Plugin", [
 			});
 		}
 
-		function updateSelectedImage(blob) {
+		function updateSelectedImage(blob, uploadImmediately) {
 			return Conversions.blobToDataUri(blob).then(function(dataUri) {
 				var id, base64, blobCache, blobInfo, selectedImage;
 
@@ -215,6 +215,10 @@ define("tinymce/imagetoolsplugin/Plugin", [
 					function imageLoadedHandler() {
 						editor.$(selectedImage).off('load', imageLoadedHandler);
 						editor.nodeChanged();
+
+						if (uploadImmediately) {
+							editor.uploadImagesAuto();
+						}
 					}
 
 					editor.$(selectedImage).on('load', imageLoadedHandler);
@@ -278,7 +282,9 @@ define("tinymce/imagetoolsplugin/Plugin", [
 							resolve(blob);
 						});
 					});
-				}).then(updateSelectedImage, function() {});
+				}).then(function(blob) {
+					updateSelectedImage(blob, true);
+				});
 			}
 		}
 
