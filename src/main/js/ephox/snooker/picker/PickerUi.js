@@ -21,11 +21,13 @@ define(
     'ephox.sugar.api.Focus',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.InsertAll',
+    'ephox.sugar.api.MouseEvent',
     'ephox.sugar.api.Remove',
+    'ephox.sugar.impl.FilteredEvent',
     'global!parseInt'
   ],
 
-  function (Arr, AriaGrid, Fun, Event, Events, Structs, PickerLookup, PickerStyles, Redimension, Styles, Util, Attr, Class, Classes, DomEvent, Element, Focus, Insert, InsertAll, Remove, parseInt) {
+  function (Arr, AriaGrid, Fun, Event, Events, Structs, PickerLookup, PickerStyles, Redimension, Styles, Util, Attr, Class, Classes, DomEvent, Element, Focus, Insert, InsertAll, MouseEvent, Remove, FilteredEvent, parseInt) {
     return function (direction, settings, helpReference) {
       var events = Events.create({
         select: Event(['rows', 'cols', 'rowHeaders', 'columnHeaders'])
@@ -137,7 +139,7 @@ define(
         redimension.manual(sizeApi, getSelection(), xDelta, yDelta);
       };
 
-      var clicker = DomEvent.bind(table, 'click', function (event) {
+      var clicker = MouseEvent.realClick.bind(table, function (event) {
         execute();
         event.raw().preventDefault();
       });
