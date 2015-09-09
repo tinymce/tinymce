@@ -345,9 +345,9 @@ define("tinymce/pasteplugin/Clipboard", [
 				}
 
 				if (items) {
-
 					for (i = 0; i < items.length; i++) {
 						item = items[i];
+
 						if (/^image\/(jpeg|png|gif|bmp)$/.test(item.type)) {
 							reader = new FileReader();
 							reader.onload = pasteImage.bind(null, reader);

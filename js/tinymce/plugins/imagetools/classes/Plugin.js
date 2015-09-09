@@ -26,7 +26,7 @@ define("tinymce/imagetoolsplugin/Plugin", [
 	"tinymce/imagetoolsplugin/Dialog"
 ], function(PluginManager, Env, Promise, URI, Tools, ImageTools, Conversions, Dialog) {
 	PluginManager.add('imagetools', function(editor) {
-		var count = 0, imageUploadTimer;
+		var count = 0, imageUploadTimer, lastSelectedImage;
 
 		if (!Env.fileApi) {
 			return;
@@ -199,6 +199,16 @@ define("tinymce/imagetoolsplugin/Plugin", [
 			});
 		}
 
+		function startTimedUpload() {
+			imageUploadTimer = setTimeout(function() {
+								editor.uploadImagesAuto();
+							}, 30000);
+		}
+
+		function cancelTimedUpload() {
+			clearTimeout(imageUploadTimer);
+		}
+
 		function updateSelectedImage(blob, uploadImmediately) {
 			return Conversions.blobToDataUri(blob).then(function(dataUri) {
 				var id, base64, blobCache, blobInfo, selectedImage;
@@ -219,10 +229,8 @@ define("tinymce/imagetoolsplugin/Plugin", [
 						if (uploadImmediately) {
 							editor.uploadImagesAuto();
 						} else {
-							clearTimeout(imageUploadTimer);
-							imageUploadTimer = setTimeout(function() {
-								editor.uploadImagesAuto();
-							}, 30000);
+							cancelTimedUpload();
+							startTimedUpload();
 						}
 					}
 
@@ -333,6 +341,24 @@ define("tinymce/imagetoolsplugin/Plugin", [
 			*/
 		}
 
+		function addEvents() {
+			editor.on('NodeChange', function(e) {
+				//If the last node we selected was an image
+				//And had a source that doesn't match the current blob url
+				//We need to attempt to upload it
+				if (lastSelectedImage && lastSelectedImage.src != e.element.src) {
+					cancelTimedUpload();
+					editor.uploadImagesAuto();
+					lastSelectedImage = undefined;
+				}
+
+				//Set up the lastSelectedImage
+				if (isEditableImage(e.element)) {
+					lastSelectedImage = e.element;
+				}
+			});
+		}
+
 		function isEditableImage(img) {
 			var selectorMatched = editor.dom.is(img, 'img:not([data-mce-object],[data-mce-placeholder])');
 
@@ -354,5 +380,6 @@ define("tinymce/imagetoolsplugin/Plugin", [
 
 		addButtons();
 		addToolbars();
+		addEvents();
 	});
 });
