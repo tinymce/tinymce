@@ -21,11 +21,12 @@ define(
     'ephox.sugar.api.Focus',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.InsertAll',
+    'ephox.sugar.api.MouseEvent',
     'ephox.sugar.api.Remove',
     'global!parseInt'
   ],
 
-  function (Arr, AriaGrid, Fun, Event, Events, Structs, PickerLookup, PickerStyles, Redimension, Styles, Util, Attr, Class, Classes, DomEvent, Element, Focus, Insert, InsertAll, Remove, parseInt) {
+  function (Arr, AriaGrid, Fun, Event, Events, Structs, PickerLookup, PickerStyles, Redimension, Styles, Util, Attr, Class, Classes, DomEvent, Element, Focus, Insert, InsertAll, MouseEvent, Remove, parseInt) {
     return function (direction, settings, helpReference) {
       var events = Events.create({
         select: Event(['rows', 'cols', 'rowHeaders', 'columnHeaders'])
@@ -137,7 +138,8 @@ define(
         redimension.manual(sizeApi, getSelection(), xDelta, yDelta);
       };
 
-      var clicker = DomEvent.bind(table, 'click', function (event) {
+      // Firefox fires mouse events when you press space on a button, so make sure we have a real click
+      var clicker = MouseEvent.realClick.bind(table, function (event) {
         execute();
         event.raw().preventDefault();
       });
