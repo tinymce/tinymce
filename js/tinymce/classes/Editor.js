@@ -2088,18 +2088,6 @@ define("tinymce/Editor", [
 			return this.editorUpload.uploadImages(callback);
 		},
 
-		/**
-		 * Uploads all data uri/blob uri images in the editor contents to server if the
-		 * automatic_uploads setting is not true.
-		 *
-		 * @method uploadImages
-		 * @param {function} callback Optional callback with images and status for each image.
-		 * @return {tinymce.util.Promise} Promise instance.
-		 */
-		uploadImagesAuto: function(callback) {
-			return this.editorUpload.uploadImagesAuto(callback);
-		},
-
 		// Internal functions
 
 		_scanForImages: function() {

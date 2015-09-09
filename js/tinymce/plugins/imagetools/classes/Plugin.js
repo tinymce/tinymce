@@ -201,7 +201,7 @@ define("tinymce/imagetoolsplugin/Plugin", [
 
 		function startTimedUpload() {
 			imageUploadTimer = setTimeout(function() {
-								editor.uploadImagesAuto();
+								editor.editorUpload.uploadImagesAuto();
 							}, 30000);
 		}
 
@@ -227,7 +227,7 @@ define("tinymce/imagetoolsplugin/Plugin", [
 						editor.nodeChanged();
 
 						if (uploadImmediately) {
-							editor.uploadImagesAuto();
+							editor.editorUpload.uploadImagesAuto();
 						} else {
 							cancelTimedUpload();
 							startTimedUpload();
@@ -348,7 +348,7 @@ define("tinymce/imagetoolsplugin/Plugin", [
 				//We need to attempt to upload it
 				if (lastSelectedImage && lastSelectedImage.src != e.element.src) {
 					cancelTimedUpload();
-					editor.uploadImagesAuto();
+					editor.editorUpload.uploadImagesAuto();
 					lastSelectedImage = undefined;
 				}
 
