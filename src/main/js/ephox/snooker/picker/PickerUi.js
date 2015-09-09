@@ -138,6 +138,7 @@ define(
         redimension.manual(sizeApi, getSelection(), xDelta, yDelta);
       };
 
+      // Firefox fires mouse events when you press space on a button, so make sure we have a real click
       var clicker = MouseEvent.realClick.bind(table, function (event) {
         execute();
         event.raw().preventDefault();
