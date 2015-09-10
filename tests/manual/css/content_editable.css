@@ -1,0 +1,15 @@
+.mce-content-body *[contentEditable=true] {
+	background: rgba(0, 255, 0, 0.3);
+}
+
+.mce-content-body *[contentEditable=false] {
+	background: rgba(255, 0, 0, 0.3);
+}
+
+.mce-content-body  *[contentEditable]:focus {
+	outline: 2px dotted blue;
+}
+
+.mce-visual-caret {
+	outline: 2px solid red;
+}
