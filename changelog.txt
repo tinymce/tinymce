@@ -1,4 +1,24 @@
-Version 4.2.8 (2015-xx-xx)
+Version 4.3.0 (2015-11-xx)
+	Added new table column/row resize support. Makes it a lot more easy to resize the columns/rows in a table.
+	Added new table inline toolbar. Makes it easier to for example add new rows or columns to a table.
+	Added new notification API. Lets you display floating notifications to the end user.
+	Added new codesample plugin that lets you insert syntax highlighted pre elements into the editor.
+	Added new image_caption to images. Lets you create images with captions using a HTML5 figure/figcaption elements.
+	Added new live previews of embeded videos. Lets you play the video right inside the editor.
+	Added new setDirty method and "dirty" event to the editor. Makes it easier to track the dirty state change.
+	Added new setMode method to Editor instances that lets you dynamically switch between design/readonly.
+	Added new core support for contentEditable=false elements within the editor overrides the browsers broken behavior.
+	Rewrote the noneditable plugin to use the new contentEditable false core logic.
+	Fixed so the dirty state doesn't set set to false automatically when the undo index is set to 0.
+	Fixed the Selection.placeCaretAt so it works better on IE when the coordinate is between paragraphs.
+	Fixed bug where data-mce-bogus="all" element contents where counted by the word count plugin.
+	Fixed bug where contentEditable=false elements would be indented by the indent buttons.
+	Fixed bug where images within contentEditable=false would be selected in WebKit on mouse click.
+	Fixed bug in DOMUntils split method where the replacement parameter wouldn't work on specific cases.
+	Fixed bug where the importcss plugin would import classes from the skin content css file.
+	Fixed so all button variants have a wrapping span for it's text to make it easier to skin.
+	Fixed so it's easier to exit pre block using the arrow keys.
+	Fixed bug where listboxes with fix widths didn't render correctly.
 	Fixed bug where it was possible to delete tables as the inline root element if all columns where selected.
 Version 4.2.7 (2015-10-27)
 	Fixed bug where backspace/delete would remove all formats on the last paragraph character in WebKit/Blink.

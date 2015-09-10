@@ -496,34 +496,72 @@ define("tinymce/dom/RangeUtils", [
 	};
 
 	/**
+	 * Finds the closest selection rect tries to get the range from that.
+	 */
+	function findClosestIeRange(clientX, clientY, doc) {
+		var element, rng, rects;
+
+		element = doc.elementFromPoint(clientX, clientY);
+		rng = doc.body.createTextRange();
+
+		if (element.tagName == 'HTML') {
+			element = doc.body;
+		}
+
+		rng.moveToElementText(element);
+		rects = Tools.toArray(rng.getClientRects());
+
+		rects = rects.sort(function(a, b) {
+			a = Math.abs(Math.max(a.top - clientY, a.bottom - clientY));
+			b = Math.abs(Math.max(b.top - clientY, b.bottom - clientY));
+
+			return a - b;
+		});
+
+		if (rects.length > 0) {
+			clientY = (rects[0].bottom + rects[0].top) / 2;
+
+			try {
+				rng.moveToPoint(clientX, clientY);
+				rng.collapse(true);
+
+				return rng;
+			} catch (ex) {
+				// At least we tried
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Gets the caret range for the given x/y location.
 	 *
 	 * @static
 	 * @method getCaretRangeFromPoint
-	 * @param {Number} x X coordinate for range
-	 * @param {Number} y Y coordinate for range
+	 * @param {Number} clientX X coordinate for range
+	 * @param {Number} clientY Y coordinate for range
 	 * @param {Document} doc Document that x/y are relative to
 	 * @returns {Range} caret range
 	 */
-	RangeUtils.getCaretRangeFromPoint = function(x, y, doc) {
+	RangeUtils.getCaretRangeFromPoint = function(clientX, clientY, doc) {
 		var rng, point;
 
 		if (doc.caretPositionFromPoint) {
-			point = doc.caretPositionFromPoint(x, y);
+			point = doc.caretPositionFromPoint(clientX, clientY);
 			rng = doc.createRange();
 			rng.setStart(point.offsetNode, point.offset);
 			rng.collapse(true);
 		} else if (doc.caretRangeFromPoint) {
-			rng = doc.caretRangeFromPoint(x, y);
+			rng = doc.caretRangeFromPoint(clientX, clientY);
 		} else if (doc.body.createTextRange) {
 			rng = doc.body.createTextRange();
 
 			try {
-				rng.moveToPoint(x, y);
+				rng.moveToPoint(clientX, clientY);
 				rng.collapse(true);
 			} catch (ex) {
-				// Append to top or bottom depending on drop location
-				rng.collapse(y < doc.body.clientHeight);
+				rng = findClosestIeRange(clientX, clientY, doc);
 			}
 		}
 
