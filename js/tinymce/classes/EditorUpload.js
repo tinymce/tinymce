@@ -23,6 +23,16 @@ define("tinymce/EditorUpload", [
 	return function(editor) {
 		var blobCache = new BlobCache(), uploader, imageScanner;
 
+		function aliveGuard(callback) {
+			return function(result) {
+				if (editor.selection) {
+					return callback(result);
+				}
+
+				return [];
+			};
+		}
+
 		// Replaces strings without regexps to avoid FF regexp to big issue
 		function replaceString(content, search, replace) {
 			var index = 0;
@@ -62,14 +72,14 @@ define("tinymce/EditorUpload", [
 				});
 			}
 
-			return scanForImages().then(function(imageInfos) {
+			return scanForImages().then(aliveGuard(function(imageInfos) {
 				var blobInfos;
 
 				blobInfos = Arr.map(imageInfos, function(imageInfo) {
 					return imageInfo.blobInfo;
 				});
 
-				return uploader.upload(blobInfos).then(function(result) {
+				return uploader.upload(blobInfos).then(aliveGuard(function(result) {
 					result = Arr.map(result, function(uploadInfo, index) {
 						var image = imageInfos[index].image;
 
@@ -91,8 +101,8 @@ define("tinymce/EditorUpload", [
 					}
 
 					return result;
-				});
-			});
+				}));
+			}));
 		}
 
 		function uploadImagesAuto(callback) {
@@ -106,14 +116,14 @@ define("tinymce/EditorUpload", [
 				imageScanner = new ImageScanner(blobCache);
 			}
 
-			return imageScanner.findAll(editor.getBody()).then(function(result) {
+			return imageScanner.findAll(editor.getBody()).then(aliveGuard(function(result) {
 				Arr.each(result, function(resultItem) {
 					replaceUrlInUndoStack(resultItem.image.src, resultItem.blobInfo.blobUri());
 					resultItem.image.src = resultItem.blobInfo.blobUri();
 				});
 
 				return result;
-			});
+			}));
 		}
 
 		function destroy() {
