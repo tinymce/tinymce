@@ -2,9 +2,9 @@
 	function fontFace(face) {
 		if (tinymce.isOpera) {
 			return "'" + face + "'";
-		} else {
-			return face;
 		}
+
+		return face;
 	}
 
 	function findContainer(selector) {
@@ -53,6 +53,52 @@
 		setRange(startContainer, startOffset, true);
 		setRange(endContainer, endOffset, false);
 		editor.selection.setRng(rng);
+	}
+
+	function assertRange(actual, expected) {
+		deepEqual({
+			startContainer: actual.startContainer,
+			startOffset: actual.startOffset,
+			endContainer: actual.endContainer,
+			endOffset: actual.endOffset
+		}, {
+			startContainer: expected.startContainer,
+			startOffset: expected.startOffset,
+			endContainer: expected.endContainer,
+			endOffset: expected.endOffset
+		});
+	}
+
+	function createRange(startContainer, startOffset, endContainer, endOffset) {
+		var rng = tinymce.DOM.createRng();
+
+		rng.setStart(startContainer, startOffset);
+
+		if (endContainer) {
+			rng.setEnd(endContainer, endOffset);
+		}
+
+		return rng;
+	}
+
+	function assertCaretPosition(actual, expected, message) {
+		if (expected === null) {
+			strictEqual(actual, expected, message || 'Expected null.');
+			return;
+		}
+
+		if (actual === null) {
+			strictEqual(actual, expected, message || 'Didn\'t expect null.');
+			return;
+		}
+
+		deepEqual({
+			container: actual.container(),
+			offset: actual.offset()
+		}, {
+			container: expected.container(),
+			offset: expected.offset()
+		}, message);
 	}
 
 	function trimContent(content) {
@@ -135,7 +181,7 @@
 
 		function charCodeToKeyCode(charCode) {
 			var lookup = {
-				'0': 48, '1': 49, '2': 50, '3': 51, '4': 52, '5': 53, '6': 54, '7': 55, '8': 56, '9': 57,'a': 65, 'b': 66, 'c': 67,
+				'0': 48, '1': 49, '2': 50, '3': 51, '4': 52, '5': 53, '6': 54, '7': 55, '8': 56, '9': 57, 'a': 65, 'b': 66, 'c': 67,
 				'd': 68, 'e': 69, 'f': 70, 'g': 71, 'h': 72, 'i': 73, 'j': 74, 'k': 75, 'l': 76, 'm': 77, 'n': 78, 'o': 79, 'p': 80, 'q': 81,
 				'r': 82, 's': 83, 't': 84, 'u': 85,	'v': 86, 'w': 87, 'x': 88, 'y': 89, ' ': 32, ',': 188, '-': 189, '.': 190, '/': 191, '\\': 220,
 				'[': 219, ']': 221, '\'': 222, ';': 186, '=': 187, ')': 41
@@ -149,10 +195,10 @@
 		}
 
 		// Numeric keyCode
-		if (typeof(chr) == "number") {
+		if (typeof chr == "number") {
 			charCode = chr;
 			keyCode = charCodeToKeyCode(charCode);
-		} else if (typeof(chr) == "string") {
+		} else if (typeof chr == "string") {
 			// String value
 			if (chr == '\b') {
 				keyCode = 8;
@@ -210,7 +256,7 @@
 
 					editor.getDoc().execCommand('Delete', false, null);
 				}
-			} else if (typeof(chr) == 'string') {
+			} else if (typeof chr == 'string') {
 				rng = editor.selection.getRng(true);
 
 				if (rng.startContainer.nodeType == 3 && rng.collapsed) {
@@ -412,6 +458,9 @@
 		trimBrsOnIE: trimBrsOnIE,
 		patch: patch,
 		unpatch: unpatch,
-		triggerElementChange: triggerElementChange
+		triggerElementChange: triggerElementChange,
+		createRange: createRange,
+		assertRange: assertRange,
+		assertCaretPosition: assertCaretPosition
 	};
 })();
