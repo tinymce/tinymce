@@ -80,6 +80,12 @@ define("tinymce/util/XHR", [
 					xhr.setRequestHeader('Content-Type', settings.content_type);
 				}
 
+				if (settings.requestheaders) {
+					Tools.each(settings.requestheaders, function(header) {
+						xhr.setRequestHeader(header.key, header.value);
+					});
+				}
+
 				xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
 				xhr = XHR.fire('beforeSend', {xhr: xhr, settings: settings}).xhr;
