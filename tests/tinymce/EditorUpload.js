@@ -2,7 +2,7 @@ ModuleLoader.require([
 	"tinymce/file/Conversions",
 	"tinymce/Env"
 ], function(Conversions, Env) {
-	var testBlob, testBlobDataUri;
+	var testBlobDataUri;
 
 	if (!tinymce.Env.fileApi) {
 		return;
@@ -19,6 +19,7 @@ ModuleLoader.require([
 				skin: false,
 				entities: 'raw',
 				indent: false,
+				automatic_uploads: false,
 				init_instance_callback: function(ed) {
 					var canvas, context;
 
@@ -40,8 +41,7 @@ ModuleLoader.require([
 
 					testBlobDataUri = canvas.toDataURL();
 
-					Conversions.uriToBlob(testBlobDataUri).then(function(blob) {
-						testBlob = blob;
+					Conversions.uriToBlob(testBlobDataUri).then(function() {
 						QUnit.start();
 					});
 				}
@@ -50,6 +50,7 @@ ModuleLoader.require([
 
 		teardown: function() {
 			editor.editorUpload.destroy();
+			editor.settings.automatic_uploads = false;
 		}
 	});
 
@@ -133,6 +134,7 @@ ModuleLoader.require([
 
 		editor.settings.images_upload_handler = function(data, success) {
 			uploadCount++;
+			success();
 		};
 
 		editor.uploadImages(done);
@@ -150,6 +152,7 @@ ModuleLoader.require([
 
 		editor.settings.images_upload_handler = function(data, success) {
 			uploadCount++;
+			success();
 		};
 
 		editor.uploadImages(done);
