@@ -113,6 +113,10 @@ define("tinymce/util/Arr", [], function() {
 		return accumulator;
 	}
 
+	function last(collection) {
+		return collection[collection.length - 1];
+	}
+
 	return {
 		isArray: isArray,
 		toArray: toArray,
@@ -120,6 +124,7 @@ define("tinymce/util/Arr", [], function() {
 		map: map,
 		filter: filter,
 		indexOf: indexOf,
-		reduce: reduce
+		reduce: reduce,
+		last: last
 	};
 });
