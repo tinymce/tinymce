@@ -11,9 +11,9 @@
 /**
  * Contains various tools for rect/position calculation.
  *
- * @class tinymce.ui.Rect
+ * @class tinymce.geom.Rect
  */
-define("tinymce/ui/Rect", [
+define("tinymce/geom/Rect", [
 ], function() {
 	"use strict";
 
@@ -72,7 +72,7 @@ define("tinymce/ui/Rect", [
 			x -= round(w / 2);
 		}
 
-		return {x: x, y: y, w: w, h: h};
+		return create(x, y, w, h);
 	}
 
 	/**
@@ -95,6 +95,8 @@ define("tinymce/ui/Rect", [
 				return rels[i];
 			}
 		}
+
+		return null;
 	}
 
 	/**
@@ -107,12 +109,7 @@ define("tinymce/ui/Rect", [
 	 * @return {Rect} New expanded rect.
 	 */
 	function inflate(rect, w, h) {
-		return {
-			x: rect.x - w,
-			y: rect.y - h,
-			w: rect.w + w * 2,
-			h: rect.h + h * 2
-		};
+		return create(rect.x - w, rect.y - h, rect.w + w * 2, rect.h + h * 2);
 	}
 
 	/**
@@ -135,7 +132,7 @@ define("tinymce/ui/Rect", [
 			return null;
 		}
 
-		return {x: x1, y: y1, w: x2 - x1, h: y2 - y1};
+		return create(x1, y1, x2 - x1, y2 - y1);
 	}
 
 	/**
@@ -177,7 +174,32 @@ define("tinymce/ui/Rect", [
 		x2 -= overflowX2;
 		y2 -= overflowY2;
 
-		return {x: x1, y: y1, w: x2 - x1, h: y2 - y1};
+		return create(x1, y1, x2 - x1, y2 - y1);
+	}
+
+	/**
+	 * Creates a new rectangle object.
+	 *
+	 * @method create
+	 * @param {Number} x Rectangle x location.
+	 * @param {Number} y Rectangle y location.
+	 * @param {Number} w Rectangle width.
+	 * @param {Number} h Rectangle height.
+	 * @return {Rect} New rectangle object.
+	 */
+	function create(x, y, w, h) {
+		return {x: x, y: y, w: w, h: h};
+	}
+
+	/**
+	 * Creates a new rectangle object form a clientRects object.
+	 *
+	 * @method fromClientRect
+	 * @param {ClientRect} clientRect DOM ClientRect object.
+	 * @return {Rect} New rectangle object.
+	 */
+	function fromClientRect(clientRect) {
+		return create(clientRect.left, clientRect.top, clientRect.width, clientRect.height);
 	}
 
 	return {
@@ -185,6 +207,8 @@ define("tinymce/ui/Rect", [
 		relativePosition: relativePosition,
 		findBestRelativePosition: findBestRelativePosition,
 		intersect: intersect,
-		clamp: clamp
+		clamp: clamp,
+		create: create,
+		fromClientRect: fromClientRect
 	};
 });

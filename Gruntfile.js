@@ -72,6 +72,7 @@ module.exports = function(grunt) {
 					compress: true,
 
 					from: [
+						"geom/Rect.js",
 						"dom/DomQuery.js",
 						"EditorManager.js",
 						"LegacyInput.js",
@@ -102,6 +103,7 @@ module.exports = function(grunt) {
 					compress: true,
 
 					from: [
+						"geom/Rect.js",
 						"dom/DomQuery.js",
 						"EditorManager.js",
 						"LegacyInput.js",
