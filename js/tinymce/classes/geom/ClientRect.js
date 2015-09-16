@@ -15,9 +15,7 @@
  * @class tinymce.geom.ClientRect
  */
 define("tinymce/geom/ClientRect", [], function() {
-	var round = Math.round,
-		max = Math.max,
-		min = Math.min;
+	var round = Math.round;
 
 	function clone(rect) {
 		if (!rect) {
@@ -58,20 +56,12 @@ define("tinymce/geom/ClientRect", [], function() {
 		);
 	}
 
-	function intersectsLessThanHalfHeight(clientRect1, clientRect2) {
-		var y1 = max(clientRect1.top, clientRect2.top),
-			y2 = min(clientRect1.bottom, clientRect2.bottom),
-			height = min(clientRect1.height, clientRect2.height);
-
-		return y2 - y1 > 0 && y2 - y1 < height / 2;
-	}
-
 	function isAbove(clientRect1, clientRect2) {
-		return clientRect1.bottom <= clientRect2.top || intersectsLessThanHalfHeight(clientRect1, clientRect2);
+		return clientRect1.bottom <= (clientRect2.top + clientRect2.bottom) / 2;
 	}
 
 	function isBelow(clientRect1, clientRect2) {
-		return clientRect2.bottom <= clientRect1.top || intersectsLessThanHalfHeight(clientRect1, clientRect2);
+		return clientRect1.top >= (clientRect2.top + clientRect2.bottom) / 2;
 	}
 
 	function isLeft(clientRect1, clientRect2) {

@@ -32,7 +32,8 @@ ModuleLoader.require([
 	test('isAbove intersects', function() {
 		equal(ClientRect.isAbove(rect(10, 10, 1, 20), rect(10, 30, 1, 20)), true);
 		equal(ClientRect.isAbove(rect(10, 10, 1, 25), rect(10, 30, 1, 20)), true);
-		equal(ClientRect.isAbove(rect(10, 10, 1, 30), rect(10, 30, 1, 20)), false);
+		equal(ClientRect.isAbove(rect(10, 10, 1, 20), rect(10, 30, 1, 20)), true);
+		equal(ClientRect.isAbove(rect(10, 25, 1, 20), rect(10, 30, 1, 20)), false);
 	});
 
 	test('isBelow', function() {
@@ -43,7 +44,9 @@ ModuleLoader.require([
 	test('isBelow intersects', function() {
 		equal(ClientRect.isBelow(rect(10, 30, 1, 20), rect(10, 10, 1, 20)), true);
 		equal(ClientRect.isBelow(rect(10, 30, 1, 20), rect(10, 10, 1, 25)), true);
-		equal(ClientRect.isBelow(rect(10, 30, 1, 20), rect(10, 10, 1, 30)), false);
+		equal(ClientRect.isBelow(rect(10, 15, 1, 20), rect(10, 30, 1, 20)), false);
+		equal(ClientRect.isBelow(rect(10, 30, 1, 20), rect(10, 10, 1, 30)), true);
+		equal(ClientRect.isBelow(rect(10, 20, 1, 20), rect(10, 10, 1, 30)), false);
 	});
 
 	test('isLeft', function() {
