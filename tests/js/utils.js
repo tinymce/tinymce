@@ -265,6 +265,7 @@
 					rng.collapse(true);
 					editor.selection.setRng(rng);
 				} else {
+					rng.deleteContents();
 					rng.insertNode(editor.getDoc().createTextNode(chr));
 				}
 			}
@@ -362,6 +363,20 @@
 		return editor.windowManager.windows[editor.windowManager.windows.length - 1];
 	}
 
+	function pressKey(evt) {
+		var dom = editor.dom, target = editor.selection.getNode();
+
+		if (typeof evt == "number") {
+			evt = {keyCode: evt};
+		}
+
+		evt = tinymce.extend({keyCode: 37}, evt);
+
+		dom.fire(target, 'keydown', evt);
+		dom.fire(target, 'keypress', evt);
+		dom.fire(target, 'keyup', evt);
+	}
+
 	function pressArrowKey(evt) {
 		var dom = editor.dom, target = editor.selection.getNode();
 
@@ -453,6 +468,7 @@
 		resetScroll: resetScroll,
 		nearlyEqualRects: nearlyEqualRects,
 		getFrontmostWindow: getFrontmostWindow,
+		pressKey: pressKey,
 		pressArrowKey: pressArrowKey,
 		pressEnter: pressEnter,
 		trimBrsOnIE: trimBrsOnIE,
