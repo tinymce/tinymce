@@ -15,8 +15,12 @@
  */
 define("tinymce/dom/BookmarkManager", [
 	"tinymce/Env",
-	"tinymce/util/Tools"
-], function(Env, Tools) {
+	"tinymce/util/Tools",
+	"tinymce/caret/CaretContainer",
+	"tinymce/dom/NodeType"
+], function(Env, Tools, CaretContainer, NodeType) {
+	var isContentEditableFalse = NodeType.isContentEditableFalse;
+
 	/**
 	 * Constructs a new BookmarkManager instance for a specific selection instance.
 	 *
@@ -48,15 +52,21 @@ define("tinymce/dom/BookmarkManager", [
 			var rng, rng2, id, collapsed, name, element, chr = '&#xFEFF;', styles;
 
 			function findIndex(name, element) {
-				var index = 0;
+				var count = 0;
 
-				Tools.each(dom.select(name), function(node, i) {
-					if (node == element) {
-						index = i;
+				Tools.each(dom.select(name), function(node) {
+					if (node.getAttribute('data-mce-bogus') === 'all') {
+						return;
 					}
+
+					if (node == element) {
+						return false;
+					}
+
+					count++;
 				});
 
-				return index;
+				return count;
 			}
 
 			function normalizeTableCellSelection(rng) {
@@ -82,8 +92,8 @@ define("tinymce/dom/BookmarkManager", [
 				return rng;
 			}
 
-			function getLocation() {
-				var rng = selection.getRng(true), root = dom.getRoot(), bookmark = {};
+			function getLocation(rng) {
+				var root = dom.getRoot(), bookmark = {};
 
 				function getPoint(rng, start) {
 					var container = rng[start ? 'startContainer' : 'endContainer'],
@@ -124,11 +134,36 @@ define("tinymce/dom/BookmarkManager", [
 				return bookmark;
 			}
 
+			function findAdjacentContentEditableFalseElm(rng) {
+				function findSibling(node) {
+					var sibling;
+
+					if (CaretContainer.isCaretContainer(node)) {
+						if (NodeType.isText(node) && CaretContainer.isCaretContainerBlock(node)) {
+							node = node.parentNode;
+						}
+
+						sibling = node.previousSibling;
+						if (isContentEditableFalse(sibling)) {
+							return sibling;
+						}
+
+						sibling = node.nextSibling;
+						if (isContentEditableFalse(sibling)) {
+							return sibling;
+						}
+					}
+				}
+
+				return findSibling(rng.startContainer) || findSibling(rng.endContainer);
+			}
+
 			if (type == 2) {
 				element = selection.getNode();
 				name = element ? element.nodeName : null;
+				rng = selection.getRng();
 
-				if (name == 'IMG') {
+				if (isContentEditableFalse(element) || name == 'IMG') {
 					return {name: name, index: findIndex(name, element)};
 				}
 
@@ -136,7 +171,13 @@ define("tinymce/dom/BookmarkManager", [
 					return selection.tridentSel.getBookmark(type);
 				}
 
-				return getLocation();
+				element = findAdjacentContentEditableFalseElm(rng);
+				if (element) {
+					name = element.tagName;
+					return {name: name, index: findIndex(name, element)};
+				}
+
+				return getLocation(rng);
 			}
 
 			// Handle simple range

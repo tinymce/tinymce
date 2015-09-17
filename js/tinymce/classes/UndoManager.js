@@ -17,8 +17,9 @@ define("tinymce/UndoManager", [
 	"tinymce/util/VK",
 	"tinymce/Env",
 	"tinymce/util/Tools",
-	"tinymce/html/SaxParser"
-], function(VK, Env, Tools, SaxParser) {
+	"tinymce/html/SaxParser",
+	"tinymce/text/Zwsp"
+], function(VK, Env, Tools, SaxParser, Zwsp) {
 	var trim = Tools.trim, trimContentRegExp;
 
 	trimContentRegExp = new RegExp([
@@ -44,7 +45,7 @@ define("tinymce/UndoManager", [
 			var bogusAllRegExp = /<(\w+) [^>]*data-mce-bogus="all"[^>]*>/g;
 			var endTagIndex, index, matchLength, matches, shortEndedElements, schema = editor.schema;
 
-			content = content.replace(trimContentRegExp, '');
+			content = Zwsp.trim(content.replace(trimContentRegExp, ''));
 			shortEndedElements = schema.getShortEndedElements();
 
 			// Remove all bogus elements marked with "all"

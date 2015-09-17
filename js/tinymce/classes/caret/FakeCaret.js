@@ -107,7 +107,7 @@ define("tinymce/caret/FakeCaret", [
 				lastClientRect = clientRect;
 				$(caretContainerNode).css('top', clientRect.top);
 
-				$lastVisualCaret = $('<div class="mce-visual-caret" data-mce-bogus="1"></div>').css(clientRect).appendTo(rootNode);
+				$lastVisualCaret = $('<div class="mce-visual-caret" data-mce-bogus="all"></div>').css(clientRect).appendTo(rootNode);
 
 				if (before) {
 					$lastVisualCaret.addClass('mce-visual-caret-before');
