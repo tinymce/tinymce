@@ -1,8 +1,8 @@
-.mce-content-body *[contentEditable=true] {
+.mce-content-body *[contentEditable=true], .mce-content-body *[data-mce-contenteditable=true] {
 	background: rgba(0, 255, 0, 0.3);
 }
 
-.mce-content-body *[contentEditable=false] {
+.mce-content-body *[contentEditable=false], .mce-content-body *[data-mce-contenteditable=false] {
 	background: rgba(255, 0, 0, 0.3);
 }
 
@@ -10,6 +10,27 @@
 	outline: 2px dotted blue;
 }
 
+/* Debug overrides */
+
 .mce-visual-caret {
 	outline: 2px solid red;
+}
+
+*[data-mce-selected] {
+	outline: 1px solid blue;
+}
+
+.mce-content-body .mce-offscreen-selection {
+	left: auto;
+	right: 0;
+}
+
+*[data-mce-caret] {
+	outline: 1px solid green;
+	position: absolute;
+	left: auto;
+	right: 0;
+	top: 0;
+	margin: 0;
+	padding: 0;
 }

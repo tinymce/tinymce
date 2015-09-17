@@ -19,11 +19,12 @@
 		plugins: [
 			"advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
 			"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-			"save table contextmenu directionality emoticons template paste textcolor importcss colorpicker textpattern"
+			"save table contextmenu directionality emoticons template paste textcolor colorpicker textpattern"
 		],
 		add_unload_trigger: false,
 		toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table",
-		content_css: 'css/content_editable.css'
+		content_css: 'css/content_editable.css',
+		height: 400
 	});
 
 	if (!window.console) {
@@ -33,6 +34,56 @@
 			}
 		};
 	}
+
+	function paintClientRect(rect, color, id) {
+		var editor = tinymce.activeEditor,
+			$ = editor.$,
+			rectDiv,
+			viewPort = editor.dom.getViewPort();
+
+		if (!rect) {
+			return;
+		}
+
+		color = color || 'red';
+		id = id || color;
+		rectDiv = $('#' + id);
+
+		if (!rectDiv[0]) {
+			rectDiv = $('<div></div>').appendTo(editor.getBody());
+		}
+
+		rectDiv.attr('id', id).css({
+			position: 'absolute',
+			left: (rect.left + viewPort.x) + 'px',
+			top: (rect.top + viewPort.y) + 'px',
+			width: (rect.width || 1) + 'px',
+			height: rect.height + 'px',
+			background: color,
+			opacity: 0.8
+		});
+	}
+
+	function paintClientRects(rects, color) {
+		tinymce.each(rects, function(rect, index) {
+			paintClientRect(rect, color, color + index);
+		});
+	}
+
+	function logPos(caretPosition) {
+		var container = caretPosition.container(),
+			offset = caretPosition.offset();
+
+		if (container.nodeType == 3) {
+			if (container.data[offset]) {
+				console.log(container.data[offset]);
+			} else {
+				console.log('<end of text node>');
+			}
+		} else {
+			console.log(container, offset, caretPosition.getNode());
+		}
+	}
 </script>
 </head>
 <body>
@@ -41,10 +92,11 @@
 		<div>
 			<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%">
 				<p contentEditable="false">[cE=false]</p>
-				<p>[cE=true]<span contentEditable="false">[cE=false]</span><span contentEditable="false">[cE=false]</span><span contentEditable="false">[cE=false]</span></p>
+				<p>[cE=true]<span contentEditable="false">[cE=false]</span>abc<span contentEditable="false">[cE=false]</span><span contentEditable="false">[cE=false]</span><span contentEditable="false">[cE=false]</span><span contentEditable="false">[cE=false]</span></p>
 				<p><span contentEditable="false">[cE=false<span contentEditable="true">[cE=true]</span>]</span></p>
 				<p contentEditable="false">[cE=false]</p>
 				<p contentEditable="false">[cE=false]</p>
+				<div contentEditable="false" style="width: 100px; height: 100px"><div>[cE=false]</div><span contentEditable="true">[cE=true]</span></div> 
 			</textarea>
 		</div>
 

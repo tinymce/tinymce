@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>CaretWalker</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<script src="../js/module_loader.js"></script>
+<script src="../../js/tinymce/tinymce.dev.js"></script>
+<script>
+function dumpRange(range) {
+	var chr = 'N/A';
+
+	if (range.startContainer.nodeType == 3) {
+		if (range.startOffset < range.startContainer.data.length) {
+			chr = range.startContainer.data[range.startOffset];
+		}
+	}
+
+	console.log({
+		offset: range.startOffset,
+		container: range.startContainer,
+		char: chr
+	});
+}
+
+function paintClientRect(rect, color) {
+	var rectDiv = document.getElementById(color);
+	var scrollY = document.body.scrollTop || document.documentElement.scrollTop;
+
+	if (!rect) {
+		return;
+	}
+
+	if (!rectDiv) {
+		rectDiv = document.createElement('div');
+		document.body.appendChild(rectDiv);
+	}
+
+	rectDiv.id = color;
+	rectDiv.style.position = 'absolute';
+	rectDiv.style.left = rect.left + 'px';
+	rectDiv.style.top = (rect.top + scrollY) + 'px';
+	rectDiv.style.width = (rect.width || 1) + 'px';
+	rectDiv.style.height = rect.height + 'px';
+	rectDiv.style.background = color;
+}
+
+function init(CaretWalker, CaretPosition) {
+	var $ = tinymce.$, caretWalker = new CaretWalker($('#edit')[0]), lastRange;
+
+	function getRange() {
+		return lastRange || getSelection().getRangeAt(0);
+	}
+
+	function setCaretPosition(caretPosition) {
+		var range = caretPosition.toRange();
+		getSelection().removeAllRanges();
+		getSelection().addRange(range);
+		lastRange = range;
+		dumpRange(range);
+	}
+
+	$('#edit').on('keydown', function(e) {
+		var handled = true;
+
+		switch (e.keyCode) {
+			case 37:
+				setCaretPosition(caretWalker.prev(CaretPosition.fromRangeStart(getRange())));
+				break;
+
+			case 39:
+				setCaretPosition(caretWalker.next(CaretPosition.fromRangeStart(getRange())));
+				break;
+
+			case 38:
+			case 40:
+				console.log('Unable to handle up/down.');
+				break;
+
+			default:
+				handled = false;
+				break;
+		}
+
+		if (handled) {
+			e.preventDefault();
+		} else {
+			lastRange = null;
+		}
+	});
+
+	$('#edit').on('mousedown', function() {
+		lastRange = null;
+	});
+
+	$('#native').html($('#edit').html());
+}
+	
+function load() {
+	ModuleLoader.require(["tinymce/caret/CaretWalker", "tinymce/caret/CaretPosition"], init);
+}
+</script>
+<style>
+	span[contentEditable="false"], p[contentEditable="false"] {
+		background: #FF9999;
+	}
+
+	span[contentEditable="true"], p[contentEditable="true"] {
+		background: #99FF99;
+	}
+
+	img {
+		width: 32px;
+		height: 32px;
+	}
+
+	table, td, caption {
+		border: 1px solid gray;
+		border-collapse: collapse;
+	}
+
+	caption {
+		border-bottom: 0;
+	}
+
+	.red {
+		border: 2px solid red;
+	}
+	
+	.green {
+		border: 2px solid green;
+	}
+	
+	.blue {
+		border: 2px solid blue;
+	}
+</style>
+</head>
+<body onload="load();" spellcheck="false">
+	<h3>CaretWalker</h3>
+
+	<div id="edit" style="border: 1px solid red; width: 400px; position: absolute; left: 10px; top: 10x;" contentEditable="true">
+		<p>abc<span contentEditable="false">[cE=false]</span>def<img src="img/dogleft.jpg">gh<img style="float: right" src="img/dogleft.jpg">i</p>
+		<p>abc<span contentEditable="false">[cE=false<span contentEditable="true">[cE=true]</span>]</span>def<img src="img/dogleft.jpg"></p>
+		<p>ab&#769;c&#xfeff;d<b>abc</b><b>123</b></p>
+		<p><img src="img/dogleft.jpg" class="red"><img src="img/dogleft.jpg" class="green"><img src="img/dogleft.jpg" class="blue"></p>
+		<p>&#1513;&#1500;&#1501;<img src="img/dogleft.jpg" class="red">&#1513;&#1500;&#1501;<img src="img/dogleft.jpg" class="green">&#1513;&#1500;&#1501;<img src="img/dogleft.jpg" class="blue">&#1513;&#1500;&#1501;</p>
+		<p>abc&#1513;&#1500;&#1501;123def</p>
+		<p><span contentEditable="false">[cE=false]</span><span contentEditable="false">[cE=false]</span><span contentEditable="false">[cE=false]</span></p>
+		<p><br><br><br></p>
+		<table>
+			<caption>abc</caption>
+			<tr>
+				<td>1x1</td>
+				<td>2x1</td>
+				<td rowspan="2">3x1,3x2</td>
+			</tr>
+			<tr>
+				<td>1x2</td>
+				<td>2x2</td>
+			</tr>
+		</table>
+		<p>Lorem      ipsum dolor sit amet, consectetur adipiscing elit. Donec et congue metus, at porttitor mi. Duis mauris eros, mollis vestibulum enim et, finibus feugiat dui. In vel ex non lacus sollicitudin ullamcorper. Morbi vestibulum dolor et efficitur posuere. Nullam sollicitudin erat nec quam hendrerit dignissim. Quisque vestibulum enim vitae sapien tristique, at rhoncus velit ultricies. Aenean sit amet magna non purus porttitor placerat ac ut mi. In ornare sapien sit amet pulvinar condimentum. Vivamus non dolor sit amet mi condimentum ultrices. Cras quis urna porttitor, pretium eros nec, blandit augue. In non velit rutrum, tristique leo sed, porttitor nisl.</p>
+		<p><img src="img/dogleft.jpg" style="display: block"><img src="img/dogleft.jpg" style="display: block"></p>
+		<p contentEditable="false">[cE=false<span contentEditable="true">[cE=true]</span>]</p>
+		<p contentEditable="false">[cE=false]</p>
+		<p contentEditable="false" style="width: 100px">[cE=false]</p>
+	</div>
+
+	<div id="native" style="border: 1px solid green; width: 400px; position: absolute; left: 420px; top: 10x;" contentEditable="true"></div>
+</body>
+</html>

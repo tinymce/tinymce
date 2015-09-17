@@ -63,14 +63,17 @@ define("tinymce/Editor", [
 	"tinymce/util/Quirks",
 	"tinymce/Env",
 	"tinymce/util/Tools",
+	"tinymce/util/Delay",
 	"tinymce/EditorObservable",
 	"tinymce/Shortcuts",
-	"tinymce/EditorUpload"
+	"tinymce/EditorUpload",
+	"tinymce/SelectionOverrides"
 ], function(
 	DOMUtils, DomQuery, AddOnManager, NodeChange, Node, DomSerializer, Serializer,
 	Selection, Formatter, UndoManager, EnterKey, ForceBlocks, EditorCommands,
 	URI, ScriptLoader, EventUtils, WindowManager,
-	Schema, DomParser, Quirks, Env, Tools, EditorObservable, Shortcuts, EditorUpload
+	Schema, DomParser, Quirks, Env, Tools, Delay, EditorObservable, Shortcuts, EditorUpload,
+	SelectionOverrides
 ) {
 	// Shorten these names
 	var DOM = DOMUtils.DOM, ThemeManager = AddOnManager.ThemeManager, PluginManager = AddOnManager.PluginManager;
@@ -941,6 +944,7 @@ define("tinymce/Editor", [
 			self.forceBlocks = new ForceBlocks(self);
 			self.enterKey = new EnterKey(self);
 			self._nodeChangeDispatcher = new NodeChange(self);
+			self._selectionOverrides = new SelectionOverrides(self);
 
 			self.fire('PreInit');
 
@@ -1024,7 +1028,7 @@ define("tinymce/Editor", [
 
 			// Handle auto focus
 			if (settings.auto_focus) {
-				setTimeout(function() {
+				Delay.setEditorTimeout(self, function() {
 					var editor;
 
 					if (settings.auto_focus === true) {
@@ -2033,6 +2037,7 @@ define("tinymce/Editor", [
 
 				self.editorManager.remove(self);
 				DOM.remove(self.getContainer());
+				self._selectionOverrides.destroy();
 				self.editorUpload.destroy();
 				self.destroy();
 			}
