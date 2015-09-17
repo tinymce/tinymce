@@ -64,7 +64,13 @@ define("tinymce/dom/NodeType", [], function() {
 
 	function hasPropValue(propName, propValue) {
 		return function(node) {
-			return !!node && node[propName] === propValue;
+			return isElement(node) && node[propName] === propValue;
+		};
+	}
+
+	function hasAttributeValue(attrName, attrValue) {
+		return function(node) {
+			return isElement(node) && node.getAttribute(attrName) === attrValue;
 		};
 	}
 
@@ -72,8 +78,20 @@ define("tinymce/dom/NodeType", [], function() {
 		return isElement(node) && node.hasAttribute('data-mce-bogus');
 	}
 
-	function isCaretContainer(node) {
-		return isElement(node) && node.hasAttribute('data-mce-caret');
+	function hasContentEditableState(value) {
+		return function(node) {
+			if (isElement(node)) {
+				if (node.contentEditable === value) {
+					return true;
+				}
+
+				if (node.getAttribute('data-mce-contenteditable') === value) {
+					return true;
+				}
+			}
+
+			return false;
+		};
 	}
 
 	return {
@@ -81,12 +99,12 @@ define("tinymce/dom/NodeType", [], function() {
 		isElement: isElement,
 		isComment: isNodeType(8),
 		isBr: matchNodeNames('br'),
-		isContentEditableTrue: hasPropValue('contentEditable', 'true'),
-		isContentEditableFalse: hasPropValue('contentEditable', 'false'),
+		isContentEditableTrue: hasContentEditableState('true'),
+		isContentEditableFalse: hasContentEditableState('false'),
 		matchNodeNames: matchNodeNames,
 		hasPropValue: hasPropValue,
+		hasAttributeValue: hasAttributeValue,
 		matchStyleValues: matchStyleValues,
-		isBogus: isBogus,
-		isCaretContainer: isCaretContainer
+		isBogus: isBogus
 	};
 });
