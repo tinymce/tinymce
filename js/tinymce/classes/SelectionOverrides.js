@@ -406,9 +406,10 @@ define("tinymce/SelectionOverrides", [
 				}
 			});
 
+			// Must be added to "top" since undoManager needs to be executed after
 			editor.on('keyup compositionstart', function() {
 				showBlockCaretContainers();
-			});
+			}, true);
 
 			editor.on('cut', function() {
 				var node = editor.selection.getNode();
