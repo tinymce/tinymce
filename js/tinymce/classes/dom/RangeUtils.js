@@ -15,9 +15,11 @@
  */
 define("tinymce/dom/RangeUtils", [
 	"tinymce/util/Tools",
-	"tinymce/dom/TreeWalker"
-], function(Tools, TreeWalker) {
-	var each = Tools.each;
+	"tinymce/dom/TreeWalker",
+	"tinymce/dom/NodeType"
+], function(Tools, TreeWalker, NodeType) {
+	var each = Tools.each,
+		isContentEditableFalse = NodeType.isContentEditableFalse;
 
 	function getEndChild(container, index) {
 		var childNodes = container.childNodes;
@@ -284,6 +286,18 @@ define("tinymce/dom/RangeUtils", [
 					}
 				}
 
+				function hasContentEditableFalseParent(node) {
+					while (node && node != body) {
+						if (isContentEditableFalse(node)) {
+							return true;
+						}
+
+						node = node.parentNode;
+					}
+
+					return false;
+				}
+
 				function isPrevNode(node, name) {
 					return node.previousSibling && node.previousSibling.nodeName == name;
 				}
@@ -371,6 +385,10 @@ define("tinymce/dom/RangeUtils", [
 						container = container.childNodes[offset];
 						offset = 0;
 
+						if (hasContentEditableFalseParent(container)) {
+							return;
+						}
+
 						// Don't walk into elements that doesn't have any child nodes like a IMG
 						if (container.hasChildNodes() && !/TABLE/.test(container.nodeName)) {
 							// Walk the DOM to find a text node to place the caret at or a BR
@@ -378,6 +396,11 @@ define("tinymce/dom/RangeUtils", [
 							walker = new TreeWalker(container, body);
 
 							do {
+								if (isContentEditableFalse(node)) {
+									normalized = false;
+									break;
+								}
+
 								// Found a text node use that position
 								if (node.nodeType === 3 && node.nodeValue.length > 0) {
 									offset = directionLeft ? 0 : node.nodeValue.length;
@@ -566,6 +589,17 @@ define("tinymce/dom/RangeUtils", [
 		}
 
 		return rng;
+	};
+
+	RangeUtils.getSelectedNode = function(range) {
+		var startContainer = range.startContainer,
+			startOffset = range.startOffset;
+
+		if (startContainer.hasChildNodes() && range.endOffset == startOffset + 1) {
+			return startContainer.childNodes[startOffset];
+		}
+
+		return null;
 	};
 
 	RangeUtils.getNode = function(container, offset) {
