@@ -22,8 +22,9 @@ define("tinymce/dom/Serializer", [
 	"tinymce/html/Node",
 	"tinymce/html/Schema",
 	"tinymce/Env",
-	"tinymce/util/Tools"
-], function(DOMUtils, DomParser, Entities, Serializer, Node, Schema, Env, Tools) {
+	"tinymce/util/Tools",
+	"tinymce/text/Zwsp"
+], function(DOMUtils, DomParser, Entities, Serializer, Node, Schema, Env, Tools, Zwsp) {
 	var each = Tools.each, trim = Tools.trim;
 	var DOM = DOMUtils.DOM;
 
@@ -371,6 +372,7 @@ define("tinymce/dom/Serializer", [
 
 				// Replace all BOM characters for now until we can find a better solution
 				if (!args.cleanup) {
+					args.content = Zwsp.trim(args.content);
 					args.content = args.content.replace(/\uFEFF/g, '');
 				}
 
