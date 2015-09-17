@@ -14,7 +14,7 @@
 define("tinymce/imagetoolsplugin/CropRect", [
 	"tinymce/dom/DomQuery",
 	"tinymce/ui/DragHelper",
-	"tinymce/ui/Rect",
+	"tinymce/geom/Rect",
 	"tinymce/util/Tools",
 	"tinymce/util/Observable"
 ], function($, DragHelper, Rect, Tools, Observable) {

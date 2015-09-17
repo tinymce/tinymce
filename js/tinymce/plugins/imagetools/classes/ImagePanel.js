@@ -16,7 +16,7 @@
 define("tinymce/imagetoolsplugin/ImagePanel", [
 	"tinymce/ui/Control",
 	"tinymce/ui/DragHelper",
-	"tinymce/ui/Rect",
+	"tinymce/geom/Rect",
 	"tinymce/util/Tools",
 	"tinymce/util/Promise",
 	"tinymce/imagetoolsplugin/CropRect"
