@@ -12,6 +12,12 @@
  * This module contains logic overriding the selection with keyboard/mouse
  * around contentEditable=false regions.
  *
+ * @example
+ * // Disable the default cE=false selection
+ * tinymce.activeEditor.on('ShowCaret ObjectSelected', function(e) {
+ *     e.preventDefault();
+ * });
+ *
  * @private
  * @class tinymce.SelectionOverrides
  */
@@ -332,7 +338,7 @@ define("tinymce/SelectionOverrides", [
 			function getContentEditableRoot(node) {
 				var root = editor.getBody();
 
-				while (node != root) {
+				while (node && node != root) {
 					if (isContentEditableTrue(node) || isContentEditableFalse(node)) {
 						return node;
 					}
@@ -454,11 +460,11 @@ define("tinymce/SelectionOverrides", [
 			);
 		}
 
-		function setContentEditableSelection(range) {
+		function setContentEditableSelection(range, fireEvent) {
 			var node, $ = editor.$, dom = editor.dom, $realSelectionContainer, sel,
 				startContainer, startOffset, endOffset, e;
 
-			if (range.collapsed) {
+			if (!range || range.collapsed) {
 				clearContentEditableSelection();
 				return null;
 			}
@@ -484,10 +490,12 @@ define("tinymce/SelectionOverrides", [
 			}
 
 			if (isContentEditableFalse(node)) {
-				e = editor.fire('ObjectSelected', {target: node});
-				if (e.isDefaultPrevented()) {
-					clearContentEditableSelection();
-					return null;
+				if (fireEvent !== false) {
+					e = editor.fire('ObjectSelected', {target: node});
+					if (e.isDefaultPrevented()) {
+						clearContentEditableSelection();
+						return null;
+					}
 				}
 
 				$realSelectionContainer = $('#' + realSelectionId);
