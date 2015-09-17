@@ -475,7 +475,7 @@ define("tinymce/dom/Selection", [
 		 * @see http://www.dotvoid.com/2001/03/using-the-range-object-in-mozilla/
 		 */
 		getRng: function(w3c) {
-			var self = this, selection, rng, elm, doc, ieRng;
+			var self = this, selection, rng, elm, doc, ieRng, evt;
 
 			function tryCompareBoundaryPoints(how, sourceRange, destinationRange) {
 				try {
@@ -528,6 +528,11 @@ define("tinymce/dom/Selection", [
 				}
 			} catch (ex) {
 				// IE throws unspecified error here if TinyMCE is placed in a frame/iframe
+			}
+
+			evt = self.editor.fire('GetSelectionRange', {range: rng});
+			if (evt.range !== rng) {
+				return evt.range;
 			}
 
 			// We have W3C ranges and it's IE then fake control selection since IE9 doesn't handle that correctly yet
@@ -585,7 +590,7 @@ define("tinymce/dom/Selection", [
 		 * @param {Boolean} forward
 		 */
 		setRng: function(rng, forward) {
-			var self = this, sel, node;
+			var self = this, sel, node, evt;
 
 			if (!rng) {
 				return;
@@ -604,6 +609,9 @@ define("tinymce/dom/Selection", [
 
 			if (!self.tridentSel) {
 				sel = self.getSel();
+
+				evt = self.editor.fire('SetSelectionRange', {range: rng});
+				rng = evt.range;
 
 				if (sel) {
 					self.explicitRange = rng;
