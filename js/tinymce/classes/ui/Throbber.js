@@ -16,8 +16,9 @@
  */
 define("tinymce/ui/Throbber", [
 	"tinymce/dom/DomQuery",
-	"tinymce/ui/Control"
-], function($, Control) {
+	"tinymce/ui/Control",
+	"tinymce/util/Delay"
+], function($, Control, Delay) {
 	"use strict";
 
 	/**
@@ -43,7 +44,7 @@ define("tinymce/ui/Throbber", [
 
 			state = true;
 
-			window.setTimeout(function() {
+			Delay.setTimeout(function() {
 				if (state) {
 					$(elm).append(
 						'<div class="' + classPrefix + 'throbber' + (inline ? ' ' + classPrefix + 'throbber-inline' : '') + '"></div>'
@@ -53,7 +54,7 @@ define("tinymce/ui/Throbber", [
 						callback();
 					}
 				}
-			}, time || 0);
+			}, time);
 
 			return self;
 		};

@@ -15,8 +15,9 @@
  * @private
  */
 define("tinymce/dom/StyleSheetLoader", [
-	"tinymce/util/Tools"
-], function(Tools) {
+	"tinymce/util/Tools",
+	"tinymce/util/Delay"
+], function(Tools, Delay) {
 	"use strict";
 
 	return function(document, settings) {
@@ -75,7 +76,7 @@ define("tinymce/dom/StyleSheetLoader", [
 				if (!testCallback()) {
 					// Wait for timeout
 					if ((new Date().getTime()) - startTime < maxLoadTime) {
-						window.setTimeout(waitCallback, 0);
+						Delay.setTimeout(waitCallback);
 					} else {
 						failed();
 					}

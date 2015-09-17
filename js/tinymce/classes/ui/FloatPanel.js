@@ -22,8 +22,9 @@ define("tinymce/ui/FloatPanel", [
 	"tinymce/ui/Movable",
 	"tinymce/ui/Resizable",
 	"tinymce/ui/DomUtils",
-	"tinymce/dom/DomQuery"
-], function(Panel, Movable, Resizable, DomUtils, $) {
+	"tinymce/dom/DomQuery",
+	"tinymce/util/Delay"
+], function(Panel, Movable, Resizable, DomUtils, $, Delay) {
 	"use strict";
 
 	var documentClickHandler, documentScrollHandler, windowResizeHandler, visiblePanels = [];
@@ -235,10 +236,10 @@ define("tinymce/ui/FloatPanel", [
 							).appendTo(self.getContainerElm());
 						}
 
-						setTimeout(function() {
+						Delay.setTimeout(function() {
 							$modalBlockEl.addClass(prefix + 'in');
 							$(self.getEl()).addClass(prefix + 'in');
-						}, 0);
+						});
 
 						hasModal = true;
 					}

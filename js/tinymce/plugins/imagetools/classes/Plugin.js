@@ -21,10 +21,11 @@ define("tinymce/imagetoolsplugin/Plugin", [
 	"tinymce/util/Promise",
 	"tinymce/util/URI",
 	"tinymce/util/Tools",
+	"tinymce/util/Delay",
 	"tinymce/imagetoolsplugin/ImageTools",
 	"tinymce/imagetoolsplugin/Conversions",
 	"tinymce/imagetoolsplugin/Dialog"
-], function(PluginManager, Env, Promise, URI, Tools, ImageTools, Conversions, Dialog) {
+], function(PluginManager, Env, Promise, URI, Tools, Delay, ImageTools, Conversions, Dialog) {
 	PluginManager.add('imagetools', function(editor) {
 		var count = 0, imageUploadTimer, lastSelectedImage;
 
@@ -201,9 +202,9 @@ define("tinymce/imagetoolsplugin/Plugin", [
 		}
 
 		function startTimedUpload() {
-			imageUploadTimer = setTimeout(function() {
-								editor.editorUpload.uploadImagesAuto();
-							}, 30000);
+			imageUploadTimer = Delay.setEditorTimeout(editor, function() {
+				editor.editorUpload.uploadImagesAuto();
+			}, 30000);
 		}
 
 		function cancelTimedUpload() {

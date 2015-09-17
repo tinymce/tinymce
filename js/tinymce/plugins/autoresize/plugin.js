@@ -106,7 +106,7 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 	 * the CSS files might load async.
 	 */
 	function wait(times, interval, callback) {
-		setTimeout(function() {
+		tinymce.util.Delay.setEditorTimeout(editor, function() {
 			resize({});
 
 			if (times--) {

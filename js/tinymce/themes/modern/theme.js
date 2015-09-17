@@ -471,11 +471,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				}
 			}
 
-			if (window.requestAnimationFrame) {
-				window.requestAnimationFrame(execute);
-			} else {
-				execute();
-			}
+			tinymce.util.Delay.requestAnimationFrame(execute);
 		}
 
 		function bindScrollEvent() {
@@ -547,12 +543,8 @@ tinymce.ThemeManager.add('modern', function(editor) {
 
 		editor.on('click keyup', function() {
 			// Needs to be delayed to avoid Chrome img focus out bug
-			window.setTimeout(function() {
+			tinymce.util.Delay.setEditorTimeout(editor, function() {
 				var match;
-
-				if (editor.removed) {
-					return;
-				}
 
 				match = findFrontMostMatch(editor.selection.getNode());
 				if (match) {
@@ -560,7 +552,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				} else {
 					hideAllContextToolbars();
 				}
-			}, 0);
+			});
 		});
 
 		editor.on('blur hide', hideAllContextToolbars);

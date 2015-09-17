@@ -20,8 +20,9 @@
  * @extends tinymce.ui.Widget
  */
 define("tinymce/ui/Iframe", [
-	"tinymce/ui/Widget"
-], function(Widget) {
+	"tinymce/ui/Widget",
+	"tinymce/util/Delay"
+], function(Widget, Delay) {
 	"use strict";
 
 	return Widget.extend({
@@ -67,9 +68,9 @@ define("tinymce/ui/Iframe", [
 
 			// Wait for iframe to initialize IE 10 takes time
 			if (!body) {
-				setTimeout(function() {
+				Delay.setTimeout(function() {
 					self.html(html);
-				}, 0);
+				});
 			} else {
 				body.innerHTML = html;
 

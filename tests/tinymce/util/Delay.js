@@ -21,9 +21,9 @@ ModuleLoader.require([
 		var count = 0, id;
 
 		id = Delay.setInterval(function() {
-			if (count++ == 3) {
+			if (++count == 2) {
 				Delay.clearInterval(id);
-				ok("setInterval was executed.", true);
+				equal(count, 2);
 				QUnit.start();
 			} else if (count > 3) {
 				throw new Error("Still executing setInterval.");
@@ -54,9 +54,9 @@ ModuleLoader.require([
 		var count = 0, id, fakeEditor = {};
 
 		id = Delay.setEditorInterval(fakeEditor, function() {
-			if (count++ == 3) {
+			if (++count == 2) {
 				Delay.clearInterval(id);
-				ok("setEditorInterval was executed.", true);
+				equal(count, 2);
 				QUnit.start();
 			} else if (count > 3) {
 				throw new Error("Still executing setEditorInterval.");
@@ -72,5 +72,27 @@ ModuleLoader.require([
 		});
 
 		ok(true, "setEditorTimeout on removed instance.");
+	});
+
+	test('clearTimeout', function() {
+		var id;
+
+		id = Delay.setTimeout(function() {
+			throw new Error("clearTimeout didn't work.");
+		});
+
+		Delay.clearTimeout(id);
+		ok(true, "clearTimeout works.");
+	});
+
+	test('clearTimeout', function() {
+		var id;
+
+		id = Delay.setInterval(function() {
+			throw new Error("clearInterval didn't work.");
+		});
+
+		Delay.clearInterval(id);
+		ok(true, "clearInterval works.");
 	});
 });

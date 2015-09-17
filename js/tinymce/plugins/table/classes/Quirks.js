@@ -16,10 +16,11 @@
  */
 define("tinymce/tableplugin/Quirks", [
 	"tinymce/util/VK",
+	"tinymce/util/Delay",
 	"tinymce/Env",
 	"tinymce/util/Tools",
 	"tinymce/tableplugin/Utils"
-], function(VK, Env, Tools, Utils) {
+], function(VK, Delay, Env, Tools, Utils) {
 	var each = Tools.each, getSpanVal = Utils.getSpanVal;
 
 	return function(editor) {
@@ -168,7 +169,7 @@ define("tinymce/tableplugin/Quirks", [
 
 				if (isVerticalMovement() && isInTable(editor)) {
 					var preBrowserNode = editor.selection.getNode();
-					setTimeout(function() {
+					Delay.setEditorTimeout(editor, function() {
 						if (shouldFixCaret(preBrowserNode)) {
 							handle(!e.shiftKey && key === VK.UP, preBrowserNode, e);
 						}

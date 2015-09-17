@@ -24,8 +24,9 @@ define("tinymce/util/Quirks", [
 	"tinymce/html/Node",
 	"tinymce/html/Entities",
 	"tinymce/Env",
-	"tinymce/util/Tools"
-], function(VK, RangeUtils, TreeWalker, NodePath, Node, Entities, Env, Tools) {
+	"tinymce/util/Tools",
+	"tinymce/util/Delay"
+], function(VK, RangeUtils, TreeWalker, NodePath, Node, Entities, Env, Tools, Delay) {
 	return function(editor) {
 		var each = Tools.each, $ = editor.$;
 		var BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection = editor.selection,
@@ -707,7 +708,7 @@ define("tinymce/util/Quirks", [
 						// produces a green plus icon. When this happens the caretRangeFromPoint
 						// will return "null" even though the x, y coordinate is correct.
 						// But if we detach the insert from the drop event we will get a proper range
-						window.setTimeout(function() {
+						Delay.setEditorTimeout(editor, function() {
 							var pointRng = RangeUtils.getCaretRangeFromPoint(e.x, e.y, doc);
 
 							if (dragStartRng) {
@@ -718,7 +719,7 @@ define("tinymce/util/Quirks", [
 							customDelete();
 							selection.setRng(pointRng);
 							insertClipboardContents(internalContent.html);
-						}, 0);
+						});
 					}
 				}
 			});
@@ -733,9 +734,9 @@ define("tinymce/util/Quirks", [
 					// Needed delay for https://code.google.com/p/chromium/issues/detail?id=363288#c3
 					// Nested delete/forwardDelete not allowed on execCommand("cut")
 					// This is ugly but not sure how to work around it otherwise
-					window.setTimeout(function() {
+					Delay.setEditorTimeout(editor, function() {
 						customDelete(true);
-					}, 0);
+					});
 				}
 			});
 		}
@@ -909,9 +910,9 @@ define("tinymce/util/Quirks", [
 						body.blur();
 
 						// Refocus the body after a little while
-						setTimeout(function() {
+						Delay.setEditorTimeout(editor, function() {
 							body.focus();
-						}, 0);
+						});
 					}
 				});
 			}
@@ -993,9 +994,9 @@ define("tinymce/util/Quirks", [
 				if (!isDefaultPrevented(e) && isSelectionAcrossElements()) {
 					applyAttributes = getAttributeApplyFunction();
 
-					setTimeout(function() {
+					Delay.setEditorTimeout(editor, function() {
 						applyAttributes();
-					}, 0);
+					});
 				}
 			});
 		}

@@ -16,8 +16,9 @@
  */
 define("tinymce/NodeChange", [
 	"tinymce/dom/RangeUtils",
-	"tinymce/Env"
-], function(RangeUtils, Env) {
+	"tinymce/Env",
+	"tinymce/util/Delay"
+], function(RangeUtils, Env, Delay) {
 	return function(editor) {
 		var lastRng, lastPath = [];
 
@@ -101,9 +102,9 @@ define("tinymce/NodeChange", [
 				// Delay nodeChanged call for WebKit edge case issue where the range
 				// isn't updated until after you click outside a selected image
 				if (editor.selection.getNode().nodeName == 'IMG') {
-					setTimeout(function() {
+					Delay.setEditorTimeout(editor, function() {
 						editor.nodeChanged();
-					}, 0);
+					});
 				} else {
 					editor.nodeChanged();
 				}

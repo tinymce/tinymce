@@ -22,8 +22,9 @@ define("tinymce/ui/Window", [
 	"tinymce/dom/DomQuery",
 	"tinymce/ui/DragHelper",
 	"tinymce/ui/BoxUtils",
-	"tinymce/Env"
-], function(FloatPanel, Panel, DomUtils, $, DragHelper, BoxUtils, Env) {
+	"tinymce/Env",
+	"tinymce/util/Delay"
+], function(FloatPanel, Panel, DomUtils, $, DragHelper, BoxUtils, Env, Delay) {
 	"use strict";
 
 	var windows = [], oldMetaValue = '';
@@ -67,7 +68,7 @@ define("tinymce/ui/Window", [
 			h: window.innerHeight
 		};
 
-		window.setInterval(function() {
+		Delay.setInterval(function() {
 			var w = window.innerWidth,
 				h = window.innerHeight;
 
@@ -79,7 +80,7 @@ define("tinymce/ui/Window", [
 
 				$(window).trigger('resize');
 			}
-		}, 0);
+		});
 
 		function reposition() {
 			var i, rect = DomUtils.getWindowSize(), layoutRect;
@@ -331,7 +332,7 @@ define("tinymce/ui/Window", [
 							}
 						} else {
 							if (!self._timer) {
-								self._timer = setTimeout(function() {
+								self._timer = Delay.setTimeout(function() {
 									var rect = DomUtils.getWindowSize();
 									self.moveTo(0, 0).resizeTo(rect.w, rect.h);
 

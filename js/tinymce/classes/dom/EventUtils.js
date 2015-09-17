@@ -16,7 +16,9 @@
  *
  * @class tinymce.dom.EventUtils
  */
-define("tinymce/dom/EventUtils", [], function() {
+define("tinymce/dom/EventUtils", [
+	"tinymce/util/Delay"
+], function(Delay) {
 	"use strict";
 
 	var eventExpandoPrefix = "mce-data-";
@@ -171,7 +173,7 @@ define("tinymce/dom/EventUtils", [], function() {
 				// http://javascript.nwbox.com/IEContentLoaded/
 				doc.documentElement.doScroll("left");
 			} catch (ex) {
-				setTimeout(tryScroll, 0);
+				Delay.setTimeout(tryScroll);
 				return;
 			}
 
