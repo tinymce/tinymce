@@ -35,12 +35,15 @@ tinymce.PluginManager.add('code', function(editor) {
 
 				editor.selection.setCursorLocation();
 				editor.nodeChanged();
+			},
+			onPostRender: function(e) {
+				// Always open the source editor with scroll at the beginning
+				var textarea = $('textarea', e.target.getEl());
+				textarea.html(editor.getContent({source_view: true}));
+				textarea.scrollTop(0);
 			}
 		});
 
-		// Gecko has a major performance issue with textarea
-		// contents so we need to set it when all reflows are done
-		win.find('#code').value(editor.getContent({source_view: true}));
 	}
 
 	editor.addCommand("mceCodeEditor", showDialog);
