@@ -1,9 +1,16 @@
 .mce-content-body *[contentEditable=true], .mce-content-body *[data-mce-contenteditable=true] {
 	background: rgba(0, 255, 0, 0.3);
+	border: 1px solid #999;
 }
 
 .mce-content-body *[contentEditable=false], .mce-content-body *[data-mce-contenteditable=false] {
 	background: rgba(255, 0, 0, 0.3);
+	border: 1px solid #999;
+	margin: 0 1px 0 2px;
+}
+
+.mce-content-body div[contentEditable=false], .mce-content-body p[contentEditable=false] {
+	margin: 2px 0 2px 0;
 }
 
 .mce-content-body  *[contentEditable]:focus {
@@ -16,8 +23,8 @@
 	outline: 2px solid red;
 }
 
-*[data-mce-selected] {
-	outline: 1px solid blue;
+.mce-content-body *[data-mce-selected] {
+	outline: 2px solid blue;
 }
 
 .mce-content-body .mce-offscreen-selection {
