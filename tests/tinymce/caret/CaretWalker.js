@@ -17,10 +17,6 @@ ModuleLoader.require([
 		return tinymce.$(selector, getRoot())[0];
 	}
 
-	function findText(selector) {
-		return tinymce.$(selector, getRoot())[0].firstChild;
-	}
-
 	function findElmPos(selector, offset) {
 		return CaretPosition(tinymce.$(selector, getRoot())[0], offset);
 	}
@@ -58,14 +54,14 @@ ModuleLoader.require([
 
 	test('within text node in element', function() {
 		setupHtml('<p>abc</p>');
-		assertCaretPosition(logicalCaret.next(CaretPosition(findText('p'), 0)), CaretPosition(findText('p'), 1));
-		assertCaretPosition(logicalCaret.next(CaretPosition(findText('p'), 1)), CaretPosition(findText('p'), 2));
-		assertCaretPosition(logicalCaret.next(CaretPosition(findText('p'), 2)), CaretPosition(findText('p'), 3));
-		assertCaretPosition(logicalCaret.next(CaretPosition(findText('p'), 3)), null);
-		assertCaretPosition(logicalCaret.prev(CaretPosition(findText('p'), 3)), CaretPosition(findText('p'), 2));
-		assertCaretPosition(logicalCaret.prev(CaretPosition(findText('p'), 2)), CaretPosition(findText('p'), 1));
-		assertCaretPosition(logicalCaret.prev(CaretPosition(findText('p'), 1)), CaretPosition(findText('p'), 0));
-		assertCaretPosition(logicalCaret.prev(CaretPosition(findText('p'), 0)), null);
+		assertCaretPosition(logicalCaret.next(findTextPos('p', 0)), findTextPos('p', 1));
+		assertCaretPosition(logicalCaret.next(findTextPos('p', 1)), findTextPos('p', 2));
+		assertCaretPosition(logicalCaret.next(findTextPos('p', 2)), findTextPos('p', 3));
+		assertCaretPosition(logicalCaret.next(findTextPos('p', 3)), null);
+		assertCaretPosition(logicalCaret.prev(findTextPos('p', 3)), findTextPos('p', 2));
+		assertCaretPosition(logicalCaret.prev(findTextPos('p', 2)), findTextPos('p', 1));
+		assertCaretPosition(logicalCaret.prev(findTextPos('p', 1)), findTextPos('p', 0));
+		assertCaretPosition(logicalCaret.prev(findTextPos('p', 0)), null);
 	});
 
 	test('from index text node over comment', function() {
@@ -78,14 +74,14 @@ ModuleLoader.require([
 
 	test('from text to text across elements', function() {
 		setupHtml('<p>abc</p><p>abc</p>');
-		assertCaretPosition(logicalCaret.next(CaretPosition(findText('p:first'), 3)), CaretPosition(findText('p:last'), 0));
-		assertCaretPosition(logicalCaret.prev(CaretPosition(findText('p:last'), 0)), CaretPosition(findText('p:first'), 3));
+		assertCaretPosition(logicalCaret.next(findTextPos('p:first', 3)), findTextPos('p:last', 0));
+		assertCaretPosition(logicalCaret.prev(findTextPos('p:last', 0)), findTextPos('p:first', 3));
 	});
 
 	test('from text to text across elements with siblings', function() {
 		setupHtml('<p>abc<b><!-- x --></b></p><p><b><!-- x --></b></p><p><b><!-- x --></b>abc</p>');
-		assertCaretPosition(logicalCaret.next(CaretPosition(findText('p:first'), 3)), CaretPosition(findElm('p:last').lastChild, 0));
-		assertCaretPosition(logicalCaret.prev(CaretPosition(findElm('p:last').lastChild)), CaretPosition(findText('p:first'), 3));
+		assertCaretPosition(logicalCaret.next(findTextPos('p:first', 3)), CaretPosition(findElm('p:last').lastChild, 0));
+		assertCaretPosition(logicalCaret.prev(CaretPosition(findElm('p:last').lastChild)), findTextPos('p:first', 3));
 	});
 
 	test('from input to text', function() {
@@ -166,16 +162,16 @@ ModuleLoader.require([
 	test('around tables', function() {
 		setupHtml('a<table><tr><td>A</td></tr></table><table><tr><td>B</td></tr></table>b');
 		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot().firstChild, 1)), CaretPosition(getRoot(), 1));
-		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 1)), CaretPosition(findText('td:first'), 0));
-		assertCaretPosition(logicalCaret.next(CaretPosition(findText('td:first'), 1)), CaretPosition(getRoot(), 2));
-		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 2)), CaretPosition(findText('td:last'), 0));
-		assertCaretPosition(logicalCaret.next(CaretPosition(findText('table:last td'), 1)), CaretPosition(getRoot(), 3));
+		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 1)), findTextPos('td:first', 0));
+		assertCaretPosition(logicalCaret.next(findTextPos('td:first', 1)), CaretPosition(getRoot(), 2));
+		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 2)), findTextPos('td:last', 0));
+		assertCaretPosition(logicalCaret.next(findTextPos('table:last td', 1)), CaretPosition(getRoot(), 3));
 		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 3)), CaretPosition(getRoot().lastChild, 0));
 		assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot().lastChild, 0)), CaretPosition(getRoot(), 3));
-		assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 3)), CaretPosition(findText('td:last'), 1));
-		assertCaretPosition(logicalCaret.prev(CaretPosition(findText('td:last'), 0)), CaretPosition(getRoot(), 2));
-		assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 2)), CaretPosition(findText('td:first'), 1));
-		assertCaretPosition(logicalCaret.prev(CaretPosition(findText('td:first'), 0)), CaretPosition(getRoot(), 1));
+		assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 3)), findTextPos('td:last', 1));
+		assertCaretPosition(logicalCaret.prev(findTextPos('td:last', 0)), CaretPosition(getRoot(), 2));
+		assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 2)), findTextPos('td:first', 1));
+		assertCaretPosition(logicalCaret.prev(findTextPos('td:first', 0)), CaretPosition(getRoot(), 1));
 		assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 1)), CaretPosition(getRoot().firstChild, 1));
 	});
 
@@ -186,13 +182,13 @@ ModuleLoader.require([
 		assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 2)), CaretPosition(getRoot(), 1));
 		assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot().lastChild, 0)), CaretPosition(getRoot(), 2));
 	});
-
+/*
 	test('from outside cE=false to nested cE=true', function() {
 		setupHtml('abc<span contentEditable="false">b<span contentEditable="true">c</span></span>def');
 		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot().firstChild, 3)), CaretPosition(getRoot(), 1));
-		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 1)), CaretPosition(findText('span span'), 0));
+		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 1)), findTextPos('span span', 0));
 		assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot().lastChild, 0)), CaretPosition(getRoot(), 2));
-		assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 2)), CaretPosition(findText('span span'), 1));
+		assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 2)), findTextPos('span span', 1));
 	});
 
 	test('from outside cE=false to nested cE=true before/after cE=false', function() {
@@ -201,7 +197,7 @@ ModuleLoader.require([
 		assertCaretPosition(logicalCaret.next(CaretPosition(findElm('span span'), 1)), CaretPosition(getRoot(), 2));
 		assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 2)), CaretPosition(findElm('span span'), 1));
 	});
-
+*/
 	test('from inside cE=true in cE=false to after cE=false', function() {
 		setupHtml(
 			'<p>' +
@@ -215,7 +211,7 @@ ModuleLoader.require([
 			'<p>abc</p>'
 		);
 
-		assertCaretPosition(logicalCaret.next(CaretPosition(findText('span span'), 3)), CaretPosition(findElm('p'), 1));
+		assertCaretPosition(logicalCaret.next(findTextPos('span span', 3)), CaretPosition(findElm('p'), 1));
 	});
 
 	test('around cE=false inside nested cE=true', function() {

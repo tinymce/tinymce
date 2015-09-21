@@ -94,7 +94,7 @@ define("tinymce/caret/CaretWalker", [
 			return null;
 		}
 
-		caretPosition = CaretUtils.getOuterCaretPosition(direction, startCaretPosition);
+		caretPosition = startCaretPosition;
 		container = caretPosition.container();
 		offset = caretPosition.offset();
 

@@ -21,8 +21,10 @@ define("tinymce/caret/LineWalker", [
 	"tinymce/dom/NodeType",
 	"tinymce/caret/CaretCandidate",
 	"tinymce/caret/CaretUtils",
+	"tinymce/caret/CaretWalker",
+	"tinymce/caret/CaretPosition",
 	"tinymce/geom/ClientRect"
-], function(Fun, Arr, NodeType, CaretCandidate, CaretUtils, ClientRect) {
+], function(Fun, Arr, NodeType, CaretCandidate, CaretUtils, CaretWalker, CaretPosition, ClientRect) {
 	var curry = Fun.curry,
 		isContentEditableFalse = NodeType.isContentEditableFalse,
 		isElement = NodeType.isElement,
@@ -95,7 +97,7 @@ define("tinymce/caret/LineWalker", [
 			return result;
 		}
 
-		node = caretPosition.getNode();
+		node = caretPosition.getNode(direction == -1);
 		add(node);
 		findUntil(direction, rootNode, add, node);
 
@@ -134,6 +136,59 @@ define("tinymce/caret/LineWalker", [
 		});
 	}
 
+	function findClosestCaretPosition(direction, node, clientX) {
+		var caretWalker, caretPosition, bestCaretPosition, walkFn, isBelowFn,
+			oldClientRect, clientRect, newDistance, oldDistance = null;
+
+		if (isElement(node)) {
+			return null;
+		}
+
+		caretWalker = new CaretWalker(node.parentNode);
+
+		if (direction == 1) {
+			walkFn = caretWalker.next;
+			isBelowFn = ClientRect.isBelow;
+			caretPosition = new CaretPosition(node, 0);
+		} else {
+			walkFn = caretWalker.prev;
+			isBelowFn = ClientRect.isAbove;
+			caretPosition = new CaretPosition(node, node.data.length);
+		}
+
+		do {
+			if (caretPosition.container() != node) {
+				return null;
+			}
+
+			if (!caretPosition.isVisible()) {
+				continue;
+			}
+
+			if (direction == 1) {
+				clientRect = caretPosition.getClientRects()[0];
+			} else {
+				clientRect = Arr.last(caretPosition.getClientRects());
+			}
+
+			if (oldClientRect && isBelowFn(clientRect, oldClientRect)) {
+				break;
+			}
+
+			oldClientRect = clientRect;
+			newDistance = Math.abs(clientRect.left - clientX);
+
+			if (oldDistance !== null && newDistance > oldDistance) {
+				break;
+			}
+
+			bestCaretPosition = caretPosition;
+			oldDistance = newDistance;
+		} while ((caretPosition = walkFn(caretPosition)));
+
+		return bestCaretPosition;
+	}
+
 	function aboveLineNumber(lineNumber, item) {
 		return item.line > lineNumber;
 	}
@@ -150,6 +205,7 @@ define("tinymce/caret/LineWalker", [
 		downUntil: downUntil,
 		isAboveLine: curry(aboveLineNumber),
 		isLine: curry(isLine),
-		findClosest: findClosest
+		findClosest: findClosest,
+		findClosestCaretPosition: findClosestCaretPosition
 	};
 });

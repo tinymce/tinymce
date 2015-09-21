@@ -86,7 +86,7 @@ define("tinymce/caret/CaretContainer", [
 
 		doc = node.ownerDocument;
 		blockNode = doc.createElement(blockName);
-		blockNode.setAttribute('data-mce-caret', '1');
+		blockNode.setAttribute('data-mce-caret', before ? 'before' : 'after');
 		blockNode.setAttribute('data-mce-bogus', 'all');
 		blockNode.appendChild(doc.createTextNode('\u00a0'));
 		parentNode = node.parentNode;

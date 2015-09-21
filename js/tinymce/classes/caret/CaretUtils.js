@@ -18,18 +18,17 @@ define("tinymce/caret/CaretUtils", [
 	"tinymce/util/Fun",
 	"tinymce/dom/TreeWalker",
 	"tinymce/dom/NodeType",
-	"tinymce/dom/DOMUtils",
 	"tinymce/caret/CaretPosition",
 	"tinymce/caret/CaretContainer",
 	"tinymce/caret/CaretCandidate"
-], function(Fun, TreeWalker, NodeType, DOMUtils, CaretPosition, CaretContainer, CaretCandidate) {
+], function(Fun, TreeWalker, NodeType, CaretPosition, CaretContainer, CaretCandidate) {
 	var isContentEditableTrue = NodeType.isContentEditableTrue,
 		isContentEditableFalse = NodeType.isContentEditableFalse,
 		isBlockLike = NodeType.matchStyleValues('display', 'block table table-cell table-caption'),
-		nodeIndex = DOMUtils.nodeIndex,
 		isCaretContainer = CaretContainer.isCaretContainer,
 		curry = Fun.curry,
-		isElement = NodeType.isElement;
+		isElement = NodeType.isElement,
+		isCaretCandidate = CaretCandidate.isCaretCandidate;
 
 	function isForwards(direction) {
 		return direction > 0;
@@ -43,6 +42,13 @@ define("tinymce/caret/CaretUtils", [
 		var walker = new TreeWalker(node, rootNode);
 
 		if (isBackwards(direction)) {
+			if (isContentEditableFalse(node)) {
+				node = walker.prev(true);
+				if (predicateFn(node)) {
+					return node;
+				}
+			}
+
 			while ((node = walker.prev(shallow))) {
 				if (predicateFn(node)) {
 					return node;
@@ -51,6 +57,13 @@ define("tinymce/caret/CaretUtils", [
 		}
 
 		if (isForwards(direction)) {
+			if (isContentEditableFalse(node)) {
+				node = walker.next(true);
+				if (predicateFn(node)) {
+					return node;
+				}
+			}
+
 			while ((node = walker.next(shallow))) {
 				if (predicateFn(node)) {
 					return node;
@@ -91,37 +104,6 @@ define("tinymce/caret/CaretUtils", [
 		return getEditingHost(caretPosition1.container(), rootNode) == getEditingHost(caretPosition2.container(), rootNode);
 	}
 
-	function getOuterCaretPosition(direction, caretPosition) {
-		var container, offset;
-
-		container = caretPosition.container();
-		offset = caretPosition.offset();
-
-		if (isCaretContainer(container.parentNode)) {
-			offset = nodeIndex(container.parentNode);
-			container = container.parentNode.parentNode;
-
-			if (isForwards(direction)) {
-				offset++;
-			}
-
-			return CaretPosition(container, offset);
-		}
-
-		if (NodeType.isText(container) && CaretContainer.isCaretContainer(container)) {
-			offset = nodeIndex(container);
-			container = container.parentNode;
-
-			if (isForwards(direction)) {
-				offset++;
-			}
-
-			return CaretPosition(container, offset);
-		}
-
-		return caretPosition;
-	}
-
 	function getChildNodeAtRelativeOffset(relativeOffset, caretPosition) {
 		var container, offset;
 
@@ -139,67 +121,163 @@ define("tinymce/caret/CaretUtils", [
 		return container.childNodes[offset + relativeOffset];
 	}
 
-	function normalizeRange(range, rootNode) {
-		function normalize(range, start) {
-			var targetOffset, sibling, node, container, offset;
+	function beforeAfter(before, node) {
+		var range = node.ownerDocument.createRange();
 
-			container = range.startContainer;
-			offset = range.startOffset;
+		if (before) {
+			range.setStartBefore(node);
+			range.setEndBefore(node);
+		} else {
+			range.setStartAfter(node);
+			range.setEndAfter(node);
+		}
 
-			if (!NodeType.isText(container)) {
-				return range;
+		return range;
+	}
+
+	function isNodesInSameBlock(rootNode, node1, node2) {
+		return getParentBlock(node1, rootNode) == getParentBlock(node2, rootNode);
+	}
+
+	function lean(left, rootNode, node) {
+		var sibling, siblingName;
+
+		if (left) {
+			siblingName = 'previousSibling';
+		} else {
+			siblingName = 'nextSibling';
+		}
+
+		while (node && node != rootNode) {
+			sibling = node[siblingName];
+
+			if (isCaretContainer(sibling)) {
+				sibling = sibling[siblingName];
 			}
 
-			targetOffset = start ? 0 : container.data.length;
-
-			if (!isCaretContainer(container)) {
-				if (start && offset <= 1 && CaretContainer.startsWithCaretContainer(container)) {
-					offset = 0;
+			if (isContentEditableFalse(sibling)) {
+				if (isNodesInSameBlock(rootNode, sibling, node)) {
+					return sibling;
 				}
 
-				if (!start && offset >= container.data.length - 1 && CaretContainer.endsWithCaretContainer(container)) {
-					offset = container.data.length;
+				break;
+			}
+
+			if (isCaretCandidate(sibling)) {
+				break;
+			}
+
+			node = node.parentNode;
+		}
+
+		return null;
+	}
+
+	var before = curry(beforeAfter, true);
+	var after = curry(beforeAfter, false);
+
+	function normalizeRange(direction, rootNode, range) {
+		var node, container, offset, location;
+		var leanLeft = curry(lean, true, rootNode);
+		var leanRight = curry(lean, false, rootNode);
+
+		container = range.startContainer;
+		offset = range.startOffset;
+
+		if (CaretContainer.isCaretContainerBlock(container)) {
+			if (!isElement(container)) {
+				container = container.parentNode;
+			}
+
+			location = container.getAttribute('data-mce-caret');
+
+			if (location == 'before') {
+				node = container.nextSibling;
+				if (isContentEditableFalse(node)) {
+					return before(node);
 				}
 			}
 
-			if (offset == targetOffset) {
-				for (node = container; node && node != rootNode; node = node.parentNode) {
-					sibling = node[start ? 'previousSibling' : 'nextSibling'];
-
-					if (isContentEditableFalse(sibling)) {
-						if (isBlockLike(sibling)) {
-							break;
-						}
-
-						if (start) {
-							range.setStartAfter(sibling);
-							range.setEndAfter(sibling);
-						} else {
-							range.setStartBefore(sibling);
-							range.setEndBefore(sibling);
-						}
-
-						break;
-					}
-
-					if (CaretCandidate.isCaretCandidate(sibling)) {
-						break;
-					}
-
-					if (CaretContainer.isCaretContainer(sibling)) {
-						range.setStart(sibling, 0);
-						range.setEnd(sibling, 0);
-						break;
-					}
+			if (location == 'after') {
+				node = container.previousSibling;
+				if (isContentEditableFalse(node)) {
+					return after(node);
 				}
 			}
+		}
 
+		if (!range.collapsed) {
 			return range;
 		}
 
-		if (range.collapsed) {
-			range = normalize(range, true);
-			range = normalize(range, false);
+		if (NodeType.isText(container)) {
+			if (isCaretContainer(container)) {
+				if (direction === 1) {
+					node = leanRight(container);
+					if (node) {
+						return before(node);
+					}
+
+					node = leanLeft(container);
+					if (node) {
+						return after(node);
+					}
+				}
+
+				if (direction === -1) {
+					node = leanLeft(container);
+					if (node) {
+						return after(node);
+					}
+
+					node = leanRight(container);
+					if (node) {
+						return before(node);
+					}
+				}
+
+				return range;
+			}
+
+			if (CaretContainer.endsWithCaretContainer(container) && offset >= container.data.length - 1) {
+				if (direction === 1) {
+					node = leanRight(container);
+					if (node) {
+						return before(node);
+					}
+				}
+
+				return range;
+			}
+
+			if (CaretContainer.startsWithCaretContainer(container) && offset <= 1) {
+				if (direction === -1) {
+					node = leanLeft(container);
+					if (node) {
+						return after(node);
+					}
+				}
+
+				return range;
+			}
+
+			if (offset === container.data.length) {
+				node = leanRight(container);
+				if (node) {
+					return before(node);
+				}
+
+				return range;
+			}
+
+			if (offset === 0) {
+				node = leanLeft(container);
+				if (node) {
+					return after(node);
+				}
+
+				return range;
+			}
 		}
 
 		return range;
@@ -217,7 +295,6 @@ define("tinymce/caret/CaretUtils", [
 		getParentBlock: getParentBlock,
 		isInSameBlock: isInSameBlock,
 		isInSameEditingHost: isInSameEditingHost,
-		getOuterCaretPosition: getOuterCaretPosition,
 		isBeforeContentEditableFalse: curry(isNextToContentEditableFalse, 0),
 		isAfterContentEditableFalse: curry(isNextToContentEditableFalse, -1),
 		normalizeRange: normalizeRange

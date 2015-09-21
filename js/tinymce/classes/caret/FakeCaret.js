@@ -27,7 +27,7 @@ define("tinymce/caret/FakeCaret", [
 		isContentEditableFalse = NodeType.isContentEditableFalse;
 
 	return function(rootNode) {
-		var cursorInterval, $lastVisualCaret, caretContainerNode, info, lastClientRect;
+		var cursorInterval, $lastVisualCaret, caretContainerNode;
 
 		function getAbsoluteClientRect(node, before) {
 			var clientRect = ClientRect.collapse(node.getBoundingClientRect(), before),
@@ -85,7 +85,7 @@ define("tinymce/caret/FakeCaret", [
 		}
 
 		function show(direction, node, before) {
-			var clientRect, rng, contentEditableSibling, container;
+			var clientRect, rng, container;
 
 			if (typeof before === "undefined") {
 				before = direction == 1;
@@ -93,18 +93,9 @@ define("tinymce/caret/FakeCaret", [
 
 			hide();
 
-			if (!before && direction == 1 && isContentEditableFalse(node.nextSibling)) {
-				contentEditableSibling = node.nextSibling;
-			}
-
-			if (before && direction == -1 && isContentEditableFalse(node.previousSibling)) {
-				contentEditableSibling = node.previousSibling;
-			}
-
 			if (isBlock(node)) {
 				caretContainerNode = CaretContainer.insertBlock('p', node, before);
 				clientRect = getAbsoluteClientRect(node, before);
-				lastClientRect = clientRect;
 				$(caretContainerNode).css('top', clientRect.top);
 
 				$lastVisualCaret = $('<div class="mce-visual-caret" data-mce-bogus="all"></div>').css(clientRect).appendTo(rootNode);
@@ -134,22 +125,10 @@ define("tinymce/caret/FakeCaret", [
 			rng.setStart(container, 0);
 			rng.setEnd(container, 1);
 
-			if (isBlock(contentEditableSibling)) {
-				info = {
-					direction: direction,
-					node: contentEditableSibling,
-					container: container
-				};
-			} else {
-				info = null;
-			}
-
 			return rng;
 		}
 
 		function hide() {
-			info = lastClientRect = null;
-
 			trimInlineCaretContainers();
 
 			if (caretContainerNode) {
@@ -169,28 +148,6 @@ define("tinymce/caret/FakeCaret", [
 			cursorInterval = Delay.setInterval(function() {
 				$('div.mce-visual-caret', rootNode).toggleClass('mce-visual-caret-hidden');
 			}, 500);
-		}
-
-		function showPendingCaret(direction, range) {
-			if (!info) {
-				return null;
-			}
-
-			if (range.startContainer != range.endContainer || range.startContainer != info.container) {
-				return false;
-			}
-
-			if (direction == info.direction) {
-				if (direction == -1) {
-					return show(1, info.node, false);
-				}
-
-				return show(-1, info.node, true);
-			}
-		}
-
-		function getClientRect() {
-			return lastClientRect;
 		}
 
 		function destroy() {
@@ -221,8 +178,6 @@ define("tinymce/caret/FakeCaret", [
 		return {
 			show: show,
 			hide: hide,
-			showPendingCaret: showPendingCaret,
-			getClientRect: getClientRect,
 			getCss: getCss,
 			destroy: destroy
 		};

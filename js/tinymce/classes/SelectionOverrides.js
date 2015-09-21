@@ -97,10 +97,6 @@ define("tinymce/SelectionOverrides", [
 			return rng;
 		}
 
-		function isCaretPositionCaretContainerBlock(caretPosition) {
-			return CaretContainer.isCaretContainerBlock(caretPosition.getNode());
-		}
-
 		function isMoveInsideSameBlock(fromCaretPosition, toCaretPosition) {
 			var inSameBlock = CaretUtils.isInSameBlock(fromCaretPosition, toCaretPosition);
 
@@ -112,7 +108,9 @@ define("tinymce/SelectionOverrides", [
 			return inSameBlock;
 		}
 
-		function getRangeEndPoint(direction, range) {
+		function getNormalizedRangeEndPoint(direction, range) {
+			range = CaretUtils.normalizeRange(direction, rootNode, range);
+
 			if (direction == -1) {
 				return CaretPosition.fromRangeStart(range);
 			}
@@ -120,12 +118,12 @@ define("tinymce/SelectionOverrides", [
 			return CaretPosition.fromRangeEnd(range);
 		}
 
-		function moveH(direction, getNextPosFn, isBeforeContentEditableFalseFn, range) {
-			var node, pendingRange, startCaretPosition, caretPosition, peekCaretPosition, inCaretBlockPos;
+		function isRangeInCaretContainerBlock(range) {
+			return CaretContainer.isCaretContainerBlock(range.startContainer);
+		}
 
-			if ((pendingRange = fakeCaret.showPendingCaret(direction, range))) {
-				return pendingRange;
-			}
+		function moveH(direction, getNextPosFn, isBeforeContentEditableFalseFn, range) {
+			var node, caretPosition, peekCaretPosition, rangeIsInContainerBlock;
 
 			if (!range.collapsed) {
 				node = getSelectedNode(range);
@@ -134,10 +132,8 @@ define("tinymce/SelectionOverrides", [
 				}
 			}
 
-			range = CaretUtils.normalizeRange(range);
-			startCaretPosition = caretPosition = getRangeEndPoint(direction, range);
-			inCaretBlockPos = isCaretPositionCaretContainerBlock(startCaretPosition);
-			caretPosition = CaretUtils.getOuterCaretPosition(direction, caretPosition);
+			rangeIsInContainerBlock = isRangeInCaretContainerBlock(range);
+			caretPosition = getNormalizedRangeEndPoint(direction, range);
 
 			if (isBeforeContentEditableFalseFn(caretPosition)) {
 				return selectNode(caretPosition.getNode(direction == -1));
@@ -145,7 +141,7 @@ define("tinymce/SelectionOverrides", [
 
 			caretPosition = getNextPosFn(caretPosition);
 			if (!caretPosition) {
-				if (inCaretBlockPos) {
+				if (rangeIsInContainerBlock) {
 					return range;
 				}
 
@@ -153,10 +149,6 @@ define("tinymce/SelectionOverrides", [
 			}
 
 			if (isBeforeContentEditableFalseFn(caretPosition)) {
-				if (CaretUtils.isInSameBlock(startCaretPosition, caretPosition)) {
-					return selectNode(caretPosition.getNode(direction == -1));
-				}
-
 				return showCaret(direction, caretPosition.getNode(direction == -1), direction == 1);
 			}
 
@@ -168,7 +160,7 @@ define("tinymce/SelectionOverrides", [
 				}
 			}
 
-			if (inCaretBlockPos) {
+			if (rangeIsInContainerBlock) {
 				fakeCaret.hide();
 				return caretPosition.toRange();
 			}
@@ -176,14 +168,20 @@ define("tinymce/SelectionOverrides", [
 			return null;
 		}
 
+		function isNextToContentEditableFalse(caretPosition) {
+			return isBeforeContentEditableFalse(caretPosition) || isAfterContentEditableFalse(caretPosition);
+		}
+
 		function moveV(direction, walkerFn, range) {
 			var caretPosition, linePositions, nextLinePositions,
 				closestNextLinePosition, caretClientRect, closestRect, clientX,
-				dist1, dist2;
+				dist1, dist2, atContentEditableFalse, rangeIsInContainerBlock;
 
-			caretPosition = CaretUtils.getOuterCaretPosition(direction, getRangeEndPoint(direction, range));
+			rangeIsInContainerBlock = isRangeInCaretContainerBlock(range);
+			caretPosition = getNormalizedRangeEndPoint(direction, range);
 			linePositions = walkerFn(rootNode, LineWalker.isAboveLine(1), caretPosition);
 			nextLinePositions = Arr.filter(linePositions, LineWalker.isLine(1));
+			atContentEditableFalse = isContentEditableFalse(getSelectedNode(range)) || isNextToContentEditableFalse(caretPosition);
 
 			if (direction == 1) {
 				caretClientRect = Arr.last(caretPosition.getClientRects());
@@ -191,7 +189,6 @@ define("tinymce/SelectionOverrides", [
 				caretClientRect = caretPosition.getClientRects()[0];
 			}
 
-			caretClientRect = fakeCaret.getClientRect() || caretClientRect;
 			if (!caretClientRect) {
 				return null;
 			}
@@ -199,12 +196,27 @@ define("tinymce/SelectionOverrides", [
 			clientX = caretClientRect.left;
 
 			closestNextLinePosition = LineWalker.findClosest(nextLinePositions, clientX);
-			if (closestNextLinePosition && isContentEditableFalse(closestNextLinePosition.node)) {
+			if (!closestNextLinePosition) {
+				if (rangeIsInContainerBlock) {
+					return range;
+				}
+
+				return null;
+			}
+
+			if (isContentEditableFalse(closestNextLinePosition.node)) {
 				closestRect = closestNextLinePosition.clientRect;
 				dist1 = Math.abs(clientX - closestRect.left);
 				dist2 = Math.abs(clientX - closestRect.right);
 
 				return showCaret(1, closestNextLinePosition.node, dist1 < dist2);
+			} else if (atContentEditableFalse) {
+				caretPosition = LineWalker.findClosestCaretPosition(direction, closestNextLinePosition.node, clientX);
+
+				fakeCaret.hide();
+				if (caretPosition) {
+					return caretPosition.toRange();
+				}
 			}
 		}
 
@@ -233,7 +245,7 @@ define("tinymce/SelectionOverrides", [
 				return range;
 			}
 
-			range = CaretUtils.normalizeRange(range);
+			range = CaretUtils.normalizeRange(1, rootNode, range);
 			caretPosition = CaretPosition.fromRangeStart(range);
 
 			if (isContentEditableFalse(caretPosition.getNode())) {
@@ -307,9 +319,7 @@ define("tinymce/SelectionOverrides", [
 				}
 			}
 
-			range = CaretUtils.normalizeRange(range);
-			caretPosition = CaretPosition.fromRangeEnd(range);
-			caretPosition = CaretUtils.getOuterCaretPosition(direction, caretPosition);
+			caretPosition = getNormalizedRangeEndPoint(direction, range);
 
 			if (beforeFn(caretPosition)) {
 				return renderRangeCaret(deleteContentEditableNode(caretPosition.getNode(direction == -1)));
@@ -425,6 +435,11 @@ define("tinymce/SelectionOverrides", [
 				var rng = e.range;
 
 				if (selectedContentEditableNode) {
+					if (!selectedContentEditableNode.parentNode) {
+						selectedContentEditableNode = null;
+						return;
+					}
+
 					rng = rng.cloneRange();
 					rng.selectNode(selectedContentEditableNode);
 					e.range = rng;

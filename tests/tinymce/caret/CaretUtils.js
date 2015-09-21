@@ -5,8 +5,7 @@ ModuleLoader.require([
 ], function(CaretUtils, CaretPosition, Zwsp) {
 	module("tinymce.caret.CaretUtils");
 
-	var assertCaretPosition = Utils.assertCaretPosition,
-		assertRange = Utils.assertRange,
+	var assertRange = Utils.assertRange,
 		createRange = Utils.createRange,
 		ZWSP = Zwsp.ZWSP;
 
@@ -129,91 +128,49 @@ ModuleLoader.require([
 		), false);
 	});
 
-	test('getOuterCaretPosition', function() {
-		setupHtml(
-			'<p>abc</p>' +
-			'<p data-mce-caret="1">X</p>' +
-			'<p>abc</p>'
-		);
-
-		assertCaretPosition(
-			CaretUtils.getOuterCaretPosition(-1, CaretPosition(findElm('p:nth-child(2)').firstChild, 0)),
-			CaretPosition(getRoot(), 1)
-		);
-
-		assertCaretPosition(
-			CaretUtils.getOuterCaretPosition(-1, CaretPosition(findElm('p:nth-child(2)').firstChild, 1)),
-			CaretPosition(getRoot(), 1)
-		);
-
-		assertCaretPosition(
-			CaretUtils.getOuterCaretPosition(1, CaretPosition(findElm('p:nth-child(2)').firstChild, 0)),
-			CaretPosition(getRoot(), 2)
-		);
-
-		assertCaretPosition(
-			CaretUtils.getOuterCaretPosition(1, CaretPosition(findElm('p:nth-child(2)').firstChild, 1)),
-			CaretPosition(getRoot(), 2)
-		);
-	});
-
-	test('getOuterCaretPosition zwsp', function() {
-		setupHtml(
-			'<span contentEditable="false">1</span>' + ZWSP + '<span contentEditable="false">2</span>'
-		);
-
-		assertCaretPosition(
-			CaretUtils.getOuterCaretPosition(-1, CaretPosition(getRoot().childNodes[1], 0)),
-			CaretPosition(getRoot(), 1)
-		);
-
-		assertCaretPosition(
-			CaretUtils.getOuterCaretPosition(-1, CaretPosition(getRoot().childNodes[1], 1)),
-			CaretPosition(getRoot(), 1)
-		);
-
-		assertCaretPosition(
-			CaretUtils.getOuterCaretPosition(1, CaretPosition(getRoot().childNodes[1], 0)),
-			CaretPosition(getRoot(), 2)
-		);
-
-		assertCaretPosition(
-			CaretUtils.getOuterCaretPosition(1, CaretPosition(getRoot().childNodes[1], 1)),
-			CaretPosition(getRoot(), 2)
-		);
-	});
-
 	test('normalizeRange', function() {
 		setupHtml(
 			'abc<span contentEditable="false">1</span>def'
 		);
 
-		assertRange(CaretUtils.normalizeRange(createRange(getRoot().firstChild, 2)), createRange(getRoot().firstChild, 2));
-		assertRange(CaretUtils.normalizeRange(createRange(getRoot().firstChild, 3)), createRange(getRoot(), 1));
-		assertRange(CaretUtils.normalizeRange(createRange(getRoot().lastChild, 2)), createRange(getRoot().lastChild, 2));
-		assertRange(CaretUtils.normalizeRange(createRange(getRoot().lastChild, 0)), createRange(getRoot(), 2));
+		assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(getRoot().firstChild, 2)), createRange(getRoot().firstChild, 2));
+		assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(getRoot().firstChild, 3)), createRange(getRoot(), 1));
+		assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(getRoot().lastChild, 2)), createRange(getRoot().lastChild, 2));
+		assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(getRoot().lastChild, 0)), createRange(getRoot(), 2));
 	});
 
 	test('normalizeRange deep', function() {
 		setupHtml(
-			'<i><b>abc</b></i><span contentEditable="false">1</span>'
+			'<i><b>abc</b></i><span contentEditable="false">1</span><i><b>def</b></i>'
 		);
 
-		assertRange(CaretUtils.normalizeRange(createRange(findElm('b').firstChild, 2)), createRange(findElm('b').firstChild, 2));
-		assertRange(CaretUtils.normalizeRange(createRange(findElm('b').firstChild, 3)), createRange(getRoot(), 1));
-		assertRange(CaretUtils.normalizeRange(createRange(findElm('b').lastChild, 2)), createRange(findElm('b').lastChild, 2));
+		assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(findElm('b').firstChild, 2)), createRange(findElm('b').firstChild, 2));
+		assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(findElm('b').firstChild, 3)), createRange(getRoot(), 1));
+		assertRange(CaretUtils.normalizeRange(-1, getRoot(), createRange(findElm('b:last').firstChild, 1)), createRange(findElm('b:last').firstChild, 1));
+		assertRange(CaretUtils.normalizeRange(-1, getRoot(), createRange(findElm('b:last').firstChild, 0)), createRange(getRoot(), 2));
 	});
 
 	test('normalizeRange break at candidate', function() {
 		setupHtml(
-			'abc<input><span contentEditable="false">1</span><input>def'
+			'<p><b>abc</b><input></p><p contentEditable="false">1</p><p><input><b>abc</b></p>'
 		);
 
-		assertRange(CaretUtils.normalizeRange(createRange(getRoot().firstChild, 3)), createRange(getRoot().firstChild, 3));
-		assertRange(CaretUtils.normalizeRange(createRange(getRoot().lastChild, 0)), createRange(getRoot().lastChild, 0));
+		assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(findElm('b').firstChild, 3)), createRange(findElm('b').firstChild, 3));
+		assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(findElm('b:last').lastChild, 0)), createRange(findElm('b:last').lastChild, 0));
 	});
 
-	test('normalizeRange caret container', function() {
+	test('normalizeRange at block caret container', function() {
+		setupHtml(
+			'<p data-mce-caret="before">\u00a0</p><p contentEditable="false">1</p><p data-mce-caret="after">\u00a0</p>'
+		);
+
+		assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(findElm('p:first').firstChild, 0)), createRange(getRoot(), 1));
+		assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(findElm('p:first').firstChild, 1)), createRange(getRoot(), 1));
+		assertRange(CaretUtils.normalizeRange(-1, getRoot(), createRange(findElm('p:last').firstChild, 0)), createRange(getRoot(), 2));
+		assertRange(CaretUtils.normalizeRange(-1, getRoot(), createRange(findElm('p:last').firstChild, 1)), createRange(getRoot(), 2));
+	});
+
+	test('normalizeRange at inline caret container', function() {
 		setupHtml(
 			'abc<span contentEditable="false">1</span>def'
 		);
@@ -221,7 +178,37 @@ ModuleLoader.require([
 		getRoot().insertBefore(document.createTextNode(ZWSP), getRoot().childNodes[1]);
 		getRoot().insertBefore(document.createTextNode(ZWSP), getRoot().childNodes[3]);
 
-		assertRange(CaretUtils.normalizeRange(createRange(getRoot().firstChild, 3)), createRange(getRoot().childNodes[1], 0));
-		assertRange(CaretUtils.normalizeRange(createRange(getRoot().lastChild, 0)), createRange(getRoot().childNodes[3], 0));
+		assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(getRoot().firstChild, 3)), createRange(getRoot(), 2));
+		assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(getRoot().childNodes[1], 0)), createRange(getRoot(), 2));
+		assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(getRoot().childNodes[1], 1)), createRange(getRoot(), 2));
+		assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(getRoot().lastChild, 0)), createRange(getRoot(), 3));
+		assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(getRoot().childNodes[3], 0)), createRange(getRoot(), 3));
+		assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(getRoot().childNodes[3], 1)), createRange(getRoot(), 3));
+		assertRange(CaretUtils.normalizeRange(-1, getRoot(), createRange(getRoot().firstChild, 3)), createRange(getRoot(), 2));
+		assertRange(CaretUtils.normalizeRange(-1, getRoot(), createRange(getRoot().childNodes[1], 0)), createRange(getRoot(), 2));
+		assertRange(CaretUtils.normalizeRange(-1, getRoot(), createRange(getRoot().childNodes[1], 1)), createRange(getRoot(), 2));
+		assertRange(CaretUtils.normalizeRange(-1, getRoot(), createRange(getRoot().lastChild, 0)), createRange(getRoot(), 3));
+		assertRange(CaretUtils.normalizeRange(-1, getRoot(), createRange(getRoot().childNodes[3], 0)), createRange(getRoot(), 3));
+		assertRange(CaretUtils.normalizeRange(-1, getRoot(), createRange(getRoot().childNodes[3], 1)), createRange(getRoot(), 3));
+	});
+
+	test('normalizeRange at inline caret container (combined)', function() {
+		setupHtml(
+			'abc' + ZWSP + '<span contentEditable="false">1</span>' + ZWSP + 'def'
+		);
+
+		assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(getRoot().firstChild, 3)), createRange(getRoot(), 1));
+		assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(getRoot().firstChild, 4)), createRange(getRoot(), 1));
+		assertRange(CaretUtils.normalizeRange(-1, getRoot(), createRange(getRoot().lastChild, 0)), createRange(getRoot(), 2));
+		assertRange(CaretUtils.normalizeRange(-1, getRoot(), createRange(getRoot().lastChild, 1)), createRange(getRoot(), 2));
+	});
+
+	test('normalizeRange at inline caret container after block', function() {
+		setupHtml(
+			'<p><span contentEditable="false">1</span></p>' + ZWSP + 'abc'
+		);
+
+		assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(getRoot().lastChild, 0)), createRange(getRoot().lastChild, 0));
+
 	});
 });
