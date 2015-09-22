@@ -25,8 +25,9 @@ define("tinymce/util/Quirks", [
 	"tinymce/html/Entities",
 	"tinymce/Env",
 	"tinymce/util/Tools",
-	"tinymce/util/Delay"
-], function(VK, RangeUtils, TreeWalker, NodePath, Node, Entities, Env, Tools, Delay) {
+	"tinymce/util/Delay",
+	"tinymce/caret/CaretContainer"
+], function(VK, RangeUtils, TreeWalker, NodePath, Node, Entities, Env, Tools, Delay, CaretContainer) {
 	return function(editor) {
 		var each = Tools.each, $ = editor.$;
 		var BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection = editor.selection,
@@ -844,14 +845,21 @@ define("tinymce/util/Quirks", [
 				// Case 2 IME doesn't initialize if you click the documentElement it also doesn't properly fire the focusin event
 				// Needs to be both down/up due to weird rendering bug on Chrome Windows
 				dom.bind(editor.getDoc(), 'mousedown mouseup', function(e) {
+					var rng;
+
 					if (e.target == editor.getDoc().documentElement) {
+						rng = selection.getRng();
 						editor.getBody().focus();
 
 						if (e.type == 'mousedown') {
+							if (CaretContainer.isCaretContainer(rng.startContainer)) {
+								return;
+							}
+
 							// Edge case for mousedown, drag select and mousedown again within selection on Chrome Windows to render caret
 							selection.placeCaretAt(e.clientX, e.clientY);
 						} else {
-							selection.setRng(selection.getRng());
+							selection.setRng(rng);
 						}
 					}
 				});
