@@ -706,8 +706,20 @@ define("tinymce/tableplugin/ResizeBars", [
                 });
             }
             
-            function setTableSize(newTableWidth, styleExtension) {
-                if (index == jenga.grid.maxCols - 1) { //We shouldn't need to touch the size of the table unless it's on the right hand side
+            function getCurrentTablePercentWidth() {
+                return table.getBoundingClientRect().width / table.parentElement.getBoundingClientRect().width * 100;
+            }
+            
+            function getUpdatedTablePercentWidth() {
+                return (table.getBoundingClientRect().width + delta) / table.parentElement.getBoundingClientRect().width * 100;
+            }
+            
+            function getNewTablePercentWidth() {
+                return index < jenga.maxCols - 1 ? getCurrentTablePercentWidth() : getUpdatedTablePercentWidth();
+            }
+            
+            function setTableSize(newTableWidth, styleExtension, isPercentBased) {
+                if (index == jenga.grid.maxCols - 1 || !isPercentBased) {
                     editor.dom.setStyle(table, 'width', newTableWidth + styleExtension);
                     editor.dom.setAttrib(table, 'width', null);
                 }
@@ -738,10 +750,10 @@ define("tinymce/tableplugin/ResizeBars", [
             var styleExtension = percentageBased ? '%' : 'px';
 			setSizes(newSizes, styleExtension);
             
-            var newTableWidth = percentageBased ? (table.getBoundingClientRect().width + delta) / table.parentElement.getBoundingClientRect().width * 100 :
+            var newTableWidth = percentageBased ?  getNewTablePercentWidth() :
                 newTotalWidth;
             
-            setTableSize(newTableWidth, styleExtension);
+            setTableSize(newTableWidth, styleExtension, percentageBased);
 
 		}
 
