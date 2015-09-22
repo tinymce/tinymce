@@ -173,9 +173,10 @@ define("tinymce/imagetoolsplugin/Plugin", [
 			}
 
 			if (!isLocalImage(img)) {
-				img = new Image();
 				src = editor.settings.imagetools_proxy;
-				img.src += (src.indexOf('?') === -1 ? '?' : '&') + 'url=' + encodeURIComponent(img.src);
+				src += (src.indexOf('?') === -1 ? '?' : '&') + 'url=' + encodeURIComponent(img.src);
+				img = new Image();
+				img.src = src;
 			}
 
 			return Conversions.imageToBlob(img);
