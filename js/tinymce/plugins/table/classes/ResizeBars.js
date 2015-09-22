@@ -377,7 +377,7 @@ define("tinymce/tableplugin/ResizeBars", [
 		}
 
 		// Attempt to deduce the width/height of a column/row that has more than one cell spanned.
-		function deduceSize(deducables, index) {
+		function deduceSize(deducables, index, idPercentageBased, table) {
 			if (index < 0 || index >= deducables.length - 1) {
 				return "";
 			}
@@ -421,7 +421,8 @@ define("tinymce/tableplugin/ResizeBars", [
 			}
 
 			var extras = next.delta - current.delta;
-			return Math.abs(next.value - current.value) / extras;
+            var pixelWidth = Math.abs(next.value - current.value) / extras;
+			return isPercentageBased ? pixelWidth / table.getBoundingClientRect().width * 100 : pixelWidth;
 		}
 
 		// Attempt to get the pixel width of a cell but only if it's a defined static value.
