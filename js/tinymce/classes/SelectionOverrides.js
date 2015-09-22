@@ -28,13 +28,17 @@ define("tinymce/SelectionOverrides", [
 	"tinymce/caret/CaretUtils",
 	"tinymce/caret/FakeCaret",
 	"tinymce/caret/LineWalker",
+	"tinymce/caret/LineUtils",
 	"tinymce/dom/NodeType",
 	"tinymce/dom/RangeUtils",
 	"tinymce/util/VK",
 	"tinymce/util/Fun",
 	"tinymce/util/Arr",
 	"tinymce/util/Delay"
-], function(CaretWalker, CaretPosition, CaretContainer, CaretUtils, FakeCaret, LineWalker, NodeType, RangeUtils, VK, Fun, Arr, Delay) {
+], function(
+	CaretWalker, CaretPosition, CaretContainer, CaretUtils, FakeCaret, LineWalker,
+	LineUtils, NodeType, RangeUtils, VK, Fun, Arr, Delay
+) {
 	var curry = Fun.curry,
 		isContentEditableTrue = NodeType.isContentEditableTrue,
 		isContentEditableFalse = NodeType.isContentEditableFalse,
@@ -60,6 +64,10 @@ define("tinymce/SelectionOverrides", [
 			fakeCaret = new FakeCaret(editor.getBody()),
 			realSelectionId = editor.dom.uniqueId(),
 			selectedContentEditableNode;
+
+		function setRange(range) {
+			editor.selection.setRng(range);
+		}
 
 		function showCaret(direction, node, before) {
 			var e;
@@ -174,7 +182,7 @@ define("tinymce/SelectionOverrides", [
 
 		function moveV(direction, walkerFn, range) {
 			var caretPosition, linePositions, nextLinePositions,
-				closestNextLinePosition, caretClientRect, closestRect, clientX,
+				closestNextLineRect, caretClientRect, clientX,
 				dist1, dist2, atContentEditableFalse, rangeIsInContainerBlock;
 
 			rangeIsInContainerBlock = isRangeInCaretContainerBlock(range);
@@ -182,12 +190,7 @@ define("tinymce/SelectionOverrides", [
 			linePositions = walkerFn(rootNode, LineWalker.isAboveLine(1), caretPosition);
 			nextLinePositions = Arr.filter(linePositions, LineWalker.isLine(1));
 			atContentEditableFalse = isContentEditableFalse(getSelectedNode(range)) || isNextToContentEditableFalse(caretPosition);
-
-			if (direction == 1) {
-				caretClientRect = Arr.last(caretPosition.getClientRects());
-			} else {
-				caretClientRect = caretPosition.getClientRects()[0];
-			}
+			caretClientRect = Arr.last(caretPosition.getClientRects());
 
 			if (!caretClientRect) {
 				return null;
@@ -195,8 +198,8 @@ define("tinymce/SelectionOverrides", [
 
 			clientX = caretClientRect.left;
 
-			closestNextLinePosition = LineWalker.findClosest(nextLinePositions, clientX);
-			if (!closestNextLinePosition) {
+			closestNextLineRect = LineUtils.findClosestClientRect(nextLinePositions, clientX);
+			if (!closestNextLineRect) {
 				if (rangeIsInContainerBlock) {
 					return range;
 				}
@@ -204,14 +207,13 @@ define("tinymce/SelectionOverrides", [
 				return null;
 			}
 
-			if (isContentEditableFalse(closestNextLinePosition.node)) {
-				closestRect = closestNextLinePosition.clientRect;
-				dist1 = Math.abs(clientX - closestRect.left);
-				dist2 = Math.abs(clientX - closestRect.right);
+			if (isContentEditableFalse(closestNextLineRect.node)) {
+				dist1 = Math.abs(clientX - closestNextLineRect.left);
+				dist2 = Math.abs(clientX - closestNextLineRect.right);
 
-				return showCaret(1, closestNextLinePosition.node, dist1 < dist2);
+				return showCaret(1, closestNextLineRect.node, dist1 < dist2);
 			} else if (atContentEditableFalse) {
-				caretPosition = LineWalker.findClosestCaretPosition(direction, closestNextLinePosition.node, clientX);
+				caretPosition = LineUtils.findClosestCaretPosition(direction, closestNextLineRect.node, clientX);
 
 				fakeCaret.hide();
 				if (caretPosition) {
@@ -229,7 +231,7 @@ define("tinymce/SelectionOverrides", [
 					fakeCaret.hide();
 
 					// Removes control rect on IE
-					editor.selection.setRng(editor.selection.getRng());
+					setRange(editor.selection.getRng());
 				}
 			});
 		}
@@ -338,7 +340,7 @@ define("tinymce/SelectionOverrides", [
 				var range = moveFn(editor.selection.getRng());
 
 				if (range) {
-					editor.selection.setRng(range);
+					setRange(range);
 					return true;
 				}
 
@@ -360,8 +362,9 @@ define("tinymce/SelectionOverrides", [
 			}
 
 			editor.on('mousedown', function(e) {
-				var contentEditableRoot = getContentEditableRoot(e.target);
+				var contentEditableRoot;
 
+				contentEditableRoot	= getContentEditableRoot(e.target);
 				if (contentEditableRoot) {
 					if (isContentEditableFalse(contentEditableRoot)) {
 						e.preventDefault();
@@ -371,6 +374,14 @@ define("tinymce/SelectionOverrides", [
 					}
 				} else {
 					clearContentEditableSelection();
+					fakeCaret.hide();
+
+					var caretInfo = LineUtils.closestCaret(rootNode, e.clientX, e.clientY);
+					if (caretInfo) {
+						e.preventDefault();
+						editor.getBody().focus();
+						setRange(showCaret(1, caretInfo.node, caretInfo.before));
+					}
 				}
 			});
 
@@ -426,7 +437,7 @@ define("tinymce/SelectionOverrides", [
 
 				if (isContentEditableFalse(node)) {
 					Delay.setEditorTimeout(editor, function() {
-						editor.selection.setRng(renderRangeCaret(deleteContentEditableNode(node)));
+						setRange(renderRangeCaret(deleteContentEditableNode(node)));
 					});
 				}
 			});
