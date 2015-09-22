@@ -13,7 +13,7 @@ module("tinymce.plugins.SearchReplace", {
 			valid_elements: 'b,i',
 			init_instance_callback : function(ed) {
 				window.editor = ed;
-				window.setTimeout(function() {
+				tinymce.util.Delay.setTimeout(function() {
 					QUnit.start();
 				}, 0);
 			}
