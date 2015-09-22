@@ -23,9 +23,10 @@ define("tinymce/dom/Selection", [
 	"tinymce/dom/ControlSelection",
 	"tinymce/dom/RangeUtils",
 	"tinymce/dom/BookmarkManager",
+	"tinymce/dom/NodeType",
 	"tinymce/Env",
 	"tinymce/util/Tools"
-], function(TreeWalker, TridentSelection, ControlSelection, RangeUtils, BookmarkManager, Env, Tools) {
+], function(TreeWalker, TridentSelection, ControlSelection, RangeUtils, BookmarkManager, NodeType, Env, Tools) {
 	var each = Tools.each, trim = Tools.trim;
 	var isIE = Env.ie;
 
@@ -891,8 +892,8 @@ define("tinymce/dom/Selection", [
 			return scrollContainer;
 		},
 
-		scrollIntoView: function(elm) {
-			var y, viewPort, self = this, dom = self.dom, root = dom.getRoot(), viewPortY, viewPortH;
+		scrollIntoView: function(elm, alignToTop) {
+			var y, viewPort, self = this, dom = self.dom, root = dom.getRoot(), viewPortY, viewPortH, offsetY = 0;
 
 			function getPos(elm) {
 				var x = 0, y = 0;
@@ -907,10 +908,18 @@ define("tinymce/dom/Selection", [
 				return {x: x, y: y};
 			}
 
+			if (!NodeType.isElement(elm)) {
+				return;
+			}
+
+			if (alignToTop === false) {
+				offsetY = elm.offsetHeight;
+			}
+
 			if (root.nodeName != 'BODY') {
 				var scrollContainer = self.getScrollContainer();
 				if (scrollContainer) {
-					y = getPos(elm).y - getPos(scrollContainer).y;
+					y = getPos(elm).y - getPos(scrollContainer).y + offsetY;
 					viewPortH = scrollContainer.clientHeight;
 					viewPortY = scrollContainer.scrollTop;
 					if (y < viewPortY || y + 25 > viewPortY + viewPortH) {
@@ -922,7 +931,7 @@ define("tinymce/dom/Selection", [
 			}
 
 			viewPort = dom.getViewPort(self.editor.getWin());
-			y = dom.getPos(elm).y;
+			y = dom.getPos(elm).y + offsetY;
 			viewPortY = viewPort.y;
 			viewPortH = viewPort.h;
 			if (y < viewPort.y || y + 25 > viewPortY + viewPortH) {
