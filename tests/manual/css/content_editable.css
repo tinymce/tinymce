@@ -23,6 +23,10 @@
 	outline: 2px solid red;
 }
 
+.mce-visual-caret-before {
+	outline: 2px solid green;
+}
+
 .mce-content-body *[data-mce-selected] {
 	outline: 2px solid blue;
 }
