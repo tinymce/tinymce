@@ -128,6 +128,30 @@ ModuleLoader.require([
 		), false);
 	});
 
+	test('isBeforeContentEditableFalse', function() {
+		setupHtml(
+			'<span contentEditable="false"></span>' +
+			'<span contentEditable="false"></span>a'
+		);
+
+		strictEqual(CaretUtils.isBeforeContentEditableFalse(CaretPosition(getRoot(), 0)), true);
+		strictEqual(CaretUtils.isBeforeContentEditableFalse(CaretPosition(getRoot(), 1)), true);
+		strictEqual(CaretUtils.isBeforeContentEditableFalse(CaretPosition(getRoot(), 2)), false);
+		strictEqual(CaretUtils.isBeforeContentEditableFalse(CaretPosition(getRoot(), 3)), false);
+	});
+
+	test('isAfterContentEditableFalse', function() {
+		setupHtml(
+			'<span contentEditable="false"></span>' +
+			'<span contentEditable="false"></span>a'
+		);
+
+		strictEqual(CaretUtils.isAfterContentEditableFalse(CaretPosition(getRoot(), 0)), false);
+		strictEqual(CaretUtils.isAfterContentEditableFalse(CaretPosition(getRoot(), 1)), true);
+		strictEqual(CaretUtils.isAfterContentEditableFalse(CaretPosition(getRoot(), 2)), true);
+		strictEqual(CaretUtils.isAfterContentEditableFalse(CaretPosition(getRoot(), 3)), false);
+	});
+
 	test('normalizeRange', function() {
 		setupHtml(
 			'abc<span contentEditable="false">1</span>def'
