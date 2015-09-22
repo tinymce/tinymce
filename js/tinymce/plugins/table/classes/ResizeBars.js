@@ -612,9 +612,9 @@ define("tinymce/tableplugin/ResizeBars", [
 				var deltas;
 
 				if (step >= 0) { // This should be zero when using percentage based to prevent weirdness.
-					deltas = isPercentageBased ? startZeros.concat([0]) : startZeros.concat([step]);
+					deltas = isPercentageBased ? startZeros.concat(getPercentStep()) : startZeros.concat([step]);
 				} else {
-					var size = isPercentageBased ? result[index] : Math.max(min, result[index] + step);
+					var size = isPercentageBased ? Math.max(min, result[index] + getPercentStep()) : Math.max(min, result[index] + step);
 					deltas = startZeros.concat([size - result[index]]);
 				}
 
