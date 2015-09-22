@@ -467,6 +467,14 @@ define("tinymce/tableplugin/ResizeBars", [
             
             var getWidthFallback  = isPercentageBased ? getPercentageWidthFallback(element, table) : getPixelWidthFallback(element)
             
+            // If this is percentage based table, but this cell isn't percentage based.
+            // Or if this is a pixel based table, but this cell isn't pixel based.
+            if (isPercentageBased && !isPercentageBasedWidth(widthString) ||
+               !isPercentageBased && !isPixelBasedWidth(widthString)) {
+                // set the widthnumber to 0
+                widthNumber = 0;
+            }
+            
 			return !isNaN(widthNumber) && widthNumber > 0 ?
 				widthNumber : getWidthFallback
         }
@@ -689,15 +697,19 @@ define("tinymce/tableplugin/ResizeBars", [
 				};
 			});
 		}
-
+        
+        function isPercentageBasedWidth(width) {
+            return width.match(/(\d+(\.\d+)?%)/);
+        }
+        
+        function isPixelBasedWidth(width) {
+            return width.match(/px|em/);
+        }
+        
 		// Adjust the width of the column of table at index, with delta.
 		function adjustWidth(table, delta, index) {
 			var tableDetails = getTableDetails(table);
 			var jenga = getJengaGrid(tableDetails);
-            
-            function isPercentageBased(width) {
-                return width.match(/(\d+(\.\d+)?%)/);
-            }
             
             function setSizes(newSizes, styleExtension) {
                 Tools.each(newSizes, function(cell) {
@@ -730,8 +742,8 @@ define("tinymce/tableplugin/ResizeBars", [
             var percentageBased = false;
 
             Tools.each(cells, function(cell) {
-                if (isPercentageBased(cell.element.width) ||
-                    isPercentageBased(cell.element.style.width)) {
+                if (isPercentageBasedWidth(cell.element.width) ||
+                    isPercentageBasedWidth(cell.element.style.width)) {
                     percentageBased = true;        
                 }
             });
