@@ -21,10 +21,8 @@ define("tinymce/caret/LineUtils", [
 	"tinymce/dom/Dimensions",
 	"tinymce/geom/ClientRect",
 	"tinymce/caret/CaretUtils",
-	"tinymce/caret/CaretCandidate",
-	"tinymce/caret/CaretWalker",
-	"tinymce/caret/CaretPosition"
-], function(Fun, Arr, NodeType, Dimensions, ClientRect, CaretUtils, CaretCandidate, CaretWalker, CaretPosition) {
+	"tinymce/caret/CaretCandidate"
+], function(Fun, Arr, NodeType, Dimensions, ClientRect, CaretUtils, CaretCandidate) {
 	var isContentEditableFalse = NodeType.isContentEditableFalse,
 		findNode = CaretUtils.findNode,
 		curry = Fun.curry;
@@ -118,63 +116,9 @@ define("tinymce/caret/LineUtils", [
 		return null;
 	}
 
-	function findClosestCaretPosition(direction, node, clientX) {
-		var caretWalker, caretPosition, bestCaretPosition, walkFn, isBelowFn,
-			oldClientRect, clientRect, newDistance, oldDistance = null;
-
-		if (NodeType.isElement(node)) {
-			return null;
-		}
-
-		caretWalker = new CaretWalker(node.parentNode);
-
-		if (direction == 1) {
-			walkFn = caretWalker.next;
-			isBelowFn = ClientRect.isBelow;
-			caretPosition = new CaretPosition(node, 0);
-		} else {
-			walkFn = caretWalker.prev;
-			isBelowFn = ClientRect.isAbove;
-			caretPosition = new CaretPosition(node, node.data.length);
-		}
-
-		do {
-			if (caretPosition.container() != node) {
-				return null;
-			}
-
-			if (!caretPosition.isVisible()) {
-				continue;
-			}
-
-			if (direction == 1) {
-				clientRect = caretPosition.getClientRects()[0];
-			} else {
-				clientRect = Arr.last(caretPosition.getClientRects());
-			}
-
-			if (oldClientRect && isBelowFn(clientRect, oldClientRect)) {
-				break;
-			}
-
-			oldClientRect = clientRect;
-			newDistance = Math.abs(clientRect.left - clientX);
-
-			if (oldDistance !== null && newDistance > oldDistance) {
-				break;
-			}
-
-			bestCaretPosition = caretPosition;
-			oldDistance = newDistance;
-		} while ((caretPosition = walkFn(caretPosition)));
-
-		return bestCaretPosition;
-	}
-
 	return {
 		findClosestClientRect: findClosestClientRect,
 		findLineNodeRects: findLineNodeRects,
-		closestCaret: closestCaret,
-		findClosestCaretPosition: findClosestCaretPosition
+		closestCaret: closestCaret
 	};
 });

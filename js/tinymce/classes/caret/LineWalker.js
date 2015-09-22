@@ -21,8 +21,10 @@ define("tinymce/caret/LineWalker", [
 	"tinymce/dom/Dimensions",
 	"tinymce/caret/CaretCandidate",
 	"tinymce/caret/CaretUtils",
+	"tinymce/caret/CaretWalker",
+	"tinymce/caret/CaretPosition",
 	"tinymce/geom/ClientRect"
-], function(Fun, Arr, Dimensions, CaretCandidate, CaretUtils, ClientRect) {
+], function(Fun, Arr, Dimensions, CaretCandidate, CaretUtils, CaretWalker, CaretPosition, ClientRect) {
 	var curry = Fun.curry;
 
 	function findUntil(direction, rootNode, predicateFn, node) {
@@ -64,17 +66,12 @@ define("tinymce/caret/LineWalker", [
 			}
 		}
 
-		if (direction == 1) {
-			targetClientRect = Arr.last(caretPosition.getClientRects());
-		} else {
-			targetClientRect = caretPosition.getClientRects()[0];
-		}
-
+		targetClientRect = Arr.last(caretPosition.getClientRects());
 		if (!targetClientRect) {
 			return result;
 		}
 
-		node = caretPosition.getNode(direction == -1);
+		node = caretPosition.getNode();
 		add(node);
 		findUntil(direction, rootNode, add, node);
 
@@ -92,9 +89,76 @@ define("tinymce/caret/LineWalker", [
 	var upUntil = curry(walkUntil, -1, ClientRect.isAbove, ClientRect.isBelow);
 	var downUntil = curry(walkUntil, 1, ClientRect.isBelow, ClientRect.isAbove);
 
+	function positionsUntil(direction, rootNode, predicateFn, node) {
+		var caretWalker = new CaretWalker(rootNode), walkFn, isBelowFn, isAboveFn,
+			caretPosition, result = [], line = 0, clientRect, targetClientRect;
+
+		function getClientRect(caretPosition) {
+			if (direction == 1) {
+				return Arr.last(caretPosition.getClientRects());
+			}
+
+			return Arr.last(caretPosition.getClientRects());
+		}
+
+		if (direction == 1) {
+			walkFn = caretWalker.next;
+			isBelowFn = ClientRect.isBelow;
+			isAboveFn = ClientRect.isAbove;
+			caretPosition = CaretPosition.after(node);
+		} else {
+			walkFn = caretWalker.prev;
+			isBelowFn = ClientRect.isAbove;
+			isAboveFn = ClientRect.isBelow;
+			caretPosition = CaretPosition.before(node);
+		}
+
+		targetClientRect = getClientRect(caretPosition);
+
+		do {
+			if (!caretPosition.isVisible()) {
+				continue;
+			}
+
+			clientRect = getClientRect(caretPosition);
+
+			if (isAboveFn(clientRect, targetClientRect)) {
+				continue;
+			}
+
+			if (result.length > 0 && isBelowFn(clientRect, Arr.last(result))) {
+				line++;
+			}
+
+			clientRect = ClientRect.clone(clientRect);
+			clientRect.position = caretPosition;
+			clientRect.line = line;
+
+			if (predicateFn(clientRect)) {
+				return result;
+			}
+
+			result.push(clientRect);
+		} while ((caretPosition = walkFn(caretPosition)));
+
+		return result;
+	}
+
 	return {
 		upUntil: upUntil,
 		downUntil: downUntil,
+
+		/**
+		 * Find client rects with line and caret position until the predicate returns true.
+		 *
+		 * @param {Numer} direction Direction forward/backward 1/-1.
+		 * @param {DOMNode} rootNode Root node to walk within.
+		 * @param {function} predicateFn Gets the client rect as it's input.
+		 * @param {DOMNode} node Node to start walking from.
+		 * @return {Array} Array of client rects with line and position properties.
+		 */
+		positionsUntil: positionsUntil,
+
 		isAboveLine: curry(aboveLineNumber),
 		isLine: curry(isLine)
 	};
