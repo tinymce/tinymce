@@ -441,28 +441,37 @@ define("tinymce/tableplugin/ResizeBars", [
 		}
 
 		// Attempt to get the pixel width of a cell
-		function getPixelWidth(element) {
+		function getPixelWidthFallback(element) {
 
-			function convertFromPercent(element, cellWidth) {
-				var table = editor.dom.getParent(element, 'table');
-				var tableTotal = table.offsetWidth;
-				return Math.floor((cellWidth / 100) * tableTotal);
-			}
-
-			var widthString = editor.dom.getStyle(element, 'width');
+			return element.getBoundingClientRect().width;
+            
+		}
+        
+        function getPercentageWidthFallback(element, table) {
+            
+            return element.getBoundingClientRect().width / table.getBoundingClientRect().width * 100;
+            
+        }
+        
+        function getWidth(element, isPercentageBased, table) {
+            var widthString = editor.dom.getStyle(element, 'width');
 			if (!widthString) {
 				widthString = editor.dom.getAttrib(element, 'width');
 			}
 			if (!widthString) {
 				widthString = editor.dom.getStyle(element, 'width', true);
 			}
+            
 			var widthNumber = parseInt(widthString, 10);
-			return widthString.indexOf('%', widthString.length - 1) > 0 ?
-				convertFromPercent(element, widthNumber) : widthNumber;
-		}
+            
+            var getWidthFallback  = isPercentageBased ? getPercentageWidthFallback(element, table) : getPixelWidthFallback(element)
+            
+			return !isNaN(widthNumber) && widthNumber > 0 ?
+				widthNumber : getWidthFallback
+        }
 
 		// Attempt to get the css width from column representative cells.
-		function getPixelWidths(jenga) {
+		function getWidths(jenga, isPercentageBased, table) {
 
 			var cols = getColumnBlocks(jenga);
 
@@ -475,7 +484,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			for (var i = 0; i < cols.length; i++) {
 				var span = cols[i].element.hasAttribute('colspan') ? parseInt(cols[i].element.getAttribute('colspan'), 10) : 1;
 				// Deduce if the column has colspan of more than 1
-				var width = span > 1 ? deduceSize(backups, i) : getPixelWidth(cols[i].element);
+				var width = span > 1 ? deduceSize(backups, i) : getWidth(cols[i].element, isPercentageBased, table);
 				// If everything's failed and we still don't have a width
 				width = width ? width : RESIZE_MINIMUM_WIDTH;
 				widths.push(width);
@@ -542,7 +551,8 @@ define("tinymce/tableplugin/ResizeBars", [
 		}
 
 		// Determine how much each column's css width will need to change.
-		function determineDeltas(sizes, column, step, min) {
+        // Sizes = result = pixels widths OR percentage based widths
+		function determineDeltas(sizes, column, step, min, isPercentageBased, table) {
 
 			var result = sizes.slice(0);
 
@@ -551,6 +561,21 @@ define("tinymce/tableplugin/ResizeBars", [
 					return 0;
 				});
 			}
+            
+            function getPercentStep() {
+                return step / table.getBoundingClientRect().width * 100;
+            }
+            
+            function onOneColumn() {
+                var deltas;
+                if (isPercentageBased) { // Should be zero as this will always be 100% later.
+                    deltas = 0;
+                } else {
+                    var newNext = Math.max(min, result[0] + step);
+				    deltas = [newNext - result[0]];
+                }
+                return deltas;
+            }
 
 			function onLeftOrMiddle(index, next) {
 
@@ -558,11 +583,14 @@ define("tinymce/tableplugin/ResizeBars", [
 				var endZeros = generateZeros(result.slice(next + 1));
 				var deltas;
 
-				if (step >= 0) {
-					var newNext = Math.max(min, result[next] - step);
-					deltas = startZeros.concat([step, newNext - result[next]]).concat(endZeros);
+				if (step >= 0) {// TODO: change the min for percentage maybe?
+                    var newNext = isPercentageBased ? Math.max(min, result[next] - getPercentStep()) 
+                        : Math.max(min, result[next] - step);
+                    var newStep = isPercentageBased ? getPercentStep() : step;
+                    deltas = startZeros.concat([newStep, newNext - result[next]]).concat(endZeros);
 				} else {
-					var newThis = Math.max(min, result[index] + step);
+					var newThis = isPercentageBased ? Math.max(min, result[index] + getPercentStep())
+                        : Math.max(min, result[index] + step);
 					var diffx = result[index] - newThis;
 					deltas = startZeros.concat([newThis - result[index], diffx]).concat(endZeros);
 				}
@@ -574,10 +602,10 @@ define("tinymce/tableplugin/ResizeBars", [
 				var startZeros = generateZeros(result.slice(0, index));
 				var deltas;
 
-				if (step >= 0) {
-					deltas = startZeros.concat([step]);
+				if (step >= 0) { // This should be zero when using percentage based to prevent weirdness.
+					deltas = isPercentageBased ? startZeros.concat([0]) : startZeros.concat([step]);
 				} else {
-					var size = Math.max(min, result[index] + step);
+					var size = isPercentageBased ? result[index] : Math.max(min, result[index] + step);
 					deltas = startZeros.concat([size - result[index]]);
 				}
 
@@ -590,8 +618,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			if (sizes.length === 0) { // No Columns
 				deltas = [];
 			} else if (sizes.length === 1) { // One Column
-				var newNext = Math.max(min, result[0] + step);
-				deltas = [newNext - result[0]];
+				deltas = onOneColumn();
 			} else if (column === 0) { // Left Column
 				deltas = onLeftOrMiddle(0, 1);
 			} else if (column > 0 && column < sizes.length - 1) { // Middle Column
@@ -625,6 +652,18 @@ define("tinymce/tableplugin/ResizeBars", [
 				};
 			});
 		}
+        
+        function generate100PercentWidths(jenga, widths) {
+            var allCells = jenga.getAllCells();
+            return Tools.map(allCells, function(cell) {
+				var width = 100;
+				return {
+					element: cell.element,
+					width: width,
+					colspan: cell.colspan
+				};
+			});
+        }
 
 		// Combine cell's css heights to determine heights of rowspan'd cells.
 		function recalculateCellHeights(jenga, heights) {
@@ -654,9 +693,38 @@ define("tinymce/tableplugin/ResizeBars", [
 		function adjustWidth(table, delta, index) {
 			var tableDetails = getTableDetails(table);
 			var jenga = getJengaGrid(tableDetails);
+            
+            function isPercentageBased(width) {
+                return width.match(/(\d+(\.\d+)?%)/);
+            }
+            
+            function setSizes(newSizes, styleExtension) {
+                Tools.each(newSizes, function(cell) {
+                    editor.dom.setStyle(cell.element, 'width', cell.width + styleExtension);
+                    editor.dom.setAttrib(cell.element, 'width', null);
+                });
+            }
+            
+            function setTableSize(newTableWidth, styleExtension) {
+                if (index == jenga.grid.maxCols - 1) { //We shouldn't need to touch the size of the table unless it's on the right hand side
+                    editor.dom.setStyle(table, 'width', newTableWidth + styleExtension);
+                    editor.dom.setAttrib(table, 'width', null);
+                }
+            }
 
-			var widths = getPixelWidths(jenga);
-			var deltas = determineDeltas(widths, index, delta, RESIZE_MINIMUM_WIDTH);
+            var cells = jenga.getAllCells();
+            
+            var percentageBased = false;
+
+            Tools.each(cells, function(cell) {
+                if (isPercentageBased(cell.element.width) ||
+                    isPercentageBased(cell.element.style.width)) {
+                    percentageBased = true;        
+                }
+            });
+            
+			var widths = getWidths(jenga, percentageBased, table);
+			var deltas = determineDeltas(widths, index, delta, RESIZE_MINIMUM_WIDTH, percentageBased, table);
 			var newWidths = [], newTotalWidth = 0;
 
 			for (var i = 0; i < deltas.length; i++) {
@@ -664,15 +732,15 @@ define("tinymce/tableplugin/ResizeBars", [
 				newTotalWidth += newWidths[i];
 			}
 
-			var newSizes = recalculateWidths(jenga, newWidths);
-
-			Tools.each(newSizes, function(cell) {
-				editor.dom.setStyle(cell.element, 'width', cell.width + 'px');
-				editor.dom.setAttrib(cell.element, 'width', null);
-			});
-
-			editor.dom.setStyle(table, 'width', newTotalWidth + 'px');
-			editor.dom.setAttrib(table, 'width', null);
+            // If we have one column in a percent based table, that column should be 100% of the width of the table.
+            var newSizes = (percentageBased && jenga.grid.maxCols == 1) ? generate100PercentWidths(jenga, newWidths) : recalculateWidths(jenga, newWidths);
+            var styleExtension = percentageBased ? '%' : 'px';
+			setSizes(newSizes, styleExtension);
+            
+            var newTableWidth = percentageBased ? (table.getBoundingClientRect().width + delta) / table.parentElement.getBoundingClientRect().width * 100 :
+                newTotalWidth;
+            
+            setTableSize(newTableWidth, styleExtension);
 
 		}
 
@@ -891,7 +959,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			determineDeltas: determineDeltas,
 			getJengaGrid: getJengaGrid,
 			getTableDetails: getTableDetails,
-			getPixelWidths: getPixelWidths,
+			getWidths: getWidths,
 			getPixelHeights: getPixelHeights,
 			recalculateWidths: recalculateWidths,
 			recalculateCellHeights: recalculateCellHeights,
