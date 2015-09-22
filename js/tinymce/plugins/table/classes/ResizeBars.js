@@ -577,8 +577,9 @@ define("tinymce/tableplugin/ResizeBars", [
             
             function onOneColumn() {
                 var deltas;
-                if (isPercentageBased) { // Should be zero as this will always be 100% later.
-                    deltas = 0;
+                if (isPercentageBased) {
+                    // If we have one column in a percent based table, that column should be 100% of the width of the table.
+                    deltas = [100 - result[0]];
                 } else {
                     var newNext = Math.max(min, result[0] + step);
 				    deltas = [newNext - result[0]];
@@ -661,18 +662,6 @@ define("tinymce/tableplugin/ResizeBars", [
 				};
 			});
 		}
-        
-        function generate100PercentWidths(jenga, widths) {
-            var allCells = jenga.getAllCells();
-            return Tools.map(allCells, function(cell) {
-				var width = 100;
-				return {
-					element: cell.element,
-					width: width,
-					colspan: cell.colspan
-				};
-			});
-        }
 
 		// Combine cell's css heights to determine heights of rowspan'd cells.
 		function recalculateCellHeights(jenga, heights) {
@@ -757,8 +746,7 @@ define("tinymce/tableplugin/ResizeBars", [
 				newTotalWidth += newWidths[i];
 			}
 
-            // If we have one column in a percent based table, that column should be 100% of the width of the table.
-            var newSizes = (percentageBased && jenga.grid.maxCols == 1) ? generate100PercentWidths(jenga, newWidths) : recalculateWidths(jenga, newWidths);
+            var newSizes = recalculateWidths(jenga, newWidths);
             var styleExtension = percentageBased ? '%' : 'px';
 			setSizes(newSizes, styleExtension);
             
