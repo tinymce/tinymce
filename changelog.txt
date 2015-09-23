@@ -7,6 +7,7 @@ Version 4.2.6 (2015-09-xx)
 	Fixed bug where shift+delete wouldn't do a cut operation on Blink/WebKit.
 	Fixed bug where cut action wouldn't properly store the before selection bookmark for the undo level.
 	Fixed bug where backspace in side an empty list element on IE would loose editor focus.
+	Fixed bug where enter key before nested images would sometimes not properly expand the previous block.
 	Fixed bug where the inline toolbars wouldn't get properly hidden when blurring the editor instance.
 	Added commands ids mceEditImage, mceAchor and mceMedia to be avaiable from execCommand.
 Version 4.2.5 (2015-08-31)

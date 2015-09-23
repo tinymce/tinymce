@@ -63,6 +63,14 @@ test('Enter before first IMG in P', function() {
 	equal(editor.getContent(), '<p>\u00a0</p><p><img src="about:blank" alt="" /></p>');
 });
 
+test('Enter before first wrapped IMG in P', function() {
+	editor.setContent('<p><b><img alt="" src="about:blank" /></b></p>');
+	editor.selection.setCursorLocation(editor.getBody().firstChild.firstChild, 0);
+	Utils.pressEnter();
+	equal(editor.getBody().firstChild.innerHTML, (tinymce.isIE && tinymce.Env.ie < 11) ? '' : '<br data-mce-bogus="1">');
+	equal(editor.getContent(), '<p>\u00a0</p><p><b><img src=\"about:blank\" alt=\"\" /></b></p>');
+});
+
 test('Enter before last IMG in P with text', function() {
 	editor.setContent('<p>abc<img alt="" src="about:blank" /></p>');
 	editor.selection.setCursorLocation(editor.getBody().firstChild, 1);
