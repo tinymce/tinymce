@@ -605,17 +605,17 @@
 	});
 
 	var testResizeTable1 = '<table><tbody>' +
-			'<tr><td style="width: 200px;" colspan="2" data-mce-style="width: 200px;">A1</td><td style="width: 100px;" data-mce-style="width: 100px;">A2</td><td style="width: 100px;" data-mce-style="width: 100px;">A3</td></tr>' +
-			'<tr><td style="width: 100px;" data-mce-style="width: 100px;">B1</td><td style="width: 200px;" colspan="2" data-mce-style="width: 200px;">B2</td><td style="width: 100px;" data-mce-style="width: 100px;">B3</td></tr>' +
-			'<tr><td style="width: 100px;" data-mce-style="width: 100px;">C1</td><td style="width: 100px;" data-mce-style="width: 100px;">C2</td><td style="width: 200px;" colspan="2" data-mce-style="width: 200px;">C3</td></tr>' +
-			'<tr><td style="width: 400px;" colspan="4" data-mce-style="width: 400px;">D1</td></tr></tbody></table>';
+			'<tr><td style="height: 20px; width: 200px;" colspan="2" data-mce-style="height: 20px; width: 200px;">A1</td><td style="height: 20px; width: 100px;" data-mce-style="height: 20px; width: 100px;">A2</td><td style="height: 20px; width: 100px;" data-mce-style="height: 20px; width: 100px;">A3</td></tr>' +
+			'<tr><td style="height: 20px; width: 100px;" data-mce-style="height: 20px; width: 100px;">B1</td><td style="height: 20px; width: 200px;" colspan="2" data-mce-style="height: 20px; width: 200px;">B2</td><td style="height: 20px; width: 100px;" data-mce-style="height: 20px; width: 100px;">B3</td></tr>' +
+			'<tr><td style="height: 20px; width: 100px;" data-mce-style="height: 20px; width: 100px;">C1</td><td style="height: 20px; width: 100px;" data-mce-style="height: 20px; width: 100px;">C2</td><td style="height: 20px; width: 200px;" colspan="2" data-mce-style="height: 20px; width: 200px;">C3</td></tr>' +
+			'<tr><td style="height: 20px; width: 400px;" colspan="4" data-mce-style="height: 20px; width: 400px;">D1</td></tr></tbody></table>';
 
 	var testResizeTable2 = '<table border="1"><tbody>' +
-	'<tr><th style="width: 20px;" data-mce-style="width: 20px;">A0</th><th style="width: 20px;" data-mce-style="width: 20px;">A1</th><th style="width: 20px;" data-mce-style="width: 20px;">A2</th>' +
-	'<th style="width: 40px;" data-mce-style="width: 40px;">A3</th><th style="width: 10px;" data-mce-style="width: 10px;">A4</th></tr><tr><td style="width: 20px;" data-mce-style="width: 20px;">B0</td><td style="width: 20px; "' +
-	'data-mce-style="width: 20px;">B1</td><td style="width: 20px;" data-mce-style="width: 20px;">B2</td><td style="width: 40px;" data-mce-style="width: 40px;">B3</td><td style="width: 10px;" rowspan="2" data-mce-style="width: 10px;">' +
-	'B3</td></tr><tr><td style="width: 20px;" data-mce-style="width: 20px;">C0</td><td style="width: 20px;" data-mce-style="width: 20px;">C1</td><td style="width: 20px;" data-mce-style="width: 20px;">C2</td><td style="width: 40px;" ' +
-	'data-mce-style="width: 40px;">C3</td></tr></tbody></table>';
+	'<tr><th style="height: 20px; width: 20px;" data-mce-style="height: 20px; width: 20px;">A0</th><th style="height: 20px; width: 20px;" data-mce-style="height: 20px; width: 20px;">A1</th><th style="height: 20px; width: 20px;" data-mce-style="height: 20px; width: 20px;">A2</th>' +
+	'<th style="height: 20px; width: 40px;" data-mce-style="height: 20px; width: 40px;">A3</th><th style="height: 20px; width: 10px;" data-mce-style="height: 20px; width: 10px;">A4</th></tr><tr><td style="height: 20px; width: 20px;" data-mce-style="height: 20px; width: 20px;">B0</td><td style="height: 20px; width: 20px; "' +
+	'data-mce-style="height: 20px; width: 20px;">B1</td><td style="height: 20px; width: 20px;" data-mce-style="height: 20px; width: 20px;">B2</td><td style="height: 20px; width: 40px;" data-mce-style="height: 20px; width: 40px;">B3</td><td style="height: 40px; width: 10px;" rowspan="2" data-mce-style="height: 20px; width: 10px;">' +
+	'B3</td></tr><tr><td style="height: 20px; width: 20px;" data-mce-style="height: 20px; width: 20px;">C0</td><td style="height: 20px; width: 20px;" data-mce-style="height: 20px; width: 20px;">C1</td><td style="height: 20px; width: 20px;" data-mce-style="height: 20px; width: 20px;">C2</td><td style="height: 20px; width: 40px;" ' +
+	'data-mce-style="height: 20px; width: 40px;">C3</td></tr></tbody></table>';
 
 	test("Get pixel widths/heights", function() {
 		editor.setContent(testResizeTable1);
