@@ -571,10 +571,6 @@ define("tinymce/tableplugin/ResizeBars", [
 				});
 			}
             
-            function getPercentStep() {
-                return step / table.getBoundingClientRect().width * 100;
-            }
-            
             function onOneColumn() {
                 var deltas;
                 if (isPercentageBased) {
@@ -593,14 +589,11 @@ define("tinymce/tableplugin/ResizeBars", [
 				var endZeros = generateZeros(result.slice(next + 1));
 				var deltas;
 
-				if (step >= 0) {// TODO: change the min for percentage maybe?
-                    var newNext = isPercentageBased ? Math.max(min, result[next] - getPercentStep()) 
-                        : Math.max(min, result[next] - step);
-                    var newStep = isPercentageBased ? getPercentStep() : step;
-                    deltas = startZeros.concat([newStep, newNext - result[next]]).concat(endZeros);
+				if (step >= 0) {
+                    var newNext = Math.max(min, result[next] - step);
+                    deltas = startZeros.concat([step, newNext - result[next]]).concat(endZeros);
 				} else {
-					var newThis = isPercentageBased ? Math.max(min, result[index] + getPercentStep())
-                        : Math.max(min, result[index] + step);
+					var newThis = Math.max(min, result[index] + step);
 					var diffx = result[index] - newThis;
 					deltas = startZeros.concat([newThis - result[index], diffx]).concat(endZeros);
 				}
@@ -612,10 +605,10 @@ define("tinymce/tableplugin/ResizeBars", [
 				var startZeros = generateZeros(result.slice(0, index));
 				var deltas;
 
-				if (step >= 0) { // This should be zero when using percentage based to prevent weirdness.
-					deltas = isPercentageBased ? startZeros.concat(getPercentStep()) : startZeros.concat([step]);
+				if (step >= 0) {
+					deltas = startZeros.concat([step]);
 				} else {
-					var size = isPercentageBased ? Math.max(min, result[index] + getPercentStep()) : Math.max(min, result[index] + step);
+					var size = Math.max(min, result[index] + step);
 					deltas = startZeros.concat([size - result[index]]);
 				}
 
@@ -738,7 +731,9 @@ define("tinymce/tableplugin/ResizeBars", [
             });
             
 			var widths = getWidths(jenga, percentageBased, table);
-			var deltas = determineDeltas(widths, index, delta, RESIZE_MINIMUM_WIDTH, percentageBased, table);
+            var step = percentageBased ? delta / table.getBoundingClientRect().width * 100 : delta;
+            // TODO: change the min for percentage maybe?
+			var deltas = determineDeltas(widths, index, step, RESIZE_MINIMUM_WIDTH, percentageBased, table);
 			var newWidths = [], newTotalWidth = 0;
 
 			for (var i = 0; i < deltas.length; i++) {
