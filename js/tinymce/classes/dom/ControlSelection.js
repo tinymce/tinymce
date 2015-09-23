@@ -574,7 +574,7 @@ define("tinymce/dom/ControlSelection", [
 				}
 			});
 
-			editor.on('hide', hideResizeRect);
+			editor.on('hide blur', hideResizeRect);
 
 			// Hide rect on focusout since it would float on top of windows otherwise
 			//editor.on('focusout', hideResizeRect);
