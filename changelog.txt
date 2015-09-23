@@ -5,6 +5,7 @@ Version 4.2.6 (2015-09-xx)
 	Fixed bug where the template plugin wouldn't handle functions as variable replacements.
 	Fixed bug where undo/redo sometimes wouldn't work properly when applying formatting collapsed ranges.
 	Fixed bug where shift+delete wouldn't do a cut operation on Blink/WebKit.
+	Fixed bug where cut action wouldn't properly store the before selection bookmark for the undo level.
 	Fixed bug where the inline toolbars wouldn't get properly hidden when blurring the editor instance.
 	Added commands ids mceEditImage, mceAchor and mceMedia to be avaiable from execCommand.
 Version 4.2.5 (2015-08-31)

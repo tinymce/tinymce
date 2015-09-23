@@ -97,7 +97,7 @@ define("tinymce/UndoManager", [
 			}
 		});
 
-		editor.on('ObjectResizeStart', function() {
+		editor.on('ObjectResizeStart Cut', function() {
 			self.beforeChange();
 		});
 
