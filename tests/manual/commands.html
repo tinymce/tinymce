@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Commands</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
+<script src="../../js/tinymce/tinymce.dev.js"></script>
+<script src="../../js/tinymce/plugins/table/plugin.dev.js"></script>
+<script src="../../js/tinymce/plugins/paste/plugin.dev.js"></script>
+<script src="../../js/tinymce/plugins/spellchecker/plugin.dev.js"></script>
+<script>
+	tinymce.init({
+		selector: "textarea#elm1",
+		theme: "modern",
+		plugins: [
+			"advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+			"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+			"save table contextmenu directionality emoticons template paste textcolor importcss colorpicker",
+			"textpattern fullpage imagetools"
+		],
+		content_css: "css/development.css",
+		add_unload_trigger: false,
+
+		toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table",
+
+		template_replace_values : {
+			user: "Jack Black"
+		}, 
+
+		spellchecker_callback: function(method, data, success) {
+			if (method == "spellcheck") {
+				var words = data.match(this.getWordCharPattern());
+				var suggestions = {};
+
+				for (var i = 0; i < words.length; i++) {
+					suggestions[words[i]] = ["First", "second"];
+				}
+
+				success({words: suggestions, dictionary: true});
+			}
+
+			if (method == "addToDictionary") {
+				success();
+			}
+		}
+	});
+
+	if (!window.console) {
+		window.console = {
+			log: function() {
+				tinymce.$('<div></div>').text(tinymce.grep(arguments).join(' ')).appendTo(document.body);
+			}
+		};
+	}
+	
+	function cmd(cmd, value) {
+		tinymce.activeEditor.execCommand(cmd, false, value);
+	}
+</script>
+<style>
+	button {
+		margin: 0;
+		padding: 0;
+		font-size: 11px;
+	}
+</style>
+</head>
+<body>
+<form method="post" action="http://www.tinymce.com/dump.php?example=true">
+	<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%">
+		<h3>am nisi elit, cursus in rhoncus</h3>
+		<p>Nam nisi elit, cursus in rhoncus sit amet, pulvinar laoreet leo. Nam sed lectus quam, ut sagittis tellus. Quisque dignissim mauris a augue rutrum tempor. Donec vitae purus nec massa vestibulum ornare sit ame[cE=false]t id tellus. Nunc quam mauris, fermentum nec lacinia eget, sollicitudin nec ante. Aliquam molestie volutpat dapibus. Nunc interdum viverra sodales. Morbi laoreet pulvinar gravida. Quisque ut turpis</p>
+<p>sagittis nunc accumsan vehicula. Duis elementum congue ultrices. Cras faucibus feugiat arcu quis lacinia. In hac habitasse platea dictumst. Pellentesque fermentum magna sit amet tellus varius ullamcorper. Vestibulum at urna augue, eget varius neque. Fusce facilisis venenatis dapibus. Integer non sem at arcu euismod tempor nec sed nisl. Morbi ultricies, mauris ut ultricies adipiscing, felis odio condimentum massa, et luctus est nunc nec eros.<img src="img/dogleft.jpg" width="100">
+<table>
+	<tr>
+		<td>cell 1</td>
+		<td>cell 2</td>
+	</tr>
+	<tr>
+		<td>cell 3</td>
+		<td>cell 4</td>
+	</tr>
+</table>
+</p>
+	</textarea>
+	<button type="button" onclick="cmd('Bold')">Bold</button>
+	<button type="button" onclick="cmd('Italic')">Italic</button>
+	<button type="button" onclick="cmd('Underline')">Underline</button>
+	<button type="button" onclick="cmd('Strikethrough')">Strikethrough</button>
+	<button type="button" onclick="cmd('Superscript')">Superscript</button>
+	<button type="button" onclick="cmd('Subscript')">Subscript</button>
+	<button type="button" onclick="cmd('Cut')">Cut</button>
+	<button type="button" onclick="cmd('Copy')">Copy</button>
+	<button type="button" onclick="cmd('Paste')">Paste</button>
+	<button type="button" onclick="cmd('Unlink')">Unlink</button>
+	<button type="button" onclick="cmd('JustifyLeft')">JustifyLeft</button>
+	<button type="button" onclick="cmd('JustifyCenter')">JustifyCenter</button>
+	<button type="button" onclick="cmd('JustifyRight')">JustifyRight</button>
+	<button type="button" onclick="cmd('JustifyFull')">JustifyFull</button>
+	<button type="button" onclick="cmd('JustifyNone')">JustifyNone</button>
+	<button type="button" onclick="cmd('InsertUnorderedList')">InsertUnorderedList</button>
+	<button type="button" onclick="cmd('InsertOrderedList')">InsertOrderedList</button>
+	<button type="button" onclick="cmd('ForeColor', 'red')">ForeColor (red)</button>
+	<button type="button" onclick="cmd('HiliteColor', 'green')">HiliteColor (green)</button>
+	<button type="button" onclick="cmd('FontName', 'Arial')">FontName (arial)</button>
+	<button type="button" onclick="cmd('FontSize', 7)">FontSize (7)</button>
+	<button type="button" onclick="cmd('RemoveFormat')">RemoveFormat</button>
+	<button type="button" onclick="cmd('mceBlockQuote')">mceBlockQuote</button>
+	<button type="button" onclick="cmd('FormatBlock', 'h1')">FormatBlock</button>
+	<button type="button" onclick="cmd('mceInsertContent', 'abc')">mceInsertContent (abc)</button>
+	<button type="button" onclick="cmd('mceToggleFormat', 'bold')">mceToggleFormat (bold)</button>
+	<button type="button" onclick="cmd('mceSetContent', 'abc')">mceSetContent (abc)</button>
+	<button type="button" onclick="cmd('Indent')">Indent</button>
+	<button type="button" onclick="cmd('Outdent')">Outdent</button>
+	<button type="button" onclick="cmd('InsertHorizontalRule')">InsertHorizontalRule</button>
+	<button type="button" onclick="cmd('mceToggleVisualAid')">mceToggleVisualAid</button>
+	<button type="button" onclick="cmd('mceInsertLink', 'url')">mceInsertLink (url)</button>
+	<button type="button" onclick="cmd('selectAll')">selectAll</button>
+	<button type="button" onclick="cmd('delete')">delete</button>
+	<button type="button" onclick="cmd('mceNewDocument')">mceNewDocument</button>
+	<button type="button" onclick="cmd('Undo')">Undo</button>
+	<button type="button" onclick="cmd('Redo')">Redo</button>
+	<button type="button" onclick="cmd('mceAutoResize')">mceAutoResize</button>
+	<button type="button" onclick="cmd('mceShowCharmap')">mceShowCharmap</button>
+	<button type="button" onclick="cmd('mceCodeEditor')">mceCodeEditor</button>
+	<button type="button" onclick="cmd('mceDirectionLTR')">mceDirectionLTR</button>
+	<button type="button" onclick="cmd('mceDirectionRTL')">mceDirectionRTL</button>
+	<button type="button" onclick="cmd('mceFullPageProperties')">mceFullPageProperties</button>
+	<button type="button" onclick="cmd('mceFullscreen')">mceFullscreen</button>
+	<button type="button" onclick="cmd('mceImage')">mceImage</button>
+	<button type="button" onclick="cmd('mceInsertDate')">mceInsertDate</button>
+	<button type="button" onclick="cmd('mceInsertTime')">mceInsertTime</button>
+	<button type="button" onclick="cmd('InsertDefinitionList')">InsertDefinitionList</button>
+	<button type="button" onclick="cmd('mceNonBreaking')">mceNonBreaking</button>
+	<button type="button" onclick="cmd('mcePageBreak')">mcePageBreak</button>
+	<button type="button" onclick="cmd('mcePreview')">mcePreview</button>
+	<button type="button" onclick="cmd('mcePrint')">mcePrint</button>
+	<button type="button" onclick="cmd('mceSave')">mceSave</button>
+	<button type="button" onclick="cmd('SearchReplace')">SearchReplace</button>
+	<button type="button" onclick="cmd('mceSpellcheck')">mceSpellcheck</button>
+	<button type="button" onclick="cmd('mceInsertTemplate', '{$user}')">mceInsertTemplate ({$user})</button>
+	<button type="button" onclick="cmd('mceVisualBlocks')">mceVisualBlocks</button>
+	<button type="button" onclick="cmd('mceVisualChars')">mceVisualChars</button>
+	<button type="button" onclick="cmd('mceMedia')">mceMedia</button>
+	<button type="button" onclick="cmd('mceAnchor')">mceAnchor</button>
+	<button type="button" onclick="cmd('mceTableSplitCells')">mceTableSplitCells</button>
+	<button type="button" onclick="cmd('mceTableMergeCells')">mceTableMergeCells</button>
+	<button type="button" onclick="cmd('mceTableInsertRowBefore')">mceTableInsertRowBefore</button>
+	<button type="button" onclick="cmd('mceTableInsertRowAfter')">mceTableInsertRowAfter</button>
+	<button type="button" onclick="cmd('mceTableInsertColBefore')">mceTableInsertColBefore</button>
+	<button type="button" onclick="cmd('mceTableInsertColAfter')">mceTableInsertColAfter</button>
+	<button type="button" onclick="cmd('mceTableDeleteCol')">mceTableDeleteCol</button>
+	<button type="button" onclick="cmd('mceTableDeleteRow')">mceTableDeleteRow</button>
+	<button type="button" onclick="cmd('mceTableCutRow')">mceTableCutRow</button>
+	<button type="button" onclick="cmd('mceTableCopyRow')">mceTableCopyRow</button>
+	<button type="button" onclick="cmd('mceTablePasteRowBefore')">mceTablePasteRowBefore</button>
+	<button type="button" onclick="cmd('mceTablePasteRowAfter')">mceTablePasteRowAfter</button>
+	<button type="button" onclick="cmd('mceTableDelete')">mceTableDelete</button>
+	<button type="button" onclick="cmd('mceInsertTable')">mceInsertTable</button>
+	<button type="button" onclick="cmd('mceTableProps')">mceTableProps</button>
+	<button type="button" onclick="cmd('mceTableRowProps')">mceTableRowProps</button>
+	<button type="button" onclick="cmd('mceTableCellProps')">mceTableCellProps</button>
+	<button type="button" onclick="cmd('mceEditImage')">mceEditImage</button>
+</form>
+
+</body>
+</html>
