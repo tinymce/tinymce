@@ -660,7 +660,10 @@ define("tinymce/Editor", [
 
 			// Domain relaxing is required since the user has messed around with document.domain
 			if (document.domain != location.hostname) {
-				url = domainRelaxUrl;
+				// Edge seems to be able to handle domain relaxing
+				if (Env.ie && Env.ie < 12) {
+					url = domainRelaxUrl;
+				}
 			}
 
 			// Create iframe
