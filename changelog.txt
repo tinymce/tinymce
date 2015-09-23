@@ -4,6 +4,7 @@ Version 4.2.6 (2015-09-xx)
 	Fixed bug where color styles woudln't be retained on copy/paste in Blink/Webkit.
 	Fixed bug where the template plugin wouldn't handle functions as variable replacements.
 	Fixed bug where undo/redo sometimes wouldn't work properly when applying formatting collapsed ranges.
+	Fixed bug where shift+delete wouldn't do a cut operation on Blink/WebKit.
 	Added commands ids mceEditImage, mceAchor and mceMedia to be avaiable from execCommand.
 Version 4.2.5 (2015-08-31)
 	Added fullscreen capability to embedded youtube and vimeo videos.
