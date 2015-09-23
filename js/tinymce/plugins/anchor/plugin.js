@@ -29,6 +29,8 @@ tinymce.PluginManager.add('anchor', function(editor) {
 		});
 	}
 
+	editor.addCommand('mceAnchor', showDialog);
+
 	editor.addButton('anchor', {
 		icon: 'anchor',
 		tooltip: 'Anchor',
@@ -36,7 +38,7 @@ tinymce.PluginManager.add('anchor', function(editor) {
 		stateSelector: 'a:not([href])'
 	});
 
-	editor.addMenuItem('anchor', {
+	editor.addMenuItem('mceAnchor', {
 		icon: 'anchor',
 		text: 'Anchor',
 		context: 'insert',

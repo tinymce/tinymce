@@ -343,5 +343,7 @@ define("tinymce/imagetoolsplugin/Plugin", [
 
 		addButtons();
 		addToolbars();
+
+		editor.addCommand('mceEditImage', editImageDialog);
 	});
 });
