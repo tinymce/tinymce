@@ -827,11 +827,12 @@ define("tinymce/tableplugin/TableGrid", [
 			return false;
 		}
 
-		table = table || dom.getParent(selection.getStart(), 'table');
+		table = table || dom.getParent(selection.getStart(true), 'table');
 
 		buildGrid();
 
-		selectedCell = dom.getParent(selection.getStart(), 'th,td');
+		selectedCell = dom.getParent(selection.getStart(true), 'th,td');
+
 		if (selectedCell) {
 			startPos = getPos(selectedCell);
 			endPos = findEndPos();

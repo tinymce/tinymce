@@ -1,7 +1,24 @@
 Version 4.2.6 (2015-09-xx)
 	Added capability to set request headers when using XHRs.
-	Added capability to upload local images automatically when they are introduced to the content.  This is delayed by 30 seconds after editing the image inline.
+	Added capability to upload local images automatically default delay is set to 30 seconds after editing images.
+	Added commands ids mceEditImage, mceAchor and mceMedia to be avaiable from execCommand.
+	Added Edge browser to saucelabs grunt task. Patch contributed by John-David Dalton.
 	Fixed bug where blob uris not produced by tinymce would produce HTML invalid markup.
+	Fixed bug where selection of contents of a nearly empty editor in Edge would sometimes fail.
+	Fixed bug where color styles woudln't be retained on copy/paste in Blink/Webkit.
+	Fixed bug where the table plugin would throw an error when inserting rows after a child table.
+	Fixed bug where the template plugin wouldn't handle functions as variable replacements.
+	Fixed bug where undo/redo sometimes wouldn't work properly when applying formatting collapsed ranges.
+	Fixed bug where shift+delete wouldn't do a cut operation on Blink/WebKit.
+	Fixed bug where cut action wouldn't properly store the before selection bookmark for the undo level.
+	Fixed bug where backspace in side an empty list element on IE would loose editor focus.
+	Fixed bug where the save plugin wouldn't enable the buttons when a change occured.
+	Fixed bug where Edge wouldn't initialize the editor if a document.domain was specified.
+	Fixed bug where enter key before nested images would sometimes not properly expand the previous block.
+	Fixed bug where the inline toolbars wouldn't get properly hidden when blurring the editor instance.
+	Fixed bug where Edge would paste Chinese characters on some Windows 10 installations.
+	Fixed bug where IME would loose focus on IE 11 due to the double trailing br bug fix.
+	Fixed bug where the proxy url in imagetools was incorrect. Patch contributed by Wong Ho Wang.
 Version 4.2.5 (2015-08-31)
 	Added fullscreen capability to embedded youtube and vimeo videos.
 	Fixed bug where the uploadImages call didn't work on IE 10.

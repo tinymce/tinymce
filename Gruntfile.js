@@ -519,6 +519,7 @@ module.exports = function(grunt) {
 						{browserName: "internet explorer", platform: "Windows 7", version: "9"},
 						{browserName: "internet explorer", platform: "Windows 7", version: "10"},
 						{browserName: "internet explorer", platform: "Windows 7", version: "11"},
+						{browserName: "microsoftedge", platform: "Windows 10", version: "20.10240"},
 						{browserName: "safari", platform: "OS X 10.9", version: "7"},
 						{browserName: "safari", platform: "OS X 10.8", version: "6"}
 					]

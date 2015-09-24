@@ -97,7 +97,7 @@ define("tinymce/UndoManager", [
 			}
 		});
 
-		editor.on('ObjectResizeStart', function() {
+		editor.on('ObjectResizeStart Cut', function() {
 			self.beforeChange();
 		});
 
@@ -106,6 +106,12 @@ define("tinymce/UndoManager", [
 
 		editor.on('KeyUp', function(e) {
 			var keyCode = e.keyCode;
+
+			// If key is prevented then don't add undo level
+			// This would happen on keyboard shortcuts for example
+			if (e.isDefaultPrevented()) {
+				return;
+			}
 
 			if ((keyCode >= 33 && keyCode <= 36) || (keyCode >= 37 && keyCode <= 40) || keyCode == 45 || keyCode == 13 || e.ctrlKey) {
 				addNonTypingUndoLevel();
@@ -136,6 +142,12 @@ define("tinymce/UndoManager", [
 
 		editor.on('KeyDown', function(e) {
 			var keyCode = e.keyCode;
+
+			// If key is prevented then don't add undo level
+			// This would happen on keyboard shortcuts for example
+			if (e.isDefaultPrevented()) {
+				return;
+			}
 
 			// Is caracter positon keys left,right,up,down,home,end,pgdown,pgup,enter
 			if ((keyCode >= 33 && keyCode <= 36) || (keyCode >= 37 && keyCode <= 40) || keyCode == 45) {

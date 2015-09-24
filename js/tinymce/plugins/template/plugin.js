@@ -183,9 +183,11 @@ tinymce.PluginManager.add('template', function(editor) {
 
 	function replaceTemplateValues(html, templateValuesOptionName) {
 		each(editor.getParam(templateValuesOptionName), function(v, k) {
-			if (typeof v != 'function') {
-				html = html.replace(new RegExp('\\{\\$' + k + '\\}', 'g'), v);
+			if (typeof v == 'function') {
+				v = v(k);
 			}
+
+			html = html.replace(new RegExp('\\{\\$' + k + '\\}', 'g'), v);
 		});
 
 		return html;
