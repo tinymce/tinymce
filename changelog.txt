@@ -1,4 +1,6 @@
 Version 4.2.6 (2015-09-xx)
+	Added commands ids mceEditImage, mceAchor and mceMedia to be avaiable from execCommand.
+	Added Edge browser to saucelabs grunt task. Patch contributed by John-David Dalton.
 	Fixed bug where blob uris not produced by tinymce would produce HTML invalid markup.
 	Fixed bug where selection of contents of a nearly empty editor in Edge would sometimes fail.
 	Fixed bug where color styles woudln't be retained on copy/paste in Blink/Webkit.
@@ -15,7 +17,6 @@ Version 4.2.6 (2015-09-xx)
 	Fixed bug where Edge would paste Chinese characters on some Windows 10 installations.
 	Fixed bug where IME would loose focus on IE 11 due to the double trailing br bug fix.
 	Fixed bug where the proxy url in imagetools was incorrect. Patch contributed by Wong Ho Wang.
-	Added commands ids mceEditImage, mceAchor and mceMedia to be avaiable from execCommand.
 Version 4.2.5 (2015-08-31)
 	Added fullscreen capability to embedded youtube and vimeo videos.
 	Fixed bug where the uploadImages call didn't work on IE 10.
