@@ -161,7 +161,7 @@
  	test("Image recognizes relative src url and prepends absolute image_prepend_url setting.", function () {
 		var win, elementId, element;
 
-		editor.settings.image_prepend_url = 'http://testing.com/images/';
+		editor.settings.image_prepend_url = 'http://localhost/images/';
 		editor.setContent('');
 		editor.execCommand('mceImage', true);
 
