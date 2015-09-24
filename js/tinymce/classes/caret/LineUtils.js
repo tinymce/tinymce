@@ -36,12 +36,23 @@ define("tinymce/caret/LineUtils", [
 	}
 
 	function findClosestClientRect(clientRects, clientX) {
-		return Arr.reduce(clientRects, function(result, clientRect) {
-			var oldClientRect = result,
-				oldDistance, newDistance;
+		function isInside(clientX, clientRect) {
+			return clientX >= clientRect.left && clientX <= clientRect.right;
+		}
+
+		return Arr.reduce(clientRects, function(oldClientRect, clientRect) {
+			var oldDistance, newDistance;
 
 			oldDistance = Math.min(distanceToRectLeft(oldClientRect, clientX), distanceToRectRight(oldClientRect, clientX));
 			newDistance = Math.min(distanceToRectLeft(clientRect, clientX), distanceToRectRight(clientRect, clientX));
+
+			if (isInside(clientX, clientRect)) {
+				return clientRect;
+			}
+
+			if (isInside(clientX, oldClientRect)) {
+				return oldClientRect;
+			}
 
 			// cE=false has higher priority
 			if (newDistance == oldDistance && isContentEditableFalse(clientRect.node)) {
@@ -52,7 +63,7 @@ define("tinymce/caret/LineUtils", [
 				return clientRect;
 			}
 
-			return result;
+			return oldClientRect;
 		});
 	}
 
