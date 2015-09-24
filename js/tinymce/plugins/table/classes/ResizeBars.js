@@ -88,6 +88,32 @@ define("tinymce/tableplugin/ResizeBars", [
 			return isRtl() ? getLeftEdge(index, cell) : getRightEdge(index, cell);
 		}
 
+		function getPercentageWidthFallback(element, table) {
+			return getComputedStyleSize(element, 'width') / getComputedStyleSize(table, 'width') * 100;
+		}
+
+		function getComputedStyleSize(element, property) {
+			var widthString = editor.dom.getStyle(element, property, true);
+			var width = parseInt(widthString, 10);
+			return width;
+		}
+
+		function getCurrentTablePercentWidth(table) {
+			var tableWidth = getComputedStyleSize(table, 'width');
+			var tableParentWidth = getComputedStyleSize(table.parentElement, 'width');
+			return tableWidth / tableParentWidth * 100;
+		}
+
+		function getCellPercentDelta(table, delta) {
+			var tableWidth = getComputedStyleSize(table, 'width');
+			return delta / tableWidth * 100;
+		}
+
+		function getTablePercentDelta(table, delta) {
+			var tableParentWidth = getComputedStyleSize(table.parentElement, 'width');
+			return delta / tableParentWidth * 100;
+		}
+
 		// Find the left/right (ltr/rtl) or top side locations of the cells to measure.
 		// This is the location of the borders we need to draw over.
 		function findPositions(getInner, getOuter, thingsToMeasure) {
@@ -422,7 +448,7 @@ define("tinymce/tableplugin/ResizeBars", [
 
 			var extras = next.delta - current.delta;
 			var pixelWidth = Math.abs(next.value - current.value) / extras;
-			return isPercentageBased ? pixelWidth / table.getBoundingClientRect().width * 100 : pixelWidth;
+			return isPercentageBased ? pixelWidth / getComputedStyleSize(table, 'width') * 100 : pixelWidth;
 		}
 
 		// Attempt to get the pixel width of a cell but only if it's a defined static value.
@@ -441,31 +467,23 @@ define("tinymce/tableplugin/ResizeBars", [
 				false : widthNumber;
 		}
 
-		// Attempt to get the pixel width of a cell
-		function getPixelWidthFallback(element) {
-
-			return element.getBoundingClientRect().width;
-
-		}
-
-		function getPercentageWidthFallback(element, table) {
-
-			return element.getBoundingClientRect().width / table.getBoundingClientRect().width * 100;
-
+		function getStyleOrAttrib(element, property) {
+			var sizeString = editor.dom.getStyle(element, property);
+			if (!sizeString) {
+				sizeString = editor.dom.getAttrib(element, property);
+			}
+			if (!sizeString) {
+				sizeString = editor.dom.getStyle(element, property, true);
+			}
+			return sizeString;
 		}
 
 		function getWidth(element, isPercentageBased, table) {
-			var widthString = editor.dom.getStyle(element, 'width');
-			if (!widthString) {
-				widthString = editor.dom.getAttrib(element, 'width');
-			}
-			if (!widthString) {
-				widthString = editor.dom.getStyle(element, 'width', true);
-			}
+			var widthString = getStyleOrAttrib(element, 'width');
 
 			var widthNumber = parseInt(widthString, 10);
 
-			var getWidthFallback = isPercentageBased ? getPercentageWidthFallback(element, table) : getPixelWidthFallback(element);
+			var getWidthFallback = isPercentageBased ? getPercentageWidthFallback(element, table) : getComputedStyleSize(element, 'width');
 
 			// If this is percentage based table, but this cell isn't percentage based.
 			// Or if this is a pixel based table, but this cell isn't pixel based.
@@ -502,20 +520,10 @@ define("tinymce/tableplugin/ResizeBars", [
 			return widths;
 		}
 
-		function getPixelHeightFallback(element) {
-			return element.getBoundingClientRect().height;
-		}
-
 		// Attempt to get the pixel height from a cell.
 		function getPixelHeight(element) {
 
-			var heightString = editor.dom.getStyle(element, 'height');
-			if (!heightString) {
-				heightString = editor.dom.getAttrib(element, 'height');
-			}
-			if (!heightString) {
-				heightString = editor.dom.getStyle(element, 'height', true);
-			}
+			var heightString = getStyleOrAttrib(element, 'height');
 
 			var heightNumber = parseInt(heightString, 10);
 
@@ -524,7 +532,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			}
 
 			return !isNaN(heightNumber) && heightNumber > 0 ?
-							heightNumber : getPixelHeightFallback();
+							heightNumber : getComputedStyleSize(element, 'height');
 		}
 
 		// Attempt to get the css height from row representative cells.
@@ -691,16 +699,9 @@ define("tinymce/tableplugin/ResizeBars", [
 				});
 			}
 
-			function getCurrentTablePercentWidth() {
-				return table.getBoundingClientRect().width / table.parentElement.getBoundingClientRect().width * 100;
-			}
-
-			function getUpdatedTablePercentWidth() {
-				return (table.getBoundingClientRect().width + delta) / table.parentElement.getBoundingClientRect().width * 100;
-			}
-
 			function getNewTablePercentWidth() {
-				return index < tableGrid.maxCols - 1 ? getCurrentTablePercentWidth() : getUpdatedTablePercentWidth();
+				return index < tableGrid.maxCols - 1 ? getCurrentTablePercentWidth(table) :
+					getCurrentTablePercentWidth(table) + getTablePercentDelta(table, delta);
 			}
 
 			function setTableSize(newTableWidth, styleExtension, isPercentBased) {
@@ -710,19 +711,12 @@ define("tinymce/tableplugin/ResizeBars", [
 				}
 			}
 
-			var cells = tableGrid.getAllCells();
-
-			var percentageBased = false;
-
-			Tools.each(cells, function(cell) {
-				if (isPercentageBasedSize(cell.element.width) ||
-				isPercentageBasedSize(cell.element.style.width)) {
-					percentageBased = true;
-				}
-			});
+			var percentageBased = isPercentageBasedSize(table.width) ||
+				isPercentageBasedSize(table.style.width);
 
 			var widths = getWidths(tableGrid, percentageBased, table);
-			var step = percentageBased ? delta / table.getBoundingClientRect().width * 100 : delta;
+
+			var step = percentageBased ? getCellPercentDelta(table, delta) : delta;
 			// TODO: change the min for percentage maybe?
 			var deltas = determineDeltas(widths, index, step, RESIZE_MINIMUM_WIDTH, percentageBased, table);
 			var newWidths = [], newTotalWidth = 0;

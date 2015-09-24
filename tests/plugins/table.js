@@ -622,32 +622,32 @@
 
 		var table = editor.dom.select('table')[0];
 		var details = editor.plugins.table.resizeBars.getTableDetails(table);
-		var jenga  = editor.plugins.table.resizeBars.getJengaGrid(details);
+		var tableGrid  = editor.plugins.table.resizeBars.getTableGrid(details);
 
 		deepEqual(
-			editor.plugins.table.resizeBars.getPixelWidths(jenga),
+			editor.plugins.table.resizeBars.getWidths(tableGrid),
 			[100, 100, 100, 100]
 		);
 
 		deepEqual(
-			editor.plugins.table.resizeBars.getPixelHeights(jenga),
-			[10, 10, 10, 10]
+			editor.plugins.table.resizeBars.getPixelHeights(tableGrid),
+			[20, 20, 20, 20]
 		);
 
 		editor.setContent(testResizeTable2);
 
 		table = editor.dom.select('table')[0];
 		details = editor.plugins.table.resizeBars.getTableDetails(table);
-		jenga  = editor.plugins.table.resizeBars.getJengaGrid(details);
+		tableGrid  = editor.plugins.table.resizeBars.getTableGrid(details);
 
 		deepEqual(
-			editor.plugins.table.resizeBars.getPixelWidths(jenga),
+			editor.plugins.table.resizeBars.getWidths(tableGrid),
 			[20, 20, 20, 40, 10]
 		);
 
 		deepEqual(
-			editor.plugins.table.resizeBars.getPixelHeights(jenga),
-			[10, 10, 10]
+			editor.plugins.table.resizeBars.getPixelHeights(tableGrid),
+			[20, 20, 20]
 		);
 	});
 
@@ -699,25 +699,25 @@
 		editor.plugins.table.resizeBars.adjustWidth(table, 50, 0);
 
 		equal(editor.getContent(),
-			'<table style="width: 400px;">' +
+			'<table style=\"width: 400px;\">' +
 			'<tbody>' +
 			'<tr>' +
-			'<td style="width: 200px;" colspan="2">A1</td>' +
-			'<td style="width: 100px;">A2</td>' +
-			'<td style="width: 100px;">A3</td>' +
+			'<td style=\"width: 200px; height: 20px;\" colspan=\"2\">A1</td>' +
+			'<td style=\"width: 100px; height: 20px;\">A2</td>' +
+			'<td style=\"width: 100px; height: 20px;\">A3</td>' +
 			'</tr>' +
 			'<tr>' +
-			'<td style="width: 150px;">B1</td>' +
-			'<td style="width: 150px;" colspan="2">B2</td>' +
-			'<td style="width: 100px;">B3</td>' +
+			'<td style=\"width: 150px; height: 20px;\">B1</td>' +
+			'<td style=\"width: 150px; height: 20px;\" colspan=\"2\">B2</td>' +
+			'<td style=\"width: 100px; height: 20px;\">B3</td>' +
 			'</tr>' +
 			'<tr>' +
-			'<td style="width: 150px;">C1</td>' +
-			'<td style="width: 50px;">C2</td>' +
-			'<td style="width: 200px;" colspan="2">C3</td>' +
+			'<td style=\"width: 150px; height: 20px;\">C1</td>' +
+			'<td style=\"width: 50px; height: 20px;\">C2</td>' +
+			'<td style=\"width: 200px; height: 20px;\" colspan=\"2\">C3</td>' +
 			'</tr>' +
 			'<tr>' +
-			'<td style="width: 400px;" colspan="4">D1</td>' +
+			'<td style=\"width: 400px; height: 20px;\" colspan=\"4\">D1</td>' +
 			'</tr>' +
 			'</tbody>' +
 			'</table>');
@@ -729,25 +729,25 @@
 		editor.plugins.table.resizeBars.adjustWidth(table, 50, 1);
 
 		equal(editor.getContent(),
-			'<table style="width: 400px;">' +
+			'<table style=\"width: 400px;\">' +
 			'<tbody>' +
 			'<tr>' +
-			'<td style="width: 250px;" colspan="2">A1</td>' +
-			'<td style="width: 50px;">A2</td>' +
-			'<td style="width: 100px;">A3</td>' +
+			'<td style=\"width: 250px; height: 20px;\" colspan=\"2\">A1</td>' +
+			'<td style=\"width: 50px; height: 20px;\">A2</td>' +
+			'<td style=\"width: 100px; height: 20px;\">A3</td>' +
 			'</tr>' +
 			'<tr>' +
-			'<td style="width: 100px;">B1</td>' +
-			'<td style="width: 200px;" colspan="2">B2</td>' +
-			'<td style="width: 100px;">B3</td>' +
+			'<td style=\"width: 100px; height: 20px;\">B1</td>' +
+			'<td style=\"width: 200px; height: 20px;\" colspan=\"2\">B2</td>' +
+			'<td style=\"width: 100px; height: 20px;\">B3</td>' +
 			'</tr>' +
 			'<tr>' +
-			'<td style="width: 100px;">C1</td>' +
-			'<td style="width: 150px;">C2</td>' +
-			'<td style="width: 150px;" colspan="2">C3</td>' +
+			'<td style=\"width: 100px; height: 20px;\">C1</td>' +
+			'<td style=\"width: 150px; height: 20px;\">C2</td>' +
+			'<td style=\"width: 150px; height: 20px;\" colspan=\"2\">C3</td>' +
 			'</tr>' +
 			'<tr>' +
-			'<td style="width: 400px;" colspan="4">D1</td>' +
+			'<td style=\"width: 400px; height: 20px;\" colspan=\"4\">D1</td>' +
 			'</tr>' +
 			'</tbody>' +
 			'</table>');
@@ -759,25 +759,25 @@
 		editor.plugins.table.resizeBars.adjustWidth(table, 50, 2);
 
 		equal(editor.getContent(),
-			'<table style="width: 400px;">' +
+			'<table style=\"width: 400px;\">' +
 			'<tbody>' +
 			'<tr>' +
-			'<td style="width: 200px;" colspan="2">A1</td>' +
-			'<td style="width: 150px;">A2</td>' +
-			'<td style="width: 50px;">A3</td>' +
+			'<td style=\"width: 200px; height: 20px;\" colspan=\"2\">A1</td>' +
+			'<td style=\"width: 150px; height: 20px;\">A2</td>' +
+			'<td style=\"width: 50px; height: 20px;\">A3</td>' +
 			'</tr>' +
 			'<tr>' +
-			'<td style="width: 100px;">B1</td>' +
-			'<td style="width: 250px;" colspan="2">B2</td>' +
-			'<td style="width: 50px;">B3</td>' +
+			'<td style=\"width: 100px; height: 20px;\">B1</td>' +
+			'<td style=\"width: 250px; height: 20px;\" colspan=\"2\">B2</td>' +
+			'<td style=\"width: 50px; height: 20px;\">B3</td>' +
 			'</tr>' +
 			'<tr>' +
-			'<td style="width: 100px;">C1</td>' +
-			'<td style="width: 100px;">C2</td>' +
-			'<td style="width: 200px;" colspan="2">C3</td>' +
+			'<td style=\"width: 100px; height: 20px;\">C1</td>' +
+			'<td style=\"width: 100px; height: 20px;\">C2</td>' +
+			'<td style=\"width: 200px; height: 20px;\" colspan=\"2\">C3</td>' +
 			'</tr>' +
 			'<tr>' +
-			'<td style="width: 400px;" colspan="4">D1</td>' +
+			'<td style=\"width: 400px; height: 20px;\" colspan=\"4\">D1</td>' +
 			'</tr>' +
 			'</tbody>' +
 			'</table>');
@@ -789,25 +789,25 @@
 		editor.plugins.table.resizeBars.adjustWidth(table, 50, 3);
 
 		equal(editor.getContent(),
-			'<table style="width: 450px;">' +
+			'<table style=\"width: 450px;\">' +
 			'<tbody>' +
 			'<tr>' +
-			'<td style="width: 200px;" colspan="2">A1</td>' +
-			'<td style="width: 100px;">A2</td>' +
-			'<td style="width: 150px;">A3</td>' +
+			'<td style=\"width: 200px; height: 20px;\" colspan=\"2\">A1</td>' +
+			'<td style=\"width: 100px; height: 20px;\">A2</td>' +
+			'<td style=\"width: 150px; height: 20px;\">A3</td>' +
 			'</tr>' +
 			'<tr>' +
-			'<td style="width: 100px;">B1</td>' +
-			'<td style="width: 200px;" colspan="2">B2</td>' +
-			'<td style="width: 150px;">B3</td>' +
+			'<td style=\"width: 100px; height: 20px;\">B1</td>' +
+			'<td style=\"width: 200px; height: 20px;\" colspan=\"2\">B2</td>' +
+			'<td style=\"width: 150px; height: 20px;\">B3</td>' +
 			'</tr>' +
 			'<tr>' +
-			'<td style="width: 100px;">C1</td>' +
-			'<td style="width: 100px;">C2</td>' +
-			'<td style="width: 250px;" colspan="2">C3</td>' +
+			'<td style=\"width: 100px; height: 20px;\">C1</td>' +
+			'<td style=\"width: 100px; height: 20px;\">C2</td>' +
+			'<td style=\"width: 250px; height: 20px;\" colspan=\"2\">C3</td>' +
 			'</tr>' +
 			'<tr>' +
-			'<td style="width: 450px;" colspan="4">D1</td>' +
+			'<td style=\"width: 450px; height: 20px;\" colspan=\"4\">D1</td>' +
 			'</tr>' +
 			'</tbody>' +
 			'</table>');
