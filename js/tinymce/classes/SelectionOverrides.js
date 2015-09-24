@@ -63,7 +63,7 @@ define("tinymce/SelectionOverrides", [
 		var getPrevVisualCaretPosition = curry(getVisualCaretPosition, caretWalker.prev),
 			fakeCaret = new FakeCaret(editor.getBody()),
 			realSelectionId = editor.dom.uniqueId(),
-			selectedContentEditableNode;
+			selectedContentEditableNode, $ = editor.$;
 
 		function setRange(range) {
 			//console.log('setRange', range);
@@ -236,19 +236,23 @@ define("tinymce/SelectionOverrides", [
 			}
 		}
 
-		function showBlockCaretContainers() {
-			editor.$('*[data-mce-caret]').each(function(i, elm) {
-				if (elm.innerHTML != '&nbsp;') {
-					elm.removeAttribute('data-mce-caret');
-					elm.removeAttribute('data-mce-bogus');
-					elm.removeAttribute('style');
-					fakeCaret.hide();
+		function getBlockCaretContainer() {
+			return $('*[data-mce-caret]')[0];
+		}
 
-					// Removes control rect on IE
-					scrollIntoView(elm);
-					setRange(getRange());
-				}
-			});
+		function showBlockCaretContainer(blockCaretContainer) {
+			blockCaretContainer = $(blockCaretContainer);
+
+			if (blockCaretContainer.attr('data-mce-caret')) {
+				fakeCaret.hide();
+				blockCaretContainer.removeAttr('data-mce-caret');
+				blockCaretContainer.removeAttr('data-mce-bogus');
+				blockCaretContainer.removeAttr('style');
+
+				// Removes control rect on IE
+				setRange(getRange());
+				scrollIntoView(blockCaretContainer[0]);
+			}
 		}
 
 		function renderRangeCaret(range) {
@@ -455,8 +459,23 @@ define("tinymce/SelectionOverrides", [
 			});
 
 			// Must be added to "top" since undoManager needs to be executed after
-			editor.on('keyup compositionstart', function() {
-				showBlockCaretContainers();
+			editor.on('keyup compositionstart', function(e) {
+				var blockCaretContainer = getBlockCaretContainer();
+
+				if (!blockCaretContainer) {
+					return;
+				}
+
+				if (e.type == 'compositionstart') {
+					e.preventDefault();
+					e.stopPropagation();
+					showBlockCaretContainer(blockCaretContainer);
+					return;
+				}
+
+				if (blockCaretContainer.innerHTML != '&nbsp;') {
+					showBlockCaretContainer(blockCaretContainer);
+				}
 			}, true);
 
 			editor.on('cut', function() {
