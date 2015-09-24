@@ -28,6 +28,33 @@ define("tinymce/dom/Serializer", [
 	var DOM = DOMUtils.DOM;
 
 	/**
+	 * IE 11 has a fantastic bug where it will produce two trailing BR elements to iframe bodies when
+	 * the iframe is hidden by display: none on a parent container. The DOM is actually out of sync
+	 * with innerHTML in this case. It's like IE adds shadow DOM BR elements that appears on innerHTML
+	 * but not as the lastChild of the body. So this fix simply removes the last two
+	 * BR elements at the end of the document.
+	 *
+	 * Example of what happens: <body>text</body> becomes <body>text<br><br></body>
+	 */
+	function trimTrailingBr(rootNode) {
+		var brNode1, brNode2;
+
+		function isBr(node) {
+			return node && node.name === 'br';
+		}
+
+		brNode1 = rootNode.lastChild;
+		if (isBr(brNode1)) {
+			brNode2 = brNode1.prev;
+
+			if (isBr(brNode2)) {
+				brNode1.remove();
+				brNode2.remove();
+			}
+		}
+	}
+
+	/**
 	 * Constructs a new DOM serializer class.
 	 *
 	 * @constructor
@@ -284,7 +311,7 @@ define("tinymce/dom/Serializer", [
 			 * @param {Object} args Arguments option that gets passed to event handlers.
 			 */
 			serialize: function(node, args) {
-				var self = this, impl, doc, oldDoc, htmlSerializer, content;
+				var self = this, impl, doc, oldDoc, htmlSerializer, content, rootNode;
 
 				// Explorer won't clone contents of script and style and the
 				// selected index of select elements are cleared on a clone operation.
@@ -334,13 +361,13 @@ define("tinymce/dom/Serializer", [
 					self.onPreProcess(args);
 				}
 
-				// Setup serializer
-				htmlSerializer = new Serializer(settings, schema);
+				// Parse HTML
+				rootNode = htmlParser.parse(trim(args.getInner ? node.innerHTML : dom.getOuterHTML(node)), args);
+				trimTrailingBr(rootNode);
 
-				// Parse and serialize HTML
-				args.content = htmlSerializer.serialize(
-					htmlParser.parse(trim(args.getInner ? node.innerHTML : dom.getOuterHTML(node)), args)
-				);
+				// Serialize HTML
+				htmlSerializer = new Serializer(settings, schema);
+				args.content = htmlSerializer.serialize(rootNode);
 
 				// Replace all BOM characters for now until we can find a better solution
 				if (!args.cleanup) {

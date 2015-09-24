@@ -268,128 +268,128 @@ test('Script with non JS type attribute', 1, function() {
 	var ser = new tinymce.dom.Serializer({fix_list_elements : true});
 	ser.setRules('script[type|language|src]');
 
-	DOM.setHTML('test', '<s'+'cript type="mylanguage"></s'+'cript>');
-	equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<s'+'cript type="mylanguage"></s'+'cript>');
+	DOM.setHTML('test', '<s' + 'cript type="mylanguage"></s' + 'cript>');
+	equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<s' + 'cript type="mylanguage"></s' + 'cript>');
 });
 
 test('Script with tags inside a comment', 1, function() {
 	var ser = new tinymce.dom.Serializer({fix_list_elements : true});
 	ser.setRules('script[type|language|src]');
 
-	DOM.setHTML('test', '<s'+'cript>// <img src="test"><a href="#"></a></s'+'cript>');
-	equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<s'+'cript>// <![CDATA[\n// <img src="test"><a href="#"></a>\n// ]]></s'+'cript>');
+	DOM.setHTML('test', '<s' + 'cript>// <img src="test"><a href="#"></a></s' + 'cript>');
+	equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<s' + 'cript>// <![CDATA[\n// <img src="test"><a href="#"></a>\n// ]]></s' + 'cript>');
 });
 
 test('Script with less than', 1, function() {
 	var ser = new tinymce.dom.Serializer({fix_list_elements : true});
 	ser.setRules('script[type|language|src]');
 
-	DOM.setHTML('test', '<s'+'cript>1 < 2;</s'+'cript>');
-	equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<s'+'cript>// <![CDATA[\n1 < 2;\n// ]]></s'+'cript>');
+	DOM.setHTML('test', '<s' + 'cript>1 < 2;</s' + 'cript>');
+	equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<s' + 'cript>// <![CDATA[\n1 < 2;\n// ]]></s' + 'cript>');
 });
 
 test('Script with type attrib and less than', 1, function() {
 	var ser = new tinymce.dom.Serializer({fix_list_elements : true});
 	ser.setRules('script[type|language|src]');
 
-	DOM.setHTML('test', '<s'+'cript type="text/javascript">1 < 2;</s'+'cript>');
-	equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript">// <![CDATA[\n1 < 2;\n// ]]></s'+'cript>');
+	DOM.setHTML('test', '<s' + 'cript type="text/javascript">1 < 2;</s' + 'cript>');
+	equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript">// <![CDATA[\n1 < 2;\n// ]]></s' + 'cript>');
 });
 
 test('Script with whitespace in beginning/end', 1, function() {
 	var ser = new tinymce.dom.Serializer({fix_list_elements : true});
 	ser.setRules('script[type|language|src]');
 
-	DOM.setHTML('test', '<script>\n\t1 < 2;\n\t if (2 < 1)\n\t\talert(1);\n</s'+'cript>');
-	equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<s'+'cript>// <![CDATA[\n\t1 < 2;\n\t if (2 < 1)\n\t\talert(1);\n// ]]></s'+'cript>');
+	DOM.setHTML('test', '<script>\n\t1 < 2;\n\t if (2 < 1)\n\t\talert(1);\n</s' + 'cript>');
+	equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<s' + 'cript>// <![CDATA[\n\t1 < 2;\n\t if (2 < 1)\n\t\talert(1);\n// ]]></s' + 'cript>');
 });
 
 test('Script with a HTML comment and less than', 1, function() {
 	var ser = new tinymce.dom.Serializer({fix_list_elements : true});
 	ser.setRules('script[type|language|src]');
 
-	DOM.setHTML('test', '<script><!-- 1 < 2; // --></s'+'cript>');
-	equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<s'+'cript>// <![CDATA[\n1 < 2;\n// ]]></s'+'cript>');
+	DOM.setHTML('test', '<script><!-- 1 < 2; // --></s' + 'cript>');
+	equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<s' + 'cript>// <![CDATA[\n1 < 2;\n// ]]></s' + 'cript>');
 });
 
 test('Script with white space in beginning, comment and less than', 1, function() {
 	var ser = new tinymce.dom.Serializer({fix_list_elements : true});
 	ser.setRules('script[type|language|src]');
 
-	DOM.setHTML('test', '<script>\n\n<!-- 1 < 2;\n\n--></s'+'cript>');
-	equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<s'+'cript>// <![CDATA[\n1 < 2;\n// ]]></s'+'cript>');
+	DOM.setHTML('test', '<script>\n\n<!-- 1 < 2;\n\n--></s' + 'cript>');
+	equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<s' + 'cript>// <![CDATA[\n1 < 2;\n// ]]></s' + 'cript>');
 });
 
 test('Script with comments and cdata', 1, function() {
 	var ser = new tinymce.dom.Serializer({fix_list_elements : true});
 	ser.setRules('script[type|language|src]');
 
-	DOM.setHTML('test', '<script>// <![CDATA[1 < 2; // ]]></s'+'cript>');
-	equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<s'+'cript>// <![CDATA[\n1 < 2;\n// ]]></s'+'cript>');
+	DOM.setHTML('test', '<script>// <![CDATA[1 < 2; // ]]></s' + 'cript>');
+	equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<s' + 'cript>// <![CDATA[\n1 < 2;\n// ]]></s' + 'cript>');
 });
 
 test('Script with cdata', 1, function() {
 	var ser = new tinymce.dom.Serializer({fix_list_elements : true});
 	ser.setRules('script[type|language|src]');
 
-	DOM.setHTML('test', '<script><![CDATA[1 < 2; ]]></s'+'cript>');
-	equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<s'+'cript>// <![CDATA[\n1 < 2;\n// ]]></s'+'cript>');
+	DOM.setHTML('test', '<script><![CDATA[1 < 2; ]]></s' + 'cript>');
+	equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<s' + 'cript>// <![CDATA[\n1 < 2;\n// ]]></s' + 'cript>');
 });
 
 test('Script whitespace in beginning/end and cdata', 1, function() {
 	var ser = new tinymce.dom.Serializer({fix_list_elements : true});
 	ser.setRules('script[type|language|src]');
 
-	DOM.setHTML('test', '<script>\n\n<![CDATA[\n\n1 < 2;\n\n]]>\n\n</s'+'cript>');
-	equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<s'+'cript>// <![CDATA[\n1 < 2;\n// ]]></s'+'cript>');
+	DOM.setHTML('test', '<script>\n\n<![CDATA[\n\n1 < 2;\n\n]]>\n\n</s' + 'cript>');
+	equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<s' + 'cript>// <![CDATA[\n1 < 2;\n// ]]></s' + 'cript>');
 });
 
 test('Script with src attr', 1, function() {
 	var ser = new tinymce.dom.Serializer({fix_list_elements : true});
 	ser.setRules('script[type|language|src]');
 
-	DOM.setHTML('test', '<script src="test.js" data-mce-src="test.js"></s'+'cript>');
-	equal(ser.serialize(DOM.get('test')), '<s'+'cript src="test.js"></s'+'cript>');
+	DOM.setHTML('test', '<script src="test.js" data-mce-src="test.js"></s' + 'cript>');
+	equal(ser.serialize(DOM.get('test')), '<s' + 'cript src="test.js"></s' + 'cript>');
 });
 
 test('Script with HTML comment, comment and CDATA', 1, function() {
 	var ser = new tinymce.dom.Serializer({fix_list_elements : true});
 	ser.setRules('script[type|language|src]');
 
-	DOM.setHTML('test', '<script><!--// <![CDATA[var hi = "hello";// ]]>--></s'+'cript>');
-	equal(ser.serialize(DOM.get('test')), '<script>// <![CDATA[\nvar hi = \"hello\";\n// ]]></s'+'cript>');
+	DOM.setHTML('test', '<script><!--// <![CDATA[var hi = "hello";// ]]>--></s' + 'cript>');
+	equal(ser.serialize(DOM.get('test')), '<script>// <![CDATA[\nvar hi = \"hello\";\n// ]]></s' + 'cript>');
 });
 
 test('Script with block comment around cdata', 1, function() {
 	var ser = new tinymce.dom.Serializer({fix_list_elements : true});
 	ser.setRules('script[type|language|src]');
 
-	DOM.setHTML('test', '<script>/* <![CDATA[ */\nvar hi = "hello";\n/* ]]> */</s'+'cript>');
-	equal(ser.serialize(DOM.get('test')), '<script>// <![CDATA[\nvar hi = \"hello\";\n// ]]></s'+'cript>');
+	DOM.setHTML('test', '<script>/* <![CDATA[ */\nvar hi = "hello";\n/* ]]> */</s' + 'cript>');
+	equal(ser.serialize(DOM.get('test')), '<script>// <![CDATA[\nvar hi = \"hello\";\n// ]]></s' + 'cript>');
 });
 
 test('Script with html comment and block comment around cdata', 1, function() {
 	var ser = new tinymce.dom.Serializer({fix_list_elements : true});
 	ser.setRules('script[type|language|src]');
 
-	DOM.setHTML('test', '<script><!-- /* <![CDATA[ */\nvar hi = "hello";\n/* ]]>*/--></s'+'cript>');
-	equal(ser.serialize(DOM.get('test')), '<script>// <![CDATA[\nvar hi = \"hello\";\n// ]]></s'+'cript>');
+	DOM.setHTML('test', '<script><!-- /* <![CDATA[ */\nvar hi = "hello";\n/* ]]>*/--></s' + 'cript>');
+	equal(ser.serialize(DOM.get('test')), '<script>// <![CDATA[\nvar hi = \"hello\";\n// ]]></s' + 'cript>');
 });
 
 test('Script with line comment and html comment', 1, function() {
 	var ser = new tinymce.dom.Serializer({fix_list_elements : true});
 	ser.setRules('script[type|language|src]');
 
-	DOM.setHTML('test', '<script>// <!--\nvar hi = "hello";\n// --></s'+'cript>');
-	equal(ser.serialize(DOM.get('test')), '<script>// <![CDATA[\nvar hi = \"hello\";\n// ]]></s'+'cript>');
+	DOM.setHTML('test', '<script>// <!--\nvar hi = "hello";\n// --></s' + 'cript>');
+	equal(ser.serialize(DOM.get('test')), '<script>// <![CDATA[\nvar hi = \"hello\";\n// ]]></s' + 'cript>');
 });
 
 test('Script with block comment around html comment', 1, function() {
 	var ser = new tinymce.dom.Serializer({fix_list_elements : true});
 	ser.setRules('script[type|language|src]');
 
-	DOM.setHTML('test', '<script>/* <!-- */\nvar hi = "hello";\n/*-->*/</s'+'cript>');
-	equal(ser.serialize(DOM.get('test')), '<script>// <![CDATA[\nvar hi = \"hello\";\n// ]]></s'+'cript>');
+	DOM.setHTML('test', '<script>/* <!-- */\nvar hi = "hello";\n/*-->*/</s' + 'cript>');
+	equal(ser.serialize(DOM.get('test')), '<script>// <![CDATA[\nvar hi = \"hello\";\n// ]]></s' + 'cript>');
 });
 
 test('Protected blocks', function() {
@@ -498,4 +498,16 @@ test('Restore tabindex', function() {
 
 	DOM.setHTML('test', '<span data-mce-tabindex="42"></span>');
 	equal(ser.serialize(DOM.get('test')), '<span tabindex="42"></span>');
+});
+
+test('Trailing BR (IE11)', function() {
+	var ser = new tinymce.dom.Serializer({
+		valid_elements: 'p,br'
+	});
+
+	DOM.setHTML('test', '<p>a</p><br><br>');
+	equal(ser.serialize(DOM.get('test')), '<p>a</p>');
+
+	DOM.setHTML('test', 'a<br><br>');
+	equal(ser.serialize(DOM.get('test')), 'a');
 });
