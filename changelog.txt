@@ -14,6 +14,7 @@ Version 4.2.6 (2015-09-xx)
 	Fixed bug where the inline toolbars wouldn't get properly hidden when blurring the editor instance.
 	Fixed bug where Edge would paste Chinese characters on some Windows 10 installations.
 	Fixed bug where IME would loose focus on IE 11 due to the double trailing br bug fix.
+	Fixed bug where the proxy url in imagetools was incorrect. Patch contributed by Wong Ho Wang.
 	Added commands ids mceEditImage, mceAchor and mceMedia to be avaiable from execCommand.
 Version 4.2.5 (2015-08-31)
 	Added fullscreen capability to embedded youtube and vimeo videos.
