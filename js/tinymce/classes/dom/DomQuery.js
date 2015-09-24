@@ -38,6 +38,7 @@ define("tinymce/dom/DomQuery", [
 	var doc = document, push = Array.prototype.push, slice = Array.prototype.slice;
 	var rquickExpr = /^(?:[^#<]*(<[\w\W]+>)[^>]*$|#([\w\-]*)$)/;
 	var Event = EventUtils.Event, undef;
+	var skipUniques = Tools.makeMap('children,contents,next,prev');
 
 	function isDefined(obj) {
 		return typeof obj !== 'undefined';
@@ -1366,7 +1367,9 @@ define("tinymce/dom/DomQuery", [
 
 			// If traversing on multiple elements we might get the same elements twice
 			if (this.length > 1) {
-				result = DomQuery.unique(result);
+				if (!skipUniques[name]) {
+					result = DomQuery.unique(result);
+				}
 
 				if (name.indexOf('parents') === 0) {
 					result = result.reverse();
