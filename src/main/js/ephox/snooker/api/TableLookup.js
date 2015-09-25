@@ -2,28 +2,21 @@ define(
   'ephox.snooker.api.TableLookup',
 
   [
-    'ephox.compass.Arr',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
     'ephox.snooker.api.Structs',
     'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Node',
     'ephox.sugar.api.SelectorFilter',
     'ephox.sugar.api.SelectorFind',
     'ephox.sugar.api.Traverse',
     'global!parseInt'
   ],
 
-  function (Arr, Fun, Option, Structs, Attr, Node, SelectorFilter, SelectorFind, Traverse, parseInt) {
-    var lookup = function (tags, element) {
-      return Arr.contains(tags, Node.name(element)) ? Option.some(element) : SelectorFind.ancestor(element, tags.join(','));
-    };
-
+  function (Fun, Structs, Attr, SelectorFilter, SelectorFind, Traverse, parseInt) {
     /*
      * Identify the optional cell that element represents.
      */
-    var cell = function (element) {
-      return lookup([ 'td', 'th' ], element);
+    var cell = function (element, isRoot) {
+      return SelectorFind.closest(element, 'td,th', isRoot);
     };
 
     var cells = function (ancestor) {
@@ -43,12 +36,12 @@ define(
       return SelectorFind.descendant(ancestor, 'th,td');
     };
 
-    var table = function (element) {
-      return lookup([ 'table' ], element);
+    var table = function (element, isRoot) {
+      return SelectorFind.closest(element, 'table', isRoot);
     };
 
-    var row = function (element) {
-      return lookup([ 'tr' ], element);
+    var row = function (element, isRoot) {
+      return SelectorFind.closest(element, 'tr', isRoot);
     };
 
     var rows = function (ancestor) {

@@ -15,8 +15,8 @@ define(
      * Identify the index of the current cell within all the cells, and
      * a list of the cells within its table.
      */
-    var detect = function (current) {
-      return TableLookup.table(current).bind(function (table) {
+    var detect = function (current, isRoot) {
+      return TableLookup.table(current, isRoot).bind(function (table) {
         var all = TableLookup.cells(table);
         var index = Arr.findIndex(all, function (x) {
           return Compare.eq(current, x);
@@ -33,8 +33,8 @@ define(
     /*
      * Identify the CellLocation of the cell when navigating forward from current
      */
-    var next = function (current) {
-      var detection = detect(current);
+    var next = function (current, isRoot) {
+      var detection = detect(current, isRoot);
       return detection.fold(function () {
         return CellLocation.none(current);
       }, function (info) {
@@ -45,8 +45,8 @@ define(
     /*
      * Identify the CellLocation of the cell when navigating back from current
      */
-    var prev = function (current) {
-      var detection = detect(current);
+    var prev = function (current, isRoot) {
+      var detection = detect(current, isRoot);
       return detection.fold(function () {
         return CellLocation.none();
       }, function (info) {
