@@ -821,27 +821,27 @@
 		editor.plugins.table.resizeBars.adjustHeight(table, 50, 0);
 
 		equal(editor.getContent(),
-			'<table border="1">' +
+			'<table border=\"1\">' +
 			'<tbody>' +
-			'<tr style="height: 60px;">' +
-			'<th style="width: 20px; height: 60px;">A0</th>' +
-			'<th style="width: 20px; height: 60px;">A1</th>' +
-			'<th style="width: 20px; height: 60px;">A2</th>' +
-			'<th style="width: 40px; height: 60px;">A3</th>' +
-			'<th style="width: 10px; height: 60px;">A4</th>' +
+			'<tr style=\"height: 70px;\">' +
+			'<th style=\"width: 20px; height: 70px;\">A0</th>' +
+			'<th style=\"width: 20px; height: 70px;\">A1</th>' +
+			'<th style=\"width: 20px; height: 70px;\">A2</th>' +
+			'<th style=\"width: 40px; height: 70px;\">A3</th>' +
+			'<th style=\"width: 10px; height: 70px;\">A4</th>' +
 			'</tr>' +
-			'<tr style="height: 10px;">' +
-			'<td style="width: 20px; height: 10px;">B0</td>' +
-			'<td style="width: 20px; height: 10px;">B1</td>' +
-			'<td style="width: 20px; height: 10px;">B2</td>' +
-			'<td style="width: 40px; height: 10px;">B3</td>' +
-			'<td style="width: 10px; height: 20px;" rowspan="2">B3</td>' +
+			'<tr style=\"height: 20px;\">' +
+			'<td style=\"width: 20px; height: 20px;\">B0</td>' +
+			'<td style=\"width: 20px; height: 20px;\">B1</td>' +
+			'<td style=\"width: 20px; height: 20px;\">B2</td>' +
+			'<td style=\"width: 40px; height: 20px;\">B3</td>' +
+			'<td style=\"width: 10px; height: 40px;\" rowspan=\"2\">B3</td>' +
 			'</tr>' +
-			'<tr style="height: 10px;">' +
-			'<td style="width: 20px; height: 10px;">C0</td>' +
-			'<td style="width: 20px; height: 10px;">C1</td>' +
-			'<td style="width: 20px; height: 10px;">C2</td>' +
-			'<td style="width: 40px; height: 10px;">C3</td>' +
+			'<tr style=\"height: 20px;\">' +
+			'<td style=\"width: 20px; height: 20px;\">C0</td>' +
+			'<td style=\"width: 20px; height: 20px;\">C1</td>' +
+			'<td style=\"width: 20px; height: 20px;\">C2</td>' +
+			'<td style=\"width: 40px; height: 20px;\">C3</td>' +
 			'</tr>' +
 			'</tbody>' +
 			'</table>');
@@ -853,27 +853,27 @@
 		editor.plugins.table.resizeBars.adjustHeight(table, 50, 1);
 
 		equal(editor.getContent(),
-			'<table border="1">' +
+			'<table border=\"1\">' +
 			'<tbody>' +
-			'<tr style="height: 10px;">' +
-			'<th style="width: 20px; height: 10px;">A0</th>' +
-			'<th style="width: 20px; height: 10px;">A1</th>' +
-			'<th style="width: 20px; height: 10px;">A2</th>' +
-			'<th style="width: 40px; height: 10px;">A3</th>' +
-			'<th style="width: 10px; height: 10px;">A4</th>' +
+			'<tr style=\"height: 20px;\">' +
+			'<th style=\"width: 20px; height: 20px;\">A0</th>' +
+			'<th style=\"width: 20px; height: 20px;\">A1</th>' +
+			'<th style=\"width: 20px; height: 20px;\">A2</th>' +
+			'<th style=\"width: 40px; height: 20px;\">A3</th>' +
+			'<th style=\"width: 10px; height: 20px;\">A4</th>' +
 			'</tr>' +
-			'<tr style="height: 60px;">' +
-			'<td style="width: 20px; height: 60px;">B0</td>' +
-			'<td style="width: 20px; height: 60px;">B1</td>' +
-			'<td style="width: 20px; height: 60px;">B2</td>' +
-			'<td style="width: 40px; height: 60px;">B3</td>' +
-			'<td style="width: 10px; height: 70px;" rowspan="2">B3</td>' +
+			'<tr style=\"height: 70px;\">' +
+			'<td style=\"width: 20px; height: 70px;\">B0</td>' +
+			'<td style=\"width: 20px; height: 70px;\">B1</td>' +
+			'<td style=\"width: 20px; height: 70px;\">B2</td>' +
+			'<td style=\"width: 40px; height: 70px;\">B3</td>' +
+			'<td style=\"width: 10px; height: 90px;\" rowspan=\"2\">B3</td>' +
 			'</tr>' +
-			'<tr style="height: 10px;">' +
-			'<td style="width: 20px; height: 10px;">C0</td>' +
-			'<td style="width: 20px; height: 10px;">C1</td>' +
-			'<td style="width: 20px; height: 10px;">C2</td>' +
-			'<td style="width: 40px; height: 10px;">C3</td>' +
+			'<tr style=\"height: 20px;\">' +
+			'<td style=\"width: 20px; height: 20px;\">C0</td>' +
+			'<td style=\"width: 20px; height: 20px;\">C1</td>' +
+			'<td style=\"width: 20px; height: 20px;\">C2</td>' +
+			'<td style=\"width: 40px; height: 20px;\">C3</td>' +
 			'</tr>' +
 			'</tbody>' +
 			'</table>');
@@ -885,27 +885,27 @@
 		editor.plugins.table.resizeBars.adjustHeight(table, 50, 2);
 
 		equal(editor.getContent(),
-			'<table border="1">' +
+			'<table border=\"1\">' +
 			'<tbody>' +
-			'<tr style="height: 10px;">' +
-			'<th style="width: 20px; height: 10px;">A0</th>' +
-			'<th style="width: 20px; height: 10px;">A1</th>' +
-			'<th style="width: 20px; height: 10px;">A2</th>' +
-			'<th style="width: 40px; height: 10px;">A3</th>' +
-			'<th style="width: 10px; height: 10px;">A4</th>' +
+			'<tr style=\"height: 20px;\">' +
+			'<th style=\"width: 20px; height: 20px;\">A0</th>' +
+			'<th style=\"width: 20px; height: 20px;\">A1</th>' +
+			'<th style=\"width: 20px; height: 20px;\">A2</th>' +
+			'<th style=\"width: 40px; height: 20px;\">A3</th>' +
+			'<th style=\"width: 10px; height: 20px;\">A4</th>' +
 			'</tr>' +
-			'<tr style="height: 10px;">' +
-			'<td style="width: 20px; height: 10px;">B0</td>' +
-			'<td style="width: 20px; height: 10px;">B1</td>' +
-			'<td style="width: 20px; height: 10px;">B2</td>' +
-			'<td style="width: 40px; height: 10px;">B3</td>' +
-			'<td style="width: 10px; height: 70px;" rowspan="2">B3</td>' +
+			'<tr style=\"height: 20px;\">' +
+			'<td style=\"width: 20px; height: 20px;\">B0</td>' +
+			'<td style=\"width: 20px; height: 20px;\">B1</td>' +
+			'<td style=\"width: 20px; height: 20px;\">B2</td>' +
+			'<td style=\"width: 40px; height: 20px;\">B3</td>' +
+			'<td style=\"width: 10px; height: 90px;\" rowspan=\"2\">B3</td>' +
 			'</tr>' +
-			'<tr style="height: 60px;">' +
-			'<td style="width: 20px; height: 60px;">C0</td>' +
-			'<td style="width: 20px; height: 60px;">C1</td>' +
-			'<td style="width: 20px; height: 60px;">C2</td>' +
-			'<td style="width: 40px; height: 60px;">C3</td>' +
+			'<tr style=\"height: 70px;\">' +
+			'<td style=\"width: 20px; height: 70px;\">C0</td>' +
+			'<td style=\"width: 20px; height: 70px;\">C1</td>' +
+			'<td style=\"width: 20px; height: 70px;\">C2</td>' +
+			'<td style=\"width: 40px; height: 70px;\">C3</td>' +
 			'</tr>' +
 			'</tbody>' +
 			'</table>');
