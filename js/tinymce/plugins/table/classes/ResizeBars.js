@@ -32,6 +32,9 @@ define("tinymce/tableplugin/ResizeBars", [
 			RESIZE_MINIMUM_WIDTH = 10,
 			RESIZE_MINIMUM_HEIGHT = 10;
 
+		var percentageBasedSizeRegex = new RegExp(/(\d+(\.\d+)?%)/),
+			pixelBasedSizeRegex = new RegExp(/px|em/);
+
 		var delayDrop, dragging, blockerElement, dragBar, lastX, lastY, hoverTable,
 			objectResizeTarget, objectResizeStartWidth, objectResizeStartHeight;
 
@@ -680,11 +683,11 @@ define("tinymce/tableplugin/ResizeBars", [
 		}
 
 		function isPercentageBasedSize(size) {
-			return size.match(/(\d+(\.\d+)?%)/);
+			return percentageBasedSizeRegex.test(size);
 		}
 
-		function isPixelBasedSize(width) {
-			return width.match(/px|em/);
+		function isPixelBasedSize(size) {
+			return pixelBasedSizeRegex.test(size);
 		}
 
 		// Adjust the width of the column of table at index, with delta.
@@ -954,6 +957,8 @@ define("tinymce/tableplugin/ResizeBars", [
 			getTableDetails: getTableDetails,
 			getWidths: getWidths,
 			getPixelHeights: getPixelHeights,
+			isPercentageBasedSize: isPercentageBasedSize,
+			isPixelBasedSize: isPixelBasedSize,
 			recalculateWidths: recalculateWidths,
 			recalculateCellHeights: recalculateCellHeights,
 			recalculateRowHeights: recalculateRowHeights

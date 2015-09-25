@@ -617,7 +617,29 @@
 	'B3</td></tr><tr><td style="height: 20px; width: 20px;" data-mce-style="height: 20px; width: 20px;">C0</td><td style="height: 20px; width: 20px;" data-mce-style="height: 20px; width: 20px;">C1</td><td style="height: 20px; width: 20px;" data-mce-style="height: 20px; width: 20px;">C2</td><td style="height: 20px; width: 40px;" ' +
 	'data-mce-style="height: 20px; width: 40px;">C3</td></tr></tbody></table>';
 
-	test("Get pixel widths/heights", function() {
+	var testResizeTable3 = '<div style=\"display: block; width: 400px;\"><table style=\"border-collapse: collapse; border: 1px solid black;\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tbody><tr><td rowspan=\"2\" width=\"25%\">&nbsp;a</td><td width=\"25%\">&nbsp;b</td><td width=\"25%\">&nbsp;</td>' +
+	'<td width=\"25%\">&nbsp;c</td></tr><tr><td width=\"25%\">&nbsp;d</td><td width=\"25%\">&nbsp;</td><td rowspan=\"2\" width=\"25%\">&nbsp;e</td></tr><tr><td width=\"25%\">&nbsp;f</td><td width=\"25%\">&nbsp;g</td><td width=\"25%\">&nbsp;</td></tr><tr><td width=\"25%\">&nbsp;h</td><td width=\"25%\">&nbsp;i</td><td width=\"25%\">&nbsp;</td><td width=\"25%\">j&nbsp;</td></tr></tbody></table></div>';
+
+	test("Is Pixel/Percentage Based Width", function() {
+		var pixelWidths = ['125px', '200px', '300em'];
+		var percentageWidths = ['25%', '30%', '100%'];
+		var i, pixelBasedSize, percentBasedSize;
+
+		for (i = 0; i < pixelWidths.length; i++) {
+			pixelBasedSize = editor.plugins.table.resizeBars.isPixelBasedSize(pixelWidths[i]);
+			deepEqual(pixelBasedSize, true);
+			percentBasedSize = editor.plugins.table.resizeBars.isPercentageBasedSize(pixelWidths[i]);
+			deepEqual(percentBasedSize, false);
+		}
+		for (i = 0; i < percentageWidths.length; i++) {
+			pixelBasedSize = editor.plugins.table.resizeBars.isPixelBasedSize(percentageWidths[i]);
+			deepEqual(pixelBasedSize, false);
+			percentBasedSize = editor.plugins.table.resizeBars.isPercentageBasedSize(percentageWidths[i]);
+			deepEqual(percentBasedSize, true);
+		}
+	});
+
+	test("Get widths/heights", function() {
 		editor.setContent(testResizeTable1);
 
 		var table = editor.dom.select('table')[0];
@@ -625,7 +647,7 @@
 		var tableGrid  = editor.plugins.table.resizeBars.getTableGrid(details);
 
 		deepEqual(
-			editor.plugins.table.resizeBars.getWidths(tableGrid),
+			editor.plugins.table.resizeBars.getWidths(tableGrid, false, table),
 			[100, 100, 100, 100]
 		);
 
@@ -641,13 +663,24 @@
 		tableGrid  = editor.plugins.table.resizeBars.getTableGrid(details);
 
 		deepEqual(
-			editor.plugins.table.resizeBars.getWidths(tableGrid),
+			editor.plugins.table.resizeBars.getWidths(tableGrid, false, table),
 			[20, 20, 20, 40, 10]
 		);
 
 		deepEqual(
 			editor.plugins.table.resizeBars.getPixelHeights(tableGrid),
 			[20, 20, 20]
+		);
+
+		editor.setContent(testResizeTable3);
+
+		table = editor.dom.select('table')[0];
+		details = editor.plugins.table.resizeBars.getTableDetails(table);
+		tableGrid  = editor.plugins.table.resizeBars.getTableGrid(details);
+
+		deepEqual(
+			editor.plugins.table.resizeBars.getWidths(tableGrid, true, table),
+			[25, 25, 25, 25]
 		);
 	});
 
@@ -674,21 +707,29 @@
 	});
 
 	test("Determine deltas", function() {
-		var deltas = editor.plugins.table.resizeBars.determineDeltas([100, 100, 100, 100], 0, 50, 10);
+		var deltas = editor.plugins.table.resizeBars.determineDeltas([100, 100, 100, 100], 0, 50, 10, false);
 
 		deepEqual(deltas, [50, -50, 0, 0]);
 
-		deltas = editor.plugins.table.resizeBars.determineDeltas([100, 100, 100, 100], 1, 50, 10);
+		deltas = editor.plugins.table.resizeBars.determineDeltas([100, 100, 100, 100], 1, 50, 10, false);
 
 		deepEqual(deltas, [0, 50, -50, 0]);
 
-		deltas = editor.plugins.table.resizeBars.determineDeltas([100, 100, 100, 100], 2, 50, 10);
+		deltas = editor.plugins.table.resizeBars.determineDeltas([100, 100, 100, 100], 2, 50, 10, false);
 
 		deepEqual(deltas, [0, 0, 50, -50]);
 
-		deltas = editor.plugins.table.resizeBars.determineDeltas([100, 100, 100, 100], 3, 50, 10);
+		deltas = editor.plugins.table.resizeBars.determineDeltas([100, 100, 100, 100], 3, 50, 10, false);
 
 		deepEqual(deltas, [0, 0, 0, 50]);
+
+		deltas = editor.plugins.table.resizeBars.determineDeltas([50], 0, 5, 10, true);
+
+		deepEqual(deltas, [50]); // 50 + 50 = 100, one column, percent case
+
+		deltas = editor.plugins.table.resizeBars.determineDeltas([25, 25, 25, 25], 1, 5, 10, true);
+
+		deepEqual(deltas, [0, 5, -5, 0]);
 	});
 
 	test("Adjust width", function() {
