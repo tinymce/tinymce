@@ -38,7 +38,7 @@ tinymce.PluginManager.add('anchor', function(editor) {
 		stateSelector: 'a:not([href])'
 	});
 
-	editor.addMenuItem('mceAnchor', {
+	editor.addMenuItem('anchor', {
 		icon: 'anchor',
 		text: 'Anchor',
 		context: 'insert',
