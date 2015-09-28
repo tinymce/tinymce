@@ -411,8 +411,49 @@ define("tinymce/util/Quirks", [
 			 * With this patch: <p><b><i>|<br></i></b></p>
 			 */
 			function handleLastBlockCharacterDelete(isForward, rng) {
-				var path, blockElm, newBlockElm, clonedBlockElm,
-					container, offset, br, currentFormatNodes, textBlockElements;
+				var path, blockElm, newBlockElm, clonedBlockElm, sibling,
+					container, offset, br, currentFormatNodes;
+
+				function cloneTextBlockWithFormats(blockElm, node) {
+					currentFormatNodes = $(node).parents().filter(function(idx, node) {
+						return !!editor.schema.getTextInlineElements()[node.nodeName];
+					});
+
+					newBlockElm = blockElm.cloneNode(false);
+
+					currentFormatNodes = Tools.map(currentFormatNodes, function(formatNode) {
+						formatNode = formatNode.cloneNode(false);
+
+						if (newBlockElm.hasChildNodes()) {
+							formatNode.appendChild(newBlockElm.firstChild);
+							newBlockElm.appendChild(formatNode);
+						} else {
+							newBlockElm.appendChild(formatNode);
+						}
+
+						newBlockElm.appendChild(formatNode);
+
+						return formatNode;
+					});
+
+					if (currentFormatNodes.length) {
+						br = dom.create('br');
+						currentFormatNodes[0].appendChild(br);
+						dom.replace(newBlockElm, blockElm);
+
+						rng.setStartBefore(br);
+						rng.setEndBefore(br);
+						editor.selection.setRng(rng);
+
+						return br;
+					}
+
+					return null;
+				}
+
+				function isTextBlock(node) {
+					return node && editor.schema.getTextBlockElements()[node.tagName];
+				}
 
 				if (!rng.collapsed) {
 					return;
@@ -420,63 +461,50 @@ define("tinymce/util/Quirks", [
 
 				container = rng.startContainer;
 				offset = rng.startOffset;
-				if (container.nodeType == 3) {
-					blockElm = dom.getParent(container, dom.isBlock);
-					textBlockElements = editor.schema.getTextBlockElements();
+				blockElm = dom.getParent(container, dom.isBlock);
+				if (!isTextBlock(blockElm)) {
+					return;
+				}
 
-					if (blockElm && textBlockElements[blockElm.tagName]) {
-						path = NodePath.create(blockElm, container);
-						clonedBlockElm = blockElm.cloneNode(true);
-						container = NodePath.resolve(clonedBlockElm, path);
+				if (container.nodeType == 1) {
+					container = container.childNodes[offset];
+					if (container && container.tagName != 'BR') {
+						return;
+					}
 
-						if (isForward) {
-							if (offset >= container.data.length) {
-								return;
-							}
+					if (isForward) {
+						sibling = blockElm.nextSibling;
+					} else {
+						sibling = blockElm.previousSibling;
+					}
 
-							container.deleteData(offset, 1);
-						} else {
-							if (offset <= 0) {
-								return;
-							}
+					if (dom.isEmpty(blockElm) && isTextBlock(sibling) && dom.isEmpty(sibling)) {
+						if (cloneTextBlockWithFormats(blockElm, container)) {
+							dom.remove(sibling);
+							return true;
+						}
+					}
+				} else if (container.nodeType == 3) {
+					path = NodePath.create(blockElm, container);
+					clonedBlockElm = blockElm.cloneNode(true);
+					container = NodePath.resolve(clonedBlockElm, path);
 
-							container.deleteData(offset - 1, 1);
+					if (isForward) {
+						if (offset >= container.data.length) {
+							return;
 						}
 
-						if (dom.isEmpty(clonedBlockElm)) {
-							currentFormatNodes = $(container).parents().filter(function(idx, node) {
-								return !!editor.schema.getTextInlineElements()[node.nodeName];
-							});
-
-							newBlockElm = blockElm.cloneNode(false);
-
-							currentFormatNodes = Tools.map(currentFormatNodes, function(formatNode) {
-								formatNode = formatNode.cloneNode(false);
-
-								if (newBlockElm.hasChildNodes()) {
-									formatNode.appendChild(newBlockElm.firstChild);
-									newBlockElm.appendChild(formatNode);
-								} else {
-									newBlockElm.appendChild(formatNode);
-								}
-
-								newBlockElm.appendChild(formatNode);
-
-								return formatNode;
-							});
-
-							if (currentFormatNodes.length) {
-								br = dom.create('br');
-								currentFormatNodes[0].appendChild(br);
-								dom.replace(newBlockElm, blockElm);
-
-								rng.setStartBefore(br);
-								rng.setEndBefore(br);
-								editor.selection.setRng(rng);
-
-								return true;
-							}
+						container.deleteData(offset, 1);
+					} else {
+						if (offset <= 0) {
+							return;
 						}
+
+						container.deleteData(offset - 1, 1);
+					}
+
+					if (dom.isEmpty(clonedBlockElm)) {
+						return cloneTextBlockWithFormats(blockElm, container);
 					}
 				}
 			}
