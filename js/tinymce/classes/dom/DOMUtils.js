@@ -98,6 +98,27 @@ define("tinymce/dom/DOMUtils", [
 		$elm.attr('data-mce-style', value);
 	}
 
+	function nodeIndex(node, normalized) {
+		var idx = 0, lastNodeType, nodeType;
+
+		if (node) {
+			for (lastNodeType = node.nodeType, node = node.previousSibling; node; node = node.previousSibling) {
+				nodeType = node.nodeType;
+
+				// Normalize text nodes
+				if (normalized && nodeType == 3) {
+					if (nodeType == lastNodeType || !node.nodeValue.length) {
+						continue;
+					}
+				}
+				idx++;
+				lastNodeType = nodeType;
+			}
+		}
+
+		return idx;
+	}
+
 	/**
 	 * Constructs a new DOMUtils instance. Consult the Wiki for more details on settings etc for this class.
 	 *
@@ -1514,26 +1535,7 @@ define("tinymce/dom/DOMUtils", [
 		 * @param {boolean} normalized Optional true/false state if the index is what it would be after a normalization.
 		 * @return {Number} Index of the specified node.
 		 */
-		nodeIndex: function(node, normalized) {
-			var idx = 0, lastNodeType, nodeType;
-
-			if (node) {
-				for (lastNodeType = node.nodeType, node = node.previousSibling; node; node = node.previousSibling) {
-					nodeType = node.nodeType;
-
-					// Normalize text nodes
-					if (normalized && nodeType == 3) {
-						if (nodeType == lastNodeType || !node.nodeValue.length) {
-							continue;
-						}
-					}
-					idx++;
-					lastNodeType = nodeType;
-				}
-			}
-
-			return idx;
-		},
+		nodeIndex: nodeIndex,
 
 		/**
 		 * Splits an element into two new elements and places the specified split
@@ -1842,6 +1844,7 @@ define("tinymce/dom/DOMUtils", [
 	 * tinymce.DOM.addClass('someid', 'someclass');
 	 */
 	DOMUtils.DOM = new DOMUtils(document);
+	DOMUtils.nodeIndex = nodeIndex;
 
 	return DOMUtils;
 });
