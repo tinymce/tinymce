@@ -298,6 +298,8 @@ define("tinymce/imagetoolsplugin/Plugin", [
 					});
 				}).then(function(blob) {
 					updateSelectedImage(blob, true);
+				}, function() {
+					// Close dialog
 				});
 			}
 		}
