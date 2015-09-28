@@ -20,11 +20,12 @@ define("tinymce/util/Quirks", [
 	"tinymce/util/VK",
 	"tinymce/dom/RangeUtils",
 	"tinymce/dom/TreeWalker",
+	"tinymce/dom/NodePath",
 	"tinymce/html/Node",
 	"tinymce/html/Entities",
 	"tinymce/Env",
 	"tinymce/util/Tools"
-], function(VK, RangeUtils, TreeWalker, Node, Entities, Env, Tools) {
+], function(VK, RangeUtils, TreeWalker, NodePath, Node, Entities, Env, Tools) {
 	return function(editor) {
 		var each = Tools.each, $ = editor.$;
 		var BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection = editor.selection,
@@ -403,6 +404,83 @@ define("tinymce/util/Quirks", [
 				}
 			}
 
+			/**
+			 * This retains the formatting if the last character is to be deleted.
+			 *
+			 * Backspace on this: <p><b><i>a|</i></b></p> would become <p>|</p> in WebKit.
+			 * With this patch: <p><b><i>|<br></i></b></p>
+			 */
+			function handleLastBlockCharacterDelete(isForward, rng) {
+				var path, blockElm, newBlockElm, clonedBlockElm,
+					container, offset, br, currentFormatNodes, textBlockElements;
+
+				if (!rng.collapsed) {
+					return;
+				}
+
+				container = rng.startContainer;
+				offset = rng.startOffset;
+				if (container.nodeType == 3) {
+					blockElm = dom.getParent(container, dom.isBlock);
+					textBlockElements = editor.schema.getTextBlockElements();
+
+					if (blockElm && textBlockElements[blockElm.tagName]) {
+						path = NodePath.create(blockElm, container);
+						clonedBlockElm = blockElm.cloneNode(true);
+						container = NodePath.resolve(clonedBlockElm, path);
+
+						if (isForward) {
+							if (offset >= container.data.length) {
+								return;
+							}
+
+							container.deleteData(offset, 1);
+						} else {
+							if (offset <= 0) {
+								return;
+							}
+
+							container.deleteData(offset - 1, 1);
+						}
+
+						if (dom.isEmpty(clonedBlockElm)) {
+							currentFormatNodes = $(container).parents().filter(function(idx, node) {
+								return !!editor.schema.getTextInlineElements()[node.nodeName];
+							});
+
+							newBlockElm = blockElm.cloneNode(false);
+
+							currentFormatNodes = Tools.map(currentFormatNodes, function(formatNode) {
+								formatNode = formatNode.cloneNode(false);
+
+								if (newBlockElm.hasChildNodes()) {
+									formatNode.appendChild(newBlockElm.firstChild);
+									newBlockElm.appendChild(formatNode);
+								} else {
+									newBlockElm.appendChild(formatNode);
+								}
+
+								newBlockElm.appendChild(formatNode);
+
+								return formatNode;
+							});
+
+							if (currentFormatNodes.length) {
+								br = dom.create('br');
+								currentFormatNodes[0].appendChild(br);
+								dom.replace(newBlockElm, blockElm);
+
+								rng.setStartBefore(br);
+								rng.setEndBefore(br);
+								editor.selection.setRng(rng);
+
+								return true;
+							}
+						}
+					}
+				}
+			}
+
 			function customDelete(isForward) {
 				var mutationObserver, rng, caretElement;
 
@@ -489,6 +567,11 @@ define("tinymce/util/Quirks", [
 
 					// Shift+Delete is cut
 					if (isForward && e.shiftKey) {
+						return;
+					}
+
+					if (handleLastBlockCharacterDelete(isForward, rng)) {
+						e.preventDefault();
 						return;
 					}
 

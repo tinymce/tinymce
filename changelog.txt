@@ -1,3 +1,5 @@
+Version 4.2.7 (2015-10-xx)
+	Fixed bug where backspace/delete would remove all formats on the last paragraph character in WebKit/Blink.
 Version 4.2.6 (2015-09-28)
 	Added capability to set request headers when using XHRs.
 	Added capability to upload local images automatically default delay is set to 30 seconds after editing images.

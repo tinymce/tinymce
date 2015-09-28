@@ -267,6 +267,22 @@ if (tinymce.isWebKit) {
 		equal(Utils.cleanHtml(editor.getBody().innerHTML), '<p><i>1<b>a</b>3</i></p>');
 		equal(editor.selection.getStart().nodeName, 'B');
 	});
+
+	test('Delete last character in formats', function() {
+		editor.getBody().innerHTML = '<p><b><i>b</i></b></p>';
+		Utils.setSelection('i', 1);
+		editor.fire("keydown", {keyCode: 8});
+		equal(Utils.cleanHtml(editor.getBody().innerHTML), '<p><b><i><br></i></b></p>');
+		equal(editor.selection.getStart(true).nodeName, 'I');
+	});
+
+	test('ForwardDelete last character in formats', function() {
+		editor.getBody().innerHTML = '<p><b><i>b</i></b></p>';
+		Utils.setSelection('i', 0);
+		editor.fire("keydown", {keyCode: 46});
+		equal(Utils.cleanHtml(editor.getBody().innerHTML), '<p><b><i><br></i></b></p>');
+		equal(editor.selection.getStart(true).nodeName, 'I');
+	});
 } else {
 	test("Skipped since the browser isn't WebKit", function() {
 		ok(true, "Skipped");
