@@ -1,4 +1,4 @@
-Version 4.2.6 (2015-09-xx)
+Version 4.2.6 (2015-09-28)
 	Added capability to set request headers when using XHRs.
 	Added capability to upload local images automatically default delay is set to 30 seconds after editing images.
 	Added commands ids mceEditImage, mceAchor and mceMedia to be avaiable from execCommand.
