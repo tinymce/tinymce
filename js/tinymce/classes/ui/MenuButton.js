@@ -181,7 +181,9 @@ define("tinymce/ui/MenuButton", [
 				'<div id="' + id + '" class="' + self.classes + '" tabindex="-1" aria-labelledby="' + id + '">' +
 					'<button id="' + id + '-open" role="presentation" type="button" tabindex="-1">' +
 						(icon ? '<i class="' + icon + '"' + image + '></i>' : '') +
+						(self.settings.fixedWidth ? '<span>' : '') +
 						(text ? (icon ? '\u00a0' : '') + self.encode(text) : '') +
+						(self.settings.fixedWidth ? '</span>' : '') +
 						' <i class="' + prefix + 'caret"></i>' +
 					'</button>' +
 				'</div>'
