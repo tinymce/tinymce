@@ -229,6 +229,23 @@ define("tinymce/ui/FormatControls", [
 
 		formatMenu = createFormatMenu();
 
+		function initOnPostRender() {
+			var self = this;
+
+			// TODO: Fix this
+			if (editor.formatter) {
+				editor.formatter.formatChanged(name, function(state) {
+					self.active(state);
+				});
+			} else {
+				editor.on('init', function() {
+					editor.formatter.formatChanged(name, function(state) {
+						self.active(state);
+					});
+				});
+			}
+		}
+
 		// Simple format controls <control/format>:<UI text>
 		each({
 			bold: 'Bold',
@@ -241,20 +258,7 @@ define("tinymce/ui/FormatControls", [
 			editor.addButton(name, {
 				tooltip: text,
 				onPostRender: function() {
-					var self = this;
-
-					// TODO: Fix this
-					if (editor.formatter) {
-						editor.formatter.formatChanged(name, function(state) {
-							self.active(state);
-						});
-					} else {
-						editor.on('init', function() {
-							editor.formatter.formatChanged(name, function(state) {
-								self.active(state);
-							});
-						});
-					}
+					initOnPostRender();
 				},
 				onclick: function() {
 					toggleFormat(name);
@@ -298,20 +302,7 @@ define("tinymce/ui/FormatControls", [
 				tooltip: item[0],
 				cmd: item[1],
 				onPostRender: function() {
-					var self = this;
-
-					// TODO: Fix this
-					if (editor.formatter) {
-						editor.formatter.formatChanged(name, function(state) {
-							self.active(state);
-						});
-					} else {
-						editor.on('init', function() {
-							editor.formatter.formatChanged(name, function(state) {
-								self.active(state);
-							});
-						});
-					}
+					initOnPostRender();
 				}
 			});
 		});
