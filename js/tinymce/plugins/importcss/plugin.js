@@ -13,6 +13,24 @@
 tinymce.PluginManager.add('importcss', function(editor) {
 	var self = this, each = tinymce.each;
 
+	function isSkinContentCss(href) {
+		var settings = editor.settings, skin = settings.skin !== false ? settings.skin || 'lightgray' : false;
+
+		if (skin) {
+			var skinUrl = settings.skin_url;
+
+			if (skinUrl) {
+				skinUrl = editor.documentBaseURI.toAbsolute(skinUrl);
+			} else {
+				skinUrl = tinymce.baseURL + '/skins/' + skin;
+			}
+
+			return href === skinUrl + '/content' + (editor.inline ? '.inline' : '') + '.min.css';
+		}
+
+		return false;
+	}
+
 	function compileFilter(filter) {
 		if (typeof filter == "string") {
 			return function(value) {
@@ -33,7 +51,7 @@ tinymce.PluginManager.add('importcss', function(editor) {
 		function append(styleSheet, imported) {
 			var href = styleSheet.href, rules;
 
-			if (!href || !fileFilter(href, imported)) {
+			if (!href || !fileFilter(href, imported) || isSkinContentCss(href)) {
 				return;
 			}
 
