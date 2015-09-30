@@ -7,6 +7,7 @@ module("tinymce.plugins.Media", {
 			add_unload_trigger: false,
 			skin: false,
 			plugins: 'media',
+			live_embeds: false,
 			document_base_url: '/tinymce/tinymce/trunk/tests/',
 			extended_valid_elements: 'script[src|type]',
 			media_scripts: [
