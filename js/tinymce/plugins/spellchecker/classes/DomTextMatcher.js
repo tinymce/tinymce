@@ -17,6 +17,10 @@
  * @private
  */
 define("tinymce/spellcheckerplugin/DomTextMatcher", [], function() {
+	function isContentEditableFalse(node) {
+		return node && node.nodeType == 1 && node.contentEditable === "false";
+	}
+
 	// Based on work developed by: James Padolsey http://james.padolsey.com
 	// released under UNLICENSE that is compatible with LGPL
 	// TODO: Handle contentEditable edgecase:
@@ -53,6 +57,10 @@ define("tinymce/spellcheckerplugin/DomTextMatcher", [], function() {
 				return '';
 			}
 
+			if (isContentEditableFalse(node)) {
+				return '\n';
+			}
+
 			txt = '';
 
 			if (blockElementsMap[node.nodeName] || shortEndedElementsMap[node.nodeName]) {
@@ -81,7 +89,7 @@ define("tinymce/spellcheckerplugin/DomTextMatcher", [], function() {
 			matchLocation = matches.shift();
 
 			out: while (true) {
-				if (blockElementsMap[curNode.nodeName] || shortEndedElementsMap[curNode.nodeName]) {
+				if (blockElementsMap[curNode.nodeName] || shortEndedElementsMap[curNode.nodeName] || isContentEditableFalse(curNode)) {
 					atIndex++;
 				}
 
@@ -129,9 +137,11 @@ define("tinymce/spellcheckerplugin/DomTextMatcher", [], function() {
 						break; // no more matches
 					}
 				} else if ((!hiddenTextElementsMap[curNode.nodeName] || blockElementsMap[curNode.nodeName]) && curNode.firstChild) {
-					// Move down
-					curNode = curNode.firstChild;
-					continue;
+					if (!isContentEditableFalse(curNode)) {
+						// Move down
+						curNode = curNode.firstChild;
+						continue;
+					}
 				} else if (curNode.nextSibling) {
 					// Move forward:
 					curNode = curNode.nextSibling;
