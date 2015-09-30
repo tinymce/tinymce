@@ -70,7 +70,7 @@ define("tinymce/ui/ListBox", [
 				self.state.set('menu', values);
 			}
 
-			self.state.set('text', settings.text || selectedText || values[0].text);
+			self.state.set('text', settings.text || selectedText);
 
 			self.classes.add('listbox');
 
