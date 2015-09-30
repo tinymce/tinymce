@@ -1628,7 +1628,8 @@ define("tinymce/dom/DOMUtils", [
 
 				// Insert middle chunk
 				if (replacementElm) {
-					pa.replaceChild(replacementElm, splitElm);
+					pa.insertBefore(replacementElm, parentElm);
+					//pa.replaceChild(replacementElm, splitElm);
 				} else {
 					pa.insertBefore(splitElm, parentElm);
 				}
