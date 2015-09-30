@@ -23,15 +23,14 @@ define("tinymce/caret/FakeCaret", [
 	"tinymce/geom/ClientRect",
 	"tinymce/util/Delay"
 ], function(CaretContainer, CaretPosition, NodeType, RangeUtils, $, ClientRect, Delay) {
-	var isBlock = NodeType.matchStyleValues('display', 'block'),
-		isContentEditableFalse = NodeType.isContentEditableFalse;
+	var isContentEditableFalse = NodeType.isContentEditableFalse;
 
-	return function(rootNode) {
+	return function(rootNode, isBlock) {
 		var cursorInterval, $lastVisualCaret, caretContainerNode;
 
 		function getAbsoluteClientRect(node, before) {
 			var clientRect = ClientRect.collapse(node.getBoundingClientRect(), before),
-				docElm, scrollX, scrollY;
+				docElm, scrollX, scrollY, margin;
 
 			scrollX = rootNode.scrollLeft;
 			scrollY = rootNode.scrollTop;
@@ -47,6 +46,17 @@ define("tinymce/caret/FakeCaret", [
 			clientRect.top += scrollY;
 			clientRect.bottom += scrollY;
 			clientRect.width = 1;
+
+			margin = node.offsetWidth - node.clientWidth;
+
+			if (margin > 0) {
+				if (before) {
+					margin *= -1;
+				}
+
+				clientRect.left += margin;
+				clientRect.right += margin;
+			}
 
 			return clientRect;
 		}
