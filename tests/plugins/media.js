@@ -53,7 +53,7 @@ test('Default media dialog on empty editor', function() {
 
 	equal(
 		editor.getContent(),
-		'<p><iframe src=\"//www.youtube.com/embed/dQw4w9WgXcQ\" width=\"425\" height=\"350\" allowfullscreen=\"allowfullscreen\"></iframe></p>'
+		'<p><iframe src=\"//www.youtube.com/embed/dQw4w9WgXcQ\" width=\"560\" height=\"314\" allowfullscreen=\"allowfullscreen\"></iframe></p>'
 	);
 });
 
@@ -165,8 +165,8 @@ test("Resize complex object", function() {
 
 test("Media script elements", function() {
 	editor.setContent(
-		'<script src="http://media1.tinymce.com/123456"></sc'+'ript>' +
-		'<script src="http://media2.tinymce.com/123456"></sc'+'ript>'
+		'<script src="http://media1.tinymce.com/123456"></sc' + 'ript>' +
+		'<script src="http://media2.tinymce.com/123456"></sc' + 'ript>'
 	);
 
 	equal(editor.getBody().getElementsByTagName('img')[0].className, 'mce-object mce-object-script');
@@ -178,8 +178,8 @@ test("Media script elements", function() {
 
 	equal(editor.getContent(),
 		'<p>\n' +
-			'<script src="http://media1.tinymce.com/123456" type="text/javascript"></sc'+'ript>\n' +
-			'<script src="http://media2.tinymce.com/123456" type="text/javascript"></sc'+'ript>\n' +
+			'<script src="http://media1.tinymce.com/123456" type="text/javascript"></sc' + 'ript>\n' +
+			'<script src="http://media2.tinymce.com/123456" type="text/javascript"></sc' + 'ript>\n' +
 		'</p>'
 	);
 });
