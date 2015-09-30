@@ -23,6 +23,25 @@
 	background: #D5D5D5 url(img/object.gif) no-repeat center;
 }
 
+.mce-preview-object {
+	display: inline-block;
+	position: relative;
+	margin: 0 2px 0 2px;
+	line-height: 0;
+	border: 1px solid gray;
+}
+
+.mce-preview-object .mce-shim {
+	position: absolute;
+	top: 0; left: 0;
+	width: 100%; height: 100%;
+	background: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);
+}
+
+.mce-preview-object[data-mce-selected] .mce-shim {
+	display: none;
+}
+
 .mce-pagebreak {
 	cursor: default;
 	display: block;
@@ -97,4 +116,12 @@ td.mce-item-selected, th.mce-item-selected {
 
 .mce-edit-focus {
 	outline: 1px dotted #333;
+}
+
+.mce-content-body *[contentEditable]:focus {
+	outline: 1px dashed #2d8ac7;
+}
+
+.mce-content-body *[contentEditable=false][data-mce-selected] {
+	outline: 2px solid #2d8ac7;
 }
