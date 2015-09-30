@@ -718,6 +718,10 @@ define("tinymce/EditorCommands", [
 					}
 
 					each(selection.getSelectedBlocks(), function(element) {
+						if (dom.getContentEditable(element) === "false") {
+							return;
+						}
+
 						if (element.nodeName != "LI") {
 							var indentStyleName = editor.getParam('indent_use_margin', false) ? 'margin' : 'padding';
 
