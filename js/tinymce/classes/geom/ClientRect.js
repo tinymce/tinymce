@@ -56,12 +56,33 @@ define("tinymce/geom/ClientRect", [], function() {
 		);
 	}
 
+	function isValidOverflow(overflowY, clientRect1, clientRect2) {
+		return overflowY >= 0 && overflowY <= Math.min(clientRect1.height, clientRect2.height) / 2;
+
+	}
+
 	function isAbove(clientRect1, clientRect2) {
-		return clientRect1.bottom <= (clientRect2.top + clientRect2.bottom) / 2;
+		if (clientRect1.bottom < clientRect2.top) {
+			return true;
+		}
+
+		if (clientRect1.top > clientRect2.bottom) {
+			return false;
+		}
+
+		return isValidOverflow(clientRect2.top - clientRect1.bottom, clientRect1, clientRect2);
 	}
 
 	function isBelow(clientRect1, clientRect2) {
-		return clientRect1.top >= (clientRect2.top + clientRect2.bottom) / 2;
+		if (clientRect1.top > clientRect2.bottom) {
+			return true;
+		}
+
+		if (clientRect1.bottom < clientRect2.top) {
+			return false;
+		}
+
+		return isValidOverflow(clientRect2.bottom - clientRect1.top, clientRect1, clientRect2);
 	}
 
 	function isLeft(clientRect1, clientRect2) {

@@ -25,28 +25,30 @@ ModuleLoader.require([
 	});
 
 	test('isAbove', function() {
-		equal(ClientRect.isAbove(rect(10, 70, 1, 40), rect(10, 40, 1, 20)), false);
-		equal(ClientRect.isAbove(rect(10, 40, 1, 20), rect(10, 70, 1, 40)), true);
+		equal(ClientRect.isAbove(rect(10, 70, 10, 40), rect(20, 40, 10, 20)), false);
+		equal(ClientRect.isAbove(rect(10, 40, 10, 20), rect(20, 70, 10, 40)), true);
 	});
 
 	test('isAbove intersects', function() {
-		equal(ClientRect.isAbove(rect(10, 10, 1, 20), rect(10, 30, 1, 20)), true);
-		equal(ClientRect.isAbove(rect(10, 10, 1, 25), rect(10, 30, 1, 20)), true);
-		equal(ClientRect.isAbove(rect(10, 10, 1, 20), rect(10, 30, 1, 20)), true);
-		equal(ClientRect.isAbove(rect(10, 25, 1, 20), rect(10, 30, 1, 20)), false);
+		equal(ClientRect.isAbove(rect(10, 20, 10, 10), rect(20, 20, 10, 10)), false);
+		equal(ClientRect.isAbove(rect(10, 20, 10, 40), rect(20, 20, 10, 10)), false);
+		equal(ClientRect.isAbove(rect(10, 20, 10, 10), rect(20, 20, 10, 40)), false);
+		equal(ClientRect.isAbove(rect(10, 10, 10, 10), rect(20, 20, 10, 10)), true);
+		equal(ClientRect.isAbove(rect(10, 15, 10, 10), rect(20, 20, 10, 10)), false);
 	});
 
 	test('isBelow', function() {
-		equal(ClientRect.isBelow(rect(10, 70, 1, 40), rect(10, 40, 1, 20)), true);
-		equal(ClientRect.isBelow(rect(10, 40, 1, 20), rect(10, 70, 1, 40)), false);
+		equal(ClientRect.isBelow(rect(10, 70, 10, 40), rect(20, 40, 10, 20)), true);
+		equal(ClientRect.isBelow(rect(10, 40, 10, 20), rect(20, 70, 10, 40)), false);
 	});
 
 	test('isBelow intersects', function() {
-		equal(ClientRect.isBelow(rect(10, 30, 1, 20), rect(10, 10, 1, 20)), true);
-		equal(ClientRect.isBelow(rect(10, 30, 1, 20), rect(10, 10, 1, 25)), true);
-		equal(ClientRect.isBelow(rect(10, 15, 1, 20), rect(10, 30, 1, 20)), false);
-		equal(ClientRect.isBelow(rect(10, 30, 1, 20), rect(10, 10, 1, 30)), true);
-		equal(ClientRect.isBelow(rect(10, 20, 1, 20), rect(10, 10, 1, 30)), false);
+		equal(ClientRect.isBelow(rect(10, 30, 10, 20), rect(20, 10, 10, 20)), true);
+		equal(ClientRect.isBelow(rect(10, 30, 10, 20), rect(20, 10, 10, 25)), true);
+		equal(ClientRect.isBelow(rect(10, 15, 10, 20), rect(20, 30, 10, 20)), false);
+		equal(ClientRect.isBelow(rect(10, 29, 10, 20), rect(20, 10, 10, 30)), false);
+		equal(ClientRect.isBelow(rect(10, 30, 10, 20), rect(20, 10, 10, 30)), true);
+		equal(ClientRect.isBelow(rect(10, 20, 10, 20), rect(20, 10, 10, 30)), false);
 	});
 
 	test('isLeft', function() {
@@ -60,8 +62,8 @@ ModuleLoader.require([
 	});
 
 	test('compare', function() {
-		equal(ClientRect.compare(rect(10, 70, 1, 40), rect(10, 40, 1, 20)), 1);
-		equal(ClientRect.compare(rect(10, 40, 1, 20), rect(10, 70, 1, 40)), -1);
+		equal(ClientRect.compare(rect(10, 70, 10, 40), rect(10, 40, 10, 20)), 1);
+		equal(ClientRect.compare(rect(10, 40, 10, 20), rect(10, 70, 10, 40)), -1);
 		equal(ClientRect.compare(rect(5, 10, 10, 10), rect(10, 10, 10, 10)), -1);
 		equal(ClientRect.compare(rect(15, 10, 10, 10), rect(10, 10, 10, 10)), 1);
 	});
