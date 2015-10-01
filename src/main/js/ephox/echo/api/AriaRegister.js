@@ -18,6 +18,10 @@ define(
     var helpStyle = Styles.resolve('aria-help');
     var helpVisibleStyle = Styles.resolve('aria-help-visible');
 
+    var roleDocument = function (element) {
+      Attr.set(element, 'role', 'document');
+    };
+
     var presentation = function (element) {
       Attr.setAll(element, {
         'role': 'presentation',
@@ -227,6 +231,7 @@ define(
     };
 
     return {
+      document: roleDocument,
       presentation: presentation,
       controls: controls,
       editor: editor,
