@@ -1097,7 +1097,7 @@ test("Applying formats in lists", function() {
 test("Applying formats on a list including child nodes", function(){
 	editor.formatter.register('format', {inline: 'strong'});
 	editor.setContent('<ol><li>a</li><li>b<ul><li>c</li><li>d<br /><ol><li>e</li><li>f</li></ol></li></ul></li><li>g</li></ol>');
-	rng = editor.dom.createRng();
+	var rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('li')[0].firstChild, 0);
 	rng.setEnd(editor.dom.select('li')[6].firstChild, 1);
 	editor.selection.setRng(rng);
@@ -1447,7 +1447,7 @@ test('format inline on contentEditable: false block', function() {
 	editor.setContent('<p>abc</p><p contenteditable="false">def</p>');
 	Utils.setSelection('p:nth-child(2)', 0, 'p:nth-child(2)', 3);
 	editor.formatter.apply('format');
-	equal(editor.getContent(), '<p>abc</p><p>def</p>', 'Text is not bold');
+	equal(editor.getContent(), '<p>abc</p><p contenteditable="false">def</p>', 'Text is not bold');
 });
 
 test('format block on contentEditable: false block', function() {
@@ -1457,7 +1457,7 @@ test('format block on contentEditable: false block', function() {
 	editor.setContent('<p>abc</p><p contenteditable="false">def</p>');
 	Utils.setSelection('p:nth-child(2)', 0, 'p:nth-child(2)', 3);
 	editor.formatter.apply('format');
-	equal(editor.getContent(), '<p>abc</p><p>def</p>', 'P is not h1');
+	equal(editor.getContent(), '<p>abc</p><p contenteditable="false">def</p>', 'P is not h1');
 });
 
 test('contentEditable: false on start and contentEditable: true on end', function() {
@@ -1467,7 +1467,7 @@ test('contentEditable: false on start and contentEditable: true on end', functio
 	editor.setContent('<p>abc</p><p contenteditable="false">def</p><p>ghi</p>');
 	Utils.setSelection('p:nth-child(2)', 0, 'p:nth-child(3)', 3);
 	editor.formatter.apply('format');
-	equal(editor.getContent(), '<p>abc</p><p>def</p><p><b>ghi</b></p>', 'Text in last paragraph is bold');
+	equal(editor.getContent(), '<p>abc</p><p contenteditable="false">def</p><p><b>ghi</b></p>', 'Text in last paragraph is bold');
 });
 
 test('contentEditable: true on start and contentEditable: false on end', function() {
@@ -1477,7 +1477,7 @@ test('contentEditable: true on start and contentEditable: false on end', functio
 	editor.setContent('<p>abc</p><p contenteditable="false">def</p>');
 	Utils.setSelection('p:nth-child(1)', 0, 'p:nth-child(2)', 3);
 	editor.formatter.apply('format');
-	equal(editor.getContent(), '<p><b>abc</b></p><p>def</p>', 'Text in first paragraph is bold');
+	equal(editor.getContent(), '<p><b>abc</b></p><p contenteditable="false">def</p>', 'Text in first paragraph is bold');
 });
 
 test('contentEditable: true inside contentEditable: false', function() {
@@ -1487,7 +1487,7 @@ test('contentEditable: true inside contentEditable: false', function() {
 	editor.setContent('<p>abc</p><p contenteditable="false"><span contenteditable="true">def</span></p>');
 	Utils.setSelection('span', 0, 'span', 3);
 	editor.formatter.apply('format');
-	equal(editor.getContent(), '<p>abc</p><p><span><b>def</b></span></p>', 'Text is bold');
+	equal(editor.getContent(), '<p>abc</p><p contenteditable="false"><span contenteditable="true"><b>def</b></span></p>', 'Text is bold');
 });
 
 test('Del element wrapping blocks', function() {

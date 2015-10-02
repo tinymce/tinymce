@@ -337,7 +337,7 @@ test('contentEditable: false on start and contentEditable: true on end', functio
 	rng.setEnd(editor.dom.select('b')[1].firstChild, 3);
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
-	equal(editor.getContent(), '<p>abc</p><p><b>def</b></p><p>ghj</p>', 'Text in last paragraph is not bold');
+	equal(editor.getContent(), '<p>abc</p><p contenteditable="false"><b>def</b></p><p>ghj</p>', 'Text in last paragraph is not bold');
 });
 
 test('contentEditable: true on start and contentEditable: false on end', function() {
@@ -345,7 +345,7 @@ test('contentEditable: true on start and contentEditable: false on end', functio
 	editor.setContent('<p>abc</p><p><b>def</b></p><p contenteditable="false"><b>ghj</b></p>');
 	Utils.setSelection('p:nth-child(2) b', 0, 'p:last b', 3);
 	editor.formatter.remove('format');
-	equal(editor.getContent(), '<p>abc</p><p>def</p><p><b>ghj</b></p>', 'Text in first paragraph is not bold');
+	equal(editor.getContent(), '<p>abc</p><p>def</p><p contenteditable="false"><b>ghj</b></p>', 'Text in first paragraph is not bold');
 });
 
 test('contentEditable: true inside contentEditable: false', function() {
@@ -353,7 +353,7 @@ test('contentEditable: true inside contentEditable: false', function() {
 	editor.setContent('<p>abc</p><p contenteditable="false"><span contenteditable="true"><b>def</b></span></p>');
 	Utils.setSelection('b', 0, 'b', 3);
 	editor.formatter.remove('format');
-	equal(editor.getContent(), '<p>abc</p><p><span>def</span></p>', 'Text is not bold');
+	equal(editor.getContent(), '<p>abc</p><p contenteditable="false"><span contenteditable="true">def</span></p>', 'Text is not bold');
 });
 
 test('remove format block on contentEditable: false block', function() {
@@ -361,7 +361,7 @@ test('remove format block on contentEditable: false block', function() {
 	editor.setContent('<p>abc</p><h1 contenteditable="false">def</h1>');
 	Utils.setSelection('h1:nth-child(2)', 0, 'h1:nth-child(2)', 3);
 	editor.formatter.remove('format');
-	equal(editor.getContent(), '<p>abc</p><h1>def</h1>', 'H1 is still not h1');
+	equal(editor.getContent(), '<p>abc</p><h1 contenteditable="false">def</h1>', 'H1 is still not h1');
 });
 
 test('remove format on del using removeformat format', function() {

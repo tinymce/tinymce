@@ -633,8 +633,7 @@ ModuleLoader.require([
 
 			rng = editor.selection.getRng(true);
 			equal(rng.collapsed, true);
-			equal(rng.startContainer.nodeType, 3);
-			equal(rng.startContainer.data, 'c');
+			equal(CaretContainer.isCaretContainer(rng.startContainer), true);
 		});
 
 		test('normalize with contentEditable:false parent and contentEditable:true child element', function() {
@@ -655,8 +654,7 @@ ModuleLoader.require([
 
 			var rng = editor.selection.getRng(true);
 			equal(rng.collapsed, true);
-			equal(rng.startContainer.nodeType, 3);
-			equal(rng.startContainer.data, 'a');
+			equal(CaretContainer.isCaretContainer(rng.startContainer), true);
 
 			// Excluding assert on IE since it's a minor issue
 			if (tinymce.ie) {
