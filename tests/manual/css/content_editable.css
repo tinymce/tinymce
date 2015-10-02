@@ -1,10 +1,10 @@
 .mce-content-body *[contentEditable=true], .mce-content-body *[data-mce-contenteditable=true] {
-	background: rgba(0, 255, 0, 0.3);
+	background: #adffad;
 	border: 1px solid #999;
 }
 
 .mce-content-body *[contentEditable=false], .mce-content-body *[data-mce-contenteditable=false] {
-	background: rgba(255, 0, 0, 0.3);
+	background: #ffadad;
 	border: 1px solid #999;
 	margin: 0 1px 0 2px;
 }
