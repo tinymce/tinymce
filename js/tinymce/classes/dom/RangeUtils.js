@@ -16,10 +16,12 @@
 define("tinymce/dom/RangeUtils", [
 	"tinymce/util/Tools",
 	"tinymce/dom/TreeWalker",
-	"tinymce/dom/NodeType"
-], function(Tools, TreeWalker, NodeType) {
+	"tinymce/dom/NodeType",
+	"tinymce/caret/CaretContainer"
+], function(Tools, TreeWalker, NodeType, CaretContainer) {
 	var each = Tools.each,
-		isContentEditableFalse = NodeType.isContentEditableFalse;
+		isContentEditableFalse = NodeType.isContentEditableFalse,
+		isCaretContainer = CaretContainer.isCaretContainer;
 
 	function getEndChild(container, index) {
 		var childNodes = container.childNodes;
@@ -323,7 +325,7 @@ define("tinymce/dom/RangeUtils", [
 					walker = new TreeWalker(startNode, parentBlockContainer);
 					while ((node = walker[left ? 'prev' : 'next']())) {
 						// Break if we hit a non content editable node
-						if (dom.getContentEditableParent(node) === "false") {
+						if (dom.getContentEditableParent(node) === "false" || isCaretContainer(node)) {
 							return;
 						}
 
@@ -357,6 +359,10 @@ define("tinymce/dom/RangeUtils", [
 				nonEmptyElementsMap = dom.schema.getNonEmptyElements();
 				directionLeft = start;
 
+				if (isCaretContainer(container)) {
+					return;
+				}
+
 				if (container.nodeType == 1 && offset > container.childNodes.length - 1) {
 					directionLeft = false;
 				}
@@ -373,6 +379,10 @@ define("tinymce/dom/RangeUtils", [
 					if (directionLeft) {
 						node = container.childNodes[offset > 0 ? offset - 1 : 0];
 						if (node) {
+							if (isCaretContainer(node)) {
+								return;
+							}
+
 							if (nonEmptyElementsMap[node.nodeName] || node.nodeName == "TABLE") {
 								return;
 							}
@@ -385,7 +395,7 @@ define("tinymce/dom/RangeUtils", [
 						container = container.childNodes[offset];
 						offset = 0;
 
-						if (hasContentEditableFalseParent(container)) {
+						if (hasContentEditableFalseParent(container) || isCaretContainer(container)) {
 							return;
 						}
 
@@ -396,7 +406,7 @@ define("tinymce/dom/RangeUtils", [
 							walker = new TreeWalker(container, body);
 
 							do {
-								if (isContentEditableFalse(node)) {
+								if (isContentEditableFalse(node) || isCaretContainer(node)) {
 									normalized = false;
 									break;
 								}
