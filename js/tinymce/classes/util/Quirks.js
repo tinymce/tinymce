@@ -1228,17 +1228,6 @@ define("tinymce/util/Quirks", [
 		}
 
 		/**
-		 * Removes ghost selections from images/tables on Gecko.
-		 */
-		function removeGhostSelection() {
-			editor.on('Undo Redo SetContent', function(e) {
-				if (!e.initial) {
-					editor.execCommand('mceRepaint');
-				}
-			});
-		}
-
-		/**
 		 * Deletes the selected image on IE instead of navigating to previous page.
 		 */
 		function deleteControlItemOnBackSpace() {
@@ -1697,7 +1686,6 @@ define("tinymce/util/Quirks", [
 			removeStylesWhenDeletingAcrossBlockElements();
 			setGeckoEditingOptions();
 			addBrAfterLastLinks();
-			removeGhostSelection();
 			showBrokenImageIcon();
 			blockCmdArrowNavigation();
 			disableBackspaceIntoATable();
