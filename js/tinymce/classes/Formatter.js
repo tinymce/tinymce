@@ -100,6 +100,7 @@ define("tinymce/Formatter", [
 				],
 
 				alignleft: [
+					{selector: 'figure.image', collapsed: false, classes: 'align-left', ceFalseOverride: true},
 					{selector: 'figure,p,h1,h2,h3,h4,h5,h6,td,th,tr,div,ul,ol,li', styles: {textAlign: 'left'}, defaultBlock: 'div'},
 					{selector: 'img,table', collapsed: false, styles: {'float': 'left'}}
 				],
@@ -111,6 +112,7 @@ define("tinymce/Formatter", [
 				],
 
 				alignright: [
+					{selector: 'figure.image', collapsed: false, classes: 'align-right', ceFalseOverride: true},
 					{selector: 'figure,p,h1,h2,h3,h4,h5,h6,td,th,tr,div,ul,ol,li', styles: {textAlign: 'right'}, defaultBlock: 'div'},
 					{selector: 'img,table', collapsed: false, styles: {'float': 'right'}}
 				],
@@ -446,6 +448,7 @@ define("tinymce/Formatter", [
 								if (dom.is(node, format.selector) && !isCaretNode(node)) {
 									setElementFormat(node, format);
 									found = true;
+									return false;
 								}
 							});
 
@@ -600,6 +603,18 @@ define("tinymce/Formatter", [
 						}
 					}
 				});
+			}
+
+			if (getContentEditable(selection.getNode()) === "false") {
+				node = selection.getNode();
+				for (var i = 0, l = formatList.length; i < l; i++) {
+					if (formatList[i].ceFalseOverride && dom.is(node, formatList[i].selector)) {
+						setElementFormat(node, formatList[i]);
+						return;
+					}
+				}
+
+				return;
 			}
 
 			if (format) {
@@ -873,6 +888,19 @@ define("tinymce/Formatter", [
 					removeRngStyle(rng);
 				} else {
 					removeRngStyle(node);
+				}
+
+				return;
+			}
+
+			if (getContentEditable(selection.getNode()) === "false") {
+				node = selection.getNode();
+				for (var i = 0, l = formatList.length; i < l; i++) {
+					if (formatList[i].ceFalseOverride) {
+						if (removeFormat(formatList[i], vars, node, node)) {
+							break;
+						}
+					}
 				}
 
 				return;
@@ -1389,7 +1417,7 @@ define("tinymce/Formatter", [
 					}
 
 					// Check if we can move up are we at root level or body level
-					if (parent.parentNode == root) {
+					if (parent == root || parent.parentNode == root) {
 						container = parent;
 						break;
 					}
