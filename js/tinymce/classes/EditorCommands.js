@@ -25,7 +25,7 @@ define("tinymce/EditorCommands", [
 	// Added for compression purposes
 	var each = Tools.each, extend = Tools.extend;
 	var map = Tools.map, inArray = Tools.inArray, explode = Tools.explode;
-	var isGecko = Env.gecko, isIE = Env.ie, isOldIE = Env.ie && Env.ie < 11;
+	var isIE = Env.ie, isOldIE = Env.ie && Env.ie < 11;
 	var TRUE = true, FALSE = false;
 
 	return function(editor) {
@@ -340,7 +340,6 @@ define("tinymce/EditorCommands", [
 
 				if (align != 'none') {
 					toggleFormat('align' + align);
-					execCommand('mceRepaint');
 				}
 			},
 
@@ -524,6 +523,62 @@ define("tinymce/EditorCommands", [
 					}
 				}
 
+				function moveSelectionToMarker(marker) {
+					var parentEditableFalseElm;
+
+					function getContentEditableFalseParent(node) {
+						var root = editor.getBody();
+
+						for (; node && node !== root; node = node.parentNode) {
+							if (editor.dom.getContentEditable(node) === 'false') {
+								return node;
+							}
+						}
+
+						return null;
+					}
+
+					if (!marker) {
+						return;
+					}
+
+					selection.scrollIntoView(marker);
+
+					// If marker is in cE=false then move selection to that element instead
+					parentEditableFalseElm = getContentEditableFalseParent(marker);
+					if (parentEditableFalseElm) {
+						dom.remove(marker);
+						selection.select(parentEditableFalseElm);
+						return;
+					}
+
+					// Move selection before marker and remove it
+					rng = dom.createRng();
+
+					// If previous sibling is a text node set the selection to the end of that node
+					node = marker.previousSibling;
+					if (node && node.nodeType == 3) {
+						rng.setStart(node, node.nodeValue.length);
+
+						// TODO: Why can't we normalize on IE
+						if (!isIE) {
+							node2 = marker.nextSibling;
+							if (node2 && node2.nodeType == 3) {
+								node.appendData(node2.data);
+								node2.parentNode.removeChild(node2);
+							}
+						}
+					} else {
+						// If the previous sibling isn't a text node or doesn't exist set the selection before the marker node
+						rng.setStartBefore(marker);
+						rng.setEndBefore(marker);
+					}
+
+					// Remove the marker node and set the new range
+					dom.remove(marker);
+					selection.setRng(rng);
+				}
+
 				if (typeof value != 'string') {
 					merge = value.merge;
 					data = value.data;
@@ -597,6 +652,8 @@ define("tinymce/EditorCommands", [
 					}
 				}
 
+				editor._selectionOverrides.showBlockCaretContainer(parentNode);
+
 				// If parser says valid we can insert the contents into that parent
 				if (!parserArgs.invalid) {
 					value = serializer.serialize(fragment);
@@ -651,37 +708,7 @@ define("tinymce/EditorCommands", [
 				}
 
 				reduceInlineTextElements();
-
-				marker = dom.get('mce_marker');
-				selection.scrollIntoView(marker);
-
-				// Move selection before marker and remove it
-				rng = dom.createRng();
-
-				// If previous sibling is a text node set the selection to the end of that node
-				node = marker.previousSibling;
-				if (node && node.nodeType == 3) {
-					rng.setStart(node, node.nodeValue.length);
-
-					// TODO: Why can't we normalize on IE
-					if (!isIE) {
-						node2 = marker.nextSibling;
-						if (node2 && node2.nodeType == 3) {
-							node.appendData(node2.data);
-							node2.parentNode.removeChild(node2);
-						}
-					}
-				} else {
-					// If the previous sibling isn't a text node or doesn't exist set the selection before the marker node
-					rng.setStartBefore(marker);
-					rng.setEndBefore(marker);
-				}
-
-				// Remove the marker node and set the new range
-				dom.remove(marker);
-				selection.setRng(rng);
-
-				// Dispatch after event and add any visual elements needed
+				moveSelectionToMarker(dom.get('mce_marker'));
 				editor.fire('SetContent', args);
 				editor.addVisual();
 			},
@@ -742,20 +769,6 @@ define("tinymce/EditorCommands", [
 			},
 
 			mceRepaint: function() {
-				if (isGecko) {
-					try {
-						storeSelection(TRUE);
-
-						if (selection.getSel()) {
-							selection.getSel().selectAllChildren(editor.getBody());
-						}
-
-						selection.collapse(TRUE);
-						restoreSelection();
-					} catch (ex) {
-						// Ignore
-					}
-				}
 			},
 
 			InsertHorizontalRule: function() {
