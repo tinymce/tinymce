@@ -9,7 +9,6 @@ module("tinymce.plugins.Noneditable", {
 			indent: false,
 			noneditable_regexp: [/\{[^\}]+\}/g],
 			plugins: 'noneditable',
-			forced_root_block: '',
 			convert_fonts_to_spans: false,
 			entities: 'raw',
 			valid_styles: {
@@ -24,184 +23,23 @@ module("tinymce.plugins.Noneditable", {
 });
 
 // Ignore on IE 7, 8 this is a known bug not worth fixing
-if (!tinymce.Env.ie || tinymce.Env.ie > 8) {
-	test('expand to noneditable (start)', function() {
-		editor.setContent('<p><span class="mceNonEditable">no</span>yes</p>');
-
-		var rng = editor.dom.createRng();
-		rng.setStart(editor.getBody().firstChild.firstChild.firstChild, 1);
-		rng.setEnd(editor.getBody().firstChild.lastChild, 1);
-		editor.selection.setRng(rng);
-
-		editor.dom.fire(editor.getBody(), 'mouseup');
-		rng = Utils.normalizeRng(editor.selection.getRng(true));
-
-		equal(rng.startContainer.nodeName, 'P');
-		equal(rng.startOffset, 0);
-		equal(rng.endContainer.nodeName, '#text');
-		equal(rng.endOffset, 1);
+if (tinymce.Env.ceFalse) {
+	test('noneditable class', function() {
+		editor.setContent('<p><span class="mceNonEditable">abc</span></p>');
+		equal(editor.dom.select('span')[0].contentEditable, "false");
 	});
 
-	test('expand to noneditable (end)', function() {
-		editor.setContent('<p>yes<span class="mceNonEditable">no</span></p>');
-
-		var rng = editor.dom.createRng();
-		rng.setStart(editor.getBody().firstChild.firstChild, 1);
-		rng.setEnd(editor.getBody().firstChild.lastChild.firstChild, 1);
-		editor.selection.setRng(rng);
-
-		editor.dom.fire(editor.getBody(), 'mouseup');
-		rng = Utils.normalizeRng(editor.selection.getRng(true));
-
-		equal(rng.startContainer.nodeName, '#text');
-		equal(rng.startOffset, 1);
-		equal(rng.endContainer.nodeName, 'P');
-		equal(rng.endOffset, 2);
+	test('editable class', function() {
+		editor.setContent('<p><span class="mceEditable">abc</span></p>');
+		equal(editor.dom.select('span')[0].contentEditable, "true");
 	});
 
-	test('expand to noneditable (start/end)', function() {
-		editor.setContent('<p>yes<span class="mceNonEditable">noedit</span>yes</p>');
+	test('noneditable regexp', function() {
+		editor.setContent('<p>{test1}{test2}</p>');
 
-		var rng = editor.dom.createRng();
-		rng.setStart(editor.dom.select('span')[0].firstChild, 1);
-		rng.setEnd(editor.dom.select('span')[0].firstChild, 2);
-		editor.selection.setRng(rng);
-
-		editor.dom.fire(editor.getBody(), 'mouseup');
-		rng = Utils.normalizeRng(editor.selection.getRng(true));
-
-		equal(rng.startContainer.nodeName, 'P');
-		equal(rng.startOffset, 1);
-		equal(rng.endContainer.nodeName, 'P');
-		equal(rng.endOffset, 2);
-	});
-
-	test('type after non editable', function() {
-		editor.setContent('<p><span class="mceNonEditable">no</span>yes</p>');
-
-		var rng = editor.dom.createRng();
-		rng.setStart(editor.dom.select('span')[0].firstChild, 2);
-		rng.setEnd(editor.dom.select('span')[0].firstChild, 2);
-		editor.selection.setRng(rng);
-
-		Utils.type('X');
-		rng = Utils.normalizeRng(editor.selection.getRng(true));
-
-		equal(rng.startContainer.getAttribute('data-mce-bogus'), 'true');
-		equal(rng.startContainer.nodeName, 'SPAN');
-		equal(rng.startOffset, 1);
-		equal(rng.endContainer.nodeName, 'SPAN');
-		equal(rng.endOffset, 1);
-		equal(editor.getContent(), '<p><span class="mceNonEditable">no</span>Xyes</p>');
+		equal(editor.dom.select('span').length, 2);
+		equal(editor.dom.select('span')[0].contentEditable, "false");
+		equal(editor.dom.select('span')[1].contentEditable, "false");
+		equal(editor.getContent(), '<p>{test1}{test2}</p>');
 	});
 }
-
-test('type between non editable', function() {
-	editor.setContent('<p><span class="mceNonEditable">no</span><span class="mceNonEditable">no</span></p>');
-
-	var rng = editor.dom.createRng();
-	rng.setStart(editor.dom.select('span')[0].firstChild, 2);
-	rng.setEnd(editor.dom.select('span')[0].firstChild, 2);
-	editor.selection.setRng(rng);
-
-	Utils.type('X');
-	rng = Utils.normalizeRng(editor.selection.getRng(true));
-
-	equal(rng.startContainer.getAttribute('data-mce-bogus'), 'true');
-	equal(rng.startContainer.nodeName, 'SPAN');
-	equal(rng.startOffset, 1);
-	equal(rng.endContainer.nodeName, 'SPAN');
-	equal(rng.endOffset, 1);
-	equal(editor.getContent(), '<p><span class="mceNonEditable">no</span>X<span class="mceNonEditable">no</span></p>');
-});
-
-test('type after last non editable', function() {
-	editor.setContent('<p><span class="mceNonEditable">no</span></p>');
-
-	var rng = editor.dom.createRng();
-	rng.setStart(editor.dom.select('span')[0].firstChild, 2);
-	rng.setEnd(editor.dom.select('span')[0].firstChild, 2);
-	editor.selection.setRng(rng);
-
-	Utils.type('X');
-	rng = Utils.normalizeRng(editor.selection.getRng(true));
-
-	equal(rng.startContainer.getAttribute('data-mce-bogus'), 'true');
-	equal(rng.startContainer.nodeName, 'SPAN');
-	equal(rng.startOffset, 1);
-	equal(rng.endContainer.nodeName, 'SPAN');
-	equal(rng.endOffset, 1);
-	equal(editor.getContent(), '<p><span class="mceNonEditable">no</span>X</p>');
-});
-
-// Ignore on IE 7, 8 this is a known bug not worth fixing
-if (!tinymce.Env.ie || tinymce.Env.ie > 8) {
-	test('escape noneditable inline element (left)', function() {
-		editor.setContent('<p>no <span class="mceNonEditable">yes</span> no</p><p class="mceNonEditable">no</p>');
-
-		var rng = editor.dom.createRng();
-		rng.selectNode(editor.dom.select('span')[0]);
-		editor.selection.setRng(rng);
-
-		Utils.type({keyCode: 37});
-		rng = Utils.normalizeRng(editor.selection.getRng(true));
-		equal(rng.startContainer.nodeName, 'P');
-		equal(rng.collapsed, true);
-	});
-}
-
-test('escape noneditable inline element (right)', function() {
-	editor.setContent('<p>no <span class="mceNonEditable">yes</span> no</p><p class="mceNonEditable">no</p>');
-
-	var rng = editor.dom.createRng();
-	rng.selectNode(editor.dom.select('span')[0]);
-	editor.selection.setRng(rng);
-
-	Utils.type({keyCode: 39});
-	rng = Utils.normalizeRng(editor.selection.getRng(true));
-
-	equal(rng.startContainer.nodeName, 'P');
-	equal(editor.dom.nodeIndex(rng.startContainer), 0);
-	equal(rng.collapsed, true);
-});
-
-test('escape noneditable block element (left)', function(){
-	editor.setContent('<p>yes</p><p class="mceNonEditable">no</p><p>yes</p>');
-
-	var rng = editor.dom.createRng();
-	rng.selectNode(editor.dom.select('p')[1]);
-	editor.selection.setRng(rng);
-
-	Utils.type({keyCode: 37});
-	rng = Utils.normalizeRng(editor.selection.getRng(true));
-
-	equal(rng.startContainer.nodeName, "P");
-	equal(editor.dom.nodeIndex(rng.startContainer), 0);
-	equal(rng.startOffset, 1);
-	equal(rng.collapsed, true);
-
-});
-
-test('escape noneditable block element (right)', function(){
-	editor.setContent('<p>yes</p><p class="mceNonEditable">no</p><p>yes</p>');
-
-	var rng = editor.dom.createRng();
-	rng.selectNode(editor.dom.select('p')[1]);
-	editor.selection.setRng(rng);
-
-	Utils.type({keyCode: 39});
-	rng = Utils.normalizeRng(editor.selection.getRng(true));
-
-	equal(rng.startContainer.nodeName, "P");
-	equal(editor.dom.nodeIndex(rng.startContainer), 2);
-	equal(rng.startOffset, 0);
-	equal(rng.collapsed, true);
-
-});
-
-test('noneditable regexp', function() {
-	editor.setContent('<p>{test1}{test2}</p>');
-
-	equal(editor.dom.select('span').length, 2);
-	equal(editor.getContent(), '<p>{test1}{test2}</p>');
-});
