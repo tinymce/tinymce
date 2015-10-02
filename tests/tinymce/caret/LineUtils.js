@@ -1,7 +1,12 @@
 ModuleLoader.require([
+	"tinymce/Env",
 	"tinymce/caret/LineUtils"
-], function(LineUtils) {
+], function(Env, LineUtils) {
 	module("tinymce.caret.LineUtils");
+
+	if (!Env.ceFalse) {
+		return;
+	}
 
 	function rect(x, y, w, h) {
 		return {

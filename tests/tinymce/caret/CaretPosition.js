@@ -1,5 +1,12 @@
-ModuleLoader.require(["tinymce/caret/CaretPosition"], function(CaretPosition) {
+ModuleLoader.require([
+	"tinymce/Env",
+	"tinymce/caret/CaretPosition"
+], function(Env, CaretPosition) {
 	module("tinymce.caret.CaretPosition");
+
+	if (!Env.ceFalse) {
+		return;
+	}
 
 	var createRange = Utils.createRange,
 		assertCaretPosition = Utils.assertCaretPosition,

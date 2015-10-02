@@ -1,9 +1,14 @@
 ModuleLoader.require([
+	"tinymce/Env",
 	"tinymce/caret/CaretContainer",
 	"tinymce/dom/DomQuery",
 	"tinymce/text/Zwsp"
-], function(CaretContainer, $, Zwsp) {
+], function(Env, CaretContainer, $, Zwsp) {
 	module("tinymce.caret.CaretContainer");
+
+	if (!Env.ceFalse) {
+		return;
+	}
 
 	function setViewHtml(html) {
 		getRoot().innerHTML = html;

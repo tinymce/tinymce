@@ -1,9 +1,14 @@
 ModuleLoader.require([
+	"tinymce/Env",
 	"tinymce/caret/CaretUtils",
 	"tinymce/caret/CaretPosition",
 	"tinymce/text/Zwsp"
-], function(CaretUtils, CaretPosition, Zwsp) {
+], function(Env, CaretUtils, CaretPosition, Zwsp) {
 	module("tinymce.caret.CaretUtils");
+
+	if (!Env.ceFalse) {
+		return;
+	}
 
 	var assertRange = Utils.assertRange,
 		createRange = Utils.createRange,

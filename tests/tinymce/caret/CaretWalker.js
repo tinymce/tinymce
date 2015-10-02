@@ -1,8 +1,13 @@
 ModuleLoader.require([
+	"tinymce/Env",
 	"tinymce/caret/CaretWalker",
 	"tinymce/caret/CaretPosition"
-], function(CaretWalker, CaretPosition) {
+], function(Env, CaretWalker, CaretPosition) {
 	module("tinymce.caret.CaretWalker");
+
+	if (!Env.ceFalse) {
+		return;
+	}
 
 	function getRoot() {
 		return document.getElementById('view');

@@ -1,9 +1,14 @@
 ModuleLoader.require([
+	"tinymce/Env",
 	"tinymce/caret/CaretCandidate",
 	"tinymce/dom/DomQuery",
 	"tinymce/text/Zwsp"
-], function(CaretCandidate, $, Zwsp) {
+], function(Env, CaretCandidate, $, Zwsp) {
 	module("tinymce.caret.CaretCandidate");
+
+	if (!Env.ceFalse) {
+		return;
+	}
 
 	function getRoot() {
 		return document.getElementById('view');
