@@ -452,11 +452,19 @@ define("tinymce/dom/ControlSelection", [
 			showResizeRect(target, name, lastMouseDownEvent);
 		}
 
+		function preventDefault(e) {
+			if (e.preventDefault) {
+				e.preventDefault();
+			} else {
+				e.returnValue = false; // IE
+			}
+		}
+
 		function nativeControlSelect(e) {
 			var target = e.srcElement;
 
 			if (isContentEditableFalse(target)) {
-				e.preventDefault();
+				preventDefault(e);
 				return;
 			}
 
@@ -555,8 +563,15 @@ define("tinymce/dom/ControlSelection", [
 					});
 
 					editor.dom.bind(rootElement, 'mscontrolselect', function(e) {
+						function delayedSelect(node) {
+							Delay.setEditorTimeout(editor, function() {
+								editor.selection.select(node);
+							});
+						}
+
 						if (isContentEditableFalse(e.target)) {
 							e.preventDefault();
+							delayedSelect(e.target);
 							return;
 						}
 
@@ -566,9 +581,7 @@ define("tinymce/dom/ControlSelection", [
 							// This moves the selection from being a control selection to a text like selection like in WebKit #6753
 							// TODO: Fix this the day IE works like other browsers without this nasty native ugly control selections.
 							if (e.target.tagName == 'IMG') {
-								Delay.setTimeout(function() {
-									editor.selection.select(e.target);
-								});
+								delayedSelect(e.target);
 							}
 						}
 					});
