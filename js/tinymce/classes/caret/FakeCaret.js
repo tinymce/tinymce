@@ -115,6 +115,11 @@ define("tinymce/caret/FakeCaret", [
 				}
 
 				startBlink();
+
+				rng = node.ownerDocument.createRange();
+				container = caretContainerNode.firstChild;
+				rng.setStart(container, 0);
+				rng.setEnd(container, 1);
 			} else {
 				container = CaretContainer.insertInline(node, before);
 				rng = node.ownerDocument.createRange();
@@ -129,11 +134,6 @@ define("tinymce/caret/FakeCaret", [
 
 				return rng;
 			}
-
-			rng = node.ownerDocument.createRange();
-			container = caretContainerNode.firstChild;
-			rng.setStart(container, 0);
-			rng.setEnd(container, 1);
 
 			return rng;
 		}
