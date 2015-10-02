@@ -154,6 +154,14 @@ define("tinymce/Env", [], function() {
 		 * @property fileApi
 		 * @type Boolean
 		 */
-		fileApi: fileApi
+		fileApi: fileApi,
+
+		/**
+		 * Constant that is true if the browser supports contentEditable=false regions.
+		 *
+		 * @property ceFalse
+		 * @type Boolean
+		 */
+		ceFalse: (ie === false || ie > 8)
 	};
 });
