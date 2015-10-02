@@ -51,6 +51,7 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"constrain": true,
+			"caption": false,
 			"height": "",
 			"src": "",
 			"width": ""
@@ -76,11 +77,13 @@
 
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
+			"caption": false,
 			"src": ""
 		});
 
 		fillAndSubmitWindowForm({
 			"alt": "alt",
+			"caption": false,
 			"src": "src"
 		});
 
@@ -108,6 +111,7 @@
 			"alt": "",
 			"class": "class1",
 			"constrain": true,
+			"caption": false,
 			"height": "",
 			"src": "",
 			"width": ""
@@ -117,6 +121,7 @@
 			"alt": "alt",
 			"class": "class1",
 			"constrain": true,
+			"caption": false,
 			"height": "200",
 			"src": "src",
 			"width": "100"
@@ -154,8 +159,6 @@
 			cleanHtml(editor.getContent()),
 			'<p><img src="' + editor.settings.image_prepend_url + 'src" alt="alt" /></p>'
 		);
-
-
  	});
 
  	test("Image recognizes relative src url and prepends absolute image_prepend_url setting.", function () {
@@ -196,6 +199,7 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
+			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -224,6 +228,7 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
+			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -254,6 +259,7 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
+			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -283,6 +289,7 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
+			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -312,6 +319,7 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
+			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -342,6 +350,7 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
+			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -373,6 +382,7 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
+			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -384,6 +394,7 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
+			"caption": false,
 			"hspace": "15",
 			"src": "",
 			"style": "margin-left: 15px; margin-right: 15px;",
@@ -402,6 +413,7 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
+			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -413,6 +425,7 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
+			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "margin-top: 15px; margin-bottom: 15px;",
@@ -431,6 +444,7 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
+			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -442,6 +456,7 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
+			"caption": false,
 			"hspace": "5",
 			"src": "",
 			"style": "margin: 5px;",
@@ -460,6 +475,7 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
+			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -471,6 +487,7 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
+			"caption": false,
 			"hspace": "10",
 			"src": "",
 			"style": "margin: 5px 10px 5px 10px;",
@@ -489,6 +506,7 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
+			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -500,6 +518,7 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
+			"caption": false,
 			"hspace": "10",
 			"src": "",
 			"style": "margin: 5px 10px 5px 10px;",
@@ -518,6 +537,7 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
+			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -529,6 +549,7 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
+			"caption": false,
 			"hspace": "10",
 			"src": "",
 			"style": "margin: 5px 10px 15px 10px;",
@@ -547,6 +568,7 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
+			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -558,6 +580,7 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
+			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "margin: 5px 10px 15px 20px;",
@@ -576,6 +599,7 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
+			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -587,6 +611,7 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
+			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "margin: 15px 10px 15px 20px;",
