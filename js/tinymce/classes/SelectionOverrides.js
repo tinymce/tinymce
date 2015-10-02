@@ -22,6 +22,7 @@
  * @class tinymce.SelectionOverrides
  */
 define("tinymce/SelectionOverrides", [
+	"tinymce/Env",
 	"tinymce/caret/CaretWalker",
 	"tinymce/caret/CaretPosition",
 	"tinymce/caret/CaretContainer",
@@ -36,7 +37,7 @@ define("tinymce/SelectionOverrides", [
 	"tinymce/util/Arr",
 	"tinymce/util/Delay"
 ], function(
-	CaretWalker, CaretPosition, CaretContainer, CaretUtils, FakeCaret, LineWalker,
+	Env, CaretWalker, CaretPosition, CaretContainer, CaretUtils, FakeCaret, LineWalker,
 	LineUtils, NodeType, RangeUtils, VK, Fun, Arr, Delay
 ) {
 	var curry = Fun.curry,
@@ -61,9 +62,13 @@ define("tinymce/SelectionOverrides", [
 		var rootNode = editor.getBody(), caretWalker = new CaretWalker(rootNode);
 		var getNextVisualCaretPosition = curry(getVisualCaretPosition, caretWalker.next);
 		var getPrevVisualCaretPosition = curry(getVisualCaretPosition, caretWalker.prev),
-			fakeCaret = new FakeCaret(editor.getBody()),
+			fakeCaret = new FakeCaret(editor.getBody(), isBlock),
 			realSelectionId = editor.dom.uniqueId(),
 			selectedContentEditableNode, $ = editor.$;
+
+		function isBlock(node) {
+			return editor.dom.isBlock(node);
+		}
 
 		function setRange(range) {
 			//console.log('setRange', range);
@@ -533,12 +538,34 @@ define("tinymce/SelectionOverrides", [
 			);
 		}
 
+		function isRangeInCaretContainer(rng) {
+			return CaretContainer.isCaretContainer(rng.startContainer) || CaretContainer.isCaretContainer(rng.endContainer);
+		}
+
 		function setContentEditableSelection(range, fireEvent) {
 			var node, $ = editor.$, dom = editor.dom, $realSelectionContainer, sel,
-				startContainer, startOffset, endOffset, e;
+				startContainer, startOffset, endOffset, e, caretPosition;
 
-			if (!range || range.collapsed) {
+			if (!range) {
 				clearContentEditableSelection();
+				return null;
+			}
+
+			if (range.collapsed) {
+				clearContentEditableSelection();
+
+				if (!isRangeInCaretContainer(range)) {
+					caretPosition = getNormalizedRangeEndPoint(1, range);
+
+					if (isContentEditableFalse(caretPosition.getNode())) {
+						return showCaret(1, caretPosition.getNode(), !caretPosition.isAtEnd());
+					}
+
+					if (isContentEditableFalse(caretPosition.getNode(true))) {
+						return showCaret(1, caretPosition.getNode(true), false);
+					}
+				}
+
 				return null;
 			}
 
@@ -618,10 +645,13 @@ define("tinymce/SelectionOverrides", [
 			selectedContentEditableNode = null;
 		}
 
-		registerEvents();
-		addCss();
+		if (Env.ceFalse) {
+			registerEvents();
+			addCss();
+		}
 
 		return {
+			showBlockCaretContainer: showBlockCaretContainer,
 			destroy: destroy
 		};
 	}
