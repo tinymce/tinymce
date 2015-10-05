@@ -516,6 +516,13 @@ define("tinymce/SelectionOverrides", [
 					e.range = rng;
 				}
 			});
+
+			editor.on('focus', function() {
+				// Make sure we have a proper fake caret on focus
+				Delay.setEditorTimeout(editor, function() {
+					editor.selection.setRng(renderRangeCaret(editor.selection.getRng()));
+				});
+			});
 		}
 
 		function addCss() {
