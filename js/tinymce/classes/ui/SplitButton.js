@@ -70,7 +70,8 @@ define("tinymce/ui/SplitButton", [
 		 */
 		renderHtml: function() {
 			var self = this, id = self._id, prefix = self.classPrefix, image;
-			var icon = self.state.get('icon'), text = self.state.get('text');
+			var icon = self.state.get('icon'), text = self.state.get('text'),
+				textHtml = '';
 
 			image = self.settings.image;
 			if (image) {
@@ -88,11 +89,16 @@ define("tinymce/ui/SplitButton", [
 
 			icon = self.settings.icon ? prefix + 'ico ' + prefix + 'i-' + icon : '';
 
+			if (text) {
+				self.classes.add('btn-has-text');
+				textHtml = '<span class="' + prefix + 'txt">' + self.encode(text) + '</span>';
+			}
+
 			return (
 				'<div id="' + id + '" class="' + self.classes + '" role="button" tabindex="-1">' +
 					'<button type="button" hidefocus="1" tabindex="-1">' +
 						(icon ? '<i class="' + icon + '"' + image + '></i>' : '') +
-						(text ? (icon ? ' ' : '') + text : '') +
+						textHtml +
 					'</button>' +
 					'<button type="button" class="' + prefix + 'open" hidefocus="1" tabindex="-1">' +
 						//(icon ? '<i class="' + icon + '"></i>' : '') +

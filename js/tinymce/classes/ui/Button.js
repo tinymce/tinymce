@@ -114,7 +114,7 @@ define("tinymce/ui/Button", [
 		 */
 		renderHtml: function() {
 			var self = this, id = self._id, prefix = self.classPrefix;
-			var icon = self.state.get('icon'), image, text = self.state.get('text');
+			var icon = self.state.get('icon'), image, text = self.state.get('text'), textHtml = '';
 
 			image = self.settings.image;
 			if (image) {
@@ -132,6 +132,7 @@ define("tinymce/ui/Button", [
 
 			if (text) {
 				self.classes.add('btn-has-text');
+				textHtml = '<span class="' + prefix + 'txt">' + self.encode(text) + '</span>';
 			}
 
 			icon = self.settings.icon ? prefix + 'ico ' + prefix + 'i-' + icon : '';
@@ -140,22 +141,27 @@ define("tinymce/ui/Button", [
 				'<div id="' + id + '" class="' + self.classes + '" tabindex="-1" aria-labelledby="' + id + '">' +
 					'<button role="presentation" type="button" tabindex="-1">' +
 						(icon ? '<i class="' + icon + '"' + image + '></i>' : '') +
-						(text ? self.encode(text) : '') +
+						textHtml +
 					'</button>' +
 				'</div>'
 			);
 		},
 
 		bindStates: function() {
-			var self = this;
+			var self = this, $ = self.$, textCls = self.classPrefix + 'txt';
 
 			function setButtonText(text) {
-				var node = self.getEl().firstChild.firstChild;
+				var $span = $('span.' + textCls, self.getEl());
 
-				for (; node; node = node.nextSibling) {
-					if (node.nodeType == 3) {
-						node.data = self.translate(text);
+				if (text) {
+					if (!$span[0]) {
+						$('button:first', self.getEl()).append('<span class="' + textCls + '"></span>');
+						$span = $('span.' + textCls, self.getEl());
 					}
+
+					$span.html(self.encode(text));
+				} else {
+					$span.remove();
 				}
 
 				self.classes.toggle('btn-has-text', !!text);

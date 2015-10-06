@@ -157,7 +157,8 @@ define("tinymce/ui/MenuButton", [
 		 */
 		renderHtml: function() {
 			var self = this, id = self._id, prefix = self.classPrefix;
-			var icon = self.settings.icon, image, text = self.state.get('text');
+			var icon = self.settings.icon, image, text = self.state.get('text'),
+				textHtml = '';
 
 			image = self.settings.image;
 			if (image) {
@@ -173,6 +174,11 @@ define("tinymce/ui/MenuButton", [
 				image = '';
 			}
 
+			if (text) {
+				self.classes.add('btn-has-text');
+				textHtml = '<span class="' + prefix + 'txt">' + self.encode(text) + '</span>';
+			}
+
 			icon = self.settings.icon ? prefix + 'ico ' + prefix + 'i-' + icon : '';
 
 			self.aria('role', self.parent() instanceof MenuBar ? 'menuitem' : 'button');
@@ -181,7 +187,7 @@ define("tinymce/ui/MenuButton", [
 				'<div id="' + id + '" class="' + self.classes + '" tabindex="-1" aria-labelledby="' + id + '">' +
 					'<button id="' + id + '-open" role="presentation" type="button" tabindex="-1">' +
 						(icon ? '<i class="' + icon + '"' + image + '></i>' : '') +
-						(text ? (icon ? '\u00a0' : '') + self.encode(text) : '') +
+						textHtml +
 						' <i class="' + prefix + 'caret"></i>' +
 					'</button>' +
 				'</div>'
