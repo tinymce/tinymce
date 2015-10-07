@@ -13,18 +13,25 @@
 tinymce.PluginManager.add('anchor', function(editor) {
 	function showDialog() {
 		var selectedNode = editor.selection.getNode(), name = '';
+		var isAnchor = selectedNode.tagName == 'A' && editor.dom.getAttrib(selectedNode, 'href') === '';
 
-		if (selectedNode.tagName == 'A') {
+		if (isAnchor)
 			name = selectedNode.name || selectedNode.id || '';
-		}
 
 		editor.windowManager.open({
 			title: 'Anchor',
 			body: {type: 'textbox', name: 'name', size: 40, label: 'Name', value: name},
 			onsubmit: function(e) {
-				editor.execCommand('mceInsertContent', false, editor.dom.createHTML('a', {
-					id: e.data.name
-				}));
+				var id = e.data.name;
+
+				if (isAnchor)
+					selectedNode.id = id;
+				else {
+					editor.selection.collapse(true);
+					editor.execCommand('mceInsertContent', false, editor.dom.createHTML('a', {
+						id: id
+					}));
+				}
 			}
 		});
 	}
