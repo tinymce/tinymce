@@ -53,11 +53,11 @@ define(
       });
     };
 
-    var freefallLtr = function (universe, element, shortcuts) {
+    var freefallLtr = function (universe, element) {
       var candidate = scan(universe, element, universe.query().nextSibling).getOr(element);
       if (universe.property().isText(candidate)) return Spot.point(candidate, 0);
       var children = universe.property().children(candidate);
-      return children.length > 0 ? freefallLtr(universe, children[0], shortcuts) : Spot.point(candidate, 0);
+      return children.length > 0 ? freefallLtr(universe, children[0]) : Spot.point(candidate, 0);
     };
 
     var toEnd = function (universe, element) {
@@ -66,11 +66,11 @@ define(
       return children.length;
     };
 
-    var freefallRtl = function (universe, element, shortcuts) {
+    var freefallRtl = function (universe, element) {
       var candidate = scan(universe, element, universe.query().prevSibling).getOr(element);
       if (universe.property().isText(candidate)) return Spot.point(candidate, toEnd(universe, candidate));
       var children = universe.property().children(candidate);
-      return children.length > 0 ? freefallRtl(universe, children[children.length - 1], shortcuts) : Spot.point(candidate, toEnd(universe, candidate));
+      return children.length > 0 ? freefallRtl(universe, children[children.length - 1]) : Spot.point(candidate, toEnd(universe, candidate));
     };
 
     return {

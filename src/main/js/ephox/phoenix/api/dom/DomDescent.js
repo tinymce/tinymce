@@ -12,12 +12,12 @@ define(
       return Descent.toLeaf(universe, element, offset);
     };
 
-    var freefallLtr = function (element, shortcuts) {
-      return Descent.freefallLtr(universe, element, shortcuts);
+    var freefallLtr = function (element) {
+      return Descent.freefallLtr(universe, element);
     };
 
-    var freefallRtl = function (element, shortcuts) {
-      return Descent.freefallRtl(universe, element, shortcuts);
+    var freefallRtl = function (element) {
+      return Descent.freefallRtl(universe, element);
     };
 
     return {

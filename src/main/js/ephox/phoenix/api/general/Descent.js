@@ -10,12 +10,12 @@ define(
       return Navigation.toLeaf(unviverse, element, offset);
     };
 
-    var freefallLtr = function (universe, element, shortcuts) {
-      return Navigation.freefallLtr(universe, element, shortcuts);
+    var freefallLtr = function (universe, element) {
+      return Navigation.freefallLtr(universe, element);
     };
 
-    var freefallRtl = function (universe, element, shortcuts) {
-      return Navigation.freefallRtl(universe, element, shortcuts);
+    var freefallRtl = function (universe, element) {
+      return Navigation.freefallRtl(universe, element);
     };
 
     return {
