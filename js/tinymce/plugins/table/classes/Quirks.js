@@ -366,12 +366,14 @@ define("tinymce/tableplugin/Quirks", [
 
 						e.preventDefault();
 
-						if (tableCells.length == selectedTableCells.length) {
-							editor.execCommand('mceTableDelete');
-						} else {
-							Tools.each(selectedTableCells, clearCell);
-							placeCaretInCell(selectedTableCells[0]);
-						}
+						editor.undoManager.transact(function() {
+							if (tableCells.length == selectedTableCells.length) {
+								editor.execCommand('mceTableDelete');
+							} else {
+								Tools.each(selectedTableCells, clearCell);
+								placeCaretInCell(selectedTableCells[0]);
+							}
+						});
 					}
 				}
 			});
