@@ -406,6 +406,121 @@ define("tinymce/tableplugin/Plugin", [
 			});
 		});
 
+		function addButtons() {
+			editor.addButton('tableprops', {
+				title: 'Table properties',
+				onclick: dialogs.tableProps,
+				icon: 'table'
+			});
+
+			editor.addButton('tabledelete', {
+				title: 'Delete table',
+				onclick: cmd('mceTableDelete')
+			});
+
+			editor.addButton('tablecellprops', {
+				title: 'Cell properties',
+				onclick: cmd('mceTableCellProps')
+			});
+
+			editor.addButton('tablemergecells', {
+				title: 'Merge cells',
+				onclick: cmd('mceTableMergeCells'),
+				icon: 'tablecellmerge'
+			});
+
+			editor.addButton('tablesplitcells', {
+				title: 'Split cell',
+				onclick: cmd('mceTableSplitCells'),
+				icon: 'tablecellunmerge'
+			});
+
+			editor.addButton('tableinsertrowbefore', {
+				title: 'Insert row before',
+				onclick: cmd('mceTableInsertRowBefore'),
+				icon: 'tableinsertrowabove'
+			});
+
+			editor.addButton('tableinsertrowafter', {
+				title: 'Insert row after',
+				onclick: cmd('mceTableInsertRowAfter'),
+				icon: 'tableinsertrowbelow'
+			});
+
+			editor.addButton('tabledeleterow', {
+				title: 'Delete row',
+				onclick: cmd('mceTableDeleteRow')
+			});
+
+			editor.addButton('tablerowprops', {
+				title: 'Row properties',
+				onclick: cmd('mceTableRowProps')
+			});
+
+			editor.addButton('tablecutrow', {
+				title: 'Cut row',
+				onclick: cmd('mceTableCutRow')
+			});
+
+			editor.addButton('tablecopyrow', {
+				title: 'Copy row',
+				onclick: cmd('mceTableCopyRow')
+			});
+
+			editor.addButton('tablepasterowbefore', {
+				title: 'Paste row before',
+				onclick: cmd('mceTablePasteRowBefore')
+			});
+
+			editor.addButton('tablepasterowafter', {
+				title: 'Paste row after',
+				onclick: cmd('mceTablePasteRowAfter')
+			});
+
+			editor.addButton('tableinsertcolbefore', {
+				title: 'Insert column before',
+				onclick: cmd('mceTableInsertColBefore'),
+				icon: 'tableinsertcolleft'
+			});
+
+			editor.addButton('tableinsertcolafter', {
+				title: 'Insert column after',
+				onclick: cmd('mceTableInsertColAfter'),
+				icon: 'tableinsertcolright'
+			});
+
+			editor.addButton('tabledeletecol', {
+				title: 'Delete column',
+				onclick: cmd('mceTableDeleteCol')
+			});
+
+		}
+
+		function isTable(table) {
+
+			var selectorMatched = editor.dom.is(table, 'table');
+
+			return selectorMatched;
+		}
+
+		function addToolbars() {
+			var toolbarItems = editor.settings.table_toolbar;
+
+			if (!toolbarItems) {
+				toolbarItems = 'tableprops tabledelete | ' +
+					'tableinsertrowbefore tableinsertrowafter tabledeleterow | ' +
+					'tableinsertcolbefore tableinsertcolafter tabledeletecol';
+			}
+
+			editor.addContextToolbar(
+				isTable,
+				toolbarItems
+			);
+		}
+
+		addButtons();
+		addToolbars();
+
 		// Enable tab key cell navigation
 		if (editor.settings.table_tab_navigation !== false) {
 			editor.on('keydown', function(e) {
