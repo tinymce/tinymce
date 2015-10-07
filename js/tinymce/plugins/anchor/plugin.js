@@ -15,8 +15,9 @@ tinymce.PluginManager.add('anchor', function(editor) {
 		var selectedNode = editor.selection.getNode(), name = '';
 		var isAnchor = selectedNode.tagName == 'A' && editor.dom.getAttrib(selectedNode, 'href') === '';
 
-		if (isAnchor)
+		if (isAnchor) {
 			name = selectedNode.name || selectedNode.id || '';
+		}
 
 		editor.windowManager.open({
 			title: 'Anchor',
@@ -24,9 +25,9 @@ tinymce.PluginManager.add('anchor', function(editor) {
 			onsubmit: function(e) {
 				var id = e.data.name;
 
-				if (isAnchor)
+				if (isAnchor) {
 					selectedNode.id = id;
-				else {
+				} else {
 					editor.selection.collapse(true);
 					editor.execCommand('mceInsertContent', false, editor.dom.createHTML('a', {
 						id: id
