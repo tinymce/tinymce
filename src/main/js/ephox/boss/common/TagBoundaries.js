@@ -25,6 +25,7 @@ define(
       'table',
       'thead',
       'tbody',
+      'tfoot',
       'caption',
       'tr',
       'td',
