@@ -23,6 +23,7 @@ define(
       // --- NOTE, TagBoundaries has li here. That means universe.isBoundary => true for li tags.
       'table',
       'thead',
+      'tfoot',
       'tbody',
       'caption',
       'tr',

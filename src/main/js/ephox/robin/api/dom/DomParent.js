@@ -22,6 +22,10 @@ define(
       return Parent.subset(universe, start, finish);
     };
 
+    var ancestors = function (start, finish, _isRoot) {
+      return Parent.ancestors(universe, start, finish, _isRoot);
+    };
+
     var breakToLeft = function (parent, child) {
       return Parent.breakToLeft(universe, parent, child);
     };
@@ -39,6 +43,7 @@ define(
     return {
       sharedOne: sharedOne,
       subset: subset,
+      ancestors: ancestors,
       breakToLeft: breakToLeft,
       breakToRight: breakToRight,
       breakPath: breakPath

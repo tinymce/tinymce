@@ -52,7 +52,7 @@ define(
 
       var prune = function (path) {
         var index = Arr.findIndex(path, isRoot);
-        return index > -1 ? path.slice(0, index) : path;
+        return index > -1 ? path.slice(0, index + 1) : path;
       };
 
       var pruned1 = prune(ps1);
