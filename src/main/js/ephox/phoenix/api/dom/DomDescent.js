@@ -12,6 +12,9 @@ define(
       return Descent.toLeaf(universe, element, offset);
     };
 
+    /* The purpose of freefall is that they will land on an element that is not whitespace text. This
+     * can be very useful inside beautified content
+     */
     var freefallLtr = function (element) {
       return Descent.freefallLtr(universe, element);
     };
