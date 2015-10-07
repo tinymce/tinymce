@@ -55,7 +55,6 @@ define(
 
     var freefallLtr = function (universe, element, shortcuts) {
       var candidate = scan(universe, element, universe.query().nextSibling).getOr(element);
-      console.log('candidate', candidate.dom());
       if (universe.property().isText(candidate)) return Spot.point(candidate, 0);
       var children = universe.property().children(candidate);
       return children.length > 0 ? freefallLtr(universe, children[0], shortcuts) : Spot.point(candidate, 0);
