@@ -425,26 +425,22 @@ define("tinymce/tableplugin/Plugin", [
 
 			editor.addButton('tablemergecells', {
 				title: 'Merge cells',
-				onclick: cmd('mceTableMergeCells'),
-				icon: 'tablecellmerge'
+				onclick: cmd('mceTableMergeCells')
 			});
 
 			editor.addButton('tablesplitcells', {
 				title: 'Split cell',
-				onclick: cmd('mceTableSplitCells'),
-				icon: 'tablecellunmerge'
+				onclick: cmd('mceTableSplitCells')
 			});
 
 			editor.addButton('tableinsertrowbefore', {
 				title: 'Insert row before',
-				onclick: cmd('mceTableInsertRowBefore'),
-				icon: 'tableinsertrowabove'
+				onclick: cmd('mceTableInsertRowBefore')
 			});
 
 			editor.addButton('tableinsertrowafter', {
 				title: 'Insert row after',
-				onclick: cmd('mceTableInsertRowAfter'),
-				icon: 'tableinsertrowbelow'
+				onclick: cmd('mceTableInsertRowAfter')
 			});
 
 			editor.addButton('tabledeleterow', {
@@ -479,14 +475,12 @@ define("tinymce/tableplugin/Plugin", [
 
 			editor.addButton('tableinsertcolbefore', {
 				title: 'Insert column before',
-				onclick: cmd('mceTableInsertColBefore'),
-				icon: 'tableinsertcolleft'
+				onclick: cmd('mceTableInsertColBefore')
 			});
 
 			editor.addButton('tableinsertcolafter', {
 				title: 'Insert column after',
-				onclick: cmd('mceTableInsertColAfter'),
-				icon: 'tableinsertcolright'
+				onclick: cmd('mceTableInsertColAfter')
 			});
 
 			editor.addButton('tabledeletecol', {
