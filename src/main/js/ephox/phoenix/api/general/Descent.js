@@ -10,8 +10,18 @@ define(
       return Navigation.toLeaf(unviverse, element, offset);
     };
 
+    var freefallLtr = function (universe, element) {
+      return Navigation.freefallLtr(universe, element);
+    };
+
+    var freefallRtl = function (universe, element) {
+      return Navigation.freefallRtl(universe, element);
+    };
+
     return {
-      toLeaf: toLeaf
+      toLeaf: toLeaf,
+      freefallLtr: freefallLtr,
+      freefallRtl: freefallRtl
     };
   }
 );
