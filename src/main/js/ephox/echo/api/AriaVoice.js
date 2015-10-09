@@ -34,18 +34,23 @@ define(
       return span;
     };
 
+    var linkToDescription = function (item, token) {
+      var id = Id.generate('ephox-echo-voice');
+      Attr.set(token, 'id', id);
+      Attr.set(item, 'aria-describedby', id);
+    };
+
     var describe = function (item, description) {
       var doc = Traverse.owner(item);
       var token = create(doc, description);
-      var id = Id.generate('ephox-echo-voice');
-      Attr.set(token, 'id', id);
-
+      
       // We may not be able to get rid of them, so we'll make them display: none;
       Css.set(token, 'display', 'none');
 
       // Although described-by does not appear to work in IE10, we are currently only supporting JAWS in Firefox (and IE11),
       // and this does work for those browsers.
-      Attr.set(item, 'aria-describedby', id);
+      linkToDescription(item, token);
+      
       return token;
     };
 
@@ -53,12 +58,11 @@ define(
       var doc = Traverse.owner(parent);
 
       // firefox needs aria-describedby to speak a role=alert token, which causes IE11 to read twice
-      var createToken = isFirefox ? Fun.curry(describe, parent) : Fun.curry(create, doc);
-      var token = createToken(text);
+      var token = create(doc, text);
+      if (isFirefox) linkToDescription(parent, token);
 
       // Make it speak as soon as it is in the DOM (politely)
       Attr.setAll(token, getAttrs(text));
-
       Css.setAll(token, offscreen);
 
       Insert.append(parent, token);
