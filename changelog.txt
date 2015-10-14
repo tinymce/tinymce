@@ -1,3 +1,5 @@
+Version 4.3.9 (2016-0x-xx)
+	Fixed bug where empty elements were unnecessarily padded with BRs on IE
 Version 4.3.8 (2016-03-15)
 	Fixed bug where inserting HR at the end of a block element would produce an extra empty block.
 	Fixed bug where links would be clickable when readonly mode was enabled.

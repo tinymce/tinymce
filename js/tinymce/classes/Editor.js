@@ -901,17 +901,25 @@ define("tinymce/Editor", [
 				}
 			});
 
-			self.parser.addNodeFilter('p,h1,h2,h3,h4,h5,h6,div', function(nodes) {
-				var i = nodes.length, node, nonEmptyElements = self.schema.getNonEmptyElements();
+			if (!ie || ie >= 11) {
+				// Add BR elements to empty blocks to prevent them collapsing, except for IE < 11,
+				// which size the elements as expected WITHOUT the br. See also EnterKey.js/emptyBlock()
+				self.parser.addNodeFilter('p,h1,h2,h3,h4,h5,h6,div', function(nodes) {
+					var i = nodes.length, node, nonEmptyElements = self.schema.getNonEmptyElements();
 
-				while (i--) {
-					node = nodes[i];
+					while (i--) {
+						node = nodes[i];
 
-					if (node.isEmpty(nonEmptyElements)) {
-						node.append(new Node('br', 1)).shortEnded = true;
+						if (node.isEmpty(nonEmptyElements)) {
+							var brNode = new Node('br', 1);
+							brNode.shortEnded = true;
+							brNode.attr('data-mce-bogus', '1');
+
+							node.append(brNode);
+						}
 					}
-				}
-			});
+				});
+			}
 
 			/**
 			 * DOM serializer for the editor. Will be used when contents is extracted from the editor.
