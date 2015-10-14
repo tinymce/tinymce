@@ -24,16 +24,13 @@ tinymce.PluginManager.add('save', function(editor) {
 
 		// Use callback instead
 		if (editor.getParam("save_onsavecallback")) {
-			if (editor.execCallback('save_onsavecallback', editor)) {
-				editor.startContent = tinymce.trim(editor.getContent({format: 'raw'}));
-				editor.nodeChanged();
-			}
-
+			editor.execCallback('save_onsavecallback', editor);
+			editor.nodeChanged();
 			return;
 		}
 
 		if (formObj) {
-			editor.isNotDirty = true;
+			editor.setDirty(false);
 
 			if (!formObj.onsubmit || formObj.onsubmit()) {
 				if (typeof formObj.submit == "function") {
@@ -66,7 +63,7 @@ tinymce.PluginManager.add('save', function(editor) {
 	function stateToggle() {
 		var self = this;
 
-		editor.on('nodeChange', function() {
+		editor.on('nodeChange dirty', function() {
 			self.disabled(editor.getParam("save_enablewhendirty", true) && !editor.isDirty());
 		});
 	}

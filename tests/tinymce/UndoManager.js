@@ -367,7 +367,7 @@ test('BeforeAddUndo event', function() {
 
 test('Dirty state type letter', function() {
 	editor.undoManager.clear();
-	editor.isNotDirty = true;
+	editor.setDirty(false);
 	editor.setContent("<p>a</p>");
 	Utils.setSelection('p', 1);
 
@@ -379,7 +379,7 @@ test('Dirty state type letter', function() {
 
 test('Dirty state type shift+letter', function() {
 	editor.undoManager.clear();
-	editor.isNotDirty = true;
+	editor.setDirty(false);
 	editor.setContent("<p>a</p>");
 	Utils.setSelection('p', 1);
 
@@ -391,7 +391,7 @@ test('Dirty state type shift+letter', function() {
 
 test('Dirty state type AltGr+letter', function() {
 	editor.undoManager.clear();
-	editor.isNotDirty = true;
+	editor.setDirty(false);
 	editor.setContent("<p>a</p>");
 	Utils.setSelection('p', 1);
 

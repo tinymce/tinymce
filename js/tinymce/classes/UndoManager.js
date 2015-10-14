@@ -25,7 +25,7 @@ define("tinymce/UndoManager", [
 		}
 
 		function setDirty(state) {
-			editor.isNotDirty = !state;
+			editor.setDirty(state);
 		}
 
 		function addNonTypingUndoLevel(e) {
@@ -88,7 +88,7 @@ define("tinymce/UndoManager", [
 					setDirty(data[0] && getContent() != data[0].content);
 
 					// Fire initial change event
-					if (!editor.isNotDirty) {
+					if (editor.isDirty()) {
 						editor.fire('change', {level: data[0], lastLevel: null});
 					}
 				}
@@ -253,13 +253,9 @@ define("tinymce/UndoManager", [
 				if (index > 0) {
 					level = data[--index];
 
-					// Undo to first index then set dirty state to false
-					if (index === 0) {
-						setDirty(false);
-					}
-
 					editor.setContent(level.content, {format: 'raw'});
 					editor.selection.moveToBookmark(level.beforeBookmark);
+					setDirty(true);
 
 					editor.fire('undo', {level: level});
 				}

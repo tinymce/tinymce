@@ -435,3 +435,28 @@ test('addQueryValueHandler', function() {
 	ok(editor.queryCommandValue("CustomCommand2"), "b");
 	ok(lastScope === editor, "Scope is not editor");
 });
+
+test('setDirty/isDirty', function() {
+	var lastArgs = null;
+
+	editor.on('dirty', function(e) {
+		lastArgs = e;
+	});
+
+	editor.setDirty(false);
+	strictEqual(lastArgs, null);
+	strictEqual(editor.isDirty(), false);
+
+	editor.setDirty(true);
+	strictEqual(lastArgs.type, 'dirty');
+	strictEqual(editor.isDirty(), true);
+
+	lastArgs = null;
+	editor.setDirty(true);
+	strictEqual(lastArgs, null);
+	strictEqual(editor.isDirty(), true);
+
+	editor.setDirty(false);
+	strictEqual(lastArgs, null);
+	strictEqual(editor.isDirty(), false);
+});
