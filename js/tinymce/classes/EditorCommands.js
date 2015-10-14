@@ -794,7 +794,7 @@ define("tinymce/EditorCommands", [
 				if (selection.getRng().setStart) {
 					rng = dom.createRng();
 					rng.setStart(root, 0);
-					rng.setEnd(root, root.childNodes.length);
+					rng.setEndAfter(root, root.childNodes.length);
 					selection.setRng(rng);
 				} else {
 					// IE will render it's own root level block elements and sometimes
