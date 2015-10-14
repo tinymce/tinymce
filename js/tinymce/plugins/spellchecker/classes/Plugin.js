@@ -207,9 +207,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 		}
 
 		function spellcheck() {
-			finish();
-
-			if (started) {
+			if (finish()) {
 				return;
 			}
 
@@ -266,6 +264,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			if (started) {
 				started = false;
 				editor.fire('SpellcheckEnd');
+				return true;
 			}
 		}
 
