@@ -16,7 +16,8 @@
 				{title: 'a', type: 'spacer', classes: 'red'},
 				{title: 'b', type: 'spacer', classes: 'green'},
 				{title: 'c', type: 'spacer', classes: 'blue'}
-			]
+			],
+			target: null
 		}, settings)).renderTo(document.getElementById('view')).reflow();
 	}
 

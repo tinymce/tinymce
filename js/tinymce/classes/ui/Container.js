@@ -72,7 +72,7 @@ define("tinymce/ui/Container", [
 				self.classes.add(settings.containerCls);
 			}
 
-			self._layout = Factory.create((settings.layout || '') + 'layout');
+			self._layout = Factory.create((settings.layout || '') + 'layout', {target: settings.target});
 
 			if (self.settings.items) {
 				self.add(self.settings.items);
@@ -234,7 +234,7 @@ define("tinymce/ui/Container", [
 						settings = Tools.extend({}, self.settings.defaults, item);
 						item.type = settings.type = settings.type || item.type || self.settings.defaultType ||
 							(settings.defaults ? settings.defaults.type : null);
-						item = Factory.create(settings);
+						item = Factory.create(settings, {target: self.settings.target});
 					}
 
 					ctrlItems.push(item);

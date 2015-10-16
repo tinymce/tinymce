@@ -75,12 +75,14 @@ define("tinymce/ui/Factory", [], function() {
 				namespaceInit = true;
 			}
 
+			settings = settings || {};
 			// If string is specified then use it as the type
 			if (typeof type == 'string') {
-				settings = settings || {};
 				settings.type = type;
 			} else {
-				settings = type;
+				for (var i in type) {
+					settings[i] = type[i];
+				}
 				type = settings.type;
 			}
 

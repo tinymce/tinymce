@@ -50,6 +50,11 @@
 					node.id = id = tinymce.DOM.uniqueId();
 				}
 
+				// Set target if not specified, otherwise we'll not be able to find in by id under Shadow DOM
+				if (!settings.target) {
+					settings = self.extend(settings, {target: node});
+				}
+
 				// Only init the editor once
 				if (tinymce.get(id)) {
 					return;

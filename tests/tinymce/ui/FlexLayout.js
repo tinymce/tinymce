@@ -20,7 +20,8 @@
 				{type: 'spacer', classes: 'red'},
 				{type: 'spacer', classes: 'green'},
 				{type: 'spacer', classes: 'blue'}
-			]
+			],
+			target: null
 		}, settings)).renderTo(document.getElementById('view')).reflow();
 
 		Utils.resetScroll(panel.getEl('body'));
@@ -487,7 +488,8 @@
 					{type: 'spacer', classes: 'magenta'}
 				]},
 				{type: 'spacer', classes: 'green'}
-			]
+			],
+			target: null
 		}).renderTo(document.getElementById('view')).reflow();
 
 		Utils.nearlyEqualRects(Utils.rect(panel), [0, 0, 110, 40]);
@@ -510,7 +512,8 @@
 					{type: 'spacer', classes: 'magenta'}
 				]},
 				{type: 'spacer', classes: 'green'}
-			]
+			],
+			target: null
 		}).renderTo(document.getElementById('view')).reflow();
 
 		panel.find('spacer')[1].hide().parent().reflow();
@@ -871,7 +874,8 @@
 					{type: 'spacer', classes: 'magenta'}
 				]},
 				{type: 'spacer', classes: 'green'}
-			]
+			],
+			target: null
 		}).renderTo(document.getElementById('view')).reflow();
 
 		Utils.nearlyEqualRects(Utils.rect(panel), [0, 0, 110, 40]);

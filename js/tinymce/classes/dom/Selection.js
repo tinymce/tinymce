@@ -463,6 +463,23 @@ define("tinymce/dom/Selection", [
 		 */
 		getSel: function() {
 			var win = this.win;
+			try {
+				// We need to return Shadow Root if target element is under Shadow DOM and not using iframe
+				if (!this.editor.iframeElement && this.editor.targetElm.matches && this.editor.targetElm.matches(':host *')) {
+					(function(target) {
+						while (target.parentNode) {
+							target = target.parentNode;
+						}
+						// If there is no parent node, but there is `host` property - we've just found Shadow Root,
+						// where we'll get selection
+						if (target.host) {
+							win = target;
+						}
+					})(this.editor.targetElm);
+				}
+			} catch (err) {
+				// Nothing, even if `.matches` method is present - it doesn't mean that browsers understands ':host *' selector
+			}
 
 			return win.getSelection ? win.getSelection() : win.document.selection;
 		},

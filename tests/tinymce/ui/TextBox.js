@@ -11,7 +11,8 @@
 
 	function createTextBox(settings) {
 		return tinymce.ui.Factory.create(tinymce.extend({
-			type: 'textbox'
+			type: 'textbox',
+			target: null
 		}, settings)).renderTo(document.getElementById('view'));
 	}
 

@@ -29,7 +29,8 @@
 							{type: 'button', name: 'button12', classes: 'class4'}
 						]}
 					]}
-				]
+				],
+				target: null
 			}).renderTo(document.getElementById('view'));
 		},
 

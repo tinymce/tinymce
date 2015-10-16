@@ -13,7 +13,8 @@
 
 	function createPanel(settings) {
 		return tinymce.ui.Factory.create(tinymce.extend({
-			type: 'panel'
+			type: 'panel',
+			target: null
 		}, settings)).renderTo(document.getElementById('view')).reflow();
 	}
 

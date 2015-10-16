@@ -117,7 +117,7 @@ define("tinymce/ui/ComboBox", [
 					menu.type = menu.type || 'menu';
 				}
 
-				self.menu = Factory.create(menu).parent(self).renderTo(self.getContainerElm());
+				self.menu = Factory.create(menu, {target: self.settings.target}).parent(self).renderTo(self.getContainerElm());
 				self.fire('createmenu');
 				self.menu.reflow();
 				self.menu.on('cancel', function(e) {

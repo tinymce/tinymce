@@ -63,7 +63,8 @@ tinymce.PluginManager.add('contextmenu', function(editor) {
 			menu = new tinymce.ui.Menu({
 				items: items,
 				context: 'contextmenu',
-				classes: 'contextmenu'
+				classes: 'contextmenu',
+				target: editor.targetElm
 			}).renderTo();
 
 			editor.on('remove', function() {

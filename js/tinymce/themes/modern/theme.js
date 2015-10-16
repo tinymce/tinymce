@@ -102,7 +102,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 						item.type = item.type || 'button';
 						item.size = size;
 
-						item = Factory.create(item);
+						item = Factory.create(item, {target: editor.targetElm});
 						buttonGroup.items.push(item);
 
 						if (editor.initialized) {
@@ -561,7 +561,8 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				items: createToolbar(match.toolbar.items),
 				oncancel: function() {
 					editor.focus();
-				}
+				},
+				target: self.settings.target
 			});
 
 			match.toolbar.panel = panel;
@@ -730,7 +731,8 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				items: [
 					settings.menubar === false ? null : {type: 'menubar', border: '0 0 1 0', items: createMenuButtons()},
 					createToolbars(settings.toolbar_items_size)
-				]
+				],
+				target: editor.targetElm
 			});
 
 			// Add statusbar
@@ -818,7 +820,8 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				settings.menubar === false ? null : {type: 'menubar', border: '0 0 1 0', items: createMenuButtons()},
 				createToolbars(settings.toolbar_items_size),
 				{type: 'panel', name: 'iframe', layout: 'stack', classes: 'edit-area', html: '', border: '1 0 0 0'}
-			]
+			],
+			target: editor.targetElm
 		});
 
 		if (settings.resize !== false) {

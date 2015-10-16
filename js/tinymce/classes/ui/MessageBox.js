@@ -158,7 +158,8 @@ define("tinymce/ui/MessageBox", [
 					onClose: settings.onClose,
 					onCancel: function() {
 						callback(false);
-					}
+					},
+					target: null
 				}).renderTo(document.body).reflow();
 			},
 

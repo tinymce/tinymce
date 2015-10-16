@@ -11,7 +11,8 @@
 
 	function createColorButton(settings) {
 		return tinymce.ui.Factory.create(tinymce.extend({
-			type: 'colorbutton'
+			type: 'colorbutton',
+			target: null
 		}, settings)).renderTo(document.getElementById('view'));
 	}
 

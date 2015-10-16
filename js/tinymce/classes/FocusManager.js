@@ -33,7 +33,8 @@ define("tinymce/FocusManager", [
 	function FocusManager(editorManager) {
 		function getActiveElement() {
 			try {
-				return document.activeElement;
+				// TODO: Hack for WebComponents.js polyfill, that doesn't wrap `document` and thus `document.activeElement` is not wrapped too
+				return document.querySelector('html').parentNode.activeElement;
 			} catch (ex) {
 				// IE sometimes fails to get the activeElement when resizing table
 				// TODO: Investigate this
@@ -111,6 +112,11 @@ define("tinymce/FocusManager", [
 							// IE 11 reports active element as iframe not body of iframe
 							if (node && node.id == editor.id + '_ifr') {
 								node = editor.getBody();
+							}
+
+							// If node has Shadow Root - real active element is somewhere inside
+							while (node.shadowRoot && node.shadowRoot.activeElement) {
+								node = node.shadowRoot.activeElement;
 							}
 
 							if (editor.dom.isChildOf(node, editor.getBody())) {
@@ -196,10 +202,10 @@ define("tinymce/FocusManager", [
 					var activeEditor = editorManager.activeEditor, target;
 
 					target = e.target;
-
-					if (activeEditor && target.ownerDocument == document) {
+					// TODO: Hack for WebComponents.js polyfill, that wraps `element.ownerDocument` and thus do not equal to `document` anymore
+					if (activeEditor && target.ownerDocument == document.querySelector('html').parentNode) {
 						// Check to make sure we have a valid selection don't update the bookmark if it's
-						// a focusin to the body of the editor see #7025
+						// a focusing to the body of the editor see #7025
 						if (activeEditor.selection && target != activeEditor.getBody()) {
 							activeEditor.selection.lastFocusBookmark = createBookmark(activeEditor.dom, activeEditor.lastRng);
 						}
@@ -260,8 +266,9 @@ define("tinymce/FocusManager", [
 	 * @return {Boolean} True/false state if the element is part of the UI or not.
 	 */
 	FocusManager.isEditorUIElement = function(elm) {
+		// Focused Shadow Root doesn't have `elm.className` property
 		// Needs to be converted to string since svg can have focus: #6776
-		return elm.className.toString().indexOf('mce-') !== -1;
+		return elm.className && elm.className.toString().indexOf('mce-') !== -1;
 	};
 
 	return FocusManager;

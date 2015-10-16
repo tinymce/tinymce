@@ -13,7 +13,8 @@
 		var panel = tinymce.ui.Factory.create(tinymce.extend({
 			type: "panel",
 			layout: "grid",
-			defaults: {type: 'spacer'}
+			defaults: {type: 'spacer'},
+			target: null
 		}, settings)).renderTo(document.getElementById('view')).reflow();
 
 		Utils.resetScroll(panel.getEl('body'));
