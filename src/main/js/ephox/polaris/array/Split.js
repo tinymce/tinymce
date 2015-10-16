@@ -28,12 +28,12 @@ define(
           // Include in the current sublist.
           part.push(x);
         }, function () {
-          // Stop the current list, create a new list containing just list, and then restart the next list.
+          // Stop the current sublist, create a new sublist containing just x, and then start the next sublist.
           if (part.length > 0) r.push(part);
           r.push([ x ]);
           part = [];
         }, function () {
-          // Stop the current list, and restart the next list.
+          // Stop the current sublist, and start the next sublist.
           if (part.length > 0) r.push(part);
           part = [];
         });
