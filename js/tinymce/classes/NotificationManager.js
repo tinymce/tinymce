@@ -104,9 +104,11 @@ define("tinymce/NotificationManager", [
 			if (notifications.length > 1) {
 				for (var i = 0; i < notifications.length; i++) {
 					if (notifications[i] === notif && i > 0) {
-						notif.moveRel(notifications[i - 1], 'bc-tc');
+						notif.moveRel(notifications[i - 1].getEl(), 'tr-br');
 					}
 				}
+			} else {
+				notif.moveRel(editor.getContentAreaContainer(), 'br-br');
 			}
 
 			return notif;
