@@ -10,7 +10,7 @@ define(
 
   function (Arr, Extract, Arrays, Splitting) {
     /**
-     * Return an array of arrays split by boundaries or empty tags.
+     * Return an array of arrays split by boundaries (exclude) or empty tags (include).
      */
     var group = function (universe, items, optimise) {
       var extractions = Arr.bind(items, function (item) {
