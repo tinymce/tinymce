@@ -36,17 +36,12 @@ define("tinymce/ui/Notification", [
 				self.text(settings.text);
 			}
 
-			//Criteria for button shown:
-			//0 Timeout
-			//>0 timeout + closeButton = true
-
-			//Criteria for button hidden:
-			//-1 Timeout (progress bar)
-			//>0 timeout
-
 			self.on('postRender', function() {
 				if (settings.type) {
 					self.getEl().className += ' ' + prefix + 'notification-' + settings.type;
+				}
+				if (settings.icon) {
+					self.getEl().firstChild.className += ' ' + prefix + 'i-' + settings.icon;
 				}
 				if (settings.timeout && (settings.timeout < 0 || settings.timeout > 0) && !settings.closeButton) {
 					self.getEl().lastChild.className += ' ' + prefix + 'hidden';
@@ -71,6 +66,7 @@ define("tinymce/ui/Notification", [
 
 			return (
 				'<div id="' + self._id + '" class="' + self.classes + '" role="presentation">' +
+					'<i class="' + prefix + 'ico"></i>' +
 					'<div class="' + prefix + 'notification-inner">' + self.state.get('text') + '</div>' +
 					'<button type="button" class="' + prefix + 'close" aria-hidden="true">\u00d7</button>' +
 				'</div>'
@@ -81,7 +77,7 @@ define("tinymce/ui/Notification", [
 			var self = this;
 
 			self.state.on('change:text', function(e) {
-				self.getEl().firstChild.innerHTML = e.value;
+				self.getEl().childNodes[1].innerHTML = e.value;
 			});
 
 			return self._super();

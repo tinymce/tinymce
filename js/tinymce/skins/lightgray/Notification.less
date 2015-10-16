@@ -6,7 +6,24 @@
 	.opacity(0.8);
 }
 
+.@{prefix}-notification-info {
+	background-color: @notification-info-bg;
+}
+
+.@{prefix}-notification-warning {
+	background-color: @notification-warning-bg;
+}
+
+.@{prefix}-notification-error {
+	background-color: @notification-error-bg;
+}
+
+.@{prefix}-notification .@{prefix}-ico {
+	margin-top: 5px;
+}
+
 .@{prefix}-notification-inner {
+	display: inline-block;
 	font-size: @notification-font-size;
 	max-width: 200px;
 	padding: 5px 8px 4px 8px;
@@ -16,21 +33,30 @@
 }
 
 .@{prefix}-notification-info .@{prefix}-notification-inner {
-	background-color: @notification-info-bg;
 	color: @notification-info-text;
 	.box-shadow(0 0 5px @notification-info-bg);
 }
 
+.@{prefix}-notification-info .@{prefix}-notification-inner * {
+	color: @notification-info-text;
+}
+
 .@{prefix}-notification-warning .@{prefix}-notification-inner {
-	background-color: @notification-warning-bg;
 	color: @notification-warning-text;
 	.box-shadow(0 0 5px @notification-warning-bg);
 }
 
+.@{prefix}-notification-warning .@{prefix}-notification-inner * {
+	color: @notification-warning-text;
+}
+
 .@{prefix}-notification-error .@{prefix}-notification-inner {
-	background-color: @notification-error-bg;
 	color: @notification-error-text;
 	.box-shadow(0 0 5px @notification-error-bg);
+}
+
+.@{prefix}-notification-error .@{prefix}-notification-inner * {
+	color: @notification-error-text;
 }
 
 .@{prefix}-notification-inner {
@@ -52,6 +78,6 @@
 	overflow: hidden;
 }
 
-.@{prefix}-notification .@{prefix}-close.@{prefix}-hidden{
+.@{prefix}-notification .@{prefix}-hidden{
 	display: none;
 }
