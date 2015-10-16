@@ -118,8 +118,6 @@ define("tinymce/NotificationManager", [
 			return notif;
 		};
 
-
-
 		/**
 		 * Closes the top most window.
 		 *
