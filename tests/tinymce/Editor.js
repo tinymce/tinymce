@@ -460,3 +460,24 @@ test('setDirty/isDirty', function() {
 	strictEqual(lastArgs, null);
 	strictEqual(editor.isDirty(), false);
 });
+
+test('setMode', function() {
+	var clickCount = 0;
+
+	editor.on('click', function() {
+		clickCount++;
+	});
+
+	editor.dom.fire(editor.getBody(), 'click');
+	equal(clickCount, 1);
+
+	editor.setMode('readonly');
+	equal(editor.theme.panel.find('button:last')[2].disabled(), true);
+	editor.dom.fire(editor.getBody(), 'click');
+	equal(clickCount, 1);
+
+	editor.setMode('design');
+	editor.dom.fire(editor.getBody(), 'click');
+	equal(editor.theme.panel.find('button:last')[2].disabled(), false);
+	equal(clickCount, 2);
+});
