@@ -318,8 +318,8 @@ define("tinymce/ui/FormatControls", [
 				}
 
 				self.disabled(!checkState());
-				editor.on('Undo Redo AddUndo TypingUndo ClearUndos', function() {
-					self.disabled(!checkState());
+				editor.on('Undo Redo AddUndo TypingUndo ClearUndos SwitchMode', function() {
+					self.disabled(editor.readonly || !checkState());
 				});
 			};
 		}

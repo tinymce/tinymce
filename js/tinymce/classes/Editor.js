@@ -762,8 +762,9 @@ define("tinymce/Editor", [
 			// It will not steal focus while setting contentEditable
 			body = self.getBody();
 			body.disabled = true;
+			self.readonly = settings.readonly;
 
-			if (!settings.readonly) {
+			if (!self.readonly) {
 				if (self.inline && DOM.getStyle(body, 'position', true) == 'static') {
 					body.style.position = 'relative';
 				}
@@ -1846,6 +1847,16 @@ define("tinymce/Editor", [
 			if (state && state != oldState) {
 				this.fire('dirty');
 			}
+		},
+
+		/**
+		 * Sets the editor mode. Mode can be for example "design", "code" or "readonly".
+		 *
+		 * @method setMode
+		 * @param {String} mode Mode to set the editor in.
+		 */
+		setMode: function(mode) {
+			this.fire('SwitchMode', {mode: mode});
 		},
 
 		/**

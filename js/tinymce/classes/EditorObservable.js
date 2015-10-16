@@ -65,6 +65,10 @@ define("tinymce/EditorObservable", [
 	function bindEventDelegate(editor, eventName) {
 		var eventRootElm = getEventTarget(editor, eventName), delegate;
 
+		function isListening(editor) {
+			return !editor.hidden && !editor.readonly;
+		}
+
 		if (!editor.delegates) {
 			editor.delegates = {};
 		}
@@ -102,7 +106,7 @@ define("tinymce/EditorObservable", [
 					var body = editors[i].getBody();
 
 					if (body === target || DOM.isChildOf(target, body)) {
-						if (!editors[i].hidden) {
+						if (isListening(editors[i])) {
 							editors[i].fire(eventName, e);
 						}
 					}
@@ -113,7 +117,7 @@ define("tinymce/EditorObservable", [
 			DOM.bind(eventRootElm, eventName, delegate);
 		} else {
 			delegate = function(e) {
-				if (!editor.hidden) {
+				if (isListening(editor)) {
 					editor.fire(eventName, e);
 				}
 			};
@@ -145,10 +149,6 @@ define("tinymce/EditorObservable", [
 		 */
 		toggleNativeEvent: function(name, state) {
 			var self = this;
-
-			if (self.settings.readonly) {
-				return;
-			}
 
 			// Never bind focus/blur since the FocusManager fakes those
 			if (name == "focus" || name == "blur") {
