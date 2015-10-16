@@ -16,7 +16,7 @@ test(
     check([], [], Fun.constant(true));
     check([[1]], [1], Fun.constant(false));
     check([[1, 2, 3]], [1, 2, 3], Fun.constant(false));
-    check([[1], [2, 3], [4, 5, 6], [7], [], [8]], [1, '|', 2, 3, '|', 4, 5, 6, '|', 7, '|', '|', 8], function (x) {
+    check([[1], [2, 3], [4, 5, 6], [7], [8]], [1, '|', 2, 3, '|', 4, 5, 6, '|', 7, '|', '|', 8], function (x) {
       return x === '|';
     });
 
@@ -26,7 +26,20 @@ test(
       else return Splitting.include(value);
     };
 
-    assert.eq([ ], Arrays.splitbyAdv([ ], predicate));
+    var checkAdv = function (expected, input) {
+      var actual = Arrays.splitbyAdv(input, predicate);
+      assert.eq(expected, actual);
+    };
+
+    checkAdv([ ], [ ]);
+    checkAdv([
+      [ '.' ],
+      [ '.' ],
+      [ 'a', 'b' ],
+      [ 'd', 'e', 'f' ],
+      [ '.' ],
+      [ 'g' ]
+    ], [ 'x', 'x', '.', 'x', '.', 'a', 'b', 'x', 'x', 'd', 'e', 'f', '.', 'g' ]);
 
   }
 );

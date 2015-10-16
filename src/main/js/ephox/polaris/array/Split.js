@@ -29,12 +29,12 @@ define(
           part.push(x);
         }, function () {
           // Stop the current list, create a new list containing just list, and then restart the next list.
-          r.push(part);
+          if (part.length > 0) r.push(part);
           r.push([ x ]);
           part = [];
         }, function () {
           // Stop the current list, and restart the next list.
-          r.push(part);
+          if (part.length > 0) r.push(part);
           part = [];
         });
       });
