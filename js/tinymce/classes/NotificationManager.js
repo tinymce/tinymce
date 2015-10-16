@@ -48,6 +48,18 @@ define("tinymce/NotificationManager", [
 
 		self.notifications = notifications;
 
+		function positionNotifications() {
+			if (notifications.length > 0) {
+				var firstItem = notifications.slice(0, 1)[0];
+				firstItem.moveRel(editor.getContentAreaContainer(), 'tc-tc');
+				if (notifications.length > 1) {
+					for (var i = 1; i < notifications.length; i++) {
+						notifications[i].moveRel(notifications[i - 1].getEl(), 'bc-tc');
+					}
+				}
+			}
+		}
+
 		editor.on('remove', function() {
 			var i = notifications.length;
 
@@ -55,6 +67,8 @@ define("tinymce/NotificationManager", [
 				notifications[i].close();
 			}
 		});
+
+		editor.on('ResizeEditor ResizeWindow', positionNotifications);
 
 		/**
 		 * Opens a new notification.
@@ -90,9 +104,7 @@ define("tinymce/NotificationManager", [
 					}
 				}
 
-				if (!notifications.length) {
-					editor.focus();
-				}
+				positionNotifications();
 			});
 
 			// store args and parameters
@@ -101,18 +113,12 @@ define("tinymce/NotificationManager", [
 
 			notif.renderTo();
 
-			if (notifications.length > 1) {
-				for (var i = 0; i < notifications.length; i++) {
-					if (notifications[i] === notif && i > 0) {
-						notif.moveRel(notifications[i - 1].getEl(), 'tr-br');
-					}
-				}
-			} else {
-				notif.moveRel(editor.getContentAreaContainer(), 'br-br');
-			}
+			positionNotifications();
 
 			return notif;
 		};
+
+
 
 		/**
 		 * Closes the top most window.
