@@ -43,9 +43,12 @@ define("tinymce/ui/FloatPanel", [
 		// Hide any float panel when a click/focus out is out side that float panel and the
 		// float panels direct parent for example a click on a menu button
 		var i = visiblePanels.length;
+		// When target element is inside Shadow DOM we need to take first element from path
+		// otherwise we'll get Shadow Root parent, not actual target element
+		var target = e.path ? e.path[0] : e.target;
 
 		while (i--) {
-			var panel = visiblePanels[i], clickCtrl = panel.getParentCtrl(e.target);
+			var panel = visiblePanels[i], clickCtrl = panel.getParentCtrl(target);
 
 			if (panel.settings.autohide) {
 				if (clickCtrl) {
@@ -54,7 +57,7 @@ define("tinymce/ui/FloatPanel", [
 					}
 				}
 
-				e = panel.fire('autohide', {target: e.target});
+				e = panel.fire('autohide', {target: target});
 				if (!e.isDefaultPrevented()) {
 					panel.hide();
 				}
