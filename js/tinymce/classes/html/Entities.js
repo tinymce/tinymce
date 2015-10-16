@@ -119,7 +119,7 @@ define("tinymce/html/Entities", [
 
 	var Entities = {
 		/**
-		 * Encodes the specified string using raw entities. This means only the required XML base entities will be endoded.
+		 * Encodes the specified string using raw entities. This means only the required XML base entities will be encoded.
 		 *
 		 * @method encodeRaw
 		 * @param {String} text Text to encode.
