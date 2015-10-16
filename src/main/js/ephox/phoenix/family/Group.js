@@ -4,20 +4,29 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.phoenix.api.general.Extract',
-    'ephox.polaris.api.Arrays'
+    'ephox.polaris.api.Arrays',
+    'ephox.polaris.api.Splitting'
   ],
 
-  function (Arr, Extract, Arrays) {
+  function (Arr, Extract, Arrays, Splitting) {
     /**
-     * Return an array of arrays split by boundaries
+     * Return an array of arrays split by boundaries or empty tags.
      */
     var group = function (universe, items, optimise) {
       var extractions = Arr.bind(items, function (item) {
         return Extract.from(universe, item, optimise);
       });
 
-      var segments = Arrays.splitby(extractions, function (item) {
-        return item.isBoundary();
+      // TBIO-3432: Previously, we only split by boundaries. Now, we are splitting by
+      // empty tags as well. However, we keep the empty tags.
+      var segments = Arrays.splitbyAdv(extractions, function (item) {
+        return item.fold(function () {
+          return Splitting.excludeWithout(item);
+        }, function () {
+          return Splitting.excludeWith(item);
+        }, function () {
+          return Splitting.include(item);
+        });
       });
 
       return Arr.filter(segments, function (x) { return x.length > 0; });

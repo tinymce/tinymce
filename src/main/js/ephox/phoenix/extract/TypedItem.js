@@ -51,6 +51,10 @@ define(
         });
       };
 
+      var isNotText = function () {
+        return fold(yes, yes, no);
+      };
+
       var len = function () {
         return fold(Fun.constant(0), Fun.constant(1), function (item, universe) {
           return universe.property().getText(item).length;
@@ -61,6 +65,7 @@ define(
         isBoundary: isBoundary,
         fold: fold,
         toText: toText,
+        isNotText: isNotText,
         is: is,
         len: len
       };
