@@ -17,10 +17,10 @@
  * @mixes tinymce.ui.Movable
  */
 define("tinymce/ui/Notification", [
-	"tinymce/ui/Control",
+	"tinymce/ui/Container",
 	"tinymce/ui/Movable"
-], function(Control, Movable) {
-	return Control.extend({
+], function(Container, Movable) {
+	return Container.extend({
 		Mixins: [Movable],
 
 		Defaults: {
