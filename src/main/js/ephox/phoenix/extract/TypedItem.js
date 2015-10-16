@@ -66,10 +66,15 @@ define(
       };
     };
 
+    var cata = function (subject, onBoundary, onEmpty, onText) {
+      return subject.fold(onBoundary, onEmpty, onText);
+    };
+
     return {
       text: text,
       boundary: boundary,
-      empty: empty
+      empty: empty,
+      cata: cata
     };
   }
 );
