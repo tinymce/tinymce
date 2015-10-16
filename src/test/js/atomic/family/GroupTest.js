@@ -45,12 +45,14 @@ test(
     };
 
     check([
-      [ 'empty(1.1.1)', 'text("post-image text")' ],
+      [ 'empty(1.1.1)' ],
+      [ 'text("post-image text")' ],
       [ 'text("This is text")', 'text("inside a span")', 'text("More text")', 'text("Inside em")', 'text("Last piece of text")' ]
     ], [ '1' ]);
 
     check([
-      [ 'empty(1.1.1)', 'text("post-image text")' ]
+      [ 'empty(1.1.1)' ],
+      [ 'text("post-image text")' ]
     ], [ '1.1' ]);
 
   }
