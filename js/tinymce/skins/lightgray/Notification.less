@@ -1,0 +1,57 @@
+// notification
+
+.@{prefix}-notification {
+	position: absolute;
+	padding: 5px;
+	.opacity(0.8);
+}
+
+.@{prefix}-notification-inner {
+	font-size: @notification-font-size;
+	max-width: 200px;
+	padding: 5px 8px 4px 8px;
+	margin-right: 20px;
+	text-align: center;
+	white-space: normal;
+}
+
+.@{prefix}-notification-info .@{prefix}-notification-inner {
+	background-color: @notification-info-bg;
+	color: @notification-info-text;
+	.box-shadow(0 0 5px @notification-info-bg);
+}
+
+.@{prefix}-notification-warning .@{prefix}-notification-inner {
+	background-color: @notification-warning-bg;
+	color: @notification-warning-text;
+	.box-shadow(0 0 5px @notification-warning-bg);
+}
+
+.@{prefix}-notification-error .@{prefix}-notification-inner {
+	background-color: @notification-error-bg;
+	color: @notification-error-text;
+	.box-shadow(0 0 5px @notification-error-bg);
+}
+
+.@{prefix}-notification-inner {
+	.border-radius(3px);
+}
+
+.@{prefix}-notification .@{prefix}-close {
+	position: absolute;
+	right: 15px;
+	top: 9px;
+	font-size: 20px;
+	font-weight: bold;
+	line-height: 20px;
+	color: @window-head-close;
+	cursor: pointer;
+
+	// IE7
+	height: 20px;
+	overflow: hidden;
+}
+
+.@{prefix}-notification .@{prefix}-close.@{prefix}-hidden{
+	display: none;
+}
