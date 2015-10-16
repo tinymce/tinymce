@@ -1,0 +1,31 @@
+// Progress
+
+.@{prefix}-progress {
+	display: inline-block;
+	overflow: hidden;
+	position: relative;
+	width: 100px;
+	height: 20px;
+	border: 1px solid @progress-border;
+	.border-radius(4px);
+}
+
+.@{prefix}-progress .@{prefix}-text {
+	position: absolute;
+	top: 50%;
+	left: 0;
+	text-align: center;
+	margin-top: -8px;
+	font-size: 12px;
+	width: 100%;
+	color: @progress-text;
+	text-shadow: 1px 1px @progress-text-shadow;
+}
+
+.@{prefix}-bar {
+	display: block;
+	width: 0%;
+	height: 100%;
+	.vertical-gradient(@progress-bar-bg, @progress-bar-bg-hlight);
+	.transition(width .2s ease);
+}
