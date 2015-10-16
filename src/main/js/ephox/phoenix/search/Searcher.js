@@ -32,7 +32,7 @@ define(
     var run = function (universe, elements, patterns, optimise) {
       var sections = Family.group(universe, elements, optimise);
       var result = Arr.bind(sections, function (x) {
-        var input = TypedList.justText(x, universe.create().text);
+        var input = TypedList.justText(x);
         var text = Arr.map(input, universe.property().getText).join('');
 
         var matches = Search.findmany(text, patterns);

@@ -39,11 +39,9 @@ define(
       });
     };
 
-    var justText = function (parray, substitute) {
+    var justText = function (parray) {
       return Arr.bind(parray, function (x) {
-        return x.fold(Fun.constant([]), function () {
-          return substitute(' ');
-        }, Fun.identity);
+        return x.fold(Fun.constant([]), Fun.constant([]), Fun.identity);
       });
     };
 
