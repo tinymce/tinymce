@@ -888,7 +888,7 @@ define("tinymce/Editor", [
 					while (i--) {
 						node = nodes[i];
 
-						if (node.isEmpty(nonEmptyElements)) {
+						if (node.isEmpty(nonEmptyElements, {br: 1} /* Consider an existing br data-mce-bogus element as non-empty */)) {
 							var brNode = new Node('br', 1);
 							brNode.shortEnded = true;
 							brNode.attr('data-mce-bogus', '1');
