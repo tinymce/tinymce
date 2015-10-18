@@ -879,8 +879,9 @@ define("tinymce/Editor", [
 				}
 			});
 
-			if (!ie) {
-				// IE does not need br elements in empty blocks. See also EnterKey.js/emptyBlock()
+			if (!ie || ie >= 11) {
+				// Add BR elements to empty blocks to prevent them collapsing, except for IE < 11,
+				// which sizes the elements as expected WITHOUT the br. See also EnterKey.js/emptyBlock()
 				self.parser.addNodeFilter('p,h1,h2,h3,h4,h5,h6,div', function(nodes) {
 					var i = nodes.length, node, nonEmptyElements = self.schema.getNonEmptyElements();
 
