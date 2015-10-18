@@ -18,8 +18,9 @@
  */
 define("tinymce/ui/Notification", [
 	"tinymce/ui/Container",
-	"tinymce/ui/Movable"
-], function(Container, Movable) {
+	"tinymce/ui/Movable",
+    "tinymce/ui/Progress"
+], function(Container, Movable, Progress) {
 	return Container.extend({
 		Mixins: [Movable],
 
@@ -28,7 +29,7 @@ define("tinymce/ui/Notification", [
 		},
 
 		init: function(settings) {
-			var self = this, prefix = self.classPrefix;
+			var self = this;
 
 			self._super(settings);
 
@@ -36,17 +37,23 @@ define("tinymce/ui/Notification", [
 				self.text(settings.text);
 			}
 
-			self.on('postRender', function() {
-				if (settings.type) {
-					self.getEl().className += ' ' + prefix + 'notification-' + settings.type;
-				}
-				if (settings.icon) {
-					self.getEl().firstChild.className += ' ' + prefix + 'i-' + settings.icon;
-				}
-				if (settings.timeout && (settings.timeout < 0 || settings.timeout > 0) && !settings.closeButton) {
-					self.getEl().lastChild.className += ' ' + prefix + 'hidden';
-				}
-			});
+			if (settings.icon) {
+				self.icon = settings.icon;
+			}
+
+			if (settings.type) {
+				self.classes.add('notification-' + settings.type);
+			}
+
+			if (settings.timeout && (settings.timeout < 0 || settings.timeout > 0) && !settings.closeButton) {
+				self.closeButton = false;
+			} else {
+				self.closeButton = true;
+			}
+
+			if (settings.progressBar) {
+				self.progressBar = new Progress();
+			}
 
 			self.on('click', function(e) {
 				if (e.target.className.indexOf(self.classPrefix + 'close') != -1) {
@@ -62,13 +69,26 @@ define("tinymce/ui/Notification", [
 		 * @return {String} HTML representing the control.
 		 */
 		renderHtml: function() {
-			var self = this, prefix = self.classPrefix;
+			var self = this, prefix = self.classPrefix, icon = '', closeButton = '', progressBar = '';
+
+			if (self.icon) {
+				icon = '<i class="' + prefix + 'ico' + ' ' + prefix + 'i-' + self.icon + '"></i>';
+			}
+
+			if (self.closeButton) {
+				closeButton = '<button type="button" class="' + prefix + 'close" aria-hidden="true">\u00d7</button>';
+			}
+
+			if (self.progressBar) {
+				progressBar = self.progressBar.renderHtml();
+			}
 
 			return (
 				'<div id="' + self._id + '" class="' + self.classes + '" role="presentation">' +
-					'<i class="' + prefix + 'ico"></i>' +
+					icon +
 					'<div class="' + prefix + 'notification-inner">' + self.state.get('text') + '</div>' +
-					'<button type="button" class="' + prefix + 'close" aria-hidden="true">\u00d7</button>' +
+					closeButton +
+                    progressBar +
 				'</div>'
 			);
 		},
@@ -79,7 +99,9 @@ define("tinymce/ui/Notification", [
 			self.state.on('change:text', function(e) {
 				self.getEl().childNodes[1].innerHTML = e.value;
 			});
-
+			if (self.progressBar) {
+				self.progressBar.bindStates();
+			}
 			return self._super();
 		},
 
