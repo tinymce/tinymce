@@ -19,12 +19,17 @@ define(
       return Split.splitby(array, predicate);
     };
 
+    var splitbyAdv = function (array, predicate) {
+      return Split.splitbyAdv(array, predicate);
+    };
+
     var sliceby = function (array, predicate) {
       return Slice.sliceby(array, predicate);
     };
 
     return {
       splitby: splitby,
+      splitbyAdv: splitbyAdv,
       sliceby: sliceby,
       boundAt: boundAt
     };
