@@ -62,6 +62,16 @@ define("tinymce/EditorUpload", [
 			});
 		}
 
+		function openNotification() {
+			return editor.notificationManager.open({
+				text:'Image uploading...',
+				type: 'info',
+				timeout: -1,
+				icon: 'bold',
+				progressBar: true
+			});
+		}
+
 		function uploadImages(callback) {
 			if (!uploader) {
 				uploader = new Uploader({
@@ -79,7 +89,7 @@ define("tinymce/EditorUpload", [
 					return imageInfo.blobInfo;
 				});
 
-				return uploader.upload(blobInfos).then(aliveGuard(function(result) {
+				return uploader.upload(blobInfos, openNotification).then(aliveGuard(function(result) {
 					result = Arr.map(result, function(uploadInfo, index) {
 						var image = imageInfos[index].image;
 
