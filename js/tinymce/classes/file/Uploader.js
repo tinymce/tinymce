@@ -77,7 +77,7 @@ define("tinymce/file/Uploader", [
 			notification = openNotification();
 
 			xhr.upload.onprogress = function(e) {
-				var percentLoaded = Math.round(e.loaded/e.total*100);
+				var percentLoaded = Math.round(e.loaded / e.total * 100);
 				notification.progressBar.value(percentLoaded);
 			};
 
@@ -107,37 +107,36 @@ define("tinymce/file/Uploader", [
 			xhr.send(formData);
 		}
 
-		var noUpload = function () {
+		function noUpload() {
 			return new Promise(function(resolve) {
 				resolve([]);
 			});
-		};
+		}
 
-		var interpretResult = function (promise) {
+		function interpretResult(promise) {
 			return promise.then(function(result) {
 				return result;
 			})['catch'](function(error) {
 				return error;
 			});
-		};
+		}
 
-		var registerPromise = function (handler, id, blobInfo) {
+		function registerPromise(handler, id, blobInfo) {
 			var response = handler(blobInfo);
 			var promise = interpretResult(response);
 			delete cachedPromises[id];
 			cachedPromises[id] = promise;
 			return promise;
-		};
+		}
 
-
-		var collectUploads = function (blobInfos, uploadBlobInfo) {
+		function collectUploads(blobInfos, uploadBlobInfo) {
 			return Tools.map(blobInfos, function(blobInfo) {
 				var id = blobInfo.id();
 				return cachedPromises[id] ? cachedPromises[id] : registerPromise(uploadBlobInfo, id, blobInfo);
 			});
-		};
+		}
 
-		var uploadBlobs = function (blobInfos, openNotification) {
+		function uploadBlobs(blobInfos, openNotification) {
 			function uploadBlobInfo(blobInfo) {
 				return new Promise(function(resolve) {
 					var handler = settings.handler;
@@ -161,7 +160,7 @@ define("tinymce/file/Uploader", [
 
 			var promises = collectUploads(blobInfos, uploadBlobInfo);
 			return Promise.all(promises);
-		};
+		}
 
 		function upload(blobInfos, openNotification) {
 			return (!settings.url && settings.handler === defaultHandler) ? noUpload() : uploadBlobs(blobInfos, openNotification);

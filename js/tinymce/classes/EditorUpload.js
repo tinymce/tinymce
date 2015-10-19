@@ -64,7 +64,7 @@ define("tinymce/EditorUpload", [
 
 		function openNotification() {
 			return editor.notificationManager.open({
-				text:'Image uploading...',
+				text: 'Image uploading...',
 				type: 'info',
 				timeout: -1,
 				icon: 'bold',
