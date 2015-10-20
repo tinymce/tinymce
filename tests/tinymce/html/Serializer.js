@@ -20,3 +20,13 @@ test('Sorting of attributes', function() {
 
 	equal(serializer.serialize(new tinymce.html.DomParser().parse('<b class="class" id="id">x</b>')), '<strong id="id" class="class">x</strong>');
 });
+
+test('Serialize with validate: true, when parsing with validate:false bug', function() {
+	var schema = new tinymce.html.Schema({valid_elements: 'b'});
+	var serializer = new tinymce.html.Serializer({}, schema);
+
+	equal(
+		serializer.serialize(new tinymce.html.DomParser({validate: false}, schema).parse('<b a="1" b="2">a</b><i a="1" b="2">b</i>')),
+		'<b a="1" b="2">a</b><i a="1" b="2">b</i>'
+	);
+});

@@ -104,27 +104,29 @@ define("tinymce/html/Serializer", [
 						sortedAttrs.map = {};
 
 						elementRule = schema.getElementRule(node.name);
-						for (i = 0, l = elementRule.attributesOrder.length; i < l; i++) {
-							attrName = elementRule.attributesOrder[i];
+						if (elementRule) {
+							for (i = 0, l = elementRule.attributesOrder.length; i < l; i++) {
+								attrName = elementRule.attributesOrder[i];
 
-							if (attrName in attrs.map) {
-								attrValue = attrs.map[attrName];
-								sortedAttrs.map[attrName] = attrValue;
-								sortedAttrs.push({name: attrName, value: attrValue});
+								if (attrName in attrs.map) {
+									attrValue = attrs.map[attrName];
+									sortedAttrs.map[attrName] = attrValue;
+									sortedAttrs.push({name: attrName, value: attrValue});
+								}
 							}
-						}
 
-						for (i = 0, l = attrs.length; i < l; i++) {
-							attrName = attrs[i].name;
+							for (i = 0, l = attrs.length; i < l; i++) {
+								attrName = attrs[i].name;
 
-							if (!(attrName in sortedAttrs.map)) {
-								attrValue = attrs.map[attrName];
-								sortedAttrs.map[attrName] = attrValue;
-								sortedAttrs.push({name: attrName, value: attrValue});
+								if (!(attrName in sortedAttrs.map)) {
+									attrValue = attrs.map[attrName];
+									sortedAttrs.map[attrName] = attrValue;
+									sortedAttrs.push({name: attrName, value: attrValue});
+								}
 							}
-						}
 
-						attrs = sortedAttrs;
+							attrs = sortedAttrs;
+						}
 					}
 
 					writer.start(node.name, attrs, isEmpty);
