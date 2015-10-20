@@ -13,7 +13,7 @@
  *
  * @-x-less Notification.less
  * @class tinymce.ui.Notification
- * @extends tinymce.ui.Control
+ * @extends tinymce.ui.Container
  * @mixes tinymce.ui.Movable
  */
 define("tinymce/ui/Notification", [
@@ -87,8 +87,8 @@ define("tinymce/ui/Notification", [
 				'<div id="' + self._id + '" class="' + self.classes + '" role="presentation">' +
 					icon +
 					'<div class="' + prefix + 'notification-inner">' + self.state.get('text') + '</div>' +
+					progressBar +
 					closeButton +
-                    progressBar +
 				'</div>'
 			);
 		},

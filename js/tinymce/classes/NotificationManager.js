@@ -9,29 +9,14 @@
  */
 
 /**
- * This class handles the creation of native windows and dialogs. This class can be extended to provide for example inline dialogs.
+ * This class handles the creation of TinyMCE's notifications.
  *
- * @class tinymce.WindowManager
+ * @class tinymce.notificationManager
  * @example
- * // Opens a new dialog with the file.htm file and the size 320x240
- * // It also adds a custom parameter this can be retrieved by using tinyMCEPopup.getWindowArg inside the dialog.
- * tinymce.activeEditor.windowManager.open({
- *    url: 'file.htm',
- *    width: 320,
- *    height: 240
- * }, {
- *    custom_param: 1
- * });
- *
- * // Displays an alert box using the active editors window manager instance
- * tinymce.activeEditor.windowManager.alert('Hello world!');
- *
- * // Displays an confirm box and an alert message will be displayed depending on what you choose in the confirm
- * tinymce.activeEditor.windowManager.confirm("Do you want to do something", function(s) {
- *    if (s)
- *       tinymce.activeEditor.windowManager.alert("Ok");
- *    else
- *       tinymce.activeEditor.windowManager.alert("Cancel");
+ * // Opens a new notification of type "error" with text "An error occurred."
+ * tinymce.activeEditor.notificationManager.open({
+ *    text: 'An error occurred.',
+ *    type: 'error'
  * });
  */
 define("tinymce/NotificationManager", [
@@ -51,7 +36,8 @@ define("tinymce/NotificationManager", [
 		function positionNotifications() {
 			if (notifications.length > 0) {
 				var firstItem = notifications.slice(0, 1)[0];
-				firstItem.moveRel(editor.getContentAreaContainer(), 'tc-tc');
+				var container = editor.inline ? editor.getElement() : editor.getContentAreaContainer();
+				firstItem.moveRel(container, 'tc-tc');
 				if (notifications.length > 1) {
 					for (var i = 1; i < notifications.length; i++) {
 						notifications[i].moveRel(notifications[i - 1].getEl(), 'bc-tc');

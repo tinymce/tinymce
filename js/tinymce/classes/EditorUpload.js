@@ -67,7 +67,6 @@ define("tinymce/EditorUpload", [
 				text: 'Image uploading...',
 				type: 'info',
 				timeout: -1,
-				icon: 'bold',
 				progressBar: true
 			});
 		}

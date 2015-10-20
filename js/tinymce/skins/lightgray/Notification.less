@@ -27,10 +27,13 @@
 	display: inline-block;
 	font-size: @notification-font-size;
 	max-width: 200px;
-	padding: 5px 8px 4px 8px;
-	margin-right: 20px;
+	margin: 5px 8px 4px 8px;
 	text-align: center;
 	white-space: normal;
+}
+
+.@{prefix}-notification .@{prefix}-progress {
+	margin-right: 8px;
 }
 
 .@{prefix}-notification-info .@{prefix}-notification-inner {
@@ -39,6 +42,10 @@
 }
 
 .@{prefix}-notification-info .@{prefix}-notification-inner * {
+	color: @notification-info-text;
+}
+
+.@{prefix}-notification-info .@{prefix}-progress .@{prefix}-text {
 	color: @notification-info-text;
 }
 
@@ -51,6 +58,10 @@
 	color: @notification-warning-text;
 }
 
+.@{prefix}-notification-warning .@{prefix}-progress .@{prefix}-text {
+	color: @notification-warning-text;
+}
+
 .@{prefix}-notification-error .@{prefix}-notification-inner {
 	color: @notification-error-text;
 	.box-shadow(0 0 5px @notification-error-bg);
@@ -60,14 +71,17 @@
 	color: @notification-error-text;
 }
 
+.@{prefix}-notification-error .@{prefix}-progress .@{prefix}-text {
+	color: @notification-error-text;
+}
+
 .@{prefix}-notification-inner {
 	.border-radius(3px);
 }
 
 .@{prefix}-notification .@{prefix}-close {
-	position: absolute;
-	right: 15px;
-	top: 9px;
+	margin-top: 3px;
+	margin-right: 8px;
 	font-size: 20px;
 	font-weight: bold;
 	line-height: 20px;
