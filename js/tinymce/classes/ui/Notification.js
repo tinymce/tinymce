@@ -41,6 +41,10 @@ define("tinymce/ui/Notification", [
 				self.icon = settings.icon;
 			}
 
+			if (settings.color) {
+				self.color = settings.color;
+			}
+
 			if (settings.type) {
 				self.classes.add('notification-' + settings.type);
 			}
@@ -69,10 +73,14 @@ define("tinymce/ui/Notification", [
 		 * @return {String} HTML representing the control.
 		 */
 		renderHtml: function() {
-			var self = this, prefix = self.classPrefix, icon = '', closeButton = '', progressBar = '';
+			var self = this, prefix = self.classPrefix, icon = '', closeButton = '', progressBar = '', notificationStyle = '';
 
 			if (self.icon) {
 				icon = '<i class="' + prefix + 'ico' + ' ' + prefix + 'i-' + self.icon + '"></i>';
+			}
+
+			if (self.color) {
+				notificationStyle = ' style="background-color: ' + self.color + '"';
 			}
 
 			if (self.closeButton) {
@@ -84,7 +92,7 @@ define("tinymce/ui/Notification", [
 			}
 
 			return (
-				'<div id="' + self._id + '" class="' + self.classes + '" role="presentation">' +
+				'<div id="' + self._id + '" class="' + self.classes + '"' + notificationStyle + ' role="presentation">' +
 					icon +
 					'<div class="' + prefix + 'notification-inner">' + self.state.get('text') + '</div>' +
 					progressBar +

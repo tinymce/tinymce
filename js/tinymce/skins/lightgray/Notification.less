@@ -2,6 +2,7 @@
 
 .@{prefix}-notification {
 	position: absolute;
+	background-color: #333333;
 	padding: 5px;
 	margin-top: 5px;
 	.opacity(0.8);
@@ -30,53 +31,27 @@
 	margin: 5px 8px 4px 8px;
 	text-align: center;
 	white-space: normal;
+	color: @notification-info-text;
 }
 
 .@{prefix}-notification .@{prefix}-progress {
 	margin-right: 8px;
 }
 
-.@{prefix}-notification-info .@{prefix}-notification-inner {
-	color: @notification-info-text;
-	.box-shadow(0 0 5px @notification-info-bg);
-}
-
-.@{prefix}-notification-info .@{prefix}-notification-inner * {
+.@{prefix}-notification *, .@{prefix}-notification .@{prefix}-progress .@{prefix}-text {
 	color: @notification-info-text;
 }
 
-.@{prefix}-notification-info .@{prefix}-progress .@{prefix}-text {
+.@{prefix}-notification-info *, .@{prefix}-notification .@{prefix}-progress .@{prefix}-text  {
 	color: @notification-info-text;
 }
 
-.@{prefix}-notification-warning .@{prefix}-notification-inner {
-	color: @notification-warning-text;
-	.box-shadow(0 0 5px @notification-warning-bg);
-}
-
-.@{prefix}-notification-warning .@{prefix}-notification-inner * {
+.@{prefix}-notification-warning *, .@{prefix}-notification .@{prefix}-progress .@{prefix}-text  {
 	color: @notification-warning-text;
 }
 
-.@{prefix}-notification-warning .@{prefix}-progress .@{prefix}-text {
-	color: @notification-warning-text;
-}
-
-.@{prefix}-notification-error .@{prefix}-notification-inner {
+.@{prefix}-notification-error *, .@{prefix}-notification .@{prefix}-progress .@{prefix}-text  {
 	color: @notification-error-text;
-	.box-shadow(0 0 5px @notification-error-bg);
-}
-
-.@{prefix}-notification-error .@{prefix}-notification-inner * {
-	color: @notification-error-text;
-}
-
-.@{prefix}-notification-error .@{prefix}-progress .@{prefix}-text {
-	color: @notification-error-text;
-}
-
-.@{prefix}-notification-inner {
-	.border-radius(3px);
 }
 
 .@{prefix}-notification .@{prefix}-close {
