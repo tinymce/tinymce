@@ -720,15 +720,16 @@ tinymce.PluginManager.add('lists', function(editor) {
 			}
 
 			if (selection.isCollapsed()) {
-				var li = dom.getParent(selection.getStart(), 'LI'), ul = li.parentNode;
-
-				if (isEditorBody(ul) && dom.isEmpty(ul)) {
-					return true;
-				}
+				var li = dom.getParent(selection.getStart(), 'LI'), ul, rng, otherLi;
 
 				if (li) {
-					var rng = selection.getRng(true);
-					var otherLi = dom.getParent(findNextCaretContainer(rng, isForward), 'LI');
+					ul = li.parentNode;
+					if (isEditorBody(ul) && dom.isEmpty(ul)) {
+						return true;
+					}
+
+					rng = selection.getRng(true);
+					otherLi = dom.getParent(findNextCaretContainer(rng, isForward), 'LI');
 
 					if (otherLi && otherLi != li) {
 						var bookmark = createBookmark(rng);
