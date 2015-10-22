@@ -35,26 +35,30 @@ define(
         'aria-label': label
       });
 
-      var labelId = Id.generate('ephox-aria');
-      var aria = Element.fromTag('span');
-      Insert.append(aria, Element.fromText(ariaHelp));
-      Attr.set(aria, 'id', labelId);
-      Class.add(aria, helpStyle);
-      if (showHelpHint === true) Class.add(aria, helpVisibleStyle);
-      Insert.append(container, aria);
+      ariaHelp.each(function (helpText) {
+        var aria = Element.fromTag('span');
+        Insert.append(aria, Element.fromText(helpText));
+        var labelId = Id.generate('ephox-aria');
+        Attr.set(aria, 'id', labelId);
+        describedBy(editor, labelId);
+        Class.add(aria, helpStyle);
+        if (showHelpHint === true) Class.add(aria, helpVisibleStyle);
+        Insert.append(container, aria);
+      });
 
       // content attributes - surprisingly helps in both classic and inline
       var attrs = {
         'aria-multiline': 'true',
         'aria-label': label,
-        title: label,
-        'aria-describedby': labelId
+        title: label
       };
 
       Attr.setAll(editor, attrs);
 
       var destroy = function () {
-        Arr.each(Obj.keys(attrs), Fun.curry(Attr.remove, editor));
+        var removeFromEditor = Fun.curry(Attr.remove, editor);
+        Arr.each(Obj.keys(attrs), removeFromEditor);
+        removeFromEditor('aria-describedby');
       };
 
       return {
