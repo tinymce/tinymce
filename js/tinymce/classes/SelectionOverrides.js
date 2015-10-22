@@ -146,7 +146,7 @@ define("tinymce/SelectionOverrides", [
 			return CaretContainer.isCaretContainerBlock(range.startContainer);
 		}
 
-		function moveH(direction, getNextPosFn, isBeforeContentEditableFalseFn, range) {
+		function moveToCeFalseHorizontally(direction, getNextPosFn, isBeforeContentEditableFalseFn, range) {
 			var node, caretPosition, peekCaretPosition, rangeIsInContainerBlock;
 
 			if (!range.collapsed) {
@@ -191,7 +191,7 @@ define("tinymce/SelectionOverrides", [
 			return null;
 		}
 
-		function moveV(direction, walkerFn, range) {
+		function moveToCeFalseVertically(direction, walkerFn, range) {
 			var caretPosition, linePositions, nextLinePositions,
 				closestNextLineRect, caretClientRect, clientX,
 				dist1, dist2, contentEditableFalseNode;
@@ -239,6 +239,78 @@ define("tinymce/SelectionOverrides", [
 					return renderRangeCaret(closestNextLineRect.position.toRange());
 				}
 			}
+		}
+
+		function exitPreBlock(direction, range) {
+			var pre, caretPos, newBlock;
+
+			function createTextBlock() {
+				var textBlock = editor.dom.create(editor.settings.forced_root_block);
+
+				if (!Env.ie || Env.ie >= 11) {
+					textBlock.innerHTML = '<br data-mce-bogus="1">';
+				}
+
+				return textBlock;
+			}
+
+			if (range.collapsed && editor.settings.forced_root_block) {
+				pre = editor.dom.getParent(range.startContainer, 'PRE');
+				if (!pre) {
+					return;
+				}
+
+				if (direction == 1) {
+					caretPos = getNextVisualCaretPosition(CaretPosition.fromRangeStart(range));
+				} else {
+					caretPos = getPrevVisualCaretPosition(CaretPosition.fromRangeStart(range));
+				}
+
+				if (!caretPos) {
+					newBlock = createTextBlock();
+
+					if (direction == 1) {
+						editor.$(pre).after(newBlock);
+					} else {
+						editor.$(pre).before(newBlock);
+					}
+
+					editor.selection.select(newBlock, true);
+					editor.selection.collapse();
+				}
+			}
+		}
+
+		function moveH(direction, getNextPosFn, isBeforeContentEditableFalseFn, range) {
+			var newRange;
+
+			newRange = moveToCeFalseHorizontally(direction, getNextPosFn, isBeforeContentEditableFalseFn, range);
+			if (newRange) {
+				return newRange;
+			}
+
+			newRange = exitPreBlock(direction, range);
+			if (newRange) {
+				return newRange;
+			}
+
+			return null;
+		}
+
+		function moveV(direction, walkerFn, range) {
+			var newRange;
+
+			newRange = moveToCeFalseVertically(direction, walkerFn, range);
+			if (newRange) {
+				return newRange;
+			}
+
+			newRange = exitPreBlock(direction, range);
+			if (newRange) {
+				return newRange;
+			}
+
+			return null;
 		}
 
 		function getBlockCaretContainer() {

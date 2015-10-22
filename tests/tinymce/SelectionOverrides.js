@@ -28,6 +28,22 @@ ModuleLoader.require([
 		};
 	}
 
+	function exitPreTest(arrow, offset, expectedContent) {
+		return function() {
+			editor.setContent('<pre>abc</pre>');
+
+			Utils.setSelection('pre', 1);
+			arrow();
+			equal(editor.getContent(), '<pre>abc</pre>');
+			equal(editor.selection.getNode().nodeName, 'PRE');
+
+			Utils.setSelection('pre', offset);
+			arrow();
+			equal(editor.getContent(), expectedContent);
+			equal(editor.selection.getNode().nodeName, 'P');
+		};
+	}
+
 	var leftArrow = pressKey(VK.LEFT);
 	var rightArrow = pressKey(VK.RIGHT);
 	var backspace = pressKey(VK.BACKSPACE);
@@ -135,4 +151,8 @@ ModuleLoader.require([
 		equal(editor.selection.getRng().startContainer, editor.$('p')[0]);
 	});
 
+	test('exit pre block (up)', exitPreTest(upArrow, 0, '<p>\u00a0</p><pre>abc</pre>'));
+	test('exit pre block (left)', exitPreTest(leftArrow, 0, '<p>\u00a0</p><pre>abc</pre>'));
+	test('exit pre block (down)', exitPreTest(downArrow, 3, '<pre>abc</pre><p>\u00a0</p>'));
+	test('exit pre block (right)', exitPreTest(rightArrow, 3, '<pre>abc</pre><p>\u00a0</p>'));
 });
