@@ -43,8 +43,10 @@ define("tinymce/ui/Progress", [
 
 			return (
 				'<div id="' + id + '" class="' + self.classes + '">' +
+					'<div class="' + prefix + 'bar-container">' +
+						'<div class="' + prefix + 'bar"></div>' +
+					'</div>' +
 					'<div class="' + prefix + 'text">0%</div>' +
-					'<div class="' + prefix + 'bar"></div>' +
 				'</div>'
 			);
 		},
@@ -63,8 +65,8 @@ define("tinymce/ui/Progress", [
 
 			function setValue(value) {
 				value = self.settings.filter(value);
-				self.getEl().firstChild.innerHTML = value + '%';
-				self.getEl().lastChild.style.width = value + '%';
+				self.getEl().lastChild.innerHTML = value + '%';
+				self.getEl().firstChild.firstChild.style.width = value + '%';
 			}
 
 			self.state.on('change:value', function(e) {

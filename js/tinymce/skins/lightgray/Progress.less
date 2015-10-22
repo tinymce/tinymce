@@ -4,20 +4,25 @@
 	display: inline-block;
 	overflow: hidden;
 	position: relative;
+	width: 138px;
+	height: 22px;
+}
+
+.@{prefix}-progress .@{prefix}-bar-container {
+	display: inline-block;
 	width: 100px;
 	height: 20px;
+	margin-right: 8px;
 	border: 1px solid @progress-border;
 	.border-radius(4px);
 }
 
 .@{prefix}-progress .@{prefix}-text {
-	position: absolute;
-	top: 50%;
-	left: 0;
-	text-align: center;
-	margin-top: -8px;
-	font-size: 12px;
-	width: 100%;
+	display: inline-block;
+	margin-top: auto;
+	margin-bottom: auto;
+	font-size: 14px;
+	width: 30px;
 	color: @progress-text;
 	text-shadow: 1px 1px @progress-text-shadow;
 }
