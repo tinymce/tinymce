@@ -8,6 +8,7 @@
 	.opacity(0.8);
 	border-width: 1px;
 	border-style: solid;
+	border-color: @notification-border;
 }
 
 .@{prefix}-notification-success {
@@ -54,6 +55,14 @@
 
 .@{prefix}-notification *, .@{prefix}-notification .@{prefix}-progress .@{prefix}-text {
 	color: @notification-text;
+}
+
+.@{prefix}-notification .@{prefix}-progress .@{prefix}-bar-container {
+	border-color: @notification-border;
+}
+
+.@{prefix}-notification .@{prefix}-progress .@{prefix}-bar-container .@{prefix}-bar {
+	background-color: @notification-text;
 }
 
 .@{prefix}-notification-success *, .@{prefix}-notification-success .@{prefix}-progress .@{prefix}-text {
