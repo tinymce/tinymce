@@ -4,6 +4,12 @@ Version 4.2.7 (2015-10-xx)
 	Fixed bug where backspace/delete on selected table cells wouldn't add an undo level.
 	Fixed bug where script tags embedded within the editor could sometimes get a mce- prefix prepended to them
 	Fixed bug where validate: false option could produce an error to be thrown from the Serialization step.
+	Fixed bug where inline editing of a table as the root element could let the user delete that table.
+	Fixed bug where inline editing of a table as the root element wouldn't properly handle enter key.
+	Fixed bug where inline editing of a table as the root element would normalize the selection incorrectly.
+	Fixed bug where inline editing of a list as the root element could let the user delete that list.
+	Fixed bug where inline editing of a list as the root element could let the user split that list.
+	Fixed bug where resize handles would be rendered on editable root elements such as table.
 Version 4.2.6 (2015-09-28)
 	Added capability to set request headers when using XHRs.
 	Added capability to upload local images automatically default delay is set to 30 seconds after editing images.

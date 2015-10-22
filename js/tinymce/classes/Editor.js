@@ -1667,7 +1667,7 @@ define("tinymce/Editor", [
 		 * tinymce.activeEditor.setContent('[b]some[/b] html', {format: 'bbcode'});
 		 */
 		setContent: function(content, args) {
-			var self = this, body = self.getBody(), forcedRootBlockName;
+			var self = this, body = self.getBody(), forcedRootBlockName, padd;
 
 			// Setup args object
 			args = args || {};
@@ -1685,14 +1685,24 @@ define("tinymce/Editor", [
 			// Padd empty content in Gecko and Safari. Commands will otherwise fail on the content
 			// It will also be impossible to place the caret in the editor unless there is a BR element present
 			if (content.length === 0 || /^\s+$/.test(content)) {
+				padd = ie && ie < 11 ? '' : '<br data-mce-bogus="1">';
+
+				// Todo: There is a lot more root elements that need special padding
+				// so separate this and add all of them at some point.
+				if (body.nodeName == 'TABLE') {
+					content = '<tr><td>' + padd + '</td></tr>';
+				} else if (/^(UL|OL)$/.test(body.nodeName)) {
+					content = '<li>' + padd + '</li>';
+				}
+
 				forcedRootBlockName = self.settings.forced_root_block;
 
 				// Check if forcedRootBlock is configured and that the block is a valid child of the body
 				if (forcedRootBlockName && self.schema.isValidChild(body.nodeName.toLowerCase(), forcedRootBlockName.toLowerCase())) {
 					// Padd with bogus BR elements on modern browsers and IE 7 and 8 since they don't render empty P tags properly
-					content = ie && ie < 11 ? '' : '<br data-mce-bogus="1">';
+					content = padd;
 					content = self.dom.createHTML(forcedRootBlockName, self.settings.forced_root_block_attrs, content);
-				} else if (!ie) {
+				} else if (!ie && !content) {
 					// We need to add a BR when forced_root_block is disabled on non IE browsers to place the caret
 					content = '<br data-mce-bogus="1">';
 				}

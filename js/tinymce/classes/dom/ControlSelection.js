@@ -98,6 +98,10 @@ define("tinymce/dom/ControlSelection", [
 				return false;
 			}
 
+			if (elm == editor.getBody()) {
+				return false;
+			}
+
 			return editor.dom.is(elm, selector);
 		}
 
