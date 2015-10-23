@@ -413,16 +413,24 @@ define("tinymce/html/Node", [], function() {
 		 * node.isEmpty({img: true});
 		 * @method isEmpty
 		 * @param {Object} elements Name/value object with elements that are automatically treated as non empty elements.
+		 * @param {Object} bogusElements Name/value object with elements that are automatically treated as non-empty elements
+		 * even when marked as mce-bogus.
 		 * @return {Boolean} true/false if the node is empty or not.
 		 */
-		isEmpty: function(elements) {
+		isEmpty: function(elements, bogusElements) {
 			var self = this, node = self.firstChild, i, name;
+
+			bogusElements = bogusElements || [];
 
 			if (node) {
 				do {
 					if (node.type === 1) {
-						// Ignore bogus elements
+						// Ignore bogus elements, unless they are explicity to be treated as non-empty
 						if (node.attributes.map['data-mce-bogus']) {
+							if (bogusElements[node.name]) {
+								return false;
+							}
+
 							continue;
 						}
 
