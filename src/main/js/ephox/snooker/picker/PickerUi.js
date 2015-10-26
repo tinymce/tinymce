@@ -122,7 +122,7 @@ define(
 
         var cells = PickerLookup.cells(rows[rows.length-1]).slice(0, numCols);
         var target = cells[cells.length-1];
-        return target;
+        return PickerLookup.button(target);
       };
 
       var getSelection = function () {
@@ -161,13 +161,11 @@ define(
       var reset = function () {
         setSize(settings.minRows, settings.minCols);
         var last = setSelection(1, 1);
-        var btn = PickerLookup.button(last);
-        Focus.focus(btn);
+        Focus.focus(last);
       };
 
       return {
         element: element,
-        button: PickerLookup.button,
         destroy: destroy,
         setSize: setSize,
         setHeaders: setHeaders,
