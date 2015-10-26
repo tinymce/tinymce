@@ -98,7 +98,7 @@ define("tinymce/SelectionOverrides", [
 
 			scrollIntoView(node, direction === -1);
 
-			return fakeCaret.show(direction, node, before);
+			return fakeCaret.show(before, node);
 		}
 
 		function selectNode(node) {

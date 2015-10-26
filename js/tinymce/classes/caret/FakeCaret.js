@@ -94,12 +94,8 @@ define("tinymce/caret/FakeCaret", [
 			return null;
 		}
 
-		function show(direction, node, before) {
+		function show(before, node) {
 			var clientRect, rng, container;
-
-			if (typeof before === "undefined") {
-				before = direction == 1;
-			}
 
 			hide();
 
@@ -121,15 +117,15 @@ define("tinymce/caret/FakeCaret", [
 				rng.setStart(container, 0);
 				rng.setEnd(container, 1);
 			} else {
-				container = CaretContainer.insertInline(node, before);
+				caretContainerNode = CaretContainer.insertInline(node, before);
 				rng = node.ownerDocument.createRange();
 
-				if (isContentEditableFalse(container.nextSibling)) {
-					rng.setStart(container, 0);
-					rng.setEnd(container, 0);
+				if (isContentEditableFalse(caretContainerNode.nextSibling)) {
+					rng.setStart(caretContainerNode, 0);
+					rng.setEnd(caretContainerNode, 0);
 				} else {
-					rng.setStart(container, 1);
-					rng.setEnd(container, 1);
+					rng.setStart(caretContainerNode, 1);
+					rng.setEnd(caretContainerNode, 1);
 				}
 
 				return rng;
