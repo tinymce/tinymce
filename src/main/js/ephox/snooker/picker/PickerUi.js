@@ -32,8 +32,11 @@ define(
         select: Event(['rows', 'cols', 'rowHeaders', 'columnHeaders'])
       });
 
-      var table = Element.fromTag('div');
+      var table = Element.fromTag('table');
       Class.add(table, PickerStyles.table());
+
+      var tbody = Element.fromTag('tbody');
+      Insert.append(table, tbody);
 
       var size = { width: 0, height: 0};
 
@@ -53,29 +56,34 @@ define(
       };
 
       var recreate = function () {
-        Remove.empty(table);
+        Remove.empty(tbody);
         var ids = helpReference.ids();
         //create a set of trs, then for each tr, insert numCols tds
         Util.repeat(size.height, function (rowNum) {
-          var row = Element.fromTag('div');
+          var row = Element.fromTag('tr');
           Class.add(row, PickerStyles.row());
           AriaGrid.row(row);
 
           var cells = Util.repeat(size.width, function (colNum) {
-            var td = Element.fromTag('button');
-            // Make the button a "button" so that firefox does not have problems with defaulting to submit: "TBIO-2560"
-            Attr.set(td, 'type', 'button');
+            var td = Element.fromTag('td');
             // this is mostly for debugging, but it's nice to have
             Class.add(td, Styles.resolve('cell-' + colNum + '-' + rowNum));
             Class.add(td, PickerStyles.cell());
-            AriaGrid.cell(td, ids[rowNum][colNum]);
+            Attr.set(td, 'role', 'gridcell');
+
+            var btn = Element.fromTag('button');
+            // Make the button a "button" so that firefox does not have problems with defaulting to submit: "TBIO-2560"
+            Attr.set(btn, 'type', 'button');
+            Attr.set(btn, 'role', 'button');
+            Attr.set(btn, 'aria-labelledby', ids[rowNum][colNum]);
+            Class.add(btn, PickerStyles.button());
+            Insert.append(td, btn);
             return td;
           });
 
           InsertAll.append(row, cells);
-          Insert.append(table, row);
+          Insert.append(tbody, row);
         });
-        Insert.append(table, helpReference.help());
       };
 
       var refresh = function () {
@@ -153,11 +161,13 @@ define(
       var reset = function () {
         setSize(settings.minRows, settings.minCols);
         var last = setSelection(1, 1);
-        Focus.focus(last);
+        var btn = PickerLookup.button(last);
+        Focus.focus(btn);
       };
 
       return {
         element: element,
+        button: PickerLookup.button,
         destroy: destroy,
         setSize: setSize,
         setHeaders: setHeaders,

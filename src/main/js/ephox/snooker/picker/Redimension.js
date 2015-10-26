@@ -3,15 +3,17 @@ define(
 
   [
     'ephox.snooker.api.Structs',
+    'ephox.snooker.picker.PickerLookup',
     'ephox.snooker.picker.Sizing',
     'ephox.sugar.api.Focus',
     'ephox.sugar.api.Height',
     'ephox.sugar.api.Location',
+    'ephox.sugar.api.SelectorFind',
     'ephox.sugar.api.Width',
     'global!Math'
   ],
 
-  function (Structs, Sizing, Focus, Height, Location, Width, Math) {
+  function (Structs, PickerLookup, Sizing, Focus, Height, Location, SelectorFind, Width, Math) {
     return function (direction, settings) {
       var active = false;
 
@@ -38,7 +40,8 @@ define(
         var full = changes.full();
         if (full.row() !== grid.rows() || full.column() !== grid.columns()) table.setSize(full.row(), full.column());
         var last = table.setSelection(changes.selection().row(), changes.selection().column());
-        Focus.focus(last);
+        var btn = PickerLookup.button(last);
+        Focus.focus(btn);
       };
 
       /*
