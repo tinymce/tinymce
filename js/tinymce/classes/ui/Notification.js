@@ -1,5 +1,5 @@
 /**
- * Tooltip.js
+ * Notification.js
  *
  * Released under LGPL License.
  * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
@@ -17,11 +17,11 @@
  * @mixes tinymce.ui.Movable
  */
 define("tinymce/ui/Notification", [
-	"tinymce/ui/Container",
+	"tinymce/ui/Control",
 	"tinymce/ui/Movable",
     "tinymce/ui/Progress"
-], function(Container, Movable, Progress) {
-	return Container.extend({
+], function(Control, Movable, Progress) {
+	return Control.extend({
 		Mixins: [Movable],
 
 		Defaults: {

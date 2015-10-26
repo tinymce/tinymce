@@ -1,5 +1,5 @@
 /**
- * WindowManager.js
+ * NotificationManager.js
  *
  * Released under LGPL License.
  * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
@@ -60,9 +60,9 @@ define("tinymce/NotificationManager", [
 		 * Opens a new notification.
 		 *
 		 * @method open
-		 * @param {Object} args Optional name/value settings collection contains things like width/height/url etc.
+		 * @param {Object} args Optional name/value settings collection contains things like timeout/color/message etc.
 		 */
-		self.open = function(args, params) {
+		self.open = function(args) {
 			var notif;
 
 			editor.editorManager.setActive(editor);
@@ -93,10 +93,6 @@ define("tinymce/NotificationManager", [
 				positionNotifications();
 			});
 
-			// store args and parameters
-			notif.features = args || {};
-			notif.params = params || {};
-
 			notif.renderTo();
 
 			positionNotifications();
@@ -105,7 +101,7 @@ define("tinymce/NotificationManager", [
 		};
 
 		/**
-		 * Closes the top most window.
+		 * Closes the top most notification.
 		 *
 		 * @method close
 		 */
@@ -116,10 +112,10 @@ define("tinymce/NotificationManager", [
 		};
 
 		/**
-		 * Returns the currently opened window objects.
+		 * Returns the currently opened notification objects.
 		 *
-		 * @method getWindows
-		 * @return {Array} Array of the currently opened windows.
+		 * @method getNotifications
+		 * @return {Array} Array of the currently opened notifications.
 		 */
 		self.getNotifications = function() {
 			return notifications;
