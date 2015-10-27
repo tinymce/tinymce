@@ -38,11 +38,15 @@
 .@{prefix}-notification-inner {
 	display: inline-block;
 	font-size: @notification-font-size;
-	max-width: 200px;
 	margin: 5px 8px 4px 8px;
 	text-align: center;
 	white-space: normal;
 	color: @notification-info-text;
+}
+
+.@{prefix}-notification-inner a {
+	text-decoration: underline;
+	cursor: pointer;
 }
 
 .@{prefix}-notification .@{prefix}-progress {
