@@ -14,6 +14,8 @@ define(
     var CELL_SELECTOR = '.' + PickerStyles.cell();
     var ROW_SELECTOR = '.' + PickerStyles.row();
 
+    // TODO: refactor to build up references at picker creation time (PickerUi.recreate)
+
     var cells = function (ancestor) {
       return SelectorFilter.descendants(ancestor, CELL_SELECTOR);
     };
