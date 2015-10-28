@@ -81,7 +81,14 @@ define("tinymce/caret/CaretPosition", [
 		}
 
 		function getBoundingClientRect(item) {
-			var clientRect = ClientRect.clone(item.getBoundingClientRect());
+			var clientRect, clientRects;
+
+			clientRects = item.getClientRects();
+			if (clientRects.length > 0) {
+				clientRect = ClientRect.clone(clientRects[0]);
+			} else {
+				clientRect = ClientRect.clone(item.getBoundingClientRect());
+			}
 
 			if (isBr(item) && clientRect.left === 0) {
 				return getBrClientRect(item);
