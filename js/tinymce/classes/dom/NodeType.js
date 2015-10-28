@@ -24,13 +24,13 @@ define("tinymce/dom/NodeType", [], function() {
 	var isElement = isNodeType(1);
 
 	function matchNodeNames(names) {
-		names = names.toUpperCase().split(' ');
+		names = names.toLowerCase().split(' ');
 
 		return function(node) {
 			var i, name;
 
-			if (node) {
-				name = node.nodeName;
+			if (node && node.nodeType) {
+				name = node.nodeName.toLowerCase();
 
 				for (i = 0; i < names.length; i++) {
 					if (name === names[i]) {

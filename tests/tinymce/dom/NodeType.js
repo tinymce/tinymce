@@ -53,9 +53,10 @@ ModuleLoader.require([
 	});
 
 	test('matchNodeNames', function() {
-		var matchNodeNames = NodeType.matchNodeNames('a div');
+		var matchNodeNames = NodeType.matchNodeNames('a div #text');
 
 		strictEqual(matchNodeNames(null), false);
+		strictEqual(matchNodeNames(document.createTextNode('x')), true);
 		strictEqual(matchNodeNames(document.createElement('a')), true);
 		strictEqual(matchNodeNames(document.createElement('div')), true);
 		strictEqual(matchNodeNames(document.createElement('b')), false);
