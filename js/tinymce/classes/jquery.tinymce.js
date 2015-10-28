@@ -180,7 +180,7 @@
 		return self;
 	};
 
-	// Add :tinymce psuedo selector this will select elements that has been converted into editor instances
+	// Add :tinymce pseudo selector this will select elements that has been converted into editor instances
 	// it's now possible to use things like $('*:tinymce') to get all TinyMCE bound elements.
 	$.extend($.expr[":"], {
 		tinymce: function(e) {

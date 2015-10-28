@@ -562,9 +562,9 @@ define("tinymce/EditorManager", [
 		 * Executes a specific command on the currently active editor.
 		 *
 		 * @method execCommand
-		 * @param {String} c Command to perform for example Bold.
-		 * @param {Boolean} u Optional boolean state if a UI should be presented for the command or not.
-		 * @param {String} v Optional value parameter like for example an URL to a link.
+		 * @param {String} cmd Command to perform for example Bold.
+		 * @param {Boolean} ui Optional boolean state if a UI should be presented for the command or not.
+		 * @param {String} value Optional value parameter like for example an URL to a link.
 		 * @return {Boolean} true/false if the command was executed or not.
 		 */
 		execCommand: function(cmd, ui, value) {

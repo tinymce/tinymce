@@ -62,6 +62,7 @@ define("tinymce/WindowManager", [
 		 *
 		 * @method open
 		 * @param {Object} args Optional name/value settings collection contains things like width/height/url etc.
+		 * @param {Object} params
 		 * @option {String} title Window title.
 		 * @option {String} file URL of the file to open in the window.
 		 * @option {Number} width Width in pixels.
@@ -173,7 +174,7 @@ define("tinymce/WindowManager", [
 		 * native version use the callback method instead then it can be extended.
 		 *
 		 * @method confirm
-		 * @param {String} messageText to display in the new confirm dialog.
+		 * @param {String} message Text to display in the new confirm dialog.
 		 * @param {function} callback Callback function to be executed after the user has selected ok or cancel.
 		 * @param {Object} scope Optional scope to execute the callback in.
 		 * @example

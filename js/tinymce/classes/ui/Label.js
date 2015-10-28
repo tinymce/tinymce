@@ -28,7 +28,7 @@ define("tinymce/ui/Label", [
 		 *
 		 * @constructor
 		 * @param {Object} settings Name/value object with settings.
-		 * @param {Boolean} multiline Multiline label.
+		 * @setting {Boolean} multiline Multiline label.
 		 */
 		init: function(settings) {
 			var self = this;

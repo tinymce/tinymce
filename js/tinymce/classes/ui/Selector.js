@@ -189,8 +189,8 @@ define("tinymce/ui/Selector", [
 				add(compileAttrFilter(parts[4], parts[5], parts[6]));
 				add(compilePsuedoFilter(parts[7]));
 
-				// Mark the filter with psuedo for performance
-				filters.psuedo = !!parts[7];
+				// Mark the filter with pseudo for performance
+				filters.pseudo = !!parts[7];
 				filters.direct = direct;
 
 				return filters;
@@ -238,7 +238,7 @@ define("tinymce/ui/Selector", [
 		 * Returns true/false if the selector matches the specified control.
 		 *
 		 * @method match
-		 * @param {tinymce.ui.Control} control Control to match agains the selector.
+		 * @param {tinymce.ui.Control} control Control to match against the selector.
 		 * @param {Array} selectors Optional array of selectors, mostly used internally.
 		 * @return {Boolean} true/false state if the control matches or not.
 		 */
@@ -256,8 +256,8 @@ define("tinymce/ui/Selector", [
 					filters = selector[si];
 
 					while (item) {
-						// Find the index and length since a psuedo filter like :first needs it
-						if (filters.psuedo) {
+						// Find the index and length since a pseudo filter like :first needs it
+						if (filters.pseudo) {
 							siblings = item.parent().items();
 							index = length = siblings.length;
 							while (index--) {
@@ -314,7 +314,7 @@ define("tinymce/ui/Selector", [
 				for (i = 0, l = items.length; i < l; i++) {
 					item = items[i];
 
-					// Run each filter agains the item
+					// Run each filter against the item
 					for (fi = 0, fl = filters.length; fi < fl; fi++) {
 						if (!filters[fi](item, i, l)) {
 							fi = fl + 1;

@@ -180,7 +180,7 @@ define("tinymce/Editor", [
 		self.isNotDirty = true;
 
 		/**
-		 * Name/Value object containting plugin instances.
+		 * Name/Value object containing plugin instances.
 		 *
 		 * @property plugins
 		 * @type Object
@@ -280,7 +280,7 @@ define("tinymce/Editor", [
 
 	Editor.prototype = {
 		/**
-		 * Renderes the editor/adds it to the page.
+		 * Renders the editor/adds it to the page.
 		 *
 		 * @method render
 		 */

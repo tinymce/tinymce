@@ -36,6 +36,7 @@ define("tinymce/dom/Selection", [
 	 * @method Selection
 	 * @param {tinymce.dom.DOMUtils} dom DOMUtils object reference.
 	 * @param {Window} win Window to bind the selection object to.
+	 * @param {tinymce.Editor} editor
 	 * @param {tinymce.dom.Serializer} serializer DOM serialization class to use for getContent.
 	 */
 	function Selection(dom, win, serializer, editor) {
@@ -81,7 +82,7 @@ define("tinymce/dom/Selection", [
 		 * Returns the selected contents using the DOM serializer passed in to this class.
 		 *
 		 * @method getContent
-		 * @param {Object} s Optional settings class with for example output format text or html.
+		 * @param {Object} args Optional settings class with for example output format text or html.
 		 * @return {String} Selected contents in for example HTML format.
 		 * @example
 		 * // Alerts the currently selected contents
@@ -156,7 +157,7 @@ define("tinymce/dom/Selection", [
 			args = args || {format: 'html'};
 			args.set = true;
 			args.selection = true;
-			content = args.content = content;
+			args.content = content;
 
 			// Dispatch before set content event
 			if (!args.no_events) {
@@ -377,7 +378,7 @@ define("tinymce/dom/Selection", [
 		 * Selects the specified element. This will place the start and end of the selection range around the element.
 		 *
 		 * @method select
-		 * @param {Element} node HMTL DOM element to select.
+		 * @param {Element} node HTML DOM element to select.
 		 * @param {Boolean} content Optional bool state if the contents should be selected or not on non IE browser.
 		 * @return {Element} Selected element the same element as the one that got passed in.
 		 * @example
@@ -575,6 +576,7 @@ define("tinymce/dom/Selection", [
 		 *
 		 * @method setRng
 		 * @param {Range} rng Range to select.
+		 * @param {Boolean} forward
 		 */
 		setRng: function(rng, forward) {
 			var self = this, sel, node;
@@ -633,7 +635,6 @@ define("tinymce/dom/Selection", [
 				if (rng.cloneRange) {
 					try {
 						self.tridentSel.addRange(rng);
-						return;
 					} catch (ex) {
 						//IE9 throws an error here if called before selection is placed in the editor
 					}
