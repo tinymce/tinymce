@@ -125,7 +125,7 @@ define("tinymce/Shortcuts", [
 		 * @param {String} pattern Shortcut pattern. Like for example: ctrl+alt+o.
 		 * @param {String} desc Text description for the command.
 		 * @param {String/Function} cmdFunc Command name string or function to execute when the key is pressed.
-		 * @param {Object} sc Optional scope to execute the function in.
+		 * @param {Object} scope Optional scope to execute the function in.
 		 * @return {Boolean} true/false state if the shortcut was added or not.
 		 */
 		self.add = function(pattern, desc, cmdFunc, scope) {

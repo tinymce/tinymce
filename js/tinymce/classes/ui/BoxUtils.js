@@ -9,7 +9,7 @@
  */
 
 /**
- * Utility class for box parsing and measuing.
+ * Utility class for box parsing and measuring.
  *
  * @private
  * @class tinymce.ui.BoxUtils

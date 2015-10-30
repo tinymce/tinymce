@@ -48,6 +48,7 @@ define("tinymce/EditorCommands", [
 		 * @param {String} command Command to execute.
 		 * @param {Boolean} ui Optional user interface state.
 		 * @param {Object} value Optional value for command.
+		 * @param {Object} args
 		 * @return {Boolean} true/false if the command was found or not.
 		 */
 		function execCommand(command, ui, value, args) {
@@ -57,7 +58,6 @@ define("tinymce/EditorCommands", [
 				editor.focus();
 			}
 
-			args = extend({}, args);
 			args = editor.fire('BeforeExecCommand', {command: command, ui: ui, value: value});
 			if (args.isDefaultPrevented()) {
 				return false;
@@ -190,7 +190,7 @@ define("tinymce/EditorCommands", [
 		 * Returns true/false if the command is supported or not.
 		 *
 		 * @method queryCommandSupported
-		 * @param {String} cmd Command that we check support for.
+		 * @param {String} command Command that we check support for.
 		 * @return {Boolean} true/false if the command is supported or not.
 		 */
 		function queryCommandSupported(command) {

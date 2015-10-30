@@ -79,10 +79,10 @@ define("tinymce/ui/Rect", [
 	 * Tests various positions to get the most suitable one.
 	 *
 	 * @method findBestRelativePosition
-	 * @param {Rect} Rect Rect to use as source.
+	 * @param {Rect} rect Rect to use as source.
 	 * @param {Rect} targetRect Rect to move relative to.
 	 * @param {Rect} constrainRect Rect to constrain within.
-	 * @param {Array} Array of relative positions to test against.
+	 * @param {Array} rels Array of relative positions to test against.
 	 */
 	function findBestRelativePosition(rect, targetRect, constrainRect, rels) {
 		var pos, i;
@@ -123,13 +123,13 @@ define("tinymce/ui/Rect", [
 	 * @param {Rect} cropRect The second rectangle to compare.
 	 * @return {Rect} The intersection of the two rectangles or null if they don't intersect.
 	 */
-	function intersect(rect1, rect2) {
+	function intersect(rect, cropRect) {
 		var x1, y1, x2, y2;
 
-		x1 = max(rect1.x, rect2.x);
-		y1 = max(rect1.y, rect2.y);
-		x2 = min(rect1.x + rect1.w, rect2.x + rect2.w);
-		y2 = min(rect1.y + rect1.h, rect2.y + rect2.h);
+		x1 = max(rect.x, cropRect.x);
+		y1 = max(rect.y, cropRect.y);
+		x2 = min(rect.x + rect.w, cropRect.x + cropRect.w);
+		y2 = min(rect.y + rect.h, cropRect.y + cropRect.h);
 
 		if (x2 - x1 < 0 || y2 - y1 < 0) {
 			return null;

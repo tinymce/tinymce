@@ -71,7 +71,7 @@ define("tinymce/ui/TextBox", [
 		 * @method repaint
 		 */
 		repaint: function() {
-			var self = this, style, rect, borderBox, borderW = 0, borderH = 0, lastRepaintRect;
+			var self = this, style, rect, borderBox, borderW, borderH = 0, lastRepaintRect;
 
 			style = self.getEl().style;
 			rect = self._layoutRect;

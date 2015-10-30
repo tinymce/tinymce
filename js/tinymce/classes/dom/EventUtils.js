@@ -330,7 +330,7 @@ define("tinymce/dom/EventUtils", [], function() {
 					}
 				}
 
-				// Fake bubbeling of focusin/focusout
+				// Fake bubbling of focusin/focusout
 				if (!hasFocusIn && (name === "focusin" || name === "focusout")) {
 					capture = true;
 					fakeName = name === "focusin" ? "focus" : "blur";
@@ -515,7 +515,7 @@ define("tinymce/dom/EventUtils", [], function() {
 				return self;
 			}
 
-			// Unbind any element on the specificed target
+			// Unbind any element on the specified target
 			if (target[expando]) {
 				unbind(target);
 			}

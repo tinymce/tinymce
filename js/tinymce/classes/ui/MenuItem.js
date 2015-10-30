@@ -236,7 +236,6 @@ define("tinymce/ui/MenuItem", [
 			}
 
 			if (settings.image) {
-				icon = 'none';
 				image = ' style="background-image: url(\'' + settings.image + '\')"';
 			}
 

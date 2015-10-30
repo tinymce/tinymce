@@ -366,7 +366,7 @@ define("tinymce/ui/Control", [
 		 */
 		repaint: function() {
 			var self = this, style, bodyStyle, bodyElm, rect, borderBox;
-			var borderW = 0, borderH = 0, lastRepaintRect, round, value;
+			var borderW, borderH, lastRepaintRect, round, value;
 
 			// Use Math.round on all values on IE < 9
 			round = !document.createRange ? Math.round : function(value) {
@@ -488,7 +488,7 @@ define("tinymce/ui/Control", [
 		 * @method off
 		 * @param {String} [name] Name for the event to unbind.
 		 * @param {function} [callback] Callback function to unbind.
-		 * @return {mxex.ui.Control} Current control object.
+		 * @return {tinymce.ui.Control} Current control object.
 		 */
 		off: function(name, callback) {
 			getEventDispatcher(this).off(name, callback);
@@ -502,7 +502,7 @@ define("tinymce/ui/Control", [
 		 * @method fire
 		 * @param {String} name Name of the event to fire.
 		 * @param {Object} [args] Arguments to pass to the event.
-		 * @param {Boolean} [bubble] Value to control bubbeling. Defaults to true.
+		 * @param {Boolean} [bubble] Value to control bubbling. Defaults to true.
 		 * @return {Object} Current arguments object.
 		 */
 		fire: function(name, args, bubble) {

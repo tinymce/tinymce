@@ -92,6 +92,7 @@ define("tinymce/dom/RangeUtils", [
 			 * @private
 			 * @param {Node} node Node to collect siblings from.
 			 * @param {String} name Name of the sibling to check for.
+			 * @param {Node} end_node
 			 * @return {Array} Array of collected siblings.
 			 */
 			function collectSiblings(node, name, end_node) {

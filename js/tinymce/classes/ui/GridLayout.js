@@ -35,7 +35,7 @@ define("tinymce/ui/GridLayout", [
 		 * @param {tinymce.ui.Container} container Container instance to recalc.
 		 */
 		recalc: function(container) {
-			var settings = container.settings, rows, cols, items, contLayoutRect, width, height, rect,
+			var settings, rows, cols, items, contLayoutRect, width, height, rect,
 				ctrlLayoutRect, ctrl, x, y, posX, posY, ctrlSettings, contPaddingBox, align, spacingH, spacingV, alignH, alignV, maxX, maxY,
 				colWidths = [], rowHeights = [], ctrlMinWidth, ctrlMinHeight, availableWidth, availableHeight, reverseRows, idx;
 

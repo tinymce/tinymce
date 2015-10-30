@@ -23,7 +23,7 @@ define("tinymce/UndoManager", [
 
 	trimContentRegExp = new RegExp([
 		'<span[^>]+data-mce-bogus[^>]+>[\u200B\uFEFF]+<\\/span>', // Trim bogus spans like caret containers
-		'\\s?data-mce-selected="[^"]+"' // Trim temporaty data-mce prefixed attributes like data-mce-selected
+		'\\s?data-mce-selected="[^"]+"' // Trim temporary data-mce prefixed attributes like data-mce-selected
 	].join('|'), 'gi');
 
 	return function(editor) {
@@ -149,7 +149,7 @@ define("tinymce/UndoManager", [
 				return;
 			}
 
-			// Is caracter positon keys left,right,up,down,home,end,pgdown,pgup,enter
+			// Is character position keys left,right,up,down,home,end,pgdown,pgup,enter
 			if ((keyCode >= 33 && keyCode <= 36) || (keyCode >= 37 && keyCode <= 40) || keyCode == 45) {
 				if (self.typing) {
 					addNonTypingUndoLevel(e);
@@ -186,7 +186,7 @@ define("tinymce/UndoManager", [
 
 		/*eslint consistent-this:0 */
 		self = {
-			// Explose for debugging reasons
+			// Explode for debugging reasons
 			data: data,
 
 			/**
@@ -214,7 +214,7 @@ define("tinymce/UndoManager", [
 			 *
 			 * @method add
 			 * @param {Object} level Optional undo level object to add.
-			 * @param {DOMEvent} Event Optional event responsible for the creation of the undo level.
+			 * @param {DOMEvent} event Optional event responsible for the creation of the undo level.
 			 * @return {Object} Undo level that got added or null it a level wasn't needed.
 			 */
 			add: function(level, event) {
@@ -364,10 +364,10 @@ define("tinymce/UndoManager", [
 			},
 
 			/**
-			 * Executes the specified function in an undo transation. The selection
+			 * Executes the specified function in an undo translation. The selection
 			 * before the modification will be stored to the undo stack and if the DOM changes
-			 * it will add a new undo level. Any methods within the transation that adds undo levels will
-			 * be ignored. So a transation can include calls to execCommand or editor.insertContent.
+			 * it will add a new undo level. Any methods within the translation that adds undo levels will
+			 * be ignored. So a translation can include calls to execCommand or editor.insertContent.
 			 *
 			 * @method transact
 			 * @param {function} callback Function to execute dom manipulation logic in.

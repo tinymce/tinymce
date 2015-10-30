@@ -54,7 +54,7 @@ define("tinymce/Compat", [
 // Describe the different namespaces
 
 /**
- * Root level namespace this contains classes directly releated to the TinyMCE editor.
+ * Root level namespace this contains classes directly related to the TinyMCE editor.
  *
  * @namespace tinymce
  */

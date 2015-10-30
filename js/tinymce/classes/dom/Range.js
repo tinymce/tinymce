@@ -737,7 +737,7 @@ define("tinymce/dom/Range", [
 		}
 
 		extend(self, {
-			// Inital states
+			// Initial states
 			startContainer: doc,
 			startOffset: 0,
 			endContainer: doc,

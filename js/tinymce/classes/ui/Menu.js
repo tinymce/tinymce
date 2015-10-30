@@ -22,7 +22,7 @@ define("tinymce/ui/Menu", [
 ], function(FloatPanel, MenuItem, Tools) {
 	"use strict";
 
-	var Menu = FloatPanel.extend({
+	return FloatPanel.extend({
 		Defaults: {
 			defaultType: 'menuitem',
 			border: 1,
@@ -117,6 +117,4 @@ define("tinymce/ui/Menu", [
 			return self._super();
 		}
 	});
-
-	return Menu;
 });

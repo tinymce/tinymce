@@ -547,7 +547,7 @@ define("tinymce/EnterKey", [
 				}
 			}
 
-			// Get editable root node normaly the body element but sometimes a div or span
+			// Get editable root node, normally the body element but sometimes a div or span
 			editableRoot = getEditableRoot(container);
 
 			// If there is no editable root then enter is done inside a contentEditable false element

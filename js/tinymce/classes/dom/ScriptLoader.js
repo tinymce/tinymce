@@ -59,7 +59,6 @@ define("tinymce/dom/ScriptLoader", [
 		 * @method load
 		 * @param {String} url Absolute URL to script to add.
 		 * @param {function} callback Optional callback function to execute ones this script gets loaded.
-		 * @param {Object} scope Optional scope to execute callback in.
 		 */
 		function loadScript(url, callback) {
 			var dom = DOM, elm, id;
@@ -131,7 +130,7 @@ define("tinymce/dom/ScriptLoader", [
 		 * the script loader or to skip it from loading some script.
 		 *
 		 * @method markDone
-		 * @param {string} u Absolute URL to the script to mark as loaded.
+		 * @param {string} url Absolute URL to the script to mark as loaded.
 		 */
 		this.markDone = function(url) {
 			states[url] = LOADED;
