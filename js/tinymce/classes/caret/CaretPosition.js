@@ -13,7 +13,6 @@
  * is similar to a DOMRange object but it doesn't have two endpoints and is also more lightweight
  * since it's now updated live when the DOM changes.
  *
- * @private
  * @class tinymce.caret.CaretPosition
  * @example
  * var caretPos1 = new CaretPosition(container, offset);
@@ -189,6 +188,14 @@ define("tinymce/caret/CaretPosition", [
 		return clientRects;
 	}
 
+	/**
+	 * Represents a location within the document by a container and an offset.
+	 *
+	 * @constructor
+	 * @param {Node} container Container node.
+	 * @param {Number} offset Offset within that container node.
+	 * @param {Array} clientRects Optional client rects array for the position.
+	 */
 	function CaretPosition(container, offset, clientRects) {
 		function isAtStart() {
 			if (isText(container)) {
@@ -237,30 +244,124 @@ define("tinymce/caret/CaretPosition", [
 		}
 
 		return {
+			/**
+			 * Returns the container node.
+			 *
+			 * @method container
+			 * @return {Node} Container node.
+			 */
 			container: Fun.constant(container),
+
+			/**
+			 * Returns the offset within the container node.
+			 *
+			 * @method offset
+			 * @return {Number} Offset within the container node.
+			 */
 			offset: Fun.constant(offset),
-			isAtStart: isAtStart,
-			isAtEnd: isAtEnd,
+
+			/**
+			 * Returns a range out of a the caret position.
+			 *
+			 * @method toRange
+			 * @return {DOMRange} range for the caret position.
+			 */
 			toRange: toRange,
+
+			/**
+			 * Returns the client rects for the caret position. Might be multiple rects between
+			 * block elements.
+			 *
+			 * @method getClientRects
+			 * @return {Array} Array of client rects.
+			 */
 			getClientRects: getClientRects,
+
+			/**
+			 * Returns true if the caret location is visible/displayed on screen.
+			 *
+			 * @method isVisible
+			 * @return {Boolean} true/false if the position is visible or not.
+			 */
 			isVisible: isVisible,
+
+			/**
+			 * Returns true if the caret location is at the beginning of text node or container.
+			 *
+			 * @method isVisible
+			 * @return {Boolean} true/false if the position is at the beginning.
+			 */
+			isAtStart: isAtStart,
+
+			/**
+			 * Returns true if the caret location is at the end of text node or container.
+			 *
+			 * @method isVisible
+			 * @return {Boolean} true/false if the position is at the end.
+			 */
+			isAtEnd: isAtEnd,
+
+			/**
+			 * Compares the caret position to another caret position. This will only compare the
+			 * container and offset not it's visual position.
+			 *
+			 * @method isEqual
+			 * @param {tinymce.caret.CaretPosition} caretPosition Caret position to compare with.
+			 * @return {Boolean} true if the caret positions are equal.
+			 */
 			isEqual: isEqual,
+
+			/**
+			 * Returns the closest resolved node from a node index. That means if you have an offset after the
+			 * last node in a container it will return that last node.
+			 *
+			 * @method getNode
+			 * @return {Node} Node that is closest to the index.
+			 */
 			getNode: getNode
 		};
 	}
 
+	/**
+	 * Creates a caret position from the start of a range.
+	 *
+	 * @method fromRangeStart
+	 * @param {DOMRange} range DOM Range to create caret position from.
+	 * @return {tinymce.caret.CaretPosition} Caret position from the start of DOM range.
+	 */
 	CaretPosition.fromRangeStart = function(range) {
 		return new CaretPosition(range.startContainer, range.startOffset);
 	};
 
+	/**
+	 * Creates a caret position from the end of a range.
+	 *
+	 * @method fromRangeEnd
+	 * @param {DOMRange} range DOM Range to create caret position from.
+	 * @return {tinymce.caret.CaretPosition} Caret position from the end of DOM range.
+	 */
 	CaretPosition.fromRangeEnd = function(range) {
 		return new CaretPosition(range.endContainer, range.endOffset);
 	};
 
+	/**
+	 * Creates a caret position from a node and places the offset after it.
+	 *
+	 * @method after
+	 * @param {Node} node Node to get caret position from.
+	 * @return {tinymce.caret.CaretPosition} Caret position from the node.
+	 */
 	CaretPosition.after = function(node) {
 		return new CaretPosition(node.parentNode, nodeIndex(node) + 1);
 	};
 
+	/**
+	 * Creates a caret position from a node and places the offset before it.
+	 *
+	 * @method before
+	 * @param {Node} node Node to get caret position from.
+	 * @return {tinymce.caret.CaretPosition} Caret position from the node.
+	 */
 	CaretPosition.before = function(node) {
 		return new CaretPosition(node.parentNode, nodeIndex(node));
 	};
