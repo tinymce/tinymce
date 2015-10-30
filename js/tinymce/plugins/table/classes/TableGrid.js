@@ -506,11 +506,33 @@ define("tinymce/tableplugin/TableGrid", [
 			});
 		}
 
+		function getSelectedCells(grid) {
+			return Tools.grep(getAllCells(grid), isCellSelected);
+		}
+
+		function getAllCells(grid) {
+			var cells = [];
+
+			each(grid, function(row) {
+				each(row, function(cell) {
+					cells.push(cell);
+				});
+			});
+
+			return cells;
+		}
+
 		function deleteCols() {
 			var cols = [];
 
-			if (isEditorBody(table) && grid[0].length == 1) {
-				return;
+			if (isEditorBody(table)) {
+				if (grid[0].length == 1) {
+					return;
+				}
+
+				if (getSelectedCells(grid).length == getAllCells(grid).length) {
+					return;
+				}
 			}
 
 			// Get selected column indexes
