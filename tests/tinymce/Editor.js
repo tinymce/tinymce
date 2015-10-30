@@ -401,18 +401,20 @@ test('addQueryStateHandler', function() {
 });
 
 test('Block script execution', function() {
-	editor.setContent('<script></script><script type="x"></script><script type="mce-x"></script>');
+	editor.setContent('<script></script><script type="x"></script><script type="mce-x"></script><p>x</p>');
 	equal(
 		Utils.cleanHtml(editor.getBody().innerHTML),
 		'<script type="mce-no/type"></script>' +
 		'<script type="mce-x"></script>' +
-		'<script type="mce-x"></script>'
+		'<script type="mce-x"></script>' +
+		'<p>x</p>'
 	);
 	equal(
 		editor.getContent(),
 		'<script></script>' +
 		'<script type="x"></script>' +
-		'<script type="x"></script>'
+		'<script type="x"></script>' +
+		'<p>x</p>'
 	);
 });
 
