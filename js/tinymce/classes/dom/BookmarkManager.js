@@ -17,8 +17,10 @@ define("tinymce/dom/BookmarkManager", [
 	"tinymce/Env",
 	"tinymce/util/Tools",
 	"tinymce/caret/CaretContainer",
+	"tinymce/caret/CaretBookmark",
+	"tinymce/caret/CaretPosition",
 	"tinymce/dom/NodeType"
-], function(Env, Tools, CaretContainer, NodeType) {
+], function(Env, Tools, CaretContainer, CaretBookmark, CaretPosition, NodeType) {
 	var isContentEditableFalse = NodeType.isContentEditableFalse;
 
 	/**
@@ -178,6 +180,15 @@ define("tinymce/dom/BookmarkManager", [
 				}
 
 				return getLocation(rng);
+			}
+
+			if (type == 3) {
+				rng = selection.getRng();
+
+				return {
+					start: CaretBookmark.create(dom.getRoot(), CaretPosition.fromRangeStart(rng)),
+					end: CaretBookmark.create(dom.getRoot(), CaretPosition.fromRangeEnd(rng))
+				};
 			}
 
 			// Handle simple range
@@ -382,8 +393,21 @@ define("tinymce/dom/BookmarkManager", [
 				return node;
 			}
 
+			function resolveCaretPositionBookmark() {
+				var rng, pos;
+
+				rng = dom.createRng();
+				pos = CaretBookmark.resolve(dom.getRoot(), bookmark.start);
+				rng.setStart(pos.container(), pos.offset());
+
+				pos = CaretBookmark.resolve(dom.getRoot(), bookmark.end);
+				rng.setEnd(pos.container(), pos.offset());
+
+				return rng;
+			}
+
 			if (bookmark) {
-				if (bookmark.start) {
+				if (Tools.isArray(bookmark.start)) {
 					rng = dom.createRng();
 					root = dom.getRoot();
 
@@ -394,6 +418,8 @@ define("tinymce/dom/BookmarkManager", [
 					if (setEndPoint(true) && setEndPoint()) {
 						selection.setRng(rng);
 					}
+				} else if (typeof bookmark.start == 'string') {
+					selection.setRng(resolveCaretPositionBookmark(bookmark));
 				} else if (bookmark.id) {
 					// Restore start/end points
 					restoreEndPoint('start');
