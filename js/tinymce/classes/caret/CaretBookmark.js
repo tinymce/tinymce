@@ -52,7 +52,7 @@ define('tinymce/caret/CaretBookmark', [
 		}
 
 		return Arr.reduce(node.childNodes, function(result, node) {
-			if (isBogus(node)) {
+			if (isBogus(node) && node.nodeName != 'BR') {
 				result = result.concat(getChildNodes(node));
 			} else {
 				result.push(node);
