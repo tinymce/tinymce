@@ -34,10 +34,12 @@ define("tinymce/pasteplugin/Plugin", [
 				this.active(true);
 
 				if (!userIsInformed) {
-					editor.windowManager.alert(
-						'Paste is now in plain text mode. Contents will now ' +
-						'be pasted as plain text until you toggle this option off.'
-					);
+					var message = editor.translate('Paste is now in plain text mode. Contents will now ' +
+						'be pasted as plain text until you toggle this option off.');
+					editor.notificationManager.open({
+						text: message,
+						type: 'info'
+					});
 
 					userIsInformed = true;
 				}

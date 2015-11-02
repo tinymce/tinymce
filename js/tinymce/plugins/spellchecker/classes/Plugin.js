@@ -188,15 +188,19 @@ define("tinymce/spellcheckerplugin/Plugin", [
 					result = JSON.parse(result);
 
 					if (!result) {
-						errorCallback("Sever response wasn't proper JSON.");
+						var message = editor.translate("Server response wasn't proper JSON.");
+						errorCallback(message);
 					} else if (result.error) {
 						errorCallback(result.error);
 					} else {
 						doneCallback(result);
 					}
 				},
-				error: function(type, xhr) {
-					errorCallback("Spellchecker request error: " + xhr.status);
+				error: function() {
+					var message = editor.translate("The spelling service was not found: (") +
+							settings.spellchecker_rpc_url +
+							editor.translate(")");
+					errorCallback(message);
 				}
 			});
 		}
@@ -212,7 +216,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			}
 
 			function errorCallback(message) {
-				editor.windowManager.alert(message);
+				editor.notificationManager.open({text: message, type: 'error'});
 				editor.setProgressState(false);
 				finish();
 			}
@@ -236,7 +240,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 				editor.dom.remove(spans, true);
 				checkIfFinished();
 			}, function(message) {
-				editor.windowManager.alert(message);
+				editor.notificationManager.open({text: message, type: 'error'});
 				editor.setProgressState(false);
 			});
 		}
@@ -367,7 +371,8 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			editor.setProgressState(false);
 
 			if (isEmpty(suggestions)) {
-				editor.windowManager.alert('No misspellings found');
+				var message = editor.translate('No misspellings found.');
+				editor.notificationManager.open({text: message, type: 'info'});
 				started = false;
 				return;
 			}

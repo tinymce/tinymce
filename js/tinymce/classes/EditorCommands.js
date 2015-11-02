@@ -305,7 +305,7 @@ define("tinymce/EditorCommands", [
 						msg = msg.replace(/Ctrl\+/g, '\u2318+');
 					}
 
-					editor.windowManager.alert(msg);
+					editor.notificationManager.open({text: msg, type: 'error'});
 				}
 			},
 

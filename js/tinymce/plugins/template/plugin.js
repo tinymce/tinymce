@@ -34,7 +34,8 @@ tinymce.PluginManager.add('template', function(editor) {
 		var win, values = [], templateHtml;
 
 		if (!templateList || templateList.length === 0) {
-			editor.windowManager.alert('No templates defined');
+			var message = editor.translate('No templates defined.');
+			editor.notificationManager.open({text: message, type: 'info'});
 			return;
 		}
 

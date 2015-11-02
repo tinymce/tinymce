@@ -36,14 +36,21 @@ tinymce.PluginManager.add('save', function(editor) {
 				if (typeof formObj.submit == "function") {
 					formObj.submit();
 				} else {
-					editor.windowManager.alert("Error: Form submit field collision.");
+					displayErrorMessage(editor.translate("Error: Form submit field collision."));
 				}
 			}
 
 			editor.nodeChanged();
 		} else {
-			editor.windowManager.alert("Error: No form element found.");
+			displayErrorMessage(editor.translate("Error: No form element found."));
 		}
+	}
+
+	function displayErrorMessage(message) {
+		editor.notificationManager.open({
+			text: message,
+			type: 'error'
+		});
 	}
 
 	function cancel() {
