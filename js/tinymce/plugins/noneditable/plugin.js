@@ -427,7 +427,7 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 
 						// Arrow right or delete
 						if (keyCode == VK.RIGHT || keyCode == VK.DELETE) {
-							nonEditableParent = getNonEmptyTextNodeSibling(caretContainer, true);
+							nonEditableParent = getNonEmptyTextNodeSibling(caretContainer, false);
 
 							if (nonEditableParent && getContentEditable(nonEditableParent) === "false") {
 								e.preventDefault();
