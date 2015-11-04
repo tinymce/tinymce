@@ -599,6 +599,8 @@ define("tinymce/dom/Selection", [
 
 			// Is IE specific range
 			if (rng.select) {
+				self.explicitRange = null;
+
 				try {
 					rng.select();
 				} catch (ex) {

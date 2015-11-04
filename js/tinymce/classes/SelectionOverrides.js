@@ -35,10 +35,11 @@ define("tinymce/SelectionOverrides", [
 	"tinymce/util/VK",
 	"tinymce/util/Fun",
 	"tinymce/util/Arr",
-	"tinymce/util/Delay"
+	"tinymce/util/Delay",
+	"tinymce/DragDropOverrides"
 ], function(
 	Env, CaretWalker, CaretPosition, CaretContainer, CaretUtils, FakeCaret, LineWalker,
-	LineUtils, NodeType, RangeUtils, VK, Fun, Arr, Delay
+	LineUtils, NodeType, RangeUtils, VK, Fun, Arr, Delay, DragDropOverrides
 ) {
 	var curry = Fun.curry,
 		isContentEditableTrue = NodeType.isContentEditableTrue,
@@ -595,6 +596,8 @@ define("tinymce/SelectionOverrides", [
 					editor.selection.setRng(renderRangeCaret(editor.selection.getRng()));
 				});
 			});
+
+			DragDropOverrides.init(editor);
 		}
 
 		function addCss() {
