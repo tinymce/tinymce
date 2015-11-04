@@ -370,11 +370,11 @@ define("tinymce/Editor", [
 			/**
 			 * Notification manager reference, use this to open new windows and dialogs.
 			 *
-			 * @property NotificationManager
+			 * @property notificationManager
 			 * @type tinymce.NotificationManager
 			 * @example
-			 * // Shows an alert message
-			 * tinymce.activeEditor.NotificationManager.alert('Hello world!');
+			 * // Shows a notification info message.
+			 * tinymce.activeEditor.notificationManager.open({text: 'Hello world!', type: 'info'});
 			 */
 			self.notificationManager = new NotificationManager(self);
 
