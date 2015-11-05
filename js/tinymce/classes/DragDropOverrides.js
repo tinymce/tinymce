@@ -22,22 +22,20 @@ define("tinymce/DragDropOverrides", [
 	var isContentEditableFalse = NodeType.isContentEditableFalse;
 
 	function init(editor) {
-		var $ = editor.$;
+		var $ = editor.$, rootDocument = document,
+			editableDoc = editor.getDoc(),
+			dom = editor.dom, state = {};
 
 		function isDraggable(elm) {
 			return isContentEditableFalse(elm);
 		}
-
-		var rootDocument = document,
-			editableDoc = editor.getDoc(),
-			dom = editor.dom, state = {};
 
 		function setBodyCursor(cursor) {
 			$(editor.getBody()).css('cursor', cursor);
 		}
 
 		function isValidDropTarget(elm) {
-			if (elm == state.element) {
+			if (elm == state.element || editor.dom.isChildOf(elm, state.element)) {
 				return false;
 			}
 
@@ -49,7 +47,13 @@ define("tinymce/DragDropOverrides", [
 		}
 
 		function move(e) {
-			var deltaX, deltaY, pos, viewPort, overflowX = 0, overflowY = 0, clientX, clientY;
+			var deltaX, deltaY, pos, viewPort,
+				overflowX = 0, overflowY = 0,
+				clientX, clientY, rootClientRect;
+
+			if (e.button !== 1) {
+				return;
+			}
 
 			deltaX = Math.abs(e.screenX - state.screenX);
 			deltaY = Math.abs(e.screenY - state.screenY);
@@ -78,7 +82,9 @@ define("tinymce/DragDropOverrides", [
 					width: state.width,
 					height: state.height
 				}).attr({
-					'data-mce-bogus': 'all'
+					'data-mce-bogus': 'all',
+					unselectable: 'on',
+					contenteditable: 'false'
 				}).addClass('mce-drag-container mce-reset').
 					append(state.clone).
 					appendTo(editor.getBody())[0];
@@ -89,7 +95,6 @@ define("tinymce/DragDropOverrides", [
 			}
 
 			if (state.dragging) {
-				editor.selection.placeCaretAt(e.clientX, e.clientY);
 				clientX = e.clientX - state.relX;
 				clientY = e.clientY + 5;
 
@@ -101,12 +106,20 @@ define("tinymce/DragDropOverrides", [
 					overflowX = (clientY + state.height) - state.maxY;
 				}
 
+				if (editor.getBody().nodeName != 'BODY') {
+					rootClientRect = editor.getBody().getBoundingClientRect();
+				} else {
+					rootClientRect = {left: 0, top: 0};
+				}
+
 				$(state.ghost).css({
-					left: clientX,
-					top: clientY,
+					left: clientX - rootClientRect.left,
+					top: clientY - rootClientRect.top,
 					width: state.width - overflowX,
 					height: state.height - overflowY
 				});
+
+				editor.selection.placeCaretAt(e.clientX, e.clientY);
 			}
 		}
 

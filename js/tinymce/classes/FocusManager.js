@@ -150,11 +150,12 @@ define("tinymce/FocusManager", [
 			});
 
 			editor.on('focusin', function() {
-				var focusedEditor = editorManager.focusedEditor;
+				var focusedEditor = editorManager.focusedEditor, lastRng;
 
 				if (editor.selection.lastFocusBookmark) {
-					editor.selection.setRng(bookmarkToRng(editor, editor.selection.lastFocusBookmark));
+					lastRng = bookmarkToRng(editor, editor.selection.lastFocusBookmark);
 					editor.selection.lastFocusBookmark = null;
+					editor.selection.setRng(lastRng);
 				}
 
 				if (focusedEditor != editor) {

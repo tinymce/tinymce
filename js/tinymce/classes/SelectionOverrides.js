@@ -684,14 +684,14 @@ define("tinymce/SelectionOverrides", [
 				if ($realSelectionContainer.length === 0) {
 					$realSelectionContainer = $(
 						'<div data-mce-bogus="all" class="mce-offscreen-selection"></div>'
-					).attr('id', realSelectionId).css({
-						top: dom.getPos(node).y
-					});
+					).attr('id', realSelectionId);
 
 					$realSelectionContainer.appendTo(editor.getBody());
 				}
 
-				$realSelectionContainer.empty().append('\u00a0').append(node.cloneNode(true)).append('\u00a0');
+				$realSelectionContainer.empty().append('\u00a0').append(node.cloneNode(true)).append('\u00a0').css({
+					top: dom.getPos(node, editor.getBody()).y
+				});
 
 				range = editor.dom.createRng();
 				range.setStart($realSelectionContainer[0].firstChild, 1);

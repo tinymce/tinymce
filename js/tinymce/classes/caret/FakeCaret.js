@@ -30,15 +30,16 @@ define("tinymce/caret/FakeCaret", [
 
 		function getAbsoluteClientRect(node, before) {
 			var clientRect = ClientRect.collapse(node.getBoundingClientRect(), before),
-				docElm, scrollX, scrollY, margin;
-
-			scrollX = rootNode.scrollLeft;
-			scrollY = rootNode.scrollTop;
+				docElm, scrollX, scrollY, margin, rootRect;
 
 			if (rootNode.tagName == 'BODY') {
 				docElm = rootNode.ownerDocument.documentElement;
-				scrollX = scrollX || docElm.scrollLeft;
-				scrollY = scrollY || docElm.scrollTop;
+				scrollX = rootNode.scrollLeft || docElm.scrollLeft;
+				scrollY = rootNode.scrollTop || docElm.scrollTop;
+			} else {
+				rootRect = rootNode.getBoundingClientRect();
+				scrollX = rootNode.scrollLeft - rootRect.left;
+				scrollY = rootNode.scrollTop - rootRect.top;
 			}
 
 			clientRect.left += scrollX;
