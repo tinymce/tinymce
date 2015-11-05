@@ -51,7 +51,7 @@ define("tinymce/DragDropOverrides", [
 				overflowX = 0, overflowY = 0,
 				clientX, clientY, rootClientRect;
 
-			if (e.button !== 1) {
+			if (e.button !== 0) {
 				return;
 			}
 
@@ -95,6 +95,8 @@ define("tinymce/DragDropOverrides", [
 			}
 
 			if (state.dragging) {
+				editor.selection.placeCaretAt(e.clientX, e.clientY);
+
 				clientX = e.clientX - state.relX;
 				clientY = e.clientY + 5;
 
@@ -118,8 +120,6 @@ define("tinymce/DragDropOverrides", [
 					width: state.width - overflowX,
 					height: state.height - overflowY
 				});
-
-				editor.selection.placeCaretAt(e.clientX, e.clientY);
 			}
 		}
 
