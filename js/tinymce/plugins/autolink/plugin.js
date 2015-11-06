@@ -12,6 +12,11 @@
 
 tinymce.PluginManager.add('autolink', function(editor) {
 	var AutoUrlDetectState;
+	var AutoLinkPattern = /^(https?:\/\/|ssh:\/\/|ftp:\/\/|file:\/|www\.|(?:mailto:)?[A-Z0-9._%+\-]+@)(.+)$/i;
+
+	if (editor.settings.autolink_pattern) {
+		AutoLinkPattern = editor.settings.autolink_pattern;
+	}
 
 	editor.on("keydown", function(e) {
 		if (e.keyCode == 13) {
@@ -179,7 +184,7 @@ tinymce.PluginManager.add('autolink', function(editor) {
 		}
 
 		text = rng.toString();
-		matches = text.match(/^(https?:\/\/|ssh:\/\/|ftp:\/\/|file:\/|www\.|(?:mailto:)?[A-Z0-9._%+\-]+@)(.+)$/i);
+		matches = text.match(AutoLinkPattern);
 
 		if (matches) {
 			if (matches[1] == 'www.') {
