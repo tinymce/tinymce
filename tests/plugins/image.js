@@ -23,6 +23,7 @@
 			delete editor.settings.image_class_list;
 			delete editor.settings.document_base_url;
 			delete editor.settings.image_advtab;
+			delete editor.settings.image_caption;
 
 			var win = Utils.getFrontmostWindow();
 
@@ -51,7 +52,6 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"constrain": true,
-			"caption": false,
 			"height": "",
 			"src": "",
 			"width": ""
@@ -77,13 +77,11 @@
 
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
-			"caption": false,
 			"src": ""
 		});
 
 		fillAndSubmitWindowForm({
 			"alt": "alt",
-			"caption": false,
 			"src": "src"
 		});
 
@@ -93,47 +91,90 @@
 		);
 	});
 
-	test('All image dialog ui options on empty editor', function() {
-		editor.settings.image_list = [
-			{title: 'link1', value: 'link1'},
-			{title: 'link2', value: 'link2'}
-		];
+	if (tinymce.Env.ceFalse) {
+		test('All image dialog ui options on empty editor', function() {
+			editor.settings.image_caption = true;
+			editor.settings.image_list = [
+				{title: 'link1', value: 'link1'},
+				{title: 'link2', value: 'link2'}
+			];
 
-		editor.settings.image_class_list = [
-			{title: 'class1', value: 'class1'},
-			{title: 'class2', value: 'class2'}
-		];
+			editor.settings.image_class_list = [
+				{title: 'class1', value: 'class1'},
+				{title: 'class2', value: 'class2'}
+			];
 
-		editor.setContent('');
-		editor.execCommand('mceImage', true);
+			editor.setContent('');
+			editor.execCommand('mceImage', true);
 
-		deepEqual(Utils.getFrontmostWindow().toJSON(), {
-			"alt": "",
-			"class": "class1",
-			"constrain": true,
-			"caption": false,
-			"height": "",
-			"src": "",
-			"width": ""
+			deepEqual(Utils.getFrontmostWindow().toJSON(), {
+				"alt": "",
+				"class": "class1",
+				"constrain": true,
+				"caption": false,
+				"height": "",
+				"src": "",
+				"width": ""
+			});
+
+			fillAndSubmitWindowForm({
+				"alt": "alt",
+				"class": "class1",
+				"constrain": true,
+				"caption": true,
+				"height": "200",
+				"src": "src",
+				"width": "100"
+			});
+
+			equal(
+				cleanHtml(editor.getContent()),
+				'<figure class="image"><img class="class1" src="src" alt="alt" width="100" height="200" /><figcaption>caption</figcaption></figure>'
+			);
 		});
+	} else {
+		test('All image dialog ui options on empty editor (old IE)', function() {
+			editor.settings.image_caption = true;
+			editor.settings.image_list = [
+				{title: 'link1', value: 'link1'},
+				{title: 'link2', value: 'link2'}
+			];
 
-		fillAndSubmitWindowForm({
-			"alt": "alt",
-			"class": "class1",
-			"constrain": true,
-			"caption": false,
-			"height": "200",
-			"src": "src",
-			"width": "100"
+			editor.settings.image_class_list = [
+				{title: 'class1', value: 'class1'},
+				{title: 'class2', value: 'class2'}
+			];
+
+			editor.setContent('');
+			editor.execCommand('mceImage', true);
+
+			deepEqual(Utils.getFrontmostWindow().toJSON(), {
+				"alt": "",
+				"class": "class1",
+				"constrain": true,
+				"height": "",
+				"src": "",
+				"width": ""
+			});
+
+			fillAndSubmitWindowForm({
+				"alt": "alt",
+				"class": "class1",
+				"constrain": true,
+				"caption": true,
+				"height": "200",
+				"src": "src",
+				"width": "100"
+			});
+
+			equal(
+				cleanHtml(editor.getContent()),
+				'<p><img class="class1" src="src" alt="alt" width="100" height="200" /></p>'
+			);
 		});
+	}
 
-		equal(
-			cleanHtml(editor.getContent()),
-			'<p><img class="class1" src="src" alt="alt" width="100" height="200" /></p>'
-		);
-	});
-
-	test("Image recognizes relative src url and prepends relative image_prepend_url setting.", function () {
+	test("Image recognizes relative src url and prepends relative image_prepend_url setting.", function() {
 		var win, elementId, element;
 
 		editor.settings.image_prepend_url = 'testing/images/';
@@ -159,9 +200,9 @@
 			cleanHtml(editor.getContent()),
 			'<p><img src="' + editor.settings.image_prepend_url + 'src" alt="alt" /></p>'
 		);
- 	});
+	});
 
- 	test("Image recognizes relative src url and prepends absolute image_prepend_url setting.", function () {
+	test("Image recognizes relative src url and prepends absolute image_prepend_url setting.", function() {
 		var win, elementId, element;
 
 		editor.settings.image_prepend_url = 'http://localhost/images/';
@@ -187,7 +228,7 @@
 			cleanHtml(editor.getContent()),
 			'<p><img src="' + editor.settings.image_prepend_url + 'src" alt="alt" /></p>'
 		);
- 	});
+	});
 
 	test('Advanced image dialog border option on empty editor', function(){
 		editor.settings.image_advtab = true;
@@ -199,7 +240,6 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
-			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -228,7 +268,6 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
-			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -259,7 +298,6 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
-			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -289,7 +327,6 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
-			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -319,7 +356,6 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
-			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -330,7 +366,7 @@
 			"alt": "alt",
 			"border": "10",
 			"src": "src",
-			"style": "border-width: 15px;",
+			"style": "border-width: 15px;"
 		});
 
 		equal(
@@ -350,7 +386,6 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
-			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -382,7 +417,6 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
-			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -394,7 +428,6 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
-			"caption": false,
 			"hspace": "15",
 			"src": "",
 			"style": "margin-left: 15px; margin-right: 15px;",
@@ -413,7 +446,6 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
-			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -425,7 +457,6 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
-			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "margin-top: 15px; margin-bottom: 15px;",
@@ -444,7 +475,6 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
-			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -456,7 +486,6 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
-			"caption": false,
 			"hspace": "5",
 			"src": "",
 			"style": "margin: 5px;",
@@ -475,7 +504,6 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
-			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -487,7 +515,6 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
-			"caption": false,
 			"hspace": "10",
 			"src": "",
 			"style": "margin: 5px 10px 5px 10px;",
@@ -506,7 +533,6 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
-			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -518,7 +544,6 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
-			"caption": false,
 			"hspace": "10",
 			"src": "",
 			"style": "margin: 5px 10px 5px 10px;",
@@ -537,7 +562,6 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
-			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -549,7 +573,6 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
-			"caption": false,
 			"hspace": "10",
 			"src": "",
 			"style": "margin: 5px 10px 15px 10px;",
@@ -568,7 +591,6 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
-			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -580,7 +602,6 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
-			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "margin: 5px 10px 15px 20px;",
@@ -599,7 +620,6 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
-			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "",
@@ -611,7 +631,6 @@
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
 			"alt": "",
 			"border": "",
-			"caption": false,
 			"hspace": "",
 			"src": "",
 			"style": "margin: 15px 10px 15px 20px;",

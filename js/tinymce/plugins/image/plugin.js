@@ -403,7 +403,7 @@ tinymce.PluginManager.add('image', function(editor) {
 
 		generalFormItems.push(classListCtrl);
 
-		if (editor.settings.image_caption !== false && tinymce.Env.ceFalse) {
+		if (editor.settings.image_caption && tinymce.Env.ceFalse) {
 			generalFormItems.push({name: 'caption', type: 'checkbox', label: 'Caption'});
 		}
 
