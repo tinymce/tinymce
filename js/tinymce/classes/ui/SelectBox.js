@@ -31,6 +31,11 @@ define("tinymce/ui/SelectBox", [
 	}
 
 	return Widget.extend({
+		Defaults: {
+			classes: "selectbox",
+			role: "selectbox",
+			options: []
+		},
 		/**
 		 * Constructs a instance with the specified settings.
 		 *
@@ -42,20 +47,34 @@ define("tinymce/ui/SelectBox", [
 			var self = this;
 
 			self._super(settings);
-			settings = self.settings;
 
-			if (settings.options) {
+			if (self.settings.size) {
 
-				self.options = settings.options;
-
-			}
-
-			if (settings.size) {
-
-				self.size = settings.size;
+				self.size = self.settings.size;
 
 			}
 
+			if (self.settings.options) {
+				self._options = self.settings.options;
+			}
+
+		},
+
+		/**
+		 * Getter/setter function for the options state.
+		 *
+		 * @method options
+		 * @param {Boolean} [state] State to be set.
+		 * @return {Boolean|tinymce.ui.Checkbox} True/false or checkbox if it's a set operation.
+		 */
+		options: function(state) {
+			if (!arguments.length) {
+				return this.state.get('options');
+			}
+
+			this.state.set('options', state);
+
+			return this;
 		},
 
 		/**
@@ -67,9 +86,7 @@ define("tinymce/ui/SelectBox", [
 		renderHtml: function() {
 			var self = this, options, size = '';
 
-			if (self.options) {
-				options = createOptions(options);
-			}
+			options = createOptions(self._options);
 
 			if (self.size) {
 				size = ' size = "' + self.size + '"';
@@ -78,7 +95,7 @@ define("tinymce/ui/SelectBox", [
 			return (
 				'<select id="' + self._id + '" class="' + self.classes + '"' + size + '>' +
 					options +
-				'</div>'
+				'</select>'
 			);
 		},
 
@@ -92,9 +109,8 @@ define("tinymce/ui/SelectBox", [
 		bindStates: function() {
 			var self = this;
 
-			self.state.on('change:options', function() {
-				var select = self.getEl().firstChild;
-				select.innerHTML = createOptions(self.options);
+			self.state.on('change:options', function(e) {
+				self.getEl().innerHTML = createOptions(e.value);
 			});
 
 			return self._super();
