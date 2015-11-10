@@ -416,13 +416,18 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			panelRect = tinymce.DOM.getRect(panel.getEl());
 			contentAreaRect = tinymce.DOM.getRect(editor.getContentAreaContainer() || editor.getBody());
 
+			// We need to use these instead of the rect values since the style
+			// size properites might not be the same as the real size for a table
+			elementRect.w = match.element.clientWidth;
+			elementRect.h = match.element.clientHeight;
+
 			if (!editor.inline) {
 				contentAreaRect.w = editor.getDoc().documentElement.offsetWidth;
 			}
 
 			// Inflate the elementRect so it doesn't get placed above resize handles
 			if (editor.selection.controlSelection.isResizable(match.element)) {
-				elementRect = Rect.inflate(elementRect, 0, 7);
+				elementRect = Rect.inflate(elementRect, 0, 8);
 			}
 
 			relPos = Rect.findBestRelativePosition(panelRect, elementRect, contentAreaRect, testPositions);
@@ -541,7 +546,12 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			return null;
 		}
 
-		editor.on('click keyup', function() {
+		editor.on('click keyup setContent', function(e) {
+			// Only act on partial inserts
+			if (e.type == 'setcontent' && !e.selection) {
+				return;
+			}
+
 			// Needs to be delayed to avoid Chrome img focus out bug
 			tinymce.util.Delay.setEditorTimeout(editor, function() {
 				var match;
