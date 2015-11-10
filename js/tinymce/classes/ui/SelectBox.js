@@ -11,6 +11,7 @@
 /**
  * Creates a new select box control.
  *
+ * @-x-less SelectBox.less
  * @class tinymce.ui.SelectBox
  * @extends tinymce.ui.Widget
  */
