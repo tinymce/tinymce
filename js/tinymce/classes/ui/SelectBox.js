@@ -1,5 +1,5 @@
 /**
- * ListBox.js
+ * SelectBox.js
  *
  * Released under LGPL License.
  * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
@@ -9,11 +9,10 @@
  */
 
 /**
- * Creates a new list box control.
+ * Creates a new select box control.
  *
- * @-x-less ListBox.less
- * @class tinymce.ui.ListBox
- * @extends tinymce.ui.MenuButton
+ * @class tinymce.ui.SelectBox
+ * @extends tinymce.ui.Widget
  */
 define("tinymce/ui/SelectBox", [
 	"tinymce/ui/Widget"
@@ -64,8 +63,8 @@ define("tinymce/ui/SelectBox", [
 		 * Getter/setter function for the options state.
 		 *
 		 * @method options
-		 * @param {Boolean} [state] State to be set.
-		 * @return {Boolean|tinymce.ui.Checkbox} True/false or checkbox if it's a set operation.
+		 * @param {Array} [state] State to be set.
+		 * @return {Array|tinymce.ui.SelectBox} Array of string options.
 		 */
 		options: function(state) {
 			if (!arguments.length) {
@@ -77,12 +76,6 @@ define("tinymce/ui/SelectBox", [
 			return this;
 		},
 
-		/**
-		 * Renders the control as a HTML string.
-		 *
-		 * @method renderHtml
-		 * @return {String} HTML representing the control.
-		 */
 		renderHtml: function() {
 			var self = this, options, size = '';
 
@@ -99,13 +92,6 @@ define("tinymce/ui/SelectBox", [
 			);
 		},
 
-		/**
-		 * Getter/setter function for the control value.
-		 *
-		 * @method value
-		 * @param {String} [value] Value to be set.
-		 * @return {Boolean/tinymce.ui.ListBox} Value or self if it's a set operation.
-		 */
 		bindStates: function() {
 			var self = this;
 
