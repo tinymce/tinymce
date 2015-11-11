@@ -726,16 +726,9 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		function switchMode() {
 			return function(e) {
 				if (e.mode == 'readonly') {
-					editor.selection.controlSelection.hideResizeRect();
-					editor.readonly = true;
-					editor.getBody().contentEditable = false;
 					panel.find('*').disabled(true);
 				} else {
-					editor.readonly = false;
-					editor.getBody().contentEditable = true;
 					panel.find('*').disabled(false);
-					editor.focus();
-					editor.nodeChanged();
 				}
 			};
 		}

@@ -66,6 +66,7 @@ define("tinymce/Editor", [
 	"tinymce/util/Tools",
 	"tinymce/util/Delay",
 	"tinymce/EditorObservable",
+	"tinymce/Mode",
 	"tinymce/Shortcuts",
 	"tinymce/EditorUpload",
 	"tinymce/SelectionOverrides"
@@ -73,7 +74,7 @@ define("tinymce/Editor", [
 	DOMUtils, DomQuery, AddOnManager, NodeChange, Node, DomSerializer, Serializer,
 	Selection, Formatter, UndoManager, EnterKey, ForceBlocks, EditorCommands,
 	URI, ScriptLoader, EventUtils, WindowManager, NotificationManager,
-	Schema, DomParser, Quirks, Env, Tools, Delay, EditorObservable, Shortcuts, EditorUpload,
+	Schema, DomParser, Quirks, Env, Tools, Delay, EditorObservable, Mode, Shortcuts, EditorUpload,
 	SelectionOverrides
 ) {
 	// Shorten these names
@@ -1881,7 +1882,7 @@ define("tinymce/Editor", [
 		 * @param {String} mode Mode to set the editor in.
 		 */
 		setMode: function(mode) {
-			this.fire('SwitchMode', {mode: mode});
+			Mode.setMode(this, mode);
 		},
 
 		/**
