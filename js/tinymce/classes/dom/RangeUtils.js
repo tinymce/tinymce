@@ -288,10 +288,6 @@ define("tinymce/dom/RangeUtils", [
 					}
 				}
 
-				function isTableCell(node) {
-					return node && /^(TD|TH|CAPTION)$/.test(node.nodeName);
-				}
-
 				function hasContentEditableFalseParent(node) {
 					while (node && node != body) {
 						if (isContentEditableFalse(node)) {
