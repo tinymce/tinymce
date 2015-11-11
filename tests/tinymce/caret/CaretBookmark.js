@@ -83,6 +83,11 @@ ModuleLoader.require([
 		assertCaretPosition(CaretBookmark.resolve(getRoot(), 'i[0],before'), CaretPosition.before(getRoot().childNodes[1]));
 	});
 
+	test('resolve odd element names', function() {
+		setupHtml('<h-2X>abc</h-2X>');
+		assertCaretPosition(CaretBookmark.resolve(getRoot(), 'h-2X[0]/text()[0],2'), createTextPos(getRoot().childNodes[0].firstChild, 2));
+	});
+
 	test('resolve deep element index', function() {
 		setupHtml('<p><span>a</span><span><b id="a"></b><b id="b"></b><b id="c"></b></span></p>');
 		assertCaretPosition(CaretBookmark.resolve(getRoot(), 'p[0]/span[1]/b[0],before'), CaretPosition.before(document.getElementById('a')));

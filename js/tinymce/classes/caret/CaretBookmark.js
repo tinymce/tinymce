@@ -210,7 +210,7 @@ define('tinymce/caret/CaretBookmark', [
 		offset = parts.length > 1 ? parts[1] : 'before';
 
 		container = Arr.reduce(path, function(result, value) {
-			value = /([a-z\-\(\)]+)\[([0-9]+)\]/.exec(value);
+			value = /([\w\-\(\)]+)\[([0-9]+)\]/.exec(value);
 			if (!value) {
 				return null;
 			}
