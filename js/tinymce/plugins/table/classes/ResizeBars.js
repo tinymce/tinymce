@@ -30,7 +30,8 @@ define("tinymce/tableplugin/ResizeBars", [
 			RESIZE_BAR_COL_DATA_INITIAL_LEFT_ATTRIBUTE = 'data-initial-left',
 			RESIZE_BAR_THICKNESS = 4,
 			RESIZE_MINIMUM_WIDTH = 10,
-			RESIZE_MINIMUM_HEIGHT = 10;
+			RESIZE_MINIMUM_HEIGHT = 10,
+			RESIZE_BAR_DRAGGING_CLASS = 'mce-resize-bar-dragging';
 
 		var percentageBasedSizeRegex = new RegExp(/(\d+(\.\d+)?%)/),
 			pixelBasedSizeRegex = new RegExp(/px|em/);
@@ -819,6 +820,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			editor.dom.remove(blockerElement);
 
 			if (dragging) {
+				editor.dom.removeClass(dragBar, RESIZE_BAR_DRAGGING_CLASS);
 				dragging = false;
 
 				var index, delta;
@@ -843,6 +845,7 @@ define("tinymce/tableplugin/ResizeBars", [
 		function setupBaseDrag(bar, dragHandler) {
 			blockerElement = blockerElement ? blockerElement : getBlockerElement();
 			dragging = true;
+			editor.dom.addClass(bar, RESIZE_BAR_DRAGGING_CLASS);
 			dragBar = bar;
 			bindBlockerEvents(blockerElement, dragHandler);
 			editor.dom.add(getBody(), blockerElement);
