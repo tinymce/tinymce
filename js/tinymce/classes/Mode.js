@@ -37,8 +37,9 @@ define("tinymce/Mode", [], function() {
 		} else {
 			editor.readonly = false;
 			editor.getBody().contentEditable = true;
-			setEditorCommandState("StyleWithCSS", false);
-			setEditorCommandState("enableInlineTableEditing", false);
+			setEditorCommandState(editor, "StyleWithCSS", false);
+			setEditorCommandState(editor, "enableInlineTableEditing", false);
+			setEditorCommandState(editor, "enableObjectResizing", false);
 			editor.focus();
 			editor.nodeChanged();
 		}
