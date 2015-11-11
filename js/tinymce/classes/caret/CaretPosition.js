@@ -13,6 +13,7 @@
  * is similar to a DOMRange object but it doesn't have two endpoints and is also more lightweight
  * since it's now updated live when the DOM changes.
  *
+ * @private
  * @class tinymce.caret.CaretPosition
  * @example
  * var caretPos1 = new CaretPosition(container, offset);

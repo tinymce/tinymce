@@ -19,6 +19,7 @@
  *  p[0]/img[0],before = <p>|<img></p>
  *  p[0]/img[0],after = <p><img>|</p>
  *
+ * @private
  * @static
  * @class tinymce.caret.CaretBookmark
  * @example
