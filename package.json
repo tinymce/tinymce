@@ -1,0 +1,12 @@
+{
+  "name": "shared-imagetools",
+  "version": "1.0.0",
+  "description": "Image tools for tinymce and textbox.io",
+  "keywords": [
+    "image",
+    "editor",
+    "ephox"
+  ],
+  "author": "ephox",
+  "private": true
+}
