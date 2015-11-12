@@ -2,26 +2,23 @@ test(
   'ColorMatrixTest',
 
   [
+    'ephox.imagetools.test.Assertion',
     'ephox.imagetools.transformations.ColorMatrix'
   ],
 
-  function (ColorMatrix) {
-    var assertEq = function (expected, actual, label) {
-      assert.eq(expected, actual, 'test: ' + label + ', expected = ' + expected + ', actual = ' + actual);
-    };
-
+  function (Assertion, ColorMatrix) {
     var checkIdentity = function (label, input) {
-      assert.eq(input, ColorMatrix.identity(input), label);
+      Assertion.assertEq(input, ColorMatrix.identity(input), label);
     };
 
     var checkAdjust = function (label, expected, input, adjustment) {
       var actual = ColorMatrix.adjust(input, adjustment);
-      assertEq(expected, actual, label);
+      Assertion.assertEq(expected, actual, label);
     };
 
     var checkMultiply = function (label, expected, input, matrix) {
       var actual = ColorMatrix.multiply(input, matrix);
-      assertEq(expected, actual, label);
+      Assertion.assertEq(expected, actual, label);
     };
 
     checkAdjust('Adjust 1', [
