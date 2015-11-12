@@ -43,7 +43,6 @@ define(
 
         var sharpen = createButton('Sharpen', function () {
           BlobConversions.imageToBlob(image.dom()).then(ImageTransformations.sharpen).then(BlobConversions.blobToDataUri).then(function (data) {
-            console.log('data', data);
             Attr.set(image, 'src', data);
           });
         });

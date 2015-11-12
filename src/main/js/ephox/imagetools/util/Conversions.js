@@ -47,7 +47,6 @@ define("ephox/imagetools/util/Conversions", [
 	function imageToBlob(image) {
 		return loadImage(image).then(function(image) {
 			var src = image.src;
-      console.log('loaded image', image);
 
 			if (src.indexOf('blob:') === 0) {
 				return blobUriToBlob(src);
@@ -58,7 +57,6 @@ define("ephox/imagetools/util/Conversions", [
 			}
 
 			return imageToCanvas(image).then(function(canvas) {
-        console.log('canvas', canvas);
 				return dataUriToBlob(canvas.toDataURL(Mime.guessMimeType(src)));
 			});
 		});
@@ -154,12 +152,10 @@ define("ephox/imagetools/util/Conversions", [
 	}
 
 	function blobToDataUri(blob) {
-    console.log('are we getting here?');
 		return new Promise(function(resolve) {
 			var reader = new FileReader();
 
 			reader.onloadend = function() {
-        console.log('done', reader.result);
 				resolve(reader.result);
 			};
 

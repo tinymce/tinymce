@@ -11,7 +11,6 @@ define(
     };
 
     var sharpen = function (blob) {
-      console.log('sharpen.blob', blob);
       return Filters.sharpen(blob);
     };
 
