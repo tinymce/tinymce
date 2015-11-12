@@ -777,7 +777,7 @@ define("tinymce/tableplugin/TableGrid", [
 				endX = Math.max(startPos.x, endPos.x);
 				endY = Math.max(startPos.y, endPos.y);
 
-				// Expand end positon to include spans
+				// Expand end position to include spans
 				maxX = endX;
 				maxY = endY;
 

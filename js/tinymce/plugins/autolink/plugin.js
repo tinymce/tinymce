@@ -104,7 +104,7 @@ tinymce.PluginManager.add('autolink', function(editor) {
 		// hence, at minimum, five characters from the beginning of the line.
 		rng = editor.selection.getRng(true).cloneRange();
 		if (rng.startOffset < 5) {
-			// During testing, the caret is placed inbetween two text nodes.
+			// During testing, the caret is placed between two text nodes.
 			// The previous text node contains the URL.
 			prev = rng.endContainer.previousSibling;
 			if (!prev) {

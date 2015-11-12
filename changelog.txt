@@ -26,7 +26,7 @@ Version 4.2.6 (2015-09-28)
 	Fixed bug where shift+delete wouldn't do a cut operation on Blink/WebKit.
 	Fixed bug where cut action wouldn't properly store the before selection bookmark for the undo level.
 	Fixed bug where backspace in side an empty list element on IE would loose editor focus.
-	Fixed bug where the save plugin wouldn't enable the buttons when a change occured.
+	Fixed bug where the save plugin wouldn't enable the buttons when a change occurred.
 	Fixed bug where Edge wouldn't initialize the editor if a document.domain was specified.
 	Fixed bug where enter key before nested images would sometimes not properly expand the previous block.
 	Fixed bug where the inline toolbars wouldn't get properly hidden when blurring the editor instance.
@@ -126,7 +126,7 @@ Version 4.1.9 (2015-03-10)
 	Fixed bug with image plugin not pulling the image dimensions out correctly if a custom document_base_url was used.
 	Fixed bug where ctrl+alt+[1-9] would conflict with the AltGr+[1-9] on Windows. New shortcuts is ctrl+shift+[1-9].
 	Fixed bug with removing formatting on nodes in inline mode would sometimes include nodes outside the editor body.
-	Fixed bug where extra nbsp:s would be inserted when you replaced a word surronded by spaces using insertContent.
+	Fixed bug where extra nbsp:s would be inserted when you replaced a word surrounded by spaces using insertContent.
 	Fixed bug with pasting from Google Docs would produce extra strong elements and line feeds.
 Version 4.1.8 (2015-03-05)
 	Added new html5 sizes attribute to img elements used together with srcset.
@@ -193,7 +193,7 @@ Version 4.1.5 (2014-09-09)
 	Fixed bug where sometimes the resize rectangles wouldn't properly render on images on WebKit/Blink.
 	Fixed bug in list plugin where delete/backspace would merge empty LI elements in lists incorrectly.
 	Fixed bug where empty list elements would result in empty LI elements without it's parent container.
-	Fixed bug where backspace in empty caret formated element could produce an type error exception of Gecko.
+	Fixed bug where backspace in empty caret formatted element could produce an type error exception of Gecko.
 	Fixed bug where lists pasted from word with a custom start index above 9 wouldn't be properly handled.
 	Fixed bug where tabfocus plugin would tab out of the editor instance even if the default action was prevented.
 	Fixed bug where tabfocus wouldn't tab properly to other adjacent editor instances.
@@ -518,7 +518,7 @@ Version 4.0.13 (2014-01-30)
 	Fixed bug where image dimension constrains proportions wouldn't work properly if you altered a value and immediately clicked the submit button.
 	Fixed so you don't need to set language option to false when specifying a custom language_url.
 	Fixed so the link dialog "text to display" field gets automatically hidden if the selection isn't text contents. Patch contributed by Godefroy.
-	Fixed so the none option for the target field in the link dialog gets excluded when specifiying the target_list config option.
+	Fixed so the none option for the target field in the link dialog gets excluded when specifying the target_list config option.
 	Fixed so outline styles are displayed by default in the formats preview. Patch contributed by nhammadi.
 	Fixed so the max characters for width/height is more than 3 in the media and image dialogs.
 	Fixed so the old mceSpellCheck command toggles the spellchecker on/off.
@@ -597,7 +597,7 @@ Version 4.0.9 (2013-10-24)
 	Fixed bug where the paste_data_images option wouldn't strip all kinds of data images.
 	Fixed bug where the GridLayout didn't render items correctly if the contents overflowed the layout container.
 	Fixed bug where the Window wasn't properly positioned if the size of the button bar or title bar was wider than the contents.
-	Fixed bug where psuedo selectors for finding UI controls didn't work properly.
+	Fixed bug where pseudo selectors for finding UI controls didn't work properly.
 	Fixed bug where resized splitbuttons would throw an exception if it didn't contain an icon.
 	Fixed bug where setContent would move focus into the editor even though it wasn't active.
 	Fixed bug where IE 11 would sometimes throw an "Invalid function" error when calling setActive on the body element.
@@ -631,7 +631,7 @@ Version 4.0.7 (2013-10-02)
 	Fixed bug where closing a dialog with an opened listbox would cause errors if new dialogs where opened.
 	Fixed bug where hidden input elements wasn't removed when inline editor instances where removed.
 	Fixed bug where editors wouldn't initialize some times due to event logic not working correctly.
-	Fixed bug where pre elements woudl cause searchreplace and spellchecker plugins to mark incorrect locations.
+	Fixed bug where pre elements would cause searchreplace and spellchecker plugins to mark incorrect locations.
 	Fixed bug where embed elements wouldn't be properly resized if they where configured in using the video_template_callback.
 	Fixed bug where paste from word would remove all BR elements since it was missing in the default paste_word_valid_elements.
 	Fixed bug where paste filtering wouldn't work properly on old WebKit installations pre Clipboard API.
