@@ -11,7 +11,7 @@
 /**
  * Modifies image blobs.
  */
-define("ephox/imagetools/ImageTools", [
+define("ephox/imagetools/transformations/ImageTools", [
 	"ephox/imagetools/util/Conversions",
 	"ephox/imagetools/util/Canvas",
 	"ephox/imagetools/util/ImageSize"

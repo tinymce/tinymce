@@ -2,10 +2,11 @@ define(
   'ephox.imagetools.api.ImageTransformations',
 
   [
-    'ephox.imagetools.transformations.Filters'
+    'ephox.imagetools.transformations.Filters',
+    'ephox.imagetools.transformations.ImageTools'
   ],
 
-  function (Filters) {
+  function (Filters, ImageTools) {
     var invert = function (blob) {
       return Filters.invert(blob);
     };
