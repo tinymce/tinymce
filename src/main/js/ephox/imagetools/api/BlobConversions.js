@@ -11,10 +11,12 @@ define(
     };
 
     var imageToBlob = function (blob) {
+      console.log('imageToBlob');
       return Conversions.imageToBlob(blob);
     };
 
     var blobToDataUri = function (blob) {
+      console.log('haha');
       return Conversions.blobToDataUri(blob);
     };
 
@@ -28,9 +30,9 @@ define(
       // used outside
       imageToBlob: imageToBlob,
       // used outside
-      blobToDataUri: Conversions.blobToDataUri,
+      blobToDataUri: blobToDataUri,
       // used outside
-      blobToBase64: Conversions.blobToBase64,
+      blobToBase64: blobToBase64,
     };
   }
 );

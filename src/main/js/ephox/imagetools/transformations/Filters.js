@@ -11,7 +11,7 @@
 /**
  * Applies various filters to blobs.
  */
-define("ephox/imagetools/Filters", [
+define("ephox/imagetools/transformations/Filters", [
 	"ephox/imagetools/util/Canvas",
 	"ephox/imagetools/util/ImageSize",
 	"ephox/imagetools/util/Conversions",
