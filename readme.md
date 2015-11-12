@@ -54,6 +54,8 @@ __How to Contribute__
 
 The TinyMCE source code is [hosted on Github](http://github.com/tinymce/tinymce). Through Github you can submit pull requests and log new bugs and feature requests.
 
-When you submit a pull request, you will get a notice about signing the __Contributors License Agreement (CLA)__, you should have a __valid email address on your GitHub account__, and you will be sent a key to verify your identity and digitaly sign the agreement, after you sign your pull request will automatically be ready for review & merge.
+When you submit a pull request, you will get a notice about signing the __Contributors License Agreement (CLA)__.
+You should have a __valid email address on your GitHub account__, and you will be sent a key to verify your identity and digitally sign the agreement.
+After you signed your pull request will automatically be ready for review & merge.
 
 [![Build Status](https://travis-ci.org/tinymce/tinymce.png?branch=master)](https://travis-ci.org/tinymce/tinymce)
