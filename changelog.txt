@@ -1,5 +1,6 @@
-Version 4.2.8 (2015-xx-xx)
+Version 4.2.8 (2015-11-13)
 	Fixed bug where it was possible to delete tables as the inline root element if all columns where selected.
+	Fixed bug where the UI buttons active state wasn't properly updated due to recent refactoring of that logic.
 Version 4.2.7 (2015-10-27)
 	Fixed bug where backspace/delete would remove all formats on the last paragraph character in WebKit/Blink.
 	Fixed bug where backspace within a inline format element with a bogus caret container would move the caret.
