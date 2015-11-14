@@ -27,12 +27,17 @@
 		image_caption: true,
 		height: 600,
 		toolbar1: "undo redo | styleselect | alignleft aligncenter alignright alignjustify | link image | media | emoticons",
-		images_upload_handler: function(data, success, failure) {
+		images_upload_handler: function(data, success, failure, openNotification) {
+			var notification;
+
 			console.log('blob upload [started]', data.id());
+
+			notification = openNotification();
 
 			setTimeout(function() {
 				console.log('blob upload [ended]', data.id());
 				success(data.id() + '.png');
+				notification.close();
 			}, 1000);
 		}
 	});
