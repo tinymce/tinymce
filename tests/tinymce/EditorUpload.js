@@ -51,6 +51,7 @@ ModuleLoader.require([
 		teardown: function() {
 			editor.editorUpload.destroy();
 			editor.settings.automatic_uploads = false;
+			delete editor.settings.images_dataimg_filter;
 		}
 	});
 
@@ -134,7 +135,7 @@ ModuleLoader.require([
 
 		editor.settings.images_upload_handler = function(data, success) {
 			uploadCount++;
-			success();
+			success('url');
 		};
 
 		editor.uploadImages(done);
@@ -152,7 +153,31 @@ ModuleLoader.require([
 
 		editor.settings.images_upload_handler = function(data, success) {
 			uploadCount++;
-			success();
+			success('url');
+		};
+
+		editor.uploadImages(done);
+	});
+
+	asyncTest('Don\'t upload filtered image', function() {
+		var uploadCount = 0;
+
+		function done() {
+			QUnit.start();
+			equal(uploadCount, 0, 'Should not upload.');
+		}
+
+		editor.getBody().innerHTML = (
+			'<img src="' + testBlobDataUri + '" data-skip="1">'
+		);
+
+		editor.settings.images_dataimg_filter = function(img) {
+			return !img.hasAttribute('data-skip');
+		};
+
+		editor.settings.images_upload_handler = function(data, success) {
+			uploadCount++;
+			success('url');
 		};
 
 		editor.uploadImages(done);

@@ -21,7 +21,7 @@ define("tinymce/EditorUpload", [
 	"tinymce/file/BlobCache"
 ], function(Arr, Uploader, ImageScanner, BlobCache) {
 	return function(editor) {
-		var blobCache = new BlobCache(), uploader, imageScanner;
+		var blobCache = new BlobCache(), uploader, imageScanner, settings = editor.settings;
 
 		function aliveGuard(callback) {
 			return function(result) {
@@ -74,10 +74,10 @@ define("tinymce/EditorUpload", [
 		function uploadImages(callback) {
 			if (!uploader) {
 				uploader = new Uploader({
-					url: editor.settings.images_upload_url,
-					basePath: editor.settings.images_upload_base_path,
-					credentials: editor.settings.images_upload_credentials,
-					handler: editor.settings.images_upload_handler
+					url: settings.images_upload_url,
+					basePath: settings.images_upload_base_path,
+					credentials: settings.images_upload_credentials,
+					handler: settings.images_upload_handler
 				});
 			}
 
@@ -115,7 +115,7 @@ define("tinymce/EditorUpload", [
 		}
 
 		function uploadImagesAuto(callback) {
-			if (editor.settings.automatic_uploads !== false) {
+			if (settings.automatic_uploads !== false) {
 				return uploadImages(callback);
 			}
 		}
@@ -125,7 +125,7 @@ define("tinymce/EditorUpload", [
 				imageScanner = new ImageScanner(blobCache);
 			}
 
-			return imageScanner.findAll(editor.getBody()).then(aliveGuard(function(result) {
+			return imageScanner.findAll(editor.getBody(), settings.images_dataimg_filter).then(aliveGuard(function(result) {
 				Arr.each(result, function(resultItem) {
 					replaceUrlInUndoStack(resultItem.image.src, resultItem.blobInfo.blobUri());
 					resultItem.image.src = resultItem.blobInfo.blobUri();
