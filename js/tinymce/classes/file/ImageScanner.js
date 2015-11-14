@@ -17,15 +17,16 @@
 define("tinymce/file/ImageScanner", [
 	"tinymce/util/Promise",
 	"tinymce/util/Arr",
+	"tinymce/util/Fun",
 	"tinymce/file/Conversions",
 	"tinymce/Env"
-], function(Promise, Arr, Conversions, Env) {
+], function(Promise, Arr, Fun, Conversions, Env) {
 	var count = 0;
 
 	return function(blobCache) {
 		var cachedPromises = {};
 
-		function findAll(elm) {
+		function findAll(elm, predicate) {
 			var images, promises;
 
 			function imageToBlobInfo(img, resolve) {
@@ -69,6 +70,10 @@ define("tinymce/file/ImageScanner", [
 				}
 			}
 
+			if (!predicate) {
+				predicate = Fun.constant(true);
+			}
+
 			images = Arr.filter(elm.getElementsByTagName('img'), function(img) {
 				var src = img.src;
 
@@ -88,7 +93,15 @@ define("tinymce/file/ImageScanner", [
 					return false;
 				}
 
-				return src.indexOf('data:') === 0 || src.indexOf('blob:') === 0;
+				if (src.indexOf('blob:') === 0) {
+					return true;
+				}
+
+				if (src.indexOf('data:') === 0) {
+					return predicate(img);
+				}
+
+				return false;
 			});
 
 			promises = Arr.map(images, function(img) {

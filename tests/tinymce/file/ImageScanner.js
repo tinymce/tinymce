@@ -28,4 +28,24 @@ ModuleLoader.require([
 			strictEqual(result[0].image, document.getElementById('view').firstChild);
 		});
 	});
+
+	QUnit.asyncTest("findAll (filtered)", function() {
+		var imageScanner = new ImageScanner(new BlobCache());
+
+		function predicate(img) {
+			return !img.hasAttribute('data-skip');
+		}
+
+		document.getElementById('view').innerHTML = (
+			'<img src="' + base64Src + '">' +
+			'<img src="' + base64Src + '" data-skip="1">'
+		);
+
+		imageScanner.findAll(document.getElementById('view'), predicate).then(function(result) {
+			QUnit.start();
+			equal(result.length, 1);
+			equal('data:image/gif;base64,' + result[0].blobInfo.base64(), base64Src);
+			strictEqual(result[0].image, document.getElementById('view').firstChild);
+		});
+	});
 });
