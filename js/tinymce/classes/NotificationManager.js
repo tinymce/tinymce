@@ -20,8 +20,9 @@
  * });
  */
 define("tinymce/NotificationManager", [
-	"tinymce/ui/Notification"
-], function(Notification) {
+	"tinymce/ui/Notification",
+	"tinymce/util/Delay"
+], function(Notification, Delay) {
 	return function(editor) {
 		var self = this, notifications = [];
 
@@ -32,6 +33,21 @@ define("tinymce/NotificationManager", [
 		}
 
 		self.notifications = notifications;
+
+		function resizeWindowEvent() {
+			Delay.requestAnimationFrame(function() {
+				prePositionNotifications();
+				positionNotifications();
+			});
+		}
+
+		// Since the viewport will change based on the present notifications, we need to move them all to the
+		// top left of the viewport to give an accurate size measurement so we can position them later.
+		function prePositionNotifications() {
+			for (var i = 0; i < notifications.length; i++) {
+				notifications[i].moveTo(0, 0);
+			}
+		}
 
 		function positionNotifications() {
 			if (notifications.length > 0) {
@@ -54,7 +70,8 @@ define("tinymce/NotificationManager", [
 			}
 		});
 
-		editor.on('ResizeEditor ResizeWindow', positionNotifications);
+		editor.on('ResizeEditor', positionNotifications);
+		editor.on('ResizeWindow', resizeWindowEvent);
 
 		/**
 		 * Opens a new notification.
@@ -120,5 +137,7 @@ define("tinymce/NotificationManager", [
 		self.getNotifications = function() {
 			return notifications;
 		};
+
+		//self.positionNotifications = positionNotifications;
 	};
 });
