@@ -48,17 +48,18 @@ define("tinymce/DragDropOverrides", [
 
 		function move(e) {
 			var deltaX, deltaY, pos, viewPort,
-				overflowX = 0, overflowY = 0,
+				overflowX = 0, overflowY = 0, movement,
 				clientX, clientY, rootClientRect;
 
 			if (e.button !== 0) {
 				return;
 			}
 
-			deltaX = Math.abs(e.screenX - state.screenX);
-			deltaY = Math.abs(e.screenY - state.screenY);
+			deltaX = e.screenX - state.screenX;
+			deltaY = e.screenY - state.screenY;
+			movement = Math.max(Math.abs(deltaX), Math.abs(deltaY));
 
-			if (!state.dragging && Math.max(deltaX, deltaY) > 10) {
+			if (!state.dragging && movement > 10) {
 				state.dragging = true;
 				setBodyCursor('default');
 
@@ -97,15 +98,15 @@ define("tinymce/DragDropOverrides", [
 			if (state.dragging) {
 				editor.selection.placeCaretAt(e.clientX, e.clientY);
 
-				clientX = e.clientX - state.relX;
-				clientY = e.clientY + 5;
+				clientX = state.clientX + deltaX - state.relX;
+				clientY = state.clientY + deltaY + 5;
 
 				if (clientX + state.width > state.maxX) {
 					overflowX = (clientX + state.width) - state.maxX;
 				}
 
 				if (clientY + state.height > state.maxY) {
-					overflowX = (clientY + state.height) - state.maxY;
+					overflowY = (clientY + state.height) - state.maxY;
 				}
 
 				if (editor.getBody().nodeName != 'BODY') {
