@@ -588,7 +588,8 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 					node.raw = true;
 					node.value = node.attr('data-mce-content');
 				} else {
-					node.attr(externalName, null);
+					if (!editor.getParam("noneditable_leave_contenteditable", false))
+						node.attr(externalName, null);
 					node.attr(internalName, null);
 				}
 			}
@@ -601,7 +602,8 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 			while (i--) {
 				node = nodes[i];
 				node.attr(internalName, node.attr(externalName));
-				node.attr(externalName, null);
+				if (!editor.getParam("noneditable_leave_contenteditable", false))
+					node.attr(externalName, null);
 			}
 		});
 	});

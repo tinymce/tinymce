@@ -712,9 +712,17 @@ define("tinymce/EditorCommands", [
 				intentValue = parseInt(intentValue, 10);
 
 				if (!queryCommandState('InsertUnorderedList') && !queryCommandState('InsertOrderedList')) {
-					// If forced_root_blocks is set to false we don't have a block to indent so lets create a div
-					if (!settings.forced_root_block && !dom.getParent(selection.getNode(), dom.isBlock)) {
-						formatter.apply('div');
+					// If forced_root_blocks is set to false we don't have a block to indent so lets create a div if there is none
+					if (!settings.forced_root_block) {
+						// search for a parent block element inside the editor
+						var parentIsInsideEditorBody = true;
+						var parentBlock = dom.getParent(selection.getRng().commonAncestorContainer, function(node) {
+							parentIsInsideEditorBody &= (node!=editor.bodyElement);
+							return parentIsInsideEditorBody && dom.isBlock(node);
+						});
+						if (!parentBlock) {
+							formatter.apply('div');
+						}
 					}
 
 					each(selection.getSelectedBlocks(), function(element) {
