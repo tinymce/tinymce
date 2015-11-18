@@ -43,6 +43,13 @@
 			timeout: time
 		});
 	}
+
+	function notifyIcon() {
+		var notification = tinymce.activeEditor.notificationManager.open({
+			text: 'Text',
+			icon: 'bold'
+		});
+	}
 </script>
 </head>
 <body>
@@ -61,6 +68,7 @@
 <button onclick="notifyProgress(50)">notifyProgress(50)</button>
 <button onclick="notifyProgress(100)">notifyProgress(100)</button>
 <button onclick="notifyTimeout(3000)">notifyTimeout(3000)</button>
+<button onclick="notifyIcon()">notifyIcon()</button>
 
 </body>
 </html>
