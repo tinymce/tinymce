@@ -36,9 +36,8 @@
 }
 
 .@{prefix}-notification-inner {
-	display: inline-block;
 	font-size: @notification-font-size;
-	margin: 5px 8px 4px 8px;
+	margin: 5px 20px 4px 8px;
 	text-align: center;
 	white-space: normal;
 	color: @notification-info-text;
@@ -118,8 +117,9 @@
 }
 
 .@{prefix}-notification .@{prefix}-close {
-	margin-top: 3px;
-	margin-right: 8px;
+	position: absolute;
+	top: 6px;
+	right: 8px;
 	font-size: 20px;
 	font-weight: bold;
 	line-height: 20px;
