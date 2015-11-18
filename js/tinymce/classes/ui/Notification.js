@@ -52,6 +52,7 @@ define("tinymce/ui/Notification", [
 			if (settings.timeout && (settings.timeout < 0 || settings.timeout > 0) && !settings.closeButton) {
 				self.closeButton = false;
 			} else {
+				self.classes.add('has-close');
 				self.closeButton = true;
 			}
 

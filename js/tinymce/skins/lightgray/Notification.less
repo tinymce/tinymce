@@ -31,13 +31,18 @@
 	border-color: @notification-error-border;
 }
 
+.@{prefix}-notification.@{prefix}-has-close {
+	padding-right: 15px;
+}
+
 .@{prefix}-notification .@{prefix}-ico {
 	margin-top: 5px;
 }
 
 .@{prefix}-notification-inner {
+	display: inline-block;
 	font-size: @notification-font-size;
-	margin: 5px 20px 4px 8px;
+	margin: 5px 8px 4px 8px;
 	text-align: center;
 	white-space: normal;
 	color: @notification-info-text;
