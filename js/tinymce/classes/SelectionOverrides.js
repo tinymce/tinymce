@@ -536,8 +536,17 @@ define("tinymce/SelectionOverrides", [
 				}
 			});
 
-			// Must be added to "top" since undoManager needs to be executed after
-			editor.on('keyup compositionstart', function(e) {
+			function paddEmptyContentEditableArea() {
+				var br, ceRoot = getContentEditableRoot(editor.selection.getNode());
+
+				if (isContentEditableTrue(ceRoot) && isBlock(ceRoot) && editor.dom.isEmpty(ceRoot)) {
+					br = editor.dom.create('br', {"data-mce-bogus": "1"});
+					editor.$(ceRoot).empty().append(br);
+					editor.selection.setRng(CaretPosition.before(br).toRange());
+				}
+			}
+
+			function handleBlockContainer(e) {
 				var blockCaretContainer = getBlockCaretContainer();
 
 				if (!blockCaretContainer) {
@@ -554,6 +563,30 @@ define("tinymce/SelectionOverrides", [
 				if (blockCaretContainer.innerHTML != '&nbsp;') {
 					showBlockCaretContainer(blockCaretContainer);
 				}
+			}
+
+			function handleEmptyBackspaceDelete(e) {
+				var prevent;
+
+				switch (e.keyCode) {
+					case VK.DELETE:
+						prevent = paddEmptyContentEditableArea();
+						break;
+
+					case VK.BACKSPACE:
+						prevent = paddEmptyContentEditableArea();
+						break;
+				}
+
+				if (prevent) {
+					e.preventDefault();
+				}
+			}
+
+			// Must be added to "top" since undoManager needs to be executed after
+			editor.on('keyup compositionstart', function(e) {
+				handleBlockContainer(e);
+				handleEmptyBackspaceDelete(e);
 			}, true);
 
 			editor.on('cut', function() {

@@ -151,6 +151,15 @@ ModuleLoader.require([
 		equal(editor.selection.getRng().startContainer, editor.$('p')[0]);
 	});
 
+	test('delete inside nested cE=true block element', function() {
+		editor.setContent('<div contenteditable="false">1<div contenteditable="true">2</div>3</div>');
+		Utils.setSelection('div div', 1);
+
+		Utils.type('\b');
+		equal(editor.getBody().innerHTML, '<div contenteditable="false">1<div contenteditable="true"><br data-mce-bogus="1"></div>3</div>');
+		equal(editor.selection.getRng().startContainer, editor.$('div div')[0]);
+	});
+
 	test('exit pre block (up)', exitPreTest(upArrow, 0, '<p>\u00a0</p><pre>abc</pre>'));
 	test('exit pre block (left)', exitPreTest(leftArrow, 0, '<p>\u00a0</p><pre>abc</pre>'));
 	test('exit pre block (down)', exitPreTest(downArrow, 3, '<pre>abc</pre><p>\u00a0</p>'));

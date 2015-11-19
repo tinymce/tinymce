@@ -399,7 +399,7 @@ define("tinymce/html/Schema", [
 						'blockquote center dir fieldset header footer article section hgroup aside nav figure');
 		blockElementsMap = createLookupTable('block_elements', 'hr table tbody thead tfoot ' +
 						'th tr td li ol ul caption dl dt dd noscript menu isindex option ' +
-						'datalist select optgroup', textBlockElementsMap);
+						'datalist select optgroup figcaption', textBlockElementsMap);
 		textInlineElementsMap = createLookupTable('text_inline_elements', 'span strong b em i font strike u var cite ' +
 										'dfn code mark q sup sub samp');
 
