@@ -1,0 +1,17 @@
+.DS_Store
+*~
+*.sublime-*
+/config
+/src/demo
+/src/test
+/lib
+/dist
+/scratch
+/gen
+/dependency
+/config/bolt/bootstrap*.js
+/inconsistent.dependencies
+/spike.build
+node_modules
+Gruntfile.js
+.npmignore

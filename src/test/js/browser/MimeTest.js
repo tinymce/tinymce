@@ -2,8 +2,8 @@ test(
   'MimeTest',
 
   [
-    'ephox.imagetools.test.Assertion',
-    'ephox.imagetools.util.Mime'
+    'ephox/imagetools/test/Assertion',
+    'ephox/imagetools/util/Mime'
   ],
 
   function (Assertion, Mime) {

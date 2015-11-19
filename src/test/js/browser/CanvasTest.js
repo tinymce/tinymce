@@ -2,8 +2,8 @@ test(
   'CanvasTest',
 
   [
-    'ephox.imagetools.test.Assertion',
-    'ephox.imagetools.util.Canvas'
+    'ephox/imagetools/test/Assertion',
+    'ephox/imagetools/util/Canvas'
   ],
 
   function (Assertion, Canvas) {

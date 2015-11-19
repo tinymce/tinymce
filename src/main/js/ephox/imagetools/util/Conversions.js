@@ -193,7 +193,7 @@ define("ephox/imagetools/util/Conversions", [
 		revokeImageUrl: revokeImageUrl,
 
      // helper method
-    uriToBlob: uriToBlob,
+    uriToBlob: uriToBlob
 
 	};
 });

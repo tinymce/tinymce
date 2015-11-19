@@ -1,8 +1,8 @@
 define(
-  'ephox.imagetools.api.BlobConversions',
+  'ephox/imagetools/api/BlobConversions',
 
   [
-    'ephox.imagetools.util.Conversions'
+    'ephox/imagetools/util/Conversions'
   ],
 
   function (Conversions) {
@@ -30,7 +30,7 @@ define(
       // used outside
       blobToDataUri: blobToDataUri,
       // used outside
-      blobToBase64: blobToBase64,
+      blobToBase64: blobToBase64
     };
   }
 );

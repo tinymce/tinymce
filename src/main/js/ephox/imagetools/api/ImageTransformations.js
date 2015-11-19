@@ -1,9 +1,9 @@
 define(
-  'ephox.imagetools.api.ImageTransformations',
+  'ephox/imagetools/api/ImageTransformations',
 
   [
-    'ephox.imagetools.transformations.Filters',
-    'ephox.imagetools.transformations.ImageTools'
+    'ephox/imagetools/transformations/Filters',
+    'ephox/imagetools/transformations/ImageTools'
   ],
 
   function (Filters, ImageTools) {
