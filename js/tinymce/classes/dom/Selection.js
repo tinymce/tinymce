@@ -37,7 +37,7 @@ define("tinymce/dom/Selection", [
 	 * @method Selection
 	 * @param {tinymce.dom.DOMUtils} dom DOMUtils object reference.
 	 * @param {Window} win Window to bind the selection object to.
-	 * @param {tinymce.Editor} editor
+	 * @param {tinymce.Editor} editor Editor instance of the selection.
 	 * @param {tinymce.dom.Serializer} serializer DOM serialization class to use for getContent.
 	 */
 	function Selection(dom, win, serializer, editor) {
@@ -588,7 +588,7 @@ define("tinymce/dom/Selection", [
 		 *
 		 * @method setRng
 		 * @param {Range} rng Range to select.
-		 * @param {Boolean} forward
+		 * @param {Boolean} forward Optional boolean if the selection is forwards or backwards.
 		 */
 		setRng: function(rng, forward) {
 			var self = this, sel, node, evt;

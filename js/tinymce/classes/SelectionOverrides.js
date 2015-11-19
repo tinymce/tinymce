@@ -640,7 +640,7 @@ define("tinymce/SelectionOverrides", [
 			styles.push(
 				rootClass + ' .mce-offscreen-selection {' +
 					'position: absolute;' +
-					'left: -5000px;' +
+					'left: -9999999999px;' +
 					'width: 100px' +
 					'height: 100px' +
 				'}' +

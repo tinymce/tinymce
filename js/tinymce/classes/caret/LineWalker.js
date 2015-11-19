@@ -151,7 +151,8 @@ define("tinymce/caret/LineWalker", [
 		/**
 		 * Find client rects with line and caret position until the predicate returns true.
 		 *
-		 * @param {Numer} direction Direction forward/backward 1/-1.
+		 * @method positionsUntil
+		 * @param {Number} direction Direction forward/backward 1/-1.
 		 * @param {DOMNode} rootNode Root node to walk within.
 		 * @param {function} predicateFn Gets the client rect as it's input.
 		 * @param {DOMNode} node Node to start walking from.

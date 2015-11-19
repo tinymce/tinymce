@@ -517,7 +517,7 @@ define("tinymce/dom/DOMUtils", [
 		 * @param {String/Element} name Name of new element to add or existing element to add.
 		 * @param {Object} attrs Optional object collection with arguments to add to the new element(s).
 		 * @param {String} html Optional inner HTML contents to add for each element.
-		 * @param {Boolean} create
+		 * @param {Boolean} create Optional flag if the element should be created or added.
 		 * @return {Element/Array} Element that got created, or an array of created elements if multiple input elements
 		 * were passed in.
 		 * @example
