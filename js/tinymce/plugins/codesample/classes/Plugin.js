@@ -62,8 +62,6 @@ define("tinymce/codesampleplugin/Plugin", [
 			});
 
 			if (unprocessedCodeSamples.length) {
-				loadCss();
-
 				editor.undoManager.transact(function() {
 					unprocessedCodeSamples.each(function(idx, elm) {
 						$(elm).find('br').each(function(idx, elm) {
@@ -80,7 +78,6 @@ define("tinymce/codesampleplugin/Plugin", [
 		});
 
 		editor.addCommand('codesample', function() {
-			loadCss();
 			Dialog.open(editor);
 		});
 
@@ -88,5 +85,7 @@ define("tinymce/codesampleplugin/Plugin", [
 			cmd: 'codesample',
 			title: 'Insert/edit code sample'
 		});
+
+		editor.on('init', loadCss);
 	});
 });
