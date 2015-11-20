@@ -1,5 +1,5 @@
 {
-  "name": "shared-imagetools",
+  "name": "@ephox/imagetools",
   "version": "1.0.0",
   "description": "Image tools for tinymce and textbox.io",
   "keywords": [
@@ -8,5 +8,10 @@
     "ephox"
   ],
   "author": "ephox",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "@ephox/bolt": "^1.6.1",
+    "grunt": "^0.4.5"
+  },
+  "license": "LGPL-2.1"
 }

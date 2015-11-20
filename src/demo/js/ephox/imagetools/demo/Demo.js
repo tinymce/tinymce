@@ -2,8 +2,8 @@ define(
   'ephox.imagetools.demo.Demo',
 
   [
-    'ephox.imagetools.api.BlobConversions',
-    'ephox.imagetools.api.ImageTransformations',
+    'ephox/imagetools/api/BlobConversions',
+    'ephox/imagetools/api/ImageTransformations',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Body',
     'ephox.sugar.api.Class',

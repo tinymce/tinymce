@@ -2,8 +2,8 @@ test(
   'ColorMatrixTest',
 
   [
-    'ephox.imagetools.test.Assertion',
-    'ephox.imagetools.transformations.ColorMatrix'
+    'ephox/imagetools/test/Assertion',
+    'ephox/imagetools/transformations/ColorMatrix'
   ],
 
   function (Assertion, ColorMatrix) {

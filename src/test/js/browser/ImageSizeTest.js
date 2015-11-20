@@ -2,9 +2,9 @@ asynctest(
   'ImageSizeTest',
 
   [
-    'ephox.imagetools.test.Assertion',
-    'ephox.imagetools.util.Conversions',
-    'ephox.imagetools.util.ImageSize'
+    'ephox/imagetools/test/Assertion',
+    'ephox/imagetools/util/Conversions',
+    'ephox/imagetools/util/ImageSize'
   ],
 
   function (Assertion, Conversions, ImageSize) {
