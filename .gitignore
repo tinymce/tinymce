@@ -11,3 +11,4 @@
 /inconsistent.dependencies
 /spike.build
 node_modules
+npm-debug.log

@@ -8,7 +8,6 @@
     "ephox"
   ],
   "author": "ephox",
-  "private": true,
   "devDependencies": {
     "@ephox/bolt": "^1.6.1",
     "grunt": "^0.4.5"
