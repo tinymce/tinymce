@@ -1,16 +1,20 @@
 {
   "name": "@ephox/imagetools",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Image tools for tinymce and textbox.io",
   "keywords": [
     "image",
     "editor",
     "ephox"
   ],
-  "author": "ephox",
   "devDependencies": {
     "@ephox/bolt": "^1.6.1",
     "grunt": "^0.4.5"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ephox/imagetools-js"
+  },
+  "author": "Ephox",
   "license": "LGPL-2.1"
 }
