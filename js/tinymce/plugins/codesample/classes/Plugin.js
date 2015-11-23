@@ -83,7 +83,7 @@ define("tinymce/codesampleplugin/Plugin", [
 
 		editor.addButton('codesample', {
 			cmd: 'codesample',
-			title: 'Insert/edit code sample'
+			title: 'Insert/Edit code sample'
 		});
 
 		editor.on('init', loadCss);
