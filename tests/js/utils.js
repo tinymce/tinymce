@@ -177,7 +177,7 @@
 
 	// TODO: Replace this with the new event logic in 3.5
 	function type(chr) {
-		var editor = tinymce.activeEditor, keyCode, charCode, evt, startElm, rng;
+		var editor = tinymce.activeEditor, keyCode, charCode, evt, startElm, rng, offset;
 
 		function charCodeToKeyCode(charCode) {
 			var lookup = {
@@ -242,15 +242,26 @@
 				} else {
 					rng = editor.selection.getRng();
 
-					if (rng.startContainer.nodeType == 1 && rng.collapsed) {
-						var nodes = rng.startContainer.childNodes, lastNode = nodes[nodes.length - 1];
+					if (rng.collapsed) {
+						if (rng.startContainer.nodeType == 1) {
+							var nodes = rng.startContainer.childNodes, lastNode = nodes[nodes.length - 1];
 
-						// If caret is at <p>abc|</p> and after the abc text node then move it to the end of the text node
-						// Expand the range to include the last char <p>ab[c]</p> since IE 11 doesn't delete otherwise
-						if (rng.startOffset >= nodes.length - 1 && lastNode && lastNode.nodeType == 3 && lastNode.data.length > 0) {
-							rng.setStart(lastNode, lastNode.data.length - 1);
-							rng.setEnd(lastNode, lastNode.data.length);
-							editor.selection.setRng(rng);
+							// If caret is at <p>abc|</p> and after the abc text node then move it to the end of the text node
+							// Expand the range to include the last char <p>ab[c]</p> since IE 11 doesn't delete otherwise
+							if (rng.startOffset >= nodes.length - 1 && lastNode && lastNode.nodeType == 3 && lastNode.data.length > 0) {
+								rng.setStart(lastNode, lastNode.data.length - 1);
+								rng.setEnd(lastNode, lastNode.data.length);
+								editor.selection.setRng(rng);
+							}
+						} else if (rng.startContainer.nodeType == 3) {
+							// If caret is at <p>abc|</p> and after the abc text node then move it to the end of the text node
+							// Expand the range to include the last char <p>ab[c]</p> since IE 11 doesn't delete otherwise
+							offset = rng.startOffset;
+							if (offset > 0) {
+								rng.setStart(rng.startContainer, offset - 1);
+								rng.setEnd(rng.startContainer, offset);
+								editor.selection.setRng(rng);
+							}
 						}
 					}
 

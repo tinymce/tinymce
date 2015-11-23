@@ -1,6 +1,7 @@
 ModuleLoader.require([
-	"tinymce/caret/CaretContainer"
-], function(CaretContainer) {
+	"tinymce/caret/CaretContainer",
+	"tinymce/Env"
+], function(CaretContainer, Env) {
 	module("tinymce.dom.Selection", {
 		setupModule: function() {
 			QUnit.stop();
@@ -653,8 +654,13 @@ ModuleLoader.require([
 			editor.selection.normalize();
 
 			var rng = editor.selection.getRng(true);
-			equal(rng.collapsed, true);
-			equal(CaretContainer.isCaretContainer(rng.startContainer), true);
+
+			if (Env.ie && Env.ie < 12) {
+				// IE automatically normalizes
+				equal(rng.startContainer.data, 'a');
+			} else {
+				equal(CaretContainer.isCaretContainer(rng.startContainer), true);
+			}
 
 			// Excluding assert on IE since it's a minor issue
 			if (tinymce.ie) {
