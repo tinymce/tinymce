@@ -64,7 +64,7 @@ define("tinymce/SelectionOverrides", [
 		var getNextVisualCaretPosition = curry(getVisualCaretPosition, caretWalker.next);
 		var getPrevVisualCaretPosition = curry(getVisualCaretPosition, caretWalker.prev),
 			fakeCaret = new FakeCaret(editor.getBody(), isBlock),
-			realSelectionId = editor.dom.uniqueId(),
+			realSelectionId = 'sel-' + editor.dom.uniqueId(),
 			selectedContentEditableNode, $ = editor.$;
 
 		function isBlock(node) {
