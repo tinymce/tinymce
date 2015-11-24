@@ -176,7 +176,7 @@ define("tinymce/FocusManager", [
 				Delay.setEditorTimeout(editor, function() {
 					var focusedEditor = editorManager.focusedEditor;
 
-					// Still the same editor the the blur was outside any editor UI
+					// Still the same editor the blur was outside any editor UI
 					if (!isUIElement(getActiveElement()) && focusedEditor == editor) {
 						editor.fire('blur', {focusedEditor: null});
 						editorManager.focusedEditor = null;

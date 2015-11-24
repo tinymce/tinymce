@@ -6,7 +6,7 @@
 
 		ctrl = new tinymce.ui.Control({});
 
-		// Check inital states
+		// Check initial states
 		equal(ctrl.disabled(), false);
 		equal(ctrl.active(), false);
 		equal(ctrl.visible(), true);

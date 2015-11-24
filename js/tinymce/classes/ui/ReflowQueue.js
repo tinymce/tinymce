@@ -10,7 +10,7 @@
 
 /**
  * This class will automatically reflow controls on the next animation frame within a few milliseconds on older browsers.
- * If the user manually reflows then the automatic reflow will be cancelled. This class is unsed internally when various control states
+ * If the user manually reflows then the automatic reflow will be cancelled. This class is used internally when various control states
  * changes that triggers a reflow.
  *
  * @class tinymce.ui.ReflowQueue
