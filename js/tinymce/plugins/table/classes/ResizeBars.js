@@ -455,20 +455,21 @@ define("tinymce/tableplugin/ResizeBars", [
 			return isPercentageBased ? pixelWidth / getComputedStyleSize(table, 'width') * 100 : pixelWidth;
 		}
 
-		// Attempt to get the pixel width of a cell but only if it's a defined static value.
-		function getNonPercentagePixelWidth(element) {
+		// Attempt to get the pixel width/height of a cell but only if it's a defined static value.
+		function getNonPercentagePixelSize(element, property) {
+			var sizeString = editor.dom.getStyle(element, property);
 
-			var widthString = editor.dom.getStyle(element, 'width');
-
-			if (!widthString) {
-				widthString = editor.dom.getAttrib(element, 'width');
+			if (!sizeString) {
+				sizeString = editor.dom.getAttrib(element, property);
 			}
-			if (!widthString) {
+
+			if (!sizeString) {
 				return false;
 			}
-			var widthNumber = parseInt(widthString, 10);
-			return widthString.indexOf('%', widthString.length - 1) > 0 ?
-				false : widthNumber;
+
+			var sizeNumber = parseInt(sizeString, 10);
+			return sizeString.indexOf('%', sizeString.length - 1) > 0 ?
+				false : sizeNumber;
 		}
 
 		function getStyleOrAttrib(element, property) {
@@ -922,13 +923,13 @@ define("tinymce/tableplugin/ResizeBars", [
 
 				Tools.each(objectResizeTarget.rows, function(row) {
 					Tools.each(row.cells, function(cell) {
-						var width = getNonPercentagePixelWidth(cell);
+						var width = getNonPercentagePixelSize(cell, 'width');
 						if (width) {
 							width = Math.round(width * widthRatio);
 							editor.dom.setStyle(cell, 'width', width + 'px');
 							editor.dom.setAttrib(cell, 'width', null);
 						}
-						var height = getPixelHeight(cell);
+						var height = getNonPercentagePixelSize(cell, 'height');
 						if (height) {
 							height = Math.round(height * heightRatio);
 							editor.dom.setStyle(cell, 'height', height + 'px');
