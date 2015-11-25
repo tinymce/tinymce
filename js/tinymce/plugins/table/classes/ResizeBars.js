@@ -687,13 +687,13 @@ define("tinymce/tableplugin/ResizeBars", [
 			}
 
 			function getNewTablePercentWidth() {
-				return index < tableGrid.maxCols - 1 ? getCurrentTablePercentWidth(table) :
+				return index < tableGrid.grid.maxCols - 1 ? getCurrentTablePercentWidth(table) :
 					getCurrentTablePercentWidth(table) + getTablePercentDelta(table, delta);
 			}
 
 			function getNewTablePixelWidth() {
-				return index < tableGrid.maxCols - 1 ? getComputedStyleSize(table, 'width') :
-					getComputedStyleSize(table) + delta;
+				return index < tableGrid.grid.maxCols - 1 ? getComputedStyleSize(table, 'width') :
+					getComputedStyleSize(table, 'width') + delta;
 			}
 
 			function setTableSize(newTableWidth, styleExtension, isPercentBased) {
@@ -899,19 +899,15 @@ define("tinymce/tableplugin/ResizeBars", [
 				Tools.each(table.rows, function(row) {
 					Tools.each(row.cells, function(cell) {
 						var width = editor.dom.getStyle(cell, 'width', true);
-						var height = editor.dom.getStyle(cell, 'height', true);
 						newCellSizes.push({
 							cell: cell,
-							width: width,
-							height: height
+							width: width
 						});
 					});
 				});
 				Tools.each(newCellSizes, function(newCellSize) {
 					editor.dom.setStyle(newCellSize.cell, 'width', newCellSize.width);
 					editor.dom.setAttrib(newCellSize.cell, 'width', null);
-					editor.dom.setStyle(newCellSize.cell, 'height', newCellSize.height);
-					editor.dom.setAttrib(newCellSize.cell, 'height', null);
 				});
 			}
 		});

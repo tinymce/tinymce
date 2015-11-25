@@ -604,7 +604,7 @@
 		);
 	});
 
-	var testResizeTable1 = '<table><tbody>' +
+	var testResizeTable1 = '<table style="width: 426px"><tbody>' +
 			'<tr><td style="height: 20px; width: 200px;" colspan="2" data-mce-style="height: 20px; width: 200px;">A1</td><td style="height: 20px; width: 100px;" data-mce-style="height: 20px; width: 100px;">A2</td><td style="height: 20px; width: 100px;" data-mce-style="height: 20px; width: 100px;">A3</td></tr>' +
 			'<tr><td style="height: 20px; width: 100px;" data-mce-style="height: 20px; width: 100px;">B1</td><td style="height: 20px; width: 200px;" colspan="2" data-mce-style="height: 20px; width: 200px;">B2</td><td style="height: 20px; width: 100px;" data-mce-style="height: 20px; width: 100px;">B3</td></tr>' +
 			'<tr><td style="height: 20px; width: 100px;" data-mce-style="height: 20px; width: 100px;">C1</td><td style="height: 20px; width: 100px;" data-mce-style="height: 20px; width: 100px;">C2</td><td style="height: 20px; width: 200px;" colspan="2" data-mce-style="height: 20px; width: 200px;">C3</td></tr>' +
@@ -740,7 +740,7 @@
 		editor.plugins.table.resizeBars.adjustWidth(table, 50, 0);
 
 		equal(editor.getContent(),
-			'<table style=\"width: 400px;\">' +
+			'<table style=\"width: 426px;\">' +
 			'<tbody>' +
 			'<tr>' +
 			'<td style=\"width: 200px; height: 20px;\" colspan=\"2\">A1</td>' +
@@ -770,7 +770,7 @@
 		editor.plugins.table.resizeBars.adjustWidth(table, 50, 1);
 
 		equal(editor.getContent(),
-			'<table style=\"width: 400px;\">' +
+			'<table style=\"width: 426px;\">' +
 			'<tbody>' +
 			'<tr>' +
 			'<td style=\"width: 250px; height: 20px;\" colspan=\"2\">A1</td>' +
@@ -800,7 +800,7 @@
 		editor.plugins.table.resizeBars.adjustWidth(table, 50, 2);
 
 		equal(editor.getContent(),
-			'<table style=\"width: 400px;\">' +
+			'<table style=\"width: 426px;\">' +
 			'<tbody>' +
 			'<tr>' +
 			'<td style=\"width: 200px; height: 20px;\" colspan=\"2\">A1</td>' +
@@ -830,7 +830,7 @@
 		editor.plugins.table.resizeBars.adjustWidth(table, 50, 3);
 
 		equal(editor.getContent(),
-			'<table style=\"width: 450px;\">' +
+			'<table style=\"width: 476px;\">' +
 			'<tbody>' +
 			'<tr>' +
 			'<td style=\"width: 200px; height: 20px;\" colspan=\"2\">A1</td>' +
