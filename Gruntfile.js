@@ -374,10 +374,12 @@ module.exports = function(grunt) {
 						"readme.md"
 					],
 
-					pathFilter: function(args) {
-						if (args.zipFilePath == "js/tinymce/tinymce.jquery.min.js") {
-							args.zipFilePath = "js/tinymce/tinymce.min.js";
+					pathFilter: function(zipFilePath) {
+						if (zipFilePath == "js/tinymce/tinymce.jquery.min.js") {
+							return "js/tinymce/tinymce.min.js";
 						}
+
+						return zipFilePath;
 					},
 
 					to: "tmp/tinymce_<%= pkg.version %>_jquery.zip"
@@ -427,7 +429,13 @@ module.exports = function(grunt) {
 
 			cdn: {
 				options: {
-					baseDir: "tinymce",
+					onBeforeSave: function(zip) {
+						zip.addData("dist/version.txt", packageData.version);
+					},
+
+					pathFilter: function(zipFilePath) {
+						return zipFilePath.replace('js/tinymce/', 'dist/');
+					},
 
 					excludes: [
 						"js/tinymce/tinymce.full.min.js",
@@ -495,10 +503,12 @@ module.exports = function(grunt) {
 						"readme.md"
 					],
 
-					pathFilter: function(args) {
-						if (args.zipFilePath.indexOf("js/tinymce/") === 0) {
-							args.zipFilePath = args.zipFilePath.substr("js/tinymce/".length);
+					pathFilter: function(zipFilePath) {
+						if (zipFilePath.indexOf("js/tinymce/") === 0) {
+							return zipFilePath.substr("js/tinymce/".length);
 						}
+
+						return zipFilePath;
 					},
 
 					onBeforeSave: function(zip) {
