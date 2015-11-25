@@ -425,6 +425,59 @@ module.exports = function(grunt) {
 				]
 			},
 
+			cdn: {
+				options: {
+					baseDir: "tinymce",
+
+					excludes: [
+						"js/tinymce/tinymce.full.min.js",
+						"js/tinymce/plugins/moxiemanager",
+						"js/tinymce/plugins/visualblocks/img",
+						"js/tinymce/plugins/*/plugin.dev.js",
+						"js/tinymce/skins/*/*.less",
+						"js/tinymce/skins/*/fonts/*.json",
+						"js/tinymce/skins/*/fonts/*.dev.svg",
+						"js/tinymce/skins/*/fonts/readme.md",
+						"js/tinymce/plugins/*/config",
+						"js/tinymce/plugins/*/scratch",
+						"js/tinymce/plugins/*/classes",
+						"readme.md",
+						"js/tests/.jshintrc"
+					],
+
+					concat: [
+						{
+							src: [
+								"js/tinymce/tinymce.min.js",
+								"js/tinymce/themes/*/theme.min.js",
+								"js/tinymce/plugins/*/plugin.min.js",
+								"!js/tinymce/plugins/compat3x/plugin.min.js",
+								"!js/tinymce/plugins/example/plugin.min.js",
+								"!js/tinymce/plugins/example_dependency/plugin.min.js",
+								"!js/tinymce/plugins/layer/plugin.min.js"
+							],
+
+							dest: [
+								"js/tinymce/tinymce.min.js",
+								"js/tinymce/tinymce.jquery.min.js"
+							]
+						}
+					],
+
+					to: "tmp/tinymce_<%= pkg.version %>_cdn.zip"
+				},
+
+				src: [
+					"js/tinymce/jquery.tinymce.min.js",
+					"js/tinymce/tinymce.js",
+					"js/tinymce/langs",
+					"js/tinymce/plugins",
+					"js/tinymce/skins",
+					"js/tinymce/themes",
+					"js/tinymce/license.txt"
+				]
+			},
+
 			component: {
 				options: {
 					excludes: [

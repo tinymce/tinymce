@@ -51,6 +51,20 @@ module.exports = function(grunt) {
 			}
 		}
 
+		if (options.concat) {
+			options.concat.forEach(function(pair) {
+				var chunks;
+
+				chunks = grunt.file.expand(pair.src).map(function(src) {
+					return grunt.file.read(src);
+				});
+
+				pair.dest.forEach(function(zipFilePath) {
+					archive.addData(path.join(options.baseDir, zipFilePath), chunks.join('\r\n'));
+				});
+			});
+		}
+
 		options.baseDir = (options.baseDir || '').replace(/\\/g, '/');
 
 		if (target.options.excludes) {
