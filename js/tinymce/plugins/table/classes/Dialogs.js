@@ -247,6 +247,7 @@ define("tinymce/tableplugin/Dialogs", [
 						dom.setAttrib(tableElm, 'width', removePxSuffix(data.width));
 					} else {
 						dom.setStyle(tableElm, 'width', addSizeSuffix(data.width));
+						dom.setAttrib(tableElm, 'width', null);
 					}
 
 					dom.setStyle(tableElm, 'height', addSizeSuffix(data.height));
@@ -463,6 +464,10 @@ define("tinymce/tableplugin/Dialogs", [
 							width: addSizeSuffix(data.width),
 							height: addSizeSuffix(data.height)
 						});
+
+						// Remove width attribute
+						if (editor.settings.table_style_by_css)
+							dom.setAttrib(cellElm, 'width', null);
 
 						// Switch cell type
 						if (data.type && cellElm.nodeName.toLowerCase() != data.type) {

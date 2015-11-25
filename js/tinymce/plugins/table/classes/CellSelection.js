@@ -75,6 +75,16 @@ define("tinymce/tableplugin/CellSelection", [
 			}
 		}
 
+		function setStyleWidth(elm)
+		{
+			if (!editor.settings.table_style_by_css)
+				return;
+
+			var width = editor.dom.getAttrib(elm, 'width');
+			editor.dom.setAttrib(elm, 'width', null);
+			dom.setStyle(elm, 'width', width + 'px');
+		}
+
 		// Add cell selection logic
 		editor.on('MouseDown', function(e) {
 			if (e.button != 2 && !resizing) {
@@ -167,6 +177,9 @@ define("tinymce/tableplugin/CellSelection", [
 
 		editor.on('ObjectResizeStart ObjectResized', function(e) {
 			resizing = e.type != 'objectresized';
+
+			if (!resizing)
+				setStyleWidth(e.target);
 		});
 
 		return {
