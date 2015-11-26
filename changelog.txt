@@ -1,4 +1,4 @@
-Version 4.3.1 (2015-12-xx)
+Version 4.3.1 (2015-11-26)
 	Fixed so it's possible to disable the table inline toolbar by setting it to false or an empty string.
 	Fixed bug where unique id:s would clash for multiple editor instances and cE=false selections.
 Version 4.3.0 (2015-11-23)
