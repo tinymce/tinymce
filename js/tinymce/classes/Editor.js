@@ -528,6 +528,10 @@ define("tinymce/Editor", [
 						initPlugin(dep);
 					});
 
+					if (self.plugins[plugin]) {
+						return;
+					}
+
 					pluginInstance = new Plugin(self, pluginUrl, self.$);
 
 					self.plugins[plugin] = pluginInstance;
