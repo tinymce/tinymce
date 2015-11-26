@@ -558,6 +558,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 
 				match = findFrontMostMatch(editor.selection.getNode());
 				if (match) {
+					hideAllContextToolbars();
 					showContextToolbar(match);
 				} else {
 					hideAllContextToolbars();
