@@ -776,7 +776,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 					}
 				}
 
-				if (node.name == 'iframe' && editor.settings.live_embeds !== false && tinymce.Env.ceFalse) {
+				if (node.name == 'iframe' && editor.settings.media_live_embeds !== false && tinymce.Env.ceFalse) {
 					placeHolder = createPreviewNode(node);
 				} else {
 					placeHolder = createPlaceholderNode(node);
