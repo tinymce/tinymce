@@ -407,8 +407,9 @@ define("tinymce/pasteplugin/Clipboard", [
 
 						if (/^image\/(jpeg|png|gif|bmp)$/.test(item.type)) {
 							reader = new FileReader();
+							item.getAsFile && (item = item.getAsFile());
 							reader.onload = pasteImage.bind(null, reader, item.name || '');
-							reader.readAsDataURL(item.getAsFile ? item.getAsFile() : item);
+							reader.readAsDataURL(item);
 
 							e.preventDefault();
 							hadImage = true;

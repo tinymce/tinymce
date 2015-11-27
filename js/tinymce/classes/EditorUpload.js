@@ -96,7 +96,8 @@ define("tinymce/EditorUpload", [
 
 						editor.$(image).attr({
 							src: uploadInfo.url,
-							'data-mce-src': editor.convertURL(uploadInfo.url, 'src')
+							'data-mce-src': editor.convertURL(uploadInfo.url, 'src'),
+							'data-mce-filename': null
 						});
 
 						return {
