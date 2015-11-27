@@ -23,6 +23,7 @@ module("tinymce.plugins.Media", {
 
 	teardown: function() {
 		delete editor.settings.media_filter_html;
+		delete editor.settings.media_live_embeds;
 	}
 });
 
@@ -35,6 +36,8 @@ function fillAndSubmitWindowForm(data) {
 }
 
 test('Default media dialog on empty editor', function() {
+	editor.settings.media_live_embeds = false;
+
 	editor.setContent('');
 	editor.plugins.media.showDialog();
 
