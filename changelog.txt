@@ -1,4 +1,4 @@
-Version 4.3.1 (2015-11-26)
+Version 4.3.1 (2015-11-30)
 	Fixed so it's possible to disable the table inline toolbar by setting it to false or an empty string.
 	Fixed bug where it wasn't possible to resize some tables using the drag handles.
 	Fixed bug where unique id:s would clash for multiple editor instances and cE=false selections.
