@@ -4,16 +4,18 @@ define(
   [
     'ephox.dragster.detect.Blocker',
     'ephox.dragster.detect.Movement',
+    'ephox.peanut.DelayedFunction',
+    'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.porkbun.Event',
     'ephox.porkbun.Events',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Remove',
-    'ephox.peanut.DelayedFunction',
     'global!Array'
   ],
 
-  function (Blocker, Movement, Event, Events, DomEvent, Insert, Remove, DelayedFunction, Array) {
+  function (Blocker, Movement, DelayedFunction, Fun, Option, Event, Events, DomEvent, Insert, Remove, Array) {
 
     var transform = function (mutation, options) {
       var settings = options !== undefined ? options : {};
@@ -74,12 +76,23 @@ define(
         };
       };
 
+
+      var unused = { unbind: Fun.noop };
+
+      var bindEvent = function (eventType, action) {
+        return eventType.fold(function () {
+          return { unbind: Fun.noop };
+        }, function (evt) {
+          return DomEvent.bind(blocker.element(), evt, action);
+        });
+      };
+
       // ASSUMPTION: runIfActive is not needed for mousedown. This is pretty much a safety measure for
       // inconsistent situations so that we don't block input.
-      var mdown = DomEvent.bind(blocker.element(), 'mousedown', drop);
-      var mup = DomEvent.bind(blocker.element(), 'mouseup', runIfActive(mouseup));
-      var mmove = DomEvent.bind(blocker.element(), 'mousemove', runIfActive(mousemove));
-      var mout = DomEvent.bind(blocker.element(), 'mouseout', runIfActive(delayDrop.schedule));
+      var mdown = bindEvent(Option.some('mousedown'), drop);
+      var mup = bindEvent(Option.some('mouseup'), runIfActive(mouseup));
+      var mmove = bindEvent(Option.some('mousemove'), runIfActive(mousemove));
+      var mout = bindEvent(Option.some('mouseout'), runIfActive(delayDrop.schedule));
 
       var destroy = function () {
         blocker.destroy();
