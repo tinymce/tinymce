@@ -3,12 +3,14 @@ define(
 
   [
     'ephox.dragster.api.DragMode',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.sugar.alien.Position'
+    'ephox.dragster.detect.Blocker',
+    'ephox.sugar.alien.Position',
+    'ephox.sugar.api.DomEvent',
+    'ephox.sugar.api.Insert',
+    'ephox.sugar.api.Remove'
   ],
 
-  function (DragMode, Fun, Option, Position) {
+  function (DragMode, Blocker, Position, DomEvent, Insert, Remove) {
     var compare = function (old, nu) {
       return Position(nu.left() - old.left(), nu.top() - old.top());
     };
@@ -17,27 +19,48 @@ define(
       return Position(event.x(), event.y());
     };
 
-    var predicate = function (event) {
-      return true;
-    };
-
     var mutate = function (mutation, info) {
       mutation.mutate(info.left(), info.top());
     };
 
-    var onStart = Option.some('mousedown');
-    var onStop = Option.some('mouseup');
-    var onExit = Option.some('mouseout');
-    var onMove = Option.some('mousemove');
+    var sink = function (dragApi, settings) {
+      var blocker = Blocker(settings);
+
+      // Included for safety. If the blocker has stayed on the screen, get rid of it on a click.
+      var mdown = DomEvent.bind(blocker.element(), 'mousedown', dragApi.forceDrop);
+
+      var mup = DomEvent.bind(blocker.element(), 'mouseup', dragApi.drop);
+      var mmove = DomEvent.bind(blocker.element(), 'mousemove', dragApi.move);
+      var mout = DomEvent.bind(blocker.element(), 'mouseout', dragApi.delayDrop);
+
+      var destroy = function () {
+        blocker.destroy();
+        mup.unbind();
+        mmove.unbind();
+        mout.unbind();
+        mdown.unbind();
+      };
+
+      var start = function (parent) {
+        Insert.append(parent, blocker.element());
+      };
+
+      var stop = function () {
+        Remove.remove(blocker.element());
+      };
+
+      return {
+        element: blocker.element,
+        start: start,
+        stop: stop,
+        destroy: destroy
+      };
+    };
 
     return DragMode({
       compare: compare,
       extract: extract,
-      predicate: predicate,
-      onStart: Fun.constant(onStart),
-      onStop: Fun.constant(onStop),
-      onExit: Fun.constant(onExit),
-      onMove: Fun.constant(onMove),
+      sink: sink,
       mutate: mutate
     });
   }

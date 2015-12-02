@@ -22,7 +22,9 @@ define(
         left: '0px',
         top: '0px',
         width: '100%',
-        height: '100%'
+        height: '100%',
+        background: 'red',
+        opacity: '0.5'
       });
 
       Class.add(div, Styles.resolve('blocker'));

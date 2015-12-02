@@ -9,12 +9,8 @@ define(
     return Contracts.exactly([
       'compare',
       'extract',
-      'predicate',
-      'onStart',
-      'onStop',
-      'onExit',
-      'onMove',
-      'mutate'
+      'mutate',
+      'sink'
     ]);
   }
 );
