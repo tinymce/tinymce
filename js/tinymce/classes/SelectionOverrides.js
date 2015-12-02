@@ -73,7 +73,9 @@ define("tinymce/SelectionOverrides", [
 
 		function setRange(range) {
 			//console.log('setRange', range);
-			editor.selection.setRng(range);
+			if (range) {
+				editor.selection.setRng(range);
+			}
 		}
 
 		function getRange() {
@@ -333,16 +335,8 @@ define("tinymce/SelectionOverrides", [
 			}
 		}
 
-		function renderRangeCaret(range) {
+		function renderCaretAtRange(range) {
 			var caretPosition;
-
-			if (!range) {
-				return range;
-			}
-
-			if (!range.collapsed) {
-				return range;
-			}
 
 			range = CaretUtils.normalizeRange(1, rootNode, range);
 			caretPosition = CaretPosition.fromRangeStart(range);
@@ -356,6 +350,21 @@ define("tinymce/SelectionOverrides", [
 			}
 
 			fakeCaret.hide();
+
+			return null;
+		}
+
+		function renderRangeCaret(range) {
+			var caretRange;
+
+			if (!range || !range.collapsed) {
+				return range;
+			}
+
+			caretRange = renderCaretAtRange(range);
+			if (caretRange) {
+				return caretRange;
+			}
 
 			return range;
 		}
@@ -466,7 +475,7 @@ define("tinymce/SelectionOverrides", [
 				var range = getRange();
 
 				if (range.collapsed) {
-					setRange(renderRangeCaret(range));
+					setRange(renderCaretAtRange(range));
 				}
 			});
 
