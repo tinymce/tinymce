@@ -2,20 +2,26 @@ define(
   'ephox.dragster.api.MouseDrag',
 
   [
-    'ephox.perhaps.Option'
+    'ephox.perhaps.Option',
+    'ephox.sugar.alien.Position'
   ],
 
-  function (Option) {
+  function (Option, Position) {
     var compare = function (old, nu) {
-
+      return Position(nu.left() - old.left(), nu.top() - old.top());
     };
 
     var extract = function (event) {
-
+      return Position(event.x(), event.y());
     };
 
     var predicate = function (event) {
+      return true;
+    };
 
+    var mutate = function (mutation, info) {
+      console.log('info', info);
+      mutation.mutate(info.left(), info.top());
     };
 
     var onStart = Option.some('mousedown');
@@ -30,7 +36,8 @@ define(
       onStart: onStart,
       onStop: onStop,
       onExit: onExit,
-      onMove: onMove
+      onMove: onMove,
+      mutate: mutate
     };
   }
 );

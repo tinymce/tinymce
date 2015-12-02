@@ -7,9 +7,7 @@ define(
 
   function (Fun) {
     return function (anchor) {
-      var onEvent = function (event) {
-        var target = event.target();
-      };
+      var onEvent = function (event, mode) { };
 
       return {
         onEvent: onEvent,

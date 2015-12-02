@@ -7,7 +7,6 @@ define(
     'ephox.dragster.detect.Movement',
     'ephox.peanut.DelayedFunction',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
     'ephox.porkbun.Event',
     'ephox.porkbun.Events',
     'ephox.sugar.api.DomEvent',
@@ -16,7 +15,7 @@ define(
     'global!Array'
   ],
 
-  function (MouseDrag, Blocker, Movement, DelayedFunction, Fun, Option, Event, Events, DomEvent, Insert, Remove, Array) {
+  function (MouseDrag, Blocker, Movement, DelayedFunction, Fun, Event, Events, DomEvent, Insert, Remove, Array) {
 
     var transform = function (mutation, options) {
       var settings = options !== undefined ? options : {};
@@ -53,11 +52,11 @@ define(
 
       var mousemove = function (event, ui) {
         delayDrop.cancel();
-        movement.onEvent(event);
+        movement.onEvent(event, mode);
       };
 
       movement.events.move.bind(function (event) {
-        mutation.mutate(event.x(), event.y());
+        mode.mutate(mutation, event.info());
       });
 
       var on = function () {

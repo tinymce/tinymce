@@ -23,8 +23,8 @@ define(
         dragState = noDragState;
       };
 
-      var onEvent = function (event) {
-        dragState.onEvent(event);
+      var onEvent = function (event, mode) {
+        dragState.onEvent(event, mode);
       };
 
       var isOn = function () {
