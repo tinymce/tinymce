@@ -2,6 +2,7 @@ define(
   'ephox.dragster.api.Dragger',
 
   [
+    'ephox.dragster.api.MouseDrag',
     'ephox.dragster.detect.Blocker',
     'ephox.dragster.detect.Movement',
     'ephox.peanut.DelayedFunction',
@@ -15,10 +16,11 @@ define(
     'global!Array'
   ],
 
-  function (Blocker, Movement, DelayedFunction, Fun, Option, Event, Events, DomEvent, Insert, Remove, Array) {
+  function (MouseDrag, Blocker, Movement, DelayedFunction, Fun, Option, Event, Events, DomEvent, Insert, Remove, Array) {
 
     var transform = function (mutation, options) {
       var settings = options !== undefined ? options : {};
+      var mode = settings.mode !== undefined ? settings.mode : MouseDrag;
       var active = false;
 
       var events = Events.create({
@@ -89,10 +91,10 @@ define(
 
       // ASSUMPTION: runIfActive is not needed for mousedown. This is pretty much a safety measure for
       // inconsistent situations so that we don't block input.
-      var mdown = bindEvent(Option.some('mousedown'), drop);
-      var mup = bindEvent(Option.some('mouseup'), runIfActive(mouseup));
-      var mmove = bindEvent(Option.some('mousemove'), runIfActive(mousemove));
-      var mout = bindEvent(Option.some('mouseout'), runIfActive(delayDrop.schedule));
+      var mdown = bindEvent(mode.onStart, drop);
+      var mup = bindEvent(mode.onStop, runIfActive(mouseup));
+      var mmove = bindEvent(mode.onMove, runIfActive(mousemove));
+      var mout = bindEvent(mode.onExit, runIfActive(delayDrop.schedule));
 
       var destroy = function () {
         blocker.destroy();
