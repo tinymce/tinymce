@@ -90,10 +90,10 @@ define(
 
       // ASSUMPTION: runIfActive is not needed for mousedown. This is pretty much a safety measure for
       // inconsistent situations so that we don't block input.
-      var mdown = bindEvent(mode.onStart, drop);
-      var mup = bindEvent(mode.onStop, runIfActive(mouseup));
-      var mmove = bindEvent(mode.onMove, runIfActive(mousemove));
-      var mout = bindEvent(mode.onExit, runIfActive(delayDrop.schedule));
+      var mdown = bindEvent(mode.onStart(), drop);
+      var mup = bindEvent(mode.onStop(), runIfActive(mouseup));
+      var mmove = bindEvent(mode.onMove(), runIfActive(mousemove));
+      var mout = bindEvent(mode.onExit(), runIfActive(delayDrop.schedule));
 
       var destroy = function () {
         blocker.destroy();

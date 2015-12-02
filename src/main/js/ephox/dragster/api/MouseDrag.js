@@ -2,11 +2,13 @@ define(
   'ephox.dragster.api.MouseDrag',
 
   [
+    'ephox.dragster.api.DragMode',
+    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.sugar.alien.Position'
   ],
 
-  function (Option, Position) {
+  function (DragMode, Fun, Option, Position) {
     var compare = function (old, nu) {
       return Position(nu.left() - old.left(), nu.top() - old.top());
     };
@@ -20,7 +22,6 @@ define(
     };
 
     var mutate = function (mutation, info) {
-      console.log('info', info);
       mutation.mutate(info.left(), info.top());
     };
 
@@ -29,15 +30,15 @@ define(
     var onExit = Option.some('mouseout');
     var onMove = Option.some('mousemove');
 
-    return {
+    return DragMode({
       compare: compare,
       extract: extract,
       predicate: predicate,
-      onStart: onStart,
-      onStop: onStop,
-      onExit: onExit,
-      onMove: onMove,
+      onStart: Fun.constant(onStart),
+      onStop: Fun.constant(onStop),
+      onExit: Fun.constant(onExit),
+      onMove: Fun.constant(onMove),
       mutate: mutate
-    };
+    });
   }
 );
