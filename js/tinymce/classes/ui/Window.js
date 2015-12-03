@@ -80,7 +80,7 @@ define("tinymce/ui/Window", [
 
 				$(window).trigger('resize');
 			}
-		});
+		}, 100);
 
 		function reposition() {
 			var i, rect = DomUtils.getWindowSize(), layoutRect;
