@@ -14,7 +14,7 @@
 		],
 		add_unload_trigger: false,
 		content_css: "css/noneditable_manual.css",
-		noneditable_regexp: /\[\[[^\]]+\]\]/g
+		noneditable_regexp: [/\[\[[^\]]+\]\]/g, /<custom-token>/g]
 	});
 </script>
 </head>
@@ -27,7 +27,7 @@
 		<div>
 			<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%">
 				&lt;p&gt;
-					Editable &lt;span class="mceNonEditable"&gt;[non editable]&lt;/span&gt; editable.
+					Editable &lt;custom-token&gt;&lt;custom-token&gt; &lt;span class="mceNonEditable"&gt;[non editable]&lt;/span&gt; editable.
 				&lt;/p&gt;
 				&lt;p class="mceNonEditable"&gt;
 					Non editable block &lt;span class="mceEditable"&gt;[editable]&lt;/span&gt; with more text.
