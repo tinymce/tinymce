@@ -2,7 +2,7 @@ define(
   'ephox.dragster.api.MouseDrag',
 
   [
-    'ephox.dragster.api.DragMode',
+    'ephox.dragster.api.DragApis',
     'ephox.dragster.detect.Blocker',
     'ephox.sugar.alien.Position',
     'ephox.sugar.api.DomEvent',
@@ -10,7 +10,7 @@ define(
     'ephox.sugar.api.Remove'
   ],
 
-  function (DragMode, Blocker, Position, DomEvent, Insert, Remove) {
+  function (DragApis, Blocker, Position, DomEvent, Insert, Remove) {
     var compare = function (old, nu) {
       return Position(nu.left() - old.left(), nu.top() - old.top());
     };
@@ -49,15 +49,15 @@ define(
         Remove.remove(blocker.element());
       };
 
-      return {
+      return DragApis.sink({
         element: blocker.element,
         start: start,
         stop: stop,
         destroy: destroy
-      };
+      });
     };
 
-    return DragMode({
+    return DragApis.mode({
       compare: compare,
       extract: extract,
       sink: sink,

@@ -2,6 +2,7 @@ define(
   'ephox.dragster.api.Dragger',
 
   [
+    'ephox.dragster.api.DragApis',
     'ephox.dragster.api.MouseDrag',
     'ephox.dragster.detect.Movement',
     'ephox.peanut.DelayedFunction',
@@ -11,7 +12,7 @@ define(
     'global!Array'
   ],
 
-  function (MouseDrag, Movement, DelayedFunction, Event, Events, Remove, Array) {
+  function (DragApis, MouseDrag, Movement, DelayedFunction, Event, Events, Remove, Array) {
 
     var transform = function (mutation, options) {
       var settings = options !== undefined ? options : {};
@@ -72,14 +73,14 @@ define(
         };
       };
 
-      var sink = mode.sink({
+      var sink = mode.sink(DragApis.api({
         // ASSUMPTION: runIfActive is not needed for mousedown. This is pretty much a safety measure for
         // inconsistent situations so that we don't block input.
         forceDrop: drop,
         drop: runIfActive(drop),
         move: runIfActive(mousemove),
         delayDrop: runIfActive(delayDrop.schedule)
-      }, settings);
+      }), settings);
     
       var destroy = function () {
         sink.destroy();
