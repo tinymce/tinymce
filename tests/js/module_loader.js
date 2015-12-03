@@ -22,7 +22,7 @@
 			module = privateModules[ids[i]] || resolve(ids[i]);
 
 			if (!module) {
-				throw 'module definition dependecy not found: ' + ids[i];
+				throw 'module definition dependency not found: ' + ids[i];
 			}
 
 			defs.push(module);
