@@ -23,7 +23,6 @@ define(
         top: '0px',
         width: '100%',
         height: '100%',
-        background: 'red',
         opacity: '0.5'
       });
 
