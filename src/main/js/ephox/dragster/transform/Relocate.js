@@ -13,8 +13,8 @@ define(
       var mutate = function (x, y) {
         var location = Location.absolute(element);
         Css.setAll(element, {
-          left: location.left() + x,
-          top: location.top() + y
+          left: (location.left() + x) + 'px',
+          top: (location.top() + y) + 'px'
         });
         events.trigger.relocate(x, y);
       };

@@ -2,30 +2,47 @@ define(
   'ephox.dragster.detect.InDrag',
 
   [
-    'ephox.dragster.detect.Delta',
+    'ephox.perhaps.Option',
     'ephox.porkbun.Event',
     'ephox.porkbun.Events'
   ],
 
-  function (Delta, Event, Events) {
+  function (Option, Event, Events) {
     return function () {
 
-      var delta = Delta();
+      var previous = Option.none();
 
-      var onEvent = function (event) {
-        var offset = delta.update(event.x(), event.y());
-        offset.each(function (v) {
-          events.trigger.move(v.left(), v.top());
+      var reset = function () {
+        previous = Option.none();
+      };
+
+      var update = function (mode, nu) {
+        var result = previous.map(function (old) {
+          return mode.compare(old, nu);
+        });
+
+        previous = Option.some(nu);
+        return result;
+      };
+
+      var onEvent = function (event, mode) {
+        var dataOption = mode.extract(event);
+
+        dataOption.each(function (data) {
+          var offset = update(mode, data);
+          offset.each(function (d) {
+            events.trigger.move(d);
+          });
         });
       };
 
       var events = Events.create({
-        move: Event(['x', 'y'])
+        move: Event([ 'info' ])
       });
 
       return {
         onEvent: onEvent,
-        reset: delta.reset,
+        reset: reset,
         events: events.registry
       };
     };

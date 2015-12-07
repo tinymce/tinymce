@@ -24,7 +24,7 @@ define(
         Height.set(r, 8);
         Css.set(r, 'position', 'absolute');
         Css.set(r, 'border', '1px solid gray');
-        Css.set(r, 'z-index', 1000);
+        Css.set(r, 'z-index', '1000');
 
         var set = function (x, y) {
           Css.set(r, 'left', (x - 4) + 'px');

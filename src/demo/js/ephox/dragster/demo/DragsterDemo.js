@@ -10,12 +10,11 @@ define(
     'ephox.sugar.api.Css',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
-    'ephox.sugar.api.Event',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function ($, Dragger, Sizers, Grow, Relocate, Css, DomEvent, Element, Event, Insert, SelectorFind) {
+  function ($, Dragger, Sizers, Grow, Relocate, Css, DomEvent, Element, Insert, SelectorFind) {
     return function () {
       // var container = $('<div/>').append('Hi.');
 
@@ -58,7 +57,7 @@ define(
       // will need closers.
       var sizers = Sizers();
 
-      Event.bind(div, 'mousedown', function () {
+      DomEvent.bind(div, 'mousedown', function () {
         sizers.show();
         sizers.update(div);
         relocater.on();
