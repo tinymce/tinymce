@@ -5,10 +5,11 @@ test(
     'ephox.dragster.api.DragApis',
     'ephox.dragster.core.Dragging',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'global!parseInt'
   ],
 
-  function (DragApis, Dragging, Fun, parseInt) {
+  function (DragApis, Dragging, Fun, Option, parseInt) {
     var api = null;
 
     var argumentToStart = 'start';
@@ -21,7 +22,7 @@ test(
         return nu - old;
       },
       extract: function (raw) {
-        return parseInt(raw, 10);
+        return Option.from(parseInt(raw, 10));
       },
       mutate: function (mutation, data) {
         assert.eq(argumentToMutate, mutation);

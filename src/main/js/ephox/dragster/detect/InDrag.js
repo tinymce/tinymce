@@ -26,11 +26,13 @@ define(
       };
 
       var onEvent = function (event, mode) {
-        var data = mode.extract(event);
+        var dataOption = mode.extract(event);
 
-        var offset = update(mode, data);
-        offset.each(function (d) {
-          events.trigger.move(d);
+        dataOption.each(function (data) {
+          var offset = update(mode, data);
+          offset.each(function (d) {
+            events.trigger.move(d);
+          });
         });
       };
 

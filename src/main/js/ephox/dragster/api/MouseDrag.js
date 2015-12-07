@@ -4,19 +4,20 @@ define(
   [
     'ephox.dragster.api.DragApis',
     'ephox.dragster.detect.Blocker',
+    'ephox.perhaps.Option',
     'ephox.sugar.alien.Position',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Remove'
   ],
 
-  function (DragApis, Blocker, Position, DomEvent, Insert, Remove) {
+  function (DragApis, Blocker, Option, Position, DomEvent, Insert, Remove) {
     var compare = function (old, nu) {
       return Position(nu.left() - old.left(), nu.top() - old.top());
     };
 
     var extract = function (event) {
-      return Position(event.x(), event.y());
+      return Option.some(Position(event.x(), event.y()));
     };
 
     var mutate = function (mutation, info) {
