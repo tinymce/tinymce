@@ -1,5 +1,6 @@
 Version 4.3.2 (2015-12-xx)
-	Fixed bug where resizing table cell did not fire a node change event or add an undo level.
+	Fixed bug where the contextual table toolbar would appear incorrectly if TinyMCE was initialized inline inside a table.
+	Fixed bug where resizing table cells did not fire a node change event or add an undo level.
 	Fixed bug where double click selection of text on IE 11 wouldn't work properly.
 Version 4.3.1 (2015-11-30)
 	Fixed so it's possible to disable the table inline toolbar by setting it to false or an empty string.
