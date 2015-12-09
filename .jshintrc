@@ -10,7 +10,6 @@
 	"maxdepth": 8,
 	"maxstatements": 150,
 	"maxlen": 140,
-	//"maxcomplexity": 10,
 	"camelcase":false,
 	"browser": true,
 	"node": false,
