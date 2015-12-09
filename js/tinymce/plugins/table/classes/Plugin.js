@@ -492,7 +492,7 @@ define("tinymce/tableplugin/Plugin", [
 
 		function isTable(table) {
 
-			var selectorMatched = editor.dom.is(table, 'table');
+			var selectorMatched = editor.dom.is(table, 'table') && editor.getBody().contains(table);
 
 			return selectorMatched;
 		}
