@@ -719,13 +719,13 @@ define("tinymce/tableplugin/ResizeBars", [
 
 			var newSizes = recalculateWidths(tableGrid, newWidths);
 			var styleExtension = percentageBased ? '%' : 'px';
-			setSizes(newSizes, styleExtension);
-
 			var newTableWidth = percentageBased ? getNewTablePercentWidth() :
-                getNewTablePixelWidth();
+				getNewTablePixelWidth();
 
-			setTableSize(newTableWidth, styleExtension, percentageBased);
-
+			editor.undoManager.transact(function() {
+				setSizes(newSizes, styleExtension);
+				setTableSize(newTableWidth, styleExtension, percentageBased);
+			});
 		}
 
 		// Adjust the height of the row of table at index, with delta.
@@ -745,18 +745,21 @@ define("tinymce/tableplugin/ResizeBars", [
 			var newCellSizes = recalculateCellHeights(tableGrid, newHeights);
 			var newRowSizes = recalculateRowHeights(tableGrid, newHeights);
 
-			Tools.each(newRowSizes, function(row) {
-				editor.dom.setStyle(row.element, 'height', row.height + 'px');
-				editor.dom.setAttrib(row.element, 'height', null);
-			});
+			editor.undoManager.transact(function() {
 
-			Tools.each(newCellSizes, function(cell) {
-				editor.dom.setStyle(cell.element, 'height', cell.height + 'px');
-				editor.dom.setAttrib(cell.element, 'height', null);
-			});
+				Tools.each(newRowSizes, function(row) {
+					editor.dom.setStyle(row.element, 'height', row.height + 'px');
+					editor.dom.setAttrib(row.element, 'height', null);
+				});
 
-			editor.dom.setStyle(table, 'height', newTotalHeight + 'px');
-			editor.dom.setAttrib(table, 'height', null);
+				Tools.each(newCellSizes, function(cell) {
+					editor.dom.setStyle(cell.element, 'height', cell.height + 'px');
+					editor.dom.setAttrib(cell.element, 'height', null);
+				});
+
+				editor.dom.setStyle(table, 'height', newTotalHeight + 'px');
+				editor.dom.setAttrib(table, 'height', null);
+			});
 		}
 
 		function scheduleDelayedDropEvent() {
@@ -826,6 +829,7 @@ define("tinymce/tableplugin/ResizeBars", [
 					adjustHeight(hoverTable, delta, index);
 				}
 				refreshBars(hoverTable);
+				editor.nodeChanged();
 			}
 		}
 
