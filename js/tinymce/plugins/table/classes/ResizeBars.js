@@ -16,8 +16,9 @@
  * @private
  */
 define("tinymce/tableplugin/ResizeBars", [
-	"tinymce/util/Tools"
-], function(Tools) {
+	"tinymce/util/Tools",
+	"tinymce/util/VK"
+], function(Tools, VK) {
 	return function(editor) {
 		var RESIZE_BAR_CLASS = 'mce-resize-bar',
 			RESIZE_BAR_ROW_CLASS = 'mce-resize-bar-row',
@@ -924,6 +925,20 @@ define("tinymce/tableplugin/ResizeBars", [
 					hoverTable = tableElement;
 					refreshBars(tableElement);
 				}
+			}
+		});
+
+		// Prevents the user from moving the caret inside the resize bars on Chrome
+		// Only does it on arrow keys since clearBars might be an epxensive operation
+		// since it's querying the DOM
+		editor.on('keydown', function(e) {
+			switch (e.keyCode) {
+				case VK.LEFT:
+				case VK.RIGHT:
+				case VK.UP:
+				case VK.DOWN:
+					clearBars();
+					break;
 			}
 		});
 
