@@ -4,6 +4,7 @@ Version 4.3.2 (2015-12-xx)
 	Fixed bug where resizing table cells did not fire a node change event or add an undo level.
 	Fixed bug where double click selection of text on IE 11 wouldn't work properly.
 	Fixed bug where codesample plugin would incorrectly produce br elements inside code elements.
+	Fixed bug where media plugin would strip dashes from youtube urls.
 	Fixed bug where it was possible to move the caret into the table resize bars.
 Version 4.3.1 (2015-11-30)
 	Fixed so it's possible to disable the table inline toolbar by setting it to false or an empty string.
