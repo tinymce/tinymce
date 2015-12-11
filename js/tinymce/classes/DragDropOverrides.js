@@ -182,6 +182,15 @@ define("tinymce/DragDropOverrides", [
 		}
 
 		editor.on('mousedown', start);
+
+		// Blocks drop inside cE=false on IE
+		editor.on('drop', function(e) {
+			var realTarget = editor.getDoc().elementFromPoint(e.clientX, e.clientY);
+
+			if (isContentEditableFalse(realTarget) || isContentEditableFalse(editor.dom.getContentEditableParent(realTarget))) {
+				e.preventDefault();
+			}
+		});
 	}
 
 	return {

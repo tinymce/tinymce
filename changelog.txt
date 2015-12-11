@@ -6,6 +6,7 @@ Version 4.3.2 (2015-12-xx)
 	Fixed bug where codesample plugin would incorrectly produce br elements inside code elements.
 	Fixed bug where media plugin would strip dashes from youtube urls.
 	Fixed bug where it was possible to move the caret into the table resize bars.
+	Fixed bug where drag/drop into a cE=false element was possible on IE.
 Version 4.3.1 (2015-11-30)
 	Fixed so it's possible to disable the table inline toolbar by setting it to false or an empty string.
 	Fixed bug where it wasn't possible to resize some tables using the drag handles.
