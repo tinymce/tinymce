@@ -330,6 +330,11 @@ test('Caret format on second word in table cell', function() {
 });
 
 test('contentEditable: false on start and contentEditable: true on end', function() {
+	if (tinymce.Env.ie) {
+		ok("Skipped since IE doesn't support selection of parts of a cE=false element", true);
+		return;
+	}
+
 	editor.formatter.register('format', {inline: 'b'});
 	editor.setContent('<p>abc</p><p contenteditable="false"><b>def</b></p><p><b>ghj</b></p>');
 	var rng = editor.dom.createRng();
