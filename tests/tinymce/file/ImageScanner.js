@@ -9,13 +9,14 @@ ModuleLoader.require([
 
 	module("tinymce.file.ImageScanner");
 
-	var base64Src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAAAAAAALAAAAAABAAEAAAICTAEAOw==';
+	var base64Src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAAAAAAALAAAAAABAAEAAAICTAEAOw==',
+		filename = 'image.gif';
 
 	QUnit.asyncTest("findAll", function() {
 		var imageScanner = new ImageScanner(new BlobCache());
 
 		document.getElementById('view').innerHTML = (
-			'<img src="' + base64Src + '">' +
+			'<img src="' + base64Src + '" data-mce-filename="' + filename + '">' +
 			'<img src="' + Env.transparentSrc + '">' +
 			'<img src="' + base64Src + '" data-mce-bogus="1">' +
 			'<img src="' + base64Src + '" data-mce-placeholder="1">'
@@ -25,6 +26,7 @@ ModuleLoader.require([
 			QUnit.start();
 			equal(result.length, 1);
 			equal('data:image/gif;base64,' + result[0].blobInfo.base64(), base64Src);
+			equal(result[0].blobInfo.filename(), filename);
 			strictEqual(result[0].image, document.getElementById('view').firstChild);
 		});
 	});

@@ -392,13 +392,13 @@ define("tinymce/pasteplugin/Clipboard", [
 			function processItems(items) {
 				var i, item, reader, hadImage = false;
 
-				function pasteImage(reader) {
+				function pasteImage(reader, name) {
 					if (rng) {
 						editor.selection.setRng(rng);
 						rng = null;
 					}
 
-					pasteHtml('<img src="' + reader.result + '">');
+					pasteHtml('<img src="' + reader.result + '" data-mce-filename="' + editor.dom.encode(name) + '">');
 				}
 
 				if (items) {
@@ -407,8 +407,9 @@ define("tinymce/pasteplugin/Clipboard", [
 
 						if (/^image\/(jpeg|png|gif|bmp)$/.test(item.type)) {
 							reader = new FileReader();
-							reader.onload = pasteImage.bind(null, reader);
-							reader.readAsDataURL(item.getAsFile ? item.getAsFile() : item);
+							item.getAsFile && (item = item.getAsFile());
+							reader.onload = pasteImage.bind(null, reader, item.name || '');
+							reader.readAsDataURL(item);
 
 							e.preventDefault();
 							hadImage = true;

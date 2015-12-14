@@ -58,7 +58,8 @@ define("tinymce/file/ImageScanner", [
 				} else {
 					Conversions.uriToBlob(img.src).then(function(blob) {
 						var blobInfoId = 'blobid' + (count++),
-							blobInfo = blobCache.create(blobInfoId, blob, base64);
+							filename = img.getAttribute('data-mce-filename') || null,
+							blobInfo = blobCache.create(blobInfoId, blob, base64, filename);
 
 						blobCache.add(blobInfo);
 
