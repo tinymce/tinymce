@@ -646,6 +646,8 @@ define("tinymce/EnterKey", [
 					emptyBlock(parentBlock);
 				}
 
+				newBlock.normalize();
+
 				// New block might become empty if it's <p><b>a |</b></p>
 				if (dom.isEmpty(newBlock)) {
 					dom.remove(newBlock);
