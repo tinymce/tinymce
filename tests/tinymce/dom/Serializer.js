@@ -89,7 +89,9 @@ test('Form elements (general)', function() {
 	equal(ser.serialize(DOM.get('test')), '<label for="test">label</label>');
 
 	DOM.setHTML('test', '<input type="checkbox" value="test" /><input type="button" /><textarea></textarea>');
-	equal(ser.serialize(DOM.get('test')), '<input type="checkbox" value="test" /><input type="button" /><textarea></textarea>');
+
+	// Edge will add an empty input value so remove that to normalize test since it doesn't break anything
+	equal(ser.serialize(DOM.get('test')).replace(/ value=""/g, ''), '<input type="checkbox" value="test" /><input type="button" /><textarea></textarea>');
 });
 
 test('Form elements (checkbox)', function() {
