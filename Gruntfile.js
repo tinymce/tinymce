@@ -281,7 +281,8 @@ module.exports = function(grunt) {
 			"content-inline": {
 				options: {
 					cleancss: true,
-					strictImports: true
+					strictImports: true,
+					compress: true
 				},
 
 				rename: function(dest, src) {
