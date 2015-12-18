@@ -85,3 +85,38 @@ test('Remove', function() {
 	editor.fire('keydown', eventArgs);
 	ok(!called, 'Shortcut was called when it shouldn\'t.');
 });
+
+asyncTest('Disable shortcuts', function() {
+    tinymce.remove();
+
+    tinymce.init({
+        selector: "textarea",
+        add_unload_trigger: false,
+        disable_nodechange: true,
+        indent: false,
+        skin: false,
+        entities: 'raw',
+        schema: 'html5',
+        shortcuts: false,
+        init_instance_callback: function(ed) {
+            QUnit.start();
+
+            var called = false, eventArgs;
+
+            eventArgs = {
+                ctrlKey: true,
+                keyCode: 68,
+                altKey: false,
+                shiftKey: false,
+                metaKey: false
+            };
+
+            ed.shortcuts.add('ctrl+d', '', function() {
+                called = true;
+            });
+
+            ed.fire('keydown', eventArgs);
+            ok(!called, 'Shortcut doesn\'t exists.');
+        }
+    });
+});
