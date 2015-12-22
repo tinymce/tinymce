@@ -145,6 +145,28 @@ define("tinymce/util/Delay", [
 		},
 
 		/**
+		 * Creates throttled callback function that only gets executed once within the specified time.
+		 *
+		 * @method throttle
+		 * @param {function} callback Callback to execute when timer finishes.
+		 * @param {Number} time Optional time to wait before the callback is executed, defaults to 0.
+		 * @return {Function} Throttled function callback.
+		 */
+		throttle: function(callback, time) {
+			var timer;
+
+			return function() {
+				var args = arguments;
+
+				clearTimeout(timer);
+
+				timer = wrappedSetTimeout(function() {
+					callback.apply(this, args);
+				}, time);
+			};
+		},
+
+		/**
 		 * Clears an interval timer so it won't execute.
 		 *
 		 * @method clearInterval
