@@ -550,4 +550,406 @@
 			'<table><tbody><tr><td>A1</td><td>A2</td></tr><tr><td>B1</td><td>B2</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table><p>x</p>'
 		);
 	});
+
+	test("Delete selected cells", function() {
+		editor.getBody().innerHTML = (
+			'<table><tbody>' +
+			'<tr><td class="mce-item-selected">A1</td><td>A2</td></tr>' +
+			'<tr><td class="mce-item-selected">B1</td><td>B2</td></tr>' +
+			'</tbody></table>' +
+			'<p>x</p>'
+		);
+
+		Utils.setSelection('td', 0, 'td', 2);
+		editor.fire('keydown', {keyCode: 46});
+
+		equal(
+			editor.getContent(),
+			'<table><tbody><tr><td>&nbsp;</td><td>A2</td></tr><tr><td>&nbsp;</td><td>B2</td></tr></tbody></table><p>x</p>'
+		);
+	});
+
+	test("Delete all cells", function() {
+		editor.getBody().innerHTML = (
+			'<table><tbody>' +
+			'<tr><td class="mce-item-selected">A1</td><td class="mce-item-selected">A2</td></tr>' +
+			'<tr><td class="mce-item-selected">B1</td><td class="mce-item-selected">B2</td></tr>' +
+			'</tbody></table>' +
+			'<p>x</p>'
+		);
+
+		Utils.setSelection('td', 0, 'td', 2);
+		editor.fire('keydown', {keyCode: 46});
+
+		equal(
+			editor.getContent(),
+			'<p>x</p>'
+		);
+	});
+
+	test("Delete empty like table cell contents", function() {
+		editor.getBody().innerHTML = (
+			'<table><tbody>' +
+			'<tr><td><p><br></p></td><td><p>a</p></td>' +
+			'</tbody></table>' +
+			'<p>x</p>'
+		);
+
+		Utils.setSelection('td', 0);
+		editor.fire('keydown', {keyCode: 46});
+
+		equal(
+			editor.getContent(),
+			'<table><tbody><tr><td>&nbsp;</td><td><p>a</p></td></tr></tbody></table><p>x</p>'
+		);
+	});
+
+	var testResizeTable1 = '<table style="width: 426px"><tbody>' +
+			'<tr><td style="height: 20px; width: 200px;" colspan="2" data-mce-style="height: 20px; width: 200px;">A1</td><td style="height: 20px; width: 100px;" data-mce-style="height: 20px; width: 100px;">A2</td><td style="height: 20px; width: 100px;" data-mce-style="height: 20px; width: 100px;">A3</td></tr>' +
+			'<tr><td style="height: 20px; width: 100px;" data-mce-style="height: 20px; width: 100px;">B1</td><td style="height: 20px; width: 200px;" colspan="2" data-mce-style="height: 20px; width: 200px;">B2</td><td style="height: 20px; width: 100px;" data-mce-style="height: 20px; width: 100px;">B3</td></tr>' +
+			'<tr><td style="height: 20px; width: 100px;" data-mce-style="height: 20px; width: 100px;">C1</td><td style="height: 20px; width: 100px;" data-mce-style="height: 20px; width: 100px;">C2</td><td style="height: 20px; width: 200px;" colspan="2" data-mce-style="height: 20px; width: 200px;">C3</td></tr>' +
+			'<tr><td style="height: 20px; width: 400px;" colspan="4" data-mce-style="height: 20px; width: 400px;">D1</td></tr></tbody></table>';
+
+	var testResizeTable2 = '<table border="1"><tbody>' +
+	'<tr><th style="height: 20px; width: 20px;" data-mce-style="height: 20px; width: 20px;">A0</th><th style="height: 20px; width: 20px;" data-mce-style="height: 20px; width: 20px;">A1</th><th style="height: 20px; width: 20px;" data-mce-style="height: 20px; width: 20px;">A2</th>' +
+	'<th style="height: 20px; width: 40px;" data-mce-style="height: 20px; width: 40px;">A3</th><th style="height: 20px; width: 10px;" data-mce-style="height: 20px; width: 10px;">A4</th></tr><tr><td style="height: 20px; width: 20px;" data-mce-style="height: 20px; width: 20px;">B0</td><td style="height: 20px; width: 20px; "' +
+	'data-mce-style="height: 20px; width: 20px;">B1</td><td style="height: 20px; width: 20px;" data-mce-style="height: 20px; width: 20px;">B2</td><td style="height: 20px; width: 40px;" data-mce-style="height: 20px; width: 40px;">B3</td><td style="height: 40px; width: 10px;" rowspan="2" data-mce-style="height: 20px; width: 10px;">' +
+	'B3</td></tr><tr><td style="height: 20px; width: 20px;" data-mce-style="height: 20px; width: 20px;">C0</td><td style="height: 20px; width: 20px;" data-mce-style="height: 20px; width: 20px;">C1</td><td style="height: 20px; width: 20px;" data-mce-style="height: 20px; width: 20px;">C2</td><td style="height: 20px; width: 40px;" ' +
+	'data-mce-style="height: 20px; width: 40px;">C3</td></tr></tbody></table>';
+
+	var testResizeTable3 = '<div style=\"display: block; width: 400px;\"><table style=\"border-collapse: collapse; border: 1px solid black;\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tbody><tr><td rowspan=\"2\" width=\"25%\">&nbsp;a</td><td width=\"25%\">&nbsp;b</td><td width=\"25%\">&nbsp;</td>' +
+	'<td width=\"25%\">&nbsp;c</td></tr><tr><td width=\"25%\">&nbsp;d</td><td width=\"25%\">&nbsp;</td><td rowspan=\"2\" width=\"25%\">&nbsp;e</td></tr><tr><td width=\"25%\">&nbsp;f</td><td width=\"25%\">&nbsp;g</td><td width=\"25%\">&nbsp;</td></tr><tr><td width=\"25%\">&nbsp;h</td><td width=\"25%\">&nbsp;i</td><td width=\"25%\">&nbsp;</td><td width=\"25%\">j&nbsp;</td></tr></tbody></table></div>';
+
+	test("Is Pixel/Percentage Based Width", function() {
+		var pixelWidths = ['125px', '200px', '300em'];
+		var percentageWidths = ['25%', '30%', '100%'];
+		var i, pixelBasedSize, percentBasedSize;
+
+		for (i = 0; i < pixelWidths.length; i++) {
+			pixelBasedSize = editor.plugins.table.resizeBars.isPixelBasedSize(pixelWidths[i]);
+			deepEqual(pixelBasedSize, true);
+			percentBasedSize = editor.plugins.table.resizeBars.isPercentageBasedSize(pixelWidths[i]);
+			deepEqual(percentBasedSize, false);
+		}
+		for (i = 0; i < percentageWidths.length; i++) {
+			pixelBasedSize = editor.plugins.table.resizeBars.isPixelBasedSize(percentageWidths[i]);
+			deepEqual(pixelBasedSize, false);
+			percentBasedSize = editor.plugins.table.resizeBars.isPercentageBasedSize(percentageWidths[i]);
+			deepEqual(percentBasedSize, true);
+		}
+	});
+
+	test("Get widths/heights", function() {
+		editor.setContent(testResizeTable1);
+
+		var table = editor.dom.select('table')[0];
+		var details = editor.plugins.table.resizeBars.getTableDetails(table);
+		var tableGrid  = editor.plugins.table.resizeBars.getTableGrid(details);
+
+		deepEqual(
+			editor.plugins.table.resizeBars.getWidths(tableGrid, false, table),
+			[100, 100, 100, 100]
+		);
+
+		deepEqual(
+			editor.plugins.table.resizeBars.getPixelHeights(tableGrid),
+			[20, 20, 20, 20]
+		);
+
+		editor.setContent(testResizeTable2);
+
+		table = editor.dom.select('table')[0];
+		details = editor.plugins.table.resizeBars.getTableDetails(table);
+		tableGrid  = editor.plugins.table.resizeBars.getTableGrid(details);
+
+		deepEqual(
+			editor.plugins.table.resizeBars.getWidths(tableGrid, false, table),
+			[20, 20, 20, 40, 10]
+		);
+
+		deepEqual(
+			editor.plugins.table.resizeBars.getPixelHeights(tableGrid),
+			[20, 20, 20]
+		);
+
+		editor.setContent(testResizeTable3);
+
+		table = editor.dom.select('table')[0];
+		details = editor.plugins.table.resizeBars.getTableDetails(table);
+		tableGrid  = editor.plugins.table.resizeBars.getTableGrid(details);
+
+		deepEqual(
+			editor.plugins.table.resizeBars.getWidths(tableGrid, true, table),
+			[25, 25, 25, 25]
+		);
+	});
+
+	test("Draw bars/clear bars", function() {
+		editor.setContent(testResizeTable1);
+
+		var table = editor.dom.select('table')[0];
+
+		editor.plugins.table.resizeBars.drawBars(table);
+
+		equal(editor.dom.select('.mce-resize-bar-row').length,
+			4);
+
+		equal(editor.dom.select('.mce-resize-bar-col').length,
+			4);
+
+		editor.plugins.table.resizeBars.clearBars();
+
+		equal(editor.dom.select('.mce-resize-bar-row').length,
+			0);
+
+		equal(editor.dom.select('.mce-resize-bar-col').length,
+			0);
+	});
+
+	test("Determine deltas", function() {
+		var deltas = editor.plugins.table.resizeBars.determineDeltas([100, 100, 100, 100], 0, 50, 10, false);
+
+		deepEqual(deltas, [50, -50, 0, 0]);
+
+		deltas = editor.plugins.table.resizeBars.determineDeltas([100, 100, 100, 100], 1, 50, 10, false);
+
+		deepEqual(deltas, [0, 50, -50, 0]);
+
+		deltas = editor.plugins.table.resizeBars.determineDeltas([100, 100, 100, 100], 2, 50, 10, false);
+
+		deepEqual(deltas, [0, 0, 50, -50]);
+
+		deltas = editor.plugins.table.resizeBars.determineDeltas([100, 100, 100, 100], 3, 50, 10, false);
+
+		deepEqual(deltas, [0, 0, 0, 50]);
+
+		deltas = editor.plugins.table.resizeBars.determineDeltas([50], 0, 5, 10, true);
+
+		deepEqual(deltas, [50]); // 50 + 50 = 100, one column, percent case
+
+		deltas = editor.plugins.table.resizeBars.determineDeltas([25, 25, 25, 25], 1, 5, 10, true);
+
+		deepEqual(deltas, [0, 5, -5, 0]);
+	});
+
+	test("Adjust width", function() {
+		editor.setContent(testResizeTable1);
+
+		var table = editor.dom.select('table')[0];
+
+		editor.plugins.table.resizeBars.adjustWidth(table, 50, 0);
+
+		equal(editor.getContent(),
+			'<table style=\"width: 426px;\">' +
+			'<tbody>' +
+			'<tr>' +
+			'<td style=\"width: 200px; height: 20px;\" colspan=\"2\">A1</td>' +
+			'<td style=\"width: 100px; height: 20px;\">A2</td>' +
+			'<td style=\"width: 100px; height: 20px;\">A3</td>' +
+			'</tr>' +
+			'<tr>' +
+			'<td style=\"width: 150px; height: 20px;\">B1</td>' +
+			'<td style=\"width: 150px; height: 20px;\" colspan=\"2\">B2</td>' +
+			'<td style=\"width: 100px; height: 20px;\">B3</td>' +
+			'</tr>' +
+			'<tr>' +
+			'<td style=\"width: 150px; height: 20px;\">C1</td>' +
+			'<td style=\"width: 50px; height: 20px;\">C2</td>' +
+			'<td style=\"width: 200px; height: 20px;\" colspan=\"2\">C3</td>' +
+			'</tr>' +
+			'<tr>' +
+			'<td style=\"width: 400px; height: 20px;\" colspan=\"4\">D1</td>' +
+			'</tr>' +
+			'</tbody>' +
+			'</table>');
+
+		editor.setContent(testResizeTable1);
+
+		table = editor.dom.select('table')[0];
+
+		editor.plugins.table.resizeBars.adjustWidth(table, 50, 1);
+
+		equal(editor.getContent(),
+			'<table style=\"width: 426px;\">' +
+			'<tbody>' +
+			'<tr>' +
+			'<td style=\"width: 250px; height: 20px;\" colspan=\"2\">A1</td>' +
+			'<td style=\"width: 50px; height: 20px;\">A2</td>' +
+			'<td style=\"width: 100px; height: 20px;\">A3</td>' +
+			'</tr>' +
+			'<tr>' +
+			'<td style=\"width: 100px; height: 20px;\">B1</td>' +
+			'<td style=\"width: 200px; height: 20px;\" colspan=\"2\">B2</td>' +
+			'<td style=\"width: 100px; height: 20px;\">B3</td>' +
+			'</tr>' +
+			'<tr>' +
+			'<td style=\"width: 100px; height: 20px;\">C1</td>' +
+			'<td style=\"width: 150px; height: 20px;\">C2</td>' +
+			'<td style=\"width: 150px; height: 20px;\" colspan=\"2\">C3</td>' +
+			'</tr>' +
+			'<tr>' +
+			'<td style=\"width: 400px; height: 20px;\" colspan=\"4\">D1</td>' +
+			'</tr>' +
+			'</tbody>' +
+			'</table>');
+
+		editor.setContent(testResizeTable1);
+
+		table = editor.dom.select('table')[0];
+
+		editor.plugins.table.resizeBars.adjustWidth(table, 50, 2);
+
+		equal(editor.getContent(),
+			'<table style=\"width: 426px;\">' +
+			'<tbody>' +
+			'<tr>' +
+			'<td style=\"width: 200px; height: 20px;\" colspan=\"2\">A1</td>' +
+			'<td style=\"width: 150px; height: 20px;\">A2</td>' +
+			'<td style=\"width: 50px; height: 20px;\">A3</td>' +
+			'</tr>' +
+			'<tr>' +
+			'<td style=\"width: 100px; height: 20px;\">B1</td>' +
+			'<td style=\"width: 250px; height: 20px;\" colspan=\"2\">B2</td>' +
+			'<td style=\"width: 50px; height: 20px;\">B3</td>' +
+			'</tr>' +
+			'<tr>' +
+			'<td style=\"width: 100px; height: 20px;\">C1</td>' +
+			'<td style=\"width: 100px; height: 20px;\">C2</td>' +
+			'<td style=\"width: 200px; height: 20px;\" colspan=\"2\">C3</td>' +
+			'</tr>' +
+			'<tr>' +
+			'<td style=\"width: 400px; height: 20px;\" colspan=\"4\">D1</td>' +
+			'</tr>' +
+			'</tbody>' +
+			'</table>');
+
+		editor.setContent(testResizeTable1);
+
+		table = editor.dom.select('table')[0];
+
+		editor.plugins.table.resizeBars.adjustWidth(table, 50, 3);
+
+		equal(editor.getContent(),
+			'<table style=\"width: 476px;\">' +
+			'<tbody>' +
+			'<tr>' +
+			'<td style=\"width: 200px; height: 20px;\" colspan=\"2\">A1</td>' +
+			'<td style=\"width: 100px; height: 20px;\">A2</td>' +
+			'<td style=\"width: 150px; height: 20px;\">A3</td>' +
+			'</tr>' +
+			'<tr>' +
+			'<td style=\"width: 100px; height: 20px;\">B1</td>' +
+			'<td style=\"width: 200px; height: 20px;\" colspan=\"2\">B2</td>' +
+			'<td style=\"width: 150px; height: 20px;\">B3</td>' +
+			'</tr>' +
+			'<tr>' +
+			'<td style=\"width: 100px; height: 20px;\">C1</td>' +
+			'<td style=\"width: 100px; height: 20px;\">C2</td>' +
+			'<td style=\"width: 250px; height: 20px;\" colspan=\"2\">C3</td>' +
+			'</tr>' +
+			'<tr>' +
+			'<td style=\"width: 450px; height: 20px;\" colspan=\"4\">D1</td>' +
+			'</tr>' +
+			'</tbody>' +
+			'</table>');
+	});
+
+	test("Adjust height", function() {
+		editor.setContent(testResizeTable2);
+
+		var table = editor.dom.select('table')[0];
+
+		editor.plugins.table.resizeBars.adjustHeight(table, 50, 0);
+
+		equal(editor.getContent(),
+			'<table border=\"1\">' +
+			'<tbody>' +
+			'<tr style=\"height: 70px;\">' +
+			'<th style=\"width: 20px; height: 70px;\">A0</th>' +
+			'<th style=\"width: 20px; height: 70px;\">A1</th>' +
+			'<th style=\"width: 20px; height: 70px;\">A2</th>' +
+			'<th style=\"width: 40px; height: 70px;\">A3</th>' +
+			'<th style=\"width: 10px; height: 70px;\">A4</th>' +
+			'</tr>' +
+			'<tr style=\"height: 20px;\">' +
+			'<td style=\"width: 20px; height: 20px;\">B0</td>' +
+			'<td style=\"width: 20px; height: 20px;\">B1</td>' +
+			'<td style=\"width: 20px; height: 20px;\">B2</td>' +
+			'<td style=\"width: 40px; height: 20px;\">B3</td>' +
+			'<td style=\"width: 10px; height: 40px;\" rowspan=\"2\">B3</td>' +
+			'</tr>' +
+			'<tr style=\"height: 20px;\">' +
+			'<td style=\"width: 20px; height: 20px;\">C0</td>' +
+			'<td style=\"width: 20px; height: 20px;\">C1</td>' +
+			'<td style=\"width: 20px; height: 20px;\">C2</td>' +
+			'<td style=\"width: 40px; height: 20px;\">C3</td>' +
+			'</tr>' +
+			'</tbody>' +
+			'</table>');
+
+		editor.setContent(testResizeTable2);
+
+		table = editor.dom.select('table')[0];
+
+		editor.plugins.table.resizeBars.adjustHeight(table, 50, 1);
+
+		equal(editor.getContent(),
+			'<table border=\"1\">' +
+			'<tbody>' +
+			'<tr style=\"height: 20px;\">' +
+			'<th style=\"width: 20px; height: 20px;\">A0</th>' +
+			'<th style=\"width: 20px; height: 20px;\">A1</th>' +
+			'<th style=\"width: 20px; height: 20px;\">A2</th>' +
+			'<th style=\"width: 40px; height: 20px;\">A3</th>' +
+			'<th style=\"width: 10px; height: 20px;\">A4</th>' +
+			'</tr>' +
+			'<tr style=\"height: 70px;\">' +
+			'<td style=\"width: 20px; height: 70px;\">B0</td>' +
+			'<td style=\"width: 20px; height: 70px;\">B1</td>' +
+			'<td style=\"width: 20px; height: 70px;\">B2</td>' +
+			'<td style=\"width: 40px; height: 70px;\">B3</td>' +
+			'<td style=\"width: 10px; height: 90px;\" rowspan=\"2\">B3</td>' +
+			'</tr>' +
+			'<tr style=\"height: 20px;\">' +
+			'<td style=\"width: 20px; height: 20px;\">C0</td>' +
+			'<td style=\"width: 20px; height: 20px;\">C1</td>' +
+			'<td style=\"width: 20px; height: 20px;\">C2</td>' +
+			'<td style=\"width: 40px; height: 20px;\">C3</td>' +
+			'</tr>' +
+			'</tbody>' +
+			'</table>');
+
+		editor.setContent(testResizeTable2);
+
+		table = editor.dom.select('table')[0];
+
+		editor.plugins.table.resizeBars.adjustHeight(table, 50, 2);
+
+		equal(editor.getContent(),
+			'<table border=\"1\">' +
+			'<tbody>' +
+			'<tr style=\"height: 20px;\">' +
+			'<th style=\"width: 20px; height: 20px;\">A0</th>' +
+			'<th style=\"width: 20px; height: 20px;\">A1</th>' +
+			'<th style=\"width: 20px; height: 20px;\">A2</th>' +
+			'<th style=\"width: 40px; height: 20px;\">A3</th>' +
+			'<th style=\"width: 10px; height: 20px;\">A4</th>' +
+			'</tr>' +
+			'<tr style=\"height: 20px;\">' +
+			'<td style=\"width: 20px; height: 20px;\">B0</td>' +
+			'<td style=\"width: 20px; height: 20px;\">B1</td>' +
+			'<td style=\"width: 20px; height: 20px;\">B2</td>' +
+			'<td style=\"width: 40px; height: 20px;\">B3</td>' +
+			'<td style=\"width: 10px; height: 90px;\" rowspan=\"2\">B3</td>' +
+			'</tr>' +
+			'<tr style=\"height: 70px;\">' +
+			'<td style=\"width: 20px; height: 70px;\">C0</td>' +
+			'<td style=\"width: 20px; height: 70px;\">C1</td>' +
+			'<td style=\"width: 20px; height: 70px;\">C2</td>' +
+			'<td style=\"width: 40px; height: 70px;\">C3</td>' +
+			'</tr>' +
+			'</tbody>' +
+			'</table>');
+
+	});
 })();

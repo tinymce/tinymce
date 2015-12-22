@@ -1,0 +1,47 @@
+.mce-content-body *[contentEditable=true], .mce-content-body *[data-mce-contenteditable=true] {
+	background: #adffad;
+	border: 1px solid #999;
+}
+
+.mce-content-body *[contentEditable=false], .mce-content-body *[data-mce-contenteditable=false] {
+	background: #ffadad;
+	border: 1px solid #999;
+	margin: 0 1px 0 2px;
+}
+
+.mce-content-body div[contentEditable=false], .mce-content-body p[contentEditable=false] {
+	margin: 2px 0 2px 0;
+}
+
+.mce-content-body  *[contentEditable]:focus {
+	outline: 2px dotted blue;
+}
+
+/* Debug overrides */
+
+.mce-visual-caret {
+	outline: 2px solid red;
+}
+
+.mce-visual-caret-before {
+	outline: 2px solid green;
+}
+
+.mce-content-body *[data-mce-selected] {
+	outline: 2px solid blue;
+}
+
+.mce-content-body .mce-offscreen-selection {
+	left: auto;
+	right: 0;
+}
+
+*[data-mce-caret] {
+	outline: 1px solid green;
+	position: absolute;
+	left: auto;
+	right: 0;
+	top: 0;
+	margin: 0;
+	padding: 0;
+}

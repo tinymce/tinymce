@@ -1,8 +1,8 @@
 /**
  * Dialogs.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -188,7 +188,7 @@ define("tinymce/tableplugin/Dialogs", [
 			function onSubmitTableForm() {
 
 				//Explore the layers of the table till we find the first layer of tds or ths
-				function styleTDTH (elm, name, value) {
+				function styleTDTH(elm, name, value) {
 					if (elm.tagName === "TD" || elm.tagName === "TH") {
 						dom.setStyle(elm, name, value);
 					} else {
@@ -273,7 +273,7 @@ define("tinymce/tableplugin/Dialogs", [
 				});
 			}
 
-			function getTDTHOverallStyle (elm, name) {
+			function getTDTHOverallStyle(elm, name) {
 				var cells = editor.dom.select("td,th", elm), firstChildStyle;
 
 				function checkChildren(firstChildStyle, elms) {

@@ -1,8 +1,8 @@
 /**
  * FloatPanel.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -21,11 +21,13 @@ define("tinymce/ui/FloatPanel", [
 	"tinymce/ui/Panel",
 	"tinymce/ui/Movable",
 	"tinymce/ui/Resizable",
-	"tinymce/ui/DomUtils"
-], function(Panel, Movable, Resizable, DomUtils) {
+	"tinymce/ui/DomUtils",
+	"tinymce/dom/DomQuery",
+	"tinymce/util/Delay"
+], function(Panel, Movable, Resizable, DomUtils, $, Delay) {
 	"use strict";
 
-	var documentClickHandler, documentScrollHandler, documentFocusOutHandler, windowResizeHandler, visiblePanels = [];
+	var documentClickHandler, documentScrollHandler, windowResizeHandler, visiblePanels = [];
 	var zOrder = [], hasModal;
 
 	function isChildOf(ctrl, parent) {
@@ -73,7 +75,7 @@ define("tinymce/ui/FloatPanel", [
 				skipOrHidePanels(e);
 			};
 
-			DomUtils.on(document, 'click', documentClickHandler);
+			$(document).on('click touchstart', documentClickHandler);
 		}
 	}
 
@@ -88,17 +90,7 @@ define("tinymce/ui/FloatPanel", [
 				}
 			};
 
-			DomUtils.on(window, 'scroll', documentScrollHandler);
-		}
-	}
-
-	function bindDocumentFocusOutHandler() {
-		if (!documentFocusOutHandler) {
-			documentFocusOutHandler = function(e) {
-				skipOrHidePanels(e);
-			};
-
-			DomUtils.on(document, 'focusout', documentFocusOutHandler);
+			$(window).on('scroll', documentScrollHandler);
 		}
 	}
 
@@ -115,7 +107,7 @@ define("tinymce/ui/FloatPanel", [
 				}
 			};
 
-			DomUtils.on(window, 'resize', windowResizeHandler);
+			$(window).on('resize', windowResizeHandler);
 		}
 	}
 
@@ -143,7 +135,7 @@ define("tinymce/ui/FloatPanel", [
 		}
 
 		if (panel.settings.autofix) {
-			if (!panel._fixed) {
+			if (!panel.state.get('fixed')) {
 				panel._autoFixY = panel.layoutRect().y;
 
 				if (panel._autoFixY < scrollY) {
@@ -190,7 +182,7 @@ define("tinymce/ui/FloatPanel", [
 		var modalBlockEl = document.getElementById(ctrl.classPrefix + 'modal-block');
 
 		if (topModal) {
-			DomUtils.css(modalBlockEl, 'z-index', topModal.zIndex - 1);
+			$(modalBlockEl).css('z-index', topModal.zIndex - 1);
 		} else if (modalBlockEl) {
 			modalBlockEl.parentNode.removeChild(modalBlockEl);
 			hasModal = false;
@@ -215,13 +207,12 @@ define("tinymce/ui/FloatPanel", [
 			self._super(settings);
 			self._eventsRoot = self;
 
-			self.addClass('floatpanel');
+			self.classes.add('floatpanel');
 
 			// Hide floatpanes on click out side the root button
 			if (settings.autohide) {
 				bindDocumentClickHandler();
 				bindWindowResizeHandler();
-				bindDocumentFocusOutHandler();
 				visiblePanels.push(self);
 			}
 
@@ -235,19 +226,20 @@ define("tinymce/ui/FloatPanel", [
 
 			self.on('postrender show', function(e) {
 				if (e.control == self) {
-					var modalBlockEl, prefix = self.classPrefix;
+					var $modalBlockEl, prefix = self.classPrefix;
 
 					if (self.modal && !hasModal) {
-						modalBlockEl = DomUtils.createFragment('<div id="' + prefix + 'modal-block" class="' +
-							prefix + 'reset ' + prefix + 'fade"></div>');
-						modalBlockEl = modalBlockEl.firstChild;
+						$modalBlockEl = $('#' + prefix + 'modal-block');
+						if (!$modalBlockEl[0]) {
+							$modalBlockEl = $(
+								'<div id="' + prefix + 'modal-block" class="' + prefix + 'reset ' + prefix + 'fade"></div>'
+							).appendTo(self.getContainerElm());
+						}
 
-						self.getContainerElm().appendChild(modalBlockEl);
-
-						setTimeout(function() {
-							DomUtils.addClass(modalBlockEl, prefix + 'in');
-							DomUtils.addClass(self.getEl(), prefix + 'in');
-						}, 0);
+						Delay.setTimeout(function() {
+							$modalBlockEl.addClass(prefix + 'in');
+							$(self.getEl()).addClass(prefix + 'in');
+						});
 
 						hasModal = true;
 					}
@@ -258,7 +250,7 @@ define("tinymce/ui/FloatPanel", [
 
 			self.on('show', function() {
 				self.parents().each(function(ctrl) {
-					if (ctrl._fixed) {
+					if (ctrl.state.get('fixed')) {
 						self.fixed(true);
 						return false;
 					}
@@ -267,15 +259,15 @@ define("tinymce/ui/FloatPanel", [
 
 			if (settings.popover) {
 				self._preBodyHtml = '<div class="' + self.classPrefix + 'arrow"></div>';
-				self.addClass('popover').addClass('bottom').addClass(self.isRtl() ? 'end' : 'start');
+				self.classes.add('popover').add('bottom').add(self.isRtl() ? 'end' : 'start');
 			}
 		},
 
 		fixed: function(state) {
 			var self = this;
 
-			if (self._fixed != state) {
-				if (self._rendered) {
+			if (self.state.get('fixed') != state) {
+				if (self.state.get('rendered')) {
 					var viewport = DomUtils.getViewPort();
 
 					if (state) {
@@ -285,8 +277,8 @@ define("tinymce/ui/FloatPanel", [
 					}
 				}
 
-				self.toggleClass('fixed', state);
-				self._fixed = state;
+				self.classes.toggle('fixed', state);
+				self.state.set('fixed', state);
 			}
 
 			return self;

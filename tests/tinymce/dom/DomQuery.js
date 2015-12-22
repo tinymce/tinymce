@@ -79,8 +79,6 @@
 		});
 
 		test(prefix + 'Constructor selector and context', function() {
-			var $selector;
-
 			$('#view').html('<div><b>a</b></div><div><b>b</b></div>');
 			$('b', $('#view div')[0]).html('x');
 			equal($('#view').html().toLowerCase().replace(/[\r\n]/g, ''), '<div><b>x</b></div><div><b>b</b></div>');
@@ -141,7 +139,9 @@
 		});
 
 		test(prefix + 'static grep()', function() {
-			deepEqual($.grep([1, 2, 3], function(v) {return v > 1;}), [2, 3]);
+			deepEqual($.grep([1, 2, 3], function(v) {
+				return v > 1;
+			}), [2, 3]);
 		});
 
 		test(prefix + 'static isArray()', function() {
@@ -578,9 +578,9 @@
 		test(prefix + 'filter()', function() {
 			strictEqual($('<b></b><i></i><u></u>').filter('b,i').length, 2);
 			strictEqual($('<b></b><i></i><u></u>').filter(function(i, elm) {
-				return  elm.tagName != 'U';
+				return elm.tagName != 'U';
 			}).length, 2);
-			strictEqual($('<b></b><i></i><u></u>').filter(function(i, elm) {
+			strictEqual($('<b></b><i></i><u></u>').filter(function(i) {
 				return i != 2;
 			}).length, 2);
 			strictEqual($([document, window, document.createTextNode('x')]).filter('*').length, 0);
@@ -610,7 +610,7 @@
 		test(prefix + 'on()/off()/trigger()', function() {
 			var lastArgs1, lastArgs2;
 
-			$elm = $('<b />')
+			$elm = $('<b />');
 
 			// Single listener
 			$elm.on('click', function(e) {
@@ -660,8 +660,8 @@
 		});
 
 		test(prefix + 'show()/hide() element', function() {
-			equal(normalizeStyleValue($('<b></b>').hide().attr('style')), 'display: none');
-			ok(!$('<b></b>').show().attr('style'));
+			equal(normalizeStyleValue($('<b></b>').appendTo('#view').hide().attr('style')), 'display: none');
+			equal(normalizeStyleValue($('<b></b>').empty().appendTo('#view').show().attr('style')), undefined);
 		});
 
 		test(prefix + 'slice/eq/first/last() on collection', function() {
@@ -798,9 +798,9 @@
 		});
 
 		test(prefix + 'parents()', function() {
-			var $result, html;
+			var $result;
 
-			html = $('<div><em><i>1</i></em><strong><b>2</b></strong></div>').appendTo('#view');
+			$('<div><em><i>1</i></em><strong><b>2</b></strong></div>').appendTo('#view');
 
 			$result = splitAtView($('#view i, #view b').parents());
 			strictEqual($result.length, 3);
@@ -817,9 +817,9 @@
 		});
 
 		test(prefix + 'parentsUntil(selector)', function() {
-			var $result, html;
+			var $result;
 
-			html = $('<div><em><i>1</i></em><strong><b>2</b></strong></div>').appendTo('#view');
+			$('<div><em><i>1</i></em><strong><b>2</b></strong></div>').appendTo('#view');
 
 			$result = $('#view i, #view b').parentsUntil('#view');
 			strictEqual($result.length, 3);
@@ -833,9 +833,9 @@
 		});
 
 		test(prefix + 'parentsUntil(element)', function() {
-			var $result, html;
+			var $result;
 
-			html = $('<div><em><i>1</i></em><strong><b>2</b></strong></div>').appendTo('#view');
+			$('<div><em><i>1</i></em><strong><b>2</b></strong></div>').appendTo('#view');
 
 			$result = $('#view i, #view b').parentsUntil(document.getElementById('view'));
 			strictEqual($result.length, 3);
@@ -849,9 +849,9 @@
 		});
 
 		test(prefix + 'parentsUntil(query)', function() {
-			var $result, html;
+			var $result;
 
-			html = $('<div><em><i>1</i></em><strong><b>2</b></strong></div>').appendTo('#view');
+			$('<div><em><i>1</i></em><strong><b>2</b></strong></div>').appendTo('#view');
 
 			$result = $('#view i, #view b').parentsUntil($('#view'));
 			strictEqual($result.length, 3);
@@ -870,7 +870,7 @@
 			html = $('<b>1</b>2<i>3</i>');
 
 			$result = html.next();
-			strictEqual($result.length, 1);
+			strictEqual($result.length, 2);
 			strictEqual($result[0].tagName, 'I');
 		});
 
@@ -880,7 +880,7 @@
 			html = $('<b>1</b>2<i>3</i>');
 
 			$result = $(html).prev();
-			strictEqual($result.length, 1);
+			strictEqual($result.length, 2);
 			strictEqual($result[0].tagName, 'B');
 		});
 
@@ -1028,5 +1028,7 @@
 
 	// Run tests against jQuery/DomQuery so we know that we are compatible
 	addTests('DomQuery: ', tinymce.dom.DomQuery);
+
+	/*global jQuery*/
 	addTests('jQuery: ', jQuery);
 })();

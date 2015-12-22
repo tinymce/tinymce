@@ -1,8 +1,8 @@
 /**
  * EditorCommands.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -25,7 +25,7 @@ define("tinymce/EditorCommands", [
 	// Added for compression purposes
 	var each = Tools.each, extend = Tools.extend;
 	var map = Tools.map, inArray = Tools.inArray, explode = Tools.explode;
-	var isGecko = Env.gecko, isIE = Env.ie, isOldIE = Env.ie && Env.ie < 11;
+	var isIE = Env.ie, isOldIE = Env.ie && Env.ie < 11;
 	var TRUE = true, FALSE = false;
 
 	return function(editor) {
@@ -48,6 +48,7 @@ define("tinymce/EditorCommands", [
 		 * @param {String} command Command to execute.
 		 * @param {Boolean} ui Optional user interface state.
 		 * @param {Object} value Optional value for command.
+		 * @param {Object} args Optional extra arguments to the execCommand.
 		 * @return {Boolean} true/false if the command was found or not.
 		 */
 		function execCommand(command, ui, value, args) {
@@ -57,7 +58,6 @@ define("tinymce/EditorCommands", [
 				editor.focus();
 			}
 
-			args = extend({}, args);
 			args = editor.fire('BeforeExecCommand', {command: command, ui: ui, value: value});
 			if (args.isDefaultPrevented()) {
 				return false;
@@ -190,7 +190,7 @@ define("tinymce/EditorCommands", [
 		 * Returns true/false if the command is supported or not.
 		 *
 		 * @method queryCommandSupported
-		 * @param {String} cmd Command that we check support for.
+		 * @param {String} command Command that we check support for.
 		 * @return {Boolean} true/false if the command is supported or not.
 		 */
 		function queryCommandSupported(command) {
@@ -305,7 +305,7 @@ define("tinymce/EditorCommands", [
 						msg = msg.replace(/Ctrl\+/g, '\u2318+');
 					}
 
-					editor.windowManager.alert(msg);
+					editor.notificationManager.open({text: msg, type: 'error'});
 				}
 			},
 
@@ -324,7 +324,7 @@ define("tinymce/EditorCommands", [
 			},
 
 			// Override justify commands to use the text formatter engine
-			'JustifyLeft,JustifyCenter,JustifyRight,JustifyFull': function(command) {
+			'JustifyLeft,JustifyCenter,JustifyRight,JustifyFull,JustifyNone': function(command) {
 				var align = command.substring(7);
 
 				if (align == 'full') {
@@ -338,8 +338,9 @@ define("tinymce/EditorCommands", [
 					}
 				});
 
-				toggleFormat('align' + align);
-				execCommand('mceRepaint');
+				if (align != 'none') {
+					toggleFormat('align' + align);
+				}
 			},
 
 			// Override list commands to fix WebKit bug
@@ -440,7 +441,7 @@ define("tinymce/EditorCommands", [
 
 			mceInsertContent: function(command, ui, value) {
 				var parser, serializer, parentNode, rootNode, fragment, args;
-				var marker, rng, node, node2, bookmarkHtml, merge;
+				var marker, rng, node, node2, bookmarkHtml, merge, data;
 				var textInlineElements = editor.schema.getTextInlineElements();
 
 				function trimOrPaddLeftRight(html) {
@@ -522,8 +523,65 @@ define("tinymce/EditorCommands", [
 					}
 				}
 
+				function moveSelectionToMarker(marker) {
+					var parentEditableFalseElm;
+
+					function getContentEditableFalseParent(node) {
+						var root = editor.getBody();
+
+						for (; node && node !== root; node = node.parentNode) {
+							if (editor.dom.getContentEditable(node) === 'false') {
+								return node;
+							}
+						}
+
+						return null;
+					}
+
+					if (!marker) {
+						return;
+					}
+
+					selection.scrollIntoView(marker);
+
+					// If marker is in cE=false then move selection to that element instead
+					parentEditableFalseElm = getContentEditableFalseParent(marker);
+					if (parentEditableFalseElm) {
+						dom.remove(marker);
+						selection.select(parentEditableFalseElm);
+						return;
+					}
+
+					// Move selection before marker and remove it
+					rng = dom.createRng();
+
+					// If previous sibling is a text node set the selection to the end of that node
+					node = marker.previousSibling;
+					if (node && node.nodeType == 3) {
+						rng.setStart(node, node.nodeValue.length);
+
+						// TODO: Why can't we normalize on IE
+						if (!isIE) {
+							node2 = marker.nextSibling;
+							if (node2 && node2.nodeType == 3) {
+								node.appendData(node2.data);
+								node2.parentNode.removeChild(node2);
+							}
+						}
+					} else {
+						// If the previous sibling isn't a text node or doesn't exist set the selection before the marker node
+						rng.setStartBefore(marker);
+						rng.setEndBefore(marker);
+					}
+
+					// Remove the marker node and set the new range
+					dom.remove(marker);
+					selection.setRng(rng);
+				}
+
 				if (typeof value != 'string') {
 					merge = value.merge;
+					data = value.data;
 					value = value.content;
 				}
 
@@ -534,7 +592,9 @@ define("tinymce/EditorCommands", [
 
 				// Setup parser and serializer
 				parser = editor.parser;
-				serializer = new Serializer({}, editor.schema);
+				serializer = new Serializer({
+					validate: settings.validate
+				}, editor.schema);
 				bookmarkHtml = '<span id="mce_marker" data-mce-type="bookmark">&#xFEFF;&#x200B;</span>';
 
 				// Run beforeSetContent handlers on the HTML to be inserted
@@ -572,7 +632,7 @@ define("tinymce/EditorCommands", [
 				parentNode = selection.getNode();
 
 				// Parse the fragment within the context of the parent node
-				var parserArgs = {context: parentNode.nodeName.toLowerCase()};
+				var parserArgs = {context: parentNode.nodeName.toLowerCase(), data: data};
 				fragment = parser.parse(value, parserArgs);
 
 				markInlineFormatElements(fragment);
@@ -591,6 +651,8 @@ define("tinymce/EditorCommands", [
 						}
 					}
 				}
+
+				editor._selectionOverrides.showBlockCaretContainer(parentNode);
 
 				// If parser says valid we can insert the contents into that parent
 				if (!parserArgs.invalid) {
@@ -646,37 +708,7 @@ define("tinymce/EditorCommands", [
 				}
 
 				reduceInlineTextElements();
-
-				marker = dom.get('mce_marker');
-				selection.scrollIntoView(marker);
-
-				// Move selection before marker and remove it
-				rng = dom.createRng();
-
-				// If previous sibling is a text node set the selection to the end of that node
-				node = marker.previousSibling;
-				if (node && node.nodeType == 3) {
-					rng.setStart(node, node.nodeValue.length);
-
-					// TODO: Why can't we normalize on IE
-					if (!isIE) {
-						node2 = marker.nextSibling;
-						if (node2 && node2.nodeType == 3) {
-							node.appendData(node2.data);
-							node2.parentNode.removeChild(node2);
-						}
-					}
-				} else {
-					// If the previous sibling isn't a text node or doesn't exist set the selection before the marker node
-					rng.setStartBefore(marker);
-					rng.setEndBefore(marker);
-				}
-
-				// Remove the marker node and set the new range
-				dom.remove(marker);
-				selection.setRng(rng);
-
-				// Dispatch after event and add any visual elements needed
+				moveSelectionToMarker(dom.get('mce_marker'));
 				editor.fire('SetContent', args);
 				editor.addVisual();
 			},
@@ -713,6 +745,10 @@ define("tinymce/EditorCommands", [
 					}
 
 					each(selection.getSelectedBlocks(), function(element) {
+						if (dom.getContentEditable(element) === "false") {
+							return;
+						}
+
 						if (element.nodeName != "LI") {
 							var indentStyleName = editor.getParam('indent_use_margin', false) ? 'margin' : 'padding';
 
@@ -733,20 +769,6 @@ define("tinymce/EditorCommands", [
 			},
 
 			mceRepaint: function() {
-				if (isGecko) {
-					try {
-						storeSelection(TRUE);
-
-						if (selection.getSel()) {
-							selection.getSel().selectAllChildren(editor.getBody());
-						}
-
-						selection.collapse(TRUE);
-						restoreSelection();
-					} catch (ex) {
-						// Ignore
-					}
-				}
 			},
 
 			InsertHorizontalRule: function() {

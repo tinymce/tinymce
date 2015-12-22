@@ -1,8 +1,8 @@
 /**
  * plugin.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -196,6 +196,7 @@ tinymce.PluginManager.add('link', function(editor) {
 				onselect: linkListChangeHandler,
 				value: editor.convertURL(data.href, 'href'),
 				onPostRender: function() {
+					/*eslint consistent-this:0*/
 					linkListCtrl = this;
 				}
 			};
@@ -286,12 +287,12 @@ tinymce.PluginManager.add('link', function(editor) {
 				function delayedConfirm(message, callback) {
 					var rng = editor.selection.getRng();
 
-					window.setTimeout(function() {
+					tinymce.util.Delay.setEditorTimeout(editor, function() {
 						editor.windowManager.confirm(message, function(state) {
 							editor.selection.setRng(rng);
 							callback(state);
 						});
-					}, 0);
+					});
 				}
 
 				function insertLink() {
@@ -350,7 +351,7 @@ tinymce.PluginManager.add('link', function(editor) {
 
 				// Is not protocol prefixed
 				if ((editor.settings.link_assume_external_targets && !/^\w+:/i.test(href)) ||
-					(!editor.settings.link_assume_external_targets && /^\s*www\./i.test(href))) {
+					(!editor.settings.link_assume_external_targets && /^\s*www[\.|\d\.]/i.test(href))) {
 					delayedConfirm(
 						'The URL you entered seems to be an external link. Do you want to add the required http:// prefix?',
 						function(state) {

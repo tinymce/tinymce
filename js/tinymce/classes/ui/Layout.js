@@ -1,8 +1,8 @@
 /**
  * Layout.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -42,7 +42,7 @@ define("tinymce/ui/Layout", [
 		 * @param {tinymce.ui.Container} container Container instance to preRender.
 		 */
 		preRender: function(container) {
-			container.addClass(this.settings.containerClass, 'body');
+			container.bodyClasses.add(this.settings.containerClass);
 		},
 
 		/**
@@ -50,23 +50,31 @@ define("tinymce/ui/Layout", [
 		 *
 		 * @private
 		 */
-		applyClasses: function(container) {
-			var self = this, settings = self.settings, items, firstClass, lastClass;
+		applyClasses: function(items) {
+			var self = this, settings = self.settings, firstClass, lastClass, firstItem, lastItem;
 
-			items = container.items().filter(':visible');
 			firstClass = settings.firstControlClass;
 			lastClass = settings.lastControlClass;
 
 			items.each(function(item) {
-				item.removeClass(firstClass).removeClass(lastClass);
+				item.classes.remove(firstClass).remove(lastClass).add(settings.controlClass);
 
-				if (settings.controlClass) {
-					item.addClass(settings.controlClass);
+				if (item.visible()) {
+					if (!firstItem) {
+						firstItem = item;
+					}
+
+					lastItem = item;
 				}
 			});
 
-			items.eq(0).addClass(firstClass);
-			items.eq(-1).addClass(lastClass);
+			if (firstItem) {
+				firstItem.classes.add(firstClass);
+			}
+
+			if (lastItem) {
+				lastItem.classes.add(lastClass);
+			}
 		},
 
 		/**
@@ -76,17 +84,11 @@ define("tinymce/ui/Layout", [
 		 * @param {tinymce.ui.Container} container Container to render HTML for.
 		 */
 		renderHtml: function(container) {
-			var self = this, settings = self.settings, items, html = '';
+			var self = this, html = '';
 
-			items = container.items();
-			items.eq(0).addClass(settings.firstControlClass);
-			items.eq(-1).addClass(settings.lastControlClass);
+			self.applyClasses(container.items());
 
-			items.each(function(item) {
-				if (settings.controlClass) {
-					item.addClass(settings.controlClass);
-				}
-
+			container.items().each(function(item) {
 				html += item.renderHtml();
 			});
 
@@ -109,6 +111,10 @@ define("tinymce/ui/Layout", [
 		 * @param {tinymce.ui.Container} container Container instance to postRender.
 		 */
 		postRender: function() {
+		},
+
+		isNative: function() {
+			return false;
 		}
 	});
 });

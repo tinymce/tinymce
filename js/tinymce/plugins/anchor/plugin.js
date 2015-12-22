@@ -1,8 +1,8 @@
 /**
  * plugin.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -13,8 +13,9 @@
 tinymce.PluginManager.add('anchor', function(editor) {
 	function showDialog() {
 		var selectedNode = editor.selection.getNode(), name = '';
+		var isAnchor = selectedNode.tagName == 'A' && editor.dom.getAttrib(selectedNode, 'href') === '';
 
-		if (selectedNode.tagName == 'A') {
+		if (isAnchor) {
 			name = selectedNode.name || selectedNode.id || '';
 		}
 
@@ -22,12 +23,21 @@ tinymce.PluginManager.add('anchor', function(editor) {
 			title: 'Anchor',
 			body: {type: 'textbox', name: 'name', size: 40, label: 'Name', value: name},
 			onsubmit: function(e) {
-				editor.execCommand('mceInsertContent', false, editor.dom.createHTML('a', {
-					id: e.data.name
-				}));
+				var id = e.data.name;
+
+				if (isAnchor) {
+					selectedNode.id = id;
+				} else {
+					editor.selection.collapse(true);
+					editor.execCommand('mceInsertContent', false, editor.dom.createHTML('a', {
+						id: id
+					}));
+				}
 			}
 		});
 	}
+
+	editor.addCommand('mceAnchor', showDialog);
 
 	editor.addButton('anchor', {
 		icon: 'anchor',

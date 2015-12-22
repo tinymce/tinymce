@@ -7,10 +7,12 @@
 	"validateQuoteMarks": null,
 	"requireLineFeedAtFileEnd": null,
 	"disallowImplicitTypeConversion": null,
-	"validateJSDoc": null,
+	"jsDoc": null,
 	"requireCamelCaseOrUpperCaseIdentifiers": null,
 	"disallowMultipleVarDecl": null,
 	"maximumLineLength": 255,
+	"requireDotNotation": null,
+	"requireCapitalizedConstructors": null,
 
 	"excludeFiles": [
 		"Jakefile.js",
@@ -25,6 +27,7 @@
 		"js/tinymce/plugins/table/plugin.js",
 		"js/tinymce/plugins/spellchecker/plugin.js",
 		"js/tinymce/plugins/paste/plugin.js",
-		"js/tinymce/classes/dom/Sizzle.js"
+		"js/tinymce/classes/dom/Sizzle.js",
+		"js/tinymce/classes/util/Promise.js"
 	]
 }

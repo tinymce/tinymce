@@ -1,8 +1,8 @@
 /**
  * Quirks.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -16,14 +16,12 @@
  */
 define("tinymce/tableplugin/Quirks", [
 	"tinymce/util/VK",
+	"tinymce/util/Delay",
 	"tinymce/Env",
-	"tinymce/util/Tools"
-], function(VK, Env, Tools) {
-	var each = Tools.each;
-
-	function getSpanVal(td, name) {
-		return parseInt(td.getAttribute(name) || 1, 10);
-	}
+	"tinymce/util/Tools",
+	"tinymce/tableplugin/Utils"
+], function(VK, Delay, Env, Tools, Utils) {
+	var each = Tools.each, getSpanVal = Utils.getSpanVal;
 
 	return function(editor) {
 		/**
@@ -42,18 +40,19 @@ define("tinymce/tableplugin/Quirks", [
 						moveCursorToRow(editor, sourceNode, siblingRow, upBool);
 						e.preventDefault();
 						return true;
-					} else {
-						var tableNode = editor.dom.getParent(currentRow, 'table');
-						var middleNode = currentRow.parentNode;
-						var parentNodeName = middleNode.nodeName.toLowerCase();
-						if (parentNodeName === 'tbody' || parentNodeName === (upBool ? 'tfoot' : 'thead')) {
-							var targetParent = getTargetParent(upBool, tableNode, middleNode, 'tbody');
-							if (targetParent !== null) {
-								return moveToRowInTarget(upBool, targetParent, sourceNode);
-							}
-						}
-						return escapeTable(upBool, currentRow, siblingDirection, tableNode);
 					}
+
+					var tableNode = editor.dom.getParent(currentRow, 'table');
+					var middleNode = currentRow.parentNode;
+					var parentNodeName = middleNode.nodeName.toLowerCase();
+					if (parentNodeName === 'tbody' || parentNodeName === (upBool ? 'tfoot' : 'thead')) {
+						var targetParent = getTargetParent(upBool, tableNode, middleNode, 'tbody');
+						if (targetParent !== null) {
+							return moveToRowInTarget(upBool, targetParent, sourceNode);
+						}
+					}
+
+					return escapeTable(upBool, currentRow, siblingDirection, tableNode);
 				}
 
 				function getTargetParent(upBool, topNode, secondNode, nodeName) {
@@ -64,9 +63,9 @@ define("tinymce/tableplugin/Quirks", [
 					} else if (position === -1) {
 						var topOrBottom = secondNode.tagName.toLowerCase() === 'thead' ? 0 : tbodies.length - 1;
 						return tbodies[topOrBottom];
-					} else {
-						return tbodies[position + (upBool ? -1 : 1)];
 					}
+
+					return tbodies[position + (upBool ? -1 : 1)];
 				}
 
 				function getFirstHeadOrFoot(upBool, parent) {
@@ -92,17 +91,17 @@ define("tinymce/tableplugin/Quirks", [
 					if (tableSibling) {
 						moveCursorToStartOfElement(tableSibling);
 						return true;
-					} else {
-						var parentCell = editor.dom.getParent(table, 'td,th');
-						if (parentCell) {
-							return handle(upBool, parentCell, e);
-						} else {
-							var backUpSibling = getChildForDirection(currentRow, !upBool);
-							moveCursorToStartOfElement(backUpSibling);
-							e.preventDefault();
-							return false;
-						}
 					}
+
+					var parentCell = editor.dom.getParent(table, 'td,th');
+					if (parentCell) {
+						return handle(upBool, parentCell, e);
+					}
+
+					var backUpSibling = getChildForDirection(currentRow, !upBool);
+					moveCursorToStartOfElement(backUpSibling);
+					e.preventDefault();
+					return false;
 				}
 
 				function getChildForDirection(parent, up) {
@@ -170,7 +169,7 @@ define("tinymce/tableplugin/Quirks", [
 
 				if (isVerticalMovement() && isInTable(editor)) {
 					var preBrowserNode = editor.selection.getNode();
-					setTimeout(function() {
+					Delay.setEditorTimeout(editor, function() {
 						if (shouldFixCaret(preBrowserNode)) {
 							handle(!e.shiftKey && key === VK.UP, preBrowserNode, e);
 						}
@@ -333,20 +332,49 @@ define("tinymce/tableplugin/Quirks", [
 		 * Delete table if all cells are selected.
 		 */
 		function deleteTable() {
+			function placeCaretInCell(cell) {
+				editor.selection.select(cell, true);
+				editor.selection.collapse(true);
+			}
+
+			function clearCell(cell) {
+				editor.$(cell).empty();
+				Utils.paddCell(cell);
+			}
+
 			editor.on('keydown', function(e) {
 				if ((e.keyCode == VK.DELETE || e.keyCode == VK.BACKSPACE) && !e.isDefaultPrevented()) {
-					var table = editor.dom.getParent(editor.selection.getStart(), 'table');
+					var table, tableCells, selectedTableCells, cell;
 
+					table = editor.dom.getParent(editor.selection.getStart(), 'table');
 					if (table) {
-						var cells = editor.dom.select('td,th', table), i = cells.length;
-						while (i--) {
-							if (!editor.dom.hasClass(cells[i], 'mce-item-selected')) {
-								return;
+						tableCells = editor.dom.select('td,th', table);
+						selectedTableCells = Tools.grep(tableCells, function(cell) {
+							return editor.dom.hasClass(cell, 'mce-item-selected');
+						});
+
+						if (selectedTableCells.length === 0) {
+							// If caret is within an empty table cell then empty it for real
+							cell = editor.dom.getParent(editor.selection.getStart(), 'td,th');
+							if (editor.selection.isCollapsed() && cell && editor.dom.isEmpty(cell)) {
+								e.preventDefault();
+								clearCell(cell);
+								placeCaretInCell(cell);
 							}
+
+							return;
 						}
 
 						e.preventDefault();
-						editor.execCommand('mceTableDelete');
+
+						editor.undoManager.transact(function() {
+							if (tableCells.length == selectedTableCells.length) {
+								editor.execCommand('mceTableDelete');
+							} else {
+								Tools.each(selectedTableCells, clearCell);
+								placeCaretInCell(selectedTableCells[0]);
+							}
+						});
 					}
 				}
 			});

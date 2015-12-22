@@ -20,7 +20,7 @@
 		plugins: [
 			"advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
 			"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-			"save table contextmenu directionality emoticons template paste textcolor importcss colorpicker textpattern"
+			"save table contextmenu directionality emoticons template paste textcolor importcss colorpicker textpattern codesample"
 		],
 		external_plugins: {
 			//"moxiemanager": "/moxiemanager-php/plugin.js"
@@ -28,9 +28,10 @@
 		content_css: "css/development.css",
 		add_unload_trigger: false,
 
-		toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table",
+		toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample",
 
 		image_advtab: true,
+		image_caption: true,
 
 		style_formats: [
 			{title: 'Bold text', format: 'h1'},
@@ -91,6 +92,14 @@
 			}
 		}
 	});
+
+	if (!window.console) {
+		window.console = {
+			log: function() {
+				tinymce.$('<div></div>').text(tinymce.grep(arguments).join(' ')).appendTo(document.body);
+			}
+		};
+	}
 </script>
 </head>
 <body>

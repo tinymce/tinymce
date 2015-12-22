@@ -24,13 +24,13 @@
 	test("colorbutton text, size large", function() {
 		var colorButton = createColorButton({text: 'X', size: 'large'});
 
-		Utils.nearlyEqualRects(Utils.rect(colorButton), [0, 0, 49, 39], 4);
+		Utils.nearlyEqualRects(Utils.rect(colorButton), [0, 0, 44, 39], 4);
 	});
 
 	test("colorbutton text, size small", function() {
 		var colorButton = createColorButton({text: 'X', size: 'small'});
 
-		Utils.nearlyEqualRects(Utils.rect(colorButton), [0, 0, 34, 23], 4);
+		Utils.nearlyEqualRects(Utils.rect(colorButton), [0, 0, 39, 23], 4);
 	});
 
 	test("colorbutton text, width 100, height 100", function() {
@@ -43,7 +43,7 @@
 	test("colorbutton icon, size default", function() {
 		var colorButton = createColorButton({icon: 'test'});
 
-		Utils.nearlyEqualRects(Utils.rect(colorButton), [0, 0, 50, 30], 4);
+		Utils.nearlyEqualRects(Utils.rect(colorButton), [0, 0, 49, 30], 4);
 	});
 
 	test("colorbutton icon, size small", function() {
@@ -55,7 +55,7 @@
 	test("colorbutton icon, size large", function() {
 		var colorButton = createColorButton({icon: 'test', size: 'large'});
 
-		Utils.nearlyEqualRects(Utils.rect(colorButton), [0, 0, 54, 40], 4);
+		Utils.nearlyEqualRects(Utils.rect(colorButton), [0, 0, 49, 40], 4);
 	});
 
 	test("colorbutton icon, width 100, height 100", function() {
@@ -74,13 +74,13 @@
 	test("colorbutton text & icon, size large", function() {
 		var colorButton = createColorButton({text: 'X', icon: 'test', size: 'large'});
 
-		Utils.nearlyEqualRects(Utils.rect(colorButton), [0, 0, 69, 40], 4);
+		Utils.nearlyEqualRects(Utils.rect(colorButton), [0, 0, 64, 40], 4);
 	});
 
 	test("colorbutton text & icon, size small", function() {
 		var colorButton = createColorButton({text: 'X', icon: 'test', size: 'small'});
 
-		Utils.nearlyEqualRects(Utils.rect(colorButton), [0, 0, 53, 24], 4);
+		Utils.nearlyEqualRects(Utils.rect(colorButton), [0, 0, 58, 24], 4);
 	});
 
 	test("colorbutton text & icon, width 100, height 100", function() {

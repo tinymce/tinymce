@@ -17,22 +17,51 @@
 	<div id="qunit-fixture"></div>
 	<div id="view" style="position: absolute; right: 0; top: 0"></div>
 
-	<script src="http://www.google.com/jsapi"></script>
-	<script>google.load("jquery", "1");</script>
+	<script src="../node_modules/jquery/dist/jquery.min.js"></script>
+	<script src="js/module_loader.js"></script>
 	<script src="js/qunit/qunit.js"></script>
 	<script src="js/tinymce_loader.js"></script>
 	<script src="../js/tinymce/classes/jquery.tinymce.js"></script>
 	<script src="js/utils.js"></script>
 	<script src="js/init.js"></script>
 
+	<!-- tinymce.data.* -->
+	<script src="tinymce/data/ObservableObject.js"></script>
+
+	<!-- tinymce.caret.* -->
+	<script src="tinymce/caret/CaretBookmark.js"></script>
+	<script src="tinymce/caret/CaretCandidate.js"></script>
+	<script src="tinymce/caret/CaretContainer.js"></script>
+	<script src="tinymce/caret/CaretPosition.js"></script>
+	<script src="tinymce/caret/CaretUtils.js"></script>
+	<script src="tinymce/caret/CaretWalker.js"></script>
+	<script src="tinymce/caret/FakeCaret.js"></script>
+	<script src="tinymce/caret/LineUtils.js"></script>
+	<script src="tinymce/caret/LineWalker.js"></script>
+
+	<!-- tinymce.geom.* -->
+	<script src="tinymce/geom/Rect.js"></script>
+	<script src="tinymce/geom/ClientRect.js"></script>
+
+	<!-- tinymce.file.* -->
+	<script src="tinymce/file/Conversions.js"></script>
+	<script src="tinymce/file/ImageScanner.js"></script>
+
+	<!-- tinymce.text.* -->
+	<script src="tinymce/text/ExtendingChar.js"></script>
+	<script src="tinymce/text/Zwsp.js"></script>
+
 	<!-- tinymce.dom.* -->
+	<script src="tinymce/dom/NodeType.js"></script>
 	<script src="tinymce/dom/DomQuery.js"></script>
 	<script src="tinymce/dom/DOMUtils.js"></script>
+	<script src="tinymce/dom/Dimensions.js"></script>
 	<script src="tinymce/dom/EventUtils.js"></script>
 	<script src="tinymce/dom/Range.js"></script>
 	<script src="tinymce/dom/Selection.js"></script>
 	<script src="tinymce/dom/Serializer.js"></script>
 	<script src="tinymce/dom/TridentSelection.js"></script>
+	<script src="tinymce/dom/NodePath.js"></script>
 
 	<!-- tinymce.html.* -->
 	<script src="tinymce/html/DomParser.js"></script>
@@ -42,6 +71,7 @@
 	<script src="tinymce/html/Schema.js"></script>
 	<script src="tinymce/html/Styles.js"></script>
 	<script src="tinymce/html/Writer.js"></script>
+	<script src="tinymce/html/Serializer.js"></script>
 
 	<!-- tnymce.ui.* -->
 	<script src="tinymce/ui/AbsoluteLayout.js"></script>
@@ -71,10 +101,13 @@
 	<script src="tinymce/util/URI.js"></script>
 	<script src="tinymce/util/XHR.js"></script>
 	<script src="tinymce/util/I18n.js"></script>
+	<script src="tinymce/util/Fun.js"></script>
+	<script src="tinymce/util/Delay.js"></script>
 
 	<!-- tinymce.* -->
 	<script src="tinymce/AddOnManager.js"></script>
 	<script src="tinymce/Editor.js"></script>
+	<script src="tinymce/EditorUpload.js"></script>
 	<script src="tinymce/EditorCommands.js"></script>
 	<script src="tinymce/EditorManager.js"></script>
 	<script src="tinymce/EnterKey.js"></script>
@@ -84,6 +117,7 @@
 	<script src="tinymce/Formatter_remove.js"></script>
 	<script src="tinymce/Shortcuts.js"></script>
 	<script src="tinymce/UndoManager.js"></script>
+	<script src="tinymce/SelectionOverrides.js"></script>
 
 	<!-- tinymce.plugins.* -->
 	<script src="plugins/autolink.js"></script>

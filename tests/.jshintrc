@@ -22,7 +22,8 @@
 		"editor": false,
 		"inlineEditor": false,
 		"Utils": false,
-		"google": false
+		"google": false,
+		"ModuleLoader": false
 	},
 	"passfail": false,
 	"maxerr": 50,

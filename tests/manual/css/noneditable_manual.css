@@ -1,11 +1,7 @@
 .mceNonEditable {
-	background: yellow;
+	background: #ffadad;
 }
 
 .mceEditable {
-	background: white;
-}
-
-*[contentEditable]:focus {
-	outline: 1px dotted gray;
+	background: #adffad;
 }

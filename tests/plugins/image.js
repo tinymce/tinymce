@@ -23,6 +23,7 @@
 			delete editor.settings.image_class_list;
 			delete editor.settings.document_base_url;
 			delete editor.settings.image_advtab;
+			delete editor.settings.image_caption;
 
 			var win = Utils.getFrontmostWindow();
 
@@ -90,45 +91,90 @@
 		);
 	});
 
-	test('All image dialog ui options on empty editor', function() {
-		editor.settings.image_list = [
-			{title: 'link1', value: 'link1'},
-			{title: 'link2', value: 'link2'}
-		];
+	if (tinymce.Env.ceFalse) {
+		test('All image dialog ui options on empty editor', function() {
+			editor.settings.image_caption = true;
+			editor.settings.image_list = [
+				{title: 'link1', value: 'link1'},
+				{title: 'link2', value: 'link2'}
+			];
 
-		editor.settings.image_class_list = [
-			{title: 'class1', value: 'class1'},
-			{title: 'class2', value: 'class2'}
-		];
+			editor.settings.image_class_list = [
+				{title: 'class1', value: 'class1'},
+				{title: 'class2', value: 'class2'}
+			];
 
-		editor.setContent('');
-		editor.execCommand('mceImage', true);
+			editor.setContent('');
+			editor.execCommand('mceImage', true);
 
-		deepEqual(Utils.getFrontmostWindow().toJSON(), {
-			"alt": "",
-			"class": "class1",
-			"constrain": true,
-			"height": "",
-			"src": "",
-			"width": ""
+			deepEqual(Utils.getFrontmostWindow().toJSON(), {
+				"alt": "",
+				"class": "class1",
+				"constrain": true,
+				"caption": false,
+				"height": "",
+				"src": "",
+				"width": ""
+			});
+
+			fillAndSubmitWindowForm({
+				"alt": "alt",
+				"class": "class1",
+				"constrain": true,
+				"caption": true,
+				"height": "200",
+				"src": "src",
+				"width": "100"
+			});
+
+			equal(
+				cleanHtml(editor.getContent()),
+				'<figure class="image"><img class="class1" src="src" alt="alt" width="100" height="200" /><figcaption>caption</figcaption></figure>'
+			);
 		});
+	} else {
+		test('All image dialog ui options on empty editor (old IE)', function() {
+			editor.settings.image_caption = true;
+			editor.settings.image_list = [
+				{title: 'link1', value: 'link1'},
+				{title: 'link2', value: 'link2'}
+			];
 
-		fillAndSubmitWindowForm({
-			"alt": "alt",
-			"class": "class1",
-			"constrain": true,
-			"height": "200",
-			"src": "src",
-			"width": "100"
+			editor.settings.image_class_list = [
+				{title: 'class1', value: 'class1'},
+				{title: 'class2', value: 'class2'}
+			];
+
+			editor.setContent('');
+			editor.execCommand('mceImage', true);
+
+			deepEqual(Utils.getFrontmostWindow().toJSON(), {
+				"alt": "",
+				"class": "class1",
+				"constrain": true,
+				"height": "",
+				"src": "",
+				"width": ""
+			});
+
+			fillAndSubmitWindowForm({
+				"alt": "alt",
+				"class": "class1",
+				"constrain": true,
+				"caption": true,
+				"height": "200",
+				"src": "src",
+				"width": "100"
+			});
+
+			equal(
+				cleanHtml(editor.getContent()),
+				'<p><img class="class1" src="src" alt="alt" width="100" height="200" /></p>'
+			);
 		});
+	}
 
-		equal(
-			cleanHtml(editor.getContent()),
-			'<p><img class="class1" src="src" alt="alt" width="100" height="200" /></p>'
-		);
-	});
-
-	test("Image recognizes relative src url and prepends relative image_prepend_url setting.", function () {
+	test("Image recognizes relative src url and prepends relative image_prepend_url setting.", function() {
 		var win, elementId, element;
 
 		editor.settings.image_prepend_url = 'testing/images/';
@@ -154,14 +200,12 @@
 			cleanHtml(editor.getContent()),
 			'<p><img src="' + editor.settings.image_prepend_url + 'src" alt="alt" /></p>'
 		);
+	});
 
-
- 	});
-
- 	test("Image recognizes relative src url and prepends absolute image_prepend_url setting.", function () {
+	test("Image recognizes relative src url and prepends absolute image_prepend_url setting.", function() {
 		var win, elementId, element;
 
-		editor.settings.image_prepend_url = 'http://testing.com/images/';
+		editor.settings.image_prepend_url = 'http://localhost/images/';
 		editor.setContent('');
 		editor.execCommand('mceImage', true);
 
@@ -184,7 +228,7 @@
 			cleanHtml(editor.getContent()),
 			'<p><img src="' + editor.settings.image_prepend_url + 'src" alt="alt" /></p>'
 		);
- 	});
+	});
 
 	test('Advanced image dialog border option on empty editor', function(){
 		editor.settings.image_advtab = true;
@@ -322,7 +366,7 @@
 			"alt": "alt",
 			"border": "10",
 			"src": "src",
-			"style": "border-width: 15px;",
+			"style": "border-width: 15px;"
 		});
 
 		equal(

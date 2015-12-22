@@ -1,8 +1,8 @@
 /**
  * Scrollable.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -15,9 +15,9 @@
  * @mixin tinymce.ui.Scrollable
  */
 define("tinymce/ui/Scrollable", [
-	"tinymce/ui/DomUtils",
+	"tinymce/dom/DomQuery",
 	"tinymce/ui/DragHelper"
-], function(DomUtils, DragHelper) {
+], function($, DragHelper) {
 	"use strict";
 
 	return {
@@ -42,16 +42,14 @@ define("tinymce/ui/Scrollable", [
 						posNameLower = posName.toLowerCase();
 						sizeNameLower = sizeName.toLowerCase();
 
-						if (self.getEl('absend')) {
-							DomUtils.css(self.getEl('absend'), posNameLower, self.layoutRect()[contentSizeName] - 1);
-						}
+						$(self.getEl('absend')).css(posNameLower, self.layoutRect()[contentSizeName] - 1);
 
 						if (!hasScroll) {
-							DomUtils.css(scrollBarElm, 'display', 'none');
+							$(scrollBarElm).css('display', 'none');
 							return;
 						}
 
-						DomUtils.css(scrollBarElm, 'display', 'block');
+						$(scrollBarElm).css('display', 'block');
 						containerElm = self.getEl('body');
 						scrollThumbElm = self.getEl('scroll' + axisName + "t");
 						containerSize = containerElm["client" + sizeName] - (margin * 2);
@@ -62,12 +60,12 @@ define("tinymce/ui/Scrollable", [
 						rect = {};
 						rect[posNameLower] = containerElm["offset" + posName] + margin;
 						rect[sizeNameLower] = containerSize;
-						DomUtils.css(scrollBarElm, rect);
+						$(scrollBarElm).css(rect);
 
 						rect = {};
 						rect[posNameLower] = containerElm["scroll" + posName] * ratio;
 						rect[sizeNameLower] = containerSize * ratio;
-						DomUtils.css(scrollThumbElm, rect);
+						$(scrollThumbElm).css(rect);
 					}
 				}
 
@@ -83,16 +81,16 @@ define("tinymce/ui/Scrollable", [
 				function addScrollAxis(axisName, posName, sizeName, deltaPosName, ax) {
 					var scrollStart, axisId = self._id + '-scroll' + axisName, prefix = self.classPrefix;
 
-					self.getEl().appendChild(DomUtils.createFragment(
+					$(self.getEl()).append(
 						'<div id="' + axisId + '" class="' + prefix + 'scrollbar ' + prefix + 'scrollbar-' + axisName + '">' +
 							'<div id="' + axisId + 't" class="' + prefix + 'scrollbar-thumb"></div>' +
 						'</div>'
-					));
+					);
 
 					self.draghelper = new DragHelper(axisId + 't', {
 						start: function() {
 							scrollStart = self.getEl('body')["scroll" + posName];
-							DomUtils.addClass(DomUtils.get(axisId), prefix + 'active');
+							$('#' + axisId).addClass(prefix + 'active');
 						},
 
 						drag: function(e) {
@@ -108,18 +106,12 @@ define("tinymce/ui/Scrollable", [
 						},
 
 						stop: function() {
-							DomUtils.removeClass(DomUtils.get(axisId), prefix + 'active');
+							$('#' + axisId).removeClass(prefix + 'active');
 						}
 					});
-/*
-					self.on('click', function(e) {
-						if (e.target.id == self._id + '-scrollv') {
-
-						}
-					});*/
 				}
 
-				self.addClass('scroll');
+				self.classes.add('scroll');
 
 				addScrollAxis("v", "Top", "Height", "Y", "Width");
 				addScrollAxis("h", "Left", "Width", "X", "Height");
@@ -139,7 +131,7 @@ define("tinymce/ui/Scrollable", [
 						repaintScroll();
 					});
 
-					DomUtils.on(self.getEl('body'), "scroll", repaintScroll);
+					$(self.getEl('body')).on("scroll", repaintScroll);
 				}
 
 				repaintScroll();

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Notification</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<script src="../../js/tinymce/tinymce.dev.js"></script>
+<script>
+	tinymce.init({
+		mode: "textareas"
+	});
+	
+	function notifyShort(type) {
+		tinymce.activeEditor.notificationManager.open({
+			type: type,
+			text: 'Short text message'
+		});
+	}
+
+	function notifyLong(len) {
+		var longTextMessage = [];
+
+		for (i = 0; i < len; i++) {
+			longTextMessage.push('bla');
+		}
+
+		tinymce.activeEditor.notificationManager.open({
+			text: longTextMessage.join(' ')
+		});
+	}
+
+	function notifyProgress(percent) {
+		var notification = tinymce.activeEditor.notificationManager.open({
+			text: 'Progress text',
+			progressBar: true
+		});
+
+		notification.progressBar.value(percent);
+	}
+
+	function notifyTimeout(time) {
+		var notification = tinymce.activeEditor.notificationManager.open({
+			text: 'Timeout: ' + time,
+			timeout: time
+		});
+	}
+
+	function notifyIcon() {
+		var notification = tinymce.activeEditor.notificationManager.open({
+			text: 'Text',
+			icon: 'bold'
+		});
+	}
+</script>
+</head>
+<body>
+
+<form method="post" action="http://www.tinymce.com/dump.php?example=true">
+	<textarea id="elm1" name="elm1"></textarea>
+</form>
+
+<button onclick="notifyShort('default')">notifyShort('default')</button>
+<button onclick="notifyShort('info')">notifyShort('info')</button>
+<button onclick="notifyShort('warning')">notifyShort('warning')</button>
+<button onclick="notifyShort('error')">notifyShort('error')</button>
+<button onclick="notifyLong(100)">notifyLong(100)</button>
+<button onclick="notifyLong(200)">notifyLong(200)</button>
+<button onclick="notifyLong(500)">notifyLong(500)</button>
+<button onclick="notifyProgress(50)">notifyProgress(50)</button>
+<button onclick="notifyProgress(100)">notifyProgress(100)</button>
+<button onclick="notifyTimeout(3000)">notifyTimeout(3000)</button>
+<button onclick="notifyIcon()">notifyIcon()</button>
+
+</body>
+</html>

@@ -1,8 +1,8 @@
 /**
  * plugin.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -12,6 +12,24 @@
 
 tinymce.PluginManager.add('importcss', function(editor) {
 	var self = this, each = tinymce.each;
+
+	function isSkinContentCss(href) {
+		var settings = editor.settings, skin = settings.skin !== false ? settings.skin || 'lightgray' : false;
+
+		if (skin) {
+			var skinUrl = settings.skin_url;
+
+			if (skinUrl) {
+				skinUrl = editor.documentBaseURI.toAbsolute(skinUrl);
+			} else {
+				skinUrl = tinymce.baseURL + '/skins/' + skin;
+			}
+
+			return href === skinUrl + '/content' + (editor.inline ? '.inline' : '') + '.min.css';
+		}
+
+		return false;
+	}
 
 	function compileFilter(filter) {
 		if (typeof filter == "string") {
@@ -33,7 +51,7 @@ tinymce.PluginManager.add('importcss', function(editor) {
 		function append(styleSheet, imported) {
 			var href = styleSheet.href, rules;
 
-			if (!href || !fileFilter(href, imported)) {
+			if (!href || !fileFilter(href, imported) || isSkinContentCss(href)) {
 				return;
 			}
 
@@ -73,7 +91,9 @@ tinymce.PluginManager.add('importcss', function(editor) {
 			each(doc.styleSheets, function(styleSheet) {
 				append(styleSheet);
 			});
-		} catch (e) {}
+		} catch (e) {
+			// Ignore
+		}
 
 		return selectors;
 	}

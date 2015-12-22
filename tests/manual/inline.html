@@ -10,7 +10,7 @@
 <script src="../../js/tinymce/plugins/spellchecker/plugin.dev.js"></script>
 <script>
 	tinymce.init({
-		selector: "div.edit",
+		selector: "div.edit,ul.edit,table.edit",
 		theme: "modern",
 		plugins: [
 			["advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker"],
@@ -20,28 +20,17 @@
 		content_css: "css/development.css",
 		add_unload_trigger: false,
 		inline: true,
-		toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media",
-
-		spellchecker_callback: function(method, words, callback) {
-			if (method == "spellcheck") {
-				var suggestions = {};
-
-				for (var i = 0; i < words.length; i++) {
-					suggestions[words[i]] = ["First", "second"];
-				}
-
-				callback(suggestions);
-			}
-		}
+		toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media"
 	});
 
 	tinymce.init({
 		selector: "h1.edit",
 		theme: "modern",
 		content_css: "css/development.css",
+		plugins: "paste",
 		add_unload_trigger: false,
 		inline: true,
-		toolbar: "undo redo"
+		toolbar: "undo redo italic styleselect"
 	});
 </script>
 </head>
@@ -51,41 +40,32 @@
 	outline: 1px solid blue;
 }
 
-div.edit {
-	float: left;
-	margin-top: 100px;
-	margin-right: 20px;
+.edit {
+	margin: 10px;
 	width: 400px;
 	overflow: auto;
+	border: 1px solid gray;
+}
+
+table, td {
+	border: 1px dashed gray;
 }
 </style>
 <form method="post" action="http://www.tinymce.com/dump.php?example=true">
 	<div>
 		<div>
-			<h1 class="edit">Edit me</h1>
-			<div class="edit">Simple content</div>
-
-			<div class="edit" style="color:Red">
-				<p>This is some example text that you can edit inside the <strong>TinyMCE editor</strong>. <img style="float: right;" alt="" src="http://moxiecode.cachefly.net/tinymce/v6/images/logo.png" /></p>
-<p>Nam nisi elit, <a href="http://www.tinymce.com">cursus</a> in rhoncus sit amet, pulvinar laoreet leo. Nam sed lectus quam, ut sagittis tellus. Quisque dignissim mauris a augue rutrum tempor. Donec vitae purus nec massa vestibulum ornare sit amet id tellus. Nunc quam mauris, fermentum nec lacinia eget, sollicitudin nec ante. Aliquam molestie volutpat dapibus. Nunc interdum viverra sodales. Morbi laoreet pulvinar gravida. Quisque ut turpis sagittis nunc accumsan vehicula. Duis elementum congue ultrices. Cras faucibus feugiat arcu quis lacinia. In hac habitasse platea dictumst. Pellentesque fermentum magna sit amet tellus varius ullamcorper. Vestibulum at urna augue, eget varius neque. Fusce facilisis venenatis dapibus. Integer non sem at arcu euismod tempor nec sed nisl. Morbi ultricies, mauris ut ultricies adipiscing, felis odio condimentum massa, et luctus est nunc nec eros.</p>
-			</div>
+			<h1 class="edit">H1 Element</h1>
+			<div class="edit">Div Element 1<img style="float: right;" width="100" src="img/dogleft.jpg" /></div>
+			<div class="edit">Div Element 2<img style="float: right;" width="100" src="img/dogleft.jpg" /></div>
+			<ul class="edit">
+				<li>List element</li>
+			</ul>
+			<table class="edit">
+				<tr>
+					<td>Table element</td>
+				</tr>
+			</table>
 		</div>
-
-		<br style="clear: both" />
-
-		<div style="height: 300px; overflow: auto; border: 1px solid gray">
-			<h1 class="edit">Edit me</h1>
-			<div class="edit">Simple content</div>
-
-			<div class="edit">
-				<p>This is some example text that you can edit inside the <strong>TinyMCE editor</strong>. <img style="float: right;" alt="" src="http://moxiecode.cachefly.net/tinymce/v6/images/logo.png" /></p>
-<p>Nam nisi elit, <a href="http://www.tinymce.com">cursus</a> in rhoncus sit amet, pulvinar laoreet leo. Nam sed lectus quam, ut sagittis tellus. Quisque dignissim mauris a augue rutrum tempor. Donec vitae purus nec massa vestibulum ornare sit amet id tellus. Nunc quam mauris, fermentum nec lacinia eget, sollicitudin nec ante. Aliquam molestie volutpat dapibus. Nunc interdum viverra sodales. Morbi laoreet pulvinar gravida. Quisque ut turpis sagittis nunc accumsan vehicula. Duis elementum congue ultrices. Cras faucibus feugiat arcu quis lacinia. In hac habitasse platea dictumst. Pellentesque fermentum magna sit amet tellus varius ullamcorper. Vestibulum at urna augue, eget varius neque. Fusce facilisis venenatis dapibus. Integer non sem at arcu euismod tempor nec sed nisl. Morbi ultricies, mauris ut ultricies adipiscing, felis odio condimentum massa, et luctus est nunc nec eros.</p>
-			</div>
-		</div>
-
-		<br />
-		<input type="submit" name="save" value="Submit" />
-		<input type="reset" name="reset" value="Reset" />
 	</div>
 </form>
 

@@ -1,8 +1,8 @@
 /**
  * plugin.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -381,16 +381,18 @@ tinymce.PluginManager.add('charmap', function(editor) {
 		});
 	}
 
+	editor.addCommand('mceShowCharmap', showDialog);
+
 	editor.addButton('charmap', {
 		icon: 'charmap',
 		tooltip: 'Special character',
-		onclick: showDialog
+		cmd: 'mceShowCharmap'
 	});
 
 	editor.addMenuItem('charmap', {
 		icon: 'charmap',
 		text: 'Special character',
-		onclick: showDialog,
+		cmd: 'mceShowCharmap',
 		context: 'insert'
 	});
 });

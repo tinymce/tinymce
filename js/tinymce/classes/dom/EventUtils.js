@@ -1,8 +1,8 @@
 /**
  * EventUtils.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -16,12 +16,14 @@
  *
  * @class tinymce.dom.EventUtils
  */
-define("tinymce/dom/EventUtils", [], function() {
+define("tinymce/dom/EventUtils", [
+	"tinymce/util/Delay"
+], function(Delay) {
 	"use strict";
 
 	var eventExpandoPrefix = "mce-data-";
 	var mouseEventRe = /^(?:mouse|contextmenu)|click/;
-	var deprecated = {keyLocation: 1, layerX: 1, layerY: 1, returnValue: 1};
+	var deprecated = {keyLocation: 1, layerX: 1, layerY: 1, returnValue: 1, webkitMovementX: 1, webkitMovementY: 1};
 
 	/**
 	 * Binds a native event to a callback on the speified target.
@@ -128,6 +130,11 @@ define("tinymce/dom/EventUtils", [], function() {
 			event.isImmediatePropagationStopped = returnFalse;
 		}
 
+		// Add missing metaKey for IE 8
+		if (typeof event.metaKey == 'undefined') {
+			event.metaKey = false;
+		}
+
 		return event;
 	}
 
@@ -166,7 +173,7 @@ define("tinymce/dom/EventUtils", [], function() {
 				// http://javascript.nwbox.com/IEContentLoaded/
 				doc.documentElement.doScroll("left");
 			} catch (ex) {
-				setTimeout(tryScroll, 0);
+				Delay.setTimeout(tryScroll);
 				return;
 			}
 
@@ -325,7 +332,7 @@ define("tinymce/dom/EventUtils", [], function() {
 					}
 				}
 
-				// Fake bubbeling of focusin/focusout
+				// Fake bubbling of focusin/focusout
 				if (!hasFocusIn && (name === "focusin" || name === "focusout")) {
 					capture = true;
 					fakeName = name === "focusin" ? "focus" : "blur";
@@ -510,7 +517,7 @@ define("tinymce/dom/EventUtils", [], function() {
 				return self;
 			}
 
-			// Unbind any element on the specificed target
+			// Unbind any element on the specified target
 			if (target[expando]) {
 				unbind(target);
 			}

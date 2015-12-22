@@ -1,8 +1,8 @@
 /**
  * DomQuery.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -38,6 +38,7 @@ define("tinymce/dom/DomQuery", [
 	var doc = document, push = Array.prototype.push, slice = Array.prototype.slice;
 	var rquickExpr = /^(?:[^#<]*(<[\w\W]+>)[^>]*$|#([\w\-]*)$)/;
 	var Event = EventUtils.Event, undef;
+	var skipUniques = Tools.makeMap('children,contents,next,prev');
 
 	function isDefined(obj) {
 		return typeof obj !== 'undefined';
@@ -271,9 +272,9 @@ define("tinymce/dom/DomQuery", [
 			} else {
 				if (context) {
 					return DomQuery(selector).attr(context);
-				} else {
-					self.context = context = document;
 				}
+
+				self.context = context = document;
 			}
 
 			if (isString(selector)) {
@@ -321,7 +322,7 @@ define("tinymce/dom/DomQuery", [
 		 * Converts the current set to an array.
 		 *
 		 * @method toArray
-		 * @param {Array} Array of all nodes in set.
+		 * @return {Array} Array of all nodes in set.
 		 */
 		toArray: function() {
 			return Tools.toArray(this);
@@ -332,6 +333,7 @@ define("tinymce/dom/DomQuery", [
 		 *
 		 * @method add
 		 * @param {Array/tinymce.dom.DomQuery} items Array of all nodes to add to set.
+		 * @param {Boolean} sort Optional sort flag that enables sorting of elements.
 		 * @return {tinymce.dom.DomQuery} New instance with nodes added.
 		 */
 		add: function(items, sort) {
@@ -744,8 +746,8 @@ define("tinymce/dom/DomQuery", [
 		 * @param {String/Element/Array/tinymce.dom.DomQuery} content Content to wrap nodes with.
 		 * @return {tinymce.dom.DomQuery} Set with wrapped nodes.
 		 */
-		wrap: function(wrapper) {
-			return wrap(this, wrapper);
+		wrap: function(content) {
+			return wrap(this, content);
 		},
 
 		/**
@@ -756,8 +758,8 @@ define("tinymce/dom/DomQuery", [
 		 * @param {String/Element/Array/tinymce.dom.DomQuery} content Content to wrap nodes with.
 		 * @return {tinymce.dom.DomQuery} Set with wrapped nodes.
 		 */
-		wrapAll: function(wrapper) {
-			return wrap(this, wrapper, true);
+		wrapAll: function(content) {
+			return wrap(this, content, true);
 		},
 
 		/**
@@ -767,9 +769,9 @@ define("tinymce/dom/DomQuery", [
 		 * @param {String/Element/Array/tinymce.dom.DomQuery} content Content to wrap nodes with.
 		 * @return {tinymce.dom.DomQuery} Set with wrapped nodes.
 		 */
-		wrapInner: function(wrapper) {
+		wrapInner: function(content) {
 			this.each(function() {
-				DomQuery(this).contents().wrapAll(wrapper);
+				DomQuery(this).contents().wrapAll(content);
 			});
 
 			return this;
@@ -958,7 +960,7 @@ define("tinymce/dom/DomQuery", [
 		 *
 		 * @method slice
 		 * @param {Number} start Start index to slice at.
-		 * @param {Number} end Optional ened index to end slice at.
+		 * @param {Number} end Optional end index to end slice at.
 		 * @return {tinymce.dom.DomQuery} Sliced set.
 		 */
 		slice: function() {
@@ -1031,7 +1033,7 @@ define("tinymce/dom/DomQuery", [
 		},
 
 		/**
-		 * Gets the current node or any partent matching the specified selector.
+		 * Gets the current node or any parent matching the specified selector.
 		 *
 		 * @method closest
 		 * @param {String/Element/tinymce.dom.DomQuery} selector Selector or element to find.
@@ -1119,14 +1121,14 @@ define("tinymce/dom/DomQuery", [
 		 * @static
 		 * @method makeArray
 		 * @param {Object} object Object to convert to array.
-		 * @return {Arrau} Array produced from object.
+		 * @return {Array} Array produced from object.
 		 */
-		makeArray: function(array) {
-			if (isWindow(array) || array.nodeType) {
-				return [array];
+		makeArray: function(object) {
+			if (isWindow(object) || object.nodeType) {
+				return [object];
 			}
 
-			return Tools.toArray(array);
+			return Tools.toArray(object);
 		},
 
 		/**
@@ -1286,7 +1288,7 @@ define("tinymce/dom/DomQuery", [
 		 * Returns a new collection with the parent of each item in current collection matching the optional selector.
 		 *
 		 * @method parent
-		 * @param {String} selector Selector to match parents agains.
+		 * @param {Element/tinymce.dom.DomQuery} node Node to match parents against.
 		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching parents.
 		 */
 		parent: function(node) {
@@ -1299,7 +1301,7 @@ define("tinymce/dom/DomQuery", [
 		 * Returns a new collection with the all the parents of each item in current collection matching the optional selector.
 		 *
 		 * @method parents
-		 * @param {String} selector Selector to match parents agains.
+		 * @param {Element/tinymce.dom.DomQuery} node Node to match parents against.
 		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching parents.
 		 */
 		parents: function(node) {
@@ -1310,7 +1312,7 @@ define("tinymce/dom/DomQuery", [
 		 * Returns a new collection with next sibling of each item in current collection matching the optional selector.
 		 *
 		 * @method next
-		 * @param {String} selector Selector to match the next element against.
+		 * @param {Element/tinymce.dom.DomQuery} node Node to match the next element against.
 		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
 		 */
 		next: function(node) {
@@ -1321,7 +1323,7 @@ define("tinymce/dom/DomQuery", [
 		 * Returns a new collection with previous sibling of each item in current collection matching the optional selector.
 		 *
 		 * @method prev
-		 * @param {String} selector Selector to match the previous element against.
+		 * @param {Element/tinymce.dom.DomQuery} node Node to match the previous element against.
 		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
 		 */
 		prev: function(node) {
@@ -1332,7 +1334,7 @@ define("tinymce/dom/DomQuery", [
 		 * Returns all child elements matching the optional selector.
 		 *
 		 * @method children
-		 * @param {String} selector Selector to match the elements against.
+		 * @param {Element/tinymce.dom.DomQuery} node Node to match the elements against.
 		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
 		 */
 		children: function(node) {
@@ -1343,6 +1345,7 @@ define("tinymce/dom/DomQuery", [
 		 * Returns all child nodes matching the optional selector.
 		 *
 		 * @method contents
+		 * @param {Element/tinymce.dom.DomQuery} node Node to get the contents of.
 		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
 		 */
 		contents: function(node) {
@@ -1366,7 +1369,9 @@ define("tinymce/dom/DomQuery", [
 
 			// If traversing on multiple elements we might get the same elements twice
 			if (this.length > 1) {
-				result = DomQuery.unique(result);
+				if (!skipUniques[name]) {
+					result = DomQuery.unique(result);
+				}
 
 				if (name.indexOf('parents') === 0) {
 					result = result.reverse();
@@ -1389,6 +1394,7 @@ define("tinymce/dom/DomQuery", [
 		 * of each item in current collection matching the optional selector.
 		 *
 		 * @method parentsUntil
+		 * @param {Element/tinymce.dom.DomQuery} node Node to find parent of.
 		 * @param {String/Element/tinymce.dom.DomQuery} until Until the matching selector or element.
 		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching parents.
 		 */
@@ -1400,6 +1406,7 @@ define("tinymce/dom/DomQuery", [
 		 * Returns a new collection with all next siblings of each item in current collection matching the optional selector.
 		 *
 		 * @method nextUntil
+		 * @param {Element/tinymce.dom.DomQuery} node Node to find next siblings on.
 		 * @param {String/Element/tinymce.dom.DomQuery} until Until the matching selector or element.
 		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
 		 */
@@ -1411,6 +1418,7 @@ define("tinymce/dom/DomQuery", [
 		 * Returns a new collection with all previous siblings of each item in current collection matching the optional selector.
 		 *
 		 * @method prevUntil
+		 * @param {Element/tinymce.dom.DomQuery} node Node to find previous siblings on.
 		 * @param {String/Element/tinymce.dom.DomQuery} until Until the matching selector or element.
 		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
 		 */

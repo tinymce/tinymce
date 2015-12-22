@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Drag/drop test</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
+<!--
+<script type="text/javascript">less = {env: "development", async: false};</script>
+<link rel="stylesheet/less" type="text/css" href="../../js/tinymce/skins/lightgray/skin.dev.less">
+<script src="../../node_modules/less/dist/less-1.4.2.min.js"></script>
+-->
+<script src="../../js/tinymce/tinymce.dev.js"></script>
+<script src="../../js/tinymce/plugins/table/plugin.dev.js"></script>
+<script src="../../js/tinymce/plugins/paste/plugin.dev.js"></script>
+<script src="../../js/tinymce/plugins/spellchecker/plugin.dev.js"></script>
+<script>
+	tinymce.init({
+		selector: "textarea",
+		plugins: [
+			"advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+			"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+			"save table contextmenu directionality emoticons template paste textcolor importcss colorpicker textpattern"
+		],
+		content_css: "css/development.css",
+		add_unload_trigger: false,
+		setup: function(ed) {
+			/*ed.on(
+				'Init PreInit PostRender PreProcess PostProcess BeforeExecCommand ExecCommand Activate Deactivate ' +
+				'NodeChange SetAttrib Load Save BeforeSetContent SetContent BeforeGetContent GetContent Remove Show Hide' +
+				'Change Undo Redo AddUndo BeforeAddUndo', function(e) {
+				console.log(e.type, e);
+			});*/
+		}
+	});
+
+	if (!window.console) {
+		window.console = {
+			log: function() {
+				tinymce.$('<div></div>').text(tinymce.grep(arguments).join(' ')).appendTo(document.body);
+			}
+		};
+	}
+</script>
+</head>
+<body>
+
+<textarea rows="15" cols="80" style="width: 80%">
+	<p>
+		text
+		<img src="img/dogleft.jpg" width="50" height="50">
+		text
+		<img src="img/dogleft.jpg" width="50" height="50" style="margin: 10px; border: 5px solid green;">
+		text
+	</p>
+
+	<p>
+		text
+		<img src="img/dogleft.jpg" width="50" height="50">
+		text
+		<img src="img/dogleft.jpg" width="50" height="50" style="margin: 10px; border: 5px solid green;">
+		text
+	</p>
+</textarea>
+
+<textarea rows="15" cols="80" style="width: 80%">
+	<p>
+		text
+		<img src="img/dogleft.jpg" width="50" height="50">
+		text
+		<img src="img/dogleft.jpg" width="50" height="50" style="margin: 10px; border: 5px solid green;">
+		text
+	</p>
+
+	<p>
+		text
+		<img src="img/dogleft.jpg" width="50" height="50">
+		text
+		<img src="img/dogleft.jpg" width="50" height="50" style="margin: 10px; border: 5px solid green;">
+		text
+	</p>
+</textarea>
+
+</body>
+</html>

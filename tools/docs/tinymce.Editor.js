@@ -13,7 +13,7 @@
 
 // Plugin events:
 // autosave: StoreDraft, RestoreDraft
-// paste: PastePreProcess, 
+// paste: PastePreProcess,
 // fullscreen: FullscreenStateChanged
 // spellcheck: SpellcheckStart, SpellcheckEnd
 
@@ -546,4 +546,21 @@
  *
  * @event blur
  * @param {tinymce.FocusEvent} e Event arguments.
+ */
+
+/**
+ * Fires when the editor becomes dirty.
+ *
+ * @example
+ * tinymce.init({
+ *     ...
+ *     setup: function(editor) {
+ *         editor.on('dirty', function(e) {
+ *             console.log('Editor is dirty', e);
+ *         });
+ *     }
+ * });
+ *
+ * @event dirty
+ * @param {tinymce.Event} e Event arguments.
  */

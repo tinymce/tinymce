@@ -10,7 +10,7 @@ module("tinymce.plugins.Lists", {
 					QUnit.started = true;
 				}
 			} else {
-				setTimeout(wait, 0);
+				tinymce.util.Delay.setTimeout(wait, 0);
 			}
 		}
 
@@ -891,7 +891,7 @@ test('Remove indented list with multiple items', function() {
 			'<li>a</li>' +
 		'</ul>' +
 		'<p>b</p>' +
-	 	'<p>c</p>' +
+		'<p>c</p>' +
 		'<ul>' +
 			'<li>d</li>' +
 		'</ul>'
@@ -1736,6 +1736,29 @@ test('Backspace at beginning of LI with BR padded empty LI above in UL', functio
 	);
 
 	equal(editor.selection.getNode().innerHTML, 'b');
+});
+
+test('Backspace at empty LI (IE)', function() {
+	editor.getBody().innerHTML = (
+		'<ul>' +
+			'<li>a</li>' +
+			'<li></li>' +
+			'<li>b</li>' +
+		'</ul>'
+	);
+
+	editor.focus();
+	Utils.setSelection('li:nth-child(2)', 0);
+	editor.plugins.lists.backspaceDelete();
+
+	equal(editor.getContent(),
+		'<ul>' +
+			'<li>a</li>' +
+			'<li>b</li>' +
+		'</ul>'
+	);
+
+	equal(editor.selection.getNode().innerHTML, 'a');
 });
 
 test('Backspace at beginning of LI with empty LI with STRING and BR above in UL', function() {

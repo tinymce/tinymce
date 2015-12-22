@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Table resize bars test</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<script src="../../js/tinymce/tinymce.dev.js"></script>
+<script src="../../js/tinymce/plugins/table/plugin.dev.js"></script>
+<script>
+	tinymce.init({
+            selector: "textarea",
+            plugins: [
+                "advlist autolink autoresize lists link image charmap print preview anchor",
+                "searchreplace visualblocks code fullscreen imagetools",
+                "insertdatetime media table contextmenu textcolor colorpicker hr pagebreak noneditable paste spellchecker"
+            ],
+            toolbar: "undo redo spellchecker | " +
+                "styleselect | " +
+                "bold italic lists forecolor backcolor fontsizeselect fontselect | " +
+                "alignleft aligncenter alignright alignjustify | " +
+                "bullist numlist outdent indent pagebreak | " +
+                "link unlink image media hr | preview",
+            content_style: '.mce-resize-bar {background-color: blue; opacity: 0.5;}'
+        });
+
+	tinymce.init({
+            selector: "div.editable",
+            inline: true,
+            plugins: [
+                "advlist autolink lists link image charmap print preview anchor",
+                "searchreplace visualblocks code fullscreen",
+                "insertdatetime media table contextmenu paste"
+            ],
+            toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+            directionality: 'rtl',
+            content_style: '.mce-resize-bar {background-color: blue; opacity: 0.5;}'
+        });
+
+</script>
+</head>
+<body>
+	<textarea>
+        <table>
+            <tbody>
+                <tr>
+                    <td style="width: 200px;" colspan="2">A1</td>
+                    <td style="width: 100px;">A2</td>
+                    <td style="width: 100px;">A3</td>
+                </tr>
+                <tr>
+                    <td style="width: 100px;">B1</td>
+                    <td style="width: 200px;" colspan="2">B2</td>
+                    <td style="width: 100px;">B3</td>
+                </tr>
+                <tr>
+                    <td style="width: 100px;">C1</td>
+                    <td style="width: 100px;">C2</td>
+                    <td style="width: 200px;" colspan="2">C3</td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="width: 400px;">D1</td>
+                </tr>
+            </tbody>
+        </table>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <th style="width: 20px;">A0</th>
+                    <th style="width: 20px;">A1</th>
+                    <th style="width: 20px;">A2</th>
+                    <th style="width: 40px;">A3</th>
+                    <th style="width: 10px;">A4</th>
+                </tr>
+                <tr>
+                    <td style="width: 20px;">B0</td>
+                    <td style="width: 20px;">B1</td>
+                    <td style="width: 20px;">B2</td>
+                    <td style="width: 40px;">B3</td>
+                    <td style="width: 10px;" rowspan="2">B3</td>
+                </tr>
+                <tr>
+                    <td style="width: 20px;">C0</td>
+                    <td style="width: 20px;">C1</td>
+                    <td style="width: 20px;">C2</td>
+                    <td style="width: 40px;">C3</td>
+                </tr>
+            </tbody>
+            </table>
+            <table contenteditable="true" width="100%" cellpadding="0" border="1" cellspacing="0">
+	            <tbody>
+	            	<tr>
+		            	<td rowspan="2" width="34%">&nbsp;a</td>
+						<td width="33%">&nbsp;b</td>
+						<td width="33%">&nbsp;c</td>
+	            	</tr>
+		            <tr>
+		            	<td width="33%">&nbsp;d</td>
+		            	<td rowspan="2" width="33%">&nbsp;e</td>
+		            </tr>
+		            <tr>
+		            	<td width="34%">&nbsp;f</td>
+		            	<td width="33%">&nbsp;g</td>
+		            </tr>
+		            <tr>
+		            	<td width="34%">&nbsp;h</td>
+		            	<td width="33%">&nbsp;i</td>
+		            	<td width="33%">j&nbsp;</td>
+		            </tr>
+	            </tbody>
+            </table>
+    </textarea>
+	<div class="editable">
+            <table>
+            <tbody>
+                <tr>
+                    <td style="width: 200px;" colspan="2">A1</td>
+                    <td style="width: 100px;">A2</td>
+                    <td style="width: 100px;">A3</td>
+                </tr>
+                <tr>
+                    <td style="width: 100px;">B1</td>
+                    <td style="width: 200px;" colspan="2">B2</td>
+                    <td style="width: 100px;">B3</td>
+                </tr>
+                <tr>
+                    <td style="width: 100px;">C1</td>
+                    <td style="width: 100px;">C2</td>
+                    <td style="width: 200px;" colspan="2">C3</td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="width: 400px;">D1</td>
+                </tr>
+            </tbody>
+        </table>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <th style="width: 20px;">A0</th>
+                    <th style="width: 20px;">A1</th>
+                    <th style="width: 20px;">A2</th>
+                    <th style="width: 40px;">A3</th>
+                    <th style="width: 10px;">A4</th>
+                </tr>
+                <tr>
+                    <td style="width: 20px;">B0</td>
+                    <td style="width: 20px;">B1</td>
+                    <td style="width: 20px;">B2</td>
+                    <td style="width: 40px;">B3</td>
+                    <td style="width: 10px;" rowspan="2">B3</td>
+                </tr>
+                <tr>
+                    <td style="width: 20px;">C0</td>
+                    <td style="width: 20px;">C1</td>
+                    <td style="width: 20px;">C2</td>
+                    <td style="width: 40px;">C3</td>
+                </tr>
+            </tbody>
+            </table>
+            <table contenteditable="true" width="100%" cellpadding="0" border="1" cellspacing="0">
+	            <tbody>
+	            	<tr>
+		            	<td rowspan="2" width="34%">&nbsp;a</td>
+						<td width="33%">&nbsp;b</td>
+						<td width="33%">&nbsp;c</td>
+	            	</tr>
+		            <tr>
+		            	<td width="33%">&nbsp;d</td>
+		            	<td rowspan="2" width="33%">&nbsp;e</td>
+		            </tr>
+		            <tr>
+		            	<td width="34%">&nbsp;f</td>
+		            	<td width="33%">&nbsp;g</td>
+		            </tr>
+		            <tr>
+		            	<td width="34%">&nbsp;h</td>
+		            	<td width="33%">&nbsp;i</td>
+		            	<td width="33%">j&nbsp;</td>
+		            </tr>
+	            </tbody>
+            </table>
+        </div>
+</body>
+</html>

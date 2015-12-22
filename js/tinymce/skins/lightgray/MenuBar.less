@@ -8,6 +8,10 @@
 	filter: none;
 }
 
+.@{prefix}-menubar .@{prefix}-menubtn button {
+	color: @menubar-menubtn-text;
+}
+
 .@{prefix}-menubar {
 	border: 1px solid @menubar-border;
 }
@@ -21,8 +25,8 @@
 }
 
 .@{prefix}-menubar .@{prefix}-menubtn:hover, .@{prefix}-menubar .@{prefix}-menubtn.@{prefix}-active, .@{prefix}-menubar .@{prefix}-menubtn:focus {
-	border-color: transparent;
-	background: @menubar-bg-active;
+	border-color: darken(@btn-bg, 20%);
+	background: @menu-bg;
 	filter: none;
 	.box-shadow(none);
 }

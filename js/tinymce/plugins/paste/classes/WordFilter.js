@@ -1,8 +1,8 @@
 /**
  * WordFilter.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -487,7 +487,9 @@ define("tinymce/pasteplugin/WordFilter", [
 				}
 
 				// Serialize DOM back to HTML
-				e.content = new Serializer({}, schema).serialize(rootNode);
+				e.content = new Serializer({
+					validate: settings.validate
+				}, schema).serialize(rootNode);
 			}
 		});
 	}

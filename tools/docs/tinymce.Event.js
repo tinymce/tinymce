@@ -11,12 +11,6 @@
  */
 
 /**
- * Prevents the default action of an event to be executed.
- *
- * @method preventDefault
- */
-
-/**
  * Stops the event from propagating up to listeners on parent objects.
  *
  * @method stopPropagation

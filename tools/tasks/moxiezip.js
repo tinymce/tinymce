@@ -9,12 +9,22 @@ module.exports = function(grunt) {
 		var done = this.async();
 		var options = target.options || {}, excludePaths = {};
 
+		options.baseDir = (options.baseDir || '').replace(/\\/g, '/');
+
 		function addExcludes(excludes) {
 			if (Array.isArray(excludes)) {
 				excludes.forEach(function(excludePath) {
 					excludePaths[path.resolve(excludePath)] = true;
 				});
 			}
+		}
+
+		function filterZipPath(zipFilePath) {
+			if (options.pathFilter) {
+				return options.pathFilter(zipFilePath);
+			}
+
+			return zipFilePath;
 		}
 
 		function process(filePath, zipFilePath) {
@@ -27,12 +37,7 @@ module.exports = function(grunt) {
 			zipFilePath = zipFilePath || filePath;
 			filePath = filePath.replace(/\\/g, '/');
 			zipFilePath = zipFilePath.replace(/\\/g, '/');
-
-			if (options.pathFilter) {
-				args = {filePath: filePath, zipFilePath: zipFilePath};
-				options.pathFilter(args);
-				zipFilePath = args.zipFilePath;
-			}
+			zipFilePath = filterZipPath(zipFilePath);
 
 			if (stat.isFile()) {
 				var data = fs.readFileSync(filePath);
@@ -51,7 +56,20 @@ module.exports = function(grunt) {
 			}
 		}
 
-		options.baseDir = (options.baseDir || '').replace(/\\/g, '/');
+		if (options.concat) {
+			options.concat.forEach(function(pair) {
+				var chunks;
+
+				chunks = grunt.file.expand(pair.src).map(function(src) {
+					return grunt.file.read(src);
+				});
+
+				pair.dest.forEach(function(zipFilePath) {
+					zipFilePath = filterZipPath(zipFilePath);
+					archive.addData(path.join(options.baseDir, zipFilePath), chunks.join('\r\n'));
+				});
+			});
+		}
 
 		if (target.options.excludes) {
 			addExcludes(grunt.file.expand(target.options.excludes));

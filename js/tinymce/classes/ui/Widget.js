@@ -1,8 +1,8 @@
 /**
  * Widget.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -46,9 +46,9 @@ define("tinymce/ui/Widget", [
 					if (e.control == self) {
 						var rel = tooltip.text(settings.tooltip).show().testMoveRel(self.getEl(), ['bc-tc', 'bc-tl', 'bc-tr']);
 
-						tooltip.toggleClass('tooltip-n', rel == 'bc-tc');
-						tooltip.toggleClass('tooltip-nw', rel == 'bc-tl');
-						tooltip.toggleClass('tooltip-ne', rel == 'bc-tr');
+						tooltip.classes.toggle('tooltip-n', rel == 'bc-tc');
+						tooltip.classes.toggle('tooltip-nw', rel == 'bc-tl');
+						tooltip.classes.toggle('tooltip-ne', rel == 'bc-tr');
 
 						tooltip.moveRel(self.getEl(), rel);
 					} else {
@@ -80,50 +80,12 @@ define("tinymce/ui/Widget", [
 		},
 
 		/**
-		 * Sets/gets the active state of the widget.
-		 *
-		 * @method active
-		 * @param {Boolean} [state] State if the control is active.
-		 * @return {Boolean|tinymce.ui.Widget} True/false or current widget instance.
-		 */
-		active: function(state) {
-			var self = this, undef;
-
-			if (state !== undef) {
-				self.aria('pressed', state);
-				self.toggleClass('active', state);
-			}
-
-			return self._super(state);
-		},
-
-		/**
-		 * Sets/gets the disabled state of the widget.
-		 *
-		 * @method disabled
-		 * @param {Boolean} [state] State if the control is disabled.
-		 * @return {Boolean|tinymce.ui.Widget} True/false or current widget instance.
-		 */
-		disabled: function(state) {
-			var self = this, undef;
-
-			if (state !== undef) {
-				self.aria('disabled', state);
-				self.toggleClass('disabled', state);
-			}
-
-			return self._super(state);
-		},
-
-		/**
 		 * Called after the control has been rendered.
 		 *
 		 * @method postRender
 		 */
 		postRender: function() {
 			var self = this, settings = self.settings;
-
-			self._rendered = true;
 
 			self._super();
 
@@ -135,6 +97,38 @@ define("tinymce/ui/Widget", [
 			if (settings.autofocus) {
 				self.focus();
 			}
+		},
+
+		bindStates: function() {
+			var self = this;
+
+			function disable(state) {
+				self.aria('disabled', state);
+				self.classes.toggle('disabled', state);
+			}
+
+			function active(state) {
+				self.aria('pressed', state);
+				self.classes.toggle('active', state);
+			}
+
+			self.state.on('change:disabled', function(e) {
+				disable(e.value);
+			});
+
+			self.state.on('change:active', function(e) {
+				active(e.value);
+			});
+
+			if (self.state.get('disabled')) {
+				disable(true);
+			}
+
+			if (self.state.get('active')) {
+				active(true);
+			}
+
+			return self._super();
 		},
 
 		/**

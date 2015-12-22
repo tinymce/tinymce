@@ -24,7 +24,7 @@
 	test("splitbutton text, size large", function() {
 		var splitButton = createSplitButton({text: 'X', size: 'large'});
 
-		Utils.nearlyEqualRects(Utils.rect(splitButton), [0, 0, 49, 39], 4);
+		Utils.nearlyEqualRects(Utils.rect(splitButton), [0, 0, 44, 39], 4);
 	});
 
 	test("splitbutton text, size small", function() {
@@ -37,7 +37,7 @@
 		var splitButton = createSplitButton({text: 'X', width: 100, height: 100});
 
 		deepEqual(Utils.rect(splitButton), [0, 0, 100, 100]);
-		deepEqual(Utils.rect(splitButton.getEl().firstChild), [1, 1, 82, 98]);
+		deepEqual(Utils.rect(splitButton.getEl().firstChild), [1, 1, 83, 98]);
 	});
 
 	test("splitbutton icon, size default", function() {
@@ -55,14 +55,14 @@
 	test("splitbutton icon, size large", function() {
 		var splitButton = createSplitButton({icon: 'test', size: 'large'});
 
-		Utils.nearlyEqualRects(Utils.rect(splitButton), [0, 0, 54, 40], 4);
+		Utils.nearlyEqualRects(Utils.rect(splitButton), [0, 0, 49, 40], 4);
 	});
 
 	test("splitbutton icon, width 100, height 100", function() {
 		var splitButton = createSplitButton({icon: 'test', width: 100, height: 100});
 
 		deepEqual(Utils.rect(splitButton), [0, 0, 100, 100]);
-		deepEqual(Utils.rect(splitButton.getEl().firstChild), [1, 1, 82, 98]);
+		deepEqual(Utils.rect(splitButton.getEl().firstChild), [1, 1, 83, 98]);
 	});
 
 	test("splitbutton text & icon, size default", function() {
@@ -74,7 +74,7 @@
 	test("splitbutton text & icon, size large", function() {
 		var splitButton = createSplitButton({text: 'X', icon: 'test', size: 'large'});
 
-		Utils.nearlyEqualRects(Utils.rect(splitButton), [0, 0, 69, 40], 4);
+		Utils.nearlyEqualRects(Utils.rect(splitButton), [0, 0, 64, 40], 4);
 	});
 
 	test("splitbutton text & icon, size small", function() {
@@ -87,7 +87,7 @@
 		var splitButton = createSplitButton({text: 'X', icon: 'test', width: 100, height: 100});
 
 		deepEqual(Utils.rect(splitButton), [0, 0, 100, 100]);
-		deepEqual(Utils.rect(splitButton.getEl().firstChild), [1, 1, 82, 98]);
+		deepEqual(Utils.rect(splitButton.getEl().firstChild), [1, 1, 83, 98]);
 	});
 
 	test("splitbutton click event", function() {

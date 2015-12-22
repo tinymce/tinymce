@@ -1,8 +1,8 @@
 /**
  * Throbber.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -15,9 +15,10 @@
  * @class tinymce.ui.Throbber
  */
 define("tinymce/ui/Throbber", [
-	"tinymce/ui/DomUtils",
-	"tinymce/ui/Control"
-], function(DomUtils, Control) {
+	"tinymce/dom/DomQuery",
+	"tinymce/ui/Control",
+	"tinymce/util/Delay"
+], function($, Control, Delay) {
 	"use strict";
 
 	/**
@@ -35,20 +36,25 @@ define("tinymce/ui/Throbber", [
 		 *
 		 * @method show
 		 * @param {Number} [time] Time to wait before showing.
+		 * @param {function} [callback] Optional callback to execute when the throbber is shown.
 		 * @return {tinymce.ui.Throbber} Current throbber instance.
 		 */
-		self.show = function(time) {
+		self.show = function(time, callback) {
 			self.hide();
 
 			state = true;
 
-			window.setTimeout(function() {
+			Delay.setTimeout(function() {
 				if (state) {
-					elm.appendChild(DomUtils.createFragment(
+					$(elm).append(
 						'<div class="' + classPrefix + 'throbber' + (inline ? ' ' + classPrefix + 'throbber-inline' : '') + '"></div>'
-					));
+					);
+
+					if (callback) {
+						callback();
+					}
 				}
-			}, time || 0);
+			}, time);
 
 			return self;
 		};

@@ -1,7 +1,155 @@
-Version 4.1.11 (2015-05-xx)
+Version 4.3.3 (2015-12-xx)
+	Added new beforeInitialize event to tinymce.util.XHR lets you modify XHR properties before open. Patch contributed by Brent Clintel.
+	Fixed bug where media plugin would strip underscores from youtube urls.
+	Fixed so the template plugins templates setting can be a function that gets a callback that can provide templates.
+Version 4.3.2 (2015-12-14)
+	Fixed bug where the resize bars for table cells were not affected by the object_resizing property.
+	Fixed bug where the contextual table toolbar would appear incorrectly if TinyMCE was initialized inline inside a table.
+	Fixed bug where resizing table cells did not fire a node change event or add an undo level.
+	Fixed bug where double click selection of text on IE 11 wouldn't work properly.
+	Fixed bug where codesample plugin would incorrectly produce br elements inside code elements.
+	Fixed bug where media plugin would strip dashes from youtube urls.
+	Fixed bug where it was possible to move the caret into the table resize bars.
+	Fixed bug where drag/drop into a cE=false element was possible on IE.
+Version 4.3.1 (2015-11-30)
+	Fixed so it's possible to disable the table inline toolbar by setting it to false or an empty string.
+	Fixed bug where it wasn't possible to resize some tables using the drag handles.
+	Fixed bug where unique id:s would clash for multiple editor instances and cE=false selections.
+	Fixed bug where the same plugin could be initialized multiple times.
+	Fixed bug where the table inline toolbars would be displayed at the same time as the image toolbars.
+	Fixed bug where the table selection rect wouldn't be removed when selecting another control element.
+Version 4.3.0 (2015-11-23)
+	Added new table column/row resize support. Makes it a lot more easy to resize the columns/rows in a table.
+	Added new table inline toolbar. Makes it easier to for example add new rows or columns to a table.
+	Added new notification API. Lets you display floating notifications to the end user.
+	Added new codesample plugin that lets you insert syntax highlighted pre elements into the editor.
+	Added new image_caption to images. Lets you create images with captions using a HTML5 figure/figcaption elements.
+	Added new live previews of embeded videos. Lets you play the video right inside the editor.
+	Added new setDirty method and "dirty" event to the editor. Makes it easier to track the dirty state change.
+	Added new setMode method to Editor instances that lets you dynamically switch between design/readonly.
+	Added new core support for contentEditable=false elements within the editor overrides the browsers broken behavior.
+	Rewrote the noneditable plugin to use the new contentEditable false core logic.
+	Fixed so the dirty state doesn't set set to false automatically when the undo index is set to 0.
+	Fixed the Selection.placeCaretAt so it works better on IE when the coordinate is between paragraphs.
+	Fixed bug where data-mce-bogus="all" element contents where counted by the word count plugin.
+	Fixed bug where contentEditable=false elements would be indented by the indent buttons.
+	Fixed bug where images within contentEditable=false would be selected in WebKit on mouse click.
+	Fixed bug in DOMUntils split method where the replacement parameter wouldn't work on specific cases.
+	Fixed bug where the importcss plugin would import classes from the skin content css file.
+	Fixed so all button variants have a wrapping span for it's text to make it easier to skin.
+	Fixed so it's easier to exit pre block using the arrow keys.
+	Fixed bug where listboxes with fix widths didn't render correctly.
+Version 4.2.8 (2015-11-13)
+	Fixed bug where it was possible to delete tables as the inline root element if all columns where selected.
+	Fixed bug where the UI buttons active state wasn't properly updated due to recent refactoring of that logic.
+Version 4.2.7 (2015-10-27)
+	Fixed bug where backspace/delete would remove all formats on the last paragraph character in WebKit/Blink.
+	Fixed bug where backspace within a inline format element with a bogus caret container would move the caret.
+	Fixed bug where backspace/delete on selected table cells wouldn't add an undo level.
+	Fixed bug where script tags embedded within the editor could sometimes get a mce- prefix prepended to them
+	Fixed bug where validate: false option could produce an error to be thrown from the Serialization step.
+	Fixed bug where inline editing of a table as the root element could let the user delete that table.
+	Fixed bug where inline editing of a table as the root element wouldn't properly handle enter key.
+	Fixed bug where inline editing of a table as the root element would normalize the selection incorrectly.
+	Fixed bug where inline editing of a list as the root element could let the user delete that list.
+	Fixed bug where inline editing of a list as the root element could let the user split that list.
+	Fixed bug where resize handles would be rendered on editable root elements such as table.
+Version 4.2.6 (2015-09-28)
+	Added capability to set request headers when using XHRs.
+	Added capability to upload local images automatically default delay is set to 30 seconds after editing images.
+	Added commands ids mceEditImage, mceAchor and mceMedia to be avaiable from execCommand.
+	Added Edge browser to saucelabs grunt task. Patch contributed by John-David Dalton.
+	Fixed bug where blob uris not produced by tinymce would produce HTML invalid markup.
+	Fixed bug where selection of contents of a nearly empty editor in Edge would sometimes fail.
+	Fixed bug where color styles woudln't be retained on copy/paste in Blink/Webkit.
+	Fixed bug where the table plugin would throw an error when inserting rows after a child table.
+	Fixed bug where the template plugin wouldn't handle functions as variable replacements.
+	Fixed bug where undo/redo sometimes wouldn't work properly when applying formatting collapsed ranges.
+	Fixed bug where shift+delete wouldn't do a cut operation on Blink/WebKit.
+	Fixed bug where cut action wouldn't properly store the before selection bookmark for the undo level.
+	Fixed bug where backspace in side an empty list element on IE would loose editor focus.
+	Fixed bug where the save plugin wouldn't enable the buttons when a change occurred.
+	Fixed bug where Edge wouldn't initialize the editor if a document.domain was specified.
+	Fixed bug where enter key before nested images would sometimes not properly expand the previous block.
+	Fixed bug where the inline toolbars wouldn't get properly hidden when blurring the editor instance.
+	Fixed bug where Edge would paste Chinese characters on some Windows 10 installations.
+	Fixed bug where IME would loose focus on IE 11 due to the double trailing br bug fix.
+	Fixed bug where the proxy url in imagetools was incorrect. Patch contributed by Wong Ho Wang.
+Version 4.2.5 (2015-08-31)
+	Added fullscreen capability to embedded youtube and vimeo videos.
+	Fixed bug where the uploadImages call didn't work on IE 10.
+	Fixed bug where image place holders would be uploaded by uploadImages call.
+	Fixed bug where images marked with bogus would be uploaded by the uploadImages call.
+	Fixed bug where multiple calls to uploadImages would result in decreased performance.
+	Fixed bug where pagebreaks were editable to imagetools patch contributed by Rasmus Wallin.
+	Fixed bug where the element path could cause too much recursion exception.
+	Fixed bug for domains containing ".min". Patch contributed by Loïc Février.
+	Fixed so validation of external links to accept a number after www. Patch contributed by Victor Carvalho.
+	Fixed so the charmap is exposed though execCommand. Patch contributed by Matthew Will.
+	Fixed so that the image uploads are concurrent for improved performance.
+	Fixed various grammar problems in inline documentation. Patches provided by nikolas.
+Version 4.2.4 (2015-08-17)
+	Added picture as a valid element to the HTML 5 schema. Patch contributed by Adam Taylor.
+	Fixed bug where contents would be duplicated on drag/drop within the same editor.
+	Fixed bug where floating/alignment of images on Edge wouldn't work properly.
+	Fixed bug where it wasn't possible to drag images on IE 11.
+	Fixed bug where image selection on Edge would sometimes fail.
+	Fixed bug where contextual toolbars icons wasn't rendered properly when using the toolbar_items_size.
+	Fixed bug where searchreplace dialog doesn't get prefilled with the selected text.
+	Fixed bug where fragmented matches wouldn't get properly replaced by the searchreplace plugin.
+	Fixed bug where enter key wouldn't place the caret if was after a trailing space within an inline element.
+	Fixed bug where the autolink plugin could produce multiple links for the same text on Gecko.
+	Fixed bug where EditorUpload could sometimes throw an exception if the blob wasn't found.
+	Fixed xss issues with media plugin not properly filtering out some script attributes.
+Version 4.2.3 (2015-07-30)
+	Fixed bug where image selection wasn't possible on Edge due to incompatible setBaseAndExtend API.
+	Fixed bug where image blobs urls where not properly destroyed by the imagetools plugin.
+	Fixed bug where keyboard shortcuts wasn't working correctly on IE 8.
+	Fixed skin issue where the borders of panels where not visible on IE 8.
+Version 4.2.2 (2015-07-22)
+	Fixed bug where float panels were not being hidden on inline editor blur when fixed_toolbar_container config option was in use.
+	Fixed bug where combobox states wasn't properly updated if contents where updated without keyboard.
+	Fixed bug where pasting into textbox or combobox would move the caret to the end of text.
+	Fixed bug where removal of bogus span elements before block elements would remove whitespace between nodes.
+	Fixed bug where repositioning of inline toolbars where async and producing errors if the editor was removed from DOM to early. Patch by iseulde.
+	Fixed bug where element path wasn't working correctly. Patch contributed by iseulde.
+	Fixed bug where menus wasn't rendered correctly when custom images where added to a menu. Patch contributed by Naim Hammadi.
+Version 4.2.1 (2015-06-29)
+	Fixed bug where back/forward buttons in the browser would render blob images as broken images.
+	Fixed bug where Firefox would throw regexp to big error when replacing huge base64 chunks.
+	Fixed bug rendering issues with resize and context toolbars not being placed properly until next animation frame.
+	Fixed bug where the rendering of the image while cropping would some times not be centered correctly.
+	Fixed bug where listbox items with submenus would me selected as active.
+	Fixed bug where context menu where throwing an error when rendering.
+	Fixed bug where resize both option wasn't working due to resent addClass API change. Patch contributed by Jogai.
+	Fixed bug where a hideAll call for container rendered inline toolbars would throw an error.
+	Fixed bug where onclick event handler on combobox could cause issues if element.id was a function by some polluting libraries.
+	Fixed bug where listboxes wouldn't get proper selected sub menu item when using link_list or image_list.
+	Fixed so the UI controls are as wide as 4.1.x to avoid wrapping controls in toolbars.
+	Fixed so the imagetools dialog is adaptive for smaller screen sizes.
+Version 4.2.0 (2015-06-25)
+	Added new flat default skin to make the UI more modern.
+	Added new imagetools plugin, lets you crop/resize and apply filters to images.
+	Added new contextual toolbars support to the API lets you add floating toolbars for specific CSS selectors.
+	Added new promise feature fill as tinymce.util.Promise.
+	Added new built in image upload feature lets you upload any base64 encoded image within the editor as files.
+	Fixed bug where resize handles would appear in the right position in the wrong editor when switching between resizable content in different inline editors.
+	Fixed bug where tables would not be inserted in inline mode due to previous float panel fix.
 	Fixed bug where floating panels would remain open when focus was lost on inline editors.
 	Fixed bug where cut command on Chrome would thrown a browser security exception.
 	Fixed bug where IE 11 sometimes would report an incorrect size for images in the image dialog.
+	Fixed bug where it wasn't possible to remove inline formatting at the end of block elements.
+	Fixed bug where it wasn't possible to delete table cell contents when cell selection was vertical.
+	Fixed bug where table cell wasn't emptied from block elements if delete/backspace where pressed in empty cell.
+	Fixed bug where cmd+shift+arrow didn't work correctly on Firefox mac when selecting to start/end of line.
+	Fixed bug where removal of bogus elements would sometimes remove whitespace between nodes.
+	Fixed bug where the resize handles wasn't updated when the main window was resized.
+	Fixed so script elements gets removed by default to prevent possible XSS issues in default config implementations.
+	Fixed so the UI doesn't need manual reflows when using non native layout managers.
+	Fixed so base64 encoded images doesn't slow down the editor on modern browsers while editing.
+	Fixed so all UI elements uses touch events to improve mobile device support.
+	Removed the touch click quirks patch for iOS since it did more harm than good.
+	Removed the non proportional resize handles since. Unproportional resize can still be done by holding the shift key.
 Version 4.1.10 (2015-05-05)
 	Fixed bug where plugins loaded with compat3x would sometimes throw errors when loading using the jQuery version.
 	Fixed bug where extra empty paragraphs would get deleted in WebKit/Blink due to recent Quriks fix.
@@ -20,7 +168,7 @@ Version 4.1.9 (2015-03-10)
 	Fixed bug with image plugin not pulling the image dimensions out correctly if a custom document_base_url was used.
 	Fixed bug where ctrl+alt+[1-9] would conflict with the AltGr+[1-9] on Windows. New shortcuts is ctrl+shift+[1-9].
 	Fixed bug with removing formatting on nodes in inline mode would sometimes include nodes outside the editor body.
-	Fixed bug where extra nbsp:s would be inserted when you replaced a word surronded by spaces using insertContent.
+	Fixed bug where extra nbsp:s would be inserted when you replaced a word surrounded by spaces using insertContent.
 	Fixed bug with pasting from Google Docs would produce extra strong elements and line feeds.
 Version 4.1.8 (2015-03-05)
 	Added new html5 sizes attribute to img elements used together with srcset.
@@ -87,7 +235,7 @@ Version 4.1.5 (2014-09-09)
 	Fixed bug where sometimes the resize rectangles wouldn't properly render on images on WebKit/Blink.
 	Fixed bug in list plugin where delete/backspace would merge empty LI elements in lists incorrectly.
 	Fixed bug where empty list elements would result in empty LI elements without it's parent container.
-	Fixed bug where backspace in empty caret formated element could produce an type error exception of Gecko.
+	Fixed bug where backspace in empty caret formatted element could produce an type error exception of Gecko.
 	Fixed bug where lists pasted from word with a custom start index above 9 wouldn't be properly handled.
 	Fixed bug where tabfocus plugin would tab out of the editor instance even if the default action was prevented.
 	Fixed bug where tabfocus wouldn't tab properly to other adjacent editor instances.
@@ -322,7 +470,7 @@ Version 4.0.20 (2014-03-18)
 	Fixed bug where some events wasn't properly unbound when all editors where removed from page.
 	Fixed bug where tapping links on iOS 7.1 would open the link instead of placing the caret inside.
 	Fixed bug where holding the finger down on iOS 7.1 would open the link/image callout menu.
-	Fixed so the jQuery plugin returns null when getting the the tinymce instance of an element before it's initialized.
+	Fixed so the jQuery plugin returns null when getting the tinymce instance of an element before it's initialized.
 	Fixed so selection normalization gets executed more often to reduce incorrect UI states on Gecko.
 	Fixed so the default action of closing the window on a form submission can be prevented using "preventDefault".
 Version 4.0.19 (2014-03-11)
@@ -412,7 +560,7 @@ Version 4.0.13 (2014-01-30)
 	Fixed bug where image dimension constrains proportions wouldn't work properly if you altered a value and immediately clicked the submit button.
 	Fixed so you don't need to set language option to false when specifying a custom language_url.
 	Fixed so the link dialog "text to display" field gets automatically hidden if the selection isn't text contents. Patch contributed by Godefroy.
-	Fixed so the none option for the target field in the link dialog gets excluded when specifiying the target_list config option.
+	Fixed so the none option for the target field in the link dialog gets excluded when specifying the target_list config option.
 	Fixed so outline styles are displayed by default in the formats preview. Patch contributed by nhammadi.
 	Fixed so the max characters for width/height is more than 3 in the media and image dialogs.
 	Fixed so the old mceSpellCheck command toggles the spellchecker on/off.
@@ -491,7 +639,7 @@ Version 4.0.9 (2013-10-24)
 	Fixed bug where the paste_data_images option wouldn't strip all kinds of data images.
 	Fixed bug where the GridLayout didn't render items correctly if the contents overflowed the layout container.
 	Fixed bug where the Window wasn't properly positioned if the size of the button bar or title bar was wider than the contents.
-	Fixed bug where psuedo selectors for finding UI controls didn't work properly.
+	Fixed bug where pseudo selectors for finding UI controls didn't work properly.
 	Fixed bug where resized splitbuttons would throw an exception if it didn't contain an icon.
 	Fixed bug where setContent would move focus into the editor even though it wasn't active.
 	Fixed bug where IE 11 would sometimes throw an "Invalid function" error when calling setActive on the body element.
@@ -525,7 +673,7 @@ Version 4.0.7 (2013-10-02)
 	Fixed bug where closing a dialog with an opened listbox would cause errors if new dialogs where opened.
 	Fixed bug where hidden input elements wasn't removed when inline editor instances where removed.
 	Fixed bug where editors wouldn't initialize some times due to event logic not working correctly.
-	Fixed bug where pre elements woudl cause searchreplace and spellchecker plugins to mark incorrect locations.
+	Fixed bug where pre elements would cause searchreplace and spellchecker plugins to mark incorrect locations.
 	Fixed bug where embed elements wouldn't be properly resized if they where configured in using the video_template_callback.
 	Fixed bug where paste from word would remove all BR elements since it was missing in the default paste_word_valid_elements.
 	Fixed bug where paste filtering wouldn't work properly on old WebKit installations pre Clipboard API.

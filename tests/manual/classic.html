@@ -8,6 +8,7 @@
 <script src="../../js/tinymce/plugins/table/plugin.dev.js"></script>
 <script src="../../js/tinymce/plugins/paste/plugin.dev.js"></script>
 <script src="../../js/tinymce/plugins/spellchecker/plugin.dev.js"></script>
+<script src="../../js/tinymce/plugins/codesample/plugin.dev.js"></script>
 <script>
 	tinymce.init({
 		selector: "textarea#elm1",
@@ -15,7 +16,7 @@
 		plugins: [
 			"advlist autolink autosave link image lists charmap print preview hr anchor pagebreak spellchecker",
 			"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-			"save table contextmenu directionality emoticons template textcolor paste fullpage textcolor colorpicker"
+			"save table contextmenu directionality emoticons template textcolor paste fullpage textcolor colorpicker codesample"
 		],
 		external_plugins: {
 			//"moxiemanager": "/moxiemanager-php/plugin.js"
@@ -26,7 +27,7 @@
 
 		toolbar1: "save newdocument fullpage | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect fontselect fontsizeselect",
 		toolbar2: "cut copy paste pastetext | searchreplace | bullist numlist | outdent indent blockquote | undo redo | link unlink anchor image media help code | insertdatetime preview | forecolor backcolor",
-		toolbar3: "table | hr removeformat | subscript superscript | charmap emoticons | print fullscreen | ltr rtl | spellchecker | visualchars visualblocks nonbreaking template pagebreak restoredraft | insertfile insertimage",
+		toolbar3: "table | hr removeformat | subscript superscript | charmap emoticons | print fullscreen | ltr rtl | spellchecker | visualchars visualblocks nonbreaking template pagebreak restoredraft | insertfile insertimage codesample",
 		menubar: false,
 		toolbar_items_size: 'small',
 

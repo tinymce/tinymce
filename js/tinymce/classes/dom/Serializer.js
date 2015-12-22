@@ -1,8 +1,8 @@
 /**
  * Serializer.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -17,15 +17,48 @@
 define("tinymce/dom/Serializer", [
 	"tinymce/dom/DOMUtils",
 	"tinymce/html/DomParser",
+	"tinymce/html/SaxParser",
 	"tinymce/html/Entities",
 	"tinymce/html/Serializer",
 	"tinymce/html/Node",
 	"tinymce/html/Schema",
 	"tinymce/Env",
-	"tinymce/util/Tools"
-], function(DOMUtils, DomParser, Entities, Serializer, Node, Schema, Env, Tools) {
+	"tinymce/util/Tools",
+	"tinymce/text/Zwsp"
+], function(DOMUtils, DomParser, SaxParser, Entities, Serializer, Node, Schema, Env, Tools, Zwsp) {
 	var each = Tools.each, trim = Tools.trim;
 	var DOM = DOMUtils.DOM;
+	var trimContentRegExp = new RegExp([
+		'<span[^>]+data-mce-bogus[^>]+>[\u200B\uFEFF]+<\\/span>', // Trim bogus spans like caret containers
+		'\\s?data-mce-selected="[^"]+"' // Trim temporaty data-mce prefixed attributes like data-mce-selected
+	].join('|'), 'gi');
+
+	/**
+	 * IE 11 has a fantastic bug where it will produce two trailing BR elements to iframe bodies when
+	 * the iframe is hidden by display: none on a parent container. The DOM is actually out of sync
+	 * with innerHTML in this case. It's like IE adds shadow DOM BR elements that appears on innerHTML
+	 * but not as the lastChild of the body. So this fix simply removes the last two
+	 * BR elements at the end of the document.
+	 *
+	 * Example of what happens: <body>text</body> becomes <body>text<br><br></body>
+	 */
+	function trimTrailingBr(rootNode) {
+		var brNode1, brNode2;
+
+		function isBr(node) {
+			return node && node.name === 'br';
+		}
+
+		brNode1 = rootNode.lastChild;
+		if (isBr(brNode1)) {
+			brNode2 = brNode1.prev;
+
+			if (isBr(brNode2)) {
+				brNode1.remove();
+				brNode2.remove();
+			}
+		}
+	}
 
 	/**
 	 * Constructs a new DOM serializer class.
@@ -41,6 +74,42 @@ define("tinymce/dom/Serializer", [
 		if (editor) {
 			dom = editor.dom;
 			schema = editor.schema;
+		}
+
+		/**
+		 * Returns a trimmed version of the editor contents to be used for the undo level. This
+		 * will remove any data-mce-bogus="all" marked elements since these are used for UI it will also
+		 * remove the data-mce-selected attributes used for selection of objects and caret containers.
+		 * It will keep all data-mce-bogus="1" elements since these can be used to place the caret etc and will
+		 * be removed by the serialization logic when you save.
+		 *
+		 * @private
+		 * @return {String} HTML contents of the editor excluding some internal bogus elements.
+		 */
+		function getTrimmedContent() {
+			var content = editor.getBody().innerHTML;
+			var bogusAllRegExp = /<(\w+) [^>]*data-mce-bogus="all"[^>]*>/g;
+			var endTagIndex, index, matchLength, matches, shortEndedElements, schema = editor.schema;
+
+			content = Zwsp.trim(content.replace(trimContentRegExp, ''));
+			shortEndedElements = schema.getShortEndedElements();
+
+			// Remove all bogus elements marked with "all"
+			while ((matches = bogusAllRegExp.exec(content))) {
+				index = bogusAllRegExp.lastIndex;
+				matchLength = matches[0].length;
+
+				if (shortEndedElements[matches[1]]) {
+					endTagIndex = index;
+				} else {
+					endTagIndex = SaxParser.findEndTag(schema, content, index);
+				}
+
+				content = content.substring(0, index - matchLength) + content.substring(endTagIndex);
+				bogusAllRegExp.lastIndex = index - matchLength;
+			}
+
+			return trim(content);
 		}
 
 		// Default DOM and Schema if they are undefined
@@ -284,7 +353,7 @@ define("tinymce/dom/Serializer", [
 			 * @param {Object} args Arguments option that gets passed to event handlers.
 			 */
 			serialize: function(node, args) {
-				var self = this, impl, doc, oldDoc, htmlSerializer, content;
+				var self = this, impl, doc, oldDoc, htmlSerializer, content, rootNode;
 
 				// Explorer won't clone contents of script and style and the
 				// selected index of select elements are cleared on a clone operation.
@@ -334,16 +403,17 @@ define("tinymce/dom/Serializer", [
 					self.onPreProcess(args);
 				}
 
-				// Setup serializer
-				htmlSerializer = new Serializer(settings, schema);
+				// Parse HTML
+				rootNode = htmlParser.parse(trim(args.getInner ? node.innerHTML : dom.getOuterHTML(node)), args);
+				trimTrailingBr(rootNode);
 
-				// Parse and serialize HTML
-				args.content = htmlSerializer.serialize(
-					htmlParser.parse(trim(args.getInner ? node.innerHTML : dom.getOuterHTML(node)), args)
-				);
+				// Serialize HTML
+				htmlSerializer = new Serializer(settings, schema);
+				args.content = htmlSerializer.serialize(rootNode);
 
 				// Replace all BOM characters for now until we can find a better solution
 				if (!args.cleanup) {
+					args.content = Zwsp.trim(args.content);
 					args.content = args.content.replace(/\uFEFF/g, '');
 				}
 
@@ -396,7 +466,9 @@ define("tinymce/dom/Serializer", [
 				if (editor) {
 					editor.fire('PostProcess', args);
 				}
-			}
+			},
+
+			getTrimmedContent: getTrimmedContent
 		};
 	};
 });

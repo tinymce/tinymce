@@ -31,6 +31,35 @@
 		"max-depth": [1, 8],
 		"max-statements": [2, 150],
 		"max-len": [1, 140, 4],
-		"eol-last": 0
-	}
+		"eol-last": 0,
+		"quotes": 0,
+		"no-trailing-spaces": 2,
+		"comma-spacing": [2, {"before": false, "after": true}],
+		"space-in-parens": [2, "never"],
+		"space-infix-ops": [2, {"int32Hint": false}],
+		"space-after-keywords": 2,
+		"space-unary-ops": [1, { "words": true, "nonwords": false }],
+		"space-return-throw-case": 2,
+		"space-before-blocks": [2, "always"],
+		"space-before-function-paren": [2, {"anonymous": "never", "named": "never"}],
+		"no-multiple-empty-lines": [1, {max: 2}],
+		"object-curly-spacing": [2, "never"],
+		"operator-linebreak": [2, "after"],
+		"semi": [2, "always"],
+		"indent": 0,
+		"curly": [2, "all"],
+		"dot-notation": [2, {"allowKeywords": false}],
+		"no-else-return": 2,
+		"no-eval": 2,
+		"no-implied-eval": 2,
+		"no-loop-func": 2,
+		"no-multi-str": 2,
+		"no-multi-spaces": 2,
+		"no-sequences": 2,
+		"radix": 2,
+		"no-new": 2,
+		"no-caller": 2
+	},
+
+	"extends": "eslint:recommended"
 }

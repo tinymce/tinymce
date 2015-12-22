@@ -1,8 +1,8 @@
 /**
  * Selection.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -23,9 +23,10 @@ define("tinymce/dom/Selection", [
 	"tinymce/dom/ControlSelection",
 	"tinymce/dom/RangeUtils",
 	"tinymce/dom/BookmarkManager",
+	"tinymce/dom/NodeType",
 	"tinymce/Env",
 	"tinymce/util/Tools"
-], function(TreeWalker, TridentSelection, ControlSelection, RangeUtils, BookmarkManager, Env, Tools) {
+], function(TreeWalker, TridentSelection, ControlSelection, RangeUtils, BookmarkManager, NodeType, Env, Tools) {
 	var each = Tools.each, trim = Tools.trim;
 	var isIE = Env.ie;
 
@@ -36,6 +37,7 @@ define("tinymce/dom/Selection", [
 	 * @method Selection
 	 * @param {tinymce.dom.DOMUtils} dom DOMUtils object reference.
 	 * @param {Window} win Window to bind the selection object to.
+	 * @param {tinymce.Editor} editor Editor instance of the selection.
 	 * @param {tinymce.dom.Serializer} serializer DOM serialization class to use for getContent.
 	 */
 	function Selection(dom, win, serializer, editor) {
@@ -81,7 +83,7 @@ define("tinymce/dom/Selection", [
 		 * Returns the selected contents using the DOM serializer passed in to this class.
 		 *
 		 * @method getContent
-		 * @param {Object} s Optional settings class with for example output format text or html.
+		 * @param {Object} args Optional settings class with for example output format text or html.
 		 * @return {String} Selected contents in for example HTML format.
 		 * @example
 		 * // Alerts the currently selected contents
@@ -156,7 +158,7 @@ define("tinymce/dom/Selection", [
 			args = args || {format: 'html'};
 			args.set = true;
 			args.selection = true;
-			content = args.content = content;
+			args.content = content;
 
 			// Dispatch before set content event
 			if (!args.no_events) {
@@ -270,21 +272,21 @@ define("tinymce/dom/Selection", [
 				}
 
 				return startElement;
-			} else {
-				startElement = rng.startContainer;
-
-				if (startElement.nodeType == 1 && startElement.hasChildNodes()) {
-					if (!real || !rng.collapsed) {
-						startElement = startElement.childNodes[Math.min(startElement.childNodes.length - 1, rng.startOffset)];
-					}
-				}
-
-				if (startElement && startElement.nodeType == 3) {
-					return startElement.parentNode;
-				}
-
-				return startElement;
 			}
+
+			startElement = rng.startContainer;
+
+			if (startElement.nodeType == 1 && startElement.hasChildNodes()) {
+				if (!real || !rng.collapsed) {
+					startElement = startElement.childNodes[Math.min(startElement.childNodes.length - 1, rng.startOffset)];
+				}
+			}
+
+			if (startElement && startElement.nodeType == 3) {
+				return startElement.parentNode;
+			}
+
+			return startElement;
 		},
 
 		/**
@@ -315,22 +317,22 @@ define("tinymce/dom/Selection", [
 				}
 
 				return endElement;
-			} else {
-				endElement = rng.endContainer;
-				endOffset = rng.endOffset;
-
-				if (endElement.nodeType == 1 && endElement.hasChildNodes()) {
-					if (!real || !rng.collapsed) {
-						endElement = endElement.childNodes[endOffset > 0 ? endOffset - 1 : endOffset];
-					}
-				}
-
-				if (endElement && endElement.nodeType == 3) {
-					return endElement.parentNode;
-				}
-
-				return endElement;
 			}
+
+			endElement = rng.endContainer;
+			endOffset = rng.endOffset;
+
+			if (endElement.nodeType == 1 && endElement.hasChildNodes()) {
+				if (!real || !rng.collapsed) {
+					endElement = endElement.childNodes[endOffset > 0 ? endOffset - 1 : endOffset];
+				}
+			}
+
+			if (endElement && endElement.nodeType == 3) {
+				return endElement.parentNode;
+			}
+
+			return endElement;
 		},
 
 		/**
@@ -377,7 +379,7 @@ define("tinymce/dom/Selection", [
 		 * Selects the specified element. This will place the start and end of the selection range around the element.
 		 *
 		 * @method select
-		 * @param {Element} node HMTL DOM element to select.
+		 * @param {Element} node HTML DOM element to select.
 		 * @param {Boolean} content Optional bool state if the contents should be selected or not on non IE browser.
 		 * @return {Element} Selected element the same element as the one that got passed in.
 		 * @example
@@ -436,7 +438,7 @@ define("tinymce/dom/Selection", [
 		 * Collapse the selection to start or end of range.
 		 *
 		 * @method collapse
-		 * @param {Boolean} toStart Optional boolean state if to collapse to end or not. Defaults to start.
+		 * @param {Boolean} toStart Optional boolean state if to collapse to end or not. Defaults to false.
 		 */
 		collapse: function(toStart) {
 			var self = this, rng = self.getRng(), node;
@@ -474,7 +476,7 @@ define("tinymce/dom/Selection", [
 		 * @see http://www.dotvoid.com/2001/03/using-the-range-object-in-mozilla/
 		 */
 		getRng: function(w3c) {
-			var self = this, selection, rng, elm, doc = self.win.document, ieRng;
+			var self = this, selection, rng, elm, doc, ieRng, evt;
 
 			function tryCompareBoundaryPoints(how, sourceRange, destinationRange) {
 				try {
@@ -488,6 +490,12 @@ define("tinymce/dom/Selection", [
 					return -1;
 				}
 			}
+
+			if (!self.win) {
+				return null;
+			}
+
+			doc = self.win.document;
 
 			// Use last rng passed from FocusManager if it's available this enables
 			// calls to editor.selection.getStart() to work when caret focus is lost on IE
@@ -523,6 +531,11 @@ define("tinymce/dom/Selection", [
 				// IE throws unspecified error here if TinyMCE is placed in a frame/iframe
 			}
 
+			evt = self.editor.fire('GetSelectionRange', {range: rng});
+			if (evt.range !== rng) {
+				return evt.range;
+			}
+
 			// We have W3C ranges and it's IE then fake control selection since IE9 doesn't handle that correctly yet
 			// IE 11 doesn't support the selection object so we check for that as well
 			if (isIE && rng && rng.setStart && doc.selection) {
@@ -530,7 +543,7 @@ define("tinymce/dom/Selection", [
 					// IE will sometimes throw an exception here
 					ieRng = doc.selection.createRange();
 				} catch (ex) {
-
+					// Ignore
 				}
 
 				if (ieRng && ieRng.item) {
@@ -575,9 +588,10 @@ define("tinymce/dom/Selection", [
 		 *
 		 * @method setRng
 		 * @param {Range} rng Range to select.
+		 * @param {Boolean} forward Optional boolean if the selection is forwards or backwards.
 		 */
 		setRng: function(rng, forward) {
-			var self = this, sel;
+			var self = this, sel, node, evt;
 
 			if (!rng) {
 				return;
@@ -585,6 +599,8 @@ define("tinymce/dom/Selection", [
 
 			// Is IE specific range
 			if (rng.select) {
+				self.explicitRange = null;
+
 				try {
 					rng.select();
 				} catch (ex) {
@@ -596,6 +612,9 @@ define("tinymce/dom/Selection", [
 
 			if (!self.tridentSel) {
 				sel = self.getSel();
+
+				evt = self.editor.fire('SetSelectionRange', {range: rng});
+				rng = evt.range;
 
 				if (sel) {
 					self.explicitRange = rng;
@@ -616,12 +635,23 @@ define("tinymce/dom/Selection", [
 					// adding range isn't always successful so we need to check range count otherwise an exception can occur
 					self.selectedRange = sel.rangeCount > 0 ? sel.getRangeAt(0) : null;
 				}
+
+				// WebKit egde case selecting images works better using setBaseAndExtent
+				if (!rng.collapsed && rng.startContainer == rng.endContainer && sel.setBaseAndExtent && !Env.ie) {
+					if (rng.endOffset - rng.startOffset < 2) {
+						if (rng.startContainer.hasChildNodes()) {
+							node = rng.startContainer.childNodes[rng.startOffset];
+							if (node && node.tagName == 'IMG') {
+								self.getSel().setBaseAndExtent(node, 0, node, 1);
+							}
+						}
+					}
+				}
 			} else {
 				// Is W3C Range fake range on IE
 				if (rng.cloneRange) {
 					try {
 						self.tridentSel.addRange(rng);
-						return;
 					} catch (ex) {
 						//IE9 throws an error here if called before selection is placed in the editor
 					}
@@ -864,8 +894,8 @@ define("tinymce/dom/Selection", [
 			return scrollContainer;
 		},
 
-		scrollIntoView: function(elm) {
-			var y, viewPort, self = this, dom = self.dom, root = dom.getRoot(), viewPortY, viewPortH;
+		scrollIntoView: function(elm, alignToTop) {
+			var y, viewPort, self = this, dom = self.dom, root = dom.getRoot(), viewPortY, viewPortH, offsetY = 0;
 
 			function getPos(elm) {
 				var x = 0, y = 0;
@@ -880,10 +910,18 @@ define("tinymce/dom/Selection", [
 				return {x: x, y: y};
 			}
 
+			if (!NodeType.isElement(elm)) {
+				return;
+			}
+
+			if (alignToTop === false) {
+				offsetY = elm.offsetHeight;
+			}
+
 			if (root.nodeName != 'BODY') {
 				var scrollContainer = self.getScrollContainer();
 				if (scrollContainer) {
-					y = getPos(elm).y - getPos(scrollContainer).y;
+					y = getPos(elm).y - getPos(scrollContainer).y + offsetY;
 					viewPortH = scrollContainer.clientHeight;
 					viewPortY = scrollContainer.scrollTop;
 					if (y < viewPortY || y + 25 > viewPortY + viewPortH) {
@@ -895,7 +933,7 @@ define("tinymce/dom/Selection", [
 			}
 
 			viewPort = dom.getViewPort(self.editor.getWin());
-			y = dom.getPos(elm).y;
+			y = dom.getPos(elm).y + offsetY;
 			viewPortY = viewPort.y;
 			viewPortH = viewPort.h;
 			if (y < viewPort.y || y + 25 > viewPortY + viewPortH) {
@@ -904,27 +942,7 @@ define("tinymce/dom/Selection", [
 		},
 
 		placeCaretAt: function(clientX, clientY) {
-			var doc = this.editor.getDoc(), rng, point;
-
-			if (doc.caretPositionFromPoint) {
-				point = doc.caretPositionFromPoint(clientX, clientY);
-				rng = doc.createRange();
-				rng.setStart(point.offsetNode, point.offset);
-				rng.collapse(true);
-			} else if (doc.caretRangeFromPoint) {
-				rng = doc.caretRangeFromPoint(clientX, clientY);
-			} else if (doc.body.createTextRange) {
-				rng = doc.body.createTextRange();
-
-				try {
-					rng.moveToPoint(clientX, clientY);
-					rng.collapse(true);
-				} catch (ex) {
-					rng.collapse(clientY < doc.body.clientHeight);
-				}
-			}
-
-			this.setRng(rng);
+			this.setRng(RangeUtils.getCaretRangeFromPoint(clientX, clientY, this.editor.getDoc()));
 		},
 
 		_moveEndPoint: function(rng, node, start) {

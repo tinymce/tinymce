@@ -1,8 +1,8 @@
 /**
  * Container.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -24,16 +24,15 @@ define("tinymce/ui/Container", [
 	"tinymce/ui/Factory",
 	"tinymce/ui/KeyboardNavigation",
 	"tinymce/util/Tools",
-	"tinymce/ui/DomUtils"
-], function(Control, Collection, Selector, Factory, KeyboardNavigation, Tools, DomUtils) {
+	"tinymce/dom/DomQuery",
+	"tinymce/ui/ClassList",
+	"tinymce/ui/ReflowQueue"
+], function(Control, Collection, Selector, Factory, KeyboardNavigation, Tools, $, ClassList, ReflowQueue) {
 	"use strict";
 
 	var selectorCache = {};
 
 	return Control.extend({
-		layout: '',
-		innerClass: 'container-inner',
-
 		/**
 		 * Constructs a new control instance with the specified settings.
 		 *
@@ -48,24 +47,37 @@ define("tinymce/ui/Container", [
 
 			self._super(settings);
 			settings = self.settings;
-			self._fixed = settings.fixed;
+
+			if (settings.fixed) {
+				self.state.set('fixed', true);
+			}
+
 			self._items = new Collection();
 
 			if (self.isRtl()) {
-				self.addClass('rtl');
+				self.classes.add('rtl');
 			}
 
-			self.addClass('container');
-			self.addClass('container-body', 'body');
+			self.bodyClasses = new ClassList(function() {
+				if (self.state.get('rendered')) {
+					self.getEl('body').className = this.toString();
+				}
+			});
+			self.bodyClasses.prefix = self.classPrefix;
+
+			self.classes.add('container');
+			self.bodyClasses.add('container-body');
 
 			if (settings.containerCls) {
-				self.addClass(settings.containerCls);
+				self.classes.add(settings.containerCls);
 			}
 
-			self._layout = Factory.create((settings.layout || self.layout) + 'layout');
+			self._layout = Factory.create((settings.layout || '') + 'layout');
 
 			if (self.settings.items) {
 				self.add(self.settings.items);
+			} else {
+				self.add(self.render());
 			}
 
 			// TODO: Fix this!
@@ -242,26 +254,26 @@ define("tinymce/ui/Container", [
 
 			// Render any new items
 			self.items().each(function(ctrl, index) {
-				var containerElm, fragment;
+				var containerElm;
 
 				ctrl.parent(self);
 
-				if (!ctrl._rendered) {
+				if (!ctrl.state.get('rendered')) {
 					containerElm = self.getEl('body');
-					fragment = DomUtils.createFragment(ctrl.renderHtml());
 
 					// Insert or append the item
 					if (containerElm.hasChildNodes() && index <= containerElm.childNodes.length - 1) {
-						containerElm.insertBefore(fragment, containerElm.childNodes[index]);
+						$(containerElm.childNodes[index]).before(ctrl.renderHtml());
 					} else {
-						containerElm.appendChild(fragment);
+						$(containerElm).append(ctrl.renderHtml());
 					}
 
 					ctrl.postRender();
+					ReflowQueue.add(ctrl);
 				}
 			});
 
-			self._layout.applyClasses(self);
+			self._layout.applyClasses(self.items().filter(':visible'));
 			self._lastRect = null;
 
 			return self;
@@ -360,9 +372,6 @@ define("tinymce/ui/Container", [
 			return data;
 		},
 
-		preRender: function() {
-		},
-
 		/**
 		 * Renders the control as a HTML string.
 		 *
@@ -376,8 +385,8 @@ define("tinymce/ui/Container", [
 			layout.preRender(self);
 
 			return (
-				'<div id="' + self._id + '" class="' + self.classes() + '"' + (role ? ' role="' + this.settings.role + '"' : '') + '>' +
-					'<div id="' + self._id + '-body" class="' + self.classes('body') + '">' +
+				'<div id="' + self._id + '" class="' + self.classes + '"' + (role ? ' role="' + this.settings.role + '"' : '') + '>' +
+					'<div id="' + self._id + '-body" class="' + self.bodyClasses + '">' +
 						(self.settings.html || '') + layout.renderHtml(self) +
 					'</div>' +
 				'</div>'
@@ -397,15 +406,15 @@ define("tinymce/ui/Container", [
 			self._super();
 
 			self._layout.postRender(self);
-			self._rendered = true;
+			self.state.set('rendered', true);
 
 			if (self.settings.style) {
-				DomUtils.css(self.getEl(), self.settings.style);
+				self.$el.css(self.settings.style);
 			}
 
 			if (self.settings.border) {
-				box = self.borderBox();
-				DomUtils.css(self.getEl(), {
+				box = self.borderBox;
+				self.$el.css({
 					'border-top-width': box.top,
 					'border-right-width': box.right,
 					'border-bottom-width': box.bottom,
@@ -469,6 +478,8 @@ define("tinymce/ui/Container", [
 		 */
 		reflow: function() {
 			var i;
+
+			ReflowQueue.remove(this);
 
 			if (this.visible()) {
 				Control.repaintControls = [];

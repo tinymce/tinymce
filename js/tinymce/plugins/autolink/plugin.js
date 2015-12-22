@@ -1,8 +1,8 @@
 /**
  * plugin.js
  *
- * Copyright 2011, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -95,11 +95,16 @@ tinymce.PluginManager.add('autolink', function(editor) {
 			}
 		}
 
+		// Never create a link when we are inside a link
+		if (editor.selection.getNode().tagName == 'A') {
+			return;
+		}
+
 		// We need at least five characters to form a URL,
 		// hence, at minimum, five characters from the beginning of the line.
 		rng = editor.selection.getRng(true).cloneRange();
 		if (rng.startOffset < 5) {
-			// During testing, the caret is placed inbetween two text nodes.
+			// During testing, the caret is placed between two text nodes.
 			// The previous text node contains the URL.
 			prev = rng.endContainer.previousSibling;
 			if (!prev) {

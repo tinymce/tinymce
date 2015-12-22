@@ -517,4 +517,26 @@
 		root = parser.parse('a<span> </span>b');
 		equal(serializer.serialize(root), 'a b');
 	});
+
+	test('Bug #7543 removes whitespace between bogus elements before a block', function() {
+		var serializer = new tinymce.html.Serializer();
+
+		equal(
+			serializer.serialize(new tinymce.html.DomParser().parse(
+				'<div><b data-mce-bogus="1">a</b> <b data-mce-bogus="1">b</b><p>c</p></div>')
+			),
+			'<div>a b<p>c</p></div>'
+		);
+	});
+
+	test('Bug #7582 removes whitespace between bogus elements before a block', function() {
+		var serializer = new tinymce.html.Serializer();
+
+		equal(
+			serializer.serialize(new tinymce.html.DomParser().parse(
+				'<div>1 <span data-mce-bogus="1">2</span><div>3</div></div>')
+			),
+			'<div>1 2<div>3</div></div>'
+		);
+	});
 })();

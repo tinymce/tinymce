@@ -86,10 +86,10 @@ test('One undo levels and one redo', function() {
 });
 
 test('Typing state', function() {
+	var selectAllFlags;
+
 	editor.undoManager.clear();
 	editor.setContent('test');
-
-	expect(4);
 
 	ok(!editor.undoManager.typing);
 
@@ -160,6 +160,36 @@ test('Events', function() {
 	editor.undoManager.redo();
 	ok(redo.content);
 	ok(redo.bookmark);
+});
+
+test('No undo/redo cmds on Undo/Redo shortcut', function() {
+	var evt, commands = [], added = false;
+
+	editor.undoManager.clear();
+	editor.setContent('test');
+
+	editor.on('BeforeExecCommand', function(e) {
+		commands.push(e.command);
+	});
+
+	editor.on('BeforeAddUndo', function() {
+		added = true;
+	});
+
+	evt = {
+		keyCode: 90,
+		metaKey: tinymce.Env.mac,
+		ctrlKey: !tinymce.Env.mac,
+		shiftKey: false,
+		altKey: false
+	};
+
+	editor.dom.fire(editor.getBody(), 'keydown', evt);
+	editor.dom.fire(editor.getBody(), 'keypress', evt);
+	editor.dom.fire(editor.getBody(), 'keyup', evt);
+
+	strictEqual(added, false);
+	deepEqual(commands, ["Undo"]);
 });
 
 test('Transact', function() {
@@ -337,7 +367,7 @@ test('BeforeAddUndo event', function() {
 
 test('Dirty state type letter', function() {
 	editor.undoManager.clear();
-	editor.isNotDirty = true;
+	editor.setDirty(false);
 	editor.setContent("<p>a</p>");
 	Utils.setSelection('p', 1);
 
@@ -349,7 +379,7 @@ test('Dirty state type letter', function() {
 
 test('Dirty state type shift+letter', function() {
 	editor.undoManager.clear();
-	editor.isNotDirty = true;
+	editor.setDirty(false);
 	editor.setContent("<p>a</p>");
 	Utils.setSelection('p', 1);
 
@@ -361,7 +391,7 @@ test('Dirty state type shift+letter', function() {
 
 test('Dirty state type AltGr+letter', function() {
 	editor.undoManager.clear();
-	editor.isNotDirty = true;
+	editor.setDirty(false);
 	editor.setContent("<p>a</p>");
 	Utils.setSelection('p', 1);
 

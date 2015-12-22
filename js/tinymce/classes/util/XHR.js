@@ -1,8 +1,8 @@
 /**
  * XHR.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -63,6 +63,8 @@ define("tinymce/util/XHR", [
 			settings.async = settings.async === false ? false : true;
 			settings.data = settings.data || '';
 
+			XHR.fire('beforeInitialize', {settings: settings});
+
 			xhr = new XMLHttpRequest();
 
 			if (xhr) {
@@ -78,6 +80,12 @@ define("tinymce/util/XHR", [
 
 				if (settings.content_type) {
 					xhr.setRequestHeader('Content-Type', settings.content_type);
+				}
+
+				if (settings.requestheaders) {
+					Tools.each(settings.requestheaders, function(header) {
+						xhr.setRequestHeader(header.key, header.value);
+					});
 				}
 
 				xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');

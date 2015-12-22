@@ -39,6 +39,23 @@ Minifies the core, adds the modern theme and adds the table and paste plugin int
 
 Contributing to the TinyMCE project
 ------------------------------------
-You can read more about how to contribute to this project at [http://www.tinymce.com/develop/contributing.php](http://www.tinymce.com/develop/contributing.php)
+TinyMCE is an open source software project and we encourage developers to contribute patches and code for us to include in the main package of TinyMCE.
+
+__Basic Rules__
+
+* Contributed code will be licensed under the LGPL license but not limited to LGPL.
+* Copyright notices will be changed to Ephox Corporation, contributors will get credit for their work.
+* All third party code will be reviewed, tested and possibly modified before being released.
+* All contributors will have to have signed the Contributor License Agreement.
+
+These basic rules ensures that the contributed code remains open source and under the LGPL license.
+
+__How to Contribute__
+
+The TinyMCE source code is [hosted on Github](http://github.com/tinymce/tinymce). Through Github you can submit pull requests and log new bugs and feature requests.
+
+When you submit a pull request, you will get a notice about signing the __Contributors License Agreement (CLA)__.
+You should have a __valid email address on your GitHub account__, and you will be sent a key to verify your identity and digitally sign the agreement.
+After you signed your pull request will automatically be ready for review & merge.
 
 [![Build Status](https://travis-ci.org/tinymce/tinymce.png?branch=master)](https://travis-ci.org/tinymce/tinymce)

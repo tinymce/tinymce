@@ -1,8 +1,8 @@
 /**
  * Movable.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -28,7 +28,7 @@ define("tinymce/ui/Movable", [
 		x = pos.x;
 		y = pos.y;
 
-		if (ctrl._fixed && DomUtils.getRuntimeStyle(document.body, 'position') == 'static') {
+		if (ctrl.state.get('fixed') && DomUtils.getRuntimeStyle(document.body, 'position') == 'static') {
 			x -= viewport.x;
 			y -= viewport.y;
 		}
@@ -104,7 +104,7 @@ define("tinymce/ui/Movable", [
 			for (var i = 0; i < rels.length; i++) {
 				var pos = calculateRelativePosition(this, elm, rels[i]);
 
-				if (this._fixed) {
+				if (this.state.get('fixed')) {
 					if (pos.x > 0 && pos.x + pos.w < viewPortRect.w && pos.y > 0 && pos.y + pos.h < viewPortRect.h) {
 						return rels[i];
 					}
@@ -164,7 +164,7 @@ define("tinymce/ui/Movable", [
 			var self = this;
 
 			// TODO: Move this to some global class
-			function contrain(value, max, size) {
+			function constrain(value, max, size) {
 				if (value < 0) {
 					return 0;
 				}
@@ -181,11 +181,11 @@ define("tinymce/ui/Movable", [
 				var viewPortRect = DomUtils.getViewPort(window);
 				var layoutRect = self.layoutRect();
 
-				x = contrain(x, viewPortRect.w + viewPortRect.x, layoutRect.w);
-				y = contrain(y, viewPortRect.h + viewPortRect.y, layoutRect.h);
+				x = constrain(x, viewPortRect.w + viewPortRect.x, layoutRect.w);
+				y = constrain(y, viewPortRect.h + viewPortRect.y, layoutRect.h);
 			}
 
-			if (self._rendered) {
+			if (self.state.get('rendered')) {
 				self.layoutRect({x: x, y: y}).repaint();
 			} else {
 				self.settings.x = x;

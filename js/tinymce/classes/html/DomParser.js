@@ -1,8 +1,8 @@
 /**
  * DomParser.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -46,11 +46,12 @@ define("tinymce/html/DomParser", [
 
 		function fixInvalidChildren(nodes) {
 			var ni, node, parent, parents, newParent, currentNode, tempNode, childNode, i;
-			var nonEmptyElements, nonSplitableElements, textBlockElements, sibling, nextNode;
+			var nonEmptyElements, nonSplitableElements, textBlockElements, specialElements, sibling, nextNode;
 
 			nonSplitableElements = makeMap('tr,td,th,tbody,thead,tfoot,table');
 			nonEmptyElements = schema.getNonEmptyElements();
 			textBlockElements = schema.getTextBlockElements();
+			specialElements = schema.getSpecialElements();
 
 			for (ni = 0; ni < nodes.length; ni++) {
 				node = nodes[ni];
@@ -151,7 +152,7 @@ define("tinymce/html/DomParser", [
 						node.wrap(self.filterNode(new Node('div', 1)));
 					} else {
 						// We failed wrapping it, then remove or unwrap it
-						if (node.name === 'style' || node.name === 'script') {
+						if (specialElements[node.name]) {
 							node.empty().remove();
 						} else {
 							node.unwrap();
@@ -353,19 +354,36 @@ define("tinymce/html/DomParser", [
 			}
 
 			function removeWhitespaceBefore(node) {
-				var textNode, textVal, sibling;
+				var textNode, textNodeNext, textVal, sibling, blockElements = schema.getBlockElements();
 
 				for (textNode = node.prev; textNode && textNode.type === 3;) {
 					textVal = textNode.value.replace(endWhiteSpaceRegExp, '');
 
+					// Found a text node with non whitespace then trim that and break
 					if (textVal.length > 0) {
 						textNode.value = textVal;
-						textNode = textNode.prev;
-					} else {
-						sibling = textNode.prev;
-						textNode.remove();
-						textNode = sibling;
+						return;
 					}
+
+					textNodeNext = textNode.next;
+
+					// Fix for bug #7543 where bogus nodes would produce empty
+					// text nodes and these would be removed if a nested list was before it
+					if (textNodeNext) {
+						if (textNodeNext.type == 3 && textNodeNext.value.length) {
+							textNode = textNode.prev;
+							continue;
+						}
+
+						if (!blockElements[textNodeNext.name] && textNodeNext.name != 'script' && textNodeNext.name != 'style') {
+							textNode = textNode.prev;
+							continue;
+						}
+					}
+
+					sibling = textNode.prev;
+					textNode.remove();
+					textNode = sibling;
 				}
 			}
 

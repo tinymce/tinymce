@@ -1,8 +1,8 @@
 /**
  * plugin.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -26,7 +26,7 @@ tinymce.PluginManager.add('wordcount', function(editor) {
 		var statusbar = editor.theme.panel && editor.theme.panel.find('#statusbar')[0];
 
 		if (statusbar) {
-			window.setTimeout(function() {
+			tinymce.util.Delay.setEditorTimeout(editor, function() {
 				statusbar.insert({
 					type: 'label',
 					name: 'wordcount',

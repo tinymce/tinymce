@@ -1,8 +1,8 @@
 /**
  * FitLayout.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -29,7 +29,7 @@ define("tinymce/ui/FitLayout", [
 		 * @param {tinymce.ui.Container} container Container instance to recalc.
 		 */
 		recalc: function(container) {
-			var contLayoutRect = container.layoutRect(), paddingBox = container.paddingBox();
+			var contLayoutRect = container.layoutRect(), paddingBox = container.paddingBox;
 
 			container.items().filter(':visible').each(function(ctrl) {
 				ctrl.layoutRect({

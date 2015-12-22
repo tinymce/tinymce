@@ -20,6 +20,8 @@ js/tinymce/tinymce.jquery.js
 js/tinymce/plugins/table/plugin.js
 js/tinymce/plugins/spellchecker/plugin.js
 js/tinymce/plugins/paste/plugin.js
+js/tinymce/plugins/imagetools/plugin.js
+js/tinymce/plugins/codesample/plugin.js
 imagemanager
 filemanager
 mcmanager

@@ -1,9 +1,8 @@
-﻿// Window
+// Window
 
 .@{prefix}-fullscreen {
 	border: 0; padding: 0; margin: 0;
 	overflow: hidden;
-	background: @window-fullscreen-bg;
 	height: 100%;
 }
 
@@ -102,6 +101,10 @@ div.@{prefix}-fullscreen {
 
 .@{prefix}-window.@{prefix}-fullscreen, .@{prefix}-window.@{prefix}-fullscreen .@{prefix}-foot {
 	.border-radius(0);
+}
+
+.@{prefix}-window-body .@{prefix}-listbox {
+	border-color: @btn-border-hover;
 }
 
 // RTL

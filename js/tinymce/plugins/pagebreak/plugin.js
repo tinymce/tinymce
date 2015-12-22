@@ -1,8 +1,8 @@
 /**
  * plugin.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -18,7 +18,7 @@ tinymce.PluginManager.add('pagebreak', function(editor) {
 	}), 'gi');
 
 	var pageBreakPlaceHolderHtml = '<img src="' + tinymce.Env.transparentSrc + '" class="' +
-		pageBreakClass + '" data-mce-resize="false" />';
+		pageBreakClass + '" data-mce-resize="false" data-mce-placeholder />';
 
 	// Register commands
 	editor.addCommand('mcePageBreak', function() {

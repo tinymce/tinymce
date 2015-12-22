@@ -13,18 +13,17 @@
 		selector: "textarea#elm1",
 		theme: "modern",
 		plugins: [
-			"advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
-			"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-			"save table contextmenu directionality emoticons template paste textcolor importcss colorpicker textpattern"
+			"save image link"
 		],
-		
+		toolbar: 'save | image link | bold italic | undo redo',
+		save_onsavecallback: logDirty,
 		setup: function(ed) {
 			ed.on('Change Undo Redo', logDirty);
 		}
 	});
 
-	function setNotDirty() {
-		tinymce.activeEditor.isNotDirty = true;
+	function setDirty(state) {
+		tinymce.activeEditor.isNotDirty = !state;
 		logDirty();
 	}
 
@@ -41,7 +40,8 @@
 	<div>
 		<div>
 			<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%">Some text</textarea>
-			<button onclick="setNotDirty()" type="button">setNotDirty</button>
+			<button onclick="setDirty(true)" type="button">setDirty(true)</button>
+			<button onclick="setDirty(false)" type="button">setDirty(false)</button>
 			<button onclick="logDirty()" type="button">logDirty</button>
 			<span id="status">isDirty: false</span>
 	</div>

@@ -1,13 +1,19 @@
 /**
  * Range.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
 
+/**
+ * Old IE Range.
+ *
+ * @private
+ * @class tinymce.dom.Range
+ */
 define("tinymce/dom/Range", [
 	"tinymce/util/Tools"
 ], function(Tools) {
@@ -173,7 +179,8 @@ define("tinymce/dom/Range", [
 		function _getSelectedNode(container, offset) {
 			var child;
 
-			if (container.nodeType == 3 /* TEXT_NODE */) {
+			// TEXT_NODE
+			if (container.nodeType == 3) {
 				return container;
 			}
 
@@ -407,7 +414,7 @@ define("tinymce/dom/Range", [
 			}
 
 			// Text node needs special case handling
-			if (self[START_CONTAINER].nodeType == 3 /* TEXT_NODE */) {
+			if (self[START_CONTAINER].nodeType == 3) { // TEXT_NODE
 				// get the substring
 				s = self[START_CONTAINER].nodeValue;
 				sub = s.substring(self[START_OFFSET], self[END_OFFSET]);
@@ -684,7 +691,8 @@ define("tinymce/dom/Range", [
 				return _traverseFullySelected(n, how);
 			}
 
-			if (n.nodeType == 3 /* TEXT_NODE */) {
+			// TEXT_NODE
+			if (n.nodeType == 3) {
 				txtValue = n.nodeValue;
 
 				if (isLeft) {
@@ -731,7 +739,7 @@ define("tinymce/dom/Range", [
 		}
 
 		extend(self, {
-			// Inital states
+			// Initial states
 			startContainer: doc,
 			startOffset: 0,
 			endContainer: doc,

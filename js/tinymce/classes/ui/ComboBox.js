@@ -1,8 +1,8 @@
 /**
  * ComboBox.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -19,8 +19,9 @@
 define("tinymce/ui/ComboBox", [
 	"tinymce/ui/Widget",
 	"tinymce/ui/Factory",
-	"tinymce/ui/DomUtils"
-], function(Widget, Factory, DomUtils) {
+	"tinymce/ui/DomUtils",
+	"tinymce/dom/DomQuery"
+], function(Widget, Factory, DomUtils, $) {
 	"use strict";
 
 	return Widget.extend({
@@ -35,11 +36,12 @@ define("tinymce/ui/ComboBox", [
 			var self = this;
 
 			self._super(settings);
-			self.addClass('combobox');
+			settings = self.settings;
+
+			self.classes.add('combobox');
 			self.subinput = true;
 			self.ariaTarget = 'inp'; // TODO: Figure out a better way
 
-			settings = self.settings;
 			settings.menu = settings.menu || settings.values;
 
 			if (settings.menu) {
@@ -48,6 +50,10 @@ define("tinymce/ui/ComboBox", [
 
 			self.on('click', function(e) {
 				var elm = e.target, root = self.getEl();
+
+				if (!$.contains(root, elm) && elm != root) {
+					return;
+				}
 
 				while (elm && elm != root) {
 					if (elm.id && elm.id.indexOf('-open') != -1) {
@@ -70,8 +76,15 @@ define("tinymce/ui/ComboBox", [
 			self.on('keydown', function(e) {
 				if (e.target.nodeName == "INPUT" && e.keyCode == 13) {
 					self.parents().reverse().each(function(ctrl) {
+						var stateValue = self.state.get('value'), inputValue = self.getEl('inp').value;
+
 						e.preventDefault();
-						self.fire('change');
+
+						self.state.set('value', inputValue);
+
+						if (stateValue != inputValue) {
+							self.fire('change');
+						}
 
 						if (ctrl.hasEventListeners('submit') && ctrl.toJSON) {
 							ctrl.fire('submit', {data: ctrl.toJSON()});
@@ -81,31 +94,11 @@ define("tinymce/ui/ComboBox", [
 				}
 			});
 
-			if (settings.placeholder) {
-				self.addClass('placeholder');
-
-				self.on('focusin', function() {
-					if (!self._hasOnChange) {
-						DomUtils.on(self.getEl('inp'), 'change', function() {
-							self.fire('change');
-						});
-
-						self._hasOnChange = true;
-					}
-
-					if (self.hasClass('placeholder')) {
-						self.getEl('inp').value = '';
-						self.removeClass('placeholder');
-					}
-				});
-
-				self.on('focusout', function() {
-					if (self.value().length === 0) {
-						self.getEl('inp').value = settings.placeholder;
-						self.addClass('placeholder');
-					}
-				});
-			}
+			self.on('keyup', function(e) {
+				if (e.target.nodeName == "INPUT") {
+					self.state.set('value', e.target.value);
+				}
+			});
 		},
 
 		showMenu: function() {
@@ -158,57 +151,6 @@ define("tinymce/ui/ComboBox", [
 		},
 
 		/**
-		 * Getter/setter function for the control value.
-		 *
-		 * @method value
-		 * @param {String} [value] Value to be set.
-		 * @return {String|tinymce.ui.ComboBox} Value or self if it's a set operation.
-		 */
-		value: function(value) {
-			var self = this;
-
-			if (typeof value != "undefined") {
-				self._value = value;
-				self.removeClass('placeholder');
-
-				if (self._rendered) {
-					self.getEl('inp').value = value;
-				}
-
-				return self;
-			}
-
-			if (self._rendered) {
-				value = self.getEl('inp').value;
-
-				if (value != self.settings.placeholder) {
-					return value;
-				}
-
-				return '';
-			}
-
-			return self._value;
-		},
-
-		/**
-		 * Getter/setter function for the disabled state.
-		 *
-		 * @method value
-		 * @param {Boolean} [state] State to be set.
-		 * @return {Boolean|tinymce.ui.ComboBox} True/false or self if it's a set operation.
-		 */
-		disabled: function(state) {
-			var self = this;
-
-			if (self._rendered && typeof state != 'undefined') {
-				self.getEl('inp').disabled = state;
-			}
-
-			return self._super(state);
-		},
-
-		/**
 		 * Focuses the input area of the control.
 		 *
 		 * @method focus
@@ -238,7 +180,7 @@ define("tinymce/ui/ComboBox", [
 				lineHeight = (self.layoutRect().h - 2) + 'px';
 			}
 
-			DomUtils.css(elm.firstChild, {
+			$(elm.firstChild).css({
 				width: width,
 				lineHeight: lineHeight
 			});
@@ -257,16 +199,12 @@ define("tinymce/ui/ComboBox", [
 		postRender: function() {
 			var self = this;
 
-			DomUtils.on(this.getEl('inp'), 'change', function() {
-				self.fire('change');
+			$(this.getEl('inp')).on('change', function(e) {
+				self.state.set('value', e.target.value);
+				self.fire('change', e);
 			});
 
 			return self._super();
-		},
-
-		remove: function() {
-			DomUtils.off(this.getEl('inp'));
-			this._super();
 		},
 
 		/**
@@ -277,7 +215,7 @@ define("tinymce/ui/ComboBox", [
 		 */
 		renderHtml: function() {
 			var self = this, id = self._id, settings = self.settings, prefix = self.classPrefix;
-			var value = settings.value || settings.placeholder || '';
+			var value = self.state.get('value') || '';
 			var icon, text, openBtnHtml = '', extraAttrs = '';
 
 			if ("spellcheck" in settings) {
@@ -305,7 +243,7 @@ define("tinymce/ui/ComboBox", [
 				icon = prefix + 'ico ' + prefix + 'i-' + settings.icon;
 			}
 
-			text = self._text;
+			text = self.state.get('text');
 
 			if (icon || text) {
 				openBtnHtml = (
@@ -317,16 +255,52 @@ define("tinymce/ui/ComboBox", [
 					'</div>'
 				);
 
-				self.addClass('has-open');
+				self.classes.add('has-open');
 			}
 
 			return (
-				'<div id="' + id + '" class="' + self.classes() + '">' +
-					'<input id="' + id + '-inp" class="' + prefix + 'textbox ' + prefix + 'placeholder" value="' +
-					value + '" hidefocus="1"' + extraAttrs + ' />' +
+				'<div id="' + id + '" class="' + self.classes + '">' +
+					'<input id="' + id + '-inp" class="' + prefix + 'textbox" value="' +
+					self.encode(value, false) + '" hidefocus="1"' + extraAttrs + ' placeholder="' +
+					self.encode(settings.placeholder) + '" />' +
 					openBtnHtml +
 				'</div>'
 			);
+		},
+
+		value: function(value) {
+			if (arguments.length) {
+				this.state.set('value', value);
+				return this;
+			}
+
+			// Make sure the real state is in sync
+			if (this.state.get('rendered')) {
+				this.state.set('value', this.getEl('inp').value);
+			}
+
+			return this.state.get('value');
+		},
+
+		bindStates: function() {
+			var self = this;
+
+			self.state.on('change:value', function(e) {
+				if (self.getEl('inp').value != e.value) {
+					self.getEl('inp').value = e.value;
+				}
+			});
+
+			self.state.on('change:disabled', function(e) {
+				self.getEl('inp').disabled = e.value;
+			});
+
+			return self._super();
+		},
+
+		remove: function() {
+			$(this.getEl('inp')).off();
+			this._super();
 		}
 	});
 });
