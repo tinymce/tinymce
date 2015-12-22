@@ -379,8 +379,11 @@ define("tinymce/pasteplugin/Clipboard", [
 		}
 
 		/**
-		 * Checks if the clipboard contains image data if it does it will take that data
+		 * Checks if the clipboard contains image data. If it does it will take that data
 		 * and convert it into a data url image and paste that image at the caret location.
+		 *
+		 * If the max_image_size setting is defined, it also makes sure the image is not
+		 * larger than that value.
 		 *
 		 * @param  {ClipboardEvent} e Paste/drop event object.
 		 * @param  {DOMRange} rng Optional rng object to move selection to.
@@ -393,12 +396,46 @@ define("tinymce/pasteplugin/Clipboard", [
 				var i, item, reader, hadImage = false;
 
 				function pasteImage(reader) {
+					function checkIfValidImageSize(max_image_size, reader) {
+						var maxPixels, imagePixels, img;
+
+						img = new Image();
+						img.src = reader.result;
+
+						if ((typeof max_image_size) === 'number') {
+							maxPixels = max_image_size * max_image_size;
+							imagePixels = img.width * img.height;
+
+							return imagePixels <= maxPixels;
+						} else if ((typeof max_image_size) === 'object') {
+							return img.width <= max_image_size.width && img.height <= max_image_size.height;
+						}
+
+					}
+
+					function formatImageSize(max_image_size) {
+						if ((typeof max_image_size) === 'number') {
+							return max_image_size + 'x' + max_image_size;
+						} else if ((typeof max_image_size) === 'object') {
+							return max_image_size.width + 'x' + max_image_size.height;
+						}
+					}
+
 					if (rng) {
 						editor.selection.setRng(rng);
 						rng = null;
 					}
 
-					pasteHtml('<img src="' + reader.result + '">');
+					if (editor.settings.max_image_size) {
+						if (checkIfValidImageSize(editor.settings.max_image_size, reader)) {
+							pasteHtml('<img src="' + reader.result + '">');
+						} else {
+							editor.windowManager.alert('The image you tried to insert is too large.\n' +
+								'The maximum limit is ' + formatImageSize(editor.settings.max_image_size) + ' pixels.');
+						}
+					} else {
+						pasteHtml('<img src="' + reader.result + '">');
+					}
 				}
 
 				if (items) {
