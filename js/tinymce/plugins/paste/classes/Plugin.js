@@ -33,6 +33,9 @@ define("tinymce/pasteplugin/Plugin", [
 				clipboard.pasteFormat = "text";
 				this.active(true);
 
+				if (settings.paste_informUser === false)
+					return;
+
 				if (!userIsInformed) {
 					var message = editor.translate('Paste is now in plain text mode. Contents will now ' +
 						'be pasted as plain text until you toggle this option off.');
