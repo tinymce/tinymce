@@ -62,7 +62,7 @@ define("tinymce/util/XHR", [
 			settings.error_scope = settings.error_scope || settings.scope;
 			settings.async = settings.async === false ? false : true;
 			settings.data = settings.data || '';
-			
+
 			XHR.fire('beforeInitialize', {settings: settings});
 
 			xhr = new XMLHttpRequest();
