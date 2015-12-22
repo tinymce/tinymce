@@ -249,6 +249,11 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		data.source2mime = guessMime(data.source2);
 		data.poster = editor.convertURL(data.poster, "poster");
 		data.flashPlayerUrl = editor.convertURL(url + '/moxieplayer.swf', "movie");
+		if(!!editor.settings.media_urlPatterns){
+			if(Tools.isArray(editor.settings.media_urlPatterns)){
+				urlPatterns = urlPatterns.concat(editor.settings.media_urlPatterns);
+			}
+		}
 
 		tinymce.each(urlPatterns, function(pattern) {
 			var match, i, url;
