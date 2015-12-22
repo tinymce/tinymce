@@ -1,5 +1,6 @@
 Version 4.3.3 (2015-12-xx)
 	Fixed bug where media plugin would strip underscores from youtube urls.
+	Fixed so the template plugins templates setting can be a function that gets a callback that can provide templates.
 Version 4.3.2 (2015-12-14)
 	Fixed bug where the resize bars for table cells were not affected by the object_resizing property.
 	Fixed bug where the contextual table toolbar would appear incorrectly if TinyMCE was initialized inline inside a table.
