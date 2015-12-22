@@ -11,7 +11,7 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('contextmenu', function(editor) {
-	var menu, contextmenuNeverUseNative = editor.settings.contextmenu_never_use_native;
+	var menus = {}, contextmenuNeverUseNative = editor.settings.contextmenu_never_use_native;
 
 	editor.on('contextmenu', function(e) {
 		var contextmenu, doc = editor.getDoc();
@@ -34,6 +34,10 @@ tinymce.PluginManager.add('contextmenu', function(editor) {
 		}
 
 		contextmenu = editor.settings.contextmenu || 'link image inserttable | cell row column deletetable';
+		if (typeof (contextmenu) === 'function')
+			contextmenu = contextmenu(editor);
+
+		var menu = menus[contextmenu];
 
 		// Render menu
 		if (!menu) {
@@ -69,7 +73,10 @@ tinymce.PluginManager.add('contextmenu', function(editor) {
 			editor.on('remove', function() {
 				menu.remove();
 				menu = null;
+				menus[contextmenu] = null;
 			});
+
+			menus[contextmenu] = menu;
 		} else {
 			menu.show();
 		}
