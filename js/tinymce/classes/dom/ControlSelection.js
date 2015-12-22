@@ -598,7 +598,9 @@ define("tinymce/dom/ControlSelection", [
 			// Update resize rect while typing in a table
 			editor.on('keydown keyup', function(e) {
 				if (selectedElm && selectedElm.nodeName == "TABLE") {
-					updateResizeRect(e);
+					Delay.requestAnimationFrame(function() {
+						updateResizeRect(e);
+					});
 				}
 			});
 
