@@ -510,6 +510,10 @@ define("tinymce/Editor", [
 					Theme = ThemeManager.get(settings.theme);
 					self.theme = new Theme(self, ThemeManager.urls[settings.theme]);
 
+					if (!self.theme) {
+						throw new Error("You do not have any themes loaded.");
+					}
+
 					if (self.theme.init) {
 						self.theme.init(self, ThemeManager.urls[settings.theme] || self.documentBaseUrl.replace(/\/$/, ''), self.$);
 					}
