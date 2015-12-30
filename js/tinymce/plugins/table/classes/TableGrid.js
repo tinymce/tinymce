@@ -367,7 +367,7 @@ define("tinymce/tableplugin/TableGrid", [
 								children = Tools.grep(startCell.childNodes);
 								count = 0;
 								each(children, function(node) {
-									if (node.nodeName == 'BR' && dom.getAttrib(node, 'data-mce-bogus') && count++ < children.length - 1) {
+									if (node.nodeName == 'BR' && count++ < children.length - 1) {
 										startCell.removeChild(node);
 									}
 								});
