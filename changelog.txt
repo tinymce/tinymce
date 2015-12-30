@@ -2,6 +2,7 @@ Version 4.3.3 (2015-12-xx)
 	Added new table_resize_bars configuration setting.  This setting allows you to disable the table resize bars.
 	Added new beforeInitialize event to tinymce.util.XHR lets you modify XHR properties before open. Patch contributed by Brent Clintel.
 	Added new autolink_pattern setting to autolink plugin. Enables you to override the default autolink formats. Patch contributed by Ben Tiedt.
+	Fixed bug where table plugin would retain all BR tags when cells were merged.
 	Fixed bug where media plugin would strip underscores from youtube urls.
 	Fixed bug where IME input would fail on IE 11 if you typed within a table.
 	Fixed so the template plugins templates setting can be a function that gets a callback that can provide templates.
