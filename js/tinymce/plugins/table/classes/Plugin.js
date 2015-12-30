@@ -30,7 +30,7 @@ define("tinymce/tableplugin/Plugin", [
 	function Plugin(editor) {
 		var clipboardRows, self = this, dialogs = new Dialogs(editor), resizeBars;
 
-		if (editor.settings.object_resizing &&
+		if (editor.settings.object_resizing && editor.settings.table_resize_bars !== false &&
 			(editor.settings.object_resizing === true || editor.settings.object_resizing === 'table')) {
 			resizeBars = ResizeBars(editor);
 		}
