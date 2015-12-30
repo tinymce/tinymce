@@ -176,7 +176,7 @@ define("tinymce/tableplugin/TableGrid", [
 
 					// Add something to the inner node
 					if (curNode) {
-						curNode.innerHTML = Env.ie ? '&nbsp;' : '<br data-mce-bogus="1" />';
+						curNode.innerHTML = Env.ie && Env.ie < 10 ? '&nbsp;' : '<br data-mce-bogus="1" />';
 					}
 
 					return false;

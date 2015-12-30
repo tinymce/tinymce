@@ -50,7 +50,7 @@ define("tinymce/tableplugin/Plugin", [
 				html += '<tr>';
 
 				for (x = 0; x < cols; x++) {
-					html += '<td>' + (Env.ie ? " " : '<br>') + '</td>';
+					html += '<td>' + (Env.ie && Env.ie < 10 ? '&nbsp;' : '<br>') + '</td>';
 				}
 
 				html += '</tr>';

@@ -22,7 +22,7 @@ define("tinymce/tableplugin/Utils", [
 	}
 
 	function paddCell(cell) {
-		if (!Env.ie || Env.ie > 10) {
+		if (!Env.ie || Env.ie > 9) {
 			cell.innerHTML = '<br data-mce-bogus="1" />';
 		}
 	}
