@@ -520,7 +520,7 @@ module.exports = function(grunt) {
 						zip.addData("bower.json", jsonToBuffer({
 							"name": "tinymce",
 							"description": "Web based JavaScript HTML WYSIWYG editor control.",
-							"license": "http://www.tinymce.com/license",
+							"license": "LGPL-2.1",
 							"keywords": ["editor", "wysiwyg", "tinymce", "richtext", "javascript", "html"],
 							"homepage": "http://www.tinymce.com",
 							"ignore": ["readme.md", "composer.json", "package.json"]
