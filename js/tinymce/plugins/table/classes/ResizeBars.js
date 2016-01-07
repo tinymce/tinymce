@@ -127,6 +127,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			for (var i = 1; i < thingsToMeasure.length; i++) {
 				// Get the element from the details
 				var item = thingsToMeasure[i].element;
+
 				// We need to zero index this again
 				tablePositions.push(getInner(i - 1, item));
 			}
@@ -334,15 +335,15 @@ define("tinymce/tableplugin/ResizeBars", [
 			var rows = range(0, tableGrid.grid.maxRows);
 
 			return Tools.map(cols, function(col) {
-
 				function getBlock() {
 					var details = [];
 					for (var i = 0; i < rows.length; i++) {
 						var detail = tableGrid.getAt(i, col);
-						if (detail.colIndex === col) {
+						if (detail && detail.colIndex === col) {
 							details.push(detail);
 						}
 					}
+
 					return details;
 				}
 
@@ -351,27 +352,33 @@ define("tinymce/tableplugin/ResizeBars", [
 				}
 
 				function getFallback() {
-					return tableGrid.getAt(0, col);
+					var item;
+
+					for (var i = 0; i < rows.length; i++) {
+						item = tableGrid.getAt(i, col);
+						if (item) {
+							return item;
+						}
+					}
+
+					return null;
 				}
 
 				return decide(getBlock, isSingle, getFallback);
-
 			});
 		}
 
 		// Attempt to get representative blocks for the height of each row.
 		function getRowBlocks(tableGrid) {
-
 			var cols = range(0, tableGrid.grid.maxCols);
 			var rows = range(0, tableGrid.grid.maxRows);
 
 			return Tools.map(rows, function(row) {
-
 				function getBlock() {
 					var details = [];
 					for (var i = 0; i < cols.length; i++) {
 						var detail = tableGrid.getAt(row, i);
-						if (detail.rowIndex === row) {
+						if (detail && detail.rowIndex === row) {
 							details.push(detail);
 						}
 					}
@@ -383,7 +390,7 @@ define("tinymce/tableplugin/ResizeBars", [
 				}
 
 				function getFallback() {
-					tableGrid.getAt(row, 0);
+					return tableGrid.getAt(row, 0);
 				}
 
 				return decide(getBlock, isSingle, getFallback);

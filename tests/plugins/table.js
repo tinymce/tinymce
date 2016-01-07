@@ -620,6 +620,30 @@
 	var testResizeTable3 = '<div style=\"display: block; width: 400px;\"><table style=\"border-collapse: collapse; border: 1px solid black;\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tbody><tr><td rowspan=\"2\" width=\"25%\">&nbsp;a</td><td width=\"25%\">&nbsp;b</td><td width=\"25%\">&nbsp;</td>' +
 	'<td width=\"25%\">&nbsp;c</td></tr><tr><td width=\"25%\">&nbsp;d</td><td width=\"25%\">&nbsp;</td><td rowspan=\"2\" width=\"25%\">&nbsp;e</td></tr><tr><td width=\"25%\">&nbsp;f</td><td width=\"25%\">&nbsp;g</td><td width=\"25%\">&nbsp;</td></tr><tr><td width=\"25%\">&nbsp;h</td><td width=\"25%\">&nbsp;i</td><td width=\"25%\">&nbsp;</td><td width=\"25%\">j&nbsp;</td></tr></tbody></table></div>';
 
+	var testResizeTable4 = (
+		'<table>' +
+			'<tbody>' +
+				'<tr>' +
+					'<td>a</td>' +
+					'<td>b</td>' +
+				'</tr>' +
+				'<tr>' +
+					'<td>a</td>' +
+					'<td>b</td>' +
+					'<td>c</td>' +
+				'</tr>' +
+				'<tr>' +
+					'<td>a</td>' +
+				'</tr>' +
+				'<tr>' +
+					'<td>a</td>' +
+					'<td>b</td>' +
+					'<td colspan="2">c</td>' +
+				'</tr>' +
+			'</tbody>' +
+		'</table>'
+	);
+
 	test("Is Pixel/Percentage Based Width", function() {
 		var pixelWidths = ['125px', '200px', '300em'];
 		var percentageWidths = ['25%', '30%', '100%'];
@@ -644,7 +668,7 @@
 
 		var table = editor.dom.select('table')[0];
 		var details = editor.plugins.table.resizeBars.getTableDetails(table);
-		var tableGrid  = editor.plugins.table.resizeBars.getTableGrid(details);
+		var tableGrid = editor.plugins.table.resizeBars.getTableGrid(details);
 
 		deepEqual(
 			editor.plugins.table.resizeBars.getWidths(tableGrid, false, table),
@@ -660,7 +684,7 @@
 
 		table = editor.dom.select('table')[0];
 		details = editor.plugins.table.resizeBars.getTableDetails(table);
-		tableGrid  = editor.plugins.table.resizeBars.getTableGrid(details);
+		tableGrid = editor.plugins.table.resizeBars.getTableGrid(details);
 
 		deepEqual(
 			editor.plugins.table.resizeBars.getWidths(tableGrid, false, table),
@@ -676,7 +700,7 @@
 
 		table = editor.dom.select('table')[0];
 		details = editor.plugins.table.resizeBars.getTableDetails(table);
-		tableGrid  = editor.plugins.table.resizeBars.getTableGrid(details);
+		tableGrid = editor.plugins.table.resizeBars.getTableGrid(details);
 
 		deepEqual(
 			editor.plugins.table.resizeBars.getWidths(tableGrid, true, table),
@@ -686,6 +710,28 @@
 
 	test("Draw bars/clear bars", function() {
 		editor.setContent(testResizeTable1);
+
+		var table = editor.dom.select('table')[0];
+
+		editor.plugins.table.resizeBars.drawBars(table);
+
+		equal(editor.dom.select('.mce-resize-bar-row').length,
+			4);
+
+		equal(editor.dom.select('.mce-resize-bar-col').length,
+			4);
+
+		editor.plugins.table.resizeBars.clearBars();
+
+		equal(editor.dom.select('.mce-resize-bar-row').length,
+			0);
+
+		equal(editor.dom.select('.mce-resize-bar-col').length,
+			0);
+	});
+
+	test("Draw bars/clear bars on invalid table", function() {
+		editor.setContent(testResizeTable4);
 
 		var table = editor.dom.select('table')[0];
 

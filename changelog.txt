@@ -6,6 +6,8 @@ Version 4.3.3 (2015-12-xx)
 	Fixed bug where table plugin would retain all BR tags when cells were merged.
 	Fixed bug where media plugin would strip underscores from youtube urls.
 	Fixed bug where IME input would fail on IE 11 if you typed within a table.
+	Fixed bug where double click selection of a word would remove the space before the word on insert contents.
+	Fixed bug where table plugin would produce exceptions when hovering tables with invalid structure.
 	Fixed so the template plugins templates setting can be a function that gets a callback that can provide templates.
 Version 4.3.2 (2015-12-14)
 	Fixed bug where the resize bars for table cells were not affected by the object_resizing property.
