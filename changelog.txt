@@ -2,12 +2,16 @@ Version 4.3.3 (2015-12-xx)
 	Added new table_resize_bars configuration setting.  This setting allows you to disable the table resize bars.
 	Added new beforeInitialize event to tinymce.util.XHR lets you modify XHR properties before open. Patch contributed by Brent Clintel.
 	Added new autolink_pattern setting to autolink plugin. Enables you to override the default autolink formats. Patch contributed by Ben Tiedt.
+	Added new charmap option that lets you override the default charmap of the charmap plugin.
+	Added new charmap_append option that lets you add new characters to the default charmap of the charmap plugin.
+	Added new insertCustomChar event that gets fired when a character is inserted by the charmap plugin.
 	Fixed bug where table cells started with a superfluous &nbsp; in IE10+.
 	Fixed bug where table plugin would retain all BR tags when cells were merged.
 	Fixed bug where media plugin would strip underscores from youtube urls.
 	Fixed bug where IME input would fail on IE 11 if you typed within a table.
 	Fixed bug where double click selection of a word would remove the space before the word on insert contents.
 	Fixed bug where table plugin would produce exceptions when hovering tables with invalid structure.
+	Fixed bug where fullscreen wouldn't scroll back to it's original position when untoggled.
 	Fixed so the template plugins templates setting can be a function that gets a callback that can provide templates.
 Version 4.3.2 (2015-12-14)
 	Fixed bug where the resize bars for table cells were not affected by the object_resizing property.
