@@ -1,4 +1,4 @@
-Version 4.3.3 (2015-12-xx)
+Version 4.3.3 (2016-01-14)
 	Added new table_resize_bars configuration setting.  This setting allows you to disable the table resize bars.
 	Added new beforeInitialize event to tinymce.util.XHR lets you modify XHR properties before open. Patch contributed by Brent Clintel.
 	Added new autolink_pattern setting to autolink plugin. Enables you to override the default autolink formats. Patch contributed by Ben Tiedt.
