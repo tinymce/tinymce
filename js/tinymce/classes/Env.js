@@ -18,7 +18,7 @@
  */
 define("tinymce/Env", [], function() {
 	var nav = navigator, userAgent = nav.userAgent;
-	var opera, webkit, ie, ie11, ie12, gecko, mac, iDevice, android, fileApi, phone, tablet;
+	var opera, webkit, ie, ie11, ie12, gecko, mac, iDevice, android, fileApi, phone, tablet, windowsPhone;
 
 	function matchMediaQuery(query) {
 		return "matchMedia" in window ? matchMedia(query).matches : false;
@@ -38,6 +38,7 @@ define("tinymce/Env", [], function() {
 	fileApi = "FormData" in window && "FileReader" in window && "URL" in window && !!URL.createObjectURL;
 	phone = matchMediaQuery("only screen and (max-device-width: 480px)") && (android || iDevice);
 	tablet = matchMediaQuery("only screen and (min-width: 800px)") && (android || iDevice);
+	windowsPhone = userAgent.indexOf('Windows Phone') != -1;
 
 	if (ie12) {
 		webkit = false;
@@ -170,6 +171,7 @@ define("tinymce/Env", [], function() {
 		 */
 		ceFalse: (ie === false || ie > 8),
 
-		desktop: !phone && !tablet
+		desktop: !phone && !tablet,
+		windowsPhone: windowsPhone
 	};
 });
