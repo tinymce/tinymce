@@ -116,7 +116,7 @@
 			{href: 'test1.css', cssRules: [
 				{selectorText: '.a'},
 				{selectorText: '.b'}
-			]},
+			]}
 		]);
 
 		equal(evt.control.items().length, 1);
@@ -133,7 +133,7 @@
 			{href: 'test1.css', cssRules: [
 				{selectorText: '.a'},
 				{selectorText: '.b'}
-			]},
+			]}
 		]);
 
 		equal(evt.control.items().length, 1);
@@ -148,7 +148,7 @@
 			{href: 'test1.css', cssRules: [
 				{selectorText: '.a'},
 				{selectorText: '.b'}
-			]},
+			]}
 		]);
 
 		equal(evt.control.items().length, 1);
@@ -168,7 +168,7 @@
 				{selectorText: '.a'},
 				{selectorText: '.b'},
 				{selectorText: '.c'}
-			]},
+			]}
 		]);
 
 		equal(evt.control.items().length, 3);
