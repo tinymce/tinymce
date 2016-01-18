@@ -634,14 +634,17 @@ define("tinymce/Editor", [
 			self.iframeHTML += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
 
 			// Load the CSS by injecting them into the HTML this will reduce "flicker"
-			for (i = 0; i < self.contentCSS.length; i++) {
-				var cssUrl = self.contentCSS[i];
-				self.iframeHTML += (
-					'<link type="text/css" ' +
-						'rel="stylesheet" ' +
-						'href="' + Tools._addCacheSuffix(cssUrl) + '" />'
-				);
-				self.loadedCSS[cssUrl] = true;
+			// However we can't do that on Chrome since # will scroll to the editor for some odd reason see #2427
+			if (!/#$/.test(document.location.href)) {
+				for (i = 0; i < self.contentCSS.length; i++) {
+					var cssUrl = self.contentCSS[i];
+					self.iframeHTML += (
+						'<link type="text/css" ' +
+							'rel="stylesheet" ' +
+							'href="' + Tools._addCacheSuffix(cssUrl) + '" />'
+					);
+					self.loadedCSS[cssUrl] = true;
+				}
 			}
 
 			bodyId = settings.body_id || 'tinymce';
