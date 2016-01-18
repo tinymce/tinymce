@@ -30,27 +30,6 @@ module.exports = function(grunt) {
 			themes: ["js/tinymce/themes/*/theme.js"]
 		},
 
-		jscs: {
-			options: {
-				config: ".jscsrc"
-			},
-
-			core: ["js/tinymce/classes/**/*.js"],
-
-			plugins: [
-				"js/tinymce/plugins/*/plugin.js",
-				"js/tinymce/plugins/*/classes/**.js",
-				"!js/tinymce/plugins/paste/plugin.js",
-				"!js/tinymce/plugins/table/plugin.js",
-				"!js/tinymce/plugins/spellchecker/plugin.js",
-				"!js/tinymce/plugins/imagetools/plugin.js",
-				"!js/tinymce/plugins/codesample/plugin.js",
-				"!js/tinymce/plugins/codesample/classes/Prism.js"
-			],
-
-			themes: ["js/tinymce/themes/*/theme.js"]
-		},
-
 		qunit: {
 			core: {
 				options: {
@@ -523,7 +502,7 @@ module.exports = function(grunt) {
 							"license": "LGPL-2.1",
 							"keywords": ["editor", "wysiwyg", "tinymce", "richtext", "javascript", "html"],
 							"homepage": "http://www.tinymce.com",
-							"ignore": ["readme.md", "composer.json", "package.json"]
+							"ignore": ["readme.md", "composer.json", "package.json", ".npmignore", "changelog.txt"]
 						}));
 
 						zip.addData("package.json", jsonToBuffer({
@@ -559,7 +538,7 @@ module.exports = function(grunt) {
 								}
 							},
 							"archive": {
-								"exclude": ["readme.md", "bower.js", "package.json"]
+								"exclude": ["readme.md", "bower.js", "package.json", ".npmignore", "changelog.txt"]
 							}
 						}));
 					},
@@ -757,7 +736,7 @@ module.exports = function(grunt) {
 		watch: {
 			core: {
 				files: ["js/tinymce/classes/**/*.js"],
-				tasks: ["eslint:core", "jscs:core", "amdlc:core", "amdlc:core-jquery", "skin"],
+				tasks: ["eslint:core", "amdlc:core", "amdlc:core-jquery", "skin"],
 				options: {
 					spawn: false
 				}
@@ -768,7 +747,7 @@ module.exports = function(grunt) {
 				tasks: [
 					"amdlc:paste-plugin", "amdlc:imagetools-plugin", "amdlc:codesample-plugin",
 					"amdlc:table-plugin", "amdlc:spellchecker-plugin", "uglify:plugins",
-					"eslint:plugins", "jscs:plugins"
+					"eslint:plugins"
 				],
 				options: {
 					spawn: false
@@ -777,7 +756,7 @@ module.exports = function(grunt) {
 
 			themes: {
 				files: ["js/tinymce/themes/**/*.js"],
-				tasks: ["eslint:themes", "jscs:themes", "uglify:themes"],
+				tasks: ["eslint:themes", "uglify:themes"],
 				options: {
 					spawn: false
 				}
@@ -796,7 +775,7 @@ module.exports = function(grunt) {
 	require("load-grunt-tasks")(grunt);
 	grunt.loadTasks("tools/tasks");
 
-	grunt.registerTask("lint", ["eslint", "jscs"]);
+	grunt.registerTask("lint", ["eslint"]);
 	grunt.registerTask("minify", ["amdlc", "uglify", "skin", "less"]);
 	grunt.registerTask("test", ["qunit"]);
 	grunt.registerTask("sc-test", ["connect", "clean:saucelabs", "saucelabs-qunit"]);
