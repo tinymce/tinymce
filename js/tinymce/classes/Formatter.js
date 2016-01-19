@@ -28,8 +28,9 @@ define("tinymce/Formatter", [
 	"tinymce/dom/BookmarkManager",
 	"tinymce/dom/ElementUtils",
 	"tinymce/util/Tools",
-	"tinymce/fmt/Preview"
-], function(TreeWalker, RangeUtils, BookmarkManager, ElementUtils, Tools, Preview) {
+	"tinymce/fmt/Preview",
+	"tinymce/fmt/Hooks"
+], function(TreeWalker, RangeUtils, BookmarkManager, ElementUtils, Tools, Preview, Hooks) {
 	/**
 	 * Constructs a new formatter instance.
 	 *
@@ -658,6 +659,8 @@ define("tinymce/Formatter", [
 						performCaretAction('apply', name, vars);
 					}
 				}
+
+				Hooks.postProcess(name, ed);
 			}
 		}
 
