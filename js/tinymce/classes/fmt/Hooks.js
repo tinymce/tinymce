@@ -38,10 +38,10 @@ define("tinymce/fmt/Hooks", [
 	}
 
 	addPostProcessHook("pre", function(editor) {
-		var rng = editor.selection.getRng(), isPre;
+		var rng = editor.selection.getRng(), isPre, blocks;
 
 		function hasPreSibling(pre) {
-			return isPre(pre.previousSibling);
+			return isPre(pre.previousSibling) && Arr.indexOf(blocks, pre.previousSibling) != -1;
 		}
 
 		function joinPre(pre1, pre2) {
@@ -51,8 +51,10 @@ define("tinymce/fmt/Hooks", [
 
 		isPre = NodeType.matchNodeNames('pre');
 
-		if (!rng.collaped) {
-			each(filter(filter(editor.selection.getSelectedBlocks(), isPre), hasPreSibling), function(pre) {
+		if (!rng.collapsed) {
+			blocks = editor.selection.getSelectedBlocks();
+
+			each(filter(filter(blocks, isPre), hasPreSibling), function(pre) {
 				joinPre(pre.previousSibling, pre);
 			});
 		}

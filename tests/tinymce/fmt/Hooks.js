@@ -33,6 +33,18 @@ ModuleLoader.require(["tinymce/fmt/Hooks"], function(Hooks) {
 		);
 
 		assertPreHook(
+			'<pre>a</pre><pre>b</pre>',
+			['pre:nth-child(2)', 0, 'pre:nth-child(2)', 1],
+			'<pre>a</pre><pre>b</pre>'
+		);
+
+		assertPreHook(
+			'<pre>a</pre><pre>b</pre>',
+			['pre:nth-child(2)', 1, 'pre:nth-child(2)', 1],
+			'<pre>a</pre><pre>b</pre>'
+		);
+
+		assertPreHook(
 			'<pre>a</pre><pre>b</pre><pre>c</pre>',
 			['pre:nth-child(1)', 0, 'pre:nth-child(3)', 1],
 			'<pre>a<br /><br />b<br /><br />c</pre>'
