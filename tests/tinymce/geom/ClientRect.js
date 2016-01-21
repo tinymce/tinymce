@@ -67,4 +67,13 @@ ModuleLoader.require([
 		equal(ClientRect.compare(rect(5, 10, 10, 10), rect(10, 10, 10, 10)), -1);
 		equal(ClientRect.compare(rect(15, 10, 10, 10), rect(10, 10, 10, 10)), 1);
 	});
+
+	test('containsXY', function() {
+		equal(ClientRect.containsXY(rect(10, 70, 10, 40), 1, 2), false);
+		equal(ClientRect.containsXY(rect(10, 70, 10, 40), 15, 2), false);
+		equal(ClientRect.containsXY(rect(10, 70, 10, 40), 25, 2), false);
+		equal(ClientRect.containsXY(rect(10, 70, 10, 40), 10, 70), true);
+		equal(ClientRect.containsXY(rect(10, 70, 10, 40), 20, 110), true);
+		equal(ClientRect.containsXY(rect(10, 70, 10, 40), 15, 75), true);
+	});
 });

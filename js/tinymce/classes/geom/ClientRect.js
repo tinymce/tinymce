@@ -113,6 +113,15 @@ define("tinymce/geom/ClientRect", [], function() {
 		return 0;
 	}
 
+	function containsXY(clientRect, clientX, clientY) {
+		return (
+			clientX >= clientRect.left &&
+			clientX <= clientRect.right &&
+			clientY >= clientRect.top &&
+			clientY <= clientRect.bottom
+		);
+	}
+
 	return {
 		clone: clone,
 		collapse: collapse,
@@ -121,6 +130,7 @@ define("tinymce/geom/ClientRect", [], function() {
 		isBelow: isBelow,
 		isLeft: isLeft,
 		isRight: isRight,
-		compare: compare
+		compare: compare,
+		containsXY: containsXY
 	};
 });

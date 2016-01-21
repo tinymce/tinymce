@@ -32,6 +32,7 @@ define("tinymce/SelectionOverrides", [
 	"tinymce/caret/LineUtils",
 	"tinymce/dom/NodeType",
 	"tinymce/dom/RangeUtils",
+	"tinymce/geom/ClientRect",
 	"tinymce/util/VK",
 	"tinymce/util/Fun",
 	"tinymce/util/Arr",
@@ -39,7 +40,7 @@ define("tinymce/SelectionOverrides", [
 	"tinymce/DragDropOverrides"
 ], function(
 	Env, CaretWalker, CaretPosition, CaretContainer, CaretUtils, FakeCaret, LineWalker,
-	LineUtils, NodeType, RangeUtils, VK, Fun, Arr, Delay, DragDropOverrides
+	LineUtils, NodeType, RangeUtils, ClientRect, VK, Fun, Arr, Delay, DragDropOverrides
 ) {
 	var curry = Fun.curry,
 		isContentEditableTrue = NodeType.isContentEditableTrue,
@@ -469,6 +470,16 @@ define("tinymce/SelectionOverrides", [
 				return null;
 			}
 
+			function isXYWithinRange(clientX, clientY, range) {
+				if (range.collapsed) {
+					return false;
+				}
+
+				return Arr.reduce(range.getClientRects(), function(state, rect) {
+					return state || ClientRect.containsXY(rect, clientX, clientY);
+				}, false);
+			}
+
 			// Some browsers (Chrome) lets you place the caret after a cE=false
 			// Make sure we render the caret container in this case
 			editor.on('mouseup', function() {
@@ -488,7 +499,9 @@ define("tinymce/SelectionOverrides", [
 						e.preventDefault();
 						setContentEditableSelection(selectNode(contentEditableRoot), false);
 					} else {
-						editor.selection.placeCaretAt(e.clientX, e.clientY);
+						if (!isXYWithinRange(e.clientX, e.clientY, editor.selection.getRng())) {
+							editor.selection.placeCaretAt(e.clientX, e.clientY);
+						}
 					}
 				} else {
 					clearContentEditableSelection();

@@ -15,11 +15,16 @@
  * @class tinymce.DragDropOverrides
  */
 define("tinymce/DragDropOverrides", [
-	"tinymce/dom/NodeType"
+	"tinymce/dom/NodeType",
+	"tinymce/util/Arr",
+	"tinymce/util/Fun"
 ], function(
-	NodeType
+	NodeType,
+	Arr,
+	Fun
 ) {
-	var isContentEditableFalse = NodeType.isContentEditableFalse;
+	var isContentEditableFalse = NodeType.isContentEditableFalse,
+		isContentEditableTrue = NodeType.isContentEditableTrue;
 
 	function init(editor) {
 		var $ = editor.$, rootDocument = document,
@@ -141,10 +146,14 @@ define("tinymce/DragDropOverrides", [
 		}
 
 		function start(e) {
+			var ceElm;
+
 			stop();
 
-			if (isDraggable(e.target)) {
-				if (editor.fire('dragstart', {target: e.target}).isDefaultPrevented()) {
+			ceElm = Arr.find(editor.dom.getParents(e.target), Fun.or(isContentEditableFalse, isContentEditableTrue));
+
+			if (isDraggable(ceElm)) {
+				if (editor.fire('dragstart', {target: ceElm}).isDefaultPrevented()) {
 					return;
 				}
 
@@ -161,7 +170,7 @@ define("tinymce/DragDropOverrides", [
 					screenY: e.screenY,
 					clientX: e.clientX,
 					clientY: e.clientY,
-					element: e.target
+					element: ceElm
 				};
 			}
 		}
