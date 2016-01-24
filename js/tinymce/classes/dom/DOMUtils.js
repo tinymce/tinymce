@@ -250,6 +250,16 @@ define("tinymce/dom/DOMUtils", [
 			return self.settings.root_element || self.doc.body;
 		},
 
+        setContainer: function(elm) {
+            if (elm) {
+                this.container = elm;
+            }
+        },
+
+        getContainer: function() {
+            return this.container;
+        },
+
 		/**
 		 * Returns the viewport of the window.
 		 *
@@ -853,6 +863,11 @@ define("tinymce/dom/DOMUtils", [
 			var self = this, x = 0, y = 0, offsetParent, doc = self.doc, body = doc.body, pos;
 
 			elm = self.get(elm);
+
+            if (!rootElm) {
+                rootElm = self.container;
+            }
+
 			rootElm = rootElm || body;
 
 			if (elm) {
