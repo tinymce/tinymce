@@ -141,7 +141,7 @@ define("tinymce/ui/Control", [
 			self.borderBox = BoxUtils.parseBox(settings.border);
 			self.paddingBox = BoxUtils.parseBox(settings.padding);
 			self.marginBox = BoxUtils.parseBox(settings.margin);
-            self.container = DomUtils.getContainer();
+			self.container = DomUtils.getContainer();
 
 			if (settings.hidden) {
 				self.hide();
@@ -158,7 +158,7 @@ define("tinymce/ui/Control", [
 		 * @return {Element} HTML DOM element to render into.
 		 */
 		getContainerElm: function() {
-            return this.container || document.body;
+			return this.container || document.body;
 		},
 
 		/**

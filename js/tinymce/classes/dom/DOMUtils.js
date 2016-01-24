@@ -250,15 +250,15 @@ define("tinymce/dom/DOMUtils", [
 			return self.settings.root_element || self.doc.body;
 		},
 
-        setContainer: function(elm) {
-            if (elm) {
-                this.container = elm;
-            }
-        },
+		setContainer: function(elm) {
+			if (elm) {
+				this.container = elm;
+			}
+		},
 
-        getContainer: function() {
-            return this.container;
-        },
+		getContainer: function() {
+			return this.container;
+		},
 
 		/**
 		 * Returns the viewport of the window.
@@ -864,9 +864,9 @@ define("tinymce/dom/DOMUtils", [
 
 			elm = self.get(elm);
 
-            if (!rootElm) {
-                rootElm = self.container;
-            }
+			if (!rootElm) {
+				rootElm = self.container;
+			}
 
 			rootElm = rootElm || body;
 

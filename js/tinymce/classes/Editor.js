@@ -495,12 +495,12 @@ define("tinymce/Editor", [
 
 			settings.aria_label = settings.aria_label || DOM.getAttrib(elm, 'aria-label', self.getLang('aria.rich_text_area'));
 
-            if (settings.container) {
-                var container = DOM.getParent(elm, settings.container);
-                if (container) {
-                    DOM.setContainer(container);
-                }
-            }
+			if (settings.container) {
+				var container = DOM.getParent(elm, settings.container);
+				if (container) {
+					DOM.setContainer(container);
+				}
+			}
 
 			/**
 			 * Reference to the theme instance that was used to generate the UI.
@@ -828,7 +828,7 @@ define("tinymce/Editor", [
 				class_filter: settings.class_filter,
 				update_styles: true,
 				root_element: self.inline ? self.getBody() : null,
-                container: settings.container,
+				container: settings.container,
 				collect: settings.content_editable,
 				schema: self.schema,
 				onSetAttrib: function(e) {
