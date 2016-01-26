@@ -19,7 +19,6 @@
 		"no-shadow": 0,
 		"no-use-before-define": 0,
 		"brace-style": [2, "1tbs"],
-		"func-style": [2, "declaration"],
 		"guard-for-in": 0,
 		"no-floating-decimal": 2,
 		"no-nested-ternary": 2,
