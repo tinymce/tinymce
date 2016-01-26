@@ -2,7 +2,7 @@
  * CropRect.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2016 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -12,11 +12,11 @@
  * ...
  */
 define("tinymce/imagetoolsplugin/CropRect", [
-	"tinymce/dom/DomQuery",
-	"tinymce/ui/DragHelper",
-	"tinymce/geom/Rect",
-	"tinymce/util/Tools",
-	"tinymce/util/Observable"
+	"global!tinymce.dom.DomQuery",
+	"global!tinymce.ui.DragHelper",
+	"global!tinymce.geom.Rect",
+	"global!tinymce.util.Tools",
+	"global!tinymce.util.Observable"
 ], function($, DragHelper, Rect, Tools, Observable) {
 	var count = 0;
 

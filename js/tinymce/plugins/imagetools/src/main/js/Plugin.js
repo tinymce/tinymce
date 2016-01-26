@@ -2,7 +2,7 @@
  * Plugin.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2016 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -16,18 +16,18 @@
  *  imagetools_toolbar - Toolbar items to render when an editable image is selected.
  */
 define("tinymce/imagetoolsplugin/Plugin", [
-	"tinymce/PluginManager",
-	"tinymce/Env",
-	"tinymce/util/Promise",
-	"tinymce/util/URI",
-	"tinymce/util/Tools",
-	"tinymce/util/Delay",
-	"tinymce/imagetoolsplugin/ImageTools",
-	"tinymce/imagetoolsplugin/Conversions",
+	"global!tinymce.PluginManager",
+	"global!tinymce.Env",
+	"global!tinymce.util.Promise",
+	"global!tinymce.util.URI",
+	"global!tinymce.util.Tools",
+	"global!tinymce.util.Delay",
+	"ephox/imagetools/api/ImageTransformations",
+	"ephox/imagetools/api/BlobConversions",
 	"tinymce/imagetoolsplugin/Dialog"
-], function(PluginManager, Env, Promise, URI, Tools, Delay, ImageTools, Conversions, Dialog) {
-	PluginManager.add('imagetools', function(editor) {
-		var count = 0, imageUploadTimer, lastSelectedImage, settings = editor.settings;
+], function(PluginManager, Env, Promise, URI, Tools, Delay, ImageTransformations, BlobConversions, Dialog) {
+	var plugin = function(editor) {
+		var count = 0, imageUploadTimer, lastSelectedImage;
 
 		if (!Env.fileApi) {
 			return;
@@ -152,6 +152,7 @@ define("tinymce/imagetoolsplugin/Plugin", [
 		}
 
 		function requestUrlAsBlob(url) {
+			// Needs to be XHR for IE 10 compatibility
 			return new Promise(function(resolve) {
 				var xhr = new XMLHttpRequest();
 
@@ -160,11 +161,6 @@ define("tinymce/imagetoolsplugin/Plugin", [
 				};
 
 				xhr.open('GET', url, true);
-
-				if (settings.imagetools_api_key) {
-					xhr.setRequestHeader('tiny-api-key', settings.imagetools_api_key);
-				}
-
 				xhr.responseType = 'blob';
 				xhr.send();
 			});
@@ -180,16 +176,11 @@ define("tinymce/imagetoolsplugin/Plugin", [
 			if (!isLocalImage(img)) {
 				src = editor.settings.imagetools_proxy;
 				src += (src.indexOf('?') === -1 ? '?' : '&') + 'url=' + encodeURIComponent(img.src);
-
-				if (settings.imagetools_api_key) {
-					return requestUrlAsBlob(src);
-				}
-
 				img = new Image();
 				img.src = src;
 			}
 
-			return Conversions.imageToBlob(img);
+			return BlobConversions.imageToBlob(img);
 		}
 
 		function findSelectedBlobInfo() {
@@ -201,7 +192,7 @@ define("tinymce/imagetoolsplugin/Plugin", [
 			}
 
 			return imageToBlob(getSelectedImage()).then(function(blob) {
-				return Conversions.blobToBase64(blob).then(function(base64) {
+				return BlobConversions.blobToBase64(blob).then(function(base64) {
 					var blobCache = editor.editorUpload.blobCache;
 					var blobInfo = blobCache.create(createId(), blob, base64);
 					blobCache.add(blobInfo);
@@ -221,7 +212,7 @@ define("tinymce/imagetoolsplugin/Plugin", [
 		}
 
 		function updateSelectedImage(blob, uploadImmediately) {
-			return Conversions.blobToDataUri(blob).then(function(dataUri) {
+			return BlobConversions.blobToDataUri(blob).then(function(dataUri) {
 				var id, base64, blobCache, blobInfo, selectedImage;
 
 				selectedImage = getSelectedImage();
@@ -274,7 +265,7 @@ define("tinymce/imagetoolsplugin/Plugin", [
 						});
 					}
 
-					return ImageTools.rotate(blobInfo.blob(), angle);
+					return ImageTransformations.rotate(blobInfo.blob(), angle);
 				})();
 			};
 		}
@@ -282,7 +273,7 @@ define("tinymce/imagetoolsplugin/Plugin", [
 		function flip(axis) {
 			return function() {
 				return selectedImageOperation(function(blobInfo) {
-					return ImageTools.flip(blobInfo.blob(), axis);
+					return ImageTransformations.flip(blobInfo.blob(), axis);
 				})();
 			};
 		}
@@ -293,7 +284,7 @@ define("tinymce/imagetoolsplugin/Plugin", [
 			if (img) {
 				imageToBlob(img).then(Dialog.edit).then(function(blob) {
 					return new Promise(function(resolve) {
-						Conversions.blobToImage(blob).then(function(newImage) {
+						BlobConversions.blobToImage(blob).then(function(newImage) {
 							var newSize = getNaturalImageSize(newImage);
 
 							if (originalSize.w != newSize.w || originalSize.h != newSize.h) {
@@ -396,5 +387,9 @@ define("tinymce/imagetoolsplugin/Plugin", [
 		addEvents();
 
 		editor.addCommand('mceEditImage', editImageDialog);
-	});
+	};
+
+	PluginManager.add('imagetools', plugin);
+
+	return plugin;
 });
