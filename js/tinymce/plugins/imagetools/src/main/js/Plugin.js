@@ -152,7 +152,6 @@ define("tinymce/imagetoolsplugin/Plugin", [
 		}
 
 		function requestUrlAsBlob(url) {
-			// Needs to be XHR for IE 10 compatibility
 			return new Promise(function(resolve) {
 				var xhr = new XMLHttpRequest();
 
@@ -161,6 +160,12 @@ define("tinymce/imagetoolsplugin/Plugin", [
 				};
 
 				xhr.open('GET', url, true);
+
+				if (editor.settings.imagetools_api_key) {
+					xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+					xhr.setRequestHeader('tiny-api-key', editor.settings.imagetools_api_key);
+				}
+
 				xhr.responseType = 'blob';
 				xhr.send();
 			});
@@ -176,6 +181,11 @@ define("tinymce/imagetoolsplugin/Plugin", [
 			if (!isLocalImage(img)) {
 				src = editor.settings.imagetools_proxy;
 				src += (src.indexOf('?') === -1 ? '?' : '&') + 'url=' + encodeURIComponent(img.src);
+
+				if (editor.settings.imagetools_api_key) {
+					return requestUrlAsBlob(src);
+				}
+
 				img = new Image();
 				img.src = src;
 			}
