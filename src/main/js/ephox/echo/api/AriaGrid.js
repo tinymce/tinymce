@@ -25,10 +25,10 @@ define(
       Attr.set(element, 'role', 'row');
     };
 
-    var cell = function (element, labelledby) {
+    var cell = function (element, label) {
       Attr.setAll(element, {
         'role': 'gridcell',
-        'aria-labelledby': labelledby
+        'aria-label': label
       });
     };
 
