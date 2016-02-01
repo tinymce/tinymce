@@ -15,7 +15,6 @@ define(
       Attr.set(element, 'aria-dropeffect', operation);
     };
 
-
     return {
       grab: grab,
       effect: effect
