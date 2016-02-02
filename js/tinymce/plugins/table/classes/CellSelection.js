@@ -37,43 +37,60 @@ define("tinymce/tableplugin/CellSelection", [
 			}
 		}
 
+		function isCellInTable(table, cell) {
+			if (!table || !cell) {
+				return false;
+			}
+
+			return table === dom.getParent(cell, 'table');
+		}
+
 		function cellSelectionHandler(e) {
-			var sel, table, target = e.target;
+			var sel, target = e.target, currentCell;
 
 			if (resizing) {
 				return;
 			}
 
-			if (startCell && (tableGrid || target != startCell) && (target.nodeName == 'TD' || target.nodeName == 'TH')) {
-				table = dom.getParent(target, 'table');
-				if (table == startTable) {
-					if (!tableGrid) {
-						tableGrid = new TableGrid(editor, table);
-						tableGrid.setStartCell(startCell);
+			if (startTable && startCell) {
+				currentCell = dom.getParent(target, 'td,th');
 
+				if (!isCellInTable(startTable, currentCell)) {
+					currentCell = dom.getParent(startTable, 'td,th');
+				}
+
+				if (isCellInTable(startTable, currentCell)) {
+					e.preventDefault();
+
+					if (!tableGrid) {
+						tableGrid = new TableGrid(editor, startTable, startCell);
 						editor.getBody().style.webkitUserSelect = 'none';
 					}
 
-					tableGrid.setEndCell(target);
+					tableGrid.setEndCell(currentCell);
 					hasCellSelection = true;
-				}
 
-				// Remove current selection
-				sel = editor.selection.getSel();
+					// Remove current selection
+					sel = editor.selection.getSel();
 
-				try {
-					if (sel.removeAllRanges) {
-						sel.removeAllRanges();
-					} else {
-						sel.empty();
+					try {
+						if (sel.removeAllRanges) {
+							sel.removeAllRanges();
+						} else {
+							sel.empty();
+						}
+					} catch (ex) {
+						// IE9 might throw errors here
 					}
-				} catch (ex) {
-					// IE9 might throw errors here
 				}
-
-				e.preventDefault();
 			}
 		}
+
+		editor.on('SelectionChange', function(e) {
+			if (hasCellSelection) {
+				e.stopImmediatePropagation();
+			}
+		}, true);
 
 		// Add cell selection logic
 		editor.on('MouseDown', function(e) {

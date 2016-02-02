@@ -23,11 +23,25 @@ define("tinymce/tableplugin/TableGrid", [
 ], function(Tools, Env, Utils) {
 	var each = Tools.each, getSpanVal = Utils.getSpanVal;
 
-	return function(editor, table) {
-		var grid, gridWidth, startPos, endPos, selectedCell, selection = editor.selection, dom = selection.dom;
+	return function(editor, table, selectedCell) {
+		var grid, gridWidth, startPos, endPos, selection = editor.selection, dom = selection.dom;
 
 		function isEditorBody(node) {
 			return node === editor.getBody();
+		}
+
+		function getChildrenByName(node, names) {
+			if (!node) {
+				return [];
+			}
+
+			names = Tools.map(names.split(','), function(name) {
+				return name.toLowerCase();
+			});
+
+			return Tools.grep(node.childNodes, function(node) {
+				return Tools.inArray(names, node.nodeName.toLowerCase()) !== -1;
+			});
 		}
 
 		function buildGrid() {
@@ -37,12 +51,13 @@ define("tinymce/tableplugin/TableGrid", [
 			gridWidth = 0;
 
 			each(['thead', 'tbody', 'tfoot'], function(part) {
-				var rows = dom.select('> ' + part + ' tr', table);
+				var partElm = getChildrenByName(table, part)[0];
+				var rows = getChildrenByName(partElm, 'tr');
 
 				each(rows, function(tr, y) {
 					y += startY;
 
-					each(dom.select('> td, > th', tr), function(td, x) {
+					each(getChildrenByName(tr, 'td,th'), function(td, x) {
 						var x2, y2, rowspan, colspan;
 
 						// Skip over existing cells produced by rowspan
@@ -873,7 +888,7 @@ define("tinymce/tableplugin/TableGrid", [
 
 		buildGrid();
 
-		selectedCell = dom.getParent(selection.getStart(true), 'th,td');
+		selectedCell = selectedCell || dom.getParent(selection.getStart(true), 'th,td');
 
 		if (selectedCell) {
 			startPos = getPos(selectedCell);

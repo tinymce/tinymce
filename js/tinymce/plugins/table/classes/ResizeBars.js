@@ -19,6 +19,8 @@ define("tinymce/tableplugin/ResizeBars", [
 	"tinymce/util/Tools",
 	"tinymce/util/VK"
 ], function(Tools, VK) {
+	var hoverTable;
+
 	return function(editor) {
 		var RESIZE_BAR_CLASS = 'mce-resize-bar',
 			RESIZE_BAR_ROW_CLASS = 'mce-resize-bar-row',
@@ -37,7 +39,7 @@ define("tinymce/tableplugin/ResizeBars", [
 		var percentageBasedSizeRegex = new RegExp(/(\d+(\.\d+)?%)/),
 			pixelBasedSizeRegex = new RegExp(/px|em/);
 
-		var delayDrop, dragging, blockerElement, dragBar, lastX, lastY, hoverTable;
+		var delayDrop, dragging, blockerElement, dragBar, lastX, lastY;
 
 		// Get the absolute position's top edge.
 		function getTopEdge(index, row) {
@@ -889,6 +891,12 @@ define("tinymce/tableplugin/ResizeBars", [
 			editor.dom.bind(getBody(), 'mousedown', function(e) {
 				var target = e.target;
 
+				// Since this code is working on global events we need to work on a global hoverTable state
+				// and make sure that the state is correct according to the events fired
+				if (!editor.$.contains(editor.getBody(), hoverTable)) {
+					return;
+				}
+
 				if (isCol(target)) {
 					e.preventDefault();
 					var initialLeft = editor.dom.getPos(target).x;
@@ -928,7 +936,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			if (!dragging) {
 				var tableElement = editor.dom.getParent(e.target, 'table');
 
-				if (e.target.nodeName === 'table' || tableElement) {
+				if (e.target.nodeName === 'TABLE' || tableElement) {
 					hoverTable = tableElement;
 					refreshBars(tableElement);
 				}
@@ -948,6 +956,8 @@ define("tinymce/tableplugin/ResizeBars", [
 					break;
 			}
 		});
+
+		editor.on('remove', clearBars);
 
 		return {
 			adjustWidth: adjustWidth,
