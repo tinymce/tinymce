@@ -21,7 +21,7 @@ define("tinymce/tableplugin/CellSelection", [
 	"tinymce/util/Tools"
 ], function(TableGrid, TreeWalker, Tools) {
 	return function(editor) {
-		var dom = editor.dom, tableGrid, startCell, startTable, hasCellSelection = true, resizing;
+		var dom = editor.dom, tableGrid, startCell, startTable, lastMouseOverTarget, hasCellSelection = true, resizing;
 
 		function clear(force) {
 			// Restore selection possibilities
@@ -51,6 +51,13 @@ define("tinymce/tableplugin/CellSelection", [
 			if (resizing) {
 				return;
 			}
+
+			// Fake mouse enter by keeping track of last mouse over
+			if (target === lastMouseOverTarget) {
+				return;
+			}
+
+			lastMouseOverTarget = target;
 
 			if (startTable && startCell) {
 				currentCell = dom.getParent(target, 'td,th');
@@ -172,13 +179,13 @@ define("tinymce/tableplugin/CellSelection", [
 				}
 
 				editor.nodeChanged();
-				startCell = tableGrid = startTable = null;
+				startCell = tableGrid = startTable = lastMouseOverTarget = null;
 			}
 		});
 
 		editor.on('KeyUp Drop SetContent', function(e) {
 			clear(e.type == 'setcontent');
-			startCell = tableGrid = startTable = null;
+			startCell = tableGrid = startTable = lastMouseOverTarget = null;
 			resizing = false;
 		});
 
