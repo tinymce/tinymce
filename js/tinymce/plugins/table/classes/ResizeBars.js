@@ -886,29 +886,31 @@ define("tinymce/tableplugin/ResizeBars", [
 			setupBaseDrag(bar, rowDragHandler);
 		}
 
+		function mouseDownHandler(e) {
+			var target = e.target;
+
+			// Since this code is working on global events we need to work on a global hoverTable state
+			// and make sure that the state is correct according to the events fired
+			if (!editor.$.contains(editor.getBody(), hoverTable)) {
+				return;
+			}
+
+			if (isCol(target)) {
+				e.preventDefault();
+				var initialLeft = editor.dom.getPos(target).x;
+				editor.dom.setAttrib(target, RESIZE_BAR_COL_DATA_INITIAL_LEFT_ATTRIBUTE, initialLeft);
+				setupColDrag(target);
+			} else if (isRow(target)) {
+				e.preventDefault();
+				var initialTop = editor.dom.getPos(target).y;
+				editor.dom.setAttrib(target, RESIZE_BAR_ROW_DATA_INITIAL_TOP_ATTRIBUTE, initialTop);
+				setupRowDrag(target);
+			}
+		}
+
 		editor.on('init', function() {
 			// Needs to be like this for inline mode, editor.on does not bind to elements in the document body otherwise
-			editor.dom.bind(getBody(), 'mousedown', function(e) {
-				var target = e.target;
-
-				// Since this code is working on global events we need to work on a global hoverTable state
-				// and make sure that the state is correct according to the events fired
-				if (!editor.$.contains(editor.getBody(), hoverTable)) {
-					return;
-				}
-
-				if (isCol(target)) {
-					e.preventDefault();
-					var initialLeft = editor.dom.getPos(target).x;
-					editor.dom.setAttrib(target, RESIZE_BAR_COL_DATA_INITIAL_LEFT_ATTRIBUTE, initialLeft);
-					setupColDrag(target);
-				} else if (isRow(target)) {
-					e.preventDefault();
-					var initialTop = editor.dom.getPos(target).y;
-					editor.dom.setAttrib(target, RESIZE_BAR_ROW_DATA_INITIAL_TOP_ATTRIBUTE, initialTop);
-					setupRowDrag(target);
-				}
-			});
+			editor.dom.bind(getBody(), 'mousedown', mouseDownHandler);
 		});
 
 		// If we're updating the table width via the old mechanic, we need to update the constituent cells' widths/heights too.
@@ -957,7 +959,10 @@ define("tinymce/tableplugin/ResizeBars", [
 			}
 		});
 
-		editor.on('remove', clearBars);
+		editor.on('remove', function() {
+			clearBars();
+			editor.dom.unbind(getBody(), 'mousedown', mouseDownHandler);
+		});
 
 		return {
 			adjustWidth: adjustWidth,

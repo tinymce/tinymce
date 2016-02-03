@@ -40,21 +40,27 @@ define("tinymce/ui/Throbber", [
 		 * @return {tinymce.ui.Throbber} Current throbber instance.
 		 */
 		self.show = function(time, callback) {
+			function render() {
+					if (state) {
+						$(elm).append(
+							'<div class="' + classPrefix + 'throbber' + (inline ? ' ' + classPrefix + 'throbber-inline' : '') + '"></div>'
+						);
+
+						if (callback) {
+							callback();
+						}
+					}
+			}
+
 			self.hide();
 
 			state = true;
 
-			Delay.setTimeout(function() {
-				if (state) {
-					$(elm).append(
-						'<div class="' + classPrefix + 'throbber' + (inline ? ' ' + classPrefix + 'throbber-inline' : '') + '"></div>'
-					);
-
-					if (callback) {
-						callback();
-					}
-				}
-			}, time);
+			if (time) {
+				Delay.setTimeout(render, time);
+			} else {
+				render();
+			}
 
 			return self;
 		};
