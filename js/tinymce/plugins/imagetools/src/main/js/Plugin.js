@@ -401,5 +401,5 @@ define("tinymce/imagetoolsplugin/Plugin", [
 
 	PluginManager.add('imagetools', plugin);
 
-	return plugin;
+	return function() {};
 });
