@@ -263,7 +263,7 @@ define("tinymce/EditorManager", [
 		 * });
 		 */
 		init: function(settings) {
-			var self = this, editors = [];
+			var self = this;
 
 			function createId(elm) {
 				var id = elm.id;
@@ -285,16 +285,6 @@ define("tinymce/EditorManager", [
 				return id;
 			}
 
-			function createEditor(id, settings, targetElm) {
-				if (!purgeDestroyedEditor(self.get(id))) {
-					var editor = new Editor(id, settings, self);
-
-					editor.targetElm = editor.targetElm || targetElm;
-					editors.push(editor);
-					editor.render();
-				}
-			}
-
 			function execCallback(name) {
 				var callback = settings[name];
 
@@ -309,31 +299,17 @@ define("tinymce/EditorManager", [
 				return className.constructor === RegExp ? className.test(elm.className) : DOM.hasClass(elm, className);
 			}
 
-			function readyHandler() {
-				var l, co;
-
-				DOM.unbind(window, 'ready', readyHandler);
-
-				execCallback('onpageload');
+			function findTargets(settings) {
+				var l, targets = [];
 
 				if (settings.types) {
-					// Process type specific selector
 					each(settings.types, function(type) {
-						each(DOM.select(type.selector), function(elm) {
-							createEditor(createId(elm), extend({}, settings, type), elm);
-						});
+						targets = targets.concat(DOM.select(type.selector));
 					});
-
-					return;
 				} else if (settings.selector) {
-					// Process global selector
-					each(DOM.select(settings.selector), function(elm) {
-						createEditor(createId(elm), settings, elm);
-					});
-
-					return;
+					targets = DOM.select(settings.selector);
 				} else if (settings.target) {
-					createEditor(createId(settings.target), settings);
+					targets = [settings.target];
 				}
 
 				// Fallback to old setting
@@ -346,14 +322,14 @@ define("tinymce/EditorManager", [
 								var elm;
 
 								if ((elm = DOM.get(id))) {
-									createEditor(id, settings, elm);
+									targets.push(elm);
 								} else {
 									each(document.forms, function(f) {
 										each(f.elements, function(e) {
 											if (e.name === id) {
 												id = 'mce_editor_' + instanceCounter++;
 												DOM.setAttrib(e, 'id', id);
-												createEditor(id, settings, e);
+												targets.push(e);
 											}
 										});
 									});
@@ -370,58 +346,69 @@ define("tinymce/EditorManager", [
 							}
 
 							if (!settings.editor_selector || hasClass(elm, settings.editor_selector)) {
-								createEditor(createId(elm), settings, elm);
+								targets.push(elm);
 							}
 						});
 						break;
 				}
 
-				// Call onInit when all editors are initialized
-				if (settings.oninit) {
-					l = co = 0;
+				return targets;
+			}
 
-					each(editors, function(ed) {
-						co++;
+			function initEditors(resolve, readyHandler) {
+				var initCount = 0, editors = [], targets;
 
-						if (!ed.initialized) {
-							// Wait for it
-							ed.on('init', function() {
-								l++;
+				function createEditor(id, settings, targetElm) {
+					if (!purgeDestroyedEditor(self.get(id))) {
+						var editor = new Editor(id, settings, self);
 
-								// All done
-								if (l == co) {
-									execCallback('oninit');
-								}
-							});
-						} else {
-							l++;
-						}
+						editors.push(editor);
 
-						// All done
-						if (l == co) {
-							execCallback('oninit');
-						}
-					});
+						editor.on('init', function() {
+							if (++initCount === targets.length) {
+								resolve(editors);
+							}
+						});
+
+						editor.targetElm = editor.targetElm || targetElm;
+						editor.render();
+					}
 				}
+
+				DOM.unbind(window, 'ready', readyHandler);
+				execCallback('onpageload');
+
+				targets = findTargets(settings);
+
+				// TODO: Deprecate this one
+				if (settings.types) {
+					each(settings.types, function(type) {
+						Tools.each(targets, function(elm) {
+							if (DOM.is(elm, type.selector)) {
+								createEditor(createId(elm), extend({}, settings, type), elm);
+								return false;
+							}
+
+							return true;
+						});
+					});
+
+					return;
+				}
+
+				each(targets, function(elm) {
+					createEditor(createId(elm), settings, elm);
+				});
 			}
 
 			self.settings = settings;
 
 			return new Promise(function(resolve) {
-				function editorsToPromises(editors) {
-					return Tools.map(editors, function(editor) {
-						return new Promise(function(resolve) {
-							editor.on('init', function() {
-								resolve(editor);
-							});
-						});
-					});
-				}
+				var readyHandler = function() {
+					initEditors(resolve, readyHandler);
+				};
 
-				DOM.bind(window, 'ready', function() {
-					readyHandler();
-					Promise.all(editorsToPromises(editors)).then(resolve);
-				});
+				DOM.bind(window, 'ready', readyHandler);
 			});
 		},
 

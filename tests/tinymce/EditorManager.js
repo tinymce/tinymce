@@ -6,11 +6,10 @@ module("tinymce.EditorManager", {
 			selector: "textarea",
 			add_unload_trigger: false,
 			disable_nodechange: true,
-			skin: false,
-			init_instance_callback: function(ed) {
-				window.editor = ed;
-				QUnit.start();
-			}
+			skin: false
+		}).then(function(editors) {
+			window.editor = editors[0];
+			QUnit.start();
 		});
 	}
 });
