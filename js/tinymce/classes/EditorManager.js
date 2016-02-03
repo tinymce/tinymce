@@ -25,10 +25,11 @@ define("tinymce/EditorManager", [
 	"tinymce/util/URI",
 	"tinymce/Env",
 	"tinymce/util/Tools",
+	"tinymce/util/Promise",
 	"tinymce/util/Observable",
 	"tinymce/util/I18n",
 	"tinymce/FocusManager"
-], function(Editor, $, DOMUtils, URI, Env, Tools, Observable, I18n, FocusManager) {
+], function(Editor, $, DOMUtils, URI, Env, Tools, Promise, Observable, I18n, FocusManager) {
 	var DOM = DOMUtils.DOM;
 	var explode = Tools.explode, each = Tools.each, extend = Tools.extend;
 	var instanceCounter = 0, beforeUnloadDelegate, EditorManager, boundGlobalEvents = false;
@@ -247,15 +248,18 @@ define("tinymce/EditorManager", [
 		 *
 		 * @method init
 		 * @param {Object} settings Settings object to be passed to each editor instance.
+		 * @return {tinymce.util.Promise} Promise that gets resolved with an array of editors when all editor instances are initialized.
 		 * @example
 		 * // Initializes a editor using the longer method
 		 * tinymce.EditorManager.init({
 		 *    some_settings : 'some value'
 		 * });
 		 *
-		 * // Initializes a editor instance using the shorter version
-		 * tinyMCE.init({
+		 * // Initializes a editor instance using the shorter version and with a promise
+		 * tinymce.init({
 		 *    some_settings : 'some value'
+		 * }).then(function(editors) {
+		 *    ...
 		 * });
 		 */
 		init: function(settings) {
@@ -403,7 +407,22 @@ define("tinymce/EditorManager", [
 
 			self.settings = settings;
 
-			DOM.bind(window, 'ready', readyHandler);
+			return new Promise(function(resolve) {
+				function editorsToPromises(editors) {
+					return Tools.map(editors, function(editor) {
+						return new Promise(function(resolve) {
+							editor.on('init', function() {
+								resolve(editor);
+							});
+						});
+					});
+				}
+
+				DOM.bind(window, 'ready', function() {
+					readyHandler();
+					Promise.all(editorsToPromises(editors)).then(resolve);
+				});
+			});
 		},
 
 		/**
