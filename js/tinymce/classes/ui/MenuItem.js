@@ -279,9 +279,10 @@ define("tinymce/ui/MenuItem", [
 			self.on('mouseenter click', function(e) {
 				if (e.control === self) {
 					if (!settings.menu && e.type === 'click') {
+						self.fire('select');
+
 						// Edge will crash if you stress it see #2660
 						Delay.requestAnimationFrame(function() {
-							self.fire('select');
 							self.parent().hideAll();
 						});
 					} else {
