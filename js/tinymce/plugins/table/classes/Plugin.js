@@ -75,7 +75,7 @@ define("tinymce/tableplugin/Plugin", [
 			function bindStateListener() {
 				var selectedElm, selectedCells, parts = {}, sum = 0, state;
 
-				selectedCells = editor.dom.select('td.mce-item-selected,th.mce-item-selected');
+				selectedCells = editor.dom.select('td[data-mce-selected],th[data-mce-selected]');
 				selectedElm = selectedCells[0];
 				if (!selectedElm) {
 					selectedElm = editor.selection.getStart();
@@ -362,7 +362,7 @@ define("tinymce/tableplugin/Plugin", [
 
 				cell = editor.dom.getParent(editor.selection.getStart(), 'th,td');
 
-				if (!editor.dom.select('td.mce-item-selected,th.mce-item-selected').length) {
+				if (!editor.dom.select('td[data-mce-selected],th[data-mce-selected]').length) {
 					dialogs.merge(grid, cell);
 				} else {
 					grid.merge();

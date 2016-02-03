@@ -511,7 +511,7 @@
 	});
 
 	test("mceTableMergeCells command with cell selection", function() {
-		editor.getBody().innerHTML = '<table><tr><td class="mce-item-selected">1</td><td class="mce-item-selected">2</td></tr></table>';
+		editor.getBody().innerHTML = '<table><tr><td data-mce-selected="1">1</td><td data-mce-selected="1">2</td></tr></table>';
 		Utils.setSelection('td', 0);
 		editor.execCommand('mceTableMergeCells');
 		equal(cleanTableHtml(editor.getContent()), '<table><tbody><tr><td colspan="2">12</td></tr></tbody></table>');
@@ -554,8 +554,8 @@
 	test("Delete selected cells", function() {
 		editor.getBody().innerHTML = (
 			'<table><tbody>' +
-			'<tr><td class="mce-item-selected">A1</td><td>A2</td></tr>' +
-			'<tr><td class="mce-item-selected">B1</td><td>B2</td></tr>' +
+			'<tr><td data-mce-selected="1">A1</td><td>A2</td></tr>' +
+			'<tr><td data-mce-selected="1">B1</td><td>B2</td></tr>' +
 			'</tbody></table>' +
 			'<p>x</p>'
 		);
@@ -572,8 +572,8 @@
 	test("Delete all cells", function() {
 		editor.getBody().innerHTML = (
 			'<table><tbody>' +
-			'<tr><td class="mce-item-selected">A1</td><td class="mce-item-selected">A2</td></tr>' +
-			'<tr><td class="mce-item-selected">B1</td><td class="mce-item-selected">B2</td></tr>' +
+			'<tr><td data-mce-selected="1">A1</td><td data-mce-selected="1">A2</td></tr>' +
+			'<tr><td data-mce-selected="1">B1</td><td data-mce-selected="1">B2</td></tr>' +
 			'</tbody></table>' +
 			'<p>x</p>'
 		);

@@ -26,6 +26,10 @@ define("tinymce/tableplugin/TableGrid", [
 	return function(editor, table, selectedCell) {
 		var grid, gridWidth, startPos, endPos, selection = editor.selection, dom = selection.dom;
 
+		function removeCellSelection() {
+			editor.$('td[data-mce-selected],th[data-mce-selected]').removeAttr('data-mce-selected');
+		}
+
 		function isEditorBody(node) {
 			return node === editor.getBody();
 		}
@@ -125,7 +129,7 @@ define("tinymce/tableplugin/TableGrid", [
 		}
 
 		function isCellSelected(cell) {
-			return cell && (dom.hasClass(cell.elm, 'mce-item-selected') || cell == selectedCell);
+			return cell && (!!dom.getAttrib(cell.elm, 'data-mce-selected') || cell == selectedCell);
 		}
 
 		function getSelectedRows() {
@@ -133,7 +137,7 @@ define("tinymce/tableplugin/TableGrid", [
 
 			each(table.rows, function(row) {
 				each(row.cells, function(cell) {
-					if (dom.hasClass(cell, 'mce-item-selected') || (selectedCell && cell == selectedCell.elm)) {
+					if (dom.getAttrib(cell, 'data-mce-selected') || (selectedCell && cell == selectedCell.elm)) {
 						rows.push(row);
 						return false;
 					}
@@ -712,8 +716,7 @@ define("tinymce/tableplugin/TableGrid", [
 				}
 			});
 
-			// Remove current selection
-			dom.removeClass(dom.select('td.mce-item-selected,th.mce-item-selected'), 'mce-item-selected');
+			removeCellSelection();
 		}
 
 		function getPos(target) {
@@ -842,14 +845,13 @@ define("tinymce/tableplugin/TableGrid", [
 					}
 				}
 
-				// Remove current selection
-				dom.removeClass(dom.select('td.mce-item-selected,th.mce-item-selected'), 'mce-item-selected');
+				removeCellSelection();
 
 				// Add new selection
 				for (y = startY; y <= maxY; y++) {
 					for (x = startX; x <= maxX; x++) {
 						if (grid[y][x]) {
-							dom.addClass(grid[y][x].elm, 'mce-item-selected');
+							dom.setAttrib(grid[y][x].elm, 'data-mce-selected', '1');
 						}
 					}
 				}
