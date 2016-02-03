@@ -113,6 +113,7 @@ define("tinymce/tableplugin/CellSelection", [
 
 		editor.on('remove', function() {
 			dom.unbind(editor.getDoc(), 'mouseover', cellSelectionHandler);
+			clear();
 		});
 
 		editor.on('MouseUp', function() {
