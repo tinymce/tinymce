@@ -63,7 +63,7 @@ define("tinymce/dom/TreeWalker", [], function() {
 
 			if (node) {
 				sibling = node[siblingName];
-				if (sibling == rootNode) {
+				if (rootNode && sibling === rootNode) {
 					return;
 				}
 
@@ -81,7 +81,7 @@ define("tinymce/dom/TreeWalker", [], function() {
 				}
 
 				parent = node.parentNode;
-				if (parent != rootNode) {
+				if (parent && parent !== rootNode) {
 					return parent;
 				}
 			}
