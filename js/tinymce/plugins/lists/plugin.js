@@ -18,6 +18,10 @@ tinymce.PluginManager.add('lists', function(editor) {
 		return editor.$.contains(editor.getBody(), elm);
 	}
 
+	function isBr(node) {
+		return node && node.nodeName == 'BR';
+	}
+
 	function isListNode(node) {
 		return node && (/^(OL|UL|DL)$/).test(node.nodeName) && isChildOfBody(node);
 	}
@@ -562,8 +566,8 @@ tinymce.PluginManager.add('lists', function(editor) {
 						return;
 					}
 
-					if (dom.isBlock(node) || node.nodeName == 'BR') {
-						if (node.nodeName == 'BR') {
+					if (dom.isBlock(node) || isBr(node)) {
+						if (isBr(node)) {
 							dom.remove(node);
 						}
 
@@ -669,6 +673,18 @@ tinymce.PluginManager.add('lists', function(editor) {
 			};
 		}
 
+		function isBogusBr(node) {
+			if (!isBr(node)) {
+				return false;
+			}
+
+			if (dom.isBlock(node.nextSibling) && !isBr(node.previousSibling)) {
+				return true;
+			}
+
+			return false;
+		}
+
 		self.backspaceDelete = function(isForward) {
 			function findNextCaretContainer(rng, isForward) {
 				var node = rng.startContainer, offset = rng.startOffset;
@@ -679,9 +695,16 @@ tinymce.PluginManager.add('lists', function(editor) {
 				}
 
 				nonEmptyBlocks = editor.schema.getNonEmptyElements();
-				walker = new tinymce.dom.TreeWalker(rng.startContainer);
+				walker = new tinymce.dom.TreeWalker(rng.startContainer, editor.getBody());
 
-				while ((node = walker[isForward ? 'next' : 'prev']())) {
+				// Delete at <li>|<br></li> then jump over the bogus br
+				if (isForward) {
+					if (isBogusBr(tinymce.dom.RangeUtils.getNode(rng.startContainer, rng.startOffset))) {
+						walker.next();
+					}
+				}
+
+				while ((node = walker[isForward ? 'next' : 'prev2']())) {
 					if (node.nodeName == 'LI' && !node.hasChildNodes()) {
 						return node;
 					}
@@ -707,8 +730,14 @@ tinymce.PluginManager.add('lists', function(editor) {
 					listNode = toElm.lastChild;
 				}
 
+				if (ul == toElm.lastChild) {
+					if (isBr(ul.previousSibling)) {
+						dom.remove(ul.previousSibling);
+					}
+				}
+
 				node = toElm.lastChild;
-				if (node && node.nodeName == 'BR' && fromElm.hasChildNodes()) {
+				if (node && isBr(node) && fromElm.hasChildNodes()) {
 					dom.remove(node);
 				}
 

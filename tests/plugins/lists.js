@@ -1823,6 +1823,31 @@ ModuleLoader.require([
 		equal(tinymce.$('#lists li').length, 3);
 	});
 
+	test('Backspace at nested LI with adjacent BR', function() {
+		editor.getBody().innerHTML = (
+			'<ul>' +
+				'<li>1' +
+					'<ul>' +
+						'<li>' +
+							'<br>' +
+							'<ul>' +
+								'<li>2</li>' +
+							'</ul>' +
+						'</li>' +
+					'</ul>' +
+				'</li>' +
+				'<li>3</li>' +
+			'</ul>'
+		);
+
+		editor.focus();
+		Utils.setSelection('ul ul ul li', 0);
+		editor.plugins.lists.backspaceDelete();
+
+		equal(editor.getContent(), '<ul><li>1<ul><li>2</li></ul></li><li>3</li></ul>');
+		equal(editor.selection.getNode().nodeName, 'LI');
+	});
+
 	// Delete
 
 	test('Delete at end of single LI in UL', function() {
@@ -2024,6 +2049,31 @@ ModuleLoader.require([
 		inlineEditor2.plugins.lists.backspaceDelete(true);
 		equal(tinymce.$('#lists ul').length, 3);
 		equal(tinymce.$('#lists li').length, 3);
+	});
+
+	test('Delete at nested LI with adjacent BR', function() {
+		editor.getBody().innerHTML = (
+			'<ul>' +
+				'<li>1' +
+					'<ul>' +
+						'<li>' +
+							'<br>' +
+							'<ul>' +
+								'<li>2</li>' +
+							'</ul>' +
+						'</li>' +
+					'</ul>' +
+				'</li>' +
+				'<li>3</li>' +
+			'</ul>'
+		);
+
+		editor.focus();
+		editor.selection.setCursorLocation(editor.$('ul ul li')[0], 0);
+		editor.plugins.lists.backspaceDelete(true);
+
+		equal(editor.getContent(), '<ul><li>1<ul><li>2</li></ul></li><li>3</li></ul>');
+		equal(editor.selection.getNode().nodeName, 'LI');
 	});
 
 	test('Remove UL in inline body element contained in LI', function() {
