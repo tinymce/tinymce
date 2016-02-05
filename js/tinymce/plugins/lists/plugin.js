@@ -14,8 +14,12 @@
 tinymce.PluginManager.add('lists', function(editor) {
 	var self = this;
 
+	function isChildOfBody(elm) {
+		return editor.$.contains(editor.getBody(), elm);
+	}
+
 	function isListNode(node) {
-		return node && (/^(OL|UL|DL)$/).test(node.nodeName);
+		return node && (/^(OL|UL|DL)$/).test(node.nodeName) && isChildOfBody(node);
 	}
 
 	function isFirstChild(node) {
@@ -694,6 +698,10 @@ tinymce.PluginManager.add('lists', function(editor) {
 
 			function mergeLiElements(fromElm, toElm) {
 				var node, listNode, ul = fromElm.parentNode;
+
+				if (!isChildOfBody(fromElm) || !isChildOfBody(toElm)) {
+					return;
+				}
 
 				if (isListNode(toElm.lastChild)) {
 					listNode = toElm.lastChild;
