@@ -666,7 +666,7 @@ define("tinymce/tableplugin/TableGrid", [
 			var rows = getSelectedRows();
 
 			each(rows, function(row, i) {
-				rows[i] = fireNewRow(cloneNode(row, true));
+				rows[i] = cloneNode(row, true);
 			});
 
 			return rows;
@@ -709,16 +709,20 @@ define("tinymce/tableplugin/TableGrid", [
 			each(rows, function(row) {
 				var i, cellCount = row.cells.length, cell;
 
+				fireNewRow(row);
+
 				// Remove col/rowspans
 				for (i = 0; i < cellCount; i++) {
 					cell = row.cells[i];
+
+					fireNewCell(cell);
 					setSpanVal(cell, 'colSpan', 1);
 					setSpanVal(cell, 'rowSpan', 1);
 				}
 
 				// Needs more cells
 				for (i = cellCount; i < targetCellCount; i++) {
-					row.appendChild(cloneCell(row.cells[cellCount - 1]));
+					row.appendChild(fireNewCell(cloneCell(row.cells[cellCount - 1])));
 				}
 
 				// Needs less cells
