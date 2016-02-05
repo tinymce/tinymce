@@ -280,13 +280,12 @@
 			}
 
 			function notFoundAlert() {
-				tinymce.ui.MessageBox.alert('Could not find the specified string.', function() {
+				editor.windowManager.alert('Could not find the specified string.', function() {
 					win.find('#find')[0].focus();
 				});
 			}
 
-			var win = tinymce.ui.Factory.create({
-				type: 'window',
+			var win = editor.windowManager.open({
 				layout: "flex",
 				pack: "center",
 				align: "center",
@@ -373,7 +372,7 @@
 						{type: 'checkbox', name: 'words', text: 'Whole words', label: ' '}
 					]
 				}
-			}).renderTo().reflow();
+			});
 		}
 
 		self.init = function(ed) {
