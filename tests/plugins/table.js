@@ -31,6 +31,8 @@
 			delete editor.settings.table_cell_class_list;
 			delete editor.settings.table_row_class_list;
 			delete editor.settings.table_style_by_css;
+
+			editor.off('newcell newrow');
 		}
 	});
 
@@ -997,5 +999,27 @@
 			'</tbody>' +
 			'</table>');
 
+	});
+
+	test("Table newcell/newrow events", function() {
+		var cells = [], rows = [], counter = 0;
+
+		editor.on('newcell', function(e) {
+			cells.push(e.node);
+			e.node.setAttribute('data-counter', counter++);
+		});
+
+		editor.on('newrow', function(e) {
+			rows.push(e.node);
+			e.node.setAttribute('data-counter', counter++);
+		});
+
+		editor.plugins.table.insertTable(2, 3);
+
+		equal(cells.length, 6);
+		equal(rows.length, 3);
+
+		equal(cells[cells.length - 1].getAttribute('data-counter'), "8");
+		equal(rows[rows.length - 1].getAttribute('data-counter'), "6");
 	});
 })();
