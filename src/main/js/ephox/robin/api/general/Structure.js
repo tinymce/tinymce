@@ -60,7 +60,7 @@ define(
     };
 
     var isEmptyTag = function (universe, item) {
-      return Arr.contains(['br', 'img', 'hr'], universe.property().name(item));
+      return Arr.contains([ 'br', 'img', 'hr', 'input' ], universe.property().name(item));
     };
 
     var isFrame = function (universe, item) {
