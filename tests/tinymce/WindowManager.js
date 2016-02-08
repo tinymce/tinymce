@@ -1,7 +1,5 @@
 ModuleLoader.require([
-	"tinymce/util/Arr",
-	"tinymce/dom/Dimensions"
-], function(Arr, Dimensions) {
+], function() {
 	module("tinymce.WindowManager", {
 		setupModule: function() {
 			QUnit.stop();
