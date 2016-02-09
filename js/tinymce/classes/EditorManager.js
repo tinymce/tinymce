@@ -244,7 +244,7 @@ define("tinymce/EditorManager", [
 		},
 
 		/**
-		 * Overrides the default settings for editor instances..
+		 * Overrides the default settings for editor instances.
 		 *
 		 * @method overrideDefaults
 		 * @param {Object} defaultSettings Defaults settings object.
@@ -254,7 +254,7 @@ define("tinymce/EditorManager", [
 
 			baseUrl = defaultSettings.base_url;
 			if (baseUrl) {
-				this.baseURL = new URI(this.documentBaseURL).toAbsolute(baseUrl);
+				this.baseURL = new URI(this.documentBaseURL).toAbsolute(baseUrl.replace(/\/+$/, ''));
 				this.baseURI = new URI(this.baseURL);
 			}
 
