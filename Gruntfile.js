@@ -102,37 +102,6 @@ module.exports = function(grunt) {
 				}
 			},
 
-			"core-jquery": {
-				options: {
-					moduleOverrides: {
-						"tinymce/dom/Sizzle": "js/tinymce/classes/dom/Sizzle.jQuery.js"
-					},
-					version: packageData.version,
-					releaseDate: packageData.date,
-					baseDir: "js/tinymce/classes",
-					rootNS: "tinymce",
-					outputSource: "js/tinymce/tinymce.jquery.js",
-					outputMinified: "js/tinymce/tinymce.jquery.min.js",
-					outputDev: "js/tinymce/tinymce.jquery.dev.js",
-					verbose: false,
-					expose: "public",
-					compress: true,
-
-					from: [
-						"geom/Rect.js",
-						"dom/DomQuery.js",
-						"EditorManager.js",
-						"LegacyInput.js",
-						"util/XHR.js",
-						"util/JSONRequest.js",
-						"util/JSONP.js",
-						"util/LocalStorage.js",
-						"Compat.js",
-						"ui/*.js"
-					]
-				}
-			},
-
 			"paste-plugin": {
 				options: {
 					baseDir: "js/tinymce/plugins/paste/classes",
@@ -358,52 +327,6 @@ module.exports = function(grunt) {
 					"js/tinymce/skins",
 					"js/tinymce/themes",
 					"js/tinymce/tinymce.min.js",
-					"js/tinymce/license.txt",
-					"changelog.txt",
-					"LICENSE.TXT",
-					"readme.md"
-				]
-			},
-
-			jquery: {
-				options: {
-					baseDir: "tinymce",
-
-					excludes: [
-						"js/tinymce/plugins/moxiemanager",
-						"js/tinymce/plugins/compat3x",
-						"js/tinymce/plugins/visualblocks/img",
-						"js/tinymce/plugins/*/config",
-						"js/tinymce/plugins/*/scratch",
-						"js/tinymce/plugins/*/classes",
-						"js/tinymce/plugins/*/src",
-						"js/tinymce/plugins/*/plugin.js",
-						"js/tinymce/plugins/*/plugin.dev.js",
-						"js/tinymce/themes/*/theme.js",
-						"js/tinymce/skins/*/*.less",
-						"js/tinymce/skins/*/fonts/*.json",
-						"js/tinymce/skins/*/fonts/*.dev.svg",
-						"js/tinymce/skins/*/fonts/readme.md",
-						"readme.md"
-					],
-
-					pathFilter: function(zipFilePath) {
-						if (zipFilePath == "js/tinymce/tinymce.jquery.min.js") {
-							return "js/tinymce/tinymce.min.js";
-						}
-
-						return zipFilePath;
-					},
-
-					to: "tmp/tinymce_<%= pkg.version %>_jquery.zip"
-				},
-
-				src: [
-					"js/tinymce/langs",
-					"js/tinymce/plugins",
-					"js/tinymce/skins",
-					"js/tinymce/themes",
-					"js/tinymce/tinymce.jquery.min.js",
 					"js/tinymce/jquery.tinymce.min.js",
 					"js/tinymce/license.txt",
 					"changelog.txt",
@@ -482,8 +405,7 @@ module.exports = function(grunt) {
 							],
 
 							dest: [
-								"js/tinymce/tinymce.min.js",
-								"js/tinymce/tinymce.jquery.min.js"
+								"js/tinymce/tinymce.min.js"
 							]
 						}
 					],
@@ -580,6 +502,18 @@ module.exports = function(grunt) {
 								"exclude": ["readme.md", "bower.js", "package.json", ".npmignore", "changelog.txt"]
 							}
 						}));
+
+						var src = grunt.file.read("js/tinymce/tinymce.js").toString();
+
+						zip.addData(
+							"tinymce.jquery.js",
+							"window.console && console.log('Use tinymce.js instead of tinymce.jquery.js.');\n" + src
+						);
+
+						zip.addData(
+							"tinymce.jquery.min.js",
+							"window.console && console.log('Use tinymce.min.js instead of tinymce.jquery.min.js.');\n" + src
+						);
 					},
 
 					to: "tmp/tinymce_<%= pkg.version %>_component.zip"
@@ -592,8 +526,6 @@ module.exports = function(grunt) {
 					"js/tinymce/tinymce.js",
 					"js/tinymce/tinymce.min.js",
 					"js/tinymce/jquery.tinymce.min.js",
-					"js/tinymce/tinymce.jquery.js",
-					"js/tinymce/tinymce.jquery.min.js",
 					"js/tinymce/license.txt",
 					"changelog.txt"
 				]
@@ -668,6 +600,7 @@ module.exports = function(grunt) {
 					{src: "js/tinymce/skins", dest: "/content/scripts/tinymce/skins"},
 					{src: "js/tinymce/tinymce.js", dest: "/content/scripts/tinymce/tinymce.js"},
 					{src: "js/tinymce/tinymce.min.js", dest: "/content/scripts/tinymce/tinymce.min.js"},
+					{src: "js/tinymce/jquery.tinymce.min.js", dest: "/content/scripts/tinymce/jquery.tinymce.min.js"},
 					{src: "js/tinymce/license.txt", dest: "/content/scripts/tinymce/license.txt"}
 				]
 			},
@@ -675,16 +608,13 @@ module.exports = function(grunt) {
 			jquery: {
 				options: {
 					id: "TinyMCE.jQuery",
+					title: "TinyMCE.jQuery [Deprecated]",
 					version: packageData.version,
 					authors: "Ephox Corp",
 					owners: "Ephox Corp",
-					description: "The best WYSIWYG editor! TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor " +
-						"control released as Open Source under LGPL by Ephox Corp. TinyMCE has the ability to convert HTML " +
-						"TEXTAREA fields or other HTML elements to editor instances. TinyMCE is very easy to integrate " +
-						"into other Content Management Systems.",
-					releaseNotes: "Release notes for my package.",
-					summary: "TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor " +
-						"control released as Open Source under LGPL by Ephox Corp.",
+					description: "This package has been deprecated use https://www.nuget.org/packages/TinyMCE/",
+					releaseNotes: "This package has been deprecated use https://www.nuget.org/packages/TinyMCE/",
+					summary: "This package has been deprecated use https://www.nuget.org/packages/TinyMCE/",
 					projectUrl: "http://www.tinymce.com/",
 					iconUrl: "http://www.tinymce.com/favicon.ico",
 					licenseUrl: "http://www.tinymce.com/license",
