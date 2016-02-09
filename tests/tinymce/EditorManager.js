@@ -109,8 +109,8 @@ test('overrideDefaults', function() {
 		suffix: "x"
 	});
 
-	strictEqual(tinymce.baseURI.path, "/base/");
-	strictEqual(tinymce.baseURL, "http://www.tinymce.com/base/");
+	strictEqual(tinymce.baseURI.path, "/base");
+	strictEqual(tinymce.baseURL, "http://www.tinymce.com/base");
 	strictEqual(tinymce.suffix, "x");
 	strictEqual(new tinymce.Editor('ed', {}, tinymce).settings.test, 42);
 
