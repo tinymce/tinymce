@@ -95,3 +95,26 @@ asyncTest('Init/remove on same id', function() {
 
 	strictEqual(tinymce.get().length, 2);
 });
+
+test('overrideDefaults', function() {
+	var oldBaseURI, oldBaseUrl, oldSuffix;
+
+	oldBaseURI = tinymce.baseURI;
+	oldBaseUrl = tinymce.baseURL;
+	oldSuffix = tinymce.suffix;
+
+	tinymce.overrideDefaults({
+		test: 42,
+		base_url: "http://www.tinymce.com/base/",
+		suffix: "x"
+	});
+
+	strictEqual(tinymce.baseURI.path, "/base/");
+	strictEqual(tinymce.baseURL, "http://www.tinymce.com/base/");
+	strictEqual(tinymce.suffix, "x");
+	strictEqual(new tinymce.Editor('ed', {}, tinymce).settings.test, 42);
+
+	tinymce.baseURI = oldBaseURI;
+	tinymce.baseURL = oldBaseUrl;
+	tinymce.suffix = oldSuffix;
+});
