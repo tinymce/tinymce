@@ -445,15 +445,13 @@ define("tinymce/SelectionOverrides", [
 			var up = curry(moveV, -1, LineWalker.upUntil);
 			var down = curry(moveV, 1, LineWalker.downUntil);
 
-			function override(moveFn) {
+			function override(evt, moveFn) {
 				var range = moveFn(getRange());
 
-				if (range) {
+				if (range && !evt.isDefaultPrevented()) {
+					evt.preventDefault();
 					setRange(range);
-					return true;
 				}
-
-				return false;
 			}
 
 			function getContentEditableRoot(node) {
@@ -517,44 +515,40 @@ define("tinymce/SelectionOverrides", [
 			});
 
 			editor.on('keydown', function(e) {
-				var prevent;
-
 				if (VK.modifierPressed(e)) {
 					return;
 				}
 
 				switch (e.keyCode) {
 					case VK.RIGHT:
-						prevent = override(right);
+						override(e, right);
 						break;
 
 					case VK.DOWN:
-						prevent = override(down);
+						override(e, down);
 						break;
 
 					case VK.LEFT:
-						prevent = override(left);
+						override(e, left);
 						break;
 
 					case VK.UP:
-						prevent = override(up);
+						override(e, up);
 						break;
 
 					case VK.DELETE:
-						prevent = override(deleteForward);
+						override(e, deleteForward);
 						break;
 
 					case VK.BACKSPACE:
-						prevent = override(backspace);
+						override(e, backspace);
 						break;
 
 					default:
-						prevent = isContentEditableFalse(editor.selection.getNode());
+						if (isContentEditableFalse(editor.selection.getNode())) {
+							e.preventDefault();
+						}
 						break;
-				}
-
-				if (prevent) {
-					e.preventDefault();
 				}
 			});
 
