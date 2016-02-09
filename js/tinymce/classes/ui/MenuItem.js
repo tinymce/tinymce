@@ -300,6 +300,18 @@ define("tinymce/ui/MenuItem", [
 			return self;
 		},
 
+		hover: function() {
+			var self = this;
+
+			self.parent().items().each(function(ctrl) {
+				ctrl.classes.remove('selected');
+			});
+
+			self.classes.toggle('selected', true);
+
+			return self;
+		},
+
 		active: function(state) {
 			if (typeof state != "undefined") {
 				this.aria('checked', state);

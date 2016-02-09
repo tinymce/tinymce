@@ -29,7 +29,7 @@ define("tinymce/ui/Throbber", [
 	 * @param {Boolean} inline Optional true/false state if the throbber should be appended to end of element for infinite scroll.
 	 */
 	return function(elm, inline) {
-		var self = this, state, classPrefix = Control.classPrefix;
+		var self = this, state, classPrefix = Control.classPrefix, timer;
 
 		/**
 		 * Shows the throbber.
@@ -57,7 +57,7 @@ define("tinymce/ui/Throbber", [
 			state = true;
 
 			if (time) {
-				Delay.setTimeout(render, time);
+				timer = Delay.setTimeout(render, time);
 			} else {
 				render();
 			}
@@ -73,6 +73,8 @@ define("tinymce/ui/Throbber", [
 		 */
 		self.hide = function() {
 			var child = elm.lastChild;
+
+			Delay.clearTimeout(timer);
 
 			if (child && child.className.indexOf('throbber') != -1) {
 				child.parentNode.removeChild(child);

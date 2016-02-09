@@ -101,6 +101,7 @@ define("tinymce/ui/Menu", [
 			function hideThrobber() {
 				if (self.throbber) {
 					self.throbber.hide();
+					self.throbber = null;
 				}
 			}
 
@@ -111,12 +112,18 @@ define("tinymce/ui/Menu", [
 
 			if (!self.throbber) {
 				self.throbber = new Throbber(self.getEl('body'), true);
+
+				if (self.items().length === 0) {
+					self.throbber.show();
+				} else {
+					self.throbber.show(100, function() {
+						self.items().remove();
+					});
+				}
+
 				self.on('hide close', hideThrobber);
 			}
 
-			hideThrobber();
-			self.getEl('body').innerHTML = '';
-			self.throbber.show();
 			self.requestTime = time = new Date().getTime();
 
 			self.settings.itemsFactory(function(items) {
@@ -124,9 +131,16 @@ define("tinymce/ui/Menu", [
 					return;
 				}
 
+				self.getEl().style.width = '';
+				self.getEl('body').style.width = '';
+
 				hideThrobber();
+				self.items().remove();
+				self.getEl('body').innerHTML = '';
+
 				self.add(items);
 				self.renderNew();
+				self.fire('loaded');
 			});
 		},
 
