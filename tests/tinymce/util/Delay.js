@@ -90,6 +90,22 @@ ModuleLoader.require([
 		}, 10);
 	});
 
+	asyncTest('throttle stop', function() {
+		var fn, args = [];
+
+		fn = Delay.throttle(function(a) {
+			args.push(a);
+		}, 0);
+
+		fn(1);
+		fn.stop();
+
+		Delay.setTimeout(function() {
+			deepEqual(args, []);
+			QUnit.start();
+		}, 10);
+	});
+
 	test('clearTimeout', function() {
 		var id;
 
