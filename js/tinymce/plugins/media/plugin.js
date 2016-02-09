@@ -191,8 +191,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 				data = htmlToData(this.next().find('#embed').value());
 				this.fromJSON(data);
 			},
-			items: generalFormItems//,
-			//style: (editor.settings.media_generaltab !== false) ? '' : 'display:none'
+			items: generalFormItems
 		});
 
 		var embedItems = [
@@ -215,29 +214,25 @@ tinymce.PluginManager.add('media', function(editor, url) {
 			onShowTab: function() {
 				this.find('#embed').value(dataToHtml(this.parent().toJSON()));
 			},
-			items: embedItems//,
-			//style: (editor.settings.media_embedtab !== false) ? '' : 'display:none'
+			items: embedItems
 		});
 
 
-
-		if(editor.settings.media_embedtab == false) {
+		if (editor.settings.media_embedtab == false) {
 			win = editor.windowManager.open({
 				title: 'Insert/edit video',
 				data: data,
 				body: generalFormItems,
 				onSubmit: onSubmitForm
 			});
-		}
-		else if(editor.settings.media_generaltab == false) {
+		} else if (editor.settings.media_generaltab == false) {
 			win = editor.windowManager.open({
 				title: 'Insert/edit video',
 				data: data,
 				body: embedItems,
 				onSubmit: onSubmitForm
 			});
-		}
-		else {
+		} else {
 			win = editor.windowManager.open({
 				title: 'Insert/edit video',
 				data: data,
