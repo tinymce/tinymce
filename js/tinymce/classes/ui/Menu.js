@@ -115,9 +115,11 @@ define("tinymce/ui/Menu", [
 
 				if (self.items().length === 0) {
 					self.throbber.show();
+					self.fire('loading');
 				} else {
 					self.throbber.show(100, function() {
 						self.items().remove();
+						self.fire('loading');
 					});
 				}
 
@@ -127,6 +129,11 @@ define("tinymce/ui/Menu", [
 			self.requestTime = time = new Date().getTime();
 
 			self.settings.itemsFactory(function(items) {
+				if (items.length === 0) {
+					self.hide();
+					return;
+				}
+
 				if (self.requestTime !== time) {
 					return;
 				}
