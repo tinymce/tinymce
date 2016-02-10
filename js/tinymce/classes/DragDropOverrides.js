@@ -150,6 +150,10 @@ define("tinymce/DragDropOverrides", [
 
 			stop();
 
+			if (e.button !== 0) {
+				return;
+			}
+
 			ceElm = Arr.find(editor.dom.getParents(e.target), Fun.or(isContentEditableFalse, isContentEditableTrue));
 
 			if (isDraggable(ceElm)) {
