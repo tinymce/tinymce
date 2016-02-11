@@ -1,3 +1,5 @@
+Version 4.3.6 (2016-02-xx)
+	...
 Version 4.3.4 (2016-02-11)
 	Added new OpenWindow/CloseWindow events that gets fired when windows open/close.
 	Added new NewCell/NewRow events that gets fired when table cells/rows are created.
