@@ -386,14 +386,14 @@ define("tinymce/pasteplugin/Clipboard", [
 		 * @param  {DOMRange} rng Optional rng object to move selection to.
 		 * @return {Boolean} true/false if the image data was found or not.
 		 */
-		function pasteImageData(e, rng) {
+		function pasteImageData(e, rng, isDomRange) {
 			var dataTransfer = e.clipboardData || e.dataTransfer;
 
 			function processItems(items) {
 				var i, item, reader, hadImage = false;
 
 				function pasteImage(reader) {
-					if (rng) {
+					if (isDomRange && rng) {
 						editor.selection.setRng(rng);
 						rng = null;
 					}
@@ -418,6 +418,10 @@ define("tinymce/pasteplugin/Clipboard", [
 
 				return hadImage;
 			}
+
+			if (!editor.settings.paste_data_images || hasContentType(rng, 'text/html') || hasContentType(rng, 'text/plain')) {
+				 return false;
+			 }
 
 			if (editor.settings.paste_data_images && dataTransfer) {
 				return processItems(dataTransfer.items) || processItems(dataTransfer.files);
@@ -567,7 +571,7 @@ define("tinymce/pasteplugin/Clipboard", [
 					return;
 				}
 
-				if (pasteImageData(e)) {
+				if (pasteImageData(e, clipboardContent, false)) {
 					removePasteBin();
 					return;
 				}
@@ -611,7 +615,7 @@ define("tinymce/pasteplugin/Clipboard", [
 					return;
 				}
 
-				if (pasteImageData(e, rng)) {
+				if (pasteImageData(e, rng, true)) {
 					return;
 				}
 
