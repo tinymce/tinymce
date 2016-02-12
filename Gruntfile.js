@@ -97,7 +97,8 @@ module.exports = function(grunt) {
 						"util/JSONP.js",
 						"util/LocalStorage.js",
 						"Compat.js",
-						"ui/*.js"
+						"ui/*.js",
+						"Register.js"
 					]
 				}
 			},
