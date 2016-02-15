@@ -322,6 +322,10 @@ define("tinymce/pasteplugin/Clipboard", [
 			return getDataTransferItems(clipboardEvent.clipboardData || editor.getDoc().dataTransfer);
 		}
 
+		function hasHtmlOrText(content) {
+			return hasContentType(content, 'text/html') || hasContentType(content, 'text/plain');
+		}
+
 		/**
 		 * Checks if the clipboard contains image data if it does it will take that data
 		 * and convert it into a data url image and paste that image at the caret location.
@@ -511,7 +515,7 @@ define("tinymce/pasteplugin/Clipboard", [
 					return;
 				}
 
-				if (pasteImageData(e)) {
+				if (!hasHtmlOrText(clipboardContent) && pasteImageData(e)) {
 					removePasteBin();
 					return;
 				}
@@ -549,18 +553,21 @@ define("tinymce/pasteplugin/Clipboard", [
 			});
 
 			editor.on('drop', function(e) {
-				var rng = getCaretRangeFromEvent(e);
+				var dropContent, rng;
+
+				rng = getCaretRangeFromEvent(e);
 
 				if (e.isDefaultPrevented() || draggingInternally) {
 					return;
 				}
 
-				if (pasteImageData(e, rng)) {
+				dropContent = getDataTransferItems(e.dataTransfer);
+
+				if (!hasHtmlOrText(dropContent) && pasteImageData(e, rng)) {
 					return;
 				}
 
 				if (rng && editor.settings.paste_filter_drop !== false) {
-					var dropContent = getDataTransferItems(e.dataTransfer);
 					var content = dropContent['mce-internal'] || dropContent['text/html'] || dropContent['text/plain'];
 
 					if (content) {
