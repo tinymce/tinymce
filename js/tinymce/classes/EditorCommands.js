@@ -523,6 +523,10 @@ define("tinymce/EditorCommands", [
 					}
 				}
 
+				function canHaveChildren(node) {
+					return node && !editor.schema.getShortEndedElements()[node.nodeName];
+				}
+
 				function moveSelectionToMarker(marker) {
 					var parentEditableFalseElm;
 
@@ -615,7 +619,7 @@ define("tinymce/EditorCommands", [
 				var caretElement = rng.startContainer || (rng.parentElement ? rng.parentElement() : null);
 				var body = editor.getBody();
 				if (caretElement === body && selection.isCollapsed()) {
-					if (dom.isBlock(body.firstChild) && dom.isEmpty(body.firstChild)) {
+					if (dom.isBlock(body.firstChild) && canHaveChildren(body.firstChild) && dom.isEmpty(body.firstChild)) {
 						rng = dom.createRng();
 						rng.setStart(body.firstChild, 0);
 						rng.setEnd(body.firstChild, 0);

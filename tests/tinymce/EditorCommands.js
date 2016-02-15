@@ -47,6 +47,19 @@ test('mceInsertContent - p inside text of p', function() {
 	equal(rng.startContainer.innerHTML, 'abc');
 });
 
+test('mceInsertContent before HR', function() {
+	var rng;
+
+	editor.setContent('<hr>');
+	editor.focus();
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody(), 0);
+	rng.setEnd(editor.getBody(), 0);
+	editor.selection.setRng(rng);
+	editor.execCommand('mceInsertContent', false, 'x');
+	equal(getContent(), '<p>x</p><hr />');
+});
+
 test('mceInsertContent - p inside whole p', function() {
 	var rng;
 
