@@ -281,56 +281,6 @@ define("tinymce/pasteplugin/Clipboard", [
 		}
 
 		/**
-		 * Some Windows 10/Edge versions will return a double encoded string. This checks if the
-		 * content has this odd encoding and decodes it.
-		 */
-		function decodeEdgeData(data) {
-			var i, out, fingerprint, code;
-
-			// Check if data is encoded
-			fingerprint = [25942, 29554, 28521, 14958];
-			for (i = 0; i < fingerprint.length; i++) {
-				if (data.charCodeAt(i) != fingerprint[i]) {
-					return data;
-				}
-			}
-
-			// Decode UTF-16 to UTF-8
-			out = '';
-			for (i = 0; i < data.length; i++) {
-				code = data.charCodeAt(i);
-
-				/*eslint no-bitwise:0*/
-				out += String.fromCharCode((code & 0x00FF));
-				out += String.fromCharCode((code & 0xFF00) >> 8);
-			}
-
-			// Decode UTF-8
-			return decodeURIComponent(escape(out));
-		}
-
-		/**
-		 * Extracts HTML contents from within a fragment.
-		 */
-		function extractFragment(data) {
-			var idx, startFragment, endFragment;
-
-			startFragment = '<!--StartFragment-->';
-			idx = data.indexOf(startFragment);
-			if (idx !== -1) {
-				data = data.substr(idx + startFragment.length);
-			}
-
-			endFragment = '<!--EndFragment-->';
-			idx = data.indexOf(endFragment);
-			if (idx !== -1) {
-				data = data.substr(0, idx);
-			}
-
-			return data;
-		}
-
-		/**
 		 * Gets various content types out of a datatransfer object.
 		 *
 		 * @param {DataTransfer} dataTransfer Event fired on paste.
@@ -352,14 +302,8 @@ define("tinymce/pasteplugin/Clipboard", [
 
 				if (dataTransfer.types) {
 					for (var i = 0; i < dataTransfer.types.length; i++) {
-						var contentType = dataTransfer.types[i],
-							data = dataTransfer.getData(contentType);
-
-						if (contentType == 'text/html') {
-							data = extractFragment(decodeEdgeData(data));
-						}
-
-						items[contentType] = data;
+						var contentType = dataTransfer.types[i];
+						items[contentType] = dataTransfer.getData(contentType);
 					}
 				}
 			}
