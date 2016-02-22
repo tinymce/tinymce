@@ -80,7 +80,6 @@ define("tinymce/ui/InfoBox", [
 			});
 
 			self.state.on('change:help', function(e) {
-				console.log(e.value);
 				self.classes.toggle('has-help', e.value);
 
 				if (self.state.get('rendered')) {
