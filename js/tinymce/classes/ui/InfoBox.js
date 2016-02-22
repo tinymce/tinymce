@@ -60,7 +60,7 @@ define("tinymce/ui/InfoBox", [
 				'<div id="' + self._id + '" class="' + self.classes + '">' +
 					'<div id="' + self._id + '-body">' +
 						self.encode(self.state.get('text')) +
-						'<button>' +
+						'<button role="button" tabindex="-1">' +
 							'<i class="' + prefix + 'ico ' + prefix + 'i-help"></i>' +
 						'</button>' +
 					'</div>' +
