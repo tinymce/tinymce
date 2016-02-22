@@ -433,6 +433,20 @@ define("tinymce/ui/Control", [
 		},
 
 		/**
+		 * Updates the controls layout rect by re-measuing it.
+		 */
+		updateLayoutRect: function() {
+			var self = this;
+
+			self.parent()._lastRect = null;
+
+			DomUtils.css(self.getEl(), {width: '', height: ''});
+
+			self._layoutRect = self._lastRepaintRect = self._lastLayoutRect = null;
+			self.initLayoutRect();
+		},
+
+		/**
 		 * Binds a callback to the specified event. This event can both be
 		 * native browser events like "click" or custom ones like PostRender.
 		 *

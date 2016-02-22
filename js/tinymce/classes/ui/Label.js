@@ -88,6 +88,13 @@ define("tinymce/ui/Label", [
 			return self._super();
 		},
 
+		severity: function(level) {
+			this.classes.remove('error');
+			this.classes.remove('warning');
+			this.classes.remove('success');
+			this.classes.add(level);
+		},
+
 		/**
 		 * Renders the control as a HTML string.
 		 *
@@ -95,12 +102,28 @@ define("tinymce/ui/Label", [
 		 * @return {String} HTML representing the control.
 		 */
 		renderHtml: function() {
-			var self = this, forId = self.settings.forId;
+			var self = this, targetCtrl, forName, forId = self.settings.forId;
+
+			if (!forId && (forName = self.settings.forName)) {
+				targetCtrl = self.getRoot().find('#' + forName)[0];
+
+				if (targetCtrl) {
+					forId = targetCtrl._id;
+				}
+			}
+
+			if (forId) {
+				return (
+					'<label id="' + self._id + '" class="' + self.classes + '"' + (forId ? ' for="' + forId + '"' : '') + '>' +
+						self.encode(self.state.get('text')) +
+					'</label>'
+				);
+			}
 
 			return (
-				'<label id="' + self._id + '" class="' + self.classes + '"' + (forId ? ' for="' + forId + '"' : '') + '>' +
+				'<span id="' + self._id + '" class="' + self.classes + '">' +
 					self.encode(self.state.get('text')) +
-				'</label>'
+				'</span>'
 			);
 		},
 
@@ -109,6 +132,10 @@ define("tinymce/ui/Label", [
 
 			self.state.on('change:text', function(e) {
 				self.innerHtml(self.encode(e.value));
+
+				if (self.state.get('rendered')) {
+					self.updateLayoutRect();
+				}
 			});
 
 			return self._super();
