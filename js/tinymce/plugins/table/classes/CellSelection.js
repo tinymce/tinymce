@@ -62,6 +62,11 @@ define("tinymce/tableplugin/CellSelection", [
 					currentCell = dom.getParent(startTable, 'td,th');
 				}
 
+				// Selection inside first cell is normal until we have expanted
+				if (startCell === currentCell && !hasCellSelection) {
+					return;
+				}
+
 				if (isCellInTable(startTable, currentCell)) {
 					e.preventDefault();
 
