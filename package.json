@@ -25,7 +25,7 @@
 		"grunt-contrib-qunit": "~0.5.2",
 		"grunt-contrib-uglify": "~0.5.1",
 		"grunt-contrib-watch": "~0.6.1",
-		"grunt-eslint": "~17.0.0",
+		"grunt-eslint": "~18.0.0",
 		"grunt-nuget-pack": "^0.0.6",
 		"grunt-saucelabs": "~8.3.2",
 		"load-grunt-tasks": "~0.6.0",
