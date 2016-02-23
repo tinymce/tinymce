@@ -50,20 +50,19 @@ div.@{prefix}-fullscreen {
 
 .@{prefix}-window-head .@{prefix}-close {
 	position: absolute;
-	right: 15px;
-	top: 9px;
-	font-size: 20px;
-	font-weight: bold;
-	line-height: 20px;
-	color: @window-head-close;
+	right: 0;
+	top: 0;
+	height: 38px;
+	width: 38px;
+	text-align: center;
 	cursor: pointer;
 
-	// IE7
-	height: 20px;
-	overflow: hidden;
+	i {
+		color: @window-head-close;
+	}
 }
 
-.@{prefix}-close:hover {
+.@{prefix}-close:hover i {
 	color: @window-head-close-hover;
 }
 
@@ -72,7 +71,7 @@ div.@{prefix}-fullscreen {
 	font-size: @window-title-font-size;
 	font-weight: bold;
 	text-rendering: optimizelegibility;
-	padding-right: 10px;
+	padding-right: 20px;
 }
 
 .@{prefix}-window .@{prefix}-container-body {
