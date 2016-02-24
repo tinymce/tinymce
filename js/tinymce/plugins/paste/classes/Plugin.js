@@ -24,6 +24,27 @@ define("tinymce/pasteplugin/Plugin", [
 
 	PluginManager.add('paste', function(editor) {
 		var self = this, clipboard, settings = editor.settings;
+		var LOCAL_STORAGE_PLAIN_TEXT_ITEM = "tinymce.paste.plaintext";
+
+		function isLocalStorageEnabled() {
+			return settings.paste_remember_plaintext_info !== false;
+		}
+
+		function isUserInformedAboutPlainText() {
+			if (isLocalStorageEnabled()) {
+				return localStorage.getItem(LOCAL_STORAGE_PLAIN_TEXT_ITEM) === "true";
+			}
+
+			return userIsInformed;
+		}
+
+		function setPlainTextInformed(state) {
+			userIsInformed = state;
+
+			if (isLocalStorageEnabled()) {
+				localStorage.setItem(LOCAL_STORAGE_PLAIN_TEXT_ITEM, "" + state);
+			}
+		}
 
 		function togglePlainTextPaste() {
 			if (clipboard.pasteFormat == "text") {
@@ -33,17 +54,20 @@ define("tinymce/pasteplugin/Plugin", [
 				clipboard.pasteFormat = "text";
 				this.active(true);
 
-				if (!userIsInformed) {
+				if (!isUserInformedAboutPlainText()) {
 					var message = editor.translate('Paste is now in plain text mode. Contents will now ' +
 						'be pasted as plain text until you toggle this option off.');
+
 					editor.notificationManager.open({
 						text: message,
 						type: 'info'
 					});
 
-					userIsInformed = true;
+					setPlainTextInformed(true);
 				}
 			}
+
+			editor.focus();
 		}
 
 		self.clipboard = clipboard = new Clipboard(editor);
