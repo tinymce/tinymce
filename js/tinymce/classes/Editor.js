@@ -1020,6 +1020,10 @@ define("tinymce/Editor", [
 			self.nodeChanged({initial: true});
 			self.execCallback('init_instance_callback', self);
 
+			self.on('compositionstart compositionend', function(e) {
+				self.composing = e.type === 'compositionstart';
+			});
+
 			// Add editor specific CSS styles
 			if (self.contentStyles.length > 0) {
 				contentCssText = '';
