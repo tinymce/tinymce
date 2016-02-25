@@ -37,10 +37,11 @@ define("tinymce/SelectionOverrides", [
 	"tinymce/util/Fun",
 	"tinymce/util/Arr",
 	"tinymce/util/Delay",
-	"tinymce/DragDropOverrides"
+	"tinymce/DragDropOverrides",
+	"tinymce/text/Zwsp"
 ], function(
 	Env, CaretWalker, CaretPosition, CaretContainer, CaretUtils, FakeCaret, LineWalker,
-	LineUtils, NodeType, RangeUtils, ClientRect, VK, Fun, Arr, Delay, DragDropOverrides
+	LineUtils, NodeType, RangeUtils, ClientRect, VK, Fun, Arr, Delay, DragDropOverrides, Zwsp
 ) {
 	var curry = Fun.curry,
 		isContentEditableTrue = NodeType.isContentEditableTrue,
@@ -338,7 +339,7 @@ define("tinymce/SelectionOverrides", [
 		}
 
 		function renderCaretAtRange(range) {
-			var caretPosition;
+			var caretPosition, ceRoot;
 
 			range = CaretUtils.normalizeRange(1, rootNode, range);
 			caretPosition = CaretPosition.fromRangeStart(range);
@@ -349,6 +350,12 @@ define("tinymce/SelectionOverrides", [
 
 			if (isContentEditableFalse(caretPosition.getNode(true))) {
 				return showCaret(1, caretPosition.getNode(true), false);
+			}
+
+			// TODO: Should render caret before/after depending on where you click on the page forces after now
+			ceRoot = editor.dom.getParent(caretPosition.getNode(), Fun.or(isContentEditableFalse, isContentEditableTrue));
+			if (isContentEditableFalse(ceRoot)) {
+				return showCaret(1, ceRoot, false);
 			}
 
 			fakeCaret.hide();
@@ -644,7 +651,7 @@ define("tinymce/SelectionOverrides", [
 				// Make sure we have a proper fake caret on focus
 				Delay.setEditorTimeout(editor, function() {
 					editor.selection.setRng(renderRangeCaret(editor.selection.getRng()));
-				});
+				}, 0);
 			});
 
 			DragDropOverrides.init(editor);
@@ -676,7 +683,7 @@ define("tinymce/SelectionOverrides", [
 
 		function setContentEditableSelection(range) {
 			var node, $ = editor.$, dom = editor.dom, $realSelectionContainer, sel,
-				startContainer, startOffset, endOffset, e, caretPosition, targetClone;
+				startContainer, startOffset, endOffset, e, caretPosition, targetClone, origTargetClone;
 
 			if (!range) {
 				clearContentEditableSelection();
@@ -726,7 +733,7 @@ define("tinymce/SelectionOverrides", [
 				return null;
 			}
 
-			targetClone = node.cloneNode(true);
+			targetClone = origTargetClone = node.cloneNode(true);
 			e = editor.fire('ObjectSelected', {target: node, targetClone: targetClone});
 			if (e.isDefaultPrevented()) {
 				clearContentEditableSelection();
@@ -743,13 +750,22 @@ define("tinymce/SelectionOverrides", [
 				$realSelectionContainer.appendTo(editor.getBody());
 			}
 
-			$realSelectionContainer.empty().append('\u00a0').append(targetClone).append('\u00a0').css({
+			range = editor.dom.createRng();
+
+			// WHY is IE making things so hard! Copy on <i contentEditable="false">x</i> produces: <em>x</em>
+			if (targetClone === origTargetClone && Env.ie) {
+				$realSelectionContainer.empty().append(Zwsp.ZWSP).append(targetClone).append(Zwsp.ZWSP);
+				range.setStart($realSelectionContainer[0].firstChild, 0);
+				range.setEnd($realSelectionContainer[0].lastChild, 1);
+			} else {
+				$realSelectionContainer.empty().append('\u00a0').append(targetClone).append('\u00a0');
+				range.setStart($realSelectionContainer[0].firstChild, 1);
+				range.setEnd($realSelectionContainer[0].lastChild, 0);
+			}
+
+			$realSelectionContainer.css({
 				top: dom.getPos(node, editor.getBody()).y
 			});
-
-			range = editor.dom.createRng();
-			range.setStart($realSelectionContainer[0].firstChild, 1);
-			range.setEnd($realSelectionContainer[0].lastChild, 0);
 
 			editor.getBody().focus();
 			$realSelectionContainer[0].focus();
