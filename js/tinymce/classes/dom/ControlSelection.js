@@ -591,7 +591,11 @@ define("tinymce/dom/ControlSelection", [
 
 			var throttledUpdateResizeRect = Delay.throttle(updateResizeRect);
 
-			editor.on('nodechange ResizeEditor ResizeWindow drop', throttledUpdateResizeRect);
+			editor.on('nodechange ResizeEditor ResizeWindow drop', function(e) {
+				if (!editor.composing) {
+					throttledUpdateResizeRect(e);
+				}
+			});
 
 			// Update resize rect while typing in a table
 			editor.on('keydown keyup compositionend', function(e) {
