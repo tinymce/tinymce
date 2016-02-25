@@ -38,6 +38,7 @@ define("tinymce/pasteplugin/Clipboard", [
 		var self = this, pasteBinElm, lastRng, keyboardPasteTimeStamp = 0, draggingInternally = false;
 		var pasteBinDefaultContent = '%MCEPASTEBIN%', keyboardPastePlainTextState;
 		var mceInternalUrlPrefix = 'data:text/mce-internal,';
+		var uniqueId = Utils.createIdGenerator("mceclip");
 
 		/**
 		 * Pastes the specified HTML. This means that the HTML is filtered and then
@@ -331,22 +332,37 @@ define("tinymce/pasteplugin/Clipboard", [
 		 * and convert it into a data url image and paste that image at the caret location.
 		 *
 		 * @param  {ClipboardEvent} e Paste/drop event object.
-		 * @param  {DOMRange} rng Optional rng object to move selection to.
+		 * @param  {DOMRange} rng Rng object to move selection to.
 		 * @return {Boolean} true/false if the image data was found or not.
 		 */
 		function pasteImageData(e, rng) {
 			var dataTransfer = e.clipboardData || e.dataTransfer;
 
+			function getBase64FromUri(uri) {
+				var idx;
+
+				idx = uri.indexOf(',');
+				if (idx !== -1) {
+					return uri.substr(idx + 1);
+				}
+
+				return null;
+			}
+
 			function processItems(items) {
 				var i, item, reader, hadImage = false;
 
-				function pasteImage(reader) {
+				function pasteImage(reader, blob) {
 					if (rng) {
 						editor.selection.setRng(rng);
 						rng = null;
 					}
 
-					pasteHtml('<img src="' + reader.result + '">');
+					var blobCache = editor.editorUpload.blobCache;
+					var blobInfo = blobCache.create(uniqueId(), blob, getBase64FromUri(reader.result));
+					blobCache.add(blobInfo);
+
+					pasteHtml('<img src="' + blobInfo.blobUri() + '">');
 				}
 
 				if (items) {
@@ -354,9 +370,11 @@ define("tinymce/pasteplugin/Clipboard", [
 						item = items[i];
 
 						if (/^image\/(jpeg|png|gif|bmp)$/.test(item.type)) {
+							var blob = item.getAsFile ? item.getAsFile() : item;
+
 							reader = new FileReader();
-							reader.onload = pasteImage.bind(null, reader);
-							reader.readAsDataURL(item.getAsFile ? item.getAsFile() : item);
+							reader.onload = pasteImage.bind(null, reader, blob);
+							reader.readAsDataURL(blob);
 
 							e.preventDefault();
 							hadImage = true;
@@ -499,6 +517,10 @@ define("tinymce/pasteplugin/Clipboard", [
 				}
 			}
 
+			var getLastRng = function() {
+				return lastRng || editor.selection.getRng();
+			};
+
 			editor.on('paste', function(e) {
 				// Getting content from the Clipboard can take some time
 				var clipboardTimer = new Date().getTime();
@@ -515,7 +537,7 @@ define("tinymce/pasteplugin/Clipboard", [
 					return;
 				}
 
-				if (!hasHtmlOrText(clipboardContent) && pasteImageData(e)) {
+				if (!hasHtmlOrText(clipboardContent) && pasteImageData(e, getLastRng())) {
 					removePasteBin();
 					return;
 				}

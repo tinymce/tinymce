@@ -122,9 +122,19 @@ define("tinymce/pasteplugin/Utils", [
 		return html;
 	}
 
+	// TODO: Should be in some global class
+	function createIdGenerator(prefix) {
+		var count = 0;
+
+		return function() {
+			return prefix + (count++);
+		};
+	}
+
 	return {
 		filter: filter,
 		innerText: innerText,
-		trimHtml: trimHtml
+		trimHtml: trimHtml,
+		createIdGenerator: createIdGenerator
 	};
 });
