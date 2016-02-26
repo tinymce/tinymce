@@ -24,20 +24,10 @@ define("tinymce/Register", [
 	};
 
 	if (typeof context.define === "function") {
-		// AMD
-		if (typeof context.define.amd === "object") {
-			context.define(tinymce);
-		}
-
 		// Bolt
 		if (!context.define.amd) {
 			context.define("ephox/tinymce", [], tinymce);
 		}
-	}
-	// CommonJS
-
-	if (typeof context.module === "object" && context.module.exports) {
-		context.module.exports = context.tinymce;
 	}
 
 	return {};
