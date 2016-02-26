@@ -5,10 +5,15 @@
 	background-color: @notification-bg;
 	padding: 5px;
 	margin-top: 5px;
-	.opacity(0.8);
 	border-width: 1px;
 	border-style: solid;
 	border-color: @notification-border;
+	.transition(opacity 150ms ease-in);
+	opacity: 0;
+}
+
+.@{prefix}-notification.@{prefix}-in {
+	opacity: 1;
 }
 
 .@{prefix}-notification-success {
