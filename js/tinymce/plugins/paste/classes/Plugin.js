@@ -27,7 +27,7 @@ define("tinymce/pasteplugin/Plugin", [
 		var LOCAL_STORAGE_PLAIN_TEXT_ITEM = "tinymce.paste.plaintext";
 
 		function isLocalStorageEnabled() {
-			return settings.paste_remember_plaintext_info !== false;
+			return !!settings.paste_remember_plaintext_info;
 		}
 
 		function isUserInformedAboutPlainText() {
