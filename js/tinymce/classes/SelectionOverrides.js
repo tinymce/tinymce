@@ -508,6 +508,8 @@ define("tinymce/SelectionOverrides", [
 						if (!isXYWithinRange(e.clientX, e.clientY, editor.selection.getRng())) {
 							editor.selection.placeCaretAt(e.clientX, e.clientY);
 						}
+
+						setContentEditableSelection(selectNode(contentEditableRoot));
 					}
 				} else {
 					clearContentEditableSelection();
