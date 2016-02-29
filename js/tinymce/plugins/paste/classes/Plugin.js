@@ -24,32 +24,16 @@ define("tinymce/pasteplugin/Plugin", [
 
 	PluginManager.add('paste', function(editor) {
 		var self = this, clipboard, settings = editor.settings;
-		var LOCAL_STORAGE_PLAIN_TEXT_ITEM = "tinymce.paste.plaintext";
-
-		function isLocalStorageEnabled() {
-			return !!settings.paste_remember_plaintext_info;
-		}
 
 		function isUserInformedAboutPlainText() {
-			if (isLocalStorageEnabled()) {
-				return localStorage.getItem(LOCAL_STORAGE_PLAIN_TEXT_ITEM) === "true";
-			}
-
-			return userIsInformed;
-		}
-
-		function setPlainTextInformed(state) {
-			userIsInformed = state;
-
-			if (isLocalStorageEnabled()) {
-				localStorage.setItem(LOCAL_STORAGE_PLAIN_TEXT_ITEM, "" + state);
-			}
+			return userIsInformed || editor.settings.paste_plaintext_inform === false;
 		}
 
 		function togglePlainTextPaste() {
 			if (clipboard.pasteFormat == "text") {
 				this.active(false);
 				clipboard.pasteFormat = "html";
+				editor.fire('PastePlainTextToggle', {state: false});
 			} else {
 				clipboard.pasteFormat = "text";
 				this.active(true);
@@ -63,7 +47,8 @@ define("tinymce/pasteplugin/Plugin", [
 						type: 'info'
 					});
 
-					setPlainTextInformed(true);
+					userIsInformed = true;
+					editor.fire('PastePlainTextToggle', {state: true});
 				}
 			}
 
