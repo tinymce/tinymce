@@ -8,12 +8,14 @@
 	border-width: 1px;
 	border-style: solid;
 	border-color: @notification-border;
-	.transition(opacity 150ms ease-in);
+	transform: scale(0.1);
+	transition: transform 100ms ease-in, opacity 150ms ease-in;
 	opacity: 0;
 }
 
 .@{prefix}-notification.@{prefix}-in {
 	opacity: 1;
+	transform: scale(1);
 }
 
 .@{prefix}-notification-success {

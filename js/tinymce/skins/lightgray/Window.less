@@ -35,10 +35,12 @@ div.@{prefix}-fullscreen {
 	position: fixed;
 	top: 0; left: 0;
 	opacity: 0;
-	.transition(opacity 150ms ease-in);
+	transform: scale(0.1);
+	transition: transform 100ms ease-in, opacity 150ms ease-in;
 }
 
 .@{prefix}-window.@{prefix}-in {
+	transform: scale(1);
 	opacity: 1;
 }
 
