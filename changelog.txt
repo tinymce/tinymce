@@ -1,5 +1,22 @@
-Version 4.3.6 (2016-02-xx)
-	...
+Version 4.3.6 (2016-03-01)
+	Added new paste_remember_plaintext_info option to allow a global disable of the plain text mode notification.
+	Added new PastePlainTextToggle event that fires when plain text mode toggles on/off.
+	Fixed bug where it wasn't possible to select media elements since the drag logic would snap it to mouse cursor.
+	Fixed bug where it was hard to place the caret inside nested cE=true elements when the outer cE=false element was focused.
+	Fixed bug where editors wouldn't properly initialize if both selector and mode where used.
+	Fixed bug where IME input inside table cells would switch the IME off.
+	Fixed bug where selection inside the first table cell would cause the whole table cell to get selected.
+	Fixed bug where error handling of images being uploaded wouldn't properly handle faulty statuses.
+	Fixed bug where inserting contents before a HR would cause an exception to be thrown.
+	Fixed bug where copy/paste of Excel data would be inserted as an image.
+	Fixed caret position issues with copy/paste of inline block cE=false elements.
+	Fixed issues with various menu item focus bugs in Chrome. Where the focused menu bar item wasn't properly blurred.
+	Fixed so the notifications have a solid background since it would be hard to read if there where text under it.
+	Fixed so notifications gets animated similar to the ones used by dialogs.
+	Fixed so larger images that gets pasted is handled better.
+	Fixed so the window close button is more uniform on various platform and also increased it's hit area.
+Version 4.3.5 (2016-02-11)
+	Npm version bump due to package not being fully updated.
 Version 4.3.4 (2016-02-11)
 	Added new OpenWindow/CloseWindow events that gets fired when windows open/close.
 	Added new NewCell/NewRow events that gets fired when table cells/rows are created.
