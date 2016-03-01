@@ -28,7 +28,6 @@
 .mce-dotted {background-image: url(../img/raster.gif);}
 .mce-i-test {background: red;}
 
- .mce-window, .mce-notification {
-	 transform: initial;
+body .mce-window, body .mce-notification {
+	 transform: none;
  }
- 
