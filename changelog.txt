@@ -1,3 +1,5 @@
+Version 4.3.7 (2016-03-xx)
+	Fixed bug where incorrect icons would be rendered for imagetools edit and color levels.
 Version 4.3.6 (2016-03-01)
 	Added new paste_remember_plaintext_info option to allow a global disable of the plain text mode notification.
 	Added new PastePlainTextToggle event that fires when plain text mode toggles on/off.
