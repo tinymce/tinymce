@@ -216,7 +216,7 @@ define(
     //   throw 'Form ARIA support not implemented yet.';
     // };
 
-    var input = function (element, label) {
+    var label = function (element, label) {
       Attr.set(element, 'aria-label', label);
     };
 
@@ -249,7 +249,7 @@ define(
       dialog: dialog,
       button: button,
       textarea: textarea,
-      input: input,
+      label: label,
       widget: widget,
       listBox: listBox,
       live: live,
