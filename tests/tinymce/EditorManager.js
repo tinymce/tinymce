@@ -106,15 +106,37 @@ test('overrideDefaults', function() {
 	tinymce.overrideDefaults({
 		test: 42,
 		base_url: "http://www.tinymce.com/base/",
-		suffix: "x"
+		suffix: "x",
+		external_plugins: {
+			"plugina": "//domain/plugina.js",
+			"pluginb": "//domain/pluginb.js"
+		}
 	});
 
 	strictEqual(tinymce.baseURI.path, "/base");
 	strictEqual(tinymce.baseURL, "http://www.tinymce.com/base");
 	strictEqual(tinymce.suffix, "x");
-	strictEqual(new tinymce.Editor('ed', {}, tinymce).settings.test, 42);
+	strictEqual(new tinymce.Editor('ed1', {}, tinymce).settings.test, 42);
+
+	deepEqual(new tinymce.Editor('ed2', {
+		external_plugins: {
+			"plugina": "//domain/plugina2.js",
+			"pluginc": "//domain/pluginc.js"
+		}
+	}, tinymce).settings.external_plugins, {
+		"plugina": "//domain/plugina2.js",
+		"pluginb": "//domain/pluginb.js",
+		"pluginc": "//domain/pluginc.js"
+	});
+
+	deepEqual(new tinymce.Editor('ed3', {}, tinymce).settings.external_plugins, {
+		"plugina": "//domain/plugina.js",
+		"pluginb": "//domain/pluginb.js"
+	});
 
 	tinymce.baseURI = oldBaseURI;
 	tinymce.baseURL = oldBaseUrl;
 	tinymce.suffix = oldSuffix;
+
+	tinymce.overrideDefaults({});
 });
