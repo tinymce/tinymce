@@ -46,6 +46,16 @@ tinymce.PluginManager.add('preview', function(editor) {
 					bodyClass = bodyClass[editor.id] || '';
 				}
 
+				var preventClicksOnLinksScript = (
+					'<script>' +
+						'document.addEventListener && document.addEventListener("click", function(e) {' +
+							'if (e.target.nodeName === "A") {' +
+								'e.preventDefault();' +
+							'}' +
+						'}, false);' +
+					'</script> '
+				);
+
 				var dirAttr = editor.settings.directionality ? ' dir="' + editor.settings.directionality + '"' : '';
 
 				previewHtml = (
@@ -56,6 +66,7 @@ tinymce.PluginManager.add('preview', function(editor) {
 					'</head>' +
 					'<body id="' + bodyId + '" class="mce-content-body ' + bodyClass + '"' + dirAttr + '>' +
 						editor.getContent() +
+						preventClicksOnLinksScript +
 					'</body>' +
 					'</html>'
 				);
