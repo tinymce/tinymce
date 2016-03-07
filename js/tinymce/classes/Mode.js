@@ -23,6 +23,26 @@ define("tinymce/Mode", [], function() {
 		}
 	}
 
+	function clickBlocker(editor) {
+		var target, handler;
+
+		target = editor.getBody();
+
+		handler = function(e) {
+			if (editor.dom.getParents(e.target, 'a').length > 0) {
+				e.preventDefault();
+			}
+		};
+
+		editor.dom.bind(target, 'click', handler);
+
+		return {
+			unbind: function() {
+				editor.dom.unbind(target, 'click', handler);
+			}
+		};
+	}
+
 	function setMode(editor, mode) {
 		var currentMode = editor.readonly ? 'readonly' : 'design';
 
@@ -30,7 +50,13 @@ define("tinymce/Mode", [], function() {
 			return;
 		}
 
+		if (editor._clickBlocker) {
+			editor._clickBlocker.unbind();
+			editor._clickBlocker = null;
+		}
+
 		if (mode == 'readonly') {
+			editor._clickBlocker = clickBlocker(editor);
 			editor.selection.controlSelection.hideResizeRect();
 			editor.readonly = true;
 			editor.getBody().contentEditable = false;

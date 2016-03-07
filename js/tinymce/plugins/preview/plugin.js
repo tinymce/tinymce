@@ -49,8 +49,10 @@ tinymce.PluginManager.add('preview', function(editor) {
 				var preventClicksOnLinksScript = (
 					'<script>' +
 						'document.addEventListener && document.addEventListener("click", function(e) {' +
-							'if (e.target.nodeName === "A") {' +
-								'e.preventDefault();' +
+							'for (var elm = e.target; elm; elm = elm.parentNode) {' +
+								'if (elm.nodeName === "A") {' +
+									'e.preventDefault();' +
+								'}' +
 							'}' +
 						'}, false);' +
 					'</script> '
