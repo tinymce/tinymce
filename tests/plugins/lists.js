@@ -1475,6 +1475,36 @@ ModuleLoader.require([
 		);
 	});
 
+	test('Indent second second li with next sibling to nested li', function() {
+		editor.getBody().innerHTML = trimBrs(
+			'<ul>' +
+				'<li>a</li>' +
+				'<li>b' +
+					'<ul>' +
+						'<li>c</li>' +
+					'</ul>' +
+				'</li>' +
+				'<li>d</li>' +
+			'</ul>'
+		);
+
+		editor.focus();
+		Utils.setSelection('ul > li:nth-child(2)', 1);
+		execCommand('Indent');
+
+		equal(editor.getContent(),
+			'<ul>' +
+				'<li>a' +
+					'<ul>' +
+						'<li>b</li>' +
+						'<li>c</li>' +
+					'</ul>' +
+				'</li>' +
+				'<li>d</li>' +
+			'</ul>'
+		);
+	});
+
 	// Backspace
 
 	test('Backspace at beginning of single LI in UL', function() {
@@ -2073,6 +2103,23 @@ ModuleLoader.require([
 		editor.plugins.lists.backspaceDelete(true);
 
 		equal(editor.getContent(), '<ul><li>1<ul><li>2</li></ul></li><li>3</li></ul>');
+		equal(editor.selection.getNode().nodeName, 'LI');
+	});
+
+	test('Delete at BR before text in LI', function() {
+		editor.getBody().innerHTML = (
+			'<ul>' +
+				'<li>1</li>' +
+				'<li>2<br></li>' +
+				'<li>3</li>' +
+			'</ul>'
+		);
+
+		editor.focus();
+		editor.selection.setCursorLocation(editor.$('li')[1], 1);
+		editor.plugins.lists.backspaceDelete(false);
+
+		equal(editor.getContent(), '<ul><li>1</li><li>2</li><li>3</li></ul>');
 		equal(editor.selection.getNode().nodeName, 'LI');
 	});
 
