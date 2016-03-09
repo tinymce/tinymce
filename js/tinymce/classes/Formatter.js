@@ -102,12 +102,26 @@ define("tinymce/Formatter", [
 
 				alignleft: [
 					{selector: 'figure.image', collapsed: false, classes: 'align-left', ceFalseOverride: true},
-					{selector: 'figure,p,h1,h2,h3,h4,h5,h6,td,th,tr,div,ul,ol,li', styles: {textAlign: 'left'}, defaultBlock: 'div'},
+					{
+						selector: 'figure,p,h1,h2,h3,h4,h5,h6,td,th,tr,div,ul,ol,li',
+						styles: {
+							textAlign: 'left'
+						},
+						inherit: false,
+						defaultBlock: 'div'
+					},
 					{selector: 'img,table', collapsed: false, styles: {'float': 'left'}}
 				],
 
 				aligncenter: [
-					{selector: 'figure,p,h1,h2,h3,h4,h5,h6,td,th,tr,div,ul,ol,li', styles: {textAlign: 'center'}, defaultBlock: 'div'},
+					{
+						selector: 'figure,p,h1,h2,h3,h4,h5,h6,td,th,tr,div,ul,ol,li',
+						styles: {
+							textAlign: 'center'
+						},
+						inherit: false,
+						defaultBlock: 'div'
+					},
 					{selector: 'figure.image', collapsed: false, classes: 'align-center', ceFalseOverride: true},
 					{selector: 'img', collapsed: false, styles: {display: 'block', marginLeft: 'auto', marginRight: 'auto'}},
 					{selector: 'table', collapsed: false, styles: {marginLeft: 'auto', marginRight: 'auto'}}
@@ -115,12 +129,26 @@ define("tinymce/Formatter", [
 
 				alignright: [
 					{selector: 'figure.image', collapsed: false, classes: 'align-right', ceFalseOverride: true},
-					{selector: 'figure,p,h1,h2,h3,h4,h5,h6,td,th,tr,div,ul,ol,li', styles: {textAlign: 'right'}, defaultBlock: 'div'},
+					{
+						selector: 'figure,p,h1,h2,h3,h4,h5,h6,td,th,tr,div,ul,ol,li',
+						styles: {
+							textAlign: 'right'
+						},
+						inherit: false,
+						defaultBlock: 'div'
+					},
 					{selector: 'img,table', collapsed: false, styles: {'float': 'right'}}
 				],
 
 				alignjustify: [
-					{selector: 'figure,p,h1,h2,h3,h4,h5,h6,td,th,tr,div,ul,ol,li', styles: {textAlign: 'justify'}, defaultBlock: 'div'}
+					{
+						selector: 'figure,p,h1,h2,h3,h4,h5,h6,td,th,tr,div,ul,ol,li',
+						styles: {
+							textAlign: 'justify'
+						},
+						inherit: false,
+						defaultBlock: 'div'
+					}
 				],
 
 				bold: [
@@ -283,6 +311,20 @@ define("tinymce/Formatter", [
 			}
 
 			return formats;
+		}
+
+		function matchesUnInheritedFormatSelector(node, name) {
+			var formatList = get(name);
+
+			if (formatList) {
+				for (var i = 0; i < formatList.length; i++) {
+					if (formatList[i].inherit === false && dom.is(node, formatList[i].selector)) {
+						return true;
+					}
+				}
+			}
+
+			return false;
 		}
 
 		function getTextDecoration(node) {
@@ -1043,6 +1085,10 @@ define("tinymce/Formatter", [
 
 				// Find first node with similar format settings
 				node = dom.getParent(node, function(node) {
+					if (matchesUnInheritedFormatSelector(node, name)) {
+						return true;
+					}
+
 					return node.parentNode === root || !!matchNode(node, name, vars, true);
 				});
 
@@ -1174,6 +1220,10 @@ define("tinymce/Formatter", [
 								}
 
 								matchedFormats[format] = callbacks;
+								return false;
+							}
+
+							if (matchesUnInheritedFormatSelector(node, format)) {
 								return false;
 							}
 						});

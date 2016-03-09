@@ -15,7 +15,7 @@ module("tinymce.Formatter - Apply", {
 			disable_nodechange: true,
 			entities: 'raw',
 			valid_styles: {
-				'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display'
+				'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display,text-align'
 			},
 			init_instance_callback: function(ed) {
 				window.editor = ed;
@@ -36,7 +36,7 @@ module("tinymce.Formatter - Apply", {
 			disable_nodechange: true,
 			entities: 'raw',
 			valid_styles: {
-				'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display'
+				'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display,text-align'
 			},
 			init_instance_callback: function(ed) {
 				window.inlineEditor = ed;
@@ -1533,6 +1533,56 @@ test('Align specified table element with collapsed: false and selection collapse
 	});
 	editor.formatter.apply('format', {}, editor.getBody().firstChild);
 	equal(getContent(), '<table style="float: right;"><tbody><tr><td>a</td></tr></tbody></table>');
+});
+
+test('Align nested table cell to same as parent', function() {
+	editor.setContent(
+		'<table>' +
+			'<tbody>' +
+				'<tr>' +
+					'<td style="text-align: right;">a' +
+						'<table>' +
+							'<tbody>' +
+								'<tr>' +
+									'<td><b>b</b></td>' +
+								'</tr>' +
+							'</tbody>' +
+						'</table>' +
+					'</td>' +
+				'</tr>' +
+			'</tbody>' +
+		'</table>'
+	);
+
+	Utils.setSelection('b', 0);
+
+	editor.formatter.register('format', {
+		selector: 'td',
+		styles: {
+			'text-align': 'right'
+		}
+	});
+
+	editor.formatter.apply('format', {}, editor.$('td td')[0]);
+
+	equal(
+		getContent(),
+		'<table>' +
+			'<tbody>' +
+				'<tr>' +
+					'<td style="text-align: right;">a' +
+						'<table>' +
+							'<tbody>' +
+								'<tr>' +
+									'<td style="text-align: right;"><b>b</b></td>' +
+								'</tr>' +
+							'</tbody>' +
+						'</table>' +
+					'</td>' +
+				'</tr>' +
+			'</tbody>' +
+		'</table>'
+	);
 });
 
 test('Apply ID format to around existing bookmark node', function() {
