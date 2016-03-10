@@ -1691,3 +1691,18 @@ asyncTest('Bug #7412 - valid_styles affects the Bold and Italic buttons, althoug
         }
     });
 });
+
+test('Format selection from with end at beginning of block', function(){
+	editor.setContent("<div id='a'>one</div><div id='b'>two</div>");
+	editor.focus();
+	Utils.setSelection('#a', 0, '#b', 0);
+	editor.execCommand('formatBlock', false, 'h1');
+	equal(getContent(), '<h1 id="a">one</h1>\n<div id="b">two</div>');
+});
+
+test('Format selection over fragments', function(){
+	editor.setContent("<strong>a</strong>bc<em>d</em>");
+	Utils.setSelection('strong', 1, 'em', 0);
+	editor.formatter.apply('underline');
+	equal(getContent(), '<p><strong>a</strong><span style="text-decoration: underline;">bc</span><em>d</em></p>');
+});
