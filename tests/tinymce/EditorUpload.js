@@ -66,8 +66,8 @@ ModuleLoader.require([
 			var blobInfo = result[0].blobInfo;
 
 			QUnit.equal("data:" + blobInfo.blob().type + ";base64," + blobInfo.base64(), testBlobDataUri);
-			QUnit.equal(Utils.normalizeHtml(editor.getBody().innerHTML), '<p><img alt="" src="' + blobInfo.blobUri() + '" /></p>');
-			QUnit.equal('<p><img src="data:' + blobInfo.blob().type + ';base64,' + blobInfo.base64() + '" alt="" /></p>', editor.getContent());
+			QUnit.equal(Utils.normalizeHtml(editor.getBody().innerHTML), '<p><img src="' + blobInfo.blobUri() + '" /></p>');
+			QUnit.equal('<p><img src="data:' + blobInfo.blob().type + ';base64,' + blobInfo.base64() + '" /></p>', editor.getContent());
 			QUnit.strictEqual(editor.editorUpload.blobCache.get(blobInfo.id()), blobInfo);
 		}).then(QUnit.start);
 	});
@@ -78,7 +78,7 @@ ModuleLoader.require([
 		function assertResult(result) {
 			QUnit.strictEqual(result[0].status, true);
 			QUnit.ok(result[0].element.src.indexOf(uploadedBlobInfo.id() + '.png') !== -1);
-			QUnit.equal('<p><img src="' + uploadedBlobInfo.filename() + '" alt="" /></p>', editor.getContent());
+			QUnit.equal('<p><img src="' + uploadedBlobInfo.filename() + '" /></p>', editor.getContent());
 
 			return result;
 		}
@@ -185,6 +185,6 @@ ModuleLoader.require([
 
 	test('Retain blobs not in blob cache', function() {
 		editor.getBody().innerHTML = '<img src="blob:http%3A//host/f8d1e462-8646-485f-87c5-f9bcee5873c6">';
-		QUnit.equal('<p><img src="blob:http%3A//host/f8d1e462-8646-485f-87c5-f9bcee5873c6" alt="" /></p>', editor.getContent());
+		QUnit.equal('<p><img src="blob:http%3A//host/f8d1e462-8646-485f-87c5-f9bcee5873c6" /></p>', editor.getContent());
 	});
 });

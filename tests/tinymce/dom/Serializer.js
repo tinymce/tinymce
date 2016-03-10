@@ -44,7 +44,7 @@ test('Schema rules', function() {
 
 	ser = new tinymce.dom.Serializer({invalid_elements : 'hr,br'});
 	DOM.setHTML('test', '<img src="tinymce/ui/img/raster.gif" data-mce-src="tinymce/ui/img/raster.gif" /><hr /><br />');
-	equal(ser.serialize(DOM.get('test')), '<div id="test"><img src="tinymce/ui/img/raster.gif" alt="" /></div>');
+	equal(ser.serialize(DOM.get('test')), '<div id="test"><img src="tinymce/ui/img/raster.gif" /></div>');
 });
 
 test('Entity encoding', function() {

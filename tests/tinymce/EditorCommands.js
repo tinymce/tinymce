@@ -211,7 +211,7 @@ test('mceInsertContent - image inside p', function() {
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 1);
 	editor.selection.setRng(rng);
 	editor.execCommand('mceInsertContent', false, '<img src="about:blank" />');
-	equal(editor.getContent(), '<p><img src="about:blank" alt="" /></p>');
+	equal(editor.getContent(), '<p><img src="about:blank" /></p>');
 	rng = Utils.normalizeRng(editor.selection.getRng(true));
 	ok(rng.collapsed);
 	equal(rng.startContainer.nodeName, 'P');
@@ -493,17 +493,17 @@ test('Formatting commands (alignInline)', function() {
 	editor.setContent('<img src="tinymce/ui/img/raster.gif" />');
 	editor.selection.select(editor.dom.select('img')[0]);
 	editor.execCommand('JustifyLeft');
-	equal(editor.getContent(), '<p><img style="float: left;" src="tinymce/ui/img/raster.gif" alt="" /></p>');
+	equal(editor.getContent(), '<p><img style="float: left;" src="tinymce/ui/img/raster.gif" /></p>');
 
 	editor.setContent('<img src="tinymce/ui/img/raster.gif" />');
 	editor.selection.select(editor.dom.select('img')[0]);
 	editor.execCommand('JustifyCenter');
-	equal(editor.getContent(), '<p><img style="margin-right: auto; margin-left: auto; display: block;" src="tinymce/ui/img/raster.gif" alt="" /></p>');
+	equal(editor.getContent(), '<p><img style="margin-right: auto; margin-left: auto; display: block;" src="tinymce/ui/img/raster.gif" /></p>');
 
 	editor.setContent('<img src="tinymce/ui/img/raster.gif" />');
 	editor.selection.select(editor.dom.select('img')[0]);
 	editor.execCommand('JustifyRight');
-	equal(editor.getContent(), '<p><img style="float: right;" src="tinymce/ui/img/raster.gif" alt="" /></p>');
+	equal(editor.getContent(), '<p><img style="float: right;" src="tinymce/ui/img/raster.gif" /></p>');
 });
 
 test('mceBlockQuote', function() {
@@ -619,7 +619,7 @@ test('mceInsertLink (link floated img)', function() {
 	editor.setContent('<p><img style="float: right;" src="about:blank" /></p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('mceInsertLink', false, 'link');
-	equal(editor.getContent(), '<p><a href="link"><img style="float: right;" src="about:blank" alt="" /></a></p>');
+	equal(editor.getContent(), '<p><a href="link"><img style="float: right;" src="about:blank" /></a></p>');
 });
 
 test('mceInsertLink (link adjacent text)', function() {
