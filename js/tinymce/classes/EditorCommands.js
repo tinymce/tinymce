@@ -284,7 +284,8 @@ define("tinymce/EditorCommands", [
 			},
 
 			'Cut,Copy,Paste': function(command) {
-				var doc = editor.getDoc(), failed;
+				var doc = editor.getDoc(), failed,
+                    isChrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
 
 				// Try executing the native command
 				try {
@@ -295,7 +296,7 @@ define("tinymce/EditorCommands", [
 				}
 
 				// Present alert message about clipboard access not being available
-				if (failed || !doc.queryCommandSupported(command)) {
+				if (failed || !doc.queryCommandSupported(command) || (isChrome && 'paste' == command)) {
 					var msg = editor.translate(
 						"Your browser doesn't support direct access to the clipboard. " +
 						"Please use the Ctrl+X/C/V keyboard shortcuts instead."
