@@ -768,12 +768,12 @@ define("tinymce/Editor", [
 				self.on('remove', function() {
 					var bodyEl = this.getBody();
 
-					DOM.removeClass(bodyEl, 'mce-content-body');
-					DOM.removeClass(bodyEl, 'mce-edit-focus');
+					// DOM.removeClass(bodyEl, 'mce-content-body');
+					// DOM.removeClass(bodyEl, 'mce-edit-focus');
 					DOM.setAttrib(bodyEl, 'contentEditable', null);
 				});
 
-				DOM.addClass(targetElm, 'mce-content-body');
+				// DOM.addClass(targetElm, 'mce-content-body');
 				self.contentDocument = doc = settings.content_document || document;
 				self.contentWindow = settings.content_window || window;
 				self.bodyElement = targetElm;
