@@ -299,7 +299,8 @@ define("tinymce/EditorCommands", [
 				if (failed || !doc.queryCommandSupported(command) || (isChrome && 'paste' == command)) {
 					var msg = editor.translate(
 						"Your browser doesn't support direct access to the clipboard. " +
-						"Please use the Ctrl+X/C/V keyboard shortcuts instead."
+						"Please use the keyboard shortcuts instead:<br><br>" +
+						"Ctrl+c to copy, Ctrl+v to paste and Ctrl+x to cut."
 					);
 
 					if (Env.mac) {
