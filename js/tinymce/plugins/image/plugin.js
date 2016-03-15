@@ -181,6 +181,7 @@ tinymce.PluginManager.add('image', function(editor) {
 				height: data.height,
 				style: data.style,
 				caption: data.caption,
+				caption_text: data.caption_text
 				"class": data["class"]
 			};
 
@@ -229,7 +230,7 @@ tinymce.PluginManager.add('image', function(editor) {
 						imgElm = imgElm.cloneNode(true);
 						figureElm = dom.create('figure', {'class': 'image'});
 						figureElm.appendChild(imgElm);
-						figureElm.appendChild(dom.create('figcaption', {contentEditable: true}, 'Caption'));
+						figureElm.appendChild(dom.create('figcaption', {contentEditable: true}, data.caption_text));
 						figureElm.contentEditable = false;
 
 						var textBlock = dom.getParent(oldImg, isTextBlock);
@@ -405,6 +406,7 @@ tinymce.PluginManager.add('image', function(editor) {
 
 		if (editor.settings.image_caption && tinymce.Env.ceFalse) {
 			generalFormItems.push({name: 'caption', type: 'checkbox', label: 'Caption'});
+			generalFormItems.push({name: 'caption_text', type: 'textbox', label: 'Caption text'});
 		}
 
 		function mergeMargins(css) {
