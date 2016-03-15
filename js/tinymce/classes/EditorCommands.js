@@ -20,13 +20,16 @@ define("tinymce/EditorCommands", [
 	"tinymce/util/Tools",
 	"tinymce/dom/ElementUtils",
 	"tinymce/dom/RangeUtils",
-	"tinymce/dom/TreeWalker"
-], function(Serializer, Env, Tools, ElementUtils, RangeUtils, TreeWalker) {
+	"tinymce/dom/TreeWalker",
+	"tinymce/caret/CaretWalker",
+	"tinymce/caret/CaretPosition",
+	"tinymce/dom/NodeType"
+], function(Serializer, Env, Tools, ElementUtils, RangeUtils, TreeWalker, CaretWalker, CaretPosition, NodeType) {
 	// Added for compression purposes
 	var each = Tools.each, extend = Tools.extend;
 	var map = Tools.map, inArray = Tools.inArray, explode = Tools.explode;
 	var isIE = Env.ie, isOldIE = Env.ie && Env.ie < 11;
-	var TRUE = true, FALSE = false;
+	var TRUE = true, FALSE = false, isTableCell = NodeType.matchNodeNames('td th');
 
 	return function(editor) {
 		var dom, selection, formatter,
@@ -528,7 +531,7 @@ define("tinymce/EditorCommands", [
 				}
 
 				function moveSelectionToMarker(marker) {
-					var parentEditableFalseElm;
+					var parentEditableFalseElm, parentNode, nextRng;
 
 					function getContentEditableFalseParent(node) {
 						var root = editor.getBody();
@@ -578,8 +581,34 @@ define("tinymce/EditorCommands", [
 						rng.setEndBefore(marker);
 					}
 
+					function findNextCaretRng(rng) {
+						var caretPos = CaretPosition.fromRangeStart(rng);
+						var caretWalker = new CaretWalker(editor.getBody());
+
+						caretPos = caretWalker.next(caretPos);
+						if (caretPos) {
+							return caretPos.toRange();
+						}
+					}
+
 					// Remove the marker node and set the new range
+					parentNode = marker.parentNode;
 					dom.remove(marker);
+
+					if (dom.isEmpty(parentNode) && dom.isBlock(parentNode)) {
+						editor.$(parentNode).empty();
+
+						rng.setStart(parentNode, 0);
+						rng.setEnd(parentNode, 0);
+
+						if (!isTableCell(parentNode) && (nextRng = findNextCaretRng(rng))) {
+							rng = nextRng;
+							dom.remove(parentNode);
+						} else {
+							dom.add(parentNode, dom.create('br', {'data-mce-bogus': '1'}));
+						}
+					}
+
 					selection.setRng(rng);
 				}
 
