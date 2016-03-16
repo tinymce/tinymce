@@ -531,7 +531,7 @@ define("tinymce/EditorCommands", [
 				}
 
 				function moveSelectionToMarker(marker) {
-					var parentEditableFalseElm, parentNode, nextRng;
+					var parentEditableFalseElm, parentBlock, nextRng;
 
 					function getContentEditableFalseParent(node) {
 						var root = editor.getBody();
@@ -592,20 +592,20 @@ define("tinymce/EditorCommands", [
 					}
 
 					// Remove the marker node and set the new range
-					parentNode = marker.parentNode;
+					parentBlock = dom.getParent(marker, dom.isBlock);
 					dom.remove(marker);
 
-					if (dom.isEmpty(parentNode) && dom.isBlock(parentNode)) {
-						editor.$(parentNode).empty();
+					if (parentBlock && dom.isEmpty(parentBlock)) {
+						editor.$(parentBlock).empty();
 
-						rng.setStart(parentNode, 0);
-						rng.setEnd(parentNode, 0);
+						rng.setStart(parentBlock, 0);
+						rng.setEnd(parentBlock, 0);
 
-						if (!isTableCell(parentNode) && (nextRng = findNextCaretRng(rng))) {
+						if (!isTableCell(parentBlock) && (nextRng = findNextCaretRng(rng))) {
 							rng = nextRng;
-							dom.remove(parentNode);
+							dom.remove(parentBlock);
 						} else {
-							dom.add(parentNode, dom.create('br', {'data-mce-bogus': '1'}));
+							dom.add(parentBlock, dom.create('br', {'data-mce-bogus': '1'}));
 						}
 					}
 

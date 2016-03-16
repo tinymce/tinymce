@@ -78,7 +78,16 @@ test('mceInsertContent HR at end of H1 with P sibling', function() {
 	equal(getContent(), '<h1>abc</h1><hr /><p>def</p>');
 });
 
-test('mceInsertContent HR at end of H1 with P sibling', function() {
+test('mceInsertContent HR at end of H1 with inline elements with P sibling', function() {
+	editor.setContent('<h1><strong>abc</strong></h1><p>def</p>');
+	Utils.setSelection('strong', 3);
+	editor.execCommand('mceInsertContent', false, '<hr>');
+	equal(editor.selection.getNode(), editor.getBody().lastChild);
+	equal(editor.selection.getNode().nodeName, 'P');
+	equal(getContent(), '<h1><strong>abc</strong></h1><hr /><p>def</p>');
+});
+
+test('mceInsertContent table at end of H1 with P sibling', function() {
 	editor.setContent('<h1>abc</h1><p>def</p>');
 	Utils.setSelection('h1', 3);
 	editor.execCommand('mceInsertContent', false, '<table><tr><td></td></tr></table>');
