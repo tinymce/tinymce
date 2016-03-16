@@ -151,7 +151,12 @@ define("tinymce/ui/TextBox", [
 				}
 			}
 
-			element.value = self.state.get('value');
+			if (settings.multiline) {
+				element.innerText = self.state.get('value');
+			} else {
+				element.setAttribute('value', self.state.get('value'));
+			}
+
 			element.id = self._id;
 			element.className = self.classes;
 			element.setAttribute( 'hidefocus', 1 );
