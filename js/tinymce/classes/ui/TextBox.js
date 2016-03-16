@@ -120,38 +120,46 @@ define("tinymce/ui/TextBox", [
 		 * @return {String} HTML representing the control.
 		 */
 		renderHtml: function() {
-			var self = this, id = self._id, settings = self.settings, value = self.encode(self.state.get('value'), false), extraAttrs = '';
+			var self = this,
+				settings = self.settings,
+				element = document.createElement( settings.multiline ? 'textarea' : 'input' ),
+				/*
+				 * For these, the key is what is set, the value is the html attribute
+				 * it will go into.  This will make it easier for legacy or shifting
+				 * keys to values, like subtype maps to html input type.
+				 */
+				extraAttrs = {
+					subtype : 'type',
+					rows : 'rows',
+					spellcheck : 'spellcheck',
+					maxLength : 'maxLength',
+					size : 'size',
+					readonly : 'readonly',
+					min : 'min',
+					max : 'max',
+					step : 'step',
+					list : 'list',
+					pattern : 'pattern',
+					placeholder : 'placeholder',
+					required : 'required',
+					multiple : 'multiple' // Multiple may be used with the `email` subtype
+				};
 
-			if ("spellcheck" in settings) {
-				extraAttrs += ' spellcheck="' + settings.spellcheck + '"';
+			for (var key in extraAttrs) {
+				if (typeof settings[ key ] !== 'undefined') {
+					element.setAttribute(extraAttrs[ key ], settings[ key ]);
+				}
 			}
 
-			if (settings.maxLength) {
-				extraAttrs += ' maxlength="' + settings.maxLength + '"';
-			}
-
-			if (settings.size) {
-				extraAttrs += ' size="' + settings.size + '"';
-			}
-
-			if (settings.subtype) {
-				extraAttrs += ' type="' + settings.subtype + '"';
-			}
-
+			element.value = self.state.get('value');
+			element.id = self._id;
+			element.className = self.classes;
+			element.setAttribute( 'hidefocus', 1 );
 			if (self.disabled()) {
-				extraAttrs += ' disabled="disabled"';
+				element.disabled = true;
 			}
 
-			if (settings.multiline) {
-				return (
-					'<textarea id="' + id + '" class="' + self.classes + '" ' +
-					(settings.rows ? ' rows="' + settings.rows + '"' : '') +
-					' hidefocus="1"' + extraAttrs + '>' + value +
-					'</textarea>'
-				);
-			}
-
-			return '<input id="' + id + '" class="' + self.classes + '" value="' + value + '" hidefocus="1"' + extraAttrs + ' />';
+			return element.outerHTML;
 		},
 
 		value: function(value) {
