@@ -123,30 +123,26 @@ define("tinymce/ui/TextBox", [
 			var self = this,
 				settings = self.settings,
 				element = document.createElement( settings.multiline ? 'textarea' : 'input' ),
-				/*
-				 * For these, the key is what is set, the value is the html attribute
-				 * it will go into.  This will make it easier for legacy or shifting
-				 * keys to values, like subtype maps to html input type.
-				 */
-				extraAttrs = {
-					rows : 'rows',
-					spellcheck : 'spellcheck',
-					maxLength : 'maxLength',
-					size : 'size',
-					readonly : 'readonly',
-					min : 'min',
-					max : 'max',
-					step : 'step',
-					list : 'list',
-					pattern : 'pattern',
-					placeholder : 'placeholder',
-					required : 'required',
-					multiple : 'multiple' // Multiple may be used with the `email` subtype
-				};
+				extraAttrs = [
+					'rows',
+					'spellcheck',
+					'maxLength',
+					'size',
+					'readonly',
+					'min',
+					'max',
+					'step',
+					'list',
+					'pattern',
+					'placeholder',
+					'required',
+					'multiple'
+				];
 
-			for (var key in extraAttrs) {
+			for (var i = 0; i < extraAttrs.length; i++) {
+				var key = extraAttrs[ i ];
 				if (typeof settings[ key ] !== 'undefined') {
-					element.setAttribute(extraAttrs[ key ], settings[ key ]);
+					element.setAttribute(key, settings[ key ]);
 				}
 			}
 
