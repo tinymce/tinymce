@@ -129,7 +129,6 @@ define("tinymce/ui/TextBox", [
 				 * keys to values, like subtype maps to html input type.
 				 */
 				extraAttrs = {
-					subtype : 'type',
 					rows : 'rows',
 					spellcheck : 'spellcheck',
 					maxLength : 'maxLength',
@@ -154,6 +153,7 @@ define("tinymce/ui/TextBox", [
 			if (settings.multiline) {
 				element.innerText = self.state.get('value');
 			} else {
+				element.setAttribute('type', settings.subtype ? settings.subtype : 'text');
 				element.setAttribute('value', self.state.get('value'));
 			}
 
