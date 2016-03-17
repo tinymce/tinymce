@@ -101,14 +101,27 @@ define("tinymce/ui/Checkbox", [
 		 * @return {String} HTML representing the control.
 		 */
 		renderHtml: function() {
-			var self = this, id = self._id, prefix = self.classPrefix;
+			var self = this, id = self._id, prefix = self.classPrefix,
+				element = document.createElement('div'),
+				i = document.createElement('i'),
+				span = document.createElement('span');
 
-			return (
-				'<div id="' + id + '" class="' + self.classes + '" unselectable="on" aria-labelledby="' + id + '-al" tabindex="-1">' +
-					'<i class="' + prefix + 'ico ' + prefix + 'i-checkbox"></i>' +
-					'<span id="' + id + '-al" class="' + prefix + 'label">' + self.encode(self.state.get('text')) + '</span>' +
-				'</div>'
-			);
+			element.id = id;
+			element.className = self.classes;
+			element.setAttribute('unselectable', 'on');
+			element.setAttribute('aria-labelledby', id + '-al');
+			element.setAttribute('tabindex', '-1');
+
+			i.className = prefix + 'ico ' + prefix + 'i-checkbox';
+
+			span.id = id + '-al';
+			span.className = prefix + label;
+			span.innerText = self.state.get('text');
+
+			element.appendChild(i);
+			element.appendChild(span);
+
+			return element.outerHTML;
 		},
 
 		bindStates: function() {

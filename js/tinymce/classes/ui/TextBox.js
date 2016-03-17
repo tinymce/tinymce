@@ -120,38 +120,47 @@ define("tinymce/ui/TextBox", [
 		 * @return {String} HTML representing the control.
 		 */
 		renderHtml: function() {
-			var self = this, id = self._id, settings = self.settings, value = self.encode(self.state.get('value'), false), extraAttrs = '';
+			var self = this,
+				settings = self.settings,
+				element = document.createElement( settings.multiline ? 'textarea' : 'input' ),
+				extraAttrs = [
+					'rows',
+					'spellcheck',
+					'maxLength',
+					'size',
+					'readonly',
+					'min',
+					'max',
+					'step',
+					'list',
+					'pattern',
+					'placeholder',
+					'required',
+					'multiple'
+				];
 
-			if ("spellcheck" in settings) {
-				extraAttrs += ' spellcheck="' + settings.spellcheck + '"';
-			}
-
-			if (settings.maxLength) {
-				extraAttrs += ' maxlength="' + settings.maxLength + '"';
-			}
-
-			if (settings.size) {
-				extraAttrs += ' size="' + settings.size + '"';
-			}
-
-			if (settings.subtype) {
-				extraAttrs += ' type="' + settings.subtype + '"';
-			}
-
-			if (self.disabled()) {
-				extraAttrs += ' disabled="disabled"';
+			for (var i = 0; i < extraAttrs.length; i++) {
+				var key = extraAttrs[ i ];
+				if (typeof settings[ key ] !== 'undefined') {
+					element.setAttribute(key, settings[ key ]);
+				}
 			}
 
 			if (settings.multiline) {
-				return (
-					'<textarea id="' + id + '" class="' + self.classes + '" ' +
-					(settings.rows ? ' rows="' + settings.rows + '"' : '') +
-					' hidefocus="1"' + extraAttrs + '>' + value +
-					'</textarea>'
-				);
+				element.innerText = self.state.get('value');
+			} else {
+				element.setAttribute('type', settings.subtype ? settings.subtype : 'text');
+				element.setAttribute('value', self.state.get('value'));
 			}
 
-			return '<input id="' + id + '" class="' + self.classes + '" value="' + value + '" hidefocus="1"' + extraAttrs + ' />';
+			element.id = self._id;
+			element.className = self.classes;
+			element.setAttribute( 'hidefocus', 1 );
+			if (self.disabled()) {
+				element.disabled = true;
+			}
+
+			return element.outerHTML;
 		},
 
 		value: function(value) {
