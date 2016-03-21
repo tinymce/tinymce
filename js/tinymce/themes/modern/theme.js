@@ -734,15 +734,18 @@ tinymce.ThemeManager.add('modern', function(editor) {
 	 * @return {Object} Name/value object with theme data.
 	 */
 	function renderIframeUI(args) {
-		var panel, resizeHandleCtrl, startSize;
+		var panel, toolbarPanel, standaloneToolbarContainer, resizeHandleCtrl, startSize;
+
+		if (settings.fixed_toolbar_container) {
+			standaloneToolbarContainer = DOM.select(settings.fixed_toolbar_container)[0];
+		}
 
 		function switchMode() {
 			return function(e) {
-				if (e.mode == 'readonly') {
-					panel.find('*').disabled(true);
-				} else {
-					panel.find('*').disabled(false);
+				if (standaloneToolbarContainer) {
+					toolbarPanel.find('*').disabled(e.mode == 'readonly');
 				}
+				panel.find('*').disabled(e.mode == 'readonly');
 			};
 		}
 
@@ -750,20 +753,25 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			tinymce.DOM.styleSheetLoader.load(args.skinUiCss, fireSkinLoaded(editor));
 		}
 
-		// Basic UI layout
+		// Create main panel
 		panel = self.panel = Factory.create({
 			type: 'panel',
 			role: 'application',
 			classes: 'tinymce',
 			style: 'visibility: hidden',
 			layout: 'stack',
-			border: 1,
-			items: [
-				settings.menubar === false ? null : {type: 'menubar', border: '0 0 1 0', items: createMenuButtons()},
-				createToolbars(settings.toolbar_items_size),
-				{type: 'panel', name: 'iframe', layout: 'stack', classes: 'edit-area', html: '', border: '1 0 0 0'}
-			]
+			border: 1
 		});
+
+		// Use main panel for toolbar, or create separate panel if needed
+		toolbarPanel = self.toolbarPanel = standaloneToolbarContainer ? Factory.create(panel.settings) : panel;
+
+		// Basic UI layout
+		toolbarPanel.add([
+			settings.menubar === false ? null : {type: 'menubar', border: '0 0 1 0', items: createMenuButtons()},
+			createToolbars(settings.toolbar_items_size)
+		]);
+		panel.add({type: 'panel', name: 'iframe', layout: 'stack', classes: 'edit-area', html: '', border: '1 0 0 0'});
 
 		if (settings.resize !== false) {
 			resizeHandleCtrl = {
@@ -799,6 +807,10 @@ tinymce.ThemeManager.add('modern', function(editor) {
 
 		editor.fire('BeforeRenderUI');
 		editor.on('SwitchMode', switchMode());
+
+		if (standaloneToolbarContainer) {
+			toolbarPanel.renderTo(standaloneToolbarContainer).reflow();
+		}
 		panel.renderBefore(args.targetNode).reflow();
 
 		if (settings.readonly) {
@@ -811,11 +823,18 @@ tinymce.ThemeManager.add('modern', function(editor) {
 
 		// Remove the panel when the editor is removed
 		editor.on('remove', function() {
+			if (standaloneToolbarContainer) {
+				toolbarPanel.remove();
+				toolbarPanel = null;
+			}
 			panel.remove();
 			panel = null;
 		});
 
-		// Add accesibility shortcuts
+		// Add accessibility shortcuts
+		if (standaloneToolbarContainer) {
+			addAccessibilityKeys(toolbarPanel);
+		}
 		addAccessibilityKeys(panel);
 		addContextualToolbars();
 
