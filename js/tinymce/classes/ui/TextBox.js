@@ -173,6 +173,7 @@ define("tinymce/ui/TextBox", [
 
 			self._super();
 
+			self.getEl().value = self.state.get('value');
 			self.$el.on('change', function(e) {
 				self.state.set('value', e.target.value);
 				self.fire('change', e);
