@@ -65,7 +65,7 @@ define(
 
     var tryAt = function (bridge, direction, box) {
       // NOTE: As we attempt to take over selection everywhere, we'll probably need to separate these again.
-        if (platform.browser.isChrome() || platform.browser.isSafari() || platform.browser.isFirefox()) return direction.otherRetry(bridge, box);
+        if (platform.browser.isChrome() || platform.browser.isSafari() || platform.browser.isFirefox() || platform.browser.isSpartan()) return direction.otherRetry(bridge, box);
         else if (platform.browser.isIE()) return direction.ieRetry(bridge, box);
         else return Option.none();
     };
