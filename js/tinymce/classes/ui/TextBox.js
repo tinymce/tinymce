@@ -120,12 +120,11 @@ define("tinymce/ui/TextBox", [
 		 * @return {String} HTML representing the control.
 		 */
 		renderHtml: function() {
-			var self = this, settings = self.settings, attrs;
+			var self = this, settings = self.settings, attrs, elm;
 
 			attrs = {
 				id: self._id,
-				class: self.classes,
-				hidefocus: "1"
+				hidefocus: '1'
 			};
 
 			Tools.each([
@@ -143,12 +142,11 @@ define("tinymce/ui/TextBox", [
 				attrs.type = settings.subtype;
 			}
 
-			if (settings.multiline) {
-				return DomUtils.create('textarea', attrs, self.encode(self.state.get('value'))).outerHTML;
-			}
+			elm = DomUtils.create(settings.multiline ? 'textarea' : 'input', attrs);
+			elm.value = self.state.get('value');
+			elm.className = self.classes;
 
-			attrs.value = self.state.get('value');
-			return DomUtils.create('input', attrs).outerHTML;
+			return elm.outerHTML;
 		},
 
 		value: function(value) {
