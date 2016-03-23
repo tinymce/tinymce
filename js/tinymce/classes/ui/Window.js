@@ -63,24 +63,26 @@ define("tinymce/ui/Window", [
 	}
 
 	function handleWindowResize() {
-		var lastSize = {
-			w: window.innerWidth,
-			h: window.innerHeight
-		};
+		if (!Env.desktop) {
+			var lastSize = {
+				w: window.innerWidth,
+				h: window.innerHeight
+			};
 
-		Delay.setInterval(function() {
-			var w = window.innerWidth,
-				h = window.innerHeight;
+			Delay.setInterval(function() {
+				var w = window.innerWidth,
+					h = window.innerHeight;
 
-			if (lastSize.w != w || lastSize.h != h) {
-				lastSize = {
-					w: w,
-					h: h
-				};
+				if (lastSize.w != w || lastSize.h != h) {
+					lastSize = {
+						w: w,
+						h: h
+					};
 
-				$(window).trigger('resize');
-			}
-		}, 100);
+					$(window).trigger('resize');
+				}
+			}, 100);
+		}
 
 		function reposition() {
 			var i, rect = DomUtils.getWindowSize(), layoutRect;
@@ -158,7 +160,7 @@ define("tinymce/ui/Window", [
 			self.on('click', function(e) {
 				var closeClass = self.classPrefix + 'close';
 
-				if (e.target.className.indexOf(closeClass) != -1 || e.target.parentNode.className.indexOf(closeClass) != -1) {
+				if (DomUtils.hasClass(e.target, closeClass) || DomUtils.hasClass(e.target.parentNode, closeClass)) {
 					self.close();
 				}
 			});
@@ -467,9 +469,7 @@ define("tinymce/ui/Window", [
 		}
 	});
 
-	if (!Env.desktop) {
-		handleWindowResize();
-	}
+	handleWindowResize();
 
 	return Window;
 });
