@@ -403,7 +403,6 @@ tinymce.ThemeManager.add('modern', function(editor) {
 
 			each({
 				l: 'left',
-				c: 'center',
 				r: 'right'
 			}, function(cls, pos) {
 				panel.classes.toggle('arrow-' + cls, pos == relPos.substr(1, 1));
