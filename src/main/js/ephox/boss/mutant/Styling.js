@@ -2,10 +2,11 @@ define(
   'ephox.boss.mutant.Styling',
 
   [
-    'ephox.highway.Merger'
+    'ephox.highway.Merger',
+    'ephox.perhaps.Option'
   ],
 
-  function (Merger) {
+  function (Merger, Option) {
     var set = function (item, property, value) {
       var r = {};
       r[property] = value;
@@ -16,6 +17,10 @@ define(
       return item.css !== undefined && item.css[property] !== undefined ? item.css[property] : 0;
     };
 
+    var getRaw = function (item, property) {
+      return item.css !== undefined && item.css[property] !== undefined ? Option.some(item.css[property]) : Option.none();
+    };
+
     var remove = function (item, property) {
       var rest = Merger.merge({}, item.css);
       delete rest[property];
@@ -24,6 +29,7 @@ define(
 
     return {
       get: get,
+      getRaw: getRaw,
       set: set,
       remove: remove
     };

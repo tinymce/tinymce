@@ -58,6 +58,7 @@ define(
         styles: Fun.constant({
           get: Styling.get,
           set: Styling.set,
+          getRaw: Styling.getRaw,
           remove: Styling.remove
         }),
         attrs: Fun.constant({

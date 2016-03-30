@@ -60,6 +60,7 @@ define(
         }),
         styles: Fun.constant({
           get: Css.get,
+          getRaw: Css.getRaw,
           set: Css.set,
           remove: Css.remove
         }),
