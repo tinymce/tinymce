@@ -33,7 +33,8 @@ tinymce.PluginManager.add('contextmenu', function(editor) {
 			}
 		}
 
-		contextmenu = editor.settings.contextmenu || 'link image inserttable | cell row column deletetable';
+		contextmenu = editor.settings.contextmenu || 'copy cut paste | link image inserttable | cell row column deletetable ' +
+				'| teamuplinknewtab';
 
 		// Render menu
 		if (!menu) {
