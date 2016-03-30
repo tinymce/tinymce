@@ -477,9 +477,9 @@ tinymce.ThemeManager.add('modern', function(editor) {
 
 			togglePositionClass(panel, relPos);
 
-			drawRect(contentAreaRect, 'blue');
-			drawRect(elementRect, 'red');
-			drawRect(panelRect, 'green');
+			//drawRect(contentAreaRect, 'blue');
+			//drawRect(elementRect, 'red');
+			//drawRect(panelRect, 'green');
 		}
 
 		function repositionHandler() {
