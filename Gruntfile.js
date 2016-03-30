@@ -174,7 +174,8 @@ module.exports = function(grunt) {
 						"Animations.less",
 						"TinyMCE.less",
 						"CropRect.less",
-						"ImagePanel.less"
+						"ImagePanel.less",
+						"Arrows.less"
 					],
 					append: ["Icons.less"],
 					importFrom: "js/tinymce/tinymce.js",
@@ -193,7 +194,8 @@ module.exports = function(grunt) {
 						"Animations.less",
 						"TinyMCE.less",
 						"CropRect.less",
-						"ImagePanel.less"
+						"ImagePanel.less",
+						"Arrows.less"
 					],
 					append: ["Icons.Ie7.less"],
 					importFrom: "js/tinymce/tinymce.js",

@@ -391,6 +391,25 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			});
 		}
 
+		function togglePositionClass(panel, relPos) {
+			relPos = relPos ? relPos.substr(0, 2) : '';
+
+			each({
+				t: 'down',
+				b: 'up'
+			}, function(cls, pos) {
+				panel.classes.toggle('arrow-' + cls, pos == relPos.substr(0, 1));
+			});
+
+			each({
+				l: 'left',
+				c: 'center',
+				r: 'right'
+			}, function(cls, pos) {
+				panel.classes.toggle('arrow-' + cls, pos == relPos.substr(1, 1));
+			});
+		}
+
 		function reposition(match) {
 			var relPos, panelRect, elementRect, contentAreaRect, panel, relRect, testPositions;
 
@@ -404,7 +423,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			}
 
 			testPositions = [
-				'tc-bc', 'bc-tc',
+				'bc-tc', 'tc-bc',
 				'tl-bl', 'bl-tl',
 				'tr-br', 'br-tr'
 			];
@@ -431,26 +450,18 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			}
 
 			relPos = Rect.findBestRelativePosition(panelRect, elementRect, contentAreaRect, testPositions);
+			elementRect = Rect.clamp(elementRect, contentAreaRect);
 
 			if (relPos) {
-				each(testPositions.concat('inside'), function(pos) {
-					panel.classes.toggle('tinymce-inline-' + pos, pos == relPos);
-				});
-
 				relRect = Rect.relativePosition(panelRect, elementRect, relPos);
 				panel.moveTo(relRect.x, relRect.y);
 			} else {
-				each(testPositions, function(pos) {
-					panel.classes.toggle('tinymce-inline-' + pos, false);
-				});
-
-				panel.classes.toggle('tinymce-inline-inside', true);
+				contentAreaRect.h += 40;
 
 				elementRect = Rect.intersect(contentAreaRect, elementRect);
-
 				if (elementRect) {
 					relPos = Rect.findBestRelativePosition(panelRect, elementRect, contentAreaRect, [
-						'tc-tc', 'tl-tl', 'tr-tr'
+						'bc-tc', 'tc-tc', 'tl-tl', 'tr-tr'
 					]);
 
 					if (relPos) {
@@ -463,6 +474,8 @@ tinymce.ThemeManager.add('modern', function(editor) {
 					panel.hide();
 				}
 			}
+
+			togglePositionClass(panel, relPos);
 
 			//drawRect(contentAreaRect, 'blue');
 			//drawRect(elementRect, 'red');
@@ -504,7 +517,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			panel = Factory.create({
 				type: 'floatpanel',
 				role: 'application',
-				classes: 'tinymce tinymce-inline',
+				classes: 'tinymce tinymce-inline arrow',
 				layout: 'flex',
 				direction: 'column',
 				align: 'stretch',

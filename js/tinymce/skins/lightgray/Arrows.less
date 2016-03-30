@@ -1,0 +1,75 @@
+// Arrows
+
+.@{prefix}-arrow-up {
+	margin-top: 3px;
+}
+
+.@{prefix}-arrow-down {
+	margin-top: -3px;
+}
+
+.@{prefix}-arrow:before,
+.@{prefix}-arrow:after {
+	position: absolute;
+	left: 50%;
+	display: block;
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-color: transparent;
+	content: "";
+}
+
+.@{prefix}-arrow.@{prefix}-arrow-up:before {
+	top: -9px;
+	border-bottom-color: @panel-border;
+	border-width: 0 9px 9px;
+	margin-left: -9px;
+}
+
+.@{prefix}-arrow.@{prefix}-arrow-down:before {
+	bottom: -9px;
+	border-top-color: @panel-border;
+	border-width: 9px 9px 0;
+	margin-left: -9px;
+}
+
+.@{prefix}-arrow.@{prefix}-arrow-up:after {
+	top: -8px;
+	border-bottom-color: mix(@panel-bg, @panel-bg-hlight, 60%);
+	border-width: 0 8px 8px;
+	margin-left: -8px;
+}
+
+.@{prefix}-arrow.@{prefix}-arrow-down:after {
+	bottom: -8px;
+	border-top-color: mix(@panel-bg, @panel-bg-hlight, 60%);
+	border-width: 8px 8px 0;
+	margin-left: -8px;
+}
+
+.@{prefix}-arrow.@{prefix}-arrow-left:before,
+.@{prefix}-arrow.@{prefix}-arrow-left:after {
+	margin: 0;
+}
+
+.@{prefix}-arrow.@{prefix}-arrow-left:before {
+	left: 20px;
+}
+.@{prefix}-arrow.@{prefix}-arrow-left:after {
+	left: 21px;
+}
+
+.@{prefix}-arrow.@{prefix}-arrow-right:before,
+.@{prefix}-arrow.@{prefix}-arrow-right:after {
+	left: auto;
+	margin: 0;
+}
+
+.@{prefix}-arrow.@{prefix}-arrow-right:before {
+	right: 20px;
+}
+
+.@{prefix}-arrow.@{prefix}-arrow-right:after {
+	right: 21px;
+}
