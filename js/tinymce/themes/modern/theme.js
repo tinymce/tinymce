@@ -455,12 +455,13 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				relRect = Rect.relativePosition(panelRect, elementRect, relPos);
 				panel.moveTo(relRect.x, relRect.y);
 			} else {
+				// Allow overflow below the editor to avoid placing toolbars ontop of tables
 				contentAreaRect.h += 40;
 
 				elementRect = Rect.intersect(contentAreaRect, elementRect);
 				if (elementRect) {
 					relPos = Rect.findBestRelativePosition(panelRect, elementRect, contentAreaRect, [
-						'bc-tc', 'tc-tc', 'tl-tl', 'tr-tr'
+						'bc-tc', 'bl-tl', 'br-tr'
 					]);
 
 					if (relPos) {
@@ -476,9 +477,9 @@ tinymce.ThemeManager.add('modern', function(editor) {
 
 			togglePositionClass(panel, relPos);
 
-			//drawRect(contentAreaRect, 'blue');
-			//drawRect(elementRect, 'red');
-			//drawRect(panelRect, 'green');
+			drawRect(contentAreaRect, 'blue');
+			drawRect(elementRect, 'red');
+			drawRect(panelRect, 'green');
 		}
 
 		function repositionHandler() {
