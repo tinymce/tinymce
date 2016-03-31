@@ -39,7 +39,6 @@ test(
     }));
 
     check('p', '<p>this<span class="me"> is it </span></p>', DomLook.predicate(DomStructure.isBlock));
-    check('span', '<p>this<span class="me"> is it </span></p>', DomLook.predicate(DomStructure.isInline));
 
     BrowserCheck.run('<p>this<span class="child"> is it </span></p>', function (node) {
       var actual = DomParent.sharedOne(DomLook.exact(Traverse.parent(node).getOrDie()), [ node ]);
