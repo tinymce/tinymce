@@ -67,13 +67,18 @@ define(
       return universe.property().name(item) === 'iframe';
     };
 
+    var isInline = function (universe, item) {
+      return !isBlock(universe, item) && !isEmptyTag(universe, item) && universe.property().name(item) === 'li';
+    };
+
     return {
       isBlock: isBlock,
       isList: isList,
       isFormatting: isFormatting,
       isContainer: isContainer,
       isEmptyTag: isEmptyTag,
-      isFrame: isFrame
+      isFrame: isFrame,
+      isInline: isInline
     };
   }
 );

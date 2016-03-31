@@ -36,13 +36,18 @@ define(
       return Structure.isFrame(universe, element);
     };
 
+    var isInline = function (element) {
+      return Structure.isInline(universe, element);
+    };
+
     return {
       isBlock: isBlock,
       isList: isList,
       isFormatting: isFormatting,
       isContainer: isContainer,
       isEmptyTag: isEmptyTag,
-      isFrame: isFrame
+      isFrame: isFrame,
+      isInline: isInline
     };
   }
 );
