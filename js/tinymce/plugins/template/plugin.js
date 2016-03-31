@@ -62,18 +62,18 @@ tinymce.PluginManager.add('template', function(editor) {
 			function insertIframeHtml(html) {
 				if (html.indexOf('<html>') == -1) {
 					var contentCssLinks = '';
-
+					var bodyClass = editor.getParam('template_popup_content_class', 'mce-abs-layout-item-preview');
 					tinymce.each(editor.contentCSS, function(url) {
 						contentCssLinks += '<link type="text/css" rel="stylesheet" href="' + editor.documentBaseURI.toAbsolute(url) + '">';
 					});
-
+				        
 					html = (
 						'<!DOCTYPE html>' +
 						'<html>' +
 							'<head>' +
 								contentCssLinks +
 							'</head>' +
-							'<body>' +
+							'<body class="'+bodyClass+'">' +
 								html +
 							'</body>' +
 						'</html>'
