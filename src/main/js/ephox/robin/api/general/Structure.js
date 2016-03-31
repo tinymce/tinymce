@@ -68,7 +68,7 @@ define(
     };
 
     var isInline = function (universe, item) {
-      return !isBlock(universe, item) && !isEmptyTag(universe, item) && universe.property().name(item) === 'li';
+      return (!isBlock(universe, item) && !isEmptyTag(universe, item)) || universe.property().name(item) === 'li';
     };
 
     return {
