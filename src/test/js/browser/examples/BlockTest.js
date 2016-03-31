@@ -30,7 +30,7 @@ test(
         });
       });
     };
-    
+
     check('p', '<p>this<span class="me"> is it </span></p>', DomLook.selector('p'));
     checkNone('<p>this<span class="me"> is it</span></p>', DomLook.selector('blockquote'));
 
