@@ -37,7 +37,7 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		return color;
 	}
 
-	function mapColors() {
+	function mapColors(type) {
 		var i, colors = [], colorMap;
 
 		colorMap = [
