@@ -74,6 +74,38 @@ ModuleLoader.require([
 		ok(true, "setEditorTimeout on removed instance.");
 	});
 
+	asyncTest('throttle', function() {
+		var fn, args = [];
+
+		fn = Delay.throttle(function(a) {
+			args.push(a);
+		}, 0);
+
+		fn(1);
+		fn(2);
+
+		Delay.setTimeout(function() {
+			deepEqual(args, [2]);
+			QUnit.start();
+		}, 10);
+	});
+
+	asyncTest('throttle stop', function() {
+		var fn, args = [];
+
+		fn = Delay.throttle(function(a) {
+			args.push(a);
+		}, 0);
+
+		fn(1);
+		fn.stop();
+
+		Delay.setTimeout(function() {
+			deepEqual(args, []);
+			QUnit.start();
+		}, 10);
+	});
+
 	test('clearTimeout', function() {
 		var id;
 

@@ -164,4 +164,11 @@ ModuleLoader.require([
 	test('exit pre block (left)', exitPreTest(leftArrow, 0, '<p>\u00a0</p><pre>abc</pre>'));
 	test('exit pre block (down)', exitPreTest(downArrow, 3, '<pre>abc</pre><p>\u00a0</p>'));
 	test('exit pre block (right)', exitPreTest(rightArrow, 3, '<pre>abc</pre><p>\u00a0</p>'));
+
+	test('click on link in cE=false', function() {
+		editor.setContent('<p contentEditable="false"><a href="#"><strong>link</strong></a></p>');
+		var evt = editor.fire('click', {target: editor.$('strong')[0]});
+
+		equal(evt.isDefaultPrevented(), true);
+	});
 });

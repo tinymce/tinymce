@@ -76,6 +76,19 @@ define("tinymce/dom/EventUtils", [
 			event.target = event.srcElement || document;
 		}
 
+		// When target element is inside Shadow DOM we need to take first element from path
+		// otherwise we'll get Shadow Root parent, not actual target element
+
+		// Normalize target for WebComponents v0 implementation (in Chrome)
+		if (event.path) {
+			event.target = event.path[0];
+		}
+
+		// Normalize target for WebComponents v1 implementation (standard)
+		if (event.deepPath) {
+			event.target = event.deepPath[0];
+		}
+
 		// Calculate pageX/Y if missing and clientX/Y available
 		if (originalEvent && mouseEventRe.test(originalEvent.type) && originalEvent.pageX === undef && originalEvent.clientX !== undef) {
 			var eventDoc = event.target.ownerDocument || document;

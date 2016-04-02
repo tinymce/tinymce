@@ -27,6 +27,24 @@ define("tinymce/ui/DomUtils", [
 			return 'mceu_' + (count++);
 		},
 
+		create: function(name, attrs, children) {
+			var elm = document.createElement(name);
+
+			DOMUtils.DOM.setAttribs(elm, attrs);
+
+			if (typeof children === 'string') {
+				elm.innerHTML = children;
+			} else {
+				Tools.each(children, function(child) {
+					if (child.nodeType) {
+						elm.appendChild(child);
+					}
+				});
+			}
+
+			return elm;
+		},
+
 		createFragment: function(html) {
 			return DOMUtils.DOM.createFragment(html);
 		},

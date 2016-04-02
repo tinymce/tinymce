@@ -19,7 +19,8 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		{regex: /youtube.com\/embed\/([a-z0-9\-_]+)/i, type: 'iframe', w: 560, h: 314, url: '//www.youtube.com/embed/$1', allowFullscreen: true},
 		{regex: /vimeo\.com\/([0-9]+)/, type: 'iframe', w: 425, h: 350, url: '//player.vimeo.com/video/$1?title=0&byline=0&portrait=0&color=8dc7dc', allowfullscreen: true},
 		{regex: /vimeo\.com\/(.*)\/([0-9]+)/, type: "iframe", w: 425, h: 350, url: "//player.vimeo.com/video/$2?title=0&amp;byline=0", allowfullscreen: true},
-		{regex: /maps\.google\.([a-z]{2,3})\/maps\/(.+)msid=(.+)/, type: 'iframe', w: 425, h: 350, url: '//maps.google.com/maps/ms?msid=$2&output=embed"', allowFullscreen: false}
+		{regex: /maps\.google\.([a-z]{2,3})\/maps\/(.+)msid=(.+)/, type: 'iframe', w: 425, h: 350, url: '//maps.google.com/maps/ms?msid=$2&output=embed"', allowFullscreen: false},
+		{regex: /dailymotion\.com\/video\/([^_]+)/, type: 'iframe', w: 480, h: 270, url: '//www.dailymotion.com/embed/video/$1', allowFullscreen: true}
 	];
 
 	var embedChange = (tinymce.Env.ie && tinymce.Env.ie <= 8) ? 'onChange' : 'onInput';
@@ -816,6 +817,16 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		});
 	});
 
+	editor.on('click keyup', function() {
+		var selectedNode = editor.selection.getNode();
+
+		if (selectedNode && editor.dom.hasClass(selectedNode, 'mce-preview-object')) {
+			if (editor.dom.getAttrib(selectedNode, 'data-mce-selected')) {
+				selectedNode.setAttribute('data-mce-selected', '2');
+			}
+		}
+	});
+
 	editor.on('ObjectSelected', function(e) {
 		var objectType = e.target.getAttribute('data-mce-object');
 
@@ -853,6 +864,18 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		onclick: showDialog,
 		context: 'insert',
 		prependToContext: true
+	});
+
+	editor.on('setContent', function() {
+		// TODO: This shouldn't be needed there should be a way to mark bogus
+		// elements so they are never removed except external save
+		editor.$('span.mce-preview-object').each(function(index, elm) {
+			var $elm = editor.$(elm);
+
+			if ($elm.find('span.mce-shim', elm).length === 0) {
+				$elm.append('<span class="mce-shim"></span>');
+			}
+		});
 	});
 
 	editor.addCommand('mceMedia', showDialog);

@@ -391,6 +391,24 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			});
 		}
 
+		function togglePositionClass(panel, relPos) {
+			relPos = relPos ? relPos.substr(0, 2) : '';
+
+			each({
+				t: 'down',
+				b: 'up'
+			}, function(cls, pos) {
+				panel.classes.toggle('arrow-' + cls, pos == relPos.substr(0, 1));
+			});
+
+			each({
+				l: 'left',
+				r: 'right'
+			}, function(cls, pos) {
+				panel.classes.toggle('arrow-' + cls, pos == relPos.substr(1, 1));
+			});
+		}
+
 		function reposition(match) {
 			var relPos, panelRect, elementRect, contentAreaRect, panel, relRect, testPositions;
 
@@ -404,7 +422,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			}
 
 			testPositions = [
-				'tc-bc', 'bc-tc',
+				'bc-tc', 'tc-bc',
 				'tl-bl', 'bl-tl',
 				'tr-br', 'br-tr'
 			];
@@ -431,26 +449,19 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			}
 
 			relPos = Rect.findBestRelativePosition(panelRect, elementRect, contentAreaRect, testPositions);
+			elementRect = Rect.clamp(elementRect, contentAreaRect);
 
 			if (relPos) {
-				each(testPositions.concat('inside'), function(pos) {
-					panel.classes.toggle('tinymce-inline-' + pos, pos == relPos);
-				});
-
 				relRect = Rect.relativePosition(panelRect, elementRect, relPos);
 				panel.moveTo(relRect.x, relRect.y);
 			} else {
-				each(testPositions, function(pos) {
-					panel.classes.toggle('tinymce-inline-' + pos, false);
-				});
-
-				panel.classes.toggle('tinymce-inline-inside', true);
+				// Allow overflow below the editor to avoid placing toolbars ontop of tables
+				contentAreaRect.h += 40;
 
 				elementRect = Rect.intersect(contentAreaRect, elementRect);
-
 				if (elementRect) {
 					relPos = Rect.findBestRelativePosition(panelRect, elementRect, contentAreaRect, [
-						'tc-tc', 'tl-tl', 'tr-tr'
+						'bc-tc', 'bl-tl', 'br-tr'
 					]);
 
 					if (relPos) {
@@ -463,6 +474,8 @@ tinymce.ThemeManager.add('modern', function(editor) {
 					panel.hide();
 				}
 			}
+
+			togglePositionClass(panel, relPos);
 
 			//drawRect(contentAreaRect, 'blue');
 			//drawRect(elementRect, 'red');
@@ -504,7 +517,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			panel = Factory.create({
 				type: 'floatpanel',
 				role: 'application',
-				classes: 'tinymce tinymce-inline',
+				classes: 'tinymce tinymce-inline arrow',
 				layout: 'flex',
 				direction: 'column',
 				align: 'stretch',
@@ -587,6 +600,18 @@ tinymce.ThemeManager.add('modern', function(editor) {
 
 			editor.contextToolbars = {};
 		});
+	}
+
+	function fireSkinLoaded(editor) {
+		return function() {
+			if (editor.initialized) {
+				editor.fire('SkinLoaded');
+			} else {
+				editor.on('init', function() {
+					editor.fire('SkinLoaded');
+				});
+			}
+		};
 	}
 
 	/**
@@ -709,7 +734,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 
 		// Preload skin css
 		if (args.skinUiCss) {
-			tinymce.DOM.styleSheetLoader.load(args.skinUiCss);
+			tinymce.DOM.styleSheetLoader.load(args.skinUiCss, fireSkinLoaded(editor));
 		}
 
 		return {};
@@ -735,7 +760,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		}
 
 		if (args.skinUiCss) {
-			tinymce.DOM.loadCSS(args.skinUiCss);
+			tinymce.DOM.styleSheetLoader.load(args.skinUiCss, fireSkinLoaded(editor));
 		}
 
 		// Basic UI layout
@@ -785,13 +810,13 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			]});
 		}
 
-		if (settings.readonly) {
-			panel.find('*').disabled(true);
-		}
-
 		editor.fire('BeforeRenderUI');
 		editor.on('SwitchMode', switchMode());
 		panel.renderBefore(args.targetNode).reflow();
+
+		if (settings.readonly) {
+			editor.setMode('readonly');
+		}
 
 		if (settings.width) {
 			tinymce.DOM.setStyle(panel.getEl(), 'width', settings.width);

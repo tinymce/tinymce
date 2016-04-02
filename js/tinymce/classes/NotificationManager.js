@@ -138,6 +138,19 @@ define("tinymce/NotificationManager", [
 			return notifications;
 		};
 
+		editor.on('SkinLoaded', function() {
+			var serviceMessage = editor.settings.service_message;
+
+			if (serviceMessage) {
+				editor.notificationManager.open({
+					text: serviceMessage,
+					type: 'warning',
+					timeout: 0,
+					icon: ''
+				});
+			}
+		});
+
 		//self.positionNotifications = positionNotifications;
 	};
 });

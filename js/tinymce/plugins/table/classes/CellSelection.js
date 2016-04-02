@@ -21,59 +21,84 @@ define("tinymce/tableplugin/CellSelection", [
 	"tinymce/util/Tools"
 ], function(TableGrid, TreeWalker, Tools) {
 	return function(editor) {
-		var dom = editor.dom, tableGrid, startCell, startTable, hasCellSelection = true, resizing;
+		var dom = editor.dom, tableGrid, startCell, startTable, lastMouseOverTarget, hasCellSelection = true, resizing;
 
 		function clear(force) {
 			// Restore selection possibilities
 			editor.getBody().style.webkitUserSelect = '';
 
 			if (force || hasCellSelection) {
-				editor.dom.removeClass(
-					editor.dom.select('td.mce-item-selected,th.mce-item-selected'),
-					'mce-item-selected'
-				);
-
+				editor.$('td[data-mce-selected],th[data-mce-selected]').removeAttr('data-mce-selected');
 				hasCellSelection = false;
 			}
 		}
 
+		function isCellInTable(table, cell) {
+			if (!table || !cell) {
+				return false;
+			}
+
+			return table === dom.getParent(cell, 'table');
+		}
+
 		function cellSelectionHandler(e) {
-			var sel, table, target = e.target;
+			var sel, target = e.target, currentCell;
 
 			if (resizing) {
 				return;
 			}
 
-			if (startCell && (tableGrid || target != startCell) && (target.nodeName == 'TD' || target.nodeName == 'TH')) {
-				table = dom.getParent(target, 'table');
-				if (table == startTable) {
-					if (!tableGrid) {
-						tableGrid = new TableGrid(editor, table);
-						tableGrid.setStartCell(startCell);
+			// Fake mouse enter by keeping track of last mouse over
+			if (target === lastMouseOverTarget) {
+				return;
+			}
 
+			lastMouseOverTarget = target;
+
+			if (startTable && startCell) {
+				currentCell = dom.getParent(target, 'td,th');
+
+				if (!isCellInTable(startTable, currentCell)) {
+					currentCell = dom.getParent(startTable, 'td,th');
+				}
+
+				// Selection inside first cell is normal until we have expanted
+				if (startCell === currentCell && !hasCellSelection) {
+					return;
+				}
+
+				if (isCellInTable(startTable, currentCell)) {
+					e.preventDefault();
+
+					if (!tableGrid) {
+						tableGrid = new TableGrid(editor, startTable, startCell);
 						editor.getBody().style.webkitUserSelect = 'none';
 					}
 
-					tableGrid.setEndCell(target);
+					tableGrid.setEndCell(currentCell);
 					hasCellSelection = true;
-				}
 
-				// Remove current selection
-				sel = editor.selection.getSel();
+					// Remove current selection
+					sel = editor.selection.getSel();
 
-				try {
-					if (sel.removeAllRanges) {
-						sel.removeAllRanges();
-					} else {
-						sel.empty();
+					try {
+						if (sel.removeAllRanges) {
+							sel.removeAllRanges();
+						} else {
+							sel.empty();
+						}
+					} catch (ex) {
+						// IE9 might throw errors here
 					}
-				} catch (ex) {
-					// IE9 might throw errors here
 				}
-
-				e.preventDefault();
 			}
 		}
+
+		editor.on('SelectionChange', function(e) {
+			if (hasCellSelection) {
+				e.stopImmediatePropagation();
+			}
+		}, true);
 
 		// Add cell selection logic
 		editor.on('MouseDown', function(e) {
@@ -89,6 +114,7 @@ define("tinymce/tableplugin/CellSelection", [
 
 		editor.on('remove', function() {
 			dom.unbind(editor.getDoc(), 'mouseover', cellSelectionHandler);
+			clear();
 		});
 
 		editor.on('MouseUp', function() {
@@ -129,7 +155,7 @@ define("tinymce/tableplugin/CellSelection", [
 				}
 
 				// Try to expand text selection as much as we can only Gecko supports cell selection
-				selectedCells = dom.select('td.mce-item-selected,th.mce-item-selected');
+				selectedCells = dom.select('td[data-mce-selected],th[data-mce-selected]');
 				if (selectedCells.length > 0) {
 					rng = dom.createRng();
 					node = selectedCells[0];
@@ -141,7 +167,7 @@ define("tinymce/tableplugin/CellSelection", [
 
 					do {
 						if (node.nodeName == 'TD' || node.nodeName == 'TH') {
-							if (!dom.hasClass(node, 'mce-item-selected')) {
+							if (!dom.getAttrib(node, 'data-mce-selected')) {
 								break;
 							}
 
@@ -155,13 +181,13 @@ define("tinymce/tableplugin/CellSelection", [
 				}
 
 				editor.nodeChanged();
-				startCell = tableGrid = startTable = null;
+				startCell = tableGrid = startTable = lastMouseOverTarget = null;
 			}
 		});
 
 		editor.on('KeyUp Drop SetContent', function(e) {
 			clear(e.type == 'setcontent');
-			startCell = tableGrid = startTable = null;
+			startCell = tableGrid = startTable = lastMouseOverTarget = null;
 			resizing = false;
 		});
 

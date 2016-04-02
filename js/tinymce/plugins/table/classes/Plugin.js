@@ -30,7 +30,7 @@ define("tinymce/tableplugin/Plugin", [
 	function Plugin(editor) {
 		var clipboardRows, self = this, dialogs = new Dialogs(editor), resizeBars;
 
-		if (editor.settings.object_resizing &&
+		if (editor.settings.object_resizing && editor.settings.table_resize_bars !== false &&
 			(editor.settings.object_resizing === true || editor.settings.object_resizing === 'table')) {
 			resizeBars = ResizeBars(editor);
 		}
@@ -50,7 +50,7 @@ define("tinymce/tableplugin/Plugin", [
 				html += '<tr>';
 
 				for (x = 0; x < cols; x++) {
-					html += '<td>' + (Env.ie ? " " : '<br>') + '</td>';
+					html += '<td>' + (Env.ie && Env.ie < 10 ? '&nbsp;' : '<br>') + '</td>';
 				}
 
 				html += '</tr>';
@@ -64,6 +64,18 @@ define("tinymce/tableplugin/Plugin", [
 				tableElm = editor.dom.get('__mce');
 				editor.dom.setAttrib(tableElm, 'id', null);
 
+				editor.$('tr', tableElm).each(function(index, row) {
+					editor.fire('newrow', {
+						node: row
+					});
+
+					editor.$('th,td', row).each(function(index, cell) {
+						editor.fire('newcell', {
+							node: cell
+						});
+					});
+				});
+
 				editor.dom.setAttribs(tableElm, editor.settings.table_default_attributes || {});
 				editor.dom.setStyles(tableElm, editor.settings.table_default_styles || {});
 			});
@@ -71,9 +83,32 @@ define("tinymce/tableplugin/Plugin", [
 			return tableElm;
 		}
 
-		function handleDisabledState(ctrl, selector) {
+		function handleDisabledState(ctrl, selector, sameParts) {
 			function bindStateListener() {
-				ctrl.disabled(!editor.dom.getParent(editor.selection.getStart(), selector));
+				var selectedElm, selectedCells, parts = {}, sum = 0, state;
+
+				selectedCells = editor.dom.select('td[data-mce-selected],th[data-mce-selected]');
+				selectedElm = selectedCells[0];
+				if (!selectedElm) {
+					selectedElm = editor.selection.getStart();
+				}
+
+				// Make sure that we don't have a selection inside thead and tbody at the same time
+				if (sameParts && selectedCells.length > 0) {
+					each(selectedCells, function(cell) {
+						return parts[cell.parentNode.parentNode.nodeName] = 1;
+					});
+
+					each(parts, function(value) {
+						sum += value;
+					});
+
+					state = sum !== 1;
+				} else {
+					state = !editor.dom.getParent(selectedElm, selector);
+				}
+
+				ctrl.disabled(state);
 
 				editor.selection.selectorChanged(selector, function(state) {
 					ctrl.disabled(!state);
@@ -95,6 +130,11 @@ define("tinymce/tableplugin/Plugin", [
 		function postRenderCell() {
 			/*jshint validthis:true*/
 			handleDisabledState(this, 'td,th');
+		}
+
+		function postRenderMergeCell() {
+			/*jshint validthis:true*/
+			handleDisabledState(this, 'td,th', true);
 		}
 
 		function generateTableGrid() {
@@ -244,7 +284,7 @@ define("tinymce/tableplugin/Plugin", [
 			context: 'table',
 			menu: [
 				{text: 'Cell properties', onclick: cmd('mceTableCellProps'), onPostRender: postRenderCell},
-				{text: 'Merge cells', onclick: cmd('mceTableMergeCells'), onPostRender: postRenderCell},
+				{text: 'Merge cells', onclick: cmd('mceTableMergeCells'), onPostRender: postRenderMergeCell},
 				{text: 'Split cell', onclick: cmd('mceTableSplitCells'), onPostRender: postRenderCell}
 			]
 		});
@@ -334,7 +374,7 @@ define("tinymce/tableplugin/Plugin", [
 
 				cell = editor.dom.getParent(editor.selection.getStart(), 'th,td');
 
-				if (!editor.dom.select('td.mce-item-selected,th.mce-item-selected').length) {
+				if (!editor.dom.select('td[data-mce-selected],th[data-mce-selected]').length) {
 					dialogs.merge(grid, cell);
 				} else {
 					grid.merge();

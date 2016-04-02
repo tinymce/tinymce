@@ -31,6 +31,8 @@
 			delete editor.settings.table_cell_class_list;
 			delete editor.settings.table_row_class_list;
 			delete editor.settings.table_style_by_css;
+
+			editor.off('newcell newrow');
 		}
 	});
 
@@ -511,7 +513,7 @@
 	});
 
 	test("mceTableMergeCells command with cell selection", function() {
-		editor.getBody().innerHTML = '<table><tr><td class="mce-item-selected">1</td><td class="mce-item-selected">2</td></tr></table>';
+		editor.getBody().innerHTML = '<table><tr><td data-mce-selected="1">1</td><td data-mce-selected="1">2</td></tr></table>';
 		Utils.setSelection('td', 0);
 		editor.execCommand('mceTableMergeCells');
 		equal(cleanTableHtml(editor.getContent()), '<table><tbody><tr><td colspan="2">12</td></tr></tbody></table>');
@@ -554,8 +556,8 @@
 	test("Delete selected cells", function() {
 		editor.getBody().innerHTML = (
 			'<table><tbody>' +
-			'<tr><td class="mce-item-selected">A1</td><td>A2</td></tr>' +
-			'<tr><td class="mce-item-selected">B1</td><td>B2</td></tr>' +
+			'<tr><td data-mce-selected="1">A1</td><td>A2</td></tr>' +
+			'<tr><td data-mce-selected="1">B1</td><td>B2</td></tr>' +
 			'</tbody></table>' +
 			'<p>x</p>'
 		);
@@ -572,8 +574,8 @@
 	test("Delete all cells", function() {
 		editor.getBody().innerHTML = (
 			'<table><tbody>' +
-			'<tr><td class="mce-item-selected">A1</td><td class="mce-item-selected">A2</td></tr>' +
-			'<tr><td class="mce-item-selected">B1</td><td class="mce-item-selected">B2</td></tr>' +
+			'<tr><td data-mce-selected="1">A1</td><td data-mce-selected="1">A2</td></tr>' +
+			'<tr><td data-mce-selected="1">B1</td><td data-mce-selected="1">B2</td></tr>' +
 			'</tbody></table>' +
 			'<p>x</p>'
 		);
@@ -620,6 +622,30 @@
 	var testResizeTable3 = '<div style=\"display: block; width: 400px;\"><table style=\"border-collapse: collapse; border: 1px solid black;\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tbody><tr><td rowspan=\"2\" width=\"25%\">&nbsp;a</td><td width=\"25%\">&nbsp;b</td><td width=\"25%\">&nbsp;</td>' +
 	'<td width=\"25%\">&nbsp;c</td></tr><tr><td width=\"25%\">&nbsp;d</td><td width=\"25%\">&nbsp;</td><td rowspan=\"2\" width=\"25%\">&nbsp;e</td></tr><tr><td width=\"25%\">&nbsp;f</td><td width=\"25%\">&nbsp;g</td><td width=\"25%\">&nbsp;</td></tr><tr><td width=\"25%\">&nbsp;h</td><td width=\"25%\">&nbsp;i</td><td width=\"25%\">&nbsp;</td><td width=\"25%\">j&nbsp;</td></tr></tbody></table></div>';
 
+	var testResizeTable4 = (
+		'<table>' +
+			'<tbody>' +
+				'<tr>' +
+					'<td>a</td>' +
+					'<td>b</td>' +
+				'</tr>' +
+				'<tr>' +
+					'<td>a</td>' +
+					'<td>b</td>' +
+					'<td>c</td>' +
+				'</tr>' +
+				'<tr>' +
+					'<td>a</td>' +
+				'</tr>' +
+				'<tr>' +
+					'<td>a</td>' +
+					'<td>b</td>' +
+					'<td colspan="2">c</td>' +
+				'</tr>' +
+			'</tbody>' +
+		'</table>'
+	);
+
 	test("Is Pixel/Percentage Based Width", function() {
 		var pixelWidths = ['125px', '200px', '300em'];
 		var percentageWidths = ['25%', '30%', '100%'];
@@ -644,7 +670,7 @@
 
 		var table = editor.dom.select('table')[0];
 		var details = editor.plugins.table.resizeBars.getTableDetails(table);
-		var tableGrid  = editor.plugins.table.resizeBars.getTableGrid(details);
+		var tableGrid = editor.plugins.table.resizeBars.getTableGrid(details);
 
 		deepEqual(
 			editor.plugins.table.resizeBars.getWidths(tableGrid, false, table),
@@ -660,7 +686,7 @@
 
 		table = editor.dom.select('table')[0];
 		details = editor.plugins.table.resizeBars.getTableDetails(table);
-		tableGrid  = editor.plugins.table.resizeBars.getTableGrid(details);
+		tableGrid = editor.plugins.table.resizeBars.getTableGrid(details);
 
 		deepEqual(
 			editor.plugins.table.resizeBars.getWidths(tableGrid, false, table),
@@ -676,7 +702,7 @@
 
 		table = editor.dom.select('table')[0];
 		details = editor.plugins.table.resizeBars.getTableDetails(table);
-		tableGrid  = editor.plugins.table.resizeBars.getTableGrid(details);
+		tableGrid = editor.plugins.table.resizeBars.getTableGrid(details);
 
 		deepEqual(
 			editor.plugins.table.resizeBars.getWidths(tableGrid, true, table),
@@ -686,6 +712,28 @@
 
 	test("Draw bars/clear bars", function() {
 		editor.setContent(testResizeTable1);
+
+		var table = editor.dom.select('table')[0];
+
+		editor.plugins.table.resizeBars.drawBars(table);
+
+		equal(editor.dom.select('.mce-resize-bar-row').length,
+			4);
+
+		equal(editor.dom.select('.mce-resize-bar-col').length,
+			4);
+
+		editor.plugins.table.resizeBars.clearBars();
+
+		equal(editor.dom.select('.mce-resize-bar-row').length,
+			0);
+
+		equal(editor.dom.select('.mce-resize-bar-col').length,
+			0);
+	});
+
+	test("Draw bars/clear bars on invalid table", function() {
+		editor.setContent(testResizeTable4);
 
 		var table = editor.dom.select('table')[0];
 
@@ -951,5 +999,27 @@
 			'</tbody>' +
 			'</table>');
 
+	});
+
+	test("Table newcell/newrow events", function() {
+		var cells = [], rows = [], counter = 0;
+
+		editor.on('newcell', function(e) {
+			cells.push(e.node);
+			e.node.setAttribute('data-counter', counter++);
+		});
+
+		editor.on('newrow', function(e) {
+			rows.push(e.node);
+			e.node.setAttribute('data-counter', counter++);
+		});
+
+		editor.plugins.table.insertTable(2, 3);
+
+		equal(cells.length, 6);
+		equal(rows.length, 3);
+
+		equal(cells[cells.length - 1].getAttribute('data-counter'), "8");
+		equal(rows[rows.length - 1].getAttribute('data-counter'), "6");
 	});
 })();

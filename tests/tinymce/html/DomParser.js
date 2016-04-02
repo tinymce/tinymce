@@ -76,7 +76,7 @@
 
 		parser = new tinymce.html.DomParser({}, new tinymce.html.Schema({invalid_elements : 'hr,br'}));
 		root = parser.parse('\n<hr />\n<br />\n<div>\n<hr />\n<br />\n<img src="file.gif" data-mce-src="file.gif" />\n<hr />\n<br />\n</div>\n<hr />\n<br />\n');
-		equal(serializer.serialize(root), '<div><img src="file.gif" data-mce-src="file.gif" alt="" /></div>', 'Whitespace where SaxParser will produce multiple whitespace nodes');
+		equal(serializer.serialize(root), '<div><img src="file.gif" data-mce-src="file.gif" /></div>', 'Whitespace where SaxParser will produce multiple whitespace nodes');
 		deepEqual(countNodes(root), {body:1, div:1, img:1}, 'Whitespace where SaxParser will produce multiple whitespace nodes (count)');
 	});
 

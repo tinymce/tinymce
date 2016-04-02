@@ -67,13 +67,19 @@ tinymce.PluginManager.add('template', function(editor) {
 						contentCssLinks += '<link type="text/css" rel="stylesheet" href="' + editor.documentBaseURI.toAbsolute(url) + '">';
 					});
 
+					var bodyClass = editor.settings.body_class || '';
+					if (bodyClass.indexOf('=') != -1) {
+						bodyClass = editor.getParam('body_class', '', 'hash');
+						bodyClass = bodyClass[editor.id] || '';
+					}
+
 					html = (
 						'<!DOCTYPE html>' +
 						'<html>' +
 							'<head>' +
 								contentCssLinks +
 							'</head>' +
-							'<body>' +
+							'<body class="' + bodyClass + '">' +
 								html +
 							'</body>' +
 						'</html>'

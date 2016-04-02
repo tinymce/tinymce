@@ -50,6 +50,7 @@ define("tinymce/dom/ControlSelection", [
 			rootClass + ' div.mce-resizehandle {' +
 				'position: absolute;' +
 				'border: 1px solid black;' +
+				'box-sizing: box-sizing;' +
 				'background: #FFF;' +
 				'width: 7px;' +
 				'height: 7px;' +
@@ -58,7 +59,7 @@ define("tinymce/dom/ControlSelection", [
 			rootClass + ' .mce-resizehandle:hover {' +
 				'background: #000' +
 			'}' +
-			rootClass + ' *[data-mce-selected] {' +
+			rootClass + ' img[data-mce-selected],' + rootClass + ' hr[data-mce-selected] {' +
 				'outline: 1px solid black;' +
 				'resize: none' + // Have been talks about implementing this in browsers
 			'}' +
@@ -589,16 +590,19 @@ define("tinymce/dom/ControlSelection", [
 				}
 			}
 
+			var throttledUpdateResizeRect = Delay.throttle(updateResizeRect);
+
 			editor.on('nodechange ResizeEditor ResizeWindow drop', function(e) {
-				Delay.requestAnimationFrame(function() {
-					updateResizeRect(e);
-				});
+				if (!editor.composing) {
+					throttledUpdateResizeRect(e);
+				}
 			});
 
 			// Update resize rect while typing in a table
-			editor.on('keydown keyup', function(e) {
-				if (selectedElm && selectedElm.nodeName == "TABLE") {
-					updateResizeRect(e);
+			editor.on('keydown keyup compositionend', function(e) {
+				// Don't update the resize rect while composing since it blows away the IME see: #2710
+				if (selectedElm && selectedElm.nodeName == "TABLE" && !editor.composing) {
+					throttledUpdateResizeRect(e);
 				}
 			});
 

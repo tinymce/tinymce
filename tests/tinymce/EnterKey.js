@@ -57,45 +57,45 @@ test('Enter before text after EM', function() {
 });
 
 test('Enter before first IMG in P', function() {
-	editor.setContent('<p><img alt="" src="about:blank" /></p>');
+	editor.setContent('<p><img src="about:blank" /></p>');
 	editor.selection.setCursorLocation(editor.getBody().firstChild, 0);
 	Utils.pressEnter();
-	equal(editor.getContent(), '<p>\u00a0</p><p><img src="about:blank" alt="" /></p>');
+	equal(editor.getContent(), '<p>\u00a0</p><p><img src="about:blank" /></p>');
 });
 
 test('Enter before first wrapped IMG in P', function() {
-	editor.setContent('<p><b><img alt="" src="about:blank" /></b></p>');
+	editor.setContent('<p><b><img src="about:blank" /></b></p>');
 	editor.selection.setCursorLocation(editor.getBody().firstChild.firstChild, 0);
 	Utils.pressEnter();
 	equal(editor.getBody().firstChild.innerHTML, (tinymce.isIE && tinymce.Env.ie < 11) ? '' : '<br data-mce-bogus="1">');
-	equal(editor.getContent(), '<p>\u00a0</p><p><b><img src=\"about:blank\" alt=\"\" /></b></p>');
+	equal(editor.getContent(), '<p>\u00a0</p><p><b><img src="about:blank" /></b></p>');
 });
 
 test('Enter before last IMG in P with text', function() {
-	editor.setContent('<p>abc<img alt="" src="about:blank" /></p>');
+	editor.setContent('<p>abc<img src="about:blank" /></p>');
 	editor.selection.setCursorLocation(editor.getBody().firstChild, 1);
 	Utils.pressEnter();
-	equal(editor.getContent(), '<p>abc</p><p><img src="about:blank" alt="" /></p>');
+	equal(editor.getContent(), '<p>abc</p><p><img src="about:blank" /></p>');
 	var rng = editor.selection.getRng(true);
 	equal(rng.startContainer.nodeName, 'P');
 	equal(rng.startContainer.childNodes[rng.startOffset].nodeName, 'IMG');
 });
 
 test('Enter before last IMG in P with IMG sibling', function() {
-	editor.setContent('<p><img src="about:blank" alt="" /><img src="about:blank" alt="" /></p>');
+	editor.setContent('<p><img src="about:blank" /><img src="about:blank" /></p>');
 	editor.selection.setCursorLocation(editor.getBody().firstChild, 1);
 	Utils.pressEnter();
-	equal(editor.getContent(), '<p><img src="about:blank" alt="" /></p><p><img src="about:blank" alt="" /></p>');
+	equal(editor.getContent(), '<p><img src="about:blank" /></p><p><img src="about:blank" /></p>');
 	var rng = editor.selection.getRng(true);
 	equal(rng.startContainer.nodeName, 'P');
 	equal(rng.startContainer.childNodes[rng.startOffset].nodeName, 'IMG');
 });
 
 test('Enter after last IMG in P', function() {
-	editor.setContent('<p>abc<img alt="" src="about:blank" /></p>');
+	editor.setContent('<p>abc<img src="about:blank" /></p>');
 	editor.selection.setCursorLocation(editor.getBody().firstChild, 2);
 	Utils.pressEnter();
-	equal(editor.getContent(), '<p>abc<img src="about:blank" alt="" /></p><p>\u00a0</p>');
+	equal(editor.getContent(), '<p>abc<img src="about:blank" /></p><p>\u00a0</p>');
 });
 
 test('Enter before last INPUT in P with text', function() {

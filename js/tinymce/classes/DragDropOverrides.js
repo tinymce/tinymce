@@ -15,11 +15,16 @@
  * @class tinymce.DragDropOverrides
  */
 define("tinymce/DragDropOverrides", [
-	"tinymce/dom/NodeType"
+	"tinymce/dom/NodeType",
+	"tinymce/util/Arr",
+	"tinymce/util/Fun"
 ], function(
-	NodeType
+	NodeType,
+	Arr,
+	Fun
 ) {
-	var isContentEditableFalse = NodeType.isContentEditableFalse;
+	var isContentEditableFalse = NodeType.isContentEditableFalse,
+		isContentEditableTrue = NodeType.isContentEditableTrue;
 
 	function init(editor) {
 		var $ = editor.$, rootDocument = document,
@@ -125,13 +130,24 @@ define("tinymce/DragDropOverrides", [
 		}
 
 		function drop() {
+			var evt;
+
 			if (state.dragging) {
 				// Hack for IE since it doesn't sync W3C Range with IE Specific range
 				editor.selection.setRng(editor.selection.getSel().getRangeAt(0));
 
 				if (isValidDropTarget(editor.selection.getNode())) {
+					var targetClone = state.element;
+
+					evt = editor.fire('drop', {targetClone: targetClone});
+					if (evt.isDefaultPrevented()) {
+						return;
+					}
+
+					targetClone = evt.targetClone;
+
 					editor.undoManager.transact(function() {
-						editor.insertContent(dom.getOuterHTML(state.element));
+						editor.insertContent(dom.getOuterHTML(targetClone));
 						$(state.element).remove();
 					});
 				}
@@ -141,10 +157,19 @@ define("tinymce/DragDropOverrides", [
 		}
 
 		function start(e) {
+			var ceElm, evt;
+
 			stop();
 
-			if (isDraggable(e.target)) {
-				if (editor.fire('dragstart', {target: e.target}).isDefaultPrevented()) {
+			if (e.button !== 0) {
+				return;
+			}
+
+			ceElm = Arr.find(editor.dom.getParents(e.target), Fun.or(isContentEditableFalse, isContentEditableTrue));
+
+			if (isDraggable(ceElm)) {
+				evt = editor.fire('dragstart', {target: ceElm});
+				if (evt.isDefaultPrevented()) {
 					return;
 				}
 
@@ -161,7 +186,7 @@ define("tinymce/DragDropOverrides", [
 					screenY: e.screenY,
 					clientX: e.clientX,
 					clientY: e.clientY,
-					element: e.target
+					element: ceElm
 				};
 			}
 		}

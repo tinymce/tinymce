@@ -16,9 +16,10 @@
 	}
 
 	test("textbox text, size chars: 5", function() {
-		var textBox = createTextBox({text: 'X', size: 5});
+		var textBox1 = createTextBox({text: 'X', size: 5});
+		var textBox2 = createTextBox({text: 'X', size: 6});
 
-		Utils.nearlyEqualRects(Utils.size(textBox), [69, 30], 30);
+		ok(Utils.size(textBox1)[0] < Utils.size(textBox2)[0]);
 	});
 
 	test("textbox text, size 100x100", function() {

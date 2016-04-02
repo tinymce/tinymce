@@ -15,7 +15,7 @@ module("tinymce.Formatter - Apply", {
 			disable_nodechange: true,
 			entities: 'raw',
 			valid_styles: {
-				'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display'
+				'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display,text-align'
 			},
 			init_instance_callback: function(ed) {
 				window.editor = ed;
@@ -36,7 +36,7 @@ module("tinymce.Formatter - Apply", {
 			disable_nodechange: true,
 			entities: 'raw',
 			valid_styles: {
-				'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display'
+				'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display,text-align'
 			},
 			init_instance_callback: function(ed) {
 				window.inlineEditor = ed;
@@ -1535,6 +1535,56 @@ test('Align specified table element with collapsed: false and selection collapse
 	equal(getContent(), '<table style="float: right;"><tbody><tr><td>a</td></tr></tbody></table>');
 });
 
+test('Align nested table cell to same as parent', function() {
+	editor.setContent(
+		'<table>' +
+			'<tbody>' +
+				'<tr>' +
+					'<td style="text-align: right;">a' +
+						'<table>' +
+							'<tbody>' +
+								'<tr>' +
+									'<td><b>b</b></td>' +
+								'</tr>' +
+							'</tbody>' +
+						'</table>' +
+					'</td>' +
+				'</tr>' +
+			'</tbody>' +
+		'</table>'
+	);
+
+	Utils.setSelection('b', 0);
+
+	editor.formatter.register('format', {
+		selector: 'td',
+		styles: {
+			'text-align': 'right'
+		}
+	});
+
+	editor.formatter.apply('format', {}, editor.$('td td')[0]);
+
+	equal(
+		getContent(),
+		'<table>' +
+			'<tbody>' +
+				'<tr>' +
+					'<td style="text-align: right;">a' +
+						'<table>' +
+							'<tbody>' +
+								'<tr>' +
+									'<td style="text-align: right;"><b>b</b></td>' +
+								'</tr>' +
+							'</tbody>' +
+						'</table>' +
+					'</td>' +
+				'</tr>' +
+			'</tbody>' +
+		'</table>'
+	);
+});
+
 test('Apply ID format to around existing bookmark node', function() {
 	editor.getBody().innerHTML = '<p>a<span id="b" data-mce-type="bookmark"></span>b</p>';
 
@@ -1640,4 +1690,19 @@ asyncTest('Bug #7412 - valid_styles affects the Bold and Italic buttons, althoug
             equal(getContent(), '<p>1 <strong><span style="text-decoration: underline;">1234</span></strong> 1</p>');
         }
     });
+});
+
+test('Format selection from with end at beginning of block', function(){
+	editor.setContent("<div id='a'>one</div><div id='b'>two</div>");
+	editor.focus();
+	Utils.setSelection('#a', 0, '#b', 0);
+	editor.execCommand('formatBlock', false, 'h1');
+	equal(getContent(), '<h1 id="a">one</h1>\n<div id="b">two</div>');
+});
+
+test('Format selection over fragments', function(){
+	editor.setContent("<strong>a</strong>bc<em>d</em>");
+	Utils.setSelection('strong', 1, 'em', 0);
+	editor.formatter.apply('underline');
+	equal(getContent(), '<p><strong>a</strong><span style="text-decoration: underline;">bc</span><em>d</em></p>');
 });

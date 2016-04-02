@@ -6,11 +6,10 @@ module("tinymce.EditorManager", {
 			selector: "textarea",
 			add_unload_trigger: false,
 			disable_nodechange: true,
-			skin: false,
-			init_instance_callback: function(ed) {
-				window.editor = ed;
-				QUnit.start();
-			}
+			skin: false
+		}).then(function(editors) {
+			window.editor = editors[0];
+			QUnit.start();
 		});
 	}
 });
@@ -95,4 +94,49 @@ asyncTest('Init/remove on same id', function() {
 	});
 
 	strictEqual(tinymce.get().length, 2);
+});
+
+test('overrideDefaults', function() {
+	var oldBaseURI, oldBaseUrl, oldSuffix;
+
+	oldBaseURI = tinymce.baseURI;
+	oldBaseUrl = tinymce.baseURL;
+	oldSuffix = tinymce.suffix;
+
+	tinymce.overrideDefaults({
+		test: 42,
+		base_url: "http://www.tinymce.com/base/",
+		suffix: "x",
+		external_plugins: {
+			"plugina": "//domain/plugina.js",
+			"pluginb": "//domain/pluginb.js"
+		}
+	});
+
+	strictEqual(tinymce.baseURI.path, "/base");
+	strictEqual(tinymce.baseURL, "http://www.tinymce.com/base");
+	strictEqual(tinymce.suffix, "x");
+	strictEqual(new tinymce.Editor('ed1', {}, tinymce).settings.test, 42);
+
+	deepEqual(new tinymce.Editor('ed2', {
+		external_plugins: {
+			"plugina": "//domain/plugina2.js",
+			"pluginc": "//domain/pluginc.js"
+		}
+	}, tinymce).settings.external_plugins, {
+		"plugina": "//domain/plugina2.js",
+		"pluginb": "//domain/pluginb.js",
+		"pluginc": "//domain/pluginc.js"
+	});
+
+	deepEqual(new tinymce.Editor('ed3', {}, tinymce).settings.external_plugins, {
+		"plugina": "//domain/plugina.js",
+		"pluginb": "//domain/pluginb.js"
+	});
+
+	tinymce.baseURI = oldBaseURI;
+	tinymce.baseURL = oldBaseUrl;
+	tinymce.suffix = oldSuffix;
+
+	tinymce.overrideDefaults({});
 });

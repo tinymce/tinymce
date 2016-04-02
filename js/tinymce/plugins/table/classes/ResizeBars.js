@@ -19,6 +19,8 @@ define("tinymce/tableplugin/ResizeBars", [
 	"tinymce/util/Tools",
 	"tinymce/util/VK"
 ], function(Tools, VK) {
+	var hoverTable;
+
 	return function(editor) {
 		var RESIZE_BAR_CLASS = 'mce-resize-bar',
 			RESIZE_BAR_ROW_CLASS = 'mce-resize-bar-row',
@@ -37,7 +39,7 @@ define("tinymce/tableplugin/ResizeBars", [
 		var percentageBasedSizeRegex = new RegExp(/(\d+(\.\d+)?%)/),
 			pixelBasedSizeRegex = new RegExp(/px|em/);
 
-		var delayDrop, dragging, blockerElement, dragBar, lastX, lastY, hoverTable;
+		var delayDrop, dragging, blockerElement, dragBar, lastX, lastY;
 
 		// Get the absolute position's top edge.
 		function getTopEdge(index, row) {
@@ -127,6 +129,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			for (var i = 1; i < thingsToMeasure.length; i++) {
 				// Get the element from the details
 				var item = thingsToMeasure[i].element;
+
 				// We need to zero index this again
 				tablePositions.push(getInner(i - 1, item));
 			}
@@ -334,15 +337,15 @@ define("tinymce/tableplugin/ResizeBars", [
 			var rows = range(0, tableGrid.grid.maxRows);
 
 			return Tools.map(cols, function(col) {
-
 				function getBlock() {
 					var details = [];
 					for (var i = 0; i < rows.length; i++) {
 						var detail = tableGrid.getAt(i, col);
-						if (detail.colIndex === col) {
+						if (detail && detail.colIndex === col) {
 							details.push(detail);
 						}
 					}
+
 					return details;
 				}
 
@@ -351,27 +354,33 @@ define("tinymce/tableplugin/ResizeBars", [
 				}
 
 				function getFallback() {
-					return tableGrid.getAt(0, col);
+					var item;
+
+					for (var i = 0; i < rows.length; i++) {
+						item = tableGrid.getAt(i, col);
+						if (item) {
+							return item;
+						}
+					}
+
+					return null;
 				}
 
 				return decide(getBlock, isSingle, getFallback);
-
 			});
 		}
 
 		// Attempt to get representative blocks for the height of each row.
 		function getRowBlocks(tableGrid) {
-
 			var cols = range(0, tableGrid.grid.maxCols);
 			var rows = range(0, tableGrid.grid.maxRows);
 
 			return Tools.map(rows, function(row) {
-
 				function getBlock() {
 					var details = [];
 					for (var i = 0; i < cols.length; i++) {
 						var detail = tableGrid.getAt(row, i);
-						if (detail.rowIndex === row) {
+						if (detail && detail.rowIndex === row) {
 							details.push(detail);
 						}
 					}
@@ -383,7 +392,7 @@ define("tinymce/tableplugin/ResizeBars", [
 				}
 
 				function getFallback() {
-					tableGrid.getAt(row, 0);
+					return tableGrid.getAt(row, 0);
 				}
 
 				return decide(getBlock, isSingle, getFallback);
@@ -877,23 +886,31 @@ define("tinymce/tableplugin/ResizeBars", [
 			setupBaseDrag(bar, rowDragHandler);
 		}
 
+		function mouseDownHandler(e) {
+			var target = e.target, body = editor.getBody();
+
+			// Since this code is working on global events we need to work on a global hoverTable state
+			// and make sure that the state is correct according to the events fired
+			if (!editor.$.contains(body, hoverTable) && hoverTable !== body) {
+				return;
+			}
+
+			if (isCol(target)) {
+				e.preventDefault();
+				var initialLeft = editor.dom.getPos(target).x;
+				editor.dom.setAttrib(target, RESIZE_BAR_COL_DATA_INITIAL_LEFT_ATTRIBUTE, initialLeft);
+				setupColDrag(target);
+			} else if (isRow(target)) {
+				e.preventDefault();
+				var initialTop = editor.dom.getPos(target).y;
+				editor.dom.setAttrib(target, RESIZE_BAR_ROW_DATA_INITIAL_TOP_ATTRIBUTE, initialTop);
+				setupRowDrag(target);
+			}
+		}
+
 		editor.on('init', function() {
 			// Needs to be like this for inline mode, editor.on does not bind to elements in the document body otherwise
-			editor.dom.bind(getBody(), 'mousedown', function(e) {
-				var target = e.target;
-
-				if (isCol(target)) {
-					e.preventDefault();
-					var initialLeft = editor.dom.getPos(target).x;
-					editor.dom.setAttrib(target, RESIZE_BAR_COL_DATA_INITIAL_LEFT_ATTRIBUTE, initialLeft);
-					setupColDrag(target);
-				} else if (isRow(target)) {
-					e.preventDefault();
-					var initialTop = editor.dom.getPos(target).y;
-					editor.dom.setAttrib(target, RESIZE_BAR_ROW_DATA_INITIAL_TOP_ATTRIBUTE, initialTop);
-					setupRowDrag(target);
-				}
-			});
+			editor.dom.bind(getBody(), 'mousedown', mouseDownHandler);
 		});
 
 		// If we're updating the table width via the old mechanic, we need to update the constituent cells' widths/heights too.
@@ -921,7 +938,7 @@ define("tinymce/tableplugin/ResizeBars", [
 			if (!dragging) {
 				var tableElement = editor.dom.getParent(e.target, 'table');
 
-				if (e.target.nodeName === 'table' || tableElement) {
+				if (e.target.nodeName === 'TABLE' || tableElement) {
 					hoverTable = tableElement;
 					refreshBars(tableElement);
 				}
@@ -940,6 +957,11 @@ define("tinymce/tableplugin/ResizeBars", [
 					clearBars();
 					break;
 			}
+		});
+
+		editor.on('remove', function() {
+			clearBars();
+			editor.dom.unbind(getBody(), 'mousedown', mouseDownHandler);
 		});
 
 		return {

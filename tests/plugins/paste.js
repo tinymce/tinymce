@@ -547,7 +547,7 @@ test('paste data image with paste_data_images: true', function() {
 	editor.setContent('');
 	editor.execCommand('mceInsertClipboardContent', false, {content: '<img src="data:image/gif;base64,R0lGODlhAQABAPAAAP8REf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==">'});
 
-	equal(editor.getContent(), '<p><img src="data:image/gif;base64,R0lGODlhAQABAPAAAP8REf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="" /></p>');
+	equal(editor.getContent(), '<p><img src="data:image/gif;base64,R0lGODlhAQABAPAAAP8REf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" /></p>');
 });
 
 test('paste pre process text (event)', function() {

@@ -44,7 +44,7 @@ test('Schema rules', function() {
 
 	ser = new tinymce.dom.Serializer({invalid_elements : 'hr,br'});
 	DOM.setHTML('test', '<img src="tinymce/ui/img/raster.gif" data-mce-src="tinymce/ui/img/raster.gif" /><hr /><br />');
-	equal(ser.serialize(DOM.get('test')), '<div id="test"><img src="tinymce/ui/img/raster.gif" alt="" /></div>');
+	equal(ser.serialize(DOM.get('test')), '<div id="test"><img src="tinymce/ui/img/raster.gif" /></div>');
 });
 
 test('Entity encoding', function() {
@@ -512,4 +512,15 @@ test('Trailing BR (IE11)', function() {
 
 	DOM.setHTML('test', 'a<br><br>');
 	equal(ser.serialize(DOM.get('test')), 'a');
+});
+
+test('addTempAttr', function() {
+	var ser = new tinymce.dom.Serializer({});
+
+	ser.addTempAttr('data-x');
+	ser.addTempAttr('data-y');
+
+	DOM.setHTML('test', '<p data-x="1" data-y="2" data-z="3">a</p>');
+	equal(ser.serialize(DOM.get('test'), {getInner: 1}), '<p data-z="3">a</p>');
+	equal(ser.trimHtml('<p data-x="1" data-y="2" data-z="3">a</p>'), '<p data-z="3">a</p>');
 });

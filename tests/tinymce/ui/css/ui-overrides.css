@@ -27,4 +27,7 @@
 .mce-cyan {background-color: cyan;}
 .mce-dotted {background-image: url(../img/raster.gif);}
 .mce-i-test {background: red;}
- 
+
+body .mce-window, body .mce-notification {
+	 transform: none;
+ }

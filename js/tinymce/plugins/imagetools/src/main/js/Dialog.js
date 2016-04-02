@@ -2,7 +2,7 @@
  * Dialog.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2016 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -12,18 +12,17 @@
  * ...
  */
 define("tinymce/imagetoolsplugin/Dialog", [
-	"tinymce/dom/DOMUtils",
-	"tinymce/util/Tools",
-	"tinymce/util/Promise",
-	"tinymce/ui/Factory",
-	"tinymce/ui/Form",
-	"tinymce/ui/Container",
+	"global!tinymce.dom.DOMUtils",
+	"global!tinymce.util.Tools",
+	"global!tinymce.util.Promise",
+	"global!tinymce.ui.Factory",
+	"global!tinymce.ui.Form",
+	"global!tinymce.ui.Container",
 	"tinymce/imagetoolsplugin/ImagePanel",
-	"tinymce/imagetoolsplugin/ImageTools",
-	"tinymce/imagetoolsplugin/Filters",
-	"tinymce/imagetoolsplugin/Conversions",
+	"ephox/imagetools/api/ImageTransformations",
+	"ephox/imagetools/api/BlobConversions",
 	"tinymce/imagetoolsplugin/UndoStack"
-], function(DOMUtils, Tools, Promise, Factory, Form, Container, ImagePanel, ImageTools, Filters, Conversions, UndoStack) {
+], function(DOMUtils, Tools, Promise, Factory, Form, Container, ImagePanel, ImageTransformations, BlobConversions, UndoStack) {
 	function createState(blob) {
 		return {
 			blob: blob,
@@ -121,7 +120,7 @@ define("tinymce/imagetoolsplugin/Dialog", [
 		function crop() {
 			var rect = imagePanel.selection();
 
-			ImageTools.crop(currentState.blob, rect.x, rect.y, rect.w, rect.h).then(function(blob) {
+			ImageTransformations.crop(currentState.blob, rect.x, rect.y, rect.w, rect.h).then(function(blob) {
 				addBlobState(blob);
 				cancel();
 			});
@@ -334,34 +333,34 @@ define("tinymce/imagetoolsplugin/Dialog", [
 
 			e.preventDefault();
 
-			action(ImageTools.resize, width, height)();
+			action(ImageTransformations.resize, width, height)();
 			cancel();
 		}).on('show', disableUndoRedo);
 
 		flipRotatePanel = createPanel([
 			{text: 'Back', onclick: cancel},
 			{type: 'spacer', flex: 1},
-			{icon: 'fliph', tooltip: 'Flip horizontally', onclick: tempAction(ImageTools.flip, 'h')},
-			{icon: 'flipv', tooltip: 'Flip vertically', onclick: tempAction(ImageTools.flip, 'v')},
-			{icon: 'rotateleft', tooltip: 'Rotate counterclockwise', onclick: tempAction(ImageTools.rotate, -90)},
-			{icon: 'rotateright', tooltip: 'Rotate clockwise', onclick: tempAction(ImageTools.rotate, 90)},
+			{icon: 'fliph', tooltip: 'Flip horizontally', onclick: tempAction(ImageTransformations.flip, 'h')},
+			{icon: 'flipv', tooltip: 'Flip vertically', onclick: tempAction(ImageTransformations.flip, 'v')},
+			{icon: 'rotateleft', tooltip: 'Rotate counterclockwise', onclick: tempAction(ImageTransformations.rotate, -90)},
+			{icon: 'rotateright', tooltip: 'Rotate clockwise', onclick: tempAction(ImageTransformations.rotate, 90)},
 			{type: 'spacer', flex: 1},
 			{text: 'Apply', subtype: 'primary', onclick: applyTempState}
 		]).hide().on('show', disableUndoRedo);
 
-		invertPanel = createFilterPanel("Invert", Filters.invert);
-		sharpenPanel = createFilterPanel("Sharpen", Filters.sharpen);
-		embossPanel = createFilterPanel("Emboss", Filters.emboss);
+		invertPanel = createFilterPanel("Invert", ImageTransformations.invert);
+		sharpenPanel = createFilterPanel("Sharpen", ImageTransformations.sharpen);
+		embossPanel = createFilterPanel("Emboss", ImageTransformations.emboss);
 
-		brightnessPanel = createVariableFilterPanel("Brightness", Filters.brightness, 0, -1, 1);
-		huePanel = createVariableFilterPanel("Hue", Filters.hue, 180, 0, 360);
-		saturatePanel = createVariableFilterPanel("Saturate", Filters.saturate, 0, -1, 1);
-		contrastPanel = createVariableFilterPanel("Contrast", Filters.contrast, 0, -1, 1);
-		grayscalePanel = createVariableFilterPanel("Grayscale", Filters.grayscale, 0, 0, 1);
-		sepiaPanel = createVariableFilterPanel("Sepia", Filters.sepia, 0, 0, 1);
-		colorizePanel = createRgbFilterPanel("Colorize", Filters.colorize);
-		gammaPanel = createVariableFilterPanel("Gamma", Filters.gamma, 0, -1, 1);
-		exposurePanel = createVariableFilterPanel("Exposure", Filters.exposure, 1, 0, 2);
+		brightnessPanel = createVariableFilterPanel("Brightness", ImageTransformations.brightness, 0, -1, 1);
+		huePanel = createVariableFilterPanel("Hue", ImageTransformations.hue, 180, 0, 360);
+		saturatePanel = createVariableFilterPanel("Saturate", ImageTransformations.saturate, 0, -1, 1);
+		contrastPanel = createVariableFilterPanel("Contrast", ImageTransformations.contrast, 0, -1, 1);
+		grayscalePanel = createVariableFilterPanel("Grayscale", ImageTransformations.grayscale, 0, 0, 1);
+		sepiaPanel = createVariableFilterPanel("Sepia", ImageTransformations.sepia, 0, 0, 1);
+		colorizePanel = createRgbFilterPanel("Colorize", ImageTransformations.colorize);
+		gammaPanel = createVariableFilterPanel("Gamma", ImageTransformations.gamma, 0, -1, 1);
+		exposurePanel = createVariableFilterPanel("Exposure", ImageTransformations.exposure, 1, 0, 2);
 
 		filtersPanel = createPanel([
 			{text: 'Back', onclick: cancel},
