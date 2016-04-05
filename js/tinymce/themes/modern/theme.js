@@ -303,7 +303,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			focus('menubar');
 		});
 
-		editor.shortcuts.add('Alt+F10', '', function() {
+		editor.shortcuts.add('Alt+F10,F10', '', function() {
 			focus('toolbar');
 		});
 
@@ -516,7 +516,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 
 			panel = Factory.create({
 				type: 'floatpanel',
-				role: 'application',
+				role: 'dialog',
 				classes: 'tinymce tinymce-inline arrow',
 				layout: 'flex',
 				direction: 'column',
@@ -525,7 +525,10 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				autofix: true,
 				fixed: true,
 				border: 1,
-				items: createToolbar(match.toolbar.items)
+				items: createToolbar(match.toolbar.items),
+				oncancel: function() {
+					editor.focus();
+				}
 			});
 
 			match.toolbar.panel = panel;
@@ -599,6 +602,13 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			});
 
 			editor.contextToolbars = {};
+		});
+
+		editor.shortcuts.add('ctrl+alt+e > ctrl+alt+p', '', function() {
+			var match = findFrontMostMatch(editor.selection.getNode());
+			if (match && match.toolbar.panel) {
+				match.toolbar.panel.items()[0].focus();
+			}
 		});
 	}
 
