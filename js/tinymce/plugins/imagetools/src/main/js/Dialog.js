@@ -102,6 +102,7 @@ define("tinymce/imagetoolsplugin/Dialog", [
 				});
 
 				targetPanel.show();
+				targetPanel.focus();
 			};
 		}
 
