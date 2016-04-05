@@ -726,7 +726,7 @@ module.exports = function(grunt) {
 		watch: {
 			core: {
 				files: ["js/tinymce/classes/**/*.js"],
-				tasks: ["eslint:core", "amdlc:core", "amdlc:core-jquery", "skin"],
+				tasks: ["amdlc:core", "bolt-build", "skin"],
 				options: {
 					spawn: false
 				}
