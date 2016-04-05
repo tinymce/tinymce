@@ -117,7 +117,7 @@ define("tinymce/ui/KeyboardNavigation", [
 				return true;
 			}
 
-			if (/^(button|menuitem|checkbox|tab|menuitemcheckbox|option|gridcell)$/.test(getRole(elm))) {
+			if (/^(button|menuitem|checkbox|tab|menuitemcheckbox|option|gridcell|slider)$/.test(getRole(elm))) {
 				return true;
 			}
 
@@ -347,6 +347,10 @@ define("tinymce/ui/KeyboardNavigation", [
 			function handleNonTabOrEscEvent(e, handler) {
 				// Ignore non tab keys for text elements
 				if (isTextInputElement(focusedElement)) {
+					return;
+				}
+
+				if (getRole(focusedElement) === 'slider') {
 					return;
 				}
 
