@@ -81,12 +81,12 @@ define("tinymce/dom/EventUtils", [
 
 		// Normalize target for WebComponents v0 implementation (in Chrome)
 		if (event.path) {
-			event.target = event.path[0];
+			event.target = event.path[0] || event.target;
 		}
 
 		// Normalize target for WebComponents v1 implementation (standard)
 		if (event.deepPath) {
-			event.target = event.deepPath[0];
+			event.target = event.deepPath[0] || event.target;
 		}
 
 		// Calculate pageX/Y if missing and clientX/Y available
