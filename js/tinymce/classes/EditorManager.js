@@ -88,6 +88,7 @@ define("tinymce/EditorManager", [
 			removeEditorFromList(editor);
 			editor.unbindAllNativeEvents();
 			editor.destroy(true);
+			editor.removed = true;
 			editor = null;
 		}
 
