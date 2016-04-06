@@ -646,6 +646,11 @@ ModuleLoader.require([
 			equal(rng.collapsed, true);
 			equal(rng.startContainer.nodeType, 3);
 			equal(rng.startContainer.data, 'b');
+
+			// WebKit is in some state state here, so lets restore it
+			rng.setStart(editor.getBody(), 0);
+			rng.setEnd(editor.getBody(), 0);
+			editor.selection.setRng(rng);
 		});
 
 		test('normalize with contentEditable:true parent and contentEditable:false child element', function() {
