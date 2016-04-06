@@ -126,6 +126,18 @@ define("tinymce/caret/CaretPosition", [
 				if (ExtendingChar.isExtendingChar(container.data[offset])) {
 					return clientRects;
 				}
+
+				// WebKit returns two client rects for a position after an extending
+				// character a\uxxx|b so expand on "b" and collapse to start of "b" box
+				if (ExtendingChar.isExtendingChar(container.data[offset - 1])) {
+					range.setStart(container, offset);
+					range.setEnd(container, offset + 1);
+
+					if (!isHiddenWhiteSpaceRange(range)) {
+						addUniqueAndValidRect(collapseAndInflateWidth(getBoundingClientRect(range), false));
+						return clientRects;
+					}
+				}
 			}
 
 			if (offset > 0) {
