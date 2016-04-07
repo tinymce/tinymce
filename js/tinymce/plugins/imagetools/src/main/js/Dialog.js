@@ -470,6 +470,8 @@ define("tinymce/imagetoolsplugin/Dialog", [
 			win.find('#w').value(width);
 			win.find('#h').value(height);
 		});
+
+		imagePanel.on('crop', crop);
 	}
 
 	function edit(blob) {

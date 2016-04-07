@@ -117,7 +117,9 @@ define("tinymce/ui/Slider", [
 
 					self.value(value);
 
-					self.fire('dragstart drag dragend', {value: value});
+					self.fire('dragstart', {value: value});
+					self.fire('drag', {value: value});
+					self.fire('dragend', {value: value});
 				}
 
 				self.on('keydown', function(e) {

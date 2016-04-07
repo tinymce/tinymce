@@ -176,7 +176,10 @@ define("tinymce/imagetoolsplugin/ImagePanel", [
 					rect,
 					self.state.get('viewRect'),
 					self.state.get('viewRect'),
-					self.getEl()
+					self.getEl(),
+					function() {
+						self.fire('crop');
+					}
 				);
 
 				self.cropRect.on('updateRect', function(e) {
