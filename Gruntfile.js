@@ -529,6 +529,11 @@ module.exports = function(grunt) {
 							"tinymce.jquery.min.js",
 							"window.console && console.log('Use tinymce.min.js instead of tinymce.jquery.min.js.');\n" + src
 						);
+
+						zip.addFile(
+							"jquery.tinymce.js",
+							"js/tinymce/classes/jquery.tinymce.js"
+						);
 					},
 
 					to: "tmp/tinymce_<%= pkg.version %>_component.zip"
