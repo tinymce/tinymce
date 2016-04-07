@@ -162,7 +162,7 @@ define("tinymce/EditorManager", [
 			var self = this, baseURL, documentBaseURL, suffix = "", preInit, src;
 
 			// Get base URL for the current document
-			documentBaseURL = document.location.href;
+			documentBaseURL = URI.getDocumentBaseUrl(document.location);
 
 			// Check if the URL is a document based format like: http://site/dir/file and file:///
 			// leave other formats like applewebdata://... intact

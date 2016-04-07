@@ -407,5 +407,26 @@ define("tinymce/util/URI", [
 		};
 	};
 
+	URI.getDocumentBaseUrl = function(loc) {
+		var baseUrl;
+
+		// Pass applewebdata:// and other non web protocols though
+		if (loc.protocol.indexOf('http') !== 0 && loc.protocol !== 'file:') {
+			baseUrl = loc.href;
+		} else {
+			baseUrl = loc.protocol + '//' + loc.host + loc.pathname;
+		}
+
+		if (/^[^:]+:\/\/\/?[^\/]+\//.test(baseUrl)) {
+			baseUrl = baseUrl.replace(/[\?#].*$/, '').replace(/[\/\\][^\/]+$/, '');
+
+			if (!/[\/\\]$/.test(baseUrl)) {
+				baseUrl += '/';
+			}
+		}
+
+		return baseUrl;
+	};
+
 	return URI;
 });

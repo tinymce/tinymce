@@ -102,3 +102,17 @@ test('isSameOrigin', function() {
 	ok(new tinymce.util.URI('https://www.site.com:8080').isSameOrigin(new tinymce.util.URI('https://www.site.com')) == false);
 	ok(new tinymce.util.URI('ftp://www.site.com:1021').isSameOrigin(new tinymce.util.URI('ftp://www.site.com')) == false);
 });
+
+test('getDocumentBaseUrl', function() {
+	var getDocumentBaseUrl = tinymce.util.URI.getDocumentBaseUrl;
+
+	equal(getDocumentBaseUrl({protocol: 'file:', host: '', pathname: '/dir/path1/path2'}), 'file:///dir/path1/');
+	equal(getDocumentBaseUrl({protocol: 'http:', host: 'localhost', pathname: '/dir/path1/path2'}), 'http://localhost/dir/path1/');
+	equal(getDocumentBaseUrl({protocol: 'https:', host: 'localhost', pathname: '/dir/path1/path2'}), 'https://localhost/dir/path1/');
+	equal(getDocumentBaseUrl({protocol: 'https:', host: 'localhost', pathname: '/dir/path1/path2/'}), 'https://localhost/dir/path1/path2/');
+	equal(getDocumentBaseUrl({protocol: 'http:', host: 'localhost:8080', pathname: '/dir/path1/path2'}), 'http://localhost:8080/dir/path1/');
+	equal(getDocumentBaseUrl({protocol: 'http:', host: 'localhost', pathname: '/dir/path1/path2/file.html'}), 'http://localhost/dir/path1/path2/');
+	equal(getDocumentBaseUrl({protocol: 'http:', host: 'localhost', pathname: '/'}), 'http://localhost/');
+	equal(getDocumentBaseUrl({protocol: 'applewebdata:', href: 'applewebdata://something//dir/path1#hash'}), 'applewebdata://something//dir/');
+	equal(getDocumentBaseUrl({protocol: 'applewebdata:', href: 'applewebdata://something//dir/path1'}), 'applewebdata://something//dir/');
+});
