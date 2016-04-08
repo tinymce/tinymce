@@ -505,7 +505,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			}
 
 			togglePositionClass(panel, relPos, function(pos1, pos2) {
-				return elementRect.w > 40 && pos1 === pos2;
+				return (!elementRect || elementRect.w > 40) && pos1 === pos2;
 			});
 
 			//drawRect(contentAreaRect, 'blue');
