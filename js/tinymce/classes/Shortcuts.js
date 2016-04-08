@@ -140,7 +140,7 @@ define("tinymce/Shortcuts", [
 			if ((hasModifier(e) || isFunctionKey(e)) && !e.isDefaultPrevented()) {
 				each(shortcuts, function(shortcut) {
 					if (matchShortcut(e, shortcut)) {
-						pendingPatterns = shortcut.subpatterns;
+						pendingPatterns = shortcut.subpatterns.slice(0);
 
 						if (e.type == "keydown") {
 							executeShortcutAction(shortcut);
