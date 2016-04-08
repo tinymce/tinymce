@@ -104,16 +104,21 @@ define("tinymce/ui/Slider", [
 			var self = this, minValue, maxValue, screenCordName,
 					stylePosName, sizeName, shortSizeName;
 
-			function handleKeyboard(minValue, maxValue, handleEl) {
+			function toFraction(min, max, val) {
+				return (val + min) / (max - min);
+			}
+
+			function fromFraction(min, max, val) {
+				return (val * (max - min)) - min;
+			}
+
+			function handleKeyboard(minValue, maxValue) {
 				function alter(delta) {
-					var startHandlePos, maxHandlePos, handlePos, value;
+					var value;
 
-					startHandlePos = parseInt(handleEl.style[stylePosName], 10);
-					maxHandlePos = (self.layoutRect()[shortSizeName] || 100) - DomUtils.getSize(handleEl)[sizeName];
-					handlePos = constrain(startHandlePos + (delta * (Math.ceil(maxHandlePos / 20))), 0, maxHandlePos);
-					handleEl.style[stylePosName] = handlePos + 'px';
-
-					value = minValue + (handlePos / maxHandlePos) * (maxValue - minValue);
+					value = self.value();
+					value = fromFraction(minValue, maxValue, toFraction(minValue, maxValue, value) + (delta * 0.05));
+					value = constrain(value, minValue, maxValue);
 
 					self.value(value);
 
