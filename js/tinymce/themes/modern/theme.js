@@ -549,6 +549,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				type: 'floatpanel',
 				role: 'dialog',
 				classes: 'tinymce tinymce-inline arrow',
+				ariaLabel: 'Inline toolbar',
 				layout: 'flex',
 				direction: 'column',
 				align: 'stretch',
