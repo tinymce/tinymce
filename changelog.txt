@@ -13,7 +13,7 @@ Version 4.3.9 (2016-04-12)
 	Fixed bug where offscreen selection of some cE=false elements would render onscreen. Patch contributed by Steven Bufton
 	Fixed bug where enter would clone styles out side the root on editors inside a span. Patch contributed by ChristophKaser.
 	Fixed bug where drag/drop of images into the editor didn't work correctly in FF.
-	Fixed so the first item in panels for the imagetools dialog gets proper keyboard foucus.
+	Fixed so the first item in panels for the imagetools dialog gets proper keyboard focus.
 	Changed the Meta+Shift+F shortcut to Ctrl+Shift+F since Czech, Slovak, Polish languages used the first one for input.
 Version 4.3.8 (2016-03-15)
 	Fixed bug where inserting HR at the end of a block element would produce an extra empty block.
