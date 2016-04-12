@@ -1,4 +1,4 @@
-Version 4.3.9 (2016-03-12)
+Version 4.3.9 (2016-04-12)
 	Added support for focusing the contextual toolbars using keyboard.
 	Added keyboard support for slider UI controls. You can no increase/decrease using arrow keys.
 	Added url pattern matching for Dailymotion to media plugin. Patch contributed by Bertrand Darbon.
