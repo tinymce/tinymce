@@ -303,7 +303,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			focus('menubar');
 		});
 
-		editor.shortcuts.add('Alt+F10,F10', '', function() {
+		editor.shortcuts.add('Alt+F10', '', function() {
 			focus('toolbar');
 		});
 

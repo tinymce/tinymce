@@ -1,3 +1,5 @@
+Version 4.3.10 (2016-04-12)
+	Fixed bug where the key "y" on WebKit couldn't be entered due to conflict with keycode for F10 on keypress.
 Version 4.3.9 (2016-04-12)
 	Added support for focusing the contextual toolbars using keyboard.
 	Added keyboard support for slider UI controls. You can no increase/decrease using arrow keys.
