@@ -10,7 +10,8 @@ test(
 
   function (Binder, Event, Events, Struct) {
     var events = Events.create({
-      myEvent: Event(['one', 'two'])
+      myEvent: Event([ ]),
+      secondEvent: Event([ ])
     });
 
     var binder = Binder.create();
@@ -27,18 +28,37 @@ test(
       });
     });
 
-    events.trigger.myEvent('a', 'b');
+    events.trigger.myEvent();
     assert.eq(true, called);
 
     called = false;
 
     binder.unbind(events.registry.myEvent);
 
-    events.trigger.myEvent('a', 'b');
+    events.trigger.myEvent();
     assert.eq(false, called);
 
     assert.throws(function () {
       binder.unbind(events.registry.myEvent);
     });
+
+
+
+    var count = 0;
+
+    binder.bind(events.registry.myEvent, function(event) {
+      count++;
+    });
+
+    binder.bind(events.registry.secondEvent, function(event) {
+      count++;
+    });
+
+    binder.unbindAll();
+
+    events.trigger.myEvent();
+    events.trigger.secondEvent();
+
+    assert.eq(0, count);
   }
 );
