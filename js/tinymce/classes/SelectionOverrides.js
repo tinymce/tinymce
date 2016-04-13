@@ -428,8 +428,29 @@ define("tinymce/SelectionOverrides", [
 			return null;
 		}
 
+		function mergeTextBlocks(direction, fromCaretPosition, toCaretPosition) {
+			var dom = editor.dom, fromBlock, toBlock, node, textBlocks;
+
+			textBlocks = editor.schema.getTextBlockElements();
+			fromBlock = dom.getParent(fromCaretPosition.getNode(), dom.isBlock);
+			toBlock = dom.getParent(toCaretPosition.getNode(), dom.isBlock);
+
+			// Verify that both blocks are text blocks
+			if (fromBlock === toBlock || !textBlocks[fromBlock.nodeName] || !textBlocks[toBlock.nodeName]) {
+				return null;
+			}
+
+			while ((node = fromBlock.firstChild)) {
+				toBlock.appendChild(node);
+			}
+
+			editor.dom.remove(fromBlock);
+
+			return toCaretPosition.toRange();
+		}
+
 		function backspaceDelete(direction, beforeFn, range) {
-			var node, caretPosition;
+			var node, caretPosition, peekCaretPosition;
 
 			if (!range.collapsed) {
 				node = getSelectedNode(range);
@@ -442,6 +463,15 @@ define("tinymce/SelectionOverrides", [
 
 			if (beforeFn(caretPosition)) {
 				return renderRangeCaret(deleteContentEditableNode(caretPosition.getNode(direction == -1)));
+			}
+
+			peekCaretPosition = direction == -1 ? caretWalker.prev(caretPosition) : caretWalker.next(caretPosition);
+			if (beforeFn(peekCaretPosition)) {
+				if (direction === -1) {
+					return mergeTextBlocks(direction, caretPosition, peekCaretPosition);
+				}
+
+				return mergeTextBlocks(direction, peekCaretPosition, caretPosition);
 			}
 		}
 

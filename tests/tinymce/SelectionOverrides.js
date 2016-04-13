@@ -1,8 +1,9 @@
 ModuleLoader.require([
 	"tinymce/caret/CaretPosition",
 	"tinymce/caret/CaretContainer",
-	"tinymce/util/VK"
-], function(CaretPosition, CaretContainer, VK) {
+	"tinymce/util/VK",
+	"tinymce/text/Zwsp"
+], function(CaretPosition, CaretContainer, VK, Zwsp) {
 	module("tinymce.SelectionOverrides", {
 		setupModule: function() {
 			QUnit.stop();
@@ -158,6 +159,26 @@ ModuleLoader.require([
 		Utils.type('\b');
 		equal(Utils.cleanHtml(editor.getBody().innerHTML), '<div contenteditable="false">1<div contenteditable="true"><br data-mce-bogus="1"></div>3</div>');
 		equal(editor.selection.getRng().startContainer, editor.$('div div')[0]);
+	});
+
+	test('backspace from block to after cE=false inline', function() {
+		editor.setContent('<p>1<span contenteditable="false">2</span></p><p>3</p>');
+		Utils.setSelection('p:nth-child(2)', 0);
+
+		Utils.type('\b');
+		equal(editor.getContent(), '<p>1<span contenteditable="false">2</span>3</p>');
+		ok(Zwsp.isZwsp(editor.selection.getRng().startContainer.data));
+		equal(editor.selection.getRng().startContainer.previousSibling.nodeName, 'SPAN');
+	});
+
+	test('delete from block to before cE=false inline', function() {
+		editor.setContent('<p>1</p><p><span contenteditable="false">2</span>3</p>');
+		Utils.setSelection('p:nth-child(1)', 1);
+
+		forwardDelete();
+		equal(editor.getContent(), '<p>1<span contenteditable="false">2</span>3</p>');
+		ok(Zwsp.isZwsp(editor.selection.getRng().startContainer.data));
+		equal(editor.selection.getRng().startContainer.nextSibling.nodeName, 'SPAN');
 	});
 
 	test('exit pre block (up)', exitPreTest(upArrow, 0, '<p>\u00a0</p><pre>abc</pre>'));
