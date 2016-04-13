@@ -431,6 +431,16 @@ define("tinymce/SelectionOverrides", [
 		function mergeTextBlocks(direction, fromCaretPosition, toCaretPosition) {
 			var dom = editor.dom, fromBlock, toBlock, node, textBlocks;
 
+			if (direction === -1) {
+				if (isAfterContentEditableFalse(toCaretPosition) && isBlock(toCaretPosition.getNode(true))) {
+					return deleteContentEditableNode(toCaretPosition.getNode(true));
+				}
+			} else {
+				if (isBeforeContentEditableFalse(fromCaretPosition) && isBlock(fromCaretPosition.getNode())) {
+					return deleteContentEditableNode(fromCaretPosition.getNode());
+				}
+			}
+
 			textBlocks = editor.schema.getTextBlockElements();
 			fromBlock = dom.getParent(fromCaretPosition.getNode(), dom.isBlock);
 			toBlock = dom.getParent(toCaretPosition.getNode(), dom.isBlock);
