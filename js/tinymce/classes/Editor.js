@@ -1124,10 +1124,10 @@ define("tinymce/Editor", [
 						try {
 							body.setActive();
 						} catch (ex) {
-							body.focus();
+							self._focus(body);
 						}
 					} else {
-						body.focus();
+						self._focus(body);
 					}
 
 					if (contentEditable) {
@@ -1148,6 +1148,18 @@ define("tinymce/Editor", [
 			self.editorManager.setActive(self);
 		},
 
+
+		/**
+		 * Set focus on an element while preserving its current scroll position
+		 *
+		 * @method _focus
+		 * @param {Element} elm to set focus to
+		 */
+		_focus: function (elm) {
+			var scrollPosition = elm.scrollTop;
+			elm.focus();
+			elm.scrollTop = scrollPosition;
+		},
 		/**
 		 * Executes a legacy callback. This method is useful to call old 2.x option callbacks.
 		 * There new event model is a better way to add callback so this method might be removed in the future.
