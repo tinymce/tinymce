@@ -33,6 +33,7 @@ define("tinymce/caret/CaretWalker", [
 	var isContentEditableFalse = NodeType.isContentEditableFalse,
 		isText = NodeType.isText,
 		isElement = NodeType.isElement,
+		isBr = NodeType.isBr,
 		isForwards = CaretUtils.isForwards,
 		isBackwards = CaretUtils.isBackwards,
 		isCaretCandidate = CaretCandidate.isCaretCandidate,
@@ -80,6 +81,10 @@ define("tinymce/caret/CaretWalker", [
 		}
 
 		if (isBackwards(direction)) {
+			if (isBr(node)) {
+				return CaretPosition.before(node);
+			}
+
 			return CaretPosition.after(node);
 		}
 

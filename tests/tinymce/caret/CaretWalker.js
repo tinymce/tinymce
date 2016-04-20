@@ -101,12 +101,14 @@ ModuleLoader.require([
 		assertCaretPosition(logicalCaret.prev(CaretPosition(findElm('p:last'), 0)), CaretPosition(findElm('p:first'), 1));
 	});
 
-	test('from br to br across elements', function() {
+	test('next br to br across elements', function() {
 		setupHtml('<p><br></p><p><br></p>');
 		assertCaretPosition(logicalCaret.next(CaretPosition(findElm('p:first'), 0)), CaretPosition(findElm('p:last'), 0));
-/*		assertCaretPosition(logicalCaret.next(CaretPosition(findElm('p:first'), 1)), CaretPosition(findElm('p:last'), 0));
-		assertCaretPosition(logicalCaret.next(CaretPosition(findElm('p:first'), 0)), CaretPosition(findElm('p:last'), 0));
-		assertCaretPosition(logicalCaret.prev(CaretPosition(findElm('p:last'), 0)), CaretPosition(findElm('p:first'), 1));*/
+	});
+
+	test('prev br to br across elements', function() {
+		setupHtml('<p><br></p><p><br></p>');
+		assertCaretPosition(logicalCaret.prev(CaretPosition(findElm('p:last'), 0)), CaretPosition(findElm('p:first'), 0));
 	});
 
 	test('from before/after br to text', function() {
