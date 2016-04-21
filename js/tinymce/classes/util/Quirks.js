@@ -244,7 +244,7 @@ define("tinymce/util/Quirks", [
 				// Protect against the possibility we are asked to find a caret node relative
 				// to a node that is no longer in the DOM tree. In this case attempting to
 				// select on any match leads to a scenario where selection is completely removed
-				// from the editor. This scenario is met in real world at a minimum on 
+				// from the editor. This scenario is met in real world at a minimum on
 				// WebKit browsers when selecting all and Cmd-X cutting to delete content.
 				if (!dom.isChildOf(node, editor.getBody())) {
 					return;
