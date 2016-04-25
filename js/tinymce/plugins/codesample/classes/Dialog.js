@@ -109,7 +109,8 @@ define("tinymce/codesampleplugin/Dialog", [
 						flex: 1,
 						style: 'direction: ltr; text-align: left',
 						classes: 'monospace',
-						value: getCurrentCode(editor)
+						value: getCurrentCode(editor),
+						autofocus: true
 					}
 				],
 				onSubmit: function(e) {

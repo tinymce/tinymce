@@ -21,27 +21,39 @@ define("tinymce/codesampleplugin/Plugin", [
 	"tinymce/codesampleplugin/Dialog",
 	"tinymce/codesampleplugin/Utils"
 ], function(Env, PluginManager, Prism, Dialog, Utils) {
-	var addedCss, trimArg = Utils.trimArg;
+	var addedInlineCss, trimArg = Utils.trimArg;
 
 	PluginManager.add('codesample', function(editor, pluginUrl) {
-		var $ = editor.$;
+		var $ = editor.$, addedCss;
 
 		if (!Env.ceFalse) {
 			return;
 		}
 
+		// Todo: use a proper css loader here
 		function loadCss() {
 			var linkElm;
 
-			if (!addedCss) {
-				addedCss = true;
-				linkElm = editor.dom.create('link', {
-					rel: 'stylesheet',
-					href: pluginUrl + '/css/prism.css'
-				});
-
-				editor.getDoc().getElementsByTagName('head')[0].appendChild(linkElm);
+			if (editor.inline && addedInlineCss) {
+				return;
 			}
+
+			if (!editor.inline && addedCss) {
+				return;
+			}
+
+			if (editor.inline) {
+				addedInlineCss = true;
+			} else {
+				addedCss = true;
+			}
+
+			linkElm = editor.dom.create('link', {
+				rel: 'stylesheet',
+				href: pluginUrl + '/css/prism.css'
+			});
+
+			editor.getDoc().getElementsByTagName('head')[0].appendChild(linkElm);
 		}
 
 		editor.on('PreProcess', function(e) {
