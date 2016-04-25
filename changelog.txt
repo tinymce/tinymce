@@ -1,3 +1,7 @@
+Version 4.3.11 (2016-04-25)
+	Fixed bug where you couldn't type the Euro character on Windows.
+	Fixed bug where backspace/delete from a cE=false element to a text block didn't work properly.
+	Fixed bug where the text color default grid would render incorrectly.
 Version 4.3.10 (2016-04-12)
 	Fixed bug where the key "y" on WebKit couldn't be entered due to conflict with keycode for F10 on keypress.
 Version 4.3.9 (2016-04-12)
