@@ -1,4 +1,5 @@
 Version 4.3.11 (2016-04-25)
+	Fixed bug where it wasn't possible to insert empty blocks though the API unless they where padded.
 	Fixed bug where you couldn't type the Euro character on Windows.
 	Fixed bug where backspace/delete from a cE=false element to a text block didn't work properly.
 	Fixed bug where the text color default grid would render incorrectly.
