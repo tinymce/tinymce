@@ -590,18 +590,18 @@ define("tinymce/dom/ControlSelection", [
 				}
 			}
 
-			var throttledUpdateResizeRect = Delay.throttle(updateResizeRect);
-
-			editor.on('nodechange ResizeEditor ResizeWindow drop', function(e) {
+			var throttledUpdateResizeRect = Delay.throttle(function(e) {
 				if (!editor.composing) {
-					throttledUpdateResizeRect(e);
+					updateResizeRect(e);
 				}
 			});
 
+			editor.on('nodechange ResizeEditor ResizeWindow drop', throttledUpdateResizeRect);
+
 			// Update resize rect while typing in a table
-			editor.on('keydown keyup compositionend', function(e) {
+			editor.on('keyup compositionend', function(e) {
 				// Don't update the resize rect while composing since it blows away the IME see: #2710
-				if (selectedElm && selectedElm.nodeName == "TABLE" && !editor.composing) {
+				if (selectedElm && selectedElm.nodeName == "TABLE") {
 					throttledUpdateResizeRect(e);
 				}
 			});
