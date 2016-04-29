@@ -1,13 +1,31 @@
 TinyMCE - The JavaScript Rich Text editor
 ==========================================
 
+[![Build Status](https://travis-ci.org/tinymce/tinymce.png?branch=master)](https://travis-ci.org/tinymce/tinymce)
+
 Building TinyMCE
 -----------------
-1. Install Node.js
-2. Open a console and go to the project directory
-3. Write "npm i -g grunt-cli" to install the grunt command line tool globally.
-4. Write "npm i" to install all package dependencies.
-4. Build TinyMCE by writing "grunt"
+1. Install [Node.js](https://nodejs.org/en/) on your system.
+2. Clone this repository on your system
+```
+$ git clone https://github.com/tinymce/tinymce.git
+```
+2. Open a console and go to the project directory.
+```
+$ cd tinymce/
+```
+3. Install `grunt` command line tool globally.
+```
+$ npm i -g grunt-cli
+```
+4. Install all package dependencies.
+```
+$ npm install
+```
+4. Now, build TinyMCE by using `grunt`.
+```
+$ grunt
+```
 
 Build tasks
 ------------
@@ -21,7 +39,7 @@ Minifies all JS and CSS files.
 Runs all qunit tests on PhantomJS.
 
 `grunt lint`
-Runs all source files though various JS linters.
+Runs all source files through various JS linters.
 
 `grunt sc-test`
 Runs all qunit tests on Saucelabs.
@@ -39,7 +57,7 @@ Minifies the core, adds the modern theme and adds the table and paste plugin int
 
 Contributing to the TinyMCE project
 ------------------------------------
-TinyMCE is an open source software project and we encourage developers to contribute patches and code for us to include in the main package of TinyMCE.
+TinyMCE is an open source software project and we encourage developers to contribute patches and code to be included in the main package of TinyMCE.
 
 __Basic Rules__
 
@@ -58,4 +76,3 @@ When you submit a pull request, you will get a notice about signing the __Contri
 You should have a __valid email address on your GitHub account__, and you will be sent a key to verify your identity and digitally sign the agreement.
 After you signed your pull request will automatically be ready for review & merge.
 
-[![Build Status](https://travis-ci.org/tinymce/tinymce.png?branch=master)](https://travis-ci.org/tinymce/tinymce)
