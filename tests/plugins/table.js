@@ -505,6 +505,32 @@
 		equal(cleanTableHtml(editor.getContent()), '<table><tbody><tr><td>1</td><td>2</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>');
 	});
 
+	test("mceTableInsertRowAfter command on merged cells", function() {
+		editor.setContent(
+			'<table>' +
+				'<tr><td>1</td><td>2</td><td>3</td></tr>' +
+				'<tr><td>4</td><td colspan="2" rowspan="2">5</td></tr>' +
+				'<tr><td>6</td></tr>' +
+			'</table>'
+		);
+
+		Utils.setSelection('tr:nth-child(2) td', 0);
+		editor.execCommand('mceTableInsertRowAfter');
+
+		equal(
+			cleanTableHtml(editor.getContent()),
+
+			'<table>' +
+				'<tbody>' +
+					'<tr><td>1</td><td>2</td><td>3</td></tr>' +
+					'<tr><td>4</td><td colspan="2" rowspan="3">5</td></tr>' +
+					'<tr><td>&nbsp;</td></tr>' +
+					'<tr><td>6</td></tr>' +
+				'</tbody>' +
+			'</table>'
+		);
+	});
+
 	test("mceTableInsertRowBefore command", function() {
 		editor.setContent('<table><tr><td>1</td><td>2</td></tr></table>');
 		Utils.setSelection('td', 0);
