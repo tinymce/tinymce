@@ -49,7 +49,7 @@ define("tinymce/dom/EventUtils", [
 	}
 
 	/**
-	 * Updates the event object with a new target based on shadow dom properties like path and deepPath.
+	 * Gets the event target based on shadow dom properties like path and deepPath.
 	 */
 	function getTargetFromShadowDom(event, defaultTarget) {
 		var path, target = defaultTarget;
