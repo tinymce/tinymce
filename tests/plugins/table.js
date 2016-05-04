@@ -505,6 +505,32 @@
 		equal(cleanTableHtml(editor.getContent()), '<table><tbody><tr><td>1</td><td>2</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>');
 	});
 
+	test("mceTableInsertRowAfter command on merged cells", function() {
+		editor.setContent(
+			'<table>' +
+				'<tr><td>1</td><td>2</td><td>3</td></tr>' +
+				'<tr><td>4</td><td colspan="2" rowspan="2">5</td></tr>' +
+				'<tr><td>6</td></tr>' +
+			'</table>'
+		);
+
+		Utils.setSelection('tr:nth-child(2) td', 0);
+		editor.execCommand('mceTableInsertRowAfter');
+
+		equal(
+			cleanTableHtml(editor.getContent()),
+
+			'<table>' +
+				'<tbody>' +
+					'<tr><td>1</td><td>2</td><td>3</td></tr>' +
+					'<tr><td>4</td><td colspan="2" rowspan="3">5</td></tr>' +
+					'<tr><td>&nbsp;</td></tr>' +
+					'<tr><td>6</td></tr>' +
+				'</tbody>' +
+			'</table>'
+		);
+	});
+
 	test("mceTableInsertRowBefore command", function() {
 		editor.setContent('<table><tr><td>1</td><td>2</td></tr></table>');
 		Utils.setSelection('td', 0);
@@ -1021,5 +1047,68 @@
 
 		equal(cells[cells.length - 1].getAttribute('data-counter'), "8");
 		equal(rows[rows.length - 1].getAttribute('data-counter'), "6");
+	});
+
+	function assertTableSelection(tableHtml, selectCells, cellContents) {
+		function selectRangeXY(table, startTd, endTd) {
+			editor.fire('mousedown', {target: startTd});
+			editor.fire('mouseover', {target: endTd});
+			editor.fire('mouseup', {target: endTd});
+		}
+
+		function getCells(table) {
+			return editor.$(table).find('td').toArray();
+		}
+
+		function getSelectedCells(table) {
+			return editor.$(table).find('td[data-mce-selected]').toArray();
+		}
+
+		editor.setContent(tableHtml);
+
+		var table = editor.$('table')[0];
+		var cells = getCells(table);
+
+		var startTd = tinymce.grep(cells, function(elm) {
+			return elm.innerHTML === selectCells[0];
+		})[0];
+
+		var endTd = tinymce.grep(cells, function(elm) {
+			return elm.innerHTML === selectCells[1];
+		})[0];
+
+		selectRangeXY(table, startTd, endTd);
+
+		var selection = getSelectedCells(table);
+		selection = tinymce.map(selection, function(elm) {
+			return elm.innerHTML;
+		});
+
+		deepEqual(selection, cellContents);
+	}
+
+	test("Table grid selection", function() {
+		assertTableSelection('<table><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>', ['1', '2'], ['1', '2']);
+		assertTableSelection('<table><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>', ['1', '3'], ['1', '3']);
+		assertTableSelection('<table><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>', ['1', '4'], ['1', '2', '3', '4']);
+		assertTableSelection('<table><tr><td colspan="2" rowspan="2">1</td><td>3</td></tr><tr><td>6</td></tr></table>', ['1', '6'], ['1', '3', '6']);
+		assertTableSelection(
+			'<table>' +
+				'<tr>' +
+					'<td>1</td>' +
+					'<td>2</td>' +
+					'<td>3</td>' +
+				'</tr>' +
+				'<tr>' +
+					'<td colspan="2" rowspan="2">4</td>' +
+					'<td>5</td>' +
+				'</tr>' +
+				'<tr>' +
+					'<td>6</td>' +
+				'</tr>' +
+			'</table>',
+			['2', '6'],
+			['2', '3', '4', '5', '6']
+		);
 	});
 })();
