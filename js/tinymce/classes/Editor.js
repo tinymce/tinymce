@@ -972,9 +972,8 @@ define("tinymce/Editor", [
 				DOM.setAttrib(body, "spellcheck", "false");
 			}
 
-			self.fire('PostRender');
-
 			self.quirks = new Quirks(self);
+			self.fire('PostRender');
 
 			if (settings.directionality) {
 				body.dir = settings.directionality;
