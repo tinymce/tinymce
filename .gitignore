@@ -25,6 +25,11 @@ js/tinymce/plugins/codesample/plugin.js
 imagemanager
 filemanager
 mcmanager
+powerpaste
+tinymcespellchecker
+a11ychecker
+codemirror
+mentions
 *.min.js
 *.dev.js
 *.full.js
