@@ -42,9 +42,11 @@ define("tinymce/imagetoolsplugin/Demo", [
 			selector: "textarea.tinymce",
 			theme: "modern",
 			plugins: [
-				"imagetools"
+				"imagetools paste"
 			],
 			add_unload_trigger: false,
+			//images_replace_blob_uris: false,
+			paste_data_images: true,
 			image_caption: true,
 			height: 600,
 			toolbar1: "undo redo | styleselect | alignleft aligncenter alignright alignjustify | link image | media | emoticons",

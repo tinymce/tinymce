@@ -1,8 +1,9 @@
 ModuleLoader.require([
 	"tinymce/file/ImageScanner",
+	"tinymce/file/UploadStatus",
 	"tinymce/file/BlobCache",
 	"tinymce/Env"
-], function(ImageScanner, BlobCache, Env) {
+], function(ImageScanner, UploadStatus, BlobCache, Env) {
 	if (!tinymce.Env.fileApi) {
 		return;
 	}
@@ -12,7 +13,7 @@ ModuleLoader.require([
 	var base64Src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAAAAAAALAAAAAABAAEAAAICTAEAOw==';
 
 	QUnit.asyncTest("findAll", function() {
-		var imageScanner = new ImageScanner(new BlobCache());
+		var imageScanner = new ImageScanner(new UploadStatus(), new BlobCache());
 
 		document.getElementById('view').innerHTML = (
 			'<img src="' + base64Src + '">' +
@@ -30,7 +31,7 @@ ModuleLoader.require([
 	});
 
 	QUnit.asyncTest("findAll (filtered)", function() {
-		var imageScanner = new ImageScanner(new BlobCache());
+		var imageScanner = new ImageScanner(new UploadStatus(), new BlobCache());
 
 		function predicate(img) {
 			return !img.hasAttribute('data-skip');

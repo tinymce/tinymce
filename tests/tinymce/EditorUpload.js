@@ -51,6 +51,7 @@ ModuleLoader.require([
 		teardown: function() {
 			editor.editorUpload.destroy();
 			editor.settings.automatic_uploads = false;
+			delete editor.settings.images_replace_blob_uris;
 			delete editor.settings.images_dataimg_filter;
 		}
 	});
@@ -72,6 +73,45 @@ ModuleLoader.require([
 		}).then(QUnit.start);
 	});
 
+	asyncTest('replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri)', function() {
+		editor.setContent(imageHtml(testBlobDataUri));
+
+		editor.settings.images_upload_handler = function(data, success) {
+			success('file.png');
+		};
+
+		editor._scanForImages().then(function(result) {
+			var blobUri = result[0].blobInfo.blobUri();
+
+			editor.uploadImages(function() {
+				editor.setContent(imageHtml(blobUri));
+				QUnit.strictEqual(editor.$('img')[0].src.indexOf('blob:') === 0, false);
+				QUnit.strictEqual(editor.getContent(), '<p><img src="file.png" /></p>');
+				QUnit.start();
+			});
+		});
+	});
+
+	asyncTest('don\'t replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri) since blob uris are retained', function() {
+		editor.settings.images_replace_blob_uris = false;
+		editor.setContent(imageHtml(testBlobDataUri));
+
+		editor.settings.images_upload_handler = function(data, success) {
+			success('file.png');
+		};
+
+		editor._scanForImages().then(function(result) {
+			var blobUri = result[0].blobInfo.blobUri();
+
+			editor.uploadImages(function() {
+				editor.setContent(imageHtml(blobUri));
+				QUnit.strictEqual(editor.$('img')[0].src.indexOf('blob:') === 0, true);
+				QUnit.strictEqual(editor.getContent(), '<p><img src="file.png" /></p>');
+				QUnit.start();
+			});
+		});
+	});
+
 	asyncTest('uploadImages', function() {
 		var uploadedBlobInfo;
 
@@ -85,6 +125,35 @@ ModuleLoader.require([
 
 		editor.setContent(imageHtml(testBlobDataUri));
 
+		editor.settings.images_upload_handler = function(data, success) {
+			uploadedBlobInfo = data;
+			success(data.id() + '.png');
+		};
+
+		editor.uploadImages(assertResult).then(assertResult).then(function() {
+			uploadedBlobInfo = null;
+
+			return editor.uploadImages(function() {}).then(function(result) {
+				QUnit.strictEqual(result.length, 0);
+				QUnit.strictEqual(uploadedBlobInfo, null);
+			});
+		}).then(QUnit.start);
+	});
+
+	asyncTest('uploadImages retain blob urls after upload', function() {
+		var uploadedBlobInfo;
+
+		function assertResult(result) {
+			QUnit.strictEqual(result[0].status, true);
+			QUnit.ok(result[0].element.src.indexOf('blob:') === 0, 'Not a blob url');
+			QUnit.equal('<p><img src="' + uploadedBlobInfo.filename() + '" /></p>', editor.getContent());
+
+			return result;
+		}
+
+		editor.setContent(imageHtml(testBlobDataUri));
+
+		editor.settings.images_replace_blob_uris = false;
 		editor.settings.images_upload_handler = function(data, success) {
 			uploadedBlobInfo = data;
 			success(data.id() + '.png');

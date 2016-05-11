@@ -32,9 +32,7 @@ define("tinymce/file/Uploader", [
 	"tinymce/util/Tools",
 	"tinymce/util/Fun"
 ], function(Promise, Tools, Fun) {
-	return function(settings) {
-		var cachedPromises = {};
-
+	return function(uploadStatus, settings) {
 		function fileName(blobInfo) {
 			var ext, extensions;
 
@@ -118,62 +116,50 @@ define("tinymce/file/Uploader", [
 			});
 		}
 
-		function interpretResult(promise) {
-			return promise.then(function(result) {
-				return result;
-			})['catch'](function(error) {
-				return error;
-			});
-		}
+		function blobInfoToPromise(blobInfo, openNotification) {
+			return new Promise(function(resolve) {
+				var handler = settings.handler;
 
-		function registerPromise(handler, id, blobInfo) {
-			var response = handler(blobInfo);
-			var promise = interpretResult(response);
-			delete cachedPromises[id];
-			cachedPromises[id] = promise;
-			return promise;
-		}
+				try {
+					handler(blobInfoToData(blobInfo), function(url) {
+						uploadStatus.markUploaded(blobInfo.blobUri(), url);
 
-		function collectUploads(blobInfos, uploadBlobInfo) {
-			return Tools.map(blobInfos, function(blobInfo) {
-				var id = blobInfo.id();
-				return cachedPromises[id] ? cachedPromises[id] : registerPromise(uploadBlobInfo, id, blobInfo);
-			});
-		}
-
-		function uploadBlobs(blobInfos, openNotification) {
-			function uploadBlobInfo(blobInfo) {
-				return new Promise(function(resolve) {
-					var handler = settings.handler;
-
-					try {
-						handler(blobInfoToData(blobInfo), function(url) {
-							resolve({
-								url: url,
-								blobInfo: blobInfo,
-								status: true
-							});
-						}, function(failure) {
-							resolve({
-								url: '',
-								blobInfo: blobInfo,
-								status: false,
-								error: failure
-							});
-						}, openNotification);
-					} catch (ex) {
+						resolve({
+							url: url,
+							blobInfo: blobInfo,
+							status: true
+						});
+					}, function(failure) {
 						resolve({
 							url: '',
 							blobInfo: blobInfo,
 							status: false,
-							error: ex.message
+							error: failure
 						});
-					}
-				});
-			}
+					}, openNotification);
+				} catch (ex) {
+					resolve({
+						url: '',
+						blobInfo: blobInfo,
+						status: false,
+						error: ex.message
+					});
+				}
+			});
+		}
 
-			var promises = collectUploads(blobInfos, uploadBlobInfo);
-			return Promise.all(promises);
+		function uploadBlobs(blobInfos, openNotification) {
+			blobInfos = Tools.grep(blobInfos, function(blobInfo) {
+				return !uploadStatus.hasBlobUri(blobInfo.blobUri());
+			});
+
+			Tools.each(blobInfos, function(blobInfo) {
+				return uploadStatus.markPending(blobInfo.blobUri());
+			});
+
+			return Promise.all(Tools.map(blobInfos, function(blobInfo) {
+				return blobInfoToPromise(blobInfo, openNotification);
+			}));
 		}
 
 		function upload(blobInfos, openNotification) {
