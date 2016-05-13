@@ -130,11 +130,7 @@ define("tinymce/EditorUpload", [
 		}
 
 		function isValidDataUriImage(imgElm) {
-			if (settings.images_dataimg_filter) {
-				return settings.images_dataimg_filter(imgElm);
-			}
-
-			return true;
+			return settings.images_dataimg_filter ? settings.images_dataimg_filter(imgElm) : true;
 		}
 
 		function scanForImages() {
