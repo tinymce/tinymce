@@ -50,18 +50,15 @@ define("tinymce/imagetoolsplugin/Demo", [
 			image_caption: true,
 			height: 600,
 			toolbar1: "undo redo | styleselect | alignleft aligncenter alignright alignjustify | link image | media | emoticons",
-			images_upload_handler: function(data, success, failure, openNotification) {
-				var notification;
-
+			images_upload_handler: function(data, success, failure, progress) {
 				console.log('blob upload [started]', data.id());
 
-				notification = openNotification();
-				notification.progressBar.value(100);
+				progress(0);
 
 				setTimeout(function() {
 					console.log('blob upload [ended]', data.id());
 					success(data.id() + '.png');
-					notification.close();
+					progress(100);
 				}, 1000);
 			}
 		});
