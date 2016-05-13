@@ -60,6 +60,19 @@ ModuleLoader.require([
 		return tinymce.DOM.createHTML('img', {src: uri});
 	}
 
+	function assertResult(uploadedBlobInfo, result) {
+		QUnit.strictEqual(result.length, 1);
+		QUnit.strictEqual(result[0].status, true);
+		QUnit.ok(result[0].element.src.indexOf(uploadedBlobInfo.id() + '.png') !== -1);
+		QUnit.equal('<p><img src="' + uploadedBlobInfo.filename() + '" /></p>', editor.getContent());
+
+		return result;
+	}
+
+	function hasBlobAsSource(elm) {
+		return elm.src.indexOf('blob:') === 0;
+	}
+
 	asyncTest('_scanForImages', function() {
 		editor.setContent(imageHtml(testBlobDataUri));
 
@@ -85,7 +98,7 @@ ModuleLoader.require([
 
 			editor.uploadImages(function() {
 				editor.setContent(imageHtml(blobUri));
-				QUnit.strictEqual(editor.$('img')[0].src.indexOf('blob:') === 0, false);
+				QUnit.strictEqual(hasBlobAsSource(editor.$('img')[0]), false);
 				QUnit.strictEqual(editor.getContent(), '<p><img src="file.png" /></p>');
 				QUnit.start();
 			});
@@ -105,23 +118,15 @@ ModuleLoader.require([
 
 			editor.uploadImages(function() {
 				editor.setContent(imageHtml(blobUri));
-				QUnit.strictEqual(editor.$('img')[0].src.indexOf('blob:') === 0, true);
+				QUnit.strictEqual(hasBlobAsSource(editor.$('img')[0]), true);
 				QUnit.strictEqual(editor.getContent(), '<p><img src="file.png" /></p>');
 				QUnit.start();
 			});
 		});
 	});
 
-	asyncTest('uploadImages', function() {
+	asyncTest('uploadImages (callback)', function() {
 		var uploadedBlobInfo;
-
-		function assertResult(result) {
-			QUnit.strictEqual(result[0].status, true);
-			QUnit.ok(result[0].element.src.indexOf(uploadedBlobInfo.id() + '.png') !== -1);
-			QUnit.equal('<p><img src="' + uploadedBlobInfo.filename() + '" /></p>', editor.getContent());
-
-			return result;
-		}
 
 		editor.setContent(imageHtml(testBlobDataUri));
 
@@ -130,14 +135,37 @@ ModuleLoader.require([
 			success(data.id() + '.png');
 		};
 
-		editor.uploadImages(assertResult).then(assertResult).then(function() {
+		editor.uploadImages(function(result) {
+			assertResult(uploadedBlobInfo, result);
+
+			editor.uploadImages(function(result) {
+				QUnit.strictEqual(result.length, 0);
+				QUnit.start();
+			});
+		});
+	});
+
+	asyncTest('uploadImages (promise)', function() {
+		var uploadedBlobInfo;
+
+		editor.setContent(imageHtml(testBlobDataUri));
+
+		editor.settings.images_upload_handler = function(data, success) {
+			uploadedBlobInfo = data;
+			success(data.id() + '.png');
+		};
+
+		editor.uploadImages().then(function(result) {
+			assertResult(uploadedBlobInfo, result);
+		}).then(function() {
 			uploadedBlobInfo = null;
 
-			return editor.uploadImages(function() {}).then(function(result) {
+			return editor.uploadImages().then(function(result) {
 				QUnit.strictEqual(result.length, 0);
 				QUnit.strictEqual(uploadedBlobInfo, null);
+				QUnit.start();
 			});
-		}).then(QUnit.start);
+		});
 	});
 
 	asyncTest('uploadImages retain blob urls after upload', function() {
@@ -145,7 +173,7 @@ ModuleLoader.require([
 
 		function assertResult(result) {
 			QUnit.strictEqual(result[0].status, true);
-			QUnit.ok(result[0].element.src.indexOf('blob:') === 0, 'Not a blob url');
+			QUnit.ok(hasBlobAsSource(result[0].element), 'Not a blob url');
 			QUnit.equal('<p><img src="' + uploadedBlobInfo.filename() + '" /></p>', editor.getContent());
 
 			return result;

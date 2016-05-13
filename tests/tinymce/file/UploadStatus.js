@@ -9,9 +9,13 @@ ModuleLoader.require([
 		strictEqual(status.hasBlobUri("nonexisting_uri"), false);
 		status.markPending("existing_uri");
 		strictEqual(status.hasBlobUri("existing_uri"), true);
+
 		status.markUploaded("existing_uri", "uri");
+		strictEqual(status.hasBlobUri("existing_uri"), true);
 		strictEqual(status.getResultUri("existing_uri"), "uri");
+
 		status.markUploaded("existing_uri2", "uri2");
+		strictEqual(status.hasBlobUri("existing_uri2"), true);
 		strictEqual(status.getResultUri("existing_uri2"), "uri2");
 	});
 });
