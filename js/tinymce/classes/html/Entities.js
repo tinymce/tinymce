@@ -198,7 +198,9 @@ define("tinymce/html/Entities", [
 
 			function encodeNamedAndNumeric(text, attr) {
 				return text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function(chr) {
-					return baseEntities[chr] || entities[chr] || '&#' + chr.charCodeAt(0) + ';' || chr;
+					return baseEntities[chr] || entities[chr] || (chr.length > 1
+				        ? '&#' + (((chr.charCodeAt(0) - 0xD800) * 0x400) + (chr.charCodeAt(1) - 0xDC00) + 0x10000) + ';'
+				        : '&#' + chr.charCodeAt(0) + ';');
 				});
 			}
 
