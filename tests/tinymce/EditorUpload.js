@@ -51,12 +51,26 @@ ModuleLoader.require([
 		teardown: function() {
 			editor.editorUpload.destroy();
 			editor.settings.automatic_uploads = false;
+			delete editor.settings.images_replace_blob_uris;
 			delete editor.settings.images_dataimg_filter;
 		}
 	});
 
 	function imageHtml(uri) {
 		return tinymce.DOM.createHTML('img', {src: uri});
+	}
+
+	function assertResult(uploadedBlobInfo, result) {
+		QUnit.strictEqual(result.length, 1);
+		QUnit.strictEqual(result[0].status, true);
+		QUnit.ok(result[0].element.src.indexOf(uploadedBlobInfo.id() + '.png') !== -1);
+		QUnit.equal('<p><img src="' + uploadedBlobInfo.filename() + '" /></p>', editor.getContent());
+
+		return result;
+	}
+
+	function hasBlobAsSource(elm) {
+		return elm.src.indexOf('blob:') === 0;
 	}
 
 	asyncTest('_scanForImages', function() {
@@ -72,12 +86,94 @@ ModuleLoader.require([
 		}).then(QUnit.start);
 	});
 
-	asyncTest('uploadImages', function() {
+	asyncTest('replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri)', function() {
+		editor.setContent(imageHtml(testBlobDataUri));
+
+		editor.settings.images_upload_handler = function(data, success) {
+			success('file.png');
+		};
+
+		editor._scanForImages().then(function(result) {
+			var blobUri = result[0].blobInfo.blobUri();
+
+			editor.uploadImages(function() {
+				editor.setContent(imageHtml(blobUri));
+				QUnit.strictEqual(hasBlobAsSource(editor.$('img')[0]), false);
+				QUnit.strictEqual(editor.getContent(), '<p><img src="file.png" /></p>');
+				QUnit.start();
+			});
+		});
+	});
+
+	asyncTest('don\'t replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri) since blob uris are retained', function() {
+		editor.settings.images_replace_blob_uris = false;
+		editor.setContent(imageHtml(testBlobDataUri));
+
+		editor.settings.images_upload_handler = function(data, success) {
+			success('file.png');
+		};
+
+		editor._scanForImages().then(function(result) {
+			var blobUri = result[0].blobInfo.blobUri();
+
+			editor.uploadImages(function() {
+				editor.setContent(imageHtml(blobUri));
+				QUnit.strictEqual(hasBlobAsSource(editor.$('img')[0]), true);
+				QUnit.strictEqual(editor.getContent(), '<p><img src="file.png" /></p>');
+				QUnit.start();
+			});
+		});
+	});
+
+	asyncTest('uploadImages (callback)', function() {
+		var uploadedBlobInfo;
+
+		editor.setContent(imageHtml(testBlobDataUri));
+
+		editor.settings.images_upload_handler = function(data, success) {
+			uploadedBlobInfo = data;
+			success(data.id() + '.png');
+		};
+
+		editor.uploadImages(function(result) {
+			assertResult(uploadedBlobInfo, result);
+
+			editor.uploadImages(function(result) {
+				QUnit.strictEqual(result.length, 0);
+				QUnit.start();
+			});
+		});
+	});
+
+	asyncTest('uploadImages (promise)', function() {
+		var uploadedBlobInfo;
+
+		editor.setContent(imageHtml(testBlobDataUri));
+
+		editor.settings.images_upload_handler = function(data, success) {
+			uploadedBlobInfo = data;
+			success(data.id() + '.png');
+		};
+
+		editor.uploadImages().then(function(result) {
+			assertResult(uploadedBlobInfo, result);
+		}).then(function() {
+			uploadedBlobInfo = null;
+
+			return editor.uploadImages().then(function(result) {
+				QUnit.strictEqual(result.length, 0);
+				QUnit.strictEqual(uploadedBlobInfo, null);
+				QUnit.start();
+			});
+		});
+	});
+
+	asyncTest('uploadImages retain blob urls after upload', function() {
 		var uploadedBlobInfo;
 
 		function assertResult(result) {
 			QUnit.strictEqual(result[0].status, true);
-			QUnit.ok(result[0].element.src.indexOf(uploadedBlobInfo.id() + '.png') !== -1);
+			QUnit.ok(hasBlobAsSource(result[0].element), 'Not a blob url');
 			QUnit.equal('<p><img src="' + uploadedBlobInfo.filename() + '" /></p>', editor.getContent());
 
 			return result;
@@ -85,6 +181,7 @@ ModuleLoader.require([
 
 		editor.setContent(imageHtml(testBlobDataUri));
 
+		editor.settings.images_replace_blob_uris = false;
 		editor.settings.images_upload_handler = function(data, success) {
 			uploadedBlobInfo = data;
 			success(data.id() + '.png');
