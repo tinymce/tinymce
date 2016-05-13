@@ -65,29 +65,23 @@ define("tinymce/file/Uploader", [
 			};
 		}
 
-		function defaultHandler(blobInfo, success, failure, openNotification) {
-			var xhr, formData, notification;
+		function defaultHandler(blobInfo, success, failure, progress) {
+			var xhr, formData;
 
 			xhr = new XMLHttpRequest();
 			xhr.open('POST', settings.url);
 			xhr.withCredentials = settings.credentials;
 
-			notification = openNotification();
-
 			xhr.upload.onprogress = function(e) {
-				var percentLoaded = Math.round(e.loaded / e.total * 100);
-				notification.progressBar.value(percentLoaded);
+				progress(e.loaded / e.total * 100);
 			};
 
 			xhr.onerror = function() {
-				notification.close();
 				failure("Image upload failed due to a XHR Transport error. Code: " + xhr.status);
 			};
 
 			xhr.onload = function() {
 				var json;
-
-				notification.close();
 
 				if (xhr.status != 200) {
 					failure("HTTP Error: " + xhr.status);
@@ -116,36 +110,70 @@ define("tinymce/file/Uploader", [
 			});
 		}
 
-		function blobInfoToPromise(blobInfo, openNotification) {
+		function handlerSuccess(blobInfo, url) {
+			return {
+				url: url,
+				blobInfo: blobInfo,
+				status: true
+			};
+		}
+
+		function handlerFailure(blobInfo, error) {
+			return {
+				url: '',
+				blobInfo: blobInfo,
+				status: false,
+				error: error
+			};
+		}
+
+		function uploadBlobInfo(blobInfo, handler, openNotification) {
 			return new Promise(function(resolve) {
-				var handler = settings.handler;
+				var notification, progress;
+
+				var noop = function() {
+				};
 
 				try {
-					handler(blobInfoToData(blobInfo), function(url) {
-						uploadStatus.markUploaded(blobInfo.blobUri(), url);
+					var closeNotification = function() {
+						if (notification) {
+							notification.close();
+							progress = noop; // Once it's closed it's closed
+						}
+					};
 
-						resolve({
-							url: url,
-							blobInfo: blobInfo,
-							status: true
-						});
-					}, function(failure) {
-						resolve({
-							url: '',
-							blobInfo: blobInfo,
-							status: false,
-							error: failure
-						});
-					}, openNotification);
+					var success = function(url) {
+						closeNotification();
+						uploadStatus.markUploaded(blobInfo.blobUri(), url);
+						resolve(handlerSuccess(blobInfo, url));
+					};
+
+					var failure = function() {
+						closeNotification();
+						resolve(handlerFailure(blobInfo, failure));
+					};
+
+					progress = function(percent) {
+						if (percent < 0 || percent > 100) {
+							return;
+						}
+
+						if (!notification) {
+							notification = openNotification();
+						}
+
+						notification.progressBar.value(percent);
+					};
+
+					handler(blobInfoToData(blobInfo), success, failure, progress);
 				} catch (ex) {
-					resolve({
-						url: '',
-						blobInfo: blobInfo,
-						status: false,
-						error: ex.message
-					});
+					resolve(handlerFailure(blobInfo, ex.message));
 				}
 			});
+		}
+
+		function isDefaultHandler(handler) {
+			return handler === defaultHandler;
 		}
 
 		function uploadBlobs(blobInfos, openNotification) {
@@ -158,12 +186,12 @@ define("tinymce/file/Uploader", [
 			});
 
 			return Promise.all(Tools.map(blobInfos, function(blobInfo) {
-				return blobInfoToPromise(blobInfo, openNotification);
+				return uploadBlobInfo(blobInfo, settings.handler, openNotification);
 			}));
 		}
 
 		function upload(blobInfos, openNotification) {
-			return (!settings.url && settings.handler === defaultHandler) ? noUpload() : uploadBlobs(blobInfos, openNotification);
+			return (!settings.url && isDefaultHandler(settings.handler)) ? noUpload() : uploadBlobs(blobInfos, openNotification);
 		}
 
 		settings = Tools.extend({
