@@ -28,10 +28,11 @@ tinymce.PluginManager.add('anchor', function(editor) {
 				if (isAnchor) {
 					selectedNode.id = id;
 				} else {
+					var attr = editor.settings.use_anchor_name_attr ? 'name' : 'id';
+					var opt = {};
+					opt[attr] = e.data.name;
 					editor.selection.collapse(true);
-					editor.execCommand('mceInsertContent', false, editor.dom.createHTML('a', {
-						id: id
-					}));
+					editor.execCommand('mceInsertContent', false, editor.dom.createHTML('a', opt));
 				}
 			}
 		});
