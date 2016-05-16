@@ -134,10 +134,6 @@ define("tinymce/file/Uploader", [
 				resolve(result);
 			});
 
-			removePending(blobUri);
-		}
-
-		function removePending(blobUri) {
 			delete pendingPromises[blobUri];
 		}
 
@@ -168,7 +164,7 @@ define("tinymce/file/Uploader", [
 					var failure = function() {
 						closeNotification();
 						uploadStatus.removeFailed(blobInfo.blobUri());
-						removePending(blobInfo.blobUri());
+						resolvePending(blobInfo.blobUri(), handlerFailure(blobInfo, failure));
 						resolve(handlerFailure(blobInfo, failure));
 					};
 

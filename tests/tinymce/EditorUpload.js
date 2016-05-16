@@ -200,7 +200,7 @@ ModuleLoader.require([
 	asyncTest('uploadConcurrentImages', function() {
 		var uploadCount = 0, callCount = 0;
 
-		function done() {
+		function done(result) {
 			callCount++;
 
 			if (callCount == 2) {
@@ -208,7 +208,9 @@ ModuleLoader.require([
 				equal(uploadCount, 1, 'Should only be one upload.');
 			}
 
-			equal(editor.getContent(), '<p><img src="blobid6.png" /></p>');
+			equal(editor.getContent(), '<p><img src="myimage.png" /></p>');
+			equal(result[0].element, editor.$('img')[0]);
+			equal(result[0].status, true);
 		}
 
 		editor.setContent(imageHtml(testBlobDataUri));
@@ -217,7 +219,36 @@ ModuleLoader.require([
 			uploadCount++;
 
 			setTimeout(function() {
-				success(data.id() + '.png');
+				success('myimage.png');
+			}, 0);
+		};
+
+		editor.uploadImages(done);
+		editor.uploadImages(done);
+	});
+
+	asyncTest('uploadConcurrentImages (fail)', function() {
+		var uploadCount = 0, callCount = 0;
+
+		function done(result) {
+			callCount++;
+
+			if (callCount == 2) {
+				QUnit.start();
+				equal(uploadCount, 1, 'Should only be one upload.');
+			}
+
+			equal(result[0].element, editor.$('img')[0]);
+			equal(result[0].status, false);
+		}
+
+		editor.setContent(imageHtml(testBlobDataUri));
+
+		editor.settings.images_upload_handler = function(data, success, failure) {
+			uploadCount++;
+
+			setTimeout(function() {
+				failure('Error');
 			}, 0);
 		};
 
