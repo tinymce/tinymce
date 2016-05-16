@@ -33,6 +33,8 @@ define("tinymce/file/Uploader", [
 	"tinymce/util/Fun"
 ], function(Promise, Tools, Fun) {
 	return function(uploadStatus, settings) {
+		var pendingPromises = {};
+
 		function fileName(blobInfo) {
 			var ext, extensions;
 
@@ -127,7 +129,21 @@ define("tinymce/file/Uploader", [
 			};
 		}
 
+		function resolvePending(blobUri, result) {
+			Tools.each(pendingPromises[blobUri], function(resolve) {
+				resolve(result);
+			});
+
+			removePending(blobUri);
+		}
+
+		function removePending(blobUri) {
+			delete pendingPromises[blobUri];
+		}
+
 		function uploadBlobInfo(blobInfo, handler, openNotification) {
+			uploadStatus.markPending(blobInfo.blobUri());
+
 			return new Promise(function(resolve) {
 				var notification, progress;
 
@@ -145,11 +161,14 @@ define("tinymce/file/Uploader", [
 					var success = function(url) {
 						closeNotification();
 						uploadStatus.markUploaded(blobInfo.blobUri(), url);
+						resolvePending(blobInfo.blobUri(), handlerSuccess(blobInfo, url));
 						resolve(handlerSuccess(blobInfo, url));
 					};
 
 					var failure = function() {
 						closeNotification();
+						uploadStatus.removeFailed(blobInfo.blobUri());
+						removePending(blobInfo.blobUri());
 						resolve(handlerFailure(blobInfo, failure));
 					};
 
@@ -176,17 +195,23 @@ define("tinymce/file/Uploader", [
 			return handler === defaultHandler;
 		}
 
+		function pendingUploadBlobInfo(blobInfo) {
+			var blobUri = blobInfo.blobUri();
+
+			return new Promise(function(resolve) {
+				pendingPromises[blobUri] = pendingPromises[blobUri] || [];
+				pendingPromises[blobUri].push(resolve);
+			});
+		}
+
 		function uploadBlobs(blobInfos, openNotification) {
 			blobInfos = Tools.grep(blobInfos, function(blobInfo) {
-				return !uploadStatus.hasBlobUri(blobInfo.blobUri());
-			});
-
-			Tools.each(blobInfos, function(blobInfo) {
-				return uploadStatus.markPending(blobInfo.blobUri());
+				return !uploadStatus.isUploaded(blobInfo.blobUri());
 			});
 
 			return Promise.all(Tools.map(blobInfos, function(blobInfo) {
-				return uploadBlobInfo(blobInfo, settings.handler, openNotification);
+				return uploadStatus.isPending(blobInfo.blobUri()) ?
+					pendingUploadBlobInfo(blobInfo) : uploadBlobInfo(blobInfo, settings.handler, openNotification);
 			}));
 		}
 

@@ -37,12 +37,24 @@ define("tinymce/file/UploadStatus", [
 			return result ? result.resultUri : null;
 		}
 
+		function isPending(blobUri) {
+			return hasBlobUri(blobUri) ? blobUriStatuses[blobUri].status === PENDING : false;
+		}
+
+		function isUploaded(blobUri) {
+			return hasBlobUri(blobUri) ? blobUriStatuses[blobUri].status === UPLOADED : false;
+		}
+
 		function markPending(blobUri) {
 			blobUriStatuses[blobUri] = createStatus(PENDING, null);
 		}
 
 		function markUploaded(blobUri, resultUri) {
 			blobUriStatuses[blobUri] = createStatus(UPLOADED, resultUri);
+		}
+
+		function removeFailed(blobUri) {
+			delete blobUriStatuses[blobUri];
 		}
 
 		function destroy() {
@@ -52,8 +64,11 @@ define("tinymce/file/UploadStatus", [
 		return {
 			hasBlobUri: hasBlobUri,
 			getResultUri: getResultUri,
+			isPending: isPending,
+			isUploaded: isUploaded,
 			markPending: markPending,
 			markUploaded: markUploaded,
+			removeFailed: removeFailed,
 			destroy: destroy
 		};
 	};

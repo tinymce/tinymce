@@ -207,13 +207,18 @@ ModuleLoader.require([
 				QUnit.start();
 				equal(uploadCount, 1, 'Should only be one upload.');
 			}
+
+			equal(editor.getContent(), '<p><img src="blobid6.png" /></p>');
 		}
 
 		editor.setContent(imageHtml(testBlobDataUri));
 
 		editor.settings.images_upload_handler = function(data, success) {
 			uploadCount++;
-			success(data.id() + '.png');
+
+			setTimeout(function() {
+				success(data.id() + '.png');
+			}, 0);
 		};
 
 		editor.uploadImages(done);
