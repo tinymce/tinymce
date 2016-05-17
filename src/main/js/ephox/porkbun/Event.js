@@ -21,10 +21,11 @@ define(
       };
 
       var unbind = function(handler) {
-        var index = Arr.indexOf(handlers, handler);
-        if (index !== -1) {
-          handlers.splice(index, 1);
-        }
+        // This is quite a bit slower than handlers.splice() but we hate mutation.
+        // Unbind isn't used very often so it should be ok.
+        handlers = Arr.filter(handlers, function (h) {
+          return h !== handler;
+        });
       };
 
       var trigger = function (/* values */) {
