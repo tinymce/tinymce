@@ -21,8 +21,9 @@ define("tinymce/InsertContent", [
 	"tinymce/caret/CaretWalker",
 	"tinymce/caret/CaretPosition",
 	"tinymce/dom/ElementUtils",
-	"tinymce/dom/NodeType"
-], function(Env, Tools, Serializer, CaretWalker, CaretPosition, ElementUtils, NodeType) {
+	"tinymce/dom/NodeType",
+	"tinymce/InsertList"
+], function(Env, Tools, Serializer, CaretWalker, CaretPosition, ElementUtils, NodeType, InsertList) {
 	var isTableCell = NodeType.matchNodeNames('td th');
 
 	var insertAtCaret = function(editor, value) {
@@ -274,6 +275,14 @@ define("tinymce/InsertContent", [
 		// Parse the fragment within the context of the parent node
 		var parserArgs = {context: parentNode.nodeName.toLowerCase(), data: data};
 		fragment = parser.parse(value, parserArgs);
+
+		// Custom handling of lists
+		if (InsertList.isListFragment(fragment) && InsertList.isParentBlockLi(dom, parentNode)) {
+			rng = InsertList.insertAtCaret(serializer, dom, editor.selection.getRng(), fragment);
+			editor.selection.setRng(rng);
+			editor.fire('SetContent', args);
+			return;
+		}
 
 		markFragmentElements(fragment);
 		markInlineFormatElements(fragment);
