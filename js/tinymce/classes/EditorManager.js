@@ -84,7 +84,7 @@ define("tinymce/EditorManager", [
 
 	function purgeDestroyedEditor(editor) {
 		// User has manually destroyed the editor lets clean up the mess
-		if (editor && !(editor.getContainer() || editor.getBody()).parentNode) {
+		if (editor && editor.initialized && !(editor.getContainer() || editor.getBody()).parentNode) {
 			removeEditorFromList(editor);
 			editor.unbindAllNativeEvents();
 			editor.destroy(true);
@@ -393,20 +393,18 @@ define("tinymce/EditorManager", [
 				var initCount = 0, editors = [], targets;
 
 				function createEditor(id, settings, targetElm) {
-					if (!purgeDestroyedEditor(self.get(id))) {
-						var editor = new Editor(id, settings, self);
+					var editor = new Editor(id, settings, self);
 
-						editors.push(editor);
+					editors.push(editor);
 
-						editor.on('init', function() {
-							if (++initCount === targets.length) {
-								provideResults(editors);
-							}
-						});
+					editor.on('init', function() {
+						if (++initCount === targets.length) {
+							provideResults(editors);
+						}
+					});
 
-						editor.targetElm = editor.targetElm || targetElm;
-						editor.render();
-					}
+					editor.targetElm = editor.targetElm || targetElm;
+					editor.render();
 				}
 
 				DOM.unbind(window, 'ready', initEditors);
@@ -429,6 +427,14 @@ define("tinymce/EditorManager", [
 
 					return;
 				}
+
+				Tools.each(targets, function(elm) {
+					purgeDestroyedEditor(self.get(elm.id));
+				});
+
+				targets = Tools.grep(targets, function(elm) {
+					return !self.get(elm.id);
+				});
 
 				each(targets, function(elm) {
 					createEditor(createId(elm), settings, elm);

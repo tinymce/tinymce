@@ -481,6 +481,7 @@ define("tinymce/Editor", [
 				});
 			}
 
+			self.editorManager.add(self);
 			loadScripts();
 		},
 
@@ -497,7 +498,6 @@ define("tinymce/Editor", [
 
 			this.editorManager.i18n.setCode(settings.language);
 			self.rtl = settings.rtl_ui || this.editorManager.i18n.rtl;
-			self.editorManager.add(self);
 
 			settings.aria_label = settings.aria_label || DOM.getAttrib(elm, 'aria-label', self.getLang('aria.rich_text_area'));
 
