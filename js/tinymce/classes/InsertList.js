@@ -79,26 +79,57 @@ define("tinymce/InsertList", [
 		];
 	};
 
-	var findFirstPosition = function(node, rootNode) {
+	var findFirstIn = function(node, rootNode) {
 		var caretPos = CaretPosition.before(node);
 		var caretWalker = new CaretWalker(rootNode);
+		var newCaretPos = caretWalker.next(caretPos);
 
-		return caretWalker.next(caretPos);
+		return newCaretPos ? newCaretPos.toRange() : null;
 	};
 
-	var findLastPosition = function(node, rootNode) {
+	var findLastOf = function(node, rootNode) {
 		var caretPos = CaretPosition.after(node);
 		var caretWalker = new CaretWalker(rootNode);
+		var newCaretPos = caretWalker.prev(caretPos);
 
-		return caretWalker.prev(caretPos);
+		return newCaretPos ? newCaretPos.toRange() : null;
+	};
+
+	var insertMiddle = function(target, elms, rootNode, rng) {
+		var parts = getSplit(target, rng);
+		var parentElm = target.parentNode;
+
+		parentElm.insertBefore(parts[0], target);
+		Tools.each(elms, function(li) {
+			parentElm.insertBefore(li, target);
+		});
+		parentElm.insertBefore(parts[1], target);
+		parentElm.removeChild(target);
+
+		return findLastOf(elms[elms.length - 1], rootNode);
+	};
+
+	var insertBefore = function(target, elms, rootNode) {
+		var parentElm = target.parentNode;
+
+		Tools.each(elms, function(elm) {
+			parentElm.insertBefore(elm, target);
+		});
+
+		return findFirstIn(target, rootNode);
+	};
+
+	var insertAfter = function(target, elms, rootNode, dom) {
+		dom.insertAfter(elms.reverse(), target);
+		return findLastOf(elms[elms.length - 1], rootNode);
 	};
 
 	var insertAtCaret = function(serializer, dom, rng, fragment) {
 		var domFragment = toDomFragment(dom, serializer, fragment);
 		var liTarget = getParentLi(dom, rng.startContainer);
-		var liParent = liTarget.parentNode;
 		var liElms = listItems(domFragment.firstChild);
 		var BEGINNING = 1, END = 2;
+		var rootNode = dom.getRoot();
 
 		var isAt = function(location) {
 			var caretPos = CaretPosition.fromRangeStart(rng);
@@ -108,42 +139,13 @@ define("tinymce/InsertList", [
 			return newPos ? getParentLi(dom, newPos.getNode()) !== liTarget : true;
 		};
 
-		var insertMiddle = function() {
-			var parts = getSplit(liTarget, rng);
-
-			liParent.insertBefore(parts[0], liTarget);
-			Tools.each(liElms, function(li) {
-				liParent.insertBefore(li, liTarget);
-			});
-			liParent.insertBefore(parts[1], liTarget);
-			liParent.removeChild(liTarget);
-
-			return findLastPosition(liElms[liElms.length - 1], dom.getRoot()).toRange();
-		};
-
-		var insertBefore = function() {
-			Tools.each(liElms, function(li) {
-				liParent.insertBefore(li, liTarget);
-			});
-
-			return findFirstPosition(liTarget, dom.getRoot()).toRange();
-		};
-
-		var insertAfter = function() {
-			Tools.each(liElms.reverse(), function(li) {
-				dom.insertAfter(li, liTarget);
-			});
-
-			return findLastPosition(liElms[liElms.length - 1], dom.getRoot()).toRange();
-		};
-
 		if (isAt(BEGINNING)) {
-			return insertBefore();
+			return insertBefore(liTarget, liElms, rootNode);
 		} else if (isAt(END)) {
-			return insertAfter();
+			return insertAfter(liTarget, liElms, rootNode, dom);
 		}
 
-		return insertMiddle();
+		return insertMiddle(liTarget, liElms, rootNode, rng);
 	};
 
 	return {
