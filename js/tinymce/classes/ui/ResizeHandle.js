@@ -56,7 +56,7 @@ define("tinymce/ui/ResizeHandle", [
 
 			self._super();
 
-			self.resizeDragHelper = new DragHelper(this._id, {
+			self.resizeDragHelper = new DragHelper(self.getEl(), {
 				start: function() {
 					self.fire('ResizeStart');
 				},

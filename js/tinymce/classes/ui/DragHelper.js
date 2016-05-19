@@ -68,7 +68,8 @@ define("tinymce/ui/DragHelper", [
 		settings = settings || {};
 
 		function getHandleElm() {
-			return doc.getElementById(settings.handle || id);
+			var id_ = settings.handle || id;
+			return typeof id_ == 'object' ? id_ : doc.getElementById(id_);
 		}
 
 		start = function(e) {
