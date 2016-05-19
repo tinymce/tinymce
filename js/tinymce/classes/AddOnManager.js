@@ -112,6 +112,11 @@ define("tinymce/AddOnManager", [
 			return addOn;
 		},
 
+		remove: function(name) {
+			delete this.urls[name];
+			delete this.lookup[name];
+		},
+
 		createUrl: function(baseUrl, dep) {
 			if (typeof dep === "object") {
 				return dep;

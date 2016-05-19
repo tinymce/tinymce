@@ -166,6 +166,11 @@ define("tinymce/dom/ScriptLoader", [
 			}
 		};
 
+		this.remove = function(url) {
+			delete states[url];
+			delete scriptLoadedCallbacks[url];
+		};
+
 		/**
 		 * Starts the loading of the queue.
 		 *
