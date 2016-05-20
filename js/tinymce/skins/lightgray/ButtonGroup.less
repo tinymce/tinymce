@@ -12,7 +12,7 @@
 .@{prefix}-btn-group .@{prefix}-btn {
 	border-width: @btn-group-border-width;
 	margin: 0;
-	.border-radius(0);
+	.border-radius(0.3rem); // .border-radius(0);
 	margin-left: @flow-layout-spacing;
 }
 
@@ -34,18 +34,18 @@
 }
 
 .@{prefix}-btn-group .@{prefix}-first {
-	.border-radius(3px 0 0 3px);
+	.border-radius(0.3rem); // .border-radius(3px 0 0 3px);
 	.btn-group-border-left(@btn-border-left);
 	margin-left: 0;
 }
 
 .@{prefix}-btn-group .@{prefix}-last {
-	.border-radius(0 3px 3px 0);
+	.border-radius(0.3rem); // .border-radius(0 3px 3px 0);
 	.btn-group-border-right(@btn-border-right);
 }
 
 .@{prefix}-btn-group .@{prefix}-first.@{prefix}-last {
-	.border-radius(3px);
+	.border-radius(0.3rem); // .border-radius(3px);
 }
 
 .@{prefix}-btn-group .@{prefix}-btn.@{prefix}-flow-layout-item {
