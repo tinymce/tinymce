@@ -24,11 +24,15 @@ define("tinymce/imagetoolsplugin/Proxy", [
 		return Promise.reject("ImageProxy HTTP error: " + status);
 	};
 
+	var proxyServiceError = function (error) {
+		Promise.reject("ImageProxy Service error: " + error);
+	};
+
 	var handleServiceError = function (status, blob) {
 		return Utils.readBlob(blob).then(function(text) {
 			var serviceError = Utils.parseJson(text);
 			var errorType = Utils.traverse(serviceError, ['error', 'type']);
-			return errorType ? Promise.reject("ImageProxy Service error: " + errorType) : handleHttpError(status);
+			return errorType ? proxyServiceError(errorType) : proxyServiceError('Invalid JSON');
 		});
 	};
 

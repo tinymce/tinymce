@@ -12,23 +12,18 @@ define("tinymce/imagetoolsplugin/Utils", [
 	"global!tinymce.util.Promise",
 	"global!tinymce.util.Tools"
 ], function(Promise, Tools) {
-	var isObject = function (obj) {
-		return typeof obj === 'object' && obj !== null;
+	var isValue = function (obj) {
+		return obj !== null && obj !== undefined;
 	};
 
 	var traverse = function (json, path) {
-		var result;
+		var value;
 
-		if (!isObject(json)) {
-			return null;
-		}
+		value = path.reduce(function(result, key) {
+			return isValue(result) ? result[key] : undefined;
+		}, json);
 
-		result = path.reduce(function(result, item) {
-			var obj = result[0][item];
-			return obj !== undefined ? [obj, obj] : [obj, null];
-		}, [json, null]);
-
-		return result[1];
+		return isValue(value) ? value : null;
 	};
 
 	var requestUrlAsBlob = function (url, headers) {

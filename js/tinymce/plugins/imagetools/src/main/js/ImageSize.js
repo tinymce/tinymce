@@ -14,7 +14,7 @@ define("tinymce/imagetoolsplugin/ImageSize", [
 		var width, height;
 
 		function isPxValue(value) {
-			return value.indexOf('px') == value.length - 2;
+			return /^[0-9\.]+px$/.test(value);
 		}
 
 		width = img.style.width;
@@ -30,8 +30,9 @@ define("tinymce/imagetoolsplugin/ImageSize", [
 			return null;
 		}
 
-		width = img.getAttribute('width');
-		height = img.getAttribute('height');
+		width = img.width;
+		height = img.height;
+
 		if (width && height) {
 			return {
 				w: parseInt(width, 10),
