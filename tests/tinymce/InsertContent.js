@@ -68,9 +68,9 @@ ModuleLoader.require([
 		editor.setContent('<ul><li>12</li></ul>');
 		editor.focus();
 		Utils.setSelection('li', 2);
-		InsertContent.insertAtCaret(editor, '<ul><li>a</li><li>b</li></ul>');
-		equal(editor.getContent(), '<ul><li>12</li><li>a</li><li>b</li></ul>');
-		assertSelection('li:nth-child(3)', 1);
+		InsertContent.insertAtCaret(editor, '<ul><li>a</li><li>b</li><li>c</li></ul>');
+		equal(editor.getContent(), '<ul><li>12</li><li>a</li><li>b</li><li>c</li></ul>');
+		assertSelection('li:nth-child(4)', 1);
 	});
 
 	test('insertAtCaret - ul with multiple items in middle of li', function() {

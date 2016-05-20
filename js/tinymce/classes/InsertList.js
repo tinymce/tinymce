@@ -40,16 +40,27 @@ define("tinymce/InsertList", [
 		return firstChild.name === 'ul' || firstChild.name === 'ol';
 	};
 
+	var cleanupDomFragment = function (domFragment) {
+		var firstChild = domFragment.firstChild;
+		var lastChild = domFragment.lastChild;
+
+		// TODO: remove the meta tag from paste logic
+		if (firstChild && firstChild.nodeName === 'META') {
+			firstChild.parentNode.removeChild(firstChild);
+		}
+
+		if (lastChild && lastChild.id === 'mce_marker') {
+			lastChild.parentNode.removeChild(lastChild);
+		}
+
+		return domFragment;
+	};
+
 	var toDomFragment = function(dom, serializer, fragment) {
 		var html = serializer.serialize(fragment);
 		var domFragment = dom.createFragment(html);
 
-		// TODO: remove the meta tag from paste logic
-		if (domFragment.firstChild.nodeName === 'META') {
-			dom.remove(domFragment.firstChild);
-		}
-
-		return domFragment;
+		return cleanupDomFragment(domFragment);
 	};
 
 	var listItems = function(elm) {
@@ -58,8 +69,12 @@ define("tinymce/InsertList", [
 		});
 	};
 
+	var isEmpty = function (elm) {
+		return !elm.firstChild;
+	};
+
 	var trimListItems = function(elms) {
-		return elms.length > 0 && !elms[elms.length - 1].firstChild ? elms.slice(0, -1) : elms;
+		return elms.length > 0 && isEmpty(elms[elms.length - 1]) ? elms.slice(0, -1) : elms;
 	};
 
 	var getParentLi = function(dom, node) {
@@ -126,7 +141,7 @@ define("tinymce/InsertList", [
 
 	var insertAfter = function(target, elms, rootNode, dom) {
 		dom.insertAfter(elms.reverse(), target);
-		return findLastOf(elms[elms.length - 1], rootNode);
+		return findLastOf(elms[0], rootNode);
 	};
 
 	var insertAtCaret = function(serializer, dom, rng, fragment) {
