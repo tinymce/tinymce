@@ -44,6 +44,7 @@ define("tinymce/InsertList", [
 		var html = serializer.serialize(fragment);
 		var domFragment = dom.createFragment(html);
 
+		// TODO: remove the meta tag from paste logic
 		if (domFragment.firstChild.nodeName === 'META') {
 			dom.remove(domFragment.firstChild);
 		}
@@ -55,6 +56,10 @@ define("tinymce/InsertList", [
 		return Tools.grep(elm.childNodes, function(child) {
 			return child.nodeName === 'LI';
 		});
+	};
+
+	var trimListItems = function(elms) {
+		return elms.length > 0 && !elms[elms.length - 1].firstChild ? elms.slice(0, -1) : elms;
 	};
 
 	var getParentLi = function(dom, node) {
@@ -127,7 +132,7 @@ define("tinymce/InsertList", [
 	var insertAtCaret = function(serializer, dom, rng, fragment) {
 		var domFragment = toDomFragment(dom, serializer, fragment);
 		var liTarget = getParentLi(dom, rng.startContainer);
-		var liElms = listItems(domFragment.firstChild);
+		var liElms = trimListItems(listItems(domFragment.firstChild));
 		var BEGINNING = 1, END = 2;
 		var rootNode = dom.getRoot();
 
@@ -151,6 +156,8 @@ define("tinymce/InsertList", [
 	return {
 		isListFragment: isListFragment,
 		insertAtCaret: insertAtCaret,
-		isParentBlockLi: isParentBlockLi
+		isParentBlockLi: isParentBlockLi,
+		trimListItems: trimListItems,
+		listItems: listItems
 	};
 });

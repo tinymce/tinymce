@@ -90,4 +90,13 @@ ModuleLoader.require([
 		equal(editor.getContent(), '<ul><li><em><strong>1</strong></em></li><li>a</li><li><em><strong>2</strong></em></li></ul>');
 		assertSelection('li:nth-child(3) strong', 1);
 	});
+
+	test('insertAtCaret - ul at beginning of li with empty end li', function() {
+		editor.setContent('<ul><li>12</li></ul>');
+		editor.focus();
+		Utils.setSelection('li', 0);
+		InsertContent.insertAtCaret(editor, '<ul><li>a</li><li></li></ul>');
+		equal(editor.getContent(), '<ul><li>a</li><li>12</li></ul>');
+		assertSelection('li:nth-child(2)', 0);
+	});
 });
