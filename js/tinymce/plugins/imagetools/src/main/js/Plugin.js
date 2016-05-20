@@ -24,8 +24,10 @@ define("tinymce/imagetoolsplugin/Plugin", [
 	"global!tinymce.util.Delay",
 	"ephox/imagetools/api/ImageTransformations",
 	"ephox/imagetools/api/BlobConversions",
-	"tinymce/imagetoolsplugin/Dialog"
-], function(PluginManager, Env, Promise, URI, Tools, Delay, ImageTransformations, BlobConversions, Dialog) {
+	"tinymce/imagetoolsplugin/Dialog",
+	"tinymce/imagetoolsplugin/ImageSize",
+	"tinymce/imagetoolsplugin/Proxy"
+], function(PluginManager, Env, Promise, URI, Tools, Delay, ImageTransformations, BlobConversions, Dialog, ImageSize, Proxy) {
 	var plugin = function(editor) {
 		var count = 0, imageUploadTimer, lastSelectedImage;
 
@@ -33,104 +35,11 @@ define("tinymce/imagetoolsplugin/Plugin", [
 			return;
 		}
 
-		/*
-		function startCrop() {
-			var imageRect, viewPortRect;
-
-			imageRect = getSelectedImage().getBoundingClientRect();
-
-			imageRect = {
-				x: imageRect.left,
-				y: imageRect.top,
-				w: imageRect.width,
-				h: imageRect.height
-			};
-
-			viewPortRect = {
-				x: 0,
-				y: 0,
-				w: editor.getBody().scrollWidth,
-				h: editor.getBody().scrollHeight
-			};
-
-			cropRect = new CropRect(imageRect, viewPortRect, imageRect, editor.getBody());
-			cropRect.toggleVisibility(true);
-
-			editor.selection.getSel().removeAllRanges();
-			editor.nodeChanged();
-		}
-
-		function stopCrop() {
-			if (cropRect) {
-				cropRect.destroy();
-				cropRect = null;
-			}
-		}
-		*/
-
-		function getImageSize(img) {
-			var width, height;
-
-			function isPxValue(value) {
-				return value.indexOf('px') == value.length - 2;
-			}
-
-			width = img.style.width;
-			height = img.style.height;
-			if (width || height) {
-				if (isPxValue(width) && isPxValue(height)) {
-					return {
-						w: parseInt(width, 10),
-						h: parseInt(height, 10)
-					};
-				}
-
-				return null;
-			}
-
-			width = editor.$(img).attr('width');
-			height = editor.$(img).attr('height');
-			if (width && height) {
-				return {
-					w: parseInt(width, 10),
-					h: parseInt(height, 10)
-				};
-			}
-
-			return null;
-		}
-
-		function setImageSize(img, size) {
-			var width, height;
-
-			if (size) {
-				width = img.style.width;
-				height = img.style.height;
-
-				if (width || height) {
-					editor.$(img).css({
-						width: size.w,
-						height: size.h
-					}).removeAttr('data-mce-style');
-				}
-
-				width = img.width;
-				height = img.height;
-
-				if (width || height) {
-					editor.$(img).attr({
-						width: size.w,
-						height: size.h
-					});
-				}
-			}
-		}
-
-		function getNaturalImageSize(img) {
-			return {
-				w: img.naturalWidth,
-				h: img.naturalHeight
-			};
+		function displayError(error) {
+			editor.notificationManager.open({
+				text: error,
+				type: 'error'
+			});
 		}
 
 		function getSelectedImage() {
@@ -155,45 +64,18 @@ define("tinymce/imagetoolsplugin/Plugin", [
 			return editor.settings.api_key || editor.settings.imagetools_api_key;
 		}
 
-		function requestUrlAsBlob(url) {
-			return new Promise(function(resolve) {
-				var xhr, apiKey;
-
-				xhr = new XMLHttpRequest();
-				xhr.onload = function() {
-					resolve(this.response);
-				};
-
-				xhr.open('GET', url, true);
-
-				apiKey = getApiKey();
-				if (apiKey) {
-					xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-					xhr.setRequestHeader('tiny-api-key', apiKey);
-				}
-
-				xhr.responseType = 'blob';
-				xhr.send();
-			});
-		}
-
 		function imageToBlob(img) {
-			var src = img.src;
+			var src = img.src, apiKey;
 
 			if (isCorsImage(img)) {
-				return requestUrlAsBlob(img.src);
+				return Proxy.getUrl(img.src, null);
 			}
 
 			if (!isLocalImage(img)) {
 				src = editor.settings.imagetools_proxy;
 				src += (src.indexOf('?') === -1 ? '?' : '&') + 'url=' + encodeURIComponent(img.src);
-
-				if (getApiKey()) {
-					return requestUrlAsBlob(src);
-				}
-
-				img = new Image();
-				img.src = src;
+				apiKey = getApiKey();
+				return Proxy.getUrl(src, apiKey);
 			}
 
 			return BlobConversions.imageToBlob(img);
@@ -258,17 +140,17 @@ define("tinymce/imagetoolsplugin/Plugin", [
 
 		function selectedImageOperation(fn) {
 			return function() {
-				return editor._scanForImages().then(findSelectedBlob).then(fn).then(updateSelectedImage);
+				return editor._scanForImages().then(findSelectedBlob).then(fn).then(updateSelectedImage, displayError);
 			};
 		}
 
 		function rotate(angle) {
 			return function() {
 				return selectedImageOperation(function(blob) {
-					var size = getImageSize(getSelectedImage());
+					var size = ImageSize.getImageSize(getSelectedImage());
 
 					if (size) {
-						setImageSize(getSelectedImage(), {
+						ImageSize.setImageSize(getSelectedImage(), {
 							w: size.h,
 							h: size.w
 						});
@@ -288,29 +170,34 @@ define("tinymce/imagetoolsplugin/Plugin", [
 		}
 
 		function editImageDialog() {
-			var img = getSelectedImage(), originalSize = getNaturalImageSize(img);
+			var img = getSelectedImage(), originalSize = ImageSize.getNaturalImageSize(img);
+			var handleDialogBlob = function(blob) {
+				return new Promise(function(resolve) {
+					BlobConversions.blobToImage(blob).then(function(newImage) {
+						var newSize = ImageSize.getNaturalImageSize(newImage);
 
-			if (img) {
-				imageToBlob(img).then(Dialog.edit).then(function(blob) {
-					return new Promise(function(resolve) {
-						BlobConversions.blobToImage(blob).then(function(newImage) {
-							var newSize = getNaturalImageSize(newImage);
-
-							if (originalSize.w != newSize.w || originalSize.h != newSize.h) {
-								if (getImageSize(img)) {
-									setImageSize(img, newSize);
-								}
+						if (originalSize.w != newSize.w || originalSize.h != newSize.h) {
+							if (ImageSize.getImageSize(img)) {
+								ImageSize.setImageSize(img, newSize);
 							}
+						}
 
-							URL.revokeObjectURL(newImage.src);
-							resolve(blob);
-						});
+						URL.revokeObjectURL(newImage.src);
+						resolve(blob);
 					});
-				}).then(function(blob) {
+				});
+			};
+
+			var openDialog = function (blob) {
+				return Dialog.edit(blob).then(handleDialogBlob).then(function(blob) {
 					updateSelectedImage(blob, true);
-				}, function() {
+				}, function () {
 					// Close dialog
 				});
+			};
+
+			if (img) {
+				imageToBlob(img).then(openDialog, displayError);
 			}
 		}
 

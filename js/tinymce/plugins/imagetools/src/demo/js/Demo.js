@@ -34,6 +34,7 @@ define("tinymce/imagetoolsplugin/Demo", [
 		tinymce.init({
 			//imagetools_cors_hosts: ["moxiecode.cachefly.net"],
 			//imagetools_proxy: "proxy.php",
+			//imagetools_api_key: '123',
 
 			//images_upload_url: 'postAcceptor.php',
 			//images_upload_base_path: 'base/path',
