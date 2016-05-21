@@ -12,7 +12,7 @@
 /*eslint max-len:0 */
 /*global tinymce:true */
 
-tinymce.PluginManager.add('media', function(editor, url) {
+tinymce.PluginManager.add('media', function(editor) {
 	var urlPatterns = [
 		{regex: /youtu\.be\/([\w\-.]+)/, type: 'iframe', w: 560, h: 314, url: '//www.youtube.com/embed/$1', allowFullscreen: true},
 		{regex: /youtube\.com(.+)v=([^&]+)/, type: 'iframe', w: 560, h: 314, url: '//www.youtube.com/embed/$2', allowFullscreen: true},
@@ -249,7 +249,6 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		data.source1mime = guessMime(data.source1);
 		data.source2mime = guessMime(data.source2);
 		data.poster = editor.convertURL(data.poster, "poster");
-		data.flashPlayerUrl = editor.convertURL(url + '/moxieplayer.swf', "movie");
 
 		tinymce.each(urlPatterns, function(pattern) {
 			var match, i, url;
