@@ -192,4 +192,27 @@ ModuleLoader.require([
 
 		equal(evt.isDefaultPrevented(), true);
 	});
+
+	test('click next to cE=false block', function() {
+		editor.setContent(
+			'<table style="width: 100%">' +
+				'<tr>' +
+					'<td style="vertical-align: top">1</td>' +
+					'<td><div contentEditable="false" style="width: 100px; height: 100px">2</div></td>' +
+				'</tr>' +
+			'</table>'
+		);
+
+		var firstTd = editor.dom.select('td')[0];
+		var rect = editor.dom.getRect(firstTd);
+
+		editor.fire('mousedown', {
+			target: firstTd,
+			clientX: rect.x + rect.w,
+			clientY: rect.y + 10
+		});
+
+		// Since we can't do a real click we need to check if it gets sucked in towards the cE=false block
+		equal(editor.selection.getNode().nodeName !== 'P', true);
+	});
 });
