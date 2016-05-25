@@ -261,7 +261,7 @@ define("tinymce/FocusManager", [
 	 */
 	FocusManager.isEditorUIElement = function(elm) {
 		// Needs to be converted to string since svg can have focus: #6776
-		return elm.className.toString().indexOf('mce-') !== -1;
+		return elm.className && elm.className.toString().indexOf('mce-') !== -1;
 	};
 
 	return FocusManager;
