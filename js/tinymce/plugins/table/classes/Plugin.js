@@ -345,7 +345,11 @@ define("tinymce/tableplugin/Plugin", [
 		self.quirks = new Quirks(editor);
 
 		editor.on('Init', function() {
-			self.cellSelection = new CellSelection(editor);
+			self.cellSelection = new CellSelection(editor, function (selecting) {
+				if (selecting) {
+					resizeBars.clearBars();
+				}
+			});
 			self.resizeBars = resizeBars;
 		});
 
