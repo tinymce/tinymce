@@ -2,12 +2,11 @@ define(
   'ephox.phoenix.wrap.Navigation',
 
   [
-    'ephox.bud.Unicode',
     'ephox.perhaps.Option',
     'ephox.phoenix.api.data.Spot'
   ],
 
-  function (Unicode, Option, Spot) {
+  function (Option, Spot) {
     /**
      * Return the last available cursor position in the node.
      */
@@ -45,7 +44,7 @@ define(
     var scan = function (universe, element, direction) {
       if (! universe.property().isText(element)) return Option.none();
       var text = universe.property().getText(element);
-      if (Unicode.trimNative(text).length > 0) return Option.none();
+      if (text.trim().length > 0) return Option.none();
       return direction(element).bind(function (elem) {
         return scan(universe, elem, direction).orThunk(function () {
           return Option.some(elem);
