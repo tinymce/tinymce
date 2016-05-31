@@ -10,5 +10,6 @@
 /config/bolt/bootstrap*.js
 /inconsistent.dependencies
 /spike.build
-node_modules
+node_modules/
 npm-debug.log
+.idea/
