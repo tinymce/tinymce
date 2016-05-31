@@ -22,6 +22,7 @@ js/tinymce/plugins/spellchecker/plugin.js
 js/tinymce/plugins/paste/plugin.js
 js/tinymce/plugins/imagetools/plugin.js
 js/tinymce/plugins/codesample/plugin.js
+js/tinymce/themes/inlight/theme.js
 imagemanager
 filemanager
 mcmanager
@@ -41,3 +42,5 @@ skin.ie7.dev.less
 **/bolt/bootstrap*.js
 **/dist
 **/scratch
+**/lib
+**/dependency
