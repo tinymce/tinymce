@@ -27,7 +27,10 @@ module.exports = function(grunt) {
 				"!js/tinymce/plugins/codesample/classes/Prism.js"
 			],
 
-			themes: ["js/tinymce/themes/*/theme.js"]
+			themes: [
+				"js/tinymce/themes/*/theme.js",
+				"!js/tinymce/themes/inlight/theme.js"
+			]
 		},
 
 		qunit: {
@@ -43,6 +46,10 @@ module.exports = function(grunt) {
 		"bolt-init": {
 			"imagetools-plugin": {
 				config_dir: "js/tinymce/plugins/imagetools/config/bolt"
+			},
+
+			"inlight-theme": {
+				config_dir: "js/tinymce/themes/inlight/config/bolt"
 			}
 		},
 
@@ -59,6 +66,20 @@ module.exports = function(grunt) {
 				files: {
 					src: ['js/tinymce/plugins/imagetools/src/main/js/Plugin.js']
 				}
+			},
+
+			"inlight-theme": {
+				config_js: "js/tinymce/themes/inlight/config/bolt/prod.js",
+				output_dir: "js/tinymce/themes/inlight/scratch",
+				main: "tinymce/inlight/Theme",
+				filename: "theme",
+
+				generate_inline: true,
+				minimise_module_names: true,
+
+				files: {
+					src: ['js/tinymce/themes/inlight/src/main/js/Theme.js']
+				}
 			}
 		},
 
@@ -68,6 +89,15 @@ module.exports = function(grunt) {
 					{
 						src: "js/tinymce/plugins/imagetools/scratch/inline/plugin.raw.js",
 						dest: "js/tinymce/plugins/imagetools/plugin.js"
+					}
+				]
+			},
+
+			"bolt-themes": {
+				files: [
+					{
+						src: "js/tinymce/themes/inlight/scratch/inline/theme.raw.js",
+						dest: "js/tinymce/themes/inlight/theme.js"
 					}
 				]
 			}
@@ -292,6 +322,15 @@ module.exports = function(grunt) {
 				]
 			},
 
+			"bolt-themes": {
+				files: [
+					{
+						src: "js/tinymce/themes/inlight/scratch/inline/theme.js",
+						dest: "js/tinymce/themes/inlight/theme.min.js"
+					}
+				]
+			},
+
 			"jquery-plugin": {
 				src: ["js/tinymce/classes/jquery.tinymce.js"],
 				dest: "js/tinymce/jquery.tinymce.min.js"
@@ -343,8 +382,8 @@ module.exports = function(grunt) {
 					baseDir: "tinymce",
 
 					excludes: [
-						"js/tinymce/plugins/*/config/bolt/bootstrap-*",
-						"js/tinymce/plugins/*/scratch",
+						"**/bolt/bootstrap-*",
+						"**/scratch",
 						"js/tinymce/tinymce.full.min.js",
 						"js/tinymce/plugins/moxiemanager",
 						"js/tests/.jshintrc"
