@@ -251,6 +251,7 @@ define("tinymce/Editor", [
 		self.suffix = editorManager.suffix;
 		self.editorManager = editorManager;
 		self.inline = settings.inline;
+		self.settings.content_editable = self.inline;
 
 		if (settings.cache_suffix) {
 			Env.cacheSuffix = settings.cache_suffix.replace(/^[\?\&]+/, '');
