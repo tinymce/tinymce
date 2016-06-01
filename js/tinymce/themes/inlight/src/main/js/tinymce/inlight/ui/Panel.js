@@ -80,7 +80,7 @@ define('tinymce/inlight/ui/Panel', [
 		return toolbarCtrl;
 	};
 
-	var showPanelAt = function (panel, toolbar, editor, elementRect) {
+	var showPanelAt = function (panel, toolbar, editor, targetRect) {
 		var contentAreaRect, panelRect, result, userConstainHandler;
 
 		showPanel(panel);
@@ -92,14 +92,14 @@ define('tinymce/inlight/ui/Panel', [
 		contentAreaRect = Measure.getContentAreaRect(editor);
 		panelRect = DOM.getRect(panel.getEl());
 
-		result = Layout.calc(elementRect, contentAreaRect, panelRect);
+		result = Layout.calc(targetRect, contentAreaRect, panelRect);
 
 		if (result) {
-			movePanelTo(panel, Layout.userConstrain(userConstainHandler, result));
+			panelRect = result.rect;
+			movePanelTo(panel, Layout.userConstrain(userConstainHandler, targetRect, contentAreaRect, panelRect));
 
-			elementRect = result.elementRect;
 			togglePositionClass(panel, result.position, function(pos1, pos2) {
-				return (!elementRect || elementRect.w > 1) && pos1 === pos2;
+				return (!targetRect || targetRect.w > 1) && pos1 === pos2;
 			});
 		} else {
 			hide(panel);

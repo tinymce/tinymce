@@ -8,11 +8,15 @@ test('browser/core/LayoutTest', [
 		return {x: x, y: y, w: w, h: h};
 	};
 
+	var clientRect = function (x, y, w, h) {
+		return {left: x, top: y, width: w, height: h, bottom: y + h, right: x + w};
+	};
+
 	var assertLayout = function (expected, rects) {
 		var result;
 
 		result = Layout.calc(
-			rects.elementRect,
+			rects.targetRect,
 			rects.contentAreaRect,
 			rects.panelRect
 		);
@@ -22,81 +26,87 @@ test('browser/core/LayoutTest', [
 
   var testCalcPanelAtBottomLeft = function () {
 		assertLayout({
-			contentAreaRect: rect(0, 0, 100, 100),
-			elementRect: rect(0, 0, 10, 10),
-			panelRect: rect(0, 10, 20, 10),
+			rect: rect(0, 10, 20, 10),
 			position: 'bl-tl'
 		}, {
 			contentAreaRect: rect(0, 0, 100, 100),
-			elementRect: rect(0, 0, 10, 10),
+			targetRect: rect(0, 0, 10, 10),
 			panelRect: rect(0, 0, 20, 10)
 		});
   };
 
 	var testCalcPanelAtBottomRight = function () {
 		assertLayout({
-			contentAreaRect: rect(0, 0, 100, 100),
-			elementRect: rect(90, 0, 10, 10),
-			panelRect: rect(80, 10, 20, 10),
+			rect: rect(80, 10, 20, 10),
 			position: 'br-tr'
 		}, {
 			contentAreaRect: rect(0, 0, 100, 100),
-			elementRect: rect(90, 0, 10, 10),
+			targetRect: rect(90, 0, 10, 10),
 			panelRect: rect(0, 0, 20, 10)
 		});
   };
 
 	var testCalcPanelAtTopLeft = function () {
 		assertLayout({
-			contentAreaRect: rect(0, 0, 100, 100),
-			elementRect: rect(0, 20, 10, 10),
-			panelRect: rect(0, 10, 20, 10),
+			rect: rect(0, 10, 20, 10),
 			position: 'tl-bl'
 		}, {
 			contentAreaRect: rect(0, 0, 100, 100),
-			elementRect: rect(0, 20, 10, 10),
+			targetRect: rect(0, 20, 10, 10),
 			panelRect: rect(0, 0, 20, 10)
 		});
   };
 
 	var testCalcPanelAtTopRight = function () {
 		assertLayout({
-			contentAreaRect: rect(0, 0, 100, 100),
-			elementRect: rect(90, 20, 10, 10),
-			panelRect: rect(80, 10, 20, 10),
+			rect: rect(80, 10, 20, 10),
 			position: 'tr-br'
 		}, {
 			contentAreaRect: rect(0, 0, 100, 100),
-			elementRect: rect(90, 20, 10, 10),
+			targetRect: rect(90, 20, 10, 10),
 			panelRect: rect(0, 0, 20, 10)
 		});
   };
 
 	var testCalcPanelAtTopCenter = function () {
 		assertLayout({
-			contentAreaRect: rect(0, 0, 100, 100),
-			elementRect: rect(40, 20, 10, 10),
-			panelRect: rect(35, 10, 20, 10),
+			rect: rect(35, 10, 20, 10),
 			position: 'tc-bc'
 		}, {
 			contentAreaRect: rect(0, 0, 100, 100),
-			elementRect: rect(40, 20, 10, 10),
+			targetRect: rect(40, 20, 10, 10),
 			panelRect: rect(0, 0, 20, 10)
 		});
   };
 
 	var testCalcPanelAtBottomCenter = function () {
 		assertLayout({
-			contentAreaRect: rect(0, 0, 100, 100),
-			elementRect: rect(40, 0, 10, 10),
-			panelRect: rect(35, 10, 20, 10),
+			rect: rect(35, 10, 20, 10),
 			position: 'bc-tc'
 		}, {
 			contentAreaRect: rect(0, 0, 100, 100),
-			elementRect: rect(40, 0, 10, 10),
+			targetRect: rect(40, 0, 10, 10),
 			panelRect: rect(0, 0, 20, 10)
 		});
   };
+
+	var testUserConstrain = function () {
+		var targetRect, contentAreaRect, panelRect, userConstrainedPanelRect, handler;
+
+		contentAreaRect = rect(0, 0, 100, 100);
+		targetRect = rect(40, 0, 10, 10);
+		panelRect = rect(0, 0, 20, 10);
+
+		handler = function (rects) {
+			assert.eq(rects.elementRect, clientRect(40, 0, 10, 10));
+			assert.eq(rects.contentAreaRect, clientRect(0, 0, 100, 100));
+			assert.eq(rects.panelRect, clientRect(0, 0, 20, 10));
+			return clientRect(1, 2, 3, 4);
+		};
+
+		userConstrainedPanelRect = Layout.userConstrain(handler, targetRect, contentAreaRect, panelRect);
+		assert.eq(userConstrainedPanelRect, rect(1, 2, 3, 4));
+	};
 
   testCalcPanelAtBottomLeft();
 	testCalcPanelAtBottomRight();
@@ -104,4 +114,5 @@ test('browser/core/LayoutTest', [
 	testCalcPanelAtTopRight();
 	testCalcPanelAtTopCenter();
 	testCalcPanelAtBottomCenter();
+	testUserConstrain();
 });

@@ -12,11 +12,9 @@ define('tinymce/inlight/core/Layout', [
 	'global!tinymce.geom.Rect',
 	'tinymce/inlight/core/Convert'
 ], function (Rect, Convert) {
-	var result = function (elementRect, contentAreaRect, panelRect, position) {
+	var result = function (rect, position) {
 		return {
-			elementRect: elementRect,
-			contentAreaRect: contentAreaRect,
-			panelRect: panelRect,
+			rect: rect,
 			position: position
 		};
 	};
@@ -25,7 +23,7 @@ define('tinymce/inlight/core/Layout', [
 		return {x: toRect.x, y: toRect.y, w: rect.w, h: rect.h};
 	};
 
-	var calc = function (elementRect, contentAreaRect, panelRect) {
+	var calc = function (targetRect, contentAreaRect, panelRect) {
 		var testPositions, relPos, relRect, outputPanelRect;
 
 		testPositions = [
@@ -34,50 +32,48 @@ define('tinymce/inlight/core/Layout', [
 			'tr-br', 'br-tr'
 		];
 
-		relPos = Rect.findBestRelativePosition(panelRect, elementRect, contentAreaRect, testPositions);
-		elementRect = Rect.clamp(elementRect, contentAreaRect);
+		relPos = Rect.findBestRelativePosition(panelRect, targetRect, contentAreaRect, testPositions);
+		targetRect = Rect.clamp(targetRect, contentAreaRect);
 
 		if (relPos) {
-			relRect = Rect.relativePosition(panelRect, elementRect, relPos);
+			relRect = Rect.relativePosition(panelRect, targetRect, relPos);
 			outputPanelRect = moveTo(panelRect, relRect);
-			return result(elementRect, contentAreaRect, outputPanelRect, relPos);
+			return result(outputPanelRect, relPos);
 		}
 
-		elementRect = Rect.intersect(contentAreaRect, elementRect);
-		if (elementRect) {
-			relPos = Rect.findBestRelativePosition(panelRect, elementRect, contentAreaRect, [
+		targetRect = Rect.intersect(contentAreaRect, targetRect);
+		if (targetRect) {
+			relPos = Rect.findBestRelativePosition(panelRect, targetRect, contentAreaRect, [
 				'bc-tc', 'bl-tl', 'br-tr'
 			]);
 
 			if (relPos) {
-				relRect = Rect.relativePosition(panelRect, elementRect, relPos);
+				relRect = Rect.relativePosition(panelRect, targetRect, relPos);
 				outputPanelRect = moveTo(panelRect, relRect);
-				return result(elementRect, contentAreaRect, outputPanelRect, relPos);
+				return result(outputPanelRect, relPos);
 			}
 
-			outputPanelRect = moveTo(panelRect, elementRect);
-			return result(elementRect, contentAreaRect, outputPanelRect, relPos);
+			outputPanelRect = moveTo(panelRect, targetRect);
+			return result(outputPanelRect, relPos);
 		}
 
 		return null;
 	};
 
-	var userConstrain = function(handler, result) {
-		var elementRect, contentAreaRect, panelRect;
-
-		elementRect = Convert.toClientRect(result.elementRect);
-		contentAreaRect = Convert.toClientRect(result.contentAreaRect);
-		panelRect = Convert.toClientRect(result.panelRect);
+	var userConstrain = function (handler, targetRect, contentAreaRect, panelRect) {
+		var userConstrainedPanelRect;
 
 		if (typeof handler === 'function') {
-			panelRect = handler({
-				elementRect: elementRect,
-				contentAreaRect: contentAreaRect,
-				panelRect: panelRect
+			userConstrainedPanelRect = handler({
+				elementRect: Convert.toClientRect(targetRect),
+				contentAreaRect: Convert.toClientRect(contentAreaRect),
+				panelRect: Convert.toClientRect(panelRect)
 			});
+
+			return Convert.fromClientRect(userConstrainedPanelRect);
 		}
 
-		return Convert.fromClientRect(panelRect);
+		return panelRect;
 	};
 
 	return {

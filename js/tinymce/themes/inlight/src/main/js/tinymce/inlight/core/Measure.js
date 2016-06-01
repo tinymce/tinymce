@@ -55,6 +55,10 @@ define('tinymce/inlight/core/Measure', [
 		return targetRect;
 	};
 
+	var getPageAreaRect = function (editor) {
+		return DOM.getRect(editor.getElement().ownerDocument.body);
+	};
+
 	var getContentAreaRect = function (editor) {
 		return toAbsolute(DOM.getRect(editor.getContentAreaContainer() || editor.getBody()));
 	};
@@ -66,6 +70,7 @@ define('tinymce/inlight/core/Measure', [
 
 	return {
 		getElementRect: getElementRect,
+		getPageAreaRect: getPageAreaRect,
 		getContentAreaRect: getContentAreaRect,
 		getSelectionRect: getSelectionRect
 	};
