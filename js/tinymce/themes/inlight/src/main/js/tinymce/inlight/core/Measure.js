@@ -13,8 +13,6 @@ define('tinymce/inlight/core/Measure', [
 	'global!tinymce.geom.Rect',
 	'tinymce/inlight/core/Convert'
 ], function (DOM, Rect, Convert) {
-	var RESIZE_HANDLE_SIZE = 8;
-
 	var toAbsolute = function (rect) {
 		var vp = DOM.getViewPort();
 
@@ -47,11 +45,6 @@ define('tinymce/inlight/core/Measure', [
 		targetRect.w = elm.clientWidth;
 		targetRect.h = elm.clientHeight;
 
-		// Inflate the elementRect so it doesn't get placed above resize handles
-		if (editor.selection.controlSelection.isResizable(elm)) {
-			targetRect = Rect.inflate(targetRect, 0, RESIZE_HANDLE_SIZE);
-		}
-
 		return targetRect;
 	};
 
@@ -65,7 +58,7 @@ define('tinymce/inlight/core/Measure', [
 
 	var getSelectionRect = function (editor) {
 		var rect = Convert.fromClientRect(editor.selection.getBoundingClientRect());
-		return toAbsolute(Rect.inflate(rect, 0, 8));
+		return toAbsolute(rect);
 	};
 
 	return {
