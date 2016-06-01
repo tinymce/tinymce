@@ -2,6 +2,7 @@ test(
   'api.Search.findall (using api.Pattern)',
 
   [
+    'ephox.bud.Unicode',
     'ephox.compass.Arr',
     'ephox.polaris.api.Pattern',
     'ephox.polaris.api.Search',
@@ -9,7 +10,7 @@ test(
     'ephox.scullion.Struct'
   ],
 
-  function (Arr, Pattern, Search, Safe, Struct) {
+  function (Unicode, Arr, Pattern, Search, Safe, Struct) {
     var checkAll = function (expected, input, pattern) {
       var actual = Search.findall(input, pattern);
       assert.eq(expected.length, actual.length);
@@ -33,7 +34,7 @@ test(
     checkAll([[1, 7]], ' cattle', Pattern.unsafetoken('cattle'));
     checkAll([], 'acattle', Pattern.unsafeword('cattle'));
     checkAll([[1, 7]], ' cattle', Pattern.unsafeword('cattle'));
-    checkAll([], '\u200Bdog ', Pattern.safeword('dog'));
+    checkAll([], Unicode.zeroWidth() + 'dog ', Pattern.safeword('dog'));
 
     checkAll([[3, 7], [10, 14]], 'no it\'s i it\'s done.', Pattern.unsafetoken('it\'s'));
     checkAll([[0, 12]], 'catastrophe\'', Pattern.unsafetoken('catastrophe\''));
@@ -48,7 +49,7 @@ test(
     checkAll([[0, 3], [4, 7], [8, 11]], 'sre sre sre ', Pattern.unsafeword('sre'));
     checkAll([[1, 4], [5, 8], [9, 12]], ' sre sre sre ', Pattern.unsafeword('sre'));
 
-    checkAll([['this '.length, 'this e\u200Bnds'.length ]], 'this e\u200Bnds here', Pattern.unsafeword('e\u200Bnds'));
+    checkAll([['this '.length, 'this e' + Unicode.zeroWidth() + 'nds'.length ]], 'this e' + Unicode.zeroWidth() + 'nds here', Pattern.unsafeword('e' + Unicode.zeroWidth() + 'nds'));
 
     var prefix = Safe.sanitise('[');
     var suffix = Safe.sanitise(']');
