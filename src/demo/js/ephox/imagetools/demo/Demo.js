@@ -8,6 +8,16 @@ define(
 
   function (BlobConversions, ImageTransformations) {
 
+      function getValue(el) {
+          var value;
+          if (el.tagName == "SELECT") {
+              value = el.options[el.selectedIndex].value;
+          } else {
+              value = el.value;
+          }
+          return value.trim();
+      }
+
       function modify(image, op, args) {
           BlobConversions.imageToBlob(image)
               .then(function (blob) {
@@ -25,14 +35,14 @@ define(
           (function(form) {
               form.onsubmit = function (el) {
                   var selector = document.getElementById('selector');
-                  var currOp = selector.options[selector.selectedIndex].value;
+                  var currOp = getValue(selector);
                   var image = document.getElementById('editor');
                   modify(image, currOp, [].slice.call(this.elements)
                           .filter(function(el) {
                               return el.tagName != 'BUTTON';
                           })
                           .map(function (el) {
-                              return el.value;
+                              return getValue(el);
                           })
                   );
                   return false;
