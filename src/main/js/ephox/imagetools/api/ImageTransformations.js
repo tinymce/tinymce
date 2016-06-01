@@ -63,8 +63,8 @@ define(
       return ImageTools.crop(blob, x, y, w, h);
     };
 
-    var resize = function (blob, w, h) {
-      return ImageTools.resize(blob, w, h);
+    var resize = function (blob, w, h, gradient) {
+      return ImageTools.resize(blob, w, h, gradient);
     };
 
     var rotate = function (blob, angle) {
