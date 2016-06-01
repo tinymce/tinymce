@@ -47,21 +47,21 @@ define('tinymce/inlight/ui/Panel', [
 		panel.moveTo(pos.x, pos.y);
 	};
 
-	var togglePositionClass = function (panel, relPos, predicate) {
+	var togglePositionClass = function (panel, relPos) {
 		relPos = relPos ? relPos.substr(0, 2) : '';
 
 		Tools.each({
 			t: 'down',
 			b: 'up'
 		}, function(cls, pos) {
-			panel.classes.toggle('arrow-' + cls, predicate(pos, relPos.substr(0, 1)));
+			panel.classes.toggle('arrow-' + cls, pos === relPos.substr(0, 1));
 		});
 
 		Tools.each({
 			l: 'left',
 			r: 'right'
 		}, function(cls, pos) {
-			panel.classes.toggle('arrow-' + cls, predicate(pos, relPos.substr(1, 1)));
+			panel.classes.toggle('arrow-' + cls, pos === relPos.substr(1, 1));
 		});
 	};
 
@@ -97,10 +97,7 @@ define('tinymce/inlight/ui/Panel', [
 		if (result) {
 			panelRect = result.rect;
 			movePanelTo(panel, Layout.userConstrain(userConstainHandler, targetRect, contentAreaRect, panelRect));
-
-			togglePositionClass(panel, result.position, function(pos1, pos2) {
-				return (!targetRect || targetRect.w > 1) && pos1 === pos2;
-			});
+			togglePositionClass(panel, result.position);
 		} else {
 			hide(panel);
 		}
