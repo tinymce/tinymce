@@ -49,7 +49,7 @@ test(
     checkAll([[0, 3], [4, 7], [8, 11]], 'sre sre sre ', Pattern.unsafeword('sre'));
     checkAll([[1, 4], [5, 8], [9, 12]], ' sre sre sre ', Pattern.unsafeword('sre'));
 
-    checkAll([['this '.length, 'this e' + Unicode.zeroWidth() + 'nds'.length ]], 'this e' + Unicode.zeroWidth() + 'nds here', Pattern.unsafeword('e' + Unicode.zeroWidth() + 'nds'));
+    checkAll([['this '.length, 'this e'.length + Unicode.zeroWidth().length + 'nds'.length]], 'this e' + Unicode.zeroWidth() + 'nds here', Pattern.unsafeword('e' + Unicode.zeroWidth() + 'nds'));
 
     var prefix = Safe.sanitise('[');
     var suffix = Safe.sanitise(']');
