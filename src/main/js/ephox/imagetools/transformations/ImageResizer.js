@@ -64,7 +64,7 @@ define("ephox/imagetools/transformations/ImageResizer", [
         return Resizer.scale(image, wRatio, hRatio).then(function(tCanvas) {
             var tW = ImageSize.getWidth(tCanvas);
             var tH = ImageSize.getWidth(tCanvas);
-            if (tW <= dW && tH <= dH) {
+            if (tW == dW && tH == dH) {
                 return tCanvas;
             } else {
                 return _scale(tCanvas, dW, dH, gradient);
