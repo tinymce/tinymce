@@ -19,59 +19,55 @@ define("ephox/imagetools/transformations/ImageResizer", [
     "ephox/imagetools/transformations/ImageResizerCanvas"
 ], function(Conversions, Canvas, ImageSize, ImageResizerCanvas) {
 
-    var _canvas;
-    var _sW,_sH, _dW, _dH;
-    var _ratio;
-    var _gradient = true;
-
     var Resizer = ImageResizerCanvas;
 
+    function scale(image, srcRect, dW, dH, gradient) {
+        var srcImage;
 
-    function scale(image, ratio, srcRect, gradient) {
-        _sW = ImageSize.getWidth(image);
-        _sH = ImageSize.getHeight(image);
-        _dW = _sW * ratio;
-        _dH = _sH * ratio;
+        if (!srcRect) {
+            srcImage = image;
+        } else {
+            var canvas = Canvas.create(srcRect.width, srcRect.height);
 
-        _ratio = ratio;
-        _gradient = gradient === undefined ? true : parseInt(gradient);
+            Canvas.get2dContext(canvas).drawImage(image,
+                srcRect.x,
+                srcRect.y,
+                srcRect.width,
+                srcRect.height
+            );
 
-        srcRect = srcRect ? srcRect : {
-            x: 0,
-            y: 0,
-            width: _sW,
-            height: _sH
-        };
+            Conversions.revokeImageUrl(image);
+            srcImage = canvas;
+        }
 
-        _canvas = Canvas.create(srcRect.width, srcRect.height);
+        gradient = gradient === undefined ? true : parseInt(gradient);
 
-        Canvas.get2dContext(_canvas).drawImage(image,
-            srcRect.x,
-            srcRect.y,
-            srcRect.width,
-            srcRect.height
-        );
-
-        Conversions.revokeImageUrl(image);
-
-        return _scale(ratio);
+        return _scale(srcImage, dW, dH, gradient);
     }
 
 
-    function _scale(tmpRatio) {
-        if (_gradient && (tmpRatio < 0.5 || tmpRatio > 2)) {
-            tmpRatio = tmpRatio < 0.5 ? 0.5 : 2;
+    function _scale(image, dW, dH, gradient) {
+        var sW = ImageSize.getWidth(image);
+        var sH = ImageSize.getHeight(image);
+        var wRatio = dW / sW;
+        var hRatio = dH / sH;
+
+        if (gradient) {
+            if (wRatio < 0.5 || wRatio > 2) {
+                wRatio = wRatio < 0.5 ? 0.5 : 2;
+            }
+            if (hRatio < 0.5 || hRatio > 2) {
+                hRatio = hRatio < 0.5 ? 0.5 : 2;
+            }
         }
 
-        return Resizer.scale(_canvas, tmpRatio).then(function(tCanvas) {
+        return Resizer.scale(image, wRatio, hRatio).then(function(tCanvas) {
             var tW = ImageSize.getWidth(tCanvas);
-            if (_ratio < 1 && tW <= _dW || _ratio > 1 && tW >= _dW) {
-                _canvas = null;
+            var tH = ImageSize.getWidth(tCanvas);
+            if (tW <= dW && tH <= dH) {
                 return tCanvas;
             } else {
-                _canvas = tCanvas;
-                tCanvas = null; // just in case
-                return _scale(_dW / tW);
+                return _scale(tCanvas, dW, dH, gradient);
             }
         });
     }

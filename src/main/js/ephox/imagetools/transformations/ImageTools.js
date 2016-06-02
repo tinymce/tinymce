@@ -81,9 +81,7 @@ define("ephox/imagetools/transformations/ImageTools", [
 
   function resize(blob, w, h, gradient) {
     return Conversions.blobToImage(blob).then(function(image) {
-      var ratio = Math.min(w / ImageSize.getWidth(image), h / ImageSize.getHeight(image));
-
-      return ImageResizer.scale(image, ratio, null, gradient).then(function(canvas) {
+      return ImageResizer.scale(image, null, w, h, gradient).then(function(canvas) {
         return Conversions.canvasToBlob(canvas, blob.type);
       });
     });

@@ -22,15 +22,16 @@ define("ephox/imagetools/transformations/ImageResizerCanvas", [
      * @method scale
      * @static
      * @param image {Image|Canvas}
-     * @param ratio
+     * @param wRatio {Number} Scale ratio for the width
+     * @param hRatio {Number} Scale ration for the height
      * @returns {Promise}
      */
-    function scale(image, ratio) {
+    function scale(image, wRatio, hRatio) {
         return new Promise(function(resolve) {
             var sW = ImageSize.getWidth(image);
             var sH = ImageSize.getHeight(image);
-            var dW = sW * ratio;
-            var dH = sH * ratio;
+            var dW = Math.floor(sW * wRatio);
+            var dH = Math.floor(sH * hRatio);
             var canvas = Canvas.create(dW, dH);
             var context = Canvas.get2dContext(canvas);
 
