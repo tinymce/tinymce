@@ -10,15 +10,22 @@
 
 define('tinymce/inlight/core/Matcher', [
 ], function () {
-	var match = function (toolbars, elements) {
-		for (var i = 0; i < elements.length; i++) {
-			for (var x = 0; x < toolbars.length; x++) {
-				if (toolbars[x].predicate(elements[i])) {
-					return {
-						toolbar: toolbars[x],
-						element: elements[i]
-					};
-				}
+	// result :: String -> Rect -> Matcher.result
+	var result = function (id, rect) {
+		return {
+			id: id,
+			rect: rect
+		};
+	};
+
+	// match :: Editor -> [(Editor -> Matcher.result | Null)] -> Matcher.result | Null
+	var match = function (editor, matchers) {
+		for (var i = 0; i < matchers.length; i++) {
+			var f = matchers[i];
+			var result = f(editor);
+
+			if (result) {
+				return result;
 			}
 		}
 
@@ -26,6 +33,7 @@ define('tinymce/inlight/core/Matcher', [
 	};
 
 	return {
-		match: match
+		match: match,
+		result: result
 	};
 });

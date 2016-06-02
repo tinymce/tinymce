@@ -16,9 +16,25 @@ define('tinymce/inlight/ui/Panel', [
 	'tinymce/inlight/core/Measure',
 	'tinymce/inlight/core/Layout'
 ], function (Tools, Factory, DOM, Toolbar, Measure, Layout) {
+	var DEFAULT_TEXT_SELECTION_ITEMS = 'bold italic | link h2 h3 blockquote';
+	var DEFAULT_INSERT_TOOLBAR_ITEMS = 'image media table';
 	var panel;
 
-	var create = function (editor) {
+	var createToolbars = function (editor, toolbars) {
+		return Tools.map(toolbars, function (toolbar) {
+			return Toolbar.create(editor, toolbar.id, toolbar.items);
+		});
+	};
+
+	var create = function (editor, toolbars) {
+		var items;
+
+		items = createToolbars(editor, toolbars);
+		items = items.concat([
+			Toolbar.create(editor, 'text', DEFAULT_TEXT_SELECTION_ITEMS),
+			Toolbar.create(editor, 'insert', DEFAULT_INSERT_TOOLBAR_ITEMS)
+		]);
+
 		return Factory.create({
 			type: 'floatpanel',
 			role: 'dialog',
@@ -31,6 +47,7 @@ define('tinymce/inlight/ui/Panel', [
 			autofix: true,
 			fixed: true,
 			border: 1,
+			items: items,
 			oncancel: function() {
 				editor.focus();
 			}
@@ -65,28 +82,21 @@ define('tinymce/inlight/ui/Panel', [
 		});
 	};
 
-	var showToolbar = function (editor, panel, toolbarMatch) {
-		var toolbars = panel.items().filter(function (toolbar) {
-			return toolbar.settings.key === toolbarMatch.items;
-		});
+	var showToolbar = function (panel, id) {
+		var toolbars = panel.items().filter('#' + id);
 
 		if (toolbars.length > 0) {
-			return toolbars[0];
+			toolbars[0].show();
+			panel.reflow();
 		}
-
-		var toolbarCtrl = Toolbar.create(editor, toolbarMatch.items);
-		toolbarCtrl.settings.key = toolbarMatch.items;
-		panel.add(toolbarCtrl).renderNew();
-		return toolbarCtrl;
 	};
 
-	var showPanelAt = function (panel, toolbar, editor, targetRect) {
+	var showPanelAt = function (panel, id, editor, targetRect) {
 		var contentAreaRect, panelRect, result, userConstainHandler;
 
 		showPanel(panel);
 		panel.items().hide();
-		showToolbar(editor, panel, toolbar).show();
-		panel.reflow();
+		showToolbar(panel, id);
 
 		userConstainHandler = editor.settings.inline_toolbar_position_handler;
 		contentAreaRect = Measure.getContentAreaRect(editor);
@@ -103,13 +113,14 @@ define('tinymce/inlight/ui/Panel', [
 		}
 	};
 
-	var show = function (editor, toolbar, targetRect) {
+	var show = function (editor, id, targetRect, toolbars) {
 		if (!panel) {
-			panel = create(editor);
-			panel.renderTo(document.body).moveTo(targetRect.x, targetRect.y).reflow();
+			panel = create(editor, toolbars);
+			panel.renderTo(document.body).reflow().moveTo(targetRect.x, targetRect.y);
+			editor.nodeChanged();
 		}
 
-		showPanelAt(panel, toolbar, editor, targetRect);
+		showPanelAt(panel, id, editor, targetRect);
 	};
 
 	var hide = function () {

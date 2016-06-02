@@ -12,100 +12,61 @@ define('tinymce/inlight/Theme', [
 	'global!tinymce.ThemeManager',
 	'global!tinymce.util.Delay',
 	'tinymce/inlight/ui/Panel',
-	'tinymce/inlight/core/Measure',
 	'tinymce/inlight/core/SkinLoader',
-	'tinymce/inlight/core/Matcher'
-], function(ThemeManager, Delay, Panel, Measure, SkinLoader, Matcher) {
-	var DEFAULT_TEXT_SELECTION_ITEMS = 'bold italic | link h2 h3 blockquote';
-	var DEFAULT_INSERT_TOOLBAR_ITEMS = 'image media table';
-
+	'tinymce/inlight/core/SelectionMatcher',
+	'tinymce/inlight/core/ElementMatcher',
+	'tinymce/inlight/core/Matcher',
+	'tinymce/inlight/alien/Arr',
+	'tinymce/inlight/core/PredicateId'
+], function(ThemeManager, Delay, Panel, SkinLoader, SelectionMatcher, ElementMatcher, Matcher, Arr, PredicateId) {
 	var getSelectionElements = function (editor) {
 		var node = editor.selection.getNode();
 		var elms = editor.dom.getParents(node);
 		return elms;
 	};
 
-	var getDefaultToolbars = function () {
-		return [
-			{
-				predicate: function (elm) {
-					return elm.nodeName === 'IMG';
-				},
+	var createToolbar = function (editor, selector, id, items) {
+		var selectorPredicate = function (elm) {
+			return editor.dom.is(elm, selector);
+		};
 
-				items: 'alignleft aligncenter alignright | image'
-			}
-		];
+		return {
+			predicate: selectorPredicate,
+			id: id,
+			items: items
+		};
 	};
 
 	var getToolbars = function (editor) {
-		var toolbars = editor.contextToolbars || [];
-		return toolbars.concat(getDefaultToolbars());
+		var contextToolbars = editor.contextToolbars;
+
+		return Arr.flatten([
+			contextToolbars ? contextToolbars : [],
+			createToolbar(editor, 'img', 'image', 'alignleft aligncenter alignright | image')
+		]);
 	};
 
-	var getTextSelectionToolbar = function (editor) {
-		var textSelectionItems = editor.settings.selection_toolbar;
+	var findMatchResult = function (editor, toolbars) {
+		var result, elements, contextToolbarsPredicateIds;
 
-		return {
-			items: textSelectionItems || DEFAULT_TEXT_SELECTION_ITEMS
-		};
-	};
+		elements = getSelectionElements(editor);
+		contextToolbarsPredicateIds = PredicateId.fromContextToolbars(toolbars);
 
-	var getEmptyTextBlockSelectionToolbar = function (editor) {
-		var insertToolbarItems = editor.settings.insert_toolbar;
+		result = Matcher.match(editor, [
+			ElementMatcher.element(elements[0], contextToolbarsPredicateIds),
+			SelectionMatcher.textSelection('text'),
+			SelectionMatcher.emptyTextBlock(elements, 'insert'),
+			ElementMatcher.parent(elements, contextToolbarsPredicateIds)
+		]);
 
-		return {
-			items: insertToolbarItems || DEFAULT_INSERT_TOOLBAR_ITEMS
-		};
-	};
-
-	var isTextSelection = function (editor, toolbars) {
-		var selection = editor.selection;
-		var selectedElm = selection.getNode();
-
-		return !selection.isCollapsed() && Matcher.match(toolbars, [selectedElm]) === null;
-	};
-
-	var showTextSelectionToolbar = function (editor) {
-		var textSelectionToolbar = getTextSelectionToolbar(editor);
-		var selectionRect = Measure.getSelectionRect(editor);
-
-		Panel.show(editor, textSelectionToolbar, selectionRect);
-	};
-
-	var toggleElementSelection = function (editor, toolbars, selectionElms) {
-		var match = Matcher.match(toolbars, selectionElms);
-		match ? Panel.show(editor, match.toolbar, Measure.getElementRect(editor, match.element)) : Panel.hide();
-	};
-
-	var showEmptyBlockToolbar = function (editor) {
-		var textSelectionToolbar = getEmptyTextBlockSelectionToolbar(editor);
-		var selectionRect = Measure.getSelectionRect(editor);
-
-		Panel.show(editor, textSelectionToolbar, selectionRect);
-	};
-
-	var isEmptyTextBlock = function (editor, toolbars, selectionElms) {
-		var textBlockElementsMap = editor.schema.getTextBlockElements();
-		var match = Matcher.match(toolbars, selectionElms);
-		var selectedBlock = editor.dom.getParent(editor.selection.getNode(), editor.dom.isBlock);
-
-		return match === null && selectedBlock && selectedBlock.nodeName in textBlockElementsMap && editor.dom.isEmpty(selectedBlock);
-	};
-
-	var toggleSelection = function (editor, toolbars) {
-		var selectionElms = getSelectionElements(editor);
-
-		if (isEmptyTextBlock(editor, toolbars, selectionElms)) {
-			showEmptyBlockToolbar(editor);
-		} else {
-			toggleElementSelection(editor, toolbars, selectionElms);
-		}
+		return result;
 	};
 
 	var showPanel = function (editor) {
 		return function () {
 			var toolbars = getToolbars(editor);
-			isTextSelection(editor, toolbars) ? showTextSelectionToolbar(editor) : toggleSelection(editor, toolbars);
+			var result = findMatchResult(editor, toolbars);
+			result ? Panel.show(editor, result.id, result.rect, toolbars) : Panel.hide();
 		};
 	};
 

@@ -53,7 +53,7 @@ define('tinymce/inlight/ui/Toolbar', [
 		};
 	};
 
-	var create = function (editor, items) {
+	var create = function (editor, name, items) {
 		var toolbarItems = [], buttonGroup;
 
 		if (!items) {
@@ -97,6 +97,7 @@ define('tinymce/inlight/ui/Toolbar', [
 		return Factory.create({
 			type: 'toolbar',
 			layout: 'flow',
+			name: name,
 			items: toolbarItems
 		});
 	};
