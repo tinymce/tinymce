@@ -22,7 +22,7 @@
 	font-style: normal;
 }
 
-@iconSize: 16px;
+@iconSize: 0.9rem; // 16px;
 
 .@{prefix}-ico {
 	font-family: 'tinymce', Arial;
@@ -30,7 +30,7 @@
 	font-weight: normal;
 	font-variant: normal;
 	font-size: @iconSize;
-	line-height: 16px;
+	line-height: @iconSize; // 16px;
 	speak: none;
 	vertical-align: text-top;
 	-webkit-font-smoothing: antialiased;
@@ -39,8 +39,8 @@
 	display: inline-block;
 	background: transparent center center;
 	background-size: cover;
-	width: 16px;
-	height: 16px;
+	width: @iconSize; // 16px;
+	height: @iconSize; // 16px;
 	color: @btn-text;
 }
 
@@ -175,3 +175,4 @@
 
 .@{prefix}-i-selected              { visibility: hidden; }
 i.@{prefix}-i-backcolor            { text-shadow: none; background: @colorbtn-backcolor-bg; }
+.@{prefix}-i-d2l_image:before      { content: url("data:image/svg+xml,%3Csvg%0A%20%20%20xmlns%3Adc%3D%22http%3A%2F%2Fpurl.org%2Fdc%2Felements%2F1.1%2F%22%0A%20%20%20xmlns%3Acc%3D%22http%3A%2F%2Fcreativecommons.org%2Fns%23%22%0A%20%20%20xmlns%3Ardf%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%22%0A%20%20%20xmlns%3Asvg%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%0A%20%20%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%0A%20%20%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%0A%20%20%20viewBox%3D%220%200%2018%2018%22%0A%20%20%20version%3D%221.1%22%0A%20%20%20id%3D%22svg3431%22%0A%20%20%20height%3D%2218%22%0A%20%20%20width%3D%2218%22%3E%0A%20%20%3Cdefs%0A%20%20%20%20%20id%3D%22defs3433%22%20%2F%3E%0A%20%20%3Cmetadata%0A%20%20%20%20%20id%3D%22metadata3436%22%3E%0A%20%20%20%20%3Crdf%3ARDF%3E%0A%20%20%20%20%20%20%3Ccc%3AWork%0A%20%20%20%20%20%20%20%20%20rdf%3Aabout%3D%22%22%3E%0A%20%20%20%20%20%20%20%20%3Cdc%3Aformat%3Eimage%2Fsvg%2Bxml%3C%2Fdc%3Aformat%3E%0A%20%20%20%20%20%20%20%20%3Cdc%3Atype%0A%20%20%20%20%20%20%20%20%20%20%20rdf%3Aresource%3D%22http%3A%2F%2Fpurl.org%2Fdc%2Fdcmitype%2FStillImage%22%20%2F%3E%0A%20%20%20%20%20%20%20%20%3Cdc%3Atitle%3E%3C%2Fdc%3Atitle%3E%0A%20%20%20%20%20%20%3C%2Fcc%3AWork%3E%0A%20%20%20%20%3C%2Frdf%3ARDF%3E%0A%20%20%3C%2Fmetadata%3E%0A%20%20%3Cg%0A%20%20%20%20%20transform%3D%22translate(0%2C-14)%22%0A%20%20%20%20%20id%3D%22layer1%22%3E%0A%20%20%20%20%3Cimage%0A%20%20%20%20%20%20%20width%3D%2218%22%0A%20%20%20%20%20%20%20height%3D%2217%22%0A%20%20%20%20%20%20%20preserveAspectRatio%3D%22none%22%0A%20%20%20%20%20%20%20xlink%3Ahref%3D%22data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAABIAAAARCAYAAADQWvz5AAAABHNCSVQICAgIfAhkiAAAAW9JREFU%0AOI3NlM1KQlEUhb9rjqrrOVINqmldhDLHQb1ABEZ%2FRIUQ0aBxEEYEEhT1AkFQIBX2R1Ag0lNEZj8q%0AUo%2FQvTkwHXgbhIZ5jJAGreHae6%2B91z6bo9m2bfMHcPyFCIBTRRaLRY5OzojfJSp4X5%2BX2alJHI7q%0A%2FlrJ2n74EIC5wAwHkRMS9w%2FKzt7eHgLTU1Vi2lMqZZ9fXGJaVh2GwC0l46N%2BtPXNbVslIoTAPzyE%0A0dUFQDqT4Soaw1LkuqXEqRJx6TqLC%2FO0tbaUOZ%2B3l86OdnZ297De3iryX03za0cqJNNpzi8uAZgY%0AG8FjGDUt%2Fvj8pd2ZllUWrAXnUnC1igytBtF1XVmQzWYJbWz9bqLM8wvwaUcKgRSCibGRiljVRCoy%0AGrvGY3TjMQzWVpbLfC6XIxq7Vgo19A8Mhr6T7%2Fk8N7dxXC6d5qZGCoUCj8kU4cNIzXtzSiGUQdOy%0AODo%2BVRZ9h1tKHKU91IvyZf%2B7b%2BQD2KmKO5L8B2kAAAAASUVORK5CYII%3D%0A%22%0A%20%20%20%20%20%20%20id%3D%22image3455%22%0A%20%20%20%20%20%20%20x%3D%220.1982336%22%0A%20%20%20%20%20%20%20y%3D%2214.301766%22%20%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A") }
