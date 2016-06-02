@@ -12,13 +12,16 @@ define('tinymce/inlight/core/SkinLoader', [
 	'global!tinymce.EditorManager',
 	'global!tinymce.DOM'
 ], function (EditorManager, DOM) {
-	var fireSkinLoaded = function (editor) {
-		if (editor.initialized) {
+	var fireSkinLoaded = function (editor, callback) {
+		var done = function () {
 			editor.fire('SkinLoaded');
+			callback();
+		};
+
+		if (editor.initialized) {
+			done();
 		} else {
-			editor.on('init', function() {
-				editor.fire('SkinLoaded');
-			});
+			editor.on('init', done);
 		}
 	};
 
@@ -27,8 +30,7 @@ define('tinymce/inlight/core/SkinLoader', [
 		var skinUrl = baseUrl + '/skins/' + skin;
 
 		var done = function () {
-			fireSkinLoaded(editor);
-			callback();
+			fireSkinLoaded(editor, callback);
 		};
 
 		DOM.styleSheetLoader.load(skinUrl + '/skin.min.css', done);

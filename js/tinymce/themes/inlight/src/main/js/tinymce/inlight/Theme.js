@@ -113,7 +113,7 @@ define('tinymce/inlight/Theme', [
 		var throttledShowPanel = Delay.throttle(showPanel(editor), 0);
 
 		editor.on('blur hide ObjectResizeStart', Panel.hide);
-		editor.on('nodeChange click', showPanel(editor));
+		editor.on('nodeChange click mouseup', throttledShowPanel);
 		editor.on('ResizeEditor ResizeWindow keyup', throttledShowPanel);
 		editor.on('remove', Panel.remove);
 	};
