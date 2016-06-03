@@ -20,7 +20,8 @@ define('tinymce/inlight/Demo', [
 		plugins: 'image table link paste contextmenu textpattern',
 		insert_toolbar: 'image media table',
 		selection_toolbar: 'bold italic | link h1 h2 blockquote',
-		inline: true
+		inline: true,
+		paste_data_images: true
 	});
 
 	return function() {};
