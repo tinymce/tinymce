@@ -78,7 +78,7 @@ module.exports = function(grunt) {
 				minimise_module_names: true,
 
 				files: {
-					src: ['js/tinymce/themes/inlight/src/main/js/Theme.js']
+					src: ['js/tinymce/themes/inlight/src/main/js/tinymce/inlight/Theme.js']
 				}
 			}
 		},
