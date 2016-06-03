@@ -23,16 +23,10 @@ define('tinymce/inlight/core/Layout', [
 		return {x: toRect.x, y: toRect.y, w: rect.w, h: rect.h};
 	};
 
-	var calc = function (targetRect, contentAreaRect, panelRect) {
-		var testPositions, relPos, relRect, outputPanelRect;
+	var calcByPositions = function (testPositions1, testPositions2, targetRect, contentAreaRect, panelRect) {
+		var relPos, relRect, outputPanelRect;
 
-		testPositions = [
-			'tc-bc', 'bc-tc',
-			'tl-bl', 'bl-tl',
-			'tr-br', 'br-tr'
-		];
-
-		relPos = Rect.findBestRelativePosition(panelRect, targetRect, contentAreaRect, testPositions);
+		relPos = Rect.findBestRelativePosition(panelRect, targetRect, contentAreaRect, testPositions1);
 		targetRect = Rect.clamp(targetRect, contentAreaRect);
 
 		if (relPos) {
@@ -43,10 +37,7 @@ define('tinymce/inlight/core/Layout', [
 
 		targetRect = Rect.intersect(contentAreaRect, targetRect);
 		if (targetRect) {
-			relPos = Rect.findBestRelativePosition(panelRect, targetRect, contentAreaRect, [
-				'bc-tc', 'bl-tl', 'br-tr'
-			]);
-
+			relPos = Rect.findBestRelativePosition(panelRect, targetRect, contentAreaRect, testPositions2);
 			if (relPos) {
 				relRect = Rect.relativePosition(panelRect, targetRect, relPos);
 				outputPanelRect = moveTo(panelRect, relRect);
@@ -58,6 +49,26 @@ define('tinymce/inlight/core/Layout', [
 		}
 
 		return null;
+	};
+
+	var calcInsert = function (targetRect, contentAreaRect, panelRect) {
+		return calcByPositions(
+			['cr-cl', 'cl-cr'],
+			['bc-tc', 'bl-tl', 'br-tr'],
+			targetRect,
+			contentAreaRect,
+			panelRect
+		);
+	};
+
+	var calc = function (targetRect, contentAreaRect, panelRect) {
+		return calcByPositions(
+			['tc-bc', 'bc-tc', 'tl-bl', 'bl-tl', 'tr-br', 'br-tr'],
+			['bc-tc', 'bl-tl', 'br-tr'],
+			targetRect,
+			contentAreaRect,
+			panelRect
+		);
 	};
 
 	var userConstrain = function (handler, targetRect, contentAreaRect, panelRect) {
@@ -77,6 +88,7 @@ define('tinymce/inlight/core/Layout', [
 	};
 
 	return {
+		calcInsert: calcInsert,
 		calc: calc,
 		userConstrain: userConstrain
 	};

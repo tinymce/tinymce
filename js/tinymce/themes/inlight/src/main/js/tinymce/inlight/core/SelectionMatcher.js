@@ -26,9 +26,15 @@ define('tinymce/inlight/core/SelectionMatcher', [
 	// emptyTextBlock :: [Elements] -> String -> (Editor -> Matcher.result | Null)
 	var emptyTextBlock = function (elements, id) {
 		return function (editor) {
-			var textBlockElementsMap = editor.schema.getTextBlockElements();
+			var i, textBlockElementsMap = editor.schema.getTextBlockElements();
 
-			for (var i = 0; i < elements.length; i++) {
+			for (i = 0; i < elements.length; i++) {
+				if (elements[i].nodeName === 'TABLE') {
+					return null;
+				}
+			}
+
+			for (i = 0; i < elements.length; i++) {
 				if (elements[i].nodeName in textBlockElementsMap) {
 					if (editor.dom.isEmpty(elements[i])) {
 						return Matcher.result(id, Measure.getSelectionRect(editor));

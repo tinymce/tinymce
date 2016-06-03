@@ -13,12 +13,13 @@ define('tinymce/inlight/ui/Panel', [
 	'global!tinymce.ui.Factory',
 	'global!tinymce.DOM',
 	'tinymce/inlight/ui/Toolbar',
+	'tinymce/inlight/ui/Forms',
 	'tinymce/inlight/core/Measure',
 	'tinymce/inlight/core/Layout'
-], function (Tools, Factory, DOM, Toolbar, Measure, Layout) {
-	var DEFAULT_TEXT_SELECTION_ITEMS = 'bold italic | link h2 h3 blockquote';
-	var DEFAULT_INSERT_TOOLBAR_ITEMS = 'image media table';
-	var panel;
+], function (Tools, Factory, DOM, Toolbar, Forms, Measure, Layout) {
+	var DEFAULT_TEXT_SELECTION_ITEMS = 'bold italic | quicklink h2 h3 blockquote';
+	var DEFAULT_INSERT_TOOLBAR_ITEMS = 'quickimage media quicktable';
+	var panel, currentRect;
 
 	var createToolbars = function (editor, toolbars) {
 		return Tools.map(toolbars, function (toolbar) {
@@ -32,7 +33,9 @@ define('tinymce/inlight/ui/Panel', [
 		items = createToolbars(editor, toolbars);
 		items = items.concat([
 			Toolbar.create(editor, 'text', DEFAULT_TEXT_SELECTION_ITEMS),
-			Toolbar.create(editor, 'insert', DEFAULT_INSERT_TOOLBAR_ITEMS)
+			Toolbar.create(editor, 'insert', DEFAULT_INSERT_TOOLBAR_ITEMS),
+			Forms.createQuickLinkForm(editor),
+			Forms.createQuickImageForm(editor)
 		]);
 
 		return Factory.create({
@@ -69,17 +72,26 @@ define('tinymce/inlight/ui/Panel', [
 
 		Tools.each({
 			t: 'down',
-			b: 'up'
+			b: 'up',
+			c: 'center'
 		}, function(cls, pos) {
 			panel.classes.toggle('arrow-' + cls, pos === relPos.substr(0, 1));
 		});
 
-		Tools.each({
-			l: 'left',
-			r: 'right'
-		}, function(cls, pos) {
-			panel.classes.toggle('arrow-' + cls, pos === relPos.substr(1, 1));
-		});
+		if (relPos === 'cr') {
+			panel.classes.toggle('arrow-left', true);
+			panel.classes.toggle('arrow-right', false);
+		} else if (relPos === 'cl') {
+			panel.classes.toggle('arrow-left', true);
+			panel.classes.toggle('arrow-right', true);
+		} else {
+			Tools.each({
+				l: 'left',
+				r: 'right'
+			}, function(cls, pos) {
+				panel.classes.toggle('arrow-' + cls, pos === relPos.substr(1, 1));
+			});
+		}
 	};
 
 	var showToolbar = function (panel, id) {
@@ -102,14 +114,46 @@ define('tinymce/inlight/ui/Panel', [
 		contentAreaRect = Measure.getContentAreaRect(editor);
 		panelRect = DOM.getRect(panel.getEl());
 
-		result = Layout.calc(targetRect, contentAreaRect, panelRect);
+		if (id === 'insert') {
+			result = Layout.calcInsert(targetRect, contentAreaRect, panelRect);
+		} else {
+			result = Layout.calc(targetRect, contentAreaRect, panelRect);
+		}
 
 		if (result) {
 			panelRect = result.rect;
+			currentRect = targetRect;
 			movePanelTo(panel, Layout.userConstrain(userConstainHandler, targetRect, contentAreaRect, panelRect));
+
 			togglePositionClass(panel, result.position);
 		} else {
 			hide(panel);
+		}
+	};
+
+	var showForm = function (editor, id) {
+		if (panel) {
+			panel.items().hide();
+			showToolbar(panel, id);
+
+			var contentAreaRect, panelRect, result, userConstainHandler;
+
+			showPanel(panel);
+			panel.items().hide();
+			showToolbar(panel, id);
+
+			userConstainHandler = editor.settings.inline_toolbar_position_handler;
+			contentAreaRect = Measure.getContentAreaRect(editor);
+			panelRect = DOM.getRect(panel.getEl());
+
+			result = Layout.calc(currentRect, contentAreaRect, panelRect);
+
+			if (result) {
+				panelRect = result.rect;
+				movePanelTo(panel, Layout.userConstrain(userConstainHandler, currentRect, contentAreaRect, panelRect));
+
+				togglePositionClass(panel, result.position);
+			}
 		}
 	};
 
@@ -138,6 +182,7 @@ define('tinymce/inlight/ui/Panel', [
 
 	return {
 		show: show,
+		showForm: showForm,
 		hide: hide,
 		remove: remove
 	};

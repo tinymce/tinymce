@@ -12,13 +12,14 @@ define('tinymce/inlight/Theme', [
 	'global!tinymce.ThemeManager',
 	'global!tinymce.util.Delay',
 	'tinymce/inlight/ui/Panel',
+	'tinymce/inlight/ui/Buttons',
 	'tinymce/inlight/core/SkinLoader',
 	'tinymce/inlight/core/SelectionMatcher',
 	'tinymce/inlight/core/ElementMatcher',
 	'tinymce/inlight/core/Matcher',
 	'tinymce/inlight/alien/Arr',
 	'tinymce/inlight/core/PredicateId'
-], function(ThemeManager, Delay, Panel, SkinLoader, SelectionMatcher, ElementMatcher, Matcher, Arr, PredicateId) {
+], function(ThemeManager, Delay, Panel, Buttons, SkinLoader, SelectionMatcher, ElementMatcher, Matcher, Arr, PredicateId) {
 	var getSelectionElements = function (editor) {
 		var node = editor.selection.getNode();
 		var elms = editor.dom.getParents(node);
@@ -79,11 +80,26 @@ define('tinymce/inlight/Theme', [
 		editor.on('remove', Panel.remove);
 	};
 
+	var overrideLinkShortcut = function (editor) {
+		editor.shortcuts.remove('meta+k');
+		editor.shortcuts.add('meta+k', '', function () {
+			var toolbars = getToolbars(editor);
+			var result = result = Matcher.match(editor, [
+				SelectionMatcher.textSelection('quicklink')
+			]);
+
+			if (result) {
+				Panel.show(editor, result.id, result.rect, toolbars);
+			}
+		});
+	};
+
 	var renderInlineUI = function (editor) {
 		var skinName = editor.settings.skin || 'lightgray';
 
 		SkinLoader.load(editor, skinName, function () {
 			bindContextualToolbarsEvents(editor);
+			overrideLinkShortcut(editor);
 		});
 
 		return {};
@@ -94,6 +110,8 @@ define('tinymce/inlight/Theme', [
 	};
 
 	ThemeManager.add('inlight', function (editor) {
+		Buttons.addToEditor(editor);
+
 		var renderUI = function () {
 			return editor.inline ? renderInlineUI(editor) : fail('Inlight theme only supports inline mode.');
 		};
