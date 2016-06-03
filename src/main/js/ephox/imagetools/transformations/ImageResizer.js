@@ -21,36 +21,13 @@ define("ephox/imagetools/transformations/ImageResizer", [
 
     var Resizer = ImageResizerCanvas;
 
-    function scale(image, srcRect, dW, dH, gradient) {
-        var srcImage;
-
-        if (!srcRect) {
-            srcImage = image;
-        } else {
-            var canvas = Canvas.create(srcRect.width, srcRect.height);
-
-            Canvas.get2dContext(canvas).drawImage(image,
-                srcRect.x,
-                srcRect.y,
-                srcRect.width,
-                srcRect.height
-            );
-
-            Conversions.revokeImageUrl(image);
-            srcImage = canvas;
-        }
-
-        gradient = gradient === undefined ? true : parseInt(gradient);
-
-        return _scale(srcImage, dW, dH, gradient);
-    }
-
-
-    function _scale(image, dW, dH, gradient) {
+    function scale(image, dW, dH, gradient) {
         var sW = ImageSize.getWidth(image);
         var sH = ImageSize.getHeight(image);
         var wRatio = dW / sW;
         var hRatio = dH / sH;
+
+        gradient = gradient === undefined ? true : parseInt(gradient);
 
         if (gradient) {
             if (wRatio < 0.5 || wRatio > 2) {
@@ -67,7 +44,7 @@ define("ephox/imagetools/transformations/ImageResizer", [
             if (tW == dW && tH == dH) {
                 return tCanvas;
             } else {
-                return _scale(tCanvas, dW, dH, gradient);
+                return scale(tCanvas, dW, dH, gradient);
             }
         });
     }
