@@ -73,3 +73,43 @@
 .@{prefix}-arrow.@{prefix}-arrow-right:after {
 	right: 9px;
 }
+
+.@{prefix}-arrow.@{prefix}-arrow-center.@{prefix}-arrow.@{prefix}-arrow-left:before {
+	left: -9px;
+	top: 50%;
+	border-right-color: @panel-border;
+	border-width: 9px 9px 9px 0;
+	margin-top: -9px;
+}
+
+.@{prefix}-arrow.@{prefix}-arrow-center.@{prefix}-arrow.@{prefix}-arrow-left:after {
+	left: -8px;
+	top: 50%;
+	border-right-color: mix(@panel-bg, @panel-bg-hlight, 60%);
+	border-width: 8px 8px 8px 0;
+	margin-top: -8px;
+}
+
+.@{prefix}-arrow.@{prefix}-arrow-center.@{prefix}-arrow.@{prefix}-arrow-left {
+	margin-left: 12px;
+}
+
+.@{prefix}-arrow.@{prefix}-arrow-center.@{prefix}-arrow.@{prefix}-arrow-right:before {
+	right: -9px;
+	top: 50%;
+	border-left-color: @panel-border;
+	border-width: 9px 0 9px 9px;
+	margin-top: -9px;
+}
+
+.@{prefix}-arrow.@{prefix}-arrow-center.@{prefix}-arrow.@{prefix}-arrow-right:after {
+	right: -8px;
+	top: 50%;
+	border-left-color: mix(@panel-bg, @panel-bg-hlight, 60%);
+	border-width: 8px 0 8px 8px;
+	margin-top: -8px;
+}
+
+.@{prefix}-arrow.@{prefix}-arrow-center.@{prefix}-arrow.@{prefix}-arrow-right {
+	margin-left: -14px;
+}
