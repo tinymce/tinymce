@@ -22,8 +22,8 @@ define("ephox/imagetools/transformations/ImageResizerWebgl", [
      * @method scale
      * @static
      * @param image {Image|Canvas}
-     * @param wRatio {Number} Scale ratio for the width
-     * @param hRatio {Number} Scale ration for the height
+     * @param dW {Number} Width that the image should be scaled to
+     * @param dH {Number} Height that the image should be scaled to
      * @returns {Promise}
      */
     function scale(image, dW, dH) {
@@ -53,7 +53,8 @@ define("ephox/imagetools/transformations/ImageResizerWebgl", [
 
     var shaders = {
         bilinear: {
-            VERTEX_SHADER: 'attribute vec2 a_dest_xy;\
+            VERTEX_SHADER: '\
+                attribute vec2 a_dest_xy;\
                 \
                 uniform vec2 u_wh;\
                 uniform vec2 u_ratio;\
