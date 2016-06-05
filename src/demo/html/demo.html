@@ -23,8 +23,7 @@
   <body>
     <h2>ImageTools Demo Page</h2>
 
-    <img id="editor" src="../images/test.jpeg" />
-    <br />
+    <input type="file" onchange="loadImage(this.files[0])" />
 
     <div class="toolbar">
       <select id="selector" onchange="showOptions(this.options[this.selectedIndex].value)">
@@ -70,6 +69,10 @@
       <button onclick="window.location.reload()">Reset</button>
     </div>
 
+    <br />
+
+    <img id="editor" src="../images/test.jpeg" />
+
 
     <!-- make sure you have run `bolt init` after checkout -->
     <script type="text/javascript" src="../../../config/bolt/bootstrap-demo.js"></script>
@@ -81,8 +84,22 @@
         if (currOp) {
           document.getElementById(currOp).style.display = 'none';
         }
-        document.getElementById(op).style.display = 'inline';
+        if (op) {
+          document.getElementById(op).style.display = 'inline';
+        }
         currOp = op;
+      }
+
+
+      function loadImage(file) {
+        var editor = document.getElementById('editor');
+        var fr = new FileReader;
+
+        fr.onload = function() {
+          editor.src = this.result;
+        };
+
+        fr.readAsDataURL(file);
       }
     </script>
 
