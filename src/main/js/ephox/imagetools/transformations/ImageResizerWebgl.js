@@ -26,12 +26,13 @@ define("ephox/imagetools/transformations/ImageResizerWebgl", [
      * @param hRatio {Number} Scale ration for the height
      * @returns {Promise}
      */
-    function scale(image, wRatio, hRatio) {
+    function scale(image, dW, dH) {
         return new Promise(function(resolve, reject) {
             var sW = ImageSize.getWidth(image);
             var sH = ImageSize.getHeight(image);
-            var dW = Math.floor(sW * wRatio);
-            var dH = Math.floor(sH * hRatio);
+            var wRatio = dW / sW;
+            var hRatio = dH / sH;
+
             var canvas = Canvas.create(dW, dH);
 
             try {

@@ -15,8 +15,9 @@ define("ephox/imagetools/transformations/ImageTools", [
   "ephox/imagetools/util/Conversions",
   "ephox/imagetools/util/Canvas",
   "ephox/imagetools/util/ImageSize",
-  "ephox/imagetools/transformations/ImageResizer"
-], function(Conversions, Canvas, ImageSize, ImageResizer) {
+  "ephox/imagetools/transformations/ImageResizerCanvas",
+  "ephox/imagetools/transformations/ImageResizerWebgl"
+], function(Conversions, Canvas, ImageSize, ImageResizerCanvas, ImageResizerWebgl) {
   var revokeImageUrl = Conversions.revokeImageUrl;
 
   function rotate(blob, angle) {
@@ -79,11 +80,15 @@ define("ephox/imagetools/transformations/ImageTools", [
     });
   }
 
-  function resize(blob, w, h, gradient) {
+  function resize(blob, w, h) {
     return Conversions.blobToImage(blob).then(function(image) {
-      return ImageResizer.scale(image, w, h, gradient).then(function(canvas) {
-        return Conversions.canvasToBlob(canvas, blob.type);
-      });
+      return ImageResizerWebgl.scale(image, w, h)
+          .catch(function() {
+            return ImageResizerCanvas.scale(image, w, h);
+          })
+          .then(function(canvas) {
+            return Conversions.canvasToBlob(canvas, blob.type);
+          });
     });
   }
 

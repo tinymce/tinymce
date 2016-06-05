@@ -64,7 +64,7 @@ define(
     };
 
     var resize = function (blob, w, h, gradient) {
-      return ImageTools.resize(blob, w, h, gradient);
+      return ImageTools.resize(blob, w, h);
     };
 
     var rotate = function (blob, angle) {

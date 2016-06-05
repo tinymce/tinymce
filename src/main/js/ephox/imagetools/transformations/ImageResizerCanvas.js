@@ -26,7 +26,32 @@ define("ephox/imagetools/transformations/ImageResizerCanvas", [
      * @param hRatio {Number} Scale ration for the height
      * @returns {Promise}
      */
-    function scale(image, wRatio, hRatio) {
+    function scale(image, dW, dH) {
+        var sW = ImageSize.getWidth(image);
+        var sH = ImageSize.getHeight(image);
+        var wRatio = dW / sW;
+        var hRatio = dH / sH;
+
+        if (wRatio < 0.5 || wRatio > 2) {
+            wRatio = wRatio < 0.5 ? 0.5 : 2;
+        }
+        if (hRatio < 0.5 || hRatio > 2) {
+            hRatio = hRatio < 0.5 ? 0.5 : 2;
+        }
+
+        return _scale(image, wRatio, hRatio).then(function(tCanvas) {
+            var tW = ImageSize.getWidth(tCanvas);
+            var tH = ImageSize.getHeight(tCanvas);
+            if (tW == dW && tH == dH) {
+                return tCanvas;
+            } else {
+                return scale(tCanvas, dW, dH);
+            }
+        });
+    }
+
+
+    function _scale(image, wRatio, hRatio) {
         return new Promise(function(resolve) {
             var sW = ImageSize.getWidth(image);
             var sH = ImageSize.getHeight(image);
