@@ -139,7 +139,7 @@ define("tinymce/html/Schema", [
 
 		// Add HTML4 elements unless it's html5-strict
 		if (type != "html5-strict") {
-			globalAttributes.push("xml:lang");
+			globalAttributes.push("xml::lang");
 
 			html4PhrasingContent = split("acronym applet basefont big font strike tt");
 			phrasingContent.push.apply(phrasingContent, html4PhrasingContent);
