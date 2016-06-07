@@ -309,6 +309,22 @@ if (tinymce.isWebKit) {
 		equal(Utils.cleanHtml(editor.getBody().innerHTML), '<p>a</p><p><b><i><br></i></b></p>');
 		equal(editor.selection.getStart(true).nodeName, 'I');
 	});
+
+	test('ForwardDelete all contents', function() {
+		editor.getBody().innerHTML = '<p>abc</p>';
+		Utils.setSelection('p', 0, 'p', 3);
+		editor.fire('keydown', {keyCode: 46});
+		equal(Utils.cleanHtml(editor.getBody().innerHTML), '<p><br data-mce-bogus="1"></p>');
+		equal(editor.selection.getStart(true).nodeName, 'P');
+	});
+
+	test('Delete all contents', function() {
+		editor.getBody().innerHTML = '<p>abc</p>';
+		Utils.setSelection('p', 0, 'p', 3);
+		editor.fire('keydown', {keyCode: 8});
+		equal(Utils.cleanHtml(editor.getBody().innerHTML), '<p><br data-mce-bogus="1"></p>');
+		equal(editor.selection.getStart(true).nodeName, 'P');
+	});
 } else {
 	test("Skipped since the browser isn't WebKit", function() {
 		ok(true, "Skipped");

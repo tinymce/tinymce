@@ -395,6 +395,11 @@ define("tinymce/dom/RangeUtils", [
 						container = container.childNodes[offset];
 						offset = 0;
 
+						// Don't normalize non collapsed selections like <p>[a</p><table></table>]
+						if (!collapsed && container === body.lastChild && container.nodeName === 'TABLE') {
+							return;
+						}
+
 						if (hasContentEditableFalseParent(container) || isCaretContainer(container)) {
 							return;
 						}
