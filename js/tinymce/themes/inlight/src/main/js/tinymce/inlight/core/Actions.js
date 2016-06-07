@@ -76,7 +76,7 @@ define('tinymce/inlight/core/Actions', [
 		var elm;
 
 		if (url.trim().length === 0) {
-			unlink();
+			unlink(editor);
 			return;
 		}
 
