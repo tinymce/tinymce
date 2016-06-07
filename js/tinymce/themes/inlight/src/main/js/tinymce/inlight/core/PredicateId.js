@@ -11,17 +11,22 @@
 define('tinymce/inlight/core/PredicateId', [
 	'global!tinymce.util.Tools'
 ], function (Tools) {
+	var create = function (id, predicate) {
+		return {
+			id: id,
+			predicate: predicate
+		};
+	};
+
 	// fromContextToolbars :: [ContextToolbar] -> [PredicateId]
 	var fromContextToolbars = function (toolbars) {
 		return Tools.map(toolbars, function (toolbar) {
-			return {
-				predicate: toolbar.predicate,
-				id: toolbar.id
-			};
+			return create(toolbar.id, toolbar.predicate);
 		});
 	};
 
 	return {
+		create: create,
 		fromContextToolbars: fromContextToolbars
 	};
 });
