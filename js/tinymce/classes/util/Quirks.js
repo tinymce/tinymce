@@ -1675,10 +1675,22 @@ define("tinymce/util/Quirks", [
 				return !editor.selection.isCollapsed() && !caretWalker.prev(startCaretPos) && !caretWalker.next(endCaretPos);
 			}
 
+			// Type over case delete and insert this won't cover typeover with a IME but at least it covers the common case
+			editor.on('keypress', function (e) {
+				if (!isDefaultPrevented(e) && !selection.isCollapsed() && e.charCode > 31 && !VK.metaKeyPressed(e)) {
+					if (isEverythingSelected(editor)) {
+						e.preventDefault();
+						editor.setContent(String.fromCharCode(e.charCode));
+						editor.selection.collapse(false);
+						editor.nodeChanged();
+					}
+				}
+			});
+
 			editor.on('keydown', function (e) {
 				var keyCode = e.keyCode;
 
-				if (!e.isDefaultPrevented() && (keyCode == DELETE || keyCode == BACKSPACE)) {
+				if (!isDefaultPrevented(e) && (keyCode == DELETE || keyCode == BACKSPACE)) {
 					if (isEverythingSelected(editor)) {
 						e.preventDefault();
 						editor.setContent('');
