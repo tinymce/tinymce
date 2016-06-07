@@ -17,7 +17,7 @@ define('tinymce/inlight/Demo', [
 	tinymce.init({
 		selector: 'div.tinymce',
 		theme: 'inlight',
-		plugins: 'image table link paste contextmenu textpattern',
+		plugins: 'image table link paste contextmenu textpattern autolink',
 		insert_toolbar: 'image media table',
 		selection_toolbar: 'bold italic | link h1 h2 blockquote',
 		inline: true,

@@ -57,8 +57,8 @@ define('tinymce/inlight/core/Measure', [
 	};
 
 	var getSelectionRect = function (editor) {
-		var rect = Convert.fromClientRect(editor.selection.getBoundingClientRect());
-		return toAbsolute(rect);
+		var clientRect = editor.selection.getBoundingClientRect();
+		return clientRect ? toAbsolute(Convert.fromClientRect(clientRect)) : null;
 	};
 
 	return {

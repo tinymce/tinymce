@@ -60,10 +60,10 @@ define('tinymce/inlight/Theme', [
 			ElementMatcher.parent(elements, contextToolbarsPredicateIds)
 		]);
 
-		return result;
+		return result && result.rect ? result : null;
 	};
 
-	var showPanel = function (editor) {
+	var togglePanel = function (editor) {
 		return function () {
 			var toolbars = getToolbars(editor);
 			var result = findMatchResult(editor, toolbars);
@@ -71,12 +71,22 @@ define('tinymce/inlight/Theme', [
 		};
 	};
 
+	var ignoreWhenFormIsVisible = function (f) {
+		return function () {
+			if (!Panel.inForm()) {
+				f();
+			}
+		};
+	};
+
 	var bindContextualToolbarsEvents = function (editor) {
-		var throttledShowPanel = Delay.throttle(showPanel(editor), 0);
+		var throttledTogglePanel = Delay.throttle(togglePanel(editor), 0);
+		var throttledTogglePanelWhenNotInForm = Delay.throttle(ignoreWhenFormIsVisible(togglePanel(editor)), 0);
 
 		editor.on('blur hide ObjectResizeStart', Panel.hide);
-		editor.on('nodeChange click mouseup', throttledShowPanel);
-		editor.on('ResizeEditor ResizeWindow keyup', throttledShowPanel);
+		editor.on('click', throttledTogglePanel);
+		editor.on('nodeChange mouseup', throttledTogglePanelWhenNotInForm);
+		editor.on('ResizeEditor ResizeWindow keyup', throttledTogglePanel);
 		editor.on('remove', Panel.remove);
 	};
 

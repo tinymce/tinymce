@@ -34,8 +34,7 @@ define('tinymce/inlight/ui/Panel', [
 		items = items.concat([
 			Toolbar.create(editor, 'text', DEFAULT_TEXT_SELECTION_ITEMS),
 			Toolbar.create(editor, 'insert', DEFAULT_INSERT_TOOLBAR_ITEMS),
-			Forms.createQuickLinkForm(editor),
-			Forms.createQuickImageForm(editor)
+			Forms.createQuickLinkForm(editor, hide)
 		]);
 
 		return Factory.create({
@@ -131,6 +130,10 @@ define('tinymce/inlight/ui/Panel', [
 		}
 	};
 
+	var hasFormVisible = function () {
+		return panel.items().filter('form:visible').length > 0;
+	};
+
 	var showForm = function (editor, id) {
 		if (panel) {
 			panel.items().hide();
@@ -180,9 +183,14 @@ define('tinymce/inlight/ui/Panel', [
 		}
 	};
 
+	var inForm = function () {
+		return panel && panel.visible() && hasFormVisible();
+	};
+
 	return {
 		show: show,
 		showForm: showForm,
+		inForm: inForm,
 		hide: hide,
 		remove: remove
 	};
