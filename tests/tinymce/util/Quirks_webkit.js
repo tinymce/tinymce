@@ -245,10 +245,10 @@ if (tinymce.isWebKit) {
 	});
 
 	test('Type over bold text in fully selected block and keep bold', function() {
-		editor.getBody().innerHTML = '<p><i><b>x</b></i></p>';
+		editor.getBody().innerHTML = '<p><i><b>x</b></i></p><p>y</p>';
 		Utils.setSelection('b', 0, 'b', 1);
 		editor.fire("keypress", {keyCode: 65, charCode: 65});
-		equal(Utils.cleanHtml(editor.getBody().innerHTML), '<p><i><b>a</b></i></p>');
+		equal(Utils.cleanHtml(editor.getBody().innerHTML), '<p><i><b>a</b></i></p><p>y</p>');
 		equal(editor.selection.getStart().nodeName, 'B');
 	});
 
