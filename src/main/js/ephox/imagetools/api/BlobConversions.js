@@ -22,6 +22,14 @@ define(
       return Conversions.blobToBase64(blob);
     };
 
+    var blobToImageResult = function(blob) {
+      return Conversions.blobToImageResult(blob);
+    };
+
+    var dataUriToImageResult = function(uri) {
+      return Conversions.dataUriToImageResult(uri);
+    };
+
     return {
       // used outside
       blobToImage: blobToImage,
@@ -30,7 +38,11 @@ define(
       // used outside
       blobToDataUri: blobToDataUri,
       // used outside
-      blobToBase64: blobToBase64
+      blobToBase64: blobToBase64,
+      // used outside
+      blobToImageResult: blobToImageResult,
+      // used outside
+      dataUriToImageResult: dataUriToImageResult
     };
   }
 );
