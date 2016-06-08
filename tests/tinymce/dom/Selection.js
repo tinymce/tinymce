@@ -662,7 +662,7 @@ ModuleLoader.require([
 
 			if (Env.ie && Env.ie < 12) {
 				// IE automatically normalizes
-				equal(rng.startContainer.data, 'a');
+				ok(rng.startContainer.parentNode.contentEditable != 'false');
 			} else {
 				equal(CaretContainer.isCaretContainer(rng.startContainer), true);
 			}
