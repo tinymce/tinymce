@@ -44,6 +44,7 @@ define('tinymce/inlight/ui/Forms', [
 
 	var createQuickLinkForm = function (editor, hide) {
 		var unlink = function () {
+			editor.focus();
 			Actions.unlink(editor);
 			hide();
 		};
@@ -57,8 +58,8 @@ define('tinymce/inlight/ui/Forms', [
 			onshow: function () {
 				var elm, linkurl = '';
 
-				elm = editor.selection.getStart();
-				if (elm.nodeName === 'A') {
+				elm = editor.dom.getParent(editor.selection.getStart(), 'a[href]');
+				if (elm) {
 					linkurl = editor.dom.getAttrib(elm, 'href');
 				}
 
@@ -66,7 +67,7 @@ define('tinymce/inlight/ui/Forms', [
 					linkurl: linkurl
 				});
 
-				toggleVisibility(this.find('#unlink'), elm.nodeName === 'A');
+				toggleVisibility(this.find('#unlink'), elm);
 			},
 			onsubmit: function (e) {
 				Actions.createLink(editor, e.data.linkurl);

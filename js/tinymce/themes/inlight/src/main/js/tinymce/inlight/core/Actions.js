@@ -9,8 +9,9 @@
  */
 
 define('tinymce/inlight/core/Actions', [
-	'tinymce/inlight/alien/Uuid'
-], function (Uuid) {
+	'tinymce/inlight/alien/Uuid',
+	'tinymce/inlight/alien/Unlink'
+], function (Uuid, Unlink) {
 	var createTableHtml = function (cols, rows) {
 		var x, y, html;
 
@@ -68,7 +69,7 @@ define('tinymce/inlight/core/Actions', [
 	};
 
 	var unlink = function (editor) {
-		editor.execCommand('unlink');
+		Unlink.unlinkSelection(editor);
 		collapseSelectionToEnd(editor);
 	};
 
@@ -80,8 +81,8 @@ define('tinymce/inlight/core/Actions', [
 			return;
 		}
 
-		elm = editor.selection.getStart();
-		if (elm.nodeName === 'A') {
+		elm = editor.dom.getParent(editor.selection.getStart(), 'a[href]');
+		if (elm) {
 			editor.dom.setAttrib(elm, 'href', url);
 			editor.focus();
 		} else {
