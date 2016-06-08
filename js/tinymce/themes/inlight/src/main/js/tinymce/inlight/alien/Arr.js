@@ -12,7 +12,7 @@ define('tinymce/inlight/alien/Arr', [
 ], function () {
 	var flatten = function (arr) {
 		return arr.reduce(function (results, item) {
-			return results.concat(item);
+			return Array.isArray(item) ? results.concat(flatten(item)) : results.concat(item);
 		}, []);
 	};
 
