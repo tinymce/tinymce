@@ -15,8 +15,9 @@ define("ephox/imagetools/util/Conversions", [
   "ephox/imagetools/util/Promise",
   "ephox/imagetools/util/Canvas",
   "ephox/imagetools/util/Mime",
-  "ephox/imagetools/util/ImageSize"
-], function(Promise, Canvas, Mime, ImageSize) {
+  "ephox/imagetools/util/ImageSize",
+  "ephox/imagetools/util/ImageResult"
+], function(Promise, Canvas, Mime, ImageSize, ImageResult) {
   function loadImage(image) {
     return new Promise(function(resolve) {
       function loaded() {
@@ -173,6 +174,18 @@ define("ephox/imagetools/util/Conversions", [
     URL.revokeObjectURL(image.src);
   }
 
+  function blobToImageResult(blob) {
+    return blobToDataUri(blob).then(function(uri) {
+      return new ImageResult({ blob: blob, dataUri: uri });
+    });
+  }
+
+  function dataUriToImageResult(uri) {
+    return uriToBlob(uri).then(function(blob) {
+      return new ImageResult({ blob: blob, dataUri: uri });
+    });
+  }
+
   return {
     // used outside
     blobToImage: blobToImage,
@@ -182,6 +195,10 @@ define("ephox/imagetools/util/Conversions", [
     blobToDataUri: blobToDataUri,
     // used outside
     blobToBase64: blobToBase64,
+    // used outside
+    blobToImageResult: blobToImageResult,
+    // used outside
+    dataUriToImageResult: dataUriToImageResult,
 
     // helper method
     imageToCanvas: imageToCanvas,
