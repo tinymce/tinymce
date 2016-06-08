@@ -455,8 +455,7 @@ module.exports = function(grunt) {
 						"js/tinymce/skins/*/*.less",
 						"js/tinymce/skins/*/fonts/*.json",
 						"js/tinymce/skins/*/fonts/*.dev.svg",
-						"js/tinymce/skins/*/fonts/readme.md",
-						"readme.md"
+						"js/tinymce/skins/*/fonts/readme.md"
 					],
 
 					pathFilter: function(zipFilePath) {
