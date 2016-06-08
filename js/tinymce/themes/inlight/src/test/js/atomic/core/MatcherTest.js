@@ -1,7 +1,7 @@
 test('browser/atomic/LayoutTest', [
-  'tinymce/inlight/core/Matcher'
+	'tinymce/inlight/core/Matcher'
 ], function (Matcher) {
-  var testMatch = function () {
+	var testMatch = function () {
 		var result, mockEditor = {
 			success1: 'success1',
 			success2: 'success2',
@@ -44,7 +44,7 @@ test('browser/atomic/LayoutTest', [
 
 		result = Matcher.match(mockEditor, []);
 		assert.eq(null, result);
-  };
+	};
 
-  testMatch();
+	testMatch();
 });

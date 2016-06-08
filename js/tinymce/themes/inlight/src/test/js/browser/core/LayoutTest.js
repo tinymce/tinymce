@@ -1,6 +1,6 @@
 test('browser/core/LayoutTest', [
 	'ephox/tinymce',
-  'tinymce/inlight/core/Layout'
+	'tinymce/inlight/core/Layout'
 ], function (tinymce, Layout) {
 	// TODO: Move this to atomic test when we can require parts of tinymce core using bolt
 
@@ -24,7 +24,7 @@ test('browser/core/LayoutTest', [
 		assert.eq(expected, result);
 	};
 
-  var testCalcPanelAtBottomLeft = function () {
+	var testCalcPanelAtBottomLeft = function () {
 		assertLayout({
 			rect: rect(0, 10, 20, 10),
 			position: 'bl-tl'
@@ -33,7 +33,7 @@ test('browser/core/LayoutTest', [
 			targetRect: rect(0, 0, 10, 10),
 			panelRect: rect(0, 0, 20, 10)
 		});
-  };
+	};
 
 	var testCalcPanelAtBottomRight = function () {
 		assertLayout({
@@ -44,7 +44,7 @@ test('browser/core/LayoutTest', [
 			targetRect: rect(90, 0, 10, 10),
 			panelRect: rect(0, 0, 20, 10)
 		});
-  };
+	};
 
 	var testCalcPanelAtTopLeft = function () {
 		assertLayout({
@@ -55,7 +55,7 @@ test('browser/core/LayoutTest', [
 			targetRect: rect(0, 20, 10, 10),
 			panelRect: rect(0, 0, 20, 10)
 		});
-  };
+	};
 
 	var testCalcPanelAtTopRight = function () {
 		assertLayout({
@@ -66,7 +66,7 @@ test('browser/core/LayoutTest', [
 			targetRect: rect(90, 20, 10, 10),
 			panelRect: rect(0, 0, 20, 10)
 		});
-  };
+	};
 
 	var testCalcPanelAtTopCenter = function () {
 		assertLayout({
@@ -77,7 +77,7 @@ test('browser/core/LayoutTest', [
 			targetRect: rect(40, 20, 10, 10),
 			panelRect: rect(0, 0, 20, 10)
 		});
-  };
+	};
 
 	var testCalcPanelAtBottomCenter = function () {
 		assertLayout({
@@ -88,7 +88,7 @@ test('browser/core/LayoutTest', [
 			targetRect: rect(40, 0, 10, 10),
 			panelRect: rect(0, 0, 20, 10)
 		});
-  };
+	};
 
 	var testUserConstrain = function () {
 		var targetRect, contentAreaRect, panelRect, userConstrainedPanelRect, handler;
@@ -108,7 +108,7 @@ test('browser/core/LayoutTest', [
 		assert.eq(userConstrainedPanelRect, rect(1, 2, 3, 4));
 	};
 
-  testCalcPanelAtBottomLeft();
+	testCalcPanelAtBottomLeft();
 	testCalcPanelAtBottomRight();
 	testCalcPanelAtTopLeft();
 	testCalcPanelAtTopRight();

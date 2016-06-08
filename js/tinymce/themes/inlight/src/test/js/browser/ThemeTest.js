@@ -1,6 +1,6 @@
 asynctest('browser/core/ThemeTest', [
 	'ephox.mcagar.api.TinyLoader',
-  'tinymce/inlight/Theme',
+	'tinymce/inlight/Theme',
 	'ephox.agar.api.Pipeline'
 ], function (TinyLoader, Theme, Pipeline) {
 	var success = arguments[arguments.length - 2];

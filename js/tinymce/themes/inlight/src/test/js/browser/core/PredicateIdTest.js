@@ -1,8 +1,8 @@
 test('browser/core/PredicateIdTest', [
 	'ephox/tinymce',
-  'tinymce/inlight/core/PredicateId'
+	'tinymce/inlight/core/PredicateId'
 ], function (tinymce, PredicateId) {
-  var testFromContextToolbars = function () {
+	var testFromContextToolbars = function () {
 		var isTrue = function () {
 			return true;
 		};
@@ -20,7 +20,7 @@ test('browser/core/PredicateIdTest', [
 			PredicateId.create('a', isTrue),
 			PredicateId.create('b', isFalse)
 		], predIds);
-  };
+	};
 
-  testFromContextToolbars();
+	testFromContextToolbars();
 });
