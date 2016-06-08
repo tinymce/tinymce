@@ -310,6 +310,15 @@ if (tinymce.isWebKit) {
 		equal(editor.selection.getStart(true).nodeName, 'I');
 	});
 
+	test('Type over all contents', function() {
+		editor.getBody().innerHTML = '<p>abc</p>';
+		Utils.setSelection('p', 0, 'p', 3);
+		editor.fire('keypress', {charCode: 97});
+		equal(Utils.cleanHtml(editor.getBody().innerHTML), '<p>a</p>');
+		equal(editor.selection.getRng().startContainer.data, 'a');
+		equal(editor.selection.getRng().startOffset, 1);
+	});
+
 	test('ForwardDelete all contents', function() {
 		editor.getBody().innerHTML = '<p>abc</p>';
 		Utils.setSelection('p', 0, 'p', 3);

@@ -1663,7 +1663,7 @@ define("tinymce/util/Quirks", [
 
 		/**
 		 * Properly empties the editor if all contents is selected and deleted this to
-		 * prevent emtpy paragraphs from being produced at beginning/end of contents.
+		 * prevent empty paragraphs from being produced at beginning/end of contents.
 		 */
 		function emptyEditorOnDeleteEverything() {
 			function isEverythingSelected(editor) {
@@ -1681,6 +1681,7 @@ define("tinymce/util/Quirks", [
 					if (isEverythingSelected(editor)) {
 						e.preventDefault();
 						editor.setContent(String.fromCharCode(e.charCode));
+						editor.selection.select(editor.getBody(), true);
 						editor.selection.collapse(false);
 						editor.nodeChanged();
 					}
