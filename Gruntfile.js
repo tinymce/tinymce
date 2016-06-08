@@ -546,7 +546,8 @@ module.exports = function(grunt) {
 					"js/tinymce/tinymce.min.js",
 					"js/tinymce/jquery.tinymce.min.js",
 					"js/tinymce/license.txt",
-					"changelog.txt"
+					"changelog.txt",
+					"readme.md"
 				]
 			}
 		},
