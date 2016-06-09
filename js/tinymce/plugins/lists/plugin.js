@@ -619,11 +619,16 @@ tinymce.PluginManager.add('lists', function(editor) {
 					block = dom.rename(block, listItemName);
 				}
 
+				updateListStyle(listBlock, detail);
 				mergeWithAdjacentLists(listBlock, detail);
 			});
 
 			moveToBookmark(bookmark);
 		}
+
+		var updateListStyle = function (el, detail) {
+			dom.setStyle(el, 'list-style-type', detail ? detail['list-style-type'] : null);
+		};
 
 		function removeList() {
 			var bookmark = createBookmark(selection.getRng(true)), root = editor.getBody();
@@ -664,7 +669,9 @@ tinymce.PluginManager.add('lists', function(editor) {
 					removeList(listName);
 				} else {
 					var bookmark = createBookmark(selection.getRng(true));
+					updateListStyle(parentList, detail);
 					mergeWithAdjacentLists(dom.rename(parentList, listName), detail);
+					
 					moveToBookmark(bookmark);
 				}
 			} else {
