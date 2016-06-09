@@ -87,9 +87,9 @@ ModuleLoader.require([
 		return html.toLowerCase().replace(/<br[^>]*>|[\r\n]+/gi, '');
 	}
 
-	function execCommand(cmd) {
+	function execCommand(cmd, ui, obj) {
 		if (editor.editorCommands.hasCustomCommand(cmd)) {
-			editor.execCommand(cmd);
+			editor.execCommand(cmd, ui, obj);
 		}
 	}
 
@@ -373,6 +373,33 @@ ModuleLoader.require([
 			'<ol>' +
 				'<li>a</li>' +
 				'<li>b</li>' +
+				'<li>c</li>' +
+			'</ol>'
+		);
+		equal(editor.selection.getStart().nodeName, 'LI');
+	});
+
+	test('Apply OL to UL and DO not merge with adjacent lists because styles are different', function() {
+		editor.getBody().innerHTML = trimBrs(
+			'<ol>' +
+				'<li>a</li>' +
+			'</ol>' +
+			'<ul><li>b</li></ul>' +
+			'<ol>' +
+				'<li>c</li>' +
+			'</ol>'
+		);
+
+		editor.focus();
+		Utils.setSelection('ul li', 1);
+		execCommand('InsertOrderedList', null, { 'list-style-type': 'alpha' });
+
+		equal(editor.getContent(),
+			'<ol>' +
+				'<li>a</li>' +
+			'</ol>' +
+			'<ol><li>b</li></ol>' +
+			'<ol>' +
 				'<li>c</li>' +
 			'</ol>'
 		);

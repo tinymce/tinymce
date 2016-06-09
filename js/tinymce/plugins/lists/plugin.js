@@ -270,11 +270,18 @@ tinymce.PluginManager.add('lists', function(editor) {
 			}
 		}
 
-		function mergeWithAdjacentLists(listBlock) {
+		var shouldMerge = function (listBlock, sibling, detail) {
+			var targetStyle = (detail && detail['list-style-type']) || editor.dom.getStyle(listBlock, 'list-style-type', true);
+			var style = editor.dom.getStyle(sibling, 'list-style-type', true);
+			return targetStyle === style;
+		};
+
+		function mergeWithAdjacentLists(listBlock, detail) {
 			var sibling, node;
+			
 
 			sibling = listBlock.nextSibling;
-			if (sibling && isListNode(sibling) && sibling.nodeName == listBlock.nodeName) {
+			if (sibling && isListNode(sibling) && sibling.nodeName == listBlock.nodeName && shouldMerge(listBlock, sibling, detail)) {
 				while ((node = sibling.firstChild)) {
 					listBlock.appendChild(node);
 				}
@@ -283,7 +290,7 @@ tinymce.PluginManager.add('lists', function(editor) {
 			}
 
 			sibling = listBlock.previousSibling;
-			if (sibling && isListNode(sibling) && sibling.nodeName == listBlock.nodeName) {
+			if (sibling && isListNode(sibling) && sibling.nodeName == listBlock.nodeName && shouldMerge(listBlock, sibling, detail)) {
 				while ((node = sibling.firstChild)) {
 					listBlock.insertBefore(node, listBlock.firstChild);
 				}
@@ -505,7 +512,7 @@ tinymce.PluginManager.add('lists', function(editor) {
 			}
 		}
 
-		function applyList(listName) {
+		function applyList(listName, detail) {
 			var rng = selection.getRng(true), bookmark, listItemName = 'LI';
 
 			if (dom.getContentEditable(selection.getNode()) === "false") {
@@ -612,7 +619,7 @@ tinymce.PluginManager.add('lists', function(editor) {
 					block = dom.rename(block, listItemName);
 				}
 
-				mergeWithAdjacentLists(listBlock);
+				mergeWithAdjacentLists(listBlock, detail);
 			});
 
 			moveToBookmark(bookmark);
@@ -645,7 +652,7 @@ tinymce.PluginManager.add('lists', function(editor) {
 			moveToBookmark(bookmark);
 		}
 
-		function toggleList(listName) {
+		function toggleList(listName, detail) {
 			var parentList = dom.getParent(selection.getStart(), 'OL,UL,DL');
 
 			if (isEditorBody(parentList)) {
@@ -657,11 +664,11 @@ tinymce.PluginManager.add('lists', function(editor) {
 					removeList(listName);
 				} else {
 					var bookmark = createBookmark(selection.getRng(true));
-					mergeWithAdjacentLists(dom.rename(parentList, listName));
+					mergeWithAdjacentLists(dom.rename(parentList, listName), detail);
 					moveToBookmark(bookmark);
 				}
 			} else {
-				applyList(listName);
+				applyList(listName, detail);
 			}
 		}
 
@@ -819,16 +826,16 @@ tinymce.PluginManager.add('lists', function(editor) {
 			}
 		});
 
-		editor.addCommand('InsertUnorderedList', function() {
-			toggleList('UL');
+		editor.addCommand('InsertUnorderedList', function(ui, detail) {
+			toggleList('UL', detail);
 		});
 
-		editor.addCommand('InsertOrderedList', function() {
-			toggleList('OL');
+		editor.addCommand('InsertOrderedList', function(ui, detail) {
+			toggleList('OL', detail);
 		});
 
-		editor.addCommand('InsertDefinitionList', function() {
-			toggleList('DL');
+		editor.addCommand('InsertDefinitionList', function(ui, detail) {
+			toggleList('DL', detail);
 		});
 
 		editor.addQueryStateHandler('InsertUnorderedList', queryListCommandState('UL'));
