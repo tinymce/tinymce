@@ -64,10 +64,16 @@ define('tinymce/inlight/Theme', [
 	};
 
 	var togglePanel = function (editor) {
-		return function () {
+		var toggle = function () {
 			var toolbars = getToolbars(editor);
 			var result = findMatchResult(editor, toolbars);
 			result ? Panel.show(editor, result.id, result.rect, toolbars) : Panel.hide();
+		};
+
+		return function () {
+			if (!editor.removed) {
+				toggle();
+			}
 		};
 	};
 

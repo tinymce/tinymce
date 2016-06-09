@@ -15,14 +15,20 @@ define('tinymce/inlight/ui/Buttons', [
 	'tinymce/inlight/core/Actions'
 ], function (Panel, Conversions, Picker, Actions) {
 	var addHeaderButtons = function (editor) {
+		var formatBlock = function (name) {
+			return function () {
+				Actions.formatBlock(editor, name);
+			};
+		};
+
 		for (var i = 1; i < 6; i++) {
 			var name = 'h' + i;
 
 			editor.addButton(name, {
 				text: name.toUpperCase(),
-				tooltip: 'Header ' + name,
+				tooltip: 'Heading ' + i,
 				stateSelector: name,
-				onclick: Actions.formatBlock(editor, name),
+				onclick: formatBlock(name),
 				onPostRender: function () {
 					// TODO: Remove this hack that produces bold H1-H6 when we have proper icons
 					var span = this.getEl().firstChild.firstChild;

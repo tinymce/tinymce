@@ -49,9 +49,7 @@ define('tinymce/inlight/core/Actions', [
 	};
 
 	var formatBlock = function (editor, formatName) {
-		return function () {
-			editor.execCommand('FormatBlock', false, formatName);
-		};
+		editor.execCommand('FormatBlock', false, formatName);
 	};
 
 	var insertBlob = function (editor, base64, blob) {
@@ -77,6 +75,7 @@ define('tinymce/inlight/core/Actions', [
 		var elm;
 
 		if (url.trim().length === 0) {
+			editor.focus();
 			unlink(editor);
 			return;
 		}
