@@ -11,25 +11,30 @@
 define("ephox/imagetools/util/ImageResult", [], function() {
 
     /**
-     * Data structure that will hold image data simultaneously as blob and as dataUri
+     * Creates data structure that will hold image data simultaneously as blob and as dataUri
      *
-     * @constructor
-     * @param {Object} data
-     *  @param {Blob} data.blob
-     *  @param {String) data.dataUri
+     * @method create
+     * @static
+     * @param {Blob} blob
+     * @param {String) dataUri
      */
-    return function ImageResult(data) {
+    function create(blob, uri) {
+        return {
+            blob: function() {
+                return blob;
+            },
 
-        this.getBlob = function() {
-            return data.blob;
-        };
+            dataUri: function() {
+                return uri;
+            },
 
-        this.getDataUri = function() {
-            return data.dataUri;
-        };
+            base64: function() {
+                return uri.split(',')[1];
+            }
+        }
+    }
 
-        this.getBase64 = function() {
-            return data.dataUri.split(',')[1];
-        };
+    return {
+        create: create
     };
 });

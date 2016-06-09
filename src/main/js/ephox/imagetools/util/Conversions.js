@@ -176,13 +176,13 @@ define("ephox/imagetools/util/Conversions", [
 
   function blobToImageResult(blob) {
     return blobToDataUri(blob).then(function(uri) {
-      return new ImageResult({ blob: blob, dataUri: uri });
+      return ImageResult.create(blob, uri);
     });
   }
 
   function dataUriToImageResult(uri) {
     return uriToBlob(uri).then(function(blob) {
-      return new ImageResult({ blob: blob, dataUri: uri });
+      return ImageResult.create(blob, uri);
     });
   }
 
