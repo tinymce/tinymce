@@ -102,7 +102,7 @@ asynctest('browser/core/ThemeTest', [
 
 	var sInsertTableTests = function (tinyApis) {
 		return GeneralSteps.sequence([
-			tinyApis.sSetContent('<p><br></p>'),
+			tinyApis.sSetContent('<p><br></p><p>b</p>'),
 			tinyApis.sSetCursor([0], 0),
 			sClickContextButton('Insert table'),
 			tinyApis.sAssertContent([
@@ -117,7 +117,8 @@ asynctest('browser/core/ThemeTest', [
 								'<td>&nbsp;</td>',
 							'</tr>',
 						'</tbody>',
-					'</table>'
+					'</table>',
+					'<p>b</p>'
 				].join('\n')
 			)
 		]);
