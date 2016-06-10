@@ -71,28 +71,29 @@ define('tinymce/inlight/core/Actions', [
 	};
 
 	var unlink = function (editor) {
+		editor.focus();
 		Unlink.unlinkSelection(editor);
 		collapseSelectionToEnd(editor);
 	};
 
-	var createLink = function (editor, url) {
-		var elm;
-
-		if (url.trim().length === 0) {
-			editor.focus();
-			unlink(editor);
-			return;
-		}
-
-		elm = editor.dom.getParent(editor.selection.getStart(), 'a[href]');
-		if (elm) {
-			editor.dom.setAttrib(elm, 'href', url);
-			editor.focus();
-		} else {
-			editor.execCommand('mceInsertLink', false, {href: url});
-		}
-
+	var changeHref = function (editor, elm, url) {
+		editor.focus();
+		editor.dom.setAttrib(elm, 'href', url);
 		collapseSelectionToEnd(editor);
+	};
+
+	var insertLink = function (editor, url) {
+		editor.execCommand('mceInsertLink', false, {href: url});
+		collapseSelectionToEnd(editor);
+	};
+
+	var updateOrInsertLink = function (editor, url) {
+		var elm = editor.dom.getParent(editor.selection.getStart(), 'a[href]');
+		elm ? changeHref(editor, elm, url) : insertLink(editor, url);
+	};
+
+	var createLink = function (editor, url) {
+		url.trim().length === 0 ? unlink(editor) : updateOrInsertLink(editor, url);
 	};
 
 	return {
