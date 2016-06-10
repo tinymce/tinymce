@@ -400,13 +400,40 @@ ModuleLoader.require([
 
 		editor.focus();
 		Utils.setSelection('ul li', 1);
-		execCommand('InsertOrderedList', null, { 'list-style-type': 'alpha' });
+		execCommand('InsertOrderedList', null, { 'list-style-type': 'lower-alpha' });
 
 		equal(editor.getContent(),
 			'<ol>' +
 				'<li>a</li>' +
 			'</ol>' +
-			'<ol><li>b</li></ol>' +
+			'<ol style="list-style-type: lower-alpha;"><li>b</li></ol>' +
+			'<ol>' +
+				'<li>c</li>' +
+			'</ol>'
+		);
+		equal(editor.selection.getStart().nodeName, 'LI');
+	});
+
+	test('Apply OL to P and DO not merge with adjacent lists because styles are different (exec has style)', function() {
+		editor.getBody().innerHTML = trimBrs(
+			'<ol>' +
+				'<li>a</li>' +
+			'</ol>' +
+			'<p>b</p>' +
+			'<ol>' +
+				'<li>c</li>' +
+			'</ol>'
+		);
+
+		editor.focus();
+		Utils.setSelection('p', 1);
+		execCommand('InsertOrderedList', null, { 'list-style-type': 'lower-alpha' });
+
+		equal(editor.getContent(),
+			'<ol>' +
+				'<li>a</li>' +
+			'</ol>' +
+			'<ol style="list-style-type: lower-alpha;"><li>b</li></ol>' +
 			'<ol>' +
 				'<li>c</li>' +
 			'</ol>'

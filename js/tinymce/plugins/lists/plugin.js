@@ -607,8 +607,14 @@ tinymce.PluginManager.add('lists', function(editor) {
 			tinymce.each(getSelectedTextBlocks(), function(block) {
 				var listBlock, sibling;
 
+				var hasCompatibleStyle = function (sib) {
+					var sibStyle = dom.getStyle(sib, 'list-style-type');
+					var detailStyle = detail ? detail['list-style-type'] : '';
+					return sibStyle === detailStyle;
+				};
+
 				sibling = block.previousSibling;
-				if (sibling && isListNode(sibling) && sibling.nodeName == listName) {
+				if (sibling && isListNode(sibling) && sibling.nodeName == listName && hasCompatibleStyle(sibling)) {
 					listBlock = sibling;
 					block = dom.rename(block, listItemName);
 					sibling.appendChild(block);
