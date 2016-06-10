@@ -23,7 +23,7 @@ define("tinymce/util/Uuid", [
 			return Math.round(Math.random() * 0xFFFFFFFF).toString(36);
 		};
 
-		return rnd() + rnd() + rnd();
+		return 's' + Date.now().toString(36) + rnd() + rnd() + rnd();
 	};
 
 	var uuid = function (prefix) {
