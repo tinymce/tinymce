@@ -16,6 +16,8 @@ define('tinymce/inlight/core/Actions', [
 		var x, y, html;
 
 		html = '<table data-mce-id="mce" style="width: 100%">';
+		html += '<tbody>';
+
 		for (y = 0; y < rows; y++) {
 			html += '<tr>';
 
@@ -25,6 +27,8 @@ define('tinymce/inlight/core/Actions', [
 
 			html += '</tr>';
 		}
+
+		html += '</tbody>';
 		html += '</table>';
 
 		return html;
