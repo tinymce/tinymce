@@ -1,50 +1,51 @@
-test('browser/atomic/LayoutTest', [
+test('browser/atomic/MatcherTest', [
 	'tinymce/inlight/core/Matcher'
 ], function (Matcher) {
-	var testMatch = function () {
-		var result, mockEditor = {
+	var testMatch = function (mockEditor, matches, expectedResult) {
+		var result;
+
+		result = Matcher.match(mockEditor, matches);
+		assert.eq(expectedResult, result);
+	};
+
+	var match = function (key) {
+		return function (editor) {
+			return editor[key];
+		};
+	};
+
+	var testMatcher = function () {
+		var mockEditor = {
 			success1: 'success1',
 			success2: 'success2',
 			failure: null
 		};
 
-		var match = function (key) {
-			return function (editor) {
-				return editor[key];
-			};
-		};
-
-		result = Matcher.match(mockEditor, [
+		testMatch(mockEditor, [
 			match('success1')
-		]);
-		assert.eq('success1', result);
+		], 'success1');
 
-		result = Matcher.match(mockEditor, [
+		testMatch(mockEditor, [
 			match(null),
 			match('success2')
-		]);
-		assert.eq('success2', result);
+		], 'success2');
 
-		result = Matcher.match(mockEditor, [
+		testMatch(mockEditor, [
 			match('success1'),
 			match('success2')
-		]);
-		assert.eq('success1', result);
+		], 'success1');
 
-		result = Matcher.match(mockEditor, [
+		testMatch(mockEditor, [
 			match(null)
-		]);
-		assert.eq(null, result);
+		], null);
 
-		result = Matcher.match(mockEditor, [
+		testMatch(mockEditor, [
 			match(null),
 			match(null)
-		]);
-		assert.eq(null, result);
+		], null);
 
-		result = Matcher.match(mockEditor, []);
-		assert.eq(null, result);
+		testMatch(mockEditor, [], null);
 	};
 
-	testMatch();
+	testMatcher();
 });

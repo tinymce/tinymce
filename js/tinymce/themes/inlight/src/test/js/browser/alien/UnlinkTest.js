@@ -10,9 +10,8 @@ asynctest('browser/alien/UnlinkTest', [
 	var failure = arguments[arguments.length - 1];
 
 	var sUnlinkSelection = function (editor) {
-		return Step.async(function (next /*die*/) {
+		return Step.sync(function () {
 			Unlink.unlinkSelection(editor);
-			next();
 		});
 	};
 
