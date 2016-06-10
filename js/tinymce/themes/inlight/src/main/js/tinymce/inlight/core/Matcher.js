@@ -10,7 +10,7 @@
 
 define('tinymce/inlight/core/Matcher', [
 ], function () {
-	// result :: String -> Rect -> Matcher.result
+	// result :: String, Rect -> Matcher.result
 	var result = function (id, rect) {
 		return {
 			id: id,
@@ -18,7 +18,7 @@ define('tinymce/inlight/core/Matcher', [
 		};
 	};
 
-	// match :: Editor -> [(Editor -> Matcher.result | Null)] -> Matcher.result | Null
+	// match :: Editor, [(Editor -> Matcher.result | Null)] -> Matcher.result | Null
 	var match = function (editor, matchers) {
 		for (var i = 0; i < matchers.length; i++) {
 			var f = matchers[i];

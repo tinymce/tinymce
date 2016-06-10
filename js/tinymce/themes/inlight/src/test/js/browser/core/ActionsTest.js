@@ -130,13 +130,44 @@ asynctest('browser/core/ActionsTest', [
 		]);
 	};
 
+	var base64ToBlob = function (base64, type) {
+		var buff = atob(base64);
+		var bytes = new Uint8Array(buff.length);
+
+		for (var i = 0; i < bytes.length; i++) {
+			bytes[i] = buff.charCodeAt(i);
+		}
+
+		return new Blob([bytes], {type: type});
+	};
+
+	var sInsertBlobTests = function (editor, tinyApis) {
+		var sInsertBlobTest = function (inputHtml, path, offset, blob, base64, expectedHtml) {
+			var sInsertBlob = wrap(Actions.insertBlob, editor);
+
+			return GeneralSteps.sequence([
+				tinyApis.sSetContent(inputHtml),
+				tinyApis.sSetCursor(path, offset),
+				sInsertBlob(blob, base64),
+				tinyApis.sAssertContent(expectedHtml, 'Should have a image')
+			]);
+		};
+
+		var base64 = 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+		var blob = base64ToBlob(base64, 'image/gif');
+
+		return GeneralSteps.sequence([
+			sInsertBlobTest('<p>a</p>', [0, 0], 0, base64, blob, '<p><img src="data:image/gif;base64,' + base64 + '" />a</p>')
+		]);
+	};
+
 	TinyLoader.setup(function (editor, onSuccess, onFailure) {
 		var tinyApis = TinyApis(editor);
 
 		Pipeline.async({}, [
 			sInsertTableTests(editor, tinyApis),
 			sFormatBlockTests(editor, tinyApis),
-			//sInsertBlobTests(editor, tinyApis),
+			sInsertBlobTests(editor, tinyApis),
 			sCreateLinkTests(editor, tinyApis),
 			sUnlinkTests(editor, tinyApis)
 		], onSuccess, onFailure);

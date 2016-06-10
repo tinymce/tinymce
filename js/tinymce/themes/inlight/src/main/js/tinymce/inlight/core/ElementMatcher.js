@@ -12,7 +12,7 @@ define('tinymce/inlight/core/ElementMatcher', [
 	'tinymce/inlight/core/Matcher',
 	'tinymce/inlight/core/Measure'
 ], function (Matcher, Measure) {
-	// emptyTextBlock :: Element -> [PredicateId] -> (Editor -> Matcher.result | Null)
+	// element :: Element, [PredicateId] -> (Editor -> Matcher.result | Null)
 	var element = function (element, predicateIds) {
 		return function (editor) {
 			for (var i = 0; i < predicateIds.length; i++) {
@@ -25,7 +25,7 @@ define('tinymce/inlight/core/ElementMatcher', [
 		};
 	};
 
-	// parent :: [Elements] -> [PredicateId] -> (Editor -> Matcher.result | Null)
+	// parent :: [Elements], [PredicateId] -> (Editor -> Matcher.result | Null)
 	var parent = function (elements, predicateIds) {
 		return function (editor) {
 			for (var i = 0; i < elements.length; i++) {

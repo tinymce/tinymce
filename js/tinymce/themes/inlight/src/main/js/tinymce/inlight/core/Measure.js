@@ -42,8 +42,8 @@ define('tinymce/inlight/core/Measure', [
 
 		// We need to use these instead of the rect values since the style
 		// size properites might not be the same as the real size for a table
-		targetRect.w = elm.clientWidth;
-		targetRect.h = elm.clientHeight;
+		targetRect.w = elm.clientWidth > 0 ? elm.clientWidth : elm.offsetWidth;
+		targetRect.h = elm.clientHeight > 0 ? elm.clientHeight : elm.offsetHeight;
 
 		return targetRect;
 	};
