@@ -270,18 +270,18 @@ tinymce.PluginManager.add('lists', function(editor) {
 			}
 		}
 
-		var shouldMerge = function (listBlock, sibling, detail) {
-			var targetStyle = (detail && detail['list-style-type']) || editor.dom.getStyle(listBlock, 'list-style-type', true);
+		var shouldMerge = function (listBlock, sibling) {
+			var targetStyle = editor.dom.getStyle(listBlock, 'list-style-type', true);
 			var style = editor.dom.getStyle(sibling, 'list-style-type', true);
 			return targetStyle === style;
 		};
 
-		function mergeWithAdjacentLists(listBlock, detail) {
+		function mergeWithAdjacentLists(listBlock, q) {
 			var sibling, node;
 			
 
 			sibling = listBlock.nextSibling;
-			if (sibling && isListNode(sibling) && sibling.nodeName == listBlock.nodeName && shouldMerge(listBlock, sibling, detail)) {
+			if (sibling && isListNode(sibling) && sibling.nodeName == listBlock.nodeName && shouldMerge(listBlock, sibling)) {
 				while ((node = sibling.firstChild)) {
 					listBlock.appendChild(node);
 				}
@@ -290,7 +290,7 @@ tinymce.PluginManager.add('lists', function(editor) {
 			}
 
 			sibling = listBlock.previousSibling;
-			if (sibling && isListNode(sibling) && sibling.nodeName == listBlock.nodeName && shouldMerge(listBlock, sibling, detail)) {
+			if (sibling && isListNode(sibling) && sibling.nodeName == listBlock.nodeName && shouldMerge(listBlock, sibling)) {
 				while ((node = sibling.firstChild)) {
 					listBlock.insertBefore(node, listBlock.firstChild);
 				}
@@ -620,7 +620,7 @@ tinymce.PluginManager.add('lists', function(editor) {
 				}
 
 				updateListStyle(listBlock, detail);
-				mergeWithAdjacentLists(listBlock, detail);
+				mergeWithAdjacentLists(listBlock);
 			});
 
 			moveToBookmark(bookmark);
@@ -670,7 +670,7 @@ tinymce.PluginManager.add('lists', function(editor) {
 				} else {
 					var bookmark = createBookmark(selection.getRng(true));
 					updateListStyle(parentList, detail);
-					mergeWithAdjacentLists(dom.rename(parentList, listName), detail);
+					mergeWithAdjacentLists(dom.rename(parentList, listName));
 					
 					moveToBookmark(bookmark);
 				}
