@@ -319,13 +319,13 @@ define("tinymce/UndoManager", [
 			},
 
 			/**
-			 * Executes the specified function in an undo translation. The selection
+			 * Executes the specified mutator function as an undo transaction. The selection
 			 * before the modification will be stored to the undo stack and if the DOM changes
 			 * it will add a new undo level. Any methods within the translation that adds undo levels will
 			 * be ignored. So a translation can include calls to execCommand or editor.insertContent.
 			 *
 			 * @method transact
-			 * @param {function} callback Function to execute dom manipulation logic in.
+			 * @param {function} callback Function that gets executed and has dom manipulation logic in it.
 			 */
 			transact: function(callback) {
 				self.beforeChange();
@@ -338,6 +338,23 @@ define("tinymce/UndoManager", [
 				}
 
 				self.add();
+			},
+
+			/**
+			 * Executes the specified mutator function as an undo transaction. The selection
+			 * before the modification will be stored to the undo stack and if the DOM changes
+			 * it will add a new undo level. Any methods within the translation that adds undo levels will
+			 * be ignored. So a translation can include calls to execCommand or editor.insertContent. The
+			 * difference between this one and transact is that this will be appended to the end of the queue
+			 * like it never happened so a user can undo back to the state this transaction created.
+			 *
+			 * @method append
+			 * @param {function} callback Function that gets executed and has dom manipulation logic in it.
+			 */
+			append: function (callback) {
+				self.transact(callback);
+				self.undo();
+				index = data.length;
 			}
 		};
 
