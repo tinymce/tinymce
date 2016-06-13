@@ -99,4 +99,12 @@ ModuleLoader.require([
 		equal(editor.getContent(), '<ul><li>a</li><li>12</li></ul>');
 		assertSelection('li:nth-child(2)', 0);
 	});
+
+	test('insertAtCaret - merge inline elements', function() {
+		editor.setContent('<strong><em>abc</em></strong>');
+		editor.focus();
+		Utils.setSelection('em', 1);
+		InsertContent.insertAtCaret(editor, {content: '<em><strong>123</strong></em>', merge: true});
+		equal(editor.getContent(), '<p><strong><em>a123bc</em></strong></p>');
+	});
 });
