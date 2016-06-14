@@ -294,6 +294,7 @@ define("tinymce/UndoManager", [
 				data = [];
 				index = 0;
 				self.typing = false;
+				self.data = data;
 				editor.fire('ClearUndos');
 			},
 
@@ -326,6 +327,7 @@ define("tinymce/UndoManager", [
 			 *
 			 * @method transact
 			 * @param {function} callback Function that gets executed and has dom manipulation logic in it.
+			 * @return {Object} Undo level that got added or null it a level wasn't needed.
 			 */
 			transact: function(callback) {
 				self.beforeChange();
@@ -337,24 +339,31 @@ define("tinymce/UndoManager", [
 					locks--;
 				}
 
-				self.add();
+				return self.add();
 			},
 
 			/**
-			 * Executes the specified mutator function as an undo transaction. The selection
-			 * before the modification will be stored to the undo stack and if the DOM changes
-			 * it will add a new undo level. Any methods within the translation that adds undo levels will
-			 * be ignored. So a translation can include calls to execCommand or editor.insertContent. The
-			 * difference between this one and transact is that this will be appended to the end of the queue
-			 * like it never happened so a user can undo back to the state this transaction created.
+			 * Adds an extra "hidden" undo level by first applying the first mutation and store that to the undo stack
+			 * then roll back that change and do the second mutation on top of the stack. This will produce an extra
+			 * undo level that the user doesn't see until they undo.
 			 *
-			 * @method append
-			 * @param {function} callback Function that gets executed and has dom manipulation logic in it.
+			 * @method extra
+			 * @param {function} callback1 Function that does mutation but gets stored as a "hidden" extra undo level.
+			 * @param {function} callback2 Function that does mutation but gets displayed to the user.
 			 */
-			append: function (callback) {
-				self.transact(callback);
-				self.undo();
-				index = data.length;
+			extra: function (callback1, callback2) {
+				var lastLevel, bookmark;
+
+				if (self.transact(callback1)) {
+					bookmark = data[index].bookmark;
+					lastLevel = data[index - 1];
+					editor.setContent(lastLevel.content, {format: 'raw'});
+					editor.selection.moveToBookmark(lastLevel.beforeBookmark);
+
+					if (self.transact(callback2)) {
+						data[index - 1].beforeBookmark = bookmark;
+					}
+				}
 			}
 		};
 

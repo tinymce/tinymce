@@ -193,7 +193,7 @@ test('No undo/redo cmds on Undo/Redo shortcut', function() {
 });
 
 test('Transact', function() {
-	var count = 0;
+	var count = 0, level;
 
 	editor.undoManager.clear();
 
@@ -201,12 +201,32 @@ test('Transact', function() {
 		count++;
 	});
 
-	editor.undoManager.transact(function() {
+	level = editor.undoManager.transact(function() {
 		editor.undoManager.add();
 		editor.undoManager.add();
 	});
 
 	equal(count, 1);
+	equal(level !== null, true);
+});
+
+test('Transact no change', function() {
+	editor.undoManager.add();
+
+	var level = editor.undoManager.transact(function() {
+	});
+
+	equal(level, null);
+});
+
+test('Transact with change', function() {
+	editor.undoManager.add();
+
+	var level = editor.undoManager.transact(function() {
+		editor.setContent('x');
+	});
+
+	equal(level !== null, true);
 });
 
 test('Transact nested', function() {
@@ -251,6 +271,34 @@ test('Transact exception', function() {
 	editor.undoManager.add();
 
 	equal(count, 1);
+});
+
+test('Extra with changes', function() {
+	var data;
+
+	editor.undoManager.clear();
+	editor.setContent('<p>abc</p>');
+	editor.undoManager.add();
+
+	editor.undoManager.extra(function() {
+		Utils.setSelection('p', 1, 'p', 2);
+		editor.insertContent('1');
+	}, function () {
+		Utils.setSelection('p', 1, 'p', 2);
+		editor.insertContent('2');
+	});
+
+	data = editor.undoManager.data;
+	equal(data.length, 3);
+	equal(data[0].content, '<p>abc</p>');
+	deepEqual(data[0].bookmark, {start: [0]});
+	deepEqual(data[0].beforeBookmark, {start: [0]});
+	equal(data[1].content, '<p>a1c</p>');
+	deepEqual(data[1].bookmark, {start: [2, 0, 0]});
+	deepEqual(data[1].beforeBookmark, {start: [2, 0, 0]});
+	equal(data[2].content, '<p>a2c</p>');
+	deepEqual(data[2].bookmark, {start: [2, 0, 0]});
+	deepEqual(data[1].beforeBookmark, data[2].bookmark);
 });
 
 test('Exclude internal elements', function() {
