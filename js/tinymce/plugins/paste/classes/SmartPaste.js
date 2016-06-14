@@ -17,12 +17,8 @@
  * @private
  */
 define("tinymce/pasteplugin/SmartPaste", [
-	"tinymce/util/Promise",
-	"tinymce/pasteplugin/ImageLoader",
-	"tinymce/pasteplugin/PromiseUtils"
-], function (Promise, ImageLoader, PromiseUtils) {
-	var resolve = PromiseUtils.resolve, reject = PromiseUtils.reject;
-
+	"tinymce/util/Tools"
+], function (Tools) {
 	var isAbsoluteUrl = function (url) {
 		return /^https?:\/\/[\w\?\-\/+=.&%]+$/i.test(url);
 	};
@@ -32,50 +28,58 @@ define("tinymce/pasteplugin/SmartPaste", [
 	};
 
 	var createImage = function (editor, url, pasteHtml) {
-			return ImageLoader.load(url).then(function () {
-				editor.undoManager.append(function () {
-					pasteHtml(url);
-				});
+		editor.undoManager.extra(function () {
+			pasteHtml(url);
+		}, function () {
+			editor.insertContent('<img src="' + url + '">');
+		});
 
-				editor.insertContent('<img src="' + url + '">');
-				return resolve();
-			});
+		return true;
 	};
 
 	var createLink = function (editor, url, pasteHtml) {
-		return new Promise(function (resolve) {
-			editor.undoManager.append(function () {
-				pasteHtml(url);
-			});
-
+		editor.undoManager.extra(function () {
+			pasteHtml(url);
+		}, function () {
 			editor.execCommand('mceInsertLink', false, url);
-			resolve();
 		});
+
+		return true;
 	};
 
 	var linkSelection = function (editor, html, pasteHtml) {
-		return editor.selection.isCollapsed() === false && isAbsoluteUrl(html) ? createLink(editor, html, pasteHtml) : reject(html);
+		return editor.selection.isCollapsed() === false && isAbsoluteUrl(html) ? createLink(editor, html, pasteHtml) : false;
 	};
 
 	var insertImage = function (editor, html, pasteHtml) {
-		return isAbsoluteUrl(html) && isImageUrl(html) ? createImage(editor, html, pasteHtml) : reject(html);
+		return isAbsoluteUrl(html) && isImageUrl(html) ? createImage(editor, html, pasteHtml) : false;
 	};
 
-	var pasteHtml = function (editor, html, pasteHtml) {
-		var fallback = function (editor, html) {
-			pasteHtml(html);
-			return resolve();
+	var insertContent = function (editor, html) {
+		var pasteHtml = function (html) {
+			editor.insertContent(html, {
+				merge: editor.settings.paste_merge_formats !== false,
+				paste: true
+			});
+
+			return true;
 		};
 
-		return PromiseUtils.until([editor, html, pasteHtml], [
+		var fallback = function (editor, html) {
+			pasteHtml(html);
+		};
+
+		Tools.each([
 			linkSelection,
 			insertImage,
 			fallback
-		]);
+		], function (action) {
+			return action(editor, html, pasteHtml) !== true;
+		});
 	};
 
 	return {
 		isAbsoluteUrl: isAbsoluteUrl,
-		pasteHtml: pasteHtml
+		insertContent: insertContent
 	};
 });

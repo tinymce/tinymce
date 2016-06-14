@@ -68,10 +68,7 @@ define("tinymce/pasteplugin/Clipboard", [
 				}
 
 				if (!args.isDefaultPrevented()) {
-					editor.insertContent(html, {
-						merge: editor.settings.paste_merge_formats !== false,
-						paste: true
-					});
+					SmartPaste.insertContent(editor, html);
 				}
 			}
 		}
@@ -542,7 +539,7 @@ define("tinymce/pasteplugin/Clipboard", [
 				if (plainTextMode) {
 					pasteText(content);
 				} else {
-					SmartPaste.pasteHtml(editor, content, pasteHtml);
+					pasteHtml(content);
 				}
 			}
 
