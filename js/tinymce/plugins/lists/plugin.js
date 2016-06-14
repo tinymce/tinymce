@@ -276,9 +276,8 @@ tinymce.PluginManager.add('lists', function(editor) {
 			return targetStyle === style;
 		};
 
-		function mergeWithAdjacentLists(listBlock, q) {
+		function mergeWithAdjacentLists(listBlock) {
 			var sibling, node;
-			
 
 			sibling = listBlock.nextSibling;
 			if (sibling && isListNode(sibling) && sibling.nodeName == listBlock.nodeName && shouldMerge(listBlock, sibling)) {
@@ -677,7 +676,7 @@ tinymce.PluginManager.add('lists', function(editor) {
 					var bookmark = createBookmark(selection.getRng(true));
 					updateListStyle(parentList, detail);
 					mergeWithAdjacentLists(dom.rename(parentList, listName));
-					
+
 					moveToBookmark(bookmark);
 				}
 			} else {

@@ -44,7 +44,10 @@ tinymce.PluginManager.add('advlist', function(editor) {
 
 			// Switch/add list type if needed
 			if (!list || list.nodeName != listName || styleValue === false) {
-				var detail = { 'list-style-type': styleValue ? styleValue : null };
+				var detail = {
+					'list-style-type': styleValue ? styleValue : null
+				};
+
 				editor.execCommand(listName == 'UL' ? 'InsertUnorderedList' : 'InsertOrderedList', false, detail);
 			}
 
