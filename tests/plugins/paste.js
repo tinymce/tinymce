@@ -793,28 +793,4 @@ if (tinymce.Env.webkit) {
 
 		equal(editor.getContent(), '<p style="color: #ff0000;">abc</p>');
 	});
-
-	test('smart paste url on selection', function() {
-		editor.focus();
-		editor.undoManager.clear();
-		editor.setContent('<p>abc</p>');
-		Utils.setSelection('p', 0, 'p', 3);
-		editor.undoManager.add();
-
-		editor.execCommand('mceInsertClipboardContent', false, {content: 'http://www.site.com'});
-		equal(editor.getContent(), '<p><a href="http://www.site.com">abc</a></p>');
-		equal(editor.undoManager.data.length, 3);
-	});
-
-	test('smart paste image url', function() {
-		editor.focus();
-		editor.undoManager.clear();
-		editor.setContent('<p>abc</p>');
-		Utils.setSelection('p', 1);
-		editor.undoManager.add();
-
-		editor.execCommand('mceInsertClipboardContent', false, {content: 'http://www.site.com/my.jpg'});
-		equal(editor.getContent(), '<p>a<img src="http://www.site.com/my.jpg" />bc</p>');
-		equal(editor.undoManager.data.length, 3);
-	});
 }

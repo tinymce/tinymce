@@ -24,7 +24,7 @@ define("tinymce/pasteplugin/SmartPaste", [
 	};
 
 	var isImageUrl = function (url) {
-		return /.(gif|jpe?g|jpng)$/.test(url);
+		return isAbsoluteUrl(url) && /.(gif|jpe?g|jpng)$/.test(url);
 	};
 
 	var createImage = function (editor, url, pasteHtml) {
@@ -52,7 +52,7 @@ define("tinymce/pasteplugin/SmartPaste", [
 	};
 
 	var insertImage = function (editor, html, pasteHtml) {
-		return isAbsoluteUrl(html) && isImageUrl(html) ? createImage(editor, html, pasteHtml) : false;
+		return isImageUrl(html) ? createImage(editor, html, pasteHtml) : false;
 	};
 
 	var insertContent = function (editor, html) {
@@ -79,6 +79,7 @@ define("tinymce/pasteplugin/SmartPaste", [
 	};
 
 	return {
+		isImageUrl: isImageUrl,
 		isAbsoluteUrl: isAbsoluteUrl,
 		insertContent: insertContent
 	};
