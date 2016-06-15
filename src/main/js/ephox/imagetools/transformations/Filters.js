@@ -52,7 +52,7 @@ define("ephox/imagetools/transformations/Filters", [
       pixels = applyMatrix(context.getImageData(0, 0, canvas.width, canvas.height), matrix);
       context.putImageData(pixels, 0, 0);
 
-      return Conversions.canvasToBlob(canvas);
+      return Conversions.canvasToImageResult(canvas);
     });
   }
 
@@ -122,7 +122,7 @@ define("ephox/imagetools/transformations/Filters", [
       pixelsOut = applyMatrix(pixelsIn, pixelsOut, matrix);
       context.putImageData(pixelsOut, 0, 0);
 
-      return Conversions.canvasToBlob(canvas);
+      return Conversions.canvasToImageResult(canvas);
     });
   }
 
@@ -154,7 +154,7 @@ define("ephox/imagetools/transformations/Filters", [
         pixels = applyLookup(context.getImageData(0, 0, canvas.width, canvas.height), lookup);
         context.putImageData(pixels, 0, 0);
 
-        return Conversions.canvasToBlob(canvas);
+        return Conversions.canvasToImageResult(canvas);
       });
     };
   }
