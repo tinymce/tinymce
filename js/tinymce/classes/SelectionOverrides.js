@@ -852,7 +852,6 @@ define("tinymce/SelectionOverrides", [
 				top: dom.getPos(node, editor.getBody()).y
 			});
 
-			editor.getBody().focus();
 			$realSelectionContainer[0].focus();
 			sel = editor.selection.getSel();
 			sel.removeAllRanges();
