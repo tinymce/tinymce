@@ -82,13 +82,16 @@ define("ephox/imagetools/transformations/ImageTools", [
 
   function resize(blob, w, h) {
     return Conversions.blobToImage(blob).then(function(image) {
-      return ImageResizerWebgl.scale(image, w, h)
+      var result = ImageResizerWebgl.scale(image, w, h)
           .catch(function() {
             return ImageResizerCanvas.scale(image, w, h);
           })
           .then(function(canvas) {
             return Conversions.canvasToBlob(canvas, blob.type);
           });
+
+      revokeImageUrl(image);
+      return result;
     });
   }
 

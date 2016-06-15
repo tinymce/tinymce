@@ -61,11 +61,6 @@ define("ephox/imagetools/transformations/ImageResizerCanvas", [
 
             context.drawImage(image, 0, 0, sW, sH, 0, 0, dW, dH);
 
-            if (image.src) {
-                Conversions.revokeImageUrl(image);
-            }
-            image = null; // just in case
-
             resolve(canvas);
         });
     }

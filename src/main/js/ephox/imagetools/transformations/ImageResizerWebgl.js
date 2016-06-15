@@ -42,11 +42,6 @@ define("ephox/imagetools/transformations/ImageResizerWebgl", [
                 return;
             }
 
-            if (image.src) {
-                Conversions.revokeImageUrl(image);
-            }
-            image = null; // just in case
-
             resolve(canvas);
         });
     }
