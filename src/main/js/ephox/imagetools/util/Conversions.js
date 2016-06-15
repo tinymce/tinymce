@@ -151,12 +151,18 @@ define("ephox/imagetools/util/Conversions", [
   function canvasToBlob(canvas, type) {
     if (HTMLCanvasElement.prototype.toBlob) {
       return new Promise(function(resolve) {
-        canvas.toBlob(function (blob) {
+        canvas.toBlob(function(blob) {
           resolve(blob);
         }, type);
       });
     }
     return dataUriToBlob(canvas.toDataURL(type));
+  }
+
+  function canvasToImageResult(canvas, type) {
+    return canvasToBlob(canvas, type).then(function(blob) {
+      return ImageResult.create(blob, canvas.toDataURL(type));
+    });
   }
 
   function blobToDataUri(blob) {
@@ -209,15 +215,13 @@ define("ephox/imagetools/util/Conversions", [
 
     // helper method
     imageToCanvas: imageToCanvas,
-
     // helper method
     canvasToBlob: canvasToBlob,
-
+    // helper method
+    canvasToImageResult: canvasToImageResult,
     // helper method
     revokeImageUrl: revokeImageUrl,
-
-     // helper method
+    // helper method
     uriToBlob: uriToBlob
-
   };
 });
