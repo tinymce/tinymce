@@ -56,9 +56,9 @@ asynctest('browser/alien/BookmarkTest', [
 		sTestBookmark('abc', {element: [0], offset: 1}),
 		sTestBookmark('abc', {start: {element: [0], offset: 0}, finish: {element: [0], offset: 1}}),
 		sTestBookmark('<b>a</b>', {element: [0, 0], offset: 0}),
-		sTestBookmark('<b>a</b>', {element: [0], offset: 0}),
-		sTestBookmark('<b>a</b>', {start: {element: [0], offset: 0}, finish: {element: [0], offset: 1}}),
-		sTestBookmark('<b>a</b><b>b</b>', {start: {element: [0], offset: 0}, finish: {element: [1], offset: 1}})
+		sTestBookmark('<b>a</b>', {element: [0, 0], offset: 0}),
+		sTestBookmark('<b>a</b>', {start: {element: [0, 0], offset: 0}, finish: {element: [0, 0], offset: 1}}),
+		sTestBookmark('<b>a</b><b>b</b>', {start: {element: [0, 0], offset: 0}, finish: {element: [1, 0], offset: 1}})
 	], function () {
 		success();
 	}, failure);
