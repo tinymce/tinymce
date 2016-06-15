@@ -19,6 +19,8 @@ define("ephox/imagetools/util/ImageResult", [], function() {
      * @param {String) dataUri
      */
     function create(blob, uri) {
+        var base64 = uri.split(',')[1];
+
         return {
             blob: function() {
                 return blob;
@@ -29,7 +31,7 @@ define("ephox/imagetools/util/ImageResult", [], function() {
             },
 
             base64: function() {
-                return uri.split(',')[1];
+                return base64;
             }
         }
     }
