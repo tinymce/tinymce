@@ -1,6 +1,7 @@
 asynctest('browser/core/ThemeTest', [
 	'ephox.mcagar.api.TinyLoader',
 	'ephox.mcagar.api.TinyApis',
+	'ephox.mcagar.api.TinyActions',
 	'ephox.mcagar.api.TinyDom',
 	'tinymce/inlight/Theme',
 	'ephox.agar.api.Pipeline',
@@ -8,15 +9,16 @@ asynctest('browser/core/ThemeTest', [
 	'ephox.agar.api.UiFinder',
 	'ephox.agar.api.Mouse',
 	'ephox.agar.api.GeneralSteps',
-	'ephox.agar.api.UiControls'
-], function (TinyLoader, TinyApis, TinyDom, Theme, Pipeline, Chain, UiFinder, Mouse, GeneralSteps, UiControls) {
+	'ephox.agar.api.UiControls',
+	'ephox.agar.api.FocusTools'
+], function (TinyLoader, TinyApis, TinyActions, TinyDom, Theme, Pipeline, Chain, UiFinder, Mouse, GeneralSteps, UiControls, FocusTools) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
 	var dialogRoot = TinyDom.fromDom(document.body);
 
 	var cWaitForContextToolbar = Chain.fromChainsWith(dialogRoot, [
-		UiFinder.cWaitForState('label', '.mce-tinymce-inline', function () {
-			return true;
+		UiFinder.cWaitForState('label', '.mce-tinymce-inline', function (elm) {
+			return elm.dom().style.display === "";
 		})
 	]);
 
@@ -27,10 +29,21 @@ asynctest('browser/core/ThemeTest', [
 		]);
 	};
 
+	var sClickFocusedButton = Chain.asStep(TinyDom.fromDom(document), [
+		FocusTools.cGetFocused,
+		Mouse.cTrueClick
+	]);
+
 	var sClickContextButton = function (ariaLabel) {
 		return Chain.asStep({}, [
 			cWaitForContextToolbar,
 			cClickToolbarButton(ariaLabel)
+		]);
+	};
+
+	var sWaitForToolbar = function () {
+		return Chain.asStep({}, [
+			cWaitForContextToolbar
 		]);
 	};
 
@@ -124,14 +137,26 @@ asynctest('browser/core/ThemeTest', [
 		]);
 	};
 
+	var sAriaTests = function (tinyApis, tinyActions) {
+		return GeneralSteps.sequence([
+			tinyApis.sSetContent('<p>a</p>'),
+			tinyApis.sSetSelection([0, 0], 0, [0, 0], 1),
+			sWaitForToolbar(),
+			tinyActions.sContentKeydown(121, {alt: true}),
+			sClickFocusedButton,
+			tinyApis.sAssertContent('<p><strong>a</strong></p>')
+		]);
+	};
+
 	TinyLoader.setup(function (editor, onSuccess, onFailure) {
-		var tinyApis = TinyApis(editor);
+		var tinyApis = TinyApis(editor), tinyActions = TinyActions(editor);
 
 		Pipeline.async({}, [
 			sBoldTests(tinyApis),
 			sH2Tests(tinyApis),
 			sLinkTests(tinyApis),
-			sInsertTableTests(tinyApis)
+			sInsertTableTests(tinyApis),
+			sAriaTests(tinyApis, tinyActions)
 		], onSuccess, onFailure);
 	}, {
 		theme: 'inlight',

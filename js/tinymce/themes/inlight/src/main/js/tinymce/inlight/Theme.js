@@ -94,6 +94,8 @@ define('tinymce/inlight/Theme', [
 		editor.on('nodeChange mouseup', throttledTogglePanelWhenNotInForm);
 		editor.on('ResizeEditor ResizeWindow keyup', throttledTogglePanel);
 		editor.on('remove', Panel.remove);
+
+		editor.shortcuts.add('Alt+F10', '', Panel.focus);
 	};
 
 	var overrideLinkShortcut = function (editor) {

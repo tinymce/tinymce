@@ -176,6 +176,14 @@ define('tinymce/inlight/ui/Panel', [
 		}
 	};
 
+	var focus = function () {
+		if (panel) {
+			panel.find('toolbar:visible').eq(0).each(function (item) {
+				item.focus(true);
+			});
+		}
+	};
+
 	var remove = function () {
 		if (panel) {
 			panel.remove();
@@ -192,6 +200,7 @@ define('tinymce/inlight/ui/Panel', [
 		showForm: showForm,
 		inForm: inForm,
 		hide: hide,
+		focus: focus,
 		remove: remove
 	};
 });
