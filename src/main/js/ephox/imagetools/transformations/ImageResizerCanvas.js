@@ -31,22 +31,21 @@ define("ephox/imagetools/transformations/ImageResizerCanvas", [
         var sH = ImageSize.getHeight(image);
         var wRatio = dW / sW;
         var hRatio = dH / sH;
+        var scaleCapped = false;
 
         if (wRatio < 0.5 || wRatio > 2) {
             wRatio = wRatio < 0.5 ? 0.5 : 2;
+            scaleCapped = true;
         }
         if (hRatio < 0.5 || hRatio > 2) {
             hRatio = hRatio < 0.5 ? 0.5 : 2;
+            scaleCapped = true;
         }
 
-        return _scale(image, wRatio, hRatio).then(function(tCanvas) {
-            var tW = ImageSize.getWidth(tCanvas);
-            var tH = ImageSize.getHeight(tCanvas);
-            if (tW == dW && tH == dH) {
-                return tCanvas;
-            } else {
-                return scale(tCanvas, dW, dH);
-            }
+        var scaled = _scale(image, wRatio, hRatio);
+
+        return !scaleCapped ? scaled : scaled.then(function (tCanvas) {
+            return scale(tCanvas, dW, dH);
         });
     }
 
