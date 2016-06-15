@@ -133,8 +133,8 @@ define("ephox/imagetools/transformations/ImageResizerWebgl", [
         }
 
         // we need a gap around the edges to avoid a black frame
-        wRatio = canvas.width / (image.width + 2);
-        hRatio = canvas.height / (image.height + 2);
+        wRatio = canvas.width / (ImageSize.getWidth(image) + 2);
+        hRatio = canvas.height / (ImageSize.getHeight(image) + 2);
 
         var program = _createProgram(gl);
         gl.useProgram(program);
@@ -162,7 +162,7 @@ define("ephox/imagetools/transformations/ImageResizerWebgl", [
 
 
         var uResolution = gl.getUniformLocation(program, "u_wh");
-        gl.uniform2f(uResolution, image.width, image.height);
+        gl.uniform2f(uResolution, ImageSize.getWidth(image), ImageSize.getHeight(image));
 
         var uRatio = gl.getUniformLocation(program, "u_ratio");
         gl.uniform2f(uRatio, wRatio, hRatio);
