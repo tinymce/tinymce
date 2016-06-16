@@ -11,8 +11,9 @@
 define('tinymce/inlight/ui/Forms', [
 	'global!tinymce.util.Tools',
 	'global!tinymce.ui.Factory',
-	'tinymce/inlight/core/Actions'
-], function (Tools, Factory, Actions) {
+	'tinymce/inlight/core/Actions',
+	'tinymce/inlight/core/UrlType'
+], function (Tools, Factory, Actions, UrlType) {
 	var focusFirstTextBox = function (form) {
 		form.find('textbox').eq(0).each(function (ctrl) {
 			ctrl.focus();
@@ -40,6 +41,19 @@ define('tinymce/inlight/ui/Forms', [
 
 	var toggleVisibility = function (ctrl, state) {
 		return state ? ctrl.show() : ctrl.hide();
+	};
+
+	var askAboutPrefix = function (editor, href, callback) {
+		editor.windowManager.confirm(
+			'The URL you entered seems to be an external link. Do you want to add the required http:// prefix?',
+			function (result) {
+				result === true ? callback('http://' + href) : callback(href);
+			}
+		);
+	};
+
+	var convertLinkToAbsolute = function (editor, href, callback) {
+		UrlType.isDomainLike(href) ? askAboutPrefix(editor, href, callback) : callback(href);
 	};
 
 	var createQuickLinkForm = function (editor, hide) {
@@ -70,8 +84,10 @@ define('tinymce/inlight/ui/Forms', [
 				toggleVisibility(this.find('#unlink'), elm);
 			},
 			onsubmit: function (e) {
-				Actions.createLink(editor, e.data.linkurl);
-				hide();
+				convertLinkToAbsolute(editor, e.data.linkurl, function (url) {
+					Actions.createLink(editor, url);
+					hide();
+				});
 			}
 		});
 	};
