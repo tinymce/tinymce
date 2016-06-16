@@ -18,7 +18,7 @@ define('tinymce/inlight/ui/Panel', [
 	'tinymce/inlight/core/Layout'
 ], function (Tools, Factory, DOM, Toolbar, Forms, Measure, Layout) {
 	var DEFAULT_TEXT_SELECTION_ITEMS = 'bold italic | quicklink h2 h3 blockquote';
-	var DEFAULT_INSERT_TOOLBAR_ITEMS = 'quickimage media quicktable';
+	var DEFAULT_INSERT_TOOLBAR_ITEMS = 'quickimage quicktable';
 	var panel, currentRect;
 
 	var createToolbars = function (editor, toolbars) {
@@ -27,13 +27,23 @@ define('tinymce/inlight/ui/Panel', [
 		});
 	};
 
+	var getTextSelectionToolbarItems = function (settings) {
+		var value = settings.selection_toolbar;
+		return value ? value : DEFAULT_TEXT_SELECTION_ITEMS;
+	};
+
+	var getInsertToolbarItems = function (settings) {
+		var value = settings.insert_toolbar;
+		return value ? value : DEFAULT_INSERT_TOOLBAR_ITEMS;
+	};
+
 	var create = function (editor, toolbars) {
-		var items;
+		var items, settings = editor.settings;
 
 		items = createToolbars(editor, toolbars);
 		items = items.concat([
-			Toolbar.create(editor, 'text', DEFAULT_TEXT_SELECTION_ITEMS),
-			Toolbar.create(editor, 'insert', DEFAULT_INSERT_TOOLBAR_ITEMS),
+			Toolbar.create(editor, 'text', getTextSelectionToolbarItems(settings)),
+			Toolbar.create(editor, 'insert', getInsertToolbarItems(settings)),
 			Forms.createQuickLinkForm(editor, hide)
 		]);
 

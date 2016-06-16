@@ -43,7 +43,7 @@ define('tinymce/inlight/Theme', [
 
 		return Arr.flatten([
 			contextToolbars ? contextToolbars : [],
-			createToolbar(editor, 'img', 'image', 'alignleft aligncenter alignright | image')
+			createToolbar(editor, 'img', 'image', 'alignleft aligncenter alignright')
 		]);
 	};
 

@@ -18,8 +18,8 @@ define('tinymce/inlight/Demo', [
 		selector: 'div.tinymce',
 		theme: 'inlight',
 		plugins: 'image table link paste contextmenu textpattern autolink',
-		insert_toolbar: 'image media table',
-		selection_toolbar: 'bold italic | link h1 h2 blockquote',
+		insert_toolbar: 'image quicktable',
+		selection_toolbar: 'bold italic | link h2 h3 blockquote',
 		inline: true,
 		paste_data_images: true
 	});
