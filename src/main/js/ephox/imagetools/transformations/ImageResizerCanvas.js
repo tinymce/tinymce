@@ -9,28 +9,25 @@
  */
 
 /**
- * Resizes image/canvas using canvas
+ * Resizes image using canvas
  */
 define("ephox/imagetools/transformations/ImageResizerCanvas", [
     "ephox/imagetools/util/Promise",
     "ephox/imagetools/util/Conversions",
-    "ephox/imagetools/util/Canvas",
-    "ephox/imagetools/util/ImageSize"
-], function(Promise, Conversions, Canvas, ImageSize) {
+    "ephox/imagetools/util/Canvas"
+], function(Promise, Conversions, Canvas) {
 
     /**
      * @method scale
      * @static
-     * @param image {Image|Canvas}
-     * @param dW {Number} Width that the image should be scaled to
-     * @param dH {Number} Height that the image should be scaled to
+     * @param sCanvas {Canvas}
+     * @param w {Number} Width that the image should be scaled to
+     * @param h {Number} Height that the image should be scaled to
      * @returns {Promise}
      */
-    function scale(image, dW, dH) {
-        var sW = ImageSize.getWidth(image);
-        var sH = ImageSize.getHeight(image);
-        var wRatio = dW / sW;
-        var hRatio = dH / sH;
+    function scale(sCanvas, w, h) {
+        var wRatio = w / sCanvas.width;
+        var hRatio = h / sCanvas.height;
         var scaleCapped = false;
 
         if (wRatio < 0.5 || wRatio > 2) {
@@ -42,26 +39,24 @@ define("ephox/imagetools/transformations/ImageResizerCanvas", [
             scaleCapped = true;
         }
 
-        var scaled = _scale(image, wRatio, hRatio);
+        var scaled = _scale(sCanvas, wRatio, hRatio);
 
-        return !scaleCapped ? scaled : scaled.then(function (tCanvas) {
-            return scale(tCanvas, dW, dH);
+        return !scaleCapped ? scaled : scaled.then(function (dCanvas) {
+            return scale(dCanvas, w, h);
         });
     }
 
 
-    function _scale(image, wRatio, hRatio) {
+    function _scale(sCanvas, wRatio, hRatio) {
         return new Promise(function(resolve) {
-            var sW = ImageSize.getWidth(image);
-            var sH = ImageSize.getHeight(image);
-            var dW = Math.floor(sW * wRatio);
-            var dH = Math.floor(sH * hRatio);
-            var canvas = Canvas.create(dW, dH);
-            var context = Canvas.get2dContext(canvas);
+            var w = Math.floor(sCanvas.width * wRatio);
+            var h = Math.floor(sCanvas.height * hRatio);
+            var dCanvas = Canvas.create(w, h);
+            var context = Canvas.get2dContext(dCanvas);
 
-            context.drawImage(image, 0, 0, sW, sH, 0, 0, dW, dH);
+            context.drawImage(sCanvas, 0, 0, sCanvas.width, sCanvas.height, 0, 0, w, h);
 
-            resolve(canvas);
+            resolve(dCanvas);
         });
     }
 
