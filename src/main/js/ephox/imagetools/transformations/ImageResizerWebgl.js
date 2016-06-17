@@ -9,37 +9,40 @@
  */
 
 /**
- * Resizes image using Webgl
+ * Resizes image/canvas using canvas and Webgl
  */
 define("ephox/imagetools/transformations/ImageResizerWebgl", [
     "ephox/imagetools/util/Promise",
     "ephox/imagetools/util/Conversions",
-    "ephox/imagetools/util/Canvas"
-], function(Promise, Conversions, Canvas) {
+    "ephox/imagetools/util/Canvas",
+    "ephox/imagetools/util/ImageSize"
+], function(Promise, Conversions, Canvas, ImageSize) {
 
     /**
      * @method scale
      * @static
-     * @param sCanvas {Canvas}
-     * @param w {Number} Width that the sCanvas should be scaled to
-     * @param h {Number} Height that the sCanvas should be scaled to
+     * @param image {Image|Canvas}
+     * @param dW {Number} Width that the image should be scaled to
+     * @param dH {Number} Height that the image should be scaled to
      * @returns {Promise}
      */
-    function scale(sCanvas, w, h) {
+    function scale(image, dW, dH) {
         return new Promise(function(resolve, reject) {
-            var wRatio = w / sCanvas.width;
-            var hRatio = h / sCanvas.height;
+            var sW = ImageSize.getWidth(image);
+            var sH = ImageSize.getHeight(image);
+            var wRatio = dW / sW;
+            var hRatio = dH / sH;
 
-            var dCanvas = Canvas.create(w, h);
+            var canvas = Canvas.create(dW, dH);
 
             try {
-                _drawImage(dCanvas, sCanvas, wRatio, hRatio);
+                _drawImage(canvas, image, wRatio, hRatio);
             } catch(ex) {
                 reject(ex);
                 return;
             }
 
-            resolve(dCanvas);
+            resolve(canvas);
         });
     }
 
@@ -118,26 +121,26 @@ define("ephox/imagetools/transformations/ImageResizerWebgl", [
     };
 
 
-    function _drawImage(dCanvas, sCanvas, wRatio, hRatio) {
-        var gl = Canvas.get3dContext(dCanvas);
+    function _drawImage(canvas, image, wRatio, hRatio) {
+        var gl = Canvas.get3dContext(canvas);
         if (!gl) {
             throw "Your environment doesn't support WebGL.";
         }
 
         // we need a gap around the edges to avoid a black frame
-        wRatio = dCanvas.width / (sCanvas.width + 2);
-        hRatio = dCanvas.height / (sCanvas.height + 2);
+        wRatio = canvas.width / (ImageSize.getWidth(image) + 2);
+        hRatio = canvas.height / (ImageSize.getHeight(image) + 2);
 
         var program = _createProgram(gl);
         gl.useProgram(program);
 
         _loadFloatBuffer(gl, program, "a_dest_xy", [
             0, 0,
-            dCanvas.width, 0,
-            0, dCanvas.height,
-            0, dCanvas.height,
-            dCanvas.width, 0,
-            dCanvas.width, dCanvas.height
+            canvas.width, 0,
+            0, canvas.height,
+            0, canvas.height,
+            canvas.width, 0,
+            canvas.width, canvas.height
         ]);
 
         // load the texture
@@ -150,11 +153,11 @@ define("ephox/imagetools/transformations/ImageResizerWebgl", [
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, sCanvas);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
 
 
         var uResolution = gl.getUniformLocation(program, "u_wh");
-        gl.uniform2f(uResolution, sCanvas.width, sCanvas.height);
+        gl.uniform2f(uResolution, ImageSize.getWidth(image), ImageSize.getHeight(image));
 
         var uRatio = gl.getUniformLocation(program, "u_ratio");
         gl.uniform2f(uRatio, wRatio, hRatio);
