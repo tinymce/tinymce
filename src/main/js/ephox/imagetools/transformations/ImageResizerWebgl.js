@@ -127,6 +127,11 @@ define("ephox/imagetools/transformations/ImageResizerWebgl", [
             throw "Your environment doesn't support WebGL.";
         }
 
+        var maxTexSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+        if (image.width > maxTexSize || image.height > maxTexSize) {
+            throw "Width or/and height of the original image exceed max allowed texture size (of "+maxTexSize+" px).";
+        }
+
         // we need a gap around the edges to avoid a black frame
         wRatio = canvas.width / (ImageSize.getWidth(image) + 2);
         hRatio = canvas.height / (ImageSize.getHeight(image) + 2);
