@@ -11,9 +11,10 @@
 define('tinymce/inlight/ui/Forms', [
 	'global!tinymce.util.Tools',
 	'global!tinymce.ui.Factory',
+	'global!tinymce.util.Promise',
 	'tinymce/inlight/core/Actions',
 	'tinymce/inlight/core/UrlType'
-], function (Tools, Factory, Actions, UrlType) {
+], function (Tools, Factory, Promise, Actions, UrlType) {
 	var focusFirstTextBox = function (form) {
 		form.find('textbox').eq(0).each(function (ctrl) {
 			ctrl.focus();
@@ -43,17 +44,20 @@ define('tinymce/inlight/ui/Forms', [
 		return state ? ctrl.show() : ctrl.hide();
 	};
 
-	var askAboutPrefix = function (editor, href, callback) {
-		editor.windowManager.confirm(
-			'The URL you entered seems to be an external link. Do you want to add the required http:// prefix?',
-			function (result) {
-				result === true ? callback('http://' + href) : callback(href);
-			}
-		);
+	var askAboutPrefix = function (editor, href) {
+		return new Promise(function (resolve) {
+			editor.windowManager.confirm(
+				'The URL you entered seems to be an external link. Do you want to add the required http:// prefix?',
+				function (result) {
+					var output = result === true ? 'http://' + href : href;
+					resolve(output);
+				}
+			);
+		});
 	};
 
-	var convertLinkToAbsolute = function (editor, href, callback) {
-		UrlType.isDomainLike(href) ? askAboutPrefix(editor, href, callback) : callback(href);
+	var convertLinkToAbsolute = function (editor, href) {
+		return UrlType.isDomainLike(href) ? askAboutPrefix(editor, href) : Promise.resolve(href);
 	};
 
 	var createQuickLinkForm = function (editor, hide) {
@@ -84,7 +88,7 @@ define('tinymce/inlight/ui/Forms', [
 				toggleVisibility(this.find('#unlink'), elm);
 			},
 			onsubmit: function (e) {
-				convertLinkToAbsolute(editor, e.data.linkurl, function (url) {
+				convertLinkToAbsolute(editor, e.data.linkurl).then(function (url) {
 					Actions.createLink(editor, url);
 					hide();
 				});

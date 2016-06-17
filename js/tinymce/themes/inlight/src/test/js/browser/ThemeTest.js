@@ -77,35 +77,69 @@ asynctest('browser/core/ThemeTest', [
 		]);
 	};
 
-	var sUnlink = function () {
-		return Chain.asStep({}, [
-			cWaitForContextToolbar,
-			cClickToolbarButton('Insert/Edit link'),
-			cWaitForContextToolbar,
-			cClickToolbarButton('Remove link')
+	var cWaitForConfirmDialog = Chain.fromChainsWith(dialogRoot, [
+		UiFinder.cWaitForState('window element', '.mce-window', function () {
+			return true;
+		})
+	]);
+
+	var cClickButton = function (btnText) {
+		return Chain.fromChains([
+			UiFinder.cFindIn('button:contains("' + btnText + '")'),
+			Mouse.cTrueClick
 		]);
 	};
 
+	var sClickConfirmButton = function (btnText) {
+		return Chain.asStep({}, [
+			cWaitForConfirmDialog,
+			cClickButton(btnText)
+		]);
+	};
+
+	var sInsertLinkConfirmPrefix = function (url, btnText) {
+		return GeneralSteps.sequence([
+			sInsertLink(url),
+			sClickConfirmButton(btnText)
+		]);
+	};
+
+	var sUnlink = Chain.asStep({}, [
+		cWaitForContextToolbar,
+		cClickToolbarButton('Insert/Edit link'),
+		cWaitForContextToolbar,
+		cClickToolbarButton('Remove link')
+	]);
+
 	var sLinkTests = function (tinyApis) {
-		var sLinkTest = function (inputHtml, spath, soffset, fpath, foffset, url, expectedHtml) {
+		var sContentActionTest = function (inputHtml, spath, soffset, fpath, foffset, expectedHtml, sAction) {
 			return GeneralSteps.sequence([
 				tinyApis.sSetContent(inputHtml),
 				tinyApis.sSetSelection(spath, soffset, fpath, foffset),
-				sInsertLink(url),
+				sAction,
 				tinyApis.sAssertContent(expectedHtml)
 			]);
+		};
+
+		var sLinkTest = function (inputHtml, spath, soffset, fpath, foffset, url, expectedHtml) {
+			return sContentActionTest(inputHtml, spath, soffset, fpath, foffset, expectedHtml, sInsertLink(url));
 		};
 
 		var sUnlinkTest = function (inputHtml, spath, soffset, fpath, foffset, expectedHtml) {
-			return GeneralSteps.sequence([
-				tinyApis.sSetContent(inputHtml),
-				tinyApis.sSetSelection(spath, soffset, fpath, foffset),
-				sUnlink(),
-				tinyApis.sAssertContent(expectedHtml)
-			]);
+			return sContentActionTest(inputHtml, spath, soffset, fpath, foffset, expectedHtml, sUnlink);
+		};
+
+		var sLinkWithConfirmOkTest = function (inputHtml, spath, soffset, fpath, foffset, url, expectedHtml) {
+			return sContentActionTest(inputHtml, spath, soffset, fpath, foffset, expectedHtml, sInsertLinkConfirmPrefix(url, 'Ok'));
+		};
+
+		var sLinkWithConfirmCancelTest = function (inputHtml, spath, soffset, fpath, foffset, url, expectedHtml) {
+			return sContentActionTest(inputHtml, spath, soffset, fpath, foffset, expectedHtml, sInsertLinkConfirmPrefix(url, 'Cancel'));
 		};
 
 		return GeneralSteps.sequence([
+			sLinkWithConfirmOkTest('<p>a</p>', [0, 0], 0, [0, 0], 1, 'www.site.com', '<p><a href="http://www.site.com">a</a></p>'),
+			sLinkWithConfirmCancelTest('<p>a</p>', [0, 0], 0, [0, 0], 1, 'www.site.com', '<p><a href="www.site.com">a</a></p>'),
 			sLinkTest('<p>a</p>', [0, 0], 0, [0, 0], 1, '#1', '<p><a href="#1">a</a></p>'),
 			sLinkTest('<p><a id="x" href="#1">a</a></p>', [0, 0, 0], 0, [0, 0, 0], 1, '#2', '<p><a id="x" href="#2">a</a></p>'),
 			sLinkTest('<p><a href="#3">a</a></p>', [0, 0, 0], 0, [0, 0, 0], 1, '', '<p>a</p>'),
