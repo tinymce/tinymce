@@ -357,9 +357,9 @@ define("tinymce/pasteplugin/Clipboard", [
 			// TODO: Move the bulk of the cache logic to EditorUpload
 			if (isValidDataUriImage(editor.settings, img)) {
 				var blobCache = editor.editorUpload.blobCache;
-				var blobInfo;
+				var blobInfo, existingBlobInfo;
 
-				var existingBlobInfo = blobCache.findFirst(function(cachedBlobInfo) {
+				existingBlobInfo = blobCache.findFirst(function(cachedBlobInfo) {
 					return cachedBlobInfo.base64() === base64;
 				});
 
