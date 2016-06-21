@@ -378,8 +378,22 @@ define("tinymce/tableplugin/TableGrid", [
 
 				// Set row/col span to start cell
 				startCell = getCell(startX, startY).elm;
-				setSpanVal(startCell, 'colSpan', (endX - startX) + 1);
-				setSpanVal(startCell, 'rowSpan', (endY - startY) + 1);
+				var colSpan = (endX - startX) + 1;
+				var rowSpan = (endY - startY) + 1;
+
+				// All cells in table selected then just make it a table with one cell
+				if (colSpan === gridWidth && rowSpan === grid.length) {
+					colSpan = 1;
+					rowSpan = 1;
+				}
+
+				// Multiple whole rows selected then just make it one rowSpan
+				if (colSpan === gridWidth && rowSpan > 1) {
+					rowSpan = 1;
+				}
+
+				setSpanVal(startCell, 'colSpan', colSpan);
+				setSpanVal(startCell, 'rowSpan', rowSpan);
 
 				// Remove other cells and add it's contents to the start cell
 				for (y = startY; y <= endY; y++) {
@@ -676,12 +690,17 @@ define("tinymce/tableplugin/TableGrid", [
 		function pasteRows(rows, before) {
 			var selectedRows = getSelectedRows(),
 				targetRow = selectedRows[before ? 0 : selectedRows.length - 1],
-				targetCellCount = targetRow.cells.length;
+				targetCellCount = targetRow.cells.length,
+				newRows;
 
 			// Nothing to paste
 			if (!rows) {
 				return;
 			}
+
+			newRows = Tools.map(rows, function (row) {
+				return row.cloneNode(true);
+			});
 
 			// Calc target cell count
 			each(grid, function(row) {
@@ -704,10 +723,10 @@ define("tinymce/tableplugin/TableGrid", [
 			});
 
 			if (!before) {
-				rows.reverse();
+				newRows.reverse();
 			}
 
-			each(rows, function(row) {
+			each(newRows, function(row) {
 				var i, cellCount = row.cells.length, cell;
 
 				fireNewRow(row);

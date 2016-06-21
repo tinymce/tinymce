@@ -531,6 +531,131 @@
 		);
 	});
 
+	test("mceTablePasteRowBefore command", function() {
+		editor.setContent(
+			'<table>' +
+				'<tr><td>1</td><td>2</td></tr>' +
+				'<tr><td>2</td><td>3</td></tr>' +
+			'</table>'
+		);
+
+		Utils.setSelection('tr:nth-child(1) td', 0);
+		editor.execCommand('mceTableCopyRow');
+		Utils.setSelection('tr:nth-child(2) td', 0);
+		editor.execCommand('mceTablePasteRowBefore');
+
+		equal(
+			cleanTableHtml(editor.getContent()),
+
+			'<table>' +
+				'<tbody>' +
+					'<tr><td>1</td><td>2</td></tr>' +
+					'<tr><td>1</td><td>2</td></tr>' +
+					'<tr><td>2</td><td>3</td></tr>' +
+				'</tbody>' +
+			'</table>'
+		);
+
+		Utils.setSelection('tr:nth-child(2) td', 0);
+		editor.execCommand('mceTablePasteRowBefore');
+
+		equal(
+			cleanTableHtml(editor.getContent()),
+
+			'<table>' +
+				'<tbody>' +
+					'<tr><td>1</td><td>2</td></tr>' +
+					'<tr><td>1</td><td>2</td></tr>' +
+					'<tr><td>1</td><td>2</td></tr>' +
+					'<tr><td>2</td><td>3</td></tr>' +
+				'</tbody>' +
+			'</table>'
+		);
+	});
+
+	test("mceTablePasteRowAfter command", function() {
+		editor.setContent(
+			'<table>' +
+				'<tr><td>1</td><td>2</td></tr>' +
+				'<tr><td>2</td><td>3</td></tr>' +
+			'</table>'
+		);
+
+		Utils.setSelection('tr:nth-child(1) td', 0);
+		editor.execCommand('mceTableCopyRow');
+		Utils.setSelection('tr:nth-child(2) td', 0);
+		editor.execCommand('mceTablePasteRowAfter');
+
+		equal(
+			cleanTableHtml(editor.getContent()),
+
+			'<table>' +
+				'<tbody>' +
+					'<tr><td>1</td><td>2</td></tr>' +
+					'<tr><td>2</td><td>3</td></tr>' +
+					'<tr><td>1</td><td>2</td></tr>' +
+				'</tbody>' +
+			'</table>'
+		);
+
+		Utils.setSelection('tr:nth-child(2) td', 0);
+		editor.execCommand('mceTablePasteRowAfter');
+
+		equal(
+			cleanTableHtml(editor.getContent()),
+
+			'<table>' +
+				'<tbody>' +
+					'<tr><td>1</td><td>2</td></tr>' +
+					'<tr><td>2</td><td>3</td></tr>' +
+					'<tr><td>1</td><td>2</td></tr>' +
+					'<tr><td>1</td><td>2</td></tr>' +
+				'</tbody>' +
+			'</table>'
+		);
+	});
+
+	test("row clipboard api", function() {
+		var clipboardRows;
+
+		editor.setContent(
+			'<table>' +
+				'<tr><td>1</td><td>2</td></tr>' +
+				'<tr><td>2</td><td>3</td></tr>' +
+			'</table>'
+		);
+
+		Utils.setSelection('tr:nth-child(1) td', 0);
+		editor.execCommand('mceTableCopyRow');
+
+		clipboardRows = editor.plugins.table.getClipboardRows();
+
+		equal(clipboardRows.length, 1);
+		equal(clipboardRows[0].tagName, 'TR');
+
+		editor.plugins.table.setClipboardRows(clipboardRows.concat([
+			editor.dom.create('tr', {}, '<td>a</td><td>b</td>'),
+			editor.dom.create('tr', {}, '<td>c</td><td>d</td>')
+		]));
+
+		Utils.setSelection('tr:nth-child(2) td', 0);
+		editor.execCommand('mceTablePasteRowAfter');
+
+		equal(
+			cleanTableHtml(editor.getContent()),
+
+			'<table>' +
+				'<tbody>' +
+					'<tr><td>1</td><td>2</td></tr>' +
+					'<tr><td>2</td><td>3</td></tr>' +
+					'<tr><td>1</td><td>2</td></tr>' +
+					'<tr><td>a</td><td>b</td></tr>' +
+					'<tr><td>c</td><td>d</td></tr>' +
+				'</tbody>' +
+			'</table>'
+		);
+	});
+
 	test("mceTableInsertRowBefore command", function() {
 		editor.setContent('<table><tr><td>1</td><td>2</td></tr></table>');
 		Utils.setSelection('td', 0);
@@ -542,7 +667,32 @@
 		editor.getBody().innerHTML = '<table><tr><td data-mce-selected="1">1</td><td data-mce-selected="1">2</td></tr></table>';
 		Utils.setSelection('td', 0);
 		editor.execCommand('mceTableMergeCells');
-		equal(cleanTableHtml(editor.getContent()), '<table><tbody><tr><td colspan="2">12</td></tr></tbody></table>');
+		equal(cleanTableHtml(editor.getContent()), '<table><tbody><tr><td>12</td></tr></tbody></table>');
+	});
+
+	test("mceTableMergeCells command with whole rows selected", function() {
+		editor.getBody().innerHTML = (
+			'<table>' +
+				'<tbody>' +
+					'<tr><td data-mce-selected="1">1</td><td data-mce-selected="1">2</td></tr>' +
+					'<tr><td data-mce-selected="1">3</td><td data-mce-selected="1">4</td></tr>' +
+					'<tr><td>5</td><td>6</td></tr>' +
+				'</tbody>' +
+			'</table>'
+		);
+
+		Utils.setSelection('td', 0);
+		editor.execCommand('mceTableMergeCells');
+
+		equal(
+			cleanTableHtml(editor.getContent()),
+			'<table>' +
+				'<tbody>' +
+					'<tr><td colspan="2">1234</td></tr>' +
+					'<tr><td>5</td><td>6</td></tr>' +
+				'</tbody>' +
+			'</table>'
+		);
 	});
 
 	test("mceTableSplitCells command", function() {
