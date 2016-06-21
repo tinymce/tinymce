@@ -670,6 +670,29 @@
 		equal(cleanTableHtml(editor.getContent()), '<table><tbody><tr><td>12</td></tr></tbody></table>');
 	});
 
+	test("mceTableMergeCells command with all cells selected", function() {
+		editor.getBody().innerHTML = (
+			'<table>' +
+				'<tbody>' +
+					'<tr><td data-mce-selected="1">1</td><td data-mce-selected="1">2</td></tr>' +
+					'<tr><td data-mce-selected="1">3</td><td data-mce-selected="1">4</td></tr>' +
+				'</tbody>' +
+			'</table>'
+		);
+
+		Utils.setSelection('td', 0);
+		editor.execCommand('mceTableMergeCells');
+
+		equal(
+			cleanTableHtml(editor.getContent()),
+			'<table>' +
+				'<tbody>' +
+					'<tr><td>1234</td></tr>' +
+				'</tbody>' +
+			'</table>'
+		);
+	});
+
 	test("mceTableMergeCells command with whole rows selected", function() {
 		editor.getBody().innerHTML = (
 			'<table>' +
