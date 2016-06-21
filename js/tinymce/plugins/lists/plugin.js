@@ -400,7 +400,7 @@ tinymce.PluginManager.add('lists', function(editor) {
 		}
 
 		function indent(li) {
-			var sibling, newList;
+			var sibling, newList, listStyle;
 
 			function mergeLists(from, to) {
 				var node;
@@ -446,6 +446,10 @@ tinymce.PluginManager.add('lists', function(editor) {
 			sibling = li.previousSibling;
 			if (sibling && sibling.nodeName == 'LI') {
 				newList = dom.create(li.parentNode.nodeName);
+				listStyle = dom.getStyle(li.parentNode, 'listStyleType');
+				if (listStyle) {
+					dom.setStyle(newList, 'listStyleType', listStyle);
+				}
 				sibling.appendChild(newList);
 				newList.appendChild(li);
 				mergeLists(li.lastChild, newList);
