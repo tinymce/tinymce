@@ -1470,6 +1470,31 @@ ModuleLoader.require([
 		equal(editor.selection.getNode().nodeName, 'LI');
 	});
 
+
+	test('Indent single LI in OL and retain OLs list style in the new OL', function() {
+		editor.getBody().innerHTML = trimBrs(
+			'<ol style="list-style-type: lower-alpha;">' +
+				'<li>a</li>' +
+				'<li>b</li>' +
+			'</ol>'
+		);
+
+		editor.focus();
+
+		Utils.setSelection('li:nth-child(2)', 0);
+		execCommand('Indent');
+
+		equal(editor.getContent(),
+			'<ol style="list-style-type: lower-alpha;">' +
+				'<li>a' +
+					'<ol style="list-style-type: lower-alpha;">' +
+						'<li>b</li>' +
+					'</ol>' +
+				'</li>' +
+			'</ol>'
+		);
+	});
+
 	test('Indent last LI in OL', function() {
 		editor.getBody().innerHTML = trimBrs(
 			'<ol>' +
