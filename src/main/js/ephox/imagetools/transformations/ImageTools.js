@@ -15,9 +15,8 @@ define("ephox/imagetools/transformations/ImageTools", [
   "ephox/imagetools/util/Conversions",
   "ephox/imagetools/util/Canvas",
   "ephox/imagetools/util/ImageSize",
-  "ephox/imagetools/transformations/ImageResizerCanvas",
-  "ephox/imagetools/transformations/ImageResizerWebgl"
-], function(Conversions, Canvas, ImageSize, ImageResizerCanvas, ImageResizerWebgl) {
+  "ephox/imagetools/transformations/ImageResizerCanvas"
+], function(Conversions, Canvas, ImageSize, ImageResizerCanvas) {
   var revokeImageUrl = Conversions.revokeImageUrl;
 
   function rotate(blob, angle) {
