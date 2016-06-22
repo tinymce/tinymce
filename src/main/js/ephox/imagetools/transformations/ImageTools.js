@@ -80,17 +80,24 @@ define("ephox/imagetools/transformations/ImageTools", [
     });
   }
 
+  var revokeImage = function (image) {
+    return function (result) {
+      revokeImageUrl(image);
+      return result;
+    };
+  };
+
   function resize(blob, w, h) {
     return Conversions.blobToImage(blob).then(function(image) {
-      var result = ImageResizerWebgl.scale(image, w, h)
-          .catch(function() {
-            return ImageResizerCanvas.scale(image, w, h);
-          })
-          .then(function(canvas) {
-            return Conversions.canvasToBlob(canvas, blob.type);
-          });
+      var result;
 
-      revokeImageUrl(image);
+      result = ImageResizerCanvas.scale(image, w, h)
+        .then(function(canvas) {
+          return Conversions.canvasToBlob(canvas, blob.type);
+        })
+        .then(revokeImage(image))
+        .catch(revokeImage(image));
+
       return result;
     });
   }
