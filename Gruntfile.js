@@ -29,7 +29,7 @@ module.exports = function(grunt) {
 
 			themes: [
 				"js/tinymce/themes/*/theme.js",
-				"!js/tinymce/themes/inlight/theme.js"
+				"!js/tinymce/themes/inlite/theme.js"
 			]
 		},
 
@@ -48,8 +48,8 @@ module.exports = function(grunt) {
 				config_dir: "js/tinymce/plugins/imagetools/config/bolt"
 			},
 
-			"inlight-theme": {
-				config_dir: "js/tinymce/themes/inlight/config/bolt"
+			"inlite-theme": {
+				config_dir: "js/tinymce/themes/inlite/config/bolt"
 			}
 		},
 
@@ -68,17 +68,17 @@ module.exports = function(grunt) {
 				}
 			},
 
-			"inlight-theme": {
-				config_js: "js/tinymce/themes/inlight/config/bolt/prod.js",
-				output_dir: "js/tinymce/themes/inlight/scratch",
-				main: "tinymce/inlight/Theme",
+			"inlite-theme": {
+				config_js: "js/tinymce/themes/inlite/config/bolt/prod.js",
+				output_dir: "js/tinymce/themes/inlite/scratch",
+				main: "tinymce/inlite/Theme",
 				filename: "theme",
 
 				generate_inline: true,
 				minimise_module_names: true,
 
 				files: {
-					src: ['js/tinymce/themes/inlight/src/main/js/tinymce/inlight/Theme.js']
+					src: ['js/tinymce/themes/inlite/src/main/js/tinymce/inlite/Theme.js']
 				}
 			}
 		},
@@ -96,8 +96,8 @@ module.exports = function(grunt) {
 			"bolt-themes": {
 				files: [
 					{
-						src: "js/tinymce/themes/inlight/scratch/inline/theme.raw.js",
-						dest: "js/tinymce/themes/inlight/theme.js"
+						src: "js/tinymce/themes/inlite/scratch/inline/theme.raw.js",
+						dest: "js/tinymce/themes/inlite/theme.js"
 					}
 				]
 			}
@@ -325,8 +325,8 @@ module.exports = function(grunt) {
 			"bolt-themes": {
 				files: [
 					{
-						src: "js/tinymce/themes/inlight/scratch/inline/theme.js",
-						dest: "js/tinymce/themes/inlight/theme.min.js"
+						src: "js/tinymce/themes/inlite/scratch/inline/theme.js",
+						dest: "js/tinymce/themes/inlite/theme.min.js"
 					}
 				]
 			},
