@@ -160,42 +160,51 @@ tinymce.PluginManager.add('media', function(editor, url) {
 
 		embedTextBox[embedChange] = updateValueOnChange;
 
+		var generalTabBody = {
+			title: 'General',
+			type: "form",
+			onShowTab: function() {
+				data = htmlToData(this.next().find('#embed').value());
+				this.fromJSON(data);
+			},
+			items: generalFormItems
+		};
+		
+		var embedTabBody = {
+			title: 'Embed',
+			type: "container",
+			layout: 'flex',
+			direction: 'column',
+			align: 'stretch',
+			padding: 10,
+			spacing: 10,
+			onShowTab: function() {
+				this.find('#embed').value(dataToHtml(this.parent().toJSON()));
+			},
+			items: [
+				{
+					type: 'label',
+					text: 'Paste your embed code below:',
+					forId: 'mcemediasource'
+				},
+				embedTextBox
+			]
+		};
+
+		var winBody = [];
+                if (editor.settings.media_general_tab !== false) {
+			winBody.push(generalTabBody);
+		}
+
+                if (editor.settings.media_embed_tab !== false){
+			winBody.push(embedTabBody);
+		}
+
 		win = editor.windowManager.open({
 			title: 'Insert/edit video',
 			data: data,
 			bodyType: 'tabpanel',
-			body: [
-				{
-					title: 'General',
-					type: "form",
-					onShowTab: function() {
-						data = htmlToData(this.next().find('#embed').value());
-						this.fromJSON(data);
-					},
-					items: generalFormItems
-				},
-
-				{
-					title: 'Embed',
-					type: "container",
-					layout: 'flex',
-					direction: 'column',
-					align: 'stretch',
-					padding: 10,
-					spacing: 10,
-					onShowTab: function() {
-						this.find('#embed').value(dataToHtml(this.parent().toJSON()));
-					},
-					items: [
-						{
-							type: 'label',
-							text: 'Paste your embed code below:',
-							forId: 'mcemediasource'
-						},
-						embedTextBox
-					]
-				}
-			],
+			body: winBody,
 			onSubmit: function() {
 				var beforeObjects, afterObjects, i, y;
 
@@ -877,3 +886,4 @@ tinymce.PluginManager.add('media', function(editor, url) {
 
 	this.showDialog = showDialog;
 });
+
