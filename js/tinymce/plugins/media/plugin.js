@@ -886,4 +886,3 @@ tinymce.PluginManager.add('media', function(editor, url) {
 
 	this.showDialog = showDialog;
 });
-
