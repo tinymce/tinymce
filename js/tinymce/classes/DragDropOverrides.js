@@ -129,8 +129,8 @@ define("tinymce/DragDropOverrides", [
 			}
 		}
 
-		function drop() {
-			var evt;
+		function drop(evt) {
+			var dropEvt;
 
 			if (state.dragging) {
 				// Hack for IE since it doesn't sync W3C Range with IE Specific range
@@ -139,12 +139,17 @@ define("tinymce/DragDropOverrides", [
 				if (isValidDropTarget(editor.selection.getNode())) {
 					var targetClone = state.element;
 
-					evt = editor.fire('drop', {targetClone: targetClone});
-					if (evt.isDefaultPrevented()) {
+					dropEvt = editor.fire('drop', {
+						targetClone: targetClone,
+						clientX: evt.clientX,
+						clientY: evt.clientY
+					});
+
+					if (dropEvt.isDefaultPrevented()) {
 						return;
 					}
 
-					targetClone = evt.targetClone;
+					targetClone = dropEvt.targetClone;
 
 					editor.undoManager.transact(function() {
 						editor.insertContent(dom.getOuterHTML(targetClone));
@@ -210,7 +215,7 @@ define("tinymce/DragDropOverrides", [
 
 		// Blocks drop inside cE=false on IE
 		editor.on('drop', function(e) {
-			var realTarget = editor.getDoc().elementFromPoint(e.clientX, e.clientY);
+			var realTarget = typeof e.clientX !== 'undefined' ? editor.getDoc().elementFromPoint(e.clientX, e.clientY) : null;
 
 			if (isContentEditableFalse(realTarget) || isContentEditableFalse(editor.dom.getContentEditableParent(realTarget))) {
 				e.preventDefault();
