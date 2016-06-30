@@ -140,6 +140,7 @@ define("tinymce/DragDropOverrides", [
 				if (isValidDropTarget(editor.selection.getNode())) {
 					var targetClone = state.element;
 
+					// Pass along clientX, clientY if we have them
 					dropEvt = editor.fire('drop', {
 						targetClone: targetClone,
 						clientX: evt.clientX,
@@ -216,6 +217,7 @@ define("tinymce/DragDropOverrides", [
 
 		// Blocks drop inside cE=false on IE
 		editor.on('drop', function(e) {
+			// FF doesn't pass out clientX/clientY for drop since this is for IE we just use null instead
 			var realTarget = typeof e.clientX !== 'undefined' ? editor.getDoc().elementFromPoint(e.clientX, e.clientY) : null;
 
 			if (isContentEditableFalse(realTarget) || isContentEditableFalse(editor.dom.getContentEditableParent(realTarget))) {
