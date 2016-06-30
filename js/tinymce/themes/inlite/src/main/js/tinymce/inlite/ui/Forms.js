@@ -57,7 +57,7 @@ define('tinymce/inlite/ui/Forms', [
 	};
 
 	var convertLinkToAbsolute = function (editor, href) {
-		return UrlType.isDomainLike(href) ? askAboutPrefix(editor, href) : Promise.resolve(href);
+		return !UrlType.isAbsolute(href) && UrlType.isDomainLike(href) ? askAboutPrefix(editor, href) : Promise.resolve(href);
 	};
 
 	var createQuickLinkForm = function (editor, hide) {
