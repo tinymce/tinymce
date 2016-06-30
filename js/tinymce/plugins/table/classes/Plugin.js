@@ -346,7 +346,7 @@ define("tinymce/tableplugin/Plugin", [
 
 		editor.on('Init', function() {
 			self.cellSelection = new CellSelection(editor, function (selecting) {
-				if (selecting) {
+				if (selecting && resizeBars) {
 					resizeBars.clearBars();
 				}
 			});
