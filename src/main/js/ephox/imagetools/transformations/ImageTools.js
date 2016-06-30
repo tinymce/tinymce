@@ -88,14 +88,14 @@ define("ephox/imagetools/transformations/ImageTools", [
 
   function resize(blob, w, h) {
     return Conversions.blobToImage(blob).then(function(image) {
+      var cleanup = revokeImage(image);
       var result;
 
       result = ImageResizerCanvas.scale(image, w, h)
         .then(function(canvas) {
           return Conversions.canvasToBlob(canvas, blob.type);
         })
-        .then(revokeImage(image))
-        .catch(revokeImage(image));
+        .then(cleanup, cleanup);
 
       return result;
     });
