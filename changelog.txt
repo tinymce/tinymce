@@ -1,4 +1,4 @@
-Version 4.4.0 (2016-07-30)
+Version 4.4.0 (2016-06-30)
 	Added new inlite theme this is a more lightweight inline UI.
 	Added smarter paste logic that auto detects urls in the clipboard and inserts images/links based on that.
 	Added a better image resize algorithm for better image quality in the imagetools plugin.
