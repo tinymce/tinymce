@@ -618,6 +618,16 @@
 	test("row clipboard api", function() {
 		var clipboardRows;
 
+		function createRow(cellContents) {
+			var tr = editor.dom.create('tr');
+
+			tinymce.each(cellContents, function (html) {
+				tr.appendChild(editor.dom.create('td', null, html));
+			});
+
+			return tr;
+		}
+
 		editor.setContent(
 			'<table>' +
 				'<tr><td>1</td><td>2</td></tr>' +
@@ -634,8 +644,8 @@
 		equal(clipboardRows[0].tagName, 'TR');
 
 		editor.plugins.table.setClipboardRows(clipboardRows.concat([
-			editor.dom.create('tr', {}, '<td>a</td><td>b</td>'),
-			editor.dom.create('tr', {}, '<td>c</td><td>d</td>')
+			createRow(['a', 'b']),
+			createRow(['c', 'd'])
 		]));
 
 		Utils.setSelection('tr:nth-child(2) td', 0);
