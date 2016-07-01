@@ -262,7 +262,7 @@ define("tinymce/InsertContent", [
 
 		// Custom handling of lists
 		if (InsertList.isListFragment(fragment) && InsertList.isParentBlockLi(dom, parentNode)) {
-			rng = InsertList.insertAtCaret(serializer, dom, editor.selection.getRng(), fragment);
+			rng = InsertList.insertAtCaret(serializer, dom, editor.selection.getRng(true), fragment);
 			editor.selection.setRng(rng);
 			editor.fire('SetContent', args);
 			return;

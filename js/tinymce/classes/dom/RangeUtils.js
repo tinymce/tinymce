@@ -17,8 +17,9 @@ define("tinymce/dom/RangeUtils", [
 	"tinymce/util/Tools",
 	"tinymce/dom/TreeWalker",
 	"tinymce/dom/NodeType",
+	"tinymce/dom/Range",
 	"tinymce/caret/CaretContainer"
-], function(Tools, TreeWalker, NodeType, CaretContainer) {
+], function(Tools, TreeWalker, NodeType, Range, CaretContainer) {
 	var each = Tools.each,
 		isContentEditableFalse = NodeType.isContentEditableFalse,
 		isCaretContainer = CaretContainer.isCaretContainer;
@@ -627,6 +628,10 @@ define("tinymce/dom/RangeUtils", [
 		}
 
 		return container;
+	};
+
+	RangeUtils.createRange = function(doc) {
+		return "createRange" in doc ? doc.createRange() : new Range(tinymce.activeEditor.dom);
 	};
 
 	return RangeUtils;
