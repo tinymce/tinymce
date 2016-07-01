@@ -630,9 +630,5 @@ define("tinymce/dom/RangeUtils", [
 		return container;
 	};
 
-	RangeUtils.createRange = function(doc) {
-		return "createRange" in doc ? doc.createRange() : new Range(tinymce.activeEditor.dom);
-	};
-
 	return RangeUtils;
 });
