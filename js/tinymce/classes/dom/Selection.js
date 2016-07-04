@@ -497,7 +497,7 @@ define("tinymce/dom/Selection", [
 			}
 
 			doc = self.win.document;
-			
+
 			if (typeof doc === 'undefined' || doc === null) {
 				return null;
 			}
