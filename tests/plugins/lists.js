@@ -979,6 +979,64 @@ ModuleLoader.require([
 		equal(editor.selection.getStart().nodeName, 'P');
 	});
 
+	test('Remove OL on a deep nested LI', function() {
+		editor.getBody().innerHTML = trimBrs(
+			'<ol>' +
+				'<li>a' +
+					'<ol>' +
+						'<li>b</li>' +
+						'<li>c' +
+							'<ol>' +
+								'<li>d</li>' +
+								'<li>e</li>' +
+								'<li>f</li>' +
+							'</ol>' +
+						'</li>' +
+						'<li>g</li>' +
+						'<li>h</li>' +
+					'</ol>' +
+				'</li>' +
+				'<li>i</li>' +
+			'</ol>'
+		);
+
+		editor.focus();
+		Utils.setSelection('ol ol ol li:nth-child(2)', 1);
+		execCommand('InsertOrderedList');
+
+		equal(editor.getContent(), 
+			'<ol>' +
+			    '<li>a' +
+			        '<ol>' +
+			            '<li>b</li>' +
+			            '<li>c' +
+			                '<ol>' +
+			                    '<li>d</li>' +
+			                '</ol>' +
+			            '</li>' +
+			        '</ol>' +
+			    '</li>' +
+			'</ol>' +
+			'<p>e</p>' +
+			'<ol>' +
+			    '<li style="list-style-type: none">' +
+			        '<ol>' +
+			            '<li style="list-style-type: none">' +
+			                '<ol>' +
+			                    '<li>f</li>' +
+			                '</ol>' +
+			            '</li>' +
+			            '<li>g</li>' +
+			            '<li>h</li>' +
+			        '</ol>' +
+			    '</li>' +
+			    '<li>i</li>' +
+			'</ol>'
+		);
+
+		equal(editor.selection.getStart().nodeName, 'P');
+	});
+
 	test('Remove UL with single LI in BR mode', function() {
 		editor.settings.forced_root_block = false;
 
