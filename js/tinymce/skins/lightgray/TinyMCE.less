@@ -60,10 +60,41 @@ div.@{prefix}-edit-area {
 	display: none;
 }
 
-.@{prefix}-fullscreen .@{prefix}-toolbar .@{prefix}-btn-group.@{prefix}-last {
-	position: absolute;
-	right: 0;
+.@{prefix}-fullscreen {
+	.@{prefix}-toolbar-grp {
+		margin: 0.5rem;
+	}
+	.@{prefix}-toolbar {
+		.@{prefix}-btn-group:not(:first-child) {
+			padding-left: .25rem;
+			margin-left: .25rem;
+		}
+		.@{prefix}-btn-group.@{prefix}-last {
+			position: absolute;
+			right: 0;
+			border: none;
+		}
+		.@{prefix}-btn {
+			min-height: 1.5rem;
+			button {
+				padding: 0.25rem;
+			}
+		}
+	}
 }
+
+
+.@{prefix}-fullscreen > .@{prefix}-container-body {
+	padding-left: 5rem;
+	padding-right: 5rem;
+	padding-top: 1rem;
+	.@{prefix}-toolbar-grp {
+		position: relative;
+	}
+}
+
+
+
 
 
 // Charmap
