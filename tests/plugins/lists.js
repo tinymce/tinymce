@@ -60,7 +60,7 @@ ModuleLoader.require([
 				valid_styles: {
 					'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display,position,top,left,list-style-type'
 				},
-				
+
 			});
 
 			tinymce.init({
@@ -77,7 +77,7 @@ ModuleLoader.require([
 				valid_styles: {
 					'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display,position,top,left,list-style-type'
 				},
-				
+
 			});
 		},
 
@@ -451,7 +451,7 @@ ModuleLoader.require([
 				'<li>c</li>' +
 			'</ol>'
 		);
-		
+
 		editor.focus();
 		Utils.setSelection('ul li', 1);
 		execCommand('InsertOrderedList');
@@ -478,7 +478,7 @@ ModuleLoader.require([
 				'<li>c</li>' +
 			'</ol>'
 		);
-		
+
 		editor.focus();
 		Utils.setSelection('ul li', 1);
 		execCommand('InsertOrderedList', false, { 'list-style-type': 'upper-roman' });
@@ -503,7 +503,7 @@ ModuleLoader.require([
 				'<li>c</li>' +
 			'</ol>'
 		);
-		
+
 		editor.focus();
 		Utils.setSelection('ul li', 1);
 		execCommand('InsertOrderedList', false, { 'list-style-type': 'lower-roman' });
@@ -530,7 +530,7 @@ ModuleLoader.require([
 				'<li>c</li>' +
 			'</ol>'
 		);
-		
+
 		editor.focus();
 		Utils.setSelection('ul li', 1);
 		execCommand('InsertOrderedList', false, { 'list-style-type': 'lower-roman' });
@@ -2442,5 +2442,19 @@ ModuleLoader.require([
 
 		equal(editor.getContent(), '<ul><li>a</li></ul>');
 		equal(editor.selection.getNode().nodeName, 'LI');
+	});
+
+	test('Apply UL list to more than two paragraphs', function() {
+		editor.getBody().innerHTML = trimBrs(
+			'<p>a</p>' +
+			'<p>b</p>' +
+			'<p>c</p>'
+		);
+
+		editor.focus();
+		Utils.setSelection('p:nth-child(1)', 0, 'p:nth-child(3)', 1);
+		execCommand('InsertUnorderedList', false, {'list-style-type': null});
+
+		equal(editor.getContent(), '<ul><li>a</li><li>b</li><li>c</li></ul>');
 	});
 });
