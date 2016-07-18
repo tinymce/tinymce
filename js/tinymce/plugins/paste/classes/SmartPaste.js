@@ -24,7 +24,7 @@ define("tinymce/pasteplugin/SmartPaste", [
 	};
 
 	var isImageUrl = function (url) {
-		return isAbsoluteUrl(url) && /.(gif|jpe?g|jpng)$/.test(url);
+		return isAbsoluteUrl(url) && /.(gif|jpe?g|png)$/.test(url);
 	};
 
 	var createImage = function (editor, url, pasteHtml) {

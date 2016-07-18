@@ -34,6 +34,9 @@ ModuleLoader.require([
 	test('isImageUrl', function() {
 		equal(SmartPaste.isImageUrl('http://www.site.com'), false);
 		equal(SmartPaste.isImageUrl('https://www.site.com'), false);
+		equal(SmartPaste.isImageUrl('http://www.site.com/dir-name/file.jpeg'), true);
+		equal(SmartPaste.isImageUrl('http://www.site.com/dir-name/file.jpg'), true);
+		equal(SmartPaste.isImageUrl('http://www.site.com/dir-name/file.png'), true);
 		equal(SmartPaste.isImageUrl('http://www.site.com/dir-name/file.gif'), true);
 		equal(SmartPaste.isImageUrl('https://www.site.com/dir-name/file.gif'), true);
 		equal(SmartPaste.isImageUrl('https://www.site.com/dir-name/file.gif?query=%42'), false);
