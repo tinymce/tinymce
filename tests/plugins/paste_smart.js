@@ -15,6 +15,7 @@ ModuleLoader.require([
 					ed.on('NodeChange', false);
 				},
 				init_instance_callback: function(ed) {
+					delete ed.settings.smart_paste;
 					window.editor = ed;
 					QUnit.start();
 				}
@@ -67,5 +68,18 @@ ModuleLoader.require([
 		editor.execCommand('mceInsertClipboardContent', false, {content: 'http://www.site.com/my.jpg'});
 		equal(editor.getContent(), '<p>a<img src="http://www.site.com/my.jpg" />bc</p>');
 		equal(editor.undoManager.data.length, 3);
+	});
+
+	test('smart paste option disabled', function() {
+		editor.focus();
+		editor.undoManager.clear();
+		editor.setContent('<p>abc</p>');
+		Utils.setSelection('p', 1);
+		editor.undoManager.add();
+		editor.settings.smart_paste = false;
+
+		editor.execCommand('mceInsertClipboardContent', false, {content: 'http://www.site.com/my.jpg'});
+		equal(editor.getContent(), '<p>ahttp://www.site.com/my.jpgbc</p>');
+		equal(editor.undoManager.data.length, 2);
 	});
 });
