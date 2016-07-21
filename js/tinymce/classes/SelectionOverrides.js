@@ -553,6 +553,31 @@ define("tinymce/SelectionOverrides", [
 				}
 			});
 
+			function handleTouchSelect(editor) {
+				var moved = false;
+
+				editor.on('touchstart', function (e) {
+					moved = false;
+				});
+
+				editor.on('touchmove', function (e) {
+					moved = true;
+				});
+
+				editor.on('touchend', function (e) {
+					var contentEditableRoot	= getContentEditableRoot(e.target);
+
+					if (isContentEditableFalse(contentEditableRoot)) {
+						if (!moved) {
+							e.preventDefault();
+							setContentEditableSelection(selectNode(contentEditableRoot));
+						}
+					} else {
+						clearContentEditableSelection();
+					}
+				});
+			}
+
 			var hasNormalCaretPosition = function (elm) {
 				var caretWalker = new CaretWalker(elm);
 
@@ -581,6 +606,8 @@ define("tinymce/SelectionOverrides", [
 
 				return targetBlock && !isInSameBlock(targetBlock, caretBlock) && hasNormalCaretPosition(targetBlock);
 			};
+
+			handleTouchSelect(editor);
 
 			editor.on('mousedown', function(e) {
 				var contentEditableRoot;
