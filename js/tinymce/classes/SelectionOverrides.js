@@ -556,11 +556,11 @@ define("tinymce/SelectionOverrides", [
 			function handleTouchSelect(editor) {
 				var moved = false;
 
-				editor.on('touchstart', function (e) {
+				editor.on('touchstart', function () {
 					moved = false;
 				});
 
-				editor.on('touchmove', function (e) {
+				editor.on('touchmove', function () {
 					moved = true;
 				});
 
