@@ -38,13 +38,13 @@ define('tinymce/inlite/ui/Buttons', [
 		}
 	};
 
-	var addToEditor = function (editor) {
+	var addToEditor = function (editor, panel) {
 		editor.addButton('quicklink', {
 			icon: 'link',
 			tooltip: 'Insert/Edit link',
 			stateSelector: 'a[href]',
 			onclick: function () {
-				Panel.showForm(editor, 'quicklink');
+				panel.showForm(editor, 'quicklink');
 			}
 		});
 
@@ -66,7 +66,7 @@ define('tinymce/inlite/ui/Buttons', [
 			icon: 'table',
 			tooltip: 'Insert table',
 			onclick: function () {
-				Panel.hide();
+				panel.hide();
 				Actions.insertTable(editor, 2, 2);
 			}
 		});
