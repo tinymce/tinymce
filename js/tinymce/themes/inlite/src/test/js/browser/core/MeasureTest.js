@@ -25,10 +25,10 @@ asynctest('browser/core/MeasureTest', [
 			var pageAreaRect = Measure.getPageAreaRect(editor);
 			var contentAreaRect = Measure.getContentAreaRect(editor);
 
-			Assertions.assertEq(contains(pageAreaRect, elementRect), true, 'Rect is not in page area rect');
-			Assertions.assertEq(contains(contentAreaRect, elementRect), true, 'Rect is not in content area rect');
-			Assertions.assertEq(elementRect.w > 0, true, 'Rect should have width');
-			Assertions.assertEq(elementRect.h > 0, true, 'Rect should have height');
+			Assertions.assertEq('Rect is not in page area rect', contains(pageAreaRect, elementRect), true);
+			Assertions.assertEq('Rect is not in content area rect', contains(contentAreaRect, elementRect), true);
+			Assertions.assertEq('Rect should have width', elementRect.w > 0, true);
+			Assertions.assertEq('Rect should have height', elementRect.h > 0, true);
 		});
 	};
 

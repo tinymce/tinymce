@@ -25,7 +25,7 @@ asynctest('atomic/core/ConvertTest', [
 			var blob = base64ToBlob(base64, 'image/gif');
 
 			Conversions.blobToBase64(blob).then(function (convertedBase64) {
-				Assertions.assertEq(base64, convertedBase64, 'Not the correct base64');
+				Assertions.assertEq('Not the correct base64', base64, convertedBase64);
 				next();
 			});
 		});

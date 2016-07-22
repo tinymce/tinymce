@@ -12,11 +12,11 @@ asynctest('browser/core/SelectionMatcherTest', [
 	var failure = arguments[arguments.length - 1];
 
 	var assertResult = function (expectedResultState, result) {
-		Assertions.assertEq(result !== null, expectedResultState, 'Should not be null');
+		Assertions.assertEq('Should not be null', result !== null, expectedResultState);
 
 		if (expectedResultState === true) {
-			Assertions.assertEq(result.id, 'a', 'Should be matching a');
-			Assertions.assertEq(result.rect.w > 0, true, 'Should be have width');
+			Assertions.assertEq('Should be matching a', result.id, 'a');
+			Assertions.assertEq('Should be have width', result.rect.w > 0, true);
 		}
 	};
 
