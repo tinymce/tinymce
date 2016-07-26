@@ -8,6 +8,7 @@ Version 4.4.1 (2016-07-26)
 	Fixed bug where the shortcut label for fullscreen mode didn't match the actual shortcut key.
 	Fixed bug where it wasn't possible to select cE=false blocks using touch devices on for example iOS.
 	Fixed bug where it was possible to select the child image within a cE=false on IE 11.
+	Fixed so inserts of html containing lists doesn't merge with any existing lists unless it's a paste operation.
 Version 4.4.0 (2016-06-30)
 	Added new inlite theme this is a more lightweight inline UI.
 	Added smarter paste logic that auto detects urls in the clipboard and inserts images/links based on that.
