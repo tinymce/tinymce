@@ -1,3 +1,13 @@
+Version 4.4.1 (2016-07-26)
+	Added smart_paste option to paste plugin to allow disabling the paste behavior if needed.
+	Fixed bug where png urls wasn't properly detected by the smart paste logic.
+	Fixed bug where the element path wasn't working properly when multiple editor instances where used.
+	Fixed bug with creating lists out of multiple paragraphs would just create one list item instead of multiple.
+	Fixed bug where scroll position wasn't properly handled by the inlite theme to place the toolbar properly.
+	Fixed bug where multiple instances of the editor using the inlite theme didn't render the toolbar properly.
+	Fixed bug where the shortcut label for fullscreen mode didn't match the actual shortcut key.
+	Fixed bug where it wasn't possible to select cE=false blocks using touch devices on for example iOS.
+	Fixed bug where it was possible to select the child image within a cE=false on IE 11.
 Version 4.4.0 (2016-06-30)
 	Added new inlite theme this is a more lightweight inline UI.
 	Added smarter paste logic that auto detects urls in the clipboard and inserts images/links based on that.
