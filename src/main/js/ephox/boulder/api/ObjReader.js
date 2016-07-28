@@ -14,18 +14,18 @@ define(
 
     var readOr = function (key, fallback) {
       return function (obj) {
-        return read(key)(obj).getOr(fallback);
+        return readOpt(key)(obj).getOr(fallback);
       };
     };
 
-    var readFrom = function (obj, key) {
-      return read(key)(obj);
+    var readOptFrom = function (obj, key) {
+      return readOpt(key)(obj);
     };
 
     return {
       readOpt: readOpt,
       readOr: readOr,
-      readFrom: readFrom
+      readOptFrom: readOptFrom
     };
   }
 );
