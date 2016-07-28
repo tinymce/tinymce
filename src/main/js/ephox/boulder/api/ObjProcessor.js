@@ -4,6 +4,8 @@ define(
   [
     'ephox.boulder.api.ObjReader',
     'ephox.boulder.api.ObjWriter',
+    'ephox.boulder.combine.ResultCombine',
+    'ephox.compass.Arr',
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
@@ -11,7 +13,7 @@ define(
     'global!Error'
   ],
 
-  function (ObjReader, ObjWriter, Json, Fun, Option, Result, Error) {
+  function (ObjReader, ObjWriter, ResultCombine, Arr, Json, Fun, Option, Result, Error) {
     var doExtract = function (path, readerTypes, f, obj) {
       var readValues = Arr.map(readerTypes, function (rt) {
         return rt.fold(function (okey, value) {
@@ -207,9 +209,68 @@ define(
 
         },
 
+// return readFrom(obj, key).fold(function () {
+//             return Result.error([
+//               'Path: ' + path.join(' > ') + '\nCould not find valid value for "' + key + '" in ' + Json.stringify(obj, null, 2)
+//             ]);
+//           }, function (arrayData) {
+//             // Probably will need to concat this.
+//             var extracted = Arr.map(arrayData, function (x, i) {
+//               return doExtract(path.concat([ key + '[' + i + ']' ]), props, f, x);
+//             });
+
+//             var consolidated = consolidateArr(extracted, {});
+//             return consolidated.map(function (c) {
+//               return wrap(okey, c);
+//             });
+
+//             console.log('extracted', extracted, consolidate(extracted, {}));
+//           });
+
 
         // arr
-        function (key, okey, presence, validation, fields) { },
+        function (key, okey, presence, validation, fields) {
+          var grouping = function (arrayData) {
+            var extracted = Arr.map(arrayData, function (ad, i) {
+              return doExtract(path.concat([ key + '[' + i + ']' ]), fields, strength);
+            });
+
+            // Now, with the array of results, consolidate them into a Result array
+            var conslidated = ResultCombine.consolidateArr(extracted);
+            return conslidated.map(function (c) {
+              return ObjWriter.wrap(okey, strength(c));
+            });
+          };
+          
+          // Check presence to work out if it is necessary. Ignore validation for the time being.
+          return presence.fold(
+            // strict
+            function () {
+              return strictAccess(path, obj, key).bind(grouping);
+            },
+            // defaulted
+            function (fallback) {
+              return fallbackAccess(obj, key, fallback).bind(grouping);
+            },
+            // option
+            function () {
+              return optionAccess(obj, key).bind(function (optGroupData) {
+                return optGroupData.fold(function () {
+                  return Result.value(
+                    ObjWriter.wrap(okey, strength(Option.none()))
+                  );
+                }, function (groupData) {
+                  var group = doExtract(path.concat([ key ]), groupData, fields, strength);
+                  return group.map(function (g) {
+                    return ObjWriter.wrap(okey, strength(Option.some(g)));
+                  });
+                });
+              });
+            }
+          );          
+
+
+        },
 
         // state
         function (okey, instantiator) {
