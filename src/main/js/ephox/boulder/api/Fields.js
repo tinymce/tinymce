@@ -2,24 +2,35 @@ define(
   'ephox.boulder.api.Fields',
 
   [
+    'ephox.peanut.Fun',
     'ephox.scullion.ADT'
   ],
 
-  function (Adt) {
+  function (Fun, Adt) {
     var adt = Adt.generate([
-      { property: [ 'key', 'okey', 'presence', 'validation' ] },
-      { obj: [ 'key', 'okey', 'presence', 'validation', 'fields' ] },
-      { arr: [ 'key', 'okey', 'presence', 'validation', 'fields' ] },
-      { state: [ 'okey', 'instantiator' ] },
-      { snapshot: [ 'okey' ] }
+      { prop: [ 'key', 'okey', 'presence', 'validation' ] },
+      // Probably really only need validation for prop, not obj and arr.
+      { obj: [ 'key', 'okey', 'presence', 'fields' ] },
+      { arr: [ 'key', 'okey', 'presence', 'fields' ] },
+      { state: [ 'okey', 'instantiator' ] }
     ]);
 
+    var output = function (okey, value) {
+      return adt.state(okey, Fun.constant(value));
+    };
+
+    var snapshot = function (okey) {
+      return adt.state(okey, Fun.identity);
+    };
+
     return {
-      property: adt.property,
+      prop: adt.prop,
       obj: adt.obj,
       arr: adt.arr,
       state: adt.state,
-      snapshot: adt.snapshot
+      
+      output: output,
+      snapshot: snapshot,
     };
   }
 );

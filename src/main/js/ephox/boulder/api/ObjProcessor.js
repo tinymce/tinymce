@@ -14,106 +14,9 @@ define(
   ],
 
   function (ObjReader, ObjWriter, ResultCombine, Arr, Json, Fun, Option, Result, Error) {
-    var doExtract = function (path, readerTypes, f, obj) {
-      var readValues = Arr.map(readerTypes, function (rt) {
-        return rt.fold(function (okey, value) {
-          // output
-          return Result.value(wrap(okey, f(value)));
-        }, function (key, okey) {
-          // // strict
-          // return readFrom(obj, key).fold(function () {
-          //   return Result.error([ 'Path: ' + path.join(' > ') + '\nCould not find valid value for "' + key + '" in ' + Json.stringify(obj, null, 2) ]);
-          // }, function (v) {
-          //   return Result.value(wrap(okey, f(v)));
-          // });
-          
-        }, function (key, okey, fallback) {
-          // withDefault
-          // var value = readFrom(obj, key).getOr(fallback);
-          // return Result.value(wrap(okey, f(value)));
-        }, function (key, okey) {
-          // asOption
-          // var value = readFrom(obj, key);
-          // return Result.value(wrap(okey, f(value)));
-        }, function (key, okey, children) {
-          // strict group
-          return readFrom(obj, key).fold(function () {
-            return Result.error([
-              'Path: ' + path.join(' > ') + '\nCould not find valid value for "' + key + '" in ' + Json.stringify(obj, null, 2)
-            ]);
-          }, function (groupData) {
-            var group = doExtract(path.concat([ key ]), children, f, groupData);
-            return group.map(function (g) {
-              return wrap(okey, f(g));  
-            });
-          });
-        }, function (key, okey, children, fallback) {
-          // default group
-          var groupData = readFrom(obj, key).getOr(fallback);
-          var group = doExtract(path.concat([ key ]), children, f, groupData);
-          return group.map(function (g) {
-            return wrap(okey, f(g));
-          });
-        }, function (key, okey, children, ifTrue) {
-          // option group
-          var groupData = obj[key] === undefined || obj[key] === false ? Option.none() : Option.some(obj[key] === true ? ifTrue : obj[key]);
-          return groupData.fold(function () {
-            return Result.value(wrap(okey, f(Option.none())));
-          }, function (gd) {
-            return doExtract(path.concat([ key ]), children, f, gd).map(function (group) {
-              return wrap(okey, f(Option.some(group)));
-            });
-          });
-        },
-
-        function (key, okey, props) {
-          // strict array
-          return readFrom(obj, key).fold(function () {
-            return Result.error([
-              'Path: ' + path.join(' > ') + '\nCould not find valid value for "' + key + '" in ' + Json.stringify(obj, null, 2)
-            ]);
-          }, function (arrayData) {
-            // Probably will need to concat this.
-            var extracted = Arr.map(arrayData, function (x, i) {
-              return doExtract(path.concat([ key + '[' + i + ']' ]), props, f, x);
-            });
-
-            var consolidated = consolidateArr(extracted, {});
-            return consolidated.map(function (c) {
-              return wrap(okey, c);
-            });
-
-            console.log('extracted', extracted, consolidate(extracted, {}));
-          });
-        },
-
-        function (key, okey, props, fallback) {
-          // default array
-          return Result.error('defaultArray Not implemented');
-
-        },
-
-        function (key, okey, pops) {
-          //option array
-          return Result.error('optionArray Not implemented');
-
-        }, function (okey, constructor) {
-          // state
-          // var state = constructor();
-          // return Result.value(wrap(okey, f(state)));
-        }, function (g) {
-          // custom
-          // return f(g(obj));
-        }, function (okey) {
-          // return Result.value(wrap(okey, f(obj)));
-        });
-      });
-      return consolidate(readValues, { });
-    };
-
     var extractReader = function (path, readerTypes, wrapping) {
       return function (obj) {
-        var extracted = doExtract(path, readerTypes, wrapping, obj);
+        var extracted = doExtract(path, obj, readerTypes, wrapping, obj);
         return extracted.fold(function (errs) {
           throw new Error('Invalid attempt to read: ' + Json.stringify(obj) + '.\n' + errs.join('\n'));
         }, Fun.identity);
@@ -123,7 +26,8 @@ define(
     var strictAccess = function (path, obj, key) {
       // In strict mode, if it undefined, it is an error.
       return ObjReader.readOptFrom(obj, key).fold(function () {
-        return Result.error([ 'Path: ' + path.join(' > ') + '\nCould not find valid value for "' + key + '" in ' + Json.stringify(obj, null, 2) ]);
+        var message = 'Failed Path: ' + path.join(' > ') + '\nCould not find valid *strict* value for "' + key + '" in ' + Json.stringify(obj, null, 2);
+        return Result.error([ message ]);
       }, Result.value);
     };
 
@@ -135,9 +39,17 @@ define(
       return Result.value(ObjReader.readOptFrom(obj, key));
     };
 
+    var doExtract = function (path, obj, fields, strength) {
+      var results = Arr.map(fields, function (field) {
+        return doExtractOne(path, obj, field, strength);
+      });
+
+      return ResultCombine.consolidateObj(results, {});
+    };
+
     var doExtractOne = function (path, obj, field, strength) {
       return field.fold(
-        // property
+        // prop
         function (key, okey, presence, validation) {
           var publish = function (v) {
             return ObjWriter.wrap(okey, strength(v));
@@ -160,19 +72,8 @@ define(
           );
         },
 
-        // return readFrom(obj, key).fold(function () {
-        //     return Result.error([
-        //       'Path: ' + path.join(' > ') + '\nCould not find valid value for "' + key + '" in ' + Json.stringify(obj, null, 2)
-        //     ]);
-        //   }, function (groupData) {
-        //     var group = doExtract(path.concat([ key ]), children, f, groupData);
-        //     return group.map(function (g) {
-        //       return wrap(okey, f(g));  
-        //     });
-        //   });
-
         // obj
-        function (key, okey, presence, validation, fields) {
+        function (key, okey, presence, fields) {
           var grouping = function (groupData) {
             var group = doExtract(path.concat([ key ]), groupData, fields, strength);
             return group.map(function (g) {
@@ -209,27 +110,8 @@ define(
 
         },
 
-// return readFrom(obj, key).fold(function () {
-//             return Result.error([
-//               'Path: ' + path.join(' > ') + '\nCould not find valid value for "' + key + '" in ' + Json.stringify(obj, null, 2)
-//             ]);
-//           }, function (arrayData) {
-//             // Probably will need to concat this.
-//             var extracted = Arr.map(arrayData, function (x, i) {
-//               return doExtract(path.concat([ key + '[' + i + ']' ]), props, f, x);
-//             });
-
-//             var consolidated = consolidateArr(extracted, {});
-//             return consolidated.map(function (c) {
-//               return wrap(okey, c);
-//             });
-
-//             console.log('extracted', extracted, consolidate(extracted, {}));
-//           });
-
-
         // arr
-        function (key, okey, presence, validation, fields) {
+        function (key, okey, presence, fields) {
           var grouping = function (arrayData) {
             var extracted = Arr.map(arrayData, function (ad, i) {
               return doExtract(path.concat([ key + '[' + i + ']' ]), fields, strength);
@@ -276,19 +158,19 @@ define(
         function (okey, instantiator) {
           var v = instantiator(obj);
           return Result.value(ObjWriter.wrap(okey, strength(v)));
-        },
-        
-        // snapshot 
-        function (okey) {
-          var v = obj;
-          return Result.value(ObjWriter.wrap(okey, strength(v)));
         }
       );
     };
 
+    var extract = function (path, obj, fields, strength) {
+      var extracted = doExtract(path, obj, fields, strength);
+      return extracted.fold(function (errs) {
+        throw new Error('Invalid attempt to read: ' + Json.stringify(obj) + '.xx\n' + errs.join('\n'));
+      }, Fun.identity);
+    };
 
     var weak = function (path, obj, fields) {
-
+      return extract(path, obj, fields, Fun.identity);
     };
 
     var strong = function (path, obj, fields) {

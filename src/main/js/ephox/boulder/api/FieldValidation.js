@@ -7,11 +7,13 @@ define(
 
   function (Adt) {
     var adt = Adt.generate([
-      { none: [ ] }
+      { none: [ ] },
+      { validator: [ 'validator' ] }
     ]);
 
     return {
-      none: adt.none
+      none: adt.none,
+      validator: adt.validator
     };
   }
 );
