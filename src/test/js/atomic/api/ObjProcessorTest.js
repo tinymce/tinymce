@@ -122,7 +122,7 @@ test(
     checkOptResult(
       'output.alpha',
       Option.some('option.alpha'),
-      'test.option.absent',
+      'test.option.supplied',
       { 'alpha': 'option.alpha' },
       Fields.prop('alpha', 'output.alpha', FieldPresence.asOption(), FieldValidation.none())
     );    
