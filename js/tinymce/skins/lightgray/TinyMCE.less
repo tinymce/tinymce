@@ -55,9 +55,10 @@ div.@{prefix}-edit-area {
 .@{prefix}-fullscreen .@{prefix}-resizehandle {
 	display: none;
 }
+
 //D2L 
 .@{prefix}-i-arrowdown ~ .@{prefix}-caret {
-	display: none;
+	display: none !important;
 }
 
 .@{prefix}-fullscreen {
@@ -80,7 +81,6 @@ div.@{prefix}-edit-area {
 	}
 }
 
-
 .@{prefix}-fullscreen > .@{prefix}-container-body {
 	padding-left: 3rem;
 	padding-right: 3rem;
@@ -91,8 +91,60 @@ div.@{prefix}-edit-area {
 }
 
 
+// For the down arrow
+.@{prefix}-btn i.@{prefix}-caret {
+	display: inline;
+	border: none;
+	width: auto;
+	position: relative;
+}
 
+// For the table button
+.@{prefix}-i-table {
+	margin-right: 0.3rem;
+}
 
+// For the Font Family and Font Size buttons
+.@{prefix}-listbox button {
+	padding-right: 0px !important;
+
+	i.@{prefix}-caret {
+		margin-left: 0.5rem;
+	}
+}
+
+.@{prefix}-fullscreen .@{prefix}-toolbar-grp .@{prefix}-menubtn.@{prefix}-fixed-width span {
+	width: auto !important;
+}
+
+// For the Color butto fly out
+.@{prefix}-floatpanel.@{prefix}-popover.@{prefix}-bottom > .@{prefix}-arrow {
+	margin-left: -0.55rem !important;
+	top: -0.55rem !important;
+}
+
+.@{prefix}-floatpanel .@{prefix}-arrow {
+	border-left-width: 0.55rem !important;
+	border-right-width: 0.55rem !important;
+	border-bottom-width: 0.55rem !important;
+}
+
+// Fro button jitter issue
+.@{prefix}-splitbtn:hover .@{prefix}-open {
+    border-left-width: 1px;
+    border-left-style: solid;
+}
+
+.@{prefix}-colorbutton:hover .@{prefix}-open {
+    border-left-width: 1px;
+    border-left-style: solid;
+}
+
+.@{prefix}-colorbutton button span.@{prefix}-preview {
+	left: 44%;
+}
+
+// END OF D2L
 
 // Charmap
 
