@@ -6,10 +6,11 @@ test(
     'ephox.boulder.api.FieldValidation',
     'ephox.boulder.api.Fields',
     'ephox.boulder.api.ObjProcessor',
-    'ephox.peanut.Fun'
+    'ephox.peanut.Fun',
+    'ephox.perhaps.Option'
   ],
 
-  function (FieldPresence, FieldValidation, Fields, ObjProcessor, Fun) {
+  function (FieldPresence, FieldValidation, Fields, ObjProcessor, Fun, Option) {
     var data = {
       alpha: 'Alpha',
       beta: 'Beta',
@@ -50,6 +51,38 @@ test(
       });
     };
 
+    var checkOptResult = function (expKey, expectedValue, label, object, field) {
+      var actual = ObjProcessor.doExtractOne([ label ], object, field, Fun.identity);
+      actual.fold(function (errs) {
+        assert.fail('Expected ' + label + ' to succeed. Failed instead with: ' + JSON.stringify(errs, 2, null));
+      }, function (valueObj) {
+        var actualValue = valueObj[expKey];
+        console.log('actualValue', actualValue, 'valueObj', valueObj);
+        actualValue.fold(function () {
+          expectedValue.fold(function () {
+            // Success.
+          }, function (se) {
+            assert.fail('Test: ' + label + '\nExpected Result(Option.some(' + 
+              JSON.stringify(se, null, 2) + '))\nActual: ' + 'Result(Option.none())');
+          });
+        }, function (sv) {
+          expectedValue.fold(function () {
+            assert.fail('Test: ' + label + '\nExpected Result(Option.none())\nActual: ' + 'Result(Option.some(' + 
+              JSON.stringify(sv, null, 2) + '))');
+          }, function (se) {
+            assert.eq(
+              se,
+              sv, 
+              'Test: ' + label + 
+                '\n.Expected value: ' + 
+                JSON.stringify(se, 2, null) + 
+                '\nWas: ' + JSON.stringify(sv, 2, null)
+            );
+          });
+        });
+      });
+    };
+
     checkError(
       'Failed Path: test.strict.absent\nCould not find valid *strict* value for "alpha" in {}',
       'test.strict.absent',
@@ -76,6 +109,22 @@ test(
       'test.default.absent',
       { },
       Fields.prop('alpha', 'output.alpha', FieldPresence.defaulted('default.alpha'), FieldValidation.none())
+    );
+
+    checkOptResult(
+      'output.alpha',
+      Option.none(),
+      'test.option.absent',
+      { },
+      Fields.prop('alpha', 'output.alpha', FieldPresence.asOption(), FieldValidation.none())
+    ); 
+
+    checkOptResult(
+      'output.alpha',
+      Option.some('option.alpha'),
+      'test.option.absent',
+      { 'alpha': 'option.alpha' },
+      Fields.prop('alpha', 'output.alpha', FieldPresence.asOption(), FieldValidation.none())
     );    
 
 
