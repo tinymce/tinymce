@@ -5,10 +5,11 @@ test(
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldValidation',
     'ephox.boulder.api.Fields',
-    'ephox.boulder.api.ObjProcessor'
+    'ephox.boulder.api.ObjProcessor',
+    'ephox.peanut.Fun'
   ],
 
-  function (FieldPresence, FieldValidation, Fields, ObjProcessor) {
+  function (FieldPresence, FieldValidation, Fields, ObjProcessor, Fun) {
     var data = {
       alpha: 'Alpha',
       beta: 'Beta',
@@ -22,6 +23,61 @@ test(
         betaArr2: 'Beta Arr2'
       }
     };
+
+    var checkError = function (expected, label, object, field) {
+      var actual = ObjProcessor.doExtractOne([ label ], object, field, Fun.identity);
+      actual.fold(function (errs) {
+        // May need to do a starts with if the JSON stringify is not deterministic
+        assert.eq([ expected ], errs);
+      }, function (value) {
+        assert.fail('Expected ' + label + ' to fail. Succeeded instead with: ' + JSON.stringify(value, 2, null));
+      });
+    };
+
+    var checkResult = function (expected, label, object, field) {
+      var actual = ObjProcessor.doExtractOne([ label ], object, field, Fun.identity);
+      actual.fold(function (errs) {
+        assert.fail('Expected ' + label + ' to succeed. Failed instead with: ' + JSON.stringify(errs, 2, null));
+      }, function (value) {
+        assert.eq(
+          expected,
+          value, 
+          'Test: ' + label + 
+            '\n.Expected value: ' + 
+            JSON.stringify(expected, 2, null) + 
+            '\nWas: ' + JSON.stringify(value, 2, null)
+        );
+      });
+    };
+
+    checkError(
+      'Failed Path: test.1a-1\nCould not find valid *strict* value for "alpha" in {}',
+      'test.1a-1',
+      { },
+      Fields.prop('alpha', 'output.alpha', FieldPresence.strict(), FieldValidation.none())
+    );
+
+    checkResult(
+      { 'output.alpha': 'strict.alpha' },
+      'test.1a-2',
+      { 'alpha': 'strict.alpha' },
+      Fields.prop('alpha', 'output.alpha', FieldPresence.strict(), FieldValidation.none())
+    );
+
+    checkResult(
+      { 'output.alpha': 'supplied.alpha' },
+      'test.1b',
+      { 'alpha': 'supplied.alpha' },
+      Fields.prop('alpha', 'output.alpha', FieldPresence.defaulted('default.alpha'), FieldValidation.none())
+    );    
+
+    checkResult(
+      { 'output.alpha': 'default.alpha' },
+      'test.1',
+      { },
+      Fields.prop('alpha', 'output.alpha', FieldPresence.defaulted('default.alpha'), FieldValidation.none())
+    );    
+
 
     // Maybe make the syntax nicer.
     var output = ObjProcessor.weak([ 'test.1' ], data, [

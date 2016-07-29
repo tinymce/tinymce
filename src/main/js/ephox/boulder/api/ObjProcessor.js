@@ -184,7 +184,10 @@ define(
     return {
       weak: weak,
       strong: strong,
-      validate: validate
+      validate: validate,
+
+      // temporarily expose until I find a better way.
+      doExtractOne: doExtractOne
     };
   }
 );
