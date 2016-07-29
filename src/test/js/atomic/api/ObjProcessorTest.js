@@ -51,29 +51,29 @@ test(
     };
 
     checkError(
-      'Failed Path: test.1a-1\nCould not find valid *strict* value for "alpha" in {}',
-      'test.1a-1',
+      'Failed Path: test.strict.absent\nCould not find valid *strict* value for "alpha" in {}',
+      'test.strict.absent',
       { },
       Fields.prop('alpha', 'output.alpha', FieldPresence.strict(), FieldValidation.none())
     );
 
     checkResult(
       { 'output.alpha': 'strict.alpha' },
-      'test.1a-2',
+      'test.strict.supplied',
       { 'alpha': 'strict.alpha' },
       Fields.prop('alpha', 'output.alpha', FieldPresence.strict(), FieldValidation.none())
     );
 
     checkResult(
       { 'output.alpha': 'supplied.alpha' },
-      'test.1b',
+      'test.default.supplied',
       { 'alpha': 'supplied.alpha' },
       Fields.prop('alpha', 'output.alpha', FieldPresence.defaulted('default.alpha'), FieldValidation.none())
     );    
 
     checkResult(
       { 'output.alpha': 'default.alpha' },
-      'test.1',
+      'test.default.absent',
       { },
       Fields.prop('alpha', 'output.alpha', FieldPresence.defaulted('default.alpha'), FieldValidation.none())
     );    
