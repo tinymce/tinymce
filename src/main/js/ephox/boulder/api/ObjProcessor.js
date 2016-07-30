@@ -121,7 +121,7 @@ define(
               'Failed Path: ' + path.concat([ key ]).join(' > ') + '\nFailed type check. Fields.arr(' + key + ') should reference an array'
             ]);
             var extracted = Arr.map(arrayData, function (ad, i) {
-              return doExtract(path.concat([ key + '[' + i + ']' ]), fields, strength);
+              return doExtract(path.concat([ key + '[' + i + ']' ]), ad, fields, strength);
             });
 
             // Now, with the array of results, consolidate them into a Result array

@@ -190,6 +190,36 @@ test(
       ])
     );
 
+    checkError(
+      [
+        'Failed Path: test.strict.array[0].missing.strict.field > alpha[0]\n' + 
+          'Could not find valid *strict* value for "alpha.field.1" in ' + JSON.stringify({ b: 5 }, null, 2)
+      ],
+      'test.strict.array[0].missing.strict.field',
+      {
+        alpha: [
+          { b: 5 }
+        ]
+      },
+      Fields.arr('alpha', 'output.alpha', FieldPresence.strict(), [
+        Fields.prop('alpha.field.1', 'output.alpha.field.1', FieldPresence.strict(), FieldValidation.none())
+      ])
+    );
+
+    checkResult(
+      { 'output.alpha': [ { 'output.a': 'default.a' } ] },
+      'test.strict.array.with.defaulted.field',
+      {
+        alpha: [
+          { b: 5 }
+        ]
+      },
+      Fields.arr('alpha', 'output.alpha', FieldPresence.strict(), [
+        Fields.prop('a', 'output.a', FieldPresence.defaulted('default.a'), FieldValidation.none())
+      ])
+    );
+
+
     // Maybe make the syntax nicer.
     var output = ObjProcessor.weak([ 'test.1' ], data, [
       Fields.prop('alpha', 't.alpha', FieldPresence.strict(), FieldValidation.none()),
