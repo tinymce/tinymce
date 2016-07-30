@@ -158,6 +158,28 @@ test(
       ])
     );
 
+    checkError(
+      [ 
+        'Failed Path: test.strict.group.with.only.one.missing.child > alpha\nCould not find valid *strict* value for "alpha.child.2" in ' + JSON.stringify({ 'alpha.child.1': '10' }, null, 2)
+      ],
+      'test.strict.group.with.only.one.missing.child',
+      { 'alpha': { 'alpha.child.1': '10' } },
+      Fields.obj('alpha', 'output.alpha', FieldPresence.strict(), [
+        Fields.prop('alpha.child.1', 'output.alpha.child.1', FieldPresence.strict(), FieldValidation.none()),
+        Fields.prop('alpha.child.2', 'output.alpha.child.2', FieldPresence.strict(), FieldValidation.none())
+      ])
+    );
+
+    checkResult(
+      { 'output.alpha': { 'alpha.child': 10 }},
+      'test.strict.group.with.defaulted.child',
+      {
+        alpha: { }
+      },
+      Fields.obj('alpha', 'output.alpha', FieldPresence.strict(), [
+        Fields.prop('alpha.child', 'output.alpha.child', FieldPresence.defaulted(10), FieldValidation.none())
+      ])
+    );
 
     // Maybe make the syntax nicer.
     var output = ObjProcessor.weak([ 'test.1' ], data, [
