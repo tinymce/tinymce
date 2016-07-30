@@ -171,13 +171,22 @@ test(
     );
 
     checkResult(
-      { 'output.alpha': { 'alpha.child': 10 }},
+      { 'output.alpha': { 'output.alpha.child': 10 }},
       'test.strict.group.with.defaulted.child',
       {
         alpha: { }
       },
       Fields.obj('alpha', 'output.alpha', FieldPresence.strict(), [
         Fields.prop('alpha.child', 'output.alpha.child', FieldPresence.defaulted(10), FieldValidation.none())
+      ])
+    );
+
+    checkError(
+      [ 'Failed Path: test.strict.array.wrong.type > alpha\nFailed type check. Fields.arr(alpha) should reference an array'],
+      'test.strict.array.wrong.type',
+      { alpha: 10 },
+      Fields.arr('alpha', 'output.alpha', FieldPresence.strict(), [
+        Fields.prop('alpha.index.0', 'output.alpha.index.0', FieldPresence.defaulted('0'), FieldValidation.none())
       ])
     );
 

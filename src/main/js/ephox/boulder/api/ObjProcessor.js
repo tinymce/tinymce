@@ -5,6 +5,7 @@ define(
     'ephox.boulder.api.ObjReader',
     'ephox.boulder.api.ObjWriter',
     'ephox.boulder.combine.ResultCombine',
+    'ephox.classify.Type',
     'ephox.compass.Arr',
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
@@ -13,7 +14,7 @@ define(
     'global!Error'
   ],
 
-  function (ObjReader, ObjWriter, ResultCombine, Arr, Json, Fun, Option, Result, Error) {
+  function (ObjReader, ObjWriter, ResultCombine, Type, Arr, Json, Fun, Option, Result, Error) {
     var extractReader = function (path, readerTypes, wrapping) {
       return function (obj) {
         var extracted = doExtract(path, obj, readerTypes, wrapping, obj);
@@ -75,6 +76,9 @@ define(
         // obj
         function (key, okey, presence, fields) {
           var grouping = function (groupData) {
+            if (! Type.isObject(groupData)) return Result.error([
+              'Failed Path: ' + path.concat([ key ]).join(' > ') + '\ncheck. Fields.obj(' + key + ') should reference an object'
+            ]);
             var group = doExtract(path.concat([ key ]), groupData, fields, strength);
             return group.map(function (g) {
               return ObjWriter.wrap(okey, strength(g));
@@ -113,6 +117,9 @@ define(
         // arr
         function (key, okey, presence, fields) {
           var grouping = function (arrayData) {
+            if (! Type.isArray(arrayData)) return Result.error([
+              'Failed Path: ' + path.concat([ key ]).join(' > ') + '\nFailed type check. Fields.arr(' + key + ') should reference an array'
+            ]);
             var extracted = Arr.map(arrayData, function (ad, i) {
               return doExtract(path.concat([ key + '[' + i + ']' ]), fields, strength);
             });
