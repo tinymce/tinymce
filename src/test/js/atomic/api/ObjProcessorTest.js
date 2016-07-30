@@ -29,7 +29,7 @@ test(
       var actual = ObjProcessor.doExtractOne([ label ], object, field, Fun.identity);
       actual.fold(function (errs) {
         // May need to do a starts with if the JSON stringify is not deterministic
-        assert.eq([ expected ], errs);
+        assert.eq(expected, errs);
       }, function (value) {
         assert.fail('Expected ' + label + ' to fail. Succeeded instead with: ' + JSON.stringify(value, 2, null));
       });
@@ -84,7 +84,7 @@ test(
     };
 
     checkError(
-      'Failed Path: test.strict.absent\nCould not find valid *strict* value for "alpha" in {}',
+      [ 'Failed Path: test.strict.absent\nCould not find valid *strict* value for "alpha" in {}' ],
       'test.strict.absent',
       { },
       Fields.prop('alpha', 'output.alpha', FieldPresence.strict(), FieldValidation.none())
@@ -125,7 +125,38 @@ test(
       'test.option.supplied',
       { 'alpha': 'option.alpha' },
       Fields.prop('alpha', 'output.alpha', FieldPresence.asOption(), FieldValidation.none())
-    );    
+    );
+
+    checkError(
+      [ 'Failed Path: test.strict.group.entirely.absent\nCould not find valid *strict* value for "alpha" in {}' ],
+      'test.strict.group.entirely.absent',
+      { },
+      Fields.obj('alpha', 'output.alpha', FieldPresence.strict(), [
+
+      ])
+    );
+
+    checkError(
+      [ 'Failed Path: test.strict.group.with.missing.strict.child > alpha\nCould not find valid *strict* value for "alpha.child" in {}' ],
+      'test.strict.group.with.missing.strict.child',
+      { 'alpha': { } },
+      Fields.obj('alpha', 'output.alpha', FieldPresence.strict(), [
+        Fields.prop('alpha.child', 'output.alpha.child', FieldPresence.strict(), FieldValidation.none())
+      ])
+    );
+
+    checkError(
+      [ 
+        'Failed Path: test.strict.group.with.missing.strict.children > alpha\nCould not find valid *strict* value for "alpha.child.1" in {}',
+        'Failed Path: test.strict.group.with.missing.strict.children > alpha\nCould not find valid *strict* value for "alpha.child.2" in {}'
+      ],
+      'test.strict.group.with.missing.strict.children',
+      { 'alpha': { } },
+      Fields.obj('alpha', 'output.alpha', FieldPresence.strict(), [
+        Fields.prop('alpha.child.1', 'output.alpha.child.1', FieldPresence.strict(), FieldValidation.none()),
+        Fields.prop('alpha.child.2', 'output.alpha.child.2', FieldPresence.strict(), FieldValidation.none())
+      ])
+    );
 
 
     // Maybe make the syntax nicer.
