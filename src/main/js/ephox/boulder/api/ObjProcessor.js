@@ -176,12 +176,31 @@ define(
       }, Fun.identity);
     };
 
-    var weak = function (path, obj, fields) {
-      return extract(path, obj, fields, Fun.identity);
+    var stencil = function (path, fields) {
+      var weak = function (obj) {
+        return extract(path, obj, fields, Fun.identity);
+      };
+
+      var strong = function (obj) {
+        return extract(path, obj, fields, Fun.constant);
+      };
+
+      return {
+        weak: weak,
+        strong: strong,
+        validate: Fun.noop
+      };
+    };
+    var weak = function (path, fields) {
+      return function (obj) {
+        return extract(path, obj, fields, Fun.identity);
+      };
     };
 
-    var strong = function (path, obj, fields) {
-
+    var strong = function (path, fields) {
+      return function (obj) {
+        return extract(path, obj, fields, Fun.constant);
+      };
     };
 
     var validate = function (path, obj, fields) {
