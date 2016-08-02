@@ -30,7 +30,7 @@ define(
       state: adt.state,
       
       output: output,
-      snapshot: snapshot,
+      snapshot: snapshot
     };
   }
 );
