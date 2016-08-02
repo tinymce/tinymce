@@ -30,6 +30,10 @@ define(
       return ValueProcessor.field(key, key, FieldPresence.strict(), arrOfObj(objFields));
     };
 
+    var strictArrayOf = function (key, prop) {
+      return ValueProcessor.field(key, key, FieldPresence.strict(), prop);
+    };
+
     var defaultField = function (key, fallback) {
       return ValueProcessor.field(key, key, FieldPresence.defaulted(fallback), anyValue);
     };
@@ -37,6 +41,7 @@ define(
     var fields = {
       strict: strictField,
       strictArrayOfObj: strictArrayOfObj,
+      strictArrayOf: strictArrayOf,
       defaulted: defaultField
     };
 

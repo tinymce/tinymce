@@ -44,16 +44,11 @@ test(
       ])
     ]));
 
-    // check({
-    //   urls: [ 'dog', 'cat' ]
-    // }, ValueProcessor.obj(
-    //   [ 'link.api' ],
-    //   [
-    //     ValueProcessor.field('urls', 'urls', FieldPresence.strict(), ValueProcessor.arr(ValueProcessor.value(function (s) {
-    //       return Type.isString(s) ? Result.value(s) : Result.error('needs to be a string');
-    //     })))
-    //   ]
-    // ));
+    check('test.5', {
+      urls: [ 'dog', 'cat' ]
+    }, ValueProcessor.obj([
+      ValueSchema.fields.strictArrayOf('urls', ValueSchema.anyValue())
+    ]));
 
   }
 );
