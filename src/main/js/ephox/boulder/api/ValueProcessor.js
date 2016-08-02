@@ -30,7 +30,11 @@ define(
     };
 
     var strict = function (key) {
-      return adt.field(key, key, FieldPresence.strict(), value(FieldValidation.none()));
+      return adt.field(key, key, FieldPresence.strict(), value(Result.value));
+    };
+
+    var defaulted = function (key, fallback) {
+      return adt.field(key, key, FieldPresence.defaulted(fallback), value(Result.value));
     };
 
     var strictAccess = function (path, obj, key) {
@@ -51,6 +55,7 @@ define(
 
 
     var cExtractOne = function (path, obj, field, strength) {
+      console.log('field', field);
       return field.fold(
         function (key, okey, presence, prop) {
           var access = (function () {
@@ -63,9 +68,11 @@ define(
             });
           })();
 
-          return access.bind(function (value) {
-            console.log('weak.value', value);
-            return prop.weak(value).map(function (res) {
+          console.log('prop', prop);
+
+          return access.bind(function (av) {
+            console.log('weak.av', av);
+            return prop.extract(strength, av).map(function (res) {
               return ObjWriter.wrap(okey, res);
             });
           });
@@ -94,10 +101,20 @@ define(
         return validator(val);
       };
 
+      var extract = function (strength, val) {
+        return validator(val).map(strength);
+      };
+
+      var toString = function () {
+        return 'val';
+      };
+
       return {
         strong: strong,
         weak: weak,
-        validate: Fun.noop
+        validate: Fun.noop,
+        extract: extract,
+        toString: toString
       };      
     };
 
@@ -107,13 +124,38 @@ define(
       };
 
       var strong = function (obj) {
-        return ObjProcessor.extract(path, obj, fields, Fun.constant);
+        return cExtract(path, obj, fields, Fun.constant);
       };
+
+      var extract = function (strength, obj) {
+        return cExtract(path, obj, fields, strength);
+      };
+
+      var toString = function () {
+        var fieldStrings = Arr.map(fields, function (field) {
+          return field.fold(function (key, okey, presence, prop) {
+            return key + ' -> ' + prop.toString();
+          }, function (okey, instantiator) {
+            return 'state(' + okey + ')';
+          });
+        });
+        return 'obj{\n' + fieldStrings.join('\n') + '}'; 
+      };
+
+      // Do the toString.
+      // var toString = function () {
+      //   return 'obj{\n' + 
+      //     Arr.map(fields, function (field) {
+      //       return fi
+      //     })
+      // }
 
       return {
         weak: weak,
         strong: strong,
-        validate: Fun.noop
+        validate: Fun.noop,
+        extract: extract,
+        toString: toString
       };
     };
 
@@ -128,10 +170,21 @@ define(
         return ResultCombine.consolidateArr(results);
       };
 
+      var extract = function (strength, array) {
+        var results = Arr.map(array, Fun.curry(prop.extract, strength));
+        return strength(ResultCombine.consolidateArr(results));
+      };
+
+      var toString = function () {
+        return 'array(' + prop.toString() + ')';
+      };
+
       return {
         strong: strong,
         weak: weak,
-        validate: Fun.noop
+        validate: Fun.noop,
+        extract: extract,
+        toString: toString
       };
     };
 
@@ -149,7 +202,8 @@ define(
       
       output: output,
       snapshot: snapshot,
-      strict: strict
+      strict: strict,
+      defaulted: defaulted
     };
   }
 );
