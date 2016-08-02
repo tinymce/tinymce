@@ -4,46 +4,59 @@ test(
   [
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.Fields',
-    'ephox.boulder.api.ValueProcessor'
+    'ephox.boulder.api.ValueProcessor',
+    'ephox.classify.Type',
+    'ephox.perhaps.Result'
   ],
 
-  function (FieldPresence, Fields, ValueProcessor) {
-    var x = 10;
-    assert.eq(10, ValueProcessor.value().weak(x).getOrDie());
+  function (FieldPresence, Fields, ValueProcessor, Type, Result) {
 
 
-    var y = [
-      10, 20, 50
-    ];
-    assert.eq(y, ValueProcessor.arr(ValueProcessor.value()).weak(y).getOrDie());
-
-    var z = {
-      a: 'a',
-      b: 'b'
+    var check = function (input, processor) {
+      assert.eq(input, processor.weak(input).getOrDie());
     };
 
-    assert.eq(z, ValueProcessor.obj([ 'obj.path' ], [
-      Fields.strict('a'),
-      Fields.strict('b')
-    ]).weak(z).getOrDie());
+
+    var any = Result.value;
 
 
+    check(10, ValueProcessor.value(any));
 
+    check([ 10, 20, 50 ], ValueProcessor.arr(
+      ValueProcessor.value(any)
+    ));
 
-    var format = ValueProcessor.obj([ 'link.api' ], [
-      Fields.arr('urls', 'urls', FieldPresence.strict(), [
-        Fields.strict('url'),
-        Fields.strict('fresh')
-      ])
-    ]);
+    check({
+      a: 'a',
+      b: 'b'
+    }, ValueProcessor.obj([ 'obj.path' ], [
+      ValueProcessor.field('a', 'a', FieldPresence.strict(), ValueProcessor.value(any)),
+      ValueProcessor.field('b', 'b', FieldPresence.strict(), ValueProcessor.value(any))
+    ]));
 
-    var h = {
+    check({
       urls: [
         { url: 'hi', fresh: 'true' }
       ]
-    };
+    }, ValueProcessor.obj(
+      [ 'link.api' ], [
+        ValueProcessor.field('urls', 'urls', FieldPresence.strict(), ValueProcessor.arr(ValueProcessor.obj([ 'arr' ], [
+          ValueProcessor.field('url', 'url', FieldPresence.strict(), ValueProcessor.value(any)),
+          ValueProcessor.field('fresh', 'fresh', FieldPresence.strict(), ValueProcessor.value(any))
+        ])))
+      ]
+    ));
 
-    assert.eq(h, format.weak(h).getOrDie());
+    check({
+      urls: [ 'dog', 'cat' ]
+    }, ValueProcessor.obj(
+      [ 'link.api' ],
+      [
+        ValueProcessor.field('urls', 'urls', FieldPresence.strict(), ValueProcessor.arr(ValueProcessor.value(function (s) {
+          return Type.isString(s) ? Result.value(s) : Result.error('needs to be a string');
+        })))
+      ]
+    ));
 
   }
 );
