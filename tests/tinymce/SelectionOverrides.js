@@ -276,6 +276,24 @@ ModuleLoader.require([
 		equal(editor.selection.getRng().startContainer.nextSibling.nodeName, 'SPAN');
 	});
 
+	test('backspace from empty block to after cE=false', function() {
+		editor.getBody().innerHTML = '<p contenteditable="false">1</p><p><br></p>';
+		Utils.setSelection('p:nth-child(2)', 0);
+
+		backspace();
+		equal(editor.getContent(), '<p contenteditable="false">1</p>');
+		assertCaretInCaretBlockContainer();
+	});
+
+	test('delete from empty block to before cE=false', function() {
+		editor.getBody().innerHTML = '<p><br></p><p contenteditable="false">2</p>';
+		Utils.setSelection('p:nth-child(1)', 0);
+
+		forwardDelete();
+		equal(editor.getContent(), '<p contenteditable="false">2</p>');
+		assertCaretInCaretBlockContainer();
+	});
+
 	test('exit pre block (up)', exitPreTest(upArrow, 0, '<p>\u00a0</p><pre>abc</pre>'));
 	test('exit pre block (left)', exitPreTest(leftArrow, 0, '<p>\u00a0</p><pre>abc</pre>'));
 	test('exit pre block (down)', exitPreTest(downArrow, 3, '<pre>abc</pre><p>\u00a0</p>'));

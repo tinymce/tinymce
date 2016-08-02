@@ -428,25 +428,51 @@ define("tinymce/SelectionOverrides", [
 			return null;
 		}
 
+		function isTextBlock(node) {
+			var textBlocks = editor.schema.getTextBlockElements();
+			return node.nodeName in textBlocks;
+		}
+
+		function isEmpty(elm) {
+			return editor.dom.isEmpty(elm);
+		}
+
 		function mergeTextBlocks(direction, fromCaretPosition, toCaretPosition) {
-			var dom = editor.dom, fromBlock, toBlock, node, textBlocks;
+			var dom = editor.dom, fromBlock, toBlock, node, ceTarget;
+
+			fromBlock = dom.getParent(fromCaretPosition.getNode(), dom.isBlock);
+			toBlock = dom.getParent(toCaretPosition.getNode(), dom.isBlock);
 
 			if (direction === -1) {
-				if (isAfterContentEditableFalse(toCaretPosition) && isBlock(toCaretPosition.getNode(true))) {
+				ceTarget = toCaretPosition.getNode(true);
+				if (isAfterContentEditableFalse(toCaretPosition) && isBlock(ceTarget)) {
+					if (isTextBlock(fromBlock)) {
+						if (isEmpty(fromBlock)) {
+							dom.remove(fromBlock);
+						}
+
+						return CaretPosition.after(ceTarget).toRange();
+					}
+
 					return deleteContentEditableNode(toCaretPosition.getNode(true));
 				}
 			} else {
-				if (isBeforeContentEditableFalse(fromCaretPosition) && isBlock(fromCaretPosition.getNode())) {
+				ceTarget = fromCaretPosition.getNode();
+				if (isBeforeContentEditableFalse(fromCaretPosition) && isBlock(ceTarget)) {
+					if (isTextBlock(toBlock)) {
+						if (isEmpty(toBlock)) {
+							dom.remove(toBlock);
+						}
+
+						return CaretPosition.before(ceTarget).toRange();
+					}
+
 					return deleteContentEditableNode(fromCaretPosition.getNode());
 				}
 			}
 
-			textBlocks = editor.schema.getTextBlockElements();
-			fromBlock = dom.getParent(fromCaretPosition.getNode(), dom.isBlock);
-			toBlock = dom.getParent(toCaretPosition.getNode(), dom.isBlock);
-
 			// Verify that both blocks are text blocks
-			if (fromBlock === toBlock || !textBlocks[fromBlock.nodeName] || !textBlocks[toBlock.nodeName]) {
+			if (fromBlock === toBlock || !isTextBlock(fromBlock) || !isTextBlock(toBlock)) {
 				return null;
 			}
 
