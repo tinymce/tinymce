@@ -57,7 +57,6 @@ test(
         assert.fail('Expected ' + label + ' to succeed. Failed instead with: ' + JSON.stringify(errs, 2, null));
       }, function (valueObj) {
         var actualValue = valueObj[expKey];
-        console.log('actualValue', actualValue, 'valueObj', valueObj);
         actualValue.fold(function () {
           expectedValue.fold(function () {
             // Success.

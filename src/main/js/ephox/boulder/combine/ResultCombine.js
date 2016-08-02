@@ -38,7 +38,7 @@ define(
           return obj.fold(function (errs) {
             return Result.error(errs);
           }, function (v) {
-            return Result.value([ v ].concat(accRest));
+            return Result.value(accRest.concat([ v ]));
           });
         });
       }, Result.value([ ]));

@@ -2,13 +2,22 @@ define(
   'ephox.boulder.api.ObjReader',
 
   [
-    'ephox.perhaps.Option'
+    'ephox.numerosity.api.JSON',
+    'ephox.perhaps.Option',
+    'ephox.perhaps.Result'
   ],
 
-  function (Option) {
+  function (Json, Option, Result) {
     var readOpt = function (key) {
       return function (obj) {
         return Option.from(obj[key]);
+      };
+    };
+
+    var readOrErr = function (key) {
+      return function (obj) {
+        if (obj[key] !== undefined) return Result.value(obj[key]);
+        else return Result.error('Key: ' + key + ' is not in ' + Json.stringify(obj, null, 2));
       };
     };
 
@@ -25,6 +34,7 @@ define(
     return {
       readOpt: readOpt,
       readOr: readOr,
+      readOrErr: readOrErr,
       readOptFrom: readOptFrom
     };
   }
