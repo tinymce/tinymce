@@ -40,7 +40,7 @@ test(
     }, ValueProcessor.obj([
       ValueSchema.fields.strictArrayOfObj('urls', [
         ValueSchema.fields.strict('url'),
-        ValueSchema.fields.strict('fresh')
+        ValueSchema.fields.defaulted('fresh', '10')
       ])
     ]));
 

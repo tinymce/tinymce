@@ -30,9 +30,14 @@ define(
       return ValueProcessor.field(key, key, FieldPresence.strict(), arrOfObj(objFields));
     };
 
+    var defaultField = function (key, fallback) {
+      return ValueProcessor.field(key, key, FieldPresence.defaulted(fallback), anyValue);
+    };
+
     var fields = {
       strict: strictField,
-      strictArrayOfObj: strictArrayOfObj
+      strictArrayOfObj: strictArrayOfObj,
+      defaulted: defaultField
     };
 
     var extract = function (label, prop, strength, obj) {
