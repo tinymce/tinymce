@@ -188,10 +188,16 @@ define(
       };
     };
 
+    var arrOfObj = function (path, fields) {
+      return arr(obj(path, fields));
+    };
+
     return {
       value: value,
       obj: obj,
       arr: arr,
+
+      arrOfObj: arrOfObj,
 
       prop: adt.prop,
       // obj: adt.obj,
