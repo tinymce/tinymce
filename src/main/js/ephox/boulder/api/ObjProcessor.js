@@ -15,6 +15,7 @@ define(
   ],
 
   function (ObjReader, ObjWriter, ResultCombine, Type, Arr, Json, Fun, Option, Result, Error) {
+    // Move to other package.
     var extractReader = function (path, readerTypes, wrapping) {
       return function (obj) {
         var extracted = doExtract(path, obj, readerTypes, wrapping, obj);
@@ -172,7 +173,7 @@ define(
     var extract = function (path, obj, fields, strength) {
       var extracted = doExtract(path, obj, fields, strength);
       return extracted.fold(function (errs) {
-        throw Result.error('Invalid attempt to read: ' + Json.stringify(obj) + '.xx\n' + errs.join('\n'));
+        return Result.error('Invalid attempt to read: ' + Json.stringify(obj) + '\n' + errs.join('\n'));
       }, Result.value);
     };
 
