@@ -1,5 +1,5 @@
 define(
-  'ephox.boulder.api.JsValue',
+  'ephox.boulder.api.ValueProcessor',
 
   [
     'ephox.boulder.api.ObjProcessor',
