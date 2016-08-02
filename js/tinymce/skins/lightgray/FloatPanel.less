@@ -69,15 +69,16 @@
 }
 
 // D2L
-// For the Color butto fly out
-.@{prefix}-fullscreen .@{prefix}-floatpanel.@{prefix}-popover.@{prefix}-bottom > .@{prefix}-arrow {
-	margin-left: -0.55rem;
-	top: -0.55rem;
+// Remove the Color butto fly out
+.@{prefix}-floatpanel.@{prefix}-popover.@{prefix}-bottom {
+    margin-top: 0;
 }
 
-.@{prefix}-fullscreen .@{prefix}-floatpanel .@{prefix}-arrow {
-	border-left-width: 0.55rem;
-	border-right-width: 0.55rem;
-	border-bottom-width: 0.55rem;
+.@{prefix}-floatpanel.@{prefix}-popover.@{prefix}-bottom.@{prefix}-start {
+    margin-left: -1.5rem;
+}
+
+.@{prefix}-floatpanel .@{prefix}-arrow {
+	display: none;
 }
 // End of D2L
