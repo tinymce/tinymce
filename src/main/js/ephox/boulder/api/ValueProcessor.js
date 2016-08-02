@@ -55,7 +55,6 @@ define(
 
 
     var cExtractOne = function (path, obj, field, strength) {
-      console.log('field', field);
       return field.fold(
         function (key, okey, presence, prop) {
           var access = (function () {
@@ -68,10 +67,7 @@ define(
             });
           })();
 
-          console.log('prop', prop);
-
           return access.bind(function (av) {
-            console.log('weak.av', av);
             return prop.extract(strength, av).map(function (res) {
               return ObjWriter.wrap(okey, res);
             });
@@ -141,14 +137,6 @@ define(
         });
         return 'obj{\n' + fieldStrings.join('\n') + '}'; 
       };
-
-      // Do the toString.
-      // var toString = function () {
-      //   return 'obj{\n' + 
-      //     Arr.map(fields, function (field) {
-      //       return fi
-      //     })
-      // }
 
       return {
         weak: weak,
