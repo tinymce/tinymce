@@ -5,11 +5,12 @@ test(
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.Fields',
     'ephox.boulder.api.ValueProcessor',
+    'ephox.boulder.api.ValueSchema',
     'ephox.classify.Type',
     'ephox.perhaps.Result'
   ],
 
-  function (FieldPresence, Fields, ValueProcessor, Type, Result) {
+  function (FieldPresence, Fields, ValueProcessor, ValueSchema, Type, Result) {
 
 
     var check = function (input, processor) {
@@ -22,9 +23,15 @@ test(
 
     check(10, ValueProcessor.value(any));
 
-    check([ 10, 20, 50 ], ValueProcessor.arr(
-      ValueProcessor.value(any)
-    ));
+    check([ 10, 20, 50 ], ValueSchema.arrOfVal());
+
+    check({
+      a: 'a',
+      b: 'b'
+    }, ValueProcessor.obj([ 'obj.path' ], [
+      ValueProcessor.field('a', 'a', FieldPresence.strict(), ValueProcessor.value(any)),
+      ValueProcessor.field('b', 'b', FieldPresence.strict(), ValueProcessor.value(any))
+    ]));
 
     check({
       a: 'a',
