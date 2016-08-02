@@ -2,11 +2,13 @@ define(
   'ephox.boulder.api.Fields',
 
   [
+    'ephox.boulder.api.FieldPresence',
+    'ephox.boulder.api.FieldValidation',
     'ephox.peanut.Fun',
     'ephox.scullion.ADT'
   ],
 
-  function (Fun, Adt) {
+  function (FieldPresence, FieldValidation, Fun, Adt) {
     var adt = Adt.generate([
       { prop: [ 'key', 'okey', 'presence', 'validation' ] },
       // Probably really only need validation for prop, not obj and arr.
@@ -23,6 +25,10 @@ define(
       return adt.state(okey, Fun.identity);
     };
 
+    var strict = function (key) {
+      return adt.prop(key, key, FieldPresence.strict(), FieldValidation.none());
+    };
+
     return {
       prop: adt.prop,
       obj: adt.obj,
@@ -30,7 +36,8 @@ define(
       state: adt.state,
       
       output: output,
-      snapshot: snapshot
+      snapshot: snapshot,
+      strict: strict
     };
   }
 );
