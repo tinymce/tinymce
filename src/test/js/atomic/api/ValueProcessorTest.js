@@ -2,11 +2,12 @@ test(
   'ValueProcessorTest',
 
   [
+    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.Fields',
     'ephox.boulder.api.ValueProcessor'
   ],
 
-  function (Fields, ValueProcessor) {
+  function (FieldPresence, Fields, ValueProcessor) {
     var x = 10;
     assert.eq(10, ValueProcessor.value().weak(x).getOrDie());
 
@@ -21,10 +22,28 @@ test(
       b: 'b'
     };
 
-    assert.eq(z, ValueProcessor.obj('obj.path', [
+    assert.eq(z, ValueProcessor.obj([ 'obj.path' ], [
       Fields.strict('a'),
       Fields.strict('b')
     ]).weak(z).getOrDie());
+
+
+
+
+    var format = ValueProcessor.obj([ 'link.api' ], [
+      Fields.arr('urls', 'urls', FieldPresence.strict(), [
+        Fields.strict('url'),
+        Fields.strict('fresh')
+      ])
+    ]);
+
+    var h = {
+      urls: [
+        { url: 'hi', fresh: 'true' }
+      ]
+    };
+
+    assert.eq(h, format.weak(h).getOrDie());
 
   }
 );
