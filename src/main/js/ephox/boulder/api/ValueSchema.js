@@ -35,10 +35,18 @@ define(
       strictArrayOfObj: strictArrayOfObj
     };
 
-    var extract = function (label, prop, obj) {
-      return prop.extract([ label ], Fun.identity, obj).fold(function (errs) {
+    var extract = function (label, prop, strength, obj) {
+      return prop.extract([ label ], strength, obj).fold(function (errs) {
         return Result.error(errs + '\n\nComplete object: \n' + Json.stringify(obj, null, 2));
       }, Result.value);
+    };
+
+    var asStruct = function (label, prop, obj) {
+      return extract(label, prop, Fun.constant, obj);
+    };
+
+    var asRaw = function (label, prop, obj) {
+      return extract(label, prop, Fun.identity, obj);
     };
 
     return {
@@ -49,7 +57,8 @@ define(
 
       fields: fields,
 
-      extract: extract
+      asStruct: asStruct,
+      asRaw: asRaw
     };
   }
 );

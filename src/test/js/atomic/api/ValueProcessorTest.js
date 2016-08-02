@@ -15,7 +15,7 @@ test(
 
 
     var check = function (label, input, processor) {
-      assert.eq(input, ValueSchema.extract(label, processor, input).getOrDie());
+      assert.eq(input, ValueSchema.asRaw(label, processor, input).getOrDie());
     };
 
 
@@ -35,7 +35,7 @@ test(
     check('test.4', {
       urls: [
         { url: 'hi', fresh: 'true' },
-        { url: 'hi', fresha: 'true' }
+        { url: 'hi', fresh: 'true' }
       ]
     }, ValueProcessor.obj([
       ValueSchema.fields.strictArrayOfObj('urls', [
