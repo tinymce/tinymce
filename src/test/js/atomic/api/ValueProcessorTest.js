@@ -21,10 +21,10 @@ test(
       b: 'b'
     };
 
-    assert.eq(z, ValueProcessor.obj([
+    assert.eq(z, ValueProcessor.obj('obj.path', [
       Fields.strict('a'),
       Fields.strict('b')
-    ]).weak(z));
+    ]).weak(z).getOrDie());
 
   }
 );

@@ -221,17 +221,6 @@ test(
     // Add a lot more tests.
 
 
-    // Maybe make the syntax nicer.
-    var output = ObjProcessor.group([ 'test.1' ], [
-      Fields.prop('alpha', 't.alpha', FieldPresence.strict(), FieldValidation.none()),
-      Fields.prop('delta', 't.delta', FieldPresence.defaulted('default.Delta'), FieldValidation.none())
-    ]).weak(data);
-
-    assert.eq({
-      't.alpha': 'Alpha',
-      't.delta': 'default.Delta'
-    }, output);
-
     // assert.eq(1, 2);
   }
 );

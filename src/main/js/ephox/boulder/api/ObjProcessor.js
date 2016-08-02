@@ -172,28 +172,12 @@ define(
     var extract = function (path, obj, fields, strength) {
       var extracted = doExtract(path, obj, fields, strength);
       return extracted.fold(function (errs) {
-        throw new Error('Invalid attempt to read: ' + Json.stringify(obj) + '.xx\n' + errs.join('\n'));
-      }, Fun.identity);
-    };
-
-    var group = function (path, fields) {
-      var weak = function (obj) {
-        return extract(path, obj, fields, Fun.identity);
-      };
-
-      var strong = function (obj) {
-        return extract(path, obj, fields, Fun.constant);
-      };
-
-      return {
-        weak: weak,
-        strong: strong,
-        validate: Fun.noop
-      };
+        throw Result.error('Invalid attempt to read: ' + Json.stringify(obj) + '.xx\n' + errs.join('\n'));
+      }, Result.value);
     };
 
     return {
-      group: group,
+      extract: extract,
       // temporarily expose until I find a better way.
       doExtractOne: doExtractOne
     };

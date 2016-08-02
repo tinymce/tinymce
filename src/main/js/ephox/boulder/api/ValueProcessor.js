@@ -26,8 +26,20 @@ define(
       };      
     };
 
-    var obj = function (fields) {
-      return ObjProcessor.group([ 'JsValue.obj' ], fields);
+    var obj = function (path, fields) {
+      var weak = function (obj) {
+        return ObjProcessor.extract(path, obj, fields, Fun.identity);
+      };
+
+      var strong = function (obj) {
+        return ObjProcessor.extract(path, obj, fields, Fun.constant);
+      };
+
+      return {
+        weak: weak,
+        strong: strong,
+        validate: Fun.noop
+      };
     };
 
     var arr = function (prop) {
