@@ -3,8 +3,6 @@ define(
 
   [
     'ephox.boulder.api.FieldPresence',
-    'ephox.boulder.api.FieldValidation',
-    'ephox.boulder.api.ObjProcessor',
     'ephox.boulder.api.ObjReader',
     'ephox.boulder.api.ObjWriter',
     'ephox.boulder.combine.ResultCombine',
@@ -15,7 +13,7 @@ define(
     'ephox.scullion.ADT'
   ],
 
-  function (FieldPresence, FieldValidation, ObjProcessor, ObjReader, ObjWriter, ResultCombine, Arr, Json, Fun, Result, Adt) {
+  function (FieldPresence, ObjReader, ObjWriter, ResultCombine, Arr, Json, Fun, Result, Adt) {
     var adt = Adt.generate([
       { field: [ 'key', 'okey', 'presence', 'prop' ] },
       { state: [ 'okey', 'instantiator' ] }
