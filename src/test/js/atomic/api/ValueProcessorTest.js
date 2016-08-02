@@ -15,7 +15,7 @@ test(
 
 
     var check = function (label, input, processor) {
-      assert.eq(input, processor.extract([ label ], Fun.identity, input).getOrDie());
+      assert.eq(input, ValueSchema.extract(label, processor, input).getOrDie());
     };
 
 
@@ -32,27 +32,17 @@ test(
       ValueSchema.fields.strict('b')
     ]));
 
-    // check({
-    //   a: 'a',
-    //   b: 'b'
-    // }, ValueProcessor.obj([ 'obj.path' ], [
-    //   ValueSchema.fields.strict('a'),
-    //   ValueSchema.fields.strict('b')
-    // ]));
-
-    // check({
-    //   urls: [
-    //     { url: 'hi', fresh: 'true' },
-    //     { url: 'hi', fresha: 'true' }
-    //   ]
-    // }, ValueProcessor.obj(
-    //   [ 'link.api' ], [
-    //     ValueSchema.fields.strictArrayOfObj('urls', [
-    //       ValueSchema.fields.strict('url'),
-    //       ValueSchema.fields.strict('fresh')
-    //     ])
-    //   ]
-    // ));
+    check('test.4', {
+      urls: [
+        { url: 'hi', fresh: 'true' },
+        { url: 'hi', fresha: 'true' }
+      ]
+    }, ValueProcessor.obj([
+      ValueSchema.fields.strictArrayOfObj('urls', [
+        ValueSchema.fields.strict('url'),
+        ValueSchema.fields.strict('fresh')
+      ])
+    ]));
 
     // check({
     //   urls: [ 'dog', 'cat' ]

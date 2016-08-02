@@ -57,7 +57,7 @@ define(
         function (key, okey, presence, prop) {
           var access = (function () {
             return presence.fold(function () {
-              return strictAccess(path.concat([ key ]), obj, key);
+              return strictAccess(path, obj, key);
             }, function (fallback) {
               return fallbackAccess(obj, key, fallback);
             }, function () {
@@ -129,7 +129,7 @@ define(
     var arr = function (prop) {
       var extract = function (path, strength, array) {
         var results = Arr.map(array, function (a, i) {
-          return prop.extract(['[' + i + ']' ], strength, a);
+          return prop.extract(path.concat(['[' + i + ']' ]), strength, a);
         });
         return strength(ResultCombine.consolidateArr(results));
       };

@@ -4,11 +4,12 @@ define(
   [
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.ValueProcessor',
+    'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
     'ephox.perhaps.Result'
   ],
 
-  function (FieldPresence, ValueProcessor, Fun, Result) {
+  function (FieldPresence, ValueProcessor, Json, Fun, Result) {
     var anyValue = ValueProcessor.value(Result.value);
 
     var arrOfObj = function (objFields) {
@@ -34,13 +35,21 @@ define(
       strictArrayOfObj: strictArrayOfObj
     };
 
+    var extract = function (label, prop, obj) {
+      return prop.extract([ label ], Fun.identity, obj).fold(function (errs) {
+        return Result.error(errs + '\n\nComplete object: \n' + Json.stringify(obj, null, 2));
+      }, Result.value);
+    };
+
     return {
       anyValue: Fun.constant(anyValue),
 
       arrOfObj: arrOfObj,
       arrOfVal: arrOfVal,
 
-      fields: fields
+      fields: fields,
+
+      extract: extract
     };
   }
 );
