@@ -223,10 +223,10 @@ test(
 
 
     // Maybe make the syntax nicer.
-    var output = ObjProcessor.weak([ 'test.1' ], data, [
+    var output = ObjProcessor.group([ 'test.1' ], [
       Fields.prop('alpha', 't.alpha', FieldPresence.strict(), FieldValidation.none()),
       Fields.prop('delta', 't.delta', FieldPresence.defaulted('default.Delta'), FieldValidation.none())
-    ]);
+    ]).weak(data);
 
     assert.eq({
       't.alpha': 'Alpha',

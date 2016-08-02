@@ -176,7 +176,7 @@ define(
       }, Fun.identity);
     };
 
-    var stencil = function (path, fields) {
+    var group = function (path, fields) {
       var weak = function (obj) {
         return extract(path, obj, fields, Fun.identity);
       };
@@ -191,27 +191,9 @@ define(
         validate: Fun.noop
       };
     };
-    var weak = function (path, fields) {
-      return function (obj) {
-        return extract(path, obj, fields, Fun.identity);
-      };
-    };
-
-    var strong = function (path, fields) {
-      return function (obj) {
-        return extract(path, obj, fields, Fun.constant);
-      };
-    };
-
-    var validate = function (path, obj, fields) {
-
-    };
 
     return {
-      weak: weak,
-      strong: strong,
-      validate: validate,
-
+      group: group,
       // temporarily expose until I find a better way.
       doExtractOne: doExtractOne
     };

@@ -9,17 +9,83 @@ var config = lib + '/config';
 var cleanDirs = [ lib ];
 
 var dependencies = [
-
-  /**** demo dependencies ****/
   {
-    name: 'exhibition',
+    name: 'peanut',
     repository: 'buildrepo2',
     version: 'latest',
-    source: 'exhibition.zip',
+    source: 'peanut.zip',
     targets: [
-      { name: 'module/*.js', path: demo },
-      { name: 'depend/*.js', path: demo },
-      { name: 'exhibition.js', path: config }
+      { name: 'module/*.js', path: depend }
+    ]
+  },
+
+  {
+    name: 'perhaps',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'perhaps.zip',
+    targets: [
+      { name: 'module/*.js', path: depend }
+    ]
+  },
+
+  {
+    name: 'compass',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'compass.zip',
+    targets: [
+      { name: 'module/*.js', path: depend }
+    ]
+  },
+
+  {
+    name: 'scullion',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'scullion.zip',
+    targets: [
+      { name: 'module/*.js', path: depend }
+    ]
+  },
+
+  {
+    name: 'classify',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'classify.zip',
+    targets: [
+      { name: 'module/*.js', path: depend }
+    ]
+  },
+
+  {
+    name: 'numerosity',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'numerosity.zip',
+    targets: [
+      { name: 'module/*.js', path: depend }
+    ]
+  },
+
+  {
+    name: 'epithet',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'epithet.zip',
+    targets: [
+      { name: 'module/*.js', path: depend }
+    ]
+  },
+
+  {
+    name: 'highway',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'highway.zip',
+    targets: [
+      { name: 'module/*.js', path: depend }
     ]
   }
 ];
