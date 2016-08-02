@@ -38,6 +38,7 @@ define(
     var strictAccess = function (path, obj, key) {
       // In strict mode, if it undefined, it is an error.
       return ObjReader.readOptFrom(obj, key).fold(function () {
+        console.log('path', path);
         var message = 'Failed Path: ' + path.join(' > ') + '\nCould not find valid *strict* value for "' + key + '" in ' + Json.stringify(obj, null, 2);
         return Result.error([ message ]);
       }, Result.value);
@@ -50,7 +51,6 @@ define(
     var optionAccess = function (obj, key) {
       return Result.value(ObjReader.readOptFrom(obj, key));
     };
-
 
     var cExtractOne = function (path, obj, field, strength) {
       return field.fold(
@@ -66,7 +66,7 @@ define(
           })();
 
           return access.bind(function (av) {
-            return prop.extract(strength, av).map(function (res) {
+            return prop.extract(path.concat([ key ]), strength, av).map(function (res) {
               return ObjWriter.wrap(okey, res);
             });
           });
@@ -87,15 +87,8 @@ define(
     };
 
     var value = function (validator) {
-      var strong = function (val) {
-        return validator(val).map(Fun.constant);
-      };
-
-      var weak = function (val) {
-        return validator(val);
-      };
-
-      var extract = function (strength, val) {
+      var extract = function (path, strength, val) {
+        // Include path when validation fails.
         return validator(val).map(strength);
       };
 
@@ -104,24 +97,14 @@ define(
       };
 
       return {
-        strong: strong,
-        weak: weak,
         validate: Fun.noop,
         extract: extract,
         toString: toString
       };      
     };
 
-    var obj = function (path, fields) {
-      var weak = function (obj) {
-        return cExtract(path, obj, fields, Fun.identity);
-      };
-
-      var strong = function (obj) {
-        return cExtract(path, obj, fields, Fun.constant);
-      };
-
-      var extract = function (strength, obj) {
+    var obj = function (fields) {
+      var extract = function (path, strength, obj) {
         return cExtract(path, obj, fields, strength);
       };
 
@@ -137,8 +120,6 @@ define(
       };
 
       return {
-        weak: weak,
-        strong: strong,
         validate: Fun.noop,
         extract: extract,
         toString: toString
@@ -146,18 +127,10 @@ define(
     };
 
     var arr = function (prop) {
-      var strong = function (array) {
-        var results = Arr.map(array, prop.strong);
-        return Fun.constant(ResultCombine.consolidateArr(results));
-      };
-
-      var weak = function (array) {
-        var results = Arr.map(array, prop.weak);
-        return ResultCombine.consolidateArr(results);
-      };
-
-      var extract = function (strength, array) {
-        var results = Arr.map(array, Fun.curry(prop.extract, strength));
+      var extract = function (path, strength, array) {
+        var results = Arr.map(array, function (a, i) {
+          return prop.extract(['[' + i + ']' ], strength, a);
+        });
         return strength(ResultCombine.consolidateArr(results));
       };
 
@@ -166,8 +139,6 @@ define(
       };
 
       return {
-        strong: strong,
-        weak: weak,
         validate: Fun.noop,
         extract: extract,
         toString: toString

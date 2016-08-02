@@ -7,63 +7,63 @@ test(
     'ephox.boulder.api.ValueProcessor',
     'ephox.boulder.api.ValueSchema',
     'ephox.classify.Type',
+    'ephox.peanut.Fun',
     'ephox.perhaps.Result'
   ],
 
-  function (FieldPresence, Fields, ValueProcessor, ValueSchema, Type, Result) {
+  function (FieldPresence, Fields, ValueProcessor, ValueSchema, Type, Fun, Result) {
 
 
-    var check = function (input, processor) {
-      assert.eq(input, processor.weak(input).getOrDie());
+    var check = function (label, input, processor) {
+      assert.eq(input, processor.extract([ label ], Fun.identity, input).getOrDie());
     };
 
 
-    var any = Result.value;
 
+    check('test.1', 10, ValueSchema.anyValue());
 
-    check(10, ValueProcessor.value(any));
+    check('test.2', [ 10, 20, 50 ], ValueSchema.arrOfVal());
 
-    check([ 10, 20, 50 ], ValueSchema.arrOfVal());
-
-    check({
+    check('test.3', {
       a: 'a',
       b: 'b'
-    }, ValueProcessor.obj([ 'obj.path' ], [
-      ValueProcessor.field('a', 'a', FieldPresence.strict(), ValueProcessor.value(any)),
-      ValueProcessor.field('b', 'b', FieldPresence.strict(), ValueProcessor.value(any))
+    }, ValueProcessor.obj([
+      ValueSchema.fields.strict('a'),
+      ValueSchema.fields.strict('b')
     ]));
 
-    check({
-      a: 'a',
-      b: 'b'
-    }, ValueProcessor.obj([ 'obj.path' ], [
-      ValueProcessor.field('a', 'a', FieldPresence.strict(), ValueProcessor.value(any)),
-      ValueProcessor.field('b', 'b', FieldPresence.strict(), ValueProcessor.value(any))
-    ]));
+    // check({
+    //   a: 'a',
+    //   b: 'b'
+    // }, ValueProcessor.obj([ 'obj.path' ], [
+    //   ValueSchema.fields.strict('a'),
+    //   ValueSchema.fields.strict('b')
+    // ]));
 
-    check({
-      urls: [
-        { url: 'hi', fresh: 'true' }
-      ]
-    }, ValueProcessor.obj(
-      [ 'link.api' ], [
-        ValueProcessor.field('urls', 'urls', FieldPresence.strict(), ValueProcessor.arr(ValueProcessor.obj([ 'arr' ], [
-          ValueProcessor.field('url', 'url', FieldPresence.strict(), ValueProcessor.value(any)),
-          ValueProcessor.field('fresh', 'fresh', FieldPresence.strict(), ValueProcessor.value(any))
-        ])))
-      ]
-    ));
+    // check({
+    //   urls: [
+    //     { url: 'hi', fresh: 'true' },
+    //     { url: 'hi', fresha: 'true' }
+    //   ]
+    // }, ValueProcessor.obj(
+    //   [ 'link.api' ], [
+    //     ValueSchema.fields.strictArrayOfObj('urls', [
+    //       ValueSchema.fields.strict('url'),
+    //       ValueSchema.fields.strict('fresh')
+    //     ])
+    //   ]
+    // ));
 
-    check({
-      urls: [ 'dog', 'cat' ]
-    }, ValueProcessor.obj(
-      [ 'link.api' ],
-      [
-        ValueProcessor.field('urls', 'urls', FieldPresence.strict(), ValueProcessor.arr(ValueProcessor.value(function (s) {
-          return Type.isString(s) ? Result.value(s) : Result.error('needs to be a string');
-        })))
-      ]
-    ));
+    // check({
+    //   urls: [ 'dog', 'cat' ]
+    // }, ValueProcessor.obj(
+    //   [ 'link.api' ],
+    //   [
+    //     ValueProcessor.field('urls', 'urls', FieldPresence.strict(), ValueProcessor.arr(ValueProcessor.value(function (s) {
+    //       return Type.isString(s) ? Result.value(s) : Result.error('needs to be a string');
+    //     })))
+    //   ]
+    // ));
 
   }
 );
