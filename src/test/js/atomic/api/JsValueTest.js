@@ -8,15 +8,13 @@ test(
 
   function (Fields, JsValue) {
     var x = 10;
-
-    var aX = JsValue.value()(x);
-    assert.eq(10, aX.getOrDie());
+    assert.eq(10, JsValue.value().weak(x).getOrDie());
 
 
     var y = [
       10, 20, 50
     ];
-    assert.eq(y, JsValue.arr(JsValue.value())(y).getOrDie());
+    assert.eq(y, JsValue.arr(JsValue.value()).weak(y).getOrDie());
 
     var z = {
       a: 'a',
@@ -26,7 +24,7 @@ test(
     assert.eq(z, JsValue.obj([
       Fields.strict('a'),
       Fields.strict('b')
-    ])(z).getOrDie());
+    ]).weak(z));
 
   }
 );

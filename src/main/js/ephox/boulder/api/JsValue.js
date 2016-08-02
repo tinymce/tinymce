@@ -5,29 +5,46 @@ define(
     'ephox.boulder.api.ObjProcessor',
     'ephox.boulder.combine.ResultCombine',
     'ephox.compass.Arr',
+    'ephox.peanut.Fun',
     'ephox.perhaps.Result'
   ],
 
-  function (ObjProcessor, ResultCombine, Arr, Result) {
+  function (ObjProcessor, ResultCombine, Arr, Fun, Result) {
     var value = function (validator) {
-      return function (jsValue) {
-        return Result.value(jsValue);
+      var strong = function (val) {
+        return Fun.constant(Result.value(val));
+      };
+
+      var weak = function (val) {
+        return Result.value(val);
+      };
+
+      return {
+        strong: strong,
+        weak: weak,
+        validate: Fun.noop
       };      
     };
 
     var obj = function (fields) {
-      return function (obj) {
-        var x = ObjProcessor.group([ 'obj' ], fields).weak(obj);
-        console.log('x', x, obj);
-
-        return Result.value(x);
-      };
+      return ObjProcessor.group([ 'JsValue.obj' ], fields);
     };
 
     var arr = function (prop) {
-      return function (array) {
-        var results = Arr.map(array, prop);
+      var strong = function (array) {
+        var results = Arr.map(array, prop.strong);
+        return Fun.constant(ResultCombine.consolidateArr(results));
+      };
+
+      var weak = function (array) {
+        var results = Arr.map(array, prop.weak);
         return ResultCombine.consolidateArr(results);
+      };
+
+      return {
+        strong: strong,
+        weak: weak,
+        validate: Fun.noop
       };
     };
 
