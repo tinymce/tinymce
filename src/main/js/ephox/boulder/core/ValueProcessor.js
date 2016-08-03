@@ -152,11 +152,13 @@ define(
       };
     };
 
-    var arrOfObj = function (path, fields) {
-      return arr(obj(path, fields));
-    };
+    var anyValue = value(Result.value);
+
+    var arrOfObj = Fun.compose(arr, obj);
 
     return {
+      anyValue: Fun.constant(anyValue),
+
       value: value,
       obj: obj,
       arr: arr,
