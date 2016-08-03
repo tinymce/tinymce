@@ -37,6 +37,10 @@ define(
       return ObjWriter.wrapAll(keyvalues);
     };
 
+    var indexOnKey = function (array, key) {
+      return ObjChanger.indexOnKey(array, key);
+    };
+
     return {
       narrow: narrow,
       readOpt: readOpt,
@@ -44,7 +48,8 @@ define(
       readOr: readOr,
       readOptFrom: readOptFrom,
       wrap: wrap,
-      wrapAll: wrapAll
+      wrapAll: wrapAll,
+      indexOnKey: indexOnKey
     };
   }
 );

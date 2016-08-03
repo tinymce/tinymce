@@ -15,8 +15,19 @@ define(
       return r;
     };
 
+    var indexOnKey = function (array, key) {
+      var obj = { };
+      Arr.each(array, function (a) {
+        // FIX: Work out what to do here.
+        var keyValue = a[key];
+        obj[keyValue] = a;
+      });
+      return obj;
+    };
+
     return {
-      narrow: narrow
+      narrow: narrow,
+      indexOnKey: indexOnKey
     };
   }
 );
