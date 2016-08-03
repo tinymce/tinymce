@@ -20,7 +20,7 @@ define("tinymce/pasteplugin/SmartPaste", [
 	"tinymce/util/Tools"
 ], function (Tools) {
 	var isAbsoluteUrl = function (url) {
-		return /^https?:\/\/[\w\?\-\/+=.&%]+$/i.test(url);
+		return /^https?:\/\/[\w\?\-\/+=.&%@~#]+$/i.test(url);
 	};
 
 	var isImageUrl = function (url) {

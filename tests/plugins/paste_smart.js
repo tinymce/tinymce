@@ -28,6 +28,8 @@ ModuleLoader.require([
 		equal(SmartPaste.isAbsoluteUrl('https://www.site.com'), true);
 		equal(SmartPaste.isAbsoluteUrl('http://www.site.com/dir-name/file.gif?query=%42'), true);
 		equal(SmartPaste.isAbsoluteUrl('https://www.site.com/dir-name/file.gif?query=%42'), true);
+		equal(SmartPaste.isAbsoluteUrl('https://www.site.com/dir-name/file.gif?query=%42#a'), true);
+		equal(SmartPaste.isAbsoluteUrl('https://www.site.com/~abc'), true);
 		equal(SmartPaste.isAbsoluteUrl('file.gif'), false);
 		equal(SmartPaste.isAbsoluteUrl(''), false);
 	});
@@ -40,6 +42,7 @@ ModuleLoader.require([
 		equal(SmartPaste.isImageUrl('http://www.site.com/dir-name/file.png'), true);
 		equal(SmartPaste.isImageUrl('http://www.site.com/dir-name/file.gif'), true);
 		equal(SmartPaste.isImageUrl('https://www.site.com/dir-name/file.gif'), true);
+		equal(SmartPaste.isImageUrl('https://www.site.com/~dir-name/file.gif'), true);
 		equal(SmartPaste.isImageUrl('https://www.site.com/dir-name/file.gif?query=%42'), false);
 		equal(SmartPaste.isImageUrl('https://www.site.com/dir-name/file.html?query=%42'), false);
 		equal(SmartPaste.isImageUrl('file.gif'), false);
