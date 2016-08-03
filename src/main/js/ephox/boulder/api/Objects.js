@@ -17,10 +17,6 @@ define(
       return ObjReader.readOpt(key);
     };
 
-    var readOrErr = function (key) {
-      return ObjReader.readOrErr(key);
-    };
-
     var readOr = function (key, fallback) {
       return ObjReader.readOr(key, fallback);
     };
@@ -44,7 +40,6 @@ define(
     return {
       narrow: narrow,
       readOpt: readOpt,
-      readOrErr: readOrErr,
       readOr: readOr,
       readOptFrom: readOptFrom,
       wrap: wrap,

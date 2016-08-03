@@ -61,6 +61,30 @@ test(
       })();
     })();
     
+    (function () {
+      var subject = { alpha: 'Alpha' };
+
+      assert.eq('Alpha', Objects.readOpt('alpha')(subject).getOrDie('readOpt(alpha) => some(Alpha)'), 'readOpt(alpha) => some(Alpha)');
+      assert.eq(true, Objects.readOpt('beta')(subject).isNone(), 'readOpt(beta) => none');
+
+      assert.eq('Alpha', Objects.readOr('alpha', 'fallback')(subject), 'readOr(alpha) => Alpha');
+      assert.eq('fallback', Objects.readOr('beta', 'fallback')(subject), 'readOr(beta) => fallback');
+    //   var readOpt = function (key) {
+    //   return ObjReader.readOpt(key);
+    // };
+
+    // var readOrErr = function (key) {
+    //   return ObjReader.readOrErr(key);
+    // };
+
+    // var readOr = function (key, fallback) {
+    //   return ObjReader.readOr(key, fallback);
+    // };
+
+    // var readOptFrom = function (obj, key) {
+    //   return ObjReader.readOptFrom(obj, key);
+    // };
+    })();
 
 
   }
