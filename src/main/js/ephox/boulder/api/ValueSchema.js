@@ -38,8 +38,13 @@ define(
       return ValueProcessor.field(key, key, FieldPresence.defaulted(fallback), anyValue);
     };
 
+    var optionField = function (key) {
+      return ValueProcessor.field(key, key, FieldPresence.asOption(), anyValue);
+    };
+
     var fields = {
       strict: strictField,
+      option: optionField,
       strictArrayOfObj: strictArrayOfObj,
       strictArrayOf: strictArrayOf,
       defaulted: defaultField

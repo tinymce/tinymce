@@ -2,16 +2,11 @@ test(
   'ValueProcessorTest',
 
   [
-    'ephox.boulder.api.FieldPresence',
-    'ephox.boulder.api.Fields',
     'ephox.boulder.api.ValueProcessor',
-    'ephox.boulder.api.ValueSchema',
-    'ephox.classify.Type',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Result'
+    'ephox.boulder.api.ValueSchema'
   ],
 
-  function (FieldPresence, Fields, ValueProcessor, ValueSchema, Type, Fun, Result) {
+  function (ValueProcessor, ValueSchema) {
 
 
     var check = function (label, input, processor) {
@@ -49,6 +44,21 @@ test(
     }, ValueProcessor.obj([
       ValueSchema.fields.strictArrayOf('urls', ValueSchema.anyValue())
     ]));
+
+
+    var optionValue = ValueSchema.asRaw('test.option', ValueProcessor.obj([
+      ValueSchema.fields.option('alpha')
+    ]), {}).getOrDie();
+    console.log('optionValue', optionValue);
+
+    assert.eq(true, optionValue.alpha.isNone(), 'alpha should be none');
+
+    var optionValue2 = ValueSchema.asRaw('test.option', ValueProcessor.obj([
+      ValueSchema.fields.option('alpha')
+    ]), { alpha: 'beta' }).getOrDie();
+    console.log('optionValue2', optionValue2);
+
+    assert.eq(true, optionValue2.alpha.isSome(), 'alpha should be some');
 
   }
 );

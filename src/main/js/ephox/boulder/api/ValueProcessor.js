@@ -9,11 +9,12 @@ define(
     'ephox.compass.Arr',
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.perhaps.Result',
     'ephox.scullion.ADT'
   ],
 
-  function (FieldPresence, ObjReader, ObjWriter, ResultCombine, Arr, Json, Fun, Result, Adt) {
+  function (FieldPresence, ObjReader, ObjWriter, ResultCombine, Arr, Json, Fun, Option, Result, Adt) {
     var adt = Adt.generate([
       { field: [ 'key', 'okey', 'presence', 'prop' ] },
       { state: [ 'okey', 'instantiator' ] }
@@ -55,21 +56,35 @@ define(
     var cExtractOne = function (path, obj, field, strength) {
       return field.fold(
         function (key, okey, presence, prop) {
-          var access = (function () {
-            return presence.fold(function () {
-              return strictAccess(path, obj, key);
-            }, function (fallback) {
-              return fallbackAccess(obj, key, fallback);
-            }, function () {
-              return optionAccess(obj, key);
-            });
-          })();
-
-          return access.bind(function (av) {
+          var bundle = function (av) {
             return prop.extract(path.concat([ key ]), strength, av).map(function (res) {
               return ObjWriter.wrap(okey, res);
             });
-          });
+          };
+
+          return (function () {
+            return presence.fold(function () {
+              return strictAccess(path, obj, key).bind(bundle);
+            }, function (fallback) {
+              return fallbackAccess(obj, key, fallback).bind(bundle);
+            }, function () {
+              console.log('OPTIONING');
+              return optionAccess(obj, key).bind(function (optValue) {
+                return optValue.fold(function () {
+                  var outcome = ObjWriter.wrap(okey, Option.none());
+                  console.log('basic value', okey, outcome);
+                  return Result.value(outcome);
+                }, function (ov) {
+
+
+
+                  return prop.extract(path.concat([ key ]), strength, ov).map(function (res) {
+                    return ObjWriter.wrap(okey, Option.some(res));
+                  });
+                });
+              });
+            });
+          })();
         },
         function (okey, instantiator) {
           var state = instantiator(obj);
