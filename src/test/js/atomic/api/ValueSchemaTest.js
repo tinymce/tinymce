@@ -7,8 +7,6 @@ test(
   ],
 
   function (FieldSchema, ValueSchema) {
-
-
     var check = function (label, input, processor) {
       assert.eq(input, ValueSchema.asRaw(label, processor, input).getOrDie());
     };
@@ -46,16 +44,12 @@ test(
 
     var optionValue = ValueSchema.asRaw('test.option', ValueSchema.objOf([
       FieldSchema.option('alpha')
-    ]), {}).getOrDie();
-    console.log('optionValue', optionValue);
-
+    ]), {}).getOrDie();    
     assert.eq(true, optionValue.alpha.isNone(), 'alpha should be none');
 
     var optionValue2 = ValueSchema.asRaw('test.option', ValueSchema.objOf([
       FieldSchema.option('alpha')
-    ]), { alpha: 'beta' }).getOrDie();
-    console.log('optionValue2', optionValue2);
-
+    ]), { alpha: 'beta' }).getOrDie();    
     assert.eq(true, optionValue2.alpha.isSome(), 'alpha should be some');
 
   }
