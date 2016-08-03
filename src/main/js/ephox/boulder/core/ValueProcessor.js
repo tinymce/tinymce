@@ -1,11 +1,10 @@
 define(
-  'ephox.boulder.api.ValueProcessor',
+  'ephox.boulder.core.ValueProcessor',
 
   [
-    'ephox.boulder.api.FieldPresence',
-    'ephox.boulder.api.ObjReader',
-    'ephox.boulder.api.ObjWriter',
     'ephox.boulder.combine.ResultCombine',
+    'ephox.boulder.core.ObjReader',
+    'ephox.boulder.core.ObjWriter',
     'ephox.compass.Arr',
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
@@ -14,7 +13,7 @@ define(
     'ephox.scullion.ADT'
   ],
 
-  function (FieldPresence, ObjReader, ObjWriter, ResultCombine, Arr, Json, Fun, Option, Result, Adt) {
+  function (ResultCombine, ObjReader, ObjWriter, Arr, Json, Fun, Option, Result, Adt) {
     var adt = Adt.generate([
       { field: [ 'key', 'okey', 'presence', 'prop' ] },
       { state: [ 'okey', 'instantiator' ] }
@@ -28,14 +27,7 @@ define(
       return adt.state(okey, Fun.identity);
     };
 
-    var strict = function (key) {
-      return adt.field(key, key, FieldPresence.strict(), value(Result.value));
-    };
-
-    var defaulted = function (key, fallback) {
-      return adt.field(key, key, FieldPresence.defaulted(fallback), value(Result.value));
-    };
-
+  
     var strictAccess = function (path, obj, key) {
       // In strict mode, if it undefined, it is an error.
       return ObjReader.readOptFrom(obj, key).fold(function () {
@@ -179,9 +171,7 @@ define(
       field: adt.field,
       
       output: output,
-      snapshot: snapshot,
-      strict: strict,
-      defaulted: defaulted
+      snapshot: snapshot
     };
   }
 );

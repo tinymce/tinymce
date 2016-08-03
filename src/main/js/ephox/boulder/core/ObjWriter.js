@@ -1,5 +1,5 @@
 define(
-  'ephox.boulder.api.ObjWriter',
+  'ephox.boulder.core.ObjWriter',
 
   [
     'ephox.compass.Arr'

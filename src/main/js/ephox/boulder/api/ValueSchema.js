@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.boulder.api.FieldPresence',
-    'ephox.boulder.api.ValueProcessor',
+    'ephox.boulder.core.ValueProcessor',
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
     'ephox.perhaps.Result'

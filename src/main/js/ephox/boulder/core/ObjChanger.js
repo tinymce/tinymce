@@ -1,5 +1,5 @@
 define(
-  'ephox.boulder.api.ObjChanger',
+  'ephox.boulder.core.ObjChanger',
 
   [
     'ephox.compass.Arr'

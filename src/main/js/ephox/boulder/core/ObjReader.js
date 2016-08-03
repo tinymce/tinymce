@@ -1,5 +1,5 @@
 define(
-  'ephox.boulder.api.ObjReader',
+  'ephox.boulder.core.ObjReader',
 
   [
     'ephox.numerosity.api.JSON',
