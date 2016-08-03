@@ -1,19 +1,16 @@
 test(
-  'ValueProcessorTest',
+  'ValueSchemaTest',
 
   [
-    'ephox.boulder.api.ValueProcessor',
     'ephox.boulder.api.ValueSchema'
   ],
 
-  function (ValueProcessor, ValueSchema) {
+  function (ValueSchema) {
 
 
     var check = function (label, input, processor) {
       assert.eq(input, ValueSchema.asRaw(label, processor, input).getOrDie());
     };
-
-
 
     check('test.1', 10, ValueSchema.anyValue());
 
@@ -22,7 +19,7 @@ test(
     check('test.3', {
       a: 'a',
       b: 'b'
-    }, ValueProcessor.obj([
+    }, ValueSchema.objOf([
       ValueSchema.fields.strict('a'),
       ValueSchema.fields.strict('b')
     ]));
@@ -32,7 +29,7 @@ test(
         { url: 'hi', fresh: 'true' },
         { url: 'hi', fresh: 'true' }
       ]
-    }, ValueProcessor.obj([
+    }, ValueSchema.objOf([
       ValueSchema.fields.strictArrayOfObj('urls', [
         ValueSchema.fields.strict('url'),
         ValueSchema.fields.defaulted('fresh', '10')
@@ -41,19 +38,19 @@ test(
 
     check('test.5', {
       urls: [ 'dog', 'cat' ]
-    }, ValueProcessor.obj([
+    }, ValueSchema.objOf([
       ValueSchema.fields.strictArrayOf('urls', ValueSchema.anyValue())
     ]));
 
 
-    var optionValue = ValueSchema.asRaw('test.option', ValueProcessor.obj([
+    var optionValue = ValueSchema.asRaw('test.option', ValueSchema.objOf([
       ValueSchema.fields.option('alpha')
     ]), {}).getOrDie();
     console.log('optionValue', optionValue);
 
     assert.eq(true, optionValue.alpha.isNone(), 'alpha should be none');
 
-    var optionValue2 = ValueSchema.asRaw('test.option', ValueProcessor.obj([
+    var optionValue2 = ValueSchema.asRaw('test.option', ValueSchema.objOf([
       ValueSchema.fields.option('alpha')
     ]), { alpha: 'beta' }).getOrDie();
     console.log('optionValue2', optionValue2);

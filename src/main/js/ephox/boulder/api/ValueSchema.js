@@ -22,6 +22,10 @@ define(
       return ValueProcessor.arr(anyValue);
     };
 
+    var arrOf = ValueProcessor.arr;
+
+    var objOf = ValueProcessor.obj;
+
     var strictField = function (key) {
       return ValueProcessor.field(key, key, FieldPresence.strict(), anyValue);
     };
@@ -42,12 +46,22 @@ define(
       return ValueProcessor.field(key, key, FieldPresence.asOption(), anyValue);
     };
 
+    var customField = function (key, okey, presence, prop) {
+      return ValueProcessor.field(key, okey, presence, prop);
+    };
+
+    var state = function (okey, instantiator) {
+      return ValueProcessor.state(okey, instantiator);
+    };
+
     var fields = {
       strict: strictField,
       option: optionField,
       strictArrayOfObj: strictArrayOfObj,
       strictArrayOf: strictArrayOf,
-      defaulted: defaultField
+      defaulted: defaultField,
+      customField: customField,
+      state: state
     };
 
     var extract = function (label, prop, strength, obj) {
@@ -68,7 +82,10 @@ define(
       anyValue: Fun.constant(anyValue),
 
       arrOfObj: arrOfObj,
+      arrOf: arrOf,
       arrOfVal: arrOfVal,
+
+      objOf: objOf,
 
       fields: fields,
 
