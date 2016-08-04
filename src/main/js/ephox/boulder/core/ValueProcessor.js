@@ -132,11 +132,17 @@ define(
     };
 
     var arr = function (prop) {
+      console.log('prop', prop.toString());
       var extract = function (path, strength, array) {
+        console.log('array', array);
         var results = Arr.map(array, function (a, i) {
+          console.log('a', a, prop);
           return prop.extract(path.concat(['[' + i + ']' ]), strength, a);
         });
-        return strength(ResultCombine.consolidateArr(results));
+        console.log('array', array, 'results', results);
+        var consolidated = ResultCombine.consolidateArr(results);
+        console.log('consolidated', consolidated);
+        return consolidated;
       };
 
       var toString = function () {
