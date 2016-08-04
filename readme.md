@@ -50,12 +50,19 @@ __Basic Rules__
 
 These basic rules ensures that the contributed code remains open source and under the LGPL license.
 
-__How to Contribute__
+__How to Contribute to the Code__
 
-The TinyMCE source code is [hosted on Github](http://github.com/tinymce/tinymce). Through Github you can submit pull requests and log new bugs and feature requests.
+The TinyMCE source code is [hosted on Github](https://github.com/tinymce/tinymce). Through Github you can submit pull requests and log new bugs and feature requests.
 
 When you submit a pull request, you will get a notice about signing the __Contributors License Agreement (CLA)__.
 You should have a __valid email address on your GitHub account__, and you will be sent a key to verify your identity and digitally sign the agreement.
+
 After you signed your pull request will automatically be ready for review & merge.
+
+__How to Contribute to the Docs__
+
+Docs are hosted on Github in the [tinymce-docs](https://github.com/tinymce/tinymce-docs) repo.
+
+[How to contribute](https://www.tinymce.com/docs/advanced/contributing-docs/) to the docs, including a style guide, can be found on the TinyMCE website. 
 
 [![Build Status](https://travis-ci.org/tinymce/tinymce.png?branch=master)](https://travis-ci.org/tinymce/tinymce)

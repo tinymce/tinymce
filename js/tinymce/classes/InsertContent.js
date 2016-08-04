@@ -26,9 +26,9 @@ define("tinymce/InsertContent", [
 ], function(Env, Tools, Serializer, CaretWalker, CaretPosition, ElementUtils, NodeType, InsertList) {
 	var isTableCell = NodeType.matchNodeNames('td th');
 
-	var insertAtCaret = function(editor, value) {
+	var insertHtmlAtCaret = function(editor, value, details) {
 		var parser, serializer, parentNode, rootNode, fragment, args;
-		var marker, rng, node, node2, bookmarkHtml, merge, data;
+		var marker, rng, node, node2, bookmarkHtml, merge;
 		var textInlineElements = editor.schema.getTextInlineElements();
 		var selection = editor.selection, dom = editor.dom;
 
@@ -85,25 +85,13 @@ define("tinymce/InsertContent", [
 			}
 		}
 
-		function markInlineFormatElements(fragment) {
-			if (merge) {
-				for (node = fragment.firstChild; node; node = node.walk(true)) {
-					if (textInlineElements[node.name]) {
-						node.attr('data-mce-new', "true");
-					}
-				}
-			}
-		}
-
 		function reduceInlineTextElements() {
 			if (merge) {
 				var root = editor.getBody(), elementUtils = new ElementUtils(dom);
 
-				Tools.each(dom.select('*[data-mce-new]'), function(node) {
-					node.removeAttribute('data-mce-new');
-
+				Tools.each(dom.select('*[data-mce-fragment]'), function(node) {
 					for (var testNode = node.parentNode; testNode && testNode != root; testNode = testNode.parentNode) {
-						if (elementUtils.compare(testNode, node)) {
+						if (textInlineElements[node.nodeName.toLowerCase()] && elementUtils.compare(testNode, node)) {
 							dom.remove(node, true);
 						}
 					}
@@ -217,12 +205,6 @@ define("tinymce/InsertContent", [
 			selection.setRng(rng);
 		}
 
-		if (typeof value != 'string') {
-			merge = value.merge;
-			data = value.data;
-			value = value.content;
-		}
-
 		// Check for whitespace before/after value
 		if (/^ | $/.test(value)) {
 			value = trimOrPaddLeftRight(value);
@@ -230,6 +212,8 @@ define("tinymce/InsertContent", [
 
 		// Setup parser and serializer
 		parser = editor.parser;
+		merge = details.merge;
+
 		serializer = new Serializer({
 			validate: editor.settings.validate
 		}, editor.schema);
@@ -273,19 +257,18 @@ define("tinymce/InsertContent", [
 		parentNode = selection.getNode();
 
 		// Parse the fragment within the context of the parent node
-		var parserArgs = {context: parentNode.nodeName.toLowerCase(), data: data};
+		var parserArgs = {context: parentNode.nodeName.toLowerCase(), data: details.data};
 		fragment = parser.parse(value, parserArgs);
 
 		// Custom handling of lists
-		if (InsertList.isListFragment(fragment) && InsertList.isParentBlockLi(dom, parentNode)) {
-			rng = InsertList.insertAtCaret(serializer, dom, editor.selection.getRng(), fragment);
+		if (details.paste === true && InsertList.isListFragment(fragment) && InsertList.isParentBlockLi(dom, parentNode)) {
+			rng = InsertList.insertAtCaret(serializer, dom, editor.selection.getRng(true), fragment);
 			editor.selection.setRng(rng);
 			editor.fire('SetContent', args);
 			return;
 		}
 
 		markFragmentElements(fragment);
-		markInlineFormatElements(fragment);
 
 		// Move the caret to a more suitable location
 		node = fragment.lastChild;
@@ -362,6 +345,34 @@ define("tinymce/InsertContent", [
 		umarkFragmentElements(editor.getBody());
 		editor.fire('SetContent', args);
 		editor.addVisual();
+	};
+
+	var processValue = function (value) {
+		var details;
+
+		if (typeof value !== 'string') {
+			details = Tools.extend({
+				paste: value.paste,
+				data: {
+					paste: value.paste
+				}
+			}, value);
+
+			return {
+				content: value.content,
+				details: details
+			};
+		}
+
+		return {
+			content: value,
+			details: {}
+		};
+	};
+
+	var insertAtCaret = function (editor, value) {
+		var result = processValue(value);
+		insertHtmlAtCaret(editor, result.content, result.details);
 	};
 
 	return {

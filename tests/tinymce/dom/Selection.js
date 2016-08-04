@@ -944,6 +944,26 @@ ModuleLoader.require([
 			equal(rng.endOffset, 0, 'endOffset offset');
 		});
 
+		test('normalize after table should not move', function() {
+			var rng;
+
+			if (tinymce.isOpera || tinymce.isIE) {
+				ok(true, "Skipped on Opera/IE since Opera doesn't let you to set the range to document and IE will steal focus.");
+				return;
+			}
+
+			editor.setContent('a<table><tr><td>b</td></tr></table>');
+			rng = editor.dom.createRng();
+			rng.setStart(editor.getBody(), 0);
+			rng.setEnd(editor.getBody(), 1);
+			editor.selection.setRng(rng);
+			editor.selection.normalize();
+
+			rng = editor.selection.getRng(true);
+			equal(rng.endContainer, editor.getBody());
+			equal(rng.endOffset, 1);
+		});
+
 	/*
 		test('normalize caret after last BR in block', function() {
 			var rng;

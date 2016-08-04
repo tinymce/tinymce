@@ -171,3 +171,26 @@ test('overrideDefaults', function() {
 
 	tinymce.overrideDefaults({});
 });
+
+test('Init inline editor on invalid targets', function() {
+	var invalidNames;
+
+	invalidNames = (
+		'area base basefont br col frame hr img input isindex link meta param embed source wbr track ' +
+		'colgroup option tbody tfoot thead tr script noscript style textarea video audio iframe object menu'
+	);
+
+	tinymce.remove();
+
+	tinymce.each(invalidNames.split(' '), function (invalidName) {
+		var elm = tinymce.DOM.add(document.body, invalidName, {'class': 'targetEditor'}, null);
+
+		tinymce.init({
+			selector: invalidName + '.targetEditor',
+			inline: true
+		});
+
+		strictEqual(tinymce.get().length, 0, 'Should not have created an editor');
+		tinymce.DOM.remove(elm);
+	});
+});
