@@ -7,6 +7,7 @@ define(
     'ephox.compass.Obj',
     'ephox.echo.api.Styles',
     'ephox.epithet.Id',
+    'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Class',
@@ -14,7 +15,7 @@ define(
     'ephox.sugar.api.Insert'
   ],
 
-  function (Type, Arr, Obj, Styles, Id, Fun, Attr, Class, Element, Insert) {
+  function (Type, Arr, Obj, Styles, Id, Merger, Fun, Attr, Class, Element, Insert) {
     var helpStyle = Styles.resolve('aria-help');
     var helpVisibleStyle = Styles.resolve('aria-help-visible');
 
@@ -107,11 +108,11 @@ define(
     };
 
     var menuItem = function (element, label, hasPopup) {
-      Attr.setAll(element, {
-        'role': 'menuitem',
-        'aria-label': label,
-        'aria-haspopup': hasPopup === true ? 'true' : 'false'
-      });
+      var attrs = { 'role': 'menuitem' };
+      var labelTxt = label ? { 'aria-label': label } : {};
+      var popup = hasPopup === undefined ? { } : { 'aria-haspopup': hasPopup === true ? 'true' : 'false' };
+
+      Attr.setAll(element, Merger.merge(attrs, labelTxt, popup));
     };
 
     var menuItemCheckbox = function (element, label) {
@@ -220,6 +221,10 @@ define(
       Attr.set(element, 'aria-label', label);
     };
 
+    var option = function (element) {
+      Attr.set(element, 'role', 'option');
+    };
+
     // TODO: Implement link ARIA support
     // var link = function (element) {
     //   throw 'Link ARIA support not implemented yet.';
@@ -251,6 +256,7 @@ define(
       textarea: textarea,
       label: label,
       widget: widget,
+      option: option,
       listBox: listBox,
       live: live,
       tabList: tabList,
