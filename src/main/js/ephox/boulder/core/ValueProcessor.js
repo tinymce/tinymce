@@ -49,9 +49,7 @@ define(
       return field.fold(
         function (key, okey, presence, prop) {
           var bundle = function (av) {
-            console.log('pre.extract.av', av, prop.toString());
             return prop.extract(path.concat([ key ]), strength, av).map(function (res) {
-              console.log('post.extract.res', res);
               return ObjWriter.wrap(okey, strength(res));
             });
           };
@@ -87,7 +85,6 @@ define(
         return cExtractOne(path, obj, field, strength);
       });
 
-       console.log('results', Arr.map(results, function (res) { return res.getOr('No');}));
       return ResultCombine.consolidateObj(results, {});
     };
 
@@ -132,17 +129,11 @@ define(
     };
 
     var arr = function (prop) {
-      console.log('prop', prop.toString());
       var extract = function (path, strength, array) {
-        console.log('array', array);
         var results = Arr.map(array, function (a, i) {
-          console.log('a', a, prop);
           return prop.extract(path.concat(['[' + i + ']' ]), strength, a);
         });
-        console.log('array', array, 'results', results);
-        var consolidated = ResultCombine.consolidateArr(results);
-        console.log('consolidated', consolidated);
-        return consolidated;
+        return ResultCombine.consolidateArr(results);
       };
 
       var toString = function () {

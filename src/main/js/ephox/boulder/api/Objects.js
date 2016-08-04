@@ -2,12 +2,13 @@ define(
   'ephox.boulder.api.Objects',
 
   [
+    'ephox.boulder.combine.ResultCombine',
     'ephox.boulder.core.ObjChanger',
     'ephox.boulder.core.ObjReader',
     'ephox.boulder.core.ObjWriter'
   ],
 
-  function (ObjChanger, ObjReader, ObjWriter) {
+  function (ResultCombine, ObjChanger, ObjReader, ObjWriter) {
     // Perhaps this level of indirection is unnecessary.
     var narrow = function (obj, fields) {
       return ObjChanger.narrow(obj, fields);
@@ -37,6 +38,10 @@ define(
       return ObjChanger.indexOnKey(array, key);
     };
 
+    var consolidate = function (objs, base) {
+      return ResultCombine.consolidateObj(objs, base);
+    };
+
     return {
       narrow: narrow,
       readOpt: readOpt,
@@ -44,7 +49,8 @@ define(
       readOptFrom: readOptFrom,
       wrap: wrap,
       wrapAll: wrapAll,
-      indexOnKey: indexOnKey
+      indexOnKey: indexOnKey,
+      consolidate: consolidate
     };
   }
 );
