@@ -6,6 +6,7 @@ define(
     'ephox.boulder.core.ObjReader',
     'ephox.boulder.core.ObjWriter',
     'ephox.compass.Arr',
+    'ephox.compass.Obj',
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
@@ -13,7 +14,7 @@ define(
     'ephox.scullion.ADT'
   ],
 
-  function (ResultCombine, ObjReader, ObjWriter, Arr, Json, Fun, Option, Result, Adt) {
+  function (ResultCombine, ObjReader, ObjWriter, Arr, Obj, Json, Fun, Option, Result, Adt) {
     var adt = Adt.generate([
       { field: [ 'key', 'okey', 'presence', 'prop' ] },
       { state: [ 'okey', 'instantiator' ] }
@@ -31,7 +32,6 @@ define(
     var strictAccess = function (path, obj, key) {
       // In strict mode, if it undefined, it is an error.
       return ObjReader.readOptFrom(obj, key).fold(function () {
-        console.log('path', path);
         var message = 'Failed Path: ' + path.join(' > ') + '\nCould not find valid *strict* value for "' + key + '" in ' + Json.stringify(obj, null, 2);
         return Result.error([ message ]);
       }, Result.value);
@@ -49,8 +49,10 @@ define(
       return field.fold(
         function (key, okey, presence, prop) {
           var bundle = function (av) {
+            console.log('pre.extract.av', av, prop.toString());
             return prop.extract(path.concat([ key ]), strength, av).map(function (res) {
-              return ObjWriter.wrap(okey, res);
+              console.log('post.extract.res', res);
+              return ObjWriter.wrap(okey, strength(res));
             });
           };
 
@@ -60,18 +62,13 @@ define(
             }, function (fallback) {
               return fallbackAccess(obj, key, fallback).bind(bundle);
             }, function () {
-              console.log('OPTIONING');
               return optionAccess(obj, key).bind(function (optValue) {
                 return optValue.fold(function () {
-                  var outcome = ObjWriter.wrap(okey, Option.none());
-                  console.log('basic value', okey, outcome);
+                  var outcome = ObjWriter.wrap(okey, strength(Option.none()));
                   return Result.value(outcome);
                 }, function (ov) {
-
-
-
                   return prop.extract(path.concat([ key ]), strength, ov).map(function (res) {
-                    return ObjWriter.wrap(okey, Option.some(res));
+                    return ObjWriter.wrap(okey, strength(Option.some(res)));
                   });
                 });
               });
@@ -80,7 +77,7 @@ define(
         },
         function (okey, instantiator) {
           var state = instantiator(obj);
-          return ObjWriter.wrap(okey, strength(state));
+          return Result.value(ObjWriter.wrap(okey, strength(state)));
         }
       );
     };
@@ -90,13 +87,14 @@ define(
         return cExtractOne(path, obj, field, strength);
       });
 
+       console.log('results', Arr.map(results, function (res) { return res.getOr('No');}));
       return ResultCombine.consolidateObj(results, {});
     };
 
     var value = function (validator) {
       var extract = function (path, strength, val) {
         // Include path when validation fails.
-        return validator(val).map(strength);
+        return validator(val); // ignore strength
       };
 
       var toString = function () {
