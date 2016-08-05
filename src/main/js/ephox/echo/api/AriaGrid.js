@@ -16,8 +16,7 @@ define(
 
     var base = function (element, label) {
       Attr.setAll(element, {
-        'aria-label': label,
-        'role': 'grid'
+        'role': 'grid' // let aria find the label
       });
     };
 
@@ -27,8 +26,7 @@ define(
 
     var cell = function (element, label) {
       Attr.setAll(element, {
-        'role': 'gridcell',
-        'aria-label': label
+        'role': 'gridcell' // let aria find the label
       });
     };
 
