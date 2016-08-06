@@ -27,7 +27,6 @@ define(
     };
 
     var consolidateArr = function (objects) {
-      console.log('consolidating', objects);
       return Arr.foldl(objects, function (acc, obj) {
         return acc.fold(function (accErrs) {
           return obj.fold(function (errs) {

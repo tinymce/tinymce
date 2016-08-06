@@ -9,19 +9,6 @@ test(
   ],
 
   function (Objects, Arr, Obj, Jsc) {
-    // TODO: Add more tests.
-    // Jsc.check(
-    //       Jsc.forall.apply(Jsc, args),
-    //       options
-    //     ).then(function (result) {
-    //       return result !== true ? die(formatErr(name, result)) : next();
-    //     }, function (err) {
-    //       die(err);
-    //     });
-
-
-    // var narrowGen = Jsc.tuple(].generator.flatMap(function ()))
-
     var smallSet = Jsc.nestring;
 
     var check = function (arb, checker) {
@@ -33,8 +20,7 @@ test(
       );
     };
 
-    // Objects.narrow
-    (function () {
+    var testNarrow = function () {
       var narrowGen = Jsc.bless({
         generator: Jsc.dict(smallSet).generator.flatMap(function (obj) {
           var keys = Obj.keys(obj);
@@ -55,13 +41,13 @@ test(
         return true;
       });
 
-      (function () {
-        var actual = Objects.narrow({ a: 'a', b: 'b', c: 'c' }, [ 'a', 'c', 'e' ]);
-        assert.eq({ a: 'a', c: 'c' }, actual);
-      })();
-    })();
-    
-    (function () {
+      // Sanity test.
+      var actual = Objects.narrow({ a: 'a', b: 'b', c: 'c' }, [ 'a', 'c', 'e' ]);
+      assert.eq({ a: 'a', c: 'c' }, actual);
+    };
+
+    var testReaders = function () {
+      // TODO: Think of a good way to property test.
       var subject = { alpha: 'Alpha' };
 
       assert.eq('Alpha', Objects.readOpt('alpha')(subject).getOrDie('readOpt(alpha) => some(Alpha)'), 'readOpt(alpha) => some(Alpha)');
@@ -71,24 +57,10 @@ test(
       assert.eq('fallback', Objects.readOr('beta', 'fallback')(subject), 'readOr(beta) => fallback');
 
       assert.eq('Alpha', Objects.readOptFrom(subject, 'alpha').getOrDie('readOptFrom(alpha) => some(Alpha)'), 'readOptFrom(alpha) => some(Alpha)');
-      assert.eq(true, Objects.readOptFrom(subject, 'beta').isNone(), 'readOptFrom(beta) => none');      
-    //   var readOpt = function (key) {
-    //   return ObjReader.readOpt(key);
-    // };
-
-    // var readOrErr = function (key) {
-    //   return ObjReader.readOrErr(key);
-    // };
-
-    // var readOr = function (key, fallback) {
-    //   return ObjReader.readOr(key, fallback);
-    // };
-
-    // var readOptFrom = function (obj, key) {
-    //   return ObjReader.readOptFrom(obj, key);
-    // };
-    })();
-
-
+      assert.eq(true, Objects.readOptFrom(subject, 'beta').isNone(), 'readOptFrom(beta) => none');
+    };
+    
+    testNarrow();
+    testReaders();
   }
 );

@@ -23,6 +23,10 @@ define(
 
     var objOf = ValueProcessor.obj;
 
+    var valueOf = function (validator) {
+      return ValueProcessor.value(validator);
+    };
+
     var extract = function (label, prop, strength, obj) {
       return prop.extract([ label ], strength, obj).fold(function (errs) {
         return Result.error(errs + '\n\nComplete object: \n' + Json.stringify(obj, null, 2));
@@ -43,6 +47,8 @@ define(
       arrOfObj: arrOfObj,
       arrOf: arrOf,
       arrOfVal: arrOfVal,
+
+      valueOf: valueOf,
 
       objOf: objOf,
 
