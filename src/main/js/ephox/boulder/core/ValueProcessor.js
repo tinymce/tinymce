@@ -90,8 +90,9 @@ define(
 
     var value = function (validator) {
       var extract = function (path, strength, val) {
-        // Include path when validation fails.
-        return validator(val); // ignore strength
+        return validator(val).fold(function (err) {
+          return Result.error('Path: ' + path.join(' > ') + '\n' + err);
+        }, Result.value); // ignore strength
       };
 
       var toString = function () {
