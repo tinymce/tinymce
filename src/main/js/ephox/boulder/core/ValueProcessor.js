@@ -99,7 +99,6 @@ define(
       };
 
       return {
-        validate: Fun.noop,
         extract: extract,
         toString: toString
       };      
@@ -122,7 +121,6 @@ define(
       };
 
       return {
-        validate: Fun.noop,
         extract: extract,
         toString: toString
       };
@@ -141,7 +139,6 @@ define(
       };
 
       return {
-        validate: Fun.noop,
         extract: extract,
         toString: toString
       };
