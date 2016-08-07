@@ -177,7 +177,6 @@ test(
         })
       });
 
-      // HERE.
       check(inputList, function (input) {
         var actual = Objects.consolidate(input.results, input.base);
 
