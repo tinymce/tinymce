@@ -1,3 +1,0 @@
-OK .. so I have the basic building blocks in place, and now I'm up to the part which makes things into structs, or validates them against something.
-
-It might make a bit more sense to have something which has a weak, strong, and validate method on it .... but it is just the combination of a path and fields. I'll have to change the tests a lot but I think the separation will make more sense.
