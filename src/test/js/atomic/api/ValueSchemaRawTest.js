@@ -53,6 +53,21 @@ test(
     ]), { alpha: 'beta' }).getOrDie();    
     assert.eq(true, optionValue2.alpha.isSome(), 'alpha should be some');
 
+    var optionValue3 = ValueSchema.asRaw('test.option', ValueSchema.objOf([
+      FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
+    ]), { alpha: 'beta' }).getOrDie();    
+    assert.eq('beta', optionValue3.alpha.getOrDie(), 'fallback.opt: alpha:beta should be some(beta)');
+
+    var optionValue4 = ValueSchema.asRaw('test.option', ValueSchema.objOf([
+      FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
+    ]), { alpha: true }).getOrDie();    
+    assert.eq('fallback', optionValue4.alpha.getOrDie(), 'fallback.opt: alpha:true should be some(fallback)');
+
+    var optionValue5 = ValueSchema.asRaw('test.option', ValueSchema.objOf([
+      FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
+    ]), {  }).getOrDie();    
+    assert.eq(true, optionValue5.alpha.isNone(), 'fallback.opt: no alpha should be none');
+
 
   }
 );

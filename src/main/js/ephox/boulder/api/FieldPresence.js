@@ -9,13 +9,15 @@ define(
     var adt = Adt.generate([
       { strict: [ ] },
       { defaulted: [ 'fallback' ] },
-      { asOption: [ ] }
+      { asOption: [ ] },
+      { asDefaultedOption: [ 'fallback' ] }
     ]);
 
     return {
       strict: adt.strict,
       defaulted: adt.defaulted,
-      asOption: adt.asOption
+      asOption: adt.asOption,
+      asDefaultedOption: adt.asDefaultedOption
     };
   }
 );

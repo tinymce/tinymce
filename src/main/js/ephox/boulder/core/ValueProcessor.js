@@ -45,6 +45,13 @@ define(
       return Result.value(ObjReader.readOptFrom(obj, key));
     };
 
+    var optionDefaultedAccess = function (obj, key, fallback) {
+      var opt = ObjReader.readOptFrom(obj, key).map(function (val) {
+        return val === true ? fallback : val;
+      });
+      return Result.value(opt);
+    };
+
     var cExtractOne = function (path, obj, field, strength) {
       return field.fold(
         function (key, okey, presence, prop) {
@@ -54,22 +61,27 @@ define(
             });
           };
 
+          var bundleAsOption = function (optValue) {
+            return optValue.fold(function () {
+              var outcome = ObjWriter.wrap(okey, strength(Option.none()));
+              return Result.value(outcome);
+            }, function (ov) {
+              return prop.extract(path.concat([ key ]), strength, ov).map(function (res) {
+                return ObjWriter.wrap(okey, strength(Option.some(res)));
+              });
+            });
+          };
+
           return (function () {
             return presence.fold(function () {
               return strictAccess(path, obj, key).bind(bundle);
             }, function (fallback) {
               return fallbackAccess(obj, key, fallback).bind(bundle);
             }, function () {
-              return optionAccess(obj, key).bind(function (optValue) {
-                return optValue.fold(function () {
-                  var outcome = ObjWriter.wrap(okey, strength(Option.none()));
-                  return Result.value(outcome);
-                }, function (ov) {
-                  return prop.extract(path.concat([ key ]), strength, ov).map(function (res) {
-                    return ObjWriter.wrap(okey, strength(Option.some(res)));
-                  });
-                });
-              });
+              return optionAccess(obj, key).bind(bundleAsOption);
+            }, function (fallback) {
+              // Defaulted option access
+              return optionDefaultedAccess(obj, key, fallback).bind(bundleAsOption);
             });
           })();
         },
