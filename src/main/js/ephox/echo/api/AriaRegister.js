@@ -110,8 +110,7 @@ define(
     var menuItem = function (element, label, hasPopup) {
       var attrs = { 'role': 'menuitem' };
       var labelTxt = label ? { 'aria-label': label } : {};
-      var popup = hasPopup === undefined ? { } : { 'aria-haspopup': hasPopup === true ? 'true' : 'false' };
-
+      var popup = hasPopup === true ? { 'aria-haspopup': 'true'} : { 'aria-haspopup': 'false' };
       Attr.setAll(element, Merger.merge(attrs, labelTxt, popup));
     };
 
