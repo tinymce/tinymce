@@ -9,6 +9,7 @@ asynctest(
     'ephox.alloy.events.Triggers',
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
+    'ephox.peanut.Fun',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Html',
@@ -17,7 +18,7 @@ asynctest(
     'global!document'
   ],
  
-  function (Assertions, Logger, Pipeline, Step, Triggers, Objects, Arr, Attr, Element, Html, Insert, SelectorFind, document) {
+  function (Assertions, Logger, Pipeline, Step, Triggers, Objects, Arr, Fun, Attr, Element, Html, Insert, SelectorFind, document) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -80,7 +81,7 @@ asynctest(
       return Objects.readOptFrom(domEvents, eventType).bind(Objects.readOpt(targetId)).map(function (h) {
         return {
           handler: h,
-          element: target
+          element: Fun.constant(target)
         };
       });
     };

@@ -37,7 +37,7 @@ define(
 
         // Now, check if the event was stopped.
         if (stopper.get() === true) return adt.stopped();
-        else return Traverse.parent(handlerInfo.element).fold(function () {
+        else return Traverse.parent(handlerInfo.element()).fold(function () {
           // No parent, so complete.
           return adt.complete();
         }, function (parent) {
