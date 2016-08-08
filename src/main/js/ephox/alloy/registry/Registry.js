@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.api.Registry',
+  'ephox.alloy.registry.Registry',
 
   [
     'ephox.alloy.events.EventRegistry',
