@@ -112,6 +112,17 @@ test('Toggle OFF - Inline element on partially selected text in start/end elemen
 	equal(getContent(), '<p>1<b>234</b></p><p><b>123</b>4</p>');
 });
 
+test('Toggle OFF - Inline element with data attribute', function() {
+	editor.formatter.register('format', {inline: 'b'});
+	editor.getBody().innerHTML = '<p><b data-x="1">1</b></p>';
+	var rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('b')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('b')[0].firstChild, 1);
+	editor.selection.setRng(rng);
+	editor.formatter.toggle('format');
+	equal(getContent(), '<p>1</p>');
+});
+
 test('Toggle ON - NO inline element on selected text', function() {
 	// Inline element on selected text
 	editor.formatter.register('format', {
@@ -575,6 +586,19 @@ test('Inline element merged with left and right siblings', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
 	equal(getContent(), '<p><b>123456</b></p>', 'Inline element merged with left and right siblings');
+});
+
+test('Inline element merged with data attributed left sibling', function() {
+	editor.formatter.register('format', {
+		inline: 'b'
+	});
+	editor.getBody().innerHTML = '<p><b data-x="1">1234</b>5678</p>';
+	var rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].lastChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].lastChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.apply('format');
+	equal(getContent(), '<p><b data-x="1">12345678</b></p>', 'Inline element merged with left sibling');
 });
 
 test('Don\'t merge siblings with whitespace between 1', function() {
