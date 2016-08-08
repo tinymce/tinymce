@@ -47,8 +47,24 @@ define(
       });
     };
 
+    var triggerUntilStopped = function (lookup, eventType, rawEvent, rawTarget) {
+      var target = rawTarget !== undefined ? rawTarget : rawEvent.target();
+
+      return triggerHandler(lookup, eventType, rawEvent, target).fold(function () {
+        // stopped.
+        return true;
+      }, function (parent) {
+        // Go again.
+        return triggerUntilStopped(lookup, eventType, rawEvent, parent);
+      }, function () {
+        // completed
+        return false;
+      });
+    };
+
     return {
-      triggerHandler: triggerHandler
+      triggerHandler: triggerHandler,
+      triggerUntilStopped: triggerUntilStopped
     };
   }
 );
