@@ -2,6 +2,7 @@ define(
   'ephox.boulder.core.ValueProcessor',
 
   [
+    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.combine.ResultCombine',
     'ephox.boulder.core.ObjReader',
     'ephox.boulder.core.ObjWriter',
@@ -14,7 +15,7 @@ define(
     'ephox.scullion.ADT'
   ],
 
-  function (ResultCombine, ObjReader, ObjWriter, Arr, Obj, Json, Fun, Option, Result, Adt) {
+  function (FieldPresence, ResultCombine, ObjReader, ObjWriter, Arr, Obj, Json, Fun, Option, Result, Adt) {
     var adt = Adt.generate([
       { field: [ 'key', 'okey', 'presence', 'prop' ] },
       { state: [ 'okey', 'instantiator' ] }
@@ -157,6 +158,32 @@ define(
       };
     };
 
+    var setOf = function (validator, prop) {
+      var validateKeys = function (path, keys) {
+        return arr(value(validator)).extract(path, Fun.identity, keys);
+      };
+      var extract = function (path, strength, o) {
+        // 
+        var keys = Obj.keys(o);
+        return validateKeys(path, keys).bind(function (validKeys) {
+          var schema = Arr.map(validKeys, function (vk) {
+            return adt.field(vk, vk, FieldPresence.strict(), prop);
+          });
+
+          return obj(schema).extract(path, strength, o);
+        });
+      };
+
+      var toString = function () {
+        return 'setOf(' + prop.toString() + ')';
+      };
+
+      return {
+        extract: extract,
+        toString: toString
+      };
+    };
+
     var anyValue = value(Result.value);
 
     var arrOfObj = Fun.compose(arr, obj);
@@ -167,6 +194,7 @@ define(
       value: value,
       obj: obj,
       arr: arr,
+      setOf: setOf,
 
       arrOfObj: arrOfObj,
 

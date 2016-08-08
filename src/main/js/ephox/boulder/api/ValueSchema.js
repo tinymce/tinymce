@@ -23,6 +23,8 @@ define(
 
     var objOf = ValueProcessor.obj;
 
+    var setOf = ValueProcessor.setOf;
+
     var valueOf = function (validator) {
       return ValueProcessor.value(validator);
     };
@@ -49,6 +51,7 @@ define(
       arrOfVal: arrOfVal,
 
       valueOf: valueOf,
+      setOf: setOf,
 
       objOf: objOf,
 
