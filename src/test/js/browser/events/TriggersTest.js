@@ -9,7 +9,6 @@ asynctest(
     'ephox.alloy.events.Triggers',
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
-    'ephox.perhaps.Option',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Html',
@@ -18,16 +17,12 @@ asynctest(
     'global!document'
   ],
  
-  function (Assertions, Logger, Pipeline, Step, Triggers, Objects, Arr, Option, Attr, Element, Html, Insert, SelectorFind, document) {
+  function (Assertions, Logger, Pipeline, Step, Triggers, Objects, Arr, Attr, Element, Html, Insert, SelectorFind, document) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     var log = [ ];
 
-    var sClearLog = Step.sync(function () {
-      log = [ ];
-    });
- 
     var make = function (stop, message) {
       return function (labEvent) {
         log.push(message);
@@ -83,7 +78,6 @@ asynctest(
       var targetId = Attr.get(target, 'data-event-id');
 
       return Objects.readOptFrom(domEvents, eventType).bind(Objects.readOpt(targetId)).map(function (h) {
-        console.log("h", h);
         return {
           handler: h,
           element: target
@@ -112,6 +106,33 @@ asynctest(
       { expected: [ 'beta', 'alpha' ], target: 'beta', type: 'no.stop' },
       { expected: [ 'alpha' ], target: 'alpha', type: 'no.stop' },
 
+      { expected: [ 'gamma' ], target: 'gamma', type: 'gamma.stop' },
+      { expected: [ 'beta', 'alpha' ], target: 'beta', type: 'gamma.stop' },
+      { expected: [ 'alpha' ], target: 'alpha', type: 'gamma.stop' },
+
+      { expected: [ 'gamma', 'beta' ], target: 'gamma', type: 'beta.stop' },
+      { expected: [ 'beta' ], target: 'beta', type: 'beta.stop' },
+      { expected: [ 'alpha' ], target: 'alpha', type: 'beta.stop' },
+
+      { expected: [ 'gamma', 'beta', 'alpha' ], target: 'gamma', type: 'alpha.stop' },
+      { expected: [ 'beta', 'alpha' ], target: 'beta', type: 'alpha.stop' },
+      { expected: [ 'alpha' ], target: 'alpha', type: 'alpha.stop' },
+
+      { expected: [ 'gamma' ], target: 'gamma', type: 'gamma.beta.stop' },
+      { expected: [ 'beta' ], target: 'beta', type: 'gamma.beta.stop' },
+      { expected: [ 'alpha' ], target: 'alpha', type: 'gamma.beta.stop' },
+
+      { expected: [ 'gamma' ], target: 'gamma', type: 'gamma.alpha.stop' },
+      { expected: [ 'beta', 'alpha' ], target: 'beta', type: 'gamma.alpha.stop' },
+      { expected: [ 'alpha' ], target: 'alpha', type: 'gamma.alpha.stop' },
+
+      { expected: [ 'gamma', 'beta' ], target: 'gamma', type: 'beta.alpha.stop' },
+      { expected: [ 'beta' ], target: 'beta', type: 'beta.alpha.stop' },
+      { expected: [ 'alpha' ], target: 'alpha', type: 'beta.alpha.stop' },
+
+      { expected: [ 'gamma' ], target: 'gamma', type: 'all.stop' },
+      { expected: [ 'beta' ], target: 'beta', type: 'all.stop' },
+      { expected: [ 'alpha' ], target: 'alpha', type: 'all.stop' },
 
     ];
 
@@ -127,3 +148,4 @@ asynctest(
     Pipeline.async({}, steps, function () { success(); }, failure);
   }
 );
+
