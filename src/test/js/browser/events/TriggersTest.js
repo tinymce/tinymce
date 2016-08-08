@@ -92,7 +92,7 @@ asynctest(
       return Logger.t(label, Step.sync(function () {
         Html.set(container, '<div data-event-id="alpha"><div data-event-id="beta"><div data-event-id="gamma"></div></div></div>');
         var targetEl = SelectorFind.descendant(container, '[data-event-id="' + target + '"]').getOrDie();
-        Triggers.triggerUntilStopped(lookup, eventType, { }, targetEl);
+        Triggers.triggerOnUntilStopped(lookup, eventType, { }, targetEl);
         Assertions.assertEq(label, expected, log.slice(0));
         log = [ ];
       }));

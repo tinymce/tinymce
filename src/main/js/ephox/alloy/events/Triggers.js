@@ -47,23 +47,27 @@ define(
       });
     };
 
-    var triggerUntilStopped = function (lookup, eventType, rawEvent, rawTarget) {
-      var target = rawTarget !== undefined ? rawTarget : rawEvent.target();
+    var triggerUntilStopped = function (lookup, eventType, rawEvent) {
+      var rawTarget = rawEvent.target();
+      return triggerOnUntilStopped(lookup, eventType, rawEvent, rawTarget);
+    };
 
-      return triggerHandler(lookup, eventType, rawEvent, target).fold(function () {
+    var triggerOnUntilStopped = function (lookup, eventType, rawEvent, rawTarget) {
+      return triggerHandler(lookup, eventType, rawEvent, rawTarget).fold(function () {
         // stopped.
         return true;
       }, function (parent) {
         // Go again.
-        return triggerUntilStopped(lookup, eventType, rawEvent, parent);
+        return triggerOnUntilStopped(lookup, eventType, rawEvent, parent);
       }, function () {
         // completed
         return false;
       });
-    };
+    }
 
     return {
       triggerHandler: triggerHandler,
+      triggerOnUntilStopped: triggerOnUntilStopped,
       triggerUntilStopped: triggerUntilStopped
     };
   }
