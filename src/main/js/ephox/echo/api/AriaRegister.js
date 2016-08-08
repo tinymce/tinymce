@@ -137,6 +137,15 @@ define(
       });
     };
 
+    var dialogButton = function (element) {
+      // dialog Buttons are spans with text labels.
+      // a <span> needs a role (a <button> does not)
+      // ARIA derives the label from the text or title.
+      Attr.setAll(element, {
+        'role': 'button'
+      });
+    };
+
     var button = function (element, label) {
       Attr.setAll(element, {
         'aria-label': label,
@@ -248,6 +257,7 @@ define(
       checkbox: checkbox,
       dialog: dialog,
       button: button,
+      dialogButton: dialogButton,
       textarea: textarea,
       label: label,
       widget: widget,
