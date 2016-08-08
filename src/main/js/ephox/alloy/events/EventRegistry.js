@@ -6,10 +6,11 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.compass.Obj',
     'ephox.peanut.Fun',
-    'ephox.sugar.api.PredicateFind'
+    'ephox.sugar.api.PredicateFind',
+    'global!console'
   ],
 
-  function (Tagger, Objects, Obj, Fun, PredicateFind) {
+  function (Tagger, Objects, Obj, Fun, PredicateFind, console) {
     var eventHandler = function (element, handler) {
       return {
         element: Fun.constant(element),
@@ -27,10 +28,10 @@ define(
     return function () {
       var registry = { };
 
-      var registerId = function (component, id, events) {
+      var registerId = function (extraArgs, id, events) {
         Obj.each(events, function (v, k) {
           var handlers = registry[k] !== undefined ? registry[k] : { };
-          handlers[id] = Fun.curry(v, component);
+          handlers[id] = Fun.curry.apply(undefined, [ v ].concat(extraArgs));
           registry[k] = handlers;
         });
       };
@@ -68,7 +69,9 @@ define(
         });
       };
 
-      var unregisterId = Fun.die('TO DO');
+      var unregisterId = function (id) {
+        console.error('Not implemented: EventRegistry.unregister(id)');
+      };
 
       return {
         registerId: registerId,

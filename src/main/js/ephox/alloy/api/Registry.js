@@ -21,7 +21,6 @@ define(
       };
 
       var unregister = function (component) {
-        // TODO: Remove events and handlers?
         Tagger.read(component.element()).each(function (tagId) {
           components[tagId] = undefined;
           events.unregisterId(tagId);

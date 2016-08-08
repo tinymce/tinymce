@@ -63,7 +63,7 @@ define(
         // completed
         return false;
       });
-    }
+    };
 
     return {
       triggerHandler: triggerHandler,
