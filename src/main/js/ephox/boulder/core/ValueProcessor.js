@@ -8,6 +8,7 @@ define(
     'ephox.boulder.core.ObjWriter',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
+    'ephox.highway.Merger',
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
@@ -15,7 +16,7 @@ define(
     'ephox.scullion.ADT'
   ],
 
-  function (FieldPresence, ResultCombine, ObjReader, ObjWriter, Arr, Obj, Json, Fun, Option, Result, Adt) {
+  function (FieldPresence, ResultCombine, ObjReader, ObjWriter, Arr, Obj, Merger, Json, Fun, Option, Result, Adt) {
     var adt = Adt.generate([
       { field: [ 'key', 'okey', 'presence', 'prop' ] },
       { state: [ 'okey', 'instantiator' ] }
@@ -83,6 +84,10 @@ define(
             }, function (fallback) {
               // Defaulted option access
               return optionDefaultedAccess(obj, key, fallback).bind(bundleAsOption);
+            }, function (other) {
+              return fallbackAccess(obj, key, {}).map(function (v) {
+                return Merger.deepMerge(other, v);
+              }).bind(bundle);
             });
           })();
         },

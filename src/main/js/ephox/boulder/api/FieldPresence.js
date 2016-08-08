@@ -10,14 +10,16 @@ define(
       { strict: [ ] },
       { defaulted: [ 'fallback' ] },
       { asOption: [ ] },
-      { asDefaultedOption: [ 'fallback' ] }
+      { asDefaultedOption: [ 'fallback' ] },
+      { mergeWith: [ 'other' ] }
     ]);
 
     return {
       strict: adt.strict,
       defaulted: adt.defaulted,
       asOption: adt.asOption,
-      asDefaultedOption: adt.asDefaultedOption
+      asDefaultedOption: adt.asDefaultedOption,
+      mergeWith: adt.mergeWith
     };
   }
 );

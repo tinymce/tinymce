@@ -84,6 +84,17 @@ test(
       ]))
     );
 
+    check('test.8', 
+      {
+        prop: {
+          'merged': true,
+          other: 'yes'
+        }
+      }, ValueSchema.objOf([
+        FieldSchema.field('prop', 'prop', FieldPresence.mergeWith({ merged: true }), ValueSchema.anyValue())
+      ])
+    );
+
     var optionValue = ValueSchema.asRaw('test.option', ValueSchema.objOf([
       FieldSchema.option('alpha')
     ]), {}).getOrDie();    
