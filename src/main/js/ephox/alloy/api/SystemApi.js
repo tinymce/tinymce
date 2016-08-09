@@ -10,10 +10,11 @@ define(
       'debugInfo',
       'triggerFocus',
       'triggerEvent',
-      'openPopup',
-      'closePopup',
-      'addToLab',
-      'removeFromLab',
+      // TODO: Implement later. See lab for details.
+      // 'openPopup',
+      // 'closePopup',
+      // 'addToWorld',
+      // 'removeFromWorld',
       'build'
     ]);
   }

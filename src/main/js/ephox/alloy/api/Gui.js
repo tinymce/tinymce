@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.GuiEvents',
+    'ephox.alloy.api.SystemApi',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.events.Triggers',
     'ephox.alloy.registry.Registry',
@@ -14,7 +15,7 @@ define(
     'ephox.sugar.api.Remove'
   ],
 
-  function (GuiEvents, SystemEvents, Triggers, Registry, Arr, Fun, Compare, Element, Insert, Remove) {
+  function (GuiEvents, SystemApi, SystemEvents, Triggers, Registry, Arr, Fun, Compare, Element, Insert, Remove) {
     var create = function ( ) {
       var container = Element.fromTag('div');
       return takeover(container);
@@ -35,7 +36,21 @@ define(
         }
       });
 
-      var systemApi = { };
+      var systemApi = SystemApi({
+        // This is a real system
+        debugInfo: Fun.constant('real'),
+        triggerEvent: function (customType, target, data) {
+          // The return value is not used because this is a fake event.
+          Triggers.triggerOnUntilStopped(lookup, customType, data, target);
+        },
+        triggerFocus: function (target, originator) {
+          Triggers.triggerHandler(lookup, SystemEvents.focus(), {
+            originator: Fun.constant(originator),
+            target: Fun.constant(target)
+          }, target);
+        },
+        build: Fun.die('no building yet')
+      });
 
       var addToWorld = function (component) {
         registry.register(component);
