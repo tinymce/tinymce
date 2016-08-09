@@ -137,6 +137,17 @@ asynctest(
     // TODO: Add agar support for input events.
     var sTestInput = Step.pass;
 
+    var sTestMouseover = GeneralSteps.sequence([
+      Mouse.sHoverOn(page, '.focusable-span'),
+      store.sAssertEq(
+        'Checking event log after hovering on focusable span',
+        [
+          { eventName: 'mouseover', target: 'focusable-span' }
+        ]
+      ),
+      store.sClear
+    ]);
+
     var sTestUnbind = GeneralSteps.sequence([
       Step.sync(function () {
         gui.unbind();
@@ -175,7 +186,8 @@ asynctest(
       sTestKeydown,      
       sTestClick,      
       sTestInput,
-      
+      sTestMouseover,
+
       sTestUnbind
     ], function () { 
       Remove.remove(page);
