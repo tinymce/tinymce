@@ -14,7 +14,10 @@ define(
 
       // This event is fired a small amount of time after the blur has fired. This 
       // allows the handler to know what was the focused element, and what is now.
-      postBlur: Fun.constant('alloy.blur.post')
+      postBlur: Fun.constant('alloy.blur.post'),
+
+      // This event is fired by gui.broadcast*. It is defined by 'receivers'
+      receive: Fun.constant('alloy.receive')
     };
   }
 );
