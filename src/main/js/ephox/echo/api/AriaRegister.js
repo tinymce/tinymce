@@ -108,10 +108,14 @@ define(
     };
 
     var menuItem = function (element, label, hasPopup) {
-      var attrs = { 'role': 'menuitem' };
-      var labelTxt = label ? { 'aria-label': label } : {};
-      var popup = hasPopup === true ? { 'aria-haspopup': 'true'} : { 'aria-haspopup': 'false' };
-      Attr.setAll(element, Merger.merge(attrs, labelTxt, popup));
+      var labelTxt = label.map(function (txt) {
+        return { 'aria-label': txt };
+      }).getOr({});
+
+      Attr.setAll(element, Merger.merge(labelTxt, {
+        'role': 'menuitem',
+        'aria-haspopup': hasPopup.getOr(false)
+      }));
     };
 
     var menuItemCheckbox = function (element, label) {
