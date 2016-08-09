@@ -16,7 +16,8 @@ define(
       'styles',
       'value',
       'innerHtml',
-      'children'
+      'defChildren',
+      'domChildren'
     ]);
 
     var modToStr = function (mod) {
@@ -31,11 +32,12 @@ define(
         attributes: mod.attributes().getOr({ }),
         styles: mod.styles().getOr({ }),
         value: mod.value().getOr('<none>'),
-        innerHtml: mod.innerHtml().getOr('<none>')
+        innerHtml: mod.innerHtml().getOr('<none>'),
+        defChildren: mod.defChildren().getOr('<none>')
       };
     };
 
-    var modify = function (defnA, mod) {
+    var merge = function (defnA, mod) {
       var raw = {
         tag: defnA.tag(),
         classes: mod.classes().getOr([ ]).concat(defnA.classes().getOr([ ])),
@@ -47,7 +49,8 @@ define(
           defnA.styles().getOr({}),
           mod.styles().getOr({})
         ),
-        children: mod.children().or(defnA.children()).getOr([ ])
+        domChildren: mod.domChildren().or(defnA.domChildren()).getOr([ ]),
+        defChildren: mod.defChildren().or(defnA.defChildren()).getOr([ ])
       };
       
       var innerHtml = mod.innerHtml().or(defnA.innerHtml());
@@ -67,7 +70,7 @@ define(
 
     return {
       nu: nu,
-      modify: modify,
+      merge: merge,
       modToStr: modToStr
     };
   }

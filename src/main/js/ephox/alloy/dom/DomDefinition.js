@@ -3,17 +3,19 @@ define(
 
   [
     'ephox.numerosity.api.JSON',
-    'ephox.scullion.Struct'
+    'ephox.scullion.Struct',
+    'global!String'
   ],
 
-  function (Json, Struct) {
+  function (Json, Struct, String) {
     var nu = Struct.immutableBag([ 'tag' ], [
       'classes',
       'attributes',
       'styles',
       'value',
       'innerHtml',
-      'children'
+      'domChildren',
+      'defChildren'
     ]);
 
     var defToStr = function (defn) {
@@ -28,10 +30,15 @@ define(
         attributes: defn.attributes().getOr({ }),
         styles: defn.styles().getOr({ }),
         value: defn.value().getOr('<none>'),
-        innerHtml: defn.innerHtml().getOr('<none>')
+        innerHtml: defn.innerHtml().getOr('<none>'),
+        defChildren: defn.defChildren().getOr('<none>'),
+        domChildren: defn.domChildren().fold(function () {
+          return '<none>';
+        }, function (children) {
+          return children.length === 0 ? '0 children, but still specified' : String(children.length);
+        })
       };
     };
-
   
     return {
       nu: nu,  

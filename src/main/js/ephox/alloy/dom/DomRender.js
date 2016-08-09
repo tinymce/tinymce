@@ -2,16 +2,34 @@ define(
   'ephox.alloy.dom.DomRender',
 
   [
+    'ephox.alloy.dom.DomDefinition',
+    'ephox.compass.Arr',
+    'ephox.peanut.Fun',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Classes',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Html',
     'ephox.sugar.api.InsertAll',
-    'ephox.sugar.api.Value'
+    'ephox.sugar.api.Value',
+    'global!Error'
   ],
 
-  function (Attr, Classes, Css, Element, Html, InsertAll, Value) {
+  function (DomDefinition, Arr, Fun, Attr, Classes, Css, Element, Html, InsertAll, Value, Error) {
+    var getChildren = function (definition) {
+      return definition.domChildren().fold(function () {
+        return definition.defChildren().fold(function () {
+          return [ ];
+        }, function (defChildren) {
+          return Arr.map(defChildren, renderDef);
+        });
+      }, function (domChildren) {
+        return definition.defChildren().fold(Fun.constant(domChildren), function (defChildren) {
+          throw new Error('Cannot specify children and child specs! Must be one or the other.\nDef: ' + DomDefinition.defToStr(definition));
+        });
+      });      
+    };
+
     var renderToDom = function (definition) {
       var subject = Element.fromTag(definition.tag());
       Classes.add(subject, definition.classes().getOr([ ]));
@@ -21,7 +39,7 @@ define(
       Html.set(subject, definition.innerHtml().getOr(''));
 
       // Children are already elements.
-      var children = definition.children().getOr([ ]);
+      var children = getChildren(definition);
       InsertAll.append(subject, children);
 
       definition.value().each(function (value) {
@@ -29,6 +47,11 @@ define(
       });
 
       return subject;
+    };
+
+    var renderDef = function (spec) {
+      var definition = DomDefinition.nu(spec);
+      return renderToDom(definition);
     };
 
     return {
