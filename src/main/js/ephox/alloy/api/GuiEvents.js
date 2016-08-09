@@ -7,6 +7,7 @@ define(
     'ephox.boulder.api.ValueSchema',
     'ephox.classify.Type',
     'ephox.compass.Arr',
+    'ephox.fred.PlatformDetection',
     'ephox.keytar.Keys',
     'ephox.perhaps.Result',
     'ephox.sugar.api.DomEvent',
@@ -14,7 +15,7 @@ define(
     'global!setTimeout'
   ],
 
-  function (FieldPresence, FieldSchema, ValueSchema, Type, Arr, Keys, Result, DomEvent, Node, setTimeout) {
+  function (FieldPresence, FieldSchema, ValueSchema, Type, Arr, PlatformDetection, Keys, Result, DomEvent, Node, setTimeout) {
     var isFunction = function (v) {
       return Type.isFunction(v) ? Result.value(v) : Result.error('Not a function');
     };
@@ -24,10 +25,21 @@ define(
       return event.raw().which === Keys.BACKSPACE()[0] && !Arr.contains([ 'input', 'textarea' ], Node.name(event.target()));
     };
 
+    var isFirefox = PlatformDetection.detect().browser.isFirefox();
+
     var settingsSchema = ValueSchema.objOf([
       FieldSchema.field('triggerEvent', 'triggerEvent', FieldPresence.strict(), ValueSchema.valueOf(isFunction)),
       FieldSchema.defaulted('stopBackspace', true)
     ]);
+
+    var bindFocus = function (container, handler) {
+      if (isFirefox) {
+        // https://bugzilla.mozilla.org/show_bug.cgi?id=687787
+        return DomEvent.capture(container, 'focus', handler);
+      } else {
+        return DomEvent.bind(container, 'focusin', handler);
+      }
+    };
 
     var setup = function (container, rawSettings) {
       console.log('settingsSchema', settingsSchema.toString());
@@ -56,7 +68,7 @@ define(
       });
 
       // TODO: Get this working on Firefox.
-      var onFocusIn = DomEvent.bind(container, 'focusin', function (event) {
+      var onFocusIn = bindFocus(container, function (event) {
         // TODO: Focus vs focusin
         var stopped = settings.triggerEvent('focusin', event);
         if (stopped) event.kill();
