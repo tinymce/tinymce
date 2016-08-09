@@ -9,7 +9,6 @@ define(
   function (Result, Error) {
     var sortKeys = function (label, keyName, array, order) {
       var sliced = array.slice(0);
-      console.log('sliced', sliced);
       try {
         var sorted = sliced.sort(function (a, b) {
           var aKey = a[keyName]();
