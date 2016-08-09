@@ -61,7 +61,7 @@ define(
           return function () {
             var args = Array.prototype.slice.call(arguments, 0);
             return Arr.foldl(sorted, function (acc, b) {
-              return b.h.apply(undefined, args);
+              return b.h.apply(undefined, extra.concat(args));
             }, undefined);
           };
         } else {
