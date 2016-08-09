@@ -2,101 +2,120 @@ define(
   'ephox.alloy.construct.ComponentEvents',
 
   [
-
+    'ephox.alloy.util.PrioritySort',
+    'ephox.boulder.api.FieldPresence',
+    'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects',
+    'ephox.boulder.api.ValueSchema',
+    'ephox.compass.Arr',
+    'ephox.compass.Obj',
+    'ephox.numerosity.api.JSON',
+    'ephox.peanut.Fun',
+    'ephox.perhaps.Result',
+    'global!Array',
+    'global!Error'
   ],
 
-  function () {
-    var combine = function (info, behaviours, base) {
-
+  function (PrioritySort, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Json, Fun, Result, Array, Error) {
+    var behaviourEvent = function (name, listener) {
+      return {
+        name: Fun.constant(name),
+        listener: listener
+      };
     };
-        // Dupe with combineApi
-    var combineEvents = function (info, behaviours, base) {
-      // Get the APIs sorted by behaviour
-      var behaviourEvents = { };
+
+    var handler = function (parts) {
+      return ValueSchema.asRaw('Extracting handler', ValueSchema.objOf([
+        FieldSchema.field('can', 'can', FieldPresence.defaulted(Fun.constant(true)), ValueSchema.anyValue()),
+        FieldSchema.field('abort', 'abort', FieldPresence.defaulted(Fun.constant(false)), ValueSchema.anyValue())
+      ]), parts).getOrDie();
+    };
+
+    var combine = function (info, behaviours, base) {
+      // FIX: behaviourEvents['lab.custom.definition.events'] = CustomDefinition.toEvents(info);
+      var behaviourEvents = base;
       Arr.each(behaviours, function (behaviour) {
         behaviourEvents[behaviour.name()] = behaviour.handlers(info);        
       });
-      behaviourEvents['lab.custom.definition.events'] = CustomDefinition.toEvents(info);
 
       // Now, with all of these events, we need to get a list of behaviours
       var eventChains = { };
       Obj.each(behaviourEvents, function (events, behaviourName) {
-        Obj.each(events, function (eventF, eventName) {
+        Obj.each(events, function (listener, eventName) {
           // TODO: Has own property.
           var chain = Objects.readOr(eventName, [ ])(eventChains);
-          chain = chain.concat({ b: behaviourName, h: eventF });
+          chain = chain.concat([
+            behaviourEvent(behaviourName, listener)
+          ]);
           eventChains[eventName] = chain;
         });
       });
 
-      console.log('eventChains', eventChains);
+      return combineEventLists(eventChains, info.eventOrder());
+    };
 
-      // TODO: Add something to boulder to merge in some defaults.
-      var eventOrder =  info.eventOrder();
-
-      // Now, with this API chain list, we need to combine things. Sort them in order.
-      return Obj.map(eventChains, function (chain, eventName) {
-        if (chain.length > 1) {
-          var order = eventOrder[eventName];
-          if (! order) throw new Error(
-            'The event (' + eventName + ') has more than one behaviour that listens to it.\nWhen this occurs, you must ' + 
-            'specify an event ordering for the behaviours in your spec (e.g. [ "listing", "toggling" ]).\nThe behaviours that ' + 
-            'can trigger it are: ' + Json.stringify(Arr.map(chain, function (c) { return c.b; }), null, 2)
-          );        
-          var sorted = chain.slice(0).sort(function (a, b) {
-            var aIndex = order.indexOf(a.b);
-            var bIndex = order.indexOf(b.b);
-            if (aIndex === -1) throw new Error('The Event ordering for ' + eventName + ' does not have an entry for ' + a.b);
-            if (bIndex === -1) throw new Error('The Event ordering for ' + eventName + ' does not have an entry for ' + b.b);
-            if (aIndex < bIndex) return -1;
-            else if (bIndex < aIndex) return 1;
-            else return 0;
-          });
-
-          var can = function () {
-            var args = Array.prototype.slice.call(arguments, 0);
-            return Arr.foldl(sorted, function (acc, b) {
-              var bCan = b.h.can !== undefined ? b.h.can : Fun.constant(true);
-              return acc && bCan.apply(undefined, args);
-            }, true);
-          };
-
-          var run = function () {
-            var args = Array.prototype.slice.call(arguments, 0);
-            Arr.each(sorted, function (s) {
-              var sRun = s.h.run !== undefined ? s.h.run : Fun.noop;
-              sRun.apply(undefined, args);
-            });
-          };
-
-          var abort = function () {
-            var args = Array.prototype.slice.call(arguments, 0);
-            return Arr.foldl(sorted, function (acc, b) {
-              var bAbort = b.h.abort !== undefined ? b.h.abort : Fun.constant(false);
-              return acc || bAbort.apply(undefined, args);
-            }, false);
-          };
-
-          var label = Arr.map(sorted, function (c) {
-            return c.b;
-          }).join(' -> ');
-
-
-          return {
-            label: label,
-            can: can,
-            run: run,
-            abort: abort
-          };
-        } else {
-          return {
-            can: chain[0].h.can !== undefined ? chain[0].h.can : Fun.constant(true),
-            run: chain[0].h.run !== undefined ? chain[0].h.run : Fun.noop,
-            abort: chain[0].h.abort !== undefined ? chain[0].h.abort : Fun.constant(false)
-          };
+    var assemble = function (listener) {
+      return function (component, simulatedEvent/*, others */) {
+        var args = Array.prototype.slice.call(arguments, 0);
+        if (listener.abort.apply(undefined, args)) {
+          simulatedEvent.stop();
+        } else if (listener.can.apply(undefined, args)) {
+          listener.run.apply(undefined, args);
         }
+      };
+    };
+
+    var missingOrderError = function (eventName, listeners) {
+      return new Result.error(
+        'The event (' + eventName + ') has more than one behaviour that listens to it.\nWhen this occurs, you must ' + 
+        'specify an event ordering for the behaviours in your spec (e.g. [ "listing", "toggling" ]).\nThe behaviours that ' + 
+        'can trigger it are: ' + Json.stringify(Arr.map(listeners, function (c) { return c.name(); }), null, 2)
+      );        
+    };
+
+    var fuse = function (listeners, eventOrder, eventName) {
+      var order = eventOrder[eventName];
+      if (! order) return missingOrderError(eventName, listeners);
+      else return PrioritySort.sortKeys('Event', 'name', listeners, order).map(function (sorted) {
+        var can = function () {
+          var args = Array.prototype.slice.call(arguments, 0);
+          return Arr.foldl(sorted, function (acc, listener) {
+            return acc && listener.can.apply(undefined, args);
+          }, true);
+        };
+
+        var run = function () {
+          var args = Array.prototype.slice.call(arguments, 0);
+          Arr.each(sorted, function (listener) {
+            listener.run.apply(undefined, args);
+          });
+        };
+
+        var abort = function () {
+          var args = Array.prototype.slice.call(arguments, 0);
+          return Arr.foldl(sorted, function (acc, listener) {
+            return acc || listener.abort.apply(undefined, args);
+          }, false);
+        };
+
+        return handler({
+          can: can,
+          abort: abort,
+          run: run
+        });
       });
     };
-    return null;
+
+    var combineEventLists = function (eventLists, eventOrder) {
+      return Obj.map(eventLists, function (listeners, eventName) {
+        var combined = listeners.length === 1 ? Result.value(listeners[0]) : fuse(listeners, eventOrder, eventName);
+        return combined.map(assemble);
+      });
+    };
+   
+    return {
+      combine: combine,
+      handler: handler
+    };
   }
 );

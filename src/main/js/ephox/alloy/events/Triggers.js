@@ -24,7 +24,7 @@ define(
         stopper.set(true);
       };
 
-      var labEvent = {
+      var simulatedEvent = {
         stop: stop,
         event: Fun.constant(rawEvent)
       };
@@ -33,7 +33,7 @@ define(
         // No handler, so complete.
         return adt.complete();
       }, function (handlerInfo) {
-        handlerInfo.handler(labEvent);
+        handlerInfo.handler(simulatedEvent);
 
         // Now, check if the event was stopped.
         if (stopper.get() === true) return adt.stopped();

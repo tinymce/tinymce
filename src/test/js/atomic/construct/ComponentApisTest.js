@@ -8,12 +8,11 @@ test(
     'ephox.alloy.test.TestStore',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
-    'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
     'ephox.scullion.Struct'
   ],
 
-  function (Logger, RawAssertions, ComponentApis, TestStore, Arr, Obj, Json, Fun, Struct) {
+  function (Logger, RawAssertions, ComponentApis, TestStore, Arr, Obj, Fun, Struct) {
     var behaviour = Struct.immutable('name', 'apis');
 
     var checkErr = function (expectedPart, info, behaviours) {
