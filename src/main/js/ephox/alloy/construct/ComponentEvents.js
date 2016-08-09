@@ -37,6 +37,7 @@ define(
       Arr.each(behaviours, function (behaviour) {
         behaviourEvents[behaviour.name()] = behaviour.handlers(info);        
       });
+      console.log('behaviourEvents', behaviourEvents);
 
       // Now, with all of these events, we need to get a list of behaviours
       var eventChains = { };
@@ -51,10 +52,13 @@ define(
         });
       });
 
+      console.log('event.chains', eventChains);
+
       return combineEventLists(eventChains, info.eventOrder());
     };
 
     var assemble = function (listener) {
+      console.log('assemble.listener', listener);
       return function (component, simulatedEvent/*, others */) {
         var args = Array.prototype.slice.call(arguments, 0);
         if (listener.abort.apply(undefined, args)) {
@@ -74,9 +78,11 @@ define(
     };
 
     var fuse = function (listeners, eventOrder, eventName) {
+      console.log('fuse.listeners', listeners);
       var order = eventOrder[eventName];
       if (! order) return missingOrderError(eventName, listeners);
       else return PrioritySort.sortKeys('Event', 'name', listeners, order).map(function (sorted) {
+        console.log('sorted');
         var can = function () {
           var args = Array.prototype.slice.call(arguments, 0);
           return Arr.foldl(sorted, function (acc, listener) {
@@ -107,8 +113,10 @@ define(
     };
 
     var combineEventLists = function (eventLists, eventOrder) {
+      console.log('eventLists', eventLists);
       return Obj.map(eventLists, function (listeners, eventName) {
-        var combined = listeners.length === 1 ? Result.value(listeners[0]) : fuse(listeners, eventOrder, eventName);
+        var combined = listeners.length === 1 ? Result.value(listeners[0].listener()) : fuse(listeners, eventOrder, eventName);
+        console.log('combine.events', combined.getOr('none'), listeners);
         return combined.map(assemble);
       });
     };
