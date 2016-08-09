@@ -134,6 +134,68 @@ test(
       }
     );
 
+    Logger.sync(
+      'Complex Test with 2 apis and 3 behaviours and missing notmiddle order so *incomplete*',
+      function () {
+        checkErr(
+          'API call (notmiddle)',
+          ao({
+            'all': [ 'b1', 'b3', 'b2' ],
+            'middle': [ 'b2' ]
+          }), 
+          [
+            behaviour('b1', {
+              'all': handler('b1.all'),
+              'notmiddle': handler('b1.notmiddle')
+            }),
+            behaviour('b2', {
+              'all': handler('b2.all'),
+              'middle': handler('b2.middle')              
+            }),
+            behaviour('b3', {
+              'all': handler('b3.all'),
+              'notmiddle': handler('b3.notmiddle')
+            })
+          ]
+        );
+      }
+    );
+
+    Logger.sync(
+      'Complex Test with 2 apis and 3 behaviours and missing middle order but it only has one',
+      function () {
+        check(
+          [
+            'b1.all',
+            'b3.all',
+            'b2.all',
+
+            'b2.middle',
+
+            'b3.notmiddle',
+            'b1.notmiddle'
+          ],
+          ao({
+            'all': [ 'b1', 'b3', 'b2' ],
+            'notmiddle': [ 'b3', 'b1' ]
+          }), 
+          [
+            behaviour('b1', {
+              'all': handler('b1.all'),
+              'notmiddle': handler('b1.notmiddle')
+            }),
+            behaviour('b2', {
+              'all': handler('b2.all'),
+              'middle': handler('b2.middle')              
+            }),
+            behaviour('b3', {
+              'all': handler('b3.all'),
+              'notmiddle': handler('b3.notmiddle')
+            })
+          ]
+        );
+      }
+    );
 
     Logger.sync(
       'Complex Test with 2 apis and 3 behaviours and correct order',
