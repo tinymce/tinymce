@@ -55,6 +55,14 @@ define("tinymce/pasteplugin/Plugin", [
 			editor.focus();
 		}
 
+		// draw back if power version is requested
+		if (/(^|[ ,])powerpaste([, ]|$)/.test(settings.plugins)) {
+			if (typeof console !== "undefined" && console.log) {
+				console.log("Paste plugin is not required, when PowerPaste is enabled.");
+			}
+			return;
+		}
+
 		self.clipboard = clipboard = new Clipboard(editor);
 		self.quirks = new Quirks(editor);
 		self.wordFilter = new WordFilter(editor);

@@ -52,6 +52,14 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			return items;
 		}
 
+		// draw back if power version is requested
+		if (/(^|[ ,])tinymcespellchecker([, ]|$)/.test(settings.plugins)) {
+			if (typeof console !== "undefined" && console.log) {
+				console.log("Spell Cheker plugin is not required, when Spell Checker Pro is enabled.");
+			}
+			return;
+		}
+
 		var languagesString = settings.spellchecker_languages ||
 			'English=en,Danish=da,Dutch=nl,Finnish=fi,French=fr_FR,' +
 			'German=de,Italian=it,Polish=pl,Portuguese=pt_BR,' +
