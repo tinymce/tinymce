@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.GuiEvents',
+    'ephox.alloy.api.SystemEvents',
     'ephox.alloy.events.Triggers',
     'ephox.alloy.registry.Registry',
     'ephox.compass.Arr',
@@ -13,7 +14,7 @@ define(
     'ephox.sugar.api.Remove'
   ],
 
-  function (GuiEvents, Triggers, Registry, Arr, Fun, Compare, Element, Insert, Remove) {
+  function (GuiEvents, SystemEvents, Triggers, Registry, Arr, Fun, Compare, Element, Insert, Remove) {
     var create = function ( ) {
       var container = Element.fromTag('div');
       return takeover(container);
@@ -21,7 +22,7 @@ define(
 
     var takeover = function (container) {
       var isRoot = Fun.curry(Compare.eq, container);
-      
+
       var registry = Registry();
 
       var lookup = function (eventName, target) {
@@ -62,11 +63,36 @@ define(
         domEvents.unbind();
       };
 
+      var broadcastData = function (data) {
+        var receivers = registry.filterByType(SystemEvents.receive());
+        Arr.each(receivers, function (receiver) {
+          receiver.handler(data);
+        });
+      };
+
+      var broadcast = function (message) {
+        broadcastData({
+          universal: Fun.constant(true),
+          data: Fun.constant(message)
+        });
+      };
+
+      var broadcastOn = function (channels, message) {
+        broadcastData({
+          universal: Fun.constant(false),
+          channels: Fun.constant(channels),
+          data: Fun.constant(message)
+        });
+      };
+
       return {
         element: Fun.constant(container),
         destroy: destroy,
         add: add,
-        remove: remove
+        remove: remove,
+
+        broadcast: broadcast,
+        broadcastOn: broadcastOn
       };
     };
 
