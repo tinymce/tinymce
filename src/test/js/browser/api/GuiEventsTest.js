@@ -81,6 +81,26 @@ asynctest(
         ]
       ),
 
+      store.sClear,
+
+      FocusTools.sSetFocus(
+        'Focusing span',
+        page,
+        '.focusable-span'
+      ),
+
+      // Wait for the post.blur to fire.
+      Step.wait(200),
+
+      store.sAssertEq(
+        'Checking event log after focusing test-input',
+        [
+          { eventName: 'focusout', target: 'test-input' },
+          { eventName: 'focusin', target: 'focusable-span' },
+          { eventName: 'alloy.blur.post', target: 'test-input' }
+        ]
+      ),
+
       Step.wait(1000000)
     ], function () { success(); }, failure);
 

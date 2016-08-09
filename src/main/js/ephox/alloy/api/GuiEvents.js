@@ -2,6 +2,7 @@ define(
   'ephox.alloy.api.GuiEvents',
 
   [
+    'ephox.alloy.api.SystemEvents',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
@@ -15,7 +16,7 @@ define(
     'global!setTimeout'
   ],
 
-  function (FieldPresence, FieldSchema, ValueSchema, Type, Arr, PlatformDetection, Keys, Result, DomEvent, Node, setTimeout) {
+  function (SystemEvents, FieldPresence, FieldSchema, ValueSchema, Type, Arr, PlatformDetection, Keys, Result, DomEvent, Node, setTimeout) {
     var isFunction = function (v) {
       return Type.isFunction(v) ? Result.value(v) : Result.error('Not a function');
     };
@@ -38,6 +39,15 @@ define(
         return DomEvent.capture(container, 'focus', handler);
       } else {
         return DomEvent.bind(container, 'focusin', handler);
+      }
+    };
+
+    var bindBlur = function (container, handler) {
+      if (isFirefox) {
+        // https://bugzilla.mozilla.org/show_bug.cgi?id=687787
+        return DomEvent.capture(container, 'blur', handler);
+      } else {
+        return DomEvent.bind(container, 'focusout', handler);
       }
     };
 
@@ -74,7 +84,7 @@ define(
         if (stopped) event.kill();
       });
 
-      var onFocusOut = DomEvent.bind(container, 'focusout', function (event) {
+      var onFocusOut = bindBlur(container, function (event) {
         // TODO: blur vs focusout
         var stopped = settings.triggerEvent('focusout', event);
         if (stopped) event.kill();
@@ -83,7 +93,7 @@ define(
         // It allows the active element to change before firing the blur that we will listen to 
         // for things like closing popups
         setTimeout(function () {
-          settings.triggerEvent('lab.blur.post', event);
+          settings.triggerEvent(SystemEvents.postBlur(), event);
         }, 0);
       });
 
