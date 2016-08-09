@@ -3,6 +3,9 @@ asynctest(
  
   [
     'ephox.agar.api.FocusTools',
+    'ephox.agar.api.GeneralSteps',
+    'ephox.agar.api.Keyboard',
+    'ephox.agar.api.Mouse',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiEvents',
@@ -13,10 +16,11 @@ asynctest(
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.InsertAll',
+    'ephox.sugar.api.Remove',
     'global!document'
   ],
  
-  function (FocusTools, Pipeline, Step, GuiEvents, DomDefinition, DomRender, TestStore, Attr, Element, Insert, InsertAll, document) {
+  function (FocusTools, GeneralSteps, Keyboard, Mouse, Pipeline, Step, GuiEvents, DomDefinition, DomRender, TestStore, Attr, Element, Insert, InsertAll, Remove, document) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -45,6 +49,10 @@ asynctest(
                   border: '1px solid blue',
                   display: 'inline-block'
                 }
+              },
+              {
+                tag: 'button',
+                classes: [ 'test-button' ]
               }
             ]
           }
@@ -53,6 +61,7 @@ asynctest(
       })
     );
 
+    var doc = Element.fromDom(document);
     var body = Element.fromDom(document.body);
     Insert.append(body, page);
 
@@ -63,11 +72,8 @@ asynctest(
       store.adder({ eventName: eventName, target: Attr.get(event.target(), 'class') })();
     };
 
-    var gui = GuiEvents.setup(page, {
-      triggerEvent: triggerEvent
-    });
 
-    Pipeline.async({}, [
+    var sTestFocusInput = GeneralSteps.sequence([
       FocusTools.sSetFocus(
         'Focusing test input',
         page,
@@ -81,8 +87,10 @@ asynctest(
         ]
       ),
 
-      store.sClear,
+      store.sClear
+    ]);
 
+    var sTestFocusSpan = GeneralSteps.sequence([
       FocusTools.sSetFocus(
         'Focusing span',
         page,
@@ -93,7 +101,7 @@ asynctest(
       Step.wait(200),
 
       store.sAssertEq(
-        'Checking event log after focusing test-input',
+        'Checking event log after focusing span',
         [
           { eventName: 'focusout', target: 'test-input' },
           { eventName: 'focusin', target: 'focusable-span' },
@@ -101,8 +109,78 @@ asynctest(
         ]
       ),
 
-      Step.wait(1000000)
-    ], function () { success(); }, failure);
+      store.sClear
+    ]);
+
+    var sTestKeydown = GeneralSteps.sequence([
+      Keyboard.sKeydown(doc, 'A'.charCodeAt(0), { }),
+      store.sAssertEq(
+        'Checking event log after keydown',
+        [
+          { eventName: 'keydown', target: 'focusable-span' }
+        ]
+      ),
+      store.sClear
+    ]);
+
+    var sTestClick = GeneralSteps.sequence([
+      Mouse.sClickOn(page, '.test-button'),
+      store.sAssertEq(
+        'Checking event log after clicking on test-button',
+        [
+          { eventName: 'click', target: 'test-button' }
+        ]
+      ),
+      store.sClear
+    ]);
+
+    // TODO: Add agar support for input events.
+    var sTestInput = Step.pass;
+
+    var sTestUnbind = GeneralSteps.sequence([
+      Step.sync(function () {
+        gui.unbind();
+      }),
+
+      store.sClear,
+
+      FocusTools.sSetFocus(
+        'Focusing test input',
+        page,
+        '.test-input'
+      ),
+
+      FocusTools.sSetFocus(
+        'Focusing span',
+        page,
+        '.focusable-span'
+      ),
+
+      Keyboard.sKeydown(doc, 'A'.charCodeAt(0), { }),
+      Mouse.sClickOn(page, '.test-button'),
+
+      store.sAssertEq(
+        'After unbinding events, nothing should be listened to any longer',
+        [ ]
+      )
+    ]);
+
+    var gui = GuiEvents.setup(page, {
+      triggerEvent: triggerEvent
+    });
+
+    Pipeline.async({}, [
+      sTestFocusInput,
+      sTestFocusSpan,
+      sTestKeydown,      
+      sTestClick,      
+      sTestInput,
+      
+      sTestUnbind
+    ], function () { 
+      Remove.remove(page);
+      success();
+    }, failure);
 
   }
 );
