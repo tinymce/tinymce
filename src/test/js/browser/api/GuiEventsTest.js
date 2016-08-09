@@ -134,8 +134,11 @@ asynctest(
       store.sClear
     ]);
 
-    // TODO: Add agar support for input events.
+    // TODO: VAN-12: Add agar support for input events.
     var sTestInput = Step.pass;
+
+    // TODO: VAN-13: Add agar support for selectstart events
+    var sTestSelectStart = Step.pass;
 
     var sTestMouseover = GeneralSteps.sequence([
       Mouse.sHoverOn(page, '.focusable-span'),
@@ -187,6 +190,7 @@ asynctest(
       sTestClick,      
       sTestInput,
       sTestMouseover,
+      sTestSelectStart,
 
       sTestUnbind
     ], function () { 
