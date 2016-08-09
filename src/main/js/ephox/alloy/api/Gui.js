@@ -2,23 +2,37 @@ define(
   'ephox.alloy.api.Gui',
 
   [
+    'ephox.alloy.api.GuiEvents',
+    'ephox.alloy.events.Triggers',
     'ephox.alloy.registry.Registry',
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
+    'ephox.sugar.api.Compare',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Remove'
   ],
 
-  function (Registry, Arr, Fun, Element, Insert, Remove) {
+  function (GuiEvents, Triggers, Registry, Arr, Fun, Compare, Element, Insert, Remove) {
     var create = function ( ) {
       var container = Element.fromTag('div');
       return takeover(container);
-
     };
 
     var takeover = function (container) {
+      var isRoot = Fun.curry(Compare.eq, container);
+      
       var registry = Registry();
+
+      var lookup = function (eventName, target) {
+        return registry.find(isRoot, eventName, target);
+      };
+
+      var domEvents = GuiEvents.setup(container, {
+        triggerEvent: function (eventName, event) {
+          return Triggers.triggerUntilStopped(lookup, eventName, event);
+        }
+      });
 
       var systemApi = { };
 
@@ -43,8 +57,14 @@ define(
         Remove.remove(component.element());
       };
 
+      var destroy = function () {
+        // INVESTIGATE: something with registry?
+        domEvents.unbind();
+      };
+
       return {
         element: Fun.constant(container),
+        destroy: destroy,
         add: add,
         remove: remove
       };

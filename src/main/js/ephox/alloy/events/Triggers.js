@@ -67,7 +67,6 @@ define(
 
     return {
       triggerHandler: triggerHandler,
-      triggerOnUntilStopped: triggerOnUntilStopped,
       triggerUntilStopped: triggerUntilStopped
     };
   }

@@ -29,6 +29,7 @@ define(
     var isFirefox = PlatformDetection.detect().browser.isFirefox();
 
     var settingsSchema = ValueSchema.objOf([
+      // triggerEvent(eventName, event)
       FieldSchema.field('triggerEvent', 'triggerEvent', FieldPresence.strict(), ValueSchema.valueOf(isFunction)),
       FieldSchema.defaulted('stopBackspace', true)
     ]);
