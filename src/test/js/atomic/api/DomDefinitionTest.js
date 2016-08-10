@@ -39,8 +39,8 @@ test(
           },
           innerHtml: '<none>',
           value: '<none>',
-          defChildren: [ ],
-          domChildren: '0 children, but still specified'
+          defChildren: '<none>',
+          domChildren: '<none>'
         }, DomDefinition.defToRaw(
           DomModification.merge(definition, addStyles)
         ));

@@ -8,17 +8,15 @@ define(
     'ephox.alloy.construct.CustomDefinition',
     'ephox.alloy.dom.DomRender',
     'ephox.alloy.util.ExtraArgs',
-    'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.scullion.Cell'
   ],
 
-  function (NoContextApi, ComponentApis, ComponentEvents, CustomDefinition, DomRender, ExtraArgs, Merger, Fun, Cell) {
+  function (NoContextApi, ComponentApis, ComponentEvents, CustomDefinition, DomRender, ExtraArgs, Fun, Cell) {
     var build = function (spec) {
       var systemApi = Cell(NoContextApi());
 
       var info = CustomDefinition.toInfo(spec).getOrDie();
-      console.log('component.info', info);
       var behaviours = CustomDefinition.behaviours(info);
 
       var definition = CustomDefinition.toDefinition(info);

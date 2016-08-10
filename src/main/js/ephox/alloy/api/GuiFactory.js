@@ -49,7 +49,6 @@ define(
       }, function (factory) {
         var spec = factory(userSpec);
 
-        console.log('spec', spec);
         // Build the subcomponents
         var components = buildSubcomponents(spec);
         postprocess(spec, components);
@@ -70,10 +69,7 @@ define(
         return buildFromSpec(userSpec);
       }, Result.value);
 
-      
-      var x = component.getOrDie();
-      console.log('build.output', x);
-      return x;
+      return component.getOrDie();
     };
 
     return {

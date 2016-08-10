@@ -24,11 +24,9 @@ define(
 
     return function (name, activeApi) {
       var customApi = ValueSchema.asRaw('custom.behaviour', activeApiSchema, activeApi).getOrDie();
-      console.log('customApi', customApi);
       
       var exhibit = function (info, base) {
         return info[name]().fold(function () {
-          console.log('nothing here');
           return DomModification.nu({ });
         }, function (bInfo) {
           return customApi.exhibit(bInfo, base);
