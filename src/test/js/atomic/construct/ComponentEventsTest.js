@@ -18,11 +18,13 @@ test(
     var store = TestStore();
 
     var base = {
-      test: ComponentEvents.handler({
-        run: function () {
-          store.adder('test.base.run')();
-        }
-      })
+      'base.behaviour': {
+        'test': ComponentEvents.handler({
+          run: function () {
+            store.adder('test.base.run')();
+          }
+        })
+      }
     };
 
     var checkErr = function (expectedPart, info, behaviours) {
@@ -60,10 +62,25 @@ test(
       };
     };
 
+    // Logger.sync(
+    //   'Testing no behaviours',
+    //   function () {
+    //     check([ ], eo([ ]), [ ]);
+    //   }
+    // );
+
     Logger.sync(
-      'Testing no behaviours',
+      'Testing 1 behaviour with 1 event',
       function () {
-        check([ ], eo([ ]), [ ]);
+        check([ ], eo([ ]), [
+          behaviour('a.behaviour', {
+            'event.one': ComponentEvents.handler({
+              run: function () {
+                console.log('hi');
+              }
+            })
+          })
+        ]);
       }
     );
   }

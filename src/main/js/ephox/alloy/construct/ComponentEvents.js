@@ -9,6 +9,7 @@ define(
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
+    'ephox.highway.Merger',
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
     'ephox.perhaps.Result',
@@ -16,11 +17,11 @@ define(
     'global!Error'
   ],
 
-  function (PrioritySort, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Json, Fun, Result, Array, Error) {
-    var behaviourEvent = function (name, listener) {
+  function (PrioritySort, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Json, Fun, Result, Array, Error) {
+    var behaviourListener = function (name, listener) {
       return {
         name: Fun.constant(name),
-        listener: listener
+        listener: Fun.constant(listener)
       };
     };
 
@@ -31,13 +32,18 @@ define(
       ]), parts).getOrDie();
     };
 
+    var nameToHandlers = function (behaviours, info) {
+      var r = {};
+      Arr.each(behaviours, function (behaviour) {
+        r[behaviour.name()] = behaviour.handlers(info);        
+      });
+      return r;
+    };
+
     var combine = function (info, behaviours, base) {
       // FIX: behaviourEvents['lab.custom.definition.events'] = CustomDefinition.toEvents(info);
-      var behaviourEvents = base;
-      Arr.each(behaviours, function (behaviour) {
-        behaviourEvents[behaviour.name()] = behaviour.handlers(info);        
-      });
-      console.log('behaviourEvents', behaviourEvents);
+      var behaviourEvents = Merger.deepMerge(base, nameToHandlers(behaviours, info));
+      console.log('behaviourEvents', JSON.stringify(behaviourEvents, null, 2));
 
       // Now, with all of these events, we need to get a list of behaviours
       var eventChains = { };
@@ -46,13 +52,16 @@ define(
           // TODO: Has own property.
           var chain = Objects.readOr(eventName, [ ])(eventChains);
           chain = chain.concat([
-            behaviourEvent(behaviourName, listener)
+            behaviourListener(behaviourName, listener)
           ]);
           eventChains[eventName] = chain;
         });
       });
 
-      console.log('event.chains', eventChains);
+      // so event chains should be:
+      // { eventName => [ (behaviourName, (can,run,abort)) ] }
+
+      console.log('event.chains', JSON.stringify(eventChains, null, 2));
 
       return combineEventLists(eventChains, info.eventOrder());
     };
@@ -115,6 +124,7 @@ define(
     var combineEventLists = function (eventLists, eventOrder) {
       console.log('eventLists', eventLists);
       return Obj.map(eventLists, function (listeners, eventName) {
+        console.log('listeners', listeners);
         var combined = listeners.length === 1 ? Result.value(listeners[0].listener()) : fuse(listeners, eventOrder, eventName);
         console.log('combine.events', combined.getOr('none'), listeners);
         return combined.map(assemble);
