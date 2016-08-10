@@ -3,12 +3,18 @@ test(
 
   [
     'ephox.agar.api.RawAssertions',
+    'ephox.alloy.behaviour.CustomBehaviour',
     'ephox.alloy.construct.CustomDefinition',
     'ephox.alloy.dom.DomDefinition',
-    'ephox.alloy.test.ResultAssertions'
+    'ephox.alloy.dom.DomModification',
+    'ephox.alloy.test.ResultAssertions',
+    'ephox.boulder.api.FieldPresence',
+    'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.ValueSchema',
+    'ephox.peanut.Fun'
   ],
 
-  function (RawAssertions, CustomDefinition, DomDefinition, ResultAssertions) {
+  function (RawAssertions, CustomBehaviour, CustomDefinition, DomDefinition, DomModification, ResultAssertions, FieldPresence, FieldSchema, ValueSchema, Fun) {
     var checkErr = function (label, expectedPart, spec) {
       ResultAssertions.checkErr(
         label,
@@ -57,6 +63,65 @@ test(
       },
       components: [ ]
     });
+
+    checkDomVal('Basics supplied with behaviour that adds classes but does not use it', {
+      tag: 'span',
+      classes: [ ],
+      attributes: { },
+      styles: { },
+      value: '<none>',
+      innerHtml: '<none>',
+      defChildren: [],
+      domChildren: '0 children, but still specified'
+    }, {
+      dom: {
+        tag: 'span'
+      },
+      components: [ ],
+      behaviours: [
+        CustomBehaviour('behaviourA', {
+          exhibit: function (info, base) {
+            return DomModification.nu({
+              classes: [ 'added-class-a' ]
+            });
+          },
+
+          schema: Fun.constant(
+            FieldSchema.field('a', 'a', FieldPresence.asOption(), ValueSchema.objOf([
+              FieldSchema.strict('a')
+            ]))
+          )
+        })
+      ]
+    });
+
+    checkErr('Basics supplied with behaviour that adds classes and does have it but does not follow schema', 
+      '*strict* value for "a"', 
+      {
+        dom: {
+          tag: 'span'
+        },
+        components: [ ],
+        behaviours: [
+          CustomBehaviour('behaviourA', {
+            exhibit: function (info, base) {
+              return DomModification.nu({
+                classes: [ 'added-class-a' ]
+              });
+            },
+
+            schema: Fun.constant(
+              ValueSchema.objOf([
+                FieldSchema.strict('a')
+              ])
+            )
+          })
+        ],
+        behaviourA: {
+
+        }
+      }
+    );
 
   }
 
