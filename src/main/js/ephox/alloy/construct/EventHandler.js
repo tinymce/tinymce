@@ -43,6 +43,7 @@ define(
       });
 
       var abort = any(handlers, function (handler) {
+        console.log('abort.handler', handler);
         return handler.abort;
       });
 

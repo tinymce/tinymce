@@ -32,12 +32,13 @@ test(
         ComponentEvents.combine(info, behaviours, base);
         continued = true;        
       } catch (err) {
-        
+        // Not using message when coming from getOrDie
+        var errMessage = err.message !== undefined ? err.message : err;
         RawAssertions.assertEq(
-          'Checking error of combined events. Expecting to contain("' + expectedPart + '")\nActual: ' + err,
+          'Checking error of combined events. Expecting to contain("' + expectedPart + '")\nActual: ' + errMessage,
           true,
-          // Not using message because coming from getOrDie
-          err.indexOf(expectedPart) > -1
+          
+          errMessage.indexOf(expectedPart) > -1
         );
       }
 
@@ -51,7 +52,9 @@ test(
       var events = Obj.keys(combined).sort();
       Arr.each(events, function (eventName) {
         console.log('eventname', eventName, combined[eventName]);
-        combined[eventName]();
+        combined[eventName]('component', {
+          stop: store.adder(eventName + '.stop')
+        });
       });
 
       store.assertEq('Checking combined api', expected);
@@ -68,7 +71,7 @@ test(
       function () {
         check([
           'base.0'
-        ], eo([ ]), [ ]);
+        ], eo({}), [ ]);
       }
     );
 
@@ -78,7 +81,7 @@ test(
         check([
           'base.0',
           'a.one'
-        ], eo([ ]), [
+        ], eo({}), [
           behaviour('a.behaviour', {
             'event.1': EventHandler.nu({
               run: store.adder('a.one')
@@ -95,7 +98,7 @@ test(
           'base.0',
           'a.one',
           'a.two'
-        ], eo([ ]), [
+        ], eo({}), [
           behaviour('a.behaviour', {
             'event.1': EventHandler.nu({
               run: store.adder('a.one')
@@ -113,7 +116,7 @@ test(
       function () {
         checkErr(
           'event ordering',
-          eo([ ]), [
+          eo({}), [
             behaviour('a.behaviour', {
               'event.1': EventHandler.nu({
                 run: store.adder('a.one')
@@ -131,7 +134,85 @@ test(
             }),
             behaviour('b.behaviour', {
               'event.3': EventHandler.nu({
-                run: store.adder('b.three')
+                run: store.adder('b.three'),
+                abort: function () {
+                  store.adder('b.three.abort')();
+                  return true;
+                }
+              })
+            })
+          ]
+        );
+      }
+    );
+
+    Logger.sync(
+      'Testing complex behaviour with many events and not quite complete ordering',
+      function () {
+        checkErr(
+          'entry for b.behaviour',
+          eo({
+            'event.3': [ 'a.behaviour' ]
+          }), [
+            behaviour('a.behaviour', {
+              'event.1': EventHandler.nu({
+                run: store.adder('a.one')
+              }),
+              'event.2': EventHandler.nu({
+                run: store.adder('a.two')
+              }),
+              'event.3': EventHandler.nu({
+                can: function () {
+                  store.adder('a.three.cannot')();
+                  return false;
+                },
+                run: store.adder('a.three')
+              })
+            }),
+            behaviour('b.behaviour', {
+              'event.3': EventHandler.nu({
+                run: store.adder('b.three'),
+                abort: function () {
+                  store.adder('b.three.abort')();
+                  return true;
+                }
+              })
+            })
+          ]
+        );
+      }
+    );
+
+    Logger.sync(
+      'Testing complex behaviour with many events and *complete* ordering',
+      function () {
+        check(
+          [ ],
+          eo({
+            'event.3': [ 'a.behaviour', 'b.behaviour' ]
+          }), [
+            behaviour('a.behaviour', {
+              'event.1': EventHandler.nu({
+                run: store.adder('a.one')
+              }),
+              'event.2': EventHandler.nu({
+                run: store.adder('a.two')
+              }),
+              'event.3': EventHandler.nu({
+                can: function () {
+                  store.adder('a.three.cannot')();
+                  return false;
+                },
+                run: store.adder('a.three')
+              })
+            }),
+            behaviour('b.behaviour', {
+              'event.3': EventHandler.nu({
+                run: store.adder('b.three'),
+                abort: function () {
+                  store.adder('b.three.abort')();
+                  return true;
+                }
               })
             })
           ]

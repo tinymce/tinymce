@@ -20,16 +20,18 @@ define(
      * The process of combining a component's events
      *
      * - Generate all the handlers based on the behaviour and the base events
-     * - Create an index (eventName -> [(behaviourName, handler)])
+     * - Create an index (eventName -> [tuples(behaviourName, handler)])
      * - Map over this index:
      *    - if the list == length 1, then collapse it to the head value
      *    - if the list > length 1, then:
-     *        - sort the behaviours for that event using eventOrder[event]. Throw error if insuccifient
-     *        - generate a can, run, and abort that combines them in the sorted order
+     *        - sort the tuples using the behavour name ordering specified using 
+                eventOrder[event]. Throw error if insuccifient
+     *        - generate a can, run, and abort that combines the handlers of the 
+                tuples in the sorted order
      *
      * So at the end, you should have (eventName -> single function)
      */ 
-    var behaviourHandler = function (name, handler) {
+    var behaviourTuple = function (name, handler) {
       return {
         name: Fun.constant(name),
         handler: Fun.constant(handler)
@@ -49,7 +51,7 @@ define(
       var behaviourEvents = Merger.deepMerge(base, nameToHandlers(behaviours, info));
       
       // Now, with all of these events, we need to index by event name
-      return ObjIndex.byInnerKey(behaviourEvents, behaviourHandler);
+      return ObjIndex.byInnerKey(behaviourEvents, behaviourTuple);
     };
 
     var combine = function (info, behaviours, base) {
@@ -58,9 +60,7 @@ define(
     };
 
     var assemble = function (handler) {
-      console.log('assemble.handler', handler);
       return function (component, simulatedEvent/*, others */) {
-        console.log('running.handler', handler);
         var args = Array.prototype.slice.call(arguments, 0);
         if (handler.abort.apply(undefined, args)) {
           simulatedEvent.stop();
@@ -70,24 +70,27 @@ define(
       };
     };
 
-    var missingOrderError = function (eventName, handlers) {
+    var missingOrderError = function (eventName, tuples) {
       return new Result.error(
         'The event (' + eventName + ') has more than one behaviour that listens to it.\nWhen this occurs, you must ' + 
         'specify an event ordering for the behaviours in your spec (e.g. [ "listing", "toggling" ]).\nThe behaviours that ' + 
-        'can trigger it are: ' + Json.stringify(Arr.map(handlers, function (c) { return c.name(); }), null, 2)
+        'can trigger it are: ' + Json.stringify(Arr.map(tuples, function (c) { return c.name(); }), null, 2)
       );        
     };
 
-    var fuse = function (handlers, eventOrder, eventName) {
-      // ASSUMPTION: handlers.length will never be 0, because it wouldn't have an entry if it was 0
+    var fuse = function (tuples, eventOrder, eventName) {
+      // ASSUMPTION: tuples.length will never be 0, because it wouldn't have an entry if it was 0
       var order = eventOrder[eventName];
-      if (! order) return missingOrderError(eventName, handlers);
-      else return PrioritySort.sortKeys('Event', 'name', handlers, order).map(EventHandler.fuse);
+      if (! order) return missingOrderError(eventName, tuples);
+      else return PrioritySort.sortKeys('Event', 'name', tuples, order).map(function (sortedTuples) {
+        var handlers = Arr.map(sortedTuples, function (tuple) { return tuple.handler(); });
+        return EventHandler.fuse(handlers);
+      });
     };
 
     var combineGroups = function (byEventName, eventOrder) {
-      return Obj.map(byEventName, function (handlers, eventName) {
-        var combined = handlers.length === 1 ? Result.value(handlers[0].handler()) : fuse(handlers, eventOrder, eventName);
+      return Obj.map(byEventName, function (tuples, eventName) {
+        var combined = tuples.length === 1 ? Result.value(tuples[0].handler()) : fuse(tuples, eventOrder, eventName);
         return combined.map(assemble).getOrDie();
       });
     };
