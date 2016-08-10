@@ -14,7 +14,6 @@ define(
           return e.message !== undefined ? e.message : e;
         }).join('');
         // Not using message when coming from getOrDie
-        console.log(errMessage);
         RawAssertions.assertEq(
           label + 'Expecting to contain("' + expectedPart + '")\nActual: ' + errMessage,
           true,
@@ -30,7 +29,6 @@ define(
       actual.fold(function (err) {
         assert.fail('Unexpected error: ', err);
       }, function (value) {
-        console.log('value', value);
         assertValue(value);
       });
     };
