@@ -35,7 +35,7 @@ define(
       Classes.add(subject, definition.classes().getOr([ ]));
       Attr.setAll(subject, definition.attributes().getOr({ }));
       Css.setAll(subject, definition.styles().getOr({ }));
-      // Remember: Order of innerHTMl vs children is important.
+      // Remember: Order of innerHtml vs children is important.
       Html.set(subject, definition.innerHtml().getOr(''));
 
       // Children are already elements.

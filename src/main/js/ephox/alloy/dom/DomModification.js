@@ -65,7 +65,6 @@ define(
         raw.value = v;
       });
 
-      console.log('raw', raw);
       return DomDefinition.nu(raw);
     };
 

@@ -24,7 +24,6 @@ define(
     };
 
     var defToRaw = function (defn) {
-      console.log('defn', defn.classes());
       return {
         tag: defn.tag(),
         classes: defn.classes().getOr([ ]),

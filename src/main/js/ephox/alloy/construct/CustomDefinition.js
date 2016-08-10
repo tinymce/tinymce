@@ -59,7 +59,6 @@ define(
     };
 
     var toDefinition = function (info) {
-      console.log('toDefinition', info);
       var base = {
         tag: info.dom().tag(),
         classes: info.dom().classes(),
