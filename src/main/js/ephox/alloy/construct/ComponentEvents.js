@@ -41,7 +41,7 @@ define(
 
     var combine = function (info, behaviours, base) {
       var byEventName = groupByEvents(info, behaviours, base);
-      return combineEventLists(byEventName, info.eventOrder());
+      return combineGroups(byEventName, info.eventOrder());
     };
 
     var assemble = function (handler) {
@@ -57,26 +57,23 @@ define(
       };
     };
 
-    var missingOrderError = function (eventName, listeners) {
+    var missingOrderError = function (eventName, handlers) {
       return new Result.error(
         'The event (' + eventName + ') has more than one behaviour that listens to it.\nWhen this occurs, you must ' + 
         'specify an event ordering for the behaviours in your spec (e.g. [ "listing", "toggling" ]).\nThe behaviours that ' + 
-        'can trigger it are: ' + Json.stringify(Arr.map(listeners, function (c) { return c.name(); }), null, 2)
+        'can trigger it are: ' + Json.stringify(Arr.map(handlers, function (c) { return c.name(); }), null, 2)
       );        
     };
 
-    var fuse = function (listeners, eventOrder, eventName) {
+    var fuse = function (handlers, eventOrder, eventName) {
       var order = eventOrder[eventName];
-      if (! order) return missingOrderError(eventName, listeners);
-      else return PrioritySort.sortKeys('Event', 'name', listeners, order).map(EventHandler.fuse);
+      if (! order) return missingOrderError(eventName, handlers);
+      else return PrioritySort.sortKeys('Event', 'name', handlers, order).map(EventHandler.fuse);
     };
 
-    var combineEventLists = function (eventLists, eventOrder) {
-      console.log('eventLists', eventLists);
-      return Obj.map(eventLists, function (listeners, eventName) {
-        console.log('listeners', listeners);
-        var combined = listeners.length === 1 ? Result.value(listeners[0].handler()) : fuse(listeners, eventOrder, eventName);
-        console.log('combine.events', combined.getOr('none'), listeners);
+    var combineGroups = function (byEventName, eventOrder) {
+      return Obj.map(byEventName, function (handlers, eventName) {
+        var combined = handlers.length === 1 ? Result.value(handlers[0].handler()) : fuse(handlers, eventOrder, eventName);
         return combined.map(assemble).getOrDie();
       });
     };
