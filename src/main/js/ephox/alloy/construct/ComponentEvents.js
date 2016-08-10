@@ -98,8 +98,6 @@ define(
         });
       });
 
-      console.log('r', r);
-
       return Objects.consolidate(r, {});
     };
    
