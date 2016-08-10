@@ -20,7 +20,7 @@ test(
 
     var base = {
       'base.behaviour': {
-        'event.0': EventHandler({
+        'event.0': EventHandler.nu({
           run: store.adder('base.0')
         })
       }
@@ -80,7 +80,7 @@ test(
           'a.one'
         ], eo([ ]), [
           behaviour('a.behaviour', {
-            'event.1': EventHandler({
+            'event.1': EventHandler.nu({
               run: store.adder('a.one')
             })
           })
@@ -97,10 +97,10 @@ test(
           'a.two'
         ], eo([ ]), [
           behaviour('a.behaviour', {
-            'event.1': EventHandler({
+            'event.1': EventHandler.nu({
               run: store.adder('a.one')
             }),
-            'event.2': EventHandler({
+            'event.2': EventHandler.nu({
               run: store.adder('a.two')
             })
           })
@@ -115,13 +115,13 @@ test(
           'event ordering',
           eo([ ]), [
             behaviour('a.behaviour', {
-              'event.1': EventHandler({
+              'event.1': EventHandler.nu({
                 run: store.adder('a.one')
               }),
-              'event.2': EventHandler({
+              'event.2': EventHandler.nu({
                 run: store.adder('a.two')
               }),
-              'event.3': EventHandler({
+              'event.3': EventHandler.nu({
                 can: function () {
                   store.adder('a.three.cannot')();
                   return false;
@@ -130,7 +130,7 @@ test(
               })
             }),
             behaviour('b.behaviour', {
-              'event.3': EventHandler({
+              'event.3': EventHandler.nu({
                 run: store.adder('b.three')
               })
             })

@@ -5,10 +5,6 @@ define(
     'ephox.alloy.construct.EventFusion',
     'ephox.alloy.util.ObjIndex',
     'ephox.alloy.util.PrioritySort',
-    'ephox.boulder.api.FieldPresence',
-    'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects',
-    'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.highway.Merger',
@@ -19,7 +15,7 @@ define(
     'global!Error'
   ],
 
-  function (EventFusion, ObjIndex, PrioritySort, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Json, Fun, Result, Array, Error) {
+  function (EventFusion, ObjIndex, PrioritySort, Arr, Obj, Merger, Json, Fun, Result, Array, Error) {
     var behaviourHandler = function (name, handler) {
       return {
         name: Fun.constant(name),
