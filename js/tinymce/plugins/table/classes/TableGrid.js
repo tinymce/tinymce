@@ -19,8 +19,9 @@
 define("tinymce/tableplugin/TableGrid", [
 	"tinymce/util/Tools",
 	"tinymce/Env",
-	"tinymce/tableplugin/Utils"
-], function(Tools, Env, Utils) {
+	"tinymce/tableplugin/Utils",
+	"tinymce/tableplugin/SplitCols"
+], function(Tools, Env, Utils, SplitCols) {
 	var each = Tools.each, getSpanVal = Utils.getSpanVal;
 
 	return function(editor, table, selectedCell) {
@@ -688,38 +689,17 @@ define("tinymce/tableplugin/TableGrid", [
 		}
 
 		function pasteRows(rows, before) {
-			var selectedRows = getSelectedRows(),
-				targetRow = selectedRows[before ? 0 : selectedRows.length - 1],
-				targetCellCount = targetRow.cells.length,
-				newRows;
+			var targetRow, newRows;
 
 			// Nothing to paste
 			if (!rows) {
 				return;
 			}
 
+			targetRow = SplitCols.splitAt(grid, startPos.x, startPos.y, before);
+
 			newRows = Tools.map(rows, function (row) {
 				return row.cloneNode(true);
-			});
-
-			// Calc target cell count
-			each(grid, function(row) {
-				var match;
-
-				targetCellCount = 0;
-				each(row, function(cell) {
-					if (cell.real) {
-						targetCellCount += cell.colspan;
-					}
-
-					if (cell.elm.parentNode == targetRow) {
-						match = 1;
-					}
-				});
-
-				if (match) {
-					return false;
-				}
 			});
 
 			if (!before) {
@@ -741,12 +721,12 @@ define("tinymce/tableplugin/TableGrid", [
 				}
 
 				// Needs more cells
-				for (i = cellCount; i < targetCellCount; i++) {
+				for (i = cellCount; i < gridWidth; i++) {
 					row.appendChild(fireNewCell(cloneCell(row.cells[cellCount - 1])));
 				}
 
 				// Needs less cells
-				for (i = targetCellCount; i < cellCount; i++) {
+				for (i = gridWidth; i < cellCount; i++) {
 					dom.remove(row.cells[i]);
 				}
 
@@ -931,6 +911,10 @@ define("tinymce/tableplugin/TableGrid", [
 			return false;
 		}
 
+		function splitCols(before) {
+			SplitCols.splitAt(grid, startPos.x, startPos.y, before);
+		}
+
 		table = table || dom.getParent(selection.getStart(true), 'table');
 
 		buildGrid();
@@ -949,6 +933,7 @@ define("tinymce/tableplugin/TableGrid", [
 			merge: merge,
 			insertRow: insertRow,
 			insertCol: insertCol,
+			splitCols: splitCols,
 			deleteCols: deleteCols,
 			deleteRows: deleteRows,
 			cutRows: cutRows,
