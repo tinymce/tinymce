@@ -65,11 +65,7 @@ define(
         }
       });
 
-      console.log('apis', apis);
-      console.log('consolidated', JSON.stringify(Objects.consolidate(apis, {}).getOr('<none>'), null, 2));
-
       return Objects.consolidate(apis, {}).getOrDie();
-      return Obj.map(output, function (o) { return o.getOrDie(); });
     };
 
     return {
