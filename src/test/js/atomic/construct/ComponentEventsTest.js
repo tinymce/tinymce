@@ -49,7 +49,7 @@ test(
       console.log('check.combined', combined);;
       var events = Obj.keys(combined).sort();
       Arr.each(events, function (eventName) {
-
+        console.log('eventname', eventName, combined[eventName]);
         combined[eventName]();
       });
 

@@ -2,6 +2,7 @@ define(
   'ephox.alloy.construct.ComponentEvents',
 
   [
+    'ephox.alloy.util.ObjIndex',
     'ephox.alloy.util.PrioritySort',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
@@ -17,7 +18,7 @@ define(
     'global!Error'
   ],
 
-  function (PrioritySort, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Json, Fun, Result, Array, Error) {
+  function (ObjIndex, PrioritySort, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Json, Fun, Result, Array, Error) {
     var behaviourListener = function (name, listener) {
       return {
         name: Fun.constant(name),
@@ -28,7 +29,8 @@ define(
     var handler = function (parts) {
       return ValueSchema.asRaw('Extracting handler', ValueSchema.objOf([
         FieldSchema.field('can', 'can', FieldPresence.defaulted(Fun.constant(true)), ValueSchema.anyValue()),
-        FieldSchema.field('abort', 'abort', FieldPresence.defaulted(Fun.constant(false)), ValueSchema.anyValue())
+        FieldSchema.field('abort', 'abort', FieldPresence.defaulted(Fun.constant(false)), ValueSchema.anyValue()),
+        FieldSchema.field('run', 'run', FieldPresence.defaulted(Fun.noop), ValueSchema.anyValue())
       ]), parts).getOrDie();
     };
 
@@ -46,29 +48,22 @@ define(
       console.log('behaviourEvents', JSON.stringify(behaviourEvents, null, 2));
 
       // Now, with all of these events, we need to get a list of behaviours
-      var eventChains = { };
-      Obj.each(behaviourEvents, function (events, behaviourName) {
-        Obj.each(events, function (listener, eventName) {
-          // TODO: Has own property.
-          var chain = Objects.readOr(eventName, [ ])(eventChains);
-          chain = chain.concat([
-            behaviourListener(behaviourName, listener)
-          ]);
-          eventChains[eventName] = chain;
-        });
-      });
+      var eventChains = ObjIndex.byInnerKey(behaviourEvents, behaviourListener);
 
       // so event chains should be:
       // { eventName => [ (behaviourName, (can,run,abort)) ] }
 
       console.log('event.chains', JSON.stringify(eventChains, null, 2));
 
-      return combineEventLists(eventChains, info.eventOrder());
+      var output = combineEventLists(eventChains, info.eventOrder());
+      console.log('output', output);
+      return output;
     };
 
     var assemble = function (listener) {
       console.log('assemble.listener', listener);
       return function (component, simulatedEvent/*, others */) {
+        console.log('running.listener', listener);
         var args = Array.prototype.slice.call(arguments, 0);
         if (listener.abort.apply(undefined, args)) {
           simulatedEvent.stop();
@@ -127,7 +122,7 @@ define(
         console.log('listeners', listeners);
         var combined = listeners.length === 1 ? Result.value(listeners[0].listener()) : fuse(listeners, eventOrder, eventName);
         console.log('combine.events', combined.getOr('none'), listeners);
-        return combined.map(assemble);
+        return combined.map(assemble).getOrDie();
       });
     };
    
