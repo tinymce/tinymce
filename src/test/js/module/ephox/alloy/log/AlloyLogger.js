@@ -6,6 +6,7 @@ define(
   ],
 
   function () {
+    // Used for atomic testing where window is not available.
     var element = function (elem) {
       return elem;
     };

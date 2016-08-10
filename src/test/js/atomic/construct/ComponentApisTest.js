@@ -7,13 +7,14 @@ test(
     'ephox.alloy.construct.ComponentApis',
     'ephox.alloy.test.ResultAssertions',
     'ephox.alloy.test.TestStore',
+    'ephox.alloy.util.ExtraArgs',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.peanut.Fun',
     'ephox.scullion.Struct'
   ],
 
-  function (Logger, RawAssertions, ComponentApis, ResultAssertions, TestStore, Arr, Obj, Fun, Struct) {
+  function (Logger, RawAssertions, ComponentApis, ResultAssertions, TestStore, ExtraArgs, Arr, Obj, Fun, Struct) {
     var behaviour = Struct.immutable('name', 'apis');
 
     var checkErr = function (expectedPart, info, behaviours) {
@@ -21,7 +22,7 @@ test(
         'Checking error of combined API',
         expectedPart,
         function () {
-          return ComponentApis.combine(info, behaviours, [ 'extra-args' ]);
+          return ComponentApis.combine(info, behaviours, [ ExtraArgs.eager('extra-args') ]);
         }
       );
     };
@@ -33,7 +34,7 @@ test(
         'Checking combined API',
         function () {
           store.clear();
-          return ComponentApis.combine(info, behaviours, [ 'extra-args' ]);
+          return ComponentApis.combine(info, behaviours, [ ExtraArgs.eager('extra-args') ]);
         },
         function (value) {
           var apis = Obj.keys(value).sort();

@@ -3,10 +3,17 @@ define(
 
   [
     'ephox.alloy.api.NoContextApi',
+    'ephox.alloy.construct.ComponentApis',
+    'ephox.alloy.construct.ComponentEvents',
+    'ephox.alloy.construct.CustomDefinition',
+    'ephox.alloy.dom.DomRender',
+    'ephox.alloy.util.ExtraArgs',
+    'ephox.highway.Merger',
+    'ephox.peanut.Fun',
     'ephox.scullion.Cell'
   ],
 
-  function (NoContextApi, Cell) {
+  function (NoContextApi, ComponentApis, ComponentEvents, CustomDefinition, DomRender, ExtraArgs, Merger, Fun, Cell) {
     var build = function (spec) {
       var systemApi = Cell(NoContextApi());
 
@@ -14,29 +21,16 @@ define(
       var behaviours = CustomDefinition.behaviours(info);
 
       var definition = CustomDefinition.toDefinition(info);
-      var item = LabRender.renderToDom(definition);
+      var item = DomRender.renderToDom(definition);
 
-      var rawEvents = combineEvents(info, behaviours);
+      var baseEvents = {
+        'alloy.base.behaviour': CustomDefinition.toEvents(info)
+      };
 
-      var events = Obj.map(rawEvents, function (eventInfo, eventType) {
-        if (eventInfo.can === undefined && eventInfo.run === undefined) throw new Error('Event type: ' + eventType + ' missing both "can" and "run"');
-        return function (labby, labevent/*, ... */) {
-
-          var args = Array.prototype.slice.call(arguments, 0);
-          var eventCan = eventInfo.can !== undefined ? eventInfo.can : Fun.constant(true);
-          var eventRun = eventInfo.run !== undefined ? eventInfo.run : Fun.noop;
-          var eventAbort = eventInfo.abort !== undefined ? eventInfo.abort: Fun.constant(false);
-
-          if (eventAbort.apply(undefined, args)) {
-            labevent.stop();
-          } else if (eventCan.apply(undefined, args)) {
-            eventRun.apply(undefined, args);
-          }
-        };
-      });
-
-      console.log('events', events);
-      var apis = combineApis(info, behaviours);
+      var events = ComponentEvents.combine(info, behaviours, baseEvents);
+      var apis = ComponentApis.combine(info, behaviours, [
+        ExtraArgs.lazy(function () { return self; })
+      ]);
 
       var connect = function (newApi) {
         systemApi.set(newApi);
@@ -46,7 +40,7 @@ define(
         return systemApi.get().debugLabel();
       };
 
-      return Merger.deepMerge({
+      var self = Merger.deepMerge({
         getSystem: systemApi.get,
         debugSystem: debugSystem,
         connect: connect,
@@ -64,6 +58,5 @@ define(
     return {
       build: build
     };
-    return null;
   }
 );

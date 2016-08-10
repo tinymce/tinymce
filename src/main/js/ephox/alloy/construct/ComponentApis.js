@@ -2,6 +2,7 @@ define(
   'ephox.alloy.construct.ComponentApis',
 
   [
+    'ephox.alloy.util.ExtraArgs',
     'ephox.alloy.util.ObjIndex',
     'ephox.alloy.util.PrioritySort',
     'ephox.boulder.api.Objects',
@@ -14,7 +15,7 @@ define(
     'global!Error'
   ],
 
-  function (ObjIndex, PrioritySort, Objects, Arr, Obj, Json, Fun, Result, Array, Error) {
+  function (ExtraArgs, ObjIndex, PrioritySort, Objects, Arr, Obj, Json, Fun, Result, Array, Error) {
     var behaviourApi = function (name, invocation) {
       return {
         name: Fun.constant(name),
@@ -34,8 +35,10 @@ define(
       return PrioritySort.sortKeys(apiName, 'name', chain, order).map(function (sorted) {
         var handler = function () {
           var args = Array.prototype.slice.call(arguments, 0);
+          var extra = ExtraArgs.get(extraArgs);
           return Arr.foldl(sorted, function (acc, bApi) {
-            return bApi.invocation.apply(undefined, extraArgs.concat(args));
+            // Derive any lazy arguments.
+            return bApi.invocation.apply(undefined, extra.concat(args));
           }, undefined);
         };
 
