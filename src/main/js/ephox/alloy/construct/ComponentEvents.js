@@ -26,11 +26,11 @@ define(
      *    - if the list == length 1, then collapse it to the head value
      *    - if the list > length 1, then:
      *        - sort the tuples using the behavour name ordering specified using 
-                eventOrder[event]. Throw error if insuccifient
+                eventOrder[event]. Return error if insuccifient
      *        - generate a can, run, and abort that combines the handlers of the 
                 tuples in the sorted order
      *
-     * So at the end, you should have (eventName -> single function)
+     * So at the end, you should have Result(eventName -> single function)
      */ 
     var behaviourTuple = function (name, handler) {
       return {
