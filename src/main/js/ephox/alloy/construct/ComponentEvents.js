@@ -26,7 +26,7 @@ define(
      *    - if the list == length 1, then collapse it to the head value
      *    - if the list > length 1, then:
      *        - sort the tuples using the behavour name ordering specified using 
-                eventOrder[event]. Return error if insuccifient
+                eventOrder[event]. Return error if insufficient
      *        - generate a can, run, and abort that combines the handlers of the 
                 tuples in the sorted order
      *
