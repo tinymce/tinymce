@@ -23,7 +23,7 @@ define(
         });
         return Result.value(sorted);
       } catch (err) {
-        return Result.error(err);
+        return Result.error([ err ]);
       }
     };
 

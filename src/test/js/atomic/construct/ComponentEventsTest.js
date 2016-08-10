@@ -33,7 +33,9 @@ test(
         continued = true;        
       } catch (err) {
         // Not using message when coming from getOrDie
-        var errMessage = err.message !== undefined ? err.message : err;
+        var errMessage = Arr.map(err, function (e) {
+          return e.message !== undefined ? e.message : e;
+        }).join('');
         RawAssertions.assertEq(
           'Checking error of combined events. Expecting to contain("' + expectedPart + '")\nActual: ' + errMessage,
           true,

@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.util.ObjIndex',
     'ephox.alloy.util.PrioritySort',
+    'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.numerosity.api.JSON',
@@ -13,12 +14,33 @@ define(
     'global!Error'
   ],
 
-  function (ObjIndex, PrioritySort, Arr, Obj, Json, Fun, Result, Array, Error) {
+  function (ObjIndex, PrioritySort, Objects, Arr, Obj, Json, Fun, Result, Array, Error) {
     var behaviourApi = function (name, invocation) {
       return {
         name: Fun.constant(name),
         invocation: invocation
       };
+    };
+
+    var missingOrder = function (chain, apiName) {
+      return new Result.error([
+        'The API call (' + apiName + ') has more than one behaviour that triggers it.\nWhen this occurs, you must ' + 
+        'specify an API ordering for the behaviours in your spec (e.g. [ "listing", "toggling" ]).\nThe behaviours that ' + 
+        'can trigger it are: ' + Json.stringify(Arr.map(chain, function (c) { return c.name(); }), null, 2)
+      ]);     
+    };
+
+    var sortByOrder = function (chain, apiName, order, extraArgs) {
+      return PrioritySort.sortKeys(apiName, 'name', chain, order).map(function (sorted) {
+        var handler = function () {
+          var args = Array.prototype.slice.call(arguments, 0);
+          return Arr.foldl(sorted, function (acc, bApi) {
+            return bApi.invocation.apply(undefined, extraArgs.concat(args));
+          }, undefined);
+        };
+
+        return Objects.wrap(apiName, handler);
+      });
     };
 
     var combine = function (info, behaviours, extraArgs) {
@@ -34,28 +56,19 @@ define(
       var apiOrder =  info.apiOrder();
 
       // Now, with this API index, we need to combine things. Sort them in order.
-      var output = Obj.map(byApiName, function (chain, apiName) {
+      var apis = Obj.mapToArray(byApiName, function (chain, apiName) {
         if (chain.length > 1) {
           var order = apiOrder[apiName];
-          if (! order) return new Result.error(
-            'The API call (' + apiName + ') has more than one behaviour that triggers it.\nWhen this occurs, you must ' + 
-            'specify an API ordering for the behaviours in your spec (e.g. [ "listing", "toggling" ]).\nThe behaviours that ' + 
-            'can trigger it are: ' + Json.stringify(Arr.map(chain, function (c) { return c.b; }), null, 2)
-          );        
-
-          var sorted = PrioritySort.sortKeys(apiName, 'name', chain, order).getOrDie();
-
-          return Result.value(function () {
-            var args = Array.prototype.slice.call(arguments, 0);
-            return Arr.foldl(sorted, function (acc, bApi) {
-              return bApi.invocation.apply(undefined, extraArgs.concat(args));
-            }, undefined);
-          });
+          return order === undefined ? missingOrder(chain, apiName) : sortByOrder(chain, apiName, order, extraArgs);
         } else {
-          return Result.value(chain[0].invocation);
+          return Result.value(Objects.wrap(apiName, chain[0].invocation));
         }
       });
 
+      console.log('apis', apis);
+      console.log('consolidated', JSON.stringify(Objects.consolidate(apis, {}).getOr('<none>'), null, 2));
+
+      return Objects.consolidate(apis, {}).getOrDie();
       return Obj.map(output, function (o) { return o.getOrDie(); });
     };
 

@@ -14,7 +14,10 @@ test(
     var checkErr = function (expected, input, order) {
       var actual = PrioritySort.sortKeys('test.sort', 'letter', input, order);
       actual.fold(function (err) {
-        RawAssertions.assertEq('Checking the error of priority sort', expected, err.message);
+        var errMessage = Arr.map(err, function (e) {
+          return e.message !== undefined ? e.message : e;
+        }).join('');
+        RawAssertions.assertEq('Checking the error of priority sort', expected, errMessage);
       }, function (val) {
         assert.fail('Priority sort should have thrown error: ' + expected + '\nWas: ' + Json.stringify(val, null, 2));
       });
