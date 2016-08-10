@@ -20,7 +20,6 @@ define(
       return r;
     };
 
-
     return {
       wrap: wrap,
       wrapAll: wrapAll
