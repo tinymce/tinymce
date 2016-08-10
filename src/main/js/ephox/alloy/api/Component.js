@@ -31,8 +31,8 @@ define(
       // Curry a lazy argument into the API. Invoke it before calling.
       var apis = ComponentApis.combine(info, behaviours, [
         ExtraArgs.lazy(function () { return self; })
-      ]);
-
+      ]).getOrDie();
+      
       var connect = function (newApi) {
         systemApi.set(newApi);
       };

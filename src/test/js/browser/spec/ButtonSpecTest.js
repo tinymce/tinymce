@@ -76,7 +76,6 @@ asynctest(
         // Test executing
         testExecuting,
 
-
         Step.wait(100000000000)
       ];
     }, success, failure);

@@ -2,6 +2,8 @@ asynctest(
   'CustomComponentTest',
  
   [
+    'ephox.agar.api.ApproxStructure',
+    'ephox.agar.api.Assertions',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.behaviour.CustomBehaviour',
@@ -13,7 +15,7 @@ asynctest(
     'ephox.peanut.Fun'
   ],
  
-  function (Step, GuiFactory, CustomBehaviour, EventHandler, DomModification, GuiSetup, FieldSchema, ValueSchema, Fun) {
+  function (ApproxStructure, Assertions, Step, GuiFactory, CustomBehaviour, EventHandler, DomModification, GuiSetup, FieldSchema, ValueSchema, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -26,7 +28,7 @@ asynctest(
         },
 
         handlers: Fun.constant({
-          'lab.custom.test.event': EventHandler.nu({
+          'alloy.custom.test.event': EventHandler.nu({
             run: function (component) {
               store.adder('behaviour.a.event')();
             }
@@ -52,7 +54,7 @@ asynctest(
         },
         
         handlers: Fun.constant({
-          'lab.custom.test.event': EventHandler.nu({
+          'alloy.custom.test.event': EventHandler.nu({
             run: function (component) {
               store.adder('behaviour.b.event')();
             }
@@ -84,18 +86,75 @@ asynctest(
           attr: 'exhibition'
         },
         apiOrder: {
-          // 'behave': [ 'behaviourB', 'behaviourA' ]
+          'behave': [ 'behaviourB', 'behaviourA' ]
         },
 
         eventOrder: {
-          'lab.custom.test.event': [ 'behaviourA', 'behaviourB' ]
+          'alloy.custom.test.event': [ 'behaviourA', 'behaviourB' ]
         }
       });
 
     }, function (doc, body, gui, component, store) {
       return [
-        Step.debugging
-      ]
+        Assertions.sAssertStructure(
+          'Checking initial DOM modification',
+          ApproxStructure.build(function (s, str, arr) {
+            return s.element('div', {
+              classes: [ arr.has('behaviour-a-exhibit') ],
+              attrs: {
+                'behaviour-b-exhibit': str.is('exhibition')
+              }
+            });
+          }),
+          component.element()
+        ),
+
+        store.sAssertEq('Nothing in store yet', [ ]),
+
+        Step.sync(function () {
+          component.apis().behave();
+        }),
+
+        store.sAssertEq('Should now have a behaviour.a and behaviour.b log with b first', [
+          'behaviour.b.apis.behave',
+          'behaviour.a.apis.behave'
+        ]),
+
+        store.sClear,
+
+        Step.sync(function () {
+          component.apis().behaveA();
+        }),
+
+        store.sAssertEq('Should now have a behaviour.a and behaviour.b log', [
+          'behaviour.a.apis.behaveA'
+        ]),
+
+        store.sClear,
+
+        Step.sync(function () {
+          component.apis().behaveB();
+        }),
+
+        store.sAssertEq('Should now have a behaviour.a and behaviour.b log', [
+          'behaviour.b.apis.behaveB'
+        ]),
+
+        store.sClear,
+
+        Step.sync(function () {
+          component.getSystem().triggerEvent(
+            'alloy.custom.test.event',
+            component.element(),
+            'event.data'
+          );
+        }),
+
+        store.sAssertEq('Should now have a behaviour.a and behaviour.b event log with a before b', [
+          'behaviour.a.event',
+          'behaviour.b.event'
+        ])
+      ];
     }, success, failure);
  
 
