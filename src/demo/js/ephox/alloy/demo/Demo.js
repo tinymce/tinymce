@@ -23,8 +23,9 @@ define(
       var button = GuiFactory.build({
         uiType: 'button',
         action: function () {
-          console.log('*** button.click');
-        }
+          console.log('***button.click');
+        },
+        text: 'Click me'
       });
 
       gui.add(button);
