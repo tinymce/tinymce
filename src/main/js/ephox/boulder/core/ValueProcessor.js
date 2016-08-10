@@ -203,9 +203,6 @@ define(
 
       arrOfObj: arrOfObj,
 
-      prop: adt.prop,
-      // obj: adt.obj,
-      // arr: adt.arr,
       state: adt.state,
 
       field: adt.field,
