@@ -53,7 +53,6 @@ define(
     };
 
     var setup = function (container, rawSettings) {
-      console.log('settingsSchema', settingsSchema.toString());
       var settings = ValueSchema.asRaw('Getting GUI events settings', settingsSchema, rawSettings).getOrDie();
 
       var onClick = DomEvent.bind(container, 'click', function (event) {

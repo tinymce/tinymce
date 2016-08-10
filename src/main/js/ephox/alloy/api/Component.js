@@ -28,6 +28,8 @@ define(
       };
 
       var events = ComponentEvents.combine(info, behaviours, baseEvents);
+      
+      // Curry a lazy argument into the API. Invoke it before calling.
       var apis = ComponentApis.combine(info, behaviours, [
         ExtraArgs.lazy(function () { return self; })
       ]);
