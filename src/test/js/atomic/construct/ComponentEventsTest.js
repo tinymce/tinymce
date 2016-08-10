@@ -31,10 +31,12 @@ test(
         ComponentEvents.combine(info, behaviours, base);
         continued = true;        
       } catch (err) {
+        
         RawAssertions.assertEq(
-          'Checking error of combined events. Expecting to contain("' + expectedPart + '")\nActual: ' + err.message,
+          'Checking error of combined events. Expecting to contain("' + expectedPart + '")\nActual: ' + err,
           true,
-          err.message.indexOf(expectedPart) > -1
+          // Not using message because coming from getOrDie
+          err.indexOf(expectedPart) > -1
         );
       }
 
@@ -82,6 +84,57 @@ test(
             })
           })
         ]);
+      }
+    );
+
+    Logger.sync(
+      'Testing 1 behaviour with 2 events',
+      function () {
+        check([
+          'base.0',
+          'a.one',
+          'a.two'
+        ], eo([ ]), [
+          behaviour('a.behaviour', {
+            'event.1': ComponentEvents.handler({
+              run: store.adder('a.one')
+            }),
+            'event.2': ComponentEvents.handler({
+              run: store.adder('a.two')
+            })
+          })
+        ]);
+      }
+    );
+
+    Logger.sync(
+      'Testing complex behaviour with many events and incomplete ordering',
+      function () {
+        checkErr(
+          'event ordering',
+          eo([ ]), [
+            behaviour('a.behaviour', {
+              'event.1': ComponentEvents.handler({
+                run: store.adder('a.one')
+              }),
+              'event.2': ComponentEvents.handler({
+                run: store.adder('a.two')
+              }),
+              'event.3': ComponentEvents.handler({
+                can: function () {
+                  store.adder('a.three.cannot')();
+                  return false;
+                },
+                run: store.adder('a.three')
+              })
+            }),
+            behaviour('b.behaviour', {
+              'event.3': ComponentEvents.handler({
+                run: store.adder('b.three')
+              })
+            })
+          ]
+        );
       }
     );
   }
