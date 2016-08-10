@@ -8,7 +8,7 @@ define(
   function (Option) {
     var readOpt = function (key) {
       return function (obj) {
-        return Option.from(obj[key]);
+        return obj.hasOwnProperty(key) ? Option.from(obj[key]) : Option.none();
       };
     };
 
