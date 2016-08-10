@@ -16,6 +16,19 @@ define(
   ],
 
   function (EventHandler, ObjIndex, PrioritySort, Arr, Obj, Merger, Json, Fun, Result, Array, Error) {
+    /*
+     * The process of combining a component's events
+     *
+     * - Generate all the handlers based on the behaviour and the base events
+     * - Create an index (eventName -> [(behaviourName, handler)])
+     * - Map over this index:
+     *    - if the list == length 1, then collapse it to the head value
+     *    - if the list > length 1, then:
+     *        - sort the behaviours for that event using eventOrder[event]. Throw error if insuccifient
+     *        - generate a can, run, and abort that combines them in the sorted order
+     *
+     * So at the end, you should have (eventName -> single function)
+     */ 
     var behaviourHandler = function (name, handler) {
       return {
         name: Fun.constant(name),
@@ -66,6 +79,7 @@ define(
     };
 
     var fuse = function (handlers, eventOrder, eventName) {
+      // ASSUMPTION: handlers.length will never be 0, because it wouldn't have an entry if it was 0
       var order = eventOrder[eventName];
       if (! order) return missingOrderError(eventName, handlers);
       else return PrioritySort.sortKeys('Event', 'name', handlers, order).map(EventHandler.fuse);
