@@ -19,7 +19,7 @@ test(
       );
     };
 
-    var checkVal = function (label, expected, spec) {
+    var checkDomVal = function (label, expected, spec) {
       ResultAssertions.checkVal(label, function () {
         var info = CustomDefinition.toInfo(spec);
         return info.map(CustomDefinition.toDefinition);
@@ -42,7 +42,7 @@ test(
       }
     });
 
-    checkVal('Basics supplied', {
+    checkDomVal('Basics supplied', {
       tag: 'span',
       classes: [ ],
       attributes: { },
