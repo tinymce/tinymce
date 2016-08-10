@@ -5,6 +5,7 @@ test(
     'ephox.agar.api.Logger',
     'ephox.agar.api.RawAssertions',
     'ephox.alloy.construct.ComponentApis',
+    'ephox.alloy.test.ResultAssertions',
     'ephox.alloy.test.TestStore',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
@@ -12,25 +13,17 @@ test(
     'ephox.scullion.Struct'
   ],
 
-  function (Logger, RawAssertions, ComponentApis, TestStore, Arr, Obj, Fun, Struct) {
+  function (Logger, RawAssertions, ComponentApis, ResultAssertions, TestStore, Arr, Obj, Fun, Struct) {
     var behaviour = Struct.immutable('name', 'apis');
 
     var checkErr = function (expectedPart, info, behaviours) {
-      var combined = ComponentApis.combine(info, behaviours, [ 'extra-args' ]);
-      combined.fold(function (err) {
-        var errMessage = Arr.map(err, function (e) {
-          return e.message !== undefined ? e.message : e;
-        }).join('');
-        // Not using message when coming from getOrDie
-        console.log(errMessage);
-        RawAssertions.assertEq(
-          'Checking error of combined api. Expecting to contain("' + expectedPart + '")\nActual: ' + errMessage,
-          true,
-          errMessage.indexOf(expectedPart) > -1
-        );
-      }, function (val) {
-        assert.fail('Expected error containing("' + expectedPart + '") was not thrown');
-      });
+      ResultAssertions.checkErr(
+        'Checking error of combined API',
+        expectedPart,
+        function () {
+          return ComponentApis.combine(info, behaviours, [ 'extra-args' ]);
+        }
+      );
     };
 
     var store = TestStore();
