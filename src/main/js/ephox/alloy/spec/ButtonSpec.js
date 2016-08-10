@@ -51,8 +51,6 @@ define(
       };
     };
 
-    
-
     var make = function (spec) {
       // Not sure about where these getOrDie statements are
       var detail = ValueSchema.asStruct('button.spec', schema, spec).getOrDie();
