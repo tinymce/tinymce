@@ -21,10 +21,12 @@ test(
         var combined = ComponentApis.combine(info, behaviours, [ 'extra-args' ]);
         continued = true;        
       } catch (err) {
+        // Not using message when coming from getOrDie
+        var errMessage = err.message !== undefined ? err.message : err;
         RawAssertions.assertEq(
-          'Checking error of combined api. Expecting to contain("' + expectedPart + '")\nActual: ' + err.message,
+          'Checking error of combined api. Expecting to contain("' + expectedPart + '")\nActual: ' + errMessage,
           true,
-          err.message.indexOf(expectedPart) > -1
+          errMessage.indexOf(expectedPart) > -1
         );
       }
 
