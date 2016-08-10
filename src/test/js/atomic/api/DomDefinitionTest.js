@@ -50,7 +50,7 @@ test(
     Logger.sync(
       'Testing definition with children supplied',
       function () {
-
+        // TODO: add test
       }
     );
   }
