@@ -45,19 +45,11 @@ define(
     var combine = function (info, behaviours, base) {
       // FIX: behaviourEvents['lab.custom.definition.events'] = CustomDefinition.toEvents(info);
       var behaviourEvents = Merger.deepMerge(base, nameToHandlers(behaviours, info));
-      console.log('behaviourEvents', JSON.stringify(behaviourEvents, null, 2));
+      
+      // Now, with all of these events, we need to index by event name
+      var byEventName = ObjIndex.byInnerKey(behaviourEvents, behaviourListener);
 
-      // Now, with all of these events, we need to get a list of behaviours
-      var eventChains = ObjIndex.byInnerKey(behaviourEvents, behaviourListener);
-
-      // so event chains should be:
-      // { eventName => [ (behaviourName, (can,run,abort)) ] }
-
-      console.log('event.chains', JSON.stringify(eventChains, null, 2));
-
-      var output = combineEventLists(eventChains, info.eventOrder());
-      console.log('output', output);
-      return output;
+      return combineEventLists(byEventName, info.eventOrder());
     };
 
     var assemble = function (listener) {
