@@ -16,11 +16,8 @@ test(
     var behaviour = Struct.immutable('name', 'apis');
 
     var checkErr = function (expectedPart, info, behaviours) {
-      var continued = false;
-      try {
-        var combined = ComponentApis.combine(info, behaviours, [ 'extra-args' ]);
-        continued = true;        
-      } catch (err) {
+      var combined = ComponentApis.combine(info, behaviours, [ 'extra-args' ]);
+      combined.fold(function (err) {
         var errMessage = Arr.map(err, function (e) {
           return e.message !== undefined ? e.message : e;
         }).join('');
@@ -31,9 +28,9 @@ test(
           true,
           errMessage.indexOf(expectedPart) > -1
         );
-      }
-
-      if (continued) assert.fail('Expected error containing("' + expectedPart + '") was not thrown');
+      }, function (val) {
+        assert.fail('Expected error containing("' + expectedPart + '") was not thrown');
+      });
     };
 
     var store = TestStore();
@@ -41,12 +38,16 @@ test(
     var check = function (expected, info, behaviours) {
       store.clear();
       var combined = ComponentApis.combine(info, behaviours, [ 'extra-args' ]);
-      var apis = Obj.keys(combined).sort();
-      Arr.each(apis, function (apiName) {
-        combined[apiName]();
-      });
+      combined.fold(function (err) {
+        assert.fail('Unexpected error: ', err);
+      }, function (value) {
+        var apis = Obj.keys(value).sort();
+        Arr.each(apis, function (apiName) {
+          value[apiName]();
+        });
 
-      store.assertEq('Checking combined api', expected);
+        store.assertEq('Checking combined api', expected);
+      });
     };
 
     var ao = function (apiOrder) {

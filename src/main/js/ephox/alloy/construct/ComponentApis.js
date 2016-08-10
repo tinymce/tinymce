@@ -65,7 +65,7 @@ define(
         }
       });
 
-      return Objects.consolidate(apis, {}).getOrDie();
+      return Objects.consolidate(apis, {});
     };
 
     return {
