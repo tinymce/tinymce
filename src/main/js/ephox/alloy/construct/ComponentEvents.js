@@ -31,13 +31,16 @@ define(
       return r;
     };
 
-    var combine = function (info, behaviours, base) {
+    var groupByEvents = function (info, behaviours, base) {
       // FIX: behaviourEvents['lab.custom.definition.events'] = CustomDefinition.toEvents(info);
       var behaviourEvents = Merger.deepMerge(base, nameToHandlers(behaviours, info));
       
       // Now, with all of these events, we need to index by event name
-      var byEventName = ObjIndex.byInnerKey(behaviourEvents, behaviourHandler);
+      return ObjIndex.byInnerKey(behaviourEvents, behaviourHandler);
+    };
 
+    var combine = function (info, behaviours, base) {
+      var byEventName = groupByEvents(info, behaviours, base);
       return combineEventLists(byEventName, info.eventOrder());
     };
 
