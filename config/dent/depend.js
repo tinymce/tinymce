@@ -98,16 +98,6 @@ var dependencies = [
       { name: 'module/*.js', path: test },
       { name: 'depend/*.js', path: test }
     ]
-  },
-
-  {
-    name: 'wrap-jsverify',
-    repository: 'buildrepo2',
-    version: 'latest',
-    source: 'wrap-jsverify.zip',
-    targets: [
-      { name: 'compile/*.js', path: test }
-    ]
   }
 ];
 
