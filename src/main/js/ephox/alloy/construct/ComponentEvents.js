@@ -2,7 +2,7 @@ define(
   'ephox.alloy.construct.ComponentEvents',
 
   [
-    'ephox.alloy.construct.EventFusion',
+    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.util.ObjIndex',
     'ephox.alloy.util.PrioritySort',
     'ephox.compass.Arr',
@@ -15,7 +15,7 @@ define(
     'global!Error'
   ],
 
-  function (EventFusion, ObjIndex, PrioritySort, Arr, Obj, Merger, Json, Fun, Result, Array, Error) {
+  function (EventHandler, ObjIndex, PrioritySort, Arr, Obj, Merger, Json, Fun, Result, Array, Error) {
     var behaviourHandler = function (name, handler) {
       return {
         name: Fun.constant(name),
@@ -65,7 +65,7 @@ define(
     var fuse = function (listeners, eventOrder, eventName) {
       var order = eventOrder[eventName];
       if (! order) return missingOrderError(eventName, listeners);
-      else return PrioritySort.sortKeys('Event', 'name', listeners, order).map(EventFusion.fuse);
+      else return PrioritySort.sortKeys('Event', 'name', listeners, order).map(EventHandler.fuse);
     };
 
     var combineEventLists = function (eventLists, eventOrder) {
