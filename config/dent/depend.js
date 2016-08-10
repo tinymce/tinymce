@@ -90,6 +90,17 @@ var dependencies = [
   },
 
   {
+    name: 'agar',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'agar.zip',
+    targets: [
+      { name: 'module/*.js', path: test },
+      { name: 'depend/*.js', path: test }
+    ]
+  },
+
+  {
     name: 'wrap-jsverify',
     repository: 'buildrepo2',
     version: 'latest',
