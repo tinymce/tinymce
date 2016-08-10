@@ -2,6 +2,7 @@ define(
   'ephox.alloy.construct.ComponentApis',
 
   [
+    'ephox.alloy.util.ObjIndex',
     'ephox.alloy.util.PrioritySort',
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
@@ -12,7 +13,7 @@ define(
     'global!Error'
   ],
 
-  function (PrioritySort, Objects, Arr, Obj, Json, Fun, Array, Error) {
+  function (ObjIndex, PrioritySort, Objects, Arr, Obj, Json, Fun, Array, Error) {
     var behaviourApi = function (name, invocation) {
       return {
         name: Fun.constant(name),
@@ -35,17 +36,18 @@ define(
       });
 
       // Now, with all of these APIs, we need to get a list of behaviours
-      var apiChains = { };
-      Obj.each(behaviourApis, function (apis, behaviourName) {
-        Obj.each(apis, function (v, k) {
-          // TODO: Has own property.
-          var chain = Objects.readOr(k, [ ])(apiChains);
-          chain = chain.concat([
-            behaviourApi(behaviourName, v)
-          ]);
-          apiChains[k] = chain;
-        });
-      });
+      var apiChains = ObjIndex.byInnerKey(behaviourApis, behaviourApi);
+      // { };
+      // Obj.each(behaviourApis, function (apis, behaviourName) {
+      //   Obj.each(apis, function (v, k) {
+      //     // TODO: Has own property.
+      //     var chain = Objects.readOr(k, [ ])(apiChains);
+      //     chain = chain.concat([
+      //       behaviourApi(behaviourName, v)
+      //     ]);
+      //     apiChains[k] = chain;
+      //   });
+      // });
 
       // TODO: Add something to boulder to merge in some defaults.
       var apiOrder =  info.apiOrder();
