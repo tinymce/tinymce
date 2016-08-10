@@ -2,6 +2,7 @@ asynctest(
   'ButtonSpecTest',
  
   [
+    'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
@@ -11,7 +12,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup'
   ],
  
-  function (Assertions, GeneralSteps, Logger, Mouse, Step, GuiFactory, GuiSetup) {
+  function (ApproxStructure, Assertions, GeneralSteps, Logger, Mouse, Step, GuiFactory, GuiSetup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -21,15 +22,21 @@ asynctest(
         buttonType: 'text',
         text: 'ButtonSpecTest.button',
         action: store.adder('button.action'),
-        clazz: 'test-button'
+        classes: [ 'test-button' ]
       });
 
     }, function (doc, body, gui, component, store) {
       var testStructure = Step.sync(function () {
         Assertions.assertStructure(
           'Checking initial structure of button',
-          {},
-          {}
+          ApproxStructure.build(function (s, str, arr) {
+            return s.element('button', {
+              classes: [
+                arr.has('test-button')
+              ]
+            });
+          }),
+          component.element()
         );
       });
       // TODOTODTODTO TODO HERE HERE HERE

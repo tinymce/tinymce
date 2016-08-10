@@ -36,13 +36,13 @@ define(
       // allow a only one of checker.
       FieldSchema.field('text', 'text', FieldPresence.asOption(), ValueSchema.anyValue()),
       // aria-label .. check with Mike
-      FieldSchema.field('clazz', 'clazz', FieldPresence.asOption(), ValueSchema.anyValue())
+      FieldSchema.field('classes', 'classes', FieldPresence.asOption(), ValueSchema.anyValue())
     ]);
 
     var defaultDom = function (detail) {
       return {
         tag: 'button',
-        classes: detail.clazz().getOr([ ]),
+        classes: detail.classes().getOr([ ]),
         innerHtml: detail.text().getOr(''),
         attributes: Objects.wrapAll([
           // { key: 'aria-label', value: detail['aria-label']() },
