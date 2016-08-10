@@ -6,6 +6,7 @@ test(
     'ephox.agar.api.RawAssertions',
     'ephox.alloy.construct.ComponentEvents',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.test.ResultAssertions',
     'ephox.alloy.test.TestStore',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
@@ -13,7 +14,7 @@ test(
     'ephox.scullion.Struct'
   ],
 
-  function (Logger, RawAssertions, ComponentEvents, EventHandler, TestStore, Arr, Obj, Fun, Struct) {
+  function (Logger, RawAssertions, ComponentEvents, EventHandler, ResultAssertions, TestStore, Arr, Obj, Fun, Struct) {
     var behaviour = Struct.immutable('name', 'handlers');
 
     var store = TestStore();
@@ -27,39 +28,33 @@ test(
     };
 
     var checkErr = function (expectedPart, info, behaviours) {
-      var continued = false;
-      try {
-        ComponentEvents.combine(info, behaviours, base);
-        continued = true;        
-      } catch (err) {
-        // Not using message when coming from getOrDie
-        var errMessage = Arr.map(err, function (e) {
-          return e.message !== undefined ? e.message : e;
-        }).join('');
-        RawAssertions.assertEq(
-          'Checking error of combined events. Expecting to contain("' + expectedPart + '")\nActual: ' + errMessage,
-          true,
-          
-          errMessage.indexOf(expectedPart) > -1
-        );
-      }
-
-      if (continued) assert.fail('Expected error containing("' + expectedPart + '") was not thrown');
+      ResultAssertions.checkErr(
+        'Checking error combined events',
+        expectedPart,
+        function () {
+          return ComponentEvents.combine(info, behaviours, base);
+        }
+      );
     };
 
     var check = function (expected, info, behaviours) {
-      store.clear();
-      var combined = ComponentEvents.combine(info, behaviours, base);
-      console.log('check.combined', combined);
-      var events = Obj.keys(combined).sort();
-      Arr.each(events, function (eventName) {
-        console.log('eventname', eventName, combined[eventName]);
-        combined[eventName]('component', {
-          stop: store.adder(eventName + '.stop')
-        });
-      });
+      ResultAssertions.checkVal(
+        'Checking value of combined events',
+        function () {
+          store.clear();
+          return ComponentEvents.combine(info, behaviours, base);
+        },
+        function (value) {
+          var events = Obj.keys(value).sort();
+          Arr.each(events, function (eventName) {
+            value[eventName]('component', {
+              stop: store.adder(eventName + '.stop')
+            });
+          });
 
-      store.assertEq('Checking combined api', expected);
+          store.assertEq('Checking combined api', expected);
+        }
+      );
     };
 
     var eo = function (eventOrder) {

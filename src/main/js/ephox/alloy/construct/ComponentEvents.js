@@ -5,6 +5,7 @@ define(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.util.ObjIndex',
     'ephox.alloy.util.PrioritySort',
+    'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.highway.Merger',
@@ -15,7 +16,7 @@ define(
     'global!Error'
   ],
 
-  function (EventHandler, ObjIndex, PrioritySort, Arr, Obj, Merger, Json, Fun, Result, Array, Error) {
+  function (EventHandler, ObjIndex, PrioritySort, Objects, Arr, Obj, Merger, Json, Fun, Result, Array, Error) {
     /*
      * The process of combining a component's events
      *
@@ -89,10 +90,17 @@ define(
     };
 
     var combineGroups = function (byEventName, eventOrder) {
-      return Obj.map(byEventName, function (tuples, eventName) {
+      var r = Obj.mapToArray(byEventName, function (tuples, eventName) {
         var combined = tuples.length === 1 ? Result.value(tuples[0].handler()) : fuse(tuples, eventOrder, eventName);
-        return combined.map(assemble).getOrDie();
+        return combined.map(function (handler) {
+          var assembled = assemble(handler);
+          return Objects.wrap(eventName, assembled);
+        });
       });
+
+      console.log('r', r);
+
+      return Objects.consolidate(r, {});
     };
    
     return {
