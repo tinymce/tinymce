@@ -36,24 +36,13 @@ define(
       });
 
       // Now, with all of these APIs, we need to get a list of behaviours
-      var apiChains = ObjIndex.byInnerKey(behaviourApis, behaviourApi);
-      // { };
-      // Obj.each(behaviourApis, function (apis, behaviourName) {
-      //   Obj.each(apis, function (v, k) {
-      //     // TODO: Has own property.
-      //     var chain = Objects.readOr(k, [ ])(apiChains);
-      //     chain = chain.concat([
-      //       behaviourApi(behaviourName, v)
-      //     ]);
-      //     apiChains[k] = chain;
-      //   });
-      // });
+      var byApiName = ObjIndex.byInnerKey(behaviourApis, behaviourApi);
 
       // TODO: Add something to boulder to merge in some defaults.
       var apiOrder =  info.apiOrder();
 
       // Now, with this API chain list, we need to combine things. Sort them in order.
-      return Obj.map(apiChains, function (chain, apiName) {
+      return Obj.map(byApiName, function (chain, apiName) {
         if (chain.length > 1) {
           var order = apiOrder[apiName];
           if (! order) throw new Error(
