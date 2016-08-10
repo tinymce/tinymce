@@ -2,10 +2,17 @@ define(
   'ephox.alloy.spec.CustomSpec',
 
   [
-
+    
   ],
 
   function () {
-    return null;
+    var make = function (spec) {
+      // Maybe default some arguments here
+      return spec;
+    };
+
+    return {
+      make: make
+    };
   }
 );

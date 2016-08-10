@@ -25,6 +25,7 @@ define(
     ]);
 
     var toInfo = function (spec) {
+      console.log('raw.spec', spec);
       var behaviours = Objects.readOr('behaviours', [])(spec);
       var behaviourSchema = Arr.map(behaviours, function (b) {
         return b.schema();

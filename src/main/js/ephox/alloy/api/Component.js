@@ -26,7 +26,7 @@ define(
         'alloy.base.behaviour': CustomDefinition.toEvents(info)
       };
 
-      var events = ComponentEvents.combine(info, behaviours, baseEvents);
+      var events = ComponentEvents.combine(info, behaviours, baseEvents).getOrDie();
       
       // Curry a lazy argument into the API. Invoke it before calling.
       var apis = ComponentApis.combine(info, behaviours, [

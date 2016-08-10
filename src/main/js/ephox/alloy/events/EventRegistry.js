@@ -5,12 +5,13 @@ define(
     'ephox.alloy.registry.Tagger',
     'ephox.boulder.api.Objects',
     'ephox.compass.Obj',
+    'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.sugar.api.PredicateFind',
     'global!console'
   ],
 
-  function (Tagger, Objects, Obj, Fun, PredicateFind, console) {
+  function (Tagger, Objects, Obj, Merger, Fun, PredicateFind, console) {
     var eventHandler = function (element, handler) {
       return {
         element: Fun.constant(element),

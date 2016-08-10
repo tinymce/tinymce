@@ -17,7 +17,10 @@ define(
       postBlur: Fun.constant('alloy.blur.post'),
 
       // This event is fired by gui.broadcast*. It is defined by 'receivers'
-      receive: Fun.constant('alloy.receive')
+      receive: Fun.constant('alloy.receive'),
+
+      // This event is for executing buttons and things that have (mostly) enter actions
+      execute: Fun.constant('alloy.execute')
     };
   }
 );
