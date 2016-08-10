@@ -71,7 +71,7 @@ test(
       styles: { },
       value: '<none>',
       innerHtml: '<none>',
-      defChildren: [],
+      defChildren: '<none>',
       domChildren: '0 children, but still specified'
     }, {
       dom: {
@@ -134,7 +134,7 @@ test(
         styles: { },
         value: '<none>',
         innerHtml: '<none>',
-        defChildren: [],
+        defChildren: '<none>',
         domChildren: '0 children, but still specified'
       }, {
         dom: {
