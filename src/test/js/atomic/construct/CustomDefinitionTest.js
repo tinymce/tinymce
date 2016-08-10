@@ -87,9 +87,9 @@ test(
           },
 
           schema: Fun.constant(
-            FieldSchema.field('a', 'a', FieldPresence.asOption(), ValueSchema.objOf([
+            ValueSchema.objOf([
               FieldSchema.strict('a')
-            ]))
+            ])
           )
         })
       ]
@@ -119,6 +119,45 @@ test(
         ],
         behaviourA: {
 
+        }
+      }
+    );
+
+    checkDomVal(
+      'Basics supplied with behaviour that adds classes and activates it with correct schema', 
+      {
+        tag: 'span',
+        classes: [
+          'added-class-a'
+        ],
+        attributes: { },
+        styles: { },
+        value: '<none>',
+        innerHtml: '<none>',
+        defChildren: [],
+        domChildren: '0 children, but still specified'
+      }, {
+        dom: {
+          tag: 'span'
+        },
+        components: [ ],
+        behaviours: [
+          CustomBehaviour('behaviourA', {
+            exhibit: function (info, base) {
+              return DomModification.nu({
+                classes: [ 'added-class-a' ]
+              });
+            },
+
+            schema: Fun.constant(
+              ValueSchema.objOf([
+                FieldSchema.strict('a')
+              ])
+            )
+          })
+        ],
+        'behaviourA': {
+          a: true
         }
       }
     );
