@@ -19,8 +19,8 @@ define(
       FieldSchema.defaulted('styles', {}),
       FieldSchema.defaulted('classes', []),
       FieldSchema.defaulted('attributes', {}),
-      FieldSchema.asOption('value'),
-      FieldSchema.asOption('innerHtml')
+      FieldSchema.field('value', 'value', FieldPresence.asOption(), ValueSchema.anyValue()),
+      FieldSchema.field('innerHtml', 'innerHtml', FieldPresence.asOption(), ValueSchema.anyValue())
       // Note, no children.
     ]);
 
@@ -31,7 +31,7 @@ define(
       });
 
       return ValueSchema.asStruct('custom.definition', ValueSchema.objOf([
-        FieldSchema.field('dom', 'dom', FieldPresence.asOption(), domSchema),
+        FieldSchema.field('dom', 'dom', FieldPresence.strict(), domSchema),
         FieldSchema.strict('components'),
         FieldSchema.defaulted('label', 'Unlabelled'),
         FieldSchema.defaulted('behaviours', [ ]),
