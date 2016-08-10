@@ -22,7 +22,7 @@ define("tinymce/tableplugin/Utils", [
 			if (td) {
 				val = parseInt(val, 10);
 
-				if (val === 1) {
+				if (val === 1 || val === 0) {
 					td.removeAttribute(name, 1);
 				} else {
 					td.setAttribute(name, val, 1);
@@ -50,6 +50,9 @@ define("tinymce/tableplugin/Utils", [
 		setRowSpan: setSpanVal('rowspan'),
 		getColSpan: getSpanVal('colSpan'),
 		getRowSpan: getSpanVal('rowSpan'),
+		setSpanVal: function (td, name, value) {
+			setSpanVal(name)(td, value);
+		},
 		getSpanVal: function (td, name) {
 			return getSpanVal(name)(td);
 		},

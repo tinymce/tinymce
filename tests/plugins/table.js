@@ -46,8 +46,8 @@
 
 	function testCommand(command, tests) {
 		tinymce.util.Tools.each(tests, function (test) {
-			editor.setContent(test.before);
-			editor.selection.select(editor.dom.select('#selected')[0], true);
+			editor.getBody().innerHTML = test.before;
+			editor.selection.select(editor.dom.select('td[data-mce-selected]')[0], true);
 			editor.selection.collapse(true);
 			editor.execCommand(command);
 			equal(cleanTableHtml(editor.getContent()), test.after, test.message);
@@ -813,18 +813,24 @@
 	test("mceSplitColsBefore", function() {
 		testCommand('mceSplitColsBefore', [
 			{
+				message: 'Should not change anything these is no table cell selection',
+				before: '<p>a</p>',
+				after: '<p>a</p>'
+			},
+
+			{
 				message: 'Should not change anything since there is nothing to split (1 row)',
 				before: (
 					'<table>' +
 						'<tbody>' +
-							'<tr><td id="selected">1a</td><td>2a</td><td>3a</td></tr>' +
+							'<tr><td data-mce-selected="1">1a</td><td>2a</td><td>3a</td></tr>' +
 						'</tbody>' +
 					'</table>'
 				),
 				after: (
 					'<table>' +
 						'<tbody>' +
-							'<tr><td id="selected">1a</td><td>2a</td><td>3a</td></tr>' +
+							'<tr><td>1a</td><td>2a</td><td>3a</td></tr>' +
 						'</tbody>' +
 					'</table>'
 				)
@@ -836,7 +842,7 @@
 					'<table>' +
 						'<tbody>' +
 							'<tr><td>1a</td><td>2a</td><td>3a</td></tr>' +
-							'<tr><td id="selected">1b</td><td>2b</td><td>3b</td></tr>' +
+							'<tr><td data-mce-selected="1">1b</td><td>2b</td><td>3b</td></tr>' +
 						'</tbody>' +
 					'</table>'
 				),
@@ -844,7 +850,7 @@
 					'<table>' +
 						'<tbody>' +
 						'<tr><td>1a</td><td>2a</td><td>3a</td></tr>' +
-						'<tr><td id="selected">1b</td><td>2b</td><td>3b</td></tr>' +
+						'<tr><td>1b</td><td>2b</td><td>3b</td></tr>' +
 						'</tbody>' +
 					'</table>'
 				)
@@ -856,7 +862,7 @@
 					'<table>' +
 						'<tbody>' +
 							'<tr><td rowspan="2">1a</td><td>2a</td><td rowspan="2">3a</td></tr>' +
-							'<tr><td id="selected">2b</td></tr>' +
+							'<tr><td data-mce-selected="1">2b</td></tr>' +
 						'</tbody>' +
 					'</table>'
 				),
@@ -864,7 +870,7 @@
 					'<table>' +
 						'<tbody>' +
 							'<tr><td>1a</td><td>2a</td><td>3a</td></tr>' +
-							'<tr><td>&nbsp;</td><td id="selected">2b</td><td>&nbsp;</td></tr>' +
+							'<tr><td>&nbsp;</td><td>2b</td><td>&nbsp;</td></tr>' +
 						'</tbody>' +
 					'</table>'
 				)
@@ -877,7 +883,7 @@
 						'<tbody>' +
 							'<tr><td rowspan="3">1a</td><td>2a</td><td rowspan="3">3a</td></tr>' +
 							'<tr><td>2b</td></tr>' +
-							'<tr><td id="selected">2c</td></tr>' +
+							'<tr><td data-mce-selected="1">2c</td></tr>' +
 						'</tbody>' +
 					'</table>'
 				),
@@ -886,7 +892,7 @@
 						'<tbody>' +
 							'<tr><td rowspan="2">1a</td><td>2a</td><td rowspan="2">3a</td></tr>' +
 							'<tr><td>2b</td></tr>' +
-							'<tr><td>&nbsp;</td><td id="selected">2c</td><td>&nbsp;</td></tr>' +
+							'<tr><td>&nbsp;</td><td>2c</td><td>&nbsp;</td></tr>' +
 						'</tbody>' +
 					'</table>'
 				)
@@ -897,18 +903,24 @@
 	test("mceSplitColsAfter", function() {
 		testCommand('mceSplitColsAfter', [
 			{
+				message: 'Should not change anything these is no table cell selection',
+				before: '<p>a</p>',
+				after: '<p>a</p>'
+			},
+
+			{
 				message: 'Should not change anything since there is nothing to split (1 row)',
 				before: (
 					'<table>' +
 						'<tbody>' +
-							'<tr><td id="selected">1a</td><td>2a</td><td>3a</td></tr>' +
+							'<tr><td data-mce-selected="1">1a</td><td>2a</td><td>3a</td></tr>' +
 						'</tbody>' +
 					'</table>'
 				),
 				after: (
 					'<table>' +
 						'<tbody>' +
-							'<tr><td id="selected">1a</td><td>2a</td><td>3a</td></tr>' +
+							'<tr><td>1a</td><td>2a</td><td>3a</td></tr>' +
 						'</tbody>' +
 					'</table>'
 				)
@@ -919,7 +931,7 @@
 				before: (
 					'<table>' +
 						'<tbody>' +
-							'<tr><td id="selected">1a</td><td>2a</td><td>3a</td></tr>' +
+							'<tr><td data-mce-selected="1">1a</td><td>2a</td><td>3a</td></tr>' +
 							'<tr><td>1b</td><td>2b</td><td>3b</td></tr>' +
 						'</tbody>' +
 					'</table>'
@@ -927,7 +939,7 @@
 				after: (
 					'<table>' +
 						'<tbody>' +
-						'<tr><td id="selected">1a</td><td>2a</td><td>3a</td></tr>' +
+						'<tr><td>1a</td><td>2a</td><td>3a</td></tr>' +
 						'<tr><td>1b</td><td>2b</td><td>3b</td></tr>' +
 						'</tbody>' +
 					'</table>'
@@ -939,7 +951,7 @@
 				before: (
 					'<table>' +
 						'<tbody>' +
-							'<tr><td rowspan="2" id="selected">1a</td><td>2a</td><td rowspan="2">3a</td></tr>' +
+							'<tr><td rowspan="2" data-mce-selected="1">1a</td><td>2a</td><td rowspan="2">3a</td></tr>' +
 							'<tr><td>2b</td></tr>' +
 						'</tbody>' +
 					'</table>'
@@ -947,7 +959,7 @@
 				after: (
 					'<table>' +
 						'<tbody>' +
-							'<tr><td id="selected">1a</td><td>2a</td><td>3a</td></tr>' +
+							'<tr><td>1a</td><td>2a</td><td>3a</td></tr>' +
 							'<tr><td>&nbsp;</td><td>2b</td><td>&nbsp;</td></tr>' +
 						'</tbody>' +
 					'</table>'
@@ -959,7 +971,7 @@
 				before: (
 					'<table>' +
 						'<tbody>' +
-							'<tr><td rowspan="3" id="selected">1a</td><td>2a</td><td rowspan="3">3a</td></tr>' +
+							'<tr><td rowspan="3" data-mce-selected="1">1a</td><td>2a</td><td rowspan="3">3a</td></tr>' +
 							'<tr><td>2b</td></tr>' +
 							'<tr><td>2c</td></tr>' +
 						'</tbody>' +
@@ -968,7 +980,7 @@
 				after: (
 					'<table>' +
 						'<tbody>' +
-							'<tr><td id="selected">1a</td><td>2a</td><td>3a</td></tr>' +
+							'<tr><td>1a</td><td>2a</td><td>3a</td></tr>' +
 							'<tr><td rowspan="2">&nbsp;</td><td>2b</td><td rowspan="2">&nbsp;</td></tr>' +
 							'<tr><td>2c</td></tr>' +
 						'</tbody>' +
@@ -985,59 +997,176 @@
 		equal(cleanTableHtml(editor.getContent()), '<table><tbody><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>1</td><td>2</td></tr></tbody></table>');
 	});
 
-	test("mceTableMergeCells command with cell selection", function() {
-		editor.getBody().innerHTML = '<table><tr><td data-mce-selected="1">1</td><td data-mce-selected="1">2</td></tr></table>';
-		Utils.setSelection('td', 0);
-		editor.execCommand('mceTableMergeCells');
-		equal(cleanTableHtml(editor.getContent()), '<table><tbody><tr><td>12</td></tr></tbody></table>');
-	});
+	test("mceTableMergeCells", function() {
+		testCommand('mceTableMergeCells', [
+			{
+				message: 'Should merge all cells into one',
+				before: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td data-mce-selected="1">a1</td><td data-mce-selected="1">b1</td></tr>' +
+							'<tr><td data-mce-selected="1">a2</td><td data-mce-selected="1">b2</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				),
 
-	test("mceTableMergeCells command with all cells selected", function() {
-		editor.getBody().innerHTML = (
-			'<table>' +
-				'<tbody>' +
-					'<tr><td data-mce-selected="1">1</td><td data-mce-selected="1">2</td></tr>' +
-					'<tr><td data-mce-selected="1">3</td><td data-mce-selected="1">4</td></tr>' +
-				'</tbody>' +
-			'</table>'
-		);
+				after: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td>a1b1a2b2</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				)
+			},
 
-		Utils.setSelection('td', 0);
-		editor.execCommand('mceTableMergeCells');
+			{
+				message: 'Should merge cells in two cols/rows into one cell with colspan',
+				before: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td data-mce-selected="1">a1</td><td data-mce-selected="1">b1</td></tr>' +
+							'<tr><td data-mce-selected="1">a2</td><td data-mce-selected="1">b2</td></tr>' +
+							'<tr><td>a3</td><td>b3</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				),
 
-		equal(
-			cleanTableHtml(editor.getContent()),
-			'<table>' +
-				'<tbody>' +
-					'<tr><td>1234</td></tr>' +
-				'</tbody>' +
-			'</table>'
-		);
-	});
+				after: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td colspan="2">a1b1a2b2</td></tr>' +
+							'<tr><td>a3</td><td>b3</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				)
+			},
 
-	test("mceTableMergeCells command with whole rows selected", function() {
-		editor.getBody().innerHTML = (
-			'<table>' +
-				'<tbody>' +
-					'<tr><td data-mce-selected="1">1</td><td data-mce-selected="1">2</td></tr>' +
-					'<tr><td data-mce-selected="1">3</td><td data-mce-selected="1">4</td></tr>' +
-					'<tr><td>5</td><td>6</td></tr>' +
-				'</tbody>' +
-			'</table>'
-		);
+			{
+				message: 'Should remove all rowspans since the table is fully merged',
+				before: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td rowspan="2">a1</td><td data-mce-selected="1">b1</td></tr>' +
+							'<tr><td data-mce-selected="1">b2</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				),
+				after: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td>a1</td><td>b1b2</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				)
+			},
 
-		Utils.setSelection('td', 0);
-		editor.execCommand('mceTableMergeCells');
+			{
+				message: 'Should remove all colspans since the table is fully merged',
+				before: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td colspan="2">a1</td></tr>' +
+							'<tr><td data-mce-selected="1">a2</td><td data-mce-selected="1">b2</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				),
+				after: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td>a1</td></tr>' +
+							'<tr><td>a2b2</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				)
+			},
 
-		equal(
-			cleanTableHtml(editor.getContent()),
-			'<table>' +
-				'<tbody>' +
-					'<tr><td colspan="2">1234</td></tr>' +
-					'<tr><td>5</td><td>6</td></tr>' +
-				'</tbody>' +
-			'</table>'
-		);
+			{
+				message: 'Should remove rowspans since the table is fully merged',
+				before: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td rowspan="3">a1</td><td rowspan="3">b1</td><td data-mce-selected="1">c1</td></tr>' +
+							'<tr><td data-mce-selected="1">c2</td></tr>' +
+							'<tr><td data-mce-selected="1">c3</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				),
+				after: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td>a1</td><td>b1</td><td>c1c2c3</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				)
+			},
+
+			{
+				message: 'Should remove colspans since the table is fully merged',
+				before: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td data-mce-selected="1">a1</td><td data-mce-selected="1">b1</td><td data-mce-selected="1">c1</td></tr>' +
+							'<tr><td colspan="3">a2</td></tr>' +
+							'<tr><td colspan="3">a3</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				),
+				after: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td>a1b1c1</td></tr>' +
+							'<tr><td>a2</td></tr>' +
+							'<tr><td>a3</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				)
+			},
+
+			{
+				message: 'Should reduce rowspans to 2 keep the colspan and remove one tr',
+				before: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td colspan="2" rowspan="2">a1</td><td rowspan="3">b1</td><td data-mce-selected="1">c1</td></tr>' +
+							'<tr><td data-mce-selected="1">c2</td></tr>' +
+							'<tr><td>a3</td><td>b3</td><td data-mce-selected="1">c3</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				),
+				after: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td colspan="2">a1</td><td rowspan="2">b1</td><td rowspan="2">c1c2c3</td></tr>' +
+							'<tr><td>a3</td><td>b3</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				)
+			},
+
+			{
+				message: 'Should reduce colspans to 2 keep the rowspan',
+				before: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td data-mce-selected="1">a1</td><td data-mce-selected="1">b1</td><td data-mce-selected="1">c1</td></tr>' +
+							'<tr><td colspan="3">a2</td></tr>' +
+							'<tr><td colspan="2" rowspan="2">a3</td><td>c3</td></tr>' +
+							'<tr><td>c4</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				),
+				after: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td colspan="2">a1b1c1</td></tr>' +
+							'<tr><td colspan="2">a2</td></tr>' +
+							'<tr><td rowspan="2">a3</td><td>c3</td></tr>' +
+							'<tr><td>c4</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				)
+			}
+		]);
 	});
 
 	test("mceTableSplitCells command", function() {

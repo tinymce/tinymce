@@ -97,30 +97,41 @@ define("tinymce/tableplugin/SplitCols", [
 	var splitAbove = function (grid, info, x, y) {
 		if (info.above !== 0) {
 			Utils.setRowSpan(info.elm, info.above);
-			insertOrAppendCell(grid, createCell(info, info.below + 1), x, y);
+			var cell = createCell(info, info.below + 1);
+			insertOrAppendCell(grid, cell, x, y);
+			return cell;
 		}
+
+		return null;
 	};
 
 	var splitBelow = function (grid, info, x, y) {
 		if (info.below !== 0) {
 			Utils.setRowSpan(info.elm, info.above + 1);
-			insertOrAppendCell(grid, createCell(info, info.below), x, y + 1);
+			var cell = createCell(info, info.below);
+			insertOrAppendCell(grid, cell, x, y + 1);
+			return cell;
 		}
+
+		return null;
 	};
 
 	var splitAt = function (grid, x, y, before) {
 		var rowInfos = getRowSplitInfo(grid, y);
 		var rowElm = getCellElmAt(grid, x, y).parentNode;
+		var cells = [];
 
 		Tools.each(rowInfos, function (info, x) {
-			if (before) {
-				splitAbove(grid, info, x, y);
-			} else {
-				splitBelow(grid, info, x, y);
+			var cell = before ? splitAbove(grid, info, x, y) : splitBelow(grid, info, x, y);
+			if (cell !== null) {
+				cells.push(cells);
 			}
 		});
 
-		return rowElm;
+		return {
+			cells: cells,
+			row: rowElm
+		};
 	};
 
 	return {
