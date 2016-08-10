@@ -49,6 +49,15 @@ define(
       ].concat(behaviourSchema)), spec);
     };
 
+    var alter = function (bs, info, base) {
+      return Arr.foldl(bs, function (acc, b) {
+        var modification = b.exhibit(info);
+        return DomModification.merge(acc, modification);
+        // var mod = behaviour.exhibit(info, );
+        // return modify(d, mod);
+      }, DomDefinition.nu(base));
+    };
+
     var toDefinition = function (info) {
       console.log('toDefinition', info);
       var base = {
@@ -68,15 +77,7 @@ define(
       });
 
       var bs = behaviours(info);
-
-      console.log('base', base);
-
-      return Arr.foldl(bs, function (acc, b) {
-        var modification = b.exhibit(info);
-        return DomModification.merge(acc, modification);
-        // var mod = behaviour.exhibit(info, );
-        // return modify(d, mod);
-      }, DomDefinition.nu(base));
+      return alter(bs, info, base);
     };
 
     // No implemented behaviours in alloy yet
