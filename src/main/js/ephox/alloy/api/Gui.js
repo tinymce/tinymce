@@ -45,6 +45,8 @@ define(
         },
         triggerFocus: function (target, originator) {
           Triggers.triggerHandler(lookup, SystemEvents.focus(), {
+            // originator is used by the default events to ensure that focus doesn't
+            // get called infinitely
             originator: Fun.constant(originator),
             target: Fun.constant(target)
           }, target);

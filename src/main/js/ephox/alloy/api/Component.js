@@ -17,7 +17,8 @@ define(
     var build = function (spec) {
       var systemApi = Cell(NoContextApi());
 
-      var info = CustomDefinition.toInfo(spec);
+      var info = CustomDefinition.toInfo(spec).getOrDie();
+      console.log('component.info', info);
       var behaviours = CustomDefinition.behaviours(info);
 
       var definition = CustomDefinition.toDefinition(info);
