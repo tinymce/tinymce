@@ -55,10 +55,10 @@ define("tinymce/pasteplugin/Plugin", [
 			editor.focus();
 		}
 
-		// draw back if power version is requested
-		if (/(^|[ ,])powerpaste([, ]|$)/.test(settings.plugins)) {
+		// draw back if power version is requested and registered
+		if (/(^|[ ,])powerpaste([, ]|$)/.test(settings.plugins) && PluginManager.get('powerpaste')) {
 			if (typeof console !== "undefined" && console.log) {
-				console.log("Paste plugin is incompatible with PowerPaste!");
+				console.log("PowerPaste is incompatible with Paste plugin!");
 			}
 			return;
 		}
