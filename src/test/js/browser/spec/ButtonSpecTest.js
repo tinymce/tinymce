@@ -33,7 +33,10 @@ asynctest(
             return s.element('button', {
               classes: [
                 arr.has('test-button')
-              ]
+              ],
+              attrs: {
+                type: str.is('input')
+              }
             });
           }),
           component.element()

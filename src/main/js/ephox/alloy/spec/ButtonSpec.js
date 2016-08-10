@@ -46,7 +46,8 @@ define(
         innerHtml: detail.text().getOr(''),
         attributes: Objects.wrapAll([
           // { key: 'aria-label', value: detail['aria-label']() },
-          { key: 'role', value: 'button' }
+          { key: 'role', value: 'button' },
+          { key: 'type', value: 'input' }
         ])
       };
     };
