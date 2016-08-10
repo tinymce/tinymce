@@ -187,7 +187,7 @@ test(
       'Testing complex behaviour with many events and *complete* ordering',
       function () {
         check(
-          [ ],
+          [ 'base.0', 'a.one', 'a.two', 'b.three.abort', 'event.3.stop' ],
           eo({
             'event.3': [ 'a.behaviour', 'b.behaviour' ]
           }), [
