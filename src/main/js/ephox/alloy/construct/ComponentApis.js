@@ -4,7 +4,6 @@ define(
   [
     'ephox.alloy.util.ObjIndex',
     'ephox.alloy.util.PrioritySort',
-    'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.numerosity.api.JSON',
@@ -13,7 +12,7 @@ define(
     'global!Error'
   ],
 
-  function (ObjIndex, PrioritySort, Objects, Arr, Obj, Json, Fun, Array, Error) {
+  function (ObjIndex, PrioritySort, Arr, Obj, Json, Fun, Array, Error) {
     var behaviourApi = function (name, invocation) {
       return {
         name: Fun.constant(name),
@@ -21,14 +20,7 @@ define(
       };
     };
 
-    // Probably should take this opportunity to pass through labby/component as well :)
-    var combine = function (info, behaviours, extra) {
-      // We need to go through all the behaviours. If at any time, the API already exists, we need to
-      // consult the order. I might do this in an inefficient way to start with, and then improve it later.
-
-      // Get all the apis first
-     
-
+    var combine = function (info, behaviours, extraArgs) {
       // Get the APIs sorted by behaviour
       var behaviourApis = { };
       Arr.each(behaviours, function (behaviour) {
@@ -38,10 +30,9 @@ define(
       // Now, with all of these APIs, we need to get a list of behaviours
       var byApiName = ObjIndex.byInnerKey(behaviourApis, behaviourApi);
 
-      // TODO: Add something to boulder to merge in some defaults.
       var apiOrder =  info.apiOrder();
 
-      // Now, with this API chain list, we need to combine things. Sort them in order.
+      // Now, with this API index, we need to combine things. Sort them in order.
       return Obj.map(byApiName, function (chain, apiName) {
         if (chain.length > 1) {
           var order = apiOrder[apiName];
@@ -56,7 +47,7 @@ define(
           return function () {
             var args = Array.prototype.slice.call(arguments, 0);
             return Arr.foldl(sorted, function (acc, bApi) {
-              return bApi.invocation.apply(undefined, extra.concat(args));
+              return bApi.invocation.apply(undefined, extraArgs.concat(args));
             }, undefined);
           };
         } else {
