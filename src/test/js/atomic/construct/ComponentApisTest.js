@@ -29,18 +29,21 @@ test(
     var store = TestStore();
 
     var check = function (expected, info, behaviours) {
-      store.clear();
-      var combined = ComponentApis.combine(info, behaviours, [ 'extra-args' ]);
-      combined.fold(function (err) {
-        assert.fail('Unexpected error: ', err);
-      }, function (value) {
-        var apis = Obj.keys(value).sort();
-        Arr.each(apis, function (apiName) {
-          value[apiName]();
-        });
+      ResultAssertions.checkVal(
+        'Checking combined API',
+        function () {
+          store.clear();
+          return ComponentApis.combine(info, behaviours, [ 'extra-args' ]);
+        },
+        function (value) {
+          var apis = Obj.keys(value).sort();
+          Arr.each(apis, function (apiName) {
+            value[apiName]();
+          });
 
-        store.assertEq('Checking combined api', expected);
-      });
+          store.assertEq('Checking combined api', expected);
+        }
+      );
     };
 
     var ao = function (apiOrder) {

@@ -30,7 +30,8 @@ define(
       actual.fold(function (err) {
         assert.fail('Unexpected error: ', err);
       }, function (value) {
-        assertValue(label, value);
+        console.log('value', value);
+        assertValue(value);
       });
     };
 
