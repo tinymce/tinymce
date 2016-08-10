@@ -59,7 +59,9 @@ define(
           spec,
           Objects.wrap('components', components)
         );
-        return Component.build(completeSpec);
+        return Result.value(
+          Component.build(completeSpec)
+        );
       });
     };
 
@@ -68,7 +70,10 @@ define(
         return buildFromSpec(userSpec);
       }, Result.value);
 
-      return component.getOrDie();
+      
+      var x = component.getOrDie();
+      console.log('build.output', x);
+      return x;
     };
 
     return {

@@ -52,7 +52,10 @@ define(
     var alter = function (bs, info, base) {
       return Arr.foldl(bs, function (acc, b) {
         var modification = b.exhibit(info);
-        return DomModification.merge(acc, modification);
+        console.log('x', DomDefinition.defToRaw(acc));
+        var y = DomModification.merge(acc, modification);
+        console.log('y', DomDefinition.defToRaw(y));
+        return y;
         // var mod = behaviour.exhibit(info, );
         // return modify(d, mod);
       }, DomDefinition.nu(base));

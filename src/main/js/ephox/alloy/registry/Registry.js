@@ -16,7 +16,7 @@ define(
       var register = function (component) {
         var elem = component.element();
         var tagId = Tagger.write(component.label(), elem);
-        events.registerId(component, tagId, component.event());
+        events.registerId(component, tagId, component.events());
         components[tagId] = component;
       };
 

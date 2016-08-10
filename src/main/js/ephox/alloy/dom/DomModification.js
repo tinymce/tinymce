@@ -3,12 +3,13 @@ define(
 
   [
     'ephox.alloy.dom.DomDefinition',
+    'ephox.boulder.api.Objects',
     'ephox.highway.Merger',
     'ephox.numerosity.api.JSON',
     'ephox.scullion.Struct'
   ],
 
-  function (DomDefinition, Merger, Json, Struct) {
+  function (DomDefinition, Objects, Merger, Json, Struct) {
     // Maybe we'll need to allow add/remove
     var nu = Struct.immutableBag([ ], [
       'classes',
@@ -37,21 +38,39 @@ define(
       };
     };
 
+    var clashingOptArrays = function (key, oArr1, oArr2) {
+      return oArr1.fold(function () {
+        return oArr2.fold(function () {
+          return { };
+        }, function (arr2) {
+          return Objects.wrap(key, arr2);
+        });
+      }, function (arr1) {
+        return oArr2.fold(function () {
+          return Objects.wrap(key, arr1);
+        }, function (arr2) {
+          return Objects.wrap(key, arr2);
+        });
+      });
+    };
+
     var merge = function (defnA, mod) {
-      var raw = {
-        tag: defnA.tag(),
-        classes: mod.classes().getOr([ ]).concat(defnA.classes().getOr([ ])),
-        attributes: Merger.merge(
-          defnA.attributes().getOr({}),
-          mod.attributes().getOr({})
-        ),
-        styles: Merger.merge(
-          defnA.styles().getOr({}),
-          mod.styles().getOr({})
-        ),
-        domChildren: mod.domChildren().or(defnA.domChildren()).getOr([ ]),
-        defChildren: mod.defChildren().or(defnA.defChildren()).getOr([ ])
-      };
+      var raw = Merger.deepMerge(
+        {
+          tag: defnA.tag(),
+          classes: mod.classes().getOr([ ]).concat(defnA.classes().getOr([ ])),
+          attributes: Merger.merge(
+            defnA.attributes().getOr({}),
+            mod.attributes().getOr({})
+          ),
+          styles: Merger.merge(
+            defnA.styles().getOr({}),
+            mod.styles().getOr({})
+          )
+        }, 
+        clashingOptArrays('domChildren', mod.domChildren(), defnA.domChildren()),
+        clashingOptArrays('defChildren', mod.defChildren(), defnA.defChildren())
+      );
       
       var innerHtml = mod.innerHtml().or(defnA.innerHtml());
       

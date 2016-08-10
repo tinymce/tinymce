@@ -43,7 +43,7 @@ define(
         return systemApi.get().debugLabel();
       };
 
-      var self = Merger.deepMerge({
+      var self = {
         getSystem: systemApi.get,
         debugSystem: debugSystem,
         connect: connect,
@@ -52,10 +52,11 @@ define(
         // Note: this is only the original components.
         components: Fun.constant(info.components()),
         item: Fun.constant(item),
-        events: Fun.constant(events)
-      }, {
+        events: Fun.constant(events),
         apis: Fun.constant(apis)
-      });
+      };
+
+      return self;
     };
 
     return {
