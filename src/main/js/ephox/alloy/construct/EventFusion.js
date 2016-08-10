@@ -8,38 +8,38 @@ define(
   ],
 
   function (EventHandler, Arr, Array) {
-    var all = function (listeners, f) {
+    var all = function (handlers, f) {
       return function () {
         var args = Array.prototype.slice.call(arguments, 0);
-        return Arr.foldl(listeners, function (acc, listener) {
-          return acc && f(listener).apply(undefined, args);
+        return Arr.foldl(handlers, function (acc, handler) {
+          return acc && f(handler).apply(undefined, args);
         }, true);
       };
     };
 
-    var any = function (listeners, f) {
+    var any = function (handlers, f) {
       return function () {
         var args = Array.prototype.slice.call(arguments, 0);
-        return Arr.foldl(listeners, function (acc, listener) {
-          return acc || f(listener).apply(undefined, args);
+        return Arr.foldl(handlers, function (acc, handler) {
+          return acc || f(handler).apply(undefined, args);
         }, false);
       };
     };
 
-    var fuse = function (listeners) {
-      var can = all(listeners, function (listener) {
-        return listener.can;
+    var fuse = function (handlers) {
+      var can = all(handlers, function (handler) {
+        return handler.can;
       });
 
-      var abort = any(listeners, function (listener) {
-        return listener.abort;
+      var abort = any(handlers, function (handler) {
+        return handler.abort;
       });
 
       var run = function () {
         var args = Array.prototype.slice.call(arguments, 0);
-        Arr.each(listeners, function (listener) {
+        Arr.each(handlers, function (handler) {
           // ASSUMPTION: Return value is unimportant.
-          listener.run.apply(undefined, args);
+          handler.run.apply(undefined, args);
         });
       };
 

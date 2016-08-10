@@ -20,10 +20,10 @@ define(
   ],
 
   function (EventFusion, ObjIndex, PrioritySort, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Json, Fun, Result, Array, Error) {
-    var behaviourListener = function (name, listener) {
+    var behaviourHandler = function (name, handler) {
       return {
         name: Fun.constant(name),
-        listener: Fun.constant(listener)
+        handler: Fun.constant(handler)
       };
     };
 
@@ -40,20 +40,20 @@ define(
       var behaviourEvents = Merger.deepMerge(base, nameToHandlers(behaviours, info));
       
       // Now, with all of these events, we need to index by event name
-      var byEventName = ObjIndex.byInnerKey(behaviourEvents, behaviourListener);
+      var byEventName = ObjIndex.byInnerKey(behaviourEvents, behaviourHandler);
 
       return combineEventLists(byEventName, info.eventOrder());
     };
 
-    var assemble = function (listener) {
-      console.log('assemble.listener', listener);
+    var assemble = function (handler) {
+      console.log('assemble.handler', handler);
       return function (component, simulatedEvent/*, others */) {
-        console.log('running.listener', listener);
+        console.log('running.handler', handler);
         var args = Array.prototype.slice.call(arguments, 0);
-        if (listener.abort.apply(undefined, args)) {
+        if (handler.abort.apply(undefined, args)) {
           simulatedEvent.stop();
-        } else if (listener.can.apply(undefined, args)) {
-          listener.run.apply(undefined, args);
+        } else if (handler.can.apply(undefined, args)) {
+          handler.run.apply(undefined, args);
         }
       };
     };
@@ -76,7 +76,7 @@ define(
       console.log('eventLists', eventLists);
       return Obj.map(eventLists, function (listeners, eventName) {
         console.log('listeners', listeners);
-        var combined = listeners.length === 1 ? Result.value(listeners[0].listener()) : fuse(listeners, eventOrder, eventName);
+        var combined = listeners.length === 1 ? Result.value(listeners[0].handler()) : fuse(listeners, eventOrder, eventName);
         console.log('combine.events', combined.getOr('none'), listeners);
         return combined.map(assemble).getOrDie();
       });
