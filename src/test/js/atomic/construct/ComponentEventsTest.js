@@ -19,10 +19,8 @@ test(
 
     var base = {
       'base.behaviour': {
-        'test': ComponentEvents.handler({
-          run: function () {
-            store.adder('test.base.run')();
-          }
+        'event.0': ComponentEvents.handler({
+          run: store.adder('base.0')
         })
       }
     };
@@ -46,7 +44,7 @@ test(
     var check = function (expected, info, behaviours) {
       store.clear();
       var combined = ComponentEvents.combine(info, behaviours, base);
-      console.log('check.combined', combined);;
+      console.log('check.combined', combined);
       var events = Obj.keys(combined).sort();
       Arr.each(events, function (eventName) {
         console.log('eventname', eventName, combined[eventName]);
@@ -62,22 +60,25 @@ test(
       };
     };
 
-    // Logger.sync(
-    //   'Testing no behaviours',
-    //   function () {
-    //     check([ ], eo([ ]), [ ]);
-    //   }
-    // );
+    Logger.sync(
+      'Testing no behaviours',
+      function () {
+        check([
+          'base.0'
+        ], eo([ ]), [ ]);
+      }
+    );
 
     Logger.sync(
       'Testing 1 behaviour with 1 event',
       function () {
-        check([ ], eo([ ]), [
+        check([
+          'base.0',
+          'a.one'
+        ], eo([ ]), [
           behaviour('a.behaviour', {
-            'event.one': ComponentEvents.handler({
-              run: function () {
-                console.log('hi');
-              }
+            'event.1': ComponentEvents.handler({
+              run: store.adder('a.one')
             })
           })
         ]);
