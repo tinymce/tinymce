@@ -36,7 +36,8 @@ asynctest(
               ],
               attrs: {
                 type: str.is('input')
-              }
+              },
+              html: str.is('ButtonSpecTest.button')
             });
           }),
           component.element()
