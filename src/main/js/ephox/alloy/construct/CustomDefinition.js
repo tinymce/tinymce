@@ -50,12 +50,13 @@ define(
     };
 
     var toDefinition = function (info) {
+      console.log('toDefinition', info);
       var base = {
         tag: info.dom().tag(),
         classes: info.dom().classes(),
         attributes: info.dom().attributes(),
         styles: info.dom().styles(),
-        children: Arr.map(info.components(), function (comp) { return comp.element(); })
+        domChildren: Arr.map(info.components(), function (comp) { return comp.element(); })
       };
 
       info.dom().innerHtml().each(function (html) {
@@ -67,6 +68,9 @@ define(
       });
 
       var bs = behaviours(info);
+
+      console.log('base', base);
+
       return Arr.foldl(bs, function (acc, b) {
         var modification = b.exhibit(info);
         return DomModification.merge(acc, modification);
