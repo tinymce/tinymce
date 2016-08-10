@@ -9,10 +9,11 @@ asynctest(
     'ephox.agar.api.Mouse',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.SystemEvents',
     'ephox.alloy.test.GuiSetup'
   ],
  
-  function (ApproxStructure, Assertions, GeneralSteps, Logger, Mouse, Step, GuiFactory, GuiSetup) {
+  function (ApproxStructure, Assertions, GeneralSteps, Logger, Mouse, Step, GuiFactory, SystemEvents, GuiSetup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -43,13 +44,26 @@ asynctest(
           component.element()
         );
       });
-      // TODOTODTODTO TODO HERE HERE HERE
+      
       var testButtonClick = Logger.t(
         'testing button click',
         GeneralSteps.sequence([
           store.sAssertEq('step 1: no clicks', [ ]),
           Mouse.sClickOn(gui.element(), 'button'),
           store.sAssertEq('step 2: post click', [ 'button.action' ])
+        ])
+      );
+
+      var testExecuting = Logger.t(
+        'testing dispatching execute',
+        GeneralSteps.sequence([
+          Step.sync(function () {
+            store.clear();
+            store.assertEq('post clear', [ ]);
+            var system = component.getSystem();
+            system.triggerEvent(SystemEvents.execute(), component.element(), {});
+            store.assertEq('post execute', [ 'button.action' ]);
+          })
         ])
       );
 
@@ -60,6 +74,7 @@ asynctest(
         testButtonClick,
 
         // Test executing
+        testExecuting,
 
 
         Step.wait(100000000000)
