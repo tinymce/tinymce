@@ -2,6 +2,7 @@ define(
   'ephox.alloy.construct.ComponentEvents',
 
   [
+    'ephox.alloy.construct.EventFusion',
     'ephox.alloy.util.ObjIndex',
     'ephox.alloy.util.PrioritySort',
     'ephox.boulder.api.FieldPresence',
@@ -18,20 +19,12 @@ define(
     'global!Error'
   ],
 
-  function (ObjIndex, PrioritySort, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Json, Fun, Result, Array, Error) {
+  function (EventFusion, ObjIndex, PrioritySort, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Json, Fun, Result, Array, Error) {
     var behaviourListener = function (name, listener) {
       return {
         name: Fun.constant(name),
         listener: Fun.constant(listener)
       };
-    };
-
-    var handler = function (parts) {
-      return ValueSchema.asRaw('Extracting handler', ValueSchema.objOf([
-        FieldSchema.field('can', 'can', FieldPresence.defaulted(Fun.constant(true)), ValueSchema.anyValue()),
-        FieldSchema.field('abort', 'abort', FieldPresence.defaulted(Fun.constant(false)), ValueSchema.anyValue()),
-        FieldSchema.field('run', 'run', FieldPresence.defaulted(Fun.noop), ValueSchema.anyValue())
-      ]), parts).getOrDie();
     };
 
     var nameToHandlers = function (behaviours, info) {
@@ -74,38 +67,9 @@ define(
     };
 
     var fuse = function (listeners, eventOrder, eventName) {
-      console.log('fuse.listeners', listeners);
       var order = eventOrder[eventName];
       if (! order) return missingOrderError(eventName, listeners);
-      else return PrioritySort.sortKeys('Event', 'name', listeners, order).map(function (sorted) {
-        console.log('sorted');
-        var can = function () {
-          var args = Array.prototype.slice.call(arguments, 0);
-          return Arr.foldl(sorted, function (acc, listener) {
-            return acc && listener.can.apply(undefined, args);
-          }, true);
-        };
-
-        var run = function () {
-          var args = Array.prototype.slice.call(arguments, 0);
-          Arr.each(sorted, function (listener) {
-            listener.run.apply(undefined, args);
-          });
-        };
-
-        var abort = function () {
-          var args = Array.prototype.slice.call(arguments, 0);
-          return Arr.foldl(sorted, function (acc, listener) {
-            return acc || listener.abort.apply(undefined, args);
-          }, false);
-        };
-
-        return handler({
-          can: can,
-          abort: abort,
-          run: run
-        });
-      });
+      else return PrioritySort.sortKeys('Event', 'name', listeners, order).map(EventFusion.fuse);
     };
 
     var combineEventLists = function (eventLists, eventOrder) {
@@ -119,8 +83,7 @@ define(
     };
    
     return {
-      combine: combine,
-      handler: handler
+      combine: combine
     };
   }
 );

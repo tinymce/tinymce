@@ -5,6 +5,7 @@ test(
     'ephox.agar.api.Logger',
     'ephox.agar.api.RawAssertions',
     'ephox.alloy.construct.ComponentEvents',
+    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.TestStore',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
@@ -12,14 +13,14 @@ test(
     'ephox.scullion.Struct'
   ],
 
-  function (Logger, RawAssertions, ComponentEvents, TestStore, Arr, Obj, Fun, Struct) {
+  function (Logger, RawAssertions, ComponentEvents, EventHandler, TestStore, Arr, Obj, Fun, Struct) {
     var behaviour = Struct.immutable('name', 'handlers');
 
     var store = TestStore();
 
     var base = {
       'base.behaviour': {
-        'event.0': ComponentEvents.handler({
+        'event.0': EventHandler({
           run: store.adder('base.0')
         })
       }
@@ -79,7 +80,7 @@ test(
           'a.one'
         ], eo([ ]), [
           behaviour('a.behaviour', {
-            'event.1': ComponentEvents.handler({
+            'event.1': EventHandler({
               run: store.adder('a.one')
             })
           })
@@ -96,10 +97,10 @@ test(
           'a.two'
         ], eo([ ]), [
           behaviour('a.behaviour', {
-            'event.1': ComponentEvents.handler({
+            'event.1': EventHandler({
               run: store.adder('a.one')
             }),
-            'event.2': ComponentEvents.handler({
+            'event.2': EventHandler({
               run: store.adder('a.two')
             })
           })
@@ -114,13 +115,13 @@ test(
           'event ordering',
           eo([ ]), [
             behaviour('a.behaviour', {
-              'event.1': ComponentEvents.handler({
+              'event.1': EventHandler({
                 run: store.adder('a.one')
               }),
-              'event.2': ComponentEvents.handler({
+              'event.2': EventHandler({
                 run: store.adder('a.two')
               }),
-              'event.3': ComponentEvents.handler({
+              'event.3': EventHandler({
                 can: function () {
                   store.adder('a.three.cannot')();
                   return false;
@@ -129,7 +130,7 @@ test(
               })
             }),
             behaviour('b.behaviour', {
-              'event.3': ComponentEvents.handler({
+              'event.3': EventHandler({
                 run: store.adder('b.three')
               })
             })
