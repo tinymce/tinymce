@@ -14,10 +14,10 @@ define(
       { lazy: [ 'thunk' ] }
     ]);
 
-    var augment = function (f, args) {
+    var augment = function (f, extraArgs) {
       return function () {
         var args = Array.prototype.slice.call(arguments, 0);
-        var extra = get(args);
+        var extra = get(extraArgs);
         return f.apply(undefined, extra.concat(args));
       };
     };

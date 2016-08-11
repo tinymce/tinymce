@@ -2,6 +2,7 @@ define(
   'ephox.alloy.construct.CustomDefinition',
 
   [
+    'ephox.alloy.behaviour.Toggling',
     'ephox.alloy.dom.DomDefinition',
     'ephox.alloy.dom.DomModification',
     'ephox.boulder.api.FieldPresence',
@@ -14,7 +15,7 @@ define(
     'global!Error'
   ],
 
-  function (DomDefinition, DomModification, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
+  function (Toggling, DomDefinition, DomModification, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
     var domSchema = ValueSchema.objOf([
       FieldSchema.strict('tag'),
       FieldSchema.defaulted('styles', {}),
@@ -27,7 +28,7 @@ define(
 
     var toInfo = function (spec) {
       var behaviours = Objects.readOr('behaviours', [])(spec);
-      var behaviourSchema = Arr.map(behaviours, function (b) {
+      var behaviourSchema = Arr.map(alloyBehaviours.concat(behaviours), function (b) {
         return b.schema();
       });
 
@@ -91,8 +92,9 @@ define(
       return alter(bs, info, base);
     };
 
-    // No implemented behaviours in alloy yet
-    var alloyBehaviours = [ ];
+    var alloyBehaviours = [
+      Toggling
+    ];
 
     var behaviours = function (info) {
       // TODO: Check if behaviours are duplicated? Lab used to ...

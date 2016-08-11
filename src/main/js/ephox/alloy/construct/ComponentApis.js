@@ -64,7 +64,9 @@ define(
           var order = apiOrder[apiName];
           return order === undefined ? missingOrder(chain, apiName) : sortByOrder(chain, apiName, order, extraArgs);
         } else {
-          return Result.value(Objects.wrap(apiName, chain[0].invocation));
+          return Result.value(
+            Objects.wrap(apiName, ExtraArgs.augment(chain[0].invocation, extraArgs))
+          );
         }
       });
 
