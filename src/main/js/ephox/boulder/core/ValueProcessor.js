@@ -81,16 +81,19 @@ define(
           return (function () {
             return presence.fold(function () {
               return strictAccess(path, obj, key).bind(bundle);
-            }, function (fallback) {
+            }, function (fallbackThunk) {
+              var fallback = fallbackThunk();
               return fallbackAccess(obj, key, fallback).bind(bundle);
             }, function () {
               return optionAccess(obj, key).bind(bundleAsOption);
-            }, function (fallback) {
+            }, function (fallbackThunk) {
               // Defaulted option access
+              var fallback = fallbackThunk();
               return optionDefaultedAccess(obj, key, fallback).bind(bundleAsOption);
-            }, function (other) {
+            }, function (baseThunk) {
+              var base = baseThunk();
               return fallbackAccess(obj, key, {}).map(function (v) {
-                return Merger.deepMerge(other, v);
+                return Merger.deepMerge(base, v);
               }).bind(bundle);
             });
           })();

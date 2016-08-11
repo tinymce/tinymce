@@ -2,24 +2,49 @@ define(
   'ephox.boulder.api.FieldPresence',
 
   [
+    'ephox.peanut.Fun',
     'ephox.scullion.ADT'
   ],
 
-  function (Adt) {
+  function (Fun, Adt) {
     var adt = Adt.generate([
       { strict: [ ] },
-      { defaulted: [ 'fallback' ] },
+      { defaultedThunk: [ 'fallbackThunk' ] },
       { asOption: [ ] },
-      { asDefaultedOption: [ 'fallback' ] },
-      { mergeWith: [ 'other' ] }
+      { asDefaultedOptionThunk: [ 'fallbackThunk' ] },
+      { mergeWithThunk: [ 'baseThunk' ] }
     ]);
+
+    var defaulted = function (fallback) {
+      return adt.defaultedThunk(
+        Fun.constant(fallback)
+      );
+    };
+
+    var asDefaultedOption = function (fallback) {
+      return adt.asDefaultedOptionThunk(
+        Fun.constant(fallback)
+      );
+    };
+
+    var mergeWith = function (base) {
+      return adt.mergeWithThunk(
+        Fun.constant(base)
+      );
+    };
 
     return {
       strict: adt.strict,
-      defaulted: adt.defaulted,
       asOption: adt.asOption,
-      asDefaultedOption: adt.asDefaultedOption,
-      mergeWith: adt.mergeWith
+      
+      defaulted: defaulted,
+      defaultedThunk: adt.defaultedThunk,
+      
+      asDefaultedOption: asDefaultedOption,      
+      asDefaultedOptionThunk: adt.asDefaultedOptionThunk,
+
+      mergeWith: mergeWith,
+      mergeWithThunk: adt.mergeWithThunk
     };
   }
 );
