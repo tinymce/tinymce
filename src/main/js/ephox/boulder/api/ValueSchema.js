@@ -3,13 +3,14 @@ define(
 
   [
     'ephox.boulder.core.ValueProcessor',
+    'ephox.compass.Arr',
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
     'ephox.perhaps.Result',
     'global!Error'
   ],
 
-  function (ValueProcessor, Json, Fun, Result, Error) {
+  function (ValueProcessor, Arr, Json, Fun, Result, Error) {
     var anyValue = ValueProcessor.value(Result.value);
 
     var arrOfObj = function (objFields) {
@@ -50,7 +51,7 @@ define(
     var getOrDie = function (extraction) {
       return extraction.fold(function (errInfo) {
         // A readable version of the error.
-        return new Error(
+        throw new Error(
           formatError(errInfo)
         );
       }, Fun.identity);
@@ -65,7 +66,9 @@ define(
     };
 
     var formatError = function (errInfo) {
-      return 'Errors: ' + Json.stringify(errInfo.errors, null, 2) + '\n\nInput object: ' + Json.stringify(errInfo.input, null, 2);
+      return 'Errors: \n' + Arr.map(errInfo.errors, function (error) {
+        return 'Failed path: ('  + error.path.join(' > ') + ')\n' + error.err;
+      }).join('\n\n') + '\n\nInput object: ' + Json.stringify(errInfo.input, null, 2);
     };
 
     return {

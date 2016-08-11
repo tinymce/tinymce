@@ -42,6 +42,10 @@ define(
       return ResultCombine.consolidateObj(objs, base);
     };
 
+    var hasKey = function (obj, key) {
+      return ObjReader.hasKey(obj, key);
+    };
+
     return {
       narrow: narrow,
       readOpt: readOpt,
@@ -50,6 +54,7 @@ define(
       wrap: wrap,
       wrapAll: wrapAll,
       indexOnKey: indexOnKey,
+      hasKey: hasKey,
       consolidate: consolidate
     };
   }

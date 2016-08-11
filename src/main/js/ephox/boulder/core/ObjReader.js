@@ -22,10 +22,15 @@ define(
       return readOpt(key)(obj);
     };
 
+    var hasKey = function (obj, key) {
+      return obj.hasOwnProperty(key) && obj[key] !== undefined && obj[key] !== null;
+    };
+
     return {
       readOpt: readOpt,
       readOr: readOr,
-      readOptFrom: readOptFrom
+      readOptFrom: readOptFrom,
+      hasKey: hasKey
     };
   }
 );
