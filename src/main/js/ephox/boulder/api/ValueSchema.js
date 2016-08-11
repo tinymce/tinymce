@@ -65,7 +65,7 @@ define(
     };
 
     var formatError = function (errInfo) {
-      return 'Errors: ' + Json.stringify(errInfo.errors, null, 2) + '\n\nInput object: ' + Json.stringify(errInfo.obj, null, 2);
+      return 'Errors: ' + Json.stringify(errInfo.errors, null, 2) + '\n\nInput object: ' + Json.stringify(errInfo.input, null, 2);
     };
 
     return {
