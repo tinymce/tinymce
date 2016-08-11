@@ -77,6 +77,7 @@ asynctest(
           tag: 'div',
           classes: [ 'custom-component-test']
         },
+        uid: 'custom-uid',
         behaviours: [
           behaviourA,
           behaviourB
@@ -102,7 +103,8 @@ asynctest(
             return s.element('div', {
               classes: [ arr.has('behaviour-a-exhibit') ],
               attrs: {
-                'behaviour-b-exhibit': str.is('exhibition')
+                'behaviour-b-exhibit': str.is('exhibition'),
+                'alloy-id': str.is('custom-uid')
               }
             });
           }),
@@ -153,7 +155,10 @@ asynctest(
         store.sAssertEq('Should now have a behaviour.a and behaviour.b event log with a before b', [
           'behaviour.a.event',
           'behaviour.b.event'
-        ])
+        ]),
+
+
+        function () { }
       ];
     }, success, failure);
  

@@ -62,6 +62,7 @@ define(
       return info.uid().fold(function () {
         return { };
       }, function (uid) {
+        // TODO: Share with the Tagger in a way that doesn't require window/document
         return Objects.wrap('alloy-id', uid);
       });
     };

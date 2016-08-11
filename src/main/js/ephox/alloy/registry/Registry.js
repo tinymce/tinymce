@@ -13,9 +13,18 @@ define(
       
       var components = { };
 
-      var register = function (component) {
+      var readOrTag = function (component) {
         var elem = component.element();
-        var tagId = Tagger.write(component.label(), elem);
+        return Tagger.read(elem).fold(function () {
+          // No existing tag, so add one.
+          return Tagger.write(component.label(), component.element());
+        }, function (uid) {
+          return uid;
+        });
+      };
+
+      var register = function (component) {
+        var tagId = readOrTag(component);
         events.registerId(component, tagId, component.events());
         components[tagId] = component;
       };
