@@ -68,7 +68,6 @@ define(
     };
 
     var toDefinition = function (info) {
-      console.log('info', info);
       var base = {
         tag: info.dom().tag(),
         classes: info.dom().classes(),
@@ -79,7 +78,6 @@ define(
         styles: info.dom().styles(),
         domChildren: Arr.map(info.components(), function (comp) { return comp.element(); })
       };
-      console.log('base', base);
 
       info.dom().innerHtml().each(function (html) {
         base.innerHtml = html;
@@ -97,7 +95,6 @@ define(
     var alloyBehaviours = [ ];
 
     var behaviours = function (info) {
-      console.log('info', info);
       // TODO: Check if behaviours are duplicated? Lab used to ...
       var bs = info.behaviours();
       return alloyBehaviours.concat(bs);

@@ -23,7 +23,8 @@ asynctest(
         buttonType: 'text',
         text: 'ButtonSpecTest.button',
         action: store.adder('button.action'),
-        classes: [ 'test-button' ]
+        classes: [ 'test-button' ],
+        uid: 'test-button-id'
       });
 
     }, function (doc, body, gui, component, store) {
@@ -36,7 +37,8 @@ asynctest(
                 arr.has('test-button')
               ],
               attrs: {
-                type: str.is('input')
+                type: str.is('input'),
+                'alloy-id': str.is('test-button-id')
               },
               html: str.is('ButtonSpecTest.button')
             });

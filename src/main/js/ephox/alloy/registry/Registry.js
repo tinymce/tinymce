@@ -26,9 +26,8 @@ define(
 
       var register = function (component) {
         var tagId = readOrTag(component);
-        if (Objects.hasKey(components, tagId)) throw new Error('The tagId ' + tagId + ' is already in use. Please choose another');
+        if (Objects.hasKey(components, tagId)) throw new Error('The tagId "' + tagId + '" is already in use. Please choose another.');
         events.registerId(component, tagId, component.events());
-        if (components.hasOwnProperty[tagId] && components[tagId] !== undefined) 
         components[tagId] = component;
       };
 

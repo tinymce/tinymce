@@ -94,7 +94,7 @@ asynctest(
           'alloy.custom.test.event': [ 'behaviourA', 'behaviourB' ]
         },
         components: [
-          { uiType: 'custom', uid: 'custom-uuid' }
+          { uiType: 'custom', uid: 'custom-uid-2', dom: { tag: 'div' } }
         ]
       });
 

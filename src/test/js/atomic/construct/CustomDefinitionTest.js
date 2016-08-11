@@ -24,7 +24,6 @@ test(
           // Format the error nicely
           return CustomDefinition.toInfo(spec).fold(
             function (errInfo) {
-              console.log('errInfo', errInfo);
               return Result.error(ValueSchema.formatError(errInfo));
             }, Result.value
           );
