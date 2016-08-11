@@ -9,7 +9,7 @@ define(
     var narrow = function (obj, fields) {
       var r = { };
       Arr.each(fields, function (field) {
-        if (obj[field] !== undefined) r[field] = obj[field];
+        if (obj[field] !== undefined && obj.hasOwnProperty(field)) r[field] = obj[field];
       });
 
       return r;
