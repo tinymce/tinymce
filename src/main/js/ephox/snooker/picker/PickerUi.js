@@ -4,6 +4,7 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.echo.api.AriaGrid',
+    'ephox.echo.api.AriaRegister',
     'ephox.peanut.Fun',
     'ephox.porkbun.Event',
     'ephox.porkbun.Events',
@@ -26,17 +27,19 @@ define(
     'global!parseInt'
   ],
 
-  function (Arr, AriaGrid, Fun, Event, Events, Structs, PickerLookup, PickerStyles, Redimension, Styles, Util, Attr, Class, Classes, DomEvent, Element, Focus, Insert, InsertAll, MouseEvent, Remove, parseInt) {
+  function (Arr, AriaGrid, AriaRegister, Fun, Event, Events, Structs, PickerLookup, PickerStyles, Redimension, Styles, Util, Attr, Class, Classes, DomEvent, Element, Focus, Insert, InsertAll, MouseEvent, Remove, parseInt) {
     return function (direction, settings, helpReference) {
       var events = Events.create({
         select: Event(['rows', 'cols', 'rowHeaders', 'columnHeaders'])
       });
 
       var table = Element.fromTag('table');
+      AriaRegister.presentation(table);
       Class.add(table, PickerStyles.table());
 
       var tbody = Element.fromTag('tbody');
       Insert.append(table, tbody);
+
 
       var size = { width: 0, height: 0};
 
@@ -62,19 +65,16 @@ define(
         Util.repeat(size.height, function (rowNum) {
           var row = Element.fromTag('tr');
           Class.add(row, PickerStyles.row());
-          AriaGrid.row(row);
 
           var cells = Util.repeat(size.width, function (colNum) {
             var td = Element.fromTag('td');
             // this is mostly for debugging, but it's nice to have
             Class.add(td, Styles.resolve('cell-' + colNum + '-' + rowNum));
             Class.add(td, PickerStyles.cell());
-            Attr.set(td, 'role', 'gridcell');
 
             var btn = Element.fromTag('button');
             // Make the button a "button" so that firefox does not have problems with defaulting to submit: "TBIO-2560"
             Attr.set(btn, 'type', 'button');
-            Attr.set(btn, 'role', 'button');
             Attr.set(btn, 'aria-labelledby', ids[rowNum][colNum]);
             Class.add(btn, PickerStyles.button());
             Insert.append(td, btn);
