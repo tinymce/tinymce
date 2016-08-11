@@ -34,8 +34,12 @@ define(
     var strictAccess = function (path, obj, key) {
       // In strict mode, if it undefined, it is an error.
       return ObjReader.readOptFrom(obj, key).fold(function () {
-        var message = 'Failed Path: ' + path.join(' > ') + '\nCould not find valid *strict* value for "' + key + '" in ' + Json.stringify(obj, null, 2);
-        return Result.error([ message ]);
+        return Result.error([
+          {
+            path: path,
+            err: 'Could not find valid *strict* value for "' + key + '" in ' + Json.stringify(obj, null, 2)
+          }
+        ]);
       }, Result.value);
     };
 
@@ -109,7 +113,12 @@ define(
     var value = function (validator) {
       var extract = function (path, strength, val) {
         return validator(val).fold(function (err) {
-          return Result.error('Path: ' + path.join(' > ') + '\n' + err);
+          return Result.error([
+            {
+              path: path,
+              err: err
+            }
+          ]);
         }, Result.value); // ignore strength
       };
 

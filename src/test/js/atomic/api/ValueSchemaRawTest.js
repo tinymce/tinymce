@@ -13,13 +13,16 @@ test(
   function (RawAssertions, FieldPresence, FieldSchema, ValueSchema, Json, Result) {
     var checkErr = function (label, expectedPart, input, processor) {
       ValueSchema.asRaw(label, processor, input).fold(function (err) {
-        RawAssertions.assertEq(label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + err, true, err.indexOf(expectedPart) > -1);
+        var message = ValueSchema.formatError(err);
+        RawAssertions.assertEq(label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + message, true, message.indexOf(expectedPart) > -1);
       }, function (val) {
         assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + Json.stringify(val, null, 2) + ')');
       });
     };
+
     var check = function (label, input, processor) {
-      assert.eq(input, ValueSchema.asRaw(label, processor, input).getOrDie());
+      var actual = ValueSchema.asRawOrDie(label, processor, input);
+      RawAssertions.assertEq(label, input, actual);
     };
   
     check('test.1', 10, ValueSchema.anyValue());
@@ -95,30 +98,30 @@ test(
       ])
     );
 
-    var optionValue = ValueSchema.asRaw('test.option', ValueSchema.objOf([
+    var optionValue = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.option('alpha')
-    ]), {}).getOrDie();    
-    assert.eq(true, optionValue.alpha.isNone(), 'alpha should be none');
+    ]), {});    
+    RawAssertions.assertEq('alpha should be none', true, optionValue.alpha.isNone());
 
-    var optionValue2 = ValueSchema.asRaw('test.option', ValueSchema.objOf([
+    var optionValue2 = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.option('alpha')
-    ]), { alpha: 'beta' }).getOrDie();    
-    assert.eq(true, optionValue2.alpha.isSome(), 'alpha should be some');
+    ]), { alpha: 'beta' });    
+    RawAssertions.assertEq('alpha should be some', true, optionValue2.alpha.isSome());
 
-    var optionValue3 = ValueSchema.asRaw('test.option', ValueSchema.objOf([
+    var optionValue3 = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
-    ]), { alpha: 'beta' }).getOrDie();    
-    assert.eq('beta', optionValue3.alpha.getOrDie(), 'fallback.opt: alpha:beta should be some(beta)');
+    ]), { alpha: 'beta' });
+    RawAssertions.assertEq('fallback.opt: alpha:beta should be some(beta)', 'beta', optionValue3.alpha.getOrDie());
 
-    var optionValue4 = ValueSchema.asRaw('test.option', ValueSchema.objOf([
+    var optionValue4 = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
-    ]), { alpha: true }).getOrDie();    
-    assert.eq('fallback', optionValue4.alpha.getOrDie(), 'fallback.opt: alpha:true should be some(fallback)');
+    ]), { alpha: true });    
+    RawAssertions.assertEq('fallback.opt: alpha:true should be some(fallback)', 'fallback', optionValue4.alpha.getOrDie());
 
-    var optionValue5 = ValueSchema.asRaw('test.option', ValueSchema.objOf([
+    var optionValue5 = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
-    ]), {  }).getOrDie();    
-    assert.eq(true, optionValue5.alpha.isNone(), 'fallback.opt: no alpha should be none');
+    ]), {  });    
+    RawAssertions.assertEq('fallback.opt: no alpha should be none', true, optionValue5.alpha.isNone());
 
 
   }
