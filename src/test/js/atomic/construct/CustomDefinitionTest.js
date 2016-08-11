@@ -41,15 +41,15 @@ test(
       });
     };
 
-    checkErr('Empty object', '*strict* value for \\"dom\\"', {});
+    checkErr('Empty object', '*strict* value for "dom"', {});
 
-    checkErr('Missing dom.tag', '*strict* value for \\"tag\\"', {
+    checkErr('Missing dom.tag', '*strict* value for "tag"', {
       dom: {
 
       }
     });
 
-    checkErr('Missing components', '*strict* value for \\"components\\"', {
+    checkErr('Missing components', '*strict* value for "components"', {
       dom: {
         tag: 'span'
       }
@@ -103,7 +103,7 @@ test(
     });
 
     checkErr('Basics supplied with behaviour that adds classes and does have it but does not follow schema', 
-      '*strict* value for \\"a\\"', 
+      '*strict* value for "a"', 
       {
         dom: {
           tag: 'span'

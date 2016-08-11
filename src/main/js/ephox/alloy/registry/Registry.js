@@ -4,10 +4,11 @@ define(
   [
     'ephox.alloy.events.EventRegistry',
     'ephox.alloy.registry.Tagger',
-    'ephox.boulder.api.Objects'
+    'ephox.boulder.api.Objects',
+    'global!Error'
   ],
 
-  function (EventRegistry, Tagger, Objects) {
+  function (EventRegistry, Tagger, Objects, Error) {
     return function () {
       var events = EventRegistry();
       
@@ -25,7 +26,9 @@ define(
 
       var register = function (component) {
         var tagId = readOrTag(component);
+        if (Objects.hasKey(components, tagId)) throw new Error('The tagId ' + tagId + ' is already in use. Please choose another');
         events.registerId(component, tagId, component.events());
+        if (components.hasOwnProperty[tagId] && components[tagId] !== undefined) 
         components[tagId] = component;
       };
 

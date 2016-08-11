@@ -92,7 +92,10 @@ asynctest(
 
         eventOrder: {
           'alloy.custom.test.event': [ 'behaviourA', 'behaviourB' ]
-        }
+        },
+        components: [
+          { uiType: 'custom', uid: 'custom-uuid' }
+        ]
       });
 
     }, function (doc, body, gui, component, store) {
