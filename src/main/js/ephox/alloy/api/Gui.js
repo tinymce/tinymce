@@ -9,13 +9,14 @@ define(
     'ephox.alloy.registry.Registry',
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Result',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Remove'
   ],
 
-  function (GuiEvents, SystemApi, SystemEvents, Triggers, Registry, Arr, Fun, Compare, Element, Insert, Remove) {
+  function (GuiEvents, SystemApi, SystemEvents, Triggers, Registry, Arr, Fun, Result, Compare, Element, Insert, Remove) {
     var create = function ( ) {
       var container = Element.fromTag('div');
       return takeover(container);
@@ -102,11 +103,18 @@ define(
         });
       };
 
+      var getByUid = function (uid) {
+        return registry.getById(uid).fold(function () {
+          return Result.error('Could not find component with uid: "' + uid + '" in system.');
+        }, Result.value);
+      };
+
       return {
         element: Fun.constant(container),
         destroy: destroy,
         add: add,
         remove: remove,
+        getByUid: getByUid,
 
         broadcast: broadcast,
         broadcastOn: broadcastOn

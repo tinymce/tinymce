@@ -4,6 +4,7 @@ asynctest(
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
+    'ephox.agar.api.Logger',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.behaviour.CustomBehaviour',
@@ -15,7 +16,7 @@ asynctest(
     'ephox.peanut.Fun'
   ],
  
-  function (ApproxStructure, Assertions, Step, GuiFactory, CustomBehaviour, EventHandler, DomModification, GuiSetup, FieldSchema, ValueSchema, Fun) {
+  function (ApproxStructure, Assertions, Logger, Step, GuiFactory, CustomBehaviour, EventHandler, DomModification, GuiSetup, FieldSchema, ValueSchema, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -158,6 +159,20 @@ asynctest(
         store.sAssertEq('Should now have a behaviour.a and behaviour.b event log with a before b', [
           'behaviour.a.event',
           'behaviour.b.event'
+        ]),
+
+        store.sClear,
+        Logger.t(
+          'Checking calling an API on a component retrieved by uid',
+          Step.sync(function () {
+            var comp = gui.getByUid('custom-uid').getOrDie();
+            comp.apis().behave();
+          })
+        ),
+
+        store.sAssertEq('Should now have a behaviour.a and behaviour.b log with b first', [
+          'behaviour.b.apis.behave',
+          'behaviour.a.apis.behave'
         ]),
 
 
