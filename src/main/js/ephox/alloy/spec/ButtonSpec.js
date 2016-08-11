@@ -29,7 +29,7 @@ define(
         'buttonType', 
         'buttonType', 
         FieldPresence.defaulted('text'),
-        ValueSchema.valueOf(isOneOf([ 'text', 'button' ]))
+        ValueSchema.valueOf(isOneOf([ 'text', 'icon' ]))
       ),
 
       // Hard-coded text. I think I want to make something in boulder that is going to 
