@@ -23,7 +23,7 @@ define(
     ]);
 
     return function (name, activeApi) {
-      var customApi = ValueSchema.asRaw('custom.behaviour', activeApiSchema, activeApi).getOrDie();
+      var customApi = ValueSchema.asRawOrDie('custom.behaviour', activeApiSchema, activeApi);
       
       var exhibit = function (info, base) {
         return info[name]().fold(function () {

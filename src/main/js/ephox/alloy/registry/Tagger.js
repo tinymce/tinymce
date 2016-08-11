@@ -3,13 +3,14 @@ define(
 
   [
     'ephox.epithet.Id',
+    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Id, Option, Attr, Node, SelectorFind) {
+  function (Id, Fun, Option, Attr, Node, SelectorFind) {
     var prefix = 'alloy-id-';
     var idAttr = 'alloy-id';
 
@@ -31,7 +32,8 @@ define(
     return {
       write: write,
       read: read,
-      find: find
+      find: find,
+      attribute: Fun.constant(idAttr)
     };
   }
 );

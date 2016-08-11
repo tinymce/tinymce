@@ -11,16 +11,23 @@ test(
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
-    'ephox.peanut.Fun'
+    'ephox.peanut.Fun',
+    'ephox.perhaps.Result'
   ],
 
-  function (RawAssertions, CustomBehaviour, CustomDefinition, DomDefinition, DomModification, ResultAssertions, FieldPresence, FieldSchema, ValueSchema, Fun) {
+  function (RawAssertions, CustomBehaviour, CustomDefinition, DomDefinition, DomModification, ResultAssertions, FieldPresence, FieldSchema, ValueSchema, Fun, Result) {
     var checkErr = function (label, expectedPart, spec) {
-      ResultAssertions.checkErr(
+      ResultAssertions.checkErrStr(
         label,
         expectedPart,
         function () {
-          return CustomDefinition.toInfo(spec);
+          // Format the error nicely
+          return CustomDefinition.toInfo(spec).fold(
+            function (errInfo) {
+              console.log('errInfo', errInfo);
+              return Result.error(ValueSchema.formatError(errInfo));
+            }, Result.value
+          );
         }
       );
     };
@@ -34,15 +41,15 @@ test(
       });
     };
 
-    checkErr('Empty object', '*strict* value for "dom"', {});
+    checkErr('Empty object', '*strict* value for \\"dom\\"', {});
 
-    checkErr('Missing dom.tag', '*strict* value for "tag"', {
+    checkErr('Missing dom.tag', '*strict* value for \\"tag\\"', {
       dom: {
 
       }
     });
 
-    checkErr('Missing components', '*strict* value for "components"', {
+    checkErr('Missing components', '*strict* value for \\"components\\"', {
       dom: {
         tag: 'span'
       }
@@ -96,7 +103,7 @@ test(
     });
 
     checkErr('Basics supplied with behaviour that adds classes and does have it but does not follow schema', 
-      '*strict* value for "a"', 
+      '*strict* value for \\"a\\"', 
       {
         dom: {
           tag: 'span'
@@ -130,7 +137,9 @@ test(
         classes: [
           'added-class-a'
         ],
-        attributes: { },
+        attributes: {
+          'alloy-id': 'id-custom-button-1'
+        },
         styles: { },
         value: '<none>',
         innerHtml: '<none>',
@@ -140,6 +149,7 @@ test(
         dom: {
           tag: 'span'
         },
+        uid: 'id-custom-button-1',
         components: [ ],
         behaviours: [
           CustomBehaviour('behaviourA', {

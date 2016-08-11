@@ -54,7 +54,7 @@ define(
 
     var make = function (spec) {
       // Not sure about where these getOrDie statements are
-      var detail = ValueSchema.asStruct('button.spec', schema, spec).getOrDie();
+      var detail = ValueSchema.asStructOrDie('button.spec', schema, spec);
 
       var executeHandler = EventHandler.nu({
         run: function (component) {

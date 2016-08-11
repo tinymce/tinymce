@@ -8,15 +8,16 @@ define(
     'ephox.alloy.construct.CustomDefinition',
     'ephox.alloy.dom.DomRender',
     'ephox.alloy.util.ExtraArgs',
+    'ephox.boulder.api.ValueSchema',
     'ephox.peanut.Fun',
     'ephox.scullion.Cell'
   ],
 
-  function (NoContextApi, ComponentApis, ComponentEvents, CustomDefinition, DomRender, ExtraArgs, Fun, Cell) {
+  function (NoContextApi, ComponentApis, ComponentEvents, CustomDefinition, DomRender, ExtraArgs, ValueSchema, Fun, Cell) {
     var build = function (spec) {
       var systemApi = Cell(NoContextApi());
 
-      var info = CustomDefinition.toInfo(spec).getOrDie();
+      var info = ValueSchema.getOrDie(CustomDefinition.toInfo(spec));
       var behaviours = CustomDefinition.behaviours(info);
 
       var definition = CustomDefinition.toDefinition(info);

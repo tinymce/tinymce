@@ -9,11 +9,12 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
+    'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'global!Error'
   ],
 
-  function (DomDefinition, DomModification, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Fun, Error) {
+  function (DomDefinition, DomModification, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
     var domSchema = ValueSchema.objOf([
       FieldSchema.strict('tag'),
       FieldSchema.defaulted('styles', {}),
@@ -34,6 +35,7 @@ define(
         FieldSchema.field('dom', 'dom', FieldPresence.strict(), domSchema),
         FieldSchema.strict('components'),
         FieldSchema.defaulted('label', 'Unlabelled'),
+        FieldSchema.option('uid'),
         FieldSchema.defaulted('behaviours', [ ]),
 
         // TODO: Add behaviours here.
@@ -56,14 +58,26 @@ define(
       }, DomDefinition.nu(base));
     };
 
+    var getUid = function (info) {
+      return info.uid().fold(function () {
+        return { };
+      }, function (uid) {
+        return Objects.wrap('alloy-id', uid);
+      });
+    };
+
     var toDefinition = function (info) {
       var base = {
         tag: info.dom().tag(),
         classes: info.dom().classes(),
-        attributes: info.dom().attributes(),
+        attributes: Merger.deepMerge(
+          getUid(info),
+          info.dom().attributes()
+        ),
         styles: info.dom().styles(),
         domChildren: Arr.map(info.components(), function (comp) { return comp.element(); })
       };
+      console.log('base', base);
 
       info.dom().innerHtml().each(function (html) {
         base.innerHtml = html;

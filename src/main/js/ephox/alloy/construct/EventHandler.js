@@ -12,11 +12,11 @@ define(
 
   function (FieldPresence, FieldSchema, ValueSchema, Arr, Fun, Array) {
     var nu = function (parts) {
-      return ValueSchema.asRaw('Extracting event.handler', ValueSchema.objOf([
+      return ValueSchema.asRawOrDie('Extracting event.handler', ValueSchema.objOf([
         FieldSchema.field('can', 'can', FieldPresence.defaulted(Fun.constant(true)), ValueSchema.anyValue()),
         FieldSchema.field('abort', 'abort', FieldPresence.defaulted(Fun.constant(false)), ValueSchema.anyValue()),
         FieldSchema.field('run', 'run', FieldPresence.defaulted(Fun.noop), ValueSchema.anyValue())
-      ]), parts).getOrDie();
+      ]), parts);
     };
 
     var all = function (handlers, f) {
