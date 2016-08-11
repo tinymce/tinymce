@@ -44,6 +44,16 @@
 		win.close();
 	}
 
+	function testCommand(command, tests) {
+		tinymce.util.Tools.each(tests, function (test) {
+			editor.getBody().innerHTML = test.before;
+			editor.selection.select(editor.dom.select('td[data-mce-selected]')[0], true);
+			editor.selection.collapse(true);
+			editor.execCommand(command);
+			equal(cleanTableHtml(editor.getContent()), test.after, test.message);
+		});
+	}
+
 	function cleanTableHtml(html) {
 		return Utils.cleanHtml(html).replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
 	}
@@ -615,6 +625,140 @@
 		);
 	});
 
+	test("mceTablePasteRowAfter from merged row source", function() {
+		editor.setContent(
+			'<table>' +
+				'<tbody>' +
+					'<tr><td colspan="2">1 2</td><td rowspan="2">3</td></tr>' +
+					'<tr><td>1</td><td>2</td></tr>' +
+				'</tbody>' +
+			'</table>'
+		);
+
+		Utils.setSelection('tr:nth-child(1) td', 0);
+		editor.execCommand('mceTableCopyRow');
+		Utils.setSelection('tr:nth-child(2) td:nth-child(2)', 0);
+		editor.execCommand('mceTablePasteRowAfter');
+
+		equal(
+			cleanTableHtml(editor.getContent()),
+
+			'<table>' +
+				'<tbody>' +
+					'<tr><td colspan="2">1 2</td><td rowspan="2">3</td></tr>' +
+					'<tr><td>1</td><td>2</td></tr>' +
+					'<tr><td>1 2</td><td>3</td><td>&nbsp;</td></tr>' +
+				'</tbody>' +
+			'</table>'
+		);
+	});
+
+	test("mceTablePasteRowAfter from merged row source to merged row target", function() {
+		editor.setContent(
+			'<table>' +
+				'<tbody>' +
+					'<tr><td colspan="2">1 2</td><td rowspan="2">3</td></tr>' +
+					'<tr><td>1</td><td>2</td></tr>' +
+				'</tbody>' +
+			'</table>'
+		);
+
+		Utils.setSelection('tr:nth-child(1) td', 0);
+		editor.execCommand('mceTableCopyRow');
+		Utils.setSelection('tr:nth-child(1) td', 0);
+		editor.execCommand('mceTablePasteRowAfter');
+
+		equal(
+			cleanTableHtml(editor.getContent()),
+
+			'<table>' +
+				'<tbody>' +
+					'<tr><td colspan="2">1 2</td><td>3</td></tr>' +
+					'<tr><td>1 2</td><td>3</td><td>&nbsp;</td></tr>' +
+					'<tr><td>1</td><td>2</td><td>&nbsp;</td></tr>' +
+				'</tbody>' +
+			'</table>'
+		);
+	});
+
+	test("mceTablePasteRowAfter to wider table", function() {
+		editor.setContent(
+			'<table>' +
+				'<tbody>' +
+					'<tr><td>1a</td><td>2a</td><td>3a</td></tr>' +
+				'</tbody>' +
+			'</table>' +
+
+			'<table>' +
+				'<tbody>' +
+					'<tr><td>1b</td><td>2b</td><td>3b</td><td>4b</td></tr>' +
+				'</tbody>' +
+			'</table>'
+		);
+
+		Utils.setSelection('table:nth-child(1) tr:nth-child(1) td', 0);
+		editor.execCommand('mceTableCopyRow');
+
+		Utils.setSelection('table:nth-child(2) td', 0);
+		editor.execCommand('mceTablePasteRowAfter');
+
+		equal(
+			cleanTableHtml(editor.getContent()),
+
+			'<table>' +
+				'<tbody>' +
+					'<tr><td>1a</td><td>2a</td><td>3a</td></tr>' +
+				'</tbody>' +
+			'</table>' +
+
+			'<table>' +
+				'<tbody>' +
+					'<tr><td>1b</td><td>2b</td><td>3b</td><td>4b</td></tr>' +
+					'<tr><td>1a</td><td>2a</td><td>3a</td><td>&nbsp;</td></tr>' +
+				'</tbody>' +
+			'</table>'
+		);
+	});
+
+	test("mceTablePasteRowAfter to narrower table", function() {
+		editor.setContent(
+			'<table>' +
+				'<tbody>' +
+					'<tr><td>1a</td><td>2a</td><td>3a</td></tr>' +
+				'</tbody>' +
+			'</table>' +
+
+			'<table>' +
+				'<tbody>' +
+					'<tr><td>1b</td><td>2b</td></tr>' +
+				'</tbody>' +
+			'</table>'
+		);
+
+		Utils.setSelection('table:nth-child(1) tr:nth-child(1) td', 0);
+		editor.execCommand('mceTableCopyRow');
+
+		Utils.setSelection('table:nth-child(2) td', 0);
+		editor.execCommand('mceTablePasteRowAfter');
+
+		equal(
+			cleanTableHtml(editor.getContent()),
+
+			'<table>' +
+				'<tbody>' +
+					'<tr><td>1a</td><td>2a</td><td>3a</td></tr>' +
+				'</tbody>' +
+			'</table>' +
+
+			'<table>' +
+				'<tbody>' +
+					'<tr><td>1b</td><td>2b</td></tr>' +
+					'<tr><td>1a</td><td>2a</td></tr>' +
+				'</tbody>' +
+			'</table>'
+		);
+	});
+
 	test("row clipboard api", function() {
 		var clipboardRows;
 
@@ -666,6 +810,186 @@
 		);
 	});
 
+	test("mceSplitColsBefore", function() {
+		testCommand('mceSplitColsBefore', [
+			{
+				message: 'Should not change anything these is no table cell selection',
+				before: '<p>a</p>',
+				after: '<p>a</p>'
+			},
+
+			{
+				message: 'Should not change anything since there is nothing to split (1 row)',
+				before: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td data-mce-selected="1">1a</td><td>2a</td><td>3a</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				),
+				after: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td>1a</td><td>2a</td><td>3a</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				)
+			},
+
+			{
+				message: 'Should not change anything since there is nothing to split (2 rows)',
+				before: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td>1a</td><td>2a</td><td>3a</td></tr>' +
+							'<tr><td data-mce-selected="1">1b</td><td>2b</td><td>3b</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				),
+				after: (
+					'<table>' +
+						'<tbody>' +
+						'<tr><td>1a</td><td>2a</td><td>3a</td></tr>' +
+						'<tr><td>1b</td><td>2b</td><td>3b</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				)
+			},
+
+			{
+				message: 'Should split at second row and remove rowspan',
+				before: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td rowspan="2">1a</td><td>2a</td><td rowspan="2">3a</td></tr>' +
+							'<tr><td data-mce-selected="1">2b</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				),
+				after: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td>1a</td><td>2a</td><td>3a</td></tr>' +
+							'<tr><td>&nbsp;</td><td>2b</td><td>&nbsp;</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				)
+			},
+
+			{
+				message: 'Should split at third row and decrease rowspan',
+				before: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td rowspan="3">1a</td><td>2a</td><td rowspan="3">3a</td></tr>' +
+							'<tr><td>2b</td></tr>' +
+							'<tr><td data-mce-selected="1">2c</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				),
+				after: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td rowspan="2">1a</td><td>2a</td><td rowspan="2">3a</td></tr>' +
+							'<tr><td>2b</td></tr>' +
+							'<tr><td>&nbsp;</td><td>2c</td><td>&nbsp;</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				)
+			}
+		]);
+	});
+
+	test("mceSplitColsAfter", function() {
+		testCommand('mceSplitColsAfter', [
+			{
+				message: 'Should not change anything these is no table cell selection',
+				before: '<p>a</p>',
+				after: '<p>a</p>'
+			},
+
+			{
+				message: 'Should not change anything since there is nothing to split (1 row)',
+				before: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td data-mce-selected="1">1a</td><td>2a</td><td>3a</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				),
+				after: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td>1a</td><td>2a</td><td>3a</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				)
+			},
+
+			{
+				message: 'Should not change anything since there is nothing to split (2 rows)',
+				before: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td data-mce-selected="1">1a</td><td>2a</td><td>3a</td></tr>' +
+							'<tr><td>1b</td><td>2b</td><td>3b</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				),
+				after: (
+					'<table>' +
+						'<tbody>' +
+						'<tr><td>1a</td><td>2a</td><td>3a</td></tr>' +
+						'<tr><td>1b</td><td>2b</td><td>3b</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				)
+			},
+
+			{
+				message: 'Should split at second row and remove rowspan',
+				before: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td rowspan="2" data-mce-selected="1">1a</td><td>2a</td><td rowspan="2">3a</td></tr>' +
+							'<tr><td>2b</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				),
+				after: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td>1a</td><td>2a</td><td>3a</td></tr>' +
+							'<tr><td>&nbsp;</td><td>2b</td><td>&nbsp;</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				)
+			},
+
+			{
+				message: 'Should split at first row and produce td:s with decreased rowspans below',
+				before: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td rowspan="3" data-mce-selected="1">1a</td><td>2a</td><td rowspan="3">3a</td></tr>' +
+							'<tr><td>2b</td></tr>' +
+							'<tr><td>2c</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				),
+				after: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td>1a</td><td>2a</td><td>3a</td></tr>' +
+							'<tr><td rowspan="2">&nbsp;</td><td>2b</td><td rowspan="2">&nbsp;</td></tr>' +
+							'<tr><td>2c</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				)
+			}
+		]);
+	});
+
 	test("mceTableInsertRowBefore command", function() {
 		editor.setContent('<table><tr><td>1</td><td>2</td></tr></table>');
 		Utils.setSelection('td', 0);
@@ -673,59 +997,176 @@
 		equal(cleanTableHtml(editor.getContent()), '<table><tbody><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>1</td><td>2</td></tr></tbody></table>');
 	});
 
-	test("mceTableMergeCells command with cell selection", function() {
-		editor.getBody().innerHTML = '<table><tr><td data-mce-selected="1">1</td><td data-mce-selected="1">2</td></tr></table>';
-		Utils.setSelection('td', 0);
-		editor.execCommand('mceTableMergeCells');
-		equal(cleanTableHtml(editor.getContent()), '<table><tbody><tr><td>12</td></tr></tbody></table>');
-	});
+	test("mceTableMergeCells", function() {
+		testCommand('mceTableMergeCells', [
+			{
+				message: 'Should merge all cells into one',
+				before: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td data-mce-selected="1">a1</td><td data-mce-selected="1">b1</td></tr>' +
+							'<tr><td data-mce-selected="1">a2</td><td data-mce-selected="1">b2</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				),
 
-	test("mceTableMergeCells command with all cells selected", function() {
-		editor.getBody().innerHTML = (
-			'<table>' +
-				'<tbody>' +
-					'<tr><td data-mce-selected="1">1</td><td data-mce-selected="1">2</td></tr>' +
-					'<tr><td data-mce-selected="1">3</td><td data-mce-selected="1">4</td></tr>' +
-				'</tbody>' +
-			'</table>'
-		);
+				after: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td>a1b1a2b2</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				)
+			},
 
-		Utils.setSelection('td', 0);
-		editor.execCommand('mceTableMergeCells');
+			{
+				message: 'Should merge cells in two cols/rows into one cell with colspan',
+				before: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td data-mce-selected="1">a1</td><td data-mce-selected="1">b1</td></tr>' +
+							'<tr><td data-mce-selected="1">a2</td><td data-mce-selected="1">b2</td></tr>' +
+							'<tr><td>a3</td><td>b3</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				),
 
-		equal(
-			cleanTableHtml(editor.getContent()),
-			'<table>' +
-				'<tbody>' +
-					'<tr><td>1234</td></tr>' +
-				'</tbody>' +
-			'</table>'
-		);
-	});
+				after: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td colspan="2">a1b1a2b2</td></tr>' +
+							'<tr><td>a3</td><td>b3</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				)
+			},
 
-	test("mceTableMergeCells command with whole rows selected", function() {
-		editor.getBody().innerHTML = (
-			'<table>' +
-				'<tbody>' +
-					'<tr><td data-mce-selected="1">1</td><td data-mce-selected="1">2</td></tr>' +
-					'<tr><td data-mce-selected="1">3</td><td data-mce-selected="1">4</td></tr>' +
-					'<tr><td>5</td><td>6</td></tr>' +
-				'</tbody>' +
-			'</table>'
-		);
+			{
+				message: 'Should remove all rowspans since the table is fully merged',
+				before: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td rowspan="2">a1</td><td data-mce-selected="1">b1</td></tr>' +
+							'<tr><td data-mce-selected="1">b2</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				),
+				after: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td>a1</td><td>b1b2</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				)
+			},
 
-		Utils.setSelection('td', 0);
-		editor.execCommand('mceTableMergeCells');
+			{
+				message: 'Should remove all colspans since the table is fully merged',
+				before: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td colspan="2">a1</td></tr>' +
+							'<tr><td data-mce-selected="1">a2</td><td data-mce-selected="1">b2</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				),
+				after: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td>a1</td></tr>' +
+							'<tr><td>a2b2</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				)
+			},
 
-		equal(
-			cleanTableHtml(editor.getContent()),
-			'<table>' +
-				'<tbody>' +
-					'<tr><td colspan="2">1234</td></tr>' +
-					'<tr><td>5</td><td>6</td></tr>' +
-				'</tbody>' +
-			'</table>'
-		);
+			{
+				message: 'Should remove rowspans since the table is fully merged',
+				before: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td rowspan="3">a1</td><td rowspan="3">b1</td><td data-mce-selected="1">c1</td></tr>' +
+							'<tr><td data-mce-selected="1">c2</td></tr>' +
+							'<tr><td data-mce-selected="1">c3</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				),
+				after: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td>a1</td><td>b1</td><td>c1c2c3</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				)
+			},
+
+			{
+				message: 'Should remove colspans since the table is fully merged',
+				before: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td data-mce-selected="1">a1</td><td data-mce-selected="1">b1</td><td data-mce-selected="1">c1</td></tr>' +
+							'<tr><td colspan="3">a2</td></tr>' +
+							'<tr><td colspan="3">a3</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				),
+				after: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td>a1b1c1</td></tr>' +
+							'<tr><td>a2</td></tr>' +
+							'<tr><td>a3</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				)
+			},
+
+			{
+				message: 'Should reduce rowspans to 2 keep the colspan and remove one tr',
+				before: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td colspan="2" rowspan="2">a1</td><td rowspan="3">b1</td><td data-mce-selected="1">c1</td></tr>' +
+							'<tr><td data-mce-selected="1">c2</td></tr>' +
+							'<tr><td>a3</td><td>b3</td><td data-mce-selected="1">c3</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				),
+				after: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td colspan="2">a1</td><td rowspan="2">b1</td><td rowspan="2">c1c2c3</td></tr>' +
+							'<tr><td>a3</td><td>b3</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				)
+			},
+
+			{
+				message: 'Should reduce colspans to 2 keep the rowspan',
+				before: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td data-mce-selected="1">a1</td><td data-mce-selected="1">b1</td><td data-mce-selected="1">c1</td></tr>' +
+							'<tr><td colspan="3">a2</td></tr>' +
+							'<tr><td colspan="2" rowspan="2">a3</td><td>c3</td></tr>' +
+							'<tr><td>c4</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				),
+				after: (
+					'<table>' +
+						'<tbody>' +
+							'<tr><td colspan="2">a1b1c1</td></tr>' +
+							'<tr><td colspan="2">a2</td></tr>' +
+							'<tr><td rowspan="2">a3</td><td>c3</td></tr>' +
+							'<tr><td>c4</td></tr>' +
+						'</tbody>' +
+					'</table>'
+				)
+			}
+		]);
 	});
 
 	test("mceTableSplitCells command", function() {

@@ -17,9 +17,25 @@
 define("tinymce/tableplugin/Utils", [
 	"tinymce/Env"
 ], function(Env) {
-	function getSpanVal(td, name) {
-		return parseInt(td.getAttribute(name) || 1, 10);
-	}
+	var setSpanVal = function (name) {
+		return function (td, val) {
+			if (td) {
+				val = parseInt(val, 10);
+
+				if (val === 1 || val === 0) {
+					td.removeAttribute(name, 1);
+				} else {
+					td.setAttribute(name, val, 1);
+				}
+			}
+		};
+	};
+
+	var getSpanVal = function (name) {
+		return function (td) {
+			return parseInt(td.getAttribute(name) || 1, 10);
+		};
+	};
 
 	function paddCell(cell) {
 		if (!Env.ie || Env.ie > 9) {
@@ -30,7 +46,16 @@ define("tinymce/tableplugin/Utils", [
 	}
 
 	return {
-		getSpanVal: getSpanVal,
+		setColSpan: setSpanVal('colSpan'),
+		setRowSpan: setSpanVal('rowspan'),
+		getColSpan: getSpanVal('colSpan'),
+		getRowSpan: getSpanVal('rowSpan'),
+		setSpanVal: function (td, name, value) {
+			setSpanVal(name)(td, value);
+		},
+		getSpanVal: function (td, name) {
+			return getSpanVal(name)(td);
+		},
 		paddCell: paddCell
 	};
 });
