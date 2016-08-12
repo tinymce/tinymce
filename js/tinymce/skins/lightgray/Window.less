@@ -30,14 +30,16 @@ div.@{prefix}-fullscreen {
 }
 
 .@{prefix}-window {
-	.border-radius(7px);
+	.border-radius(7px);  //d2l originally 6px
 	.reset-gradient();
 	background: @window-bg;
 	position: fixed;
 	top: 0; left: 0;
 	opacity: 0;
-	transition: opacity ease-in .2s;
-	box-shadow: 0px 2px 12px rgba(86, 90, 92, 0.25);
+	transform: scale(0.1);
+	transition: @d2l-window-appear-transition; //d2l originally transition: transform 100ms ease-in, opacity 150ms ease-in;
+	box-shadow: @d2l-window-box-shadow; //d2l originally @window-box-shadow
+	padding: @d2l-window-padding;
 }
 
 .@{prefix}-window.@{prefix}-in {
@@ -46,30 +48,39 @@ div.@{prefix}-fullscreen {
 }
 
 .@{prefix}-window-head {
+//	padding: 9px 15px; //d2l commented out
+//  border-bottom: 1px solid @window-head-border; //d2l commented out	
 	position: relative;
 }
 
 .@{prefix}-window-head .@{prefix}-close {
 	position: absolute;
-	right: -0.2rem;
-	top: -0.50rem;
-	height: 2rem;
-	width: 2rem;
+	right: -0.1rem; //d2l orginally 0
+	top: -0.27rem; //d2l orginally 0
+	min-height: 1.3rem !important; //d2l overrides 2rem min-height constraint on buttons
+	width: 1.3rem; 
 	text-align: center;
 	cursor: pointer;
-	border: 1px solid transparent;
+	border: @d2l-window-close-button-border;
 	border-radius: 0.3rem;
+
+    // i {
+    //     color: @window-head-close;
+    // } //d2l
 }
 
 button.@{prefix}-close:hover {
-	border: 1px solid rgba(0, 0, 0, 0.2);
+	border: @d2l-window-close-border-hover;
+//    color: @window-head-close-hover;
 }
 
 .@{prefix}-window-head .@{prefix}-title {
 	line-height: 20px;
 	font-size: @window-title-font-size;
 	font-weight: bold;
+	letter-spacing: @d2l-window-title-letter-spacing;
 	text-rendering: optimizelegibility;
+	//padding-right: 20px;  
 }
 
 .@{prefix}-window .@{prefix}-container-body {
@@ -78,7 +89,7 @@ button.@{prefix}-close:hover {
 
 .@{prefix}-foot {
 	display: block;
-	border-width: 0px !important;
+	border-width: 0px !important; //d2l overrides the foot border 
 }
 
 .@{prefix}-window-head .@{prefix}-dragh {

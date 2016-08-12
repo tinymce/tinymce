@@ -5,16 +5,18 @@
 @prefix:                         mce;
 
 // Default font
-@font-family:                    "Helvetica Neue", Helvetica, Arial, sans-serif;
+// @font-family:                    "Helvetica Neue", Helvetica, Arial, sans-serif;
+@font-family:                    Lato,'Lucida Sans Unicode','Lucida Grande',sans-serif; //d2l "Helvetica Neue", Helvetica, Arial, sans-serif;
 @font-size:                      0.7rem; // 14px;
 @line-height:                    1rem; // 20px;
+@font-weight:					 700; //d2l default font-weight	
 @has-gradients:                  false;
 @has-radius:                     true; // false;
 @has-boxshadow:                  false;
 @has-button-borders:             false;
 
 // Text colors
-@text:                           #565a5c;
+@text:                           #565a5c; //d2l orginally #333
 @text-inverse:                   white;
 @text-disabled:                  #aaa;
 @text-shadow:                    0 1px 1px hsla(hue(@text-inverse), saturation(@text-inverse), lightness(@text-inverse), 0.75);
@@ -134,13 +136,14 @@
 // Window
 @window-border:                  #c5c5c5;
 @window-head-border:             @window-border;
+@window-head-close:              mix(@text, @window-bg, 60%);
+@window-head-close-hover:        mix(@text, @window-bg, 40%);
 @window-foot-border:             @window-border;
-@window-head-close:              mix(@text, @window-bg, 80%);
-@window-head-close-hover:        #006fbf;
 @window-foot-bg:                 @window-bg;
 @window-fullscreen-bg:           #FFF;
 @window-modalblock-bg:           #000;
-@window-modalblock-opacity:      0.5;
+@window-box-shadow:              0 3px 7px rgba(0, 0, 0, 0.3);
+@window-modalblock-opacity:      0.5; //0.3
 @window-bg:                      #FFF;
 @window-title-font-size:         1rem; // 20px;
 
@@ -211,3 +214,18 @@
 
 // Flow layout
 @flow-layout-spacing:            2px;
+
+//d2l variables
+@d2l-window-title-letter-spacing: 0.025rem;
+@d2l-window-box-shadow:           0px 2px 12px rgba(86, 90, 92, 0.25);
+@d2l-window-padding:              1.5rem;
+@d2l-dialog-shim-color:           #f9fafb;
+@d2l-window-close-button-border:  1px solid transparent;
+@d2l-window-close-border-hover:   1px solid rgba(0, 0, 0, 0.2);
+@d2l-window-appear-transition:    opacity ease-in .2s;
+@d2l-textbox-font-size:           1rem;
+@d2l-textbox-font-weight:         300;
+@d2l-textbox-border:              #d3d9e3;
+
+
+

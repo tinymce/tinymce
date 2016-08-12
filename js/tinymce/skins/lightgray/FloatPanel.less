@@ -69,7 +69,7 @@
 }
 
 // D2L
-// Remove the Color butto fly out
+// Remove the Color button fly out
 .@{prefix}-floatpanel.@{prefix}-popover.@{prefix}-bottom {
     margin-top: 0;
 }
@@ -81,4 +81,87 @@
 .@{prefix}-floatpanel .@{prefix}-arrow {
 	display: none;
 }
+
+// Conform OK button style to daylight
+.@{prefix}-floatpanel .@{prefix}-primary.@{prefix}-btn {
+	left: 0 !important;
+	top: initial !important;
+	bottom: 0 !important;
+	border: 1px solid #1b5295; 
+	background-color: #006fbf;
+	border-radius: .3rem;
+	
+	button {		
+		color: #fff;
+		font-size: @font-size;
+		font-weight: @font-weight;
+		letter-spacing: .02rem;
+		line-height: 1rem;
+		width: 4rem;
+
+		span.@{prefix}-txt {
+			display: none;
+		}
+
+		&:after {
+			content: "Save";
+		}
+
+		&:hover {
+			color: #ffffff;
+		}
+	}
+
+	&:hover {
+		background-color: #1c5295;
+	}
+}
+
+// Conform Cancel button style to daylight
+.@{prefix}-floatpanel .@{prefix}-last.@{prefix}-btn {
+	left: 5rem !important;
+	top: initial !important;
+	bottom: 0 !important;
+	background-color: #f2f3f5;
+	border: 1px solid #d3d9e3;
+	border-radius: .3rem;
+
+	button {		
+		color: #565a5c;
+		font-size: @font-size;
+		font-weight: @font-weight;
+		letter-spacing: .02rem;
+		line-height: 1rem;
+		width: 4rem;
+
+		span.@{prefix}-txt {
+			font-weight: inherit;
+			font-weight: inherit;
+			line-spacing: inherit;
+		}
+
+		&:hover {
+			color: #565a5c;
+		}
+	}
+
+	&:hover {
+		background-color: #e6eaf0;
+	}
+}
+
+// Remove borders
+.@{prefix}-floatpanel .@{prefix}-window-head {
+	border-bottom: 0;
+	margin-bottom: 1rem;
+}
+
+.@{prefix}-floatpanel .@{prefix}-foot {
+	border-top: 0;
+}
+
+// Make the floatpanel height auto so it can auto adjust height
+.@{prefix}-container.@{prefix}-panel.@{prefix}-floatpanel.@{prefix}-window.@{prefix}-in {
+	height: auto !important;
+} 
 // End of D2L
