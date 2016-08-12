@@ -56,6 +56,16 @@ var dependencies = [
       { name: 'module/*.js', path: depend },
       { name: 'depend/*.js', path: depend }
     ]
+  },
+
+  {
+    name: 'agar',
+    repository: 'buildrepo2',
+    source: 'agar.zip',
+    targets: [
+      { name: 'module/*.js', path: test },
+      { name: 'depend/*.js', path: test }
+    ]
   }
 
 ];

@@ -12,10 +12,11 @@ define(
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert'
+    'ephox.sugar.api.Insert',
+    'ephox.sugar.api.InsertAll'
   ],
 
-  function (Type, Arr, Obj, Styles, Id, Merger, Fun, Attr, Class, Element, Insert) {
+  function (Type, Arr, Obj, Styles, Id, Merger, Fun, Attr, Class, Element, Insert, InsertAll) {
     var helpStyle = Styles.resolve('aria-help');
     var helpVisibleStyle = Styles.resolve('aria-help-visible');
 
@@ -157,6 +158,25 @@ define(
       });
     };
 
+    // return a container object with methods {element, field} containing an html field and label
+    var labelledField = function (field, name, labelText) {
+      var container = Element.fromTag('div');
+      var id = name + Id.generate('');
+      var label = Element.fromHtml('<label>' + labelText + '</label>');
+      Attr.set(label, 'for', id);
+      Attr.set(field, 'id', id);
+      // add Aria-labelledby refering to the label in the case that the label is not visibile (display=none)
+      //var labelId = Id.generate('ephox-aria');
+      //Attr.set(label, 'id', labelId); //
+      //AriaRegister.labelledBy(field, labelId);
+      InsertAll.append(container, [ label, field ]);
+
+      return {
+        element: Fun.constant(container),
+        field:   Fun.constant(field)
+      };
+    };
+
     var textarea = function (element) {
       Attr.setAll(element, {
         'aria-multiline': 'true',
@@ -266,6 +286,7 @@ define(
       dialog: dialog,
       button: button,
       dialogButton: dialogButton,
+      labelledField: labelledField,
       textarea: textarea,
       label: label,
       widget: widget,
