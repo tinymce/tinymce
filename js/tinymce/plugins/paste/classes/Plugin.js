@@ -58,7 +58,7 @@ define("tinymce/pasteplugin/Plugin", [
 		// draw back if power version is requested and registered
 		if (/(^|[ ,])powerpaste([, ]|$)/.test(settings.plugins) && PluginManager.get('powerpaste')) {
 			if (typeof console !== "undefined" && console.log) {
-				console.log("PowerPaste is incompatible with Paste plugin!");
+				console.log("PowerPaste is incompatible with Paste plugin! Remove 'paste' from the 'plugins' option.");
 			}
 			return;
 		}

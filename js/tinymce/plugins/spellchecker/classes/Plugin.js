@@ -55,7 +55,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 		// draw back if power version is requested and registered
 		if (/(^|[ ,])tinymcespellchecker([, ]|$)/.test(settings.plugins) && PluginManager.get('tinymcespellchecker')) {
 			if (typeof console !== "undefined" && console.log) {
-				console.log("Spell Checker Pro is incompatible with Spell Checker plugin!");
+				console.log("Spell Checker Pro is incompatible with Spell Checker plugin! Remove 'spellchecker' from the 'plugins' option.");
 			}
 			return;
 		}
