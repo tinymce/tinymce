@@ -13,10 +13,11 @@ define(
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
-    'ephox.sugar.api.InsertAll'
+    'ephox.sugar.api.InsertAll',
+    'ephox.sugar.api.Node'
   ],
 
-  function (Type, Arr, Obj, Styles, Id, Merger, Fun, Attr, Class, Element, Insert, InsertAll) {
+  function (Type, Arr, Obj, Styles, Id, Merger, Fun, Attr, Class, Element, Insert, InsertAll, Node) {
     var helpStyle = Styles.resolve('aria-help');
     var helpVisibleStyle = Styles.resolve('aria-help-visible');
 
@@ -82,10 +83,25 @@ define(
       });
     };
 
+    var textButton = function (element, contentElement) {
+      // textButtons are spans whose contentElement is the label (not an icon)
+      // element and contentElement are the element() and conent().element() 
+      // from a pastry Button.
+      // a <span> needs a role (a <button> does not). 
+      // text content in a span needs role=presentation
+      // ARIA derives the label from the text or title.
+      if (Node.name(element) !== 'button') {
+        Attr.set(element, 'role', 'button');
+      }
+      if (Node.name(contentElement) === 'span') {
+        Attr.set(contentElement, 'role', 'presentation');
+      }
+    };
+
     var toolbarButton = function (element, label, hasPopup, isToggle) {
       Attr.setAll(element, {
         'role': 'button',
-        'aria-label': label,
+        //'aria-label': label,
         'aria-haspopup': '' + hasPopup
       });
       if (isToggle) Attr.set(element, 'aria-pressed', 'false');
@@ -139,15 +155,6 @@ define(
       Attr.setAll(element, {
         'role': 'dialog',
         'aria-label': label
-      });
-    };
-
-    var dialogButton = function (element) {
-      // dialog Buttons are spans with text labels.
-      // a <span> needs a role (a <button> does not)
-      // ARIA derives the label from the text or title.
-      Attr.setAll(element, {
-        'role': 'button'
       });
     };
 
@@ -279,13 +286,13 @@ define(
       toolbar: toolbar,
       toolbarGroup: toolbarGroup,
       toolbarButton: toolbarButton,
+      textButton: textButton,
       menu: menu,
       menuItem: menuItem,
       menuItemCheckbox: menuItemCheckbox,
       checkbox: checkbox,
       dialog: dialog,
       button: button,
-      dialogButton: dialogButton,
       labelledField: labelledField,
       textarea: textarea,
       label: label,
