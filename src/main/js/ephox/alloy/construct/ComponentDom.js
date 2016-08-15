@@ -83,7 +83,6 @@ define(
       defChildren: onlyOne,
       innerHtml: onlyOne,
 
-
       value: onlyOne
     };
 
@@ -93,7 +92,6 @@ define(
       Arr.each(behaviours, function (behaviour) {
         behaviourDoms[behaviour.name()] = behaviour.exhibit(info, base);
       });
-
 
       var byAspect = ObjIndex.byInnerKey(behaviourDoms, behaviourDom);
 
