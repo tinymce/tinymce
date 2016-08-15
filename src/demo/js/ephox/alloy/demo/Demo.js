@@ -61,9 +61,10 @@ define(
                   
                 },
                 styles: {
-                  foreground: 'red'
+                  background: 'red'
                   // background: 'red'
-                }
+                },
+                // value: 15
               });
             }
           })

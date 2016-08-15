@@ -23,21 +23,21 @@ define(
       };
     };
 
-    var anyOrderConcat = function (chain, aspect) {
-      console.log('chain', chain);
+    var concat = function (chain, aspect) {
       var values = Arr.bind(chain, function (c) {
         return c.modification().getOr([ ]);
       });
-      var x = Result.value(
+      return Result.value(
         Objects.wrap(aspect, values)
       );
-      console.log('x', values);
-      return x;
     };
 
     var onlyOne = function (chain, aspect, order) {
-      console.log('chain', chain);
-      if (chain.length > 1) return Result.error('Only one can specify');
+      if (chain.length > 1) return Result.error(
+        'Multiple behaviours have tried to change DOM "' + aspect + '". The guilty behaviours are: ' + 
+          Json.stringify(Arr.map(chain, function (b) { return b.name(); })) + '. At this stage, this ' +
+          'is not supported. Future releases might provide strategies for resolving this.' 
+      );
       else if (chain.length === 0) return  Result.value({ });
       else return Result.value(
         chain[0].modification().fold(function () {
@@ -48,14 +48,22 @@ define(
       );
     };
 
-    var mergeInOrder = function (chain, aspect) {
+    var duplicate = function (aspect, k, obj, behaviours) {
+      return Result.error('Mulitple behaviours have tried to change the _' + k + '_ "' + aspect + '"' +
+        '. The guilty behaviours are: ' + Json.stringify(Arr.bind(behaviours, function (b) {
+          return b.modification().getOr({})[k] !== undefined ? [ b.name() ] : [ ];
+        }), null, 2) + '. This is not currently supported.'
+      );
+    };
+
+    var safeMerge = function (chain, aspect) {
       var y = Arr.foldl(chain, function (acc, c) {
         var obj = c.modification().getOr({});
         return acc.bind(function (accRest) {
           console.log('accRest', accRest);
 
           var ps = Obj.mapToArray(obj, function (v, k) {
-            return accRest[k] !== undefined ? Result.error('Duplicate: ' + k) : 
+            return accRest[k] !== undefined ? duplicate(aspect, k, obj, chain) : 
               Result.value(Objects.wrap(k, v));
           });
           console.log("ps", ps);
@@ -71,9 +79,9 @@ define(
     };
 
     var mergeTypes = {
-      classes: anyOrderConcat,
-      attributes: mergeInOrder,
-      styles: mergeInOrder,
+      classes: concat,
+      attributes: safeMerge,
+      styles: safeMerge,
 
       // Group these together somehow
       domChildren: onlyOne,
