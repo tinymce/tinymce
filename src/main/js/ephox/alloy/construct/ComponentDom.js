@@ -23,27 +23,6 @@ define(
       };
     };
 
-    var missingOrder = function (chain, aspect) {
-      return new Result.error([
-        'The DOM modification for "' + aspect + '" has more than one behaviour that modifies it.\nWhen this occurs, you must ' + 
-        'specify an ordering for the merging in your spec (e.g. [ "listing", "toggling" ]).\nThe behaviours that ' + 
-        'modify it are: ' + Json.stringify(Arr.map(chain, function (c) { return c.name(); }), null, 2) ]);
-    };
-
-    var sortByOrder = function (chain, apiName, orde) {
-      return PrioritySort.sortKeys(apiName, 'name', chain, order).map(function (sorted) {
-        var handler = function () {
-          var args = Array.prototype.slice.call(arguments, 0);
-          return Arr.foldl(sorted, function (acc, bApi) {
-            // Derive any lazy arguments.
-            return bApi.modification().apply(undefined, extra.concat(args));
-          }, undefined);
-        };
-
-        return Objects.wrap(apiName, handler);
-      });
-    };
-
     var anyOrderConcat = function (chain, aspect) {
       console.log('chain', chain);
       var values = Arr.bind(chain, function (c) {
@@ -56,11 +35,20 @@ define(
       return x;
     };
 
-    var onlyOne = function (chain) {
-
+    var onlyOne = function (chain, aspect, order) {
+      console.log('chain', chain);
+      if (chain.length > 1) return Result.error('Only one can specify');
+      else if (chain.length === 0) return  Result.value({ });
+      else return Result.value(
+        chain[0].modification().fold(function () {
+          return { };
+        }, function (m) {
+          return Objects.wrap(aspect, m);
+        })
+      );
     };
 
-    var mergeInOrder = function (chain, aspect, order) {
+    var mergeInOrder = function (chain, aspect) {
       var y = Arr.foldl(chain, function (acc, c) {
         var obj = c.modification().getOr({});
         return acc.bind(function (accRest) {
@@ -84,7 +72,16 @@ define(
 
     var mergeTypes = {
       classes: anyOrderConcat,
-      attributes: mergeInOrder
+      attributes: mergeInOrder,
+      styles: mergeInOrder,
+
+      // Group these together somehow
+      domChildren: onlyOne,
+      defChildren: onlyOne,
+      innerHtml: onlyOne,
+
+
+      value: onlyOne
     };
 
     var combine = function (info, behaviours, base) {
@@ -115,22 +112,11 @@ define(
       // Now, with all of these APIs, we need to get a list of behaviours
       
 
-      var modOrder =  info.domModificationOrder();
-
       // Now, with this API index, we need to combine things. Sort them in order.
       var modifications = Obj.mapToArray(usedAspect, function (values, aspect) {
         // TODO: Use hasOwnProperty.
-        if (mergeTypes[aspect] !== undefined) return mergeTypes[aspect](values, aspect, modOrder);
-        if (values.length > 1) {
-          var order = modOrder[aspect];
-          return order === undefined ? missingOrder(values, aspect) : sortByOrder(values, aspect, order);
-        } else if (values.length === 1) {
-          return Result.value(
-            Objects.wrap(aspect, values[0].modification())
-          );
-        } else {
-          return Result.value({});
-        }
+        if (mergeTypes[aspect] !== undefined) return mergeTypes[aspect](values, aspect);
+        else return Result.error('Unknown field type: ' + aspect);
       });
 
       var consolidated = Objects.consolidate(modifications, {});

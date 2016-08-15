@@ -35,18 +35,41 @@ define(
         eventOrder: {
           'alloy.execute': [ 'alloy.base.behaviour', 'toggling' ]
         },
-        behaviours: CustomBehaviour('blah', {
-          schema: Fun.constant(ValueSchema.anyValue()),
-          exhibit: function (info, base) {
-            return DomModification.nu({
-              classes: [ 'cat' ],
-              attributes: {
-                'aria-presseds': 'cat'
-              }
-            });
-          }
-        }),
-        blah: true
+        behaviours: [
+          CustomBehaviour('blah', {
+            schema: Fun.constant(ValueSchema.anyValue()),
+            exhibit: function (info, base) {
+              return DomModification.nu({
+                classes: [ 'cat' ],
+                attributes: {
+                  'data-cat': 'cat'
+                },
+                styles: {
+                  background: 'blue'
+                },
+                value: 10
+              });
+            }
+          }),
+
+          CustomBehaviour('blah2', {
+            schema: Fun.constant(ValueSchema.anyValue()),
+            exhibit: function (info, base) {
+              return DomModification.nu({
+                classes: [ 'cat' ],
+                attributes: {
+                  
+                },
+                styles: {
+                  foreground: 'red'
+                  // background: 'red'
+                }
+              });
+            }
+          })
+        ],
+        blah: true,
+        'blah2': true
       });
 
       gui.add(button);
