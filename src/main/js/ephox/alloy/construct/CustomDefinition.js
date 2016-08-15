@@ -46,7 +46,14 @@ define(
 
         // Use mergeWith in the future when pre-built behaviours conflict
         FieldSchema.defaulted('apiOrder', {}),
-        FieldSchema.defaulted('eventOrder', {}),
+        FieldSchema.field(
+          'eventOrder',
+          'eventOrder',
+          FieldPresence.mergeWith({
+            'alloy.execute': [ 'alloy.base.behaviour', 'toggling' ]
+          }),
+          ValueSchema.anyValue()
+        ),
         FieldSchema.defaulted('domModificationOrder', {}),
 
         FieldSchema.state('definition.input', Fun.identity)

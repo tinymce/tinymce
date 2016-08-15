@@ -31,9 +31,11 @@ define(
           console.log('***button.click');
         },
         text: 'Click me',
-        'toggling': true,
+        toggling: {
+          toggleClass: 'demo-selected'
+        },
         eventOrder: {
-          'alloy.execute': [ 'alloy.base.behaviour', 'toggling' ]
+          // 'alloy.execute': [ 'alloy.base.behaviour', 'toggling' ]
         },
         behaviours: [
           CustomBehaviour('blah', {
