@@ -21,7 +21,7 @@ define("tinymce/tableplugin/CellSelection", [
 	"tinymce/util/Tools"
 ], function(TableGrid, TreeWalker, Tools) {
 	return function(editor, selectionChange) {
-		var dom = editor.dom, tableGrid, startCell, startTable, lastMouseOverTarget, hasCellSelection = true, resizing;
+		var dom = editor.dom, tableGrid, startCell, startTable, lastMouseOverTarget, hasCellSelection = true, resizing, dragging;
 
 		function clear(force) {
 			// Restore selection possibilities
@@ -49,7 +49,7 @@ define("tinymce/tableplugin/CellSelection", [
 		function cellSelectionHandler(e) {
 			var sel, target = e.target, currentCell;
 
-			if (resizing) {
+			if (resizing || dragging) {
 				return;
 			}
 
@@ -109,7 +109,7 @@ define("tinymce/tableplugin/CellSelection", [
 
 		// Add cell selection logic
 		editor.on('MouseDown', function(e) {
-			if (e.button != 2 && !resizing) {
+			if (e.button != 2 && !resizing && !dragging) {
 				clear();
 
 				startCell = dom.getParent(e.target, 'td,th');
@@ -200,6 +200,14 @@ define("tinymce/tableplugin/CellSelection", [
 
 		editor.on('ObjectResizeStart ObjectResized', function(e) {
 			resizing = e.type != 'objectresized';
+		});
+
+		editor.on('dragstart', function () {
+			dragging = true;
+		});
+
+		editor.on('drop dragend', function () {
+			dragging = false;
 		});
 
 		return {
