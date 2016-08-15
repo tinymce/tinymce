@@ -47,16 +47,10 @@ define(
         // Use mergeWith in the future when pre-built behaviours conflict
         FieldSchema.defaulted('apiOrder', {}),
         FieldSchema.defaulted('eventOrder', {}),
+        FieldSchema.defaulted('domModificationOrder', {}),
 
         FieldSchema.state('definition.input', Fun.identity)
       ].concat(behaviourSchema)), spec);
-    };
-
-    var alter = function (bs, info, base) {
-      return Arr.foldl(bs, function (acc, b) {
-        var modification = b.exhibit(info);
-        return DomModification.merge(acc, modification);
-      }, DomDefinition.nu(base));
     };
 
     var getUid = function (info) {
@@ -80,6 +74,7 @@ define(
         domChildren: Arr.map(info.components(), function (comp) { return comp.element(); })
       };
 
+      // FIX Mutation
       info.dom().innerHtml().each(function (html) {
         base.innerHtml = html;
       });
@@ -88,8 +83,7 @@ define(
         base.value = value;
       });
 
-      var bs = behaviours(info);
-      return alter(bs, info, base);
+      return DomDefinition.nu(base);
     };
 
     var alloyBehaviours = [

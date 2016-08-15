@@ -4,15 +4,16 @@ define(
   [
     'ephox.alloy.dom.DomDefinition',
     'ephox.boulder.api.Objects',
+    'ephox.compass.Arr',
+    'ephox.compass.Obj',
     'ephox.highway.Merger',
     'ephox.numerosity.api.JSON',
     'ephox.perhaps.Result',
     'ephox.scullion.Struct'
   ],
 
-  function (DomDefinition, Objects, Merger, Json, Result, Struct) {
-    // Maybe we'll need to allow add/remove
-    var nu = Struct.immutableBag([ ], [
+  function (DomDefinition, Objects, Arr, Obj, Merger, Json, Result, Struct) {
+    var fields = [
       'classes',
       'attributes',
       'styles',
@@ -20,7 +21,22 @@ define(
       'innerHtml',
       'defChildren',
       'domChildren'
-    ]);
+    ];
+    // Maybe we'll need to allow add/remove
+    var nu = Struct.immutableBag([ ], fields);
+
+
+    var derive = function (settings) {
+      var r = { };
+      var keys = Obj.keys(settings);
+      Arr.each(keys, function (key) {
+        settings[key].each(function (v) {
+          r[key] = v;
+        });
+      });
+
+      return nu(r);
+    };
 
     var modToStr = function (mod) {
       var raw = modToRaw(mod);
@@ -89,14 +105,54 @@ define(
       return DomDefinition.nu(raw);
     };
 
-    var combine = function (mods) {
-      return Result.value(mods[0]);
-    };
+//     var combine = function (mods) {
+//       var reader = function (field) {
+//         console.log('field', field);
+//         return function (obj) {
+//           console.log('obj', obj);
+//           return Objects.readOptFrom(obj, field).bind(function (accessor) {
+//             console.log('accessor', accessor);
+//             return Option.none();
+//           })
+//         }
+//       }
+
+// // Come back here.
+//       return Arr.foldl(mods, function (acc, mod) {
+//         return acc.
+//         // For each field, get a result value for it.
+//         var results = Arr.map(fields, function (field) {
+//           return reader(field)(acc).fold(function () {
+
+//             return reader(mod)(field).fold(function () {
+//               return Result.value({ });
+//             }, function (modField) {
+//               return Result.value(Objects.wrap(field, modField));
+//             });
+
+//           }, function (accField) {
+//             return Objects.readOptFrom(mod, field).getOrDie().fold(function () {
+//               return Result.value(Objects.wrap(field, accField));
+//             }, function (modField) {
+//               return Result.error('Clashing field: ' + field);
+//             });
+//           });
+//         });
+//         console.log('results', results);
+
+//         var input = Objects.consolidate(results, { });
+//         console.log("input", input.getOrDie());
+
+//         return acc;
+//       }, mods.length >= 1 ? Result.value(mods[0]) : Result.error('No mods'));
+//     };
 
     return {
       nu: nu,
+      derive: derive,
+
       merge: merge,
-      combine: combine,
+      // combine: combine,
       modToStr: modToStr,
       modToRaw: modToRaw
     };

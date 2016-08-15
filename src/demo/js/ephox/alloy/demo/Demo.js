@@ -4,13 +4,18 @@ define(
   [
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.behaviour.CustomBehaviour',
+    'ephox.alloy.dom.DomModification',
+    'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.ValueSchema',
+    'ephox.peanut.Fun',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'global!document'
   ],
 
-  function (Gui, GuiFactory, Class, Element, Insert, document) {
+  function (Gui, GuiFactory, CustomBehaviour, DomModification, FieldSchema, ValueSchema, Fun, Class, Element, Insert, document) {
     return function () {
       console.log('Loading demo');
 
@@ -25,7 +30,23 @@ define(
         action: function () {
           console.log('***button.click');
         },
-        text: 'Click me'
+        text: 'Click me',
+        'toggling': true,
+        eventOrder: {
+          'alloy.execute': [ 'alloy.base.behaviour', 'toggling' ]
+        },
+        behaviours: CustomBehaviour('blah', {
+          schema: Fun.constant(ValueSchema.anyValue()),
+          exhibit: function (info, base) {
+            return DomModification.nu({
+              classes: [ 'cat' ],
+              attributes: {
+                'aria-presseds': 'cat'
+              }
+            });
+          }
+        }),
+        blah: true
       });
 
       gui.add(button);

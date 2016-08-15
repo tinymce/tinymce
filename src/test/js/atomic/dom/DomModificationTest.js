@@ -32,6 +32,23 @@ test(
 
       })
     ]);
+
+    checkVal('Combined classes', {
+      classes: [ 'a', 'b' ],
+      attributes: '<none>',
+      styles: '<none>',
+      value: '<none>',
+      innerHtml: '<none>',
+      defChildren: '<none>',
+      domChildren: '<none>'
+    }, [
+      DomModification.nu({
+        classes: [ 'a' ]
+      }),
+      DomModification.nu({
+        classes: [ 'b' ]
+      })
+    ]);
   }
 );
 

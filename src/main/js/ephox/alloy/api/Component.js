@@ -4,8 +4,10 @@ define(
   [
     'ephox.alloy.api.NoContextApi',
     'ephox.alloy.construct.ComponentApis',
+    'ephox.alloy.construct.ComponentDom',
     'ephox.alloy.construct.ComponentEvents',
     'ephox.alloy.construct.CustomDefinition',
+    'ephox.alloy.dom.DomModification',
     'ephox.alloy.dom.DomRender',
     'ephox.alloy.util.ExtraArgs',
     'ephox.boulder.api.ValueSchema',
@@ -13,7 +15,7 @@ define(
     'ephox.scullion.Cell'
   ],
 
-  function (NoContextApi, ComponentApis, ComponentEvents, CustomDefinition, DomRender, ExtraArgs, ValueSchema, Fun, Cell) {
+  function (NoContextApi, ComponentApis, ComponentDom, ComponentEvents, CustomDefinition, DomModification, DomRender, ExtraArgs, ValueSchema, Fun, Cell) {
     var build = function (spec) {
       var systemApi = Cell(NoContextApi());
 
@@ -21,7 +23,12 @@ define(
       var behaviours = CustomDefinition.behaviours(info);
 
       var definition = CustomDefinition.toDefinition(info);
-      var item = DomRender.renderToDom(definition);
+
+      var modification = ComponentDom.combine(info, behaviours, definition).getOrDie();
+      console.log('modification', DomModification.modToRaw(modification));
+      var modDefinition = DomModification.merge(definition, modification);
+
+      var item = DomRender.renderToDom(modDefinition);
 
       var baseEvents = {
         'alloy.base.behaviour': CustomDefinition.toEvents(info)
