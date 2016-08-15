@@ -12,7 +12,7 @@ define(
 
   function (SystemEvents, EventHandler, AlloyLogger, Objects, Compare, console) {
     // The purpose of this check is to ensure that a simulated focus call is not going
-    // to recurse infinitely. Essentially, is the originator of the focus call is the same
+    // to recurse infinitely. Essentially, if the originator of the focus call is the same
     // as the element receiving it, and it wasn't its own target, then stop the focus call
     // and log a warning.
     var isRecursive = function (component, originator, target) {

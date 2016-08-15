@@ -74,16 +74,10 @@ define(
         domChildren: Arr.map(info.components(), function (comp) { return comp.element(); })
       };
 
-      // FIX Mutation
-      info.dom().innerHtml().each(function (html) {
-        base.innerHtml = html;
-      });
-
-      info.dom().value().each(function (value) {
-        base.value = value;
-      });
-
-      return DomDefinition.nu(base);
+      return DomDefinition.nu(Merger.deepMerge(base, 
+        info.dom().innerHtml().map(function (h) { return Objects.wrap('innerHtml', h); }).getOr({ }),
+        info.dom().value().map(function (h) { return Objects.wrap('value', h); }).getOr({ })
+      ));
     };
 
     var alloyBehaviours = [

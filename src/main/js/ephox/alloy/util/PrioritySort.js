@@ -7,6 +7,7 @@ define(
   ],
 
   function (Result, Error) {
+    // TODO: Move to a sensible place.
     var sortKeys = function (label, keyName, array, order) {
       var sliced = array.slice(0);
       try {

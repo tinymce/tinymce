@@ -9,6 +9,7 @@ define(
   ],
 
   function (Arr, Fun, Adt, Array) {
+    // TODO: Move to a sensible place.
     var adt = Adt.generate([
       { eager: [ 'value' ] },
       { lazy: [ 'thunk' ] }

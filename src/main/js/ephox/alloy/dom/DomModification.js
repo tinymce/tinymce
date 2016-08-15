@@ -45,7 +45,6 @@ define(
 
     var modToRaw = function (mod) {
       return {
-        // Missing tag?
         classes: mod.classes().getOr('<none>'),
         attributes: mod.attributes().getOr('<none>'),
         styles: mod.styles().getOr('<none>'),
@@ -104,48 +103,6 @@ define(
       
       return DomDefinition.nu(raw);
     };
-
-//     var combine = function (mods) {
-//       var reader = function (field) {
-//         console.log('field', field);
-//         return function (obj) {
-//           console.log('obj', obj);
-//           return Objects.readOptFrom(obj, field).bind(function (accessor) {
-//             console.log('accessor', accessor);
-//             return Option.none();
-//           })
-//         }
-//       }
-
-// // Come back here.
-//       return Arr.foldl(mods, function (acc, mod) {
-//         return acc.
-//         // For each field, get a result value for it.
-//         var results = Arr.map(fields, function (field) {
-//           return reader(field)(acc).fold(function () {
-
-//             return reader(mod)(field).fold(function () {
-//               return Result.value({ });
-//             }, function (modField) {
-//               return Result.value(Objects.wrap(field, modField));
-//             });
-
-//           }, function (accField) {
-//             return Objects.readOptFrom(mod, field).getOrDie().fold(function () {
-//               return Result.value(Objects.wrap(field, accField));
-//             }, function (modField) {
-//               return Result.error('Clashing field: ' + field);
-//             });
-//           });
-//         });
-//         console.log('results', results);
-
-//         var input = Objects.consolidate(results, { });
-//         console.log("input", input.getOrDie());
-
-//         return acc;
-//       }, mods.length >= 1 ? Result.value(mods[0]) : Result.error('No mods'));
-//     };
 
     return {
       nu: nu,
