@@ -101,7 +101,7 @@ define(
     var toolbarButton = function (element, label, hasPopup, isToggle) {
       Attr.setAll(element, {
         'role': 'button',
-        //'aria-label': label,
+        'aria-label': label,
         'aria-haspopup': '' + hasPopup
       });
       if (isToggle) Attr.set(element, 'aria-pressed', 'false');
@@ -172,10 +172,6 @@ define(
       var label = Element.fromHtml('<label>' + labelText + '</label>');
       Attr.set(label, 'for', id);
       Attr.set(field, 'id', id);
-      // add Aria-labelledby refering to the label in the case that the label is not visibile (display=none)
-      //var labelId = Id.generate('ephox-aria');
-      //Attr.set(label, 'id', labelId); //
-      //AriaRegister.labelledBy(field, labelId);
       InsertAll.append(container, [ label, field ]);
 
       return {
