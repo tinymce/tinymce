@@ -68,22 +68,18 @@ define(
             mod.styles().getOr({})
           )
         }, 
+        mod.innerHtml().or(defnA.innerHtml()).map(function (innerHtml) {
+          return Objects.wrap('innerHtml', innerHtml);
+        }).getOr({ }),
+
         clashingOptArrays('domChildren', mod.domChildren(), defnA.domChildren()),
-        clashingOptArrays('defChildren', mod.defChildren(), defnA.defChildren())
+        clashingOptArrays('defChildren', mod.defChildren(), defnA.defChildren()),
+
+        mod.value().or(defnA.value()).map(function (value) {
+          return Objects.wrap('value', value);
+        }).getOr({ })
       );
       
-      var innerHtml = mod.innerHtml().or(defnA.innerHtml());
-      
-      // FIX: Mutation
-      innerHtml.each(function (html) {
-        raw.innerHtml = html;
-      });
-
-      var value = mod.value().or(defnA.value());
-      value.each(function (v) {
-        raw.value = v;
-      });
-
       return DomDefinition.nu(raw);
     };
 
