@@ -173,10 +173,7 @@ asynctest(
         store.sAssertEq('Should now have a behaviour.a and behaviour.b log with b first', [
           'behaviour.b.apis.behave',
           'behaviour.a.apis.behave'
-        ]),
-
-
-        function () { }
+        ])
       ];
     }, success, failure);
  

@@ -52,8 +52,6 @@ test(
           return ComponentDom.combine(inf, behaviours, definition).map(function (mod) {
             return DomModification.merge(definition, mod);
           });
-//       console.log('modification', DomModification.modToRaw(modification));
-//       var modDefinition = DomModification.merge(definition, modification);
         });
       }, function (value) {
         RawAssertions.assertEq(label, expected, DomDefinition.defToRaw(value));
