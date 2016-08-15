@@ -60,20 +60,15 @@ define(
       var y = Arr.foldl(chain, function (acc, c) {
         var obj = c.modification().getOr({});
         return acc.bind(function (accRest) {
-          console.log('accRest', accRest);
-
-          var ps = Obj.mapToArray(obj, function (v, k) {
+          var parts = Obj.mapToArray(obj, function (v, k) {
             return accRest[k] !== undefined ? duplicate(aspect, k, obj, chain) : 
               Result.value(Objects.wrap(k, v));
           });
-          console.log("ps", ps);
-
-          return Objects.consolidate(ps, accRest);
+          return Objects.consolidate(parts, accRest);
         });
       }, Result.value({}));
 
       return y.map(function (yValue) {
-        console.log('y.log', yValue);
         return Objects.wrap(aspect, yValue);
       });
     };

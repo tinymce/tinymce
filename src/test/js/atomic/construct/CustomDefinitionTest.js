@@ -4,6 +4,7 @@ test(
   [
     'ephox.agar.api.RawAssertions',
     'ephox.alloy.behaviour.CustomBehaviour',
+    'ephox.alloy.construct.ComponentDom',
     'ephox.alloy.construct.CustomDefinition',
     'ephox.alloy.dom.DomDefinition',
     'ephox.alloy.dom.DomModification',
@@ -15,13 +16,22 @@ test(
     'ephox.perhaps.Result'
   ],
 
-  function (RawAssertions, CustomBehaviour, CustomDefinition, DomDefinition, DomModification, ResultAssertions, FieldPresence, FieldSchema, ValueSchema, Fun, Result) {
+  function (RawAssertions, CustomBehaviour, ComponentDom, CustomDefinition, DomDefinition, DomModification, ResultAssertions, FieldPresence, FieldSchema, ValueSchema, Fun, Result) {
     var checkErr = function (label, expectedPart, spec) {
       ResultAssertions.checkErrStr(
         label,
         expectedPart,
         function () {
-          // Format the error nicely
+//           // Format the error nicely
+// var behaviours = CustomDefinition.behaviours(info);
+
+//       var definition = CustomDefinition.toDefinition(info);
+
+//       var modification = ComponentDom.combine(info, behaviours, definition).getOrDie();
+//       console.log('modification', DomModification.modToRaw(modification));
+//       var modDefinition = DomModification.merge(definition, modification);
+
+
           return CustomDefinition.toInfo(spec).fold(
             function (errInfo) {
               return Result.error(ValueSchema.formatError(errInfo));
@@ -34,7 +44,17 @@ test(
     var checkDomVal = function (label, expected, spec) {
       ResultAssertions.checkVal(label, function () {
         var info = CustomDefinition.toInfo(spec);
-        return info.map(CustomDefinition.toDefinition);
+        return info.bind(function (inf) {
+          var behaviours = CustomDefinition.behaviours(inf);
+
+          var definition = CustomDefinition.toDefinition(inf);
+
+          return ComponentDom.combine(inf, behaviours, definition).map(function (mod) {
+            return DomModification.merge(definition, mod);
+          });
+//       console.log('modification', DomModification.modToRaw(modification));
+//       var modDefinition = DomModification.merge(definition, modification);
+        });
       }, function (value) {
         RawAssertions.assertEq(label, expected, DomDefinition.defToRaw(value));
       });
