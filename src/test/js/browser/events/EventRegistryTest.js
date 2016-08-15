@@ -69,7 +69,11 @@ asynctest(
         var filtered = events.filterByType(type);
         var raw = Arr.map(filtered, function (f) {
           return { handler: f.handler(), id: f.id() };
-        }).sort();
+        }).sort(function (f, g) {
+          if (f.id < g.id) return -1;
+          else if (f.id > g.id) return +1;
+          else return 0;
+        });
 
         Assertions.assertEq('filter(' + type + ') = ' + Json.stringify(expected), expected, raw);
       });
