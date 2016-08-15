@@ -25,7 +25,6 @@ define(
       var definition = CustomDefinition.toDefinition(info);
 
       var modification = ComponentDom.combine(info, behaviours, definition).getOrDie();
-      console.log('modification', DomModification.modToRaw(modification));
       var modDefinition = DomModification.merge(definition, modification);
 
       var item = DomRender.renderToDom(modDefinition);
