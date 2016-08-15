@@ -6,10 +6,11 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.highway.Merger',
     'ephox.numerosity.api.JSON',
+    'ephox.perhaps.Result',
     'ephox.scullion.Struct'
   ],
 
-  function (DomDefinition, Objects, Merger, Json, Struct) {
+  function (DomDefinition, Objects, Merger, Json, Result, Struct) {
     // Maybe we'll need to allow add/remove
     var nu = Struct.immutableBag([ ], [
       'classes',
@@ -29,12 +30,17 @@ define(
     var modToRaw = function (mod) {
       return {
         // Missing tag?
-        classes: mod.classes().getOr([ ]),
-        attributes: mod.attributes().getOr({ }),
-        styles: mod.styles().getOr({ }),
+        classes: mod.classes().getOr('<none>'),
+        attributes: mod.attributes().getOr('<none>'),
+        styles: mod.styles().getOr('<none>'),
         value: mod.value().getOr('<none>'),
         innerHtml: mod.innerHtml().getOr('<none>'),
-        defChildren: mod.defChildren().getOr('<none>')
+        defChildren: mod.defChildren().getOr('<none>'),
+        domChildren: mod.domChildren().fold(function () {
+          return '<none>';
+        }, function (children) {
+          return children.length === 0 ? '0 children, but still specified' : String(children.length);
+        })
       };
     };
 
@@ -83,10 +89,16 @@ define(
       return DomDefinition.nu(raw);
     };
 
+    var combine = function (mods) {
+      return Result.value(mods[0]);
+    };
+
     return {
       nu: nu,
       merge: merge,
-      modToStr: modToStr
+      combine: combine,
+      modToStr: modToStr,
+      modToRaw: modToRaw
     };
   }
 );
