@@ -92,10 +92,7 @@ define(
       });
 
 
-      console.log('behaviourDoms', behaviourDoms);
       var byAspect = ObjIndex.byInnerKey(behaviourDoms, behaviourDom);
-
-      console.log('byAspect', byAspect);
 
       var usedAspect = Obj.map(byAspect, function (values, aspect) {
         return Arr.bind(values, function (value) {
@@ -107,20 +104,16 @@ define(
         });
       });
 
-      console.log('usedAspect', usedAspect);
-
-      // Now, with all of these APIs, we need to get a list of behaviours
-      
-
-      // Now, with this API index, we need to combine things. Sort them in order.
       var modifications = Obj.mapToArray(usedAspect, function (values, aspect) {
         // TODO: Use hasOwnProperty.
-        if (mergeTypes[aspect] !== undefined) return mergeTypes[aspect](values, aspect);
-        else return Result.error('Unknown field type: ' + aspect);
+        return Objects.readOptFrom(mergeTypes, aspect).fold(function () {
+          return Result.error('Unknown field type: ' + aspect);
+        }, function (merger ){
+          return merger(values, aspect);
+        });
       });
 
       var consolidated = Objects.consolidate(modifications, {});
-      console.log('consolidated', consolidated.getOr('<none>'));
       return consolidated.map(DomModification.nu);
     };
 
