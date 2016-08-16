@@ -84,18 +84,11 @@ define(
     };
 
     var textButton = function (element, contentElement) {
-      // textButtons are spans whose contentElement is the label (not an icon)
-      // element and contentElement are the element() and conent().element() 
-      // from a pastry Button.
-      // a <span> needs a role (a <button> does not). 
-      // text content in a span needs role=presentation
-      // ARIA derives the label from the text or title.
-      if (Node.name(element) !== 'button') {
-        Attr.set(element, 'role', 'button');
-      }
-      if (Node.name(contentElement) === 'span') {
-        Attr.set(contentElement, 'role', 'presentation');
-      }
+      // Add ARIA role 'button' to a span button, and add presentation role
+      // to the contentElement (a span for formatting) that contains the button text.
+      // Aria attributes are generally not needed for HTML <button> elements, just spans.
+      Attr.set(element, 'role', 'button');
+      Attr.set(contentElement, 'role', 'presentation');
     };
 
     var toolbarButton = function (element, label, hasPopup, isToggle) {
