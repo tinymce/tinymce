@@ -206,20 +206,17 @@ define(
       });
     };
 
-    var tabPanel = function (element /*, label */) {
+    var tabPanel = function (element) {
       Attr.setAll(element, {
         'role': 'tabpanel'
-        // 'aria-label': label // Doesn't seem to be read by JAWS or VoiceOver, so giving up
       });
     };
 
     var linkTabToPanel = function (tab, panel) {
-      // I couldn't hear any difference with this, but the concept is linking buttons to the panel that will show
       var id = Id.generate('ephox-aria');
       Attr.set(panel, 'id', id);
       Attr.setAll(tab, {
-        'aria-controls': id,
-        'aria-owns': id
+        'aria-controls': id 
       });
     };
 
