@@ -85,9 +85,9 @@ define(
 
     var textButton = function (element, contentElement) {
       // textButtons are spans whose contentElement is the label (not an icon)
-      // element and contentElement are the element() and conent().element() 
+      // element and contentElement are the element() and conent().element()
       // from a pastry Button.
-      // a <span> needs a role (a <button> does not). 
+      // a <span> needs a role (a <button> does not).
       // text content in a span needs role=presentation
       // ARIA derives the label from the text or title.
       if (Node.name(element) !== 'button') {
@@ -101,7 +101,7 @@ define(
     var toolbarButton = function (element, label, hasPopup, isToggle) {
       Attr.setAll(element, {
         'role': 'button',
-        //'aria-label': label,
+        'aria-label': label,
         'aria-haspopup': '' + hasPopup
       });
       if (isToggle) Attr.set(element, 'aria-pressed', 'false');
@@ -138,7 +138,6 @@ define(
     var menuItemCheckbox = function (element, label) {
       Attr.setAll(element, {
         'role': 'menuitemcheckbox',
-        'aria-label': label,
         'aria-checked': false
       });
     };
