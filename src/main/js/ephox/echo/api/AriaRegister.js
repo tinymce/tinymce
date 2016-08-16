@@ -13,11 +13,10 @@ define(
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
-    'ephox.sugar.api.InsertAll',
-    'ephox.sugar.api.Node'
+    'ephox.sugar.api.InsertAll'
   ],
 
-  function (Type, Arr, Obj, Styles, Id, Merger, Fun, Attr, Class, Element, Insert, InsertAll, Node) {
+  function (Type, Arr, Obj, Styles, Id, Merger, Fun, Attr, Class, Element, Insert, InsertAll) {
     var helpStyle = Styles.resolve('aria-help');
     var helpVisibleStyle = Styles.resolve('aria-help-visible');
 
@@ -84,9 +83,8 @@ define(
     };
 
     var textButton = function (element, contentElement) {
-      // Add ARIA role 'button' to a span button, and add presentation role
-      // to the contentElement (a span for formatting) that contains the button text.
-      // Aria attributes are generally not needed for HTML <button> elements, just spans.
+      // Add 'button' roleto a pastry button, and 'presentation' role
+      // to the contentElement that contains the button text.
       Attr.set(element, 'role', 'button');
       Attr.set(contentElement, 'role', 'presentation');
     };
