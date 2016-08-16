@@ -12,29 +12,30 @@ test(
  
   function (ApproxStructure, Assertions, AriaRegister, Element, Html, Strings) {
 
-    var checkDialogButton = function (expectedStructure, expectedHtml, element) {
-      AriaRegister.dialogButton(element);
+    var checkTextButton = function (expectedElement, expectedContent, element, contentElement) {
+      AriaRegister.textButton(element, contentElement);
       Assertions.assertStructure(
         'Checking dialog button attributes',
-        expectedStructure,
+        expectedElement,
         element
       );
-      Assertions.assertHtml('Checking dialog button html',
-        expectedHtml,
-        Html.getOuter(element));
+      Assertions.assertStructure(
+        'Checking dialog button label attributes',
+        expectedContent,
+        contentElement
+      );
     };
 
-    checkDialogButton(ApproxStructure.build(
-      function (s, str, arr) {
-        return s.element('div', {
-          attrs: {
-            'role': str.is('button')
-          }
-        }
-        );
-      }),
-      '<div role="button"></div>', 
-      Element.fromTag('div')
+    checkTextButton(ApproxStructure.build(
+        function (s, str, arr) {
+          return s.element('span', { attrs: { 'role': str.is('button') } });
+        }),
+      ApproxStructure.build(
+        function (s, str, arr) {
+          return s.element('span', { attrs: { 'role': str.is('presentation') } });
+        }),
+      Element.fromTag('span'), // representing the button
+      Element.fromTag('span')  // representing the label span which normally is inside the button span
     );
 
     var checkLabelledField = function (expectedDom, expectedHtmlPrefix, field, name, labelText) {

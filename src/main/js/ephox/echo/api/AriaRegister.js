@@ -84,9 +84,8 @@ define(
     };
 
     var textButton = function (element, contentElement) {
-      // Add ARIA role 'button' to a span button, and add presentation role
-      // to the contentElement (a span for formatting) that contains the button text.
-      // Aria attributes are generally not needed for HTML <button> elements, just spans.
+      // Add 'button' roleto a pastry button, and 'presentation' role
+      // to the contentElement that contains the button text.
       Attr.set(element, 'role', 'button');
       Attr.set(contentElement, 'role', 'presentation');
     };
