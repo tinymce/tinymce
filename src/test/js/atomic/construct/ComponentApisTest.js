@@ -70,7 +70,7 @@ test(
       'Test with 1 api from 1 behaviour',
       function () {
         check([
-          'isAlpha.actionz'
+          'isAlpha.action'
         ], ao({}), [
           behaviour('alpha', {
             'isAlpha': handler('isAlpha.action')
