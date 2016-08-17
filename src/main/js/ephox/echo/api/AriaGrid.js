@@ -27,17 +27,13 @@ define(
 
     // gridcell with explicit label
     var cell = function (element, label) {
-      Attr.setAll(element, {
-        'role': 'gridcell',
-        'aria-label': label
-      });
+      gridcell(element);
+      Attr.set(element, 'aria-label', label);
     };
 
     // gridcell with implicit label
     var gridcell = function (element) {
-      Attr.setAll(element, {
-        'role': 'gridcell',
-      });
+      Attr.set(element,'role', 'gridcell');
     };
 
     var createHelp = function (rows, cols, translations) {
