@@ -9,7 +9,16 @@ var config = lib + '/config';
 var cleanDirs = [ lib ];
 
 var dependencies = [
-
+  {
+    name: 'agar',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'agar.zip',
+    targets: [
+      { name: 'module/*.js', path: test },
+      { name: 'depend/*.js', path: test }
+    ]
+  },
   /**** demo dependencies ****/
   {
     name: 'exhibition',
