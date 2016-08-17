@@ -10,6 +10,41 @@ var cleanDirs = [ lib ];
 
 var dependencies = [
   {
+    name: 'numerosity',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'numerosity.zip',
+    targets: [
+      { name: 'module/*.js', path: test }
+    ]
+  },
+
+  {
+    name: 'sugar',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'sugar.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
+  // REMOVE ME
+  {
+    name: 'keytar',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'keytar.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
+
+  // Test dependencies
+  {
     name: 'agar',
     repository: 'buildrepo2',
     version: 'latest',
@@ -19,16 +54,14 @@ var dependencies = [
       { name: 'depend/*.js', path: test }
     ]
   },
-  /**** demo dependencies ****/
+
   {
-    name: 'exhibition',
+    name: 'wrap-jquery',
     repository: 'buildrepo2',
     version: 'latest',
-    source: 'exhibition.zip',
+    source: 'wrap-jquery.zip',
     targets: [
-      { name: 'module/*.js', path: demo },
-      { name: 'depend/*.js', path: demo },
-      { name: 'exhibition.js', path: config }
+      { name: 'compile/*.js', path: test }
     ]
   }
 ];
