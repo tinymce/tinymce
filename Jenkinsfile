@@ -70,7 +70,7 @@ node("primary") {
     }
 
     stage "Archiving Artifacts"
-    step([$class: 'ArtifactArchiver', artifacts: 'alloy/scratch'])
+    //step([$class: 'ArtifactArchiver', artifacts: 'alloy/scratch'])
 }
 
 
