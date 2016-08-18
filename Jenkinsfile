@@ -26,9 +26,9 @@ def permutations = [:]
 
 
 permutations = [
-  [ os: "windows-10", browser: "chrome", sh: false ],
-  [ os: "windows-10", browser: "firefox", sh: false ],
-  [ os: "macos-10.11", browser: "safari", sh: true ]
+  [ name: "win10Chrome", os: "windows-10", browser: "chrome", sh: false ],
+  [ name: "win10FF", os: "windows-10", browser: "firefox", sh: false ],
+  [ name: "win10Edge", os: "windows-10", browser: "MicrosoftEdge", sh: false ]
 ]
 
 def processes = [:]
@@ -36,7 +36,7 @@ def processes = [:]
 
 for (int i = 0; i < permutations.size(); i++) {
     def permutation = permutations.get(i);
-    def name = permutation.os + " x " + permutation.browser;
+    def name = permutation.name;
     processes[name] = {
         node("bedrock-" + permutation.os) {
             echo "Slave checkout"
