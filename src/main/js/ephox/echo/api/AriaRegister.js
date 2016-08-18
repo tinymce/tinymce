@@ -78,8 +78,9 @@ define(
 
     var menu = function (element, label) {
       Attr.setAll(element, {
-        'role': 'menu',
-        'aria-label': label
+
+        'aria-label': label,
+        'role': 'menu'
       });
     };
 
