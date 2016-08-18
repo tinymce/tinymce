@@ -13,11 +13,10 @@ define(
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
-    'ephox.sugar.api.InsertAll',
-    'ephox.sugar.api.Node'
+    'ephox.sugar.api.InsertAll'
   ],
 
-  function (Type, Arr, Obj, Styles, Id, Merger, Fun, Attr, Class, Element, Insert, InsertAll, Node) {
+  function (Type, Arr, Obj, Styles, Id, Merger, Fun, Attr, Class, Element, Insert, InsertAll) {
     var helpStyle = Styles.resolve('aria-help');
     var helpVisibleStyle = Styles.resolve('aria-help-visible');
 
@@ -78,25 +77,16 @@ define(
 
     var menu = function (element, label) {
       Attr.setAll(element, {
-
         'aria-label': label,
         'role': 'menu'
       });
     };
 
     var textButton = function (element, contentElement) {
-      // textButtons are spans whose contentElement is the label (not an icon)
-      // element and contentElement are the element() and conent().element()
-      // from a pastry Button.
-      // a <span> needs a role (a <button> does not).
-      // text content in a span needs role=presentation
-      // ARIA derives the label from the text or title.
-      if (Node.name(element) !== 'button') {
-        Attr.set(element, 'role', 'button');
-      }
-      if (Node.name(contentElement) === 'span') {
-        Attr.set(contentElement, 'role', 'presentation');
-      }
+      // Add 'button' roleto a pastry button, and 'presentation' role
+      // to the contentElement that contains the button text.
+      Attr.set(element, 'role', 'button');
+      Attr.set(contentElement, 'role', 'presentation');
     };
 
     var toolbarButton = function (element, label, hasPopup, isToggle) {
@@ -172,10 +162,6 @@ define(
       var label = Element.fromHtml('<label>' + labelText + '</label>');
       Attr.set(label, 'for', id);
       Attr.set(field, 'id', id);
-      // add Aria-labelledby refering to the label in the case that the label is not visibile (display=none)
-      //var labelId = Id.generate('ephox-aria');
-      //Attr.set(label, 'id', labelId); //
-      //AriaRegister.labelledBy(field, labelId);
       InsertAll.append(container, [ label, field ]);
 
       return {
@@ -210,20 +196,17 @@ define(
       });
     };
 
-    var tabPanel = function (element /*, label */) {
+    var tabPanel = function (element) {
       Attr.setAll(element, {
         'role': 'tabpanel'
-        // 'aria-label': label // Doesn't seem to be read by JAWS or VoiceOver, so giving up
       });
     };
 
     var linkTabToPanel = function (tab, panel) {
-      // I couldn't hear any difference with this, but the concept is linking buttons to the panel that will show
       var id = Id.generate('ephox-aria');
       Attr.set(panel, 'id', id);
       Attr.setAll(tab, {
-        'aria-controls': id,
-        'aria-owns': id
+        'aria-controls': id
       });
     };
 
