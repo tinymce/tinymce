@@ -32,7 +32,6 @@ permutations = [
 ]
 
 def processes = [:]
-//def browsers = ["chrome","firefox","MicrosoftEdge"]
 
 for (int i = 0; i < permutations.size(); i++) {
     def permutation = permutations.get(i);

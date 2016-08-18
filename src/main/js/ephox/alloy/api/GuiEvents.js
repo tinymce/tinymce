@@ -26,8 +26,7 @@ define(
       return event.raw().which === Keys.BACKSPACE()[0] && !Arr.contains([ 'input', 'textarea' ], Node.name(event.target()));
     };
 
-    // Fake error 
-    var isFirefox = PlatformDetection.detect().browser.isFirefox() && false;
+    var isFirefox = PlatformDetection.detect().browser.isFirefox();
 
     var settingsSchema = ValueSchema.objOf([
       // triggerEvent(eventName, event)
