@@ -61,8 +61,16 @@ node("primary") {
         }
     }
 
-    stage "Browser Tests"
-    parallel processes
+    //stage "Browser Tests"
+    //parallel processes
+
+    stage "Building"
+    dir("alloy") {
+      sh "ent"
+    }
+
+    stage "Archiving Artifacts"
+    step([$class: 'ArtifactArchiver', artifacts: 'alloy/scratch'])
 }
 
 
