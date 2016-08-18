@@ -61,7 +61,7 @@ node("primary") {
         }
     }
 
-    stage: "Browser Tests"
+    stage "Browser Tests"
     parallel processes
 }
 
