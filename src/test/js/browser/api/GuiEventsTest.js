@@ -2,12 +2,15 @@ asynctest(
   'GuiEventsTest',
  
   [
+    'ephox.agar.api.Chain',
+    'ephox.agar.api.Cursors',
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Mouse',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
+    'ephox.agar.api.UiFinder',
     'ephox.alloy.api.GuiEvents',
     'ephox.alloy.dom.DomDefinition',
     'ephox.alloy.dom.DomRender',
@@ -16,11 +19,13 @@ asynctest(
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.InsertAll',
+    'ephox.sugar.api.Node',
     'ephox.sugar.api.Remove',
+    'ephox.sugar.api.Text',
     'global!document'
   ],
  
-  function (FocusTools, GeneralSteps, Keyboard, Mouse, Pipeline, Step, GuiEvents, DomDefinition, DomRender, TestStore, Attr, Element, Insert, InsertAll, Remove, document) {
+  function (Chain, Cursors, FocusTools, GeneralSteps, Keyboard, Mouse, Pipeline, Step, UiFinder, GuiEvents, DomDefinition, DomRender, TestStore, Attr, Element, Insert, InsertAll, Node, Remove, Text, document) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -52,7 +57,8 @@ asynctest(
               },
               {
                 tag: 'button',
-                classes: [ 'test-button' ]
+                classes: [ 'test-button' ],
+                innerHtml: 'Button'
               }
             ]
           }
@@ -69,7 +75,9 @@ asynctest(
 
 
     var triggerEvent = function (eventName, event) {
-      store.adder({ eventName: eventName, target: Attr.get(event.target(), 'class') })();
+      var target = event.target();
+      var targetValue = Node.isText(target) ? 'text(' + Text.get(target) + ')' : Attr.get(target, 'class');
+      store.adder({ eventName: eventName, target: targetValue })();
     };
 
 
@@ -129,6 +137,18 @@ asynctest(
         'Checking event log after clicking on test-button',
         [
           { eventName: 'click', target: 'test-button' }
+        ]
+      ),
+      store.sClear,
+      Chain.asStep(page, [
+        UiFinder.cFindIn('.test-button'),
+        Cursors.cFollow([ 0 ]),
+        Mouse.cClick
+      ]),
+      store.sAssertEq(
+        'Checking event log after clicking on test-button text',
+        [
+          { eventName: 'click', target: 'text(Button)' }
         ]
       ),
       store.sClear

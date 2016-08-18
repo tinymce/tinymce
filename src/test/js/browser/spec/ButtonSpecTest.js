@@ -4,16 +4,19 @@ asynctest(
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
+    'ephox.agar.api.Chain',
+    'ephox.agar.api.Cursors',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Mouse',
     'ephox.agar.api.Step',
+    'ephox.agar.api.UiFinder',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.test.GuiSetup'
   ],
  
-  function (ApproxStructure, Assertions, GeneralSteps, Logger, Mouse, Step, GuiFactory, SystemEvents, GuiSetup) {
+  function (ApproxStructure, Assertions, Chain, Cursors, GeneralSteps, Logger, Mouse, Step, UiFinder, GuiFactory, SystemEvents, GuiSetup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -52,7 +55,14 @@ asynctest(
         GeneralSteps.sequence([
           store.sAssertEq('step 1: no clicks', [ ]),
           Mouse.sClickOn(gui.element(), 'button'),
-          store.sAssertEq('step 2: post click', [ 'button.action' ])
+          store.sAssertEq('step 2: post click', [ 'button.action' ]),
+          store.sClear,
+          Chain.asStep(gui.element(), [
+            UiFinder.cFindIn('button'),
+            Cursors.cFollow([ 0 ]),
+            Mouse.cClick
+          ]),
+          store.sAssertEq('step 3: post click on button text', [ 'button.action' ])
         ])
       );
 

@@ -49,14 +49,23 @@ node("primary") {
                 def bedrockCmd = "bedrock-auto -b " + permutation.browser + " --testdir src/test/js/browser --name " + name;
                 
                 echo "Browser tests"
+                def testResults = 0;
                 if (permutation.sh) {
-                  sh bedrockCmd
+                  testResults = sh [script: bedrockCmd, returnStatus: true]
                 } else {
-                  bat bedrockCmd
+                  testResults = bat [script: bedrockCmd, returnStatus: true]
                 }
                 
                 echo "Writing results"
                 step([$class: 'JUnitResultArchiver', testResults: 'scratch/TEST-*.xml'])
+
+                if (testResults != 0) {
+                  if (permutation.sh) {
+                    sh "exit 1"
+                  } else {
+                    bat "exit 1"
+                  }
+                }
             }
         }
     }
