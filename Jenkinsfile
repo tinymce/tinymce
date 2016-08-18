@@ -53,7 +53,7 @@ for (int i = 0; i < permutations.size(); i++) {
             echo "Browser tests"
             if (permutation.sh) {
               sh bedrockCmd
-            } els {
+            } else {
               bat bedrockCmd
             }
             
