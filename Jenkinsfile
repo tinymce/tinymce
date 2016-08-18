@@ -28,7 +28,8 @@ def permutations = [:]
 permutations = [
   [ name: "win10Chrome", os: "windows-10", browser: "chrome", sh: false ],
   [ name: "win10FF", os: "windows-10", browser: "firefox", sh: false ],
-  [ name: "win10Edge", os: "windows-10", browser: "MicrosoftEdge", sh: false ]
+  [ name: "win10Edge", os: "windows-10", browser: "MicrosoftEdge", sh: false ],
+  [ name: "win10IE", os: "windows-10", browser: "ie", sh: false ]
 ]
 
 def processes = [:]
@@ -62,4 +63,5 @@ for (int i = 0; i < permutations.size(); i++) {
     }
 }
 
+stage: "Browser Tests"
 parallel processes
