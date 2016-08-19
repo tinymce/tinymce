@@ -16,9 +16,8 @@
  */
 define("tinymce/codesampleplugin/Dialog", [
 	"tinymce/dom/DOMUtils",
-	"tinymce/codesampleplugin/Utils",
-	"tinymce/codesampleplugin/Prism"
-], function(DOMUtils, Utils, Prism) {
+	"tinymce/codesampleplugin/Utils"
+], function(DOMUtils, Utils) {
 	var DOM = DOMUtils.DOM;
 
 	var languages = [
@@ -43,7 +42,6 @@ define("tinymce/codesampleplugin/Dialog", [
 			if (node) {
 				editor.dom.setAttrib(node, 'class', 'language-' + language);
 				node.innerHTML = code;
-				Prism.highlightElement(node);
 				editor.selection.select(node);
 			} else {
 				editor.insertContent('<pre id="__new" class="language-' + language + '">' + code + '</pre>');
@@ -97,7 +95,7 @@ define("tinymce/codesampleplugin/Dialog", [
 						label: 'Language',
 						maxWidth: 200,
 						value: getCurrentLanguage(editor),
-						values: languages
+						values: editor.settings.codesample_languages || languages
 					},
 
 					{
