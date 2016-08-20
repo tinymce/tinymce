@@ -968,7 +968,7 @@ ModuleLoader.require([
 			'</ol>' +
 			'<p>c</p>' +
 			'<ol>' +
-				'<li>' +
+				'<li style="list-style-type: none;">' +
 					'<ul>' +
 						'<li>d</li>' +
 					'</ul>' +
