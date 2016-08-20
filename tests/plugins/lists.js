@@ -1019,9 +1019,9 @@ ModuleLoader.require([
 			'</ol>' +
 			'<p>e</p>' +
 			'<ol>' +
-			    '<li style="list-style-type: none">' +
+			    '<li style="list-style-type: none;">' +
 			        '<ol>' +
-			            '<li style="list-style-type: none">' +
+			            '<li style="list-style-type: none;">' +
 			                '<ol>' +
 			                    '<li>f</li>' +
 			                '</ol>' +
