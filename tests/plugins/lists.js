@@ -35,7 +35,7 @@ ModuleLoader.require([
 				indent: false,
 				schema: 'html5',
 				entities: 'raw',
-				valid_elements: 'li,ol[style],ul[style],dl,dt,dd,em,strong,span,#p,div,br',
+				valid_elements: 'li[style],ol[style],ul[style],dl,dt,dd,em,strong,span,#p,div,br',
 				valid_styles: {
 					'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display,position,top,left,list-style-type'
 				},
@@ -59,7 +59,7 @@ ModuleLoader.require([
 				},
 				valid_styles: {
 					'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display,position,top,left,list-style-type'
-				},
+				}
 
 			});
 
@@ -76,7 +76,7 @@ ModuleLoader.require([
 				},
 				valid_styles: {
 					'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display,position,top,left,list-style-type'
-				},
+				}
 
 			});
 		},
