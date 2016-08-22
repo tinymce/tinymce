@@ -15,11 +15,12 @@ define('tinymce/inlite/ui/Panel', [
 	'tinymce/inlite/ui/Toolbar',
 	'tinymce/inlite/ui/Forms',
 	'tinymce/inlite/core/Measure',
-	'tinymce/inlite/core/Layout'
-], function (Tools, Factory, DOM, Toolbar, Forms, Measure, Layout) {
+	'tinymce/inlite/core/Layout',
+	'tinymce/inlite/alien/EditorSettings'
+], function (Tools, Factory, DOM, Toolbar, Forms, Measure, Layout, EditorSettings) {
 	return function () {
-		var DEFAULT_TEXT_SELECTION_ITEMS = 'bold italic | quicklink h2 h3 blockquote';
-		var DEFAULT_INSERT_TOOLBAR_ITEMS = 'quickimage quicktable';
+		var DEFAULT_TEXT_SELECTION_ITEMS = ['bold', 'italic', '|', 'quicklink', 'h2', 'h3', 'blockquote'];
+		var DEFAULT_INSERT_TOOLBAR_ITEMS = ['quickimage', 'quicktable'];
 		var panel, currentRect;
 
 		var createToolbars = function (editor, toolbars) {
@@ -28,23 +29,22 @@ define('tinymce/inlite/ui/Panel', [
 			});
 		};
 
-		var getTextSelectionToolbarItems = function (settings) {
-			var value = settings.selection_toolbar;
-			return value ? value : DEFAULT_TEXT_SELECTION_ITEMS;
+		var getTextSelectionToolbarItems = function (editor) {
+			return EditorSettings.getToolbarItemsOr(editor, 'selection_toolbar', DEFAULT_TEXT_SELECTION_ITEMS);
 		};
 
-		var getInsertToolbarItems = function (settings) {
-			var value = settings.insert_toolbar;
-			return value ? value : DEFAULT_INSERT_TOOLBAR_ITEMS;
+		var getInsertToolbarItems = function (editor) {
+			return EditorSettings.getToolbarItemsOr(editor, 'insert_toolbar', DEFAULT_INSERT_TOOLBAR_ITEMS);
+		};
+
+		var hasToolbarItems = function (toolbar) {
+			return toolbar.items().length > 0;
 		};
 
 		var create = function (editor, toolbars) {
-			var items, settings = editor.settings;
-
-			items = createToolbars(editor, toolbars);
-			items = items.concat([
-				Toolbar.create(editor, 'text', getTextSelectionToolbarItems(settings)),
-				Toolbar.create(editor, 'insert', getInsertToolbarItems(settings)),
+			var items = createToolbars(editor, toolbars).concat([
+				Toolbar.create(editor, 'text', getTextSelectionToolbarItems(editor)),
+				Toolbar.create(editor, 'insert', getInsertToolbarItems(editor)),
 				Forms.createQuickLinkForm(editor, hide)
 			]);
 
@@ -60,7 +60,7 @@ define('tinymce/inlite/ui/Panel', [
 				autofix: true,
 				fixed: true,
 				border: 1,
-				items: items,
+				items: Tools.grep(items, hasToolbarItems),
 				oncancel: function() {
 					editor.focus();
 				}
@@ -110,7 +110,10 @@ define('tinymce/inlite/ui/Panel', [
 			if (toolbars.length > 0) {
 				toolbars[0].show();
 				panel.reflow();
+				return true;
 			}
+
+			return false;
 		};
 
 		var showPanelAt = function (panel, id, editor, targetRect) {
@@ -118,9 +121,13 @@ define('tinymce/inlite/ui/Panel', [
 
 			showPanel(panel);
 			panel.items().hide();
-			showToolbar(panel, id);
 
-			userConstainHandler = editor.settings.inline_toolbar_position_handler;
+			if (!showToolbar(panel, id)) {
+				hide(panel);
+				return;
+			}
+
+			userConstainHandler = EditorSettings.getHandlerOr(editor, 'inline_toolbar_position_handler', Layout.defaultHandler);
 			contentAreaRect = Measure.getContentAreaRect(editor);
 			panelRect = DOM.getRect(panel.getEl());
 
@@ -134,7 +141,6 @@ define('tinymce/inlite/ui/Panel', [
 				panelRect = result.rect;
 				currentRect = targetRect;
 				movePanelTo(panel, Layout.userConstrain(userConstainHandler, targetRect, contentAreaRect, panelRect));
-
 				togglePositionClass(panel, result.position);
 			} else {
 				hide(panel);
@@ -148,7 +154,11 @@ define('tinymce/inlite/ui/Panel', [
 		var showForm = function (editor, id) {
 			if (panel) {
 				panel.items().hide();
-				showToolbar(panel, id);
+
+				if (!showToolbar(panel, id)) {
+					hide(panel);
+					return;
+				}
 
 				var contentAreaRect, panelRect, result, userConstainHandler;
 
@@ -156,7 +166,7 @@ define('tinymce/inlite/ui/Panel', [
 				panel.items().hide();
 				showToolbar(panel, id);
 
-				userConstainHandler = editor.settings.inline_toolbar_position_handler;
+				userConstainHandler = EditorSettings.getHandlerOr(editor, 'inline_toolbar_position_handler', Layout.defaultHandler);
 				contentAreaRect = Measure.getContentAreaRect(editor);
 				panelRect = DOM.getRect(panel.getEl());
 
@@ -165,7 +175,6 @@ define('tinymce/inlite/ui/Panel', [
 				if (result) {
 					panelRect = result.rect;
 					movePanelTo(panel, Layout.userConstrain(userConstainHandler, currentRect, contentAreaRect, panelRect));
-
 					togglePositionClass(panel, result.position);
 				}
 			}
