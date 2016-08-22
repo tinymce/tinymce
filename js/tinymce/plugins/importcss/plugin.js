@@ -158,65 +158,89 @@ tinymce.PluginManager.add('importcss', function(editor) {
 		return format;
 	}
 
+	function getGroupsBySelector(groups, selector) {
+		return tinymce.util.Tools.grep(groups, function (group) {
+			return !group.filter || group.filter(selector);
+		});
+	}
+
+	function compileUserDefinedGroups(groups) {
+		return tinymce.util.Tools.map(groups, function(group) {
+			return tinymce.util.Tools.extend({}, group, {
+				original: group,
+				filter: compileFilter(group.filter),
+				item: {
+					text: group.title,
+					menu: []
+				}
+			});
+		});
+	}
+
+	function isExclusiveMode(editor) {
+		return editor.settings.importcss_exclusive !== false;
+	}
+
 	editor.on('renderFormatsMenu', function(e) {
 		var settings = editor.settings, selectors = {};
 		var selectorConverter = settings.importcss_selector_converter || convertSelectorToFormat;
 		var selectorFilter = compileFilter(settings.importcss_selector_filter), ctrl = e.control;
+		var groups = compileUserDefinedGroups(settings.importcss_groups);
+
+		var processSelector = function (selector, group) {
+			if (isExclusiveMode(editor)) {
+				if (selectors[selector]) {
+					return;
+				}
+
+				selectors[selector] = true;
+			}
+
+			var format = selectorConverter.call(self, selector, group);
+
+			if (format) {
+				var formatName = format.name || tinymce.DOM.uniqueId();
+				editor.formatter.register(formatName, format);
+
+				return tinymce.extend({}, ctrl.settings.itemDefaults, {
+					text: format.title,
+					format: formatName
+				});
+			}
+
+			return null;
+		};
 
 		if (!editor.settings.importcss_append) {
 			ctrl.items().remove();
 		}
 
-		// Setup new groups collection by cloning the configured one
-		var groups = [];
-		tinymce.each(settings.importcss_groups, function(group) {
-			group = tinymce.extend({}, group);
-			group.filter = compileFilter(group.filter);
-			groups.push(group);
-		});
-
 		each(getSelectors(e.doc || editor.getDoc(), compileFilter(settings.importcss_file_filter)), function(selector) {
 			if (selector.indexOf('.mce-') === -1) {
-				if (!selectors[selector] && (!selectorFilter || selectorFilter(selector))) {
-					var format = selectorConverter.call(self, selector), menu;
+				if (!selectorFilter || selectorFilter(selector)) {
+					var selectorGroups = getGroupsBySelector(groups, selector);
 
-					if (format) {
-						var formatName = format.name || tinymce.DOM.uniqueId();
-
-						if (groups) {
-							for (var i = 0; i < groups.length; i++) {
-								if (!groups[i].filter || groups[i].filter(selector)) {
-									if (!groups[i].item) {
-										groups[i].item = {text: groups[i].title, menu: []};
-									}
-
-									menu = groups[i].item.menu;
-									break;
-								}
+					if (selectorGroups.length > 0) {
+						tinymce.util.Tools.each(selectorGroups, function (group) {
+							var menuItem = processSelector(selector, group);
+							if (menuItem) {
+								group.item.menu.push(menuItem);
 							}
-						}
-
-						editor.formatter.register(formatName, format);
-
-						var menuItem = tinymce.extend({}, ctrl.settings.itemDefaults, {
-							text: format.title,
-							format: formatName
 						});
-
-						if (menu) {
-							menu.push(menuItem);
-						} else {
+					} else {
+						var menuItem = processSelector(selector, null);
+						if (menuItem) {
 							ctrl.add(menuItem);
 						}
 					}
-
-					selectors[selector] = true;
 				}
 			}
 		});
 
 		each(groups, function(group) {
-			ctrl.add(group.item);
+			if (group.item.menu.length > 0) {
+				ctrl.add(group.item);
+			}
 		});
 
 		e.control.renderNew();
