@@ -1,7 +1,7 @@
-test('Zipper', 
+test('Zip', 
 
   [
-    'ephox.katamari.api.Zipper'
+    'ephox.katamari.api.Zip'
   ],
 
   function(Zipper) {    

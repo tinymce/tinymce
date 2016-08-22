@@ -1,5 +1,5 @@
 define(
-  'ephox.katamari.api.Zipper',
+  'ephox.katamari.api.Zip',
 
   [
   ],
