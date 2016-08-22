@@ -185,12 +185,53 @@ define(
       return a.equals_(b, elementEq);
     };
 
+    var cat = function (arr) {
+      var r = [];
+      var push = function (x) {
+        r.push(x);
+      };
+      for (var i = 0; i < arr.length; i++) {
+        arr[i].each(push);
+      }
+      return r;
+    };
+
+    var findMap = function (arr, f) {
+      for (var i = 0; i < arr.length; i++) {
+        var r = f(arr[i], i);
+        if (r.isSome()) {
+          return r;
+        }
+      }
+      return none();
+    };
+
+    /**
+    if all elements in arr are 'some', their inner values are passed as arguments to f
+    f must have arity arr.length
+    */
+    var liftN = function(arr, f) {
+      var r = [];
+      for (var i = 0; i < arr.length; i++) {
+        var x = arr[i];
+        if (x.isSome()) {
+          r.push(x.getOrDie());
+        } else {
+          return none();
+        }
+      }
+      return some(f.apply(null, r));
+    };
+
     return {
       some: some,
       none: none,
       from: from,
       equals: equals,
-      equals_: equals_
+      equals_: equals_,
+      cat: cat,
+      findMap: findMap,
+      liftN: liftN
     };
   }
 );
