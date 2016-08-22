@@ -45,37 +45,6 @@ define(
         return par(Arr.map(as, fn));
       };
 
-      /** (Future a, Future b) -> ((a, b) -> c) -> Future C
-        * Executes the two futures in "parallel" with respect to browser JS threading.
-        */
-      var lift2 = function(fa, fb, abc) {
-        return nu(function(callback) {
-          var completeA = false;
-          var completeB = false;
-          var valueA = undefined;
-          var valueB = undefined;
-
-          var done = function() {
-            if (completeA && completeB) {
-              var c = abc(valueA, valueB);
-              callback(c);
-            }
-          };
-
-          fa.get(function(a) {
-            valueA = a;
-            completeA = true;
-            done();
-          });
-
-          fb.get(function(b) {
-            valueB = b;
-            completeB = true;
-            done();
-          });
-        });
-      };
-
       /** Kleisli composition of two functions: a -> Future b.
        *  Note the order of arguments: g is invoked first, then the result passed to f.
        *  This is in line with f . g = \x -> f (g a)
@@ -93,7 +62,6 @@ define(
         pure: pure,
         par: par,
         mapM: mapM,
-        lift2: lift2,
         compose: compose
       };
     };
