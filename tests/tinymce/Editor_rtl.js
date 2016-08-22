@@ -7,7 +7,10 @@ ModuleLoader.require([
 		setupModule: function() {
 			QUnit.stop();
 
-			I18n.rtl = true;
+			tinymce.addI18n('ar', {
+				"Bold": "Bold test",
+				"_dir": "rtl"
+			});
 
 			tinymce.init({
 				selector: "textarea",
@@ -16,10 +19,11 @@ ModuleLoader.require([
 					var beforeEventRtl = editor.rtl;
 
 					editor.on('ScriptsLoaded', function () {
-						// We will know the rtl mode after all scripts have been loaded
+						// We will know the rtl mode and code after all scripts have been loaded
 						scriptLoadedRtlState = {
-							before: beforeEventRtl,
-							after: editor.rtl
+							beforeRtl: beforeEventRtl,
+							afterRtl: editor.rtl,
+							code: I18n.getCode()
 						};
 					});
 				},
@@ -32,6 +36,7 @@ ModuleLoader.require([
 
 		teardown: function() {
 			I18n.rtl = false;
+			I18n.setCode('en');
 		}
 	});
 
@@ -40,8 +45,9 @@ ModuleLoader.require([
 		QUnit.equal(tinymce.activeEditor.rtl, true, 'Should have the rtl property set');
 	});
 
-	test('UI rendered in RTL mode 2', function() {
-		QUnit.equal(scriptLoadedRtlState.before, undefined, 'Should be undefined since we dont know the rtl mode yet');
-		QUnit.equal(scriptLoadedRtlState.after, true, 'Should be true since we now know the rtl mode');
+	test('Rtl mode property set on editor instance and I18n global', function() {
+		QUnit.equal(scriptLoadedRtlState.beforeRtl, undefined, 'Should be undefined since we dont know the rtl mode yet');
+		QUnit.equal(scriptLoadedRtlState.afterRtl, true, 'Should be true since we now know the rtl mode');
+		QUnit.equal(scriptLoadedRtlState.code, 'ar', 'Should be "ar" since the code hass been changed during loading');
 	});
 });
