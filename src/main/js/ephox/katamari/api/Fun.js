@@ -6,6 +6,7 @@ define(
   ],
 
   function (Array) {
+
     var noop = function () { };
 
     var compose = function (fa, fb) {
@@ -66,6 +67,10 @@ define(
       f();
     };
 
+    var never = constant(false);
+    var always = constant(true);
+    
+
     return {
       noop: noop,
       compose: compose,
@@ -76,7 +81,9 @@ define(
       not: not,
       die: die,
       apply: apply,
-      call: call
+      call: call,
+      never: never,
+      always: always
     };
   }
 );

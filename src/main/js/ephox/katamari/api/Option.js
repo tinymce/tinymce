@@ -8,8 +8,8 @@ define(
 
   function (Fun, Object) {
 
-    var never = Fun.constant(false);
-    var always = Fun.constant(true);
+    var never = Fun.never;
+    var always = Fun.always;
 
     /**
       Option objects support the following methods:

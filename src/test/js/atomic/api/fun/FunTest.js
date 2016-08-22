@@ -32,6 +32,14 @@ test('Constant', [ 'ephox.katamari.api.Fun' ], function (Fun) {
   assert.eq({a: 'a'}, Fun.constant({a: 'a'})());
 });
 
+test('Never', [ 'ephox.katamari.api.Fun' ], function (Fun) {
+  assert.eq(false, Fun.never());
+});
+
+test('Always', [ 'ephox.katamari.api.Fun' ], function (Fun) {
+  assert.eq(true, Fun.always());
+});
+
 test('Curry', [ 'ephox.katamari.api.Fun' ], function (Fun) {
   var c = function (/* arguments */) {
     return Array.prototype.slice.call(arguments, 0);
