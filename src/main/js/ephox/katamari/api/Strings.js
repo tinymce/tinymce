@@ -131,10 +131,6 @@ define(
 
     var containsIgnoringCase = /* str, substr */ ignoringCase(contains);
 
-    var htmlEncodeDoubleQuotes = function(str) {
-      return str.replace(/\"/gm, "&quot;");
-    };
-
     var equals = function(a, b) {
       return a === b;
     };
@@ -205,7 +201,6 @@ define(
       rTrim: rTrim,
       contains: contains,
       containsIgnoringCase: containsIgnoringCase,
-      htmlEncodeDoubleQuotes: htmlEncodeDoubleQuotes,
       equals: equals,
       equalsIgnoringCase: equalsIgnoringCase,
       head: head,
