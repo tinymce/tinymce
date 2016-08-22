@@ -100,12 +100,12 @@ define('tinymce/inlite/ui/Toolbar', [
 					toolbarItems.push(item);
 					buttonGroup = null;
 				} else {
-					if (!buttonGroup) {
-						buttonGroup = {type: 'buttongroup', items: []};
-						toolbarItems.push(buttonGroup);
-					}
-
 					if (editor.buttons[item]) {
+						if (!buttonGroup) {
+							buttonGroup = {type: 'buttongroup', items: []};
+							toolbarItems.push(buttonGroup);
+						}
+
 						itemName = item;
 						item = editor.buttons[itemName];
 
