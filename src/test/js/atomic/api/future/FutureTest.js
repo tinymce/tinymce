@@ -146,54 +146,6 @@ asynctest(
 );
 
 asynctest(
-  'FutureLift2Test',
-
-  [
-    'ephox.katamari.api.Future',
-    'ephox.katamari.api.Fun',
-    'global!setTimeout'
-  ],
-
-  function (Future, Fun, setTimeout, success, failure) {
-    var fa = Future.nu(function(callback) {
-      setTimeout(Fun.curry(callback, 'apple'), 50);
-    });
-    var fb = Future.nu(function(callback) {
-      setTimeout(Fun.curry(callback, 'banana'), 5);
-    });
-
-    Future.lift2(fa, fb, function(a, b) { return [a, 3, b]; }).get(function(r) {
-      assert.eq(['apple', 3, 'banana'], r);
-      success();
-    });
-  }
-);
-
-asynctest(
-  'FutureLift2Test2',
-
-  [
-    'ephox.katamari.api.Future',
-    'ephox.katamari.api.Fun',
-    'global!setTimeout'
-  ],
-
-  function (Future, Fun, setTimeout, success, failure) {
-    var fa = Future.nu(function(callback) {
-      setTimeout(Fun.curry(callback, 'apple'), 5);
-    });
-    var fb = Future.nu(function(callback) {
-      setTimeout(Fun.curry(callback, 'banana'), 50);
-    });
-
-    Future.lift2(fa, fb, function(a, b) { return [a, 3, b]; }).get(function(r) {
-      assert.eq(['apple', 3, 'banana'], r);
-      success();
-    });
-  }
-);
-
-asynctest(
   'FutureMapMTest',
 
   [
