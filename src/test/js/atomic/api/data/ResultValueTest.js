@@ -50,17 +50,18 @@ test(
         return Jsc.eq(true, res.is(res.getOrDie()));
       });
 
-      // Jsc.property('Checking value.isValue is always false', arbResultError, function (res) {
-      //   return Jsc.eq(false, res.isValue());
-      // });      
+      Jsc.property('Checking value.isValue is always true', arbResultValue, function (res) {
+        return Jsc.eq(true, res.isValue());
+      });      
 
-      // Jsc.property('Checking value.isError is always true', arbResultError, function (res) {
-      //   return Jsc.eq(true, res.isError());
-      // });      
+      Jsc.property('Checking value.isError is always false', arbResultValue, function (res) {
+        return Jsc.eq(false, res.isError());
+      });      
 
-      // Jsc.property('Checking value.getOr(v) = v', arbResultError, 'json', function (res, json) {
-      //   return Jsc.eq(json, res.getOr(json));
-      // });
+      Jsc.property('Checking value.getOr(v) === value.value ', arbResultValue, 'json', function (res, json) {
+        var inside = res.fold(Fun.die('no'), Fun.identity);
+        return Jsc.eq(inside, json) ? true : Jsc.eq(inside, res.getOr(json)) === true;
+      });
 
       // Jsc.property('Checking value.getOrDie() always throws', arbResultError, function (res) {
       //   try {
