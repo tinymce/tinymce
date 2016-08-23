@@ -91,12 +91,9 @@ test(
         return Jsc.eq(actual, res.fold(Fun.die('should not get here'), Fun.identity));
       });
 
-      // Jsc.property('Checking value.map(f) = error', arbResultError, 'string -> json', function (res, f) {
-      //   var actual = res.map(f);
-      //   return Jsc.eq(true, actual.fold(function (e) {
-      //     return e == res.fold(Fun.identity, Fun.die('should not get here!'));
-      //   }), Fun.constant(false));
-      // });
+      Jsc.property('Checking value.map(f) = f(value.getOrDie())', arbResultValue, 'json -> json', function (res, f) {
+        return Jsc.eq(res.map(f).getOrDie('not a value'), f(res.getOrDie()));
+      });
 
       // Jsc.property('Checking value.map(f) = error', arbResultError, 'string -> json', function (res, f) {
       //   var actual = res.map(f);
