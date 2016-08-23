@@ -46,21 +46,21 @@ test(
     var arbResultValue = ArbDataTypes.resultValue;
 
     var testSpecs = function () {
-      Jsc.property('Checking value.is(value.getOrDie()) is always true', arbResultValue, function (res) {
+      Jsc.property('Checking value.is(value.getOrDie()) === true', arbResultValue, function (res) {
         return Jsc.eq(true, res.is(res.getOrDie()));
       });
 
-      Jsc.property('Checking value.isValue is always true', arbResultValue, function (res) {
+      Jsc.property('Checking value.isValue === true', arbResultValue, function (res) {
         return Jsc.eq(true, res.isValue());
       });      
 
-      Jsc.property('Checking value.isError is always false', arbResultValue, function (res) {
+      Jsc.property('Checking value.isError === false', arbResultValue, function (res) {
         return Jsc.eq(false, res.isError());
       });      
 
-      Jsc.property('Checking value.getOr(v) === value.value ', arbResultValue, 'json', function (res, json) {
+      Jsc.property('Checking value.getOr(v) === value.value', arbResultValue, 'json', function (res, json) {
         var inside = res.fold(Fun.die('no'), Fun.identity);
-        return Jsc.eq(inside, json) ? true : Jsc.eq(inside, res.getOr(json)) === true;
+        return Jsc.eq(inside, res.getOr(json)) === true;
       });
 
       Jsc.property('Checking value.getOrDie() does not throw', arbResultValue, function (res) {
@@ -72,9 +72,9 @@ test(
         }
       });
 
-      Jsc.property('Checking value.or(oValue) = value', arbResultValue, 'json', function (res, json) {
+      Jsc.property('Checking value.or(oValue) === value', arbResultValue, 'json', function (res, json) {
         var inside = res.fold(Fun.die('no'), Fun.identity);
-        return Jsc.eq(inside, json) ? true : Jsc.eq(inside, res.or(Result.value(json)).getOr(json)) === true;
+        return Jsc.eq(inside, res.or(Result.value(json)).getOr(json)) === true;
       });
 
       Jsc.property('Checking value.orThunk(die) does not throw', arbResultValue, function (res) {
@@ -86,25 +86,25 @@ test(
         }
       });
 
-      Jsc.property('Checking value.fold(die, id) = value.getOrDie()', arbResultValue, 'json', function (res, json) {
+      Jsc.property('Checking value.fold(die, id) === value.getOrDie()', arbResultValue, 'json', function (res, json) {
         var actual = res.getOrDie();
         return Jsc.eq(actual, res.fold(Fun.die('should not get here'), Fun.identity));
       });
 
-      Jsc.property('Checking value.map(f) = f(value.getOrDie())', arbResultValue, 'json -> json', function (res, f) {
+      Jsc.property('Checking value.map(f) === f(value.getOrDie())', arbResultValue, 'json -> json', function (res, f) {
         return Jsc.eq(res.map(f).getOrDie(), f(res.getOrDie()));
       });
 
-      Jsc.property('Checking value.each(f) = undefined', arbResultValue, 'string -> json', function (res, f) {
+      Jsc.property('Checking value.each(f) === undefined', arbResultValue, 'string -> json', function (res, f) {
         var actual = res.each(f);
         return Jsc.eq(undefined, actual);
       });
 
-      Jsc.property('Given f :: s -> RV, checking value.bind(f).getOrDie() = f(value.getOrDie()).getOrDie()', arbResultValue, Jsc.fn(arbResultValue), function (res, f) {
+      Jsc.property('Given f :: s -> RV, checking value.bind(f).getOrDie() === f(value.getOrDie()).getOrDie()', arbResultValue, Jsc.fn(arbResultValue), function (res, f) {
         return Jsc.eq(res.bind(f).getOrDie(), f(res.getOrDie()).getOrDie());
       });
 
-      Jsc.property('Given f :: s -> RE, checking value.bind(f).fold(id, die) = f(value.getOrDie()).fold(id, die)', arbResultValue, Jsc.fn(arbResultError), function (res, f) {
+      Jsc.property('Given f :: s -> RE, checking value.bind(f).fold(id, die) === f(value.getOrDie()).fold(id, die)', arbResultValue, Jsc.fn(arbResultError), function (res, f) {
         var toErrString = function (r) {
           return r.fold(Fun.identity, Fun.die('Not a Result.error'));
         };
