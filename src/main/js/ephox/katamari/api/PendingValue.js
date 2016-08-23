@@ -3,13 +3,14 @@ define(
 
   [
     'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Option',
     'global!Array',
     'global!setTimeout'
   ],
 
-  function (Arr, Array, setTimeout) {
+  function (Arr, Option, Array, setTimeout) {
     return function () {
-      var data = null;
+      var data = Option.none();
       var callbacks = [];
 
       var onReady = function (callback) {
@@ -17,26 +18,26 @@ define(
         else callbacks.push(callback);
       };
 
-      var set = function (/* data */) {
-        data = Array.prototype.slice.call(arguments);
-        run();
+      var set = function (x) {
+        data = Option.some(x);
+        run(callbacks);
         callbacks = [];
       };
 
       var isAvailable = function () {
-        return data !== null;
+        return data.isSome();
       };
 
-      var run = function () {
-        Arr.each(callbacks, function (x) {
-          call(x);
+      var run = function (cbs) {
+        Arr.each(cbs, call);
+      };
+
+      var call = function (cb) {
+        data.each(function (x) {
+          setTimeout(function () {
+            cb(x);
+          }, 0);
         });
-      };
-
-      var call = function (f) {
-        setTimeout(function () {
-          f.apply(null, data);
-        }, 0);
       };
 
       return {
