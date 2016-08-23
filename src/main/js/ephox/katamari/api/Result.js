@@ -61,7 +61,9 @@ define(
         });
       };
 
-      var each = map;
+      var each = function (f) {
+        fold(Fun.noop, f);
+      };
 
       var bind = function (f) {
         return fold(error, f);
