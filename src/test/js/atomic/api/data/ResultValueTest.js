@@ -123,8 +123,7 @@ test(
       Jsc.property('Checking value.toOption is always Option.some(value.getOrDie())', arbResultValue, function (res) {
         return Jsc.eq(res.getOrDie(), res.toOption().getOrDie());
       });
-    };
-     
+    };     
 
     testSanity();
     testSpecs();
