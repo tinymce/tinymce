@@ -159,6 +159,10 @@ test(
       Jsc.property('Checking error:exists is always false', arbResultError, 'string -> bool', function (res, f) {
         return Jsc.eq(false, res.exists(f));
       });
+
+      Jsc.property('Checking error:toOption is always none', arbResultError, function (res) {
+        return Jsc.eq(true, res.toOption().isNone());
+      });
     };
      
 
