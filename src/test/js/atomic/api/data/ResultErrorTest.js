@@ -60,20 +60,20 @@ test(
     };
 
     var testSpecs = function () {
-      Jsc.property('Checking error.is is always false', arbResultError, function (res) {
+      Jsc.property('Checking error.is === false', arbResultError, function (res) {
         var v = res.fold(Fun.identity, Fun.die('should be result.error'));
         return Jsc.eq(false, res.is(v));
       });
 
-      Jsc.property('Checking error.isValue is always false', arbResultError, function (res) {
+      Jsc.property('Checking error.isValue === false', arbResultError, function (res) {
         return Jsc.eq(false, res.isValue());
       });      
 
-      Jsc.property('Checking error.isError is always true', arbResultError, function (res) {
+      Jsc.property('Checking error.isError === true', arbResultError, function (res) {
         return Jsc.eq(true, res.isError());
       });      
 
-      Jsc.property('Checking error.getOr(v) = v', arbResultError, 'json', function (res, json) {
+      Jsc.property('Checking error.getOr(v) === v', arbResultError, 'json', function (res, json) {
         return Jsc.eq(json, res.getOr(json));
       });
 
@@ -86,55 +86,55 @@ test(
         }
       });
 
-      Jsc.property('Checking error.or(oValue) = oValue', arbResultError, 'json', function (res, json) {
+      Jsc.property('Checking error.or(oValue) === oValue', arbResultError, 'json', function (res, json) {
         var output = res.or(Result.value(json));
         return Jsc.eq(true, output.is(json));
       });
 
-      Jsc.property('Checking error.orThunk(function () { return value; }) = value', arbResultError, 'json', function (res, json) {
+      Jsc.property('Checking error.orThunk(_ -> v) === v', arbResultError, 'json', function (res, json) {
         var output = res.orThunk(function () {
           return Result.value(json);
         });
         return Jsc.eq(true, output.is(json));
       });
 
-      Jsc.property('Checking error.fold(_ -> x, die) = x', arbResultError, 'json', function (res, json) {
+      Jsc.property('Checking error.fold(_ -> x, die) === x', arbResultError, 'json', function (res, json) {
         var actual = res.fold(Fun.constant(json), Fun.die('Should not die'));
         return Jsc.eq(json, actual);
       });
 
-      Jsc.property('Checking error.map(f) = error', arbResultError, 'string -> json', function (res, f) {
+      Jsc.property('Checking error.map(f) === error', arbResultError, 'string -> json', function (res, f) {
         var actual = res.map(f);
         return Jsc.eq(true, actual.fold(function (e) {
           return e == res.fold(Fun.identity, Fun.die('should not get here!'));
         }), Fun.constant(false));
       });
 
-      Jsc.property('Checking error.map(f) = error', arbResultError, 'string -> json', function (res, f) {
+      Jsc.property('Checking error.map(f) === error', arbResultError, 'string -> json', function (res, f) {
         var actual = res.map(f);
         return Jsc.eq(true, getErrorOrDie(res) === getErrorOrDie(actual));
       });
 
-      Jsc.property('Checking error.each(f) = undefined', arbResultError, 'string -> json', function (res, f) {
+      Jsc.property('Checking error.each(f) === undefined', arbResultError, 'string -> json', function (res, f) {
         var actual = res.each(f);
         return Jsc.eq(undefined, actual);
       });
 
-      Jsc.property('Checking error.bind(f -> RV) = error', arbResultError, Jsc.fn(arbResultValue), function (res, f) {
+      Jsc.property('Given f :: s -> RV, checking error.bind(f) === error', arbResultError, Jsc.fn(arbResultValue), function (res, f) {
         var actual = res.bind(f);
         return Jsc.eq(true, getErrorOrDie(res) === getErrorOrDie(actual));
       });
 
-      Jsc.property('Checking error.bind(f -> RE) = error', arbResultError, Jsc.fn(arbResultError), function (res, f) {
+      Jsc.property('Given f :: s -> RE, checking error.bind(f) === error', arbResultError, Jsc.fn(arbResultError), function (res, f) {
         var actual = res.bind(f);
         return Jsc.eq(true, getErrorOrDie(res) === getErrorOrDie(actual));
       });
 
-      Jsc.property('Checking error.forall is always true', arbResultError, 'string -> bool', function (res, f) {
+      Jsc.property('Checking error.forall === true', arbResultError, 'string -> bool', function (res, f) {
         return Jsc.eq(true, res.forall(f));
       });
 
-      Jsc.property('Checking error.exists is always false', arbResultError, 'string -> bool', function (res, f) {
+      Jsc.property('Checking error.exists === false', arbResultError, 'string -> bool', function (res, f) {
         return Jsc.eq(false, res.exists(f));
       });
 
