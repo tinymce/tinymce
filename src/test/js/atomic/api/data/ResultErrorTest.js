@@ -93,6 +93,13 @@ test(
         return output.is(json);
       });
 
+      Jsc.property('Checking error.orThunk(function () { return value; }) = value', arbResultError, 'json', function (res, json) {
+        var output = res.orThunk(function () {
+          return Result.value(json);
+        });
+        return output.is(json);
+      });
+
       Jsc.property('Checking error:forall is always true', arbResultError, 'string -> bool', function (res, f) {
         return Jsc.eq(true, res.forall(f));
       });
