@@ -92,23 +92,17 @@ test(
       });
 
       Jsc.property('Checking value.map(f) = f(value.getOrDie())', arbResultValue, 'json -> json', function (res, f) {
-        return Jsc.eq(res.map(f).getOrDie('not a value'), f(res.getOrDie()));
+        return Jsc.eq(res.map(f).getOrDie(), f(res.getOrDie()));
       });
 
-      // Jsc.property('Checking value.map(f) = error', arbResultError, 'string -> json', function (res, f) {
-      //   var actual = res.map(f);
-      //   return Jsc.eq(true, getErrorOrDie(res) === getErrorOrDie(actual));
-      // });
+      Jsc.property('Checking value.each(f) = undefined', arbResultValue, 'string -> json', function (res, f) {
+        var actual = res.each(f);
+        return Jsc.eq(undefined, actual);
+      });
 
-      // Jsc.property('Checking value.each(f) = undefined', arbResultError, 'string -> json', function (res, f) {
-      //   var actual = res.each(f);
-      //   return Jsc.eq(undefined, actual);
-      // });
-
-      // Jsc.property('Checking value.bind(f -> RV) = error', arbResultError, Jsc.fn(arbResultValue), function (res, f) {
-      //   var actual = res.bind(f);
-      //   return Jsc.eq(true, getErrorOrDie(res) === getErrorOrDie(actual));
-      // });
+      Jsc.property('Given f :: s -> RV, checking value.bind(f).getOrDie() = f(value.getOrDie()).getOrDie()', arbResultValue, Jsc.fn(arbResultValue), function (res, f) {
+        return Jsc.eq(res.bind(f).getOrDie(), f(res.getOrDie()).getOrDie());
+      });
 
       // Jsc.property('Checking value.bind(f -> RE) = error', arbResultError, Jsc.fn(arbResultError), function (res, f) {
       //   var actual = res.bind(f);
