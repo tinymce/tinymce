@@ -4,10 +4,11 @@ test(
   [
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Result',
+    'ephox.katamari.test.arb.ArbDataTypes',
     'ephox.wrap.Jsc'
   ],
  
-  function (Fun, Result, Jsc) {
+  function (Fun, Result, ArbDataTypes, Jsc) {
     var testSanity = function () {
       var s = Result.error('error');
       assert.eq(false, s.is('error'));
@@ -49,31 +50,8 @@ test(
       assert.eq(true, Result.error(4).toOption().isNone());
     };
 
-    var show = function (res) {
-      return res.fold(function (e) {
-        return 'Result.error(' + e + ')';
-      }, function (v) {
-        return 'Result.value(' + v + ')';
-      });
-    };
-
-    var arbResultError = Jsc.string.smap(function (e) {
-      return Result.error(e);
-    }, function (res) {
-      return res.fold(Fun.identity, Fun.die('This should not happen'));
-    }, show);
-
-    var arbResultValue = Jsc.string.smap(function (e) {
-      return Result.value(e);
-    }, function (res) {
-      return res.fold(Fun.die('This should not happen'), Fun.identity);
-    }, show);
-
-    var isError = function (err, res) {
-      return res.fold(function (e) {
-        return e === err;
-      }, Fun.constant(false));
-    };
+    var arbResultError = ArbDataTypes.resultError;
+    var arbResultValue = ArbDataTypes.resultValue;
 
     var getErrorOrDie = function (res) {
       return res.fold(function (err) {
