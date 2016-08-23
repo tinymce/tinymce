@@ -110,7 +110,7 @@ tinymce.PluginManager.add('importcss', function(editor) {
 		return selectors;
 	}
 
-	function convertSelectorToFormat(selectorText) {
+	function defaultConvertSelectorToFormat(selectorText) {
 		var format;
 
 		// Parse simple element.class1, .class1
@@ -168,6 +168,7 @@ tinymce.PluginManager.add('importcss', function(editor) {
 		return tinymce.util.Tools.map(groups, function(group) {
 			return tinymce.util.Tools.extend({}, group, {
 				original: group,
+				selectors: {},
 				filter: compileFilter(group.filter),
 				item: {
 					text: group.title,
@@ -177,35 +178,56 @@ tinymce.PluginManager.add('importcss', function(editor) {
 		});
 	}
 
-	function isExclusiveMode(editor) {
-		return editor.settings.importcss_exclusive !== false;
+	function isExclusiveMode(editor, group) {
+		// Exclusive mode can only be disabled when there are groups allowing the same style to be present in multiple groups
+		return group === null || editor.settings.importcss_exclusive !== false;
+	}
+
+	function isUniqueSelector(selector, group, globallyUniqueSelectors) {
+		return !(isExclusiveMode(editor, group) ? selector in globallyUniqueSelectors : selector in group.selectors);
+	}
+
+	function markUniqueSelector(selector, group, globallyUniqueSelectors) {
+		if (isExclusiveMode(editor, group)) {
+			globallyUniqueSelectors[selector] = true;
+		} else {
+			group.selectors[selector] = true;
+		}
+	}
+
+	function convertSelectorToFormat(plugin, selector, group) {
+		var selectorConverter, settings = editor.settings;
+
+		if (group && group.selector_converter) {
+			selectorConverter = group.selector_converter;
+		} else if (settings.importcss_selector_converter) {
+			selectorConverter = settings.importcss_selector_converter;
+		} else {
+			selectorConverter = defaultConvertSelectorToFormat;
+		}
+
+		return selectorConverter.call(plugin, selector, group);
 	}
 
 	editor.on('renderFormatsMenu', function(e) {
-		var settings = editor.settings, selectors = {};
-		var selectorConverter = settings.importcss_selector_converter || convertSelectorToFormat;
+		var settings = editor.settings, globallyUniqueSelectors = {};
 		var selectorFilter = compileFilter(settings.importcss_selector_filter), ctrl = e.control;
 		var groups = compileUserDefinedGroups(settings.importcss_groups);
 
 		var processSelector = function (selector, group) {
-			if (isExclusiveMode(editor)) {
-				if (selectors[selector]) {
-					return;
+			if (isUniqueSelector(selector, group, globallyUniqueSelectors)) {
+				markUniqueSelector(selector, group, globallyUniqueSelectors);
+
+				var format = convertSelectorToFormat(self, selector, group);
+				if (format) {
+					var formatName = format.name || tinymce.DOM.uniqueId();
+					editor.formatter.register(formatName, format);
+
+					return tinymce.extend({}, ctrl.settings.itemDefaults, {
+						text: format.title,
+						format: formatName
+					});
 				}
-
-				selectors[selector] = true;
-			}
-
-			var format = selectorConverter.call(self, selector, group);
-
-			if (format) {
-				var formatName = format.name || tinymce.DOM.uniqueId();
-				editor.formatter.register(formatName, format);
-
-				return tinymce.extend({}, ctrl.settings.itemDefaults, {
-					text: format.title,
-					format: formatName
-				});
 			}
 
 			return null;
@@ -247,5 +269,5 @@ tinymce.PluginManager.add('importcss', function(editor) {
 	});
 
 	// Expose default convertSelectorToFormat implementation
-	self.convertSelectorToFormat = convertSelectorToFormat;
+	self.convertSelectorToFormat = defaultConvertSelectorToFormat;
 });

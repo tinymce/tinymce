@@ -256,6 +256,49 @@
 		equal(items[2].settings.menu[0].text, '.cC');
 	});
 
+	test("Import custom group selector_converter", function() {
+		var constant = function (format) {
+			return function () {
+				return format;
+			};
+		};
+
+		var formatA = {
+			title: 'my format a',
+			selector: 'p'
+		};
+
+		var formatB = {
+			title: 'my format b',
+			selector: 'h1'
+		};
+
+		editor.settings.importcss_groups = [
+			{title: 'g1', filter: /\.a/, selector_converter: constant(formatA)},
+			{title: 'g2', filter: /\.b/, selector_converter: constant(formatB)},
+			{title: 'g3', custom: 'C'}
+		];
+
+		editor.contentCSS.push("test1.css");
+
+		var evt = fireFormatsMenuEvent([
+			{href: 'test1.css', cssRules: [
+				{selectorText: '.a'},
+				{selectorText: '.b'},
+				{selectorText: '.c'}
+			]}
+		]);
+
+		var items = evt.control.items();
+		equal(items.length, 3);
+		equal(items[0].text(), 'g1');
+		equal(items[0].settings.menu[0].text, 'my format a');
+		equal(items[1].text(), 'g2');
+		equal(items[1].settings.menu[0].text, 'my format b');
+		equal(items[2].text(), 'g3');
+		equal(items[2].settings.menu[0].text, 'c');
+	});
+
 	test("Import custom importcss_exclusive: true", function() {
 		editor.settings.importcss_exclusive = true;
 		editor.settings.importcss_groups = [
