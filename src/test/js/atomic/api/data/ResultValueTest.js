@@ -63,26 +63,28 @@ test(
         return Jsc.eq(inside, json) ? true : Jsc.eq(inside, res.getOr(json)) === true;
       });
 
-      // Jsc.property('Checking value.getOrDie() always throws', arbResultError, function (res) {
-      //   try {
-      //     res.getOrDie();
-      //     return false;
-      //   } catch (err) {
-      //     return true;
-      //   }
-      // });
+      Jsc.property('Checking value.getOrDie() does not throw', arbResultValue, function (res) {
+        try {
+          res.getOrDie();
+          return true;
+        } catch (err) {
+          return false;
+        }
+      });
 
-      // Jsc.property('Checking value.or(value) = value', arbResultError, 'json', function (res, json) {
-      //   var output = res.or(Result.value(json));
-      //   return Jsc.eq(true, output.is(json));
-      // });
+      Jsc.property('Checking value.or(oValue) = value', arbResultValue, 'json', function (res, json) {
+        var inside = res.fold(Fun.die('no'), Fun.identity);
+        return Jsc.eq(inside, json) ? true : Jsc.eq(inside, res.or(Result.value(json)).getOr(json)) === true;
+      });
 
-      // Jsc.property('Checking value.orThunk(function () { return value; }) = value', arbResultError, 'json', function (res, json) {
-      //   var output = res.orThunk(function () {
-      //     return Result.value(json);
-      //   });
-      //   return Jsc.eq(true, output.is(json));
-      // });
+      Jsc.property('Checking value.orThunk(die) does not throw', arbResultValue, function (res) {
+        try {
+          res.orThunk(Fun.die('dies'));
+          return true;
+        } catch (err) {
+          return false;
+        }
+      });
 
       // Jsc.property('Checking value.fold(_ -> x, die) = x', arbResultError, 'json', function (res, json) {
       //   var actual = res.fold(Fun.constant(json), Fun.die('Should not die'));

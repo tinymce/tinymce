@@ -86,7 +86,7 @@ test(
         }
       });
 
-      Jsc.property('Checking error.or(value) = value', arbResultError, 'json', function (res, json) {
+      Jsc.property('Checking error.or(oValue) = oValue', arbResultError, 'json', function (res, json) {
         var output = res.or(Result.value(json));
         return Jsc.eq(true, output.is(json));
       });
