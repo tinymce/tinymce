@@ -60,16 +60,16 @@ test(
     };
 
     var testSpecs = function () {
-      Jsc.property('Checking error:is is always false', arbResultError, function (res) {
+      Jsc.property('Checking error.is is always false', arbResultError, function (res) {
         var v = res.fold(Fun.identity, Fun.die('should be result.error'));
         return Jsc.eq(false, res.is(v));
       });
 
-      Jsc.property('Checking error:isValue is always false', arbResultError, function (res) {
+      Jsc.property('Checking error.isValue is always false', arbResultError, function (res) {
         return Jsc.eq(false, res.isValue());
       });      
 
-      Jsc.property('Checking error:isError is always true', arbResultError, function (res) {
+      Jsc.property('Checking error.isError is always true', arbResultError, function (res) {
         return Jsc.eq(true, res.isError());
       });      
 
@@ -130,15 +130,15 @@ test(
         return Jsc.eq(true, getErrorOrDie(res) === getErrorOrDie(actual));
       });
 
-      Jsc.property('Checking error:forall is always true', arbResultError, 'string -> bool', function (res, f) {
+      Jsc.property('Checking error.forall is always true', arbResultError, 'string -> bool', function (res, f) {
         return Jsc.eq(true, res.forall(f));
       });
 
-      Jsc.property('Checking error:exists is always false', arbResultError, 'string -> bool', function (res, f) {
+      Jsc.property('Checking error.exists is always false', arbResultError, 'string -> bool', function (res, f) {
         return Jsc.eq(false, res.exists(f));
       });
 
-      Jsc.property('Checking error:toOption is always none', arbResultError, function (res) {
+      Jsc.property('Checking error.toOption is always none', arbResultError, function (res) {
         return Jsc.eq(true, res.toOption().isNone());
       });
     };
