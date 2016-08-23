@@ -86,10 +86,10 @@ test(
         }
       });
 
-      // Jsc.property('Checking value.fold(_ -> x, die) = x', arbResultError, 'json', function (res, json) {
-      //   var actual = res.fold(Fun.constant(json), Fun.die('Should not die'));
-      //   return Jsc.eq(json, actual);
-      // });
+      Jsc.property('Checking value.fold(die, id) = value.getOrDie()', arbResultValue, 'json', function (res, json) {
+        var actual = res.getOrDie();
+        return Jsc.eq(actual, res.fold(Fun.die('should not get here'), Fun.identity));
+      });
 
       // Jsc.property('Checking value.map(f) = error', arbResultError, 'string -> json', function (res, f) {
       //   var actual = res.map(f);
