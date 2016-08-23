@@ -79,6 +79,19 @@ test(
         return Jsc.eq(json, res.getOr(json));
       });
 
+      Jsc.property('Checking error.getOrDie() always throws', arbResultError, function (res) {
+        try {
+          res.getOrDie();
+          return false;
+        } catch (err) {
+          return true;
+        }
+      });
+
+      Jsc.property('Checking error.or(value) = value', arbResultError, 'json', function (res, json) {
+        var output = res.or(Result.value(json));
+        return output.is(json);
+      });
 
       Jsc.property('Checking error:forall is always true', arbResultError, 'string -> bool', function (res, f) {
         return Jsc.eq(true, res.forall(f));
