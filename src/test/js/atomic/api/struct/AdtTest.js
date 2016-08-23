@@ -2,11 +2,14 @@ test(
   'ADT Test',
 
   [
+    'ephox.katamari.api.Adt',
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Adt'
+    'ephox.katamari.api.Obj',
+    'ephox.wrap.Jsc'
   ],
 
-  function (Fun, Adt) {
+  function (Adt, Arr, Fun, Obj, Jsc) {
 
     var checkInvalid = function (message, f) {
       var error = false;
@@ -109,7 +112,59 @@ test(
     assert.eq('cheese', adtCreated.fold(   die,    die, cheese,    die));
     assert.eq('cheese', adtActual.fold(    die,    die,    die, cheese));
 
+    var newAdt = Adt.generate([
+      { nothing: [ ] },
+      { unknown: [ 'guesses' ] },
+      { exact: [ 'value', 'precision' ] }
+    ]);
+
+    var arbNothing = Jsc.constant(newAdt.nothing());
+
+    var arbUnknown = Jsc.array(Jsc.string).smap(function (guesses) {
+      return newAdt.unknown(guesses);
+    }, function (r) {
+      return r.match({
+        nothing: Fun.die('not a nothing'),
+        unknown: Fun.identity,
+        exact: Fun.die('not an exact')
+      });
+    });
+
+    var arbExact = Jsc.tuple(Jsc.number, Jsc.number).smap(function (arr) {
+      return newAdt.exact(arr[0], arr[1]);
+    }, function (r) {
+      return r.match({
+        nothing: Fun.die('not a nothing'),
+        unknown: Fun.die('not an unknown'),
+        exact: function (value, precision) { return [ value, precision ]; }
+      });
+    });
+
+    var arbAdt = Jsc.oneof([
+      arbNothing,
+      arbUnknown,
+      arbExact
+    ]);
+
     // Fix with property-based testing
+    var allKeys = [ 'nothing', 'unknown', 'exact' ];
+    var arbKeys = Jsc.elements(allKeys);
+
+    Jsc.property('Error is thrown if not all arguments are supplied', arbAdt, arbKeys, function (subject, key) {
+      var original = Arr.filter(allKeys, function (k) {
+        return k !== key;
+      });
+
+      assert.throws(function () {
+        var branches = Obj.tupleMap(original, function (k, i) {
+          return { key: k, value: function () { } };
+        });
+        subject.match(branches);
+      });
+      return false;
+    });
+
+/*
     assert.throws(function () {
       adtNone.match({
         none: cheese
@@ -151,5 +206,6 @@ test(
       created: die,
       actual: cheese
     }));
+  */
   }
 );
