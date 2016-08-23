@@ -9,17 +9,13 @@ var config = lib + '/config';
 var cleanDirs = [ lib ];
 
 var dependencies = [
-
-  /**** demo dependencies ****/
   {
-    name: 'exhibition',
+    name: 'wrap-jsverify',
     repository: 'buildrepo2',
-    version: 'latest',
-    source: 'exhibition.zip',
+    version: '1.0 latest',
+    source: 'wrap-jsverify.zip',
     targets: [
-      { name: 'module/*.js', path: demo },
-      { name: 'depend/*.js', path: demo },
-      { name: 'exhibition.js', path: config }
+      { name: 'compile/ephox.wrap.Jsc.js', path: test }
     ]
   }
 ];
