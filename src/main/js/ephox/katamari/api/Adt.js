@@ -2,13 +2,14 @@ define(
   'ephox.katamari.api.Adt',
 
   [
-    'ephox.katamari.api.Type',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Obj',
-    'global!Array'
+    'ephox.katamari.api.Type',
+    'global!Array',
+    'global!Error'
   ],
 
-  function (Type, Arr, Obj, Array) {
+  function (Arr, Obj, Type, Array, Error) {
     // TODO: Probably accept the name ADT instead.
 
     /*
@@ -28,6 +29,9 @@ define(
       if (cases.length === 0) {
         throw 'there must be at least one case';
       }
+
+      var allKeys = Obj.keys(cases);
+
       // adt is mutated to add the individual cases
       var adt = {};
       Arr.each(cases, function (acase, count) {
@@ -50,6 +54,8 @@ define(
           // this implicitly checks if acase is an object
           throw 'case arguments must be an array';
         }
+
+
         //
         // constructor for key
         //
@@ -65,6 +71,22 @@ define(
           var args = new Array(argLength);
           for (var i = 0; i < args.length; i++) args[i] = arguments[i];
 
+
+          // INVESTIGATE: Can this be optimised?
+          var match = function (branches) {
+            var branchKeys = Obj.keys(branches);
+            if (allKeys.length !== branchKeys.length) {
+              throw new Error('Wrong arguments to match. Expected: ' + allKeys.join(',') + '\nActual: ' + branchKeys.join(','));
+            }
+
+            var allReqd = Arr.forall(keys, function (reqKey) {
+              return Arr.contains(branchKeys, reqKey);
+            });
+
+            if (!allReqd) throw new Error('Not all branches were specified when using match. Specified: ' + branchKeys.join(', ') + '\nRequired: ' + allKeys.join(', '));
+
+            return branches[key].apply(null, args);
+          };
           //
           // the fold function for key
           //
@@ -76,7 +98,8 @@ define(
               }
               var target = arguments[count];
               return target.apply(null, args);
-            }
+            },
+            match: match
           };
         };
       });

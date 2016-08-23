@@ -108,5 +108,48 @@ test(
     assert.eq('cheese', adtRoot.fold(      die, cheese,    die,    die));
     assert.eq('cheese', adtCreated.fold(   die,    die, cheese,    die));
     assert.eq('cheese', adtActual.fold(    die,    die,    die, cheese));
+
+    // Fix with property-based testing
+    assert.throws(function () {
+      adtNone.match({
+        none: cheese
+      });
+    });
+
+    assert.throws(function () {
+      adtNone.match({
+        root: die,
+        created: die,
+        actual: die
+      });
+    });
+
+    assert.eq('cheese', adtNone.match({
+      none: cheese,
+      root: die,
+      created: die,
+      actual: die
+    }));
+
+    assert.eq('cheese', adtRoot.match({
+      none: die,
+      root: cheese,
+      created: die,
+      actual: die
+    }));
+
+    assert.eq('cheese', adtCreated.match({
+      none: die,
+      root: die,
+      created: cheese,
+      actual: die
+    }));
+
+    assert.eq('cheese', adtActual.match({
+      none: die,
+      root: die,
+      created: die,
+      actual: cheese
+    }));
   }
 );
