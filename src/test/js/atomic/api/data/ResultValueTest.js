@@ -112,17 +112,17 @@ test(
         return Jsc.eq(toErrString(res.bind(f)), toErrString(f(res.getOrDie())));
       });
 
-      // Jsc.property('Checking value.forall is always true', arbResultError, 'string -> bool', function (res, f) {
-      //   return Jsc.eq(true, res.forall(f));
-      // });
+      Jsc.property('Checking value.forall is true iff. f(value.getOrDie() === true)', arbResultValue, 'string -> bool', function (res, f) {
+        return Jsc.eq(f(res.getOrDie()), res.forall(f));
+      });
 
-      // Jsc.property('Checking value.exists is always false', arbResultError, 'string -> bool', function (res, f) {
-      //   return Jsc.eq(false, res.exists(f));
-      // });
+      Jsc.property('Checking value.exists is true iff. f(value.getOrDie() === true)', arbResultValue, 'string -> bool', function (res, f) {
+        return  Jsc.eq(f(res.getOrDie()), res.exists(f));
+      });
 
-      // Jsc.property('Checking value.toOption is always none', arbResultError, function (res) {
-      //   return Jsc.eq(true, res.toOption().isNone());
-      // });
+      Jsc.property('Checking value.toOption is always Option.some(value.getOrDie())', arbResultValue, function (res) {
+        return Jsc.eq(res.getOrDie(), res.toOption().getOrDie());
+      });
     };
      
 
