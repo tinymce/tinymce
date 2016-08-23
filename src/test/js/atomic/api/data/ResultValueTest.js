@@ -104,10 +104,13 @@ test(
         return Jsc.eq(res.bind(f).getOrDie(), f(res.getOrDie()).getOrDie());
       });
 
-      // Jsc.property('Checking value.bind(f -> RE) = error', arbResultError, Jsc.fn(arbResultError), function (res, f) {
-      //   var actual = res.bind(f);
-      //   return Jsc.eq(true, getErrorOrDie(res) === getErrorOrDie(actual));
-      // });
+      Jsc.property('Given f :: s -> RE, checking value.bind(f).fold(id, die) = f(value.getOrDie()).fold(id, die)', arbResultValue, Jsc.fn(arbResultError), function (res, f) {
+        var toErrString = function (r) {
+          return r.fold(Fun.identity, Fun.die('Not a Result.error'));
+        };
+
+        return Jsc.eq(toErrString(res.bind(f)), toErrString(f(res.getOrDie())));
+      });
 
       // Jsc.property('Checking value.forall is always true', arbResultError, 'string -> bool', function (res, f) {
       //   return Jsc.eq(true, res.forall(f));
