@@ -6,10 +6,11 @@ test(
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Obj',
-    'ephox.wrap.Jsc'
+    'ephox.wrap.Jsc',
+    'global!Array'
   ],
 
-  function (Adt, Arr, Fun, Obj, Jsc) {
+  function (Adt, Arr, Fun, Obj, Jsc, Array) {
 
     var checkInvalid = function (message, f) {
       var error = false;
@@ -166,48 +167,35 @@ test(
       }
     });
 
-/*
-    assert.throws(function () {
-      adtNone.match({
-        none: cheese
+    var record = function () {
+      return Array.prototype.slice.call(arguments, 0);
+    };
+
+    Jsc.property('adt.nothing.match should pass [ ]', arbNothing, function (subject) {
+      var contents = subject.match({
+        nothing: record,
+        unknown: Fun.die('should not be unknown'),
+        exact: Fun.die('should not be exact')
       });
+      return Jsc.eq([ ], contents);
     });
 
-    assert.throws(function () {
-      adtNone.match({
-        root: die,
-        created: die,
-        actual: die
+    Jsc.property('adt.unknown.match should pass 1 parameter: [ guesses ]', arbUnknown, function (subject) {
+      var contents = subject.match({
+        nothing: Fun.die('should not be nothing'),
+        unknown: record,
+        exact: Fun.die('should not be exact')
       });
+      return Jsc.eq(1, contents.length);
     });
 
-    assert.eq('cheese', adtNone.match({
-      none: cheese,
-      root: die,
-      created: die,
-      actual: die
-    }));
-
-    assert.eq('cheese', adtRoot.match({
-      none: die,
-      root: cheese,
-      created: die,
-      actual: die
-    }));
-
-    assert.eq('cheese', adtCreated.match({
-      none: die,
-      root: die,
-      created: cheese,
-      actual: die
-    }));
-
-    assert.eq('cheese', adtActual.match({
-      none: die,
-      root: die,
-      created: die,
-      actual: cheese
-    }));
-  */
+    Jsc.property('adt.unknown.match should pass 2 parameters [ value, precision ]', arbExact, function (subject) {
+      var contents = subject.match({
+        nothing: Fun.die('should not be nothing'),
+        unknown: Fun.die('should not be unknown'),
+        exact: record
+      });
+      return Jsc.eq(2, contents.length);
+    });
   }
 );
