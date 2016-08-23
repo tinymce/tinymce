@@ -130,7 +130,7 @@ test(
       });
     });
 
-    var arbExact = Jsc.tuple(Jsc.number, Jsc.number).smap(function (arr) {
+    var arbExact = Jsc.tuple([Jsc.number, Jsc.number]).smap(function (arr) {
       return newAdt.exact(arr[0], arr[1]);
     }, function (r) {
       return r.match({
@@ -150,18 +150,20 @@ test(
     var allKeys = [ 'nothing', 'unknown', 'exact' ];
     var arbKeys = Jsc.elements(allKeys);
 
-    Jsc.property('Error is thrown if not all arguments are supplied', arbAdt, arbKeys, function (subject, key) {
+    Jsc.property('Error is thrown if not all arguments are supplied', arbAdt, Jsc.nearray(arbKeys), function (subject, exclusions) {
       var original = Arr.filter(allKeys, function (k) {
-        return k !== key;
+        return !Arr.contains(exclusions, k);
       });
 
-      assert.throws(function () {
+      try {
         var branches = Obj.tupleMap(original, function (k, i) {
-          return { key: k, value: function () { } };
+          return { k: k, v: function () { } };
         });
         subject.match(branches);
-      });
-      return false;
+        return false;
+      } catch (err) {
+        return true;
+      }
     });
 
 /*
