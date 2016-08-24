@@ -30,14 +30,23 @@ define(
       return TextSearch.next(text, offset);
     };
 
+    // recurse to the left of (item, offset).
+    // Uses whole text nodes while 'process' returns Some() value.
+    // Stops at text 'boundaries'.
     var repeatLeft = function (universe, item, offset, process) {
       return TextSeeker.repeatLeft(universe, item, offset, process);
     };
 
+    // recurse to the right of (item, offset).
+    // Uses whole text nodes while 'process' returns Some() value.
+    // Stops at text 'boundaries'.
     var repeatRight = function (universe, item, offset, process) {
       return TextSeeker.repeatRight(universe, item, offset, process);
     };
 
+    // find an (element offset) pair to the left of (item, offset).
+    // uses a regular expression (rawSeeker) on the text content.
+    // Stops at text 'boundaries'.
     var expandLeft = function (universe, item, offset, rawSeeker) {
       var seeker = seekerSig(rawSeeker);
 
@@ -53,6 +62,9 @@ define(
       return repeatLeft(universe, item, offset, process);
     };
 
+    // find an (element offset) pair to the right of (item, offset).
+    // uses a regular expression (rawSeeker) on the text content.
+    // Stops at text 'boundaries'.
     var expandRight = function (universe, item, offset, rawSeeker) {
       var seeker = seekerSig(rawSeeker);
 
