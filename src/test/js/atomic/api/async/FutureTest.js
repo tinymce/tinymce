@@ -17,6 +17,17 @@ asynctest(
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
+    var testGet = function () {
+      return new Promise(function (resolve, reject) {
+        Future.nu(function(callback) {
+          setTimeout(Fun.curry(callback, 'blah'), 10);
+        }).get(function(a) {
+          assert.eq('blah', a);
+          resolve(true);
+        });
+      });
+    };
+
     var testMap = function () {
       return new Promise(function (resolve, reject) {
         var fut = Future.nu(function(callback) {
@@ -42,12 +53,33 @@ asynctest(
 
         var f = function(x) {
           return Future.nu(function(callback) {
-            callback(x + "hello");
+            callback(x + 'hello');
           });
         };
 
         fut.bind(f).get(function(a) {
           assert.eq('blahhello', a);
+          resolve(true);
+        });
+      });
+    };
+
+    var testAnonBind = function () {
+      return new Promise(function (resolve, reject) {
+        var called = false;
+
+        var fut = Future.nu(function(callback) {
+          called = true;
+          setTimeout(Fun.curry(callback, 'blah'), 10);
+        });
+
+        var f = Future.nu(function(callback) {
+          callback('hello');
+        });
+
+        fut.anonBind(f).get(function(a) {
+          assert.eq('hello', a);
+          assert.eq(true, called);
           resolve(true);
         });
       });
@@ -145,7 +177,7 @@ asynctest(
       ]);
     };
 
-    testMap().then(testBind).then(testSpecs).then(function () {
+    testGet().then(testMap).then(testBind).then(testAnonBind).then(testSpecs).then(function () {
       success();
     }, failure);
   }
