@@ -12,10 +12,11 @@ define(
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert'
+    'ephox.sugar.api.Insert',
+    'ephox.sugar.api.InsertAll'
   ],
 
-  function (Type, Arr, Obj, Styles, Id, Merger, Fun, Attr, Class, Element, Insert) {
+  function (Type, Arr, Obj, Styles, Id, Merger, Fun, Attr, Class, Element, Insert, InsertAll) {
     var helpStyle = Styles.resolve('aria-help');
     var helpVisibleStyle = Styles.resolve('aria-help-visible');
 
@@ -76,9 +77,16 @@ define(
 
     var menu = function (element, label) {
       Attr.setAll(element, {
-        'role': 'menu',
-        'aria-label': label
+        'aria-label': label,
+        'role': 'menu'
       });
+    };
+
+    var textButton = function (element, contentElement) {
+      // Add 'button' roleto a pastry button, and 'presentation' role
+      // to the contentElement that contains the button text.
+      Attr.set(element, 'role', 'button');
+      Attr.set(contentElement, 'role', 'presentation');
     };
 
     var toolbarButton = function (element, label, hasPopup, isToggle) {
@@ -118,10 +126,9 @@ define(
       }));
     };
 
-    var menuItemCheckbox = function (element, label) {
+    var menuItemCheckbox = function (element) {
       Attr.setAll(element, {
         'role': 'menuitemcheckbox',
-        'aria-label': label,
         'aria-checked': false
       });
     };
@@ -146,6 +153,21 @@ define(
         'aria-label': label,
         'role': 'button'
       });
+    };
+
+    // return a container object with methods {element, field} containing an html field and label
+    var labelledField = function (field, name, labelText) {
+      var container = Element.fromTag('div');
+      var id = name + Id.generate('');
+      var label = Element.fromHtml('<label>' + labelText + '</label>');
+      Attr.set(label, 'for', id);
+      Attr.set(field, 'id', id);
+      InsertAll.append(container, [ label, field ]);
+
+      return {
+        element: Fun.constant(container),
+        field:   Fun.constant(field)
+      };
     };
 
     var textarea = function (element) {
@@ -174,20 +196,17 @@ define(
       });
     };
 
-    var tabPanel = function (element /*, label */) {
+    var tabPanel = function (element) {
       Attr.setAll(element, {
         'role': 'tabpanel'
-        // 'aria-label': label // Doesn't seem to be read by JAWS or VoiceOver, so giving up
       });
     };
 
     var linkTabToPanel = function (tab, panel) {
-      // I couldn't hear any difference with this, but the concept is linking buttons to the panel that will show
       var id = Id.generate('ephox-aria');
       Attr.set(panel, 'id', id);
       Attr.setAll(tab, {
-        'aria-controls': id,
-        'aria-owns': id
+        'aria-controls': id
       });
     };
 
@@ -250,12 +269,14 @@ define(
       toolbar: toolbar,
       toolbarGroup: toolbarGroup,
       toolbarButton: toolbarButton,
+      textButton: textButton,
       menu: menu,
       menuItem: menuItem,
       menuItemCheckbox: menuItemCheckbox,
       checkbox: checkbox,
       dialog: dialog,
       button: button,
+      labelledField: labelledField,
       textarea: textarea,
       label: label,
       widget: widget,

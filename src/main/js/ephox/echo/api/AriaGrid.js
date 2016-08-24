@@ -16,8 +16,8 @@ define(
 
     var base = function (element, label) {
       Attr.setAll(element, {
-        'aria-label': label,
-        'role': 'grid'
+        'role': 'grid',
+        'aria-label': label
       });
     };
 
@@ -25,11 +25,15 @@ define(
       Attr.set(element, 'role', 'row');
     };
 
+    // gridcell with explicit label
     var cell = function (element, label) {
-      Attr.setAll(element, {
-        'role': 'gridcell',
-        'aria-label': label
-      });
+      gridcell(element);
+      Attr.set(element, 'aria-label', label);
+    };
+
+    // gridcell with implicit label
+    var gridcell = function (element) {
+      Attr.set(element,'role', 'gridcell');
     };
 
     var createHelp = function (rows, cols, translations) {
@@ -75,6 +79,7 @@ define(
       base: base,
       row: row,
       cell: cell,
+      gridcell: gridcell,
       createHelp: createHelp
     };
   }
