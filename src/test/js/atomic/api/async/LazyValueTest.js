@@ -88,6 +88,16 @@ asynctest(
               return Jsc.eq(json, data) ? Result.value(true) : Result.error('Payload is not the same');
             });
           }
+        },
+
+        {
+          label: 'LazyValue.pure map f resolves with f data',
+          arbs: [ Jsc.json, Jsc.fun(Jsc.json) ],
+          f: function (json, f) {
+            return AsyncProps.checkLazy(LazyValue.pure(json).map(f), function (data) {
+              return Jsc.eq(f(json), data) ? Result.value(true) : Result.error('f(json) !== data');
+            });
+          }
         }
       ]);
     };
