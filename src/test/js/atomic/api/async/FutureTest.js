@@ -5,10 +5,11 @@ asynctest(
     'ephox.katamari.api.Future',
     'ephox.katamari.test.AsyncProps',
     'ephox.wrap.Jsc',
-    'global!Promise'
+    'global!Promise',
+    'global!setTimeout'
   ],
  
-  function (Future, AsyncProps, Jsc, Promise) {
+  function (Future, AsyncProps, Jsc, Promise, setTimeout) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -20,6 +21,18 @@ asynctest(
         });
       });
     };
+
+    var genFuture = Jsc.json.generator.map(function (json) {
+      return Future.nu(function (done) {
+        setTimeout(function () {
+          done(json);
+        }, 10);
+      });
+    });
+
+    var arbFuture = Jsc.bless({
+      generator: genFuture
+    });
 
     AsyncProps.checkProps([
       {
@@ -38,6 +51,22 @@ asynctest(
         f: function (json, f) {
           return futureToPromise(Future.pure(json).map(f)).then(function (data) {
             return Jsc.eq(f(json), data) ? Promise.resolve(true) : Promise.reject();
+          });
+        }
+      },
+
+      {
+        label: 'future.bind(binder) equiv future.get(bind)',
+        arbs: [ arbFuture, Jsc.fun(arbFuture) ],
+        f: function (future, binder) {
+          return futureToPromise(future.bind(binder)).then(function (data) {
+            return new Promise(function (resolve, reject) {
+              future.toLazy().get(function (initial) {
+                binder(initial).toLazy().get(function (bInitial) {
+                  return Jsc.eq(data, bInitial) ? resolve(true): reject('Data did not match');
+                });
+              });
+            });
           });
         }
       }

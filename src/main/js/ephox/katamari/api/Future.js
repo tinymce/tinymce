@@ -54,7 +54,8 @@ define(
         map: map,
         bind: bind,
         anonBind: anonBind,
-        toLazy: toLazy
+        toLazy: toLazy,
+        get: get
       };
 
     };
