@@ -26,10 +26,10 @@ asynctest(
         var lazy = lazyCounter();
 
         lazy.get(function (val) {
-          if (! Jsc.eq(val, 1)) reject('The counter should be 1 after 1 call');
+          if (! Jsc.eq(val, 1)) reject('LazyValue.get. The counter should be 1 after 1 call');
           else lazy.get(function (val2) {
             if (Jsc.eq(val2, 1)) resolve(true);
-            else reject('The counter should still be 1 because it is cached. Was: ' + val2);
+            else reject('LazyValue.get. The counter should still be 1 because it is cached. Was: ' + val2);
           });
         });
       });
@@ -61,9 +61,9 @@ asynctest(
           }, 100);
         });
 
-        if (lazy.isReady()) reject('Lazy value should not be ready yet.');
+        if (lazy.isReady()) reject('LazyValue.isReady. Lazy value should not be ready yet.');
         else lazy.get(function (v) {
-          if (! lazy.isReady()) reject('Lazy value should now be ready');
+          if (! lazy.isReady()) reject('LazyValue.isReady. Lazy value should now be ready');
           else resolve(true);
         });
       });
@@ -71,7 +71,9 @@ asynctest(
 
     var testPure = function () {
       return new Promise(function (resolve, reject) {
-        resolve(true);
+        LazyValue.pure(10).get(function (v) {
+          return Jsc.eq(10, v) ? resolve(true) : reject('LazyValue.pure. Expected 10, was: ' + v);
+        });
       });
     };
 
