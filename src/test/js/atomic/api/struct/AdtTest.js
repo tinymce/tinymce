@@ -113,6 +113,7 @@ test(
     assert.eq('cheese', adtCreated.fold(   die,    die, cheese,    die));
     assert.eq('cheese', adtActual.fold(    die,    die,    die, cheese));
 
+
     var newAdt = Adt.generate([
       { nothing: [ ] },
       { unknown: [ 'guesses' ] },
@@ -162,7 +163,7 @@ test(
         subject.match(branches);
         return false;
       } catch (err) {
-        return err.message.indexOf('nothing') > 0;
+        return err.message.indexOf('nothing') > -1;
       }
     });
 
@@ -228,6 +229,19 @@ test(
 
       var folded = subject.fold(Fun.die('should not be nothing'), Fun.die('should not be unknown'), record);
       return Jsc.eq(matched, folded);
+    });
+
+    Jsc.property('adt.match must have the right arguments, not just the right number', arbAdt, function (subject) {
+      try {
+        subject.match({
+          not: Fun.identity,
+          the: Fun.identity,
+          right: Fun.identity
+        });
+        return false;
+      } catch (err) {
+        return err.message.indexOf('nothing') > -1;
+      }
     });
   }
 );

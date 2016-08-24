@@ -79,7 +79,7 @@ define(
               throw new Error('Wrong number of arguments to match. Expected: ' + constructors.join(',') + '\nActual: ' + branchKeys.join(','));
             }
 
-            var allReqd = Arr.forall(keys, function (reqKey) {
+            var allReqd = Arr.forall(constructors, function (reqKey) {
               return Arr.contains(branchKeys, reqKey);
             });
 
