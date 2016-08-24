@@ -2,14 +2,16 @@ asynctest(
   'FutureTest',
  
   [
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Future',
+    'ephox.katamari.api.Futures',
     'ephox.katamari.test.AsyncProps',
     'ephox.wrap.Jsc',
     'global!Promise',
     'global!setTimeout'
   ],
  
-  function (Future, AsyncProps, Jsc, Promise, setTimeout) {
+  function (Arr, Future, Futures, AsyncProps, Jsc, Promise, setTimeout) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -22,6 +24,19 @@ asynctest(
       });
     };
 
+    var genFutureSchema = Jsc.json.generator.map(function (json) {
+      var future = Future.nu(function (done) {
+        setTimeout(function () {
+          done(json);
+        }, 10);
+      });
+
+      return {
+        future: future,
+        contents: json
+      };
+    });
+
     var genFuture = Jsc.json.generator.map(function (json) {
       return Future.nu(function (done) {
         setTimeout(function () {
@@ -32,6 +47,10 @@ asynctest(
 
     var arbFuture = Jsc.bless({
       generator: genFuture
+    });
+
+    var arbFutureSchema = Jsc.bless({
+      generator: genFutureSchema
     });
 
     AsyncProps.checkProps([
@@ -57,15 +76,29 @@ asynctest(
 
       {
         label: 'future.bind(binder) equiv future.get(bind)',
-        arbs: [ arbFuture, Jsc.fun(arbFuture) ],
-        f: function (future, binder) {
-          return futureToPromise(future.bind(binder)).then(function (data) {
+        arbs: [ arbFutureSchema, Jsc.fun(arbFuture) ],
+        f: function (arbF, binder) {
+          return futureToPromise(arbF.future.bind(binder)).then(function (data) {
             return new Promise(function (resolve, reject) {
-              future.toLazy().get(function (initial) {
-                binder(initial).toLazy().get(function (bInitial) {
-                  return Jsc.eq(data, bInitial) ? resolve(true): reject('Data did not match');
-                });
+              binder(arbF.contents).toLazy().get(function (bInitial) {
+                return Jsc.eq(data, bInitial) ? resolve(true): reject('Data did not match');
               });
+            });
+          });
+        }
+      },
+
+      {
+        label: 'futures.par([future]).get() === [future.val]',
+        arbs: [ Jsc.array(arbFutureSchema) ],
+        f: function (futures) {
+          var rawFutures = Arr.map(futures, function (ft) { return ft.future; });
+          var expected = Arr.map(futures, function (ft) { return ft.contents; });
+          return futureToPromise(Futures.par(rawFutures)).then(function (list) {
+            return new Promise(function (resolve, reject) {
+              return Jsc.eq(expected, list) ? resolve(true) : reject('Expected: ' + expected.join(',') +
+                ', actual: ' + list.join(',')
+              );
             });
           });
         }
