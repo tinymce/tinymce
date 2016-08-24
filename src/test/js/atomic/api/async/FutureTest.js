@@ -1,200 +1,53 @@
 asynctest(
-  'FutureGetTest',
-
+  'FutureTest',
+ 
   [
     'ephox.katamari.api.Future',
-    'ephox.katamari.api.Fun',
-    'global!setTimeout'
+    'ephox.katamari.test.AsyncProps',
+    'ephox.wrap.Jsc',
+    'global!Promise'
   ],
+ 
+  function (Future, AsyncProps, Jsc, Promise) {
+    var success = arguments[arguments.length - 2];
+    var failure = arguments[arguments.length - 1];
 
-  function (Future, Fun, setTimeout, success, failure) {
-    Future.nu(function(callback) {
-      setTimeout(Fun.curry(callback, 'blah'), 10);
-    }).get(function(a) {
-      assert.eq('blah', a);
-      success();
-    });
-  }
-);
-
-asynctest(
-  'FutureMapTest',
-
-  [
-    'ephox.katamari.api.Future',
-    'ephox.katamari.api.Fun',
-    'global!setTimeout'
-  ],
-
-  function (Future, Fun, setTimeout, success, failure) {
-    var fut = Future.nu(function(callback) {
-      setTimeout(Fun.curry(callback, 'blah'), 10);
-    });
-
-    var f = function(x) {
-      return x + "hello";
-    };
-
-    fut.map(f).get(function(a) {
-      assert.eq('blahhello', a);
-      success();
-    });
-  }
-);
-
-asynctest(
-  'FutureBindTest',
-
-  [
-    'ephox.katamari.api.Future',
-    'ephox.katamari.api.Fun',
-    'global!setTimeout'
-  ],
-
-  function (Future, Fun, setTimeout, success, failure) {
-    var fut = Future.nu(function(callback) {
-      setTimeout(Fun.curry(callback, 'blah'), 10);
-    });
-
-    var f = function(x) {
-      return Future.nu(function(callback) {
-        callback(x + "hello");
+    var futureToPromise = function (future) {
+      var lazy = future.toLazy();
+      return new Promise(function (resolve, reject) {
+        lazy.get(function (data) {
+          resolve(data);
+        });
       });
     };
 
-    fut.bind(f).get(function(a) {
-      assert.eq('blahhello', a);
+    AsyncProps.checkProps([
+      {
+        label: 'Future.pure resolves with data',
+        arbs: [ Jsc.json ],
+        f: function (json) {
+          return futureToPromise(Future.pure(json)).then(function (data) {
+            return Jsc.eq(json, data) ? Promise.resolve(true) : Promise.reject();
+          });
+        }
+      },
+
+      {
+        label: 'Future.pure map f resolves with f data',
+        arbs: [ Jsc.json, Jsc.fun(Jsc.json) ],
+        f: function (json, f) {
+          return futureToPromise(Future.pure(json).map(f)).then(function (data) {
+            return Jsc.eq(f(json), data) ? Promise.resolve(true) : Promise.reject();
+          });
+        }
+      }
+
+
+    ]).then(function () {
       success();
-    });
-  }
-);
-
-asynctest(
-  'FutureAnonBindTest',
-
-  [
-    'ephox.katamari.api.Future',
-    'ephox.katamari.api.Fun',
-    'global!setTimeout'
-  ],
-
-  function (Future, Fun, setTimeout, success, failure) {
-    var called = false;
-
-    var fut = Future.nu(function(callback) {
-      called = true;
-      setTimeout(Fun.curry(callback, 'blah'), 10);
-    });
-
-    var f = Future.nu(function(callback) {
-      callback("hello");
-    });
-
-    fut.anonBind(f).get(function(a) {
-      assert.eq('hello', a);
-      assert.eq(true, called);
-      success();
-    });
-  }
-);
-
-asynctest(
-  'FuturePureTest',
-
-  [
-    'ephox.katamari.api.Future',
-    'ephox.katamari.api.Fun',
-    'global!setTimeout'
-  ],
-
-  function (Future, Fun, setTimeout, success, failure) {
-    Future.pure('hello').get(function(a) {
-      assert.eq('hello', a);
-      success();
-    });
-  }
-);
-
-asynctest(
-  'FutureParallelTest',
-
-  [
-    'ephox.katamari.api.Future',
-    'ephox.katamari.api.Fun',
-    'global!setTimeout'
-  ],
-
-  function (Future, Fun, setTimeout, success, failure) {
-    var f = Future.nu(function(callback) {
-      setTimeout(Fun.curry(callback, 'apple'), 10);
-    });
-    var g = Future.nu(function(callback) {
-      setTimeout(Fun.curry(callback, 'banana'), 5);
-    });
-    var h = Future.nu(function(callback) {
-      callback('carrot');
-    });
-
-
-    Future.par([f, g, h]).get(function(r){
-      assert.eq(r[0], 'apple');
-      assert.eq(r[1], 'banana');
-      assert.eq(r[2], 'carrot');
-      success();
-    });
-  }
-);
-
-asynctest(
-  'FutureMapMTest',
-
-  [
-    'ephox.katamari.api.Future',
-    'ephox.katamari.api.Fun',
-    'global!setTimeout'
-  ],
-
-  function (Future, Fun, setTimeout, success, failure) {
-    var fn = function(a) {
-      return Future.nu(function(cb) {
-        setTimeout(Fun.curry(cb, a + " bizarro"), 10);
-      });
-    };
-
-    Future.mapM(['q', 'r', 's'], fn).get(function(r){
-      assert.eq(['q bizarro', 'r bizarro', 's bizarro'], r);
-      success();
-    });
-  }
-);
-
-
-
-asynctest(
-  'ComposeTest',
-
-  [
-    'ephox.katamari.api.Future',
-    'ephox.katamari.api.Fun',
-    'global!setTimeout'
-  ],
-
-  function (Future, Fun, setTimeout, success, failure) {
-    var f = function(a) {
-      return Future.nu(function(cb) {
-        setTimeout(Fun.curry(cb, a + " f"), 10);
-      });
-    };
-
-    var g = function(a) {
-      return Future.nu(function(cb) {
-        setTimeout(Fun.curry(cb, a + " g"), 10);
-      });
-    };
-
-    Future.compose(f, g)('a').get(function(r) {
-      assert.eq('a g f', r);
-      success();
+    }, function (err) {
+      console.error('failed');
+      failure(err);
     });
   }
 );

@@ -44,15 +44,13 @@ define(
       };
 
       var toLazy = function () {
-        return LazyValue(function (callback) {
-          get(function (a) {
-            callback(a);
-          });
+        // Should we pass the whole future in?
+        return LazyValue.nu({
+          get: get
         });
       };
 
       return {
-        // get: get,
         map: map,
         bind: bind,
         anonBind: anonBind,
