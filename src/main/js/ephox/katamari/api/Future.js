@@ -44,7 +44,6 @@ define(
       };
 
       var toLazy = function () {
-        // Should we pass the whole future in?
         return LazyValue.nu(get);
       };
 
