@@ -126,7 +126,7 @@ define(
       }));
     };
 
-    var menuItemCheckbox = function (element, label) {
+    var menuItemCheckbox = function (element) {
       Attr.setAll(element, {
         'role': 'menuitemcheckbox',
         'aria-checked': false
