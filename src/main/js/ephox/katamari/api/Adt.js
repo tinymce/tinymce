@@ -30,8 +30,6 @@ define(
         throw 'there must be at least one case';
       }
 
-      var allKeys = Obj.keys(cases);
-
       var constructors = [ ];
 
       // adt is mutated to add the individual cases
