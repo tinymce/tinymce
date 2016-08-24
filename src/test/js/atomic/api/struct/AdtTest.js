@@ -2,11 +2,15 @@ test(
   'ADT Test',
 
   [
+    'ephox.katamari.api.Adt',
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Adt'
+    'ephox.katamari.api.Obj',
+    'ephox.wrap.Jsc',
+    'global!Array'
   ],
 
-  function (Fun, Adt) {
+  function (Adt, Arr, Fun, Obj, Jsc, Array) {
 
     var checkInvalid = function (message, f) {
       var error = false;
@@ -108,5 +112,136 @@ test(
     assert.eq('cheese', adtRoot.fold(      die, cheese,    die,    die));
     assert.eq('cheese', adtCreated.fold(   die,    die, cheese,    die));
     assert.eq('cheese', adtActual.fold(    die,    die,    die, cheese));
+
+
+    var newAdt = Adt.generate([
+      { nothing: [ ] },
+      { unknown: [ 'guesses' ] },
+      { exact: [ 'value', 'precision' ] }
+    ]);
+
+    var arbNothing = Jsc.constant(newAdt.nothing());
+
+    var arbUnknown = Jsc.array(Jsc.string).smap(function (guesses) {
+      return newAdt.unknown(guesses);
+    }, function (r) {
+      return r.match({
+        nothing: Fun.die('not a nothing'),
+        unknown: Fun.identity,
+        exact: Fun.die('not an exact')
+      });
+    });
+
+    var arbExact = Jsc.tuple([Jsc.number, Jsc.number]).smap(function (arr) {
+      return newAdt.exact(arr[0], arr[1]);
+    }, function (r) {
+      return r.match({
+        nothing: Fun.die('not a nothing'),
+        unknown: Fun.die('not an unknown'),
+        exact: function (value, precision) { return [ value, precision ]; }
+      });
+    });
+
+    var arbAdt = Jsc.oneof([
+      arbNothing,
+      arbUnknown,
+      arbExact
+    ]);
+
+    var allKeys = [ 'nothing', 'unknown', 'exact' ];
+    var arbKeys = Jsc.elements(allKeys);
+
+    Jsc.property('Error is thrown if not all arguments are supplied', arbAdt, Jsc.nearray(arbKeys), function (subject, exclusions) {
+      var original = Arr.filter(allKeys, function (k) {
+        return !Arr.contains(exclusions, k);
+      });
+
+      try {
+        var branches = Obj.tupleMap(original, function (k, i) {
+          return { k: k, v: Fun.identity };
+        });
+        subject.match(branches);
+        return false;
+      } catch (err) {
+        return err.message.indexOf('nothing') > -1;
+      }
+    });
+
+    var record = function () {
+      return Array.prototype.slice.call(arguments, 0);
+    };
+
+    Jsc.property('adt.nothing.match should pass [ ]', arbNothing, function (subject) {
+      var contents = subject.match({
+        nothing: record,
+        unknown: Fun.die('should not be unknown'),
+        exact: Fun.die('should not be exact')
+      });
+      return Jsc.eq([ ], contents);
+    });
+
+    Jsc.property('adt.nothing.match should be same as fold', arbNothing, function (subject) {
+      var matched = subject.match({
+        nothing: record,
+        unknown: Fun.die('should not be unknown'),
+        exact: Fun.die('should not be exact')
+      });
+
+      var folded = subject.fold(record, Fun.die('should not be unknown'), Fun.die('should not be exact'));
+      return Jsc.eq(matched, folded);
+    });
+
+    Jsc.property('adt.unknown.match should pass 1 parameter: [ guesses ]', arbUnknown, function (subject) {
+      var contents = subject.match({
+        nothing: Fun.die('should not be nothing'),
+        unknown: record,
+        exact: Fun.die('should not be exact')
+      });
+      return Jsc.eq(1, contents.length);
+    });
+
+    Jsc.property('adt.unknown.match should be same as fold', arbUnknown, function (subject) {
+      var matched = subject.match({
+        nothing: Fun.die('should not be nothing'),
+        unknown: record,
+        exact: Fun.die('should not be exact')
+      });
+
+      var folded = subject.fold(Fun.die('should not be nothing'), record, Fun.die('should not be exact'));
+      return Jsc.eq(matched, folded);
+    });
+
+    Jsc.property('adt.exact.match should pass 2 parameters [ value, precision ]', arbExact, function (subject) {
+      var contents = subject.match({
+        nothing: Fun.die('should not be nothing'),
+        unknown: Fun.die('should not be unknown'),
+        exact: record
+      });
+      return Jsc.eq(2, contents.length);
+    });
+
+    Jsc.property('adt.exact.match should be same as fold', arbExact, function (subject) {
+      var matched = subject.match({
+        nothing: Fun.die('should not be nothing'),
+        unknown: Fun.die('should not be unknown'),
+        exact: record
+      });
+
+      var folded = subject.fold(Fun.die('should not be nothing'), Fun.die('should not be unknown'), record);
+      return Jsc.eq(matched, folded);
+    });
+
+    Jsc.property('adt.match must have the right arguments, not just the right number', arbAdt, function (subject) {
+      try {
+        subject.match({
+          not: Fun.identity,
+          the: Fun.identity,
+          right: Fun.identity
+        });
+        return false;
+      } catch (err) {
+        return err.message.indexOf('nothing') > -1;
+      }
+    });
   }
 );
