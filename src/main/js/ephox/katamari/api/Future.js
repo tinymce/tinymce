@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.katamari.api.LazyValue',
-    'ephox.katamari.future.Bounce'
+    'ephox.katamari.async.Bounce'
   ],
 
   /** A future value that is evaluated on demand. The base function is re-evaluated each time 'get' is called. */

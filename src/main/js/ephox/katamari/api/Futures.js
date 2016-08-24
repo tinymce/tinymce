@@ -3,34 +3,14 @@ define(
 
   [
     'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Future'
+    'ephox.katamari.api.Future',
+    'ephox.katamari.async.AsyncValues'
   ],
 
-  function (Arr, Future) {
+  function (Arr, Future, AsyncValues) {
     /** [Future a] -> Future [a] */
     var par = function(futures) {
-      return Future.nu(function(callback) {
-        var r = [];
-        var count = 0;
-
-        var cb = function(i) {
-          return function(value) {
-            r[i] = value;
-            count++;
-            if (count >= futures.length) {
-              callback(r);
-            }
-          };
-        };
-
-        if (futures.length === 0) {
-          callback([]);
-        } else {
-          Arr.each(futures, function(future, i) {
-            future.get(cb(i));
-          });
-        }
-      });
+      return AsyncValues.par(futures, Future.nu);
     };
 
     /** [a] -> (a -> Future b) -> Future [b] */
