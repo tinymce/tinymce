@@ -8,7 +8,7 @@ define(
   ],
 
   function (Arr, Option, setTimeout) {
-    var nu = function (lazyGet) {
+    var nu = function (baseFn) {
       var data = Option.none();
       var callbacks = [];
 
@@ -48,7 +48,7 @@ define(
       };
 
       // Lazy values cache the value and kick off immediately
-      lazyGet.get(set);
+      baseFn(set);
 
       return {
         get: get,
@@ -57,8 +57,15 @@ define(
       };
     };
 
+    var pure = function (a) {
+      return nu(function (callback) {
+        callback(a);
+      });
+    };
+
     return {
-      nu: nu
+      nu: nu,
+      pure: pure
     };
   }
 );
