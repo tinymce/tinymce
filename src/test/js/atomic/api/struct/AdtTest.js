@@ -179,6 +179,17 @@ test(
       return Jsc.eq([ ], contents);
     });
 
+    Jsc.property('adt.nothing.match should be same as fold', arbNothing, function (subject) {
+      var matched = subject.match({
+        nothing: record,
+        unknown: Fun.die('should not be unknown'),
+        exact: Fun.die('should not be exact')
+      });
+
+      var folded = subject.fold(record, Fun.die('should not be unknown'), Fun.die('should not be exact'));
+      return Jsc.eq(matched, folded);
+    });
+
     Jsc.property('adt.unknown.match should pass 1 parameter: [ guesses ]', arbUnknown, function (subject) {
       var contents = subject.match({
         nothing: Fun.die('should not be nothing'),
@@ -188,13 +199,35 @@ test(
       return Jsc.eq(1, contents.length);
     });
 
-    Jsc.property('adt.unknown.match should pass 2 parameters [ value, precision ]', arbExact, function (subject) {
+    Jsc.property('adt.unknown.match should be same as fold', arbUnknown, function (subject) {
+      var matched = subject.match({
+        nothing: Fun.die('should not be nothing'),
+        unknown: record,
+        exact: Fun.die('should not be exact')
+      });
+
+      var folded = subject.fold(Fun.die('should not be nothing'), record, Fun.die('should not be exact'));
+      return Jsc.eq(matched, folded);
+    });
+
+    Jsc.property('adt.exact.match should pass 2 parameters [ value, precision ]', arbExact, function (subject) {
       var contents = subject.match({
         nothing: Fun.die('should not be nothing'),
         unknown: Fun.die('should not be unknown'),
         exact: record
       });
       return Jsc.eq(2, contents.length);
+    });
+
+    Jsc.property('adt.exact.match should be same as fold', arbExact, function (subject) {
+      var matched = subject.match({
+        nothing: Fun.die('should not be nothing'),
+        unknown: Fun.die('should not be unknown'),
+        exact: record
+      });
+
+      var folded = subject.fold(Fun.die('should not be nothing'), Fun.die('should not be unknown'), record);
+      return Jsc.eq(matched, folded);
     });
   }
 );
