@@ -35,7 +35,7 @@ ModuleLoader.require([
 				indent: false,
 				schema: 'html5',
 				entities: 'raw',
-				valid_elements: 'li,ol[style],ul[style],dl,dt,dd,em,strong,span,#p,div,br',
+				valid_elements: 'li[style],ol[style],ul[style],dl,dt,dd,em,strong,span,#p,div,br',
 				valid_styles: {
 					'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display,position,top,left,list-style-type'
 				},
@@ -59,7 +59,7 @@ ModuleLoader.require([
 				},
 				valid_styles: {
 					'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display,position,top,left,list-style-type'
-				},
+				}
 
 			});
 
@@ -76,7 +76,7 @@ ModuleLoader.require([
 				},
 				valid_styles: {
 					'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display,position,top,left,list-style-type'
-				},
+				}
 
 			});
 		},
@@ -968,7 +968,7 @@ ModuleLoader.require([
 			'</ol>' +
 			'<p>c</p>' +
 			'<ol>' +
-				'<li>' +
+				'<li style="list-style-type: none;">' +
 					'<ul>' +
 						'<li>d</li>' +
 					'</ul>' +
@@ -976,6 +976,64 @@ ModuleLoader.require([
 				'<li>e</li>' +
 			'</ol>'
 		);
+		equal(editor.selection.getStart().nodeName, 'P');
+	});
+
+	test('Remove OL on a deep nested LI', function() {
+		editor.getBody().innerHTML = trimBrs(
+			'<ol>' +
+				'<li>a' +
+					'<ol>' +
+						'<li>b</li>' +
+						'<li>c' +
+							'<ol>' +
+								'<li>d</li>' +
+								'<li>e</li>' +
+								'<li>f</li>' +
+							'</ol>' +
+						'</li>' +
+						'<li>g</li>' +
+						'<li>h</li>' +
+					'</ol>' +
+				'</li>' +
+				'<li>i</li>' +
+			'</ol>'
+		);
+
+		editor.focus();
+		Utils.setSelection('ol ol ol li:nth-child(2)', 1);
+		execCommand('InsertOrderedList');
+
+		equal(editor.getContent(), 
+			'<ol>' +
+			    '<li>a' +
+			        '<ol>' +
+			            '<li>b</li>' +
+			            '<li>c' +
+			                '<ol>' +
+			                    '<li>d</li>' +
+			                '</ol>' +
+			            '</li>' +
+			        '</ol>' +
+			    '</li>' +
+			'</ol>' +
+			'<p>e</p>' +
+			'<ol>' +
+			    '<li style="list-style-type: none;">' +
+			        '<ol>' +
+			            '<li style="list-style-type: none;">' +
+			                '<ol>' +
+			                    '<li>f</li>' +
+			                '</ol>' +
+			            '</li>' +
+			            '<li>g</li>' +
+			            '<li>h</li>' +
+			        '</ol>' +
+			    '</li>' +
+			    '<li>i</li>' +
+			'</ol>'
+		);
+
 		equal(editor.selection.getStart().nodeName, 'P');
 	});
 
