@@ -2,51 +2,75 @@ define(
   'ephox.katamari.api.Future',
 
   [
-    'ephox.katamari.future.FutureValue',
-    'ephox.katamari.future.Futures'
+    'ephox.katamari.api.LazyValue',
+    'ephox.katamari.future.Bounce'
   ],
 
   /** A future value that is evaluated on demand. The base function is re-evaluated each time 'get' is called. */
-  function (FutureValue, Futures) {
-    var nu = function (callback) {
-      return FutureValue(callback);
+  function (LazyValue, Bounce) {
+    var nu = function (baseFn) {
+      var get = function(callback) {
+        baseFn(Bounce.bounce(callback));
+      };
+
+      /** map :: this Future a -> (a -> b) -> Future b */
+      var map = function (fab) {
+        return nu(function (callback) {
+          get(function (a) {
+            var value = fab(a);
+            callback(value);
+          });
+        });
+      };
+
+      /** bind :: this Future a -> (a -> Future b) -> Future b */
+      var bind = function (aFutureB) {
+        return nu(function (callback) {
+          get(function (a) {
+            aFutureB(a).get(callback);
+          });
+        });
+      };
+
+      /** anonBind :: this Future a -> Future b -> Future b
+       *  Returns a future, which evaluates the first future, ignores the result, then evaluates the second.
+       */
+      var anonBind = function (futureB) {
+        return nu(function (callback) {
+          get(function (a) {
+            futureB.get(callback);
+          });
+        });
+      };
+
+      var toLazy = function () {
+        return LazyValue(function (callback) {
+          get(function (a) {
+            callback(a);
+          });
+        });
+      };
+
+      return {
+        // get: get,
+        map: map,
+        bind: bind,
+        anonBind: anonBind,
+        toLazy: toLazy
+      };
+
     };
 
     /** a -> Future a */
-    var pure = function(a) {
-      return nu(function(callback) {
+    var pure = function (a) {
+      return nu(function (callback) {
         callback(a);
       });
     };
 
-    /** [Future a] -> Future [a] **/
-    var par = function (futures) {
-      return Futures.par(futures);
-    };
-
-    /** [a] -> (a -> Future b) -> Future [b] */
-    var mapM = function (array, fn) {
-      return Futures.mapM(array, fn);
-    };
-
-    /** Kleisli composition of two functions: a -> Future b.
-     *  Note the order of arguments: g is invoked first, then the result passed to f.
-     *  This is in line with f . g = \x -> f (g a)
-     *
-     *  compose :: ((b -> Future c), (a -> Future b)) -> a -> Future c
-     */
-    var compose = function (f, g) {
-      return function (a) {
-        return g(a).bind(f);
-      };
-    };
-
     return {
       nu: nu,
-      pure: pure,
-      par: par,
-      mapM: mapM,
-      compose: compose
+      pure: pure
     };
   }
 );
