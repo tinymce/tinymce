@@ -10,8 +10,9 @@
 
 define('tinymce/inlite/ui/Toolbar', [
 	'global!tinymce.util.Tools',
-	'global!tinymce.ui.Factory'
-], function (Tools, Factory) {
+	'global!tinymce.ui.Factory',
+	'tinymce/inlite/alien/Type'
+], function (Tools, Factory, Type) {
 	var setActiveItem = function (item, name) {
 		return function(state, args) {
 			var nodeName, i = args.parents.length;
@@ -71,6 +72,16 @@ define('tinymce/inlite/ui/Toolbar', [
 		};
 	};
 
+	var itemsToArray = function (items) {
+		if (Type.isArray(items)) {
+			return items;
+		} else if (Type.isString(items)) {
+			return items.split(/[ ,]/);
+		}
+
+		return [];
+	};
+
 	var create = function (editor, name, items) {
 		var toolbarItems = [], buttonGroup;
 
@@ -78,7 +89,7 @@ define('tinymce/inlite/ui/Toolbar', [
 			return;
 		}
 
-		Tools.each(items.split(/[ ,]/), function(item) {
+		Tools.each(itemsToArray(items), function(item) {
 			var itemName;
 
 			if (item == '|') {
@@ -89,12 +100,12 @@ define('tinymce/inlite/ui/Toolbar', [
 					toolbarItems.push(item);
 					buttonGroup = null;
 				} else {
-					if (!buttonGroup) {
-						buttonGroup = {type: 'buttongroup', items: []};
-						toolbarItems.push(buttonGroup);
-					}
-
 					if (editor.buttons[item]) {
+						if (!buttonGroup) {
+							buttonGroup = {type: 'buttongroup', items: []};
+							toolbarItems.push(buttonGroup);
+						}
+
 						itemName = item;
 						item = editor.buttons[itemName];
 

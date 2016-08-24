@@ -18,8 +18,9 @@ define('tinymce/inlite/Theme', [
 	'tinymce/inlite/core/ElementMatcher',
 	'tinymce/inlite/core/Matcher',
 	'tinymce/inlite/alien/Arr',
+	'tinymce/inlite/alien/EditorSettings',
 	'tinymce/inlite/core/PredicateId'
-], function(ThemeManager, Delay, Panel, Buttons, SkinLoader, SelectionMatcher, ElementMatcher, Matcher, Arr, PredicateId) {
+], function(ThemeManager, Delay, Panel, Buttons, SkinLoader, SelectionMatcher, ElementMatcher, Matcher, Arr, EditorSettings, PredicateId) {
 	var getSelectionElements = function (editor) {
 		var node = editor.selection.getNode();
 		var elms = editor.dom.getParents(node);
@@ -118,7 +119,7 @@ define('tinymce/inlite/Theme', [
 	};
 
 	var renderInlineUI = function (editor, panel) {
-		var skinName = editor.settings.skin || 'lightgray';
+		var skinName = EditorSettings.getStringOr(editor, 'skin', 'lightgray');
 
 		SkinLoader.load(editor, skinName, function () {
 			bindContextualToolbarsEvents(editor, panel);
