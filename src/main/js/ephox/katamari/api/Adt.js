@@ -87,6 +87,7 @@ define(
 
             return branches[key].apply(null, args);
           };
+
           //
           // the fold function for key
           //
@@ -99,7 +100,14 @@ define(
               var target = arguments[count];
               return target.apply(null, args);
             },
-            match: match
+            match: match,
+            inspect: function () {
+              return {
+                types: cases,
+                constructor: key,
+                params: args
+              };
+            }
           };
         };
       });
