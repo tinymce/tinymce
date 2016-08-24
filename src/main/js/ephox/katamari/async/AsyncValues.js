@@ -7,10 +7,13 @@ define(
 
   function (Arr) {
     /* 
-     * NOTE: an `asyncValue` must have a `get` function which gets given a function which calls 
-     * a callback with a value
+     * NOTE: an `asyncValue` must have a `get` function which gets given a callback and calls 
+     * that callback with a value once it is ready
      *
-     * e.g get: function (callback) { callback(10); }
+     * e.g 
+     * {
+     *   get: function (callback) { callback(10); }
+     * }
      */
     var par = function (asyncValues, nu) {
       return nu(function(callback) {
