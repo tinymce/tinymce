@@ -32,6 +32,8 @@ define(
 
       var allKeys = Obj.keys(cases);
 
+      var constructors = [ ];
+
       // adt is mutated to add the individual cases
       var adt = {};
       Arr.each(cases, function (acase, count) {
@@ -55,7 +57,7 @@ define(
           throw 'case arguments must be an array';
         }
 
-
+        constructors.push(key);
         //
         // constructor for key
         //
@@ -75,15 +77,15 @@ define(
           // INVESTIGATE: Can this be optimised?
           var match = function (branches) {
             var branchKeys = Obj.keys(branches);
-            if (allKeys.length !== branchKeys.length) {
-              throw new Error('Wrong arguments to match. Expected: ' + allKeys.join(',') + '\nActual: ' + branchKeys.join(','));
+            if (constructors.length !== branchKeys.length) {
+              throw new Error('Wrong number of arguments to match. Expected: ' + constructors.join(',') + '\nActual: ' + branchKeys.join(','));
             }
 
             var allReqd = Arr.forall(keys, function (reqKey) {
               return Arr.contains(branchKeys, reqKey);
             });
 
-            if (!allReqd) throw new Error('Not all branches were specified when using match. Specified: ' + branchKeys.join(', ') + '\nRequired: ' + allKeys.join(', '));
+            if (!allReqd) throw new Error('Not all branches were specified when using match. Specified: ' + branchKeys.join(', ') + '\nRequired: ' + constructors.join(', '));
 
             return branches[key].apply(null, args);
           };
@@ -103,7 +105,7 @@ define(
             match: match,
             inspect: function () {
               return {
-                types: cases,
+                constructors: constructors,
                 constructor: key,
                 params: args
               };

@@ -163,7 +163,7 @@ test(
         subject.match(branches);
         return false;
       } catch (err) {
-        return true;
+        return err.message.indexOf('nothing') > 0;
       }
     });
 
