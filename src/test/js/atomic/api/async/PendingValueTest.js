@@ -22,7 +22,7 @@ asynctest(
     };
 
     var data = 'the data';
-/*
+
     var pval = PendingValue();
     assert.eq(false, pval.isAvailable());
     pval.onReady(getCheck(data));
@@ -32,7 +32,6 @@ asynctest(
     pval.onReady(getCheck(data));
 
     assert.eq(0, called);
-    */
 
     var checkProp = function (label, arbitraries, f) {
       return Jsc.check(
