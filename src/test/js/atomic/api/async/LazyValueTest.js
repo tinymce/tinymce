@@ -55,7 +55,17 @@ asynctest(
 
     var testIsReady = function () {
       return new Promise(function (resolve, reject) {
-        resolve(true);
+        var lazy = LazyValue.nu(function (callback) {
+          setTimeout(function () {
+            callback('extra');
+          }, 100);
+        });
+
+        if (lazy.isReady()) reject('Lazy value should not be ready yet.');
+        else lazy.get(function (v) {
+          if (! lazy.isReady()) reject('Lazy value should now be ready');
+          else resolve(true);
+        });
       });
     };
 
