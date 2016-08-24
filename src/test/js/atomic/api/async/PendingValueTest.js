@@ -52,24 +52,62 @@ asynctest(
       function (json) {
         var pv = PendingValue();
         return new Promise(function (resolve, reject) {
-          pv.set(json);
           pv.onReady(function (data) {
             resolve(Jsc.eq(json, data));
           });
+          pv.set(json);          
         });
       }
     ).then(function () {
       return checkProp(
-        'onReady calls with the right data',
+        'onReady calls with the second data',
         [ Jsc.json, Jsc.json ],
         function (json1, json2) {
           var pv = PendingValue();
-          return new Promise(function (resolve, reject) {
+          return new Promise(function (resolve, reject) {           
             pv.set(json1);
             pv.set(json2);
             pv.onReady(function (data) {
               resolve(Jsc.eq(json2, data));
             });
+          });
+        }
+      );
+    }).then(function () {
+      return checkProp(
+        'isAvailable is false before being set and true afterwards',
+        [ Jsc.json, Jsc.json ],
+        function (json1, json2) {
+          var pv = PendingValue();
+          return new Promise(function (resolve, reject) {
+            if (pv.isAvailable()) return false;
+            pv.set(json1);
+            pv.set(json2);
+            pv.onReady(function (data) {
+              resolve(Jsc.eq(json2, data) && Jsc.eq(true, pv.isAvailable()));
+            });
+          });
+        }
+      );
+    }).then(function () {
+      return checkProp(
+        'onReady fires for all listeners',
+        [ Jsc.json ],
+        function (json) {
+          var pv = PendingValue();
+          var cache = [ ];
+          return new Promise(function (resolve, reject) {
+            if (pv.isAvailable()) return false;
+            pv.onReady(function (data) {
+              cache.push(data);
+            });
+            pv.onReady(function (data) {
+              cache.push(data);
+            });
+            pv.set(json);
+            setTimeout(function () {
+              resolve(Jsc.eq(2, cache.length));
+            }, 10);
           });
         }
       );
