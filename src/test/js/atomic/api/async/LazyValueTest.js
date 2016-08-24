@@ -2,6 +2,7 @@ asynctest(
   'LazyValueTest',
  
   [
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.LazyValue',
     'ephox.katamari.api.LazyValues',
@@ -12,7 +13,7 @@ asynctest(
     'global!setTimeout'
   ],
  
-  function (Fun, LazyValue, LazyValues, Result, AsyncProps, Jsc, Promise, setTimeout) {
+  function (Arr, Fun, LazyValue, LazyValues, Result, AsyncProps, Jsc, Promise, setTimeout) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -103,6 +104,23 @@ asynctest(
     };
 
     var testSpecs = function () {
+      var genLazySchema = Jsc.json.generator.map(function (json) {
+        var future = LazyValue.nu(function (done) {
+          setTimeout(function () {
+            done(json);
+          }, 10);
+        });
+
+        return {
+          future: future,
+          contents: json
+        };
+      });
+
+      var arbLazySchema = Jsc.bless({
+        generator: genLazySchema
+      });
+
       return AsyncProps.checkProps([
         {
           label: 'LazyValue.pure resolves with data',
@@ -120,6 +138,20 @@ asynctest(
           f: function (json, f) {
             return AsyncProps.checkLazy(LazyValue.pure(json).map(f), function (data) {
               return Jsc.eq(f(json), data) ? Result.value(true) : Result.error('f(json) !== data');
+            });
+          }
+        },
+
+        {
+          label: 'LazyValues.par([lazyvalue]).get() === [lazyvalue.val]',
+          arbs: [ Jsc.array(arbLazySchema) ],
+          f: function (futures) {
+            var rawLazyvals = Arr.map(futures, function (ft) { return ft.future; });
+            var expected = Arr.map(futures, function (ft) { return ft.contents; });
+            return AsyncProps.checkLazy(LazyValues.par(rawLazyvals), function (list) {
+              return Jsc.eq(expected, list) ? Result.value(true) : Result.error(
+                'Expected: ' + expected.join(',') +', actual: ' + list.join(',')
+              );
             });
           }
         }
