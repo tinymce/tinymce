@@ -102,6 +102,8 @@ define(
               return target.apply(null, args);
             },
             match: match,
+
+            // NOTE: Only for debugging.
             log: function (label) {
               console.log(label, {
                 constructors: constructors,
