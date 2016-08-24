@@ -34,6 +34,25 @@ asynctest(
       });
     };
 
+    var testBind = function () {
+      return new Promise(function (resolve, reject) {
+        var fut = Future.nu(function(callback) {
+          setTimeout(Fun.curry(callback, 'blah'), 10);
+        });
+
+        var f = function(x) {
+          return Future.nu(function(callback) {
+            callback(x + "hello");
+          });
+        };
+
+        fut.bind(f).get(function(a) {
+          assert.eq('blahhello', a);
+          resolve(true);
+        });
+      });
+    };
+
     var testSpecs = function () {
       var genFutureSchema = Jsc.json.generator.map(function (json) {
         var future = Future.nu(function (done) {
@@ -126,7 +145,7 @@ asynctest(
       ]);
     };
 
-    testMap().then(testSpecs).then(function () {
+    testMap().then(testBind).then(testSpecs).then(function () {
       success();
     }, failure);
   }
