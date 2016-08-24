@@ -147,7 +147,6 @@ test(
       arbExact
     ]);
 
-    // Fix with property-based testing
     var allKeys = [ 'nothing', 'unknown', 'exact' ];
     var arbKeys = Jsc.elements(allKeys);
 
@@ -158,7 +157,7 @@ test(
 
       try {
         var branches = Obj.tupleMap(original, function (k, i) {
-          return { k: k, v: function () { } };
+          return { k: k, v: Fun.identity };
         });
         subject.match(branches);
         return false;
