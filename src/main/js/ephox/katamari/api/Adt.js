@@ -6,10 +6,11 @@ define(
     'ephox.katamari.api.Obj',
     'ephox.katamari.api.Type',
     'global!Array',
-    'global!Error'
+    'global!Error',
+    'global!console'
   ],
 
-  function (Arr, Obj, Type, Array, Error) {
+  function (Arr, Obj, Type, Array, Error, console) {
     // TODO: Probably accept the name ADT instead.
 
     /*
@@ -101,12 +102,12 @@ define(
               return target.apply(null, args);
             },
             match: match,
-            inspect: function () {
-              return {
+            log: function (label) {
+              console.log(label, {
                 constructors: constructors,
                 constructor: key,
                 params: args
-              };
+              });
             }
           };
         };
