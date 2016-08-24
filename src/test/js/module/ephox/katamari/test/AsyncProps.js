@@ -28,9 +28,31 @@ define(
       }, Promise.resolve(true));
     };
 
+    var futureToPromise = function (future) {
+      var lazy = future.toLazy();
+      return new Promise(function (resolve, reject) {
+        lazy.get(function (data) {
+          resolve(data);
+        });
+      });
+    };
+
+    var checkFuture = function (future, predicate) {
+      return futureToPromise(future).then(function (answer) {
+        return new Promise(function (resolve, reject) {
+          return predicate(answer).fold(
+            function (err) { reject(err); },
+            function (v) { resolve(true); }
+          );
+        });
+      });
+    };
+
     return {
       checkProp: checkProp,
-      checkProps: checkProps
+      checkProps: checkProps,
+      futureToPromise: futureToPromise,
+      checkFuture: checkFuture
     };
   }
 );
