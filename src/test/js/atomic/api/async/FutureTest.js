@@ -94,6 +94,28 @@ asynctest(
       });
     };
 
+    var testParallel = function () {
+      return new Promise(function (resolve, reject) {
+        var f = Future.nu(function(callback) {
+          setTimeout(Fun.curry(callback, 'apple'), 10);
+        });
+        var g = Future.nu(function(callback) {
+          setTimeout(Fun.curry(callback, 'banana'), 5);
+        });
+        var h = Future.nu(function(callback) {
+          callback('carrot');
+        });
+
+
+        Futures.par([f, g, h]).get(function(r){
+          assert.eq(r[0], 'apple');
+          assert.eq(r[1], 'banana');
+          assert.eq(r[2], 'carrot');
+          success();
+        });
+      });
+    };
+
     var testSpecs = function () {
       var genFutureSchema = Jsc.json.generator.map(function (json) {
         var future = Future.nu(function (done) {
@@ -186,7 +208,7 @@ asynctest(
       ]);
     };
 
-    testPure().then(testGet).then(testMap).then(testBind).then(testAnonBind).then(testSpecs).then(function () {
+    testPure().then(testGet).then(testMap).then(testBind).then(testAnonBind).then(testParallel).then(testSpecs).then(function () {
       success();
     }, failure);
   }
