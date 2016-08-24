@@ -5,10 +5,11 @@ asynctest(
     'ephox.katamari.api.LazyValue',
     'ephox.katamari.test.AsyncProps',
     'ephox.wrap.Jsc',
-    'global!Promise'
+    'global!Promise',
+    'global!setTimeout'
   ],
  
-  function (LazyValue, AsyncProps, Jsc, Promise) {
+  function (LazyValue, AsyncProps, Jsc, Promise, setTimeout) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -36,7 +37,19 @@ asynctest(
 
     var testMap = function () {
       return new Promise(function (resolve, reject) {
-        resolve(true);
+        var f = function (x) {
+          return x + 'hello';
+        };
+
+        var lazy = LazyValue.nu(function (callback) {
+          setTimeout(function () {
+            callback('extra');
+          }, 10);
+        });
+
+        lazy.map(f).get(function (fx) {
+          return Jsc.eq(fx, 'extrahello') ? resolve(true) : reject('LazyValue.map. Expected: extrahello, was: ' + fx);
+        });
       });
     };
 
