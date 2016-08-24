@@ -134,7 +134,22 @@ asynctest(
 
     var testCompose = function () {
       return new Promise(function (resolve, reject) {
+        var f = function(a) {
+          return Future.nu(function(cb) {
+            setTimeout(Fun.curry(cb, a + ' f'), 10);
+          });
+        };
 
+        var g = function(a) {
+          return Future.nu(function(cb) {
+            setTimeout(Fun.curry(cb, a + ' g'), 10);
+          });
+        };
+
+        Futures.compose(f, g)('a').get(function(r) {
+          assert.eq('a g f', r);
+          resolve(true);
+        });
       });
     };
 
@@ -231,7 +246,7 @@ asynctest(
     };
 
     testPure().then(testGet).then(testMap).then(testBind).then(testAnonBind).
-      then(testParallel).then(testMapM).then(testSpecs).then(function () {
+      then(testParallel).then(testMapM).then(testCompose).then(testSpecs).then(function () {
       success();
     }, failure);
   }
