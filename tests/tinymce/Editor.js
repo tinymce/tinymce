@@ -491,3 +491,8 @@ test('translate', function() {
 
 	equal(editor.translate('input i18n'), 'output i18n');
 });
+
+test('kamer word bounderies', function() {
+	editor.setContent('<p>!\u200b!\u200b!</p>');
+	equal(editor.getContent(), '<p>!\u200b!\u200b!</p>');
+});

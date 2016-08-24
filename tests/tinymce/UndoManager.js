@@ -337,6 +337,7 @@ test('Exclude internal elements', function() {
 		'<img src="about:blank" data-mce-bogus="all">' +
 		'<br data-mce-bogus="1">' +
 		'test' +
+		'\u200B' +
 		'<img src="about:blank" />' +
 		'<table><tr><td>x</td></tr></table>'
 	);
@@ -346,6 +347,7 @@ test('Exclude internal elements', function() {
 	equal(Utils.cleanHtml(lastLevel.content),
 		'<br data-mce-bogus="1">' +
 		'test' +
+		'\u200B' +
 		'<img src="about:blank">' +
 		'<table><tbody><tr><td>x</td></tr></tbody></table>'
 	);
