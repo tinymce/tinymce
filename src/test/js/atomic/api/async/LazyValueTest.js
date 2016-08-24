@@ -3,13 +3,14 @@ asynctest(
  
   [
     'ephox.katamari.api.LazyValue',
+    'ephox.katamari.api.Result',
     'ephox.katamari.test.AsyncProps',
     'ephox.wrap.Jsc',
     'global!Promise',
     'global!setTimeout'
   ],
  
-  function (LazyValue, AsyncProps, Jsc, Promise, setTimeout) {
+  function (LazyValue, Result, AsyncProps, Jsc, Promise, setTimeout) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -78,7 +79,17 @@ asynctest(
     };
 
     var testSpecs = function () {
-      return AsyncProps.checkProps([ ]);
+      return AsyncProps.checkProps([
+        {
+          label: 'LazyValue.pure resolves with data',
+          arbs: [ Jsc.json ],
+          f: function (json) {
+            return AsyncProps.checkLazy(LazyValue.pure(json), function (data) {
+              return Jsc.eq(json, data) ? Result.value(true) : Result.error('Payload is not the same');
+            });
+          }
+        }
+      ]);
     };
 
     return testGet().then(testMap).then(testIsReady).then(testPure).then(testSpecs).then(function () {

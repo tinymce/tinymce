@@ -30,6 +30,10 @@ define(
 
     var futureToPromise = function (future) {
       var lazy = future.toLazy();
+      return lazyToPromise(lazy);
+    };
+
+    var lazyToPromise = function (lazy) {
       return new Promise(function (resolve, reject) {
         lazy.get(function (data) {
           resolve(data);
@@ -37,22 +41,34 @@ define(
       });
     };
 
+    var checkPromise = function (answer, predicate) {
+      return new Promise(function (resolve, reject) {
+        return predicate(answer).fold(
+          function (err) { reject(err); },
+          function (v) { resolve(true); }
+        );
+      });
+    };
+
     var checkFuture = function (future, predicate) {
       return futureToPromise(future).then(function (answer) {
-        return new Promise(function (resolve, reject) {
-          return predicate(answer).fold(
-            function (err) { reject(err); },
-            function (v) { resolve(true); }
-          );
-        });
+        return checkPromise(answer, predicate);
+      });
+    };
+
+    var checkLazy = function (lazy, predicate) {
+      return lazyToPromise(lazy).then(function (answer) {
+        return checkPromise(answer, predicate);
       });
     };
 
     return {
       checkProp: checkProp,
       checkProps: checkProps,
+      lazyToPromise: lazyToPromise,
       futureToPromise: futureToPromise,
-      checkFuture: checkFuture
+      checkFuture: checkFuture,
+      checkLazy: checkLazy
     };
   }
 );
