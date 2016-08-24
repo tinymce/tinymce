@@ -12,7 +12,11 @@ define(
       return Jsc.check(
         Jsc.forall.apply(Jsc, arbitraries.concat([ f ])),
         {
-
+          /*
+           * Insert jsverify options here like number of tests, rngState
+           *
+           */
+          tests: 100
         }
       ).then(function (result) {
         if (result === true) { return Promise.resolve(result); }
