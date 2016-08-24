@@ -111,8 +111,30 @@ asynctest(
           assert.eq(r[0], 'apple');
           assert.eq(r[1], 'banana');
           assert.eq(r[2], 'carrot');
-          success();
+          resolve(true);
         });
+      });
+    };
+
+    var testMapM = function () {
+      return new Promise(function (resolve, reject) {
+        var fn = function(a) {
+          return Future.nu(function(cb) {
+            setTimeout(Fun.curry(cb, a + ' bizarro'), 10);
+          });
+        };
+
+        Futures.mapM(['q', 'r', 's'], fn).get(function(r){
+          assert.eq(['q bizarro', 'r bizarro', 's bizarro'], r);
+          resolve(true);
+        });
+
+      });
+    };
+
+    var testCompose = function () {
+      return new Promise(function (resolve, reject) {
+
       });
     };
 
@@ -208,7 +230,8 @@ asynctest(
       ]);
     };
 
-    testPure().then(testGet).then(testMap).then(testBind).then(testAnonBind).then(testParallel).then(testSpecs).then(function () {
+    testPure().then(testGet).then(testMap).then(testBind).then(testAnonBind).
+      then(testParallel).then(testMapM).then(testSpecs).then(function () {
       success();
     }, failure);
   }
