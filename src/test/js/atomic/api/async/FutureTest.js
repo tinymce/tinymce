@@ -17,6 +17,15 @@ asynctest(
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
+    var testPure = function () {
+      return new Promise(function (resolve, reject) {
+        Future.pure('hello').get(function(a) {
+          assert.eq('hello', a);
+          resolve(true);
+        });
+      });
+    };
+
     var testGet = function () {
       return new Promise(function (resolve, reject) {
         Future.nu(function(callback) {
@@ -177,7 +186,7 @@ asynctest(
       ]);
     };
 
-    testGet().then(testMap).then(testBind).then(testAnonBind).then(testSpecs).then(function () {
+    testPure().then(testGet).then(testMap).then(testBind).then(testAnonBind).then(testSpecs).then(function () {
       success();
     }, failure);
   }
