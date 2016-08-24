@@ -73,7 +73,6 @@ define(
           for (var i = 0; i < args.length; i++) args[i] = arguments[i];
 
 
-          // INVESTIGATE: Can this be optimised?
           var match = function (branches) {
             var branchKeys = Obj.keys(branches);
             if (constructors.length !== branchKeys.length) {
