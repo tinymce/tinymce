@@ -2,7 +2,9 @@ asynctest(
   'LazyValueTest',
  
   [
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.LazyValue',
+    'ephox.katamari.api.LazyValues',
     'ephox.katamari.api.Result',
     'ephox.katamari.test.AsyncProps',
     'ephox.wrap.Jsc',
@@ -10,7 +12,7 @@ asynctest(
     'global!setTimeout'
   ],
  
-  function (LazyValue, Result, AsyncProps, Jsc, Promise, setTimeout) {
+  function (Fun, LazyValue, LazyValues, Result, AsyncProps, Jsc, Promise, setTimeout) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -78,6 +80,28 @@ asynctest(
       });
     };
 
+    var testParallel = function () {
+      return new Promise(function (resolve, reject) {
+        var f = LazyValue.nu(function(callback) {
+          setTimeout(Fun.curry(callback, 'apple'), 10);
+        });
+        var g = LazyValue.nu(function(callback) {
+          setTimeout(Fun.curry(callback, 'banana'), 5);
+        });
+        var h = LazyValue.nu(function(callback) {
+          callback('carrot');
+        });
+
+
+        LazyValues.par([f, g, h]).get(function(r){
+          assert.eq(r[0], 'apple');
+          assert.eq(r[1], 'banana');
+          assert.eq(r[2], 'carrot');
+          resolve(true);
+        });
+      });
+    };
+
     var testSpecs = function () {
       return AsyncProps.checkProps([
         {
@@ -102,7 +126,8 @@ asynctest(
       ]);
     };
 
-    return testGet().then(testMap).then(testIsReady).then(testPure).then(testSpecs).then(function () {
+    return testGet().then(testMap).then(testIsReady).then(testPure).then(testParallel).
+      then(testSpecs).then(function () {
       success();
     }, failure);
   }
