@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.util.ExtraArgs',
+  'ephox.alloy.alien.ExtraArgs',
 
   [
     'ephox.compass.Arr',

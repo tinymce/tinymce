@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.util.ObjIndex',
+  'ephox.alloy.alien.ObjIndex',
 
   [
     'ephox.boulder.api.Objects',

@@ -2,9 +2,9 @@ define(
   'ephox.alloy.construct.ComponentApis',
 
   [
-    'ephox.alloy.util.ExtraArgs',
-    'ephox.alloy.util.ObjIndex',
-    'ephox.alloy.util.PrioritySort',
+    'ephox.alloy.alien.ExtraArgs',
+    'ephox.alloy.alien.ObjIndex',
+    'ephox.alloy.alien.PrioritySort',
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.compass.Obj',

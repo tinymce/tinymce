@@ -2,20 +2,17 @@ define(
   'ephox.alloy.construct.ComponentDom',
 
   [
+    'ephox.alloy.alien.ObjIndex',
     'ephox.alloy.dom.DomModification',
-    'ephox.alloy.util.ObjIndex',
-    'ephox.alloy.util.PrioritySort',
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.perhaps.Options',
     'ephox.perhaps.Result'
   ],
 
-  function (DomModification, ObjIndex, PrioritySort, Objects, Arr, Obj, Json, Fun, Option, Options, Result) {
+  function (ObjIndex, DomModification, Objects, Arr, Obj, Json, Fun, Result) {
     var behaviourDom = function (name, modification) {
       return {
         name: Fun.constant(name),

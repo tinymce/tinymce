@@ -3,18 +3,17 @@ test(
 
   [
     'ephox.agar.api.Logger',
-    'ephox.agar.api.RawAssertions',
+    'ephox.alloy.alien.ExtraArgs',
     'ephox.alloy.construct.ComponentApis',
     'ephox.alloy.test.ResultAssertions',
     'ephox.alloy.test.TestStore',
-    'ephox.alloy.util.ExtraArgs',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.peanut.Fun',
     'ephox.scullion.Struct'
   ],
 
-  function (Logger, RawAssertions, ComponentApis, ResultAssertions, TestStore, ExtraArgs, Arr, Obj, Fun, Struct) {
+  function (Logger, ExtraArgs, ComponentApis, ResultAssertions, TestStore, Arr, Obj, Fun, Struct) {
     var behaviour = Struct.immutable('name', 'apis');
 
     var checkErr = function (expectedPart, info, behaviours) {

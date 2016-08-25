@@ -3,7 +3,7 @@ test(
 
   [
     'ephox.agar.api.RawAssertions',
-    'ephox.alloy.util.ExtraArgs',
+    'ephox.alloy.alien.ExtraArgs',
     'global!Array'
   ],
 

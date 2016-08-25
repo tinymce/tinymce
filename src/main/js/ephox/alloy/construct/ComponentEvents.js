@@ -2,9 +2,9 @@ define(
   'ephox.alloy.construct.ComponentEvents',
 
   [
+    'ephox.alloy.alien.ObjIndex',
+    'ephox.alloy.alien.PrioritySort',
     'ephox.alloy.construct.EventHandler',
-    'ephox.alloy.util.ObjIndex',
-    'ephox.alloy.util.PrioritySort',
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
@@ -16,7 +16,7 @@ define(
     'global!Error'
   ],
 
-  function (EventHandler, ObjIndex, PrioritySort, Objects, Arr, Obj, Merger, Json, Fun, Result, Array, Error) {
+  function (ObjIndex, PrioritySort, EventHandler, Objects, Arr, Obj, Merger, Json, Fun, Result, Array, Error) {
     /*
      * The process of combining a component's events
      *

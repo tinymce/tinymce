@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.util.PrioritySort',
+  'ephox.alloy.alien.PrioritySort',
 
   [
     'ephox.perhaps.Result',

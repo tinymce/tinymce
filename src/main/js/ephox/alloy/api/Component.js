@@ -2,6 +2,7 @@ define(
   'ephox.alloy.api.Component',
 
   [
+    'ephox.alloy.alien.ExtraArgs',
     'ephox.alloy.api.NoContextApi',
     'ephox.alloy.construct.ComponentApis',
     'ephox.alloy.construct.ComponentDom',
@@ -9,13 +10,12 @@ define(
     'ephox.alloy.construct.CustomDefinition',
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.dom.DomRender',
-    'ephox.alloy.util.ExtraArgs',
     'ephox.boulder.api.ValueSchema',
     'ephox.peanut.Fun',
     'ephox.scullion.Cell'
   ],
 
-  function (NoContextApi, ComponentApis, ComponentDom, ComponentEvents, CustomDefinition, DomModification, DomRender, ExtraArgs, ValueSchema, Fun, Cell) {
+  function (ExtraArgs, NoContextApi, ComponentApis, ComponentDom, ComponentEvents, CustomDefinition, DomModification, DomRender, ValueSchema, Fun, Cell) {
     var build = function (spec) {
       var systemApi = Cell(NoContextApi());
 

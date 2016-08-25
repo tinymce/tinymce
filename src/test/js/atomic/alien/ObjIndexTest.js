@@ -4,7 +4,7 @@ test(
   [
     'ephox.agar.api.Logger',
     'ephox.agar.api.RawAssertions',
-    'ephox.alloy.util.ObjIndex',
+    'ephox.alloy.alien.ObjIndex',
     'ephox.compass.Obj'
   ],
 

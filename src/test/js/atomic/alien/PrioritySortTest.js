@@ -4,7 +4,7 @@ test(
   [
     'ephox.agar.api.Logger',
     'ephox.agar.api.RawAssertions',
-    'ephox.alloy.util.PrioritySort',
+    'ephox.alloy.alien.PrioritySort',
     'ephox.compass.Arr',
     'ephox.numerosity.api.JSON',
     'ephox.scullion.Struct'
