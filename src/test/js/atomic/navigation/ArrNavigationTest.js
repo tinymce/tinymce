@@ -3,10 +3,13 @@ test(
 
   [
     'ephox.alloy.navigation.ArrNavigation',
-    'ephox.perhaps.Option'
+    'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
+    'ephox.wrap.Jsc',
+    'global!Error'
   ],
 
-  function (ArrNavigation, Option) {
+  function (ArrNavigation, Fun, Option, Jsc, Error) {
     var testSanity = function () {
       var checkCycle = function (expected, value, delta, min, max) {
         assert.eq(expected, ArrNavigation.cycleBy(value, delta, min, max));
@@ -51,5 +54,43 @@ test(
     };
 
     testSanity();
+
+    var genTestCase = Jsc.nearray(Jsc.integer).generator.flatMap(function (values1) {
+      return Jsc.nearray(Jsc.integer).generator.flatMap(function (values2) {
+        var combined = values1.concat(values2);
+        return Jsc.integer(0, combined.length).generator.map(function (index) {
+          return {
+            values: combined,
+            index: index
+          };
+        });
+      });
+    });
+
+    var arbTestCase = Jsc.bless({
+      generator: genTestCase
+    });
+
+    Jsc.property(
+      'Cycling should always be possible in a >= 2 length array',
+      arbTestCase,
+      function (testCase) {
+        ArrNavigation.cycleNext(testCase.values, testCase.index, Fun.constant(true)).getOrDie(
+          'Should always be able to cycle next on a >= 2 length array'
+        );
+        return true;
+      }
+    );
+
+    Jsc.property(
+      'Cycling should never be possible in a >= 2 length array if predicate is never',
+      arbTestCase,
+      function (testCase) {
+        ArrNavigation.cycleNext(testCase.values, testCase.index, Fun.constant(false)).each(function (_) {
+          throw new Error('Should not have navigatied to: ' + _);
+        });
+        return true;
+      }
+    );
   }
 );
