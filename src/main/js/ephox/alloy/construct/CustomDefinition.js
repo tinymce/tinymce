@@ -5,6 +5,7 @@ define(
     'ephox.alloy.behaviour.Toggling',
     'ephox.alloy.dom.DomDefinition',
     'ephox.alloy.dom.DomModification',
+    'ephox.alloy.ephemera.AlloyTags',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
@@ -15,7 +16,7 @@ define(
     'global!Error'
   ],
 
-  function (Toggling, DomDefinition, DomModification, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
+  function (Toggling, DomDefinition, DomModification, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
     var domSchema = ValueSchema.objOf([
       FieldSchema.strict('tag'),
       FieldSchema.defaulted('styles', {}),
@@ -64,8 +65,7 @@ define(
       return info.uid().fold(function () {
         return { };
       }, function (uid) {
-        // TODO: Share with the Tagger in a way that doesn't require window/document
-        return Objects.wrap('alloy-id', uid);
+        return Objects.wrap(AlloyTags.idAttr(), uid);
       });
     };
 

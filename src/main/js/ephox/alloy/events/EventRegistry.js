@@ -2,6 +2,7 @@ define(
   'ephox.alloy.events.EventRegistry',
 
   [
+    'ephox.alloy.alien.TransformFind',
     'ephox.alloy.registry.Tagger',
     'ephox.boulder.api.Objects',
     'ephox.compass.Obj',
@@ -11,7 +12,7 @@ define(
     'global!console'
   ],
 
-  function (Tagger, Objects, Obj, Merger, Fun, PredicateFind, console) {
+  function (TransformFind, Tagger, Objects, Obj, Merger, Fun, PredicateFind, console) {
     var eventHandler = function (element, handler) {
       return {
         element: Fun.constant(element),
@@ -58,16 +59,10 @@ define(
       // Given event type, and element, find the handler.
       var find = function (isRoot, type, target) {
         var readType = Objects.readOpt(type);
-        // TODO: Sugar method is inefficient ... .need to write something new which allows me to keep the optional 
-        // information, rather than just returning a boolean. Sort of a findMap for Predicate.ancestor.
         var handlers = readType(registry);
-        var delegate = PredicateFind.closest(target, function (elem) {
+        return TransformFind.closest(target, function (elem) {
           return findHandler(handlers, elem).isSome();
         }, isRoot);
-
-        return delegate.bind(function (dlg) {
-          return findHandler(handlers, dlg);
-        });
       };
 
       var unregisterId = function (id) {

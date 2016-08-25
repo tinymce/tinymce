@@ -106,7 +106,6 @@ define(
       });
 
       var modifications = Obj.mapToArray(usedAspect, function (values, aspect) {
-        // TODO: Use hasOwnProperty.
         return Objects.readOptFrom(mergeTypes, aspect).fold(function () {
           return Result.error('Unknown field type: ' + aspect);
         }, function (merger ){
