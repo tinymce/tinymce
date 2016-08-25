@@ -33,11 +33,11 @@ asynctest(
     var page = Element.fromTag('div');
 
     Html.set(page, 
-      '<div alloy-id="comp-1">' +
-        '<div alloy-id="comp-2">' +
-          '<div alloy-id="comp-3">' +
-            '<div alloy-id="comp-4">' +
-              '<div alloy-id="comp-5"></div>' +
+      '<div data-alloy-id="comp-1">' +
+        '<div data-alloy-id="comp-2">' +
+          '<div data-alloy-id="comp-3">' +
+            '<div data-alloy-id="comp-4">' +
+              '<div data-alloy-id="comp-5"></div>' +
             '</div>' +
           '</div>' +
         '</div>' +
@@ -85,7 +85,7 @@ asynctest(
         'Test: ' + label + '\nLooking for handlers for  id = ' + id + ' and event = ' + type + '. Should not find any',
         GeneralSteps.sequence([
           Chain.asStep(page, [
-            UiFinder.cFindIn('[alloy-id="' + id + '"]'),
+            UiFinder.cFindIn('[data-alloy-id="' + id + '"]'),
             Chain.binder(function (target) {
               var handler = events.find(isRoot, type, target);
               return handler.fold(function () {
@@ -115,7 +115,7 @@ asynctest(
           Chain.asStep({}, [
             NamedChain.asChain([
               NamedChain.writeValue('page', page),
-              NamedChain.direct('page', UiFinder.cFindIn('[alloy-id="' + id + '"]'), 'target'),
+              NamedChain.direct('page', UiFinder.cFindIn('[data-alloy-id="' + id + '"]'), 'target'),
               NamedChain.direct('target', cFindHandler, 'handler'),
               NamedChain.bundle(Result.value)
             ]),
@@ -123,7 +123,7 @@ asynctest(
               Assertions.assertEq(
                 'find(' + type + ', ' + id + ') = true', 
                 expected.target,
-                Attr.get(actual.handler.element(), 'alloy-id')
+                Attr.get(actual.handler.element(), 'data-alloy-id')
               );
               Assertions.assertEq(
                 'find(' + type + ', ' + id + ') = ' + Json.stringify(expected.handler),

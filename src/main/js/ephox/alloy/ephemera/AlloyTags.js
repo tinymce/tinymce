@@ -7,7 +7,7 @@ define(
 
   function (Fun) {
     var prefix = 'alloy-id-';
-    var idAttr = 'alloy-id';
+    var idAttr = 'data-alloy-id';
 
     return {
       prefix: Fun.constant(prefix),

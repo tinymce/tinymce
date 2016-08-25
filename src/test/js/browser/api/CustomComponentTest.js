@@ -108,7 +108,7 @@ asynctest(
               classes: [ arr.has('behaviour-a-exhibit') ],
               attrs: {
                 'behaviour-b-exhibit': str.is('exhibition'),
-                'alloy-id': str.is('custom-uid')
+                'data-alloy-id': str.is('custom-uid')
               }
             });
           }),

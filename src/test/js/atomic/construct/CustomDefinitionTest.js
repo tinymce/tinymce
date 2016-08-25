@@ -155,7 +155,7 @@ test(
           'added-class-a'
         ],
         attributes: {
-          'alloy-id': 'id-custom-button-1'
+          'data-alloy-id': 'id-custom-button-1'
         },
         styles: { },
         value: '<none>',

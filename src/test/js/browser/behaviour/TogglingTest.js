@@ -47,7 +47,7 @@ asynctest(
                   arr.not('selected')
                 ],
                 attrs: {
-                  'alloy-id': str.is('custom-uid'),
+                  'data-alloy-id': str.is('custom-uid'),
                   'aria-pressed': str.is('true'),
                   'aria-expanded': str.none()
                 }
@@ -69,7 +69,7 @@ asynctest(
                   arr.not('selected')
                 ],
                 attrs: {
-                  'alloy-id': str.is('custom-uid'),
+                  'data-alloy-id': str.is('custom-uid'),
                   'aria-pressed': str.is('false'),
                   'aria-expanded': str.none()
                 }

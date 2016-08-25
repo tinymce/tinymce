@@ -2,6 +2,7 @@ define(
   'ephox.alloy.registry.Tagger',
 
   [
+    'ephox.alloy.ephemera.AlloyTags',
     'ephox.epithet.Id',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
@@ -10,10 +11,10 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Id, Fun, Option, Attr, Node, SelectorFind) {
-    var prefix = 'alloy-id-';
-    var idAttr = 'alloy-id';
-
+  function (AlloyTags, Id, Fun, Option, Attr, Node, SelectorFind) {
+    var prefix = AlloyTags.prefix();
+    var idAttr = AlloyTags.idAttr();
+    
     var write = function (label, elem) {
       var id = Id.generate(prefix + label);
       Attr.set(elem, idAttr, id);
