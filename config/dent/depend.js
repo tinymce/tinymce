@@ -10,16 +10,6 @@ var cleanDirs = [ lib ];
 
 var dependencies = [
   {
-    name: 'numerosity',
-    repository: 'buildrepo2',
-    version: 'latest',
-    source: 'numerosity.zip',
-    targets: [
-      { name: 'module/*.js', path: test }
-    ]
-  },
-
-  {
     name: 'sugar',
     repository: 'buildrepo2',
     version: 'latest',
@@ -30,18 +20,16 @@ var dependencies = [
     ]
   },
 
-  // REMOVE ME
   {
-    name: 'keytar',
+    name: 'katamari',
     repository: 'buildrepo2',
     version: 'latest',
-    source: 'keytar.zip',
+    source: 'katamari.zip',
     targets: [
       { name: 'module/*.js', path: depend },
       { name: 'depend/*.js', path: depend }
     ]
   },
-
 
   // Test dependencies
   {
@@ -52,6 +40,16 @@ var dependencies = [
     targets: [
       { name: 'module/*.js', path: test },
       { name: 'depend/*.js', path: test }
+    ]
+  },
+  
+  {
+    name: 'numerosity',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'numerosity.zip',
+    targets: [
+      { name: 'module/*.js', path: test }
     ]
   },
 

@@ -2,7 +2,7 @@ define(
   'ephox.alloy.log.AlloyLogger',
 
   [
-    'ephox.agar.alien.Truncate'
+    'ephox.alloy.alien.Truncate'
   ],
 
   function (Truncate) {

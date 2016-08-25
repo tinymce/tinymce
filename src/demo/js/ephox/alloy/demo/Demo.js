@@ -6,7 +6,6 @@ define(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.behaviour.CustomBehaviour',
     'ephox.alloy.dom.DomModification',
-    'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.peanut.Fun',
     'ephox.sugar.api.Class',
@@ -15,7 +14,7 @@ define(
     'global!document'
   ],
 
-  function (Gui, GuiFactory, CustomBehaviour, DomModification, FieldSchema, ValueSchema, Fun, Class, Element, Insert, document) {
+  function (Gui, GuiFactory, CustomBehaviour, DomModification, ValueSchema, Fun, Class, Element, Insert, document) {
     return function () {
       console.log('Loading demo');
 

@@ -2,6 +2,7 @@ define(
   'ephox.alloy.api.GuiEvents',
 
   [
+    'ephox.alloy.alien.Keys',
     'ephox.alloy.api.SystemEvents',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
@@ -9,14 +10,13 @@ define(
     'ephox.classify.Type',
     'ephox.compass.Arr',
     'ephox.fred.PlatformDetection',
-    'ephox.keytar.Keys',
     'ephox.perhaps.Result',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Node',
     'global!setTimeout'
   ],
 
-  function (SystemEvents, FieldPresence, FieldSchema, ValueSchema, Type, Arr, PlatformDetection, Keys, Result, DomEvent, Node, setTimeout) {
+  function (Keys, SystemEvents, FieldPresence, FieldSchema, ValueSchema, Type, Arr, PlatformDetection, Result, DomEvent, Node, setTimeout) {
     var isFunction = function (v) {
       return Type.isFunction(v) ? Result.value(v) : Result.error('Not a function');
     };
