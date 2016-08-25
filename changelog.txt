@@ -1,3 +1,24 @@
+Version 4.4.2 (2016-08-25)
+	Added new importcss_exclusive option to disable unique selectors per group.
+	Added new group specific selector_converter option to importcss plugin.
+	Added new codesample_languages option to apply custom languages to codesample plugin.
+	Added new codesample_dialog_width/codesample_dialog_height options.
+	Fixed bug where fullscreen button had an incorrect keyboard shortcut.
+	Fixed bug where backspace/delete wouldn't work correctly from a block to a cE=false element.
+	Fixed bug where smartpaste wasn't detecting links with special characters in them like tilde.
+	Fixed bug where the editor wouldn't get proper focus if you clicked on a cE=false element.
+	Fixed bug where it wasn't possible to copy/paste table rows that had merged cells.
+	Fixed bug where merging cells could some times produce invalid col/rowspan attibute values.
+	Fixed bug where getBody would sometimes thrown an exception now it just returns null if the iframe is clobbered.
+	Fixed bug where drag/drop of cE=false element wasn't properly constrained to viewport.
+	Fixed bug where contextmenu on Mac would collapse any selection to a caret.
+	Fixed bug where rtl mode wasn't rendered properly when loading a language pack with the rtl flag.
+	Fixed bug where Kamer word bounderies would be stripped from contents.
+	Fixed bug where lists would sometimes render two dots or numbers on the same line.
+	Fixed bug where the skin_url wasn't used by the inlite theme.
+	Fixed so data attributes are ignored when comparing formats in the formatter.
+	Fixed so it's possible to disable inline toolbars in the inlite theme.
+	Fixed so template dialog gets resized if it doesn't fit the window viewport.
 Version 4.4.1 (2016-07-26)
 	Added smart_paste option to paste plugin to allow disabling the paste behavior if needed.
 	Fixed bug where png urls wasn't properly detected by the smart paste logic.
