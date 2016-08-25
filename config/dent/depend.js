@@ -9,17 +9,57 @@ var config = lib + '/config';
 var cleanDirs = [ lib ];
 
 var dependencies = [
-
-  /**** demo dependencies ****/
   {
-    name: 'exhibition',
+    name: 'sugar',
     repository: 'buildrepo2',
     version: 'latest',
-    source: 'exhibition.zip',
+    source: 'sugar.zip',
     targets: [
-      { name: 'module/*.js', path: demo },
-      { name: 'depend/*.js', path: demo },
-      { name: 'exhibition.js', path: config }
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
+  {
+    name: 'boulder',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'boulder.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
+  // Test dependencies
+  {
+    name: 'agar',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'agar.zip',
+    targets: [
+      { name: 'module/*.js', path: test },
+      { name: 'depend/*.js', path: test }
+    ]
+  },
+  
+  {
+    name: 'numerosity',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'numerosity.zip',
+    targets: [
+      { name: 'module/*.js', path: test }
+    ]
+  },
+
+  {
+    name: 'wrap-jquery',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'wrap-jquery.zip',
+    targets: [
+      { name: 'compile/*.js', path: test }
     ]
   }
 ];
