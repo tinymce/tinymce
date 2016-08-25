@@ -15,14 +15,15 @@
  * @class tinymce.ui.DomUtils
  */
 define("tinymce/ui/DomUtils", [
+	"tinymce/Env",
 	"tinymce/util/Tools",
 	"tinymce/dom/DOMUtils"
-], function(Tools, DOMUtils) {
+], function(Env, Tools, DOMUtils) {
 	"use strict";
 
 	var count = 0;
 
-	return {
+	var funcs = {
 		id: function() {
 			return 'mceu_' + (count++);
 		},
@@ -70,7 +71,11 @@ define("tinymce/ui/DomUtils", [
 		},
 
 		getPos: function(elm, root) {
-			return DOMUtils.DOM.getPos(elm, root);
+			return DOMUtils.DOM.getPos(elm, root || funcs.getContainer());
+		},
+
+		getContainer: function () {
+			return Env.container ? Env.container : document.body;
 		},
 
 		getViewPort: function(win) {
@@ -122,4 +127,6 @@ define("tinymce/ui/DomUtils", [
 			DOMUtils.DOM.setHTML(elm, html);
 		}
 	};
+
+	return funcs;
 });

@@ -19,14 +19,18 @@ define("tinymce/ui/FormatControls", [
 	"tinymce/ui/Widget",
 	"tinymce/ui/FloatPanel",
 	"tinymce/util/Tools",
+	"tinymce/dom/DOMUtils",
 	"tinymce/EditorManager",
 	"tinymce/Env"
-], function(Control, Widget, FloatPanel, Tools, EditorManager, Env) {
+], function(Control, Widget, FloatPanel, Tools, DOMUtils, EditorManager, Env) {
 	var each = Tools.each;
 
 	EditorManager.on('AddEditor', function(e) {
-		setupRtlMode(e.editor);
-		registerControls(e.editor);
+		var editor = e.editor;
+
+		setupRtlMode(editor);
+		registerControls(editor);
+		setupContainer(editor);
 	});
 
 	Control.translate = function(text) {
@@ -34,6 +38,12 @@ define("tinymce/ui/FormatControls", [
 	};
 
 	Widget.tooltips = !Env.iOS;
+
+	function setupContainer(editor) {
+		if (editor.settings.ui_container) {
+			Env.container = DOMUtils.DOM.select(editor.settings.ui_container)[0];
+		}
+	}
 
 	function setupRtlMode(editor) {
 		editor.on('ScriptsLoaded', function () {
