@@ -49,7 +49,7 @@ node("primary") {
         }  
 
         echo "Platform: browser tests for " + permutation.name
-        extBedrock(permutation.name, permutation.browser, "src/test/js/browser src/test/js/webdriver", permutation.sh)
+        extBedrock(permutation.name, permutation.browser, "src/test/js/browser", permutation.sh)
       }
     }
   }
