@@ -1,6 +1,7 @@
 ModuleLoader.require([
-	"tinymce/util/I18n"
-], function(I18n) {
+	"tinymce/util/I18n",
+	"tinymce/ui/Control"
+], function(I18n, Control) {
 	var scriptLoadedRtlState = {};
 
 	module("tinymce.Editor_rtl", {
@@ -37,6 +38,7 @@ ModuleLoader.require([
 		teardown: function() {
 			I18n.rtl = false;
 			I18n.setCode('en');
+			Control.rtl = false;
 		}
 	});
 
