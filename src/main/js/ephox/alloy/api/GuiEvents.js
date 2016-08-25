@@ -77,19 +77,16 @@ define(
         if (stopped) event.kill();
       });
 
-      // TODO: Get this working on Firefox.
       var onFocusIn = bindFocus(container, function (event) {
-        // TODO: Focus vs focusin
         var stopped = settings.triggerEvent('focusin', event);
         if (stopped) event.kill();
       });
 
       var onFocusOut = bindBlur(container, function (event) {
-        // TODO: blur vs focusout
         var stopped = settings.triggerEvent('focusout', event);
         if (stopped) event.kill();
 
-        // Come up with a better way of doing this. Related target can be used, but not on FF.
+        // INVESTIGTE: Come up with a better way of doing this. Related target can be used, but not on FF.
         // It allows the active element to change before firing the blur that we will listen to 
         // for things like closing popups
         setTimeout(function () {
