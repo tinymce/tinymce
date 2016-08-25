@@ -7,6 +7,7 @@ asynctest(
     'ephox.agar.api.Chain',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
+    'ephox.agar.api.NamedChain',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
@@ -23,7 +24,7 @@ asynctest(
     'global!document'
   ],
  
-  function (Truncate, Assertions, Chain, GeneralSteps, Logger, Pipeline, Step, UiFinder, EventRegistry, Arr, Json, Fun, Result, Attr, Compare, Element, Html, Insert, document) {
+  function (Truncate, Assertions, Chain, GeneralSteps, Logger, NamedChain, Pipeline, Step, UiFinder, EventRegistry, Arr, Json, Fun, Result, Attr, Compare, Element, Html, Insert, document) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -104,21 +105,31 @@ asynctest(
     };
 
     var sAssertFind = function (label, expected, type, id) {
+      var cFindHandler = Chain.binder(function (target) {
+        return events.find(isRoot, type, target);
+      });
+
       return Logger.t(
         'Test: ' + label + '\nLooking for handlers for  id = ' + id + ' and event = ' + type,
         GeneralSteps.sequence([
-          Chain.asStep(page, [
-            UiFinder.cFindIn('[alloy-id="' + id + '"]'),
-            Chain.binder(function (target) {
-              var handler = events.find(isRoot, type, target);
-              return handler.fold(function () {
-                return Result.error('Could not find handler');
-              }, function (h) {
-                // TODO: Update to use named chains when they become available.
-                Assertions.assertEq('find(' + type + ', ' + id + ') = true', expected.target, Attr.get(h.element(), 'alloy-id'));
-                Assertions.assertEq('find(' + type + ', ' + id + ') = ' + Json.stringify(expected.handler), expected.handler, h.handler());
-                return Result.value(h);
-              });
+          Chain.asStep({}, [
+            NamedChain.asChain([
+              NamedChain.writeValue('page', page),
+              NamedChain.direct('page', UiFinder.cFindIn('[alloy-id="' + id + '"]'), 'target'),
+              NamedChain.direct('target', cFindHandler, 'handler'),
+              NamedChain.bundle(Result.value)
+            ]),
+            Chain.op(function (actual) {
+              Assertions.assertEq(
+                'find(' + type + ', ' + id + ') = true', 
+                expected.target,
+                Attr.get(actual.handler.element(), 'alloy-id')
+              );
+              Assertions.assertEq(
+                'find(' + type + ', ' + id + ') = ' + Json.stringify(expected.handler),
+                expected.handler,
+                actual.handler.handler()
+              );
             })
           ])
         ])
