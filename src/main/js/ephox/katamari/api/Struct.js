@@ -3,14 +3,12 @@ define(
 
   [
     'ephox.katamari.data.Immutable',
-    'ephox.katamari.data.Immutable2',
     'ephox.katamari.data.MixedBag'
   ],
 
-  function (Immutable, Immutable2, MixedBag) {
+  function (Immutable, MixedBag) {
     return {
       immutable: Immutable,
-      immutable2: Immutable2,
       immutableBag: MixedBag
     };
   }
