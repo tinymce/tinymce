@@ -1,9 +1,12 @@
 define(
   'ephox.katamari.api.Id',
   [
+    'global!Date',
+    'global!Math',
+    'global!String'
   ],
 
-  function () {
+  function (Date, Math, String) {
 
     /**
      * Generate a unique identifier.
@@ -26,7 +29,7 @@ define(
 
       unique++;
 
-      return prefix + "_" + random + unique + String(time);
+      return prefix + '_' + random + unique + String(time);
     };
 
     return {
