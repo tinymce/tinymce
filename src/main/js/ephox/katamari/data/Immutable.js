@@ -4,10 +4,11 @@ define(
   [
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
-    'global!Array'
+    'global!Array',
+    'global!Error'
   ],
 
-  function (Arr, Fun, Array) {
+  function (Arr, Fun, Array, Error) {
     return function () {
       var fields = arguments;
       return function(/* values */) {
@@ -16,7 +17,7 @@ define(
         for (var i = 0; i < values.length; i++) values[i] = arguments[i];
 
         if (fields.length !== values.length)
-          throw 'Wrong number of arguments to struct. Expected "[' + fields.length + ']", got ' + values.length + ' arguments';
+          throw new Error('Wrong number of arguments to struct. Expected "[' + fields.length + ']", got ' + values.length + ' arguments');
 
         var struct = {};
         Arr.each(fields, function (name, i) {
