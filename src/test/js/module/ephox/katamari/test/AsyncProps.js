@@ -19,6 +19,7 @@ define(
           tests: 100
         }
       ).then(function (result) {
+        // TODO: Get labels to show up. Probably need to make the fake `it` in Jsc handle promises.
         if (result === true) { return Promise.resolve(result); }
         else return Promise.reject(result);
       });
