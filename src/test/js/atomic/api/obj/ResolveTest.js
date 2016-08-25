@@ -2,11 +2,11 @@ test(
   'ObjResolverTest',
 
   [
-    'ephox.katamari.api.ObjResolver',
+    'ephox.katamari.api.Resolve',
     'ephox.wrap.Jsc'
   ],
 
-  function (ObjResolver, Jsc) {
+  function (Resolve, Jsc) {
     var testNamespace = function () {
       var survivor = 'i want to survive this namespacing';
       var token = 'i should be set as the [token] attribute on the namespace';
@@ -20,7 +20,7 @@ test(
       };
 
       var run = function (path, target) {
-        var r = ObjResolver.namespace(path, target);
+        var r = Resolve.namespace(path, target);
         r.token = token;
       };
 
@@ -37,7 +37,7 @@ test(
 
     var testResolve = function () {
       var check = function (expected, path, scope) {
-        var actual = ObjResolver.resolve(path, scope);
+        var actual = Resolve.resolve(path, scope);
         assert.eq(expected, actual);
       };
 
@@ -77,9 +77,9 @@ test(
         Jsc.nestring,
         Jsc.nestring,
         function (dict, parts, field, newValue) {
-          var created = ObjResolver.forge(parts, dict);
+          var created = Resolve.forge(parts, dict);
           created[field] = newValue;
-          var resolved = ObjResolver.path(parts.concat([ field ]), dict);
+          var resolved = Resolve.path(parts.concat([ field ]), dict);
           return checkEq(
             'Checking that namespace works with resolve',
             newValue,

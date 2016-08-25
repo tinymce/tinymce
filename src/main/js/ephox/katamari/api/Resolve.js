@@ -1,5 +1,5 @@
 define(
-  'ephox.katamari.api.ObjResolver',
+  'ephox.katamari.api.Resolve',
 
   [
     'ephox.katamari.api.Global'
