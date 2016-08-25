@@ -17,14 +17,16 @@ define(
 
   function (DomDefinition, Arr, Fun, Attr, Classes, Css, Element, Html, InsertAll, Value, Error) {
     var getChildren = function (definition) {
-      return definition.domChildren().fold(function () {
-        var defChildren = definition.defChildren().getOr([ ]);
-        return Arr.map(defChildren, renderDef);
-      }, function (domChildren) {
-        return definition.defChildren().fold(Fun.constant(domChildren), function (defChildren) {
-          throw new Error('Cannot specify children and child specs! Must be one or the other.\nDef: ' + DomDefinition.defToStr(definition));
-        });
-      });      
+      if (definition.domChildren().isSome() && definition.defChildren().isSome()) {
+        throw new Error('Cannot specify children and child specs! Must be one or the other.\nDef: ' + DomDefinition.defToStr(definition));
+      } else {
+        return definition.domChildren().fold(function () {
+          var defChildren = definition.defChildren().getOr([ ]);
+          return Arr.map(defChildren, renderDef);
+        }, function (domChildren) {
+          return domChildren;
+        });      
+      }
     };
 
     var renderToDom = function (definition) {
