@@ -3,10 +3,12 @@ test(
 
   [
     'ephox.katamari.api.Result',
-    'ephox.katamari.api.Results'
+    'ephox.katamari.api.Results',
+    'ephox.katamari.test.arb.ArbDataTypes',
+    'ephox.wrap.Jsc'
   ],
 
-  function (Result, Results) {
+  function (Result, Results, ArbDataTypes, Jsc) {
     var testPartition = function () {
       var actual = Results.partition([
         Result.value('a'),
@@ -26,5 +28,40 @@ test(
     };
 
     testPartition();
+
+    var arbResultError = ArbDataTypes.resultError;
+    var arbResultValue = ArbDataTypes.resultValue;
+    var arbResult = ArbDataTypes.result;
+
+    Jsc.property(
+      'Check that values should be empty and  errors should be all if we only generate errors',
+      Jsc.array(arbResultError),
+      function (resErrors) {
+        var actual = Results.partition(resErrors);
+        if (! Jsc.eq(0, actual.values.length)) return 'Values length should be 0';
+        else if (! Jsc.eq(resErrors.length, actual.errors.length)) return 'Errors length should be ' + resErrors.length;
+        return true;
+      }
+    );
+
+    Jsc.property(
+      'Check that errors should be empty and values should be all if we only generate values',
+      Jsc.array(arbResultValue),
+      function (resValues) {
+        var actual = Results.partition(resValues);
+        if (! Jsc.eq(0, actual.errors.length)) return 'Errors length should be 0';
+        else if (! Jsc.eq(resValues.length, actual.values.length)) return 'Values length should be ' + resValues.length;
+        return true;
+      }
+    );
+
+    Jsc.property(
+      'Check that the total number of values and errors matches the input size',
+      Jsc.array(arbResult),
+      function (results) {
+        var actual = Results.partition(results);
+        return Jsc.eq(results.length, actual.errors.length + actual.values.length) ? true : 'Total number should match size of input';
+      }
+    );
   }
 );

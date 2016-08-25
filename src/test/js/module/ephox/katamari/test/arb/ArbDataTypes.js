@@ -28,9 +28,12 @@ define(
       return res.fold(Fun.die('This should not happen'), Fun.identity);
     }, show);
 
+    var result = Jsc.oneof([ resultError, resultValue ]);
+
     return {
       resultError: resultError,
-      resultValue: resultValue
+      resultValue: resultValue,
+      result: result
     };
   }
 );
