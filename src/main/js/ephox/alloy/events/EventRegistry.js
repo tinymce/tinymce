@@ -61,7 +61,7 @@ define(
         var readType = Objects.readOpt(type);
         var handlers = readType(registry);
         return TransformFind.closest(target, function (elem) {
-          return findHandler(handlers, elem).isSome();
+          return findHandler(handlers, elem);
         }, isRoot);
       };
 
