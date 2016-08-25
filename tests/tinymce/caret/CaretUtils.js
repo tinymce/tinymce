@@ -18,8 +18,29 @@ ModuleLoader.require([
 		return document.getElementById('view');
 	}
 
+	function replaceWithZwsp(node) {
+		for (var i = 0; i < node.childNodes.length; i++) {
+			var childNode = node.childNodes[i];
+
+			if (childNode.nodeType === 3) {
+				childNode.nodeValue = childNode.nodeValue.replace(/__ZWSP__/, ZWSP);
+			} else {
+				replaceWithZwsp(childNode);
+			}
+		}
+	}
+
 	function setupHtml(html) {
-		getRoot().innerHTML = html;
+		var child, rootElm = getRoot();
+
+		// IE leaves zwsp in the dom on innerHTML
+		while ((child = rootElm.firstChild)) {
+			rootElm.removeChild(child);
+		}
+
+		// IE messes zwsp up on innerHTML so we need to first set markers then replace then using dom operations
+		rootElm.innerHTML = html.replace(new RegExp(ZWSP, 'g'), '__ZWSP__');
+		replaceWithZwsp(rootElm);
 	}
 
 	function findElm(selector) {

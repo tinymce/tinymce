@@ -278,6 +278,7 @@ test('Extra with changes', function() {
 
 	editor.undoManager.clear();
 	editor.setContent('<p>abc</p>');
+	Utils.setSelection('p', 0);
 	editor.undoManager.add();
 
 	editor.undoManager.extra(function() {
@@ -291,8 +292,8 @@ test('Extra with changes', function() {
 	data = editor.undoManager.data;
 	equal(data.length, 3);
 	equal(data[0].content, '<p>abc</p>');
-	deepEqual(data[0].bookmark, {start: [0]});
-	deepEqual(data[0].beforeBookmark, {start: [0]});
+	deepEqual(data[0].bookmark, {start: [0, 0, 0]});
+	deepEqual(data[0].beforeBookmark, {start: [0, 0, 0]});
 	equal(data[1].content, '<p>a1c</p>');
 	deepEqual(data[1].bookmark, {start: [2, 0, 0]});
 	deepEqual(data[1].beforeBookmark, {start: [2, 0, 0]});
