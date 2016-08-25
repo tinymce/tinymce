@@ -47,7 +47,7 @@ define(
         attributes: Objects.wrapAll([
           // { key: 'aria-label', value: detail['aria-label']() },
           { key: 'role', value: 'button' },
-          { key: 'type', value: 'input' }
+          { key: 'type', value: 'button' }
         ])
       };
     };

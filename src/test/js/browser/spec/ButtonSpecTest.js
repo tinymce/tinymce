@@ -40,7 +40,7 @@ asynctest(
                 arr.has('test-button')
               ],
               attrs: {
-                type: str.is('input'),
+                type: str.is('button'),
                 'data-alloy-id': str.is('test-button-id')
               },
               html: str.is('ButtonSpecTest.button')
