@@ -4,7 +4,6 @@ define(
   [
     'ephox.alloy.behaviour.Toggling',
     'ephox.alloy.dom.DomDefinition',
-    'ephox.alloy.dom.DomModification',
     'ephox.alloy.ephemera.AlloyTags',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
@@ -16,7 +15,7 @@ define(
     'global!Error'
   ],
 
-  function (Toggling, DomDefinition, DomModification, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
+  function (Toggling, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
     var domSchema = ValueSchema.objOf([
       FieldSchema.strict('tag'),
       FieldSchema.defaulted('styles', {}),

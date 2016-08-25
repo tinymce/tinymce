@@ -18,11 +18,8 @@ define(
   function (DomDefinition, Arr, Fun, Attr, Classes, Css, Element, Html, InsertAll, Value, Error) {
     var getChildren = function (definition) {
       return definition.domChildren().fold(function () {
-        return definition.defChildren().fold(function () {
-          return [ ];
-        }, function (defChildren) {
-          return Arr.map(defChildren, renderDef);
-        });
+        var defChildren = definition.defChildren().getOr([ ]);
+        return Arr.map(defChildren, renderDef);
       }, function (domChildren) {
         return definition.defChildren().fold(Fun.constant(domChildren), function (defChildren) {
           throw new Error('Cannot specify children and child specs! Must be one or the other.\nDef: ' + DomDefinition.defToStr(definition));
