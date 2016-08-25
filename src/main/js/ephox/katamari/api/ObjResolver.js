@@ -24,17 +24,22 @@ define(
       return o[part];
     };
 
-    var namespace = function (name, target) {
-      var o = target !== undefined ? target : Global;
-      var parts = name.split('.');
+    var forge = function (parts, target) {
+      var o = target !== undefined ? target : Global;      
       for (var i = 0; i < parts.length; ++i)
         o = step(o, parts[i]);
       return o;
     };
 
+    var namespace = function (name, target) {
+      var parts = name.split('.');
+      return forge(parts, target);
+    };
+
     return {
       path: path,
       resolve: resolve,
+      forge: forge,
       namespace: namespace
     };
   }

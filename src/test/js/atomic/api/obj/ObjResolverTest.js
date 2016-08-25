@@ -2,10 +2,11 @@ test(
   'ObjResolverTest',
 
   [
-    'ephox.katamari.api.ObjResolver'
+    'ephox.katamari.api.ObjResolver',
+    'ephox.wrap.Jsc'
   ],
 
-  function (ObjResolver) {
+  function (ObjResolver, Jsc) {
     var testNamespace = function () {
       var survivor = 'i want to survive this namespacing';
       var token = 'i should be set as the [token] attribute on the namespace';
@@ -63,7 +64,33 @@ test(
       check(undefined, 'c.carrot.orange', data);
     };
 
+    var testSpecs = function () {
+      var checkEq = function (label, expected, actual) {
+        return Jsc.eq(expected, actual) ? true : label + '. Exp: ' + expected + ', actual: ' + actual;
+      };
+
+      Jsc.property(
+        'Checking that creating a namespace (forge) from an obj will enable that value to be retrieved by resolving (path)',
+        // NOTE: This value is being modified, so it cannot be shrunk.
+        Jsc.nonshrink(Jsc.dict(Jsc.nestring)),
+        Jsc.nearray(Jsc.nestring),
+        Jsc.nestring,
+        Jsc.nestring,
+        function (dict, parts, field, newValue) {
+          var created = ObjResolver.forge(parts, dict);
+          created[field] = newValue;
+          var resolved = ObjResolver.path(parts.concat([ field ]), dict);
+          return checkEq(
+            'Checking that namespace works with resolve',
+            newValue,
+            resolved
+          );
+        }
+      );
+    };
+
     testNamespace();
     testResolve();
+    testSpecs();
   }
 );
