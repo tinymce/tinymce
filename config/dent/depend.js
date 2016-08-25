@@ -21,10 +21,10 @@ var dependencies = [
   },
 
   {
-    name: 'katamari',
+    name: 'boulder',
     repository: 'buildrepo2',
     version: 'latest',
-    source: 'katamari.zip',
+    source: 'boulder.zip',
     targets: [
       { name: 'module/*.js', path: depend },
       { name: 'depend/*.js', path: depend }
