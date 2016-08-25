@@ -119,9 +119,7 @@ define('tinymce/inlite/Theme', [
 	};
 
 	var renderInlineUI = function (editor, panel) {
-		var skinName = EditorSettings.getStringOr(editor, 'skin', 'lightgray');
-
-		SkinLoader.load(editor, skinName, function () {
+		SkinLoader.load(editor, function () {
 			bindContextualToolbarsEvents(editor, panel);
 			overrideLinkShortcut(editor, panel);
 		});
