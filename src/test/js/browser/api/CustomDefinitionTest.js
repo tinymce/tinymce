@@ -9,14 +9,13 @@ test(
     'ephox.alloy.dom.DomDefinition',
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.test.ResultAssertions',
-    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.peanut.Fun',
     'ephox.perhaps.Result'
   ],
 
-  function (RawAssertions, CustomBehaviour, ComponentDom, CustomDefinition, DomDefinition, DomModification, ResultAssertions, FieldPresence, FieldSchema, ValueSchema, Fun, Result) {
+  function (RawAssertions, CustomBehaviour, ComponentDom, CustomDefinition, DomDefinition, DomModification, ResultAssertions, FieldSchema, ValueSchema, Fun, Result) {
     var checkErr = function (label, expectedPart, spec) {
       ResultAssertions.checkErrStr(
         label,
