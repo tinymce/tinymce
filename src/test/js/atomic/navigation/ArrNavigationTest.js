@@ -178,5 +178,31 @@ test(
         return Jsc.eq(before, testCase.values.length - 1) || Jsc.eq(testCase.index - 1, before);
       }
     );
+
+    Jsc.property(
+      'Unique: Try next should be some(+1) or none',
+      arbUniqueNumTestCase,
+      function (testCase) {
+        return ArrNavigation.tryNext(testCase.values, testCase.index, Fun.constant(true)).fold(function () {
+          // Nothing, so we must be at the last index position
+          return Jsc.eq(testCase.index, testCase.values.length - 1);
+        }, function (after) {
+          return Jsc.eq(testCase.index + 1, after);
+        });
+      }
+    );
+
+    Jsc.property(
+      'Unique: Try prev should be some(-1) or none',
+      arbUniqueNumTestCase,
+      function (testCase) {
+        return ArrNavigation.tryPrev(testCase.values, testCase.index, Fun.constant(true)).fold(function () {
+          // Nothing, so we must be at the first index position
+          return Jsc.eq(testCase.index, 0);
+        }, function (before) {
+          return Jsc.eq(testCase.index - 1, before);
+        });
+      }
+    );
   }
 );
