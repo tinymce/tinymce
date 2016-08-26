@@ -27,8 +27,8 @@ asynctest(
               display: 'inline-block',
               width: '20px',
               height: '20px',
-              margin: '2px',
-              border: '1px solid ' + (Arr.contains(classes, 'stay') ? 'blue' : 'yellow')
+              margin: '1px',
+              border: '1px solid black'
             },
             classes: [ 'square' ].concat(classes)
           },
@@ -48,7 +48,7 @@ asynctest(
           classes: [ 'flat-grid-keying-test'],
           styles: {
             background: 'white',
-            width: '200px',
+            width: '150px',
             height: '200px'
           }
         },
@@ -57,12 +57,12 @@ asynctest(
           mode: 'flatgrid',
           selector: '.square'
         },
-        // 6 x 4 grid size
+        // 4 x 6 grid size
         components: Arr.map([
           's01', 's02', 's03', 's04', 's05', 's06',
           's07', 's08', 's09', 's10', 's11', 's12',
           's13', 's14', 's15', 's16', 's17', 's18',
-          's19', 's20', 's21', 's22', 's23', 's24'
+          's19', 's20', 's21'
         ], function (num) {
           return item([ num ]);
         })
@@ -77,10 +77,10 @@ asynctest(
       };
 
       return [
-        FocusTools.sSetFocus('Initial focus', gui.element(), '.one'),
+        FocusTools.sSetFocus('Initial focus', gui.element(), '.s11'),
         NavigationUtils.sequence(
           doc,
-          Keys.right(),
+          Keys.down(),
           {},
           [
             targets.two,
@@ -132,7 +132,9 @@ asynctest(
         ),
 
         // Test execute
-        Keyboard.sKeydown(doc, Keys.enter(), {})
+        Keyboard.sKeydown(doc, Keys.enter(), {}),
+
+        function () { }
       ];
     }, function () {
       success();

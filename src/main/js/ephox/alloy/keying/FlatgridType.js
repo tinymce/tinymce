@@ -32,8 +32,8 @@ define(
         FieldSchema.defaulted('execute', defaultExecute),
         FieldSchema.state('dimensions', function () {
           return Cell({
-            numColumns: 0,
-            numRows: 0
+            numColumns: 6,
+            numRows: 4
           });
         }),
         FieldSchema.state('handler', function () {
@@ -59,8 +59,11 @@ define(
       return function (component, simulatedEvent, gridInfo) {
         var container = component.element();
         var delta = navigator(container);
+        console.log('delta', delta);
         return Focus.search(container).bind(function (focused) {
+          console.log('focused', focused.dom());
           return DomPinpoint.locateVisible(container, focused, gridInfo.selector()).bind(function (identified) {
+            console.log('identified', identified, identified.index());
             var outcome = ArrNavigation.cycleGrid(
               identified.candidates(),
               identified.index(),
@@ -72,11 +75,13 @@ define(
             );
 
             var newCell = outcome.bind(function (newIndex) {
+              console.log('newIndex', newIndex, 'oldIndex', identified.index());
               var cells = identified.candidates();
               return newIndex >= 0 && newIndex < cells.length ? Option.some(cells[newIndex]) : Option.none();
             });
 
             newCell.each(function (newFocus) {
+              console.log('newFocus', newFocus.dom());
               component.getSystem().triggerFocus(newFocus, component.element());
               simulatedEvent.stop();
             });
@@ -86,13 +91,16 @@ define(
     };
 
     var rules = [
-      KeyRules.rule( KeyMatch.inSet( Keys.LEFT().concat(Keys.UP()) ), move(Navigator.west)),
-      KeyRules.rule( KeyMatch.inSet( Keys.RIGHT().concat(Keys.DOWN()) ), move(Navigator.east)),
+      KeyRules.rule( KeyMatch.inSet( Keys.LEFT() ), move(Navigator.west)),
+      KeyRules.rule( KeyMatch.inSet( Keys.RIGHT() ), move(Navigator.east)),
+      KeyRules.rule( KeyMatch.inSet( Keys.UP() ), move(Navigator.north)),
+      KeyRules.rule( KeyMatch.inSet( Keys.DOWN() ), move(Navigator.south)),
       KeyRules.rule( KeyMatch.inSet( Keys.SPACE().concat(Keys.ENTER()) ), execute)
     ];
 
     var processKey = function (component, simulatedEvent, gridInfo) {
       KeyRules.choose(rules, simulatedEvent.event()).each(function (transition) {
+        console.log('transitions', transition);
         transition(component, simulatedEvent, gridInfo);
       });
     };
