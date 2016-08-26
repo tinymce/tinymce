@@ -400,7 +400,7 @@ ModuleLoader.require([
 
 		editor.focus();
 		Utils.setSelection('ul li', 1);
-		execCommand('InsertOrderedList', null, { 'list-style-type': 'lower-alpha' });
+		execCommand('InsertOrderedList', null, {'list-style-type': 'lower-alpha'});
 
 		equal(editor.getContent(),
 			'<ol>' +
@@ -427,7 +427,7 @@ ModuleLoader.require([
 
 		editor.focus();
 		Utils.setSelection('p', 1);
-		execCommand('InsertOrderedList', null, { 'list-style-type': 'lower-alpha' });
+		execCommand('InsertOrderedList', null, {'list-style-type': 'lower-alpha'});
 
 		equal(editor.getContent(),
 			'<ol>' +
@@ -481,7 +481,7 @@ ModuleLoader.require([
 
 		editor.focus();
 		Utils.setSelection('ul li', 1);
-		execCommand('InsertOrderedList', false, { 'list-style-type': 'upper-roman' });
+		execCommand('InsertOrderedList', false, {'list-style-type': 'upper-roman'});
 
 		equal(editor.getContent(),
 			'<ol style="list-style-type: upper-roman;">' +
@@ -506,7 +506,7 @@ ModuleLoader.require([
 
 		editor.focus();
 		Utils.setSelection('ul li', 1);
-		execCommand('InsertOrderedList', false, { 'list-style-type': 'lower-roman' });
+		execCommand('InsertOrderedList', false, {'list-style-type': 'lower-roman'});
 
 		equal(editor.getContent(),
 			'<ol style="list-style-type: lower-roman;">' +
@@ -533,7 +533,7 @@ ModuleLoader.require([
 
 		editor.focus();
 		Utils.setSelection('ul li', 1);
-		execCommand('InsertOrderedList', false, { 'list-style-type': 'lower-roman' });
+		execCommand('InsertOrderedList', false, {'list-style-type': 'lower-roman'});
 
 		equal(editor.getContent(),
 			'<ol style="list-style-type: upper-roman;">' +
@@ -1004,33 +1004,33 @@ ModuleLoader.require([
 		Utils.setSelection('ol ol ol li:nth-child(2)', 1);
 		execCommand('InsertOrderedList');
 
-		equal(editor.getContent(), 
+		equal(editor.getContent(),
 			'<ol>' +
-			    '<li>a' +
-			        '<ol>' +
-			            '<li>b</li>' +
-			            '<li>c' +
-			                '<ol>' +
-			                    '<li>d</li>' +
-			                '</ol>' +
-			            '</li>' +
-			        '</ol>' +
-			    '</li>' +
+					'<li>a' +
+							'<ol>' +
+									'<li>b</li>' +
+									'<li>c' +
+											'<ol>' +
+													'<li>d</li>' +
+											'</ol>' +
+									'</li>' +
+							'</ol>' +
+					'</li>' +
 			'</ol>' +
 			'<p>e</p>' +
 			'<ol>' +
-			    '<li style="list-style-type: none;">' +
-			        '<ol>' +
-			            '<li style="list-style-type: none;">' +
-			                '<ol>' +
-			                    '<li>f</li>' +
-			                '</ol>' +
-			            '</li>' +
-			            '<li>g</li>' +
-			            '<li>h</li>' +
-			        '</ol>' +
-			    '</li>' +
-			    '<li>i</li>' +
+					'<li style="list-style-type: none;">' +
+							'<ol>' +
+									'<li style="list-style-type: none;">' +
+											'<ol>' +
+													'<li>f</li>' +
+											'</ol>' +
+									'</li>' +
+									'<li>g</li>' +
+									'<li>h</li>' +
+							'</ol>' +
+					'</li>' +
+					'<li>i</li>' +
 			'</ol>'
 		);
 
@@ -2127,6 +2127,70 @@ ModuleLoader.require([
 
 		equal(editor.getContent(), '<ul><li>1<ul><li>2</li></ul></li><li>3</li></ul>');
 		equal(editor.selection.getNode().nodeName, 'LI');
+	});
+
+	test('Backspace at LI selected with triple-click in UL', function() {
+		editor.getBody().innerHTML = trimBrs(
+			'<ul>' +
+				'<li>a</li>' +
+				'<li>b' +
+					'<ul>' +
+						'<li>c</li>' +
+						'<li>d</li>' +
+					'</ul>' +
+				'</li>' +
+			'</ul>'
+		);
+
+		editor.focus();
+		Utils.setSelection('li:nth-child(1)', 0, 'li:nth-child(2)', 0);
+		editor.plugins.lists.backspaceDelete();
+
+		equal(trimBrs(editor.getContent()),
+			'<ul>' +
+				'<li>b' +
+					'<ul>' +
+						'<li>c</li>' +
+						'<li>d</li>' +
+					'</ul>' +
+				'</li>' +
+			'</ul>'
+		);
+
+		equal(editor.selection.getNode().nodeName, 'LI');
+	});
+
+	test('Backspace at partially selected list', function() {
+		editor.getBody().innerHTML = trimBrs(
+			'<p>abc</p>' +
+			'<ul>' +
+				'<li>a</li>' +
+				'<li>b' +
+					'<ul>' +
+						'<li>c</li>' +
+						'<li>d</li>' +
+					'</ul>' +
+				'</li>' +
+			'</ul>'
+		);
+
+		editor.focus();
+		Utils.setSelection('p', 1, 'li:nth-child(2)', 0);
+		editor.plugins.lists.backspaceDelete();
+
+		equal(trimBrs(editor.getContent()),
+			'<p>ab</p>' +
+			'<ul>' +
+				'<li style="list-style-type: none;">' +
+				'<ul>' +
+					'<li>c</li>' +
+					'<li>d</li>' +
+				'</ul>' +
+				'</li>' +
+			'</ul>'
+		);
+
+		equal(editor.selection.getNode().nodeName, 'P');
 	});
 
 	// Delete
