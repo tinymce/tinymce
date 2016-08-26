@@ -171,6 +171,11 @@ define("tinymce/Env", [], function() {
 		 */
 		ceFalse: (ie === false || ie > 8),
 
+		/**
+		 * Constant if CSP mode is possible or not. Meaning we can't use script urls for the iframe.
+		 */
+		canHaveCSP: (ie === false || ie > 11),
+
 		desktop: !phone && !tablet,
 		windowsPhone: windowsPhone
 	};
