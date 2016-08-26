@@ -25,7 +25,7 @@ define(
       return [
         FieldSchema.defaulted('selector', '[data-lab-tabstop="true"]'),
         FieldSchema.defaulted('onEscape', Fun.noop),
-        FieldSchema.state('mode', function () {
+        FieldSchema.state('handler', function () {
           return self;
         })
       ];
@@ -97,14 +97,22 @@ define(
     };
 
     var toEvents = function (cyclicInfo) {
-      return Objects.wrap(
-        SystemEvents.focus(),
-        EventHandler.nu({
-          run: function (component) {
-            focusFirst(component, cyclicInfo);
-          }
-        })
-      );
+      return Objects.wrapAll([
+        { 
+          key: SystemEvents.focus(),
+          value: EventHandler.nu({
+            run: function (component) {
+              focusFirst(component, cyclicInfo);
+            }
+          })
+        },
+        {
+          key: 'keydown',
+          value: EventHandler.nu({
+            run: processKey
+          })
+        }
+      ]);
     };
 
     var self = {

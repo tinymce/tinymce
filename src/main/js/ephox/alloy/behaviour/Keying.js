@@ -40,10 +40,21 @@ define(
       )
     );
 
+    var handlers = function (info) {
+      return info.keying().fold(function () {
+        return { };
+      }, function (keyInfo) {
+        console.log('keyInfo', keyInfo);
+        // Note, each type needs to output this.
+        var handler = keyInfo.handler();
+        return handler.toEvents(keyInfo);
+      });
+    };
+
     return Behaviour.contract({
       name: Fun.constant('keying'),
       exhibit: exhibit,
-      handlers: Fun.constant({ }),
+      handlers: handlers,
       apis: apis,
       schema: Fun.constant(schema)
     });

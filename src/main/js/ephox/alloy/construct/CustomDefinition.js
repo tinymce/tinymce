@@ -54,7 +54,7 @@ define(
           'eventOrder',
           FieldPresence.mergeWith({
             'alloy.execute': [ 'alloy.base.behaviour', 'toggling' ],
-            'alloy.focus': [ 'alloy.base.behaviour', 'focusing' ]
+            'alloy.focus': [ 'alloy.base.behaviour', 'keying', 'focusing' ]
           }),
           ValueSchema.anyValue()
         ),
