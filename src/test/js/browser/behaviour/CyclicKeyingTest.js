@@ -33,9 +33,22 @@ asynctest(
         },
         components: [
           { uiType: 'button', action: store.adder('button1.clicked'), text: 'Button1' },
-          { uiType: 'button', action: store.adder('button2.clicked'), text: 'Button2' }
-
-
+          { uiType: 'button', action: store.adder('button2.clicked'), text: 'Button2' },
+          {
+            uiType: 'custom',
+            dom: {
+              tag: 'span',
+              classes: 'focusable-span',
+              styles: {
+                'display': 'inline-block',
+                'width': '200px',
+                'border': '1px solid green',
+                background: 'white',
+                height: '20px'
+              }
+            },
+            tabstopping: true
+          }
         ]
       });
 

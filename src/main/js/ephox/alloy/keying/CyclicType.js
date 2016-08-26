@@ -23,7 +23,7 @@ define(
   function (Keys, SystemEvents, EventHandler, ArrNavigation, KeyMatch, KeyRules, FieldSchema, Objects, Arr, Fun, Option, Compare, Focus, SelectorFilter, SelectorFind, Visibility) {
     var schema = function () {
       return [
-        FieldSchema.defaulted('selector', '[lab-tabstop="true"]'),
+        FieldSchema.defaulted('selector', '[data-lab-tabstop="true"]'),
         FieldSchema.defaulted('onEscape', Fun.noop),
         FieldSchema.state('mode', function () {
           return self;
