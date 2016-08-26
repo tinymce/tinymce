@@ -13,7 +13,7 @@ define(
       var adder = function (value) {
         return function () {            
           array.push(value);
-          // console.log('store.add', value, array);
+          console.log('store.add', value, array);
         };
       };
 

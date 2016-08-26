@@ -19,7 +19,7 @@ asynctest(
         uiType: 'custom',
         dom: {
           tag: 'div',
-          classes: [ 'custom-component-test'],
+          classes: [ 'cyclic-keying-test'],
           styles: {
             background: 'blue',
             width: '200px',
@@ -27,10 +27,6 @@ asynctest(
           }
         },
         uid: 'custom-uid',
-        toggling: {
-          selected: true,
-          toggleClass: 'test-selected'
-        },
         keying: {
           mode: 'cyclic'
         },

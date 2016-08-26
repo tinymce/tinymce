@@ -8,7 +8,7 @@ define(
   ],
 
   function (Arr, Option, Struct) {
-    var indexInfo = Struct.immutable('index', 'candidates');
+    var indexInfo = Struct.immutableBag([ 'index', 'candidates' ], [ ]);
 
     var locate = function (candidates, predicate) {
       var index = Arr.findIndex(candidates, predicate);

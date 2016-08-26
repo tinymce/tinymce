@@ -5,13 +5,15 @@ define(
     'ephox.alloy.behaviour.Behaviour',
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.keying.CyclicType',
+    'ephox.alloy.keying.FlowType',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
-    'ephox.peanut.Fun'
+    'ephox.peanut.Fun',
+    'global!Error'
   ],
 
-  function (Behaviour, DomModification, CyclicType, FieldPresence, FieldSchema, ValueSchema, Fun) {
+  function (Behaviour, DomModification, CyclicType, FlowType, FieldPresence, FieldSchema, ValueSchema, Fun, Error) {
     var doFocusIn = function (component) {
       var system = component.getSystem();
       system.triggerFocus(component.element(), component.element());
@@ -35,7 +37,8 @@ define(
         'mode',
         {
           // Note, these are only fields.
-          cyclic: CyclicType.schema()
+          cyclic: CyclicType.schema(),
+          flow: FlowType.schema()
         }
       )
     );
@@ -44,7 +47,8 @@ define(
       return info.keying().fold(function () {
         return { };
       }, function (keyInfo) {
-        console.log('keyInfo', keyInfo);
+        // Get a better error.
+        if (keyInfo.handler === undefined) throw new Error('Keymode missing handler output');
         // Note, each type needs to output this.
         var handler = keyInfo.handler();
         return handler.toEvents(keyInfo);
