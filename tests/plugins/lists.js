@@ -2517,7 +2517,7 @@ ModuleLoader.require([
 	});
 
 	if (tinymce.Env.ie === 11) {
-		test('Backspace merge cells on IE 11', function() {
+		test('Backspace merge li elements on IE 11', function() {
 			// IE allows you to place the caret inside a LI without children
 			editor.getBody().innerHTML = trimBrs(
 				'<ul>' +
