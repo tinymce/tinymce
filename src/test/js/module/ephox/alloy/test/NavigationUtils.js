@@ -20,11 +20,11 @@ define(
       var array = range(identifiers.length, function (_, i) {
         return [
           Keyboard.sKeydown(doc, key, modifiers),
-          // FocusTools.sTryOnSelector(
-          //   'Focus should move from ' + (i > 0 ? identifiers[i-1].label : '(start)') + ' to ' + identifiers[i].label,
-          //   doc,
-          //   identifiers[i].selector
-          // ),
+          FocusTools.sTryOnSelector(
+            'Focus should move from ' + (i > 0 ? identifiers[i-1].label : '(start)') + ' to ' + identifiers[i].label,
+            doc,
+            identifiers[i].selector
+          ),
           Step.wait(100)
         ];
       });
