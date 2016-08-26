@@ -302,9 +302,6 @@ tinymce.PluginManager.add('lists', function(editor) {
 			tinymce.each(tinymce.grep(dom.select('ol,ul', element)), normalizeList);
 		}
 
-		/**
-		 * Normalizes the all lists in the specified element.
-		 */
 		function normalizeList(ul) {
 			var sibling, parentNode = ul.parentNode;
 
