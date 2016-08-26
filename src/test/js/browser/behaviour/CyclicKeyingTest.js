@@ -71,11 +71,44 @@ asynctest(
         ),
         Keyboard.sKeydown(doc, Keys.tab(), {}),
         FocusTools.sTryOnSelector(
-          'Focus should be on button 2',
+          'Focus should move from button 1 to button 2',
           doc,
           'button:contains("Button2")'
         ),
-        function () { }
+        Keyboard.sKeydown(doc, Keys.tab(), {}),
+        FocusTools.sTryOnSelector(
+          'Focus should move from button 2 to span',
+          doc,
+          'span.focusable-span'
+        ),
+
+        Keyboard.sKeydown(doc, Keys.tab(), {}),
+        FocusTools.sTryOnSelector(
+          'Focus should move from span to button 1',
+          doc,
+          'button:contains("Button1")'
+        ),
+
+        Keyboard.sKeydown(doc, Keys.tab(), { shift: true }),
+        FocusTools.sTryOnSelector(
+          'Focus should move from button1 to span',
+          doc,
+          'span.focusable-span'
+        ),
+
+        Keyboard.sKeydown(doc, Keys.tab(), { shift: true }),
+        FocusTools.sTryOnSelector(
+          'Focus should move from span to button 2',
+          doc,
+          'button:contains("Button2")'
+        ),
+
+        Keyboard.sKeydown(doc, Keys.tab(), { shift: true }),
+        FocusTools.sTryOnSelector(
+          'Focus should move from button2 to button 1',
+          doc,
+          'button:contains("Button1")'
+        )
       ];
     }, function () {
       success();
