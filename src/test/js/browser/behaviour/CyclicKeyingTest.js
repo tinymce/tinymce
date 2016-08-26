@@ -41,7 +41,7 @@ asynctest(
             uiType: 'custom',
             dom: {
               tag: 'span',
-              classes: 'focusable-span',
+              classes: [ 'focusable-span' ],
               styles: {
                 'display': 'inline-block',
                 'width': '200px',
