@@ -55,10 +55,24 @@ test(
 
     testSanity();
 
+    var genUniqueArray = function (min, max) {
+      return Jsc.integer(min, max).generator.map(function (num) {
+        var r = [ ];
+        for (var i = 0; i < num; i++) {
+          r[i] = i;
+        }
+        return r;
+      });
+    };
+
+    var genIndexInArray = function (array) {
+      return Jsc.integer(0, array.length - 1).generator;
+    };
+
     var genTestCase = Jsc.nearray(Jsc.integer).generator.flatMap(function (values1) {
       return Jsc.nearray(Jsc.integer).generator.flatMap(function (values2) {
         var combined = values1.concat(values2);
-        return Jsc.integer(0, combined.length).generator.map(function (index) {
+        return genIndexInArray(combined).map(function (index) {
           return {
             values: combined,
             index: index
@@ -67,8 +81,22 @@ test(
       });
     });
 
+    var genUniqueNumTestCase = genUniqueArray(2, 10).flatMap(function (values) {
+      return genIndexInArray(values).map(function (index) {
+        return {
+          values: values,
+          index: index
+        };
+      });
+    });
+
     var arbTestCase = Jsc.bless({
       generator: genTestCase
+    });
+
+    // Each value in the array matches its index
+    var arbUniqueNumTestCase = Jsc.bless({
+      generator: genUniqueNumTestCase
     });
 
     Jsc.property(
@@ -90,6 +118,64 @@ test(
           throw new Error('Should not have navigatied to: ' + _);
         });
         return true;
+      }
+    );
+
+    Jsc.property(
+      'Cycling across a list of unique numbers of size 2 or greater should be symmetric: after(before(x)) === x',
+      arbUniqueNumTestCase,
+      function (testCase) {
+        var initial = testCase.index;
+        var before = ArrNavigation.cyclePrev(testCase.values, initial, Fun.constant(true)).getOrDie(
+          'Should always be able to cycle prev on a >= 2 length array'
+        );
+        // Note, the index is the same as the value, so we can do this.
+        var after = ArrNavigation.cycleNext(testCase.values, before, Fun.constant(true)).getOrDie(
+          'Should always be able to cycle next on a >= 2 length array'
+        );
+
+        return Jsc.eq(initial, after);
+      }
+    );
+
+    Jsc.property(
+      'Cycling across a list of unique numbers of size 2 or greater should be symmetric: before(after(x)) === x',
+      arbUniqueNumTestCase,
+      function (testCase) {
+        var initial = testCase.index;
+        var after = ArrNavigation.cycleNext(testCase.values, initial, Fun.constant(true)).getOrDie(
+          'Should always be able to cycle next on a >= 2 length array'
+        );
+        // Note, the index is the same as the value, so we can do this.
+        var before = ArrNavigation.cyclePrev(testCase.values, after, Fun.constant(true)).getOrDie(
+          'Should always be able to cycle prev on a >= 2 length array'
+        );
+
+        return Jsc.eq(initial, before);
+      }
+    );
+
+    Jsc.property(
+      'Cycling next makes an index of 0, or one higher',
+      arbUniqueNumTestCase,
+      function (testCase) {
+        var after = ArrNavigation.cycleNext(testCase.values, testCase.index, Fun.constant(true)).getOrDie(
+          'Should always be able to cycle next on a >= 2 length array'
+        );
+
+        return Jsc.eq(after, 0) || Jsc.eq(testCase.index + 1, after);
+      }
+    );
+
+    Jsc.property(
+      'Cycling prev makes an index of values.length - 1, or one lower',
+      arbUniqueNumTestCase,
+      function (testCase) {
+        var before = ArrNavigation.cyclePrev(testCase.values, testCase.index, Fun.constant(true)).getOrDie(
+          'Should always be able to cycle prev on a >= 2 length array'
+        );
+
+        return Jsc.eq(before, testCase.values.length - 1) || Jsc.eq(testCase.index - 1, before);
       }
     );
   }
