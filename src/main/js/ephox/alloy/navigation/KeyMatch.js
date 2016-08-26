@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.navigation.KeyValue',
+  'ephox.alloy.navigation.KeyMatch',
 
   [
     'ephox.compass.Arr'

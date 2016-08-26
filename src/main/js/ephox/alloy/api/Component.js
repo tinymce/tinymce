@@ -20,6 +20,9 @@ define(
       var systemApi = Cell(NoContextApi());
 
       var info = ValueSchema.getOrDie(CustomDefinition.toInfo(spec));
+
+      console.log('info', info);
+
       var behaviours = CustomDefinition.behaviours(info);
 
       var definition = CustomDefinition.toDefinition(info);

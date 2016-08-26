@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.alloy.behaviour.Behaviour',
-    'ephox.alloy.dom.DomDefinition',
+    'ephox.alloy.dom.DomModification',
     'ephox.alloy.keying.CyclicType',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
@@ -11,18 +11,14 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (Behaviour, DomDefinition, CyclicType, FieldPresence, FieldSchema, ValueSchema, Fun) {
-    var keytypes = {
-      'cyclic': CyclicType
-    };
-
+  function (Behaviour, DomModification, CyclicType, FieldPresence, FieldSchema, ValueSchema, Fun) {
     var doFocusIn = function (component) {
       var system = component.getSystem();
       system.triggerFocus(component.element(), component.element());
     };
 
     var exhibit = function (info, base) {
-      return DomDefinition.nu({ });
+      return DomModification.nu({ });
     };
 
     var apis = function (info) {
@@ -35,9 +31,13 @@ define(
       'keying',
       'keying',
       FieldPresence.asOption(),
-      ValueSchema.objOf([
-        FieldSchema.strict('mode')
-      ])
+      ValueSchema.choose(
+        'mode',
+        {
+          // Note, these are only fields.
+          cyclic: CyclicType.schema()
+        }
+      )
     );
 
     return Behaviour.contract({

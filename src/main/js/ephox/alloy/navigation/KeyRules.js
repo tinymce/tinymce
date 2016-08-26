@@ -2,15 +2,15 @@ define(
   'ephox.alloy.navigation.KeyRules',
 
   [
-    'ephox.alloy.navigation.KeyValue',
+    'ephox.alloy.navigation.KeyMatch',
     'ephox.compass.Arr',
     'ephox.perhaps.Option'
   ],
 
-  function (KeyValue, Arr, Option) {
+  function (KeyMatch, Arr, Option) {
     var basic = function (key, action) {
       return {
-        matches: KeyValue.is(key),
+        matches: KeyMatch.is(key),
         classification: action
       };
     };
