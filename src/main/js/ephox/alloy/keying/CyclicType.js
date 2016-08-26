@@ -23,7 +23,7 @@ define(
   function (Keys, SystemEvents, EventHandler, ArrNavigation, KeyMatch, KeyRules, FieldSchema, Objects, Arr, Fun, Option, Compare, Focus, SelectorFilter, SelectorFind, Visibility) {
     var schema = function () {
       return [
-        FieldSchema.defaulted('selector', '[data-lab-tabstop="true"]'),
+        FieldSchema.defaulted('selector', '[data-alloy-tabstop="true"]'),
         FieldSchema.defaulted('onEscape', Fun.noop),
         FieldSchema.state('handler', function () {
           return self;
@@ -43,20 +43,26 @@ define(
 
     var findTabstop = function (component, cyclicInfo) {
       return Focus.search(component.element()).bind(function (elem) {
+        console.log('elem', elem.dom());
         return SelectorFind.closest(elem, cyclicInfo.selector());
       });
     };
 
     var go = function (component, simulatedEvent, cyclicInfo, cycle) {
+      console.log('go', cyclicInfo, component);
       // 1. Find our current tabstop
       // 2. Find the index of that tabstop
       // 3. Cycle the tabstop
       // 4. Fire alloy focus on the resultant tabstop
       var tabstops = SelectorFilter.descendants(component.element(), cyclicInfo.selector());
+      console.log('tabstops', tabstops);
       findTabstop(component, cyclicInfo).each(function (tabstop) {
+        console.log('tabstop', tabstop);
         // focused component
         var index = Arr.findIndex(tabstops, Fun.curry(Compare.eq, tabstop));
+        console.log('index', index);
         cycle(tabstops, index, Visibility.isVisible).fold(function () {
+          alert('here');
           // Did not find anything to move to ... kill the event anyway.
           /*
           // Didn't find anything (probably length: 0) ... go back to start?
@@ -64,6 +70,7 @@ define(
           labevent.stop();
           */
         }, function (outcome) {
+          console.log('outcome', outcome.dom());
           var system = component.getSystem();
           var originator = component.element();
           system.triggerFocus(outcome, originator);
@@ -109,7 +116,9 @@ define(
         {
           key: 'keydown',
           value: EventHandler.nu({
-            run: processKey
+            run: function (component, simulatedEvent) {
+              return processKey(component, simulatedEvent, cyclicInfo);
+            }
           })
         }
       ]);

@@ -81,6 +81,11 @@ define(
           events: events
         },
 
+        {
+          tabstopping: true,
+          focusing: true
+        },
+
         spec, 
 
         {
