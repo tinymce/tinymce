@@ -47,7 +47,8 @@ asynctest(
                 height: '20px'
               }
             },
-            tabstopping: true
+            tabstopping: true,
+            focusing: true
           }
         ]
       });

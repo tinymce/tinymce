@@ -2,6 +2,7 @@ define(
   'ephox.alloy.construct.CustomDefinition',
 
   [
+    'ephox.alloy.behaviour.Focusing',
     'ephox.alloy.behaviour.Keying',
     'ephox.alloy.behaviour.Tabstopping',
     'ephox.alloy.behaviour.Toggling',
@@ -17,7 +18,7 @@ define(
     'global!Error'
   ],
 
-  function (Keying, Tabstopping, Toggling, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
+  function (Focusing, Keying, Tabstopping, Toggling, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
     var domSchema = ValueSchema.objOf([
       FieldSchema.strict('tag'),
       FieldSchema.defaulted('styles', {}),
@@ -52,7 +53,8 @@ define(
           'eventOrder',
           'eventOrder',
           FieldPresence.mergeWith({
-            'alloy.execute': [ 'alloy.base.behaviour', 'toggling' ]
+            'alloy.execute': [ 'alloy.base.behaviour', 'toggling' ],
+            'alloy.focus': [ 'alloy.base.behaviour', 'focusing' ]
           }),
           ValueSchema.anyValue()
         ),
@@ -91,7 +93,8 @@ define(
     var alloyBehaviours = [
       Toggling,
       Keying,
-      Tabstopping
+      Tabstopping,
+      Focusing
     ];
 
     var behaviours = function (info) {
