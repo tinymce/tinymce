@@ -33,8 +33,8 @@ define(
         FieldSchema.defaulted('execute', defaultExecute),
         FieldSchema.state('dimensions', function () {
           return Cell({
-            numColumns: 6,
-            numRows: 4
+            numColumns: 1,
+            numRows: 1
           });
         }),
         FieldSchema.state('handler', function () {
@@ -129,13 +129,19 @@ define(
       ]);
     };
 
-    var setSize = function (gridInfo) {
-      
-    }
+    var setGridSize = function (gridInfo, numRows, numColumns) {
+      console.log('gridInfo', gridInfo, arguments);
+      gridInfo.dimensions().set({
+        numRows: numRows,
+        numColumns: numColumns
+      });
+    };
 
     var toApis = function (gridInfo) {
       return {
-        setSize: Fun.curry(setSize, gridInfo)
+        setGridSize: function (component, numRows, numCols) {
+          setGridSize(gridInfo, numRows, numCols);
+        }
       };
     };
 

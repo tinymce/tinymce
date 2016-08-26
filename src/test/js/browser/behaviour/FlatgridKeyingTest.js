@@ -78,6 +78,9 @@ asynctest(
 
       return [
         FocusTools.sSetFocus('Initial focus', gui.element(), '.s11'),
+        Step.sync(function () {
+          component.apis().setGridSize(4, 6);
+        }),
         NavigationUtils.sequence(
           doc,
           Keys.down(),
