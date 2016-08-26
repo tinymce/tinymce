@@ -105,48 +105,72 @@ asynctest(
             targets.s03
           ]
         ),
-        // NavigationUtils.sequence(
-        //   doc,
-        //   Keys.left(),
-        //   {  },
-        //   [
-        //     targets.five,
-        //     targets.two,
-        //     targets.one,
-        //     targets.five,
-        //     targets.two,
-        //     targets.one
-        //   ]
-        // ),
-        // NavigationUtils.sequence(
-        //   doc,
-        //   Keys.up(),
-        //   {  },
-        //   [
-        //     targets.five,
-        //     targets.two,
-        //     targets.one,
-        //     targets.five,
-        //     targets.two,
-        //     targets.one
-        //   ]
-        // ),
-        // NavigationUtils.sequence(
-        //   doc,
-        //   Keys.down(),
-        //   {  },
-        //   [
-        //     targets.two,
-        //     targets.five,
-        //     targets.one,
-        //     targets.two,
-        //     targets.five,
-        //     targets.one
-        //   ]
-        // ),
+        NavigationUtils.sequence(
+          doc,
+          Keys.left(),
+          {  },
+          [
+            targets.s02,
+            targets.s01,
+            targets.s06,
+            targets.s05,
+            targets.s04,
+            targets.s03,
+            targets.s02,
+            targets.s01,
+            targets.s06
+          ]
+        ),
+        NavigationUtils.sequence(
+          doc,
+          Keys.up(),
+          {  },
+          [
+            targets.s21,
+            targets.s15,
+            targets.s09,
+            targets.s03,
+            targets.s21,
+            targets.s15,
+            targets.s09,
+            targets.s03,
+            targets.s21
+          ]
+        ),
+        NavigationUtils.sequence(
+          doc,
+          Keys.right(),
+          {  },
+          [
+            targets.s19,
+            targets.s20,
+            targets.s21,
+            targets.s19,
+            targets.s20,
+            targets.s21
+          ]
+        ),
+
+        NavigationUtils.sequence(
+          doc,
+          Keys.left(),
+          {  },
+          [
+            targets.s20,
+            targets.s19,
+            targets.s21,
+            targets.s20,
+            targets.s19,
+            targets.s21
+          ]
+        ),
 
         // Test execute
         Keyboard.sKeydown(doc, Keys.enter(), {}),
+        store.sAssertEq(
+          'Execute should have s21',
+          [ 'item.execute: s21' ]
+        )
 
         // function () { }
       ];
