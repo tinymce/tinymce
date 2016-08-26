@@ -6,10 +6,11 @@ test(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.wrap.Jsc',
-    'global!Error'
+    'global!Error',
+    'global!Math'
   ],
 
-  function (ArrNavigation, Fun, Option, Jsc, Error) {
+  function (ArrNavigation, Fun, Option, Jsc, Error, Math) {
     var testSanity = function () {
       var checkCycle = function (expected, value, delta, min, max) {
         assert.eq(expected, ArrNavigation.cycleBy(value, delta, min, max));
@@ -202,6 +203,19 @@ test(
         }, function (before) {
           return Jsc.eq(testCase.index - 1, before);
         });
+      }
+    );
+
+    Jsc.property(
+      'CycleBy should have an adjustment of delta, or be the min or max',
+      Jsc.nat,
+      Jsc.integer,
+      Jsc.nat,
+      Jsc.nat,
+      function (value, delta, min, range) {
+        var max = min + range;
+        var actual = ArrNavigation.cycleBy(value, delta, min, max);
+        return Jsc.eq((actual - value) === delta, true) || actual === min || actual === max;
       }
     );
   }
