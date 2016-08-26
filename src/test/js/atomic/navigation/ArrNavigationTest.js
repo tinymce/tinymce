@@ -2,7 +2,9 @@ test(
   'ArrNavigationTest',
 
   [
+    'ephox.agar.api.RawAssertions',
     'ephox.alloy.navigation.ArrNavigation',
+    'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.wrap.Jsc',
@@ -10,7 +12,7 @@ test(
     'global!Math'
   ],
 
-  function (ArrNavigation, Fun, Option, Jsc, Error, Math) {
+  function (RawAssertions, ArrNavigation, Arr, Fun, Option, Jsc, Error, Math) {
     var testSanity = function () {
       var checkCycle = function (expected, value, delta, min, max) {
         assert.eq(expected, ArrNavigation.cycleBy(value, delta, min, max));
@@ -52,6 +54,74 @@ test(
       checkNav(Option.none(), [ 1, 3, 5 ], [ ].length, isEven, ArrNavigation.cycleNext);
       checkNav(Option.some(10), [ 1, 3, 5, 7, 10, 8 ], [ 1, 3, 5 ].length - 1, isEven, ArrNavigation.cycleNext);
       checkNav(Option.some(2), [ 2, 1, 3, 5, 7, 10, 89 ], [ 2, 1, 3, 5, 7, 10, 89 ].length - 1, isEven, ArrNavigation.cycleNext);
+
+
+      var checkIrregularGrid = function (expected, method, values, index, numRows, numColumns) {
+        var actual = method(values, index, numRows, numColumns, Fun.constant(true)).getOrDie('Checking irregular grid');
+        RawAssertions.assertEq('Checking expected index in irregular grid', expected, actual);
+      };
+
+      var range = function (num) {
+        var r = [];
+        for (var i = 0; i < num; i++) {
+          r[i] = i;
+        }
+        return r;
+      };
+
+      var cases = [
+        // cycle down
+        { start: { r: 0, c: 0 }, move: ArrNavigation.cycleDown, finish: { r: 1, c: 0 } },
+        { start: { r: 0, c: 1 }, move: ArrNavigation.cycleDown, finish: { r: 1, c: 1 } },
+        { start: { r: 2, c: 0 }, move: ArrNavigation.cycleDown, finish: { r: 3, c: 0 } },
+        { start: { r: 4, c: 0 }, move: ArrNavigation.cycleDown, finish: { r: 5, c: 0 } },
+        { start: { r: 5, c: 0 }, move: ArrNavigation.cycleDown, finish: { r: 0, c: 0 } },
+
+        // This one should be capped.
+        { start: { r: 4, c: 3 }, move: ArrNavigation.cycleDown, finish: { r: 5, c: 1 } }
+
+
+        // { start: 4 * 0 + 1, move: ArrNavigation.cycleDown, finish: 4 * 1 + 1 },
+        // { start: 4 * 1 + 1, move: ArrNavigation.cycleDown, finish: 4 * 2 + 1 },
+        // { start: 4 * 5 + 0, move: ArrNavigation.cycleDown, finish: 4 * 0 + 0 },
+        // { start: 4 * 5 + 1, move: ArrNavigation.cycleDown, finish: 4 * 0 + 1 },
+        // { start: 4 * 3 + 2, move: ArrNavigation.cycleDown, finish: 4 * 4 + 2 },
+
+        // // cycle up
+        // { start: 4 * 4 + 3, move: ArrNavigation.cycleUp, finish: 4 * 3 + 3 },
+        // { start: 4 * 3 + 2, move: ArrNavigation.cycleUp, finish: 4 * 2 + 2 },
+        // { start: 4 * 0 + 2, move: ArrNavigation.cycleUp, finish: 4 * 5 + 2 },
+
+        // // cycle left
+        // { start: 4 * 4 + 3, move: ArrNavigation.cycleUp, finish: 4 * 3 + 3 },
+
+        // { start: 1, move: ArrNavigation.cycleUp, finish: 5 },
+        // { start: 4 * 1 + 1, move: ArrNavigation.cycleUp, finish: 9 },
+        // { start: 4 * 4 + 0, move: ArrNavigation.cycleUp, finish: 0 },
+        // { start: 4 * 4 + 1, move: ArrNavigation.cycleUp, finish: 1 },
+      ];
+
+      /*
+        00 01 02 03
+        04 05 06 07
+        08 09 10 11
+        12 13 14 15
+        16 17 18 19
+        20 21
+ 
+
+
+      */
+      Arr.each(cases, function (c) {
+        checkIrregularGrid(
+          c.finish.r * 4 + c.finish.c,
+          c.move,
+          range(22),
+          c.start.r * 4 + c.start.c,
+          6,
+          4
+        );
+      });
     };
 
     testSanity();
