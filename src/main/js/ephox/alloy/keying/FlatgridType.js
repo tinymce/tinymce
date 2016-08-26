@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.alien.Keys',
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.behaviour.Behaviour',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.navigation.ArrNavigation',
     'ephox.alloy.navigation.DomPinpoint',
@@ -19,7 +20,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Keys, SystemEvents, EventHandler, ArrNavigation, DomPinpoint, KeyMatch, KeyRules, Navigator, FieldSchema, Objects, Fun, Option, Cell, Focus, SelectorFind) {
+  function (Keys, SystemEvents, Behaviour, EventHandler, ArrNavigation, DomPinpoint, KeyMatch, KeyRules, Navigator, FieldSchema, Objects, Fun, Option, Cell, Focus, SelectorFind) {
     // FIX: Dupe with FlowType.
     var defaultExecute = function (component, simulatedEvent, focused) {
       var system = component.getSystem();
@@ -128,10 +129,21 @@ define(
       ]);
     };
 
+    var setSize = function (gridInfo) {
+      
+    }
+
+    var toApis = function (gridInfo) {
+      return {
+        setSize: Fun.curry(setSize, gridInfo)
+      };
+    };
+
     var self = {
       schema: schema,
       processKey: processKey,
-      toEvents: toEvents
+      toEvents: toEvents,
+      toApis: toApis
     };
 
     return self;

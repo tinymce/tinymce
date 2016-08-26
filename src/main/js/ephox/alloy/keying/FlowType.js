@@ -11,11 +11,12 @@ define(
     'ephox.alloy.navigation.Navigator',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
+    'ephox.peanut.Fun',
     'ephox.sugar.api.Focus',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Keys, SystemEvents, EventHandler, DomNavigation, KeyMatch, KeyRules, Navigator, FieldSchema, Objects, Focus, SelectorFind) {
+  function (Keys, SystemEvents, EventHandler, DomNavigation, KeyMatch, KeyRules, Navigator, FieldSchema, Objects, Fun, Focus, SelectorFind) {
     var schema = function () {
       return [
         FieldSchema.strict('selector'),
@@ -95,7 +96,8 @@ define(
     var self = {
       schema: schema,
       processKey: processKey,
-      toEvents: toEvents
+      toEvents: toEvents,
+      toApis: Fun.constant({ })
     };
 
     return self;

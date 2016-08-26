@@ -127,7 +127,8 @@ define(
     var self = {
       schema: schema,
       processKey: processKey,
-      toEvents: toEvents
+      toEvents: toEvents,
+      toApis: Fun.constant({ })
     };
 
     return self;

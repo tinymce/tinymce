@@ -10,11 +10,12 @@ define(
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
+    'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'global!Error'
   ],
 
-  function (Behaviour, DomModification, CyclicType, FlatgridType, FlowType, FieldPresence, FieldSchema, ValueSchema, Fun, Error) {
+  function (Behaviour, DomModification, CyclicType, FlatgridType, FlowType, FieldPresence, FieldSchema, ValueSchema, Merger, Fun, Error) {
     var doFocusIn = function (component) {
       var system = component.getSystem();
       system.triggerFocus(component.element(), component.element());
@@ -25,9 +26,19 @@ define(
     };
 
     var apis = function (info) {
-      return {
+      var handlerApis = info.keying().fold(function () {
+        return { };
+      }, function (keyInfo) {
+        // Get a better error.
+        if (keyInfo.handler === undefined) throw new Error('Keymode missing handler output');
+        // Note, each type needs to output this.
+        var handler = keyInfo.handler();
+        return handler.toApis(keyInfo);
+      });
+
+      return Merger.deepMerge(handlerApis, {
         focusIn: Behaviour.tryActionOpt('keying', info, 'toggle', doFocusIn)
-      };
+      });
     };
 
     var schema = FieldSchema.field(
