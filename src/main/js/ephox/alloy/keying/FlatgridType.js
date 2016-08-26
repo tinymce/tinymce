@@ -5,18 +5,37 @@ define(
     'ephox.alloy.alien.Keys',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.navigation.ArrNavigation',
+    'ephox.alloy.navigation.DomPinpoint',
     'ephox.alloy.navigation.KeyMatch',
     'ephox.alloy.navigation.KeyRules',
+    'ephox.alloy.navigation.Navigator',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
+    'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
+    'ephox.scullion.Cell',
+    'ephox.sugar.api.Focus',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Keys, SystemEvents, EventHandler, KeyMatch, KeyRules, FieldSchema, Objects, SelectorFind) {
+  function (Keys, SystemEvents, EventHandler, ArrNavigation, DomPinpoint, KeyMatch, KeyRules, Navigator, FieldSchema, Objects, Fun, Option, Cell, Focus, SelectorFind) {
+    // FIX: Dupe with FlowType.
+    var defaultExecute = function (component, simulatedEvent, focused) {
+      var system = component.getSystem();
+      system.triggerEvent(SystemEvents.execute(), focused, simulatedEvent);
+    };
+
     var schema = function () {
       return [
         FieldSchema.strict('selector'),
         FieldSchema.defaulted('execute', defaultExecute),
+        FieldSchema.state('dimensions', function () {
+          return Cell({
+            numColumns: 0,
+            numRows: 0
+          });
+        }),
         FieldSchema.state('handler', function () {
           return self;
         })
@@ -29,43 +48,42 @@ define(
       });
     };
 
-    var toCell = function (r, c, dx) {
-        var cells = SelectorFilter.descendants(container, selector);
-        var end = cells.length - 1;
-        var row = (r * columns);
-        /* from (last row, first cell), (last row, last cell) & (second last row, last cell) */
-        var index = (row + c) > end ? ((dx > 0) ? row : end) : row + c;
-        return index >= 0 && index < cells.length ? Option.some(cells[index]) : Option.none();
-      };
-
-      var fromCell = function (cell) {
-        return Traverse.findIndex(cell).map(function (index) {
-          return address(Math.floor(index / columns), index % columns);
-        });
-      };
-
-      var resize = function (newRows, newColumns) {
-        rows = newRows;
-        columns = newColumns;
-      };
-
-      var move = function (deltaX, deltaY) {
-        return Focuser.find(container).bind(function (focused) {
-          return fromCell(focused).bind(function (p) {
-            var row = Cycles.adjust(p.row(), deltaY, 0, rows - 1);
-            var column = Cycles.adjust(p.column(), deltaX, 0, columns - 1);
-            return toCell(row, column, deltaX);
-          });
-        });
-      };
-
-      var moveItem = Navigator(container, function (deltaX, deltaY) {
-        return move(deltaX, deltaY).bind(function (elem) {
-          Focuser.set(elem);
-          recent.set(Option.some(elem));
-          return Option.some(true);
-        });
+    var execute = function (component, simulatedEvent, gridInfo) {
+      Focus.search(component.element(), gridInfo.selector()).each(function (focused) {
+        gridInfo.execute()(component, simulatedEvent, focused);
+        simulatedEvent.stop();
       });
+    };
+
+    var move = function (navigator) {
+      return function (component, simulatedEvent, gridInfo) {
+        var container = component.element();
+        var delta = navigator(container);
+        return Focus.search(container).bind(function (focused) {
+          return DomPinpoint.locateVisible(container, focused, gridInfo.selector()).bind(function (identified) {
+            var outcome = ArrNavigation.cycleGrid(
+              identified.candidates(),
+              identified.index(),
+              gridInfo.dimensions().get().numRows,
+              gridInfo.dimensions().get().numColumns,
+              delta.x(),
+              delta.y(),
+              Fun.constant(true)
+            );
+
+            var newCell = outcome.bind(function (newIndex) {
+              var cells = identified.candidates();
+              return newIndex >= 0 && newIndex < cells.length ? Option.some(cells[newIndex]) : Option.none();
+            });
+
+            newCell.each(function (newFocus) {
+              component.getSystem().triggerFocus(newFocus, component.element());
+              simulatedEvent.stop();
+            });
+          });
+        });          
+      };
+    };
 
     var rules = [
       KeyRules.rule( KeyMatch.inSet( Keys.LEFT().concat(Keys.UP()) ), move(Navigator.west)),
@@ -73,13 +91,13 @@ define(
       KeyRules.rule( KeyMatch.inSet( Keys.SPACE().concat(Keys.ENTER()) ), execute)
     ];
 
-    var processKey = function (component, simulatedEvent, flowInfo) {
+    var processKey = function (component, simulatedEvent, gridInfo) {
       KeyRules.choose(rules, simulatedEvent.event()).each(function (transition) {
-        transition(component, simulatedEvent, flowInfo);
+        transition(component, simulatedEvent, gridInfo);
       });
     };
 
-    var toEvents = function (flowInfo) {
+    var toEvents = function (gridInfo) {
       return Objects.wrapAll([
         { 
           key: SystemEvents.focus(),
@@ -87,7 +105,7 @@ define(
             run: function (component) {
               // TODO: Do we want to implement a 'recent' again?
               // Find a target inside the component
-              focusIn(component, flowInfo);
+              focusIn(component, gridInfo);
             }
           })
         },
@@ -95,7 +113,7 @@ define(
           key: 'keydown',
           value: EventHandler.nu({
             run: function (component, simulatedEvent) {
-              return processKey(component, simulatedEvent, flowInfo);
+              return processKey(component, simulatedEvent, gridInfo);
             }
           })
         }

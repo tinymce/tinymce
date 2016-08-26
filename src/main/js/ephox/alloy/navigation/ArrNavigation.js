@@ -94,7 +94,8 @@ define(
       cycleDown: cycleDown,
       cycleUp: cycleUp,
       cycleLeft: cycleLeft,
-      cycleRight: cycleRight
+      cycleRight: cycleRight,
+      cycleGrid: cycleGrid
     };
   }
 );
