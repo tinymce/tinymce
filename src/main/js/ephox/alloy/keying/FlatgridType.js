@@ -60,11 +60,8 @@ define(
       return function (component, simulatedEvent, gridInfo) {
         var container = component.element();
         var delta = navigator(container);
-        console.log('delta', delta);
         return Focus.search(container).bind(function (focused) {
-          console.log('focused', focused.dom());
           return DomPinpoint.locateVisible(container, focused, gridInfo.selector()).bind(function (identified) {
-            console.log('identified', identified, identified.index());
             var outcome = ArrNavigation.cycleGrid(
               identified.candidates(),
               identified.index(),
@@ -76,13 +73,11 @@ define(
             );
 
             var newCell = outcome.bind(function (newIndex) {
-              console.log('newIndex', newIndex, 'oldIndex', identified.index());
               var cells = identified.candidates();
               return newIndex >= 0 && newIndex < cells.length ? Option.some(cells[newIndex]) : Option.none();
             });
 
             newCell.each(function (newFocus) {
-              console.log('newFocus', newFocus.dom());
               component.getSystem().triggerFocus(newFocus, component.element());
               simulatedEvent.stop();
             });
@@ -101,7 +96,6 @@ define(
 
     var processKey = function (component, simulatedEvent, gridInfo) {
       KeyRules.choose(rules, simulatedEvent.event()).each(function (transition) {
-        console.log('transitions', transition);
         transition(component, simulatedEvent, gridInfo);
       });
     };
@@ -130,7 +124,6 @@ define(
     };
 
     var setGridSize = function (gridInfo, numRows, numColumns) {
-      console.log('gridInfo', gridInfo, arguments);
       gridInfo.dimensions().set({
         numRows: numRows,
         numColumns: numColumns

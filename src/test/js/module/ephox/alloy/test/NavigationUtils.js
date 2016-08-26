@@ -25,7 +25,7 @@ define(
             doc,
             identifiers[i].selector
           ),
-          Step.wait(100)
+          Step.wait(0)
         ];
       });
       
