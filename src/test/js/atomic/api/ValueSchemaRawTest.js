@@ -2,6 +2,7 @@ test(
   'ValueSchemaRawTest',
 
   [
+    'ephox.agar.api.Logger',
     'ephox.agar.api.RawAssertions',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
@@ -10,7 +11,7 @@ test(
     'ephox.perhaps.Result'
   ],
 
-  function (RawAssertions, FieldPresence, FieldSchema, ValueSchema, Json, Result) {
+  function (Logger, RawAssertions, FieldPresence, FieldSchema, ValueSchema, Json, Result) {
     var checkErr = function (label, expectedPart, input, processor) {
       ValueSchema.asRaw(label, processor, input).fold(function (err) {
         var message = ValueSchema.formatError(err);
@@ -122,6 +123,31 @@ test(
       FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
     ]), {  });    
     RawAssertions.assertEq('fallback.opt: no alpha should be none', true, optionValue5.alpha.isNone());
+
+
+    Logger.sync(
+      'Checking choose',
+      function () {
+        var input = {
+          type: 'other',
+          houses: '10'
+        };
+
+        var output = ValueSchema.asRawOrDie('checking choose', ValueSchema.choose(
+          'type',
+          {
+            'general': [
+              FieldSchema.strict('cardss')
+            ],
+            'other': [
+              FieldSchema.strict('houses')
+            ]
+          }
+        ), input);
+
+        console.log('output', output);
+      }
+    );
 
 
   }

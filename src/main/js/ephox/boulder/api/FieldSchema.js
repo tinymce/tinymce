@@ -3,10 +3,11 @@ define(
 
   [
     'ephox.boulder.api.FieldPresence',
-    'ephox.boulder.core.ValueProcessor'
+    'ephox.boulder.core.ValueProcessor',
+    'ephox.peanut.Fun'
   ],
 
-  function (FieldPresence, ValueProcessor) {
+  function (FieldPresence, ValueProcessor, Fun) {
     var strict = function (key) {
       return ValueProcessor.field(key, key, FieldPresence.strict(), ValueProcessor.anyValue());
     };
@@ -40,6 +41,21 @@ define(
       return ValueProcessor.state(okey, instantiator);
     };
 
+    // FieldSchema.field('keying', 'keying', FieldPresence.asOption(), ValueSchema.oneOf('mode', [
+//   FieldSchema.candidate('cyclic', schema1),
+//   FieldSchema.candidate('flow', schema2)
+//   schema2,
+//   schema3,
+//   schema4
+// ]))
+
+    var candidate = function (name, schema) {
+      return {
+        name: Fun.constant(name),
+        schema: Fun.constant(schema)
+      };
+    };
+
     return {
       strict: strict,
       option: option,
@@ -47,7 +63,9 @@ define(
       strictArrayOf: strictArrayOf,
       defaulted: defaulted,
       field: field,
-      state: state
+      state: state,
+
+      candidate: candidate
 
       // snapshot?
     };
