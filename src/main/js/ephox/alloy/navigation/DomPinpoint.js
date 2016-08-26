@@ -3,12 +3,14 @@ define(
 
   [
     'ephox.alloy.navigation.ArrPinpoint',
+    'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.sugar.api.Compare',
-    'ephox.sugar.api.SelectorFilter'
+    'ephox.sugar.api.SelectorFilter',
+    'ephox.sugar.api.Visibility'
   ],
 
-  function (ArrPinpoint, Fun, Compare, SelectorFilter) {
+  function (ArrPinpoint, Arr, Fun, Compare, SelectorFilter, Visibility) {
     // var indexInfo = Struct.immutable('index', 'candidates');
 
     // Assumptions:
@@ -38,15 +40,21 @@ define(
     //   });
     // };
 
+    var locateVisible = function (container, current, selector) {
+      var filter = Visibility.isVisible;
+      return locateIn(container, current, selector, filter);
+    };
 
-    var locate = function (container, current, selector) {
-      var candidates = SelectorFilter.descendants(container, selector);
+    var locateIn = function (container, current, selector, filter) {
       var predicate = Fun.curry(Compare.eq, current);
-      return ArrPinpoint.locate(candidates, predicate);
+      var candidates = SelectorFilter.descendants(container, selector);
+      var visible = Arr.filter(candidates, Visibility.isVisible);
+      return ArrPinpoint.locate(visible, predicate);
     };
 
     return {
-      locate: locate
+      locateVisible: locateVisible,
+      locateIn: locateIn
     };
   }
 );
