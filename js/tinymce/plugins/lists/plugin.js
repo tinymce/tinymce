@@ -189,7 +189,7 @@ tinymce.PluginManager.add('lists', function(editor) {
 				rng.setEnd(bookmark.endContainer, bookmark.endOffset);
 			}
 
-			selection.setRng(rng);
+			selection.setRng(normalizeRange(rng));
 		}
 
 		function createNewTextBlock(contentNode, blockName) {
