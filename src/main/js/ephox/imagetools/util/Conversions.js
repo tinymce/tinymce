@@ -201,6 +201,15 @@ define("ephox/imagetools/util/Conversions", [
     });
   }
 
+  function imageResultToJpeg(imageResult) {
+    return blobToImage(imageResult.blob())
+        .then(imageToCanvas)
+        .then(function(canvas) {
+          return canvasToImageResult(canvas, 'image/jpeg')
+        });
+  }
+
+
   return {
     // used outside
     blobToImage: blobToImage,
@@ -214,6 +223,8 @@ define("ephox/imagetools/util/Conversions", [
     blobToImageResult: blobToImageResult,
     // used outside
     dataUriToImageResult: dataUriToImageResult,
+    // used outside
+    imageResultToJpeg: imageResultToJpeg,
 
     // helper method
     imageToCanvas: imageToCanvas,

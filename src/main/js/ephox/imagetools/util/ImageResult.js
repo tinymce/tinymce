@@ -22,6 +22,10 @@ define("ephox/imagetools/util/ImageResult", [], function() {
         var base64 = uri.split(',')[1];
 
         return {
+            type: function() {
+                return blob.type;
+            },
+
             blob: function() {
                 return blob;
             },

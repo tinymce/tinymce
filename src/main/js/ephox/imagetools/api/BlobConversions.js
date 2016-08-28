@@ -30,6 +30,10 @@ define(
       return Conversions.dataUriToImageResult(uri);
     };
 
+    var imageResultToJpeg = function(imageResult) {
+      return Conversions.imageResultToJpeg(imageResult);
+    };
+
     return {
       // used outside
       blobToImage: blobToImage,
@@ -42,7 +46,9 @@ define(
       // used outside
       blobToImageResult: blobToImageResult,
       // used outside
-      dataUriToImageResult: dataUriToImageResult
+      dataUriToImageResult: dataUriToImageResult,
+      // used outside
+      imageResultToJpeg: imageResultToJpeg
     };
   }
 );
