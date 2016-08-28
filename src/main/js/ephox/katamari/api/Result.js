@@ -7,85 +7,54 @@ define(
   ],
 
   function (Fun, Option) {
-    var value = function (r) {
-      return result(function (e, v) {
-        return v(r);
-      });
-    };
-
-    var error = function (message) {
-      return result(function (e, v) {
-        return e(message);
-      });
-    };
-
-    var result = function (fold) {
-
+    var value = function (o) {
       var is = function (v) {
-        return fold(Fun.constant(false), function (o) {
-          return o === v;
-        });
-      };
-      
-      var isValue = function () {
-        return fold(Fun.constant(false), Fun.constant(true));
-      };
-
-      var isError = Fun.not(isValue);
-
-      var getOr = function (a) {
-        return fold(Fun.constant(a), Fun.identity);
-      };
-
-      var getOrThunk = function (f) {
-        return fold(f, Fun.identity);
-      };
-
-      var getOrDie = function () {
-        return fold(function (m) {
-          Fun.die(m)();
-        }, Fun.identity);
+        return o === v;      
       };
 
       var or = function (opt) {
-        return fold(Fun.constant(opt), value);
+        return value(o);
       };
 
       var orThunk = function (f) {
-        return fold(f, value);
+        return value(o);
       };
 
       var map = function (f) {
-        return bind(function (a) {
-          return value(f(a));
-        });
+        return value(f(o));
       };
 
-      var each = map;
+      var each = function (f) {
+        f(o);
+      };
 
       var bind = function (f) {
-        return fold(error, f);
+        return f(o);
+      };
+
+      var fold = function (_, onValue) {
+        return onValue(o);
       };
 
       var exists = function (f) {
-        return fold(Fun.constant(false), f);
+        return f(o);
       };
 
       var forall = function (f) {
-        return fold(Fun.constant(true), f);
+        return f(o);
       };
 
       var toOption = function () {
-        return fold(Option.none, Option.some);
+        return Option.some(o);
       };
      
       return {
         is: is,
-        isValue: isValue,
-        isError: isError,
-        getOr: getOr,
-        getOrThunk: getOrThunk,
-        getOrDie: getOrDie,
+        isValue: Fun.constant(true),
+        isError: Fun.constant(false),
+        getOr: Fun.constant(o),
+        getOrThunk: Fun.constant(o),
+        getOrDie: Fun.constant(o),
         or: or,
         orThunk: orThunk,
         fold: fold,
@@ -98,11 +67,57 @@ define(
       };
     };
 
+    var error = function (message) {
+      var getOrThunk = function (f) {
+        return f();
+      };
+
+      var getOrDie = function () {
+        return Fun.die(message)();
+      };
+
+      var or = function (opt) {
+        return opt;
+      };
+
+      var orThunk = function (f) {
+        return f();
+      };
+
+      var map = function (f) {
+        return error(message);
+      };
+
+      var bind = function (f) {
+        return error(message);
+      };
+
+      var fold = function (onError, _) {
+        return onError(message);
+      };
+
+      return {
+        is: Fun.constant(false),
+        isValue: Fun.constant(false),
+        isError: Fun.constant(true),
+        getOr: Fun.identity,
+        getOrThunk: getOrThunk,
+        getOrDie: getOrDie,
+        or: or,
+        orThunk: orThunk,
+        fold: fold,
+        map: map,
+        each: Fun.noop,
+        bind: bind,
+        exists: Fun.constant(false),
+        forall: Fun.constant(true),
+        toOption: Option.none
+      };
+    };
+
     return {
       value: value,
       error: error
     };
-
-
   }
 );

@@ -40,7 +40,7 @@ define(
         } else {
           return Option.none();
         }
-      };
+      }
       return Option.some(f.apply(null, r));
     };
 
