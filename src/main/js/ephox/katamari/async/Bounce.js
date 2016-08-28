@@ -1,5 +1,5 @@
 define(
-  'ephox.katamari.future.Bounce',
+  'ephox.katamari.async.Bounce',
 
   [
     'global!Array',
