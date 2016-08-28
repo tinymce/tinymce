@@ -44,7 +44,7 @@ define("ephox/imagetools/transformations/ImageTools", [
       context.drawImage(image, 0, 0);
       revokeImageUrl(image);
 
-      return Conversions.canvasToBlob(canvas, blob.type);
+      return Conversions.canvasToBlob(canvas);
     });
   }
 
@@ -93,7 +93,7 @@ define("ephox/imagetools/transformations/ImageTools", [
 
       result = ImageResizerCanvas.scale(image, w, h)
         .then(function(canvas) {
-          return Conversions.canvasToBlob(canvas, blob.type);
+          return Conversions.canvasToBlob(canvas);
         })
         .then(cleanup, cleanup);
 
