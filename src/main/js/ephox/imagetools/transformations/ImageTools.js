@@ -44,7 +44,7 @@ define("ephox/imagetools/transformations/ImageTools", [
       context.drawImage(image, 0, 0);
       revokeImageUrl(image);
 
-      return Conversions.canvasToBlob(canvas);
+      return Conversions.canvasToImageResult(canvas);
     });
   }
 
@@ -63,7 +63,7 @@ define("ephox/imagetools/transformations/ImageTools", [
 
       revokeImageUrl(image);
 
-      return Conversions.canvasToBlob(canvas);
+      return Conversions.canvasToImageResult(canvas);
     });
   }
 
@@ -75,7 +75,7 @@ define("ephox/imagetools/transformations/ImageTools", [
       context.drawImage(image, -x, -y);
       revokeImageUrl(image);
 
-      return Conversions.canvasToBlob(canvas);
+      return Conversions.canvasToImageResult(canvas);
     });
   }
 
@@ -93,7 +93,7 @@ define("ephox/imagetools/transformations/ImageTools", [
 
       result = ImageResizerCanvas.scale(image, w, h)
         .then(function(canvas) {
-          return Conversions.canvasToBlob(canvas);
+          return Conversions.canvasToImageResult(canvas);
         })
         .then(cleanup, cleanup);
 

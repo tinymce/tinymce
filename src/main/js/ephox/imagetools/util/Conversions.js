@@ -15,8 +15,9 @@ define("ephox/imagetools/util/Conversions", [
   "ephox/imagetools/util/Promise",
   "ephox/imagetools/util/Canvas",
   "ephox/imagetools/util/Mime",
-  "ephox/imagetools/util/ImageSize"
-], function(Promise, Canvas, Mime, ImageSize) {
+  "ephox/imagetools/util/ImageSize",
+  "ephox/imagetools/util/ImageResult"
+], function(Promise, Canvas, Mime, ImageSize, ImageResult) {
   function loadImage(image) {
     return new Promise(function(resolve) {
       function loaded() {
@@ -148,7 +149,22 @@ define("ephox/imagetools/util/Conversions", [
   }
 
   function canvasToBlob(canvas, type) {
-    return dataUriToBlob(canvas.toDataURL(type || 'image/png'));
+    type = type || 'image/png';
+    
+    if (HTMLCanvasElement.prototype.toBlob) {
+      return new Promise(function(resolve) {
+        canvas.toBlob(function(blob) {
+          resolve(blob);
+        }, type);
+      });
+    }
+    return dataUriToBlob(canvas.toDataURL(type));
+  }
+
+  function canvasToImageResult(canvas, type) {
+    return canvasToBlob(canvas, type).then(function(blob) {
+      return ImageResult.create(blob, canvas.toDataURL(type));
+    });
   }
 
   function blobToDataUri(blob) {
@@ -173,6 +189,18 @@ define("ephox/imagetools/util/Conversions", [
     URL.revokeObjectURL(image.src);
   }
 
+  function blobToImageResult(blob) {
+    return blobToDataUri(blob).then(function(uri) {
+      return ImageResult.create(blob, uri);
+    });
+  }
+
+  function dataUriToImageResult(uri) {
+    return uriToBlob(uri).then(function(blob) {
+      return ImageResult.create(blob, uri);
+    });
+  }
+
   return {
     // used outside
     blobToImage: blobToImage,
@@ -182,18 +210,20 @@ define("ephox/imagetools/util/Conversions", [
     blobToDataUri: blobToDataUri,
     // used outside
     blobToBase64: blobToBase64,
+    // used outside
+    blobToImageResult: blobToImageResult,
+    // used outside
+    dataUriToImageResult: dataUriToImageResult,
 
     // helper method
     imageToCanvas: imageToCanvas,
-
     // helper method
     canvasToBlob: canvasToBlob,
-
+    // helper method
+    canvasToImageResult: canvasToImageResult,
     // helper method
     revokeImageUrl: revokeImageUrl,
-
-     // helper method
+    // helper method
     uriToBlob: uriToBlob
-
   };
 });
