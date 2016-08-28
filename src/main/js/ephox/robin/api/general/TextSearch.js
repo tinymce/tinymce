@@ -30,23 +30,29 @@ define(
       return TextSearch.next(text, offset);
     };
 
-    // recurse to the left of (item, offset).
-    // Uses whole text nodes while 'process' returns Some() value.
-    // Stops at text 'boundaries'.
+    // Returns: a TextSeeker outcome ADT of 'aborted', 'success', or 'edge'.
+    // 'success' returns a point {element, offset} to the left of (item, offset)
+    // successfully found using a process function.
+    // 'edge' returns the text element where the process stopped due to being adjacent to a
+    // block boundary.
     var repeatLeft = function (universe, item, offset, process) {
       return TextSeeker.repeatLeft(universe, item, offset, process);
     };
 
-    // recurse to the right of (item, offset).
-    // Uses whole text nodes while 'process' returns Some() value.
-    // Stops at text 'boundaries'.
+    // Returns: a TextSeeker outcome ADT of 'aborted', 'success', or 'edge'.
+    // 'success' returns a point {element, offset} to the right of (item, offset)
+    // successfully found using a process function.
+    // 'edge' returns the text element where the process stopped due to being adjacent to a
+    // block boundary.
     var repeatRight = function (universe, item, offset, process) {
       return TextSeeker.repeatRight(universe, item, offset, process);
     };
 
-    // find an (element offset) pair to the left of (item, offset).
-    // uses a regular expression (rawSeeker) on the text content.
-    // Stops at text 'boundaries'.
+    // Returns: a TextSeeker outcome ADT of 'aborted', 'success', or 'edge'.
+    // 'success' returns a point {element, offset} to the left of (item, offset)
+    // successfully found using a regular expression (rawSeeker object) on the text content.
+    // 'edge' returns the text element where the search stopped due to being adjacent to a
+    // block boundary.
     var expandLeft = function (universe, item, offset, rawSeeker) {
       var seeker = seekerSig(rawSeeker);
 
@@ -62,9 +68,11 @@ define(
       return repeatLeft(universe, item, offset, process);
     };
 
-    // find an (element offset) pair to the right of (item, offset).
-    // uses a regular expression (rawSeeker) on the text content.
-    // Stops at text 'boundaries'.
+    // Returns: a TextSeeker outcome ADT of 'aborted', 'success', or 'edge'.
+    // 'success' returns a point {element, offset} to the right of (item, offset)
+    // successfully found using a regular expression (rawSeeker object) on the text content.
+    // 'edge' returns the text element where the search stopped due to being adjacent to a
+    // block boundary.
     var expandRight = function (universe, item, offset, rawSeeker) {
       var seeker = seekerSig(rawSeeker);
 
