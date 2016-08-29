@@ -157,8 +157,9 @@ define("ephox/imagetools/util/Conversions", [
           resolve(blob);
         }, type);
       });
+    } else {
+      return dataUriToBlob(canvas.toDataURL(type));
     }
-    return dataUriToBlob(canvas.toDataURL(type));
   }
 
   function canvasToImageResult(canvas, type) {
