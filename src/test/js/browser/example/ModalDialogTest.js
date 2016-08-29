@@ -6,14 +6,32 @@ asynctest(
     'ephox.agar.api.Keys',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
-    'ephox.alloy.test.GuiSetup'
+    'ephox.alloy.test.GuiSetup',
+    'ephox.compass.Arr'
   ],
  
-  function (Keyboard, Keys, Step, GuiFactory, GuiSetup) {
+  function (Keyboard, Keys, Step, GuiFactory, GuiSetup, Arr) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
+      var makeItem = function (name) {
+        return {
+          uiType: 'custom',
+          dom: {
+            tag: 'span',
+            styles: {
+              display: 'inline-block',
+              width: '20px',
+              height: '20px',
+              border: '1px solid blue'
+            },
+            classes: [ 'candidate', name ]
+          },
+          focusing: true
+        };
+      };
+
       return GuiFactory.build({
         uiType: 'custom',
         dom: {
@@ -48,6 +66,18 @@ asynctest(
               uiType: 'input'
             },
             label: 'Choose Title  '
+          },
+          {
+            uiType: 'custom',
+            dom: {
+              tag: 'div'
+            },
+            keying: {
+              mode: 'flow',
+              selector: '.candidate'
+            },
+            tabstopping: true,
+            components: Arr.map([ 'one', 'two', 'three' ], makeItem)
           }
         ]
       });
