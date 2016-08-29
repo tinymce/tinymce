@@ -11,8 +11,7 @@ define(
   function (FieldSchema, ValueSchema, Id, Attr) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('label'),
-      FieldSchema.strict('field'),
-      FieldSchema.defaulted('concise', false)
+      FieldSchema.strict('field')
     ]);
 
     var make = function (spec) {
