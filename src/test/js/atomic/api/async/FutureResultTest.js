@@ -84,6 +84,22 @@ asynctest(
       });
     };
 
+    var testBindFuture = function () {
+      return new Promise(function (resolve, reject) {
+        var fut = FutureResult.pure('10');
+
+        var f = function (x) {
+          return FutureResult.pure(x + '.bind');
+        };
+
+        fut.bindFuture(f).get(function (output) {
+          var value = output.getOrDie();
+          assert.eq('10.bind', value);
+          resolve(true);
+        });
+      });
+    };
+
     var testSpecs = function () {
       return AsyncProps.checkProps([
         {
@@ -102,7 +118,8 @@ asynctest(
       ]);
     };
 
-    testPure().then(testError).then(testFromResult).then(testFromFuture).then(testNu).then(testSpecs).then(function () {
+    testPure().then(testError).then(testFromResult).then(testFromFuture).then(testNu).
+      then(testBindFuture).then(testSpecs).then(function () {
       success();
     }, failure);
   }
