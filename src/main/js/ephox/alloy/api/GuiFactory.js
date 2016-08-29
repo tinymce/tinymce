@@ -6,6 +6,7 @@ define(
     'ephox.alloy.events.DefaultEvents',
     'ephox.alloy.spec.ButtonSpec',
     'ephox.alloy.spec.CustomSpec',
+    'ephox.alloy.spec.InputSpec',
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
@@ -17,10 +18,11 @@ define(
     'global!Error'
   ],
 
-  function (Component, DefaultEvents, ButtonSpec, CustomSpec, Objects, Arr, Obj, Merger, Json, Fun, Option, Result, Error) {
+  function (Component, DefaultEvents, ButtonSpec, CustomSpec, InputSpec, Objects, Arr, Obj, Merger, Json, Fun, Option, Result, Error) {
     var knownSpecs = {
       custom: CustomSpec.make,
-      button: ButtonSpec.make
+      button: ButtonSpec.make,
+      input: InputSpec.make
       // Add other specs here.
     };
 

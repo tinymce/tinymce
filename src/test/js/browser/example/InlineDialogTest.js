@@ -39,19 +39,8 @@ asynctest(
         },
         components: [
           {
-            uiType: 'custom',
-            dom: {
-              tag: 'input',
-              value: 'initial'
-            },
-            tabstopping: true,
-            focusing: {
-              onFocus: function (component) {
-                var input = component.element();
-                var value = Value.get(input);
-                input.dom().setSelectionRange(0, value.length);
-              }
-            }
+            uiType: 'input',
+            value: 'initial-value'
           },
           {
             uiType: 'button',
@@ -81,7 +70,7 @@ asynctest(
           var active = Focus.active(doc).getOrDie();
           var raw = active.dom();
           Assertions.assertEq('Input should be selected from start', 0, raw.selectionStart);
-          Assertions.assertEq('Input should be selected from end', Value.get(active).length, raw.selectionEnd);
+          Assertions.assertEq('Input should be selected from end', 'initial-value'.length, raw.selectionEnd);
           // Input's selection should be 
         }),
 
