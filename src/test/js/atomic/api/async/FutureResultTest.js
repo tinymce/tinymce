@@ -89,16 +89,49 @@ asynctest(
         var fut = FutureResult.pure('10');
 
         var f = function (x) {
-          return FutureResult.pure(x + '.bind');
+          return FutureResult.pure(x + '.bind.future');
         };
 
         fut.bindFuture(f).get(function (output) {
           var value = output.getOrDie();
-          assert.eq('10.bind', value);
+          assert.eq('10.bind.future', value);
           resolve(true);
         });
       });
     };
+
+    var testBindResult = function () {
+      return new Promise(function (resolve, reject) {
+        var fut = FutureResult.pure('10');
+
+        var f = function (x) {
+          return Result.value(x + '.bind.result');
+        };
+
+        fut.bindResult(f).get(function (output) {
+          var value = output.getOrDie();
+          assert.eq('10.bind.result', value);
+          resolve(true);
+        });
+      });
+    };
+
+    var testMapResult = function () {
+      return new Promise(function (resolve, reject) {
+        var fut = FutureResult.pure('10');
+
+        var f = function (x) {
+          return x + '.map.result';
+        };
+
+        fut.mapResult(f).get(function (output) {
+          var value = output.getOrDie();
+          assert.eq('10.map.result', value);
+          resolve(true);
+        });
+      });
+    };
+
 
     var testSpecs = function () {
       return AsyncProps.checkProps([
@@ -119,7 +152,7 @@ asynctest(
     };
 
     testPure().then(testError).then(testFromResult).then(testFromFuture).then(testNu).
-      then(testBindFuture).then(testSpecs).then(function () {
+      then(testBindResult).then(testBindFuture).then(testMapResult).then(testSpecs).then(function () {
       success();
     }, failure);
   }

@@ -47,26 +47,24 @@ define(
 
       /*
        * bindResult :: (
-       *   fResult :: FutureResult a
        *   f :: a -> Result b
        * ) -> FutureResult b     
        */
-      var bindResult = function (fResult, f) {
+      var bindResult = function (f) {
         // If we are a result error, keep the error
-        return fResult.map(function (resA) {
+        return delegate.map(function (resA) {
           return resA.bind(f);
         });
       };
 
       /*
        * mapResult :: (
-       *   fResult :: FutureResult a
        *   f :: a -> b
        * ) -> FutureResult b     
        */
-      var mapResult = function (fResult, f) {
+      var mapResult = function (f) {
         // If we are a result error, keep the error
-        return fResult.map(function (res) {
+        return delegate.map(function (res) {
           return res.map(f);
         });
       };
