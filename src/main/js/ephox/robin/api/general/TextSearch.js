@@ -11,13 +11,7 @@ define(
     'ephox.scullion.Contracts'
   ],
 
-  // Note: Robin text search API functions generally operate on and navigate through text nodes
-  // rather than general DOM elements. Text searches also generally stop at boundary elements such as DIVs.
-  //
-  // If you have a DOM element and need to find a contained text node and offset to start searching from
-  // then consider the phoenix DomDescent API functions freefallLtr() and freefallRtl() functions which, 
-  // given an element, return a text node and offset from the left-most or right-most end of the element, 
-  // respectively.
+  // Refer to: robin/readme.md
 
   function (Fun, Option, Spot, Gather, TextSearch, TextSeeker, Contracts) {
     var seekerSig = Contracts.exactly([ 'regex', 'attempt' ]);
