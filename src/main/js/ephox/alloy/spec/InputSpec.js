@@ -6,10 +6,11 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
+    'ephox.highway.Merger',
     'ephox.sugar.api.Value'
   ],
 
-  function (FieldSchema, Objects, ValueSchema, Arr, Value) {
+  function (FieldSchema, Objects, ValueSchema, Arr, Merger, Value) {
     // This is not fleshed out yet.
     var schema = ValueSchema.objOf([
       FieldSchema.defaulted('classes', [ ]),
@@ -28,20 +29,20 @@ define(
         }).getOr([ ]);
       };
 
-      return {
+      return Merger.deepMerge({
         uiType: 'custom',
         // Simplify this
         dom: Objects.wrapAll(
           Arr.flatten([
             toProp(detail.value(), 'value'),
             [
-              { key: 'tag', value: 'input' },
-              { key: 'type', value: detail.type() },
+              { key: 'tag', value: 'input' },              
               {
                 key: 'attributes',
                 value: Objects.wrapAll(
                   Arr.flatten([
-                    toProp(detail.placeholder(), 'placeholder')
+                    toProp(detail.placeholder(), 'placeholder'),
+                    [ { key: 'type', value: detail.type() }]
                   ])
                 )
               }
@@ -57,7 +58,7 @@ define(
             input.dom().setSelectionRange(0, value.length);
           }
         }
-      };
+      }, spec);
     };
 
     return {
