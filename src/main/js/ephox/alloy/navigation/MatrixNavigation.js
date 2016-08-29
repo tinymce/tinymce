@@ -8,6 +8,7 @@ define(
   ],
 
   function (ArrNavigation, Struct, Math) {
+    // TODO: Atomic tests.
     var address = Struct.immutableBag([ 'row', 'column' ], [ ]);
 
     var cycleHorizontal = function (matrix, rowIndex, startCol, deltaCol) {
