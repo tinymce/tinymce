@@ -25,6 +25,11 @@ test(
       var actual = ValueSchema.asRawOrDie(label, processor, input);
       RawAssertions.assertEq(label, input, actual);
     };
+
+    var checkIs = function (label, expected, input, processor) {
+      var actual = ValueSchema.asRawOrDie(label, processor, input);
+      RawAssertions.assertEq(label, expected, actual);
+    };
   
     check('test.1', 10, ValueSchema.anyValue());
 
@@ -128,12 +133,8 @@ test(
     Logger.sync(
       'Checking choose',
       function () {
-        var input = {
-          type: 'other',
-          houses: '10'
-        };
 
-        var output = ValueSchema.asRawOrDie('checking choose', ValueSchema.choose(
+        var processor = ValueSchema.choose(
           'type',
           {
             'general': [
@@ -143,9 +144,78 @@ test(
               FieldSchema.strict('houses')
             ]
           }
-        ), input);
+        );
 
-        console.log('output', output);
+        checkIs(
+          'Checking choose(other)',
+          { houses: '10' },
+          {
+            type: 'other',
+            houses: '10'
+          },
+          processor
+        );
+
+        checkErr(
+          'Checking choose(other) without everything',
+          'Could not find valid *strict* value for "houses"',
+          {
+            type: 'other',
+            house: '10'
+          },
+          processor
+        );
+
+        checkErr(
+          'Checking choose(other) without wrong schema',
+          'Could not find valid *strict* value for "houses"',
+          {
+            type: 'other',
+            cards: '10'
+          },
+          processor
+        );
+
+        checkIs(
+          'Checking choose(general)',
+          { cards: '10' },
+          {
+            type: 'general',
+            cards: '10'
+          },
+          processor
+        );
+
+        checkErr(
+          'Checking choose(general) without everything',
+          'Could not find valid *strict* value for "cards"',
+          {
+            type: 'general',
+            mech: '10'
+          },
+          processor
+        );
+
+        checkErr(
+          'Checking choose(general) with wrong schema',
+          'Could not find valid *strict* value for "cards"',
+          {
+            type: 'general',
+            houses: '10'
+          },
+          processor
+        );
+
+        checkErr(
+          'Checking choose(dog)',
+          'chosen schema: "dog" did not exist',
+          {
+            type: 'dog',
+            houses: '10'
+          },
+          processor
+        );
+
       }
     );
 
