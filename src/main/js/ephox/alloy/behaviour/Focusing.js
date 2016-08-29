@@ -27,8 +27,10 @@ define(
       ])
     );
 
-    var doFocus = function (component) {
+    var doFocus = function (component, focusInfo) {
       Focus.focus(component.element());
+      focusInfo.onFocus()(component);
+
     };
 
     var doBlur = function (component) {
@@ -65,7 +67,9 @@ define(
         return Objects.wrap(
           SystemEvents.focus(),
           EventHandler.nu({
-            run: doFocus
+            run: function (component, simulatedEvent) {
+              doFocus(component, focusInfo);
+            }
           })
         );
       });

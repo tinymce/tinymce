@@ -4,10 +4,11 @@ asynctest(
   [
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
-    'ephox.alloy.test.GuiSetup'
+    'ephox.alloy.test.GuiSetup',
+    'ephox.sugar.api.Value'
   ],
  
-  function (Step, GuiFactory, GuiSetup) {
+  function (Step, GuiFactory, GuiSetup, Value) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -33,10 +34,17 @@ asynctest(
           {
             uiType: 'custom',
             dom: {
-              tag: 'input'
+              tag: 'input',
+              value: 'initial'
             },
             tabstopping: true,
-            focusing: true
+            focusing: {
+              onFocus: function (component) {
+                var input = component.element();
+                var value = Value.get(input);
+                input.dom().setSelectionRange(0, value.length)
+              }
+            }
           },
           {
             uiType: 'button',
