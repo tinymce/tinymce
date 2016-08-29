@@ -147,6 +147,49 @@ asynctest(
               });              
             });
           }       
+        },
+
+        {
+          label: 'FutureResult.pure mapResult f resolves with f data',
+          arbs: [ Jsc.json, Jsc.fun(Jsc.json) ],
+          f: function (json, f) {
+            var futureResult = FutureResult.pure(json);
+            return AsyncProps.checkFuture(futureResult.mapResult(f), function (data) {
+              return data.fold(function (err) {
+                return Result.error('Should not have failed: ' + err);
+              }, function (val) {
+                return Jsc.eq(f(json), val) ? Result.value(true) : Result.error('f(json) !== mapResult(f)');
+              });
+            });
+          }
+        },
+
+        {
+          label: 'futureResult.bind(binder) equiv futureResult.get(bind)',
+          arbs: [ ArbDataTypes.futureResultSchema, Jsc.fun(ArbDataTypes.futureResult) ],
+          f: function (arbF, binder) {
+            return AsyncProps.futureToPromise(arbF.futureResult.bindFuture(binder)).then(function (data) {
+              return new Promise(function (resolve, reject) {
+                binder(arbF.contents).toLazy().get(function (bInitial) {
+                  return bInitial.fold(function (bErr) {
+                    return data.fold(function (dErr) {
+                      console.log('bErr', bErr);
+                      console.log('dErr', dErr);
+                      return Jsc.eq(bErr, dErr) ? resolve(true) : reject('errors did not match');
+                    }, function (dVal) {
+                      reject('Did not get the expected error. Was instead value: ' + dVal);
+                    });
+                  }, function (bVal) {
+                    return data.fold(function (dErr) {
+                      reject('Did not get expected value. Was instead error: ' + dErr);
+                    }, function (dVal) {
+                      return Jsc.eq(bVal, bVal) ? resolve(true): reject('Data did not match');
+                    });
+                  });                  
+                });
+              });
+            });
+          }
         }
       ]);
     };

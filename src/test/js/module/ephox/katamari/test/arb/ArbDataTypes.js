@@ -32,6 +32,17 @@ define(
     var arbResult = Jsc.oneof([ arbResultError, arbResultValue ]);
 
 
+    var genFutureResultSchema = arbResult.generator.map(function (result) {
+      var futureResult = FutureResult.nu(function (callback) {
+        callback(result);
+      });
+
+      return {
+        futureResult: futureResult,
+        contents: result
+      };
+    });
+
     var genFutureResult = arbResult.generator.map(function (result) {
       return FutureResult.nu(function (callback) {
         callback(result);
@@ -42,12 +53,17 @@ define(
       generator: genFutureResult
     });
 
+    var arbFutureResultSchema = Jsc.bless({
+      generator: genFutureResultSchema
+    });
+
     return {
       resultError: arbResultError,
       resultValue: arbResultValue,
       result: arbResult,
 
-      futureResult: arbFutureResult
+      futureResult: arbFutureResult,
+      futureResultSchema: arbFutureResultSchema
     };
   }
 );
