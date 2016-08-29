@@ -69,18 +69,12 @@ define(
   
     var doMove = function (cycle) {
       return function (element, focused, matrixInfo) {
-        console.log('cycling');
         return SelectorFind.closest(focused, matrixInfo.selectors().row()).bind(function (inRow) {
-          console.log('inRow', inRow.dom());
           var cellsInRow = SelectorFilter.descendants(inRow, matrixInfo.selectors().cell());
-          console.log('cellsInRow', cellsInRow);
-
+        
           return DomPinpoint.findIndex(cellsInRow, focused).bind(function (colIndex) {
-            console.log('inColumn', colIndex);
             var allRows = SelectorFilter.descendants(element, matrixInfo.selectors().row());
-            console.log('allRows', allRows);
             return DomPinpoint.findIndex(allRows, inRow).bind(function (rowIndex) {
-              console.log('rowIndex', rowIndex);
               // Now, make the matrix.
               var matrix = toMatrix(allRows, matrixInfo);
               return cycle(matrix, rowIndex, colIndex).map(function (next) {
