@@ -26,6 +26,10 @@ tinymce.PluginManager.add('lists', function(editor) {
 		return node && (/^(OL|UL|DL)$/).test(node.nodeName) && isChildOfBody(node);
 	}
 
+	function isListItemNode(node) {
+		return node && /^(LI|DT|DD)$/.test(node.nodeName);
+	}
+
 	function isFirstChild(node) {
 		return node.parentNode.firstChild == node;
 	}
@@ -42,28 +46,29 @@ tinymce.PluginManager.add('lists', function(editor) {
 		return elm === editor.getBody();
 	}
 
+	function isTextNode(node) {
+		return node && node.nodeType === 3;
+	}
+
+	function getNormalizedEndPoint(container, offset) {
+		var node = tinymce.dom.RangeUtils.getNode(container, offset);
+
+		if (isListItemNode(container) && isTextNode(node)) {
+			var textNodeOffset = offset >= container.childNodes.length ? node.data.length : 0;
+			return {container: node, offset: textNodeOffset};
+		}
+
+		return {container: container, offset: offset};
+	}
+
 	function normalizeRange(rng) {
 		var outRng = rng.cloneRange();
 
-		function normalizeEndPoint(start, container, offset) {
-			var node = tinymce.dom.RangeUtils.getNode(container, offset);
+		var rangeStart = getNormalizedEndPoint(rng.startContainer, rng.startOffset);
+		outRng.setStart(rangeStart.container, rangeStart.offset);
 
-			if (container.nodeName === 'LI' && node.nodeType === 3) {
-				if (start) {
-					var textOffset = offset >= container.childNodes.length ? node.data.length : 0;
-					outRng.setStart(node, textOffset);
-					outRng.setEnd(node, textOffset);
-				} else {
-					outRng.setEnd(node, node.data.length);
-				}
-			}
-		}
-
-		normalizeEndPoint(true, rng.startContainer, rng.startOffset);
-
-		if (!rng.collapsed) {
-			normalizeEndPoint(false, rng.endContainer, rng.endOffset);
-		}
+		var rangeEnd = getNormalizedEndPoint(rng.endContainer, rng.endOffset);
+		outRng.setEnd(rangeEnd.container, rangeEnd.offset);
 
 		return outRng;
 	}
@@ -250,7 +255,7 @@ tinymce.PluginManager.add('lists', function(editor) {
 
 		function getSelectedListItems() {
 			return tinymce.grep(selection.getSelectedBlocks(), function(block) {
-				return /^(LI|DT|DD)$/.test(block.nodeName);
+				return isListItemNode(block);
 			});
 		}
 
