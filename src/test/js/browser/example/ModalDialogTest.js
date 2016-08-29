@@ -74,7 +74,8 @@ asynctest(
             },
             keying: {
               mode: 'flow',
-              selector: '.candidate'
+              selector: '.candidate',
+              execute: store.adder('flow.execute')
             },
             tabstopping: true,
             components: Arr.map([ 'one', 'two', 'three' ], makeItem)
@@ -94,10 +95,10 @@ asynctest(
         store.sClear,
 
         Keyboard.sKeydown(doc, Keys.enter(), { shift: true }),
-        store.sAssertEq('1. After shift+enter, nothing', [ ]),
+        store.sAssertEq('2. After shift+enter, nothing', [ ]),
 
-        function () { }
-
+        Keyboard.sKeydown(doc, Keys.escape(), { }),
+        store.sAssertEq('3. After shift+enter, dialog.escape', [ 'dialog.escape' ])
       ];
 
     }, success, failure);
