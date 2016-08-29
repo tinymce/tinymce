@@ -36,7 +36,7 @@ asynctest(
         uiType: 'custom',
         dom: {
           tag: 'div',
-          classes: [ 'inline-dialog-example'],
+          classes: [ 'modal-dialog-example'],
           styles: {
             background: 'gray',
             border: '1px solid black',
