@@ -103,6 +103,9 @@ define(
     };
 
     return {
+      // Probably move.
+      cap: cap,
+
       cycleBy: cycleBy,
       cyclePrev: cyclePrev,
       cycleNext: cycleNext,

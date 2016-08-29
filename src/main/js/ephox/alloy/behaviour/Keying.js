@@ -7,6 +7,7 @@ define(
     'ephox.alloy.keying.CyclicType',
     'ephox.alloy.keying.FlatgridType',
     'ephox.alloy.keying.FlowType',
+    'ephox.alloy.keying.MatrixType',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
@@ -15,7 +16,7 @@ define(
     'global!Error'
   ],
 
-  function (Behaviour, DomModification, CyclicType, FlatgridType, FlowType, FieldPresence, FieldSchema, ValueSchema, Merger, Fun, Error) {
+  function (Behaviour, DomModification, CyclicType, FlatgridType, FlowType, MatrixType, FieldPresence, FieldSchema, ValueSchema, Merger, Fun, Error) {
     var doFocusIn = function (component) {
       var system = component.getSystem();
       system.triggerFocus(component.element(), component.element());
@@ -51,7 +52,8 @@ define(
           // Note, these are only fields.
           cyclic: CyclicType.schema(),
           flow: FlowType.schema(),
-          flatgrid: FlatgridType.schema()
+          flatgrid: FlatgridType.schema(),
+          matrix: MatrixType.schema()
         }
       )
     );

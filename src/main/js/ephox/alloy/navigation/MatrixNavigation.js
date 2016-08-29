@@ -43,7 +43,7 @@ define(
     };
 
     var cycleDown = function (matrix, startRow, startCol) {
-      return cycleVertical(matrix, startRow, startCol, +1);
+      return cycleVertical(matrix, startCol, startRow, +1);
     };
 
     return {
