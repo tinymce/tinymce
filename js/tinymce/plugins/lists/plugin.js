@@ -26,6 +26,10 @@ tinymce.PluginManager.add('lists', function(editor) {
 		return node && (/^(OL|UL|DL)$/).test(node.nodeName) && isChildOfBody(node);
 	}
 
+	function isListItemNode(node) {
+		return node && /^(LI|DT|DD)$/.test(node.nodeName);
+	}
+
 	function isFirstChild(node) {
 		return node.parentNode.firstChild == node;
 	}
@@ -40,6 +44,33 @@ tinymce.PluginManager.add('lists', function(editor) {
 
 	function isEditorBody(elm) {
 		return elm === editor.getBody();
+	}
+
+	function isTextNode(node) {
+		return node && node.nodeType === 3;
+	}
+
+	function getNormalizedEndPoint(container, offset) {
+		var node = tinymce.dom.RangeUtils.getNode(container, offset);
+
+		if (isListItemNode(container) && isTextNode(node)) {
+			var textNodeOffset = offset >= container.childNodes.length ? node.data.length : 0;
+			return {container: node, offset: textNodeOffset};
+		}
+
+		return {container: container, offset: offset};
+	}
+
+	function normalizeRange(rng) {
+		var outRng = rng.cloneRange();
+
+		var rangeStart = getNormalizedEndPoint(rng.startContainer, rng.startOffset);
+		outRng.setStart(rangeStart.container, rangeStart.offset);
+
+		var rangeEnd = getNormalizedEndPoint(rng.endContainer, rng.endOffset);
+		outRng.setEnd(rangeEnd.container, rangeEnd.offset);
+
+		return outRng;
 	}
 
 	editor.on('init', function() {
@@ -163,7 +194,7 @@ tinymce.PluginManager.add('lists', function(editor) {
 				rng.setEnd(bookmark.endContainer, bookmark.endOffset);
 			}
 
-			selection.setRng(rng);
+			selection.setRng(normalizeRange(rng));
 		}
 
 		function createNewTextBlock(contentNode, blockName) {
@@ -224,7 +255,7 @@ tinymce.PluginManager.add('lists', function(editor) {
 
 		function getSelectedListItems() {
 			return tinymce.grep(selection.getSelectedBlocks(), function(block) {
-				return /^(LI|DT|DD)$/.test(block.nodeName);
+				return isListItemNode(block);
 			});
 		}
 
@@ -804,7 +835,7 @@ tinymce.PluginManager.add('lists', function(editor) {
 						return true;
 					}
 
-					rng = selection.getRng(true);
+					rng = normalizeRange(selection.getRng(true));
 					otherLi = dom.getParent(findNextCaretContainer(rng, isForward), 'LI');
 
 					if (otherLi && otherLi != li) {

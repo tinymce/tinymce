@@ -1004,7 +1004,7 @@ ModuleLoader.require([
 		Utils.setSelection('ol ol ol li:nth-child(2)', 1);
 		execCommand('InsertOrderedList');
 
-		equal(editor.getContent(), 
+		equal(editor.getContent(),
 			'<ol>' +
 			    '<li>a' +
 			        '<ol>' +
@@ -2515,4 +2515,30 @@ ModuleLoader.require([
 
 		equal(editor.getContent(), '<ul><li>a</li><li>b</li><li>c</li></ul>');
 	});
+
+	if (tinymce.Env.ie === 11) {
+		test('Backspace merge li elements on IE 11', function() {
+			// IE allows you to place the caret inside a LI without children
+			editor.getBody().innerHTML = trimBrs(
+				'<ul>' +
+					'<li>a</li>' +
+					'<li></li>' +
+				'</ul>'
+			);
+
+			editor.focus();
+			Utils.setSelection('li:nth-child(2)', 0);
+
+			editor.plugins.lists.backspaceDelete();
+
+			equal(editor.getContent(),
+				'<ul>' +
+					'<li>a</li>' +
+				'</ul>'
+			);
+
+			equal(editor.selection.getNode().nodeName, 'LI');
+			equal(editor.selection.getRng(true).startContainer.nodeType, 3, 'Should be a text node');
+		});
+	}
 });
