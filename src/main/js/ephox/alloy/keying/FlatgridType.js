@@ -4,23 +4,20 @@ define(
   [
     'ephox.alloy.alien.Keys',
     'ephox.alloy.api.SystemEvents',
-    'ephox.alloy.behaviour.Behaviour',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.navigation.ArrNavigation',
+    'ephox.alloy.navigation.DomMovement',
     'ephox.alloy.navigation.DomPinpoint',
     'ephox.alloy.navigation.KeyMatch',
     'ephox.alloy.navigation.KeyRules',
-    'ephox.alloy.navigation.Navigator',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
     'ephox.scullion.Cell',
     'ephox.sugar.api.Focus',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Keys, SystemEvents, Behaviour, EventHandler, ArrNavigation, DomPinpoint, KeyMatch, KeyRules, Navigator, FieldSchema, Objects, Fun, Option, Cell, Focus, SelectorFind) {
+  function (Keys, SystemEvents, EventHandler, ArrNavigation, DomMovement, DomPinpoint, KeyMatch, KeyRules, FieldSchema, Objects, Cell, Focus, SelectorFind) {
     // FIX: Dupe with FlowType.
     var defaultExecute = function (component, simulatedEvent, focused) {
       var system = component.getSystem();
@@ -56,41 +53,30 @@ define(
       });
     };
 
-    var move = function (navigator) {
-      return function (component, simulatedEvent, gridInfo) {
-        var container = component.element();
-        var delta = navigator(container);
-        return Focus.search(container).bind(function (focused) {
-          return DomPinpoint.locateVisible(container, focused, gridInfo.selector()).bind(function (identified) {
-            var outcome = ArrNavigation.cycleGrid(
-              identified.candidates(),
-              identified.index(),
-              gridInfo.dimensions().get().numRows,
-              gridInfo.dimensions().get().numColumns,
-              delta.x(),
-              delta.y(),
-              Fun.constant(true)
-            );
-
-            var newCell = outcome.bind(function (newIndex) {
-              var cells = identified.candidates();
-              return newIndex >= 0 && newIndex < cells.length ? Option.some(cells[newIndex]) : Option.none();
-            });
-
-            newCell.each(function (newFocus) {
-              component.getSystem().triggerFocus(newFocus, component.element());
-              simulatedEvent.stop();
-            });
-          });
-        });          
+    var doMove = function (cycle) {
+      return function (element, focused, info) {
+        return DomPinpoint.locateVisible(element, focused, info.selector()).bind(function (identified) {
+          return cycle(
+            identified.candidates(),
+            identified.index(),
+            info.dimensions().get().numRows,
+            info.dimensions().get().numColumns
+          );
+        });
       };
     };
 
+    var moveLeft = doMove(ArrNavigation.cycleLeft);
+    var moveRight = doMove(ArrNavigation.cycleRight);
+    
+    var moveNorth = doMove(ArrNavigation.cycleUp);
+    var moveSouth = doMove(ArrNavigation.cycleDown);
+
     var rules = [
-      KeyRules.rule( KeyMatch.inSet( Keys.LEFT() ), move(Navigator.west)),
-      KeyRules.rule( KeyMatch.inSet( Keys.RIGHT() ), move(Navigator.east)),
-      KeyRules.rule( KeyMatch.inSet( Keys.UP() ), move(Navigator.north)),
-      KeyRules.rule( KeyMatch.inSet( Keys.DOWN() ), move(Navigator.south)),
+      KeyRules.rule( KeyMatch.inSet( Keys.LEFT() ), DomMovement.west(moveLeft, moveRight)),
+      KeyRules.rule( KeyMatch.inSet( Keys.RIGHT() ), DomMovement.east(moveLeft, moveRight)),
+      KeyRules.rule( KeyMatch.inSet( Keys.UP() ), DomMovement.north(moveNorth)),
+      KeyRules.rule( KeyMatch.inSet( Keys.DOWN() ), DomMovement.south(moveSouth)),
       KeyRules.rule( KeyMatch.inSet( Keys.SPACE().concat(Keys.ENTER()) ), execute)
     ];
 

@@ -3,11 +3,12 @@ define(
 
   [
     'ephox.compass.Arr',
+    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'global!Math'
   ],
 
-  function (Arr, Option, Math) {
+  function (Arr, Fun, Option, Math) {
     var cycleBy = function (value, delta, min, max) {
       var r = value + delta;
       if (r > max) return min;
@@ -50,38 +51,55 @@ define(
       return findIn(after, predicate);
     };
 
-    // TODO: property tests
+    var withGrid = function (values, index, numCols, f) {
+      var oldRow = Math.floor(index / numCols);
+      var oldColumn = index % numCols;
 
-    // return address(Math.floor(index / columns), index % columns);
-    var cycleRight = function (values, index, numRows, numColumns, predicate) {
-      return cycleGrid(values, index, numRows, numColumns, +1, 0, predicate);
+      return f(oldRow, oldColumn).bind(function (address) {
+        var newIndex = address.row() * numCols + address.column();
+        return newIndex >= 0 && newIndex < values.length ? Option.some(values[newIndex]) : Option.none();
+      });
     };
 
-    var cycleLeft = function (values, index, numRows, numColumns, predicate) {
-      return cycleGrid(values, index, numRows, numColumns, -1, 0, predicate);
+    var cycleHorizontal = function (values, index, numRows, numCols, delta) {
+      return withGrid(values, index, numCols, function (oldRow, oldColumn) {
+        var onLastRow = oldRow === numRows - 1;
+        var colsInRow = onLastRow ? values.length - (oldRow * numCols) : numCols;
+        var newColumn = cycleBy(oldColumn, delta, 0, colsInRow - 1);
+        return Option.some({
+          row: Fun.constant(oldRow),
+          column: Fun.constant(newColumn)
+        });
+      });
     };
 
-    var cycleUp = function (values, index, numRows, numColumns, predicate) {
-      return cycleGrid(values, index, numRows, numColumns, 0, -1, predicate);
+    var cycleVertical = function (values, index, numRows, numCols, delta) {
+      return withGrid(values, index, numCols, function (oldRow, oldColumn) {
+        var newRow = cycleBy(oldRow, delta, 0, numRows - 1);
+        var onLastRow = newRow === numRows - 1;
+        var colsInRow = onLastRow ? values.length - (newRow * numCols) : numCols;
+        var newCol = cap(oldColumn, 0, colsInRow - 1);
+        return Option.some({
+          row: Fun.constant(newRow),
+          column: Fun.constant(newCol)
+        });
+      });
     };
 
-    var cycleDown = function (values, index, numRows, numColumns, predicate) {
-      return cycleGrid(values, index, numRows, numColumns, 0, +1, predicate);
+    var cycleRight = function (values, index, numRows, numCols) {
+      return cycleHorizontal(values, index, numRows, numCols, +1);
     };
 
-    var cycleGrid = function (values, index, numRows, numColumns, dx, dy, predicate) {
-      var oldRow = Math.floor(index / numColumns);
-      var oldColumn = index % numColumns;
+    var cycleLeft = function (values, index, numRows, numCols) {
+      return cycleHorizontal(values, index, numRows, numCols, -1);
+    };
 
-      var newRow = cycleBy(oldRow, dy, 0, numRows - 1);
-      // Note, the grid may be irregular, so if we are on the last row, the number 
-      // of columns may not be the same as the previous row.
-      // Therefore, if we are only travelling vertically, cap the column at colsInRow
-      var onLastRow = newRow === numRows - 1;
-      var colsInRow = onLastRow ? values.length - (newRow * numColumns) : numColumns;
-      var newColumn = dx !== 0 ? cycleBy(oldColumn, dx, 0, colsInRow - 1) : cap(oldColumn, 0, colsInRow - 1);
-      var newIndex = newRow * numColumns + newColumn;
-      return newIndex >= 0 && newIndex < values.length ? Option.some(newIndex) : Option.none();
+    var cycleUp = function (values, index, numRows, numCols) {
+      return cycleVertical(values, index, numRows, numCols, -1);
+    };
+
+    var cycleDown = function (values, index, numRows, numCols) {
+      return cycleVertical(values, index, numRows, numCols, +1);
     };
 
     return {
@@ -94,8 +112,7 @@ define(
       cycleDown: cycleDown,
       cycleUp: cycleUp,
       cycleLeft: cycleLeft,
-      cycleRight: cycleRight,
-      cycleGrid: cycleGrid
+      cycleRight: cycleRight
     };
   }
 );

@@ -5,10 +5,10 @@ define(
     'ephox.alloy.alien.Keys',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.navigation.DomMovement',
     'ephox.alloy.navigation.DomNavigation',
     'ephox.alloy.navigation.KeyMatch',
     'ephox.alloy.navigation.KeyRules',
-    'ephox.alloy.navigation.Navigator',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.peanut.Fun',
@@ -16,7 +16,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Keys, SystemEvents, EventHandler, DomNavigation, KeyMatch, KeyRules, Navigator, FieldSchema, Objects, Fun, Focus, SelectorFind) {
+  function (Keys, SystemEvents, EventHandler, DomMovement, DomNavigation, KeyMatch, KeyRules, FieldSchema, Objects, Fun, Focus, SelectorFind) {
     var schema = function () {
       return [
         FieldSchema.strict('selector'),
@@ -25,20 +25,6 @@ define(
           return self;
         })
       ];
-    };
-
-    var move = function (navigator) {
-      return function (component, simulatedEvent, flowInfo) {
-        var delta = navigator(component.element());
-        var outcome = Focus.search(component.element(), flowInfo.selector()).bind(function (focused) {
-          return DomNavigation.horizontal(component.element(), flowInfo.selector(), focused, delta.x());
-        });
-
-        outcome.each(function (newFocus) {
-          component.getSystem().triggerFocus(newFocus, component.element());
-          simulatedEvent.stop();
-        });
-      };
     };
 
     var defaultExecute = function (component, simulatedEvent, focused) {
@@ -59,9 +45,17 @@ define(
       });
     };
 
+    var moveLeft = function (element, focused, info) {
+      return DomNavigation.horizontal(element, info.selector(), focused, -1);
+    };
+
+    var moveRight = function (element, focused, info) {
+      return DomNavigation.horizontal(element, info.selector(), focused, +1);
+    };
+
     var rules = [
-      KeyRules.rule( KeyMatch.inSet( Keys.LEFT().concat(Keys.UP()) ), move(Navigator.west)),
-      KeyRules.rule( KeyMatch.inSet( Keys.RIGHT().concat(Keys.DOWN()) ), move(Navigator.east)),
+      KeyRules.rule( KeyMatch.inSet( Keys.LEFT().concat(Keys.UP()) ), DomMovement.west(moveLeft, moveRight)),
+      KeyRules.rule( KeyMatch.inSet( Keys.RIGHT().concat(Keys.DOWN()) ), DomMovement.east(moveLeft, moveRight)),
       KeyRules.rule( KeyMatch.inSet( Keys.SPACE().concat(Keys.ENTER()) ), execute)
     ];
 
