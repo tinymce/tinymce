@@ -24,7 +24,8 @@ define(
     var schema = function () {
       return [
         FieldSchema.defaulted('selector', '[data-alloy-tabstop="true"]'),
-        FieldSchema.defaulted('onEscape', Fun.noop),
+        FieldSchema.option('onEscape'),
+        FieldSchema.option('onEnter'),
         FieldSchema.state('handler', function () {
           return self;
         })
@@ -53,47 +54,52 @@ define(
       // 3. Cycle the tabstop
       // 4. Fire alloy focus on the resultant tabstop
       var tabstops = SelectorFilter.descendants(component.element(), cyclicInfo.selector());
-      findTabstop(component, cyclicInfo).each(function (tabstop) {
+      return findTabstop(component, cyclicInfo).bind(function (tabstop) {
         // focused component
         var index = Arr.findIndex(tabstops, Fun.curry(Compare.eq, tabstop));
-        cycle(tabstops, index, Visibility.isVisible).fold(function () {
-          // INVESTIGATE: Should I do something here?
-          // Did not find anything to move to ... kill the event anyway.
-          /*
-          // Didn't find anything (probably length: 0) ... go back to start?
-          labby.getSystem().triggerFocus(tabstop, labby);
-          labevent.stop();
-          */
-        }, function (outcome) {
+        return cycle(tabstops, index, Visibility.isVisible).map(function (outcome) {
           var system = component.getSystem();
           var originator = component.element();
           system.triggerFocus(outcome, originator);
-          simulatedEvent.stop();
+
+          // Kill the event
+          return true;
         });
       });
     };
 
     var goBackwards = function (component, simulatedEvent, cyclicInfo) {
-      go(component, simulatedEvent, cyclicInfo, ArrNavigation.cyclePrev);
+      return go(component, simulatedEvent, cyclicInfo, ArrNavigation.cyclePrev);
     };
 
     var goForwards = function (component, simulatedEvent, cyclicInfo) {
-      go(component, simulatedEvent, cyclicInfo, ArrNavigation.cycleNext);
+      return go(component, simulatedEvent, cyclicInfo, ArrNavigation.cycleNext);
+    };
+
+    var execute = function (component, simulatedEvent, cyclicInfo) {
+      return cyclicInfo.onEnter().map(function (f) {
+        f(component, simulatedEvent);
+        return true;
+      });
     };
 
     var exit = function (component, simulatedEvent, cyclicInfo) {
-      cyclicInfo.onEscape()(component, simulatedEvent);
+      return cyclicInfo.onEscape().map(function (f) {
+        f(component, simulatedEvent);
+        return true;
+      });
     };
 
     var rules = [
       KeyRules.rule( KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), goBackwards),
       KeyRules.rule( KeyMatch.inSet( Keys.TAB() ), goForwards),
-      KeyRules.rule( KeyMatch.inSet( Keys.ESCAPE()), exit)
+      KeyRules.rule( KeyMatch.inSet( Keys.ESCAPE()), exit),
+      KeyRules.rule( KeyMatch.inSet( Keys.ENTER()), execute)
     ];
 
     var processKey = function (component, simulatedEvent, cyclicInfo) {
-      KeyRules.choose(rules, simulatedEvent.event()).each(function (transition) {
-        transition(component, simulatedEvent, cyclicInfo);
+      return KeyRules.choose(rules, simulatedEvent.event()).bind(function (transition) {
+        return transition(component, simulatedEvent, cyclicInfo);
       });
     };
 
@@ -111,7 +117,9 @@ define(
           key: 'keydown',
           value: EventHandler.nu({
             run: function (component, simulatedEvent) {
-              return processKey(component, simulatedEvent, cyclicInfo);
+              processKey(component, simulatedEvent, cyclicInfo).each(function (_) {
+                simulatedEvent.stop();
+              });
             }
           })
         }

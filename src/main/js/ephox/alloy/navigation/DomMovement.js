@@ -12,7 +12,7 @@ define(
     var useH = function (movement) {
       return function (component, simulatedEvent, info) {
         var move = movement(component.element());
-        use(move, component, simulatedEvent, info);
+        return use(move, component, simulatedEvent, info);
       };
     };
 
@@ -28,7 +28,7 @@ define(
 
     var useV = function (move) {
       return function (component, simulatedEvent, info) {
-        use(move, component, simulatedEvent, info);
+        return use(move, component, simulatedEvent, info);
       };
     };
 
@@ -37,9 +37,9 @@ define(
         return move(component.element(), focused, info);
       });
 
-      outcome.each(function (newFocus) {
+      return outcome.map(function (newFocus) {
         component.getSystem().triggerFocus(newFocus, component.element());
-        simulatedEvent.stop();
+        return true;
       });
     };
 

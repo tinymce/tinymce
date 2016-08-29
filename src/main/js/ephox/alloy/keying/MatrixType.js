@@ -55,9 +55,9 @@ define(
     };
 
     var execute = function (component, simulatedEvent, matrixInfo) {
-      Focus.search(component.element()).each(function (focused) {
+      return Focus.search(component.element()).map(function (focused) {
         matrixInfo.execute()(component, simulatedEvent, focused);
-        simulatedEvent.stop();
+        return true;
       });
     };
 
@@ -101,8 +101,8 @@ define(
     ];
 
     var processKey = function (component, simulatedEvent, matrixInfo) {
-      KeyRules.choose(rules, simulatedEvent.event()).each(function (transition) {
-        transition(component, simulatedEvent, matrixInfo);
+      return KeyRules.choose(rules, simulatedEvent.event()).each(function (transition) {
+        return transition(component, simulatedEvent, matrixInfo);
       });
     };
 
@@ -122,7 +122,9 @@ define(
           key: 'keydown',
           value: EventHandler.nu({
             run: function (component, simulatedEvent) {
-              return processKey(component, simulatedEvent, matrixInfo);
+              processKey(component, simulatedEvent, matrixInfo).each(function (_) {
+                simulatedEvent.stop();
+              });
             }
           })
         }

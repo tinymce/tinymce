@@ -47,9 +47,9 @@ define(
     };
 
     var execute = function (component, simulatedEvent, gridInfo) {
-      Focus.search(component.element(), gridInfo.selector()).each(function (focused) {
+      return Focus.search(component.element(), gridInfo.selector()).map(function (focused) {
         gridInfo.execute()(component, simulatedEvent, focused);
-        simulatedEvent.stop();
+        return true;
       });
     };
 
@@ -81,8 +81,8 @@ define(
     ];
 
     var processKey = function (component, simulatedEvent, gridInfo) {
-      KeyRules.choose(rules, simulatedEvent.event()).each(function (transition) {
-        transition(component, simulatedEvent, gridInfo);
+      return KeyRules.choose(rules, simulatedEvent.event()).bind(function (transition) {
+        return transition(component, simulatedEvent, gridInfo);
       });
     };
 
@@ -102,7 +102,9 @@ define(
           key: 'keydown',
           value: EventHandler.nu({
             run: function (component, simulatedEvent) {
-              return processKey(component, simulatedEvent, gridInfo);
+              processKey(component, simulatedEvent, gridInfo).each(function (_) {
+                simulatedEvent.stop();
+              });
             }
           })
         }

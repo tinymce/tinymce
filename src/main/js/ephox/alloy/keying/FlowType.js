@@ -33,9 +33,9 @@ define(
     };
 
     var execute = function (component, simulatedEvent, flowInfo) {
-      Focus.search(component.element(), flowInfo.selector()).each(function (focused) {
+      return Focus.search(component.element()).each(function (focused) {
         flowInfo.execute()(component, simulatedEvent, focused);
-        simulatedEvent.stop();
+        return true;
       });
     };
 
@@ -60,8 +60,8 @@ define(
     ];
 
     var processKey = function (component, simulatedEvent, flowInfo) {
-      KeyRules.choose(rules, simulatedEvent.event()).each(function (transition) {
-        transition(component, simulatedEvent, flowInfo);
+      return KeyRules.choose(rules, simulatedEvent.event()).bind(function (transition) {
+        return transition(component, simulatedEvent, flowInfo);
       });
     };
 
@@ -80,7 +80,9 @@ define(
           key: 'keydown',
           value: EventHandler.nu({
             run: function (component, simulatedEvent) {
-              return processKey(component, simulatedEvent, flowInfo);
+              processKey(component, simulatedEvent, flowInfo).each(function (_) {
+                simulatedEvent.stop();
+              });
             }
           })
         }

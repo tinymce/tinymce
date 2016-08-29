@@ -64,8 +64,9 @@ define(
       });
 
       var clickHandler = EventHandler.nu({
-        run: function (component) {
+        run: function (component, simulatedEvent) {
           var system = component.getSystem();
+          simulatedEvent.stop();
           system.triggerEvent(SystemEvents.execute(), component.element(), { });
         }
       });
