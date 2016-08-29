@@ -2,10 +2,11 @@ define(
   'ephox.alloy.navigation.KeyMatch',
 
   [
-    'ephox.compass.Arr'
+    'ephox.compass.Arr',
+    'ephox.peanut.Fun'
   ],
 
-  function (Arr) {
+  function (Arr, Fun) {
     var inSet = function (keys) {
       return function (event) {
         return Arr.contains(keys, event.raw().which);
@@ -34,7 +35,9 @@ define(
       inSet: inSet,
       and: and,
       is: is,
-      isShift: isShift
+      isShift: isShift,
+      isNotShift: Fun.not(isShift)
+
     };
   }
 );
