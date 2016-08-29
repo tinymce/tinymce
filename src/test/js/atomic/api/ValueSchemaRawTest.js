@@ -137,7 +137,7 @@ test(
           'type',
           {
             'general': [
-              FieldSchema.strict('cardss')
+              FieldSchema.strict('cards')
             ],
             'other': [
               FieldSchema.strict('houses')
