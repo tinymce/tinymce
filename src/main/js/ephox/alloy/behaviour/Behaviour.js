@@ -28,21 +28,8 @@ define(
       };
     };
 
-    // Hard coded to use mode?
-    var tryActionModeOpt = function (field, info, error, f) {
-      // Fail fast if the mode is not set.
-      // TODO: Make boulder have a clean way of doing this.
-      var modeInfo = info[field]().bind(function (bInfo) {
-        var bMode = bInfo.mode();
-        return bInfo[bMode]();
-      });
-
-      return tryActionOpt(field, modeInfo, error, f);
-    };
-
     return {
       tryActionOpt: tryActionOpt,
-      tryActionModeOpt: tryActionModeOpt,
       contract: contract
     };
   }
