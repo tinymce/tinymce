@@ -19,8 +19,6 @@ asynctest(
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
-      var executor = store.adder('dialog.execute');
-
       return GuiFactory.build({
         uiType: 'custom',
         dom: {
@@ -37,7 +35,7 @@ asynctest(
         keying: {
           mode: 'cyclic',
           onEscape: store.adder('dialog.escape'),
-          onEnter: store.adder('outer.dialog.execute')
+          onEnter: store.adder('dialog.execute')
         },
         components: [
           {
@@ -57,7 +55,7 @@ asynctest(
           },
           {
             uiType: 'button',
-            action: executor,
+            action: store.adder('button.execute'),
             text: 'Click me'
           }
         ]
@@ -100,7 +98,17 @@ asynctest(
         ]),
 
         Keyboard.sKeydown(doc, Keys.enter(), { }),
-        store.sAssertEq('Enter in input should have executed dialog', [ 'dialog.execute' ])
+        store.sAssertEq('Enter in input should have executed dialog', [ 'dialog.execute' ]),
+
+        store.sClear,
+        Keyboard.sKeydown(doc, Keys.tab(), { }),
+        Keyboard.sKeydown(doc, Keys.enter(), { }),
+        store.sAssertEq('Enter in button should have executed button', [ 'button.execute' ]),
+
+        store.sClear,
+        Keyboard.sKeydown(doc, Keys.tab(), { }),
+        Keyboard.sKeydown(doc, Keys.enter(), { }),
+        store.sAssertEq('Enter in input should have executed dialog (again)', [ 'dialog.execute' ])
       ];
     }, success, failure);
   }

@@ -5,6 +5,7 @@ define(
     'ephox.alloy.alien.Keys',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.navigation.KeyMatch',
     'ephox.alloy.navigation.KeyRules',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
@@ -12,7 +13,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (Keys, SystemEvents, EventHandler, KeyRules, FieldSchema, Objects, Fun, Option) {
+  function (Keys, SystemEvents, EventHandler, KeyMatch, KeyRules, FieldSchema, Objects, Fun, Option) {
     var schema = function () {
       return [
         FieldSchema.defaulted('execute', defaultExecute),
@@ -38,9 +39,10 @@ define(
     var processKey = function (component, simulatedEvent, executeInfo) {
       var spaceExec = executeInfo.useSpace() ? Keys.SPACE() : [ ];
       var enterExec = executeInfo.useEnter() ? Keys.ENTER() : [ ];
+      var execKeys = spaceExec.concat(enterExec);
 
       var transitions = [
-        KeyRules.rule( KeyRules.inSet( spaceExec.concat(enterExec) ), execute)
+        KeyRules.rule( KeyMatch.inSet(execKeys), execute)
       ];
 
       return KeyRules.choose(transitions, simulatedEvent.event()).bind(function (transition) {
