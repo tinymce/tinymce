@@ -3,31 +3,38 @@ define(
 
   [
     'ephox.alloy.navigation.Cycles',
+    'ephox.perhaps.Option',
     'ephox.scullion.Struct',
     'global!Math'
   ],
 
-  function (Cycles, Struct, Math) {
-    // TODO: Atomic tests.
-    var address = Struct.immutableBag([ 'row', 'column' ], [ ]);
+  function (Cycles, Option, Struct, Math) {
+    var outcome = Struct.immutableBag([ 'rowIndex', 'columnIndex', 'cell' ], [ ]);
+
+    var toCell = function (matrix, rowIndex, columnIndex) {
+      return Option.from(matrix[rowIndex]).bind(function (row) {
+        return Option.from(row[columnIndex]).map(function (cell) {
+          return outcome({
+            rowIndex: rowIndex,
+            columnIndex: columnIndex,
+            cell: cell
+          });
+        });
+      });
+    };
 
     var cycleHorizontal = function (matrix, rowIndex, startCol, deltaCol) {
       var row = matrix[rowIndex];
       var colsInRow = row.length;
       var newColIndex = Cycles.cycleBy(startCol, deltaCol, 0, colsInRow - 1);
-      return address({
-        row: rowIndex,
-        column: newColIndex
-      });
+      return toCell(matrix, rowIndex, newColIndex);
     };
 
     var cycleVertical = function (matrix, colIndex, startRow, deltaRow) {
       var nextRowIndex = Cycles.cycleBy(startRow, deltaRow, 0, matrix.length - 1);
       var colsInNextRow = matrix[nextRowIndex].length;
-      return address({
-        row: nextRowIndex,
-        column: Cycles.cap(colIndex, 0, colsInNextRow - 1)
-      });
+      var nextColIndex = Cycles.cap(colIndex, 0, colsInNextRow - 1);
+      return toCell(matrix, nextRowIndex, nextColIndex);
     };
 
     // return address(Math.floor(index / columns), index % columns);

@@ -39,9 +39,13 @@ test(
       'Regular matrix: cycleUp and cycleDown should be symmetric',
       arbRegularMatrix,
       function (arb) {
-        var postUp = MatrixNavigation.cycleUp(arb.matrix, arb.row, arb.col);
-        var postDown = MatrixNavigation.cycleDown(arb.matrix, postUp.row(), postUp.column());
-        return Jsc.eq(postDown.row(), arb.row) && Jsc.eq(postDown.column(), arb.col);
+        var postUp = MatrixNavigation.cycleUp(arb.matrix, arb.row, arb.col).getOrDie(
+          'Should be able to cycleUp!'
+        );
+        var postDown = MatrixNavigation.cycleDown(arb.matrix, postUp.rowIndex(), postUp.columnIndex()).getOrDie(
+          'Should be able to cycleDown!'
+        );
+        return Jsc.eq(postDown.rowIndex(), arb.row) && Jsc.eq(postDown.columnIndex(), arb.col);
       }
     );
 
@@ -49,9 +53,13 @@ test(
       'Regular matrix: cycleLeft and cycleRight should be symmetric',
       arbRegularMatrix,
       function (arb) {
-        var postUp = MatrixNavigation.cycleLeft(arb.matrix, arb.row, arb.col);
-        var postDown = MatrixNavigation.cycleRight(arb.matrix, postUp.row(), postUp.column());
-        return Jsc.eq(postDown.row(), arb.row) && Jsc.eq(postDown.column(), arb.col);
+        var postLeft = MatrixNavigation.cycleLeft(arb.matrix, arb.row, arb.col).getOrDie(
+          'Should be able to cycleLeft'
+        );
+        var postRight = MatrixNavigation.cycleRight(arb.matrix, postLeft.rowIndex(), postLeft.columnIndex()).getOrDie(
+          'Should be able to cycleRight'
+        );
+        return Jsc.eq(postRight.rowIndex(), arb.row) && Jsc.eq(postRight.columnIndex(), arb.col);
       }
     );
 

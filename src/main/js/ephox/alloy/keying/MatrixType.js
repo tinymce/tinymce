@@ -66,13 +66,7 @@ define(
         return SelectorFilter.descendants(row, matrixInfo.selectors().cell());
       });
     };
-
-    var toCell = function (matrix, newIndices) {
-      return Option.from(matrix[newIndices.row()]).bind(function (row) {
-        return Option.from(row[newIndices.column()]);
-      });
-    };
-
+  
     var doMove = function (cycle) {
       return function (element, focused, matrixInfo) {
         console.log('cycling');
@@ -89,9 +83,9 @@ define(
               console.log('rowIndex', rowIndex);
               // Now, make the matrix.
               var matrix = toMatrix(allRows, matrixInfo);
-              var newIndices = cycle(matrix, rowIndex, colIndex);
-
-              return toCell(matrix, newIndices);
+              return cycle(matrix, rowIndex, colIndex).map(function (next) {
+                return next.cell();
+              });
             });
           });
         });
