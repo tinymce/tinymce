@@ -5,10 +5,13 @@ asynctest(
     'ephox.katamari.api.Future',
     'ephox.katamari.api.FutureResult',
     'ephox.katamari.api.Result',
+    'ephox.katamari.test.AsyncProps',
+    'ephox.katamari.test.arb.ArbDataTypes',
+    'ephox.wrap.Jsc',
     'global!Promise'
   ],
 
-  function (Future, FutureResult, Result, Promise) {
+  function (Future, FutureResult, Result, AsyncProps, ArbDataTypes, Jsc, Promise) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -81,7 +84,25 @@ asynctest(
       });
     };
 
-    testPure().then(testError).then(testFromResult).then(testFromFuture).then(testNu).then(function () {
+    var testSpecs = function () {
+      return AsyncProps.checkProps([
+        {
+          label: 'FutureResult.pure resolves with data',
+          arbs: [ Jsc.json ],
+          f: function (json) {
+            return AsyncProps.checkFuture(FutureResult.pure(json), function (data) {
+              return data.fold(function (err) {
+                return Result.error('Unexpected error in test: ' + err);
+              }, function (value) {
+                return Jsc.eq(json, value) ? Result.value(true) : Result.error('Payload is not the same');  
+              });              
+            });
+          }       
+        }
+      ]);
+    };
+
+    testPure().then(testError).then(testFromResult).then(testFromFuture).then(testNu).then(testSpecs).then(function () {
       success();
     }, failure);
   }
