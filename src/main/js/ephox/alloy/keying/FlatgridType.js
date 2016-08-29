@@ -5,7 +5,7 @@ define(
     'ephox.alloy.alien.Keys',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.construct.EventHandler',
-    'ephox.alloy.navigation.ArrNavigation',
+    'ephox.alloy.navigation.WrapArrNavigation',
     'ephox.alloy.navigation.DomMovement',
     'ephox.alloy.navigation.DomPinpoint',
     'ephox.alloy.navigation.KeyMatch',
@@ -17,7 +17,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Keys, SystemEvents, EventHandler, ArrNavigation, DomMovement, DomPinpoint, KeyMatch, KeyRules, FieldSchema, Objects, Cell, Focus, SelectorFind) {
+  function (Keys, SystemEvents, EventHandler, WrapArrNavigation, DomMovement, DomPinpoint, KeyMatch, KeyRules, FieldSchema, Objects, Cell, Focus, SelectorFind) {
     // FIX: Dupe with FlowType.
     var defaultExecute = function (component, simulatedEvent, focused) {
       var system = component.getSystem();
@@ -66,11 +66,11 @@ define(
       };
     };
 
-    var moveLeft = doMove(ArrNavigation.cycleLeft);
-    var moveRight = doMove(ArrNavigation.cycleRight);
+    var moveLeft = doMove(WrapArrNavigation.cycleLeft);
+    var moveRight = doMove(WrapArrNavigation.cycleRight);
     
-    var moveNorth = doMove(ArrNavigation.cycleUp);
-    var moveSouth = doMove(ArrNavigation.cycleDown);
+    var moveNorth = doMove(WrapArrNavigation.cycleUp);
+    var moveSouth = doMove(WrapArrNavigation.cycleDown);
 
     var rules = [
       KeyRules.rule( KeyMatch.inSet( Keys.LEFT() ), DomMovement.west(moveLeft, moveRight)),

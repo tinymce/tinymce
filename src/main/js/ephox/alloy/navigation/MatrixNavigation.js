@@ -2,19 +2,19 @@ define(
   'ephox.alloy.navigation.MatrixNavigation',
 
   [
-    'ephox.alloy.navigation.ArrNavigation',
+    'ephox.alloy.navigation.Cycles',
     'ephox.scullion.Struct',
     'global!Math'
   ],
 
-  function (ArrNavigation, Struct, Math) {
+  function (Cycles, Struct, Math) {
     // TODO: Atomic tests.
     var address = Struct.immutableBag([ 'row', 'column' ], [ ]);
 
     var cycleHorizontal = function (matrix, rowIndex, startCol, deltaCol) {
       var row = matrix[rowIndex];
       var colsInRow = row.length;
-      var newColIndex = ArrNavigation.cycleBy(startCol, deltaCol, 0, colsInRow - 1);
+      var newColIndex = Cycles.cycleBy(startCol, deltaCol, 0, colsInRow - 1);
       return address({
         row: rowIndex,
         column: newColIndex
@@ -22,11 +22,11 @@ define(
     };
 
     var cycleVertical = function (matrix, colIndex, startRow, deltaRow) {
-      var nextRowIndex = ArrNavigation.cycleBy(startRow, deltaRow, 0, matrix.length - 1);
+      var nextRowIndex = Cycles.cycleBy(startRow, deltaRow, 0, matrix.length - 1);
       var colsInNextRow = matrix[nextRowIndex].length;
       return address({
         row: nextRowIndex,
-        column: ArrNavigation.cap(colIndex, 0, colsInNextRow - 1)
+        column: Cycles.cap(colIndex, 0, colsInNextRow - 1)
       });
     };
 
