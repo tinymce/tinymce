@@ -16,14 +16,13 @@ define(
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
     'ephox.sugar.api.Focus',
     'ephox.sugar.api.SelectorFilter',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Keys, SystemEvents, EventHandler, DomMovement, DomPinpoint, KeyMatch, KeyRules, MatrixNavigation, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Fun, Option, Focus, SelectorFilter, SelectorFind) {
-    // FIX: Dupe with FlowType.
+  function (Keys, SystemEvents, EventHandler, DomMovement, DomPinpoint, KeyMatch, KeyRules, MatrixNavigation, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Fun, Focus, SelectorFilter, SelectorFind) {
+    // INVESTIGATE: nice way of sharing defaultExecute
     var defaultExecute = function (component, simulatedEvent, focused) {
       var system = component.getSystem();
       system.triggerEvent(SystemEvents.execute(), focused, simulatedEvent);

@@ -18,7 +18,7 @@ define(
   ],
 
   function (Keys, SystemEvents, EventHandler, WrapArrNavigation, DomMovement, DomPinpoint, KeyMatch, KeyRules, FieldSchema, Objects, Cell, Focus, SelectorFind) {
-    // FIX: Dupe with FlowType.
+    // INVESTIGATE: nice way of sharing defaultExecute
     var defaultExecute = function (component, simulatedEvent, focused) {
       var system = component.getSystem();
       system.triggerEvent(SystemEvents.execute(), focused, simulatedEvent);

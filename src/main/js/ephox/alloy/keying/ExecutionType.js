@@ -25,6 +25,7 @@ define(
       ];
     };
 
+    // INVESTIGATE: nice way of sharing defaultExecute
     var defaultExecute = function (component, simulatedEvent, focused) {
       var system = component.getSystem();
       system.triggerEvent(SystemEvents.execute(), focused, simulatedEvent);
