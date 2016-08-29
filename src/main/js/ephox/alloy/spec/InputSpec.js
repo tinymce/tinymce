@@ -33,11 +33,18 @@ define(
         // Simplify this
         dom: Objects.wrapAll(
           Arr.flatten([
-            toProp(detail.placeholder(), 'placeholder'),
             toProp(detail.value(), 'value'),
             [
               { key: 'tag', value: 'input' },
-              { key: 'type', value: detail.type() }
+              { key: 'type', value: detail.type() },
+              {
+                key: 'attributes',
+                value: Objects.wrapAll(
+                  Arr.flatten([
+                    toProp(detail.placeholder(), 'placeholder')
+                  ])
+                )
+              }
             ]
           ])
         ),

@@ -37,13 +37,17 @@ asynctest(
           {
             uiType: 'formlabel',
             field: {
-              uiType: 'input'
+              uiType: 'input',
+              placeholder: 'Add URL'
             },
-            label: 'dog'
+            label: 'Choose URL'
           },
           {
-            uiType: 'input',
-            value: 'next-value'
+            uiType: 'formlabel',
+            field: {
+              uiType: 'input'
+            },
+            label: 'Choose Title  '
           }
         ]
       });
