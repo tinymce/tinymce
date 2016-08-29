@@ -18,7 +18,7 @@ asynctest(
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
-      var item = function (classes) {
+      var item = function (classes, name) {
         return {
           uiType: 'custom',
           dom: {
@@ -34,7 +34,7 @@ asynctest(
           },
           events: {
             'alloy.execute': EventHandler.nu({
-              run: store.adder('item.execute: ' + classes.join(','))
+              run: store.adder('item.execute: ' + name)
             })
           },
           focusing: true
@@ -58,11 +58,11 @@ asynctest(
           selector: '.stay'
         },
         components: [
-          item([ 'stay', 'one' ]),
-          item([ 'stay', 'two' ]),
-          item([ 'skip', 'three' ]),
-          item([ 'skip', 'four' ]),
-          item([ 'stay', 'five' ])
+          item([ 'stay', 'one' ], 'one'),
+          item([ 'stay', 'two' ], 'two'),
+          item([ 'skip', 'three' ], 'three'),
+          item([ 'skip', 'four' ], 'four'),
+          item([ 'stay', 'five' ], 'five')
         ]
       });
 
@@ -130,7 +130,8 @@ asynctest(
         ),
 
         // Test execute
-        Keyboard.sKeydown(doc, Keys.enter(), {})
+        Keyboard.sKeydown(doc, Keys.enter(), {}),
+        store.sAssertEq('Check that execute has fired on the right target', [ 'item.execute: one' ])
       ];
     }, function () {
       success();
