@@ -81,25 +81,3 @@ define(
     });
   }
 );
-
-
-/*
-
-FieldSchema.field('keying', 'keying', FieldPresence.asOption(), ValueSchema.oneOf('mode', [
-  FieldSchema.candidate('cyclic', schema1),
-  FieldSchema.candidate('flow', schema2)
-  schema2,
-  schema3,
-  schema4
-]))
-
-
-{
-  keying: {
-    mode: 'cyclic',
-    blah: 'dog',
-    output: handler.
-  }
-}
-
-*/
