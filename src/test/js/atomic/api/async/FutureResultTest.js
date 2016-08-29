@@ -170,22 +170,31 @@ asynctest(
           f: function (arbF, binder) {
             return AsyncProps.futureToPromise(arbF.futureResult.bindFuture(binder)).then(function (data) {
               return new Promise(function (resolve, reject) {
-                binder(arbF.contents).toLazy().get(function (bInitial) {
-                  return bInitial.fold(function (bErr) {
-                    return data.fold(function (dErr) {
-                      console.log('bErr', bErr);
-                      console.log('dErr', dErr);
-                      return Jsc.eq(bErr, dErr) ? resolve(true) : reject('errors did not match');
-                    }, function (dVal) {
-                      reject('Did not get the expected error. Was instead value: ' + dVal);
-                    });
-                  }, function (bVal) {
-                    return data.fold(function (dErr) {
-                      reject('Did not get expected value. Was instead error: ' + dErr);
-                    }, function (dVal) {
-                      return Jsc.eq(bVal, bVal) ? resolve(true): reject('Data did not match');
-                    });
-                  });                  
+                arbF.contents.fold(function (cErr) {
+                  data.fold(function (dErr) {
+                    return Jsc.eq(dErr, cErr) ? resolve(true) : reject('Error did not match');
+                  }, function (dVal) {
+                    reject('Unexpected value: ' + dVal);
+                  });
+                  // We initially had an error, so bind should have done nothing;
+                }, function (cVal) {
+
+
+                  binder(cVal).toLazy().get(function (bInitial) {
+                    return bInitial.fold(function (bErr) {
+                      return data.fold(function (dErr) {
+                        return Jsc.eq(bErr, dErr) ? resolve(true) : reject('errors did not match');
+                      }, function (dVal) {
+                        reject('Did not get the expected error. Was instead value: ' + dVal);
+                      });
+                    }, function (bVal) {
+                      return data.fold(function (dErr) {
+                        reject('Did not get expected value. Was instead error: ' + dErr);
+                      }, function (dVal) {
+                        return Jsc.eq(bVal, bVal) ? resolve(true): reject('Data did not match');
+                      });
+                    });                  
+                  });
                 });
               });
             });
@@ -195,7 +204,7 @@ asynctest(
     };
 
     testPure().then(testError).then(testFromResult).then(testFromFuture).then(testNu).
-      then(testBindResult).then(testBindFuture).then(testMapResult).then(testSpecs).then(function () {
+      then(testBindResult).then(function () { }, testBindFuture).then(testMapResult).then(testSpecs).then(function () {
       success();
     }, failure);
   }
