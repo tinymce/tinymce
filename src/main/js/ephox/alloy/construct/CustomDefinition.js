@@ -60,7 +60,8 @@ define(
         ),
         FieldSchema.defaulted('domModificationOrder', {}),
 
-        FieldSchema.state('definition.input', Fun.identity)
+        FieldSchema.state('definition.input', Fun.identity),
+        FieldSchema.defaulted('postprocess', Fun.noop)
       ].concat(behaviourSchema)), spec);
     };
 

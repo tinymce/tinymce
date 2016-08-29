@@ -35,7 +35,11 @@ asynctest(
         },
         components: [
           {
-            uiType: 'input'
+            uiType: 'formlabel',
+            field: {
+              uiType: 'input'
+            },
+            label: 'dog'
           },
           {
             uiType: 'input',
