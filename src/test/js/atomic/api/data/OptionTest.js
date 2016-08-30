@@ -36,31 +36,6 @@ test('SomeTest', ['ephox.katamari.api.Fun', 'ephox.katamari.api.Option'], functi
   assert.eq(true, s.filter(Fun.constant(false)).flatten().isNone());
 });
 
-test('NoneTest', [ 'ephox.katamari.api.Fun', 'ephox.katamari.api.Option' ], function (Fun, Option) {
-  var s = Option.none();
-  assert.eq(false, s.isSome());
-  assert.eq(true, s.isNone());
-  assert.eq(6, s.getOr(6));
-  assert.eq(6, s.getOrThunk(function () { return 6; }));
-  assert.throws(function () { s.getOrDie('Died!'); });
-  assert.eq(6, s.or(Option.some(6)).getOrDie());
-  assert.eq(6, s.orThunk(function () {
-    return Option.some(6);
-  }).getOrDie());
-
-
-  assert.eq(true, s.map(function (v) {
-    return v * 2;
-  }).isNone());
-
-  assert.eq(true, s.bind(function (v) {
-    return Option.some('test' + v);
-  }).isNone());
-
-  assert.eq(true, s.flatten().isNone());
-  assert.eq(true, s.filter(Fun.constant(true)).flatten().isNone());
-  assert.eq(true, s.filter(Fun.constant(false)).flatten().isNone());
-});
 
 test('FromTest', [ 'ephox.katamari.api.Option' ], function (Option) {
   assert.eq(true, Option.from(5).isSome());
@@ -136,30 +111,4 @@ test('fold_test', [ 'ephox.katamari.api.Option', 'ephox.katamari.api.Fun' ], fun
   assert.eq([], Option.none().fold(function () { return Array.prototype.slice.call(arguments); }, boom));
 
 
-});
-
-test(
-  'Options',
-
-  [
-    'ephox.katamari.api.Option'
-  ],
-
-  function (Option) {
-    var arr = [Option.some(1), Option.none(), Option.some(2), Option.some(3), Option.none(), Option.none(), Option.none(), Option.none(), Option.some(4)];
-    assert.eq([1, 2, 3, 4], Option.cat(arr));
-  }
-);
-
-test('liftN', [ 'ephox.katamari.api.Option' ], function (Option) {
-
-
-  var Person = function(name, age, address) {
-    return {name:name, age:age, address:address};
-  };
-
-  assert.eq({name:'bob', age:25, address:"the moon"}, Option.liftN([Option.some("bob"), Option.some(25), Option.some("the moon")], Person).getOrDie());
-
-  assert.eq(true, Option.liftN([Option.some("bob"), Option.none(), Option.some("the moon")], function() { throw "barf"; }).isNone());
-  assert.eq(true, Option.liftN([Option.none(), Option.none(), Option.some("the moon")], function() { throw "barf"; }).isNone());
 });
