@@ -67,6 +67,8 @@ test(
 
     var testSpecs = function () {
       var arbOptionNone = ArbDataTypes.optionNone;
+      var arbOptionSome = ArbDataTypes.optionSome;
+      var arbOption = ArbDataTypes.option;
 
       Jsc.property('Checking none.is === false', arbOptionNone, function (opt) {
         var v = opt.fold(Fun.identity, Fun.die('should be option.none'));
@@ -131,18 +133,19 @@ test(
         return Jsc.eq(undefined, actual);
       });
 
-            return;
-
-
-      Jsc.property('Given f :: s -> RV, checking error.bind(f) === error', arbResultError, Jsc.fn(arbResultValue), function (opt, f) {
+      Jsc.property('Given f :: s -> some(b), checking none.bind(f) === none', arbOptionNone, Jsc.fn(arbOptionSome), function (opt, f) {
         var actual = opt.bind(f);
-        return Jsc.eq(true, getErrorOrDie(opt) === getErrorOrDie(actual));
+        return Jsc.eq(true, actual.isNone());
       });
 
-      Jsc.property('Given f :: s -> RE, checking error.bind(f) === error', arbResultError, Jsc.fn(arbResultError), function (opt, f) {
+      Jsc.property('Given f :: s -> none, checking none.bind(f) === none', arbOptionNone, Jsc.fn(arbOptionNone), function (opt, f) {
         var actual = opt.bind(f);
-        return Jsc.eq(true, getErrorOrDie(opt) === getErrorOrDie(actual));
+        return Jsc.eq(true, actual.isNone());
       });
+
+      return;
+
+      
 
       Jsc.property('Checking error.forall === true', arbResultError, 'string -> bool', function (opt, f) {
         return Jsc.eq(true, opt.forall(f));
