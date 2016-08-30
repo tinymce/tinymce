@@ -94,6 +94,8 @@ test(
 
     var testSpecs = function () {
       var arbOptionSome = ArbDataTypes.optionSome;
+      var arbOptionNone = ArbDataTypes.optionNone;
+
 
       Jsc.property('Checking some(x).fold(die, id) === x', 'json', function (json) {
         var opt = Option.some(json);
@@ -168,26 +170,44 @@ test(
         return Jsc.eq(undefined, actual) && hack == opt.getOrDie();
       });
 
+      Jsc.property('Given f :: s -> some(b), checking some(x).bind(f) === some(b)', arbOptionSome, Jsc.fn(arbOptionSome), function (opt, f) {
+        var actual = opt.bind(f);
+        return actual.isSome() && Jsc.eq(true, actual.equals(f(opt.getOrDie())));
+      });
 
-      return;
+      
 
-      Jsc.property('Given f :: s -> some(b), checking none.bind(f) === none', arbOptionSome, Jsc.fn(arbOptionSome), function (opt, f) {
+      Jsc.property('Given f :: s -> none, checking some(x).bind(f) === none', arbOptionSome, Jsc.fn(arbOptionNone), function (opt, f) {
         var actual = opt.bind(f);
         return Jsc.eq(true, actual.isNone());
       });
 
-      Jsc.property('Given f :: s -> none, checking none.bind(f) === none', arbOptionSome, Jsc.fn(arbOptionNone), function (opt, f) {
-        var actual = opt.bind(f);
-        return Jsc.eq(true, actual.isNone());
-      });
 
-      Jsc.property('Checking none.flatten === none', arbOptionSome, function (opt) {
+
+      Jsc.property('Checking some(none).flatten === none', arbOptionNone, function (inside) {
+        var opt = Option.some(inside);
         return Jsc.eq(true, opt.flatten().isNone());
       });
 
-      Jsc.property('Checking none.exists === false', arbOptionSome, 'string -> bool', function (opt, f) {
-        return Jsc.eq(false, opt.exists(f));
+      Jsc.property('Checking some(some(y)).flatten === none', arbOptionSome, function (inside) {
+        var opt = Option.some(inside);
+        return Jsc.eq(inside.getOrDie(), opt.flatten().getOrDie());
       });
+
+      Jsc.property('Checking some(x).exists(_ -> false) === false', arbOptionSome, function (opt) {
+        return Jsc.eq(false, opt.exists(Fun.constant(false)));
+      });
+
+      Jsc.property('Checking some(x).exists(_ -> true) === true', arbOptionSome, function (opt) {
+        return Jsc.eq(true, opt.exists(Fun.constant(true)));
+      });
+
+      Jsc.property('Checking some(x).exists(f) iff. f(x)', 'json', Jsc.fun(Jsc.bool), function (json, f) {
+        var opt = Option.some(json);
+        return f(json) === true ? Jsc.eq(true, opt.exists(f)) : Jsc.eq(false, opt.exists(f));
+      });
+
+      return;
 
       Jsc.property('Checking none.forall === true', arbOptionSome, 'string -> bool', function (opt, f) {
         return Jsc.eq(true, opt.forall(f));
