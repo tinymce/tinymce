@@ -227,7 +227,7 @@ asynctest(
           }
         },
         {
-          label: 'futureResult.bindResult equiv futureResult.....',
+          label: 'futureResult.bindResult equiv binding original value',
           arbs: [ ArbDataTypes.futureResultSchema, Jsc.fun(ArbDataTypes.result) ],
           f: function (arbF, resultBinder) {
             return AsyncProps.futureToPromise(arbF.futureResult.bindResult(resultBinder)).then(function (data) {
