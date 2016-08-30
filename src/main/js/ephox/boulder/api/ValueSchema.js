@@ -2,17 +2,16 @@ define(
   'ephox.boulder.api.ValueSchema',
 
   [
-    'ephox.boulder.api.Objects',
+    'ephox.boulder.core.ChoiceProcessor',
     'ephox.boulder.core.ValueProcessor',
     'ephox.compass.Arr',
-    'ephox.compass.Obj',
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
     'ephox.perhaps.Result',
     'global!Error'
   ],
 
-  function (Objects, ValueProcessor, Arr, Obj, Json, Fun, Result, Error) {
+  function (ChoiceProcessor, ValueProcessor, Arr, Json, Fun, Result, Error) {
     var anyValue = ValueProcessor.value(Result.value);
 
     var arrOfObj = function (objFields) {
@@ -75,35 +74,7 @@ define(
 
     // The purpose of oneof is that all of the field schemas
     var choose = function (key, branches) {
-      var extract = function (path, strength, input) {
-        var choice = Objects.readOptFrom(input, key);
-        return choice.fold(function () {
-          return Result.error([{
-            path: path,
-            err: 'Choice schema did not contain choice key: "' + key + '"'
-          }]);
-        }, function (ch) {
-          var fields = Objects.readOptFrom(branches, ch);
-          return fields.fold(function () {
-            return Result.error([{
-              path: path,
-              err: 'The chosen schema: "' + ch + '" did not exist in branches: ' + Json.stringify(branches, null, 2)
-            }]);
-          }, function (fs) {
-            return objOf(fs).extract(path.concat([ 'branch: ' + ch ]), strength, input);  
-          });          
-        });
-      };
-
-      var toString = function () {
-        return 'chooseOn(' + key + '). Possible values: ' + Obj.keys(branches);
-      };
-
-      return {
-        extract: extract,
-        toString: toString
-      };
-
+      return ChoiceProcessor.choose(key, branches);
     };
 
     return {
