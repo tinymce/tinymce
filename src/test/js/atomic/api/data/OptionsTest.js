@@ -3,13 +3,14 @@ test(
 
   [
     'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Options',
     'ephox.katamari.test.arb.ArbDataTypes',
     'ephox.wrap.Jsc'
   ],
 
-  function (Arr, Option, Options, ArbDataTypes, Jsc) {
+  function (Arr, Fun, Option, Options, ArbDataTypes, Jsc) {
     Jsc.property(
       'Options.cat of only nones should be an empty array',
       Jsc.array(ArbDataTypes.optionNone),
@@ -94,5 +95,42 @@ test(
         return output.isNone() || output.isSome();
       }
     );
+
+    Jsc.property(
+      'Options.liftN of an array of nones returns a none',
+      Jsc.nearray(ArbDataTypes.optionNone),
+      function (arr) {
+        var output = Options.liftN(arr, Fun.die('Never executes f'));
+        return output.isNone();
+      }
+    );
+
+
+    Jsc.property(
+      'Options.liftN of an array of somes returns a some',
+      Jsc.nearray(ArbDataTypes.optionSome),
+      Jsc.fun(Jsc.json),
+      function (arr, f) {
+        var output = Options.liftN(arr, f);
+        return output.isSome();
+      }
+    );
+
+    /**
+    if all elements in arr are 'some', their inner values are passed as arguments to f
+    f must have arity arr.length
+    */
+    var liftN = function(arr, f) {
+      var r = [];
+      for (var i = 0; i < arr.length; i++) {
+        var x = arr[i];
+        if (x.isSome()) {
+          r.push(x.getOrDie());
+        } else {
+          return Option.none();
+        }
+      }
+      return Option.some(f.apply(null, r));
+    };
   }
 );
