@@ -2,12 +2,11 @@ define(
   'ephox.katamari.api.FutureResult',
 
   [
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Future',
     'ephox.katamari.api.Result'
   ],
 
-  function (Fun, Future, Result) {
+  function (Future, Result) {
     var fromResult = function (result) {
       return nu(function (callback) {
         callback(result);

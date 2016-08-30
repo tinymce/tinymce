@@ -281,6 +281,51 @@ asynctest(
               });
             });
           }
+        },
+
+        {
+          label: 'futureResult.mapResult equiv mapping original result',
+          arbs: [ ArbDataTypes.futureResultSchema, Jsc.fun(ArbDataTypes.json) ],
+          f: function (arbF, resultMapper) {
+            return AsyncProps.futureToPromise(arbF.futureResult.mapResult(resultMapper)).then(function (data) {
+              return new Promise(function (resolve, reject) {
+                var comparison = Results.compare(arbF.contents, data);
+                comparison.match({
+                  // input was error
+                  // bind result was error
+                  // so check that the error strings are the same (i.e. binder didn't run)
+                  bothErrors: function (errInit, errBind) {
+                    return Jsc.eq(errInit, errBind) ? resolve(true) : reject('Both were errors, but the errors did not match');
+                  },
+
+                  // input was error
+                  // bind result was value
+                  // something is wrong.
+                  firstError: function (errInit, valBind) {
+                    reject('Initially, you had an error, but after bind you received a value');
+                  },
+
+                  // input was value
+                  // bind result was error
+                  // something is wrong because you can't map to an error
+                  secondError: function (valInit, errBind) {
+                    reject('Initially you had a value, so you cannot map to an error');
+                  },
+                  bothValues: function (valInit, valBind) {
+                    // input was value
+                    // bind result was value
+                    // something is right if mapper(value) === value
+                    var valF = resultMapper(valInit);
+                    return Jsc.eq(valBind, valF) ? resolve(true) : reject(
+                      'Mapper results did not match\n' +
+                      'First: ' + valBind + '\n' +
+                      'Second: ' + valF
+                    );
+                  }
+                });
+              });
+            });
+          }
         }
       ]);
     };
