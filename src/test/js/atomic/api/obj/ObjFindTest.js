@@ -63,7 +63,7 @@ test(
     );
 
     Jsc.property(
-      'If predicate is always true, then value is always the first, or undefined if dict is empty',
+      'If predicate is always true, then value is always the first (anything here), or undefined if dict is empty',
       Jsc.dict(Jsc.json),
       function (obj) {
         var value = Obj.find(obj, Fun.constant(true));
