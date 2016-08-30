@@ -6,7 +6,7 @@ test(
   ],
 
   function (Obj) {
-    var check = function (expected, C, input) {
+    var check = function (expected, input) {
       var values = [];
       Obj.each(input, function (x, i) {
         values.push({index: i, value: x});
