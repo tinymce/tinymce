@@ -20,6 +20,9 @@ test(
     assert.eq(true, Option.liftN([Option.some('bob'), Option.none(), Option.some('the moon')], function() { throw 'barf'; }).isNone());
     assert.eq(true, Option.liftN([Option.none(), Option.none(), Option.some('the moon')], function() { throw 'barf'; }).isNone());
 
+    var arr1 = [Option.some(1), Option.none(), Option.some(2), Option.some(3), Option.none(), Option.none(), Option.none(), Option.none(), Option.some(4)];
+    assert.eq([1, 2, 3, 4], Option.cat(arr1));
+
     Jsc.property(
       'Options.cat of only nones should be an empty array',
       Jsc.array(ArbDataTypes.optionNone),
