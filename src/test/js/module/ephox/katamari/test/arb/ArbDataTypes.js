@@ -3,11 +3,12 @@ define(
 
   [
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.katamari.api.Result',
     'ephox.wrap.Jsc'
   ],
 
-  function (Fun, Result, Jsc) {
+  function (Fun, Option, Result, Jsc) {
     var show = function (res) {
       return res.fold(function (e) {
         return 'Result.error(' + e + ')';
@@ -31,6 +32,15 @@ define(
     var result = Jsc.oneof([ resultError, resultValue ]);
 
 
+    var arbNone = Jsc.constant(Option.none());
+    var arbSome = Jsc.json.smap(function (v) {
+      return Option.some(v);
+    }, function (option) {
+      return option.getOrDie();
+    });
+
+    var arbOption = Jsc.oneof([ arbNone, arbSome ]);
+
     var genIndexArrayOf = function (len) {
       return Jsc.integer(0, len).generator.map(function (aLength) {
         var r = [ ];
@@ -51,6 +61,10 @@ define(
       resultError: resultError,
       resultValue: resultValue,
       result: result,
+
+      option: arbOption,
+      optionSome: arbSome,
+      optionNone: arbNone,
 
       indexArrayOf: arbIndexArrayOf
     };
