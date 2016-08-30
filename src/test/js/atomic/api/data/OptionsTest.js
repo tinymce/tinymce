@@ -11,6 +11,15 @@ test(
   ],
 
   function (Arr, Fun, Option, Options, ArbDataTypes, Jsc) {
+    var person = function(name, age, address) {
+      return {name:name, age:age, address:address};
+    };
+
+    assert.eq({name:'bob', age:25, address:'the moon'}, Option.liftN([Option.some('bob'), Option.some(25), Option.some('the moon')], person).getOrDie());
+
+    assert.eq(true, Option.liftN([Option.some('bob'), Option.none(), Option.some('the moon')], function() { throw 'barf'; }).isNone());
+    assert.eq(true, Option.liftN([Option.none(), Option.none(), Option.some('the moon')], function() { throw 'barf'; }).isNone());
+
     Jsc.property(
       'Options.cat of only nones should be an empty array',
       Jsc.array(ArbDataTypes.optionNone),
