@@ -168,6 +168,13 @@ test(
         return Jsc.eq(true, opt1.equals_(opt2));
       });
 
+      Jsc.property('Checking none.toArray equals [ ]', arbOptionNone, function (opt) {
+        return Jsc.eq([ ], opt.toArray());
+      });
+
+      Jsc.property('Checking none.toString equals "none()"', arbOptionNone, function (opt) {
+        return Jsc.eq('none()', opt.toString());
+      });
     };
 
     testSanity();
