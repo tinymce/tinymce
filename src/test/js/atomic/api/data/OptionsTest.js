@@ -131,22 +131,5 @@ test(
         }
       }
     );
-
-    /**
-    if all elements in arr are 'some', their inner values are passed as arguments to f
-    f must have arity arr.length
-    */
-    var liftN = function(arr, f) {
-      var r = [];
-      for (var i = 0; i < arr.length; i++) {
-        var x = arr[i];
-        if (x.isSome()) {
-          r.push(x.getOrDie());
-        } else {
-          return Option.none();
-        }
-      }
-      return Option.some(f.apply(null, r));
-    };
   }
 );
