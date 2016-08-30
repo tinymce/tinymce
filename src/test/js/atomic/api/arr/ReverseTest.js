@@ -8,22 +8,21 @@ test(
 
   function (Arr, Jsc) {
 
-    Jsc.property("Reversing twice is identity", "[nat]", function(a) {
+    Jsc.property('Reversing twice is identity', '[nat]', function(a) {
       return Jsc.eq(a, Arr.reverse(Arr.reverse(a)));
     });
 
-    Jsc.property("Reverse lists of 1 element", "nat", function(a) {
+    Jsc.property('Reverse lists of 1 element', 'nat', function(a) {
       return Jsc.eq([a], Arr.reverse([a]));
     });
 
-    Jsc.property("Reverse lists of 2 elements", "nat", "string", function(a, b) {
+    Jsc.property('Reverse lists of 2 elements', 'nat', 'string', function(a, b) {
       return Jsc.eq([b, a], Arr.reverse([a, b]));
     });
 
-    Jsc.property("Reverse lists of 3 elements", "bool", "nat", "string", function(a, b, c) {
+    Jsc.property('Reverse lists of 3 elements', 'bool', 'nat', 'string', function(a, b, c) {
       return Jsc.eq([c, b, a], Arr.reverse([a, b, c]));
     });
-
 
     var check = function (expected, input) {
       var actual = Arr.reverse(input);

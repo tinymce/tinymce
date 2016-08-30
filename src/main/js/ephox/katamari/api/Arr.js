@@ -240,6 +240,12 @@ define(
       return [x];
     };
 
+    var sort = function (xs, comparator) {
+      var copy = xs.slice(0);
+      copy.sort(comparator);
+      return copy;
+    };
+
     return {
       map: map,
       each: each,
@@ -263,7 +269,8 @@ define(
       chunk: chunk,
       difference: difference,
       mapToObject: mapToObject,
-      pure: pure
+      pure: pure,
+      sort: sort
     };
   }
 );
