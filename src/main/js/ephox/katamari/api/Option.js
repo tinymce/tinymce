@@ -144,7 +144,9 @@ define(
             return some(fab(a));
           });
         },
-        each: map,
+        each: function (f) {
+          f(a);
+        },
         bind: bind,
         flatten: constant_a,
         exists: bind,

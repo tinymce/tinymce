@@ -135,35 +135,41 @@ test(
         }
       });
 
-      return;
-
-      Jsc.property('Checking none.or(oSomeValue) === oSomeValue', arbOptionSome, 'json', function (opt, json) {
-        var output = opt.or(Option.some(json));
+      Jsc.property('Checking some(x).or(oSomeValue) === some(x)', 'json', arbOptionSome, function (json, other) {
+        var output = Option.some(json).or(other);
         return Jsc.eq(true, output.is(json));
       });      
 
-      Jsc.property('Checking none.orThunk(_ -> v) === v', arbOptionSome, 'json', function (opt, json) {
-        var output = opt.orThunk(function () {
-          return Option.some(json);
+      Jsc.property('Checking some(x).orThunk(_ -> oSomeValue) === some(x)', 'json', arbOptionSome, function (json, other) {
+        var output = Option.some(json).orThunk(function () {
+          return other;
         });
         return Jsc.eq(true, output.is(json));
       });     
 
-      Jsc.property('Checking none.map(f) === none', arbOptionSome, 'string -> json', function (opt, f) {
+      Jsc.property('Checking some(x).map(f) === some(f(x))', 'json', 'json -> json', function (json, f) {
+        var opt = Option.some(json);
         var actual = opt.map(f);
-        return Jsc.eq(true, actual.isNone());
+        return Jsc.eq(f(json), actual.getOrDie());
       });
 
-      Jsc.property('Checking none.ap(Option.some(string -> json) === none', arbOptionSome, 'string -> json', function (opt, f) {
+      Jsc.property('Checking some(x).ap(Option.some(f) === some(f(x))', 'json', 'string -> json', function (json, f) {
+        var opt = Option.some(json);
         var g = Option.some(f);
         var actual = opt.ap(g);
-        return Jsc.eq(true, actual.isNone());
+        return Jsc.eq(f(json), actual.getOrDie());
+      });      
+
+      Jsc.property('Checking some(x).each(f) === undefined and f gets x', arbOptionSome, function (opt) {
+        var hack = null;
+        var actual = opt.each(function (x) {
+          hack = x;
+        });
+        return Jsc.eq(undefined, actual) && hack == opt.getOrDie();
       });
 
-      Jsc.property('Checking none.each(f) === undefined and f does not fire', arbOptionSome, 'string -> json', function (opt, f) {
-        var actual = opt.each(Fun.die('should not invoke'));
-        return Jsc.eq(undefined, actual);
-      });
+
+      return;
 
       Jsc.property('Given f :: s -> some(b), checking none.bind(f) === none', arbOptionSome, Jsc.fn(arbOptionSome), function (opt, f) {
         var actual = opt.bind(f);
