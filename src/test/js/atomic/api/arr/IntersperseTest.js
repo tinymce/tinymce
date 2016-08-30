@@ -1,11 +1,12 @@
 test('Intersperse',
 
   [
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Jam',
     'ephox.wrap.Jsc'
   ],
 
-  function(Jam, Jsc) {
+  function(Arr, Jam, Jsc) {
 
     var check = function (expected, input, delimiter) {
       var actual = Jam.intersperse(input, delimiter);
@@ -36,6 +37,19 @@ test('Intersperse',
         var actual = Jam.intersperse(arr, delimiter);
         var expected = arr.length === 0 ? 0 : arr.length * 2 - 1;
         return Jsc.eq(expected, actual.length);
+      }
+
+    );
+
+    Jsc.property(
+      'Every odd element matches delimiter',
+      Jsc.array(Jsc.json),
+      Jsc.json,
+      function (arr, delimiter) {
+        var actual = Jam.intersperse(arr, delimiter);
+        return Arr.forall(actual, function (x, i) {
+          return i % 2 === 1 ? Jsc.eq(x, delimiter) : true;
+        });
       }
 
     );
