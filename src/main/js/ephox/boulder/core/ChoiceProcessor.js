@@ -28,7 +28,8 @@ define(
       });         
     };
 
-    // The purpose of choose is that all of the field schemas
+    // The purpose of choose is to have a key which picks which of the schemas to follow.
+    // The key will index into the object of schemas: branches
     var choose = function (key, branches) {
       var extract = function (path, strength, input) {
         var choice = Objects.readOptFrom(input, key);
