@@ -83,7 +83,7 @@ test('Zip',
     );
 
     Jsc.property(
-      'zipToObject',
+      'zipToObject has matching keys and values',
       Jsc.array(Jsc.nestring),
       function (rawValues) {
         var values = Unique.stringArray(rawValues);
@@ -100,6 +100,20 @@ test('Zip',
           var index = parseInt(oKey, 10);
           var expected = values[index];
           return output[oKey] === expected;
+        });
+      }
+    );
+
+    Jsc.property(
+      'zipToTuples matches corresponding tuples',
+      Jsc.array(Jsc.json),
+      Jsc.array(Jsc.json),
+      function (keys, values) {
+        var output = Zip.zipToTuples(keys, values);
+
+        if (output.length !== keys.length) return 'Output keys did not match';
+        return Arr.forall(output, function (x, i) {
+          return x.k === keys[i] && x.v === values[i];
         });
       }
     );
