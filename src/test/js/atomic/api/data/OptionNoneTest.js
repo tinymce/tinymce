@@ -143,21 +143,15 @@ test(
         return Jsc.eq(true, actual.isNone());
       });
 
-      return;
-
-      
-
-      Jsc.property('Checking error.forall === true', arbResultError, 'string -> bool', function (opt, f) {
+      Jsc.property('Checking none.forall === true', arbOptionNone, 'string -> bool', function (opt, f) {
         return Jsc.eq(true, opt.forall(f));
       });
+      
 
-      Jsc.property('Checking error.exists === false', arbResultError, 'string -> bool', function (opt, f) {
+      Jsc.property('Checking none.exists === false', arbOptionNone, 'string -> bool', function (opt, f) {
         return Jsc.eq(false, opt.exists(f));
       });
 
-      Jsc.property('Checking error.toOption is always none', arbResultError, function (opt) {
-        return Jsc.eq(true, opt.toOption().isNone());
-      });
     };
 
     testSanity();
