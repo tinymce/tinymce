@@ -1,10 +1,11 @@
 test('Intersperse',
 
   [
-    'ephox.katamari.api.Jam'
+    'ephox.katamari.api.Jam',
+    'ephox.wrap.Jsc'
   ],
 
-  function(Jam) {
+  function(Jam, Jsc) {
 
     var check = function (expected, input, delimiter) {
       var actual = Jam.intersperse(input, delimiter);
@@ -26,5 +27,17 @@ test('Intersperse',
     check(['a', 3, 'a', 3, 'a'], ['a', 'a', 'a'], 3);
     check([[1], [4], [1]], [[1], [1]], [4]);
     checkErr('Cannot intersperse undefined', undefined, 2);
+
+    Jsc.property(
+      'Length of interspersed = len(arr) + len(arr)-1',
+      Jsc.array(Jsc.json),
+      Jsc.json,
+      function (arr, delimiter) {
+        var actual = Jam.intersperse(arr, delimiter);
+        var expected = arr.length === 0 ? 0 : arr.length * 2 - 1;
+        return Jsc.eq(expected, actual.length);
+      }
+
+    );
   }
 );
