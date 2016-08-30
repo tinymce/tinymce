@@ -70,6 +70,11 @@ test(
       var arbOptionSome = ArbDataTypes.optionSome;
       var arbOption = ArbDataTypes.option;
 
+      Jsc.property('Checking none.fold(_ -> x, die) === x', arbOptionNone, 'json', function (opt, json) {
+        var actual = opt.fold(Fun.constant(json), Fun.die('Should not die'));
+        return Jsc.eq(json, actual);
+      });
+
       Jsc.property('Checking none.is === false', arbOptionNone, function (opt) {
         var v = opt.fold(Fun.identity, Fun.die('should be option.none'));
         return Jsc.eq(false, opt.is(v));
@@ -77,18 +82,19 @@ test(
 
       Jsc.property('Checking none.isSome === false', arbOptionNone, function (opt) {
         return Jsc.eq(false, opt.isSome());
-      });
-      
+      });      
 
       Jsc.property('Checking none.isNone === true', arbOptionNone, function (opt) {
         return Jsc.eq(true, opt.isNone());
       });
-
   
       Jsc.property('Checking none.getOr(v) === v', arbOptionNone, 'json', function (opt, json) {
         return Jsc.eq(json, opt.getOr(json));
       });
 
+      Jsc.property('Checking none.getOrThunk(_ -> v) === v', arbOptionNone, Jsc.fun(Jsc.json), function (opt, thunk) {
+        return Jsc.eq(thunk(), opt.getOrThunk(thunk));
+      });
 
       // Require non empty string of msg falsiness gets in the way.
       Jsc.property('Checking none.getOrDie() always throws', arbOptionNone, Jsc.nestring, function (opt, s) {
@@ -100,31 +106,26 @@ test(
         }
       });
 
-
-      Jsc.property('Checking none.or(oValue) === oValue', arbOptionNone, 'json', function (opt, json) {
+      Jsc.property('Checking none.or(oSomeValue) === oSomeValue', arbOptionNone, 'json', function (opt, json) {
         var output = opt.or(Option.some(json));
         return Jsc.eq(true, output.is(json));
-      });
-
-      
+      });      
 
       Jsc.property('Checking none.orThunk(_ -> v) === v', arbOptionNone, 'json', function (opt, json) {
         var output = opt.orThunk(function () {
           return Option.some(json);
         });
         return Jsc.eq(true, output.is(json));
-      });
-
-      
-
-      Jsc.property('Checking none.fold(_ -> x, die) === x', arbOptionNone, 'json', function (opt, json) {
-        var actual = opt.fold(Fun.constant(json), Fun.die('Should not die'));
-        return Jsc.eq(json, actual);
-      });
-     
+      });     
 
       Jsc.property('Checking none.map(f) === none', arbOptionNone, 'string -> json', function (opt, f) {
         var actual = opt.map(f);
+        return Jsc.eq(true, actual.isNone());
+      });
+
+      Jsc.property('Checking none.ap(Option.some(string -> json) === none', arbOptionNone, 'string -> json', function (opt, f) {
+        var g = Option.some(f);
+        var actual = opt.ap(g);
         return Jsc.eq(true, actual.isNone());
       });
 
@@ -143,14 +144,17 @@ test(
         return Jsc.eq(true, actual.isNone());
       });
 
-      Jsc.property('Checking none.forall === true', arbOptionNone, 'string -> bool', function (opt, f) {
-        return Jsc.eq(true, opt.forall(f));
+      Jsc.property('Checking none.flatten === none', arbOptionNone, function (opt) {
+        return Jsc.eq(true, opt.flatten().isNone());
       });
-      
 
       Jsc.property('Checking none.exists === false', arbOptionNone, 'string -> bool', function (opt, f) {
         return Jsc.eq(false, opt.exists(f));
       });
+
+      Jsc.property('Checking none.forall === true', arbOptionNone, 'string -> bool', function (opt, f) {
+        return Jsc.eq(true, opt.forall(f));
+      });      
 
     };
 
