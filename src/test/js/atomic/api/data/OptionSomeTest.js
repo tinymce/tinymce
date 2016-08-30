@@ -4,11 +4,13 @@ test(
   [
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
+    'ephox.katamari.test.arb.ArbDataTypes',
+    'ephox.wrap.Jsc',
     'global!Array',
     'global!Math'
   ],
 
-  function (Fun, Option, Array, Math) {
+  function (Fun, Option, ArbDataTypes, Jsc, Array, Math) {
     var testSanity = function () {
       var boom = function(f) { throw 'Should not be called'; };
 
@@ -90,6 +92,120 @@ test(
       assert.eq('az', Option.some('a').fold(Fun.die('boom'), function(x) { return x + 'z'; }));
     };
 
+    var testSpecs = function () {
+      var arbOptionSome = ArbDataTypes.optionSome;
+
+      Jsc.property('Checking some(x).fold(die, id) === x', 'json', function (json) {
+        var opt = Option.some(json);
+        var actual = opt.fold(Fun.die('Should not be none!'), Fun.identity);
+        return Jsc.eq(json, actual);
+      });
+
+      return;
+
+      Jsc.property('Checking none.is === false', arbOptionSome, function (opt) {
+        var v = opt.fold(Fun.identity, Fun.die('should be option.none'));
+        return Jsc.eq(false, opt.is(v));
+      });
+
+      Jsc.property('Checking none.isSome === false', arbOptionSome, function (opt) {
+        return Jsc.eq(false, opt.isSome());
+      });      
+
+      Jsc.property('Checking none.isNone === true', arbOptionSome, function (opt) {
+        return Jsc.eq(true, opt.isNone());
+      });
+  
+      Jsc.property('Checking none.getOr(v) === v', arbOptionSome, 'json', function (opt, json) {
+        return Jsc.eq(json, opt.getOr(json));
+      });
+
+      Jsc.property('Checking none.getOrThunk(_ -> v) === v', arbOptionSome, Jsc.fun(Jsc.json), function (opt, thunk) {
+        return Jsc.eq(thunk(), opt.getOrThunk(thunk));
+      });
+
+      // Require non empty string of msg falsiness gets in the way.
+      Jsc.property('Checking none.getOrDie() always throws', arbOptionSome, Jsc.nestring, function (opt, s) {
+        try {
+          opt.getOrDie(s);
+          return false;
+        } catch (err) {
+          return Jsc.eq(s, err.message);
+        }
+      });
+
+      Jsc.property('Checking none.or(oSomeValue) === oSomeValue', arbOptionSome, 'json', function (opt, json) {
+        var output = opt.or(Option.some(json));
+        return Jsc.eq(true, output.is(json));
+      });      
+
+      Jsc.property('Checking none.orThunk(_ -> v) === v', arbOptionSome, 'json', function (opt, json) {
+        var output = opt.orThunk(function () {
+          return Option.some(json);
+        });
+        return Jsc.eq(true, output.is(json));
+      });     
+
+      Jsc.property('Checking none.map(f) === none', arbOptionSome, 'string -> json', function (opt, f) {
+        var actual = opt.map(f);
+        return Jsc.eq(true, actual.isNone());
+      });
+
+      Jsc.property('Checking none.ap(Option.some(string -> json) === none', arbOptionSome, 'string -> json', function (opt, f) {
+        var g = Option.some(f);
+        var actual = opt.ap(g);
+        return Jsc.eq(true, actual.isNone());
+      });
+
+      Jsc.property('Checking none.each(f) === undefined and f does not fire', arbOptionSome, 'string -> json', function (opt, f) {
+        var actual = opt.each(Fun.die('should not invoke'));
+        return Jsc.eq(undefined, actual);
+      });
+
+      Jsc.property('Given f :: s -> some(b), checking none.bind(f) === none', arbOptionSome, Jsc.fn(arbOptionSome), function (opt, f) {
+        var actual = opt.bind(f);
+        return Jsc.eq(true, actual.isNone());
+      });
+
+      Jsc.property('Given f :: s -> none, checking none.bind(f) === none', arbOptionSome, Jsc.fn(arbOptionNone), function (opt, f) {
+        var actual = opt.bind(f);
+        return Jsc.eq(true, actual.isNone());
+      });
+
+      Jsc.property('Checking none.flatten === none', arbOptionSome, function (opt) {
+        return Jsc.eq(true, opt.flatten().isNone());
+      });
+
+      Jsc.property('Checking none.exists === false', arbOptionSome, 'string -> bool', function (opt, f) {
+        return Jsc.eq(false, opt.exists(f));
+      });
+
+      Jsc.property('Checking none.forall === true', arbOptionSome, 'string -> bool', function (opt, f) {
+        return Jsc.eq(true, opt.forall(f));
+      });
+
+      Jsc.property('Checking none.filter(f) === none', arbOptionSome, Jsc.fun(Jsc.bool), function (opt, f) {
+        return Jsc.eq(true, opt.filter(f).isNone());
+      });
+
+      Jsc.property('Checking none.equals(none) === true', arbOptionSome, arbOptionNone, function (opt1, opt2) {
+        return Jsc.eq(true, opt1.equals(opt2));
+      });
+
+      Jsc.property('Checking none.equals_(none) === true', arbOptionSome, arbOptionNone, function (opt1, opt2) {
+        return Jsc.eq(true, opt1.equals_(opt2));
+      });
+
+      Jsc.property('Checking none.toArray equals [ ]', arbOptionSome, function (opt) {
+        return Jsc.eq([ ], opt.toArray());
+      });
+
+      Jsc.property('Checking none.toString equals "none()"', arbOptionSome, function (opt) {
+        return Jsc.eq('none()', opt.toString());
+      });
+    };
+
     testSanity();
+    testSpecs();
   }
 );
