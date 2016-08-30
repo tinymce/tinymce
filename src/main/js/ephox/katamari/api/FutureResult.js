@@ -40,7 +40,7 @@ define(
           return resA.fold(function () {
             return delegate;
           }, function (a) {
-            return delegate;
+            return f(a);
           });
         });
       };

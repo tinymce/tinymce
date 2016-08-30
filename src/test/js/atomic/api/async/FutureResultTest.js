@@ -5,13 +5,14 @@ asynctest(
     'ephox.katamari.api.Future',
     'ephox.katamari.api.FutureResult',
     'ephox.katamari.api.Result',
+    'ephox.katamari.api.Results',
     'ephox.katamari.test.AsyncProps',
     'ephox.katamari.test.arb.ArbDataTypes',
     'ephox.wrap.Jsc',
     'global!Promise'
   ],
 
-  function (Future, FutureResult, Result, AsyncProps, ArbDataTypes, Jsc, Promise) {
+  function (Future, FutureResult, Result, Results, AsyncProps, ArbDataTypes, Jsc, Promise) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -170,31 +171,56 @@ asynctest(
           f: function (arbF, binder) {
             return AsyncProps.futureToPromise(arbF.futureResult.bindFuture(binder)).then(function (data) {
               return new Promise(function (resolve, reject) {
-                arbF.contents.fold(function (cErr) {
-                  data.fold(function (dErr) {
-                    return Jsc.eq(dErr, cErr) ? resolve(true) : reject('Error did not match');
-                  }, function (dVal) {
-                    reject('Unexpected value: ' + dVal);
-                  });
-                  // We initially had an error, so bind should have done nothing;
-                }, function (cVal) {
 
+                var comparison = Results.compare(arbF.contents, data);
+                comparison.match({
+                  // input was error
+                  // bind result was error
+                  // so check that the error strings are the same (i.e. binder didn't run)
+                  bothErrors: function (errInit, errBind) {
+                    return Jsc.eq(errInit, errBind) ? resolve(true) : reject('Both were errors, but the errors did not match');
+                  },
 
-                  binder(cVal).toLazy().get(function (bInitial) {
-                    return bInitial.fold(function (bErr) {
-                      return data.fold(function (dErr) {
-                        return Jsc.eq(bErr, dErr) ? resolve(true) : reject('errors did not match');
-                      }, function (dVal) {
-                        reject('Did not get the expected error. Was instead value: ' + dVal);
+                  // input was error
+                  // bind result was value
+                  // something is wrong.
+                  firstError: function (errInit, valBind) {
+                    reject('Initially, you had an error, but after bind you received a value');
+                  },
+
+                  // input was value
+                  // bind result was error
+                  // something is right if binder(value) === error
+                  secondError: function (valInit, errBind) {
+                    // check that bind did not do that.
+                    binder(valInit).toLazy().get(function (resF) {
+                      resF.fold(function (errF) {
+                        // binding original value resulted in error, so check error
+                        return Jsc.eq(errBind, errF) ? resolve(true) : reject('Both bind results were errors, but the errors did not match');
+                      }, function (valF) {
+                        // binding original value resulted in value, so this path is wrong
+                        reject('After binding the value, bindFuture should be a value, but it is an error');
                       });
-                    }, function (bVal) {
-                      return data.fold(function (dErr) {
-                        reject('Did not get expected value. Was instead error: ' + dErr);
-                      }, function (dVal) {
-                        return Jsc.eq(bVal, bVal) ? resolve(true): reject('Data did not match');
+                    });
+                  },
+                  bothValues: function (valInit, valBind) {
+                    // input was value
+                    // bind result was value
+                    // something is right if binder(value) === value
+                    binder(valInit).toLazy().get(function (resF) {
+                      resF.fold(function (errF) {
+                        reject(
+                          'After binding the value, bindFuture should be a error: ' + errF + ', but was value: ' + valBind
+                        );
+                      }, function (valF) {
+                        return Jsc.eq(valBind, valF) ? resolve(true) : reject(
+                          'Both bind results were values, but the values did not match\n' +
+                          'First: ' + valBind + '\n' +
+                          'Second: ' + valF
+                        );
                       });
-                    });                  
-                  });
+                    });
+                  }
                 });
               });
             });
