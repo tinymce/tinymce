@@ -207,30 +207,72 @@ test(
         return f(json) === true ? Jsc.eq(true, opt.exists(f)) : Jsc.eq(false, opt.exists(f));
       });
 
-      return;
-
-      Jsc.property('Checking none.forall === true', arbOptionSome, 'string -> bool', function (opt, f) {
-        return Jsc.eq(true, opt.forall(f));
+      Jsc.property('Checking some(x).forall(_ -> false) === false', arbOptionSome, function (opt) {
+        return Jsc.eq(false, opt.forall(Fun.constant(false)));
       });
 
-      Jsc.property('Checking none.filter(f) === none', arbOptionSome, Jsc.fun(Jsc.bool), function (opt, f) {
-        return Jsc.eq(true, opt.filter(f).isNone());
+      Jsc.property('Checking some(x).forall(_ -> true) === true', arbOptionSome, function (opt) {
+        return Jsc.eq(true, opt.forall(Fun.constant(true)));
       });
 
-      Jsc.property('Checking none.equals(none) === true', arbOptionSome, arbOptionNone, function (opt1, opt2) {
-        return Jsc.eq(true, opt1.equals(opt2));
+      Jsc.property('Checking some(x).forall(f) iff. f(x)', 'json', Jsc.fun(Jsc.bool), function (json, f) {
+        var opt = Option.some(json);
+        return f(json) === true ? Jsc.eq(true, opt.forall(f)) : Jsc.eq(false, opt.forall(f));
       });
 
-      Jsc.property('Checking none.equals_(none) === true', arbOptionSome, arbOptionNone, function (opt1, opt2) {
-        return Jsc.eq(true, opt1.equals_(opt2));
+      Jsc.property('Checking some(x).filter(_ -> false) === none', arbOptionSome, function (opt) {
+        return Jsc.eq(true, opt.filter(Fun.constant(false)).isNone());
       });
 
-      Jsc.property('Checking none.toArray equals [ ]', arbOptionSome, function (opt) {
-        return Jsc.eq([ ], opt.toArray());
+      Jsc.property('Checking some(x).filter(_ -> true) === some(x)', arbOptionSome, function (opt) {
+        return Jsc.eq(opt.getOrDie(), opt.filter(Fun.constant(true)).getOrDie());
       });
 
-      Jsc.property('Checking none.toString equals "none()"', arbOptionSome, function (opt) {
-        return Jsc.eq('none()', opt.toString());
+      Jsc.property('Checking some(x).filter(f) === some(x) iff. f(x)', 'json', Jsc.fun(Jsc.bool), function (json, f) {
+        var opt = Option.some(json);
+        return f(json) === true ? Jsc.eq(json, opt.filter(f).getOrDie()) : Jsc.eq(true, opt.filter(f).isNone());
+      });
+
+      Jsc.property('Checking some(x).equals(none) === false', arbOptionSome, arbOptionNone, function (opt1, opt2) {
+        return Jsc.eq(false, opt1.equals(opt2));
+      });
+
+      Jsc.property('Checking some(x).equals(some(y)) iff. x === y', arbOptionSome, arbOptionSome, function (json1, json2) {
+        var opt1 = Option.some(json1);
+        var opt2 = Option.some(json2);
+        return json1 === json2 ? opt1.equals(opt2) : !opt1.equals(opt2);
+      });
+
+      Jsc.property('Checking some(x).equals_(none, _ -> false) === false', arbOptionSome, arbOptionNone, function (opt1, opt2) {
+        return Jsc.eq(false, opt1.equals_(opt2, Fun.constant(false)));
+      });
+
+      Jsc.property('Checking some(x).equals_(none, _, _ -> true) === false', arbOptionSome, arbOptionNone, function (opt1, opt2) {
+        return Jsc.eq(false, opt1.equals_(opt2, Fun.constant(true)));
+      });
+
+      Jsc.property('Checking some(x).equals_(some(y), _, _ -> false) === false', arbOptionSome, arbOptionSome, function (opt1, opt2) {
+        return Jsc.eq(false, opt1.equals_(opt2, Fun.constant(false)));
+      });
+
+      Jsc.property('Checking some(x).equals_(some(y), _, _ -> true) === true', 'json', 'json', function (json1, json2) {
+        var opt1 = Option.some(json1);
+        var opt2 = Option.some(json2);
+        return Jsc.eq(true, opt1.equals_(opt2, Fun.constant(true)));
+      });
+
+      Jsc.property('Checking some(x).equals_(some(y), f) iff. f(x, y)', arbOptionSome, arbOptionSome, 'json, json -> bool', function (json1, json2, f) {
+        var opt1 = Option.some(json1);
+        var opt2 = Option.some(json2);
+        return f(json1, json2) ? opt1.equals_(opt2, f) : !opt1.equals_(opt2, f);
+      });
+
+      Jsc.property('Checking some(x).toArray equals [ x ]', 'json', function (json) {
+        return Jsc.eq([ json ], Option.some(json).toArray());
+      });
+
+      Jsc.property('Checking some(x).toString equals "some(x)"', 'json', function (json) {
+        return Jsc.eq('some(' + json + ')', Option.some(json).toString());
       });
     };
 

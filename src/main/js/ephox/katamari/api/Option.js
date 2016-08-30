@@ -167,7 +167,7 @@ define(
           return [a];
         },
         toString: function () {
-          return "some(" + a + ")";
+          return 'some(' + a + ')';
         }
       };
       return me;
