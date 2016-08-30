@@ -16,7 +16,7 @@ test('Intersperse',
     var checkErr = function (expected, input, delimiter) {
       try {
         Jam.intersperse(input, delimiter);
-        jssert.fail('Excpected exception: ' + expected + ' from input: ' + input + ' with delimiter: ' + delimiter);
+        assert.fail('Excpected exception: ' + expected + ' from input: ' + input + ' with delimiter: ' + delimiter);
       } catch (e) {
         assert.eq(expected, e);
       }
@@ -51,7 +51,19 @@ test('Intersperse',
           return i % 2 === 1 ? Jsc.eq(x, delimiter) : true;
         });
       }
+    );
 
+    Jsc.property(
+      'Filtering out delimiters (assuming different type to array to avoid removing original array) should equal original',
+      Jsc.array(Jsc.string),
+      Jsc.nat,
+      function (arr, delimiter) {
+        var actual = Jam.intersperse(arr, delimiter);
+        var filtered = Arr.filter(actual, function (a) {
+          return a !== delimiter;
+        });
+        return Jsc.eq(arr, filtered);
+      }
     );
   }
 );
