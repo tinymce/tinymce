@@ -6,10 +6,11 @@ define(
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Obj',
     'ephox.katamari.api.Type',
-    'ephox.katamari.util.BagUtils'
+    'ephox.katamari.util.BagUtils',
+    'global!Error'
   ],
 
-  function (Arr, Fun, Obj, Type, BagUtils) {
+  function (Arr, Fun, Obj, Type, BagUtils, Error) {
     // Ensure that the object has all required fields. They must be functions.
     var base = function (handleUnsupported, required) {
       return baseWith(handleUnsupported, required, {
@@ -20,7 +21,7 @@ define(
 
     // Ensure that the object has all required fields. They must satisy predicates.
     var baseWith = function (handleUnsupported, required, pred) {
-      if (required.length === 0) throw 'You must specify at least one required field.';
+      if (required.length === 0) throw new Error('You must specify at least one required field.');
 
       BagUtils.validateStrArr('required', required);
 

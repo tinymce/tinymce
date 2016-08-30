@@ -25,10 +25,10 @@ define(
     var generate = function (cases) {
       // validation
       if (!Type.isArray(cases)) {
-        throw 'cases must be an array';
+        throw new Error('cases must be an array');
       }
       if (cases.length === 0) {
-        throw 'there must be at least one case';
+        throw new Error('there must be at least one case');
       }
 
       var constructors = [ ];
@@ -40,7 +40,7 @@ define(
 
         // validation
         if (keys.length !== 1) {
-          throw 'one and only one name per case';
+          throw new Error('one and only one name per case');
         }
 
         var key = keys[0];
@@ -48,12 +48,12 @@ define(
 
         // validation
         if (adt[key] !== undefined) {
-          throw 'duplicate key detected:' + key;
+          throw new Error('duplicate key detected:' + key);
         } else if (key === 'cata') {
-          throw 'cannot have a case named cata (sorry)';
+          throw new Error('cannot have a case named cata (sorry)');
         } else if (!Type.isArray(value)) {
           // this implicitly checks if acase is an object
-          throw 'case arguments must be an array';
+          throw new Error('case arguments must be an array');
         }
 
         constructors.push(key);
@@ -65,7 +65,7 @@ define(
 
           // validation
           if (argLength !== value.length) {
-            throw 'Wrong number of arguments to case ' + key + '. Expected ' + value.length + ' (' + value + '), got ' + argLength;
+            throw new Error('Wrong number of arguments to case ' + key + '. Expected ' + value.length + ' (' + value + '), got ' + argLength);
           }
 
           // TBIO-4011: Don't use array slice(arguments), makes the whole function unoptimisable on Chrome
@@ -95,7 +95,7 @@ define(
             fold: function (/* arguments */) {
               // runtime validation
               if (arguments.length !== cases.length) {
-                throw 'Wrong number of arguments to fold. Expected ' + cases.length + ', got ' + arguments.length;
+                throw new Error('Wrong number of arguments to fold. Expected ' + cases.length + ', got ' + arguments.length);
               }
               var target = arguments[count];
               return target.apply(null, args);

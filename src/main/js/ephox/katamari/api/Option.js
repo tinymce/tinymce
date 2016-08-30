@@ -86,7 +86,7 @@ define(
         getOr: id,
         getOrThunk: call,
         getOrDie: function (msg) {
-          throw msg || 'error: getOrDie called on none.';
+          throw new Error(msg || 'error: getOrDie called on none.');
         },
         or: id,
         orThunk: call,

@@ -7,14 +7,15 @@ define(
     'ephox.katamari.api.Obj',
     'ephox.katamari.api.Option',
     'ephox.katamari.util.BagUtils',
+    'global!Error',
     'global!Object'
   ],
 
-  function (Arr, Fun, Obj, Option, BagUtils, Object) {
+  function (Arr, Fun, Obj, Option, BagUtils, Error, Object) {
     
     return function (required, optional) {
       var everything = required.concat(optional);
-      if (everything.length === 0) throw 'You must specify at least one required or optional field.';
+      if (everything.length === 0) throw new Error('You must specify at least one required or optional field.');
 
       BagUtils.validateStrArr('required', required);
       BagUtils.validateStrArr('optional', optional);

@@ -88,14 +88,13 @@ test(
       });
 
 
-      Jsc.property('Checking none.getOrDie() always throws', arbOptionNone, Jsc.string, function (opt, s) {
+      // Require non empty string of msg falsiness gets in the way.
+      Jsc.property('Checking none.getOrDie() always throws', arbOptionNone, Jsc.nestring, function (opt, s) {
         try {
           opt.getOrDie(s);
           return false;
         } catch (err) {
-          // CONTINUE_HERE
-          console.log('s', s, 'err', err);
-          return Jsc.eq(s, err);
+          return Jsc.eq(s, err.message);
         }
       });
 
