@@ -101,38 +101,41 @@ test(
         return Jsc.eq(json, actual);
       });
 
-      return;
 
-      Jsc.property('Checking none.is === false', arbOptionSome, function (opt) {
-        var v = opt.fold(Fun.identity, Fun.die('should be option.none'));
-        return Jsc.eq(false, opt.is(v));
+      Jsc.property('Checking some(x).is(x) === true', 'json', function (json) {
+        var opt = Option.some(json);
+        return Jsc.eq(true, opt.is(json));
       });
 
-      Jsc.property('Checking none.isSome === false', arbOptionSome, function (opt) {
-        return Jsc.eq(false, opt.isSome());
+      Jsc.property('Checking some(x).isSome === true', arbOptionSome, function (opt) {
+        return Jsc.eq(true, opt.isSome());
       });      
 
-      Jsc.property('Checking none.isNone === true', arbOptionSome, function (opt) {
-        return Jsc.eq(true, opt.isNone());
+      Jsc.property('Checking some(x).isNone === false', arbOptionSome, function (opt) {
+        return Jsc.eq(false, opt.isNone());
       });
   
-      Jsc.property('Checking none.getOr(v) === v', arbOptionSome, 'json', function (opt, json) {
-        return Jsc.eq(json, opt.getOr(json));
+      Jsc.property('Checking some(x).getOr(v) === x', arbOptionSome, 'json', 'json', function (json1, json2) {
+        return Jsc.eq(json1, Option.some(json1).getOr(json2));
       });
 
-      Jsc.property('Checking none.getOrThunk(_ -> v) === v', arbOptionSome, Jsc.fun(Jsc.json), function (opt, thunk) {
-        return Jsc.eq(thunk(), opt.getOrThunk(thunk));
+      
+      Jsc.property('Checking some(x).getOrThunk(_ -> v) === x', 'json', Jsc.fun(Jsc.json), function (json1, thunk) {
+        return Jsc.eq(json1, Option.some(json1).getOrThunk(thunk));
       });
 
       // Require non empty string of msg falsiness gets in the way.
-      Jsc.property('Checking none.getOrDie() always throws', arbOptionSome, Jsc.nestring, function (opt, s) {
+      Jsc.property('Checking some.getOrDie() never throws', 'json', Jsc.nestring, function (json, s) {
         try {
+          var opt = Option.some(json);
           opt.getOrDie(s);
-          return false;
+          return Jsc.eq(json, opt.getOrDie(s));
         } catch (err) {
-          return Jsc.eq(s, err.message);
+          return 'Should not throw error: ' + err;
         }
       });
+
+      return;
 
       Jsc.property('Checking none.or(oSomeValue) === oSomeValue', arbOptionSome, 'json', function (opt, json) {
         var output = opt.or(Option.some(json));
