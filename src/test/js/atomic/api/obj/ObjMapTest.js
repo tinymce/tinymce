@@ -40,5 +40,17 @@ test(
     checkT({}, {}, tupleF);
     checkT({ab:'ab'}, {a:'a'}, tupleF);
     checkT({ab:'ab', bb:'bb', cb:'cb'}, {a:'a', b:'b', c:'c'}, tupleF);
+
+    var stringify = function (x, i) {
+      return i + ' :: ' + x;
+    };
+
+    var checkMapToArray = function (expected, input, f) {
+      assert.eq(expected, Obj.mapToArray(input, f));
+    };
+
+    checkMapToArray([], {}, stringify);
+    checkMapToArray(['a :: a'], {a:'a'}, stringify);
+    checkMapToArray(['a :: a','b :: b','c :: c'], {a:'a', b:'b', c:'c'}, stringify);
   }
 );

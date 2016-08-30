@@ -4,10 +4,12 @@ test(
   [
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Obj',
+    'ephox.katamari.api.Unique',
     'ephox.wrap.Jsc'
   ],
 
-  function (Arr, Fun, Jsc) {
+  function (Arr, Fun, Obj, Unique, Jsc) {
     var dbl = function (x) {
       return x * 2;
     };
@@ -23,6 +25,15 @@ test(
     checkA([], [], dbl);
     checkA([2], [1], dbl);
     checkA([4, 6, 10], [2, 3, 5], dbl);
+
+    var checkToObject = function(expected, input, f) {
+      assert.eq(expected, Arr.mapToObject(input, f));
+    };
+
+    checkToObject({}, [], function() { throw 'boom'; });
+    checkToObject({'a': '3a'}, ['a'], function(x) { return 3 + x; });
+    checkToObject({'a': '3a', 'b': '3b'}, ['a', 'b'], function(x) { return 3 + x; });
+    checkToObject({'1': 4, '2': 5}, [1, 2], function(x) { return 3 + x; });
 
     Jsc.property(
       'map id xs = xs',
@@ -41,6 +52,22 @@ test(
         var output = Arr.map(arr, Fun.constant(y));
         return Arr.forall(output, function (x) {
           return x === y;
+        });
+      }
+    );
+
+    Jsc.property(
+      'mapToObject generates the right number of keys and f(key) = value in object',
+      Jsc.array(Jsc.nestring),
+      Jsc.fun(Jsc.json),
+      function (rawKeys, f) {
+        var keys = Unique.stringArray(rawKeys);
+        var output = Arr.mapToObject(keys, function (k) { return f(k); });
+        var objKeys = Obj.keys(output);
+        if (objKeys.length !== keys.length) return 'Not all keys were mapped';
+
+        return Arr.forall(objKeys, function (ok) {
+          return Arr.contains(keys, ok) && f(ok) === output[ok];
         });
       }
     );
