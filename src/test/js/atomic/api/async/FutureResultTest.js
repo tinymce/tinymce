@@ -225,12 +225,68 @@ asynctest(
               });
             });
           }
+        },
+        {
+          label: 'futureResult.bindResult equiv futureResult.....',
+          arbs: [ ArbDataTypes.futureResultSchema, Jsc.fun(ArbDataTypes.result) ],
+          f: function (arbF, resultBinder) {
+            return AsyncProps.futureToPromise(arbF.futureResult.bindResult(resultBinder)).then(function (data) {
+              return new Promise(function (resolve, reject) {
+                var comparison = Results.compare(arbF.contents, data);
+                comparison.match({
+                  // input was error
+                  // bind result was error
+                  // so check that the error strings are the same (i.e. binder didn't run)
+                  bothErrors: function (errInit, errBind) {
+                    return Jsc.eq(errInit, errBind) ? resolve(true) : reject('Both were errors, but the errors did not match');
+                  },
+
+                  // input was error
+                  // bind result was value
+                  // something is wrong.
+                  firstError: function (errInit, valBind) {
+                    reject('Initially, you had an error, but after bind you received a value');
+                  },
+
+                  // input was value
+                  // bind result was error
+                  // something is right if binder(value) === error
+                  secondError: function (valInit, errBind) {
+                    // check that bind did not do that.
+                    resultBinder(valInit).fold(function (errF) {
+                      // binding original value resulted in error, so check error
+                      return Jsc.eq(errBind, errF) ? resolve(true) : reject('Both bind results were errors, but the errors did not match');
+                    }, function (valF) {
+                      // binding original value resulted in value, so this path is wrong
+                      reject('After binding the value, bindFuture should be a value, but it is an error');
+                    });
+                  },
+                  bothValues: function (valInit, valBind) {
+                    // input was value
+                    // bind result was value
+                    // something is right if binder(value) === value
+                    resultBinder(valInit).fold(function (errF) {
+                      reject(
+                        'After binding the value, bindFuture should be a error: ' + errF + ', but was value: ' + valBind
+                      );
+                    }, function (valF) {
+                      return Jsc.eq(valBind, valF) ? resolve(true) : reject(
+                        'Both bind results were values, but the values did not match\n' +
+                        'First: ' + valBind + '\n' +
+                        'Second: ' + valF
+                      );
+                    });
+                  }
+                });
+              });
+            });
+          }
         }
       ]);
     };
 
     testPure().then(testError).then(testFromResult).then(testFromFuture).then(testNu).
-      then(testBindResult).then(function () { }, testBindFuture).then(testMapResult).then(testSpecs).then(function () {
+      then(testBindResult).then(testBindFuture).then(testMapResult).then(testSpecs).then(function () {
       success();
     }, failure);
   }
