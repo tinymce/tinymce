@@ -154,7 +154,19 @@ test(
 
       Jsc.property('Checking none.forall === true', arbOptionNone, 'string -> bool', function (opt, f) {
         return Jsc.eq(true, opt.forall(f));
-      });      
+      });
+
+      Jsc.property('Checking none.filter(f) === none', arbOptionNone, Jsc.fun(Jsc.bool), function (opt, f) {
+        return Jsc.eq(true, opt.filter(f).isNone());
+      });
+
+      Jsc.property('Checking none.equals(none) === true', arbOptionNone, arbOptionNone, function (opt1, opt2) {
+        return Jsc.eq(true, opt1.equals(opt2));
+      });
+
+      Jsc.property('Checking none.equals_(none) === true', arbOptionNone, arbOptionNone, function (opt1, opt2) {
+        return Jsc.eq(true, opt1.equals_(opt2));
+      });
 
     };
 
