@@ -2,6 +2,8 @@ define(
   'ephox.boulder.api.ValueSchema',
 
   [
+    'ephox.boulder.core.ChoiceProcessor',
+    'ephox.boulder.core.SchemaError',
     'ephox.boulder.core.ValueProcessor',
     'ephox.compass.Arr',
     'ephox.numerosity.api.JSON',
@@ -10,7 +12,7 @@ define(
     'global!Error'
   ],
 
-  function (ValueProcessor, Arr, Json, Fun, Result, Error) {
+  function (ChoiceProcessor, SchemaError, ValueProcessor, Arr, Json, Fun, Result, Error) {
     var anyValue = ValueProcessor.value(Result.value);
 
     var arrOfObj = function (objFields) {
@@ -66,9 +68,12 @@ define(
     };
 
     var formatError = function (errInfo) {
-      return 'Errors: \n' + Arr.map(errInfo.errors, function (error) {
-        return 'Failed path: ('  + error.path.join(' > ') + ')\n' + error.err;
-      }).join('\n\n') + '\n\nInput object: ' + Json.stringify(errInfo.input, null, 2);
+      return 'Errors: \n' + Arr.map(errInfo.errors, SchemaError.toString).join('\n\n') + 
+        '\n\nInput object: ' + Json.stringify(errInfo.input, null, 2);
+    };
+
+    var choose = function (key, branches) {
+      return ChoiceProcessor.choose(key, branches);
     };
 
     return {
@@ -90,7 +95,9 @@ define(
       asRawOrDie: asRawOrDie,
 
       getOrDie: getOrDie,
-      formatError: formatError
+      formatError: formatError,
+
+      choose: choose
     };
   }
 );

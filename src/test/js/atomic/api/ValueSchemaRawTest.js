@@ -2,6 +2,7 @@ test(
   'ValueSchemaRawTest',
 
   [
+    'ephox.agar.api.Logger',
     'ephox.agar.api.RawAssertions',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
@@ -10,7 +11,7 @@ test(
     'ephox.perhaps.Result'
   ],
 
-  function (RawAssertions, FieldPresence, FieldSchema, ValueSchema, Json, Result) {
+  function (Logger, RawAssertions, FieldPresence, FieldSchema, ValueSchema, Json, Result) {
     var checkErr = function (label, expectedPart, input, processor) {
       ValueSchema.asRaw(label, processor, input).fold(function (err) {
         var message = ValueSchema.formatError(err);
@@ -23,6 +24,11 @@ test(
     var check = function (label, input, processor) {
       var actual = ValueSchema.asRawOrDie(label, processor, input);
       RawAssertions.assertEq(label, input, actual);
+    };
+
+    var checkIs = function (label, expected, input, processor) {
+      var actual = ValueSchema.asRawOrDie(label, processor, input);
+      RawAssertions.assertEq(label, expected, actual);
     };
   
     check('test.1', 10, ValueSchema.anyValue());
@@ -122,6 +128,96 @@ test(
       FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
     ]), {  });    
     RawAssertions.assertEq('fallback.opt: no alpha should be none', true, optionValue5.alpha.isNone());
+
+
+    Logger.sync(
+      'Checking choose',
+      function () {
+
+        var processor = ValueSchema.choose(
+          'type',
+          {
+            'general': [
+              FieldSchema.strict('cards')
+            ],
+            'other': [
+              FieldSchema.strict('houses')
+            ]
+          }
+        );
+
+        checkIs(
+          'Checking choose(other)',
+          { houses: '10' },
+          {
+            type: 'other',
+            houses: '10'
+          },
+          processor
+        );
+
+        checkErr(
+          'Checking choose(other) without everything',
+          'Could not find valid *strict* value for "houses"',
+          {
+            type: 'other',
+            house: '10'
+          },
+          processor
+        );
+
+        checkErr(
+          'Checking choose(other) without wrong schema',
+          'Could not find valid *strict* value for "houses"',
+          {
+            type: 'other',
+            cards: '10'
+          },
+          processor
+        );
+
+        checkIs(
+          'Checking choose(general)',
+          { cards: '10' },
+          {
+            type: 'general',
+            cards: '10'
+          },
+          processor
+        );
+
+        checkErr(
+          'Checking choose(general) without everything',
+          'Could not find valid *strict* value for "cards"',
+          {
+            type: 'general',
+            mech: '10'
+          },
+          processor
+        );
+
+        checkErr(
+          'Checking choose(general) with wrong schema',
+          'Could not find valid *strict* value for "cards"',
+          {
+            type: 'general',
+            houses: '10'
+          },
+          processor
+        );
+
+        checkErr(
+          'Checking choose(dog)',
+          'chosen schema: "dog" did not exist',
+          {
+            type: 'dog',
+            houses: '10'
+          },
+          processor
+        );
+
+      }
+    );
 
 
   }

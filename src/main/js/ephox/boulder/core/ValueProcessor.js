@@ -6,6 +6,7 @@ define(
     'ephox.boulder.combine.ResultCombine',
     'ephox.boulder.core.ObjReader',
     'ephox.boulder.core.ObjWriter',
+    'ephox.boulder.core.SchemaError',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.highway.Merger',
@@ -16,7 +17,7 @@ define(
     'ephox.scullion.ADT'
   ],
 
-  function (FieldPresence, ResultCombine, ObjReader, ObjWriter, Arr, Obj, Merger, Json, Fun, Option, Result, Adt) {
+  function (FieldPresence, ResultCombine, ObjReader, ObjWriter, SchemaError, Arr, Obj, Merger, Json, Fun, Option, Result, Adt) {
     var adt = Adt.generate([
       { field: [ 'key', 'okey', 'presence', 'prop' ] },
       { state: [ 'okey', 'instantiator' ] }
@@ -34,12 +35,10 @@ define(
     var strictAccess = function (path, obj, key) {
       // In strict mode, if it undefined, it is an error.
       return ObjReader.readOptFrom(obj, key).fold(function () {
-        return Result.error([
-          {
-            path: path,
-            err: 'Could not find valid *strict* value for "' + key + '" in ' + Json.stringify(obj, null, 2)
-          }
-        ]);
+        return SchemaError.nu(
+          path,
+          'Could not find valid *strict* value for "' + key + '" in ' + Json.stringify(obj, null, 2)
+        );
       }, Result.value);
     };
 
@@ -116,12 +115,7 @@ define(
     var value = function (validator) {
       var extract = function (path, strength, val) {
         return validator(val).fold(function (err) {
-          return Result.error([
-            {
-              path: path,
-              err: err
-            }
-          ]);
+          return SchemaError.nu(path, err);
         }, Result.value); // ignore strength
       };
 
