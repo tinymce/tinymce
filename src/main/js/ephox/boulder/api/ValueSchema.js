@@ -72,7 +72,6 @@ define(
         '\n\nInput object: ' + Json.stringify(errInfo.input, null, 2);
     };
 
-    // The purpose of oneof is that all of the field schemas
     var choose = function (key, branches) {
       return ChoiceProcessor.choose(key, branches);
     };
