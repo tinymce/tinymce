@@ -99,41 +99,40 @@ test(
       });
 
 
-      return;
-
-      Jsc.property('Checking error.or(oValue) === oValue', arbResultError, 'json', function (opt, json) {
-        var output = opt.or(Result.value(json));
+      Jsc.property('Checking none.or(oValue) === oValue', arbOptionNone, 'json', function (opt, json) {
+        var output = opt.or(Option.some(json));
         return Jsc.eq(true, output.is(json));
       });
 
-      Jsc.property('Checking error.orThunk(_ -> v) === v', arbResultError, 'json', function (opt, json) {
+      
+
+      Jsc.property('Checking none.orThunk(_ -> v) === v', arbOptionNone, 'json', function (opt, json) {
         var output = opt.orThunk(function () {
-          return Result.value(json);
+          return Option.some(json);
         });
         return Jsc.eq(true, output.is(json));
       });
 
-      Jsc.property('Checking error.fold(_ -> x, die) === x', arbResultError, 'json', function (opt, json) {
+      
+
+      Jsc.property('Checking none.fold(_ -> x, die) === x', arbOptionNone, 'json', function (opt, json) {
         var actual = opt.fold(Fun.constant(json), Fun.die('Should not die'));
         return Jsc.eq(json, actual);
       });
+     
 
-      Jsc.property('Checking error.map(f) === error', arbResultError, 'string -> json', function (opt, f) {
+      Jsc.property('Checking none.map(f) === none', arbOptionNone, 'string -> json', function (opt, f) {
         var actual = opt.map(f);
-        return Jsc.eq(true, actual.fold(function (e) {
-          return e == opt.fold(Fun.identity, Fun.die('should not get here!'));
-        }), Fun.constant(false));
+        return Jsc.eq(true, actual.isNone());
       });
 
-      Jsc.property('Checking error.map(f) === error', arbResultError, 'string -> json', function (opt, f) {
-        var actual = opt.map(f);
-        return Jsc.eq(true, getErrorOrDie(opt) === getErrorOrDie(actual));
-      });
-
-      Jsc.property('Checking error.each(f) === undefined', arbResultError, 'string -> json', function (opt, f) {
-        var actual = opt.each(f);
+      Jsc.property('Checking none.each(f) === undefined and f does not fire', arbOptionNone, 'string -> json', function (opt, f) {
+        var actual = opt.each(Fun.die('should not invoke'));
         return Jsc.eq(undefined, actual);
       });
+
+            return;
+
 
       Jsc.property('Given f :: s -> RV, checking error.bind(f) === error', arbResultError, Jsc.fn(arbResultValue), function (opt, f) {
         var actual = opt.bind(f);

@@ -77,6 +77,7 @@ define(
       // inlined from peanut, maybe a micro-optimisation?
       var call = function (thunk) { return thunk(); };
       var id = function (n) { return n; };
+      var noop = function () { };
 
       var me = {
         fold: function (n, s) { return n(); },
@@ -92,7 +93,7 @@ define(
         orThunk: call,
         map: none,
         ap: none,
-        each: none,
+        each: noop,
         bind: none,
         flatten: none,
         exists: never,
