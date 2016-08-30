@@ -3,25 +3,20 @@ define(
 
   [
     'ephox.boulder.api.Objects',
+    'ephox.boulder.core.SchemaError',
     'ephox.boulder.core.ValueProcessor',
     'ephox.compass.Obj',
     'ephox.numerosity.api.JSON',
     'ephox.perhaps.Result'
   ],
 
-  function (Objects, ValueProcessor, Obj, Json, Result) {
+  function (Objects, SchemaError, ValueProcessor, Obj, Json, Result) {
     var missingKey = function (path, key) {
-      return Result.error([{
-        path: path,
-        err: 'Choice schema did not contain choice key: "' + key + '"'
-      }]);
+      return SchemaError.nu(path, 'Choice schema did not contain choice key: "' + key + '"');
     };
 
     var missingBranch = function (path, branches, branch) {
-      return Result.error([{
-        path: path,
-        err: 'The chosen schema: "' + branch + '" did not exist in branches: ' + Json.stringify(branches, null, 2)
-      }]);
+      return SchemaError.nu(path, 'The chosen schema: "' + branch + '" did not exist in branches: ' + Json.stringify(branches, null, 2));
     };
     
     var chooseFrom = function (path, strength, input, branches, ch) {
