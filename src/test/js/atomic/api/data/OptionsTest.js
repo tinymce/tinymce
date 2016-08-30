@@ -60,5 +60,39 @@ test(
         return Jsc.eq(on, output);
       }
     );
+
+    Jsc.property(
+      'Options.findMap of empty is none',
+      Jsc.fun(ArbDataTypes.option),
+      function (f) {
+        return Jsc.eq(true, Options.findMap([ ], f).isNone());
+      }
+    );
+
+    Jsc.property(
+      'Options.findMap of non-empty is first if f is Option.some',
+      Jsc.nearray(Jsc.json),
+      function (arr) {
+        return Jsc.eq(arr[0], Options.findMap(arr, Option.some).getOrDie());
+      }
+    );
+
+    Jsc.property(
+      'Options.findMap of non-empty is none if f is Option.none',
+      Jsc.nearray(Jsc.json),
+      function (arr) {
+        return Jsc.eq(true, Options.findMap(arr, Option.none).isNone());
+      }
+    );
+
+    Jsc.property(
+      'Options.findMap always returns an option',
+      Jsc.nearray(Jsc.json),
+      Jsc.fun(ArbDataTypes.option),
+      function (arr, f) {
+        var output = Options.findMap(arr, f);
+        return output.isNone() || output.isSome();
+      }
+    );
   }
 );
