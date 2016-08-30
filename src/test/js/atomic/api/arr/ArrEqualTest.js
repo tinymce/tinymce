@@ -4,10 +4,11 @@ test(
   [
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.test.arb.ArbDataTypes',
     'ephox.wrap.Jsc'
   ],
 
-  function (Arr, Fun, Jsc) {
+  function (Arr, Fun, ArbDataTypes, Jsc) {
     var check = function (expected, a1, a2) {
       var actual = Arr.equal(a1, a2);
       assert.eq(expected, actual);
@@ -56,6 +57,25 @@ test(
       function (arr) {
         var other = Arr.map(arr, Fun.identity);
         return Arr.equal(arr, other);
+      }
+    );
+
+    Jsc.property(
+      'reverse(arr) !== arr if arr contains unique elements and has length > 1',
+      ArbDataTypes.indexArrayOf(10),
+      function (arr) {
+        var other = Arr.reverse(arr);
+        return arr.length > 1  ? !Arr.equal(arr, other) : Arr.equal(arr, other);
+      }
+    );
+
+    Jsc.property(
+      'reverse(reverse(arr)).eq(arr)',
+      Jsc.nearray(Jsc.json),
+      function (arr) {
+        var other = Arr.reverse(arr);
+        var again = Arr.reverse(other);
+        return Arr.equal(arr, again);
       }
     );
   }

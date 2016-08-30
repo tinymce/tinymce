@@ -30,10 +30,29 @@ define(
 
     var result = Jsc.oneof([ resultError, resultValue ]);
 
+
+    var genIndexArrayOf = function (len) {
+      return Jsc.integer(0, len).generator.map(function (aLength) {
+        var r = [ ];
+        for (var i = 0; i < aLength; i++) {
+          r.push(i);
+        }
+        return r;
+      });
+    };
+
+    var arbIndexArrayOf = function (len) {
+      return Jsc.bless({
+        generator: genIndexArrayOf(len)
+      });
+    };
+
     return {
       resultError: resultError,
       resultValue: resultValue,
-      result: result
+      result: result,
+
+      indexArrayOf: arbIndexArrayOf
     };
   }
 );
