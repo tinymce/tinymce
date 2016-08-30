@@ -37,5 +37,28 @@ test(
         return Jsc.eq(arr, output);
       }
     );
+
+    Jsc.property(
+      'Options.cat of somes and nones should have length <= original',
+      Jsc.array(ArbDataTypes.option),
+      function (arr) {
+        var output = Options.cat(arr);
+        return Jsc.eq(output.length <= arr.length, true);
+      }
+    );
+
+    Jsc.property(
+      'Options.cat of nones.concat(somes).concat(nones) should be somes',
+      Jsc.array(Jsc.json),
+      Jsc.array(Jsc.json),
+      Jsc.array(Jsc.json),
+      function (before, on, after) {
+        var beforeNones = Arr.map(before, Option.none);
+        var afterNones = Arr.map(after, Option.none);
+        var onSomes = Arr.map(on, Option.some);
+        var output = Options.cat(beforeNones.concat(onSomes).concat(afterNones));
+        return Jsc.eq(on, output);
+      }
+    );
   }
 );
