@@ -242,6 +242,7 @@ define(
 
     var sort = function (xs, comparator) {
       var copy = xs.slice(0);
+      // INVESTIGATE: does passing in "undefined" here work on every browser?
       copy.sort(comparator);
       return copy;
     };
