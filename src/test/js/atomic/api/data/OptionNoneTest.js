@@ -4,10 +4,12 @@ test(
   [
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
+    'ephox.katamari.test.arb.ArbDataTypes',
+    'ephox.wrap.Jsc',
     'global!Array'
   ],
 
-  function (Fun, Option, Array) {
+  function (Fun, Option, ArbDataTypes, Jsc, Array) {
     var testSanity = function () {
       var s = Option.none();
       assert.eq(false, s.isSome());
@@ -63,6 +65,101 @@ test(
       assert.eq('b', Option.none().fold(Fun.constant('b'), Fun.die('boom')));
     };
 
+    var testSpecs = function () {
+      var arbOptionNone = ArbDataTypes.optionNone;
+
+      Jsc.property('Checking none.is === false', arbOptionNone, function (opt) {
+        var v = opt.fold(Fun.identity, Fun.die('should be option.none'));
+        return Jsc.eq(false, opt.is(v));
+      });
+
+      Jsc.property('Checking none.isSome === false', arbOptionNone, function (opt) {
+        return Jsc.eq(false, opt.isSome());
+      });
+      
+
+      Jsc.property('Checking none.isNone === true', arbOptionNone, function (opt) {
+        return Jsc.eq(true, opt.isNone());
+      });
+
+  
+      Jsc.property('Checking none.getOr(v) === v', arbOptionNone, 'json', function (opt, json) {
+        return Jsc.eq(json, opt.getOr(json));
+      });
+
+
+      Jsc.property('Checking none.getOrDie() always throws', arbOptionNone, Jsc.string, function (opt, s) {
+        try {
+          opt.getOrDie(s);
+          return false;
+        } catch (err) {
+          // CONTINUE_HERE
+          console.log('s', s, 'err', err);
+          return Jsc.eq(s, err);
+        }
+      });
+
+
+      return;
+
+      Jsc.property('Checking error.or(oValue) === oValue', arbResultError, 'json', function (opt, json) {
+        var output = opt.or(Result.value(json));
+        return Jsc.eq(true, output.is(json));
+      });
+
+      Jsc.property('Checking error.orThunk(_ -> v) === v', arbResultError, 'json', function (opt, json) {
+        var output = opt.orThunk(function () {
+          return Result.value(json);
+        });
+        return Jsc.eq(true, output.is(json));
+      });
+
+      Jsc.property('Checking error.fold(_ -> x, die) === x', arbResultError, 'json', function (opt, json) {
+        var actual = opt.fold(Fun.constant(json), Fun.die('Should not die'));
+        return Jsc.eq(json, actual);
+      });
+
+      Jsc.property('Checking error.map(f) === error', arbResultError, 'string -> json', function (opt, f) {
+        var actual = opt.map(f);
+        return Jsc.eq(true, actual.fold(function (e) {
+          return e == opt.fold(Fun.identity, Fun.die('should not get here!'));
+        }), Fun.constant(false));
+      });
+
+      Jsc.property('Checking error.map(f) === error', arbResultError, 'string -> json', function (opt, f) {
+        var actual = opt.map(f);
+        return Jsc.eq(true, getErrorOrDie(opt) === getErrorOrDie(actual));
+      });
+
+      Jsc.property('Checking error.each(f) === undefined', arbResultError, 'string -> json', function (opt, f) {
+        var actual = opt.each(f);
+        return Jsc.eq(undefined, actual);
+      });
+
+      Jsc.property('Given f :: s -> RV, checking error.bind(f) === error', arbResultError, Jsc.fn(arbResultValue), function (opt, f) {
+        var actual = opt.bind(f);
+        return Jsc.eq(true, getErrorOrDie(opt) === getErrorOrDie(actual));
+      });
+
+      Jsc.property('Given f :: s -> RE, checking error.bind(f) === error', arbResultError, Jsc.fn(arbResultError), function (opt, f) {
+        var actual = opt.bind(f);
+        return Jsc.eq(true, getErrorOrDie(opt) === getErrorOrDie(actual));
+      });
+
+      Jsc.property('Checking error.forall === true', arbResultError, 'string -> bool', function (opt, f) {
+        return Jsc.eq(true, opt.forall(f));
+      });
+
+      Jsc.property('Checking error.exists === false', arbResultError, 'string -> bool', function (opt, f) {
+        return Jsc.eq(false, opt.exists(f));
+      });
+
+      Jsc.property('Checking error.toOption is always none', arbResultError, function (opt) {
+        return Jsc.eq(true, opt.toOption().isNone());
+      });
+    };
+
     testSanity();
+    testSpecs();
   }
 );
