@@ -116,6 +116,22 @@ test(
       }
     );
 
+    Jsc.property(
+      'Options.liftN of an array mirrors cat',
+      Jsc.nearray(ArbDataTypes.option),
+      Jsc.fun(Jsc.json),
+      function (arr, f) {
+        var args = Options.cat(arr);
+        var output = Options.liftN(arr, f);
+
+        if (args.length === arr.length) {
+          return Jsc.eq(output.getOrDie(), f.apply(undefined, args));
+        } else {
+          return output.isNone();
+        }
+      }
+    );
+
     /**
     if all elements in arr are 'some', their inner values are passed as arguments to f
     f must have arity arr.length
