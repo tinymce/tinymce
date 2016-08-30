@@ -2,10 +2,11 @@ define(
   'ephox.katamari.api.Fun',
 
   [
-    'global!Array'
+    'global!Array',
+    'global!Error'
   ],
 
-  function (Array) {
+  function (Array, Error) {
 
     var noop = function () { };
 
@@ -55,7 +56,7 @@ define(
 
     var die = function (msg) {
       return function () {
-        throw msg;
+        throw new Error(msg);
       };
     };
 

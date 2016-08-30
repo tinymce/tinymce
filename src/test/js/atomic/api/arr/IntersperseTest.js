@@ -18,7 +18,7 @@ test('Intersperse',
         Jam.intersperse(input, delimiter);
         assert.fail('Excpected exception: ' + expected + ' from input: ' + input + ' with delimiter: ' + delimiter);
       } catch (e) {
-        assert.eq(expected, e);
+        assert.eq(expected, e.message);
       }
     };
 
