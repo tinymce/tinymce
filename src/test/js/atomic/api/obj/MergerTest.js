@@ -80,12 +80,32 @@ test('Merger',
       return Jsc.eq(obj, Merger.merge(obj, {}));
     });
 
+    Jsc.property('Merged with itself is itself', Jsc.dict(Jsc.json), function (obj) {
+      return Jsc.eq(obj, Merger.merge(obj, obj));
+    });
+
+    Jsc.property('Merge(a, Merge(b, c)) === Merge(Merge(a, b), c)', Jsc.dict(Jsc.json), Jsc.dict(Jsc.json), Jsc.dict(Jsc.json), function (a, b, c) {
+      var one = Merger.merge(a, Merger.merge(b, c));
+      var other = Merger.merge(Merger.merge(a, b), c);
+      return Jsc.eq(one, other);
+    });
+
     Jsc.property('Deep-merged with identity on left', Jsc.dict(Jsc.json), function (obj) {
       return Jsc.eq(obj, Merger.deepMerge({}, obj));
     });
 
     Jsc.property('Deep-merged with identity on right', Jsc.dict(Jsc.json), function (obj) {
       return Jsc.eq(obj, Merger.deepMerge(obj, {}));
+    });
+
+    Jsc.property('Deep-merged with itself is itself', Jsc.dict(Jsc.json), function (obj) {
+      return Jsc.eq(obj, Merger.deepMerge(obj, obj));
+    });
+
+    Jsc.property('Deep-merge(a, Deep-merge(b, c)) === Deep-merge(Deep-merge(a, b), c)', Jsc.dict(Jsc.json), Jsc.dict(Jsc.json), Jsc.dict(Jsc.json), function (a, b, c) {
+      var one = Merger.merge(a, Merger.merge(b, c));
+      var other = Merger.merge(Merger.merge(a, b), c);
+      return Jsc.eq(one, other);
     });
 
 
