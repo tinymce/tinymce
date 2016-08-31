@@ -61,16 +61,31 @@ define('tinymce/inlite/ui/Forms', [
 	};
 
 	var createQuickLinkForm = function (editor, hide) {
+		var attachState = {};
+
 		var unlink = function () {
 			editor.focus();
 			Actions.unlink(editor);
 			hide();
 		};
 
+		var onChangeHandler = function (e) {
+			var meta = e.meta;
+
+			if (meta && meta.attach) {
+				attachState = {
+					href: e.value,
+					attach: e.meta.attach
+				};
+			} else {
+				attachState = {};
+			}
+		};
+
 		return createForm('quicklink', {
 			items: [
 				{type: 'button', name: 'unlink', icon: 'unlink', onclick: unlink, tooltip: 'Remove link'},
-				{type: 'textbox', name: 'linkurl', placeholder: 'Paste or type a link'},
+				{type: 'filepicker', name: 'linkurl', placeholder: 'Paste or type a link', filetype: 'file', onchange: onChangeHandler},
 				{type: 'button', icon: 'checkmark', subtype: 'primary', tooltip: 'Ok', onclick: 'submit'}
 			],
 			onshow: function () {
@@ -86,10 +101,20 @@ define('tinymce/inlite/ui/Forms', [
 				});
 
 				toggleVisibility(this.find('#unlink'), elm);
+				this.find('#linkurl')[0].focus();
 			},
 			onsubmit: function (e) {
 				convertLinkToAbsolute(editor, e.data.linkurl).then(function (url) {
-					Actions.createLink(editor, url);
+					editor.undoManager.transact(function () {
+						var attach = attachState.attach;
+
+						if (attach) {
+							attach();
+						}
+
+						Actions.createLink(editor, url);
+					});
+
 					hide();
 				});
 			}
