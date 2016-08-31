@@ -2,10 +2,13 @@ test(
   'ObjMapTest',
 
   [
-    'ephox.katamari.api.Obj'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Obj',
+    'ephox.wrap.Jsc'
   ],
 
-  function (Obj) {
+  function (Arr, Fun, Obj, Jsc) {
     var dbl = function (x) {
       return x * 2;
     };
@@ -21,21 +24,18 @@ test(
       };
     };
 
-    var check = function (expected, C, input, f) {
-      assert.eq(expected, C.map(input, f));
+    var check = function (expected, input, f) {
+      assert.eq(expected, Obj.map(input, f));
     };
   
-    var checkO = function (expected, input, f) {
-      check(expected, Obj, input, f);
-    };
 
     var checkT = function (expected, input, f) {
       assert.eq(expected, Obj.tupleMap(input, f));
     };
 
-    checkO({}, {}, dbl);
-    checkO({a: 'a.'}, {a: 'a'}, addDot);
-    checkO({a: 'a.', b: 'b.', c: 'c.'}, {a: 'a', b: 'b', c: 'c'}, addDot);
+    check({}, {}, dbl);
+    check({a: 'a.'}, {a: 'a'}, addDot);
+    check({a: 'a.', b: 'b.', c: 'c.'}, {a: 'a', b: 'b', c: 'c'}, addDot);
 
     checkT({}, {}, tupleF);
     checkT({ab:'ab'}, {a:'a'}, tupleF);
@@ -52,5 +52,61 @@ test(
     checkMapToArray([], {}, stringify);
     checkMapToArray(['a :: a'], {a:'a'}, stringify);
     checkMapToArray(['a :: a','b :: b','c :: c'], {a:'a', b:'b', c:'c'}, stringify);
+
+    Jsc.property(
+      'map id obj = obj',
+      Jsc.dict(Jsc.json),
+      function (obj) {
+        var output = Obj.map(obj, Fun.identity);
+        return Jsc.eq(obj, output);
+      }
+    );
+
+    Jsc.property(
+      'map constant obj means that values(obj) are all the constant',
+      Jsc.dict(Jsc.json),
+      Jsc.json,
+      function (obj, x) {
+        var output = Obj.map(obj, Fun.constant(x));
+        var values = Obj.values(output);
+        return Arr.forall(values, function (v) {
+          return v === x;
+        });
+      }
+    );
+
+    Jsc.property(
+      'tupleMap obj (x, i) -> { k: i, v: x }',
+      Jsc.dict(Jsc.json),
+      function (obj) {
+        var output = Obj.tupleMap(obj, function (x, i) {
+          return { k: i, v: x };
+        });
+
+        return Jsc.eq(output, obj);
+      }
+    );
+
+    Jsc.property(
+      'mapToArray is symmetric with tupleMap',
+      Jsc.dict(Jsc.nestring),
+      function (obj) {
+        var array = Obj.mapToArray(obj, function (x, i) {
+          return { k: i, v: x };
+        });
+
+        var aKeys = Arr.map(array, function (x) { return x.k; });
+        var aValues = Arr.map(array, function (x) { return x.v; });
+
+        var keys = Obj.keys(obj);
+        var values = Obj.values(obj);
+
+        var comp = function (arr1, arr2) {
+          return Arr.equal(Arr.sort(arr1), Arr.sort(arr2));
+        };
+
+        return comp(keys, aKeys) && comp(values, aValues);
+      }
+    );
   }
 );
