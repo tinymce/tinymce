@@ -71,7 +71,7 @@ define("tinymce/SelectionOverrides", [
 
 		function getRealSelectionElement() {
 			var container = editor.dom.get(realSelectionId);
-			return container.getElementsByTagName('*')[0];
+			return container ? container.getElementsByTagName('*')[0] : container;
 		}
 
 		function isBlock(node) {
