@@ -713,9 +713,7 @@ define("tinymce/Editor", [
 				self.fire("load");
 			};
 
-			if (!Env.canHaveCSP) {
-				DOM.setAttrib(ifr, "src", url || 'javascript:""');
-			}
+			DOM.setAttrib(ifr, "src", url || 'javascript:""');
 
 			self.contentAreaContainer = o.iframeContainer;
 			self.iframeElement = ifr;
