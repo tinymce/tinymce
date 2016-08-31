@@ -21,6 +21,23 @@ test("Translate strings", function() {
 	equal(tinymce.util.I18n.translate(["value:{0}{1}{context:something}", "a", "b"]), "value translation:ab with context");
 });
 
+test("Translate strings with language variant", function() {
+	tinymce.util.I18n.add("code", {
+		"only_base": "Only base",
+		"overridden": "Not overridden"
+	});
+	tinymce.util.I18n.add("code_variant", {
+		"overridden": "Overridden",
+		"only_variant": "Only in variant"
+	});
+
+	equal(tinymce.util.I18n.getCode(), "code_variant");
+	equal(tinymce.util.I18n.translate("only_base"), "Only base");
+	equal(tinymce.util.I18n.translate("overridden"), "Overridden");
+	equal(tinymce.util.I18n.translate("only_variant"), "Only in variant");
+	equal(tinymce.util.I18n.translate("not_defined_anywhere"), "not_defined_anywhere");
+});
+
 test("Switch language", function() {
 	for (var key in tinymce.util.I18n.data) {
 		delete tinymce.util.I18n.data[key];
