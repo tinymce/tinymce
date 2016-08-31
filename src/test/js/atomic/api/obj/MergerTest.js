@@ -1,10 +1,11 @@
 test('Merger',
 
   [
-    'ephox.katamari.api.Merger'
+    'ephox.katamari.api.Merger',
+    'ephox.wrap.Jsc'
   ],
 
-  function(Merger) {
+  function(Merger, Jsc) {
 
     assert.eq({}, Merger.merge({}, {}));
     assert.eq({a: 'A'}, Merger.merge({a: 'A'}, {}));
@@ -70,6 +71,24 @@ test('Merger',
         }
       }
     }));
+
+    Jsc.property('Merged with identity on left', Jsc.dict(Jsc.json), function (obj) {
+      return Jsc.eq(obj, Merger.merge({}, obj));
+    });
+
+    Jsc.property('Merged with identity on right', Jsc.dict(Jsc.json), function (obj) {
+      return Jsc.eq(obj, Merger.merge(obj, {}));
+    });
+
+    Jsc.property('Deep-merged with identity on left', Jsc.dict(Jsc.json), function (obj) {
+      return Jsc.eq(obj, Merger.deepMerge({}, obj));
+    });
+
+    Jsc.property('Deep-merged with identity on right', Jsc.dict(Jsc.json), function (obj) {
+      return Jsc.eq(obj, Merger.deepMerge(obj, {}));
+    });
+
+
 
   }
 );
