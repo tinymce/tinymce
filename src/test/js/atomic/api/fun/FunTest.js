@@ -3,10 +3,11 @@ test(
 
   [
     'ephox.katamari.api.Fun',
+    'ephox.wrap.Jsc',
     'global!Array'
   ],
 
-  function (Fun, Array) {
+  function (Fun, Jsc, Array) {
   
   var testSanity = function () {
     var add2 = function (n) {
@@ -61,5 +62,63 @@ test(
 
   };
 
+  var testSpecs = function () {
+    Jsc.property('Check compose :: compose(f, g)(x) = f(g(x))', 'string', 'string -> string', 'string -> string', function (x, f, g) {
+      var h = Fun.compose(f, g);
+      return Jsc.eq(f(g(x)), h(x));
+    });
+
+    Jsc.property('Check constant :: constant(a)() === a', 'json', function (json) {
+      return Jsc.eq(json, Fun.constant(json)());
+    });
+
+    Jsc.property('Check identity :: identity(a) === a', 'json', function (json) {
+      return Jsc.eq(json, Fun.identity(json));
+    });
+
+    Jsc.property('Check always :: f(x) === true', 'json', function (json) {
+      return Jsc.eq(true, Fun.always(json));
+    });
+
+    Jsc.property('Check never :: f(x) === false', 'json', function (json) {
+      return Jsc.eq(false, Fun.never(json));
+    });
+
+    Jsc.property('Check curry :: curry(f, x)(y) = f(x, y)', Jsc.array(Jsc.json), Jsc.array(Jsc.json), function (extra1, extra2) {
+      var f = function () {
+        var args = Array.prototype.slice.call(arguments, 0);
+        return args;
+      };
+
+      var curried = Fun.curry.apply(undefined, [ f ].concat(extra1));
+      var output = Fun.curry.apply(undefined, [ curried ].concat(extra2))();
+      return Jsc.eq(extra1.concat(extra2), output);
+    });
+
+    Jsc.property('Check not :: not(f(x)) === !f(x)', Jsc.json, Jsc.fun(Jsc.bool), function (x, f) {
+      var g = Fun.not(f);
+      return Jsc.eq(f(x), !g(x));
+    });
+
+    Jsc.property('Check not :: not(not(f(x))) === f(x)', Jsc.json, Jsc.fun(Jsc.bool), function (x, f) {
+      var g = Fun.not(Fun.not(f));
+      return Jsc.eq(f(x), g(x));
+    });
+
+    Jsc.property('Check apply :: apply(constant(a)) === a', Jsc.json, function (x) {
+      return Jsc.eq(x, Fun.apply(Fun.constant(x)));
+    });
+
+    Jsc.property('Check call :: apply(constant(a)) === undefined', Jsc.json, function (x) {
+      var hack = null;
+      var output = Fun.call(function () {
+        hack = x;
+      });
+
+      return Jsc.eq(undefined, output) && Jsc.eq(x, hack);
+    });
+  };
+
   testSanity();
+  testSpecs();
 });
