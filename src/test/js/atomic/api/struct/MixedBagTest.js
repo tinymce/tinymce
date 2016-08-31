@@ -2,10 +2,15 @@ test(
   'MixedBagTest',
 
   [
-    'ephox.katamari.data.MixedBag'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj',
+    'ephox.katamari.api.Type',
+    'ephox.katamari.api.Unique',
+    'ephox.katamari.data.MixedBag',
+    'ephox.wrap.Jsc'
   ],
 
-  function (MixedBag) {
+  function (Arr, Obj, Type, Unique, MixedBag, Jsc) {
     var bagger = MixedBag([ 'alpha', 'beta', 'gamma' ], [ 'oDelta', 'oEpsilon' ]);
     (function () {
       var t1 = bagger({
@@ -183,5 +188,58 @@ test(
         assert.eq(expected, err.message);
       }
     })();
+
+    var genInputs = Jsc.array(Jsc.nestring).generator.flatMap(function (rawRequired) {
+      return Jsc.array(Jsc.nestring).generator.flatMap(function (extra) {
+        return Jsc.nestring.generator.map(function (backup) {
+          var required = rawRequired.length === 0 && extra.length === 0 ? [ backup ] : Unique.stringArray(rawRequired);
+          return {
+            required: required,
+            extra: Arr.filter(extra, function (e) {
+              return !Arr.contains(required, e);
+            })
+          };
+        });
+      });
+    });
+
+    var arbInputs = Jsc.bless({
+      generator: genInputs
+    });
+
+    Jsc.property('Check Mixed Bag', arbInputs, Jsc.json, Jsc.fun(Jsc.bool), function (inputs, constant, pred) {
+      var bag = MixedBag(inputs.required, inputs.extra);
+      var fields = Arr.filter(inputs.required.concat(inputs.extra), function (x) { return pred(x); });
+
+      var r = { };
+      Arr.each(fields, function (field) {
+        r[field] = constant;
+      });
+
+      var shouldPass = Arr.forall(inputs.required, function (k) {
+        return r.hasOwnProperty(k);
+      });
+
+      if (shouldPass) {
+        var output = bag(r);
+        var keys = Obj.keys(output);
+        return Arr.forall(keys, function (k) {
+          return (
+            (Arr.contains(inputs.required, k) && output[k]() === r[k]) || 
+            (Arr.contains(inputs.extra, k) && (
+              (r.hasOwnProperty(k) && output[k]().isSome()) ||
+              (!r.hasOwnProperty(k) && output[k]().isNone())
+            ))
+          );
+        });
+      } else {
+        try {
+          bag(r);
+          return false;
+        } catch (err) {
+          return !Jsc.eq(true, err.message.indexOf('All required') > -1) ? 'Unexpected error: ' + err.message : true;
+        }
+      }
+    });
   }
 );
