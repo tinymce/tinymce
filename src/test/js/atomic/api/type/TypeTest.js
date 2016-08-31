@@ -1,11 +1,13 @@
 test('Type',
 
   [
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Type',
+    'ephox.wrap.Jsc',
     'global!String'
   ],
 
-  function(Type, String) {
+  function(Arr, Type, Jsc, String) {
 
     var check = function (expected, method, input) {
       var actual = Type[method](input);
@@ -110,5 +112,24 @@ test('Type',
     check(false, 'isNumber', noop);
     check(false, 'isNumber', [1,3,4,5]);
     check(true, 'isNumber', 1);
+
+    Jsc.property('Check Type.is* :: only one should match for every value', Jsc.json, function (json) {
+      var classifiers = [
+        Type.isString,
+        Type.isObject,
+        Type.isArray,
+        Type.isNull,
+        Type.isBoolean,
+        Type.isUndefined,
+        Type.isFunction,
+        Type.isNumber
+      ];
+
+      var matches = Arr.filter(classifiers, function (c) {
+        return c(json);
+      });
+
+      return matches.length === 1;
+    });
   }
 );
