@@ -15,23 +15,19 @@ test(
       assert.eq(expected, values);
     };
 
-    var checkA = function (expected, input) {
-      check(expected, input);
-    };
-
-    checkA([], []);
-    checkA([{index: 0, value: 1}], [1]);
-    checkA([{index: 0, value: 2}, {index: 1, value: 3}, {index: 2, value: 5}], [2, 3, 5]);
+    check([], []);
+    check([{index: 0, value: 1}], [1]);
+    check([{index: 0, value: 2}, {index: 1, value: 3}, {index: 2, value: 5}], [2, 3, 5]);
 
     Jsc.property(
       'Each + push should equal the same object',
       Jsc.array(Jsc.json),
       function (arr) {
         var values = [ ];
-        Arr.each(arr, function (x, i) {
+        var output = Arr.each(arr, function (x, i) {
           values.push(x);
         });
-        return Jsc.eq(arr, values);
+        return Jsc.eq(arr, values) && Jsc.eq(undefined, output);
       }
     );
   }

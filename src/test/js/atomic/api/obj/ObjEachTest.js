@@ -2,10 +2,11 @@ test(
   'ObjEachTest',
 
   [
-    'ephox.katamari.api.Obj'
+    'ephox.katamari.api.Obj',
+    'ephox.wrap.Jsc'
   ],
 
-  function (Obj) {
+  function (Obj, Jsc) {
     var check = function (expected, input) {
       var values = [];
       Obj.each(input, function (x, i) {
@@ -14,12 +15,20 @@ test(
       assert.eq(expected, values);
     };
 
-    var checkO = function (expected, input) {
-      check(expected, input);
-    };
- 
-    checkO([], {});
-    checkO([{index: 'a', value: 'A'}], {a: 'A'});
-    checkO([{index: 'a', value: 'A'}, {index: 'b', value: 'B'}, {index: 'c', value: 'C'}], {a: 'A', b: 'B', c: 'C'});
+    check([], {});
+    check([{index: 'a', value: 'A'}], {a: 'A'});
+    check([{index: 'a', value: 'A'}, {index: 'b', value: 'B'}, {index: 'c', value: 'C'}], {a: 'A', b: 'B', c: 'C'});
+
+    Jsc.property(
+      'Each + set should equal the same object',
+      Jsc.dict(Jsc.json),
+      function (obj) {
+        var values = { };
+        var output = Obj.each(obj, function (x, i) {
+          values[i] = x;
+        });
+        return Jsc.eq(obj, values) && Jsc.eq(undefined, output);
+      }
+    );
   }
 );
