@@ -74,11 +74,9 @@ define('tinymce/inlite/ui/Forms', [
 
 			if (meta && meta.attach) {
 				attachState = {
-					href: e.value,
-					attach: e.meta.attach
+					href: this.value(),
+					attach: meta.attach
 				};
-			} else {
-				attachState = {};
 			}
 		};
 
@@ -106,10 +104,9 @@ define('tinymce/inlite/ui/Forms', [
 			onsubmit: function (e) {
 				convertLinkToAbsolute(editor, e.data.linkurl).then(function (url) {
 					editor.undoManager.transact(function () {
-						var attach = attachState.attach;
-
-						if (attach) {
-							attach();
+						if (url === attachState.href) {
+							attachState.attach();
+							attachState = {};
 						}
 
 						Actions.createLink(editor, url);
