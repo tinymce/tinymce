@@ -47,7 +47,8 @@ define(
       east: east,
       west: west,
       north: useV,
-      south: useV
+      south: useV,
+      move: useV
     };
   }
 );
