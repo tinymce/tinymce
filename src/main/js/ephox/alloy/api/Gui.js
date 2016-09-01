@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.GuiEvents',
+    'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.SystemApi',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.events.Triggers',
@@ -17,7 +18,7 @@ define(
     'ephox.sugar.api.Remove'
   ],
 
-  function (GuiEvents, SystemApi, SystemEvents, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Element, Insert, Remove) {
+  function (GuiEvents, GuiFactory, SystemApi, SystemEvents, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Element, Insert, Remove) {
     var create = function ( ) {
       var container = Element.fromTag('div');
       return takeover(container);
@@ -59,7 +60,7 @@ define(
         getByDom: function (elem) {
           return Tagger.read(elem).bind(getByUid);
         },
-        build: Fun.die('no building yet'),
+        build: GuiFactory.build,
         addToWorld: function (c) { addToWorld(c); }
       });
 

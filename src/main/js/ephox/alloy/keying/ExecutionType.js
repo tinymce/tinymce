@@ -9,11 +9,12 @@ define(
     'ephox.alloy.navigation.KeyRules',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
+    'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option'
   ],
 
-  function (Keys, SystemEvents, EventHandler, KeyMatch, KeyRules, FieldSchema, Objects, Fun, Option) {
+  function (Keys, SystemEvents, EventHandler, KeyMatch, KeyRules, FieldSchema, Objects, Merger, Fun, Option) {
     var schema = function () {
       return [
         FieldSchema.defaulted('execute', defaultExecute),
@@ -28,7 +29,9 @@ define(
     // INVESTIGATE: nice way of sharing defaultExecute
     var defaultExecute = function (component, simulatedEvent, focused) {
       var system = component.getSystem();
-      system.triggerEvent(SystemEvents.execute(), focused, simulatedEvent);
+      system.triggerEvent(SystemEvents.execute(), focused, Merger.deepMerge({
+        target: Fun.constant(component.element())
+      }, simulatedEvent));
     };
 
 
