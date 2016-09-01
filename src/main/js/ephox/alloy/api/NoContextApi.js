@@ -12,7 +12,8 @@ define(
         debugInfo: Fun.constant('fake'),
         triggerEvent: Fun.die('The component must be in a context to send event: trigger'),
         triggerFocus: Fun.die('The component must be in a context to send event: triggerFocus'),
-        build: Fun.die('The component must be in a context to send event: build')
+        build: Fun.die('The component must be in a context to send event: build'),
+        addToWorld: Fun.die('The component must be in a context to addToWorld')
       });
     };
   }

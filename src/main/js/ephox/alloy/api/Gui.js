@@ -52,7 +52,8 @@ define(
             target: Fun.constant(target)
           }, target);
         },
-        build: Fun.die('no building yet')
+        build: Fun.die('no building yet'),
+        addToWorld: function (c) { addToWorld(c); }
       });
 
       var addToWorld = function (component) {
