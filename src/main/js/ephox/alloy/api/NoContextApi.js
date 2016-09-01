@@ -14,6 +14,7 @@ define(
         triggerFocus: Fun.die('The component must be in a context to send event: triggerFocus'),
         build: Fun.die('The component must be in a context to send event: build'),
         addToWorld: Fun.die('The component must be in a context to addToWorld'),
+        removeFromWorld: Fun.die('The component must be in a context to removeFromWorld'),
         getByUid: Fun.die('The component must be in a context to getByUid'),
         getByDom: Fun.die('The compoennt must be in a context to getByDom')
       });

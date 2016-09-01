@@ -61,7 +61,8 @@ define(
           return Tagger.read(elem).bind(getByUid);
         },
         build: GuiFactory.build,
-        addToWorld: function (c) { addToWorld(c); }
+        addToWorld: function (c) { addToWorld(c); },
+        removeFromWorld: function (c) { removeFromWorld(c); }
       });
 
       var addToWorld = function (component) {
@@ -71,8 +72,8 @@ define(
       };
 
       var removeFromWorld = function (component) {
-        registry.unregister(component);
         Arr.each(component.components(), removeFromWorld);
+        registry.unregister(component);
       };
 
       var add = function (component) {
@@ -82,6 +83,7 @@ define(
 
       var remove = function (component) {
         registry.unregister(component);
+        component.disconnect();
         Remove.remove(component.element());
       };
 

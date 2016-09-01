@@ -14,7 +14,7 @@ define(
       // 'openPopup',
       // 'closePopup',
       'addToWorld',
-      // 'removeFromWorld',
+      'removeFromWorld',
       'build',
       'getByUid',
       'getByDom'
