@@ -40,7 +40,7 @@ define(
       });
 
       return Merger.deepMerge(handlerApis, {
-        focusIn: Behaviour.tryActionOpt('keying', info, 'toggle', doFocusIn)
+        focusIn: Behaviour.tryActionOpt('keying', info, 'focusIn', doFocusIn)
       });
     };
 

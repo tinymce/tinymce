@@ -72,6 +72,10 @@ define(
         });
       };
 
+      setInterval(function () {
+        console.log('registry', registry);
+      }, 10000);
+
       return {
         registerId: registerId,
         unregisterId: unregisterId,
