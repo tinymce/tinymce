@@ -37,6 +37,12 @@ define(
       ])
     );
 
+    var chooseChannels = function (channels, message) {
+      return message.universal() ? channels : Arr.filter(channels, function (ch) {
+        return Arr.contains(message.channels(), ch);
+      });
+    };
+
     var handlers = function (info) {
       return info.receiving().fold(function () {
         return {};
@@ -48,7 +54,7 @@ define(
               var channelMap = receiveInfo.channels();
               var channels = Obj.keys(channelMap);
 
-              var targetChannels = channels;
+              var targetChannels = chooseChannels(channels, message);
               Arr.each(targetChannels, function (ch) {
                 var channelInfo = channelMap[ch]();
                 var channelSchema = channelInfo.schema();
