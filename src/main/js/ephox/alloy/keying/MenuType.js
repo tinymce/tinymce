@@ -60,35 +60,22 @@ define(
       return DomNavigation.horizontal(element, info.selector(), focused, +1);
     };
 
-    var fireRight = function (component, simulatedEvent, menuInfo) {
-      // probably need to pass arguments to it.
-      return menuInfo.onRight().bind(Fun.apply);
-    };
-
-    var fireLeft = function (component, simulatedEvent, menuInfo) {
-      return menuInfo.onLeft().bind(Fun.apply);
-    };
-
-    var fireEscape = function (component, simulatedEvent, menuInfo) {
-      return menuInfo.onEscape().bind(Fun.apply);
-    };
-
-    var fireTab = function (component, simulatedEvent, menuInfo) {
-      return menuInfo.onTab().bind(Fun.apply);
-    };
-
-    var fireShiftTab = function (component, simulatedEvent, menuInfo) {
-      return menuInfo.onShiftTab().bind(Fun.apply);
+    var fire = function (onHandler) {
+      return function (component, simulatedEvent, menuInfo) {
+        return menuInfo[onHandler]().bind(function (h) {
+          return h(component, simulatedEvent.event().target());
+        });
+      };
     };
 
     var rules = [
       KeyRules.rule( KeyMatch.inSet( Keys.UP() ), DomMovement.move(moveUp)),
       KeyRules.rule( KeyMatch.inSet( Keys.DOWN() ), DomMovement.move(moveDown)),
-      KeyRules.rule( KeyMatch.inSet( Keys.RIGHT() ), fireRight),
-      KeyRules.rule( KeyMatch.inSet( Keys.LEFT() ), fireLeft),
-      KeyRules.rule( KeyMatch.inSet( Keys.ESCAPE() ), fireEscape),
-      KeyRules.rule( KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), fireTab),
-      KeyRules.rule( KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet( Keys.TAB()) ]), fireShiftTab),
+      KeyRules.rule( KeyMatch.inSet( Keys.RIGHT() ), fire('onRight')),
+      KeyRules.rule( KeyMatch.inSet( Keys.LEFT() ), fire('onLeft')),
+      KeyRules.rule( KeyMatch.inSet( Keys.ESCAPE() ), fire('onEscape')),
+      KeyRules.rule( KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), fire('onShiftTab')),
+      KeyRules.rule( KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet( Keys.TAB()) ]), fire('onTab')),
       KeyRules.rule( KeyMatch.inSet( Keys.SPACE().concat(Keys.ENTER()) ), execute)
     ];
 
