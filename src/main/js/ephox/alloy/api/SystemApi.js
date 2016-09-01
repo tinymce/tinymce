@@ -15,7 +15,9 @@ define(
       // 'closePopup',
       'addToWorld',
       // 'removeFromWorld',
-      'build'
+      'build',
+      'getByUid',
+      'getByDom'
     ]);
   }
 );
