@@ -12,7 +12,7 @@ define(
       var system = component.getSystem();
       system.triggerEvent(SystemEvents.execute(), focused, Merger.deepMerge({
         target: Fun.constant(component.element())
-      }, simulatedEvent));
+      }, simulatedEvent.event()));
     };
 
     return {
