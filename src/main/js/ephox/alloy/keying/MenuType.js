@@ -20,11 +20,10 @@ define(
     // FIX: Dupe with Flowtype
     var schema = [
       FieldSchema.strict('selector'),
-      FieldSchema.defaulted('execute', KeyingTypes.sdefaultExecute),
+      FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
       FieldSchema.option('onRight'),
       FieldSchema.option('onLeft'),
       FieldSchema.option('onEscape'),
-      FieldSchema.option('onShiftTab'),
       FieldSchema.defaulted('moveOnTab', false)
     ];
 
