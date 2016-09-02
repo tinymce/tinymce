@@ -3,10 +3,11 @@ define(
 
   [
     'global!Array',
+    'global!Error',
     'global!String'
   ],
 
-  function (Array, String) {
+  function (Array, Error, String) {
     var eqC = function(x) {
       return function(y) {
         return x === y;
@@ -160,7 +161,7 @@ define(
     var findOrDie = function (xs, f, message) {
       var r = find(xs, f);
       if (r === undefined) {
-        throw message || 'Could not find element in array: ' + String(xs);
+        throw new Error(message || 'Could not find element in array: ' + String(xs));
       } else {
         return r;
       }
@@ -240,6 +241,12 @@ define(
       return [x];
     };
 
+    var sort = function (xs, comparator) {
+      var copy = slice.call(xs, 0);
+      copy.sort(comparator);
+      return copy;
+    };
+
     return {
       map: map,
       each: each,
@@ -263,7 +270,8 @@ define(
       chunk: chunk,
       difference: difference,
       mapToObject: mapToObject,
-      pure: pure
+      pure: pure,
+      sort: sort
     };
   }
 );

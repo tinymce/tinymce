@@ -3,10 +3,11 @@ define(
 
   [
     'ephox.katamari.api.Type',
-    'global!Array'
+    'global!Array',
+    'global!Error'
   ],
 
-  function (Type, Array) {
+  function (Type, Array, Error) {
 
     var shallow = function (old, nu) {
       return nu;
@@ -23,7 +24,7 @@ define(
         var objects = new Array(arguments.length);
         for (var i = 0; i < objects.length; i++) objects[i] = arguments[i];
 
-        if (objects.length === 0) throw "Can't merge zero objects";
+        if (objects.length === 0) throw new Error('Can\'t merge zero objects');
 
         var ret = {};
         for (var j = 0; j < objects.length; j++) {

@@ -1,10 +1,15 @@
 test('Zip', 
 
   [
-    'ephox.katamari.api.Zip'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj',
+    'ephox.katamari.api.Unique',
+    'ephox.katamari.api.Zip',
+    'ephox.wrap.Jsc',
+    'global!parseInt'
   ],
 
-  function(Zipper) {    
+  function (Arr, Obj, Unique, Zip, Jsc, parseInt) {    
     var check1 = function(expectedZipToObject, expectedZipToTuples, keys, values) {
       var sort = function(a, ord) {
         var c = a.slice();
@@ -29,8 +34,8 @@ test('Zip',
         });
       };
 
-      assert.eq(expectedZipToObject, Zipper.zipToObject(keys, values));
-      assert.eq(sortTuples(expectedZipToTuples), sortTuples(Zipper.zipToTuples(keys, values)));
+      assert.eq(expectedZipToObject, Zip.zipToObject(keys, values));
+      assert.eq(sortTuples(expectedZipToTuples), sortTuples(Zip.zipToTuples(keys, values)));
     };
 
     check1(
@@ -75,6 +80,42 @@ test('Zip',
       [{k: 'q', v: 'a'}, {k: 'r', v: undefined}],
       ['q', 'r'], 
       ['a']
+    );
+
+    Jsc.property(
+      'zipToObject has matching keys and values',
+      Jsc.array(Jsc.nestring),
+      function (rawValues) {
+        var values = Unique.stringArray(rawValues);
+
+        var keys = Arr.map(values, function (v, i) {
+          return i;
+        });
+
+        var output = Zip.zipToObject(keys, values);
+
+        var oKeys = Obj.keys(output);
+        if (oKeys.length !== values.length) return 'Output keys did not match';
+        return Arr.forall(oKeys, function (oKey) {
+          var index = parseInt(oKey, 10);
+          var expected = values[index];
+          return output[oKey] === expected;
+        });
+      }
+    );
+
+    Jsc.property(
+      'zipToTuples matches corresponding tuples',
+      Jsc.array(Jsc.json),
+      Jsc.array(Jsc.json),
+      function (keys, values) {
+        var output = Zip.zipToTuples(keys, values);
+
+        if (output.length !== keys.length) return 'Output keys did not match';
+        return Arr.forall(output, function (x, i) {
+          return x.k === keys[i] && x.v === values[i];
+        });
+      }
     );
   }
 );

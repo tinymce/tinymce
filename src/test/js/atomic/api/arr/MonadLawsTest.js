@@ -9,7 +9,7 @@ test(
   function (Arr, Jsc) {
 
     // return a >>= f ≡ f a
-    Jsc.property("Monad law: left identity", "string", "string -> [integer]", function(a, f) {
+    Jsc.property('Monad law: left identity', 'string', 'string -> [integer]', function(a, f) {
       return Jsc.eq(
         Arr.bind(Arr.pure(a), f),
         f(a)
@@ -17,7 +17,7 @@ test(
     });
 
     // m >>= return ≡ m
-    Jsc.property("Monad law: right identity", "[string]", function(m) {
+    Jsc.property('Monad law: right identity', '[string]', function(m) {
       return Jsc.eq(
         Arr.bind(m, Arr.pure),
         m
@@ -25,7 +25,7 @@ test(
     });
 
     // (m >>= f) >>= g ≡ m >>= (\x -> f x >>= g)
-    Jsc.property("Monad law: associativity", "[string]", "string -> [integer]", "integer -> [string]", function(m, f, g) {
+    Jsc.property('Monad law: associativity', '[string]', 'string -> [integer]', 'integer -> [string]', function(m, f, g) {
       return Jsc.eq(
         Arr.bind(Arr.bind(m, f), g),
         Arr.bind(m, function(x){ return Arr.bind(f(x), g); })

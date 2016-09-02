@@ -14,7 +14,7 @@ test(
         operation();
         assert.fail('Expected error not thrown: ' + message);
       } catch (err) {
-        assert.eq(message, err);
+        assert.eq(message, err.message);
       }
     };
 

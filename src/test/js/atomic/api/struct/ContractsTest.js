@@ -57,7 +57,7 @@ test(
 
         assert.fail('Expected failure: ' + expected);
       } catch (err) {
-        assert.eq(expected, err);
+        assert.eq(expected, err.message);
       }
     })();
 
@@ -72,7 +72,7 @@ test(
 
         assert.fail('Expected failure: ' + expected);
       } catch (err) {
-        assert.eq(expected, err);
+        assert.eq(expected, err.message);
       }
     })();
 
@@ -88,7 +88,7 @@ test(
 
         assert.fail('Expected failure: ' + expected);
       } catch (err) {
-        assert.eq(expected, err);
+        assert.eq(expected, err.message);
       }
     })();
 
@@ -116,7 +116,7 @@ test(
         
         assert.fail('Expected failure: ' + expected);
       } catch (err) {
-        assert.eq(expected, err);
+        assert.eq(expected, err.message);
       }
     })();
 

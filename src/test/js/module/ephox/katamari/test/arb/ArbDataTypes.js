@@ -3,12 +3,14 @@ define(
 
   [
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.katamari.api.FutureResult',
     'ephox.katamari.api.Result',
     'ephox.wrap.Jsc'
   ],
 
-  function (Fun, FutureResult, Result, Jsc) {
+
+  function (Fun, Option, FutureResult, Result, Jsc) {
     var show = function (res) {
       return res.fold(function (e) {
         return 'Result.error(' + e + ')';
@@ -57,7 +59,38 @@ define(
       generator: genFutureResultSchema
     });
 
+
+    var arbNone = Jsc.constant(Option.none());
+    var arbSome = Jsc.json.smap(function (v) {
+      return Option.some(v);
+    }, function (option) {
+      return option.getOrDie();
+    });
+
+    var arbOption = Jsc.oneof([ arbNone, arbSome ]);
+
+    var genIndexArrayOf = function (len) {
+      return Jsc.integer(0, len).generator.map(function (aLength) {
+        var r = [ ];
+        for (var i = 0; i < aLength; i++) {
+          r.push(i);
+        }
+        return r;
+      });
+    };
+
+    var arbIndexArrayOf = function (len) {
+      return Jsc.bless({
+        generator: genIndexArrayOf(len)
+      });
+    };
+
     return {
+      option: arbOption,
+      optionSome: arbSome,
+      optionNone: arbNone,
+
+      indexArrayOf: arbIndexArrayOf,
       resultError: arbResultError,
       resultValue: arbResultValue,
       result: arbResult,

@@ -77,6 +77,7 @@ define(
       // inlined from peanut, maybe a micro-optimisation?
       var call = function (thunk) { return thunk(); };
       var id = function (n) { return n; };
+      var noop = function () { };
 
       var me = {
         fold: function (n, s) { return n(); },
@@ -86,13 +87,13 @@ define(
         getOr: id,
         getOrThunk: call,
         getOrDie: function (msg) {
-          throw msg || 'error: getOrDie called on none.';
+          throw new Error(msg || 'error: getOrDie called on none.');
         },
         or: id,
         orThunk: call,
         map: none,
         ap: none,
-        each: none,
+        each: noop,
         bind: none,
         flatten: none,
         exists: never,
@@ -143,7 +144,9 @@ define(
             return some(fab(a));
           });
         },
-        each: map,
+        each: function (f) {
+          f(a);
+        },
         bind: bind,
         flatten: constant_a,
         exists: bind,
@@ -164,7 +167,7 @@ define(
           return [a];
         },
         toString: function () {
-          return "some(" + a + ")";
+          return 'some(' + a + ')';
         }
       };
       return me;

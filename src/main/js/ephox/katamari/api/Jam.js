@@ -2,13 +2,14 @@ define(
   'ephox.katamari.api.Jam',
 
   [
+    'global!Error',
     'global!Object'
   ],
 
-  function (Object) {
+  function (Error, Object) {
 
     var intersperseThunk = function (array, delimiterThunk) {
-      if (array === undefined) throw 'Cannot intersperse undefined';
+      if (array === undefined) throw new Error('Cannot intersperse undefined');
       if (array.length <= 1) return array;
 
       var r = [];

@@ -13,5 +13,7 @@ test(
     check(0, {});
     check(1, { a:'a' });
     check(3, { a:'a', b:'b', c:'c' });
+
+    // INVESTIGATE: Find some way to use Jsc that isn't just re-implementing
   }
 );

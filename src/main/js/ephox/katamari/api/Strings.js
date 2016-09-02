@@ -2,13 +2,14 @@ define(
   'ephox.katamari.api.Strings',
 
   [
-    'ephox.katamari.util.Validate'
+    'ephox.katamari.util.Validate',
+    'global!Error'
   ],
 
-  function (Validate) {
+  function (Validate, Error) {
     //common method
     var checkRange = function(str, substr, start) {
-      if (substr === "") return true;
+      if (substr === '') return true;
       if (str.length < substr.length) return false;
       var x = str.substr(start, start + substr.length);
       return x === substr;
@@ -21,7 +22,7 @@ define(
     var supplant = function(str, obj) {
       var isStringOrNumber = function(a) {
         var t = typeof a;
-        return t === "string" || t === "number";
+        return t === 'string' || t === 'number';
       };
 
       return str.replace(/\${([^{}]*)}/g,
@@ -137,27 +138,27 @@ define(
     var equalsIgnoringCase = /* a, b */ ignoringCase(equals);
 
     var head = function(str) {
-      if (str === "") throw "head on empty string";
+      if (str === '') throw new Error('head on empty string');
       return str.substr(0, 1);
     };
 
     var toe = function(str) {
-      if (str === "") throw "toe on empty string";
+      if (str === '') throw new Error('toe on empty string');
       return str.substr(str.length - 1, str.length);
     };
 
     var tail = function(str) {
-      if (str === "") throw "tail on empty string";
+      if (str === '') throw new Error('tail on empty string');
       return str.substr(1, str.length - 1);
     };
 
     var torso = function(str) {
-      if (str === "") throw "torso on empty string";
+      if (str === '') throw new Error('torso on empty string');
       return str.substr(0, str.length - 1);
     };
 
     var capitalize = function(str) {
-      if (str === "") return str;
+      if (str === '') return str;
       return head(str).toUpperCase() + tail(str);
     };
 
