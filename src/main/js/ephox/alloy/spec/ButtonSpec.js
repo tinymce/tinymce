@@ -57,9 +57,10 @@ define(
       var detail = ValueSchema.asStructOrDie('button.spec', schema, spec);
 
       var executeHandler = EventHandler.nu({
-        run: function (component) {
+        run: function (component, simulatedEvent) {
           var action = detail.action();
           action(component);
+          simulatedEvent.stop();
         }
       });
 
