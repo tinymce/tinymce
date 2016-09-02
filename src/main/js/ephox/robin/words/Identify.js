@@ -12,10 +12,10 @@ define(
   ],
 
   function (Arr, Option, Pattern, Search, WordScope, WordSanitiser, RegExp) {
+    // Returns: [array of WordScope Struct] containing all words from string allText
     var words = function (allText) {
       var pattern = Pattern.unsafetoken(Pattern.wordchar() + '+');
       var matches = Search.findall(allText, pattern);
-
       var len = allText.length;
 
       // FIX ... I may possibly index strings elsewhere.
