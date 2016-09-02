@@ -95,7 +95,6 @@ define(
       var broadcastData = function (data) {
         var receivers = registry.filter(SystemEvents.receive());
         Arr.each(receivers, function (receiver) {
-          console.log('found a receiver', receiver);
           receiver.handler(data);
         });
       };

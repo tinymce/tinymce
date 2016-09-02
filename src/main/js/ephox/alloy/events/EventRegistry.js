@@ -66,15 +66,11 @@ define(
       };
 
       var unregisterId = function (id) {
-        // Hmm ... mutation
+        // INVESTIGATE: Find a better way than mutation if we can.
         Obj.each(registry, function (handlersById, eventName) {
           if (handlersById.hasOwnProperty(id)) delete handlersById[id];
         });
       };
-
-      setInterval(function () {
-        console.log('registry', registry);
-      }, 10000);
 
       return {
         registerId: registerId,
