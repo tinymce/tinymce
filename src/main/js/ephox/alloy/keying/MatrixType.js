@@ -5,6 +5,8 @@ define(
     'ephox.alloy.alien.Keys',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.keying.KeyingType',
+    'ephox.alloy.keying.KeyingTypes',
     'ephox.alloy.navigation.DomMovement',
     'ephox.alloy.navigation.DomPinpoint',
     'ephox.alloy.navigation.KeyMatch',
@@ -21,30 +23,19 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Keys, SystemEvents, EventHandler, DomMovement, DomPinpoint, KeyMatch, KeyRules, MatrixNavigation, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Fun, Focus, SelectorFilter, SelectorFind) {
-    // INVESTIGATE: nice way of sharing defaultExecute
-    var defaultExecute = function (component, simulatedEvent, focused) {
-      var system = component.getSystem();
-      system.triggerEvent(SystemEvents.execute(), focused, simulatedEvent);
-    };
-
-    var schema = function () {
-      return [
-        FieldSchema.field(
-          'selectors',
-          'selectors',
-          FieldPresence.strict(),
-          ValueSchema.objOf([
-            FieldSchema.strict('row'),
-            FieldSchema.strict('cell')
-          ])
-        ),
-        FieldSchema.defaulted('execute', defaultExecute),
-        FieldSchema.state('handler', function () {
-          return self;
-        })
-      ];
-    };
+  function (Keys, SystemEvents, EventHandler, KeyingType, KeyingTypes, DomMovement, DomPinpoint, KeyMatch, KeyRules, MatrixNavigation, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Fun, Focus, SelectorFilter, SelectorFind) {
+    var schema = [
+      FieldSchema.field(
+        'selectors',
+        'selectors',
+        FieldPresence.strict(),
+        ValueSchema.objOf([
+          FieldSchema.strict('row'),
+          FieldSchema.strict('cell')
+        ])
+      ),
+      FieldSchema.defaulted('execute', KeyingTypes.defaultExecute)
+    ];
 
     var focusIn = function (component, matrixInfo) {
       var selectors = matrixInfo.selector();
@@ -91,21 +82,17 @@ define(
     var moveNorth = doMove(MatrixNavigation.cycleUp);
     var moveSouth = doMove(MatrixNavigation.cycleDown);
 
-    var rules = [
-      KeyRules.rule( KeyMatch.inSet( Keys.LEFT() ), DomMovement.west(moveLeft, moveRight)),
-      KeyRules.rule( KeyMatch.inSet( Keys.RIGHT() ), DomMovement.east(moveLeft, moveRight)),
-      KeyRules.rule( KeyMatch.inSet( Keys.UP() ), DomMovement.north(moveNorth)),
-      KeyRules.rule( KeyMatch.inSet( Keys.DOWN() ), DomMovement.south(moveSouth)),
-      KeyRules.rule( KeyMatch.inSet( Keys.SPACE().concat(Keys.ENTER()) ), execute)
-    ];
-
-    var processKey = function (component, simulatedEvent, matrixInfo) {
-      return KeyRules.choose(rules, simulatedEvent.event()).each(function (transition) {
-        return transition(component, simulatedEvent, matrixInfo);
-      });
+    var getRules = function (_) {
+      return [
+        KeyRules.rule( KeyMatch.inSet( Keys.LEFT() ), DomMovement.west(moveLeft, moveRight)),
+        KeyRules.rule( KeyMatch.inSet( Keys.RIGHT() ), DomMovement.east(moveLeft, moveRight)),
+        KeyRules.rule( KeyMatch.inSet( Keys.UP() ), DomMovement.north(moveNorth)),
+        KeyRules.rule( KeyMatch.inSet( Keys.DOWN() ), DomMovement.south(moveSouth)),
+        KeyRules.rule( KeyMatch.inSet( Keys.SPACE().concat(Keys.ENTER()) ), execute)
+      ];
     };
 
-    var toEvents = function (matrixInfo) {
+    var getEvents = function (matrixInfo) {
       return Objects.wrapAll([
         { 
           key: SystemEvents.focus(),
@@ -116,27 +103,11 @@ define(
               focusIn(component, matrixInfo);
             }
           })
-        },
-        {
-          key: 'keydown',
-          value: EventHandler.nu({
-            run: function (component, simulatedEvent) {
-              processKey(component, simulatedEvent, matrixInfo).each(function (_) {
-                simulatedEvent.stop();
-              });
-            }
-          })
         }
       ]);
     };
 
-    var self = {
-      schema: schema,
-      processKey: processKey,
-      toEvents: toEvents,
-      toApis: Fun.constant({ })
-    };
-
-    return self;
+    var getApis = Fun.constant({ });
+    return KeyingType(schema, getRules, getEvents, getApis);
   }
 );
