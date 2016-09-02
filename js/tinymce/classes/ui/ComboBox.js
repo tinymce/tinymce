@@ -96,7 +96,13 @@ define("tinymce/ui/ComboBox", [
 
 			self.on('keyup', function(e) {
 				if (e.target.nodeName == "INPUT") {
-					self.state.set('value', e.target.value);
+					var oldValue = self.state.get('value');
+					var newValue = e.target.value;
+
+					if (newValue !== oldValue) {
+						self.state.set('value', newValue);
+						self.fire('autocomplete', e);
+					}
 				}
 			});
 
@@ -325,6 +331,11 @@ define("tinymce/ui/ComboBox", [
 
 		showAutoComplete: function (items, term) {
 			var self = this;
+
+			if (items.length === 0) {
+				self.hideMenu();
+				return;
+			}
 
 			var insert = function (value, title) {
 				return function () {

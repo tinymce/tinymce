@@ -20,17 +20,14 @@ define("tinymce/ui/FilePicker", [
 	"tinymce/ui/ComboBox",
 	"tinymce/util/Tools",
 	"tinymce/util/Arr",
+	"tinymce/util/Fun",
+	"tinymce/util/VK",
 	"tinymce/content/LinkTargets"
-], function(ComboBox, Tools, Arr, LinkTargets) {
+], function(ComboBox, Tools, Arr, Fun, VK, LinkTargets) {
 	"use strict";
 
 	var history = {};
 	var HISTORY_LENGTH = 5;
-	var noop = function () {};
-
-	var hasFocus = function (elm) {
-		return document.activeElement === elm;
-	};
 
 	var toMenuItems = function (targets) {
 		return Tools.map(targets, function (target) {
@@ -53,7 +50,7 @@ define("tinymce/ui/FilePicker", [
 		return !foundTarget;
 	};
 
-	var createMenuItems = function (targets, fileType) {
+	var createMenuItems = function (term, targets, fileType) {
 		var separator = {title: '-'};
 
 		var fromHistoryMenuItems = function (history) {
@@ -67,7 +64,7 @@ define("tinymce/ui/FilePicker", [
 					value: {
 						title: url,
 						url: url,
-						attach: noop
+						attach: Fun.noop
 					}
 				};
 			});
@@ -89,9 +86,9 @@ define("tinymce/ui/FilePicker", [
 		};
 
 		return join([
-			fromHistoryMenuItems(history),
-			fromMenuItems('header'),
-			fromMenuItems('anchor')
+			filterByQuery(term, fromHistoryMenuItems(history)),
+			filterByQuery(term, fromMenuItems('header')),
+			filterByQuery(term, fromMenuItems('anchor'))
 		]);
 	};
 
@@ -107,24 +104,24 @@ define("tinymce/ui/FilePicker", [
 		}
 	};
 
-	var filterByQuery = function (menuItems, term) {
+	var filterByQuery = function (term, menuItems) {
 		var lowerCaseTerm = term.toLowerCase();
-		return Tools.grep(menuItems, function (item) {
+		var result = Tools.grep(menuItems, function (item) {
 			return item.title.toLowerCase().indexOf(lowerCaseTerm) !== -1;
 		});
+
+		return result.length === 1 && result[0].title === term ? [] : result;
 	};
 
 	var setupAutoCompleteHandler = function (ctrl, bodyElm, fileType) {
 		var autocomplete = function (term) {
 			var linkTargets = LinkTargets.find(bodyElm);
-			var menuItems = filterByQuery(createMenuItems(linkTargets, fileType), term);
+			var menuItems = createMenuItems(term, linkTargets, fileType);
 			ctrl.showAutoComplete(menuItems, term);
 		};
 
-		ctrl.state.on('change:value', function (e) {
-			if (hasFocus(ctrl.getEl('inp'))) {
-				autocomplete(e.value);
-			}
+		ctrl.on('autocomplete', function () {
+			autocomplete(ctrl.value());
 		});
 
 		ctrl.on('selectitem', function (e) {

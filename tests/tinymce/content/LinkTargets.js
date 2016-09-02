@@ -77,11 +77,23 @@ ModuleLoader.require([
 		equal(elm.innerHTML, '<h1 id="a">a</h1>', 'Should remain the same as before attach');
 	});
 
-	test('Header attach on header without id', function() {
-		var elm = createFromHtml('<h1>a</h1>');
+	test('Header attach on headers without ids', function() {
+		var elm = createFromHtml('<h1>a</h1><h2>b</h2>');
 		var targets = LinkTargets.find(elm);
 
 		targets[0].attach();
-		equal(elm.innerHTML, '<h1 id="' + elm.firstChild.id + '">a</h1>', 'Should remain the same as before attach');
+		targets[1].attach();
+
+		var idA = elm.firstChild.id;
+		var idB = elm.lastChild.id;
+		var afterAttachHtml = elm.innerHTML;
+
+		equal(afterAttachHtml, '<h1 id="' + idA + '">a</h1><h2 id="' + idB + '">b</h2>', 'Should have unique id:s');
+		ok(idA !== idB, 'Should not be equal id:s');
+
+		targets[0].attach();
+		targets[1].attach();
+
+		equal(elm.innerHTML, afterAttachHtml, 'Should be the same id:s regardless of how many times you attach');
 	});
 });

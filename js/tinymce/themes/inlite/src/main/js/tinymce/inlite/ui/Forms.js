@@ -80,13 +80,8 @@ define('tinymce/inlite/ui/Forms', [
 			}
 		};
 
-		return createForm('quicklink', {
-			items: [
-				{type: 'button', name: 'unlink', icon: 'unlink', onclick: unlink, tooltip: 'Remove link'},
-				{type: 'filepicker', name: 'linkurl', placeholder: 'Paste or type a link', filetype: 'file', onchange: onChangeHandler},
-				{type: 'button', icon: 'checkmark', subtype: 'primary', tooltip: 'Ok', onclick: 'submit'}
-			],
-			onshow: function () {
+		var onShowHandler = function (e) {
+			if (e.control === this) {
 				var elm, linkurl = '';
 
 				elm = editor.dom.getParent(editor.selection.getStart(), 'a[href]');
@@ -100,7 +95,16 @@ define('tinymce/inlite/ui/Forms', [
 
 				toggleVisibility(this.find('#unlink'), elm);
 				this.find('#linkurl')[0].focus();
-			},
+			}
+		};
+
+		return createForm('quicklink', {
+			items: [
+				{type: 'button', name: 'unlink', icon: 'unlink', onclick: unlink, tooltip: 'Remove link'},
+				{type: 'filepicker', name: 'linkurl', placeholder: 'Paste or type a link', filetype: 'file', onchange: onChangeHandler},
+				{type: 'button', icon: 'checkmark', subtype: 'primary', tooltip: 'Ok', onclick: 'submit'}
+			],
+			onshow: onShowHandler,
 			onsubmit: function (e) {
 				convertLinkToAbsolute(editor, e.data.linkurl).then(function (url) {
 					editor.undoManager.transact(function () {
