@@ -37,7 +37,8 @@ define(
     // INVESTIGATE: nice way of sharing defaultExecute
     var defaultExecute = function (component, simulatedEvent, focused) {
       var system = component.getSystem();
-      system.triggerEvent(SystemEvents.execute(), focused, simulatedEvent);
+      // FIX duplication!
+      system.triggerEvent(SystemEvents.execute(), focused, simulatedEvent.event());
     };
 
     var execute = function (component, simulatedEvent, menuInfo) {
