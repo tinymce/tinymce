@@ -5,6 +5,8 @@ define(
     'ephox.alloy.alien.Keys',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.keying.KeyingType',
+    'ephox.alloy.keying.KeyingTypes',
     'ephox.alloy.navigation.DomMovement',
     'ephox.alloy.navigation.DomNavigation',
     'ephox.alloy.navigation.KeyMatch',
@@ -16,22 +18,11 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Keys, SystemEvents, EventHandler, DomMovement, DomNavigation, KeyMatch, KeyRules, FieldSchema, Objects, Fun, Focus, SelectorFind) {
-    var schema = function () {
-      return [
-        FieldSchema.strict('selector'),
-        FieldSchema.defaulted('execute', defaultExecute),
-        FieldSchema.state('handler', function () {
-          return self;
-        })
-      ];
-    };
-
-    // INVESTIGATE: nice way of sharing defaultExecute
-    var defaultExecute = function (component, simulatedEvent, focused) {
-      var system = component.getSystem();
-      system.triggerEvent(SystemEvents.execute(), focused, simulatedEvent);
-    };
+  function (Keys, SystemEvents, EventHandler, KeyingType, KeyingTypes, DomMovement, DomNavigation, KeyMatch, KeyRules, FieldSchema, Objects, Fun, Focus, SelectorFind) {
+    var schema = [
+      FieldSchema.strict('selector'),
+      FieldSchema.defaulted('execute', KeyingTypes.defaultExecute)
+    ];
 
     var execute = function (component, simulatedEvent, flowInfo) {
       return Focus.search(component.element()).each(function (focused) {
@@ -54,19 +45,15 @@ define(
       return DomNavigation.horizontal(element, info.selector(), focused, +1);
     };
 
-    var rules = [
-      KeyRules.rule( KeyMatch.inSet( Keys.LEFT().concat(Keys.UP()) ), DomMovement.west(moveLeft, moveRight)),
-      KeyRules.rule( KeyMatch.inSet( Keys.RIGHT().concat(Keys.DOWN()) ), DomMovement.east(moveLeft, moveRight)),
-      KeyRules.rule( KeyMatch.inSet( Keys.SPACE().concat(Keys.ENTER()) ), execute)
-    ];
-
-    var processKey = function (component, simulatedEvent, flowInfo) {
-      return KeyRules.choose(rules, simulatedEvent.event()).bind(function (transition) {
-        return transition(component, simulatedEvent, flowInfo);
-      });
+    var getRules = function (_) {
+      return [
+        KeyRules.rule( KeyMatch.inSet( Keys.LEFT().concat(Keys.UP()) ), DomMovement.west(moveLeft, moveRight)),
+        KeyRules.rule( KeyMatch.inSet( Keys.RIGHT().concat(Keys.DOWN()) ), DomMovement.east(moveLeft, moveRight)),
+        KeyRules.rule( KeyMatch.inSet( Keys.SPACE().concat(Keys.ENTER()) ), execute)
+      ];
     };
 
-    var toEvents = function (flowInfo) {
+    var getEvents = function (flowInfo) {
       return Objects.wrapAll([
         { 
           key: SystemEvents.focus(),
@@ -76,27 +63,11 @@ define(
               focusIn(component, flowInfo);
             }
           })
-        },
-        {
-          key: 'keydown',
-          value: EventHandler.nu({
-            run: function (component, simulatedEvent) {
-              processKey(component, simulatedEvent, flowInfo).each(function (_) {
-                simulatedEvent.stop();
-              });
-            }
-          })
         }
       ]);
     };
 
-    var self = {
-      schema: schema,
-      processKey: processKey,
-      toEvents: toEvents,
-      toApis: Fun.constant({ })
-    };
-
-    return self;
+    var getApis = Fun.constant({ });
+    return KeyingType(schema, getRules, getEvents, getApis);
   }
 );
