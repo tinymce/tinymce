@@ -3,61 +3,31 @@ define(
 
   [
     'ephox.alloy.alien.Keys',
-    'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.keying.KeyingType',
     'ephox.alloy.navigation.KeyMatch',
     'ephox.alloy.navigation.KeyRules',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects',
     'ephox.peanut.Fun'
   ],
 
-  function (Keys, EventHandler, KeyMatch, KeyRules, FieldSchema, Objects, Fun) {
-    // DUPE
-    var schema = function () {
-      return [
-        FieldSchema.strict('onEscape'),
-        FieldSchema.state('handler', function () {
-          return self;
-        })
-      ];
-    };
+  function (Keys, KeyingType, KeyMatch, KeyRules, FieldSchema, Fun) {
+    var schema = [
+      FieldSchema.strict('onEscape')
+    ];
 
     var doEscape = function (component, simulatedEvent, escapeInfo) {
       return escapeInfo.onEscape()(component, simulatedEvent);
     };
     
-    var processKey = function (component, simulatedEvent, escapeInfo) {
-      var transitions = [
+    var getRules = function (component, simulatedEvent, escapeInfo) {
+      return [
         KeyRules.rule( KeyMatch.inSet(Keys.ESCAPE()), doEscape)
       ];
-
-      return KeyRules.choose(transitions, simulatedEvent.event()).bind(function (transition) {
-        return transition(component, simulatedEvent, escapeInfo);
-      });
     };
 
-    var toEvents = function (cyclicInfo) {
-      return Objects.wrapAll([
-        {
-          key: 'keydown',
-          value: EventHandler.nu({
-            run: function (component, simulatedEvent) {
-              processKey(component, simulatedEvent, cyclicInfo).each(function (_) {
-                simulatedEvent.stop();
-              });
-            }
-          })
-        }
-      ]);
-    };
+    var getEvents = Fun.constant({ });
+    var getApis = Fun.constant({ });
 
-     var self = {
-      schema: schema,
-      processKey: processKey,
-      toEvents: toEvents,
-      toApis: Fun.constant({ })
-    };
-
-    return self;
+    return KeyingType(schema, getRules, getEvents, getApis);
   }
 );
