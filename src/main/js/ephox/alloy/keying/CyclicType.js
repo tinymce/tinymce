@@ -5,6 +5,7 @@ define(
     'ephox.alloy.alien.Keys',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.keying.KeyingType',
     'ephox.alloy.navigation.ArrNavigation',
     'ephox.alloy.navigation.KeyMatch',
     'ephox.alloy.navigation.KeyRules',
@@ -20,17 +21,12 @@ define(
     'ephox.sugar.api.Visibility'
   ],
 
-  function (Keys, SystemEvents, EventHandler, ArrNavigation, KeyMatch, KeyRules, FieldSchema, Objects, Arr, Fun, Option, Compare, Focus, SelectorFilter, SelectorFind, Visibility) {
-    var schema = function () {
-      return [
-        FieldSchema.defaulted('selector', '[data-alloy-tabstop="true"]'),
-        FieldSchema.option('onEscape'),
-        FieldSchema.option('onEnter'),
-        FieldSchema.state('handler', function () {
-          return self;
-        })
-      ];
-    };
+  function (Keys, SystemEvents, EventHandler, KeyingType, ArrNavigation, KeyMatch, KeyRules, FieldSchema, Objects, Arr, Fun, Option, Compare, Focus, SelectorFilter, SelectorFind, Visibility) {
+    var schema = [
+      FieldSchema.defaulted('selector', '[data-alloy-tabstop="true"]'),
+      FieldSchema.option('onEscape'),
+      FieldSchema.option('onEnter')
+    ];
 
     // Fire an alloy focus on the first visible element that matches the selector
     var focusFirst = function (component, cyclicInfo) {
@@ -90,20 +86,7 @@ define(
       });
     };
 
-    var rules = [
-      KeyRules.rule( KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), goBackwards),
-      KeyRules.rule( KeyMatch.inSet( Keys.TAB() ), goForwards),
-      KeyRules.rule( KeyMatch.inSet( Keys.ESCAPE()), exit),
-      KeyRules.rule( KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet( Keys.ENTER()) ]), execute)
-    ];
-
-    var processKey = function (component, simulatedEvent, cyclicInfo) {
-      return KeyRules.choose(rules, simulatedEvent.event()).bind(function (transition) {
-        return transition(component, simulatedEvent, cyclicInfo);
-      });
-    };
-
-    var toEvents = function (cyclicInfo) {
+    var getEvents = function (cyclicInfo) {
       return Objects.wrapAll([
         { 
           key: SystemEvents.focus(),
@@ -112,27 +95,21 @@ define(
               focusFirst(component, cyclicInfo);
             }
           })
-        },
-        {
-          key: 'keydown',
-          value: EventHandler.nu({
-            run: function (component, simulatedEvent) {
-              processKey(component, simulatedEvent, cyclicInfo).each(function (_) {
-                simulatedEvent.stop();
-              });
-            }
-          })
         }
       ]);
     };
 
-    var self = {
-      schema: schema,
-      processKey: processKey,
-      toEvents: toEvents,
-      toApis: Fun.constant({ })
+    var getRules = function (_) {
+      return [
+        KeyRules.rule( KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), goBackwards),
+        KeyRules.rule( KeyMatch.inSet( Keys.TAB() ), goForwards),
+        KeyRules.rule( KeyMatch.inSet( Keys.ESCAPE()), exit),
+        KeyRules.rule( KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet( Keys.ENTER()) ]), execute)
+      ];
     };
 
-    return self;
+    var getApis = Fun.constant({ });
+
+    return KeyingType(schema, getRules, getEvents, getApis);
   }
 );
