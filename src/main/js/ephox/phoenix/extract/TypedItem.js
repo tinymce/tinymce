@@ -11,7 +11,10 @@ define(
    * - boundary (block tag or inline tag with block CSS display)
    * - empty
    * - text
+   *
+   * TODO: MJP: for Multi-Language spell checking: deal with the element LANG, adding language to typeditem so this nested information is not lost
    */
+
   function (Fun, Option) {
     var no = Fun.constant(false);
     var yes = Fun.constant(true);
