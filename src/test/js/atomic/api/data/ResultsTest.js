@@ -66,7 +66,7 @@ test(
     );
 
     Jsc.property(
-      'Check that two errors alway equal comparison.bothErrors',
+      'Check that two errors always equal comparison.bothErrors',
       arbResultError,
       arbResultError,
       function (r1, r2) {
@@ -81,7 +81,7 @@ test(
     );
 
     Jsc.property(
-      'Check that error, value alway equal comparison.firstError',
+      'Check that error, value always equal comparison.firstError',
       arbResultError,
       arbResultValue,
       function (r1, r2) {
@@ -96,7 +96,7 @@ test(
     );
 
     Jsc.property(
-      'Check that value, error alway equal comparison.secondError',
+      'Check that value, error always equal comparison.secondError',
       arbResultValue,
       arbResultError,
       function (r1, r2) {
@@ -111,7 +111,7 @@ test(
     );
 
     Jsc.property(
-      'Check that value, value alway equal comparison.bothValues',
+      'Check that value, value always equal comparison.bothValues',
       arbResultValue,
       arbResultValue,
       function (r1, r2) {
