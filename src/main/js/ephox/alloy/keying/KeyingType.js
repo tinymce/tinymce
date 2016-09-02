@@ -2,6 +2,7 @@ define(
   'ephox.alloy.keying.KeyingType',
 
   [
+    'ephox.alloy.api.SystemEvents',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.navigation.KeyRules',
     'ephox.boulder.api.FieldSchema',
@@ -9,8 +10,8 @@ define(
     'ephox.highway.Merger'
   ],
 
-  function (EventHandler, KeyRules, FieldSchema, Objects, Merger) {
-    return function (infoSchema, getRules, getEvents, getApis) {
+  function (SystemEvents, EventHandler, KeyRules, FieldSchema, Objects, Merger) {
+    var typical = function (infoSchema, getRules, getEvents, getApis, optFocusIn) {
       var schema = function () {
         return infoSchema.concat([
           FieldSchema.state('handler', function () {
@@ -29,18 +30,29 @@ define(
 
       var toEvents = function (keyInfo) {
         var otherEvents = getEvents(keyInfo);
-        var keyEvents = Objects.wrapAll([
-          {
-            key: 'keydown',
-            value: EventHandler.nu({
-              run: function (component, simulatedEvent) {
-                processKey(component, simulatedEvent, keyInfo).each(function (_) {
-                  simulatedEvent.stop();
-                });
-              }
-            })
-          }
-        ]);
+        var keyEvents = Objects.wrapAll(
+          optFocusIn.map(function (focusIn) {
+            return { 
+              key: SystemEvents.focus(),
+              value: EventHandler.nu({
+                run: function (component) {
+                  focusIn(component, keyInfo);
+                }
+              })
+            };
+          }).toArray().concat([
+            {
+              key: 'keydown',
+              value: EventHandler.nu({
+                run: function (component, simulatedEvent) {
+                  processKey(component, simulatedEvent, keyInfo).each(function (_) {
+                    simulatedEvent.stop();
+                  });
+                }
+              })
+            }
+          ]
+        ));
         return Merger.deepMerge(otherEvents, keyEvents);
       };
 
@@ -52,6 +64,10 @@ define(
       };
 
       return self;
+    };
+
+    return {
+      typical: typical
     };
   }
 );

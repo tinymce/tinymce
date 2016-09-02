@@ -3,14 +3,11 @@ define(
 
   [
     'ephox.alloy.alien.Keys',
-    'ephox.alloy.api.SystemEvents',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.keying.KeyingType',
     'ephox.alloy.navigation.ArrNavigation',
     'ephox.alloy.navigation.KeyMatch',
     'ephox.alloy.navigation.KeyRules',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
@@ -21,7 +18,7 @@ define(
     'ephox.sugar.api.Visibility'
   ],
 
-  function (Keys, SystemEvents, EventHandler, KeyingType, ArrNavigation, KeyMatch, KeyRules, FieldSchema, Objects, Arr, Fun, Option, Compare, Focus, SelectorFilter, SelectorFind, Visibility) {
+  function (Keys, KeyingType, ArrNavigation, KeyMatch, KeyRules, FieldSchema, Arr, Fun, Option, Compare, Focus, SelectorFilter, SelectorFind, Visibility) {
     var schema = [
       FieldSchema.defaulted('selector', '[data-alloy-tabstop="true"]'),
       FieldSchema.option('onEscape'),
@@ -29,7 +26,7 @@ define(
     ];
 
     // Fire an alloy focus on the first visible element that matches the selector
-    var focusFirst = function (component, cyclicInfo) {
+    var focusIn = function (component, cyclicInfo) {
       var tabstops = SelectorFilter.descendants(component.element(), cyclicInfo.selector());
       var visible = Arr.filter(tabstops, Visibility.isVisible);
       Option.from(visible[0]).each(function (target) {
@@ -86,30 +83,16 @@ define(
       });
     };
 
-    var getEvents = function (cyclicInfo) {
-      return Objects.wrapAll([
-        { 
-          key: SystemEvents.focus(),
-          value: EventHandler.nu({
-            run: function (component) {
-              focusFirst(component, cyclicInfo);
-            }
-          })
-        }
-      ]);
-    };
+    var getRules = Fun.constant([
+      KeyRules.rule( KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), goBackwards),
+      KeyRules.rule( KeyMatch.inSet( Keys.TAB() ), goForwards),
+      KeyRules.rule( KeyMatch.inSet( Keys.ESCAPE()), exit),
+      KeyRules.rule( KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet( Keys.ENTER()) ]), execute)
+    ]);
 
-    var getRules = function (_) {
-      return [
-        KeyRules.rule( KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), goBackwards),
-        KeyRules.rule( KeyMatch.inSet( Keys.TAB() ), goForwards),
-        KeyRules.rule( KeyMatch.inSet( Keys.ESCAPE()), exit),
-        KeyRules.rule( KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet( Keys.ENTER()) ]), execute)
-      ];
-    };
-
+    var getEvents = Fun.constant({ });
     var getApis = Fun.constant({ });
 
-    return KeyingType(schema, getRules, getEvents, getApis);
+    return KeyingType.typical(schema, getRules, getEvents, getApis, Option.some(focusIn));
   }
 );

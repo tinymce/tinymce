@@ -3,8 +3,6 @@ define(
 
   [
     'ephox.alloy.alien.Keys',
-    'ephox.alloy.api.SystemEvents',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.keying.KeyingType',
     'ephox.alloy.keying.KeyingTypes',
     'ephox.alloy.navigation.DomMovement',
@@ -13,13 +11,14 @@ define(
     'ephox.alloy.navigation.KeyRules',
     'ephox.alloy.navigation.WrapArrNavigation',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects',
+    'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.scullion.Cell',
     'ephox.sugar.api.Focus',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Keys, SystemEvents, EventHandler, KeyingType, KeyingTypes, DomMovement, DomPinpoint, KeyMatch, KeyRules, WrapArrNavigation, FieldSchema, Objects, Cell, Focus, SelectorFind) {
+  function (Keys, KeyingType, KeyingTypes, DomMovement, DomPinpoint, KeyMatch, KeyRules, WrapArrNavigation, FieldSchema, Fun, Option, Cell, Focus, SelectorFind) {
     var schema = [
       FieldSchema.strict('selector'),
       FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
@@ -63,30 +62,15 @@ define(
     var moveNorth = doMove(WrapArrNavigation.cycleUp);
     var moveSouth = doMove(WrapArrNavigation.cycleDown);
 
-    var getRules = function (_) {
-      return [
-        KeyRules.rule( KeyMatch.inSet( Keys.LEFT() ), DomMovement.west(moveLeft, moveRight)),
-        KeyRules.rule( KeyMatch.inSet( Keys.RIGHT() ), DomMovement.east(moveLeft, moveRight)),
-        KeyRules.rule( KeyMatch.inSet( Keys.UP() ), DomMovement.north(moveNorth)),
-        KeyRules.rule( KeyMatch.inSet( Keys.DOWN() ), DomMovement.south(moveSouth)),
-        KeyRules.rule( KeyMatch.inSet( Keys.SPACE().concat(Keys.ENTER()) ), execute)
-      ];
-    };
+    var getRules = Fun.constant([
+      KeyRules.rule( KeyMatch.inSet( Keys.LEFT() ), DomMovement.west(moveLeft, moveRight)),
+      KeyRules.rule( KeyMatch.inSet( Keys.RIGHT() ), DomMovement.east(moveLeft, moveRight)),
+      KeyRules.rule( KeyMatch.inSet( Keys.UP() ), DomMovement.north(moveNorth)),
+      KeyRules.rule( KeyMatch.inSet( Keys.DOWN() ), DomMovement.south(moveSouth)),
+      KeyRules.rule( KeyMatch.inSet( Keys.SPACE().concat(Keys.ENTER()) ), execute)
+    ]);
 
-    var getEvents = function (gridInfo) {
-      return Objects.wrapAll([
-        { 
-          key: SystemEvents.focus(),
-          value: EventHandler.nu({
-            run: function (component) {
-              // TODO: Do we want to implement a 'recent' again?
-              // Find a target inside the component
-              focusIn(component, gridInfo);
-            }
-          })
-        }
-      ]);
-    };
+    var getEvents = Fun.constant({ });
 
     var setGridSize = function (gridInfo, numRows, numColumns) {
       gridInfo.dimensions().set({
@@ -103,6 +87,6 @@ define(
       };
     };
 
-    return KeyingType(schema, getRules, getEvents, getApis);
+    return KeyingType.typical(schema, getRules, getEvents, getApis, Option.some(focusIn));
   }
 );

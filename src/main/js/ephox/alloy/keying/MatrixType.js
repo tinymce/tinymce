@@ -18,12 +18,13 @@ define(
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.sugar.api.Focus',
     'ephox.sugar.api.SelectorFilter',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Keys, SystemEvents, EventHandler, KeyingType, KeyingTypes, DomMovement, DomPinpoint, KeyMatch, KeyRules, MatrixNavigation, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Fun, Focus, SelectorFilter, SelectorFind) {
+  function (Keys, SystemEvents, EventHandler, KeyingType, KeyingTypes, DomMovement, DomPinpoint, KeyMatch, KeyRules, MatrixNavigation, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Fun, Option, Focus, SelectorFilter, SelectorFind) {
     var schema = [
       FieldSchema.field(
         'selectors',
@@ -82,32 +83,17 @@ define(
     var moveNorth = doMove(MatrixNavigation.cycleUp);
     var moveSouth = doMove(MatrixNavigation.cycleDown);
 
-    var getRules = function (_) {
-      return [
-        KeyRules.rule( KeyMatch.inSet( Keys.LEFT() ), DomMovement.west(moveLeft, moveRight)),
-        KeyRules.rule( KeyMatch.inSet( Keys.RIGHT() ), DomMovement.east(moveLeft, moveRight)),
-        KeyRules.rule( KeyMatch.inSet( Keys.UP() ), DomMovement.north(moveNorth)),
-        KeyRules.rule( KeyMatch.inSet( Keys.DOWN() ), DomMovement.south(moveSouth)),
-        KeyRules.rule( KeyMatch.inSet( Keys.SPACE().concat(Keys.ENTER()) ), execute)
-      ];
-    };
+    var getRules = Fun.constant([
+      KeyRules.rule( KeyMatch.inSet( Keys.LEFT() ), DomMovement.west(moveLeft, moveRight)),
+      KeyRules.rule( KeyMatch.inSet( Keys.RIGHT() ), DomMovement.east(moveLeft, moveRight)),
+      KeyRules.rule( KeyMatch.inSet( Keys.UP() ), DomMovement.north(moveNorth)),
+      KeyRules.rule( KeyMatch.inSet( Keys.DOWN() ), DomMovement.south(moveSouth)),
+      KeyRules.rule( KeyMatch.inSet( Keys.SPACE().concat(Keys.ENTER()) ), execute)
+    ]);
 
-    var getEvents = function (matrixInfo) {
-      return Objects.wrapAll([
-        { 
-          key: SystemEvents.focus(),
-          value: EventHandler.nu({
-            run: function (component) {
-              // TODO: Do we want to implement a 'recent' again?
-              // Find a target inside the component
-              focusIn(component, matrixInfo);
-            }
-          })
-        }
-      ]);
-    };
+    var getEvents = Fun.constant({ });
 
     var getApis = Fun.constant({ });
-    return KeyingType(schema, getRules, getEvents, getApis);
+    return KeyingType.typical(schema, getRules, getEvents, getApis, Option.some(focusIn));
   }
 );

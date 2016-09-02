@@ -3,8 +3,6 @@ define(
 
   [
     'ephox.alloy.alien.Keys',
-    'ephox.alloy.api.SystemEvents',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.keying.KeyingType',
     'ephox.alloy.keying.KeyingTypes',
     'ephox.alloy.navigation.DomMovement',
@@ -12,14 +10,13 @@ define(
     'ephox.alloy.navigation.KeyMatch',
     'ephox.alloy.navigation.KeyRules',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Focus',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Keys, SystemEvents, EventHandler, KeyingType, KeyingTypes, DomMovement, DomNavigation, KeyMatch, KeyRules, FieldSchema, Objects, Fun, Option, Focus, SelectorFind) {
+  function (Keys, KeyingType, KeyingTypes, DomMovement, DomNavigation, KeyMatch, KeyRules, FieldSchema, Fun, Option, Focus, SelectorFind) {
     // FIX: Dupe with Flowtype
     var schema = [
       FieldSchema.strict('selector'),
@@ -79,22 +76,10 @@ define(
       KeyRules.rule( KeyMatch.inSet( Keys.SPACE().concat(Keys.ENTER()) ), execute)
     ]);
 
-    var getEvents = function (menuInfo) {
-      return Objects.wrapAll([
-        { 
-          key: SystemEvents.focus(),
-          value: EventHandler.nu({
-            run: function (component) {
-              // Find a target inside the component
-              focusIn(component, menuInfo);
-            }
-          })
-        }
-      ]);
-    };
+    var getEvents = Fun.constant({ });
 
     var getApis = Fun.constant({ });
 
-    return KeyingType(schema, getRules, getEvents, getApis);
+    return KeyingType.typical(schema, getRules, getEvents, getApis, Option.some(focusIn));
   }
 );

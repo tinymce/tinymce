@@ -14,11 +14,12 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.sugar.api.Focus',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Keys, SystemEvents, EventHandler, KeyingType, KeyingTypes, DomMovement, DomNavigation, KeyMatch, KeyRules, FieldSchema, Objects, Fun, Focus, SelectorFind) {
+  function (Keys, SystemEvents, EventHandler, KeyingType, KeyingTypes, DomMovement, DomNavigation, KeyMatch, KeyRules, FieldSchema, Objects, Fun, Option, Focus, SelectorFind) {
     var schema = [
       FieldSchema.strict('selector'),
       FieldSchema.defaulted('execute', KeyingTypes.defaultExecute)
@@ -53,21 +54,9 @@ define(
       ];
     };
 
-    var getEvents = function (flowInfo) {
-      return Objects.wrapAll([
-        { 
-          key: SystemEvents.focus(),
-          value: EventHandler.nu({
-            run: function (component) {
-              // Find a target inside the component
-              focusIn(component, flowInfo);
-            }
-          })
-        }
-      ]);
-    };
+    var getEvents = Fun.constant({ });
 
     var getApis = Fun.constant({ });
-    return KeyingType(schema, getRules, getEvents, getApis);
+    return KeyingType.typical(schema, getRules, getEvents, getApis, Option.some(focusIn));
   }
 );

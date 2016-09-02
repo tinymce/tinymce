@@ -37,6 +37,6 @@ define(
     var getEvents = Fun.constant({ });
     var getApis = Fun.constant({ });
 
-    return KeyingType(schema, getRules, getEvents, getApis);
+    return KeyingType.typical(schema, getRules, getEvents, getApis, Option.none());
   }
 );
