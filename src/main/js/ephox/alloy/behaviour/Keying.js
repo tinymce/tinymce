@@ -11,6 +11,7 @@ define(
     'ephox.alloy.keying.FlowType',
     'ephox.alloy.keying.MatrixType',
     'ephox.alloy.keying.MenuType',
+    'ephox.alloy.keying.SpecialType',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
@@ -19,7 +20,7 @@ define(
     'global!Error'
   ],
 
-  function (Behaviour, DomModification, CyclicType, EscapingType, ExecutionType, FlatgridType, FlowType, MatrixType, MenuType, FieldPresence, FieldSchema, ValueSchema, Merger, Fun, Error) {
+  function (Behaviour, DomModification, CyclicType, EscapingType, ExecutionType, FlatgridType, FlowType, MatrixType, MenuType, SpecialType, FieldPresence, FieldSchema, ValueSchema, Merger, Fun, Error) {
     var doFocusIn = function (component) {
       var system = component.getSystem();
       system.triggerFocus(component.element(), component.element());
@@ -59,7 +60,8 @@ define(
           matrix: MatrixType.schema(),
           execution: ExecutionType.schema(),
           menu: MenuType.schema(),
-          escaping: EscapingType.schema()
+          escaping: EscapingType.schema(),
+          special: SpecialType.schema()
         }
       )
     );
