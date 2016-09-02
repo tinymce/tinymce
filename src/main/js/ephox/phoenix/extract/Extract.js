@@ -10,9 +10,15 @@ define(
 
   function (Arr, Spot, TypedItem, TypedList) {
     /**
-     * Flattens the item tree into TypedItem representations.
+     * Flattens the item tree into an array of TypedItem representations.
      *
      * Boundaries are returned twice, before and after their children.
+     *
+     * Returns: [array of TypedItem] where:
+     *  If item is a text node or empty tag, returns a single-element array [item]
+     *  If item is an element, returns all children recursively as an array.
+     *  - if the element is also boundary, item is added to the front and end of the return array.
+     *  Otherwise returns []
      */
     var typed = function (universe, item, optimise) {
       if (universe.property().isText(item)) {
