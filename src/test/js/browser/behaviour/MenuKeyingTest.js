@@ -110,7 +110,7 @@ asynctest(
         ], [ ]),
 
         FocusTools.sTryOnSelector('Focus should now be on beta', doc, '.beta'),
-        // Basic tests
+        
         checkStore('pressing up', [
           Keyboard.sKeydown(doc, Keys.up(), { })
         ], [ ]),
