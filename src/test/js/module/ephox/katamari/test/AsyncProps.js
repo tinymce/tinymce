@@ -4,10 +4,11 @@ define(
   [
     'ephox.katamari.api.Arr',
     'ephox.wrap.Jsc',
-    'global!Promise'
+    'global!Promise',
+    'global!console'
   ],
 
-  function (Arr, Jsc, Promise) {
+  function (Arr, Jsc, Promise, console) {
     var checkProp = function (label, arbitraries, f) {
       return Jsc.check(
         Jsc.forall.apply(Jsc, arbitraries.concat([ f ])),
@@ -19,9 +20,15 @@ define(
           tests: 100
         }
       ).then(function (result) {
-        // TODO: Get labels to show up. Probably need to make the fake `it` in Jsc handle promises.
-        if (result === true) { return Promise.resolve(result); }
-        else return Promise.reject(result);
+        // TODO: Update Jsc wrap so that we can disable the OK log without losing the error log
+        if (result === true) {
+          console.log('✓ [async]: ' + label);
+          return Promise.resolve(result);
+        }
+        else {
+          console.log('x [async]: ' + label);
+          return Promise.reject(result);
+        }
       });
     };
 

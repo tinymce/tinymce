@@ -2,13 +2,14 @@ test(
   'ResultsTest',
 
   [
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Result',
     'ephox.katamari.api.Results',
     'ephox.katamari.test.arb.ArbDataTypes',
     'ephox.wrap.Jsc'
   ],
 
-  function (Result, Results, ArbDataTypes, Jsc) {
+  function (Fun, Result, Results, ArbDataTypes, Jsc) {
     var testPartition = function () {
       var actual = Results.partition([
         Result.value('a'),
@@ -61,6 +62,66 @@ test(
       function (results) {
         var actual = Results.partition(results);
         return Jsc.eq(results.length, actual.errors.length + actual.values.length) ? true : 'Total number should match size of input';
+      }
+    );
+
+    Jsc.property(
+      'Check that two errors always equal comparison.bothErrors',
+      arbResultError,
+      arbResultError,
+      function (r1, r2) {
+        var comparison = Results.compare(r1, r2);
+        return comparison.match({
+          bothErrors: Fun.constant(true),
+          firstError: Fun.constant(false),
+          secondError: Fun.constant(false),
+          bothValues: Fun.constant(false)
+        });
+      }
+    );
+
+    Jsc.property(
+      'Check that error, value always equal comparison.firstError',
+      arbResultError,
+      arbResultValue,
+      function (r1, r2) {
+        var comparison = Results.compare(r1, r2);
+        return comparison.match({
+          bothErrors: Fun.constant(false),
+          firstError: Fun.constant(true),
+          secondError: Fun.constant(false),
+          bothValues: Fun.constant(false)
+        });
+      }
+    );
+
+    Jsc.property(
+      'Check that value, error always equal comparison.secondError',
+      arbResultValue,
+      arbResultError,
+      function (r1, r2) {
+        var comparison = Results.compare(r1, r2);
+        return comparison.match({
+          bothErrors: Fun.constant(false),
+          firstError: Fun.constant(false),
+          secondError: Fun.constant(true),
+          bothValues: Fun.constant(false)
+        });
+      }
+    );
+
+    Jsc.property(
+      'Check that value, value always equal comparison.bothValues',
+      arbResultValue,
+      arbResultValue,
+      function (r1, r2) {
+        var comparison = Results.compare(r1, r2);
+        return comparison.match({
+          bothErrors: Fun.constant(false),
+          firstError: Fun.constant(false),
+          secondError: Fun.constant(false),
+          bothValues: Fun.constant(true)
+        });
       }
     );
   }
