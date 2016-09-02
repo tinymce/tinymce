@@ -2,7 +2,7 @@ test(
   'CyclesTest',
 
   [
-    'ephox.alloy.navigation.Cycles',
+    'ephox.alloy.alien.Cycles',
     'ephox.wrap.Jsc'
   ],
 

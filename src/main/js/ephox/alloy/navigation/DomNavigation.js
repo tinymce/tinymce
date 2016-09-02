@@ -2,7 +2,7 @@ define(
   'ephox.alloy.navigation.DomNavigation',
 
   [
-    'ephox.alloy.navigation.Cycles',
+    'ephox.alloy.alien.Cycles',
     'ephox.alloy.navigation.DomPinpoint',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option'

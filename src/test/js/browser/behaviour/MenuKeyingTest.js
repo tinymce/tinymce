@@ -18,12 +18,6 @@ asynctest(
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
-      var handle = function (f) {
-        return Fun.compose(function () {
-          return Option.some(true);
-        }, f);
-      };
-
       var makeItem = function (name) {
         return {
           uiType: 'custom',
@@ -49,9 +43,9 @@ asynctest(
         keying: {
           mode: 'menu',
           selector: '.test-item',
-          onEscape: handle(store.adder('detected.escape')),
-          onRight: handle(store.adder('detected.right')),
-          onLeft: handle(store.adder('detected.left')),
+          onEscape: store.adderH('detected.escape'),
+          onRight: store.adderH('detected.right'),
+          onLeft:  store.adderH('detected.left'),
           moveOnTab: true
         },
         components: [

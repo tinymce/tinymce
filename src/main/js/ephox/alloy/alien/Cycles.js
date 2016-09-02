@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.navigation.Cycles',
+  'ephox.alloy.alien.Cycles',
 
   [
 

@@ -2,7 +2,7 @@ define(
   'ephox.alloy.navigation.MatrixNavigation',
 
   [
-    'ephox.alloy.navigation.Cycles',
+    'ephox.alloy.alien.Cycles',
     'ephox.perhaps.Option',
     'ephox.scullion.Struct',
     'global!Math'

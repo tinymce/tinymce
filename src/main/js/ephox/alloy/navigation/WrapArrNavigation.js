@@ -2,7 +2,7 @@ define(
   'ephox.alloy.navigation.WrapArrNavigation',
 
   [
-    'ephox.alloy.navigation.Cycles',
+    'ephox.alloy.alien.Cycles',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'global!Math'

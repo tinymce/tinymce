@@ -26,7 +26,7 @@ asynctest(
         uid: 'custom-uid',
         keying: {
           mode: 'escaping',
-          onEscape: store.adder('detected.escape')
+          onEscape: store.adderH('detected.escape')
         },
         components: [
           
