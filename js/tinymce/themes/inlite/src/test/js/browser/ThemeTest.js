@@ -3,6 +3,7 @@ asynctest('browser/core/ThemeTest', [
 	'ephox.mcagar.api.TinyApis',
 	'ephox.mcagar.api.TinyActions',
 	'ephox.mcagar.api.TinyDom',
+	'tinymce.inlite.test.Toolbar',
 	'tinymce/inlite/Theme',
 	'ephox.agar.api.Pipeline',
 	'ephox.agar.api.Chain',
@@ -11,47 +12,24 @@ asynctest('browser/core/ThemeTest', [
 	'ephox.agar.api.GeneralSteps',
 	'ephox.agar.api.UiControls',
 	'ephox.agar.api.FocusTools'
-], function (TinyLoader, TinyApis, TinyActions, TinyDom, Theme, Pipeline, Chain, UiFinder, Mouse, GeneralSteps, UiControls, FocusTools) {
+], function (
+	TinyLoader, TinyApis, TinyActions, TinyDom, Toolbar, Theme,
+	Pipeline, Chain, UiFinder, Mouse, GeneralSteps, UiControls, FocusTools
+) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
 	var dialogRoot = TinyDom.fromDom(document.body);
-
-	var cWaitForContextToolbar = Chain.fromChainsWith(dialogRoot, [
-		UiFinder.cWaitForState('label', '.mce-tinymce-inline', function (elm) {
-			return elm.dom().style.display === "";
-		})
-	]);
-
-	var cClickToolbarButton = function (ariaLabel) {
-		return Chain.fromChains([
-			UiFinder.cFindIn('div[aria-label="' + ariaLabel + '"]'),
-			Mouse.cTrueClick
-		]);
-	};
 
 	var sClickFocusedButton = Chain.asStep(TinyDom.fromDom(document), [
 		FocusTools.cGetFocused,
 		Mouse.cTrueClick
 	]);
 
-	var sClickContextButton = function (ariaLabel) {
-		return Chain.asStep({}, [
-			cWaitForContextToolbar,
-			cClickToolbarButton(ariaLabel)
-		]);
-	};
-
-	var sWaitForToolbar = function () {
-		return Chain.asStep({}, [
-			cWaitForContextToolbar
-		]);
-	};
-
 	var sBoldTests = function (tinyApis) {
 		return GeneralSteps.sequence([
 			tinyApis.sSetContent('<p>a</p>'),
 			tinyApis.sSetSelection([0, 0], 0, [0, 0], 1),
-			sClickContextButton('Bold'),
+			Toolbar.sClickButton('Bold'),
 			tinyApis.sAssertContent('<p><strong>a</strong></p>')
 		]);
 	};
@@ -60,20 +38,20 @@ asynctest('browser/core/ThemeTest', [
 		return GeneralSteps.sequence([
 			tinyApis.sSetContent('<p>a</p>'),
 			tinyApis.sSetSelection([0, 0], 0, [0, 0], 1),
-			sClickContextButton('Heading 2'),
+			Toolbar.sClickButton('Heading 2'),
 			tinyApis.sAssertContent('<h2>a</h2>')
 		]);
 	};
 
 	var sInsertLink = function (url) {
 		return Chain.asStep({}, [
-			cWaitForContextToolbar,
-			cClickToolbarButton('Insert/Edit link'),
-			cWaitForContextToolbar,
+			Toolbar.cWaitForToolbar,
+			Toolbar.cClickButton('Insert/Edit link'),
+			Toolbar.cWaitForToolbar,
 			UiFinder.cFindIn('input'),
 			UiControls.cSetValue(url),
-			cWaitForContextToolbar,
-			cClickToolbarButton('Ok')
+			Toolbar.cWaitForToolbar,
+			Toolbar.cClickButton('Ok')
 		]);
 	};
 
@@ -105,10 +83,10 @@ asynctest('browser/core/ThemeTest', [
 	};
 
 	var sUnlink = Chain.asStep({}, [
-		cWaitForContextToolbar,
-		cClickToolbarButton('Insert/Edit link'),
-		cWaitForContextToolbar,
-		cClickToolbarButton('Remove link')
+		Toolbar.cWaitForToolbar,
+		Toolbar.cClickButton('Insert/Edit link'),
+		Toolbar.cWaitForToolbar,
+		Toolbar.cClickButton('Remove link')
 	]);
 
 	var sLinkTests = function (tinyApis) {
@@ -151,7 +129,7 @@ asynctest('browser/core/ThemeTest', [
 		return GeneralSteps.sequence([
 			tinyApis.sSetContent('<p><br></p><p>b</p>'),
 			tinyApis.sSetCursor([0], 0),
-			sClickContextButton('Insert table'),
+			Toolbar.sClickButton('Insert table'),
 			tinyApis.sAssertContent([
 					'<table style="width: 100%;">',
 						'<tbody>',
@@ -175,7 +153,7 @@ asynctest('browser/core/ThemeTest', [
 		return GeneralSteps.sequence([
 			tinyApis.sSetContent('<p>a</p>'),
 			tinyApis.sSetSelection([0, 0], 0, [0, 0], 1),
-			sWaitForToolbar(),
+			Toolbar.sWaitForToolbar(),
 			tinyActions.sContentKeydown(121, {alt: true}),
 			sClickFocusedButton,
 			tinyApis.sAssertContent('<p><strong>a</strong></p>')

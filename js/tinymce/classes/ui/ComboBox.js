@@ -428,17 +428,23 @@ define("tinymce/ui/ComboBox", [
 				}
 			});
 
+			var focusIdx = function (idx, menu) {
+				if (menu && menu.items().length > 0) {
+					menu.items().eq(idx)[0].focus();
+				}
+			};
+
 			self.on('keydown', function (e) {
 				var keyCode = e.keyCode;
-				var menu = self.menu;
 
-				if (e.target.nodeName === 'INPUT' && menu && menu.items().length > 0) {
+				if (e.target.nodeName === 'INPUT') {
 					if (keyCode === VK.DOWN) {
 						e.preventDefault();
-						menu.items().eq(0)[0].focus();
+						self.fire('autocomplete');
+						focusIdx(0, self.menu);
 					} else if (keyCode === VK.UP) {
 						e.preventDefault();
-						menu.items().eq(-1)[0].focus();
+						focusIdx(-1, self.menu);
 					}
 				}
 			});
