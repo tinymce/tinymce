@@ -16,7 +16,8 @@ define(
     var schema = [
       FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
       FieldSchema.defaulted('useSpace', false),
-      FieldSchema.defaulted('useEnter', true)
+      FieldSchema.defaulted('useEnter', true),
+      FieldSchema.defaulted('useDown', false)
     ];
 
     var execute = function (component, simulatedEvent, executeInfo) {
@@ -27,7 +28,8 @@ define(
     var getRules = function (component, simulatedEvent, executeInfo) {
       var spaceExec = executeInfo.useSpace() ? Keys.SPACE() : [ ];
       var enterExec = executeInfo.useEnter() ? Keys.ENTER() : [ ];
-      var execKeys = spaceExec.concat(enterExec);
+      var downExec = executeInfo.useDown() ? Keys.DOWN() : [ ];
+      var execKeys = spaceExec.concat(enterExec).concat(downExec);
 
       return [
         KeyRules.rule( KeyMatch.inSet(execKeys), execute)
