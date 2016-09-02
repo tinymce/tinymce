@@ -22,6 +22,9 @@ define(
       return decision([], false);
     };
 
+    // Returns: a 'decision' Struct with the items slot containing an empty array if None
+    //   or  a zero-width [start, end] range was returned by slicer, or 1-element array of the
+    //   [start, end] substring otherwise.
     var onText = function (universe, item, slicer) {
       var text = universe.property().getText(item);
       return slicer(text).fold(function () {
