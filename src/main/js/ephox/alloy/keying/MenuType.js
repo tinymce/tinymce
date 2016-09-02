@@ -5,6 +5,8 @@ define(
     'ephox.alloy.alien.Keys',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.keying.KeyingType',
+    'ephox.alloy.keying.KeyingTypes',
     'ephox.alloy.navigation.DomMovement',
     'ephox.alloy.navigation.DomNavigation',
     'ephox.alloy.navigation.KeyMatch',
@@ -17,29 +19,17 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Keys, SystemEvents, EventHandler, DomMovement, DomNavigation, KeyMatch, KeyRules, FieldSchema, Objects, Fun, Option, Focus, SelectorFind) {
+  function (Keys, SystemEvents, EventHandler, KeyingType, KeyingTypes, DomMovement, DomNavigation, KeyMatch, KeyRules, FieldSchema, Objects, Fun, Option, Focus, SelectorFind) {
     // FIX: Dupe with Flowtype
-    var schema = function () {
-      return [
-        FieldSchema.strict('selector'),
-        FieldSchema.defaulted('execute', defaultExecute),
-        FieldSchema.option('onRight'),
-        FieldSchema.option('onLeft'),
-        FieldSchema.option('onEscape'),
-        FieldSchema.option('onShiftTab'),
-        FieldSchema.defaulted('moveOnTab', false),
-        FieldSchema.state('handler', function () {
-          return self;
-        })
-      ];
-    };
-
-    // INVESTIGATE: nice way of sharing defaultExecute
-    var defaultExecute = function (component, simulatedEvent, focused) {
-      var system = component.getSystem();
-      // FIX duplication!
-      system.triggerEvent(SystemEvents.execute(), focused, simulatedEvent.event());
-    };
+    var schema = [
+      FieldSchema.strict('selector'),
+      FieldSchema.defaulted('execute', KeyingTypes.sdefaultExecute),
+      FieldSchema.option('onRight'),
+      FieldSchema.option('onLeft'),
+      FieldSchema.option('onEscape'),
+      FieldSchema.option('onShiftTab'),
+      FieldSchema.defaulted('moveOnTab', false)
+    ];
 
     var execute = function (component, simulatedEvent, menuInfo) {
       return Focus.search(component.element()).each(function (focused) {
@@ -78,7 +68,7 @@ define(
       return menuInfo.moveOnTab() ? DomMovement.move(moveDown)(component, simulatedEvent, menuInfo) : Option.none();
     };
 
-    var rules = [
+    var getRules = Fun.constant([
       KeyRules.rule( KeyMatch.inSet( Keys.UP() ), DomMovement.move(moveUp)),
       KeyRules.rule( KeyMatch.inSet( Keys.DOWN() ), DomMovement.move(moveDown)),
       KeyRules.rule( KeyMatch.inSet( Keys.RIGHT() ), fire('onRight')),
@@ -87,15 +77,9 @@ define(
       KeyRules.rule( KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), fireShiftTab),
       KeyRules.rule( KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet( Keys.TAB()) ]), fireTab),
       KeyRules.rule( KeyMatch.inSet( Keys.SPACE().concat(Keys.ENTER()) ), execute)
-    ];
+    ]);
 
-    var processKey = function (component, simulatedEvent, menuInfo) {
-      return KeyRules.choose(rules, simulatedEvent.event()).bind(function (transition) {
-        return transition(component, simulatedEvent, menuInfo);
-      });
-    };
-
-    var toEvents = function (menuInfo) {
+    var getEvents = function (menuInfo) {
       return Objects.wrapAll([
         { 
           key: SystemEvents.focus(),
@@ -105,27 +89,12 @@ define(
               focusIn(component, menuInfo);
             }
           })
-        },
-        {
-          key: 'keydown',
-          value: EventHandler.nu({
-            run: function (component, simulatedEvent) {
-              processKey(component, simulatedEvent, menuInfo).each(function (_) {
-                simulatedEvent.stop();
-              });
-            }
-          })
         }
       ]);
     };
 
-    var self = {
-      schema: schema,
-      processKey: processKey,
-      toEvents: toEvents,
-      toApis: Fun.constant({ })
-    };
+    var getApis = Fun.constant({ });
 
-    return self;
+    return KeyingType(schema, getRules, getEvents, getApis);
   }
 );
