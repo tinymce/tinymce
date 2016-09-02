@@ -22,7 +22,6 @@ define(
      * TODO: MJP: for Multi-Language spell checking: deal with the element LANG, adding language to typeditem so this nested information is not lost
      */
     var typed = function (universe, item, optimise) {
-
       if (universe.property().isText(item)) {
         return [ TypedItem.text(item, universe) ];
       } else if (universe.property().isEmptyTag(item)) {
