@@ -25,24 +25,55 @@ define("tinymce/ui/FilePicker", [
 	"use strict";
 
 	var history = {};
+	var HISTORY_LENGTH = 5;
+	var noop = function () {};
 
 	var hasFocus = function (elm) {
 		return document.activeElement === elm;
 	};
 
 	var toMenuItems = function (targets) {
-		return Tools.map(targets, function (item) {
+		return Tools.map(targets, function (target) {
 			return {
-				title: item.title,
-				value: item
+				title: target.title,
+				value: {
+					title: target.title,
+					url: target.url,
+					attach: target.attach
+				}
 			};
 		});
 	};
 
-	var createMenuItems = function (targets) {
+	var isUniqueUrl = function (url, targets) {
+		var foundTarget = Arr.find(targets, function (target) {
+			return target.url === url;
+		});
+
+		return !foundTarget;
+	};
+
+	var createMenuItems = function (targets, fileType) {
 		var separator = {title: '-'};
 
-		var createMenuItems = function (type) {
+		var fromHistoryMenuItems = function (history) {
+			var uniqueHistory = Arr.filter(history[fileType], function (url) {
+				return isUniqueUrl(url, targets);
+			});
+
+			return Tools.map(uniqueHistory, function (url) {
+				return {
+					title: url,
+					value: {
+						title: url,
+						url: url,
+						attach: noop
+					}
+				};
+			});
+		};
+
+		var fromMenuItems = function (type) {
 			var filteredTargets = Arr.filter(targets, function (target) {
 				return target.type == type;
 			});
@@ -52,74 +83,42 @@ define("tinymce/ui/FilePicker", [
 
 		var join = function (items) {
 			return Arr.reduce(items, function (a, b) {
-				return a.length === 0 || b.length === 0 ? a.concat(b) : a.concat(separator, b);
+				var bothEmpty = a.length === 0 || b.length === 0;
+				return bothEmpty ? a.concat(b) : a.concat(separator, b);
 			}, []);
 		};
 
 		return join([
-			createMenuItems('history'),
-			createMenuItems('header'),
-			createMenuItems('anchor')
+			fromHistoryMenuItems(history),
+			fromMenuItems('header'),
+			fromMenuItems('anchor')
 		]);
 	};
 
 	var addToHistory = function (url, fileType) {
-		var target = LinkTargets.createHistoricTarget(url);
+		var items = history[fileType];
 
-		if (fileType in history) {
-			if (url && isUniqueTarget(history[fileType])(target)) {
-				history[fileType] = history[fileType].slice(0, 100).concat(target);
+		if (items) {
+			if (Arr.indexOf(items, url) === -1) {
+				history[fileType] = items.slice(0, HISTORY_LENGTH).concat(url);
 			}
 		} else {
-			history[fileType] = [target];
+			history[fileType] = [url];
 		}
 	};
 
-	var getHistory = function (fileType) {
-		return fileType in history ? history[fileType] : [];
-	};
-
-	var isUniqueTarget = function (targets) {
-		return function (target) {
-			var foundTarget = Arr.find(targets, function (seekTarget) {
-				return target.url === seekTarget.url;
-			});
-
-			return !foundTarget;
-		};
-	};
-
-	var concatHistory = function (targets, fileType) {
-		return targets.concat(Arr.filter(getHistory(fileType).slice(0, 5), isUniqueTarget(targets)));
-	};
-
-	var filterTargets = function (targets, term) {
+	var filterByQuery = function (menuItems, term) {
 		var lowerCaseTerm = term.toLowerCase();
-
-		return Tools.grep(targets, function (target) {
-			return (
-				target.title.toLowerCase().indexOf(lowerCaseTerm) !== -1
-			);
+		return Tools.grep(menuItems, function (item) {
+			return item.title.toLowerCase().indexOf(lowerCaseTerm) !== -1;
 		});
-	};
-
-	var defaultAutoCompleteHandler = function (linkTargets, query, success) {
-		success(filterTargets(linkTargets, query.term));
 	};
 
 	var setupAutoCompleteHandler = function (ctrl, bodyElm, fileType) {
 		var autocomplete = function (term) {
-			var linkTargets = concatHistory(LinkTargets.getTargets(bodyElm), fileType);
-
-			defaultAutoCompleteHandler(linkTargets, {
-				term: term,
-				type: fileType
-			}, function (targets) {
-				var menuItems = createMenuItems(targets, fileType);
-				if (menuItems.length > 0) {
-					ctrl.showAutoComplete(menuItems, term);
-				}
-			});
+			var linkTargets = LinkTargets.find(bodyElm);
+			var menuItems = filterByQuery(createMenuItems(linkTargets, fileType), term);
+			ctrl.showAutoComplete(menuItems, term);
 		};
 
 		ctrl.state.on('change:value', function (e) {
@@ -129,14 +128,14 @@ define("tinymce/ui/FilePicker", [
 		});
 
 		ctrl.on('selectitem', function (e) {
-			var linkTarget = e.value;
+			var linkDetails = e.value;
 
-			ctrl.value(linkTarget.url);
+			ctrl.value(linkDetails.url);
 
 			if (fileType === 'image') {
-				ctrl.fire('change', {meta: {alt: e.title, attach: linkTarget.attach}});
+				ctrl.fire('change', {meta: {alt: linkDetails.title, attach: linkDetails.attach}});
 			} else {
-				ctrl.fire('change', {meta: {text: e.title, attach: linkTarget.attach}});
+				ctrl.fire('change', {meta: {text: linkDetails.title, attach: linkDetails.attach}});
 			}
 
 			ctrl.focus();

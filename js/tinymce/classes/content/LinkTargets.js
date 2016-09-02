@@ -11,7 +11,7 @@
 /**
  * This module is enables you to get anything that you can link to in a element.
  *
- * @prwivate
+ * @private
  * @class tinymce.content.LinkTargets
  */
 define('tinymce/content/LinkTargets', [
@@ -97,17 +97,12 @@ define('tinymce/content/LinkTargets', [
 		return trim(target.title).length > 0;
 	};
 
-	var getTargets = function (elm) {
+	var find = function (elm) {
 		var elms = getTargetElements(elm);
 		return Arr.filter(getHeaderTargets(elms).concat(getAnchorTargets(elms)), hasTitle);
 	};
 
-	var createHistoricTarget = function (url) {
-		return create("history", url, url, 0, Fun.noop);
-	};
-
 	return {
-		getTargets: getTargets,
-		createHistoricTarget: createHistoricTarget
+		find: find
 	};
 });
