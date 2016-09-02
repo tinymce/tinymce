@@ -35,10 +35,14 @@ define(
       });
     };
 
-    var decide = function (universe, item, slicer) {
+    // Return decision struct with one or zero 'make' Struct items. If present the make struct item is the entire item node text,
+    // or a substring of it with the [left, right] bounds as determined by the result of slicer(item).
+    // currLang is an Option(string) of the current item language, languageFun is a function to return the language of an element.
+    var decide = function (universe, item, slicer, currLang, languageFun) {
       var f = (function () {
-        if (universe.property().isBoundary(item)) return onEdge
+        if (universe.property().isBoundary(item)) return onEdge;
         else if (universe.property().isEmptyTag(item)) return onEdge;
+        else if (universe.property().isElement(item) && !languageFun(item).equals(currLang)) return onEdge; // hit an element with a different language
         else if (universe.property().isText(item)) return onText;
         else return onOther;
       })();
