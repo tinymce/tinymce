@@ -162,12 +162,6 @@ define("ephox/imagetools/util/Conversions", [
     }
   }
 
-  function canvasToImageResult(canvas, type) {
-    return canvasToBlob(canvas, type).then(function(blob) {
-      return ImageResult.create(blob, canvas.toDataURL(type));
-    });
-  }
-
   function blobToDataUri(blob) {
     return new Promise(function(resolve) {
       var reader = new FileReader();
@@ -190,25 +184,6 @@ define("ephox/imagetools/util/Conversions", [
     URL.revokeObjectURL(image.src);
   }
 
-  function blobToImageResult(blob) {
-    return blobToDataUri(blob).then(function(uri) {
-      return ImageResult.create(blob, uri);
-    });
-  }
-
-  function dataUriToImageResult(uri) {
-    return uriToBlob(uri).then(function(blob) {
-      return ImageResult.create(blob, uri);
-    });
-  }
-
-  function imageResultToJpeg(imageResult) {
-    return blobToImage(imageResult.blob())
-        .then(imageToCanvas)
-        .then(function(canvas) {
-          return canvasToImageResult(canvas, 'image/jpeg')
-        });
-  }
 
 
   return {
@@ -220,19 +195,12 @@ define("ephox/imagetools/util/Conversions", [
     blobToDataUri: blobToDataUri,
     // used outside
     blobToBase64: blobToBase64,
-    // used outside
-    blobToImageResult: blobToImageResult,
-    // used outside
-    dataUriToImageResult: dataUriToImageResult,
-    // used outside
-    imageResultToJpeg: imageResultToJpeg,
+
 
     // helper method
     imageToCanvas: imageToCanvas,
     // helper method
     canvasToBlob: canvasToBlob,
-    // helper method
-    canvasToImageResult: canvasToImageResult,
     // helper method
     revokeImageUrl: revokeImageUrl,
     // helper method
