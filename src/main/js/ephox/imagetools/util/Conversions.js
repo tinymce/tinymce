@@ -148,17 +148,17 @@ define("ephox/imagetools/util/Conversions", [
     return null;
   }
 
-  function canvasToBlob(canvas, type) {
+  function canvasToBlob(canvas, type, quality) {
     type = type || 'image/png';
     
     if (HTMLCanvasElement.prototype.toBlob) {
       return new Promise(function(resolve) {
         canvas.toBlob(function(blob) {
           resolve(blob);
-        }, type);
+        }, type, quality);
       });
     } else {
-      return dataUriToBlob(canvas.toDataURL(type));
+      return dataUriToBlob(canvas.toDataURL(type, quality));
     }
   }
 
