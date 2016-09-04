@@ -28,7 +28,7 @@ define("ephox/imagetools/util/ImageResult", [
         }
 
         function toBase64(type, quality) {
-            return canvas.toDataURL(type, quality).split(',')[1];
+            return toDataURL(type, quality).split(',')[1];
         }
 
         function toCanvas() {
