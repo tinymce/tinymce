@@ -8,39 +8,71 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define("ephox/imagetools/util/ImageResult", [], function() {
+define("ephox/imagetools/util/ImageResult", [
+    "ephox/imagetools/util/Promise",
+    "ephox/imagetools/util/Conversions"
+], function(Promise, Conversions) {
 
-    /**
-     * Creates data structure that will hold image data simultaneously as blob and as dataUri
-     *
-     * @method create
-     * @static
-     * @param {Blob} blob
-     * @param {String) dataUri
-     */
-    function create(blob, uri) {
-        var base64 = uri.split(',')[1];
+    function create(canvas) {
+
+        function toPromisedBlob(type, quality) {
+            return Conversions.canvasToBlob(canvas, type, quality);
+        }
+
+        function toBlob(type, quality) {
+            return Conversions.dataUriToBlobSync(toDataURL(type, quality));
+        }
+
+        function toDataURL(type, quality) {
+            return canvas.toDataURL(type, quality);
+        }
+
+        function toBase64(type, quality) {
+            return canvas.toDataURL(type, quality).split(',')[1];
+        }
+
+        function toCanvas() {
+            return canvas;
+        }
 
         return {
-            type: function() {
-                return blob.type;
-            },
-
-            blob: function() {
-                return blob;
-            },
-
-            dataUri: function() {
-                return uri;
-            },
-
-            base64: function() {
-                return base64;
-            }
-        }
+            toBlob: toBlob,
+            toPromisedBlob: toPromisedBlob,
+            toDataURL: toDataURL,
+            toBase64: toBase64,
+            toCanvas: toCanvas
+        };
     }
 
+
+    function fromBlob(blob) {
+        return Conversions.blobToImage(blob)
+            .then(function(image) {
+                var result = Conversions.imageToCanvas(image);
+                Conversions.revokeImageUrl(image);
+                return result;
+            })
+            .then(function(canvas) {
+                return create(canvas);
+            });
+    }
+
+
+    function fromCanvas(canvas) {
+        return new Promise(function(resolve) {
+            resolve(create(canvas));
+        });
+    }
+
+
+    function fromImage(image) {
+        return Conversions.imageToCanvas(image).then(fromCanvas);
+    }
+
+
     return {
-        create: create
+        fromBlob: fromBlob,
+        fromCanvas: fromCanvas,
+        fromImage: fromImage
     };
 });
