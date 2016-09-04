@@ -50,7 +50,7 @@ define(
       return findTabstop(component, cyclicInfo).bind(function (tabstop) {
         // focused component
         var index = Arr.findIndex(tabstops, Fun.curry(Compare.eq, tabstop));
-        return cycle(tabstops, index, Visibility.isVisible).map(function (outcome) {
+        return index < 0 ? Option.none() : cycle(tabstops, index, Visibility.isVisible).map(function (outcome) {
           var system = component.getSystem();
           var originator = component.element();
           system.triggerFocus(outcome, originator);
