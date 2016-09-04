@@ -2,73 +2,100 @@ define(
   'ephox/imagetools/api/ImageTransformations',
 
   [
+    'ephox/imagetools/util/ImageResult',
     'ephox/imagetools/transformations/Filters',
     'ephox/imagetools/transformations/ImageTools'
   ],
 
-  function (Filters, ImageTools) {
+  function (ImageResult, Filters, ImageTools) {
     var invert = function (blob) {
-      return Filters.invert(blob);
+      return ImageResult.fromBlob(blob).then(Filters.invert);
     };
 
     var sharpen = function (blob) {
-      return Filters.sharpen(blob);
+      return ImageResult.fromBlob(blob).then(Filters.sharpen);
     };
 
     var emboss = function (blob) {
-      return Filters.emboss(blob);
+      return ImageResult.fromBlob(blob).then(Filters.emboss);
     };
 
     var gamma = function (blob, value) {
-      return Filters.gamma(blob, value);
+      return ImageResult.fromBlob(blob).then(function(ir) {
+        return Filters.gamma(ir, value);
+      });
     };
 
     var exposure = function (blob, value) {
-      return Filters.exposure(blob, value);
+      return ImageResult.fromBlob(blob).then(function(ir) {
+        return Filters.exposure(ir, value);
+      });
     };
 
     var colorize = function (blob, adjustR, adjustG, adjustB) {
-      return Filters.colorize(blob, adjustR, adjustG, adjustB);
+      return ImageResult.fromBlob(blob).then(function(ir) {
+        return Filters.colorize(ir, adjustR, adjustG, adjustB);
+      });
     };
 
     var brightness = function (blob, adjust) {
-      return Filters.brightness(blob, adjust);
+      return ImageResult.fromBlob(blob).then(function(ir) {
+        return Filters.brightness(ir, adjust);
+      });
     };
 
     var hue = function (blob, adjust) {
-      return Filters.hue(blob, adjust);
+      return ImageResult.fromBlob(blob).then(function(ir) {
+        return Filters.hue(ir, adjust);
+      });
     };
 
     var saturate = function (blob, adjust) {
-      return Filters.saturate(blob, adjust);
+      return ImageResult.fromBlob(blob).then(function(ir) {
+        return Filters.saturate(ir, adjust);
+      });
     };
 
     var contrast = function (blob, adjust) {
-      return Filters.contrast(blob, adjust);
+      return ImageResult.fromBlob(blob).then(function(ir) {
+        return Filters.contrast(ir, adjust);
+      });
     };
 
     var grayscale = function (blob, adjust) {
-      return Filters.grayscale(blob, adjust);
+      return ImageResult.fromBlob(blob).then(function(ir) {
+        return Filters.grayscale(ir, adjust);
+      });
     };
 
     var sepia = function (blob, adjust) {
-      return Filters.sepia(blob, adjust);
+      return ImageResult.fromBlob(blob).then(function(ir) {
+        return Filters.sepia(ir, adjust);
+      });
     };
 
     var flip = function (blob, axis) {
-      return ImageTools.flip(blob, axis);
+      return ImageResult.fromBlob(blob).then(function(ir) {
+        return ImageTools.flip(ir, axis);
+      });
     };
 
     var crop = function (blob, x, y, w, h) {
-      return ImageTools.crop(blob, x, y, w, h);
+      return ImageResult.fromBlob(blob).then(function(ir) {
+        return ImageTools.crop(ir, x, y, w, h);
+      });
     };
 
     var resize = function (blob, w, h) {
-      return ImageTools.resize(blob, w, h);
+      return ImageResult.fromBlob(blob).then(function(ir) {
+        return ImageTools.resize(ir, w, h);
+      });
     };
 
     var rotate = function (blob, angle) {
-      return ImageTools.rotate(blob, angle);
+      return ImageResult.fromBlob(blob).then(function(ir) {
+        return ImageTools.rotate(ir, angle);
+      });
     };
 
     return {
