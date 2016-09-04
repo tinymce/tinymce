@@ -15,9 +15,8 @@ define("ephox/imagetools/util/Conversions", [
   "ephox/imagetools/util/Promise",
   "ephox/imagetools/util/Canvas",
   "ephox/imagetools/util/Mime",
-  "ephox/imagetools/util/ImageSize",
-  "ephox/imagetools/util/ImageResult"
-], function(Promise, Canvas, Mime, ImageSize, ImageResult) {
+  "ephox/imagetools/util/ImageSize"
+], function(Promise, Canvas, Mime, ImageSize) {
   function loadImage(image) {
     return new Promise(function(resolve) {
       function loaded() {
@@ -98,41 +97,43 @@ define("ephox/imagetools/util/Conversions", [
     });
   }
 
-  function dataUriToBlob(uri) {
-    return new Promise(function(resolve) {
-      var str, arr, i, matches, type, blobBuilder;
 
-      uri = uri.split(',');
+  function dataUriToBlobSync(uri) {
+    var str, arr, i, matches, type, blobBuilder;
 
-      matches = /data:([^;]+)/.exec(uri[0]);
-      if (matches) {
-        type = matches[1];
-      }
+    uri = uri.split(',');
 
-      str = atob(uri[1]);
+    matches = /data:([^;]+)/.exec(uri[0]);
+    if (matches) {
+      type = matches[1];
+    }
 
-      if (window.WebKitBlobBuilder) {
-        /*globals WebKitBlobBuilder:false */
-        blobBuilder = new WebKitBlobBuilder();
+    str = atob(uri[1]);
 
-        arr = new ArrayBuffer(str.length);
-        for (i = 0; i < arr.length; i++) {
-          arr[i] = str.charCodeAt(i);
-        }
+    if (window.WebKitBlobBuilder) {
+      /*globals WebKitBlobBuilder:false */
+      blobBuilder = new WebKitBlobBuilder();
 
-        blobBuilder.append(arr);
-
-        resolve(blobBuilder.getBlob(type));
-        return;
-      }
-
-      arr = new Uint8Array(str.length);
-
+      arr = new ArrayBuffer(str.length);
       for (i = 0; i < arr.length; i++) {
         arr[i] = str.charCodeAt(i);
       }
 
-      resolve(new Blob([arr], {type: type}));
+      blobBuilder.append(arr);
+      return blobBuilder.getBlob(type);
+    }
+
+    arr = new Uint8Array(str.length);
+    for (i = 0; i < arr.length; i++) {
+      arr[i] = str.charCodeAt(i);
+    }
+    return new Blob([arr], {type: type});
+  }
+
+
+  function dataUriToBlob(uri) {
+    return new Promise(function(resolve) {
+      resolve(dataUriToBlobSync(uri));
     });
   }
 
@@ -195,8 +196,7 @@ define("ephox/imagetools/util/Conversions", [
     blobToDataUri: blobToDataUri,
     // used outside
     blobToBase64: blobToBase64,
-
-
+    
     // helper method
     imageToCanvas: imageToCanvas,
     // helper method
@@ -204,6 +204,8 @@ define("ephox/imagetools/util/Conversions", [
     // helper method
     revokeImageUrl: revokeImageUrl,
     // helper method
-    uriToBlob: uriToBlob
+    uriToBlob: uriToBlob,
+    // helper method
+    dataUriToBlobSync: dataUriToBlobSync
   };
 });
