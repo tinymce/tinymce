@@ -2,10 +2,11 @@ define(
   'ephox/imagetools/api/BlobConversions',
 
   [
-    'ephox/imagetools/util/Conversions'
+    'ephox/imagetools/util/Conversions',
+    'ephox/imagetools/util/ImageResult'
   ],
 
-  function (Conversions) {
+  function (Conversions, ImageResult) {
     var blobToImage = function (image) {
       return Conversions.blobToImage(image);
     };
@@ -23,15 +24,15 @@ define(
     };
 
     var blobToImageResult = function(blob) {
-      return Conversions.blobToImageResult(blob);
+      return ImageResult.fromBlob(blob);
     };
 
     var dataUriToImageResult = function(uri) {
-      return Conversions.dataUriToImageResult(uri);
+      return Conversions.uriToBlob(uri).then(ImageResult.fromBlob);
     };
 
-    var imageResultToJpeg = function(imageResult) {
-      return Conversions.imageResultToJpeg(imageResult);
+    var imageToImageResult = function(image) {
+      return ImageResult.fromImage(image);
     };
 
     return {
@@ -48,7 +49,7 @@ define(
       // used outside
       dataUriToImageResult: dataUriToImageResult,
       // used outside
-      imageResultToJpeg: imageResultToJpeg
+      imageToImageResult: imageToImageResult
     };
   }
 );
