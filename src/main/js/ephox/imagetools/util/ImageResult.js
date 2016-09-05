@@ -10,13 +10,19 @@
 
 define("ephox/imagetools/util/ImageResult", [
     "ephox/imagetools/util/Promise",
-    "ephox/imagetools/util/Conversions"
-], function(Promise, Conversions) {
+    "ephox/imagetools/util/Conversions",
+    "ephox/imagetools/util/Mime",
+    "ephox/imagetools/util/Canvas"
+], function(Promise, Conversions, Mime, Canvas) {
 
-    function create(canvas) {
+    function create(canvas, initialType) {
+
+        function getType() {
+            return initialType;
+        }
 
         function toPromisedBlob(type, quality) {
-            return Conversions.canvasToBlob(canvas, type, quality);
+            return Conversions.canvasToBlob(canvas, type || initialType, quality);
         }
 
         function toBlob(type, quality) {
@@ -24,7 +30,7 @@ define("ephox/imagetools/util/ImageResult", [
         }
 
         function toDataURL(type, quality) {
-            return canvas.toDataURL(type, quality);
+            return canvas.toDataURL(type || initialType, quality);
         }
 
         function toBase64(type, quality) {
@@ -36,6 +42,7 @@ define("ephox/imagetools/util/ImageResult", [
         }
 
         return {
+            getType: getType,
             toBlob: toBlob,
             toPromisedBlob: toPromisedBlob,
             toDataURL: toDataURL,
@@ -53,20 +60,23 @@ define("ephox/imagetools/util/ImageResult", [
                 return result;
             })
             .then(function(canvas) {
-                return create(canvas);
+                return create(canvas, blob.type);
             });
     }
 
 
-    function fromCanvas(canvas) {
+    function fromCanvas(canvas, type) {
         return new Promise(function(resolve) {
-            resolve(create(Canvas.clone(canvas)));
+            resolve(create(Canvas.clone(canvas), type));
         });
     }
 
 
     function fromImage(image) {
-        return Conversions.imageToCanvas(image).then(fromCanvas);
+        var type = Mime.guessMimeType(image.src);
+        return Conversions.imageToCanvas(image).then(function(canvas) {
+            return create(canvas, type);
+        });
     }
 
 
