@@ -13,7 +13,7 @@ define(
     };
 
     var get = function (item, property) {
-      return item.attrs !== undefined && item.attrs[property] !== undefined ? item.attrs[property] : 0;
+      return item.attrs[property];
     };
 
     var remove = function (item, property) {
