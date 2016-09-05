@@ -90,6 +90,14 @@ asynctest(
         });
       };
 
+      var isInside = function (sinkComponent, popupComponent) {
+        var isSink = function (el) {
+          return Compare.eq(el, sinkComponent.element());
+        };
+
+        return PredicateExists.closest(popupComponent.element(), isSink);
+      };
+
       return [
         Chain.asStep({}, [
           NamedChain.asChain([
@@ -108,16 +116,30 @@ asynctest(
             }),
             Chain.control(
               NamedChain.bundle(function (data) {
-                var isRelative = function (el) {
-                  return Compare.eq(el, data.relative.element());
-                };
-
-                var insideRelative = PredicateExists.closest(data.popup.element(), isRelative);
-                return insideRelative ? Result.value(data) : Result.error(
+                var inside = isInside(data.relative, data.popup);
+                return inside ? Result.value(data) : Result.error(
                   new Error('The popup does not appear within the relative sink container')
                 );
               }),
               Guard.tryUntil('Ensuring that the popup is inside the relative sink', 100, 3000)
+            ),
+
+            NamedChain.bundle(function (data) {
+              data.fixed.apis().addContainer(data.popup);
+              data.fixed.apis().position({
+                anchor: 'hotspot',
+                hotspot: data.hotspot
+              }, data.popup);
+              return Result.value(data);
+            }),
+            Chain.control(
+              NamedChain.bundle(function (data) {
+                var inside = isInside(data.fixed, data.popup);
+                return inside ? Result.value(data) : Result.error(
+                  new Error('The popup does not appear within the fixed sink container')
+                );
+              }),
+              Guard.tryUntil('Ensuring that the popup is inside the fixed sink', 100, 3000)
             )
           ])
         ])
