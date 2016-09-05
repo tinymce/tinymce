@@ -66,7 +66,10 @@ define(
       };
 
       var unregisterId = function (id) {
-        console.error('Not implemented: EventRegistry.unregister(id)');
+        // INVESTIGATE: Find a better way than mutation if we can.
+        Obj.each(registry, function (handlersById, eventName) {
+          if (handlersById.hasOwnProperty(id)) delete handlersById[id];
+        });
       };
 
       return {

@@ -6,6 +6,8 @@ define(
     'ephox.alloy.events.DefaultEvents',
     'ephox.alloy.spec.ButtonSpec',
     'ephox.alloy.spec.CustomSpec',
+    'ephox.alloy.spec.FormLabelSpec',
+    'ephox.alloy.spec.InputSpec',
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
@@ -17,10 +19,12 @@ define(
     'global!Error'
   ],
 
-  function (Component, DefaultEvents, ButtonSpec, CustomSpec, Objects, Arr, Obj, Merger, Json, Fun, Option, Result, Error) {
+  function (Component, DefaultEvents, ButtonSpec, CustomSpec, FormLabelSpec, InputSpec, Objects, Arr, Obj, Merger, Json, Fun, Option, Result, Error) {
     var knownSpecs = {
       custom: CustomSpec.make,
-      button: ButtonSpec.make
+      button: ButtonSpec.make,
+      input: InputSpec.make,
+      formlabel: FormLabelSpec.make
       // Add other specs here.
     };
 
@@ -30,9 +34,9 @@ define(
 
     var unknownSpec = function (uiType) {
       var known = Obj.keys(knownSpecs);
-      return new Result.error('Unknown component type: ' + uiType + '.\nKnown types: ' + 
+      return new Result.error(new Error('Unknown component type: ' + uiType + '.\nKnown types: ' + 
         Json.stringify(known, null, 2)
-      );
+      ));
     };
 
     var buildSubcomponents = function (spec) {

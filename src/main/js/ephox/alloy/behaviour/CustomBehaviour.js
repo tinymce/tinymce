@@ -15,7 +15,7 @@ define(
   function (Behaviour, DomDefinition, DomModification, FieldPresence, FieldSchema, ValueSchema, Obj, Fun) {
     var activeApiSchema = ValueSchema.objOf([
       FieldSchema.defaulted('exhibit', function () {
-        return DomDefinition.modification({ });
+        return DomModification.nu({ });
       }),
       FieldSchema.defaulted('handlers', Fun.constant({ })),
       FieldSchema.defaulted('apis', Fun.constant({ })),

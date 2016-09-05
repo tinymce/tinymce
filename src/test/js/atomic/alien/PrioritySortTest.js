@@ -13,11 +13,12 @@ test(
   function (Logger, RawAssertions, PrioritySort, Arr, Json, Struct) {
     var checkErr = function (expected, input, order) {
       var actual = PrioritySort.sortKeys('test.sort', 'letter', input, order);
+      // TODO: Use ResultAssertions test?
       actual.fold(function (err) {
         var errMessage = Arr.map(err, function (e) {
           return e.message !== undefined ? e.message : e;
         }).join('');
-        RawAssertions.assertEq('Checking the error of priority sort', expected, errMessage);
+        RawAssertions.assertEq('Checking the error of priority sort', errMessage.indexOf(expected) > -1, true);
       }, function (val) {
         assert.fail('Priority sort should have thrown error: ' + expected + '\nWas: ' + Json.stringify(val, null, 2));
       });

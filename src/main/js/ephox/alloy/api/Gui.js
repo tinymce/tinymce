@@ -3,10 +3,12 @@ define(
 
   [
     'ephox.alloy.api.GuiEvents',
+    'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.SystemApi',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.events.Triggers',
     'ephox.alloy.registry.Registry',
+    'ephox.alloy.registry.Tagger',
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Result',
@@ -16,7 +18,7 @@ define(
     'ephox.sugar.api.Remove'
   ],
 
-  function (GuiEvents, SystemApi, SystemEvents, Triggers, Registry, Arr, Fun, Result, Compare, Element, Insert, Remove) {
+  function (GuiEvents, GuiFactory, SystemApi, SystemEvents, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Element, Insert, Remove) {
     var create = function ( ) {
       var container = Element.fromTag('div');
       return takeover(container);
@@ -52,7 +54,15 @@ define(
             target: Fun.constant(target)
           }, target);
         },
-        build: Fun.die('no building yet')
+        getByUid: function (uid) {
+          return getByUid(uid);
+        },
+        getByDom: function (elem) {
+          return Tagger.read(elem).bind(getByUid);
+        },
+        build: GuiFactory.build,
+        addToWorld: function (c) { addToWorld(c); },
+        removeFromWorld: function (c) { removeFromWorld(c); }
       });
 
       var addToWorld = function (component) {
@@ -62,8 +72,8 @@ define(
       };
 
       var removeFromWorld = function (component) {
-        registry.unregister(component);
         Arr.each(component.components(), removeFromWorld);
+        registry.unregister(component);
       };
 
       var add = function (component) {
@@ -73,6 +83,7 @@ define(
 
       var remove = function (component) {
         registry.unregister(component);
+        component.disconnect();
         Remove.remove(component.element());
       };
 
@@ -82,7 +93,7 @@ define(
       };
 
       var broadcastData = function (data) {
-        var receivers = registry.filterByType(SystemEvents.receive());
+        var receivers = registry.filter(SystemEvents.receive());
         Arr.each(receivers, function (receiver) {
           receiver.handler(data);
         });

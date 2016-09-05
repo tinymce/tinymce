@@ -83,7 +83,7 @@ define(
       // ASSUMPTION: tuples.length will never be 0, because it wouldn't have an entry if it was 0
       var order = eventOrder[eventName];
       if (! order) return missingOrderError(eventName, tuples);
-      else return PrioritySort.sortKeys('Event', 'name', tuples, order).map(function (sortedTuples) {
+      else return PrioritySort.sortKeys('Event: ' + eventName, 'name', tuples, order).map(function (sortedTuples) {
         var handlers = Arr.map(sortedTuples, function (tuple) { return tuple.handler(); });
         return EventHandler.fuse(handlers);
       });

@@ -23,6 +23,7 @@ define(
       };
     };
 
+    // IMPROVEMENT: Only fire if all these behaviours have *run* ... because can can be in any order.
     var missingOrder = function (chain, apiName) {
       return new Result.error([
         'The API call (' + apiName + ') has more than one behaviour that triggers it.\nWhen this occurs, you must ' + 

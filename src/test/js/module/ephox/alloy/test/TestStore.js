@@ -4,16 +4,25 @@ define(
   [
     'ephox.agar.api.RawAssertions',
     'ephox.agar.api.Step',
+    'ephox.perhaps.Option',
     'global!console'
   ],
 
-  function (RawAssertions, Step, console) {
+  function (RawAssertions, Step, Option, console) {
     return function () {
       var array = [ ];
       var adder = function (value) {
         return function () {            
           array.push(value);
-          // console.log('store.add', value, array);
+          console.log('store.add', value, array);
+        };
+      };
+
+      // Used for keyboard handlers which need to return Option to know whether or not to kill the event
+      var adderH = function (value) {
+        return function () {
+          adder(value)();
+          return Option.some(true);
         };
       };
 
@@ -45,6 +54,7 @@ define(
 
       return {
         adder: adder,
+        adderH: adderH,
         clear: clear,
         sClear: sClear,
         sAssertEq: sAssertEq,

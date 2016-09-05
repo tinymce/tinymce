@@ -23,7 +23,7 @@ define(
       var behaviours = CustomDefinition.behaviours(info);
 
       var definition = CustomDefinition.toDefinition(info);
-
+      
       var modification = ComponentDom.combine(info, behaviours, definition).getOrDie();
       var modDefinition = DomModification.merge(definition, modification);
 
@@ -44,6 +44,10 @@ define(
         systemApi.set(newApi);
       };
 
+      var disconnect = function () {
+        systemApi.set(NoContextApi());
+      };
+
       var debugSystem = function () {
         return systemApi.get().debugLabel();
       };
@@ -52,6 +56,7 @@ define(
         getSystem: systemApi.get,
         debugSystem: debugSystem,
         connect: connect,
+        disconnect: disconnect,
         label: Fun.constant(info.label()),
         element: Fun.constant(item),
         // Note: this is only the original components.

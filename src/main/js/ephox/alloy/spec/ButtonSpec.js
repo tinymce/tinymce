@@ -57,15 +57,17 @@ define(
       var detail = ValueSchema.asStructOrDie('button.spec', schema, spec);
 
       var executeHandler = EventHandler.nu({
-        run: function (component) {
+        run: function (component, simulatedEvent) {
           var action = detail.action();
           action(component);
+          simulatedEvent.stop();
         }
       });
 
       var clickHandler = EventHandler.nu({
-        run: function (component) {
+        run: function (component, simulatedEvent) {
           var system = component.getSystem();
+          simulatedEvent.stop();
           system.triggerEvent(SystemEvents.execute(), component.element(), { });
         }
       });
@@ -79,6 +81,16 @@ define(
         {
           dom: defaultDom(detail),
           events: events
+        },
+
+        {
+          tabstopping: true,
+          focusing: true,
+          keying: {
+            mode: 'execution',
+            useSpace: true,
+            useEnter: true
+          }
         },
 
         spec, 
