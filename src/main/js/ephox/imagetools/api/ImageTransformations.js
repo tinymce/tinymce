@@ -2,106 +2,73 @@ define(
   'ephox/imagetools/api/ImageTransformations',
 
   [
-    'ephox/imagetools/api/BlobConversions',
     'ephox/imagetools/transformations/Filters',
     'ephox/imagetools/transformations/ImageTools'
   ],
 
-  function (BlobConversions, Filters, ImageTools) {
-    var invert = function (blob) {
-      return BlobConversions.blobToImageResult(blob)
-          .then(Filters.invert)
-          .then(BlobConversions.imageResultToBlob);
+  function (Filters, ImageTools) {
+    var invert = function (ir) {
+      return Filters.invert(ir);
     };
 
-    var sharpen = function (blob) {
-      return BlobConversions.blobToImageResult(blob)
-          .then(Filters.sharpen)
-          .then(BlobConversions.imageResultToBlob);
+    var sharpen = function (ir) {
+      return Filters.sharpen(ir);
     };
 
-    var emboss = function (blob) {
-      return BlobConversions.blobToImageResult(blob)
-          .then(Filters.emboss)
-          .then(BlobConversions.imageResultToBlob);
+    var emboss = function (ir) {
+      return Filters.emboss(ir);
     };
 
-    var gamma = function (blob, value) {
-      return BlobConversions.blobToImageResult(blob).then(function(ir) {
-        return Filters.gamma(ir, value).then(BlobConversions.imageResultToBlob);
-      });
+    var gamma = function (ir, value) {
+      return Filters.gamma(ir, value);
     };
 
-    var exposure = function (blob, value) {
-      return BlobConversions.blobToImageResult(blob).then(function(ir) {
-        return Filters.exposure(ir, value).then(BlobConversions.imageResultToBlob);
-      });
+    var exposure = function (ir, value) {
+      return Filters.exposure(ir, value);
     };
 
-    var colorize = function (blob, adjustR, adjustG, adjustB) {
-      return BlobConversions.blobToImageResult(blob).then(function(ir) {
-        return Filters.colorize(ir, adjustR, adjustG, adjustB).then(BlobConversions.imageResultToBlob);
-      });
+    var colorize = function (ir, adjustR, adjustG, adjustB) {
+      return Filters.colorize(ir, adjustR, adjustG, adjustB);
     };
 
-    var brightness = function (blob, adjust) {
-      return BlobConversions.blobToImageResult(blob).then(function(ir) {
-        return Filters.brightness(ir, adjust).then(BlobConversions.imageResultToBlob);
-      });
+    var brightness = function (ir, adjust) {
+      return Filters.brightness(ir, adjust);
     };
 
-    var hue = function (blob, adjust) {
-      return BlobConversions.blobToImageResult(blob).then(function(ir) {
-        return Filters.hue(ir, adjust).then(BlobConversions.imageResultToBlob);
-      });
+    var hue = function (ir, adjust) {
+      return Filters.hue(ir, adjust);
     };
 
-    var saturate = function (blob, adjust) {
-      return BlobConversions.blobToImageResult(blob).then(function(ir) {
-        return Filters.saturate(ir, adjust).then(BlobConversions.imageResultToBlob);
-      });
+    var saturate = function (ir, adjust) {
+      return Filters.saturate(ir, adjust);
     };
 
-    var contrast = function (blob, adjust) {
-      return BlobConversions.blobToImageResult(blob).then(function(ir) {
-        return Filters.contrast(ir, adjust).then(BlobConversions.imageResultToBlob);
-      });
+    var contrast = function (ir, adjust) {
+      return Filters.contrast(ir, adjust);
     };
 
-    var grayscale = function (blob, adjust) {
-      return BlobConversions.blobToImageResult(blob).then(function(ir) {
-        return Filters.grayscale(ir, adjust).then(BlobConversions.imageResultToBlob);
-      });
+    var grayscale = function (ir, adjust) {
+      return Filters.grayscale(ir, adjust);
     };
 
-    var sepia = function (blob, adjust) {
-      return BlobConversions.blobToImageResult(blob).then(function(ir) {
-        return Filters.sepia(ir, adjust).then(BlobConversions.imageResultToBlob);
-      });
+    var sepia = function (ir, adjust) {
+      return Filters.sepia(ir, adjust);
     };
 
-    var flip = function (blob, axis) {
-      return BlobConversions.blobToImageResult(blob).then(function(ir) {
-        return ImageTools.flip(ir, axis).then(BlobConversions.imageResultToBlob);
-      });
+    var flip = function (ir, axis) {
+      return ImageTools.flip(ir, axis);
     };
 
-    var crop = function (blob, x, y, w, h) {
-      return BlobConversions.blobToImageResult(blob).then(function(ir) {
-        return ImageTools.crop(ir, x, y, w, h).then(BlobConversions.imageResultToBlob);
-      });
+    var crop = function (ir, x, y, w, h) {
+      return ImageTools.crop(ir, x, y, w, h);
     };
 
-    var resize = function (blob, w, h) {
-      return BlobConversions.blobToImageResult(blob).then(function(ir) {
-        return ImageTools.resize(ir, w, h).then(BlobConversions.imageResultToBlob);
-      });
+    var resize = function (ir, w, h) {
+      return ImageTools.resize(ir, w, h);
     };
 
-    var rotate = function (blob, angle) {
-      return BlobConversions.blobToImageResult(blob).then(function(ir) {
-        return ImageTools.rotate(ir, angle).then(BlobConversions.imageResultToBlob);
-      });
+    var rotate = function (ir, angle) {
+      return ImageTools.rotate(ir, angle);
     };
 
     return {

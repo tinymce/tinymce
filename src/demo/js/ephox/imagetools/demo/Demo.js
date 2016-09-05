@@ -3,7 +3,7 @@ define(
 
   [
     'ephox/imagetools/api/BlobConversions',
-    'ephox/imagetools/api/ImageResultTransformations'
+    'ephox/imagetools/api/ImageTransformations'
   ],
 
   function (BlobConversions, ImageTransformations) {
