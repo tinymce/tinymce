@@ -28,8 +28,10 @@ define(
     // Fire an alloy focus on the first visible element that matches the selector
     var focusIn = function (component, cyclicInfo) {
       var tabstops = SelectorFilter.descendants(component.element(), cyclicInfo.selector());
-      var visible = Arr.filter(tabstops, Visibility.isVisible);
-      Option.from(visible[0]).each(function (target) {
+      var visible = Arr.find(tabstops, Visibility.isVisible);
+      // TODO: Update when Arr.find changes signature
+      var visibleOpt = visible !== null && visible !== undefined ? Option.some(visible) : Option.none();
+      visibleOpt.each(function (target) {
         var originator = component.element();
         component.getSystem().triggerFocus(target, originator);
       });
@@ -50,7 +52,7 @@ define(
       return findTabstop(component, cyclicInfo).bind(function (tabstop) {
         // focused component
         var index = Arr.findIndex(tabstops, Fun.curry(Compare.eq, tabstop));
-        return cycle(tabstops, index, Visibility.isVisible).map(function (outcome) {
+        return index < 0 ? Option.none() : cycle(tabstops, index, Visibility.isVisible).map(function (outcome) {
           var system = component.getSystem();
           var originator = component.element();
           system.triggerFocus(outcome, originator);
