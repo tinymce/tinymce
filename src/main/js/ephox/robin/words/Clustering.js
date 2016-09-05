@@ -45,7 +45,7 @@ define(
 
     // Represent all the text nodes within all the sub-tree elements of item.
     // Returns: [WordDecision.make Struct] of all the words at item.
-    // TODO: MJP: For multi-language spell checking: This currently assumes the language of 'item' 
+    // TODO: for TBIO-470: For multi-language spell checking: This currently assumes the language of 'item' 
     //       is the language of the entire descendent tree of 'item'. This will be wrong if the sub-tree
     //       has multiple languages annotated. Extract.all needs to return an array of items that retain this language type information.
     var extract = function (universe, item, optimise) {
@@ -66,12 +66,17 @@ define(
       });
     };
 
+    // Returns: Option(string) of the LANG attribute of el, if any.
+    var elementLang = function (el) {
+      return Attr.get(el, 'lang');
+    };
+
     // Return the words to the left and right of item, and the descendants of item (middle), and the language of item.
     var words = function (universe, item, optimise) {
-      var lang = language(item);
-      var toLeft = doWords(universe, item, Gather.sidestep, WordWalking.left, lang, language);
-      var middle = extract(universe, item, optimise); // TODO: MJP: multi-language spelling: for now we treat middle/innerText as being single language
-      var toRight = doWords(universe, item, Gather.sidestep, WordWalking.right, lang, language);
+      var lang = language(item); // closest language anywhere up the DOM ancestor path
+      var toLeft = doWords(universe, item, Gather.sidestep, WordWalking.left, lang, elementLang); // lang tag of the current element, if any
+      var middle = extract(universe, item, optimise); // TODO: for TBIO-470 multi-language spelling: for now we treat middle/innerText as being single language
+      var toRight = doWords(universe, item, Gather.sidestep, WordWalking.right, lang, elementLang); // lang tag of the current element, if any
       return {
         all: Fun.constant(Arr.reverse(toLeft).concat(middle).concat(toRight)),
         left: Fun.constant(toLeft),
