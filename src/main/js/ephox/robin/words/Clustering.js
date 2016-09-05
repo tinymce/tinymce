@@ -8,12 +8,10 @@ define(
     'ephox.phoenix.api.general.Extract',
     'ephox.phoenix.api.general.Gather',
     'ephox.robin.words.WordDecision',
-    'ephox.robin.words.WordWalking',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.robin.words.WordWalking'
   ],
 
-  function (Unicode, Arr, Fun, Extract, Gather, WordDecision, WordWalking, Attr, SelectorFind) {
+  function (Unicode, Arr, Fun, Extract, Gather, WordDecision, WordWalking) {
     /*
      * Identification of words:
      *
@@ -28,11 +26,11 @@ define(
      * These rules are encoded in WordDecision.decide
      * Returns: [WordDecision.make Struct] of all the words recursively from item in direction.
      */
-    var doWords = function (universe, item, mode, direction, currLanguage, languageFun) {
+    var doWords = function (universe, item, mode, direction, currLanguage) {
       var destination = Gather.walk(universe, item, mode, direction);
       var result = destination.map(function (dest) {
-        var decision = WordDecision.decide(universe, dest.item(), direction.slicer, currLanguage, languageFun);
-        var recursive = decision.abort() ? [] : doWords(universe, dest.item(), dest.mode(), direction, currLanguage, languageFun);
+        var decision = WordDecision.decide(universe, dest.item(), direction.slicer, currLanguage);
+        var recursive = decision.abort() ? [] : doWords(universe, dest.item(), dest.mode(), direction, currLanguage);
         return decision.items().concat(recursive);
       }).getOr([]);
 
@@ -60,23 +58,18 @@ define(
     //  - uses Fun.constant(false) for isRoot parameter to search even the top HTML element
     //    (regardless of 'classic'/iframe or 'inline'/div mode).
     // Note: there may be descendant elements with a different language
-    var language = function (item) {
-      return SelectorFind.closest(item, '[lang]', Fun.constant(false)).map(function (el) {
-        return Attr.get(el, 'lang');
+    var language = function (universe, item) {
+      return universe.up().closest(item, '[lang]', Fun.constant(false)).map(function (el) {
+        return universe.attrs().get(el, 'lang');
       });
-    };
-
-    // Returns: Option(string) of the LANG attribute of el, if any.
-    var elementLang = function (el) {
-      return Attr.get(el, 'lang');
     };
 
     // Return the words to the left and right of item, and the descendants of item (middle), and the language of item.
     var words = function (universe, item, optimise) {
-      var lang = language(item); // closest language anywhere up the DOM ancestor path
-      var toLeft = doWords(universe, item, Gather.sidestep, WordWalking.left, lang, elementLang); // lang tag of the current element, if any
+      var lang = language(universe, item); // closest language anywhere up the DOM ancestor path
+      var toLeft = doWords(universe, item, Gather.sidestep, WordWalking.left, lang); // lang tag of the current element, if any
       var middle = extract(universe, item, optimise); // TODO: for TBIO-470 multi-language spelling: for now we treat middle/innerText as being single language
-      var toRight = doWords(universe, item, Gather.sidestep, WordWalking.right, lang, elementLang); // lang tag of the current element, if any
+      var toRight = doWords(universe, item, Gather.sidestep, WordWalking.right, lang); // lang tag of the current element, if any
       return {
         all: Fun.constant(Arr.reverse(toLeft).concat(middle).concat(toRight)),
         left: Fun.constant(toLeft),
