@@ -23,7 +23,10 @@ asynctest(
       var fixedSink = GuiFactory.build({
         uiType: 'custom',
         dom: {
-          tag: 'div'
+          tag: 'div',
+          styles: {
+            background: 'green'
+          }
         },
         uid: 'fixed-sink',
         positioning: {
@@ -34,7 +37,10 @@ asynctest(
       var relativeSink = GuiFactory.build({
         uiType: 'custom',
         dom: {
-          tag: 'div'
+          tag: 'div',
+          styles: {
+            background: 'blue'
+          }
         },
         uid: 'relative-sink',
         positioning: {
@@ -50,7 +56,8 @@ asynctest(
           styles: {
             width: '200px',
             height: '150px',
-            border: '1px solid black'
+            border: '1px solid black',
+            background: 'inherit'
           }
         },
         uid: 'popup'
@@ -123,6 +130,7 @@ asynctest(
               }),
               Guard.tryUntil('Ensuring that the popup is inside the relative sink', 100, 3000)
             ),
+            Chain.wait(2000),
 
             NamedChain.bundle(function (data) {
               data.fixed.apis().addContainer(data.popup);
@@ -140,7 +148,8 @@ asynctest(
                 );
               }),
               Guard.tryUntil('Ensuring that the popup is inside the fixed sink', 100, 3000)
-            )
+            ),
+            Chain.wait(2000)
           ])
         ])
       ];
