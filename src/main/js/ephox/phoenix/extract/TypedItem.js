@@ -12,7 +12,7 @@ define(
    * - empty
    * - text
    *
-   * TODO: MJP: for Multi-Language spell checking: deal with the element LANG, adding language to typeditem so this nested information is not lost
+   * TODO: for TBIO-470 for Multi-Language spell checking: deal with the element LANG, adding language to typeditem so this nested information is not lost
    */
 
   function (Fun, Option) {
