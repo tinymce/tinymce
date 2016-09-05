@@ -3,14 +3,19 @@ asynctest(
  
   [
     'ephox.agar.api.Chain',
+    'ephox.agar.api.Guard',
     'ephox.agar.api.NamedChain',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.test.GuiSetup',
-    'ephox.perhaps.Result'
+    'ephox.perhaps.Result',
+    'ephox.sugar.api.Compare',
+    'ephox.sugar.api.PredicateExists',
+    'global!Error',
+    'global!setTimeout'
   ],
  
-  function (Chain, NamedChain, Step, GuiFactory, GuiSetup, Result) {
+  function (Chain, Guard, NamedChain, Step, GuiFactory, GuiSetup, Result, Compare, PredicateExists, Error, setTimeout) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -59,7 +64,7 @@ asynctest(
           styles: {
             position: 'absolute',
             left: '100px',
-            top: '350px'
+            top: '450px'
           }
         },
         uid: 'hotspot'
@@ -100,11 +105,22 @@ asynctest(
                 hotspot: data.hotspot
               }, data.popup);
               return Result.value(data);
-              console.log('data', data);
-            })
+            }),
+            Chain.control(
+              NamedChain.bundle(function (data) {
+                var isRelative = function (el) {
+                  return Compare.eq(el, data.relative.element());
+                };
+
+                var insideRelative = PredicateExists.closest(data.popup.element(), isRelative);
+                return insideRelative ? Result.value(data) : Result.error(
+                  new Error('The popup does not appear within the relative sink container')
+                );
+              }),
+              Guard.tryUntil('Ensuring that the popup is inside the relative sink', 100, 3000)
+            )
           ])
-        ]),
-        Step.debugging
+        ])
       ];
     }, function () { success(); }, failure);
  
