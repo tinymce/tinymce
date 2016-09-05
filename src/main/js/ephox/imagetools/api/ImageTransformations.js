@@ -2,99 +2,105 @@ define(
   'ephox/imagetools/api/ImageTransformations',
 
   [
-    'ephox/imagetools/util/ImageResult',
+    'ephox/imagetools/api/BlobConversions',
     'ephox/imagetools/transformations/Filters',
     'ephox/imagetools/transformations/ImageTools'
   ],
 
-  function (ImageResult, Filters, ImageTools) {
+  function (BlobConversions, Filters, ImageTools) {
     var invert = function (blob) {
-      return ImageResult.fromBlob(blob).then(Filters.invert);
+      return BlobConversions.blobToImageResult(blob)
+          .then(Filters.invert)
+          .then(BlobConversions.imageResultToBlob);
     };
 
     var sharpen = function (blob) {
-      return ImageResult.fromBlob(blob).then(Filters.sharpen);
+      return BlobConversions.blobToImageResult(blob)
+          .then(Filters.sharpen)
+          .then(BlobConversions.imageResultToBlob);
     };
 
     var emboss = function (blob) {
-      return ImageResult.fromBlob(blob).then(Filters.emboss);
+      return BlobConversions.blobToImageResult(blob)
+          .then(Filters.emboss)
+          .then(BlobConversions.imageResultToBlob);
     };
 
     var gamma = function (blob, value) {
-      return ImageResult.fromBlob(blob).then(function(ir) {
-        return Filters.gamma(ir, value);
+      return BlobConversions.blobToImageResult(blob).then(function(ir) {
+        return Filters.gamma(ir, value).then(BlobConversions.imageResultToBlob);
       });
     };
 
     var exposure = function (blob, value) {
-      return ImageResult.fromBlob(blob).then(function(ir) {
-        return Filters.exposure(ir, value);
+      return BlobConversions.blobToImageResult(blob).then(function(ir) {
+        return Filters.exposure(ir, value).then(BlobConversions.imageResultToBlob);
       });
     };
 
     var colorize = function (blob, adjustR, adjustG, adjustB) {
-      return ImageResult.fromBlob(blob).then(function(ir) {
-        return Filters.colorize(ir, adjustR, adjustG, adjustB);
+      return BlobConversions.blobToImageResult(blob).then(function(ir) {
+        return Filters.colorize(ir, adjustR, adjustG, adjustB).then(BlobConversions.imageResultToBlob);
       });
     };
 
     var brightness = function (blob, adjust) {
-      return ImageResult.fromBlob(blob).then(function(ir) {
-        return Filters.brightness(ir, adjust);
+      return BlobConversions.blobToImageResult(blob).then(function(ir) {
+        return Filters.brightness(ir, adjust).then(BlobConversions.imageResultToBlob);
       });
     };
 
     var hue = function (blob, adjust) {
-      return ImageResult.fromBlob(blob).then(function(ir) {
-        return Filters.hue(ir, adjust);
+      return BlobConversions.blobToImageResult(blob).then(function(ir) {
+        return Filters.hue(ir, adjust).then(BlobConversions.imageResultToBlob);
       });
     };
 
     var saturate = function (blob, adjust) {
-      return ImageResult.fromBlob(blob).then(function(ir) {
-        return Filters.saturate(ir, adjust);
+      return BlobConversions.blobToImageResult(blob).then(function(ir) {
+        return Filters.saturate(ir, adjust).then(BlobConversions.imageResultToBlob);
       });
     };
 
     var contrast = function (blob, adjust) {
-      return ImageResult.fromBlob(blob).then(function(ir) {
-        return Filters.contrast(ir, adjust);
+      return BlobConversions.blobToImageResult(blob).then(function(ir) {
+        return Filters.contrast(ir, adjust).then(BlobConversions.imageResultToBlob);
       });
     };
 
     var grayscale = function (blob, adjust) {
-      return ImageResult.fromBlob(blob).then(function(ir) {
-        return Filters.grayscale(ir, adjust);
+      return BlobConversions.blobToImageResult(blob).then(function(ir) {
+        return Filters.grayscale(ir, adjust).then(BlobConversions.imageResultToBlob);
       });
     };
 
     var sepia = function (blob, adjust) {
-      return ImageResult.fromBlob(blob).then(function(ir) {
-        return Filters.sepia(ir, adjust);
+      return BlobConversions.blobToImageResult(blob).then(function(ir) {
+        return Filters.sepia(ir, adjust).then(BlobConversions.imageResultToBlob);
       });
     };
 
     var flip = function (blob, axis) {
-      return ImageResult.fromBlob(blob).then(function(ir) {
-        return ImageTools.flip(ir, axis);
+      return BlobConversions.blobToImageResult(blob).then(function(ir) {
+        return ImageTools.flip(ir, axis).then(BlobConversions.imageResultToBlob);
       });
     };
 
     var crop = function (blob, x, y, w, h) {
-      return ImageResult.fromBlob(blob).then(function(ir) {
-        return ImageTools.crop(ir, x, y, w, h);
+      return BlobConversions.blobToImageResult(blob).then(function(ir) {
+        return ImageTools.crop(ir, x, y, w, h).then(BlobConversions.imageResultToBlob);
       });
     };
 
     var resize = function (blob, w, h) {
-      return ImageResult.fromBlob(blob).then(function(ir) {
-        return ImageTools.resize(ir, w, h);
+      return BlobConversions.blobToImageResult(blob).then(function(ir) {
+        return ImageTools.resize(ir, w, h).then(BlobConversions.imageResultToBlob);
       });
     };
 
     var rotate = function (blob, angle) {
-      return ImageResult.fromBlob(blob).then(function(ir) {
-        return ImageTools.rotate(ir, angle);
+      return BlobConversions.blobToImageResult(blob).then(function(ir) {
+        return ImageTools.rotate(ir, angle).then(BlobConversions.imageResultToBlob);
       });
     };
 
