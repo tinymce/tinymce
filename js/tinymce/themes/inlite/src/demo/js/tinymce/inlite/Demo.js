@@ -23,10 +23,10 @@ define('tinymce/inlite/Demo', [
 		inline: true,
 		paste_data_images: true,
 		filepicker_validator_handler: function (query, success) {
-			var valid = /^https?:/.test(query.term);
+			var valid = /^https?:/.test(query.url);
 
 			success({
-				status: valid ? 'ok' : 'warn',
+				status: valid ? 'valid' : 'invalid',
 				message: valid ? 'Url seems to be valid' : 'Are you use that this url is valid?'
 			});
 		},

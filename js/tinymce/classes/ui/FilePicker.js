@@ -153,21 +153,37 @@ define("tinymce/ui/FilePicker", [
 		});
 	};
 
+	var statusToUiState = function (result) {
+		var status = result.status, message = result.message;
+
+		if (status === 'valid') {
+			return {status: 'ok', message: message};
+		} else if (status === 'unknown') {
+			return {status: 'warn', message: message};
+		} else if (status === 'invalid') {
+			return {status: 'warn', message: message};
+		} else {
+			return {status: 'none', message: ''};
+		}
+	};
+
 	var setupLinkValidatorHandler = function (ctrl, editorSettings, fileType) {
 		var validatorHandler = editorSettings.filepicker_validator_handler;
 		if (validatorHandler) {
-			var validateUrl = function (term) {
-				if (term.length === 0) {
+			var validateUrl = function (url) {
+				if (url.length === 0) {
 					ctrl.statusLevel('none');
 					return;
 				}
 
 				validatorHandler({
-					term: term,
+					url: url,
 					type: fileType
 				}, function (result) {
-					ctrl.statusMessage(result.message);
-					ctrl.statusLevel(result.status);
+					var uiState = statusToUiState(result);
+
+					ctrl.statusMessage(uiState.message);
+					ctrl.statusLevel(uiState.status);
 				});
 			};
 
