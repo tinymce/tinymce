@@ -8,12 +8,15 @@ asynctest(
     'ephox.agar.api.Logger',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
-    'ephox.alloy.test.GuiSetup'
+    'ephox.alloy.test.GuiSetup',
+    'ephox.fred.PlatformDetection'
   ],
  
-  function (ApproxStructure, Assertions, GeneralSteps, Logger, Step, GuiFactory, GuiSetup) {
+  function (ApproxStructure, Assertions, GeneralSteps, Logger, Step, GuiFactory, GuiSetup, PlatformDetection) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+
+    var platform = PlatformDetection.detect();
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build({
@@ -56,10 +59,12 @@ asynctest(
         });
       };
 
+      var defaultCursor = platform.browser.isChrome() || platform.browser.isSafari() ? 'initial-value'.length : 0;
+
       var testFocus = Logger.t(
         'Testing input.focus selects text inside',
         GeneralSteps.sequence([
-          sCheckInputSelection('before focus', { start: 'initial-value'.length, end: 'initial-value'.length }),
+          sCheckInputSelection('before focus', { start: defaultCursor, end: defaultCursor }),
           Step.sync(function () {
             component.apis().focus();
           }),
