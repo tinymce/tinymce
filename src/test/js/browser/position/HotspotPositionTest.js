@@ -33,7 +33,7 @@ asynctest(
         },
         uid: 'relative-sink',
         positioning: {
-          useFixed: true
+          useFixed: false
         }
       });
 
@@ -90,15 +90,16 @@ asynctest(
           NamedChain.asChain([
             NamedChain.writeValue('context', gui),
             NamedChain.direct('context', cFindUid('fixed-sink'), 'fixed'),
+            NamedChain.direct('context', cFindUid('relative-sink'), 'relative'),
             NamedChain.direct('context', cFindUid('hotspot'), 'hotspot'),
             NamedChain.direct('context', cFindUid('popup'), 'popup'),
             NamedChain.bundle(function (data) {
-              data.fixed.apis().addContainer(data.popup);
-              data.fixed.apis().position({
+              data.relative.apis().addContainer(data.popup);
+              data.relative.apis().position({
                 anchor: 'hotspot',
                 hotspot: data.hotspot
               }, data.popup);
-              return Result.value({ });
+              return Result.value(data);
               console.log('data', data);
             })
           ])
