@@ -18,8 +18,7 @@ define("ephox/imagetools/transformations/Filters", [
 ], function(Canvas, ImageResult, ColorMatrix) {
 
   function colorFilter(ir, matrix) {
-    var image = ir.toCanvas();
-    var canvas = Canvas.create(image.width, image.height);
+    var canvas = ir.toCanvas();
     var context = Canvas.get2dContext(canvas);
     var pixels;
 
@@ -45,7 +44,6 @@ define("ephox/imagetools/transformations/Filters", [
       return pixels;
     }
 
-    context.drawImage(image, 0, 0);
     pixels = applyMatrix(context.getImageData(0, 0, canvas.width, canvas.height), matrix);
     context.putImageData(pixels, 0, 0);
 
@@ -53,8 +51,7 @@ define("ephox/imagetools/transformations/Filters", [
   }
 
   function convoluteFilter(ir, matrix) {
-    var image = ir.toCanvas();
-    var canvas = Canvas.create(image.width, image.height);
+    var canvas = ir.toCanvas();
     var context = Canvas.get2dContext(canvas);
     var pixelsIn, pixelsOut;
 
@@ -111,7 +108,6 @@ define("ephox/imagetools/transformations/Filters", [
       return pixelsOut;
     }
 
-    context.drawImage(image, 0, 0);
     pixelsIn = context.getImageData(0, 0, canvas.width, canvas.height);
     pixelsOut = context.getImageData(0, 0, canvas.width, canvas.height);
     pixelsOut = applyMatrix(pixelsIn, pixelsOut, matrix);
@@ -122,8 +118,7 @@ define("ephox/imagetools/transformations/Filters", [
 
   function functionColorFilter(colorFn) {
     return function(ir, value) {
-      var image = ir.toCanvas();
-      var canvas = Canvas.create(image.width, image.height);
+      var canvas = ir.toCanvas();
       var context = Canvas.get2dContext(canvas);
       var pixels, i, lookup = new Array(256);
 
@@ -143,7 +138,6 @@ define("ephox/imagetools/transformations/Filters", [
         lookup[i] = colorFn(i, value);
       }
 
-      context.drawImage(image, 0, 0);
       pixels = applyLookup(context.getImageData(0, 0, canvas.width, canvas.height), lookup);
       context.putImageData(pixels, 0, 0);
 
