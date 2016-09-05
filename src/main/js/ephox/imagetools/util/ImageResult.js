@@ -21,11 +21,11 @@ define("ephox/imagetools/util/ImageResult", [
             return initialType;
         }
 
-        function toPromisedBlob(type, quality) {
+        function toBlob(type, quality) {
             return Conversions.canvasToBlob(canvas, type || initialType, quality);
         }
 
-        function toBlob(type, quality) {
+        function toBlobSync(type, quality) {
             return Conversions.dataUriToBlobSync(toDataURL(type, quality));
         }
 
@@ -44,7 +44,7 @@ define("ephox/imagetools/util/ImageResult", [
         return {
             getType: getType,
             toBlob: toBlob,
-            toPromisedBlob: toPromisedBlob,
+            toBlobSync: toBlobSync,
             toDataURL: toDataURL,
             toBase64: toBase64,
             toCanvas: toCanvas

@@ -36,7 +36,7 @@ define(
     };
 
     var imageResultToBlob = function(ir) {
-      return ir.toPromisedBlob();
+      return ir.toBlob();
     };
 
     return {
