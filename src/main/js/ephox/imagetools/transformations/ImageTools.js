@@ -41,7 +41,7 @@ define("ephox/imagetools/transformations/ImageTools", [
     context.rotate(angle * Math.PI / 180);
     context.drawImage(image, 0, 0);
 
-    return ImageResult.fromCanvas(canvas);
+    return ImageResult.fromCanvas(canvas, ir.getType());
   }
 
   function flip(ir, axis) {
@@ -57,7 +57,7 @@ define("ephox/imagetools/transformations/ImageTools", [
       context.drawImage(image, -canvas.width, 0);
     }
 
-    return ImageResult.fromCanvas(canvas);
+    return ImageResult.fromCanvas(canvas, ir.getType());
   }
 
   function crop(ir, x, y, w, h) {
@@ -67,13 +67,15 @@ define("ephox/imagetools/transformations/ImageTools", [
 
     context.drawImage(image, -x, -y);
 
-    return ImageResult.fromCanvas(canvas);
+    return ImageResult.fromCanvas(canvas, ir.getType());
   }
 
 
   function resize(ir, w, h) {
     return ImageResizerCanvas.scale(ir.toCanvas(), w, h)
-        .then(ImageResult.fromCanvas);
+      .then(function(canvas) {
+        return ImageResult.fromCanvas(canvas, ir.getType());
+      });
   }
 
   return {
