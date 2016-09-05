@@ -35,6 +35,10 @@ define(
       return ImageResult.fromImage(image);
     };
 
+    var imageResultToBlob = function(ir) {
+      return ir.toPromisedBlob();
+    };
+
     return {
       // used outside
       blobToImage: blobToImage,
@@ -49,7 +53,9 @@ define(
       // used outside
       dataUriToImageResult: dataUriToImageResult,
       // used outside
-      imageToImageResult: imageToImageResult
+      imageToImageResult: imageToImageResult,
+      // used outside
+      imageResultToBlob: imageResultToBlob
     };
   }
 );
