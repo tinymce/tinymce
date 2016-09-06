@@ -125,14 +125,13 @@ asynctest(
         Guard.tryUntil('Ensuring that the popup is inside the fixed sink', 100, 3000)
       );
 
-      var cScrollToHotspot = NamedChain.direct('item', Chain.mapper(function (item) {
+      var cScrollToItem = NamedChain.direct('item', Chain.mapper(function (item) {
         item.element().dom().scrollIntoView();
         return Scroll.get();
       }), 'scrollValue');
 
       return [
         Chain.asStep({}, [
-          Chain.debugging,
           NamedChain.asChain([
             NamedChain.writeValue('context', gui),
             NamedChain.direct('context', cFindUid('fixed-sink'), 'fixed'),
@@ -145,20 +144,16 @@ asynctest(
             cAddPopupToFixed,
             cTestPopupInFixed,
 
-            
-            Chain.wait(10000),
             NamedChain.bundle(function (data) {
               Css.set(data.list.element(), 'top', '1000px');
               return Result.value(data);
             }),
 
-            cScrollToHotspot,
+            cScrollToItem,
             cAddPopupToRelative,
             cTestPopupInRelative,
             cAddPopupToFixed,
-            cTestPopupInFixed,
-
-            Chain.wait(10000)
+            cTestPopupInFixed
           ])
         ])
       ];
