@@ -193,8 +193,10 @@ asynctest(
 
                 cAddPopupToRelative,
                 cTestPopupInRelative,
+                Chain.wait(2000),
                 cAddPopupToFixed,
-                cTestPopupInFixed
+                cTestPopupInFixed,
+                Chain.wait(2000)
               ]
             ),
             
@@ -210,8 +212,10 @@ asynctest(
 
                 cAddPopupToRelative,
                 cTestPopupInRelative,
+                Chain.wait(2000),
                 cAddPopupToFixed,
-                cTestPopupInFixed
+                cTestPopupInFixed,
+                Chain.wait(2000)
               ]
             ),
 
