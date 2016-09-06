@@ -66,9 +66,7 @@ define(
       var win = Traverse.defaultView(anchorInfo.root()).dom();
       var rawAnchorBox = getAnchorSelection(win, anchorInfo).bind(function (sel) {
         var optRect = WindowSelection.rectangleAt(win, sel.start(), sel.soffset(), sel.finish(), sel.foffset());
-        return optRect.map(function (rect) {
-          return Rectangles.fromRaw(rect);
-        });
+        return optRect.map(Rectangles.fromRaw);
       }).getOr(Rectangles.empty());
 
       var optOffset = getOffset(component, anchorInfo);
