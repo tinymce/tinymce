@@ -2,7 +2,6 @@ define(
   'ephox.alloy.positioning.SelectionAnchor',
 
   [
-    'ephox.alloy.alien.AdjustPositions',
     'ephox.alloy.alien.CssPosition',
     'ephox.alloy.alien.Descend',
     'ephox.alloy.alien.Rectangles',
@@ -26,7 +25,7 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (AdjustPositions, CssPosition, Descend, Rectangles, FieldSchema, SelectionRange, WindowSelection, Awareness, Fun, Option, Bubble, Layout, MaxHeight, Origins, Struct, Position, Compare, Element, Location, Node, Scroll, Traverse) {
+  function (CssPosition, Descend, Rectangles, FieldSchema, SelectionRange, WindowSelection, Awareness, Fun, Option, Bubble, Layout, MaxHeight, Origins, Struct, Position, Compare, Element, Location, Node, Scroll, Traverse) {
     var point = Struct.immutable('element', 'offset');
 
     // A range from (a, 1) to (body, end) was giving the wrong bounds.
@@ -99,7 +98,7 @@ define(
         };
       });
 
-      var points = [ rootPoint, rawAnchorBox.point() ];
+    var points = [ rootPoint, rawAnchorBox.point() ];
       var topLeft = Origins.cata(origin,
         function () {
           /* none ... so use absolute */
