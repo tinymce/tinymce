@@ -2,8 +2,11 @@ define(
   'ephox.alloy.positioning.SelectionAnchor',
 
   [
+    'ephox.alloy.alien.AdjustPositions',
     'ephox.alloy.alien.Descend',
+    'ephox.alloy.alien.Rectangles',
     'ephox.boulder.api.FieldSchema',
+    'ephox.fussy.api.SelectionRange',
     'ephox.fussy.api.WindowSelection',
     'ephox.oath.proximity.Awareness',
     'ephox.peanut.Fun',
@@ -11,8 +14,6 @@ define(
     'ephox.repartee.api.Bubble',
     'ephox.repartee.api.Layout',
     'ephox.repartee.api.MaxHeight',
-    'ephox.repartee.api.Origins',
-    'ephox.scullion.ADT',
     'ephox.scullion.Struct',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Element',
@@ -22,119 +23,61 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Descend, FieldSchema, WindowSelection, Awareness, Fun, Option, Bubble, Layout, MaxHeight, Origins, Adt, Struct, Compare, Element, Location, Node, Scroll, Traverse) {
-    var adt = Adt.generate([
-      { 'page': [ ] },
-      { 'idoc': [ 'absX', 'absY' ] }
-    ]);
-
-    var makeRect = Struct.immutableBag([ 'x', 'y', 'width', 'height' ], [ ]);
+  function (AdjustPositions, Descend, Rectangles, FieldSchema, SelectionRange, WindowSelection, Awareness, Fun, Option, Bubble, Layout, MaxHeight, Struct, Compare, Element, Location, Node, Scroll, Traverse) {
     var point = Struct.immutable('element', 'offset');
-
-    // In one mode, the window is inside an iframe. If that iframe is in the
-    // same document as the positioning element (component), then identify the offset
-    // difference between the iframe and the component.
-    var getExtraOffset = function (component, anchorInfo) {
-      var win = Traverse.defaultView(anchorInfo.root()).dom();
-
-      var hasSameOwner = function (frame) {
-        var frameOwner = Traverse.owner(frame);
-        var compOwner = Traverse.owner(component.element());
-
-        console.log('frameOwner', frameOwner, 'compOwner', compOwner);
-
-        return Compare.eq(frameOwner, compOwner);
-      };
-
-      return Option.from(win.frameElement).map(Element.fromDom).filter(hasSameOwner).map(function (frame) {
-        var location = Location.absolute(frame);
-        return adt.idoc(location.left(), location.top());
-      }).getOrThunk(function () {
-        return adt.page();
-      });
-    };
 
     // A range from (a, 1) to (body, end) was giving the wrong bounds.
     var modifyStart = function (element, offset) {
       return Node.isText(element) ? point(element, offset) : Descend.descendOnce(element, offset);
     };
 
-    var placement = function (component, posInfo, anchorInfo, origin) {
-      // The window might be within an iframe that is inside the component's doc. Therefore, we 
-      // need to add the absolute position (minus scrolling?) 
-      var win = Traverse.defaultView(anchorInfo.root()).dom();
-      var extraOffset = getExtraOffset(component, anchorInfo);
-
-      var fallbackRect = makeRect({
-        x: 100,
-        y: 0,
-        width: 0,
-        height: 0
-      });
-
+    var getAnchorSelection = function (win, anchorInfo) {
       var getSelection = anchorInfo.getSelection().getOrThunk(function () {
         return function () {
-          console.log('window.selection.get');
           return WindowSelection.get(win);
         };
       });
-      var rawAnchorBox = getSelection().bind(function (sel) {
-        console.log('rawAnchorBox', sel);
+
+      return getSelection().map(function (sel) {
         var rootEnd = Awareness.getEnd(anchorInfo.root());
         var modStart = modifyStart(sel.start(), sel.soffset());
-        
-
-        return WindowSelection.rectangleAt(win, modStart.element(), modStart.offset(), anchorInfo.root(), rootEnd).map(function (rect) {
-          console.log('rect', rect);
-          return makeRect({
-            x: rect.left,
-            y: rect.top,
-            width: rect.width,
-            height: rect.height
-          });
-        });
-      }).getOr(fallbackRect);
-
-      var translate = function (rect, x, y) {
-        return makeRect({
-          x: rect.x() + x,
-          y: rect.y() + y,
-          width: rect.width(),
-          height: rect.height()
-        });
-      };
-
-      var addScroll = function (rect) {
-        var scroll = Scroll.get();
-        console.log('adding scroll', scroll.top());
-        return translate(rect, scroll.left(), scroll.top());
-      };
-
-      var subtractScroll = function (rect) {
-        var scroll = Scroll.get();
-        console.log('adding scroll', scroll.top());
-        return translate(rect, -scroll.left(), -scroll.top());
-      };
-
-      var addExtra = function (f, g, rect) {
-        return extraOffset.fold(function () {
-          return f(rect);
-        }, function (offX, offY) {
-          console.log('adding extra', offY);
-          return translate(g(rect), offX, offY);
-        });
-      };
-
-      // Shared concept with repartee, but we don't have an element.
-      // (calls OuterPosition.find in repartee)
-
-      var anchorBox = Origins.cata(origin, function (/*none*/) {
-        return addExtra(addScroll, Fun.identity, rawAnchorBox);
-      }, function (/* relative */) {
-        return addExtra(addScroll, Fun.identity, rawAnchorBox);
-      }, function (/* fixed */) {
-        return addExtra(Fun.identity, subtractScroll, rawAnchorBox);
+        return SelectionRange.general(modStart.element(), modStart.offset(), anchorInfo.root(), rootEnd);
       });
+    };
+
+    // In one mode, the window is inside an iframe. If that iframe is in the
+    // same document as the positioning element (component), then identify the offset
+    // difference between the iframe and the component.
+    var getOffset = function (component, anchorInfo) {
+      var win = Traverse.defaultView(anchorInfo.root()).dom();
+
+      var hasSameOwner = function (frame) {
+        var frameOwner = Traverse.owner(frame);
+        var compOwner = Traverse.owner(component.element());
+        return Compare.eq(frameOwner, compOwner);
+      };
+
+      return Option.from(win.frameElement).map(Element.fromDom).filter(hasSameOwner).map(function (frame) {
+        var location = Location.absolute(frame);
+        return Option.some(location);
+      }).getOrThunk(function () {
+        return Option.none();
+      });
+    };
+
+
+    var placement = function (component, posInfo, anchorInfo, origin) {
+      var win = Traverse.defaultView(anchorInfo.root()).dom();
+      var rawAnchorBox = getAnchorSelection(win, anchorInfo).bind(function (sel) {
+        var optRect = WindowSelection.rectangleAt(win, sel.start(), sel.soffset(), sel.finish(), sel.foffset());
+        return optRect.map(function (rect) {
+          return Rectangles.fromRaw(rect);
+        });
+      }).getOr(Rectangles.empty());
+
+      var optOffset = getOffset(component, anchorInfo);
+
+      var anchorBox = AdjustPositions.adjust(origin, optOffset, Scroll.get(), rawAnchorBox);
 
       return {
         anchorBox: Fun.constant(anchorBox),
