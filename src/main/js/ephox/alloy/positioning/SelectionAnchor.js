@@ -57,12 +57,8 @@ define(
         return Compare.eq(frameOwner, compOwner);
       };
 
-      return Option.from(win.frameElement).map(Element.fromDom).filter(hasSameOwner).map(function (frame) {
-        var location = Location.absolute(frame);
-        return Option.some(location);
-      }).getOrThunk(function () {
-        return Option.none();
-      });
+      return Option.from(win.frameElement).map(Element.fromDom).
+        filter(hasSameOwner).map(Location.absolute);
     };
 
 
