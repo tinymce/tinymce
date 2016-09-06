@@ -56,7 +56,7 @@ define(
 
     // A range from (a, 1) to (body, end) was giving the wrong bounds.
     var modifyStart = function (element, offset) {
-      return Node.isText(element) ? point(element, offset) : Descend.descend(element, offset);
+      return Node.isText(element) ? point(element, offset) : Descend.descendOnce(element, offset);
     };
 
     var placement = function (component, posInfo, anchorInfo, origin) {
