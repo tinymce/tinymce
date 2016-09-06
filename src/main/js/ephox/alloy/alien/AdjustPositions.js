@@ -18,9 +18,9 @@ define(
 
       var addExtra = function (f, g, rect) {
         return optOffset.fold(function () {
-          return f(rect);
+          return rect;
         }, function (offset) {
-          return Rectangles.translate(g(rect), offset.left(), offset.top());
+          return Rectangles.translate(rect, offset.left(), offset.top());
         });
       };
 
@@ -29,11 +29,11 @@ define(
 
       // Not using Origins.cata here because it has DOM imports
       return origin.fold(function (/*none*/) {
-        return addExtra(addScroll, Fun.identity, box);
+        return addExtra(Fun.identity, Fun.identity, box);
       }, function (/* relative */) {
-        return addExtra(addScroll, Fun.identity, box);
+        return addExtra(Fun.identity, Fun.identity, box);
       }, function (/* fixed */) {
-        return addExtra(Fun.identity, subtractScroll, box);
+        return addExtra(subtractScroll, subtractScroll, box);
       });
     };
 
