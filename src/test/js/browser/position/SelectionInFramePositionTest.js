@@ -1,5 +1,5 @@
 asynctest(
-  'SelectionPositionTest',
+  'SelectionInFramePositionTest',
  
   [
     'ephox.agar.api.Chain',
@@ -17,13 +17,15 @@ asynctest(
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Scroll',
+    'ephox.sugar.api.SelectorExists',
+    'ephox.sugar.api.SelectorFind',
     'ephox.sugar.api.Traverse',
     'global!Error',
     'global!setTimeout',
     'global!window'
   ],
  
-  function (Chain, Cursors, Guard, NamedChain, GuiFactory, GuiSetup, Sinks, Arr, WindowSelection, Result, Writer, Css, DomEvent, Element, Scroll, Traverse, Error, setTimeout, window) {
+  function (Chain, Cursors, Guard, NamedChain, GuiFactory, GuiSetup, Sinks, Arr, WindowSelection, Result, Writer, Css, DomEvent, Element, Scroll, SelectorExists, SelectorFind, Traverse, Error, setTimeout, window) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -165,6 +167,19 @@ asynctest(
             NamedChain.direct('context', cFindUid('classic-editor'), 'classic'),
             NamedChain.direct('context', cFindUid('popup'), 'popup'),
             NamedChain.direct('classic', cGetWin, 'iWin'),
+
+            // Wait until the content has loaded
+            Chain.control(
+              Chain.binder(function (data) {
+                var root = Element.fromDom(data.classic.element().dom().contentWindow.document.body);
+                return SelectorFind.descendant(root, 'p').fold(function () {
+                  return Result.error('Could not find paragraph yet');
+                }, function (p) {
+                  return Result.value(data);
+                });
+              }),
+              Guard.tryUntil('Waiting for content to load in iframe', 100, 10000)
+            ),
             
             addLogging(
               'Selected: 3rd paragraph, no page scroll, no editor scroll',
