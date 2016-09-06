@@ -12,7 +12,7 @@ define(
 
   function (FieldSchema, Fun, Bubble, LinkedLayout, MaxHeight, Origins) {
     var placement = function (component, posInfo, submenuInfo, origin) {
-      var anchorBox = Origins.toBox(origin, submenuInfo.item());
+      var anchorBox = Origins.toBox(origin, submenuInfo.item().element());
 
       return {
         anchorBox: Fun.constant(anchorBox),

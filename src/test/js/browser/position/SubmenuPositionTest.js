@@ -8,6 +8,7 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.test.GuiSetup',
+    'ephox.alloy.test.Sinks',
     'ephox.perhaps.Result',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Css',
@@ -17,38 +18,13 @@ asynctest(
     'global!setTimeout'
   ],
  
-  function (Chain, Guard, NamedChain, Step, GuiFactory, GuiSetup, Result, Compare, Css, PredicateExists, Scroll, Error, setTimeout) {
+  function (Chain, Guard, NamedChain, Step, GuiFactory, GuiSetup, Sinks, Result, Compare, Css, PredicateExists, Scroll, Error, setTimeout) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
-      var fixedSink = GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div',
-          styles: {
-            background: 'green'
-          }
-        },
-        uid: 'fixed-sink',
-        positioning: {
-          useFixed: true
-        }
-      });
-
-      var relativeSink = GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div',
-          styles: {
-            background: 'blue'
-          }
-        },
-        uid: 'relative-sink',
-        positioning: {
-          useFixed: false
-        }
-      });
+      var fixedSink = Sinks.fixedSink();
+      var relativeSink = Sinks.relativeSink();
 
       var popup = GuiFactory.build({
         uiType: 'custom',
@@ -65,18 +41,30 @@ asynctest(
         uid: 'popup'
       });
 
-      var hotspot = GuiFactory.build({
-        uiType: 'button',
-        text: 'Hotspot',
-        action: function () { },
+      var item = GuiFactory.build({
+        uiType: 'custom',
         dom: {
+          tag: 'li',
+          innerHtml: 'Trigger Item'
+        },
+        
+        uid: 'test-item'
+      });
+
+      var list = GuiFactory.build({
+        uiType: 'custom',
+        dom: {
+          tag: 'ol',
           styles: {
             position: 'absolute',
-            left: '100px',
-            top: '120px'
+            left: '400px',
+            top: '140px'
           }
         },
-        uid: 'hotspot'
+        uid: 'test-list',
+        components: [
+          { built: item }
+        ]
       });
 
       return GuiFactory.build({
@@ -88,7 +76,7 @@ asynctest(
           { built: fixedSink },
           { built: relativeSink },
           { built: popup },
-          { built: hotspot }
+          { built: list }
         ]
       });
 
@@ -99,26 +87,18 @@ asynctest(
         });
       };
 
-      var isInside = function (sinkComponent, popupComponent) {
-        var isSink = function (el) {
-          return Compare.eq(el, sinkComponent.element());
-        };
-
-        return PredicateExists.closest(popupComponent.element(), isSink);
-      };
-
       var cAddPopupToRelative = NamedChain.bundle(function (data) {
         data.relative.apis().addContainer(data.popup);
         data.relative.apis().position({
-          anchor: 'hotspot',
-          hotspot: data.hotspot
+          anchor: 'submenu',
+          item: data.item
         }, data.popup);
         return Result.value(data);
       });
 
       var cTestPopupInRelative = Chain.control(
         NamedChain.bundle(function (data) {
-          var inside = isInside(data.relative, data.popup);
+          var inside = Sinks.isInside(data.relative, data.popup);
           return inside ? Result.value(data) : Result.error(
             new Error('The popup does not appear within the relative sink container')
           );
@@ -129,15 +109,15 @@ asynctest(
       var cAddPopupToFixed = NamedChain.bundle(function (data) {
         data.fixed.apis().addContainer(data.popup);
         data.fixed.apis().position({
-          anchor: 'hotspot',
-          hotspot: data.hotspot
+          anchor: 'submenu',
+          item: data.item
         }, data.popup);
         return Result.value(data);
       });
 
       var cTestPopupInFixed = Chain.control(
         NamedChain.bundle(function (data) {
-          var inside = isInside(data.fixed, data.popup);
+          var inside = Sinks.isInside(data.fixed, data.popup);
           return inside ? Result.value(data) : Result.error(
             new Error('The popup does not appear within the fixed sink container')
           );
@@ -145,26 +125,30 @@ asynctest(
         Guard.tryUntil('Ensuring that the popup is inside the fixed sink', 100, 3000)
       );
 
-      var cScrollToHotspot = NamedChain.direct('hotspot', Chain.mapper(function (hotspot) {
-        hotspot.element().dom().scrollIntoView();
+      var cScrollToHotspot = NamedChain.direct('item', Chain.mapper(function (item) {
+        item.element().dom().scrollIntoView();
         return Scroll.get();
       }), 'scrollValue');
 
       return [
         Chain.asStep({}, [
+          Chain.debugging,
           NamedChain.asChain([
             NamedChain.writeValue('context', gui),
             NamedChain.direct('context', cFindUid('fixed-sink'), 'fixed'),
             NamedChain.direct('context', cFindUid('relative-sink'), 'relative'),
-            NamedChain.direct('context', cFindUid('hotspot'), 'hotspot'),
+            NamedChain.direct('context', cFindUid('test-list'), 'list'),
+            NamedChain.direct('context', cFindUid('test-item'), 'item'),
             NamedChain.direct('context', cFindUid('popup'), 'popup'),
             cAddPopupToRelative,
             cTestPopupInRelative,
             cAddPopupToFixed,
             cTestPopupInFixed,
 
+            
+            Chain.wait(10000),
             NamedChain.bundle(function (data) {
-              Css.set(data.hotspot.element(), 'top', '1000px');
+              Css.set(data.list.element(), 'top', '1000px');
               return Result.value(data);
             }),
 
@@ -172,7 +156,9 @@ asynctest(
             cAddPopupToRelative,
             cTestPopupInRelative,
             cAddPopupToFixed,
-            cTestPopupInFixed
+            cTestPopupInFixed,
+
+            Chain.wait(10000)
           ])
         ])
       ];
