@@ -8,6 +8,7 @@ define(
   ],
 
   function (Arr, Fun, Css) {
+    // TODO: Support RTL mode.
     return function (component) {
       var position = function (offset) {
         reset();

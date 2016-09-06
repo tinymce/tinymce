@@ -82,7 +82,6 @@ define(
     };
 
     return [
-      // FieldSchema.defaulted(/) // ui direction
       FieldSchema.option('getSelection'),
       FieldSchema.strict('root'),
       FieldSchema.state('placement', function () {

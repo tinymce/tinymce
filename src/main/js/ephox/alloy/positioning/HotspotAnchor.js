@@ -25,7 +25,6 @@ define(
     };
 
     return [
-      // FieldSchema.defaulted(/) // ui direction
       FieldSchema.strict('hotspot'),
       FieldSchema.state('placement', function () {
         return placement;

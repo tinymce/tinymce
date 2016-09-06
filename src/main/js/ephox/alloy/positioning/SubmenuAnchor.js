@@ -23,7 +23,6 @@ define(
     };
 
     return [
-      // FieldSchema.defaulted(/) // ui direction
       FieldSchema.strict('item'),
       FieldSchema.state('placement', function () {
         return placement;
