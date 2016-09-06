@@ -9,6 +9,7 @@ asynctest(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.Sinks',
+    'ephox.compass.Arr',
     'ephox.fussy.api.WindowSelection',
     'ephox.perhaps.Result',
     'ephox.photon.Writer',
@@ -16,11 +17,13 @@ asynctest(
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Scroll',
+    'ephox.sugar.api.Traverse',
     'global!Error',
-    'global!setTimeout'
+    'global!setTimeout',
+    'global!window'
   ],
  
-  function (Chain, Cursors, Guard, NamedChain, GuiFactory, GuiSetup, Sinks, WindowSelection, Result, Writer, Css, DomEvent, Element, Scroll, Error, setTimeout) {
+  function (Chain, Cursors, Guard, NamedChain, GuiFactory, GuiSetup, Sinks, Arr, WindowSelection, Result, Writer, Css, DomEvent, Element, Scroll, Traverse, Error, setTimeout, window) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -90,9 +93,6 @@ asynctest(
         };
       };
 
-      var classicEditor = component.components()[3];
-      console.log('classicEditor', classicEditor);
-
       var cAddPopupToRelative = NamedChain.bundle(function (data) {
         data.relative.apis().addContainer(data.popup);
         data.relative.apis().position(getAnchor(data), data.popup);
@@ -125,10 +125,36 @@ asynctest(
         Guard.tryUntil('Ensuring that the popup is inside the fixed sink', 100, 3000)
       );
 
-      var cScrollToItem = NamedChain.direct('item', Chain.mapper(function (item) {
-        item.element().dom().scrollIntoView();
-        return Scroll.get();
-      }), 'scrollValue');
+      var cGetWin = Chain.mapper(function (frame) {
+        return frame.element().dom().contentWindow;
+      });
+
+      var cSetPath = function (rawPath) {
+        var path = Cursors.path(rawPath);
+
+        return Chain.binder(function (win) {
+          var body = Element.fromDom(win.document.body);
+          var range = Cursors.calculate(body, path);
+           WindowSelection.setExact(
+            win,
+            range.start(),
+            range.soffset(),
+            range.finish(),
+            range.foffset()
+          );
+          return WindowSelection.get(win).fold(function () {
+            return Result.error('Could not retrieve the set selection');
+          }, Result.value);
+        });
+      };
+
+      var addLogging = function (label, chains) {
+        var logChains = Arr.map(chains, function (c) {
+          return Chain.control(c, Guard.addLogging(label));
+        });
+
+        return Chain.fromChains(logChains);
+      };
 
       return [
         Chain.asStep({}, [
@@ -138,108 +164,64 @@ asynctest(
             NamedChain.direct('context', cFindUid('relative-sink'), 'relative'),
             NamedChain.direct('context', cFindUid('classic-editor'), 'classic'),
             NamedChain.direct('context', cFindUid('popup'), 'popup'),
+            NamedChain.direct('classic', cGetWin, 'iWin'),
+            
+            addLogging(
+              'Selected: 3rd paragraph, no page scroll, no editor scroll',
+              [
+                NamedChain.direct('iWin', cSetPath({
+                  startPath: [ 2, 0 ],
+                  soffset: 0,
+                  finishPath: [ 3, 0 ],
+                  foffset: 0
+                }), 'range'),
 
-            Chain.wait(3000),
-            NamedChain.bundle(function (data) {
-
-              var path = Cursors.path({
-                startPath: [ 2, 0 ],
-                soffset: 0,
-                finishPath: [ 3, 0 ],
-                foffset: 0
-              });
-
-              var win = data.classic.element().dom().contentWindow;
-              var root = Element.fromDom(win.document.body);
-              var range = Cursors.calculate(root, path);
-              // Make a selection in the window.
-              
-              win.focus();
-              
-              WindowSelection.setExact(
-                win,
-                range.start(),
-                range.soffset(),
-                range.finish(),
-                range.foffset()
-              );
-              return Result.value(data);
-            }),
-            cAddPopupToRelative,
-            cTestPopupInRelative,
-
-
-            Chain.wait(1000),
-            cAddPopupToFixed,
-            cTestPopupInFixed,
-
+                cAddPopupToRelative,
+                cTestPopupInRelative,
+                cAddPopupToFixed,
+                cTestPopupInFixed
+              ]
+            ),
+            
             Chain.wait(1000),
 
-            Chain.op(function (data) {
-              Css.set(data.classic.element(), 'margin-top', '2000px');
-              window.scrollTo(0, 2000);
-              
-            }),
+            addLogging(
+              'Selected: 3rd paragraph, large page scroll, no editor scroll',
+              [
+                Chain.op(function (data) {
+                  Css.set(data.classic.element(), 'margin-top', '2000px');
+                  window.scrollTo(0, 2000);
+                }),
 
-            cAddPopupToRelative,
-            cTestPopupInRelative,
+                cAddPopupToRelative,
+                cTestPopupInRelative,
+                cAddPopupToFixed,
+                cTestPopupInFixed
+              ]
+            ),
 
-            Chain.wait(1000),
+            addLogging(
+              'Selected: 13th paragraph, large page scroll, large editor scroll',
+              [
+                NamedChain.direct('iWin', cSetPath({
+                  startPath: [ 12 ],
+                  soffset: 0,
+                  finishPath: [ 13 ],
+                  foffset: 0
+                }), 'range2'),
+                NamedChain.direct('range2', Chain.mapper(function (range2) {
+                  range2.start().dom().scrollIntoView();
+                  return Scroll.get(
+                    Traverse.owner(range2.start())
+                  );
+                }), 'scroll2'),
 
-            cAddPopupToFixed,
-            cTestPopupInFixed,
-
-            Chain.wait(1000),
-
-            Chain.op(function (data) {
-              var iWin = data.classic.element().dom().contentWindow;
-
-              var path = Cursors.path({
-                startPath: [ 12 ],
-                soffset: 0,
-                finishPath: [ 13 ],
-                foffset: 0
-              });
-
-              var root = Element.fromDom(iWin.document.body);
-              var range = Cursors.calculate(root, path);
-              // Make a selection in the window.
-              
-              iWin.focus();
-              
-              WindowSelection.setExact(
-                iWin,
-                range.start(),
-                range.soffset(),
-                range.finish(),
-                range.foffset()
-              );
-
-              iWin.getSelection().getRangeAt(0).startContainer.scrollIntoView();
-              
-            }),
-            Chain.wait(1000),
-
-            cAddPopupToRelative,
-            cTestPopupInRelative,
-
-            Chain.wait(1000),
-
-            cAddPopupToFixed,
-            cTestPopupInFixed,
-
-            Chain.wait(1000),
-
-            // NamedChain.bundle(function (data) {
-            //   Css.set(data.list.element(), 'top', '1000px');
-            //   return Result.value(data);
-            // }),
-
-            // cScrollToItem,
-            // cAddPopupToRelative,
-            // cTestPopupInRelative,
-            // cAddPopupToFixed,
-            // cTestPopupInFixed
+                cAddPopupToRelative,
+                cTestPopupInRelative,
+                cAddPopupToFixed,
+                cTestPopupInFixed
+              ]
+            )
           ])
         ])
       ];
