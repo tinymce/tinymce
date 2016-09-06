@@ -14,7 +14,7 @@ define(
         dom: {
           tag: 'div',
           styles: {
-            background: 'green'
+            border: '1px solid green'
           }
         },
         uid: 'fixed-sink',
@@ -30,7 +30,7 @@ define(
         dom: {
           tag: 'div',
           styles: {
-            background: 'blue'
+            border: '1px solid blue'
           }
         },
         uid: 'relative-sink',

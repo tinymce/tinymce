@@ -31,8 +31,7 @@ asynctest(
           styles: {
             width: '200px',
             height: '150px',
-            border: '1px solid black',
-            background: 'inherit'
+            border: 'inherit'
           }
         },
         uid: 'popup'

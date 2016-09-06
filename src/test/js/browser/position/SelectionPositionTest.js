@@ -36,8 +36,7 @@ asynctest(
           styles: {
             width: '200px',
             height: '150px',
-            border: '1px solid black',
-            background: 'inherit',
+            border: 'inherit',
             position: 'absolute'
           }
         },
@@ -84,15 +83,19 @@ asynctest(
         });
       };
 
+      var getAnchor = function (data) {
+        return {
+          anchor: 'selection',
+          root: Element.fromDom(data.classic.element().dom().contentWindow.document.body)
+        };
+      };
+
       var classicEditor = component.components()[3];
       console.log('classicEditor', classicEditor);
 
       var cAddPopupToRelative = NamedChain.bundle(function (data) {
         data.relative.apis().addContainer(data.popup);
-        data.relative.apis().position({
-          anchor: 'selection',
-          root: Element.fromDom(data.classic.element().dom().contentWindow.document.body),
-        }, data.popup);
+        data.relative.apis().position(getAnchor(data), data.popup);
         return Result.value(data);
       });
 
@@ -108,10 +111,7 @@ asynctest(
 
       var cAddPopupToFixed = NamedChain.bundle(function (data) {
         data.fixed.apis().addContainer(data.popup);
-        data.fixed.apis().position({
-          anchor: 'submenu',
-          item: data.item
-        }, data.popup);
+        data.fixed.apis().position(getAnchor(data), data.popup);
         return Result.value(data);
       });
 
@@ -169,9 +169,66 @@ asynctest(
             cTestPopupInRelative,
 
 
-            Chain.wait(100000),
-            // cAddPopupToFixed,
-            // cTestPopupInFixed,
+            Chain.wait(1000),
+            cAddPopupToFixed,
+            cTestPopupInFixed,
+
+            Chain.wait(1000),
+
+            Chain.op(function (data) {
+              Css.set(data.classic.element(), 'margin-top', '2000px');
+              window.scrollTo(0, 2000);
+              
+            }),
+
+            cAddPopupToRelative,
+            cTestPopupInRelative,
+
+            Chain.wait(1000),
+
+            cAddPopupToFixed,
+            cTestPopupInFixed,
+
+            Chain.wait(1000),
+
+            Chain.op(function (data) {
+              var iWin = data.classic.element().dom().contentWindow;
+
+              var path = Cursors.path({
+                startPath: [ 12 ],
+                soffset: 0,
+                finishPath: [ 13 ],
+                foffset: 0
+              });
+
+              var root = Element.fromDom(iWin.document.body);
+              var range = Cursors.calculate(root, path);
+              // Make a selection in the window.
+              
+              iWin.focus();
+              
+              WindowSelection.setExact(
+                iWin,
+                range.start(),
+                range.soffset(),
+                range.finish(),
+                range.foffset()
+              );
+
+              iWin.getSelection().getRangeAt(0).startContainer.scrollIntoView();
+              
+            }),
+            Chain.wait(1000),
+
+            cAddPopupToRelative,
+            cTestPopupInRelative,
+
+            Chain.wait(1000),
+
+            cAddPopupToFixed,
+            cTestPopupInFixed,
+
+            Chain.wait(1000),
 
             // NamedChain.bundle(function (data) {
             //   Css.set(data.list.element(), 'top', '1000px');
