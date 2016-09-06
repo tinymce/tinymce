@@ -25,10 +25,6 @@ define("ephox/imagetools/util/ImageResult", [
             return Conversions.canvasToBlob(canvas, type || initialType, quality);
         }
 
-        function toBlobSync(type, quality) {
-            return Conversions.dataUriToBlobSync(toDataURL(type, quality));
-        }
-
         function toDataURL(type, quality) {
             return canvas.toDataURL(type || initialType, quality);
         }
@@ -44,7 +40,6 @@ define("ephox/imagetools/util/ImageResult", [
         return {
             getType: getType,
             toBlob: toBlob,
-            toBlobSync: toBlobSync,
             toDataURL: toDataURL,
             toBase64: toBase64,
             toCanvas: toCanvas
