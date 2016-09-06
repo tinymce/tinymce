@@ -10,12 +10,14 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.perhaps.Result',
     'ephox.sugar.api.Compare',
+    'ephox.sugar.api.Css',
     'ephox.sugar.api.PredicateExists',
+    'ephox.sugar.api.Scroll',
     'global!Error',
     'global!setTimeout'
   ],
  
-  function (Chain, Guard, NamedChain, Step, GuiFactory, GuiSetup, Result, Compare, PredicateExists, Error, setTimeout) {
+  function (Chain, Guard, NamedChain, Step, GuiFactory, GuiSetup, Result, Compare, Css, PredicateExists, Scroll, Error, setTimeout) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -71,7 +73,7 @@ asynctest(
           styles: {
             position: 'absolute',
             left: '100px',
-            top: '450px'
+            top: '120px'
           }
         },
         uid: 'hotspot'
@@ -105,6 +107,49 @@ asynctest(
         return PredicateExists.closest(popupComponent.element(), isSink);
       };
 
+      var cAddPopupToRelative = NamedChain.bundle(function (data) {
+        data.relative.apis().addContainer(data.popup);
+        data.relative.apis().position({
+          anchor: 'hotspot',
+          hotspot: data.hotspot
+        }, data.popup);
+        return Result.value(data);
+      });
+
+      var cTestPopupInRelative = Chain.control(
+        NamedChain.bundle(function (data) {
+          var inside = isInside(data.relative, data.popup);
+          return inside ? Result.value(data) : Result.error(
+            new Error('The popup does not appear within the relative sink container')
+          );
+        }),
+        Guard.tryUntil('Ensuring that the popup is inside the relative sink', 100, 3000)
+      );
+
+      var cAddPopupToFixed = NamedChain.bundle(function (data) {
+        data.fixed.apis().addContainer(data.popup);
+        data.fixed.apis().position({
+          anchor: 'hotspot',
+          hotspot: data.hotspot
+        }, data.popup);
+        return Result.value(data);
+      });
+
+      var cTestPopupInFixed = Chain.control(
+        NamedChain.bundle(function (data) {
+          var inside = isInside(data.fixed, data.popup);
+          return inside ? Result.value(data) : Result.error(
+            new Error('The popup does not appear within the fixed sink container')
+          );
+        }),
+        Guard.tryUntil('Ensuring that the popup is inside the fixed sink', 100, 3000)
+      );
+
+      var cScrollToHotspot = NamedChain.direct('hotspot', Chain.mapper(function (hotspot) {
+        hotspot.element().dom().scrollIntoView();
+        return Scroll.get();
+      }), 'scrollValue');
+
       return [
         Chain.asStep({}, [
           NamedChain.asChain([
@@ -113,43 +158,21 @@ asynctest(
             NamedChain.direct('context', cFindUid('relative-sink'), 'relative'),
             NamedChain.direct('context', cFindUid('hotspot'), 'hotspot'),
             NamedChain.direct('context', cFindUid('popup'), 'popup'),
-            NamedChain.bundle(function (data) {
-              data.relative.apis().addContainer(data.popup);
-              data.relative.apis().position({
-                anchor: 'hotspot',
-                hotspot: data.hotspot
-              }, data.popup);
-              return Result.value(data);
-            }),
-            Chain.control(
-              NamedChain.bundle(function (data) {
-                var inside = isInside(data.relative, data.popup);
-                return inside ? Result.value(data) : Result.error(
-                  new Error('The popup does not appear within the relative sink container')
-                );
-              }),
-              Guard.tryUntil('Ensuring that the popup is inside the relative sink', 100, 3000)
-            ),
-            Chain.wait(2000),
+            cAddPopupToRelative,
+            cTestPopupInRelative,
+            cAddPopupToFixed,
+            cTestPopupInFixed,
 
             NamedChain.bundle(function (data) {
-              data.fixed.apis().addContainer(data.popup);
-              data.fixed.apis().position({
-                anchor: 'hotspot',
-                hotspot: data.hotspot
-              }, data.popup);
+              Css.set(data.hotspot.element(), 'top', '1000px');
               return Result.value(data);
             }),
-            Chain.control(
-              NamedChain.bundle(function (data) {
-                var inside = isInside(data.fixed, data.popup);
-                return inside ? Result.value(data) : Result.error(
-                  new Error('The popup does not appear within the fixed sink container')
-                );
-              }),
-              Guard.tryUntil('Ensuring that the popup is inside the fixed sink', 100, 3000)
-            ),
-            Chain.wait(2000)
+
+            cScrollToHotspot,
+            cAddPopupToRelative,
+            cTestPopupInRelative,
+            cAddPopupToFixed,
+            cTestPopupInFixed
           ])
         ])
       ];
