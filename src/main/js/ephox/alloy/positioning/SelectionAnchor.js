@@ -14,6 +14,7 @@ define(
     'ephox.repartee.api.Origins',
     'ephox.scullion.ADT',
     'ephox.scullion.Struct',
+    'ephox.sugar.api.Compare',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Location',
     'ephox.sugar.api.Node',
@@ -21,7 +22,7 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Descend, FieldSchema, WindowSelection, Awareness, Fun, Option, Bubble, Layout, MaxHeight, Origins, Adt, Struct, Element, Location, Node, Scroll, Traverse) {
+  function (Descend, FieldSchema, WindowSelection, Awareness, Fun, Option, Bubble, Layout, MaxHeight, Origins, Adt, Struct, Compare, Element, Location, Node, Scroll, Traverse) {
     var adt = Adt.generate([
       { 'page': [ ] },
       { 'idoc': [ 'absX', 'absY' ] }
@@ -40,11 +41,14 @@ define(
         var frameOwner = Traverse.owner(frame);
         var compOwner = Traverse.owner(component.element());
 
-        return frameOwner == compOwner;
+        console.log('frameOwner', frameOwner, 'compOwner', compOwner);
+
+        return Compare.eq(frameOwner, compOwner);
       };
 
       return Option.from(win.frameElement).map(Element.fromDom).filter(hasSameOwner).map(function (frame) {
-        return adt.idoc(Location.absolute(frame));
+        var location = Location.absolute(frame);
+        return adt.idoc(location.left(), location.top());
       }).getOrThunk(function () {
         return adt.page();
       });
@@ -62,21 +66,26 @@ define(
       var extraOffset = getExtraOffset(component, anchorInfo);
 
       var fallbackRect = makeRect({
-        x: 0,
+        x: 100,
         y: 0,
         width: 0,
         height: 0
       });
 
       var getSelection = anchorInfo.getSelection().getOrThunk(function () {
-        return WindowSelection.get(win);
+        return function () {
+          console.log('window.selection.get');
+          return WindowSelection.get(win);
+        };
       });
-      var rawAnchorBox = getSelection.bind(function (sel) {
+      var rawAnchorBox = getSelection().bind(function (sel) {
+        console.log('rawAnchorBox', sel);
         var rootEnd = Awareness.getEnd(anchorInfo.root());
         var modStart = modifyStart(sel.start(), sel.soffset());
         
 
         return WindowSelection.rectangleAt(win, modStart.element(), modStart.offset(), anchorInfo.root(), rootEnd).map(function (rect) {
+          console.log('rect', rect);
           return makeRect({
             x: rect.left,
             y: rect.top,

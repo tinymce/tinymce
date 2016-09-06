@@ -3,6 +3,7 @@ asynctest(
  
   [
     'ephox.agar.api.Chain',
+    'ephox.agar.api.Cursors',
     'ephox.agar.api.Guard',
     'ephox.agar.api.NamedChain',
     'ephox.alloy.api.GuiFactory',
@@ -19,7 +20,7 @@ asynctest(
     'global!setTimeout'
   ],
  
-  function (Chain, Guard, NamedChain, GuiFactory, GuiSetup, Sinks, WindowSelection, Result, Writer, Css, DomEvent, Element, Scroll, Error, setTimeout) {
+  function (Chain, Cursors, Guard, NamedChain, GuiFactory, GuiSetup, Sinks, WindowSelection, Result, Writer, Css, DomEvent, Element, Scroll, Error, setTimeout) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -36,7 +37,8 @@ asynctest(
             width: '200px',
             height: '150px',
             border: '1px solid black',
-            background: 'inherit'
+            background: 'inherit',
+            position: 'absolute'
           }
         },
         uid: 'popup'
@@ -59,6 +61,8 @@ asynctest(
           element: frame
         }
       });
+
+      Css.set(classicEditor.element(), 'margin-top', '300px');
 
       return GuiFactory.build({
         uiType: 'custom',
@@ -138,24 +142,34 @@ asynctest(
             Chain.wait(3000),
             NamedChain.bundle(function (data) {
 
-              // Make a selection in the window.
+              var path = Cursors.path({
+                startPath: [ 2, 0 ],
+                soffset: 0,
+                finishPath: [ 3, 0 ],
+                foffset: 0
+              });
+
               var win = data.classic.element().dom().contentWindow;
-              win.focus();
-              console.log('win', win);
               var root = Element.fromDom(win.document.body);
+              var range = Cursors.calculate(root, path);
+              // Make a selection in the window.
+              
+              win.focus();
               
               WindowSelection.setExact(
                 win,
-                body,
-                0,
-                body,
-                1
+                range.start(),
+                range.soffset(),
+                range.finish(),
+                range.foffset()
               );
-debugger;
               return Result.value(data);
             }),
             cAddPopupToRelative,
-            // cTestPopupInRelative,
+            cTestPopupInRelative,
+
+
+            Chain.wait(100000),
             // cAddPopupToFixed,
             // cTestPopupInFixed,
 
