@@ -62,7 +62,7 @@ define("ephox/imagetools/util/ImageResult", [
 
     function fromCanvas(canvas, type) {
         return new Promise(function(resolve) {
-            resolve(create(Canvas.clone(canvas), type));
+            resolve(create(canvas, type));
         });
     }
 
