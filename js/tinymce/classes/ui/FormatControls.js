@@ -197,6 +197,7 @@ define("tinymce/ui/FormatControls", [
 
 			return {
 				type: 'menu',
+				root: true,
 				items: createStylesMenu(),
 				onPostRender: function(e) {
 					editor.fire('renderFormatsMenu', {control: e.control});
@@ -429,10 +430,59 @@ define("tinymce/ui/FormatControls", [
 			}
 		}
 
+		function hideMenuObjects(menu) {
+			var count = menu.length;
+
+			Tools.each(menu, function (item) {
+				if (item.menu) {
+					item.hidden = hideMenuObjects(item.menu) === 0;
+				}
+
+				var formatName = item.format;
+				if (formatName) {
+					item.hidden = !editor.formatter.canApply(formatName);
+				}
+
+				if (item.hidden) {
+					count--;
+				}
+			});
+
+			return count;
+		}
+
+		function hideFormatMenuItems(menu) {
+			var count = menu.items().length;
+
+			menu.items().each(function (item) {
+				if (item.menu) {
+					item.visible(hideFormatMenuItems(item.menu) > 0);
+				}
+
+				if (!item.menu && item.settings.menu) {
+					item.visible(hideMenuObjects(item.settings.menu) > 0);
+				}
+
+				var formatName = item.settings.format;
+				if (formatName) {
+					item.visible(editor.formatter.canApply(formatName));
+				}
+
+				if (!item.visible()) {
+					count--;
+				}
+			});
+
+			return count;
+		}
+
 		editor.addButton('styleselect', {
 			type: 'menubutton',
 			text: 'Formats',
-			menu: formatMenu
+			menu: formatMenu,
+			onShowMenu: function () {
+				hideFormatMenuItems(this.menu);
+			}
 		});
 
 		editor.addButton('formatselect', function() {
