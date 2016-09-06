@@ -7,68 +7,68 @@ define(
   ],
 
   function (Filters, ImageTools) {
-    var invert = function (blob) {
-      return Filters.invert(blob);
+    var invert = function (ir) {
+      return Filters.invert(ir);
     };
 
-    var sharpen = function (blob) {
-      return Filters.sharpen(blob);
+    var sharpen = function (ir) {
+      return Filters.sharpen(ir);
     };
 
-    var emboss = function (blob) {
-      return Filters.emboss(blob);
+    var emboss = function (ir) {
+      return Filters.emboss(ir);
     };
 
-    var gamma = function (blob, value) {
-      return Filters.gamma(blob, value);
+    var gamma = function (ir, value) {
+      return Filters.gamma(ir, value);
     };
 
-    var exposure = function (blob, value) {
-      return Filters.exposure(blob, value);
+    var exposure = function (ir, value) {
+      return Filters.exposure(ir, value);
     };
 
-    var colorize = function (blob, adjustR, adjustG, adjustB) {
-      return Filters.colorize(blob, adjustR, adjustG, adjustB);
+    var colorize = function (ir, adjustR, adjustG, adjustB) {
+      return Filters.colorize(ir, adjustR, adjustG, adjustB);
     };
 
-    var brightness = function (blob, adjust) {
-      return Filters.brightness(blob, adjust);
+    var brightness = function (ir, adjust) {
+      return Filters.brightness(ir, adjust);
     };
 
-    var hue = function (blob, adjust) {
-      return Filters.hue(blob, adjust);
+    var hue = function (ir, adjust) {
+      return Filters.hue(ir, adjust);
     };
 
-    var saturate = function (blob, adjust) {
-      return Filters.saturate(blob, adjust);
+    var saturate = function (ir, adjust) {
+      return Filters.saturate(ir, adjust);
     };
 
-    var contrast = function (blob, adjust) {
-      return Filters.contrast(blob, adjust);
+    var contrast = function (ir, adjust) {
+      return Filters.contrast(ir, adjust);
     };
 
-    var grayscale = function (blob, adjust) {
-      return Filters.grayscale(blob, adjust);
+    var grayscale = function (ir, adjust) {
+      return Filters.grayscale(ir, adjust);
     };
 
-    var sepia = function (blob, adjust) {
-      return Filters.sepia(blob, adjust);
+    var sepia = function (ir, adjust) {
+      return Filters.sepia(ir, adjust);
     };
 
-    var flip = function (blob, axis) {
-      return ImageTools.flip(blob, axis);
+    var flip = function (ir, axis) {
+      return ImageTools.flip(ir, axis);
     };
 
-    var crop = function (blob, x, y, w, h) {
-      return ImageTools.crop(blob, x, y, w, h);
+    var crop = function (ir, x, y, w, h) {
+      return ImageTools.crop(ir, x, y, w, h);
     };
 
-    var resize = function (blob, w, h) {
-      return ImageTools.resize(blob, w, h);
+    var resize = function (ir, w, h) {
+      return ImageTools.resize(ir, w, h);
     };
 
-    var rotate = function (blob, angle) {
-      return ImageTools.rotate(blob, angle);
+    var rotate = function (ir, angle) {
+      return ImageTools.rotate(ir, angle);
     };
 
     return {

@@ -19,15 +19,13 @@ define(
       }
 
       function modify(image, op, args) {
-          BlobConversions.imageToBlob(image)
-              .then(function (blob) {
-                  args.unshift(blob);
-                  return ImageTransformations[op].apply(null, args);
-              })
-              .then(BlobConversions.blobToDataUri)
-              .then(function (data) {
-                  image.src = data;
-              });
+          BlobConversions.imageToImageResult(image).then(function(ir) {
+              args.unshift(ir);
+              return ImageTransformations[op].apply(null, args)
+                  .then(function (imageResult) {
+                      image.src = imageResult.toDataURL();
+                  });
+          });
       }
 
       var forms = document.querySelectorAll('.options');
