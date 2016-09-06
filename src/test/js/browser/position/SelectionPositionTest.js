@@ -1,5 +1,5 @@
 asynctest(
-  'SubmenuPositionTest',
+  'SelectionPositionTest',
  
   [
     'ephox.agar.api.Chain',
@@ -8,14 +8,18 @@ asynctest(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.Sinks',
+    'ephox.fussy.api.WindowSelection',
     'ephox.perhaps.Result',
+    'ephox.photon.Writer',
     'ephox.sugar.api.Css',
+    'ephox.sugar.api.DomEvent',
+    'ephox.sugar.api.Element',
     'ephox.sugar.api.Scroll',
     'global!Error',
     'global!setTimeout'
   ],
  
-  function (Chain, Guard, NamedChain, GuiFactory, GuiSetup, Sinks, Result, Css, Scroll, Error, setTimeout) {
+  function (Chain, Guard, NamedChain, GuiFactory, GuiSetup, Sinks, WindowSelection, Result, Writer, Css, DomEvent, Element, Scroll, Error, setTimeout) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -38,30 +42,22 @@ asynctest(
         uid: 'popup'
       });
 
-      var item = GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'li',
-          innerHtml: 'Trigger Item'
-        },
-        
-        uid: 'test-item'
+      var content = '';
+      for (var i = 0; i < 20; i++) {
+        content += '<p>paragraph ' + i  + '</p>';
+      }
+
+      var frame = Element.fromTag('iframe');
+      var onload = DomEvent.bind(frame, 'load', function () {
+        onload.unbind();
+        Writer.write(frame, '<html><body contenteditable="true">' + content + '</body></html>');
       });
 
-      var list = GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'ol',
-          styles: {
-            position: 'absolute',
-            left: '400px',
-            top: '140px'
-          }
-        },
-        uid: 'test-list',
-        components: [
-          { built: item }
-        ]
+      var classicEditor = GuiFactory.build({
+        external: {
+          uid: 'classic-editor',
+          element: frame
+        }
       });
 
       return GuiFactory.build({
@@ -73,7 +69,7 @@ asynctest(
           { built: fixedSink },
           { built: relativeSink },
           { built: popup },
-          { built: list }
+          { built: classicEditor }
         ]
       });
 
@@ -84,11 +80,14 @@ asynctest(
         });
       };
 
+      var classicEditor = component.components()[3];
+      console.log('classicEditor', classicEditor);
+
       var cAddPopupToRelative = NamedChain.bundle(function (data) {
         data.relative.apis().addContainer(data.popup);
         data.relative.apis().position({
-          anchor: 'submenu',
-          item: data.item
+          anchor: 'selection',
+          root: Element.fromDom(data.classic.element().dom().contentWindow.document.body),
         }, data.popup);
         return Result.value(data);
       });
@@ -133,24 +132,43 @@ asynctest(
             NamedChain.writeValue('context', gui),
             NamedChain.direct('context', cFindUid('fixed-sink'), 'fixed'),
             NamedChain.direct('context', cFindUid('relative-sink'), 'relative'),
-            NamedChain.direct('context', cFindUid('test-list'), 'list'),
-            NamedChain.direct('context', cFindUid('test-item'), 'item'),
+            NamedChain.direct('context', cFindUid('classic-editor'), 'classic'),
             NamedChain.direct('context', cFindUid('popup'), 'popup'),
-            cAddPopupToRelative,
-            cTestPopupInRelative,
-            cAddPopupToFixed,
-            cTestPopupInFixed,
 
+            Chain.wait(3000),
             NamedChain.bundle(function (data) {
-              Css.set(data.list.element(), 'top', '1000px');
+
+              // Make a selection in the window.
+              var win = data.classic.element().dom().contentWindow;
+              win.focus();
+              console.log('win', win);
+              var root = Element.fromDom(win.document.body);
+              
+              WindowSelection.setExact(
+                win,
+                body,
+                0,
+                body,
+                1
+              );
+debugger;
               return Result.value(data);
             }),
-
-            cScrollToItem,
             cAddPopupToRelative,
-            cTestPopupInRelative,
-            cAddPopupToFixed,
-            cTestPopupInFixed
+            // cTestPopupInRelative,
+            // cAddPopupToFixed,
+            // cTestPopupInFixed,
+
+            // NamedChain.bundle(function (data) {
+            //   Css.set(data.list.element(), 'top', '1000px');
+            //   return Result.value(data);
+            // }),
+
+            // cScrollToItem,
+            // cAddPopupToRelative,
+            // cTestPopupInRelative,
+            // cAddPopupToFixed,
+            // cTestPopupInFixed
           ])
         ])
       ];
