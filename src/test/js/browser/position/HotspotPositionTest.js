@@ -124,8 +124,10 @@ asynctest(
             NamedChain.direct('context', cFindUid('popup'), 'popup'),
             cAddPopupToRelative,
             cTestPopupInRelative,
+            Chain.wait(1000),
             cAddPopupToFixed,
             cTestPopupInFixed,
+            Chain.wait(1000),
 
             NamedChain.bundle(function (data) {
               Css.set(data.hotspot.element(), 'top', '1000px');
@@ -135,8 +137,10 @@ asynctest(
             cScrollToHotspot,
             cAddPopupToRelative,
             cTestPopupInRelative,
+            Chain.wait(1000),
             cAddPopupToFixed,
-            cTestPopupInFixed
+            cTestPopupInFixed,
+            Chain.wait(1000)
           ])
         ])
       ];

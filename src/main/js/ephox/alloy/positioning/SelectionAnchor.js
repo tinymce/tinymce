@@ -54,14 +54,12 @@ define(
           var point = CssPosition.screen(
             Position(rawRect.left, rawRect.top)
           );
-          debugger;
           return Boxes.pointed(point, rawRect.width, rawRect.height);
         });
       });
 
       return selectionBox.map(function (box) {
         var points = [ rootPoint, box.point() ];
-        debugger;
         var topLeft = Origins.cata(origin,
           function () {
             return CssPosition.sumAsAbsolute(points);
