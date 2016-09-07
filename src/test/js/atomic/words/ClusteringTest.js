@@ -13,6 +13,12 @@ test(
 
   function (Gene, TestUniverse, TextGene, Arr, Fun, Option, Clustering) {
 
+    var checkLang  = function (universe, id, lang) {
+        var item = universe.find(universe.get(), id).getOrDie();
+        var itemLang = Clustering.language(universe, item);
+        assert.eq(true, Option.equals(lang, itemLang));
+    };
+
     var checkWords  = function (universe, words) {
       return Arr.map(words, function (a) {
         var text = universe.property().getText(a.item());
@@ -25,7 +31,7 @@ test(
       assert.eq(expLeft,   checkWords(universe, act.left()));
       assert.eq(expMiddle, checkWords(universe, act.middle()));
       assert.eq(expRight,  checkWords(universe, act.right()));
-      assert.eq(true, Option.equals(expLang, act.lang()));
+      assert.eq(true, Option.equals(expLang, act.lang()), 'language mismatch: '+expLang.getOr('NONE') + ' <> ' + act.lang().getOr('NONE'));
       // .all() is:  tfel + middle + right
       assert.eq(expLeft.reverse().concat(expMiddle).concat(expRight), checkWords(universe, act.all()));
     };
@@ -156,17 +162,151 @@ test(
     checkAll(uniNoLang, ['l', 'sp'], ['it'], ['word', 'and'], Option.none(), 'p4it'); // left/right are text nodes without spaces
     checkAll(uniNoLang, ['it', 'l', 'sp'], ['word'], ['and'], Option.none(), 'p4word'); // left/right are text nodes without spaces
     checkAll(uniNoLang, ['word', 'it', 'l', 'sp'], ['and'], [], Option.none(), 'p4and'); // left/right are text nodes without spaces
-    // NOTE: next line looks like a bug? 
+    // NOTE: next line looks wrong? 
     // ' not ' has a space either side of the word, so dont need to expand left?
     // - compare the line after, it doesent capture the not to the left 
     checkAll(uniNoLang, ['and', 'word', 'it', 'l', 'sp'], [' not '], [], Option.none(), 'p4_not_'); // left is a sibling word
     checkAll(uniNoLang, [], [' this '], [], Option.none(), 'p4_this_'); 
 
-    // //////////////////////////
-    // Universe with NO ROOT LANG
+    // //////////////////////////////////////
+    // LANG Attr + Universe with NO ROOT LANG
+    var uniSpanLang = TestUniverse(
+      Gene('root', 'root', [
+        // <p id=p1> <span1> "sp" <span2> "l" <span3 lang=FR> "it" "word" </span3> "and" </span2> " not " </span1> " this " </p>
+        Gene('p1', 'p', [
+          Gene('p1s1', 'span', [
+            TextGene('p1sp', 'sp'),
+            Gene('p1s2', 'span', [
+              TextGene('p1l', 'l'),
+              Gene('p1s3', 'span', [
+                TextGene('p1it', 'it'),
+                TextGene('p1word', 'word')
+              ], {}, {'lang': 'FR'}),
+              TextGene('p1and', 'and')
+            ]),
+            TextGene('p1_not_', ' not ')
+          ]),
+          TextGene('p1_this_', ' this ')
+        ]),
+        // <p id=p2 lang=DE> <span1> "sp" <span2> "l" <span3> "it" "word" </span3> "and" </span2> " not " </span1> " this " </p>
+        Gene('p2', 'p', [
+          Gene('p2s1', 'span', [
+            TextGene('p2sp', 'sp'),
+            Gene('p2s2', 'span', [
+              TextGene('p2l', 'l'),
+              Gene('p2s3', 'span', [
+                TextGene('p2it', 'it'),
+                TextGene('p2word', 'word')
+              ]),
+              TextGene('p2and', 'and')
+            ]),
+            TextGene('p2_not_', ' not ')
+          ]),
+          TextGene('p2_this_', ' this ')
+        ], {}, {'lang': 'DE'}),
+        // <p id=p3 lang=DE> <span1> "sp" <span2> "l" <span3 lang=FR> "it" "word" </span3> "and" </span2> " not " </span1> " this " </p>
+        Gene('p3', 'p', [
+          Gene('p3s1', 'span', [
+            TextGene('p3sp', 'sp'),
+            Gene('p3s2', 'span', [
+              TextGene('p3l', 'l'),
+              Gene('p3s3', 'span', [
+                TextGene('p3it', 'it'),
+                TextGene('p3word', 'word')
+              ], {}, {'lang': 'FR'}),
+              TextGene('p3and', 'and')
+            ]),
+            TextGene('p3_not_', ' not ')
+          ]),
+          TextGene('p3_this_', ' this ')
+        ], {}, {'lang': 'DE'})
+      ]) // root
+    );
 
-    // //////////////////////////
-    // Universe WITH ROOT LANG
+    checkLang(uniSpanLang, 'p1',   Option.none());
+    checkLang(uniSpanLang, 'p1s1', Option.none());
+    checkLang(uniSpanLang, 'p1s2', Option.none());
+    checkLang(uniSpanLang, 'p1s3', Option.some('FR'));
+    checkLang(uniSpanLang, 'p2',   Option.some('DE'));
+    checkLang(uniSpanLang, 'p2s1', Option.some('DE'));
+    checkLang(uniSpanLang, 'p2s2', Option.some('DE'));
+    checkLang(uniSpanLang, 'p2s3', Option.some('DE'));
+    checkLang(uniSpanLang, 'p3',   Option.some('DE'));
+    checkLang(uniSpanLang, 'p3s1', Option.some('DE'));
+    checkLang(uniSpanLang, 'p3s2', Option.some('DE'));
+    checkLang(uniSpanLang, 'p3s3', Option.some('FR'));
+
+    // TODO: Part of TBIO-470: fix known multi-language problem where we currently assume the 'middle' text is all one langugae. 
+    //       We should check the language of sub-elements, but this requires changes to TypedNode. 
+
+    // <p id=p1> <span1> "sp" <span2> "l" <span3 lang=FR> "it" "word" </span3> "and" </span2> " not " </span1> " this " </p>
+
+    // Should be: checkAll(uniSpanLang, [], [ 'sp', 'l', 'and', ' not ', ' this ' ], [], Option.none(), 'p1');
+    checkAll(uniSpanLang, [], [ 'sp', 'l', 'it', 'word', 'and', ' not ', ' this ' ], [], Option.none(), 'p1');
+    // Sholud be: checkAll(uniSpanLang, [], [ 'sp', 'l', 'and', ' not '], [], Option.none(), 'p1s1');
+    checkAll(uniSpanLang, [], [ 'sp', 'l', 'it', 'word', 'and', ' not '], [], Option.none(), 'p1s1');
+    // Should be: checkAll(uniSpanLang, [], [ 'sp'], ['l', 'and'], Option.none(), 'p1sp');
+    checkAll(uniSpanLang, [], [ 'sp'], ['l', 'it', 'word', 'and'], Option.none(), 'p1sp');
+    // Should be: checkAll(uniSpanLang, ['sp'], ['l', 'and'], [], Option.none(), 'p1s2');
+    checkAll(uniSpanLang, ['sp'], ['l', 'it', 'word', 'and'], [], Option.none(), 'p1s2');
+    // Should be: checkAll(uniSpanLang, ['sp'], ['l'], ['and'], Option.none(), 'p1l'); 
+    checkAll(uniSpanLang, ['sp'], ['l'], ['it', 'word', 'and'], Option.none(), 'p1l');     
+    // Should be: checkAll(uniSpanLang, ['l', 'sp'], [], ['and'], Option.none(), 'p1s3');
+    checkAll(uniSpanLang, ['l', 'sp'], ['it','word'], ['and'], Option.some('FR'), 'p1s3');
+    // OK:
+    checkAll(uniSpanLang, [], ['it'], ['word'], Option.some('FR'), 'p1it');
+    checkAll(uniSpanLang, ['it'], ['word'], [], Option.some('FR'), 'p1word');
+    // Should be: checkAll(uniSpanLang, [], ['and'], [], Option.none(), 'p1and');
+    checkAll(uniSpanLang, ['word', 'it', 'l', 'sp'], ['and'], [], Option.none(), 'p1and');
+    // Should be: checkAll(uniSpanLang, ['and'], [' not '], [], Option.none(), 'p1_not_');
+    checkAll(uniSpanLang, ['and', 'word', 'it', 'l', 'sp'], [' not '], [], Option.none(), 'p1_not_');
+    // OK
+    checkAll(uniSpanLang, [], [' this '], [], Option.none(), 'p1_this_'); 
+
+    // <p id=p2> <span1 lang=DE> "sp" <span2> "l" <span3> "it" "word" </span3> "and" </span2> " not " </span1> " this " </p>
+    // same as p4 in first example, but with lang=DE, not None
+    checkAll(uniSpanLang, [], [ 'sp', 'l', 'it', 'word', 'and', ' not ', ' this ' ], [], Option.some('DE'), 'p2');
+    checkAll(uniSpanLang, [], [ 'sp', 'l', 'it', 'word', 'and', ' not '], [], Option.some('DE'), 'p2s1');
+    checkAll(uniSpanLang, [], [ 'sp'], ['l', 'it', 'word', 'and'], Option.some('DE'), 'p2sp'); // right is text nodes without spaces
+    checkAll(uniSpanLang, ['sp'], ['l', 'it', 'word', 'and'], [], Option.some('DE'), 'p2s2'); // left is text nodes without spaces
+    checkAll(uniSpanLang, ['sp'], ['l'], ['it', 'word', 'and'], Option.some('DE'), 'p2l'); // left/right are text nodes without spaces
+    checkAll(uniSpanLang, ['l', 'sp'], ['it','word'], ['and'], Option.some('DE'), 'p2s3'); // left/right are text nodes without spaces
+    checkAll(uniSpanLang, ['l', 'sp'], ['it'], ['word', 'and'], Option.some('DE'), 'p2it'); // left/right are text nodes without spaces
+    checkAll(uniSpanLang, ['it', 'l', 'sp'], ['word'], ['and'], Option.some('DE'), 'p2word'); // left/right are text nodes without spaces
+    checkAll(uniSpanLang, ['word', 'it', 'l', 'sp'], ['and'], [], Option.some('DE'), 'p2and'); // left/right are text nodes without spaces
+    // NOTE: next line looks wrong? 
+    // ' not ' has a space either side of the word, so dont need to expand left?
+    // - compare the line after, it doesent capture the not to the left 
+    checkAll(uniSpanLang, ['and', 'word', 'it', 'l', 'sp'], [' not '], [], Option.some('DE'), 'p2_not_'); // left is a sibling word
+    checkAll(uniSpanLang, [], [' this '], [], Option.some('DE'), 'p2_this_'); 
+
+    // <p id=p3 lang=DE> <span1> "sp" <span2> "l" <span3 lang=FR> "it" "word" </span3> "and" </span2> " not " </span1> " this " </p>
+    // checkAll(uniSpanLang, [], [ 'sp', 'l', 'and', ' not ', ' this ' ], [], Option.some('DE'), 'p3');
+    checkAll(uniSpanLang, [], [ 'sp', 'l', 'it', 'word', 'and', ' not ', ' this ' ], [], Option.some('DE'), 'p3');
+    // Should be: checkAll(uniSpanLang, [], [ 'sp', 'l', 'and', ' not '], [], Option.some('DE'), 'p3s1');
+    checkAll(uniSpanLang, [], [ 'sp', 'l', 'it', 'word', 'and', ' not '], [], Option.some('DE'), 'p3s1');
+    // Should be: checkAll(uniSpanLang, [], [ 'sp'], ['l', 'and'], Option.some('DE'), 'p3sp'); // right is text nodes without spaces
+    checkAll(uniSpanLang, [], [ 'sp'], ['l', 'it', 'word', 'and'], Option.some('DE'), 'p3sp'); // right is text nodes without spaces
+    // Should be: checkAll(uniSpanLang, ['sp'], ['l', 'and'], [], Option.some('DE'), 'p3s2'); // left is text nodes without spaces
+    checkAll(uniSpanLang, ['sp'], ['l', 'it', 'word', 'and'], [], Option.some('DE'), 'p3s2'); // left is text nodes without spaces
+    // Should be: checkAll(uniSpanLang, ['sp'], ['l'], ['and'], Option.some('DE'), 'p3l'); // left/right are text nodes without spaces
+    checkAll(uniSpanLang, ['sp'], ['l'], ['it', 'word', 'and'], Option.some('DE'), 'p3l'); // left/right are text nodes without spaces
+    // Should be: checkAll(uniSpanLang, [], ['it','word'], [], Option.some('FR'), 'p3s3'); // left/right are text nodes without spaces
+    checkAll(uniSpanLang, ['l', 'sp'], ['it','word'], ['and'], Option.some('FR'), 'p3s3'); // left/right are text nodes without spaces
+    // OK:
+    checkAll(uniSpanLang, [], ['it'], ['word'], Option.some('FR'), 'p3it'); // left/right are text nodes without spaces
+    checkAll(uniSpanLang, ['it'], ['word'], [], Option.some('FR'), 'p3word'); // left/right are text nodes without spaces
+    // Should be: checkAll(uniSpanLang, ['l', 'sp'], ['and'], [], Option.some('DE'), 'p3and'); // left/right are text nodes without spaces
+    checkAll(uniSpanLang, ['word', 'it', 'l', 'sp'], ['and'], [], Option.some('DE'), 'p3and'); // left/right are text nodes without spaces
+    // // NOTE: next line looks wrong? 
+    // // ' not ' has a space either side of the word, so dont need to expand left?
+    // // - compare the line after, it doesent capture the not to the left 
+    // Should be: checkAll(uniSpanLang, ['and', 'l', 'sp'], [' not '], [], Option.some('DE'), 'p3_not_'); // left is a sibling word
+    checkAll(uniSpanLang, ['and', 'word', 'it', 'l', 'sp'], [' not '], [], Option.some('DE'), 'p3_not_'); // left is a sibling word
+    checkAll(uniSpanLang, [], [' this '], [], Option.some('DE'), 'p3_this_'); 
+
+    // //////////////////////////////////////
+    // LANG Attr + Universe WITH ROOT LANG
 
   }
 );
