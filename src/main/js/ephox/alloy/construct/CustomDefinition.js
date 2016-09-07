@@ -6,6 +6,7 @@ define(
     'ephox.alloy.behaviour.Coupling',
     'ephox.alloy.behaviour.Focusing',
     'ephox.alloy.behaviour.Keying',
+    'ephox.alloy.behaviour.Positioning',
     'ephox.alloy.behaviour.Receiving',
     'ephox.alloy.behaviour.Tabstopping',
     'ephox.alloy.behaviour.Toggling',
@@ -21,7 +22,7 @@ define(
     'global!Error'
   ],
 
-  function (Changing, Coupling, Focusing, Keying, Receiving, Tabstopping, Toggling, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
+  function (Changing, Coupling, Focusing, Keying, Positioning, Receiving, Tabstopping, Toggling, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
     var domSchema = ValueSchema.objOf([
       FieldSchema.strict('tag'),
       FieldSchema.defaulted('styles', {}),
@@ -101,7 +102,8 @@ define(
       Focusing,
       Receiving,
       Coupling,
-      Changing
+      Changing,
+      Positioning
     ];
 
     var behaviours = function (info) {

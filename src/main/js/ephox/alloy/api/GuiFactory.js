@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.Component',
+    'ephox.alloy.api.ExternalComponent',
     'ephox.alloy.events.DefaultEvents',
     'ephox.alloy.spec.ButtonSpec',
     'ephox.alloy.spec.CustomSpec',
@@ -19,17 +20,22 @@ define(
     'global!Error'
   ],
 
-  function (Component, DefaultEvents, ButtonSpec, CustomSpec, FormLabelSpec, InputSpec, Objects, Arr, Obj, Merger, Json, Fun, Option, Result, Error) {
+  function (Component, ExternalComponent, DefaultEvents, ButtonSpec, CustomSpec, FormLabelSpec, InputSpec, Objects, Arr, Obj, Merger, Json, Fun, Option, Result, Error) {
     var knownSpecs = {
       custom: CustomSpec.make,
       button: ButtonSpec.make,
       input: InputSpec.make,
       formlabel: FormLabelSpec.make
+
       // Add other specs here.
     };
 
     var getPrebuilt = function (userSpec) {
       return userSpec.built !== undefined ? Option.some(userSpec.built) : Option.none();
+    };
+
+    var getExternal = function (userSpec) {
+      return userSpec.external !== undefined ? Option.some(userSpec.external) : Option.none();
     };
 
     var unknownSpec = function (uiType) {
@@ -71,9 +77,16 @@ define(
       });
     };
 
+    // INVESTIGATE: A better way to provide 'meta-specs'
     var build = function (userSpec) {
       var component = getPrebuilt(userSpec).fold(function () {
-        return buildFromSpec(userSpec);
+        return getExternal(userSpec).fold(function () {
+          return buildFromSpec(userSpec);
+        }, function (elem) {
+          return Result.value(
+            ExternalComponent.build(elem)
+          );
+        });
       }, Result.value);
 
       return component.getOrDie();
@@ -83,4 +96,4 @@ define(
       build: build
     };
   }
-);
+);  
