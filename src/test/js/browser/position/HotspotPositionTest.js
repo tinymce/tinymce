@@ -50,43 +50,12 @@ asynctest(
       });
 
     }, function (doc, body, gui, component, store) {
-      var cAddPopupToRelative = NamedChain.bundle(function (data) {
-        data.relative.apis().addContainer(data.popup);
-        data.relative.apis().position({
+      var cSetupAnchor = Chain.mapper(function (hotspot) {
+        return {
           anchor: 'hotspot',
-          hotspot: data.hotspot
-        }, data.popup);
-        return Result.value(data);
+          hotspot: hotspot
+        };
       });
-
-      var cTestPopupInRelative = Chain.control(
-        NamedChain.bundle(function (data) {
-          var inside = Sinks.isInside(data.relative, data.popup);
-          return inside ? Result.value(data) : Result.error(
-            new Error('The popup does not appear within the relative sink container')
-          );
-        }),
-        Guard.tryUntil('Ensuring that the popup is inside the relative sink', 100, 3000)
-      );
-
-      var cAddPopupToFixed = NamedChain.bundle(function (data) {
-        data.fixed.apis().addContainer(data.popup);
-        data.fixed.apis().position({
-          anchor: 'hotspot',
-          hotspot: data.hotspot
-        }, data.popup);
-        return Result.value(data);
-      });
-
-      var cTestPopupInFixed = Chain.control(
-        NamedChain.bundle(function (data) {
-          var inside = Sinks.isInside(data.fixed, data.popup);
-          return inside ? Result.value(data) : Result.error(
-            new Error('The popup does not appear within the fixed sink container')
-          );
-        }),
-        Guard.tryUntil('Ensuring that the popup is inside the fixed sink', 100, 3000)
-      );
 
       return [
         Chain.asStep({}, [
@@ -98,52 +67,17 @@ asynctest(
               'hotspot': 'hotspot'
             }),
 
-            ChainUtils.cLogging(
-              'Relative, not scrolled',
-              [
-                cAddPopupToRelative,
-                cTestPopupInRelative
-              ]
-            ),
+            NamedChain.direct('hotspot', cSetupAnchor, 'anchor'),
 
+            PositionTestUtils.cTestSink('Relative, not scrolled', 'relative'),
+            Chain.wait(1000),
+            PositionTestUtils.cTestSink('Fixed, not scrolled', 'fixed'),
             Chain.wait(1000),
 
-            ChainUtils.cLogging(
-              'Fixed, not scrolled',
-              [
-                cAddPopupToFixed,
-                cTestPopupInFixed
-              ]
-            ),
-            
+            PositionTestUtils.cScrollDown('hotspot', '1000px'),
+            PositionTestUtils.cTestSink('Relative, scrolled 1000px', 'relative'),
             Chain.wait(1000),
-
-            ChainUtils.cLogging(
-              'Adding margin to hotspot and scrolling to it',
-              [
-                NamedChain.direct('hotspot', PositionTestUtils.cAddTopMargin('1000px'), '_'),
-                NamedChain.direct('hotspot', PositionTestUtils.cScrollTo, 'scroll')
-              ]
-            ),
-            
-
-            ChainUtils.cLogging(
-              'Relative, scrolled 1000px',
-              [
-                cAddPopupToRelative,
-                cTestPopupInRelative
-              ]
-            ),
-
-            Chain.wait(1000),
-
-            ChainUtils.cLogging(
-              'Fixed, scrolled 1000px',
-              [
-                cAddPopupToFixed,
-                cTestPopupInFixed
-              ]
-            ),
+            PositionTestUtils.cTestSink('Fixed, scrolled 1000px', 'fixed'),
             
             Chain.wait(1000)
           ])
