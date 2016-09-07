@@ -41,7 +41,7 @@ define(
             dom: {
               tag: 'div',
               styles: {
-                'padding': '30px',
+                'padding': '10px',
                 background: 'white',
                 border: '2px solid black'
               }
@@ -112,6 +112,48 @@ define(
                     }, popup);
                   }
                 })
+              }
+            }
+          ]
+        }
+      );
+
+      var section3 = HtmlDisplay.section(
+        gui,
+        'Position anchoring to text selection',
+        {
+          uiType: 'custom',
+          dom: {
+            tag: 'div'
+          },
+          components: [
+            {
+              uiType: 'custom',
+              dom: {
+                tag: 'div',
+                attributes: {
+                  'contenteditable': 'true'
+                },
+                styles: {
+                  border: '1px solid green',
+                  width: '150px',
+                  display: 'inline-block'
+                },
+                innerHtml: '<p>One</p><p>Two</p><p>Three</p><p>Four</p><p>Five</p><p>Six</p>'
+              },
+              uid: 'text-editor'
+            },
+            {
+              uiType: 'button',
+              text: 'Show popup at cursor',
+              action: function (button) {
+                sink.apis().addContainer(popup);
+                sink.apis().position({
+                  anchor: 'selection',
+                  root: button.getSystem().getByUid('text-editor').getOrDie(
+                    'Could not find text editor'
+                  ).element()
+                }, popup);
               }
             }
           ]
