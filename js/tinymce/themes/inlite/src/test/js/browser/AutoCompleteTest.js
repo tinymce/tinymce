@@ -40,19 +40,22 @@ asynctest('browser/AutoCompleteTest', [
 
 	var sSelectAutoCompleteLink = function (tinyApis, url) {
 		return Chain.asStep({}, [
-			Toolbar.cWaitForToolbar,
-			Toolbar.cClickButton('Insert/Edit link'),
-			Toolbar.cWaitForToolbar,
-			UiFinder.cFindIn('input'),
-			UiControls.cSetValue(url),
-			cKeyStroke(Keys.space(), {}),
-			cKeyStroke(Keys.down(), {}),
+			Chain.fromParent(Toolbar.cWaitForToolbar, [
+				Toolbar.cClickButton('Insert/Edit link')
+			]),
+			Chain.fromParent(UiFinder.cFindIn('input'), [
+				UiControls.cSetValue(url),
+				cKeyStroke(Keys.space(), {}),
+				cKeyStroke(Keys.down(), {})
+			]),
 			Chain.inject(TinyDom.fromDom(document)),
-			FocusTools.cGetFocused,
-			cKeyStroke(Keys.down(), {}),
-			cKeyStroke(Keys.enter(), {}),
-			Toolbar.cWaitForToolbar,
-			Toolbar.cClickButton('Ok')
+			Chain.fromParent(FocusTools.cGetFocused, [
+				cKeyStroke(Keys.down(), {}),
+				cKeyStroke(Keys.enter(), {})
+			]),
+			Chain.fromParent(Toolbar.cWaitForToolbar, [
+				Toolbar.cClickButton('Ok')
+			])
 		]);
 	};
 
