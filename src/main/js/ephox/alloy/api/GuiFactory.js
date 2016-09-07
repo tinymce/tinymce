@@ -77,6 +77,7 @@ define(
       });
     };
 
+    // INVESTIGATE: A better way to provide 'meta-specs'
     var build = function (userSpec) {
       var component = getPrebuilt(userSpec).fold(function () {
         return getExternal(userSpec).fold(function () {

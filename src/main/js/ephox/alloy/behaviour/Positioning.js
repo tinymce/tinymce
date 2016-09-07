@@ -5,7 +5,6 @@ define(
     'ephox.alloy.behaviour.Behaviour',
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.positioning.AnchorSchema',
-    'ephox.alloy.positioning.Anchoring',
     'ephox.alloy.positioning.PopupSpi',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
@@ -20,7 +19,7 @@ define(
     'global!window'
   ],
 
-  function (Behaviour, DomModification, AnchorSchema, Anchoring, PopupSpi, FieldPresence, FieldSchema, ValueSchema, Fun, Callouts, Origins, Css, Insert, Location, Remove, window) {
+  function (Behaviour, DomModification, AnchorSchema, PopupSpi, FieldPresence, FieldSchema, ValueSchema, Fun, Callouts, Origins, Css, Insert, Location, Remove, window) {
     var schema = FieldSchema.field(
       'positioning',
       'positioning',
@@ -52,7 +51,7 @@ define(
       var bubble = placement.bubble();
       var anchorBox = placement.anchorBox();
 
-      // TODO: Fix this.
+      // TODO: Add RTL support.
       var direction = { isRtl: function () { return false; }};
 
       var preference = getLayout(direction, placement.layouts());
@@ -75,19 +74,18 @@ define(
       var anchorage = ValueSchema.asStructOrDie('positioning anchor.info', AnchorSchema, anchor);
       var origin = posInfo.useFixed() ? getFixedOrigin() : getRelativeOrigin(component);
 
+      // We set it to be fixed, so that it doesn't interfere with the layout of anything
+      // when calculating anchors
+      Css.set(placee.element(), 'position', 'fixed');
+      // INVESTIGATE: Will hiding the popup cause issues for focus?
+      Css.set(placee.element(), 'visibility', 'hidden');
+
       var placer = anchorage.placement();
-      
       placer(component, posInfo, anchorage, origin).each(function (placement) {
-
-        Css.set(placee.element(), 'position', 'fixed');
-        // Does this cause problems for focus?
-        Css.set(placee.element(), 'visibility', 'hidden');
-
         var popup = PopupSpi(placee);
         place(origin, placement, posInfo, popup);
-
-        Css.remove(placee.element(), 'visibility');
       });
+      Css.remove(placee.element(), 'visibility');
     };
 
     var addContainer = function (component, posInfo, sandbox) {
@@ -103,7 +101,7 @@ define(
         return DomModification.nu({});
       }, function (posInfo) {
         return DomModification.nu({
-          classes: [ 'ephox-alloy-popup-container' ],
+          classes: [ ],
           styles: posInfo.useFixed() ? { } : { position: 'relative' }
         });
       });

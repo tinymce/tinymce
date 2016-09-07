@@ -16,6 +16,7 @@ define(
       FieldSchema.strict('element'),
       FieldSchema.option('uid')
     ]);
+
     var build = function (spec) {
       var extSpec = ValueSchema.asStructOrDie('external.component', externalSpec, spec);
       var systemApi = Cell(NoContextApi());
@@ -33,7 +34,6 @@ define(
       };
 
       extSpec.uid().each(function (uid) {
-        console.log('here', uid);
         Tagger.writeOnly(extSpec.element(), uid);
       });
 
@@ -44,7 +44,6 @@ define(
         disconnect: disconnect,
         label: Fun.constant(extSpec.label()),
         element: Fun.constant(extSpec.element()),
-        // Note: this is only the original components.
         components: Fun.constant([ ]),
         events: Fun.constant({ }),
         apis: Fun.constant({ })
