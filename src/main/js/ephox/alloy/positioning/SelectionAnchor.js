@@ -2,30 +2,26 @@ define(
   'ephox.alloy.positioning.SelectionAnchor',
 
   [
+    'ephox.alloy.alien.Boxes',
     'ephox.alloy.alien.CssPosition',
     'ephox.alloy.alien.Descend',
-    'ephox.alloy.alien.Rectangles',
+    'ephox.alloy.positioning.ContainerOffsets',
     'ephox.boulder.api.FieldSchema',
     'ephox.fussy.api.SelectionRange',
     'ephox.fussy.api.WindowSelection',
     'ephox.oath.proximity.Awareness',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
     'ephox.repartee.api.Bubble',
     'ephox.repartee.api.Layout',
     'ephox.repartee.api.MaxHeight',
     'ephox.repartee.api.Origins',
     'ephox.scullion.Struct',
     'ephox.sugar.alien.Position',
-    'ephox.sugar.api.Compare',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Location',
     'ephox.sugar.api.Node',
-    'ephox.sugar.api.Scroll',
     'ephox.sugar.api.Traverse'
   ],
 
-  function (CssPosition, Descend, Rectangles, FieldSchema, SelectionRange, WindowSelection, Awareness, Fun, Option, Bubble, Layout, MaxHeight, Origins, Struct, Position, Compare, Element, Location, Node, Scroll, Traverse) {
+  function (Boxes, CssPosition, Descend, ContainerOffsets, FieldSchema, SelectionRange, WindowSelection, Awareness, Fun, Bubble, Layout, MaxHeight, Origins, Struct, Position, Node, Traverse) {
     var point = Struct.immutable('element', 'offset');
 
     // A range from (a, 1) to (body, end) was giving the wrong bounds.
@@ -47,84 +43,53 @@ define(
       });
     };
 
-    // In one mode, the window is inside an iframe. If that iframe is in the
-    // same document as the positioning element (component), then identify the offset
-    // difference between the iframe and the component.
-    var getOffset = function (component, origin, anchorInfo) {
-      var win = Traverse.defaultView(anchorInfo.root()).dom();
-
-      var hasSameOwner = function (frame) {
-        var frameOwner = Traverse.owner(frame);
-        var compOwner = Traverse.owner(component.element());
-        return Compare.eq(frameOwner, compOwner);
-      };
-      
-      return Option.from(win.frameElement).map(Element.fromDom).
-        filter(hasSameOwner).map(Location.absolute);
-    };
-
-
     var placement = function (component, posInfo, anchorInfo, origin) {
-      var doc = Traverse.owner(component.element());
-      var outerScroll = Scroll.get(doc);
       var win = Traverse.defaultView(anchorInfo.root()).dom();
-      var offset = getOffset(component, origin, anchorInfo).getOr(outerScroll);
-      var rootPoint = CssPosition.absolute(offset, outerScroll.left(), outerScroll.top());
+      var rootPoint = ContainerOffsets.getRootPoint(component, origin, anchorInfo);
 
-      var rawAnchorBox = getAnchorSelection(win, anchorInfo).bind(function (sel) {
-        /* This represents the *visual* rectangle of the selection. If it is in the 
-         * same document, then you need to consider scroll (because scroll isn't being
-         * added by the offset above. If it is not in the same document, then leave it 
-         * as is
-         */
+      var selectionBox = getAnchorSelection(win, anchorInfo).bind(function (sel) {
+        // This represents the *visual* rectangle of the selection.
         var optRect = WindowSelection.rectangleAt(win, sel.start(), sel.soffset(), sel.finish(), sel.foffset());
         return optRect.map(function (rawRect) {
-          var rect = Rectangles.fromRaw(rawRect);
           var point = CssPosition.screen(
-            Position(rect.x(), rect.y())
+            Position(rawRect.left, rawRect.top)
           );
-
-          return {
-            point: Fun.constant(point),
-            width: rect.width,
-            height: rect.height
-          };
+          debugger;
+          return Boxes.pointed(point, rawRect.width, rawRect.height);
         });
-      }).getOrThunk(function () {
+      });
+
+      return selectionBox.map(function (box) {
+        var points = [ rootPoint, box.point() ];
+        debugger;
+        var topLeft = Origins.cata(origin,
+          function () {
+            return CssPosition.sumAsAbsolute(points);
+          },
+          function () {
+            return CssPosition.sumAsAbsolute(points);
+          },
+          function () {
+            return CssPosition.sumAsFixed(points);
+          }
+        );
+
+        console.log('topLeft', topLeft.left(), topLeft.top());
+
+        var anchorBox = Boxes.rect(
+          topLeft.left(),
+          topLeft.top(),
+          box.width(),
+          box.height()
+        );
+
         return {
-          point: Fun.constant(Position(0, 0)),
-          width: Fun.constant(0),
-          height: Fun.constant(0)
+          anchorBox: Fun.constant(anchorBox),
+          bubble: Fun.constant(Bubble(0, 0)),
+          maxHeightFunction: Fun.constant(MaxHeight.available()),
+          layouts: Fun.constant(Layout)
         };
       });
-
-    var points = [ rootPoint, rawAnchorBox.point() ];
-      var topLeft = Origins.cata(origin,
-        function () {
-          /* none ... so use absolute */
-          return CssPosition.sumAsAbsolute(points);
-        },
-        function () {
-          return CssPosition.sumAsAbsolute(points);
-        },
-        function () {
-          return CssPosition.sumAsFixed(points);
-        }
-      );
-
-      var anchorBox = Rectangles.make({
-        x: topLeft.left(),
-        y: topLeft.top(),
-        width: rawAnchorBox.width(),
-        height: rawAnchorBox.height()
-      });
-
-      return {
-        anchorBox: Fun.constant(anchorBox),
-        bubble: Fun.constant(Bubble(0, 0)),
-        maxHeightFunction: Fun.constant(MaxHeight.available()),
-        layouts: Fun.constant(Layout)
-      };
     };
 
     return [

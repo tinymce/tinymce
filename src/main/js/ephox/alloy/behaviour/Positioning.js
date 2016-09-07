@@ -77,16 +77,17 @@ define(
 
       var placer = anchorage.placement();
       
-      var placement = placer(component, posInfo, anchorage, origin);
+      placer(component, posInfo, anchorage, origin).each(function (placement) {
 
-      Css.set(placee.element(), 'position', 'fixed');
-      // Does this cause problems for focus?
-      Css.set(placee.element(), 'visibility', 'hidden');
+        Css.set(placee.element(), 'position', 'fixed');
+        // Does this cause problems for focus?
+        Css.set(placee.element(), 'visibility', 'hidden');
 
-      var popup = PopupSpi(placee);
-      place(origin, placement, posInfo, popup);
+        var popup = PopupSpi(placee);
+        place(origin, placement, posInfo, popup);
 
-      Css.remove(placee.element(), 'visibility');
+        Css.remove(placee.element(), 'visibility');
+      });
     };
 
     var addContainer = function (component, posInfo, sandbox) {
