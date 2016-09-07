@@ -84,7 +84,6 @@ define(
 
     // INVESTIGATE: A better way to provide 'meta-specs'
     var build = function (userSpec) {
-      console.log('build', userSpec);
       var builder = Options.findMap(types, function (t) {
         return userSpec[t.type] !== undefined ? Option.some(function () {
           var param = t.only === true ? userSpec[t.type] : userSpec;
