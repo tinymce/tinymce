@@ -2,11 +2,12 @@ define(
   'ephox.boss.mutant.Comparator',
 
   [
+    'ephox.boss.mutant.Attribution',
     'ephox.compass.Arr',
     'ephox.perhaps.Option'
   ],
 
-  function (Arr, Option) {
+  function (Attribution, Arr, Option) {
 
     var ATTR_REGEX = /^\[(.*)\]$/;
 
@@ -22,8 +23,8 @@ define(
       return Option.from(selector.match(ATTR_REGEX)).fold(function () { // not [attr], assume list of names
         var matches = selector.split(',');
         return Arr.contains(matches, item.name);
-      }, function (attrMatch) { // [attr] in item attrs
-        return (attrMatch[1] in item.attrs);
+      }, function (attrMatch) { // [attr], check value not undefined
+        return (Attribution.get(item, attrMatch[1]) !== undefined);
       });
     };
 
