@@ -3,23 +3,20 @@ define(
 
   [
     'ephox.compass.Arr',
+    'ephox.peanut.Fun',
     'ephox.scullion.ADT',
     'ephox.sugar.alien.Position'
   ],
 
-  function (Arr, Adt, Position) {
+  function (Arr, Fun, Adt, Position) {
     var adt = Adt.generate([
       { screen: [ 'point' ] },
       { absolute: [ 'point', 'scrollLeft', 'scrollTop' ] }
     ]);
 
-
     var toFixed = function (pos) {
       return pos.fold(
-        function (point) {
-          // 
-          return point;
-        },
+        Fun.identity,
         function (point, scrollLeft, scrollTop) {
           return point.translate(-scrollLeft, -scrollTop);
         }
@@ -28,10 +25,7 @@ define(
 
     var toAbsolute = function (pos) {
       return pos.fold(
-        function (point) {
-          //
-          return point;
-        },
+        Fun.identity,
         function (point, scrollLeft, scrollTop) {
           return point;
         }
