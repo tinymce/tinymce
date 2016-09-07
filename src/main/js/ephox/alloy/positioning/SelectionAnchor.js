@@ -72,8 +72,6 @@ define(
           }
         );
 
-        console.log('topLeft', topLeft.left(), topLeft.top());
-
         var anchorBox = Boxes.rect(
           topLeft.left(),
           topLeft.top(),
