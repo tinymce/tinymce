@@ -97,7 +97,6 @@ asynctest(
           };
         })
       );
-      console.log('targets', targets);
 
       return [
         FocusTools.sSetFocus('Initial focus', gui.element(), '.c11'),

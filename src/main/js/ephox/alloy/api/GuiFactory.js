@@ -49,7 +49,6 @@ define(
     };
 
     var buildFromSpec = function (userSpec) {
-      console.log('building');
       var uiType = userSpec.uiType;
       return Objects.readOptFrom(knownSpecs, uiType).fold(function () {
         return unknownSpec(uiType, userSpec);
@@ -66,7 +65,6 @@ define(
           Objects.wrap('components', components)
         );
 
-        console.log('completeSpec', completeSpec);
         return Result.value(
           Component.build(completeSpec)
         );

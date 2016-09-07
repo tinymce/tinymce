@@ -62,7 +62,6 @@ define(
             'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
           },
           action: function (comp) {
-            console.log('here');
             if (comp.apis().isSelected()) {
               sink.apis().addContainer(popup);
               sink.apis().position({

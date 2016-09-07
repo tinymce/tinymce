@@ -31,7 +31,7 @@ define(
         {
           uiType: 'button',
           action: function () {
-            console.log('***button.click');
+            console.log('*** ButtonDemo click ***');
           },
           text: 'Click me',
           toggling: {
