@@ -5,13 +5,14 @@ define(
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.demo.DemoContent',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert'
   ],
 
-  function (Gui, GuiFactory, EventHandler, HtmlDisplay, Class, Element, Insert) {
+  function (Gui, GuiFactory, EventHandler, DemoContent, HtmlDisplay, Class, Element, Insert) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -135,10 +136,12 @@ define(
                 },
                 styles: {
                   border: '1px solid green',
-                  width: '150px',
+                  width: '300px',
+                  height: '200px',
+                  'overflow-y': 'scroll',
                   display: 'inline-block'
                 },
-                innerHtml: '<p>One</p><p>Two</p><p>Three</p><p>Four</p><p>Five</p><p>Six</p>'
+                innerHtml: DemoContent.generate(20)
               },
               uid: 'text-editor'
             },
