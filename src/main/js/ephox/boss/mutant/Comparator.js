@@ -20,12 +20,14 @@ define(
     // 'name,name,...' : comma-list of names to compare against item name
     // '[attr]'        : single attribute 'attr' key present in item attrs
     var is = function (item, selector) {
-      return Option.from(selector.match(ATTR_REGEX)).fold(function () { // not [attr], assume list of names
+      var tagMatch = function () {
         var matches = selector.split(',');
         return Arr.contains(matches, item.name);
-      }, function (attrMatch) { // [attr], check value not undefined
-        return (Attribution.get(item, attrMatch[1]) !== undefined);
-      });
+      };
+      var attrMatch = function (match) {
+        return (Attribution.get(item, match[1]) !== undefined);
+      };
+      return Option.from(selector.match(ATTR_REGEX)).fold(tagMatch, attrMatch);
     };
 
     return {
