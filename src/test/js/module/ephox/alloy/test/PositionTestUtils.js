@@ -55,7 +55,8 @@ define(
         label,
         [
           cAddPopupToSink(sinkName),
-          cTestPopupInSink(sinkName, sinkName)
+          cTestPopupInSink(sinkName, sinkName),
+          Chain.wait(1000)
         ]
       );
     };
@@ -72,9 +73,7 @@ define(
 
     return {
       cTestSink: cTestSink,
-      cScrollDown: cScrollDown,
-      cScrollTo: cScrollTo,
-      cAddTopMargin: cAddTopMargin
+      cScrollDown: cScrollDown
     };
   }
 );

@@ -4,14 +4,12 @@ asynctest(
   [
     'ephox.agar.api.Chain',
     'ephox.agar.api.Cursors',
-    'ephox.agar.api.Guard',
     'ephox.agar.api.NamedChain',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.test.ChainUtils',
     'ephox.alloy.test.GuiSetup',
+    'ephox.alloy.test.PositionTestUtils',
     'ephox.alloy.test.Sinks',
-    'ephox.compass.Arr',
-    'ephox.fussy.api.WindowSelection',
     'ephox.perhaps.Option',
     'ephox.perhaps.Result',
     'ephox.sugar.api.Css',
@@ -22,7 +20,7 @@ asynctest(
     'global!window'
   ],
  
-  function (Chain, Cursors, Guard, NamedChain, GuiFactory, ChainUtils, GuiSetup, Sinks, Arr, WindowSelection, Option, Result, Css, Element, Html, Error, setTimeout, window) {
+  function (Chain, Cursors, NamedChain, GuiFactory, ChainUtils, GuiSetup, PositionTestUtils, Sinks, Option, Result, Css, Element, Html, Error, setTimeout, window) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -63,13 +61,7 @@ asynctest(
       });
 
     }, function (doc, body, gui, component, store) {
-      var cFindUid = function (uid) {
-        return Chain.binder(function (context) {
-          return context.getByUid(uid);
-        });
-      };
-
-      var getAnchor = function (data) {
+      var cSetupAnchor = Chain.mapper(function (data) {
         return {
           anchor: 'selection',
           root: data.inline.element(),
@@ -79,39 +71,7 @@ asynctest(
             );
           }
         };
-      };
-
-      var cAddPopupToRelative = NamedChain.bundle(function (data) {
-        data.relative.apis().addContainer(data.popup);
-        data.relative.apis().position(getAnchor(data), data.popup);
-        return Result.value(data);
       });
-
-      var cTestPopupInRelative = Chain.control(
-        NamedChain.bundle(function (data) {
-          var inside = Sinks.isInside(data.relative, data.popup);
-          return inside ? Result.value(data) : Result.error(
-            new Error('The popup does not appear within the relative sink container')
-          );
-        }),
-        Guard.tryUntil('Ensuring that the popup is inside the relative sink', 100, 3000)
-      );
-
-      var cAddPopupToFixed = NamedChain.bundle(function (data) {
-        data.fixed.apis().addContainer(data.popup);
-        data.fixed.apis().position(getAnchor(data), data.popup);
-        return Result.value(data);
-      });
-
-      var cTestPopupInFixed = Chain.control(
-        NamedChain.bundle(function (data) {
-          var inside = Sinks.isInside(data.fixed, data.popup);
-          return inside ? Result.value(data) : Result.error(
-            new Error('The popup does not appear within the fixed sink container')
-          );
-        }),
-        Guard.tryUntil('Ensuring that the popup is inside the fixed sink', 100, 3000)
-      );
 
       return [
         Chain.asStep({}, [
@@ -134,53 +94,32 @@ asynctest(
                 }))
               ]
             ),
-            
-            ChainUtils.cLogging(
-              'Relative, Selected: 3rd paragraph, no page scroll, no editor scroll',
-              [
-                cAddPopupToRelative,
-                cTestPopupInRelative,
-                Chain.wait(1000)
-              ]
-            ),
 
-            ChainUtils.cLogging(
+            NamedChain.write('anchor', cSetupAnchor),
+            
+            PositionTestUtils.cTestSink(
+              'Relative, Selected: 3rd paragraph, no page scroll, no editor scroll',
+              'relative'
+            ),
+            PositionTestUtils.cTestSink(
               'Fixed, Selected: 3rd paragraph, no page scroll, no editor scroll',
-              [
-                cAddPopupToFixed,
-                cTestPopupInFixed,
-                Chain.wait(1000)
-              ]
+              'fixed'
             ),
            
-            ChainUtils.cLogging(
-              'Setting margin on inline editor and scrolling to it',
-              [
-                Chain.wait(1000),
-                Chain.op(function (data) {
-                  Css.set(data.inline.element(), 'margin-top', '2000px');
-                  window.scrollTo(0, 2000);
-                })
-              ]
+            PositionTestUtils.cScrollDown(
+              'inline',
+              '2000px'
             ),
 
-            ChainUtils.cLogging(
+            PositionTestUtils.cTestSink(
               'Relative, Selected: 3rd paragraph, large scroll, no editor scroll',
-              [
-                cAddPopupToRelative,
-                cTestPopupInRelative,
-                Chain.wait(1000)
-              ]
+              'relative'
             ),
-
-            ChainUtils.cLogging(
+            PositionTestUtils.cTestSink(
               'Fixed, Selected: 3rd paragraph, large scroll, no editor scroll',
-              [
-                cAddPopupToFixed,
-                cTestPopupInFixed,
-                Chain.wait(1000)
-              ]
+              'fixed'
             ),
+          
 
             ChainUtils.cLogging(
               'Setting selection to 13th paragraph and scrolling there',
@@ -197,26 +136,20 @@ asynctest(
                   var range = Cursors.calculate(root, path);
                   range.start().dom().scrollIntoView();
                   return Result.value(data);
-                })
+                }),
+
+                // Update the anchor
+                NamedChain.write('anchor', cSetupAnchor)
               ]
             ),
 
-            ChainUtils.cLogging(
+            PositionTestUtils.cTestSink(
               'Relative, Selected: 13rd paragraph, large scroll, no editor scroll',
-              [
-                cAddPopupToRelative,
-                cTestPopupInRelative,
-                Chain.wait(1000)
-              ]
+              'relative'
             ),
-
-            ChainUtils.cLogging(
+            PositionTestUtils.cTestSink(
               'Fixed, Selected: 13rd paragraph, large scroll, no editor scroll',
-              [
-                cAddPopupToFixed,
-                cTestPopupInFixed,
-                Chain.wait(1000)
-              ]
+              'fixed'
             )
           ])
         ])

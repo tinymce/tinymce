@@ -3,21 +3,17 @@ asynctest(
  
   [
     'ephox.agar.api.Chain',
-    'ephox.agar.api.Guard',
     'ephox.agar.api.NamedChain',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.test.ChainUtils',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.PositionTestUtils',
     'ephox.alloy.test.Sinks',
-    'ephox.perhaps.Result',
-    'ephox.sugar.api.Css',
-    'ephox.sugar.api.Scroll',
     'global!Error',
     'global!setTimeout'
   ],
  
-  function (Chain, Guard, NamedChain, GuiFactory, ChainUtils, GuiSetup, PositionTestUtils, Sinks, Result, Css, Scroll, Error, setTimeout) {
+  function (Chain, NamedChain, GuiFactory, ChainUtils, GuiSetup, PositionTestUtils, Sinks, Error, setTimeout) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -70,16 +66,11 @@ asynctest(
             NamedChain.direct('hotspot', cSetupAnchor, 'anchor'),
 
             PositionTestUtils.cTestSink('Relative, not scrolled', 'relative'),
-            Chain.wait(1000),
             PositionTestUtils.cTestSink('Fixed, not scrolled', 'fixed'),
-            Chain.wait(1000),
 
             PositionTestUtils.cScrollDown('hotspot', '1000px'),
             PositionTestUtils.cTestSink('Relative, scrolled 1000px', 'relative'),
-            Chain.wait(1000),
-            PositionTestUtils.cTestSink('Fixed, scrolled 1000px', 'fixed'),
-            
-            Chain.wait(1000)
+            PositionTestUtils.cTestSink('Fixed, scrolled 1000px', 'fixed')
           ])
         ])
       ];
