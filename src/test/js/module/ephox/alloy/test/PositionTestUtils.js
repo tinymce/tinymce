@@ -55,8 +55,7 @@ define(
         label,
         [
           cAddPopupToSink(sinkName),
-          cTestPopupInSink(sinkName, sinkName),
-          Chain.wait(1000)
+          cTestPopupInSink(sinkName, sinkName)
         ]
       );
     };
