@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.api.ExternalComponent',
+  'ephox.alloy.construct.Components',
 
   [
     'ephox.alloy.api.NoContextApi',
@@ -7,17 +7,40 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.peanut.Fun',
-    'ephox.scullion.Cell'
+    'ephox.perhaps.Result',
+    'ephox.scullion.Cell',
+    'ephox.sugar.api.Element'
   ],
 
-  function (NoContextApi, Tagger, FieldSchema, ValueSchema, Fun, Cell) {
+  function (NoContextApi, Tagger, FieldSchema, ValueSchema, Fun, Result, Cell, Element) {
     var externalSpec = ValueSchema.objOf([
       FieldSchema.defaulted('label', 'unlabelled'),
       FieldSchema.strict('element'),
       FieldSchema.option('uid')
     ]);
 
-    var build = function (spec) {
+    var text = function (textContent) {
+      var element = Element.fromText(textContent);
+
+      return {
+        getSystem: Fun.die('Cannot call getSystem on text node'),
+        debugSystem: Fun.noop,
+        connect: Fun.noop,
+        disconnect: Fun.noop,
+        label: Fun.constant('text'),
+        element: Fun.constant(element),
+        components: Fun.constant([ ]),
+        events: Fun.constant({ }),
+        apis: Fun.constant({ })
+      };
+    };
+
+    var premade = function (spec) {
+      return spec;
+    };
+
+    var external = function (spec) {
+
       var extSpec = ValueSchema.asStructOrDie('external.component', externalSpec, spec);
       var systemApi = Cell(NoContextApi());
       
@@ -51,7 +74,9 @@ define(
     };
 
     return {
-      build: build
+      external: external,
+      premade: premade,
+      text: text
     };
   }
 );

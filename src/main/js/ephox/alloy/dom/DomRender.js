@@ -4,7 +4,6 @@ define(
   [
     'ephox.alloy.dom.DomDefinition',
     'ephox.compass.Arr',
-    'ephox.peanut.Fun',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Classes',
     'ephox.sugar.api.Css',
@@ -15,7 +14,7 @@ define(
     'global!Error'
   ],
 
-  function (DomDefinition, Arr, Fun, Attr, Classes, Css, Element, Html, InsertAll, Value, Error) {
+  function (DomDefinition, Arr, Attr, Classes, Css, Element, Html, InsertAll, Value, Error) {
     var getChildren = function (definition) {
       if (definition.domChildren().isSome() && definition.defChildren().isSome()) {
         throw new Error('Cannot specify children and child specs! Must be one or the other.\nDef: ' + DomDefinition.defToStr(definition));
