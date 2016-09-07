@@ -38,9 +38,14 @@ define(
       );
     };
 
+    var cStore = function (property) {
+      return NamedChain.direct(property, Chain.inject, property);
+    };
+
     return {
       cLogging: cLogging,
-      cFindUids: cFindUids
+      cFindUids: cFindUids,
+      cStore: cStore
     };
   }
 );

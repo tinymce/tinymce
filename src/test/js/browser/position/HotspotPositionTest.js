@@ -8,6 +8,7 @@ asynctest(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.test.ChainUtils',
     'ephox.alloy.test.GuiSetup',
+    'ephox.alloy.test.PositionTestUtils',
     'ephox.alloy.test.Sinks',
     'ephox.perhaps.Result',
     'ephox.sugar.api.Css',
@@ -16,7 +17,7 @@ asynctest(
     'global!setTimeout'
   ],
  
-  function (Chain, Guard, NamedChain, GuiFactory, ChainUtils, GuiSetup, Sinks, Result, Css, Scroll, Error, setTimeout) {
+  function (Chain, Guard, NamedChain, GuiFactory, ChainUtils, GuiSetup, PositionTestUtils, Sinks, Result, Css, Scroll, Error, setTimeout) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -87,11 +88,6 @@ asynctest(
         Guard.tryUntil('Ensuring that the popup is inside the fixed sink', 100, 3000)
       );
 
-      var cScrollToHotspot = NamedChain.direct('hotspot', Chain.mapper(function (hotspot) {
-        hotspot.element().dom().scrollIntoView();
-        return Scroll.get();
-      }), 'scrollValue');
-
       return [
         Chain.asStep({}, [
           NamedChain.asChain([
@@ -122,11 +118,14 @@ asynctest(
             
             Chain.wait(1000),
 
-            NamedChain.bundle(function (data) {
-              Css.set(data.hotspot.element(), 'top', '1000px');
-              return Result.value(data);
-            }),
-            cScrollToHotspot,
+            ChainUtils.cLogging(
+              'Adding margin to hotspot and scrolling to it',
+              [
+                NamedChain.direct('hotspot', PositionTestUtils.cAddTopMargin('1000px'), '_'),
+                NamedChain.direct('hotspot', PositionTestUtils.cScrollTo, 'scroll')
+              ]
+            ),
+            
 
             ChainUtils.cLogging(
               'Relative, scrolled 1000px',
