@@ -15,10 +15,11 @@ define(
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
+    'ephox.sugar.api.Node',
     'ephox.sugar.api.Remove'
   ],
 
-  function (GuiEvents, GuiFactory, SystemApi, SystemEvents, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Element, Insert, Remove) {
+  function (GuiEvents, GuiFactory, SystemApi, SystemEvents, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Element, Insert, Node, Remove) {
     var create = function ( ) {
       var container = Element.fromTag('div');
       return takeover(container);
@@ -66,14 +67,18 @@ define(
       });
 
       var addToWorld = function (component) {
-        registry.register(component);
-        component.connect(systemApi);
-        Arr.each(component.components(), addToWorld);
+        if (! Node.isText(component.element())) {
+          registry.register(component);
+          component.connect(systemApi);
+          Arr.each(component.components(), addToWorld);
+        }
       };
 
       var removeFromWorld = function (component) {
-        Arr.each(component.components(), removeFromWorld);
-        registry.unregister(component);
+        if (! Node.isText(component.element())) {
+          Arr.each(component.components(), removeFromWorld);
+          registry.unregister(component);
+        }
       };
 
       var add = function (component) {
