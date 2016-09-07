@@ -81,7 +81,7 @@ define(
 
     return {
       words: words,
-      lanugage: language
+      language: language
     };
   }
 );
