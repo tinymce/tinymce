@@ -7,49 +7,26 @@ asynctest(
     'ephox.agar.api.Guard',
     'ephox.agar.api.NamedChain',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.test.ChainUtils',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.Sinks',
     'ephox.compass.Arr',
     'ephox.fussy.api.WindowSelection',
     'ephox.perhaps.Option',
     'ephox.perhaps.Result',
-    'ephox.photon.Writer',
     'ephox.sugar.api.Css',
-    'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Html',
-    'ephox.sugar.api.Scroll',
-    'ephox.sugar.api.SelectorExists',
-    'ephox.sugar.api.SelectorFind',
-    'ephox.sugar.api.Traverse',
     'global!Error',
     'global!setTimeout',
     'global!window'
   ],
  
-  function (Chain, Cursors, Guard, NamedChain, GuiFactory, GuiSetup, Sinks, Arr, WindowSelection, Option, Result, Writer, Css, DomEvent, Element, Html, Scroll, SelectorExists, SelectorFind, Traverse, Error, setTimeout, window) {
+  function (Chain, Cursors, Guard, NamedChain, GuiFactory, ChainUtils, GuiSetup, Sinks, Arr, WindowSelection, Option, Result, Css, Element, Html, Error, setTimeout, window) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
-      var fixedSink = Sinks.fixedSink();
-      var relativeSink = Sinks.relativeSink();
-
-      var popup = GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div',
-          innerHtml: 'Demo day',
-          styles: {
-            width: '200px',
-            height: '150px',
-            border: 'inherit',
-            position: 'absolute'
-          }
-        },
-        uid: 'popup'
-      });
-
       var content = '';
       for (var i = 0; i < 20; i++) {
         content += '<p>paragraph ' + i  + '</p>';
@@ -78,9 +55,9 @@ asynctest(
           tag: 'div'
         },
         components: [
-          { built: fixedSink },
-          { built: relativeSink },
-          { built: popup },
+          { built: Sinks.fixedSink() },
+          { built: Sinks.relativeSink() },
+          { built: Sinks.popup() },
           { built: inlineEditor }
         ]
       });
@@ -136,81 +113,77 @@ asynctest(
         Guard.tryUntil('Ensuring that the popup is inside the fixed sink', 100, 3000)
       );
 
-      var cSetPath = function (rawPath) {
-        var path = Cursors.path(rawPath);
-
-        return Chain.binder(function (win) {
-          var body = Element.fromDom(win.document.body);
-          var range = Cursors.calculate(body, path);
-           WindowSelection.setExact(
-            win,
-            range.start(),
-            range.soffset(),
-            range.finish(),
-            range.foffset()
-          );
-          return WindowSelection.get(win).fold(function () {
-            return Result.error('Could not retrieve the set selection');
-          }, Result.value);
-        });
-      };
-
-      var addLogging = function (label, chains) {
-        var logChains = Arr.map(chains, function (c) {
-          return Chain.control(c, Guard.addLogging(label));
-        });
-
-        return Chain.fromChains(logChains);
-      };
-
       return [
         Chain.asStep({}, [
           NamedChain.asChain([
-            NamedChain.writeValue('context', gui),
-            NamedChain.direct('context', cFindUid('fixed-sink'), 'fixed'),
-            NamedChain.direct('context', cFindUid('relative-sink'), 'relative'),
-            NamedChain.direct('context', cFindUid('inline-editor'), 'inline'),
-            NamedChain.direct('context', cFindUid('popup'), 'popup'),
-            NamedChain.writeValue('path', Cursors.path({
-              startPath: [ 2 ],
-              soffset: 0,
-              finishPath: [ 3 ],
-              foffset: 0
-            })),
-            
-            addLogging(
-              'Selected: 3rd paragraph, no page scroll, no editor scroll',
+            ChainUtils.cFindUids(gui, {
+              'fixed': 'fixed-sink',
+              'relative': 'relative-sink',
+              'popup': 'popup',
+              'inline': 'inline-editor'
+            }),
+
+            ChainUtils.cLogging(
+              'Setting selection path to 3rd paragraph',
               [
-                cAddPopupToRelative,
-                cTestPopupInRelative,
-                Chain.wait(2000),
-                cAddPopupToFixed,
-                cTestPopupInFixed,
-                Chain.wait(2000)
+                NamedChain.writeValue('path', Cursors.path({
+                  startPath: [ 2 ],
+                  soffset: 0,
+                  finishPath: [ 3 ],
+                  foffset: 0
+                }))
               ]
             ),
             
-            Chain.wait(1000),
-
-            addLogging(
-              'Selected: 3rd paragraph, large page scroll, no editor scroll',
+            ChainUtils.cLogging(
+              'Relative, Selected: 3rd paragraph, no page scroll, no editor scroll',
               [
+                cAddPopupToRelative,
+                cTestPopupInRelative,
+                Chain.wait(1000)
+              ]
+            ),
+
+            ChainUtils.cLogging(
+              'Fixed, Selected: 3rd paragraph, no page scroll, no editor scroll',
+              [
+                cAddPopupToFixed,
+                cTestPopupInFixed,
+                Chain.wait(1000)
+              ]
+            ),
+           
+            ChainUtils.cLogging(
+              'Setting margin on inline editor and scrolling to it',
+              [
+                Chain.wait(1000),
                 Chain.op(function (data) {
                   Css.set(data.inline.element(), 'margin-top', '2000px');
                   window.scrollTo(0, 2000);
-                }),
-
-                cAddPopupToRelative,
-                cTestPopupInRelative,
-                Chain.wait(2000),
-                cAddPopupToFixed,
-                cTestPopupInFixed,
-                Chain.wait(2000)
+                })
               ]
             ),
 
-            addLogging(
-              'Selected: 13th paragraph, large page scroll, large editor scroll',
+            ChainUtils.cLogging(
+              'Relative, Selected: 3rd paragraph, large scroll, no editor scroll',
+              [
+                cAddPopupToRelative,
+                cTestPopupInRelative,
+                Chain.wait(1000)
+              ]
+            ),
+
+            ChainUtils.cLogging(
+              'Fixed, Selected: 3rd paragraph, large scroll, no editor scroll',
+              [
+                cAddPopupToFixed,
+                cTestPopupInFixed,
+                Chain.wait(1000)
+              ]
+            ),
+
+            ChainUtils.cLogging(
+              'Setting selection to 13th paragraph and scrolling there',
               [
                 NamedChain.writeValue('path', Cursors.path({
                   startPath: [ 12 ],
@@ -224,15 +197,25 @@ asynctest(
                   var range = Cursors.calculate(root, path);
                   range.start().dom().scrollIntoView();
                   return Result.value(data);
-                }),
+                })
+              ]
+            ),
 
+            ChainUtils.cLogging(
+              'Relative, Selected: 13rd paragraph, large scroll, no editor scroll',
+              [
                 cAddPopupToRelative,
                 cTestPopupInRelative,
-                Chain.wait(3000),
+                Chain.wait(1000)
+              ]
+            ),
+
+            ChainUtils.cLogging(
+              'Fixed, Selected: 13rd paragraph, large scroll, no editor scroll',
+              [
                 cAddPopupToFixed,
                 cTestPopupInFixed,
-
-                Chain.wait(3000)
+                Chain.wait(1000)
               ]
             )
           ])

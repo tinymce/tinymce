@@ -40,6 +40,22 @@ define(
       });
     };
 
+    var popup = function () {
+      return GuiFactory.build({
+        uiType: 'custom',
+        dom: {
+          tag: 'div',
+          innerHtml: 'Demo day',
+          styles: {
+            width: '200px',
+            height: '150px',
+            border: 'inherit'
+          }
+        },
+        uid: 'popup'
+      });
+    };
+
     var isInside = function (sinkComponent, popupComponent) {
       var isSink = function (el) {
         return Compare.eq(el, sinkComponent.element());
@@ -51,7 +67,8 @@ define(
     return {
       fixedSink: fixedSink,
       isInside: isInside,
-      relativeSink: relativeSink
+      relativeSink: relativeSink,
+      popup: popup
     };
   }
 );

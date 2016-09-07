@@ -6,6 +6,7 @@ asynctest(
     'ephox.agar.api.Guard',
     'ephox.agar.api.NamedChain',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.test.ChainUtils',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.Sinks',
     'ephox.perhaps.Result',
@@ -15,28 +16,11 @@ asynctest(
     'global!setTimeout'
   ],
  
-  function (Chain, Guard, NamedChain, GuiFactory, GuiSetup, Sinks, Result, Css, Scroll, Error, setTimeout) {
+  function (Chain, Guard, NamedChain, GuiFactory, ChainUtils, GuiSetup, Sinks, Result, Css, Scroll, Error, setTimeout) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
-      var fixedSink = Sinks.fixedSink();
-      var relativeSink = Sinks.relativeSink();
-
-      var popup = GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div',
-          innerHtml: 'Demo day',
-          styles: {
-            width: '200px',
-            height: '150px',
-            border: 'inherit'
-          }
-        },
-        uid: 'popup'
-      });
-
       var hotspot = GuiFactory.build({
         uiType: 'button',
         text: 'Hotspot',
@@ -57,20 +41,14 @@ asynctest(
           tag: 'div'
         },
         components: [
-          { built: fixedSink },
-          { built: relativeSink },
-          { built: popup },
+          { built: Sinks.fixedSink() },
+          { built: Sinks.relativeSink() },
+          { built: Sinks.popup() },
           { built: hotspot }
         ]
       });
 
     }, function (doc, body, gui, component, store) {
-      var cFindUid = function (uid) {
-        return Chain.binder(function (context) {
-          return context.getByUid(uid);
-        });
-      };
-
       var cAddPopupToRelative = NamedChain.bundle(function (data) {
         data.relative.apis().addContainer(data.popup);
         data.relative.apis().position({
@@ -117,29 +95,57 @@ asynctest(
       return [
         Chain.asStep({}, [
           NamedChain.asChain([
-            NamedChain.writeValue('context', gui),
-            NamedChain.direct('context', cFindUid('fixed-sink'), 'fixed'),
-            NamedChain.direct('context', cFindUid('relative-sink'), 'relative'),
-            NamedChain.direct('context', cFindUid('hotspot'), 'hotspot'),
-            NamedChain.direct('context', cFindUid('popup'), 'popup'),
-            cAddPopupToRelative,
-            cTestPopupInRelative,
+            ChainUtils.cFindUids(gui, {
+              'fixed': 'fixed-sink',
+              'relative': 'relative-sink',
+              'popup': 'popup',
+              'hotspot': 'hotspot'
+            }),
+
+            ChainUtils.cLogging(
+              'Relative, not scrolled',
+              [
+                cAddPopupToRelative,
+                cTestPopupInRelative
+              ]
+            ),
+
             Chain.wait(1000),
-            cAddPopupToFixed,
-            cTestPopupInFixed,
+
+            ChainUtils.cLogging(
+              'Fixed, not scrolled',
+              [
+                cAddPopupToFixed,
+                cTestPopupInFixed
+              ]
+            ),
+            
             Chain.wait(1000),
 
             NamedChain.bundle(function (data) {
               Css.set(data.hotspot.element(), 'top', '1000px');
               return Result.value(data);
             }),
-
             cScrollToHotspot,
-            cAddPopupToRelative,
-            cTestPopupInRelative,
+
+            ChainUtils.cLogging(
+              'Relative, scrolled 1000px',
+              [
+                cAddPopupToRelative,
+                cTestPopupInRelative
+              ]
+            ),
+
             Chain.wait(1000),
-            cAddPopupToFixed,
-            cTestPopupInFixed,
+
+            ChainUtils.cLogging(
+              'Fixed, scrolled 1000px',
+              [
+                cAddPopupToFixed,
+                cTestPopupInFixed
+              ]
+            ),
+            
             Chain.wait(1000)
           ])
         ])
