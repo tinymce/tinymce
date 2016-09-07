@@ -4,13 +4,14 @@ define(
   [
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert'
   ],
 
-  function (Gui, GuiFactory, HtmlDisplay, Class, Element, Insert) {
+  function (Gui, GuiFactory, EventHandler, HtmlDisplay, Class, Element, Insert) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -76,6 +77,44 @@ define(
           toggling: {
             toggleClass: 'demo-selected'
           }
+        }
+      );
+
+      var section2 = HtmlDisplay.section(
+        gui,
+        'Position anchoring to menu',
+        {
+          uiType: 'custom',
+          dom: {
+            tag: 'ol',
+            styles: {
+              'list-style-type': 'none'
+            }
+          },
+          components: [
+            {
+              uiType: 'custom',
+              dom: {
+                tag: 'li',
+                innerHtml: 'Hover over me',
+                styles: {
+                  border: '1px solid gray',
+                  width: '100px'
+                }
+              },
+              events: {
+                mouseover: EventHandler.nu({
+                  run: function (item) {
+                    sink.apis().addContainer(popup);
+                    sink.apis().position({
+                      anchor: 'submenu',
+                      item: item
+                    }, popup);
+                  }
+                })
+              }
+            }
+          ]
         }
       );
     };
