@@ -9,6 +9,7 @@ asynctest(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.test.ChainUtils',
     'ephox.alloy.test.GuiSetup',
+    'ephox.alloy.test.PositionTestUtils',
     'ephox.alloy.test.Sinks',
     'ephox.fussy.api.WindowSelection',
     'ephox.perhaps.Result',
@@ -24,7 +25,7 @@ asynctest(
     'global!window'
   ],
  
-  function (Chain, Cursors, Guard, NamedChain, GuiFactory, ChainUtils, GuiSetup, Sinks, WindowSelection, Result, Writer, Css, DomEvent, Element, Scroll, SelectorFind, Traverse, Error, setTimeout, window) {
+  function (Chain, Cursors, Guard, NamedChain, GuiFactory, ChainUtils, GuiSetup, PositionTestUtils, Sinks, WindowSelection, Result, Writer, Css, DomEvent, Element, Scroll, SelectorFind, Traverse, Error, setTimeout, window) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -63,44 +64,12 @@ asynctest(
       });
 
     }, function (doc, body, gui, component, store) {
-      var getAnchor = function (data) {
+      var cSetupAnchor = Chain.mapper(function (data) {
         return {
           anchor: 'selection',
           root: Element.fromDom(data.classic.element().dom().contentWindow.document.body)
         };
-      };
-
-      var cAddPopupToRelative = NamedChain.bundle(function (data) {
-        data.relative.apis().addContainer(data.popup);
-        data.relative.apis().position(getAnchor(data), data.popup);
-        return Result.value(data);
       });
-
-      var cTestPopupInRelative = Chain.control(
-        NamedChain.bundle(function (data) {
-          var inside = Sinks.isInside(data.relative, data.popup);
-          return inside ? Result.value(data) : Result.error(
-            new Error('The popup does not appear within the relative sink container')
-          );
-        }),
-        Guard.tryUntil('Ensuring that the popup is inside the relative sink', 100, 3000)
-      );
-
-      var cAddPopupToFixed = NamedChain.bundle(function (data) {
-        data.fixed.apis().addContainer(data.popup);
-        data.fixed.apis().position(getAnchor(data), data.popup);
-        return Result.value(data);
-      });
-
-      var cTestPopupInFixed = Chain.control(
-        NamedChain.bundle(function (data) {
-          var inside = Sinks.isInside(data.fixed, data.popup);
-          return inside ? Result.value(data) : Result.error(
-            new Error('The popup does not appear within the fixed sink container')
-          );
-        }),
-        Guard.tryUntil('Ensuring that the popup is inside the fixed sink', 100, 3000)
-      );
 
       var cGetWin = Chain.mapper(function (frame) {
         return frame.element().dom().contentWindow;
@@ -162,57 +131,30 @@ asynctest(
                   soffset: 0,
                   finishPath: [ 3, 0 ],
                   foffset: 0
-                }), 'range')
+                }), 'range'),
+                NamedChain.write('anchor', cSetupAnchor)
               ]
             ),
 
-            ChainUtils.cLogging(
+            PositionTestUtils.cTestSink(
               'Relative, Selected: 3rd paragraph, no page scroll, no editor scroll',
-              [
-                cAddPopupToRelative,
-                cTestPopupInRelative,
-                Chain.wait(1000)
-              ]
+              'relative'
             ),
-
-            ChainUtils.cLogging(
+            PositionTestUtils.cTestSink(
               'Fixed, Selected: 3rd paragraph, no page scroll, no editor scroll',
-              [
-                cAddPopupToFixed,
-                cTestPopupInFixed,
-                Chain.wait(1000)
-              ]
-            ),
-            
-            ChainUtils.cLogging(
-              'Adding margin to classic editor, and scrolling to it',
-              [
-                Chain.op(function (data) {
-                  Css.set(data.classic.element(), 'margin-top', '2000px');
-                  window.scrollTo(0, 2000);
-                })
-              ]
+              'fixed'
             ),
 
-            ChainUtils.cLogging(
-              'Relative, Selected: 3rd paragraph, large page scroll, no editor scroll',
-              [
-                
-                cAddPopupToRelative,
-                cTestPopupInRelative,
-                Chain.wait(2000)
-              ]
+            PositionTestUtils.cScrollDown('classic', '2000px'),
+            PositionTestUtils.cTestSink(
+              'Relative, Selected: 3rd paragraph, 2000px scroll, no editor scroll',
+              'relative'
+            ),
+            PositionTestUtils.cTestSink(
+              'Fixed, Selected: 3rd paragraph, 2000px scroll, no editor scroll',
+              'fixed'
             ),
 
-            ChainUtils.cLogging(
-              'Fixed, Selected: 3rd paragraph, large page scroll, no editor scroll',
-              [
-                
-                cAddPopupToFixed,
-                cTestPopupInFixed,
-                Chain.wait(2000)
-              ]
-            ),
 
             ChainUtils.cLogging(
               'Selecting 13th paragraph and scrolling to it',
@@ -228,27 +170,19 @@ asynctest(
                   return Scroll.get(
                     Traverse.owner(range2.start())
                   );
-                }), 'scroll2')
+                }), 'scroll2'),
+                NamedChain.write('anchor', cSetupAnchor)
               ]
             ),
 
 
-            ChainUtils.cLogging(
-              'Relative, Selected: 13th paragraph, large page scroll, large editor scroll',
-              [
-                cAddPopupToRelative,
-                cTestPopupInRelative,
-                Chain.wait(1000)
-              ]
+            PositionTestUtils.cTestSink(
+              'Relative, Selected: 13rd paragraph, 2000px scroll, no editor scroll',
+              'relative'
             ),
-
-            ChainUtils.cLogging(
-              'Fixed, Selected: 13th paragraph, large page scroll, large editor scroll',
-              [
-                cAddPopupToFixed,
-                cTestPopupInFixed,
-                Chain.wait(1000)
-              ]
+            PositionTestUtils.cTestSink(
+              'Fixed, Selected: 13rd paragraph, 2000px scroll, no editor scroll',
+              'fixed'
             )
           ])
         ])
