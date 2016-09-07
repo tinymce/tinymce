@@ -8,6 +8,7 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
+    'ephox.highway.Merger',
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
     'ephox.perhaps.Result',
@@ -15,7 +16,7 @@ define(
     'global!Error'
   ],
 
-  function (ExtraArgs, ObjIndex, PrioritySort, Objects, Arr, Obj, Json, Fun, Result, Array, Error) {
+  function (ExtraArgs, ObjIndex, PrioritySort, Objects, Arr, Obj, Merger, Json, Fun, Result, Array, Error) {
     var behaviourApi = function (name, invocation) {
       return {
         name: Fun.constant(name),
@@ -47,9 +48,9 @@ define(
       });
     };
 
-    var combine = function (info, behaviours, extraArgs) {
+    var combine = function (info, behaviours, baseApis, extraArgs) {
       // Get the APIs sorted by behaviour
-      var behaviourApis = { };
+      var behaviourApis = Merger.deepMerge(baseApis, { });
       Arr.each(behaviours, function (behaviour) {
         behaviourApis[behaviour.name()] = behaviour.apis(info);
       });

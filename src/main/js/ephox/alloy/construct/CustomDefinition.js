@@ -50,6 +50,7 @@ define(
         //
 
         FieldSchema.defaulted('events', {}),
+        FieldSchema.defaulted('apis', {}),
 
         // Use mergeWith in the future when pre-built behaviours conflict
         FieldSchema.defaulted('apiOrder', {}),
@@ -112,6 +113,10 @@ define(
       return alloyBehaviours.concat(bs);
     };
 
+    var toApis = function (info) {
+      return info.apis();
+    };
+
     var toEvents = function (info) {
       return info.events();
     };
@@ -120,6 +125,7 @@ define(
       toInfo: toInfo,
       toDefinition: toDefinition,
       behaviours: behaviours,
+      toApis: toApis,
       toEvents: toEvents
     };
   }
