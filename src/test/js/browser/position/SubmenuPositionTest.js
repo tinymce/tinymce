@@ -3,20 +3,17 @@ asynctest(
  
   [
     'ephox.agar.api.Chain',
-    'ephox.agar.api.Guard',
     'ephox.agar.api.NamedChain',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.test.ChainUtils',
     'ephox.alloy.test.GuiSetup',
+    'ephox.alloy.test.PositionTestUtils',
     'ephox.alloy.test.Sinks',
-    'ephox.perhaps.Result',
-    'ephox.sugar.api.Css',
-    'ephox.sugar.api.Scroll',
     'global!Error',
     'global!setTimeout'
   ],
  
-  function (Chain, Guard, NamedChain, GuiFactory, ChainUtils, GuiSetup, Sinks, Result, Css, Scroll, Error, setTimeout) {
+  function (Chain, NamedChain, GuiFactory, ChainUtils, GuiSetup, PositionTestUtils, Sinks, Error, setTimeout) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -61,49 +58,13 @@ asynctest(
       });
 
     }, function (doc, body, gui, component, store) {
-      var cAddPopupToRelative = NamedChain.bundle(function (data) {
-        data.relative.apis().addContainer(data.popup);
-        data.relative.apis().position({
+      var cSetupAnchor = Chain.mapper(function (item) {
+        return {
           anchor: 'submenu',
-          item: data.item
-        }, data.popup);
-        return Result.value(data);
+          item: item
+        };
       });
-
-      var cTestPopupInRelative = Chain.control(
-        NamedChain.bundle(function (data) {
-          var inside = Sinks.isInside(data.relative, data.popup);
-          return inside ? Result.value(data) : Result.error(
-            new Error('The popup does not appear within the relative sink container')
-          );
-        }),
-        Guard.tryUntil('Ensuring that the popup is inside the relative sink', 100, 3000)
-      );
-
-      var cAddPopupToFixed = NamedChain.bundle(function (data) {
-        data.fixed.apis().addContainer(data.popup);
-        data.fixed.apis().position({
-          anchor: 'submenu',
-          item: data.item
-        }, data.popup);
-        return Result.value(data);
-      });
-
-      var cTestPopupInFixed = Chain.control(
-        NamedChain.bundle(function (data) {
-          var inside = Sinks.isInside(data.fixed, data.popup);
-          return inside ? Result.value(data) : Result.error(
-            new Error('The popup does not appear within the fixed sink container')
-          );
-        }),
-        Guard.tryUntil('Ensuring that the popup is inside the fixed sink', 100, 3000)
-      );
-
-      var cScrollToItem = NamedChain.direct('item', Chain.mapper(function (item) {
-        item.element().dom().scrollIntoView();
-        return Scroll.get();
-      }), 'scrollValue');
-
+     
       return [
         Chain.asStep({}, [
           NamedChain.asChain([
@@ -115,52 +76,14 @@ asynctest(
               'list': 'test-list'
             }),
 
-            ChainUtils.cLogging(
-              'Relative, not scrolled',
-              [
-                cAddPopupToRelative,
-                cTestPopupInRelative,
-                Chain.wait(1000)
-              ]
-            ),
+            NamedChain.direct('item', cSetupAnchor, 'anchor'),
 
-            ChainUtils.cLogging(
-              'Fixed, not scrolled',
-              [
-                cAddPopupToFixed,
-                cTestPopupInFixed,
-                Chain.wait(1000)
-              ]
-            ),
+            PositionTestUtils.cTestSink('Relative, not scrolled', 'relative'),
+            PositionTestUtils.cTestSink('Fixed, not scrolled', 'fixed'),
 
-            ChainUtils.cLogging(
-              'Adding margin to item and scrolling to it',
-              [
-                NamedChain.bundle(function (data) {
-                  Css.set(data.list.element(), 'top', '1000px');
-                  return Result.value(data);
-                }),
-                cScrollToItem
-              ]
-            ),
-
-            ChainUtils.cLogging(
-              'Relative, scrolled 1000px',
-              [
-                cAddPopupToRelative,
-                cTestPopupInRelative,
-                Chain.wait(1000)
-              ]
-            ),
-
-            ChainUtils.cLogging(
-              'Fixed, scrolled 1000px',
-              [
-                cAddPopupToFixed,
-                cTestPopupInFixed,
-                Chain.wait(1000)
-              ]
-            )
+            PositionTestUtils.cScrollDown('list', '1000px'),
+            PositionTestUtils.cTestSink('Relative, scrolled 1000px', 'relative'),
+            PositionTestUtils.cTestSink('Fixed, scrolled 1000px', 'fixed')
           ])
         ])
       ];
