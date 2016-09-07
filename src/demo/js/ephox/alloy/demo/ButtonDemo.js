@@ -24,7 +24,7 @@ define(
       Class.add(gui.element(), 'gui-root-demo-container');
       Insert.append(body, gui.element());
 
-      var button = HtmlDisplay.section(
+      var button1 = HtmlDisplay.section(
         gui,
         'This button has two custom behaviours. One adds (among other things) "data-cat" and ' +
         'background blue, and the other adds color red',
