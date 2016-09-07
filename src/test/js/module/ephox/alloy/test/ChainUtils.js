@@ -10,7 +10,7 @@ define(
   ],
 
   function (Chain, Guard, NamedChain, Arr, Obj) {
-    // Move to agar?
+    // INVESTIGATE: Does cLogging have a place in vanilla agar?
     var cLogging = function (label, chains) {
       var logChains = Arr.map(chains, function (c) {
         return Chain.control(c, Guard.addLogging(label));
@@ -38,14 +38,9 @@ define(
       );
     };
 
-    var cStore = function (property) {
-      return NamedChain.direct(property, Chain.inject, property);
-    };
-
     return {
       cLogging: cLogging,
-      cFindUids: cFindUids,
-      cStore: cStore
+      cFindUids: cFindUids
     };
   }
 );
