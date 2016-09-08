@@ -35,6 +35,7 @@ define(
         KeyRules.rule( KeyMatch.inSet(Keys.UP()), executeInfo.onUp()),
         KeyRules.rule( KeyMatch.inSet(Keys.DOWN()), executeInfo.onDown()),
         KeyRules.rule( KeyMatch.inSet(Keys.LEFT()), executeInfo.onLeft()),
+        KeyRules.rule( KeyMatch.inSet(Keys.RIGHT()), executeInfo.onRight()),
         KeyRules.rule( KeyMatch.inSet(Keys.SPACE()), executeInfo.onSpace()),
         KeyRules.rule( KeyMatch.inSet(Keys.ESCAPE()), executeInfo.onEscape())
       ];
