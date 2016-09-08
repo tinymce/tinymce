@@ -56,7 +56,7 @@ define(
     };
 
     var gotoSandbox = function (sandbox, sInfo) {
-      Manager.enter(sandbox, sInfo);
+      if (isShowing(sandbox, sInfo)) Manager.enter(sandbox, sInfo);
     };
 
     // Open sandbox transfers focus to the opened menu

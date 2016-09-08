@@ -3,6 +3,7 @@ asynctest(
  
   [
     'ephox.agar.api.Assertions',
+    'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
@@ -16,10 +17,11 @@ asynctest(
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
+    'ephox.sugar.api.Node',
     'ephox.sugar.api.Remove'
   ],
  
-  function (Assertions, Logger, Step, UiFinder, GuiFactory, Manager, GuiSetup, Sinks, CachedFuture, Future, Fun, Attr, Element, Insert, Remove) {
+  function (Assertions, GeneralSteps, Logger, Step, UiFinder, GuiFactory, Manager, GuiSetup, Sinks, CachedFuture, Future, Fun, Attr, Element, Insert, Node, Remove) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -85,6 +87,10 @@ asynctest(
         });
       };
 
+      var sClose = Step.sync(function () {
+        sandbox.apis().closeSandbox();
+      });
+
       var sCheckShowing = function (label, expected) {
         return Step.sync(function () {
           Assertions.assertEq(
@@ -95,54 +101,93 @@ asynctest(
         });
       };
 
+      var sCheckOpenState = function (label, expected) {
+        return Logger.t(
+          label, 
+          GeneralSteps.sequence([
+            sCheckShowing(label, true),
+            UiFinder.sExists(gui.element(), 'input[data-test-input="' + expected.data + '"]'),
+            UiFinder.sExists(gui.element(), '.test-sandbox'),
+            store.sAssertEq('Checking store', expected.store),
+            store.sClear,
+            Step.sync(function () {
+              var state = sandbox.apis().getState();
+              Assertions.assertEq(label + '\nChecking state node name', 'input', Node.name(state.getOrDie()));
+            })
+          ])
+        );
+      };
+
+      var sCheckClosedState = function (label, expected) {
+        return Logger.t(
+          label,
+          GeneralSteps.sequence([
+            sCheckShowing(label, false),
+            UiFinder.sNotExists(gui.element(), 'input[data-test-input]'),
+            UiFinder.sNotExists(gui.element(), '.test-sandbox'),
+            store.sAssertEq(label, expected.store),
+            store.sClear,
+            Step.sync(function () {
+              var state = sandbox.apis().getState();
+              Assertions.assertEq(label + '\nChecking state is not set', true, state.isNone());
+            })
+          ])
+        );
+      };
+
       return [
         // initially
-        UiFinder.sNotExists(gui.element(), 'input[data-test-input]'),
-        UiFinder.sNotExists(gui.element(), '.test-sandbox'),
-        sCheckShowing('Initially', false),
+        sCheckClosedState('Initial state', { store: [ ] }),
 
         // showing sandbox
-        Logger.t(
-          'Show the sandbox with data: first-showing',
-          sShowWith('first-showing')
-        ),
-        sCheckShowing('After showing', true),
-        UiFinder.sExists(gui.element(), 'input[data-test-input="first-showing"]'),
-        store.sAssertEq('After show, preview should be in list', [ 'preview' ]),
-        store.sClear,
+        Logger.t('Show the sandbox with data: first-showing', sShowWith('first-showing')),
+        sCheckOpenState('After showing', { data: 'first-showing', store: [ 'preview' ] }),
 
         // closing sandbox
-        Logger.t(
-          'Closing sandbox',
-          Step.sync(function () {
-            sandbox.apis().closeSandbox();
-          })
-        ),
-
-        store.sAssertEq('After close, nothing', [  ]),
-        UiFinder.sNotExists(gui.element(), 'input[data-test-input]'),
-        UiFinder.sNotExists(gui.element(), '.test-sandbox'),
-        sCheckShowing('After closing', false),
+        Logger.t('Closing sandbox', sClose),
+        sCheckClosedState('After closing', { store: [ ] }),
 
         // opening sandbox
-        Logger.t(
-          'Opening sandbox',
-          sOpenWith('first-opening')
-        ),
-        sCheckShowing('After opening', true),
-        UiFinder.sExists(gui.element(), 'input[data-test-input="first-opening"]'),
-        store.sAssertEq('After open, enter should be in list', [ 'enter' ]),
-        store.sClear,
+        Logger.t('Opening sandbox', sOpenWith('first-opening')),
+        sCheckOpenState('Opening sandbox', { data: 'first-opening', store: [ 'enter' ] }),
 
         // opening sandbox again
-        Logger.t(
-          'Opening sandbox while it is already open',
-          sOpenWith('second-opening')
-        ),
-        sCheckShowing('After opening', true),
-        UiFinder.sExists(gui.element(), 'input[data-test-input="second-opening"]'),
-        store.sAssertEq('After open, enter should be in list', [ 'enter' ]),
-        store.sClear
+        Logger.t('Opening sandbox while it is already open', sOpenWith('second-opening')),
+        sCheckOpenState('Opening sandbox while it is already open', {
+          data: 'second-opening',
+          store: [ 'enter' ]
+        }),
+
+        // closing sandbox again
+        Logger.t('Closing sandbox 2', sClose),
+        sCheckClosedState('After closing 2', { store: [ ] }),
+
+        // showing sandbox again
+        Logger.t('Showing sandbox 2', sShowWith('second-showing')),
+        sCheckOpenState('After showing 2', {
+          data: 'second-showing',
+          store: [ 'preview' ]
+        }),
+
+        // goto showing sandbox
+        Logger.t('Goto sandbox', Step.sync(function () {
+          sandbox.apis().gotoSandbox();
+        })),
+        sCheckOpenState('After goto sandbox', {
+          data: 'second-showing',
+          store: [ 'enter' ]
+        }),
+
+        // Close sandbox
+        Logger.t('Closing sandbox 3', sClose),
+        sCheckClosedState('After closing 3', { store: [ ] }),
+
+        Logger.t('Goto closed sandbox', Step.sync(function () {
+          sandbox.apis().gotoSandbox();
+        })),
+        sCheckClosedState('After goto closed sandbox', {
+          store: [ ]
+        })
       ];
     }, function () { success(); }, failure);
 
