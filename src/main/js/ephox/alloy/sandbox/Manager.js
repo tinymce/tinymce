@@ -8,7 +8,7 @@ define(
   function (Contracts) {
     var contract = Contracts.exactly([
       'clear',
-      'build',
+      'populate',
       'preview',
       'enter',
       'isPartOf'
@@ -18,8 +18,8 @@ define(
       sInfo.manager().clear(sandbox, sInfo.state().get());
     };
 
-    var build = function (sandbox, sInfo, data) {
-      return sInfo.manager().build(sandbox, data);
+    var populate = function (sandbox, sInfo, data) {
+      return sInfo.manager().populate(sandbox, data);
     };
 
     var preview = function (sandbox, sInfo) {
@@ -37,7 +37,7 @@ define(
     return {
       contract: contract,
       clear: clear,
-      build: build,
+      populate: populate,
       preview: preview,
       enter: enter,
       isPartOf: isPartOf

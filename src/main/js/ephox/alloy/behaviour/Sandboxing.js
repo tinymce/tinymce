@@ -37,7 +37,7 @@ define(
       Remove.empty(sandbox.element());
       sInfo.sink().apis().addContainer(sandbox);
       sInfo.sink().getSystem().addToWorld(sandbox);
-      var output = Manager.build(sandbox, sInfo, data);
+      var output = Manager.populate(sandbox, sInfo, data);
       sInfo.state().set(output);
     };
 

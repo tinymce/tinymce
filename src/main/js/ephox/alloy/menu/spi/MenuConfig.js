@@ -102,7 +102,7 @@ define(
         });
       };
 
-      var build = function (sandbox, data) {
+      var populate = function (sandbox, data) {
         var componentMap = buildMenus(sandbox, data.menus);
         addToWorld(sandbox, componentMap);
 
@@ -269,7 +269,7 @@ define(
           manager: Manager.contract({
             clear: clear,
             isPartOf: isPartOf,
-            build: build,
+            populate: populate,
             preview: preview,
             enter: enter
           }),
