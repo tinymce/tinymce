@@ -50,7 +50,7 @@ define(
         //
 
         FieldSchema.defaulted('events', {}),
-        FieldSchema.defaulted('apis', {}),
+        FieldSchema.defaulted('apis', Fun.constant({})),
 
         // Use mergeWith in the future when pre-built behaviours conflict
         FieldSchema.defaulted('apiOrder', {}),
@@ -113,6 +113,7 @@ define(
       return alloyBehaviours.concat(bs);
     };
 
+    // Probably want to pass info to these at some point.
     var toApis = function (info) {
       return info.apis();
     };
