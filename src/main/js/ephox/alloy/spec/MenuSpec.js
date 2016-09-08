@@ -2,14 +2,23 @@ define(
   'ephox.alloy.spec.MenuSpec',
 
   [
+    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.build.ItemType',
     'ephox.alloy.menu.build.SeparatorType',
     'ephox.alloy.menu.build.WidgetType',
+    'ephox.alloy.menu.util.ItemEvents',
+    'ephox.alloy.menu.util.MenuEvents',
+    'ephox.alloy.menu.util.MenuMarkers',
+    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.ValueSchema'
+    'ephox.boulder.api.Objects',
+    'ephox.boulder.api.ValueSchema',
+    'ephox.compass.Arr',
+    'ephox.highway.Merger',
+    'ephox.peanut.Fun'
   ],
 
-  function (ItemType, SeparatorType, WidgetType, FieldSchema, ValueSchema) {
+  function (EventHandler, ItemType, SeparatorType, WidgetType, ItemEvents, MenuEvents, MenuMarkers, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun) {
     var itemSchema = ValueSchema.choose(
       'type',
       {
@@ -21,30 +30,34 @@ define(
 
     var menuSchema = ValueSchema.objOf([
       FieldSchema.strict('value'),
-      FieldSchema.strict('items')
+      FieldSchema.strict('items'),
+      FieldSchema.defaulted('classes', [ ]),
+      FieldSchema.field(
+        'markers',
+        'markers',
+        FieldPresence.defaulted(MenuMarkers.fallback()),
+        MenuMarkers.schema()
+      )
     ]);
 
-    return function (rawSpec) {
-      var spec = ValueSchema.asStructOrDie('menu.spec', menuSchema, rawSpec);
-
+    var make = function (spec) {
+      var detail = ValueSchema.asStructOrDie('menu.spec', menuSchema, spec);
       return {
         uiType: 'custom',
         dom: {
           tag: 'ol',
-          classes: [
-            'lab-menu'
-          ],
-          attributes: {
-            'data-menu-value': spec.value()
-          }
+          classes: detail.classes(),
+          attributes: Objects.wrapAll([
+            {
+              key: detail.markers().menuValue(),
+              value: detail.value()
+            }
+          ])
         },
-        behaviours: [
-          // Highlighting for a menu is selecting items inside the menu
-          Highlighting
-        ],
         highlighting: {
-          highlightClass: 'selected',
-          itemClass: 'lab-item-type'
+          // Highlighting for a menu is selecting items inside the menu
+          highlightClass: detail.markers().selectedItem(),
+          itemClass: detail.markers().item()
         },
         events: Objects.wrapAll([
           { 
@@ -69,11 +82,26 @@ define(
             })
           }
         ]),
-        components: Arr.map(spec.items(), function (i) {
-          var itemInfo = ValueSchema.asStructOrDie('deciphering item', itemSchema, i);
+        components: Arr.map(detail.items(), function (i) {
+          var markers = {
+            item: detail.markers().item(),
+            itemValue: detail.markers().itemValue(),
+            itemText: detail.markers().itemText(),
+            selectedItem: detail.markers().selectedItem()
+          };
+
+          var merged = Merger.deepMerge(i, {
+            markers: markers
+          });
+          var itemInfo = ValueSchema.asStructOrDie('menu.spec item', itemSchema, merged);
           return itemInfo.builder()(itemInfo);
         })
       };
-    return null;
+    };
+
+    return {
+      schema: Fun.constant(menuSchema),
+      make: make
+    };
   }
 );

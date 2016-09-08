@@ -14,6 +14,7 @@ define(
   function (SystemEvents, EventHandler, ItemEvents, FieldSchema, Objects, Option, Traverse) {
     var schema = [
       FieldSchema.strict('spec'),
+      FieldSchema.strict('markers'),
       FieldSchema.defaulted('classes', [ ]),
       FieldSchema.state('builder', function () {
         return builder;
@@ -25,7 +26,7 @@ define(
         uiType: 'custom',
         dom: {
           tag: 'li',
-          classes: info.classes()
+          classes: [ info.markers().item() ]
         },
         components: [ info.spec() ],
         events: Objects.wrapAll([

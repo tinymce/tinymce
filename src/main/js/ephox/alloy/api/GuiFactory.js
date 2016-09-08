@@ -7,8 +7,11 @@ define(
     'ephox.alloy.events.DefaultEvents',
     'ephox.alloy.spec.ButtonSpec',
     'ephox.alloy.spec.CustomSpec',
+    'ephox.alloy.spec.DropdownButtonSpec',
+    'ephox.alloy.spec.DropdownMenuSpec',
     'ephox.alloy.spec.FormLabelSpec',
     'ephox.alloy.spec.InputSpec',
+    'ephox.alloy.spec.MenuSpec',
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
@@ -21,12 +24,15 @@ define(
     'global!Error'
   ],
 
-  function (Component, Components, DefaultEvents, ButtonSpec, CustomSpec, FormLabelSpec, InputSpec, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
+  function (Component, Components, DefaultEvents, ButtonSpec, CustomSpec, DropdownButtonSpec, DropdownMenuSpec, FormLabelSpec, InputSpec, MenuSpec, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
     var knownSpecs = {
       custom: CustomSpec.make,
       button: ButtonSpec.make,
       input: InputSpec.make,
-      formlabel: FormLabelSpec.make
+      formlabel: FormLabelSpec.make,
+      dropdownmenu: DropdownMenuSpec.make,
+      dropdown: DropdownButtonSpec.make,
+      menu: MenuSpec.make
 
       // Add other specs here.
     };

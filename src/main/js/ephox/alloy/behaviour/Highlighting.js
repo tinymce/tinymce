@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.behaviour.Behaviour',
     'ephox.alloy.dom.DomModification',
+    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
@@ -14,11 +15,16 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Behaviour, DomModification, FieldSchema, ValueSchema, Arr, Fun, Option, Class, SelectorFilter, SelectorFind) {
-    var schema = ValueSchema.objOf([
-      FieldSchema.strict('highlightClass'),
-      FieldSchema.strict('itemClass')
-    ]);
+  function (Behaviour, DomModification, FieldPresence, FieldSchema, ValueSchema, Arr, Fun, Option, Class, SelectorFilter, SelectorFind) {
+    var schema = FieldSchema.field(
+      'highlighting',
+      'highlighting',
+      FieldPresence.asOption(),
+      ValueSchema.objOf([
+        FieldSchema.strict('highlightClass'),
+        FieldSchema.strict('itemClass')
+      ])
+    );
 
     var exhibit = function (info, base) {
       return DomModification.nu({ });

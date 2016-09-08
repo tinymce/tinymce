@@ -5,9 +5,11 @@ define(
     'ephox.alloy.behaviour.Changing',
     'ephox.alloy.behaviour.Coupling',
     'ephox.alloy.behaviour.Focusing',
+    'ephox.alloy.behaviour.Highlighting',
     'ephox.alloy.behaviour.Keying',
     'ephox.alloy.behaviour.Positioning',
     'ephox.alloy.behaviour.Receiving',
+    'ephox.alloy.behaviour.Sandboxing',
     'ephox.alloy.behaviour.Tabstopping',
     'ephox.alloy.behaviour.Toggling',
     'ephox.alloy.dom.DomDefinition',
@@ -22,7 +24,7 @@ define(
     'global!Error'
   ],
 
-  function (Changing, Coupling, Focusing, Keying, Positioning, Receiving, Tabstopping, Toggling, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
+  function (Changing, Coupling, Focusing, Highlighting, Keying, Positioning, Receiving, Sandboxing, Tabstopping, Toggling, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
     var domSchema = ValueSchema.objOf([
       FieldSchema.strict('tag'),
       FieldSchema.defaulted('styles', {}),
@@ -104,7 +106,9 @@ define(
       Receiving,
       Coupling,
       Changing,
-      Positioning
+      Positioning,
+      Highlighting,
+      Sandboxing
     ];
 
     var behaviours = function (info) {

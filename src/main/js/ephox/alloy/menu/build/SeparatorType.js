@@ -8,6 +8,7 @@ define(
   function (FieldSchema) {
     var schema = [
       FieldSchema.defaulted('classes', [ ]),
+      FieldSchema.strict('markers'),
       FieldSchema.state('builder', function () {
         return builder;
       })
@@ -18,7 +19,7 @@ define(
         uiType: 'custom',
         dom: {
           tag: 'li',
-          classes: info.classes()
+          classes: [ ]
         }
       };
     };

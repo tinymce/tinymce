@@ -8,11 +8,15 @@ define(
     'ephox.alloy.menu.state.LayeredState',
     'ephox.alloy.menu.util.ItemEvents',
     'ephox.alloy.menu.util.MenuEvents',
+    'ephox.alloy.menu.util.MenuMarkers',
+    'ephox.alloy.spec.MenuSpec',
+    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
+    'ephox.highway.Merger',
     'ephox.perhaps.Option',
     'ephox.perhaps.Options',
     'ephox.sugar.api.Attr',
@@ -24,7 +28,7 @@ define(
     'ephox.sugar.api.SelectorFilter'
   ],
 
-  function (ComponentStructure, SystemEvents, EventHandler, LayeredState, ItemEvents, MenuEvents, FieldSchema, Objects, ValueSchema, Arr, Obj, Option, Options, Attr, Body, Class, Classes, Insert, Remove, SelectorFilter) {
+  function (ComponentStructure, SystemEvents, EventHandler, LayeredState, ItemEvents, MenuEvents, MenuMarkers, MenuSpec, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Option, Options, Attr, Body, Class, Classes, Insert, Remove, SelectorFilter) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('lazyHotspot'),
 
@@ -32,35 +36,38 @@ define(
       FieldSchema.strict('onClose'),
       FieldSchema.strict('onExecute'),
 
-      FieldSchema.strict('builder'),
       FieldSchema.strict('sink'),
 
-      FieldSchema.strict('backgroundClass'),
-      FieldSchema.strict('textAttr'),
-      FieldSchema.strict('valueAttr'),
-      FieldSchema.strict('itemSelector'),
-      FieldSchema.strict('activeMenuSelector'),
-      FieldSchema.strict('menuSelector')
+      FieldSchema.field(
+        'markers',
+        'markers',
+        FieldPresence.strict(),
+        MenuMarkers.schema()
+      ),
+
+      FieldSchema.strict('backgroundClass')
     ]);
     
     return function (rawUiSpec) {
       var uiSpec = ValueSchema.asStructOrDie('spi.MenuConfig', schema, rawUiSpec);
-      var buildMenus = function (sandbox, menus) {
-        var builder = function (spec, name) {
-          var newSpec = uiSpec.builder()({
-            value: name,
-            items: spec
-          });
-          return sandbox.getSystem().build(newSpec);
-        };
 
-        return Obj.map(menus, builder);
+      var buildMenus = function (sandbox, menus) {
+        return Obj.map(menus, function (spec, name) {
+          // NOTE: We use rawUiSpec here so the nesting isn't a struct
+          var data = {
+            uiType: 'menu',
+            value: name,
+            items: spec,
+            markers: rawUiSpec.markers
+          };
+          return sandbox.getSystem().build(data);
+        });
       };
 
       var toMenuValues = function (sMenus) {
         return Obj.map(sMenus, function (menu) {
-          var menuItems = SelectorFilter.descendants(menu.element(), uiSpec.itemSelector());
-          return Arr.map(menuItems, function (mi) { return Attr.get(mi, uiSpec.valueAttr()); });
+          var menuItems = SelectorFilter.descendants(menu.element(), uiSpec.markers().item());
+          return Arr.map(menuItems, function (mi) { return Attr.get(mi, uiSpec.markers().itemValue()); });
         });
       };
 
@@ -166,7 +173,7 @@ define(
       };
 
       var expandRight = function (sandbox, triggerItem) {
-        var value = Attr.get(triggerItem, uiSpec.valueAttr());
+        var value = Attr.get(triggerItem, uiSpec.markers().itemValue());
         var state = sandbox.apis().getState();
         return state.expand(value).bind(function (path) {
           // When expanding, always select the first.
@@ -187,7 +194,7 @@ define(
       };
 
       var collapseLeft = function (sandbox, item) {
-        var value = Attr.get(item, uiSpec.valueAttr());
+        var value = Attr.get(item, uiSpec.markers().itemValue());
         var state = sandbox.apis().getState();
         return state.collapse(value).bind(function (path) {
           return updateMenuPath(sandbox, state, path);
@@ -195,7 +202,7 @@ define(
       };
 
       var updateView = function (sandbox, item) {
-        var value = Attr.get(item, uiSpec.valueAttr());
+        var value = Attr.get(item, uiSpec.markers().itemValue());
         var state = sandbox.apis().getState();
         return state.refresh(value).bind(function (path) {
           return updateMenuPath(sandbox, state, path);
@@ -272,7 +279,7 @@ define(
         },
         keying: {
           mode: 'menu',
-          selector: '.active-menu .lab-item-type',
+          selector: [ '.' + uiSpec.markers().selectedMenu(), uiSpec.markers().item() ].join(' '),
           onRight: onRight,
           onLeft: onLeft,
           onEscape: onEscape,
@@ -280,8 +287,8 @@ define(
         },
         // Highlighting is used for highlighting the active menu
         highlighting: {
-          highlightClass: uiSpec.activeMenuSelector(),
-          itemClass: uiSpec.menuSelector()
+          highlightClass: uiSpec.markers().selectedMenu(),
+          itemClass: uiSpec.markers().menu()
         },
         events: events
       };
