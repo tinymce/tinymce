@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.behaviour.Changing',
+  'ephox.alloy.behaviour.Streaming',
 
   [
     'ephox.alloy.behaviour.Behaviour',
@@ -15,25 +15,36 @@ define(
 
   function (Behaviour, EventHandler, DomModification, FieldPresence, FieldSchema, Objects, ValueSchema, Fun, Throttler) {
      var schema = FieldSchema.field(
-      'changing',
-      'changing',
+      'streaming',
+      'streaming',
       FieldPresence.asOption(),
       ValueSchema.objOf([
-        FieldSchema.field('rate', 'rate', FieldPresence.strict(), ValueSchema.choose(
+        FieldSchema.field('stream', 'stream', FieldPresence.strict(), ValueSchema.choose(
           'mode',
           {
             'throttle': [
               FieldSchema.strict('delay'),
-              FieldSchema.state('setupLimiter', function () {
-                return function (changeInfo) {
-                  return Throttler(changeInfo.onChange(), changeInfo.rate().delay());
+              FieldSchema.defaulted('stopEvent', true),
+              FieldSchema.state('streams', function () {
+                var setup = function (streamInfo) {
+                  var sInfo = streamInfo.stream();
+                  var throttler = Throttler(streamInfo.onStream(), sInfo.delay());
+
+                  return function (component, simulatedEvent) {
+                    throttler.throttle(component, simulatedEvent);
+                    if (sInfo.stopEvent()) simulatedEvent.stop();
+                  };
+                };
+
+                return {
+                  setup: setup
                 };
               })
             ]
           }
         )),
         FieldSchema.defaulted('event', 'input'),
-        FieldSchema.strict('onChange')
+        FieldSchema.strict('onStream')
       ])
     );
 
@@ -42,18 +53,16 @@ define(
     };
 
     var handlers = function (info) {
-      return info.changing().fold(function () {
+      return info.streaming().fold(function () {
         return { };
-      }, function (changeInfo) {
-        var limiter = changeInfo.rate().setupLimiter();
-        var throttler = limiter(changeInfo);
-        console.log("throttler", throttler);
+      }, function (streamInfo) {
+        var streams = streamInfo.stream().streams();
+        var processor = streams.setup(streamInfo);
         return Objects.wrap(
-          changeInfo.event(),
+          streamInfo.event(),
           EventHandler.nu({
             run: function (component, simulatedEvent) {
-              throttler.throttle(component, simulatedEvent);
-              simulatedEvent.stop();
+              processor(component, simulatedEvent);
             }
           })
         );
@@ -61,7 +70,7 @@ define(
     };
 
     return Behaviour.contract({
-      name: Fun.constant('changing'),
+      name: Fun.constant('streaming'),
       exhibit: exhibit,
       handlers: handlers,
       apis: Fun.constant({ }),

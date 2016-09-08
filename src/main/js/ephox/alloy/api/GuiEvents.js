@@ -86,7 +86,7 @@ define(
         var stopped = settings.triggerEvent('focusout', event);
         if (stopped) event.kill();
 
-        // INVESTIGTE: Come up with a better way of doing this. Related target can be used, but not on FF.
+        // INVESTIGATE: Come up with a better way of doing this. Related target can be used, but not on FF.
         // It allows the active element to change before firing the blur that we will listen to 
         // for things like closing popups
         setTimeout(function () {
@@ -99,6 +99,11 @@ define(
         if (stopped) event.kill();
       });
 
+      var onChange = DomEvent.bind(container, 'change', function (event) {
+        var stopped = settings.triggerEvent('change', event);
+        if (stopped) event.kill();
+      });
+
       var unbind = function () {
         onClick.unbind();
         onSelectStart.unbind();
@@ -107,6 +112,7 @@ define(
         onFocusIn.unbind();
         onFocusOut.unbind();
         onInput.unbind();
+        onChange.unbind();
       };
 
       return {
