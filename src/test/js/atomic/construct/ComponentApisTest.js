@@ -21,7 +21,7 @@ test(
         'Checking error of combined API',
         expectedPart,
         function () {
-          return ComponentApis.combine(info, behaviours, [ ExtraArgs.eager('extra-args') ]);
+          return ComponentApis.combine(info, behaviours, {}, [ ExtraArgs.eager('extra-args') ]);
         }
       );
     };
@@ -33,7 +33,7 @@ test(
         'Checking combined API',
         function () {
           store.clear();
-          return ComponentApis.combine(info, behaviours, [ ExtraArgs.eager('extra-args') ]);
+          return ComponentApis.combine(info, behaviours, {}, [ ExtraArgs.eager('extra-args') ]);
         },
         function (value) {
           var apis = Obj.keys(value).sort();
