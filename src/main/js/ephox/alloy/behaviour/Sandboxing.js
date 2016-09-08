@@ -11,11 +11,10 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.scullion.Cell',
-    'ephox.sugar.api.Body',
     'ephox.sugar.api.Remove'
   ],
 
-  function (Behaviour, DomModification, Manager, FieldPresence, FieldSchema, ValueSchema, Fun, Option, Cell, Body, Remove) {
+  function (Behaviour, DomModification, Manager, FieldPresence, FieldSchema, ValueSchema, Fun, Option, Cell, Remove) {
     var schema = FieldSchema.field(
       'sandboxing',
       'sandboxing',
@@ -31,10 +30,17 @@ define(
       ])
     );
 
+    var clear = function (sandbox, sInfo) {
+      if (sInfo.state().get().isSome()) {
+        Manager.clear(sandbox, sInfo);
+        sInfo.sink().getSystem().removeFromWorld(sandbox);
+      }
+    };
+
     // NOTE: A sandbox should not start as part of the world. It is expected to be
     // added to the sink on rebuild.
     var rebuildSandbox = function (sandbox, sInfo, data) {
-      if (sInfo.state().get().isSome()) Manager.clear(sandbox, sInfo);
+      clear(sandbox, sInfo);
       Remove.empty(sandbox.element());
       sInfo.sink().apis().addContainer(sandbox);
       sInfo.sink().getSystem().addToWorld(sandbox);
@@ -82,6 +88,7 @@ define(
         sandbox.getSystem().removeFromWorld(sandbox);
         sInfo.sink().apis().removeContainer(sandbox);
         sInfo.onClose()(sandbox, state);
+        sInfo.state().set(Option.none());
       });
     };
 

@@ -64,42 +64,85 @@ asynctest(
         getState: Behaviour.tryActionOpt('sandboxing', info, 'getState', getState)
 
       */
-      return [
-        UiFinder.sNotExists(gui.element(), 'input[data-test-input]'),
-        // It is not in the DOM until it opens
-        UiFinder.sNotExists(gui.element(), '.test-sandbox'),
 
-        Step.sync(function () {
+      var sShowWith = function (data) {
+        return Step.async(function (next, die) {
+          sandbox.apis().showSandbox(
+            CachedFuture.pure(data)
+          ).get(function () {
+            next();
+          });
+        });
+      };
+
+      var sOpenWith = function (data) {
+        return Step.async(function (next, die) {
+          sandbox.apis().openSandbox(
+            CachedFuture.pure(data)
+          ).get(function () {
+            next();
+          });
+        });
+      };
+
+      var sCheckShowing = function (label, expected) {
+        return Step.sync(function () {
           Assertions.assertEq(
-            'Sandbox should not be showing yet',
-            false,
+            label + '\nSandbox should ' + (expected === false ? '*not* ' : '') + 'be showing',
+            expected,
             sandbox.apis().isShowing()
           );
-        }),
+        });
+      };
 
+      return [
+        // initially
+        UiFinder.sNotExists(gui.element(), 'input[data-test-input]'),
+        UiFinder.sNotExists(gui.element(), '.test-sandbox'),
+        sCheckShowing('Initially', false),
+
+        // showing sandbox
         Logger.t(
           'Show the sandbox with data: first-showing',
-          Step.async(function (next, die) {
-            sandbox.apis().showSandbox(
-              CachedFuture.pure('first-showing')
-            ).get(function () {
-              next();
-            });
+          sShowWith('first-showing')
+        ),
+        sCheckShowing('After showing', true),
+        UiFinder.sExists(gui.element(), 'input[data-test-input="first-showing"]'),
+        store.sAssertEq('After show, preview should be in list', [ 'preview' ]),
+        store.sClear,
+
+        // closing sandbox
+        Logger.t(
+          'Closing sandbox',
+          Step.sync(function () {
+            sandbox.apis().closeSandbox();
           })
         ),
 
-        Step.sync(function () {
-          Assertions.assertEq(
-            'Sandbox should now be showing',
-            true,
-            sandbox.apis().isShowing()
-          );
-        }),
+        store.sAssertEq('After close, nothing', [  ]),
+        UiFinder.sNotExists(gui.element(), 'input[data-test-input]'),
+        UiFinder.sNotExists(gui.element(), '.test-sandbox'),
+        sCheckShowing('After closing', false),
 
-        Step.sync(function () {
+        // opening sandbox
+        Logger.t(
+          'Opening sandbox',
+          sOpenWith('first-opening')
+        ),
+        sCheckShowing('After opening', true),
+        UiFinder.sExists(gui.element(), 'input[data-test-input="first-opening"]'),
+        store.sAssertEq('After open, enter should be in list', [ 'enter' ]),
+        store.sClear,
 
-        }),
-        Step.debugging
+        // opening sandbox again
+        Logger.t(
+          'Opening sandbox while it is already open',
+          sOpenWith('second-opening')
+        ),
+        sCheckShowing('After opening', true),
+        UiFinder.sExists(gui.element(), 'input[data-test-input="second-opening"]'),
+        store.sAssertEq('After open, enter should be in list', [ 'enter' ]),
+        store.sClear
       ];
     }, function () { success(); }, failure);
 
