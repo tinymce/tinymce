@@ -279,7 +279,7 @@ define(
         },
         keying: {
           mode: 'menu',
-          selector: [ '.' + uiSpec.markers().selectedMenu(), uiSpec.markers().item() ].join(' '),
+          selector: [ '.' + uiSpec.markers().selectedMenu(), '.' + uiSpec.markers().item() ].join(' '),
           onRight: onRight,
           onLeft: onLeft,
           onEscape: onEscape,

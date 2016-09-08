@@ -31,6 +31,7 @@ define(
     ]);
 
     var make = function (spec) {
+      // Not ideal that it's raw.
       var detail = ValueSchema.asRawOrDie('menusandbox.spec', schema, spec);
 
       var config = MenuConfig(detail);
@@ -53,8 +54,8 @@ define(
         }),
         events: config.events,
         highlighting: {
-          highlightClass: 'active-menu',
-          itemClass: 'lab-menu'
+          highlightClass: detail.markers.selectedMenu,
+          itemClass: detail.markers.menu
         }
       };
     };
