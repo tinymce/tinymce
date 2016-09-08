@@ -9,21 +9,20 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.scullion.Cell',
     'ephox.sugar.api.Body',
     'ephox.sugar.api.Remove'
   ],
 
-  function (Behaviour, DomModification, Manager, FieldPresence, FieldSchema, ValueSchema, Fun, Cell, Body, Remove) {
+  function (Behaviour, DomModification, Manager, FieldPresence, FieldSchema, ValueSchema, Fun, Option, Cell, Body, Remove) {
     var schema = FieldSchema.field(
       'sandboxing',
       'sandboxing',
       FieldPresence.asOption(),
       ValueSchema.objOf([
         FieldSchema.state('state', function () {
-          return Cell({
-            isClear: Fun.constant(true)
-          });
+          return Cell(Option.none());
         }),
         FieldSchema.defaulted('onOpen', Fun.noop),
         FieldSchema.defaulted('onClose', Fun.noop),
@@ -32,13 +31,18 @@ define(
       ])
     );
 
+    // NOTE: A sandbox should not start as part of the world. It is expected to be
+    // added to the sink on rebuild.
     var rebuildSandbox = function (sandbox, sInfo, data) {
-      if (! sInfo.state().get().isClear()) Manager.clear(sandbox, sInfo);
+      if (sInfo.state().get().isSome()) Manager.clear(sandbox, sInfo);
       Remove.empty(sandbox.element());
       sInfo.sink().apis().addContainer(sandbox);
       sInfo.sink().getSystem().addToWorld(sandbox);
       var output = Manager.populate(sandbox, sInfo, data);
-      sInfo.state().set(output);
+      sInfo.state().set(
+        Option.some(output)
+      );
+      return output;
     };
 
     var previewSandbox = function (sandbox, sInfo) {
@@ -51,34 +55,38 @@ define(
 
     // Open sandbox transfers focus to the opened menu
     var openSandbox = function (sandbox, sInfo, futureData) {
-      futureData.get(function (data) {
-        rebuildSandbox(sandbox, sInfo, data);
+      return futureData.map(function (data) {
+        var state = rebuildSandbox(sandbox, sInfo, data);
         // Focus the sandbox.
         gotoSandbox(sandbox, sInfo);
-        sInfo.onOpen()(sandbox, sInfo.state().get());
+        sInfo.onOpen()(sandbox, state);
+        return state;
       });
     };
 
     // Show sandbox does not transfer focus to the opened menu
     var showSandbox = function (sandbox, sInfo, futureData) {
-      futureData.get(function (data) {
-        rebuildSandbox(sandbox, sInfo, data);
+      return futureData.map(function (data) {
+        var state = rebuildSandbox(sandbox, sInfo, data);
         // Preview the sandbox without focusing it
         previewSandbox(sandbox, sInfo);
-        sInfo.onOpen()(sandbox, sInfo.state().get());
+        sInfo.onOpen()(sandbox, state);
+        return state;
       });
     };
 
     var closeSandbox = function (sandbox, sInfo) {
-      Manager.clear(sandbox, sInfo);
-      Remove.empty(sandbox.element());
-      sandbox.getSystem().removeFromWorld(sandbox);
-      sInfo.sink().apis().removeContainer(sandbox);
-      sInfo.onClose()(sandbox, sInfo.state().get());
+      sInfo.state().get().each(function (state) {
+        Manager.clear(sandbox, sInfo);
+        Remove.empty(sandbox.element());
+        sandbox.getSystem().removeFromWorld(sandbox);
+        sInfo.sink().apis().removeContainer(sandbox);
+        sInfo.onClose()(sandbox, state);
+      });
     };
 
     var isShowing = function (sandbox, sInfo) {
-      return !sInfo.state().get().isClear();
+      return sInfo.state().get().isSome();
     };
 
     var isPartOf = function (sandbox, sInfo, queryElem) {

@@ -3,12 +3,15 @@ asynctest(
  
   [
     'ephox.agar.api.Assertions',
+    'ephox.agar.api.Logger',
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.sandbox.Manager',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.Sinks',
+    'ephox.knoch.future.CachedFuture',
+    'ephox.knoch.future.Future',
     'ephox.peanut.Fun',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Element',
@@ -16,52 +19,39 @@ asynctest(
     'ephox.sugar.api.Remove'
   ],
  
-  function (Assertions, Step, UiFinder, GuiFactory, Manager, GuiSetup, Sinks, Fun, Attr, Element, Insert, Remove) {
+  function (Assertions, Logger, Step, UiFinder, GuiFactory, Manager, GuiSetup, Sinks, CachedFuture, Future, Fun, Attr, Element, Insert, Remove) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
-      var sink = Sinks.fixedSink();
-
-      return GuiFactory.build({
+      return Sinks.fixedSink();
+    }, function (doc, body, gui, sink, store) {
+      var sandbox = sink.getSystem().build({
         uiType: 'custom',
         dom: {
-          tag: 'div'
+          tag: 'div',
+          classes: [ 'test-sandbox' ]
         },
-        components: [
-          { built: sink },
-          {
-            uiType: 'custom',
-            dom: {
-              tag: 'div',
-              classes: [ 'test-sandbox' ]
+        uid: 'no-duplicates',
+        sandboxing: {
+          sink: sink,
+          manager: Manager.contract({
+            clear: function (sandbox) {
+              Remove.empty(sandbox.element());
             },
-            uid: 'subject-sandbox',
-            sandboxing: {
-              sink: sink,
-              manager: Manager.contract({
-                clear: function (sandbox) {
-                  Remove.empty(sandbox.element());
-                },
-                enter: store.adder('enter'),
-                preview: store.adder('preview'),
-                populate: function (sandbox, data) {
-                  var input = Element.fromTag('input');
-                  Attr.set('data-test-input', 'true');
-                  Insert.append(sandbox.element(), input);
-                  return input;
-                },
-                isPartOf: Fun.constant(false)
+            enter: store.adder('enter'),
+            preview: store.adder('preview'),
+            populate: function (sandbox, data) {
+              var input = Element.fromTag('input');
+              Attr.set(input, 'data-test-input', data);
+              Insert.append(sandbox.element(), input);
+              return input;
+            },
+            isPartOf: Fun.constant(false)
 
-              })
-            }
-          }
-        ]
+          })
+        }
       });
-
-    }, function (doc, body, gui, component, store) {
-      var sandbox = gui.getByUid('subject-sandbox').getOrDie();
-
       /*
         Testing apis:
        
@@ -76,8 +66,8 @@ asynctest(
       */
       return [
         UiFinder.sNotExists(gui.element(), 'input[data-test-input]'),
-        // It exists straight away because we've added it.
-        UiFinder.sExists(gui.element(), '.test-sandbox'),
+        // It is not in the DOM until it opens
+        UiFinder.sNotExists(gui.element(), '.test-sandbox'),
 
         Step.sync(function () {
           Assertions.assertEq(
@@ -86,6 +76,26 @@ asynctest(
             sandbox.apis().isShowing()
           );
         }),
+
+        Logger.t(
+          'Show the sandbox with data: first-showing',
+          Step.async(function (next, die) {
+            sandbox.apis().showSandbox(
+              CachedFuture.pure('first-showing')
+            ).get(function () {
+              next();
+            });
+          })
+        ),
+
+        Step.sync(function () {
+          Assertions.assertEq(
+            'Sandbox should now be showing',
+            true,
+            sandbox.apis().isShowing()
+          );
+        }),
+
         Step.sync(function () {
 
         }),
