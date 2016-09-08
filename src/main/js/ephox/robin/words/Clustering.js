@@ -21,7 +21,7 @@ define(
      *   a) text node has a character break, stop the gathering process and include partial
      *   b) text node has no character breaks, keep gathering and include entire node
      * For other elements, calculate the language of the closest ancestor:
-     *   a) if the (destination) language has changed, stop the gathering process and do not incude
+     *   a) if the (destination) language has changed, stop the gathering process and do not include
      *   b) if the (destination) language has not changed, keep gathering and do not include
      * These rules are encoded in WordDecision.decide
      * Returns: [WordDecision.make Struct] of all the words recursively from item in direction.
