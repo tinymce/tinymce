@@ -9,6 +9,7 @@ define(
     'ephox.alloy.menu.util.ItemEvents',
     'ephox.alloy.menu.util.MenuEvents',
     'ephox.alloy.menu.util.MenuMarkers',
+    'ephox.alloy.sandbox.Manager',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
@@ -26,7 +27,7 @@ define(
     'ephox.sugar.api.SelectorFilter'
   ],
 
-  function (ComponentStructure, SystemEvents, EventHandler, LayeredState, ItemEvents, MenuEvents, MenuMarkers, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Option, Options, Attr, Body, Class, Classes, Insert, Remove, SelectorFilter) {
+  function (ComponentStructure, SystemEvents, EventHandler, LayeredState, ItemEvents, MenuEvents, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Option, Options, Attr, Body, Class, Classes, Insert, Remove, SelectorFilter) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('lazyHotspot'),
 
@@ -265,13 +266,13 @@ define(
 
       return {
         sandboxing: {
-          manager: {
+          manager: Manager.contract({
             clear: clear,
             isPartOf: isPartOf,
             build: build,
             preview: preview,
             enter: enter
-          },
+          }),
           onClose: uiSpec.onClose(),
           sink: uiSpec.sink()
         },

@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.behaviour.Behaviour',
     'ephox.alloy.dom.DomModification',
+    'ephox.alloy.sandbox.Manager',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
@@ -13,7 +14,7 @@ define(
     'ephox.sugar.api.Remove'
   ],
 
-  function (Behaviour, DomModification, FieldPresence, FieldSchema, ValueSchema, Fun, Cell, Body, Remove) {
+  function (Behaviour, DomModification, Manager, FieldPresence, FieldSchema, ValueSchema, Fun, Cell, Body, Remove) {
     var schema = FieldSchema.field(
       'sandboxing',
       'sandboxing',
@@ -32,22 +33,20 @@ define(
     );
 
     var rebuildSandbox = function (sandbox, sInfo, data) {
-      if (! sInfo.state().get().isClear()) sInfo.manager().clear(sandbox, sInfo.state().get());
+      if (! sInfo.state().get().isClear()) Manager.clear(sandbox, sInfo);
       Remove.empty(sandbox.element());
       sInfo.sink().apis().addContainer(sandbox);
       sInfo.sink().getSystem().addToWorld(sandbox);
-      var output = sInfo.manager().build(sandbox, data);
+      var output = Manager.build(sandbox, sInfo, data);
       sInfo.state().set(output);
     };
 
     var previewSandbox = function (sandbox, sInfo) {
-      // show
-      sInfo.manager().preview(sandbox, sInfo.state().get());
+      Manager.preview(sandbox, sInfo);
     };
 
     var gotoSandbox = function (sandbox, sInfo) {
-      // active and show and focusIn
-      sInfo.manager().enter(sandbox, sInfo.state().get());
+      Manager.enter(sandbox, sInfo);
     };
 
     // Open sandbox transfers focus to the opened menu
@@ -71,7 +70,7 @@ define(
     };
 
     var closeSandbox = function (sandbox, sInfo) {
-      sInfo.manager().clear(sandbox, sInfo.state().get());
+      Manager.clear(sandbox, sInfo);
       Remove.empty(sandbox.element());
       sandbox.getSystem().removeFromWorld(sandbox);
       sInfo.sink().apis().removeContainer(sandbox);
@@ -83,7 +82,7 @@ define(
     };
 
     var isPartOf = function (sandbox, sInfo, queryElem) {
-      return isShowing(sandbox, sInfo) && sInfo.manager().isPartOf(sandbox, sInfo.state().get(), queryElem);
+      return isShowing(sandbox, sInfo) && Manager.isPartOf(sandbox, sInfo, queryElem);
     };
 
     var getState = function (sandbox, sInfo) {
