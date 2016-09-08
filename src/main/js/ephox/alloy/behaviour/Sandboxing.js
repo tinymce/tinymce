@@ -78,7 +78,7 @@ define(
     };
 
     var isShowing = function (sandbox, sInfo) {
-      return Body.inBody(sandbox.element());
+      return !sInfo.state().get().isClear();
     };
 
     var isPartOf = function (sandbox, sInfo, queryElem) {

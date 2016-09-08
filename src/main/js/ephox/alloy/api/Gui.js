@@ -16,10 +16,11 @@ define(
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Node',
-    'ephox.sugar.api.Remove'
+    'ephox.sugar.api.Remove',
+    'global!Error'
   ],
 
-  function (GuiEvents, GuiFactory, SystemApi, SystemEvents, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Element, Insert, Node, Remove) {
+  function (GuiEvents, GuiFactory, SystemApi, SystemEvents, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Element, Insert, Node, Remove, Error) {
     var create = function ( ) {
       var container = Element.fromTag('div');
       return takeover(container);
@@ -121,7 +122,9 @@ define(
 
       var getByUid = function (uid) {
         return registry.getById(uid).fold(function () {
-          return Result.error('Could not find component with uid: "' + uid + '" in system.');
+          return Result.error(
+            new Error('Could not find component with uid: "' + uid + '" in system.')
+          );
         }, Result.value);
       };
 
