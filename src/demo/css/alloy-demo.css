@@ -9,3 +9,17 @@
   color: white;
   background: black;
 }
+
+.alloy-menu {
+  margin: 0px;
+  padding: 0px;
+  background: white;
+  list-style-type: none;
+  border: 1px solid black;
+}
+
+.alloy-menu li {
+  padding: 0px;
+  margin: 0px;
+  width: 200px;
+}

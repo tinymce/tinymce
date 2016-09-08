@@ -31,7 +31,7 @@ define(
     var menuSchema = ValueSchema.objOf([
       FieldSchema.strict('value'),
       FieldSchema.strict('items'),
-      FieldSchema.defaulted('classes', [ ]),
+      FieldSchema.defaulted('classes', [ 'alloy-menu' ]),
       FieldSchema.field(
         'markers',
         'markers',
