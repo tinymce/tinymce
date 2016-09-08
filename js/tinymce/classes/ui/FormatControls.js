@@ -197,7 +197,6 @@ define("tinymce/ui/FormatControls", [
 
 			return {
 				type: 'menu',
-				root: true,
 				items: createStylesMenu(),
 				onPostRender: function(e) {
 					editor.fire('renderFormatsMenu', {control: e.control});
@@ -481,7 +480,9 @@ define("tinymce/ui/FormatControls", [
 			text: 'Formats',
 			menu: formatMenu,
 			onShowMenu: function () {
-				hideFormatMenuItems(this.menu);
+				if (editor.settings.style_formats_autohide) {
+					hideFormatMenuItems(this.menu);
+				}
 			}
 		});
 
