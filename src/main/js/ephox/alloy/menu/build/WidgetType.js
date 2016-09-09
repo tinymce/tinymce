@@ -15,6 +15,7 @@ define(
 
   function (SystemEvents, EventHandler, ItemEvents, MenuMarkers, FieldPresence, FieldSchema, Objects, Option, Traverse) {
     var schema = [
+      FieldSchema.strict('value'),
       FieldSchema.strict('spec'),
       FieldSchema.field(
         'markers',
@@ -33,7 +34,8 @@ define(
         uiType: 'custom',
         dom: {
           tag: 'li',
-          classes: [ info.markers().item() ]
+          classes: [ info.markers().item() ],
+          attributes: Objects.wrap(info.markers().itemValue(), info.value())
         },
         components: [ info.spec() ],
         events: Objects.wrapAll([
