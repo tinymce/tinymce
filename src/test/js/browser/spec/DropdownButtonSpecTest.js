@@ -115,6 +115,10 @@ asynctest(
         store.sAssertEq('after executing item: gamma', [ 'gamma' ]),
         store.sClear,
 
+        Mouse.sClickOn(gui.element(), components.alpha.selector),
+        store.sAssertEq('after executing item: alpha', [ 'alpha' ]),
+        store.sClear,
+
         Keyboard.sKeydown(doc, Keys.escape(), {}),
         FocusTools.sTryOnSelector(
           'Focus should have moved back to the dropdown',

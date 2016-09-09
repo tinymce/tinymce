@@ -145,9 +145,11 @@ asynctest(
         UiFinder.sExists(gui.element(), components.packagesMenu.selector + '.alloy-selected-menu'),
         UiFinder.sExists(gui.element(), components.toolsMenu.selector),
 
-        
+        // Mouse.sClickOn(gui.element(), components.alpha.selector),
+        // store.sAssertEq('after executing item: alpha', [ 'alpha' ]),
+        // store.sClear,
         // Step.debugging,
-        function () { }
+        // function () { }
       ];
     }, function () { success(); }, failure);
 
