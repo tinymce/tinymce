@@ -2,6 +2,7 @@ asynctest(
   'DropdownButtonSpecTest',
  
   [
+    'ephox.agar.api.FocusTools',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.test.GuiSetup',
@@ -9,7 +10,7 @@ asynctest(
     'ephox.knoch.future.Future'
   ],
  
-  function (Step, GuiFactory, GuiSetup, Sinks, Future) {
+  function (FocusTools, Step, GuiFactory, GuiSetup, Sinks, Future) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -41,8 +42,11 @@ asynctest(
         ]
       });
     }, function (doc, body, gui, component, store) {
+      var dropdown = component.getSystem().getByUid('test-dropdown').getOrDie();
+
+      dropdown.apis().focus();
+
       return [
-        Step.debugging,
         function () { }
       ];
     }, function () { success(); }, failure);

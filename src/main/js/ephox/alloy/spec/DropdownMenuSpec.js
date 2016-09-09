@@ -17,13 +17,16 @@ define(
         FieldSchema.strict('fetch'),
         FieldSchema.strict('text'),
         FieldSchema.defaulted('onOpen', Fun.noop),
-        FieldSchema.strict('sink')
+        FieldSchema.strict('sink'),
+        FieldSchema.option('uid')
       ]), spec);
 
       var open = function (component, sandbox) {
         var fetcher = detail.fetch();
+
         var futureData = fetcher();
-        sandbox.apis().openSandbox(futureData);
+        // Resolve the future to open the dropdown
+        sandbox.apis().openSandbox(futureData).get(function () { });
       };
 
       var close = function (component, sandbox) {
@@ -69,6 +72,7 @@ define(
           // Order, the button state is toggled first, so assumed !selected means close.
           'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
         },
+        uid: detail.uid().getOr(undefined),
         text: detail.text(),
         coupling: {
           others: {

@@ -17,7 +17,8 @@ define(
         FieldSchema.strict('fetchItems'),
         FieldSchema.strict('text'),
         FieldSchema.defaulted('onOpen', Fun.noop),
-        FieldSchema.strict('sink')
+        FieldSchema.strict('sink'),
+        FieldSchema.option('uid')
       ]), spec);
 
       return DropdownMenuSpec.make({
@@ -42,7 +43,9 @@ define(
         },
         text: detail.text,
         sink: detail.sink,
-        onOpen: detail.onOpen
+        onOpen: detail.onOpen,
+        // Not sure if that will work
+        uid: detail.uid.getOr(undefined)
       });
     };
 

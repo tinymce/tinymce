@@ -10,10 +10,11 @@ define(
     'ephox.boulder.api.ValueSchema',
     'ephox.highway.Merger',
     'ephox.numerosity.api.JSON',
+    'ephox.peanut.Fun',
     'ephox.perhaps.Result'
   ],
 
-  function (SystemEvents, EventHandler, FieldPresence, FieldSchema, Objects, ValueSchema, Merger, Json, Result) {
+  function (SystemEvents, EventHandler, FieldPresence, FieldSchema, Objects, ValueSchema, Merger, Json, Fun, Result) {
     // FIX: Move to boulder
     var isOneOf = function (candidates) {
       return function (value) {
@@ -36,7 +37,8 @@ define(
       // allow a only one of checker.
       FieldSchema.field('text', 'text', FieldPresence.asOption(), ValueSchema.anyValue()),
       // aria-label .. check with Mike
-      FieldSchema.field('classes', 'classes', FieldPresence.asOption(), ValueSchema.anyValue())
+      FieldSchema.field('classes', 'classes', FieldPresence.asOption(), ValueSchema.anyValue()),
+      FieldSchema.option('uid')
     ]);
 
     var defaultDom = function (detail) {
@@ -97,7 +99,11 @@ define(
 
         {
           uiType: 'custom'
-        }
+        },
+
+        detail.uid().fold(Fun.constant({ }), function (uid) {
+          return Objects.wrap('uid', uid);
+        })
       );
     };
 
