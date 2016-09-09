@@ -354,10 +354,24 @@ asynctest(
           ]
         ),
 
-        // Now, let's play with the inline widget
-        Keyboard.sKeydown(doc, Keys.down(), { }),
+        // Pressing right on "about" does nothing
+        Keyboard.sKeydown(doc, Keys.right(), { }),
         sTestMenus(
-          'After pressing <down> from about',
+          'Pressing <right> on "about" does nothing',
+          [ ],
+          components.about,
+          [ components.toolsMenu ], [ ], [
+            components.packagesMenu,
+            components.sortbyMenu,
+            components.stringsMenu,
+            components.numbersMenu
+          ]
+        ),
+
+        // Now, let's play with the inline widget
+        Keyboard.sKeydown(doc, Keys.tab(), { }),
+        sTestMenus(
+          'After pressing <tab> from about',
           [ ],
           components.widget,
           [ components.toolsMenu ], [ ], [
