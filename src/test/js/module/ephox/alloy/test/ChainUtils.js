@@ -38,9 +38,21 @@ define(
       );
     };
 
+    var cToElement = Chain.mapper(function (comp) {
+      return comp.element();
+    });
+
+    var eToComponent = function (other) {
+      return Chain.binder(function (elem) {
+        return other.getSystem().getByDom(elem);
+      });
+    };
+
     return {
       cLogging: cLogging,
-      cFindUids: cFindUids
+      cFindUids: cFindUids,
+      cToElement: cToElement,
+      eToComponent: eToComponent
     };
   }
 );
