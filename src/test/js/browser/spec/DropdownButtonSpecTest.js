@@ -4,8 +4,11 @@ asynctest(
   [
     'ephox.agar.api.Assertions',
     'ephox.agar.api.FocusTools',
+    'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
+    'ephox.agar.api.Logger',
+    'ephox.agar.api.Mouse',
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
     'ephox.agar.api.Waiter',
@@ -13,10 +16,11 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.NavigationUtils',
     'ephox.alloy.test.Sinks',
-    'ephox.knoch.future.Future'
+    'ephox.knoch.future.Future',
+    'global!Error'
   ],
  
-  function (Assertions, FocusTools, Keyboard, Keys, Step, UiFinder, Waiter, GuiFactory, GuiSetup, NavigationUtils, Sinks, Future) {
+  function (Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, GuiSetup, NavigationUtils, Sinks, Future, Error) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -107,11 +111,80 @@ asynctest(
         store.sClear,
 
         Keyboard.sKeydown(doc, Keys.down(), {}),
-        Keyboard.sKeydown(doc, Keys.enter(), {}),
+        Keyboard.sKeydown(doc, Keys.space(), {}),
         store.sAssertEq('after executing item: gamma', [ 'gamma' ]),
         store.sClear,
 
-        function () { }
+        Keyboard.sKeydown(doc, Keys.escape(), {}),
+        FocusTools.sTryOnSelector(
+          'Focus should have moved back to the dropdown',
+          doc,
+          components.button.selector
+        ),
+
+        Mouse.sClickOn(gui.element(), components.button.selector),
+
+        Keyboard.sKeydown(doc, Keys.enter(), { }),
+        FocusTools.sTryOnSelector(
+          'focus should start on alpha',
+          doc,
+          '[data-alloy-item-value="alpha"]'
+        ),
+
+        Logger.t(
+          'Broadcast dismiss on button ... should not close',
+          GeneralSteps.sequence([
+            Step.sync(function () {
+              gui.broadcastOn([
+                'dismiss.popups'
+              ], {
+                target: dropdown.element()
+              });
+            })
+          ])
+        ),
+
+        FocusTools.sTryOnSelector(
+          'focus should start on alpha',
+          doc,
+          '[data-alloy-item-value="alpha"]'
+        ),
+
+        Logger.t(
+          'Broadcast dismiss on item ... should not close',
+          GeneralSteps.sequence([
+            Step.sync(function () {
+              var item = UiFinder.findIn(gui.element(), components.alpha.selector).getOrDie(
+                new Error('Could not find the alpha item for dispatching dismiss')
+              );
+              console.log('item', item.dom());
+              gui.broadcastOn([
+                'dismiss.popups'
+              ], {
+                target: item
+              });
+            })
+          ])
+        ),
+
+        FocusTools.sTryOnSelector(
+          'focus should start on alpha',
+          doc,
+          '[data-alloy-item-value="alpha"]'
+        ),
+
+        Logger.t(
+          'Broadcast dismiss on gui element ... should close',
+          Step.sync(function () {
+            gui.broadcastOn([
+              'dismiss.popups'
+            ], {
+              target: gui.element()
+            });
+          })
+        ),
+
+        UiFinder.sNotExists(gui.element(), '[data-alloy-item-value]')
       ];
     }, function () { success(); }, failure);
 

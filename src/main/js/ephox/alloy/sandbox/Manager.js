@@ -37,8 +37,8 @@ define(
     };
 
     var isPartOf = function (sandbox, sInfo, queryElem) {
-      sInfo.state().get().each(function (state) {
-        sInfo.manager().isPartOf(sandbox, state, queryElem);
+      return sInfo.state().get().exists(function (state) {
+        return sInfo.manager().isPartOf(sandbox, state, queryElem);
       });
     };
 
