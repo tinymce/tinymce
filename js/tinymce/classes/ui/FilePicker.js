@@ -29,17 +29,30 @@ define("tinymce/ui/FilePicker", [
 	var history = {};
 	var HISTORY_LENGTH = 5;
 
-	var toMenuItems = function (targets) {
-		return Tools.map(targets, function (target) {
-			return {
+	var toMenuItem = function (target) {
+		return {
+			title: target.title,
+			value: {
 				title: target.title,
-				value: {
-					title: target.title,
-					url: target.url,
-					attach: target.attach
-				}
-			};
-		});
+				url: target.url,
+				attach: target.attach
+			}
+		};
+	};
+
+	var toMenuItems = function (targets) {
+		return Tools.map(targets, toMenuItem);
+	};
+
+	var staticMenuItem = function (title, url) {
+		return {
+			title: title,
+			value: {
+				title: title,
+				url: url,
+				attach: Fun.noop
+			}
+		};
 	};
 
 	var isUniqueUrl = function (url, targets) {
@@ -78,6 +91,14 @@ define("tinymce/ui/FilePicker", [
 			return toMenuItems(filteredTargets);
 		};
 
+		var anchorMenuItems = function () {
+			var menuItems = fromMenuItems('anchor');
+			var top = staticMenuItem('<top>', '#top');
+			var bottom = staticMenuItem('<bottom>', '#bottom');
+
+			return [top].concat(menuItems).concat([bottom]);
+		};
+
 		var join = function (items) {
 			return Arr.reduce(items, function (a, b) {
 				var bothEmpty = a.length === 0 || b.length === 0;
@@ -88,12 +109,16 @@ define("tinymce/ui/FilePicker", [
 		return join([
 			filterByQuery(term, fromHistoryMenuItems(history)),
 			filterByQuery(term, fromMenuItems('header')),
-			filterByQuery(term, fromMenuItems('anchor'))
+			filterByQuery(term, anchorMenuItems())
 		]);
 	};
 
 	var addToHistory = function (url, fileType) {
 		var items = history[fileType];
+
+		if (url === "#top" || url === "#bottom") {
+			return;
+		}
 
 		if (items) {
 			if (Arr.indexOf(items, url) === -1) {
