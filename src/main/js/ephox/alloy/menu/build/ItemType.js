@@ -17,7 +17,6 @@ define(
       FieldSchema.strict('value'),
       FieldSchema.strict('text'),
       FieldSchema.option('html'),
-      // Maybe flesh out the inners of markers
       FieldSchema.field(
         'markers',
         'markers',

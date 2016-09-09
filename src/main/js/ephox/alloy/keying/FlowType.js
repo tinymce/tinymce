@@ -26,7 +26,8 @@ define(
     ];
 
     var execute = function (component, simulatedEvent, flowInfo) {
-      return Focus.search(component.element()).each(function (focused) {
+      // Investigate if this should be returning a value.
+      return Focus.search(component.element()).map(function (focused) {
         flowInfo.execute()(component, simulatedEvent, focused);
         return true;
       });

@@ -5,16 +5,23 @@ define(
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.util.ItemEvents',
+    'ephox.alloy.menu.util.MenuMarkers',
+    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Traverse'
   ],
 
-  function (SystemEvents, EventHandler, ItemEvents, FieldSchema, Objects, Option, Traverse) {
+  function (SystemEvents, EventHandler, ItemEvents, MenuMarkers, FieldPresence, FieldSchema, Objects, Option, Traverse) {
     var schema = [
       FieldSchema.strict('spec'),
-      FieldSchema.strict('markers'),
+      FieldSchema.field(
+        'markers',
+        'markers',
+        FieldPresence.strict(),
+        MenuMarkers.itemSchema()
+      ),
       FieldSchema.defaulted('classes', [ ]),
       FieldSchema.state('builder', function () {
         return builder;

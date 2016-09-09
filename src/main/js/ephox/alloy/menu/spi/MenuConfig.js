@@ -65,7 +65,7 @@ define(
 
       var toMenuValues = function (sMenus) {
         return Obj.map(sMenus, function (menu) {
-          var menuItems = SelectorFilter.descendants(menu.element(), uiSpec.markers().item());
+          var menuItems = SelectorFilter.descendants(menu.element(), '.' + uiSpec.markers().item());
           return Arr.map(menuItems, function (mi) { return Attr.get(mi, uiSpec.markers().itemValue()); });
         });
       };
