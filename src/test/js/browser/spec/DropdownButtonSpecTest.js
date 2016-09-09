@@ -3,6 +3,7 @@ asynctest(
  
   [
     'ephox.agar.api.Assertions',
+    'ephox.agar.api.Chain',
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Keyboard',
@@ -17,10 +18,14 @@ asynctest(
     'ephox.alloy.test.NavigationUtils',
     'ephox.alloy.test.Sinks',
     'ephox.knoch.future.Future',
-    'global!Error'
+    'ephox.sugar.api.Css',
+    'ephox.sugar.api.Width',
+    'global!Error',
+    'global!Math',
+    'global!parseInt'
   ],
  
-  function (Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, GuiSetup, NavigationUtils, Sinks, Future, Error) {
+  function (Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, GuiSetup, NavigationUtils, Sinks, Future, Css, Width, Error, Math, parseInt) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -83,6 +88,27 @@ asynctest(
           'focus should start on alpha',
           doc,
           '[data-alloy-item-value="alpha"]'
+        ),
+
+        // On dropdown buttons, there should be a width property that is approximately
+        // the same size as the button
+        Logger.t(
+          'Checking that the button width is passed onto the menu width',
+          Chain.asStep(gui.element(), [
+            UiFinder.cFindIn('[data-alloy-menu-value]'),
+            Chain.op(function (menu) {
+              var buttonWidth = Width.get(dropdown.element());
+              var menuWidth = parseInt(
+                Css.getRaw(menu, 'width').getOrDie('Menu must have a width property'),
+                10
+              );
+              Assertions.assertEq(
+                'Check that the menu width is approximately the same as the button width',
+                true,
+                Math.abs(menuWidth - buttonWidth) < 20
+              );
+            })
+          ])
         ),
 
         NavigationUtils.sequence(doc, Keys.down(), {}, [

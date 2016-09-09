@@ -9,10 +9,11 @@ define(
     'ephox.compass.Arr',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option'
+    'ephox.perhaps.Option',
+    'ephox.sugar.api.Width'
   ],
 
-  function (DropdownMenuSpec, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Option) {
+  function (DropdownMenuSpec, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Option, Width) {
     var make = function (spec) {
       var detail = ValueSchema.asRawOrDie('dropdown.button.spec', ValueSchema.objOf([
         FieldSchema.strict('fetchItems'),
@@ -45,7 +46,11 @@ define(
         },
         text: detail.text,
         sink: detail.sink,
-        onOpen: detail.onOpen,
+        onOpen: function (button, sandbox, menu) {
+          var buttonWidth = Width.get(button.element());
+          Width.set(menu.element(), buttonWidth);
+          detail.onOpen(button, sandbox, menu);
+        },
         onExecute: detail.onExecute,
         // Not sure if that will work
         uid: detail.uid.getOr(undefined)

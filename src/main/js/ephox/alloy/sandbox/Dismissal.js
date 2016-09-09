@@ -21,7 +21,6 @@ define(
               FieldSchema.strict('target')
             ]),
             onReceive: function (sandbox, data) {
-              console.log('data', data);
               if (sandbox.apis().isShowing()) {
                 var isPart = sandbox.apis().isPartOf(data.target()) || spec.isExtraPart(sandbox, data.target());
                 if (! isPart) sandbox.apis().closeSandbox();
