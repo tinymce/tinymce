@@ -13,14 +13,6 @@ asynctest(
   function (FocusTools, GeneralSteps, Keyboard, Keys, GuiFactory, GuiSetup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
-// FieldSchema.defaulted('onSpace', Option.none),
-//       FieldSchema.defaulted('onEnter', Option.none),
-//       FieldSchema.defaulted('onShiftEnter', Option.none),
-//       FieldSchema.defaulted('onLeft', Option.none),
-//       FieldSchema.defaulted('onRight', Option.none),
-//       FieldSchema.defaulted('onUp', Option.none),
-//       FieldSchema.defaulted('onDown', Option.none),
-//       FieldSchema.defaulted('onEscape', Option.none)
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build({
