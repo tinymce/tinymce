@@ -38,28 +38,28 @@ define(
     };
 
     var dehighlight = function (component, hInfo, target) {
-      Class.remove(target, hInfo.highlightClass());
+      Class.remove(target.element(), hInfo.highlightClass());
     };
 
     var highlight = function (component, hInfo, target) {
       dehighlightAll(component, hInfo);
-      Class.add(target, hInfo.highlightClass());
+      Class.add(target.element(), hInfo.highlightClass());
     };
 
     var highlightFirst = function (component, hInfo) {
       getFirst(component, hInfo).each(function (firstComp) {
-        highlight(component, hInfo, firstComp.element());
+        highlight(component, hInfo, firstComp);
       });
     };
 
     var highlightLast = function (component, hInfo) {
       getLast(component, hInfo).each(function (lastComp) {
-        highlight(component, hInfo, lastComp.element());
+        highlight(component, hInfo, lastComp);
       });
     };
 
     var isHighlighted = function (component, hInfo, queryTarget) {
-      return Class.has(queryTarget, hInfo.highlightClass());
+      return Class.has(queryTarget.element(), hInfo.highlightClass());
     };
 
     var getHighlighted = function (component, hInfo) {

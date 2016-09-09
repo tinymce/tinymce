@@ -8,6 +8,7 @@ asynctest(
     'ephox.agar.api.NamedChain',
     'ephox.agar.api.UiFinder',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.test.ChainUtils',
     'ephox.alloy.test.GuiSetup',
     'ephox.compass.Arr',
     'ephox.perhaps.Result',
@@ -16,7 +17,7 @@ asynctest(
     'global!Error'
   ],
  
-  function (Truncate, Assertions, Chain, NamedChain, UiFinder, GuiFactory, GuiSetup, Arr, Result, Attr, Class, Error) {
+  function (Truncate, Assertions, Chain, NamedChain, UiFinder, GuiFactory, ChainUtils, GuiSetup, Arr, Result, Attr, Class, Error) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -143,22 +144,29 @@ asynctest(
         });
       };
 
+      var cFindComponent = function (selector) {
+        return Chain.fromChains([
+          UiFinder.cFindIn(selector),
+          ChainUtils.eToComponent(component)
+        ]);
+      };
+
       return [
         Chain.asStep({}, [
           NamedChain.asChain([
             NamedChain.writeValue('container', component.element()),
-            NamedChain.direct('container', UiFinder.cFindIn('.alpha'), 'alpha'),
-            NamedChain.direct('container', UiFinder.cFindIn('.beta'), 'beta'),
-            NamedChain.direct('container', UiFinder.cFindIn('.gamma'), 'gamma'),
+            NamedChain.direct('container', cFindComponent('.alpha'), 'alpha'),
+            NamedChain.direct('container', cFindComponent('.beta'), 'beta'),
+            NamedChain.direct('container', cFindComponent('.gamma'), 'gamma'),
 
             cCheckNumOf('Should be none selected', '.test-selected', 0),
             cCheckNumOf('Should be three items', '.test-item', 3),
 
-            NamedChain.write('firstComp', cGetFirst),
-            NamedChain.write('lastComp', cGetLast),
+            NamedChain.write('first', cGetFirst),
+            NamedChain.write('last', cGetLast),
 
-            NamedChain.direct('firstComp', cHasClass('alpha'), '_'),
-            NamedChain.direct('lastComp', cHasClass('gamma'), '_'),
+            NamedChain.direct('first', cHasClass('alpha'), '_'),
+            NamedChain.direct('last', cHasClass('gamma'), '_'),
 
             cHighlightFirst,
             cCheckSelected('highlightFirst => Alpha is selected', 'alpha'),
@@ -166,7 +174,6 @@ asynctest(
             cHighlightLast,
             cCheckSelected('highlightLast => Gamma is selected', 'gamma'),
 
-            // Weird that it switches between elements and components
             NamedChain.direct('beta', cHighlight, '_'),
             cCheckSelected('highlight(beta) => Beta is selected', 'beta'),
         
