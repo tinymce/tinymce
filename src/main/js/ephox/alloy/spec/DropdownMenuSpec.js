@@ -7,16 +7,18 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.sugar.api.Remove'
   ],
 
-  function (ButtonSpec, MenuSandboxSpec, FieldSchema, ValueSchema, Fun, Remove) {
+  function (ButtonSpec, MenuSandboxSpec, FieldSchema, ValueSchema, Fun, Option, Remove) {
     var make = function (spec) {
       var detail = ValueSchema.asStructOrDie('dropdown.spec', ValueSchema.objOf([
         // Returns a Future{ primary, expansions, menus } object asynchronously
         FieldSchema.strict('fetch'),
         FieldSchema.strict('text'),
         FieldSchema.defaulted('onOpen', Fun.noop),
+        FieldSchema.defaulted('onExecute', Option.none),
         FieldSchema.strict('sink'),
         FieldSchema.option('uid')
       ]), spec);
@@ -47,7 +49,8 @@ define(
           lazyHotspot: Fun.constant(dropdown),
           sink: detail.sink(),
           onOpen: onOpen,
-          onClose: onClose
+          onClose: onClose,
+          onExecute: detail.onExecute()
         });
       };
 

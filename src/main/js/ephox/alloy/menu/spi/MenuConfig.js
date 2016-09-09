@@ -260,7 +260,10 @@ define(
               // I.e. clicking on menu item
               var target = simulatedEvent.event().target();
               return expandRight(sandbox, target).orThunk(function () {
-                return uiSpec.onExecute()(sandbox, target);
+                return sandbox.getSystem().getByDom(target).bind(function (item) {
+                  var itemValue = Attr.get(target, uiSpec.markers().itemValue());
+                  return uiSpec.onExecute()(sandbox, item, itemValue);
+                });
               });
             }
           })
