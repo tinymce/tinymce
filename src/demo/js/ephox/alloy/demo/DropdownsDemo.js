@@ -67,6 +67,9 @@ define(
           uiType: 'dropdownmenu',
           text: '+',
           sink: sink,
+          onExecute: function (sandbox, item, itemValue) {
+            console.log('*** dropdown menu demo execute on: ' + itemValue + ' ***');
+          },
           fetch: function () {
             return Future.pure({
               primary: 'tools-menu',
@@ -137,7 +140,7 @@ define(
                   { type: 'item', value: 'alphabetic', text: 'Alphabetic' }
                 ],
                 'numbers-menu': [
-                  { type: 'item', value: 'double', text: 'Double digits' }
+                  { type: 'item', value: 'doubled', text: 'Double digits' }
                 ]
               }, 
               expansions: {
