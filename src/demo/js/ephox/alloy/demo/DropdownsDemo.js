@@ -53,7 +53,10 @@ define(
             ]);
           },
           sink: sink,
-          desc: 'demo-dropdown'
+          desc: 'demo-dropdown',
+          onExecute: function (sandbox, item, itemValue) {
+            console.log('*** dropdown demo execute on: ' + itemValue + ' ***');
+          }
         }
       );
     };
