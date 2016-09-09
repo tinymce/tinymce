@@ -166,8 +166,7 @@ asynctest(
             sCheckActive,
             sCheckBackground,
             sCheckOthers,
-            store.sClear,
-            Step.wait(50)
+            store.sClear
           ])
         );
       };
