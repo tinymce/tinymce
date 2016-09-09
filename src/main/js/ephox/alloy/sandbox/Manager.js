@@ -15,7 +15,9 @@ define(
     ]);
 
     var clear = function (sandbox, sInfo) {
-      sInfo.manager().clear(sandbox, sInfo.state().get());
+      sInfo.state().get().each(function (state) {
+        sInfo.manager().clear(sandbox, state);
+      });
     };
 
     var populate = function (sandbox, sInfo, data) {
@@ -23,15 +25,21 @@ define(
     };
 
     var preview = function (sandbox, sInfo) {
-      sInfo.manager().preview(sandbox, sInfo.state().get());
+      sInfo.state().get().each(function (state) {
+        sInfo.manager().preview(sandbox, state);
+      });
     };
 
     var enter = function (sandbox, sInfo) {
-      sInfo.manager().enter(sandbox, sInfo.state().get());
+      sInfo.state().get().each(function (state) {
+        sInfo.manager().enter(sandbox, state);
+      });
     };
 
     var isPartOf = function (sandbox, sInfo, queryElem) {
-      sInfo.manager().isPartOf(sandbox, sInfo.state().get(), queryElem);
+      sInfo.state().get().each(function (state) {
+        sInfo.manager().isPartOf(sandbox, state, queryElem);
+      });
     };
 
     return {

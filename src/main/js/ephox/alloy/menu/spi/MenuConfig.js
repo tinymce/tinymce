@@ -94,7 +94,7 @@ define(
       };
 
       var setActiveMenu = function (sandbox, menu) {
-        sandbox.apis().highlight(menu.element());
+        sandbox.apis().highlight(menu);
         menu.apis().getHighlighted().orThunk(function () {
           return menu.apis().getFirst();
         }).each(function (item) {
@@ -173,38 +173,41 @@ define(
 
       var expandRight = function (sandbox, triggerItem) {
         var value = Attr.get(triggerItem, uiSpec.markers().itemValue());
-        var state = sandbox.apis().getState();
-        return state.expand(value).bind(function (path) {
-          // When expanding, always select the first.
-          Option.from(path[0]).bind(state.lookupMenu).each(function (newMenuComp) {
-            sandbox.getSystem().getByDom(triggerItem).each(function (itemComp) {
-              newMenuComp.apis().highlightFirst();
+        return sandbox.apis().getState().bind(function (state) {
+          return state.expand(value).bind(function (path) {
+            // When expanding, always select the first.
+            Option.from(path[0]).bind(state.lookupMenu).each(function (newMenuComp) {
+              sandbox.getSystem().getByDom(triggerItem).each(function (itemComp) {
+                newMenuComp.apis().highlightFirst();
 
-              // DUPE with above. Fix later.
-              if (! Body.inBody(newMenuComp.element())) {
-                Insert.append(sandbox.element(), newMenuComp.element());
-                showSubmenu(sandbox, itemComp, newMenuComp);
-              }
+                // DUPE with above. Fix later.
+                if (! Body.inBody(newMenuComp.element())) {
+                  Insert.append(sandbox.element(), newMenuComp.element());
+                  showSubmenu(sandbox, itemComp, newMenuComp);
+                }
+              });
             });
-          });
 
-          return updateMenuPath(sandbox, state, path);
+            return updateMenuPath(sandbox, state, path);
+          });
         });
       };
 
       var collapseLeft = function (sandbox, item) {
         var value = Attr.get(item, uiSpec.markers().itemValue());
-        var state = sandbox.apis().getState();
-        return state.collapse(value).bind(function (path) {
-          return updateMenuPath(sandbox, state, path);
+        return sandbox.apis().getState().bind(function (state) {
+          return state.collapse(value).bind(function (path) {
+            return updateMenuPath(sandbox, state, path);
+          });
         });
       };
 
       var updateView = function (sandbox, item) {
         var value = Attr.get(item, uiSpec.markers().itemValue());
-        var state = sandbox.apis().getState();
-        return state.refresh(value).bind(function (path) {
-          return updateMenuPath(sandbox, state, path);
+        return sandbox.apis().getState().bind(function (state) {
+          return state.refresh(value).bind(function (path) {
+            return updateMenuPath(sandbox, state, path);
+          });
         });
       };
 
@@ -232,8 +235,8 @@ define(
           value: EventHandler.nu({
             // Set "active-menu" for the menu with focus
             run: function (sandbox, simulatedEvent) {
-              var menuDom = simulatedEvent.event().menu().element();
-              sandbox.apis().highlight(menuDom);
+              var menu = simulatedEvent.event().menu();
+              sandbox.apis().highlight(menu);
             }
           })
         },

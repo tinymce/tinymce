@@ -66,17 +66,18 @@ define(
               run: function (menu, simulatedEvent) {
                 // Highlight the item
                 var event = simulatedEvent.event();
-                var item = event.target();
-                menu.apis().highlight(item);
+                menu.getSystem().getByDom(event.target()).each(function (item) {
+                  menu.apis().highlight(item);
 
-                simulatedEvent.stop();
+                  simulatedEvent.stop();
 
-                // Trigger the focus event on the menu.
-                var focusTarget = menu.element();
-                menu.getSystem().triggerEvent(MenuEvents.focus(), focusTarget, {
-                  target: Fun.constant(focusTarget),
-                  menu: Fun.constant(menu),
-                  item: simulatedEvent.event().item
+                  // Trigger the focus event on the menu.
+                  var focusTarget = menu.element();
+                  menu.getSystem().triggerEvent(MenuEvents.focus(), focusTarget, {
+                    target: Fun.constant(focusTarget),
+                    menu: Fun.constant(menu),
+                    item: item
+                  });
                 });
               }
             })

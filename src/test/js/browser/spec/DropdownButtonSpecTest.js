@@ -3,6 +3,8 @@ asynctest(
  
   [
     'ephox.agar.api.FocusTools',
+    'ephox.agar.api.Keyboard',
+    'ephox.agar.api.Keys',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.test.GuiSetup',
@@ -10,7 +12,7 @@ asynctest(
     'ephox.knoch.future.Future'
   ],
  
-  function (FocusTools, Step, GuiFactory, GuiSetup, Sinks, Future) {
+  function (FocusTools, Keyboard, Keys, Step, GuiFactory, GuiSetup, Sinks, Future) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -47,6 +49,7 @@ asynctest(
       dropdown.apis().focus();
 
       return [
+        Keyboard.sKeydown(doc, Keys.enter(), { }),
         function () { }
       ];
     }, function () { success(); }, failure);
