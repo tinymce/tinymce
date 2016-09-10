@@ -262,7 +262,8 @@ define(
               return expandRight(sandbox, target).orThunk(function () {
                 return sandbox.getSystem().getByDom(target).bind(function (item) {
                   var itemValue = Attr.get(target, uiSpec.markers().itemValue());
-                  return uiSpec.onExecute()(sandbox, item, itemValue);
+                  var itemText = Attr.get(target, uiSpec.markers().itemText());
+                  return uiSpec.onExecute()(sandbox, item, itemValue, itemText);
                 });
               });
             }

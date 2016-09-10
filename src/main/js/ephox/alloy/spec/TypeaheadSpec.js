@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.spec.LookaheadSpec',
+  'ephox.alloy.spec.TypeaheadSpec',
 
   [
     'ephox.alloy.spec.InputSpec',
@@ -25,7 +25,7 @@ define(
     ]);
 
     var make = function (spec) {
-      var detail = ValueSchema.asStructOrDie('lookahead.spec', schema, spec);
+      var detail = ValueSchema.asStructOrDie('typeahead.spec', schema, spec);
 
       var fetch = function (comp, sandbox) {
         var fetcher = detail.fetchItems();
@@ -119,10 +119,10 @@ define(
                   var inputWidth = Width.get(owner.element());
                   Width.set(menu.element(), inputWidth);
                 },
-                onExecute: function (sandbox, target) {
+                onExecute: function (sandbox, choice, itemValue, textValue) {
                   var input = owner.element();
-                  Value.set(input, Attr.get(target, 'data-item-text'));
-                  sandbox.apis().closeSandbox(Option.none());
+                  Value.set(input, textValue);
+                  sandbox.apis().closeSandbox();
                   owner.apis().focus();
                 }
               });

@@ -33,7 +33,7 @@ define(
       HtmlDisplay.section(gui,
         'An example of a typeahead component',
         {
-          uiType: 'lookahead',
+          uiType: 'typeahead',
           desc: 'typeahead-desc',
           sink: sink,
           fetchItems: function () {

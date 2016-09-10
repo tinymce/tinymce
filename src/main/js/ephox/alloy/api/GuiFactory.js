@@ -12,8 +12,8 @@ define(
     'ephox.alloy.spec.FormLabelSpec',
     'ephox.alloy.spec.InlineSpec',
     'ephox.alloy.spec.InputSpec',
-    'ephox.alloy.spec.LookaheadSpec',
     'ephox.alloy.spec.MenuSpec',
+    'ephox.alloy.spec.TypeaheadSpec',
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
@@ -26,7 +26,7 @@ define(
     'global!Error'
   ],
 
-  function (Component, Components, DefaultEvents, ButtonSpec, CustomSpec, DropdownButtonSpec, DropdownMenuSpec, FormLabelSpec, InlineSpec, InputSpec, LookaheadSpec, MenuSpec, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
+  function (Component, Components, DefaultEvents, ButtonSpec, CustomSpec, DropdownButtonSpec, DropdownMenuSpec, FormLabelSpec, InlineSpec, InputSpec, MenuSpec, TypeaheadSpec, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
     var knownSpecs = {
       custom: CustomSpec.make,
       button: ButtonSpec.make,
@@ -36,7 +36,7 @@ define(
       dropdown: DropdownButtonSpec.make,
       menu: MenuSpec.make,
       inline: InlineSpec.make,
-      lookahead: LookaheadSpec.make
+      typeahead: TypeaheadSpec.make
 
       // Add other specs here.
     };
