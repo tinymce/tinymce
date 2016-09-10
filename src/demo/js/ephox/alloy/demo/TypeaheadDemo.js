@@ -68,7 +68,6 @@ define(
           minChars: 1,
           sink: sink,
           fetchItems: function (text) {
-            console.log('fetching', text);
             var matching = Arr.bind(dataset, function (d) {
               var index = d.indexOf(text.toLowerCase());
               if (index > -1) {
