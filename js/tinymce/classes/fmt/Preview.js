@@ -23,7 +23,7 @@ define("tinymce/fmt/Preview", [
 	var each = Tools.each;
 
 	function getCssText(editor, format) {
-		var name, previewElm, dom = editor.dom;
+		var name, previewFrag, previewElm, dom = editor.dom;
 		var previewCss = '', parentFontSize, previewStyles;
 
 		previewStyles = editor.settings.preview_styles;
@@ -37,6 +37,20 @@ define("tinymce/fmt/Preview", [
 		if (!previewStyles) {
 			previewStyles = 'font-family font-size font-weight font-style text-decoration ' +
 				'text-transform color background-color border border-radius outline text-shadow';
+		}
+
+		function wrapIfRequired(elm) {
+			var elmName = elm.nodeName.toLowerCase();
+			var elmRule = editor.schema.getElementRule(elmName);
+			var parent;
+
+			if (elmRule.parentsRequired.length) {
+				parent = dom.create(elmRule.parentsRequired[0]);
+				parent.appendChild(elm);
+				return wrapIfRequired(parent);
+			} else {
+				return elm;
+			}
 		}
 
 		// Removes any variables since these can't be previewed
@@ -54,8 +68,10 @@ define("tinymce/fmt/Preview", [
 			format = format[0];
 		}
 
-		name = format.block || format.inline || 'span';
+		name = format.selector || format.block || format.inline || 'span';
+
 		previewElm = dom.create(name);
+		previewFrag = wrapIfRequired(previewElm);
 
 		// Add format styles to preview element
 		each(format.styles, function(value, name) {
@@ -88,7 +104,7 @@ define("tinymce/fmt/Preview", [
 
 		// Add the previewElm outside the visual area
 		dom.setStyles(previewElm, {position: 'absolute', left: -0xFFFF});
-		editor.getBody().appendChild(previewElm);
+		editor.getBody().appendChild(previewFrag);
 
 		// Get parent container font size so we can compute px values out of em/% for older IE:s
 		parentFontSize = dom.getStyle(editor.getBody(), 'fontSize', true);
@@ -140,7 +156,7 @@ define("tinymce/fmt/Preview", [
 
 		//previewCss += 'line-height:normal';
 
-		dom.remove(previewElm);
+		dom.remove(previewFrag);
 
 		return previewCss;
 	}
