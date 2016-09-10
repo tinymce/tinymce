@@ -37,6 +37,7 @@ define(
           desc: 'typeahead-desc',
           sink: sink,
           fetchItems: function () {
+            console.log('fetching');
             return Future.pure([
               { value: 'd', text: 'D' }
             ]);

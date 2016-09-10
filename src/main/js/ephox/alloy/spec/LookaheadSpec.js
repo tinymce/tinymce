@@ -32,24 +32,22 @@ define(
         // TODO: Move "representing" behaviour across.
         var typed = Value.get(comp.element());
 
-        return Future.nu(function (callback) {
-          fetcher(typed, function (rawItems) {
-            var items = Arr.map(rawItems, function (item) {
-              return Merger.deepMerge({
-                type: 'item'
-              }, item);
-            });
+        return fetcher(typed).map(function (rawItems) {
+          var items = Arr.map(rawItems, function (item) {
+            return Merger.deepMerge({
+              type: 'item'
+            }, item);
+          });
 
-            var primary = detail.desc() + '-dropdown';
-            var expansions = {};
-            var menus = Objects.wrap(primary, items);
+          var primary = detail.desc() + '-dropdown';
+          var expansions = {};
+          var menus = Objects.wrap(primary, items);
 
-            callback({
-              primary: primary,
-              menus: menus,
-              expansions: expansions
-            });
-          });  
+          return {
+            primary: primary,
+            menus: menus,
+            expansions: expansions
+          };
         });     
       };
 
