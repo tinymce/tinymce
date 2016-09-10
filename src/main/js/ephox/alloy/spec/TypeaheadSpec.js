@@ -101,7 +101,7 @@ define(
           onDown: moveToPopup
         },
         dom: {
-          classes: [ 'dropdown-button' ]
+          classes: [ 'typeahead' ]
         },
         focusing: true,
         tabstopping: true,
