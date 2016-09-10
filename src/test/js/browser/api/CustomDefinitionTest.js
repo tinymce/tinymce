@@ -21,16 +21,6 @@ test(
         label,
         expectedPart,
         function () {
-//           // Format the error nicely
-// var behaviours = CustomDefinition.behaviours(info);
-
-//       var definition = CustomDefinition.toDefinition(info);
-
-//       var modification = ComponentDom.combine(info, behaviours, definition).getOrDie();
-//       console.log('modification', DomModification.modToRaw(modification));
-//       var modDefinition = DomModification.merge(definition, modification);
-
-
           return CustomDefinition.toInfo(spec).fold(
             function (errInfo) {
               return Result.error(ValueSchema.formatError(errInfo));

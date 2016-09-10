@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.Component',
+    'ephox.alloy.construct.Components',
     'ephox.alloy.events.DefaultEvents',
     'ephox.alloy.spec.ButtonSpec',
     'ephox.alloy.spec.CustomSpec',
@@ -15,27 +16,25 @@ define(
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.perhaps.Options',
     'ephox.perhaps.Result',
     'global!Error'
   ],
 
-  function (Component, DefaultEvents, ButtonSpec, CustomSpec, FormLabelSpec, InputSpec, Objects, Arr, Obj, Merger, Json, Fun, Option, Result, Error) {
+  function (Component, Components, DefaultEvents, ButtonSpec, CustomSpec, FormLabelSpec, InputSpec, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
     var knownSpecs = {
       custom: CustomSpec.make,
       button: ButtonSpec.make,
       input: InputSpec.make,
       formlabel: FormLabelSpec.make
+
       // Add other specs here.
     };
 
-    var getPrebuilt = function (userSpec) {
-      return userSpec.built !== undefined ? Option.some(userSpec.built) : Option.none();
-    };
-
-    var unknownSpec = function (uiType) {
+    var unknownSpec = function (uiType, userSpec) {
       var known = Obj.keys(knownSpecs);
       return new Result.error(new Error('Unknown component type: ' + uiType + '.\nKnown types: ' + 
-        Json.stringify(known, null, 2)
+        Json.stringify(known, null, 2) + '\nEntire spec: ' + Json.stringify(userSpec, null, 2)
       ));
     };
 
@@ -52,7 +51,7 @@ define(
     var buildFromSpec = function (userSpec) {
       var uiType = userSpec.uiType;
       return Objects.readOptFrom(knownSpecs, uiType).fold(function () {
-        return unknownSpec(uiType);
+        return unknownSpec(uiType, userSpec);
       }, function (factory) {
         var spec = factory(userSpec);
 
@@ -65,22 +64,40 @@ define(
           spec,
           Objects.wrap('components', components)
         );
+
         return Result.value(
           Component.build(completeSpec)
         );
       });
     };
 
-    var build = function (userSpec) {
-      var component = getPrebuilt(userSpec).fold(function () {
-        return buildFromSpec(userSpec);
-      }, Result.value);
+    var buildFromSpecOrDie = function (userSpec) {
+      return buildFromSpec(userSpec).getOrDie();
+    };
 
-      return component.getOrDie();
+    var types = [
+      { type: 'uiType', build: buildFromSpecOrDie, only: false },
+      { type: 'external', build: Components.external, only: true },
+      { type: 'built', build: Components.premade, only: true },
+      { type: 'text', build: Components.text, only: true }
+    ];
+
+    // INVESTIGATE: A better way to provide 'meta-specs'
+    var build = function (userSpec) {
+      var builder = Options.findMap(types, function (t) {
+        return userSpec[t.type] !== undefined ? Option.some(function () {
+          var param = t.only === true ? userSpec[t.type] : userSpec;
+          return t.build(param);
+        }) : Option.none();
+      }).getOrThunk(function () {
+        throw new Error('Did not recognise any component type in ' + Json.stringify(userSpec, null, 2))
+      });
+
+      return builder();
     };
 
     return {
       build: build
     };
   }
-);
+);  

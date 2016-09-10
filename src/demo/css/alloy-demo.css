@@ -1,0 +1,11 @@
+.html-display {
+  font-family: monospace;
+  margin: 5px;
+  padding: 5px;
+  font-size: 80%;
+}
+
+.demo-selected {
+  color: white;
+  background: black;
+}

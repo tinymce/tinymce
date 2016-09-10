@@ -31,6 +31,39 @@ var dependencies = [
     ]
   },
 
+  {
+    name: 'repartee',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'repartee.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
+  {
+    name: 'oath',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'oath.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
+  {
+    name: 'fussy',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'fussy.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
   // Test dependencies
   {
     name: 'agar',

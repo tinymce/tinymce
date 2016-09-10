@@ -21,6 +21,10 @@ define(
       return id;
     };
 
+    var writeOnly = function (elem, uid) {
+      Attr.set(elem, idAttr, uid);
+    };
+
     var read = function (elem) {
       var id = Node.isElement(elem) ? Attr.get(elem, idAttr) : null;
       return Option.from(id);
@@ -32,6 +36,7 @@ define(
 
     return {
       write: write,
+      writeOnly: writeOnly,
       read: read,
       find: find,
       attribute: Fun.constant(idAttr)

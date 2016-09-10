@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.behaviour.Focusing',
     'ephox.alloy.behaviour.Keying',
+    'ephox.alloy.behaviour.Positioning',
     'ephox.alloy.behaviour.Receiving',
     'ephox.alloy.behaviour.Tabstopping',
     'ephox.alloy.behaviour.Toggling',
@@ -19,7 +20,7 @@ define(
     'global!Error'
   ],
 
-  function (Focusing, Keying, Receiving, Tabstopping, Toggling, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
+  function (Focusing, Keying, Positioning, Receiving, Tabstopping, Toggling, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
     var domSchema = ValueSchema.objOf([
       FieldSchema.strict('tag'),
       FieldSchema.defaulted('styles', {}),
@@ -97,7 +98,8 @@ define(
       Keying,
       Tabstopping,
       Focusing,
-      Receiving
+      Receiving,
+      Positioning
     ];
 
     var behaviours = function (info) {
