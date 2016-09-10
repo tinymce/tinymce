@@ -19,6 +19,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.NavigationUtils',
     'ephox.alloy.test.Sinks',
+    'ephox.alloy.test.TestBroadcasts',
     'ephox.knoch.future.Future',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.Focus',
@@ -26,7 +27,7 @@ asynctest(
     'global!Math'
   ],
  
-  function (Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, NamedChain, RealKeys, Step, UiControls, UiFinder, Waiter, GuiFactory, GuiSetup, NavigationUtils, Sinks, Future, Css, Focus, Width, Math) {
+  function (Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, NamedChain, RealKeys, Step, UiControls, UiFinder, Waiter, GuiFactory, GuiSetup, NavigationUtils, Sinks, TestBroadcasts, Future, Css, Focus, Width, Math) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -77,28 +78,8 @@ asynctest(
         ]),
         UiControls.sSetValue(typeahead.element(), 'peo'),
 
-        // // check that the typeahead is not open.
-        // UiFinder.sNotExists(gui.element(), '[data-alloy-item-value]'),
-
-        // RealKeys.sSendKeysOn(
-        //   '.typeahead',
-        //   [
-        //     RealKeys.text('test-page')
-        //   ]
-        // ),
-
-        // Waiter.sTryUntil(
-        //   'Waiting for content to load',
-        //   UiFinder.sExists(gui.element(), '[data-alloy-item-value]'),
-        //   100, 3000
-        // ),
-
-        // // Focus should still be in the typeahead.
-        // FocusTools.sTryOnSelector(
-        //   'Focus should be on typeahead, not the list of options',
-        //   doc,
-        //   '.typeahead'
-        // ),
+        // check that the typeahead is not open.
+        UiFinder.sNotExists(gui.element(), '[data-alloy-item-value]'),
         
         Keyboard.sKeydown(doc, Keys.down(), { }),
         FocusTools.sTryOnSelector(
@@ -187,7 +168,44 @@ asynctest(
         Chain.asStep(typeahead.element(), [
           UiControls.cGetValue,
           Assertions.cAssertEq('Checking typeahead value matches clicked on value', 'new-value2')
-        ])
+        ]),
+
+        // check dismissing popups
+        Keyboard.sKeydown(doc, Keys.down(), { }),
+        FocusTools.sTryOnSelector(
+          'Wait for typeahead list to show',
+          doc,
+          '[data-alloy-item-value="new-value21"]'
+        ),
+        TestBroadcasts.sDismissOn(
+          'typeahead input: should not close',
+          gui,
+          '.typeahead'
+        ),
+        Logger.t(
+          'Broadcasting dismiss on input should not close popup',
+          UiFinder.sExists(gui.element(), '[data-alloy-item-value]')
+        ),
+
+        TestBroadcasts.sDismissOn(
+          'typeahead list option: should not close',
+          gui,
+          '[data-alloy-item-value="new-value22"]'
+        ),
+        Logger.t(
+          'Broadcasting dismiss on list option should not close popup',
+          UiFinder.sExists(gui.element(), '[data-alloy-item-value]')
+        ),
+
+         TestBroadcasts.sDismiss(
+          'outer gui element: should close',
+          gui,
+          gui.element()
+        ),
+        Logger.t(
+          'Broadcasting dismiss on outer gui context should close popup',
+          UiFinder.sNotExists(gui.element(), '[data-alloy-item-value]')
+        )
 
       ];
     }, function () { success(); }, failure);

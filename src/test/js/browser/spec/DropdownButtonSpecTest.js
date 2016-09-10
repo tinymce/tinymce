@@ -17,6 +17,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.NavigationUtils',
     'ephox.alloy.test.Sinks',
+    'ephox.alloy.test.TestBroadcasts',
     'ephox.knoch.future.Future',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.Width',
@@ -25,7 +26,7 @@ asynctest(
     'global!parseInt'
   ],
  
-  function (Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, GuiSetup, NavigationUtils, Sinks, Future, Css, Width, Error, Math, parseInt) {
+  function (Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, GuiSetup, NavigationUtils, Sinks, TestBroadcasts, Future, Css, Width, Error, Math, parseInt) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -161,60 +162,40 @@ asynctest(
           '[data-alloy-item-value="alpha"]'
         ),
 
-        Logger.t(
-          'Broadcast dismiss on button ... should not close',
-          GeneralSteps.sequence([
-            Step.sync(function () {
-              gui.broadcastOn([
-                'dismiss.popups'
-              ], {
-                target: dropdown.element()
-              });
-            })
-          ])
+        TestBroadcasts.sDismiss(
+          'button: should not close',
+          gui,
+          dropdown.element()
         ),
 
-        FocusTools.sTryOnSelector(
-          'focus should start on alpha',
+        FocusTools.sIsOnSelector(
+          'focus should stay on alpha',
           doc,
           '[data-alloy-item-value="alpha"]'
         ),
 
-        Logger.t(
-          'Broadcast dismiss on item ... should not close',
-          GeneralSteps.sequence([
-            Step.sync(function () {
-              var item = UiFinder.findIn(gui.element(), components.alpha.selector).getOrDie(
-                new Error('Could not find the alpha item for dispatching dismiss')
-              );
-              console.log('item', item.dom());
-              gui.broadcastOn([
-                'dismiss.popups'
-              ], {
-                target: item
-              });
-            })
-          ])
+        TestBroadcasts.sDismissOn(
+          'item: should not close',
+          gui,
+          components.alpha.selector
         ),
 
-        FocusTools.sTryOnSelector(
-          'focus should start on alpha',
+        FocusTools.sIsOnSelector(
+          'focus should stay on alpha',
           doc,
           '[data-alloy-item-value="alpha"]'
         ),
 
-        Logger.t(
-          'Broadcast dismiss on gui element ... should close',
-          Step.sync(function () {
-            gui.broadcastOn([
-              'dismiss.popups'
-            ], {
-              target: gui.element()
-            });
-          })
+        TestBroadcasts.sDismiss(
+          'outer element: should close',
+          gui,
+          gui.element()
         ),
 
-        UiFinder.sNotExists(gui.element(), '[data-alloy-item-value]')
+        Logger.t(
+          'After broadcasting dismiss popup on a non popup element, the menu should not longer exist in the DOM',
+          UiFinder.sNotExists(gui.element(), '[data-alloy-item-value]')
+        )
       ];
     }, function () { success(); }, failure);
 
