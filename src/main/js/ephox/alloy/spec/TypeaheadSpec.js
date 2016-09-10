@@ -21,7 +21,8 @@ define(
     var schema = ValueSchema.objOf([
       FieldSchema.strict('sink'),
       FieldSchema.strict('fetchItems'),
-      FieldSchema.strict('desc')
+      FieldSchema.strict('desc'),
+      FieldSchema.defaulted('minChars', 5)
     ]);
 
     var make = function (spec) {
@@ -83,7 +84,7 @@ define(
             // You don't want it to change when something else has triggered the change.
             if (focusInInput) {
               if (sandbox.apis().isShowing()) sandbox.apis().closeSandbox();
-              if (Value.get(component.element()).length > 3) {
+              if (Value.get(component.element()).length >= detail.minChars()) {
                 showPreview(component, sandbox);
               }
             }
