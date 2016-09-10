@@ -23,7 +23,7 @@ define("tinymce/fmt/Preview", [
 	var each = Tools.each;
 
 	function getCssText(editor, format) {
-		var name, previewFrag, previewElm, dom = editor.dom;
+		var name, previewFrag, previewElm, elmChain, dom = editor.dom;
 		var previewCss = '', parentFontSize, previewStyles;
 
 		previewStyles = editor.settings.preview_styles;
@@ -39,19 +39,54 @@ define("tinymce/fmt/Preview", [
 				'text-transform color background-color border border-radius outline text-shadow';
 		}
 
-		function wrapIfRequired(elm) {
+		function wrapIfRequired(elm, ancestors) {
 			var elmName = elm.nodeName.toLowerCase();
 			var elmRule = editor.schema.getElementRule(elmName);
-			var parent;
+			var parent, parentName, parentsRequired = elmRule.parentsRequired;
 
-			if (elmRule.parentsRequired.length) {
-				parent = dom.create(elmRule.parentsRequired[0]);
+			if (parentsRequired.length) {
+				parentName = parentsRequired[0];
+				if (ancestors && ancestors.length) {
+					Tools.each(parentsRequired, function(parentRequired) {
+						var idx = Tools.indexOf(ancestors, parentRequired);
+						if (idx !== -1) {
+							parentName = parentsRequired
+							// remove candidates upto and including the matched ancestor
+							ancestors.splice(0, idx + 1);
+							return false;
+						}
+					});
+				}
+				parent = dom.create(parentName);
 				parent.appendChild(elm);
-				return wrapIfRequired(parent);
+				return wrapIfRequired(parent, ancestors);
 			} else {
 				return elm;
 			}
 		}
+
+
+		function extractTagsOnly(selector) {
+			var ancestry;
+
+			// take into account only first one
+			selector = selector.split(/\s*,\s*/)[0];
+
+			// tighten
+			selector = selector.replace(/\s*(~\+|~|\+|>)\s*/g, '$1');
+
+			ancestry = selector.split(/(?:>|\s+)/);
+
+			return Tools.map(ancestry, function(selector) {
+				// if there are any sibling selectors we only take the target
+				var siblings = selector.split(/(?:~\+|~|\+)/);
+				selector = siblings[siblings.length - 1];
+
+				// strip off any IDs, CLASSes or PSEUDOS
+				return Tools.trim(selector).replace(/[\.#:\[].+$/, '');
+			}).reverse();
+		}
+
 
 		// Removes any variables since these can't be previewed
 		function removeVars(val) {
@@ -68,10 +103,12 @@ define("tinymce/fmt/Preview", [
 			format = format[0];
 		}
 
-		name = format.selector || format.block || format.inline || 'span';
+		elmChain = extractTagsOnly(format.selector);
+
+		name = elmChain.shift() || format.block || format.inline || 'span';
 
 		previewElm = dom.create(name);
-		previewFrag = wrapIfRequired(previewElm);
+		previewFrag = wrapIfRequired(previewElm, elmChain);
 
 		// Add format styles to preview element
 		each(format.styles, function(value, name) {
