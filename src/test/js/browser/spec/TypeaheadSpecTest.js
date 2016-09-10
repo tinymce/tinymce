@@ -7,6 +7,8 @@ asynctest(
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
+    'ephox.agar.api.Logger',
+    'ephox.agar.api.Mouse',
     'ephox.agar.api.NamedChain',
     'ephox.agar.api.RealKeys',
     'ephox.agar.api.Step',
@@ -18,10 +20,13 @@ asynctest(
     'ephox.alloy.test.NavigationUtils',
     'ephox.alloy.test.Sinks',
     'ephox.knoch.future.Future',
-    'ephox.sugar.api.Focus'
+    'ephox.sugar.api.Css',
+    'ephox.sugar.api.Focus',
+    'ephox.sugar.api.Width',
+    'global!Math'
   ],
  
-  function (Assertions, Chain, FocusTools, Keyboard, Keys, NamedChain, RealKeys, Step, UiControls, UiFinder, Waiter, GuiFactory, GuiSetup, NavigationUtils, Sinks, Future, Focus) {
+  function (Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, NamedChain, RealKeys, Step, UiControls, UiFinder, Waiter, GuiFactory, GuiSetup, NavigationUtils, Sinks, Future, Css, Focus, Width, Math) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -102,6 +107,28 @@ asynctest(
           '[data-alloy-item-value="peo1"]'
         ),
 
+        // On typeaheads, there should be a width property that is approximately
+        // the same size as the input field
+        // NOTE: Dupe with Dropdown test.
+        Logger.t(
+          'Checking that the input width is passed onto the typeahead list width',
+          Chain.asStep(gui.element(), [
+            UiFinder.cFindIn('[data-alloy-menu-value]'),
+            Chain.op(function (menu) {
+              var inputWidth = Width.get(typeahead.element());
+              var menuWidth = parseInt(
+                Css.getRaw(menu, 'width').getOrDie('Menu must have a width property'),
+                10
+              );
+              Assertions.assertEq(
+                'Check that the menu width is approximately the same as the input width',
+                true,
+                Math.abs(menuWidth - inputWidth) < 20
+              );
+            })
+          ])
+        ),
+
         NavigationUtils.sequence(doc, Keys.down(), {}, [
           item('peo2'),
           item('peo1'),
@@ -141,7 +168,26 @@ asynctest(
           doc,
           '.typeahead'
         ),
-        UiFinder.sNotExists(gui.element(), '[data-alloy-item-value]')
+        Chain.asStep(typeahead.element(), [
+          UiControls.cGetValue,
+          Assertions.cAssertEq('Checking typeahead value has preserved old value before esc', 'new-value')
+        ]),
+
+        UiFinder.sNotExists(gui.element(), '[data-alloy-item-value]'),
+
+        Keyboard.sKeydown(doc, Keys.down(), {}),
+        FocusTools.sTryOnSelector(
+          'Focus should be on list of options, not typeahead',
+          doc,
+          '[data-alloy-item-value="new-value1"]'
+        ),
+
+        Mouse.sClickOn(gui.element(), '[data-alloy-item-value="new-value2"]'),
+        UiFinder.sNotExists(gui.element(), '[data-alloy-item-value]'),
+        Chain.asStep(typeahead.element(), [
+          UiControls.cGetValue,
+          Assertions.cAssertEq('Checking typeahead value matches clicked on value', 'new-value2')
+        ])
 
       ];
     }, function () { success(); }, failure);
