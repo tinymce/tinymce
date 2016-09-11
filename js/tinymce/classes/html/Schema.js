@@ -44,7 +44,7 @@ define("tinymce/html/Schema", [
 		var phrasingContent, flowContent, html4BlockContent, html4PhrasingContent;
 
 		function add(name, attributes, children, parentsRequired) {
-			var ni, attributesOrder;
+			var ni, attributesOrder, element;
 
 			function arrayToMap(array, obj) {
 				var map = {}, i, l;
@@ -58,7 +58,6 @@ define("tinymce/html/Schema", [
 
 			children = children || [];
 			attributes = attributes || "";
-			parentsRequired = parentsRequired || "";
 
 			if (typeof children === "string") {
 				children = split(children);
@@ -68,12 +67,18 @@ define("tinymce/html/Schema", [
 			ni = name.length;
 			while (ni--) {
 				attributesOrder = split([globalAttributes, attributes].join(' '));
-				schema[name[ni]] = {
+
+				element = {
 					attributes: arrayToMap(attributesOrder),
 					attributesOrder: attributesOrder,
-					children: arrayToMap(children, dummyObj),
-					parentsRequired: split(parentsRequired)
+					children: arrayToMap(children, dummyObj)
 				};
+
+				if (parentsRequired) {
+					element.parentsRequired = split(parentsRequired);
+				}
+
+				schema[name[ni]] = element;
 			}
 		}
 
@@ -408,7 +413,7 @@ define("tinymce/html/Schema", [
 		// This function is a bit hard to read since it's heavily optimized for speed
 		function addValidElements(validElements) {
 			var ei, el, ai, al, matches, element, attr, attrData, elementName, attrName, attrType, attributes, attributesOrder,
-				prefix, outputName, globalAttributes, globalAttributesOrder, key, value, parentsRequired,
+				prefix, outputName, globalAttributes, globalAttributesOrder, key, value,
 				elementRuleRegExp = /^([#+\-])?([^\[!\/]+)(?:\/([^\[!]+))?(?:(!?)\[([^\]]+)\])?$/,
 				attrRuleRegExp = /^([!\-])?(\w+::\w+|[^=:<]+)?(?:([=:<])(.*))?$/,
 				hasPatternsRegExp = /[*?+]/;
@@ -437,18 +442,16 @@ define("tinymce/html/Schema", [
 						attributes = {};
 						attributesOrder = [];
 
-						// Some elements are not valid without specific parents (e.g. TD)
-						parentsRequired = [];
-						if (schemaItems[elementName]) {
-							parentsRequired = schemaItems[elementName].parentsRequired;
-						}
-
 						// Create the new element
 						element = {
 							attributes: attributes,
-							attributesOrder: attributesOrder,
-							parentsRequired: parentsRequired
+							attributesOrder: attributesOrder
 						};
+
+						// Some elements are not valid without specific parents (e.g. TD)
+						if (schemaItems[elementName] && schemaItems[elementName].parentsRequired) {
+							element.parentsRequired = schemaItems[elementName].parentsRequired;
+						}
 
 						// Padd empty elements prefix
 						if (prefix === '#') {
@@ -677,9 +680,12 @@ define("tinymce/html/Schema", [
 			each(schemaItems, function(element, name) {
 				elements[name] = {
 					attributes: element.attributes,
-					attributesOrder: element.attributesOrder,
-					parentsRequired: element.parentsRequired
+					attributesOrder: element.attributesOrder
 				};
+
+				if (element.parentsRequired) {
+					elements[name].parentsRequired = element.parentsRequired;
+				}
 
 				children[name] = element.children;
 			});

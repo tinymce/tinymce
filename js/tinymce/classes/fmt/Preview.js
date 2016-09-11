@@ -44,7 +44,7 @@ define("tinymce/fmt/Preview", [
 			var elmRule = editor.schema.getElementRule(elmName);
 			var parent, parentName, parentsRequired = elmRule.parentsRequired;
 
-			if (parentsRequired.length) {
+			if (parentsRequired && parentsRequired.length) {
 				parentName = parentsRequired[0];
 				if (ancestors && ancestors.length) {
 					Tools.each(parentsRequired, function(parentRequired) {
