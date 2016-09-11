@@ -130,7 +130,7 @@ define("tinymce/html/Schema", [
 			globalAttributes += " contenteditable contextmenu draggable dropzone " +
 				"hidden spellcheck translate";
 			blockContent += " article aside details dialog figure header footer hgroup section nav";
-			phrasingContent += "audio canvas command datalist mark meter output picture " +
+			phrasingContent += " audio canvas command datalist mark meter output picture " +
 				"progress time wbr video ruby bdi keygen";
 		}
 
