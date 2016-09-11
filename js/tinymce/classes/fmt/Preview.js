@@ -74,7 +74,8 @@ define("tinymce/fmt/Preview", [
 
 			if (ancestor && ancestor.siblings) {
 				if (parent == grandParent) {
-					grandParent = dom.createFragment();
+					// if no more ancestors, wrap in generic div
+					grandParent = dom.create('div');
 					grandParent.appendChild(parent);
 				}
 
@@ -208,7 +209,7 @@ define("tinymce/fmt/Preview", [
 		editor.fire('PreviewFormats');
 
 		// Add the previewElm outside the visual area
-		dom.setStyles(previewElm, {position: 'absolute', left: -0xFFFF});
+		dom.setStyles(previewFrag, {position: 'absolute', left: -0xFFFF});
 		editor.getBody().appendChild(previewFrag);
 
 		// Get parent container font size so we can compute px values out of em/% for older IE:s
