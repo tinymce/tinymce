@@ -46,17 +46,19 @@ define("tinymce/fmt/Preview", [
 
 			if (parentsRequired && parentsRequired.length) {
 				parentName = parentsRequired[0];
+
 				if (ancestors && ancestors.length) {
 					Tools.each(parentsRequired, function(parentRequired) {
-						var idx = Tools.indexOf(ancestors, parentRequired);
+						var idx = Tools.inArray(ancestors, parentRequired);
 						if (idx !== -1) {
-							parentName = parentsRequired
+							parentName = ancestors[idx];
 							// remove candidates upto and including the matched ancestor
 							ancestors.splice(0, idx + 1);
 							return false;
 						}
 					});
 				}
+
 				parent = dom.create(parentName);
 				parent.appendChild(elm);
 				return wrapIfRequired(parent, ancestors);
@@ -68,6 +70,10 @@ define("tinymce/fmt/Preview", [
 
 		function extractTagsOnly(selector) {
 			var ancestry;
+
+			if (!selector || typeof(selector) !== 'string') {
+				return [];
+			}
 
 			// take into account only first one
 			selector = selector.split(/\s*,\s*/)[0];
