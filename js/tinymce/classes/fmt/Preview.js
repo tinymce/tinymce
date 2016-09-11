@@ -23,7 +23,7 @@ define("tinymce/fmt/Preview", [
 	var each = Tools.each;
 
 	function getCssText(editor, format) {
-		var name, previewFrag, previewElm, elmChain, dom = editor.dom;
+		var name, previewFrag, previewElm, items, dom = editor.dom;
 		var previewCss = '', parentFontSize, previewStyles;
 
 		previewStyles = editor.settings.preview_styles;
@@ -39,40 +39,98 @@ define("tinymce/fmt/Preview", [
 				'text-transform color background-color border border-radius outline text-shadow';
 		}
 
-		function wrapIfRequired(elm, ancestors) {
+		function besiegeWithHml(elm, ancestors) {
 			var elmName = elm.nodeName.toLowerCase();
 			var elmRule = editor.schema.getElementRule(elmName);
-			var parent, parentName, parentsRequired = elmRule.parentsRequired;
+			var parent, parentName, grandParent;
+			var parentsRequired = elmRule.parentsRequired;
+			var ancestor = ancestors.length && ancestors[0];
+
+			function decorate(elm, obj) {
+				dom.addClass(elm, obj.classes);
+				dom.setAttribs(elm, obj.attrs);
+			}
 
 			if (parentsRequired && parentsRequired.length) {
-				parentName = parentsRequired[0];
-
-				if (ancestors && ancestors.length) {
-					Tools.each(ancestors, function(ancestor) {
-						var idx = Tools.inArray(parentsRequired, ancestor);
-						if (idx !== -1) {
-							parentName = ancestor;
-							// remove candidates upto and including the matched ancestor
-							ancestors = Tools.grep(ancestors, function(v, i) {
-								return i > idx;
-							});
-							return false;
-						}
-					});
+				if (ancestor && Tools.inArray(parentsRequired, ancestor.name) !== -1) {
+					parentName = ancestor.name;
+					ancestors = ancestors.slice(1);
+				} else {
+					parentName = parentsRequired[0];
 				}
-
-				parent = dom.create(parentName);
-				parent.appendChild(elm);
-				return wrapIfRequired(parent, ancestors);
+			} else if (ancestor) {
+				parentName = ancestor.name;
+				ancestors = ancestors.slice(1);
 			} else {
 				return elm;
 			}
+
+			parent = dom.create(parentName);
+
+			decorate(parent, ancestor);
+
+			parent.appendChild(elm);
+			grandParent = besiegeWithHml(parent, ancestors);
+
+			if (ancestor && ancestor.siblings) {
+				if (parent == grandParent) {
+					grandParent = dom.createFragment();
+					grandParent.appendChild(parent);
+				}
+
+				Tools.each(ancestor.siblings, function(sibling) {
+					var elm = dom.create(sibling.name);
+					decorate(elm, sibling);
+					grandParent.insertBefore(elm, parent);
+				});
+			}
+
+			return grandParent;
 		}
 
 
-		function extractTagsOnly(selector) {
-			var ancestry;
+		function parseSelectorItem(item) {
+			var obj = {
+				classes: [],
+				attrs: {}
+			};
 
+			item = Tools.trim(item).replace(/([#\.\[]|::?)([\w\-"=]+)\]?/g, function($0, $1, $2) {
+				switch ($1) {
+					case '#':
+						obj.attrs.id = $2;
+						break;
+
+					case '.':
+						obj.classes.push($2);
+						break;
+
+					case '[':
+						var m = $2.match(/([\w\-]+)(?:\=\"([^\"]+))?/);
+						if (m) {
+							obj.attrs[m[1]] = m[2];
+						}
+						break;
+
+					case ':':
+						if (Tools.inArray('checked disabled enabled read-only required'.split(' '), m[2]) !== -1) {
+							obj.attrs[m[2]] = m[2];
+						}
+						break;
+
+					case '::':
+					default:
+						break;
+				}
+				return '';
+			});
+
+			obj.name = item;
+			return obj;
+		}
+
+
+		function parseSelector(selector) {
 			if (!selector || typeof(selector) !== 'string') {
 				return [];
 			}
@@ -83,15 +141,14 @@ define("tinymce/fmt/Preview", [
 			// tighten
 			selector = selector.replace(/\s*(~\+|~|\+|>)\s*/g, '$1');
 
-			ancestry = selector.split(/(?:>|\s+)/);
+			return Tools.map(selector.split(/(?:>|\s+)/), function(item) {
+				var siblings = Tools.map(item.split(/(?:~\+|~|\+)/), parseSelectorItem);
+				var obj = siblings.pop();
 
-			return Tools.map(ancestry, function(selector) {
-				// if there are any sibling selectors we only take the target
-				var siblings = selector.split(/(?:~\+|~|\+)/);
-				selector = siblings[siblings.length - 1];
-
-				// strip off any IDs, CLASSes or PSEUDOS
-				return Tools.trim(selector).replace(/[\.#:\[].+$/, '');
+				if (siblings.length) {
+					obj.siblings = siblings;
+				}
+				return obj;
 			}).reverse();
 		}
 
@@ -111,12 +168,15 @@ define("tinymce/fmt/Preview", [
 			format = format[0];
 		}
 
-		elmChain = extractTagsOnly(format.selector);
-
-		name = elmChain.shift() || format.block || format.inline || 'span';
+		items = parseSelector(format.selector);
+		if (items.length) {
+			name = items.shift().name;
+		} else {
+			name = format.block || format.inline || 'span';
+		}
 
 		previewElm = dom.create(name);
-		previewFrag = wrapIfRequired(previewElm, elmChain);
+		previewFrag = besiegeWithHml(previewElm, items);
 
 		// Add format styles to preview element
 		each(format.styles, function(value, name) {
