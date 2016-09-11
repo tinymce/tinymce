@@ -48,12 +48,14 @@ define("tinymce/fmt/Preview", [
 				parentName = parentsRequired[0];
 
 				if (ancestors && ancestors.length) {
-					Tools.each(parentsRequired, function(parentRequired) {
-						var idx = Tools.inArray(ancestors, parentRequired);
+					Tools.each(ancestors, function(ancestor) {
+						var idx = Tools.inArray(parentsRequired, ancestor);
 						if (idx !== -1) {
-							parentName = ancestors[idx];
+							parentName = ancestor;
 							// remove candidates upto and including the matched ancestor
-							ancestors.splice(0, idx + 1);
+							ancestors = Tools.grep(ancestors, function(v, i) {
+								return i > idx;
+							});
 							return false;
 						}
 					});

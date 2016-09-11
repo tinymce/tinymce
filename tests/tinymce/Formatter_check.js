@@ -270,4 +270,7 @@ test('Get preview css text for formats', function() {
 
 	ok(/color\:rgb\(0, 0, 255\)/.test(getCssText({ selector: 'ul + ol.someClass > li#someId', classes: ['preview'] })),
 		'ul + ol.someClass > li#someId previewed properly.');
+
+	ok(/color\:rgb\(0, 0, 255\)/.test(getCssText({ selector: 'ul li ol li', classes: ['preview'] })),
+		'ul li ol li previewed properly.');
 });
