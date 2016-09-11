@@ -113,8 +113,8 @@ define("tinymce/fmt/Preview", [
 						break;
 
 					case ':':
-						if (Tools.inArray('checked disabled enabled read-only required'.split(' '), m[2]) !== -1) {
-							obj.attrs[m[2]] = m[2];
+						if (Tools.inArray('checked disabled enabled read-only required'.split(' '), $2) !== -1) {
+							obj.attrs[$2] = $2;
 						}
 						break;
 
