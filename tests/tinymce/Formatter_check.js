@@ -230,6 +230,44 @@ test('Match format on div block in inline mode', function() {
 });
 
 test('Get preview css text for formats', function() {
-	ok(/font-weight\:(bold|700)/.test(editor.formatter.getCssText('bold')), 'Bold not found in preview style');
-	ok(/font-weight\:(bold|700)/.test(editor.formatter.getCssText({inline: 'b'})), 'Bold not found in preview style');
+	var getCssText = editor.formatter.getCssText;
+
+	ok(/font-weight\:(bold|700)/.test(getCssText('bold')),
+		'Bold not found in preview style');
+
+	ok(/font-weight\:(bold|700)/.test(getCssText({inline: 'b'})),
+		'Bold not found in preview style');
+
+	editor.dom.addStyle(
+		'table .preview {' +
+			'color: rgb(0, 255, 0);' + // green
+		'}' +
+
+		'ol .preview {' +
+			'color: rgb(0, 0, 255);' + // blue
+		'}' +
+
+		'.preview {' +
+			'color: rgb(255, 0, 0);' + // red
+		'}'
+	);
+
+	ok(/color\:rgb\(0, 255, 0\)/.test(getCssText({ selector: 'tr', classes: ['preview'] })),
+		'Style is properly inherited in preview for partial element (like TR).');
+
+
+	ok(/color\:rgb\(255, 0, 0\)/.test(getCssText({ selector: 'li', classes: ['preview'] })),
+		'For LI element default required parent is UL.');
+
+	ok(/color\:rgb\(0, 0, 255\)/.test(getCssText({ selector: 'ol li', classes: ['preview'] })),
+		'Parent explicitly present in the selector will have preference.');
+
+	ok(/color\:rgb\(0, 0, 255\)/.test(getCssText({ selector: 'ol > li', classes: ['preview'] })),
+		'ol > li previewed properly.');
+
+	ok(/color\:rgb\(0, 0, 255\)/.test(getCssText({ selector: 'ol.someClass > li#someId[title="someTitle"]', classes: ['preview'] })),
+		'ol.someClass > li#someId[title="someTitle"] previewed properly.');
+
+	ok(/color\:rgb\(0, 0, 255\)/.test(getCssText({ selector: 'ul + ol.someClass > li#someId', classes: ['preview'] })),
+		'ul + ol.someClass > li#someId previewed properly.');
 });
