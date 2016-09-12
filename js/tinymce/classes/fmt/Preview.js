@@ -74,12 +74,14 @@ define("tinymce/fmt/Preview", [
 
 			if (parentRequired) {
 				if (ancestorName == parentRequired) {
-					parentCandidate = ancestry.shift();
+					parentCandidate = ancestry[0];
+					ancestry = ancestry.slice(1);
 				} else {
 					parentCandidate = parentRequired;
 				}
 			} else if (ancestor) {
-				parentCandidate = ancestry.shift();
+				parentCandidate = ancestry[0];
+				ancestry = ancestry.slice(1);
 			} else if (!siblings) {
 				return elm;
 			}
@@ -105,13 +107,11 @@ define("tinymce/fmt/Preview", [
 			return wrapInHtml(parent, ancestry, parentCandidate && parentCandidate.siblings);
 		}
 
-		ancestry = ancestry.slice(); // work on copy
-
 		if (ancestry && ancestry.length) {
-			item = ancestry.shift();
+			item = ancestry[0];
 			elm = createElement(item);
 			fragment = dom.create('div');
-			fragment.appendChild(wrapInHtml(elm, ancestry, item.siblings));
+			fragment.appendChild(wrapInHtml(elm, ancestry.slice(1), item.siblings));
 			return fragment;
 		} else {
 			return '';
