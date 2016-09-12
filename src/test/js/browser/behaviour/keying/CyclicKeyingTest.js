@@ -2,15 +2,17 @@ asynctest(
   'Cyclic Keying Test',
  
   [
+    'ephox.agar.api.Assertions',
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
-    'ephox.alloy.test.GuiSetup'
+    'ephox.alloy.test.GuiSetup',
+    'ephox.sugar.api.DomEvent'
   ],
  
-  function (FocusTools, Keyboard, Keys, Step, GuiFactory, GuiSetup) {
+  function (Assertions, FocusTools, Keyboard, Keys, Step, GuiFactory, GuiSetup, DomEvent) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -53,8 +55,8 @@ asynctest(
       });
 
     }, function (doc, body, gui, component, store) {
-
       return [
+        GuiSetup.mSetupKeyLogger(body),
         FocusTools.sSetFocus(
           'Setting focus on first button',
           gui.element(),
@@ -104,7 +106,8 @@ asynctest(
           'Focus should move from button2 to button 1',
           doc,
           'button:contains("Button1")'
-        )
+        ),
+        GuiSetup.mTeardownKeyLogger(body, [ ])
       ];
     }, function () {
       success();
