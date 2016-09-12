@@ -18,16 +18,20 @@
  * @class tinymce.fmt.Preview
  */
 define("tinymce/fmt/Preview", [
+	"tinymce/dom/DOMUtils",
 	"tinymce/util/Tools"
-], function(Tools) {
+], function(DOMUtils, Tools) {
 	var each = Tools.each;
+	var dom = DOMUtils.DOM;
 
-	function parsedSelectorToHtml(ancestry) {
-		var dom = editor.dom;
+	function parsedSelectorToHtml(ancestry, editor) {
 		var elm, item, fragment;
+		var schema = editor && editor.schema || new tinymce.html.Schema({});
 
 		function decorate(elm, item) {
-			dom.addClass(elm, item.classes.join(' '));
+			if (item.classes.length) {
+				dom.addClass(elm, item.classes.join(' '));
+			}
 			dom.setAttribs(elm, item.attrs);
 		}
 
@@ -49,7 +53,7 @@ define("tinymce/fmt/Preview", [
 
 		function getRequiredParent(elm, candidate) {
 			var name = typeof(elm) !== 'string' ? elm.nodeName.toLowerCase() : elm;
-			var elmRule = editor.schema.getElementRule(name);
+			var elmRule = schema.getElementRule(name);
 			var parentsRequired = elmRule.parentsRequired;
 
 			if (parentsRequired && parentsRequired.length) {
@@ -115,8 +119,8 @@ define("tinymce/fmt/Preview", [
 	}
 
 
-	function selectorToHtml(selector) {
-		return parsedSelectorToHtml(parseSelector(selector));
+	function selectorToHtml(selector, editor) {
+		return parsedSelectorToHtml(parseSelector(selector, editor));
 	}
 
 
@@ -190,7 +194,7 @@ define("tinymce/fmt/Preview", [
 
 
 	function getCssText(editor, format) {
-		var name, previewFrag, previewElm, items, dom = editor.dom;
+		var name, previewFrag, previewElm, items;
 		var previewCss = '', parentFontSize, previewStyles;
 
 		previewStyles = editor.settings.preview_styles;
