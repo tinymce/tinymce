@@ -45,6 +45,7 @@ asynctest(
       };
 
       return [
+        GuiSetup.mSetupKeyLogger(body),
         FocusTools.sSetFocus('Start on component', gui.element(), '.special-keying'),
         press('space', Keys.space(), { }),
         press('enter', Keys.enter(), { }),
@@ -53,7 +54,8 @@ asynctest(
         press('up', Keys.up(), { }),
         press('down', Keys.down(), { }),
         press('right', Keys.right(), { }),
-        press('escape', Keys.escape(), { })
+        press('escape', Keys.escape(), { }),
+        GuiSetup.mTeardownKeyLogger(body, [  ])
       ];
     }, function () { success(); }, failure);
 

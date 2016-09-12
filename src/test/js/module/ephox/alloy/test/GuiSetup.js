@@ -51,7 +51,7 @@ define(
 
     var mTeardownKeyLogger = function (body, expected) {
       return Step.stateful(function (state, next, die) {
-        Assertions.assertEq('Checking key log outside context', expected, state.log);
+        Assertions.assertEq('Checking key log outside context (on teardown)', expected, state.log);
         state.onKeydown.unbind();
         next({});
       });

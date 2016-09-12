@@ -8,12 +8,10 @@ asynctest(
     'ephox.agar.api.Keys',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
-    'ephox.alloy.test.GuiSetup',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option'
+    'ephox.alloy.test.GuiSetup'
   ],
  
-  function (FocusTools, GeneralSteps, Keyboard, Keys, Step, GuiFactory, GuiSetup, Fun, Option) {
+  function (FocusTools, GeneralSteps, Keyboard, Keys, Step, GuiFactory, GuiSetup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
