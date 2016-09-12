@@ -21,8 +21,7 @@ define(
     ];
 
     var execute = function (component, simulatedEvent, executeInfo) {
-      executeInfo.execute()(component, simulatedEvent, component.element());
-      return Option.some(true);
+      return executeInfo.execute()(component, simulatedEvent, component.element());
     };
     
     var getRules = function (component, simulatedEvent, executeInfo) {

@@ -36,8 +36,8 @@ define(
 
     var mSetupKeyLogger = function (body) {
       return Step.stateful(function (_, next, die) {
-        var onKeydown = DomEvent.bind(body, 'keydown', function () {
-          newState.log.push('keydown.to.body');
+        var onKeydown = DomEvent.bind(body, 'keydown', function (event) {
+          newState.log.push('keydown.to.body: ' + event.raw().which);
         });
 
         var log = [ ];

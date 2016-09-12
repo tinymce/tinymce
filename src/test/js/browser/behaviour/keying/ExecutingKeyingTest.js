@@ -41,12 +41,14 @@ asynctest(
 
     }, function (doc, body, gui, component, store) {
       return [
+        GuiSetup.mSetupKeyLogger(body),
         Step.sync(function () {
           component.apis().focus();
         }),
         store.sAssertEq('Initially empty', [ ]),
         Keyboard.sKeydown(doc, Keys.enter(), { }),
-        store.sAssertEq('Post enter', [ 'event.execute' ])
+        store.sAssertEq('Post enter', [ 'event.execute' ]),
+        GuiSetup.mTeardownKeyLogger(body, [ ])
       ];
     }, function () { success(); }, failure);
 
