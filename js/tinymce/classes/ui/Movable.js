@@ -21,6 +21,15 @@ define("tinymce/ui/Movable", [
 	function calculateRelativePosition(ctrl, targetElm, rel) {
 		var ctrlElm, pos, x, y, selfW, selfH, targetW, targetH, viewport, size;
 
+		// can override the calculateRelativePosition setting the new function on Env.calculateRelativePosition
+		if (typeof Env.calculateRelativePosition === "function") {
+			var result = Env.calculateRelativePosition(ctrl, targetElm, rel, DomUtils);
+			// fall back to default if this returns null
+			if (result != null) {
+				return result;
+			}
+		}
+
 		viewport = DomUtils.getViewPort();
 
 		// Get pos of target
