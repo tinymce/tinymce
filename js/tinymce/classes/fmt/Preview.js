@@ -133,7 +133,8 @@ define("tinymce/fmt/Preview", [
 
 		item = obj.selector = Tools.trim(item);
 
-		tagName = item.replace(/([#\.\[]|::?)([\w\-"=]+)\]?/g, function($0, $1, $2) {
+		// matching IDs, CLASSes, ATTRIBUTES and PSEUDOs
+		tagName = item.replace(/(?:([#\.]|::?)([\w\-]+)|(\[)([^\]]+)\]?)/g, function($0, $1, $2, $3, $4) {
 			switch ($1) {
 				case '#':
 					obj.attrs.id = $2;
@@ -143,23 +144,21 @@ define("tinymce/fmt/Preview", [
 					obj.classes.push($2);
 					break;
 
-				case '[':
-					var m = $2.match(/([\w\-]+)(?:\=\"([^\"]+))?/);
-					if (m) {
-						obj.attrs[m[1]] = m[2];
-					}
-					break;
-
 				case ':':
 					if (Tools.inArray('checked disabled enabled read-only required'.split(' '), $2) !== -1) {
 						obj.attrs[$2] = $2;
 					}
 					break;
-
-				case '::':
-				default:
-					break;
 			}
+
+			// atribute matched
+			if ($3 == '[') {
+				var m = $4.match(/([\w\-]+)(?:\=\"([^\"]+))?/);
+				if (m) {
+					obj.attrs[m[1]] = m[2];
+				}
+			}
+
 			return '';
 		});
 
