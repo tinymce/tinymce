@@ -521,12 +521,6 @@ define("tinymce/EditorManager", [
 			// to fire a bunch of activate/deactivate calls while initializing
 			self.activeEditor = editor;
 
-			/**
-			 * Fires when an editor is added to the EditorManager collection.
-			 *
-			 * @event AddEditor
-			 * @param {Object} e Event arguments.
-			 */
 			self.fire('AddEditor', {editor: editor});
 
 			if (!beforeUnloadDelegate) {
@@ -607,12 +601,6 @@ define("tinymce/EditorManager", [
 				return null;
 			}
 
-			/**
-			 * Fires when an editor is removed from EditorManager collection.
-			 *
-			 * @event RemoveEditor
-			 * @param {Object} e Event arguments.
-			 */
 			if (removeEditorFromList(editor)) {
 				self.fire('RemoveEditor', {editor: editor});
 			}
