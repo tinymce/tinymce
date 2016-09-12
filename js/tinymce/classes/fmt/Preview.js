@@ -24,16 +24,15 @@ define("tinymce/fmt/Preview", [
 
 	function parsedSelectorToHtml(ancestry) {
 		var dom = editor.dom;
+		var elm, item, fragment;
 
 		function decorate(elm, item) {
-			dom.addClass(elm, item.classes);
+			dom.addClass(elm, item.classes.join(' '));
 			dom.setAttribs(elm, item.attrs);
 		}
 
-		function toHtml(item, ancestry) {
-			var elm, parent, parentCandidate, parentRequired;
-			var ancestor = ancestry.length && ancestry[0];
-
+		function createElement(item) {
+			var elm;
 
 			if (typeof(item) == 'string') {
 				item = {
@@ -45,45 +44,74 @@ define("tinymce/fmt/Preview", [
 
 			elm = dom.create(item.name);
 			decorate(elm, item);
+			return elm;
+		}
 
-			parentRequired = getRequiredParent(elm, ancestor && ancestor.name);
+		function getRequiredParent(elm, candidate) {
+			var name = typeof(elm) !== 'string' ? elm.nodeName.toLowerCase() : elm;
+			var elmRule = editor.schema.getElementRule(name);
+			var parentsRequired = elmRule.parentsRequired;
+
+			if (parentsRequired && parentsRequired.length) {
+				return candidate && Tools.inArray(parentsRequired, candidate) !== -1
+					? candidate
+					: parentsRequired[0];
+			} else {
+				return false;
+			}
+		}
+
+		function wrapInHtml(elm, ancestry, siblings) {
+			var parent, parentCandidate, parentRequired;
+			var ancestor = ancestry.length && ancestry[0];
+			var ancestorName = ancestor && ancestor.name;
+
+			parentRequired = getRequiredParent(elm, ancestorName);
 
 			if (parentRequired) {
-				if (ancestor && ancestor.name == parentRequired) {
+				if (ancestorName == parentRequired) {
 					parentCandidate = ancestry.shift();
 				} else {
 					parentCandidate = parentRequired;
 				}
 			} else if (ancestor) {
 				parentCandidate = ancestry.shift();
-			} else {
+			} else if (!siblings) {
 				return elm;
 			}
 
-			parent = toHtml(parentCandidate, ancestry);
-
-			if (parent != elm) {
+			if (parentCandidate) {
+				parent = createElement(parentCandidate);
 				parent.appendChild(elm);
 			}
 
-			if (item && item.siblings) {
-				if (parent == elm) {
-					// if no more ancestors, wrap in generic div
+			if (siblings) {
+				if (!parent) {
+					// if no more ancestry, wrap in generic div
 					parent = dom.create('div');
 					parent.appendChild(elm);
 				}
 
-				Tools.each(item.siblings, function(sibling) {
-					var elm = dom.create(sibling.name);
-					decorate(elm, sibling);
-					parent.insertBefore(elm, parent);
+				Tools.each(siblings, function(sibling) {
+					var siblingElm = createElement(sibling);
+					parent.insertBefore(siblingElm, elm);
 				});
 			}
 
-			return parent;
+			return wrapInHtml(parent, ancestry, parentCandidate && parentCandidate.siblings);
 		}
 
-		return ancestry && ancestry.length ? toHtml(ancestry.shift(), ancestry) : '';
+		ancestry = ancestry.slice(); // work on copy
+
+		if (ancestry && ancestry.length) {
+			item = ancestry.shift();
+			elm = createElement(item);
+			fragment = dom.create('div');
+			fragment.appendChild(wrapInHtml(elm, ancestry, item.siblings));
+			return fragment;
+		} else {
+			return '';
+		}
 	}
 
 
@@ -92,28 +120,16 @@ define("tinymce/fmt/Preview", [
 	}
 
 
-	function getRequiredParent(elm, candidate) {
-		var name = typeof(elm) !== 'string' ? elm.nodeName.toLowerCase() : elm;
-		var elmRule = editor.schema.getElementRule(name);
-		var parentsRequired = elmRule.parentsRequired;
-
-		if (parentsRequired && parentsRequired.length) {
-			return candidate && Tools.inArray(parentsRequired, candidate) !== -1
-				? candidate
-				: parentsRequired[0];
-		} else {
-			return false;
-		}
-	}
-
-
 	function parseSelectorItem(item) {
+		var tagName;
 		var obj = {
 			classes: [],
 			attrs: {}
 		};
 
-		item = Tools.trim(item).replace(/([#\.\[]|::?)([\w\-"=]+)\]?/g, function($0, $1, $2) {
+		item = obj.selector = Tools.trim(item);
+
+		tagName = item.replace(/([#\.\[]|::?)([\w\-"=]+)\]?/g, function($0, $1, $2) {
 			switch ($1) {
 				case '#':
 					obj.attrs.id = $2;
@@ -143,7 +159,7 @@ define("tinymce/fmt/Preview", [
 			return '';
 		});
 
-		obj.name = item;
+		obj.name = tagName || 'div';
 		return obj;
 	}
 
@@ -216,7 +232,7 @@ define("tinymce/fmt/Preview", [
 			previewFrag = parsedSelectorToHtml([name]);
 		}
 
-		previewElm = dom.select(name, previewFrag)[0] || previewFrag;
+		previewElm = dom.select(name, previewFrag)[0] || previewFrag.firstChild;
 
 		// Add format styles to preview element
 		each(format.styles, function(value, name) {
