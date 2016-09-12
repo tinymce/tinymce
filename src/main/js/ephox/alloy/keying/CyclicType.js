@@ -72,16 +72,14 @@ define(
     };
 
     var execute = function (component, simulatedEvent, cyclicInfo) {
-      return cyclicInfo.onEnter().map(function (f) {
-        f(component, simulatedEvent);
-        return true;
+      return cyclicInfo.onEnter().bind(function (f) {
+        return f(component, simulatedEvent);
       });
     };
 
     var exit = function (component, simulatedEvent, cyclicInfo) {
-      return cyclicInfo.onEscape().map(function (f) {
-        f(component, simulatedEvent);
-        return true;
+      return cyclicInfo.onEscape().bind(function (f) {
+        return f(component, simulatedEvent);
       });
     };
 

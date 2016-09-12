@@ -46,9 +46,8 @@ define(
     };
 
     var execute = function (component, simulatedEvent, matrixInfo) {
-      return Focus.search(component.element()).map(function (focused) {
-        matrixInfo.execute()(component, simulatedEvent, focused);
-        return true;
+      return Focus.search(component.element()).bind(function (focused) {
+        return matrixInfo.execute()(component, simulatedEvent, focused);
       });
     };
 
