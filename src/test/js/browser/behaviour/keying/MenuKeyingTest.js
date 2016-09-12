@@ -65,6 +65,7 @@ asynctest(
       };
 
       return [
+        GuiSetup.mSetupKeyLogger(body),
         Step.sync(function () {
           component.apis().focusIn();
         }),
@@ -119,7 +120,9 @@ asynctest(
 
         checkStore('pressing enter', [
           Keyboard.sKeydown(doc, Keys.enter(), { })
-        ], [ ])
+        ], [ ]),
+
+        GuiSetup.mTeardownKeyLogger(body, [ ])
       ];
     }, function () { success(); }, failure);
 

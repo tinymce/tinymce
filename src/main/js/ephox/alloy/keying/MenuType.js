@@ -28,9 +28,8 @@ define(
     ];
 
     var execute = function (component, simulatedEvent, menuInfo) {
-      return Focus.search(component.element()).each(function (focused) {
-        menuInfo.execute()(component, simulatedEvent, focused);
-        return true;
+      return Focus.search(component.element()).bind(function (focused) {
+        return menuInfo.execute()(component, simulatedEvent, focused);
       });
     };
 
