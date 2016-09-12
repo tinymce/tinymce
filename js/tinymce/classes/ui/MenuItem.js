@@ -133,9 +133,11 @@ define("tinymce/ui/MenuItem", [
 						menu.hide();
 					});
 					menu.on('show hide', function(e) {
-						e.control.items().each(function(ctrl) {
-							ctrl.active(ctrl.settings.selected);
-						});
+						if (e.control.items) {
+							e.control.items().each(function(ctrl) {
+								ctrl.active(ctrl.settings.selected);
+							});
+						}
 					}).fire('show');
 
 					menu.on('hide', function(e) {
