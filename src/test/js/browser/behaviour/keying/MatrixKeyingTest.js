@@ -99,6 +99,7 @@ asynctest(
       );
 
       return [
+        GuiSetup.mSetupKeyLogger(body),
         FocusTools.sSetFocus('Initial focus', gui.element(), '.c11'),
         NavigationUtils.sequence(
           doc,
@@ -179,9 +180,9 @@ asynctest(
         store.sAssertEq(
           'Execute should have c21',
           [ 'item.execute: c21' ]
-        )
+        ),
 
-        // function () { }
+        GuiSetup.mTeardownKeyLogger(body, [ ])
       ];
     }, function () {
       success();
