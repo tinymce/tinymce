@@ -179,7 +179,7 @@ define("tinymce/fmt/Preview", [
 		selector = selector.replace(/\s*(~\+|~|\+|>)\s*/g, '$1');
 
 		// split either on > or on space, but not the one inside brackets
-		return Tools.map(selector.split(/(?:>|\s+(?!.+?\]))/), function(item) {
+		return Tools.map(selector.split(/(?:>|\s+(?![^\[\]]+\]))/), function(item) {
 			// process each sibling selector separately
 			var siblings = Tools.map(item.split(/(?:~\+|~|\+)/), parseSelectorItem);
 			var obj = siblings.pop(); // the last one is our real target

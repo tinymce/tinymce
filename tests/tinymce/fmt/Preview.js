@@ -184,5 +184,16 @@ ModuleLoader.require(["tinymce/fmt/Preview"], function(Preview) {
             </div>\
         '), 'tr > th + td (required parental structure properly rebuilt) ok');
 
+
+        equal(selectorToHtml('p li[title="Some Title"][alt="Some Alt"]'), trimSpaces('\
+            <div>\
+                <p>\
+                    <ul>\
+                        <li title="Some Title" alt="Some Alt"></li>\
+                    </ul>\
+                </p>\
+            </div>\
+        '), 'p li[title="Some Title"][alt="Some Alt"] (test multiple spaced attributes) ok');
+
     });
 });
