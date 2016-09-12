@@ -37,9 +37,8 @@ define(
     };
 
     var execute = function (component, simulatedEvent, gridInfo) {
-      return Focus.search(component.element(), gridInfo.selector()).map(function (focused) {
-        gridInfo.execute()(component, simulatedEvent, focused);
-        return true;
+      return Focus.search(component.element(), gridInfo.selector()).bind(function (focused) {
+        return gridInfo.execute()(component, simulatedEvent, focused);
       });
     };
 

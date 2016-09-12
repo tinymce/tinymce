@@ -85,7 +85,8 @@ asynctest(
         })
       );
       
-      return [     
+      return [
+        GuiSetup.mSetupKeyLogger(body),
         FocusTools.sSetFocus('Initial focus', gui.element(), '.s11'),
         Step.sync(function () {
           component.apis().setGridSize(4, 6);
@@ -169,9 +170,8 @@ asynctest(
         store.sAssertEq(
           'Execute should have s21',
           [ 'item.execute: s21' ]
-        )
-
-        // function () { }
+        ),
+        GuiSetup.mTeardownKeyLogger(body, [ ])
       ];
     }, function () {
       success();
