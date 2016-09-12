@@ -74,6 +74,7 @@ asynctest(
       };
 
       return [
+        GuiSetup.mSetupKeyLogger(body),
         FocusTools.sSetFocus('Initial focus', gui.element(), '.one'),
         NavigationUtils.sequence(
           doc,
@@ -130,7 +131,9 @@ asynctest(
 
         // Test execute
         Keyboard.sKeydown(doc, Keys.enter(), {}),
-        store.sAssertEq('Check that execute has fired on the right target', [ 'item.execute: one' ])
+        store.sAssertEq('Check that execute has fired on the right target', [ 'item.execute: one' ]),
+
+        GuiSetup.mTeardownKeyLogger(body, [ ])
       ];
     }, function () {
       success();

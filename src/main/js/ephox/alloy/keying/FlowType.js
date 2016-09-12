@@ -26,9 +26,8 @@ define(
     ];
 
     var execute = function (component, simulatedEvent, flowInfo) {
-      return Focus.search(component.element()).map(function (focused) {
-        flowInfo.execute()(component, simulatedEvent, focused);
-        return true;
+      return Focus.search(component.element()).bind(function (focused) {
+        return flowInfo.execute()(component, simulatedEvent, focused);
       });
     };
 
