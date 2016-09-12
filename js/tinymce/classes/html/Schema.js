@@ -29,6 +29,7 @@ define("tinymce/html/Schema", [
 	var makeMap = Tools.makeMap, each = Tools.each, extend = Tools.extend, explode = Tools.explode, inArray = Tools.inArray;
 
 	function split(items, delim) {
+		items = Tools.trim(items);
 		return items ? items.split(delim || ' ') : [];
 	}
 
