@@ -170,5 +170,19 @@ ModuleLoader.require(["tinymce/fmt/Preview"], function(Preview) {
             </div>\
         '), 'ol + ul#id1 > li.class1[title="Some Title"] ok');
 
+
+        equal(selectorToHtml('tr > th + td'), trimSpaces('\
+            <div>\
+                <table>\
+                    <tbody>\
+                        <tr>\
+                            <th></th>\
+                            <td></td>\
+                        </tr>\
+                    </tbody>\
+                </table>\
+            </div>\
+        '), 'tr > th + td (required parental structure properly rebuilt) ok');
+
     });
 });
