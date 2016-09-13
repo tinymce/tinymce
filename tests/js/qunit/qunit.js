@@ -571,6 +571,11 @@ if ( !defined.document || document.readyState === "complete" ) {
 	config.autorun = true;
 }
 
+if (document.location.search.indexOf('bedrock') !== -1) {
+	config.autorun = false;
+	config.autostart = false;
+}
+
 QUnit.load = function() {
 	runLoggingCallbacks( "begin", QUnit, {} );
 
