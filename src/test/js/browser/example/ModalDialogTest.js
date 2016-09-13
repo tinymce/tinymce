@@ -48,8 +48,8 @@ asynctest(
         uid: 'uid-dialog',
         keying: {
           mode: 'cyclic',
-          onEscape: store.adder('dialog.escape'),
-          onEnter: store.adder('dialog.execute')
+          onEscape: store.adderH('dialog.escape'),
+          onEnter: store.adderH('dialog.execute')
         },
         components: [
           {
