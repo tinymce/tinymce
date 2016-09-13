@@ -615,7 +615,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			});
 		});
 
-		editor.on('blur hide', hideAllContextToolbars);
+		editor.on('blur hide submit', hideAllContextToolbars);
 
 		editor.on('ObjectResizeStart', function() {
 			var match = findFrontMostMatch(editor.selection.getNode());
