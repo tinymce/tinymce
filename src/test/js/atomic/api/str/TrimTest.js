@@ -8,9 +8,9 @@ test('trim',
   function(Strings, Jsc) {
 
     function check(expectedL, expectedR, expected, input) {
-        assert.eq(expected, Strings.trim(input));
-        assert.eq(expectedL, Strings.lTrim(input));
-        assert.eq(expectedR, Strings.rTrim(input));
+      assert.eq(expected, Strings.trim(input));
+      assert.eq(expectedL, Strings.lTrim(input));
+      assert.eq(expectedR, Strings.rTrim(input));
     }
 
     check('', '', '', '');
