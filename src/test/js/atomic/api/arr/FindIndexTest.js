@@ -14,7 +14,7 @@ test(
     };
 
     var check = function (expected, input, pred) {
-      var actual = Arr.findIndex(input, pred).getOrDie('Should have found index: ' + input);
+      var actual = Arr.findIndex(input, pred).getOrDie('should have found index: ' + input);
       assert.eq(expected, actual);
     };
 
@@ -54,7 +54,7 @@ test(
       function (arr) {
         var index = Arr.findIndex(arr, Fun.constant(true));
         if (arr.length === 0) return Jsc.eq(true, index.isNone());
-        else return Jsc.eq(0, index.getOrDie('Should have found index'));
+        else return Jsc.eq(0, index.getOrDie('should have found index'));
       }
     );
   }
