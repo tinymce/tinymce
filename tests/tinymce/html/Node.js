@@ -139,7 +139,7 @@ test('remove middle node', function() {
 	ok(root.lastChild === node3, 'root.lastChild');
 	ok(node.next === node3, 'node.next');
 	equal(node.prev, undefined, 'node.prev');
-	ok(node3.prev, node, 'node3.prev');
+	equal(node3.prev, node, 'node3.prev');
 	equal(node3.next, undefined, 'node3.next');
 });
 
