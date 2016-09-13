@@ -15,13 +15,13 @@ test(
       return {name:name, age:age, address:address};
     };
 
-    assert.eq({name:'bob', age:25, address:'the moon'}, Option.liftN([Option.some('bob'), Option.some(25), Option.some('the moon')], person).getOrDie());
+    assert.eq({name:'bob', age:25, address:'the moon'}, Options.liftN([Option.some('bob'), Option.some(25), Option.some('the moon')], person).getOrDie());
 
-    assert.eq(true, Option.liftN([Option.some('bob'), Option.none(), Option.some('the moon')], function() { throw 'barf'; }).isNone());
-    assert.eq(true, Option.liftN([Option.none(), Option.none(), Option.some('the moon')], function() { throw 'barf'; }).isNone());
+    assert.eq(true, Options.liftN([Option.some('bob'), Option.none(), Option.some('the moon')], function() { throw 'barf'; }).isNone());
+    assert.eq(true, Options.liftN([Option.none(), Option.none(), Option.some('the moon')], function() { throw 'barf'; }).isNone());
 
     var arr1 = [Option.some(1), Option.none(), Option.some(2), Option.some(3), Option.none(), Option.none(), Option.none(), Option.none(), Option.some(4)];
-    assert.eq([1, 2, 3, 4], Option.cat(arr1));
+    assert.eq([1, 2, 3, 4], Options.cat(arr1));
 
     Jsc.property(
       'Options.cat of only nones should be an empty array',
