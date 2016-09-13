@@ -12,11 +12,13 @@ asynctest(
     'ephox.alloy.test.PositionTestUtils',
     'ephox.alloy.test.Sinks',
     'ephox.fussy.api.WindowSelection',
+    'ephox.perhaps.Option',
     'ephox.perhaps.Result',
     'ephox.photon.Writer',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
+    'ephox.sugar.api.Node',
     'ephox.sugar.api.Scroll',
     'ephox.sugar.api.SelectorFind',
     'ephox.sugar.api.Traverse',
@@ -25,7 +27,7 @@ asynctest(
     'global!window'
   ],
  
-  function (Chain, Cursors, Guard, NamedChain, GuiFactory, ChainUtils, GuiSetup, PositionTestUtils, Sinks, WindowSelection, Result, Writer, Css, DomEvent, Element, Scroll, SelectorFind, Traverse, Error, setTimeout, window) {
+  function (Chain, Cursors, Guard, NamedChain, GuiFactory, ChainUtils, GuiSetup, PositionTestUtils, Sinks, WindowSelection, Option, Result, Writer, Css, DomEvent, Element, Node, Scroll, SelectorFind, Traverse, Error, setTimeout, window) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -165,11 +167,16 @@ asynctest(
                   finishPath: [ 13 ],
                   foffset: 0
                 }), 'range2'),
-                NamedChain.direct('range2', Chain.mapper(function (range2) {
-                  range2.start().dom().scrollIntoView();
-                  return Scroll.get(
-                    Traverse.owner(range2.start())
-                  );
+                NamedChain.direct('range2', Chain.binder(function (range2) {
+                  var start = range2.start();
+                  // NOTE: Safari likes to select the text node.
+                  var optElement = Node.isText(start) ? Traverse.parent(start) : Option.some(start);
+                  return optElement.map(function (elem) {
+                    elem.dom().scrollIntoView();
+                    return Scroll.get(
+                      Traverse.owner(elem)
+                    );
+                  });
                 }), 'scroll2'),
                 NamedChain.write('anchor', cSetupAnchor)
               ]
