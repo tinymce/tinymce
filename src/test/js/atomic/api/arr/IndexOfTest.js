@@ -29,7 +29,7 @@ test(
 
     // We use this property because duplicates cause problems
     Jsc.property(
-      'indexOf(slice, val) == 0 if slice starts with val',
+      'indexOf(slice, val) == some(0) if slice starts with val',
       Jsc.array(Jsc.json),
       function (arr) {
         return Arr.forall(arr, function (x, i) {
@@ -40,7 +40,7 @@ test(
     );
 
     Jsc.property(
-      'indexOf(unique_arr, val) === iterator index',
+      'indexOf(unique_arr, val) === some(iterator index)',
       ArbDataTypes.indexArrayOf(10),
       function (arr) {
         return Arr.forall(arr, function (x, i) {
@@ -51,7 +51,7 @@ test(
     );
 
     Jsc.property(
-      'indexOf of an empty array is -1',
+      'indexOf of an empty array is none',
       Jsc.json,
       function (json) {
         return Arr.indexOf([ ], json).isNone();
@@ -59,7 +59,7 @@ test(
     );
 
     Jsc.property(
-      'indexOf of a [value].concat(array) is 0',
+      'indexOf of a [value].concat(array) is some(0)',
       Jsc.array(Jsc.json),
       Jsc.json,
       function (arr, json) {

@@ -65,7 +65,7 @@ test(
     );
 
     Jsc.property(
-      'If predicate is always true, then value is always the first, or none if array is empty',
+      'If predicate is always true, then value is always some(first), or none if array is empty',
       Jsc.array(Jsc.json),
       function (arr) {
         var value = Arr.find(arr, Fun.constant(true));

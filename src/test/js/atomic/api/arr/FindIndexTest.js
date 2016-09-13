@@ -40,7 +40,7 @@ test(
     );
 
     Jsc.property(
-      'If predicate is always false, then index is always negative one',
+      'If predicate is always false, then index is always none',
       Jsc.array(Jsc.json),
       function (arr) {
         var index = Arr.findIndex(arr, Fun.constant(false));
@@ -49,7 +49,7 @@ test(
     );
 
     Jsc.property(
-      'If predicate is always true, then index is always 0, or -1 if array is empty',
+      'If predicate is always true, then index is always some(0), or none if array is empty',
       Jsc.array(Jsc.json),
       function (arr) {
         var index = Arr.findIndex(arr, Fun.constant(true));
