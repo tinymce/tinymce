@@ -2,12 +2,13 @@ define(
   'ephox.katamari.api.Arr',
 
   [
+    'ephox.katamari.api.Option',
     'global!Array',
     'global!Error',
     'global!String'
   ],
 
-  function (Array, Error, String) {
+  function (Option, Array, Error, String) {
     var eqC = function(x) {
       return function(y) {
         return x === y;
@@ -16,25 +17,30 @@ define(
 
     // Use the native Array.indexOf if it is available (IE9+) otherwise fall back to manual iteration
     // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
-    var indexOf = (function () {
-      var indexOf = Array.prototype.indexOf;
+    var _indexOf = (function () {
+      var pIndexOf = Array.prototype.indexOf;
 
-      var fastIndex = function (xs, x) { return indexOf.call(xs, x); };
+      var fastIndex = function (xs, x) { return  pIndexOf.call(xs, x); };
 
-      var slowIndex = function(xs, x) { return findIndex(xs, eqC(x)); };
+      var slowIndex = function(xs, x) { return _findIndex(xs, eqC(x)); };
 
-      return indexOf === undefined ? slowIndex : fastIndex;
+      return pIndexOf === undefined ? slowIndex : fastIndex;
     })();
+
+    var indexOf = function (xs, x) {
+      var r = _indexOf(xs, x);
+      return r === -1 ? Option.none() : Option.some(r);
+    };
 
     // Contains is so similar to indexOf, we de-duped with an extra math check at the end.
     var contains = function (xs, x) {
-      return indexOf(xs, x) > -1;
+      return _indexOf(xs, x) > -1;
     };
 
     // Using findIndex is likely less optimal in Chrome (dynamic return type instead of bool)
     // but if we need that micro-optimisation we can inline it later.
     var exists = function (xs, pred) {
-      return findIndex(xs, pred) > -1;
+      return _findIndex(xs, pred) > -1;
     };
 
     // It's a total micro optimisation, but these do make some difference.
@@ -167,7 +173,7 @@ define(
       }
     };
 
-    var findIndex = function (xs, pred) {
+    var _findIndex = function (xs, pred) {
       var fn = pred || isTrue;
 
       for (var i = 0, len = xs.length; i < len; ++i) {
@@ -177,6 +183,11 @@ define(
       }
 
       return -1;
+    };
+
+    var findIndex = function (xs, pred) {
+      var r = _findIndex(xs, pred);
+      return r === -1 ? Option.none() : Option.some(r);
     };
 
     var push = Array.prototype.push;
