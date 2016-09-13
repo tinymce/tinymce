@@ -190,7 +190,8 @@ test(
     })();
 
     var genInputs = Jsc.array(Jsc.nestring).generator.flatMap(function (rawRequired) {
-      return Jsc.array(Jsc.nestring).generator.flatMap(function (extra) {
+      return Jsc.array(Jsc.nestring).generator.flatMap(function (rawExtra) {
+        var extra = Unique.stringArray(rawExtra);
         return Jsc.nestring.generator.map(function (backup) {
           var required = rawRequired.length === 0 && extra.length === 0 ? [ backup ] : Unique.stringArray(rawRequired);
           return {
