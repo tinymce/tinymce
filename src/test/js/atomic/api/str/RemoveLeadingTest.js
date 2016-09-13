@@ -21,7 +21,7 @@ test('removeLeading',
     check('dog', 'catdog', 'cat');
 
     Jsc.property(
-      'startsWith(removeLeading(str, s1), s1) === false',
+      'startsWith(removeLeading(str, s1), s1) === false (unless it doubled up)',
       Jsc.asciistring,
       Jsc.asciinestring,
       function (str, s1) {

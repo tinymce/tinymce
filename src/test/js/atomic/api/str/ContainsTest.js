@@ -6,7 +6,6 @@ test('contains',
   ],
 
   function(Strings, Jsc) {
-
     function check(expected, str, substr) {
       var actual = Strings.contains(str, substr);
       assert.eq(expected, actual);
