@@ -8,17 +8,22 @@ test(
   ],
 
   function (Arr, Fun, Jsc) {
-    var checkArr = function (expected, input, pred) {
+    var checkNone = function (input, pred) {
       var actual = Arr.find(input, pred);
+      assert.eq(true, actual.isNone());
+    };
+
+    var checkArr = function (expected, input, pred) {
+      var actual = Arr.find(input, pred).getOrDie('should have value');
       assert.eq(expected, actual);
     };
 
-    checkArr(undefined, [], function (x) { return x > 0; });
-    checkArr(undefined, [-1], function (x) { return x > 0; });
+    checkNone([], function (x) { return x > 0; });
+    checkNone([-1], function (x) { return x > 0; });
     checkArr(1, [1], function (x) { return x > 0; });
     checkArr(41, [4, 2, 10, 41, 3], function (x) { return x === 41; });
     checkArr(100, [4, 2, 10, 41, 3, 100], function (x) { return x > 80; });
-    checkArr(undefined, [4, 2, 10, 412, 3], function (x) { return x === 41; });
+    checkNone([4, 2, 10, 412, 3], function (x) { return x === 41; });
 
     checkArr(10, [4, 2, 10, 412, 3], function (x, i) { return i === 2; });
 
@@ -32,40 +37,40 @@ test(
       Jsc.fun(Jsc.bool),
       function (arr, pred) {
         var value = Arr.find(arr, pred);
-        if (value === undefined) {
+        if (value.isNone()) {
           return !Arr.exists(arr, pred);
           // nothing in array matches predicate
         } else {
-          return pred(value);
+          return pred(value.getOrDie('should have value'));
         }
       }
     );
 
     Jsc.property(
-      'If predicate is always false, then find is always undefined',
+      'If predicate is always false, then find is always none',
       Jsc.array(Jsc.json),
       function (arr) {
         var value = Arr.find(arr, Fun.constant(false));
-        return value === undefined;
+        return value.isNone();
       }
     );
 
     Jsc.property(
-      'If array is empty, find is always undefined',
+      'If array is empty, find is always none',
       Jsc.fun(Jsc.bool),
       function (pred) {
         var value = Arr.find([ ], pred);
-        return value === undefined;
+        return value.isNone();
       }
     );
 
     Jsc.property(
-      'If predicate is always true, then value is always the first, or undefined if array is empty',
+      'If predicate is always true, then value is always the first, or none if array is empty',
       Jsc.array(Jsc.json),
       function (arr) {
         var value = Arr.find(arr, Fun.constant(true));
-        var expected = arr.length === 0 ? undefined : arr[0];
-        return Jsc.eq(expected, value);
+        if (arr.length === 0) return Jsc.eq(true, value.isNone());
+        else return Jsc.eq(arr[0], value.getOrDie('should have value'));
       }
     );
 

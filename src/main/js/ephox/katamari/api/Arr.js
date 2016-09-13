@@ -149,7 +149,7 @@ define(
       return acc;
     };
 
-    var find = function(xs, pred) {
+    var _find = function (xs, pred) {
       for (var i = 0, len = xs.length; i < len; i++) {
         var x = xs[i];
         if (pred(x, i, xs)) {
@@ -159,13 +159,18 @@ define(
       return undefined;
     };
 
+    var find = function (xs, pred) {
+      var r = _find(xs, pred);
+      return r === undefined ? Option.none() : Option.some(r);
+    };
+
     var findOr = function (xs, f, default_) {
-      var r = find(xs, f);
+      var r = _find(xs, f);
       return r !== undefined ? r : default_;
     };
 
     var findOrDie = function (xs, f, message) {
-      var r = find(xs, f);
+      var r = _find(xs, f);
       if (r === undefined) {
         throw new Error(message || 'Could not find element in array: ' + String(xs));
       } else {
