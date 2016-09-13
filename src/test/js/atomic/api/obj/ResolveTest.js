@@ -73,6 +73,8 @@ test(
         'Checking that creating a namespace (forge) from an obj will enable that value to be retrieved by resolving (path)',
         // NOTE: This value is being modified, so it cannot be shrunk.
         Jsc.nonshrink(Jsc.dict(
+          // We want to make sure every path in the object is an object
+          // also, because that is a limitation of forge.
           Jsc.dict(
             Jsc.dict(Jsc.constant({}))
           )
