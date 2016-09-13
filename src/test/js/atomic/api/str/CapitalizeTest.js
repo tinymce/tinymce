@@ -6,7 +6,6 @@ test('capitalize',
   ],
 
   function(Strings, Jsc) {
-
     function check(expected, input) {
       var actual = Strings.capitalize(input);
       assert.eq(expected, actual);
