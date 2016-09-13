@@ -86,7 +86,7 @@ asynctest(
         ),
 
         FocusTools.sTryOnSelector(
-          'focus should start on alpha',
+          '1. focus should start on alpha',
           doc,
           '[data-alloy-item-value="alpha"]'
         ),
@@ -154,10 +154,9 @@ asynctest(
         ),
 
         Mouse.sClickOn(gui.element(), components.button.selector),
-
-        Keyboard.sKeydown(doc, Keys.enter(), { }),
+        
         FocusTools.sTryOnSelector(
-          'focus should start on alpha',
+          '2. focus should start on alpha',
           doc,
           '[data-alloy-item-value="alpha"]'
         ),
