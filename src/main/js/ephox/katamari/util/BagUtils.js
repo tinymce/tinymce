@@ -37,7 +37,9 @@ define(
         return i < sorted.length -1 && s === sorted[i + 1];
       });
 
-      if (dupe !== undefined && dupe !== null) throw new Error('The field: ' + dupe + ' occurs more than once in the combined fields: [' + sorted.join(', ') + '].');
+      dupe.each(function (d) {
+        throw new Error('The field: ' + d + ' occurs more than once in the combined fields: [' + sorted.join(', ') + '].');
+      });
     };
 
     return {
