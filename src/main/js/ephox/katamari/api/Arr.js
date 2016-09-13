@@ -43,6 +43,14 @@ define(
       return _findIndex(xs, pred) > -1;
     };
 
+    var range = function (num, f) {
+      var r = [];
+      for (var i = 0; i < num; i++) {
+        r.push(f(i));
+      }
+      return r;
+    };
+
     // It's a total micro optimisation, but these do make some difference.
     // Particularly for browsers other than Chrome.
     // - length caching
@@ -298,7 +306,8 @@ define(
       difference: difference,
       mapToObject: mapToObject,
       pure: pure,
-      sort: sort
+      sort: sort,
+      range: range
     };
   }
 );
