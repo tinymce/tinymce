@@ -80,6 +80,13 @@ define(
       }
     };
 
+    var rEach = function (xs, f) {
+      for (var i = xs.length - 1; i >= 0; i--) {
+        var x = xs[i];
+        f(x, i, xs);
+      }
+    };
+
     var partition = function(xs, pred) {
       var pass = [];
       var fail = [];
@@ -139,7 +146,10 @@ define(
     };
 
     var foldr = function (xs, f, acc) {
-      return foldl(reverse(xs), f, acc);
+      rEach(xs, function (x) {
+        acc = f(acc, x);
+      });
+      return acc;
     };
 
     var foldl = function (xs, f, acc) {
@@ -266,6 +276,7 @@ define(
     return {
       map: map,
       each: each,
+      rEach: rEach,
       partition: partition,
       filter: filter,
       groupBy: groupBy,
