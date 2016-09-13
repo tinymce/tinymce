@@ -72,10 +72,14 @@ test(
       Jsc.property(
         'Checking that creating a namespace (forge) from an obj will enable that value to be retrieved by resolving (path)',
         // NOTE: This value is being modified, so it cannot be shrunk.
-        Jsc.nonshrink(Jsc.dict(Jsc.nestring)),
-        Jsc.nearray(Jsc.nestring),
-        Jsc.nestring,
-        Jsc.nestring,
+        Jsc.nonshrink(Jsc.dict(
+          Jsc.dict(
+            Jsc.dict(Jsc.constant({}))
+          )
+        )),
+        Jsc.nearray(Jsc.asciinestring),
+        Jsc.asciinestring,
+        Jsc.asciinestring,
         function (dict, parts, field, newValue) {
           var created = Resolve.forge(parts, dict);
           created[field] = newValue;
