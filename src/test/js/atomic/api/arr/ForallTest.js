@@ -16,8 +16,6 @@ test(
       assert.eq(expected, Arr.forall(input, f));
     };
 
-    check(true, [true, true, true]);
-    check(false, [true, false, true]);
     check(true, [1, 1, 1], isone);
     check(false, [1, 2, 1], isone);
 

@@ -53,8 +53,6 @@ test(
       assert.eq(expected, Arr.exists(input, f));
     };
 
-    check(true, [false, true, false]);
-    check(false, [false, false, false]);
     check(true, [1, 2, 3], eqc(1));
     check(false, [2, 3, 4], eqc(1));
   }

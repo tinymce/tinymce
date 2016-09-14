@@ -42,7 +42,7 @@ test(
     );
 
     Jsc.property(
-      'rEach + push should equal the a reverse of the array',
+      'rEach + push should equal the reverse of the array',
       Jsc.array(Jsc.json),
       function (arr) {
         var values = [ ];
