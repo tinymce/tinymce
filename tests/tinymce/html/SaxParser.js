@@ -604,6 +604,10 @@
 		writer.reset();
 		parser.parse('<!--[if !IE]>alert(1)<![endif]-->');
 		equal(writer.getContent(), '<!-- [if !IE]>alert(1)<![endif]-->');
+
+		writer.reset();
+		parser.parse('<!--[iF !IE]>alert(1)<![endif]-->');
+		equal(writer.getContent(), '<!-- [iF !IE]>alert(1)<![endif]-->');
 	});
 
 	test('Parse script urls (allowed)', function() {
