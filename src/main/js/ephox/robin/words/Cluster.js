@@ -5,16 +5,19 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.phoenix.api.dom.DomGather',
+    'ephox.phoenix.api.general.Gather',
     'ephox.polaris.api.Arrays',
     'ephox.robin.api.general.Zone',
     'ephox.robin.words.Clustering',
     'ephox.robin.words.Identify',
+    'ephox.sugar.api.Compare',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.PredicateFilter',
     'ephox.sugar.api.Text'
   ],
 
-  function (Arr, Fun, Option, Arrays, Zone, Clustering, Identify, Node, PredicateFilter, Text) {
+  function (Arr, Fun, Option, DomGather, Gather, Arrays, Zone, Clustering, Identify, Compare, Node, PredicateFilter, Text) {
     /**
      * Finds words in groups of text (each HTML text node can have multiple words).
      */
@@ -36,6 +39,21 @@ define(
     var block = function (universe, element) {
 
       // Will have to group this later.
+      var _rules = undefined;
+      var nodes = [ ];
+
+      var walk = function (item, mode) {
+        return DomGather.walk(item, mode, DomGather.walkers().right(), _rules).map(function (n) {
+          if (Compare.eq(n.item(), element)) return [ ];
+          var self = Node.isText(n.item()) ? [ n.item() ] : [ ];
+          var rest = walk(n.item(), n.mode());
+          return self.concat(rest);
+        }).getOr([ ]);
+      };
+
+      var allnodes = walk(element, Gather.advance);
+      console.log('allnodes', Arr.map(allnodes, Text.get));
+
       var nodes = PredicateFilter.descendants(element, Node.isText);
       var text = Arr.map(nodes, Text.get).join('');
 
