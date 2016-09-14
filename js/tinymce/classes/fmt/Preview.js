@@ -35,16 +35,14 @@ define("tinymce/fmt/Preview", [
 			dom.setAttribs(elm, item.attrs);
 		}
 
-		function createElement(item) {
+		function createElement(sItem) {
 			var elm;
 
-			if (typeof(item) == 'string') {
-				item = {
-					name: item,
-					classes: [],
-					attrs: {}
-				};
-			}
+			item = typeof(sItem) === 'string' ? {
+				name: sItem,
+				classes: [],
+				attrs: {}
+			} : sItem;
 
 			elm = dom.create(item.name);
 			decorate(elm, item);
