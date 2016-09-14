@@ -9,17 +9,6 @@ define(
   ],
 
   function (Option, Array, Error, String) {
-    var slowIndexOf = function (xs, x) {
-      for (var i = 0, len = xs.length; i < len; ++i) {
-        if (xs[i] === x) {
-          return i;
-        }
-      }
-
-      return -1;
-    };
-
-
     // Use the native Array.indexOf if it is available (IE9+) otherwise fall back to manual iteration
     // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
     var rawIndexOf = (function () {
@@ -191,6 +180,16 @@ define(
       }
 
       return Option.none();
+    };
+
+    var slowIndexOf = function (xs, x) {
+      for (var i = 0, len = xs.length; i < len; ++i) {
+        if (xs[i] === x) {
+          return i;
+        }
+      }
+
+      return -1;
     };
 
     var push = Array.prototype.push;
