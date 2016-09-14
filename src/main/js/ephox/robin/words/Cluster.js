@@ -8,10 +8,13 @@ define(
     'ephox.polaris.api.Arrays',
     'ephox.robin.api.general.Zone',
     'ephox.robin.words.Clustering',
-    'ephox.robin.words.Identify'
+    'ephox.robin.words.Identify',
+    'ephox.sugar.api.Node',
+    'ephox.sugar.api.PredicateFilter',
+    'ephox.sugar.api.Text'
   ],
 
-  function (Arr, Fun, Option, Arrays, Zone, Clustering, Identify) {
+  function (Arr, Fun, Option, Arrays, Zone, Clustering, Identify, Node, PredicateFilter, Text) {
     /**
      * Finds words in groups of text (each HTML text node can have multiple words).
      */
@@ -28,6 +31,25 @@ define(
         }).join('');
         return Identify.words(text);
       });
+    };
+
+    var block = function (universe, element) {
+
+      // Will have to group this later.
+      var nodes = PredicateFilter.descendants(element, Node.isText);
+      var text = Arr.map(nodes, Text.get).join('');
+
+      var words = Identify.words(text);
+
+      return {
+        zone: function () {
+          return {
+            elements: Fun.constant(nodes)
+          };
+        },
+        words: Fun.constant(words),
+        lang: Option.none
+      };
     };
 
     /**
@@ -60,6 +82,7 @@ define(
 
     return {
       generate: generate,
+      block: block,
       empty: empty
     };
   }
