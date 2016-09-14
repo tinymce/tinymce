@@ -10,6 +10,7 @@ node("primary") {
      git ([url: "ssh://git@stash:7999/van/jenkins-plumbing.git", credentialsId: credentialsId]) 
   }
   def extBedrock = load("jenkins-plumbing/bedrock-tests.groovy")
+  def exec = load("jenkins-plumbing/exec.groovy")
    
   dir("alloy-project") {    
     stage "Primary: checkout"
@@ -25,10 +26,10 @@ node("primary") {
   def permutations = [:]
 
   permutations = [
-    [ name: "win10Chrome", os: "windows-10", browser: "chrome", sh: false ],
-    [ name: "win10FF", os: "windows-10", browser: "firefox", sh: false ],
-    [ name: "win10Edge", os: "windows-10", browser: "MicrosoftEdge", sh: false ],
-    [ name: "win10IE", os: "windows-10", browser: "ie", sh: false ]
+    [ name: "win10Chrome", os: "windows-10", browser: "chrome" ],
+    [ name: "win10FF", os: "windows-10", browser: "firefox" ],
+    [ name: "win10Edge", os: "windows-10", browser: "MicrosoftEdge" ],
+    [ name: "win10IE", os: "windows-10", browser: "ie" ]
   ]
 
   def processes = [:]
@@ -42,14 +43,10 @@ node("primary") {
         git([branch: "master", url:'ssh://git@stash:7999/van/alloy.git', credentialsId: credentialsId])
         
         echo "Platform: dependencies"
-        if (permutation.sh) {
-          sh "dent"
-        } else {
-          bat "dent"
-        }  
+        exec "dent"
 
         echo "Platform: browser tests for " + permutation.name
-        extBedrock(permutation.name, permutation.browser, "src/test/js/browser", permutation.sh)
+        extBedrock(permutation.name, permutation.browser, "src/test/js/browser")
       }
     }
   }
