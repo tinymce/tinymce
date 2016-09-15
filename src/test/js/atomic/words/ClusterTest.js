@@ -44,17 +44,17 @@ test(
         assert.eq(true, Option.equals(expected.lang, aZone.lang()));
       };
 
-      // check({
-      //   words: [ 'determined', 'and'],
-      //   items: [ 'd', 'e', 'f' ],
-      //   lang: Option.none()
-      // }, 'e');
+      check({
+        words: [ 'determined', 'and'],
+        items: [ 'd', 'e', 'f' ],
+        lang: Option.none()
+      }, 'e');
 
-      // check({
-      //   words: [ 'again' ],
-      //   items: [ 'i' ],
-      //   lang: Option.none()
-      // }, 'i');
+      check({
+        words: [ 'again' ],
+        items: [ 'i' ],
+        lang: Option.none()
+      }, 'i');
 
       check({
         words: [ 'and', 'it\'s', 'driving', 'me', 'insane' ],

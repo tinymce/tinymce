@@ -41,7 +41,7 @@ define(
         });
       }).getOr([ ]);
 
-      console.log('languageStack', languageStack);
+      // console.log('languageStack', languageStack);
 
       // kind of need an ADT
       // if you hit a tag inside the tag that should break up a word (e.g. image, diff language)
@@ -106,7 +106,7 @@ define(
       var again = function (aItem, aMode) {
         
         return Gather.walk(universe, aItem, aMode, Gather.walkers().right(), _rules).fold(function () {
-          return adt.concluded(aItem, aMode, Option.none());
+          return adt.concluded(aItem, aMode);
         }, function (n) {
           var currentLang = universe.property().isElement(n.item()) ? Option.from(universe.attrs().get(n.item(), 'lang')) : Option.none();
           // HACKY HACKY HACKY
@@ -207,10 +207,6 @@ define(
       walk(element, Gather.advance, Option.none());
       var groups = grouping.done();
 
-      console.log('groups', Arr.map(groups, function (g) {
-        return Arr.map(g, function (x) { return [ x.elem.dom(), x.lang.getOr('none') ]; });
-      }));
-
       var zones = Arr.map(groups, function (group) {
         var nodes = Arr.map(group, function (g) { return g.elem; });
         var lang = Option.from(group[0]).bind(function (g) { return g.lang; });
@@ -220,7 +216,7 @@ define(
         }).join('');
 
         var words = Identify.words(line);
-        console.log('words', Arr.map(words, function (w) { return w.word(); }));
+        // console.log('words', Arr.map(words, function (w) { return w.word(); }));
         return zone({
           lang: lang,
           words: words,
