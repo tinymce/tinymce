@@ -131,7 +131,7 @@ define(
           }
 
           
-          console.log('on item',  n.item().dom(), 'diffLang', diffLang, 'current', currentLang.getOr('none'));
+          // console.log('on item',  n.item().dom(), 'diffLang', diffLang, 'current', currentLang.getOr('none'));
           //   Arr.map(languageStack.slice(0), function (s) { return s.lang; }),
           //   'diffLang', diffLang,
           //   'currentLang', currentLang.getOr('none')
@@ -156,7 +156,11 @@ define(
 
         // include
         outcome.fold(function (aItem, aMode) {
-          if (universe.property().isText(aItem)) grouping.add(aItem);
+          console.log('lastLang', lastLang.getOr('none'), aItem.dom());
+          if (universe.property().isText(aItem)) grouping.add({
+            lang: lastLang,
+            elem: aItem
+          });
           walk(aItem, aMode, lastLang);
 
         // separator  
@@ -176,8 +180,11 @@ define(
           if (starting) {
             if (Option.equals(lastLang, aLang)) grouping.reopen();
             else grouping.end();
+
           } else {
             grouping.end();
+            // Really hacky
+            aLang = Option.none();
           }
           walk(aItem, aMode, aLang);
         // concluded
@@ -201,8 +208,25 @@ define(
       var groups = grouping.done();
 
       console.log('groups', Arr.map(groups, function (g) {
-        return Arr.map(g, function (x) { return x.dom(); });
+        return Arr.map(g, function (x) { return [ x.elem.dom(), x.lang.getOr('none') ]; });
       }));
+
+      var zones = Arr.map(groups, function (group) {
+        var nodes = Arr.map(group, function (g) { return g.elem; });
+        var lang = Option.from(group[0]).bind(function (g) { return g.lang; });
+
+        var line = Arr.map(nodes, function (x) {
+          return universe.property().isText(x) ? universe.property().getText(x) : '';
+        }).join('');
+
+        var words = Identify.words(line);
+        console.log('words', Arr.map(words, function (w) { return w.word(); }));
+        return zone({
+          lang: lang,
+          words: words,
+          elements: nodes
+        });
+      });
       // var words = Arr.bind(groups, function (g) {
       //   var line = Arr.map(g, function (gi) {
       //     if (! universe.property().isText(gi)) {
@@ -213,7 +237,7 @@ define(
       //   return Identify.words(line);
       // });
 
-      var zones = [ ];
+      // var zones = [ ];
 
       return {
         // zone: function () {
