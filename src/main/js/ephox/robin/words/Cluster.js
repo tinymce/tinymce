@@ -11,10 +11,11 @@ define(
     'ephox.robin.util.ArrayGroup',
     'ephox.robin.words.Clustering',
     'ephox.robin.words.Identify',
-    'ephox.scullion.ADT'
+    'ephox.scullion.ADT',
+    'ephox.scullion.Struct'
   ],
 
-  function (Arr, Fun, Option, Gather, Arrays, Zone, ArrayGroup, Clustering, Identify, Adt) {
+  function (Arr, Fun, Option, Gather, Arrays, Zone, ArrayGroup, Clustering, Identify, Adt, Struct) {
     /**
      * Finds words in groups of text (each HTML text node can have multiple words).
      */
@@ -107,7 +108,7 @@ define(
         return Gather.walk(universe, aItem, aMode, Gather.walkers().right(), _rules).fold(function () {
           return adt.concluded(aItem, aMode, Option.none());
         }, function (n) {
-          var currentLang = Option.from(universe.attrs().get(n.item(), 'lang'));
+          var currentLang = universe.property().isElement(n.item()) ? Option.from(universe.attrs().get(n.item(), 'lang')) : Option.none();
           // HACKY HACKY HACKY
           var diffLang = false;
           // Check the stack
@@ -127,11 +128,11 @@ define(
           }
 
           
-          console.log('on item', n.item().id + ' ', n.item().text || n.item().name + ' ', n.item().attrs, ', lang: ', 
-            Arr.map(languageStack.slice(0), function (s) { return s.lang; }),
-            'diffLang', diffLang,
-            'currentLang', currentLang.getOr('none')
-          );
+          // console.log('on item', n.item().id + ' ', n.item().text || n.item().name + ' ', n.item().attrs, ', lang: ', 
+          //   Arr.map(languageStack.slice(0), function (s) { return s.lang; }),
+          //   'diffLang', diffLang,
+          //   'currentLang', currentLang.getOr('none')
+          // );
           if (universe.eq(n.item(), element)) return adt.concluded(n.item(), n.mode());
           else if (universe.property().isBoundary(n.item())) return adt.boundary(n.item(), n.mode());
 
@@ -152,7 +153,7 @@ define(
 
         // include
         outcome.fold(function (aItem, aMode) {
-          grouping.add(aItem);
+          if (universe.property().isText(aItem)) grouping.add(aItem);
           walk(aItem, aMode, lastLang);
 
         // separator  
@@ -197,20 +198,28 @@ define(
       var groups = grouping.done();
 
       var words = Arr.bind(groups, function (g) {
-        var line = Arr.map(g, universe.property().getText).join('');
+        var line = Arr.map(g, function (gi) {
+          if (! universe.property().isText(gi)) {
+            debugger;
+          }
+          return universe.property().getText(gi);
+        }).join('');
         return Identify.words(line);
       });
 
       return {
-        zone: function () {
-          return {
-            elements: Fun.constant([ element ])
-          };
-        },
-        words: Fun.constant(words),
-        lang: Option.none
+        // zone: function () {
+        //   return {
+        //     elements: Fun.constant([ element ])
+        //   };
+        // },
+        // groups: Fun.constant(words),
+        // lang: Option.none
+        zones: Fun.constant([ ])
       };
     };
+
+    var zone = Struct.immutableBag([ 'lang', 'words', 'elements' ], [ ]);
 
     /**
      * Searches for words within the element or that span the edge of the element.
@@ -223,20 +232,24 @@ define(
       var rawCluster = Clustering.words(universe, element, optimise);
       var cluster = rawCluster.all();
       var items = Arr.map(cluster, function (c) { return c.item(); });      
-      var zone = Zone.constant(items);
       var words = findWords(universe, cluster);
+
+      var zones = [
+        zone({
+          lang: rawCluster.lang(),
+          words: words,
+          elements: items
+        })
+      ];
+     
       return {
-        zone: Fun.constant(zone),
-        words: Fun.constant(words),
-        lang: rawCluster.lang
+        zones: Fun.constant(zones)
       };
     };
 
     var empty = function () {
       return {
-        zone: Zone.empty,
-        words: Fun.constant([]),
-        lang: Option.none
+        zones: Fun.constant([ ])
       };
     };
 
