@@ -241,9 +241,14 @@ define(
           elements: items
         })
       ];
+
+      var recalculate = function () {
+        return generate(universe, element, optimise);
+      };
      
       return {
-        zones: Fun.constant(zones)
+        zones: Fun.constant(zones),
+        recalculate: recalculate
       };
     };
 
