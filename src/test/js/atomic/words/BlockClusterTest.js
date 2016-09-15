@@ -30,7 +30,7 @@ test(
 
     check({
       words: [ 'one', 'two' ],
-      items: [ 'a', 'b', 'c' ]
+      items: [ 'div1' ]
     }, 'div1');
   }
 );
