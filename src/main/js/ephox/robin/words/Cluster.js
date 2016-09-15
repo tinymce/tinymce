@@ -8,12 +8,13 @@ define(
     'ephox.phoenix.api.general.Gather',
     'ephox.polaris.api.Arrays',
     'ephox.robin.api.general.Zone',
+    'ephox.robin.util.ArrayGroup',
     'ephox.robin.words.Clustering',
     'ephox.robin.words.Identify',
     'ephox.scullion.ADT'
   ],
 
-  function (Arr, Fun, Option, Gather, Arrays, Zone, Clustering, Identify, Adt) {
+  function (Arr, Fun, Option, Gather, Arrays, Zone, ArrayGroup, Clustering, Identify, Adt) {
     /**
      * Finds words in groups of text (each HTML text node can have multiple words).
      */
@@ -71,77 +72,77 @@ define(
         // hit the starting tag
         { concluded: [ 'item', 'direction' ]}
       ]);
-      /*
-      var splitbyAdv = function (xs, pred) {
-      var r = [];
-      var part = [];
-      Arr.each(xs, function (x) {
-        var choice = pred(x);
-        Splitting.cata(choice, function () {
-          // Include in the current sublist.
-          part.push(x);
-        }, function () {
-          // Stop the current sublist, create a new sublist containing just x, and then start the next sublist.
-          if (part.length > 0) r.push(part);
-          r.push([ x ]);
-          part = [];
-        }, function () {
-          // Stop the current sublist, and start the next sublist.
-          if (part.length > 0) r.push(part);
-          part = [];
-        });
-      });
-
-      if (part.length > 0) r.push(part);
-      return r;
-    };
-    */
-
+  
       // Will have to group this later.
       var _rules = undefined;
       var nodes = [ ];
 
-      // var walkHack = function (item, mode) {
-      //   var r = [ ];
-      //   var part = [ ];
-
-      //   var again = function (aItem, aMode) {
-      //     return Gather.walk(universe, item, mode, Gather.walkers().right(), _rules).map(function (n) {
-      //       // n.item() is the next element
-      //       // n.mode() is the direction to go
-      //       // finished.
-      //       if (universe.eq(aItem, element)) return adt.concluded(aItem, aMode);
-      //       else if (universe.property().isBoundaryTag(aItem)) return adt.section(aItem, aMode);
-      //       else if (universe.property().isEmptyTag(elem)) return adt.gap(aItem, aMode);
-      //       else {
-      //         var rest = again(n.item(), n.mode());
-
-      //     });  
-      //   };
+      
+      var again = function (aItem, aMode) {
+        return Gather.walk(universe, aItem, aMode, Gather.walkers().right(), _rules).fold(function () {
+          return adt.concluded(aItem, aMode);
+        }, function (n) {
+          // n.item() is the next element
+          // n.mode() is the direction to go
+          // finished.
+          if (universe.eq(n.item(), element)) return adt.concluded(n.item(), n.mode());
+          else if (universe.property().isBoundary(n.item())) return adt.section(n.item(), n.mode());
+          else if (universe.property().isEmptyTag(n.item())) return adt.gap(n.item(), n.mode());
+          else return adt.include(n.item(), n.mode());
+        });  
+      };
 
         
       // }
 
+      var grouping = ArrayGroup();
+
       var walk = function (item, mode) {
-        return Gather.walk(universe, item, mode, Gather.walkers().right(), _rules).map(function (n) {
-          console.log('n', n.item());
-          if (universe.eq(n.item(), element)) return [ ];
-          var self = universe.property().isText(n.item()) ? [ n.item() ] : [ ];
-          var rest = walk(n.item(), n.mode());
-          return self.concat(rest);
-        }).getOr([ ]);
+        var outcome = again(item, mode);
+
+        // include
+        outcome.fold(function (aItem, aMode) {
+          grouping.add(aItem);
+          walk(aItem, aMode);
+
+        // separator  
+        }, function (aItem, aMode) {
+          grouping.end();
+          // grouping.separator(aItem);
+          walk(aItem, aMode);
+        // section
+        }, function (aItem, aMode) {
+          grouping.end(aItem);
+          walk(aItem, aMode);
+        // concluded
+        }, function (aItem, aMode) {
+          // do nothing.
+        });
+
+        // hacky
+        // console.log('grouping', grouping.done());
+        // return Gather.walk(universe, item, mode, Gather.walkers().right(), _rules).map(function (n) {
+        //   console.log('n', n.item());
+        //   if (universe.eq(n.item(), element)) return [ ];
+        //   var self = universe.property().isText(n.item()) ? [ n.item() ] : [ ];
+        //   var rest = walk(n.item(), n.mode());
+        //   return self.concat(rest);
+        // }).getOr([ ]);
       };
 
-      var allnodes = walk(element, Gather.advance);
-      var text = Arr.map(allnodes, universe.property().getText).join(' ');
-      console.log('text', text, 'item', element);
 
-      var words = Identify.words(text);
+      walk(element, Gather.advance);
+      var groups = grouping.done();
+
+      var words = Arr.bind(groups, function (g) {
+        var line = Arr.map(g, universe.property().getText).join('');
+        return Identify.words(line);
+      });
 
       return {
         zone: function () {
           return {
-            elements: Fun.constant(nodes)
+            elements: Fun.constant([ element ])
           };
         },
         words: Fun.constant(words),
