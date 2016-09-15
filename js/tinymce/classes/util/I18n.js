@@ -85,13 +85,6 @@ define("tinymce/util/I18n", [], function() {
 		 * @return {String} String that got translated.
 		 */
 		translate: function(text) {
-			var langData;
-
-			langData = data[code];
-			if (!langData) {
-				langData = {};
-			}
-
 			if (typeof text == "undefined") {
 				return text;
 			}
@@ -100,15 +93,39 @@ define("tinymce/util/I18n", [], function() {
 				return text.raw;
 			}
 
+			/**
+			 * Get the translation of key in the current language/variant. If a variant is active and the key is not
+			 * found there, also tries the root language, e.g. if 'I am a text' is not found in "fr_FR", also looks for
+			 * it in "fr".
+			 * @param {String} the text to be translated
+			 * @return {String} the translation, for further processing, or undefined if no translation was found.
+			 */
+			function getTranslated(key) {
+				var langData = data[code];
+				if (!langData) {
+					langData = {};
+				}
+
+				if (langData[key] || code.indexOf('_') == -1) {
+					// Match found, or not using a language variant
+					return langData[key];
+				}
+
+				// No match found, and using a language variant
+				langData = data[code.substr(0, code.indexOf('_'))];
+
+				return langData ? langData[key] : undefined;
+			}
+
 			if (text.push) {
 				var values = text.slice(1);
 
-				text = (langData[text[0]] || text[0]).replace(/\{([0-9]+)\}/g, function(match1, match2) {
+				text = (getTranslated(text[0]) || text[0]).replace(/\{([0-9]+)\}/g, function(match1, match2) {
 					return values[match2];
 				});
 			}
 
-			return (langData[text] || text).replace(/{context:\w+}$/, '');
+			return (getTranslated(text) || text).replace(/{context:\w+}$/, '');
 		},
 
 		data: data
