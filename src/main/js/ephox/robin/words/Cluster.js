@@ -5,19 +5,15 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.phoenix.api.dom.DomGather',
     'ephox.phoenix.api.general.Gather',
     'ephox.polaris.api.Arrays',
     'ephox.robin.api.general.Zone',
     'ephox.robin.words.Clustering',
     'ephox.robin.words.Identify',
-    'ephox.sugar.api.Compare',
-    'ephox.sugar.api.Node',
-    'ephox.sugar.api.PredicateFilter',
-    'ephox.sugar.api.Text'
+    'ephox.scullion.ADT'
   ],
 
-  function (Arr, Fun, Option, DomGather, Gather, Arrays, Zone, Clustering, Identify, Compare, Node, PredicateFilter, Text) {
+  function (Arr, Fun, Option, Gather, Arrays, Zone, Clustering, Identify, Adt) {
     /**
      * Finds words in groups of text (each HTML text node can have multiple words).
      */
@@ -38,24 +34,107 @@ define(
 
     var block = function (universe, element) {
 
+      // kind of need an ADT
+      // if you hit a tag inside the tag that should break up a word (e.g. image, diff language)
+      // then return adt.section(item, mode, xs). The walking process will then start a new array from there with a 
+      // language attached.
+      // if you hit the starting tag again, then return adt.complete(item, xs)
+      // otherwise, return adt.gathering(item, mode, xs)
+
+      /*
+        var all = [ ];
+        var current = [ ];
+
+        adt.match({
+          section: function (item, mode, xs) {
+            // we have just
+          },
+          complete: function (item, xs) {
+
+          },
+          gathering: function (item, mode, xs) {
+            
+          }
+        })
+
+
+
+      */
+
+      var adt = Adt.generate([
+        // keep going and
+        { include: [ 'item', 'direction' ] },
+        // things like <img>, <br>
+        { gap: [ 'item', 'direction' ] },
+        // things like different language sections
+        { section: [ 'item', 'direction' ] },
+        // hit the starting tag
+        { concluded: [ 'item', 'direction' ]}
+      ]);
+      /*
+      var splitbyAdv = function (xs, pred) {
+      var r = [];
+      var part = [];
+      Arr.each(xs, function (x) {
+        var choice = pred(x);
+        Splitting.cata(choice, function () {
+          // Include in the current sublist.
+          part.push(x);
+        }, function () {
+          // Stop the current sublist, create a new sublist containing just x, and then start the next sublist.
+          if (part.length > 0) r.push(part);
+          r.push([ x ]);
+          part = [];
+        }, function () {
+          // Stop the current sublist, and start the next sublist.
+          if (part.length > 0) r.push(part);
+          part = [];
+        });
+      });
+
+      if (part.length > 0) r.push(part);
+      return r;
+    };
+    */
+
       // Will have to group this later.
       var _rules = undefined;
       var nodes = [ ];
 
+      // var walkHack = function (item, mode) {
+      //   var r = [ ];
+      //   var part = [ ];
+
+      //   var again = function (aItem, aMode) {
+      //     return Gather.walk(universe, item, mode, Gather.walkers().right(), _rules).map(function (n) {
+      //       // n.item() is the next element
+      //       // n.mode() is the direction to go
+      //       // finished.
+      //       if (universe.eq(aItem, element)) return adt.concluded(aItem, aMode);
+      //       else if (universe.property().isBoundaryTag(aItem)) return adt.section(aItem, aMode);
+      //       else if (universe.property().isEmptyTag(elem)) return adt.gap(aItem, aMode);
+      //       else {
+      //         var rest = again(n.item(), n.mode());
+
+      //     });  
+      //   };
+
+        
+      // }
+
       var walk = function (item, mode) {
-        return DomGather.walk(item, mode, DomGather.walkers().right(), _rules).map(function (n) {
-          if (Compare.eq(n.item(), element)) return [ ];
-          var self = Node.isText(n.item()) ? [ n.item() ] : [ ];
+        return Gather.walk(universe, item, mode, Gather.walkers().right(), _rules).map(function (n) {
+          console.log('n', n.item());
+          if (universe.eq(n.item(), element)) return [ ];
+          var self = universe.property().isText(n.item()) ? [ n.item() ] : [ ];
           var rest = walk(n.item(), n.mode());
           return self.concat(rest);
         }).getOr([ ]);
       };
 
       var allnodes = walk(element, Gather.advance);
-      console.log('allnodes', Arr.map(allnodes, Text.get));
-
-      var nodes = PredicateFilter.descendants(element, Node.isText);
-      var text = Arr.map(nodes, Text.get).join('');
+      var text = Arr.map(allnodes, universe.property().getText).join(' ');
+      console.log('text', text, 'item', element);
 
       var words = Identify.words(text);
 
