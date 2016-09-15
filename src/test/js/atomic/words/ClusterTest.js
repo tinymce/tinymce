@@ -12,7 +12,7 @@ test(
 
   function (Gene, TestUniverse, TextGene, Arr, Option, Cluster) {
     (function () {
-      /*
+      
       var doc = TestUniverse(Gene('root', 'root', [
         Gene('p1', 'p', [
           TextGene('a', 'There i'),
@@ -44,17 +44,17 @@ test(
         assert.eq(true, Option.equals(expected.lang, aZone.lang()));
       };
 
-      check({
-        words: [ 'determined', 'and'],
-        items: [ 'd', 'e', 'f' ],
-        lang: Option.none()
-      }, 'e');
+      // check({
+      //   words: [ 'determined', 'and'],
+      //   items: [ 'd', 'e', 'f' ],
+      //   lang: Option.none()
+      // }, 'e');
 
-      check({
-        words: [ 'again' ],
-        items: [ 'i' ],
-        lang: Option.none()
-      }, 'i');
+      // check({
+      //   words: [ 'again' ],
+      //   items: [ 'i' ],
+      //   lang: Option.none()
+      // }, 'i');
 
       check({
         words: [ 'and', 'it\'s', 'driving', 'me', 'insane' ],
@@ -67,7 +67,7 @@ test(
         items: [ 'j' ],
         lang: Option.none()
       }, 'j');
-      */
+
     })();
 
     (function () {

@@ -39,7 +39,7 @@ define(
     // Returns: true if currLang and the item 'lang' attribute are both the same string, or both are None.
     var isLanguageBoundary = function (universe, item, currLang) {
       return (universe.property().isElement(item) &&
-        !Option.equals(currLang, Option.some(universe.attrs().get(item, 'lang'))));
+        !Option.equals(currLang, Option.from(universe.attrs().get(item, 'lang'))));
     };
 
     // Return decision struct with one or zero 'make' Struct items. If present the make struct item is the entire item node text,
@@ -48,7 +48,7 @@ define(
     // to return an Option(string) of the language of an element.
     var decide = function (universe, item, slicer, currLang) {
       var f = (function () {
-        console.log('item', item, currLang.getOr('none'), 'lBound:', isLanguageBoundary(universe, item, currLang));
+        // console.log('item', item, currLang.getOr('none'),Option.from(universe.attrs().get(item, 'lang')).getOr('none'), 'lBound:', isLanguageBoundary(universe, item, currLang));
         if (universe.property().isBoundary(item)) return onEdge;
         else if (universe.property().isEmptyTag(item)) return onEdge;
         else if (isLanguageBoundary(universe, item, currLang)) return onEdge;
