@@ -37,6 +37,7 @@ define("tinymce/pasteplugin/Plugin", [
 			} else {
 				clipboard.pasteFormat = "text";
 				this.active(true);
+				editor.fire('PastePlainTextToggle', {state: true});
 
 				if (!isUserInformedAboutPlainText()) {
 					var message = editor.translate('Paste is now in plain text mode. Contents will now ' +
@@ -48,7 +49,6 @@ define("tinymce/pasteplugin/Plugin", [
 					});
 
 					userIsInformed = true;
-					editor.fire('PastePlainTextToggle', {state: true});
 				}
 			}
 
