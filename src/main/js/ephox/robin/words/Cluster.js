@@ -118,7 +118,10 @@ define(
           }
           else {
             currentLang.each(function (cl) {
-              topStack().each(function (top) {
+              topStack().fold(function () {
+                languageStack.push({ item: n.item(), lang: cl });              
+                diffLang = true;
+              }, function (top) {
                 if (cl !== top.lang) {
                   languageStack.push({ item: n.item(), lang: cl });              
                   diffLang = true;
@@ -128,7 +131,7 @@ define(
           }
 
           
-          // console.log('on item', n.item().id + ' ', n.item().text || n.item().name + ' ', n.item().attrs, ', lang: ', 
+          console.log('on item',  n.item().dom(), 'diffLang', diffLang, 'current', currentLang.getOr('none'));
           //   Arr.map(languageStack.slice(0), function (s) { return s.lang; }),
           //   'diffLang', diffLang,
           //   'currentLang', currentLang.getOr('none')
@@ -197,15 +200,20 @@ define(
       walk(element, Gather.advance, Option.none());
       var groups = grouping.done();
 
-      var words = Arr.bind(groups, function (g) {
-        var line = Arr.map(g, function (gi) {
-          if (! universe.property().isText(gi)) {
-            debugger;
-          }
-          return universe.property().getText(gi);
-        }).join('');
-        return Identify.words(line);
-      });
+      console.log('groups', Arr.map(groups, function (g) {
+        return Arr.map(g, function (x) { return x.dom(); });
+      }));
+      // var words = Arr.bind(groups, function (g) {
+      //   var line = Arr.map(g, function (gi) {
+      //     if (! universe.property().isText(gi)) {
+      //       debugger;
+      //     }
+      //     return universe.property().getText(gi);
+      //   }).join('');
+      //   return Identify.words(line);
+      // });
+
+      var zones = [ ];
 
       return {
         // zone: function () {
@@ -215,7 +223,7 @@ define(
         // },
         // groups: Fun.constant(words),
         // lang: Option.none
-        zones: Fun.constant([ ])
+        zones: Fun.constant(zones)
       };
     };
 
