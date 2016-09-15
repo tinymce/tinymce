@@ -35,6 +35,15 @@ define(
 
     var block = function (universe, element) {
 
+      var language = function (item) {
+        return universe.up().closest(item, '[lang]', Fun.constant(false)).bind(function (el) {
+          return Option.from(universe.attrs().get(el, 'lang'));
+        });
+      };
+
+      var lang = language(element);
+      console.log('lang', lang);
+
       // kind of need an ADT
       // if you hit a tag inside the tag that should break up a word (e.g. image, diff language)
       // then return adt.section(item, mode, xs). The walking process will then start a new array from there with a 
@@ -64,13 +73,13 @@ define(
 
       var adt = Adt.generate([
         // keep going and
-        { include: [ 'item', 'direction' ] },
+        { include: [ 'item', 'direction', 'lang' ] },
         // things like <img>, <br>
-        { gap: [ 'item', 'direction' ] },
+        { gap: [ 'item', 'direction', 'lang' ] },
         // things like different language sections
-        { section: [ 'item', 'direction' ] },
+        { section: [ 'item', 'direction', 'lang' ] },
         // hit the starting tag
-        { concluded: [ 'item', 'direction' ]}
+        { concluded: [ 'item', 'direction', 'lang' ]}
       ]);
   
       // Will have to group this later.
@@ -78,17 +87,35 @@ define(
       var nodes = [ ];
 
       
-      var again = function (aItem, aMode) {
+      var again = function (aItem, aMode, aLang) {
         return Gather.walk(universe, aItem, aMode, Gather.walkers().right(), _rules).fold(function () {
-          return adt.concluded(aItem, aMode);
+          return adt.concluded(aItem, aMode, Option.none());
         }, function (n) {
+          var currentLang = Option.from(universe.attrs().get(n.item(), 'lang'));
+          var isDiffLang = function () {
+            return currentLang.exists(function (l) {
+              // We have a current language, so we need to create a new section if this language
+              // does not match the previous language. The previous language will be the language
+              // that has carried through from the previous item
+              return !aLang.forall(function (a) {
+                console.log('comparing', a, 'with', l);
+                return a === l;
+              });
+            });
+
+          };
+
+          console.log('different lang', isDiffLang());
           // n.item() is the next element
           // n.mode() is the direction to go
           // finished.
-          if (universe.eq(n.item(), element)) return adt.concluded(n.item(), n.mode());
-          else if (universe.property().isBoundary(n.item())) return adt.section(n.item(), n.mode());
-          else if (universe.property().isEmptyTag(n.item())) return adt.gap(n.item(), n.mode());
-          else return adt.include(n.item(), n.mode());
+          if (universe.eq(n.item(), element)) return adt.concluded(n.item(), n.mode(), aLang);
+          else if (universe.property().isBoundary(n.item())) return adt.section(n.item(), n.mode(), aLang);
+
+          // Different language
+
+          else if (universe.property().isEmptyTag(n.item())) return adt.gap(n.item(), n.mode(), aLang);
+          else return isDiffLang() ? adt.section(n.item(), n.mode(), currentLang) : adt.include(n.item(), n.mode(), aLang);
         });  
       };
 
@@ -97,25 +124,26 @@ define(
 
       var grouping = ArrayGroup();
 
-      var walk = function (item, mode) {
-        var outcome = again(item, mode);
+      var walk = function (item, mode, wLang) {
+        var outcome = again(item, mode, wLang);
 
         // include
-        outcome.fold(function (aItem, aMode) {
+        outcome.fold(function (aItem, aMode, aLang) {
           grouping.add(aItem);
-          walk(aItem, aMode);
+          walk(aItem, aMode, aLang);
 
         // separator  
-        }, function (aItem, aMode) {
+        }, function (aItem, aMode, aLang) {
           grouping.end();
           // grouping.separator(aItem);
-          walk(aItem, aMode);
+          walk(aItem, aMode, aLang);
         // section
-        }, function (aItem, aMode) {
+        }, function (aItem, aMode, aLang) {
+          console.log('ending section', aItem);
           grouping.end(aItem);
-          walk(aItem, aMode);
+          walk(aItem, aMode, aLang);
         // concluded
-        }, function (aItem, aMode) {
+        }, function (aItem, aMode, aLang) {
           // do nothing.
         });
 
@@ -131,7 +159,7 @@ define(
       };
 
 
-      walk(element, Gather.advance);
+      walk(element, Gather.advance, lang);
       var groups = grouping.done();
 
       var words = Arr.bind(groups, function (g) {

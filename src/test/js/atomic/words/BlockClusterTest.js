@@ -25,10 +25,20 @@ test(
           TextGene('en-c', 'o'),
           Gene('de', 'span', [
             TextGene('de-a', 'di'),
-            TextGene('de-b', 'e')
-          ], {}, { lang: 'de' })  
+            TextGene('de-b', 'e'),
+
+            // Two consecutive english spans, so all should be in the same section.
+            Gene('en', 'span', [
+              TextGene('en-d', 'but')
+            ], {}, { lang: 'en' }),
+            Gene('en2', 'span', [
+              TextGene('en-e', 'ter')
+            ], {}, { lang: 'en' })
+          ], {}, { lang: 'de' }),
+          TextGene('en-f', 'anoth'),
+          TextGene('en-g', 'er')
         ])
-      ])
+      ], {}, { lang: 'en' })
     ]));
 
     var check = function (expected, id) {
@@ -39,7 +49,7 @@ test(
     };
 
     check({
-      words: [ 'one', 'two', 'one', 'two', 'die' ],
+      words: [ 'one', 'two', 'one', 'two', 'die', 'but', 'another' ],
       items: [ 'div1' ]
     }, 'div1');
 
