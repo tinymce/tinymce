@@ -218,7 +218,8 @@ define(
         var words = Identify.words(line);
         // console.log('words', Arr.map(words, function (w) { return w.word(); }));
         return zone({
-          lang: lang,
+          // FIX: later
+          lang: lang.get('en'),
           words: words,
           elements: nodes
         });
@@ -264,7 +265,7 @@ define(
 
       var zones = [
         zone({
-          lang: rawCluster.lang(),
+          lang: rawCluster.lang().getOr('en'),
           words: words,
           elements: items
         })
