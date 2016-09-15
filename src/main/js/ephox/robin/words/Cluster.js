@@ -156,7 +156,7 @@ define(
 
         // include
         outcome.fold(function (aItem, aMode) {
-          console.log('lastLang', lastLang.getOr('none'), aItem.dom());
+          // console.log('lastLang', lastLang.getOr('none'), aItem.dom());
           if (universe.property().isText(aItem)) grouping.add({
             lang: lastLang,
             elem: aItem
