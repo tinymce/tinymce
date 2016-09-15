@@ -160,7 +160,7 @@ define(
         }, function (aItem, aMode) {
           var label = aMode === Gather.advance ? 'starting' : 'ending';
           console.log(label + ' section', aItem);
-          grouping.end(aItem);
+          grouping.end();
           walk(aItem, aMode);
         // concluded
         }, function (aItem, aMode, aLang) {
