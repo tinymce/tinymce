@@ -100,7 +100,7 @@ test(
       };
 
       check({
-        words: [ 'one', 'two', 'die', 'e', 'undinside', 'but', /* bug that these separate */ 'ter', 'another' ],
+        words: [ 'one', 'two', 'die', 'e', 'undinside', 'butter', 'another' ],
         items: [ 'div1' ]
       }, 'div1');
 

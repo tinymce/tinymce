@@ -2,10 +2,10 @@ define(
   'ephox.robin.util.ArrayGroup',
 
   [
-
+    'ephox.perhaps.Option'
   ],
 
-  function () {
+  function (Option) {
     return function () {
       var all = [ ];
       var part = [ ];
@@ -30,6 +30,16 @@ define(
         part = [ ];
       };
 
+      var reopen = function () {
+        if (all.length === 0) return Option.none();
+        else {
+          var last = all[all.length - 1];
+          part = last.slice(0);
+          all = all.slice(0, all.length - 1);
+          return Option.some(part);
+        }
+      };
+
       var done = function () {
         var result = all.slice(0);
         if (part.length > 0) result.push(part.slice(0));
@@ -41,6 +51,7 @@ define(
         add: add,
         separator: separator,
         begin: begin,
+        reopen: reopen,
         end: end
       };
     };

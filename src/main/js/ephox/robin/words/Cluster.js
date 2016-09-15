@@ -92,7 +92,7 @@ define(
         { boundary: [ 'item', 'direction' ] },
 
         // things like language sections
-        { section: [ 'item', 'direction' ] },
+        { section: [ 'item', 'direction', 'lang' ] },
 
         // hit the starting tag
         { concluded: [ 'item', 'direction' ]}
@@ -138,7 +138,7 @@ define(
           // Different language
 
           else if (universe.property().isEmptyTag(n.item())) return adt.gap(n.item(), n.mode());
-          else return diffLang ? adt.section(n.item(), n.mode()) : adt.include(n.item(), n.mode());
+          else return diffLang ? adt.section(n.item(), n.mode(), currentLang) : adt.include(n.item(), n.mode());
         });  
       };
 
@@ -147,30 +147,35 @@ define(
 
       var grouping = ArrayGroup();
 
-      var walk = function (item, mode) {
+      var walk = function (item, mode, lastLang) {
         var outcome = again(item, mode);
 
         // include
         outcome.fold(function (aItem, aMode) {
           grouping.add(aItem);
-          walk(aItem, aMode);
+          walk(aItem, aMode, lastLang);
 
         // separator  
         }, function (aItem, aMode) {
           grouping.end();
           // grouping.separator(aItem);
-          walk(aItem, aMode);
+          walk(aItem, aMode, Option.none());
         // boundary
         }, function (aItem, aMode) {
           grouping.end();
-          walk(aItem, aMode);
+          walk(aItem, aMode, Option.none());
         
         // section
-        }, function (aItem, aMode) {
-          var label = aMode === Gather.advance ? 'starting' : 'ending';
-          console.log(label + ' section', aItem);
-          grouping.end();
-          walk(aItem, aMode);
+        }, function (aItem, aMode, aLang) {
+          var starting = aMode === Gather.advance;
+        
+          if (starting) {
+            if (Option.equals(lastLang, aLang)) grouping.reopen();
+            else grouping.end();
+          } else {
+            grouping.end();
+          }
+          walk(aItem, aMode, aLang);
         // concluded
         }, function (aItem, aMode, aLang) {
           // do nothing.
@@ -188,7 +193,7 @@ define(
       };
 
 
-      walk(element, Gather.advance);
+      walk(element, Gather.advance, Option.none());
       var groups = grouping.done();
 
       var words = Arr.bind(groups, function (g) {
