@@ -17,6 +17,16 @@ test(
           Gene('image', 'img', [ ]),
           TextGene('b', 'tw'),
           TextGene('c', 'o')
+        ]),
+        Gene('p2', 'p', [
+          TextGene('en-a', 'one'),
+          Gene('image2', 'img', [ ]),
+          TextGene('en-b', 'tw'),
+          TextGene('en-c', 'o'),
+          Gene('de', 'span', [
+            TextGene('de-a', 'di'),
+            TextGene('de-b', 'e')
+          ], {}, { lang: 'de' })  
         ])
       ])
     ]));
@@ -29,8 +39,13 @@ test(
     };
 
     check({
-      words: [ 'one', 'two' ],
+      words: [ 'one', 'two', 'one', 'two', 'die' ],
       items: [ 'div1' ]
     }, 'div1');
+
+    // check({
+    //   words: [ 'one', 'two' ],
+    //   items: [ 'div1' ]
+    // }, 'div2');
   }
 );
