@@ -35,7 +35,11 @@ define(
     };
 
     var block = function (universe, element) {
-      var languageStack = universe.up().closest(element, '[lang]', Fun.constant(false)).bind(function (el) {
+      return range(universe, element, element);
+    };
+
+    var range = function (universe, start, finish) {
+      var languageStack = universe.up().closest(start, '[lang]', Fun.constant(false)).bind(function (el) {
         return Option.from(universe.attrs().get(el, 'lang')).map(function (lang) {
           return [ { item: el, lang: lang } ];
         });
@@ -136,7 +140,7 @@ define(
           //   'diffLang', diffLang,
           //   'currentLang', currentLang.getOr('none')
           // );
-          if (universe.eq(n.item(), element)) return adt.concluded(n.item(), n.mode());
+          if (universe.eq(n.item(), finish)) return adt.concluded(n.item(), n.mode());
           else if (universe.property().isBoundary(n.item())) return adt.boundary(n.item(), n.mode());
 
           // Different language
@@ -189,6 +193,7 @@ define(
           walk(aItem, aMode, aLang);
         // concluded
         }, function (aItem, aMode, aLang) {
+          console.debug('concluded', aItem.dom());
           // do nothing.
         });
 
@@ -204,7 +209,7 @@ define(
       };
 
 
-      walk(element, Gather.advance, Option.none());
+      walk(start, Gather.advance, Option.none());
       var groups = grouping.done();
 
       var zones = Arr.map(groups, function (group) {
@@ -219,7 +224,7 @@ define(
         // console.log('words', Arr.map(words, function (w) { return w.word(); }));
         return zone({
           // FIX: later
-          lang: lang.get('en'),
+          lang: lang.getOr('en'),
           words: words,
           elements: nodes
         });
@@ -289,6 +294,7 @@ define(
     return {
       inline: inline,
       block: block,
+      range: range,
       empty: empty
     };
   }

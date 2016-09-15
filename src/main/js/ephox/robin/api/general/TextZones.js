@@ -12,8 +12,7 @@ define(
     };
 
     var range = function (universe, start, soffset, finish, foffset) {
-
-      // return universe.property().isBoundary(element) ? Cluster.block(universe, element) : Cluster.generate(universe, element, optimise);
+      return Cluster.range(universe, start, soffset, finish, foffset);
     };
 
     return {
