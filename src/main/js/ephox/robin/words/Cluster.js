@@ -88,8 +88,12 @@ define(
         { include: [ 'item', 'direction' ] },
         // things like <img>, <br>
         { gap: [ 'item', 'direction' ] },
-        // things like different language sections
+        // things like boundary tags
+        { boundary: [ 'item', 'direction' ] },
+
+        // things like language sections
         { section: [ 'item', 'direction' ] },
+
         // hit the starting tag
         { concluded: [ 'item', 'direction' ]}
       ]);
@@ -129,7 +133,7 @@ define(
             'currentLang', currentLang.getOr('none')
           );
           if (universe.eq(n.item(), element)) return adt.concluded(n.item(), n.mode());
-          else if (universe.property().isBoundary(n.item())) return adt.section(n.item(), n.mode());
+          else if (universe.property().isBoundary(n.item())) return adt.boundary(n.item(), n.mode());
 
           // Different language
 
@@ -156,6 +160,11 @@ define(
           grouping.end();
           // grouping.separator(aItem);
           walk(aItem, aMode);
+        // boundary
+        }, function (aItem, aMode) {
+          grouping.end();
+          walk(aItem, aMode);
+        
         // section
         }, function (aItem, aMode) {
           var label = aMode === Gather.advance ? 'starting' : 'ending';
