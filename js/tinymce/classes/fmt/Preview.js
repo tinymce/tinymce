@@ -19,14 +19,15 @@
  */
 define("tinymce/fmt/Preview", [
 	"tinymce/dom/DOMUtils",
-	"tinymce/util/Tools"
-], function(DOMUtils, Tools) {
+	"tinymce/util/Tools",
+	"tinymce/html/Schema"
+], function(DOMUtils, Tools, Schema) {
 	var each = Tools.each;
 	var dom = DOMUtils.DOM;
 
 	function parsedSelectorToHtml(ancestry, editor) {
 		var elm, item, fragment;
-		var schema = editor && editor.schema || new tinymce.html.Schema({});
+		var schema = editor && editor.schema || new Schema({});
 
 		function decorate(elm, item) {
 			if (item.classes.length) {
@@ -38,7 +39,7 @@ define("tinymce/fmt/Preview", [
 		function createElement(sItem) {
 			var elm;
 
-			item = typeof(sItem) === 'string' ? {
+			item = typeof sItem === 'string' ? {
 				name: sItem,
 				classes: [],
 				attrs: {}
@@ -50,14 +51,12 @@ define("tinymce/fmt/Preview", [
 		}
 
 		function getRequiredParent(elm, candidate) {
-			var name = typeof(elm) !== 'string' ? elm.nodeName.toLowerCase() : elm;
+			var name = typeof elm !== 'string' ? elm.nodeName.toLowerCase() : elm;
 			var elmRule = schema.getElementRule(name);
 			var parentsRequired = elmRule.parentsRequired;
 
 			if (parentsRequired && parentsRequired.length) {
-				return candidate && Tools.inArray(parentsRequired, candidate) !== -1
-					? candidate
-					: parentsRequired[0];
+				return candidate && Tools.inArray(parentsRequired, candidate) !== -1 ? candidate : parentsRequired[0];
 			} else {
 				return false;
 			}
@@ -166,7 +165,7 @@ define("tinymce/fmt/Preview", [
 
 
 	function parseSelector(selector) {
-		if (!selector || typeof(selector) !== 'string') {
+		if (!selector || typeof selector !== 'string') {
 			return [];
 		}
 
