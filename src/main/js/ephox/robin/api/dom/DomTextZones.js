@@ -14,7 +14,7 @@ define(
     };
 
     var range = function (start, soffset, finish, foffset) {
-      return TextZones.range(start, soffset, finish, foffset);
+      return TextZones.range(universe, start, soffset, finish, foffset);
     };
 
     // Something for full document in stages?

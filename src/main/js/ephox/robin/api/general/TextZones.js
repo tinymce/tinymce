@@ -12,7 +12,8 @@ define(
     };
 
     var range = function (universe, start, soffset, finish, foffset) {
-      return Cluster.range(universe, start, soffset, finish, foffset);
+      // TODO: Descend first to use the offsets?
+      return Cluster.range(universe, start, finish);
     };
 
     return {

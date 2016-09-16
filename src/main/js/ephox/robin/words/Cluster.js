@@ -214,17 +214,23 @@ define(
 
       var zones = Arr.map(groups, function (group) {
         var nodes = Arr.map(group, function (g) { return g.elem; });
-        var lang = Option.from(group[0]).bind(function (g) { return g.lang; });
+        var optLang = Option.from(group[0]).bind(function (g) { return g.lang; });
 
         var line = Arr.map(nodes, function (x) {
           return universe.property().isText(x) ? universe.property().getText(x) : '';
         }).join('');
 
         var words = Identify.words(line);
+
+        var lang = optLang.or(
+          Option.from(languageStack[0]).map(function (l) { return l.lang; })
+        ).getOr('en');
+
+        console.log('zone: ', lang, Arr.map(words, function (w) { return w.word(); }));
         // console.log('words', Arr.map(words, function (w) { return w.word(); }));
         return zone({
           // FIX: later
-          lang: lang.getOr('en'),
+          lang: lang,
           words: words,
           elements: nodes
         });
