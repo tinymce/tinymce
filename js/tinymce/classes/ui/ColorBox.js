@@ -46,7 +46,8 @@ define("tinymce/ui/ColorBox", [
 		},
 
 		repaintColor: function(value) {
-			var elm = this.getEl().getElementsByTagName('i')[0];
+			var openElm = this.getEl('open');
+			var elm = openElm ? openElm.getElementsByTagName('i')[0] : null;
 
 			if (elm) {
 				try {
