@@ -31,6 +31,10 @@ define(
       });
     };
 
+    var presentationRole = function (element) {
+      Attr.set(element, 'role', 'presentation');
+    };
+
     var editor = function (container, editor, label, ariaHelp, showHelpHint) {
       Attr.setAll(container, {
         'role': 'application',
@@ -86,7 +90,7 @@ define(
       // Add 'button' roleto a pastry button, and 'presentation' role
       // to the contentElement that contains the button text.
       Attr.set(element, 'role', 'button');
-      Attr.set(contentElement, 'role', 'presentation');
+      presentationRole(contentElement);
     };
 
     var toolbarButton = function (element, label, hasPopup, isToggle) {
@@ -158,6 +162,7 @@ define(
     // return a container object with methods {element, field} containing an html field and label
     var labelledField = function (field, name, labelText) {
       var container = Element.fromTag('div');
+      presentationRole(container);
       var id = name + Id.generate('');
       var label = Element.fromHtml('<label>' + labelText + '</label>');
       Attr.set(label, 'for', id);
@@ -264,6 +269,7 @@ define(
     return {
       document: roleDocument,
       presentation: presentation,
+      presentationRole: presentationRole,
       controls: controls,
       editor: editor,
       toolbar: toolbar,
