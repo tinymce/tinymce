@@ -12,7 +12,8 @@ test("Translate strings", function() {
 		"text": "text translation",
 		"value:{0}{1}": "value translation:{0}{1}",
 		"text{context:something}": "text translation with context",
-		"value:{0}{1}{context:something}": "value translation:{0}{1} with context"
+		"value:{0}{1}{context:something}": "value translation:{0}{1} with context",
+		"empty string": ""
 	});
 
 	equal(translate("text"), "text translation");
@@ -24,7 +25,10 @@ test("Translate strings", function() {
 	equal(translate(["value:{0}{1}{context:something}", "a", "b"]), "value translation:ab with context");
 
 	// check if translate survives some awkward cases
-	equal(translate(["untranslated value:{0}{1}"]), "untranslated value:");
+	deepEqual(translate("empty string"), "");
+	equal(translate(["untranslated value:{0}{1}", "a"]), "untranslated value:a{1}",
+		"Do not strip tokens that weren't replaced.");
+
 	equal(translate([{}]), "[object Object]");
 
 	equal(translate(null), "null");

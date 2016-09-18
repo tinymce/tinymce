@@ -89,8 +89,12 @@ define("tinymce/util/I18n", [
 		translate: function(text) {
 			var langData = data[code] || {};
 
+			function toString(obj) {
+				return obj + "";
+			}
+
 			function getLangData(text) {
-				return {}.hasOwnProperty.call(langData, text) && langData[text] || text;
+				return {}.hasOwnProperty.call(langData, text) ? toString(langData[text]) : text;
 			}
 
 			if (text === null) {
@@ -98,20 +102,18 @@ define("tinymce/util/I18n", [
 			}
 
 			if (Tools.is(text, 'object') && text.hasOwnProperty('raw')) {
-				return text.raw + "";
+				return toString(text.raw);
 			}
 
 			if (Tools.is(text, 'array') && Tools.is(text[0], 'string')) {
 				var values = text.slice(1);
 
 				text = getLangData(text[0]).replace(/\{([0-9]+)\}/g, function($1, $2) {
-					return values[$2] || '';
+					return values.hasOwnProperty($2) ? toString(values[$2]) : $1;
 				});
 			}
 
-			text += ""; // whatever it is by this moment, cast it to string
-
-			return getLangData(text).replace(/{context:\w+}$/, '');
+			return getLangData(toString(text)).replace(/{context:\w+}$/, '');
 		},
 
 		data: data
