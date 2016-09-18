@@ -14,7 +14,9 @@
  *
  * @class tinymce.util.I18n
  */
-define("tinymce/util/I18n", [], function() {
+define("tinymce/util/I18n", [
+	"tinymce/util/Tools"
+], function(Tools) {
 	"use strict";
 
 	var data = {}, code = "en";
@@ -85,30 +87,31 @@ define("tinymce/util/I18n", [], function() {
 		 * @return {String} String that got translated.
 		 */
 		translate: function(text) {
-			var langData;
+			var langData = data[code] || {};
 
-			langData = data[code];
-			if (!langData) {
-				langData = {};
+			function getLangData(text) {
+				return {}.hasOwnProperty.call(langData, text) && langData[text] || text;
 			}
 
-			if (typeof text == "undefined") {
-				return text;
+			if (text === null) {
+				return 'null';
 			}
 
-			if (typeof text != "string" && text.raw) {
-				return text.raw;
+			if (Tools.is(text, 'object') && text.hasOwnProperty('raw')) {
+				return text.raw + "";
 			}
 
-			if (text.push) {
+			if (Tools.is(text, 'array') && Tools.is(text[0], 'string')) {
 				var values = text.slice(1);
 
-				text = (langData[text[0]] || text[0]).replace(/\{([0-9]+)\}/g, function(match1, match2) {
-					return values[match2];
+				text = getLangData(text[0]).replace(/\{([0-9]+)\}/g, function($1, $2) {
+					return values[$2] || '';
 				});
 			}
 
-			return (langData[text] || text).replace(/{context:\w+}$/, '');
+			text += ""; // whatever it is by this moment, cast it to string
+
+			return getLangData(text).replace(/{context:\w+}$/, '');
 		},
 
 		data: data
