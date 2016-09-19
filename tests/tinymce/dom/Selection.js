@@ -1055,5 +1055,28 @@ ModuleLoader.require([
 		equal(rng.endContainer.nodeName, '#text');
 		equal(rng.endOffset, 1);
 	});
+
+	test('getRng should return null if win.document is not defined or null', function() {
+		var win = editor.selection.win,
+			rng = editor.dom.createRng();
+
+		editor.setContent('<p>x</p>');
+
+		rng.setStart(editor.$('p')[0].firstChild, 0);
+		rng.setEnd(editor.$('p')[0].firstChild, 1);
+
+		editor.selection.setRng(rng);
+		editor.selection.setRng(null);
+
+		editor.selection.win = {};
+		rng = editor.selection.getRng(true);
+		equal(rng, null);
+
+		editor.selection.win = {document:null};
+		rng = editor.selection.getRng(true);
+		equal(rng, null);
+
+		editor.selection.win = win;
+	});
 });
 
