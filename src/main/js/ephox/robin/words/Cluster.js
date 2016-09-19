@@ -39,7 +39,13 @@ define(
       return range(universe, element, element);
     };
 
+    var oneText = function (universe, textnode) {
+
+    }
+
     var range = function (universe, start, finish) {
+      // Single text node should use inline.
+      if (universe.eq(start, finish) && universe.property().isText(start)) return inline(universe, start);
       // console.log('*** range ***', start.dom(), ' -> ', finish.dom());
 
       var zones = Parent.subset(universe, start, finish).bind(function (children) {
@@ -48,6 +54,7 @@ define(
         var last = children[children.length - 1];
         // console.log('first', first.dom(), 'last', last.dom());
         return universe.property().parent(first).map(function (parent) {
+          // console.log('parent', parent.dom(), 'first' ,first.dom(), 'last', last.dom());
           // debugger;
           var defaultLang =  universe.up().closest(start, '[lang]', Fun.constant(false)).bind(function (el) {
             return Option.from(universe.attrs().get(el, 'lang'));
@@ -75,16 +82,18 @@ define(
               // console.log('concluding', aItem.dom());
               return adt.concluded(aItem, aMode);
             }, function (n) {
+              // console.log('bItem', n.item().dom());
               // Find if the current item has a lang property on it.
               var currentLang = universe.property().isElement(n.item()) ? Option.from(universe.attrs().get(n.item(), 'lang')) : Option.none();
         
-              if (universe.eq(n.item(), last) && n.mode() !== Gather.advance) return adt.concluded(n.item(), n.mode());
+              if (universe.property().isText(n.item())) return adt.text(n.item(), n.mode());
+              else if (universe.eq(n.item(), last) && n.mode() !== Gather.advance) return adt.concluded(n.item(), n.mode());
               else if (universe.property().isBoundary(n.item())) return adt.boundary(n.item(), n.mode(), currentLang);
 
               // Different language
 
               else if (universe.property().isEmptyTag(n.item())) return adt.empty(n.item(), n.mode());
-              else if (universe.property().isText(n.item())) return adt.text(n.item(), n.mode());
+              
               else return adt.inline(n.item(), n.mode(), currentLang);
             });  
           };
@@ -104,7 +113,8 @@ define(
             }, function (aItem, aMode) {
               // text (aItem, aMode)
               stack.addText(aItem);
-              walk(aItem, aMode);
+              // console.log('**** TEXT **** last', last.dom(), 'aItem', aItem.dom());
+              if (! universe.eq(aItem, last)) walk(aItem, aMode);
             
             }, function (aItem, aMode) {
               // empty (aItem, aMode)
