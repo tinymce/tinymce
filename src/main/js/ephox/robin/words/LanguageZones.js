@@ -63,6 +63,9 @@ define(
       };
 
       var addText = function (elem) {
+        var lang = getLang(Option.none());
+        // If the top of the stack is not the same as zoneLang, then we need to spawn again.
+        if (lang !== zoneLang) spawn(lang);
         zone.push(elem);
         // console.log('text', elem.dom().cloneNode(true), stack);
       };
