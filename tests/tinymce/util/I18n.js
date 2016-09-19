@@ -31,7 +31,7 @@ test("Translate strings", function() {
 
 	equal(translate([{}]), "[object Object]");
 
-	equal(translate(null), "null");
+	equal(translate(null), "");
 	equal(translate(0), 0, "0");
 	equal(translate(true), "true", "true");
 	equal(translate(false), "false", "false");
@@ -39,8 +39,8 @@ test("Translate strings", function() {
 	equal(translate({}), "[object Object]", "[object Object]");
 	equal(translate({raw:""}), "", "empty string");
 	equal(translate({raw:false}), "false", "false");
-	equal(translate({raw:undef}), "undefined", "undefined");
-	equal(translate({raw:null}), "null", "null");
+	equal(translate({raw:undef}), "");
+	equal(translate({raw:null}), "");
 
 	// https://github.com/tinymce/tinymce/issues/3029
 	equal(translate("hasOwnProperty"), "hasOwnProperty");

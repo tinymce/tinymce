@@ -89,16 +89,20 @@ define("tinymce/util/I18n", [
 		translate: function(text) {
 			var langData = data[code] || {};
 
+			function isEmpty(text) {
+				return text === '' || text === null || Tools.is(text, 'undefined');
+			}
+
 			function toString(obj) {
-				return obj + "";
+				return !isEmpty(obj) ? obj + '' : '';
 			}
 
 			function getLangData(text) {
 				return {}.hasOwnProperty.call(langData, text) ? toString(langData[text]) : text;
 			}
 
-			if (text === null) {
-				return 'null';
+			if (isEmpty(text)) {
+				return '';
 			}
 
 			if (Tools.is(text, 'object') && text.hasOwnProperty('raw')) {
