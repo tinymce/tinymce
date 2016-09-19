@@ -68,6 +68,8 @@ define(
       };
 
       var addEmpty = function (empty) {
+        var lang = getLang(Option.none());
+        spawn(lang);
         console.log('empty', empty.dom().cloneNode(true));
       };  
 
