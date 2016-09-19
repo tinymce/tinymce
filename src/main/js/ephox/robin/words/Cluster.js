@@ -46,6 +46,7 @@ define(
         // Ensure this exists.
         var last = children[children.length - 1];
         return universe.property().parent(first).map(function (parent) {
+          // debugger;
           var defaultLang =  universe.up().closest(start, '[lang]', Fun.constant(false)).bind(function (el) {
             return Option.from(universe.attrs().get(el, 'lang'));
           // Default language properly.
@@ -67,14 +68,15 @@ define(
           var _rules = undefined;
 
           var again = function (aItem, aMode) {
-            
+            console.log('aItem', aItem.dom());
             return Gather.walk(universe, aItem, aMode, Gather.walkers().right(), _rules).fold(function () {
+              console.log('concluding', aItem.dom());
               return adt.concluded(aItem, aMode);
             }, function (n) {
               // Find if the current item has a lang property on it.
               var currentLang = universe.property().isElement(n.item()) ? Option.from(universe.attrs().get(n.item(), 'lang')) : Option.none();
         
-              if (universe.eq(n.item(), finish)) return adt.concluded(n.item(), n.mode());
+              if (universe.eq(n.item(), last) && n.mode() !== Gather.advance) return adt.concluded(n.item(), n.mode());
               else if (universe.property().isBoundary(n.item())) return adt.boundary(n.item(), n.mode(), currentLang);
 
               // Different language
@@ -114,11 +116,12 @@ define(
               walk(aItem, aMode, aLang);
             // concluded
             }, function (aItem, aMode) {
+              console.log('concluding on adt ....', aItem.dom());
               // DO NOTHING.
             });
           };
 
-          walk(start, Gather.advance);
+          walk(first, Gather.advance);
           var groups = stack.done();
 
           return Arr.map(groups, function (group) {
@@ -144,7 +147,7 @@ define(
         });
       }).getOr([ ]);
 
-  console.log('zones', zones);
+  // console.log('zones', zones);
         
           // var words = Arr.bind(groups, function (g) {
           //   var line = Arr.map(g, function (gi) {

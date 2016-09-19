@@ -88,6 +88,12 @@ define(
       };
 
       var done = function () {
+        if (zone.length > 0) {
+          zones.push({
+            lang: Fun.constant(zoneLang),
+            elements: Fun.constant(zone)
+          });
+        }
         return zones.slice(0);
       };
 
