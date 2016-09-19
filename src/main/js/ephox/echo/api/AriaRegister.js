@@ -31,18 +31,24 @@ define(
       });
     };
 
+    // https://www.w3.org/TR/wai-aria/roles#presentation
     var presentationRole = function (element) {
       Attr.set(element, 'role', 'presentation');
     };
 
     var editor = function (container, editor, label, ariaHelp, showHelpHint) {
+      // Set role=region: https://www.w3.org/TR/wai-aria/roles#region
+      // on editor for better user navigation modes, as it is mostly text content.
+      // Better than role=application which constrains the reader navigation
+      // - https://www.w3.org/TR/wai-aria/roles#application
       Attr.setAll(container, {
-        'role': 'application',
+        'role': 'region',
         'aria-label': label
       });
 
       ariaHelp.each(function (helpText) {
         var aria = Element.fromTag('span');
+        presentationRole(aria);
         Insert.append(aria, Element.fromText(helpText));
         var labelId = Id.generate('ephox-aria');
         Attr.set(aria, 'id', labelId);
@@ -72,6 +78,7 @@ define(
       };
     };
 
+    // Sets the role 'group', with a label
     var toolbar = function (element, label) {
       Attr.setAll(element, {
         'role': 'group',
@@ -93,6 +100,7 @@ define(
       presentationRole(contentElement);
     };
 
+    // Set the role 'button'
     var toolbarButton = function (element, label, hasPopup, isToggle) {
       Attr.setAll(element, {
         'role': 'button',
@@ -103,6 +111,7 @@ define(
       if (hasPopup) Attr.set(element, 'aria-expanded', 'false');
     };
 
+    // Set the role 'toolbar' and aria-label if provided
     var toolbarGroup = function (element, label) {
       // TODO: duplicated from 'ephox.polish.alien.Query', consolidate isEmpty();
       var isEmpty = function (val) {
