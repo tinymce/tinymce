@@ -89,7 +89,7 @@ define("tinymce/ui/DragHelper", [
 				cursor = handleElm.runtimeStyle.cursor;
 			}
 
-			$eventOverlay = $('<div>').css({
+			$eventOverlay = $('<div></div>').css({
 				position: "absolute",
 				top: 0, left: 0,
 				width: docSize.width,
