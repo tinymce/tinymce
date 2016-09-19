@@ -41,7 +41,7 @@ define("tinymce/ui/SelectBox", [
 		 *
 		 * @constructor
 		 * @param {Object} settings Name/value object with settings.
-		 * @setting {Array} values Array with values to add to list box.
+		 * @setting {Array} options Array with options to add to the select box.
 		 */
 		init: function(settings) {
 			var self = this;
