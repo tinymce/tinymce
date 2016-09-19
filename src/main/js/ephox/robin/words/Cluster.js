@@ -40,13 +40,13 @@ define(
     };
 
     var range = function (universe, start, finish) {
-      console.log('*** range ***', start.dom(), ' -> ', finish.dom());
+      // console.log('*** range ***', start.dom(), ' -> ', finish.dom());
 
       var zones = Parent.subset(universe, start, finish).bind(function (children) {
         var first = children[0];
         // Ensure this exists.
         var last = children[children.length - 1];
-        console.log('first', first.dom(), 'last', last.dom());
+        // console.log('first', first.dom(), 'last', last.dom());
         return universe.property().parent(first).map(function (parent) {
           // debugger;
           var defaultLang =  universe.up().closest(start, '[lang]', Fun.constant(false)).bind(function (el) {
@@ -149,13 +149,13 @@ define(
         });
       }).getOr([ ]);
 
-      console.log('zones', JSON.stringify(Arr.map(zones, function (zone) {
-        return {
-          lang: zone.lang(),
-          elements: Arr.map(zone.elements(), universe.property().getText),
-          words: Arr.map(zone.words(), function (w) { return w.word(); })
-        };
-      }), null, 2));
+      // console.log('zones', JSON.stringify(Arr.map(zones, function (zone) {
+      //   return {
+      //     lang: zone.lang(),
+      //     elements: Arr.map(zone.elements(), universe.property().getText),
+      //     words: Arr.map(zone.words(), function (w) { return w.word(); })
+      //   };
+      // }), null, 2));
 
   // console.log('zones', zones);
         
