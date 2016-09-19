@@ -2,6 +2,7 @@ define(
   'ephox.echo.api.AriaVoice',
 
   [
+    'ephox.echo.api.AriaRegister',
     'ephox.epithet.Id',
     'ephox.fred.PlatformDetection',
     'ephox.peanut.Fun',
@@ -14,7 +15,7 @@ define(
     'global!setTimeout'
   ],
 
-  function (Id, PlatformDetection, Fun, Attr, Css, Element, Insert, Remove, Traverse, setTimeout) {
+  function (AriaRegister, Id, PlatformDetection, Fun, Attr, Css, Element, Insert, Remove, Traverse, setTimeout) {
     var isFirefox = PlatformDetection.detect().browser.isFirefox();
 
     var offscreen = {
@@ -28,6 +29,7 @@ define(
 
     var create = function (doc, text) {
       var span = Element.fromTag('span', doc.dom());
+      AriaRegister.presentationRole(span);
       // This stops it saying other things (possibly blank) between transitions.
       var contents = Element.fromText(text, doc.dom());
       Insert.append(span, contents);
@@ -46,7 +48,7 @@ define(
       
       // We may not be able to get rid of them, so we'll make them display: none;
       Css.set(token, 'display', 'none');
-
+      AriaRegister.hidden(token, true);  // aria-hidden needs to be in sync with dom visibility
       // Although described-by does not appear to work in IE10, we are currently only supporting JAWS in Firefox (and IE11),
       // and this does work for those browsers.
       linkToDescription(item, token);
