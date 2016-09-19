@@ -7,15 +7,16 @@ define(
     'ephox.perhaps.Option',
     'ephox.phoenix.api.general.Gather',
     'ephox.polaris.api.Arrays',
-    'ephox.robin.api.general.Zone',
+    'ephox.robin.api.general.Parent',
     'ephox.robin.util.ArrayGroup',
     'ephox.robin.words.Clustering',
     'ephox.robin.words.Identify',
+    'ephox.robin.words.LanguageZones',
     'ephox.scullion.ADT',
     'ephox.scullion.Struct'
   ],
 
-  function (Arr, Fun, Option, Gather, Arrays, Zone, ArrayGroup, Clustering, Identify, Adt, Struct) {
+  function (Arr, Fun, Option, Gather, Arrays, Parent, ArrayGroup, Clustering, Identify, LanguageZones, Adt, Struct) {
     /**
      * Finds words in groups of text (each HTML text node can have multiple words).
      */
@@ -39,213 +40,124 @@ define(
     };
 
     var range = function (universe, start, finish) {
-      var languageStack = universe.up().closest(start, '[lang]', Fun.constant(false)).bind(function (el) {
-        return Option.from(universe.attrs().get(el, 'lang')).map(function (lang) {
-          return [ { item: el, lang: lang } ];
+
+      var zones = Parent.subset(universe, start, finish).bind(function (children) {
+        var first = children[0];
+        // Ensure this exists.
+        var last = children[children.length - 1];
+        return universe.property().parent(first).map(function (parent) {
+          var defaultLang =  universe.up().closest(start, '[lang]', Fun.constant(false)).bind(function (el) {
+            return Option.from(universe.attrs().get(el, 'lang'));
+          // Default language properly.
+          }).getOr('en');
+
+          var adt = Adt.generate([
+            // keep going and
+            { inline: [ 'item', 'mode', 'lang' ] },
+            { text: [ 'item', 'mode' ] },
+            // things like <img>, <br>
+            { empty: [ 'item', 'mode' ] },
+            // things like boundary tags
+            { boundary: [ 'item', 'mode', 'lang' ] },
+            // hit the starting tag
+            { concluded: [ 'item', 'mode' ]}
+          ]);
+      
+      
+          var _rules = undefined;
+
+          var again = function (aItem, aMode) {
+            
+            return Gather.walk(universe, aItem, aMode, Gather.walkers().right(), _rules).fold(function () {
+              return adt.concluded(aItem, aMode);
+            }, function (n) {
+              // Find if the current item has a lang property on it.
+              var currentLang = universe.property().isElement(n.item()) ? Option.from(universe.attrs().get(n.item(), 'lang')) : Option.none();
+        
+              if (universe.eq(n.item(), finish)) return adt.concluded(n.item(), n.mode());
+              else if (universe.property().isBoundary(n.item())) return adt.boundary(n.item(), n.mode(), currentLang);
+
+              // Different language
+
+              else if (universe.property().isEmptyTag(n.item())) return adt.empty(n.item(), n.mode());
+              else if (universe.property().isText(n.item())) return adt.text(n.item(), n.mode());
+              else return adt.inline(n.item(), n.mode(), currentLang);
+            });  
+          };
+
+          var stack = LanguageZones(defaultLang);
+
+          var walk = function (item, mode) {
+            var outcome = again(item, mode);
+
+            // include
+            outcome.fold(function (aItem, aMode, aLang) {
+              // inline(aItem, aMode, aLang)
+              var opening = aMode === Gather.advance;
+              (opening ? stack.openInline : stack.closeInline)(aLang, aItem);
+              walk(aItem, aMode);
+
+            }, function (aItem, aMode) {
+              // text (aItem, aMode)
+              stack.addText(aItem);
+              walk(aItem, aMode);
+            
+            }, function (aItem, aMode) {
+              // empty (aItem, aMode)
+              stack.addEmpty(aItem);
+              walk(aItem, aMode);
+                    
+            }, function (aItem, aMode, aLang) {
+              // boundary(aItem, aMode, aLang) 
+              var opening = aMode === Gather.advance;
+              (opening ? stack.openBoundary : stack.closeBoundary)(aLang, aItem);
+              walk(aItem, aMode, aLang);
+            // concluded
+            }, function (aItem, aMode) {
+              // DO NOTHING.
+            });
+          };
+
+          walk(start, Gather.advance);
+          var groups = stack.done();
+
+          return Arr.map(groups, function (group) {
+
+            var elements = group.elements();
+            var lang = group.lang();
+
+            var line = Arr.map(elements, function (x) {
+              return universe.property().isText(x) ? universe.property().getText(x) : '';
+            }).join('');
+
+            var words = Identify.words(line);
+
+         
+            // console.log('words', Arr.map(words, function (w) { return w.word(); }));
+            return zone({
+              // FIX: later
+              lang: lang,
+              words: words,
+              elements: elements
+            });
+          });
         });
       }).getOr([ ]);
 
-      // console.log('languageStack', languageStack);
-
-      // kind of need an ADT
-      // if you hit a tag inside the tag that should break up a word (e.g. image, diff language)
-      // then return adt.section(item, mode, xs). The walking process will then start a new array from there with a 
-      // language attached.
-      // if you hit the starting tag again, then return adt.complete(item, xs)
-      // otherwise, return adt.gathering(item, mode, xs)
-
-      /*
-        var all = [ ];
-        var current = [ ];
-
-        adt.match({
-          section: function (item, mode, xs) {
-            // we have just
-          },
-          complete: function (item, xs) {
-
-          },
-          gathering: function (item, mode, xs) {
-            
-          }
-        })
-
-  
-
-      */
-
-      var topStack = function () {
-        return languageStack.length > 0 ? Option.some(languageStack[languageStack.length - 1]) : Option.none();
-      };
-
-      var isOnTop = function (item) {
-        return topStack().exists(function (data) {
-          return universe.eq(item, data.item);
-        });
-      };
-
-      var popStack = function () {
-        languageStack = languageStack.slice(0, languageStack.length - 1);
-      };
-
-      var adt = Adt.generate([
-        // keep going and
-        { include: [ 'item', 'direction' ] },
-        // things like <img>, <br>
-        { gap: [ 'item', 'direction' ] },
-        // things like boundary tags
-        { boundary: [ 'item', 'direction' ] },
-
-        // things like language sections
-        { section: [ 'item', 'direction', 'lang' ] },
-
-        // hit the starting tag
-        { concluded: [ 'item', 'direction' ]}
-      ]);
-  
-      // Will have to group this later.
-      var _rules = undefined;
-      var nodes = [ ];
-
-      var again = function (aItem, aMode) {
+  console.log('zones', zones);
         
-        return Gather.walk(universe, aItem, aMode, Gather.walkers().right(), _rules).fold(function () {
-          return adt.concluded(aItem, aMode);
-        }, function (n) {
-          var currentLang = universe.property().isElement(n.item()) ? Option.from(universe.attrs().get(n.item(), 'lang')) : Option.none();
-          // HACKY HACKY HACKY
-          var diffLang = false;
-          // Check the stack
-          if (isOnTop(n.item())) {
-            popStack();
-            diffLang = true;
-          }
-          else {
-            currentLang.each(function (cl) {
-              topStack().fold(function () {
-                languageStack.push({ item: n.item(), lang: cl });              
-                diffLang = true;
-              }, function (top) {
-                if (cl !== top.lang) {
-                  languageStack.push({ item: n.item(), lang: cl });              
-                  diffLang = true;
-                }
-              });              
-            });
-          }
+          // var words = Arr.bind(groups, function (g) {
+          //   var line = Arr.map(g, function (gi) {
+          //     if (! universe.property().isText(gi)) {
+          //       debugger;
+          //     }
+          //     return universe.property().getText(gi);
+          //   }).join('');
+          //   return Identify.words(line);
+          // });
 
-          
-          // console.log('on item',  n.item().dom(), 'diffLang', diffLang, 'current', currentLang.getOr('none'));
-          //   Arr.map(languageStack.slice(0), function (s) { return s.lang; }),
-          //   'diffLang', diffLang,
-          //   'currentLang', currentLang.getOr('none')
-          // );
-          if (universe.eq(n.item(), finish)) return adt.concluded(n.item(), n.mode());
-          else if (universe.property().isBoundary(n.item())) return adt.boundary(n.item(), n.mode());
+        // var zones = [ ];
 
-          // Different language
-
-          else if (universe.property().isEmptyTag(n.item())) return adt.gap(n.item(), n.mode());
-          else return diffLang ? adt.section(n.item(), n.mode(), currentLang) : adt.include(n.item(), n.mode());
-        });  
-      };
-
-        
-      // }
-
-      var grouping = ArrayGroup();
-
-      var walk = function (item, mode, lastLang) {
-        var outcome = again(item, mode);
-
-        // include
-        outcome.fold(function (aItem, aMode) {
-          // console.log('lastLang', lastLang.getOr('none'), aItem.dom());
-          if (universe.property().isText(aItem)) grouping.add({
-            lang: lastLang,
-            elem: aItem
-          });
-          walk(aItem, aMode, lastLang);
-
-        // separator  
-        }, function (aItem, aMode) {
-          grouping.end();
-          // grouping.separator(aItem);
-          walk(aItem, aMode, Option.none());
-        // boundary
-        }, function (aItem, aMode) {
-          grouping.end();
-          walk(aItem, aMode, Option.none());
-        
-        // section
-        }, function (aItem, aMode, aLang) {
-          var starting = aMode === Gather.advance;
-        
-          if (starting) {
-            if (Option.equals(lastLang, aLang)) grouping.reopen();
-            else grouping.end();
-
-          } else {
-            grouping.end();
-            // Really hacky
-            aLang = Option.none();
-          }
-          walk(aItem, aMode, aLang);
-        // concluded
-        }, function (aItem, aMode, aLang) {
-          console.debug('concluded', aItem.dom());
-          // do nothing.
-        });
-
-        // hacky
-        // console.log('grouping', grouping.done());
-        // return Gather.walk(universe, item, mode, Gather.walkers().right(), _rules).map(function (n) {
-        //   console.log('n', n.item());
-        //   if (universe.eq(n.item(), element)) return [ ];
-        //   var self = universe.property().isText(n.item()) ? [ n.item() ] : [ ];
-        //   var rest = walk(n.item(), n.mode());
-        //   return self.concat(rest);
-        // }).getOr([ ]);
-      };
-
-
-      walk(start, Gather.advance, Option.none());
-      var groups = grouping.done();
-
-      var zones = Arr.map(groups, function (group) {
-        var nodes = Arr.map(group, function (g) { return g.elem; });
-        var optLang = Option.from(group[0]).bind(function (g) { return g.lang; });
-
-        var line = Arr.map(nodes, function (x) {
-          return universe.property().isText(x) ? universe.property().getText(x) : '';
-        }).join('');
-
-        var words = Identify.words(line);
-
-        var lang = optLang.or(
-          Option.from(languageStack[0]).map(function (l) { return l.lang; })
-        ).getOr('en');
-
-        console.log('zone: ', lang, Arr.map(words, function (w) { return w.word(); }));
-        // console.log('words', Arr.map(words, function (w) { return w.word(); }));
-        return zone({
-          // FIX: later
-          lang: lang,
-          words: words,
-          elements: nodes
-        });
-      });
-      // var words = Arr.bind(groups, function (g) {
-      //   var line = Arr.map(g, function (gi) {
-      //     if (! universe.property().isText(gi)) {
-      //       debugger;
-      //     }
-      //     return universe.property().getText(gi);
-      //   }).join('');
-      //   return Identify.words(line);
-      // });
-
-      // var zones = [ ];
 
       return {
         // zone: function () {
