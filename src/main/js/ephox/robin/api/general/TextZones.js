@@ -16,9 +16,14 @@ define(
       return Cluster.range(universe, start, finish);
     };
 
+    var empty = function () {
+      return Cluster.empty();
+    };
+
     return {
       single: single,
-      range: range
+      range: range,
+      empty: empty
     };
   }
 );

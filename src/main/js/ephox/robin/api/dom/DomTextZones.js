@@ -17,11 +17,16 @@ define(
       return TextZones.range(universe, start, soffset, finish, foffset);
     };
 
+    var empty = function () {
+      return TextZones.empty();
+    };
+
     // Something for full document in stages?
 
     return {
       single: single,
-      range: range
+      range: range,
+      empty: empty
     };
   }
 );

@@ -40,11 +40,13 @@ define(
     };
 
     var range = function (universe, start, finish) {
+      console.log('*** range ***', start.dom(), ' -> ', finish.dom());
 
       var zones = Parent.subset(universe, start, finish).bind(function (children) {
         var first = children[0];
         // Ensure this exists.
         var last = children[children.length - 1];
+        console.log('first', first.dom(), 'last', last.dom());
         return universe.property().parent(first).map(function (parent) {
           // debugger;
           var defaultLang =  universe.up().closest(start, '[lang]', Fun.constant(false)).bind(function (el) {
@@ -68,9 +70,9 @@ define(
           var _rules = undefined;
 
           var again = function (aItem, aMode) {
-            console.log('aItem', aItem.dom());
+            // console.log('aItem', aItem.dom());
             return Gather.walk(universe, aItem, aMode, Gather.walkers().right(), _rules).fold(function () {
-              console.log('concluding', aItem.dom());
+              // console.log('concluding', aItem.dom());
               return adt.concluded(aItem, aMode);
             }, function (n) {
               // Find if the current item has a lang property on it.
@@ -116,7 +118,7 @@ define(
               walk(aItem, aMode, aLang);
             // concluded
             }, function (aItem, aMode) {
-              console.log('concluding on adt ....', aItem.dom());
+              // console.log('concluding on adt ....', aItem.dom());
               // DO NOTHING.
             });
           };
@@ -146,6 +148,14 @@ define(
           });
         });
       }).getOr([ ]);
+
+      console.log('zones', JSON.stringify(Arr.map(zones, function (zone) {
+        return {
+          lang: zone.lang(),
+          elements: Arr.map(zone.elements(), universe.property().getText),
+          words: Arr.map(zone.words(), function (w) { return w.word(); })
+        };
+      }), null, 2));
 
   // console.log('zones', zones);
         
