@@ -80,6 +80,11 @@ define(
       };
     };
 
+    // Set the role 'group'
+    var group = function (element) {
+      Attr.set(element, 'role', 'group');
+    };
+
     // Sets the role 'group', with a label
     var toolbar = function (element, label) {
       Attr.setAll(element, {
@@ -283,6 +288,7 @@ define(
       presentationRole: presentationRole,
       controls: controls,
       editor: editor,
+      group: group,
       toolbar: toolbar,
       toolbarGroup: toolbarGroup,
       toolbarButton: toolbarButton,
