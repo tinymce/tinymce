@@ -30,6 +30,7 @@ test("Translate strings", function() {
 		"Do not strip tokens that weren't replaced.");
 
 	equal(translate([{}]), "[object Object]");
+	equal(translate(function(){}), "[object Function]");
 
 	equal(translate(null), "");
 	equal(translate(0), 0, "0");

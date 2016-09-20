@@ -89,35 +89,50 @@ define("tinymce/util/I18n", [
 		translate: function(text) {
 			var langData = data[code] || {};
 
+			/**
+			 * number - string
+			 * null, undefined and empty string - empty string
+			 * array - comma-delimited string
+			 * object - in [object Object]
+			 * function - in [object Function]
+			 *
+			 * @param obj
+			 * @returns {string}
+			 */
+			function toString(obj) {
+				if (Tools.is(obj, 'function')) {
+					return Object.prototype.toString.call(obj);
+				}
+				return !isEmpty(obj) ? '' + obj  : '';
+			}
+
 			function isEmpty(text) {
 				return text === '' || text === null || Tools.is(text, 'undefined');
 			}
 
-			function toString(obj) {
-				return !isEmpty(obj) ? obj + '' : '';
-			}
-
 			function getLangData(text) {
-				return {}.hasOwnProperty.call(langData, text) ? toString(langData[text]) : text;
+				// make sure we work on a string and return a string
+				text = toString(text);
+				return toString(Tools.hasOwn(langData, text) ? langData[text] : text);
 			}
+			
 
 			if (isEmpty(text)) {
 				return '';
 			}
 
-			if (Tools.is(text, 'object') && text.hasOwnProperty('raw')) {
+			if (Tools.is(text, 'object') && Tools.hasOwn(text, 'raw')) {
 				return toString(text.raw);
 			}
 
-			if (Tools.is(text, 'array') && Tools.is(text[0], 'string')) {
+			if (Tools.is(text, 'array')) {
 				var values = text.slice(1);
-
 				text = getLangData(text[0]).replace(/\{([0-9]+)\}/g, function($1, $2) {
-					return values.hasOwnProperty($2) ? toString(values[$2]) : $1;
+					return Tools.hasOwn(values, $2) ? toString(values[$2]) : $1;
 				});
 			}
 
-			return getLangData(toString(text)).replace(/{context:\w+}$/, '');
+			return getLangData(text).replace(/{context:\w+}$/, '');
 		},
 
 		data: data
