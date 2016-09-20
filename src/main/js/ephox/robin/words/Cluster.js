@@ -8,7 +8,6 @@ define(
     'ephox.phoenix.api.general.Gather',
     'ephox.polaris.api.Arrays',
     'ephox.robin.api.general.Parent',
-    'ephox.robin.util.ArrayGroup',
     'ephox.robin.words.Clustering',
     'ephox.robin.words.Identify',
     'ephox.robin.words.LanguageZones',
@@ -16,7 +15,7 @@ define(
     'ephox.scullion.Struct'
   ],
 
-  function (Arr, Fun, Option, Gather, Arrays, Parent, ArrayGroup, Clustering, Identify, LanguageZones, Adt, Struct) {
+  function (Arr, Fun, Option, Gather, Arrays, Parent, Clustering, Identify, LanguageZones, Adt, Struct) {
     /**
      * Finds words in groups of text (each HTML text node can have multiple words).
      */
@@ -38,10 +37,6 @@ define(
     var block = function (universe, element) {
       return range(universe, element, element);
     };
-
-    var oneText = function (universe, textnode) {
-
-    }
 
     var range = function (universe, start, finish) {
       // Single text node should use inline.
@@ -159,37 +154,7 @@ define(
         });
       }).getOr([ ]);
 
-      // console.log('zones', JSON.stringify(Arr.map(zones, function (zone) {
-      //   return {
-      //     lang: zone.lang(),
-      //     elements: Arr.map(zone.elements(), universe.property().getText),
-      //     words: Arr.map(zone.words(), function (w) { return w.word(); })
-      //   };
-      // }), null, 2));
-
-  // console.log('zones', zones);
-        
-          // var words = Arr.bind(groups, function (g) {
-          //   var line = Arr.map(g, function (gi) {
-          //     if (! universe.property().isText(gi)) {
-          //       debugger;
-          //     }
-          //     return universe.property().getText(gi);
-          //   }).join('');
-          //   return Identify.words(line);
-          // });
-
-        // var zones = [ ];
-
-
       return {
-        // zone: function () {
-        //   return {
-        //     elements: Fun.constant([ element ])
-        //   };
-        // },
-        // groups: Fun.constant(words),
-        // lang: Option.none
         zones: Fun.constant(zones)
       };
     };
