@@ -41,6 +41,48 @@ test(
       );
     };
 
+    var checkProps = function (uni, textIds, start, actual) {
+      var checkGroup = function (label, group) {
+        var items = Arr.map(group, function (g) { return g.item(); });
+        Arr.each(items, function (x, i) {
+          RawAssertions.assertEq('Checking everything in ' + label + ' has same language', LanguageZones.getDefault(uni, x).getOr('none'), actual.lang().getOr('none'));
+          RawAssertions.assertEq(
+            'Check that everything in the ' + label + ' is a text node',
+            true,
+            uni.property().isText(x)
+          );
+        });
+      };
+
+      RawAssertions.assertEq('Check that the language matches the start',  LanguageZones.getDefault(uni, start).getOr('none'), actual.lang().getOr('none'));
+      checkGroup('left', actual.left());
+      checkGroup('middle', actual.middle());
+      checkGroup('right', actual.right());
+
+      Arr.each(actual.all(), function (x, i) {
+        if (i > 0) {
+          var prev = actual.all()[i - 1].item().id;
+          var current = x.item().id;
+          console.log('prev', prev, 'current' ,current);
+          RawAssertions.assertEq(
+            'The text nodes should be one after the other',
+            +1,
+            Arr.indexOf(textIds, current) - Arr.indexOf(textIds, prev)
+          );
+        }
+      });
+
+      // TODO: Not failing yet.
+      var blockParent = uni.up().predicate(start, uni.property().isBoundary).getOrDie('No block parent tag found');
+      Arr.each(actual.all(), function (x, i) {
+        RawAssertions.assertEq(
+          'All block ancestor tags should be the same as the original',
+          blockParent,
+          uni.up().predicate(x.item(), uni.property().isBoundary).getOrDie('No block parent tag found')
+        );
+      });
+    };
+
     /*
      * <p>
      *   "This is"
@@ -286,49 +328,11 @@ test(
           'Checking that text nodes have consistent zones',
           arbTextIds,
           function (startId) {
-            var checkGroup = function (label, group) {
-              var items = Arr.map(group, function (g) { return g.item(); });
-              Arr.each(items, function (x, i) {
-                RawAssertions.assertEq('Checking everything in ' + label + ' has same language', LanguageZones.getDefault(uniSpanLang, x).getOr('none'), actual.lang().getOr('none'));
-                RawAssertions.assertEq(
-                  'Check that everything in the ' + label + ' is a text node',
-                  true,
-                  uniSpanLang.property().isText(x)
-                );
-              });
-            };
             if (startId === 'root') return true;
-            console.log('startId', startId);
             var start = uniSpanLang.find(uniSpanLang.get(), startId).getOrDie();
             if (uniSpanLang.property().isBoundary(start)) return true;
             var actual = Clustering.words(uniSpanLang, start, Fun.constant(false));
-            RawAssertions.assertEq('Check that the language matches the start',  LanguageZones.getDefault(uniSpanLang, start).getOr('none'), actual.lang().getOr('none'));
-            checkGroup('left', actual.left());
-            checkGroup('middle', actual.middle());
-            checkGroup('right', actual.right());
-
-            Arr.each(actual.all(), function (x, i) {
-              if (i > 0) {
-                var prev = actual.all()[i - 1].item().id;
-                var current = x.item().id;
-                console.log('prev', prev, 'current' ,current);
-                RawAssertions.assertEq(
-                  'The text nodes should be one after the other',
-                  +1,
-                  Arr.indexOf(textIds, current) - Arr.indexOf(textIds, prev)
-                );
-              }
-            });
-
-            // TODO: Not failing yet.
-            var blockParent = uniSpanLang.up().predicate(start, uniSpanLang.property().isBoundary).getOrDie('No block parent tag found');
-            Arr.each(actual.all(), function (x, i) {
-              RawAssertions.assertEq(
-                'All block ancestor tags should be the same as the original',
-                blockParent,
-                uniSpanLang.up().predicate(x.item(), uniSpanLang.property().isBoundary).getOrDie('No block parent tag found')
-              );
-            });
+            checkProps(uniSpanLang, textIds, start, actual);
             return true;
           }
         );
