@@ -10,12 +10,13 @@ test(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.robin.test.Arbitraries',
     'ephox.robin.words.Clustering',
     'ephox.robin.words.LanguageZones',
     'ephox.wrap.Jsc'
   ],
 
-  function (Logger, RawAssertions, Gene, TestUniverse, TextGene, Arr, Fun, Option, Clustering, LanguageZones, Jsc) {
+  function (Logger, RawAssertions, Gene, TestUniverse, TextGene, Arr, Fun, Option, Arbitraries, Clustering, LanguageZones, Jsc) {
     var checkWords  = function (universe, words) {
       return Arr.map(words, function (a) {
         var text = universe.property().getText(a.item());
@@ -227,20 +228,12 @@ test(
       Logger.sync(
         label,
         function () {
-          var getIds = function (item, predicate) {
-            var rest = Arr.bind(item.children || [ ], function (id) { return getIds(id, predicate); });
-            var self = predicate(item) ? [ item.id ] : [ ];
-            return self.concat(rest);
-          };
-
-          var textIds = getIds(universe.get(), universe.property().isText);
-
-          var arbTextIds = Jsc.elements(textIds);
-
           Jsc.property(
             label + ': Checking that text nodes have consistent zones',
-            arbTextIds,
-            function (startId) {
+            Arbitraries.arbTextIds(universe),
+            function (idInfo) {
+              var startId = idInfo.startId;
+              var textIds = idInfo.textIds;
               if (startId === 'root') return true;
               var start = universe.find(universe.get(), startId).getOrDie();
               if (universe.property().isBoundary(start)) return true;
