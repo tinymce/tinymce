@@ -1,15 +1,15 @@
 test(
-  'BlockClusterTest',
+  'BoundedClusterTest',
 
   [
     'ephox.boss.api.Gene',
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
     'ephox.compass.Arr',
-    'ephox.robin.words.Cluster'
+    'ephox.robin.words.BoundedCluster'
   ],
 
-  function (Gene, TestUniverse, TextGene, Arr, Cluster) {
+  function (Gene, TestUniverse, TextGene, Arr, BoundedCluster) {
     var doc = TestUniverse(Gene('root', 'root', [
       Gene('div1', 'div', [
         Gene('p1', 'p', [
@@ -43,7 +43,7 @@ test(
 
     var check = function (expected, id) {
       var item = doc.find(doc.get(), id).getOrDie();
-      var actual = Cluster.block(doc, item);
+      var actual = BoundedCluster.scour(doc, item, item);
       assert.eq(expected.words, Arr.map(actual.words(), function (x) { return x.word(); }));
       assert.eq(expected.items, Arr.map(actual.zone().elements(), function (x) { return x.id; }));
     };
@@ -94,7 +94,7 @@ test(
 
       var check = function (expected, id) {
         var item = doc2.find(doc2.get(), id).getOrDie();
-        var actual = Cluster.block(doc2, item);
+        var actual = BoundedCluster.scour(doc2, item, item);
         assert.eq(expected.words, Arr.map(actual.words(), function (x) { return x.word(); }));
         assert.eq(expected.items, Arr.map(actual.zone().elements(), function (x) { return x.id; }));
       };

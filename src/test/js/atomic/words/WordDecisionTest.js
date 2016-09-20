@@ -6,12 +6,13 @@ test(
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
     'ephox.compass.Arr',
+    'ephox.perhaps.Option',
     'ephox.robin.words.WordDecision',
     'ephox.robin.words.WordWalking',
     'ephox.scullion.Struct'
   ],
 
-  function (Gene, TestUniverse, TextGene, Arr, WordDecision, WordWalking, Struct) {
+  function (Gene, TestUniverse, TextGene, Arr, Option, WordDecision, WordWalking, Struct) {
     var universe = TestUniverse(
       Gene('root', 'root', [
         Gene('p1', 'p', [
@@ -29,24 +30,24 @@ test(
         ])
       ])
     );
-
-    var decision = Struct.immutable('items', 'abort');
     
-    var check = function (items, abort, id, slicer) {
-      var actual = WordDecision.decide(universe, universe.find(universe.get(), id).getOrDie(), slicer);
+    var check = function (items, abort, id, slicer, currLanguage) {
+      var actual = WordDecision.decide(universe, universe.find(universe.get(), id).getOrDie(), slicer, currLanguage);
       assert.eq(items, Arr.map(actual.items(), function (item) { return item.item().id; }));
       assert.eq(abort, actual.abort());
-    }
+    };
 
-    check([], true, 'p1', WordWalking.left.slicer);
-    check([], true, 'p1', WordWalking.right.slicer);
-    check([], true, 'going_', WordWalking.left.slicer);
-    check([ 'going_' ], true, 'going_', WordWalking.right.slicer);
-    check([ 'to' ], false, 'to', WordWalking.left.slicer);
-    check([ 'to' ], false, 'to', WordWalking.right.slicer);
-    check([ '_b' ], true, '_b', WordWalking.left.slicer);
-    check([ ], true, '_b', WordWalking.right.slicer);
-    check([ ], true, 'br1', WordWalking.left.slicer);
-    check([ ], true, 'br1', WordWalking.right.slicer);
+    check([], true, 'p1', WordWalking.left.slicer, Option.none());
+    check([], true, 'p1', WordWalking.right.slicer, Option.none());
+    check([], true, 'going_', WordWalking.left.slicer, Option.none());
+    check([ 'going_' ], true, 'going_', WordWalking.right.slicer, Option.none());
+    check([ 'to' ], false, 'to', WordWalking.left.slicer, Option.none());
+    check([ 'to' ], false, 'to', WordWalking.right.slicer, Option.none());
+    check([ '_b' ], true, '_b', WordWalking.left.slicer, Option.none());
+    check([ ], true, '_b', WordWalking.right.slicer, Option.none());
+    check([ ], true, 'br1', WordWalking.left.slicer, Option.none());
+    check([ ], true, 'br1', WordWalking.right.slicer, Option.none());
+
+    // TODO: Add tests around language
   }
 );
