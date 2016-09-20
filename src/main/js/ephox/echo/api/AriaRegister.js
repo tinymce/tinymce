@@ -25,6 +25,8 @@ define(
     };
 
     var presentation = function (element) {
+      // Note: aria-hidden=true says this element and all of its descendents are not percievable
+      // https://www.w3.org/TR/wai-aria/states_and_properties#aria-hidden
       Attr.setAll(element, {
         'role': 'presentation',
         'aria-hidden': 'true'
