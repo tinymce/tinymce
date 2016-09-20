@@ -31,6 +31,7 @@ define(
       var destination = Gather.walk(universe, item, mode, direction);
       var result = destination.map(function (dest) {
         var decision = WordDecision.decide(universe, dest.item(), direction.slicer, currLanguage);
+        console.log('dest.item()', dest.item(), 'decision', decision.abort());
         var recursive = decision.abort() ? [] : doWords(universe, dest.item(), dest.mode(), direction, currLanguage);
         return decision.items().concat(recursive);
       }).getOr([]);
