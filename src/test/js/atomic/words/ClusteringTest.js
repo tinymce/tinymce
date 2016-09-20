@@ -108,6 +108,36 @@ test(
         'p2.text1.id'
       );
 
+      check(
+        'Left: stopped by p2, middle: itself, right: stopped by p1.span2 lang',
+        universe,
+        [ 'z3a' ],
+        [ 'z3b' ],
+        [ 'z3c' ],
+        Option.some('DE'),
+        'p2.text2.id'
+      );
+
+      check(
+        'Left: stopped by p2, middle: itself, right: stopped by p1.span2 lang',
+        universe,
+        [ 'z3b', 'z3a' ], // intentionally ordered that way for "left" call, but not "all"
+        [ 'z3c' ],
+        [  ],
+        Option.some('DE'),
+        'p2.span1.text1.id'
+      );
+
+      check(
+        'Left: stopped by p2.span2 lang, middle: itself, right: stopped by p2.span2 lang',
+        universe,
+        [ ],
+        [ 'z4a' ],
+        [  ],
+        Option.some('FR'),
+        'p2.span2.text1.id'
+      );
+
     };
 
     var checkProps = function (universe, textIds, start, actual) {

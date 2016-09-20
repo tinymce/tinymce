@@ -59,8 +59,11 @@ define(
     // Return the words to the left and right of item, and the descendants of item (middle), and the language of item.
     var words = function (universe, item, optimise) {
       var lang = LanguageZones.getDefault(universe, item); // closest language anywhere up the DOM ancestor path
+      console.log('going left');
       var toLeft = doWords(universe, item, Gather.sidestep, WordWalking.left, lang); // lang tag of the current element, if any
+      console.log('going middle');
       var middle = extract(universe, item, optimise); // TODO: for TBIO-470 multi-language spelling: for now we treat middle/innerText as being single language
+      console.log('going right');
       var toRight = doWords(universe, item, Gather.sidestep, WordWalking.right, lang); // lang tag of the current element, if any
       return {
         all: Fun.constant(Arr.reverse(toLeft).concat(middle).concat(toRight)),
