@@ -81,6 +81,18 @@ define("tinymce/util/Tools", [
 	}
 
 	/**
+	 * JavaScript does not protect hasOwnProperty method, so it is possible to overwrite it. This is
+	 * object independent version.
+	 *
+	 * @param {Object} obj
+	 * @param {String} prop
+	 * @returns {Boolean}
+	 */
+	function hasOwnProperty(obj, prop) {
+		return Object.prototype.hasOwnProperty.call(obj, prop);
+	}
+
+	/**
 	 * Creates a class, subclass or static singleton.
 	 * More details on this method can be found in the Wiki.
 	 *
@@ -430,6 +442,8 @@ define("tinymce/util/Tools", [
 		 * @return {boolean} true/false state if the object is an array or not.
 		 */
 		inArray: Arr.indexOf,
+
+		hasOwn: hasOwnProperty,
 
 		extend: extend,
 		create: create,
