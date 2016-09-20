@@ -63,7 +63,10 @@ test(
             ], { }, { lang: 'FR' })
           ], { }, { lang: 'DE' }),
           Gene('p3.id', 'p', [
-
+            TextGene('p3.text1.id', ' '),
+            TextGene('p3.text2.id', 'do'),
+            TextGene('p3.text3.id', 'g and'),
+            TextGene('p3.text4.id', ' bone')
           ])
         ])
       );
@@ -138,6 +141,46 @@ test(
         'p2.span2.text1.id'
       );
 
+      check(
+        'Left: stopped by p3, middle: itself, right: stopped by space in "g and"',
+        universe,
+        [ ],
+        [ ' ' ],
+        [ 'do', 'g' ],
+        Option.none(),
+        'p3.text1.id'
+      );
+
+      check(
+        'Left: stopped by " ", middle: itself, right: stopped by space in "g and"',
+        universe,
+        [ ],
+        [ 'do' ],
+        [ 'g' ],
+        Option.none(),
+        'p3.text2.id'
+      );
+
+      check(
+        'Left: stopped by " ", middle: itself, right: stopped by space in " bone"',
+        universe,
+        [ 'do' ],
+        [ 'g and' ],
+        [  ],
+        Option.none(),
+        'p3.text3.id'
+      );
+
+      check(
+        'Left: stopped by space in "g and", middle: itself, right: stopped by p3',
+        universe,
+        [ 'and' ],
+        [ ' bone' ],
+        [ ],
+        Option.none(),
+        'p3.text4.id'
+      );
+
     };
 
     var checkProps = function (universe, textIds, start, actual) {
@@ -170,7 +213,6 @@ test(
         }
       });
 
-      // TODO: Not failing yet.
       var blockParent = universe.up().predicate(start, universe.property().isBoundary).getOrDie('No block parent tag found');
       Arr.each(actual.all(), function (x, i) {
         RawAssertions.assertEq(
@@ -212,8 +254,7 @@ test(
     };
 
     testSanity();
-    return;
-
+    
     propertyTest(
       'Testing with no languages at all',
       TestUniverse(
@@ -265,60 +306,60 @@ test(
             ]),
             TextGene('p4_this_', ' this ')
           ])
-        ]) // root
+        ])
       )
     );
 
     propertyTest(
       'Testing with no root language',
       TestUniverse(
-          Gene('root', 'root', [
-            Gene('p1', 'p', [
-              Gene('p1s1', 'span', [
-                TextGene('p1sp', 'sp'),
-                Gene('p1s2', 'span', [
-                  TextGene('p1l', 'l'),
-                  Gene('p1s3', 'span', [
-                    TextGene('p1it', 'it'),
-                    TextGene('p1word', 'word')
-                  ], {}, {'lang': 'FR'}),
-                  TextGene('p1and', 'and')
-                ]),
-                TextGene('p1_not_', ' not ')
+        Gene('root', 'root', [
+          Gene('p1', 'p', [
+            Gene('p1s1', 'span', [
+              TextGene('p1sp', 'sp'),
+              Gene('p1s2', 'span', [
+                TextGene('p1l', 'l'),
+                Gene('p1s3', 'span', [
+                  TextGene('p1it', 'it'),
+                  TextGene('p1word', 'word')
+                ], {}, {'lang': 'FR'}),
+                TextGene('p1and', 'and')
               ]),
-              TextGene('p1_this_', ' this ')
+              TextGene('p1_not_', ' not ')
             ]),
-            Gene('p2', 'p', [
-              Gene('p2s1', 'span', [
-                TextGene('p2sp', 'sp'),
-                Gene('p2s2', 'span', [
-                  TextGene('p2l', 'l'),
-                  Gene('p2s3', 'span', [
-                    TextGene('p2it', 'it'),
-                    TextGene('p2word', 'word')
-                  ]),
-                  TextGene('p2and', 'and')
+            TextGene('p1_this_', ' this ')
+          ]),
+          Gene('p2', 'p', [
+            Gene('p2s1', 'span', [
+              TextGene('p2sp', 'sp'),
+              Gene('p2s2', 'span', [
+                TextGene('p2l', 'l'),
+                Gene('p2s3', 'span', [
+                  TextGene('p2it', 'it'),
+                  TextGene('p2word', 'word')
                 ]),
-                TextGene('p2_not_', ' not ')
+                TextGene('p2and', 'and')
               ]),
-              TextGene('p2_this_', ' this ')
-            ], {}, {'lang': 'DE'}),
-            Gene('p3', 'p', [
-              Gene('p3s1', 'span', [
-                TextGene('p3sp', 'sp'),
-                Gene('p3s2', 'span', [
-                  TextGene('p3l', 'l'),
-                  Gene('p3s3', 'span', [
-                    TextGene('p3it', 'it'),
-                    TextGene('p3word', 'word')
-                  ], {}, {'lang': 'FR'}),
-                  TextGene('p3and', 'and')
-                ]),
-                TextGene('p3_not_', ' not ')
+              TextGene('p2_not_', ' not ')
+            ]),
+            TextGene('p2_this_', ' this ')
+          ], {}, {'lang': 'DE'}),
+          Gene('p3', 'p', [
+            Gene('p3s1', 'span', [
+              TextGene('p3sp', 'sp'),
+              Gene('p3s2', 'span', [
+                TextGene('p3l', 'l'),
+                Gene('p3s3', 'span', [
+                  TextGene('p3it', 'it'),
+                  TextGene('p3word', 'word')
+                ], {}, {'lang': 'FR'}),
+                TextGene('p3and', 'and')
               ]),
-              TextGene('p3_this_', ' this ')
-            ], {}, {'lang': 'DE'})
-          ]) // root
+              TextGene('p3_not_', ' not ')
+            ]),
+            TextGene('p3_this_', ' this ')
+          ], {}, {'lang': 'DE'})
+        ])
       )
     );
 
@@ -326,7 +367,6 @@ test(
       'Testing with DE as root language',
       TestUniverse(
         Gene('root', 'root', [
-          // <p id=p1> <span1> "sp" <span2> "l" <span3 lang=FR> "it" "word" </span3> "and" </span2> " not " </span1> " this " </p>
           Gene('p1', 'p', [
             Gene('p1s1', 'span', [
               TextGene('p1sp', 'sp'),
@@ -342,7 +382,7 @@ test(
             ]),
             TextGene('p1_this_', ' this ')
           ])
-        ], {}, {'lang': 'DE'}) // root
+        ], {}, {'lang': 'DE'})
       )
     );
   }
