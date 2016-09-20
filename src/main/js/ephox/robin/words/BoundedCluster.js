@@ -14,7 +14,8 @@ define(
 
   function (Arr, Fun, Option, Parent, Identify, LanguageZones, Zone, ZoneWalker) {
     var rangeOn = function (universe, first, last) {
-      return universe.property().parent(first).map(function (parent) {
+      var ancestor = universe.eq(first, last) ? Option.some(first) : universe.property().parent(first);
+      return ancestor.map(function (parent) {
         // Find a sensible way to provide a default.
         var defaultLang = LanguageZones.getDefault(universe, parent).getOr('en');
         var groups = ZoneWalker.walk(universe, first, last, defaultLang);

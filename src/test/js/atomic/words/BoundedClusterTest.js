@@ -40,18 +40,32 @@ test(
             ], {}, { lang: 'en' }),
             Gene('en2', 'span', [
               TextGene('en-e', 'ter')
-            ], {}, { lang: 'en' })
+            ], {}, { lang: 'en' }),
+            TextGene('de-c', 'der Hund')
           ], {}, { lang: 'de' }),
           TextGene('en-f', 'anoth'),
           TextGene('en-g', 'er')
-        ])
-      ], {}, { lang: 'en' })
+        ], { }, { lang: 'en' })
+      ], {}, { lang: 'fr' })
     ]));
 
-    check(doc1, {
-      words: [ 'one', 'two', 'one', 'two', 'die', 'but', 'another' ],
-      elements: [ 'div1' ]
-    }, 'div1');
+    check(doc1, [
+
+      { lang: 'fr', elements: [ 'a' ], words: [ 'one' ] },
+      { lang: 'fr', elements: [ 'b', 'c' ], words: [ 'two' ] },
+
+      { lang: 'en', elements: [ 'en-a' ], words: [ 'one' ] },
+      { lang: 'en', elements: [ 'en-b', 'en-c' ], words: [ 'two' ] },
+
+      { lang: 'de', elements: [ 'de-a', 'de-b' ], words: [ 'die' ] },
+
+      { lang: 'en', elements: [ 'en-d', 'en-e' ], words: [ 'butter' ] },
+
+      { lang: 'de', elements: [ 'de-c' ], words: [ 'der', 'Hund' ] },
+
+      { lang: 'en', elements: [ 'en-f', 'en-g' ], words: [ 'another' ] }
+
+    ], 'div1');
 
     var doc2 = TestUniverse(Gene('root', 'root', [
       Gene('div1', 'div', [
@@ -79,7 +93,10 @@ test(
             ], {}, { lang: 'en' }),
             Gene('en2', 'span', [
               TextGene('en-e', 'ter')
-            ], {}, { lang: 'en' })
+            ], {}, { lang: 'en' }),
+            // This text node is put in because of a limitation where we need an intervening text node to identify
+            // language boundaries
+            TextGene('de-d', '')
           ], {}, { lang: 'de' }),
           TextGene('en-f', 'anoth'),
           TextGene('en-g', 'er')
@@ -87,9 +104,17 @@ test(
       ], {}, { lang: 'en' })
     ]));
 
-    check(doc2, {
-      words: [ 'one', 'two', 'die', 'e', 'undinside', 'butter', 'another' ],
-      items: [ 'div1' ]
-    }, 'div1');
+    check(doc2, [
+
+      { lang: 'en', elements: [ 'en-a' ], words: [ 'one' ] },
+      { lang: 'en', elements: [ 'en-b', 'en-c' ], words: [ 'two' ] },
+      { lang: 'de', elements: [ 'de-a', 'de-b' ], words: [ 'die' ] },
+      { lang: 'fr', elements: [ 'fr-a' ], words: [ 'e' ] },
+      { lang: 'de', elements: [ 'de-c', 'de-c-1' ], words: [ 'undinside' ] },
+      { lang: 'en', elements: [ 'en-d', 'en-e' ], words: [ 'butter' ] },
+      { lang: 'de', elements: [ 'de-d' ], words: [ ] },
+      { lang: 'en', elements: [ 'en-f', 'en-g' ], words: [ 'another' ] }
+
+    ], 'div1');
   }
 );
