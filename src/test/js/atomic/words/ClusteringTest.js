@@ -319,6 +319,16 @@ test(
                 );
               }
             });
+
+            // TODO: Not failing yet.
+            var blockParent = uniSpanLang.up().predicate(start, uniSpanLang.property().isBoundary).getOrDie('No block parent tag found');
+            Arr.each(actual.all(), function (x, i) {
+              RawAssertions.assertEq(
+                'All block ancestor tags should be the same as the original',
+                blockParent,
+                uniSpanLang.up().predicate(x.item(), uniSpanLang.property().isBoundary).getOrDie('No block parent tag found')
+              );
+            });
             return true;
           }
         );
