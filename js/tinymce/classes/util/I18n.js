@@ -113,9 +113,9 @@ define("tinymce/util/I18n", [
 			function getLangData(text) {
 				// make sure we work on a string and return a string
 				text = toString(text);
-				return toString(Tools.hasOwn(langData, text) ? langData[text] : text);
+				return Tools.hasOwn(langData, text) ? toString(langData[text]) : text;
 			}
-			
+
 
 			if (isEmpty(text)) {
 				return '';
