@@ -42,7 +42,6 @@ define(
       // Not efficient. We need to look up the tree because the lang might be set by the parent, 
       // and the currLang may have been set by something inside a span with a diff language.
       var itemLang = LanguageZones.getDefault(universe, item);
-      console.log('itemLang', itemLang.getOr('none'));
       return !Option.equals(currLang, itemLang);
     };
 
@@ -52,7 +51,6 @@ define(
     // to return an Option(string) of the language of an element.
     var decide = function (universe, item, slicer, currLang) {
       var f = (function () {
-        console.log('WordDecision.isLanguageBoundary', isLanguageBoundary(universe, item, currLang), item, currLang.getOr('none'));
         if (universe.property().isBoundary(item)) return onEdge;
         else if (universe.property().isEmptyTag(item)) return onEdge;
         else if (isLanguageBoundary(universe, item, currLang)) return onEdge;

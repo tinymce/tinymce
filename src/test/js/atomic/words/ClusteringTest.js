@@ -10,10 +10,12 @@ test(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.robin.words.Clustering'
+    'ephox.robin.words.Clustering',
+    'ephox.robin.words.LanguageZones',
+    'ephox.wrap.Jsc'
   ],
 
-  function (Logger, RawAssertions, Gene, TestUniverse, TextGene, Arr, Fun, Option, Clustering) {
+  function (Logger, RawAssertions, Gene, TestUniverse, TextGene, Arr, Fun, Option, Clustering, LanguageZones, Jsc) {
     var checkWords  = function (universe, words) {
       return Arr.map(words, function (a) {
         var text = universe.property().getText(a.item());
@@ -269,94 +271,58 @@ test(
           };
         };
 
-        // For the time being, let's just concentrate on text nodes. Other behaviour is questionable.
-        var testcases = {
-          p1: {
-            'sp': expect([ ], [ 'sp' ], [ 'l' ], Option.none()),
-            'l': expect([ 'sp' ], [ 'l' ], [ ], Option.none()),
-            'it': {
-
-            },
-            word: {
-
-            },
-            and: {
-
-            },
-            '_not_': {
-
-            },
-            '_this_': {
-
-            }
-          }
+        var getIds = function (item, predicate) {
+          var rest = Arr.bind(item.children || [ ], function (id) { return getIds(id, predicate); });
+          var self = predicate(item) ? [ item.id ] : [ ];
+          return self.concat(rest);
         };
-        // TODO: Part of TBIO-470: fix known multi-language problem where we currently assume the 'middle' text is all one langugae. 
-        //       We should check the language of sub-elements, but this requires changes to TypedNode. 
 
-        // <p id=p1> <span1> "sp" <span2> "l" <span3 lang=FR> "it" "word" </span3> "and" </span2> " not " </span1> " this " </p>
+        var textIds = getIds(uniSpanLang.get(), uniSpanLang.property().isText);
+        console.log('allIds', textIds);
 
-        check('', uniSpanLang, [], [ 'sp', 'l', 'it', 'word', 'and', ' not ', ' this ' ], [], Option.none(), 'p1');
-        check('', uniSpanLang, [], [ 'sp', 'l', 'it', 'word', 'and', ' not '], [], Option.none(), 'p1s1');
-        check('', uniSpanLang, [], [ 'sp'], ['l'], Option.none(), 'p1sp');
-        check('', uniSpanLang, ['sp'], ['l', 'it', 'word', 'and'], [], Option.none(), 'p1s2');
-        check('', uniSpanLang, ['sp'], ['l'], [ /*'it', 'word', 'and' */], Option.none(), 'p1l');
-        
-        check('', uniSpanLang, [], [ 'it', 'word' ], [], Option.some('FR'), 'p1s3');
-        check('', uniSpanLang, [], ['it'], ['word'], Option.some('FR'), 'p1it');
-        check('', uniSpanLang, ['it'], ['word'], [], Option.some('FR'), 'p1word');
-        check('', uniSpanLang, [], ['and'], [ /* no " not " here because of the word boundary */ ], Option.none(), 'p1and');
-        // Should be: check('', uniSpanLang, ['and'], [' not '], [], Option.none(), 'p1_not_');
-        check('', uniSpanLang, [ 'and' ], [' not '], [], Option.none(), 'p1_not_');
-        // OK
-        check('', uniSpanLang, [ ], [' this '], [], Option.none(), 'p1_this_'); 
+        var arbTextIds = Jsc.elements(textIds);
 
-        // <p id=p2> <span1 lang=DE> "sp" <span2> "l" <span3> "it" "word" </span3> "and" </span2> " not " </span1> " this " </p>
-        // same as p4 in first example, but with lang=DE, not None
-        check('', uniSpanLang, [], [ 'sp', 'l', 'it', 'word', 'and', ' not ', ' this ' ], [], Option.some('DE'), 'p2');
-        check('', uniSpanLang, [], [ 'sp', 'l', 'it', 'word', 'and', ' not '], [], Option.some('DE'), 'p2s1');
-        check('', uniSpanLang, [], [ 'sp'], ['l', 'it', 'word', 'and'], Option.some('DE'), 'p2sp');
-        check('', uniSpanLang, ['sp'], ['l', 'it', 'word', 'and'], [], Option.some('DE'), 'p2s2');
-        check('', uniSpanLang, ['sp'], ['l'], ['it', 'word', 'and'], Option.some('DE'), 'p2l');
-        check('', uniSpanLang, ['l', 'sp'], ['it','word'], ['and'], Option.some('DE'), 'p2s3');
-        check('', uniSpanLang, ['l', 'sp'], ['it'], ['word', 'and'], Option.some('DE'), 'p2it');
-        check('', uniSpanLang, ['it', 'l', 'sp'], ['word'], ['and'], Option.some('DE'), 'p2word');
-        check('', uniSpanLang, ['word', 'it', 'l', 'sp'], ['and'], [], Option.some('DE'), 'p2and');
-        // NOTE: next line looks wrong? 
-        // ' not ' has a space either side of the word, so dont need to expand left?
-        // - compare the line after, it doesent capture the not to the left 
-        check('', uniSpanLang, ['and', 'word', 'it', 'l', 'sp'], [' not '], [], Option.some('DE'), 'p2_not_');
-        check('', uniSpanLang, [], [' this '], [], Option.some('DE'), 'p2_this_'); 
+        Jsc.property(
+          'Checking that text nodes have consistent zones',
+          arbTextIds,
+          function (startId) {
+            var checkGroup = function (label, group) {
+              var items = Arr.map(group, function (g) { return g.item(); });
+              Arr.each(items, function (x, i) {
+                RawAssertions.assertEq('Checking everything in ' + label + ' has same language', LanguageZones.getDefault(uniSpanLang, x).getOr('none'), actual.lang().getOr('none'));
+                RawAssertions.assertEq(
+                  'Check that everything in the ' + label + ' is a text node',
+                  true,
+                  uniSpanLang.property().isText(x)
+                );
+              });
+            };
+            if (startId === 'root') return true;
+            console.log('startId', startId);
+            var start = uniSpanLang.find(uniSpanLang.get(), startId).getOrDie();
+            if (uniSpanLang.property().isBoundary(start)) return true;
+            var actual = Clustering.words(uniSpanLang, start, Fun.constant(false));
+            RawAssertions.assertEq('Check that the language matches the start',  LanguageZones.getDefault(uniSpanLang, start).getOr('none'), actual.lang().getOr('none'));
+            checkGroup('left', actual.left());
+            checkGroup('middle', actual.middle());
+            checkGroup('right', actual.right());
 
-        // <p id=p3 lang=DE> <span1> "sp" <span2> "l" <span3 lang=FR> "it" "word" </span3> "and" </span2> " not " </span1> " this " </p>
-        // check('', uniSpanLang, [], [ 'sp', 'l', 'and', ' not ', ' this ' ], [], Option.some('DE'), 'p3');
-        check('', uniSpanLang, [], [ 'sp', 'l', 'it', 'word', 'and', ' not ', ' this ' ], [], Option.some('DE'), 'p3');
-        // Should be: check('', uniSpanLang, [], [ 'sp', 'l', 'and', ' not '], [], Option.some('DE'), 'p3s1');
-        check('', uniSpanLang, [], [ 'sp', 'l', 'it', 'word', 'and', ' not '], [], Option.some('DE'), 'p3s1');
-        // Should be: check('', uniSpanLang, [], [ 'sp'], ['l', 'and'], Option.some('DE'), 'p3sp');
-        check(
-          'Paragraph',
-          uniSpanLang,
-          [], [ 'sp'], ['l', 'it', 'word', 'and'],
-          Option.some('DE'), 'p3sp'
+            Arr.each(actual.all(), function (x, i) {
+              if (i > 0) {
+                var prev = actual.all()[i - 1].item().id;
+                var current = x.item().id;
+                console.log('prev', prev, 'current' ,current);
+                RawAssertions.assertEq(
+                  'The text nodes should be one after the other',
+                  +1,
+                  Arr.indexOf(textIds, current) - Arr.indexOf(textIds, prev)
+                );
+              }
+            });
+            return true;
+          }
         );
-        // Should be: check('', uniSpanLang, ['sp'], ['l', 'and'], [], Option.some('DE'), 'p3s2');
-        check('', uniSpanLang, ['sp'], ['l', 'it', 'word', 'and'], [], Option.some('DE'), 'p3s2');
-        // Should be: check('', uniSpanLang, ['sp'], ['l'], ['and'], Option.some('DE'), 'p3l');
-        check('', uniSpanLang, ['sp'], ['l'], ['it', 'word', 'and'], Option.some('DE'), 'p3l');
-        // Should be: check('', uniSpanLang, [], ['it','word'], [], Option.some('FR'), 'p3s3');
-        check('', uniSpanLang, ['l', 'sp'], ['it','word'], ['and'], Option.some('FR'), 'p3s3');
-        // OK:
-        check('', uniSpanLang, [], ['it'], ['word'], Option.some('FR'), 'p3it');
-        check('', uniSpanLang, ['it'], ['word'], [], Option.some('FR'), 'p3word');
-        // Should be: check('', uniSpanLang, ['l', 'sp'], ['and'], [], Option.some('DE'), 'p3and');
-        check('', uniSpanLang, ['word', 'it', 'l', 'sp'], ['and'], [], Option.some('DE'), 'p3and');
-        // // NOTE: next line looks wrong? 
-        // // ' not ' has a space either side of the word, so dont need to expand left?
-        // // - compare the line after, it doesent capture the not to the left 
-        // Should be: check('', uniSpanLang, ['and', 'l', 'sp'], [' not '], [], Option.some('DE'), 'p3_not_');
-        check('', uniSpanLang, ['and', 'word', 'it', 'l', 'sp'], [' not '], [], Option.some('DE'), 'p3_not_');
-        check('', uniSpanLang, [], [' this '], [], Option.some('DE'), 'p3_this_');
+     
       }
     );
 

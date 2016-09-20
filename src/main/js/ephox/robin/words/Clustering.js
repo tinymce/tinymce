@@ -31,7 +31,6 @@ define(
       var destination = Gather.walk(universe, item, mode, direction);
       var result = destination.map(function (dest) {
         var decision = WordDecision.decide(universe, dest.item(), direction.slicer, currLanguage);
-        console.log('decision', decision, dest, currLanguage);
         var recursive = decision.abort() ? [] : doWords(universe, dest.item(), dest.mode(), direction, currLanguage);
         return decision.items().concat(recursive);
       }).getOr([]);
@@ -59,7 +58,6 @@ define(
     // Return the words to the left and right of item, and the descendants of item (middle), and the language of item.
     var words = function (universe, item, optimise) {
       var lang = LanguageZones.getDefault(universe, item); // closest language anywhere up the DOM ancestor path
-      console.log('lang', lang.getOr('none'));
       var toLeft = doWords(universe, item, Gather.sidestep, WordWalking.left, lang); // lang tag of the current element, if any
       var middle = extract(universe, item, optimise); // TODO: for TBIO-470 multi-language spelling: for now we treat middle/innerText as being single language
       var toRight = doWords(universe, item, Gather.sidestep, WordWalking.right, lang); // lang tag of the current element, if any
