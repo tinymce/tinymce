@@ -2,6 +2,7 @@ test(
   'ClusteringTest',
 
   [
+    'ephox.agar.api.RawAssertions',
     'ephox.boss.api.Gene',
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
@@ -11,12 +12,12 @@ test(
     'ephox.robin.words.Clustering'
   ],
 
-  function (Gene, TestUniverse, TextGene, Arr, Fun, Option, Clustering) {
+  function (RawAssertions, Gene, TestUniverse, TextGene, Arr, Fun, Option, Clustering) {
 
     var checkLang  = function (universe, id, lang) {
-        var item = universe.find(universe.get(), id).getOrDie();
-        var itemLang = Clustering.language(universe, item);
-        assert.eq(true, Option.equals(lang, itemLang));
+      var item = universe.find(universe.get(), id).getOrDie();
+      var itemLang = Clustering.language(universe, item);
+      RawAssertions.assertEq('check lang()', true, Option.equals(lang, itemLang));
     };
 
     var checkWords  = function (universe, words) {
@@ -28,12 +29,12 @@ test(
 
     var checkAll = function (universe, expLeft, expMiddle, expRight, expLang, id) {
       var act = Clustering.words(universe, universe.find(universe.get(), id).getOrDie(), Fun.constant(false));
-      assert.eq(expLeft,   checkWords(universe, act.left()));
-      assert.eq(expMiddle, checkWords(universe, act.middle()));
-      assert.eq(expRight,  checkWords(universe, act.right()));
-      assert.eq(true, Option.equals(expLang, act.lang()), 'language mismatch: '+expLang.getOr('NONE') + ' <> ' + act.lang().getOr('NONE'));
+      RawAssertions.assertEq('check left()', expLeft,   checkWords(universe, act.left()));
+      RawAssertions.assertEq('check middle()', expMiddle, checkWords(universe, act.middle()));
+      RawAssertions.assertEq('check right()', expRight,  checkWords(universe, act.right()));
+      RawAssertions.assertEq('check lang()', true, Option.equals(expLang, act.lang()));
       // .all() is:  tfel + middle + right
-      assert.eq(expLeft.reverse().concat(expMiddle).concat(expRight), checkWords(universe, act.all()));
+      RawAssertions.assertEq('check all()', expLeft.reverse().concat(expMiddle).concat(expRight), checkWords(universe, act.all()));
     };
 
     /*
@@ -246,11 +247,11 @@ test(
     // Sholud be: checkAll(uniSpanLang, [], [ 'sp', 'l', 'and', ' not '], [], Option.none(), 'p1s1');
     checkAll(uniSpanLang, [], [ 'sp', 'l', 'it', 'word', 'and', ' not '], [], Option.none(), 'p1s1');
     // Should be: checkAll(uniSpanLang, [], [ 'sp'], ['l', 'and'], Option.none(), 'p1sp');
-    checkAll(uniSpanLang, [], [ 'sp'], ['l', 'it', 'word', 'and'], Option.none(), 'p1sp');
+    checkAll(uniSpanLang, [], [ 'sp'], ['l'/*, 'it', 'word', 'and' */], Option.none(), 'p1sp');
     // Should be: checkAll(uniSpanLang, ['sp'], ['l', 'and'], [], Option.none(), 'p1s2');
     checkAll(uniSpanLang, ['sp'], ['l', 'it', 'word', 'and'], [], Option.none(), 'p1s2');
     // Should be: checkAll(uniSpanLang, ['sp'], ['l'], ['and'], Option.none(), 'p1l'); 
-    checkAll(uniSpanLang, ['sp'], ['l'], ['it', 'word', 'and'], Option.none(), 'p1l');     
+    checkAll(uniSpanLang, ['sp'], ['l'], [ /*'it', 'word', 'and' */], Option.none(), 'p1l');     
     // Should be: checkAll(uniSpanLang, ['l', 'sp'], [], ['and'], Option.none(), 'p1s3');
     checkAll(uniSpanLang, ['l', 'sp'], ['it','word'], ['and'], Option.some('FR'), 'p1s3');
     // OK:

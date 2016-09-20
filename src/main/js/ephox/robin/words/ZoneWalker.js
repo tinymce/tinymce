@@ -5,10 +5,11 @@ define(
     'ephox.perhaps.Option',
     'ephox.phoenix.api.general.Gather',
     'ephox.robin.words.LanguageZones',
+    'ephox.robin.words.WordWalking',
     'ephox.scullion.ADT'
   ],
 
-  function (Option, Gather, LanguageZones, Adt) {
+  function (Option, Gather, LanguageZones, WordWalking, Adt) {
     var adt = Adt.generate([
       // keep going and
       { inline: [ 'item', 'mode', 'lang' ] },
@@ -24,7 +25,7 @@ define(
       
     var _rules = undefined;
 
-    var takeStep = function (universe, item, mode, last) {
+    var takeStep = function (universe, item, mode, stopOn) {
       // console.log('aItem', aItem.dom());
       return Gather.walk(universe, item, mode, Gather.walkers().right(), _rules).fold(function () {
         // console.log('concluding', aItem.dom());
@@ -34,7 +35,7 @@ define(
         var currentLang = universe.property().isElement(n.item()) ? Option.from(universe.attrs().get(n.item(), 'lang')) : Option.none();
   
         if (universe.property().isText(n.item())) return adt.text(n.item(), n.mode());
-        else if (universe.eq(n.item(), last) && n.mode() !== Gather.advance) return adt.concluded(n.item(), n.mode());
+        else if (stopOn(n)) return adt.concluded(n.item(), n.mode());
         else if (universe.property().isBoundary(n.item())) return adt.boundary(n.item(), n.mode(), currentLang);
 
         else if (universe.property().isEmptyTag(n.item())) return adt.empty(n.item(), n.mode());
@@ -44,7 +45,11 @@ define(
     };    
 
     var doWalk = function (universe, current, mode, finish, stack) {
-      var outcome = takeStep(universe, current, mode, finish);
+      var stopOn = function (n) {
+        return (universe.eq(n.item(), finish) && n.mode() !== Gather.advance);
+      };
+
+      var outcome = takeStep(universe, current, mode, stopOn);
 
       outcome.fold(function (aItem, aMode, aLang) {
         // inline(aItem, aMode, aLang)
@@ -79,8 +84,20 @@ define(
       return stack.done();
     };
 
+    var expandTo = function (universe, current, mode, defaultLang) {
+
+    };
+
+    var expand = function (universe, centre, defaultLang) {
+      var toLeft = expandTo(universe, centre, Gather.sidestep, WordWalking.left, defaultLang);
+      var toRight = expandTo(universe, centre, Gather.sidestep, WordWalking.right, defaultLang);
+
+
+    };
+
     return {
-      walk: walk
+      walk: walk,
+      expand: expand
     };
   }
 );
