@@ -24,14 +24,12 @@ define(
       Attr.set(element, 'role', 'document');
     };
 
-    // // Note: aria-hidden=true says this element and all of its descendents are not percievable
-    // // https://www.w3.org/TR/wai-aria/states_and_properties#aria-hidden
-    // var presentation = function (element) {
-    //   Attr.setAll(element, {
-    //     'role': 'presentation',
-    //     'aria-hidden': 'true'
-    //   });
-    // };
+    var presentation = function (element) {
+      Attr.setAll(element, {
+        'role': 'presentation',
+        'aria-hidden': 'true'
+      });
+    };
 
     // https://www.w3.org/TR/wai-aria/roles#presentation
     var presentationRole = function (element) {
@@ -284,7 +282,7 @@ define(
 
     return {
       document: roleDocument,
-      // presentation: presentation,
+      presentation: presentation,
       presentationRole: presentationRole,
       controls: controls,
       editor: editor,
