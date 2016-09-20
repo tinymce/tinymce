@@ -36,10 +36,9 @@ define(
       });
     };
 
-    // Returns: true if currLang and the item 'lang' attribute are both the same string, or both are None.
+    // Returns: true if currLang and the item 'lang' attribute are either different strings, or only one of them is none
     var isLanguageBoundary = function (universe, item, currLang) {
       return (universe.property().isElement(item) &&
-        // Option.equals(currLang, Option.some(universe.attrs().get(item, 'lang'))));
         !Option.equals(currLang, Option.from(universe.attrs().get(item, 'lang'))));
     };
 

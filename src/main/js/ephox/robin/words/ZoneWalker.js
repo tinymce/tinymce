@@ -5,11 +5,10 @@ define(
     'ephox.perhaps.Option',
     'ephox.phoenix.api.general.Gather',
     'ephox.robin.words.LanguageZones',
-    'ephox.robin.words.WordWalking',
     'ephox.scullion.ADT'
   ],
 
-  function (Option, Gather, LanguageZones, WordWalking, Adt) {
+  function (Option, Gather, LanguageZones, Adt) {
     var adt = Adt.generate([
       // keep going and
       { inline: [ 'item', 'mode', 'lang' ] },
@@ -50,7 +49,6 @@ define(
       };
 
       var outcome = takeStep(universe, current, mode, stopOn);
-
       outcome.fold(function (aItem, aMode, aLang) {
         // inline(aItem, aMode, aLang)
         var opening = aMode === Gather.advance;
@@ -72,8 +70,6 @@ define(
         (opening ? stack.openBoundary : stack.closeBoundary)(aLang, aItem);
         doWalk(universe, aItem, aMode, finish, stack);
       }, function (aItem, aMode) {
-        // concluded(aItem, aMode)
-        // DO NOTHING.
       });
     };
 

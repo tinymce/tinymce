@@ -31,9 +31,7 @@ define(
           var words = Identify.words(line);
 
        
-          // console.log('words', Arr.map(words, function (w) { return w.word(); }));
           return Zone({
-            // FIX: later
             lang: lang,
             words: words,
             elements: elements
@@ -43,9 +41,6 @@ define(
     };
 
     var scour = function (universe, start, finish) {
-      // // Single text node should use inline.
-      // if (universe.eq(start, finish) && universe.property().isText(start)) return inline(universe, start);
-      
       var zones = Parent.subset(universe, start, finish).bind(function (children) {
         if (children.length === 0) return Option.none();
         var first = children[0];
