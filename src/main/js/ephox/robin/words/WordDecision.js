@@ -48,7 +48,6 @@ define(
     // to return an Option(string) of the language of an element.
     var decide = function (universe, item, slicer, currLang) {
       var f = (function () {
-        // console.log('item', item, currLang.getOr('none'),Option.from(universe.attrs().get(item, 'lang')).getOr('none'), 'lBound:', isLanguageBoundary(universe, item, currLang));
         if (universe.property().isBoundary(item)) return onEdge;
         else if (universe.property().isEmptyTag(item)) return onEdge;
         else if (isLanguageBoundary(universe, item, currLang)) return onEdge;

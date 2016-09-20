@@ -21,8 +21,6 @@ define(
       return TextZones.empty();
     };
 
-    // Something for full document in stages?
-
     return {
       single: single,
       range: range,

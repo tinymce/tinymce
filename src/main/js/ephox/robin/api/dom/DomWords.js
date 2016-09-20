@@ -17,17 +17,12 @@ define(
       return Words.identify(allText);
     };
 
-    var cluster = function (element, optimise) {
-      throw new Error('Should not be calling cluster from DomWords any more');
-    };
-
     var isWord = function (text) {
       return Words.isWord(universe, text);
     };
 
     return {
       identify: identify,
-      cluster: cluster,
       isWord: isWord
     };
 
