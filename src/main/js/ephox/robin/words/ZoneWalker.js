@@ -79,25 +79,13 @@ define(
 
     var walk = function (universe, start, finish, defaultLang) {
       // TODO: Make the language zone stack immutable *and* performant
-      var stack = LanguageZones(defaultLang);
+      var stack = LanguageZones.nu(defaultLang);
       doWalk(universe, start, Gather.advance, finish, stack);
       return stack.done();
     };
 
-    var expandTo = function (universe, current, mode, defaultLang) {
-
-    };
-
-    var expand = function (universe, centre, defaultLang) {
-      var toLeft = expandTo(universe, centre, Gather.sidestep, WordWalking.left, defaultLang);
-      var toRight = expandTo(universe, centre, Gather.sidestep, WordWalking.right, defaultLang);
-
-
-    };
-
     return {
-      walk: walk,
-      expand: expand
+      walk: walk
     };
   }
 );

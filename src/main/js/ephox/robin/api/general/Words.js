@@ -3,20 +3,15 @@ define(
 
   [
     'ephox.robin.util.WordUtil',
-    'ephox.robin.words.Cluster',
     'ephox.robin.words.Identify'
   ],
 
   /**
    * Documentation is in the actual implementations.
    */
-  function (WordUtil, Cluster, Identify) {
+  function (WordUtil, Identify) {
     var identify = function (allText) {
       return Identify.words(allText);
-    };
-
-    var cluster = function (universe, element, optimise) {
-      return universe.property().isBoundary(element) ? Cluster.block(universe, element) : Cluster.generate(universe, element, optimise);
     };
 
     var isWord = function (_universe, text) {
@@ -25,7 +20,6 @@ define(
 
     return {
       identify: identify,
-      cluster: cluster,
       isWord: isWord
     };
   }

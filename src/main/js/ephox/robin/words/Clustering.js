@@ -7,11 +7,12 @@ define(
     'ephox.peanut.Fun',
     'ephox.phoenix.api.general.Extract',
     'ephox.phoenix.api.general.Gather',
+    'ephox.robin.words.LanguageZones',
     'ephox.robin.words.WordDecision',
     'ephox.robin.words.WordWalking'
   ],
 
-  function (Unicode, Arr, Fun, Extract, Gather, WordDecision, WordWalking) {
+  function (Unicode, Arr, Fun, Extract, Gather, LanguageZones, WordDecision, WordWalking) {
     /*
      * Identification of words:
      *
@@ -54,19 +55,9 @@ define(
       });
     };
 
-    // Returns: Option(string) of the LANG attribute of the closest ancestor element or None.
-    //  - uses Fun.constant(false) for isRoot parameter to search even the top HTML element
-    //    (regardless of 'classic'/iframe or 'inline'/div mode).
-    // Note: there may be descendant elements with a different language
-    var language = function (universe, item) {
-      return universe.up().closest(item, '[lang]', Fun.constant(false)).map(function (el) {
-        return universe.attrs().get(el, 'lang');
-      });
-    };
-
     // Return the words to the left and right of item, and the descendants of item (middle), and the language of item.
     var words = function (universe, item, optimise) {
-      var lang = language(universe, item); // closest language anywhere up the DOM ancestor path
+      var lang = LanguageZones.getDefault(universe, item); // closest language anywhere up the DOM ancestor path
       var toLeft = doWords(universe, item, Gather.sidestep, WordWalking.left, lang); // lang tag of the current element, if any
       var middle = extract(universe, item, optimise); // TODO: for TBIO-470 multi-language spelling: for now we treat middle/innerText as being single language
       var toRight = doWords(universe, item, Gather.sidestep, WordWalking.right, lang); // lang tag of the current element, if any
@@ -80,8 +71,7 @@ define(
     };
 
     return {
-      words: words,
-      language: language
+      words: words
     };
   }
 );

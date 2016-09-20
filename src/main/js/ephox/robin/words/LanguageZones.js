@@ -7,9 +7,7 @@ define(
   ],
 
   function (Fun, Option) {
-    // Maybe try and make immutable ... if it is still performant.
-
-    return function (defaultLang) {
+    var nu = function (defaultLang) {
       var stack = [ ];
 
       var zones = [ ];
@@ -92,6 +90,7 @@ define(
 
       var done = function () {
         if (zone.length > 0) {
+          // Intentionally, not a zone because we don't have words yet.
           zones.push({
             lang: Fun.constant(zoneLang),
             elements: Fun.constant(zone)
@@ -109,6 +108,21 @@ define(
         closeBoundary: closeBoundary,
         done: done
       };
+    };
+
+    // Returns: Option(string) of the LANG attribute of the closest ancestor element or None.
+    //  - uses Fun.constant(false) for isRoot parameter to search even the top HTML element
+    //    (regardless of 'classic'/iframe or 'inline'/div mode).
+    // Note: there may be descendant elements with a different language
+    var getDefault = function (universe, item) {
+      return universe.up().closest(item, '[lang]', Fun.constant(false)).map(function (el) {
+        return universe.attrs().get(el, 'lang');
+      });
+    };
+
+    return {
+      nu: nu,
+      getDefault: getDefault
     };
   }
 );
