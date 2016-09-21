@@ -9,12 +9,12 @@ define(
   function (DomUniverse, TextZones) {
     var universe = DomUniverse();
 
-    var single = function (element) {
-      return TextZones.single(universe, element);
+    var single = function (element, envLang) {
+      return TextZones.single(universe, element, envLang);
     };
 
-    var range = function (start, soffset, finish, foffset) {
-      return TextZones.range(universe, start, soffset, finish, foffset);
+    var range = function (start, soffset, finish, foffset, envLang) {
+      return TextZones.range(universe, start, soffset, finish, foffset, envLang);
     };
 
     var empty = function () {

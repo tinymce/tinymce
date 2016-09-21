@@ -35,21 +35,21 @@ define(
      *  'words' is an array of strings being the words detected from the zone items.
      *  'zone' contains the dom nodes from the clustering data structure detected in an element.
      */
-    var scour = function (universe, element) {
+    var scour = function (universe, element, envLang) {
       // An Extract.all flag used for not expanding children.
       var optimise = Fun.constant(false);
       var cluster = Clustering.words(universe, element, optimise);
-      return fromCluster(universe, cluster);
+      return fromCluster(universe, cluster, envLang);
     };
 
-    var fromCluster = function (universe, cluster) {
+    var fromCluster = function (universe, cluster, envLang) {
       var units = cluster.all();
       var items = Arr.map(units, function (c) { return c.item(); });      
       var words = findWords(universe, units);
 
       var zones = [
         Zone({
-          lang: cluster.lang().getOr('en'),
+          lang: cluster.lang().getOr(envLang),
           words: words,
           elements: items
         })
@@ -61,7 +61,8 @@ define(
     };
 
     return {
-      scour: scour
+      scour: scour,
+      fromCluster: fromCluster
     };
   }
 );

@@ -10,25 +10,26 @@ define(
   ],
 
   function (Fun, Descent, BoundedCluster, Clustering, ExpandingCluster) {
-    var inline = function (universe, element) {
+    var inline = function (universe, element, envLang) {
       // Create a cluster that branches to the edge of words, and then apply the zones.
       var cluster = Clustering.words(universe, element, Fun.constant(false));
       var all = cluster.all();
-      return all.length > 0 ? BoundedCluster.scour(universe, all[0].item(), all[all.length - 1].item()) : ExpandingCluster.fromCluster(universe, cluster);
+      return all.length > 1 ? BoundedCluster.scour(universe, all[0].item(), all[all.length - 1].item(), envLang)
+        : ExpandingCluster.fromCluster(universe, cluster, envLang);
     };
 
-    var single = function (universe, element) {
-      if (universe.property().isBoundary(element)) return BoundedCluster.scour(universe, element, element);
+    var single = function (universe, element, envLang) {
+      if (universe.property().isBoundary(element)) return BoundedCluster.scour(universe, element, element, envLang);
       else if (universe.property().isEmptyTag(element)) return empty();
-      else if (universe.property().isText(element)) return ExpandingCluster.scour(universe, element);
+      else if (universe.property().isText(element)) return ExpandingCluster.scour(universe, element, envLang);
       else return inline(universe, element);
     };
 
-    var range = function (universe, start, soffset, finish, foffset) {
+    var range = function (universe, start, soffset, finish, foffset, envLang) {
       var startPt = Descent.toLeaf(universe, start, soffset);
       var finishPt = Descent.toLeaf(universe, finish, foffset);
-      if (universe.eq(startPt.element(), finishPt.element())) return single(universe, startPt.element());      
-      return BoundedCluster.scour(universe, startPt.element(), finishPt.element());
+      if (universe.eq(startPt.element(), finishPt.element())) return single(universe, startPt.element(), envLang);      
+      return BoundedCluster.scour(universe, startPt.element(), finishPt.element(), envLang);
     };
 
     var empty = function () {

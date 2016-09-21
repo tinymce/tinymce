@@ -48,7 +48,7 @@ test(
 
     var checkSingle = function (info) {
       var item = doc1.find(doc1.get(), info.startId).getOrDie();
-      var actual = TextZones.single(doc1, item);
+      var actual = TextZones.single(doc1, item, 'en');
       ZoneObjects.assertProps('Testing zones for single(' + info.startId + ')', doc1, actual.zones());
       return true;
     };
@@ -56,7 +56,7 @@ test(
     var checkRange = function (info) {
       var item1 = doc1.find(doc1.get(), info.startId).getOrDie();
       var item2 = doc1.find(doc1.get(), info.finishId).getOrDie();
-      var actual = TextZones.range(doc1, item1, 0, item2, 0);
+      var actual = TextZones.range(doc1, item1, 0, item2, 0, 'en');
       ZoneObjects.assertProps('Testing zones for range(' + info.startId + '->' + info.finishId + ')', doc1, actual.zones());
       return true;
     };

@@ -13,11 +13,12 @@ define(
   ],
 
   function (Arr, Fun, Option, Parent, Identify, LanguageZones, Zone, ZoneWalker) {
-    var rangeOn = function (universe, first, last) {
+    var rangeOn = function (universe, first, last, envLang) {
+      if (envLang === undefined) throw new Error('No environment language');
       var ancestor = universe.eq(first, last) ? Option.some(first) : universe.property().parent(first);
       return ancestor.map(function (parent) {
         // Find a sensible way to provide a default.
-        var defaultLang = LanguageZones.getDefault(universe, parent).getOr('en');
+        var defaultLang = LanguageZones.getDefault(universe, parent).getOr(envLang);
         var groups = ZoneWalker.walk(universe, first, last, defaultLang);
 
         return Arr.map(groups, function (group) {
@@ -41,12 +42,12 @@ define(
       });
     };
 
-    var scour = function (universe, start, finish) {
+    var scour = function (universe, start, finish, envLang) {
       var zones = Parent.subset(universe, start, finish).bind(function (children) {
         if (children.length === 0) return Option.none();
         var first = children[0];
         var last = children[children.length - 1];
-        return rangeOn(universe, first, last);
+        return rangeOn(universe, first, last, envLang);
       }).getOr([ ]);
 
       return {
