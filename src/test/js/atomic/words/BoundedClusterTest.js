@@ -5,12 +5,14 @@ test(
     'ephox.boss.api.Gene',
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
-    'ephox.compass.Arr',
+    'ephox.robin.test.Arbitraries',
+    'ephox.robin.test.PropertyAssertions',
     'ephox.robin.test.ZoneObjects',
-    'ephox.robin.words.BoundedCluster'
+    'ephox.robin.words.BoundedCluster',
+    'global!Error'
   ],
 
-  function (Gene, TestUniverse, TextGene, Arr, ZoneObjects, BoundedCluster) {
+  function (Gene, TestUniverse, TextGene, Arbitraries, PropertyAssertions, ZoneObjects, BoundedCluster, Error) {
     var check = function (universe, expected, id) {
       var item = universe.find(universe.get(), id).getOrDie();
       var actual = BoundedCluster.scour(universe, item, item);
@@ -116,5 +118,19 @@ test(
       { lang: 'en', elements: [ 'en-f', 'en-g' ], words: [ 'another' ] }
 
     ], 'div1');
+
+
+    PropertyAssertions.check('Checking any id ranges', [
+      Arbitraries.arbRangeIds(doc1, doc1.property().isText)
+    ], function (info) {
+      var item1 = doc1.find(doc1.get(), info.startId).getOrDie();
+      var item2 = doc1.find(doc1.get(), info.finishId).getOrDie();
+      var actual = BoundedCluster.scour(doc1, item1, item2);
+      ZoneObjects.assertProps('Testing zones for ' + info.startId + '->' + info.finishId, doc1, actual.zones());
+      return true;
+    }, {
+
+    });
+
   }
 );

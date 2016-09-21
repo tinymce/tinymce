@@ -15,9 +15,7 @@ define(
     };
 
     var range = function (universe, start, soffset, finish, foffset) {
-      var isInline = !(universe.property().isBoundary(start) || universe.property().isEmptyTag(start));
-      if (universe.eq(start, finish) && isInline) return ExpandingCluster.scour(universe, start);
-      // INVESTIGATE: Descend first to use the offsets?
+      if (universe.eq(start, finish)) return single(universe, start);
       else return BoundedCluster.scour(universe, start, finish);
     };
 

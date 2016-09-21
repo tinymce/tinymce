@@ -9,7 +9,7 @@ define(
   function (Arr, Jsc) {
     var getIds = function (item, predicate) {
       var rest = Arr.bind(item.children || [ ], function (id) { return getIds(id, predicate); });
-      var self = predicate(item) ? [ item.id ] : [ ];
+      var self = predicate(item) && item.id !== 'root' ? [ item.id ] : [ ];
       return self.concat(rest);
     };
 
@@ -29,8 +29,43 @@ define(
       });
     };
 
+    var arbIds = function (universe, predicate) {
+      var ids = getIds(universe.get(), predicate);
+
+      return Jsc.elements(ids).smap(function (id) {
+        return {
+          startId: id,
+          ids: ids
+        };
+      }, function (obj) {
+        return obj.startId;
+      }, function (obj) {
+        return '[id :: ' + obj.startId + ']';
+      });
+    };
+
+    var arbRangeIds = function (universe, predicate) {
+      var ids = getIds(universe.get(), predicate);
+
+      var generator = Jsc.integer(0, ids.length - 1).generator.flatMap(function (startIndex) {
+        return Jsc.integer(startIndex, ids.length - 1).generator.map(function (finishIndex) {
+          return {
+            startId: ids[startIndex],
+            finishId: ids[finishIndex],
+            ids: ids
+          };
+        });
+      });
+
+      return Jsc.bless({
+        generator: generator
+      });
+    };
+
     return {
-      arbTextIds: arbTextIds
+      arbTextIds: arbTextIds,
+      arbRangeIds: arbRangeIds,
+      arbIds: arbIds
     };
   }
 );
