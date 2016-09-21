@@ -41,14 +41,16 @@ define(
       });
     };
 
-    // Return the words to the left and right of item, and as well as the item itself if a text node (middle), and the language of item.
+    // Return the words to the left and right of item, and as well as the any text nodes inside the item itself, and the language of item.
     var words = function (universe, item, _optimise) {
       // TODO: Remote optimise parameter.
       var lang = LanguageZones.getDefault(universe, item); // closest language anywhere up the DOM ancestor path including self
       var toLeft = doWords(universe, item, Gather.sidestep, WordWalking.left, lang);
 
-      // NOTE: When we get here, we have a text node, or a leaf node.
-      var middle = universe.property().isText(item) ? [ WordDecision.detail(universe, item) ] : [ ];
+      var middle = universe.property().isText(item) ? [ WordDecision.detail(universe, item) ] : Arr.map(
+        universe.down().predicate(item, universe.property().isText),
+        function (e) { return WordDecision.detail(universe, e); }
+      );
       var toRight = doWords(universe, item, Gather.sidestep, WordWalking.right, lang);
       return {
         all: Fun.constant(Arr.reverse(toLeft).concat(middle).concat(toRight)),

@@ -22,7 +22,7 @@ define(
       if (universe.property().isBoundary(element)) return BoundedCluster.scour(universe, element, element, envLang);
       else if (universe.property().isEmptyTag(element)) return empty();
       else if (universe.property().isText(element)) return ExpandingCluster.scour(universe, element, envLang);
-      else return inline(universe, element);
+      else return inline(universe, element, envLang);
     };
 
     var range = function (universe, start, soffset, finish, foffset, envLang) {
