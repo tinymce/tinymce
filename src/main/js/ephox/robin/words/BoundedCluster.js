@@ -14,10 +14,8 @@ define(
 
   function (Arr, Fun, Option, Parent, Identify, LanguageZones, Zone, ZoneWalker) {
     var rangeOn = function (universe, first, last, envLang) {
-      if (envLang === undefined) throw new Error('No environment language');
       var ancestor = universe.eq(first, last) ? Option.some(first) : universe.property().parent(first);
       return ancestor.map(function (parent) {
-        // Find a sensible way to provide a default.
         var defaultLang = LanguageZones.getDefault(universe, parent).getOr(envLang);
         var groups = ZoneWalker.walk(universe, first, last, defaultLang);
 
@@ -31,7 +29,6 @@ define(
           }).join('');
 
           var words = Identify.words(line);
-
        
           return Zone({
             lang: lang,

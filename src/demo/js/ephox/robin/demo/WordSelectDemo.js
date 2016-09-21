@@ -2,7 +2,6 @@ define(
   'ephox.robin.demo.WordSelectDemo',
 
   [
-    'ephox.wrap.JQuery',
     'ephox.peanut.Fun',
     'ephox.robin.api.dom.DomSmartSelect',
     'ephox.sugar.api.DomEvent',
@@ -11,7 +10,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function ($, Fun, DomSmartSelect, DomEvent, Element, Insert, SelectorFind) {
+  function (Fun, DomSmartSelect, DomEvent, Element, Insert, SelectorFind) {
     return function () {
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
