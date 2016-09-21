@@ -45,17 +45,17 @@ test(
       ], {}, { lang: 'fr' })
     ]));
 
-    // PropertyAssertions.check('Check text ranges', [
-    //   Arbitraries.arbRangeIds(doc1, doc1.property().isText)
-    // ], function (info) {
-    //   var item1 = doc1.find(doc1.get(), info.startId).getOrDie();
-    //   var item2 = doc1.find(doc1.get(), info.finishId).getOrDie();
-    //   var actual = TextZones.range(doc1, item1, 0, item2, 0);
-    //   ZoneObjects.assertProps('Testing zones for ' + info.startId + '->' + info.finishId, doc1, actual.zones());
-    //   return true;
-    // }, {
-
-    // });
+    PropertyAssertions.check('Check text ranges', [
+      Arbitraries.arbRangeIds(doc1, doc1.property().isText)
+    ], function (info) {
+      var item1 = doc1.find(doc1.get(), info.startId).getOrDie();
+      var item2 = doc1.find(doc1.get(), info.finishId).getOrDie();
+      var actual = TextZones.range(doc1, item1, 0, item2, 0);
+      ZoneObjects.assertProps('Testing zones for ' + info.startId + '->' + info.finishId, doc1, actual.zones());
+      return true;
+    }, {
+      
+    });
 
     PropertyAssertions.check('Check boundaries', [
       Arbitraries.arbIds(doc1, doc1.property().isBoundary)
@@ -73,8 +73,6 @@ test(
     ], function (info) {
       var item = doc1.find(doc1.get(), info.startId).getOrDie();
       var actual = TextZones.range(doc1, item, 0, item, 0);
-      console.log(actual.zones());
-      console.log('item', item);
       return Jsc.eq(0, actual.zones().length);
     }, {
 

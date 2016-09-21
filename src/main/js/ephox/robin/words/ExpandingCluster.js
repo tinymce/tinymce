@@ -36,6 +36,7 @@ define(
      *  'zone' contains the dom nodes from the clustering data structure detected in an element.
      */
     var scour = function (universe, element) {
+      console.log('expanding.scour');
       // An Extract.all flag used for not expanding children.
       var optimise = Fun.constant(false);
       var rawCluster = Clustering.words(universe, element, optimise);

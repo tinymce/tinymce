@@ -52,12 +52,12 @@ define(
         // then we don't want to create a new zone.
         if (lang !== zoneLang) spawn(lang);
         push(optLang);
-        // console.log('Open inline', elem.dom().cloneNode(true), stack);
+        //console.log('Open inline', elem.id, stack, lang, zoneLang);
       };
 
       var closeInline = function (optLang, elem) {
         pop(optLang);
-        // console.log('Close inline', elem.dom().cloneNode(true), stack);
+        //console.log('Close inline', elem.id, stack);
       };
 
       var addText = function (elem) {
@@ -65,27 +65,27 @@ define(
         // If the top of the stack is not the same as zoneLang, then we need to spawn again.
         if (lang !== zoneLang) spawn(lang);
         zone.push(elem);
-        // console.log('text', elem.dom().cloneNode(true), stack);
+        //console.log('text', elem.id, stack, 'zone', zone);
       };
 
       var addEmpty = function (empty) {
         var lang = getLang(Option.none());
         spawn(lang);
-        // console.log('empty', empty.dom().cloneNode(true));
+        //console.log('empty', empty.id);
       };  
 
       var openBoundary = function (optLang, elem) {
         push(optLang);
         var lang = getLang(optLang);
         spawn(lang);
-        // console.log('Open boundary', elem.dom().cloneNode(true), stack);
+        //console.log('Open boundary', elem.id, stack);
       };
 
       var closeBoundary = function (optLang, elem) {
         pop(optLang);
         var lang = getLang(optLang);
         spawn(lang);
-        // console.log('Close boundary', elem.dom().cloneNode(true), stack);
+        //console.log('Close boundary', elem.id, stack);
       };
 
       var done = function () {

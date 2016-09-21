@@ -24,59 +24,72 @@ define(
       
     var _rules = undefined;
 
+    var analyse = function (universe, item, mode, stopOn) {
+    // Find if the current item has a lang property on it.
+      var currentLang = universe.property().isElement(item) ? Option.from(universe.attrs().get(item, 'lang')) : Option.none();
+
+      if (universe.property().isText(item)) return adt.text(item, mode);
+      else if (stopOn(item, mode)) return adt.concluded(item, mode);
+      else if (universe.property().isBoundary(item)) return adt.boundary(item, mode, currentLang);
+
+      else if (universe.property().isEmptyTag(item)) return adt.empty(item, mode);
+      
+      else return adt.inline(item, mode, currentLang);
+    };
+
     var takeStep = function (universe, item, mode, stopOn) {
-      // console.log('aItem', aItem.dom());
       return Gather.walk(universe, item, mode, Gather.walkers().right(), _rules).fold(function () {
         // console.log('concluding', aItem.dom());
         return adt.concluded(item, mode);
       }, function (n) {
-        // Find if the current item has a lang property on it.
-        var currentLang = universe.property().isElement(n.item()) ? Option.from(universe.attrs().get(n.item(), 'lang')) : Option.none();
-  
-        if (universe.property().isText(n.item())) return adt.text(n.item(), n.mode());
-        else if (stopOn(n)) return adt.concluded(n.item(), n.mode());
-        else if (universe.property().isBoundary(n.item())) return adt.boundary(n.item(), n.mode(), currentLang);
-
-        else if (universe.property().isEmptyTag(n.item())) return adt.empty(n.item(), n.mode());
-        
-        else return adt.inline(n.item(), n.mode(), currentLang);
+        return analyse(universe, n.item(), n.mode(), stopOn);
       });  
-    };    
+    };
 
-    var doWalk = function (universe, current, mode, finish, stack) {
-      var stopOn = function (n) {
-        return (universe.eq(n.item(), finish) && n.mode() !== Gather.advance);
-      };
+    var process = function (universe, outcome, stopOn, stack) {
+      outcome.fold(
+        function (aItem, aMode, aLang) {
+          // inline(aItem, aMode, aLang)
+          var opening = aMode === Gather.advance;
+          (opening ? stack.openInline : stack.closeInline)(aLang, aItem);
+          doWalk(universe, aItem, aMode, stopOn, stack);
 
+        }, function (aItem, aMode) {
+          // text (aItem, aMode)
+          stack.addText(aItem);
+          if (! stopOn(aItem, aMode)) doWalk(universe, aItem, aMode, stopOn, stack);
+        }, function (aItem, aMode) {
+          // empty (aItem, aMode)
+          stack.addEmpty(aItem);
+          doWalk(universe, aItem, aMode, stopOn, stack);
+                
+        }, function (aItem, aMode, aLang) {
+          // boundary(aItem, aMode, aLang) 
+          var opening = aMode === Gather.advance;
+          (opening ? stack.openBoundary : stack.closeBoundary)(aLang, aItem);
+          doWalk(universe, aItem, aMode, stopOn, stack);
+        }, function (aItem, aMode) {
+        
+        }
+      );
+    };
+
+    var doWalk = function (universe, current, mode, stopOn, stack) {
       var outcome = takeStep(universe, current, mode, stopOn);
-      outcome.fold(function (aItem, aMode, aLang) {
-        // inline(aItem, aMode, aLang)
-        var opening = aMode === Gather.advance;
-        (opening ? stack.openInline : stack.closeInline)(aLang, aItem);
-        doWalk(universe, aItem, aMode, finish, stack);
-
-      }, function (aItem, aMode) {
-        // text (aItem, aMode)
-        stack.addText(aItem);
-        if (! universe.eq(aItem, finish)) doWalk(universe, aItem, aMode, finish, stack);
-      }, function (aItem, aMode) {
-        // empty (aItem, aMode)
-        stack.addEmpty(aItem);
-        doWalk(universe, aItem, aMode, finish, stack);
-              
-      }, function (aItem, aMode, aLang) {
-        // boundary(aItem, aMode, aLang) 
-        var opening = aMode === Gather.advance;
-        (opening ? stack.openBoundary : stack.closeBoundary)(aLang, aItem);
-        doWalk(universe, aItem, aMode, finish, stack);
-      }, function (aItem, aMode) {
-      });
+      process(universe, outcome, stopOn, stack);
     };
 
     var walk = function (universe, start, finish, defaultLang) {
+      var stopOn = function (sItem, sMode) {
+        return universe.eq(sItem, finish) && (sMode !== Gather.advance || universe.property().isText(sItem));
+      };
       // TODO: Make the language zone stack immutable *and* performant
       var stack = LanguageZones.nu(defaultLang);
-      doWalk(universe, start, Gather.advance, finish, stack);
+      var mode = Gather.advance;
+      var initial = analyse(universe, start, mode, stopOn);
+      process(universe, initial, stopOn, stack);
+
+
       return stack.done();
     };
 
