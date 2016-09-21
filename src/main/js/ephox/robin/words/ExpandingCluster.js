@@ -11,8 +11,8 @@ define(
   ],
 
   function (Arr, Fun, Arrays, Clustering, Identify, Zone) {
-    var findWords = function (universe, cluster) {
-      var groups = Arrays.splitby(cluster, function (c) {
+    var findWords = function (universe, units) {
+      var groups = Arrays.splitby(units, function (c) {
         // I really don't think this can happen ... given that the cluster is specifically excluding these.
         var elem = c.item();
         return universe.property().isBoundary(elem) || universe.property().isEmptyTag(elem);
@@ -38,14 +38,18 @@ define(
     var scour = function (universe, element) {
       // An Extract.all flag used for not expanding children.
       var optimise = Fun.constant(false);
-      var rawCluster = Clustering.words(universe, element, optimise);
-      var cluster = rawCluster.all();
-      var items = Arr.map(cluster, function (c) { return c.item(); });      
-      var words = findWords(universe, cluster);
+      var cluster = Clustering.words(universe, element, optimise);
+      return fromCluster(universe, cluster);
+    };
+
+    var fromCluster = function (universe, cluster) {
+      var units = cluster.all();
+      var items = Arr.map(units, function (c) { return c.item(); });      
+      var words = findWords(universe, units);
 
       var zones = [
         Zone({
-          lang: rawCluster.lang().getOr('en'),
+          lang: cluster.lang().getOr('en'),
           words: words,
           elements: items
         })

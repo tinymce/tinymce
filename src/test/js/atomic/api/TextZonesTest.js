@@ -5,6 +5,7 @@ test(
     'ephox.boss.api.Gene',
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
+    'ephox.peanut.Fun',
     'ephox.robin.api.general.TextZones',
     'ephox.robin.test.Arbitraries',
     'ephox.robin.test.PropertyAssertions',
@@ -12,7 +13,7 @@ test(
     'ephox.wrap.Jsc'
   ],
 
-  function (Gene, TestUniverse, TextGene, TextZones, Arbitraries, PropertyAssertions, ZoneObjects, Jsc) {
+  function (Gene, TestUniverse, TextGene, Fun, TextZones, Arbitraries, PropertyAssertions, ZoneObjects, Jsc) {
     var doc1 = TestUniverse(Gene('root', 'root', [
       Gene('div1', 'div', [
         Gene('p1', 'p', [
@@ -82,6 +83,7 @@ test(
       Arbitraries.arbIds(doc1, doc1.property().isEmptyTag)
     ], function (info) {
       var item = doc1.find(doc1.get(), info.startId).getOrDie();
+      // Consider other offsets
       var actual = TextZones.range(doc1, item, 0, item, 0);
       return Jsc.eq(0, actual.zones().length);
     }, {
@@ -116,11 +118,31 @@ test(
     );
 
     PropertyAssertions.check(
+      'Check inline tag single', 
+      [
+        Arbitraries.arbRangeIds(doc1, function (item) {
+          return !(doc1.property().isBoundary(item) || doc1.property().isEmptyTag(item) || doc1.property().isText(item));
+        })
+      ],
+      checkSingle,
+      { }
+    );
+
+    PropertyAssertions.check(
       'Check inline tag range', 
       [
         Arbitraries.arbRangeIds(doc1, function (item) {
           return !(doc1.property().isBoundary(item) || doc1.property().isEmptyTag(item) || doc1.property().isText(item));
         })
+      ],
+      checkRange,
+      { }
+    );
+
+    PropertyAssertions.check(
+      'Check any tag range', 
+      [
+        Arbitraries.arbRangeIds(doc1, Fun.constant(true))
       ],
       checkRange,
       { }
