@@ -2,6 +2,7 @@ test(
   'BlockTest',
 
   [
+    'ephox.agar.api.RawAssertions',
     'ephox.boss.api.Gene',
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
@@ -10,11 +11,10 @@ test(
     'ephox.perhaps.Option',
     'ephox.robin.api.general.Look',
     'ephox.robin.api.general.Parent',
-    'ephox.robin.api.general.Structure',
-    'ephox.robin.test.Assertions'
+    'ephox.robin.api.general.Structure'
   ],
 
-  function (Gene, TestUniverse, TextGene, Arr, Fun, Option, Look, Parent, Structure, Assertions) {
+  function (RawAssertions, Gene, TestUniverse, TextGene, Arr, Fun, Option, Look, Parent, Structure) {
     var doc = TestUniverse(Gene('root', 'root', [
       Gene('d1', 'div', [
         TextGene('d1_t1', 'List: '),
@@ -45,9 +45,7 @@ test(
         return doc.find(doc.get(), id).getOrDie();
       });
       var actual = Parent.sharedOne(doc, look, items);
-      Assertions.assertOptComp(expected, actual, function (e, a) {
-        assert.eq(e, a.id);
-      });
+      RawAssertions.assertEq('Checking parent :: Option', expected.getOr('none'), actual.getOr({ id: 'none' }).id);
     };
 
     check(Option.some('ol1'), ['li2'], Look.selector(doc, 'ol'));
