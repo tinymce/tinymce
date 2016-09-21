@@ -451,7 +451,6 @@ define("tinymce/ui/Window", [
 				this.statusbar.remove();
 			}
 
-			toggleFullScreenState(windows.length > 0);
 			toggleBodyFullScreenClasses(self.classPrefix, false);
 
 			i = windows.length;
@@ -460,6 +459,8 @@ define("tinymce/ui/Window", [
 					windows.splice(i, 1);
 				}
 			}
+
+			toggleFullScreenState(windows.length > 0);
 		},
 
 		/**
