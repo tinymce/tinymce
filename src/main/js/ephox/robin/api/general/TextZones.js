@@ -3,11 +3,12 @@ define(
 
   [
     'ephox.peanut.Fun',
+    'ephox.phoenix.api.general.Descent',
     'ephox.robin.words.BoundedCluster',
     'ephox.robin.words.ExpandingCluster'
   ],
 
-  function (Fun, BoundedCluster, ExpandingCluster) {
+  function (Fun, Descent, BoundedCluster, ExpandingCluster) {
     var single = function (universe, element) {
       if (universe.property().isBoundary(element)) return BoundedCluster.scour(universe, element, element);
       else if (universe.property().isEmptyTag(element)) return empty();
@@ -15,8 +16,10 @@ define(
     };
 
     var range = function (universe, start, soffset, finish, foffset) {
-      if (universe.eq(start, finish)) return single(universe, start);
-      else return BoundedCluster.scour(universe, start, finish);
+      var startPt = Descent.toLeaf(universe, start, soffset);
+      var finishPt = Descent.toLeaf(universe, finish, foffset);
+      if (universe.eq(startPt.element(), finishPt.element())) return single(universe, startPt.element());      
+      return BoundedCluster.scour(universe, startPt.element(), finishPt.element());
     };
 
     var empty = function () {
