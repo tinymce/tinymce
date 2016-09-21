@@ -13,7 +13,7 @@ test(
   function (Gene, TestUniverse, TextGene, Option, ZoneObjects, ExpandingCluster) {
      var check = function (universe, expected, id) {
       var item = universe.find(universe.get(), id).getOrDie();
-      var actual = ExpandingCluster.scour(universe, item);
+      var actual = ExpandingCluster.scour(universe, item, 'en');
       ZoneObjects.assertZones('Starting on: ' + id, universe, expected, actual.zones());
     };
 

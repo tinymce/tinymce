@@ -5,14 +5,13 @@ define(
     'ephox.bud.Unicode',
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
-    'ephox.phoenix.api.general.Extract',
     'ephox.phoenix.api.general.Gather',
     'ephox.robin.words.LanguageZones',
     'ephox.robin.words.WordDecision',
     'ephox.robin.words.WordWalking'
   ],
 
-  function (Unicode, Arr, Fun, Extract, Gather, LanguageZones, WordDecision, WordWalking) {
+  function (Unicode, Arr, Fun, Gather, LanguageZones, WordDecision, WordWalking) {
     /*
      * Identification of words:
      *
@@ -23,7 +22,7 @@ define(
      *   b) text node has no character breaks, keep gathering and include entire node
      * For other elements, calculate the language of the closest ancestor:
      *   a) if the (destination) language has changed, stop the gathering process and do not include
-     *   b) if the (destination) language has not changed, keep gathering and do not include
+     *   b) if the (destination) language has not changed, keep gathering and include
      * These rules are encoded in WordDecision.decide
      * Returns: [WordDecision.make Struct] of all the words recursively from item in direction.
      */
@@ -42,25 +41,15 @@ define(
       });
     };
 
-    // Represent all the text nodes within all the sub-tree elements of item.
-    // Returns: [WordDecision.make Struct] of all the words at item.
-    // TODO: for TBIO-470: For multi-language spell checking: This currently assumes the language of 'item' 
-    //       is the language of the entire descendent tree of 'item'. This will be wrong if the sub-tree
-    //       has multiple languages annotated. Extract.all needs to return an array of items that retain this language type information.
-    var extract = function (universe, item, optimise) {
-      if (universe.property().isText(item)) return [ WordDecision.detail(universe, item) ];
-      var children = Extract.all(universe, item, optimise);
-      return Arr.bind(children, function (child) {
-        return universe.property().isText(child) ? [ WordDecision.detail(universe, child) ] : [];
-      });
-    };
+    // Return the words to the left and right of item, and as well as the item itself if a text node (middle), and the language of item.
+    var words = function (universe, item, _optimise) {
+      // TODO: Remote optimise parameter.
+      var lang = LanguageZones.getDefault(universe, item); // closest language anywhere up the DOM ancestor path including self
+      var toLeft = doWords(universe, item, Gather.sidestep, WordWalking.left, lang);
 
-    // Return the words to the left and right of item, and the descendants of item (middle), and the language of item.
-    var words = function (universe, item, optimise) {
-      var lang = LanguageZones.getDefault(universe, item); // closest language anywhere up the DOM ancestor path
-      var toLeft = doWords(universe, item, Gather.sidestep, WordWalking.left, lang); // lang tag of the current element, if any
-      var middle = extract(universe, item, optimise); // TODO: for TBIO-470 multi-language spelling: for now we treat middle/innerText as being single language
-      var toRight = doWords(universe, item, Gather.sidestep, WordWalking.right, lang); // lang tag of the current element, if any
+      // NOTE: When we get here, we have a text node, or a leaf node.
+      var middle = universe.property().isText(item) ? [ WordDecision.detail(universe, item) ] : [ ];
+      var toRight = doWords(universe, item, Gather.sidestep, WordWalking.right, lang);
       return {
         all: Fun.constant(Arr.reverse(toLeft).concat(middle).concat(toRight)),
         left: Fun.constant(toLeft),

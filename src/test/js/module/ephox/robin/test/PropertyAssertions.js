@@ -21,7 +21,9 @@ define(
         Json.stringify({ rngState: err.rngState, shrinks: err.shrinks, tests: err.tests }, null, 2)) : err;
     };
 
-    var check = function (label, arbitraries, f, _options) {
+    var checkWith = function (label, arbitraries, f, _options) {
+      // NOTE: Due to a current implementation detail of Jsc's wrapper, these will not have labels in the console
+      // However, use this one if you want to supply options (like seed, number of tests etc.)
       Logger.sync(label, function () {
         var options = _options !== undefined ? _options : { };
         var property = Jsc.forall.apply(Jsc, arbitraries.concat([ f ]));
@@ -35,8 +37,13 @@ define(
       });
     };
 
+    var check = function (label, arbitraries, f) {
+      Jsc.property.apply(Jsc, [ label ].concat(arbitraries).concat([ f ]));
+    };
+
     return {
-      check :check
+      check :check,
+      checkWith: checkWith
     };
   }
 );
