@@ -45,52 +45,85 @@ test(
       ], {}, { lang: 'fr' })
     ]));
 
-    // PropertyAssertions.check('Check text ranges', [
-    //   Arbitraries.arbRangeIds(doc1, doc1.property().isText)
-    // ], function (info) {
-    //   var item1 = doc1.find(doc1.get(), info.startId).getOrDie();
-    //   var item2 = doc1.find(doc1.get(), info.finishId).getOrDie();
-    //   var actual = TextZones.range(doc1, item1, 0, item2, 0);
-    //   ZoneObjects.assertProps('Testing zones for ' + info.startId + '->' + info.finishId, doc1, actual.zones());
-    //   return true;
-    // }, {
-      
-    // });
-
-    // PropertyAssertions.check('Check boundaries', [
-    //   Arbitraries.arbIds(doc1, doc1.property().isBoundary)
-    // ], function (info) {
-    //   var item1 = doc1.find(doc1.get(), info.startId).getOrDie();
-    //   var actual = TextZones.range(doc1, item1, 0, item1, 0);
-    //   ZoneObjects.assertProps('Testing zones for ' + info.startId, doc1, actual.zones());
-    //   return true;
-    // }, {
-
-    // });
-
-    // PropertyAssertions.check('Check that empty tags produce no zones', [
-    //   Arbitraries.arbIds(doc1, doc1.property().isEmptyTag)
-    // ], function (info) {
-    //   var item = doc1.find(doc1.get(), info.startId).getOrDie();
-    //   var actual = TextZones.range(doc1, item, 0, item, 0);
-    //   return Jsc.eq(0, actual.zones().length);
-    // }, {
-
-    // });
-
-
-
-    PropertyAssertions.check('Check inline tags', [
-      Arbitraries.arbIds(doc1, function (item) {
-        return !(doc1.property().isBoundary(item) || doc1.property().isEmptyTag(item) || doc1.property().isText(item));
-      })
-    ], function (info) {
-      var item1 = doc1.find(doc1.get(), info.startId).getOrDie();
-      var actual = TextZones.range(doc1, item1, 0, item1, 0);
-      ZoneObjects.assertProps('Testing zones for ' + info.startId, doc1, actual.zones());
+    var checkSingle = function (info) {
+      var item = doc1.find(doc1.get(), info.startId).getOrDie();
+      var actual = TextZones.single(doc1, item);
+      ZoneObjects.assertProps('Testing zones for single(' + info.startId + ')', doc1, actual.zones());
       return true;
+    };
+
+    var checkRange = function (info) {
+      var item1 = doc1.find(doc1.get(), info.startId).getOrDie();
+      var item2 = doc1.find(doc1.get(), info.finishId).getOrDie();
+      var actual = TextZones.range(doc1, item1, 0, item2, 0);
+      ZoneObjects.assertProps('Testing zones for range(' + info.startId + '->' + info.finishId + ')', doc1, actual.zones());
+      return true;
+    };
+
+    PropertyAssertions.check(
+      'Check text single', 
+      [
+        Arbitraries.arbIds(doc1, doc1.property().isText)
+      ],
+      checkSingle,
+      { }
+    );
+
+    PropertyAssertions.check(
+      'Check text range', 
+      [
+        Arbitraries.arbRangeIds(doc1, doc1.property().isText)
+      ],
+      checkRange,
+      { }
+    );
+
+    PropertyAssertions.check('Check that empty tags produce no zones', [
+      Arbitraries.arbIds(doc1, doc1.property().isEmptyTag)
+    ], function (info) {
+      var item = doc1.find(doc1.get(), info.startId).getOrDie();
+      var actual = TextZones.range(doc1, item, 0, item, 0);
+      return Jsc.eq(0, actual.zones().length);
     }, {
-      "rngState": "000c5d791e6ab83f24",
+
     });
+
+    PropertyAssertions.check(
+      'Check empty range', 
+      [
+        Arbitraries.arbRangeIds(doc1, doc1.property().isEmptyTag)
+      ],
+      checkRange,
+      { }
+    );
+
+    PropertyAssertions.check(
+      'Check boundary single', 
+      [
+        Arbitraries.arbIds(doc1, doc1.property().isBoundary)
+      ],
+      checkSingle,
+      { }
+    );
+
+    PropertyAssertions.check(
+      'Check boundary range', 
+      [
+        Arbitraries.arbRangeIds(doc1, doc1.property().isBoundary)
+      ],
+      checkRange,
+      { }
+    );
+
+    PropertyAssertions.check(
+      'Check inline tag range', 
+      [
+        Arbitraries.arbRangeIds(doc1, function (item) {
+          return !(doc1.property().isBoundary(item) || doc1.property().isEmptyTag(item) || doc1.property().isText(item));
+        })
+      ],
+      checkRange,
+      { }
+    );
   }
 );

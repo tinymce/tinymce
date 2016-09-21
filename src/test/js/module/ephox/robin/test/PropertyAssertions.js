@@ -31,6 +31,7 @@ define(
         } catch (err) {
           throw new Error(formatErr(label, err));
         }
+        return true;
       });
     };
 
