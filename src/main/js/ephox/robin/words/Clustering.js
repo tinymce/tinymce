@@ -53,7 +53,7 @@ define(
     // to create a cluster of the same language.
     var byLanguage = function (universe, item, _optimise) {
       // TODO: Remote optimise parameter.
-      var optLang = LanguageZones.getDefault(universe, item);
+      var optLang = LanguageZones.calculate(universe, item);
       var isLanguageBoundary = LanguageZones.getBounder(optLang);
 
       var toLeft = ClusterSearch.creepLeft(universe, item, isLanguageBoundary);

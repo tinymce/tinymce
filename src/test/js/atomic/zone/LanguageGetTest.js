@@ -13,7 +13,7 @@ test(
   function (RawAssertions, Gene, TestUniverse, TextGene, Option, LanguageZones) {
     var check  = function (doc, id, lang) {
       var item = doc.find(doc.get(), id).getOrDie();
-      var itemLang = LanguageZones.getDefault(doc, item);
+      var itemLang = LanguageZones.calculate(doc, item);
       RawAssertions.assertEq(
         'check lang(). Expected: ' + lang.getOr('none') + ', actual: ' + itemLang.getOr('none'),
         true,

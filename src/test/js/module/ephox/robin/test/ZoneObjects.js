@@ -43,7 +43,7 @@ define(
             Arr.each(elements, function (x, i) {
               RawAssertions.assertEq(
                 'Checking everything in ' + label + ' has same language. Item: ' + x.id,
-                LanguageZones.getDefault(universe, x).getOr('none'), zone.lang()
+                LanguageZones.calculate(universe, x).getOr('none'), zone.lang()
               );
               RawAssertions.assertEq(
                 'Check that everything in the ' + label + ' is a text node',

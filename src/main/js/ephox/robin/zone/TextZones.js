@@ -16,7 +16,7 @@ define(
     var rangeOn = function (universe, first, last, envLang) {
       var ancestor = universe.eq(first, last) ? Option.some(first) : universe.property().parent(first);
       return ancestor.map(function (parent) {
-        var defaultLang = LanguageZones.getDefault(universe, parent).getOr(envLang);
+        var defaultLang = LanguageZones.calculate(universe, parent).getOr(envLang);
         return ZoneWalker.walk(universe, first, last, defaultLang);
       });
     };

@@ -108,7 +108,7 @@ define(
     //  - uses Fun.constant(false) for isRoot parameter to search even the top HTML element
     //    (regardless of 'classic'/iframe or 'inline'/div mode).
     // Note: there may be descendant elements with a different language
-    var getDefault = function (universe, item) {
+    var calculate = function (universe, item) {
       return universe.up().closest(item, '[lang]', Fun.constant(false)).map(function (el) {
         return universe.attrs().get(el, 'lang');
       });
@@ -117,7 +117,7 @@ define(
     // Horrible name.
     var strictBounds = function (envLang, onlyLang) {
       return function (universe, item) {
-        var itemLang = getDefault(universe, item).getOr(envLang);
+        var itemLang = calculate(universe, item).getOr(envLang);
         var r = onlyLang !== itemLang;
         return r;
       };
@@ -125,14 +125,14 @@ define(
 
     var getBounder = function (optLang) {
       return function (universe, item) {
-        var itemLang = getDefault(universe, item);
+        var itemLang = calculate(universe, item);
         return !Option.equals(optLang, itemLang);
       };
     };
 
     return {
       nu: nu,
-      getDefault: getDefault,
+      calculate: calculate,
       getBounder: getBounder,
       strictBounds: strictBounds
     };

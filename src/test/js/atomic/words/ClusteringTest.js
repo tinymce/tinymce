@@ -188,7 +188,7 @@ test(
       var checkGroup = function (label, group) {
         var items = Arr.map(group, function (g) { return g.item(); });
         Arr.each(items, function (x, i) {
-          RawAssertions.assertEq('Checking everything in ' + label + ' has same language', LanguageZones.getDefault(universe, x).getOr('none'), actual.lang().getOr('none'));
+          RawAssertions.assertEq('Checking everything in ' + label + ' has same language', LanguageZones.calculate(universe, x).getOr('none'), actual.lang().getOr('none'));
           RawAssertions.assertEq(
             'Check that everything in the ' + label + ' is a text node',
             true,
@@ -197,7 +197,7 @@ test(
         });
       };
 
-      RawAssertions.assertEq('Check that the language matches the start',  LanguageZones.getDefault(universe, start).getOr('none'), actual.lang().getOr('none'));
+      RawAssertions.assertEq('Check that the language matches the start',  LanguageZones.calculate(universe, start).getOr('none'), actual.lang().getOr('none'));
       checkGroup('left', actual.left());
       checkGroup('middle', actual.middle());
       checkGroup('right', actual.right());
