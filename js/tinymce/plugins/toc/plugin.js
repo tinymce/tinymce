@@ -173,6 +173,11 @@ tinymce.PluginManager.add('toc', function(editor) {
     );
 
 
+    editor.on('PreProcess', function(e) {
+        editor.$('.mce-toc[contenteditable=false]', e.node).removeAttr('contentEditable');
+    });
+
+
     editor.addCommand('mceInsertToc', function() {
         insertToc();
     });
