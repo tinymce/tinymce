@@ -37,23 +37,24 @@ define(
       });
     };
 
-    // Returns: true if currLang and the item 'lang' attribute are either different strings, or only one of them is none
-    var isLanguageBoundary = function (universe, item, currLang) {
-      // Not efficient. We need to look up the tree because the lang might be set by the parent, 
-      // and the currLang may have been set by something inside a span with a diff language.
-      var itemLang = LanguageZones.getDefault(universe, item);
-      return !Option.equals(currLang, itemLang);
-    };
+    // // Returns: true if currLang and the item 'lang' attribute are either different strings, or only one of them is none
+    // var isLanguageBoundary = function (universe, item, currLang) {
+    //   // Not efficient. We need to look up the tree because the lang might be set by the parent, 
+    //   // and the currLang may have been set by something inside a span with a diff language.
+    //   var itemLang = LanguageZones.getDefault(universe, item);
+    //   console.log('itemLang', itemLang.getOr('none'), 'currentLang', currLang.getOr('none'));
+    //   return !Option.equals(currLang, itemLang);
+    // };
 
     // Return decision struct with one or zero 'make' Struct items. If present the make struct item is the entire item node text,
     // or a substring of it with the [left, right] bounds as determined by the result of slicer(item).
     // currLang is an Option(string) of the current item language, languageFun is a function 
     // to return an Option(string) of the language of an element.
-    var decide = function (universe, item, slicer, currLang) {
+    var decide = function (universe, item, slicer, isCustomBoundary) {
       var f = (function () {
         if (universe.property().isBoundary(item)) return onEdge;
         else if (universe.property().isEmptyTag(item)) return onEdge;
-        else if (isLanguageBoundary(universe, item, currLang)) return onEdge;
+        else if (isCustomBoundary(universe, item)) return onEdge;
         else if (universe.property().isText(item)) return onText;
         else return onOther;
       })();

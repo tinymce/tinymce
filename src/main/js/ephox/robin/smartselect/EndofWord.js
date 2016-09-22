@@ -39,7 +39,8 @@ define(
         return c === Unicode.zeroWidth();
       }).length;
 
-      var cluster = Clustering.words(universe, item, optimise);
+      // We only want to identify words that are all the same language.
+      var cluster = Clustering.byLanguage(universe, item, optimise);
       // We are at the left edge of the cluster.
       var atLeftEdge = preLength === 0 && cluster.left().length === 0;
       // We are at the right edge of the cluster.

@@ -2,30 +2,12 @@ define(
   'ephox.robin.words.ExpandingCluster',
 
   [
-    'ephox.compass.Arr',
     'ephox.peanut.Fun',
-    'ephox.polaris.api.Arrays',
     'ephox.robin.words.Clustering',
-    'ephox.robin.words.Identify',
-    'ephox.robin.words.Zone'
+    'ephox.robin.words.Zones'
   ],
 
-  function (Arr, Fun, Arrays, Clustering, Identify, Zone) {
-    var findWords = function (universe, units) {
-      var groups = Arrays.splitby(units, function (c) {
-        // I really don't think this can happen ... given that the cluster is specifically excluding these.
-        var elem = c.item();
-        return universe.property().isBoundary(elem) || universe.property().isEmptyTag(elem);
-      });
-
-      return Arr.bind(groups, function (x) {
-        var text = Arr.map(x, function (y) {
-          return y.text();
-        }).join('');
-        return Identify.words(text);
-      });
-    };
-
+  function (Fun, Clustering, Zones) {
     /**
      * Searches from the element left and right until it amasses a single zone where
      * the language is all the same, and no word boundaries exist (except for the first node)
@@ -38,31 +20,12 @@ define(
     var scour = function (universe, element, envLang) {
       // An Extract.all flag used for not expanding children.
       var optimise = Fun.constant(false);
-      var cluster = Clustering.words(universe, element, optimise);
-      return fromCluster(universe, cluster, envLang);
-    };
-
-    var fromCluster = function (universe, cluster, envLang) {
-      var units = cluster.all();
-      var items = Arr.map(units, function (c) { return c.item(); });      
-      var words = findWords(universe, units);
-
-      var zones = [
-        Zone({
-          lang: cluster.lang().getOr(envLang),
-          words: words,
-          elements: items
-        })
-      ];
-
-      return {
-        zones: Fun.constant(zones)
-      };
+      var cluster = Clustering.sameLang(universe, element, optimise);
+      return Zones.fromUnits(universe, cluster.all(), cluster.lang().getOr(envLang));
     };
 
     return {
-      scour: scour,
-      fromCluster: fromCluster
+      scour: scour
     };
   }
 );

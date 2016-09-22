@@ -29,7 +29,7 @@ define(
           }).join('');
 
           var words = Identify.words(line);
-       
+          
           return Zone({
             lang: lang,
             words: words,
