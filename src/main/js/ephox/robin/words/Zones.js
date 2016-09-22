@@ -7,10 +7,12 @@ define(
     'ephox.polaris.api.Arrays',
     'ephox.robin.words.Identify',
     'ephox.robin.words.LanguageZones',
-    'ephox.robin.words.Zone'
+    'ephox.scullion.Struct'
   ],
 
-  function (Arr, Fun, Arrays, Identify, LanguageZones, Zone) {
+  function (Arr, Fun, Arrays, Identify, LanguageZones, Struct) {
+    var nu = Struct.immutableBag([ 'elements', 'lang', 'words' ], [ ]);
+
     var findWords = function (universe, units) {
       var groups = Arrays.splitby(units, function (c) {
         // I really don't think this can happen ... given that the cluster is specifically excluding these.
@@ -32,7 +34,7 @@ define(
       var lang = LanguageZones.getDefault(universe, element).getOr(envLang);
 
       var zones = [
-        Zone({
+        nu({
           lang: lang,
           words: words,
           elements: [ text ]
@@ -49,7 +51,7 @@ define(
       var words = findWords(universe, units);
 
       var zones = [
-        Zone({
+        nu({
           lang: lang,
           words: words,
           elements: items
@@ -72,7 +74,7 @@ define(
 
         var words = Identify.words(line);
         
-        return Zone({
+        return nu({
           lang: lang,
           words: words,
           elements: elements
