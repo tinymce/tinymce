@@ -1,5 +1,5 @@
 test(
-  'BoundedClusterTest',
+  'BoundedZoneTest',
 
   [
     'ephox.boss.api.Gene',
@@ -8,14 +8,14 @@ test(
     'ephox.robin.test.Arbitraries',
     'ephox.robin.test.PropertyAssertions',
     'ephox.robin.test.ZoneObjects',
-    'ephox.robin.words.BoundedCluster',
+    'ephox.robin.zone.TextZones',
     'global!Error'
   ],
 
-  function (Gene, TestUniverse, TextGene, Arbitraries, PropertyAssertions, ZoneObjects, BoundedCluster, Error) {
+  function (Gene, TestUniverse, TextGene, Arbitraries, PropertyAssertions, ZoneObjects, TextZones, Error) {
     var check = function (universe, expected, id) {
       var item = universe.find(universe.get(), id).getOrDie();
-      var actual = BoundedCluster.scour(universe, item, item, 'en');
+      var actual = TextZones.fromBounded(universe, item, item, 'en');
       ZoneObjects.assertZones('Starting from: ' + id, universe, expected, actual.zones());
     };
 
@@ -125,7 +125,7 @@ test(
     ], function (info) {
       var item1 = doc1.find(doc1.get(), info.startId).getOrDie();
       var item2 = doc1.find(doc1.get(), info.finishId).getOrDie();
-      var actual = BoundedCluster.scour(doc1, item1, item2, 'en');
+      var actual = TextZones.fromBounded(doc1, item1, item2, 'en');
       ZoneObjects.assertProps('Testing zones for ' + info.startId + '->' + info.finishId, doc1, actual.zones());
       return true;
     }, {
