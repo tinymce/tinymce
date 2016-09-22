@@ -2,40 +2,28 @@ define(
   'ephox.robin.api.general.TextZones',
 
   [
-    'ephox.peanut.Fun',
     'ephox.phoenix.api.general.Descent',
-    'ephox.robin.words.BoundedCluster',
-    'ephox.robin.words.Clustering'
+    'ephox.robin.zone.TextZones'
   ],
 
-  function (Fun, Descent, BoundedCluster, Clustering) {
-    var inline = function (universe, element, envLang) {
-      // Create a cluster that branches to the edge of words, and then apply the zones. We will move
-      // pass language boundaries, because we might need to be retokenizing words post a language
-      // change
-      var bounded = Clustering.byBoundary(universe, element);
-      return bounded.isEmpty() ? empty() : BoundedCluster.scour(universe, bounded.left(), bounded.right(), envLang);
-    };
-
+  function (Descent, TextZones) {
     var single = function (universe, element, envLang) {
       // console.log('single', element.dom());
-      if (universe.property().isBoundary(element)) return BoundedCluster.scour(universe, element, element, envLang);
+      if (universe.property().isBoundary(element)) return TextZones.fromBounded(universe, element, element, envLang);
       else if (universe.property().isEmptyTag(element)) return empty();
-      else return inline(universe, element, envLang);
+      else return TextZones.fromInline(universe, element, envLang);
     };
 
     var range = function (universe, start, soffset, finish, foffset, envLang) {
       var startPt = Descent.toLeaf(universe, start, soffset);
       var finishPt = Descent.toLeaf(universe, finish, foffset);
-      // console.log('range', startPt.element().dom(), finishPt.element().dom());
+      // Probably have to do some gathering here.
       if (universe.eq(startPt.element(), finishPt.element())) return single(universe, startPt.element(), envLang);      
-      return BoundedCluster.scour(universe, startPt.element(), finishPt.element(), envLang);
+      return TextZones.fromBounded(universe, startPt.element(), finishPt.element(), envLang);
     };
 
     var empty = function () {
-      return {
-        zones: Fun.constant([ ])
-      };
+      return TextZones.empty();
     };
 
     return {
