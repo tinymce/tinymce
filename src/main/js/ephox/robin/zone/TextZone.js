@@ -29,9 +29,9 @@ define(
     };
 
     var fromRange = function (universe, start, finish, envLang, onlyLang) {
-      var isLanguageBoundary = LanguageZones.strictBounds(envLang, onlyLang);
+      var isLanguageBoundary = LanguageZones.strictBounder(envLang, onlyLang);
       var edges = Clustering.getEdges(universe, start, finish, isLanguageBoundary);
-      var transform = TextZones.tranformEdges(edges.left(), edges.right());
+      var transform = TextZones.transformEdges(edges.left(), edges.right());
       return fromBoundedWith(universe, edges.left().item(), edges.right().item(), envLang, onlyLang, transform);
     };
 

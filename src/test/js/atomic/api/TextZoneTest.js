@@ -7,12 +7,16 @@ test(
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
     'ephox.numerosity.api.JSON',
+    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.robin.api.general.TextZone',
-    'ephox.robin.test.ZoneObjects'
+    'ephox.robin.test.Arbitraries',
+    'ephox.robin.test.PropertyAssertions',
+    'ephox.robin.test.ZoneObjects',
+    'ephox.wrap.Jsc'
   ],
 
-  function (RawAssertions, Gene, TestUniverse, TextGene, Json, Option, TextZone, ZoneObjects) {
+  function (RawAssertions, Gene, TestUniverse, TextGene, Json, Fun, Option, TextZone, Arbitraries, PropertyAssertions, ZoneObjects, Jsc) {
     var doc1 = TestUniverse(Gene('root', 'root', [
       Gene('div1', 'div', [
         Gene('p1', 'p', [
@@ -111,6 +115,141 @@ test(
       }),
       'span-semi-isolated',
       'en'
+    );
+
+    checkRange(
+      'Basic ranged zone for two adjacent english text nodes should create zone with them',
+      Option.some({
+        lang: 'en',
+        words: [ 'two' ],
+        elements: [ 'en-b', 'en-c' ]
+      }),
+      'en-b', 'en-c',
+      'en'
+    );
+
+    checkRange(
+      'Basic ranged zone for an english text node next to another one (but not part of the range) should create zone with them',
+      Option.some({
+        lang: 'en',
+        words: [ 'two' ],
+        elements: [ 'en-b', 'en-c' ]
+      }),
+      'en-b', 'en-b',
+      'en'
+    );
+
+    checkRange(
+      'Basic ranged zone for an english text node to a german text node should create no zone',
+      Option.none(),
+      'en-b', 'de-a',
+      'en'
+    );
+
+    var checkSingleProp = function (info) {
+      var item = doc1.find(doc1.get(), info.startId).getOrDie();
+      var actual = TextZone.single(doc1, item, 'en', 'en');
+      return actual.forall(function (zone) {
+        ZoneObjects.assertProps('Testing zone for single(' + info.startId + ')', doc1, [ zone ]);
+        return true;
+      });
+    };
+
+    var checkRangeProp = function (info) {
+      var item1 = doc1.find(doc1.get(), info.startId).getOrDie();
+      var item2 = doc1.find(doc1.get(), info.finishId).getOrDie();
+      var actual = TextZone.range(doc1, item1, 0, item2, 0, 'en', 'en');
+      return actual.forall(function (zone) {
+        ZoneObjects.assertProps('Testing zone for range(' + info.startId + '->' + info.finishId + ')', doc1, [ zone ]);
+        return true;
+      });
+    };
+
+    PropertyAssertions.check(
+      'Check text single', 
+      [
+        Arbitraries.arbIds(doc1, doc1.property().isText)
+      ],
+      checkSingleProp,
+      { }
+    );
+
+    PropertyAssertions.check(
+      'Check text range', 
+      [
+        Arbitraries.arbRangeIds(doc1, doc1.property().isText)
+      ],
+      checkRangeProp,
+      { }
+    );
+
+    PropertyAssertions.check('Check that empty tags produce no zone', [
+      Arbitraries.arbIds(doc1, doc1.property().isEmptyTag)
+    ], function (info) {
+      var item = doc1.find(doc1.get(), info.startId).getOrDie();
+      // Consider other offsets
+      var actual = TextZone.range(doc1, item, 0, item, 0);
+      return Jsc.eq(true, actual.isNone());
+    }, {
+
+    });
+
+    PropertyAssertions.check(
+      'Check empty range', 
+      [
+        Arbitraries.arbRangeIds(doc1, doc1.property().isEmptyTag)
+      ],
+      checkRangeProp,
+      { }
+    );
+
+    PropertyAssertions.check(
+      'Check boundary single', 
+      [
+        Arbitraries.arbIds(doc1, doc1.property().isBoundary)
+      ],
+      checkSingleProp,
+      { }
+    );
+
+    PropertyAssertions.check(
+      'Check boundary range', 
+      [
+        Arbitraries.arbRangeIds(doc1, doc1.property().isBoundary)
+      ],
+      checkRangeProp,
+      { }
+    );
+
+    PropertyAssertions.check(
+      'Check inline tag single', 
+      [
+        Arbitraries.arbRangeIds(doc1, function (item) {
+          return !(doc1.property().isBoundary(item) || doc1.property().isEmptyTag(item) || doc1.property().isText(item));
+        })
+      ],
+      checkSingleProp,
+      { }
+    );
+
+    PropertyAssertions.check(
+      'Check inline tag range', 
+      [
+        Arbitraries.arbRangeIds(doc1, function (item) {
+          return !(doc1.property().isBoundary(item) || doc1.property().isEmptyTag(item) || doc1.property().isText(item));
+        })
+      ],
+      checkRangeProp,
+      { }
+    );
+
+    PropertyAssertions.check(
+      'Check any tag range', 
+      [
+        Arbitraries.arbRangeIds(doc1, Fun.constant(true))
+      ],
+      checkRangeProp,
+      { }
     );
   }
 );
