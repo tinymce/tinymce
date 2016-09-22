@@ -61,9 +61,33 @@ define(
       };
     };
 
+    var fromWalking = function (universe, groups) {
+      var zones = Arr.map(groups, function (group) {
+        var elements = group.elements();
+        var lang = group.lang();
+
+        var line = Arr.map(elements, function (x) {
+          return universe.property().isText(x) ? universe.property().getText(x) : '';
+        }).join('');
+
+        var words = Identify.words(line);
+        
+        return Zone({
+          lang: lang,
+          words: words,
+          elements: elements
+        });
+      });
+
+      return {
+        zones: Fun.constant(zones)
+      };
+    };
+
     return {
       fromElement: fromElement,
-      fromUnits: fromUnits
+      fromUnits: fromUnits,
+      fromWalking: fromWalking
     };
   }
 );
