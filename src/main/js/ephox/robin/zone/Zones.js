@@ -1,5 +1,5 @@
 define(
-  'ephox.robin.words.Zones',
+  'ephox.robin.zone.Zones',
 
   [
     'ephox.compass.Arr',

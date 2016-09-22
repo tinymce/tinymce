@@ -8,7 +8,7 @@ define(
     'ephox.robin.words.Clustering',
     'ephox.robin.words.LanguageZones',
     'ephox.robin.zone.ZoneWalker',
-    'ephox.robin.words.Zones'
+    'ephox.robin.zone.Zones'
   ],
 
   function (Fun, Option, Parent, Clustering, LanguageZones, ZoneWalker, Zones) {
