@@ -31,13 +31,18 @@ define(
         return Option.from(stack[stack.length - 1]);
       };
 
-      var spawn = function (newLang) {
+      var pushZone = function () {
         if (zone.length > 0) {
+          // Intentionally, not a zone. These are details
           zones.push({
             lang: Fun.constant(zoneLang),
-            elements: Fun.constant(zone)
+            details: Fun.constant(zone)
           });
         }
+      };
+
+      var spawn = function (newLang) {
+        pushZone();
         zone = [ ];
         zoneLang = newLang;
       };
@@ -58,11 +63,11 @@ define(
         pop(optLang);
       };
 
-      var addText = function (elem) {
+      var addDetail = function (detail) {
         var lang = getLang(Option.none());
         // If the top of the stack is not the same as zoneLang, then we need to spawn again.
         if (lang !== zoneLang) spawn(lang);
-        zone.push(elem);
+        zone.push(detail);
       };
 
       var addEmpty = function (empty) {
@@ -83,20 +88,14 @@ define(
       };
 
       var done = function () {
-        if (zone.length > 0) {
-          // Intentionally, not a zone because we don't have words yet.
-          zones.push({
-            lang: Fun.constant(zoneLang),
-            elements: Fun.constant(zone)
-          });
-        }
+        pushZone();
         return zones.slice(0);
       };
 
       return {
         openInline: openInline,
         closeInline: closeInline,
-        addText: addText,
+        addDetail: addDetail,
         addEmpty: addEmpty,
         openBoundary: openBoundary,
         closeBoundary: closeBoundary,
@@ -114,8 +113,7 @@ define(
       });
     };
 
-    // Horrible name.
-    var strictBounds = function (envLang, onlyLang) {
+    var strictBounder = function (envLang, onlyLang) {
       return function (universe, item) {
         var itemLang = calculate(universe, item).getOr(envLang);
         var r = onlyLang !== itemLang;
@@ -123,7 +121,7 @@ define(
       };
     };
 
-    var getBounder = function (optLang) {
+    var softBounder = function (optLang) {
       return function (universe, item) {
         var itemLang = calculate(universe, item);
         return !Option.equals(optLang, itemLang);
@@ -133,8 +131,8 @@ define(
     return {
       nu: nu,
       calculate: calculate,
-      getBounder: getBounder,
-      strictBounds: strictBounds
+      softBounder: softBounder,
+      strictBounder: strictBounder
     };
   }
 );

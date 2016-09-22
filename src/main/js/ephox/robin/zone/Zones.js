@@ -13,12 +13,16 @@ define(
 
     var fromWalking = function (universe, groups) {
       var zones = Arr.map(groups, function (group) {
-        var elements = group.elements();
+        var details = group.details();
         var lang = group.lang();
 
-        var line = Arr.map(elements, function (x) {
-          return universe.property().isText(x) ? universe.property().getText(x) : '';
+        var line = Arr.map(details, function (x) {
+          return x.text();
         }).join('');
+
+        var elements = Arr.map(details, function (x) {
+          return x.item();
+        });
 
         var words = Identify.words(line);
         

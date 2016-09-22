@@ -68,6 +68,7 @@ define(
 
     return {
       raw: raw,
+      rawOne: rawOne,
       assertZones: assertZones,
       assertProps: assertProps
     };

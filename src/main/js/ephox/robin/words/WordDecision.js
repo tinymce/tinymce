@@ -14,6 +14,10 @@ define(
       return make(item, 0, text.length, text);
     };
 
+    var fromItem = function (universe, item) {
+      return universe.property().isText(item) ? detail(universe, item) : make(item, 0, 0, '');
+    };
+
     var onEdge = function (universe, item, slicer) {
       return decision([], true);
     };
@@ -50,6 +54,7 @@ define(
 
     return {
       detail: detail,
+      fromItem: fromItem,
       decide: decide
     };
   }

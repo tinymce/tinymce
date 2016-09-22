@@ -15,7 +15,7 @@ define(
     var byBoundary = function (universe, item) {
       var isCustomBoundary = Fun.constant(false);
 
-      var edges = getEdges(universe, item, isCustomBoundary);
+      var edges = getEdges(universe, item, item, isCustomBoundary);
      
       var isMiddleEmpty = function () {
         return ClusterSearch.isEmpty(universe, item);
@@ -32,14 +32,14 @@ define(
 
     // This identifies the edges to the left and right, using a custom boundaryFunction
     // to use in addition to normal boundaries. Often, it's language
-    var getEdges = function (universe, item, isCustomBoundary) {
-      var toLeft = ClusterSearch.creepLeft(universe, item, isCustomBoundary);
-      var toRight = ClusterSearch.creepRight(universe, item, isCustomBoundary);
+    var getEdges = function (universe, start, finish, isCustomBoundary) {
+      var toLeft = ClusterSearch.creepLeft(universe, start, isCustomBoundary);
+      var toRight = ClusterSearch.creepRight(universe, finish, isCustomBoundary);
 
-      var leftEdge = toLeft.length > 0 ? toLeft[toLeft.length - 1].item() : item;
-      var rightEdge = toRight.length > 0 ? toRight[toRight.length - 1].item() : item;
+      var leftEdge = toLeft.length > 0 ? toLeft[toLeft.length - 1] : WordDecision.fromItem(universe, start);
+      var rightEdge = toRight.length > 0 ? toRight[toRight.length - 1] : WordDecision.fromItem(universe, finish);
 
-      var isEmpty = leftEdge.length === 0 && toRight.length === 0;
+      var isEmpty = toLeft.length === 0 && toRight.length === 0;
 
       return {
         left: Fun.constant(leftEdge),
@@ -54,7 +54,7 @@ define(
     var byLanguage = function (universe, item, _optimise) {
       // TODO: Remote optimise parameter.
       var optLang = LanguageZones.calculate(universe, item);
-      var isLanguageBoundary = LanguageZones.getBounder(optLang);
+      var isLanguageBoundary = LanguageZones.softBounder(optLang);
 
       var toLeft = ClusterSearch.creepLeft(universe, item, isLanguageBoundary);
       var toRight = ClusterSearch.creepRight(universe, item, isLanguageBoundary);
