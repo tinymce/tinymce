@@ -197,7 +197,6 @@ tinymce.PluginManager.add('toc', function(editor) {
 
     editor.addMenuItem('toc', {
         text: 'Table of Contents',
-        icon: 'print',
         context: 'insert',
         onclick: openInsertTocDialog
     });
