@@ -767,7 +767,7 @@ define("tinymce/tableplugin/Dialogs", [
 						type: 'listbox',
 						name: 'type',
 						label: 'Row type',
-						text: 'None',
+						text: 'Header',
 						maxWidth: null,
 						values: [
 							{text: 'Header', value: 'thead'},
