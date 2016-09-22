@@ -28,7 +28,7 @@ test(
       Logger.sync(
         id + ' => check: ' + label,
         function () {
-          var act = Clustering.words(universe, universe.find(universe.get(), id).getOrDie(), Fun.constant(false));
+          var act = Clustering.byLanguage(universe, universe.find(universe.get(), id).getOrDie());
           RawAssertions.assertEq('start: ' + id + ', check left()', expLeft,   checkWords(universe, act.left()));
           RawAssertions.assertEq('start: ' + id + ', check middle()', expMiddle, checkWords(universe, act.middle()));
           RawAssertions.assertEq('start: ' + id + ', check right()', expRight,  checkWords(universe, act.right()));
@@ -237,7 +237,7 @@ test(
               if (startId === 'root') return true;
               var start = universe.find(universe.get(), startId).getOrDie();
               if (universe.property().isBoundary(start)) return true;
-              var actual = Clustering.words(universe, start, Fun.constant(false));
+              var actual = Clustering.byLanguage(universe, start, Fun.constant(false));
               checkProps(universe, textIds, start, actual);
               return true;
             }

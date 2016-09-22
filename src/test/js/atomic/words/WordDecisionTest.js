@@ -6,13 +6,14 @@ test(
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
     'ephox.compass.Arr',
+    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.robin.words.WordDecision',
     'ephox.robin.words.WordWalking',
     'ephox.scullion.Struct'
   ],
 
-  function (Gene, TestUniverse, TextGene, Arr, Option, WordDecision, WordWalking, Struct) {
+  function (Gene, TestUniverse, TextGene, Arr, Fun, Option, WordDecision, WordWalking, Struct) {
     var universe = TestUniverse(
       Gene('root', 'root', [
         Gene('p1', 'p', [
@@ -32,7 +33,8 @@ test(
     );
     
     var check = function (items, abort, id, slicer, currLanguage) {
-      var actual = WordDecision.decide(universe, universe.find(universe.get(), id).getOrDie(), slicer, currLanguage);
+      var isCustomBoundary = Fun.constant(false);
+      var actual = WordDecision.decide(universe, universe.find(universe.get(), id).getOrDie(), slicer, isCustomBoundary);
       assert.eq(items, Arr.map(actual.items(), function (item) { return item.item().id; }));
       assert.eq(abort, actual.abort());
     };
