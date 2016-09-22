@@ -47,9 +47,10 @@ define(
       return doWords(universe, item, Gather.sidestep, WordWalking.right, isCustomBoundary);
     };
 
+    // FIX: This needs to be tested!
     var isEmpty = function (universe, item) {      
       // This is PredicateFilter.descendants
-      return universe.down().predicate(item, universe.property().isText).length > 0;
+      return universe.down().predicate(item, universe.property().isText).length === 0;
     };
 
     var flatten = function (universe, item) {
