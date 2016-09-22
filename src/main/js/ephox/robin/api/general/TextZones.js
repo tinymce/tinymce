@@ -19,7 +19,7 @@ define(
       var finishPt = Descent.toLeaf(universe, finish, foffset);
       // Probably have to do some gathering here.
       if (universe.eq(startPt.element(), finishPt.element())) return single(universe, startPt.element(), envLang);      
-      return TextZones.fromBounded(universe, startPt.element(), finishPt.element(), envLang);
+      return TextZones.fromRange(universe, startPt.element(), finishPt.element(), envLang);
     };
 
     var empty = function () {
