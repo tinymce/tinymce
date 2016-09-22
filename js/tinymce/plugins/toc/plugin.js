@@ -47,7 +47,7 @@ tinymce.PluginManager.add('toc', function(editor) {
             }
             return {
                 id: h.id,
-                level: +h.nodeName.replace(/^H/, ''),
+                level: parseInt(h.nodeName.replace(/^H/i, ''), 10),
                 title: editor.$.text(h)
             };
         });
