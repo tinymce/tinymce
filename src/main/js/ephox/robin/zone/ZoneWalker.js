@@ -1,5 +1,5 @@
 define(
-  'ephox.robin.words.ZoneWalker',
+  'ephox.robin.zone.ZoneWalker',
 
   [
     'ephox.perhaps.Option',

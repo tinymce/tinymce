@@ -7,7 +7,7 @@ define(
     'ephox.robin.api.general.Parent',
     'ephox.robin.words.Clustering',
     'ephox.robin.words.LanguageZones',
-    'ephox.robin.words.ZoneWalker',
+    'ephox.robin.zone.ZoneWalker',
     'ephox.robin.words.Zones'
   ],
 
