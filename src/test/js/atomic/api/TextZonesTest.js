@@ -2,6 +2,8 @@ test(
   'TextZonesTest',
 
   [
+    'ephox.agar.api.Logger',
+    'ephox.agar.api.RawAssertions',
     'ephox.boss.api.Gene',
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
@@ -13,7 +15,7 @@ test(
     'ephox.wrap.Jsc'
   ],
 
-  function (Gene, TestUniverse, TextGene, Fun, TextZones, Arbitraries, PropertyAssertions, ZoneObjects, Jsc) {
+  function (Logger, RawAssertions, Gene, TestUniverse, TextGene, Fun, TextZones, Arbitraries, PropertyAssertions, ZoneObjects, Jsc) {
     var doc1 = TestUniverse(Gene('root', 'root', [
       Gene('div1', 'div', [
         Gene('p1', 'p', [
@@ -41,7 +43,12 @@ test(
             TextGene('de-c', 'der Hund')
           ], {}, { lang: 'de' }),
           TextGene('en-f', 'anoth'),
-          TextGene('en-g', 'er')
+          TextGene('en-g', 'er'),
+          TextGene('en-h', ' '),
+          Gene('isolated', 'span', [
+            TextGene('en-i', 'isolated')
+          ]),
+          TextGene('en-j', ' ')
         ], { }, { lang: 'en' })
       ], {}, { lang: 'fr' })
     ]));
@@ -60,6 +67,25 @@ test(
       ZoneObjects.assertProps('Testing zones for range(' + info.startId + '->' + info.finishId + ')', doc1, actual.zones());
       return true;
     };
+
+    Logger.sync(
+      'Checking the (single) zone of an isolated inline tag',
+      function () {
+        var item = doc1.find(doc1.get(), 'isolated').getOrDie();
+        var actual = TextZones.single(doc1, item, 'en');
+        RawAssertions.assertEq(
+          'Zone assertion',
+          [{
+            lang: 'en',
+            elements: [
+              'en-i'
+            ],
+            words: [
+              'isolated'
+            ]
+          }], ZoneObjects.raw(doc1, actual.zones()));
+      }
+    );
 
     PropertyAssertions.check(
       'Check text single', 
