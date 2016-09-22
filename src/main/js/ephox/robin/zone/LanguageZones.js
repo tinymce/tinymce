@@ -120,9 +120,27 @@ define(
       });
     };
 
+    // Horrible name.
+    var strictBounds = function (envLang, onlyLang) {
+      return function (universe, item) {
+        var itemLang = getDefault(universe, item).getOr(envLang);
+        var r = onlyLang !== itemLang;
+        return r;
+      };
+    };
+
+    var getBounder = function (optLang) {
+      return function (universe, item) {
+        var itemLang = getDefault(universe, item);
+        return !Option.equals(optLang, itemLang);
+      };
+    };
+
     return {
       nu: nu,
-      getDefault: getDefault
+      getDefault: getDefault,
+      getBounder: getBounder,
+      strictBounds: strictBounds
     };
   }
 );
