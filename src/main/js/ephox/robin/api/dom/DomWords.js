@@ -3,14 +3,13 @@ define(
 
   [
     'ephox.boss.api.DomUniverse',
-    'ephox.robin.api.general.Words',
-    'global!Error'
+    'ephox.robin.api.general.Words'
   ],
 
   /**
    * Documentation is in the actual implementations.
    */
-  function (DomUniverse, Words, Error) {
+  function (DomUniverse, Words) {
     var universe = DomUniverse();
 
     var identify = function (allText) {

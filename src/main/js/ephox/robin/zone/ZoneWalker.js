@@ -69,7 +69,7 @@ define(
           (opening ? stack.openBoundary : stack.closeBoundary)(aLang, aItem);
           doWalk(universe, aItem, aMode, stopOn, stack);
         }, function (aItem, aMode) {
-        
+          // concluded(aItem, aMode) DO NOTHING
         }
       );
     };
@@ -83,7 +83,8 @@ define(
       var stopOn = function (sItem, sMode) {
         return universe.eq(sItem, finish) && (sMode !== Gather.advance || universe.property().isText(sItem));
       };
-      // TODO: Make the language zone stack immutable *and* performant
+
+      // INVESTIGATE: Make the language zone stack immutable *and* performant
       var stack = LanguageZones.nu(defaultLang);
       var mode = Gather.advance;
       var initial = analyse(universe, start, mode, stopOn);

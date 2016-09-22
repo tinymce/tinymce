@@ -10,6 +10,8 @@ define(
   ],
 
   function (Arr, Fun, ClusterSearch, WordDecision, LanguageZones) {
+    // This identifies the inline edges to the left and right, ignoring any language
+    // boundaries
     var byBoundary = function (universe, item) {
       var isCustomBoundary = Fun.constant(false);
 
@@ -28,6 +30,8 @@ define(
       };
     };
 
+    // This identifies the edges to the left and right, using a custom boundaryFunction
+    // to use in addition to normal boundaries. Often, it's language
     var getEdges = function (universe, item, isCustomBoundary) {
       var toLeft = ClusterSearch.creepLeft(universe, item, isCustomBoundary);
       var toRight = ClusterSearch.creepRight(universe, item, isCustomBoundary);
@@ -44,15 +48,17 @@ define(
       };
     };
 
-    // Return the anyLang to the left and right of item, and as well as the any text nodes inside the item itself, and the language of item.
+    // Return a grouping of: left, middle, right, lang, and all. It will use 
+    // language boundaries in addition to the normal block boundaries. Use this 
+    // to create a cluster of the same language.
     var byLanguage = function (universe, item, _optimise) {
       // TODO: Remote optimise parameter.
-      var optLang = LanguageZones.getDefault(universe, item); // closest language anywhere up the DOM ancestor path including self
+      var optLang = LanguageZones.getDefault(universe, item);
       var isLanguageBoundary = LanguageZones.getBounder(optLang);
 
       var toLeft = ClusterSearch.creepLeft(universe, item, isLanguageBoundary);
       var toRight = ClusterSearch.creepRight(universe, item, isLanguageBoundary);
-      var middle =  [ WordDecision.detail(universe, item) ];
+      var middle =  universe.property().isText(item) ? [ WordDecision.detail(universe, item) ] : [ ];
 
       var all = Arr.reverse(toLeft).concat(middle).concat(toRight);
 

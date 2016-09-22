@@ -43,7 +43,7 @@ define(
 
     var fromInline = function (universe, element, envLang) {
       // Create a cluster that branches to the edge of words, and then apply the zones. We will move
-      // pass language boundaries, because we might need to be retokenizing words post a language
+      // past language boundaries, because we might need to be retokenizing words post a language
       // change
       var bounded = Clustering.byBoundary(universe, element);
       return bounded.isEmpty() ? empty() : fromBounded(universe, bounded.left(), bounded.right(), envLang);

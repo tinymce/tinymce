@@ -14,7 +14,6 @@ define(
     // a Text Zone enforces a language, and returns Option.some only if a single zone was identified
     // with that language.
     var filterZone = function (zone, onlyLang) {
-      console.log('zoning', zone.lang(), onlyLang);
       return zone.lang() === onlyLang ? Option.some(zone) : Option.none();
     };
 
@@ -37,9 +36,6 @@ define(
 
     var fromInline = function (universe, element, envLang, onlyLang) {
       var isLanguageBoundary = LanguageZones.strictBounds(envLang, onlyLang);
-      // Create a cluster that branches to the edge of words, and then apply the zones. We will move
-      // pass language boundaries, because we might need to be retokenizing words post a language
-      // change
       var edges = Clustering.getEdges(universe, element, isLanguageBoundary);
       return edges.isEmpty() ? scour(universe, element, envLang, onlyLang) : fromBounded(universe, edges.left(), edges.right(), envLang, onlyLang);
     };

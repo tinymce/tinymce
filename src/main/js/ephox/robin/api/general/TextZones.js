@@ -7,17 +7,20 @@ define(
   ],
 
   function (Descent, TextZones) {
+    /*
+     * TextZones return an array of zones based on an area being scanned
+     */
     var single = function (universe, element, envLang) {
-      // console.log('single', element.dom());
       if (universe.property().isBoundary(element)) return TextZones.fromBounded(universe, element, element, envLang);
       else if (universe.property().isEmptyTag(element)) return empty();
       else return TextZones.fromInline(universe, element, envLang);
     };
 
+    // NOTE: this is duplicated with TextZone, but I think if we try and reuse it it will become
+    // unreadable.
     var range = function (universe, start, soffset, finish, foffset, envLang) {
       var startPt = Descent.toLeaf(universe, start, soffset);
       var finishPt = Descent.toLeaf(universe, finish, foffset);
-      // Probably have to do some gathering here.
       if (universe.eq(startPt.element(), finishPt.element())) return single(universe, startPt.element(), envLang);      
       return TextZones.fromRange(universe, startPt.element(), finishPt.element(), envLang);
     };

@@ -15,12 +15,12 @@ define(
      *
      * For boundaries, stop the gathering process and do not include
      * For empty tags, stop the gathering process and do not include
+     * For items satisfying the custom boundary, stop the gathering process and do not include. This is
+     * often a language boundary function.
      * For text nodes:
      *   a) text node has a character break, stop the gathering process and include partial
      *   b) text node has no character breaks, keep gathering and include entire node
-     * For other elements, calculate the language of the closest ancestor:
-     *   a) if the (destination) language has changed, stop the gathering process and do not include
-     *   b) if the (destination) language has not changed, keep gathering and include
+     *
      * These rules are encoded in WordDecision.decide
      * Returns: [WordDecision.make Struct] of all the words recursively from item in direction.
      */
