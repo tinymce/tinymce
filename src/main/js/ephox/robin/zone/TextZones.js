@@ -6,7 +6,7 @@ define(
     'ephox.perhaps.Option',
     'ephox.robin.api.general.Parent',
     'ephox.robin.words.Clustering',
-    'ephox.robin.words.LanguageZones',
+    'ephox.robin.zone.LanguageZones',
     'ephox.robin.zone.ZoneWalker',
     'ephox.robin.zone.Zones'
   ],

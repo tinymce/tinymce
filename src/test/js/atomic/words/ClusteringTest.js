@@ -12,7 +12,7 @@ test(
     'ephox.perhaps.Option',
     'ephox.robin.test.Arbitraries',
     'ephox.robin.words.Clustering',
-    'ephox.robin.words.LanguageZones',
+    'ephox.robin.zone.LanguageZones',
     'ephox.wrap.Jsc'
   ],
 

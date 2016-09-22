@@ -6,7 +6,7 @@ define(
     'ephox.peanut.Fun',
     'ephox.polaris.api.Arrays',
     'ephox.robin.words.Identify',
-    'ephox.robin.words.LanguageZones',
+    'ephox.robin.zone.LanguageZones',
     'ephox.scullion.Struct'
   ],
 

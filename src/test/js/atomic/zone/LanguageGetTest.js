@@ -7,7 +7,7 @@ test(
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
     'ephox.perhaps.Option',
-    'ephox.robin.words.LanguageZones'
+    'ephox.robin.zone.LanguageZones'
   ],
 
   function (RawAssertions, Gene, TestUniverse, TextGene, Option, LanguageZones) {

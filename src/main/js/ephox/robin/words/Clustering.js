@@ -6,11 +6,11 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.robin.words.ClusterSearch',
-    'ephox.robin.words.LanguageZones',
-    'ephox.robin.words.WordDecision'
+    'ephox.robin.words.WordDecision',
+    'ephox.robin.zone.LanguageZones'
   ],
 
-  function (Arr, Fun, Option, ClusterSearch, LanguageZones, WordDecision) {
+  function (Arr, Fun, Option, ClusterSearch, WordDecision, LanguageZones) {
     var byBoundary = function (universe, item) {
       var isCustomBoundary = Fun.constant(false);
       // TODO: Remote optimise parameter.

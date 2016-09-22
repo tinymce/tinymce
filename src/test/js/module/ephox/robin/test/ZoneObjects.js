@@ -6,7 +6,7 @@ define(
     'ephox.agar.api.RawAssertions',
     'ephox.compass.Arr',
     'ephox.numerosity.api.JSON',
-    'ephox.robin.words.LanguageZones'
+    'ephox.robin.zone.LanguageZones'
   ],
 
   function (Logger, RawAssertions, Arr, Json, LanguageZones) {

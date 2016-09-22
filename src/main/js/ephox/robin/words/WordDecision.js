@@ -2,12 +2,10 @@ define(
   'ephox.robin.words.WordDecision',
 
   [
-    'ephox.perhaps.Option',
-    'ephox.robin.words.LanguageZones',
     'ephox.scullion.Struct'
   ],
 
-  function (Option, LanguageZones, Struct) {
+  function (Struct) {
     var make = Struct.immutable('item', 'start', 'finish', 'text');
     var decision = Struct.immutable('items', 'abort');
 

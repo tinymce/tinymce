@@ -1,5 +1,5 @@
 define(
-  'ephox.robin.words.LanguageZones',
+  'ephox.robin.zone.LanguageZones',
 
   [
     'ephox.peanut.Fun',

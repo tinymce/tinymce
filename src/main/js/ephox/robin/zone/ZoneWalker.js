@@ -4,7 +4,7 @@ define(
   [
     'ephox.perhaps.Option',
     'ephox.phoenix.api.general.Gather',
-    'ephox.robin.words.LanguageZones',
+    'ephox.robin.zone.LanguageZones',
     'ephox.scullion.ADT'
   ],
 
