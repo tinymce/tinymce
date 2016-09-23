@@ -34,6 +34,10 @@ tinymce.PluginManager.add('preview', function(editor) {
 					headHtml += '<link type="text/css" rel="stylesheet" href="' + editor.documentBaseURI.toAbsolute(url) + '">';
 				});
 
+				if (editor.contentStyles) {
+					headHtml += '<style>' + editor.contentStyles.join('') + '</style>';
+				}
+
 				var bodyId = settings.body_id || 'tinymce';
 				if (bodyId.indexOf('=') != -1) {
 					bodyId = editor.getParam('body_id', '', 'hash');
