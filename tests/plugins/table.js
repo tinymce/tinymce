@@ -331,16 +331,16 @@
 		editor.execCommand('mceTableProps');
 
 		deepEqual(Utils.getFrontmostWindow().toJSON(), {
-		"align": "",
-		"backgroundColor": "",
-		"border": "",
-		"borderColor": "",
-		"caption": false,
-		"cellpadding": "5px",
-		"cellspacing": "",
-		"height": "",
-		"style": "",
-		"width": ""
+			"align": "",
+			"backgroundColor": "",
+			"border": "",
+			"borderColor": "",
+			"caption": false,
+			"cellpadding": "5px",
+			"cellspacing": "",
+			"height": "",
+			"style": "",
+			"width": ""
 		});
 	});
 
@@ -426,6 +426,52 @@
 		);
 	});
 
+	test("Table cell properties dialog update multiple cells", function() {
+		editor.getBody().innerHTML = (
+			'<table>' +
+				'<tbody>' +
+					'<tr>' +
+						'<td style="width: 10px;" data-mce-selected="1">a</td>' +
+						'<td style="width: 20px;" data-mce-selected="1">b</td>' +
+					'</tr>' +
+				'</tbody>' +
+			'</table>'
+		);
+		Utils.setSelection('td:nth-child(2)', 0);
+		editor.execCommand('mceTableCellProps');
+
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
+			"align": "",
+			"valign": "",
+			"height": "",
+			"scope": "",
+			"type": "td",
+			"width": "",
+			"backgroundColor": "",
+			"borderColor": "",
+			"style": ""
+		}, 'Should not contain width');
+
+		fillAndSubmitWindowForm({
+			"height": "20"
+		});
+
+		equal(
+			cleanTableHtml(editor.getContent()),
+			(
+				'<table>' +
+					'<tbody>' +
+						'<tr>' +
+							'<td style="width: 10px; height: 20px;">a</td>' +
+							'<td style="width: 20px; height: 20px;">b</td>' +
+						'</tr>' +
+					'</tbody>' +
+				'</table>'
+			),
+			'Width should be retained height should be changed'
+		);
+	});
+
 	test("Table row properties dialog (get data from plain cell)", function() {
 		editor.setContent('<table><tr><td>X</td></tr></table>');
 		Utils.setSelection('td', 0);
@@ -470,6 +516,57 @@
 		equal(
 			cleanTableHtml(editor.getContent()),
 			'<table><thead><tr style="height: 10px; text-align: right;"><td>x</td></tr></thead></table>'
+		);
+	});
+
+	test("Table row properties dialog update multiple rows", function() {
+		editor.getBody().innerHTML = (
+			'<table>' +
+				'<tbody>' +
+					'<tr style="height: 20px;">' +
+						'<td data-mce-selected="1">a</td>' +
+						'<td data-mce-selected="1">b</td>' +
+					'</tr>' +
+					'<tr style="height: 20px;">' +
+						'<td data-mce-selected="1">c</td>' +
+						'<td data-mce-selected="1">d</td>' +
+					'</tr>' +
+				'</tbody>' +
+			'</table>'
+		);
+		Utils.setSelection('tr:nth-child(2) td:nth-child(2)', 0);
+		editor.execCommand('mceTableRowProps');
+
+		deepEqual(Utils.getFrontmostWindow().toJSON(), {
+			"align": "",
+			"height": "",
+			"type": "tbody",
+			"backgroundColor": "",
+			"borderColor": "",
+			"style": ""
+		}, 'Should not contain height');
+
+		fillAndSubmitWindowForm({
+			"align": "center"
+		});
+
+		equal(
+			cleanTableHtml(editor.getContent()),
+			(
+				'<table>' +
+					'<tbody>' +
+						'<tr style="height: 20px; text-align: center;">' +
+							'<td>a</td>' +
+							'<td>b</td>' +
+						'</tr>' +
+						'<tr style="height: 20px; text-align: center;">' +
+							'<td>c</td>' +
+							'<td>d</td>' +
+						'</tr>' +
+					'</tbody>' +
+				'</table>'
+			),
+			'Width should be retained height should be changed'
 		);
 	});
 
