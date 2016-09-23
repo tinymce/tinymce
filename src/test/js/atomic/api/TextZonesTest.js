@@ -48,7 +48,9 @@ test(
           Gene('isolated', 'span', [
             TextGene('en-i', 'isolated')
           ]),
-          TextGene('en-j', ' ')
+          TextGene('en-j', ' '),
+          TextGene('en-k', ' isolated-text' ),
+          TextGene('ek-l' ,' ')
         ], { }, { lang: 'en' })
       ], {}, { lang: 'fr' })
     ]));
@@ -82,6 +84,25 @@ test(
             ],
             words: [
               'isolated'
+            ]
+          }], ZoneObjects.raw(doc1, actual.zones()));
+      }
+    );
+
+    Logger.sync(
+      'Checking the (single) zone of an isolated text node',
+      function () {
+        var item = doc1.find(doc1.get(), 'en-k').getOrDie();
+        var actual = TextZones.single(doc1, item, 'en');
+        RawAssertions.assertEq(
+          'Zone assertion',
+          [{
+            lang: 'en',
+            elements: [
+              'en-k'
+            ],
+            words: [
+              'isolated-text'
             ]
           }], ZoneObjects.raw(doc1, actual.zones()));
       }

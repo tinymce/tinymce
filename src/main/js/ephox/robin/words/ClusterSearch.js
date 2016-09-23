@@ -48,8 +48,8 @@ define(
     };
 
     var isEmpty = function (universe, item) {
-      // This is PredicateFilter.descendants
-      return universe.down().predicate(item, universe.property().isText).length === 0;
+      // Empty if there are no text nodes in self or any descendants.
+      return universe.property().isText(item) ? false : universe.down().predicate(item, universe.property().isText).length === 0;
     };
 
     var flatten = function (universe, item) {
