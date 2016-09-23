@@ -17,7 +17,7 @@ tinymce.PluginManager.add('toc', function(editor) {
     // so only lowercase letters allowed, underscores are ok
     var defaults = {
         title: "Table of Contents",
-        maxlevel: 3,
+        maxlevel: "3",
         prefix: 'mce'
     };
 
