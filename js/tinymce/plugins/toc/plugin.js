@@ -81,18 +81,27 @@ tinymce.PluginManager.add('toc', function(editor) {
             h = headers[i];
             nextLevel = headers[i+1] && headers[i+1].level;
 
-            for (ii = prevLevel; ii < h.level; ii++) {
-                html += '<ul class="' + o.prefix + '-toc-lvl-' + (ii+1) + '"><li style="list-style-type: none">';
+            if (prevLevel === h.level) {
+                html += '<li style="list-style-type: none">';
+            } else {
+                for (ii = prevLevel; ii < h.level; ii++) {
+                    html += '<ul class="' + o.prefix + '-toc-lvl-' + (ii + 1) + '">';
+                    html += '<li style="list-style-type: none">';
+                }
             }
 
             html += '<a href="#' + h.id + '">' + h.title + '</a>';
 
-            for (ii = h.level; ii > nextLevel; ii--) {
-                html += '</li></ul><li style="list-style-type: none">';
-            }
+            if (nextLevel === h.level || !nextLevel) {
+                html += '</li>';
 
-            if (!nextLevel) {
-                html += '</ul>';
+                if (!nextLevel) {
+                    html += '</ul>';
+                }
+            } else {
+                for (ii = h.level; ii > nextLevel; ii--) {
+                    html += '</li></ul><li style="list-style-type: none">';
+                }
             }
 
             prevLevel = h.level;
