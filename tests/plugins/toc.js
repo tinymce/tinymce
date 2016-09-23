@@ -254,4 +254,34 @@
         equal($toc.find('ul.mce-toc-lvl-1 a[href="#h5"]').length, 1, "ToC has been successfully updated");
     });
 
+
+    test("Misc.", function() {
+        editor.getBody().innerHTML =
+            '<h1 id="h1">H1</h1>' +
+            '<p>This is some text.</p><br />' +
+            '<h1 id="h2">H1</h1>' +
+            '<p>This is some text.</p><hr />' +
+            '<h1 id="h3">H1</h1>' +
+            '<p>This is some text.</p>' +
+            '<h2 id="h4">H2</h2>' +
+            '<p>This is some text.</p>'
+        ;
+
+        Utils.setSelection('h1', 0);
+        editor.execCommand('mceTocProps');
+
+        fillAndSubmitWindowForm({
+            title: "<strong>html</strong>"
+        });
+
+        var $toc = editor.$('[data-mce-toc]');
+
+        equal($toc.attr('data-mce-toc-title'), "&lt;strong&gt;html&lt;/strong&gt;",
+            "HTML tags in the ToC attributes are not allowed");
+
+        equal($toc.find('.mce-toc-title').text(), "<strong>html</strong>",
+            "HTML in the ToC title becomes plain text");
+
+    });
+
 }());
