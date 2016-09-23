@@ -217,9 +217,12 @@ tinymce.PluginManager.add('toc', function(editor) {
         insertToc(defaults);
     });
 
-
     editor.addCommand('mceUpdateToc', function() {
         updateToc();
+    });
+
+    editor.addCommand('mceTocProps', function() {
+        openInsertTocDialog();
     });
 
 
@@ -238,6 +241,6 @@ tinymce.PluginManager.add('toc', function(editor) {
     editor.addMenuItem('toc', {
         text: 'Table of Contents',
         context: 'insert',
-        onclick: openInsertTocDialog
+        cmd: 'mceTocProps'
     });
 });
