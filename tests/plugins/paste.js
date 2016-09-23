@@ -27,6 +27,32 @@ module("tinymce.plugins.Paste", {
 	}
 });
 
+test("Plain text toggle event", function() {
+	var events = [];
+
+	editor.on('PastePlainTextToggle', function (e) {
+		events.push({state: e.state});
+	});
+
+	editor.execCommand('mceTogglePlainTextPaste');
+	deepEqual(events, [
+		{state: true}
+	], 'Should be enabled');
+
+	editor.execCommand('mceTogglePlainTextPaste');
+	deepEqual(events, [
+		{state: true},
+		{state: false}
+	], 'Should be disabled');
+
+	editor.execCommand('mceTogglePlainTextPaste');
+	deepEqual(events, [
+		{state: true},
+		{state: false},
+		{state: true}
+	], 'Should be enabled again');
+});
+
 test("Paste simple text content", function() {
 	var rng = editor.dom.createRng();
 
