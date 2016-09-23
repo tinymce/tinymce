@@ -22,7 +22,7 @@ tinymce.PluginManager.add('toc', function(editor) {
     };
 
     function isToc(elm) {
-        return editor.dom.is(elm, '[data-mce-toc]') && editor.getBody().contains(elm);
+        return elm && editor.dom.is(elm, '[data-mce-toc]') && editor.getBody().contains(elm);
     }
 
 
@@ -58,7 +58,7 @@ tinymce.PluginManager.add('toc', function(editor) {
 
     function generateTocHtml(o) {
         var html = generateTocContentHtml(o);
-        return html ? '<div id="__mcetoc" class="' + o.prefix + '-toc" contenteditable="false" data-mce-toc="1">' + html + '</div>' : '';
+        return html ? '<div id="__mcetoc" class="' + o.prefix + '-toc" contenteditable="false" data-mce-toc="1" style="padding: 1em;">' + html + '</div>' : '';
     }
 
 
@@ -139,7 +139,7 @@ tinymce.PluginManager.add('toc', function(editor) {
 
     function updateToc(tocElm, o) {
         var tocElm = tocElm || getSelectedToc();
-        var o = o || getTocOptions(tocElm);
+        var o = tinymce.extend({}, defaults, o || getTocOptions(tocElm));
 
         if (o) {
             editor.undoManager.transact(function () {
@@ -164,10 +164,12 @@ tinymce.PluginManager.add('toc', function(editor) {
     }
 
 
-    function openInsertTocDialog() {
+    function openInsertTocDialog(tocElm) {
         var levels = '1,2,3,4,5,6,7,8,9';
-        var tocElm = getSelectedToc();
-        var options = getTocOptions(tocElm) || defaults;
+        var o;
+
+        tocElm = tocElm || getSelectedToc();
+        o = tinymce.extend({}, defaults, getTocOptions(tocElm));
 
         editor.windowManager.open({
             title: "Table of Contents",
@@ -177,7 +179,7 @@ tinymce.PluginManager.add('toc', function(editor) {
                     title: 'Properties',
                     type: 'form',
                     padding: 20,
-                    data: options,
+                    data: o,
                     items: [
                         {
                             label: 'Title',
@@ -188,7 +190,7 @@ tinymce.PluginManager.add('toc', function(editor) {
                             label: 'Show levels',
                             name: 'maxlevel',
                             type: 'listbox',
-                            text: options.maxlevel,
+                            text: o.maxlevel,
                             values: tinymce.map(levels.split(','), function(i) {
                                 return { text: i, value: i };
                             })
