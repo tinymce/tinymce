@@ -103,8 +103,7 @@ tinymce.PluginManager.add('toc', function(editor) {
 
 
     function getSelectedToc() {
-        var node = editor.selection.getNode();
-        return isToc(node) ? node : null;
+        return editor.dom.getParent(editor.selection.getStart(), '[data-mce-toc]') || null;
     }
 
 
