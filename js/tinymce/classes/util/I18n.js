@@ -103,7 +103,7 @@ define("tinymce/util/I18n", [
 				if (Tools.is(obj, 'function')) {
 					return Object.prototype.toString.call(obj);
 				}
-				return !isEmpty(obj) ? '' + obj  : '';
+				return !isEmpty(obj) ? '' + obj : '';
 			}
 
 			function isEmpty(text) {
