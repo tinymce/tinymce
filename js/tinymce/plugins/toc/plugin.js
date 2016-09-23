@@ -58,7 +58,12 @@ tinymce.PluginManager.add('toc', function(editor) {
 
     function generateTocHtml(o) {
         var html = generateTocContentHtml(o);
-        return html ? '<div id="__mcetoc" class="' + o.prefix + '-toc" contenteditable="false" data-mce-toc="1" style="padding: 1em;">' + html + '</div>' : '';
+        var tocHtml = '';
+        if (html) {
+            tocHtml += '<div id="__mcetoc" class="' + o.prefix + '-toc" contenteditable="false"';
+            tocHtml += ' data-mce-toc="1" style="padding: 1em;">' + html + '</div>';
+        }
+        return tocHtml;
     }
 
 
@@ -74,12 +79,12 @@ tinymce.PluginManager.add('toc', function(editor) {
 
         if (title) {
             html += '<div class="' + o.prefix + '-toc-title"';
-            html += ' style="font-size: 1.5em; font-weight: bold;">' + title + '</div>';
+            html += ' style="font-size:1.5em;font-weight:bold;">' + title + '</div>';
         }
 
         for (i = 0; i < headers.length; i++) {
             h = headers[i];
-            nextLevel = headers[i+1] && headers[i+1].level;
+            nextLevel = headers[i + 1] && headers[i + 1].level;
 
             if (prevLevel === h.level) {
                 html += '<li style="list-style-type: none">';
@@ -138,8 +143,8 @@ tinymce.PluginManager.add('toc', function(editor) {
 
 
     function updateToc(tocElm, o) {
-        var tocElm = tocElm || getSelectedToc();
-        var o = tinymce.extend({}, defaults, o || getTocOptions(tocElm));
+        tocElm = tocElm || getSelectedToc();
+        o = tinymce.extend({}, defaults, o || getTocOptions(tocElm));
 
         if (o) {
             editor.undoManager.transact(function () {
@@ -192,7 +197,7 @@ tinymce.PluginManager.add('toc', function(editor) {
                             type: 'listbox',
                             text: o.maxlevel,
                             values: tinymce.map(levels.split(','), function(i) {
-                                return { text: i, value: i };
+                                return {text: i, value: i};
                             })
                         },
                         {
@@ -201,7 +206,7 @@ tinymce.PluginManager.add('toc', function(editor) {
                             type: 'textbox'
                         }
                     ]
-                },
+                }
             ],
 
             onsubmit: function(e) {
