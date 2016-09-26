@@ -4,6 +4,7 @@ tmp
 .settings
 .idea
 .project
+.vscode
 *.sublime-*
 .externalToolBuilders
 *~
