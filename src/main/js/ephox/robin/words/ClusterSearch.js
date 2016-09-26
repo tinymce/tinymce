@@ -2,14 +2,13 @@ define(
   'ephox.robin.words.ClusterSearch',
 
   [
-    'ephox.bud.Unicode',
     'ephox.compass.Arr',
     'ephox.phoenix.api.general.Gather',
     'ephox.robin.words.WordDecision',
     'ephox.robin.words.WordWalking'
   ],
 
-  function (Unicode, Arr, Gather, WordDecision, WordWalking) {
+  function (Arr, Gather, WordDecision, WordWalking) {
     /*
      * Identification of words:
      *
@@ -33,9 +32,7 @@ define(
       }).getOr([]);
 
       return Arr.filter(result, function (res) {
-        // Removing the unicode characters that mess up with words. This won't be sufficient, but 
-        // we'll have to look at handling this later.
-        return res.text().replace(Unicode.zeroWidth(), '') !== '';
+        return res.text().trim().length > 0;
       });
     };
 

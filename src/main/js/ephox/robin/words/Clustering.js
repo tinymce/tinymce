@@ -51,8 +51,7 @@ define(
     // Return a grouping of: left, middle, right, lang, and all. It will use 
     // language boundaries in addition to the normal block boundaries. Use this 
     // to create a cluster of the same language.
-    var byLanguage = function (universe, item, _optimise) {
-      // TODO: Remote optimise parameter.
+    var byLanguage = function (universe, item) {
       var optLang = LanguageZones.calculate(universe, item);
       var isLanguageBoundary = LanguageZones.softBounder(optLang);
 

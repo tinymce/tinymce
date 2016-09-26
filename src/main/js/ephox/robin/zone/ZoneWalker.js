@@ -10,7 +10,7 @@ define(
 
   function (Option, Gather, LanguageZones, Adt) {
     var adt = Adt.generate([
-      // keep going and
+      // an inline element, so use the lang to identify if a new zone is needed
       { inline: [ 'item', 'mode', 'lang' ] },
       { text: [ 'item', 'mode' ] },
       // things like <img>, <br>
@@ -39,7 +39,6 @@ define(
 
     var takeStep = function (universe, item, mode, stopOn) {
       return Gather.walk(universe, item, mode, Gather.walkers().right(), _rules).fold(function () {
-        // console.log('concluding', aItem.dom());
         return adt.concluded(item, mode);
       }, function (n) {
         return analyse(universe, n.item(), n.mode(), stopOn);

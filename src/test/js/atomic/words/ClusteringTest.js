@@ -8,7 +8,6 @@ test(
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
     'ephox.compass.Arr',
-    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.robin.test.Arbitraries',
     'ephox.robin.words.Clustering',
@@ -16,7 +15,7 @@ test(
     'ephox.wrap.Jsc'
   ],
 
-  function (Logger, RawAssertions, Gene, TestUniverse, TextGene, Arr, Fun, Option, Arbitraries, Clustering, LanguageZones, Jsc) {
+  function (Logger, RawAssertions, Gene, TestUniverse, TextGene, Arr, Option, Arbitraries, Clustering, LanguageZones, Jsc) {
     var checkWords  = function (universe, words) {
       return Arr.map(words, function (a) {
         var text = universe.property().getText(a.item());
@@ -237,7 +236,7 @@ test(
               if (startId === 'root') return true;
               var start = universe.find(universe.get(), startId).getOrDie();
               if (universe.property().isBoundary(start)) return true;
-              var actual = Clustering.byLanguage(universe, start, Fun.constant(false));
+              var actual = Clustering.byLanguage(universe, start);
               checkProps(universe, textIds, start, actual);
               return true;
             }
