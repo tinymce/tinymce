@@ -1,7 +1,6 @@
 ModuleLoader.require([
 	'tinymce/util/Tools'
-],
-	function(Tools) {
+], function(Tools) {
 	module("tinymce.NotificationManager", {
 		setupModule: function() {
 			QUnit.stop();
@@ -59,7 +58,7 @@ ModuleLoader.require([
 		equal(notifications.length, 4, 'Should work for all text message types.');
 	});
 
-	test('Should add duplicate progressBas messages', function() {
+	test('Should add duplicate progressBar messages', function() {
 		expect(2);
 		var testMsg1 = {text: 'test progressBar message', progressBar: true};
 		var notifications = editor.notificationManager.notifications;
@@ -77,6 +76,11 @@ ModuleLoader.require([
 
 	asyncTest('Should add duplicate timeout messages', function() {
 		expect(2);
+		var checkClosed = function () {
+			if (notifications.length === 0) {
+				start();
+			}
+		};
 		var testMsg1 = {text: 'test timeout message', timeout: 1};
 		var notifications = editor.notificationManager.notifications;
 
@@ -87,12 +91,6 @@ ModuleLoader.require([
 		editor.notificationManager.open(testMsg1).on('close', checkClosed);
 
 		equal(notifications.length, 2, 'Duplicate should be added for timeout message.');
-
-		function checkClosed() {
-			if (notifications.length === 0) {
-				start();
-			}
-		}
 	});
 
 });
