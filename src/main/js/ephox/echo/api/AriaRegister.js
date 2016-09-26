@@ -279,7 +279,11 @@ define(
     // };
 
     var hidden = function (element, status) {
-      Attr.set(element, 'aria-hidden', status);
+      if (status) {
+        Attr.set(element, 'aria-hidden', status);
+      } else {
+        Attr.remove(element, 'aria-hidden'); // same as setting aria-hidden:false
+      }
     };
 
     return {
