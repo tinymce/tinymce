@@ -2,13 +2,14 @@ test(
   'SelectionTest',
 
   [
+    'ephox.agar.api.RawAssertions',
     'ephox.boss.api.Gene',
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
     'ephox.robin.smartselect.Selection'
   ],
 
-  function (Gene, TestUniverse, TextGene, Selection) {
+  function (RawAssertions, Gene, TestUniverse, TextGene, Selection) {
     var doc1 = TestUniverse(Gene('root', 'root', [
       Gene('p1', 'p', [
         TextGene('a', 'There i'),
@@ -50,12 +51,12 @@ test(
     ]));
 
     var check = function (expected, doc, id, offset) {
-      var item = doc.find(doc.get(), id).getOrDie();
-      var actual = Selection.word(doc, item, offset).getOrDie();
-      assert.eq(expected.startContainer, actual.startContainer().id);
-      assert.eq(expected.startOffset, actual.startOffset());
-      assert.eq(expected.endContainer, actual.endContainer().id);
-      assert.eq(expected.endOffset, actual.endOffset());
+      var item = doc.find(doc.get(), id).getOrDie('Could not find item: ' + id);
+      var actual = Selection.word(doc, item, offset).getOrDie('Selection for: (' + id + ', ' + offset + ') yielded nothing');
+      RawAssertions.assertEq('Selection for: (' + id + ', ' + offset + ') => startContainer', expected.startContainer, actual.startContainer().id);
+      RawAssertions.assertEq('Selection for: (' + id + ', ' + offset + ') => startOffset', expected.startOffset, actual.startOffset());
+      RawAssertions.assertEq('Selection for: (' + id + ', ' + offset + ') => endContainer', expected.endContainer, actual.endContainer().id);
+      RawAssertions.assertEq('Selection for: (' + id + ', ' + offset + ') => endOffset', expected.endOffset, actual.endOffset());
     };
 
     var checkNone = function (doc, id, offset) {
@@ -120,5 +121,118 @@ test(
     checkNone(doc3, 'b', ''.length);
     checkNone(doc3, 'b', '\uFEFF'.length);
     checkNone(doc3, 'b', '\uFEFF\uFEFF'.length);
+
+    var doc4 = TestUniverse(Gene('root', 'root', [
+      Gene('s1-fr', 'span', [
+        TextGene('t1-fr', 'da'),
+        TextGene('t2-fr', 'aa bo'),
+        TextGene('t3-fr', 'dytag')
+      ], {}, { lang: 'fr' }),
+      Gene('s2-en', 'span', [
+        TextGene('t4-en', 'span'),
+        TextGene('t5-en', 'ning')
+      ], {}, { lang: 'en' }),
+      Gene('s3-en', 'span', [
+        TextGene('t6-en', 'bound'),
+        TextGene('t7-en', 'aries and'),
+        TextGene('t8-en', 'more')
+      ], {}, { lang: 'en' }),
+      Gene('s4-de', 'span', [
+        TextGene('t9-de', 'di'),
+        TextGene('t10-de', 'ee '),
+        TextGene('t11-de', ' der')
+      ], {}, { lang: 'de' })
+    ]));
+
+    check({
+      startContainer: 't1-fr',
+      startOffset: ''.length,
+      endContainer: 't2-fr',
+      endOffset: 'aa'.length
+    }, doc4, 't1-fr', 'd'.length);
+
+    check({
+      startContainer: 't1-fr',
+      startOffset: ''.length,
+      endContainer: 't2-fr',
+      endOffset: 'aa'.length
+    }, doc4, 't2-fr', 'a'.length);
+
+    check({
+      startContainer: 't2-fr',
+      startOffset: 'aa '.length,
+      endContainer: 't3-fr',
+      endOffset: 'dytag'.length
+    }, doc4, 't2-fr', 'aa b'.length);
+
+    check({
+      startContainer: 't2-fr',
+      startOffset: 'aa '.length,
+      endContainer: 't3-fr',
+      endOffset: 'dytag'.length
+    }, doc4, 't3-fr', 'aa b'.length);
+
+    check({
+      startContainer: 't4-en',
+      startOffset: ''.length,
+      endContainer: 't7-en',
+      endOffset: 'aries'.length
+    }, doc4, 't4-en', 's'.length);
+
+    check({
+      startContainer: 't4-en',
+      startOffset: ''.length,
+      endContainer: 't7-en',
+      endOffset: 'aries'.length
+    }, doc4, 't5-en', 'n'.length);
+
+    check({
+      startContainer: 't4-en',
+      startOffset: ''.length,
+      endContainer: 't7-en',
+      endOffset: 'aries'.length
+    }, doc4, 't6-en', 'bou'.length);
+
+    check({
+      startContainer: 't4-en',
+      startOffset: ''.length,
+      endContainer: 't7-en',
+      endOffset: 'aries'.length
+    }, doc4, 't7-en', 'ari'.length);
+
+    check({
+      startContainer: 't7-en',
+      startOffset: 'aries '.length,
+      endContainer: 't8-en',
+      endOffset: 'more'.length
+    }, doc4, 't7-en', 'aries an'.length);
+
+    check({
+      startContainer: 't7-en',
+      startOffset: 'aries '.length,
+      endContainer: 't8-en',
+      endOffset: 'more'.length
+    }, doc4, 't8-en', 'mo'.length);
+
+    check({
+      startContainer: 't9-de',
+      startOffset: ''.length,
+      endContainer: 't10-de',
+      endOffset: 'ee'.length
+    }, doc4, 't9-de', 'd'.length);
+
+    check({
+      startContainer: 't9-de',
+      startOffset: ''.length,
+      endContainer: 't10-de',
+      endOffset: 'ee'.length
+    }, doc4, 't10-de', 'e'.length);
+
+    check({
+      startContainer: 't11-de',
+      startOffset: ' '.length,
+      endContainer: 't11-de',
+      endOffset: ' der'.length
+    }, doc4, 't11-de', ' d'.length);
   }
 );

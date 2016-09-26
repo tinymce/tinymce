@@ -2,16 +2,16 @@ test(
   'CurrentWordTest',
 
   [
+    'ephox.agar.api.RawAssertions',
     'ephox.perhaps.Option',
-    'ephox.robin.test.Assertions',
     'ephox.robin.util.CurrentWord'
   ],
 
-  function (Option, Assertions, CurrentWord) {
+  function (RawAssertions, Option, CurrentWord) {
     var check = function (expected, text, position) {
       var actual = CurrentWord.around(text, position);
-      Assertions.assertOpt(expected.before, actual.before());
-      Assertions.assertOpt(expected.after, actual.after());
+      RawAssertions.assertEq('Checking before :: Option', expected.before.getOr('none'), actual.before().getOr('none'));
+      RawAssertions.assertEq('Checking after :: Option', expected.after.getOr('none'), actual.after().getOr('none'));
     };
 
     check({ before: Option.some(' this is a '.length), after: Option.some(' this is a test'.length) },

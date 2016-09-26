@@ -112,16 +112,15 @@ var dependencies = [
     ]
   },
 
-  /**** demo dependencies ****/
+  /*** test dependencies */
   {
-    name: 'exhibition',
+    name: 'agar',
     repository: 'buildrepo2',
     version: 'latest',
-    source: 'exhibition.zip',
+    source: 'agar.zip',
     targets: [
-      { name: 'module/*.js', path: demo },
-      { name: 'depend/*.js', path: demo },
-      { name: 'exhibition.js', path: config }
+      { name: 'module/*.js', path: test },
+      { name: 'depend/*.js', path: test }
     ]
   }
 ];

@@ -2,17 +2,20 @@ define(
   'ephox.robin.words.WordDecision',
 
   [
-    'ephox.perhaps.Option',
     'ephox.scullion.Struct'
   ],
 
-  function (Option, Struct) {
+  function (Struct) {
     var make = Struct.immutable('item', 'start', 'finish', 'text');
     var decision = Struct.immutable('items', 'abort');
 
     var detail = function (universe, item) {
       var text = universe.property().getText(item);
       return make(item, 0, text.length, text);
+    };
+
+    var fromItem = function (universe, item) {
+      return universe.property().isText(item) ? detail(universe, item) : make(item, 0, 0, '');
     };
 
     var onEdge = function (universe, item, slicer) {
@@ -36,21 +39,13 @@ define(
       });
     };
 
-    // Returns: true if currLang and the item 'lang' attribute are both the same string, or both are None.
-    var isLanguageBoundary = function (universe, item, currLang) {
-      return (universe.property().isElement(item) &&
-        Option.equals(currLang, Option.some(universe.attrs().get(item, 'lang'))));
-    };
-
     // Return decision struct with one or zero 'make' Struct items. If present the make struct item is the entire item node text,
     // or a substring of it with the [left, right] bounds as determined by the result of slicer(item).
-    // currLang is an Option(string) of the current item language, languageFun is a function 
-    // to return an Option(string) of the language of an element.
-    var decide = function (universe, item, slicer, currLang) {
+    var decide = function (universe, item, slicer, isCustomBoundary) {
       var f = (function () {
         if (universe.property().isBoundary(item)) return onEdge;
         else if (universe.property().isEmptyTag(item)) return onEdge;
-        else if (isLanguageBoundary(universe, item, currLang)) return onEdge;
+        else if (isCustomBoundary(universe, item)) return onEdge;
         else if (universe.property().isText(item)) return onText;
         else return onOther;
       })();
@@ -59,6 +54,7 @@ define(
 
     return {
       detail: detail,
+      fromItem: fromItem,
       decide: decide
     };
   }

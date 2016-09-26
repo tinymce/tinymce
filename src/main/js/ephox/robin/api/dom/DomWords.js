@@ -16,17 +16,12 @@ define(
       return Words.identify(allText);
     };
 
-    var cluster = function (element, optimise) {
-      return Words.cluster(universe, element, optimise);
-    };
-
     var isWord = function (text) {
       return Words.isWord(universe, text);
     };
 
     return {
       identify: identify,
-      cluster: cluster,
       isWord: isWord
     };
 

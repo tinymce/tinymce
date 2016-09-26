@@ -2,86 +2,78 @@ define(
   'ephox.robin.words.Clustering',
 
   [
-    'ephox.bud.Unicode',
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
-    'ephox.phoenix.api.general.Extract',
-    'ephox.phoenix.api.general.Gather',
+    'ephox.robin.words.ClusterSearch',
     'ephox.robin.words.WordDecision',
-    'ephox.robin.words.WordWalking'
+    'ephox.robin.zone.LanguageZones'
   ],
 
-  function (Unicode, Arr, Fun, Extract, Gather, WordDecision, WordWalking) {
-    /*
-     * Identification of words:
-     *
-     * For boundaries, stop the gathering process and do not include
-     * For empty tags, stop the gathering process and do not include
-     * For text nodes:
-     *   a) text node has a character break, stop the gathering process and include partial
-     *   b) text node has no character breaks, keep gathering and include entire node
-     * For other elements, calculate the language of the closest ancestor:
-     *   a) if the (destination) language has changed, stop the gathering process and do not include
-     *   b) if the (destination) language has not changed, keep gathering and do not include
-     * These rules are encoded in WordDecision.decide
-     * Returns: [WordDecision.make Struct] of all the words recursively from item in direction.
-     */
-    var doWords = function (universe, item, mode, direction, currLanguage) {
-      var destination = Gather.walk(universe, item, mode, direction);
-      var result = destination.map(function (dest) {
-        var decision = WordDecision.decide(universe, dest.item(), direction.slicer, currLanguage);
-        var recursive = decision.abort() ? [] : doWords(universe, dest.item(), dest.mode(), direction, currLanguage);
-        return decision.items().concat(recursive);
-      }).getOr([]);
+  function (Arr, Fun, ClusterSearch, WordDecision, LanguageZones) {
+    // This identifies the inline edges to the left and right, ignoring any language
+    // boundaries
+    var byBoundary = function (universe, item) {
+      var isCustomBoundary = Fun.constant(false);
 
-      return Arr.filter(result, function (res) {
-        // Removing the unicode characters that mess up with words. This won't be sufficient, but 
-        // we'll have to look at handling this later.
-        return res.text().replace(Unicode.zeroWidth(), '') !== '';
-      });
-    };
+      var edges = getEdges(universe, item, item, isCustomBoundary);
+     
+      var isMiddleEmpty = function () {
+        return ClusterSearch.isEmpty(universe, item);
+      };
 
-    // Represent all the text nodes within all the sub-tree elements of item.
-    // Returns: [WordDecision.make Struct] of all the words at item.
-    // TODO: for TBIO-470: For multi-language spell checking: This currently assumes the language of 'item' 
-    //       is the language of the entire descendent tree of 'item'. This will be wrong if the sub-tree
-    //       has multiple languages annotated. Extract.all needs to return an array of items that retain this language type information.
-    var extract = function (universe, item, optimise) {
-      if (universe.property().isText(item)) return [ WordDecision.detail(universe, item) ];
-      var children = Extract.all(universe, item, optimise);
-      return Arr.bind(children, function (child) {
-        return universe.property().isText(child) ? [ WordDecision.detail(universe, child) ] : [];
-      });
-    };
+      var isEmpty = edges.isEmpty() && isMiddleEmpty();
 
-    // Returns: Option(string) of the LANG attribute of the closest ancestor element or None.
-    //  - uses Fun.constant(false) for isRoot parameter to search even the top HTML element
-    //    (regardless of 'classic'/iframe or 'inline'/div mode).
-    // Note: there may be descendant elements with a different language
-    var language = function (universe, item) {
-      return universe.up().closest(item, '[lang]', Fun.constant(false)).map(function (el) {
-        return universe.attrs().get(el, 'lang');
-      });
-    };
-
-    // Return the words to the left and right of item, and the descendants of item (middle), and the language of item.
-    var words = function (universe, item, optimise) {
-      var lang = language(universe, item); // closest language anywhere up the DOM ancestor path
-      var toLeft = doWords(universe, item, Gather.sidestep, WordWalking.left, lang); // lang tag of the current element, if any
-      var middle = extract(universe, item, optimise); // TODO: for TBIO-470 multi-language spelling: for now we treat middle/innerText as being single language
-      var toRight = doWords(universe, item, Gather.sidestep, WordWalking.right, lang); // lang tag of the current element, if any
       return {
-        all: Fun.constant(Arr.reverse(toLeft).concat(middle).concat(toRight)),
+        left: edges.left,
+        right: edges.right,
+        isEmpty: Fun.constant(isEmpty)
+      };
+    };
+
+    // This identifies the edges to the left and right, using a custom boundaryFunction
+    // to use in addition to normal boundaries. Often, it's language
+    var getEdges = function (universe, start, finish, isCustomBoundary) {
+      var toLeft = ClusterSearch.creepLeft(universe, start, isCustomBoundary);
+      var toRight = ClusterSearch.creepRight(universe, finish, isCustomBoundary);
+
+      var leftEdge = toLeft.length > 0 ? toLeft[toLeft.length - 1] : WordDecision.fromItem(universe, start);
+      var rightEdge = toRight.length > 0 ? toRight[toRight.length - 1] : WordDecision.fromItem(universe, finish);
+
+      var isEmpty = toLeft.length === 0 && toRight.length === 0;
+
+      return {
+        left: Fun.constant(leftEdge),
+        right: Fun.constant(rightEdge),
+        isEmpty: Fun.constant(isEmpty)     
+      };
+    };
+
+    // Return a grouping of: left, middle, right, lang, and all. It will use 
+    // language boundaries in addition to the normal block boundaries. Use this 
+    // to create a cluster of the same language.
+    var byLanguage = function (universe, item) {
+      var optLang = LanguageZones.calculate(universe, item);
+      var isLanguageBoundary = LanguageZones.softBounder(optLang);
+
+      var toLeft = ClusterSearch.creepLeft(universe, item, isLanguageBoundary);
+      var toRight = ClusterSearch.creepRight(universe, item, isLanguageBoundary);
+      var middle =  universe.property().isText(item) ? [ WordDecision.detail(universe, item) ] : [ ];
+
+      var all = Arr.reverse(toLeft).concat(middle).concat(toRight);
+
+      return {
+        all: Fun.constant(all),
         left: Fun.constant(toLeft),
         middle: Fun.constant(middle),
         right: Fun.constant(toRight),
-        lang: Fun.constant(lang)
+        lang: Fun.constant(optLang)
       };
     };
 
     return {
-      words: words,
-      language: language
+      byBoundary: byBoundary,
+      getEdges: getEdges,
+      byLanguage: byLanguage
     };
   }
 );
