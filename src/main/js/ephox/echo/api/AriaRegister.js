@@ -25,16 +25,7 @@ define(
     };
 
     var presentation = function (element) {
-      // Note: aria-hidden=true says this element and all of its descendents are not percievable
-      // https://www.w3.org/TR/wai-aria/states_and_properties#aria-hidden
-      Attr.setAll(element, {
-        'role': 'presentation',
-        'aria-hidden': 'true'
-      });
-    };
-
     // https://www.w3.org/TR/wai-aria/roles#presentation
-    var presentationRole = function (element) {
       Attr.set(element, 'role', 'presentation');
     };
 
@@ -50,7 +41,7 @@ define(
 
       ariaHelp.each(function (helpText) {
         var aria = Element.fromTag('span');
-        presentationRole(aria);
+        presentation(aria);
         Insert.append(aria, Element.fromText(helpText));
         var labelId = Id.generate('ephox-aria');
         Attr.set(aria, 'id', labelId);
@@ -104,7 +95,7 @@ define(
       // Add 'button' roleto a pastry button, and 'presentation' role
       // to the contentElement that contains the button text.
       Attr.set(element, 'role', 'button');
-      presentationRole(contentElement);
+      presentation(contentElement);
     };
 
     // Set the role 'button'
@@ -178,7 +169,7 @@ define(
     // return a container object with methods {element, field} containing an html field and label
     var labelledField = function (field, name, labelText) {
       var container = Element.fromTag('div');
-      presentationRole(container);
+      presentation(container);
       var id = name + Id.generate('');
       var label = Element.fromHtml('<label>' + labelText + '</label>');
       Attr.set(label, 'for', id);
@@ -279,6 +270,8 @@ define(
     // };
 
     var hidden = function (element, status) {
+      // Note: aria-hidden=true says this element and all of its descendents are not percievable
+      // https://www.w3.org/TR/wai-aria/states_and_properties#aria-hidden
       if (status) {
         Attr.set(element, 'aria-hidden', status);
       } else {
@@ -289,7 +282,6 @@ define(
     return {
       document: roleDocument,
       presentation: presentation,
-      presentationRole: presentationRole,
       controls: controls,
       editor: editor,
       group: group,

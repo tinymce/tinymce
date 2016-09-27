@@ -39,7 +39,7 @@ define(
 
     var createHelp = function (rows, cols, translations) {
       var gridHelp = Element.fromTag('div');
-      AriaRegister.presentationRole(gridHelp);
+      AriaRegister.presentation(gridHelp);
       Class.add(gridHelp, Styles.resolve('aria-help'));
 
       var colIds = [];
@@ -48,7 +48,7 @@ define(
         // Temporary non-random number until we get it right
         var colId = Id.generate('ephox-aria');
         var cellHelp = Element.fromTag('span');
-        AriaRegister.presentationRole(cellHelp);
+        AriaRegister.presentation(cellHelp);
         Attr.set(cellHelp, 'id', colId);
         Class.add(cellHelp, Styles.resolve('aria-help'));
         Insert.append(cellHelp, Element.fromText(translations.col(colHelp + 1)));
@@ -63,7 +63,7 @@ define(
         // Temporary non-random number until we get it right
         var rowId = Id.generate('ephox-aria');
         var rowHelp = Element.fromTag('span');
-        AriaRegister.presentationRole(rowHelp);
+        AriaRegister.presentation(rowHelp);
         Attr.set(rowHelp, 'id', rowId);
         Class.add(rowHelp, Styles.resolve('aria-help'));
         Insert.append(rowHelp, Element.fromText(translations.row(rowNum + 1)));

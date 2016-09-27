@@ -29,7 +29,7 @@ define(
 
     var create = function (doc, text) {
       var span = Element.fromTag('span', doc.dom());
-      AriaRegister.presentationRole(span);
+      AriaRegister.presentation(span);
       // This stops it saying other things (possibly blank) between transitions.
       var contents = Element.fromText(text, doc.dom());
       Insert.append(span, contents);
