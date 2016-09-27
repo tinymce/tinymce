@@ -35,6 +35,7 @@ define(
 
       var table = Element.fromTag('table');
       AriaRegister.presentation(table);
+      AriaRegister.hidden(table, true);
       Class.add(table, PickerStyles.table());
 
       var tbody = Element.fromTag('tbody');
