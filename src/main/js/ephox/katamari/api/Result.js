@@ -7,6 +7,24 @@ define(
   ],
 
   function (Fun, Option) {
+    /* The type signatures for Result 
+     * is :: this Result a -> a -> Bool
+     * or :: this Result a -> Result a -> Result a
+     * orThunk :: this Result a -> (_ -> Result a) -> Result a
+     * map :: this Result a -> (a -> b) -> Result b
+     * each :: this Result a -> (a -> _) -> _ 
+     * bind :: this Result a -> (a -> Result b) -> Result b
+     * fold :: this Result a -> (_ -> b, a -> b) -> b
+     * exists :: this Result a -> (a -> Bool) -> Bool
+     * forall :: this Result a -> (a -> Bool) -> Bool
+     * toOption :: this Result a -> Option a
+     * isValue :: this Result a -> Bool
+     * isError :: this Result a -> Bool
+     * getOr :: this Result a -> a -> a
+     * getOrThunk :: this Result a -> (_ -> a) -> a
+     * getOrDie :: this Result a -> a (or throws error)
+    */
+
     var value = function (o) {
       var is = function (v) {
         return o === v;      

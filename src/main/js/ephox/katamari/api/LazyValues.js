@@ -7,7 +7,7 @@ define(
   ],
 
   function (LazyValue, AsyncValues) {
-    /** [LazyValue a] -> LazyValue [a] */
+    /** par :: [LazyValue a] -> LazyValue [a] */
     var par = function (lazyValues) {
       return AsyncValues.par(lazyValues, LazyValue.nu);
     };

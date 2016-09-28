@@ -29,11 +29,7 @@ define(
       // FutureResult a
       var delegate = Future.nu(baseFn);
 
-      /*
-       * bindFuture :: (
-       *   f :: a -> FutureResult b
-       * ) -> FutureResult b     
-       */
+      /** bindFuture :: this FutureResult a -> (a -> FutureResult b) -> FutureResult b */
       var bindFuture = function (f) {
         // If we are a result error, keep the error
         return delegate.bind(function (resA) {
@@ -45,11 +41,7 @@ define(
         });
       };
 
-      /*
-       * bindResult :: (
-       *   f :: a -> Result b
-       * ) -> FutureResult b     
-       */
+      /* bindResult :: this FutureResult a -> (a -> Result b) -> FutureResult b */
       var bindResult = function (f) {
         // If we are a result error, keep the error
         return delegate.map(function (resA) {
@@ -57,11 +49,7 @@ define(
         });
       };
 
-      /*
-       * mapResult :: (
-       *   f :: a -> b
-       * ) -> FutureResult b     
-       */
+      /* mapResult :: this FutureResult a -> (a -> b) -> FutureResult b */
       var mapResult = function (f) {
         // If we are a result error, keep the error
         return delegate.map(function (res) {

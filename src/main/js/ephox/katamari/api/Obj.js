@@ -15,7 +15,7 @@ define(
       var fastKeys = Object.keys;
 
       // This technically means that 'each' and 'find' on IE8 iterate through the object twice.
-      // Our code doesn't run on IE8 much, so I believe it's an acceptable tradeoff.
+      // This code doesn't run on IE8 much, so it's an acceptable tradeoff.
       // If it becomes a problem we can always duplicate the feature detection inside each and find as well.
       var slowKeys = function (o) {
         var r = [];
@@ -40,6 +40,7 @@ define(
       }
     };
 
+    /** objectMap :: (JsObj(k, v), (v, k, JsObj(k, v) -> x)) -> JscObj(k, x) */
     var objectMap = function (obj, f) {
       return tupleMap(obj, function (x, i, obj) {
         return {
@@ -49,6 +50,7 @@ define(
       });
     };
 
+    /** tupleMap :: (JsObj(k, v), (v, k, JsObj(k, v) -> { k: x, v: y })) -> JsObj(x, y) */
     var tupleMap = function (obj, f) {
       var r = {};
       each(obj, function (x, i) {
@@ -58,6 +60,7 @@ define(
       return r;
     };
 
+    /** bifilter :: (JsObj(k, v), (v, k -> Bool)) -> { t: JsObj(k, v), f: JsObj(k, v) } */
     var bifilter = function (obj, pred) {
       var t = {};
       var f = {};
@@ -71,6 +74,7 @@ define(
       };
     };
 
+    /** mapToArray :: (JsObj(k, v), (v, k -> a)) -> [a] */
     var mapToArray = function (obj, f) {
       var r = [];
       each(obj, function(value, name) {
@@ -79,6 +83,7 @@ define(
       return r;
     };
 
+    /** find :: (JsObj(k, v), (v, k, JsObj(k, v) -> Bool)) -> Option v */
     var find = function (obj, pred) {
       var props = keys(obj);
       for (var k = 0, len = props.length; k < len; k++) {
@@ -91,6 +96,7 @@ define(
       return Option.none();
     };
 
+    /** values :: JsObj(k, v) -> [v] */
     var values = function (obj) {
       return mapToArray(obj, function (v) {
         return v;

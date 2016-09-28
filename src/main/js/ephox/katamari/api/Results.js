@@ -14,6 +14,7 @@ define(
       { bothValues: [ 'value1', 'value2' ] }
     ]);
 
+    /** partition :: [Result a] -> { errors: [String], values: [a] } */
     var partition = function (results) {
       var errors = [];
       var values = [];
@@ -28,6 +29,7 @@ define(
       return { errors: errors, values: values };
     };
 
+    /** compare :: (Result a, Result b) -> Comparison a b */
     var compare = function (result1, result2) {
       return result1.fold(function (err1) {
         return result2.fold(function (err2) {

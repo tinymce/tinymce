@@ -11,15 +11,8 @@ define(
   ],
 
   function (Arr, Obj, Type, Array, Error, console) {
-    // TODO: Probably accept the name ADT instead.
-
     /*
-     * Generates a church encoded ADT. No, I'm not going to explain what that is here.
-     *
-     * The aim of this file is to replace the extreme ADT syntax we have been using
-     * (50 lines of code for a simple variant with 4 cases). Specifying the ADT
-     * can now be done in one line per case, and proper validation is included.
-     *
+     * Generates a church encoded ADT (https://en.wikipedia.org/wiki/Church_encoding)
      * For syntax and use, look at the test code.
      */
     var generate = function (cases) {
@@ -68,7 +61,7 @@ define(
             throw new Error('Wrong number of arguments to case ' + key + '. Expected ' + value.length + ' (' + value + '), got ' + argLength);
           }
 
-          // TBIO-4011: Don't use array slice(arguments), makes the whole function unoptimisable on Chrome
+          // Don't use array slice(arguments), makes the whole function unoptimisable on Chrome
           var args = new Array(argLength);
           for (var i = 0; i < args.length; i++) args[i] = arguments[i];
 

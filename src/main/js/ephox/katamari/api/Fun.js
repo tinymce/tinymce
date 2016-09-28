@@ -30,7 +30,7 @@ define(
       return a === b;
     };
 
-    // TBIO-4011: Don't use array slice(arguments), makes the whole function unoptimisable on Chrome
+    // Don't use array slice(arguments), makes the whole function unoptimisable on Chrome
     var curry = function (f) {
       // equivalent to arguments.slice(1)
       // starting at 1 because 0 is the f, makes things tricky.
