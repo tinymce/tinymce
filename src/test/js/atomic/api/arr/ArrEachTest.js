@@ -17,7 +17,7 @@ test(
 
     var checkR = function (expected, input) {
       var values = [];
-      Arr.rEach(input, function (x, i) {
+      Arr.eachr(input, function (x, i) {
         values.push({index: i, value: x});
       });
       assert.eq(expected, values);
@@ -42,11 +42,11 @@ test(
     );
 
     Jsc.property(
-      'rEach + push should equal the reverse of the array',
+      'eachr + push should equal the reverse of the array',
       Jsc.array(Jsc.json),
       function (arr) {
         var values = [ ];
-        var output = Arr.rEach(arr, function (x, i) {
+        var output = Arr.eachr(arr, function (x, i) {
           values.push(x);
         });
         return Jsc.eq(arr, Arr.reverse(values)) && Jsc.eq(undefined, output);

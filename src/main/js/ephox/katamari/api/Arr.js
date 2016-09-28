@@ -82,7 +82,7 @@ define(
       }
     };
 
-    var rEach = function (xs, f) {
+    var eachr = function (xs, f) {
       for (var i = xs.length - 1; i >= 0; i--) {
         var x = xs[i];
         f(x, i, xs);
@@ -148,7 +148,7 @@ define(
     };
 
     var foldr = function (xs, f, acc) {
-      rEach(xs, function (x) {
+      eachr(xs, function (x) {
         acc = f(acc, x);
       });
       return acc;
@@ -261,7 +261,7 @@ define(
     return {
       map: map,
       each: each,
-      rEach: rEach,
+      eachr: eachr,
       partition: partition,
       filter: filter,
       groupBy: groupBy,
