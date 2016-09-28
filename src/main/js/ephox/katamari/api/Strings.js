@@ -2,13 +2,12 @@ define(
   'ephox.katamari.api.Strings',
 
   [
-    'ephox.katamari.api.Fun',
     'ephox.katamari.str.StrAppend',
     'ephox.katamari.str.StringParts',
     'global!Error'
   ],
 
-  function (Fun, StrAppend, StringParts, Error) {
+  function (StrAppend, StringParts, Error) {
     var checkRange = function(str, substr, start) {
       if (substr === '') return true;
       if (str.length < substr.length) return false;
@@ -51,7 +50,7 @@ define(
     };
  
     var contains = function(str, substr) {
-      return str.indexOf(substr) != -1;
+      return str.indexOf(substr) !== -1;
     };
 
     var capitalize = function(str) {
