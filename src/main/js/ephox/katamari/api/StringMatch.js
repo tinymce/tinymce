@@ -2,68 +2,41 @@ define(
   'ephox.katamari.api.StringMatch',
 
   [
-
+    'ephox.katamari.api.Adt'
   ],
 
-  function () {
-    // Change to use ADT?
-    var starts = function (value) {
-      return folder(function (s, p, c, e, a, n) {
-        return s(value);
-      });
+  function (Adt) {
+    var adt = Adt.generate([
+      { starts: [ 'value', 'f' ] },
+      { pattern: [ 'regex', 'f' ] },
+      { contains: [ 'value', 'f' ] },
+      { exact: [ 'value', 'f' ] },
+      { all: [ ] },
+      { not: [ 'stringMatch' ] }
+    ]);
+
+    var caseInsensitive = function (val) {
+      return val.toLowerCase();
     };
 
-    var pattern = function (regex) {
-      return folder(function (s, p, c, e, a, n) {
-        return p(regex);
-      });
+    var caseSensitive = function (val) {
+      return val;
     };
 
-    var contains = function (value) {
-      return folder(function (s, p, c, e, a, n) {
-        return c(value);
+    var matches = function (subject, str) {
+      return subject.fold(function (value, f) {
+        return f(str).indexOf(f(value)) === 0;
+      }, function (regex, f) {
+        return regex.test(f(str));
+      }, function (value, f) {
+        return f(str).indexOf(f(value)) >= 0;
+      }, function (value, f) {
+        return f(str) === f(value);
+      }, function () {
+        return true;
+      }, function (other) {
+        return !matches(other, str);
       });
-    };
-
-    var exact = function (value) {
-      return folder(function (s, p, c, e, a, n) {
-        return e(value);
-      });
-    };
-
-    var all = function () {
-      return folder(function (s, p, c, e, a, n) {
-        return a();
-      });
-    };
-
-    var not = function (sm) {
-      return folder(function (s, p, c, e, a, n) {
-        return n(sm);
-      });
-    };
-
-    var folder = function (fold) {
-      var matches = function (str) {
-        return fold(function (value) {
-          return str.toLowerCase().indexOf(value.toLowerCase()) === 0;
-        }, function (regex) {
-          return regex.test(str.toLowerCase());
-        }, function (value) {
-          return str.toLowerCase().indexOf(value.toLowerCase()) >= 0;
-        }, function (value) {
-          return str.toLowerCase() === value.toLowerCase();
-        }, function () {
-          return true;
-        }, function (other) {
-          return !other.matches(str);
-        });
-      };
-
-      return {
-        fold: fold,
-        matches: matches
-      };
     };
 
     var cata = function (subject, s, p, c, e, a, n) {
@@ -71,13 +44,16 @@ define(
     };
 
     return {
-      starts: starts,
-      pattern: pattern,
-      contains: contains,
-      exact: exact,
-      all: all,
-      not: not,
-      cata: cata
+      starts: adt.starts,
+      pattern: adt.pattern,
+      contains: adt.contains,
+      exact: adt.exact,
+      all: adt.all,
+      not: adt.not,
+      cata: cata,
+      matches: matches,
+      caseSensitive: caseSensitive,
+      caseInsensitive: caseInsensitive
     };
   }
 );
