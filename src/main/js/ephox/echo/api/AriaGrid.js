@@ -2,6 +2,7 @@ define(
   'ephox.echo.api.AriaGrid',
 
   [
+    'ephox.echo.api.AriaRegister',
     'ephox.echo.api.Styles',
     'ephox.epithet.Id',
     'ephox.scullion.Struct',
@@ -11,7 +12,7 @@ define(
     'ephox.sugar.api.Insert'
   ],
 
-  function (Styles, Id, Struct, Attr, Class, Element, Insert) {
+  function (AriaRegister, Styles, Id, Struct, Attr, Class, Element, Insert) {
     var help = Struct.immutable('help', 'ids');
 
     var base = function (element, label) {
@@ -38,6 +39,7 @@ define(
 
     var createHelp = function (rows, cols, translations) {
       var gridHelp = Element.fromTag('div');
+      AriaRegister.presentation(gridHelp);
       Class.add(gridHelp, Styles.resolve('aria-help'));
 
       var colIds = [];
@@ -46,6 +48,7 @@ define(
         // Temporary non-random number until we get it right
         var colId = Id.generate('ephox-aria');
         var cellHelp = Element.fromTag('span');
+        AriaRegister.presentation(cellHelp);
         Attr.set(cellHelp, 'id', colId);
         Class.add(cellHelp, Styles.resolve('aria-help'));
         Insert.append(cellHelp, Element.fromText(translations.col(colHelp + 1)));
@@ -60,6 +63,7 @@ define(
         // Temporary non-random number until we get it right
         var rowId = Id.generate('ephox-aria');
         var rowHelp = Element.fromTag('span');
+        AriaRegister.presentation(rowHelp);
         Attr.set(rowHelp, 'id', rowId);
         Class.add(rowHelp, Styles.resolve('aria-help'));
         Insert.append(rowHelp, Element.fromText(translations.row(rowNum + 1)));

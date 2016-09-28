@@ -25,20 +25,23 @@ define(
     };
 
     var presentation = function (element) {
-      Attr.setAll(element, {
-        'role': 'presentation',
-        'aria-hidden': 'true'
-      });
+    // https://www.w3.org/TR/wai-aria/roles#presentation
+      Attr.set(element, 'role', 'presentation');
     };
 
     var editor = function (container, editor, label, ariaHelp, showHelpHint) {
+      // Set role=region: https://www.w3.org/TR/wai-aria/roles#region
+      // on editor for better user navigation modes, as it is mostly text content.
+      // Better than role=application which constrains the reader navigation
+      // - https://www.w3.org/TR/wai-aria/roles#application
       Attr.setAll(container, {
-        'role': 'application',
+        'role': 'region',
         'aria-label': label
       });
 
       ariaHelp.each(function (helpText) {
         var aria = Element.fromTag('span');
+        presentation(aria);
         Insert.append(aria, Element.fromText(helpText));
         var labelId = Id.generate('ephox-aria');
         Attr.set(aria, 'id', labelId);
@@ -68,6 +71,12 @@ define(
       };
     };
 
+    // Set the role 'group'
+    var group = function (element) {
+      Attr.set(element, 'role', 'group');
+    };
+
+    // Sets the role 'group', with a label
     var toolbar = function (element, label) {
       Attr.setAll(element, {
         'role': 'group',
@@ -86,9 +95,10 @@ define(
       // Add 'button' roleto a pastry button, and 'presentation' role
       // to the contentElement that contains the button text.
       Attr.set(element, 'role', 'button');
-      Attr.set(contentElement, 'role', 'presentation');
+      presentation(contentElement);
     };
 
+    // Set the role 'button'
     var toolbarButton = function (element, label, hasPopup, isToggle) {
       Attr.setAll(element, {
         'role': 'button',
@@ -99,6 +109,7 @@ define(
       if (hasPopup) Attr.set(element, 'aria-expanded', 'false');
     };
 
+    // Set the role 'toolbar' and aria-label if provided
     var toolbarGroup = function (element, label) {
       // TODO: duplicated from 'ephox.polish.alien.Query', consolidate isEmpty();
       var isEmpty = function (val) {
@@ -158,6 +169,7 @@ define(
     // return a container object with methods {element, field} containing an html field and label
     var labelledField = function (field, name, labelText) {
       var container = Element.fromTag('div');
+      presentation(container);
       var id = name + Id.generate('');
       var label = Element.fromHtml('<label>' + labelText + '</label>');
       Attr.set(label, 'for', id);
@@ -258,7 +270,21 @@ define(
     // };
 
     var hidden = function (element, status) {
-      Attr.set(element, 'aria-hidden', status);
+      // Note: aria-hidden=true says this element and all of its descendents are not percievable
+      // https://www.w3.org/TR/wai-aria/states_and_properties#aria-hidden
+      if (status) {
+        Attr.set(element, 'aria-hidden', status);
+      } else {
+        Attr.remove(element, 'aria-hidden'); // same as setting aria-hidden:false
+      }
+    };
+
+    var invalid = function (element, status) {
+      if (status === true) {
+        Attr.set(element, 'aria-invalid', 'true');
+      } else {
+        Attr.remove(element, 'aria-invalid');
+      }
     };
 
     return {
@@ -266,6 +292,7 @@ define(
       presentation: presentation,
       controls: controls,
       editor: editor,
+      group: group,
       toolbar: toolbar,
       toolbarGroup: toolbarGroup,
       toolbarButton: toolbarButton,
@@ -290,7 +317,8 @@ define(
       describedBy: describedBy,
       labelledBy: labelledBy,
       required: required,
-      hidden: hidden
+      hidden: hidden,
+      invalid: invalid
     };
   }
 );
