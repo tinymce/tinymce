@@ -200,6 +200,8 @@ define(
       // With this change it will throw an error.
       var r = [];
       for (var i = 0, len = xs.length; i < len; ++i) {
+        // Ensure that each value is an array itself
+        if (! Array.prototype.isPrototypeOf(xs[i])) throw new Error('Arr.flatten item ' + i + ' was not an array, input: ' + xs);
         push.apply(r, xs[i]);
       }
       return r;

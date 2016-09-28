@@ -16,6 +16,23 @@ test(
     check([1, 2], [[1], [2]]);
     check([1, 2, 3, 4, 5], [[1, 2], [], [3], [4, 5], []]);
 
+    var checkError = function (input) {
+      var message = undefined;
+      try {
+        Arr.flatten(input);
+      } catch (e) {
+        message = e.message ? e.message : e;
+      }
+
+      if (message === undefined) {
+        assert.fail('Arr.flatten did not throw an error for input ' + input);
+      }
+    };
+
+    checkError([{}]);
+    checkError([function () {}]);
+    checkError([42]);
+
     Jsc.property(
       'Flatten is symmetric with chunking',
       Jsc.array(Jsc.json),
