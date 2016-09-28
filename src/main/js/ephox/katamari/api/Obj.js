@@ -40,7 +40,7 @@ define(
       }
     };
 
-    /** objectMap :: (JsObj(k, v), (v, k, JsObj(k, v) -> x)) -> JscObj(k, x) */
+    /** objectMap :: (JsObj(k, v), (v, k, JsObj(k, v) -> x)) -> JsObj(k, x) */
     var objectMap = function (obj, f) {
       return tupleMap(obj, function (x, i, obj) {
         return {
