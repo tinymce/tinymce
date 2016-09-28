@@ -12,3 +12,4 @@
 /inconsistent.dependencies
 node_modules
 /config/repl
+/*.log
