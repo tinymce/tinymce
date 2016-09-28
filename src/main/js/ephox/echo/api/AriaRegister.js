@@ -279,6 +279,14 @@ define(
       }
     };
 
+    var invalid = function (element, status) {
+      if (status === true) {
+        Attr.set(element, 'aria-invalid', 'true');
+      } else {
+        Attr.remove(element, 'aria-invalid');
+      }
+    };
+
     return {
       document: roleDocument,
       presentation: presentation,
@@ -309,7 +317,8 @@ define(
       describedBy: describedBy,
       labelledBy: labelledBy,
       required: required,
-      hidden: hidden
+      hidden: hidden,
+      invalid: invalid
     };
   }
 );
