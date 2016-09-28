@@ -53,7 +53,6 @@ test(
 
       assert.eq(true, Option.some(5.1).equals_(Option.some(5.3), comparator));
       assert.eq(false, Option.some(5.1).equals_(Option.some(5.9), comparator));
-      assert.eq(true, Option.equals_(Option.some(5.1), Option.some(5.3), comparator));
 
       assert.eq([1], Option.some(1).toArray());
       assert.eq([{ cat: 'dog' }], Option.some({ cat: 'dog' }).toArray());

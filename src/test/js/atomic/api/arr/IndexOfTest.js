@@ -4,55 +4,66 @@ test(
   [
     'ephox.katamari.api.Arr',
     'ephox.katamari.test.arb.ArbDataTypes',
-    'ephox.wrap.Jsc'
+    'ephox.wrap.Jsc',
+    'global!Error'
   ],
-  function(Arr, ArbDataTypes, Jsc) {
-    assert.eq(-1, Arr.indexOf([], 'x'));
-    assert.eq(-1, Arr.indexOf(['q'], 'x'));
-    assert.eq(-1, Arr.indexOf([1], '1'));
-    assert.eq(-1, Arr.indexOf([1], undefined));
-    assert.eq(0, Arr.indexOf([undefined], undefined));
-    assert.eq(0, Arr.indexOf([undefined, undefined], undefined));
-    assert.eq(1, Arr.indexOf([1, undefined], undefined));
-    assert.eq(2, Arr.indexOf(['dog', 3, 'cat'], 'cat'));
+  function(Arr, ArbDataTypes, Jsc, Error) {
+    var checkNone = function (xs, x) {
+      var actual = Arr.indexOf(xs, x);
+      assert.eq(true, actual.isNone());
+    };
+
+    var check = function (expected, xs, x) {
+      var actual = Arr.indexOf(xs, x).getOrDie('should have value');
+      assert.eq(expected, actual);
+    };
+
+    checkNone([], 'x');
+    checkNone(['q'], 'x');
+    checkNone([1], '1');
+    checkNone([1], undefined);
+    check(0, [undefined], undefined);
+    check(0, [undefined, undefined], undefined);
+    check(1, [1, undefined], undefined);
+    check(2, ['dog', 3, 'cat'], 'cat');
 
     // We use this property because duplicates cause problems
     Jsc.property(
-      'indexOf(slice, val) == 0 if slice starts with val',
+      'indexOf(slice, val) == some(0) if slice starts with val',
       Jsc.array(Jsc.json),
       function (arr) {
         return Arr.forall(arr, function (x, i) {
-          var index = Arr.indexOf(arr.slice(i), x);
+          var index = Arr.indexOf(arr.slice(i), x).getOrDie('should have index');
           return 0 === index;
         });
       }
     );
 
     Jsc.property(
-      'indexOf(unique_arr, val) === iterator index',
+      'indexOf(unique_arr, val) === some(iterator index)',
       ArbDataTypes.indexArrayOf(10),
       function (arr) {
         return Arr.forall(arr, function (x, i) {
-          var index = Arr.indexOf(arr, x);
+          var index = Arr.indexOf(arr, x).getOrDie('should have index');
           return i === index;
         });
       }
     );
 
     Jsc.property(
-      'indexOf of an empty array is -1',
+      'indexOf of an empty array is none',
       Jsc.json,
       function (json) {
-        return Arr.indexOf([ ], json) === -1;
+        return Arr.indexOf([ ], json).isNone();
       }
     );
 
     Jsc.property(
-      'indexOf of a [value].concat(array) is 0',
+      'indexOf of a [value].concat(array) is some(0)',
       Jsc.array(Jsc.json),
       Jsc.json,
       function (arr, json) {
-        return Arr.indexOf([ json ].concat(arr), json) === 0;
+        return Arr.indexOf([ json ].concat(arr), json).getOrDie('should have index') === 0;
       }
     );
   }

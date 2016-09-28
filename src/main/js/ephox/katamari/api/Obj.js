@@ -2,10 +2,11 @@ define(
   'ephox.katamari.api.Obj',
 
   [
+    'ephox.katamari.api.Option',
     'global!Object'
   ],
 
-  function (Object) {
+  function (Option, Object) {
     // There are many variations of Object iteration that are faster than the 'for-in' style:
     // http://jsperf.com/object-keys-iteration/107
     //
@@ -84,10 +85,10 @@ define(
         var i = props[k];
         var x = obj[i];
         if (pred(x, i, obj)) {
-          return x;
+          return Option.some(x);
         }
       }
-      return undefined;
+      return Option.none();
     };
 
     var values = function (obj) {

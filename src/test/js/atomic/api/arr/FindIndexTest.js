@@ -8,49 +8,53 @@ test(
   ],
 
   function (Arr, Fun, Jsc) {
-    var check = function (expected, input, pred) {
+    var checkNone = function (input, pred) {
       var actual = Arr.findIndex(input, pred);
+      assert.eq(true, actual.isNone());
+    };
+
+    var check = function (expected, input, pred) {
+      var actual = Arr.findIndex(input, pred).getOrDie('should have found index: ' + input);
       assert.eq(expected, actual);
     };
 
-    check(-1, [], function (x) { return x > 0; });
-    check(-1, [-1], function (x) { return x > 0; });
+    checkNone([], function (x) { return x > 0; });
+    checkNone([-1], function (x) { return x > 0; });
     check(0, [1], function (x) { return x > 0; });
     check(3, [4, 2, 10, 41, 3], function (x) { return x == 41; });
     check(5, [4, 2, 10, 41, 3, 100], function (x) { return x > 80; });
-    check(-1, [4, 2, 10, 412, 3], function (x) { return x == 41; });
+    checkNone([4, 2, 10, 412, 3], function (x) { return x == 41; });
 
     Jsc.property(
       'the index found by findIndex always passes predicate',
       Jsc.array(Jsc.json),
       Jsc.fun(Jsc.bool),
       function (arr, pred) {
-        var index = Arr.findIndex(arr, pred);
-        if (index === -1) {
-          return !Arr.exists(arr, pred);
+        return Arr.findIndex(arr, pred).fold(function () {
           // nothing in array matches predicate
-        } else {
+          return !Arr.exists(arr, pred);
+        }, function (index) {
           return pred(arr[index]);
-        }
+        });
       }
     );
 
     Jsc.property(
-      'If predicate is always false, then index is always negative one',
+      'If predicate is always false, then index is always none',
       Jsc.array(Jsc.json),
       function (arr) {
         var index = Arr.findIndex(arr, Fun.constant(false));
-        return index === -1;
+        return index.isNone();
       }
     );
 
     Jsc.property(
-      'If predicate is always true, then index is always 0, or -1 if array is empty',
+      'If predicate is always true, then index is always some(0), or none if array is empty',
       Jsc.array(Jsc.json),
       function (arr) {
         var index = Arr.findIndex(arr, Fun.constant(true));
-        var expected = arr.length === 0 ? -1 : 0;
-        return Jsc.eq(expected, index);
+        if (arr.length === 0) return Jsc.eq(true, index.isNone());
+        else return Jsc.eq(0, index.getOrDie('should have found index'));
       }
     );
   }

@@ -2,39 +2,47 @@ define(
   'ephox.katamari.api.Arr',
 
   [
+    'ephox.katamari.api.Option',
     'global!Array',
     'global!Error',
     'global!String'
   ],
 
-  function (Array, Error, String) {
-    var eqC = function(x) {
-      return function(y) {
-        return x === y;
-      };
-    };
-
+  function (Option, Array, Error, String) {
     // Use the native Array.indexOf if it is available (IE9+) otherwise fall back to manual iteration
     // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
-    var indexOf = (function () {
-      var indexOf = Array.prototype.indexOf;
+    var rawIndexOf = (function () {
+      var pIndexOf = Array.prototype.indexOf;
 
-      var fastIndex = function (xs, x) { return indexOf.call(xs, x); };
+      var fastIndex = function (xs, x) { return  pIndexOf.call(xs, x); };
 
-      var slowIndex = function(xs, x) { return findIndex(xs, eqC(x)); };
+      var slowIndex = function(xs, x) { return slowIndexOf(xs, x); };
 
-      return indexOf === undefined ? slowIndex : fastIndex;
+      return pIndexOf === undefined ? slowIndex : fastIndex;
     })();
 
-    // Contains is so similar to indexOf, we de-duped with an extra math check at the end.
+    var indexOf = function (xs, x) {
+      // The rawIndexOf method does not wrap up in an option. This is for performance reasons.
+      var r = rawIndexOf(xs, x);
+      return r === -1 ? Option.none() : Option.some(r);
+    };
+
     var contains = function (xs, x) {
-      return indexOf(xs, x) > -1;
+      return rawIndexOf(xs, x) > -1;
     };
 
     // Using findIndex is likely less optimal in Chrome (dynamic return type instead of bool)
     // but if we need that micro-optimisation we can inline it later.
     var exists = function (xs, pred) {
-      return findIndex(xs, pred) > -1;
+      return findIndex(xs, pred).isSome();
+    };
+
+    var range = function (num, f) {
+      var r = [];
+      for (var i = 0; i < num; i++) {
+        r.push(f(i));
+      }
+      return r;
     };
 
     // It's a total micro optimisation, but these do make some difference.
@@ -69,6 +77,13 @@ define(
     // The code size is roughly the same, and it should allow for better optimisation.
     var each = function(xs, f) {
       for (var i = 0, len = xs.length; i < len; i++) {
+        var x = xs[i];
+        f(x, i, xs);
+      }
+    };
+
+    var eachr = function (xs, f) {
+      for (var i = xs.length - 1; i >= 0; i--) {
         var x = xs[i];
         f(x, i, xs);
       }
@@ -133,7 +148,10 @@ define(
     };
 
     var foldr = function (xs, f, acc) {
-      return foldl(reverse(xs), f, acc);
+      eachr(xs, function (x) {
+        acc = f(acc, x);
+      });
+      return acc;
     };
 
     var foldl = function (xs, f, acc) {
@@ -143,35 +161,30 @@ define(
       return acc;
     };
 
-    var find = function(xs, pred) {
+    var find = function (xs, pred) {
       for (var i = 0, len = xs.length; i < len; i++) {
         var x = xs[i];
         if (pred(x, i, xs)) {
-          return x;
+          return Option.some(x);
         }
       }
-      return undefined;
-    };
-
-    var findOr = function (xs, f, default_) {
-      var r = find(xs, f);
-      return r !== undefined ? r : default_;
-    };
-
-    var findOrDie = function (xs, f, message) {
-      var r = find(xs, f);
-      if (r === undefined) {
-        throw new Error(message || 'Could not find element in array: ' + String(xs));
-      } else {
-        return r;
-      }
+      return Option.none();
     };
 
     var findIndex = function (xs, pred) {
-      var fn = pred || isTrue;
+      for (var i = 0, len = xs.length; i < len; i++) {
+        var x = xs[i];
+        if (pred(x, i, xs)) {
+          return Option.some(i);
+        }
+      }
 
+      return Option.none();
+    };
+
+    var slowIndexOf = function (xs, x) {
       for (var i = 0, len = xs.length; i < len; ++i) {
-        if (fn(xs[i]) === true) {
+        if (xs[i] === x) {
           return i;
         }
       }
@@ -197,12 +210,10 @@ define(
       return flatten(output);
     };
 
-    var isTrue = eqC(true);
-
     var forall = function (xs, pred) {
-      var fn = pred || isTrue;
       for (var i = 0, len = xs.length; i < len; ++i) {
-        if (fn(xs[i], i) !== true) {
+        var x = xs[i];
+        if (pred(x, i, xs) !== true) {
           return false;
         }
       }
@@ -250,6 +261,7 @@ define(
     return {
       map: map,
       each: each,
+      eachr: eachr,
       partition: partition,
       filter: filter,
       groupBy: groupBy,
@@ -258,8 +270,6 @@ define(
       foldl: foldl,
       find: find,
       findIndex: findIndex,
-      findOr: findOr,
-      findOrDie: findOrDie,
       flatten: flatten,
       bind: bind,
       forall: forall,
@@ -271,7 +281,8 @@ define(
       difference: difference,
       mapToObject: mapToObject,
       pure: pure,
-      sort: sort
+      sort: sort,
+      range: range
     };
   }
 );

@@ -9,16 +9,21 @@ test(
   ],
 
   function (Arr, Fun, Obj, Jsc) {
-    var checkObj = function (expected, input, pred) {
+    var checkNone = function (input, pred) {
       var actual = Obj.find(input, pred);
+      return actual.isNone();
+    };
+
+    var checkObj = function (expected, input, pred) {
+      var actual = Obj.find(input, pred).getOrDie('should have value');
       assert.eq(expected, actual);
     };
 
-    checkObj(undefined, {}, function (v, k) { return v > 0; });
+    checkNone({}, function (v, k) { return v > 0; });
     checkObj(3, { 'test': 3 }, function (v, k) { return k === 'test'; });
-    checkObj(undefined, { 'test': 0 }, function (v, k) { return v > 0; });
+    checkNone({ 'test': 0 }, function (v, k) { return v > 0; });
     checkObj(4, { 'blah': 4, 'test': 3 }, function (v, k) { return v > 0; });
-    checkObj(undefined, { 'blah': 4, 'test': 3 }, function (v, k) { return v === 12; });
+    checkNone({ 'blah': 4, 'test': 3 }, function (v, k) { return v === 12; });
 
     var obj = { 'blah': 4, 'test': 3 };
     checkObj(4, obj, function (v, k, o) { return o === obj; });
@@ -33,42 +38,42 @@ test(
         var value = Obj.find(obj, function (v) {
           return pred(v);
         });
-        if (value === undefined) {
+        return value.fold(function () {
           var values = Obj.values(obj);
           return !Arr.exists(values, function (v) {
             return pred(v);
           });
-        } else {
-          return pred(value);
-        }
+        }, function (v) {
+          return pred(v);
+        });
       }
     );
 
     Jsc.property(
-      'If predicate is always false, then find is always undefined',
+      'If predicate is always false, then find is always none',
       Jsc.dict(Jsc.json),
       function (obj) {
         var value = Obj.find(obj, Fun.constant(false));
-        return value === undefined;
+        return value.isNone();
       }
     );
 
     Jsc.property(
-      'If object is empty, find is always undefined',
+      'If object is empty, find is always none',
       Jsc.fun(Jsc.bool),
       function (pred) {
         var value = Obj.find({ }, pred);
-        return value === undefined;
+        return value.isNone();
       }
     );
 
     Jsc.property(
-      'If predicate is always true, then value is always the first (anything here), or undefined if dict is empty',
+      'If predicate is always true, then value is always the some(first), or none if dict is empty',
       Jsc.dict(Jsc.json),
       function (obj) {
         var value = Obj.find(obj, Fun.constant(true));
-        // No order is specified
-        return Obj.keys(obj).length === 0 ? value === undefined : true;
+        // No order is specified, so we cannot know what "first" is
+        return Obj.keys(obj).length === 0 ? value.isNone() : true;
       }
     );
   }
