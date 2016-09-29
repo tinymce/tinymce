@@ -33,7 +33,7 @@ define("tinymce/ui/FilePicker", [
 		return {
 			title: target.title,
 			value: {
-				title: target.title,
+				title: {raw: target.title},
 				url: target.url,
 				attach: target.attach
 			}
