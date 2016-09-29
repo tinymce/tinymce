@@ -253,7 +253,7 @@ tinymce.PluginManager.add('template', function(editor) {
 	});
 
 	editor.addMenuItem('template', {
-		text: 'Insert template',
+		text: 'Template',
 		onclick: createTemplateList(showDialog),
 		context: 'insert'
 	});
