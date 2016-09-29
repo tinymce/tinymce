@@ -8,12 +8,12 @@ define(
   ],
 
   function (Arr, Future, AsyncValues) {
-    /** [Future a] -> Future [a] */
+    /** par :: [Future a] -> Future [a] */
     var par = function(futures) {
       return AsyncValues.par(futures, Future.nu);
     };
 
-    /** [a] -> (a -> Future b) -> Future [b] */
+    /** mapM :: [a] -> (a -> Future b) -> Future [b] */
     var mapM = function(array, fn) {
       var futures = Arr.map(array, fn);
       return par(futures);

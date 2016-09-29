@@ -20,7 +20,7 @@ define(
 
     var baseMerge = function (merger) {
       return function() {
-        // TBIO-4011: Don't use array slice(arguments), makes the whole function unoptimisable on Chrome
+        // Don't use array slice(arguments), makes the whole function unoptimisable on Chrome
         var objects = new Array(arguments.length);
         for (var i = 0; i < objects.length; i++) objects[i] = arguments[i];
 

@@ -12,6 +12,7 @@ define(
       var data = Option.none();
       var callbacks = [];
 
+      /** map :: this LazyValue a -> (a -> b) -> LazyValue b */
       var map = function (f) {
         return nu(function (nCallback) {
           get(function (data) {

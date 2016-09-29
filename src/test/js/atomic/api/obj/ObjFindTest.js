@@ -33,7 +33,7 @@ test(
       Jsc.dict(Jsc.json),
       Jsc.fun(Jsc.bool),
       function (obj, pred) {
-        // I think the way that Jsc.fun works is it cares about all of its arguments, so therefore
+        // It looks like the way that Jsc.fun works is it cares about all of its arguments, so therefore
         // we have to only pass in one if we want it to be deterministic. Just an assumption
         var value = Obj.find(obj, function (v) {
           return pred(v);

@@ -23,6 +23,7 @@ define(
       return val;
     };
 
+    /** matches :: (StringMatch, String) -> Boolean */
     var matches = function (subject, str) {
       return subject.fold(function (value, f) {
         return f(str).indexOf(f(value)) === 0;

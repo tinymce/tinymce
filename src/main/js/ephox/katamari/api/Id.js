@@ -17,8 +17,7 @@ define(
      * The chance of generating a non-unique identifier has been minimized
      * by combining the current time, a random number and a one-up counter.
      *
-     * @param {string} prefix Prepended to the identifier
-     * @return {string} Unique identifier
+     * generate :: String -> String
      */
     var unique = 0;
 

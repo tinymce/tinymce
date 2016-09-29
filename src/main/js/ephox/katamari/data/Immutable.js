@@ -12,7 +12,7 @@ define(
     return function () {
       var fields = arguments;
       return function(/* values */) {
-        // TBIO-4011: Don't use array slice(arguments), makes the whole function unoptimisable on Chrome
+        //  Don't use array slice(arguments), makes the whole function unoptimisable on Chrome
         var values = new Array(arguments.length);
         for (var i = 0; i < values.length; i++) values[i] = arguments[i];
 

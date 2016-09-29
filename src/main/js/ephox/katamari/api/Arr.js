@@ -194,12 +194,14 @@ define(
 
     var push = Array.prototype.push;
     var flatten = function (xs) {
-      // this is a crazy optimisation I never expected. Push supports multiple arguments:
+      // Note, this is possible because push supports multiple arguments:
       // http://jsperf.com/concat-push/6
       // Note that in the past, concat() would silently work (very slowly) for array-like objects.
       // With this change it will throw an error.
       var r = [];
       for (var i = 0, len = xs.length; i < len; ++i) {
+        // Ensure that each value is an array itself
+        if (! Array.prototype.isPrototypeOf(xs[i])) throw new Error('Arr.flatten item ' + i + ' was not an array, input: ' + xs);
         push.apply(r, xs[i]);
       }
       return r;

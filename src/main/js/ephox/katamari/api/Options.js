@@ -6,6 +6,7 @@ define(
   ],
 
   function (Option) {
+    /** cat :: [Option a] -> [a] */
     var cat = function (arr) {
       var r = [];
       var push = function (x) {
@@ -17,6 +18,7 @@ define(
       return r;
     };
 
+    /** findMap :: ([a], (a, Int -> Option b)) -> Option b */
     var findMap = function (arr, f) {
       for (var i = 0; i < arr.length; i++) {
         var r = f(arr[i], i);
@@ -28,8 +30,8 @@ define(
     };
 
     /**
-    if all elements in arr are 'some', their inner values are passed as arguments to f
-    f must have arity arr.length
+     * if all elements in arr are 'some', their inner values are passed as arguments to f
+     * f must have arity arr.length
     */
     var liftN = function(arr, f) {
       var r = [];
