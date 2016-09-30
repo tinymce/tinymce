@@ -19,11 +19,18 @@ define("tinymce/ui/FormatControls", [
 	"tinymce/ui/Widget",
 	"tinymce/ui/FloatPanel",
 	"tinymce/util/Tools",
+	"tinymce/util/Arr",
 	"tinymce/dom/DOMUtils",
 	"tinymce/EditorManager",
 	"tinymce/Env"
-], function(Control, Widget, FloatPanel, Tools, DOMUtils, EditorManager, Env) {
+], function(Control, Widget, FloatPanel, Tools, Arr, DOMUtils, EditorManager, Env) {
 	var each = Tools.each;
+
+	var flatten = function (ar) {
+		return Arr.reduce(ar, function (result, item) {
+			return result.concat(item);
+		}, []);
+	};
 
 	EditorManager.on('AddEditor', function(e) {
 		var editor = e.editor;
@@ -347,6 +354,71 @@ define("tinymce/ui/FormatControls", [
 			self.active(editor.hasVisual);
 		}
 
+		var trimMenuItems = function (menuItems) {
+			var outputMenuItems = menuItems;
+
+			if (outputMenuItems.length > 0 && outputMenuItems[0].text === '-') {
+				outputMenuItems = outputMenuItems.slice(1);
+			}
+
+			if (outputMenuItems.length > 0 && outputMenuItems[outputMenuItems.length - 1].text === '-') {
+				outputMenuItems = outputMenuItems.slice(0, outputMenuItems.length - 1);
+			}
+
+			return outputMenuItems;
+		};
+
+		var createCustomMenuItems = function (names) {
+			var items, nameList;
+
+			if (typeof names === 'string') {
+				nameList = names.split(' ');
+			} else if (Tools.isArray(names)) {
+				return flatten(Tools.map(names, createCustomMenuItems));
+			}
+
+			items = Tools.grep(nameList, function (name) {
+				return name === '|' || name in editor.menuItems;
+			});
+
+			return Tools.map(items, function (name) {
+				return name === '|' ? {text: '-'} : editor.menuItems[name];
+			});
+		};
+
+		var createContextMenuItems = function (context) {
+			var outputMenuItems = [{text: '-'}];
+			var menuItems = Tools.grep(editor.menuItems, function (menuItem) {
+				return menuItem.context === context;
+			});
+
+			Tools.each(menuItems, function (menuItem) {
+				if (menuItem.separator == 'before') {
+					outputMenuItems.push({text: '|'});
+				}
+
+				if (menuItem.prependToContext) {
+					outputMenuItems.unshift(menuItem);
+				} else {
+					outputMenuItems.push(menuItem);
+				}
+
+				if (menuItem.separator == 'after') {
+					outputMenuItems.push({text: '|'});
+				}
+			});
+
+			return outputMenuItems;
+		};
+
+		var createInsertMenu = function (editorSettings) {
+			if (editorSettings.insert_button_items) {
+				return trimMenuItems(createCustomMenuItems(editorSettings.insert_button_items));
+			} else {
+				return trimMenuItems(createContextMenuItems('insert'));
+			}
+		};
+
 		editor.addButton('undo', {
 			tooltip: 'Undo',
 			onPostRender: toggleUndoRedoState('undo'),
@@ -392,6 +464,16 @@ define("tinymce/ui/FormatControls", [
 			tooltip: 'Remove',
 			icon: 'remove',
 			cmd: 'Delete'
+		});
+
+		editor.addButton('insert', {
+			type: 'menubutton',
+			icon: 'insert',
+			menu: [],
+			oncreatemenu: function () {
+				this.menu.add(createInsertMenu(editor.settings));
+				this.menu.renderNew();
+			}
 		});
 
 		each({

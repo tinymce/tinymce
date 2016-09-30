@@ -855,7 +855,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 
 	editor.addMenuItem('media', {
 		icon: 'media',
-		text: 'Insert/edit video',
+		text: 'Media',
 		onclick: showDialog,
 		context: 'insert',
 		prependToContext: true
