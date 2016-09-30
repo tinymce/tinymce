@@ -4,11 +4,12 @@ define(
   [
     'ephox.perhaps.Option',
     'ephox.phoenix.api.general.Gather',
+    'ephox.robin.api.general.ZonePosition',
     'ephox.robin.zone.LanguageZones',
     'ephox.scullion.ADT'
   ],
 
-  function (Option, Gather, LanguageZones, Adt) {
+  function (Option, Gather, ZonePosition, LanguageZones, Adt) {
     var adt = Adt.generate([
       // an inline element, so use the lang to identify if a new zone is needed
       { inline: [ 'item', 'mode', 'lang' ] },
@@ -45,41 +46,52 @@ define(
       });  
     };
 
-    var process = function (universe, outcome, stopOn, stack, transform) {
+    var process = function (universe, outcome, stopOn, stack, transform, viewport) {
       outcome.fold(
         function (aItem, aMode, aLang) {
           // inline(aItem, aMode, aLang)
           var opening = aMode === Gather.advance;
           (opening ? stack.openInline : stack.closeInline)(aLang, aItem);
-          doWalk(universe, aItem, aMode, stopOn, stack, transform);
+          doWalk(universe, aItem, aMode, stopOn, stack, transform, viewport);
 
         }, function (aItem, aMode) {
           var detail = transform(universe, aItem);
           // text (aItem, aMode)
           stack.addDetail(detail);
-          if (! stopOn(aItem, aMode)) doWalk(universe, aItem, aMode, stopOn, stack, transform);
+          if (! stopOn(aItem, aMode)) doWalk(universe, aItem, aMode, stopOn, stack, transform, viewport);
         }, function (aItem, aMode) {
           // empty (aItem, aMode)
           stack.addEmpty(aItem);
-          doWalk(universe, aItem, aMode, stopOn, stack, transform);
+          doWalk(universe, aItem, aMode, stopOn, stack, transform, viewport);
                 
         }, function (aItem, aMode, aLang) {
-          // boundary(aItem, aMode, aLang) 
-          var opening = aMode === Gather.advance;
-          (opening ? stack.openBoundary : stack.closeBoundary)(aLang, aItem);
-          doWalk(universe, aItem, aMode, stopOn, stack, transform);
+          // Use boundary positions to assess whether we have moved out of the viewport.
+          var position = viewport.assess(aItem);
+          ZonePosition.cata(position,
+            function (aboveBlock) {
+              // Only sidestep if we hadn't already tried it. Otherwise, we'll loop forever.
+              if (aMode !== Gather.backtrack) doWalk(universe, aItem, Gather.sidestep, stopOn, stack, transform, viewport);
+            }, function (inBlock) {
+              var opening = aMode === Gather.advance;
+              (opening ? stack.openBoundary : stack.closeBoundary)(aLang, aItem);
+              doWalk(universe, aItem, aMode, stopOn, stack, transform, viewport);
+            }, function (belowBlock) {
+              // abort.
+              console.log('Aborting', belowBlock.dom());
+            }
+          );
         }, function (aItem, aMode) {
           // concluded(aItem, aMode) DO NOTHING
         }
       );
     };
 
-    var doWalk = function (universe, current, mode, stopOn, stack, transform) {
+    var doWalk = function (universe, current, mode, stopOn, stack, transform, viewport) {
       var outcome = takeStep(universe, current, mode, stopOn);
-      process(universe, outcome, stopOn, stack, transform);
+      process(universe, outcome, stopOn, stack, transform, viewport);
     };
 
-    var walk = function (universe, start, finish, defaultLang, transform) {
+    var walk = function (universe, start, finish, defaultLang, transform, viewport) {
       var stopOn = function (sItem, sMode) {
         return universe.eq(sItem, finish) && (sMode !== Gather.advance || universe.property().isText(sItem) || universe.property().children(sItem).length === 0);
       };
@@ -88,7 +100,7 @@ define(
       var stack = LanguageZones.nu(defaultLang);
       var mode = Gather.advance;
       var initial = analyse(universe, start, mode, stopOn);
-      process(universe, initial, stopOn, stack, transform);
+      process(universe, initial, stopOn, stack, transform, viewport);
 
 
       return stack.done();
