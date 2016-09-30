@@ -10,26 +10,27 @@ define(
 
   function (Arr, Jsc, Promise, console) {
     var checkProp = function (label, arbitraries, f) {
-      return Jsc.check(
-        Jsc.forall.apply(Jsc, arbitraries.concat([ f ])),
-        {
-          /*
-           * Insert jsverify options here like number of tests, rngState
-           *
-           */
-          tests: 100
-        }
-      ).then(function (result) {
-        // TODO: Update Jsc wrap so that we can disable the OK log without losing the error log
-        if (result === true) {
-          console.log('✓ [async]: ' + label);
-          return Promise.resolve(result);
-        }
-        else {
-          console.log('x [async]: ' + label);
-          return Promise.reject(result);
-        }
-      });
+      return Jsc.asyncProperty(label, arbitraries, f, { tests: 10 });
+      // return Jsc.check(
+      //   Jsc.forall.apply(Jsc, arbitraries.concat([ f ])),
+      //   {
+      //     /*
+      //      * Insert jsverify options here like number of tests, rngState
+      //      *
+      //      */
+      //     tests: 100
+      //   }
+      // ).then(function (result) {
+      //   // TODO: Update Jsc wrap so that we can disable the OK log without losing the error log
+      //   if (result === true) {
+      //     console.log('✓ [async]: ' + label);
+      //     return Promise.resolve(result);
+      //   }
+      //   else {
+      //     console.log('x [async]: ' + label);
+      //     return Promise.reject(result);
+      //   }
+      // });
     };
 
     var checkProps = function (props) {
