@@ -12,40 +12,56 @@
 
 tinymce.PluginManager.add('toc', function(editor) {
     var $ = editor.$;
+    var opts;
 
-    // these options will be saved as data attributes on each toc
-    // so only lowercase letters allowed, underscores are ok
-    var defaults = {
-        title: "Table of Contents",
-        maxlevel: "3",
-        prefix: 'mce'
+    var defs = {
+        depth: 3,
+        headerTag: 'h2',
+        className: 'mce-toc'
     };
 
-    function isToc(elm) {
-        return elm && editor.dom.is(elm, '[data-mce-toc]') && editor.getBody().contains(elm);
+    var guid = (function() {
+        var counter = 0;
+        return function(prefix) {
+            var guid = new Date().getTime().toString(32);
+            return (prefix || '_') + guid + (counter++).toString(32);
+        };
+    }());
+
+
+    function isValidTag(tagName) {
+        return editor.schema.isValidChild('div', tagName);
     }
 
 
-    function generateSelector(maxlevel) {
-        var selector = [];
+    function isToc(elm) {
+        return elm && editor.dom.is(elm, '.' + opts.className) && editor.getBody().contains(elm);
+    }
 
-        maxlevel = parseInt(maxlevel, 10);
-        if (isNaN(maxlevel)) {
-            maxlevel = defaults.maxlevel;
-        }
 
-        for (var i = 1; i <= maxlevel; i++) {
+    function generateSelector(depth) {
+        var i, selector = [];
+        for (i = 1; i <= depth; i++) {
             selector.push('h' + i);
         }
         return selector.join(',');
     }
 
 
-    function prepareHeaders(maxlevel) {
-        var selector = generateSelector(maxlevel);
-        return tinymce.map($(selector), function(h) {
+    function prepareHeaders(o) {
+        var selector = generateSelector(o.depth);
+        var headers = $(selector);
+
+        // if headerTag is one of h1-9, we need to filter it out from the set
+        if (/^h[1-9]$/i.test(o.headerTag)) {
+            headers = headers.filter(function(i, el) {
+                return !editor.dom.hasClass(el.parentNode, o.className);
+            });
+        }
+
+        return tinymce.map(headers, function(h) {
             if (!h.id) {
-                h.id = editor.dom.uniqueId();
+                h.id = guid('mce_toc_');
             }
             return {
                 id: h.id,
@@ -56,42 +72,39 @@ tinymce.PluginManager.add('toc', function(editor) {
     }
 
 
+    function generateTitle(tag, title) {
+        var openTag = '<' + tag + ' contenteditable="true">';
+        var closeTag = '</' + tag + '>';
+        return openTag + editor.dom.encode(title) + closeTag;
+    }
+
+
     function generateTocHtml(o) {
         var html = generateTocContentHtml(o);
-        var tocHtml = '';
-        if (html) {
-            tocHtml += '<div id="__mcetoc" class="' + o.prefix + '-toc" contenteditable="false"';
-            tocHtml += ' data-mce-toc="1" style="padding: 1em;">' + html + '</div>';
-        }
-        return tocHtml;
+        return '<div class="' + o.className + '" contenteditable="false">' + html + '</div>';
     }
 
 
     function generateTocContentHtml(o) {
         var html = '';
-        var headers = prepareHeaders(o.maxlevel);
+        var headers = prepareHeaders(o);
         var i, ii, h, prevLevel = 0, nextLevel;
-        var title = tinymce.trim(editor.dom.encode(o.title));
 
         if (!headers.length) {
             return;
         }
 
-        if (title) {
-            html += '<div class="' + o.prefix + '-toc-title"';
-            html += ' style="font-size:1.5em;font-weight:bold;">' + title + '</div>';
-        }
+        html += generateTitle(o.headerTag, tinymce.translate("Table of Contents"));
 
         for (i = 0; i < headers.length; i++) {
             h = headers[i];
             nextLevel = headers[i + 1] && headers[i + 1].level;
 
             if (prevLevel === h.level) {
-                html += '<li style="list-style-type: none">';
+                html += '<li>';
             } else {
                 for (ii = prevLevel; ii < h.level; ii++) {
-                    html += '<ul class="' + o.prefix + '-toc-lvl-' + (ii + 1) + '">';
-                    html += '<li style="list-style-type: none">';
+                    html += '<ul><li>';
                 }
             }
 
@@ -105,7 +118,7 @@ tinymce.PluginManager.add('toc', function(editor) {
                 }
             } else {
                 for (ii = h.level; ii > nextLevel; ii--) {
-                    html += '</li></ul><li style="list-style-type: none">';
+                    html += '</li></ul><li>';
                 }
             }
 
@@ -116,138 +129,56 @@ tinymce.PluginManager.add('toc', function(editor) {
     }
 
 
-    function getSelectedToc() {
-        return editor.dom.getParent(editor.selection.getStart(), '[data-mce-toc]') || null;
-    }
-
-
-    function getTocOptions(tocElm) {
-        var o = {};
-        if (tocElm) {
-            tinymce.each(defaults, function(val, key) {
-                o[key] = editor.dom.getAttrib(tocElm, 'data-mce-toc-' + key);
-            });
-            return o;
-        } else {
-            return null;
-        }
-
-    }
-
-
-    function updateTocOptions(tocElm, o) {
-        tinymce.each(defaults, function(val, key) {
-            editor.dom.setAttrib(tocElm, 'data-mce-toc-' + key, editor.dom.encode(o[key]));
-        });
-    }
-
-
-    function updateToc(tocElm, o) {
-        tocElm = tocElm || getSelectedToc();
-        o = tinymce.extend({}, defaults, o || getTocOptions(tocElm));
-
-        if (o) {
-            editor.undoManager.transact(function () {
-                editor.dom.setHTML(tocElm, generateTocContentHtml(o));
-                editor.dom.setAttrib(tocElm, 'class', o.prefix + '-toc');
-
-                updateTocOptions(tocElm, o);
-            });
-        }
-    }
-
-
-    function insertToc(o) {
-        editor.undoManager.transact(function() {
-            var $tocElm;
-            editor.insertContent(generateTocHtml(o));
-            $tocElm = $('#__mcetoc');
-            $tocElm.removeAttr('id');
-
-            updateTocOptions($tocElm[0], o);
-        });
-    }
-
-
-    function openInsertTocDialog(tocElm) {
-        var levels = '1,2,3,4,5,6,7,8,9';
-        var o;
-
-        tocElm = tocElm || getSelectedToc();
-        o = tinymce.extend({}, defaults, getTocOptions(tocElm));
-
-        editor.windowManager.open({
-            title: "Table of Contents",
-            bodyType: 'tabpanel',
-            body: [
-                {
-                    title: 'Properties',
-                    type: 'form',
-                    padding: 20,
-                    data: o,
-                    items: [
-                        {
-                            label: 'Title',
-                            name: 'title',
-                            type: 'textbox'
-                        },
-                        {
-                            label: 'Show levels',
-                            name: 'maxlevel',
-                            type: 'listbox',
-                            text: o.maxlevel,
-                            values: tinymce.map(levels.split(','), function(i) {
-                                return {text: i, value: i};
-                            })
-                        },
-                        {
-                            label: 'className Prefix',
-                            name: 'prefix',
-                            type: 'textbox'
-                        }
-                    ]
-                }
-            ],
-
-            onsubmit: function(e) {
-                if (tocElm) {
-                    updateToc(tocElm, e.data);
-                } else {
-                    insertToc(e.data);
-                }
-            }
-        });
-    }
+    editor.on('PreInit', function() {
+        var s = editor.settings;
+        opts = {
+            depth: parseInt(s.toc_depth, 10) || defs.depth,
+            headerTag: isValidTag(s.toc_header) ? s.toc_header : defs.headerTag,
+            className: s.toc_class ? editor.dom.encode(s.toc_class) : defs.className
+        };
+    });
 
 
     editor.on('PreProcess', function(e) {
-        $('[data-mce-toc][contenteditable=false]', e.node).removeAttr('contentEditable');
+        $('.' + opts.className + '[contenteditable=false]', e.node).removeAttr('contentEditable');
     });
 
+
     editor.on('SetContent', function() {
-        $('[data-mce-toc]').attr('contentEditable', false);
+        $('.' + opts.className).attr('contentEditable', false);
     });
 
 
     editor.addCommand('mceInsertToc', function() {
-        insertToc(defaults);
+        if (!$('.' + opts.className).length) {
+            editor.insertContent(generateTocHtml(opts));
+        } else {
+            editor.execCommand('mceUpdateToc');
+        }
     });
+
 
     editor.addCommand('mceUpdateToc', function() {
-        updateToc();
+        var $tocElm = $('.' + opts.className);
+        if ($tocElm.length) {
+            editor.undoManager.transact(function () {
+                $tocElm.html(generateTocContentHtml(opts));
+            });
+        }
     });
 
-    editor.addCommand('mceTocProps', function() {
-        openInsertTocDialog();
-    });
 
+    editor.addButton('toc', {
+        tooltip: 'Table of Contents',
+        cmd: 'mceInsertToc',
+        icon: 'toc'
+    });
 
     editor.addButton('tocupdate', {
-        title: 'Update',
+        tooltip: 'Update',
         cmd: 'mceUpdateToc',
-        icon: 'redo'
+        icon: 'reload'
     });
-
 
     editor.addContextToolbar(
         isToc,
@@ -255,8 +186,8 @@ tinymce.PluginManager.add('toc', function(editor) {
     );
 
     editor.addMenuItem('toc', {
-        text: 'Table of Contents',
+        text: "Table of Contents",
         context: 'insert',
-        cmd: 'mceTocProps'
+        cmd: 'mceInsertToc'
     });
 });
