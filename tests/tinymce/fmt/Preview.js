@@ -150,7 +150,7 @@ ModuleLoader.require(["tinymce/fmt/Preview"], function(Preview) {
         }
 
         function selectorToHtml(selector) {
-            return Preview.selectorToHtml(selector).outerHTML;
+            return Utils.normalizeHtml(Preview.selectorToHtml(selector).outerHTML);
         }
 
         equal(selectorToHtml('ul > li.class1'), trimSpaces([
@@ -192,7 +192,7 @@ ModuleLoader.require(["tinymce/fmt/Preview"], function(Preview) {
             '<div>',
                 '<p>',
                     '<ul>',
-                        '<li title="Some Title" alt="Some Alt"></li>',
+                        '<li alt="Some Alt" title="Some Title"></li>',
                     '</ul>',
                 '</p>',
             '</div>'
