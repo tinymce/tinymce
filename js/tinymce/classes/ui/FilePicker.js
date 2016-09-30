@@ -155,6 +155,11 @@ define("tinymce/ui/FilePicker", [
 		return result.length === 1 && result[0].title === term ? [] : result;
 	};
 
+	var getTitle = function (linkDetails) {
+		var title = linkDetails.title;
+		return title.raw ? title.raw : title;
+	};
+
 	var setupAutoCompleteHandler = function (ctrl, editorSettings, bodyElm, fileType) {
 		var autocomplete = function (term) {
 			var linkTargets = LinkTargets.find(bodyElm);
@@ -170,11 +175,12 @@ define("tinymce/ui/FilePicker", [
 			var linkDetails = e.value;
 
 			ctrl.value(linkDetails.url);
+			var title = getTitle(linkDetails);
 
 			if (fileType === 'image') {
-				ctrl.fire('change', {meta: {alt: linkDetails.title, attach: linkDetails.attach}});
+				ctrl.fire('change', {meta: {alt: title, attach: linkDetails.attach}});
 			} else {
-				ctrl.fire('change', {meta: {text: linkDetails.title, attach: linkDetails.attach}});
+				ctrl.fire('change', {meta: {text: title, attach: linkDetails.attach}});
 			}
 
 			ctrl.focus();
