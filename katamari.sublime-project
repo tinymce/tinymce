@@ -8,7 +8,7 @@
       ],
       "folder_exclude_patterns":
       [
-        "/dist",
+        "dist",
         "scratch",
         "dependency"
       ],
