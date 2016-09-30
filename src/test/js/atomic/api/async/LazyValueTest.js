@@ -158,7 +158,7 @@ asynctest(
       ]);
     };
 
-    return testGet().then(testMap).then(testIsReady).then(testPure).then(testParallel).
+    testGet().then(testMap).then(testIsReady).then(testPure).then(testParallel).
       then(testSpecs).then(function () {
       success();
     }, failure);
