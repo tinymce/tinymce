@@ -524,3 +524,17 @@ test('addTempAttr', function() {
 	equal(ser.serialize(DOM.get('test'), {getInner: 1}), '<p data-z="3">a</p>');
 	equal(ser.trimHtml('<p data-x="1" data-y="2" data-z="3">a</p>'), '<p data-z="3">a</p>');
 });
+
+test('addTempAttr same attr twice', function() {
+	var ser1 = new tinymce.dom.Serializer({});
+	var ser2 = new tinymce.dom.Serializer({});
+
+	ser1.addTempAttr('data-x');
+	ser2.addTempAttr('data-x');
+
+	DOM.setHTML('test', '<p data-x="1" data-z="3">a</p>');
+	equal(ser1.serialize(DOM.get('test'), {getInner: 1}), '<p data-z="3">a</p>');
+	equal(ser1.trimHtml('<p data-x="1" data-z="3">a</p>'), '<p data-z="3">a</p>');
+	equal(ser2.serialize(DOM.get('test'), {getInner: 1}), '<p data-z="3">a</p>');
+	equal(ser2.trimHtml('<p data-x="1" data-z="3">a</p>'), '<p data-z="3">a</p>');
+});

@@ -33,7 +33,7 @@ define("tinymce/ui/FilePicker", [
 		return {
 			title: target.title,
 			value: {
-				title: target.title,
+				title: {raw: target.title},
 				url: target.url,
 				attach: target.attach
 			}
@@ -63,7 +63,12 @@ define("tinymce/ui/FilePicker", [
 		return !foundTarget;
 	};
 
-	var createMenuItems = function (term, targets, fileType) {
+	var getSetting = function (editorSettings, name, defaultValue) {
+		var value = name in editorSettings ? editorSettings[name] : defaultValue;
+		return value === false ? null : value;
+	};
+
+	var createMenuItems = function (term, targets, fileType, editorSettings) {
 		var separator = {title: '-'};
 
 		var fromHistoryMenuItems = function (history) {
@@ -92,11 +97,19 @@ define("tinymce/ui/FilePicker", [
 		};
 
 		var anchorMenuItems = function () {
-			var menuItems = fromMenuItems('anchor');
-			var top = staticMenuItem('<top>', '#top');
-			var bottom = staticMenuItem('<bottom>', '#bottom');
+			var anchorMenuItems = fromMenuItems('anchor');
+			var topAnchor = getSetting(editorSettings, 'anchor_top', '#top');
+			var bottomAchor = getSetting(editorSettings, 'anchor_bottom', '#bottom');
 
-			return [top].concat(menuItems).concat([bottom]);
+			if (topAnchor !== null) {
+				anchorMenuItems.unshift(staticMenuItem('<top>', topAnchor));
+			}
+
+			if (bottomAchor !== null) {
+				anchorMenuItems.push(staticMenuItem('<bottom>', bottomAchor));
+			}
+
+			return anchorMenuItems;
 		};
 
 		var join = function (items) {
@@ -105,6 +118,10 @@ define("tinymce/ui/FilePicker", [
 				return bothEmpty ? a.concat(b) : a.concat(separator, b);
 			}, []);
 		};
+
+		if (editorSettings.typeahead_urls === false) {
+			return [];
+		}
 
 		return join([
 			filterByQuery(term, fromHistoryMenuItems(history)),
@@ -116,7 +133,7 @@ define("tinymce/ui/FilePicker", [
 	var addToHistory = function (url, fileType) {
 		var items = history[fileType];
 
-		if (url === "#top" || url === "#bottom") {
+		if (!/^https?/.test(url)) {
 			return;
 		}
 
@@ -138,10 +155,10 @@ define("tinymce/ui/FilePicker", [
 		return result.length === 1 && result[0].title === term ? [] : result;
 	};
 
-	var setupAutoCompleteHandler = function (ctrl, bodyElm, fileType) {
+	var setupAutoCompleteHandler = function (ctrl, editorSettings, bodyElm, fileType) {
 		var autocomplete = function (term) {
 			var linkTargets = LinkTargets.find(bodyElm);
-			var menuItems = createMenuItems(term, linkTargets, fileType);
+			var menuItems = createMenuItems(term, linkTargets, fileType, editorSettings);
 			ctrl.showAutoComplete(menuItems, term);
 		};
 
@@ -278,7 +295,7 @@ define("tinymce/ui/FilePicker", [
 
 			self._super(settings);
 
-			setupAutoCompleteHandler(self, editor.getBody(), fileType);
+			setupAutoCompleteHandler(self, editorSettings, editor.getBody(), fileType);
 			setupLinkValidatorHandler(self, editorSettings, fileType);
 		}
 	});
