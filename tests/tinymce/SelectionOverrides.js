@@ -328,4 +328,29 @@ ModuleLoader.require([
 		// Since we can't do a real click we need to check if it gets sucked in towards the cE=false block
 		equal(editor.selection.getNode().nodeName !== 'P', true);
 	});
+
+	test('offscreen copy of cE=false block remains offscreen', function() {
+		if (tinymce.isIE || tinymce.isGecko || tinymce.isOpera) {
+			expect(3);
+			editor.setContent('<table contenteditable="false" style="width: 100%; table-layout: fixed">'
+						  + '<tbody><tr><td>1</td><td>2</td></tr></tbody>'
+						  + '</table>');
+
+			editor.selection.select(editor.getBody().ownerDocument.getElementsByTagName('table')[0]);
+			var offscreenSelection = editor.getBody().ownerDocument.getElementsByClassName('mce-offscreen-selection')[0];
+
+			ok(offscreenSelection.offsetLeft !== undefined, 'The offscreen selection\'s left border is undefined');
+			ok(offscreenSelection.offsetLeft < 0, 'The offscreen selection\'s left border is onscreen');
+			ok(offscreenSelection.offsetWidth+ offscreenSelection.offsetLeft < 0,
+			   'The cE=false offscreen selection is visible on-screen. Right edge: ' +
+			   offscreenSelection.offsetLeft + '+' + offscreenSelection.offsetWidth + '=' +
+			   (offscreenSelection.offsetLeft + offscreenSelection.offsetWidth) + 'px');
+		}
+		else {
+			// Chrome and Safari behave correctly, and PhantomJS also declares itself as WebKit but does not
+			// put the off-screen selection off-screen, so fails the above tests. However, it has no visible UI,
+			// so everything is off-screen anyway :-)
+			ok(true, 'Not a tested browser - Chrome & Safari work, PhantomJS does not put the selection off screen');
+		}
+	});
 });
