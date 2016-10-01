@@ -69,7 +69,7 @@ define("tinymce/html/Schema", [
 					args[i] = split(args[i]);
 				}
 
-				children.push.apply(children, args[i]);
+				children = children.concat(args[i]);
 			}
 
 			name = split(name);
