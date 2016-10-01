@@ -119,6 +119,15 @@ test('Required attribute values', function() {
 	deepEqual(schema.getElementRule('span'), {"attributes": {"dir": {"validValues": {"rtl": {}, "ltr": {}}}}, "attributesOrder": ["dir"]});
 });
 
+test('Required parents', function() {
+	var schema;
+
+	schema = new tinymce.html.Schema();
+	deepEqual(schema.getElementRule('tr').parentsRequired, ['tbody', 'thead', 'tfoot']);
+	deepEqual(schema.getElementRule('li').parentsRequired, ['ul', 'ol']);
+	deepEqual(schema.getElementRule('div').parentsRequired, undefined);
+});
+
 test('Remove empty elements', function() {
 	var schema;
 
