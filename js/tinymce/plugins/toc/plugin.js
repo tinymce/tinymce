@@ -140,12 +140,20 @@ tinymce.PluginManager.add('toc', function(editor) {
 
 
     editor.on('PreProcess', function(e) {
-        $('.' + opts.className + '[contenteditable=false]', e.node).removeAttr('contentEditable');
+        var $tocElm = $('.' + opts.className, e.node);
+        if ($tocElm.length) {
+            $tocElm.removeAttr('contentEditable');
+            $tocElm.find('[contenteditable]').removeAttr('contentEditable');
+        }
     });
 
 
     editor.on('SetContent', function() {
-        $('.' + opts.className).attr('contentEditable', false);
+        var $tocElm = $('.' + opts.className);
+        if ($tocElm.length) {
+            $tocElm.attr('contentEditable', false);
+            $tocElm.children(':first-child').attr('contentEditable', true);
+        }
     });
 
 

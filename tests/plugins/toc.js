@@ -153,4 +153,33 @@
             "ToC has been successfully updated");
     });
 
+
+    test("Misc.", function() {
+        var contents, $toc;
+
+        editor.getBody().innerHTML =
+            '<h1 id="h1">H1</h1>' +
+            '<p>This is some text.</p><br />' +
+            '<h2 id="h2">H2</h2>' +
+            '<p>This is some text.</p><hr />' +
+            '<h1 id="h3">H1</h1>' +
+            '<p>This is some text.</p>' +
+            '<h3 id="h4">H3</h3>' +
+            '<p>This is some text.</p>'
+        ;
+
+        Utils.setSelection('h1', 0);
+        editor.execCommand('mceInsertToc');
+
+        contents = editor.getContent();
+        ok(!/contenteditable/i.test(contents), "cE stripped for getContent()");
+
+        editor.setContent(contents);
+
+        $toc = editor.$('.tst-toc');
+        deepEqual($toc.attr('contentEditable'), "false", "cE added back after setContent()");
+        deepEqual($toc.find(':first-child').attr('contentEditable'), "true",
+            "cE added back to title after setContent()");
+    });
+
 }());
