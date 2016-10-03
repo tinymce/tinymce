@@ -40,6 +40,10 @@
         $el.find('['+attr+']').removeAttr(attr);
     }
 
+	function trimBr(html) {
+		return html.replace(/<br data-mce-bogus="1" \/>/g, '');
+	}
+
 
     test("mceInsertToc", function() {
         editor.getBody().innerHTML =
@@ -65,7 +69,7 @@
 
         stripAttribs($toc, ['data-mce-href', 'data-mce-selected']);
 
-        equal(Utils.normalizeHtml($toc[0].outerHTML),
+        equal(trimBr(Utils.normalizeHtml($toc[0].outerHTML)),
             '<div class="tst-toc" contenteditable="false">' +
                 '<h3 contenteditable="true">Table of Contents</h3>' +
                 '<ul>' +
@@ -104,7 +108,7 @@
 
         stripAttribs($toc, ['data-mce-href', 'data-mce-selected']);
 
-        equal(Utils.normalizeHtml($toc[0].innerHTML),
+        equal(trimBr(Utils.normalizeHtml($toc[0].innerHTML)),
             '<h3 contenteditable="true">Table of Contents</h3>' +
             '<ul>' +
                 '<li>' +
@@ -123,7 +127,7 @@
             "no surprises in ToC structure"
         );
     });
-    
+
 
 
     test("mceUpdateToc", function() {
@@ -181,7 +185,7 @@
 
         stripAttribs($toc, ['data-mce-href', 'data-mce-selected']);
 
-        equal(Utils.normalizeHtml($toc[0].innerHTML),
+        equal(trimBr(Utils.normalizeHtml($toc[0].innerHTML)),
             '<h3 contenteditable="true">Table of Contents</h3>' +
             '<ul>' +
                 '<li>' +
