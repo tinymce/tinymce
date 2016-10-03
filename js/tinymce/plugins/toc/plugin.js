@@ -43,10 +43,7 @@ tinymce.PluginManager.add('toc', function(editor) {
 
     function toggleState() {
         var self = this;
-
-        self.disabled(!haveHeaders());
-
-        editor.on('SetContent', function() {
+        editor.on('LoadContent SetContent change', function() {
             self.disabled(editor.readonly || !haveHeaders());
         });
     }
