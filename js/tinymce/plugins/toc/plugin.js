@@ -131,8 +131,10 @@ tinymce.PluginManager.add('toc', function(editor) {
 
     editor.on('PreInit', function() {
         var s = editor.settings;
+        var depth = parseInt(s.toc_depth, 10) || 0;
+
         opts = {
-            depth: parseInt(s.toc_depth, 10) || defs.depth,
+            depth: depth >= 1 && depth <= 9 ? depth : defs.depth,
             headerTag: isValidTag(s.toc_header) ? s.toc_header : defs.headerTag,
             className: s.toc_class ? editor.dom.encode(s.toc_class) : defs.className
         };
