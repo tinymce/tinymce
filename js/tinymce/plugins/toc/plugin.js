@@ -20,13 +20,15 @@ tinymce.PluginManager.add('toc', function(editor) {
         className: 'mce-toc'
     };
 
-    var guid = (function() {
+    var guid = function() {
         var counter = 0;
         return function(prefix) {
             var guid = new Date().getTime().toString(32);
-            return (prefix || '_') + guid + (counter++).toString(32);
+            return prefix + guid + (counter++).toString(32);
         };
-    }());
+    };
+
+    var tocId = guid('mcetoc_');
 
 
     function isValidTag(tagName) {
@@ -39,6 +41,17 @@ tinymce.PluginManager.add('toc', function(editor) {
     }
 
 
+    function toggleState() {
+        var self = this;
+
+        self.disabled(!haveHeaders());
+
+        editor.on('SetContent', function() {
+            self.disabled(editor.readonly || !haveHeaders());
+        });
+    }
+
+
     function generateSelector(depth) {
         var i, selector = [];
         for (i = 1; i <= depth; i++) {
@@ -48,12 +61,17 @@ tinymce.PluginManager.add('toc', function(editor) {
     }
 
 
+    function haveHeaders() {
+        return !!(opts && prepareHeaders(opts).length);
+    }
+
+
     function prepareHeaders(o) {
         var selector = generateSelector(o.depth);
         var headers = $(selector);
 
         // if headerTag is one of h1-9, we need to filter it out from the set
-        if (/^h[1-9]$/i.test(o.headerTag)) {
+        if (headers.length && /^h[1-9]$/i.test(o.headerTag)) {
             headers = headers.filter(function(i, el) {
                 return !editor.dom.hasClass(el.parentNode, o.className);
             });
@@ -61,7 +79,7 @@ tinymce.PluginManager.add('toc', function(editor) {
 
         return tinymce.map(headers, function(h) {
             if (!h.id) {
-                h.id = guid('mce_toc_');
+                h.id = tocId();
             }
             return {
                 id: h.id,
@@ -69,6 +87,23 @@ tinymce.PluginManager.add('toc', function(editor) {
                 title: $.text(h)
             };
         });
+    }
+
+
+    function getMinLevel(headers) {
+        var i, minLevel = 9;
+
+        for (i = 0; i < headers.length; i++) {
+            if (headers[i].level < minLevel) {
+                minLevel = headers[i].level;
+            }
+
+            // do not proceed if we have reached absolute minimum
+            if (minLevel == 1) {
+                return minLevel;
+            }
+        }
+        return minLevel;
     }
 
 
@@ -88,10 +123,11 @@ tinymce.PluginManager.add('toc', function(editor) {
     function generateTocContentHtml(o) {
         var html = '';
         var headers = prepareHeaders(o);
-        var i, ii, h, prevLevel = 0, nextLevel;
+        var prevLevel = getMinLevel(headers) - 1;
+        var i, ii, h, nextLevel;
 
         if (!headers.length) {
-            return;
+            return '';
         }
 
         html += generateTitle(o.headerTag, tinymce.translate("Table of Contents"));
@@ -158,7 +194,6 @@ tinymce.PluginManager.add('toc', function(editor) {
         }
     });
 
-
     editor.addCommand('mceInsertToc', function() {
         if (!$('.' + opts.className).length) {
             editor.insertContent(generateTocHtml(opts));
@@ -181,7 +216,8 @@ tinymce.PluginManager.add('toc', function(editor) {
     editor.addButton('toc', {
         tooltip: 'Table of Contents',
         cmd: 'mceInsertToc',
-        icon: 'toc'
+        icon: 'toc',
+        onPostRender: toggleState
     });
 
     editor.addButton('tocupdate', {
@@ -198,6 +234,7 @@ tinymce.PluginManager.add('toc', function(editor) {
     editor.addMenuItem('toc', {
         text: "Table of Contents",
         context: 'insert',
-        cmd: 'mceInsertToc'
+        cmd: 'mceInsertToc',
+        onPostRender: toggleState
     });
 });
