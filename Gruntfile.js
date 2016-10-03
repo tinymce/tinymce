@@ -3,7 +3,6 @@
 module.exports = function(grunt) {
 	var packageData = grunt.file.readJSON("package.json");
 	var changelogLine = grunt.file.read("changelog.txt").toString().split("\n")[0];
-	packageData.version = /^Version ([0-9xabrc.]+)/.exec(changelogLine)[1];
 	packageData.date = /^Version [^\(]+\(([^\)]+)\)/.exec(changelogLine)[1];
 
 	grunt.initConfig({

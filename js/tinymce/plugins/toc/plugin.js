@@ -20,9 +20,9 @@ tinymce.PluginManager.add('toc', function(editor) {
         className: 'mce-toc'
     };
 
-    var guid = function() {
+    var guid = function(prefix) {
         var counter = 0;
-        return function(prefix) {
+        return function() {
             var guid = new Date().getTime().toString(32);
             return prefix + guid + (counter++).toString(32);
         };
