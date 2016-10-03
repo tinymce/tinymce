@@ -31,7 +31,8 @@ define("tinymce/Register", [
 	}
 
 	if (typeof module === 'object') {
-		module.exports = window.tinymce; // eslint-disable-line
+		/* global module */
+		module.exports = window.tinymce;
 	}
 
 	return {};
