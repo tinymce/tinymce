@@ -93,4 +93,17 @@ ModuleLoader.require([
 		equal(notifications.length, 2, 'Duplicate should be added for timeout message.');
 	});
 
+	test('Should not open notifcation if editor is removed', function() {
+		var testMsg1 = {type: 'default', text: 'test progressBar message'};
+
+		editor.remove();
+
+		try {
+			editor.notificationManager.open(testMsg1);
+			ok(true, 'Should execute without throwing.')
+		} catch (e) {
+			ok(false, 'Should never throw exception.');
+		}
+	});
+
 });
