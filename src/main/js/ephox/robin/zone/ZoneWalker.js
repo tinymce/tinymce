@@ -71,22 +71,23 @@ define(
             var position = viewport.assess(aItem);
             return ZonePosition.cata(position,
               function (aboveBlock) {
+                // We are before the viewport, so skip
                 // Only sidestep if we hadn't already tried it. Otherwise, we'll loop forever.
                 if (aMode !== Gather.backtrack) return doWalk(universe, aItem, Gather.sidestep, stopOn, stack, transform, viewport);
                 else return Trampoline.stop();
               }, function (inBlock) {
+                // We are in the viewport, so process normally
                 var opening = aMode === Gather.advance;
                 (opening ? stack.openBoundary : stack.closeBoundary)(aLang, aItem);
                 return doWalk(universe, aItem, aMode, stopOn, stack, transform, viewport);
               }, function (belowBlock) {
+                // We've gone past the end of the viewport, so stop completely
                 return Trampoline.stop();
-                // abort.
-                // console.log('Aborting', belowBlock.dom());
               }
             );
           }, function (aItem, aMode) {
-            return Trampoline.stop();
             // concluded(aItem, aMode) DO NOTHING
+            return Trampoline.stop();
           }
         );
       };

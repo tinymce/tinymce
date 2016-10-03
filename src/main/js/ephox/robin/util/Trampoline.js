@@ -15,7 +15,7 @@ define(
       }
     };
 
-    var stop = undefined;
+    var stop = 'trampoline.stop';
 
     return {
       stop: Fun.constant(stop),
