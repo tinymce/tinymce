@@ -158,17 +158,15 @@
         var contents, $toc;
 
         editor.getBody().innerHTML =
-            '<h1 id="h1">H1</h1>' +
+            '<h2 id="h1">H2</h2>' +
             '<p>This is some text.</p><br />' +
             '<h2 id="h2">H2</h2>' +
-            '<p>This is some text.</p><hr />' +
-            '<h1 id="h3">H1</h1>' +
             '<p>This is some text.</p>' +
             '<h3 id="h4">H3</h3>' +
             '<p>This is some text.</p>'
         ;
 
-        Utils.setSelection('h1', 0);
+        Utils.setSelection('h2', 0);
         editor.execCommand('mceInsertToc');
 
         contents = editor.getContent();
@@ -180,6 +178,21 @@
         deepEqual($toc.attr('contentEditable'), "false", "cE added back after setContent()");
         deepEqual($toc.find(':first-child').attr('contentEditable'), "true",
             "cE added back to title after setContent()");
+
+        stripAttribs($toc, ['data-mce-href', 'data-mce-selected']);
+
+        equal(Utils.normalizeHtml($toc[0].innerHTML),
+            '<h3 contenteditable="true">Table of Contents</h3>' +
+            '<ul>' +
+                '<li>' +
+                    '<a href="#h1">H2</a>' +
+                '</li>' +
+                '<li>' +
+                    '<a href="#h2">H2</a>' +
+                '</li>' +
+            '</ul>',
+            "the largest available header becomes first ToC level"
+        );
     });
 
 }());
