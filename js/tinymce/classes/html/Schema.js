@@ -217,7 +217,8 @@ define("tinymce/html/Schema", [
 			add("canvas", "width height", flowContent);
 			add("video", "src crossorigin poster preload autoplay mediagroup loop " +
 				"muted controls width height buffered", [flowContent, "track source"].join(' '));
-			add("audio", "src crossorigin preload autoplay mediagroup loop muted controls buffered volume", [flowContent, "track source"].join(' '));
+			add("audio", "src crossorigin preload autoplay mediagroup loop muted controls " +
+				"buffered volume", [flowContent, "track source"].join(' '));
 			add("picture", "", "img source");
 			add("source", "src srcset type media sizes");
 			add("track", "kind src srclang label default");
