@@ -4,14 +4,16 @@ define(
   [
     'ephox.perhaps.Option',
     'ephox.phoenix.api.general.Descent',
-    'ephox.robin.words.ClusterSearch',
+    'ephox.robin.api.general.ZoneViewports',
     'ephox.robin.words.Clustering',
     'ephox.robin.words.WordDecision',
     'ephox.robin.zone.LanguageZones',
     'ephox.robin.zone.TextZones'
   ],
 
-  function (Option, Descent, ClusterSearch, Clustering, WordDecision, LanguageZones, TextZones) {
+  function (Option, Descent, ZoneViewports, Clustering, WordDecision, LanguageZones, TextZones) {
+    var viewport = ZoneViewports.anything();
+
     // a Text Zone enforces a language, and returns Option.some only if a single zone was identified
     // with that language.
     var filterZone = function (zone, onlyLang) {
@@ -19,7 +21,7 @@ define(
     };
 
     var fromBoundedWith = function (universe, left, right, envLang, onlyLang, transform) {
-      var output = TextZones.fromBoundedWith(universe, left, right, envLang, transform);
+      var output = TextZones.fromBoundedWith(universe, left, right, envLang, transform, viewport);
       var zones = output.zones();
       return zones.length === 1 ? filterZone(zones[0], onlyLang) : Option.none();
     };

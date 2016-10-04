@@ -4,11 +4,13 @@ define(
   [
     'ephox.perhaps.Option',
     'ephox.phoenix.api.general.Gather',
+    'ephox.robin.api.general.ZonePosition',
+    'ephox.robin.util.Trampoline',
     'ephox.robin.zone.LanguageZones',
     'ephox.scullion.ADT'
   ],
 
-  function (Option, Gather, LanguageZones, Adt) {
+  function (Option, Gather, ZonePosition, Trampoline, LanguageZones, Adt) {
     var adt = Adt.generate([
       // an inline element, so use the lang to identify if a new zone is needed
       { inline: [ 'item', 'mode', 'lang' ] },
@@ -45,41 +47,61 @@ define(
       });  
     };
 
-    var process = function (universe, outcome, stopOn, stack, transform) {
-      outcome.fold(
-        function (aItem, aMode, aLang) {
-          // inline(aItem, aMode, aLang)
-          var opening = aMode === Gather.advance;
-          (opening ? stack.openInline : stack.closeInline)(aLang, aItem);
-          doWalk(universe, aItem, aMode, stopOn, stack, transform);
+    var process = function (universe, outcome, stopOn, stack, transform, viewport) {
+      return function () {
+        return outcome.fold(
+          function (aItem, aMode, aLang) {
+            // inline(aItem, aMode, aLang)
+            var opening = aMode === Gather.advance;
+            (opening ? stack.openInline : stack.closeInline)(aLang, aItem);
+            return doWalk(universe, aItem, aMode, stopOn, stack, transform, viewport);
 
-        }, function (aItem, aMode) {
-          var detail = transform(universe, aItem);
-          // text (aItem, aMode)
-          stack.addDetail(detail);
-          if (! stopOn(aItem, aMode)) doWalk(universe, aItem, aMode, stopOn, stack, transform);
-        }, function (aItem, aMode) {
-          // empty (aItem, aMode)
-          stack.addEmpty(aItem);
-          doWalk(universe, aItem, aMode, stopOn, stack, transform);
-                
-        }, function (aItem, aMode, aLang) {
-          // boundary(aItem, aMode, aLang) 
-          var opening = aMode === Gather.advance;
-          (opening ? stack.openBoundary : stack.closeBoundary)(aLang, aItem);
-          doWalk(universe, aItem, aMode, stopOn, stack, transform);
-        }, function (aItem, aMode) {
-          // concluded(aItem, aMode) DO NOTHING
-        }
-      );
+          }, function (aItem, aMode) {
+            var detail = transform(universe, aItem);
+            // text (aItem, aMode)
+            stack.addDetail(detail);
+            return (! stopOn(aItem, aMode)) ? doWalk(universe, aItem, aMode, stopOn, stack, transform, viewport) : Trampoline.stop();
+          }, function (aItem, aMode) {
+            // empty (aItem, aMode)
+            stack.addEmpty(aItem);
+            return doWalk(universe, aItem, aMode, stopOn, stack, transform, viewport);
+                  
+          }, function (aItem, aMode, aLang) {
+            // Use boundary positions to assess whether we have moved out of the viewport.
+            var position = viewport.assess(aItem);
+            return ZonePosition.cata(position,
+              function (aboveBlock) {
+                // We are before the viewport, so skip
+                // Only sidestep if we hadn't already tried it. Otherwise, we'll loop forever.
+                if (aMode !== Gather.backtrack) return doWalk(universe, aItem, Gather.sidestep, stopOn, stack, transform, viewport);
+                else return Trampoline.stop();
+              }, function (inBlock) {
+                // We are in the viewport, so process normally
+                var opening = aMode === Gather.advance;
+                (opening ? stack.openBoundary : stack.closeBoundary)(aLang, aItem);
+                return doWalk(universe, aItem, aMode, stopOn, stack, transform, viewport);
+              }, function (belowBlock) {
+                // We've gone past the end of the viewport, so stop completely
+                return Trampoline.stop();
+              }
+            );
+          }, function (aItem, aMode) {
+            // concluded(aItem, aMode) DO NOTHING
+            return Trampoline.stop();
+          }
+        );
+      };
     };
 
-    var doWalk = function (universe, current, mode, stopOn, stack, transform) {
+    // I'm going to trampoline this: (http://stackoverflow.com/questions/25228871/how-to-understand-trampoline-in-javascript)
+    // The reason is because we often hit stack problems with this code, so this is an attempt to resolve them.
+    // The key thing is that you need to keep returning a function.
+    var doWalk = function (universe, current, mode, stopOn, stack, transform, viewport) {
       var outcome = takeStep(universe, current, mode, stopOn);
-      process(universe, outcome, stopOn, stack, transform);
+      return process(universe, outcome, stopOn, stack, transform, viewport);
     };
 
-    var walk = function (universe, start, finish, defaultLang, transform) {
+    var walk = function (universe, start, finish, defaultLang, transform, viewport) {
       var stopOn = function (sItem, sMode) {
         return universe.eq(sItem, finish) && (sMode !== Gather.advance || universe.property().isText(sItem) || universe.property().children(sItem).length === 0);
       };
@@ -88,8 +110,10 @@ define(
       var stack = LanguageZones.nu(defaultLang);
       var mode = Gather.advance;
       var initial = analyse(universe, start, mode, stopOn);
-      process(universe, initial, stopOn, stack, transform);
 
+      Trampoline.run(function () {
+        return process(universe, initial, stopOn, stack, transform, viewport);
+      });
 
       return stack.done();
     };

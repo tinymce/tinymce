@@ -5,6 +5,8 @@ test(
     'ephox.boss.api.Gene',
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
+    'ephox.robin.api.general.ZonePosition',
+    'ephox.robin.api.general.ZoneViewports',
     'ephox.robin.test.Arbitraries',
     'ephox.robin.test.PropertyAssertions',
     'ephox.robin.test.ZoneObjects',
@@ -12,10 +14,10 @@ test(
     'global!Error'
   ],
 
-  function (Gene, TestUniverse, TextGene, Arbitraries, PropertyAssertions, ZoneObjects, TextZones, Error) {
+  function (Gene, TestUniverse, TextGene, ZonePosition, ZoneViewports, Arbitraries, PropertyAssertions, ZoneObjects, TextZones, Error) {
     var check = function (universe, expected, id) {
       var item = universe.find(universe.get(), id).getOrDie();
-      var actual = TextZones.fromBounded(universe, item, item, 'en');
+      var actual = TextZones.fromBounded(universe, item, item, 'en', ZoneViewports.anything());
       ZoneObjects.assertZones('Starting from: ' + id, universe, expected, actual.zones());
     };
 
@@ -125,7 +127,7 @@ test(
     ], function (info) {
       var item1 = doc1.find(doc1.get(), info.startId).getOrDie();
       var item2 = doc1.find(doc1.get(), info.finishId).getOrDie();
-      var actual = TextZones.fromBounded(doc1, item1, item2, 'en');
+      var actual = TextZones.fromBounded(doc1, item1, item2, 'en', ZoneViewports.anything());
       ZoneObjects.assertProps('Testing zones for ' + info.startId + '->' + info.finishId, doc1, actual.zones());
       return true;
     }, {

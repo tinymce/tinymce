@@ -9,13 +9,14 @@ test(
     'ephox.boss.api.TextGene',
     'ephox.peanut.Fun',
     'ephox.robin.api.general.TextZones',
+    'ephox.robin.api.general.ZoneViewports',
     'ephox.robin.test.Arbitraries',
     'ephox.robin.test.PropertyAssertions',
     'ephox.robin.test.ZoneObjects',
     'ephox.wrap.Jsc'
   ],
 
-  function (Logger, RawAssertions, Gene, TestUniverse, TextGene, Fun, TextZones, Arbitraries, PropertyAssertions, ZoneObjects, Jsc) {
+  function (Logger, RawAssertions, Gene, TestUniverse, TextGene, Fun, TextZones, ZoneViewports, Arbitraries, PropertyAssertions, ZoneObjects, Jsc) {
     var doc1 = TestUniverse(Gene('root', 'root', [
       Gene('div1', 'div', [
         Gene('p1', 'p', [
@@ -57,7 +58,7 @@ test(
 
     var checkSingle = function (info) {
       var item = doc1.find(doc1.get(), info.startId).getOrDie();
-      var actual = TextZones.single(doc1, item, 'en');
+      var actual = TextZones.single(doc1, item, 'en', ZoneViewports.anything());
       ZoneObjects.assertProps('Testing zones for single(' + info.startId + ')', doc1, actual.zones());
       return true;
     };
@@ -65,7 +66,7 @@ test(
     var checkRange = function (info) {
       var item1 = doc1.find(doc1.get(), info.startId).getOrDie();
       var item2 = doc1.find(doc1.get(), info.finishId).getOrDie();
-      var actual = TextZones.range(doc1, item1, 0, item2, 0, 'en');
+      var actual = TextZones.range(doc1, item1, 0, item2, 0, 'en', ZoneViewports.anything());
       ZoneObjects.assertProps('Testing zones for range(' + info.startId + '->' + info.finishId + ')', doc1, actual.zones());
       return true;
     };
@@ -74,7 +75,7 @@ test(
       'Checking the (single) zone of an isolated inline tag',
       function () {
         var item = doc1.find(doc1.get(), 'isolated').getOrDie();
-        var actual = TextZones.single(doc1, item, 'en');
+        var actual = TextZones.single(doc1, item, 'en', ZoneViewports.anything());
         RawAssertions.assertEq(
           'Zone assertion',
           [{
@@ -93,7 +94,7 @@ test(
       'Checking the (single) zone of an isolated text node',
       function () {
         var item = doc1.find(doc1.get(), 'en-k').getOrDie();
-        var actual = TextZones.single(doc1, item, 'en');
+        var actual = TextZones.single(doc1, item, 'en', ZoneViewports.anything());
         RawAssertions.assertEq(
           'Zone assertion',
           [{
@@ -131,7 +132,7 @@ test(
     ], function (info) {
       var item = doc1.find(doc1.get(), info.startId).getOrDie();
       // Consider other offsets
-      var actual = TextZones.range(doc1, item, 0, item, 0);
+      var actual = TextZones.range(doc1, item, 0, item, 0, 'en', ZoneViewports.anything());
       return Jsc.eq(0, actual.zones().length);
     }, {
 
