@@ -583,6 +583,28 @@ module.exports = function(grunt) {
 							"jquery.tinymce.js",
 							"js/tinymce/classes/jquery.tinymce.js"
 						);
+
+						var pluginDirectories = grunt.file.expand(
+							{
+								filter: function(path) {
+									return this.excludes.indexOf(path) === -1;
+								}.bind(this),
+								cwd: "js/tinymce/plugins"
+							},
+							["*"]
+						);
+
+						pluginDirectories.forEach(function(plugin) {
+							zip.addData(
+								"plugins/" + plugin + "/index.js",
+								"// Exports the \"" + plugin + "\" plugin for usage with module loaders\n" +
+								"// Usage:\n" +
+								"//   CommonJS:\n" +
+								"//     require('tinymce/plugins/" + plugin + "')\n" +
+								"//   ES2015:\n" +
+								"//     import 'tinymce/plugins/" + plugin + "'\n" +
+								"require('./plugin.js');");
+						});
 					},
 
 					to: "tmp/tinymce_<%= pkg.version %>_component.zip"
