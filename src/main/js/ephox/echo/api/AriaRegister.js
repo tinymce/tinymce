@@ -222,7 +222,7 @@ define(
       Attr.set(element, 'aria-owns', id);
     };
 
-    var ownsRemove = function (element) {
+    var disown = function (element) {
       // An element can have only one explicit owner, so this removes the attribute.
       Attr.remove(element, 'aria-owns');
     };
@@ -307,7 +307,7 @@ define(
       presentation: presentation,
       controls: controls,
       owns: owns,
-      ownsRemove: ownsRemove,
+      disown: disown,
       editor: editor,
       group: group,
       toolbar: toolbar,
