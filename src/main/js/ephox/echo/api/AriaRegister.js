@@ -202,12 +202,31 @@ define(
       });
     };
 
-    var linkTabToPanel = function (tab, panel) {
+    var owns = function (element, id) {
+      // https://www.w3.org/TR/wai-aria/states_and_properties#aria-owns
+      // Identifies a functional parent/child relationship between dom elements
+      // where the DOM hierarchy cannot be used.
+      // An element can have only one explicit owner.
+      Attr.set(element, 'aria-owns', id);
+    };
+
+    var disown = function (element) {
+      // An element can have only one explicit owner, so this removes the attribute.
+      Attr.remove(element, 'aria-owns');
+    };
+
+    var controls = function (element, id) {
+      Attr.set(element, 'aria-controls', id);
+    };
+
+    var linkElements = function (master, slave) {
       var id = Id.generate('ephox-aria');
-      Attr.set(panel, 'id', id);
-      Attr.setAll(tab, {
-        'aria-controls': id
-      });
+      Attr.set(slave, 'id', id);
+      controls(master, id);
+    };
+
+    var linkTabToPanel = function (tab, panel) {
+      linkElements(tab, panel);
     };
 
     var describedBy = function (element, id) {
@@ -224,10 +243,6 @@ define(
         'aria-live': priority,
         'id': id
       });
-    };
-
-    var controls = function (element, id) {
-      Attr.set(element, 'aria-controls', id);
     };
 
     var required = function (element) {
@@ -280,6 +295,8 @@ define(
       presentation: presentation,
       region: region,
       controls: controls,
+      owns: owns,
+      disown: disown,
       editor: editor,
       group: group,
       toolbar: toolbar,
@@ -302,6 +319,7 @@ define(
       tabList: tabList,
       tabButton: tabButton,
       tabPanel: tabPanel,
+      linkElements: linkElements,
       linkTabToPanel: linkTabToPanel,
       describedBy: describedBy,
       labelledBy: labelledBy,
