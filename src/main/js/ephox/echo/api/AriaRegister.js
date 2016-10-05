@@ -51,8 +51,7 @@ define(
       });
 
       var destroy = function () {
-        var removeFromEditor = Fun.curry(Attr.remove, editor);
-        removeFromEditor('aria-describedby');
+        Attr.remove(editor, 'aria-describedby');
       };
 
       return {
