@@ -419,7 +419,7 @@ define("tinymce/util/Quirks", [
 					container, offset, br, currentFormatNodes;
 
 				function cloneTextBlockWithFormats(blockElm, node) {
-					currentFormatNodes = $(node).parents().filter(function(idx, node) {
+					currentFormatNodes = $(node).parentsUntil(editor.getBody()).filter(function(idx, node) {
 						return !!editor.schema.getTextInlineElements()[node.nodeName];
 					});
 
@@ -634,7 +634,7 @@ define("tinymce/util/Quirks", [
 					e.preventDefault();
 
 					// Keep track of current format nodes
-					currentFormatNodes = $(rng.startContainer).parents().filter(function(idx, node) {
+					currentFormatNodes = $(rng.startContainer).parentsUntil(editor.getBody()).filter(function(idx, node) {
 						return !!editor.schema.getTextInlineElements()[node.nodeName];
 					});
 
