@@ -3,8 +3,6 @@ define(
 
   [
     'ephox.classify.Type',
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
     'ephox.echo.api.Styles',
     'ephox.epithet.Id',
     'ephox.highway.Merger',
@@ -16,7 +14,7 @@ define(
     'ephox.sugar.api.InsertAll'
   ],
 
-  function (Type, Arr, Obj, Styles, Id, Merger, Fun, Attr, Class, Element, Insert, InsertAll) {
+  function (Type, Styles, Id, Merger, Fun, Attr, Class, Element, Insert, InsertAll) {
     var helpStyle = Styles.resolve('aria-help');
     var helpVisibleStyle = Styles.resolve('aria-help-visible');
 
@@ -29,13 +27,14 @@ define(
       Attr.set(element, 'role', 'presentation');
     };
 
+    var region = function (element) {
+      Attr.set(element, 'role', 'region');
+    };
+
     var editor = function (container, editor, label, ariaHelp, showHelpHint) {
-      // Set role=region: https://www.w3.org/TR/wai-aria/roles#region
-      // on editor for better user navigation modes, as it is mostly text content.
-      // Better than role=application which constrains the reader navigation
-      // - https://www.w3.org/TR/wai-aria/roles#application
+      // The editor needs to be role application otherwise ainspector will complain about event listeners
       Attr.setAll(container, {
-        'role': 'region',
+        'role': 'application',
         'aria-label': label
       });
 
@@ -51,19 +50,8 @@ define(
         Insert.append(container, aria);
       });
 
-      // content attributes - surprisingly helps in both classic and inline
-      var attrs = {
-        'aria-multiline': 'true',
-        'aria-label': label,
-        title: label
-      };
-
-      Attr.setAll(editor, attrs);
-
       var destroy = function () {
-        var removeFromEditor = Fun.curry(Attr.remove, editor);
-        Arr.each(Obj.keys(attrs), removeFromEditor);
-        removeFromEditor('aria-describedby');
+        Attr.remove(editor, 'aria-describedby');
       };
 
       return {
@@ -290,6 +278,7 @@ define(
     return {
       document: roleDocument,
       presentation: presentation,
+      region: region,
       controls: controls,
       editor: editor,
       group: group,
