@@ -384,7 +384,7 @@ define("tinymce/SelectionOverrides", [
 		}
 
 		function deleteContentEditableNode(node) {
-			var nextCaretPosition, prevCaretPosition, prevCeFalseElm, nextElement;
+			var nextCaretPosition, prevCaretPosition, prevCeFalseElm, nextElement, parentElement;
 
 			if (!isContentEditableFalse(node)) {
 				return null;
@@ -405,13 +405,24 @@ define("tinymce/SelectionOverrides", [
 
 			CaretContainer.remove(node.previousSibling);
 			CaretContainer.remove(node.nextSibling);
+
+			parentElement = node.parentElement;
 			editor.dom.remove(node);
+			parentElement = removeEmptyNonBlockAncestors(parentElement);
+
 			clearContentEditableSelection();
 
 			if (editor.dom.isEmpty(editor.getBody())) {
 				editor.setContent('');
 				editor.focus();
 				return;
+			}
+
+			// If the cE=false was the only element of the parent, insert a <br> tag so that the
+			// caret can be placed inside the parent element.
+			if (!parentElement.hasChildNodes()) {
+				parentElement.innerHTML = "<br>";
+				return CaretPosition.after(parentElement.firstChild).toRange();
 			}
 
 			if (prevCeFalseElm) {
@@ -431,6 +442,22 @@ define("tinymce/SelectionOverrides", [
 			}
 
 			return null;
+		}
+
+		/**
+		 * Removes the current node and direct ancestors that are empty until the first block element
+		 * is encountered. The first block or non-empty element is then returned. This is to replicate
+		 * the behavior of deleting a text element where the browser also deletes the surrounding
+		 * non-block parents.
+		 */
+		function removeEmptyNonBlockAncestors(node) {
+			while (!node.hasChildNodes() && !editor.dom.isBlock(node)) {
+				var parentElement = node.parentElement;
+				editor.dom.remove(node);
+				node = parentElement;
+			}
+
+			return node;
 		}
 
 		function isTextBlock(node) {
