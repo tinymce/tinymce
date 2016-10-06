@@ -3,10 +3,12 @@ define(
 
   [
     'ephox.classify.Type',
+    'ephox.compass.Arr',
     'ephox.echo.api.Styles',
     'ephox.epithet.Id',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
@@ -14,7 +16,7 @@ define(
     'ephox.sugar.api.InsertAll'
   ],
 
-  function (Type, Styles, Id, Merger, Fun, Attr, Class, Element, Insert, InsertAll) {
+  function (Type, Arr, Styles, Id, Merger, Fun, Option, Attr, Class, Element, Insert, InsertAll) {
     var helpStyle = Styles.resolve('aria-help');
     var helpVisibleStyle = Styles.resolve('aria-help-visible');
 
@@ -31,12 +33,16 @@ define(
       Attr.set(element, 'role', 'region');
     };
 
-    var editor = function (container, editor, label, ariaHelp, showHelpHint) {
+    var editorCommon = function (container, ariaLabel) {
       // The editor needs to be role application otherwise ainspector will complain about event listeners
       Attr.setAll(container, {
         'role': 'application',
-        'aria-label': label
+        'aria-label': ariaLabel
       });
+    };
+
+    var editor = function (container, editor, arialabel, ariaHelp, showHelpHint) {
+      editorCommon(container, arialabel);
 
       ariaHelp.each(function (helpText) {
         var aria = Element.fromTag('span');
@@ -52,6 +58,41 @@ define(
 
       var destroy = function () {
         Attr.remove(editor, 'aria-describedby');
+      };
+
+      return {
+        destroy: destroy
+      };
+    };
+
+    var inline = function (container, editor, arialabel, ariaHelp, showHelpHint) {
+      editorCommon(container, arialabel);
+
+      var destroyers = [];
+
+      ariaHelp.each(function (helpText) {
+        if (Attr.has(editor, 'id')) {
+          owns(container, Attr.get(editor, 'id'));
+        } else {
+          var tmpId = Id.generate('ephox-aria-content');
+          Attr.set(editor, 'id', tmpId);
+          owns(container, tmpId);
+
+          destroyers.push(function () {
+            Attr.remove(editor, 'id');
+          });
+        }
+
+        if (!Attr.has(editor, 'aria-label')) {
+          label(editor, helpText);
+          destroyers.push(function () {
+            Attr.remove(editor, 'aria-label');
+          });
+        }
+      });
+
+      var destroy = function () {
+        Arr.each(destroyers, Fun.apply);
       };
 
       return {
@@ -298,6 +339,7 @@ define(
       owns: owns,
       disown: disown,
       editor: editor,
+      inline: inline,
       group: group,
       toolbar: toolbar,
       toolbarGroup: toolbarGroup,
