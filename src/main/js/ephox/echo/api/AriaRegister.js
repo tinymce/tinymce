@@ -70,21 +70,29 @@ define(
 
       var destroyers = [];
 
+      if (Attr.has(editor, 'id')) {
+        owns(container, Attr.get(editor, 'id'));
+      } else {
+        var tmpId = Id.generate('ephox-aria-content');
+        Attr.set(editor, 'id', tmpId);
+        owns(container, tmpId);
+
+        destroyers.push(function () {
+          Attr.remove(editor, 'id');
+        });
+      }
+
       ariaHelp.each(function (helpText) {
-        if (Attr.has(editor, 'id')) {
-          owns(container, Attr.get(editor, 'id'));
-        } else {
-          var tmpId = Id.generate('ephox-aria-content');
-          Attr.set(editor, 'id', tmpId);
-          owns(container, tmpId);
+        if (Attr.has(editor, 'aria-label')) {
+          var backup = Attr.get(editor, 'aria-label');
+          label(editor, helpText);
 
           destroyers.push(function () {
-            Attr.remove(editor, 'id');
+            label(editor, backup);
           });
-        }
-
-        if (!Attr.has(editor, 'aria-label')) {
+        } else {
           label(editor, helpText);
+
           destroyers.push(function () {
             Attr.remove(editor, 'aria-label');
           });
