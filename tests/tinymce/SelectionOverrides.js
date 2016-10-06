@@ -138,6 +138,33 @@ ModuleLoader.require([
 		equal(editor.selection.getRng().startContainer, editor.$('p')[0]);
 	});
 
+	test('backspace on selected cE=false block when wrapped in non-block elements', function() {
+		editor.setContent('<p><strong><em><span contenteditable="false">1</span></em></strong></p>');
+		editor.selection.select(editor.$('span')[0]);
+
+		backspace();
+		equal(editor.getContent(), '');
+		equal(editor.selection.getRng().startContainer, editor.$('p')[0]);
+	});
+
+	test('backspace on selected cE=false block when surrounded by non-block elements that contain other contents', function() {
+		editor.setContent('<p><strong><em><span contenteditable="false">1</span></em>a</strong></p>');
+		editor.selection.select(editor.$('span')[0]);
+
+		backspace();
+		equal(editor.getContent(), '<p><strong>a</strong></p>');
+		equal(editor.selection.getRng().startContainer, editor.$('strong')[0].childNodes[0]);
+	});
+
+	test('backspace on selected cE=false block when wrapped in non-block elements with other content on the page', function() {
+		editor.setContent('<p>Other content</p><p><strong><em><span contenteditable="false">1</span></em></strong></p>');
+		editor.selection.select(editor.$('span')[0]);
+
+		backspace();
+		equal(editor.getContent({format: 'raw'}), '<p>Other content</p><p><br></p>');
+		equal(editor.selection.getRng().startContainer, editor.$('p')[1]);
+	});
+
 	test('backspace after cE=false block', function() {
 		editor.setContent('<p contenteditable="false">1</p>');
 		editor.selection.select(editor.$('p')[0]);
