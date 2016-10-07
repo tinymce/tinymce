@@ -464,10 +464,12 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			contentAreaRect = tinymce.DOM.getRect(editor.getContentAreaContainer() || editor.getBody());
 			smallElementWidthThreshold = 25;
 
-			// We need to use these instead of the rect values since the style
-			// size properites might not be the same as the real size for a table
-			elementRect.w = match.element.clientWidth;
-			elementRect.h = match.element.clientHeight;
+			if (tinymce.DOM.getStyle(match.element, 'display', true) != 'inline') {
+				// We need to use these instead of the rect values since the style
+				// size properites might not be the same as the real size for a table
+				elementRect.w = match.element.clientWidth;
+				elementRect.h = match.element.clientHeight;
+			}
 
 			if (!editor.inline) {
 				contentAreaRect.w = editor.getDoc().documentElement.offsetWidth;
