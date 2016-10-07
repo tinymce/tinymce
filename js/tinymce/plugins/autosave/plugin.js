@@ -35,11 +35,20 @@ tinymce._beforeUnloadHandler = function() {
 tinymce.PluginManager.add('autosave', function(editor) {
 	var settings = editor.settings, LocalStorage = tinymce.util.LocalStorage, prefix, started;
 
-	prefix = settings.autosave_prefix || 'tinymce-autosave-{path}{query}-{id}-';
-	prefix = prefix.replace(/\{path\}/g, document.location.pathname);
-	prefix = prefix.replace(/\{query\}/g, document.location.search);
-	prefix = prefix.replace(/\{id\}/g, editor.id);
+	setPrefix(settings.autosave_prefix);
 
+	function setPrefix(newPrefix) {
+		prefix = newPrefix || 'tinymce-autosave-{path}{query}-{id}-';
+		prefix = prefix.replace(/\{path\}/g, document.location.pathname);
+		prefix = prefix.replace(/\{query\}/g, document.location.search);
+		prefix = prefix.replace(/\{hash\}/g, document.location.hash);
+		prefix = prefix.replace(/\{id\}/g, editor.id);
+	}
+	
+	function getPrefix() {
+		return prefix;
+	}
+	
 	function parseTime(time, defaultTime) {
 		var multipels = {
 			s: 1000,
@@ -162,4 +171,6 @@ tinymce.PluginManager.add('autosave', function(editor) {
 	this.restoreDraft = restoreDraft;
 	this.removeDraft = removeDraft;
 	this.isEmpty = isEmpty;
+	this.setPrefix = setPrefix;
+	this.getPrefix = getPrefix;
 });
