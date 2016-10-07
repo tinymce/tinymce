@@ -244,11 +244,6 @@ define("tinymce/Editor", [
 		self.shortcuts = new Shortcuts(self);
 		self.loadedCSS = {};
 		self.editorCommands = new EditorCommands(self);
-
-		if (settings.target) {
-			self.targetElm = settings.target;
-		}
-
 		self.suffix = editorManager.suffix;
 		self.editorManager = editorManager;
 		self.inline = settings.inline;
