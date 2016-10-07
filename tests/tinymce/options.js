@@ -2,7 +2,7 @@ module("tinymce.options", {
     setup: function() {
         var i, htmlReset = '';
         for (i = 1; i < 9; i++) {
-            htmlReset += '<textarea id="elm-' + i + '" class="' + ((i&1) ? 'elm-odd' : 'elm-even') + '"></textarea>';
+            htmlReset += '<textarea id="elm-' + i + '" class="' + (i&1 ? 'elm-odd' : 'elm-even') + '"></textarea>';
         }
 
         document.getElementById('view').innerHTML = htmlReset;
@@ -73,6 +73,7 @@ test("target (each editor should have a different target)", function() {
     var maxCount = $('.elm-even').length;
     var elm1 = document.getElementById('elm-1');
     var count = 0;
+    var targets = [];
 
     QUnit.stop();
 
@@ -80,7 +81,10 @@ test("target (each editor should have a different target)", function() {
         selector: '.elm-even',
         target: elm1,
         init_instance_callback: function(ed) {
-            notEqual(ed.targetElm, elm1);
+            notEqual(ed.targetElm, elm1, "target option ignored");
+            ok($.inArray(ed.targetElm, targets) === -1);
+
+            targets.push(ed.targetElm);
 
             if (++count >= maxCount) {
                 QUnit.start();
