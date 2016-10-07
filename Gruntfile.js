@@ -1,4 +1,5 @@
 /*eslint-env node */
+var path = require("path");
 
 module.exports = function(grunt) {
 	var packageData = grunt.file.readJSON("package.json");
@@ -583,6 +584,25 @@ module.exports = function(grunt) {
 							"jquery.tinymce.js",
 							"js/tinymce/classes/jquery.tinymce.js"
 						);
+
+						var pluginDirectories = grunt.file.expand({filter: "isDirectory"}, "js/tinymce/plugins/*");
+						var excludedPlugins = grunt.file.match(this.excludes, pluginDirectories);
+
+						pluginDirectories.filter(function(path) {
+							return excludedPlugins.indexOf(path) === -1;
+						}).map(function(p) {
+							return path.basename(p);
+						}).forEach(function(plugin) {
+							zip.addData(
+								"plugins/" + plugin + "/index.js",
+								"// Exports the \"" + plugin + "\" plugin for usage with module loaders\n" +
+								"// Usage:\n" +
+								"//   CommonJS:\n" +
+								"//     require('tinymce/plugins/" + plugin + "')\n" +
+								"//   ES2015:\n" +
+								"//     import 'tinymce/plugins/" + plugin + "'\n" +
+								"require('./plugin.js');");
+						});
 					},
 
 					to: "tmp/tinymce_<%= pkg.version %>_component.zip"
