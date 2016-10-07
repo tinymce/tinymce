@@ -43,6 +43,7 @@ define("tinymce/dom/ControlSelection", [
 		var startX, startY, selectedElmX, selectedElmY, startW, startH, ratio, resizeStarted;
 		var width, height, editableDoc = editor.getDoc(), rootDocument = document, isIE = Env.ie && Env.ie < 11;
 		var abs = Math.abs, round = Math.round, rootElement = editor.getBody(), startScrollWidth, startScrollHeight;
+		var resizableClass = Tools.trim(editor.getParam("resizeable_class", ".mceResizable"));
 
 		// Details about each resize handle how to scale etc
 		resizeHandles = {
@@ -77,7 +78,7 @@ define("tinymce/dom/ControlSelection", [
 				'resize: none' + // Have been talks about implementing this in browsers
 			'}' +
 			rootClass + ' .mce-clonedresizable {' +
-				'position: absolute;' +
+				'position: absolute !important;' +
 				(Env.gecko ? '' : 'outline: 1px dashed black;') + // Gecko produces trails while resizing
 				'opacity: .5;' +
 				'filter: alpha(opacity=50);' +
@@ -109,7 +110,7 @@ define("tinymce/dom/ControlSelection", [
 			}
 
 			if (typeof selector != 'string') {
-				selector = 'table,img,div';
+				selector = 'table,img,div,' + resizableClass;
 			}
 
 			if (elm.getAttribute('data-mce-resize') === 'false') {
@@ -407,7 +408,7 @@ define("tinymce/dom/ControlSelection", [
 			});
 
 			controlElm = e.type == 'mousedown' ? e.target : selection.getNode();
-			controlElm = dom.$(controlElm).closest(isIE ? 'table' : 'table,img,hr')[0];
+			controlElm = dom.$(controlElm).closest(isIE ? 'table,' + resizableClass : 'table,img,hr,' + resizableClass)[0];
 
 			if (isChildOrEqual(controlElm, rootElement)) {
 				disableGeckoResize();
