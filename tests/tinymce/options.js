@@ -32,6 +32,25 @@ test("target (initialised properly)", function() {
     });
 });
 
+
+test("target (initialise on element without id)", function() {
+    var elm = document.createElement('textarea');
+    document.getElementById('view').appendChild(elm);
+
+    QUnit.stop();
+
+    tinymce.init({
+        target: elm,
+        init_instance_callback: function(ed) {
+            QUnit.start();
+
+            ok(ed.id, "editors id set to: " + ed.id);
+            equal(ed.targetElm, elm);
+        }
+    });
+});
+
+
 test("target (selector option takes precedence over target option)", function() {
     var elm1 = document.getElementById('elm-1');
     var elm2 = document.getElementById('elm-2');
