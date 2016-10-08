@@ -23,7 +23,6 @@ tinymce.PluginManager.add('link', function(editor) {
 		if (!a) {
 			return;
 		}
-
 		if (/^#/.test(a.href)) {
 			targetEl = editor.$(a.href);
 			if (targetEl.length) {
