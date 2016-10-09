@@ -13,6 +13,45 @@
 tinymce.PluginManager.add('link', function(editor) {
 	var attachState = {};
 
+	function isLink(elm) {
+		return elm && elm.nodeName === 'A' && elm.href;
+	}
+
+	function hasLinks(elements) {
+		return tinymce.util.Tools.grep(elements, isLink).length > 0;
+	}
+
+	function getSelectedLink() {
+		return editor.dom.getParent(editor.selection.getStart(), 'a[href]');
+	}
+
+	function gotoHref() {
+		var targetEl, a = getSelectedLink();
+		if (!a) {
+			return;
+		}
+		if (/^#/.test(a.href)) {
+			targetEl = editor.$(a.href);
+			if (targetEl.length) {
+				editor.selection.scrollIntoView(targetEl[0], true);
+			}
+		} else {
+			window.open(a.href, '_blank');
+		}
+	}
+
+	function toggleViewLinkState() {
+        var self = this;
+
+        editor.on('nodechange', function(e) {
+			if (hasLinks(e.parents)) {
+				self.show();
+			} else {
+				self.hide();
+			}
+		});
+	}
+
 	function createLinkList(callback) {
 		return function() {
 			var linkList = editor.settings.link_list;
@@ -417,6 +456,13 @@ tinymce.PluginManager.add('link', function(editor) {
 	editor.addCommand('mceLink', createLinkList(showDialog));
 
 	this.showDialog = showDialog;
+
+	editor.addMenuItem('gotolink', {
+		text: 'View link',
+		onclick: gotoHref,
+		onPostRender: toggleViewLinkState,
+		prependToContext: true
+	});
 
 	editor.addMenuItem('link', {
 		icon: 'link',
