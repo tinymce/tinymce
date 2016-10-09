@@ -13,6 +13,13 @@
 tinymce.PluginManager.add('link', function(editor) {
 	var attachState = {};
 
+	function isLink(elm) {
+		return elm && elm.nodeName === 'A' && elm.href;
+	}
+
+	function hasLinks(elements) {
+		return tinymce.util.Tools.grep(elements, isLink).length > 0;
+	}
 
 	function getSelectedLink() {
 		return editor.dom.getParent(editor.selection.getStart(), 'a[href]');
@@ -36,15 +43,14 @@ tinymce.PluginManager.add('link', function(editor) {
 	function toggleViewLinkState() {
         var self = this;
 
-        editor.on('nodechange', function() {
-			if (getSelectedLink()) {
+        editor.on('nodechange', function(e) {
+			if (hasLinks(e.parents)) {
 				self.show();
 			} else {
 				self.hide();
 			}
-        });
+		});
 	}
-
 
 	function createLinkList(callback) {
 		return function() {
