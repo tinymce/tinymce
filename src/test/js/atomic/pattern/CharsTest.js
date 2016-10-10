@@ -39,7 +39,7 @@ test(
         chars: 'ÁÉÍÓÚÝ áéíóúý ÄËÏÖÜŸ äëïöüÿ ÀÈÌÒÙ àèìòù ÂÊÎÔÛ âêîôû'
       },
       en_uk: {
-        label: 'Emglish (UK)',
+        label: 'English (UK)',
         html: '<known>',
         chars: ''
       },
