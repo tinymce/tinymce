@@ -100,9 +100,6 @@ test(
       }
     };
 
-    /*
-     * https://www.cs.tut.fi/~jkorpela/html/french.html
-     */
     var regex = new RegExp(Chars.wordchar(), '');
 
     var checkAllKnown = function (label, str) {
