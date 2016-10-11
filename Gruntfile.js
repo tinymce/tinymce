@@ -5,6 +5,7 @@ var zipUtils = require('./tools/modules/zip-helper');
 module.exports = function(grunt) {
 	var packageData = grunt.file.readJSON("package.json");
 	var changelogLine = grunt.file.read("changelog.txt").toString().split("\n")[0];
+	var BUILD_VERSION = packageData.version + '-' + (process.env.BUILD_NUMBER ? process.env.BUILD_NUMBER : '0');
 	packageData.date = /^Version [^\(]+\(([^\)]+)\)/.exec(changelogLine)[1];
 
 	grunt.initConfig({
@@ -838,6 +839,10 @@ module.exports = function(grunt) {
 		}
 	});
 
+	grunt.registerTask('version', 'Creates a version file', function () {
+		grunt.file.write('tmp/version.txt', BUILD_VERSION);
+	});
+
 	require("load-grunt-tasks")(grunt);
 	grunt.loadTasks("tools/tasks");
 	grunt.loadNpmTasks('@ephox/bolt');
@@ -846,5 +851,5 @@ module.exports = function(grunt) {
 	grunt.registerTask("minify", ["amdlc", "bolt-build", "uglify", "copy", "skin", "less"]);
 	grunt.registerTask("test", ["qunit"]);
 	grunt.registerTask("sc-test", ["connect", "clean:saucelabs", "saucelabs-qunit"]);
-	grunt.registerTask("default", ["lint", "bolt-init", "minify", "test", "clean:release", "moxiezip", "nugetpack"]);
+	grunt.registerTask("default", ["lint", "bolt-init", "minify", "test", "clean:release", "moxiezip", "nugetpack", "version"]);
 };
