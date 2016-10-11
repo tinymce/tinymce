@@ -72,7 +72,10 @@ define("tinymce/ui/Widget", [
 		 */
 		tooltip: function() {
 			if (!tooltip) {
-				tooltip = new Tooltip({type: 'tooltip'});
+				tooltip = new Tooltip({
+					type: 'tooltip',
+					target: null
+				});
 				tooltip.renderTo();
 			}
 

@@ -584,9 +584,24 @@ define("tinymce/dom/RangeUtils", [
 	 * @returns {Range} caret range
 	 */
 	RangeUtils.getCaretRangeFromPoint = function(clientX, clientY, doc) {
-		var rng, point;
+		var element, point, rect, rng;
 
-		if (doc.caretPositionFromPoint) {
+		// Check whether target point is under Shadow DOM
+		element = doc.elementFromPoint(clientX, clientY);
+		if (element && element.shadowRoot) {
+			// Under Shadow DOM the best thing we can do it to determine end or start of target place, not exact position
+			rng = doc.createRange();
+			while (element.shadowRoot) {
+				element = element.shadowRoot.elementFromPoint(clientX, clientY);
+			}
+			rect = element.getBoundingClientRect();
+			// 10px is limit where insertion point will be considered to be at start, otherwise at the end
+			if (clientX > doc.scrollingElement.scrollLeft + rect.left + 10) {
+				rng.setStart(element, 1);
+			} else {
+				rng.setStart(element, 0);
+			}
+		} else if (doc.caretPositionFromPoint) {
 			point = doc.caretPositionFromPoint(clientX, clientY);
 			rng = doc.createRange();
 			rng.setStart(point.offsetNode, point.offset);

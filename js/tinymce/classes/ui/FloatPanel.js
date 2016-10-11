@@ -361,10 +361,10 @@ define("tinymce/ui/FloatPanel", [
 		},
 
 		postRender: function() {
-			var self = this;
+			var self = this, editor = editor;
 
 			if (self.settings.bodyRole) {
-				this.getEl('body').setAttribute('role', self.settings.bodyRole);
+				this.getEl('body', editor && editor.targetElm).setAttribute('role', self.settings.bodyRole);
 			}
 
 			return self._super();

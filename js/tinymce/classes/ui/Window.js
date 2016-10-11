@@ -155,7 +155,8 @@ define("tinymce/ui/Window", [
 					defaults: {
 						type: 'button'
 					},
-					items: settings.buttons
+					items: settings.buttons,
+					target: settings.target
 				});
 
 				self.statusbar.classes.add('foot');

@@ -47,6 +47,7 @@ define("tinymce/ui/PanelButton", [
 				panelSettings.popover = true;
 				panelSettings.autohide = true;
 				panelSettings.ariaRoot = true;
+				panelSettings.target = settings.target;
 
 				self.panel = new FloatPanel(panelSettings).on('hide', function() {
 					self.active(false);

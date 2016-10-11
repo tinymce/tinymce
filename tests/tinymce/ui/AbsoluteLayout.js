@@ -14,7 +14,8 @@
 			type: 'panel',
 			layout: 'absolute',
 			width: 200,
-			height: 200
+			height: 200,
+			target: null
 		}, settings)).renderTo(document.getElementById('view')).reflow();
 	}
 

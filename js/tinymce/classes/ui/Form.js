@@ -78,7 +78,8 @@ define("tinymce/ui/Form", [
 							flex: 0,
 							forId: ctrl._id,
 							disabled: ctrl.disabled()
-						}
+						},
+						target: self.settings.target
 					}, self.settings.formItemDefaults));
 
 					formItem.type = 'formitem';

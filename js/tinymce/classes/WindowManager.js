@@ -85,6 +85,8 @@ define("tinymce/WindowManager", [
 		self.open = function(args, params) {
 			var win;
 
+			args.target = editor.targetElm;
+
 			editor.editorManager.setActive(editor);
 
 			args.title = args.title || ' ';

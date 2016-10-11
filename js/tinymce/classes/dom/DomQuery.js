@@ -295,7 +295,8 @@ define("tinymce/dom/DomQuery", [
 							node = node.nextSibling;
 						}
 					} else {
-						node = getElementDocument(context).getElementById(match[2]);
+						// Element might be in global scope or inside current context (within Shadow DOM)
+						node = getElementDocument(context).getElementById(match[2]) || context.querySelector('#' + match[2]);
 
 						if (!node) {
 							return self;

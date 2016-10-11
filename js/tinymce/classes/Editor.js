@@ -1124,7 +1124,10 @@ define("tinymce/Editor", [
 							body.focus();
 						}
 					} else {
-						body.focus();
+						// Under native Shadow DOM body ==== self.targetElm and causes infinite loop
+						if (body !== self.targetElm || !Object.getPrototypeOf(document).registerElement) {
+							body.focus();
+						}
 					}
 
 					if (contentEditable) {

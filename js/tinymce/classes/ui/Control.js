@@ -631,10 +631,36 @@ define("tinymce/ui/Control", [
 		 * @return {Element} HTML DOM element for the current control or it's children.
 		 */
 		getEl: function(suffix) {
-			var id = suffix ? this._id + '-' + suffix : this._id;
+			var context, id = suffix ? this._id + '-' + suffix : this._id, target, editor = editor;
 
 			if (!this._elmCache[id]) {
-				this._elmCache[id] = $('#' + id)[0];
+				target = this.settings.target;
+				if (target === undefined && editor) {
+					target = editor.targetElm;
+				}
+				if (target === undefined) {
+					throw 'settings.target not specified, might not work under Shadow DOM, add corresponding parameter, please';
+				}
+
+				try {
+					// If element is under Shadow DOM - set context to it's Shadow Root
+					if (target && target.matches && target.matches(':host *')) {
+						(function(target) {
+							while (target.parentNode) {
+								target = target.parentNode;
+							}
+							// If there is no parent node, but there is `host` property - we've just found Shadow Root,
+							// this is our new context
+							if (target.host) {
+								context = target;
+							}
+						})(target);
+					}
+				} catch (err) {
+					// Nothing, even if `.matches` method is present - it doesn't mean that browsers understands ':host *' selector
+				}
+
+				this._elmCache[id] = $('#' + id, context)[0];
 			}
 
 			return this._elmCache[id];
@@ -697,7 +723,13 @@ define("tinymce/ui/Control", [
 		 * @return {tinymce.ui.Control} Current control instance.
 		 */
 		aria: function(name, value) {
-			var self = this, elm = self.getEl(self.ariaTarget);
+			var self = this, editor = editor, elm, target;
+
+			target = self.settings.target;
+			if (target === undefined) {
+				target = editor.targetElm;
+			}
+			elm = self.getEl(self.ariaTarget, target);
 
 			if (typeof value === "undefined") {
 				return self._aria[name];

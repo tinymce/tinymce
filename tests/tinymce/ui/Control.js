@@ -48,7 +48,9 @@
 	test("Properties", function() {
 		var ctrl, cont;
 
-		cont = new tinymce.ui.Container({});
+		cont = new tinymce.ui.Container({
+			target: null
+		});
 		ctrl = new tinymce.ui.Control({});
 
 		// Set all states
@@ -72,7 +74,9 @@
 	});
 
 	test("Chained methods", function() {
-		var ctrl = new tinymce.ui.Control({});
+		var ctrl = new tinymce.ui.Control({
+			target: null
+		});
 
 		// Set all states
 		ctrl = ctrl.

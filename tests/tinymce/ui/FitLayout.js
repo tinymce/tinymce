@@ -17,7 +17,8 @@
 			layout: 'fit',
 			width: 200,
 			height: 200,
-			border: 1
+			border: 1,
+			target: null
 		}, settings)).renderTo(document.getElementById('view')).reflow();
 	}
 

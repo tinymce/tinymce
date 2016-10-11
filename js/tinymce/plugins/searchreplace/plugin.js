@@ -371,7 +371,8 @@
 						{type: 'checkbox', name: 'case', text: 'Match case', label: ' '},
 						{type: 'checkbox', name: 'words', text: 'Whole words', label: ' '}
 					]
-				}
+				},
+				target: this.settings.target
 			});
 		}
 

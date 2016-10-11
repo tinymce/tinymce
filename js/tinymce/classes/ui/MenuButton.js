@@ -87,7 +87,7 @@ define("tinymce/ui/MenuButton", [
 				}
 
 				if (!menu.renderTo) {
-					self.menu = Factory.create(menu).parent(self).renderTo();
+					self.menu = Factory.create(menu, {target: self.settings.target}).parent(self).renderTo();
 				} else {
 					self.menu = menu.parent(self).show().renderTo();
 				}

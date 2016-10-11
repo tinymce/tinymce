@@ -36,7 +36,8 @@
 
 	function fireFormatsMenuEvent(styleSheets, items) {
 		menuCtrl = tinymce.ui.Factory.create('menu', {
-			items: items
+			items: items,
+			target: null
 		}).renderTo(document.getElementById('view'));
 
 		return editor.fire('renderFormatsMenu', {

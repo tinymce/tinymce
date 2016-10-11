@@ -12,7 +12,8 @@
 
 	function createWindow(settings) {
 		return tinymce.ui.Factory.create(tinymce.extend({
-			type: 'window'
+			type: 'window',
+			target: null
 		}, settings)).renderTo(document.getElementById('view')).reflow();
 	}
 

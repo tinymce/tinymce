@@ -396,19 +396,19 @@ define("tinymce/dom/DOMUtils", [
 		 * Returns the specified element by ID or the input element if it isn't a string.
 		 *
 		 * @method get
-		 * @param {String/Element} n Element id to look for or element to just pass though.
+		 * @param {String/Element} elm Element id to look for or element to just pass though.
 		 * @return {Element} Element matching the specified id or null if it wasn't found.
 		 */
 		get: function(elm) {
-			var name;
+			var name, root = this.settings.root_element || this.doc;
 
-			if (elm && this.doc && typeof elm == 'string') {
+			if (elm && root && typeof elm == 'string') {
 				name = elm;
-				elm = this.doc.getElementById(elm);
+				elm = root.querySelector('#' + elm);
 
 				// IE and Opera returns meta elements when they match the specified input ID, but getElementsByName seems to do the trick
 				if (elm && elm.id !== name) {
-					return this.doc.getElementsByName(name)[1];
+					return root.querySelector('[name=' + name + ']')[1];
 				}
 			}
 

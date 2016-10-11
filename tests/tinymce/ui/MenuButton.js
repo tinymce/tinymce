@@ -16,7 +16,8 @@
 				{text: '1'},
 				{text: '2'},
 				{text: '3'}
-			]
+			],
+			target: null
 		}, settings)).renderTo(document.getElementById('view'));
 	}
 

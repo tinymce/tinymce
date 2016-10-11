@@ -11,7 +11,8 @@
 
 	function createButton(settings) {
 		return tinymce.ui.Factory.create(tinymce.extend({
-			type: 'button'
+			type: 'button',
+			target: null
 		}, settings)).renderTo(document.getElementById('view'));
 	}
 

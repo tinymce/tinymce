@@ -11,7 +11,8 @@
 
 	function createSplitButton(settings) {
 		return tinymce.ui.Factory.create(tinymce.extend({
-			type: 'splitbutton'
+			type: 'splitbutton',
+			target: null
 		}, settings)).renderTo(document.getElementById('view'));
 	}
 
