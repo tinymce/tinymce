@@ -1,69 +1,105 @@
+(function () {
+
+var defs = {}; // id -> {dependencies, definition, instance (possibly undefined)}
+
+// Used when there is no 'main' module.
+// The name is probably (hopefully) unique so minification removes for releases.
+var register_3795 = function (id) {
+  var module = dem(id);
+  var fragments = id.split('.');
+  var target = Function('return this;')();
+  for (var i = 0; i < fragments.length - 1; ++i) {
+    if (target[fragments[i]] === undefined)
+      target[fragments[i]] = {};
+    target = target[fragments[i]];
+  }
+  target[fragments[fragments.length - 1]] = module;
+};
+
+var instantiate = function (id) {
+  var actual = defs[id];
+  var dependencies = actual.deps;
+  var definition = actual.defn;
+  var len = dependencies.length;
+  var instances = new Array(len);
+  for (var i = 0; i < len; ++i)
+    instances[i] = dem(dependencies[i]);
+  var defResult = definition.apply(null, instances);
+  if (defResult === undefined)
+     throw 'module [' + id + '] returned undefined';
+  actual.instance = defResult;
+};
+
+var def = function (id, dependencies, definition) {
+  if (typeof id !== 'string')
+    throw 'module id must be a string';
+  else if (dependencies === undefined)
+    throw 'no dependencies for ' + id;
+  else if (definition === undefined)
+    throw 'no definition function for ' + id;
+  defs[id] = {
+    deps: dependencies,
+    defn: definition,
+    instance: undefined
+  };
+};
+
+var dem = function (id) {
+  var actual = defs[id];
+  if (actual === undefined)
+    throw 'module [' + id + '] was undefined';
+  else if (actual.instance === undefined)
+    instantiate(id);
+  return actual.instance;
+};
+
+var req = function (ids, callback) {
+  var len = ids.length;
+  var instances = new Array(len);
+  for (var i = 0; i < len; ++i)
+    instances.push(dem(ids[i]));
+  callback.apply(null, callback);
+};
+
+var ephox = {};
+
+ephox.bolt = {
+  module: {
+    api: {
+      define: def,
+      require: req,
+      demand: dem
+    }
+  }
+};
+
+var define = def;
+var require = req;
+var demand = dem;
+// this helps with minificiation when using a lot of global references
+var defineGlobal = function (id, ref) {
+  define(id, [], function () { return ref; });
+};
+/*jsc
+["tinymce/wordcountplugin/Plugin"]
+jsc*/
 /**
- * plugin.js
+ * Plugin.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2016 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
 
-/*global tinymce:true */
-
-tinymce.PluginManager.add('wordcount', function(editor) {
-	var self = this, countre, cleanre;
-
-	// Included most unicode blocks see: http://en.wikipedia.org/wiki/Unicode_block
-	// Latin-1_Supplement letters, a-z, u2019 == &rsquo;
-	countre = editor.getParam('wordcount_countregex', /[\w\u2019\x27\-\u00C0-\u1FFF]+/g);
-	cleanre = editor.getParam('wordcount_cleanregex', /[0-9.(),;:!?%#$?\x27\x22_+=\\\/\-]*/g);
-
-	function update() {
-		editor.theme.panel.find('#wordcount').text(['Words: {0}', self.getCount()]);
-	}
-
-	editor.on('init', function() {
-		var statusbar = editor.theme.panel && editor.theme.panel.find('#statusbar')[0];
-
-		if (statusbar) {
-			tinymce.util.Delay.setEditorTimeout(editor, function() {
-				statusbar.insert({
-					type: 'label',
-					name: 'wordcount',
-					text: ['Words: {0}', self.getCount()],
-					classes: 'wordcount',
-					disabled: editor.settings.readonly
-				}, 0);
-
-				editor.on('setcontent beforeaddundo', update);
-
-				editor.on('keyup', function(e) {
-					if (e.keyCode == 32) {
-						update();
-					}
-				});
-			}, 0);
-		}
-	});
-
-	self.getCount = function() {
-		var tx = editor.getContent({format: 'raw'});
-		var tc = 0;
-
-		if (tx) {
-			tx = tx.replace(/\.\.\./g, ' '); // convert ellipses to spaces
-			tx = tx.replace(/<.[^<>]*?>/g, ' ').replace(/&nbsp;|&#160;/gi, ' '); // remove html tags and space chars
-
-			// deal with html entities
-			tx = tx.replace(/(\w+)(&#?[a-z0-9]+;)+(\w+)/i, "$1$3").replace(/&.+?;/g, ' ');
-			tx = tx.replace(cleanre, ''); // remove numbers and punctuation
-
-			var wordArray = tx.match(countre);
-			if (wordArray) {
-				tc = wordArray.length;
-			}
-		}
-
-		return tc;
+define("tinymce/wordcountplugin/Plugin", [], function() {
+	var plugin = function(a, b) {
+		return a + b;
 	};
+
+	return plugin;
 });
+
+dem('tinymce/wordcountplugin/Plugin')();
+})();

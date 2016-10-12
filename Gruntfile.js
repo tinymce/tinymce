@@ -25,6 +25,7 @@ module.exports = function(grunt) {
 				"!js/tinymce/plugins/table/plugin.js",
 				"!js/tinymce/plugins/spellchecker/plugin.js",
 				"!js/tinymce/plugins/imagetools/plugin.js",
+				"!js/tinymce/plugins/wordcount/plugin.js",
 				"!js/tinymce/plugins/codesample/plugin.js",
 				"!js/tinymce/plugins/codesample/classes/Prism.js"
 			],
@@ -50,6 +51,10 @@ module.exports = function(grunt) {
 				config_dir: "js/tinymce/plugins/imagetools/config/bolt"
 			},
 
+			"wordcount-plugin": {
+				config_dir: "js/tinymce/plugins/wordcount/config/bolt"
+			},
+
 			"inlite-theme": {
 				config_dir: "js/tinymce/themes/inlite/config/bolt"
 			}
@@ -67,6 +72,20 @@ module.exports = function(grunt) {
 
 				files: {
 					src: ['js/tinymce/plugins/imagetools/src/main/js/Plugin.js']
+				}
+			},
+
+			"wordcount-plugin": {
+				config_js: "js/tinymce/plugins/wordcount/config/bolt/prod.js",
+				output_dir: "js/tinymce/plugins/wordcount/scratch",
+				main: "tinymce/wordcount/Plugin",
+				filename: "plugin",
+
+				generate_inline: true,
+				minimise_module_names: true,
+
+				files: {
+					src: ["js/tinymce/plugins/wordcount/src/main/js/tinymce/wordcount/Plugin.js"]
 				}
 			},
 
@@ -91,6 +110,10 @@ module.exports = function(grunt) {
 					{
 						src: "js/tinymce/plugins/imagetools/scratch/inline/plugin.raw.js",
 						dest: "js/tinymce/plugins/imagetools/plugin.js"
+					},
+					{
+						src: "js/tinymce/plugins/wordcount/scratch/inline/plugin.raw.js",
+						dest: "js/tinymce/plugins/wordcount/plugin.js"
 					}
 				]
 			},
@@ -812,7 +835,7 @@ module.exports = function(grunt) {
 			plugins: {
 				files: ["js/tinymce/plugins/**/*.js"],
 				tasks: [
-					"amdlc:paste-plugin", "bolt-build:imagetools-plugin", "amdlc:codesample-plugin",
+					"amdlc:paste-plugin", "bolt-build:imagetools-plugin", "bolt-build:wordcount-plugin", "amdlc:codesample-plugin",
 					"amdlc:table-plugin", "amdlc:spellchecker-plugin", "uglify:plugins",
 					"eslint:plugins"
 				],
