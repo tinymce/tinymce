@@ -803,6 +803,33 @@ test('indent/outdent', function() {
 	equal(editor.getContent(), '<p>test 123</p>');
 });
 
+test('indent/outdent table always uses margin', function () {
+	expect(4);
+
+	editor.setContent('<table><tbody><tr><td>test</td></tr></tbody></table>');
+	editor.execCommand('SelectAll');
+	editor.execCommand('Indent');
+	equal(editor.getContent(), '<table style="margin-left: 30px;"><tbody><tr><td>test</td></tr></tbody></table>');
+
+	editor.setContent('<table><tbody><tr><td>test</td></tr></tbody></table>');
+	editor.execCommand('SelectAll');
+	editor.execCommand('Indent');
+	editor.execCommand('Indent');
+	equal(editor.getContent(), '<table style="margin-left: 60px;"><tbody><tr><td>test</td></tr></tbody></table>');
+
+	editor.setContent('<table><tbody><tr><td>test</td></tr></tbody></table>');
+	editor.execCommand('SelectAll');
+	editor.execCommand('Indent');
+	editor.execCommand('Indent');
+	editor.execCommand('Outdent');
+	equal(editor.getContent(), '<table style="margin-left: 30px;"><tbody><tr><td>test</td></tr></tbody></table>');
+
+	editor.setContent('<table><tbody><tr><td>test</td></tr></tbody></table>');
+	editor.execCommand('SelectAll');
+	editor.execCommand('Outdent');
+	equal(editor.getContent(), '<table><tbody><tr><td>test</td></tr></tbody></table>');
+});
+
 test('RemoveFormat', function() {
 	expect(4);
 
