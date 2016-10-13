@@ -25,9 +25,11 @@ define(
       return DomModification.nu({ });
     };
 
+    var behaviourName = 'redesigning';
+
     var schema = FieldSchema.field(
-      'redesigning',
-      'redesigning',
+      behaviourName,
+      behaviourName,
       FieldPresence.asOption(),
       ValueSchema.objOf([
         FieldSchema.field('index', 'index', FieldPresence.strict(), ValueSchema.anyValue())
@@ -35,6 +37,7 @@ define(
     );
 
     var insertInPosition = function (parent, placee, components) {
+      console.log('inserting', placee.element().dom());
       var eq = Fun.curry(Fun.tripleEquals, placee);
       // Find where it is in the components array
       var index = Arr.findIndex(components, eq);
@@ -78,12 +81,12 @@ define(
 
     var apis = function (info) {
       return {
-        redesign: Behaviour.tryActionOpt('redesigning', info, 'redesign', redesign)
+        redesign: Behaviour.tryActionOpt(behaviourName, info, 'redesign', redesign)
       };
     };
 
     return Behaviour.contract({
-      name: Fun.constant('receiving'),
+      name: Fun.constant(behaviourName),
       exhibit: exhibit,
       handlers: Fun.constant({ }),
       apis: apis,

@@ -49,6 +49,7 @@ define(
 
       // Given just the event type, find all handlers regardless of element
       var filterByType = function (type) {
+        console.log('type', type, registry);
         return Objects.readOptFrom(registry, type).map(function (handlers) {
           return Obj.mapToArray(handlers, function (f, id) {
             return messageHandler(id, f);
