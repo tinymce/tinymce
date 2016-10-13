@@ -10,12 +10,13 @@ define(
     'ephox.compass.Arr',
     'ephox.echo.api.AriaFocus',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.scullion.Cell',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Remove'
   ],
 
-  function (Behaviour, DomModification, FieldPresence, FieldSchema, ValueSchema, Arr, AriaFocus, Fun, Cell, Insert, Remove) {
+  function (Behaviour, DomModification, FieldPresence, FieldSchema, ValueSchema, Arr, AriaFocus, Fun, Option, Cell, Insert, Remove) {
     var behaviourName = 'replacing';
 
     var schema = FieldSchema.field(
@@ -23,12 +24,12 @@ define(
       behaviourName,
       FieldPresence.asOption(),
       ValueSchema.objOf([
-        FieldSchema.state('state', function () { return Cell({ }); })
+        FieldSchema.state('state', function () { return Cell(Option.none()); })
       ])
     );
 
     var clearOld = function (component, replaceInfo) {
-      var old = replaceInfo.state().get();
+      var old = replaceInfo.state().get().getOr(component.components());
       Arr.each(old, function (child) {
         child.getSystem().removeFromWorld(child);
       });
@@ -48,7 +49,7 @@ define(
           Insert.append(component.element(), l.element());
         });
 
-        replaceInfo.state().set(children);
+        replaceInfo.state().set(Option.some(children));
       }, component.element());
     };
 
