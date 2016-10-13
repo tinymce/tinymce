@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.behaviour.Coupling',
+    'ephox.alloy.behaviour.Disabling',
     'ephox.alloy.behaviour.Focusing',
     'ephox.alloy.behaviour.Highlighting',
     'ephox.alloy.behaviour.Keying',
@@ -25,7 +26,7 @@ define(
     'global!Error'
   ],
 
-  function (Coupling, Focusing, Highlighting, Keying, Positioning, Receiving, Redesigning, Sandboxing, Streaming, Tabstopping, Toggling, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
+  function (Coupling, Disabling, Focusing, Highlighting, Keying, Positioning, Receiving, Redesigning, Sandboxing, Streaming, Tabstopping, Toggling, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
     var domSchema = ValueSchema.objOf([
       FieldSchema.strict('tag'),
       FieldSchema.defaulted('styles', {}),
@@ -61,7 +62,7 @@ define(
           'eventOrder',
           'eventOrder',
           FieldPresence.mergeWith({
-            'alloy.execute': [ 'alloy.base.behaviour', 'toggling' ],
+            'alloy.execute': [ 'disabling', 'alloy.base.behaviour', 'toggling' ],
             'alloy.focus': [ 'alloy.base.behaviour', 'keying', 'focusing' ]
           }),
           ValueSchema.anyValue()
@@ -110,7 +111,8 @@ define(
       Positioning,
       Highlighting,
       Sandboxing,
-      Redesigning
+      Redesigning,
+      Disabling
     ];
 
     var behaviours = function (info) {

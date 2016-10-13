@@ -2,19 +2,25 @@ define(
   'ephox.alloy.behaviour.Disabling',
 
   [
+    'ephox.alloy.api.SystemEvents',
     'ephox.alloy.behaviour.Behaviour',
+    'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.dom.DomModification',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
-    'ephox.peanut.Fun'
+    'ephox.peanut.Fun',
+    'ephox.sugar.api.Attr',
+    'ephox.sugar.api.Class'
   ],
 
-  function (Behaviour, FieldPresence, FieldSchema, ValueSchema, Fun) {
+  function (SystemEvents, Behaviour, EventHandler, DomModification, FieldPresence, FieldSchema, Objects, ValueSchema, Fun, Attr, Class) {
     var behaviourName = 'disabling';
 
     var schema = FieldSchema.field(
-      'focusing',
-      'focusing',
+      behaviourName,
+      behaviourName,
       FieldPresence.asOption(),
       ValueSchema.objOf([
         // TODO: Work out when we want to  call this. Only when it is has changed?
@@ -25,51 +31,76 @@ define(
           'aria',
           FieldPresence.strict(),
           ValueSchema.objOf([
-            FieldSchema.defaulted('ariaDisabledAttr', 'aria-disabled')
+            FieldSchema.defaulted('disableAttr', 'aria-disabled')
           ])
         )
       ])
     );
 
-    var doFocus = function (component, focusInfo) {
-      // Focus.focus(component.element());
-      // focusInfo.onFocus()(component);
-
+    var updateAriaState = function (component, disableInfo) {
+      var disabled = doIsDisabled(component, disableInfo);
+      Attr.set(
+        component.element(),
+        disableInfo.aria().disableAttr(),
+        disabled
+      );
     };
 
-    // var exhibit = function (info, base) {
-    //   if (info.focusing().isNone()) return DomModification.nu({});
-    //   return DomModification.nu({
-    //     attributes: {
-    //       'tabindex': '-1'
-    //     }
-    //   });
-    // };
+    var doEnable = function (component, disableInfo) {
+      Class.remove(component.element(), disableInfo.disableClass());
+      updateAriaState(component, disableInfo);
+    };
 
-    // var apis = function (info) {
-    //   return {
-    //     focus: Behaviour.tryActionOpt(behaviourName, info, 'focus', doFocus),
-    //     blur: Behaviour.tryActionOpt(behaviourName, info, 'blur', doBlur),
-    //     // Should be supported either way.
-    //     isFocused: doIsFocused
-    //   };
-    // };
+    var doDisable = function (component, disableInfo) {
+      Class.add(component.element(), disableInfo.disableClass());
+      updateAriaState(component, disableInfo);
+    };
 
-    // var handlers = function (info) {
-    //   var focusing = info.focusing();
-    //   return focusing.fold(function () {
-    //     return { };
-    //   }, function (focusInfo) {
-    //     return Objects.wrap(
-    //       SystemEvents.focus(),
-    //       EventHandler.nu({
-    //         run: function (component, simulatedEvent) {
-    //           doFocus(component, focusInfo);
-    //         }
-    //       })
-    //     );
-    //   });
-    // };
+    var doIsDisabled = function (component, disableInfo) {
+      return Class.has(component.element(), disableInfo.disableClass());
+    };
+
+    var doesExhibit = function (base, disableInfo) {
+      return DomModification.nu({
+        classes: disableInfo.disabled() ? [ disableInfo.disableClass() ] : [ ],
+        attributes: Objects.wrapAll([
+          { key: disableInfo.aria().disableAttr(), value: disableInfo.disabled() }
+        ])
+      });
+    };
+
+    var exhibit = function (info, base) {
+      return info.disabling().fold(function () {
+        return DomModification.nu({ });
+      }, function (disableInfo) {
+        return doesExhibit(base, disableInfo);
+      });
+    };
+
+    var apis = function (info) {
+      return {
+        enable: Behaviour.tryActionOpt(behaviourName, info, 'enable', doEnable),
+        disable: Behaviour.tryActionOpt(behaviourName, info, 'disable', doDisable),
+        // TODO: Find a way to stop other apis building on things that return.
+        isDisabled: Behaviour.tryActionOpt(behaviourName, info, 'isDisabled', doIsDisabled)
+      };
+    };
+
+    var handlers = function (info) {
+      var disabling = info.disabling();
+      return disabling.fold(function () {
+        return { };
+      }, function (disableInfo) {
+        return Objects.wrap(
+          SystemEvents.execute(),
+          EventHandler.nu({
+            abort: function (component, simulatedEvent) {
+              return component.apis().isDisabled();
+            }
+          })
+        );
+      });
+    };
 
     return Behaviour.contract({
       name: Fun.constant(behaviourName),
@@ -80,80 +111,3 @@ define(
     });
   }
 );
-
-/*
-var doDisable = function (labby, disableInfo) {
-      Class.add(labby.element(), disableInfo.disableClass());
-      updateAriaState(labby, disableInfo);
-    };
-
-    var doEnable = function (labby, disableInfo) {
-      Class.remove(labby.element(), disableInfo.disableClass());
-      updateAriaState(labby, disableInfo);
-    };
-
-    var doIsDisabled = function (labby, disableInfo) {
-      return Class.has(labby.element(), disableInfo.disableClass());
-    };
-
-    var updateAriaState = function (labby, disableInfo) {
-      var disabled = doIsDisabled(labby, disableInfo);
-      Attr.set(
-        labby.element(),
-        disableInfo.aria().disableAttr(),
-        disabled
-      );
-    };
-
-    var doesExhibit = function (base, disableInfo) {
-      return DomDefinition.modification({
-        classes: disableInfo.disabled() ? [ disableInfo.disableClass() ] : [ ],
-        attributes: Objects.wrapAll([
-          { key: disableInfo.aria().disableAttr(), value: disableInfo.disabled() }
-        ])
-      });
-    };
-
-    var exhibit = function (info, base) {
-      return info.disabling().fold(function () {
-        return DomDefinition.modification({ });
-      }, function (disableInfo) {
-        return doesExhibit(base, disableInfo);
-      });
-    };
-
-    var prop = Prop.asOptionGroup('disabling', 'disabling', [
-      Prop.withDefault('disabled', 'disabled', false),
-      Prop.strict('disableClass', 'disableClass'),
-      Prop.asStrictGroup('aria', 'aria', [
-        Prop.withDefault('aria-disabled-attr', 'disableAttr', 'aria-disabled')
-      ])
-    ], {});
-
-    var apis = function (info) {
-      return {
-        enable: Behaviour.tryActionOpt('disabling', info, 'enable', doEnable),
-        disable: Behaviour.tryActionOpt('disabling', info, 'disable', doDisable),
-        isDisabled: info.disabling().isSome() ? Behaviour.tryActionOpt('disabling', info, 'isDisabled', doIsDisabled) : Fun.constant(false)
-      };
-    };
-
-    var handlers = function (info) {
-      return {
-        'lab.execute': {
-          abort: function (labby) {
-            return labby.apis().isDisabled(labby);
-          },
-          label: 'disabling.execute'
-        }
-      };
-    };
-
-    return Behaviour.contract({
-      name: Fun.constant('disabling'),
-      exhibit: exhibit,
-      apis: apis,
-      handlers: handlers,
-      prop: Fun.constant(prop)
-    });
-    */
