@@ -6,6 +6,7 @@ define(
     'ephox.alloy.construct.Components',
     'ephox.alloy.events.DefaultEvents',
     'ephox.alloy.spec.ButtonSpec',
+    'ephox.alloy.spec.ContainerSpec',
     'ephox.alloy.spec.CustomSpec',
     'ephox.alloy.spec.DropdownButtonSpec',
     'ephox.alloy.spec.DropdownMenuSpec',
@@ -26,8 +27,9 @@ define(
     'global!Error'
   ],
 
-  function (Component, Components, DefaultEvents, ButtonSpec, CustomSpec, DropdownButtonSpec, DropdownMenuSpec, FormLabelSpec, InlineSpec, InputSpec, MenuSpec, TypeaheadSpec, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
+  function (Component, Components, DefaultEvents, ButtonSpec, ContainerSpec, CustomSpec, DropdownButtonSpec, DropdownMenuSpec, FormLabelSpec, InlineSpec, InputSpec, MenuSpec, TypeaheadSpec, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
     var knownSpecs = {
+      container: ContainerSpec.make,
       custom: CustomSpec.make,
       button: ButtonSpec.make,
       input: InputSpec.make,
