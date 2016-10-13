@@ -9,12 +9,15 @@ define(
     'ephox.repartee.api.Bubble',
     'ephox.repartee.api.LinkedLayout',
     'ephox.repartee.api.MaxHeight',
-    'ephox.repartee.api.Origins'
+    'ephox.repartee.api.Origins',
+    'ephox.sugar.api.Direction'
   ],
 
-  function (Anchoring, FieldSchema, Fun, Option, Bubble, LinkedLayout, MaxHeight, Origins) {
+  function (Anchoring, FieldSchema, Fun, Option, Bubble, LinkedLayout, MaxHeight, Origins, Direction) {
     var placement = function (component, posInfo, submenuInfo, origin) {
       var anchorBox = Origins.toBox(origin, submenuInfo.item().element());
+
+      var layouts = Direction.onDirection(LinkedLayout.all(), LinkedLayout.allRtl())(component.element());
 
       return Option.some(
         Anchoring({
@@ -22,7 +25,7 @@ define(
           bubble: Fun.constant(Bubble(0, 0)),
           // maxHeightFunction: Fun.constant(MaxHeight.available()),
           overrides: Fun.constant({ }),
-          layouts: Fun.constant(LinkedLayout.all())
+          layouts: Fun.constant(layouts)
         })
       );
     };

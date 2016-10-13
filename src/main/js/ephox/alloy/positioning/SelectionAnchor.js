@@ -12,17 +12,19 @@ define(
     'ephox.fussy.api.WindowSelection',
     'ephox.oath.proximity.Awareness',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.repartee.api.Bubble',
     'ephox.repartee.api.Layout',
     'ephox.repartee.api.MaxHeight',
     'ephox.repartee.api.Origins',
     'ephox.scullion.Struct',
     'ephox.sugar.alien.Position',
+    'ephox.sugar.api.Direction',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Boxes, CssPosition, Descend, Anchoring, ContainerOffsets, FieldSchema, SelectionRange, WindowSelection, Awareness, Fun, Bubble, Layout, MaxHeight, Origins, Struct, Position, Node, Traverse) {
+  function (Boxes, CssPosition, Descend, Anchoring, ContainerOffsets, FieldSchema, SelectionRange, WindowSelection, Awareness, Fun, Option, Bubble, Layout, MaxHeight, Origins, Struct, Position, Direction, Node, Traverse) {
     var point = Struct.immutable('element', 'offset');
 
     // A range from (a, 1) to (body, end) was giving the wrong bounds.
@@ -80,12 +82,19 @@ define(
           box.height()
         );
 
+        var targetElement = getAnchorSelection(win, anchorInfo).bind(function (sel) {
+          return Node.isElement(sel.start()) ? Option.some(sel.start()) : Option.none();
+        });
+
+        var layouts = targetElement.map(
+          Direction.onDirection(Layout.all, Layout.allRtl)
+        ).getOrThunk(Layout.all);
+
         return Anchoring({
           anchorBox: Fun.constant(anchorBox),
           bubble: Fun.constant(Bubble(0, 0)),
-          // maxHeightFunction: Fun.constant(MaxHeight.available()),
           overrides: Fun.constant({ }),
-          layouts: Fun.constant(Layout.all())
+          layouts: Fun.constant(layouts)
         });
       });
     };

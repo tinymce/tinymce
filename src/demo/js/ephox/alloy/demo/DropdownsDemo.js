@@ -7,17 +7,20 @@ define(
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.knoch.future.Future',
     'ephox.sugar.api.Class',
+    'ephox.sugar.api.Css',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'global!document'
   ],
 
-  function (Gui, GuiFactory, HtmlDisplay, Future, Class, DomEvent, Element, Insert, document) {
+  function (Gui, GuiFactory, HtmlDisplay, Future, Class, Css, DomEvent, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
       Class.add(gui.element(), 'gui-root-demo-container');
+      Css.set(gui.element(), 'direction', 'rtl');
+
       Insert.append(body, gui.element());
 
       var sink = GuiFactory.build({

@@ -8,14 +8,16 @@ define(
     'ephox.alloy.demo.DemoContent',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.sugar.api.Class',
+    'ephox.sugar.api.Css',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert'
   ],
 
-  function (Gui, GuiFactory, EventHandler, DemoContent, HtmlDisplay, Class, Element, Insert) {
+  function (Gui, GuiFactory, EventHandler, DemoContent, HtmlDisplay, Class, Css, Element, Insert) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
+      Css.set(gui.element(), 'direction', 'rtl');
       Class.add(gui.element(), 'gui-root-demo-container');
       Insert.append(body, gui.element());
 
