@@ -26,7 +26,7 @@ define(
           tag: 'div'
         },
         positioning: {
-          useFixed: true
+          useFixed: false
         }
       });
 
