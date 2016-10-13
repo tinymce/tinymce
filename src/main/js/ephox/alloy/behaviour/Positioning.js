@@ -50,6 +50,9 @@ define(
       console.log('anchoring', anchoring);
 
       var anchor = Anchor.box(anchoring.anchorBox());
+      console.log('anchor', anchor);
+
+      console.log('layouts', anchoring.layouts());
       
       // TODO: Overrides for expanding panel
       SimpleLayout.fixed(anchor, placee.element(), anchoring.bubble(), anchoring.layouts(), anchoring.overrides());
