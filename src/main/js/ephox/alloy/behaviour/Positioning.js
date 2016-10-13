@@ -9,7 +9,9 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.repartee.api.Anchor',
+    'ephox.repartee.api.Boxes',
     'ephox.repartee.api.Origins',
     'ephox.repartee.api.SimpleLayout',
     'ephox.sugar.api.Css',
@@ -19,7 +21,7 @@ define(
     'global!window'
   ],
 
-  function (Behaviour, DomModification, AnchorSchema, FieldPresence, FieldSchema, ValueSchema, Fun, Anchor, Origins, SimpleLayout, Css, Insert, Location, Remove, window) {
+  function (Behaviour, DomModification, AnchorSchema, FieldPresence, FieldSchema, ValueSchema, Fun, Option, Anchor, Boxes, Origins, SimpleLayout, Css, Insert, Location, Remove, window) {
     var schema = FieldSchema.field(
       'positioning',
       'positioning',
@@ -44,21 +46,34 @@ define(
       return direction.isRtl() ? [ layout.southwest, layout.southeast, layout.northwest, layout.northeast ] : [ layout.southeast, layout.southwest, layout.northeast, layout.northwest ];
     };
 
-    var placeFixed = function (origin, anchoring, posInfo, placee) {
+    var placeFixed = function (_component, origin, anchoring, posInfo, placee) {
       console.log('anchoring', anchoring);
 
       var anchor = Anchor.box(anchoring.anchorBox());
       
+      // TODO: Overrides for expanding panel
       SimpleLayout.fixed(anchor, placee.element(), anchoring.bubble(), anchoring.layouts(), anchoring.overrides());
     };
 
-    var placeRelative = function (origin, anchoring, posInfo, placee) {
+    var placeRelative = function (component, origin, anchoring, posInfo, placee) {
+      var bounds = posInfo.bounds().getOr(Boxes.view());
 
+      SimpleLayout.relative(
+        anchoring.anchorBox(),
+        placee.element(),
+        anchoring.bubble(),
+        {
+          bounds: bounds,
+          origin: origin,
+          preference: anchoring.layouts(),
+          maxHeightFunction: function () { } 
+        }
+      );
     };
 
-    var place = function (origin, anchoring, posInfo, placee) {
+    var place = function (component, origin, anchoring, posInfo, placee) {
       var f = posInfo.useFixed() ? placeFixed : placeRelative;
-      f(origin, anchoring, posInfo, placee);
+      f(component, origin, anchoring, posInfo, placee);
 
       /*
       var optBounds = posInfo.bounds();
@@ -99,7 +114,7 @@ define(
 
       var placer = anchorage.placement();
       placer(component, posInfo, anchorage, origin).each(function (anchoring) {
-        place(origin, anchoring, posInfo, placee);
+        place(component, origin, anchoring, posInfo, placee);
       });
       Css.remove(placee.element(), 'visibility');
     };
