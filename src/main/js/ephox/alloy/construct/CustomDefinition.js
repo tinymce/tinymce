@@ -8,6 +8,7 @@ define(
     'ephox.alloy.behaviour.Keying',
     'ephox.alloy.behaviour.Positioning',
     'ephox.alloy.behaviour.Receiving',
+    'ephox.alloy.behaviour.Redesigning',
     'ephox.alloy.behaviour.Sandboxing',
     'ephox.alloy.behaviour.Streaming',
     'ephox.alloy.behaviour.Tabstopping',
@@ -24,7 +25,7 @@ define(
     'global!Error'
   ],
 
-  function (Coupling, Focusing, Highlighting, Keying, Positioning, Receiving, Sandboxing, Streaming, Tabstopping, Toggling, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
+  function (Coupling, Focusing, Highlighting, Keying, Positioning, Receiving, Redesigning, Sandboxing, Streaming, Tabstopping, Toggling, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
     var domSchema = ValueSchema.objOf([
       FieldSchema.strict('tag'),
       FieldSchema.defaulted('styles', {}),
@@ -108,7 +109,8 @@ define(
       Streaming,
       Positioning,
       Highlighting,
-      Sandboxing
+      Sandboxing,
+      Redesigning
     ];
 
     var behaviours = function (info) {
