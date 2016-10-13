@@ -5,6 +5,7 @@ define(
     'ephox.alloy.alien.Boxes',
     'ephox.alloy.alien.CssPosition',
     'ephox.alloy.alien.Descend',
+    'ephox.alloy.positioning.Anchoring',
     'ephox.alloy.positioning.ContainerOffsets',
     'ephox.boulder.api.FieldSchema',
     'ephox.fussy.api.SelectionRange',
@@ -21,7 +22,7 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Boxes, CssPosition, Descend, ContainerOffsets, FieldSchema, SelectionRange, WindowSelection, Awareness, Fun, Bubble, Layout, MaxHeight, Origins, Struct, Position, Node, Traverse) {
+  function (Boxes, CssPosition, Descend, Anchoring, ContainerOffsets, FieldSchema, SelectionRange, WindowSelection, Awareness, Fun, Bubble, Layout, MaxHeight, Origins, Struct, Position, Node, Traverse) {
     var point = Struct.immutable('element', 'offset');
 
     // A range from (a, 1) to (body, end) was giving the wrong bounds.
@@ -79,12 +80,13 @@ define(
           box.height()
         );
 
-        return {
+        return Anchoring({
           anchorBox: Fun.constant(anchorBox),
           bubble: Fun.constant(Bubble(0, 0)),
-          maxHeightFunction: Fun.constant(MaxHeight.available()),
+          // maxHeightFunction: Fun.constant(MaxHeight.available()),
+          overrides: Fun.constant({ }),
           layouts: Fun.constant(Layout)
-        };
+        });
       });
     };
 

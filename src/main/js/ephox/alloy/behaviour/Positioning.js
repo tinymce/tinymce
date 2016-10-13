@@ -5,13 +5,13 @@ define(
     'ephox.alloy.behaviour.Behaviour',
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.positioning.AnchorSchema',
-    'ephox.alloy.positioning.PopupSpi',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.peanut.Fun',
-    'ephox.repartee.api.Callouts',
+    'ephox.repartee.api.Anchor',
     'ephox.repartee.api.Origins',
+    'ephox.repartee.api.SimpleLayout',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Location',
@@ -19,7 +19,7 @@ define(
     'global!window'
   ],
 
-  function (Behaviour, DomModification, AnchorSchema, PopupSpi, FieldPresence, FieldSchema, ValueSchema, Fun, Callouts, Origins, Css, Insert, Location, Remove, window) {
+  function (Behaviour, DomModification, AnchorSchema, FieldPresence, FieldSchema, ValueSchema, Fun, Anchor, Origins, SimpleLayout, Css, Insert, Location, Remove, window) {
     var schema = FieldSchema.field(
       'positioning',
       'positioning',
@@ -44,7 +44,23 @@ define(
       return direction.isRtl() ? [ layout.southwest, layout.southeast, layout.northwest, layout.northeast ] : [ layout.southeast, layout.southwest, layout.northeast, layout.northwest ];
     };
 
-    var place = function (origin, placement, posInfo, popup) {
+    var placeFixed = function (origin, anchoring, posInfo, placee) {
+      console.log('anchoring', anchoring);
+
+      var anchor = Anchor.box(anchoring.anchorBox());
+      
+      SimpleLayout.fixed(anchor, placee.element(), anchoring.bubble(), anchoring.layouts(), anchoring.overrides());
+    };
+
+    var placeRelative = function (origin, anchoring, posInfo, placee) {
+
+    };
+
+    var place = function (origin, anchoring, posInfo, placee) {
+      var f = posInfo.useFixed() ? placeFixed : placeRelative;
+      f(origin, anchoring, posInfo, placee);
+
+      /*
       var optBounds = posInfo.bounds();
       var bounds = Origins.viewport(origin, optBounds);
 
@@ -68,6 +84,7 @@ define(
 
       Callouts.setClasses(popup, decision);
       Callouts.setHeight(anchorBox, popup, decision, options, bubble);
+      */
     };
 
     var position = function (component, posInfo, anchor, placee) {
@@ -81,9 +98,8 @@ define(
       Css.set(placee.element(), 'visibility', 'hidden');
 
       var placer = anchorage.placement();
-      placer(component, posInfo, anchorage, origin).each(function (placement) {
-        var popup = PopupSpi(placee);
-        place(origin, placement, posInfo, popup);
+      placer(component, posInfo, anchorage, origin).each(function (anchoring) {
+        place(origin, anchoring, posInfo, placee);
       });
       Css.remove(placee.element(), 'visibility');
     };

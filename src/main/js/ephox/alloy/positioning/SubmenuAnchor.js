@@ -20,7 +20,8 @@ define(
         Anchoring({
           anchorBox: Fun.constant(anchorBox),
           bubble: Fun.constant(Bubble(0, 0)),
-          maxHeightFunction: Fun.constant(MaxHeight.available()),
+          // maxHeightFunction: Fun.constant(MaxHeight.available()),
+          overrides: Fun.constant({ }),
           layouts: Fun.constant(LinkedLayout)
         })
       );

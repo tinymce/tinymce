@@ -9,7 +9,7 @@ define(
     return Contracts.exactly([
       'anchorBox',
       'bubble',
-      'maxHeightFunction',
+      'overrides',
       'layouts'
     ]);
   }
