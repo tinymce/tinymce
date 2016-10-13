@@ -12,10 +12,11 @@ define(
     'ephox.alloy.dom.DomRender',
     'ephox.boulder.api.ValueSchema',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.scullion.Cell'
   ],
 
-  function (ExtraArgs, NoContextApi, ComponentApis, ComponentDom, ComponentEvents, CustomDefinition, DomModification, DomRender, ValueSchema, Fun, Cell) {
+  function (ExtraArgs, NoContextApi, ComponentApis, ComponentDom, ComponentEvents, CustomDefinition, DomModification, DomRender, ValueSchema, Fun, Option, Cell) {
     var build = function (spec) {
       var systemApi = Cell(NoContextApi());
 
@@ -41,7 +42,10 @@ define(
 
       // Curry a lazy argument into the API. Invoke it before calling.
       var apis = ComponentApis.combine(info, behaviours, baseApis, [
-        ExtraArgs.lazy(function () { return self; })
+        // Use the delegate if there is one.
+        ExtraArgs.lazy(function () {
+          return self;
+        })
       ]).getOrDie();
       
       var connect = function (newApi) {
@@ -59,6 +63,7 @@ define(
       var self = {
         getSystem: systemApi.get,
         debugSystem: debugSystem,
+        delegate: info.delegate,
         connect: connect,
         disconnect: disconnect,
         label: Fun.constant(info.label()),
@@ -67,7 +72,14 @@ define(
         components: Fun.constant(info.components()),
         item: Fun.constant(item),
         events: Fun.constant(events),
-        apis: Fun.constant(apis)
+        apis: Fun.constant(apis),
+
+        logSpec: function () {
+          console.log('debugging :: component spec', spec);
+        },
+        logInfo: function () {
+          console.log('debugging :: component.info', info);
+        }
       };
 
       return self;

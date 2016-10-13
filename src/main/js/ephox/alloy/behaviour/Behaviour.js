@@ -15,15 +15,22 @@ define(
       return AlloyLogger.element(element);
     };
 
-    var tryActionOpt = function (field, info, error, f) {
+    var tryActionOpt = function (field, info, apiName, f) {
       return function (component/*, */) {
         var args = Array.prototype.slice.call(arguments, 0);
-        var behaviourInfo = info[field]();
-        return behaviourInfo.fold(function () {
-          console.error('Ui (' + truncate(component.element()) + ') does not support: ' + error);
-          return false;
-        }, function (bInfo) {
-          return f.apply(undefined, [ component, bInfo ].concat(args.slice(1)));
+        var delegate = component.delegate().map(function (dlg) { return dlg.get()(); });
+        return delegate.fold(function () {
+          var behaviourInfo = info[field]();
+          return behaviourInfo.fold(function () {
+            console.error('Ui (' + truncate(component.element()) + ') does not support: ' + apiName);
+            console.error('component', component);
+            return false;
+          }, function (bInfo) {
+            console.log('cInfo', bInfo, 'bInfo', bInfo);
+            return f.apply(undefined, [ component, bInfo ].concat(args.slice(1)));
+          });
+        }, function (dlg) {
+          return dlg.apis()[apiName].apply(undefined, args.slice(1));
         });
       };
     };

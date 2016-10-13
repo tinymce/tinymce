@@ -29,7 +29,7 @@ define(
     );
 
     var clearOld = function (component, replaceInfo) {
-      var old = replaceInfo.state().get().getOr(component.components());
+      var old = doContents(component, replaceInfo);
       Arr.each(old, function (child) {
         child.getSystem().removeFromWorld(child);
       });
@@ -54,7 +54,7 @@ define(
     };
 
     var doContents = function (component, replaceInfo) {
-      return replaceInfo.state().get();
+      return replaceInfo.state().get().getOr(component.components());
     };
 
     var exhibit = function (info, base) {

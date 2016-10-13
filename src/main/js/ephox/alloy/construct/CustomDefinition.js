@@ -12,6 +12,7 @@ define(
     'ephox.alloy.behaviour.Receiving',
     'ephox.alloy.behaviour.Redesigning',
     'ephox.alloy.behaviour.Replacing',
+    'ephox.alloy.behaviour.Representing',
     'ephox.alloy.behaviour.Sandboxing',
     'ephox.alloy.behaviour.Streaming',
     'ephox.alloy.behaviour.Tabstopping',
@@ -28,7 +29,7 @@ define(
     'global!Error'
   ],
 
-  function (Coupling, Disabling, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Redesigning, Replacing, Sandboxing, Streaming, Tabstopping, Toggling, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
+  function (Coupling, Disabling, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Redesigning, Replacing, Representing, Sandboxing, Streaming, Tabstopping, Toggling, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
     var domSchema = ValueSchema.objOf([
       FieldSchema.strict('tag'),
       FieldSchema.defaulted('styles', {}),
@@ -72,7 +73,17 @@ define(
         FieldSchema.defaulted('domModificationOrder', {}),
 
         FieldSchema.state('definition.input', Fun.identity),
-        FieldSchema.defaulted('postprocess', Fun.noop)
+        FieldSchema.defaulted('postprocess', Fun.noop),
+
+        // Could wrap this up in a behaviour ...but won't for the time being
+        FieldSchema.field(
+          'delegate',
+          'delegate',
+          FieldPresence.asOption(),
+          ValueSchema.objOf([
+            FieldSchema.strict('get')
+          ])
+        )
       ].concat(behaviourSchema)), spec);
     };
 
@@ -116,7 +127,8 @@ define(
       Redesigning,
       Disabling,
       Invalidating,
-      Replacing
+      Replacing,
+      Representing
     ];
 
     var behaviours = function (info) {
