@@ -42,18 +42,8 @@ define(
       return Origins.relative(position.left(), position.top());
     };
 
-    var getLayout = function (direction, layout) {
-      return direction.isRtl() ? [ layout.southwest, layout.southeast, layout.northwest, layout.northeast ] : [ layout.southeast, layout.southwest, layout.northeast, layout.northwest ];
-    };
-
     var placeFixed = function (_component, origin, anchoring, posInfo, placee) {
-      console.log('anchoring', anchoring);
-
       var anchor = Anchor.box(anchoring.anchorBox());
-      console.log('anchor', anchor);
-
-      console.log('layouts', anchoring.layouts());
-      
       // TODO: Overrides for expanding panel
       SimpleLayout.fixed(anchor, placee.element(), anchoring.bubble(), anchoring.layouts(), anchoring.overrides());
     };

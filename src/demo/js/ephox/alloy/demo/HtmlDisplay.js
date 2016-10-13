@@ -31,6 +31,7 @@ define(
           styles: {
             'padding-left': '100px',
             'padding-top': '20px',
+            'padding-right': '100px',
             'border': '1px dashed green'
           }
         },

@@ -17,7 +17,7 @@ define(
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
-      Css.set(gui.element(), 'direction', 'rtl');
+      // Css.set(gui.element(), 'direction', 'rtl');
       Class.add(gui.element(), 'gui-root-demo-container');
       Insert.append(body, gui.element());
 

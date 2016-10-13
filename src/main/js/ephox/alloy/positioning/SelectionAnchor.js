@@ -10,12 +10,10 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.fussy.api.SelectionRange',
     'ephox.fussy.api.WindowSelection',
-    'ephox.oath.proximity.Awareness',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.repartee.api.Bubble',
     'ephox.repartee.api.Layout',
-    'ephox.repartee.api.MaxHeight',
     'ephox.repartee.api.Origins',
     'ephox.scullion.Struct',
     'ephox.sugar.alien.Position',
@@ -24,11 +22,11 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Boxes, CssPosition, Descend, Anchoring, ContainerOffsets, FieldSchema, SelectionRange, WindowSelection, Awareness, Fun, Option, Bubble, Layout, MaxHeight, Origins, Struct, Position, Direction, Node, Traverse) {
+  function (Boxes, CssPosition, Descend, Anchoring, ContainerOffsets, FieldSchema, SelectionRange, WindowSelection, Fun, Option, Bubble, Layout, Origins, Struct, Position, Direction, Node, Traverse) {
     var point = Struct.immutable('element', 'offset');
 
     // A range from (a, 1) to (body, end) was giving the wrong bounds.
-    var modifyStart = function (element, offset) {
+    var descendOnce = function (element, offset) {
       return Node.isText(element) ? point(element, offset) : Descend.descendOnce(element, offset);
     };
 
@@ -40,9 +38,9 @@ define(
       });
 
       return getSelection().map(function (sel) {
-        var rootEnd = Awareness.getEnd(anchorInfo.root());
-        var modStart = modifyStart(sel.start(), sel.soffset());
-        return SelectionRange.general(modStart.element(), modStart.offset(), anchorInfo.root(), rootEnd);
+        var modStart = descendOnce(sel.start(), sel.soffset());
+        var modFinish = descendOnce(sel.finish(), sel.foffset());
+        return SelectionRange.general(modStart.element(), modStart.offset(), modFinish.element(), modFinish.offset());
       });
     };
 
@@ -57,6 +55,9 @@ define(
           var point = CssPosition.screen(
             Position(rawRect.left, rawRect.top)
           );
+
+          console.log('rawRect', rawRect.height, rawRect.top);
+
           return Boxes.pointed(point, rawRect.width, rawRect.height);
         });
       });
@@ -83,12 +84,11 @@ define(
         );
 
         var targetElement = getAnchorSelection(win, anchorInfo).bind(function (sel) {
-          return Node.isElement(sel.start()) ? Option.some(sel.start()) : Option.none();
+          return Node.isElement(sel.start()) ? Option.some(sel.start()) : Traverse.parent(sel.start());
         });
 
-        var layouts = targetElement.map(
-          Direction.onDirection(Layout.all, Layout.allRtl)
-        ).getOrThunk(Layout.all);
+        var getLayouts = Direction.onDirection(Layout.all(), Layout.allRtl());
+        var layouts = targetElement.map(getLayouts).getOrThunk(Layout.all);
 
         return Anchoring({
           anchorBox: Fun.constant(anchorBox),
