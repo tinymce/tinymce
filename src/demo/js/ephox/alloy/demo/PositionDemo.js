@@ -7,17 +7,19 @@ define(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.demo.DemoContent',
     'ephox.alloy.demo.HtmlDisplay',
+    'ephox.photon.Writer',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Css',
+    'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert'
   ],
 
-  function (Gui, GuiFactory, EventHandler, DemoContent, HtmlDisplay, Class, Css, Element, Insert) {
+  function (Gui, GuiFactory, EventHandler, DemoContent, HtmlDisplay, Writer, Class, Css, DomEvent, Element, Insert) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
-      // Css.set(gui.element(), 'direction', 'rtl');
+      Css.set(gui.element(), 'direction', 'rtl');
       Class.add(gui.element(), 'gui-root-demo-container');
       Insert.append(body, gui.element());
 
@@ -157,6 +159,45 @@ define(
                   root: button.getSystem().getByUid('text-editor').getOrDie(
                     'Could not find text editor'
                   ).element()
+                }, popup);
+              }
+            }
+          ]
+        }
+      );
+
+      // Maybe make a component.
+      var frame = Element.fromTag('iframe');
+      var onLoad = DomEvent.bind(frame, 'load', function () {
+        onLoad.unbind();
+
+        var html = '<!doctype html><html><body contenteditable="true">' + DemoContent.generate(20) + '</body></html>';
+        Writer.write(frame, html);
+      });
+
+      var section4 = HtmlDisplay.section(
+        gui,
+        'Position anchoring to text selection [iframe]',
+        {
+          uiType: 'custom',
+          dom: {
+            tag: 'div'
+          },
+          components: [
+            {
+              external: {
+                element: frame,
+                uid: 'frame-editor'
+              }
+            },
+            {
+              uiType: 'button',
+              text: 'Show popup at cursor',
+              action: function (button) {
+                sink.apis().addContainer(popup);
+                sink.apis().position({
+                  anchor: 'selection',
+                  root: Element.fromDom(frame.dom().contentWindow.document.body)
                 }, popup);
               }
             }
