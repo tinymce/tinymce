@@ -67,32 +67,6 @@ define(
     var place = function (component, origin, anchoring, posInfo, placee) {
       var f = posInfo.useFixed() ? placeFixed : placeRelative;
       f(component, origin, anchoring, posInfo, placee);
-
-      /*
-      var optBounds = posInfo.bounds();
-      var bounds = Origins.viewport(origin, optBounds);
-
-      var bubble = placement.bubble();
-      var anchorBox = placement.anchorBox();
-
-      // TODO: Add RTL support.
-      var direction = { isRtl: function () { return false; }};
-
-      var preference = getLayout(direction, placement.layouts());
-
-      var options = {
-        bounds: bounds,
-        origin: origin,
-        preference:  preference,
-        maxHeightFunction: placement.maxHeightFunction()
-      };
-
-      var decision = Callouts.layout(anchorBox, popup, bubble, options);
-      Callouts.position(popup, direction, decision, origin);
-
-      Callouts.setClasses(popup, decision);
-      Callouts.setHeight(anchorBox, popup, decision, options, bubble);
-      */
     };
 
     var position = function (component, posInfo, anchor, placee) {
