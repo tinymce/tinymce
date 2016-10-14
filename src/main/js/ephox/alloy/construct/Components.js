@@ -49,7 +49,9 @@ define(
       };
 
       var disconnect = function () {
-        systemApi.set(NoContextApi());
+        systemApi.set(NoContextApi(function () {
+          return self; 
+        }));
       };
 
       var debugSystem = function () {
@@ -60,7 +62,7 @@ define(
         Tagger.writeOnly(extSpec.element(), uid);
       });
 
-      return {
+      var self = {
         getSystem: systemApi.get,
         debugSystem: debugSystem,
         connect: connect,
@@ -71,6 +73,8 @@ define(
         events: Fun.constant({ }),
         apis: Fun.constant({ })
       };
+
+      return self;
     };
 
     return {

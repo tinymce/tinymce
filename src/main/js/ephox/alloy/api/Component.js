@@ -17,8 +17,12 @@ define(
   ],
 
   function (ExtraArgs, NoContextApi, ComponentApis, ComponentDom, ComponentEvents, CustomDefinition, DomModification, DomRender, ValueSchema, Fun, Option, Cell) {
-    var build = function (spec) {
-      var systemApi = Cell(NoContextApi());
+    var build = function (spec) { 
+      var getSelf = function () {
+        return self;
+      };
+
+      var systemApi = Cell(NoContextApi(getSelf));
 
       var info = ValueSchema.getOrDie(CustomDefinition.toInfo(spec));
       var behaviours = CustomDefinition.behaviours(info);
@@ -47,13 +51,14 @@ define(
           return self;
         })
       ]).getOrDie();
-      
+   
+
       var connect = function (newApi) {
         systemApi.set(newApi);
       };
 
       var disconnect = function () {
-        systemApi.set(NoContextApi());
+        systemApi.set(NoContextApi(getSelf));
       };
 
       var debugSystem = function () {
