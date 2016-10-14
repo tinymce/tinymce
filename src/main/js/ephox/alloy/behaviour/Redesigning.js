@@ -37,7 +37,6 @@ define(
     );
 
     var insertInPosition = function (parent, placee, components) {
-      console.log('inserting', placee.element().dom());
       var eq = Fun.curry(Fun.tripleEquals, placee);
       // Find where it is in the components array
       var index = Arr.findIndex(components, eq);

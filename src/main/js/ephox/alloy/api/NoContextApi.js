@@ -16,7 +16,9 @@ define(
         addToWorld: Fun.die('The component must be in a context to addToWorld'),
         removeFromWorld: Fun.die('The component must be in a context to removeFromWorld'),
         getByUid: Fun.die('The component must be in a context to getByUid'),
-        getByDom: Fun.die('The compoennt must be in a context to getByDom')
+        getByDom: Fun.die('The component must be in a context to getByDom'),
+        broadcast: Fun.die('The component must be in a context to broadcast'),
+        broadcastOn: Fun.die('The component must be in a context to broadcastOn')
       });
     };
   }

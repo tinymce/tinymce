@@ -64,7 +64,13 @@ define(
         },
         build: GuiFactory.build,
         addToWorld: function (c) { addToWorld(c); },
-        removeFromWorld: function (c) { removeFromWorld(c); }
+        removeFromWorld: function (c) { removeFromWorld(c); },
+        broadcast: function (message) {
+          broadcast(message);
+        },
+        broadcastOn: function (channels, message) {
+          broadcastOn(channels, message);
+        }
       });
 
       var addToWorld = function (component) {
@@ -100,7 +106,6 @@ define(
 
       var broadcastData = function (data) {
         var receivers = registry.filter(SystemEvents.receive());
-        console.log('any receivers', receivers.length);
         Arr.each(receivers, function (receiver) {
           receiver.handler(data);
         });

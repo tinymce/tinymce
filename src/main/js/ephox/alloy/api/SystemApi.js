@@ -17,7 +17,10 @@ define(
       'removeFromWorld',
       'build',
       'getByUid',
-      'getByDom'
+      'getByDom',
+
+      'broadcast',
+      'broadcastOn'
     ]);
   }
 );
