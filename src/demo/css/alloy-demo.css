@@ -3,6 +3,7 @@
   margin: 5px;
   padding: 5px;
   font-size: 80%;
+  white-space: pre;
 }
 
 .demo-selected {
@@ -21,4 +22,8 @@
 .alloy-menu li {
   padding: 0px;
   margin: 0px;
+}
+
+:focus {
+  outline: 2px solid green;
 }

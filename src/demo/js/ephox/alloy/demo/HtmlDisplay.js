@@ -3,10 +3,11 @@ define(
 
   [
     'ephox.alloy.api.GuiFactory',
-    'ephox.sugar.api.Html'
+    'ephox.sugar.api.Html',
+    'ephox.wrap.JsBeautify'
   ],
 
-  function (GuiFactory, Html) {
+  function (GuiFactory, Html, JsBeautify) {
 
     var section = function (gui, instructions, spec) {
       var information = {
@@ -23,6 +24,7 @@ define(
       gui.add(GuiFactory.build(information));
 
       var component = GuiFactory.build(spec);
+      component.logSpec();
 
       var display = GuiFactory.build({
         uiType: 'custom',
@@ -50,7 +52,7 @@ define(
           classes: [ 'html-display' ]
         },
         components: [
-          { text: htmlDump }
+          { text: JsBeautify.html(htmlDump) }
         ]
       };
 
