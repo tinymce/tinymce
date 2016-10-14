@@ -18,7 +18,7 @@ define(
         var elem = component.element();
         return Tagger.read(elem).fold(function () {
           // No existing tag, so add one.
-          return Tagger.write(component.label(), component.element());
+          return Tagger.write('', component.element());
         }, function (uid) {
           return uid;
         });

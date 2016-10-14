@@ -66,7 +66,6 @@ define(
         delegate: info.delegate,
         connect: connect,
         disconnect: disconnect,
-        label: Fun.constant(info.label()),
         element: Fun.constant(item),
         // Note: this is only the original components.
         components: Fun.constant(info.components()),

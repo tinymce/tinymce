@@ -2,25 +2,35 @@ define(
   'ephox.alloy.spec.FormLabelSpec',
 
   [
+    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.epithet.Id',
+    'ephox.highway.Merger',
     'ephox.scullion.Cell',
     'ephox.sugar.api.Attr'
   ],
 
-  function (FieldSchema, ValueSchema, Id, Cell, Attr) {
+  function (FieldPresence, FieldSchema, ValueSchema, Id, Merger, Cell, Attr) {
     var schema = ValueSchema.objOf([
-      FieldSchema.strict('label'),
+      FieldSchema.field(
+        'label',
+        'label',
+        FieldPresence.strict(),
+        ValueSchema.objOf([
+          FieldSchema.strict('text')
+        ])
+      ),
       FieldSchema.strict('field')
     ]);
 
     var make = function (spec) {
       var detail = ValueSchema.asStructOrDie('input.spec', schema, spec);
+      console.log('label.detail', detail);
 
       var field = Cell(undefined);
 
-      return {
+      return Merger.deepMerge(spec, {
         uiType: 'custom',
         dom: {
           tag: 'div'
@@ -30,7 +40,7 @@ define(
             uiType: 'custom',
             dom: {
               tag: 'label',
-              innerHtml: detail.label()
+              innerHtml: detail.label().text()
             }
           },
           detail.field()
@@ -48,7 +58,7 @@ define(
           Attr.set(components[0].element(), 'for', id);
           Attr.set(components[1].element(), 'id', id);
         }
-      };
+      });
     };
 
     return {

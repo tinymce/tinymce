@@ -11,6 +11,7 @@ define(
     'ephox.alloy.spec.DropdownButtonSpec',
     'ephox.alloy.spec.DropdownMenuSpec',
     'ephox.alloy.spec.FormLabelSpec',
+    'ephox.alloy.spec.HtmlSelectSpec',
     'ephox.alloy.spec.InlineSpec',
     'ephox.alloy.spec.InputSpec',
     'ephox.alloy.spec.MenuSpec',
@@ -27,7 +28,7 @@ define(
     'global!Error'
   ],
 
-  function (Component, Components, DefaultEvents, ButtonSpec, ContainerSpec, CustomSpec, DropdownButtonSpec, DropdownMenuSpec, FormLabelSpec, InlineSpec, InputSpec, MenuSpec, TypeaheadSpec, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
+  function (Component, Components, DefaultEvents, ButtonSpec, ContainerSpec, CustomSpec, DropdownButtonSpec, DropdownMenuSpec, FormLabelSpec, HtmlSelectSpec, InlineSpec, InputSpec, MenuSpec, TypeaheadSpec, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
     var knownSpecs = {
       container: ContainerSpec.make,
       custom: CustomSpec.make,
@@ -38,7 +39,8 @@ define(
       dropdown: DropdownButtonSpec.make,
       menu: MenuSpec.make,
       inline: InlineSpec.make,
-      typeahead: TypeaheadSpec.make
+      typeahead: TypeaheadSpec.make,
+      select: HtmlSelectSpec.make
 
       // Add other specs here.
     };

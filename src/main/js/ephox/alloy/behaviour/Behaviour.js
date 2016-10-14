@@ -26,7 +26,6 @@ define(
             console.error('component', component);
             return false;
           }, function (bInfo) {
-            console.log('cInfo', bInfo, 'bInfo', bInfo);
             return f.apply(undefined, [ component, bInfo ].concat(args.slice(1)));
           });
         }, function (dlg) {

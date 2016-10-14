@@ -49,7 +49,6 @@ define(
       return ValueSchema.asStruct('custom.definition', ValueSchema.objOf([
         FieldSchema.field('dom', 'dom', FieldPresence.strict(), domSchema),
         FieldSchema.strict('components'),
-        FieldSchema.defaulted('label', 'Unlabelled'),
         FieldSchema.option('uid'),
         FieldSchema.defaulted('behaviours', [ ]),
 
