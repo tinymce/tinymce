@@ -6,6 +6,7 @@ define(
     'ephox.alloy.behaviour.Behaviour',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dom.DomModification',
+    'ephox.alloy.log.AlloyLogger',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
@@ -16,7 +17,7 @@ define(
     'ephox.perhaps.Result'
   ],
 
-  function (SystemEvents, Behaviour, EventHandler, DomModification, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Fun, Result) {
+  function (SystemEvents, Behaviour, EventHandler, DomModification, AlloyLogger, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Fun, Result) {
     var exhibit = function (info, base) {
       return DomModification.nu({ });
     };
@@ -58,7 +59,10 @@ define(
               Arr.each(targetChannels, function (ch) {
                 var channelInfo = channelMap[ch]();
                 var channelSchema = channelInfo.schema();
-                var data = ValueSchema.asStructOrDie('channel[' + ch + '] data', channelSchema, message.data());
+                var data = ValueSchema.asStructOrDie(
+                  'channel[' + ch + '] data\nReceiver: ' + AlloyLogger.element(component.element()),
+                  channelSchema, message.data()
+                );
                 channelInfo.onReceive()(component, data);
               });
             }

@@ -21,7 +21,8 @@ define(
           FieldSchema.strict('text')
         ])
       ),
-      FieldSchema.strict('field')
+      FieldSchema.strict('field'),
+      FieldSchema.strict('prefix')
     ]);
 
     var make = function (spec) {
@@ -53,7 +54,7 @@ define(
           }
         },
         postprocess: function (components) {
-          var id = Id.generate('form-field');
+          var id = Id.generate(detail.prefix());
           field.set(components[1]);
           Attr.set(components[0].element(), 'for', id);
           Attr.set(components[1].element(), 'id', id);
