@@ -13,6 +13,7 @@ define('tinymce.wordcount.text.StringMapper', [
 ], function(UnicodeData, Arr) {
 	var SETS = UnicodeData.SETS;
 	var OTHER = UnicodeData.characterIndices.OTHER;
+
 	var getType = function (char) {
 		var j, set, type = OTHER;
 		var setsLength = SETS.length;
@@ -26,6 +27,7 @@ define('tinymce.wordcount.text.StringMapper', [
 			}
 			return type;
 	};
+
 	var memoize = function (func) {
 		var cache = {};
 		return function(char) {
@@ -38,9 +40,13 @@ define('tinymce.wordcount.text.StringMapper', [
 			}
 		};
 	};
+
 	var classify = function (string) {
 		var memoized = memoize(getType);
 		return Arr.map(string.split(''), memoized);
 	};
-	return classify;
+
+	return {
+		classify: classify
+	};
 });

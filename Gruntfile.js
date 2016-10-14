@@ -78,7 +78,7 @@ module.exports = function(grunt) {
 			"wordcount-plugin": {
 				config_js: "js/tinymce/plugins/wordcount/config/bolt/prod.js",
 				output_dir: "js/tinymce/plugins/wordcount/scratch",
-				main: "tinymce/wordcount/Plugin",
+				main: "tinymce.wordcount.Plugin",
 				filename: "plugin",
 
 				generate_inline: true,

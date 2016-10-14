@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define("tinymce.wordcount.text.IsWordBoundary", [
+define("tinymce.wordcount.text.WordBoundary", [
 	"tinymce.wordcount.text.UnicodeData"
 ], function(UnicodeData) {
 	var ci = UnicodeData.characterIndices;
@@ -114,5 +114,7 @@ define("tinymce.wordcount.text.IsWordBoundary", [
 			return true;
 	};
 
-	return isWordBoundary;
+	return {
+		isWordBoundary: isWordBoundary
+	};
 });

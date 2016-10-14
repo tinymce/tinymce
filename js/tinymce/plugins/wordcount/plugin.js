@@ -81,9 +81,10 @@ var defineGlobal = function (id, ref) {
   define(id, [], function () { return ref; });
 };
 /*jsc
-["tinymce.wordcount.Plugin","global!tinymce.PluginManager","tinymce.wordcount.text.WordGetter","tinymce.wordcount.text.UnicodeData","tinymce.wordcount.text.StringMapper","tinymce.wordcount.text.IsWordBoundary","tinymce.wordcount.alien.Arr"]
+["tinymce.wordcount.Plugin","global!tinymce.PluginManager","global!tinymce.util.Delay","tinymce.wordcount.text.WordGetter","tinymce.wordcount.text.UnicodeData","tinymce.wordcount.text.StringMapper","tinymce.wordcount.text.WordBoundary","tinymce.wordcount.alien.Arr"]
 jsc*/
 defineGlobal("global!tinymce.PluginManager", tinymce.PluginManager);
+defineGlobal("global!tinymce.util.Delay", tinymce.util.Delay);
 /**
  * UnicodeData.js
  *
@@ -232,6 +233,7 @@ define('tinymce.wordcount.text.StringMapper', [
 ], function(UnicodeData, Arr) {
 	var SETS = UnicodeData.SETS;
 	var OTHER = UnicodeData.characterIndices.OTHER;
+
 	var getType = function (char) {
 		var j, set, type = OTHER;
 		var setsLength = SETS.length;
@@ -245,6 +247,7 @@ define('tinymce.wordcount.text.StringMapper', [
 			}
 			return type;
 	};
+
 	var memoize = function (func) {
 		var cache = {};
 		return function(char) {
@@ -257,11 +260,15 @@ define('tinymce.wordcount.text.StringMapper', [
 			}
 		};
 	};
+
 	var classify = function (string) {
 		var memoized = memoize(getType);
 		return Arr.map(string.split(''), memoized);
 	};
-	return classify;
+
+	return {
+		classify: classify
+	};
 });
 
 /**
@@ -274,7 +281,7 @@ define('tinymce.wordcount.text.StringMapper', [
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define("tinymce.wordcount.text.IsWordBoundary", [
+define("tinymce.wordcount.text.WordBoundary", [
 	"tinymce.wordcount.text.UnicodeData"
 ], function(UnicodeData) {
 	var ci = UnicodeData.characterIndices;
@@ -380,7 +387,9 @@ define("tinymce.wordcount.text.IsWordBoundary", [
 			return true;
 	};
 
-	return isWordBoundary;
+	return {
+		isWordBoundary: isWordBoundary
+	};
 });
 /**
  * WordGetter.js
@@ -395,61 +404,63 @@ define("tinymce.wordcount.text.IsWordBoundary", [
 define("tinymce.wordcount.text.WordGetter", [
 	"tinymce.wordcount.text.UnicodeData",
 	"tinymce.wordcount.text.StringMapper",
-	"tinymce.wordcount.text.IsWordBoundary"
-], function(UnicodeData, StringMapper, IsWordBoundary) {
+	"tinymce.wordcount.text.WordBoundary"
+], function(UnicodeData, StringMapper, WordBoundary) {
 	var EMPTY_STRING = UnicodeData.EMPTY_STRING;
 	var WHITESPACE = UnicodeData.WHITESPACE;
 	var PUNCTUATION = UnicodeData.PUNCTUATION;
-	var wordGetter = function (string, options) {
-			var i = 0,
-					map = StringMapper(string),
-					len = map.length,
-					word = [],
-					words = [],
-					chr,
-					includePunctuation,
-					includeWhitespace;
+	var getWords = function (string, options) {
+		var i = 0,
+				map = StringMapper.classify(string),
+				len = map.length,
+				word = [],
+				words = [],
+				chr,
+				includePunctuation,
+				includeWhitespace;
 
-			if (!options) {
-					options = {};
+		if (!options) {
+			options = {};
+		}
+
+		if (options.ignoreCase) {
+			string = string.toLowerCase();
+		}
+
+		includePunctuation = options.includePunctuation;
+		includeWhitespace = options.includeWhitespace;
+
+		// Loop through each character in the classification map and determine
+		// whether it precedes a word boundary, building an array of distinct
+		// words as we go.
+		for (; i < len; ++i) {
+			chr = string.charAt(i);
+
+			// Append this character to the current word.
+			word.push(chr);
+
+			// If there's a word boundary between the current character and the
+			// next character, append the current word to the words array and
+			// start building a new word.
+			if (WordBoundary.isWordBoundary(map, i)) {
+				word = word.join(EMPTY_STRING);
+
+				if (word &&
+								(includeWhitespace || !WHITESPACE.test(word)) &&
+								(includePunctuation || !PUNCTUATION.test(word))) {
+					words.push(word);
+				}
+
+				word = [];
 			}
+		}
 
-			if (options.ignoreCase) {
-					string = string.toLowerCase();
-			}
-
-			includePunctuation = options.includePunctuation;
-			includeWhitespace = options.includeWhitespace;
-
-			// Loop through each character in the classification map and determine
-			// whether it precedes a word boundary, building an array of distinct
-			// words as we go.
-			for (; i < len; ++i) {
-					chr = string.charAt(i);
-
-					// Append this character to the current word.
-					word.push(chr);
-
-					// If there's a word boundary between the current character and the
-					// next character, append the current word to the words array and
-					// start building a new word.
-					if (IsWordBoundary(map, i)) {
-							word = word.join(EMPTY_STRING);
-
-							if (word &&
-											(includeWhitespace || !WHITESPACE.test(word)) &&
-											(includePunctuation || !PUNCTUATION.test(word))) {
-									words.push(word);
-							}
-
-							word = [];
-					}
-			}
-
-			return words;
+		return words;
 	};
 
-	return wordGetter;
+	return {
+		getWords: getWords
+	};
 });
 /**
  * Plugin.js
@@ -460,67 +471,52 @@ define("tinymce.wordcount.text.WordGetter", [
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
+/* global tinymce: true */
 
 define("tinymce.wordcount.Plugin", [
 	"global!tinymce.PluginManager",
+	"global!tinymce.util.Delay",
 	"tinymce.wordcount.text.WordGetter"
-], function(PluginManager, WordGetter) {
-
+], function(PluginManager, Delay, WordGetter) {
 	PluginManager.add('wordcount', function(editor) {
-		var self = this;
+		var getTextContent = function(editor) {
+			return editor.getBody().innerText;
+		};
 
-		function update() {
-			editor.theme.panel.find('#wordcount').text(['Words: {0}', self.getCount()]);
-		}
+		var getCount = function() {
+			return WordGetter.getWords(getTextContent(editor)).length;
+		};
+
+		var update = function() {
+			editor.theme.panel.find('#wordcount').text(['Words: {0}', getCount()]);
+		};
 
 		editor.on('init', function() {
 			var statusbar = editor.theme.panel && editor.theme.panel.find('#statusbar')[0];
+			var debouncedUpdate = Delay.debounce(update, 300);
 
 			if (statusbar) {
 				tinymce.util.Delay.setEditorTimeout(editor, function() {
 					statusbar.insert({
 						type: 'label',
 						name: 'wordcount',
-						text: ['Words: {0}', self.getCount()],
+						text: ['Words: {0}', getCount()],
 						classes: 'wordcount',
 						disabled: editor.settings.readonly
 					}, 0);
 
-					editor.on('setcontent beforeaddundo', update);
-
-					editor.on('keyup', function(e) {
-						if (e.keyCode == 32) {
-							update();
-						}
-					});
+					editor.on('setcontent beforeaddundo keyup', debouncedUpdate);
 				}, 0);
 			}
 		});
 
-		self.getCount = function() {
-			var tx = editor.getContent({format: 'raw'});
-			var tc = 0;
-
-			if (tx) {
-				tx = tx.replace(/<.[^<>]*?>/g, ' ').replace(/&nbsp;|&#160;/gi, ' '); // remove html tags and space chars
-
-				// deal with html entities
-				tx = tx.replace(/(\w+)(&#?[a-z0-9]+;)+(\w+)/i, "$1$3").replace(/&.+?;/g, ' ');
-
-				var wordArray = WordGetter(countre);
-				if (wordArray) {
-					tc = wordArray.length;
-				}
-			}
-
-			return tc;
+		return {
+			getCount: getCount
 		};
 	});
 
-	return {
-		plugin: WordGetter
-	};
+	return function () {};
 });
 
-dem('tinymce/wordcount/Plugin')();
+dem('tinymce.wordcount.Plugin')();
 })();

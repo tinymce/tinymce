@@ -11,61 +11,45 @@
 
 define("tinymce.wordcount.Plugin", [
 	"global!tinymce.PluginManager",
+	"global!tinymce.util.Delay",
 	"tinymce.wordcount.text.WordGetter"
-], function(PluginManager, WordGetter) {
-
+], function(PluginManager, Delay, WordGetter) {
 	PluginManager.add('wordcount', function(editor) {
-		var self = this;
+		var getTextContent = function(editor) {
+			return editor.removed ? '' : editor.getBody().innerText;
+		};
 
-		function update() {
-			editor.theme.panel.find('#wordcount').text(['Words: {0}', self.getCount()]);
-		}
+		var getCount = function() {
+			return WordGetter.getWords(getTextContent(editor)).length;
+		};
+
+		var update = function() {
+			editor.theme.panel.find('#wordcount').text(['Words: {0}', getCount()]);
+		};
 
 		editor.on('init', function() {
 			var statusbar = editor.theme.panel && editor.theme.panel.find('#statusbar')[0];
+			var debouncedUpdate = Delay.debounce(update, 300);
 
 			if (statusbar) {
 				tinymce.util.Delay.setEditorTimeout(editor, function() {
 					statusbar.insert({
 						type: 'label',
 						name: 'wordcount',
-						text: ['Words: {0}', self.getCount()],
+						text: ['Words: {0}', getCount()],
 						classes: 'wordcount',
 						disabled: editor.settings.readonly
 					}, 0);
 
-					editor.on('setcontent beforeaddundo', update);
-
-					editor.on('keyup', function(e) {
-						if (e.keyCode == 32) {
-							update();
-						}
-					});
+					editor.on('setcontent beforeaddundo undo redo keyup', debouncedUpdate);
 				}, 0);
 			}
 		});
 
-		self.getCount = function() {
-			var tx = editor.getContent({format: 'raw'});
-			var tc = 0;
-
-			if (tx) {
-				tx = tx.replace(/<.[^<>]*?>/g, ' ').replace(/&nbsp;|&#160;/gi, ' '); // remove html tags and space chars
-
-				// deal with html entities
-				tx = tx.replace(/(\w+)(&#?[a-z0-9]+;)+(\w+)/i, "$1$3").replace(/&.+?;/g, ' ');
-
-				var wordArray = WordGetter(tx);
-				if (wordArray) {
-					tc = wordArray.length;
-				}
-			}
-
-			return tc;
+		return {
+			getCount: getCount
 		};
 	});
 
-	return {
-		plugin: WordGetter
-	};
+	return function () {};
 });
