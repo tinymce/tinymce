@@ -12,7 +12,9 @@ define(
         dom: {
           tag: 'div'
         }
-      }, spec);
+      }, spec, {
+        uiType: 'custom'
+      });
     };
 
     return {

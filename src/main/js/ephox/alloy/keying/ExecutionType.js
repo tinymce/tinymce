@@ -5,6 +5,7 @@ define(
     'ephox.alloy.alien.Keys',
     'ephox.alloy.keying.KeyingType',
     'ephox.alloy.keying.KeyingTypes',
+    'ephox.alloy.log.AlloyLogger',
     'ephox.alloy.navigation.KeyMatch',
     'ephox.alloy.navigation.KeyRules',
     'ephox.boulder.api.FieldSchema',
@@ -12,7 +13,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (Keys, KeyingType, KeyingTypes, KeyMatch, KeyRules, FieldSchema, Fun, Option) {
+  function (Keys, KeyingType, KeyingTypes, AlloyLogger, KeyMatch, KeyRules, FieldSchema, Fun, Option) {
     var schema = [
       FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
       FieldSchema.defaulted('useSpace', false),

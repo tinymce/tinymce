@@ -6,13 +6,11 @@ define(
     'ephox.alloy.registry.Tagger',
     'ephox.boulder.api.Objects',
     'ephox.compass.Obj',
-    'ephox.highway.Merger',
     'ephox.peanut.Fun',
-    'ephox.sugar.api.PredicateFind',
     'global!console'
   ],
 
-  function (TransformFind, Tagger, Objects, Obj, Merger, Fun, PredicateFind, console) {
+  function (TransformFind, Tagger, Objects, Obj, Fun, console) {
     var eventHandler = function (element, handler) {
       return {
         element: Fun.constant(element),
