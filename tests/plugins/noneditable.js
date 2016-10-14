@@ -42,4 +42,9 @@ if (tinymce.Env.ceFalse) {
 		equal(editor.dom.select('span')[1].contentEditable, "false");
 		equal(editor.getContent(), '<p>{test1}{test2}</p>');
 	});
+
+	test('noneditable regexp inside cE=false', function() {
+		editor.setContent('<span contenteditable="false">{test1}</span>');
+		equal(editor.dom.select('span').length, 1);
+	});
 }
