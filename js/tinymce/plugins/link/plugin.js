@@ -12,6 +12,7 @@
 
 tinymce.PluginManager.add('link', function(editor) {
 	var attachState = {};
+	var leftBtnWasClicked = false;
 
 	function isLink(elm) {
 		return elm && elm.nodeName === 'A' && elm.href;
@@ -23,6 +24,20 @@ tinymce.PluginManager.add('link', function(editor) {
 
 	function getSelectedLink() {
 		return editor.dom.getParent(editor.selection.getStart(), 'a[href]');
+	}
+
+	function leftClickedOnAHref(elm) {
+		var sel, rng, node;
+		if (leftBtnWasClicked && isLink(elm)) {
+			sel = editor.selection;
+			rng = sel.getRng();
+			node = rng.startContainer;
+			// ignore cursor positions at the beginning/end (to make context toolbar less noisy)
+			if (node.nodeType == 3 && sel.isCollapsed() && rng.startOffset > 0 && rng.startOffset < node.data.length) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	function gotoHref() {
@@ -451,6 +466,27 @@ tinymce.PluginManager.add('link', function(editor) {
 		cmd: 'unlink',
 		stateSelector: 'a[href]'
 	});
+
+	editor.addButton('gotolink', {
+		icon: 'preview',
+		tooltip: 'View link',
+		onclick: gotoHref
+	});
+
+
+	editor.on('mousedown', function(e) {
+		// we need context toolbar only on left click
+		leftBtnWasClicked = (e.which == 1);
+	});
+
+
+	if (editor.addContextToolbar) {
+		editor.addContextToolbar(
+			leftClickedOnAHref,
+			'gotolink | link unlink'
+		);
+	}
+
 
 	editor.addShortcut('Meta+K', '', createLinkList(showDialog));
 	editor.addCommand('mceLink', createLinkList(showDialog));
