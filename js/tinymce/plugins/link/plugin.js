@@ -28,7 +28,7 @@ tinymce.PluginManager.add('link', function(editor) {
 
 	function leftClickedOnAHref(elm) {
 		var sel, rng, node;
-		if (leftBtnWasClicked && isLink(elm)) {
+		if (editor.settings.link_context_toolbar && leftBtnWasClicked && isLink(elm)) {
 			sel = editor.selection;
 			rng = sel.getRng();
 			node = rng.startContainer;
@@ -468,7 +468,7 @@ tinymce.PluginManager.add('link', function(editor) {
 	});
 
 
-	if (editor.settings.link_context_toolbar && editor.addContextToolbar) {
+	if (editor.addContextToolbar) {
 		editor.addButton('gotolink', {
 			icon: 'preview',
 			tooltip: 'View link',
