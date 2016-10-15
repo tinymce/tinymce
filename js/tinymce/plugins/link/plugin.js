@@ -467,20 +467,19 @@ tinymce.PluginManager.add('link', function(editor) {
 		stateSelector: 'a[href]'
 	});
 
-	editor.addButton('gotolink', {
-		icon: 'preview',
-		tooltip: 'View link',
-		onclick: gotoHref
-	});
 
+	if (editor.settings.link_context_toolbar && editor.addContextToolbar) {
+		editor.addButton('gotolink', {
+			icon: 'preview',
+			tooltip: 'View link',
+			onclick: gotoHref
+		});
 
-	editor.on('mousedown', function(e) {
-		// we need context toolbar only on left click
-		leftBtnWasClicked = (e.which == 1);
-	});
+		editor.on('mousedown', function(e) {
+			// we need context toolbar only on left click
+			leftBtnWasClicked = (e.which == 1);
+		});
 
-
-	if (editor.addContextToolbar) {
 		editor.addContextToolbar(
 			leftClickedOnAHref,
 			'gotolink | link unlink'
