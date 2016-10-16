@@ -41,7 +41,8 @@ define(
 
               ]
             }
-          ]
+          ],
+          overflowing: { }
         }
       );
     };

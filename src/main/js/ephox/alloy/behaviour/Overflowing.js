@@ -11,7 +11,7 @@ define(
   ],
 
   function (Behaviour, DomModification, FieldPresence, FieldSchema, ValueSchema, Fun) {
-    var behaviourName = 'disabling';
+    var behaviourName = 'overfowing';
 
     var schema = FieldSchema.field(
       behaviourName,
@@ -24,7 +24,7 @@ define(
 
 
 
-    var doCommand1 = function (component, bInfo) {
+    var doRefresh = function (component, bInfo) {
       /* */
     };
 
@@ -38,7 +38,7 @@ define(
 
     var apis = function (info) {
       return {
-        command1: Behaviour.tryActionOpt(behaviourName, info, 'command1', doCommand1)
+        refresh: Behaviour.tryActionOpt(behaviourName, info, 'refresh', doRefresh)
       };
     };
 

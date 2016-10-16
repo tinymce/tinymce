@@ -8,6 +8,7 @@ define(
     'ephox.alloy.behaviour.Highlighting',
     'ephox.alloy.behaviour.Invalidating',
     'ephox.alloy.behaviour.Keying',
+    'ephox.alloy.behaviour.Overflowing',
     'ephox.alloy.behaviour.Positioning',
     'ephox.alloy.behaviour.Receiving',
     'ephox.alloy.behaviour.Redesigning',
@@ -29,7 +30,7 @@ define(
     'global!Error'
   ],
 
-  function (Coupling, Disabling, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Redesigning, Replacing, Representing, Sandboxing, Streaming, Tabstopping, Toggling, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
+  function (Coupling, Disabling, Focusing, Highlighting, Invalidating, Keying, Overflowing, Positioning, Receiving, Redesigning, Replacing, Representing, Sandboxing, Streaming, Tabstopping, Toggling, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
     var domSchema = ValueSchema.objOf([
       FieldSchema.strict('tag'),
       FieldSchema.defaulted('styles', {}),
@@ -127,7 +128,8 @@ define(
       Disabling,
       Invalidating,
       Replacing,
-      Representing
+      Representing,
+      Overflowing
     ];
 
     var behaviours = function (info) {

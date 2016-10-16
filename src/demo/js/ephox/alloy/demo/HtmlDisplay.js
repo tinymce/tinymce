@@ -25,6 +25,7 @@ define(
 
       var component = GuiFactory.build(spec);
       component.logSpec();
+      console.log('Component APIs: ', component.apis());
 
       var display = GuiFactory.build({
         uiType: 'custom',
