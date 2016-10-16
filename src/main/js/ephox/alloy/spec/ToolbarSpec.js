@@ -34,7 +34,7 @@ define(
     );
 
     // TODO: Standardise all of these.
-    var groupSpec = ValueSchema.objOf([
+    var groupSchema = ValueSchema.objOf([
       FieldSchema.option('label'),
       FieldSchema.field(
         'components',
@@ -44,14 +44,14 @@ define(
       )
     ]);
 
-    var toolbarSpec = ValueSchema.objOf([
+    var toolbarSchema = ValueSchema.objOf([
       FieldSchema.option('label'),
       FieldSchema.field(
         'groups',
         'groups',
         FieldPresence.strict(),
         ValueSchema.arrOf(
-          groupSpec
+          groupSchema
         )
       )
     ]);
@@ -81,7 +81,7 @@ define(
     };
 
     var make = function (spec) {
-      var detail = ValueSchema.asStructOrDie('toolbar.spec', toolbarSpec, spec);
+      var detail = ValueSchema.asStructOrDie('toolbar.spec', toolbarSchema, spec);
       // Maybe default some arguments here
       return Merger.deepMerge({
         dom: {
