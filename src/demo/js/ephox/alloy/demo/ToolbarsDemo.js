@@ -42,7 +42,10 @@ define(
               ]
             }
           ],
-          overflowing: { }
+          overflowing: {
+            overflow: 'scroll',
+            defaultWidth: '100px'
+          }
         }
       );
     };

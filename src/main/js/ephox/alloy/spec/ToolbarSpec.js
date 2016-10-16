@@ -83,7 +83,7 @@ define(
     var make = function (spec) {
       var detail = ValueSchema.asStructOrDie('toolbar.spec', toolbarSchema, spec);
       // Maybe default some arguments here
-      return Merger.deepMerge({
+      return Merger.deepMerge(spec, {
         dom: {
           tag: 'div'
         },
