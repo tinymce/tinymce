@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.behaviour.Overflowing',
+  'ephox.alloy.toolbar.Overflowing',
 
   [
     'ephox.alloy.behaviour.Behaviour',
@@ -7,12 +7,10 @@ define(
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.scullion.Cell'
+    'ephox.peanut.Fun'
   ],
 
-  function (Behaviour, DomModification, FieldPresence, FieldSchema, ValueSchema, Arr, Fun, Cell) {
+  function (Behaviour, DomModification, FieldPresence, FieldSchema, ValueSchema, Fun) {
     var behaviourName = 'overflowing';
 
     var schema = FieldSchema.field(
@@ -97,17 +95,7 @@ define(
           styles: {
             'overflow-x': 'scroll',
             'max-width': oInfo.defaultWidth()
-          },
-          defChildren: [
-            {
-              uiType: 'custom',
-              dom: {
-                tag: 'div'
-              },
-              domChildren: Arr.map(info.components(), function (c) { return c.element(); })
-            }
-          ],
-          domChildren: [ ]
+          }
         });
       });
     };

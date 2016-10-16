@@ -27,3 +27,7 @@
 :focus {
   outline: 2px solid green;
 }
+
+button {
+  margin: 3px;
+}

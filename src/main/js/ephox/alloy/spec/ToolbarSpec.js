@@ -2,6 +2,7 @@ define(
   'ephox.alloy.spec.ToolbarSpec',
 
   [
+    'ephox.alloy.toolbar.ScrollOverflow',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
@@ -9,7 +10,7 @@ define(
     'ephox.highway.Merger'
   ],
 
-  function (FieldPresence, FieldSchema, ValueSchema, Arr, Merger) {
+  function (ScrollOverflow, FieldPresence, FieldSchema, ValueSchema, Arr, Merger) {
     var itemSchema = ValueSchema.choose(
       'type',
       {
@@ -20,7 +21,10 @@ define(
               return {
                 uiType: 'button',
                 dom: {
-                  classes: [ 'toolbar-group-item' ]
+                  classes: [ 'toolbar-group-item' ],
+                  styles: {
+                    display: 'flex'
+                  }
                 },
                 tabstopping: undefined,
                 focusing: true,
@@ -53,6 +57,17 @@ define(
         ValueSchema.arrOf(
           groupSchema
         )
+      ),
+      FieldSchema.field(
+        'overflow',
+        'overflow',
+        FieldPresence.strict(),
+        ValueSchema.choose(
+          'mode',
+          {
+            scroll: ScrollOverflow
+          }
+        )
       )
     ]);
 
@@ -66,7 +81,7 @@ define(
         dom: {
           tag: 'div',
           styles: {
-            display: 'inline-block'
+            display: 'flex'
           }
         },
         keying: {
@@ -82,15 +97,22 @@ define(
 
     var make = function (spec) {
       var detail = ValueSchema.asStructOrDie('toolbar.spec', toolbarSchema, spec);
+
+      var groups = Arr.map(detail.groups(), buildGroup);
+      var overflower = detail.overflow();
+      console.log('overflower', overflower);
       // Maybe default some arguments here
       return Merger.deepMerge(spec, {
         dom: {
-          tag: 'div'
+          tag: 'div',
+          styles: {
+            display: 'flex'
+          }
         },
         keying: {
           mode: 'cyclic'
         },
-        components: Arr.map(detail.groups(), buildGroup)
+        components: groups
       }, spec, {
         uiType: 'custom'
       });

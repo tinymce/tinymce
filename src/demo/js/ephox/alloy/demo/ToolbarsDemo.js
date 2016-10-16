@@ -42,8 +42,8 @@ define(
               ]
             }
           ],
-          overflowing: {
-            overflow: 'scroll',
+          overflow: {
+            mode: 'scroll',
             defaultWidth: '100px'
           }
         }
