@@ -40,7 +40,8 @@ define(
             components: groups,
             dom: {
               styles: {
-                display: 'flex'
+                display: 'flex',
+                background: '#333'
               }
             },
             replacing: { }
@@ -56,8 +57,8 @@ define(
             replacing: { },
             dom: {
               styles: {
-                background: 'black',
-                color: 'white',
+                background: 'white',
+                color: 'black',
                 display: 'flex',
                 'flex-wrap': 'wrap'
               }
