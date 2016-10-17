@@ -21,8 +21,8 @@ define(
        var schema = [
         FieldSchema.strict('closedStyle'),
         FieldSchema.strict('openStyle'),
-        FieldSchema.strict('hideStyle'),
-        FieldSchema.strict('showStyle'),
+        FieldSchema.strict('shrinkingStyle'),
+        FieldSchema.strict('growingStyle'),
         FieldSchema.state('state', function () {
           return Cell(false);
         }),
@@ -37,7 +37,7 @@ define(
           };
 
           var disableTransitions = function (component, oInfo) {
-            Classes.remove(component.element(), [ oInfo.showStyle(), oInfo.hideStyle() ]);
+            Classes.remove(component.element(), [ oInfo.shrinkingStyle(), oInfo.growingStyle() ]);
           };
 
           var doHide2 = function (component, oInfo) {
@@ -52,6 +52,7 @@ define(
             Class.remove(component.element(), oInfo.closedStyle());
             Class.add(component.element(), oInfo.openStyle());
             Css.remove(component.element(), dimensionProperty);
+            // Reflow?
           };
 
           var doHide = function (component, oInfo) {
@@ -60,7 +61,7 @@ define(
             Css.set(component.element(), dimensionProperty, getDimension(component.element()));
             Css.reflow(component.element());
 
-            Class.add(component.element(), oInfo.hideStyle()); // enable transitions
+            Class.add(component.element(), oInfo.shrinkingStyle()); // enable transitions
             doHide2(component, oInfo);
           };
 
@@ -71,7 +72,7 @@ define(
             var expanded = getDimension(component.element());
             doHide2(component, oInfo);
 
-            Class.add(component.element(), oInfo.showStyle());
+            Class.add(component.element(), oInfo.growingStyle());
             doShow2(component, oInfo);
             Css.set(component.element(), dimensionProperty, expanded);
             oInfo.state().set(true);

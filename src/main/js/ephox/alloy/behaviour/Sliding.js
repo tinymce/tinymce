@@ -4,14 +4,16 @@ define(
   [
     'ephox.alloy.behaviour.Behaviour',
     'ephox.alloy.dom.DomModification',
-    'ephox.alloy.sliding.SlidingHeight',
+    'ephox.alloy.sliding.SlidingDimension',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
-    'ephox.peanut.Fun'
+    'ephox.peanut.Fun',
+    'ephox.sugar.api.Height',
+    'ephox.sugar.api.Width'
   ],
 
-  function (Behaviour, DomModification, SlidingHeight, FieldPresence, FieldSchema, ValueSchema, Fun) {
+  function (Behaviour, DomModification, SlidingDimension, FieldPresence, FieldSchema, ValueSchema, Fun, Height, Width) {
     var behaviourName = 'sliding';
 
     var schema = FieldSchema.field(
@@ -22,7 +24,18 @@ define(
         'mode',
         {
           // Note, these are only fields.
-          height: SlidingHeight
+          height: SlidingDimension(
+            'height',
+            function (elem) {
+              return Height.get(elem) + 'px';
+            }
+          ),
+          width: SlidingDimension(
+            'width',
+            function (elem) {
+              return Width.get(elem) + 'px';
+            }
+          )
         }
       )
     );

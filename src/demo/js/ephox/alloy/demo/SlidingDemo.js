@@ -25,13 +25,13 @@ define(
           components: [
             {
               uiType: 'container',
-              uid: 'slider',
+              uid: 'height-slider',
               sliding: {
                 mode: 'height',
                 closedStyle: 'demo-sliding-closed',
                 openStyle: 'demo-sliding-open',
-                hideStyle: 'demo-sliding-hide',
-                showStyle: 'demo-sliding-show'
+                shrinkingStyle: 'demo-sliding-height-shrinking',
+                growingStyle: 'demo-sliding-height-growing'
               },
               components: [
                 {
@@ -47,7 +47,46 @@ define(
               uiType: 'button',
               text: 'Toggle',
               action: function () {
-                var slider = gui.getByUid('slider').getOrDie();
+                var slider = gui.getByUid('height-slider').getOrDie();
+                if (slider.apis().hasGrown()) slider.apis().shrink();
+                else slider.apis().grow();
+              }
+            }
+          ]
+        }
+      );
+
+      HtmlDisplay.section(
+        gui,
+        'This container slides its width',
+        {
+          uiType: 'container',
+          components: [
+            {
+              uiType: 'container',
+              uid: 'width-slider',
+              sliding: {
+                mode: 'width',
+                closedStyle: 'demo-sliding-closed',
+                openStyle: 'demo-sliding-open',
+                shrinkingStyle: 'demo-sliding-width-shrinking',
+                growingStyle: 'demo-sliding-width-growing'
+              },
+              components: [
+                {
+                  uiType: 'container',
+                  dom: {
+                    styles: { height: '100px', background: 'blue' }
+                  }
+                }
+              ]
+            },
+
+            {
+              uiType: 'button',
+              text: 'Toggle',
+              action: function () {
+                var slider = gui.getByUid('width-slider').getOrDie();
                 if (slider.apis().hasGrown()) slider.apis().shrink();
                 else slider.apis().grow();
               }
