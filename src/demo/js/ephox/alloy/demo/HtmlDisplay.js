@@ -4,10 +4,11 @@ define(
   [
     'ephox.alloy.api.GuiFactory',
     'ephox.sugar.api.Html',
+    'ephox.sugar.api.TextContent',
     'ephox.wrap.JsBeautify'
   ],
 
-  function (GuiFactory, Html, JsBeautify) {
+  function (GuiFactory, Html, TextContent, JsBeautify) {
 
     var section = function (gui, instructions, spec) {
       var information = {
@@ -45,6 +46,7 @@ define(
       var htmlDump = Html.getOuter(component.element());
       var dump = {
         uiType: 'custom',
+        uid: 'html-dump',
         dom: {
           tag: 'p',
           classes: [ 'html-display' ]
@@ -53,6 +55,11 @@ define(
           { text: JsBeautify.html(htmlDump) }
         ]
       };
+
+      setInterval(function () {
+        var dumpC = gui.getByUid('html-dump').getOrDie();
+        TextContent.set(dumpC.element(), JsBeautify.html(Html.getOuter(component.element())));
+      }, 3000);
 
       var all = GuiFactory.build({
         uiType: 'container',

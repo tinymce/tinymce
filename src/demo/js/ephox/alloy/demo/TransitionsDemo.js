@@ -24,36 +24,45 @@ define(
           uiType: 'container',
           transitioning: {
             views: {
-              help: function (component, revertToBase) {
-                return [{
-                  uiType: 'container',
-                  dom: {
-                    innerHtml: 'This is going to be the help page'
-                  },
-                  components: [
-                    { uiType: 'button', action: revertToBase, text: 'X' },
-                    { uiType: 'button', action: function () {
-                      component.apis().transition('A');
-                    }, text: 'A' }
-                  ]
-                }];
-              },
-
-              'A': function (component, revertToBase) {
+              'insert_link': function (component, revertToBase) {
                 return [
-                  { uiType: 'input' },
-                  { uiType: 'button', action: revertToBase, text: 'X' }
+                  {
+                    uiType: 'formlabel',
+                    label: { text: 'Hyperlink' },
+                    field: { uiType: 'input' },
+                    prefix: 'link_',
+                    dom: {
+                      styles: {
+                        display: 'inline-block'
+                      }
+                    }
+                  },
+                  {
+                    uiType: 'button',
+                    action: revertToBase,
+                    text: 'X'
+                  }
                 ];
               }
             },
             base: function (component) {
-              return [{ uiType: 'container' }];
+              var moveTo = function (view) {
+                return function () {
+                  component.apis().transition(view);
+                };
+              };
+
+              return [
+                { uiType: 'button', text: 'Insert Link', action: moveTo('insert_link') }
+              ];
             }
           }
         }
       );
 
-      subject.apis().transition('help');
+      subject.apis().revertToBase();
+
+      // subject.apis().transition('help');
     };
   }
 );

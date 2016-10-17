@@ -81,7 +81,8 @@ define(
 
     var apis = function (info) {
       return {
-        transition: Behaviour.tryActionOpt(behaviourName, info, 'transition', doTransition)
+        transition: Behaviour.tryActionOpt(behaviourName, info, 'transition', doTransition),
+        revertToBase: Behaviour.tryActionOpt(behaviourName, info, 'revertToBase', revertToBase)
       };
     };
 
