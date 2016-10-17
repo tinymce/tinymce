@@ -6,10 +6,11 @@ define(
     'ephox.epithet.Id',
     'ephox.sugar.api.Html',
     'ephox.sugar.api.TextContent',
-    'ephox.wrap.JsBeautify'
+    'ephox.wrap.JsBeautify',
+    'global!setInterval'
   ],
 
-  function (GuiFactory, Id, Html, TextContent, JsBeautify) {
+  function (GuiFactory, Id, Html, TextContent, JsBeautify, setInterval) {
 
     var section = function (gui, instructions, spec) {
       var information = {

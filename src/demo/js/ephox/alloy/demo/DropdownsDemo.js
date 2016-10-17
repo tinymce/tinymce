@@ -55,7 +55,7 @@ define(
               { value: 'delta', text: 'Delta' }
             ]);
           },
-          sink: sink,
+          // sink: sink,
           desc: 'demo-dropdown',
           onExecute: function (sandbox, item, itemValue) {
             console.log('*** dropdown demo execute on: ' + itemValue + ' ***');

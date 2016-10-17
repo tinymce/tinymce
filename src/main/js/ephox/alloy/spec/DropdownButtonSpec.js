@@ -20,7 +20,7 @@ define(
         FieldSchema.strict('text'),
         FieldSchema.defaulted('onOpen', Fun.noop),
         FieldSchema.defaulted('onExecute', Option.none),
-        FieldSchema.strict('sink'),
+        FieldSchema.option('sink'),
         FieldSchema.option('uid')
       ]), spec);
 
@@ -45,7 +45,7 @@ define(
           });
         },
         text: detail.text,
-        sink: detail.sink,
+        sink: detail.sink.getOr(undefined),
         onOpen: function (button, sandbox, menu) {
           var buttonWidth = Width.get(button.element());
           Width.set(menu.element(), buttonWidth);

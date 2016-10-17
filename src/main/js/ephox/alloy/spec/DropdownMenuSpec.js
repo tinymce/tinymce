@@ -6,12 +6,13 @@ define(
     'ephox.alloy.spec.MenuSandboxSpec',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
+    'ephox.epithet.Id',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Remove'
   ],
 
-  function (ButtonSpec, MenuSandboxSpec, FieldSchema, ValueSchema, Fun, Option, Remove) {
+  function (ButtonSpec, MenuSandboxSpec, FieldSchema, ValueSchema, Id, Fun, Option, Remove) {
     var make = function (spec) {
       var detail = ValueSchema.asStructOrDie('dropdown.spec', ValueSchema.objOf([
         // Returns a Future{ primary, expansions, menus } object asynchronously
@@ -19,7 +20,7 @@ define(
         FieldSchema.strict('text'),
         FieldSchema.defaulted('onOpen', Fun.noop),
         FieldSchema.defaulted('onExecute', Option.none),
-        FieldSchema.strict('sink'),
+        FieldSchema.option('sink'),
         FieldSchema.option('uid')
       ]), spec);
 
@@ -45,9 +46,13 @@ define(
           dropdown.apis().deselect();
         };
 
+        var sink = detail.sink().getOrThunk(function () {
+          return dropdown.getSystem().getByUid(dropdownUid + '-sandbox').getOrDie();
+        });
+
         return MenuSandboxSpec.make({
           lazyHotspot: Fun.constant(dropdown),
-          sink: detail.sink(),
+          sink: sink,
           onOpen: onOpen,
           onClose: onClose,
           onExecute: detail.onExecute()
@@ -60,7 +65,9 @@ define(
         action(dropdown, sandbox);
       };
         
-      return ButtonSpec.make({
+      var dropdownUid = Id.generate('dropdown');
+
+      var base = ButtonSpec.make({
         action: togglePopup,
         toggling: {
           toggleClass: 'menu-open',
@@ -83,6 +90,30 @@ define(
           }
         }
       });
+
+      return detail.sink().fold(function () {
+        // The sink will be inline.
+        return {
+          uiType: 'custom',
+          dom: {
+            tag: 'div',
+            styles: {
+              display: 'inline-block'
+            }
+          },
+          components: [
+            base,
+            {
+              uiType: 'custom',
+              dom: { tag: 'div' },
+              uid: dropdownUid + '-sandbox',
+              positioning: {
+                useFixed: false
+              }
+            }
+          ]
+        };
+      }, Fun.constant(base));
     };
 
     return {
