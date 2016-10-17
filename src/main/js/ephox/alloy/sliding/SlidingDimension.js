@@ -4,10 +4,8 @@ define(
   [
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dom.DomModification',
-    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
-    'ephox.boulder.api.ValueSchema',
     'ephox.peanut.Fun',
     'ephox.scullion.Cell',
     'ephox.sugar.api.Class',
@@ -15,7 +13,7 @@ define(
     'ephox.sugar.api.Css'
   ],
 
-  function (EventHandler, DomModification, FieldPresence, FieldSchema, Objects, ValueSchema, Fun, Cell, Class, Classes, Css) {
+  function (EventHandler, DomModification, FieldSchema, Objects, Fun, Cell, Class, Classes, Css) {
     return function (dimensionProperty, getDimension) {
 
        var schema = [
@@ -23,6 +21,8 @@ define(
         FieldSchema.strict('openStyle'),
         FieldSchema.strict('shrinkingStyle'),
         FieldSchema.strict('growingStyle'),
+        FieldSchema.defaulted('onShrunk', function () { }),
+        FieldSchema.defaulted('onGrown', function () { }),
         FieldSchema.state('state', function () {
           return Cell(false);
         }),
@@ -40,7 +40,7 @@ define(
             Classes.remove(component.element(), [ oInfo.shrinkingStyle(), oInfo.growingStyle() ]);
           };
 
-          var doHide2 = function (component, oInfo) {
+          var setShrunk = function (component, oInfo) {
             Class.remove(component.element(), oInfo.openStyle());
             Class.add(component.element(), oInfo.closedStyle());
 
@@ -48,33 +48,42 @@ define(
             Css.reflow(component.element());
           };
 
-          var doShow2 = function (component, oInfo) {
+          // Note, this is without transitions, so we can measure the size instantaneously
+          var measureTargetSize = function (component, oInfo) {
+            setGrown(component, oInfo);
+            var expanded = getDimension(component.element());
+            setShrunk(component, oInfo);
+            return expanded;
+          };
+
+          var setGrown = function (component, oInfo) {
             Class.remove(component.element(), oInfo.closedStyle());
             Class.add(component.element(), oInfo.openStyle());
             Css.remove(component.element(), dimensionProperty);
             // Reflow?
           };
 
-          var doHide = function (component, oInfo) {
+          var startShrink = function (component, oInfo) {
             oInfo.state().set(false);
+
             // Force current dimension to begin transition
             Css.set(component.element(), dimensionProperty, getDimension(component.element()));
             Css.reflow(component.element());
 
             Class.add(component.element(), oInfo.shrinkingStyle()); // enable transitions
-            doHide2(component, oInfo);
+            setShrunk(component, oInfo);
           };
 
           // Showing is complex due to the inability to transition to "auto".
           // We also can't cache the dimension as the parents may have resized since it was last shown.
-          var doShow = function (component, oInfo) {
-            doShow2(component, oInfo);
-            var expanded = getDimension(component.element());
-            doHide2(component, oInfo);
+          var startGrow = function (component, oInfo) {
+            var fullSize = measureTargetSize(component, oInfo);
 
+            // Start the growing animation styles
             Class.add(component.element(), oInfo.growingStyle());
-            doShow2(component, oInfo);
-            Css.set(component.element(), dimensionProperty, expanded);
+
+            setGrown(component, oInfo);
+            Css.set(component.element(), dimensionProperty, fullSize);
             oInfo.state().set(true);
           };
 
@@ -88,6 +97,8 @@ define(
                   if (raw.propertyName === dimensionProperty) {
                     disableTransitions(component, oInfo); // disable transitions immediately (Safari animates the dimension removal below)
                     if (oInfo.state().get() === true) Css.remove(component.element(), dimensionProperty); // when showing, remove the dimension so it is responsive
+                    var notify = oInfo.state().get() === true ? oInfo.onGrown() : oInfo.onShrunk();
+                    notify(component, simulatedEvent);
                   }
                 }
               })
@@ -97,10 +108,10 @@ define(
           var toApis = function (oInfo) {
             return {
               grow: function (comp) {
-                doShow(comp, oInfo);
+                startGrow(comp, oInfo);
               },
               shrink: function (comp) {
-                doHide(comp, oInfo);
+                startShrink(comp, oInfo);
               },
               hasGrown: function (comp) {
                 return oInfo.state().get() === true;

@@ -31,7 +31,13 @@ define(
                 closedStyle: 'demo-sliding-closed',
                 openStyle: 'demo-sliding-open',
                 shrinkingStyle: 'demo-sliding-height-shrinking',
-                growingStyle: 'demo-sliding-height-growing'
+                growingStyle: 'demo-sliding-height-growing',
+                onShrunk: function () {
+                  console.log('height.slider.shrunk');
+                },
+                onGrown: function () {
+                  console.log('height.slider.grown');
+                }
               },
               components: [
                 {
@@ -70,7 +76,13 @@ define(
                 closedStyle: 'demo-sliding-closed',
                 openStyle: 'demo-sliding-open',
                 shrinkingStyle: 'demo-sliding-width-shrinking',
-                growingStyle: 'demo-sliding-width-growing'
+                growingStyle: 'demo-sliding-width-growing',
+                onShrunk: function () {
+                  console.log('width.slider.shrunk');
+                },
+                onGrown: function () {
+                  console.log('width.slider.grown');
+                }
               },
               components: [
                 {
