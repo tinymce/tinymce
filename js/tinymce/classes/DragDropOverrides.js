@@ -187,7 +187,7 @@ define("tinymce/DragDropOverrides", [
 	var drop = function (state, editor) {
 		return function (e) {
 			if (state.dragging) {
-				if (isValidDropTarget(editor, editor.selection.getNode(), state.element)) {
+				if (isValidDropTarget(editor, editor.getDoc().getSelection().focusNode, state.element)) {
 					var targetClone = cloneElement(state.element);
 
 					var args = editor.fire('drop', {
