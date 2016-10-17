@@ -47,7 +47,9 @@ define(
               uiType: 'button',
               text: 'Toggle',
               action: function () {
-
+                var slider = gui.getByUid('slider').getOrDie();
+                if (slider.apis().hasGrown()) slider.apis().shrink();
+                else slider.apis().grow();
               }
             }
           ]

@@ -104,6 +104,11 @@ define(
         if (stopped) event.kill();
       });
 
+      var onTransitionEnd = DomEvent.bind(container, 'transitionend', function (event) {
+        var stopped = settings.triggerEvent('transitionend', event);
+        if (stopped) event.kill();
+      });
+
       var unbind = function () {
         onClick.unbind();
         onSelectStart.unbind();
@@ -113,6 +118,7 @@ define(
         onFocusOut.unbind();
         onInput.unbind();
         onChange.unbind();
+        onTransitionEnd.unbind();
       };
 
       return {
