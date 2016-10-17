@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dom.DomModification',
+    'ephox.alloy.sliding.SlidingDimension',
     'ephox.boulder.api.FieldSchema',
     'ephox.peanut.Fun',
     'ephox.scullion.Cell',
@@ -13,7 +14,13 @@ define(
     'ephox.sugar.api.Height'
   ],
 
-  function (EventHandler, DomModification, FieldSchema, Fun, Cell, Class, Classes, Css, Height) {
+  function (EventHandler, DomModification, SlidingDimension, FieldSchema, Fun, Cell, Class, Classes, Css, Height) {
+    return SlidingDimension(
+      'height',
+      function (elem) {
+        return Height.get(elem) + 'px';
+      }
+    );
     var schema = [
       FieldSchema.strict('closedStyle'),
       FieldSchema.strict('openStyle'),
