@@ -3,12 +3,13 @@ define(
 
   [
     'ephox.alloy.api.GuiFactory',
+    'ephox.epithet.Id',
     'ephox.sugar.api.Html',
     'ephox.sugar.api.TextContent',
     'ephox.wrap.JsBeautify'
   ],
 
-  function (GuiFactory, Html, TextContent, JsBeautify) {
+  function (GuiFactory, Id, Html, TextContent, JsBeautify) {
 
     var section = function (gui, instructions, spec) {
       var information = {
@@ -43,10 +44,12 @@ define(
         ]
       });
 
+      var dumpUid = Id.generate('html-dump');
+
       var htmlDump = Html.getOuter(component.element());
       var dump = {
         uiType: 'custom',
-        uid: 'html-dump',
+        uid: dumpUid,
         dom: {
           tag: 'p',
           classes: [ 'html-display' ]
@@ -57,7 +60,7 @@ define(
       };
 
       setInterval(function () {
-        var dumpC = gui.getByUid('html-dump').getOrDie();
+        var dumpC = gui.getByUid(dumpUid).getOrDie();
         TextContent.set(dumpC.element(), JsBeautify.html(Html.getOuter(component.element())));
       }, 3000);
 

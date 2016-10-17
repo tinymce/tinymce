@@ -45,7 +45,7 @@ define(
           ]
         }
       ];
-/*
+
       var toolbar = HtmlDisplay.section(
         gui,
         'This toolbar has overflow behaviour that scrolls',
@@ -76,7 +76,7 @@ define(
           }
         }
       );
-*/
+
       var toolbar3 = HtmlDisplay.section(
         gui,
         'The slick toolbar',
@@ -98,7 +98,7 @@ define(
 
 
       window.addEventListener('resize', function () {
-        // toolbar2.apis().refresh();
+        toolbar2.apis().refresh();
       });
     };
   }
