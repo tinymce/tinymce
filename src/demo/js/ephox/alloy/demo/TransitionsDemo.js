@@ -46,15 +46,14 @@ define(
                 ];
               }
             },
-            base: [{ uiType: 'container' }]
+            base: function (component) {
+              return [{ uiType: 'container' }];
+            }
           }
         }
       );
 
       subject.apis().transition('help');
-      setTimeout(function () {
-        subject.apis().transition('dog');
-      }, 10000);
     };
   }
 );

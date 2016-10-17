@@ -46,7 +46,7 @@ define(
     };
 
     var revertToBase = function (component, transitionInfo) {
-      doTransitionTo(component, transitionInfo, transitionInfo.base());
+      doTransitionTo(component, transitionInfo, transitionInfo.base()(component));
     };
 
     var doTransitionTo = function (component, transitionInfo, data) {
