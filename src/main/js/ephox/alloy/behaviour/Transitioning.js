@@ -68,7 +68,7 @@ define(
       var builder = transitionInfo.views()[viewName];
       if (builder === undefined) throw unsupportedView(component, transitionInfo, viewName);
 
-      var data = builder(function () {
+      var data = builder(component, function () {
         revertToBase(component, transitionInfo);
       });
 

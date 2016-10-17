@@ -24,16 +24,26 @@ define(
           uiType: 'container',
           transitioning: {
             views: {
-              help: function (revertToBase) {
+              help: function (component, revertToBase) {
                 return [{
                   uiType: 'container',
                   dom: {
                     innerHtml: 'This is going to be the help page'
                   },
                   components: [
-                    { uiType: 'button', action: revertToBase, text: 'X' }
+                    { uiType: 'button', action: revertToBase, text: 'X' },
+                    { uiType: 'button', action: function () {
+                      component.apis().transition('A');
+                    }, text: 'A' }
                   ]
                 }];
+              },
+
+              'A': function (component, revertToBase) {
+                return [
+                  { uiType: 'input' },
+                  { uiType: 'button', action: revertToBase, text: 'X' }
+                ];
               }
             },
             base: [{ uiType: 'container' }]
