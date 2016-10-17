@@ -4,10 +4,14 @@ define(
   [
     'ephox.alloy.behaviour.Behaviour',
     'ephox.alloy.dom.DomModification',
+    'ephox.alloy.toolbar.OverflowState',
+    'ephox.alloy.toolbar.Overflows',
+    'ephox.alloy.toolbar.ToolbarSpecs',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
+    'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.scullion.Cell',
@@ -15,10 +19,11 @@ define(
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.InsertAll',
     'ephox.sugar.api.Remove',
+    'ephox.sugar.api.Traverse',
     'ephox.sugar.api.Width'
   ],
 
-  function (Behaviour, DomModification, FieldPresence, FieldSchema, ValueSchema, Arr, Fun, Option, Cell, Css, Insert, InsertAll, Remove, Width) {
+  function (Behaviour, DomModification, OverflowState, Overflows, ToolbarSpecs, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Fun, Option, Cell, Css, Insert, InsertAll, Remove, Traverse, Width) {
     var behaviourName = 'more-overflowing';
 
     var schema = FieldSchema.field(
@@ -27,10 +32,9 @@ define(
       FieldPresence.asOption(),
       ValueSchema.objOf([
         FieldSchema.strict('initGroups'),
-        FieldSchema.state('state', function (spec) {
-          console.log('spec', spec);
-          return Cell({ groups: Option.none() });
-        })
+        FieldSchema.strict('drawer'),
+        FieldSchema.strict('button'),
+        FieldSchema.state('state', OverflowState)
       ])
     );
 
@@ -39,11 +43,42 @@ define(
     };
 
     var doSetGroups = function (component, oInfo, groups) {
-      oInfo.state().set(
-        Option.some({
-          groups: groups
-        })
-      );
+      oInfo.state().groups().set(Option.some(groups));
+    };
+
+    var getButton = function (component, oInfo) {
+      var s = oInfo.state().button();
+      return s.get().fold(function () {
+        var groupSpec =  ToolbarSpecs.buildGroup(
+          ValueSchema.asStructOrDie('overflow.group', ToolbarSpecs.groupSchema(), {
+            label: 'more-button-group',
+            components: [
+              {
+                type: 'button',
+                text: oInfo.button().text,
+                action: function () {
+                  oInfo.button().action(getDrawer(component, oInfo));
+                }
+              }
+            ]
+          })
+        );
+
+        var built = component.getSystem().build(groupSpec);
+        // component.getSystem().addToWorld(built);
+        s.set(Option.some(built));
+        return built;
+      }, Fun.identity);
+    };
+
+    var getDrawer = function (component, oInfo) {
+      var s = oInfo.state().drawer();
+      return s.get().fold(function () {
+        var built = component.getSystem().build(oInfo.drawer());
+         component.getSystem().addToWorld(built);
+         s.set(Option.some(built));
+        return built;
+      }, Fun.identity);
     };
 
     var doRefresh = function (component, oInfo) {
@@ -55,39 +90,59 @@ define(
       
       Css.set(toolbar.element(), 'visibility', 'hidden');
 
-      var groups = oInfo.state().get().groups.getOr(oInfo.initGroups());
+      var groups = oInfo.state().groups().get().getOr(oInfo.initGroups());
 
       // Clear any restricted width on the toolbar somehow ----- */
       // barType.clearWidth()
 
       toolbar.apis().replace(groups);
-
-      var total = Width.get(toolbar.element());
-
-      // NOTE: We need to add the overflow button because it has no width otherwise
-      // Note, adding it doesn't affect the width of the toolbar, so it should be fine.
-      // var overflows = oInfo.overflows();
-      // Insert.append(toolbar, overflows);
-
-      // Clear out the toolbar and the more drawers
-
-
-      var more = component.apis().getCoupled('more-drawer');
-      component.getSystem().addToWorld(more);
-
-      var moreButton = component.apis().getCoupled('more-button');
-
-
-      Insert.append(component.element(), more.element());
-      component.syncComponents();
-
-      toolbar.apis().replace(groups.slice(0, 1).concat({ built: moreButton }));
       toolbar.syncComponents();
 
-      more.apis().replace(groups.slice(1));
-      more.syncComponents();
+
+       
+      var button = getButton(component, oInfo);
+      var drawer = getDrawer(component, oInfo);
+      // component.getSystem().removeFromWorld(button);
+      // component.getSystem().removeFromWorld(drawer);
+
+
+ // NOTE: We need to add the overflow button because it has no width otherwise
+        // Note, adding it doesn't affect the width of the toolbar, so it should be fine.
+        // var overflows = oInfo.overflows();
+        // Insert.append(toolbar, overflows);
+
+      Insert.append(toolbar.element(), button.element());
+      var total = Width.get(toolbar.element());
+     
+
+      var overflows = Overflows.partition(total, toolbar.components(), function (comp) {
+        var w = Width.get(comp.element());
+        return w;
+      }, button);
+
+      Remove.remove(button.element());
+      
+
+
+      if (overflows.extra().length === 0) {
+        drawer.apis().replace([ ]);
+        Remove.remove(drawer.element());
+      } else {
+        toolbar.apis().replace(Arr.map(overflows.within(), function (c) {
+          return { built: c };
+        }));
+
+        drawer.apis().replace(Arr.map(overflows.extra(), function (c) {
+          return { built: c };
+        }));
+
+        Insert.append(component.element(), drawer.element());
+      }
 
       
+      component.syncComponents();
+      drawer.syncComponents();
+      toolbar.syncComponents();
 
 
 

@@ -37,9 +37,7 @@ define(
         components: [
           {
             uiType: 'container',
-            components: groups.concat([
-         
-            ]),
+            components: groups,
             dom: {
               styles: {
                 display: 'flex'
@@ -48,52 +46,38 @@ define(
             replacing: { }
           }
         ],
-        coupling: {
-          others: {
-            'more-drawer': function (primary) {
-              return {
-                uiType: 'container',
-                replacing: { },
-                dom: {
-                  styles: {
-                    background: 'black',
-                    color: 'white',
-                    display: 'flex'
-                  }
-                },
-                sliding: {
-                  mode: 'height',
-                  // FIX: hard-coded demo styles
-                  closedStyle: 'demo-sliding-closed',
-                  openStyle: 'demo-sliding-open',
-                  shrinkingStyle: 'demo-sliding-height-shrinking',
-                  growingStyle: 'demo-sliding-height-growing'
-                }
-              };
-            },
-            'more-button': function (primary) {
-              return ToolbarSpecs.buildGroup(
-                ValueSchema.asStructOrDie('overflow.group', ToolbarSpecs.groupSchema(), {
-                  label: 'more-button-group',
-                  components: [
-                    {
-                      type: 'button',
-                      text: 'Toggle',
-                      action: function () {
-                        primary.apis().getCoupled('more-drawer').apis().toggleGrow();
-                      }
-                    }
-                  ]
-                })
-              );
-            }
-          }
-        },
         behaviours: [
           MoreOverflow
         ],
         'more-overflowing': {
-          initGroups: groups
+          initGroups: groups,
+          drawer: {
+            uiType: 'container',
+            replacing: { },
+            dom: {
+              styles: {
+                background: 'black',
+                color: 'white',
+                display: 'flex',
+                'flex-wrap': 'wrap'
+              }
+            },
+            sliding: {
+              mode: 'height',
+              // FIX: hard-coded demo styles
+              closedStyle: 'demo-sliding-closed',
+              openStyle: 'demo-sliding-open',
+              shrinkingStyle: 'demo-sliding-height-shrinking',
+              growingStyle: 'demo-sliding-height-growing'
+            }
+          },
+          button: {
+            // FIX: Structify
+            text: 'Toggle',
+            action: function (drawer) {
+              drawer.apis().toggleGrow();
+            }
+          }
         },
         postprocess: postprocess
       }, spec, {

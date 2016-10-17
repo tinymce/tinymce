@@ -67,13 +67,23 @@ define(
           uid: 'demo-more-toolbar',
           groups: groups,
           initWidth: '100px',
+          dom: {
+            styles: {
+              // width: '300px',
+              // display: 'flex',
+              overflow: 'hidden'
+            }
+          },
           overflower: {
             type: 'button', text: 'Blah'
           }
         }
       );
 
-      toolbar2.apis().refresh();
+
+      window.addEventListener('resize', function () {
+        toolbar2.apis().refresh();
+      });
     };
   }
 );
