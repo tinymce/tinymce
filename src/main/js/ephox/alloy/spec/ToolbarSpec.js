@@ -8,10 +8,11 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
-    'ephox.highway.Merger'
+    'ephox.highway.Merger',
+    'ephox.peanut.Fun'
   ],
 
-  function (Overflowing, ScrollOverflow, FieldPresence, FieldSchema, ValueSchema, Arr, Merger) {
+  function (Overflowing, ScrollOverflow, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Fun) {
     var itemSchema = ValueSchema.choose(
       'type',
       {
@@ -88,19 +89,28 @@ define(
     var make = function (spec) {
       var detail = ValueSchema.asStructOrDie('toolbar.spec', toolbarSchema, spec);
 
+      // FIX: I don't want to calculate this here.
+      var overflowSpec = ValueSchema.asStructOrDie('overflow.spec', ValueSchema.objOf([
+        Overflowing.schema()
+      ]), spec);
+
+      var builder = overflowSpec.overflowing().map(function (oInfo) {
+        return Fun.curry(oInfo.handler().builder, oInfo);
+      }).getOr(Fun.identity);
+
       var groups = Arr.map(detail.groups(), buildGroup);
       // Maybe default some arguments here
       return Merger.deepMerge(spec, {
         dom: {
           tag: 'div',
           styles: {
-            display: 'flex'
+            // display: 'flex'
           }
         },
         keying: {
           mode: 'cyclic'
         },
-        components: groups,
+        components: builder(groups),
         behaviours: [
           Overflowing
         ]

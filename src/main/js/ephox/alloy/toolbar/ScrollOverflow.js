@@ -21,13 +21,19 @@ define(
           return DomModification.nu({
             styles: {
               'overflow-x': 'auto',
-              'max-width': oInfo.initWidth()
+              'max-width': oInfo.initWidth(),
+              display: 'flex'
             }
           });
         };
 
+        var builder = function (oInfo, groups) {
+          return groups;
+        };
+
         return {
           doExhibit: doExhibit,
+          builder: builder,
           schema: Fun.constant(schema)
         };
       })
