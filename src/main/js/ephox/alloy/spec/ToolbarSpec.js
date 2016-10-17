@@ -3,91 +3,16 @@ define(
 
   [
     'ephox.alloy.toolbar.Overflowing',
-    'ephox.alloy.toolbar.ScrollOverflow',
-    'ephox.boulder.api.FieldPresence',
-    'ephox.boulder.api.FieldSchema',
+    'ephox.alloy.toolbar.ToolbarSpecs',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.highway.Merger',
     'ephox.peanut.Fun'
   ],
 
-  function (Overflowing, ScrollOverflow, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Fun) {
-    var itemSchema = ValueSchema.choose(
-      'type',
-      {
-        button: [
-          FieldSchema.strict('text'),
-          FieldSchema.state('builder', function () {
-            return function (info) {
-              return {
-                uiType: 'button',
-                dom: {
-                  classes: [ 'toolbar-group-item' ],
-                  styles: {
-                    display: 'flex'
-                  }
-                },
-                tabstopping: undefined,
-                focusing: true,
-                action: function () { },
-                text: info.text()
-              };
-            };
-          })
-        ]
-      }
-    );
-
-    // TODO: Standardise all of these.
-    var groupSchema = ValueSchema.objOf([
-      FieldSchema.option('label'),
-      FieldSchema.field(
-        'components',
-        'components',
-        FieldPresence.strict(),
-        ValueSchema.arrOf(itemSchema)
-      )
-    ]);
-
-    var toolbarSchema = ValueSchema.objOf([
-      FieldSchema.option('label'),
-      FieldSchema.field(
-        'groups',
-        'groups',
-        FieldPresence.strict(),
-        ValueSchema.arrOf(
-          groupSchema
-        )
-      )
-    ]);
-
-    var buildComponent = function (compInfo) {
-      return compInfo.builder()(compInfo);
-    };
-
-    var buildGroup = function (group) {
-      return {
-        uiType: 'custom',
-        dom: {
-          tag: 'div',
-          styles: {
-            display: 'flex'
-          }
-        },
-        keying: {
-          mode: 'flow',
-          selector: '.toolbar-group-item'
-        },
-        tabstopping: true,
-        // GOTCHAs. False won't do anything. Fix this so we don't have to pass "undefined"
-        focusing: undefined,
-        components: Arr.map(group.components(), buildComponent)
-      };
-    };
-
+  function (Overflowing, ToolbarSpecs, ValueSchema, Arr, Merger, Fun) {
     var make = function (spec) {
-      var detail = ValueSchema.asStructOrDie('toolbar.spec', toolbarSchema, spec);
+      var detail = ValueSchema.asStructOrDie('toolbar.spec', ToolbarSpecs.toolbarSchema(), spec);
 
       // FIX: I don't want to calculate this here.
       var overflowSpec = ValueSchema.asStructOrDie('overflow.spec', ValueSchema.objOf([
@@ -98,7 +23,7 @@ define(
         return Fun.curry(oInfo.handler().builder, oInfo);
       }).getOr(Fun.identity);
 
-      var groups = Arr.map(detail.groups(), buildGroup);
+      var groups = Arr.map(detail.groups(), ToolbarSpecs.buildGroup);
       // Maybe default some arguments here
       return Merger.deepMerge(spec, {
         dom: {
@@ -113,7 +38,8 @@ define(
         components: builder(groups),
         behaviours: [
           Overflowing
-        ]
+        ],
+        postprocess: overflowSpec.overflowing().map(function (oInfo) { return Fun.curry(oInfo.handler().postprocess, oInfo); }).getOr(Fun.identity)
       }, spec, {
         uiType: 'custom'
       });

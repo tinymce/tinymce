@@ -33,8 +33,10 @@ define(
 
         return {
           doExhibit: doExhibit,
+          toApis: Fun.constant({ }),
           builder: builder,
-          schema: Fun.constant(schema)
+          schema: Fun.constant(schema),
+          postprocess: Fun.identity
         };
       })
 

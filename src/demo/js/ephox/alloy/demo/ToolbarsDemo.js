@@ -63,24 +63,17 @@ define(
         gui,
         'This toolbar has overflow behaviour that uses a more drawer',
         {
-          uiType: 'container',
-          components: [
-            {
-              uiType: 'toolbar',
-              uid: 'demo-more-toolbar',
-              groups: groups,
-              overflowing: {
-                mode: 'more',
-                initWidth: '100px',
-                getDrawer: function () {
-                  return gui.getByUid('demo-more-toolbar-drawer');
-                }
-              }
-            }
-          ]
-          
+          uiType: 'more.toolbar',
+          uid: 'demo-more-toolbar',
+          groups: groups,
+          initWidth: '100px',
+          overflower: {
+            type: 'button', text: 'Blah'
+          }
         }
       );
+
+      toolbar2.apis().refresh();
     };
   }
 );

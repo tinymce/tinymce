@@ -30,14 +30,6 @@ define(
       )
     );
 
-    var doResizeWidth = function (component, bInfo, value) {
-      Css.set(component.element(), 'max-width', value);
-    };
-
-    var doRefresh = function (component, bInfo) {
-      // DO nothing
-    };
-
     var exhibit = function (info, base) {     
       return info[behaviourName]().fold(function () {
         return DomModification.nu({ });
@@ -47,10 +39,13 @@ define(
     };
 
     var apis = function (info) {
-      return {
-        resizeWidth: Behaviour.tryActionOpt(behaviourName, info, 'resizeWidth', doResizeWidth),
-        refresh: Behaviour.tryActionOpt(behaviourName, info, 'refresh', doRefresh)
-      };
+      return info[behaviourName]().fold(function () {
+        return { };
+      }, function (oInfo) {
+        var x = oInfo.handler().toApis(oInfo);
+        console.log('x', x);
+        return x;
+      });
     };
 
     var handlers = function (info) {
