@@ -18,7 +18,6 @@ define(
     'ephox.alloy.spec.ToolbarSpec',
     'ephox.alloy.spec.TypeaheadSpec',
     'ephox.alloy.toolbar.MoreToolbar',
-    'ephox.alloy.toolbar.SlickToolbar',
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
@@ -31,7 +30,7 @@ define(
     'global!Error'
   ],
 
-  function (Component, Components, DefaultEvents, ButtonSpec, ContainerSpec, CustomSpec, DropdownButtonSpec, DropdownMenuSpec, FormLabelSpec, HtmlSelectSpec, InlineSpec, InputSpec, MenuSpec, ToolbarSpec, TypeaheadSpec, MoreToolbar, SlickToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
+  function (Component, Components, DefaultEvents, ButtonSpec, ContainerSpec, CustomSpec, DropdownButtonSpec, DropdownMenuSpec, FormLabelSpec, HtmlSelectSpec, InlineSpec, InputSpec, MenuSpec, ToolbarSpec, TypeaheadSpec, MoreToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
     var knownSpecs = {
       container: ContainerSpec.make,
       custom: CustomSpec.make,
@@ -45,8 +44,7 @@ define(
       typeahead: TypeaheadSpec.make,
       select: HtmlSelectSpec.make,
       toolbar: ToolbarSpec.make,
-      'more.toolbar': MoreToolbar.make,
-      'slick.toolbar': SlickToolbar.make
+      'more.toolbar': MoreToolbar.make
 
       // Add other specs here.
     };

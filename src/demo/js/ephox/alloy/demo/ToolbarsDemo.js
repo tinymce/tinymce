@@ -77,26 +77,6 @@ define(
         }
       );
 
-      var toolbar3 = HtmlDisplay.section(
-        gui,
-        'The slick toolbar',
-        {
-          uiType: 'slick.toolbar',
-          uid: 'demo-slick-toolbar',
-          groups: [
-            {
-              label: 'group-1',
-              components: [
-                { type: 'button', text: 'Alpha', action: function () { } },
-                { type: 'button', text: 'Beta', action: function () { } },
-                { type: 'button', text: 'Gamma', action: function () { } }
-              ]
-            }
-          ]
-        }
-      );
-
-
       window.addEventListener('resize', function () {
         toolbar2.apis().refresh();
       });
