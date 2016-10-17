@@ -18,14 +18,14 @@ define('tinymce.wordcount.text.StringMapper', [
 		var j, set, type = OTHER;
 		var setsLength = SETS.length;
 		for (j = 0; j < setsLength; ++j) {
-				set = SETS[j];
+			set = SETS[j];
 
-				if (set && set.test(char)) {
-					type = j;
-					break;
-				}
+			if (set && set.test(char)) {
+				type = j;
+				break;
 			}
-			return type;
+		}
+		return type;
 	};
 
 	var memoize = function (func) {

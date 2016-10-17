@@ -17,14 +17,14 @@ define("tinymce.wordcount.text.WordGetter", [
 	var WHITESPACE = UnicodeData.WHITESPACE;
 	var PUNCTUATION = UnicodeData.PUNCTUATION;
 	var getWords = function (string, options) {
-		var i = 0,
-				map = StringMapper.classify(string),
-				len = map.length,
-				word = [],
-				words = [],
-				chr,
-				includePunctuation,
-				includeWhitespace;
+		var i = 0;
+		var map = StringMapper.classify(string);
+		var len = map.length;
+		var word = [];
+		var words = [];
+		var chr;
+		var includePunctuation;
+		var includeWhitespace;
 
 		if (!options) {
 			options = {};

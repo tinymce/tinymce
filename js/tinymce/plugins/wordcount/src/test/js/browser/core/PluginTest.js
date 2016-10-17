@@ -2,24 +2,19 @@ asynctest('browser.core.PluginTest', [
 	'tinymce.wordcount.Plugin',
 	'ephox.mcagar.api.TinyLoader',
 	'ephox.mcagar.api.TinyApis',
-	'ephox.mcagar.api.TinyActions',
 	'ephox.mcagar.api.TinyDom',
 	'ephox.agar.api.Pipeline',
-	'ephox.agar.api.Chain',
-	'ephox.agar.api.UiFinder',
 	'ephox.agar.api.Keyboard',
 	'ephox.agar.api.Keys',
 	'ephox.agar.api.GeneralSteps',
-	'ephox.agar.api.UiControls',
-	'ephox.agar.api.FocusTools',
 	'ephox.agar.api.Waiter',
 	'ephox.agar.api.Step',
 	'ephox.agar.api.Assertions',
 	'ephox/tinymce'
 ], function (
-	Plugin, TinyLoader, TinyApis, TinyActions, TinyDom,
-	Pipeline, Chain, UiFinder, Keyboard, Keys, GeneralSteps, UiControls,
-	FocusTools, Waiter, Step, Assertions, Tiny
+	Plugin, TinyLoader, TinyApis, TinyDom,
+	Pipeline, Keyboard, Keys, GeneralSteps,
+	Waiter, Step, Assertions, Tiny
 ) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
@@ -95,7 +90,7 @@ asynctest('browser.core.PluginTest', [
 	};
 
 	TinyLoader.setup(function (editor, onSuccess, onFailure) {
-		var tinyApis = TinyApis(editor), tinyActions = TinyActions(editor);
+		var tinyApis = TinyApis(editor);
 
 		Pipeline.async({}, [
 			sTestSetContent(tinyApis),

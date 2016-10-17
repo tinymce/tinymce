@@ -29,7 +29,7 @@ test('atomic.core.WordBoundaryTest', [
 
 		// should extend characters
 		assert.eq(false, iwb('foo\u00ADbar', 2));
-    assert.eq(false, iwb('foo\u0300bar', 2));
+		assert.eq(false, iwb('foo\u0300bar', 2));
 
 		// Should NOT break in Katakana
 		assert.eq(false, iwb('カラテ', 1));
@@ -67,7 +67,7 @@ test('atomic.core.WordBoundaryTest', [
 
 		// should return true for empty string
 		assert.eq(true, iwb('', 0));
-};
+	};
 
 	testWordBoundary();
 });
