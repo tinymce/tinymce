@@ -2,15 +2,17 @@ define(
   'ephox.alloy.toolbar.MoreToolbar',
 
   [
+    'ephox.alloy.toolbar.MoreOverflow',
     'ephox.alloy.toolbar.Overflowing',
     'ephox.alloy.toolbar.ToolbarSpecs',
+    'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.highway.Merger',
     'ephox.peanut.Fun'
   ],
 
-  function (Overflowing, ToolbarSpecs, ValueSchema, Arr, Merger, Fun) {
+  function (MoreOverflow, Overflowing, ToolbarSpecs, FieldSchema, ValueSchema, Arr, Merger, Fun) {
     var make = function (spec) {
       var detail = ValueSchema.asStructOrDie('toolbar.spec', ToolbarSpecs.toolbarSchema(), spec);
 
@@ -47,45 +49,38 @@ define(
         ],
         coupling: {
           others: {
-            'more-drawer': {
-              uiType: 'container',
-              uid: 'more-drawer-slider',
-              components: [
-                {
-                  uiType: 'container',
-                  dom: {
-                    styles: {
-                      height: '100px',
-                      display: 'block',
-
-                      'background-color': 'black'
-                    }
-                  }
+            'more-drawer': function (primary) {
+              return {
+                uiType: 'container',
+                replacing: { },
+                sliding: {
+                  mode: 'height',
+                  // FIX: hard-coded demo styles
+                  closedStyle: 'demo-sliding-closed',
+                  openStyle: 'demo-sliding-open',
+                  shrinkingStyle: 'demo-sliding-height-shrinking',
+                  growingStyle: 'demo-sliding-height-growing'
                 }
-              ],
-              replacing: { },
-              sliding: {
-                mode: 'height',
-                // FIX: hard-coded demo styles
-                closedStyle: 'demo-sliding-closed',
-                openStyle: 'demo-sliding-open',
-                shrinkingStyle: 'demo-sliding-height-shrinking',
-                growingStyle: 'demo-sliding-height-growing'
-              }
+              };
             },
-            'more-button': ToolbarSpecs.buildGroup(
-              ValueSchema.asStructOrDie('overflow.goru', ToolbarSpecs.groupSchema(), {
-                label: 'more-button-group',
-                components: [
-                  { type: 'button', text: 'Toggle' }
-                ]
-              })
-            )
+            'more-button': function (primary) {
+              return ToolbarSpecs.buildGroup(
+                ValueSchema.asStructOrDie('overflow.goru', ToolbarSpecs.groupSchema(), {
+                  label: 'more-button-group',
+                  components: [
+                    { type: 'button', text: 'Toggle' }
+                  ]
+                })
+              );
+            }
           }
         },
         behaviours: [
-          Overflowing
+          MoreOverflow
         ],
+        'more-overflowing': {
+          initGroups: groups
+        },
         postprocess: postprocess
       }, spec, {
         uiType: 'custom'

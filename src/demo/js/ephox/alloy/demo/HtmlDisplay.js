@@ -20,12 +20,11 @@ define(
 
       var hr = { uiType: 'custom', dom: { tag: 'hr' } };
 
-      gui.add(GuiFactory.build(hr));
-      gui.add(GuiFactory.build(information));
-
       var component = GuiFactory.build(spec);
       component.logSpec();
       console.log('Component APIs: ', component.apis());
+
+    
 
       var display = GuiFactory.build({
         uiType: 'custom',
@@ -43,8 +42,6 @@ define(
         ]
       });
 
-      gui.add(display);
-
       var htmlDump = Html.getOuter(component.element());
       var dump = {
         uiType: 'custom',
@@ -57,8 +54,18 @@ define(
         ]
       };
 
-      gui.add(GuiFactory.build(dump));
-      gui.add(GuiFactory.build(hr));
+      var all = GuiFactory.build({
+        uiType: 'container',
+        components: [
+          hr,
+          information,
+          { built: display },
+          dump,
+          hr
+        ]
+      });
+
+      gui.add(all);
 
       return component;
 
