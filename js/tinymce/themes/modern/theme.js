@@ -457,7 +457,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			];
 
 			panel = match.toolbar.panel;
-			panel.show();
+			//panel.show();
 
 			elementRect = getElementRect(match.element);
 			panelRect = tinymce.DOM.getRect(panel.getEl());
@@ -617,7 +617,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			});
 		});
 
-		editor.on('blur hide', hideAllContextToolbars);
+		editor.on('blur hide contextmenu', hideAllContextToolbars);
 
 		editor.on('ObjectResizeStart', function() {
 			var match = findFrontMostMatch(editor.selection.getNode());
