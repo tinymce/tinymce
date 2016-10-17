@@ -12,7 +12,6 @@
 
 tinymce.PluginManager.add('link', function(editor) {
 	var attachState = {};
-	var leftBtnWasClicked = false;
 
 	function isLink(elm) {
 		return elm && elm.nodeName === 'A' && elm.href;
@@ -26,9 +25,14 @@ tinymce.PluginManager.add('link', function(editor) {
 		return editor.dom.getParent(editor.selection.getStart(), 'a[href]');
 	}
 
+	function isContextMenuVisible() {
+		var contextmenu = editor.plugins.contextmenu;
+		return contextmenu ? contextmenu.isContextMenuVisible() : false;
+	}
+
 	function leftClickedOnAHref(elm) {
 		var sel, rng, node;
-		if (editor.settings.link_context_toolbar && leftBtnWasClicked && isLink(elm)) {
+		if (editor.settings.link_context_toolbar && !isContextMenuVisible() && isLink(elm)) {
 			sel = editor.selection;
 			rng = sel.getRng();
 			node = rng.startContainer;
@@ -473,11 +477,6 @@ tinymce.PluginManager.add('link', function(editor) {
 			icon: 'preview',
 			tooltip: 'View link',
 			onclick: gotoHref
-		});
-
-		editor.on('mousedown', function(e) {
-			// we need context toolbar only on left click
-			leftBtnWasClicked = (e.which == 1);
 		});
 
 		editor.addContextToolbar(
