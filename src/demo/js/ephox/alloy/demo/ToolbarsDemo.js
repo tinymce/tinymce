@@ -82,7 +82,14 @@ define(
               components: [
 
               ],
-              uid: 'demo-more-toolbar-drawer'
+              uid: 'demo-more-toolbar-drawer',
+              sliding: {
+                mode: 'height',
+                closedStyle: 'demo-sliding-closed',
+                openStyle: 'demo-sliding-open',
+                shrinkingStyle: 'demo-sliding-height-shrinking',
+                growingStyle: 'demo-sliding-height-growing'
+              }
             }
           ]
           
