@@ -45,11 +45,12 @@ define(
       );
     };
 
-    var doTransition = function (component, transitionInfo, viewName) {
-      clearOld(component, transitionInfo);
-      var data = transitionInfo.views()[viewName];
-      if (data === undefined) throw unsupportedView(component, transitionInfo, viewName);
+    var revertToBase = function (component, transitionInfo) {
+      doTransitionTo(component, transitionInfo, transitionInfo.base());
+    };
 
+    var doTransitionTo = function (component, transitionInfo, data) {
+      clearOld(component, transitionInfo);
       // NOTE: we may want to create a behaviour which allows you to switch
       // between predefined layouts, which would make a noop detection easier.
       // Until then, we'll just use AriaFocus like redesigning does.
@@ -61,6 +62,17 @@ define(
           Insert.append(component.element(), l.element());
         });
       }, component.element());
+    };
+
+    var doTransition = function (component, transitionInfo, viewName) {
+      var builder = transitionInfo.views()[viewName];
+      if (builder === undefined) throw unsupportedView(component, transitionInfo, viewName);
+
+      var data = builder(function () {
+        revertToBase(component, transitionInfo);
+      });
+
+      doTransitionTo(component, transitionInfo, data);
     };
 
     var exhibit = function (info, base) {

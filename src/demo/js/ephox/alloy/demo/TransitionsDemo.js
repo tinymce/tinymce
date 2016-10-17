@@ -24,12 +24,17 @@ define(
           uiType: 'container',
           transitioning: {
             views: {
-              help: [{
-                uiType: 'container',
-                dom: {
-                  innerHtml: 'This is going to be the help page'
-                }
-              }]
+              help: function (revertToBase) {
+                return [{
+                  uiType: 'container',
+                  dom: {
+                    innerHtml: 'This is going to be the help page'
+                  },
+                  components: [
+                    { uiType: 'button', action: revertToBase, text: 'X' }
+                  ]
+                }];
+              }
             },
             base: [{ uiType: 'container' }]
           }
@@ -39,7 +44,7 @@ define(
       subject.apis().transition('help');
       setTimeout(function () {
         subject.apis().transition('dog');
-      }, 1000);
+      }, 10000);
     };
   }
 );
