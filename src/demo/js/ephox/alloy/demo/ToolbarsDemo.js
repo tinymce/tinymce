@@ -42,9 +42,9 @@ define(
               ]
             }
           ],
-          overflow: {
+          overflowing: {
             mode: 'scroll',
-            defaultWidth: '100px'
+            initWidth: '150px'
           }
         }
       );

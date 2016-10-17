@@ -4,13 +4,15 @@ define(
   [
     'ephox.alloy.behaviour.Behaviour',
     'ephox.alloy.dom.DomModification',
+    'ephox.alloy.toolbar.ScrollOverflow',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
-    'ephox.peanut.Fun'
+    'ephox.peanut.Fun',
+    'ephox.sugar.api.Css'
   ],
 
-  function (Behaviour, DomModification, FieldPresence, FieldSchema, ValueSchema, Fun) {
+  function (Behaviour, DomModification, ScrollOverflow, FieldPresence, FieldSchema, ValueSchema, Fun, Css) {
     var behaviourName = 'overflowing';
 
     var schema = FieldSchema.field(
@@ -18,90 +20,33 @@ define(
       behaviourName,
       FieldPresence.asOption(),
       ValueSchema.choose(
-        'overflow',
+        'mode',
         {
-          scroll: [
-            FieldSchema.strict('defaultWidth'),
-            // Get sensible initial values.
-            // FieldSchema.state('setWidth', Cell),
-            FieldSchema.state('mode', function () {
-              return function (info) {
-                return {
-                  width: info.defaultWidth
-                }
-              };
-            })
-          ]
+          scroll: ScrollOverflow
         }
         /* */
       )
     );
 
-
-// var schema = FieldSchema.field(
-//       'keying',
-//       'keying',
-//       FieldPresence.asOption(),
-//       ValueSchema.choose(
-//         'mode',
-//         {
-//           // Note, these are only fields.
-//           cyclic: CyclicType.schema(),
-//           flow: FlowType.schema(),
-//           flatgrid: FlatgridType.schema(),
-//           matrix: MatrixType.schema(),
-//           execution: ExecutionType.schema(),
-//           menu: MenuType.schema(),
-//           escaping: EscapingType.schema(),
-//           special: SpecialType.schema()
-//         }
-//       )
-//     );
-
-
-// var itemSchema = ValueSchema.choose(
-//       'type',
-//       {
-//         button: [
-//           FieldSchema.strict('text'),
-//           FieldSchema.state('builder', function () {
-//             return function (info) {
-//               return {
-//                 uiType: 'button',
-//                 dom: {
-//                   classes: [ 'toolbar-group-item' ]
-//                 },
-//                 tabstopping: undefined,
-//                 focusing: true,
-//                 action: function () { },
-//                 text: info.text()
-//               };
-//             };
-//           })
-//         ]
-//       }
-//     );
-
-
-    var doRefresh = function (component, bInfo) {
-      /* */
+    var doResizeWidth = function (component, bInfo, value) {
+      Css.set(component.element(), 'max-width', value);
     };
 
-    var exhibit = function (info, base) {
+    var doRefresh = function (component, bInfo) {
+      // DO nothing
+    };
+
+    var exhibit = function (info, base) {     
       return info[behaviourName]().fold(function () {
         return DomModification.nu({ });
       }, function (oInfo) {
-        return DomModification.nu({
-          styles: {
-            'overflow-x': 'scroll',
-            'max-width': oInfo.defaultWidth()
-          }
-        });
+        return oInfo.handler().doExhibit(oInfo, base);
       });
     };
 
     var apis = function (info) {
       return {
+        resizeWidth: Behaviour.tryActionOpt(behaviourName, info, 'resizeWidth', doResizeWidth),
         refresh: Behaviour.tryActionOpt(behaviourName, info, 'refresh', doRefresh)
       };
     };

@@ -2,45 +2,33 @@ define(
   'ephox.alloy.toolbar.ScrollOverflow',
 
   [
+    'ephox.alloy.dom.DomModification',
     'ephox.boulder.api.FieldSchema',
     'ephox.compass.Arr',
-    'ephox.highway.Merger'
+    'ephox.highway.Merger',
+    'ephox.peanut.Fun'
   ],
 
-  function (FieldSchema, Arr, Merger) {
+  function (DomModification, FieldSchema, Arr, Merger, Fun) {
     // TODO: This probably needs an additional container. Not sure how to do it yet. Maybe we can resolve this by making
     // overflowing behaviour not apply to everything.
     var schema = [
-      FieldSchema.state('builder', function () {
-        return function (info, groups) {
-          return Arr.map(groups, function (group) {
-            return Merger.deepMerge(group, {
-              dom: {
-                styles: {
-                  display: 'flex'
-                }
-              }
-            });
-          });
-          return [
-            {
-              uiType: 'container',
-              components: Arr.map(groups, function (group) {
-                return Merger.deepMerge(group, {
-                  dom: {
-                    styles: {
-                      display: 'flex'
-                    }
-                  }
-                });
-              }),
-              dom: {
-                // styles: {
-                //   'dis'
-                // }
-              }
+      FieldSchema.strict('initWidth'),
+      FieldSchema.state('handler', function () {
+        var schema = [ ];
+
+        var doExhibit = function (oInfo, base) {
+          return DomModification.nu({
+            styles: {
+              'overflow-x': 'auto',
+              'max-width': oInfo.initWidth()
             }
-          ]
+          });
+        };
+
+        return {
+          doExhibit: doExhibit,
+          schema: Fun.constant(schema)
         };
       })
 

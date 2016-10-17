@@ -2,6 +2,7 @@ define(
   'ephox.alloy.spec.ToolbarSpec',
 
   [
+    'ephox.alloy.toolbar.Overflowing',
     'ephox.alloy.toolbar.ScrollOverflow',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
@@ -10,7 +11,7 @@ define(
     'ephox.highway.Merger'
   ],
 
-  function (ScrollOverflow, FieldPresence, FieldSchema, ValueSchema, Arr, Merger) {
+  function (Overflowing, ScrollOverflow, FieldPresence, FieldSchema, ValueSchema, Arr, Merger) {
     var itemSchema = ValueSchema.choose(
       'type',
       {
@@ -57,17 +58,6 @@ define(
         ValueSchema.arrOf(
           groupSchema
         )
-      ),
-      FieldSchema.field(
-        'overflow',
-        'overflow',
-        FieldPresence.strict(),
-        ValueSchema.choose(
-          'mode',
-          {
-            scroll: ScrollOverflow
-          }
-        )
       )
     ]);
 
@@ -99,8 +89,6 @@ define(
       var detail = ValueSchema.asStructOrDie('toolbar.spec', toolbarSchema, spec);
 
       var groups = Arr.map(detail.groups(), buildGroup);
-      var overflower = detail.overflow();
-      console.log('overflower', overflower);
       // Maybe default some arguments here
       return Merger.deepMerge(spec, {
         dom: {
@@ -112,7 +100,10 @@ define(
         keying: {
           mode: 'cyclic'
         },
-        components: groups
+        components: groups,
+        behaviours: [
+          Overflowing
+        ]
       }, spec, {
         uiType: 'custom'
       });
