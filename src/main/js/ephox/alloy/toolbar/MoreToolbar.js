@@ -44,7 +44,8 @@ define(
               styles: {
                 display: 'flex'
               }
-            }
+            },
+            replacing: { }
           }
         ],
         coupling: {
@@ -53,6 +54,13 @@ define(
               return {
                 uiType: 'container',
                 replacing: { },
+                dom: {
+                  styles: {
+                    background: 'black',
+                    color: 'white',
+                    display: 'flex'
+                  }
+                },
                 sliding: {
                   mode: 'height',
                   // FIX: hard-coded demo styles
@@ -65,10 +73,16 @@ define(
             },
             'more-button': function (primary) {
               return ToolbarSpecs.buildGroup(
-                ValueSchema.asStructOrDie('overflow.goru', ToolbarSpecs.groupSchema(), {
+                ValueSchema.asStructOrDie('overflow.group', ToolbarSpecs.groupSchema(), {
                   label: 'more-button-group',
                   components: [
-                    { type: 'button', text: 'Toggle' }
+                    {
+                      type: 'button',
+                      text: 'Toggle',
+                      action: function () {
+                        primary.apis().getCoupled('more-drawer').apis().toggleGrow();
+                      }
+                    }
                   ]
                 })
               );

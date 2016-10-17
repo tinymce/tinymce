@@ -9,6 +9,7 @@ define(
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.scullion.Cell',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.Insert',
@@ -17,7 +18,7 @@ define(
     'ephox.sugar.api.Width'
   ],
 
-  function (Behaviour, DomModification, FieldPresence, FieldSchema, ValueSchema, Arr, Fun, Cell, Css, Insert, InsertAll, Remove, Width) {
+  function (Behaviour, DomModification, FieldPresence, FieldSchema, ValueSchema, Arr, Fun, Option, Cell, Css, Insert, InsertAll, Remove, Width) {
     var behaviourName = 'more-overflowing';
 
     var schema = FieldSchema.field(
@@ -26,8 +27,9 @@ define(
       FieldPresence.asOption(),
       ValueSchema.objOf([
         FieldSchema.strict('initGroups'),
-        FieldSchema.state('state', function () {
-          return Cell({ groups: [ ] });
+        FieldSchema.state('state', function (spec) {
+          console.log('spec', spec);
+          return Cell({ groups: Option.none() });
         })
       ])
     );
@@ -37,9 +39,11 @@ define(
     };
 
     var doSetGroups = function (component, oInfo, groups) {
-      oInfo.state().set({
-        groups: groups
-      });
+      oInfo.state().set(
+        Option.some({
+          groups: groups
+        })
+      );
     };
 
     var doRefresh = function (component, oInfo) {
@@ -51,13 +55,12 @@ define(
       
       Css.set(toolbar.element(), 'visibility', 'hidden');
 
-      var groups = oInfo.state().get().groups;
+      var groups = oInfo.state().get().groups.getOr(oInfo.initGroups());
 
       // Clear any restricted width on the toolbar somehow ----- */
       // barType.clearWidth()
 
-      Remove.empty(toolbar.element());
-      InsertAll.append(toolbar.element(), Arr.map(groups, function (g) { return g.element(); }));
+      toolbar.apis().replace(groups);
 
       var total = Width.get(toolbar.element());
 
@@ -72,21 +75,27 @@ define(
       var more = component.apis().getCoupled('more-drawer');
       component.getSystem().addToWorld(more);
 
+      var moreButton = component.apis().getCoupled('more-button');
+
+
       Insert.append(component.element(), more.element());
       component.syncComponents();
 
-      more.apis().replace(groups);
+      toolbar.apis().replace(groups.slice(0, 1).concat({ built: moreButton }));
+      toolbar.syncComponents();
+
+      more.apis().replace(groups.slice(1));
       more.syncComponents();
 
       
 
-      Remove.empty(toolbar.element());
+
 
       // Add the within to the toolbar, and the extra to the more drawer
 
       // barType.updateWidth
 
-      Css.remove(component.element(), 'visibility');
+      Css.remove(toolbar.element(), 'visibility');
       // Add the overflow group
     };
 

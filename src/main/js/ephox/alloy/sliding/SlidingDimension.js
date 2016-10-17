@@ -115,6 +115,10 @@ define(
               },
               hasGrown: function (comp) {
                 return oInfo.state().get() === true;
+              },
+              toggleGrow: function (comp) {
+                var f = oInfo.state().get() === true ? startShrink : startGrow;
+                f(comp, oInfo);
               }
             };
           };

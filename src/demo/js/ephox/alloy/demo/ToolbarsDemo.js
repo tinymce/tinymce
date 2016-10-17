@@ -21,9 +21,9 @@ define(
         {
           label: 'group-1',
           components: [
-            { type: 'button', text: 'Alpha' },
-            { type: 'button', text: 'Beta' },
-            { type: 'button', text: 'Gamma' }
+            { type: 'button', text: 'Alpha', action: function () { } },
+            { type: 'button', text: 'Beta', action: function () { } },
+            { type: 'button', text: 'Gamma', action: function () { } }
 
           ]
         },
@@ -31,16 +31,16 @@ define(
         {
           label: 'group-2',
           components: [
-            { type: 'button', text: 'Delta' },
-            { type: 'button', text: 'Epsilon' }
+            { type: 'button', text: 'Delta', action: function () { } },
+            { type: 'button', text: 'Epsilon', action: function () { } }
 
           ]
         },
         {
           label: 'group-2',
           components: [
-            { type: 'button', text: 'Rho' },
-            { type: 'button', text: 'Theta' }
+            { type: 'button', text: 'Rho', action: function () { } },
+            { type: 'button', text: 'Theta', action: function () { } }
 
           ]
         }

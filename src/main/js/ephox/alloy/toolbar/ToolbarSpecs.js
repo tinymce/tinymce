@@ -15,6 +15,7 @@ define(
       {
         button: [
           FieldSchema.strict('text'),
+          FieldSchema.strict('action'),
           FieldSchema.state('builder', function () {
             return function (info) {
               return {
@@ -27,7 +28,7 @@ define(
                 },
                 tabstopping: undefined,
                 focusing: true,
-                action: function () { },
+                action: info.action(),
                 text: info.text()
               };
             };
