@@ -2,10 +2,44 @@ define(
   'ephox.alloy.sliding.SlidingHeight',
 
   [
-
+    'ephox.alloy.dom.DomModification',
+    'ephox.boulder.api.FieldSchema',
+    'ephox.peanut.Fun',
+    'ephox.scullion.Cell'
   ],
 
-  function () {
+  function (DomModification, FieldSchema, Fun, Cell) {
+    var schema = [
+      FieldSchema.strict('closedStyle'),
+      FieldSchema.strict('openStyle'),
+      FieldSchema.strict('hideStyle'),
+      FieldSchema.strict('showStyle'),
+      FieldSchema.state('state', function () {
+        return Cell(false);
+      }),
+      FieldSchema.state('handler', function () {
+        var schema = [ ];
+
+        var doExhibit = function (oInfo, base) {
+          return DomModification.nu({
+            styles: {  }
+          });
+        };
+
+        return {
+          doExhibit: doExhibit,
+          schema: Fun.constant(schema)
+        };
+      })
+
+    ];
+
+
+
+    return schema;
+
+    /*
+    var schema = 
     var closedStyle = Styles.resolve('toolbar-more-closed');
     var openStyle = Styles.resolve('toolbar-more-open');
     var hideStyle = Styles.resolve('toolbar-more-hide');
@@ -77,5 +111,6 @@ define(
       };
 
     };
+    */
   }
 );

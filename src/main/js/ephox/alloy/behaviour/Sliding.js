@@ -36,8 +36,8 @@ define(
     var exhibit = function (info, base) {
       return info[behaviourName]().fold(function () {
         return DomModification.nu({ });
-      }, function (/* */) {
-        return DomModification.nu({ });
+      }, function (sInfo) {
+        return sInfo.handler().doExhibit(sInfo, base);
       });
     };
 

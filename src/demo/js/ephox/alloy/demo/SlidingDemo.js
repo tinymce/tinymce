@@ -26,7 +26,13 @@ define(
             {
               uiType: 'container',
               uid: 'slider',
-              sliding: { },
+              sliding: {
+                mode: 'height',
+                closedStyle: 'demo-sliding-closed',
+                openStyle: 'demo-sliding-open',
+                hideStyle: 'demo-sliding-hide',
+                showStyle: 'demo-sliding-show'
+              },
               components: [
                 {
                   uiType: 'container',
@@ -47,8 +53,6 @@ define(
           ]
         }
       );
-
-
     };
   }
 );
