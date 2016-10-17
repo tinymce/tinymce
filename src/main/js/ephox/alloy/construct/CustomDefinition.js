@@ -18,6 +18,7 @@ define(
     'ephox.alloy.behaviour.Streaming',
     'ephox.alloy.behaviour.Tabstopping',
     'ephox.alloy.behaviour.Toggling',
+    'ephox.alloy.behaviour.Transitioning',
     'ephox.alloy.dom.DomDefinition',
     'ephox.alloy.ephemera.AlloyTags',
     'ephox.boulder.api.FieldPresence',
@@ -30,7 +31,7 @@ define(
     'global!Error'
   ],
 
-  function (Coupling, Disabling, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Redesigning, Replacing, Representing, Sandboxing, Sliding, Streaming, Tabstopping, Toggling, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
+  function (Coupling, Disabling, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Redesigning, Replacing, Representing, Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Transitioning, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
     var domSchema = ValueSchema.objOf([
       FieldSchema.strict('tag'),
       FieldSchema.defaulted('styles', {}),
@@ -129,7 +130,8 @@ define(
       Invalidating,
       Replacing,
       Representing,
-      Sliding
+      Sliding,
+      Transitioning
     ];
 
     var behaviours = function (info) {
