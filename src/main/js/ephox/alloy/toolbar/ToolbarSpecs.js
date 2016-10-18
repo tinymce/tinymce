@@ -21,12 +21,12 @@ define(
               return {
                 uiType: 'button',
                 buttonType: info.buttonType(),
-                dom: {
-                  classes: [ 'toolbar-group-item' ],
-                  styles: {
-                    display: 'flex'
-                  }
-                },
+                // dom: {
+                //   classes: [ 'toolbar-group-item' ],
+                //   styles: {
+                //     display: 'flex'
+                //   }
+                // },
                 tabstopping: undefined,
                 focusing: true,
                 action: info.action()
