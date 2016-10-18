@@ -6,31 +6,22 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
+    'ephox.highway.Merger',
     'ephox.peanut.Fun'
   ],
 
-  function (FieldPresence, FieldSchema, ValueSchema, Arr, Fun) {
+  function (FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Fun) {
     var itemSchema = ValueSchema.choose(
       'type',
       {
         button: [
-          FieldSchema.strict('buttonType'),
-          FieldSchema.strict('action'),
-          FieldSchema.state('builder', function () {
+          FieldSchema.state('builder', function (raw) {
             return function (info) {
-              return {
+              return Merger.deepMerge(raw, {
                 uiType: 'button',
-                buttonType: info.buttonType(),
-                // dom: {
-                //   classes: [ 'toolbar-group-item' ],
-                //   styles: {
-                //     display: 'flex'
-                //   }
-                // },
                 tabstopping: undefined,
-                focusing: true,
-                action: info.action()
-              };
+                focusing: true
+              });
             };
           })
         ]

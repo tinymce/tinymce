@@ -60,6 +60,13 @@ define(
                   };
                 };
               })
+            ],
+            custom: [
+              FieldSchema.state('builder', function () {
+                return function (cInfo) {
+                  return { };
+                };
+              })
 
             ]
           }
