@@ -68,6 +68,10 @@ define(
       var dropdownUid = Id.generate('dropdown');
 
       var base = ButtonSpec.make({
+        buttonType: {
+          mode: 'text',
+          text: detail.text()
+        },
         action: togglePopup,
         toggling: {
           toggleClass: 'menu-open',

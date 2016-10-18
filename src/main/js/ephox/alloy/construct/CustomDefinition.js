@@ -102,6 +102,7 @@ define(
         classes: info.dom().classes(),
         attributes: Merger.deepMerge(
           getUid(info),
+          { role: 'presentation' },
           info.dom().attributes()
         ),
         styles: info.dom().styles(),

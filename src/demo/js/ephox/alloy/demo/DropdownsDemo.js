@@ -107,14 +107,20 @@ define(
                             {
                               uiType: 'button',
                               action: function () { console.log('clicked on a button', arguments); },
-                              text: '-',
+                              buttonType: {
+                                mode: 'text',
+                                text: '-'
+                              },
                               // FIX: This is required to override a previous tabstopping.
                               tabstopping: undefined
                             },
                             {
                               uiType: 'button',
                               action: function () { console.log('clicked on a button', arguments); },
-                              text: '+',
+                              buttonType: {
+                                mode: 'text',
+                                text: '+'
+                              },
                               tabstopping: undefined
                             }
                           ],
