@@ -10,6 +10,7 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.fussy.api.SelectionRange',
     'ephox.fussy.api.WindowSelection',
+    'ephox.oath.proximity.Awareness',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.repartee.api.Bubble',
@@ -22,7 +23,7 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Boxes, CssPosition, Descend, Anchoring, ContainerOffsets, FieldSchema, SelectionRange, WindowSelection, Fun, Option, Bubble, Layout, Origins, Struct, Position, Direction, Node, Traverse) {
+  function (Boxes, CssPosition, Descend, Anchoring, ContainerOffsets, FieldSchema, SelectionRange, WindowSelection, Awareness, Fun, Option, Bubble, Layout, Origins, Struct, Position, Direction, Node, Traverse) {
     var point = Struct.immutable('element', 'offset');
 
     // A range from (a, 1) to (body, end) was giving the wrong bounds.
@@ -40,7 +41,11 @@ define(
       return getSelection().map(function (sel) {
         var modStart = descendOnce(sel.start(), sel.soffset());
         var modFinish = descendOnce(sel.finish(), sel.foffset());
-        return SelectionRange.general(modStart.element(), modStart.offset(), modFinish.element(), modFinish.offset());
+        var originalStart = point(sel.start(), sel.soffset());
+        var originalFinish = point(sel.finish(), sel.foffset());
+        var useStart = Node.name(modStart.element()) === 'br' ? originalStart : modStart;
+        var useFinish = Node.name(modFinish.element()) === 'br' ? originalFinish : modFinish;
+        return SelectionRange.general(useStart.element(), useStart.offset(), useFinish.element(), useFinish.offset());
       });
     };
 
@@ -48,9 +53,21 @@ define(
       var win = Traverse.defaultView(anchorInfo.root()).dom();
       var rootPoint = ContainerOffsets.getRootPoint(component, origin, anchorInfo);
 
+      console.log('selection.placement');
+
       var selectionBox = getAnchorSelection(win, anchorInfo).bind(function (sel) {
         // This represents the *visual* rectangle of the selection.
-        var optRect = WindowSelection.rectangleAt(win, sel.start(), sel.soffset(), sel.finish(), sel.foffset());
+        var optRect = WindowSelection.rectangleAt(win, sel.start(), sel.soffset(), sel.finish(), sel.foffset()).orThunk(function () {
+          // Certain things like <p><br/></p> with (p, 0) as collapsed selection do not return a client rectangle
+          return WindowSelection.rectangleAt(win, sel.start(), sel.soffset(), anchorInfo.root(), Awareness.getEnd(anchorInfo.root())).map(function (rectToEnd) {
+            return {
+              left: rectToEnd.left,
+              top: rectToEnd.top,
+              width: 0,
+              height: 0
+            };
+          });
+        });
         return optRect.map(function (rawRect) {
           // NOTE: We are going to have to do some interesting things to make inline toolbars not appear over the toolbar.
           var point = CssPosition.screen(
