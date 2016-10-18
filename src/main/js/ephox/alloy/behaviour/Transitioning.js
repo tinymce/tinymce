@@ -26,7 +26,8 @@ define(
       FieldPresence.asOption(),
       ValueSchema.objOf([
         FieldSchema.strict('views'),
-        FieldSchema.strict('base')
+        FieldSchema.strict('base'),
+        FieldSchema.defaulted('onChange', Fun.identity)
       ])
     );
 
@@ -62,6 +63,8 @@ define(
           Insert.append(component.element(), l.element());
         });
       }, component.element());
+
+      transitionInfo.onChange()(component);
     };
 
     var doTransition = function (component, transitionInfo, viewName) {

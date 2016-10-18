@@ -22,6 +22,9 @@ define(
         'instructions',
         {
           uiType: 'container',
+          keying: {
+            mode: 'cyclic'
+          },
           transitioning: {
             views: {
               'insert_link': function (component, revertToBase) {
@@ -39,8 +42,11 @@ define(
                   },
                   {
                     uiType: 'button',
-                    action: revertToBase,
-                    text: 'X'
+                    buttonType: {
+                      mode: 'text',
+                      text: 'X'
+                    },
+                    action: revertToBase
                   }
                 ];
               }
@@ -53,8 +59,11 @@ define(
               };
 
               return [
-                { uiType: 'button', text: 'Insert Link', action: moveTo('insert_link') }
+                { uiType: 'button', buttonType: { mode: 'text', text: 'Insert Link' }, action: moveTo('insert_link') }
               ];
+            },
+            onChange: function (component) {
+              component.apis().focusIn();
             }
           }
         }

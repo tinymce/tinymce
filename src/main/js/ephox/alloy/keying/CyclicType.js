@@ -52,13 +52,18 @@ define(
       return findTabstop(component, cyclicInfo).bind(function (tabstop) {
         // focused component
         var index = Arr.findIndex(tabstops, Fun.curry(Compare.eq, tabstop));
-        return index < 0 ? Option.none() : cycle(tabstops, index, Visibility.isVisible).map(function (outcome) {
+        return index < 0 ? Option.none() : cycle(tabstops, index, Visibility.isVisible).fold(function () {
+          // Even if there is only one, still capture the event.
+          return Option.some(true);
+        }, function (outcome) {
           var system = component.getSystem();
           var originator = component.element();
           system.triggerFocus(outcome, originator);
 
+
+
           // Kill the event
-          return true;
+          return Option.some(true);
         });
       });
     };
