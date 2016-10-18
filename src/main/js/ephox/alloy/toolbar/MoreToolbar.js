@@ -74,7 +74,10 @@ define(
           },
           button: {
             // FIX: Structify
-            text: 'Toggle',
+            buttonType: {
+              mode: 'text',
+              text: 'Toggle'
+            },
             action: function (drawer) {
               drawer.apis().toggleGrow();
             }

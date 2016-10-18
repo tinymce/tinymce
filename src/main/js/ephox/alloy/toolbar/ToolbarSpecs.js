@@ -14,12 +14,13 @@ define(
       'type',
       {
         button: [
-          FieldSchema.strict('text'),
+          FieldSchema.strict('buttonType'),
           FieldSchema.strict('action'),
           FieldSchema.state('builder', function () {
             return function (info) {
               return {
                 uiType: 'button',
+                buttonType: info.buttonType(),
                 dom: {
                   classes: [ 'toolbar-group-item' ],
                   styles: {
@@ -28,8 +29,7 @@ define(
                 },
                 tabstopping: undefined,
                 focusing: true,
-                action: info.action(),
-                text: info.text()
+                action: info.action()
               };
             };
           })

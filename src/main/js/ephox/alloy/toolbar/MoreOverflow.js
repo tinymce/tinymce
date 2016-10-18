@@ -55,7 +55,7 @@ define(
             components: [
               {
                 type: 'button',
-                text: oInfo.button().text,
+                buttonType: oInfo.button().buttonType,
                 action: function () {
                   oInfo.button().action(getDrawer(component, oInfo));
                 }
