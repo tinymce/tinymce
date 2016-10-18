@@ -457,7 +457,6 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			];
 
 			panel = match.toolbar.panel;
-			//panel.show();
 
 			elementRect = getElementRect(match.element);
 			panelRect = tinymce.DOM.getRect(panel.getEl());
