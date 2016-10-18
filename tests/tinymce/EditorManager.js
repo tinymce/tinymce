@@ -141,6 +141,9 @@ test('overrideDefaults', function() {
 		external_plugins: {
 			"plugina": "//domain/plugina.js",
 			"pluginb": "//domain/pluginb.js"
+		},
+		plugin_base_urls: {
+			testplugin: 'http://custom.ephox.com/dir/testplugin'
 		}
 	});
 
@@ -148,11 +151,15 @@ test('overrideDefaults', function() {
 	strictEqual(tinymce.baseURL, "http://www.tinymce.com/base");
 	strictEqual(tinymce.suffix, "x");
 	strictEqual(new tinymce.Editor('ed1', {}, tinymce).settings.test, 42);
+	strictEqual(tinymce.PluginManager.urls.testplugin, 'http://custom.ephox.com/dir/testplugin');
 
 	deepEqual(new tinymce.Editor('ed2', {
 		external_plugins: {
 			"plugina": "//domain/plugina2.js",
 			"pluginc": "//domain/pluginc.js"
+		},
+		plugin_base_urls: {
+			testplugin: 'http://custom.ephox.com/dir/testplugin'
 		}
 	}, tinymce).settings.external_plugins, {
 		"plugina": "//domain/plugina2.js",
