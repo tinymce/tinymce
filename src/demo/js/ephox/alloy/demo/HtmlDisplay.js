@@ -60,10 +60,17 @@ define(
         ]
       };
 
-      setInterval(function () {
-        var dumpC = gui.getByUid(dumpUid).getOrDie();
-        TextContent.set(dumpC.element(), JsBeautify.html(Html.getOuter(component.element())));
-      }, 3000);
+      var updateHtml = function () {
+        gui.getByUid(dumpUid).each(function (dumpC) {
+          TextContent.set(dumpC.element(), JsBeautify.html(Html.getOuter(component.element())));
+        });
+      };
+
+      var observer = new MutationObserver(function (mutations) {
+        updateHtml();
+      });
+
+      observer.observe(component.element().dom(), { attributes: true, childList: true, characterData: true });
 
       var all = GuiFactory.build({
         uiType: 'container',

@@ -3,7 +3,7 @@
   margin: 5px;
   padding: 5px;
   font-size: 80%;
-  white-space: pre;
+  white-space: pre-wrap;
 }
 
 .demo-selected {

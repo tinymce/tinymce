@@ -9,50 +9,66 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.highway.Merger',
-    'ephox.numerosity.api.JSON',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Result'
+    'ephox.peanut.Fun'
   ],
 
-  function (SystemEvents, EventHandler, FieldPresence, FieldSchema, Objects, ValueSchema, Merger, Json, Fun, Result) {
-    // FIX: Move to boulder
-    var isOneOf = function (candidates) {
-      return function (value) {
-        return candidates.indexOf(value) > -1 ? Result.value(value) : Result.error(value + ' is not ' +
-          'one of known candidates: ' + Json.stringify(candidates, null, 2)
-        );
-      };
-    };
-
+  function (SystemEvents, EventHandler, FieldPresence, FieldSchema, Objects, ValueSchema, Merger, Fun) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('action'),
+
       FieldSchema.field(
         'buttonType', 
         'buttonType', 
-        FieldPresence.defaulted('text'),
-        ValueSchema.valueOf(isOneOf([ 'text', 'icon' ]))
-      ),
+        FieldPresence.strict(),
+        ValueSchema.choose(
+          'mode',
+          {
+            // Note, these are only fields.
+            text: [
+              FieldSchema.strict('text'),
+              FieldSchema.state('builder', function () {
+                return function (tInfo) {
+                  return {
+                    innerHtml: tInfo.text()
+                  };
+                };
+              })
+            ],
+            font: [
+              FieldSchema.strict('classes'),
+              FieldSchema.state('builder', function () {
+                return function (fInfo) {
+                  return {
+                    classes: fInfo.classes()
+                  };
+                };
+              })
+            ],
+            image: [
+              FieldSchema.strict('url'),
+              FieldSchema.state('builder', function () {
+                return function (imgInfo) {
+                  return {
+                    styles: {
+                      'background-image': 'url(' + imgInfo.url() + ')',
+                      width: '1em',
+                      height: '1em',
+                      display: 'flex',
+                      // Hard-coded.
+                      margin: '0.7em'
+                    }
+                  };
+                };
+              })
 
-      // Hard-coded text. I think I want to make something in boulder that is going to 
-      // allow a only one of checker.
-      FieldSchema.field('text', 'text', FieldPresence.asOption(), ValueSchema.anyValue()),
-      // aria-label .. check with Mike
-      FieldSchema.field('classes', 'classes', FieldPresence.asOption(), ValueSchema.anyValue()),
+            ]
+          }
+        )
+      ),
+     
       FieldSchema.option('uid')
     ]);
 
-    var defaultDom = function (detail) {
-      return {
-        tag: 'button',
-        classes: detail.classes().getOr([ ]),
-        innerHtml: detail.text().getOr(''),
-        attributes: Objects.wrapAll([
-          // { key: 'aria-label', value: detail['aria-label']() },
-          { key: 'role', value: 'button' },
-          { key: 'type', value: 'button' }
-        ])
-      };
-    };
 
     var make = function (spec) {
       // Not sure about where these getOrDie statements are
@@ -81,7 +97,7 @@ define(
 
       return Merger.deepMerge(
         {
-          dom: defaultDom(detail),
+          dom: detail.buttonType().builder()(detail.buttonType()),
           events: events
         },
 
@@ -92,6 +108,15 @@ define(
             mode: 'execution',
             useSpace: true,
             useEnter: true
+          }
+        },
+
+        {
+          dom: {
+            tag: 'button',
+            attributes: {
+              role: 'button'
+            }
           }
         },
 
