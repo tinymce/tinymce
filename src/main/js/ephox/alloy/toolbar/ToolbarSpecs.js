@@ -63,7 +63,9 @@ define(
           tag: 'div',
           styles: {
             display: 'flex'
-          }
+          },
+          // FIX: 
+          classes: [ 'ephox-chameleon-toolbar-group' ]
         },
         keying: {
           mode: 'flow',
