@@ -103,17 +103,26 @@ define(
                         components: [
                           {
                             uiType: 'button',
-                            text: 'B',
+                            buttonType: {
+                              mode: 'text',
+                              text: 'B'
+                            },
                             action: function () { console.log('inline bold'); }
                           },
                           {
                             uiType: 'button',
-                            text: 'I',
+                            buttonType: {
+                              mode: 'text',
+                              text: 'I'
+                            },
                             action: function () { console.log('inline italic'); }
                           },
                           {
                             uiType: 'button',
-                            text: 'U',
+                            buttonType: {
+                              mode: 'text',
+                              text: 'U'
+                            },
                             action: function () { console.log('inline underline'); }
                           }
                         ]
