@@ -48,12 +48,12 @@ test("Does not count asterisks, non-word characters", function() {
 	equal(result, 3);
 });
 
-test("Does not count numbers", function() {
+test("Does count numbers", function() {
 	expect(1);
 
 	editor.setContent('<p>Something 123 ok</p>');
 	var result = editor.plugins.wordcount.getCount();
-	equal(result, 2);
+	equal(result, 3);
 });
 
 test("Does not count htmlentities", function() {
@@ -64,12 +64,12 @@ test("Does not count htmlentities", function() {
 	equal(result, 6);
 });
 
-test("Counts hyphenated words as one word", function() {
+test("Counts hyphenated words as two words", function() {
 	expect(1);
 
 	editor.setContent('<p>Hello some-word here.</p>');
 	var result = editor.plugins.wordcount.getCount();
-	equal(result, 3);
+	equal(result, 4);
 });
 
 test("Counts words between blocks as two words", function() {
