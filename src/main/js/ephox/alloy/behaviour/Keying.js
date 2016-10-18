@@ -24,6 +24,8 @@ define(
     var doFocusIn = function (component) {
       var system = component.getSystem();
       system.triggerFocus(component.element(), component.element());
+      console.log('triggering focus on', component.element().dom());
+      console.log('result', document.activeElement);
     };
 
     var exhibit = function (info, base) {
