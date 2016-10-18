@@ -36,7 +36,7 @@ define("tinymce/DragDropOverrides", [
 			return false;
 		}
 
-		if (isContentEditableFalse(targetElement)) {
+		if (isContentEditableFalse(targetElement) || editor.dom.getContentEditableParent(targetElement) === "false") {
 			return false;
 		}
 
@@ -255,7 +255,7 @@ define("tinymce/DragDropOverrides", [
 			// FF doesn't pass out clientX/clientY for drop since this is for IE we just use null instead
 			var realTarget = typeof e.clientX !== 'undefined' ? editor.getDoc().elementFromPoint(e.clientX, e.clientY) : null;
 
-			if (isContentEditableFalse(realTarget) || isContentEditableFalse(editor.dom.getContentEditableParent(realTarget))) {
+			if (isContentEditableFalse(realTarget) || editor.dom.getContentEditableParent(realTarget) === 'false') {
 				e.preventDefault();
 			}
 		});
