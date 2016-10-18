@@ -78,7 +78,7 @@ define(
         },
         keying: {
           mode: 'flow',
-          selector: '.ephox-pastry-independent-button'
+          selector: '.ephox-chameleon-toolbar-button'
         },
         tabstopping: true,
         // GOTCHAs. False won't do anything. Fix this so we don't have to pass "undefined"

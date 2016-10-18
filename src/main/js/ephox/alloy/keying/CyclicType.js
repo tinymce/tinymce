@@ -50,6 +50,7 @@ define(
       // 4. Fire alloy focus on the resultant tabstop
       var tabstops = SelectorFilter.descendants(component.element(), cyclicInfo.selector());
       return findTabstop(component, cyclicInfo).bind(function (tabstop) {
+        console.log('current', tabstop.dom(), 'tabstops', tabstops);
         // focused component
         var index = Arr.findIndex(tabstops, Fun.curry(Compare.eq, tabstop));
         return index < 0 ? Option.none() : cycle(tabstops, index, Visibility.isVisible).fold(function () {
