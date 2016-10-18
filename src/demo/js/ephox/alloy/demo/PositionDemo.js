@@ -63,6 +63,10 @@ define(
         'Position anchoring to button',
         {
           uiType: 'button',
+          buttonType: {
+            mode: 'text',
+            text: 'Toggle Popup'
+          },
           eventOrder: {
             'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
           },
@@ -77,7 +81,6 @@ define(
               sink.apis().removeContainer(popup);
             }
           },
-          text: 'Toggle Popup',
           toggling: {
             toggleClass: 'demo-selected'
           }
@@ -151,7 +154,10 @@ define(
             },
             {
               uiType: 'button',
-              text: 'Show popup at cursor',
+              buttonType: {
+                mode: 'text',
+                text: 'Show popup at cursor'
+              },
               action: function (button) {
                 sink.apis().addContainer(popup);
                 sink.apis().position({
@@ -192,7 +198,10 @@ define(
             },
             {
               uiType: 'button',
-              text: 'Show popup at cursor',
+              buttonType: {
+                mode: 'text',
+                text: 'Show popup at cursor'
+              },
               action: function (button) {
                 sink.apis().addContainer(popup);
                 sink.apis().position({
