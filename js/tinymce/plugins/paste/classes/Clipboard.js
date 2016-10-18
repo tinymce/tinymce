@@ -601,7 +601,8 @@ define("tinymce/pasteplugin/Clipboard", [
 			});
 
 			function isPlainTextFileUrl(content) {
-				return content['text/plain'].indexOf('file://') === 0;
+				var plainTextContent = content['text/plain'];
+				return plainTextContent ? plainTextContent.indexOf('file://') === 0 : false;
 			}
 
 			editor.on('drop', function(e) {
