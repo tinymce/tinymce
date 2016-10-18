@@ -24,6 +24,15 @@ define(
               });
             };
           })
+        ],
+        custom: [
+          FieldSchema.state('builder', function (raw) {
+            return function (_) {
+              return Merger.deepMerge(raw, {
+                uiType: 'custom'
+              });
+            };
+          })
         ]
       }
     );
