@@ -600,6 +600,12 @@ define("tinymce/util/Quirks", [
 				});
 			}
 
+			function transactCustomDelete(isForward) {
+				editor.undoManager.transact(function () {
+					customDelete(isForward);
+				});
+			}
+
 			editor.on('keydown', function(e) {
 				var isForward = e.keyCode == DELETE, isMetaOrCtrl = e.ctrlKey || e.metaKey;
 
@@ -728,7 +734,7 @@ define("tinymce/util/Quirks", [
 								dragStartRng = null;
 							}
 
-							customDelete();
+							transactCustomDelete();
 							selection.setRng(pointRng);
 							insertClipboardContents(internalContent.html);
 						});
@@ -747,7 +753,7 @@ define("tinymce/util/Quirks", [
 					// Nested delete/forwardDelete not allowed on execCommand("cut")
 					// This is ugly but not sure how to work around it otherwise
 					Delay.setEditorTimeout(editor, function() {
-						customDelete(true);
+						transactCustomDelete(true);
 					});
 				}
 			});
