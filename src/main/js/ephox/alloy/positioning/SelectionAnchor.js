@@ -52,6 +52,7 @@ define(
         // This represents the *visual* rectangle of the selection.
         var optRect = WindowSelection.rectangleAt(win, sel.start(), sel.soffset(), sel.finish(), sel.foffset());
         return optRect.map(function (rawRect) {
+          // NOTE: We are going to have to do some interesting things to make inline toolbars not appear over the toolbar.
           var point = CssPosition.screen(
             Position(rawRect.left, rawRect.top)
           );
@@ -87,7 +88,7 @@ define(
           return Node.isElement(sel.start()) ? Option.some(sel.start()) : Traverse.parent(sel.start());
         });
 
-        var getLayouts = Direction.onDirection(Layout.all(), Layout.allRtl());
+        var getLayouts = Direction.onDirection([ Layout.northwest ], Layout.allRtl());
         var layouts = targetElement.map(getLayouts).getOrThunk(Layout.all);
 
         return Anchoring({
