@@ -17,21 +17,10 @@ define("tinymce.wordcount.Demo", [
 	return function() {
 
 		tinymce.init({
-			//imagetools_cors_hosts: ["moxiecode.cachefly.net"],
-			//imagetools_proxy: "proxy.php",
-			//imagetools_api_key: '123',
-
-			//images_upload_url: 'postAcceptor.php',
-			//images_upload_base_path: 'base/path',
-			//images_upload_credentials: true,
-
 			selector: "textarea.tinymce",
 			theme: "modern",
-			plugins: [
-				"wordcount"
-			],
-			height: 600,
-			// toolbar1: "undo redo | styleselect | alignleft aligncenter alignright alignjustify | link | media | emoticons",
+			plugins: ["wordcount"],
+			height: 600
 		});
 	};
 });
