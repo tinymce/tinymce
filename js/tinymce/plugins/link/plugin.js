@@ -25,6 +25,25 @@ tinymce.PluginManager.add('link', function(editor) {
 		return editor.dom.getParent(editor.selection.getStart(), 'a[href]');
 	}
 
+	function isContextMenuVisible() {
+		var contextmenu = editor.plugins.contextmenu;
+		return contextmenu ? contextmenu.isContextMenuVisible() : false;
+	}
+
+	function leftClickedOnAHref(elm) {
+		var sel, rng, node;
+		if (editor.settings.link_context_toolbar && !isContextMenuVisible() && isLink(elm)) {
+			sel = editor.selection;
+			rng = sel.getRng();
+			node = rng.startContainer;
+			// ignore cursor positions at the beginning/end (to make context toolbar less noisy)
+			if (node.nodeType == 3 && sel.isCollapsed() && rng.startOffset > 0 && rng.startOffset < node.data.length) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	function gotoHref() {
 		var targetEl, a = getSelectedLink();
 		if (!a) {
@@ -451,6 +470,21 @@ tinymce.PluginManager.add('link', function(editor) {
 		cmd: 'unlink',
 		stateSelector: 'a[href]'
 	});
+
+
+	if (editor.addContextToolbar) {
+		editor.addButton('gotolink', {
+			icon: 'preview',
+			tooltip: 'View link',
+			onclick: gotoHref
+		});
+
+		editor.addContextToolbar(
+			leftClickedOnAHref,
+			'gotolink | link unlink'
+		);
+	}
+
 
 	editor.addShortcut('Meta+K', '', createLinkList(showDialog));
 	editor.addCommand('mceLink', createLinkList(showDialog));
