@@ -2,18 +2,19 @@ define(
   'ephox.alloy.spec.GroupButtonSpec',
 
   [
+    'ephox.alloy.construct.EventHandler',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
-    'ephox.highway.Merger'
+    'ephox.highway.Merger',
+    'ephox.peanut.Fun'
   ],
 
-  function (FieldPresence, FieldSchema, ValueSchema, Arr, Merger) {
+  function (EventHandler, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Fun) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('action'),
       FieldSchema.strict('buttonTypes'),
-      FieldSchema.strict('toggleClass'),
       FieldSchema.field(
         'buttons',
         'buttons',
@@ -34,6 +35,9 @@ define(
       // Not sure about where these getOrDie statements are
       var detail = ValueSchema.asStructOrDie('gropubutton.spec', schema, spec);
 
+
+      var actionEvent = 'alloy.groupbutton.value';
+
       return Merger.deepMerge(spec, {
         type: 'custom',
         dom: {
@@ -48,18 +52,40 @@ define(
             {
               uiType: 'button',
               buttonType: buttonSpec.spec(),
-              toggling: {
-                toggleClass: detail.toggleClass()
+              dom: {
+                classes: [ 'group-button' ]
               }
+              // toggling: {
+              //   toggleClass: detail.toggleClass()
+              // }
             }, {
               buttonType: {
                 mode: detail.buttonTypes()
               }
             }, {
-              action: function () { }
+              action: function (button) {
+                button.getSystem().triggerEvent(actionEvent, button.element(), {
+                  value: buttonSpec.value,
+                  button: Fun.constant(button)
+                })
+                console.log('here', arguments);
+              }
             }, buttonSpec.extra().getOr({ })
           );
-        })
+        }),
+        highlighting: {
+          highlightClass: 'demo-selected',
+          itemClass: 'group-button'
+        },
+        events: {
+          'alloy.groupbutton.value': EventHandler.nu({
+            run: function (component, event) {
+              component.apis().highlight(event.event().button());
+              console.log('arguments.in.handler', event.event());
+              detail.action()(event.event().value());
+            }
+          })
+        }
       });
     };
 
