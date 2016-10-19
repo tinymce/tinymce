@@ -15,6 +15,8 @@ define(
     var schema = ValueSchema.objOf([
       FieldSchema.strict('action'),
       FieldSchema.strict('buttonTypes'),
+      FieldSchema.strict('buttonClass'),
+      FieldSchema.strict('selectedClass'),
       FieldSchema.field(
         'buttons',
         'buttons',
@@ -53,7 +55,7 @@ define(
               uiType: 'button',
               buttonType: buttonSpec.spec(),
               dom: {
-                classes: [ 'group-button' ]
+                classes: [ detail.buttonClass() ]
               }
               // toggling: {
               //   toggleClass: detail.toggleClass()
@@ -62,26 +64,24 @@ define(
               buttonType: {
                 mode: detail.buttonTypes()
               }
-            }, {
+            }, buttonSpec.extra().getOr({ }), {
               action: function (button) {
                 button.getSystem().triggerEvent(actionEvent, button.element(), {
                   value: buttonSpec.value,
                   button: Fun.constant(button)
-                })
-                console.log('here', arguments);
+                });
               }
-            }, buttonSpec.extra().getOr({ })
+            }
           );
         }),
         highlighting: {
-          highlightClass: 'demo-selected',
-          itemClass: 'group-button'
+          highlightClass: detail.selectedClass(),
+          itemClass: detail.buttonClass()
         },
         events: {
           'alloy.groupbutton.value': EventHandler.nu({
             run: function (component, event) {
               component.apis().highlight(event.event().button());
-              console.log('arguments.in.handler', event.event());
               detail.action()(event.event().value());
             }
           })

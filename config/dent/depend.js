@@ -87,12 +87,43 @@ var dependencies = [
   },
 
   {
+    name: 'polaris',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'polaris.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
+  {
     name: 'wrap-jquery',
     repository: 'buildrepo2',
     version: 'latest',
     source: 'wrap-jquery.zip',
     targets: [
       { name: 'compile/*.js', path: test }
+    ]
+  },
+
+  {
+    name: 'wrap-jsbeautify',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'wrap-jsbeautify.zip',
+    targets: [
+      { name: 'compile/*.js', path: demo }
+    ]
+  },
+
+  {
+    name: 'modulator-text',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'modulator-text.zip',
+    targets: [
+      { name: 'module/*.js', path: depend }
     ]
   }
 ];

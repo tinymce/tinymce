@@ -131,7 +131,8 @@ define(
         {
           uiType: 'groupbutton',
           buttonTypes: 'text',
-          toggleClass: 'demo-selected',
+          buttonClass: 'group-button',
+          selectedClass: 'demo-selected',
           buttons: [
             { value: 'alpha', spec: { text: 'Alpha' } },
             { value: 'beta', spec: { text: 'Beta' } },

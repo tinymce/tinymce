@@ -29,7 +29,7 @@ define(
           FieldSchema.state('builder', function (raw) {
             return function (_) {
               return Merger.deepMerge(raw, {
-                uiType: 'custom'
+                uiType: raw.uiType !== undefined ? raw.uiType : 'custom'
               });
             };
           })
