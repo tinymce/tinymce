@@ -368,6 +368,10 @@ define("tinymce/tableplugin/TableGrid", [
 		function reduceRowSpans(grid, startX, startY, endX, endY) {
 			var count = 0;
 
+			if (endY - startY < 1) {
+				return 0;
+			}
+
 			for (var y = startY; y <= endY; y++) {
 				var allCells = findItemsOutsideOfRange(getRow(grid, y), startX, endX);
 				var fakeCells = getFakeCells(allCells);
@@ -386,6 +390,10 @@ define("tinymce/tableplugin/TableGrid", [
 
 		function reduceColSpans(grid, startX, startY, endX, endY) {
 			var count = 0;
+
+			if (endX - startX < 1) {
+				return 0;
+			}
 
 			for (var x = startX; x <= endX; x++) {
 				var allCells = findItemsOutsideOfRange(getColumn(grid, x), startY, endY);

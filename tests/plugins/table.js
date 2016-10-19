@@ -1262,6 +1262,49 @@
 						'</tbody>' +
 					'</table>'
 				)
+			},
+
+			{
+				message: 'Should merge b3+c3 but not reduce a2a3',
+				before: (
+					'<table>' +
+						'<tbody>' +
+							'<tr>' +
+								'<td>a1</td>' +
+								'<td>b1</td>' +
+								'<td>c1</td>' +
+							'</tr>' +
+							'<tr>' +
+								'<td rowspan="2">a2a3</td>' +
+								'<td>b2</td>' +
+								'<td>c2</td>' +
+							'</tr>' +
+							'<tr>' +
+								'<td data-mce-selected="1">b3</td>' +
+								'<td data-mce-selected="1">c3</td>' +
+							'</tr>' +
+						'</tbody>' +
+					'</table>'
+				),
+				after: (
+					'<table>' +
+						'<tbody>' +
+							'<tr>' +
+								'<td>a1</td>' +
+								'<td>b1</td>' +
+								'<td>c1</td>' +
+							'</tr>' +
+							'<tr>' +
+								'<td rowspan="2">a2a3</td>' +
+								'<td>b2</td>' +
+								'<td>c2</td>' +
+							'</tr>' +
+							'<tr>' +
+								'<td colspan="2">b3c3</td>' +
+							'</tr>' +
+						'</tbody>' +
+					'</table>'
+				)
 			}
 		]);
 	});
