@@ -9,10 +9,11 @@ define(
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'global!document',
-    'text!dom-templates/tinymce.toolbar.group'
+    'text!dom-templates/tinymce.toolbar.button',
+    'text!dom-templates/tinymce.toolbar.group.2'
   ],
 
-  function (Gui, GuiTemplate, HtmlDisplay, Class, Element, Insert, document, TemplateGroup) {
+  function (Gui, GuiTemplate, HtmlDisplay, Class, Element, Insert, document, TemplateButton, TemplateGroup) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -29,7 +30,20 @@ define(
             classes: [ 'mce-container' ]
           },
           components: [
-            GuiTemplate.use(TemplateGroup, { uiType: 'custom' }, { })
+            GuiTemplate.use(TemplateGroup, { uiType: 'custom' }, {
+              fields: { },
+              components: {
+                buttons: [
+                  GuiTemplate.use(TemplateButton, { uiType: 'custom' }, { }),
+                  GuiTemplate.use(TemplateButton, { uiType: 'custom' }, { }),
+                  GuiTemplate.use(TemplateButton, { uiType: 'custom' }, { }),
+                  GuiTemplate.use(TemplateButton, { uiType: 'custom' }, { }),
+                  GuiTemplate.use(TemplateButton, { uiType: 'custom' }, { })
+                ]
+              }
+            })
+            // GuiTemplate.use(TemplateGroup, { uiType: 'custom' }, { }),
+            
           ]
         }
       );
