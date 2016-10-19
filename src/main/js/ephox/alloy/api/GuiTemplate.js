@@ -41,7 +41,8 @@ define(
         return !Objects.hasKey(replacements, field);
       });
 
-      if (missing.length > 0) return Result.error('Missing fields in HTML template replacement\nMissing: [' + missing.join(', ') + '].\nProvided: [' + Obj.keys(template.replacements).join(', ') + ']');
+      if (missing.length > 0) return Result.error('Missing fields in HTML template replacement\nMissing: [' + missing.join(', ') +
+       '].\nProvided: [' + Obj.keys(replacements).join(', ') + ']');
       else {
         var html = Strings.supplant(templateHtml, replacements);
         return readHtml(html);
