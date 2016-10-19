@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+  <head>
+    <title>TinyMce Page</title>
+    <script type="text/javascript" src="../../../config/bolt/bootstrap-demo.js"></script>
+    <link href="../css/alloy-demo.css" rel="Stylesheet">
+    <link href="http://localhost/me/work/tiny/tinymce/js/tinymce/skins/lightgray/skin.min.css" rel="Stylesheet">
+    <script type="text/javascript">
+      ephox.bolt.module.api.main('ephox.alloy.demo.TinyMceDemo');
+    </script>
+
+    <style type="text/css">
+      #ephox-ui {
+        margin-bottom: 20px;
+      }
+
+      .demo-alloy-bold {
+        font-family: monospace;
+        color: white;
+        background-color: black;
+      }
+
+      .demo-alloy-bold.demo-selected {
+        color: black;
+        background-color: white;
+      }
+
+      .demo-alloy-bold:before {
+        content: 'B';
+      }
+    </style>
+  </head>
+
+  <body>
+    <h2>TinyMce Page</h2>
+
+    <div id="ephox-ui"></div>
+  </body>
+</html>

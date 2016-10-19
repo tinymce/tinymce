@@ -31,8 +31,8 @@ define(
 
     var readTemplate = function (templateHtml, replacements) {
       var regex = /\${([^{}]*)}/g;
-      var fields = templateHtml.match(regex);
-
+      var rawFields = templateHtml.match(regex);
+      var fields = rawFields !== undefined && rawFields !== null ? rawFields : [ ];
       var fs = Arr.map(fields, function (f) {
         return f.substring('${'.length, f.length - '}'.length);
       });
