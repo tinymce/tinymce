@@ -70,7 +70,7 @@ define(
         updateHtml();
       });
 
-      observer.observe(component.element().dom(), { attributes: true, childList: true, characterData: true });
+      observer.observe(component.element().dom(), { attributes: true, childList: true, characterData: true, subtree: true });
 
       var all = GuiFactory.build({
         uiType: 'container',

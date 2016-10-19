@@ -124,6 +124,24 @@ define(
           'blah2': true
         }
       );
+
+      var group1 = HtmlDisplay.section(
+        gui,
+        'This button can only have one value selected. It can not be turned off',
+        {
+          uiType: 'groupbutton',
+          buttonTypes: 'text',
+          toggleClass: 'demo-selected',
+          buttons: [
+            { value: 'alpha', spec: { text: 'Alpha' } },
+            { value: 'beta', spec: { text: 'Beta' } },
+            { value: 'gamma', spec: { text: 'Gamma' } }
+          ],
+          action: function (value) {
+            console.log('fired value', value);
+          }
+        }
+      );
     };
   }
 );
