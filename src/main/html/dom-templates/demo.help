@@ -1,5 +1,5 @@
 <div>
-  <p>This is the first paragraph</p>
+  <p aria-label="${aria-label}" title="${title}">This is the first paragraph</p>
 
   <button>Button</button>
 

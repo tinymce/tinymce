@@ -4,6 +4,7 @@ define(
   [
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
+    'ephox.compass.Obj',
     'ephox.highway.Merger',
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
@@ -12,10 +13,11 @@ define(
     'ephox.sugar.api.Node',
     'ephox.sugar.api.Text',
     'ephox.sugar.api.Traverse',
+    'ephox.violin.Strings',
     'global!Error'
   ],
 
-  function (Objects, Arr, Merger, Json, Fun, Result, Element, Node, Text, Traverse, Error) {
+  function (Objects, Arr, Obj, Merger, Json, Fun, Result, Element, Node, Text, Traverse, Strings, Error) {
     var failure = function (message, spec) {
       throw new Error(message +'\n' + Json.stringify(spec, null, 2));
     };
@@ -47,7 +49,26 @@ define(
     };
 
     var readTemplate = function (template) {
-      var elem = Element.fromHtml(template.html);
+      var regex = /\${([^{}]*)}/g;
+      var fields = template.html.match(regex);
+
+      var fs = Arr.map(fields, function (f) {
+        return f.substring('${'.length, f.length - '}'.length);
+      });
+
+      var missing = Arr.filter(fs, function (field) {
+        return !Objects.hasKey(template.replacements, field);
+      });
+
+      if (missing.length > 0) return Result.error('Missing fields in HTML template replacement\nMissing: [' + missing.join(', ') + '].\nProvided: [' + Obj.keys(template.replacements).join(', ') + ']');
+      else {
+        var html = Strings.supplant(template.html, template.replacements);
+        return readHtml(html);
+      }
+    };
+
+    var readHtml = function (html) {
+      var elem = Element.fromHtml(html);
       return Node.isText(elem) ? Result.error('Template text must contain an element!') : Result.value(
         read(elem)
       );

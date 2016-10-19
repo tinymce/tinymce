@@ -25,7 +25,11 @@ define(
           uiType: 'custom',
           template: {
             format: 'html',
-            html: template_pastryButton
+            html: template_pastryButton,
+            replacements: {
+              'aria-label': 'Dog',
+              title: 'Title caption'
+            }
           }
         }
       );
