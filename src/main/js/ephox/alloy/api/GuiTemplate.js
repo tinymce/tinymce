@@ -32,6 +32,7 @@ define(
     };
 
     var getAttrs = function (elem) {
+      console.log('getAttrs', elem.dom());
       var attributes = elem.dom().attributes !== undefined ? elem.dom().attributes : [ ];
       return Arr.foldl(attributes, function (b, attr) {
         return Merger.deepMerge(b, Objects.wrap(attr.name, attr.value));
