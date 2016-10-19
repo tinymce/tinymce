@@ -8,7 +8,7 @@ define(
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'global!document',
-    'text!dom-templates/pastry.button'
+    'text!dom-templates/demo.help'
   ],
 
   function (Gui, HtmlDisplay, Class, Element, Insert, document, template_pastryButton) {
@@ -25,7 +25,7 @@ define(
           uiType: 'custom',
           template: {
             format: 'html',
-            html: '<span data-color="blue" style="background: blue;" aria-label="${label}">Dog</span>'
+            html: template_pastryButton
           }
         }
       );

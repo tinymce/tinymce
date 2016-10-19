@@ -28,12 +28,14 @@ define(
     'ephox.compass.Arr',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
+    'ephox.sugar.api.Classes',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Node',
+    'ephox.sugar.api.Traverse',
     'global!Error'
   ],
 
-  function (Coupling, Disabling, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Redesigning, Replacing, Representing, Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Transitioning, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Element, Node, Error) {
+  function (Coupling, Disabling, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Redesigning, Replacing, Representing, Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Transitioning, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Classes, Element, Node, Traverse, Error) {
     var domSchema = ValueSchema.objOf([
       FieldSchema.strict('tag'),
       FieldSchema.defaulted('styles', {}),
@@ -44,33 +46,8 @@ define(
       // Note, no children.
     ]);
 
-    var ripoff = function (template) {
-      var elem = Element.fromHtml(template.html);
-      console.log('elem', elem.dom());
 
-      // FIX: Sugarify
-      var attrs = Arr.foldl(elem.dom().attributes, function (b, attr) {
-        return Merger.deepMerge(b, Objects.wrap(attr.name, attr.value));
-      }, {});
-
-      var styles = Arr.foldl(elem.dom().style, function (b, st) {
-        return Merger.deepMerge(b, Objects.wrap(st, elem.dom().style[st]));
-      }, {});
-
-      return {
-        dom: {
-          tag: Node.name(elem),
-          attributes: attrs,
-          styles: styles
-        }
-      };
-    };
-
-
-    var toInfo = function (rawSpec) {
-      console.log('rawSpec', rawSpec);
-      if (rawSpec.dom !== undefined && rawSpec.template !== undefined) throw new Error('Cannot specify both config DOM and template DOM');
-      var spec = rawSpec.dom !== undefined ? rawSpec : Merger.deepMerge(ripoff(rawSpec.template), rawSpec);
+    var toInfo = function (spec) {
       var behaviours = Objects.readOr('behaviours', [])(spec);
       var behaviourSchema = Arr.map(alloyBehaviours.concat(behaviours), function (b) {
         return b.schema();

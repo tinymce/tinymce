@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.Component',
+    'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.construct.Components',
     'ephox.alloy.events.DefaultEvents',
     'ephox.alloy.spec.ButtonSpec',
@@ -31,7 +32,7 @@ define(
     'global!Error'
   ],
 
-  function (Component, Components, DefaultEvents, ButtonSpec, ContainerSpec, CustomSpec, DropdownButtonSpec, DropdownMenuSpec, FormLabelSpec, GroupButtonSpec, HtmlSelectSpec, InlineSpec, InputSpec, MenuSpec, ToolbarSpec, TypeaheadSpec, MoreToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
+  function (Component, GuiTemplate, Components, DefaultEvents, ButtonSpec, ContainerSpec, CustomSpec, DropdownButtonSpec, DropdownMenuSpec, FormLabelSpec, GroupButtonSpec, HtmlSelectSpec, InlineSpec, InputSpec, MenuSpec, ToolbarSpec, TypeaheadSpec, MoreToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
     var knownSpecs = {
       container: ContainerSpec.make,
       custom: CustomSpec.make,
@@ -68,7 +69,9 @@ define(
       f(components);
     };
 
-    var buildFromSpec = function (userSpec) {
+    var buildFromSpec = function (rawUserSpec) {
+      var userSpec = GuiTemplate.massage(rawUserSpec);
+      console.log('massaged', userSpec);
       var uiType = userSpec.uiType;
       return Objects.readOptFrom(knownSpecs, uiType).fold(function () {
         return unknownSpec(uiType, userSpec);
