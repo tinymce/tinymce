@@ -69,9 +69,7 @@ define(
       f(components);
     };
 
-    var buildFromSpec = function (rawUserSpec) {
-      var userSpec = GuiTemplate.massage(rawUserSpec);
-      console.log('massaged', userSpec);
+    var buildFromSpec = function (userSpec) {
       var uiType = userSpec.uiType;
       return Objects.readOptFrom(knownSpecs, uiType).fold(function () {
         return unknownSpec(uiType, userSpec);

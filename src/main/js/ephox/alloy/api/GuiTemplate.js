@@ -18,27 +18,8 @@ define(
   ],
 
   function (Objects, Arr, Obj, Merger, Json, Fun, Result, Element, Node, Text, Traverse, Strings, Error) {
-    var failure = function (message, spec) {
+    var fail = function (message, spec) {
       throw new Error(message +'\n' + Json.stringify(spec, null, 2));
-    };
-
-    var safeMassage = function (spec) {
-      if (spec.dom !== undefined && spec.template !== undefined) return Result.error('Cannot specify both config DOM and template DOM');
-      else if (spec.template === undefined) return Result.value(spec); // Let the eror get handled by boulder which is more graceful with error messages
-      else return readTemplate(spec.template).fold(function (err) {
-        return Result.error(err);
-      }, function (addSpec) {
-        var newSpec = Merger.deepMerge(spec, addSpec);
-        console.log('newSpec', newSpec);
-        if (newSpec.components.length > 0 && spec.components !== undefined && spec.components.length > 0) return Result.error('Cannot specify a template with a child element AND components');
-        else return Result.value(newSpec);
-      });
-    };
-
-    var massage = function (spec) {
-      return safeMassage(spec).fold(function (err) {
-        failure(err, spec);
-      }, Fun.identity);
     };
 
     var getAttrs = function (elem) {
@@ -48,21 +29,21 @@ define(
       }, {});
     };
 
-    var readTemplate = function (template) {
+    var readTemplate = function (templateHtml, replacements) {
       var regex = /\${([^{}]*)}/g;
-      var fields = template.html.match(regex);
+      var fields = templateHtml.match(regex);
 
       var fs = Arr.map(fields, function (f) {
         return f.substring('${'.length, f.length - '}'.length);
       });
 
       var missing = Arr.filter(fs, function (field) {
-        return !Objects.hasKey(template.replacements, field);
+        return !Objects.hasKey(replacements, field);
       });
 
       if (missing.length > 0) return Result.error('Missing fields in HTML template replacement\nMissing: [' + missing.join(', ') + '].\nProvided: [' + Obj.keys(template.replacements).join(', ') + ']');
       else {
-        var html = Strings.supplant(template.html, template.replacements);
+        var html = Strings.supplant(templateHtml, replacements);
         return readHtml(html);
       }
     };
@@ -100,8 +81,21 @@ define(
       };
     };
 
+    var use = function (templateHtml, spec, replacements) {
+      var extra = readTemplate(templateHtml, replacements);
+      return extra.fold(function (err) {
+        fail(err, {
+          templateHtml: templateHtml,
+          replacements: replacements,
+          spec: spec
+        });
+      }, function (additions) {
+        return Merger.deepMerge(spec, additions);
+      });
+    };
+
     return {
-      massage: massage
+      use: use
     };
   }
 );
