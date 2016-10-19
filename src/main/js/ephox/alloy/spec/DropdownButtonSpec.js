@@ -17,9 +17,10 @@ define(
     var make = function (spec) {
       var detail = ValueSchema.asRawOrDie('dropdown.button.spec', ValueSchema.objOf([
         FieldSchema.strict('fetchItems'),
-        FieldSchema.strict('text'),
         FieldSchema.defaulted('onOpen', Fun.noop),
         FieldSchema.defaulted('onExecute', Option.none),
+        FieldSchema.strict('dom'),
+        FieldSchema.defaulted('components', []),
         FieldSchema.option('sink'),
         FieldSchema.option('uid')
       ]), spec);
@@ -44,7 +45,6 @@ define(
             };
           });
         },
-        text: detail.text,
         sink: detail.sink.getOr(undefined),
         onOpen: function (button, sandbox, menu) {
           var buttonWidth = Width.get(button.element());
@@ -53,7 +53,9 @@ define(
         },
         onExecute: detail.onExecute,
         // Not sure if that will work
-        uid: detail.uid.getOr(undefined)
+        uid: detail.uid.getOr(undefined),
+        dom: detail.dom,
+        components: detail.components
       });
     };
 

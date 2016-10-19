@@ -7,19 +7,21 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.epithet.Id',
+    'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Remove'
   ],
 
-  function (ButtonSpec, MenuSandboxSpec, FieldSchema, ValueSchema, Id, Fun, Option, Remove) {
+  function (ButtonSpec, MenuSandboxSpec, FieldSchema, ValueSchema, Id, Merger, Fun, Option, Remove) {
     var make = function (spec) {
       var detail = ValueSchema.asStructOrDie('dropdown.spec', ValueSchema.objOf([
         // Returns a Future{ primary, expansions, menus } object asynchronously
         FieldSchema.strict('fetch'),
-        FieldSchema.strict('text'),
         FieldSchema.defaulted('onOpen', Fun.noop),
         FieldSchema.defaulted('onExecute', Option.none),
+        FieldSchema.strict('dom'),
+        FieldSchema.defaulted('components', [ ]),
         FieldSchema.option('sink'),
         FieldSchema.option('uid')
       ]), spec);
@@ -67,33 +69,35 @@ define(
         
       var dropdownUid = Id.generate('dropdown');
 
-      var base = ButtonSpec.make({
-        buttonType: {
-          mode: 'text',
-          text: detail.text()
-        },
-        action: togglePopup,
-        toggling: {
-          toggleClass: 'menu-open',
-          aria: {
-            'aria-expanded-attr': 'aria-expanded'
+      console.log('spec', spec);
+
+      var base = Merger.deepMerge(
+        spec,
+        ButtonSpec.make({
+          action: togglePopup,
+          toggling: {
+            toggleClass: 'menu-open',
+            aria: {
+              'aria-expanded-attr': 'aria-expanded'
+            }
+          },
+          dom: detail.dom(),
+          components: detail.components(),
+          keying: {
+            useDown: true
+          },   
+          eventOrder: {
+            // Order, the button state is toggled first, so assumed !selected means close.
+            'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
+          },
+          uid: detail.uid().getOr(undefined),
+          coupling: {
+            others: {
+              sandbox: makeSandbox
+            }
           }
-        },
-        keying: {
-          useDown: true
-        },   
-        eventOrder: {
-          // Order, the button state is toggled first, so assumed !selected means close.
-          'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
-        },
-        uid: detail.uid().getOr(undefined),
-        text: detail.text(),
-        coupling: {
-          others: {
-            sandbox: makeSandbox
-          }
-        }
-      });
+        })
+      );
 
       return detail.sink().fold(function () {
         // The sink will be inline.
@@ -105,7 +109,7 @@ define(
               display: 'inline-block'
             }
           },
-          components: [
+          components: base.components.concat([
             base,
             {
               uiType: 'custom',
@@ -115,7 +119,7 @@ define(
                 useFixed: false
               }
             }
-          ]
+          ])
         };
       }, Fun.constant(base));
     };
