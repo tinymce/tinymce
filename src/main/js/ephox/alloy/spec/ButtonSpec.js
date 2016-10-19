@@ -4,7 +4,6 @@ define(
   [
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.construct.EventHandler',
-    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
@@ -12,67 +11,9 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (SystemEvents, EventHandler, FieldPresence, FieldSchema, Objects, ValueSchema, Merger, Fun) {
+  function (SystemEvents, EventHandler, FieldSchema, Objects, ValueSchema, Merger, Fun) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('action'),
-
-      FieldSchema.field(
-        'buttonType', 
-        'buttonType', 
-        FieldPresence.strict(),
-        ValueSchema.choose(
-          'mode',
-          {
-            // Note, these are only fields.
-            text: [
-              FieldSchema.strict('text'),
-              FieldSchema.state('builder', function () {
-                return function (tInfo) {
-                  return {
-                    innerHtml: tInfo.text()
-                  };
-                };
-              })
-            ],
-            font: [
-              FieldSchema.strict('classes'),
-              FieldSchema.state('builder', function () {
-                return function (fInfo) {
-                  return {
-                    classes: fInfo.classes()
-                  };
-                };
-              })
-            ],
-            image: [
-              FieldSchema.strict('url'),
-              FieldSchema.state('builder', function () {
-                return function (imgInfo) {
-                  return {
-                    styles: {
-                      'background-image': 'url(' + imgInfo.url() + ')',
-                      width: '1em',
-                      height: '1em',
-                      display: 'flex',
-                      // Hard-coded.
-                      margin: '0.7em'
-                    }
-                  };
-                };
-              })
-            ],
-            custom: [
-              FieldSchema.state('builder', function () {
-                return function (cInfo) {
-                  return { };
-                };
-              })
-
-            ]
-          }
-        )
-      ),
-     
       FieldSchema.option('uid')
     ]);
 
@@ -104,7 +45,6 @@ define(
 
       return Merger.deepMerge(
         {
-          dom: detail.buttonType().builder()(detail.buttonType()),
           events: events
         },
 
@@ -120,7 +60,6 @@ define(
 
         {
           dom: {
-            tag: 'button',
             attributes: {
               role: 'button'
             }

@@ -65,9 +65,14 @@ define(
       );
     };
 
+    var readText = function (elem) {
+      var text = Text.get(elem);
+      return text.trim().length > 0 ? [ { text: text } ] : [ ]
+    };
+
     // The top-level cannot container component definitions
     var readChildren = function (elem, compDefns) {
-      if (Node.isText(elem)) return [ { text: Text.get(elem) } ];
+      if (Node.isText(elem)) return readText(elem);
 
       var compsId = Attr.get(elem, 'data-alloy-components');
       var compId = Attr.get(elem, 'data-alloy-component');
@@ -87,7 +92,7 @@ define(
         var children = Traverse.children(elem);
 
         var components = Arr.bind(children, function (child) {
-          if (Node.isText(child)) return [ { text: Text.get(child) } ];
+          if (Node.isText(child)) return readText(child);
           else {
             var parsed = readChildren(child, compDefns);
             return Arr.map(parsed, function (p) {

@@ -11,31 +11,31 @@ define(
   ],
 
   function (FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Fun) {
-    var itemSchema = ValueSchema.choose(
-      'type',
-      {
-        button: [
-          FieldSchema.state('builder', function (raw) {
-            return function (info) {
-              return Merger.deepMerge(raw, {
-                uiType: 'button',
-                tabstopping: undefined,
-                focusing: true
-              });
-            };
-          })
-        ],
-        custom: [
-          FieldSchema.state('builder', function (raw) {
-            return function (_) {
-              return Merger.deepMerge(raw, {
-                uiType: raw.uiType !== undefined ? raw.uiType : 'custom'
-              });
-            };
-          })
-        ]
-      }
-    );
+    // var itemSchema = ValueSchema.choose(
+    //   'type',
+    //   {
+    //     button: [
+    //       FieldSchema.state('builder', function (raw) {
+    //         return function (info) {
+    //           return Merger.deepMerge(raw, {
+    //             uiType: 'button',
+    //             tabstopping: undefined,
+    //             focusing: true
+    //           });
+    //         };
+    //       })
+    //     ],
+    //     custom: [
+    //       FieldSchema.state('builder', function (raw) {
+    //         return function (_) {
+    //           return Merger.deepMerge(raw, {
+    //             uiType: raw.uiType !== undefined ? raw.uiType : 'custom'
+    //           });
+    //         };
+    //       })
+    //     ]
+    //   }
+    // );
 
 
     // TODO: Standardise all of these.
@@ -45,7 +45,7 @@ define(
         'components',
         'components',
         FieldPresence.strict(),
-        ValueSchema.arrOf(itemSchema)
+        ValueSchema.arrOf(ValueSchema.anyValue())
       )
     ]);
 
@@ -62,7 +62,7 @@ define(
     ]);
 
     var buildItem = function (compInfo) {
-      return compInfo.builder()(compInfo);
+      return compInfo;
     };
 
     var buildGroup = function (group) {
