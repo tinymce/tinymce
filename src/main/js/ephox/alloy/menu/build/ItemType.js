@@ -23,6 +23,7 @@ define(
         FieldPresence.strict(),
         MenuMarkers.itemSchema()
       ),
+      FieldSchema.defaulted('extra', { }),
       FieldSchema.defaulted('classes', [ ]),
       FieldSchema.state('builder', function () {
         return builder;

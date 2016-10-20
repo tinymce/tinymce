@@ -43,6 +43,7 @@ define(
         FieldSchema.strict('fetchItems'),
         FieldSchema.defaulted('onOpen', Fun.noop),
         FieldSchema.defaulted('onExecute', Option.none),
+        FieldSchema.defaulted('toggleClass', 'alloy-selected-button'),
         FieldSchema.strict('dom'),
         FieldSchema.option('sink'),
         FieldSchema.defaulted('dependents', { })

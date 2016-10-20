@@ -21,6 +21,7 @@ define(
         FieldSchema.strict('fetch'),
         FieldSchema.defaulted('onOpen', Fun.noop),
         FieldSchema.defaulted('onExecute', Option.none),
+        FieldSchema.defaulted('toggleClass', 'alloy-selected-button'),
         FieldSchema.strict('dom'),
         FieldSchema.option('sink')
       ], spec, { });
@@ -79,7 +80,7 @@ define(
         ButtonSpec.make({
           action: togglePopup,
           toggling: {
-            toggleClass: 'menu-open',
+            toggleClass: detail.toggleClass(),
             aria: {
               'aria-expanded-attr': 'aria-expanded'
             }

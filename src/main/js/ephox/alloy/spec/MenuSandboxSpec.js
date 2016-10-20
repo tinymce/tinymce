@@ -47,8 +47,6 @@ define(
           tag: 'div'
         },
         sandboxing: config.sandboxing,
-        // Temporary
-        uid: 'magic',
         keying: config.keying,
         receiving: Dismissal.receiving({
           isExtraPart: isExtraPart
