@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.spec.SpecSchema',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
@@ -11,10 +12,9 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (SystemEvents, EventHandler, FieldSchema, Objects, ValueSchema, Merger, Fun) {
+  function (SystemEvents, EventHandler, SpecSchema, FieldSchema, Objects, ValueSchema, Merger, Fun) {
     var schema = ValueSchema.objOf([
-      FieldSchema.strict('action'),
-      FieldSchema.option('uid')
+      FieldSchema.strict('action')
     ]);
 
 
@@ -43,6 +43,7 @@ define(
         { key: 'click', value: clickHandler }
       ]);
 
+      return spec;
       return Merger.deepMerge(
         {
           events: events

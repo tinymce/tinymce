@@ -112,12 +112,13 @@ define(
           if (Node.isText(child)) return readText(child);
           else {
             var parsed = readChildren(child, compDefns);
+            console.log('parsed', parsed);
             return Arr.map(parsed, function (p) {
-              return {
+              return p.uiType !== 'dependent' ? {
                 uiType: 'custom',
                 dom: p.dom,
                 components: p.components
-              };
+              } : p;
             });
           }
         });
@@ -136,21 +137,27 @@ define(
           components: components
         };
 
-        console.log('common', common, elem.dom());
 
-        if (knownCompId !== undefined) {
-          return [ { uiType: 'dependent', name: knownCompId, extra: common } ];
-        } else if (knownCompsId !== undefined) {
-          return [ { uiType: 'dependents', name: knownCompsId, extra: common } ];
-        } else {
 
-          return [
-            Merger.deepMerge(common, {
-              uiType: 'custom'
-            
-            })
-          ];
-        }
+        var r = (function () {
+          if (knownCompId !== undefined) {
+            return [ { uiType: 'dependent', name: knownCompId, extra: common } ];
+          } else if (knownCompsId !== undefined) {
+            return [ { uiType: 'dependents', name: knownCompsId, extra: common } ];
+          } else {
+            console.log("COMMON", common);
+            return [
+              Merger.deepMerge(common, {
+                uiType: 'custom'
+              
+              })
+            ];
+          }
+        })();
+
+
+        console.log('common', common, elem.dom(), knownCompId, r);
+        return r;
       }
     };
 

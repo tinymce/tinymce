@@ -4,8 +4,10 @@ define(
   [
     'ephox.alloy.spec.ButtonSpec',
     'ephox.alloy.spec.MenuSandboxSpec',
+    'ephox.alloy.spec.SpecSchema',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
+    'ephox.compass.Arr',
     'ephox.epithet.Id',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
@@ -13,18 +15,19 @@ define(
     'ephox.sugar.api.Remove'
   ],
 
-  function (ButtonSpec, MenuSandboxSpec, FieldSchema, ValueSchema, Id, Merger, Fun, Option, Remove) {
+  function (ButtonSpec, MenuSandboxSpec, SpecSchema, FieldSchema, ValueSchema, Arr, Id, Merger, Fun, Option, Remove) {
     var make = function (spec) {
-      var detail = ValueSchema.asStructOrDie('dropdown.spec', ValueSchema.objOf([
-        // Returns a Future{ primary, expansions, menus } object asynchronously
+      var detail = SpecSchema.asStructOrDie('dropdown.button', [
         FieldSchema.strict('fetch'),
         FieldSchema.defaulted('onOpen', Fun.noop),
         FieldSchema.defaulted('onExecute', Option.none),
         FieldSchema.strict('dom'),
-        FieldSchema.defaulted('components', [ ]),
-        FieldSchema.option('sink'),
-        FieldSchema.strict('uid')
-      ]), spec);
+        FieldSchema.option('sink')
+      ], spec, { });
+
+      var components = Arr.map(detail.components(), function (comp) {
+        return comp(detail);
+      });
 
       var open = function (component, sandbox) {
         var fetcher = detail.fetch();
@@ -71,6 +74,7 @@ define(
 
       console.log('dropdown.menu.spec', spec);
 
+
       var base = Merger.deepMerge(
         spec,
         ButtonSpec.make({
@@ -82,7 +86,7 @@ define(
             }
           },
           dom: detail.dom(),
-          components: detail.components(),
+          components: components,
           keying: {
             useDown: true
           },   
