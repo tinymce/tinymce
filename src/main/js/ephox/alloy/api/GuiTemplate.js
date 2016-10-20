@@ -50,16 +50,17 @@ define(
       });
 
       var missing = Arr.filter(fs, function (field) {
-        return Resolve.resolve(field, replacements.fields) === null;
+        var resolved = Resolve.resolve(field, replacements.fields);
+        return resolved === null || resolved === undefined;
       });
 
       if (missing.length > 0) return Result.error('Missing fields in HTML template replacement\nMissing: [' + missing.join(', ') +
-       '].\nProvided: [' + Obj.keys(replacements.fields).join(', ') + ']');
+       '].\nProvided fields for top-level objects: [' + Obj.keys(replacements.fields).join(', ') + ']');
       else {
         // Copied from violin.supplant but used here to resolve paths with dots.
         var html = templateHtml.replace(/\${([^{}]*)}/g,
           function (a, b) {
-            var resolved = Resolve.resolve(a, replacements.fields);
+            var resolved = Resolve.resolve(b, replacements.fields);
             return resolved !== null ? String(resolved) : a;
           }
         );

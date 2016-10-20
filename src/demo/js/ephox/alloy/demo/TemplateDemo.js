@@ -37,7 +37,10 @@ define(
           {
             fields: {
               root: {
-                clazz: 'demo-template-dummy'
+                clazz: 'demo-template-root'
+              },
+              chapter: {
+                clazz: 'demo-template-chapter'
               }
             },
             components: { }
