@@ -91,7 +91,7 @@ define(
       var knownCompsId = Attr.get(elem, 'data-alloy-template-known-components');
       var knownCompId = Attr.get(elem, 'data-alloy-template-known-component');
 
-      console.log('compId', compId);
+      console.log('compId', compId, compsId, knownCompId, knownCompsId);
 
       if (compsId !== undefined && !Objects.hasKey(compDefns, compsId)) fail('Element: ' + Html.getOuter(elem) + ' does not ' +
         'contain components definition for ' + compsId, { html: Html.getOuter(elem), defns: compDefns });
@@ -136,6 +136,8 @@ define(
           components: components
         };
 
+        console.log('common', common, elem.dom());
+
         if (knownCompId !== undefined) {
           return [ { uiType: 'dependent', name: knownCompId, extra: common } ];
         } else if (knownCompsId !== undefined) {
@@ -160,6 +162,10 @@ define(
       var components = Arr.bind(children, function (child) {
         return readChildren(child, compDefns);
       });
+
+      debugger;
+
+      console.log('components', JSON.stringify(components, null, 2));
 
       return {
         dom: {

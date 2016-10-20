@@ -34,11 +34,16 @@ define(
       return SelectorFind.descendant(container, id);
     };
 
+    var generate = function (prefix) {
+      return Id.generate(prefix);
+    };
+
     return {
       write: write,
       writeOnly: writeOnly,
       read: read,
       find: find,
+      generate: generate,
       attribute: Fun.constant(idAttr)
     };
   }

@@ -56,7 +56,7 @@ define(
       return ValueSchema.asStruct('custom.definition', ValueSchema.objOf([
         FieldSchema.field('dom', 'dom', FieldPresence.strict(), domSchema),
         FieldSchema.strict('components'),
-        FieldSchema.option('uid'),
+        FieldSchema.strict('uid'),
         FieldSchema.defaulted('behaviours', [ ]),
 
         // TODO: Add behaviours here.
@@ -94,11 +94,7 @@ define(
     };
 
     var getUid = function (info) {
-      return info.uid().fold(function () {
-        return { };
-      }, function (uid) {
-        return Objects.wrap(AlloyTags.idAttr(), uid);
-      });
+      return Objects.wrap(AlloyTags.idAttr(), info.uid());
     };
 
     var toDefinition = function (info) {

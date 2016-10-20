@@ -6,6 +6,7 @@ define(
     'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.construct.Components',
     'ephox.alloy.events.DefaultEvents',
+    'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.ButtonSpec',
     'ephox.alloy.spec.ContainerSpec',
     'ephox.alloy.spec.CustomSpec',
@@ -33,7 +34,7 @@ define(
     'global!Error'
   ],
 
-  function (Component, GuiTemplate, Components, DefaultEvents, ButtonSpec, ContainerSpec, CustomSpec, DropdownButtonSpec, DropdownMenuSpec, DummySpec, FormLabelSpec, GroupButtonSpec, HtmlSelectSpec, InlineSpec, InputSpec, MenuSpec, ToolbarSpec, TypeaheadSpec, MoreToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
+  function (Component, GuiTemplate, Components, DefaultEvents, Tagger, ButtonSpec, ContainerSpec, CustomSpec, DropdownButtonSpec, DropdownMenuSpec, DummySpec, FormLabelSpec, GroupButtonSpec, HtmlSelectSpec, InlineSpec, InputSpec, MenuSpec, ToolbarSpec, TypeaheadSpec, MoreToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
     var knownSpecs = {
       container: ContainerSpec.make,
       custom: CustomSpec.make,
@@ -106,7 +107,11 @@ define(
     ];
 
     // INVESTIGATE: A better way to provide 'meta-specs'
-    var build = function (userSpec) {
+    var build = function (rawUserSpec) {
+      var userSpec = Merger.deepMerge({
+        uid: Tagger.generate('uid')
+      }, rawUserSpec);
+
       var builder = Options.findMap(types, function (t) {
         return userSpec[t.type] !== undefined ? Option.some(function () {
           var param = t.only === true ? userSpec[t.type] : userSpec;

@@ -23,7 +23,7 @@ define(
         FieldSchema.strict('dom'),
         FieldSchema.defaulted('components', [ ]),
         FieldSchema.option('sink'),
-        FieldSchema.option('uid')
+        FieldSchema.strict('uid')
       ]), spec);
 
       var open = function (component, sandbox) {
@@ -69,7 +69,7 @@ define(
         
       var dropdownUid = Id.generate('dropdown');
 
-      console.log('spec', spec);
+      console.log('dropdown.menu.spec', spec);
 
       var base = Merger.deepMerge(
         spec,
@@ -90,7 +90,7 @@ define(
             // Order, the button state is toggled first, so assumed !selected means close.
             'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
           },
-          uid: detail.uid().getOr(undefined),
+          uid: detail.uid() + '-button',
           coupling: {
             others: {
               sandbox: makeSandbox
@@ -99,7 +99,7 @@ define(
         })
       );
 
-      return detail.sink().fold(function () {
+      var xx = detail.sink().fold(function () {
         // The sink will be inline.
         return {
           uiType: 'custom',
@@ -109,6 +109,7 @@ define(
               display: 'inline-block'
             }
           },
+          uid: detail.uid(),
           components: [
             base,
             {
@@ -122,6 +123,10 @@ define(
           ]
         };
       }, Fun.constant(base));
+
+      console.log('xx', xx);
+
+      return xx;
     };
 
     return {
