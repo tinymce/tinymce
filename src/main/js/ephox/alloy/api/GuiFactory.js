@@ -11,6 +11,7 @@ define(
     'ephox.alloy.spec.CustomSpec',
     'ephox.alloy.spec.DropdownButtonSpec',
     'ephox.alloy.spec.DropdownMenuSpec',
+    'ephox.alloy.spec.DummySpec',
     'ephox.alloy.spec.FormLabelSpec',
     'ephox.alloy.spec.GroupButtonSpec',
     'ephox.alloy.spec.HtmlSelectSpec',
@@ -32,7 +33,7 @@ define(
     'global!Error'
   ],
 
-  function (Component, GuiTemplate, Components, DefaultEvents, ButtonSpec, ContainerSpec, CustomSpec, DropdownButtonSpec, DropdownMenuSpec, FormLabelSpec, GroupButtonSpec, HtmlSelectSpec, InlineSpec, InputSpec, MenuSpec, ToolbarSpec, TypeaheadSpec, MoreToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
+  function (Component, GuiTemplate, Components, DefaultEvents, ButtonSpec, ContainerSpec, CustomSpec, DropdownButtonSpec, DropdownMenuSpec, DummySpec, FormLabelSpec, GroupButtonSpec, HtmlSelectSpec, InlineSpec, InputSpec, MenuSpec, ToolbarSpec, TypeaheadSpec, MoreToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
     var knownSpecs = {
       container: ContainerSpec.make,
       custom: CustomSpec.make,
@@ -47,7 +48,8 @@ define(
       select: HtmlSelectSpec.make,
       toolbar: ToolbarSpec.make,
       groupbutton: GroupButtonSpec.make,
-      'more.toolbar': MoreToolbar.make
+      'more.toolbar': MoreToolbar.make,
+      'dummy': DummySpec.make
 
       // Add other specs here.
     };

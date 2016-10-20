@@ -77,6 +77,8 @@ define(
 
       var compsId = Attr.get(elem, 'data-alloy-components');
       var compId = Attr.get(elem, 'data-alloy-component');
+      var knownCompsId = Attr.get(elem, 'data-known-components');
+      var knownCompId = Attr.get(elem, 'data-known-component');
 
       console.log('compsId', compsId);
 
@@ -88,6 +90,10 @@ define(
         return compDefns[compsId];
       } else if (compId !== undefined && Objects.hasKeys(compDefns, compId)) {
         return [ compDefns[compId] ];
+      } else if (knownCompId !== undefined) {
+        return [ { uiType: 'dependent', name: knownCompId } ];
+      } else if (knownCompsId !== undefined) {
+        return [ { uiType: 'dependents', name: knownCompsId } ];
       } else {
         var attrs = getAttrs(elem);
         var children = Traverse.children(elem);

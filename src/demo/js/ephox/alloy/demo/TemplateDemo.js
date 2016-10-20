@@ -3,15 +3,16 @@ define(
 
   [
     'ephox.alloy.api.Gui',
+    'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'global!document',
-    'text!dom-templates/demo.help'
+    'text!dom-templates/dummy.html'
   ],
 
-  function (Gui, HtmlDisplay, Class, Element, Insert, document, template_pastryButton) {
+  function (Gui, GuiTemplate, HtmlDisplay, Class, Element, Insert, document, Template) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -21,17 +22,18 @@ define(
       var subject = HtmlDisplay.section(
         gui,
         'This shows a template created by a normal DOM modification',
-        {
-          uiType: 'custom',
-          template: {
-            format: 'html',
-            html: template_pastryButton,
-            replacements: {
-              'aria-label': 'Dog',
-              title: 'Title caption'
-            }
+        GuiTemplate.use(
+          Template,
+          {
+            uiType: 'dummy'
+          },
+          {
+            fields: {
+              'template-class': 'demo-template-dummy'
+            },
+            components: { }
           }
-        }
+        )
       );
     };
   }
