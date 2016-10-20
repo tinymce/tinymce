@@ -1,5 +1,7 @@
-Version 3.5.x (2015-xx-xx)
+Version 3.5.12 (2016-xx-xx)
 	Added new option table_style_by_css for the table plugin to set table styling with css rather than table attributes.
+	Added new option theme_advanced_default_font_size allows you to specify a default font size for the body.
+	Added new option theme_advanced_default_font_family allows you to specify a default font family for the body.
 	Fixed bug where params tags for width and height were being stripped from object tags in the media plugin.
 	Fixed font families in order to provide appropriate web-safe fonts.
 Version 3.5.11 (2014-05-08)
