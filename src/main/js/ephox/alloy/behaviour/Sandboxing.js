@@ -62,6 +62,7 @@ define(
     // Open sandbox transfers focus to the opened menu
     var openSandbox = function (sandbox, sInfo, futureData) {
       return futureData.map(function (data) {
+        console.log('DATA', data);
         var state = rebuildSandbox(sandbox, sInfo, data);
         // Focus the sandbox.
         gotoSandbox(sandbox, sInfo);
