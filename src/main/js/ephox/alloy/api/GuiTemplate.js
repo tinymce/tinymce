@@ -91,8 +91,6 @@ define(
       var knownCompsId = Attr.get(elem, 'data-alloy-template-known-components');
       var knownCompId = Attr.get(elem, 'data-alloy-template-known-component');
 
-      console.log('compId', compId, compsId, knownCompId, knownCompsId);
-
       if (compsId !== undefined && !Objects.hasKey(compDefns, compsId)) fail('Element: ' + Html.getOuter(elem) + ' does not ' +
         'contain components definition for ' + compsId, { html: Html.getOuter(elem), defns: compDefns });
 
@@ -112,7 +110,6 @@ define(
           if (Node.isText(child)) return readText(child);
           else {
             var parsed = readChildren(child, compDefns);
-            console.log('parsed', parsed);
             return Arr.map(parsed, function (p) {
               return p.uiType !== 'dependent' ? {
                 uiType: 'custom',
@@ -139,25 +136,19 @@ define(
 
 
 
-        var r = (function () {
-          if (knownCompId !== undefined) {
-            return [ { uiType: 'dependent', name: knownCompId, extra: common } ];
-          } else if (knownCompsId !== undefined) {
-            return [ { uiType: 'dependents', name: knownCompsId, extra: common } ];
-          } else {
-            console.log("COMMON", common);
-            return [
-              Merger.deepMerge(common, {
-                uiType: 'custom'
-              
-              })
-            ];
-          }
-        })();
-
-
-        console.log('common', common, elem.dom(), knownCompId, r);
-        return r;
+        
+        if (knownCompId !== undefined) {
+          return [ { uiType: 'dependent', name: knownCompId, extra: common } ];
+        } else if (knownCompsId !== undefined) {
+          return [ { uiType: 'dependents', name: knownCompsId, extra: common } ];
+        } else {
+          return [
+            Merger.deepMerge(common, {
+              uiType: 'custom'
+            
+            })
+          ];
+        }
       }
     };
 
@@ -169,10 +160,6 @@ define(
       var components = Arr.bind(children, function (child) {
         return readChildren(child, compDefns);
       });
-
-      debugger;
-
-      console.log('components', JSON.stringify(components, null, 2));
 
       return {
         dom: {

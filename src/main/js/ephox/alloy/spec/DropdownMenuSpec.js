@@ -25,9 +25,7 @@ define(
         FieldSchema.option('sink')
       ], spec, { });
 
-      var components = Arr.map(detail.components(), function (comp) {
-        return comp(detail);
-      });
+      var components = detail.components();
 
       var open = function (component, sandbox) {
         var fetcher = detail.fetch();

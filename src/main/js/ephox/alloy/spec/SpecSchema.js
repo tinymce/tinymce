@@ -16,27 +16,24 @@ define(
     var base = function (label, factories, spec) {
       return [
         FieldSchema.strict('uid'),
-        FieldSchema.defaulted('library', { }),
         FieldSchema.field(
           'components',
           'components',
           FieldPresence.defaulted([ ]),
           ValueSchema.arrOf(
-            ValueSchema.valueOf(function (compSpec) {
-              if (compSpec.uiType !== 'dependent') return Result.value(Fun.constant(compSpec));
-              else {
-                debugger;
-                var library = Objects.readOptFrom(spec, 'library').getOr({ });              
-                var merged = Merger.deepMerge(factories, library);
-                return Objects.readOptFrom(merged, compSpec.name).fold(function () {
-                  return Result.error('Dependent component: ' + compSpec.name + ' not in library by ' + label + '\nLibrary has: [' + Obj.keys(merged).join(', ') + ']');
-                }, function (factory) {
-                  return Result.value(
-                    Fun.curry(factory, compSpec)
-                  );
-                });
-              }
-            })
+            ValueSchema.anyValue()
+            // ValueSchema.valueOf(function (compSpec) {
+            //   if (compSpec.uiType !== 'dependent') return Result.value(Fun.constant(compSpec));
+            //   else {
+            //     return Objects.readOptFrom(factories, compSpec.name).fold(function () {
+            //       return Result.error('Dependent component: ' + compSpec.name + ' not in library by ' + label + '\nLibrary has: [' + Obj.keys(factories).join(', ') + ']');
+            //     }, function (factory) {
+            //       return Result.value(
+            //         Fun.curry(factory, compSpec)
+            //       );
+            //     });
+            //   }
+            // })
           )
         )
       ];
@@ -54,14 +51,8 @@ define(
     };
 
     var extend = function (builder, original, nu) {
-      var o = Objects.readOptFrom(original, 'library').getOr({ });
-      var n = Objects.readOptFrom(nu, 'library').getOr({ });
-      var library = Merger.deepMerge(o, n);
       // Merge all at the moment.
-      var newSpec = Merger.deepMerge(original, nu, {
-        library: library
-      });
-
+      var newSpec = Merger.deepMerge(original, nu);
       return builder(newSpec);
     };
 

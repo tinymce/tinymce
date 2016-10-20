@@ -4,29 +4,25 @@ define(
   [
     'ephox.alloy.spec.DropdownMenuSpec',
     'ephox.alloy.spec.SpecSchema',
-    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
-    'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
+    'ephox.compass.Obj',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.perhaps.Result',
-    'ephox.sugar.api.Width'
+    'ephox.sugar.api.Width',
+    'global!Error'
   ],
 
-  function (DropdownMenuSpec, SpecSchema, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Option, Result, Width) {
-    
+  function (DropdownMenuSpec, SpecSchema, FieldSchema, Objects, Arr, Obj, Merger, Fun, Option, Width, Error) {
 
     var factories = {
       '<alloy.dropdown.display>': function (comp, detail) {
-        throw new Error('Finally!');
         return Merger.deepMerge(comp.extra, {
           uiType: 'container',
           uid: detail.uid + '-dropdown.display',
           dom: {
-            tag: 'div',
             attributes: {
               'data-goal': 'true'
             },
@@ -45,12 +41,28 @@ define(
         FieldSchema.strict('dom'),
         FieldSchema.option('sink')
       ], spec, factories);
-      
 
-      var components = Arr.map(detail.components, function (comp) {
-        return comp(detail);
+      var scan = function (compSpec) {
+        return Objects.readOptFrom(factories, compSpec.name).fold(function () {
+          throw new Error('Unknown dependent component: ' + compSpec.name + '\nKnown: [' + Obj.keys(factories) + ']\nSpec: ' + compSpec);
+        }, function (builder) {
+          return builder(compSpec, detail);
+        });
+      };
+
+      var connect = function (compSpec) {
+        var base = compSpec.uiType !== 'dependent' ? compSpec : scan(compSpec);
+        var cs = Objects.readOptFrom(base, 'components').getOr([ ]);
+        var cs2 = Arr.map(cs, connect);
+        return Merger.deepMerge(base, {
+          components: cs2
+        });
+      };
+
+      var components = Arr.map(detail.components, function (compSpec) {
+        return connect(compSpec);
       });
-
+  
       return SpecSchema.extend(DropdownMenuSpec.make, spec, {
         fetch: function () {
           return detail.fetchItems().map(function (rawItems) {
@@ -78,7 +90,8 @@ define(
           detail.onOpen(button, sandbox, menu);
         },
         onExecute: detail.onExecute,
-        components: components
+        components: components,
+        library: factories
       }, factories);
     };
 

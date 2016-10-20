@@ -13,14 +13,13 @@ define(
   ],
 
   function (SystemEvents, EventHandler, SpecSchema, FieldSchema, Objects, ValueSchema, Merger, Fun) {
-    var schema = ValueSchema.objOf([
-      FieldSchema.strict('action')
-    ]);
+    var schema = ValueSchema.objOf();
 
 
     var make = function (spec) {
-      // Not sure about where these getOrDie statements are
-      var detail = ValueSchema.asStructOrDie('button.spec', schema, spec);
+      var detail = SpecSchema.asRawOrDie('button', [
+        FieldSchema.strict('action')
+      ], spec, { });
 
       var executeHandler = EventHandler.nu({
         run: function (component, simulatedEvent) {
@@ -43,7 +42,6 @@ define(
         { key: 'click', value: clickHandler }
       ]);
 
-      return spec;
       return Merger.deepMerge(
         {
           events: events
@@ -71,11 +69,7 @@ define(
 
         {
           uiType: 'custom'
-        },
-
-        detail.uid().fold(Fun.constant({ }), function (uid) {
-          return Objects.wrap('uid', uid);
-        })
+        }
       );
     };
 
