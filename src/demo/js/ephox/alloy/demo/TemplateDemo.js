@@ -36,7 +36,9 @@ define(
           },
           {
             fields: {
-              'template-class': 'demo-template-dummy'
+              root: {
+                clazz: 'demo-template-dummy'
+              }
             },
             components: { }
           }

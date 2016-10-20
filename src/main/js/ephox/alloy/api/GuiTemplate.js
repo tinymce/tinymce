@@ -7,6 +7,7 @@ define(
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
+    'ephox.epithet.Resolve',
     'ephox.highway.Merger',
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
@@ -18,10 +19,11 @@ define(
     'ephox.sugar.api.Text',
     'ephox.sugar.api.Traverse',
     'ephox.violin.Strings',
-    'global!Error'
+    'global!Error',
+    'global!String'
   ],
 
-  function (FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Json, Fun, Result, Attr, Element, Html, Node, Text, Traverse, Strings, Error) {
+  function (FieldSchema, Objects, ValueSchema, Arr, Obj, Resolve, Merger, Json, Fun, Result, Attr, Element, Html, Node, Text, Traverse, Strings, Error, String) {
     var contract = ValueSchema.objOf([
       FieldSchema.defaulted('components', { }),
       FieldSchema.defaulted('fields', [ ])
@@ -48,13 +50,20 @@ define(
       });
 
       var missing = Arr.filter(fs, function (field) {
-        return !Objects.hasKey(replacements.fields, field);
+        return Resolve.resolve(field, replacements.fields) === null;
       });
 
       if (missing.length > 0) return Result.error('Missing fields in HTML template replacement\nMissing: [' + missing.join(', ') +
        '].\nProvided: [' + Obj.keys(replacements.fields).join(', ') + ']');
       else {
-        var html = Strings.supplant(templateHtml, replacements.fields);
+        // Copied from violin.supplant but used here to resolve paths with dots.
+        var html = templateHtml.replace(/\${([^{}]*)}/g,
+          function (a, b) {
+            var resolved = Resolve.resolve(a, replacements.fields);
+            return resolved !== null ? String(resolved) : a;
+          }
+        );
+
         return readHtml(html, replacements.components);
       }
     };

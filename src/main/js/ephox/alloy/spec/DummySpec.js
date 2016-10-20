@@ -16,6 +16,16 @@ define(
 
   function (EventHandler, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Result) {
     var helpers = {
+      'chapter': function (detail) {
+        var extra = detail.dependents.chapter !== undefined ? detail.dependents.chapter : { };
+        return Merger.deepMerge(extra, {
+          uiType: 'container',
+          dom: {
+            tag: 'div'
+          }
+        });
+      },
+
       'input': function (detail) {
         var extra = detail.dependents.input !== undefined ? detail.dependents.input : { };
         return Merger.deepMerge(extra, {
