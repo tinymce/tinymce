@@ -7,19 +7,17 @@ define(
     'ephox.alloy.spec.SpecSchema',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
-    'ephox.boulder.api.ValueSchema',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun'
+    'ephox.highway.Merger'
   ],
 
-  function (SystemEvents, EventHandler, SpecSchema, FieldSchema, Objects, ValueSchema, Merger, Fun) {
-    var schema = ValueSchema.objOf([]);
+  function (SystemEvents, EventHandler, SpecSchema, FieldSchema, Objects, Merger) {
+    var schema = [
+      FieldSchema.strict('action')
+    ];
 
 
     var make = function (spec) {
-      var detail = SpecSchema.asRawOrDie('button', [
-        FieldSchema.strict('action')
-      ], spec, { });
+      var detail = SpecSchema.asRawOrDie('button', schema, spec, { });
 
       var executeHandler = EventHandler.nu({
         run: function (component, simulatedEvent) {

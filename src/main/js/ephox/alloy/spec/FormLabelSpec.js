@@ -2,6 +2,7 @@ define(
   'ephox.alloy.spec.FormLabelSpec',
 
   [
+    'ephox.alloy.spec.SpecSchema',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
@@ -11,8 +12,8 @@ define(
     'ephox.sugar.api.Attr'
   ],
 
-  function (FieldPresence, FieldSchema, ValueSchema, Id, Merger, Cell, Attr) {
-    var schema = ValueSchema.objOf([
+  function (SpecSchema, FieldPresence, FieldSchema, ValueSchema, Id, Merger, Cell, Attr) {
+    var schema = [
       FieldSchema.field(
         'label',
         'label',
@@ -23,10 +24,10 @@ define(
       ),
       FieldSchema.strict('field'),
       FieldSchema.strict('prefix')
-    ]);
+    ];
 
     var make = function (spec) {
-      var detail = ValueSchema.asStructOrDie('input.spec', schema, spec);
+      var detail = SpecSchema.asStructOrDie('input.spec', schema, spec);
       console.log('label.detail', detail);
 
       var field = Cell(undefined);
