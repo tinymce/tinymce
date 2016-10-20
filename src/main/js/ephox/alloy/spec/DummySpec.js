@@ -16,19 +16,22 @@ define(
 
   function (EventHandler, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Result) {
     var helpers = {
-      'chapter': function (detail) {
-        var extra = detail.dependents.chapter !== undefined ? detail.dependents.chapter : { };
-        return Merger.deepMerge(extra, {
+      'chapter': function (comp, detail) {
+        return Merger.deepMerge(comp.extra, {
           uiType: 'container',
           dom: {
-            tag: 'div'
+            tag: 'div',
+            attributes: {
+              'data-goal': 'true'
+            },
+            // FIX: Getting clobbered.
+            classes: [ 'from-spec' ]
           }
         });
       },
 
-      'input': function (detail) {
-        var extra = detail.dependents.input !== undefined ? detail.dependents.input : { };
-        return Merger.deepMerge(extra, {
+      'input': function (comp, detail) {
+        return Merger.deepMerge(comp.extra, {
           uiType: 'input'
         });
       }
@@ -42,7 +45,7 @@ define(
         ValueSchema.arrOf(
           ValueSchema.valueOf(function (comp) {
             if (comp.uiType !== 'dependent') return Result.value(Fun.constant(comp));
-            else return Objects.hasKey(helpers, comp.name) ? Result.value(helpers[comp.name]) : Result.error('Dependent component: ' + comp.name + ' not known by DummySpec');
+            else return Objects.hasKey(helpers, comp.name) ? Result.value(Fun.curry(helpers[comp.name], comp)) : Result.error('Dependent component: ' + comp.name + ' not known by DummySpec');
           })
         )
       ),

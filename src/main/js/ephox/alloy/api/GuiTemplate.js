@@ -84,26 +84,26 @@ define(
     // The top-level cannot container component definitions
     var readChildren = function (elem, compDefns) {
       if (Node.isText(elem)) return readText(elem);
+      else if (Node.isComment(elem)) return [ ];
 
-      var compsId = Attr.get(elem, 'data-alloy-components');
-      var compId = Attr.get(elem, 'data-alloy-component');
-      var knownCompsId = Attr.get(elem, 'data-known-components');
-      var knownCompId = Attr.get(elem, 'data-known-component');
+      var compsId = Attr.get(elem, 'data-alloy-template-components');
+      var compId = Attr.get(elem, 'data-alloy-template-component');
+      var knownCompsId = Attr.get(elem, 'data-alloy-template-known-components');
+      var knownCompId = Attr.get(elem, 'data-alloy-template-known-component');
 
-      console.log('compsId', compsId);
+      console.log('compId', compId);
 
       if (compsId !== undefined && !Objects.hasKey(compDefns, compsId)) fail('Element: ' + Html.getOuter(elem) + ' does not ' +
         'contain components definition for ' + compsId, { html: Html.getOuter(elem), defns: compDefns });
 
+      if (compId !== undefined && !Objects.hasKey(compDefns, compId)) fail('Element: ' + Html.getOuter(elem) + ' does not ' +
+        'contain component definition for ' + compId, { html: Html.getOuter(elem), defns: compDefns });
+
       if (compsId !== undefined && Objects.hasKey(compDefns, compsId)) {
         // this particular child is a component ... so ignore its children. and treat as leaf.
         return compDefns[compsId];
-      } else if (compId !== undefined && Objects.hasKeys(compDefns, compId)) {
+      } else if (compId !== undefined && Objects.hasKey(compDefns, compId)) {
         return [ compDefns[compId] ];
-      } else if (knownCompId !== undefined) {
-        return [ { uiType: 'dependent', name: knownCompId } ];
-      } else if (knownCompsId !== undefined) {
-        return [ { uiType: 'dependents', name: knownCompsId } ];
       } else {
         var attrs = getAttrs(elem);
         var children = Traverse.children(elem);
@@ -121,15 +121,34 @@ define(
             });
           }
         });
-
-        return [{
-          uiType: 'custom',
+        /*
+        else if (knownCompId !== undefined) {
+        return [ { uiType: 'dependent', name: knownCompId } ];
+      } else if (knownCompsId !== undefined) {
+        return [ { uiType: 'dependents', name: knownCompsId } ];
+      } 
+      */
+        var common = {
           dom: {
             tag: Node.name(elem),
             attributes: attrs
           },
           components: components
-        }];
+        };
+
+        if (knownCompId !== undefined) {
+          return [ { uiType: 'dependent', name: knownCompId, extra: common } ];
+        } else if (knownCompsId !== undefined) {
+          return [ { uiType: 'dependents', name: knownCompsId, extra: common } ];
+        } else {
+
+          return [
+            Merger.deepMerge(common, {
+              uiType: 'custom'
+            
+            })
+          ];
+        }
       }
     };
 
