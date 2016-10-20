@@ -25,7 +25,14 @@ define(
         GuiTemplate.use(
           Template,
           {
-            uiType: 'dummy'
+            uiType: 'dummy',
+            dependents: {
+              'input': {
+                dom: {
+                  classes: [ 'extra-input-class' ]
+                }
+              }
+            }
           },
           {
             fields: {

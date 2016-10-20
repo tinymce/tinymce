@@ -8,17 +8,19 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
+    'ephox.compass.Obj',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Result'
   ],
 
-  function (EventHandler, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Result) {
+  function (EventHandler, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Result) {
     var helpers = {
       'input': function (detail) {
-        return {
+        var extra = detail.dependents.input !== undefined ? detail.dependents.input : { };
+        return Merger.deepMerge(extra, {
           uiType: 'input'
-        };
+        });
       }
     };
 
@@ -33,10 +35,21 @@ define(
             else return Objects.hasKey(helpers, comp.name) ? Result.value(helpers[comp.name]) : Result.error('Dependent component: ' + comp.name + ' not known by DummySpec');
           })
         )
-      )
+      ),
+      FieldSchema.field(
+        'dependents',
+        'dependents',
+        FieldPresence.defaulted({ }),
+        ValueSchema.valueOf(function (dependents) {
+          var keys = Obj.keys(dependents);
+          console.log('keys', keys, dependents);
+          var unknown = Arr.filter(keys, function (key) {
+            return !Objects.hasKey(helpers, key);
+          });
+
+          return unknown.length > 0 ? Result.error('Specified dependent components that DummySpec does not know: ' + unknown.join(', ') + '\nKnown: ' + Obj.keys(helpers)) : Result.value(dependents);
+        }))
     ]);
-
-
 
 
     var make = function (spec) {
