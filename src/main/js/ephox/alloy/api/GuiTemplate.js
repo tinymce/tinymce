@@ -34,7 +34,6 @@ define(
     };
 
     var getAttrs = function (elem) {
-      console.log('getAttrs', elem.dom());
       var attributes = elem.dom().attributes !== undefined ? elem.dom().attributes : [ ];
       return Arr.foldl(attributes, function (b, attr) {
         return Merger.deepMerge(b, Objects.wrap(attr.name, attr.value));
@@ -78,7 +77,7 @@ define(
 
     var readText = function (elem) {
       var text = Text.get(elem);
-      return text.trim().length > 0 ? [ { text: text } ] : [ ]
+      return text.trim().length > 0 ? [ { text: text } ] : [ ];
     };
 
     // The top-level cannot container component definitions

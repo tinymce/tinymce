@@ -30,6 +30,7 @@ define(
 
       var open = function (component, sandbox) {
         var fetcher = detail.fetch();
+        console.log('*****');
 
         var futureData = fetcher();
         // Resolve the future to open the dropdown

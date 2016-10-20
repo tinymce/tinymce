@@ -72,6 +72,7 @@ define(
   
       return SpecSchema.extend(DropdownMenuSpec.make, spec, {
         fetch: function () {
+          console.log('+++++++++++++');
           return detail.fetchItems().map(function (rawItems) {
             var items = Arr.map(rawItems, function (item) {
               return Merger.deepMerge({
