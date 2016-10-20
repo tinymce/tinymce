@@ -109,7 +109,7 @@ define(
               display: 'inline-block'
             }
           },
-          components: base.components.concat([
+          components: [
             base,
             {
               uiType: 'custom',
@@ -119,7 +119,7 @@ define(
                 useFixed: false
               }
             }
-          ])
+          ]
         };
       }, Fun.constant(base));
     };
