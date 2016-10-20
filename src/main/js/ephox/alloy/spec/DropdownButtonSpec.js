@@ -2,10 +2,14 @@ define(
   'ephox.alloy.spec.DropdownButtonSpec',
 
   [
+    'ephox.alloy.behaviour.Behaviour',
+    'ephox.alloy.dom.DomModification',
     'ephox.alloy.spec.DropdownMenuSpec',
     'ephox.alloy.spec.SpecSchema',
+    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
+    'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.highway.Merger',
@@ -15,10 +19,11 @@ define(
     'global!Error'
   ],
 
-  function (DropdownMenuSpec, SpecSchema, FieldSchema, Objects, Arr, Obj, Merger, Fun, Option, Width, Error) {
+  function (Behaviour, DomModification, DropdownMenuSpec, SpecSchema, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Width, Error) {
 
     var factories = {
       '<alloy.dropdown.display>': function (comp, detail) {
+        var fromUser = Objects.readOptFrom(detail.dependents, '<alloy.dropdown.display>');
         return Merger.deepMerge(comp.extra, {
           uiType: 'container',
           uid: detail.uid + '-dropdown.display',
@@ -29,7 +34,7 @@ define(
             // FIX: Getting clobbered.
             classes: [ 'from-spec' ]
           }
-        });
+        }, fromUser);
       }
     };
 
@@ -39,7 +44,8 @@ define(
         FieldSchema.defaulted('onOpen', Fun.noop),
         FieldSchema.defaulted('onExecute', Option.none),
         FieldSchema.strict('dom'),
-        FieldSchema.option('sink')
+        FieldSchema.option('sink'),
+        FieldSchema.defaulted('dependents', { })
       ], spec, factories);
 
       var scan = function (compSpec) {
@@ -91,6 +97,27 @@ define(
         },
         onExecute: detail.onExecute,
         components: components,
+        behaviours: [
+          Behaviour.contract({
+            name: Fun.constant('dropdown.button.api'),
+            exhibit: function () { return DomModification.nu({ }); },
+            handlers: Fun.constant({ }),
+            apis: function (info) {
+              return {
+                showValue: function (component, value) {
+                  var displayer = component.getSystem().getByUid(detail.uid + '-dropdown.display').getOrDie();
+                  displayer.apis().setValue(value);
+                }
+              };
+            },
+            schema: Fun.constant(FieldSchema.field(
+              'dropdown.button.api',
+              'dropdown.button.api',
+              FieldPresence.asOption(),
+              ValueSchema.anyValue()
+            ))
+          })
+        ],
         library: factories
       }, factories);
     };

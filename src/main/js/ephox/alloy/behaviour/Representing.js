@@ -18,12 +18,17 @@ define(
       behaviourName,
       FieldPresence.asOption(),
       ValueSchema.objOf([
-        FieldSchema.strict('query')
+        FieldSchema.strict('query'),
+        FieldSchema.strict('set')
       ])
     );
 
     var doGetValue = function (component, repInfo) {
       return repInfo.query()(component);
+    };
+
+    var doSetValue = function (component, repInfo, value) {
+      repInfo.set()(component, value);
     };
 
     var exhibit = function (info, base) {
@@ -32,7 +37,8 @@ define(
 
     var apis = function (info) {
       return {
-        getValue: Behaviour.tryActionOpt(behaviourName, info, 'getValue', doGetValue)
+        getValue: Behaviour.tryActionOpt(behaviourName, info, 'getValue', doGetValue),
+        setValue: Behaviour.tryActionOpt(behaviourName, info, 'setValue', doSetValue)
       };
     };
 

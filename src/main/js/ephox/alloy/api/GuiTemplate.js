@@ -138,7 +138,16 @@ define(
 
         
         if (knownCompId !== undefined) {
-          return [ { uiType: 'dependent', name: knownCompId, extra: common } ];
+          return [
+            {
+              uiType: 'dependent',
+              name: knownCompId,
+              extra: Merger.deepMerge(
+                Objects.readOptFrom(compDefns, knownCompId).getOr({ }),
+                common
+              )
+            }
+          ];
         } else if (knownCompsId !== undefined) {
           return [ { uiType: 'dependents', name: knownCompsId, extra: common } ];
         } else {
