@@ -151,3 +151,4 @@ tinymce.PluginManager.add('formatpainter', function(p_editor, p_url) {
 		}
 	});
 });
+
