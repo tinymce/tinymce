@@ -25,7 +25,7 @@ define(
         FieldSchema.option('uid')
       ]), spec);
 
-      return DropdownMenuSpec.make({
+      return Merger.deepMerge(spec, DropdownMenuSpec.make({
         fetch: function () {
           return detail.fetchItems().map(function (rawItems) {
             var items = Arr.map(rawItems, function (item) {
@@ -56,7 +56,7 @@ define(
         uid: detail.uid.getOr(undefined),
         dom: detail.dom,
         components: detail.components
-      });
+      }));
     };
 
     return {
