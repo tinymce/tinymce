@@ -9,6 +9,7 @@ define(
     'ephox.alloy.menu.util.ItemEvents',
     'ephox.alloy.menu.util.MenuEvents',
     'ephox.alloy.menu.util.MenuMarkers',
+    'ephox.alloy.spec.SpecSchema',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
@@ -18,7 +19,7 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (EventHandler, ItemType, SeparatorType, WidgetType, ItemEvents, MenuEvents, MenuMarkers, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun) {
+  function (EventHandler, ItemType, SeparatorType, WidgetType, ItemEvents, MenuEvents, MenuMarkers, SpecSchema, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun) {
     var itemSchema = ValueSchema.choose(
       'type',
       {
@@ -28,7 +29,7 @@ define(
       }
     );
 
-    var menuSchema = ValueSchema.objOf([
+    var menuSchema = [
       FieldSchema.strict('value'),
       FieldSchema.strict('items'),
       FieldSchema.defaulted('classes', [ 'alloy-menu' ]),
@@ -38,10 +39,10 @@ define(
         FieldPresence.defaulted(MenuMarkers.fallback()),
         MenuMarkers.schema()
       )
-    ]);
+    ];
 
     var make = function (spec) {
-      var detail = ValueSchema.asStructOrDie('menu.spec', menuSchema, spec);
+      var detail = SpecSchema.asStructOrDie('menu.spec', menuSchema, spec);
       return {
         uiType: 'custom',
         dom: {
@@ -54,6 +55,7 @@ define(
             }
           ])
         },
+        uid: detail.uid(),
         highlighting: {
           // Highlighting for a menu is selecting items inside the menu
           highlightClass: detail.markers().selectedItem(),

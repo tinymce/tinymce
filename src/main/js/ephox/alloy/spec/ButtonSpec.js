@@ -13,7 +13,7 @@ define(
   ],
 
   function (SystemEvents, EventHandler, SpecSchema, FieldSchema, Objects, ValueSchema, Merger, Fun) {
-    var schema = ValueSchema.objOf();
+    var schema = ValueSchema.objOf([]);
 
 
     var make = function (spec) {
@@ -23,8 +23,7 @@ define(
 
       var executeHandler = EventHandler.nu({
         run: function (component, simulatedEvent) {
-          var action = detail.action();
-          action(component);
+          detail.action(component);
           simulatedEvent.stop();
         }
       });

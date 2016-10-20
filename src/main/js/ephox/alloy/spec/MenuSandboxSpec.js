@@ -6,14 +6,15 @@ define(
     'ephox.alloy.menu.spi.MenuConfig',
     'ephox.alloy.menu.util.MenuMarkers',
     'ephox.alloy.sandbox.Dismissal',
+    'ephox.alloy.spec.SpecSchema',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.perhaps.Option'
   ],
 
-  function (ComponentStructure, MenuConfig, MenuMarkers, Dismissal, FieldPresence, FieldSchema, ValueSchema, Option) {
-    var schema = ValueSchema.objOf([
+  function (ComponentStructure, MenuConfig, MenuMarkers, Dismissal, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Option) {
+    var schema = [
       // This hotspot is going to have to be a little more advanced when we get away from menus and dropdowns
       FieldSchema.strict('lazyHotspot'),
       FieldSchema.strict('onClose'),
@@ -28,11 +29,11 @@ define(
         FieldPresence.defaulted(MenuMarkers.fallback()),
         MenuMarkers.schema()
       )
-    ]);
+    ];
 
     var make = function (spec) {
       // Not ideal that it's raw.
-      var detail = ValueSchema.asRawOrDie('menusandbox.spec', schema, spec);
+      var detail = SpecSchema.asRawOrDie('menusandbox.spec', schema, spec);
 
       var config = MenuConfig(detail);
 

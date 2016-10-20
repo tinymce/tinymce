@@ -25,7 +25,6 @@ define(
       };
 
       var register = function (component) {
-        console.log('tagId', component.element().dom().cloneNode(true));
         var tagId = readOrTag(component);
         if (Objects.hasKey(components, tagId)) throw new Error('The tagId "' + tagId + '" is already in use. Please choose another.');
         events.registerId(component, tagId, component.events());

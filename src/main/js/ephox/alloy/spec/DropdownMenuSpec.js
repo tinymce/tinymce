@@ -50,7 +50,7 @@ define(
         };
 
         var sink = detail.sink().getOrThunk(function () {
-          return dropdown.getSystem().getByUid(dropdownUid + '-sandbox').getOrDie();
+          return dropdown.getSystem().getByUid(dropdownUid + '-internal-sink').getOrDie();
         });
 
         return MenuSandboxSpec.make({
@@ -58,6 +58,7 @@ define(
           sink: sink,
           onOpen: onOpen,
           onClose: onClose,
+          uid: detail.uid() + '-sandbox',
           onExecute: detail.onExecute()
         });
       };
@@ -117,7 +118,7 @@ define(
             {
               uiType: 'custom',
               dom: { tag: 'div' },
-              uid: dropdownUid + '-sandbox',
+              uid: dropdownUid + '-internal-sink',
               positioning: {
                 useFixed: false
               }
