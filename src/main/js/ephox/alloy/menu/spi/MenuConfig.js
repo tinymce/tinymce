@@ -212,7 +212,7 @@ define(
       };
 
       var collapseLeft = function (sandbox, item) {
-        var value = Attr.get(item, uiSpec.markers().itemValue());
+        var value = item.apis().getValue();
         return sandbox.apis().getState().bind(function (state) {
           return state.collapse(value).bind(function (path) {
             return updateMenuPath(sandbox, state, path);
@@ -236,15 +236,19 @@ define(
       };
 
       var onLeft = function (sandbox, target) {
-        return collapseLeft(sandbox, target);
+        return sandbox.getSystem().getByDom(target).bind(function (item) {
+          return collapseLeft(sandbox, item);
+        });
       };
 
       var onEscape = function (sandbox, target) {
-        return collapseLeft(sandbox, target).orThunk(function () {
-          sandbox.apis().closeSandbox();
-          // This should only fire when the user presses ESC ... not any other close.
-          uiSpec.lazyHotspot()().apis().focus();
-          return Option.some(true);
+        return sandbox.getSystem().getByDom(target).bind(function (item) {
+          return collapseLeft(sandbox, item).orThunk(function () {
+            sandbox.apis().closeSandbox();
+            // This should only fire when the user presses ESC ... not any other close.
+            uiSpec.lazyHotspot()().apis().focus();
+            return Option.some(true);
+          });
         });
       };
 
