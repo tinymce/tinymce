@@ -67,10 +67,10 @@ define(
             sliding: {
               mode: 'height',
               // FIX: hard-coded demo styles
-              closedStyle: 'demo-sliding-closed',
-              openStyle: 'demo-sliding-open',
-              shrinkingStyle: 'demo-sliding-height-shrinking',
-              growingStyle: 'demo-sliding-height-growing'
+              closedStyle: 'ephox-chameleon-toolbar-more-closed',
+              openStyle: 'ephox-chameleon-toolbar-more-open',
+              shrinkingStyle: 'ephox-chameleon-toolbar-more-hide',
+              growingStyle: 'ephox-chameleon-toolbar-more-show'
             }
           },
           button: {
