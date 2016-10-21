@@ -4,16 +4,19 @@ define(
   [
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.demo.HtmlDisplay',
+    'ephox.compass.Arr',
     'ephox.knoch.future.Future',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
-    'global!document'
+    'global!document',
+    'text!dom-templates/demo.menu.item.html'
   ],
 
-  function (Gui, GuiFactory, HtmlDisplay, Future, Class, DomEvent, Element, Insert, document) {
+  function (Gui, GuiFactory, GuiTemplate, HtmlDisplay, Arr, Future, Class, DomEvent, Element, Insert, document, TemplateMenuItem) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -63,11 +66,15 @@ define(
 
             },
             item: {
-              dom: {
-                tag: 'li',
-                styles: {
-                  background: 'green'
-                }
+              munge: function (spec) {
+                return GuiTemplate.use(
+                  TemplateMenuItem,
+                  {
+                    value: 'bird'
+                  }, {
+                    fields: spec
+                  }
+                );
               }
             }
             // menu: GuiTempalte.use(TemplateMenu)
@@ -77,12 +84,15 @@ define(
             // itemDefn: { }            
           },
           fetchItems: function () {
-            return Future.pure([
-              { value: 'alpha', text: 'Alpha' },
-              { value: 'beta', text: 'Beta' },
-              { value: 'gamma', text: 'Gamma' },
-              { value: 'delta', text: 'Delta' }
-            ]);
+
+            var data = [
+              { value: 'alpha', text: 'Alpha', 'item-class': 'class-alpha' },
+              { value: 'beta', text: 'Beta', 'item-class': 'class-beta' },
+              { value: 'gamma', text: 'Gamma', 'item-class': 'class-gamma' },
+              { value: 'delta', text: 'Delta', 'item-class': 'class-delta' }
+            ];
+
+            return Future.pure(data);
           },
           // sink: sink,
           desc: 'demo-dropdown',
