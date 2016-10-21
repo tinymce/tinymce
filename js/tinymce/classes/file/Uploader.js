@@ -63,7 +63,7 @@ define("tinymce/file/Uploader", [
 				id: blobInfo.id,
 				blob: blobInfo.blob,
 				base64: blobInfo.base64,
-				filename: Fun.constant(fileName(blobInfo))
+				fileName: Fun.constant(fileName(blobInfo))
 			};
 		}
 
@@ -101,7 +101,7 @@ define("tinymce/file/Uploader", [
 			};
 
 			formData = new FormData();
-			formData.append('file', blobInfo.blob(), fileName(blobInfo));
+			formData.append('file', blobInfo.blob(), blobInfo.fileName());
 
 			xhr.send(formData);
 		}
