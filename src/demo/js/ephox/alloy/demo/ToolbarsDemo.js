@@ -73,6 +73,13 @@ define(
               // display: 'flex',
               overflow: 'hidden'
             }
+          },
+          overflowButton: {
+            uiType: 'button',
+            dom: {
+              tag: 'button',
+              innerHtml: '-More-'
+            }
           }
         }
       );

@@ -62,16 +62,14 @@ define(
           ValueSchema.asStructOrDie('overflow.group', ToolbarSpecs.groupSchema(), {
             label: 'more-button-group',
             components: [
-              {
-                uiType: 'button',
-                dom: {
-                  tag: 'button',
-                  innerHtml: 'more'
-                },
-                action: function () {
-                  oInfo.button().action(getDrawer(component, oInfo));
+              Merger.deepMerge(
+                oInfo.button(), 
+                {
+                  action: function () {
+                    oInfo.button().action(getDrawer(component, oInfo));
+                  }
                 }
-              }
+              )
             ]
           })
         );

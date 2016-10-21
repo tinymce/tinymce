@@ -15,7 +15,11 @@ define(
 
   function (SpecSchema, MoreOverflow, Overflowing, ToolbarSpecs, FieldSchema, ValueSchema, Arr, Merger, Fun) {
     var make = function (spec) {
-      var detail = SpecSchema.asStructOrDie('more.toolbar.spec', ToolbarSpecs.toolbarSchema(), spec);
+      var detail = SpecSchema.asStructOrDie('more.toolbar.spec', 
+        [
+          FieldSchema.strict('overflowButton')
+        ].concat(ToolbarSpecs.toolbarSchema()), 
+      spec);
 
 
       var groups = Arr.map(detail.groups(), ToolbarSpecs.buildGroup);
@@ -75,16 +79,14 @@ define(
               growingStyle: 'ephox-chameleon-toolbar-more-show'
             }
           },
-          button: {
-            // FIX: Structify
-            buttonType: {
-              mode: 'text',
-              text: 'Toggle'
-            },
-            action: function (drawer) {
-              drawer.apis().toggleGrow();
+          button: Merger.deepMerge(
+            detail.overflowButton(),
+            {
+              action: function (drawer) {
+                drawer.apis().toggleGrow();
+              }
             }
-          }
+          )
         },
         postprocess: postprocess
       }, spec, {

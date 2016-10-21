@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.alien.Keys',
     'ephox.alloy.keying.KeyingType',
+    'ephox.alloy.log.AlloyLogger',
     'ephox.alloy.navigation.ArrNavigation',
     'ephox.alloy.navigation.KeyMatch',
     'ephox.alloy.navigation.KeyRules',
@@ -18,7 +19,7 @@ define(
     'ephox.sugar.api.Visibility'
   ],
 
-  function (Keys, KeyingType, ArrNavigation, KeyMatch, KeyRules, FieldSchema, Arr, Fun, Option, Compare, Focus, SelectorFilter, SelectorFind, Visibility) {
+  function (Keys, KeyingType, AlloyLogger, ArrNavigation, KeyMatch, KeyRules, FieldSchema, Arr, Fun, Option, Compare, Focus, SelectorFilter, SelectorFind, Visibility) {
     var schema = [
       FieldSchema.defaulted('selector', '[data-alloy-tabstop="true"]'),
       FieldSchema.option('onEscape'),
@@ -43,6 +44,20 @@ define(
       });
     };
 
+    var logFailed = function (index, tabstops) {
+      console.log('pressing tab failed');
+    };
+
+    var logSuccess = function (index, tabstops, originator, destination) {
+      console.log('********');
+      console.log('Original index in tabstops: ' + index);
+      console.log('Tabstops: ', Arr.map(tabstops, AlloyLogger.element));
+      console.log('Originator: ' + AlloyLogger.element(originator));
+      console.log('Destination: ' + AlloyLogger.element(destination));
+      console.log('********');
+
+    }
+
     var go = function (component, simulatedEvent, cyclicInfo, cycle) {
       // 1. Find our current tabstop
       // 2. Find the index of that tabstop
@@ -50,13 +65,14 @@ define(
       // 4. Fire alloy focus on the resultant tabstop
       var tabstops = SelectorFilter.descendants(component.element(), cyclicInfo.selector());
       return findTabstop(component, cyclicInfo).bind(function (tabstop) {
-        console.log('current', tabstop.dom(), 'tabstops', tabstops);
         // focused component
         var index = Arr.findIndex(tabstops, Fun.curry(Compare.eq, tabstop));
         return index < 0 ? Option.none() : cycle(tabstops, index, Visibility.isVisible).fold(function () {
           // Even if there is only one, still capture the event.
+          logFailed(index, tabstops);
           return Option.some(true);
         }, function (outcome) {
+          logSuccess(index, tabstops, component.element(), outcome);
           var system = component.getSystem();
           var originator = component.element();
           system.triggerFocus(outcome, originator);
