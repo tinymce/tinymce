@@ -44,9 +44,13 @@ define(
 
     var doSetGroups = function (component, oInfo, groups) {
       var built = Arr.map(groups, function (g) {
-        return ToolbarSpecs.buildGroup({
+        var spec = ToolbarSpecs.buildGroup({
           components: Fun.constant(g.components)
         });
+
+        return {
+          built: component.getSystem().build(spec)
+        };
       });
       oInfo.state().groups().set(Option.some(built));
     };
@@ -90,6 +94,7 @@ define(
     };
 
     var doRefresh = function (component, oInfo) {
+      Css.reflow(component.element());
       // NOTE: Assumes syncComponents has been called.
       var components = component.components();
       var toolbar = components[0];
@@ -103,13 +108,16 @@ define(
       // Clear any restricted width on the toolbar somehow ----- */
       // barType.clearWidth()
 
+      var drawer = getDrawer(component, oInfo);
+
+      drawer.apis().replace([ ]);
       toolbar.apis().replace(groups);
       toolbar.syncComponents();
 
 
        
       var button = getButton(component, oInfo);
-      var drawer = getDrawer(component, oInfo);
+     
       // component.getSystem().removeFromWorld(button);
       // component.getSystem().removeFromWorld(drawer);
 
@@ -159,7 +167,7 @@ define(
       // barType.updateWidth
 
       Css.remove(toolbar.element(), 'visibility');
-      // Add the overflow group
+      Css.reflow(toolbar.element());
     };
 
     var apis = function (info) {

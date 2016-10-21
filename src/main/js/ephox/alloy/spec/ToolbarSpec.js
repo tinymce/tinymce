@@ -2,6 +2,7 @@ define(
   'ephox.alloy.spec.ToolbarSpec',
 
   [
+    'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.toolbar.Overflowing',
     'ephox.alloy.toolbar.ToolbarSpecs',
     'ephox.boulder.api.ValueSchema',
@@ -10,9 +11,9 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (Overflowing, ToolbarSpecs, ValueSchema, Arr, Merger, Fun) {
+  function (SpecSchema, Overflowing, ToolbarSpecs, ValueSchema, Arr, Merger, Fun) {
     var make = function (spec) {
-      var detail = ValueSchema.asStructOrDie('toolbar.spec', ToolbarSpecs.toolbarSchema(), spec);
+      var detail = SpecSchema.asStructOrDie('toolbar.spec', ToolbarSpecs.toolbarSchema(), spec);
 
       // FIX: I don't want to calculate this here.
       var overflowSpec = ValueSchema.asStructOrDie('overflow.spec', ValueSchema.objOf([

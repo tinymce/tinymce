@@ -3,12 +3,14 @@ define(
 
   [
     'ephox.alloy.events.EventRegistry',
+    'ephox.alloy.log.AlloyLogger',
     'ephox.alloy.registry.Tagger',
     'ephox.boulder.api.Objects',
+    'ephox.sugar.api.Body',
     'global!Error'
   ],
 
-  function (EventRegistry, Tagger, Objects, Error) {
+  function (EventRegistry, AlloyLogger, Tagger, Objects, Body, Error) {
     return function () {
       var events = EventRegistry();
       
@@ -24,9 +26,17 @@ define(
         });
       };
 
+      var failOnDuplicate = function (component, tagId) {
+        var conflict = components[tagId];
+        throw new Error(
+          'The tagId "' + tagId + '" is already used by: ' + AlloyLogger.element(conflict.element()) + '\nCannot used it for: ' + AlloyLogger.element(component.element()) + '\n' +
+            'The conflicting element is' + (Body.inBody(conflict.element()) ? ' ' : ' not ') + 'already in the DOM'
+        );
+      };
+
       var register = function (component) {
         var tagId = readOrTag(component);
-        if (Objects.hasKey(components, tagId)) throw new Error('The tagId "' + tagId + '" is already in use. Please choose another.');
+        if (Objects.hasKey(components, tagId)) failOnDuplicate(component, tagId);
         events.registerId(component, tagId, component.events());
         components[tagId] = component;
       };
