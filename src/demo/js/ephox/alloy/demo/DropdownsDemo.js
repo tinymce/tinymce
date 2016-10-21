@@ -46,18 +46,6 @@ define(
         });
       });
 
-      var menu1 = GuiTemplate.use(
-              TemplateMenu,
-              { },
-              {
-                fields: {
-                  'aria-label': 'menu-label'
-                }
-              }
-            );
-      console.log('menu1', menu1);
-      debugger;
-
       HtmlDisplay.section(
         gui,
         'This dropdown button has four possible values: alpha, beta, gamma, and delta',

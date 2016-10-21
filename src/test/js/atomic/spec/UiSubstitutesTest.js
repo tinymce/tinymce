@@ -1,0 +1,58 @@
+test(
+  'UiSubstitutesTest',
+
+  [
+    'ephox.agar.api.Logger',
+    'ephox.agar.api.RawAssertions',
+    'ephox.alloy.spec.UiSubstitutes',
+    'ephox.wrap.Jsc'
+  ],
+
+  function (Logger, RawAssertions, UiSubstitutes, Jsc) {
+    Logger.sync(
+      'Testing empty components',
+      function () {
+        var actual = UiSubstitutes.substituteAll('detail', [ ], { }, { });
+        RawAssertions.assertEq('Components should stay empty', [ ], actual);
+      }
+    );
+
+    Logger.sync(
+      'Testing everything normal',
+      function () {
+        var actual = UiSubstitutes.substituteAll('detail', [
+          { uiType: 'normal' }
+        ], { }, { });
+        RawAssertions.assertEq('Normal should be returned as is', [
+          { uiType: 'normal', components: [ ] }
+        ], actual); 
+      }
+    );
+
+    Logger.sync(
+      'Testing one level with a dependent',
+      function () {
+        var actual = UiSubstitutes.substituteAll('detail', [
+          { uiType: 'normal' },
+          { uiType: 'dependent', name: 'foo' }
+        ], {
+          foo: function (compSpec, detail) {
+            return {
+              uiType: 'foo-dependent',
+              detail: detail
+            };
+          }
+        }, { });
+        RawAssertions.assertEq('Dependent should be substituted', [
+          { uiType: 'normal', components: [ ] },
+          { uiType: 'foo-dependent', detail: 'detail', components: [ ] }
+        ], actual);
+      }
+    );
+
+    // Do a property based test once it has worked that everything retuns a uiType
+    // Jsc.property(
+    //   'E')
+    // assert.eq(1, 2);
+  }
+);
