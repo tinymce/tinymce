@@ -41,9 +41,10 @@ define(
             components: groups,
             dom: {
               styles: {
-                display: 'flex',
-                background: '#333'
-              }
+                // display: 'flex',
+                // background: '#333'
+              },
+              classes: [ 'ephox-chameleon-toolbar', 'ephox-chameleon-toolbar-primary' ]
             },
             replacing: { }
           }
@@ -58,11 +59,12 @@ define(
             replacing: { },
             dom: {
               styles: {
-                background: 'white',
-                color: 'black',
-                display: 'flex',
-                'flex-wrap': 'wrap'
-              }
+                // background: 'white',
+                // color: 'black',
+                // display: 'flex',
+                // 'flex-wrap': 'wrap'
+              },
+              classes: [ 'ephox-chameleon-toolbar-more', 'ephox-chameleon-toolbar' ]
             },
             sliding: {
               mode: 'height',
