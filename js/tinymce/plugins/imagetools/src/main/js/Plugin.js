@@ -109,8 +109,12 @@ define("tinymce/imagetoolsplugin/Plugin", [
 				selectedImage = getSelectedImage();
 				id = createId();
 				blobCache = editor.editorUpload.blobCache;
+				blobInfo = blobCache.getByUri(selectedImage.src);
 				base64 = URI.parseDataUri(dataUri).data;
 
+				if (blobInfo) {
+					blobCache.removeByUri(blobInfo.blobUri());
+				}
 				blobInfo = blobCache.create(id, blob, base64);
 				blobCache.add(blobInfo);
 
