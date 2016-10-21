@@ -5,12 +5,16 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <!-- TinyMCE -->
 <script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<!-- <script type="text/javascript" src="/powerpaste2/dist/powerpaste/plugin.js"></script> -->
 <script type="text/javascript">
 	tinyMCE.init({
 		// General options
 		mode : "textareas",
 		theme : "advanced",
-		plugins : "autolink,lists,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,wordcount,advlist,autosave,visualblocks",
+		plugins : "paste,autolink,lists,pagebreak,style,layer,table,save,advhr,advimage," +
+					"advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace," +
+					"print,contextmenu,directionality,fullscreen,noneditable,visualchars,nonbreaking," +
+					"xhtmlxtras,template,wordcount,advlist,visualblocks",
 
 		// Theme options
 		theme_advanced_buttons1 : "save,newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
@@ -21,9 +25,21 @@
 		theme_advanced_toolbar_align : "left",
 		theme_advanced_statusbar_location : "bottom",
 		theme_advanced_resizing : true,
+		add_unload_trigger: false,
+
+		theme_advanced_default_font_size : '10pt',
+		theme_advanced_default_font_family : 'Verdana',
+		theme_advanced_fonts : "Andale Mono=andale mono,monospace;Arial=arial,helvetica,sans-serif;Arial Black=arial black,sans-serif;Book Antiqua=book antiqua,palatino,serif;Comic Sans MS=comic sans ms,sans-serif;Courier New=courier new,courier,monospace;Georgia=georgia,palatino,serif;Helvetica=helvetica,arial,sans-serif;Impact=impact,sans-serif;Symbol=symbol;Tahoma=tahoma,arial,helvetica,sans-serif;Terminal=terminal,monaco,monospace;Times New Roman=times new roman,times,serif;Trebuchet MS=trebuchet ms,geneva,sans-serif;Verdana=verdana,geneva,sans-serif;Webdings=webdings;Wingdings=wingdings,zapf dingbats",
+		theme_advanced_font_sizes : '8pt,9pt,10pt,11pt,12pt,14pt,16pt,18pt,20pt,22pt,24pt,28pt,36pt',
+		paste_retain_style_properties: 'font-size,font-family,color',
+		paste_remove_styles_if_webkit: false,
+
+        powerpaste_word_import: 'merge',
+        powerpaste_html_import: 'clean',
+        powerpaste_allow_local_images: false,
 
 		// Example content CSS (should be your site CSS)
-		content_css : "css/content.css",
+		// content_css : "css/content.css",
 
 		// Drop lists for link/image/media/template dialogs
 		template_external_list_url : "lists/template_list.js",
@@ -69,9 +85,15 @@
 				&lt;p&gt;
 					This is some example text that you can edit inside the &lt;strong&gt;TinyMCE editor&lt;/strong&gt;.
 				&lt;/p&gt;
-				&lt;p&gt;
+				&lt;p style="font-family: Arial; font-size: 14pt"&gt;
 				Nam nisi elit, cursus in rhoncus sit amet, pulvinar laoreet leo. Nam sed lectus quam, ut sagittis tellus. Quisque dignissim mauris a augue rutrum tempor. Donec vitae purus nec massa vestibulum ornare sit amet id tellus. Nunc quam mauris, fermentum nec lacinia eget, sollicitudin nec ante. Aliquam molestie volutpat dapibus. Nunc interdum viverra sodales. Morbi laoreet pulvinar gravida. Quisque ut turpis sagittis nunc accumsan vehicula. Duis elementum congue ultrices. Cras faucibus feugiat arcu quis lacinia. In hac habitasse platea dictumst. Pellentesque fermentum magna sit amet tellus varius ullamcorper. Vestibulum at urna augue, eget varius neque. Fusce facilisis venenatis dapibus. Integer non sem at arcu euismod tempor nec sed nisl. Morbi ultricies, mauris ut ultricies adipiscing, felis odio condimentum massa, et luctus est nunc nec eros.
 				&lt;/p&gt;
+				<table style="width: 300px">
+					<tbody>
+						<tr><td>a</td><td style="font-family: Arial Black; font-size: 28pt">b</td></tr>
+						<tr><td>c</td><td>d</td></tr>
+					</tbody>
+				</table>
 			</textarea>
 		</div>
 

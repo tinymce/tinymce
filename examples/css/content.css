@@ -17,6 +17,13 @@ td {
 	font-size: 10px;
 }
 
+table, caption, td, th {
+	font-size: inherit;
+	font-weight: inherit;
+	font-style: inherit;
+	font-variant: inherit;
+}
+
 pre {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 10px;

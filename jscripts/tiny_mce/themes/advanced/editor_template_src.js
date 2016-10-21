@@ -11,6 +11,25 @@
 (function(tinymce) {
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, extend = tinymce.extend, each = tinymce.each, Cookie = tinymce.util.Cookie, lastExtID, explode = tinymce.explode;
 
+	var applyDefaultFont = function (body, settings) {
+		var fontSize = settings.theme_advanced_default_font_size;
+		var fontFamily = settings.theme_advanced_default_font_family;
+
+		if (fontSize) {
+			body.style.fontSize = fontSize;
+		}
+
+		if (fontFamily) {
+			body.style.fontFamily = fontFamily;
+		}
+	};
+
+	var hasDefaultFontSizeOrFamily = function (settings) {
+		var fontSize = settings.theme_advanced_default_font_size;
+		var fontFamily = settings.theme_advanced_default_font_family;
+		return !!(fontSize || fontFamily);
+	};
+
 	// Generates a preview for a format
 	function getPreviewCss(ed, fmt) {
 		var name, previewElm, dom = ed.dom, previewCss = '', parentFontSize, previewStylesName;
@@ -234,6 +253,8 @@
 						t._updateUndoStatus(ed);
 					});
 				}
+
+				applyDefaultFont(ed.getBody(), ed.settings);
 			});
 
 			ed.onSetProgressState.add(function(ed, b, ti) {
@@ -1079,8 +1100,8 @@
 				cm.setActive(c, ed.queryCommandState(t.controls[c][1]));
 			});
 
-			function getParent(name) {
-				var i, parents = ob.parents, func = name;
+			var getElement = function (elements, name) {
+				var i, elements, func = name;
 
 				if (typeof(name) == 'string') {
 					func = function(node) {
@@ -1088,10 +1109,18 @@
 					};
 				}
 
-				for (i = 0; i < parents.length; i++) {
-					if (func(parents[i]))
-						return parents[i];
+				for (i = 0; i < elements.length; i++) {
+					if (func(elements[i]))
+						return elements[i];
 				}
+			};
+
+			function getParent(name) {
+				return getElement(ob.parents, name);
+			};
+
+			function getParentIncBody(name) {
+				return getElement([].concat(ob.parents).concat([ed.getBody()]), name);
 			};
 
 			cm.setActive('visualaid', ed.hasVisual);
@@ -1142,13 +1171,16 @@
 			}
 
 			// Find out current fontSize, fontFamily and fontClass
-			getParent(function(n) {
+			getParentIncBody(function(n) {
+				var matchesSelector;
+
 				if (n.nodeName === 'SPAN') {
 					if (!cl && n.className)
 						cl = n.className;
 				}
 
-				if (ed.dom.is(n, s.theme_advanced_font_selector)) {
+				matchesSelector = ed.dom.is(n, s.theme_advanced_font_selector);
+				if (matchesSelector || hasDefaultFontSizeOrFamily(ed.settings)) {
 					if (!fz && n.style.fontSize)
 						fz = n.style.fontSize;
 
