@@ -32,12 +32,20 @@ define(
     var menuSchema = [
       FieldSchema.strict('value'),
       FieldSchema.strict('items'),
-      FieldSchema.defaulted('classes', [ 'alloy-menu' ]),
+      FieldSchema.strict('dom'),
       FieldSchema.field(
         'markers',
         'markers',
         FieldPresence.defaulted(MenuMarkers.fallback()),
         MenuMarkers.schema()
+      ),
+      FieldSchema.field(
+        'members',
+        'members',
+        FieldPresence.strict(),
+        ValueSchema.objOf([
+          FieldSchema.strict('item')
+        ])
       )
     ];
 
@@ -45,16 +53,14 @@ define(
       var detail = SpecSchema.asStructOrDie('menu.spec', menuSchema, spec);
       return {
         uiType: 'custom',
-        dom: {
-          tag: 'ol',
-          classes: detail.classes(),
+        dom: Merger.deepMerge({
           attributes: Objects.wrapAll([
             {
               key: detail.markers().menuValue(),
               value: detail.value()
             }
           ])
-        },
+        }, detail.dom()),
         uid: detail.uid(),
         highlighting: {
           // Highlighting for a menu is selecting items inside the menu

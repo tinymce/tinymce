@@ -5,6 +5,7 @@ define(
     'ephox.alloy.spec.ButtonSpec',
     'ephox.alloy.spec.MenuSandboxSpec',
     'ephox.alloy.spec.SpecSchema',
+    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
@@ -15,7 +16,7 @@ define(
     'ephox.sugar.api.Remove'
   ],
 
-  function (ButtonSpec, MenuSandboxSpec, SpecSchema, FieldSchema, ValueSchema, Arr, Id, Merger, Fun, Option, Remove) {
+  function (ButtonSpec, MenuSandboxSpec, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Arr, Id, Merger, Fun, Option, Remove) {
     var make = function (spec) {
       var detail = SpecSchema.asStructOrDie('dropdown.button', [
         FieldSchema.strict('fetch'),
@@ -23,6 +24,15 @@ define(
         FieldSchema.defaulted('onExecute', Option.none),
         FieldSchema.defaulted('toggleClass', 'alloy-selected-button'),
         FieldSchema.strict('dom'),
+        FieldSchema.field(
+          'members',
+          'members',
+          FieldPresence.strict(),
+          ValueSchema.objOf([
+            FieldSchema.strict('menu'),
+            FieldSchema.strict('item')
+          ])
+        ),
         FieldSchema.option('sink')
       ], spec, { });
 
@@ -61,7 +71,11 @@ define(
           onOpen: onOpen,
           onClose: onClose,
           uid: detail.uid() + '-sandbox',
-          onExecute: detail.onExecute()
+          onExecute: detail.onExecute(),
+          members: {
+            menu: detail.members().menu(),
+            item: detail.members().item()
+          }
         });
       };
 

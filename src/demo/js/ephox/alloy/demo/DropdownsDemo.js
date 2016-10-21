@@ -7,19 +7,18 @@ define(
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.knoch.future.Future',
     'ephox.sugar.api.Class',
-    'ephox.sugar.api.Css',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'global!document'
   ],
 
-  function (Gui, GuiFactory, HtmlDisplay, Future, Class, Css, DomEvent, Element, Insert, document) {
+  function (Gui, GuiFactory, HtmlDisplay, Future, Class, DomEvent, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
       Class.add(gui.element(), 'gui-root-demo-container');
-      Css.set(gui.element(), 'direction', 'rtl');
+      // Css.set(gui.element(), 'direction', 'rtl');
 
       Insert.append(body, gui.element());
 
@@ -34,6 +33,8 @@ define(
       });
 
       gui.add(sink);      
+
+      console.log('sink', sink.element());
 
       var onMousedown = DomEvent.bind(Element.fromDom(document), 'mousedown', function (evt) {
         gui.broadcastOn([ 'dismiss.popups' ], {
@@ -51,6 +52,30 @@ define(
             tag: 'button',
             innerHtml: 'Click me'
           },
+          members: {
+            menu: {
+              dom: {
+                tag: 'ul',
+                styles: {
+                  background: 'blue'
+                }
+              }
+
+            },
+            item: {
+              dom: {
+                tag: 'li',
+                styles: {
+                  background: 'green'
+                }
+              }
+            }
+            // menu: GuiTempalte.use(TemplateMenu)
+            // dom: {
+            //   tag: 'div'  
+            // },
+            // itemDefn: { }            
+          },
           fetchItems: function () {
             return Future.pure([
               { value: 'alpha', text: 'Alpha' },
@@ -67,6 +92,7 @@ define(
         }
       );
 
+      return;
       HtmlDisplay.section(
         gui,
         'This dropdown menu has an intricate menu system derived from Sublime sorting',

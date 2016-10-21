@@ -2,13 +2,16 @@ define(
   'ephox.alloy.behaviour.Behaviour',
 
   [
+    'ephox.alloy.dom.DomModification',
     'ephox.alloy.log.AlloyLogger',
+    'ephox.boulder.api.FieldSchema',
+    'ephox.peanut.Fun',
     'ephox.scullion.Contracts',
     'global!Array',
     'global!console'
   ],
 
-  function (AlloyLogger, Contracts, Array, console) {
+  function (DomModification, AlloyLogger, FieldSchema, Fun, Contracts, Array, console) {
     var contract = Contracts.exactly([ 'name', 'exhibit', 'handlers', 'apis', 'schema' ]);
 
     var truncate = function (element) {
@@ -34,8 +37,24 @@ define(
       };
     };
 
+    var exhibition = function (name, modification) {
+      return contract({
+        name: Fun.constant(name),
+        exhibit: function () {
+          return DomModification.nu(modification);
+        },
+        apis: Fun.constant({ }),
+        handlers: Fun.constant({ }),
+        // Make this better.
+        schema: Fun.constant(
+          FieldSchema.state('state', function () { })
+        )
+      });
+    };
+
     return {
       tryActionOpt: tryActionOpt,
+      exhibition: exhibition,
       contract: contract
     };
   }

@@ -28,6 +28,16 @@ define(
         'markers',
         FieldPresence.defaulted(MenuMarkers.fallback()),
         MenuMarkers.schema()
+      ),
+
+      FieldSchema.field(
+        'members',
+        'members',
+        FieldPresence.strict(),
+        ValueSchema.objOf([
+          FieldSchema.strict('menu'),
+          FieldSchema.strict('item')
+        ])
       )
     ];
 

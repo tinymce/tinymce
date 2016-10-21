@@ -16,6 +16,7 @@ define(
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
+    'ephox.highway.Merger',
     'ephox.perhaps.Option',
     'ephox.perhaps.Options',
     'ephox.sugar.api.Attr',
@@ -27,7 +28,7 @@ define(
     'ephox.sugar.api.SelectorFilter'
   ],
 
-  function (ComponentStructure, SystemEvents, EventHandler, LayeredState, ItemEvents, MenuEvents, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Option, Options, Attr, Body, Class, Classes, Insert, Remove, SelectorFilter) {
+  function (ComponentStructure, SystemEvents, EventHandler, LayeredState, ItemEvents, MenuEvents, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Option, Options, Attr, Body, Class, Classes, Insert, Remove, SelectorFilter) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('lazyHotspot'),
 
@@ -44,7 +45,17 @@ define(
         MenuMarkers.schema()
       ),
 
-      FieldSchema.strict('backgroundClass')
+      FieldSchema.strict('backgroundClass'),
+
+      FieldSchema.field(
+        'members',
+        'members',
+        FieldPresence.strict(),
+        ValueSchema.objOf([
+          FieldSchema.strict('menu'),
+          FieldSchema.strict('item')
+        ])
+      )
     ]);
     
     return function (rawUiSpec) {
@@ -53,12 +64,21 @@ define(
       var buildMenus = function (sandbox, menus) {
         return Obj.map(menus, function (spec, name) {
           // NOTE: We use rawUiSpec here so the nesting isn't a struct
-          var data = {
-            uiType: 'menu',
-            value: name,
-            items: spec,
-            markers: rawUiSpec.markers
-          };
+          var data = Merger.deepMerge(
+            uiSpec.members().menu(),
+            {
+              uiType: 'menu',
+              value: name,
+              items: Arr.map(spec, function (sItem) {
+                return Merger.deepMerge(uiSpec.members().item(), sItem);
+              }),
+              markers: rawUiSpec.markers,
+              members: {
+                item: uiSpec.members().item()
+              }
+            }
+          );
+          console.log('Data', data);
           return sandbox.getSystem().build(data);
         });
       };

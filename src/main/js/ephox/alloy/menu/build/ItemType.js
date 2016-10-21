@@ -3,19 +3,22 @@ define(
 
   [
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.behaviour.Behaviour',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.util.ItemEvents',
     'ephox.alloy.menu.util.MenuMarkers',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
+    'ephox.highway.Merger',
     'ephox.peanut.Fun'
   ],
 
-  function (SystemEvents, EventHandler, ItemEvents, MenuMarkers, FieldPresence, FieldSchema, Objects, Fun) {
+  function (SystemEvents, Behaviour, EventHandler, ItemEvents, MenuMarkers, FieldPresence, FieldSchema, Objects, Merger, Fun) {
     var schema = [
       FieldSchema.strict('value'),
       FieldSchema.strict('text'),
+      FieldSchema.strict('dom'),
       FieldSchema.option('html'),
       FieldSchema.field(
         'markers',
@@ -33,21 +36,7 @@ define(
     var builder = function (info) {
       return {
         uiType: 'custom',
-        dom: {
-          tag: 'li',
-          classes: info.classes().concat([ info.markers().item() ]),
-          attributes: Objects.wrapAll([
-            {
-              key: info.markers().itemValue(),
-              value: info.value()
-            },
-            {
-              key: info.markers().itemText(),
-              value: info.text()
-            }
-          ]),
-          innerHtml: info.html().getOr(info.text())
-        },
+        dom: info.dom(),
         focusing: {
           onFocus: function (component) {
             ItemEvents.onFocus(component);
@@ -66,7 +55,23 @@ define(
         },
         keying: {
           mode: 'execution'
-        }
+        },
+        behaviours: [
+          Behaviour.exhibition('exhibition.menu.item.type', {
+            attributes: Objects.wrapAll([
+              {
+                key: info.markers().itemValue(),
+                value: info.value()
+              },
+              {
+                key: info.markers().itemText(),
+                value: info.text()
+              }
+            ]),
+            innerHtml: info.html().getOr(info.text()),
+            classes: [ info.markers().item() ]
+          })
+        ]
       };
     };
 
