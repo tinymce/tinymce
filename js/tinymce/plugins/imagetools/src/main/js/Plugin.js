@@ -46,6 +46,14 @@ define("tinymce/imagetoolsplugin/Plugin", [
 			return editor.selection.getNode();
 		}
 
+		function extractFilename(url) {
+			var m = url.match(/\/([^\/\?]+)?\.(?:jpeg|jpg|png|gif)(?:\?|$)/i);
+			if (m) {
+				return editor.dom.encode(m[1]);
+			}
+			return null;
+		}
+
 		function createId() {
 			return 'imagetools' + count++;
 		}
@@ -107,9 +115,19 @@ define("tinymce/imagetoolsplugin/Plugin", [
 				var id, base64, blobCache, blobInfo, selectedImage;
 
 				selectedImage = getSelectedImage();
-				id = createId();
 				blobCache = editor.editorUpload.blobCache;
 				blobInfo = blobCache.getByUri(selectedImage.src);
+
+				if (editor.settings.imagetools_reuse_filename) {
+					if (blobInfo) {
+						id = blobInfo.id();
+					} else {
+						id = extractFilename(selectedImage.src) || createId();
+					}
+				} else {
+					id = createId();
+				}
+				
 				base64 = URI.parseDataUri(dataUri).data;
 
 				if (blobInfo) {
