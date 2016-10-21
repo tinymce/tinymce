@@ -47,6 +47,10 @@ define(
         {
           uiType: 'dropdown',
           text: 'Dropdown',
+          dom: {
+            tag: 'button',
+            innerHtml: 'Click me'
+          },
           fetchItems: function () {
             return Future.pure([
               { value: 'alpha', text: 'Alpha' },
@@ -68,7 +72,10 @@ define(
         'This dropdown menu has an intricate menu system derived from Sublime sorting',
         {
           uiType: 'dropdownmenu',
-          text: '+',
+          dom: {
+            tag: 'button',
+            innerHtml: '+'
+          },
           sink: sink,
           onExecute: function (sandbox, item, itemValue) {
             console.log('*** dropdown menu demo execute on: ' + itemValue + ' ***');
@@ -107,9 +114,9 @@ define(
                             {
                               uiType: 'button',
                               action: function () { console.log('clicked on a button', arguments); },
-                              buttonType: {
-                                mode: 'text',
-                                text: '-'
+                              dom: {
+                                tag: 'button',
+                                innerHtml: '-'
                               },
                               // FIX: This is required to override a previous tabstopping.
                               tabstopping: undefined
@@ -117,9 +124,9 @@ define(
                             {
                               uiType: 'button',
                               action: function () { console.log('clicked on a button', arguments); },
-                              buttonType: {
-                                mode: 'text',
-                                text: '+'
+                              dom: {
+                                tag: 'button',
+                                innerHtml: '+'
                               },
                               tabstopping: undefined
                             }
