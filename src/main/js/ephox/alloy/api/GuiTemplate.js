@@ -90,8 +90,6 @@ define(
       var knownCompId = Attr.get(elem, 'data-alloy-template-known-component');
 
       var placeholderId = Attr.get(elem, 'data-alloy-template-placeholder');
-      console.log('reading children', compId, knownCompId, placeholderId);
-
       
       if (compId !== undefined && !Objects.hasKey(compDefns, compId)) fail('Element: ' + Html.getOuter(elem) + ' does not ' +
         'contain component definition for ' + compId, { html: Html.getOuter(elem), defns: compDefns });

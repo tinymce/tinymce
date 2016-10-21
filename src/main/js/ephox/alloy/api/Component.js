@@ -37,8 +37,6 @@ define(
 
       var item = DomRender.renderToDom(modDefinition);
 
-      console.log('spec', spec, 'info', info);
-      
       var baseEvents = {
         'alloy.base.behaviour': CustomDefinition.toEvents(info)
       };
