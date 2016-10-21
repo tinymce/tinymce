@@ -8,6 +8,7 @@ define(
     'ephox.alloy.construct.ComponentDom',
     'ephox.alloy.construct.ComponentEvents',
     'ephox.alloy.construct.CustomDefinition',
+    'ephox.alloy.dom.DomDefinition',
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.dom.DomRender',
     'ephox.boulder.api.ValueSchema',
@@ -18,7 +19,7 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (ExtraArgs, NoContextApi, ComponentApis, ComponentDom, ComponentEvents, CustomDefinition, DomModification, DomRender, ValueSchema, Arr, Fun, Option, Cell, Traverse) {
+  function (ExtraArgs, NoContextApi, ComponentApis, ComponentDom, ComponentEvents, CustomDefinition, DomDefinition, DomModification, DomRender, ValueSchema, Arr, Fun, Option, Cell, Traverse) {
     var build = function (spec) { 
       var getSelf = function () {
         return self;
@@ -35,7 +36,7 @@ define(
       var modDefinition = DomModification.merge(definition, modification);
 
       var item = DomRender.renderToDom(modDefinition);
-
+      
       var baseEvents = {
         'alloy.base.behaviour': CustomDefinition.toEvents(info)
       };
