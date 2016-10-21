@@ -54,6 +54,12 @@ define(
         keying: {
           mode: 'execution'
         },
+        representing: {
+          query: function () {
+            return info.value();
+          },
+          set: function () { }
+        },
         behaviours: [
           Behaviour.exhibition('exhibition.menu.item.type', {
             attributes: Objects.wrapAll([

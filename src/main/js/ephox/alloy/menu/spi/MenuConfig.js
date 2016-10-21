@@ -191,21 +191,19 @@ define(
         });
       };
 
-      var expandRight = function (sandbox, triggerItem) {
-        var value = Attr.get(triggerItem, uiSpec.markers().itemValue());
+      var expandRight = function (sandbox, item) {
+        var value = item.apis().getValue();
         return sandbox.apis().getState().bind(function (state) {
           return state.expand(value).bind(function (path) {
             // When expanding, always select the first.
             Option.from(path[0]).bind(state.lookupMenu).each(function (newMenuComp) {
-              sandbox.getSystem().getByDom(triggerItem).each(function (itemComp) {
-                newMenuComp.apis().highlightFirst();
+              newMenuComp.apis().highlightFirst();
 
-                // DUPE with above. Fix later.
-                if (! Body.inBody(newMenuComp.element())) {
-                  Insert.append(sandbox.element(), newMenuComp.element());
-                  showSubmenu(sandbox, itemComp, newMenuComp);
-                }
-              });
+              // DUPE with above. Fix later.
+              if (! Body.inBody(newMenuComp.element())) {
+                Insert.append(sandbox.element(), newMenuComp.element());
+                showSubmenu(sandbox, item, newMenuComp);
+              }
             });
 
             return updateMenuPath(sandbox, state, path);
@@ -231,9 +229,10 @@ define(
         });
       };
 
-      var onRight = function (sandbox, target) {
-        // we want to press right otherwise.
-        return expandRight(sandbox, target);
+      var onRight = function (sandbox, triggerItem) {
+        return sandbox.getSystem().getByDom(triggerItem).bind(function (item) {
+          return expandRight(sandbox, item);
+        });
       };
 
       var onLeft = function (sandbox, target) {
@@ -266,9 +265,9 @@ define(
             // Hide any irrelevant submenus and expand any submenus based 
             // on hovered item
             run: function (sandbox, simulatedEvent) {
-              var itemDom = simulatedEvent.event().item().element();
-              updateView(sandbox, itemDom);
-              expandRight(sandbox, itemDom);
+              var item = simulatedEvent.event().item();
+              updateView(sandbox, item.element());
+              expandRight(sandbox, item);
             }
           })
         },
@@ -279,11 +278,9 @@ define(
               // Trigger on execute on the targeted element
               // I.e. clicking on menu item
               var target = simulatedEvent.event().target();
-              return expandRight(sandbox, target).orThunk(function () {
-                return sandbox.getSystem().getByDom(target).bind(function (item) {
-                  var itemValue = Attr.get(target, uiSpec.markers().itemValue());
-                  var itemText = Attr.get(target, uiSpec.markers().itemText());
-                  return uiSpec.onExecute()(sandbox, item, itemValue, itemText);
+              return sandbox.getSystem().getByDom(target).bind(function (item) {
+                return expandRight(sandbox, item).orThunk(function () {
+                  return uiSpec.onExecute()(sandbox, item);
                 });
               });
             }

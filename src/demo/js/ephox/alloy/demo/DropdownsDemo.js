@@ -92,7 +92,6 @@ define(
         }
       );
 
-      return;
       HtmlDisplay.section(
         gui,
         'This dropdown menu has an intricate menu system derived from Sublime sorting',
@@ -103,6 +102,30 @@ define(
             innerHtml: '+'
           },
           sink: sink,
+          members: {
+            menu: {
+              dom: {
+                tag: 'ul',
+                styles: {
+                  background: 'blue'
+                }
+              }
+
+            },
+            item: {
+              dom: {
+                tag: 'li',
+                styles: {
+                  background: 'green'
+                }
+              }
+            }
+            // menu: GuiTempalte.use(TemplateMenu)
+            // dom: {
+            //   tag: 'div'  
+            // },
+            // itemDefn: { }            
+          },
           onExecute: function (sandbox, item, itemValue) {
             console.log('*** dropdown menu demo execute on: ' + itemValue + ' ***');
           },
