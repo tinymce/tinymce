@@ -33,6 +33,7 @@ define(
     };
 
     var subPlaceholder = function (detail, compSpec, factories, placeholders) {
+      debugger;
       return compSpec;
     };
 

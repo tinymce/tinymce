@@ -10,6 +10,7 @@ define(
     'ephox.alloy.menu.util.MenuEvents',
     'ephox.alloy.menu.util.MenuMarkers',
     'ephox.alloy.spec.SpecSchema',
+    'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
@@ -19,7 +20,7 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (EventHandler, ItemType, SeparatorType, WidgetType, ItemEvents, MenuEvents, MenuMarkers, SpecSchema, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun) {
+  function (EventHandler, ItemType, SeparatorType, WidgetType, ItemEvents, MenuEvents, MenuMarkers, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun) {
     var itemSchema = ValueSchema.choose(
       'type',
       {
@@ -66,6 +67,10 @@ define(
         return itemInfo.builder()(itemInfo);
       });
 
+      var components = UiSubstitutes.substituteAll(detail, detail.components(), { }, {
+        '<alloy.menu.items>': builtItems
+      });
+
       return {
         uiType: 'custom',
         dom: detail.dom(),
@@ -105,7 +110,7 @@ define(
           },
           set: function () { }
         },
-        components: detail.components()
+        components: components
       };
     };
 
