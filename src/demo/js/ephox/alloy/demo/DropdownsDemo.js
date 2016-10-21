@@ -79,12 +79,7 @@ define(
                   }
                 );
               }
-            }
-            // menu: GuiTempalte.use(TemplateMenu)
-            // dom: {
-            //   tag: 'div'  
-            // },
-            // itemDefn: { }            
+            }     
           },
           fetchItems: function () {
 
