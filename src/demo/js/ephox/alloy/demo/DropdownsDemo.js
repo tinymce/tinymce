@@ -58,7 +58,7 @@ define(
           members: {
             menu: {
               dom: {
-                tag: 'ul',
+                tag: 'div',
                 styles: {
                   background: 'blue'
                 }
