@@ -119,13 +119,7 @@ define("tinymce/imagetoolsplugin/Plugin", [
 				blobInfo = blobCache.getByUri(selectedImage.src);
 
 				if (editor.settings.imagetools_reuse_filename) {
-					if (blobInfo) {
-						id = blobInfo.id();
-					} else {
-						id = extractFilename(selectedImage.src) || createId();
-					}
-				} else {
-					id = createId();
+					id = blobInfo ? blobInfo.id() : extractFilename(selectedImage.src);
 				}
 				
 				base64 = URI.parseDataUri(dataUri).data;
@@ -133,7 +127,7 @@ define("tinymce/imagetoolsplugin/Plugin", [
 				if (blobInfo) {
 					blobCache.removeByUri(blobInfo.blobUri());
 				}
-				blobInfo = blobCache.create(id, blob, base64);
+				blobInfo = blobCache.create(id || createId(), blob, base64);
 				blobCache.add(blobInfo);
 
 				editor.undoManager.transact(function() {
