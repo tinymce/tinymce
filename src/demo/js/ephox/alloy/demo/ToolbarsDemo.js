@@ -21,9 +21,9 @@ define(
         {
           label: 'group-1',
           components: [
-            { type: 'button', buttonType: { mode: 'text', text: 'Alpha' }, action: function () { } },
-            { type: 'button', buttonType: { mode: 'text', text: 'Beta' }, action: function () { } },
-            { type: 'button', buttonType: { mode: 'text', text: 'Gamma' }, action: function () { } }
+            { uiType: 'button', dom: { tag: 'button', innerHtml: 'Alpha' }, action: function () { } },
+            { uiType: 'button', dom: { tag: 'button', innerHtml: 'Beta' }, action: function () { } },
+            { uiType: 'button', dom: { tag: 'button', innerHtml: 'Gamma' }, action: function () { } }
 
           ]
         },
@@ -31,16 +31,16 @@ define(
         {
           label: 'group-2',
           components: [
-            { type: 'button', buttonType: { mode: 'text', text: 'Delta' }, action: function () { } },
-            { type: 'button', buttonType: { mode: 'text', text: 'Epsilon' }, action: function () { } }
+            { uiType: 'button', dom: { tag: 'button', innerHtml: 'Delta' }, action: function () { } },
+            { uiType: 'button', dom: { tag: 'button', innerHtml: 'Epsilon' }, action: function () { } }
 
           ]
         },
         {
           label: 'group-2',
           components: [
-            { type: 'button', buttonType: { mode: 'text', text: 'Rho' }, action: function () { } },
-            { type: 'button', buttonType: { mode: 'text', text: 'Theta' }, action: function () { } }
+            { uiType: 'button', dom: { tag: 'button', innerHtml: 'Rho' }, action: function () { } },
+            { uiType: 'button', dom: { tag: 'button', innerHtml: 'Theta' }, action: function () { } }
 
           ]
         }

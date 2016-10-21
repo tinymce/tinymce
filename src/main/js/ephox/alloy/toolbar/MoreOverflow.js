@@ -54,8 +54,11 @@ define(
             label: 'more-button-group',
             components: [
               {
-                type: 'button',
-                buttonType: oInfo.button().buttonType,
+                uiType: 'button',
+                dom: {
+                  tag: 'button',
+                  innerHtml: 'more'
+                },
                 action: function () {
                   oInfo.button().action(getDrawer(component, oInfo));
                 }
