@@ -221,7 +221,7 @@ define(
       };
 
       var updateView = function (sandbox, item) {
-        var value = Attr.get(item, uiSpec.markers().itemValue());
+        var value = item.apis().getValue();
         return sandbox.apis().getState().bind(function (state) {
           return state.refresh(value).bind(function (path) {
             return updateMenuPath(sandbox, state, path);
@@ -266,7 +266,7 @@ define(
             // on hovered item
             run: function (sandbox, simulatedEvent) {
               var item = simulatedEvent.event().item();
-              updateView(sandbox, item.element());
+              updateView(sandbox, item);
               expandRight(sandbox, item);
             }
           })
