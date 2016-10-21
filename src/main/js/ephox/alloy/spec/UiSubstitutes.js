@@ -7,10 +7,11 @@ define(
     'ephox.compass.Obj',
     'ephox.highway.Merger',
     'ephox.numerosity.api.JSON',
+    'ephox.peanut.Fun',
     'global!Error'
   ],
 
-  function (Objects, Arr, Obj, Merger, Json, Error) {
+  function (Objects, Arr, Obj, Merger, Json, Fun, Error) {
     var dependent = 'dependent';
     var placeholder = 'placeholder';
 
@@ -60,6 +61,9 @@ define(
     };
 
     return {
+      isSubstitute: isSubstitute,
+      dependent: Fun.constant(dependent),
+      placeholder: Fun.constant(placeholder),
       substitute: substitute,
       substituteAll: substituteAll
     };

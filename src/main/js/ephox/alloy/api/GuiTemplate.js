@@ -2,6 +2,7 @@ define(
   'ephox.alloy.api.GuiTemplate',
 
   [
+    'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
@@ -23,7 +24,7 @@ define(
     'global!String'
   ],
 
-  function (FieldSchema, Objects, ValueSchema, Arr, Obj, Resolve, Merger, Json, Fun, Result, Attr, Element, Html, Node, Text, Traverse, Strings, Error, String) {
+  function (UiSubstitutes, FieldSchema, Objects, ValueSchema, Arr, Obj, Resolve, Merger, Json, Fun, Result, Attr, Element, Html, Node, Text, Traverse, Strings, Error, String) {
     var contract = ValueSchema.objOf([
       FieldSchema.defaulted('components', { }),
       FieldSchema.defaulted('fields', [ ])
@@ -85,21 +86,14 @@ define(
       if (Node.isText(elem)) return readText(elem);
       else if (Node.isComment(elem)) return [ ];
 
-      var compsId = Attr.get(elem, 'data-alloy-template-components');
       var compId = Attr.get(elem, 'data-alloy-template-component');
-      var knownCompsId = Attr.get(elem, 'data-alloy-template-known-components');
       var knownCompId = Attr.get(elem, 'data-alloy-template-known-component');
 
-      if (compsId !== undefined && !Objects.hasKey(compDefns, compsId)) fail('Element: ' + Html.getOuter(elem) + ' does not ' +
-        'contain components definition for ' + compsId, { html: Html.getOuter(elem), defns: compDefns });
-
+      
       if (compId !== undefined && !Objects.hasKey(compDefns, compId)) fail('Element: ' + Html.getOuter(elem) + ' does not ' +
         'contain component definition for ' + compId, { html: Html.getOuter(elem), defns: compDefns });
 
-      if (compsId !== undefined && Objects.hasKey(compDefns, compsId)) {
-        // this particular child is a component ... so ignore its children. and treat as leaf.
-        return compDefns[compsId];
-      } else if (compId !== undefined && Objects.hasKey(compDefns, compId)) {
+      else if (compId !== undefined && Objects.hasKey(compDefns, compId)) {
         return [ compDefns[compId] ];
       } else {
         var attrs = getAttrs(elem);
@@ -110,11 +104,11 @@ define(
           else {
             var parsed = readChildren(child, compDefns);
             return Arr.map(parsed, function (p) {
-              return p.uiType !== 'dependent' ? {
+              return UiSubstitutes.isSubstitute(p.uiType) ? p : {
                 uiType: 'custom',
                 dom: p.dom,
                 components: p.components
-              } : p;
+              };
             });
           }
         });
@@ -139,7 +133,7 @@ define(
         if (knownCompId !== undefined) {
           return [
             {
-              uiType: 'dependent',
+              uiType: UiSubstitutes.dependent(),
               name: knownCompId,
               extra: Merger.deepMerge(
                 Objects.readOptFrom(compDefns, knownCompId).getOr({ }),
@@ -147,8 +141,6 @@ define(
               )
             }
           ];
-        } else if (knownCompsId !== undefined) {
-          return [ { uiType: 'dependents', name: knownCompsId, extra: common } ];
         } else {
           return [
             Merger.deepMerge(common, {
