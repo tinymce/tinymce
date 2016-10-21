@@ -115,7 +115,7 @@ define(
           members: {
             menu: {
               dom: {
-                tag: 'ul',
+                tag: 'div',
                 styles: {
                   background: 'blue'
                 }
@@ -123,11 +123,15 @@ define(
 
             },
             item: {
-              dom: {
-                tag: 'li',
-                styles: {
-                  background: 'green'
-                }
+              munge: function (spec) {
+                return GuiTemplate.use(
+                  TemplateMenuItem,
+                  {
+                    value: 'bird'
+                  }, {
+                    fields: spec
+                  }
+                );
               }
             }
             // menu: GuiTempalte.use(TemplateMenu)
@@ -144,11 +148,12 @@ define(
               primary: 'tools-menu',
               menus: {
                 'tools-menu': [
-                  { type: 'item', value: 'packages', text: 'Packages' },
-                  { type: 'item', value: 'about', text: 'About' },
+                  { type: 'item', value: 'packages', text: 'Packages', 'item-class': '' },
+                  { type: 'item', value: 'about', text: 'About', 'item-class': '' },
                   { 
                     type: 'widget',
                     value: 'widget',
+                    'item-class': '',
                     spec: {
                       uiType: 'custom',
                       dom: {
@@ -204,18 +209,18 @@ define(
                   }
                 ],
                 'packages-menu': [
-                  { type: 'item', value: 'sortby', text: 'SortBy' }
+                  { type: 'item', value: 'sortby', text: 'SortBy', 'item-class': '' }
                 ],
                 'sortby-menu': [
-                  { type: 'item', value: 'strings', text: 'Strings' },
-                  { type: 'item', value: 'numbers', text: 'Numbers' }
+                  { type: 'item', value: 'strings', text: 'Strings', 'item-class': '' },
+                  { type: 'item', value: 'numbers', text: 'Numbers', 'item-class': '' }
                 ],
                 'strings-menu': [
-                  { type: 'item', value: 'version', text: 'Versions', html: '<b>V</b>ersions' },
-                  { type: 'item', value: 'alphabetic', text: 'Alphabetic' }
+                  { type: 'item', value: 'version', text: 'Versions', html: '<b>V</b>ersions', 'item-class': '' },
+                  { type: 'item', value: 'alphabetic', text: 'Alphabetic', 'item-class': '' }
                 ],
                 'numbers-menu': [
-                  { type: 'item', value: 'doubled', text: 'Double digits' }
+                  { type: 'item', value: 'doubled', text: 'Double digits', 'item-class': '' }
                 ]
               }, 
               expansions: {
