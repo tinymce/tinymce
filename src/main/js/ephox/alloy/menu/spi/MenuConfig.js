@@ -65,13 +65,11 @@ define(
         return Obj.map(menus, function (spec, name) {
           // NOTE: We use rawUiSpec here so the nesting isn't a struct
           var data = Merger.deepMerge(
-            uiSpec.members().menu(),
+            uiSpec.members().menu().munge(spec),
             {
               uiType: 'menu',
               value: name,
-              items: Arr.map(spec, function (sItem) {
-                return Merger.deepMerge(uiSpec.members().item(), sItem);
-              }),
+              items: spec.items,
               markers: rawUiSpec.markers,
               members: {
                 item: uiSpec.members().item()

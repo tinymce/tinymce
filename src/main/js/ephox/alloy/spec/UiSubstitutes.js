@@ -47,7 +47,7 @@ define(
         );
       }, function (newSpec) {
         // Must return a single/multiple type
-        return newSpec;
+        return newSpec.replace();
       });
     };
 
@@ -79,12 +79,9 @@ define(
     };
 
     var substituteAll = function (detail, components, factories, placeholders) {
-      var dd = Arr.bind(components, function (c) {
+      return Arr.bind(components, function (c) {
         return substitute(detail, c, factories, placeholders);
       });
-      // Everything should have a UI Type.
-      debugger;
-      return dd;
     };
 
     return {

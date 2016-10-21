@@ -57,15 +57,19 @@ define(
             innerHtml: 'Click me to expand'
           },
           members: {
-            menu: GuiTemplate.use(
-              TemplateMenu,
-              { },
-              {
-                fields: {
-                  'aria-label': 'menu-label'
-                }
+            menu: {
+              munge: function (spec) {
+                return GuiTemplate.use(
+                  TemplateMenu,
+                  { },
+                  {
+                    fields: {
+                      'aria-label': 'menu-label'
+                    }
+                  }
+                );
               }
-            ),
+            },
             item: {
               munge: function (spec) {
                 return GuiTemplate.use(

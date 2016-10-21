@@ -15,26 +15,23 @@ define(
   function (SystemEvents, Behaviour, EventHandler, ItemEvents, MenuMarkers, FieldPresence, FieldSchema, Fun) {
     var schema = [
       FieldSchema.strict('value'),
-      FieldSchema.strict('munge'),
       FieldSchema.field(
         'markers',
         'markers',
         FieldPresence.strict(),
         MenuMarkers.itemSchema()
       ),
+      FieldSchema.strict('components'),
+      FieldSchema.strict('dom'),
       FieldSchema.state('builder', function () {
         return builder;
-      }),
-
-      FieldSchema.state('original', Fun.identity)
+      })
     ];
 
     var builder = function (info) {
-      var munged = info.munge()(info.original());
-
       return {
         uiType: 'custom',
-        dom: munged.dom,
+        dom: info.dom(),
         focusing: {
           onFocus: function (component) {
             ItemEvents.onFocus(component);
@@ -65,7 +62,7 @@ define(
             classes: [ info.markers().item() ]
           })
         ],
-        components: munged.components
+        components: info.components()
       };
     };
 

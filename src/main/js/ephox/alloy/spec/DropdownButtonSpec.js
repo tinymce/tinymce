@@ -64,7 +64,11 @@ define(
 
             var primary = 'main-dropdown';
             var expansions = {};
-            var menus = Objects.wrap(primary, items);
+            var menus = Objects.wrap(primary, {
+              name: primary,
+              textkey: 'DOGS',
+              items: items
+            });
 
             return {
               primary: primary,

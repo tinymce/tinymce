@@ -16,11 +16,14 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
+    'ephox.compass.Obj',
     'ephox.highway.Merger',
-    'ephox.peanut.Fun'
+    'ephox.numerosity.api.JSON',
+    'ephox.peanut.Fun',
+    'global!Error'
   ],
 
-  function (EventHandler, ItemType, SeparatorType, WidgetType, ItemEvents, MenuEvents, MenuMarkers, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun) {
+  function (EventHandler, ItemType, SeparatorType, WidgetType, ItemEvents, MenuEvents, MenuMarkers, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Json, Fun, Error) {
     var itemSchema = ValueSchema.choose(
       'type',
       {
@@ -51,6 +54,28 @@ define(
       )
     ];
 
+    var placeholder = function (label, replacements) {
+      var called = false;
+
+      var used = function () {
+        return called;
+      };
+
+      var replace = function () {
+        if (called === true) throw new Error(
+          'Trying to use the same placeholder more than once: ' + label
+        );
+        called = true;
+        return replacements;
+      };
+
+      return {
+        name: Fun.constant(label),
+        used: used,
+        replace: replace
+      };
+    };
+
     var make = function (spec) {
       var detail = SpecSchema.asStructOrDie('menu.spec', menuSchema, spec);
 
@@ -60,15 +85,32 @@ define(
           selectedItem: detail.markers().selectedItem()
         };
 
+        
+        var munged = detail.members().item().munge(i);
         var merged = Merger.deepMerge(i, {
           markers: markers
-        });
+        }, munged);
+
         var itemInfo = ValueSchema.asStructOrDie('menu.spec item', itemSchema, merged);
+
         return itemInfo.builder()(itemInfo);
       });
 
-      var components = UiSubstitutes.substituteAll(detail, detail.components(), { }, {
-        '<alloy.menu.items>': UiSubstitutes.multiple(builtItems)
+      var placeholders = {
+        '<alloy.menu.items>': placeholder(
+          'alloy.menu.items',
+          UiSubstitutes.multiple(builtItems)
+        )
+      };
+
+      
+      var components = UiSubstitutes.substituteAll(detail, detail.components(), { }, placeholders);
+
+      Obj.each(placeholders, function (p) {
+        if (p.used() === false) throw new Error(
+          'Placeholder: ' + p.name() + ' was not found in components list\nComponents: ' +
+          Json.stringify(detail.components(), null, 2)
+        );
       });
 
       return {
