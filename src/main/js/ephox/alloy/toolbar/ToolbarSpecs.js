@@ -49,7 +49,7 @@ define(
       )
     ]);
 
-    var toolbarSchema = ValueSchema.objOf([
+    var toolbarSchema = [
       FieldSchema.option('label'),
       FieldSchema.field(
         'groups',
@@ -59,7 +59,7 @@ define(
           groupSchema
         )
       )
-    ]);
+    ];
 
     var buildItem = function (compInfo) {
       return compInfo;

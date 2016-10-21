@@ -2,6 +2,7 @@ define(
   'ephox.alloy.toolbar.MoreToolbar',
 
   [
+    'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.toolbar.MoreOverflow',
     'ephox.alloy.toolbar.Overflowing',
     'ephox.alloy.toolbar.ToolbarSpecs',
@@ -12,9 +13,9 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (MoreOverflow, Overflowing, ToolbarSpecs, FieldSchema, ValueSchema, Arr, Merger, Fun) {
+  function (SpecSchema, MoreOverflow, Overflowing, ToolbarSpecs, FieldSchema, ValueSchema, Arr, Merger, Fun) {
     var make = function (spec) {
-      var detail = ValueSchema.asStructOrDie('toolbar.spec', ToolbarSpecs.toolbarSchema(), spec);
+      var detail = SpecSchema.asStructOrDie('more.toolbar.spec', ToolbarSpecs.toolbarSchema(), spec);
 
 
       var groups = Arr.map(detail.groups(), ToolbarSpecs.buildGroup);
