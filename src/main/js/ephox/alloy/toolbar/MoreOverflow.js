@@ -43,7 +43,12 @@ define(
     };
 
     var doSetGroups = function (component, oInfo, groups) {
-      oInfo.state().groups().set(Option.some(groups));
+      var built = Arr.map(groups, function (g) {
+        return ToolbarSpecs.buildGroup({
+          components: Fun.constant(g.components)
+        });
+      });
+      oInfo.state().groups().set(Option.some(built));
     };
 
     var getButton = function (component, oInfo) {
