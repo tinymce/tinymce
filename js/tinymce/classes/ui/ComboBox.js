@@ -367,6 +367,8 @@ define("tinymce/ui/ComboBox", [
 			});
 
 			self.menu.renderNew();
+			self.hideMenu();
+
 			self.menu.on('cancel', function(e) {
 				if (e.control.parent() === self.menu) {
 					e.stopPropagation();
