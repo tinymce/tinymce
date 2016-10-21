@@ -2,31 +2,25 @@ define(
   'ephox.alloy.menu.build.SeparatorType',
 
   [
-    'ephox.boulder.api.FieldSchema'
+    'ephox.alloy.spec.SpecSchema',
+    'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.ValueSchema'
   ],
 
-  function (FieldSchema) {
+  function (SpecSchema, FieldSchema, ValueSchema) {
     var schema = [
-      FieldSchema.defaulted('classes', [ ]),
-      FieldSchema.strict('markers'),
+      FieldSchema.strict('dom'),
+      FieldSchema.strict('components'),
       FieldSchema.state('builder', function () {
         return builder;
       })
     ];
 
-    var builder = function (info) {
+    var builder = function (detail) {
       return {
         uiType: 'custom',
-        dom: {
-          tag: 'li',
-          classes: [ ]
-        },
-        representing: {
-          query: function () {
-            return info.value();
-          },
-          set: function () { }
-        }
+        dom: detail.dom(),
+        components: detail.components()
       };
     };
 

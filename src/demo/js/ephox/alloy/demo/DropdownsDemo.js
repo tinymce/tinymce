@@ -14,10 +14,11 @@ define(
     'ephox.sugar.api.Insert',
     'global!document',
     'text!dom-templates/demo.menu.html',
-    'text!dom-templates/demo.menu.item.html'
+    'text!dom-templates/demo.menu.item.html',
+    'text!dom-templates/demo.menu.separator.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, HtmlDisplay, Arr, Future, Class, DomEvent, Element, Insert, document, TemplateMenu, TemplateMenuItem) {
+  function (Gui, GuiFactory, GuiTemplate, HtmlDisplay, Arr, Future, Class, DomEvent, Element, Insert, document, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -78,8 +79,9 @@ define(
             },
             item: {
               munge: function (spec) {
+                var template = spec.type === 'separator' ? TemplateMenuSeparator : TemplateMenuItem;
                 return GuiTemplate.use(
-                  TemplateMenuItem,
+                  template,
                   { }, {
                     fields: spec
                   }
@@ -90,10 +92,11 @@ define(
           fetchItems: function () {
 
             var data = [
-              { value: 'alpha', text: 'Alpha', 'item-class': 'class-alpha' },
-              { value: 'beta', text: 'Beta', 'item-class': 'class-beta' },
-              { value: 'gamma', text: 'Gamma', 'item-class': 'class-gamma' },
-              { value: 'delta', text: 'Delta', 'item-class': 'class-delta' }
+              { type: 'item', value: 'alpha', text: 'Alpha', 'item-class': 'class-alpha' },
+              { type: 'item', value: 'beta', text: 'Beta', 'item-class': 'class-beta' },
+              { type: 'separator', value: 'text' },
+              { type: 'item', value: 'gamma', text: 'Gamma', 'item-class': 'class-gamma' },
+              { type: 'item', value: 'delta', text: 'Delta', 'item-class': 'class-delta' }
             ];
 
             return Future.pure(data);

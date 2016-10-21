@@ -63,13 +63,7 @@ define(
       return SpecSchema.extend(DropdownMenuSpec.make, spec, {
         fetch: function () {
           console.log('+++++++++++++');
-          return detail.fetchItems().map(function (rawItems) {
-            var items = Arr.map(rawItems, function (item) {
-              return Merger.deepMerge({
-                type: 'item'
-              }, item);
-            });
-
+          return detail.fetchItems().map(function (items) {
             var primary = 'main-dropdown';
             var expansions = {};
             var menus = Objects.wrap(primary, {
