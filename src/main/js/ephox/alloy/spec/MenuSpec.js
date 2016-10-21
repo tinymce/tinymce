@@ -53,14 +53,7 @@ define(
       var detail = SpecSchema.asStructOrDie('menu.spec', menuSchema, spec);
       return {
         uiType: 'custom',
-        dom: Merger.deepMerge({
-          attributes: Objects.wrapAll([
-            {
-              key: detail.markers().menuValue(),
-              value: detail.value()
-            }
-          ])
-        }, detail.dom()),
+        dom: detail.dom(),
         uid: detail.uid(),
         highlighting: {
           // Highlighting for a menu is selecting items inside the menu
@@ -91,11 +84,15 @@ define(
             })
           }
         ]),
+        representing: {
+          query: function () {
+            return detail.value();
+          },
+          set: function () { }
+        },
         components: Arr.map(detail.items(), function (i) {
           var markers = {
             item: detail.markers().item(),
-            itemValue: detail.markers().itemValue(),
-            itemText: detail.markers().itemText(),
             selectedItem: detail.markers().selectedItem()
           };
 

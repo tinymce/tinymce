@@ -34,8 +34,7 @@ define(
         uiType: 'custom',
         dom: {
           tag: 'li',
-          classes: [ info.markers().item() ],
-          attributes: Objects.wrap(info.markers().itemValue(), info.value())
+          classes: [ info.markers().item() ]
         },
         representing: {
           query: function () {

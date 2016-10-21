@@ -20,7 +20,6 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.perhaps.Options',
-    'ephox.sugar.api.Attr',
     'ephox.sugar.api.Body',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Classes',
@@ -29,7 +28,7 @@ define(
     'ephox.sugar.api.SelectorFilter'
   ],
 
-  function (ComponentStructure, SystemEvents, EventHandler, LayeredState, ItemEvents, MenuEvents, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Options, Attr, Body, Class, Classes, Insert, Remove, SelectorFilter) {
+  function (ComponentStructure, SystemEvents, EventHandler, LayeredState, ItemEvents, MenuEvents, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, Insert, Remove, SelectorFilter) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('lazyHotspot'),
 

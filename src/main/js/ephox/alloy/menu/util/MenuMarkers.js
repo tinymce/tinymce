@@ -11,24 +11,18 @@ define(
     var fallback = {
       item: 'alloy-item',
       selectedItem: 'alloy-selected-item',
-      itemValue: 'data-alloy-item-value',
-      itemText: 'data-alloy-item-text',
       menu: 'alloy-menu',
-      selectedMenu: 'alloy-selected-menu',
-      menuValue: 'data-alloy-menu-value'
+      selectedMenu: 'alloy-selected-menu'
     };
 
     var menuFields = [
       FieldSchema.strict('menu'),
-      FieldSchema.strict('selectedMenu'),
-      FieldSchema.strict('menuValue')
+      FieldSchema.strict('selectedMenu')
     ];
 
     var itemFields = [
       FieldSchema.strict('item'),
-      FieldSchema.strict('selectedItem'),
-      FieldSchema.strict('itemText'),
-      FieldSchema.strict('itemValue')
+      FieldSchema.strict('selectedItem')
     ];
 
     var schema = ValueSchema.objOf(

@@ -9,17 +9,13 @@ define(
     'ephox.alloy.menu.util.MenuMarkers',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects',
-    'ephox.highway.Merger',
     'ephox.peanut.Fun'
   ],
 
-  function (SystemEvents, Behaviour, EventHandler, ItemEvents, MenuMarkers, FieldPresence, FieldSchema, Objects, Merger, Fun) {
+  function (SystemEvents, Behaviour, EventHandler, ItemEvents, MenuMarkers, FieldPresence, FieldSchema, Fun) {
     var schema = [
       FieldSchema.strict('value'),
-      FieldSchema.strict('text'),
       FieldSchema.strict('dom'),
-      FieldSchema.option('html'),
       FieldSchema.field(
         'markers',
         'markers',
@@ -62,17 +58,6 @@ define(
         },
         behaviours: [
           Behaviour.exhibition('exhibition.menu.item.type', {
-            attributes: Objects.wrapAll([
-              {
-                key: info.markers().itemValue(),
-                value: info.value()
-              },
-              {
-                key: info.markers().itemText(),
-                value: info.text()
-              }
-            ]),
-            innerHtml: info.html().getOr(info.text()),
             classes: [ info.markers().item() ]
           })
         ]

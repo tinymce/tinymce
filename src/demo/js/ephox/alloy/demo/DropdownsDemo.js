@@ -87,7 +87,7 @@ define(
           // sink: sink,
           desc: 'demo-dropdown',
           onExecute: function (sandbox, item, itemValue) {
-            console.log('*** dropdown demo execute on: ' + itemValue + ' ***');
+            console.log('*** dropdown demo execute on: ' + item.apis().getValue());
           }
         }
       );
@@ -127,7 +127,7 @@ define(
             // itemDefn: { }            
           },
           onExecute: function (sandbox, item, itemValue) {
-            console.log('*** dropdown menu demo execute on: ' + itemValue + ' ***');
+            console.log('*** dropdown menu demo execute on: ' + item.apis().getValue() + ' ***');
           },
           fetch: function () {
             return Future.pure({
