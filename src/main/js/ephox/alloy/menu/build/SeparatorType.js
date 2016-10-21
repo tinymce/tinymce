@@ -20,6 +20,12 @@ define(
         dom: {
           tag: 'li',
           classes: [ ]
+        },
+        representing: {
+          query: function () {
+            return info.value();
+          },
+          set: function () { }
         }
       };
     };

@@ -37,6 +37,12 @@ define(
           classes: [ info.markers().item() ],
           attributes: Objects.wrap(info.markers().itemValue(), info.value())
         },
+        representing: {
+          query: function () {
+            return info.value();
+          },
+          set: function () { }
+        },
         components: [ info.spec() ],
         events: Objects.wrapAll([
           {

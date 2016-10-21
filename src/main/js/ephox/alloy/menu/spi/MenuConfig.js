@@ -17,6 +17,7 @@ define(
     'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.highway.Merger',
+    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.perhaps.Options',
     'ephox.sugar.api.Attr',
@@ -28,7 +29,7 @@ define(
     'ephox.sugar.api.SelectorFilter'
   ],
 
-  function (ComponentStructure, SystemEvents, EventHandler, LayeredState, ItemEvents, MenuEvents, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Option, Options, Attr, Body, Class, Classes, Insert, Remove, SelectorFilter) {
+  function (ComponentStructure, SystemEvents, EventHandler, LayeredState, ItemEvents, MenuEvents, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Options, Attr, Body, Class, Classes, Insert, Remove, SelectorFilter) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('lazyHotspot'),
 
@@ -83,10 +84,14 @@ define(
         });
       };
 
-      var toMenuValues = function (sMenus) {
+      var toMenuValues = function (sandbox, sMenus) {
         return Obj.map(sMenus, function (menu) {
           var menuItems = SelectorFilter.descendants(menu.element(), '.' + uiSpec.markers().item());
-          return Arr.map(menuItems, function (mi) { return Attr.get(mi, uiSpec.markers().itemValue()); });
+          return Arr.bind(menuItems, function (mi) {
+            return sandbox.getSystem().getByDom(mi).map(function (item) {
+              return item.apis().getValue();
+            }).fold(Fun.constant([ ]), Arr.pure);
+          });
         });
       };
 
@@ -128,7 +133,9 @@ define(
 
         var state = LayeredState();
         
-        state.setContents(data.primary, componentMap, data.expansions, toMenuValues);
+        state.setContents(data.primary, componentMap, data.expansions, function (sMenus) {
+          return toMenuValues(sandbox, sMenus);
+        });
         state.getPrimary().each(function (primary) {
           if (! Body.inBody(primary.element())) Insert.append(sandbox.element(), primary.element());
         });
