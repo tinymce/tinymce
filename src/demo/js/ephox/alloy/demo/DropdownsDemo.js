@@ -64,7 +64,7 @@ define(
                   { },
                   {
                     fields: {
-                      'aria-label': 'menu-label'
+                      'aria-label': spec.textkey
                     }
                   }
                 );
@@ -117,21 +117,23 @@ define(
           sink: sink,
           members: {
             menu: {
-              dom: {
-                tag: 'div',
-                styles: {
-                  background: 'blue'
-                }
-              },
-              components: [ ]
+              munge: function (spec) {
+                return GuiTemplate.use(
+                  TemplateMenu,
+                  { },
+                  {
+                    fields: {
+                      'aria-label': spec.textkey
+                    }
+                  }
+                );
+              }
             },
             item: {
               munge: function (spec) {
                 return GuiTemplate.use(
                   TemplateMenuItem,
-                  {
-                    value: 'bird'
-                  }, {
+                  { }, {
                     fields: spec
                   }
                 );
@@ -150,81 +152,97 @@ define(
             return Future.pure({
               primary: 'tools-menu',
               menus: {
-                'tools-menu': [
-                  { type: 'item', value: 'packages', text: 'Packages', 'item-class': '' },
-                  { type: 'item', value: 'about', text: 'About', 'item-class': '' },
-                  { 
-                    type: 'widget',
-                    value: 'widget',
-                    'item-class': '',
-                    spec: {
-                      uiType: 'custom',
-                      dom: {
-                        tag: 'div'
-                      },
-                      components: [
-                        {
-                          uiType: 'input',
-                          dom: {
-                            styles: {
-                              display: 'inline-block',
-                              width: '50px'
-                            }
-                          }
+                'tools-menu': {
+                  textkey: 'tools-menu',
+                  items: [
+                    { type: 'item', value: 'packages', text: 'Packages', 'item-class': '' },
+                    { type: 'item', value: 'about', text: 'About', 'item-class': '' },
+                    { 
+                      type: 'widget',
+                      value: 'widget',
+                      text: 'Widget',
+                      'item-class': '',
+                      spec: {
+                        uiType: 'custom',
+                        dom: {
+                          tag: 'div'
                         },
-                        {
-                          uiType: 'custom',
-                          dom: {
-                            tag: 'div'
-                          },
-                          components: [
-                            {
-                              uiType: 'button',
-                              action: function () { console.log('clicked on a button', arguments); },
-                              dom: {
-                                tag: 'button',
-                                innerHtml: '-'
-                              },
-                              // FIX: This is required to override a previous tabstopping.
-                              tabstopping: undefined
-                            },
-                            {
-                              uiType: 'button',
-                              action: function () { console.log('clicked on a button', arguments); },
-                              dom: {
-                                tag: 'button',
-                                innerHtml: '+'
-                              },
-                              tabstopping: undefined
+                        components: [
+                          {
+                            uiType: 'input',
+                            dom: {
+                              styles: {
+                                display: 'inline-block',
+                                width: '50px'
+                              }
                             }
-                          ],
-                          keying: {
-                            mode: 'flow',
-                            selector: 'button'
                           },
-                          tabstopping: true
+                          {
+                            uiType: 'custom',
+                            dom: {
+                              tag: 'div'
+                            },
+                            components: [
+                              {
+                                uiType: 'button',
+                                action: function () { console.log('clicked on a button', arguments); },
+                                dom: {
+                                  tag: 'button',
+                                  innerHtml: '-'
+                                },
+                                // FIX: This is required to override a previous tabstopping.
+                                tabstopping: undefined
+                              },
+                              {
+                                uiType: 'button',
+                                action: function () { console.log('clicked on a button', arguments); },
+                                dom: {
+                                  tag: 'button',
+                                  innerHtml: '+'
+                                },
+                                tabstopping: undefined
+                              }
+                            ],
+                            keying: {
+                              mode: 'flow',
+                              selector: 'button'
+                            },
+                            tabstopping: true
+                          }
+                        ],
+                        keying: {
+                          mode: 'cyclic'
                         }
-                      ],
-                      keying: {
-                        mode: 'cyclic'
                       }
                     }
-                  }
-                ],
-                'packages-menu': [
-                  { type: 'item', value: 'sortby', text: 'SortBy', 'item-class': '' }
-                ],
-                'sortby-menu': [
-                  { type: 'item', value: 'strings', text: 'Strings', 'item-class': '' },
-                  { type: 'item', value: 'numbers', text: 'Numbers', 'item-class': '' }
-                ],
-                'strings-menu': [
-                  { type: 'item', value: 'version', text: 'Versions', html: '<b>V</b>ersions', 'item-class': '' },
-                  { type: 'item', value: 'alphabetic', text: 'Alphabetic', 'item-class': '' }
-                ],
-                'numbers-menu': [
-                  { type: 'item', value: 'doubled', text: 'Double digits', 'item-class': '' }
-                ]
+                  ]
+                },
+                'packages-menu': {
+                  textkey: 'packages',
+                  items: [
+                    { type: 'item', value: 'sortby', text: 'SortBy', 'item-class': '' }
+                  ]
+                },
+                'sortby-menu': {
+                  textkey: 'sortby',
+                  items: [
+                    { type: 'item', value: 'strings', text: 'Strings', 'item-class': '' },
+                    { type: 'item', value: 'numbers', text: 'Numbers', 'item-class': '' }
+                  ]
+                },
+                'strings-menu': {
+                  textkey: 'strings',
+                  items: [
+                    { type: 'item', value: 'version', text: 'Versions', html: '<b>V</b>ersions', 'item-class': '' },
+                    { type: 'item', value: 'alphabetic', text: 'Alphabetic', 'item-class': '' }
+                  ]
+                },
+                'numbers-menu': {
+                  textkey: 'numbers',
+                  items: [
+                    { type: 'item', value: 'doubled', text: 'Double digits', 'item-class': '' }
+                  ]
+                }
               }, 
               expansions: {
                 'packages': 'packages-menu',
