@@ -133,7 +133,7 @@ define(
             base,
             {
               uiType: 'custom',
-              dom: { tag: 'div' },
+              dom: { tag: 'div', classes: [ 'ephox-chameleon-popup-container' ] },
               uid: dropdownUid + '-internal-sink',
               positioning: {
                 useFixed: false

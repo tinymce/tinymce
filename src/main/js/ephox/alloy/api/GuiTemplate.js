@@ -186,7 +186,9 @@ define(
           spec: spec
         });
       }, function (additions) {
-        return Merger.deepMerge(spec, additions);
+        return Merger.deepMerge(spec, additions, {
+          base: spec
+        });
       });
     };
 

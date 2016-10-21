@@ -36,6 +36,8 @@ define(
       var modDefinition = DomModification.merge(definition, modification);
 
       var item = DomRender.renderToDom(modDefinition);
+
+      console.log('spec', spec, 'info', info);
       
       var baseEvents = {
         'alloy.base.behaviour': CustomDefinition.toEvents(info)
@@ -83,6 +85,8 @@ define(
         });
         subcomponents.set(subs);
       };
+
+
 
       var self = {
         getSystem: systemApi.get,

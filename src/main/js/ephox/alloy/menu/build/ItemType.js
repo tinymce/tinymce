@@ -9,10 +9,11 @@ define(
     'ephox.alloy.menu.util.MenuMarkers',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
+    'ephox.highway.Merger',
     'ephox.peanut.Fun'
   ],
 
-  function (SystemEvents, Behaviour, EventHandler, ItemEvents, MenuMarkers, FieldPresence, FieldSchema, Fun) {
+  function (SystemEvents, Behaviour, EventHandler, ItemEvents, MenuMarkers, FieldPresence, FieldSchema, Merger, Fun) {
     var schema = [
       FieldSchema.strict('value'),
       FieldSchema.field(
@@ -23,13 +24,14 @@ define(
       ),
       FieldSchema.strict('components'),
       FieldSchema.strict('dom'),
+      FieldSchema.defaulted('base', { }),
       FieldSchema.state('builder', function () {
         return builder;
       })
     ];
 
     var builder = function (info) {
-      return {
+      return Merger.deepMerge(info.base(), {
         uiType: 'custom',
         dom: info.dom(),
         focusing: {
@@ -63,7 +65,7 @@ define(
           })
         ],
         components: info.components()
-      };
+      });
     };
 
     return schema;
