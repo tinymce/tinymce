@@ -451,7 +451,7 @@ define("tinymce/SelectionOverrides", [
 		 * non-block parents.
 		 */
 		function removeEmptyNonBlockAncestors(node) {
-			while (!node.hasChildNodes() && !editor.dom.isBlock(node)) {
+			while (!node.hasChildNodes() && !editor.dom.isBlock(node) && node !== editor.getBody()) {
 				var parentElement = node.parentElement;
 				editor.dom.remove(node);
 				node = parentElement;
