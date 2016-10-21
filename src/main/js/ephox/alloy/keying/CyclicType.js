@@ -14,28 +14,43 @@ define(
     'ephox.perhaps.Option',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Focus',
+    'ephox.sugar.api.Height',
     'ephox.sugar.api.SelectorFilter',
     'ephox.sugar.api.SelectorFind',
     'ephox.sugar.api.Visibility'
   ],
 
-  function (Keys, KeyingType, AlloyLogger, ArrNavigation, KeyMatch, KeyRules, FieldSchema, Arr, Fun, Option, Compare, Focus, SelectorFilter, SelectorFind, Visibility) {
+  function (Keys, KeyingType, AlloyLogger, ArrNavigation, KeyMatch, KeyRules, FieldSchema, Arr, Fun, Option, Compare, Focus, Height, SelectorFilter, SelectorFind, Visibility) {
     var schema = [
       FieldSchema.defaulted('selector', '[data-alloy-tabstop="true"]'),
       FieldSchema.option('onEscape'),
-      FieldSchema.option('onEnter')
+      FieldSchema.option('onEnter'),
+      // Maybe later we should just expose isVisible
+      FieldSchema.option('visibilitySelector')
     ];
 
     // Fire an alloy focus on the first visible element that matches the selector
     var focusIn = function (component, cyclicInfo) {
       var tabstops = SelectorFilter.descendants(component.element(), cyclicInfo.selector());
-      var visible = Arr.find(tabstops, Visibility.isVisible);
+      var visible = Arr.find(tabstops, function (elem) {
+        return isVisible(cyclicInfo, elem);
+      });
       // TODO: Update when Arr.find changes signature
       var visibleOpt = visible !== null && visible !== undefined ? Option.some(visible) : Option.none();
       visibleOpt.each(function (target) {
         var originator = component.element();
         component.getSystem().triggerFocus(target, originator);
       });
+    };
+
+    // TODO: Test this
+    var isVisible = function (cyclicInfo, element) {
+      var target = cyclicInfo.visibilitySelector().bind(function (sel) {
+        return SelectorFind.closest(element, sel);
+      }).getOr(element);
+
+      // NOTE: We can't use Visibility.isVisible, because the toolbar has width when it has closed, just not height.
+      return Height.get(target) > 0;
     };
 
     var findTabstop = function (component, cyclicInfo) {
@@ -48,12 +63,12 @@ define(
       console.log('pressing tab failed');
     };
 
-    var logSuccess = function (index, tabstops, originator, destination) {
-      console.log('********');
+    var logSuccess = function (cyclicInfo, index, tabstops, originator, destination) {
+      console.log('*** Cyclic movement: SUCCESS ***');
       console.log('Original index in tabstops: ' + index);
       console.log('Tabstops: ', Arr.map(tabstops, AlloyLogger.element));
-      console.log('Originator: ' + AlloyLogger.element(originator));
-      console.log('Destination: ' + AlloyLogger.element(destination));
+      console.log('Originator: ', originator.dom());
+      console.log('Destination: ', destination.dom(), ':visible', isVisible(cyclicInfo, destination), Height.get(destination));
       console.log('********');
 
     }
@@ -67,12 +82,14 @@ define(
       return findTabstop(component, cyclicInfo).bind(function (tabstop) {
         // focused component
         var index = Arr.findIndex(tabstops, Fun.curry(Compare.eq, tabstop));
-        return index < 0 ? Option.none() : cycle(tabstops, index, Visibility.isVisible).fold(function () {
+        return index < 0 ? Option.none() : cycle(tabstops, index, function (elem) {
+          return isVisible(cyclicInfo, elem);
+        }).fold(function () {
           // Even if there is only one, still capture the event.
-          logFailed(index, tabstops);
+          // logFailed(index, tabstops);
           return Option.some(true);
         }, function (outcome) {
-          logSuccess(index, tabstops, component.element(), outcome);
+          // logSuccess(cyclicInfo, index, tabstops, component.element(), outcome);
           var system = component.getSystem();
           var originator = component.element();
           system.triggerFocus(outcome, originator);

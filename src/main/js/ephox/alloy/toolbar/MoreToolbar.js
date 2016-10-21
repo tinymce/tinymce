@@ -37,7 +37,8 @@ define(
           }
         },
         keying: {
-          mode: 'cyclic'
+          mode: 'cyclic',
+          visibilitySelector: '.ephox-chameleon-toolbar'
         },
         components: [
           {
