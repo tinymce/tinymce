@@ -26,7 +26,7 @@ define(
       FieldSchema.field(
         'markers',
         'markers',
-        FieldPresence.defaulted(MenuMarkers.fallback()),
+        FieldPresence.strict(),
         MenuMarkers.schema()
       ),
 

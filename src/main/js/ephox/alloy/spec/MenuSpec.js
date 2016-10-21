@@ -41,7 +41,7 @@ define(
       FieldSchema.field(
         'markers',
         'markers',
-        FieldPresence.defaulted(MenuMarkers.fallback()),
+        FieldPresence.strict(),
         MenuMarkers.schema()
       ),
       FieldSchema.field(
@@ -80,16 +80,8 @@ define(
       var detail = SpecSchema.asStructOrDie('menu.spec', menuSchema, spec);
 
       var builtItems = Arr.map(detail.items(), function (i) {
-        var markers = {
-          item: detail.markers().item(),
-          selectedItem: detail.markers().selectedItem()
-        };
-
-        
         var munged = detail.members().item().munge(i);
-        var merged = Merger.deepMerge(i, {
-          markers: markers
-        }, munged);
+        var merged = Merger.deepMerge(i, munged);
 
         var itemInfo = ValueSchema.asStructOrDie('menu.spec item', itemSchema, merged);
 

@@ -17,24 +17,20 @@ define(
     var schema = [
       FieldSchema.strict('value'),
       FieldSchema.strict('spec'),
-      FieldSchema.field(
-        'markers',
-        'markers',
-        FieldPresence.strict(),
-        MenuMarkers.itemSchema()
-      ),
+      FieldSchema.strict('markers'),
       FieldSchema.defaulted('classes', [ ]),
       FieldSchema.state('builder', function () {
         return builder;
       })
     ];
 
+    // FIX: Bring this in line with templating.
     var builder = function (info) {
       return {
         uiType: 'custom',
         dom: {
           tag: 'li',
-          classes: [ info.markers().item() ]
+          classes: [ info.markers().item ]
         },
         representing: {
           query: function () {

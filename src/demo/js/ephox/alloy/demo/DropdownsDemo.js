@@ -56,6 +56,12 @@ define(
             tag: 'button',
             innerHtml: 'Click me to expand'
           },
+          markers: {
+            item: 'alloy-item',
+            selectedItem: 'alloy-selected-item',
+            menu: 'alloy-menu',
+            selectedMenu: 'alloy-selected-menu'
+          },
           members: {
             menu: {
               munge: function (spec) {
@@ -110,6 +116,12 @@ define(
             innerHtml: '+'
           },
           sink: sink,
+          markers: {
+            item: 'alloy-item',
+            selectedItem: 'alloy-selected-item',
+            menu: 'alloy-menu',
+            selectedMenu: 'alloy-selected-menu'
+          },
           members: {
             menu: {
               munge: function (spec) {
@@ -157,6 +169,9 @@ define(
                       value: 'widget',
                       text: 'Widget',
                       'item-class': '',
+                      markers: {
+                        item: 'alloy-item'
+                      },
                       spec: {
                         uiType: 'custom',
                         dom: {

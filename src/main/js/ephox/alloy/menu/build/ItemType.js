@@ -16,12 +16,6 @@ define(
   function (SystemEvents, Behaviour, EventHandler, ItemEvents, MenuMarkers, FieldPresence, FieldSchema, Merger, Fun) {
     var schema = [
       FieldSchema.strict('value'),
-      FieldSchema.field(
-        'markers',
-        'markers',
-        FieldPresence.strict(),
-        MenuMarkers.itemSchema()
-      ),
       FieldSchema.strict('components'),
       FieldSchema.strict('dom'),
       FieldSchema.defaulted('base', { }),
@@ -31,6 +25,8 @@ define(
     ];
 
     var builder = function (info) {
+      // info.base() can contain other things like toggling. I need to find a better way to do
+      // this though. Putting all the behaviours in a single object will probably do it.
       return Merger.deepMerge(info.base(), {
         uiType: 'custom',
         dom: info.dom(),
@@ -59,11 +55,6 @@ define(
           },
           set: function () { }
         },
-        behaviours: [
-          Behaviour.exhibition('exhibition.menu.item.type', {
-            classes: [ info.markers().item() ]
-          })
-        ],
         components: info.components()
       });
     };

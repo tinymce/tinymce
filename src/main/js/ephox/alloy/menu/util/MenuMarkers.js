@@ -8,14 +8,7 @@ define(
   ],
 
   function (FieldSchema, ValueSchema, Fun) {
-    var fallback = {
-      item: 'alloy-item',
-      selectedItem: 'alloy-selected-item',
-      menu: 'alloy-menu',
-      selectedMenu: 'alloy-selected-menu'
-    };
-
-    var menuFields = [
+        var menuFields = [
       FieldSchema.strict('menu'),
       FieldSchema.strict('selectedMenu')
     ];
@@ -33,8 +26,7 @@ define(
 
     return {
       schema: Fun.constant(schema),
-      itemSchema: Fun.constant(itemSchema),
-      fallback: Fun.constant(fallback)
+      itemSchema: Fun.constant(itemSchema)
     };
   }
 );

@@ -2,6 +2,7 @@ define(
   'ephox.alloy.spec.DropdownMenuSpec',
 
   [
+    'ephox.alloy.menu.util.MenuMarkers',
     'ephox.alloy.spec.ButtonSpec',
     'ephox.alloy.spec.MenuSandboxSpec',
     'ephox.alloy.spec.SpecSchema',
@@ -16,9 +17,9 @@ define(
     'ephox.sugar.api.Remove'
   ],
 
-  function (ButtonSpec, MenuSandboxSpec, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Arr, Id, Merger, Fun, Option, Remove) {
+  function (MenuMarkers, ButtonSpec, MenuSandboxSpec, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Arr, Id, Merger, Fun, Option, Remove) {
     var make = function (spec) {
-      var detail = SpecSchema.asStructOrDie('dropdown.button', [
+      var detail = SpecSchema.asStructOrDie('dropdownmenu', [
         FieldSchema.strict('fetch'),
         FieldSchema.defaulted('onOpen', Fun.noop),
         FieldSchema.defaulted('onExecute', Option.none),
@@ -32,6 +33,12 @@ define(
             FieldSchema.strict('menu'),
             FieldSchema.strict('item')
           ])
+        ),
+        FieldSchema.field(
+          'markers',
+          'markers',
+          FieldPresence.strict(),
+          MenuMarkers.schema()
         ),
         FieldSchema.option('sink')
       ], spec, { });
@@ -75,6 +82,12 @@ define(
           members: {
             menu: detail.members().menu(),
             item: detail.members().item()
+          },
+          markers: {
+            item: detail.markers().item(),
+            selectedItem: detail.markers().selectedItem(),
+            menu: detail.markers().menu(),
+            selectedMenu: detail.markers().selectedMenu()
           }
         });
       };

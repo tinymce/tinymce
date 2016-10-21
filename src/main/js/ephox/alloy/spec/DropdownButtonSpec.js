@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.behaviour.Behaviour',
     'ephox.alloy.dom.DomModification',
+    'ephox.alloy.menu.util.MenuMarkers',
     'ephox.alloy.spec.DropdownMenuSpec',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
@@ -20,7 +21,7 @@ define(
     'global!Error'
   ],
 
-  function (Behaviour, DomModification, DropdownMenuSpec, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Width, Error) {
+  function (Behaviour, DomModification, MenuMarkers, DropdownMenuSpec, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Width, Error) {
 
     var factories = {
       '<alloy.dropdown.display>': function (comp, detail) {
@@ -47,7 +48,14 @@ define(
         FieldSchema.defaulted('toggleClass', 'alloy-selected-button'),
         FieldSchema.strict('dom'),
         FieldSchema.option('sink'),
-        FieldSchema.defaulted('dependents', { })
+        FieldSchema.defaulted('dependents', { }),
+
+        FieldSchema.field(
+          'markers',
+          'markers',
+          FieldPresence.strict(),
+          MenuMarkers.schema()
+        )
       ], spec, factories);
 
       var components = UiSubstitutes.substituteAll(detail, detail.components, factories, { });
