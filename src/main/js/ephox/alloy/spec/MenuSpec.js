@@ -68,7 +68,7 @@ define(
       });
 
       var components = UiSubstitutes.substituteAll(detail, detail.components(), { }, {
-        '<alloy.menu.items>': builtItems
+        '<alloy.menu.items>': UiSubstitutes.multiple(builtItems)
       });
 
       return {
