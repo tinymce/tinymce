@@ -6,6 +6,7 @@ define(
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.spec.DropdownMenuSpec',
     'ephox.alloy.spec.SpecSchema',
+    'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
@@ -19,7 +20,7 @@ define(
     'global!Error'
   ],
 
-  function (Behaviour, DomModification, DropdownMenuSpec, SpecSchema, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Width, Error) {
+  function (Behaviour, DomModification, DropdownMenuSpec, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Width, Error) {
 
     var factories = {
       '<alloy.dropdown.display>': function (comp, detail) {
@@ -49,27 +50,8 @@ define(
         FieldSchema.defaulted('dependents', { })
       ], spec, factories);
 
-      var scan = function (compSpec) {
-        return Objects.readOptFrom(factories, compSpec.name).fold(function () {
-          throw new Error('Unknown dependent component: ' + compSpec.name + '\nKnown: [' + Obj.keys(factories) + ']\nSpec: ' + compSpec);
-        }, function (builder) {
-          return builder(compSpec, detail);
-        });
-      };
-
-      var connect = function (compSpec) {
-        var base = compSpec.uiType !== 'dependent' ? compSpec : scan(compSpec);
-        var cs = Objects.readOptFrom(base, 'components').getOr([ ]);
-        var cs2 = Arr.map(cs, connect);
-        return Merger.deepMerge(base, {
-          components: cs2
-        });
-      };
-
-      var components = Arr.map(detail.components, function (compSpec) {
-        return connect(compSpec);
-      });
-  
+      var components = UiSubstitutes.substituteAll(detail, detail.components, factories, { });
+    
       return SpecSchema.extend(DropdownMenuSpec.make, spec, {
         fetch: function () {
           console.log('+++++++++++++');

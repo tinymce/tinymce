@@ -33,6 +33,7 @@ define(
       FieldSchema.strict('value'),
       FieldSchema.strict('items'),
       FieldSchema.strict('dom'),
+      FieldSchema.strict('components'),
       FieldSchema.field(
         'markers',
         'markers',
@@ -51,6 +52,20 @@ define(
 
     var make = function (spec) {
       var detail = SpecSchema.asStructOrDie('menu.spec', menuSchema, spec);
+
+      var builtItems = Arr.map(detail.items(), function (i) {
+        var markers = {
+          item: detail.markers().item(),
+          selectedItem: detail.markers().selectedItem()
+        };
+
+        var merged = Merger.deepMerge(i, {
+          markers: markers
+        });
+        var itemInfo = ValueSchema.asStructOrDie('menu.spec item', itemSchema, merged);
+        return itemInfo.builder()(itemInfo);
+      });
+
       return {
         uiType: 'custom',
         dom: detail.dom(),
@@ -90,18 +105,7 @@ define(
           },
           set: function () { }
         },
-        components: Arr.map(detail.items(), function (i) {
-          var markers = {
-            item: detail.markers().item(),
-            selectedItem: detail.markers().selectedItem()
-          };
-
-          var merged = Merger.deepMerge(i, {
-            markers: markers
-          });
-          var itemInfo = ValueSchema.asStructOrDie('menu.spec item', itemSchema, merged);
-          return itemInfo.builder()(itemInfo);
-        })
+        components: detail.components()
       };
     };
 

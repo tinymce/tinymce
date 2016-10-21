@@ -13,10 +13,11 @@ define(
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'global!document',
+    'text!dom-templates/demo.menu.html',
     'text!dom-templates/demo.menu.item.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, HtmlDisplay, Arr, Future, Class, DomEvent, Element, Insert, document, TemplateMenuItem) {
+  function (Gui, GuiFactory, GuiTemplate, HtmlDisplay, Arr, Future, Class, DomEvent, Element, Insert, document, TemplateMenu, TemplateMenuItem) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -53,25 +54,23 @@ define(
           text: 'Dropdown',
           dom: {
             tag: 'button',
-            innerHtml: 'Click me'
+            innerHtml: 'Click me to expand'
           },
           members: {
-            menu: {
-              dom: {
-                tag: 'div',
-                styles: {
-                  background: 'blue'
+            menu: GuiTemplate.use(
+              TemplateMenu,
+              { },
+              {
+                fields: {
+                  'aria-label': 'menu-label'
                 }
               }
-
-            },
+            ),
             item: {
               munge: function (spec) {
                 return GuiTemplate.use(
                   TemplateMenuItem,
-                  {
-                    value: 'bird'
-                  }, {
+                  { }, {
                     fields: spec
                   }
                 );
@@ -119,8 +118,8 @@ define(
                 styles: {
                   background: 'blue'
                 }
-              }
-
+              },
+              components: [ ]
             },
             item: {
               munge: function (spec) {
