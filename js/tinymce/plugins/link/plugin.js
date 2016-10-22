@@ -44,10 +44,6 @@ tinymce.PluginManager.add('link', function(editor) {
 		return false;
 	}
 
-	function isSafeTarget(target) {
-		return tinymce.inArray(target, ['_top', '_self', '_parent']) !== -1;
-	}
-
 	/**
 	 * Document opened with window.open(..., '_blank'), retains access to originating
 	 * page through window.opener property, even across domain origins. This opens
@@ -65,7 +61,7 @@ tinymce.PluginManager.add('link', function(editor) {
 	function openDetachedWindow(url, target) {
 		var win, iframe, iframeDoc, script;
 
-		if (target && isSafeTarget(target)) {
+		if (target && target != '_blank') {
 			return open.call(window, url, target);
 		}
 		if (!tinymce.Env.ie) {
@@ -417,6 +413,25 @@ tinymce.PluginManager.add('link', function(editor) {
 					});
 				}
 
+				function toggleTargetRules(rel, isUnsafe) {
+					var rules = 'noopener noreferrer';
+
+					function addTargetRules(rel) {
+						rel = removeTargetRules(rel);
+						return rel ? [rel, rules].join(' ') : rules;
+					}
+
+					function removeTargetRules(rel) {
+						var regExp = new RegExp('(' + rules.replace(' ', '|') + ')', 'g');
+						if (rel) {
+							rel = tinymce.trim(rel.replace(regExp, ''));
+						}
+						return rel ? rel : null;
+					}
+
+					return isUnsafe ? addTargetRules(rel) : removeTargetRules(rel);
+				}
+
 				function createLink() {
 					var linkAttrs = {
 						href: href,
@@ -426,8 +441,8 @@ tinymce.PluginManager.add('link', function(editor) {
 						title: data.title ? data.title : null
 					};
 
-					if (!editor.settings.allow_unsafe_link_target && !linkAttrs.rel && !isSafeTarget(linkAttrs.target)) {
-						linkAttrs.rel = 'noopener noreferrer';
+					if (!editor.settings.allow_unsafe_link_target) {
+						linkAttrs.rel = toggleTargetRules(linkAttrs.rel, linkAttrs.target == '_blank');
 					}
 
 					if (href === attachState.href) {
