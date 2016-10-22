@@ -363,48 +363,6 @@ define("tinymce/util/Tools", [
 		return url;
 	}
 
-	/**
-	 * Document opened with window.open(..., '_blank'), retains access to originating
-	 * page through window.opener property, even across domain origins. This opens
-	 * possibilities for phishing attacks by redirecting window.opener to some malicious
-	 * address.
-	 *
-	 * Inspired by blankshield: https://github.com/danielstjules/blankshield
-	 * The MIT License (MIT)
-	 * Copyright (c) 2015 Daniel St. Jules
-	 *
-	 * @method open
-	 * @param {string} url
-	 * @returns {window}
-	 */
-	function open(url, target) {
-		var win, iframe, iframeDoc, script;
-
-		if (target && target != '_blank') {
-			return open.call(window, url, target);
-		}
-		if (!Env.ie) {
-			iframe = document.createElement('iframe');
-			iframe.style.display = 'none';
-			document.body.appendChild(iframe);
-			iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-
-			script = iframeDoc.createElement('script');
-			script.text =
-				'window.parent = window.top = window.frameElement = null;' +
-				'var child = window.open("' + url + '", "_blank");' +
-				'child.opener = null;';
-
-			iframeDoc.body.appendChild(script);
-			win = iframe.contentWindow.child;
-			document.body.removeChild(iframe);
-		} else {
-			win = open.call(window, url, '_blank');
-			win.opener = null;
-		}
-		return win;
-	}
-
 	return {
 		trim: trim,
 
@@ -493,8 +451,6 @@ define("tinymce/util/Tools", [
 		createNS: createNS,
 		resolve: resolve,
 		explode: explode,
-		_addCacheSuffix: _addCacheSuffix,
-
-		open: open
+		_addCacheSuffix: _addCacheSuffix
 	};
 });

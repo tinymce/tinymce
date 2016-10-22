@@ -44,6 +44,52 @@ tinymce.PluginManager.add('link', function(editor) {
 		return false;
 	}
 
+	function isSafeTarget(target) {
+		return tinymce.inArray(target, ['_top', '_self', '_parent']) !== -1;
+	}
+
+	/**
+	 * Document opened with window.open(..., '_blank'), retains access to originating
+	 * page through window.opener property, even across domain origins. This opens
+	 * possibilities for phishing attacks by redirecting window.opener to some malicious
+	 * address.
+	 *
+	 * Inspired by blankshield: https://github.com/danielstjules/blankshield
+	 * The MIT License (MIT)
+	 * Copyright (c) 2015 Daniel St. Jules
+	 *
+	 * @method openDetachedWindow
+	 * @param {string} url
+	 * @returns {window}
+	 */
+	function openDetachedWindow(url, target) {
+		var win, iframe, iframeDoc, script;
+
+		if (target && isSafeTarget(target)) {
+			return open.call(window, url, target);
+		}
+		if (!tinymce.Env.ie) {
+			iframe = document.createElement('iframe');
+			iframe.style.display = 'none';
+			document.body.appendChild(iframe);
+			iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+			script = iframeDoc.createElement('script');
+			script.text =
+				'window.parent = window.top = window.frameElement = null;' +
+				'var child = window.open("' + url + '", "_blank");' +
+				'child.opener = null;';
+
+			iframeDoc.body.appendChild(script);
+			win = iframe.contentWindow.child;
+			document.body.removeChild(iframe);
+		} else {
+			win = open.call(window, url, '_blank');
+			win.opener = null;
+		}
+		return win;
+	}
+
 	function gotoHref() {
 		var targetEl, a = getSelectedLink();
 		if (!a) {
@@ -55,7 +101,7 @@ tinymce.PluginManager.add('link', function(editor) {
 				editor.selection.scrollIntoView(targetEl[0], true);
 			}
 		} else {
-			tinymce.open(a.href);
+			openDetachedWindow(a.href);
 		}
 	}
 
@@ -380,7 +426,7 @@ tinymce.PluginManager.add('link', function(editor) {
 						title: data.title ? data.title : null
 					};
 
-					if (editor.settings.link_detach_target_blank !== false && linkAttrs.target == '_blank' && !linkAttrs.rel) {
+					if (!editor.settings.allow_unsafe_link_target && !linkAttrs.rel && !isSafeTarget(linkAttrs.target)) {
 						linkAttrs.rel = 'noopener noreferrer';
 					}
 
