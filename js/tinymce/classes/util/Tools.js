@@ -401,7 +401,6 @@ define("tinymce/util/Tools", [
 		} else {
 			win = open.call(window, url, '_blank');
 			win.opener = null;
-			win.location = url;
 		}
 		return win;
 	}
