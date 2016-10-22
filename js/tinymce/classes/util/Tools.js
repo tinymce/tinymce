@@ -383,7 +383,6 @@ define("tinymce/util/Tools", [
 		if (target && target != '_blank') {
 			return open.call(window, url, target);
 		}
-		
 		if (!Env.ie) {
 			iframe = document.createElement('iframe');
 			iframe.style.display = 'none';

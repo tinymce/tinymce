@@ -55,7 +55,7 @@ tinymce.PluginManager.add('link', function(editor) {
 				editor.selection.scrollIntoView(targetEl[0], true);
 			}
 		} else {
-			window.open(a.href, '_blank');
+			tinymce.open(a.href);
 		}
 	}
 
