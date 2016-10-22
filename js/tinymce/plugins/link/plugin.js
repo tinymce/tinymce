@@ -380,6 +380,10 @@ tinymce.PluginManager.add('link', function(editor) {
 						title: data.title ? data.title : null
 					};
 
+					if (editor.settings.link_detach_target_blank !== false && linkAttrs.target == '_blank' && !linkAttrs.rel) {
+						linkAttrs.rel = 'noopener noreferrer';
+					}
+
 					if (href === attachState.href) {
 						attachState.attach();
 						attachState = {};
