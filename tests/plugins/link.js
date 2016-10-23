@@ -25,7 +25,6 @@
 			delete editor.settings.link_class_list;
 			delete editor.settings.link_target_list;
 			delete editor.settings.rel_list;
-			delete editor.settings.link_detach_target_blank;
 
 			var win = Utils.getFrontmostWindow();
 
@@ -96,7 +95,6 @@
 	});
 
 	test('Default link dialog on non pure text selection', function() {
-		editor.settings.link_detach_target_blank = false;
 		editor.setContent('<p>a</p><p>bc</p>');
 		Utils.setSelection('p:nth-child(1)', 0, 'p:nth-child(2)', 2);
 		editor.execCommand('mceLink', true);
@@ -115,14 +113,12 @@
 
 		equal(
 			cleanHtml(editor.getContent()),
-			'<p><a title="title" href="href" target="_blank">a</a></p>' +
-			'<p><a title="title" href="href" target="_blank">bc</a></p>'
+			'<p><a title="title" href="href" target="_blank" rel="noopener noreferrer">a</a></p>' +
+			'<p><a title="title" href="href" target="_blank" rel="noopener noreferrer">bc</a></p>'
 		);
 	});
 
 	test('All lists link dialog on empty editor', function() {
-		editor.settings.link_detach_target_blank = false;
-		
 		editor.settings.link_list = [
 			{title: 'link1', value: 'link1'},
 			{title: 'link2', value: 'link2'}
