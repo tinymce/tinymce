@@ -9,6 +9,7 @@ define(
     'ephox.alloy.menu.util.ItemEvents',
     'ephox.alloy.menu.util.MenuEvents',
     'ephox.alloy.menu.util.MenuMarkers',
+    'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldPresence',
@@ -23,7 +24,7 @@ define(
     'global!Error'
   ],
 
-  function (EventHandler, ItemType, SeparatorType, WidgetType, ItemEvents, MenuEvents, MenuMarkers, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Json, Fun, Error) {
+  function (EventHandler, ItemType, SeparatorType, WidgetType, ItemEvents, MenuEvents, MenuMarkers, Tagger, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Json, Fun, Error) {
     var itemSchema = ValueSchema.choose(
       'type',
       {
@@ -81,7 +82,10 @@ define(
 
       var builtItems = Arr.map(detail.items(), function (i) {
         var munged = detail.members().item().munge(i);
-        var merged = Merger.deepMerge(i, munged);
+        var fallbackUid = Tagger.generate('');
+        var merged = Merger.deepMerge({
+          uid: fallbackUid
+        }, i, munged);
 
         var itemInfo = ValueSchema.asStructOrDie('menu.spec item', itemSchema, merged);
 

@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.GuiTemplate',
+    'ephox.alloy.demo.DemoTemplates',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.compass.Arr',
     'ephox.knoch.future.Future',
@@ -18,7 +19,7 @@ define(
     'text!dom-templates/demo.menu.separator.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, HtmlDisplay, Arr, Future, Class, DomEvent, Element, Insert, document, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator) {
+  function (Gui, GuiFactory, GuiTemplate, DemoTemplates, HtmlDisplay, Arr, Future, Class, DomEvent, Element, Insert, document, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -79,13 +80,7 @@ define(
             },
             item: {
               munge: function (spec) {
-                var template = spec.type === 'separator' ? TemplateMenuSeparator : TemplateMenuItem;
-                return GuiTemplate.use(
-                  template,
-                  { }, {
-                    fields: spec
-                  }
-                );
+                return DemoTemplates.item(spec);
               }
             }     
           },
@@ -141,12 +136,7 @@ define(
             },
             item: {
               munge: function (spec) {
-                return GuiTemplate.use(
-                  TemplateMenuItem,
-                  { }, {
-                    fields: spec
-                  }
-                );
+                return DemoTemplates.item(spec);
               }
             }
             // menu: GuiTempalte.use(TemplateMenu)
@@ -171,11 +161,7 @@ define(
                       type: 'widget',
                       value: 'widget',
                       text: 'Widget',
-                      'item-class': '',
-                      markers: {
-                        item: 'alloy-item'
-                      },
-                      spec: {
+                      widget: {
                         uiType: 'custom',
                         dom: {
                           tag: 'div'

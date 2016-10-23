@@ -3,17 +3,14 @@ define(
 
   [
     'ephox.alloy.api.SystemEvents',
-    'ephox.alloy.behaviour.Behaviour',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.util.ItemEvents',
-    'ephox.alloy.menu.util.MenuMarkers',
-    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
     'ephox.peanut.Fun'
   ],
 
-  function (SystemEvents, Behaviour, EventHandler, ItemEvents, MenuMarkers, FieldPresence, FieldSchema, Merger, Fun) {
+  function (SystemEvents, EventHandler, ItemEvents, FieldSchema, Merger, Fun) {
     var schema = [
       FieldSchema.strict('value'),
       FieldSchema.strict('components'),

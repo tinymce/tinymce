@@ -84,13 +84,53 @@ define(
       });
     };
 
+    var oneReplace = function (label, replacements) {
+      var called = false;
+
+      var used = function () {
+        return called;
+      };
+
+      var replace = function () {
+        if (called === true) throw new Error(
+          'Trying to use the same placeholder more than once: ' + label
+        );
+        called = true;
+        return replacements;
+      };
+
+      return {
+        name: Fun.constant(label),
+        used: used,
+        replace: replace
+      };
+    };
+
+    var substitutePlaces = function (detail, components, placeholders) {
+      var ps = Obj.map(placeholders, function (ph, name) {
+        return oneReplace(name, ph);
+      });
+
+      var outcome = substituteAll(detail, components, { }, ps);
+
+      Obj.each(ps, function (p) {
+        if (p.used() === false) throw new Error(
+          'Placeholder: ' + p.name() + ' was not found in components list\nComponents: ' +
+          Json.stringify(detail.components(), null, 2)
+        );
+      });
+
+      return outcome;
+    };
+
     return {
       single: adt.single,
       multiple: adt.multiple,
       isSubstitute: isSubstitute,
       dependent: Fun.constant(dependent),
       placeholder: Fun.constant(placeholder),
-      substituteAll: substituteAll
+      substituteAll: substituteAll,
+      substitutePlaces: substitutePlaces
     };
   }
 );

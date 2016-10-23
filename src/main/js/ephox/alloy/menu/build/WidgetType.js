@@ -6,47 +6,60 @@ define(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.util.ItemEvents',
     'ephox.alloy.menu.util.MenuMarkers',
+    'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
+    'ephox.highway.Merger',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Traverse'
   ],
 
-  function (SystemEvents, EventHandler, ItemEvents, MenuMarkers, FieldPresence, FieldSchema, Objects, Option, Traverse) {
+  function (SystemEvents, EventHandler, ItemEvents, MenuMarkers, UiSubstitutes, FieldPresence, FieldSchema, Objects, Merger, Option, Traverse) {
     var schema = [
+      FieldSchema.strict('uid'),
       FieldSchema.strict('value'),
-      FieldSchema.strict('spec'),
-      FieldSchema.strict('markers'),
-      FieldSchema.defaulted('classes', [ ]),
+      FieldSchema.strict('components'),
+      FieldSchema.strict('dom'),
+      FieldSchema.strict('widget'),
+      FieldSchema.defaulted('base', { }),
       FieldSchema.state('builder', function () {
         return builder;
       })
     ];
 
-    // FIX: Bring this in line with templating.
     var builder = function (info) {
-      return {
+      var widgetUid = Objects.readOptFrom(
+        info.widget(),
+        'uid'
+      ).getOr(info.uid() + '-widget');
+
+      var placeholders = {
+        '<alloy.menu.widget>': UiSubstitutes.single(Merger.deepMerge(
+          { uid: widgetUid },
+          info.widget()
+        ))
+      };
+
+      var components = UiSubstitutes.substitutePlaces(info, info.components(), placeholders);
+
+      return Merger.deepMerge(info.base(), {
         uiType: 'custom',
-        dom: {
-          tag: 'li',
-          classes: [ info.markers().item ]
-        },
+        dom: info.dom(),
         representing: {
           query: function () {
             return info.value();
           },
+          // Not sure what to do about this.
           set: function () { }
         },
-        components: [ info.spec() ],
+        components: components,
         events: Objects.wrapAll([
           {
             key: SystemEvents.execute(),
             value: EventHandler.nu({
               run: function (component, simulatedEvent) {
-                // The top component is the list item, so focus in the widget which
-                // is the first child.
-                Traverse.firstChild(component.element()).bind(component.getSystem().getByDom).each(function (widget) {
+                component.getSystem().getByUid(widgetUid).each(function (widget) {
                   widget.apis().focusIn();
                   simulatedEvent.stop();
                 });
@@ -77,7 +90,7 @@ define(
             }
           }
         }
-      };
+      });
     };
 
     return schema;
