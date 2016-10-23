@@ -435,11 +435,12 @@ define("tinymce/util/Tools", [
 		grep: Arr.filter,
 
 		/**
-		 * Returns true/false if the object is an array or not.
+		 * Returns an index of the item or -1 if item is not present in the array.
 		 *
-		 * @method isArray
-		 * @param {Object} obj Object to check.
-		 * @return {boolean} true/false state if the object is an array or not.
+		 * @method inArray
+		 * @param {any} item Item to search for.
+		 * @param {Array} arr Array to search in.
+		 * @return {Number} index of the item or -1 if item was not found.
 		 */
 		inArray: Arr.indexOf,
 
