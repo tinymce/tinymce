@@ -121,7 +121,8 @@ define(
         menu.apis().getHighlighted().orThunk(function () {
           return menu.apis().getFirst();
         }).each(function (item) {
-          item.apis().focus();
+          sandbox.getSystem().triggerEvent(SystemEvents.focusItem(), item.element(), { });
+          // item.apis().focus();
         });
       };
 

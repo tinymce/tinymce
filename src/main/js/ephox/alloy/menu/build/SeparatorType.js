@@ -2,12 +2,13 @@ define(
   'ephox.alloy.menu.build.SeparatorType',
 
   [
-    'ephox.alloy.spec.SpecSchema',
+    'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.construct.EventHandler',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.ValueSchema'
+    'ephox.boulder.api.Objects'
   ],
 
-  function (SpecSchema, FieldSchema, ValueSchema) {
+  function (SystemEvents, EventHandler, FieldSchema, Objects) {
     var schema = [
       FieldSchema.strict('dom'),
       FieldSchema.strict('components'),
@@ -20,7 +21,16 @@ define(
       return {
         uiType: 'custom',
         dom: detail.dom(),
-        components: detail.components()
+        components: detail.components(),
+        events: Objects.wrapAll([
+          {
+            key: SystemEvents.focusItem(),
+            value: EventHandler.nu(function (component, simulatedEvent) {
+              simulatedEvent.stop();
+            })
+          }
+
+        ])
       };
     };
 

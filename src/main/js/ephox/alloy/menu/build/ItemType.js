@@ -6,11 +6,12 @@ define(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.util.ItemEvents',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects',
     'ephox.highway.Merger',
     'ephox.peanut.Fun'
   ],
 
-  function (SystemEvents, EventHandler, ItemEvents, FieldSchema, Merger, Fun) {
+  function (SystemEvents, EventHandler, ItemEvents, FieldSchema, Objects, Merger, Fun) {
     var schema = [
       FieldSchema.strict('value'),
       FieldSchema.strict('components'),
@@ -32,17 +33,31 @@ define(
             ItemEvents.onFocus(component);
           }
         },
-        events: {
-          'click': EventHandler.nu({
-            run: function (component) {
-              var target = component.element();
-              component.getSystem().triggerEvent(SystemEvents.execute(), target, {
-                target: Fun.constant(target)
-              });
-            }
-          }),
-          'mouseover': ItemEvents.hoverHandler
-        },
+        events: Objects.wrapAll([
+          {
+            key: 'click',
+            value: EventHandler.nu({
+              run: function (component) {
+                var target = component.element();
+                component.getSystem().triggerEvent(SystemEvents.execute(), target, {
+                  target: Fun.constant(target)
+                });
+              }
+            })
+          },
+          {
+            key: 'mouseover',
+            value: ItemEvents.hoverHandler
+          },
+          {
+            key: SystemEvents.focusItem(),
+            value: EventHandler.nu({
+              run: function (component) {
+                component.apis().focus();
+              }
+            })
+          }
+        ]),
         keying: {
           mode: 'execution'
         },

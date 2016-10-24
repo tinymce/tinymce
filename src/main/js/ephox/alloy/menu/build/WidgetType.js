@@ -84,15 +84,20 @@ define(
           {
             key: 'mouseover',
             value: ItemEvents.hoverHandler
+          },
+          {
+            key: SystemEvents.focusItem(),
+            value: EventHandler.nu({
+              run: function (component, simulatedEvent) {
+                if (info.autofocus()) focusWidget(component);
+                else component.apis().focus();
+              }
+            })
           }
-
         ]),
         focusing: {
           onFocus: function (component) {
             ItemEvents.onFocus(component);
-            if (info.autofocus()) {
-              focusWidget(component);
-            }
           }
         },
         keying: {

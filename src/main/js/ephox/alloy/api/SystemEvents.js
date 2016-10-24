@@ -20,7 +20,12 @@ define(
       receive: Fun.constant('alloy.receive'),
 
       // This event is for executing buttons and things that have (mostly) enter actions
-      execute: Fun.constant('alloy.execute')
+      execute: Fun.constant('alloy.execute'),
+
+      // This event is used by a menu to tell an item to focus itself because it has been
+      // selected. This might automatically focus inside the item, it might focus the outer
+      // part of the widget etc.
+      focusItem: Fun.constant('alloy.focus.item')
     };
   }
 );
