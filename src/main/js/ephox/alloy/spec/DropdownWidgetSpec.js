@@ -49,8 +49,7 @@ define(
           'members',
           FieldPresence.strict(),
           ValueSchema.objOf([
-            FieldSchema.strict('container'),
-            FieldSchema.strict('widget')
+            FieldSchema.strict('container')
           ])
         )
       ], spec, factories);

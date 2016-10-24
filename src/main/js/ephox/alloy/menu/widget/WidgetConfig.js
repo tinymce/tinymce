@@ -29,8 +29,7 @@ define(
         'members',
         FieldPresence.strict(),
         ValueSchema.objOf([
-          FieldSchema.strict('container'),
-          FieldSchema.strict('widget')
+          FieldSchema.strict('container')
         ])
       )
     ]);
@@ -46,7 +45,7 @@ define(
           {
             // Always flatgrid.
             uiType: 'widget-container',
-            widget: uiSpec.members().widget().munge(data)
+            widget: data
           }
         );
 

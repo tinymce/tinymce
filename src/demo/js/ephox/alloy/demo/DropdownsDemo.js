@@ -7,8 +7,6 @@ define(
     'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.demo.DemoTemplates',
     'ephox.alloy.demo.HtmlDisplay',
-    'ephox.alloy.spec.UiSubstitutes',
-    'ephox.compass.Arr',
     'ephox.knoch.future.Future',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.DomEvent',
@@ -18,10 +16,11 @@ define(
     'text!dom-templates/demo.grid.item.html',
     'text!dom-templates/demo.menu.html',
     'text!dom-templates/demo.menu.item.html',
-    'text!dom-templates/demo.menu.separator.html'
+    'text!dom-templates/demo.menu.separator.html',
+    'text!dom-templates/demo.widget.container.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, DemoTemplates, HtmlDisplay, UiSubstitutes, Arr, Future, Class, DomEvent, Element, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator) {
+  function (Gui, GuiFactory, GuiTemplate, DemoTemplates, HtmlDisplay, Future, Class, DomEvent, Element, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateWidgetContainer) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -61,28 +60,22 @@ define(
             innerHtml: 'Click for widget'
           },
           members: {
-            widget: {
-              munge: function (spec) {
-                return spec;
-              }
-            },
             container: {
               munge: function (spec) {
-                return {
-                  dom: {
-                    tag: 'div',
-                    classes: [ 'widget-container' ]
-                  },
-                  components: [
-                    { uiType: UiSubstitutes.placeholder(), name: '<alloy.widget>' }
-                  ]
-                };
+                return GuiTemplate.use(
+                  TemplateWidgetContainer,
+                  { },
+                  { }
+                );
               }
             }
           },
           fetchWidget: function () {
             return Future.pure({
               uiType: 'container',
+              dom: {
+                classes: [ 'my-widget' ]
+              },
               keying: { mode: 'cyclic' },
               components: [
                 { uiType: 'input' }

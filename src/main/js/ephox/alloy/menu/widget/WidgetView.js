@@ -16,8 +16,7 @@ define(
         'members',
         FieldPresence.strict(),
         ValueSchema.objOf([
-          FieldSchema.strict('container'),
-          FieldSchema.strict('widget')
+          FieldSchema.strict('container')
         ])
       ),
 
@@ -32,8 +31,7 @@ define(
             onClose: interactions.onClose,
             onExecute: interactions.onExecute,
             members: {
-              container: detail.view().members().container(),
-              widget: detail.view().members().widget()
+              container: detail.view().members().container()
             }
           });
         };
