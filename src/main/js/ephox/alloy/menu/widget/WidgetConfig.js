@@ -72,8 +72,6 @@ define(
           bubble: Option.none()
         }, container);
 
-        sandbox.apis().setGridSize(2, 2);
-
         uiSpec.onOpen()(sandbox, container);
       };
 
@@ -132,10 +130,19 @@ define(
           sink: uiSpec.sink()
         },
         keying: {
-          mode: 'flatgrid',
-          selector:  '.' + uiSpec.markers().item(),
-          captureTab: true
+          mode: 'special',
+          onTab: function () { return Option.some(true); },
+          onEscape: function (sandbox) {
+            sandbox.apis().closeSandbox();
+            uiSpec.lazyHotspot()().apis().focus();
+            return Option.some(true);
+          },
+          focusIn: function (sandbox, sInfo) {
+            return Option.none();
+            // uiSpec.startFocus()(sandbox, sInfo);
+          }
         },
+        // maybe ESC and TAB handling?
         events: events
       };
     };

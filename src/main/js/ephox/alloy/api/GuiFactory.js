@@ -57,7 +57,7 @@ define(
       'more.toolbar': MoreToolbar.make,
       'dummy': DummySpec.make,
       flatgrid: FlatgridSpec.make,
-      'widget-container': WidgetContainerSpec
+      'widget-container': WidgetContainerSpec.make
 
       // Add other specs here.
     };

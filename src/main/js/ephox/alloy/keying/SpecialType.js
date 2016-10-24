@@ -20,7 +20,8 @@ define(
       FieldSchema.defaulted('onRight', Option.none),
       FieldSchema.defaulted('onUp', Option.none),
       FieldSchema.defaulted('onDown', Option.none),
-      FieldSchema.defaulted('onEscape', Option.none)
+      FieldSchema.defaulted('onEscape', Option.none),
+      FieldSchema.option('focusIn')
     ];
     
     var getRules = function (component, simulatedEvent, executeInfo) {
@@ -41,9 +42,15 @@ define(
       ];
     };
 
+    var focusIn = function (component, executeInfo) {
+      return executeInfo.focusIn().bind(function (f) {
+        return f(component, executeInfo);
+      });
+    };
+
     var getEvents = Fun.constant({ });
     var getApis = Fun.constant({ });
 
-    return KeyingType.typical(schema, getRules, getEvents, getApis, Option.none());
+    return KeyingType.typical(schema, getRules, getEvents, getApis, Option.some(focusIn));
   }
 );

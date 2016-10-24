@@ -38,58 +38,35 @@ define(
     };
 
     var make = function (spec) {
-      var detail = SpecSchema.asRawOrDie('dropdown.list', [
-        FieldSchema.strict('fetchItems'),
+      var detail = SpecSchema.asRawOrDie('dropdown.widget', [
+        FieldSchema.strict('fetchWidget'),
         FieldSchema.defaulted('onOpen', Fun.noop),
         FieldSchema.defaulted('onExecute', Option.none),
         FieldSchema.defaulted('toggleClass', 'alloy-selected-button'),
         FieldSchema.strict('dom'),
         FieldSchema.option('sink'),
-        FieldSchema.defaulted('dependents', { }),
-
+        
         FieldSchema.field(
           'members',
           'members',
           FieldPresence.strict(),
           ValueSchema.objOf([
-            FieldSchema.strict('menu'),
-            FieldSchema.strict('item')
+            FieldSchema.strict('container'),
+            FieldSchema.strict('widget')
           ])
-        ),
-
-        FieldSchema.field(
-          'markers',
-          'markers',
-          FieldPresence.strict(),
-          MenuMarkers.itemSchema()
         )
       ], spec, factories);
 
       var components = UiSubstitutes.substituteAll(detail, detail.components, factories, { });
-    
-      return SpecSchema.extend(Dropdown.make, spec, {
-        fetch: function () {
-          return detail.fetchItems().map(function (items) {
-            var primary = 'main-dropdown';
-            var expansions = {};
-            var menus = Objects.wrap(primary, {
-              name: primary,
-              textkey: 'DOGS',
-              items: items
-            });
 
-            return {
-              primary: primary,
-              expansions: expansions,
-              menus: menus
-            };
-          });
-        },
+      return SpecSchema.extend(Dropdown.make, spec, {
+        fetch: detail.fetchWidget,
         sink: detail.sink.getOr(undefined),
-        onOpen: function (button, sandbox, menu) {
+        onOpen: function (button, sandbox, container) {
           var buttonWidth = Width.get(button.element());
-          Width.set(menu.element(), buttonWidth);
-          detail.onOpen(button, sandbox, menu);
+          Width.set(container.element(), buttonWidth);
+          detail.onOpen(button, sandbox, container);
+          container.apis().focusIn();
         },
         onExecute: detail.onExecute,
         components: components,

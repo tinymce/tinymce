@@ -7,6 +7,7 @@ define(
     'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.demo.DemoTemplates',
     'ephox.alloy.demo.HtmlDisplay',
+    'ephox.alloy.spec.UiSubstitutes',
     'ephox.compass.Arr',
     'ephox.knoch.future.Future',
     'ephox.sugar.api.Class',
@@ -20,7 +21,7 @@ define(
     'text!dom-templates/demo.menu.separator.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, DemoTemplates, HtmlDisplay, Arr, Future, Class, DomEvent, Element, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator) {
+  function (Gui, GuiFactory, GuiTemplate, DemoTemplates, HtmlDisplay, UiSubstitutes, Arr, Future, Class, DomEvent, Element, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -50,7 +51,8 @@ define(
       });
 
       HtmlDisplay.section(
-        'Thie dropdown button shows a widget',
+        gui,
+        'This dropdown button shows a widget',
         {
           uiType: 'dropdown-widget',
           text: 'Dropdown',
@@ -60,17 +62,35 @@ define(
           },
           members: {
             widget: {
-              munge: function () {
-
+              munge: function (spec) {
+                return spec;
               }
             },
             container: {
-              munge: function () {
-
+              munge: function (spec) {
+                return {
+                  dom: {
+                    tag: 'div',
+                    classes: [ 'widget-container' ]
+                  },
+                  components: [
+                    { uiType: UiSubstitutes.placeholder(), name: '<alloy.widget>' }
+                  ]
+                };
               }
             }
+          },
+          fetchWidget: function () {
+            return Future.pure({
+              uiType: 'container',
+              keying: { mode: 'cyclic' },
+              components: [
+                { uiType: 'input' }
+              ]
+            });
           }
-        })
+        }
+      );
 
       HtmlDisplay.section(
         gui,

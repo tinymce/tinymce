@@ -10,15 +10,16 @@ define(
   ],
 
   function (SpecSchema, UiSubstitutes, FieldSchema, ValueSchema, Fun) {
-    var schema = ValueSchema.objOf([
-      FieldSchema.strict('widget')
-    ]);
+    var schema = [
+      FieldSchema.strict('widget'),
+      FieldSchema.strict('dom')
+    ];
     
     var make = function (spec) {
-      var detail = SpecSchema.asStructOrDie('flatgrid.spec', schema, spec);
+      var detail = SpecSchema.asStructOrDie('widget-container.spec', schema, spec);
       
       var placeholders = {
-        '<alloy.widget>': detail.widget()
+        '<alloy.widget>': UiSubstitutes.single(detail.widget())
       };
 
       var components = UiSubstitutes.substitutePlaces(detail, detail.components(), placeholders);
@@ -27,17 +28,15 @@ define(
         uiType: 'custom',
         dom: detail.dom(),
         uid: detail.uid(),
-        highlighting: {
-          // Highlighting for a menu is selecting items inside the menu
-          highlightClass: detail.markers().selectedItem(),
-          itemClass: detail.markers().item()
-        },
-        components: components
+        components: components,
+        keying: {
+          mode: 'flow',
+          selector: '[tabindex="-1"]'
+        }
       };
     };
 
     return {
-      schema: Fun.constant(schema),
       make: make
     };
   }
