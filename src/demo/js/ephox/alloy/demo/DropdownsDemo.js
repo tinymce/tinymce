@@ -166,13 +166,11 @@ define(
         }
       );
 
-      return;
-
       HtmlDisplay.section(
         gui,
         'This dropdown menu has an intricate menu system derived from Sublime sorting',
         {
-          uiType: 'dropdownmenu',
+          uiType: 'dropdown-menu',
           dom: {
             tag: 'button',
             innerHtml: '+'

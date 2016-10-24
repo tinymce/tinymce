@@ -2,6 +2,7 @@ define(
   'ephox.alloy.spec.DropdownMenuSpec',
 
   [
+    'ephox.alloy.dropdown.Dropdown',
     'ephox.alloy.menu.grid.GridView',
     'ephox.alloy.menu.layered.LayeredView',
     'ephox.alloy.spec.ButtonSpec',
@@ -16,7 +17,7 @@ define(
     'ephox.sugar.api.Remove'
   ],
 
-  function (GridView, LayeredView, ButtonSpec, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Id, Merger, Fun, Option, Remove) {
+  function (Dropdown, GridView, LayeredView, ButtonSpec, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Id, Merger, Fun, Option, Remove) {
     var make = function (spec) {
       var detail = SpecSchema.asStructOrDie('dropdownmenu', [
         FieldSchema.strict('fetch'),
@@ -25,21 +26,18 @@ define(
         FieldSchema.defaulted('toggleClass', 'alloy-selected-button'),
         FieldSchema.defaulted('processData', Fun.identity),
         FieldSchema.strict('dom'),
-        FieldSchema.field(
-          'view',
-          'view',
-          FieldPresence.strict(),
-          ValueSchema.choose(
-            'style',
-            {
-              layered: LayeredView,
-              grid: GridView
-            }
-          )
-        ),
-      
         FieldSchema.option('sink')
       ], spec, { });
+
+      return Dropdown.make(
+        Merger.deepMerge({
+          view: {
+            style: 'layered',
+            members: spec.members,
+            markers: spec.markers
+          }
+        }, spec)
+      );
 
       var components = detail.components();
 

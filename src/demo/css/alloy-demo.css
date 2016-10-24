@@ -13,15 +13,15 @@
 
 .demo-alloy-menu {
   margin: 0px;
-  padding: 0px;
+  padding: 2px;
   background: white;
   list-style-type: none;
   border: 1px solid black;
 }
 
-.alloy-menu li {
+.demo-alloy-menu li {
   padding: 0px;
-  margin: 0px;
+  margin: 2px;
 }
 
 :focus {

@@ -42,7 +42,7 @@ define(
       button: ButtonSpec.make,
       input: InputSpec.make,
       formlabel: FormLabelSpec.make,
-      dropdownmenu: DropdownMenuSpec.make,
+      'dropdown-menu': DropdownMenuSpec.make,
       'dropdown-list': DropdownListSpec.make,
       'dropdown-grid': DropdownGridSpec.make,
       menu: MenuSpec.make,
