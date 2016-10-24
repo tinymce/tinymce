@@ -50,6 +50,64 @@ define(
 
       HtmlDisplay.section(
         gui,
+        'This grid dropdown button is a grid of 3 x 2',
+        {
+          uiType: 'dropdown',
+          text: 'Dropdown',
+          dom: {
+            tag: 'button',
+            innerHtml: 'Click me to expand'
+          },
+          markers: {
+            item: 'alloy-item',
+            selectedItem: 'alloy-selected-item',
+            menu: 'alloy-menu',
+            selectedMenu: 'alloy-selected-menu'
+          },
+          members: {
+            item: {
+              munge: function (spec) {
+                return DemoTemplates.item(spec);
+              }
+            },
+            flatgrid: {
+              munge: function (spec) {
+                return GuiTemplate.use(
+                  TemplateMenu,
+                  { },
+                  {
+                    fields: {
+                      'aria-label': spec.textkey || 'TEMPORARY_HACK'
+                    }
+                  }
+                );
+              }
+            }
+          },
+          fetchItems: function () {
+
+            var data = [
+              { type: 'item', value: 'alpha', text: 'Alpha', 'item-class': 'class-alpha' },
+              { type: 'item', value: 'beta', text: 'Beta', 'item-class': 'class-beta' },
+              { type: 'separator', value: 'text' },
+              { type: 'item', value: 'gamma', text: 'Gamma', 'item-class': 'class-gamma' },
+              { type: 'item', value: 'delta', text: 'Delta', 'item-class': 'class-delta' }
+            ];
+
+            return Future.pure(data);
+          },
+          // sink: sink,
+          desc: 'demo-dropdown',
+          onExecute: function (sandbox, item, itemValue) {
+            console.log('*** dropdown demo execute on: ' + item.apis().getValue());
+          }
+        }
+      );
+
+      return;
+
+      HtmlDisplay.section(
+        gui,
         'This dropdown button has four possible values: alpha, beta, gamma, and delta',
         {
           uiType: 'dropdown',
@@ -82,7 +140,20 @@ define(
               munge: function (spec) {
                 return DemoTemplates.item(spec);
               }
-            }     
+            },
+            flatgrid: {
+              munge: function (spec) {
+                return GuiTemplate.use(
+                  TemplateMenu,
+                  { },
+                  {
+                    fields: {
+                      'aria-label': spec.textkey
+                    }
+                  }
+                );
+              }
+            }
           },
           fetchItems: function () {
 

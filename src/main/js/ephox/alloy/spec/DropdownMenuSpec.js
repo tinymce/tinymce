@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.menu.util.MenuMarkers',
     'ephox.alloy.spec.ButtonSpec',
+    'ephox.alloy.spec.GridSandboxSpec',
     'ephox.alloy.spec.MenuSandboxSpec',
     'ephox.alloy.spec.SpecSchema',
     'ephox.boulder.api.FieldPresence',
@@ -17,7 +18,7 @@ define(
     'ephox.sugar.api.Remove'
   ],
 
-  function (MenuMarkers, ButtonSpec, MenuSandboxSpec, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Arr, Id, Merger, Fun, Option, Remove) {
+  function (MenuMarkers, ButtonSpec, GridSandboxSpec, MenuSandboxSpec, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Arr, Id, Merger, Fun, Option, Remove) {
     var make = function (spec) {
       var detail = SpecSchema.asStructOrDie('dropdownmenu', [
         FieldSchema.strict('fetch'),
@@ -30,7 +31,7 @@ define(
           'members',
           FieldPresence.strict(),
           ValueSchema.objOf([
-            FieldSchema.strict('menu'),
+            FieldSchema.strict('flatgrid'),
             FieldSchema.strict('item')
           ])
         ),
@@ -72,7 +73,7 @@ define(
           return dropdown.getSystem().getByUid(dropdownUid + '-internal-sink').getOrDie();
         });
 
-        return MenuSandboxSpec.make({
+        return GridSandboxSpec.make({
           lazyHotspot: Fun.constant(dropdown),
           sink: sink,
           onOpen: onOpen,
@@ -80,7 +81,7 @@ define(
           uid: detail.uid() + '-sandbox',
           onExecute: detail.onExecute(),
           members: {
-            menu: detail.members().menu(),
+            flatgrid: detail.members().flatgrid(),
             item: detail.members().item()
           },
           markers: {

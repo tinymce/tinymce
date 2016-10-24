@@ -64,19 +64,20 @@ define(
         fetch: function () {
           console.log('+++++++++++++');
           return detail.fetchItems().map(function (items) {
-            var primary = 'main-dropdown';
-            var expansions = {};
-            var menus = Objects.wrap(primary, {
-              name: primary,
-              textkey: 'DOGS',
-              items: items
-            });
+            // var primary = 'main-dropdown';
+            // var expansions = {};
+            // var menus = Objects.wrap(primary, {
+            //   name: primary,
+            //   textkey: 'DOGS',
+            //   items: items
+            // });
 
-            return {
-              primary: primary,
-              expansions: expansions,
-              menus: menus
-            };
+            // return {
+            //   primary: primary,
+            //   expansions: expansions,
+            //   menus: menus
+            // };
+            return items;
           });
         },
         sink: detail.sink.getOr(undefined),

@@ -8,7 +8,7 @@ define(
   ],
 
   function (FieldSchema, ValueSchema, Fun) {
-        var menuFields = [
+    var menuFields = [
       FieldSchema.strict('menu'),
       FieldSchema.strict('selectedMenu')
     ];

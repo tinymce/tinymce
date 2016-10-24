@@ -13,6 +13,7 @@ define(
     'ephox.alloy.spec.DropdownButtonSpec',
     'ephox.alloy.spec.DropdownMenuSpec',
     'ephox.alloy.spec.DummySpec',
+    'ephox.alloy.spec.FlatgridSpec',
     'ephox.alloy.spec.FormLabelSpec',
     'ephox.alloy.spec.GroupButtonSpec',
     'ephox.alloy.spec.HtmlSelectSpec',
@@ -34,7 +35,7 @@ define(
     'global!Error'
   ],
 
-  function (Component, GuiTemplate, Components, DefaultEvents, Tagger, ButtonSpec, ContainerSpec, CustomSpec, DropdownButtonSpec, DropdownMenuSpec, DummySpec, FormLabelSpec, GroupButtonSpec, HtmlSelectSpec, InlineSpec, InputSpec, MenuSpec, ToolbarSpec, TypeaheadSpec, MoreToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
+  function (Component, GuiTemplate, Components, DefaultEvents, Tagger, ButtonSpec, ContainerSpec, CustomSpec, DropdownButtonSpec, DropdownMenuSpec, DummySpec, FlatgridSpec, FormLabelSpec, GroupButtonSpec, HtmlSelectSpec, InlineSpec, InputSpec, MenuSpec, ToolbarSpec, TypeaheadSpec, MoreToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
     var knownSpecs = {
       container: ContainerSpec.make,
       custom: CustomSpec.make,
@@ -50,7 +51,8 @@ define(
       toolbar: ToolbarSpec.make,
       groupbutton: GroupButtonSpec.make,
       'more.toolbar': MoreToolbar.make,
-      'dummy': DummySpec.make
+      'dummy': DummySpec.make,
+      flatgrid: FlatgridSpec.make
 
       // Add other specs here.
     };
