@@ -6,14 +6,14 @@ define(
     'text!dom-templates/demo.menu.html',
     'text!dom-templates/demo.menu.item.html',
     'text!dom-templates/demo.menu.separator.html',
-    'text!dom-templates/demo.menu.widget.html'
+    'text!dom-templates/demo.menu.widget.item.html'
   ],
 
-  function (GuiTemplate, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateMenuWidget) {
+  function (GuiTemplate, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateMenuWidgetItem) {
     var item = function (spec) {
       if (spec.type === 'widget') {
         return GuiTemplate.use(
-          TemplateMenuWidget,
+          TemplateMenuWidgetItem,
           { },
           {
             fields: {
