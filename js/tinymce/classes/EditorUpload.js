@@ -82,7 +82,7 @@ define("tinymce/EditorUpload", [
 			replaceUrlInUndoStack(image.src, resultUri);
 
 			editor.$(image).attr({
-				src: resultUri + cacheInvalidator(),
+				src: settings.images_reuse_filename ? resultUri + cacheInvalidator() : resultUri,
 				'data-mce-src': editor.convertURL(resultUri, 'src')
 			});
 		}
