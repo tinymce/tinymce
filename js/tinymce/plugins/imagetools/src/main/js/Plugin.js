@@ -112,22 +112,21 @@ define("tinymce/imagetoolsplugin/Plugin", [
 
 		function updateSelectedImage(blob, uploadImmediately) {
 			return BlobConversions.blobToDataUri(blob).then(function(dataUri) {
-				var id, base64, blobCache, blobInfo, selectedImage;
+				var id, filename, base64, blobCache, blobInfo, selectedImage;
 
 				selectedImage = getSelectedImage();
 				blobCache = editor.editorUpload.blobCache;
 				blobInfo = blobCache.getByUri(selectedImage.src);
-
-				if (editor.settings.imagetools_reuse_filename) {
-					id = blobInfo ? blobInfo.id() : extractFilename(selectedImage.src);
-				}
-				
 				base64 = URI.parseDataUri(dataUri).data;
+				id = createId();
+				if (editor.settings.images_reuse_filename) {
+					filename = blobInfo ? blobInfo.filename() : extractFilename(selectedImage.src);
+				}
 
 				if (blobInfo) {
 					blobCache.removeByUri(blobInfo.blobUri());
 				}
-				blobInfo = blobCache.create(id || createId(), blob, base64);
+				blobInfo = blobCache.create(id, blob, base64, filename);
 				blobCache.add(blobInfo);
 
 				editor.undoManager.transact(function() {
