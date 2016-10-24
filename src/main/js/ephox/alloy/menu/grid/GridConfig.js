@@ -149,6 +149,11 @@ define(
         },
         keying: {
           mode: 'flatgrid',
+          onEscape: function (sandbox, simulatedEvent) {
+            sandbox.apis().closeSandbox();
+            uiSpec.lazyHotspot()().apis().focus();
+            return Option.some(true);
+          },
           selector:  '.' + uiSpec.markers().item(),
           captureTab: true
         },

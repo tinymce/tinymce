@@ -22,6 +22,7 @@ define(
     var schema = [
       FieldSchema.strict('selector'),
       FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
+      FieldSchema.defaulted('onEscape', Option.none),
       FieldSchema.defaulted('captureTab', false),
       FieldSchema.state('dimensions', function () {
         return Cell({
@@ -60,6 +61,10 @@ define(
       return gridInfo.captureTab() ? Option.some(true) : Option.none();
     };
 
+    var doEscape = function (component, simulatedEvent, gridInfo) {
+      return gridInfo.onEscape()(component, simulatedEvent);
+    };
+
     var moveLeft = doMove(WrapArrNavigation.cycleLeft);
     var moveRight = doMove(WrapArrNavigation.cycleRight);
     
@@ -73,6 +78,7 @@ define(
       KeyRules.rule( KeyMatch.inSet( Keys.DOWN() ), DomMovement.south(moveSouth)),
       KeyRules.rule( KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), handleTab),
       KeyRules.rule( KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet( Keys.TAB()) ]), handleTab),
+      KeyRules.rule( KeyMatch.inSet( Keys.ESCAPE() ), doEscape),
 
       KeyRules.rule( KeyMatch.inSet( Keys.SPACE().concat(Keys.ENTER()) ), execute)
     ]);
