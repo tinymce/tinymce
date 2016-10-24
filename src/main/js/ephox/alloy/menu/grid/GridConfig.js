@@ -149,7 +149,8 @@ define(
         },
         keying: {
           mode: 'flatgrid',
-          selector:  '.' + uiSpec.markers().item()
+          selector:  '.' + uiSpec.markers().item(),
+          captureTab: true
         },
         events: events
       };
