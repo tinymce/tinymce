@@ -20,7 +20,7 @@ define(
       FieldSchema.strict('onOpen'),
       FieldSchema.defaulted('onExecute', Option.none),
       FieldSchema.strict('sink'),
-      
+
       FieldSchema.field(
         'members',
         'members',
@@ -48,11 +48,19 @@ define(
           tag: 'div'
         },
         sandboxing: config.sandboxing,
-        keying: config.keying,
         receiving: Dismissal.receiving({
           isExtraPart: isExtraPart
         }),
-        events: config.events
+        events: { },
+        keying: {
+          mode: 'special',
+          onTab: function () { return Option.some(true); },
+          onEscape: function (sandbox) {
+            sandbox.apis().closeSandbox();
+            detail.lazyHotspot().apis().focus();
+            return Option.some(true);
+          }
+        }
       };
     };
 

@@ -3,13 +3,9 @@ define(
 
   [
     'ephox.alloy.alien.ComponentStructure',
-    'ephox.alloy.api.SystemEvents',
-    'ephox.alloy.construct.EventHandler',
-    'ephox.alloy.menu.util.MenuMarkers',
     'ephox.alloy.sandbox.Manager',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.highway.Merger',
     'ephox.perhaps.Option',
@@ -18,7 +14,7 @@ define(
     'ephox.sugar.api.Insert'
   ],
 
-  function (ComponentStructure, SystemEvents, EventHandler, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Merger, Option, Cell, Body, Insert) {
+  function (ComponentStructure, Manager, FieldPresence, FieldSchema, ValueSchema, Merger, Option, Cell, Body, Insert) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('lazyHotspot'),
 
@@ -101,22 +97,6 @@ define(
         });
       };
 
-      var events = Objects.wrapAll([
-        {
-          key: SystemEvents.execute(),
-          value: EventHandler.nu({
-            run: function (sandbox, simulatedEvent) {
-              // Trigger on execute on the targeted element
-              // I.e. clicking on menu item
-              var target = simulatedEvent.event().target();
-              return sandbox.getSystem().getByDom(target).bind(function (item) {
-                return uiSpec.onExecute()(sandbox, item);
-              });
-            }
-          })
-        }
-      ]);
-
       return {
         sandboxing: {
           manager: Manager.contract({
@@ -128,22 +108,7 @@ define(
           }),
           onClose: uiSpec.onClose(),
           sink: uiSpec.sink()
-        },
-        keying: {
-          mode: 'special',
-          onTab: function () { return Option.some(true); },
-          onEscape: function (sandbox) {
-            sandbox.apis().closeSandbox();
-            uiSpec.lazyHotspot()().apis().focus();
-            return Option.some(true);
-          },
-          focusIn: function (sandbox, sInfo) {
-            return Option.none();
-            // uiSpec.startFocus()(sandbox, sInfo);
-          }
-        },
-        // maybe ESC and TAB handling?
-        events: events
+        }
       };
     };
   }
