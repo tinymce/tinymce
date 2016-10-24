@@ -7,6 +7,7 @@ define(
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.layered.LayeredState',
+    'ephox.alloy.menu.logic.HotspotViews',
     'ephox.alloy.menu.util.ItemEvents',
     'ephox.alloy.menu.util.MenuEvents',
     'ephox.alloy.menu.util.MenuMarkers',
@@ -29,7 +30,7 @@ define(
     'ephox.sugar.api.SelectorFilter'
   ],
 
-  function (ComponentStructure, EditableFields, SystemEvents, EventHandler, LayeredState, ItemEvents, MenuEvents, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, Insert, Remove, SelectorFilter) {
+  function (ComponentStructure, EditableFields, SystemEvents, EventHandler, LayeredState, HotspotViews, ItemEvents, MenuEvents, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, Insert, Remove, SelectorFilter) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('lazyHotspot'),
 
@@ -251,10 +252,8 @@ define(
       var onEscape = function (sandbox, target) {
         return sandbox.getSystem().getByDom(target).bind(function (item) {
           return collapseLeft(sandbox, item).orThunk(function () {
-            sandbox.apis().closeSandbox();
-            // This should only fire when the user presses ESC ... not any other close.
-            uiSpec.lazyHotspot()().apis().focus();
-            return Option.some(true);
+          // This should only fire when the user presses ESC ... not any other close.
+            return HotspotViews.onEscape(uiSpec.lazyHotspot()(), sandbox);
           });
         });
       };

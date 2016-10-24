@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.ComponentStructure',
+    'ephox.alloy.menu.logic.HotspotViews',
     'ephox.alloy.menu.widget.WidgetConfig',
     'ephox.alloy.sandbox.Dismissal',
     'ephox.alloy.spec.SpecSchema',
@@ -12,7 +13,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (ComponentStructure, WidgetConfig, Dismissal, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Option) {
+  function (ComponentStructure, HotspotViews, WidgetConfig, Dismissal, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Option) {
     var schema = [
       // This hotspot is going to have to be a little more advanced when we get away from menus and dropdowns
       FieldSchema.strict('lazyHotspot'),
@@ -56,9 +57,7 @@ define(
           mode: 'special',
           onTab: function () { return Option.some(true); },
           onEscape: function (sandbox) {
-            sandbox.apis().closeSandbox();
-            detail.lazyHotspot().apis().focus();
-            return Option.some(true);
+            return HotspotViews.onEscape(detail.lazyHotspot(), sandbox);
           }
         }
       };
