@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.spec.DropdownMenuSpec',
+  'ephox.alloy.dropdown.Dropdown',
 
   [
     'ephox.alloy.menu.grid.GridView',
@@ -23,7 +23,6 @@ define(
         FieldSchema.defaulted('onOpen', Fun.noop),
         FieldSchema.defaulted('onExecute', Option.none),
         FieldSchema.defaulted('toggleClass', 'alloy-selected-button'),
-        FieldSchema.defaulted('processData', Fun.identity),
         FieldSchema.strict('dom'),
         FieldSchema.field(
           'view',
@@ -46,7 +45,7 @@ define(
       var open = function (component, sandbox) {
         var fetcher = detail.fetch();
         
-        var futureData = fetcher().map(detail.processData());
+        var futureData = fetcher();
         // Resolve the future to open the dropdown
         sandbox.apis().openSandbox(futureData).get(function () { });
       };

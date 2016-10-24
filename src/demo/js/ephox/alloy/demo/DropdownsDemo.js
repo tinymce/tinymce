@@ -14,12 +14,13 @@ define(
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'global!document',
+    'text!dom-templates/demo.grid.item.html',
     'text!dom-templates/demo.menu.html',
     'text!dom-templates/demo.menu.item.html',
     'text!dom-templates/demo.menu.separator.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, DemoTemplates, HtmlDisplay, Arr, Future, Class, DomEvent, Element, Insert, document, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator) {
+  function (Gui, GuiFactory, GuiTemplate, DemoTemplates, HtmlDisplay, Arr, Future, Class, DomEvent, Element, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -52,49 +53,51 @@ define(
         gui,
         'This grid dropdown button is a grid of 3 x 2',
         {
-          uiType: 'dropdown',
+          uiType: 'dropdown-grid',
           text: 'Dropdown',
           dom: {
             tag: 'button',
             innerHtml: 'Click me to expand'
           },
-          view: {
-            style: 'grid',
-            markers: {
-              item: 'alloy-item',
-              selectedItem: 'alloy-selected-item',
-              menu: 'alloy-menu',
-              selectedMenu: 'alloy-selected-menu'
+          markers: {
+            item: 'alloy-item',
+            selectedItem: 'alloy-selected-item',
+            menu: 'alloy-menu',
+            selectedMenu: 'alloy-selected-menu'
+          },
+          members: {
+            item: {
+              munge: function (spec) {
+                return GuiTemplate.use(
+                  TemplateGridItem,
+                  { },
+                  {
+                    fields: spec
+                  }
+                );
+              }
             },
-            members: {
-              item: {
-                munge: function (spec) {
-                  return DemoTemplates.item(spec);
-                }
-              },
-              grid: {
-                munge: function (spec) {
-                  return GuiTemplate.use(
-                    TemplateMenu,
-                    { },
-                    {
-                      fields: {
-                        'aria-label': spec.textkey || 'TEMPORARY_HACK'
-                      }
+            grid: {
+              munge: function (spec) {
+                return GuiTemplate.use(
+                  TemplateMenu,
+                  { },
+                  {
+                    fields: {
+                      'aria-label': spec.textkey || 'TEMPORARY_HACK'
                     }
-                  );
-                }
+                  }
+                );
               }
             }
           },
           fetchItems: function () {
 
             var data = [
-              { type: 'item', value: 'alpha', text: 'Alpha', 'item-class': 'class-alpha' },
-              { type: 'item', value: 'beta', text: 'Beta', 'item-class': 'class-beta' },
-              { type: 'separator', value: 'text' },
-              { type: 'item', value: 'gamma', text: 'Gamma', 'item-class': 'class-gamma' },
-              { type: 'item', value: 'delta', text: 'Delta', 'item-class': 'class-delta' }
+              { type: 'item', value: 'alpha', text: '+Alpha', 'item-class': 'class-alpha' },
+              { type: 'item', value: 'beta', text: '+Beta', 'item-class': 'class-beta' },
+              { type: 'item', value: 'gamma', text: '+Gamma', 'item-class': 'class-gamma' },
+              { type: 'item', value: 'delta', text: '+Delta', 'item-class': 'class-delta' }
             ];
 
             return Future.pure(data);
@@ -111,7 +114,7 @@ define(
         gui,
         'This dropdown button has four possible values: alpha, beta, gamma, and delta',
         {
-          uiType: 'dropdown',
+          uiType: 'dropdown-list',
           text: 'Dropdown',
           dom: {
             tag: 'button',
@@ -140,19 +143,6 @@ define(
             item: {
               munge: function (spec) {
                 return DemoTemplates.item(spec);
-              }
-            },
-            flatgrid: {
-              munge: function (spec) {
-                return GuiTemplate.use(
-                  TemplateMenu,
-                  { },
-                  {
-                    fields: {
-                      'aria-label': spec.textkey
-                    }
-                  }
-                );
               }
             }
           },

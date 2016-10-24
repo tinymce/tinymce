@@ -43,7 +43,7 @@ define(
 
     var make = function (spec) {
       // Not ideal that it's raw.
-      var detail = SpecSchema.asRawOrDie('dropdown [layered] sandbox', schema, spec);
+      var detail = SpecSchema.asRawOrDie('layered.sandbox', schema, spec);
 
       var config = LayeredConfig(detail);
 

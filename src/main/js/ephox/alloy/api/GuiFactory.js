@@ -3,14 +3,14 @@ define(
 
   [
     'ephox.alloy.api.Component',
-    'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.construct.Components',
     'ephox.alloy.events.DefaultEvents',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.ButtonSpec',
     'ephox.alloy.spec.ContainerSpec',
     'ephox.alloy.spec.CustomSpec',
-    'ephox.alloy.spec.DropdownButtonSpec',
+    'ephox.alloy.spec.DropdownGridSpec',
+    'ephox.alloy.spec.DropdownListSpec',
     'ephox.alloy.spec.DropdownMenuSpec',
     'ephox.alloy.spec.DummySpec',
     'ephox.alloy.spec.FlatgridSpec',
@@ -35,7 +35,7 @@ define(
     'global!Error'
   ],
 
-  function (Component, GuiTemplate, Components, DefaultEvents, Tagger, ButtonSpec, ContainerSpec, CustomSpec, DropdownButtonSpec, DropdownMenuSpec, DummySpec, FlatgridSpec, FormLabelSpec, GroupButtonSpec, HtmlSelectSpec, InlineSpec, InputSpec, MenuSpec, ToolbarSpec, TypeaheadSpec, MoreToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
+  function (Component, Components, DefaultEvents, Tagger, ButtonSpec, ContainerSpec, CustomSpec, DropdownGridSpec, DropdownListSpec, DropdownMenuSpec, DummySpec, FlatgridSpec, FormLabelSpec, GroupButtonSpec, HtmlSelectSpec, InlineSpec, InputSpec, MenuSpec, ToolbarSpec, TypeaheadSpec, MoreToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
     var knownSpecs = {
       container: ContainerSpec.make,
       custom: CustomSpec.make,
@@ -43,7 +43,8 @@ define(
       input: InputSpec.make,
       formlabel: FormLabelSpec.make,
       dropdownmenu: DropdownMenuSpec.make,
-      dropdown: DropdownButtonSpec.make,
+      'dropdown-list': DropdownListSpec.make,
+      'dropdown-grid': DropdownGridSpec.make,
       menu: MenuSpec.make,
       inline: InlineSpec.make,
       typeahead: TypeaheadSpec.make,

@@ -3,13 +3,14 @@ define(
 
   [
     'ephox.alloy.menu.layered.LayeredSandbox',
+    'ephox.alloy.menu.util.MenuMarkers',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.peanut.Fun'
   ],
 
-  function (LayeredSandbox, FieldPresence, FieldSchema, ValueSchema, Fun) {
+  function (LayeredSandbox, MenuMarkers, FieldPresence, FieldSchema, ValueSchema, Fun) {
     var schema = [
       FieldSchema.field(
         'members',
@@ -25,27 +26,31 @@ define(
         'markers',
         'markers',
         FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('menu'),
-          FieldSchema.strict('item')
-        ])
+        MenuMarkers.schema()
       ),
 
       FieldSchema.state('sandbox', function () {
 
-        var spawn = function (button, detail, blah) {
+        var spawn = function (button, detail, interactions) {
           return LayeredSandbox.make({
-            uid: detail.uid + '-sandbox',
+            uid: detail.uid() + '-sandbox',
             lazyHotspot: Fun.constant(button),
             
-            sink: blah.sink,
-            onOpen: blah.onOpen,
-            onClose: blah.onClose,
-            onExecute: blah.onExecute,
+            sink: interactions.sink,
+            onOpen: interactions.onOpen,
+            onClose: interactions.onClose,
+            onExecute: interactions.onExecute,
 
-            flat: detail.view.flat,
-            members: detail.view.members,
-            markers: detail.view.markers
+            members: {
+              item: detail.view().members().item(),
+              menu: detail.view().members().menu()
+            },
+            markers: {
+              item: detail.view().markers().item(),
+              selectedItem: detail.view().markers().selectedItem(),
+              menu: detail.view().markers().menu(),
+              selectedMenu: detail.view().markers().selectedMenu()
+            }
           });
         };
 
