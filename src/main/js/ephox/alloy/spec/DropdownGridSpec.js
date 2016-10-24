@@ -5,6 +5,7 @@ define(
     'ephox.alloy.behaviour.Behaviour',
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.dropdown.Dropdown',
+    'ephox.alloy.dropdown.DropdownBehaviour',
     'ephox.alloy.menu.util.MenuMarkers',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
@@ -19,7 +20,7 @@ define(
     'global!Error'
   ],
 
-  function (Behaviour, DomModification, Dropdown, MenuMarkers, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Merger, Fun, Option, Width, Error) {
+  function (Behaviour, DomModification, Dropdown, DropdownBehaviour, MenuMarkers, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Merger, Fun, Option, Width, Error) {
 
     var factories = {
       '<alloy.dropdown.display>': function (comp, detail) {
@@ -79,25 +80,7 @@ define(
         onExecute: detail.onExecute,
         components: components,
         behaviours: [
-          Behaviour.contract({
-            name: Fun.constant('dropdown.button.api'),
-            exhibit: function () { return DomModification.nu({ }); },
-            handlers: Fun.constant({ }),
-            apis: function (info) {
-              return {
-                showValue: function (component, value) {
-                  var displayer = component.getSystem().getByUid(detail.uid + '-dropdown.display').getOrDie();
-                  displayer.apis().setValue(value);
-                }
-              };
-            },
-            schema: Fun.constant(FieldSchema.field(
-              'dropdown.button.api',
-              'dropdown.button.api',
-              FieldPresence.asOption(),
-              ValueSchema.anyValue()
-            ))
-          })
+          DropdownBehaviour(detail)
         ],
         view: {
           style: 'grid',

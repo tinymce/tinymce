@@ -2,10 +2,8 @@ define(
   'ephox.alloy.spec.DropdownWidgetSpec',
 
   [
-    'ephox.alloy.behaviour.Behaviour',
-    'ephox.alloy.dom.DomModification',
     'ephox.alloy.dropdown.Dropdown',
-    'ephox.alloy.menu.util.MenuMarkers',
+    'ephox.alloy.dropdown.DropdownBehaviour',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldPresence',
@@ -18,7 +16,7 @@ define(
     'ephox.sugar.api.Width'
   ],
 
-  function (Behaviour, DomModification, Dropdown, MenuMarkers, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Merger, Fun, Option, Width) {
+  function (Dropdown, DropdownBehaviour, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Merger, Fun, Option, Width) {
     // DUPE:
     var factories = {
       '<alloy.dropdown.display>': function (comp, detail) {
@@ -70,25 +68,7 @@ define(
         onExecute: detail.onExecute,
         components: components,
         behaviours: [
-          Behaviour.contract({
-            name: Fun.constant('dropdown.button.api'),
-            exhibit: function () { return DomModification.nu({ }); },
-            handlers: Fun.constant({ }),
-            apis: function (info) {
-              return {
-                showValue: function (component, value) {
-                  var displayer = component.getSystem().getByUid(detail.uid + '-dropdown.display').getOrDie();
-                  displayer.apis().setValue(value);
-                }
-              };
-            },
-            schema: Fun.constant(FieldSchema.field(
-              'dropdown.button.api',
-              'dropdown.button.api',
-              FieldPresence.asOption(),
-              ValueSchema.anyValue()
-            ))
-          })
+          DropdownBehaviour(detail)
         ],
         view: {
           style: 'widget',
