@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.ComponentStructure',
+    'ephox.alloy.alien.EditableFields',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.state.LayeredState',
@@ -28,7 +29,7 @@ define(
     'ephox.sugar.api.SelectorFilter'
   ],
 
-  function (ComponentStructure, SystemEvents, EventHandler, LayeredState, ItemEvents, MenuEvents, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, Insert, Remove, SelectorFilter) {
+  function (ComponentStructure, EditableFields, SystemEvents, EventHandler, LayeredState, ItemEvents, MenuEvents, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, Insert, Remove, SelectorFilter) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('lazyHotspot'),
 
@@ -235,13 +236,14 @@ define(
 
       var onRight = function (sandbox, triggerItem) {
         return sandbox.getSystem().getByDom(triggerItem).bind(function (item) {
-          return expandRight(sandbox, item);
+          return EditableFields.inside(triggerItem) ? Option.none() : expandRight(sandbox, item);
         });
       };
 
       var onLeft = function (sandbox, target) {
         return sandbox.getSystem().getByDom(target).bind(function (item) {
-          return collapseLeft(sandbox, item);
+          // Exclude inputs, textareas etc.
+          return EditableFields.inside(target) ? Option.none() : collapseLeft(sandbox, item);
         });
       };
 
