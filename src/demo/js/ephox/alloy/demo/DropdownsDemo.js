@@ -50,6 +50,29 @@ define(
       });
 
       HtmlDisplay.section(
+        'Thie dropdown button shows a widget',
+        {
+          uiType: 'dropdown-widget',
+          text: 'Dropdown',
+          dom: {
+            tag: 'button',
+            innerHtml: 'Click for widget'
+          },
+          members: {
+            widget: {
+              munge: function () {
+
+              }
+            },
+            container: {
+              munge: function () {
+
+              }
+            }
+          }
+        })
+
+      HtmlDisplay.section(
         gui,
         'This grid dropdown button is a grid of 3 x 2',
         {

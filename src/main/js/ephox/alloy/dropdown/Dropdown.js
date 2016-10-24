@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.menu.grid.GridView',
     'ephox.alloy.menu.layered.LayeredView',
+    'ephox.alloy.menu.widget.WidgetView',
     'ephox.alloy.spec.ButtonSpec',
     'ephox.alloy.spec.SpecSchema',
     'ephox.boulder.api.FieldPresence',
@@ -16,7 +17,7 @@ define(
     'ephox.sugar.api.Remove'
   ],
 
-  function (GridView, LayeredView, ButtonSpec, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Id, Merger, Fun, Option, Remove) {
+  function (GridView, LayeredView, WidgetView, ButtonSpec, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Id, Merger, Fun, Option, Remove) {
     var make = function (spec) {
       var detail = SpecSchema.asStructOrDie('dropdownmenu', [
         FieldSchema.strict('fetch'),
@@ -32,7 +33,8 @@ define(
             'style',
             {
               layered: LayeredView,
-              grid: GridView
+              grid: GridView,
+              widget: WidgetView
             }
           )
         ),

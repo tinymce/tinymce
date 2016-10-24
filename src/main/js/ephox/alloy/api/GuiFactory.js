@@ -12,6 +12,7 @@ define(
     'ephox.alloy.spec.DropdownGridSpec',
     'ephox.alloy.spec.DropdownListSpec',
     'ephox.alloy.spec.DropdownMenuSpec',
+    'ephox.alloy.spec.DropdownWidgetSpec',
     'ephox.alloy.spec.DummySpec',
     'ephox.alloy.spec.FlatgridSpec',
     'ephox.alloy.spec.FormLabelSpec',
@@ -22,6 +23,7 @@ define(
     'ephox.alloy.spec.MenuSpec',
     'ephox.alloy.spec.ToolbarSpec',
     'ephox.alloy.spec.TypeaheadSpec',
+    'ephox.alloy.spec.WidgetContainerSpec',
     'ephox.alloy.toolbar.MoreToolbar',
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
@@ -35,7 +37,7 @@ define(
     'global!Error'
   ],
 
-  function (Component, Components, DefaultEvents, Tagger, ButtonSpec, ContainerSpec, CustomSpec, DropdownGridSpec, DropdownListSpec, DropdownMenuSpec, DummySpec, FlatgridSpec, FormLabelSpec, GroupButtonSpec, HtmlSelectSpec, InlineSpec, InputSpec, MenuSpec, ToolbarSpec, TypeaheadSpec, MoreToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
+  function (Component, Components, DefaultEvents, Tagger, ButtonSpec, ContainerSpec, CustomSpec, DropdownGridSpec, DropdownListSpec, DropdownMenuSpec, DropdownWidgetSpec, DummySpec, FlatgridSpec, FormLabelSpec, GroupButtonSpec, HtmlSelectSpec, InlineSpec, InputSpec, MenuSpec, ToolbarSpec, TypeaheadSpec, WidgetContainerSpec, MoreToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
     var knownSpecs = {
       container: ContainerSpec.make,
       custom: CustomSpec.make,
@@ -43,6 +45,7 @@ define(
       input: InputSpec.make,
       formlabel: FormLabelSpec.make,
       'dropdown-menu': DropdownMenuSpec.make,
+      'dropdown-widget': DropdownWidgetSpec.make,
       'dropdown-list': DropdownListSpec.make,
       'dropdown-grid': DropdownGridSpec.make,
       menu: MenuSpec.make,
@@ -53,7 +56,8 @@ define(
       groupbutton: GroupButtonSpec.make,
       'more.toolbar': MoreToolbar.make,
       'dummy': DummySpec.make,
-      flatgrid: FlatgridSpec.make
+      flatgrid: FlatgridSpec.make,
+      'widget-container': WidgetContainerSpec
 
       // Add other specs here.
     };
