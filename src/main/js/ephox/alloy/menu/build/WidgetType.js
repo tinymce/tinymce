@@ -22,6 +22,7 @@ define(
       FieldSchema.strict('components'),
       FieldSchema.strict('dom'),
       FieldSchema.strict('widget'),
+      FieldSchema.defaulted('autofocus', false),
       FieldSchema.defaulted('base', { }),
       FieldSchema.state('builder', function () {
         return builder;
@@ -37,11 +38,26 @@ define(
       var placeholders = {
         '<alloy.item.widget>': UiSubstitutes.single(Merger.deepMerge(
           { uid: widgetUid },
-          info.widget()
+          info.widget(),
+          {
+            representing: {
+              query: function (component) {
+                return info.value();
+              },
+              set: function () { }
+            }
+          }
         ))
       };
 
       var components = UiSubstitutes.substitutePlaces(info, info.components(), placeholders);
+
+      var focusWidget = function (component) {
+        return component.getSystem().getByUid(widgetUid).map(function (widget) {
+          widget.apis().focusIn();
+          return widget;
+        });
+      };
 
       return Merger.deepMerge(info.base(), {
         uiType: 'custom',
@@ -59,8 +75,7 @@ define(
             key: SystemEvents.execute(),
             value: EventHandler.nu({
               run: function (component, simulatedEvent) {
-                component.getSystem().getByUid(widgetUid).each(function (widget) {
-                  widget.apis().focusIn();
+                focusWidget(component).each(function (widget) {
                   simulatedEvent.stop();
                 });
               }
@@ -75,6 +90,9 @@ define(
         focusing: {
           onFocus: function (component) {
             ItemEvents.onFocus(component);
+            if (info.autofocus()) {
+              focusWidget(component);
+            }
           }
         },
         keying: {
