@@ -74,7 +74,7 @@ define(
       var enter = function (sandbox, state) {
         state.get().each(function (container) {
           show(sandbox, container);
-          sandbox.apis().focusIn();
+          container.apis().focusIn();
         });
       };
 

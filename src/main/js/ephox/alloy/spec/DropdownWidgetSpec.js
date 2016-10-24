@@ -66,7 +66,6 @@ define(
           var buttonWidth = Width.get(button.element());
           Width.set(container.element(), buttonWidth);
           detail.onOpen(button, sandbox, container);
-          container.apis().focusIn();
         },
         onExecute: detail.onExecute,
         components: components,
