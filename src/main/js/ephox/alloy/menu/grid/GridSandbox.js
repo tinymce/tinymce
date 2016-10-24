@@ -1,9 +1,9 @@
 define(
-  'ephox.alloy.spec.MenuSandboxSpec',
+  'ephox.alloy.menu.grid.GridSandbox',
 
   [
     'ephox.alloy.alien.ComponentStructure',
-    'ephox.alloy.menu.spi.MenuConfig',
+    'ephox.alloy.menu.grid.GridConfig',
     'ephox.alloy.menu.util.MenuMarkers',
     'ephox.alloy.sandbox.Dismissal',
     'ephox.alloy.spec.SpecSchema',
@@ -13,7 +13,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (ComponentStructure, MenuConfig, MenuMarkers, Dismissal, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Option) {
+  function (ComponentStructure, GridConfig, MenuMarkers, Dismissal, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Option) {
     var schema = [
       // This hotspot is going to have to be a little more advanced when we get away from menus and dropdowns
       FieldSchema.strict('lazyHotspot'),
@@ -23,11 +23,12 @@ define(
       FieldSchema.strict('sink'),
       FieldSchema.defaulted('itemValue', 'data-item-value'),
       FieldSchema.defaulted('backgroundClass', 'background-menu'),
+      FieldSchema.strict('flat'),
       FieldSchema.field(
         'markers',
         'markers',
         FieldPresence.strict(),
-        MenuMarkers.schema()
+        MenuMarkers.itemSchema()
       ),
 
       FieldSchema.field(
@@ -35,7 +36,7 @@ define(
         'members',
         FieldPresence.strict(),
         ValueSchema.objOf([
-          FieldSchema.strict('menu'),
+          FieldSchema.strict('grid'),
           FieldSchema.strict('item')
         ])
       )
@@ -43,9 +44,9 @@ define(
 
     var make = function (spec) {
       // Not ideal that it's raw.
-      var detail = SpecSchema.asRawOrDie('menusandbox.spec', schema, spec);
+      var detail = SpecSchema.asRawOrDie('grid.sandbox.spec', schema, spec);
 
-      var config = MenuConfig(detail);
+      var config = GridConfig(detail);
 
       var isExtraPart = function (sandbox, target) {
         return ComponentStructure.isPartOf(detail.lazyHotspot(), target);
@@ -61,11 +62,7 @@ define(
         receiving: Dismissal.receiving({
           isExtraPart: isExtraPart
         }),
-        events: config.events,
-        highlighting: {
-          highlightClass: detail.markers.selectedMenu,
-          itemClass: detail.markers.menu
-        }
+        events: config.events
       };
     };
 

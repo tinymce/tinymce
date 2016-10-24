@@ -48,14 +48,7 @@ define(
         FieldSchema.defaulted('toggleClass', 'alloy-selected-button'),
         FieldSchema.strict('dom'),
         FieldSchema.option('sink'),
-        FieldSchema.defaulted('dependents', { }),
-
-        FieldSchema.field(
-          'markers',
-          'markers',
-          FieldPresence.strict(),
-          MenuMarkers.schema()
-        )
+        FieldSchema.defaulted('dependents', { })
       ], spec, factories);
 
       var components = UiSubstitutes.substituteAll(detail, detail.components, factories, { });

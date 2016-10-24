@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.menu.state.MenuPathing',
+  'ephox.alloy.menu.layered.MenuPathing',
 
   [
     'ephox.boulder.api.Objects',

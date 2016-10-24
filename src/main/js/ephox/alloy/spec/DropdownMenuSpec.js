@@ -2,15 +2,13 @@ define(
   'ephox.alloy.spec.DropdownMenuSpec',
 
   [
-    'ephox.alloy.menu.util.MenuMarkers',
+    'ephox.alloy.menu.grid.GridView',
+    'ephox.alloy.menu.layered.LayeredView',
     'ephox.alloy.spec.ButtonSpec',
-    'ephox.alloy.spec.GridSandboxSpec',
-    'ephox.alloy.spec.MenuSandboxSpec',
     'ephox.alloy.spec.SpecSchema',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
-    'ephox.compass.Arr',
     'ephox.epithet.Id',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
@@ -18,7 +16,7 @@ define(
     'ephox.sugar.api.Remove'
   ],
 
-  function (MenuMarkers, ButtonSpec, GridSandboxSpec, MenuSandboxSpec, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Arr, Id, Merger, Fun, Option, Remove) {
+  function (GridView, LayeredView, ButtonSpec, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Id, Merger, Fun, Option, Remove) {
     var make = function (spec) {
       var detail = SpecSchema.asStructOrDie('dropdownmenu', [
         FieldSchema.strict('fetch'),
@@ -27,20 +25,18 @@ define(
         FieldSchema.defaulted('toggleClass', 'alloy-selected-button'),
         FieldSchema.strict('dom'),
         FieldSchema.field(
-          'members',
-          'members',
+          'view',
+          'view',
           FieldPresence.strict(),
-          ValueSchema.objOf([
-            FieldSchema.strict('flatgrid'),
-            FieldSchema.strict('item')
-          ])
+          ValueSchema.choose(
+            'style',
+            {
+              layered: LayeredView,
+              grid: GridView
+            }
+          )
         ),
-        FieldSchema.field(
-          'markers',
-          'markers',
-          FieldPresence.strict(),
-          MenuMarkers.schema()
-        ),
+      
         FieldSchema.option('sink')
       ], spec, { });
 
@@ -48,8 +44,7 @@ define(
 
       var open = function (component, sandbox) {
         var fetcher = detail.fetch();
-        console.log('DropdownMenuSpec.open');
-
+        
         var futureData = fetcher();
         // Resolve the future to open the dropdown
         sandbox.apis().openSandbox(futureData).get(function () { });
@@ -73,24 +68,14 @@ define(
           return dropdown.getSystem().getByUid(dropdownUid + '-internal-sink').getOrDie();
         });
 
-        return GridSandboxSpec.make({
-          lazyHotspot: Fun.constant(dropdown),
-          sink: sink,
+        var interactions = {
           onOpen: onOpen,
           onClose: onClose,
-          uid: detail.uid() + '-sandbox',
           onExecute: detail.onExecute(),
-          members: {
-            flatgrid: detail.members().flatgrid(),
-            item: detail.members().item()
-          },
-          markers: {
-            item: detail.markers().item(),
-            selectedItem: detail.markers().selectedItem(),
-            menu: detail.markers().menu(),
-            selectedMenu: detail.markers().selectedMenu()
-          }
-        });
+          sink: sink
+        };
+
+        return detail.view().sandbox().spawn(dropdown, detail, interactions);
       };
 
       var togglePopup = function (dropdown) {
@@ -100,9 +85,6 @@ define(
       };
         
       var dropdownUid = Id.generate('dropdown');
-
-      console.log('dropdown.menu.spec', spec);
-
 
       var base = Merger.deepMerge(
         spec,
@@ -132,7 +114,7 @@ define(
         })
       );
 
-      var xx = detail.sink().fold(function () {
+      return detail.sink().fold(function () {
         // The sink will be inline.
         return {
           uiType: 'custom',
@@ -156,10 +138,6 @@ define(
           ]
         };
       }, Fun.constant(base));
-
-      console.log('xx', xx);
-
-      return xx;
     };
 
     return {

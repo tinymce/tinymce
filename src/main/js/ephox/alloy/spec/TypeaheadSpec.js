@@ -3,21 +3,18 @@ define(
 
   [
     'ephox.alloy.spec.InputSpec',
-    'ephox.alloy.spec.MenuSandboxSpec',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.highway.Merger',
-    'ephox.knoch.future.Future',
     'ephox.perhaps.Option',
-    'ephox.sugar.api.Attr',
     'ephox.sugar.api.Value',
     'ephox.sugar.api.Width',
     'global!document'
   ],
 
-  function (InputSpec, MenuSandboxSpec, FieldSchema, Objects, ValueSchema, Arr, Merger, Future, Option, Attr, Value, Width, document) {
+  function (InputSpec, FieldSchema, Objects, ValueSchema, Arr, Merger, Option, Value, Width, document) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('sink'),
       FieldSchema.strict('fetchItems'),

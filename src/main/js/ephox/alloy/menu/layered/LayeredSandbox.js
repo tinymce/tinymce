@@ -1,10 +1,9 @@
 define(
-  'ephox.alloy.spec.GridSandboxSpec',
+  'ephox.alloy.menu.layered.LayeredSandbox',
 
   [
     'ephox.alloy.alien.ComponentStructure',
-    'ephox.alloy.menu.spi.GridConfig',
-    'ephox.alloy.menu.spi.MenuConfig',
+    'ephox.alloy.menu.layered.LayeredConfig',
     'ephox.alloy.menu.util.MenuMarkers',
     'ephox.alloy.sandbox.Dismissal',
     'ephox.alloy.spec.SpecSchema',
@@ -14,7 +13,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (ComponentStructure, GridConfig, MenuConfig, MenuMarkers, Dismissal, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Option) {
+  function (ComponentStructure, LayeredConfig, MenuMarkers, Dismissal, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Option) {
     var schema = [
       // This hotspot is going to have to be a little more advanced when we get away from menus and dropdowns
       FieldSchema.strict('lazyHotspot'),
@@ -36,7 +35,7 @@ define(
         'members',
         FieldPresence.strict(),
         ValueSchema.objOf([
-          FieldSchema.strict('flatgrid'),
+          FieldSchema.strict('menu'),
           FieldSchema.strict('item')
         ])
       )
@@ -44,9 +43,9 @@ define(
 
     var make = function (spec) {
       // Not ideal that it's raw.
-      var detail = SpecSchema.asRawOrDie('grid.sandbox.spec', schema, spec);
+      var detail = SpecSchema.asRawOrDie('dropdown [layered] sandbox', schema, spec);
 
-      var config = GridConfig(detail);
+      var config = LayeredConfig(detail);
 
       var isExtraPart = function (sandbox, target) {
         return ComponentStructure.isPartOf(detail.lazyHotspot(), target);

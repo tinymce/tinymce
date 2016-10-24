@@ -1,19 +1,17 @@
 define(
-  'ephox.alloy.menu.state.LayeredState',
+  'ephox.alloy.menu.layered.LayeredState',
 
   [
-    'ephox.alloy.menu.state.MenuPathing',
+    'ephox.alloy.menu.layered.MenuPathing',
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.scullion.Cell',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.SelectorFilter'
+    'ephox.scullion.Cell'
   ],
 
-  function (MenuPathing, Objects, Arr, Obj, Fun, Option, Cell, Attr, SelectorFilter) {
+  function (MenuPathing, Objects, Arr, Obj, Fun, Option, Cell) {
     return function () {
       var expansions = Cell({ });
       var menus = Cell({ });

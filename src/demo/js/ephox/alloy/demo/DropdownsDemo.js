@@ -58,29 +58,32 @@ define(
             tag: 'button',
             innerHtml: 'Click me to expand'
           },
-          markers: {
-            item: 'alloy-item',
-            selectedItem: 'alloy-selected-item',
-            menu: 'alloy-menu',
-            selectedMenu: 'alloy-selected-menu'
-          },
-          members: {
-            item: {
-              munge: function (spec) {
-                return DemoTemplates.item(spec);
-              }
+          view: {
+            style: 'grid',
+            markers: {
+              item: 'alloy-item',
+              selectedItem: 'alloy-selected-item',
+              menu: 'alloy-menu',
+              selectedMenu: 'alloy-selected-menu'
             },
-            flatgrid: {
-              munge: function (spec) {
-                return GuiTemplate.use(
-                  TemplateMenu,
-                  { },
-                  {
-                    fields: {
-                      'aria-label': spec.textkey || 'TEMPORARY_HACK'
+            members: {
+              item: {
+                munge: function (spec) {
+                  return DemoTemplates.item(spec);
+                }
+              },
+              grid: {
+                munge: function (spec) {
+                  return GuiTemplate.use(
+                    TemplateMenu,
+                    { },
+                    {
+                      fields: {
+                        'aria-label': spec.textkey || 'TEMPORARY_HACK'
+                      }
                     }
-                  }
-                );
+                  );
+                }
               }
             }
           },
@@ -103,8 +106,6 @@ define(
           }
         }
       );
-
-      return;
 
       HtmlDisplay.section(
         gui,
@@ -174,6 +175,8 @@ define(
           }
         }
       );
+
+      return;
 
       HtmlDisplay.section(
         gui,

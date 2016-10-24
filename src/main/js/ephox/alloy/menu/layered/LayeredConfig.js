@@ -1,12 +1,12 @@
 define(
-  'ephox.alloy.menu.spi.MenuConfig',
+  'ephox.alloy.menu.layered.LayeredConfig',
 
   [
     'ephox.alloy.alien.ComponentStructure',
     'ephox.alloy.alien.EditableFields',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.construct.EventHandler',
-    'ephox.alloy.menu.state.LayeredState',
+    'ephox.alloy.menu.layered.LayeredState',
     'ephox.alloy.menu.util.ItemEvents',
     'ephox.alloy.menu.util.MenuEvents',
     'ephox.alloy.menu.util.MenuMarkers',

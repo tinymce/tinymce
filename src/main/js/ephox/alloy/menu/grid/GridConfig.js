@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.menu.spi.GridConfig',
+  'ephox.alloy.menu.grid.GridConfig',
 
   [
     'ephox.alloy.alien.ComponentStructure',
@@ -27,6 +27,7 @@ define(
       FieldSchema.strict('onExecute'),
 
       FieldSchema.strict('sink'),
+      FieldSchema.strict('flat'),
 
       FieldSchema.field(
         'markers',
@@ -40,22 +41,23 @@ define(
         'members',
         FieldPresence.strict(),
         ValueSchema.objOf([
-          FieldSchema.strict('flatgrid'),
+          FieldSchema.strict('grid'),
           FieldSchema.strict('item')
         ])
       )
     ]);
 
     return function (rawUiSpec) {
-      var uiSpec = ValueSchema.asStructOrDie('spi.MenuConfig', schema, rawUiSpec);
+      var uiSpec = ValueSchema.asStructOrDie('GridConfig', schema, rawUiSpec);
 
       var state = Cell(Option.none());
 
       var build = function (sandbox, data) {
         var container = Merger.deepMerge(
-          uiSpec.members().flatgrid().munge(rawUiSpec),
+          uiSpec.members().grid().munge(rawUiSpec),
           {
-            uiType: 'flatgrid',
+            // Always flatgrid.
+            uiType: uiSpec.flat() ? 'flatgrid' : 'flatgrid',
             items: data,
             // markers: rawUiSpec.markers,
             members: {
