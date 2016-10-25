@@ -115,34 +115,6 @@ define(
         )
       );
 
-      return;
-
-
-      HtmlDisplay.section(
-        gui,
-        'This dropdown is custom',
-        GuiTemplate.use(
-          TemplateInlineDropdown,
-          {
-            uiType: 'dropdown-alpha',
-            parts: {
-              button: {
-                buttonType: 'custom',
-                config: {
-                  dom: {
-                    innerHtml: 'Text'                  
-                  },
-                  components: [ ]
-                }
-              }
-            }
-          },
-          {
-
-          }
-        )
-      );
-
 
       var x = HtmlDisplay.section(
         gui,
