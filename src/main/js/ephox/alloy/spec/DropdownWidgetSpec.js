@@ -44,9 +44,7 @@ define(
       return Merger.deepMerge(
         ButtonSpec.make({
           uid: detail.uid(),
-          action: function (button) {
-            beta.togglePopup(button)
-          }
+          action: beta.togglePopup
         }), {
         uid: detail.uid(),
           uiType: 'button',
