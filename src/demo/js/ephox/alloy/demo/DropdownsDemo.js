@@ -8,6 +8,7 @@ define(
     'ephox.alloy.demo.DemoTemplates',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.knoch.future.Future',
+    'ephox.perhaps.Option',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
@@ -23,7 +24,7 @@ define(
     'text!dom-templates/dropdown-alpha.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, DemoTemplates, HtmlDisplay, Future, Class, DomEvent, Element, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateToolbarDropdown, TemplateToolbarSplitButton, TemplateWidgetContainer, TemplateInlineDropdown) {
+  function (Gui, GuiFactory, GuiTemplate, DemoTemplates, HtmlDisplay, Future, Option, Class, DomEvent, Element, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateToolbarDropdown, TemplateToolbarSplitButton, TemplateWidgetContainer, TemplateInlineDropdown) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -55,64 +56,79 @@ define(
       HtmlDisplay.section(
         gui,
         'Thi is a split-button dropdown',
-        GuiTemplate.use(
-          TemplateToolbarSplitButton,
-          { 
-            uiType: 'split-dropdown',
-            toggleClass: 'demo-selected',
-            fetch: function () {
-              return Future.pure({
-                uiType: 'container',
-                components: [
-                  { uiType: 'input'}
-                ]
+        {
+          uiType: 'sandboxed-component',
+          sink: {
+            type: 'internal'
+          },
+          dom: {
+            tag: 'div'
+          },
+          components: [
+            { uiType: 'container' },
+            { uiType: 'placeholder', name: 'blah', owner: 'sandboxed-component' }
+          ],
+          component: GuiTemplate.use(
+            Option.some('split-dropdown'),
+            TemplateToolbarSplitButton,
+            { 
+              uiType: 'split-dropdown',
+              toggleClass: 'demo-selected',
+              fetch: function () {
+                return Future.pure({
+                  uiType: 'container',
+                  components: [
+                    { uiType: 'input'}
+                  ]
 
-              });
-            },
-            sink: sink,
-            onExecute: function () {
-
-            },
-
-            parts: {
-              button: {
-                uiType: 'button',
-                dom: {
-                  tag: 'button',
-                  innerHtml: 'Run'
-                },
-                action: function () {
-                  console.log('*** Clicked on Action ***');
-                },
-                uid: 'supplied'
+                });
               },
-              arrow: {
-                uiType: 'button',
-                dom: {
-                  tag: 'button',
-                  innerHtml: 'v'
+              sink: sink,
+              onExecute: function () {
+
+              },
+
+              parts: {
+                button: {
+                  uiType: 'button',
+                  dom: {
+                    tag: 'button',
+                    innerHtml: 'Run'
+                  },
+                  action: function () {
+                    console.log('*** Clicked on Action ***');
+                  },
+                  uid: 'supplied'
+                },
+                arrow: {
+                  uiType: 'button',
+                  dom: {
+                    tag: 'button',
+                    innerHtml: 'v'
+                  }
                 }
-              }
-            },
-            view: {
-              style: 'widget',
-              members: {
-                container: {
-                  munge: function (spec) {
-                    return GuiTemplate.use(
-                      TemplateWidgetContainer,
-                      { },
-                      { }
-                    );
+              },
+              view: {
+                style: 'widget',
+                members: {
+                  container: {
+                    munge: function (spec) {
+                      return GuiTemplate.use(
+                        Option.none(),
+                        TemplateWidgetContainer,
+                        { },
+                        { }
+                      );
+                    }
                   }
                 }
               }
-            }
-          },
-          {
+            },
+            {
 
-          }
-        )
+            }
+          )
+        }
       );
 
       return;

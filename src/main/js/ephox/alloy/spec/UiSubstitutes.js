@@ -28,7 +28,7 @@ define(
       ], uiType);
     };
 
-    var subDependent = function (detail, compSpec, factories, placeholders) {
+    var subDependent = function (_owner, detail, compSpec, factories, placeholders) {
       return Objects.readOptFrom(factories, compSpec.name).fold(function () {
         throw new Error('Unknown dependent component: ' + compSpec.name + '\nKnown: [' +
           Obj.keys(factories) + ']\nSpec: ' + Json.stringify(compSpec, null, 2)
@@ -39,7 +39,8 @@ define(
       });
     };
 
-    var subPlaceholder = function (detail, compSpec, factories, placeholders) {
+    var subPlaceholder = function (owner, detail, compSpec, factories, placeholders) {
+      if (owner.exists(function (o) { return o !== compSpec.owner; })) return adt.single(compSpec);
       // Ignore having to find something for the time being.
       return Objects.readOptFrom(placeholders, compSpec.name).fold(function () {
         throw new Error('Unknown placeholder component: ' + compSpec.name + '\nKnown: [' + 
@@ -51,20 +52,20 @@ define(
       });
     };
 
-    var scan = function (detail, compSpec, factories, placeholders) {
-      if (compSpec.uiType === dependent) return subDependent(detail, compSpec, factories, placeholders);
-      else if (compSpec.uiType === placeholder) return subPlaceholder(detail, compSpec, factories, placeholders);
+    var scan = function (owner, detail, compSpec, factories, placeholders) {
+      if (compSpec.uiType === dependent) return subDependent(owner, detail, compSpec, factories, placeholders);
+      else if (compSpec.uiType === placeholder) return subPlaceholder(owner, detail, compSpec, factories, placeholders);
       else return adt.single(compSpec);
     };
 
-    var substitute = function (detail, compSpec, factories, placeholders) {
-      var base = scan(detail, compSpec, factories, placeholders);
+    var substitute = function (owner, detail, compSpec, factories, placeholders) {
+      var base = scan(owner, detail, compSpec, factories, placeholders);
       
       return base.fold(
         function (value) {
           var childSpecs = Objects.readOptFrom(value, 'components').getOr([ ]);
           var substituted = Arr.bind(childSpecs, function (c) {
-            return substitute(detail, c, factories, placeholders);
+            return substitute(owner, detail, c, factories, placeholders);
           });
           return [
             Merger.deepMerge(value, {
@@ -78,9 +79,9 @@ define(
       );
     };
 
-    var substituteAll = function (detail, components, factories, placeholders) {
+    var substituteAll = function (owner, detail, components, factories, placeholders) {
       return Arr.bind(components, function (c) {
-        return substitute(detail, c, factories, placeholders);
+        return substitute(owner, detail, c, factories, placeholders);
       });
     };
 
@@ -106,12 +107,12 @@ define(
       };
     };
 
-    var substitutePlaces = function (detail, components, placeholders) {
+    var substitutePlaces = function (owner, detail, components, placeholders) {
       var ps = Obj.map(placeholders, function (ph, name) {
         return oneReplace(name, ph);
       });
 
-      var outcome = substituteAll(detail, components, { }, ps);
+      var outcome = substituteAll(owner, detail, components, { }, ps);
 
       Obj.each(ps, function (p) {
         if (p.used() === false) throw new Error(

@@ -6,10 +6,11 @@ define(
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
-    'ephox.peanut.Fun'
+    'ephox.peanut.Fun',
+    'ephox.perhaps.Option'
   ],
 
-  function (SpecSchema, UiSubstitutes, FieldSchema, ValueSchema, Fun) {
+  function (SpecSchema, UiSubstitutes, FieldSchema, ValueSchema, Fun, Option) {
     var schema = [
       FieldSchema.strict('widget'),
       FieldSchema.strict('dom')
@@ -22,7 +23,7 @@ define(
         '<alloy.widget>': UiSubstitutes.single(detail.widget())
       };
 
-      var components = UiSubstitutes.substitutePlaces(detail, detail.components(), placeholders);
+      var components = UiSubstitutes.substitutePlaces(Option.none(), detail, detail.components(), placeholders);
 
       return {
         uiType: 'custom',

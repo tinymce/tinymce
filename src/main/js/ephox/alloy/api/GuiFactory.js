@@ -22,6 +22,7 @@ define(
     'ephox.alloy.spec.InlineSpec',
     'ephox.alloy.spec.InputSpec',
     'ephox.alloy.spec.MenuSpec',
+    'ephox.alloy.spec.SandboxedSpec',
     'ephox.alloy.spec.SplitDropdownSpec',
     'ephox.alloy.spec.ToolbarSpec',
     'ephox.alloy.spec.TypeaheadSpec',
@@ -39,7 +40,7 @@ define(
     'global!Error'
   ],
 
-  function (Component, Components, DefaultEvents, Tagger, ButtonSpec, ContainerSpec, CustomSpec, DropdownAlphaSpec, DropdownGridSpec, DropdownListSpec, DropdownMenuSpec, DropdownWidgetSpec, DummySpec, FlatgridSpec, FormLabelSpec, GroupButtonSpec, HtmlSelectSpec, InlineSpec, InputSpec, MenuSpec, SplitDropdownSpec, ToolbarSpec, TypeaheadSpec, WidgetContainerSpec, MoreToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
+  function (Component, Components, DefaultEvents, Tagger, ButtonSpec, ContainerSpec, CustomSpec, DropdownAlphaSpec, DropdownGridSpec, DropdownListSpec, DropdownMenuSpec, DropdownWidgetSpec, DummySpec, FlatgridSpec, FormLabelSpec, GroupButtonSpec, HtmlSelectSpec, InlineSpec, InputSpec, MenuSpec, SandboxedSpec, SplitDropdownSpec, ToolbarSpec, TypeaheadSpec, WidgetContainerSpec, MoreToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
     var knownSpecs = {
       container: ContainerSpec.make,
       custom: CustomSpec.make,
@@ -62,7 +63,9 @@ define(
       'widget-container': WidgetContainerSpec.make,
 
       'dropdown-alpha': DropdownAlphaSpec.make,
-      'split-dropdown': SplitDropdownSpec.make
+      'split-dropdown': SplitDropdownSpec.make,
+
+      'sandboxed-component': SandboxedSpec.make
 
       // Add other specs here.
     };

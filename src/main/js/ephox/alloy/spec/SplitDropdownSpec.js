@@ -16,10 +16,11 @@ define(
     'ephox.compass.Obj',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.sugar.api.Remove'
   ],
 
-  function (SystemEvents, EventHandler, GridView, LayeredView, WidgetView, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Obj, Merger, Fun, Remove) {
+  function (SystemEvents, EventHandler, GridView, LayeredView, WidgetView, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Obj, Merger, Fun, Option, Remove) {
     var schema = [
       FieldSchema.strict('toggleClass'),
       FieldSchema.strict('fetch'),
@@ -112,7 +113,7 @@ define(
       };
 
       // Need to make the substitutions for "button" and "arrow"
-      var components = UiSubstitutes.substitutePlaces(detail, detail.components(), {
+      var components = UiSubstitutes.substitutePlaces(Option.some('split-dropdown'), detail, detail.components(), {
         '<alloy.split-dropdown.button>': UiSubstitutes.single(
           Merger.deepMerge(
             {

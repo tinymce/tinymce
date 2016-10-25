@@ -41,7 +41,7 @@ define(
       }, {});
     };
 
-    var readTemplate = function (templateHtml, replacements) {
+    var readTemplate = function (owner, templateHtml, replacements) {
       var regex = /\${([^{}]*)}/g;
       var rawFields = templateHtml.match(regex);
       var fields = rawFields !== undefined && rawFields !== null ? rawFields : [ ];
@@ -65,14 +65,14 @@ define(
           }
         );
 
-        return readHtml(html, replacements.components);
+        return readHtml(owner, html, replacements.components);
       }
     };
 
-    var readHtml = function (html, compDefns) {
+    var readHtml = function (owner, html, compDefns) {
       var elem = Element.fromHtml(html);
       return Node.isText(elem) ? Result.error('Template text must contain an element!') : Result.value(
-        read(elem, compDefns)
+        read(owner, elem, compDefns)
       );
     };
 
@@ -82,7 +82,7 @@ define(
     };
 
     // The top-level cannot container component definitions
-    var readChildren = function (elem, compDefns) {
+    var readChildren = function (owner, elem, compDefns) {
       if (Node.isText(elem)) return readText(elem);
       else if (Node.isComment(elem)) return [ ];
 
@@ -97,7 +97,7 @@ define(
       else if (compId !== undefined && Objects.hasKey(compDefns, compId)) {
         return [ compDefns[compId] ];
       } else if (placeholderId !== undefined) {
-        return [ { uiType: UiSubstitutes.placeholder(), name: placeholderId } ];
+        return [ { uiType: UiSubstitutes.placeholder(), name: placeholderId, owner: owner.getOr('') } ];
 
       } else {
         var attrs = getAttrs(elem);
@@ -106,7 +106,7 @@ define(
         var components = Arr.bind(children, function (child) {
           if (Node.isText(child)) return readText(child);
           else {
-            var parsed = readChildren(child, compDefns);
+            var parsed = readChildren(owner, child, compDefns);
             return Arr.map(parsed, function (p) {
               return UiSubstitutes.isSubstitute(p.uiType) ? p : {
                 uiType: 'custom',
@@ -157,12 +157,12 @@ define(
     };
 
 
-    var read = function (elem, compDefns) {
+    var read = function (owner, elem, compDefns) {
       var attrs = getAttrs(elem);
       var children = Traverse.children(elem);
 
       var components = Arr.bind(children, function (child) {
-        return readChildren(child, compDefns);
+        return readChildren(owner, child, compDefns);
       });
 
       return {
@@ -174,9 +174,9 @@ define(
       };
     };
 
-    var use = function (templateHtml, spec, rawReplacements) {
+    var use = function (owner, templateHtml, spec, rawReplacements) {
       var replacements = ValueSchema.asRawOrDie('Template spec', contract, rawReplacements);
-      var extra = readTemplate(templateHtml, replacements);
+      var extra = readTemplate(owner, templateHtml, replacements);
       return extra.fold(function (err) {
         fail(err, {
           templateHtml: templateHtml,
