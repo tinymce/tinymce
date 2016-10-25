@@ -3,7 +3,6 @@ define(
 
   [
     'ephox.alloy.dropdown.Beta',
-    'ephox.alloy.dropdown.Dropdown',
     'ephox.alloy.dropdown.DropdownBehaviour',
     'ephox.alloy.menu.logic.ViewTypes',
     'ephox.alloy.spec.ButtonSpec',
@@ -12,11 +11,10 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.sugar.api.Width'
+    'ephox.perhaps.Option'
   ],
 
-  function (Beta, Dropdown, DropdownBehaviour, ViewTypes, ButtonSpec, SpecSchema, UiSubstitutes, FieldSchema, Merger, Fun, Option, Width) {
+  function (Beta, DropdownBehaviour, ViewTypes, ButtonSpec, SpecSchema, UiSubstitutes, FieldSchema, Merger, Fun, Option) {
     // DUPE:
     var schema = [
       FieldSchema.strict('fetch'),
@@ -45,8 +43,9 @@ define(
         ButtonSpec.make({
           uid: detail.uid(),
           action: beta.togglePopup
-        }), {
-        uid: detail.uid(),
+        }),
+        {
+          uid: detail.uid(),
           uiType: 'button',
           dom: detail.dom(),
           components: components,
@@ -65,6 +64,9 @@ define(
               sandbox: beta.makeSandbox
             }
           },
+          behaviours: [
+            DropdownBehaviour(detail.uid())
+          ],
           keying: {
             mode: 'execution',
             useSpace: true
@@ -72,21 +74,6 @@ define(
           focusing: true
         }
       );
-      // SpecSchema.extend(Dropdown.make, spec, {
-      //   fetch: detail.fetchWidget,
-      //   sink: detail.sink.getOr(undefined),
-      //   onOpen: function (button, sandbox, container) {
-      //     var buttonWidth = Width.get(button.element());
-      //     Width.set(container.element(), buttonWidth);
-      //     detail.onOpen(button, sandbox, container);
-      //   },
-      //   onExecute: detail.onExecute,
-      //   components: components,
-      //   behaviours: [
-      //     DropdownBehaviour(detail)
-      //   ],
-      //   view: ViewTypes.useWidget(spec)
-      // }, factories);
     };
 
     return {

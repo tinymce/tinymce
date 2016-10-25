@@ -11,7 +11,7 @@ define(
   ],
 
   function (Behaviour, DomModification, FieldPresence, FieldSchema, ValueSchema, Fun) {
-    return function (rawDetail) {
+    return function (uid) {
       return Behaviour.contract({
         name: Fun.constant('dropdown.button.api'),
         exhibit: function () { return DomModification.nu({ }); },
@@ -19,7 +19,7 @@ define(
         apis: function (info) {
           return {
             showValue: function (component, value) {
-              var displayer = component.getSystem().getByUid(rawDetail.uid + '-dropdown.display').getOrDie();
+              var displayer = component.getSystem().getByUid(uid + '-dropdown.display').getOrDie();
               displayer.apis().setValue(value);
             }
           };
