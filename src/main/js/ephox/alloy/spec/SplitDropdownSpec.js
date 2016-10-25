@@ -5,26 +5,19 @@ define(
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dropdown.Beta',
-    'ephox.alloy.menu.grid.GridView',
-    'ephox.alloy.menu.layered.LayeredView',
+    'ephox.alloy.dropdown.Gamma',
     'ephox.alloy.menu.logic.ViewTypes',
-    'ephox.alloy.menu.widget.WidgetView',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
-    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
-    'ephox.boulder.api.ValueSchema',
-    'ephox.compass.Obj',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.perhaps.Result',
-    'ephox.sugar.api.Remove',
     'global!Error'
   ],
 
-  function (SystemEvents, EventHandler, Beta, GridView, LayeredView, ViewTypes, WidgetView, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Obj, Merger, Fun, Option, Result, Remove, Error) {
+  function (SystemEvents, EventHandler, Beta, Gamma, ViewTypes, SpecSchema, UiSubstitutes, FieldSchema, Objects, Merger, Fun, Option, Error) {
     var schema = [
       FieldSchema.strict('toggleClass'),
       FieldSchema.strict('fetch'),
@@ -42,8 +35,6 @@ define(
         'button',
         'arrow'
       ]);
-
-      var beta = Beta(detail);
 
       // Need to make the substitutions for "button" and "arrow"
       var components = UiSubstitutes.substitutePlaces(Option.some('split-dropdown'), detail, detail.components(), {
@@ -72,9 +63,7 @@ define(
             }
           })
         )
-      }, {
-        '<alloy.sink>': beta.makeSink
-      });
+      }, Gamma.sink());
 
       return {
         uid: detail.uid(),
@@ -85,7 +74,7 @@ define(
             key: SystemEvents.execute(),
             value: EventHandler.nu({
               run: function (component) {
-                beta.togglePopup(component);
+                Beta.togglePopup(detail, component);
               }
             })
           }
@@ -103,7 +92,9 @@ define(
         },
         coupling: {
           others: {
-            sandbox: beta.makeSandbox
+            sandbox: function (hotspot) {
+              return Beta.makeSandbox(detail, hotspot);
+            }
           }
         },
         keying: {

@@ -3,15 +3,17 @@ define(
 
   [
     'ephox.highway.Merger',
-    'ephox.peanut.Fun'
+    'ephox.peanut.Fun',
+    'ephox.perhaps.Result',
+    'global!Error'
   ],
 
-  function (Merger, Fun) {
+  function (Merger, Fun, Result, Error) {
     var parts = [
       'display'
     ];
 
-    var factories = {
+    var display = {
       '<alloy.dropdown.display>': function (dSpec, detail) {
         return Merger.deepMerge(detail.parts().display(), {
           uiType: 'custom',
@@ -22,9 +24,36 @@ define(
       }
     };
 
+    var sink  = {
+      '<alloy.sink>': function (dSpec, detail) {
+        return {
+          uid: detail.uid() + '-internal-sink',
+          uiType: 'custom',
+          dom: dSpec.extra.dom,
+          components: dSpec.extra.components,
+          positioning: {
+            useFixed: true
+          }
+        };
+      }
+    };
+
+    var getSink = function (hotspot, detail) {
+      return hotspot.getSystem().getByUid(detail.uid() + '-internal-sink').orThunk(function () {
+        return detail.sink().fold(function () {
+          return Result.error(new Error(
+            'No internal sink is specified, not an external sink'
+          ));
+        }, Result.value);
+      }).getOrDie();
+    };
+      
     return {
       parts: Fun.constant(parts),
-      display: Fun.constant(factories)
+      display: Fun.constant(display),
+      sink: Fun.constant(sink),
+
+      getSink: getSink
     };
   }
 );

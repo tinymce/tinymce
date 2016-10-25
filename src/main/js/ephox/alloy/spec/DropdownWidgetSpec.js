@@ -32,12 +32,9 @@ define(
         view: ViewTypes.useWidget(spec)
       }), Gamma.parts());
 
-      var beta = Beta(detail);
-
+    
       var factories = Merger.deepMerge(
-        {
-          '<alloy.sink>': beta.makeSink
-        },
+        Gamma.sink(),
         Gamma.display()
       );
 
@@ -46,7 +43,9 @@ define(
       return Merger.deepMerge(
         ButtonSpec.make({
           uid: detail.uid(),
-          action: beta.togglePopup
+          action: function (component) {
+            Beta.togglePopup(detail, component);
+          }
         }),
         {
           uid: detail.uid(),
@@ -65,7 +64,9 @@ define(
           },
           coupling: {
             others: {
-              sandbox: beta.makeSandbox
+              sandbox: function (hotspot) {
+                return Beta.makeSandbox(detail, hotspot);
+              }
             }
           },
           behaviours: [
