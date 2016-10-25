@@ -102,6 +102,7 @@ define(
 
       return {
         name: Fun.constant(label),
+        required: Fun.constant(true),
         used: used,
         replace: replace
       };
@@ -115,7 +116,7 @@ define(
       var outcome = substituteAll(owner, detail, components, { }, ps);
 
       Obj.each(ps, function (p) {
-        if (p.used() === false) throw new Error(
+        if (p.used() === false && p.required()) throw new Error(
           'Placeholder: ' + p.name() + ' was not found in components list\nComponents: ' +
           Json.stringify(detail.components(), null, 2)
         );

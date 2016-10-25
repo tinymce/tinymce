@@ -107,7 +107,6 @@ define(
           sink: detail.sink()
         };
 
-
         return detail.view().sandbox().spawn(hotspot, detail, interactions);
 
       };

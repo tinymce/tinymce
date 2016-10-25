@@ -56,79 +56,66 @@ define(
       HtmlDisplay.section(
         gui,
         'Thi is a split-button dropdown',
-        {
-          uiType: 'sandboxed-component',
-          sink: {
-            type: 'internal'
-          },
-          dom: {
-            tag: 'div'
-          },
-          components: [
-            { uiType: 'container' },
-            { uiType: 'placeholder', name: 'blah', owner: 'sandboxed-component' }
-          ],
-          component: GuiTemplate.use(
-            Option.some('split-dropdown'),
-            TemplateToolbarSplitButton,
-            { 
-              uiType: 'split-dropdown',
-              toggleClass: 'demo-selected',
-              fetch: function () {
-                return Future.pure({
-                  uiType: 'container',
-                  components: [
-                    { uiType: 'input'}
-                  ]
+        GuiTemplate.use(
+          Option.some('split-dropdown'),
+          TemplateToolbarSplitButton,
+          { 
+            uiType: 'split-dropdown',
+            toggleClass: 'demo-selected',
+            fetch: function () {
+              return Future.pure({
+                uiType: 'container',
+                components: [
+                  { uiType: 'input'}
+                ]
 
-                });
-              },
-              sink: sink,
-              onExecute: function () {
+              });
+            },
+            sink: sink,
+            onExecute: function () {
 
-              },
+            },
 
-              parts: {
-                button: {
-                  uiType: 'button',
-                  dom: {
-                    tag: 'button',
-                    innerHtml: 'Run'
-                  },
-                  action: function () {
-                    console.log('*** Clicked on Action ***');
-                  },
-                  uid: 'supplied'
+            parts: {
+              button: {
+                uiType: 'button',
+                dom: {
+                  tag: 'button',
+                  innerHtml: 'Run'
                 },
-                arrow: {
-                  uiType: 'button',
-                  dom: {
-                    tag: 'button',
-                    innerHtml: 'v'
-                  }
-                }
+                action: function () {
+                  console.log('*** Clicked on Action ***');
+                },
+                uid: 'supplied'
               },
-              view: {
-                style: 'widget',
-                members: {
-                  container: {
-                    munge: function (spec) {
-                      return GuiTemplate.use(
-                        Option.none(),
-                        TemplateWidgetContainer,
-                        { },
-                        { }
-                      );
-                    }
-                  }
+              arrow: {
+                uiType: 'button',
+                dom: {
+                  tag: 'button',
+                  innerHtml: 'v'
                 }
               }
             },
-            {
-
+            view: {
+              style: 'widget',
+              members: {
+                container: {
+                  munge: function (spec) {
+                    return GuiTemplate.use(
+                      Option.none(),
+                      TemplateWidgetContainer,
+                      { },
+                      { }
+                    );
+                  }
+                }
+              }
             }
-          )
-        }
+          },
+          {
+
+          }
+        )
       );
 
       return;
