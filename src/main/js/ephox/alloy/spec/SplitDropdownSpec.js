@@ -17,15 +17,17 @@ define(
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.sugar.api.Remove'
+    'ephox.perhaps.Result',
+    'ephox.sugar.api.Remove',
+    'global!Error'
   ],
 
-  function (SystemEvents, EventHandler, GridView, LayeredView, WidgetView, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Obj, Merger, Fun, Option, Remove) {
+  function (SystemEvents, EventHandler, GridView, LayeredView, WidgetView, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Obj, Merger, Fun, Option, Result, Remove, Error) {
     var schema = [
       FieldSchema.strict('toggleClass'),
       FieldSchema.strict('fetch'),
       FieldSchema.strict('onExecute'),
-      FieldSchema.strict('sink'),
+      FieldSchema.option('sink'),
       FieldSchema.strict('dom'),
       FieldSchema.defaulted('onOpen', Fun.noop),
       
@@ -100,11 +102,19 @@ define(
           hotspot.apis().deselect();
         };
 
+        var sink = hotspot.getSystem().getByUid(detail.uid() + '-internal-sink').orThunk(function () {
+          return detail.sink().fold(function () {
+            return Result.error(new Error(
+              'No internal sink is specified, not an external sink'
+            ));
+          }, Result.value);
+        }).getOrDie();
+
         var interactions = {
           onOpen: onOpen,
           onClose: onClose,
           onExecute: detail.onExecute(),
-          sink: detail.sink()
+          sink: sink
         };
 
         return detail.view().sandbox().spawn(hotspot, detail, interactions);
@@ -144,6 +154,18 @@ define(
             }
           })
         )
+      }, {
+        '<alloy.sink>': function (depInfo, s) {
+          return {
+            uid: detail.uid() + '-internal-sink',
+            uiType: 'custom',
+            dom: depInfo.extra.dom,
+            components: depInfo.extra.components,
+            positioning: {
+              useFixed: true
+            }
+          };
+        }
       });
 
       return {

@@ -108,12 +108,12 @@ define(
       };
     };
 
-    var substitutePlaces = function (owner, detail, components, placeholders) {
+    var substitutePlaces = function (owner, detail, components, placeholders, _factories) {
       var ps = Obj.map(placeholders, function (ph, name) {
         return oneReplace(name, ph);
       });
 
-      var outcome = substituteAll(owner, detail, components, { }, ps);
+      var outcome = substituteAll(owner, detail, components, _factories !== undefined ? _factories : { }, ps);
 
       Obj.each(ps, function (p) {
         if (p.used() === false && p.required()) throw new Error(
