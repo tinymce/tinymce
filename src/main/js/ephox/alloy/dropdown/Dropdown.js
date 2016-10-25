@@ -25,6 +25,8 @@ define(
         FieldSchema.defaulted('onExecute', Option.none),
         FieldSchema.defaulted('toggleClass', 'alloy-selected-button'),
         FieldSchema.strict('dom'),
+
+        
         FieldSchema.field(
           'view',
           'view',

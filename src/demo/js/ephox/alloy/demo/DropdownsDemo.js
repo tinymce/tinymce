@@ -123,6 +123,7 @@ define(
         gui,
         'This dropdown button shows a widget',
         GuiTemplate.use(
+          Option.none(),
           TemplateToolbarDropdown,
           {
             uiType: 'dropdown-widget',
@@ -131,6 +132,7 @@ define(
               container: {
                 munge: function (spec) {
                   return GuiTemplate.use(
+                    Option.none(),
                     TemplateWidgetContainer,
                     { },
                     { }
@@ -138,7 +140,7 @@ define(
                 }
               }
             },
-            fetchWidget: function () {
+            fetch: function () {
               return Future.pure({
                 uiType: 'container',
                 dom: {

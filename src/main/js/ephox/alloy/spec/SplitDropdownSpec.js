@@ -7,6 +7,7 @@ define(
     'ephox.alloy.dropdown.Beta',
     'ephox.alloy.menu.grid.GridView',
     'ephox.alloy.menu.layered.LayeredView',
+    'ephox.alloy.menu.logic.ViewTypes',
     'ephox.alloy.menu.widget.WidgetView',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
@@ -23,7 +24,7 @@ define(
     'global!Error'
   ],
 
-  function (SystemEvents, EventHandler, Beta, GridView, LayeredView, WidgetView, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Obj, Merger, Fun, Option, Result, Remove, Error) {
+  function (SystemEvents, EventHandler, Beta, GridView, LayeredView, ViewTypes, WidgetView, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Obj, Merger, Fun, Option, Result, Remove, Error) {
     var schema = [
       FieldSchema.strict('toggleClass'),
       FieldSchema.strict('fetch'),
@@ -31,6 +32,7 @@ define(
       FieldSchema.option('sink'),
       FieldSchema.strict('dom'),
       FieldSchema.defaulted('onOpen', Fun.noop),
+      // FieldSchema.defaulted('onClose', Fun.noop),
       
       FieldSchema.field(
         'parts',
@@ -42,22 +44,7 @@ define(
         ])
       ),
 
-      // FieldSchema.defaulted('onClose', Fun.noop),
-
-      FieldSchema.field(
-        'view',
-        'view',
-        FieldPresence.strict(),
-        ValueSchema.choose(
-          'style',
-          {
-            layered: LayeredView,
-            grid: GridView,
-            widget: WidgetView
-          }
-        )
-      ),
-
+      ViewTypes.schema(),
 
       FieldSchema.state(
         'partUids',
@@ -83,8 +70,6 @@ define(
           Merger.deepMerge(
             {
               focusing: undefined
-
-
             },
             detail.parts().button(),
             {
@@ -96,10 +81,6 @@ define(
         '<alloy.split-dropdown.arrow>': UiSubstitutes.single(
           Merger.deepMerge({
             uiType: 'button',
-            
-            
-            
-            
             tabstopping: undefined,
             focusing: undefined
           }, detail.parts().arrow(), {
@@ -118,7 +99,6 @@ define(
         uid: detail.uid(),
         uiType: 'custom',
         dom: detail.dom(),
-        tabstopping: true,
         events: Objects.wrapAll([
           {
             key: SystemEvents.execute(),
