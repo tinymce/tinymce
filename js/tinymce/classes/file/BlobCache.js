@@ -21,9 +21,10 @@ define("tinymce/file/BlobCache", [
 	return function() {
 		var cache = [], constant = Fun.constant;
 
-		function create(id, blob, base64) {
+		function create(id, blob, base64, filename) {
 			return {
 				id: constant(id),
+				filename: constant(filename || id),
 				blob: constant(blob),
 				base64: constant(base64),
 				blobUri: constant(URL.createObjectURL(blob))
