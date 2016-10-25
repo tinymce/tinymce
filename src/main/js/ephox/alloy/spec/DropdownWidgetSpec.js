@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.dropdown.Beta',
     'ephox.alloy.dropdown.DropdownBehaviour',
+    'ephox.alloy.dropdown.Gamma',
     'ephox.alloy.menu.logic.ViewTypes',
     'ephox.alloy.spec.ButtonSpec',
     'ephox.alloy.spec.SpecSchema',
@@ -14,7 +15,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (Beta, DropdownBehaviour, ViewTypes, ButtonSpec, SpecSchema, UiSubstitutes, FieldSchema, Merger, Fun, Option) {
+  function (Beta, DropdownBehaviour, Gamma, ViewTypes, ButtonSpec, SpecSchema, UiSubstitutes, FieldSchema, Merger, Fun, Option) {
     // DUPE:
     var schema = [
       FieldSchema.strict('fetch'),
@@ -29,23 +30,16 @@ define(
     var make = function (spec) {
       var detail = SpecSchema.asStructOrDie('dropdown.widget', schema, Merger.deepMerge(spec, {
         view: ViewTypes.useWidget(spec)
-      }), [
-        'display'
-      ]);
+      }), Gamma.parts());
 
       var beta = Beta(detail);
 
-      var factories = {
-        '<alloy.sink>': beta.makeSink,
-        '<alloy.dropdown.display>': function (dSpec, detail) {
-          return Merger.deepMerge(detail.parts().display(), {
-            uiType: 'custom',
-            dom: dSpec.extra.dom,
-            components: dSpec.extra.components,
-            uid: detail.partUids().display
-          });
-        }
-      };
+      var factories = Merger.deepMerge(
+        {
+          '<alloy.sink>': beta.makeSink
+        },
+        Gamma.display()
+      );
 
       var components = UiSubstitutes.substitutePlaces(Option.none(), detail, detail.components(), { }, factories);
 
