@@ -62,6 +62,8 @@ define(
       };
 
       var makeSandbox = function (dropdown) {
+        // Hotspot should be button, not dropdown
+        var hotspot = dropdown.getSystem().getByUid(detail.uid()).getOrDie();
         var onOpen = function (component, menu) {
           detail.onOpen()(dropdown, component, menu);
         };
@@ -77,7 +79,8 @@ define(
           sink: detail.sink()
         };
 
-        return detail.view().sandbox().spawn(dropdown, detail, interactions);
+
+        return detail.view().sandbox().spawn(hotspot, detail, interactions);
 
       };
 
