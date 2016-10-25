@@ -17,10 +17,12 @@ define(
     'text!dom-templates/demo.menu.html',
     'text!dom-templates/demo.menu.item.html',
     'text!dom-templates/demo.menu.separator.html',
-    'text!dom-templates/demo.widget.container.html'
+    'text!dom-templates/demo.toolbar.dropdown.html',
+    'text!dom-templates/demo.widget.container.html',
+    'text!dom-templates/dropdown-alpha.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, DemoTemplates, HtmlDisplay, Future, Class, DomEvent, Element, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateWidgetContainer) {
+  function (Gui, GuiFactory, GuiTemplate, DemoTemplates, HtmlDisplay, Future, Class, DomEvent, Element, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateToolbarDropdown, TemplateWidgetContainer, TemplateInlineDropdown) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -49,41 +51,74 @@ define(
         });
       });
 
+
       HtmlDisplay.section(
         gui,
-        'This dropdown button shows a widget',
-        {
-          uiType: 'dropdown-widget',
-          text: 'Dropdown',
-          dom: {
-            tag: 'button',
-            innerHtml: 'Click for widget'
-          },
-          members: {
-            container: {
-              munge: function (spec) {
-                return GuiTemplate.use(
-                  TemplateWidgetContainer,
-                  { },
-                  { }
-                );
+        'This dropdown is custom',
+        GuiTemplate.use(
+          TemplateInlineDropdown,
+          {
+            uiType: 'dropdown-alpha',
+            parts: {
+              button: {
+                buttonType: 'custom',
+                config: {
+                  dom: {
+                    innerHtml: 'Text'                  
+                  },
+                  components: [ ]
+                }
               }
             }
           },
-          fetchWidget: function () {
-            return Future.pure({
-              uiType: 'container',
-              dom: {
-                classes: [ 'my-widget' ]
-              },
-              keying: { mode: 'cyclic' },
-              components: [
-                { uiType: 'input' }
-              ]
-            });
+          {
+
           }
-        }
+        )
       );
+
+
+      var x = HtmlDisplay.section(
+        gui,
+        'This dropdown button shows a widget',
+        GuiTemplate.use(
+          TemplateToolbarDropdown,
+          {
+            uiType: 'dropdown-widget',
+            sink: sink,
+            members: {
+              container: {
+                munge: function (spec) {
+                  return GuiTemplate.use(
+                    TemplateWidgetContainer,
+                    { },
+                    { }
+                  );
+                }
+              }
+            },
+            fetchWidget: function () {
+              return Future.pure({
+                uiType: 'container',
+                dom: {
+                  classes: [ 'my-widget' ]
+                },
+                keying: { mode: 'cyclic' },
+                components: [
+                  { uiType: 'input' }
+                ]
+              });
+            }
+          }, { 
+
+          }
+        )
+      );
+
+      // x.apis().showValue('dog');
+      // console.log('x', x.element().dom());
+
+      // return;
 
       HtmlDisplay.section(
         gui,
