@@ -18,11 +18,12 @@ define(
     'text!dom-templates/demo.menu.item.html',
     'text!dom-templates/demo.menu.separator.html',
     'text!dom-templates/demo.toolbar.dropdown.html',
+    'text!dom-templates/demo.toolbar.split-dropdown.html',
     'text!dom-templates/demo.widget.container.html',
     'text!dom-templates/dropdown-alpha.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, DemoTemplates, HtmlDisplay, Future, Class, DomEvent, Element, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateToolbarDropdown, TemplateWidgetContainer, TemplateInlineDropdown) {
+  function (Gui, GuiFactory, GuiTemplate, DemoTemplates, HtmlDisplay, Future, Class, DomEvent, Element, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateToolbarDropdown, TemplateToolbarSplitButton, TemplateWidgetContainer, TemplateInlineDropdown) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -54,59 +55,64 @@ define(
       HtmlDisplay.section(
         gui,
         'Thi is a split-button dropdown',
-        {
-          uiType: 'split-dropdown',
-          toggleClass: 'demo-selected',
-          fetch: function () {
-            return Future.pure({
-              uiType: 'container',
-              components: [
-                { uiType: 'input'}
-              ]
+        GuiTemplate.use(
+          TemplateToolbarSplitButton,
+          { 
+            uiType: 'split-dropdown',
+            toggleClass: 'demo-selected',
+            fetch: function () {
+              return Future.pure({
+                uiType: 'container',
+                components: [
+                  { uiType: 'input'}
+                ]
 
-            });
-          },
-          sink: sink,
-          onExecute: function () {
-
-          },
-
-          parts: {
-            button: {
-              uiType: 'button',
-              dom: {
-                tag: 'button',
-                innerHtml: 'Run'
-              },
-              action: function () {
-                console.log('*** Clicked on Action ***');
-              },
-              uid: 'supplied'
+              });
             },
-            arrow: {
-              uiType: 'button',
-              dom: {
-                tag: 'button',
-                innerHtml: 'v'
-              }
-            }
-          },
+            sink: sink,
+            onExecute: function () {
 
-          view: {
-            style: 'widget',
-            members: {
-              container: {
-                munge: function (spec) {
-                  return GuiTemplate.use(
-                    TemplateWidgetContainer,
-                    { },
-                    { }
-                  );
+            },
+
+            parts: {
+              button: {
+                uiType: 'button',
+                dom: {
+                  tag: 'button',
+                  innerHtml: 'Run'
+                },
+                action: function () {
+                  console.log('*** Clicked on Action ***');
+                },
+                uid: 'supplied'
+              },
+              arrow: {
+                uiType: 'button',
+                dom: {
+                  tag: 'button',
+                  innerHtml: 'v'
+                }
+              }
+            },
+            view: {
+              style: 'widget',
+              members: {
+                container: {
+                  munge: function (spec) {
+                    return GuiTemplate.use(
+                      TemplateWidgetContainer,
+                      { },
+                      { }
+                    );
+                  }
                 }
               }
             }
+          },
+          {
+
           }
-        }
+        )
       );
 
       return;

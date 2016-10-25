@@ -7,8 +7,8 @@ define(
     'ephox.alloy.menu.grid.GridView',
     'ephox.alloy.menu.layered.LayeredView',
     'ephox.alloy.menu.widget.WidgetView',
-    'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.SpecSchema',
+    'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
@@ -16,16 +16,16 @@ define(
     'ephox.compass.Obj',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
-    'ephox.scullion.Cell',
     'ephox.sugar.api.Remove'
   ],
 
-  function (SystemEvents, EventHandler, GridView, LayeredView, WidgetView, Tagger, SpecSchema, FieldPresence, FieldSchema, Objects, ValueSchema, Obj, Merger, Fun, Cell, Remove) {
+  function (SystemEvents, EventHandler, GridView, LayeredView, WidgetView, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Obj, Merger, Fun, Remove) {
     var schema = [
       FieldSchema.strict('toggleClass'),
       FieldSchema.strict('fetch'),
       FieldSchema.strict('onExecute'),
       FieldSchema.strict('sink'),
+      FieldSchema.strict('dom'),
       FieldSchema.defaulted('onOpen', Fun.noop),
       
       FieldSchema.field(
@@ -114,31 +114,9 @@ define(
 
       };
 
-      return {
-        uid: detail.uid(),
-        uiType: 'custom',
-        dom: {
-          tag: 'div'
-        },
-        tabstopping: true,
-        events: Objects.wrapAll([
-          {
-            key: SystemEvents.execute(),
-            value: EventHandler.nu({
-              run: function (component) {
-                var arrow = component.getSystem().getByUid(detail.partUids().arrow).getOrDie();
-                component.getSystem().triggerEvent(SystemEvents.execute(), arrow.element(), { });
-              }
-            })
-          }
-
-        ]),
-        keying: {
-          mode: 'execution',
-          useSpace: true
-        },
-        focusing: true,
-        components: [
+      // Need to make the substitutions for "button" and "arrow"
+      var components = UiSubstitutes.substitutePlaces(detail, detail.components(), {
+        '<alloy.split-dropdown.button>': UiSubstitutes.single(
           Merger.deepMerge(
             {
               focusing: undefined
@@ -149,8 +127,10 @@ define(
             {
               uid: detail.partUids().button
             }
-          ),
+          )
+        ),
 
+        '<alloy.split-dropdown.arrow>': UiSubstitutes.single(
           Merger.deepMerge({
             uiType: 'button',
             
@@ -175,8 +155,33 @@ define(
             uid: detail.partUids().arrow,
             action: togglePopup
           })
-        ]
+        )
+      });
 
+      return {
+        uid: detail.uid(),
+        uiType: 'custom',
+        dom: detail.dom(),
+        tabstopping: true,
+        events: Objects.wrapAll([
+          {
+            key: SystemEvents.execute(),
+            value: EventHandler.nu({
+              run: function (component) {
+                // Redirect executing the whole button to executing the arrow part
+                var arrow = component.getSystem().getByUid(detail.partUids().arrow).getOrDie();
+                component.getSystem().triggerEvent(SystemEvents.execute(), arrow.element(), { });
+              }
+            })
+          }
+
+        ]),
+        keying: {
+          mode: 'execution',
+          useSpace: true
+        },
+        focusing: true,
+        components: components
       };
     };
 
