@@ -56,16 +56,6 @@ define(
         'Thi is a split-button dropdown',
         {
           uiType: 'split-dropdown',
-          actionButton: {
-            uiType: 'button',
-            dom: {
-              tag: 'button',
-              innerHtml: 'Run'
-            },
-            action: function () {
-              console.log('*** Clicked on Action ***');
-            }
-          },
           toggleClass: 'demo-selected',
           fetch: function () {
             return Future.pure({
@@ -80,6 +70,28 @@ define(
           onExecute: function () {
 
           },
+
+          parts: {
+            button: {
+              uiType: 'button',
+              dom: {
+                tag: 'button',
+                innerHtml: 'Run'
+              },
+              action: function () {
+                console.log('*** Clicked on Action ***');
+              },
+              uid: 'supplied'
+            },
+            arrow: {
+              uiType: 'button',
+              dom: {
+                tag: 'button',
+                innerHtml: 'v'
+              }
+            }
+          },
+
           view: {
             style: 'widget',
             members: {
