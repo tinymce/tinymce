@@ -15,6 +15,7 @@ define(
 
     var display = {
       '<alloy.dropdown.display>': function (dSpec, detail) {
+        // Enforce that is has representing behaviour?
         return Merger.deepMerge(detail.parts().display(), {
           uiType: 'custom',
           dom: dSpec.extra.dom,

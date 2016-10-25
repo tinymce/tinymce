@@ -77,7 +77,7 @@ define(
     };
 
     var make = function (spec) {
-      var detail = SpecSchema.asStructOrDie('flatgrid.spec', menuSchema, spec);
+      var detail = SpecSchema.asStructOrDie('flatgrid.spec', menuSchema, spec, [ ]);
       var builtItems = Arr.map(detail.items(), function (i) {
         var munged = detail.members().item().munge(i);
         var fallbackUid = Tagger.generate('');

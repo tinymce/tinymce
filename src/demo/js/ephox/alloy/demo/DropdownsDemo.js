@@ -175,9 +175,6 @@ define(
 
       x.apis().showValue('dog');
 
-      
-   return;
-
       console.log('x', x.element().dom());
 
       // return;
@@ -202,6 +199,7 @@ define(
             item: {
               munge: function (spec) {
                 return GuiTemplate.use(
+                  Option.none(),
                   TemplateGridItem,
                   { },
                   {
@@ -213,6 +211,7 @@ define(
             grid: {
               munge: function (spec) {
                 return GuiTemplate.use(
+                  Option.none(),
                   TemplateMenu,
                   { },
                   {
@@ -224,7 +223,7 @@ define(
               }
             }
           },
-          fetchItems: function () {
+          fetch: function () {
 
             var data = [
               { type: 'item', value: 'alpha', text: '+Alpha', 'item-class': 'class-alpha' },
@@ -239,9 +238,24 @@ define(
           desc: 'demo-dropdown',
           onExecute: function (sandbox, item, itemValue) {
             console.log('*** dropdown demo execute on: ' + item.apis().getValue());
+          },
+          sink: sink,
+          parts: {
+            display: {
+              representing: {
+                query: function (comp) {
+
+                },
+                set: function (comp, v) {
+                  Html.set(comp.element(), v);
+                }
+              }
+            }
           }
         }
       );
+
+      return;
 
       HtmlDisplay.section(
         gui,

@@ -34,9 +34,18 @@ define(
       };
     };
 
+    var useGrid = function (spec) {
+      return {
+        style: 'grid',
+        members: spec.members,
+        markers: spec.markers
+      };
+    };
+
     return {
       schema: Fun.constant(schema),
-      useWidget: useWidget
+      useWidget: useWidget,
+      useGrid: useGrid
     };
   }
 );
