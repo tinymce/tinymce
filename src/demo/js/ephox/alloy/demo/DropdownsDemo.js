@@ -51,6 +51,54 @@ define(
         });
       });
 
+      HtmlDisplay.section(
+        gui,
+        'Thi is a split-button dropdown',
+        {
+          uiType: 'split-dropdown',
+          actionButton: {
+            uiType: 'button',
+            dom: {
+              tag: 'button',
+              innerHtml: 'Run'
+            },
+            action: function () {
+              console.log('*** Clicked on Action ***');
+            }
+          },
+          toggleClass: 'demo-selected',
+          fetch: function () {
+            return Future.pure({
+              uiType: 'container',
+              components: [
+                { uiType: 'input'}
+              ]
+
+            });
+          },
+          sink: sink,
+          onExecute: function () {
+
+          },
+          view: {
+            style: 'widget',
+            members: {
+              container: {
+                munge: function (spec) {
+                  return GuiTemplate.use(
+                    TemplateWidgetContainer,
+                    { },
+                    { }
+                  );
+                }
+              }
+            }
+          }
+        }
+      );
+
+      return;
+
 
       HtmlDisplay.section(
         gui,

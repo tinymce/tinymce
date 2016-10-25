@@ -56,10 +56,15 @@ define(
       return builder(newSpec);
     };
 
+    var addBehaviours = function (original, behaviours) {
+      return Merger.deepMerge(original, behaviours);
+    };
+
     
     return {
       asRawOrDie: asRawOrDie,
       asStructOrDie: asStructOrDie,
+      addBehaviours: addBehaviours,
       extend: extend
     };
   }
