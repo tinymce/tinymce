@@ -118,9 +118,7 @@ define(
         )
       );
 
-      return;
-
-
+   
       var x = HtmlDisplay.section(
         gui,
         'This dropdown button shows a widget',
@@ -157,6 +155,10 @@ define(
           }
         )
       );
+
+
+   return;
+
 
       x.apis().showValue('dog');
       console.log('x', x.element().dom());

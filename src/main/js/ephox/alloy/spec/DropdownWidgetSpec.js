@@ -80,6 +80,5 @@ define(
     return {
       make: make
     };
-    return null;
   }
 );

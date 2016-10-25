@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.dropdown.Beta',
     'ephox.alloy.menu.grid.GridView',
     'ephox.alloy.menu.layered.LayeredView',
     'ephox.alloy.menu.widget.WidgetView',
@@ -22,7 +23,7 @@ define(
     'global!Error'
   ],
 
-  function (SystemEvents, EventHandler, GridView, LayeredView, WidgetView, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Obj, Merger, Fun, Option, Result, Remove, Error) {
+  function (SystemEvents, EventHandler, Beta, GridView, LayeredView, WidgetView, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Obj, Merger, Fun, Option, Result, Remove, Error) {
     var schema = [
       FieldSchema.strict('toggleClass'),
       FieldSchema.strict('fetch'),
@@ -74,52 +75,7 @@ define(
     var make = function (spec) {
       var detail = SpecSchema.asStructOrDie('split-dropdown.spec', schema, spec);
 
-      var open = function (component, sandbox) {
-        var fetcher = detail.fetch();
-        var futureData = fetcher();
-        // Resolve the future to open the dropdown
-        sandbox.apis().openSandbox(futureData).get(function () { });
-      };
-
-      var close = function (component, sandbox) {
-        sandbox.apis().closeSandbox();
-        // INVESTIGATE: Not sure if this is needed. 
-        Remove.remove(sandbox.element());
-      };
-
-      var togglePopup = function (hotspot) {
-        var sandbox = hotspot.apis().getCoupled('sandbox');
-        var action = hotspot.apis().isSelected() ? open : close;
-        action(hotspot, sandbox);
-      };
-
-      var makeSandbox = function (hotspot) {
-        var onOpen = function (component, menu) {
-          detail.onOpen()(hotspot, component, menu);
-        };
-
-        var onClose = function (component, menu) {
-          hotspot.apis().deselect();
-        };
-
-        var sink = hotspot.getSystem().getByUid(detail.uid() + '-internal-sink').orThunk(function () {
-          return detail.sink().fold(function () {
-            return Result.error(new Error(
-              'No internal sink is specified, not an external sink'
-            ));
-          }, Result.value);
-        }).getOrDie();
-
-        var interactions = {
-          onOpen: onOpen,
-          onClose: onClose,
-          onExecute: detail.onExecute(),
-          sink: sink
-        };
-
-        return detail.view().sandbox().spawn(hotspot, detail, interactions);
-
-      };
+      var beta = Beta(detail);
 
       // Need to make the substitutions for "button" and "arrow"
       var components = UiSubstitutes.substitutePlaces(Option.some('split-dropdown'), detail, detail.components(), {
@@ -155,17 +111,7 @@ define(
           })
         )
       }, {
-        '<alloy.sink>': function (depInfo, s) {
-          return {
-            uid: detail.uid() + '-internal-sink',
-            uiType: 'custom',
-            dom: depInfo.extra.dom,
-            components: depInfo.extra.components,
-            positioning: {
-              useFixed: true
-            }
-          };
-        }
+        '<alloy.sink>': beta.makeSink
       });
 
       return {
@@ -178,7 +124,7 @@ define(
             key: SystemEvents.execute(),
             value: EventHandler.nu({
               run: function (component) {
-                togglePopup(component);
+                beta.togglePopup(component);
               }
             })
           }
@@ -196,7 +142,7 @@ define(
         },
         coupling: {
           others: {
-            sandbox: makeSandbox
+            sandbox: beta.makeSandbox
           }
         },
         keying: {
