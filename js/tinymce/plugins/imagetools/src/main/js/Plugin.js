@@ -103,7 +103,7 @@ define("tinymce/imagetoolsplugin/Plugin", [
 		function startTimedUpload() {
 			imageUploadTimer = Delay.setEditorTimeout(editor, function() {
 				editor.editorUpload.uploadImagesAuto();
-			}, 30000);
+			}, editor.settings.images_upload_timeout || 30000);
 		}
 
 		function cancelTimedUpload() {
