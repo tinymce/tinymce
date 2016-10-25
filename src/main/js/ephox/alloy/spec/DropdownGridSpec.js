@@ -65,7 +65,7 @@ define(
           FieldPresence.strict(),
           MenuMarkers.itemSchema()
         )
-      ], spec, factories);
+      ], spec, [ ]);
 
       var components = UiSubstitutes.substituteAll(detail, detail.components, factories, { });
     

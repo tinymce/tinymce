@@ -34,7 +34,7 @@ define(
 
     var make = function (spec) {
       // Not ideal that it's raw.
-      var detail = SpecSchema.asRawOrDie('widget.sandbox.spec', schema, spec);
+      var detail = SpecSchema.asRawOrDie('widget.sandbox.spec', schema, spec, [ ]);
 
       var config = WidgetConfig(detail);
 

@@ -17,7 +17,7 @@ define(
     ];
     
     var make = function (spec) {
-      var detail = SpecSchema.asStructOrDie('widget-container.spec', schema, spec);
+      var detail = SpecSchema.asStructOrDie('widget-container.spec', schema, spec, [ ]);
       
       var placeholders = {
         '<alloy.widget>': UiSubstitutes.single(detail.widget())

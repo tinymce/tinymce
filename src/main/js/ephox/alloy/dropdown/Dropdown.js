@@ -42,7 +42,7 @@ define(
         ),
       
         FieldSchema.option('sink')
-      ], spec, { });
+      ], spec, [ ]);
 
       var components = detail.components();
 

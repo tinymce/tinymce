@@ -33,34 +33,15 @@ define(
       FieldSchema.strict('dom'),
       FieldSchema.defaulted('onOpen', Fun.noop),
       // FieldSchema.defaulted('onClose', Fun.noop),
-      
-      FieldSchema.field(
-        'parts',
-        'parts',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('button'),
-          FieldSchema.strict('arrow')
-        ])
-      ),
-
-      ViewTypes.schema(),
-
-      FieldSchema.state(
-        'partUids',
-        function (spec) {
-          var uids = Obj.map(spec.parts, function (v, k) {
-            return Objects.readOptFrom(v, 'uid').getOrThunk(function () {
-              return spec.uid + '-' + k;
-            });
-          });
-          return uids;
-        }
-      )
+    
+      ViewTypes.schema()
     ];
 
     var make = function (spec) {
-      var detail = SpecSchema.asStructOrDie('split-dropdown.spec', schema, spec);
+      var detail = SpecSchema.asStructOrDie('split-dropdown.spec', schema, spec, [
+        'button',
+        'arrow'
+      ]);
 
       var beta = Beta(detail);
 
@@ -71,9 +52,9 @@ define(
             {
               focusing: undefined
             },
-            detail.parts().button(),
+            detail.parts()['button'](),
             {
-              uid: detail.partUids().button
+              uid: detail.partUids()['button']
             }
           )
         ),

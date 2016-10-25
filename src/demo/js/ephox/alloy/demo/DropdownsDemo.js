@@ -12,6 +12,7 @@ define(
     'ephox.sugar.api.Class',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
+    'ephox.sugar.api.Html',
     'ephox.sugar.api.Insert',
     'global!document',
     'text!dom-templates/demo.grid.item.html',
@@ -24,7 +25,7 @@ define(
     'text!dom-templates/dropdown-alpha.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, DemoTemplates, HtmlDisplay, Future, Option, Class, DomEvent, Element, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateToolbarDropdown, TemplateToolbarSplitButton, TemplateWidgetContainer, TemplateInlineDropdown) {
+  function (Gui, GuiFactory, GuiTemplate, DemoTemplates, HtmlDisplay, Future, Option, Class, DomEvent, Element, Html, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateToolbarDropdown, TemplateToolbarSplitButton, TemplateWidgetContainer, TemplateInlineDropdown) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -137,6 +138,18 @@ define(
                     { },
                     { }
                   );
+                }
+              }
+            },
+            parts: {
+              display: {
+                representing: {
+                  query: function (comp) {
+
+                  },
+                  set: function (comp, v) {
+                    Html.set(comp.element(), v);
+                  }
                 }
               }
             },

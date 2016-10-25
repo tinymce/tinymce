@@ -29,12 +29,22 @@ define(
     var make = function (spec) {
       var detail = SpecSchema.asStructOrDie('dropdown.widget', schema, Merger.deepMerge(spec, {
         view: ViewTypes.useWidget(spec)
-      }));
+      }), [
+        'display'
+      ]);
 
       var beta = Beta(detail);
 
       var factories = {
-        '<alloy.sink>': beta.makeSink
+        '<alloy.sink>': beta.makeSink,
+        '<alloy.dropdown.display>': function (dSpec, detail) {
+          return Merger.deepMerge(detail.parts().display(), {
+            uiType: 'custom',
+            dom: dSpec.extra.dom,
+            components: dSpec.extra.components,
+            uid: detail.partUids().display
+          });
+        }
       };
 
       var components = UiSubstitutes.substitutePlaces(Option.none(), detail, detail.components(), { }, factories);
@@ -65,7 +75,7 @@ define(
             }
           },
           behaviours: [
-            DropdownBehaviour(detail.uid())
+            DropdownBehaviour(detail.partUids().display)
           ],
           keying: {
             mode: 'execution',

@@ -6,15 +6,46 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
+    'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.highway.Merger',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Result'
+    'global!Error'
   ],
 
-  function (FieldPresence, FieldSchema, Objects, ValueSchema, Obj, Merger, Fun, Result) {
-    var base = function (label, factories, spec) {
-      return [
+  function (FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Error) {
+    var getPartsSchema = function (partNames) {
+      if (partNames.length === 0) return [ ];
+
+      // temporary hacking
+      var partsSchema = FieldSchema.field(
+        'parts',
+        'parts',
+        FieldPresence.strict(),
+        ValueSchema.objOf(
+          Arr.map(partNames, FieldSchema.strict)
+        )
+      );
+
+      var partUidsSchema = FieldSchema.state(
+        'partUids',
+        function (spec) {
+          if (! Objects.hasKey(spec, 'parts')) throw new Error('Part uid definition requires "parts"');
+          var uids = Obj.map(spec.parts, function (v, k) {
+            return Objects.readOptFrom(v, 'uid').getOrThunk(function () {
+              return spec.uid + '-' + k;
+            });
+          });
+          return uids;
+        }
+      );
+
+      return [ partsSchema, partUidsSchema ];
+    };
+
+    var base = function (label, partNames, spec) {
+      var partsSchema = getPartsSchema(partNames);
+
+      return partsSchema.concat([
         FieldSchema.strict('uid'),
         FieldSchema.field(
           'components',
@@ -22,31 +53,20 @@ define(
           FieldPresence.defaulted([ ]),
           ValueSchema.arrOf(
             ValueSchema.anyValue()
-            // ValueSchema.valueOf(function (compSpec) {
-            //   if (compSpec.uiType !== 'dependent') return Result.value(Fun.constant(compSpec));
-            //   else {
-            //     return Objects.readOptFrom(factories, compSpec.name).fold(function () {
-            //       return Result.error('Dependent component: ' + compSpec.name + ' not in library by ' + label + '\nLibrary has: [' + Obj.keys(factories).join(', ') + ']');
-            //     }, function (factory) {
-            //       return Result.value(
-            //         Fun.curry(factory, compSpec)
-            //       );
-            //     });
-            //   }
-            // })
           )
         )
-      ];
+      ]);
     };
 
 
-    var asRawOrDie = function (label, schema, spec, factories) {
-      var baseS = base(label, factories, spec);
+    var asRawOrDie = function (label, schema, spec, partNames) {
+
+      var baseS = base(label, partNames, spec);
       return ValueSchema.asRawOrDie(label + 'spec', ValueSchema.objOf(baseS.concat(schema)), spec);
     };
 
-    var asStructOrDie = function (label, schema, spec, factories) {
-      var baseS = base(label, factories, spec);
+    var asStructOrDie = function (label, schema, spec, partNames) {
+      var baseS = base(label, partNames, spec);
       return ValueSchema.asStructOrDie(label + 'spec', ValueSchema.objOf(baseS.concat(schema)), spec);
     };
 

@@ -17,7 +17,7 @@ define(
 
 
     var make = function (spec) {
-      var detail = SpecSchema.asRawOrDie('button', schema, spec, { });
+      var detail = SpecSchema.asRawOrDie('button', schema, spec, [ ]);
 
       var executeHandler = EventHandler.nu({
         run: function (component, simulatedEvent) {

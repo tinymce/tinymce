@@ -21,7 +21,7 @@ define(
     ];
 
     var make = function (spec) {
-      var detail = SpecSchema.asStructOrDie('dropdown-alpha', schema, spec);
+      var detail = SpecSchema.asStructOrDie('dropdown-alpha', schema, spec, [ ]);
       return {
         uiType: 'custom',
         uid: detail.uid(),

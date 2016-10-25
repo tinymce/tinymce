@@ -44,7 +44,7 @@ define(
 
     var make = function (spec) {
       // Not ideal that it's raw.
-      var detail = SpecSchema.asRawOrDie('grid.sandbox.spec', schema, spec);
+      var detail = SpecSchema.asRawOrDie('grid.sandbox.spec', schema, spec, [ ]);
 
       var config = GridConfig(detail);
 
