@@ -219,27 +219,27 @@ define("tinymce/imagetoolsplugin/Plugin", [
 		function addButtons() {
 			editor.addButton('rotateleft', {
 				title: 'Rotate counterclockwise',
-				onclick: rotate(-90)
+				cmd: 'mceImageRotateLeft'
 			});
 
 			editor.addButton('rotateright', {
 				title: 'Rotate clockwise',
-				onclick: rotate(90)
+				cmd: 'mceImageRotateRight'
 			});
 
 			editor.addButton('flipv', {
 				title: 'Flip vertically',
-				onclick: flip('v')
+				cmd: 'mceImageFlipVertical'
 			});
 
 			editor.addButton('fliph', {
 				title: 'Flip horizontally',
-				onclick: flip('h')
+				cmd: 'mceImageFlipHorizontal'
 			});
 
 			editor.addButton('editimage', {
 				title: 'Edit image',
-				onclick: editImageDialog
+				cmd: 'mceEditImage'
 			});
 
 			editor.addButton('imageoptions', {
@@ -293,11 +293,19 @@ define("tinymce/imagetoolsplugin/Plugin", [
 			);
 		}
 
+		Tools.each({
+			mceImageRotateLeft: rotate(-90),
+			mceImageRotateRight: rotate(90),
+			mceImageFlipVertical: flip('v'),
+			mceImageFlipHorizontal: flip('h'),
+			mceEditImage: editImageDialog
+		}, function(fn, cmd) {
+			editor.addCommand(cmd, fn);
+		});
+
 		addButtons();
 		addToolbars();
 		addEvents();
-
-		editor.addCommand('mceEditImage', editImageDialog);
 	};
 
 	PluginManager.add('imagetools', plugin);
