@@ -84,22 +84,19 @@ define(
         Remove.remove(sandbox.element());
       };
 
-      var togglePopup = function (arrow) {
-        var sandbox = arrow.apis().getCoupled('sandbox');
-        var action = arrow.apis().isSelected() ? open : close;
-        action(arrow, sandbox);
+      var togglePopup = function (hotspot) {
+        var sandbox = hotspot.apis().getCoupled('sandbox');
+        var action = hotspot.apis().isSelected() ? open : close;
+        action(hotspot, sandbox);
       };
 
-      var makeSandbox = function (arrow) {
-        // Hotspot should be button, not arrow
-        var hotspot = arrow.getSystem().getByUid(detail.uid()).getOrDie();
-
+      var makeSandbox = function (hotspot) {
         var onOpen = function (component, menu) {
-          detail.onOpen()(arrow, component, menu);
+          detail.onOpen()(hotspot, component, menu);
         };
 
         var onClose = function (component, menu) {
-          arrow.apis().deselect();
+          hotspot.apis().deselect();
         };
 
         var interactions = {
@@ -134,26 +131,17 @@ define(
           Merger.deepMerge({
             uiType: 'button',
             
-            toggling: {
-              toggleClass: detail.toggleClass(),
-              aria: {
-                'aria-expanded-attr': 'aria-expanded'
-              }
-            },
-            eventOrder: {
-              // Order, the button state is toggled first, so assumed !selected means close.
-              'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
-            },
-            coupling: {
-              others: {
-                sandbox: makeSandbox
-              }
-            },
+            
+            
+            
             tabstopping: undefined,
             focusing: undefined
           }, detail.parts().arrow(), {
             uid: detail.partUids().arrow,
-            action: togglePopup
+            action: function (arrow) {
+              var hotspot = arrow.getSystem().getByUid(detail.uid()).getOrDie();
+              hotspot.getSystem().triggerEvent(SystemEvents.execute(), hotspot.element(), { });
+            }
           })
         )
       });
@@ -168,14 +156,27 @@ define(
             key: SystemEvents.execute(),
             value: EventHandler.nu({
               run: function (component) {
-                // Redirect executing the whole button to executing the arrow part
-                var arrow = component.getSystem().getByUid(detail.partUids().arrow).getOrDie();
-                component.getSystem().triggerEvent(SystemEvents.execute(), arrow.element(), { });
+                togglePopup(component);
               }
             })
           }
 
         ]),
+        toggling: {
+          toggleClass: detail.toggleClass(),
+          aria: {
+            'aria-expanded-attr': 'aria-expanded'
+          }
+        },
+        eventOrder: {
+          // Order, the button state is toggled first, so assumed !selected means close.
+          'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
+        },
+        coupling: {
+          others: {
+            sandbox: makeSandbox
+          }
+        },
         keying: {
           mode: 'execution',
           useSpace: true

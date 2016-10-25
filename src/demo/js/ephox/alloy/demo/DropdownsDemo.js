@@ -115,6 +115,8 @@ define(
         )
       );
 
+      return;
+
 
       var x = HtmlDisplay.section(
         gui,
@@ -153,8 +155,8 @@ define(
         )
       );
 
-      // x.apis().showValue('dog');
-      // console.log('x', x.element().dom());
+      x.apis().showValue('dog');
+      console.log('x', x.element().dom());
 
       // return;
 
