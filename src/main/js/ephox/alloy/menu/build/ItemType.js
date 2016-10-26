@@ -17,7 +17,7 @@ define(
       FieldSchema.strict('components'),
       FieldSchema.strict('dom'),
       FieldSchema.defaulted('base', { }),
-      FieldSchema.option('fakeClass'),
+      FieldSchema.defaulted('ignoreFocus', false),
       FieldSchema.state('builder', function () {
         return builder;
       })
@@ -30,7 +30,7 @@ define(
         uiType: 'custom',
         dom: info.dom(),
         focusing: {
-          ignore: true,
+          ignore: info.ignoreFocus(),
           onFocus: function (component) {
             ItemEvents.onFocus(component);
           }

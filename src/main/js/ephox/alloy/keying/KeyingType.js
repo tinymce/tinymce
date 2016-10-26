@@ -16,7 +16,7 @@ define(
     var typical = function (infoSchema, getRules, getEvents, getApis, optFocusIn) {
       var schema = function () {
         return infoSchema.concat([
-          FieldSchema.option('fakeClass'),
+          FieldSchema.option('focusClass'),
           FieldSchema.state('handler', function () {
             return self;
           })
@@ -39,10 +39,10 @@ define(
               key: SystemEvents.focus(),
               value: EventHandler.nu({
                 run: function (component) {
-                  keyInfo.fakeClass().fold(function () {
+                  keyInfo.focusClass().fold(function () {
                     focusIn(component, keyInfo);
                   }, function (e) {
-                    // Temporarily hacked
+                    // FIX 2016-10-26 Temporarily hacked
                     SelectorFind.descendant(component.element(), keyInfo.selector()).each(function (first) {
                       Class.add(first, e);
                     });

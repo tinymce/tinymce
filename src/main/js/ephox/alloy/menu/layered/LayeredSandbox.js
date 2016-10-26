@@ -20,6 +20,7 @@ define(
       FieldSchema.strict('onClose'),
       FieldSchema.strict('onOpen'),
       FieldSchema.defaulted('onExecute', Option.none),
+      FieldSchema.option('focusClass'),
       FieldSchema.strict('sink'),
       FieldSchema.defaulted('itemValue', 'data-item-value'),
       FieldSchema.defaulted('backgroundClass', 'background-menu'),
@@ -45,7 +46,18 @@ define(
       // Not ideal that it's raw.
       var detail = SpecSchema.asRawOrDie('layered.sandbox', schema, spec, [ ]);
 
-      var config = LayeredConfig(detail);
+      var config = LayeredConfig({
+        lazyHotspot: detail.lazyHotspot,
+        onClose: detail.onClose,
+        onOpen: detail.onOpen,
+        onExecute: detail.onExecute,
+        sink: detail.sink,
+        itemValue: detail.itemValue,
+        backgroundClass: detail.backgroundClass,
+        markers: detail.markers,
+        members: detail.members,
+        focusClass: detail.focusClass.getOr(undefined)
+      });
 
       var isExtraPart = function (sandbox, target) {
         return ComponentStructure.isPartOf(detail.lazyHotspot(), target);

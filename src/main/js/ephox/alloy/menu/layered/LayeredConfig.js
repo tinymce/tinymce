@@ -37,6 +37,8 @@ define(
       FieldSchema.strict('onOpen'),
       FieldSchema.strict('onClose'),
       FieldSchema.strict('onExecute'),
+      FieldSchema.option('focusClass'),
+
 
       FieldSchema.strict('sink'),
 
@@ -61,7 +63,7 @@ define(
     ]);
     
     return function (rawUiSpec) {
-      var uiSpec = ValueSchema.asStructOrDie('spi.MenuConfig', schema, rawUiSpec);
+      var uiSpec = ValueSchema.asStructOrDie('LayeredConfig', schema, rawUiSpec);
 
       var buildMenus = function (sandbox, menus) {
         return Obj.map(menus, function (spec, name) {
@@ -316,7 +318,7 @@ define(
           onLeft: onLeft,
           onEscape: onEscape,
           moveOnTab: true,
-          fakeClass: 'alloy-selected-item'
+          focusClass: uiSpec.focusClass().getOr(undefined)
         },
         // Highlighting is used for highlighting the active menu
         highlighting: {

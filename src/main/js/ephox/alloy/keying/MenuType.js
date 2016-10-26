@@ -28,7 +28,16 @@ define(
     ];
 
     var execute = function (component, simulatedEvent, menuInfo) {
-      return Focus.search(component.element()).bind(function (focused) {
+      var getFocus = function () {
+        return menuInfo.focusClass().fold(function () {
+          return Focus.search(component.element());
+        }, function (fc) {
+          return SelectorFind.descendant(component.element(), '.' + fc);
+        });
+      };
+
+      return getFocus().bind(function (focused) {
+        console.log('focusing', focused.dom());
         return menuInfo.execute()(component, simulatedEvent, focused);
       });
     };

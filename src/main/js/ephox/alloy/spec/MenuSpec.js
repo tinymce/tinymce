@@ -51,7 +51,9 @@ define(
         ValueSchema.objOf([
           FieldSchema.strict('item')
         ])
-      )
+      ),
+
+      FieldSchema.defaulted('ignoreFocus', false)
     ];
 
     var make = function (spec) {
@@ -63,7 +65,7 @@ define(
         var merged = Merger.deepMerge({
           uid: fallbackUid
         }, i, munged, {
-          fakeClass: 'alloy-selected-item'
+          ignoreFocus: detail.ignoreFocus()
         });
 
         var itemInfo = ValueSchema.asStructOrDie('menu.spec item', itemSchema, merged);

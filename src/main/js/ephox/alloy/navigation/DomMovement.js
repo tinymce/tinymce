@@ -35,7 +35,7 @@ define(
     };
 
     var getFocused = function (component, info) {
-      return info.fakeClass().fold(function () {
+      return info.focusClass().fold(function () {
         return Focus.search(component.element());
       }, function (fc) {
         return SelectorFind.descendant(component.element(), '.' + fc);
@@ -43,8 +43,6 @@ define(
     };
 
     var use = function (move, component, simulatedEvent, info) {
-      console.log('info', info);
-
       var outcome = getFocused(component, info).bind(function (focused) {
         return move(component.element(), focused, info).map(function (newFocus) {
           return {
@@ -55,7 +53,7 @@ define(
       });
 
       return outcome.map(function (focuses) {
-        info.fakeClass().fold(function () {
+        info.focusClass().fold(function () {
           component.getSystem().triggerFocus(focuses.nu, component.element());  
         }, function (fc) {
           Class.remove(focuses.original, fc);

@@ -382,6 +382,7 @@ define(
             // itemDefn: { }            
           },
           onExecute: function (sandbox, item, itemValue) {
+            console.trace();
             console.log('*** dropdown menu demo execute on: ' + item.apis().getValue() + ' ***');
           },
           fetch: function () {
