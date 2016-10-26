@@ -114,7 +114,10 @@ define(
           // },
           keying: {
             mode: 'special',
-            onDown: moveToPopup
+            onDown: moveToPopup,
+            onEscape: function (comp) {
+              return Beta.escapePopup(detail, comp);
+            }
           },
           dom: {
             classes: [ 'typeahead' ]

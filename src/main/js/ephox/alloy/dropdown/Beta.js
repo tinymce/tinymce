@@ -3,12 +3,13 @@ define(
 
   [
     'ephox.alloy.dropdown.Gamma',
+    'ephox.perhaps.Option',
     'ephox.sugar.api.Remove',
     'ephox.sugar.api.Width',
     'global!Error'
   ],
 
-  function (Gamma, Remove, Width, Error) {
+  function (Gamma, Option, Remove, Width, Error) {
     
     var open = function (detail, component, sandbox) {
       var fetcher = detail.fetch();
@@ -57,9 +58,17 @@ define(
       return detail.view().sandbox().spawn(hotspot, detail, interactions);
     };
 
+    var escapePopup = function (detail, hotspot) {
+      var sandbox = hotspot.apis().getCoupled('sandbox');
+      close(detail, hotspot, sandbox);
+      return Option.some(true);
+    };
+
     return {
       makeSandbox: makeSandbox,
-      togglePopup: togglePopup
+      togglePopup: togglePopup,
+
+      escapePopup: escapePopup
     };
   }
 );
