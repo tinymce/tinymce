@@ -65,6 +65,8 @@ define(
             }
           }
         },
+
+        // Find a nice way of doing this.
         {
           onExecute: function (sandbox, component) {
             sandbox.apis().closeSandbox();
