@@ -3,7 +3,6 @@ define(
 
   [
     'ephox.alloy.dropdown.Beta',
-    'ephox.alloy.dropdown.Dropdown',
     'ephox.alloy.dropdown.DropdownBehaviour',
     'ephox.alloy.dropdown.Gamma',
     'ephox.alloy.menu.logic.ViewTypes',
@@ -16,7 +15,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (Beta, Dropdown, DropdownBehaviour, Gamma, ViewTypes, ButtonSpec, SpecSchema, UiSubstitutes, FieldSchema, Merger, Fun, Option) {
+  function (Beta, DropdownBehaviour, Gamma, ViewTypes, ButtonSpec, SpecSchema, UiSubstitutes, FieldSchema, Merger, Fun, Option) {
     var schema = [
       FieldSchema.strict('fetch'),
       FieldSchema.defaulted('onOpen', Fun.noop),

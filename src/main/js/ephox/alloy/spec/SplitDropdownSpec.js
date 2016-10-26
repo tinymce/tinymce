@@ -7,6 +7,7 @@ define(
     'ephox.alloy.dropdown.Beta',
     'ephox.alloy.dropdown.Gamma',
     'ephox.alloy.menu.logic.ViewTypes',
+    'ephox.alloy.spec.ButtonSpec',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldSchema',
@@ -17,7 +18,7 @@ define(
     'global!Error'
   ],
 
-  function (SystemEvents, EventHandler, Beta, Gamma, ViewTypes, SpecSchema, UiSubstitutes, FieldSchema, Objects, Merger, Fun, Option, Error) {
+  function (SystemEvents, EventHandler, Beta, Gamma, ViewTypes, ButtonSpec, SpecSchema, UiSubstitutes, FieldSchema, Objects, Merger, Fun, Option, Error) {
     var schema = [
       FieldSchema.strict('toggleClass'),
       FieldSchema.strict('fetch'),
@@ -67,45 +68,41 @@ define(
         )
       }, Gamma.sink());
 
-      return {
-        uid: detail.uid(),
-        uiType: 'custom',
-        dom: detail.dom(),
-        events: Objects.wrapAll([
-          {
-            key: SystemEvents.execute(),
-            value: EventHandler.nu({
-              run: function (component) {
-                Beta.togglePopup(detail, component);
-              }
-            })
+      return Merger.deepMerge(
+        ButtonSpec.make({
+          uid: detail.uid(),
+          action: function (component) {
+            Beta.togglePopup(detail, component);
           }
-
-        ]),
-        toggling: {
-          toggleClass: detail.toggleClass(),
-          aria: {
-            'aria-expanded-attr': 'aria-expanded'
-          }
-        },
-        eventOrder: {
-          // Order, the button state is toggled first, so assumed !selected means close.
-          'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
-        },
-        coupling: {
-          others: {
-            sandbox: function (hotspot) {
-              return Beta.makeSandbox(detail, hotspot);
+        }), {
+          uid: detail.uid(),
+          uiType: 'button',
+          dom: detail.dom(),
+          components: components,
+          toggling: {
+            toggleClass: detail.toggleClass(),
+            aria: {
+              'aria-expanded-attr': 'aria-expanded'
             }
-          }
-        },
-        keying: {
-          mode: 'execution',
-          useSpace: true
-        },
-        focusing: true,
-        components: components
-      };
+          },
+          eventOrder: {
+            // Order, the button state is toggled first, so assumed !selected means close.
+            'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
+          },
+          coupling: {
+            others: {
+              sandbox: function (hotspot) {
+                return Beta.makeSandbox(detail, hotspot);
+              }
+            }
+          },
+          keying: {
+            mode: 'execution',
+            useSpace: true
+          },
+          focusing: true          
+        }
+      );
     };
 
     return {
