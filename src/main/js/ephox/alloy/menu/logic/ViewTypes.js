@@ -7,11 +7,12 @@ define(
     'ephox.alloy.menu.widget.WidgetView',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.peanut.Fun'
   ],
 
-  function (GridView, LayeredView, WidgetView, FieldPresence, FieldSchema, ValueSchema, Fun) {
+  function (GridView, LayeredView, WidgetView, FieldPresence, FieldSchema, Objects, ValueSchema, Fun) {
     var schema = FieldSchema.field(
       'view',
       'view',
@@ -30,7 +31,8 @@ define(
       return {
         style: 'widget',
         members: spec.members,
-        markers: spec.markers
+        markers: spec.markers,
+        preprocess: Fun.identity
       };
     };
 
@@ -38,14 +40,49 @@ define(
       return {
         style: 'grid',
         members: spec.members,
-        markers: spec.markers
+        markers: spec.markers,
+        preprocess: Fun.identity
+      };
+    };
+
+    var useLayered = function (spec) {
+      return {
+        style: 'layered',
+        members: spec.members,
+        markers: spec.markers,
+        preprocess: Fun.identity
+      };
+    };
+
+    var useList = function (spec) {
+      return {
+        style: 'layered',
+        members: spec.members,
+        markers: spec.markers,
+        preprocess: function (items) {
+          var primary = 'blah';
+          var expansions = {};
+          var menus = Objects.wrap(primary, {
+            name: primary,
+            textkey: 'DOGS',
+            items: items
+          });
+
+          return {
+            primary: primary,
+            expansions: expansions,
+            menus: menus
+          };
+        }
       };
     };
 
     return {
       schema: Fun.constant(schema),
       useWidget: useWidget,
-      useGrid: useGrid
+      useGrid: useGrid,
+      useLayered: useLayered,
+      useList: useList
     };
   }
 );

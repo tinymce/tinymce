@@ -2,111 +2,83 @@ define(
   'ephox.alloy.spec.DropdownListSpec',
 
   [
-    'ephox.alloy.behaviour.Behaviour',
-    'ephox.alloy.dom.DomModification',
-    'ephox.alloy.dropdown.Dropdown',
+    'ephox.alloy.dropdown.Beta',
     'ephox.alloy.dropdown.DropdownBehaviour',
-    'ephox.alloy.menu.util.MenuMarkers',
-    'ephox.alloy.spec.DropdownMenuSpec',
+    'ephox.alloy.dropdown.Gamma',
+    'ephox.alloy.menu.logic.ViewTypes',
+    'ephox.alloy.spec.ButtonSpec',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
-    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects',
-    'ephox.boulder.api.ValueSchema',
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.sugar.api.Width',
     'global!Error'
   ],
 
-  function (Behaviour, DomModification, Dropdown, DropdownBehaviour, MenuMarkers, DropdownMenuSpec, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Width, Error) {
-
-    var factories = {
-      '<alloy.dropdown.display>': function (comp, detail) {
-        var fromUser = Objects.readOptFrom(detail.dependents, '<alloy.dropdown.display>');
-        return Merger.deepMerge(comp.extra, {
-          uiType: 'container',
-          uid: detail.uid + '-dropdown.display',
-          dom: {
-            attributes: {
-              'data-goal': 'true'
-            },
-            // FIX: Getting clobbered.
-            classes: [ 'from-spec' ]
-          }
-        }, fromUser);
-      }
-    };
+  function (Beta, DropdownBehaviour, Gamma, ViewTypes, ButtonSpec, SpecSchema, UiSubstitutes, FieldSchema, Merger, Fun, Option, Error) {
+    var schema = [
+      FieldSchema.strict('fetch'),
+      FieldSchema.defaulted('onOpen', Fun.noop),
+      FieldSchema.defaulted('onExecute', Option.none),
+      FieldSchema.defaulted('toggleClass', 'alloy-selected-button'),
+      FieldSchema.strict('dom'),
+      FieldSchema.option('sink'),
+      FieldSchema.defaulted('matchWidth', true),
+      ViewTypes.schema()
+    ];
 
     var make = function (spec) {
-      var detail = SpecSchema.asRawOrDie('dropdown.list', [
-        FieldSchema.strict('fetchItems'),
-        FieldSchema.defaulted('onOpen', Fun.noop),
-        FieldSchema.defaulted('onExecute', Option.none),
-        FieldSchema.defaulted('toggleClass', 'alloy-selected-button'),
-        FieldSchema.strict('dom'),
-        FieldSchema.option('sink'),
-        FieldSchema.defaulted('dependents', { }),
+      var detail = SpecSchema.asStructOrDie('dropdown.list', schema, Merger.deepMerge(spec, {
+        view: ViewTypes.useList(spec)
+      }), Gamma.parts());
 
-        FieldSchema.field(
-          'members',
-          'members',
-          FieldPresence.strict(),
-          ValueSchema.objOf([
-            FieldSchema.strict('menu'),
-            FieldSchema.strict('item')
-          ])
-        ),
+      var factories = Merger.deepMerge(
+        Gamma.sink(),
+        Gamma.display()
+      );
 
-        FieldSchema.field(
-          'markers',
-          'markers',
-          FieldPresence.strict(),
-          MenuMarkers.itemSchema()
-        )
-      ], spec, factories);
-
-      var components = UiSubstitutes.substituteAll(detail, detail.components, factories, { });
+      var components = UiSubstitutes.substitutePlaces(Option.none(), detail, detail.components(), { }, factories);
     
-      return SpecSchema.extend(Dropdown.make, spec, {
-        fetch: function () {
-          return detail.fetchItems().map(function (items) {
-            var primary = 'main-dropdown';
-            var expansions = {};
-            var menus = Objects.wrap(primary, {
-              name: primary,
-              textkey: 'DOGS',
-              items: items
-            });
-
-            return {
-              primary: primary,
-              expansions: expansions,
-              menus: menus
-            };
-          });
-        },
-        sink: detail.sink.getOr(undefined),
-        onOpen: function (button, sandbox, menu) {
-          var buttonWidth = Width.get(button.element());
-          Width.set(menu.element(), buttonWidth);
-          detail.onOpen(button, sandbox, menu);
-        },
-        onExecute: detail.onExecute,
-        components: components,
-        behaviours: [
-          DropdownBehaviour(detail)
-        ],
-        view: {
-          style: 'layered',
-          members: spec.members,
-          markers: spec.markers
+      return Merger.deepMerge(
+        ButtonSpec.make({
+          uid: detail.uid(),
+          action: function (component) {
+            Beta.togglePopup(detail, component);
+          }
+        }),
+        {
+          uid: detail.uid(),
+          uiType: 'button',
+          dom: detail.dom(),
+          components: components,
+          toggling: {
+            toggleClass: detail.toggleClass(),
+            aria: {
+              'aria-expanded-attr': 'aria-expanded'
+            }
+          },
+          eventOrder: {
+            // Order, the button state is toggled first, so assumed !selected means close.
+            'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
+          },
+          coupling: {
+            others: {
+              sandbox: function (hotspot) {
+                return Beta.makeSandbox(detail, hotspot);
+              }
+            }
+          },
+          behaviours: [
+            DropdownBehaviour(detail.partUids().display)
+          ],
+          keying: {
+            mode: 'execution',
+            useSpace: true
+          },
+          focusing: true
         }
-      }, factories);
+      );
     };
 
     return {

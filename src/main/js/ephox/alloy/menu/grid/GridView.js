@@ -29,6 +29,7 @@ define(
         MenuMarkers.itemSchema()
       ),
 
+      FieldSchema.defaulted('preprocess', Fun.identity),
 
       FieldSchema.defaulted('flat', false),
       FieldSchema.state('sandbox', function () {

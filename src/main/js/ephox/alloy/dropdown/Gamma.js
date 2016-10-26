@@ -43,7 +43,7 @@ define(
       return hotspot.getSystem().getByUid(detail.uid() + '-internal-sink').orThunk(function () {
         return detail.sink().fold(function () {
           return Result.error(new Error(
-            'No internal sink is specified, not an external sink'
+            'No internal sink is specified, nor an external sink'
           ));
         }, Result.value);
       }).getOrDie();

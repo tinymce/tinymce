@@ -24,6 +24,7 @@ define(
       FieldSchema.defaulted('toggleClass', 'alloy-selected-button'),
       FieldSchema.strict('dom'),
       FieldSchema.option('sink'),
+      FieldSchema.defaulted('matchWidth', true),
       ViewTypes.schema()
     ];
 

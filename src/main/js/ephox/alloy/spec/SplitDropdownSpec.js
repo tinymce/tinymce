@@ -26,6 +26,8 @@ define(
       FieldSchema.strict('dom'),
       FieldSchema.defaulted('onOpen', Fun.noop),
       // FieldSchema.defaulted('onClose', Fun.noop),
+
+      FieldSchema.defaulted('matchWidth', false),
     
       ViewTypes.schema()
     ];

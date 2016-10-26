@@ -20,6 +20,8 @@ define(
         ])
       ),
 
+      FieldSchema.defaulted('preprocess', Fun.identity),
+
       FieldSchema.state('sandbox', function () {
 
         var spawn = function (button, detail, interactions) {

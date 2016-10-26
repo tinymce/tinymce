@@ -255,7 +255,7 @@ define(
         }
       );
 
-      return;
+
 
       HtmlDisplay.section(
         gui,
@@ -277,6 +277,7 @@ define(
             menu: {
               munge: function (spec) {
                 return GuiTemplate.use(
+                  Option.none(),
                   TemplateMenu,
                   { },
                   {
@@ -293,7 +294,20 @@ define(
               }
             }
           },
-          fetchItems: function () {
+          parts: {
+            display: {
+              representing: {
+                query: function (comp) {
+
+                },
+                set: function (comp, v) {
+                  Html.set(comp.element(), v);
+                }
+              }
+            }
+          },
+          sink: sink,
+          fetch: function () {
 
             var data = [
               { type: 'item', value: 'alpha', text: 'Alpha', 'item-class': 'class-alpha' },
@@ -312,6 +326,8 @@ define(
           }
         }
       );
+
+            return;
 
       HtmlDisplay.section(
         gui,

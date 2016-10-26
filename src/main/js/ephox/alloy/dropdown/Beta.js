@@ -4,14 +4,16 @@ define(
   [
     'ephox.alloy.dropdown.Gamma',
     'ephox.sugar.api.Remove',
+    'ephox.sugar.api.Width',
     'global!Error'
   ],
 
-  function (Gamma, Remove, Error) {
+  function (Gamma, Remove, Width, Error) {
     
     var open = function (detail, component, sandbox) {
       var fetcher = detail.fetch();
-      var futureData = fetcher();
+      var futureData = fetcher().map(detail.view().preprocess());
+
       // Resolve the future to open the dropdown
       sandbox.apis().openSandbox(futureData).get(function () { });
     };
@@ -28,8 +30,14 @@ define(
       action(detail, hotspot, sandbox);
     };
 
+    var matchWidth = function (hotspot, container) {
+      var buttonWidth = Width.get(hotspot.element());
+      Width.set(container.element(), buttonWidth);
+    };
+
     var makeSandbox = function (detail, hotspot) {
       var onOpen = function (component, menu) {
+        if (detail.matchWidth()) matchWidth(hotspot, menu);
         detail.onOpen()(hotspot, component, menu);
       };
 
