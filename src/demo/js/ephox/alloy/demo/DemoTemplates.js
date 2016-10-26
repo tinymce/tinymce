@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.GuiTemplate',
+    'ephox.boulder.api.Objects',
     'ephox.perhaps.Option',
     'text!dom-templates/demo.menu.html',
     'text!dom-templates/demo.menu.item.html',
@@ -10,7 +11,7 @@ define(
     'text!dom-templates/demo.menu.widget.item.html'
   ],
 
-  function (GuiTemplate, Option, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateMenuWidgetItem) {
+  function (GuiTemplate, Objects, Option, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateMenuWidgetItem) {
     var item = function (spec) {
       if (spec.type === 'widget') {
         return GuiTemplate.use(
@@ -24,15 +25,23 @@ define(
             }
           }
         );
-      } else {
-        var template = spec.type === 'separator' ? TemplateMenuSeparator : TemplateMenuItem;
+      } else if (spec.type === 'separator') {
         return GuiTemplate.use(
           Option.none(),
-          template,
-          { }, {
+          TemplateMenuSeparator,
+          { },
+          {
             fields: {
-              text: spec.text !== undefined ? spec.text : ''
+              text: Objects.readOptFrom(spec, 'text').getOr('')
             }
+          }
+        );
+      } else {
+        return GuiTemplate.use(
+          Option.none(),
+          TemplateMenuItem,
+          { }, {
+            fields: spec
           }
         );
       }
