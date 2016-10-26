@@ -2,13 +2,14 @@ define(
   'ephox.alloy.dropdown.Gamma',
 
   [
+    'ephox.alloy.construct.EventHandler',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Result',
     'global!Error'
   ],
 
-  function (Merger, Fun, Result, Error) {
+  function (EventHandler, Merger, Fun, Result, Error) {
     var parts = [
       'display'
     ];
@@ -34,6 +35,14 @@ define(
           components: dSpec.extra.components,
           positioning: {
             useFixed: true
+          },
+          events: {
+            'keydown': EventHandler.nu({
+              run: function (component, simulatedEvent) {
+                // Sinks should not let keydown or click propagate
+                simulatedEvent.cut();
+              }
+            })
           }
         };
       }

@@ -20,12 +20,19 @@ define(
 
       var stopper = Cell(false);
 
+      var cutter = Cell(false);
+
       var stop = function () {
         stopper.set(true);
       };
 
+      var cut = function () {
+        cutter.set(true);
+      };
+
       var simulatedEvent = {
         stop: stop,
+        cut: cut,
         event: Fun.constant(rawEvent)
       };
 
@@ -37,6 +44,8 @@ define(
 
         // Now, check if the event was stopped.
         if (stopper.get() === true) return adt.stopped();
+        // Now, check if the event was cut
+        else if (cutter.get() === true) return adt.complete();
         else return Traverse.parent(handlerInfo.element()).fold(function () {
           // No parent, so complete.
           return adt.complete();
