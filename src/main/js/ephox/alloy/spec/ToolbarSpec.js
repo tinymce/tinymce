@@ -13,7 +13,7 @@ define(
 
   function (SpecSchema, Overflowing, ToolbarSpecs, ValueSchema, Arr, Merger, Fun) {
     var make = function (spec) {
-      var detail = SpecSchema.asStructOrDie('toolbar.spec', ToolbarSpecs.toolbarSchema(), spec);
+      var detail = SpecSchema.asStructOrDie('toolbar.spec', ToolbarSpecs.toolbarSchema(), spec, [ ]);
 
       // FIX: I don't want to calculate this here.
       var overflowSpec = ValueSchema.asStructOrDie('overflow.spec', ValueSchema.objOf([
