@@ -7,13 +7,16 @@ define(
     'ephox.alloy.navigation.KeyRules',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
-    'ephox.highway.Merger'
+    'ephox.highway.Merger',
+    'ephox.sugar.api.Class',
+    'ephox.sugar.api.SelectorFind'
   ],
 
-  function (SystemEvents, EventHandler, KeyRules, FieldSchema, Objects, Merger) {
+  function (SystemEvents, EventHandler, KeyRules, FieldSchema, Objects, Merger, Class, SelectorFind) {
     var typical = function (infoSchema, getRules, getEvents, getApis, optFocusIn) {
       var schema = function () {
         return infoSchema.concat([
+          FieldSchema.option('fakeClass'),
           FieldSchema.state('handler', function () {
             return self;
           })
@@ -36,7 +39,14 @@ define(
               key: SystemEvents.focus(),
               value: EventHandler.nu({
                 run: function (component) {
-                  focusIn(component, keyInfo);
+                  keyInfo.fakeClass().fold(function () {
+                    focusIn(component, keyInfo);
+                  }, function (e) {
+                    // Temporarily hacked
+                    SelectorFind.descendant(component.element(), keyInfo.selector()).each(function (first) {
+                      Class.add(first, e);
+                    });
+                  });
                 }
               })
             };

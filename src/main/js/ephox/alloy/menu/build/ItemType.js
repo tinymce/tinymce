@@ -17,6 +17,7 @@ define(
       FieldSchema.strict('components'),
       FieldSchema.strict('dom'),
       FieldSchema.defaulted('base', { }),
+      FieldSchema.option('fakeClass'),
       FieldSchema.state('builder', function () {
         return builder;
       })
@@ -29,6 +30,7 @@ define(
         uiType: 'custom',
         dom: info.dom(),
         focusing: {
+          ignore: true,
           onFocus: function (component) {
             ItemEvents.onFocus(component);
           }
@@ -37,7 +39,7 @@ define(
           {
             key: 'click',
             value: EventHandler.nu({
-              run: function (component) {
+              run: function (component, simulatedEvent) {
                 var target = component.element();
                 component.getSystem().triggerEvent(SystemEvents.execute(), target, {
                   target: Fun.constant(target)

@@ -32,6 +32,9 @@ button {
   margin: 3px;
 }
 
+.alloy-selected-item {
+  background: #cadbee;
+}
 
 /*
  * Hiding and showing the more drawer

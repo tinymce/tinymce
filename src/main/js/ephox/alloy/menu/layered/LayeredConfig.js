@@ -123,7 +123,6 @@ define(
           return menu.apis().getFirst();
         }).each(function (item) {
           sandbox.getSystem().triggerEvent(SystemEvents.focusItem(), item.element(), { });
-          // item.apis().focus();
         });
       };
 
@@ -316,7 +315,8 @@ define(
           onRight: onRight,
           onLeft: onLeft,
           onEscape: onEscape,
-          moveOnTab: true
+          moveOnTab: true,
+          fakeClass: 'alloy-selected-item'
         },
         // Highlighting is used for highlighting the active menu
         highlighting: {

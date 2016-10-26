@@ -62,7 +62,9 @@ define(
         var fallbackUid = Tagger.generate('');
         var merged = Merger.deepMerge({
           uid: fallbackUid
-        }, i, munged);
+        }, i, munged, {
+          fakeClass: 'alloy-selected-item'
+        });
 
         var itemInfo = ValueSchema.asStructOrDie('menu.spec item', itemSchema, merged);
 

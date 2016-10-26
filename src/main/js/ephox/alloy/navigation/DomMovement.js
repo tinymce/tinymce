@@ -2,11 +2,13 @@ define(
   'ephox.alloy.navigation.DomMovement',
 
   [
+    'ephox.sugar.api.Class',
     'ephox.sugar.api.Direction',
-    'ephox.sugar.api.Focus'
+    'ephox.sugar.api.Focus',
+    'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Direction, Focus) {
+  function (Class, Direction, Focus, SelectorFind) {
     // Looks up direction (considering LTR and RTL), finds the focused element,
     // and tries to move. If it succeeds, triggers focus and kills the event.
     var useH = function (movement) {
@@ -32,13 +34,33 @@ define(
       };
     };
 
+    var getFocused = function (component, info) {
+      return info.fakeClass().fold(function () {
+        return Focus.search(component.element());
+      }, function (fc) {
+        return SelectorFind.descendant(component.element(), '.' + fc);
+      });
+    };
+
     var use = function (move, component, simulatedEvent, info) {
-      var outcome = Focus.search(component.element()).bind(function (focused) {
-        return move(component.element(), focused, info);
+      console.log('info', info);
+
+      var outcome = getFocused(component, info).bind(function (focused) {
+        return move(component.element(), focused, info).map(function (newFocus) {
+          return {
+            original: focused,
+            nu: newFocus
+          };
+        });
       });
 
-      return outcome.map(function (newFocus) {
-        component.getSystem().triggerFocus(newFocus, component.element());
+      return outcome.map(function (focuses) {
+        info.fakeClass().fold(function () {
+          component.getSystem().triggerFocus(focuses.nu, component.element());  
+        }, function (fc) {
+          Class.remove(focuses.original, fc);
+          Class.add(focuses.nu, fc);
+        });
         return true;
       });
     };

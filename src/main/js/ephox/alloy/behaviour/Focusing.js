@@ -23,18 +23,23 @@ define(
       }),
       ValueSchema.objOf([
         // TODO: Work out when we want to  call this. Only when it is has changed?
-        FieldSchema.defaulted('onFocus', Fun.noop)
+        FieldSchema.defaulted('onFocus', Fun.noop),
+        FieldSchema.defaulted('ignore', false)
       ])
     );
 
     var doFocus = function (component, focusInfo) {
-      Focus.focus(component.element());
-      focusInfo.onFocus()(component);
+      if (! focusInfo.ignore()) {
+        Focus.focus(component.element());
+        focusInfo.onFocus()(component);
+      }
 
     };
 
-    var doBlur = function (component) {
-      Focus.blur(component.element());
+    var doBlur = function (component, focusInfo) {
+      if (! focusInfo.ignore()) {
+        Focus.blur(component.element());
+      }
     };
 
     var doIsFocused = function (component) {
