@@ -14,6 +14,7 @@ define(
     var item = function (spec) {
       if (spec.type === 'widget') {
         return GuiTemplate.use(
+          Option.none(),
           TemplateMenuWidgetItem,
           { },
           {

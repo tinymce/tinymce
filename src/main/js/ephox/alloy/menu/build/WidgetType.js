@@ -50,7 +50,7 @@ define(
         ))
       };
 
-      var components = UiSubstitutes.substitutePlaces(info, info.components(), placeholders);
+      var components = UiSubstitutes.substitutePlaces(Option.none(), info, info.components(), placeholders);
 
       var focusWidget = function (component) {
         return component.getSystem().getByUid(widgetUid).map(function (widget) {

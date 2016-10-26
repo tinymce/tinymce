@@ -327,8 +327,6 @@ define(
         }
       );
 
-            return;
-
       HtmlDisplay.section(
         gui,
         'This dropdown menu has an intricate menu system derived from Sublime sorting',
@@ -345,10 +343,23 @@ define(
             menu: 'alloy-menu',
             selectedMenu: 'alloy-selected-menu'
           },
+          parts: {
+            display: {
+              representing: {
+                query: function (comp) {
+
+                },
+                set: function (comp, v) {
+                  Html.set(comp.element(), v);
+                }
+              }
+            }
+          },
           members: {
             menu: {
               munge: function (spec) {
                 return GuiTemplate.use(
+                  Option.none(),
                   TemplateMenu,
                   { },
                   {
