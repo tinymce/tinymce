@@ -3,13 +3,16 @@ define(
 
   [
     'ephox.alloy.alien.EditableFields',
+    'ephox.alloy.alien.Keys',
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.navigation.KeyMatch',
+    'ephox.alloy.navigation.KeyRules',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option'
   ],
 
-  function (EditableFields, SystemEvents, Merger, Fun, Option) {
+  function (EditableFields, Keys, SystemEvents, KeyMatch, KeyRules, Merger, Fun, Option) {
 
     var doDefaultExecute = function (component, simulatedEvent, focused) {
       var system = component.getSystem();
@@ -20,7 +23,7 @@ define(
     };
 
     var defaultExecute = function (component, simulatedEvent, focused) {
-      return EditableFields.inside(focused) ? Option.none() : doDefaultExecute(component, simulatedEvent, focused);
+      return EditableFields.inside(focused) && KeyMatch.inSet(Keys.SPACE())(simulatedEvent.event()) ? Option.none() : doDefaultExecute(component, simulatedEvent, focused);
     };
 
     return {
