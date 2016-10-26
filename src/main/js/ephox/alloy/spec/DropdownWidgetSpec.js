@@ -50,7 +50,7 @@ define(
         }),
         {
           uid: detail.uid(),
-          uiType: 'button',
+          uiType: 'custom',
           dom: detail.dom(),
           components: components,
           toggling: {

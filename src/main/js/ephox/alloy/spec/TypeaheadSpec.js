@@ -2,51 +2,50 @@ define(
   'ephox.alloy.spec.TypeaheadSpec',
 
   [
+    'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.dropdown.Beta',
+    'ephox.alloy.dropdown.Gamma',
+    'ephox.alloy.menu.logic.ViewTypes',
     'ephox.alloy.spec.InputSpec',
+    'ephox.alloy.spec.SpecSchema',
+    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.highway.Merger',
+    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.perhaps.Result',
     'ephox.sugar.api.Value',
     'ephox.sugar.api.Width',
     'global!document'
   ],
 
-  function (InputSpec, FieldSchema, Objects, ValueSchema, Arr, Merger, Option, Value, Width, document) {
-    var schema = ValueSchema.objOf([
+  function (SystemEvents, EventHandler, Beta, Gamma, ViewTypes, InputSpec, SpecSchema, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Option, Result, Value, Width, document) {
+    var schema = [
       FieldSchema.strict('sink'),
-      FieldSchema.strict('fetchItems'),
-      FieldSchema.strict('desc'),
-      FieldSchema.defaulted('minChars', 5)
-    ]);
+      FieldSchema.strict('fetch'),
+      FieldSchema.strict('dom'),
+      FieldSchema.option('sink'),
+      FieldSchema.defaulted('minChars', 5),
+      ViewTypes.schema(),
+      FieldSchema.defaulted('onOpen', Fun.noop),
+      FieldSchema.defaulted('onExecute', Option.none),
+      FieldSchema.defaulted('matchWidth', true),
+      FieldSchema.defaulted('toggleClass', 'alloy-selected-button')
+    ];
 
     var make = function (spec) {
-      var detail = ValueSchema.asStructOrDie('typeahead.spec', schema, spec);
+      var detail = SpecSchema.asStructOrDie('typeahead.spec', schema, Merger.deepMerge(
+        spec,
+        { view: ViewTypes.useList(spec) }
+      ), Gamma.parts());
 
       var fetch = function (comp, sandbox) {
-        var fetcher = detail.fetchItems();
-        // TODO: Move "representing" behaviour across.
-        var typed = Value.get(comp.element());
-
-        return fetcher(typed).map(function (rawItems) {
-          var items = Arr.map(rawItems, function (item) {
-            return Merger.deepMerge({
-              type: 'item'
-            }, item);
-          });
-
-          var primary = detail.desc() + '-dropdown';
-          var expansions = {};
-          var menus = Objects.wrap(primary, items);
-
-          return {
-            primary: primary,
-            menus: menus,
-            expansions: expansions
-          };
-        });     
+        var fetcher = detail.fetch();
+        return fetcher(comp).map(detail.view().preprocess());
       };
 
       var openPopup = function (comp, sandbox) {
@@ -69,65 +68,68 @@ define(
         return Option.some(true);
       };
       
-      return Merger.deepMerge(InputSpec.make(spec), {
-        streaming: {
-          stream: {
-            mode: 'throttle',
-            delay: 1000
+      return Merger.deepMerge(
+        InputSpec.make(spec),
+        {
+          // streaming: {
+          //   stream: {
+          //     mode: 'throttle',
+          //     delay: 1000
+          //   },
+          //   onStream: function (component, simulatedEvent) {
+          //     var sandbox = component.apis().getCoupled('sandbox');
+          //     var focusInInput = component.apis().isFocused();
+          //     // You don't want it to change when something else has triggered the change.
+          //     if (focusInInput) {
+          //       if (sandbox.apis().isShowing()) sandbox.apis().closeSandbox();
+          //       if (Value.get(component.element()).length >= detail.minChars()) {
+          //         showPreview(component, sandbox);
+          //       }
+          //     }
+          //   }
+          // },
+
+          events: Objects.wrapAll([
+            {
+              key: SystemEvents.execute(),
+              value: EventHandler.nu({
+                run: function (comp) {
+                  Beta.togglePopup(detail, comp);
+                }
+              })
+            }
+          ]),
+
+          toggling: {
+            toggleClass: 'menu-open',
+            aria: {
+              'aria-expanded-attr': 'aria-expanded'
+            }
           },
-          onStream: function (component, simulatedEvent) {
-            var sandbox = component.apis().getCoupled('sandbox');
-            var focusInInput = component.apis().isFocused();
-            // You don't want it to change when something else has triggered the change.
-            if (focusInInput) {
-              if (sandbox.apis().isShowing()) sandbox.apis().closeSandbox();
-              if (Value.get(component.element()).length >= detail.minChars()) {
-                showPreview(component, sandbox);
+          // keying: {
+          //   mode: 'execution',
+          //   useSpace: false,
+          //   useEnter: true,
+          //   useDown: true
+          // },
+          keying: {
+            mode: 'special',
+            onDown: moveToPopup
+          },
+          dom: {
+            classes: [ 'typeahead' ]
+          },
+          focusing: true,
+          tabstopping: true,
+          coupling: {
+            others: {
+              sandbox: function (hotspot) {
+                return Beta.makeSandbox(detail, hotspot);
               }
             }
           }
-        },
-        toggling: {
-          toggleClass: 'menu-open',
-          aria: {
-            'aria-expanded-attr': 'aria-expanded'
-          }
-        },
-        keying: {
-          mode: 'special',
-          onDown: moveToPopup
-        },
-        dom: {
-          classes: [ 'typeahead' ]
-        },
-        focusing: true,
-        tabstopping: true,
-        coupling: {
-          others: {
-            sandbox: function (owner) {
-              return MenuSandboxSpec.make({
-                lazyHotspot: function () {
-                  return owner;
-                },
-                sink: detail.sink(),
-                onClose: function (sandbox) {
-                  owner.apis().deselect();
-                },
-                onOpen: function (sandbox, menu) {
-                  var inputWidth = Width.get(owner.element());
-                  Width.set(menu.element(), inputWidth);
-                },
-                onExecute: function (sandbox, choice, itemValue, textValue) {
-                  var input = owner.element();
-                  Value.set(input, textValue);
-                  sandbox.apis().closeSandbox();
-                  owner.apis().focus();
-                }
-              });
-            }
-          }
         }
-      });
+      );
     };
 
     return {

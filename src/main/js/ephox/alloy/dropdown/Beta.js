@@ -12,7 +12,7 @@ define(
     
     var open = function (detail, component, sandbox) {
       var fetcher = detail.fetch();
-      var futureData = fetcher().map(detail.view().preprocess());
+      var futureData = fetcher(component).map(detail.view().preprocess());
 
       // Resolve the future to open the dropdown
       sandbox.apis().openSandbox(futureData).get(function () { });

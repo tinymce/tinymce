@@ -30,7 +30,9 @@ define(
           Option.none(),
           template,
           { }, {
-            fields: spec
+            fields: {
+              text: spec.text !== undefined ? spec.text : ''
+            }
           }
         );
       }
