@@ -10,7 +10,9 @@ define(
     'ephox.alloy.navigation.KeyMatch',
     'ephox.alloy.navigation.KeyRules',
     'ephox.alloy.navigation.WrapArrNavigation',
+    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.ValueSchema',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.scullion.Cell',
@@ -18,17 +20,23 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Keys, KeyingType, KeyingTypes, DomMovement, DomPinpoint, KeyMatch, KeyRules, WrapArrNavigation, FieldSchema, Fun, Option, Cell, Focus, SelectorFind) {
+  function (Keys, KeyingType, KeyingTypes, DomMovement, DomPinpoint, KeyMatch, KeyRules, WrapArrNavigation, FieldPresence, FieldSchema, ValueSchema, Fun, Option, Cell, Focus, SelectorFind) {
     var schema = [
       FieldSchema.strict('selector'),
       FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
       FieldSchema.defaulted('onEscape', Option.none),
       FieldSchema.defaulted('captureTab', false),
+      FieldSchema.field(
+        'initSize',
+        'initSize',
+        FieldPresence.strict(),
+        ValueSchema.objOf([
+          FieldSchema.strict('numColumns'),
+          FieldSchema.strict('numRows')
+        ])
+      ),
       FieldSchema.state('dimensions', function () {
-        return Cell({
-          numColumns: 1,
-          numRows: 1
-        });
+        return Cell(Option.none());
       })
     ];
 
@@ -50,8 +58,8 @@ define(
           return cycle(
             identified.candidates(),
             identified.index(),
-            info.dimensions().get().numRows,
-            info.dimensions().get().numColumns
+            info.dimensions().get().map(function (d) { return d.numRows(); }).getOr(info.initSize().numRows()),
+            info.dimensions().get().map(function (d) { return d.numColumns(); }).getOr(info.initSize().numColumns())
           );
         });
       };
@@ -86,10 +94,12 @@ define(
     var getEvents = Fun.constant({ });
 
     var setGridSize = function (gridInfo, numRows, numColumns) {
-      gridInfo.dimensions().set({
-        numRows: numRows,
-        numColumns: numColumns
-      });
+      gridInfo.dimensions().set(
+        Option.some({
+          numRows: numRows,
+          numColumns: numColumns
+        })
+      );
     };
 
     var getApis = function (gridInfo) {

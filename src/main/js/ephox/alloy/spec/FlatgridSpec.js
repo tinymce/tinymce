@@ -50,6 +50,16 @@ define(
         ValueSchema.objOf([
           FieldSchema.strict('item')
         ])
+      ),
+
+      FieldSchema.field(
+        'initSize',
+        'initSize',
+        FieldPresence.strict(),
+        ValueSchema.objOf([
+          FieldSchema.strict('numColumns'),
+          FieldSchema.strict('numRows')
+        ])
       )
     ];
 
@@ -78,7 +88,7 @@ define(
         dom: detail.dom(),
         uid: detail.uid(),
         highlighting: {
-          // Highlighting for a menu is selecting items inside the menu
+          // Highlighting for a grid is selecting items inside the grid
           highlightClass: detail.markers().selectedItem(),
           itemClass: detail.markers().item()
         },
@@ -112,7 +122,15 @@ define(
           },
           set: function () { }
         },
-        components: components
+        components: components,
+        keying: {
+          mode: 'flatgrid',
+          selector: '[tabindex="-1"]',
+          initSize: {
+            numColumns: detail.initSize().numColumns(),
+            numRows: detail.initSize().numRows()
+          }
+        }
       };
     };
 
