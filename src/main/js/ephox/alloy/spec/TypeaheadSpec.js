@@ -14,11 +14,13 @@ define(
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.scullion.Cell',
     'ephox.sugar.api.Value',
+    'ephox.violin.Strings',
     'global!document'
   ],
 
-  function (SystemEvents, EventHandler, Beta, Gamma, ViewTypes, InputSpec, SpecSchema, FieldSchema, Objects, Merger, Fun, Option, Value, document) {
+  function (SystemEvents, EventHandler, Beta, Gamma, ViewTypes, InputSpec, SpecSchema, FieldSchema, Objects, Merger, Fun, Option, Cell, Value, Strings, document) {
     var schema = [
       FieldSchema.strict('sink'),
       FieldSchema.strict('fetch'),
@@ -29,7 +31,10 @@ define(
       FieldSchema.defaulted('onOpen', Fun.noop),
       FieldSchema.defaulted('onExecute', Option.none),
       FieldSchema.defaulted('matchWidth', true),
-      FieldSchema.defaulted('toggleClass', 'alloy-selected-button')
+      FieldSchema.defaulted('toggleClass', 'alloy-selected-button'),
+      FieldSchema.state('previewing', function () {
+        return Cell(true);
+      })
     ];
 
     var make = function (spec) {
@@ -40,10 +45,35 @@ define(
           view: {
             fakeFocus: true,
             onHighlight: function (menu, item) {
-              menu.getSystem().getByUid(detail.uid()).each(function (input) {
-                input.apis().setValue(item.apis().getValue());
-              });
+              if (! detail.previewing().get()) {
+                menu.getSystem().getByUid(detail.uid()).each(function (input) {
+                  input.apis().setValue(item.apis().getValue());
+                });
+              } else {
+                // Highlight the rest of the text so that the user types over it.
+                menu.getSystem().getByUid(detail.uid()).each(function (input) {
+                  var currentValue = input.apis().getValue();
+                  var nextValue = item.apis().getValue();
+                  if (Strings.startsWith(nextValue, currentValue)) {
+                    input.apis().setValue(nextValue);
+                    input.element().dom().setSelectionRange(currentValue.length, nextValue.length);
+                  }
+                  
+                });
+              }
+              detail.previewing().set(false);
             }
+          }
+        },
+        {
+          onExecute: function (sandbox, component) {
+            sandbox.apis().closeSandbox();
+            var currentValue = component.apis().getValue();
+            component.element().dom().setSelectionRange(currentValue.length, currentValue.length);
+            // Should probably streamline this one.
+            var other = spec.onExecute !== undefined ? spec.onExecute : Fun.noop;
+            other(sandbox, component);
+            return Option.some(true);
           }
         }
       ), Gamma.parts());
@@ -63,6 +93,7 @@ define(
               if (focusInInput) {
                 if (sandbox.apis().isShowing()) sandbox.apis().closeSandbox();
                 if (Value.get(component.element()).length >= detail.minChars()) {
+                  detail.previewing().set(true);
                   Beta.enterPopup(detail, component);
                 }
               }
@@ -107,7 +138,7 @@ define(
             },
             onEnter: function (comp, simulatedEvent) {
               var sandbox = comp.apis().getCoupled('sandbox');
-              sandbox.getSystem().triggerEvent('keydown', sandbox.element(), simulatedEvent.event());
+              detail.onExecute()(sandbox, comp);
               return Option.some(true);
             }
           },

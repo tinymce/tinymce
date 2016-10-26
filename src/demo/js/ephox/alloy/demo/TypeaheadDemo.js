@@ -121,8 +121,8 @@ define(
             return Future.pure(matches);
           },
           onExecute: function (sandbox, item, itemValue) {
-            console.trace();
-            console.log('*** typeahead menu demo execute on: ' + item.apis().getValue() + ' ***');
+            var value = item.apis().getValue();
+            console.log('*** typeahead menu demo execute on: ' + value + ' ***');
           },
           parts: {
             display: {

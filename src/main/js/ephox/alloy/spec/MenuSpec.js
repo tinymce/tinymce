@@ -122,8 +122,6 @@ define(
               run: function (menu, simulatedEvent) {
                 var item = simulatedEvent.event().item();
                 menu.apis().highlight(item);
-                // Maybe move into highlighting class
-                detail.onHighlight()(menu, item);
               }
             })
           }
