@@ -9,21 +9,16 @@ define(
     'ephox.alloy.menu.logic.ViewTypes',
     'ephox.alloy.spec.InputSpec',
     'ephox.alloy.spec.SpecSchema',
-    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
-    'ephox.boulder.api.ValueSchema',
-    'ephox.compass.Arr',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.perhaps.Result',
     'ephox.sugar.api.Value',
-    'ephox.sugar.api.Width',
     'global!document'
   ],
 
-  function (SystemEvents, EventHandler, Beta, Gamma, ViewTypes, InputSpec, SpecSchema, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Option, Result, Value, Width, document) {
+  function (SystemEvents, EventHandler, Beta, Gamma, ViewTypes, InputSpec, SpecSchema, FieldSchema, Objects, Merger, Fun, Option, Value, document) {
     var schema = [
       FieldSchema.strict('sink'),
       FieldSchema.strict('fetch'),
@@ -46,23 +41,23 @@ define(
       return Merger.deepMerge(
         InputSpec.make(spec),
         {
-          // streaming: {
-          //   stream: {
-          //     mode: 'throttle',
-          //     delay: 1000
-          //   },
-          //   onStream: function (component, simulatedEvent) {
-          //     var sandbox = component.apis().getCoupled('sandbox');
-          //     var focusInInput = component.apis().isFocused();
-          //     // You don't want it to change when something else has triggered the change.
-          //     if (focusInInput) {
-          //       if (sandbox.apis().isShowing()) sandbox.apis().closeSandbox();
-          //       if (Value.get(component.element()).length >= detail.minChars()) {
-          //         showPreview(component, sandbox);
-          //       }
-          //     }
-          //   }
-          // },
+          streaming: {
+            stream: {
+              mode: 'throttle',
+              delay: 1000
+            },
+            onStream: function (component, simulatedEvent) {
+              var sandbox = component.apis().getCoupled('sandbox');
+              var focusInInput = component.apis().isFocused();
+              // You don't want it to change when something else has triggered the change.
+              if (focusInInput) {
+                if (sandbox.apis().isShowing()) sandbox.apis().closeSandbox();
+                if (Value.get(component.element()).length >= detail.minChars()) {
+                  Beta.previewPopup(detail, component);
+                }
+              }
+            }
+          },
 
           events: Objects.wrapAll([
             {
@@ -81,12 +76,6 @@ define(
               'aria-expanded-attr': 'aria-expanded'
             }
           },
-          // keying: {
-          //   mode: 'execution',
-          //   useSpace: false,
-          //   useEnter: true,
-          //   useDown: true
-          // },
           keying: {
             mode: 'special',
             onDown: function (comp) {
