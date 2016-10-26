@@ -3,17 +3,20 @@ define(
 
   [
     'ephox.alloy.alien.ComponentStructure',
+    'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.logic.HotspotViews',
     'ephox.alloy.menu.widget.WidgetConfig',
     'ephox.alloy.sandbox.Dismissal',
     'ephox.alloy.spec.SpecSchema',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.perhaps.Option'
   ],
 
-  function (ComponentStructure, HotspotViews, WidgetConfig, Dismissal, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Option) {
+  function (ComponentStructure, SystemEvents, EventHandler, HotspotViews, WidgetConfig, Dismissal, SpecSchema, FieldPresence, FieldSchema, Objects, ValueSchema, Option) {
     var schema = [
       // This hotspot is going to have to be a little more advanced when we get away from menus and dropdowns
       FieldSchema.strict('lazyHotspot'),
@@ -51,7 +54,16 @@ define(
         receiving: Dismissal.receiving({
           isExtraPart: isExtraPart
         }),
-        events: { },
+        events: Objects.wrapAll([
+          {
+            key: SystemEvents.sandboxClose(),
+            value: EventHandler.nu({
+              run: function (sandbox) {
+                sandbox.apis().closeSandbox();
+              }
+            })
+          }
+        ]),
         keying: {
           mode: 'special',
           onTab: function () { return Option.some(true); },

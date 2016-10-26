@@ -83,7 +83,7 @@ define(
       
       var components = UiSubstitutes.substitutePlaces(Option.some('flatgrid'), detail, detail.components(), placeholders, { });
 
-      return {
+      return Merger.deepMerge(spec, {
         uiType: 'custom',
         dom: detail.dom(),
         uid: detail.uid(),
@@ -131,7 +131,7 @@ define(
             numRows: detail.initSize().numRows()
           }
         }
-      };
+      });
     };
 
     return {
