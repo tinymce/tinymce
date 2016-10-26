@@ -45,6 +45,16 @@ define(
           FieldSchema.strict('grid'),
           FieldSchema.strict('item')
         ])
+      ),
+
+      FieldSchema.field(
+        'initSize',
+        'initSize',
+        FieldPresence.strict(),
+        ValueSchema.objOf([
+          FieldSchema.strict('numColumns'),
+          FieldSchema.strict('numRows')
+        ])
       )
     ]);
 
@@ -67,6 +77,10 @@ define(
             markers: {
               item: uiSpec.markers().item(),
               selectedItem: uiSpec.markers().selectedItem()
+            },
+            initSize: {
+              numColumns: uiSpec.initSize().numColumns(),
+              numRows: uiSpec.initSize().numRows()
             }
           }
         );
@@ -154,7 +168,11 @@ define(
             return HotspotViews.onEscape(uiSpec.lazyHotspot()(), sandbox);
           },
           selector:  '.' + uiSpec.markers().item(),
-          captureTab: true
+          captureTab: true,
+          initSize: {
+            numColumns: uiSpec.initSize().numColumns(),
+            numRows: uiSpec.initSize().numRows()
+          }
         },
         events: events
       };

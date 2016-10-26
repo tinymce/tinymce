@@ -29,6 +29,16 @@ define(
         MenuMarkers.itemSchema()
       ),
 
+      FieldSchema.field(
+        'initSize',
+        'initSize',
+        FieldPresence.strict(),
+        ValueSchema.objOf([
+          FieldSchema.strict('numColumns'),
+          FieldSchema.strict('numRows')
+        ])
+      ),
+
       FieldSchema.defaulted('preprocess', Fun.identity),
 
       FieldSchema.defaulted('flat', false),
@@ -46,6 +56,10 @@ define(
             members: {
               item: detail.view().members().item(),
               grid: detail.view().members().grid()
+            },
+            initSize: {
+              numColumns: detail.view().initSize().numColumns(),
+              numRows: detail.view().initSize().numRows()
             },
             markers: {
               item: detail.view().markers().item(),

@@ -41,7 +41,8 @@ define(
         style: 'grid',
         members: spec.members,
         markers: spec.markers,
-        preprocess: Fun.identity
+        preprocess: Fun.identity,
+        initSize: spec.initSize
       };
     };
 

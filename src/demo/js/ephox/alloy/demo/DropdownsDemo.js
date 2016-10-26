@@ -103,7 +103,7 @@ define(
                 container: {
                   munge: function (spec) {
                     return GuiTemplate.use(
-                      Option.none(),
+                      Option.some('widget-container'),
                       TemplateWidgetContainer,
                       { },
                       { }
@@ -124,7 +124,7 @@ define(
         gui,
         'This dropdown button shows a widget',
         GuiTemplate.use(
-          Option.none(),
+          Option.some('dropdown-widget'),
           TemplateToolbarDropdown,
           {
             uiType: 'dropdown-widget',
@@ -133,7 +133,7 @@ define(
               container: {
                 munge: function (spec) {
                   return GuiTemplate.use(
-                    Option.none(),
+                    Option.some('widget-container'),
                     TemplateWidgetContainer,
                     { },
                     { }
@@ -181,7 +181,7 @@ define(
 
       HtmlDisplay.section(
         gui,
-        'This grid dropdown button is a grid of 3 x 2',
+        'This grid dropdown button is a grid of 2 x 2',
         {
           uiType: 'dropdown-grid',
           text: 'Dropdown',
@@ -194,6 +194,10 @@ define(
             selectedItem: 'alloy-selected-item',
             menu: 'alloy-menu',
             selectedMenu: 'alloy-selected-menu'
+          },
+          initSize: {
+            numColumns: 2,
+            numRows: 2
           },
           members: {
             item: {
@@ -211,7 +215,7 @@ define(
             grid: {
               munge: function (spec) {
                 return GuiTemplate.use(
-                  Option.none(),
+                  Option.some('flatgrid'),
                   TemplateMenu,
                   { },
                   {
@@ -277,7 +281,7 @@ define(
             menu: {
               munge: function (spec) {
                 return GuiTemplate.use(
-                  Option.none(),
+                  Option.some('dropdown-list'),
                   TemplateMenu,
                   { },
                   {

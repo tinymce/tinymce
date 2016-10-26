@@ -66,7 +66,10 @@ define(
           coupling: {
             others: {
               sandbox: function (hotspot) {
-                return Beta.makeSandbox(detail, hotspot);
+                return Beta.makeSandbox(detail, hotspot, {
+                  onOpen: hotspot.apis().select,
+                  close: hotspot.apis().deselect
+                });
               }
             }
           },

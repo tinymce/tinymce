@@ -39,6 +39,16 @@ define(
           FieldSchema.strict('grid'),
           FieldSchema.strict('item')
         ])
+      ),
+
+      FieldSchema.field(
+        'initSize',
+        'initSize',
+        FieldPresence.strict(),
+        ValueSchema.objOf([
+          FieldSchema.strict('numColumns'),
+          FieldSchema.strict('numRows')
+        ])
       )
     ];
 
