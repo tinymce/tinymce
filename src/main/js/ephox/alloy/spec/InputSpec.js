@@ -50,6 +50,15 @@ define(
           ])
         ),
 
+        representing: {
+          query: function (comp) {
+            return Value.get(comp.element());
+          },
+          set: function (comp, value) {
+            Value.set(comp.element(), value);
+          }
+        },
+
         tabstopping: detail.tabstop(),
         focusing: {
           onFocus: function (component) {

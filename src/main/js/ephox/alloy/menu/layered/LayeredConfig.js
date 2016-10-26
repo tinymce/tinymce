@@ -59,7 +59,9 @@ define(
           FieldSchema.strict('menu'),
           FieldSchema.strict('item')
         ])
-      )
+      ),
+
+      FieldSchema.strict('onHighlight')
     ]);
     
     return function (rawUiSpec) {
@@ -78,7 +80,8 @@ define(
               members: {
                 item: uiSpec.members().item()
               },
-              fakeFocus: uiSpec.fakeFocus()
+              fakeFocus: uiSpec.fakeFocus(),
+              onHighlight: uiSpec.onHighlight()
             }
           );
           console.log('Data', data);

@@ -10,10 +10,11 @@ define(
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
+    'ephox.peanut.Fun',
     'ephox.perhaps.Option'
   ],
 
-  function (ComponentStructure, LayeredConfig, MenuMarkers, Dismissal, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Option) {
+  function (ComponentStructure, LayeredConfig, MenuMarkers, Dismissal, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Fun, Option) {
     var schema = [
       // This hotspot is going to have to be a little more advanced when we get away from menus and dropdowns
       FieldSchema.strict('lazyHotspot'),
@@ -39,7 +40,9 @@ define(
           FieldSchema.strict('menu'),
           FieldSchema.strict('item')
         ])
-      )
+      ),
+
+      FieldSchema.strict('onHighlight')
     ];
 
     var make = function (spec) {

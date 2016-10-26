@@ -53,7 +53,8 @@ define(
         ])
       ),
 
-      FieldSchema.defaulted('fakeFocus', false)
+      FieldSchema.defaulted('fakeFocus', false),
+      FieldSchema.defaulted('onHighlight', Fun.noop)
     ];
 
     var make = function (spec) {
@@ -97,6 +98,7 @@ define(
                 var event = simulatedEvent.event();
                 menu.getSystem().getByDom(event.target()).each(function (item) {
                   menu.apis().highlight(item);
+                  detail.onHighlight()(menu, item);
 
                   simulatedEvent.stop();
 
@@ -120,6 +122,8 @@ define(
               run: function (menu, simulatedEvent) {
                 var item = simulatedEvent.event().item();
                 menu.apis().highlight(item);
+                // Maybe move into highlighting class
+                detail.onHighlight()(menu, item);
               }
             })
           }

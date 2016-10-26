@@ -38,7 +38,12 @@ define(
         { view: ViewTypes.useList(spec) },
         {
           view: {
-            fakeFocus: true
+            fakeFocus: true,
+            onHighlight: function (menu, item) {
+              menu.getSystem().getByUid(detail.uid()).each(function (input) {
+                input.apis().setValue(item.apis().getValue());
+              });
+            }
           }
         }
       ), Gamma.parts());
@@ -96,6 +101,11 @@ define(
               return Beta.escapePopup(detail, comp);
             },
             onUp: function (comp, simulatedEvent) {
+              var sandbox = comp.apis().getCoupled('sandbox');
+              sandbox.getSystem().triggerEvent('keydown', sandbox.element(), simulatedEvent.event());
+              return Option.some(true);
+            },
+            onEnter: function (comp, simulatedEvent) {
               var sandbox = comp.apis().getCoupled('sandbox');
               sandbox.getSystem().triggerEvent('keydown', sandbox.element(), simulatedEvent.event());
               return Option.some(true);

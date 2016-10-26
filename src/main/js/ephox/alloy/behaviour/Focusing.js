@@ -75,6 +75,7 @@ define(
           EventHandler.nu({
             run: function (component, simulatedEvent) {
               doFocus(component, focusInfo);
+              simulatedEvent.stop();
             }
           })
         );

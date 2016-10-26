@@ -49,6 +49,10 @@ define(
         });  
       }, function (fc) {
         SelectorFind.descendant(component.element(), menuInfo.selector()).each(function (first) {
+          // This is bypassing highlight which is accidentally good. Will need to get all of this
+          // behaviour consistent. The reason it is accidentally good is because when implementing
+          // the typeahead, I don't want the first preview one to update the input field ... although
+          // I sort of do.
           Class.add(first, fc);
           simulatedEvent.stop();
         });  

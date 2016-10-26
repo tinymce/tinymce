@@ -31,6 +31,7 @@ define(
 
       FieldSchema.defaulted('preprocess', Fun.identity),
       FieldSchema.defaulted('fakeFocus', false),
+      FieldSchema.defaulted('onHighlight', Fun.noop),
 
       FieldSchema.state('sandbox', function () {
 
@@ -43,6 +44,7 @@ define(
             onOpen: interactions.onOpen,
             onClose: interactions.onClose,
             onExecute: interactions.onExecute,
+            onHighlight: detail.view().onHighlight(),
 
             fakeFocus: detail.view().fakeFocus(),
 
