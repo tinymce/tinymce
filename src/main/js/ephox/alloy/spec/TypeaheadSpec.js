@@ -68,14 +68,16 @@ define(
 
         // Find a nice way of doing this.
         {
-          onExecute: function (sandbox, component) {
+          onExecute: function (sandbox, item) {
             sandbox.apis().closeSandbox();
-            var currentValue = component.apis().getValue();
-            component.element().dom().setSelectionRange(currentValue.length, currentValue.length);
-            // Should probably streamline this one.
-            var other = spec.onExecute !== undefined ? spec.onExecute : Fun.noop;
-            other(sandbox, component);
-            return Option.some(true);
+            var currentValue = item.apis().getValue();
+            return item.getSystem().getByUid(detail.uid()).bind(function (input) {
+              input.element().dom().setSelectionRange(currentValue.length, currentValue.length);
+              // Should probably streamline this one.
+              var other = spec.onExecute !== undefined ? spec.onExecute : Fun.noop;
+              other(sandbox, input);
+              return Option.some(true);
+            });
           }
         }
       ), Gamma.parts());
