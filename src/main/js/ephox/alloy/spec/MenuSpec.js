@@ -66,7 +66,7 @@ define(
         var merged = Merger.deepMerge({
           uid: fallbackUid
         }, i, munged, {
-          focusClass: detail.fakeFocus() ? detail.markers().selectedItem() : undefined
+          ignoreFocus: detail.fakeFocus()
         });
 
         var itemInfo = ValueSchema.asStructOrDie('menu.spec item', itemSchema, merged);
@@ -87,7 +87,8 @@ define(
         highlighting: {
           // Highlighting for a menu is selecting items inside the menu
           highlightClass: detail.markers().selectedItem(),
-          itemClass: detail.markers().item()
+          itemClass: detail.markers().item(),
+          onHighlight: detail.onHighlight()
         },
         events: Objects.wrapAll([
           { 
@@ -98,7 +99,6 @@ define(
                 var event = simulatedEvent.event();
                 menu.getSystem().getByDom(event.target()).each(function (item) {
                   menu.apis().highlight(item);
-                  detail.onHighlight()(menu, item);
 
                   simulatedEvent.stop();
 

@@ -30,10 +30,10 @@ define(
 
     var execute = function (component, simulatedEvent, menuInfo) {
       var getFocus = function () {
-        return menuInfo.focusClass().fold(function () {
+        return menuInfo.focusManager().fold(function () {
           return Focus.search(component.element());
-        }, function (fc) {
-          return SelectorFind.descendant(component.element(), '.' + fc);
+        }, function (manager) {
+          return manager.get(component);
         });
       };
 
@@ -43,18 +43,17 @@ define(
     };
 
     var focusIn = function (component, menuInfo, simulatedEvent) {
-      menuInfo.focusClass().fold(function () {
+      menuInfo.focusManager().fold(function () {
         SelectorFind.descendant(component.element(), menuInfo.selector()).each(function (first) {
           component.getSystem().triggerFocus(first, component.element());
         });  
-      }, function (fc) {
+      }, function (manager) {
         SelectorFind.descendant(component.element(), menuInfo.selector()).each(function (first) {
           // This is bypassing highlight which is accidentally good. Will need to get all of this
           // behaviour consistent. The reason it is accidentally good is because when implementing
           // the typeahead, I don't want the first preview one to update the input field ... although
-          // I sort of do.
-          Class.add(first, fc);
-          simulatedEvent.stop();
+          // I sort of do.\
+          manager.set(component, first);
         });  
       });
     };

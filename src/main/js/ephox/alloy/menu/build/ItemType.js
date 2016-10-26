@@ -8,17 +8,16 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.highway.Merger',
-    'ephox.peanut.Fun',
-    'ephox.sugar.api.Class'
+    'ephox.peanut.Fun'
   ],
 
-  function (SystemEvents, EventHandler, ItemEvents, FieldSchema, Objects, Merger, Fun, Class) {
+  function (SystemEvents, EventHandler, ItemEvents, FieldSchema, Objects, Merger, Fun) {
     var schema = [
       FieldSchema.strict('value'),
       FieldSchema.strict('components'),
       FieldSchema.strict('dom'),
       FieldSchema.defaulted('base', { }),
-      FieldSchema.option('focusClass'),
+      FieldSchema.defaulted('ignoreFocus', false),
       FieldSchema.state('builder', function () {
         return builder;
       })
@@ -31,7 +30,7 @@ define(
         uiType: 'custom',
         dom: info.dom(),
         focusing: {
-          ignore: info.focusClass().isSome(),
+          ignore: info.ignoreFocus(),
           onFocus: function (component) {
             ItemEvents.onFocus(component);
           }
@@ -56,11 +55,7 @@ define(
             key: SystemEvents.focusItem(),
             value: EventHandler.nu({
               run: function (component) {
-                info.focusClass().fold(function () {
-                  component.apis().focus();
-                }, function (fc) {
-                  Class.add(component.element(), fc);
-                });
+                component.apis().focus();
               }
             })
           }

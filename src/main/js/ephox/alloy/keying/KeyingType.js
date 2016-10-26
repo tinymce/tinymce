@@ -14,7 +14,7 @@ define(
     var typical = function (infoSchema, getRules, getEvents, getApis, optFocusIn) {
       var schema = function () {
         return infoSchema.concat([
-          FieldSchema.option('focusClass'),
+          FieldSchema.option('focusManager'),
           FieldSchema.state('handler', function () {
             return self;
           })

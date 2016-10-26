@@ -22,7 +22,9 @@ define(
       FieldPresence.asOption(),
       ValueSchema.objOf([
         FieldSchema.strict('highlightClass'),
-        FieldSchema.strict('itemClass')
+        FieldSchema.strict('itemClass'),
+
+        FieldSchema.defaulted('onHighlight', Fun.noop)
       ])
     );
 
@@ -44,6 +46,7 @@ define(
     var highlight = function (component, hInfo, target) {
       dehighlightAll(component, hInfo);
       Class.add(target.element(), hInfo.highlightClass());
+      hInfo.onHighlight()(component, target);
     };
 
     var highlightFirst = function (component, hInfo) {

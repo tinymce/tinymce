@@ -305,6 +305,23 @@ define(
 
       console.log('uiSpec', uiSpec);
 
+      var focusManager = {
+        set: function (sandbox, element) {
+          sandbox.getSystem().getByDom(element).fold(Fun.noop, function (item) {
+            sandbox.apis().getHighlighted().each(function (menu) {
+              menu.apis().highlight(item);
+            });
+          });          
+        },
+        get: function (sandbox) {
+          return sandbox.apis().getHighlighted().bind(function (menu) {
+            return menu.apis().getHighlighted().map(function (item) {
+              return item.element();
+            });
+          });
+        }
+      };
+
       return {
         sandboxing: {
           manager: Manager.contract({
@@ -324,7 +341,7 @@ define(
           onLeft: onLeft,
           onEscape: onEscape,
           moveOnTab: true,
-          focusClass: uiSpec.fakeFocus() ? uiSpec.markers().selectedItem() : undefined
+          focusManager: uiSpec.fakeFocus() ? focusManager : undefined
         },
         // Highlighting is used for highlighting the active menu
         highlighting: {

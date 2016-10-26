@@ -35,29 +35,23 @@ define(
     };
 
     var getFocused = function (component, info) {
-      return info.focusClass().fold(function () {
+      return info.focusManager().fold(function () {
         return Focus.search(component.element());
-      }, function (fc) {
-        return SelectorFind.descendant(component.element(), '.' + fc);
+      }, function (manager) {
+        return manager.get(component);
       });
     };
 
     var use = function (move, component, simulatedEvent, info) {
       var outcome = getFocused(component, info).bind(function (focused) {
-        return move(component.element(), focused, info).map(function (newFocus) {
-          return {
-            original: focused,
-            nu: newFocus
-          };
-        });
+        return move(component.element(), focused, info);
       });
 
-      return outcome.map(function (focuses) {
-        info.focusClass().fold(function () {
-          component.getSystem().triggerFocus(focuses.nu, component.element());  
-        }, function (fc) {
-          Class.remove(focuses.original, fc);
-          Class.add(focuses.nu, fc);
+      return outcome.map(function (newFocus) {
+        info.focusManager().fold(function () {
+          component.getSystem().triggerFocus(newFocus, component.element());  
+        }, function (manager) {
+          manager.set(component, newFocus);
         });
         return true;
       });
