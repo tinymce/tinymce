@@ -65,14 +65,14 @@ define(
       return info.toggling().fold(function () {
         return { };
       }, function (toggleInfo) {
-        return Objects.wrap(
+        return toggleInfo.toggleOnExecute() ? Objects.wrap(
           SystemEvents.execute(),
           EventHandler.nu({
             run: function (component) {
               doToggle(component, toggleInfo);
             }
           })
-        );
+        ) : { };
       });
     };
 
@@ -92,6 +92,7 @@ define(
       ValueSchema.objOf([
         FieldSchema.defaulted('selected', false),
         FieldSchema.defaulted('toggleClass', 'selected'),
+        FieldSchema.defaulted('toggleOnExecute', true),
         FieldSchema.field(
           'aria',
           'aria',

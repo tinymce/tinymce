@@ -35,7 +35,8 @@ define(
 
     var togglePopup = function (detail, hotspot) {
       var sandbox = hotspot.apis().getCoupled('sandbox');
-      var action = hotspot.apis().isSelected() ? open : close;
+      var showing = sandbox.apis().isShowing();
+      var action = showing ? close : open;
       action(detail, hotspot, sandbox);
     };
 
@@ -44,14 +45,18 @@ define(
       Width.set(container.element(), buttonWidth);
     };
 
-    var makeSandbox = function (detail, hotspot) {
+    var makeSandbox = function (detail, hotspot, extras) {
       var onOpen = function (component, menu) {
         if (detail.matchWidth()) matchWidth(hotspot, menu);
         detail.onOpen()(hotspot, component, menu);
+        if (extras !== undefined && extras.onOpen !== undefined) extras.onOpen(component, menu);
       };
 
       var onClose = function (component, menu) {
-        hotspot.apis().deselect();
+        // FIX: Will need to do this for non split-dropdown
+        // hotspot.apis().deselect();
+        // FIX: Using to hack in turning off the arrow.
+        if (extras !== undefined && extras.onClose !== undefined) extras.onClose(component, menu);
       };
 
       var sink = Gamma.getSink(hotspot, detail);

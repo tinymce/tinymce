@@ -63,6 +63,9 @@ define(
             action: function (arrow) {
               var hotspot = arrow.getSystem().getByUid(detail.uid()).getOrDie();
               hotspot.getSystem().triggerEvent(SystemEvents.execute(), hotspot.element(), { });
+            },
+            toggling: {
+              toggleOnExecute: false
             }
           })
         )
@@ -79,12 +82,12 @@ define(
           uiType: 'button',
           dom: detail.dom(),
           components: components,
-          toggling: {
-            toggleClass: detail.toggleClass(),
-            aria: {
-              'aria-expanded-attr': 'aria-expanded'
-            }
-          },
+          // toggling: {
+          //   toggleClass: detail.toggleClass(),
+          //   aria: {
+          //     'aria-expanded-attr': 'aria-expanded'
+          //   }
+          // },
           eventOrder: {
             // Order, the button state is toggled first, so assumed !selected means close.
             'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
@@ -92,7 +95,18 @@ define(
           coupling: {
             others: {
               sandbox: function (hotspot) {
-                return Beta.makeSandbox(detail, hotspot);
+                var button = hotspot.getSystem().getByUid(detail.partUids().button).getOrDie();
+                var arrow = hotspot.getSystem().getByUid(detail.partUids().arrow).getOrDie();
+                var extras = {
+                  onOpen: function () {
+                    arrow.apis().select();
+                  },
+                  onClose: function () {
+                    arrow.apis().deselect();
+                  }
+                };
+
+                return Beta.makeSandbox(detail, hotspot, extras);
               }
             }
           },
