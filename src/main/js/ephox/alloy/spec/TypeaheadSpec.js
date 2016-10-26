@@ -43,31 +43,6 @@ define(
         { view: ViewTypes.useList(spec) }
       ), Gamma.parts());
 
-      var fetch = function (comp, sandbox) {
-        var fetcher = detail.fetch();
-        return fetcher(comp).map(detail.view().preprocess());
-      };
-
-      var openPopup = function (comp, sandbox) {
-        var futureData = fetch(comp, sandbox);
-        sandbox.apis().openSandbox(futureData).get(function () { });
-      };
-
-      var showPreview = function (comp, sandbox) {
-        if (sandbox.apis().isShowing()) sandbox.apis().closeSandbox();
-        var futureData = fetch(comp, sandbox);
-        sandbox.apis().showSandbox(futureData).get(function () { });
-      };
-      var moveToPopup = function (comp) {
-        var sandbox = comp.apis().getCoupled('sandbox');
-        if (sandbox.apis().isShowing()) {
-          sandbox.apis().gotoSandbox();
-        } else {
-          openPopup(comp, sandbox);
-        }
-        return Option.some(true);
-      };
-      
       return Merger.deepMerge(
         InputSpec.make(spec),
         {
@@ -114,7 +89,9 @@ define(
           // },
           keying: {
             mode: 'special',
-            onDown: moveToPopup,
+            onDown: function (comp) {
+              return Beta.enterPopup(detail, comp);
+            },
             onEscape: function (comp) {
               return Beta.escapePopup(detail, comp);
             }

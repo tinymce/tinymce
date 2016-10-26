@@ -11,12 +11,20 @@ define(
 
   function (Gamma, Option, Remove, Width, Error) {
     
-    var open = function (detail, component, sandbox) {
+    var fetch = function (detail, component) {
       var fetcher = detail.fetch();
-      var futureData = fetcher(component).map(detail.view().preprocess());
+      return fetcher(component).map(detail.view().preprocess());
+    };
 
+    var open = function (detail, component, sandbox) {
+      var futureData = fetch(detail, component);
       // Resolve the future to open the dropdown
       sandbox.apis().openSandbox(futureData).get(function () { });
+    };
+
+    var preview = function (detail, component, sandbox) {
+      var futureData = fetch(detail, component);
+      sandbox.apis().showSandbox(futureData).get(function () { });
     };
 
     var close = function (detail, component, sandbox) {
@@ -58,6 +66,24 @@ define(
       return detail.view().sandbox().spawn(hotspot, detail, interactions);
     };
 
+    
+    var previewPopup = function (detail, hotspot) {
+      var sandbox = hotspot.apis().getCoupled('sandbox');
+      if (sandbox.apis().isShowing()) close(detail, hotspot, sandbox);
+      preview(detail, hotspot, sandbox);
+      return Option.some(true);
+    };
+
+    var enterPopup = function (detail, hotspot) {
+      var sandbox = hotspot.apis().getCoupled('sandbox');
+      if (sandbox.apis().isShowing()) {
+        sandbox.apis().gotoSandbox();
+      } else {
+        open(detail, hotspot, sandbox);
+      }
+      return Option.some(true);
+    };
+
     var escapePopup = function (detail, hotspot) {
       var sandbox = hotspot.apis().getCoupled('sandbox');
       close(detail, hotspot, sandbox);
@@ -68,7 +94,9 @@ define(
       makeSandbox: makeSandbox,
       togglePopup: togglePopup,
 
-      escapePopup: escapePopup
+      escapePopup: escapePopup,
+      previewPopup: previewPopup,
+      enterPopup: enterPopup
     };
   }
 );
