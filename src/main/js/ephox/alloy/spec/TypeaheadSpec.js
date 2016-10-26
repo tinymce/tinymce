@@ -53,7 +53,7 @@ define(
               if (focusInInput) {
                 if (sandbox.apis().isShowing()) sandbox.apis().closeSandbox();
                 if (Value.get(component.element()).length >= detail.minChars()) {
-                  Beta.previewPopup(detail, component);
+                  Beta.enterPopup(detail, component);
                 }
               }
             }
@@ -78,11 +78,22 @@ define(
           },
           keying: {
             mode: 'special',
-            onDown: function (comp) {
-              return Beta.enterPopup(detail, comp);
+            onDown: function (comp, simulatedEvent) {
+              var sandbox = comp.apis().getCoupled('sandbox');
+              if (sandbox.apis().isShowing()) {
+                sandbox.getSystem().triggerEvent('keydown', sandbox.element(), simulatedEvent.event());
+                return Option.some(true);
+              } else {
+                return Beta.enterPopup(detail, comp);
+              }              
             },
             onEscape: function (comp) {
               return Beta.escapePopup(detail, comp);
+            },
+            onUp: function (comp, simulatedEvent) {
+              var sandbox = comp.apis().getCoupled('sandbox');
+              sandbox.getSystem().triggerEvent('keydown', sandbox.element(), simulatedEvent.event());
+              return Option.some(true);
             }
           },
           dom: {

@@ -77,6 +77,7 @@ define(
     var enterPopup = function (detail, hotspot) {
       var sandbox = hotspot.apis().getCoupled('sandbox');
       if (sandbox.apis().isShowing()) {
+        console.log('going to sandbox');
         sandbox.apis().gotoSandbox();
       } else {
         open(detail, hotspot, sandbox);
