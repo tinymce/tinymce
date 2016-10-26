@@ -78,7 +78,7 @@ define(
               members: {
                 item: uiSpec.members().item()
               },
-              ignoreFocus: uiSpec.focusClass().isSome()
+              focusClass: uiSpec.focusClass().getOr(undefined)
             }
           );
           console.log('Data', data);

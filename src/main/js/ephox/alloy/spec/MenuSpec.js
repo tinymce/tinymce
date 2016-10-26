@@ -53,7 +53,7 @@ define(
         ])
       ),
 
-      FieldSchema.defaulted('ignoreFocus', false)
+      FieldSchema.option('focusClass')
     ];
 
     var make = function (spec) {
@@ -65,7 +65,7 @@ define(
         var merged = Merger.deepMerge({
           uid: fallbackUid
         }, i, munged, {
-          ignoreFocus: detail.ignoreFocus()
+          focusClass: detail.focusClass().getOr(undefined)
         });
 
         var itemInfo = ValueSchema.asStructOrDie('menu.spec item', itemSchema, merged);
@@ -108,6 +108,18 @@ define(
                     item: item
                   });
                 });
+              }
+            })
+          },
+
+          {
+            key: ItemEvents.hover(),
+            value: EventHandler.nu({
+              // Hide any irrelevant submenus and expand any submenus based 
+              // on hovered item
+              run: function (menu, simulatedEvent) {
+                var item = simulatedEvent.event().item();
+                menu.apis().highlight(item);
               }
             })
           }
