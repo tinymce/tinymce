@@ -37,7 +37,20 @@ define(
             useFixed: true
           },
           events: {
+            // Probably a behaviour: cut mania
             'keydown': EventHandler.nu({
+              run: function (component, simulatedEvent) {
+                // Sinks should not let keydown or click propagate
+                simulatedEvent.cut();
+              }
+            }),
+            'mousedown': EventHandler.nu({
+              run: function (component, simulatedEvent) {
+                // Sinks should not let keydown or click propagate
+                simulatedEvent.cut();
+              }
+            }),
+            'click': EventHandler.nu({
               run: function (component, simulatedEvent) {
                 // Sinks should not let keydown or click propagate
                 simulatedEvent.cut();
