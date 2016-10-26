@@ -2,9 +2,8 @@ define(
   'ephox.alloy.keying.FlowType',
 
   [
+    'ephox.alloy.alien.EditableFields',
     'ephox.alloy.alien.Keys',
-    'ephox.alloy.api.SystemEvents',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.keying.KeyingType',
     'ephox.alloy.keying.KeyingTypes',
     'ephox.alloy.navigation.DomMovement',
@@ -12,14 +11,13 @@ define(
     'ephox.alloy.navigation.KeyMatch',
     'ephox.alloy.navigation.KeyRules',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Focus',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Keys, SystemEvents, EventHandler, KeyingType, KeyingTypes, DomMovement, DomNavigation, KeyMatch, KeyRules, FieldSchema, Objects, Fun, Option, Focus, SelectorFind) {
+  function (EditableFields, Keys, KeyingType, KeyingTypes, DomMovement, DomNavigation, KeyMatch, KeyRules, FieldSchema, Fun, Option, Focus, SelectorFind) {
     var schema = [
       FieldSchema.strict('selector'),
       FieldSchema.defaulted('execute', KeyingTypes.defaultExecute)
@@ -49,7 +47,8 @@ define(
       return [
         KeyRules.rule( KeyMatch.inSet( Keys.LEFT().concat(Keys.UP()) ), DomMovement.west(moveLeft, moveRight)),
         KeyRules.rule( KeyMatch.inSet( Keys.RIGHT().concat(Keys.DOWN()) ), DomMovement.east(moveLeft, moveRight)),
-        KeyRules.rule( KeyMatch.inSet( Keys.SPACE().concat(Keys.ENTER()) ), execute)
+        KeyRules.rule( KeyMatch.inSet( Keys.ENTER() ), execute),
+        KeyRules.rule( KeyMatch.inSet( Keys.SPACE() ), execute)
       ];
     };
 

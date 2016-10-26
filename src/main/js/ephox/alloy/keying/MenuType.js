@@ -13,12 +13,11 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.sugar.api.Class',
     'ephox.sugar.api.Focus',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (EditableFields, Keys, KeyingType, KeyingTypes, DomMovement, DomNavigation, KeyMatch, KeyRules, FieldSchema, Fun, Option, Class, Focus, SelectorFind) {
+  function (EditableFields, Keys, KeyingType, KeyingTypes, DomMovement, DomNavigation, KeyMatch, KeyRules, FieldSchema, Fun, Option, Focus, SelectorFind) {
     // FIX: Dupe with Flowtype
     var schema = [
       FieldSchema.strict('selector'),
@@ -28,10 +27,6 @@ define(
       FieldSchema.option('onEscape'),
       FieldSchema.defaulted('moveOnTab', false)
     ];
-
-    var executeIfNotEditable = function (component, simulatedEvent, menuInfo) {
-      return EditableFields.inside(simulatedEvent.event().target()) ? Option.none() : execute(component, simulatedEvent, menuInfo);
-    };
 
     var execute = function (component, simulatedEvent, menuInfo) {
       var getFocus = function () {
@@ -96,7 +91,7 @@ define(
       KeyRules.rule( KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), fireShiftTab),
       KeyRules.rule( KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet( Keys.TAB()) ]), fireTab),
       KeyRules.rule( KeyMatch.inSet( Keys.ENTER() ), execute),
-      KeyRules.rule( KeyMatch.inSet( Keys.SPACE() ), executeIfNotEditable)
+      KeyRules.rule( KeyMatch.inSet( Keys.SPACE() ), execute)
     ]);
 
     var getEvents = Fun.constant({ });
