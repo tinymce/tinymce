@@ -37,7 +37,7 @@ define(
       FieldSchema.strict('onOpen'),
       FieldSchema.strict('onClose'),
       FieldSchema.strict('onExecute'),
-      FieldSchema.option('focusClass'),
+      FieldSchema.defaulted('fakeFocus', false),
 
 
       FieldSchema.strict('sink'),
@@ -78,7 +78,7 @@ define(
               members: {
                 item: uiSpec.members().item()
               },
-              focusClass: uiSpec.focusClass().getOr(undefined)
+              fakeFocus: uiSpec.fakeFocus()
             }
           );
           console.log('Data', data);
@@ -321,7 +321,7 @@ define(
           onLeft: onLeft,
           onEscape: onEscape,
           moveOnTab: true,
-          focusClass: uiSpec.focusClass().getOr(undefined)
+          focusClass: uiSpec.fakeFocus() ? uiSpec.markers().selectedItem() : undefined
         },
         // Highlighting is used for highlighting the active menu
         highlighting: {

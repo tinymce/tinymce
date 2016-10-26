@@ -38,7 +38,7 @@ define(
         { view: ViewTypes.useList(spec) },
         {
           view: {
-            focusClass: 'alloy-selected-item'
+            fakeFocus: true
           }
         }
       ), Gamma.parts());

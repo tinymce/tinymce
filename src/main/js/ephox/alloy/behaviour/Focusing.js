@@ -47,7 +47,8 @@ define(
     };
 
     var exhibit = function (info, base) {
-      if (info.focusing().isNone()) return DomModification.nu({});
+      // Not sure if we want to disable focus altogether for ignore ... probably
+      if (info.focusing().isNone() || info.focusing().exists(function (f) { return f.ignore(); })) return DomModification.nu({});
       return DomModification.nu({
         attributes: {
           'tabindex': '-1'

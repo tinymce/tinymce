@@ -30,7 +30,7 @@ define(
       ),
 
       FieldSchema.defaulted('preprocess', Fun.identity),
-      FieldSchema.option('focusClass'),
+      FieldSchema.defaulted('fakeFocus', false),
 
       FieldSchema.state('sandbox', function () {
 
@@ -44,7 +44,7 @@ define(
             onClose: interactions.onClose,
             onExecute: interactions.onExecute,
 
-            focusClass: detail.view().focusClass().getOr(undefined),
+            fakeFocus: detail.view().fakeFocus(),
 
             members: {
               item: detail.view().members().item(),

@@ -53,7 +53,7 @@ define(
         ])
       ),
 
-      FieldSchema.option('focusClass')
+      FieldSchema.defaulted('fakeFocus', false)
     ];
 
     var make = function (spec) {
@@ -65,7 +65,7 @@ define(
         var merged = Merger.deepMerge({
           uid: fallbackUid
         }, i, munged, {
-          focusClass: detail.focusClass().getOr(undefined)
+          focusClass: detail.fakeFocus() ? detail.markers().selectedItem() : undefined
         });
 
         var itemInfo = ValueSchema.asStructOrDie('menu.spec item', itemSchema, merged);
