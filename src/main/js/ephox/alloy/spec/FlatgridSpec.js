@@ -71,7 +71,7 @@ define(
         '<alloy.menu.items>': UiSubstitutes.multiple(builtItems)
       };
       
-      var components = UiSubstitutes.substitutePlaces(Option.none(), detail, detail.components(), placeholders, { });
+      var components = UiSubstitutes.substitutePlaces(Option.some('flatgrid'), detail, detail.components(), placeholders, { });
 
       return {
         uiType: 'custom',

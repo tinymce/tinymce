@@ -23,7 +23,7 @@ define(
         '<alloy.widget>': UiSubstitutes.single(detail.widget())
       };
 
-      var components = UiSubstitutes.substitutePlaces(Option.none(), detail, detail.components(), placeholders);
+      var components = UiSubstitutes.substitutePlaces(Option.some('widget-container'), detail, detail.components(), placeholders);
 
       return {
         uiType: 'custom',

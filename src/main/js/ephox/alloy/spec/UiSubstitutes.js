@@ -63,6 +63,7 @@ define(
       
       return base.fold(
         function (value) {
+          console.log('compSpec', compSpec, value);
           var childSpecs = Objects.readOptFrom(value, 'components').getOr([ ]);
           var substituted = Arr.bind(childSpecs, function (c) {
             return substitute(owner, detail, c, factories, placeholders);
@@ -109,6 +110,7 @@ define(
     };
 
     var substitutePlaces = function (owner, detail, components, placeholders, _factories) {
+      console.log('OWNER: ', owner.getOr('none'));
       var ps = Obj.map(placeholders, function (ph, name) {
         return oneReplace(name, ph);
       });
@@ -117,7 +119,7 @@ define(
 
       Obj.each(ps, function (p) {
         if (p.used() === false && p.required()) throw new Error(
-          'Placeholder: ' + p.name() + ' was not found in components list\nComponents: ' +
+          'Placeholder: ' + p.name() + ' was not found in components list\nNamespace: ' + owner.getOr('none') + '\nComponents: ' +
           Json.stringify(detail.components(), null, 2)
         );
       });
