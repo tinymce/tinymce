@@ -44,7 +44,7 @@ define(
             onClose: interactions.onClose,
             onExecute: interactions.onExecute,
 
-            focusClass: detail.view().focusClass().or(undefined),
+            focusClass: detail.view().focusClass().getOr(undefined),
 
             members: {
               item: detail.view().members().item(),

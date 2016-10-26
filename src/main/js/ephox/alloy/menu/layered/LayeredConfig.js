@@ -77,7 +77,8 @@ define(
               markers: rawUiSpec.markers,
               members: {
                 item: uiSpec.members().item()
-              }
+              },
+              ignoreFocus: uiSpec.focusClass().isSome()
             }
           );
           console.log('Data', data);
@@ -298,6 +299,8 @@ define(
           })
         }
       ]);
+
+      console.log('uiSpec', uiSpec);
 
       return {
         sandboxing: {

@@ -35,7 +35,12 @@ define(
     var make = function (spec) {
       var detail = SpecSchema.asStructOrDie('typeahead.spec', schema, Merger.deepMerge(
         spec,
-        { view: ViewTypes.useList(spec) }
+        { view: ViewTypes.useList(spec) },
+        {
+          view: {
+            focusClass: 'alloy-selected-item'
+          }
+        }
       ), Gamma.parts());
 
       return Merger.deepMerge(

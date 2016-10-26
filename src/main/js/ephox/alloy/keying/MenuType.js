@@ -12,11 +12,12 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.sugar.api.Class',
     'ephox.sugar.api.Focus',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Keys, KeyingType, KeyingTypes, DomMovement, DomNavigation, KeyMatch, KeyRules, FieldSchema, Fun, Option, Focus, SelectorFind) {
+  function (Keys, KeyingType, KeyingTypes, DomMovement, DomNavigation, KeyMatch, KeyRules, FieldSchema, Fun, Option, Class, Focus, SelectorFind) {
     // FIX: Dupe with Flowtype
     var schema = [
       FieldSchema.strict('selector'),
@@ -37,14 +38,20 @@ define(
       };
 
       return getFocus().bind(function (focused) {
-        console.log('focusing', focused.dom());
         return menuInfo.execute()(component, simulatedEvent, focused);
       });
     };
 
-    var focusIn = function (component, menuInfo) {
-      SelectorFind.descendant(component.element(), menuInfo.selector()).each(function (first) {
-        component.getSystem().triggerFocus(first, component.element());
+    var focusIn = function (component, menuInfo, simulatedEvent) {
+      menuInfo.focusClass().fold(function () {
+        SelectorFind.descendant(component.element(), menuInfo.selector()).each(function (first) {
+          component.getSystem().triggerFocus(first, component.element());
+        });  
+      }, function (fc) {
+        SelectorFind.descendant(component.element(), menuInfo.selector()).each(function (first) {
+          Class.add(first, fc);
+          simulatedEvent.stop();
+        });  
       });
     };
 
