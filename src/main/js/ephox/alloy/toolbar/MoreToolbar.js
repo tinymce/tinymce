@@ -19,7 +19,7 @@ define(
         [
           FieldSchema.strict('overflowButton')
         ].concat(ToolbarSpecs.toolbarSchema()), 
-      spec);
+      spec, [ ]);
 
 
       var groups = Arr.map(detail.groups(), ToolbarSpecs.buildGroup);
