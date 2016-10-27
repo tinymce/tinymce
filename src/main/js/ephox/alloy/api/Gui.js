@@ -77,6 +77,7 @@ define(
         if (! Node.isText(component.element())) {
           registry.register(component);
           component.connect(systemApi);
+          systemApi.triggerEvent(SystemEvents.systemInit(), component.element(), { });
           Arr.each(component.components(), addToWorld);
         }
       };
@@ -84,6 +85,7 @@ define(
       var removeFromWorld = function (component) {
         if (! Node.isText(component.element())) {
           Arr.each(component.components(), removeFromWorld);
+          // Hmm... wonder if I should disconnect here.
           registry.unregister(component);
         }
       };

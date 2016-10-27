@@ -2,11 +2,14 @@ define(
   'ephox.alloy.behaviour.Transitioning',
 
   [
+    'ephox.alloy.api.SystemEvents',
     'ephox.alloy.behaviour.Behaviour',
+    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.log.AlloyLogger',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
@@ -17,7 +20,7 @@ define(
     'global!Error'
   ],
 
-  function (Behaviour, DomModification, AlloyLogger, FieldPresence, FieldSchema, ValueSchema, Arr, Obj, AriaFocus, Fun, Insert, Remove, Error) {
+  function (SystemEvents, Behaviour, EventHandler, DomModification, AlloyLogger, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, AriaFocus, Fun, Insert, Remove, Error) {
     var behaviourName = 'transitioning';
 
     var schema = FieldSchema.field(
@@ -89,10 +92,30 @@ define(
       };
     };
 
+    var handlers = function (info) {
+      return info.transitioning().fold(function () {
+        return { };
+      }, function (transitionInfo) {
+        return Objects.wrapAll([
+          {
+            key: SystemEvents.systemInit(),
+            value: EventHandler.nu({
+              run: function (component, simulatedEvent) {
+                revertToBase(component, transitionInfo);
+                // Not sure whether I want to stop
+                simulatedEvent.stop();
+              }
+            })
+          }
+
+        ]);
+      });
+    };
+
     return Behaviour.contract({
       name: Fun.constant(behaviourName),
       exhibit: exhibit,
-      handlers: Fun.constant({ }),
+      handlers: handlers,
       apis: apis,
       schema: Fun.constant(schema)
     });

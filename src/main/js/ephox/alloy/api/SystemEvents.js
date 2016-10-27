@@ -29,7 +29,10 @@ define(
 
 
       // Fire by a child element to tell the outer element to close
-      sandboxClose: Fun.constant('alloy.sandbox.close')
+      sandboxClose: Fun.constant('alloy.sandbox.close'),
+
+      // Fired when adding to a world
+      systemInit: Fun.constant('alloy.system.init')
     };
   }
 );

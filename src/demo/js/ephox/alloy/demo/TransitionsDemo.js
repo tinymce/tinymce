@@ -112,12 +112,12 @@ define(
               } }
             ],
             defaultView: function () {
-              return {
+              return [{
                 uiType: 'container',
                 dom: {
                   innerHtml: 'Loading'
                 }
-              };
+              }];
             },
             parts: {
               'tabbar': GuiTemplate.use(

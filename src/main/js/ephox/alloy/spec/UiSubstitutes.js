@@ -31,7 +31,7 @@ define(
     var subDependent = function (_owner, detail, compSpec, factories, placeholders) {
       return Objects.readOptFrom(factories, compSpec.name).fold(function () {
         throw new Error('Unknown dependent component: ' + compSpec.name + '\nKnown: [' +
-          Obj.keys(factories) + ']\nSpec: ' + Json.stringify(compSpec, null, 2)
+          Obj.keys(factories) + ']\nNamespace: ' + _owner.getOr('none') + '\nSpec: ' + Json.stringify(compSpec, null, 2)
         );
       }, function (builder) {
         var output = builder(compSpec, detail);
@@ -44,7 +44,7 @@ define(
       // Ignore having to find something for the time being.
       return Objects.readOptFrom(placeholders, compSpec.name).fold(function () {
         throw new Error('Unknown placeholder component: ' + compSpec.name + '\nKnown: [' + 
-          Obj.keys(placeholders) + ']\nSpec: ' + Json.stringify(compSpec, null, 2)
+          Obj.keys(placeholders) + ']\nNamespace: ' + owner.getOr('none') + '\nSpec: ' + Json.stringify(compSpec, null, 2)
         );
       }, function (newSpec) {
         // Must return a single/multiple type
