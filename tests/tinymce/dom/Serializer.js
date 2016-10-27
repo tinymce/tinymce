@@ -25,7 +25,7 @@ test('Schema rules', function() {
 
 	ser.setRules('a[href|target<_blank?_top|title:forced value]');
 	DOM.setHTML('test', '<a href="file.htm" data-mce-href="file.htm" target="_blank" title="title">link</a><a href="#" data-mce-href="#" target="test">test2</a>');
-	equal(ser.serialize(DOM.get('test')), '<a href="file.htm" target="_blank" title="forced value">link</a><a href="#" title="forced value">test2</a>');
+	equal(ser.serialize(DOM.get('test')), '<a href="file.htm" target="_blank" title="forced value" rel="noopener noreferrer">link</a><a href="#" title="forced value">test2</a>');
 
 	ser.setRules('img[src|border=0|alt=]');
 	DOM.setHTML('test', '<img src="tinymce/ui/img/raster.gif" data-mce-src="tinymce/ui/img/raster.gif" border="0" alt="" />');
