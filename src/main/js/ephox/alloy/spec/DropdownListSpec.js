@@ -67,7 +67,7 @@ define(
               sandbox: function (hotspot) {
                 return Beta.makeSandbox(detail, hotspot, {
                   onOpen: hotspot.apis().select,
-                  close: hotspot.apis().deselect
+                  onClose: hotspot.apis().deselect
                 });
               }
             }
