@@ -91,7 +91,11 @@ define(
           highlightClass: detail.markers().selectedClass(),
           itemClass: detail.markers().tabClass()
         },
-        components: components
+        components: components,
+        keying: {
+          mode: 'flow',
+          selector: '.' + detail.markers().tabClass()
+        }
       };
     };
 

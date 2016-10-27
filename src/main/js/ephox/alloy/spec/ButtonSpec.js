@@ -8,10 +8,11 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
-    'ephox.highway.Merger'
+    'ephox.highway.Merger',
+    'ephox.peanut.Fun'
   ],
 
-  function (SystemEvents, EventHandler, SpecSchema, FieldSchema, Objects, Arr, Merger) {
+  function (SystemEvents, EventHandler, SpecSchema, FieldSchema, Objects, Arr, Merger, Fun) {
     var schema = [
       FieldSchema.option('action')
     ];
@@ -33,7 +34,9 @@ define(
         run: function (component, simulatedEvent) {
           var system = component.getSystem();
           simulatedEvent.stop();
-          system.triggerEvent(SystemEvents.execute(), component.element(), { });
+          system.triggerEvent(SystemEvents.execute(), component.element(), {
+            button: Fun.constant(component)
+          });
         }
       });
 
