@@ -27,7 +27,7 @@ define(
     ];
 
     var make = function (spec) {
-      var detail = SpecSchema.asStructOrDie('input.spec', schema, spec);
+      var detail = SpecSchema.asStructOrDie('input.spec', schema, spec, [ ]);
       console.log('label.detail', detail);
 
       var field = Cell(undefined);
