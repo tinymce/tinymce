@@ -9,10 +9,11 @@ define(
     'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.highway.Merger',
+    'ephox.numerosity.api.JSON',
     'global!Error'
   ],
 
-  function (FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Error) {
+  function (FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Json, Error) {
     var getPartsSchema = function (partNames) {
       if (partNames.length === 0) return [ ];
 
@@ -29,7 +30,10 @@ define(
       var partUidsSchema = FieldSchema.state(
         'partUids',
         function (spec) {
-          if (! Objects.hasKey(spec, 'parts')) throw new Error('Part uid definition requires "parts"');
+          if (! Objects.hasKey(spec, 'parts')) throw new Error(
+            'Part uid definition requires "parts"\nSpec: ' +
+            Json.stringify(spec, null, 2)
+          );
           var uids = Obj.map(spec.parts, function (v, k) {
             return Objects.readOptFrom(v, 'uid').getOrThunk(function () {
               return spec.uid + '-' + k;

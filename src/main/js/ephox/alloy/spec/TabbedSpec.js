@@ -4,10 +4,11 @@ define(
   [
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
+    'ephox.highway.Merger',
     'ephox.perhaps.Option'
   ],
 
-  function (SpecSchema, UiSubstitutes, Option) {
+  function (SpecSchema, UiSubstitutes, Merger, Option) {
     var schema = [
 
 
@@ -19,18 +20,27 @@ define(
         'tabview'
       ]);
 
-      var placeholders = {
-        '<alloy.tabbar>': UiSubstitutes.single({
-          uiType: 'container'
+      console.log('tabbar', detail.parts().tabbar());
 
-        }),
+      var placeholders = {
+        '<alloy.tabbar>': UiSubstitutes.single(
+          Merger.deepMerge(
+            detail.parts().tabbar(),
+            detail.parts().tabbar().base,
+            {
+              uid: detail.partUids().tabbar,
+              uiType: 'tabbar'
+            }
+          )
+        ),
         '<alloy.tabview>': UiSubstitutes.single({
-          uiType: 'container'
+          uiType: 'container',
+          uid: detail.partUids().tabview
         })
       };
 
       var components = UiSubstitutes.substitutePlaces(
-        Option.some('tabs'),
+        Option.some('tabbing'),
         detail,
         detail.components(),
         placeholders,

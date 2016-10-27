@@ -10,10 +10,11 @@ define(
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'global!document',
+    'text!dom-templates/demo.tabbar.html',
     'text!dom-templates/demo.tabbing.html'
   ],
 
-  function (Gui, GuiTemplate, HtmlDisplay, Option, Class, Element, Insert, document, TemplateTabs) {
+  function (Gui, GuiTemplate, HtmlDisplay, Option, Class, Element, Insert, document, TemplateTabbar, TemplateTabs) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -85,12 +86,39 @@ define(
         gui,
         'A basic tab view',
         GuiTemplate.use(
-          Option.some('tabs'),
+          Option.some('tabbing'),
           TemplateTabs,
           {
-            uiType: 'tabs',
+            uiType: 'tabbing',
             parts: {
-              'tabbar': { },
+              'tabbar': GuiTemplate.use(
+                Option.some('tabbar'),
+                TemplateTabbar,
+                {
+                  uiType: 'container',
+                  parts: {
+                    tabs: { }
+                  },
+                  tabs: [
+                    { text: 'alpha' },
+                    { text: 'beta' }
+                  ],
+                  members: {
+                    tab: {
+                      munge: function (spec) {
+                        return { 
+                          dom: {
+                            tag: 'button',
+                            innerHtml: spec.text
+                          },
+                          components: [ ]
+                        };
+                      }
+                    }
+                  }
+                },
+                { }
+              ),
               'tabview': { }
             } 
           }, {
