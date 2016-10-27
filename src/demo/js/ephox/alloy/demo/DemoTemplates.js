@@ -15,7 +15,7 @@ define(
     var item = function (spec) {
       if (spec.type === 'widget') {
         return GuiTemplate.use(
-          Option.none(),
+          Option.some('item-widget'),
           TemplateMenuWidgetItem,
           { },
           {
@@ -38,7 +38,7 @@ define(
         );
       } else {
         return GuiTemplate.use(
-          Option.none(),
+          Option.some('item'),
           TemplateMenuItem,
           { }, {
             fields: spec
