@@ -21,6 +21,17 @@
 		}
 	});
 
+    function invokeWhen(predicate, cb) {
+        var args = arguments;
+        setTimeout(function() {
+            if (predicate()) {
+                cb.apply(null, Array.prototype.slice.call(args, 2));
+            } else {
+                invokeWhen.apply(null, args);
+            }
+        }, 100);
+    }
+
     function loadTiny(options, cb) {
         tinymce.init(tinymce.extend({
             selector: 'textarea',
@@ -52,10 +63,14 @@
             images_upload_timeout: 1,
             images_upload_url: 'postAcceptor.php',
             images_upload_handler: function(blobInfo, success) {
+                var src = editor.$('img').attr('src');
+
                 notEqual(blobInfo.filename(), 'dogleft.png');
-                setTimeout(function() {
-                    finalize(blobInfo.id());
-                }, 1);
+
+                invokeWhen(function() {
+                    return editor.$('img').attr('src') != src;
+                }, finalize, blobInfo.id());
+                
                 success(blobInfo.filename());
             }
         }, function() {
@@ -77,8 +92,14 @@
             images_upload_timeout: 1,
             images_upload_url: 'postAcceptor.php',
             images_upload_handler: function(blobInfo, success) {
+                var src = editor.$('img').attr('src');
+
                 equal(blobInfo.filename(), 'dogleft.png');
-                setTimeout(finalize, 1);
+                
+                invokeWhen(function() {
+                    return editor.$('img').attr('src') != src;
+                }, finalize, blobInfo.id());
+                
                 success('dogleft.png');
             }
         }, function() {
