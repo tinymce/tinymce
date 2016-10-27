@@ -109,7 +109,6 @@ define(
     };
 
     var substitutePlaces = function (owner, detail, components, placeholders, _factories) {
-      console.log('OWNER: ', owner.getOr('none'));
       var ps = Obj.map(placeholders, function (ph, name) {
         return oneReplace(name, ph);
       });

@@ -84,7 +84,6 @@ define(
               onHighlight: uiSpec.onHighlight()
             }
           );
-          console.log('Data', data);
           return sandbox.getSystem().build(data);
         });
       };
@@ -302,8 +301,6 @@ define(
           })
         }
       ]);
-
-      console.log('uiSpec', uiSpec);
 
       var focusManager = {
         set: function (sandbox, element) {
