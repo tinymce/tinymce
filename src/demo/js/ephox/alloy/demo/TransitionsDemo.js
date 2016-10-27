@@ -101,7 +101,8 @@ define(
                   },
                   tabs: [
                     { text: 'alpha' },
-                    { text: 'beta' }
+                    { text: 'beta' },
+                    { text: 'gamma' }
                   ],
                   members: {
                     tab: {
@@ -109,6 +110,9 @@ define(
                         return { 
                           dom: {
                             tag: 'button',
+                            styles: {
+                              margin: '0px'
+                            },
                             innerHtml: spec.text
                           },
                           components: [ ]

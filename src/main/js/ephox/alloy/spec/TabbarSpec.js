@@ -6,13 +6,14 @@ define(
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.highway.Merger',
     'ephox.perhaps.Option'
   ],
 
-  function (SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Option) {
+  function (SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Option) {
     var schema = [
       FieldSchema.strict('tabs'),
 
@@ -41,7 +42,13 @@ define(
               munged,
               {
                 uiType: 'button',
-                action: function () { }
+                dom: {
+                  tag: 'button'
+                }, 
+                action: function (button) {
+                  var bar = button.getSystem().getByUid(detail.uid()).getOrDie();
+                  bar.apis().highlight(button);
+                }
               }
             );
           })
@@ -62,6 +69,14 @@ define(
         dom: {
           tag: 'div'
         },
+        highlighting: {
+          highlightClass: 'demo-selected',
+          itemClass: 'button'
+        },
+        events: Objects.wrapAll([
+
+
+        ]),
         components: components
       };
     };
