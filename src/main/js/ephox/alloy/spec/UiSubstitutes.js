@@ -63,7 +63,6 @@ define(
       
       return base.fold(
         function (value) {
-          console.log('compSpec', compSpec, value);
           var childSpecs = Objects.readOptFrom(value, 'components').getOr([ ]);
           var substituted = Arr.bind(childSpecs, function (c) {
             return substitute(owner, detail, c, factories, placeholders);
