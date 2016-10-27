@@ -28,6 +28,8 @@ define(
 
     var sink  = {
       '<alloy.sink>': function (dSpec, detail) {
+        // NOT sure what to do here.
+        if (detail.sink().isSome()) return { uiType: 'container' };
         return {
           uid: detail.uid() + '-internal-sink',
           uiType: 'custom',
