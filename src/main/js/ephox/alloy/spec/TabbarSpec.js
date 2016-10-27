@@ -17,6 +17,8 @@ define(
     var schema = [
       FieldSchema.strict('tabs'),
 
+      FieldSchema.strict('onExecute'),
+
       FieldSchema.field(
         'members',
         'members',
@@ -44,10 +46,17 @@ define(
                 uiType: 'button',
                 dom: {
                   tag: 'button'
-                }, 
+                },
+                representing: {
+                  query: function () {
+                    return tab.value;
+                  },
+                  set: function () { }
+                },
                 action: function (button) {
                   var bar = button.getSystem().getByUid(detail.uid()).getOrDie();
                   bar.apis().highlight(button);
+                  detail.onExecute()(bar, button);
                 }
               }
             );

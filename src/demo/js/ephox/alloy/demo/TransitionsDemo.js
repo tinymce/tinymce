@@ -90,6 +90,35 @@ define(
           TemplateTabs,
           {
             uiType: 'tabbing',
+            tabs: [
+              { value: 'alpha', text: 'alpha', view: function () { 
+                return [{
+                  uiType: 'input'
+                }];
+              } },
+              { value: 'beta', text: 'beta', view: function () {
+                return [{
+                  uiType: 'button',
+                  action: function () { console.log('button'); },
+                  dom: {
+                    tag: 'button'
+                  }
+                }];
+              } },
+              { value: 'gamma', text: 'gamma', view: function () {
+                return [{
+                  uiType: 'input'
+                }];
+              } }
+            ],
+            defaultView: function () {
+              return {
+                uiType: 'container',
+                dom: {
+                  innerHtml: 'Loading'
+                }
+              };
+            },
             parts: {
               'tabbar': GuiTemplate.use(
                 Option.some('tabbar'),
@@ -99,11 +128,7 @@ define(
                   parts: {
                     tabs: { }
                   },
-                  tabs: [
-                    { text: 'alpha' },
-                    { text: 'beta' },
-                    { text: 'gamma' }
-                  ],
+                  
                   members: {
                     tab: {
                       munge: function (spec) {

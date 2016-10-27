@@ -4,13 +4,16 @@ define(
   [
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
+    'ephox.boulder.api.FieldSchema',
+    'ephox.compass.Arr',
     'ephox.highway.Merger',
     'ephox.perhaps.Option'
   ],
 
-  function (SpecSchema, UiSubstitutes, Merger, Option) {
+  function (SpecSchema, UiSubstitutes, FieldSchema, Arr, Merger, Option) {
     var schema = [
-
+      FieldSchema.strict('tabs'),
+      FieldSchema.strict('defaultView')
 
     ];
 
@@ -22,6 +25,11 @@ define(
 
       console.log('tabbar', detail.parts().tabbar());
 
+      var views = { };
+      Arr.each(detail.tabs(), function (tab) {
+        views[tab.value] = tab.view;
+      });
+
       var placeholders = {
         '<alloy.tabbar>': UiSubstitutes.single(
           Merger.deepMerge(
@@ -29,14 +37,31 @@ define(
             detail.parts().tabbar().base,
             {
               uid: detail.partUids().tabbar,
-              uiType: 'tabbar'
+              uiType: 'tabbar',
+              onExecute: function (tabbar, button) {
+                var tabValue = button.apis().getValue();
+                button.getSystem().getByUid(detail.partUids().tabview).each(function (viewer) {
+                  viewer.apis().transition(tabValue);
+                });
+              },
+              tabs: detail.tabs()
             }
           )
         ),
-        '<alloy.tabview>': UiSubstitutes.single({
-          uiType: 'container',
-          uid: detail.partUids().tabview
-        })
+        '<alloy.tabview>': UiSubstitutes.single(
+          Merger.deepMerge(
+            detail.parts().tabview(),
+            detail.parts().tabview().base,
+            {
+              uid: detail.partUids().tabview,
+              uiType: 'container',
+              transitioning: {
+                views: views,
+                base: detail.defaultView()
+              }
+            }
+          )
+        )
       };
 
       var components = UiSubstitutes.substitutePlaces(
