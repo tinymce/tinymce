@@ -7,12 +7,13 @@ define(
     'ephox.alloy.spec.SpecSchema',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
+    'ephox.compass.Arr',
     'ephox.highway.Merger'
   ],
 
-  function (SystemEvents, EventHandler, SpecSchema, FieldSchema, Objects, Merger) {
+  function (SystemEvents, EventHandler, SpecSchema, FieldSchema, Objects, Arr, Merger) {
     var schema = [
-      FieldSchema.strict('action')
+      FieldSchema.option('action')
     ];
 
 
@@ -21,8 +22,10 @@ define(
 
       var executeHandler = EventHandler.nu({
         run: function (component, simulatedEvent) {
-          detail.action(component);
-          simulatedEvent.stop();
+          detail.action.each(function (action) {
+            action(component);
+            simulatedEvent.stop();
+          });
         }
       });
 
@@ -34,10 +37,12 @@ define(
         }
       });
 
-      var events = Objects.wrapAll([
-        { key: SystemEvents.execute(), value: executeHandler },
-        { key: 'click', value: clickHandler }
-      ]);
+      var events = Objects.wrapAll(
+        Arr.flatten([
+          detail.action.isSome() ? [ { key: SystemEvents.execute(), value: executeHandler } ] : [ ],
+          [ { key: 'click', value: clickHandler } ]
+        ])
+      );
 
       return Merger.deepMerge(
         {

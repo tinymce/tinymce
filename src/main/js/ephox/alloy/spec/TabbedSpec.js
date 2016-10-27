@@ -13,8 +13,8 @@ define(
   function (SpecSchema, UiSubstitutes, FieldSchema, Arr, Merger, Option) {
     var schema = [
       FieldSchema.strict('tabs'),
-      FieldSchema.strict('defaultView')
-
+      FieldSchema.strict('defaultView'),
+      FieldSchema.strict('dom')
     ];
 
     var make = function (spec) {
@@ -75,9 +75,7 @@ define(
       return {
         uid: detail.uid(),
         uiType: 'custom',
-        dom: {
-          tag: 'div'
-        },
+        dom: detail.dom(),
         components: components
       };
     };

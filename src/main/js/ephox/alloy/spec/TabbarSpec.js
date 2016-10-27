@@ -18,6 +18,7 @@ define(
       FieldSchema.strict('tabs'),
 
       FieldSchema.strict('onExecute'),
+      FieldSchema.strict('dom'),
 
       FieldSchema.field(
         'members',
@@ -25,6 +26,16 @@ define(
         FieldPresence.strict(),
         ValueSchema.objOf([
           FieldSchema.strict('tab')
+        ])
+      ),
+
+      FieldSchema.field(
+        'markers',
+        'markers',
+        FieldPresence.strict(),
+        ValueSchema.objOf([
+          FieldSchema.strict('tabClass'),
+          FieldSchema.strict('selectedClass')
         ])
       )
     ];
@@ -75,17 +86,11 @@ define(
       return {
         uid: detail.uid(),
         uiType: 'custom',
-        dom: {
-          tag: 'div'
-        },
+        dom: detail.dom(),
         highlighting: {
-          highlightClass: 'demo-selected',
-          itemClass: 'button'
+          highlightClass: detail.markers().selectedClass(),
+          itemClass: detail.markers().tabClass()
         },
-        events: Objects.wrapAll([
-
-
-        ]),
         components: components
       };
     };

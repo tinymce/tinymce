@@ -51,7 +51,7 @@ define(
       };
 
       var components = UiSubstitutes.substitutePlaces(Option.some('item-widget'), info, info.components(), placeholders);
-
+console.debug('components', components);
       var focusWidget = function (component) {
         return component.getSystem().getByUid(widgetUid).map(function (widget) {
           widget.apis().focusIn();
