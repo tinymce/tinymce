@@ -110,9 +110,6 @@ define(
                 component.getSystem().getByUid(detail.partUids().more).each(function (drawer) {
                   drawer.apis().toggleGrow();
                 });
-              },
-              dom: {
-                innerHtml: 'More'
               }
             }
           )

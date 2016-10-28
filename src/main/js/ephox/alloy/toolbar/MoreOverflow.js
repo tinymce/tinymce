@@ -107,8 +107,10 @@ define(
       // NOTE: We need to add the overflow button because it has no width otherwise
       // Note, adding it doesn't affect the width of the toolbar, so it should be fine.
       primary.apis().setGroups(
-        Arr.map(groups, prebuild)
-      );//.concat(overflow));
+        Arr.map(groups.concat(overflow), prebuild)
+      );
+
+      console.log('width of overflow', Width.get(overflow.element()));
 
       var total = Width.get(primary.element());
 

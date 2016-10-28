@@ -259,6 +259,8 @@ define(
         //   }
         // }
       );
+
+      toolbar2.getSystem().getByUid('demo-toolstrip').getOrDie().apis().refresh();
       
 
       window.addEventListener('resize', function () {
