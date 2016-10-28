@@ -5,35 +5,26 @@ define(
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.alloy.toolbar.MoreOverflow',
-    'ephox.alloy.toolbar.ToolbarSpecs',
-    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.ValueSchema',
-    'ephox.compass.Arr',
-    'ephox.highway.Merger'
+    'ephox.highway.Merger',
+    'ephox.perhaps.Option'
   ],
 
-  function (SpecSchema, UiSubstitutes, MoreOverflow, ToolbarSpecs, FieldPresence, FieldSchema, ValueSchema, Arr, Merger) {
+  function (SpecSchema, UiSubstitutes, MoreOverflow, FieldSchema, Merger, Option) {
     var schema = [
       FieldSchema.strict('dom'),
       FieldSchema.strict('overflowButton'),
-      FieldSchema.strict('groups'),
-
-      FieldSchema.field(
-        'members',
-        'members',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('group')
-        ])
-      )
+      // FieldSchema.strict('groups')
     ];
 
     var make = function (spec) {
       var detail = SpecSchema.asStructOrDie(
         'more.toolbar.spec', 
         schema.concat([ ]),
-        spec, [ ]
+        spec, [
+          'primary',
+          'more'
+        ]
       );
 
       var components = UiSubstitutes.substitutePlaces(
@@ -41,15 +32,22 @@ define(
         detail,
         detail.components(),
         {
-          '<alloy.toolbar.groups>': UiSubstitutes.multiple(
-            Arr.map(detail.groups(), function (grp) {
-              return Merger.deepMerge(
-                detail.members().group().munge(grp),
-                {
-                  uiType: 'toolbar-group'
-                }
-              );
-            })
+          '<alloy.toolbar.primary>': UiSubstitutes.single(
+            Merger.deepMerge(
+              detail.parts().primary(),
+              {
+                uiType: 'toolbar'
+              }
+            )
+          ),
+
+          '<alloy.toolbar.more>': UiSubstitutes.multiple(
+            Merger.deepMerge(
+              detail.parts().more(),
+              {
+                uiType: 'toolbar'
+              }
+            )
           )
         }, 
         {
@@ -64,25 +62,12 @@ define(
           mode: 'cyclic',
           visibilitySelector: '.ephox-chameleon-toolbar'
         },
-        components: [
-          {
-            uiType: 'container',
-            components: groups,
-            dom: {
-              styles: {
-                // display: 'flex',
-                // background: '#333'
-              },
-              classes: [ 'ephox-chameleon-toolbar', 'ephox-chameleon-toolbar-primary' ]
-            },
-            replacing: { }
-          }
-        ],
+        components: components,
         behaviours: [
           MoreOverflow
         ],
         'more-overflowing': {
-          initGroups: groups,
+          initGroups: [ ],
           drawer: {
             uiType: 'container',
             replacing: { },
@@ -113,9 +98,7 @@ define(
             }
           )
         },
-        postprocess: postprocess
-      }, spec, {
-        uiType: 'custom'
+        postprocess: function () { }
       });
     };
 
