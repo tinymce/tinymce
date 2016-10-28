@@ -33,6 +33,13 @@ define("tinymce/UndoManager", [
 			self.add({}, e);
 		}
 
+		function endTyping() {
+			if (self.typing) {
+				self.typing = false;
+				self.add();
+			}
+		}
+
 		// Add initial undo level when the editor is initialized
 		editor.on('init', function() {
 			self.add();
@@ -43,6 +50,7 @@ define("tinymce/UndoManager", [
 			var cmd = e.command;
 
 			if (cmd != 'Undo' && cmd != 'Redo' && cmd != 'mceRepaint') {
+				endTyping();
 				self.beforeChange();
 			}
 		});
@@ -330,6 +338,7 @@ define("tinymce/UndoManager", [
 			 * @return {Object} Undo level that got added or null it a level wasn't needed.
 			 */
 			transact: function(callback) {
+				endTyping();
 				self.beforeChange();
 
 				try {
