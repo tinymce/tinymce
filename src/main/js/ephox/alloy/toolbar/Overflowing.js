@@ -4,16 +4,14 @@ define(
   [
     'ephox.alloy.behaviour.Behaviour',
     'ephox.alloy.dom.DomModification',
-    'ephox.alloy.toolbar.MoreOverflow',
     'ephox.alloy.toolbar.ScrollOverflow',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
-    'ephox.peanut.Fun',
-    'ephox.sugar.api.Css'
+    'ephox.peanut.Fun'
   ],
 
-  function (Behaviour, DomModification, MoreOverflow, ScrollOverflow, FieldPresence, FieldSchema, ValueSchema, Fun, Css) {
+  function (Behaviour, DomModification, ScrollOverflow, FieldPresence, FieldSchema, ValueSchema, Fun) {
     var behaviourName = 'overflowing';
 
     var schema = FieldSchema.field(
@@ -23,10 +21,8 @@ define(
       ValueSchema.choose(
         'mode',
         {
-          scroll: ScrollOverflow,
-          more: MoreOverflow
+          scroll: ScrollOverflow
         }
-        /* */
       )
     );
 
@@ -42,9 +38,7 @@ define(
       return info[behaviourName]().fold(function () {
         return { };
       }, function (oInfo) {
-        var x = oInfo.handler().toApis(oInfo);
-        console.log('x', x);
-        return x;
+        return oInfo.handler().toApis(oInfo);
       });
     };
 

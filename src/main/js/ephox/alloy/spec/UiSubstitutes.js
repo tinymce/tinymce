@@ -28,10 +28,12 @@ define(
       ], uiType);
     };
 
-    var subDependent = function (_owner, detail, compSpec, factories, placeholders) {
+    var subDependent = function (owner, detail, compSpec, factories, placeholders) {
+      console.log('dependent', owner.getOr('none'), compSpec.owner, compSpec);
+      if (owner.exists(function (o) { return o !== compSpec.owner; })) return adt.single(compSpec);
       return Objects.readOptFrom(factories, compSpec.name).fold(function () {
         throw new Error('Unknown dependent component: ' + compSpec.name + '\nKnown: [' +
-          Obj.keys(factories) + ']\nNamespace: ' + _owner.getOr('none') + '\nSpec: ' + Json.stringify(compSpec, null, 2)
+          Obj.keys(factories) + ']\nNamespace: ' + owner.getOr('none') + '\nSpec: ' + Json.stringify(compSpec, null, 2)
         );
       }, function (builder) {
         var output = builder(compSpec, detail);
@@ -112,6 +114,8 @@ define(
       var ps = Obj.map(placeholders, function (ph, name) {
         return oneReplace(name, ph);
       });
+
+      console.log('factories', _factories);
 
       var outcome = substituteAll(owner, detail, components, _factories !== undefined ? _factories : { }, ps);
 

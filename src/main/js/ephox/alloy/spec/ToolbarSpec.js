@@ -18,7 +18,7 @@ define(
   function (SpecSchema, UiSubstitutes, Overflowing, ToolbarSpecs, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Fun, Option) {
     var schema = [
       FieldSchema.strict('dom'),
-      FieldSchema.strict('groups'),
+      FieldSchema.strict('initGroups'),
 
       FieldSchema.field(
         'members',
@@ -31,7 +31,9 @@ define(
     ];
 
     var make = function (spec) {
-      var detail = SpecSchema.asStructOrDie('toolbar.spec', schema, spec, []);
+      var detail = SpecSchema.asStructOrDie('toolbar.spec', schema, spec, [
+        'groups'
+      ]);
 
        // FIX: I don't want to calculate this here.
       var overflowSpec = ValueSchema.asStructOrDie('overflow.spec', ValueSchema.objOf([
@@ -42,26 +44,50 @@ define(
       //   return Fun.curry(oInfo.handler().builder, oInfo);
       // }).getOr(Fun.identity);
 
+      var buildGroups = function (groups) {
+        return Arr.map(groups, function (grp) {
+          return Merger.deepMerge(
+            detail.members().group().munge(grp),
+            {
+              uiType: 'toolbar-group'
+            }
+          );
+        });
+      };
+
       var components = UiSubstitutes.substitutePlaces(
         Option.some('toolbar'),
         detail,
         detail.components(),
         {
-          '<alloy.toolbar.groups>': UiSubstitutes.multiple(
-            Arr.map(detail.groups(), function (grp) {
-              return Merger.deepMerge(
-                detail.members().group().munge(grp),
-                {
-                  uiType: 'toolbar-group'
-                }
-              );
-            })
-          )
+          
         }, 
         {
-
+          '<alloy.toolbar.groups.container>': function (dSpec, detail) {
+            return Merger.deepMerge(
+              detail.parts().groups(),              
+              dSpec,
+              {
+                uiType: 'custom'
+              },
+              dSpec.extra,
+              {
+                uid: detail.partUids().groups,
+                replacing: { },
+                components: buildGroups(detail.initGroups())
+              }
+            );
+          }
         }
       );
+
+      var setGroups = function (component, gs) {
+        var containerUid = detail.partUids().groups;
+        component.getSystem().getByUid(containerUid).each(function (container) {
+          var newGroups = buildGroups(gs);
+          container.apis().replacing(newGroups);
+        });
+      };
 
      console.log('components', components);
    
@@ -77,7 +103,10 @@ define(
         postprocess: overflowSpec.overflowing().map(function (oInfo) { return Fun.curry(oInfo.handler().postprocess, oInfo); }).getOr(Fun.identity)
       }, spec, {
         uiType: 'custom',
-        components: components
+        components: components,
+        apis: {
+          setGroups: setGroups
+        }
       });
     };
 

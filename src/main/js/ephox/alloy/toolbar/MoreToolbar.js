@@ -14,6 +14,7 @@ define(
     var schema = [
       FieldSchema.strict('dom'),
       FieldSchema.strict('overflowButton'),
+      FieldSchema.strict('initGroups')
       // FieldSchema.strict('groups')
     ];
 
@@ -36,16 +37,30 @@ define(
             Merger.deepMerge(
               detail.parts().primary(),
               {
-                uiType: 'toolbar'
+                uiType: 'toolbar',
+                uid: detail.partUids().primary,
+                initGroups: detail.initGroups(),
+                replacing: { }
               }
             )
           ),
 
-          '<alloy.toolbar.more>': UiSubstitutes.multiple(
+          '<alloy.toolbar.more>': UiSubstitutes.single(
             Merger.deepMerge(
               detail.parts().more(),
               {
-                uiType: 'toolbar'
+                uiType: 'toolbar',
+                uid: detail.partUids().more,
+                initGroups: [ ],
+                sliding: {
+                  mode: 'height',
+                  // FIX: hard-coded demo styles
+                  closedStyle: 'ephox-chameleon-toolbar-more-closed',
+                  openStyle: 'ephox-chameleon-toolbar-more-open',
+                  shrinkingStyle: 'ephox-chameleon-toolbar-more-hide',
+                  growingStyle: 'ephox-chameleon-toolbar-more-show'
+                },
+                replacing: { }
               }
             )
           )
@@ -68,27 +83,8 @@ define(
         ],
         'more-overflowing': {
           initGroups: [ ],
-          drawer: {
-            uiType: 'container',
-            replacing: { },
-            dom: {
-              styles: {
-                // background: 'white',
-                // color: 'black',
-                // display: 'flex',
-                // 'flex-wrap': 'wrap'
-              },
-              classes: [ 'ephox-chameleon-toolbar-more', 'ephox-chameleon-toolbar' ]
-            },
-            sliding: {
-              mode: 'height',
-              // FIX: hard-coded demo styles
-              closedStyle: 'ephox-chameleon-toolbar-more-closed',
-              openStyle: 'ephox-chameleon-toolbar-more-open',
-              shrinkingStyle: 'ephox-chameleon-toolbar-more-hide',
-              growingStyle: 'ephox-chameleon-toolbar-more-show'
-            }
-          },
+          drawerUid: detail.partUids().more,
+          primaryUid: detail.partUids().primary,
           button: Merger.deepMerge(
             detail.overflowButton(),
             {

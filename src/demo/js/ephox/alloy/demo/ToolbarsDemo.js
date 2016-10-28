@@ -136,11 +136,13 @@ define(
             TemplateToolbar,
             {
               uiType: 'toolbar',
-              groups: groups,
               members: {
                 'group': {
                   munge: groupMunge
                 }
+              },
+              parts: {
+                groups: { }
               }
             },
             {
@@ -161,6 +163,7 @@ define(
       //     },
       //     components: [
       //       toolbarSpec({
+      //         groups: groups,
       //         overflowing: {
       //           mode: 'scroll',
       //           initWidth: '200px'
@@ -184,11 +187,13 @@ define(
               Option.some('more.toolbar'),
               TemplateToolstrip,
               {
+                uid: 'demo-toolstrip',
                 uiType: 'more.toolbar',
                 parts: {
                   primary: toolbarSpec({ }),
                   more: toolbarSpec({ })
                 },
+                initGroups: groups,
                 // overflowing: {
                 //   mode: 'scroll',
                 //   initWidth: '200px'
@@ -238,7 +243,7 @@ define(
       
 
       window.addEventListener('resize', function () {
-        toolbar2.apis().refresh();
+        toolbar2.getSystem().getByUid('demo-toolstrip').getOrDie().apis().refresh();
       });
     };
   }

@@ -142,7 +142,8 @@ define(
               extra: Merger.deepMerge(
                 Objects.readOptFrom(compDefns, knownCompId).getOr({ }),
                 common
-              )
+              ),
+              owner: owner.getOr('')
             }
           ];
         } else {

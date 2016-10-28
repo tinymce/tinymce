@@ -32,7 +32,8 @@ define(
       FieldPresence.asOption(),
       ValueSchema.objOf([
         FieldSchema.strict('initGroups'),
-        FieldSchema.strict('drawer'),
+        FieldSchema.strict('drawerUid'),
+        FieldSchema.strict('primaryUid'),
         FieldSchema.strict('button'),
         FieldSchema.state('state', OverflowState)
       ])
