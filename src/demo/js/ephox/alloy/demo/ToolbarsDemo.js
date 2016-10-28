@@ -13,11 +13,12 @@ define(
     'global!document',
     'text!dom-templates/tinymce.toolbar.group.button.html',
     'text!dom-templates/tinymce.toolbar.group.html',
+    'text!dom-templates/tinymce.toolbar.group.textbutton.html',
     'text!dom-templates/tinymce.toolbar.html',
     'text!dom-templates/tinymce.toolstrip.html'
   ],
 
-  function (Gui, GuiTemplate, HtmlDisplay, Merger, Option, Class, Element, Insert, document, TemplateButton, TemplateGroup, TemplateToolbar, TemplateToolstrip) {
+  function (Gui, GuiTemplate, HtmlDisplay, Merger, Option, Class, Element, Insert, document, TemplateButton, TemplateGroup, TemplateTextButton, TemplateToolbar, TemplateToolstrip) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -28,81 +29,84 @@ define(
         {
           label: 'group-1',
           items: [
-            { uiType: 'button', dom: { tag: 'button', innerHtml: 'Alpha' }, action: function () { } },
-            { uiType: 'button', dom: { tag: 'button', innerHtml: 'Beta' }, action: function () { } },
-            { uiType: 'button', dom: { tag: 'button', innerHtml: 'Gamma' }, action: function () { } }
+            { uiType: 'button', action: function () { } },
+            { uiType: 'button', action: function () { } },
+            { uiType: 'button', action: function () { } }
 
           ]
         },
         {
           label: 'group-2',
           items: [
-            { uiType: 'button', dom: { tag: 'button', innerHtml: 'Alpha' }, action: function () { } },
-            { uiType: 'button', dom: { tag: 'button', innerHtml: 'Beta' }, action: function () { } },
-            { uiType: 'button', dom: { tag: 'button', innerHtml: 'Gamma' }, action: function () { } }
+            { uiType: 'button', action: function () { } },
+            { uiType: 'button', action: function () { } },
+            { uiType: 'button', action: function () { } }
 
           ]
         },
         {
           label: 'group-3',
           items: [
-            { uiType: 'button', dom: { tag: 'button', innerHtml: 'Alpha' }, action: function () { } },
-            { uiType: 'button', dom: { tag: 'button', innerHtml: 'Beta' }, action: function () { } },
-            { uiType: 'button', dom: { tag: 'button', innerHtml: 'Gamma' }, action: function () { } }
+            { uiType: 'button', action: function () { } },
+            { uiType: 'button', action: function () { } },
+            { uiType: 'button', action: function () { } }
 
           ]
         },
         {
           label: 'group-4',
           items: [
-            { uiType: 'button', dom: { tag: 'button', innerHtml: 'Alpha' }, action: function () { } },
-            { uiType: 'button', dom: { tag: 'button', innerHtml: 'Beta' }, action: function () { } },
-            { uiType: 'button', dom: { tag: 'button', innerHtml: 'Gamma' }, action: function () { } }
+            { uiType: 'button', action: function () { } },
+            { uiType: 'button', action: function () { } },
+            { uiType: 'button', action: function () { } }
 
           ]
         },
         {
           label: 'group-5',
           items: [
-            { uiType: 'button', dom: { tag: 'button', innerHtml: 'Alpha' }, action: function () { } },
-            { uiType: 'button', dom: { tag: 'button', innerHtml: 'Beta' }, action: function () { } },
-            { uiType: 'button', dom: { tag: 'button', innerHtml: 'Gamma' }, action: function () { } }
+            { uiType: 'button', action: function () { } },
+            { uiType: 'button', action: function () { } },
+            { uiType: 'button', action: function () { } }
 
           ]
         },
         {
           label: 'group-6',
           items: [
-            { uiType: 'button', dom: { tag: 'button', innerHtml: 'Delta' }, action: function () { } },
-            { uiType: 'button', dom: { tag: 'button', innerHtml: 'Epsilon' }, action: function () { } }
+            { uiType: 'button', action: function () { } },
+            { uiType: 'button', action: function () { } }
 
           ]
         },
         {
           label: 'group-7',
           items: [
-            { uiType: 'button', dom: { tag: 'button', innerHtml: 'Rho' }, action: function () { } },
-            { uiType: 'button', dom: { tag: 'button', innerHtml: 'Theta' }, action: function () { } }
+            { uiType: 'button', action: function () { } },
+            { uiType: 'button', action: function () { } }
 
           ]
         }
       ];
 
       var itemMunge = function (s) {
-        return GuiTemplate.use(
-          Option.none(),
-          TemplateButton,
-          {
-            uiType: 'button',
-            action: function () {
-              console.log('clicked on button', s);
-            },
-            toggling: {
-              toggleClass: 'mce-active'
+        return Merger.deepMerge(
+          GuiTemplate.use(
+            Option.none(),
+            TemplateButton,
+            {
+              uiType: 'button',
+              action: s.action !== undefined ? s.action : function () {
+                console.log('clicked on button', s);
+              },
+              toggling: {
+                toggleClass: 'mce-active'
+              }
+            }, {
+              fields: { }
             }
-          }, {
-            fields: { }
-          }
+          ),
+          s
         );
       };
 
@@ -210,11 +214,20 @@ define(
                 //     munge: groupMunge
                 //   }
                 // }
-                overflowButton: {
-                  uiType: 'button',
-                  dom: {
-                    tag: 'button',
-                    innerHtml: '-More-'
+                members: {
+                  overflow: {
+                    munge: function (spec) {
+                      return GuiTemplate.use(
+                        Option.none(),
+                        TemplateTextButton,
+                        {
+
+                        },
+                        {
+                          fields: { }
+                        }
+                      );
+                    }
                   }
                 }
               },

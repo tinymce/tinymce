@@ -5,22 +5,32 @@ define(
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.alloy.toolbar.MoreOverflow',
+    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.highway.Merger',
     'ephox.perhaps.Option'
   ],
 
-  function (SpecSchema, UiSubstitutes, MoreOverflow, FieldSchema, Arr, Merger, Option) {
+  function (SpecSchema, UiSubstitutes, MoreOverflow, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Option) {
     var schema = [
       FieldSchema.strict('dom'),
-      FieldSchema.strict('overflowButton'),
       FieldSchema.strict('initGroups'),
 
       FieldSchema.strict('moreClosedClass'),
       FieldSchema.strict('moreOpenClass'),
       FieldSchema.strict('moreGrowingClass'),
-      FieldSchema.strict('moreShrinkingClass')
+      FieldSchema.strict('moreShrinkingClass'),
+
+      FieldSchema.field(
+        'members',
+        'members',
+        FieldPresence.strict(),
+        ValueSchema.objOf([
+          FieldSchema.strict('overflow')
+        ])
+      )
     ];
 
     var make = function (spec) {
@@ -33,16 +43,18 @@ define(
         ]
       );
 
+      var buildGroup = function (grp) {
+        return Merger.deepMerge(
+          detail.parts().primary().members.group.munge(grp),
+          {
+            uiType: 'toolbar-group'
+          }
+        );
+      };
+
       // Dupe with toolbar spec. Not ideal. Find a better way, but just checking the concept. HERE.
       var buildGroups = function (groups) {
-        return Arr.map(groups, function (grp) {
-          return Merger.deepMerge(
-            detail.parts().primary().members.group.munge(grp),
-            {
-              uiType: 'toolbar-group'
-            }
-          );
-        });
+        return Arr.map(groups, buildGroup);
       };
 
       var components = UiSubstitutes.substitutePlaces(
@@ -87,6 +99,26 @@ define(
         }
       );
 
+      var overflowGroup = {
+        label: '',
+        items: [
+          Merger.deepMerge(
+            detail.members().overflow().munge({ }),
+            {
+              uiType: 'button',
+              action: function (component) {
+                component.getSystem().getByUid(detail.partUids().more).each(function (drawer) {
+                  drawer.apis().toggleGrow();
+                });
+              },
+              dom: {
+                innerHtml: 'More'
+              }
+            }
+          )
+        ]
+      };
+
      // Maybe default some arguments here
       return Merger.deepMerge(spec, {
         dom: detail.dom(),
@@ -102,14 +134,7 @@ define(
           initGroups: buildGroups(detail.initGroups()),
           drawerUid: detail.partUids().more,
           primaryUid: detail.partUids().primary,
-          button: Merger.deepMerge(
-            detail.overflowButton(),
-            {
-              action: function (drawer) {
-                drawer.apis().toggleGrow();
-              }
-            }
-          )
+          overflowGroup: buildGroup(overflowGroup)
         },
         postprocess: function () { }
       });

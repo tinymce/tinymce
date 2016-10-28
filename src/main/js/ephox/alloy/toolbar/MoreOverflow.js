@@ -34,7 +34,7 @@ define(
         FieldSchema.strict('initGroups'),
         FieldSchema.strict('drawerUid'),
         FieldSchema.strict('primaryUid'),
-        FieldSchema.strict('button'),
+        FieldSchema.strict('overflowGroup'),
         FieldSchema.state('state', OverflowState)
       ])
     );
@@ -54,24 +54,8 @@ define(
 
     var getButton = function (component, oInfo) {
       var s = oInfo.state().button();
-      return s.get().fold(function () {
-        var groupSpec =  ToolbarSpecs.buildGroup(
-          ValueSchema.asStructOrDie('overflow.group', ToolbarSpecs.groupSchema(), {
-            label: 'more-button-group',
-            components: [
-              Merger.deepMerge(
-                oInfo.button(), 
-                {
-                  action: function () {
-                    oInfo.button().action(getDrawer(component, oInfo));
-                  }
-                }
-              )
-            ]
-          })
-        );
-
-        var built = component.getSystem().build(groupSpec);
+      return s.get().fold(function () {       
+        var built = component.getSystem().build(oInfo.overflowGroup());
         // component.getSystem().addToWorld(built);
         s.set(Option.some(built));
         return built;
