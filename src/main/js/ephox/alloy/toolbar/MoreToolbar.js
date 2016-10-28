@@ -131,7 +131,8 @@ define(
           initGroups: buildGroups(detail.initGroups()),
           drawerUid: detail.partUids().more,
           primaryUid: detail.partUids().primary,
-          overflowGroup: buildGroup(overflowGroup)
+          overflowGroup: buildGroup(overflowGroup),
+          buildGroups: buildGroups
         },
         postprocess: function () { }
       });

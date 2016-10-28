@@ -35,6 +35,7 @@ define(
         FieldSchema.strict('drawerUid'),
         FieldSchema.strict('primaryUid'),
         FieldSchema.strict('overflowGroup'),
+        FieldSchema.strict('buildGroups'),
         FieldSchema.state('state', OverflowState)
       ])
     );
@@ -44,7 +45,8 @@ define(
     };
 
     var doSetGroups = function (component, oInfo, groups) {
-      var built = Arr.map(groups, function (g) {
+      var preprocessed = oInfo.buildGroups()(groups);
+      var built = Arr.map(preprocessed, function (g) {
         return {
           built: component.getSystem().build(g)
         };
