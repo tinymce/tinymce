@@ -53,7 +53,7 @@ define(
         },
 
         {
-          tabstopping: true,
+          // tabstopping: true,
           focusing: true,
           keying: {
             mode: 'execution',

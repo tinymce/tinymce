@@ -35,6 +35,8 @@ define(
       var visible = Arr.find(tabstops, function (elem) {
         return isVisible(cyclicInfo, elem);
       });
+
+      console.log('visible tabstops', visible);
       // TODO: Update when Arr.find changes signature
       var visibleOpt = visible !== null && visible !== undefined ? Option.some(visible) : Option.none();
       visibleOpt.each(function (target) {

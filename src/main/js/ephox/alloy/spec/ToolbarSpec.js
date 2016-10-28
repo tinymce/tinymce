@@ -105,9 +105,9 @@ define(
       // Maybe default some arguments here
       return Merger.deepMerge(spec, {
         dom: detail.dom(),
-        keying: {
-          mode: 'cyclic'
-        },
+        // keying: {
+        //   mode: 'cyclic'
+        // },
         behaviours: [
           Overflowing
         ],
