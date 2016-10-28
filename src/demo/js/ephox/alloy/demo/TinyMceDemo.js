@@ -10,10 +10,11 @@ define(
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'global!document',
+    'text!dom-templates/tinymce.toolbar.group.html',
     'text!dom-templates/tinymce.toolbar.html'
   ],
 
-  function (Gui, GuiTemplate, HtmlDisplay, Option, Class, Element, Insert, document, TemplateToolbar) {
+  function (Gui, GuiTemplate, HtmlDisplay, Option, Class, Element, Insert, document, TemplateGroup, TemplateToolbar) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -48,33 +49,33 @@ define(
                   'group': {
                     munge: function (s) {
                       console.log('s', s);
-                      return {
-                        dom: {
-                          tag: 'div',
-                          classes: [ 'group' ]
-                        },
-                        items: s.items,
-                        components: [
-                          { uiType: 'placeholder', name: '<alloy.toolbar.items>', owner: 'toolbar-group' }
-                        ],
-                        members: {
-                          'item': {
-                            munge: function (s) {
-                              return {
-                                uiType: 'custom',
-                                dom: {
-                                  tag: 'div',
-                                  classes: [ 'item' ]
-                                },
-                                components: [ ]
-                              };
+                      return GuiTemplate.use(
+                        Option.some('toolbar-group'),
+                        TemplateGroup,
+                        {
+                          items: s.items,
+                          members: {
+                            'item': {
+                              munge: function (s) {
+                                return {
+                                  uiType: 'custom',
+                                  dom: {
+                                    tag: 'div',
+                                    classes: [ 'item' ]
+                                  },
+                                  components: [ ]
+                                };
+                              }
                             }
+                          },
+                          markers: {
+                            itemClass: 'dog'
                           }
                         },
-                        markers: {
-                          itemClass: 'dog'
+                        {
+                          fields: { }
                         }
-                      };
+                      );
                     }
                   }
                 }
