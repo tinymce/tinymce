@@ -5,15 +5,15 @@ define(
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.demo.HtmlDisplay',
+    'ephox.perhaps.Option',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'global!document',
-    'text!dom-templates/tinymce.toolbar.button',
-    'text!dom-templates/tinymce.toolbar.group.2'
+    'text!dom-templates/tinymce.toolbar.html'
   ],
 
-  function (Gui, GuiTemplate, HtmlDisplay, Class, Element, Insert, document, TemplateButton, TemplateGroup) {
+  function (Gui, GuiTemplate, HtmlDisplay, Option, Class, Element, Insert, document, TemplateToolbar) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -30,20 +30,59 @@ define(
             classes: [ 'mce-container' ]
           },
           components: [
-            GuiTemplate.use(TemplateGroup, { uiType: 'custom' }, {
-              fields: { },
-              components: {
-                buttons: [
-                  GuiTemplate.use(TemplateButton, { uiType: 'custom' }, { }),
-                  GuiTemplate.use(TemplateButton, { uiType: 'custom' }, { }),
-                  GuiTemplate.use(TemplateButton, { uiType: 'custom' }, { }),
-                  GuiTemplate.use(TemplateButton, { uiType: 'custom' }, { }),
-                  GuiTemplate.use(TemplateButton, { uiType: 'custom' }, { })
-                ]
+            GuiTemplate.use(
+              Option.some('toolbar'),
+              TemplateToolbar,
+              {
+                uiType: 'toolbar',
+                groups: [
+                  {
+                    items: [
+                      { }
+                    ],
+                    components: [ ]
+                  }
+
+                ],
+                members: {
+                  'group': {
+                    munge: function (s) {
+                      console.log('s', s);
+                      return {
+                        dom: {
+                          tag: 'div',
+                          classes: [ 'group' ]
+                        },
+                        items: s.items,
+                        components: [
+                          { uiType: 'placeholder', name: '<alloy.toolbar.items>', owner: 'toolbar-group' }
+                        ],
+                        members: {
+                          'item': {
+                            munge: function (s) {
+                              return {
+                                uiType: 'custom',
+                                dom: {
+                                  tag: 'div',
+                                  classes: [ 'item' ]
+                                },
+                                components: [ ]
+                              };
+                            }
+                          }
+                        },
+                        markers: {
+                          itemClass: 'dog'
+                        }
+                      };
+                    }
+                  }
+                }
+              },
+              {
+                fields: { }
               }
-            })
-            // GuiTemplate.use(TemplateGroup, { uiType: 'custom' }, { }),
-            
+            )
           ]
         }
       );

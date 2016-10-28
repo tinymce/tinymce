@@ -3,46 +3,81 @@ define(
 
   [
     'ephox.alloy.spec.SpecSchema',
+    'ephox.alloy.spec.UiSubstitutes',
     'ephox.alloy.toolbar.Overflowing',
     'ephox.alloy.toolbar.ToolbarSpecs',
+    'ephox.boulder.api.FieldPresence',
+    'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.highway.Merger',
-    'ephox.peanut.Fun'
+    'ephox.peanut.Fun',
+    'ephox.perhaps.Option'
   ],
 
-  function (SpecSchema, Overflowing, ToolbarSpecs, ValueSchema, Arr, Merger, Fun) {
-    var make = function (spec) {
-      var detail = SpecSchema.asStructOrDie('toolbar.spec', ToolbarSpecs.toolbarSchema(), spec, [ ]);
+  function (SpecSchema, UiSubstitutes, Overflowing, ToolbarSpecs, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Fun, Option) {
+    var schema = [
+      FieldSchema.strict('dom'),
+      FieldSchema.strict('groups'),
 
-      // FIX: I don't want to calculate this here.
+      FieldSchema.field(
+        'members',
+        'members',
+        FieldPresence.strict(),
+        ValueSchema.objOf([
+          FieldSchema.strict('group')
+        ])
+      )
+    ];
+
+    var make = function (spec) {
+      var detail = SpecSchema.asStructOrDie('toolbar.spec', schema, spec, []);
+
+       // FIX: I don't want to calculate this here.
       var overflowSpec = ValueSchema.asStructOrDie('overflow.spec', ValueSchema.objOf([
         Overflowing.schema()
       ]), spec);
 
-      var builder = overflowSpec.overflowing().map(function (oInfo) {
-        return Fun.curry(oInfo.handler().builder, oInfo);
-      }).getOr(Fun.identity);
+      // var builder = overflowSpec.overflowing().map(function (oInfo) {
+      //   return Fun.curry(oInfo.handler().builder, oInfo);
+      // }).getOr(Fun.identity);
 
-      var groups = Arr.map(detail.groups(), ToolbarSpecs.buildGroup);
+      var components = UiSubstitutes.substitutePlaces(
+        Option.some('toolbar'),
+        detail,
+        detail.components(),
+        {
+          '<alloy.toolbar.groups>': UiSubstitutes.multiple(
+            Arr.map(detail.groups(), function (grp) {
+              return Merger.deepMerge(
+                detail.members().group().munge(grp),
+                {
+                  uiType: 'toolbar-group'
+                }
+              );
+            })
+          )
+        }, 
+        {
+
+        }
+      );
+
+     console.log('components', components);
+   
       // Maybe default some arguments here
       return Merger.deepMerge(spec, {
-        dom: {
-          tag: 'div',
-          styles: {
-            // display: 'flex'
-          }
-        },
+        dom: detail.dom(),
         keying: {
           mode: 'cyclic'
         },
-        components: builder(groups),
         behaviours: [
           Overflowing
         ],
         postprocess: overflowSpec.overflowing().map(function (oInfo) { return Fun.curry(oInfo.handler().postprocess, oInfo); }).getOr(Fun.identity)
       }, spec, {
-        uiType: 'custom'
+        uiType: 'custom',
+        components: components
       });
     };
 
