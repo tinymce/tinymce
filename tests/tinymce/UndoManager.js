@@ -451,3 +451,41 @@ test('Dirty state type AltGr+letter', function() {
 	equal(editor.getContent(), "<p>aB</p>");
 	ok(editor.isDirty(), "Dirty state should be true");
 });
+
+test('ExecCommand while typing should produce undo level', function() {
+	editor.undoManager.clear();
+	editor.setDirty(false);
+	editor.setContent('<p>a</p>');
+	Utils.setSelection('p', 1);
+
+	equal(editor.undoManager.typing, false);
+	Utils.type({keyCode: 66, charCode: 66});
+	equal(editor.undoManager.typing, true);
+	equal(editor.getContent(), '<p>aB</p>');
+	editor.execCommand('mceInsertContent', false, 'C');
+	equal(editor.undoManager.typing, false);
+	equal(editor.undoManager.data.length, 3);
+	equal(editor.undoManager.data[0].content, '<p>a</p>');
+	equal(editor.undoManager.data[1].content, '<p>aB</p>');
+	equal(editor.undoManager.data[2].content, '<p>aBC</p>');
+});
+
+test('transact while typing should produce undo level', function() {
+	editor.undoManager.clear();
+	editor.setDirty(false);
+	editor.setContent('<p>a</p>');
+	Utils.setSelection('p', 1);
+
+	equal(editor.undoManager.typing, false);
+	Utils.type({keyCode: 66, charCode: 66});
+	equal(editor.undoManager.typing, true);
+	equal(editor.getContent(), '<p>aB</p>');
+	editor.undoManager.transact(function () {
+		editor.getBody().firstChild.firstChild.data = 'aBC';
+	});
+	equal(editor.undoManager.typing, false);
+	equal(editor.undoManager.data.length, 3);
+	equal(editor.undoManager.data[0].content, '<p>a</p>');
+	equal(editor.undoManager.data[1].content, '<p>aB</p>');
+	equal(editor.undoManager.data[2].content, '<p>aBC</p>');
+});
