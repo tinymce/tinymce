@@ -10,11 +10,12 @@ define(
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'global!document',
+    'text!dom-templates/tinymce.toolbar.group.button.html',
     'text!dom-templates/tinymce.toolbar.group.html',
     'text!dom-templates/tinymce.toolbar.html'
   ],
 
-  function (Gui, GuiTemplate, HtmlDisplay, Option, Class, Element, Insert, document, TemplateGroup, TemplateToolbar) {
+  function (Gui, GuiTemplate, HtmlDisplay, Option, Class, Element, Insert, document, TemplateButton, TemplateGroup, TemplateToolbar) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -39,9 +40,26 @@ define(
                 groups: [
                   {
                     items: [
+                      { },
+                      { },
                       { }
-                    ],
-                    components: [ ]
+                    ]
+                  },
+
+                  {
+                    items: [
+                      { },
+                      { },
+                      { }
+                    ]
+                  },
+
+                  {
+                    items: [
+                      { },
+                      { },
+                      { }
+                    ]
                   }
 
                 ],
@@ -57,14 +75,21 @@ define(
                           members: {
                             'item': {
                               munge: function (s) {
-                                return {
-                                  uiType: 'custom',
-                                  dom: {
-                                    tag: 'div',
-                                    classes: [ 'item' ]
-                                  },
-                                  components: [ ]
-                                };
+                                return GuiTemplate.use(
+                                  Option.none(),
+                                  TemplateButton,
+                                  {
+                                    uiType: 'button',
+                                    action: function () {
+                                      console.log('clicked on button', s);
+                                    },
+                                    toggling: {
+                                      toggleClass: 'mce-active'
+                                    }
+                                  }, {
+                                    fields: { }
+                                  }
+                                );
                               }
                             }
                           },
