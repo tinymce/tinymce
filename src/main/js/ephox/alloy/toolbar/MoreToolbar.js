@@ -10,10 +10,11 @@ define(
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.highway.Merger',
+    'ephox.peanut.Fun',
     'ephox.perhaps.Option'
   ],
 
-  function (SpecSchema, UiSubstitutes, MoreOverflow, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Option) {
+  function (SpecSchema, UiSubstitutes, MoreOverflow, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Fun, Option) {
     var schema = [
       FieldSchema.strict('dom'),
       FieldSchema.strict('initGroups'),
@@ -22,6 +23,8 @@ define(
       FieldSchema.strict('moreOpenClass'),
       FieldSchema.strict('moreGrowingClass'),
       FieldSchema.strict('moreShrinkingClass'),
+
+      FieldSchema.defaulted('onEscape', Option.none),
 
       FieldSchema.field(
         'members',
@@ -121,7 +124,8 @@ define(
         dom: detail.dom(),
         keying: {
           mode: 'cyclic',
-          visibilitySelector: '.ephox-chameleon-toolbar'
+          visibilitySelector: '.ephox-chameleon-toolbar',
+          onEscape: detail.onEscape()
         },
         components: components,
         behaviours: [
