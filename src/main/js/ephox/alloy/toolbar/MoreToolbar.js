@@ -6,11 +6,12 @@ define(
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.alloy.toolbar.MoreOverflow',
     'ephox.boulder.api.FieldSchema',
+    'ephox.compass.Arr',
     'ephox.highway.Merger',
     'ephox.perhaps.Option'
   ],
 
-  function (SpecSchema, UiSubstitutes, MoreOverflow, FieldSchema, Merger, Option) {
+  function (SpecSchema, UiSubstitutes, MoreOverflow, FieldSchema, Arr, Merger, Option) {
     var schema = [
       FieldSchema.strict('dom'),
       FieldSchema.strict('overflowButton'),
@@ -27,6 +28,18 @@ define(
           'more'
         ]
       );
+
+      // Dupe with toolbar spec. Not ideal. Find a better way, but just checking the concept. HERE.
+      var buildGroups = function (groups) {
+        return Arr.map(groups, function (grp) {
+          return Merger.deepMerge(
+            detail.parts().primary().members.group.munge(grp),
+            {
+              uiType: 'toolbar-group'
+            }
+          );
+        });
+      };
 
       var components = UiSubstitutes.substitutePlaces(
         Option.some('more.toolbar'),
@@ -82,7 +95,7 @@ define(
           MoreOverflow
         ],
         'more-overflowing': {
-          initGroups: [ ],
+          initGroups: buildGroups(detail.initGroups()),
           drawerUid: detail.partUids().more,
           primaryUid: detail.partUids().primary,
           button: Merger.deepMerge(

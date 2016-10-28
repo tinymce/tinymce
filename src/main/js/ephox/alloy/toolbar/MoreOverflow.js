@@ -45,12 +45,8 @@ define(
 
     var doSetGroups = function (component, oInfo, groups) {
       var built = Arr.map(groups, function (g) {
-        var spec = ToolbarSpecs.buildGroup({
-          components: Fun.constant(g.components)
-        });
-
         return {
-          built: component.getSystem().build(spec)
+          built: component.getSystem().build(g)
         };
       });
       oInfo.state().groups().set(Option.some(built));
@@ -82,91 +78,87 @@ define(
       }, Fun.identity);
     };
 
+    var getPrimary = function (component, oInfo) {
+      return component.getSystem().getByUid(
+        oInfo.primaryUid()
+      ).getOrDie();
+    };
+
     var getDrawer = function (component, oInfo) {
-      var s = oInfo.state().drawer();
-      return s.get().fold(function () {
-        var built = component.getSystem().build(oInfo.drawer());
-         component.getSystem().addToWorld(built);
-         s.set(Option.some(built));
-        return built;
+      return component.getSystem().getByUid(
+        oInfo.drawerUid()
+      ).getOrDie();
+    };
+
+    var prebuild = function (c) {
+      return { built: c };
+    };
+
+    var getGroups = function (component, oInfo) {
+      return oInfo.state().groups().get().fold(function () {
+        var init = oInfo.initGroups();
+        doSetGroups(component, oInfo, init);
+        return oInfo.state().groups().get().getOr([ ]);
       }, Fun.identity);
     };
 
     var doRefresh = function (component, oInfo) {
       Css.reflow(component.element());
+      var groups = getGroups(component, oInfo).map(function (c) {
+        return c.built;
+      });
+
+      console.log('GROUPS *****', groups);
       // NOTE: Assumes syncComponents has been called.
-      var components = component.components();
-      var toolbar = components[0];
-
+      var primary = getPrimary(component, oInfo);
       
       
-      Css.set(toolbar.element(), 'visibility', 'hidden');
-
-      var groups = oInfo.state().groups().get().getOr(oInfo.initGroups());
+      Css.set(primary.element(), 'visibility', 'hidden');
 
       // Clear any restricted width on the toolbar somehow ----- */
       // barType.clearWidth()
-
       var drawer = getDrawer(component, oInfo);
+      var overflow = getButton(component, oInfo);
 
-      drawer.apis().replace([ ]);
-      toolbar.apis().replace(groups);
-      toolbar.syncComponents();
+      drawer.apis().setGroups([ ]);
+      // NOTE: We need to add the overflow button because it has no width otherwise
+      // Note, adding it doesn't affect the width of the toolbar, so it should be fine.
+      primary.apis().setGroups(
+        Arr.map(groups, prebuild)
+      );//.concat(overflow));
+
+      var total = Width.get(primary.element());
+
+      console.log('total', total);
 
 
-       
-      var button = getButton(component, oInfo);
-     
-      // component.getSystem().removeFromWorld(button);
-      // component.getSystem().removeFromWorld(drawer);
-
-
- // NOTE: We need to add the overflow button because it has no width otherwise
-        // Note, adding it doesn't affect the width of the toolbar, so it should be fine.
-        // var overflows = oInfo.overflows();
-        // Insert.append(toolbar, overflows);
-
-      Insert.append(toolbar.element(), button.element());
-      var total = Width.get(toolbar.element());
-     
-
-      var overflows = Overflows.partition(total, toolbar.components(), function (comp) {
-        var w = Width.get(comp.element());
-        return w;
-      }, button);
-
-      Remove.remove(button.element());
-      
-
+      var overflows = Overflows.partition(total, groups, function (comp) {
+        return Width.get(comp.element());
+      }, overflow);
 
       if (overflows.extra().length === 0) {
-        drawer.apis().replace([ ]);
-        Remove.remove(drawer.element());
+        console.log('Nothing in extra');
+        // Not ideal. Breaking abstraction somewhat, though remove is better than insert
+        // Can just reset the toolbar groups also ... but may be a bit slower.
+        Remove.remove(overflow.element());
+        drawer.apis().setGroups([ ]);
+        // Remove.remove(drawer.element());
       } else {
-        toolbar.apis().replace(Arr.map(overflows.within(), function (c) {
-          return { built: c };
-        }));
+        console.log('More drawer required');
+        var inPrimary = Arr.map(overflows.within(), prebuild);
+        var inDrawer = Arr.map(overflows.extra(), prebuild);
 
-        drawer.apis().replace(Arr.map(overflows.extra(), function (c) {
-          return { built: c };
-        }));
+        primary.apis().setGroups(inPrimary);
+        drawer.apis().setGroups(inDrawer);
 
-        Insert.append(component.element(), drawer.element());
+        //Insert.append(component.element(), drawer.element());
       }
 
-      
-      component.syncComponents();
-      drawer.syncComponents();
-      toolbar.syncComponents();
-
-
-
       // Add the within to the toolbar, and the extra to the more drawer
-
       // barType.updateWidth
 
-      Css.remove(toolbar.element(), 'visibility');
-      Css.reflow(toolbar.element());
+      Css.remove(primary.element(), 'visibility');
+      Css.reflow(primary.element());
     };
 
     var apis = function (info) {

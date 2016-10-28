@@ -81,11 +81,22 @@ define(
         }
       );
 
-      var setGroups = function (component, gs) {
+      var setGroupSpecs = function (component, gs) {
         var containerUid = detail.partUids().groups;
+        console.log('gs1', gs);
         component.getSystem().getByUid(containerUid).each(function (container) {
           var newGroups = buildGroups(gs);
-          container.apis().replacing(newGroups);
+          container.apis().replace(newGroups);
+          container.syncComponents();
+        });
+      };
+
+      var setGroups = function (component, gs) {
+        var containerUid = detail.partUids().groups;
+        console.log('gs2', gs);
+        component.getSystem().getByUid(containerUid).each(function (container) {
+          container.apis().replace(gs);
+          container.syncComponents();
         });
       };
 
@@ -105,7 +116,8 @@ define(
         uiType: 'custom',
         components: components,
         apis: {
-          setGroups: setGroups
+          setGroups: setGroups,
+          setGroupSpecs: setGroupSpecs
         }
       });
     };
