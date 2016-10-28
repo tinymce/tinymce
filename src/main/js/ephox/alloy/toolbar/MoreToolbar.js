@@ -15,8 +15,12 @@ define(
     var schema = [
       FieldSchema.strict('dom'),
       FieldSchema.strict('overflowButton'),
-      FieldSchema.strict('initGroups')
-      // FieldSchema.strict('groups')
+      FieldSchema.strict('initGroups'),
+
+      FieldSchema.strict('moreClosedClass'),
+      FieldSchema.strict('moreOpenClass'),
+      FieldSchema.strict('moreGrowingClass'),
+      FieldSchema.strict('moreShrinkingClass')
     ];
 
     var make = function (spec) {
@@ -68,10 +72,10 @@ define(
                 sliding: {
                   mode: 'height',
                   // FIX: hard-coded demo styles
-                  closedStyle: 'ephox-chameleon-toolbar-more-closed',
-                  openStyle: 'ephox-chameleon-toolbar-more-open',
-                  shrinkingStyle: 'ephox-chameleon-toolbar-more-hide',
-                  growingStyle: 'ephox-chameleon-toolbar-more-show'
+                  closedStyle: detail.moreClosedClass(),
+                  openStyle: detail.moreOpenClass(),
+                  shrinkingStyle: detail.moreShrinkingClass(),
+                  growingStyle: detail.moreGrowingClass()
                 },
                 replacing: { }
               }

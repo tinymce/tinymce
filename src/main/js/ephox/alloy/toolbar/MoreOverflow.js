@@ -108,7 +108,6 @@ define(
         return c.built;
       });
 
-      console.log('GROUPS *****', groups);
       // NOTE: Assumes syncComponents has been called.
       var primary = getPrimary(component, oInfo);
       
@@ -129,22 +128,17 @@ define(
 
       var total = Width.get(primary.element());
 
-      console.log('total', total);
-
-
       var overflows = Overflows.partition(total, groups, function (comp) {
         return Width.get(comp.element());
       }, overflow);
 
       if (overflows.extra().length === 0) {
-        console.log('Nothing in extra');
         // Not ideal. Breaking abstraction somewhat, though remove is better than insert
         // Can just reset the toolbar groups also ... but may be a bit slower.
         Remove.remove(overflow.element());
         drawer.apis().setGroups([ ]);
         // Remove.remove(drawer.element());
       } else {
-        console.log('More drawer required');
         var inPrimary = Arr.map(overflows.within(), prebuild);
         var inDrawer = Arr.map(overflows.extra(), prebuild);
 

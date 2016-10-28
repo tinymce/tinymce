@@ -194,6 +194,12 @@ define(
                   more: toolbarSpec({ })
                 },
                 initGroups: groups,
+
+                moreOpenClass: 'demo-sliding-open',
+                moreClosedClass: 'demo-sliding-closed',
+                moreGrowingClass: 'demo-sliding-height-growing',
+                moreShrinkingClass: 'demo-sliding-height-shrinking',
+
                 // overflowing: {
                 //   mode: 'scroll',
                 //   initWidth: '200px'
