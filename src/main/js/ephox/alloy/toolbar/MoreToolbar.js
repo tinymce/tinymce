@@ -3,39 +3,63 @@ define(
 
   [
     'ephox.alloy.spec.SpecSchema',
+    'ephox.alloy.spec.UiSubstitutes',
     'ephox.alloy.toolbar.MoreOverflow',
-    'ephox.alloy.toolbar.Overflowing',
     'ephox.alloy.toolbar.ToolbarSpecs',
+    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun'
+    'ephox.highway.Merger'
   ],
 
-  function (SpecSchema, MoreOverflow, Overflowing, ToolbarSpecs, FieldSchema, ValueSchema, Arr, Merger, Fun) {
+  function (SpecSchema, UiSubstitutes, MoreOverflow, ToolbarSpecs, FieldPresence, FieldSchema, ValueSchema, Arr, Merger) {
+    var schema = [
+      FieldSchema.strict('dom'),
+      FieldSchema.strict('overflowButton'),
+      FieldSchema.strict('groups'),
+
+      FieldSchema.field(
+        'members',
+        'members',
+        FieldPresence.strict(),
+        ValueSchema.objOf([
+          FieldSchema.strict('group')
+        ])
+      )
+    ];
+
     var make = function (spec) {
-      var detail = SpecSchema.asStructOrDie('more.toolbar.spec', 
-        [
-          FieldSchema.strict('overflowButton')
-        ].concat(ToolbarSpecs.toolbarSchema()), 
-      spec, [ ]);
+      var detail = SpecSchema.asStructOrDie(
+        'more.toolbar.spec', 
+        schema.concat([ ]),
+        spec, [ ]
+      );
 
+      var components = UiSubstitutes.substitutePlaces(
+        Option.some('more.toolbar'),
+        detail,
+        detail.components(),
+        {
+          '<alloy.toolbar.groups>': UiSubstitutes.multiple(
+            Arr.map(detail.groups(), function (grp) {
+              return Merger.deepMerge(
+                detail.members().group().munge(grp),
+                {
+                  uiType: 'toolbar-group'
+                }
+              );
+            })
+          )
+        }, 
+        {
 
-      var groups = Arr.map(detail.groups(), ToolbarSpecs.buildGroup);
-
-      var postprocess = function () {
-
-      };
+        }
+      );
 
      // Maybe default some arguments here
       return Merger.deepMerge(spec, {
-        dom: {
-          tag: 'div',
-          styles: {
-            // display: 'flex'
-          }
-        },
+        dom: detail.dom(),
         keying: {
           mode: 'cyclic',
           visibilitySelector: '.ephox-chameleon-toolbar'
