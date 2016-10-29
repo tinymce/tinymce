@@ -732,9 +732,9 @@ define("tinymce/util/Quirks", [
 							if (dragStartRng) {
 								selection.setRng(dragStartRng);
 								dragStartRng = null;
+								transactCustomDelete();
 							}
 
-							transactCustomDelete();
 							selection.setRng(pointRng);
 							insertClipboardContents(internalContent.html);
 						});
