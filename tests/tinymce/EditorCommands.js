@@ -750,6 +750,13 @@ test('unlink', function() {
 	equal(editor.getContent(), '<p>test 123</p>');
 });
 
+test('unlink - unselected a[href] with childNodes', function() {
+	editor.setContent('<p><a href="test"><strong><em>test</em></strong></a></p>');
+	Utils.setSelection('em', 0);
+	editor.execCommand('unlink');
+	equal(editor.getContent(), '<p><strong><em>test</em></strong></p>');
+});
+
 test('subscript/superscript', function() {
 	expect(4);
 
