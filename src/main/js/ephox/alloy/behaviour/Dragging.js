@@ -47,11 +47,11 @@ define(
     };
 
     var handlers = function (info) {
-      var bInfo = info[behaviourName]();
-      return bInfo.fold(function () {
+      return info[behaviourName]().fold(function () {
         return { };
-      }, function (/* */) {
-        return { };
+      }, function (dragInfo) {
+        var dragger = dragInfo.dragger();
+        return dragger.handlers(dragInfo);
       });
     };
 

@@ -72,6 +72,16 @@ define(
         else if (settings.stopBackspace === true && isDangerous(event)) { event.prevent(); }
       });
 
+      var onMousedown = DomEvent.bind(container, 'mousedown', function (event) {
+        var stopped = settings.triggerEvent('mousedown', event);
+        if (stopped) event.kill();
+      });
+
+      var onMouseup = DomEvent.bind(container, 'mouseup', function (event) {
+        var stopped = settings.triggerEvent('mouseup', event);
+        if (stopped) event.kill();
+      });
+
       var onMouseover = DomEvent.bind(container, 'mouseover', function (event) {
         var stopped = settings.triggerEvent('mouseover', event);
         if (stopped) event.kill();
@@ -114,6 +124,8 @@ define(
         onSelectStart.unbind();
         onKeydown.unbind();
         onMouseover.unbind();
+        onMousedown.unbind();
+        onMouseup.unbind();
         onFocusIn.unbind();
         onFocusOut.unbind();
         onInput.unbind();

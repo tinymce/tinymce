@@ -21,6 +21,17 @@ var dependencies = [
   },
 
   {
+    name: 'dragster',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'dragster.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
+  {
     name: 'boulder',
     repository: 'buildrepo2',
     version: 'latest',
