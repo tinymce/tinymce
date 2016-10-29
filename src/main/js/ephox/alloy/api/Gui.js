@@ -63,6 +63,8 @@ define(
           return Tagger.read(elem).bind(getByUid);
         },
         build: GuiFactory.build,
+        addToGui: function (c) { add(c); },
+        removeFromGui: function (c) { remove(c); },
         addToWorld: function (c) { addToWorld(c); },
         removeFromWorld: function (c) { removeFromWorld(c); },
         broadcast: function (message) {

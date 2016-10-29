@@ -25,6 +25,8 @@ define(
         build: fail('build'),
         addToWorld: fail('addToWorld'),
         removeFromWorld: fail('removeFromWorld'),
+        addToGui: fail('addToGui'),
+        removeFromGui: fail('removeFromGui'),
         getByUid: fail('getByUid'),
         getByDom: fail('getByDom'),
         broadcast: fail('broadcast'),

@@ -87,6 +87,16 @@ define(
         if (stopped) event.kill();
       });
 
+      var onMousemove = DomEvent.bind(container, 'mousemove', function (event) {
+        var stopped = settings.triggerEvent('mousemove', event);
+        if (stopped) event.kill();
+      });
+
+      var onMouseout = DomEvent.bind(container, 'mouseout', function (event) {
+        var stopped = settings.triggerEvent('mouseout', event);
+        if (stopped) event.kill();
+      });
+
       var onFocusIn = bindFocus(container, function (event) {
         var stopped = settings.triggerEvent('focusin', event);
         if (stopped) event.kill();
@@ -126,6 +136,8 @@ define(
         onMouseover.unbind();
         onMousedown.unbind();
         onMouseup.unbind();
+        onMousemove.unbind();
+        onMouseout.unbind();
         onFocusIn.unbind();
         onFocusOut.unbind();
         onInput.unbind();
