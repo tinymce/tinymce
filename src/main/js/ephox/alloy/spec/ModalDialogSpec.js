@@ -19,7 +19,9 @@ define(
       var detail = SpecSchema.asStructOrDie('modal-dialog', schema, spec, [
         'title',
         'close',
-        'draghandle'
+        'draghandle',
+        'body',
+        'footer'
       ]);
 
       var placeholders = {
@@ -53,6 +55,24 @@ define(
                   return SelectorFind.ancestor(handle, '[role="dialog"]').getOr(handle);
                 }
               }
+            }
+          )
+        ),
+        '<alloy.dialog.body>': UiSubstitutes.single(
+          Merger.deepMerge(
+            detail.parts().body(),
+            detail.parts().body().base,
+            {
+              uid: detail.partUids().body
+            }
+          )
+        ),
+        '<alloy.dialog.footer>': UiSubstitutes.single(
+          Merger.deepMerge(
+            detail.parts().footer(),
+            detail.parts().footer().base,
+            {
+              uid: detail.partUids().footer
             }
           )
         )

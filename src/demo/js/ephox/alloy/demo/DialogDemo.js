@@ -56,6 +56,12 @@ define(
                   classes: [ 'mce-dragh' ]
                 }
               },
+              body: {
+                uiType: 'container'
+              },
+              footer: {
+                uiType: 'container'
+              },
               //<button type="button" class="mce-close" aria-hidden="true"><i class="mce-ico mce-i-remove"></i></button>
               close: {
                 uiType: 'button',
