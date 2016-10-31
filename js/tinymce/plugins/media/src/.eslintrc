@@ -1,0 +1,15 @@
+{
+  "env": {
+    "browser": true,
+    "amd": true
+  },
+
+  "rules": {
+    "eqeqeq": "error",
+    "no-mixed-spaces-and-tabs": "error",
+    "space-before-function-paren": ["error", "always"],
+    "yoda": "error"
+  },
+
+  "extends": "../../../../../.eslintrc"
+}
