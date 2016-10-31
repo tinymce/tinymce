@@ -10,7 +10,19 @@ define(
       return Merger.deepMerge(
         spec,
         {
-          uiType: 'custom'
+          uiType: 'custom',
+          dom: {
+            tag: 'div',
+            styles: {
+              position: ''
+            },
+            attributes: {
+              role: 'dialog'
+            }
+          },
+          keying: {
+            mode: 'cyclic'
+          }
         }
       );
     };

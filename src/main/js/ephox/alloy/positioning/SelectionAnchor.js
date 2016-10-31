@@ -123,7 +123,8 @@ define(
           anchorBox: Fun.constant(anchorBox),
           bubble: Fun.constant(anchorInfo.bubble().getOr(Bubble(0, 0))),
           overrides: Fun.constant({ }),
-          layouts: Fun.constant(layouts)
+          layouts: Fun.constant(layouts),
+          placer: Option.none
         });
       });
     };

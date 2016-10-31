@@ -25,7 +25,8 @@ define(
           bubble: Fun.constant(Bubble(0, 0)),
           // maxHeightFunction: Fun.constant(MaxHeight.available()),
           overrides: Fun.constant({ }),
-          layouts: Fun.constant(layouts)
+          layouts: Fun.constant(layouts),
+          placer: Option.none
         })
       );
     };

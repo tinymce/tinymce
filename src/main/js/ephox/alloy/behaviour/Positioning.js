@@ -81,7 +81,8 @@ define(
 
       var placer = anchorage.placement();
       placer(component, posInfo, anchorage, origin).each(function (anchoring) {
-        place(component, origin, anchoring, posInfo, placee);
+        var doPlace = anchoring.placer().getOr(place);
+        doPlace(component, origin, anchoring, posInfo, placee);
       });
       Css.remove(placee.element(), 'visibility');
     };

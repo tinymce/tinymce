@@ -10,7 +10,8 @@ define(
       'anchorBox',
       'bubble',
       'overrides',
-      'layouts'
+      'layouts',
+      'placer'
     ]);
   }
 );
