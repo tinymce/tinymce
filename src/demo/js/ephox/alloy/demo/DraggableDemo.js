@@ -25,13 +25,14 @@ define(
         {
           uiType: 'button',
           dom: {
-            tag: 'button',
+            tag: 'span',
             innerHtml: 'Drag me!'
           },
           dragging: {
             mode: 'mouse'
             // initial position?
-          }
+          },
+          unselecting: true
         }
       );
 
