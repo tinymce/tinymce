@@ -39,7 +39,32 @@ define(
           Option.some('modal-dialog'),
           TemplateTinyDialog,
           {
-            uiType: 'modal-dialog'
+            uiType: 'modal-dialog',
+            parts: {
+              title: {
+                uiType: 'container',
+                dom: {
+                  classes: [ 'mce-title' ],
+                  innerHtml: 'Insert link'
+                }
+
+              },
+              //<button type="button" class="mce-close" aria-hidden="true"><i class="mce-ico mce-i-remove"></i></button>
+              close: {
+                uiType: 'button',
+                dom: {
+                  tag: 'button',
+                  attributes: {
+                    type: 'button',
+                    'aria-hidden': 'true'
+                  },
+                  classes: [ 'mce-close' ]
+                },
+                components: [
+                  { uiType: 'custom', dom: { tag: 'i', classes: [ 'mce-ico', 'mce-i-remove' ] } }
+                ]
+              }
+            }
           },
           {
             fields: { }
