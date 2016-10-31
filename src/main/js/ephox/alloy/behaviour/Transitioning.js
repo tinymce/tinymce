@@ -66,6 +66,7 @@ define(
           Insert.append(component.element(), l.element());
         });
       }, component.element());
+      component.syncComponents();
 
       transitionInfo.onChange()(component);
     };
