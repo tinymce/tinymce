@@ -25,6 +25,7 @@ module.exports = function(grunt) {
 				"!js/tinymce/plugins/table/plugin.js",
 				"!js/tinymce/plugins/spellchecker/plugin.js",
 				"!js/tinymce/plugins/imagetools/plugin.js",
+				"!js/tinymce/plugins/media/plugin.js",
 				"!js/tinymce/plugins/wordcount/plugin.js",
 				"!js/tinymce/plugins/codesample/plugin.js",
 				"!js/tinymce/plugins/codesample/classes/Prism.js"
@@ -128,6 +129,10 @@ module.exports = function(grunt) {
 					{
 						src: "js/tinymce/plugins/imagetools/scratch/inline/plugin.raw.js",
 						dest: "js/tinymce/plugins/imagetools/plugin.js"
+					},
+					{
+						src: "js/tinymce/plugins/media/scratch/inline/plugin.raw.js",
+						dest: "js/tinymce/plugins/media/plugin.js"
 					},
 					{
 						src: "js/tinymce/plugins/wordcount/scratch/inline/plugin.raw.js",
@@ -853,7 +858,8 @@ module.exports = function(grunt) {
 			plugins: {
 				files: ["js/tinymce/plugins/**/*.js"],
 				tasks: [
-					"amdlc:paste-plugin", "bolt-build:imagetools-plugin", "bolt-build:media-plugin", "bolt-build:wordcount-plugin", "amdlc:codesample-plugin",
+					"amdlc:paste-plugin", "bolt-build:imagetools-plugin",
+					"bolt-build:media-plugin", "bolt-build:wordcount-plugin", "amdlc:codesample-plugin",
 					"amdlc:table-plugin", "amdlc:spellchecker-plugin", "uglify:plugins",
 					"eslint:plugins"
 				],
