@@ -12,7 +12,8 @@ define(
 
   function (SpecSchema, UiSubstitutes, FieldSchema, Merger, Option, SelectorFind) {
     var schema = [
-      FieldSchema.strict('dom')
+      FieldSchema.strict('dom'),
+      FieldSchema.defaulted('draggable', false)
     ];
 
     var make = function (spec) {
@@ -24,25 +25,7 @@ define(
         'footer'
       ]);
 
-      var placeholders = {
-        '<alloy.dialog.title>': UiSubstitutes.single(
-          Merger.deepMerge(
-            detail.parts().title(),
-            detail.parts().title().base,
-            {
-              uid: detail.partUids().title
-            }
-          )
-        ),
-        '<alloy.dialog.close>': UiSubstitutes.single(
-          Merger.deepMerge(
-            detail.parts().close(),
-            detail.parts().close().base,
-            {
-              uid: detail.partUids().close
-            }
-          )
-        ),
+      var extra = detail.draggable() ? {
         '<alloy.dialog.draghandle>': UiSubstitutes.single(
           Merger.deepMerge(
             detail.parts().draghandle(),
@@ -57,26 +40,50 @@ define(
               }
             }
           )
-        ),
-        '<alloy.dialog.body>': UiSubstitutes.single(
-          Merger.deepMerge(
-            detail.parts().body(),
-            detail.parts().body().base,
-            {
-              uid: detail.partUids().body
-            }
-          )
-        ),
-        '<alloy.dialog.footer>': UiSubstitutes.single(
-          Merger.deepMerge(
-            detail.parts().footer(),
-            detail.parts().footer().base,
-            {
-              uid: detail.partUids().footer
-            }
-          )
         )
-      };
+      } : { };
+
+      var placeholders = Merger.deepMerge(
+        {
+          '<alloy.dialog.title>': UiSubstitutes.single(
+            Merger.deepMerge(
+              detail.parts().title(),
+              detail.parts().title().base,
+              {
+                uid: detail.partUids().title
+              }
+            )
+          ),
+          '<alloy.dialog.close>': UiSubstitutes.single(
+            Merger.deepMerge(
+              detail.parts().close(),
+              detail.parts().close().base,
+              {
+                uid: detail.partUids().close
+              }
+            )
+          ),
+          '<alloy.dialog.body>': UiSubstitutes.single(
+            Merger.deepMerge(
+              detail.parts().body(),
+              detail.parts().body().base,
+              {
+                uid: detail.partUids().body
+              }
+            )
+          ),
+          '<alloy.dialog.footer>': UiSubstitutes.single(
+            Merger.deepMerge(
+              detail.parts().footer(),
+              detail.parts().footer().base,
+              {
+                uid: detail.partUids().footer
+              }
+            )
+          )
+        },
+        extra
+      );
 
       var components = UiSubstitutes.substitutePlaces(
         Option.some('modal-dialog'),

@@ -85,6 +85,15 @@ define(
         doPlace(component, origin, anchoring, posInfo, placee);
       });
       Css.remove(placee.element(), 'visibility');
+
+      // We need to remove position: fixed put on by above code if it is not needed.
+      if (
+        Css.getRaw(placee.element(), 'left').isNone() && 
+        Css.getRaw(placee.element(), 'top').isNone() && 
+        Css.getRaw(placee.element(), 'right').isNone() && 
+        Css.getRaw(placee.element(), 'bottom').isNone() &&
+        Css.getRaw(placee.element(), 'position').is('fixed')
+      ) Css.remove(placee.element(), 'position');
     };
 
     var addContainer = function (component, posInfo, sandbox) {

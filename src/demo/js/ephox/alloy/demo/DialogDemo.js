@@ -40,6 +40,7 @@ define(
           TemplateTinyDialog,
           {
             uiType: 'modal-dialog',
+            draggable: true,
             parts: {
               title: {
                 uiType: 'container',

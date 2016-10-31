@@ -14,6 +14,7 @@ define(
     var placement = function (component, posInfo, anchorInfo, origin) {
 
       var placer = function (component, origin, anchoring, posInfo, placee) {
+        console.log('placee', placee.element().dom().cloneNode(true));
         var modal = component.getSystem().build({
           uiType: 'custom',
           dom: {
@@ -24,8 +25,11 @@ define(
               'top': '0px',
               'right': '0px',
               'bottom': '0px',
-              'background-color': 'rgba(20,20,20,0.5)'
-            }
+              'background-color': 'rgba(20,20,20,0.5)',
+              'z-index': '100000000'
+            },
+            // FIX: Remove hard-coding
+            classes: [ 'ephox-gel-centered-dialog', 'ephox-gel-modal' ]
           },
           components: [
             { built: placee }
