@@ -41,7 +41,7 @@ define(
     ];
 
     var make = function (spec) {
-      var detail = SpecSchema.asStructOrDie('tabbed', schema, spec, [
+      var detail = SpecSchema.asStructOrDie('tabbar', schema, spec, [
         'tabs'
       ]);
 
@@ -51,13 +51,10 @@ define(
         '<alloy.tabs>': UiSubstitutes.multiple(
           Arr.map(detail.tabs(), function (tab) {
             var munged = detail.members().tab().munge(tab);
-            return Merger.deepMerge(
+            var bt = Merger.deepMerge(
               munged,
               {
                 uiType: 'button',
-                dom: {
-                  tag: 'button'
-                },
                 representing: {
                   query: function () {
                     return tab.value;
@@ -71,6 +68,8 @@ define(
                 }
               }
             );
+            console.log('bt', bt);
+            return bt;
           })
         )
       };

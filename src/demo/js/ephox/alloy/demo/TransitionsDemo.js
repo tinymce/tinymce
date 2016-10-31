@@ -128,6 +128,10 @@ define(
                   parts: {
                     tabs: { }
                   },
+                  markers: {
+                    tabClass: 'tab-button',
+                    selectedClass: 'demo-selected'
+                  },
                   
                   members: {
                     tab: {
@@ -138,6 +142,7 @@ define(
                             styles: {
                               margin: '0px'
                             },
+                            classes: [ 'tab-button' ],
                             innerHtml: spec.text
                           },
                           components: [ ]
