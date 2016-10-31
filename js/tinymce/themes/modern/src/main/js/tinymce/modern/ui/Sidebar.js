@@ -66,6 +66,7 @@ define('tinymce.modern.ui.Sidebar', [
 
 					container.prepend(panel);
 					trigger(onrender)(panel);
+					trigger(onshow)(panel);
 				}
 
 				btnCtrl.active(true);
