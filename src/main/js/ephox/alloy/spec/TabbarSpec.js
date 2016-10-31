@@ -93,7 +93,8 @@ define(
         components: components,
         keying: {
           mode: 'flow',
-          selector: '.' + detail.markers().tabClass()
+          selector: '.' + detail.markers().tabClass(),
+          executeOnMove: true
         }
       };
     };
