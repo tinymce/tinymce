@@ -1,4 +1,4 @@
-Version 3.5.12 (2016-xx-xx)
+Version 3.5.12 (2016-10-31)
 	Added new option table_style_by_css for the table plugin to set table styling with css rather than table attributes.
 	Added new option theme_advanced_default_font_size allows you to specify a default font size for the body.
 	Added new option theme_advanced_default_font_family allows you to specify a default font family for the body.
