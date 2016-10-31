@@ -38,10 +38,11 @@ define(
               extract: extractCoords,
               compare: compareCoords,
               mutate: function (mutation, coords) {
-                var location = Location.absolute(component.element());
-                var leftPx = Css.getRaw(component.element(), 'left').getOr(location.left());
-                var topPx = Css.getRaw(component.element(), 'top').getOr(location.top());
-                Css.setAll(component.element(), {
+                var target = dragInfo.getTarget()(component.element());
+                var location = Location.absolute(target);
+                var leftPx = Css.getRaw(target, 'left').getOr(location.left());
+                var topPx = Css.getRaw(target, 'top').getOr(location.top());
+                Css.setAll(target, {
                   left: (parseInt(leftPx, 10) + coords.left()) + 'px',
                   top: (parseInt(topPx, 10) + coords.top()) + 'px',
                   position: 'absolute'
@@ -125,6 +126,7 @@ define(
     var schema = [
       FieldSchema.defaulted('useFixed', false),
       FieldSchema.state('movement', Movement),
+      FieldSchema.defaulted('getTarget', Fun.identity),
       FieldSchema.state('dragger', instance)
     ];
 

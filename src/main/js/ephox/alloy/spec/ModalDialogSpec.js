@@ -6,10 +6,11 @@ define(
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
-    'ephox.perhaps.Option'
+    'ephox.perhaps.Option',
+    'ephox.sugar.api.SelectorFind'
   ],
 
-  function (SpecSchema, UiSubstitutes, FieldSchema, Merger, Option) {
+  function (SpecSchema, UiSubstitutes, FieldSchema, Merger, Option, SelectorFind) {
     var schema = [
       FieldSchema.strict('dom')
     ];
@@ -17,7 +18,8 @@ define(
     var make = function (spec) {
       var detail = SpecSchema.asStructOrDie('modal-dialog', schema, spec, [
         'title',
-        'close'
+        'close',
+        'draghandle'
       ]);
 
       var placeholders = {
@@ -36,6 +38,21 @@ define(
             detail.parts().close().base,
             {
               uid: detail.partUids().close
+            }
+          )
+        ),
+        '<alloy.dialog.draghandle>': UiSubstitutes.single(
+          Merger.deepMerge(
+            detail.parts().draghandle(),
+            detail.parts().draghandle().base,
+            {
+              uid: detail.partUids().draghandle,
+              dragging: {
+                mode: 'mouse',
+                getTarget: function (handle) {
+                  return SelectorFind.ancestor(handle, '[role="dialog"]').getOr(handle);
+                }
+              }
             }
           )
         )

@@ -49,6 +49,13 @@ define(
                 }
 
               },
+              //<div id="mceu_85-dragh" class="mce-dragh"></div>
+              draghandle: {
+                uiType: 'container',
+                dom: {
+                  classes: [ 'mce-dragh' ]
+                }
+              },
               //<button type="button" class="mce-close" aria-hidden="true"><i class="mce-ico mce-i-remove"></i></button>
               close: {
                 uiType: 'button',
