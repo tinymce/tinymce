@@ -40,13 +40,19 @@ define(
 
       var placeholders = {
         '<alloy.form.field-input>': UiSubstitutes.single(
-          detail.parts().field()
+          Merger.deepMerge(
+            detail.parts().field(),
+            {
+              uid: detail.partUids().field
+            }
+          )
         ),
         '<alloy.form.field-label>': UiSubstitutes.single(
           Merger.deepMerge(
             detail.parts().label(),
             {
               uiType: 'custom',
+              uid: detail.partUids().label,
               dom: {
                 tag: 'label',
                 innerHtml: detail.label().text()

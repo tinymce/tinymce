@@ -10,8 +10,10 @@ define(
   function (Tagger, FormLabelSpec, FieldSchema) {
     var schema = [
       FieldSchema.option('uid'),
+      FieldSchema.strict('label'),
+      FieldSchema.strict('components'),
       // FieldSchema.strict('components'),
-      // FieldSchema.defaulted('dom'),
+      FieldSchema.strict('dom'),
       // FieldSchema.strict('label'),
       FieldSchema.state('builder', function () {
         return builder;
@@ -27,9 +29,9 @@ define(
     var builder = function (info) {
       return FormLabelSpec.make({
         uid: info.uid().getOr(Tagger.generate('')),
-        prefix: 'dog',
+        prefix: 'text-input',
         label: {
-          text: 'dog'
+          text: info.label()
         },
         parts: {
           field: {
@@ -37,13 +39,8 @@ define(
           },
           label: { }
         },
-        dom: {
-          tag: 'div'
-        },
-        components: [
-          { uiType: 'placeholder', name: '<alloy.form.field-input>', owner: 'formlabel' },
-          { uiType: 'placeholder', name: '<alloy.form.field-label>', owner: 'formlabel' }
-        ]
+        dom: info.dom(),
+        components: info.components()
       });
     };
 
