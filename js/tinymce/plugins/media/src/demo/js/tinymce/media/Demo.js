@@ -13,14 +13,18 @@
 define("tinymce.media.Demo", [
 	"tinymce.media.Plugin",
 	"global!tinymce"
-], function(Plugin, tinymce) {
-	return function() {
+], function (Plugin, tinymce) {
+	return function () {
 
 		tinymce.init({
 			selector: "textarea.tinymce",
 			theme: "modern",
-			plugins: ["media"],
-			height: 600
+			plugins: ["media", "code"],
+			toolbar: "media code",
+			height: 600,
+			// media_embed_handler: function (editor, resolve) {
+			// 	resolve({html: 'a lot of html'});
+			// }
 		});
 	};
 });

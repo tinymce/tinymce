@@ -15,8 +15,9 @@
 define('tinymce.media.Plugin', [
 	'global!tinymce.PluginManager',
 	'tinymce.media.ui.Dialog',
-	'tinymce.media.core.Data'
-], function (PluginManager, Dialog, Data) {
+	'tinymce.media.core.Data',
+	'tinymce.media.core.Nodes'
+], function (PluginManager, Dialog, Data, Nodes) {
 	var Plugin = function (editor) {
 		editor.on('ResolveName', function (e) {
 			var name;
@@ -43,48 +44,8 @@ define('tinymce.media.Plugin', [
 			});
 
 			// Converts iframe, video etc into placeholder images
-			editor.parser.addNodeFilter('iframe,video,audio,object,embed,script', function (nodes) {
-				var i = nodes.length;
-				var node;
-				var placeHolder;
-				var videoScript;
-
-				while (i--) {
-					node = nodes[i];
-					if (!node.parent) {
-						continue;
-					}
-
-					if (node.parent.attr('data-mce-object')) {
-						continue;
-					}
-
-					if (node.name === 'script') {
-						videoScript = Data.getVideoScriptMatch(editor, node.attr('src'));
-						if (!videoScript) {
-							continue;
-						}
-					}
-
-					if (videoScript) {
-						if (videoScript.width) {
-							node.attr('width', videoScript.width.toString());
-						}
-
-						if (videoScript.height) {
-							node.attr('height', videoScript.height.toString());
-						}
-					}
-
-					if (node.name === 'iframe' && editor.settings.media_live_embeds !== false && tinymce.Env.ceFalse) {
-						placeHolder = Data.createPreviewNode(editor, node);
-					} else {
-						placeHolder = Data.createPlaceholderNode(editor, node);
-					}
-
-					node.replace(placeHolder);
-				}
-			});
+			editor.parser.addNodeFilter('iframe,video,audio,object,embed,script',
+				Nodes.placeHolderConverter(editor));
 
 			// Replaces placeholder images with real elements for video, object, iframe etc
 			editor.serializer.addAttributeFilter('data-mce-object', function (nodes, name) {
