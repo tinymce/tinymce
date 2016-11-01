@@ -97,7 +97,8 @@ define(
           {
             uiType: 'custom',
             dom: {
-              tag: 'legend'
+              tag: 'legend',
+              innerHtml: info.label()
             }
           }
         )
