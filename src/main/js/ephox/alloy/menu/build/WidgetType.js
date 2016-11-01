@@ -2,6 +2,7 @@ define(
   'ephox.alloy.menu.build.WidgetType',
 
   [
+    'ephox.alloy.alien.EditableFields',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.util.ItemEvents',
@@ -15,7 +16,7 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (SystemEvents, EventHandler, ItemEvents, MenuMarkers, UiSubstitutes, FieldPresence, FieldSchema, Objects, Merger, Option, Traverse) {
+  function (EditableFields, SystemEvents, EventHandler, ItemEvents, MenuMarkers, UiSubstitutes, FieldPresence, FieldSchema, Objects, Merger, Option, Traverse) {
     var schema = [
       FieldSchema.strict('uid'),
       FieldSchema.strict('value'),
@@ -57,6 +58,10 @@ console.debug('components', components);
           widget.apis().focusIn();
           return widget;
         });
+      };
+
+      var onHorizontalArrow = function (component, simulatedEvent) {
+        return EditableFields.inside(simulatedEvent.event().target()) ? Option.none() : Option.some(true);
       };
 
       return Merger.deepMerge(info.base(), {
@@ -101,7 +106,9 @@ console.debug('components', components);
           }
         },
         keying: {
-          mode: 'escaping',
+          mode: 'special',
+          onLeft: onHorizontalArrow,
+          onRight: onHorizontalArrow,
           onEscape: function (component, simulatedEvent) {
             // If the outer list item didn't have focus, 
             // then focus it (i.e. escape the inner widget)
