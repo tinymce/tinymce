@@ -14,13 +14,14 @@ define(
     'ephox.perhaps.Result',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Element',
+    'ephox.sugar.api.Focus',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.Remove',
     'global!Error'
   ],
 
-  function (GuiEvents, GuiFactory, SystemApi, SystemEvents, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Element, Insert, Node, Remove, Error) {
+  function (GuiEvents, GuiFactory, SystemApi, SystemEvents, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Element, Focus, Insert, Node, Remove, Error) {
     var create = function ( ) {
       var container = Element.fromTag('div');
       return takeover(container);
@@ -49,12 +50,17 @@ define(
           Triggers.triggerOnUntilStopped(lookup, customType, data, target);
         },
         triggerFocus: function (target, originator) {
-          Triggers.triggerHandler(lookup, SystemEvents.focus(), {
-            // originator is used by the default events to ensure that focus doesn't
-            // get called infinitely
-            originator: Fun.constant(originator),
-            target: Fun.constant(target)
-          }, target);
+          Tagger.read(target).fold(function () {
+            // When the target is not within the alloy system, dispatch a normal focus event.
+            Focus.focus(target);
+          }, function (_alloyId) {
+            Triggers.triggerHandler(lookup, SystemEvents.focus(), {
+              // originator is used by the default events to ensure that focus doesn't
+              // get called infinitely
+              originator: Fun.constant(originator),
+              target: Fun.constant(target)
+            }, target);
+          });
         },
         getByUid: function (uid) {
           return getByUid(uid);
