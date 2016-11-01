@@ -13,6 +13,7 @@ define(
   function (SpecSchema, UiSubstitutes, FieldSchema, Merger, Option, SelectorFind) {
     var schema = [
       FieldSchema.strict('dom'),
+      FieldSchema.strict('onEscape'),
       FieldSchema.defaulted('draggable', false)
     ];
 
@@ -100,7 +101,8 @@ define(
           dom: detail.dom(),
           components: components,
           keying: {
-            mode: 'cyclic'
+            mode: 'cyclic',
+            onEscape: detail.onEscape()
           }
         }
       );
