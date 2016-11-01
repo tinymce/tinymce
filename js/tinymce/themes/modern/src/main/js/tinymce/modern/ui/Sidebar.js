@@ -20,41 +20,54 @@ define('tinymce.modern.ui.Sidebar', [
 		};
 	};
 
-	var trigger = function (callback) {
-		return function (panel) {
-			if (callback) {
-				callback(api(panel.getEl('body')));
-			}
-		};
+	var trigger = function (sidebar, panel, callbackName) {
+		var callback = sidebar.settings[callbackName];
+		if (callback) {
+			callback(api(panel.getEl('body')));
+		}
 	};
 
-	var showPanel = function (name, onrender, onshow, onhide) {
+	var hidePanels = function (name, container, sidebars) {
+		Tools.each(sidebars, function (sidebar) {
+			var panel = container.items().filter('#' + sidebar.name)[0];
+
+			if (panel && panel.visible() && sidebar.name !== name) {
+				trigger(sidebar, panel, 'onhide');
+				panel.visible(false);
+			}
+		});
+	};
+
+	var deactivateButtons = function (toolbar) {
+		toolbar.items().each(function (ctrl) {
+			ctrl.active(false);
+		});
+	};
+
+	var findSidebar = function (sidebars, name) {
+		return Tools.grep(sidebars, function (sidebar) {
+			return sidebar.name === name;
+		})[0];
+	};
+
+	var showPanel = function (editor, name, sidebars) {
 		return function (e) {
 			var btnCtrl = e.control;
 			var container = btnCtrl.parents().filter('panel')[0];
 			var panel = container.find('#' + name)[0];
+			var sidebar = findSidebar(sidebars, name);
 
-			container.items().filter(function (ctrl) {
-				return ctrl.settings.name !== name && ctrl.settings.classes === 'sidebar-panel';
-			}).each(trigger(onhide)).hide();
-
-			btnCtrl.parent().items().each(function (ctrl) {
-				ctrl.active(false);
-			});
+			hidePanels(name, container, sidebars);
+			deactivateButtons(btnCtrl.parent());
 
 			if (panel && panel.visible()) {
-				trigger(onhide)(panel);
-
-				if (onhide) {
-					onhide(api(panel.getEl()));
-				}
-
+				trigger(sidebar, panel, 'onhide');
 				panel.hide();
 				btnCtrl.active(false);
 			} else {
 				if (panel) {
 					panel.show();
-					trigger(onshow)(panel);
+					trigger(sidebar, panel, 'onshow');
 				} else {
 					panel = Factory.create({
 						type: 'container',
@@ -65,12 +78,14 @@ define('tinymce.modern.ui.Sidebar', [
 					});
 
 					container.prepend(panel);
-					trigger(onrender)(panel);
-					trigger(onshow)(panel);
+					trigger(sidebar, panel, 'onrender');
+					trigger(sidebar, panel, 'onshow');
 				}
 
 				btnCtrl.active(true);
 			}
+
+			editor.fire('ResizeEditor');
 		};
 	};
 
@@ -87,7 +102,7 @@ define('tinymce.modern.ui.Sidebar', [
 				icon: settings.icon,
 				image: settings.image,
 				tooltip: settings.tooltip,
-				onclick: showPanel(sidebar.name, settings.onrender, settings.onshow, settings.onhide)
+				onclick: showPanel(editor, sidebar.name, editor.sidebars)
 			};
 		});
 

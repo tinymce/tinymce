@@ -44,7 +44,10 @@ define('tinymce.modern.Demo', [
 						]
 					});
 					panel.renderTo(api.element()).reflow();
-					//console.log('Show panel 1', api.element());
+					console.log('Render panel 1');
+				},
+				onshow: function (api) {
+					console.log('Show panel 1', api.element());
 				},
 				onhide: function (api) {
 					console.log('Hide panel 1', api.element());
@@ -54,6 +57,9 @@ define('tinymce.modern.Demo', [
 			ed.addSidebar('sidebar2', {
 				tooltip: 'My side bar 2',
 				icon: 'italic',
+				onrender: function (api) {
+					console.log('Render panel 2', api.element());
+				},
 				onshow: function (api) {
 					console.log('Show panel 2', api.element());
 					api.element().innerHTML = document.body.innerText;

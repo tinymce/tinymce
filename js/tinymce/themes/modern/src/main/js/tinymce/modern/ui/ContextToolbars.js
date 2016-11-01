@@ -97,7 +97,7 @@ define('tinymce.modern.ui.ContextToolbars', [
 			return targetRect;
 		};
 
-		var reposition = function (match) {
+		var reposition = function (match, shouldShow) {
 			var relPos, panelRect, elementRect, contentAreaRect, panel, relRect, testPositions, smallElementWidthThreshold;
 			var handler = settings.inline_toolbar_position_handler;
 
@@ -117,6 +117,11 @@ define('tinymce.modern.ui.ContextToolbars', [
 			];
 
 			panel = match.toolbar.panel;
+
+			// Only show the panel on some events not for example nodeChange since that fires when context menu is opened
+			if (shouldShow) {
+				panel.show();
+			}
 
 			elementRect = getElementRect(match.element);
 			panelRect = DOM.getRect(panel.getEl());
@@ -175,20 +180,22 @@ define('tinymce.modern.ui.ContextToolbars', [
 			//drawRect(panelRect, 'green');
 		};
 
-		var repositionHandler = function () {
-			var execute = function () {
-				if (editor.selection) {
-					reposition(findFrontMostMatch(editor.selection.getNode()));
-				}
-			};
+		var repositionHandler = function (show) {
+			return function () {
+				var execute = function () {
+					if (editor.selection) {
+						reposition(findFrontMostMatch(editor.selection.getNode()), show);
+					}
+				};
 
-			Delay.requestAnimationFrame(execute);
+				Delay.requestAnimationFrame(execute);
+			};
 		};
 
 		var bindScrollEvent = function () {
 			if (!scrollContainer) {
 				scrollContainer = editor.selection.getScrollContainer() || editor.getWin();
-				DOM.bind(scrollContainer, 'scroll', repositionHandler);
+				DOM.bind(scrollContainer, 'scroll', repositionHandler(true));
 
 				editor.on('remove', function() {
 					DOM.unbind(scrollContainer, 'scroll');
@@ -286,7 +293,8 @@ define('tinymce.modern.ui.ContextToolbars', [
 			}
 		});
 
-		editor.on('nodeChange ResizeEditor ResizeWindow', repositionHandler);
+		editor.on('ResizeEditor ResizeWindow', repositionHandler(true));
+		editor.on('nodeChange', repositionHandler(false));
 
 		editor.on('remove', function() {
 			Tools.each(getContextToolbars(), function(toolbar) {
