@@ -2,18 +2,25 @@ define(
   'ephox.alloy.spec.ModalDialogSpec',
 
   [
+    'ephox.alloy.behaviour.Behaviour',
+    'ephox.alloy.dom.DomModification',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
+    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.ValueSchema',
     'ephox.highway.Merger',
+    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.sugar.api.SelectorFind',
+    'ephox.sugar.api.Traverse'
   ],
 
-  function (SpecSchema, UiSubstitutes, FieldSchema, Merger, Option, SelectorFind) {
+  function (Behaviour, DomModification, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Merger, Fun, Option, SelectorFind, Traverse) {
     var schema = [
       FieldSchema.strict('dom'),
       FieldSchema.strict('onEscape'),
+      FieldSchema.strict('sink'),
       FieldSchema.defaulted('draggable', false)
     ];
 
@@ -103,7 +110,54 @@ define(
           keying: {
             mode: 'cyclic',
             onEscape: detail.onEscape()
-          }
+          },
+          behaviours: [
+            Behaviour.contract({
+              name: Fun.constant('modal-dialog-spec'),
+              exhibit: Fun.constant(DomModification.nu({})),
+              handlers: Fun.constant({ }),
+              apis: function () {
+                return {
+                  showDialog: function (dialog) {
+                    var blocker = detail.sink().getSystem().build({
+                      uiType: 'custom',
+                      dom: {
+                        tag: 'div',
+                        styles: {
+                          'position': 'fixed',
+                          'left': '0px',
+                          'top': '0px',
+                          'right': '0px',
+                          'bottom': '0px',
+                          'background-color': 'rgba(20,20,20,0.5)',
+                          'z-index': '100000000'
+                        },
+                        // FIX: Remove hard-coding
+                        classes: [ 'ephox-gel-centered-dialog', 'ephox-gel-modal' ]
+                      },
+                      components: [
+                        { built: dialog }
+                      ]
+                    });
+                    detail.sink().getSystem().addToWorld(blocker);
+                    detail.sink().apis().addContainer(blocker);
+                    dialog.apis().focusIn();
+                  },
+                  hideDialog: function (dialog) {
+                    console.log('hiding dialog');
+                    Traverse.parent(dialog.element()).each(function (parent) {
+                      dialog.getSystem().getByDom(parent).each(function (blocker) {
+                        detail.sink().apis().removeContainer(blocker);
+                        detail.sink().getSystem().removeFromWorld(blocker);
+                      });
+                    });
+                  }
+                };
+              },
+              schema: Fun.constant(FieldSchema.field('_', '_', FieldPresence.asOption(), ValueSchema.anyValue()))
+            })
+
+          ]
         }
       );
     };
