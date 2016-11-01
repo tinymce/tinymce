@@ -10,11 +10,12 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
+    'ephox.compass.Obj',
     'ephox.highway.Merger',
     'ephox.perhaps.Option'
   ],
 
-  function (RadioGroupSpec, TextInputSpec, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Option) {
+  function (RadioGroupSpec, TextInputSpec, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Arr, Obj, Merger, Option) {
     var schema = [
       FieldSchema.strict('dom'),
       FieldSchema.strict('uis'),
@@ -42,29 +43,40 @@ define(
 
       ]);
 
-      var placeholders = {
-        '<alloy.form.fields>': UiSubstitutes.multiple(
-          Arr.map(detail.uis(), function (ui) {
-            var uiSpec = detail.members().ui().munge(ui);
-            var itemInfo = ValueSchema.asStructOrDie('ui.spec item', uiSchema, uiSpec);
-            return itemInfo.builder()(itemInfo);
-          })
-        )
-      };
+      var byName = { };
 
-      var components = UiSubstitutes.substitutePlaces(
-        Option.some('form'),
-        detail,
-        detail.components(),
-        placeholders,
-        { }
-      );
+      var fields = Arr.map(detail.uis(), function (ui) {
+        var uiSpec = detail.members().ui().munge(ui);
+        var itemInfo = ValueSchema.asStructOrDie('ui.spec item', uiSchema, uiSpec);
+        var output = itemInfo.builder()(itemInfo);
+        byName[uiSpec.name] = output.uid;
+        return output;
+      });
 
       return Merger.deepMerge(spec, {
         dom: detail.dom(),
         uid: detail.uid(),
         uiType: 'container',
-        components: components
+        components: fields,
+        representing: {
+          query: function (form) {
+            var r = {};
+            Obj.each(byName, function (field, name) {
+              r[name] = field.apis().getValue();
+            });
+            return r;
+          },
+          set: function (form, value) {
+            Obj.each(value, function (v, k) {
+              var fieldUid = byName[k];
+              form.getSystem().getByUid(fieldUid).each(function (field) {
+                field.delegate().map(function (dlg) {
+                  return dlg.get()(field);
+                }).getOr(field).apis().setValue(v);
+              });
+            });
+          }
+        }
       });
     };
 

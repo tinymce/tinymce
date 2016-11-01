@@ -89,6 +89,8 @@ define(
       asRawOrDie: asRawOrDie,
       asStructOrDie: asStructOrDie,
       addBehaviours: addBehaviours,
+
+      getPartsSchema: getPartsSchema,
       extend: extend
     };
   }

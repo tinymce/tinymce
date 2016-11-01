@@ -29,11 +29,30 @@ define(
               { uiType: 'placeholder', name: '<alloy.form.field-input>', owner: 'formlabel' }
             ]
           });
+        },
+        'radio-group': function (spec) {
+          return Merger.deepMerge(spec, {
+            dom: {
+              tag: 'fieldset'
+            },
+            label: 'Radio',
+            parts: {
+              legend: { },
+              fields: { }
+            },
+            components: [
+              { uiType: 'placeholder', name: '<alloy.form.radio-fields>', owner: 'radio-group' },
+              { uiType: 'placeholder', name: '<alloy.form.field-legend>', owner: 'radio-group' }
+            ]
+          });
         }
       };
 
    
-      HtmlDisplay.section(
+          
+
+
+      var form = HtmlDisplay.section(
         gui,
         'This form has many fields',
         {
@@ -41,9 +60,7 @@ define(
           dom: {
             tag: 'div'
           },
-          components: [
-            { uiType: 'placeholder', name: '<alloy.form.fields>', owner: 'form' }
-          ],
+          components: [ ],
           members: {
             ui: {
               munge: function (spec) {
@@ -52,17 +69,29 @@ define(
             }
           },
           uis: [
-            { type: 'text-input', label: 'Alpha' },
-            { type: 'text-input', label: 'Beta', inline: false }
-            // {
-            //   type: 'radio-group'
-            // }
+            { type: 'text-input', label: 'Alpha', name: 'alpha' },
+            { type: 'text-input', label: 'Beta', inline: false, name: 'beta' },
+            {
+              type: 'radio-group',
+              name: 'gamma',
+              candidates: [
+                { value: 'abra', text: 'Abra' },
+                { value: 'cad', text: 'Cad' },
+                { value: 'abra!', text: 'abra!' }
+              ]
+            }
           ],
           keying: {
             mode: 'cyclic'
           }
         }
       );
+
+      form.apis().setValue({
+        alpha: 'doggy',
+        beta: 'bottle',
+        gamma: 'cad'
+      })
     };
   }
 );

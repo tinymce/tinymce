@@ -2,13 +2,16 @@ define(
   'ephox.alloy.alien.EditableFields',
 
   [
-    'ephox.compass.Arr',
+    'ephox.sugar.api.Attr',
     'ephox.sugar.api.Node'
   ],
 
-  function (Arr, Node) {
+  function (Attr, Node) {
     var inside = function (target) {
-      return Arr.contains([ 'input', 'textarea' ], Node.name(target));
+      return (
+        (Node.name(target) === 'input' && Attr.get(target, 'type') !== 'radio') ||
+        Node.name(target) === 'textarea'
+      );
     };
 
     return {

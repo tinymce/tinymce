@@ -5,15 +5,16 @@ define(
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.FormLabelSpec',
     'ephox.boulder.api.FieldSchema',
-    'ephox.highway.Merger'
+    'ephox.highway.Merger',
+    'ephox.sugar.api.Value'
   ],
 
-  function (Tagger, FormLabelSpec, FieldSchema, Merger) {
+  function (Tagger, FormLabelSpec, FieldSchema, Merger, Value) {
     var schema = [
       FieldSchema.option('uid'),
       FieldSchema.strict('label'),
+      FieldSchema.strict('name'),
       FieldSchema.strict('components'),
-      // FieldSchema.strict('components'),
       FieldSchema.strict('dom'),
       FieldSchema.defaulted('inline', true),
       // FieldSchema.strict('label'),
@@ -39,7 +40,15 @@ define(
         parts: {
           field: Merger.deepMerge(
             {
-              uiType: 'input'
+              uiType: 'input',
+              representing: { 
+                query: function (input) {
+                  return Value.get(input.element());
+                },
+                set: function (input, value) {
+                  Value.set(input.element(), value);
+                }
+              }
             },
             info.inline() ? {
               dom: {
