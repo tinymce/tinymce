@@ -691,7 +691,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			if (panel) {
 				panel.show();
 				reposition();
-				DOM.addClass(editor.getBody(), 'mce-edit-focus');
+				// DOM.addClass(editor.getBody(), 'mce-edit-focus');
 			}
 		}
 
@@ -703,7 +703,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				// All other autohidden float panels will be closed below.
 				FloatPanel.hideAll();
 
-				DOM.removeClass(editor.getBody(), 'mce-edit-focus');
+				// DOM.removeClass(editor.getBody(), 'mce-edit-focus');
 			}
 		}
 
