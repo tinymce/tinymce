@@ -20,14 +20,9 @@ define('tinymce.modern.ui.A11y', [
 		};
 	};
 
-	/**
-	 * Adds accessibility shortcut keys to panel.
-	 *
-	 * @param {tinymce.ui.Panel} panel Panel to add focus to.
-	 */
 	var addKeys = function (editor, panel) {
 		editor.shortcuts.add('Alt+F9', '', focus(panel, 'menubar'));
-		editor.shortcuts.add('Alt+F10', '', focus(panel, 'toolbar'));
+		editor.shortcuts.add('Alt+F10,F10', '', focus(panel, 'toolbar'));
 		editor.shortcuts.add('Alt+F11', '', focus(panel, 'elementpath'));
 		panel.on('cancel', function() {
 			editor.focus();
