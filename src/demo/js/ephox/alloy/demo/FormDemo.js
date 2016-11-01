@@ -53,7 +53,7 @@ define(
           },
           uis: [
             { type: 'text-input', label: 'Alpha' },
-            { type: 'text-input', label: 'Beta' }
+            { type: 'text-input', label: 'Beta', inline: false }
             // {
             //   type: 'radio-group'
             // }

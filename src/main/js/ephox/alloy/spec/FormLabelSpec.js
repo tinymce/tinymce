@@ -29,7 +29,8 @@ define(
       ),
       FieldSchema.strict('prefix'),
       FieldSchema.strict('dom'),
-      FieldSchema.strict('components')
+      FieldSchema.strict('components'),
+      FieldSchema.defaulted('inline', true)
     ];
 
     var make = function (spec) {
@@ -38,6 +39,8 @@ define(
         'label'
       ]);
 
+      console.log('inline', detail.inline());
+
       var placeholders = {
         '<alloy.form.field-input>': UiSubstitutes.single(
           Merger.deepMerge(
@@ -45,7 +48,7 @@ define(
             {
               uid: detail.partUids().field
             }
-          )
+          ) 
         ),
         '<alloy.form.field-label>': UiSubstitutes.single(
           Merger.deepMerge(
@@ -57,7 +60,14 @@ define(
                 tag: 'label',
                 innerHtml: detail.label().text()
               }
-            }
+            },
+            detail.inline() ? {
+              dom: {
+                styles: {
+                  display: 'none'
+                }
+              }
+            } : { }
           )
         )
       };
