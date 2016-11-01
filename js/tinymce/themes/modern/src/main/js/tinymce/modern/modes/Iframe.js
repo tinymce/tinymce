@@ -22,20 +22,33 @@ define('tinymce.modern.modes.Iframe', [
 ], function (Tools, Factory, DOM, Toolbar, Menubar, ContextToolbars, A11y, Sidebar, SkinLoaded, Resize) {
 	var switchMode = function (panel) {
 		return function(e) {
-			if (e.mode == 'readonly') {
-				panel.find('*').disabled(true);
-			} else {
-				panel.find('*').disabled(false);
-			}
+			panel.find('*').disabled(e.mode === 'readonly');
 		};
 	};
 
-	/**
-	 * Renders the iframe editor UI.
-	 *
-	 * @param {Object} args Details about target element etc.
-	 * @return {Object} Name/value object with theme data.
-	 */
+	var editArea = function () {
+		return {
+			type: 'panel',
+			name: 'iframe',
+			layout: 'stack',
+			classes: 'edit-area',
+			html: ''
+		};
+	};
+
+	var editAreaContainer = function (editor) {
+		return {
+			type: 'panel',
+			layout: 'stack',
+			classes: 'edit-aria-container',
+			border: '1 0 0 0',
+			items: [
+				editArea(),
+				Sidebar.createSidebar(editor)
+			]
+		};
+	};
+
 	var render = function (editor, theme, args) {
 		var panel, resizeHandleCtrl, startSize, settings = editor.settings;
 
@@ -43,7 +56,6 @@ define('tinymce.modern.modes.Iframe', [
 			DOM.styleSheetLoader.load(args.skinUiCss, SkinLoaded.fireSkinLoaded(editor));
 		}
 
-		// Basic UI layout
 		panel = theme.panel = Factory.create({
 			type: 'panel',
 			role: 'application',
@@ -54,22 +66,7 @@ define('tinymce.modern.modes.Iframe', [
 			items: [
 				settings.menubar === false ? null : {type: 'menubar', border: '0 0 1 0', items: Menubar.createMenuButtons(editor)},
 				Toolbar.createToolbars(editor, settings.toolbar_items_size),
-				{
-					type: 'panel',
-					layout: 'stack',
-					classes: 'edit-aria-container',
-					border: '1 0 0 0',
-					items: [
-						{
-							type: 'panel',
-							name: 'iframe',
-							layout: 'stack',
-							classes: 'edit-area',
-							html: ''
-						},
-						Sidebar.createSidebar(editor)
-					]
-				}
+				Sidebar.hasSidebar(editor) ? editAreaContainer(editor) : editArea()
 			]
 		});
 

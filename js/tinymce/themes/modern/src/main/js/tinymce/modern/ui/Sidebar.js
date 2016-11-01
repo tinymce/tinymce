@@ -74,6 +74,10 @@ define('tinymce.modern.ui.Sidebar', [
 		};
 	};
 
+	var hasSidebar = function (editor) {
+		return editor.sidebars ? editor.sidebars.length > 0 : false;
+	};
+
 	var createSidebar = function (editor) {
 		var buttons = Tools.map(editor.sidebars, function (sidebar) {
 			var settings = sidebar.settings;
@@ -104,6 +108,7 @@ define('tinymce.modern.ui.Sidebar', [
 	};
 
 	return {
+		hasSidebar: hasSidebar,
 		createSidebar: createSidebar
 	};
 });
