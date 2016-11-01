@@ -51,9 +51,11 @@ define(
 
     var toInfo = function (spec) {
       var behaviours = Objects.readOr('behaviours', [])(spec);
-      var behaviourSchema = Arr.map(alloyBehaviours.concat(behaviours), function (b) {
+      var bs = getDefaultBehaviours(spec);
+      var behaviourSchema = Arr.map(bs.concat(behaviours), function (b) {
         return b.schema();
       });
+      // var behaviourSchema = [ Positioning.schema(), Focusing.schema(), Unselecting.schema(), Keying.schema(), Tabstopping.schema(), Transitioning.schema(), Receiving.schema() ];
 
       return ValueSchema.asStruct('custom.definition', ValueSchema.objOf([
         FieldSchema.field('dom', 'dom', FieldPresence.strict(), domSchema),
@@ -119,6 +121,12 @@ define(
       ));
     };
 
+    var getDefaultBehaviours = function (spec) {
+      return Arr.filter(alloyBehaviours, function (b) {
+        return Objects.hasKey(spec, b.name());
+      });
+    };
+
     var alloyBehaviours = [
       Toggling,
       Keying,
@@ -144,9 +152,7 @@ define(
     var behaviours = function (info) {
       // TODO: Check if behaviours are duplicated? Lab used to ...
       var bs = info.behaviours();
-      var filtered = Arr.filter(alloyBehaviours, function (ab) {
-        return Objects.hasKey(info.originalSpec(), ab.name());
-      });
+      var filtered = getDefaultBehaviours(info.originalSpec());
       return filtered.concat(bs);
     };
 
