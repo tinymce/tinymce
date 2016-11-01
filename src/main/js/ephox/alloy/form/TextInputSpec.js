@@ -18,6 +18,12 @@ define(
       })
     ];
 
+    // '<alloy.form.field-input>': UiSubstitutes.single(
+    //       detail.parts().field()
+    //     ),
+    //     '<alloy.form.field-label>': UiSubstitutes.single(
+    //       Merger.deepMerge(
+
     var builder = function (info) {
       return FormLabelSpec.make({
         uid: info.uid().getOr(Tagger.generate('')),
@@ -25,9 +31,19 @@ define(
         label: {
           text: 'dog'
         },
-        field: {
-          uiType: 'input'
-        }
+        parts: {
+          field: {
+            uiType: 'input'
+          },
+          label: { }
+        },
+        dom: {
+          tag: 'div'
+        },
+        components: [
+          { uiType: 'placeholder', name: '<alloy.form.field-input>', owner: 'formlabel' },
+          { uiType: 'placeholder', name: '<alloy.form.field-label>', owner: 'formlabel' }
+        ]
       });
     };
 

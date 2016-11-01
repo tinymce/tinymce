@@ -21,7 +21,7 @@ define(
     var tryActionOpt = function (field, info, apiName, f) {
       return function (component/*, */) {
         var args = Array.prototype.slice.call(arguments, 0);
-        var delegate = component.delegate().map(function (dlg) { return dlg.get()(); });
+        var delegate = component.delegate(component).map(function (dlg) { return dlg.get()(); });
         return delegate.fold(function () {
           var behaviourInfo = info[field]();
           return behaviourInfo.fold(function () {
