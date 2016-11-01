@@ -86,6 +86,27 @@ tinymce.PluginManager.add('media', function(editor) {
 			}
 		];
 
+
+		function onSubmitForm() {
+			var beforeObjects, afterObjects, i, y;
+
+			beforeObjects = editor.dom.select('img[data-mce-object]');
+			editor.insertContent(dataToHtml(this.toJSON()));
+			afterObjects = editor.dom.select('img[data-mce-object]');
+
+			// Find new image placeholder so we can select it
+			for (i = 0; i < beforeObjects.length; i++) {
+				for (y = afterObjects.length - 1; y >= 0; y--) {
+					if (beforeObjects[i] == afterObjects[y]) {
+						afterObjects.splice(y, 1);
+					}
+				}
+			}
+
+			editor.selection.select(afterObjects[0]);
+			editor.nodeChanged();
+		}
+
 		function recalcSize(e) {
 			var widthCtrl, heightCtrl, newWidth, newHeight;
 
@@ -150,7 +171,8 @@ tinymce.PluginManager.add('media', function(editor) {
 			name: 'embed',
 			value: getSource(),
 			multiline: true,
-			label: 'Source'
+			minWidth: 480,
+			minHeight: 130
 		};
 
 		function updateValueOnChange() {
@@ -160,62 +182,67 @@ tinymce.PluginManager.add('media', function(editor) {
 
 		embedTextBox[embedChange] = updateValueOnChange;
 
-		win = editor.windowManager.open({
-			title: 'Insert/edit video',
-			data: data,
-			bodyType: 'tabpanel',
-			body: [
-				{
-					title: 'General',
-					type: "form",
-					onShowTab: function() {
-						data = htmlToData(this.next().find('#embed').value());
-						this.fromJSON(data);
-					},
-					items: generalFormItems
-				},
 
-				{
-					title: 'Embed',
-					type: "container",
-					layout: 'flex',
-					direction: 'column',
-					align: 'stretch',
-					padding: 10,
-					spacing: 10,
-					onShowTab: function() {
-						this.find('#embed').value(dataToHtml(this.parent().toJSON()));
-					},
-					items: [
-						{
-							type: 'label',
-							text: 'Paste your embed code below:',
-							forId: 'mcemediasource'
-						},
-						embedTextBox
-					]
-				}
-			],
-			onSubmit: function() {
-				var beforeObjects, afterObjects, i, y;
+		var windowBody = [];
 
-				beforeObjects = editor.dom.select('img[data-mce-object]');
-				editor.insertContent(dataToHtml(this.toJSON()));
-				afterObjects = editor.dom.select('img[data-mce-object]');
-
-				// Find new image placeholder so we can select it
-				for (i = 0; i < beforeObjects.length; i++) {
-					for (y = afterObjects.length - 1; y >= 0; y--) {
-						if (beforeObjects[i] == afterObjects[y]) {
-							afterObjects.splice(y, 1);
-						}
-					}
-				}
-
-				editor.selection.select(afterObjects[0]);
-				editor.nodeChanged();
-			}
+		windowBody.push({
+			title: 'General',
+			type: "form",
+			onShowTab: function() {
+				data = htmlToData(this.next().find('#embed').value());
+				this.fromJSON(data);
+			},
+			items: generalFormItems
 		});
+
+		var embedItems = [
+			{
+				type: 'label',
+				text: 'Paste your embed code below:',
+				forId: 'mcemediasource'
+			},
+			embedTextBox
+		];
+
+		windowBody.push({
+			title: 'Embed',
+			type: "container",
+			layout: 'flex',
+			direction: 'column',
+			align: 'stretch',
+			padding: 10,
+			spacing: 10,
+			onShowTab: function() {
+				this.find('#embed').value(dataToHtml(this.parent().toJSON()));
+			},
+			items: embedItems
+		});
+
+
+		if (editor.settings.media_embedtab == false) {
+			win = editor.windowManager.open({
+				title: 'Insert/edit video',
+				data: data,
+				body: generalFormItems,
+				onSubmit: onSubmitForm
+			});
+		} else if (editor.settings.media_generaltab == false) {
+			win = editor.windowManager.open({
+				title: 'Insert/edit video',
+				data: data,
+				body: embedItems,
+				onSubmit: onSubmitForm
+			});
+		} else {
+			win = editor.windowManager.open({
+				title: 'Insert/edit video',
+				data: data,
+				bodyType: 'tabpanel',
+				body: windowBody,
+				activeTab: '1',
+				onSubmit: onSubmitForm
+			});
+		}
 	}
 
 	function getSource() {
