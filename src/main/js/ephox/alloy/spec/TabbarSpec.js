@@ -95,7 +95,8 @@ define(
           mode: 'flow',
           selector: '.' + detail.markers().tabClass(),
           executeOnMove: true
-        }
+        },
+        tabstopping: true
       };
     };
 
