@@ -114,6 +114,24 @@ tinymce.PluginManager.add('media', function(editor) {
 			width = newWidth;
 			height = newHeight;
 		}
+		
+		
+		if(editor.settings.media_autoplay !== false) {
+		    generalFormItems.push({
+		        name: "autoplay",
+		        type: "checkbox",
+		        label: "Play automatically" 
+	        });
+		}
+		
+		if(editor.settings.media_controls !== false) {
+		    generalFormItems.push({
+		        name: "controls",
+		        type: "checkbox",
+		        label: "Show controls",
+		        checked: true
+	        });
+		}
 
 		if (editor.settings.media_alt_source !== false) {
 			generalFormItems.push({name: 'source2', type: 'filepicker', filetype: 'media', size: 40, label: 'Alternative source'});
@@ -243,6 +261,14 @@ tinymce.PluginManager.add('media', function(editor) {
 		if (!data.poster) {
 			data.poster = '';
 		}
+		
+		if(!data.autoplay || data.autoplay === "false") {
+		    data.autoplay = false;
+	    }
+	    
+	    if(data.controls !== false && data.controls !== "false") {
+	        data.controls = true;
+        }
 
 		data.source1 = editor.convertURL(data.source1, "source");
 		data.source2 = editor.convertURL(data.source2, "source");
@@ -305,7 +331,9 @@ tinymce.PluginManager.add('media', function(editor) {
 					html = editor.settings.audio_template_callback(data);
 				} else {
 					html += (
-						'<audio controls="controls" src="' + data.source1 + '">' +
+						'<audio ' + (data.controls === "true" ? " controls=\"controls\" " : "")
+						+ (data.autoplay === "true" ? " autoplay=\"autoplay\" " : "")
+						+ 'src="' + data.source1 + '">' +
 							(data.source2 ? '\n<source src="' + data.source2 + '"' + (data.source2mime ? ' type="' + data.source2mime + '"' : '') + ' />\n' : '') +
 						'</audio>'
 					);
@@ -317,7 +345,8 @@ tinymce.PluginManager.add('media', function(editor) {
 					html = editor.settings.video_template_callback(data);
 				} else {
 					html = (
-						'<video width="' + data.width + '" height="' + data.height + '"' + (data.poster ? ' poster="' + data.poster + '"' : '') + ' controls="controls">\n' +
+						'<video width="' + data.width + '" height="' + data.height + '"' + (data.poster ? ' poster="' + data.poster + '"' : '') + (data.controls === "true" ? " controls=\"controls\" " : "") 
+						+ (data.autoplay === "true" ? " autoplay=\"autoplay\" " : "") + ' >\n' +
 							'<source src="' + data.source1 + '"' + (data.source1mime ? ' type="' + data.source1mime + '"' : '') + ' />\n' +
 							(data.source2 ? '<source src="' + data.source2 + '"' + (data.source2mime ? ' type="' + data.source2mime + '"' : '') + ' />\n' : '') +
 						'</video>'
@@ -505,20 +534,25 @@ tinymce.PluginManager.add('media', function(editor) {
 			start: function(name, attrs, empty) {
 				switch (name) {
 					case "video":
+					case "audio":
 					case "object":
 					case "embed":
 					case "img":
 					case "iframe":
-						setAttributes(attrs, {
+					    setAttributes(attrs, {
 							width: data.width,
-							height: data.height
+							height: data.height,
+							controls: data.controls ? "controls" : "",
+							autoplay : data.autoplay ? "autoplay" : ""
 						});
+					    
 						break;
 				}
 
 				if (updateAll) {
 					switch (name) {
 						case "video":
+						case "audio":
 							setAttributes(attrs, {
 								poster: data.poster,
 								src: ""
@@ -566,7 +600,7 @@ tinymce.PluginManager.add('media', function(editor) {
 			},
 
 			end: function(name) {
-				if (name == "video" && updateAll) {
+				if ((name == "video" || name == "audio") && updateAll) {
 					for (var index = 1; index <= 2; index++) {
 						if (data["source" + index]) {
 							var attrs = [];
