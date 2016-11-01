@@ -101,7 +101,7 @@ tinymce.util.Quirks = function(editor) {
 					// runtime styles junk into that EM
 					wrapperElm = dom.create('em', {'id': '__mceDel'});
 
-					each(tinymce.grep(blockElm.childNodes), function(node) {
+					tinymce.each(tinymce.grep(blockElm.childNodes), function(node) {
 						wrapperElm.appendChild(node);
 					});
 
