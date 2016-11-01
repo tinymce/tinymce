@@ -26,12 +26,13 @@ define('tinymce.modern.modes.Iframe', [
 		};
 	};
 
-	var editArea = function () {
+	var editArea = function (border) {
 		return {
 			type: 'panel',
 			name: 'iframe',
 			layout: 'stack',
 			classes: 'edit-area',
+			border: border,
 			html: ''
 		};
 	};
@@ -43,7 +44,7 @@ define('tinymce.modern.modes.Iframe', [
 			classes: 'edit-aria-container',
 			border: '1 0 0 0',
 			items: [
-				editArea(),
+				editArea('0'),
 				Sidebar.createSidebar(editor)
 			]
 		};
@@ -66,7 +67,7 @@ define('tinymce.modern.modes.Iframe', [
 			items: [
 				settings.menubar === false ? null : {type: 'menubar', border: '0 0 1 0', items: Menubar.createMenuButtons(editor)},
 				Toolbar.createToolbars(editor, settings.toolbar_items_size),
-				Sidebar.hasSidebar(editor) ? editAreaContainer(editor) : editArea()
+				Sidebar.hasSidebar(editor) ? editAreaContainer(editor) : editArea('1 0 0 0')
 			]
 		});
 
@@ -85,7 +86,7 @@ define('tinymce.modern.modes.Iframe', [
 				},
 
 				onResize: function(e) {
-					if (settings.resize == 'both') {
+					if (settings.resize === 'both') {
 						Resize.resizeTo(editor, startSize.width + e.deltaX, startSize.height + e.deltaY);
 					} else {
 						Resize.resizeTo(editor, null, startSize.height + e.deltaY);

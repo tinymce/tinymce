@@ -27,6 +27,50 @@ define('tinymce.modern.ui.ContextToolbars', [
 		};
 	};
 
+	var hideAllFloatingPanels = function (editor) {
+		Tools.each(editor.contextToolbars, function(toolbar) {
+			if (toolbar.panel) {
+				toolbar.panel.hide();
+			}
+		});
+	};
+
+	var movePanelTo = function (panel, pos) {
+		panel.moveTo(pos.left, pos.top);
+	};
+
+	var togglePositionClass = function (panel, relPos, predicate) {
+		relPos = relPos ? relPos.substr(0, 2) : '';
+
+		Tools.each({
+			t: 'down',
+			b: 'up'
+		}, function(cls, pos) {
+			panel.classes.toggle('arrow-' + cls, predicate(pos, relPos.substr(0, 1)));
+		});
+
+		Tools.each({
+			l: 'left',
+			r: 'right'
+		}, function(cls, pos) {
+			panel.classes.toggle('arrow-' + cls, predicate(pos, relPos.substr(1, 1)));
+		});
+	};
+
+	var userConstrain = function (handler, x, y, elementRect, contentAreaRect, panelRect) {
+		panelRect = toClientRect({x: x, y: y, w: panelRect.w, h: panelRect.h});
+
+		if (handler) {
+			panelRect = handler({
+				elementRect: toClientRect(elementRect),
+				contentAreaRect: toClientRect(contentAreaRect),
+				panelRect: panelRect
+			});
+		}
+
+		return panelRect;
+	};
+
 	var addContextualToolbars = function (editor) {
 		var scrollContainer, settings = editor.settings;
 
@@ -42,7 +86,7 @@ define('tinymce.modern.ui.ContextToolbars', [
 			root = editor.dom.getRoot();
 
 			// Adjust targetPos for scrolling in the editor
-			if (root.nodeName == 'BODY') {
+			if (root.nodeName === 'BODY') {
 				targetRect.x -= root.ownerDocument.documentElement.scrollLeft || root.scrollLeft;
 				targetRect.y -= root.ownerDocument.documentElement.scrollTop || root.scrollTop;
 			}
@@ -53,59 +97,16 @@ define('tinymce.modern.ui.ContextToolbars', [
 			return targetRect;
 		};
 
-		var hideAllFloatingPanels = function () {
-			Tools.each(editor.contextToolbars, function(toolbar) {
-				if (toolbar.panel) {
-					toolbar.panel.hide();
-				}
-			});
-		};
-
-		var togglePositionClass = function (panel, relPos, predicate) {
-			relPos = relPos ? relPos.substr(0, 2) : '';
-
-			Tools.each({
-				t: 'down',
-				b: 'up'
-			}, function(cls, pos) {
-				panel.classes.toggle('arrow-' + cls, predicate(pos, relPos.substr(0, 1)));
-			});
-
-			Tools.each({
-				l: 'left',
-				r: 'right'
-			}, function(cls, pos) {
-				panel.classes.toggle('arrow-' + cls, predicate(pos, relPos.substr(1, 1)));
-			});
-		};
-
-		var userConstrain = function (x, y, elementRect, contentAreaRect, panelRect) {
-				panelRect = toClientRect({x: x, y: y, w: panelRect.w, h: panelRect.h});
-
-				if (settings.inline_toolbar_position_handler) {
-					panelRect = settings.inline_toolbar_position_handler({
-						elementRect: toClientRect(elementRect),
-						contentAreaRect: toClientRect(contentAreaRect),
-						panelRect: panelRect
-					});
-				}
-
-				return panelRect;
-		};
-
-		var movePanelTo = function (panel, pos) {
-			panel.moveTo(pos.left, pos.top);
-		};
-
 		var reposition = function (match) {
 			var relPos, panelRect, elementRect, contentAreaRect, panel, relRect, testPositions, smallElementWidthThreshold;
+			var handler = settings.inline_toolbar_position_handler;
 
 			if (editor.removed) {
 				return;
 			}
 
 			if (!match || !match.toolbar.panel) {
-				hideAllFloatingPanels();
+				hideAllFloatingPanels(editor);
 				return;
 			}
 
@@ -122,7 +123,7 @@ define('tinymce.modern.ui.ContextToolbars', [
 			contentAreaRect = DOM.getRect(editor.getContentAreaContainer() || editor.getBody());
 			smallElementWidthThreshold = 25;
 
-			if (DOM.getStyle(match.element, 'display', true) != 'inline') {
+			if (DOM.getStyle(match.element, 'display', true) !== 'inline') {
 				// We need to use these instead of the rect values since the style
 				// size properites might not be the same as the real size for a table
 				elementRect.w = match.element.clientWidth;
@@ -143,7 +144,7 @@ define('tinymce.modern.ui.ContextToolbars', [
 
 			if (relPos) {
 				relRect = Rect.relativePosition(panelRect, elementRect, relPos);
-				movePanelTo(panel, userConstrain(relRect.x, relRect.y, elementRect, contentAreaRect, panelRect));
+				movePanelTo(panel, userConstrain(handler, relRect.x, relRect.y, elementRect, contentAreaRect, panelRect));
 			} else {
 				// Allow overflow below the editor to avoid placing toolbars ontop of tables
 				contentAreaRect.h += panelRect.h;
@@ -156,9 +157,9 @@ define('tinymce.modern.ui.ContextToolbars', [
 
 					if (relPos) {
 						relRect = Rect.relativePosition(panelRect, elementRect, relPos);
-						movePanelTo(panel, userConstrain(relRect.x, relRect.y, elementRect, contentAreaRect, panelRect));
+						movePanelTo(panel, userConstrain(handler, relRect.x, relRect.y, elementRect, contentAreaRect, panelRect));
 					} else {
-						movePanelTo(panel, userConstrain(elementRect.x, elementRect.y, elementRect, contentAreaRect, panelRect));
+						movePanelTo(panel, userConstrain(handler, elementRect.x, elementRect.y, elementRect, contentAreaRect, panelRect));
 					}
 				} else {
 					panel.hide();
@@ -255,9 +256,9 @@ define('tinymce.modern.ui.ContextToolbars', [
 			return null;
 		};
 
-		editor.on('click keyup setContent', function(e) {
+		editor.on('click keyup setContent ObjectResized', function(e) {
 			// Only act on partial inserts
-			if (e.type == 'setcontent' && !e.selection) {
+			if (e.type === 'setcontent' && !e.selection) {
 				return;
 			}
 
