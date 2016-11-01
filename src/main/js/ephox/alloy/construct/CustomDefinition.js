@@ -91,7 +91,8 @@ define(
           ValueSchema.objOf([
             FieldSchema.strict('get')
           ])
-        )
+        ),
+        FieldSchema.state('originalSpec', Fun.identity)
       ].concat(behaviourSchema)), spec);
     };
 
@@ -143,7 +144,10 @@ define(
     var behaviours = function (info) {
       // TODO: Check if behaviours are duplicated? Lab used to ...
       var bs = info.behaviours();
-      return alloyBehaviours.concat(bs);
+      var filtered = Arr.filter(alloyBehaviours, function (ab) {
+        return Objects.hasKey(info.originalSpec(), ab.name());
+      });
+      return filtered.concat(bs);
     };
 
     // Probably want to pass info to these at some point.
