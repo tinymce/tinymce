@@ -30,7 +30,7 @@ define(
       FieldSchema.strict('prefix'),
       FieldSchema.strict('dom'),
       FieldSchema.strict('components'),
-      FieldSchema.defaulted('inline', true)
+      FieldSchema.defaulted('inline', false)
     ];
 
     var make = function (spec) {
