@@ -51,7 +51,7 @@ define(
         '<alloy.tabs>': UiSubstitutes.multiple(
           Arr.map(detail.tabs(), function (tab) {
             var munged = detail.members().tab().munge(tab);
-            var bt = Merger.deepMerge(
+            return Merger.deepMerge(
               munged,
               {
                 uiType: 'button',
@@ -68,8 +68,6 @@ define(
                 }
               }
             );
-            console.log('bt', bt);
-            return bt;
           })
         )
       };
@@ -93,6 +91,12 @@ define(
         components: components,
         keying: {
           mode: 'flow',
+          getInitial: function (tabbar) {
+            // Restore focus to the previously highlighted tab.
+            return tabbar.apis().getHighlighted().map(function (tab) {
+              return tab.element();
+            });
+          },
           selector: '.' + detail.markers().tabClass(),
           executeOnMove: true
         },

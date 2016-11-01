@@ -20,6 +20,7 @@ define(
   function (EditableFields, Keys, KeyingType, KeyingTypes, DomMovement, DomNavigation, KeyMatch, KeyRules, FieldSchema, Fun, Option, Focus, SelectorFind) {
     var schema = [
       FieldSchema.strict('selector'),
+      FieldSchema.defaulted('getInitial', Option.none),
       FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
       FieldSchema.defaulted('executeOnMove', false)
     ];
@@ -31,7 +32,7 @@ define(
     };
 
     var focusIn = function (component, flowInfo) {
-      SelectorFind.descendant(component.element(), flowInfo.selector()).each(function (first) {
+      flowInfo.getInitial()(component).or(SelectorFind.descendant(component.element(), flowInfo.selector())).each(function (first) {
         component.getSystem().triggerFocus(first, component.element());
       });
     };
