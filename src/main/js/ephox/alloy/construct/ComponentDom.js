@@ -7,13 +7,12 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
-    'ephox.lumber.api.Timers',
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
     'ephox.perhaps.Result'
   ],
 
-  function (ObjIndex, DomModification, Objects, Arr, Obj, Timers, Json, Fun, Result) {
+  function (ObjIndex, DomModification, Objects, Arr, Obj, Json, Fun, Result) {
     var behaviourDom = function (name, modification) {
       return {
         name: Fun.constant(name),
@@ -68,22 +67,20 @@ define(
     };
 
     var safeMerge = function (chain, aspect) {
-      return Timers.run('safeMerge', function () {
-        return unsafeMerge(chain, aspect);
-        var y = Arr.foldl(chain, function (acc, c) {
-          var obj = c.modification().getOr({});
-          return acc.bind(function (accRest) {
-            var parts = Obj.mapToArray(obj, function (v, k) {
-              return accRest[k] !== undefined ? duplicate(aspect, k, obj, chain) : 
-                Result.value(Objects.wrap(k, v));
-            });
-            return Objects.consolidate(parts, accRest);
+      // return unsafeMerge(chain, aspect);
+      var y = Arr.foldl(chain, function (acc, c) {
+        var obj = c.modification().getOr({});
+        return acc.bind(function (accRest) {
+          var parts = Obj.mapToArray(obj, function (v, k) {
+            return accRest[k] !== undefined ? duplicate(aspect, k, obj, chain) : 
+              Result.value(Objects.wrap(k, v));
           });
-        }, Result.value({}));
-
-        return y.map(function (yValue) {
-          return Objects.wrap(aspect, yValue);
+          return Objects.consolidate(parts, accRest);
         });
+      }, Result.value({}));
+
+      return y.map(function (yValue) {
+        return Objects.wrap(aspect, yValue);
       });
     };
 
@@ -102,50 +99,34 @@ define(
 
     var combine = function (info, behaviours, base) {
       // Get the Behaviour DOM modifications
-      var behaviourDoms = Timers.run('combine.behaviours', function () {
-        var b = { };
-        Arr.each(behaviours, function (behaviour) {
-          b[behaviour.name()] = behaviour.exhibit(info, base);
-        });
-        return b;
+      var behaviourDoms = { };
+      Arr.each(behaviours, function (behaviour) {
+        behaviourDoms[behaviour.name()] = behaviour.exhibit(info, base);
       });
 
-      var byAspect = Timers.run('combine.innerkey', function () {
-        return ObjIndex.byInnerKey(behaviourDoms, behaviourDom);
-      });
+      var byAspect = ObjIndex.byInnerKey(behaviourDoms, behaviourDom);
 
-      var usedAspect = Timers.run('combine.usedAspect', function () {
-        return Obj.map(byAspect, function (values, aspect) {
-          return Arr.bind(values, function (value) {
-            return value.modification().fold(function () {
-              return [ ];
-            }, function (v) {
-              return [ value ];
-            });
+      var usedAspect = Obj.map(byAspect, function (values, aspect) {
+        return Arr.bind(values, function (value) {
+          return value.modification().fold(function () {
+            return [ ];
+          }, function (v) {
+            return [ value ];
           });
         });
       });
 
-      var modifications = Timers.run('combine.modifications', function () {
-        return Obj.mapToArray(usedAspect, function (values, aspect) {
-          return Objects.readOptFrom(mergeTypes, aspect).fold(function () {
-            return Result.error('Unknown field type: ' + aspect);
-          }, function (merger ){
-            return Timers.run('combine.merger', function () {
-              return merger(values, aspect);
-            });
-          });
+      var modifications = Obj.mapToArray(usedAspect, function (values, aspect) {
+        return Objects.readOptFrom(mergeTypes, aspect).fold(function () {
+          return Result.error('Unknown field type: ' + aspect);
+        }, function (merger ){
+          return merger(values, aspect);
         });
       });
 
-      var consolidated = Timers.run('combine.consolidate', function () {
-        return Objects.consolidate(modifications, {});
-      });
+      var consolidated = Objects.consolidate(modifications, {});
 
-
-      return Timers.run('combine.return', function () {
-        return consolidated.map(DomModification.nu);
-      });
+      return consolidated.map(DomModification.nu);
     };
 
     return {
