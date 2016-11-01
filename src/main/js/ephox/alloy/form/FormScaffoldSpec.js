@@ -9,12 +9,13 @@ define(
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
+    'ephox.highway.Merger',
     'ephox.perhaps.Option'
   ],
 
-  function (RadioGroupSpec, TextInputSpec, Tagger, SpecSchema, UiSubstitutes, FieldSchema, ValueSchema, Option) {
+  function (RadioGroupSpec, TextInputSpec, Tagger, SpecSchema, UiSubstitutes, FieldSchema, ValueSchema, Merger, Option) {
     var schema = [
-      FieldSchema.option('uid'),
+      FieldSchema.strict('uid'),
       FieldSchema.strict('components'),
       FieldSchema.strict('dom'),
       FieldSchema.defaulted('inline', true),
@@ -41,8 +42,13 @@ define(
       var placeholders = {
         '<alloy.form.element>': UiSubstitutes.single(
           (function () {
-            console.log('field', info.parts().field());
-            var itemInfo = ValueSchema.asStructOrDie('ui.spec item', uiSchema, info.parts().field());
+            var fullSpec = Merger.deepMerge(
+              info.parts().field(),
+              {
+                uid: info.partUids().field
+              }
+            );
+            var itemInfo = ValueSchema.asStructOrDie('ui.spec item', uiSchema, fullSpec);
             var output = itemInfo.builder()(itemInfo);
             return output;
           })()
@@ -59,7 +65,7 @@ define(
 
       return {
         uiType: 'custom',
-        uid: info.uid().getOr(Tagger.generate('')),
+        uid: info.uid(),
         dom: info.dom(),
         components: components
       };

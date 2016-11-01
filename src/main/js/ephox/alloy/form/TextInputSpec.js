@@ -11,7 +11,7 @@ define(
 
   function (Tagger, FormLabelSpec, FieldSchema, Merger, Value) {
     var schema = [
-      FieldSchema.option('uid'),
+      FieldSchema.strict('uid'),
       FieldSchema.strict('label'),
       FieldSchema.strict('name'),
       FieldSchema.strict('components'),
@@ -31,7 +31,7 @@ define(
 
     var builder = function (info) {
       return FormLabelSpec.make({
-        uid: info.uid().getOr(Tagger.generate('')),
+        uid: info.uid(),
         prefix: 'text-input',
         inline: info.inline(),
         label: {

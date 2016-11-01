@@ -32,7 +32,7 @@ define(
      */
 
     var schema = [
-      FieldSchema.option('uid'),
+      FieldSchema.strict('uid'),
       FieldSchema.strict('components'),
       FieldSchema.strict('dom'),
       FieldSchema.strict('label'),
@@ -151,7 +151,7 @@ define(
           })
         ),
         tabstopping: true,
-        uid: info.uid().getOr(Tagger.generate('')),
+        uid: info.uid(),
         dom: info.dom(),
         components: components
       };

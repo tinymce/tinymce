@@ -5,10 +5,12 @@ define(
     'ephox.alloy.form.FormScaffoldSpec',
     'ephox.alloy.form.RadioGroupSpec',
     'ephox.alloy.form.TextInputSpec',
+    'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
@@ -16,7 +18,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (FormScaffoldSpec, RadioGroupSpec, TextInputSpec, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Arr, Obj, Merger, Option) {
+  function (FormScaffoldSpec, RadioGroupSpec, TextInputSpec, Tagger, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Option) {
     var schema = [
       FieldSchema.strict('dom'),
       FieldSchema.strict('uis'),
@@ -48,7 +50,13 @@ define(
       var byName = { };
 
       var fields = Arr.map(detail.uis(), function (ui) {
-        var uiSpec = detail.members().ui().munge(ui);
+        var uid = Objects.readOptFrom(ui, 'uid').getOrThunk(function () { return Tagger.generate(''); });
+        var uiSpec = detail.members().ui().munge(Merger.deepMerge(
+          ui,
+          {
+            uid: uid
+          }
+        ));
         var itemInfo = ValueSchema.asStructOrDie('ui.spec item', uiSchema, uiSpec);
         var output = itemInfo.builder()(itemInfo);
         byName[uiSpec.name] = output.uid;
