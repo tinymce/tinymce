@@ -20,10 +20,11 @@ define(
     'ephox.peanut.Fun',
     'ephox.peanut.Thunk',
     'ephox.perhaps.Option',
+    'ephox.scullion.Cell',
     'global!Error'
   ],
 
-  function (CustomRadioGroupSpec, FormScaffoldSpec, RadioGroupSpec, TextInputSpec, Tagger, SpecSchema, TabbedSpec, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Thunk, Option, Error) {
+  function (CustomRadioGroupSpec, FormScaffoldSpec, RadioGroupSpec, TextInputSpec, Tagger, SpecSchema, TabbedSpec, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Thunk, Option, Cell, Error) {
     var schema = [
       FieldSchema.strict('dom'),
 
@@ -52,17 +53,55 @@ define(
 
     var make = function (spec) {
 
-      var detail = SpecSchema.asStructOrDie('slide-form', schema, spec, [
+      var detail = SpecSchema.asStructOrDie('slide-form', schema.concat([
+        // Store the states for panels that have no been craeted
+        FieldSchema.state('fieldState', function () {
+          return Cell({ });
+        })
+      ]), spec, [
         'tabbar',
-        'tabview'
+        'tabview',
+        'left',
+        'right'
       ].concat(spec.fieldOrder));
+
+      var placeholders = {
+        '<alloy.slide-form.left>': UiSubstitutes.single(
+          Merger.deepMerge(
+            detail.parts().left(),
+            detail.parts().left().base,
+            {
+              uid: detail.partUids().left,
+              uiType: 'button'
+            }
+          )
+        ),
+        '<alloy.slide-form.right>': UiSubstitutes.single(
+          Merger.deepMerge(
+            detail.parts().right(),
+            detail.parts().right().base,
+            {
+              uid: detail.partUids().right,
+              uiType: 'button'
+            }
+          )
+        )
+      };
+
+      var components = UiSubstitutes.substitutePlaces(
+        Option.some('slide-form'),
+        detail,
+        detail.components(),
+        placeholders,
+        { }
+      );
 
       return Merger.deepMerge(
         spec,
         TabbedSpec.make({
           uid: detail.uid(),
           dom: detail.dom(),
-          components: detail.components(),
+          components: components,
           defaultView: Fun.constant([ { uiType: 'container' } ]),
           tabs: Arr.map(detail.fieldOrder(), function (f) {
             return Objects.readOptFrom(detail.fields(), f).fold(function () {
@@ -96,10 +135,12 @@ define(
             query: function (form) {
               var r = {};
               Obj.each(detail.partUids(), function (partUid, name) {
+                if (Arr.contains([ 'tabbar', 'tabview' ], name)) return;
                 form.getSystem().getByUid(partUid).each(function (field) {
-                  r[name] = field.delegate().map(function (dlg) {
+                  var delegate = r[name] = field.delegate().map(function (dlg) {
                     return dlg.get()(field);
-                  }).getOr(field).apis().getValue();
+                  }).getOr(field);
+                  r[name] = delegate.apis().getValue();
                 });
               });
               return r;
@@ -108,30 +149,16 @@ define(
               Obj.each(value, function (v, k) {
                 var fieldUid = detail.partUids()[k];
                 form.getSystem().getByUid(fieldUid).each(function (field) {
-                  field.delegate().map(function (dlg) {
+                  var delegate = field.delegate().map(function (dlg) {
                     return dlg.get()(field);
-                  }).getOr(field).apis().setValue(v);
+                  }).getOr(field);
+                  delegate.apis().setValue(v);
                 });
               });
             }
           }
         }
       );
-
-      var components = UiSubstitutes.substitutePlaces(
-        Option.some('slide-form'),
-        detail,
-        detail.components(),
-        placeholders,
-        { }
-      );
-
-      return Merger.deepMerge(spec, {
-        uiType: 'container',
-        uid: detail.uid(),
-        dom: detail.dom(),
-        components: components
-      });
     };
 
     return {

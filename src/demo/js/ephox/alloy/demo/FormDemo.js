@@ -238,6 +238,12 @@ define(
           parts: Merger.deepMerge(
             fieldParts,
             {
+              left: {
+                dom: { tag: 'button', innerHtml: '<' }
+              },
+              right: {
+                dom: { tag: 'button', innerHtml: '>' }
+              },
               tabbar: {
                 dom: {
                   tag: 'span'
@@ -245,12 +251,15 @@ define(
                 members: {
                   tab: {
                     munge: function (spec) {
-                      return {
-                        dom: {
-                          tag: 'span',
-                          classes: [ 'dot' ]
+                      return Merger.deepMerge(
+                        spec,
+                        {
+                          dom: {
+                            tag: 'span',
+                            classes: [ 'dot' ]
+                          }
                         }
-                      };
+                      );
                     }
                   }
                 },
@@ -276,7 +285,9 @@ define(
               uiType: 'container',
               dom: { classes: [ 'dot-container' ] },
               components: [
-                { uiType: 'placeholder', name: '<alloy.tabbar>', owner: 'tabbing' }
+                { uiType: 'placeholder', name: '<alloy.slide-form.left>', owner: 'slide-form' },
+                { uiType: 'placeholder', name: '<alloy.tabbar>', owner: 'tabbing' },
+                { uiType: 'placeholder', name: '<alloy.slide-form.right>', owner: 'slide-form' }
               ]
             }
           ],
@@ -293,7 +304,11 @@ define(
         }
       );
 
-      // window.CC = form;
+      slideform.apis().setValue({
+        delta: 'dog'
+      });
+
+      window.SC = slideform;
     };
   }
 );
