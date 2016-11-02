@@ -40,6 +40,9 @@ define(
               legend: { },
               fields: { }
             },
+            markers: {
+              radioSelector: 'input[type="radio"]'
+            },
             components: [
               { uiType: 'placeholder', name: '<alloy.form.radio-fields>', owner: 'radio-group' },
               { uiType: 'placeholder', name: '<alloy.form.field-legend>', owner: 'radio-group' }
@@ -96,6 +99,20 @@ define(
               ]
             }
           ],
+
+          /*
+          <fieldset role="radiogroup" aria-labelledby="ephox-aria_6601596576731478045917659">
+            <legend id="ephox-aria_6601596576731478045917659">Floating Alignment</legend>
+            <div role="presentation" class="ephox-polish-dialog-float-options">
+              <span class="ephox-pastry-independent-button ephox-pastry-button ephox-polish-dialog-float-container ephox-polish-dialog-float-selected" unselectable="on" tabindex="-1" data-float-value="none" title="Align None" aria-label="Align None" role="radio" aria-checked="true" style="-webkit-user-select: none;">
+                <div role="presentation" aria-hidden="true" class="ephox-polish-dialog-float-icon">
+                  <div role="presentation" class="ephox-polish-dialog-float-icon-inner-left"></div>
+                  <div role="presentation" class="ephox-polish-dialog-float-icon-inner-center"></div>
+                  <div role="presentation" class="ephox-polish-dialog-float-icon-inner-right"></div>
+                </div>
+              </span>
+              <span class="ephox-pastry-independent-button ephox-pastry-button ephox-polish-dialog-float-container" unselectable="on" tabindex="-1" data-float-value="center" title="Align Center" aria-label="Align Center" role="radio" aria-checked="false" style="-webkit-user-select: none;"><div role="presentation" aria-hidden="true" class="ephox-polish-dialog-float-icon"><div role="presentation" class="ephox-polish-dialog-float-icon-inner-left"></div><div role="presentation" class="ephox-polish-dialog-float-icon-inner-center"></div><div role="presentation" class="ephox-polish-dialog-float-icon-inner-right"></div></div></span><span class="ephox-pastry-independent-button ephox-pastry-button ephox-polish-dialog-float-container" unselectable="on" tabindex="-1" data-float-value="left" title="Align Left" aria-label="Align Left" role="radio" aria-checked="false" style="-webkit-user-select: none;"><div role="presentation" aria-hidden="true" class="ephox-polish-dialog-float-icon"><div role="presentation" class="ephox-polish-dialog-float-icon-inner-left"></div><div role="presentation" class="ephox-polish-dialog-float-icon-inner-center"></div><div role="presentation" class="ephox-polish-dialog-float-icon-inner-right"></div></div></span><span class="ephox-pastry-independent-button ephox-pastry-button ephox-polish-dialog-float-container" unselectable="on" tabindex="-1" data-float-value="right" title="Align Right" aria-label="Align Right" role="radio" aria-checked="false" style="-webkit-user-select: none;"><div role="presentation" aria-hidden="true" class="ephox-polish-dialog-float-icon"><div role="presentation" class="ephox-polish-dialog-float-icon-inner-left"></div><div role="presentation" class="ephox-polish-dialog-float-icon-inner-center"></div><div role="presentation" class="ephox-polish-dialog-float-icon-inner-right"></div></div></span></div></fieldset>
+          */
 
           // uis: [
           //   { type: 'text-input', label: 'Alpha', name: 'alpha' },

@@ -38,6 +38,15 @@ define(
       FieldSchema.strict('label'),
       FieldSchema.strict('candidates'),
       FieldSchema.option('selectedValue'),
+
+      FieldSchema.field(
+        'markers',
+        'markers',
+        FieldPresence.strict(),
+        ValueSchema.objOf([
+          FieldSchema.strict('radioSelector')
+        ])
+      ),
   
       FieldSchema.strict('name'),
       FieldSchema.state('builder', function () {
@@ -116,7 +125,7 @@ define(
         uiType: 'custom',
         keying: {
           mode: 'flow',
-          selector: 'input[type="radio"]',
+          selector: info.markers().radioSelector(),
           executeOnMove: true,
           getInitial: function (comp) {
             return Checked.find(comp.element());
