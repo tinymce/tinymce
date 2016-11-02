@@ -151,6 +151,9 @@ define(
                         detail.sink().getSystem().removeFromWorld(blocker);
                       });
                     });
+                  },
+                  getBody: function (dialog) {
+                    return dialog.getSystem().getByUid(detail.partUids().body);
                   }
                 };
               },
