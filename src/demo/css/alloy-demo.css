@@ -40,6 +40,14 @@ button {
   content: '+';
 }
 
+.outside-slide-form {
+  width: 150px;
+}
+
+.outside-slide-form input {
+  width: 100%;
+}
+
 
 
 .dot {

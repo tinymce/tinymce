@@ -85,7 +85,7 @@ define(
 
       var fieldParts = {
         alpha: { type: 'text-input', label: 'Alpha', inline: false },
-        beta: { type: 'text-input', label: 'Beta' },
+        beta: { type: 'text-input', label: 'Beta', inline: false },
         gamma: {
           type: 'radio-group',
           members: {
@@ -119,7 +119,7 @@ define(
             { value: 'abra!', text: 'abra!' }
           ]
         },
-        delta: { type: 'text-input', label: 'Delta' },
+        delta: { type: 'text-input', label: 'Delta', inline: false },
         epsilon: { type: 'text-input', label: 'Epsilon' },
         rho: {
           type: 'custom-radio-group',
@@ -223,10 +223,7 @@ define(
           uiType: 'slide-form',
           dom: {
             tag: 'div',
-            classes: [ 'outside-slide-form' ],
-            styles: {
-              width: '300px'
-            }
+            classes: [ 'outside-slide-form' ]
           },
           members: {
             ui: {
@@ -293,9 +290,9 @@ define(
           ],
           fields: fieldParts,
           fieldOrder: [
-            'alpha',
+            // 'alpha',
             'beta',
-            'gamma',
+            // 'gamma',
             'delta'
           ],
           keying: {
