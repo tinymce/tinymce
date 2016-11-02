@@ -235,38 +235,41 @@ define(
               }
             }
           },
-          parts: {
-            tabbar: {
-              dom: {
-                tag: 'span'
-              },
-              members: {
-                tab: {
-                  munge: function (spec) {
-                    return {
-                      dom: {
-                        tag: 'span',
-                        classes: [ 'dot' ]
-                      }
-                    };
+          parts: Merger.deepMerge(
+            fieldParts,
+            {
+              tabbar: {
+                dom: {
+                  tag: 'span'
+                },
+                members: {
+                  tab: {
+                    munge: function (spec) {
+                      return {
+                        dom: {
+                          tag: 'span',
+                          classes: [ 'dot' ]
+                        }
+                      };
+                    }
                   }
-                }
+                },
+                markers: {
+                  tabClass: 'dot',
+                  selectedClass: 'selected-dot'
+                },
+                parts: {
+                  tabs: { }
+                },
+                components: [
+                  { uiType: 'placeholder', name: '<alloy.tabs>', owner: 'tabbar' }
+                ]
               },
-              markers: {
-                tabClass: 'dot',
-                selectedClass: 'selected-dot'
-              },
-              parts: {
-                tabs: { }
-              },
-              components: [
-                { uiType: 'placeholder', name: '<alloy.tabs>', owner: 'tabbar' }
-              ]
-            },
-            tabview: {
+              tabview: {
 
+              }
             }
-          },
+          ),
           components: [
             { uiType: 'placeholder', name: '<alloy.tabview>', owner: 'tabbing' },
             {

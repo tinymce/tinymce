@@ -15,13 +15,15 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
+    'ephox.compass.Obj',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
+    'ephox.peanut.Thunk',
     'ephox.perhaps.Option',
     'global!Error'
   ],
 
-  function (CustomRadioGroupSpec, FormScaffoldSpec, RadioGroupSpec, TextInputSpec, Tagger, SpecSchema, TabbedSpec, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Option, Error) {
+  function (CustomRadioGroupSpec, FormScaffoldSpec, RadioGroupSpec, TextInputSpec, Tagger, SpecSchema, TabbedSpec, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Thunk, Option, Error) {
     var schema = [
       FieldSchema.strict('dom'),
 
@@ -53,7 +55,7 @@ define(
       var detail = SpecSchema.asStructOrDie('slide-form', schema, spec, [
         'tabbar',
         'tabview'
-      ]);
+      ].concat(spec.fieldOrder));
 
       return Merger.deepMerge(
         spec,
@@ -70,7 +72,7 @@ define(
                 Merger.deepMerge(
                   uiSpec,
                   {
-                    uid: Objects.readOptFrom(uiSpec, 'uid').getOr(Tagger.generate(''))
+                    uid: detail.partUids()[f]
                   }
                 )
               );
@@ -79,26 +81,42 @@ define(
               return {
                 value: f,
                 text: f,
-                view: function (view, revertToBase) {
-                  return [ output ];
-                }
+                view: Thunk.cached(function (view, revertToBase) {
+                  var built = view.getSystem().build(output);
+                  return [ { built: built } ];
+                })
               };
             });
           }),
           parts: spec.parts
-        })
-      );
-
-      var placeholders = {
-        '<alloy.slide-form.container>': UiSubstitutes.multiple(
-          [ ]
-        ),
-        '<alloy.slide-form.footer>': UiSubstitutes.single(
-          {
-            uiType: 'tabbar'
+        }),
+        {
+          // Dupe with form spec
+          representing: {
+            query: function (form) {
+              var r = {};
+              Obj.each(detail.partUids(), function (partUid, name) {
+                form.getSystem().getByUid(partUid).each(function (field) {
+                  r[name] = field.delegate().map(function (dlg) {
+                    return dlg.get()(field);
+                  }).getOr(field).apis().getValue();
+                });
+              });
+              return r;
+            },
+            set: function (form, value) {
+              Obj.each(value, function (v, k) {
+                var fieldUid = detail.partUids()[k];
+                form.getSystem().getByUid(fieldUid).each(function (field) {
+                  field.delegate().map(function (dlg) {
+                    return dlg.get()(field);
+                  }).getOr(field).apis().setValue(v);
+                });
+              });
+            }
           }
-        )
-      };
+        }
+      );
 
       var components = UiSubstitutes.substitutePlaces(
         Option.some('slide-form'),
