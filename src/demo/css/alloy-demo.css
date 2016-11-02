@@ -40,6 +40,24 @@ button {
   content: '+';
 }
 
+.dot {
+  border-radius: 50%;
+  border: 7px solid #333;
+  width: 0px;
+  height: 0px;
+  padding: 0px;
+  margin: 5px;
+  display: inline-block;
+}
+
+.dot.selected-dot {
+  border-color: blue;
+}
+
+.dot:focus {
+  background: green;
+}
+
 /*
  * Hiding and showing the more drawer
  *

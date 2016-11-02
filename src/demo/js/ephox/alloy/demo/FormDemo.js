@@ -242,16 +242,16 @@ define(
                   munge: function (spec) {
                     return {
                       dom: {
-                        tag: 'button',
-                        innerHtml: spec.value
+                        tag: 'span',
+                        classes: [ 'dot' ]
                       }
                     };
                   }
                 }
               },
               markers: {
-                tabClass: 'tab',
-                selectedClass: 'selected-tab'
+                tabClass: 'dot',
+                selectedClass: 'selected-dot'
               },
               parts: {
                 tabs: { }
@@ -271,8 +271,13 @@ define(
           fields: fieldParts,
           fieldOrder: [
             'alpha',
-            'beta'
-          ]
+            'beta',
+            'gamma',
+            'delta'
+          ],
+          keying: {
+            mode: 'cyclic'
+          }
         }
       );
 

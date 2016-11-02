@@ -55,36 +55,39 @@ define(
         'tabview'
       ]);
 
-      return TabbedSpec.make({
-        uid: detail.uid(),
-        dom: detail.dom(),
-        components: detail.components(),
-        defaultView: Fun.constant([ { uiType: 'container' } ]),
-        tabs: Arr.map(detail.fieldOrder(), function (f) {
-          return Objects.readOptFrom(detail.fields(), f).fold(function () {
-            throw new Error('Slide form trying to create view for: ' + f + '. Field does not exist');
-          }, function (uiSpec) {
-            var fullSpec = detail.members().ui().munge(
-              Merger.deepMerge(
-                uiSpec,
-                {
-                  uid: Objects.readOptFrom(uiSpec, 'uid').getOr(Tagger.generate(''))
+      return Merger.deepMerge(
+        spec,
+        TabbedSpec.make({
+          uid: detail.uid(),
+          dom: detail.dom(),
+          components: detail.components(),
+          defaultView: Fun.constant([ { uiType: 'container' } ]),
+          tabs: Arr.map(detail.fieldOrder(), function (f) {
+            return Objects.readOptFrom(detail.fields(), f).fold(function () {
+              throw new Error('Slide form trying to create view for: ' + f + '. Field does not exist');
+            }, function (uiSpec) {
+              var fullSpec = detail.members().ui().munge(
+                Merger.deepMerge(
+                  uiSpec,
+                  {
+                    uid: Objects.readOptFrom(uiSpec, 'uid').getOr(Tagger.generate(''))
+                  }
+                )
+              );
+              var itemInfo = ValueSchema.asStructOrDie('ui.spec item', uiSchema, fullSpec);
+              var output = itemInfo.builder()(itemInfo);
+              return {
+                value: f,
+                text: f,
+                view: function (view, revertToBase) {
+                  return [ output ];
                 }
-              )
-            );
-            var itemInfo = ValueSchema.asStructOrDie('ui.spec item', uiSchema, fullSpec);
-            var output = itemInfo.builder()(itemInfo);
-            return {
-              value: f,
-              text: f,
-              view: function (view, revertToBase) {
-                return [ output ];
-              }
-            };
-          });
-        }),
-        parts: spec.parts
-      });
+              };
+            });
+          }),
+          parts: spec.parts
+        })
+      );
 
       var placeholders = {
         '<alloy.slide-form.container>': UiSubstitutes.multiple(
