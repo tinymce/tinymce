@@ -20,6 +20,13 @@ define(
         'controls'
       ]);
 
+      var toggleForm = function (anyComp) {
+        var extraOpt = anyComp.getSystem().getByUid(detail.partUids()['extra-form']);
+        extraOpt.each(function (extra) {
+          extra.apis().toggleGrow();
+        });
+      };
+
       var placeholders = {
         '<alloy.expandable-form.minimal-form>': UiSubstitutes.single(
           Merger.deepMerge(
@@ -59,12 +66,7 @@ define(
             {
               uid: detail.partUids().expander,
               uiType: 'button',
-              action: function (button) {
-                var extraOpt = button.getSystem().getByUid(detail.partUids()['extra-form']);
-                extraOpt.each(function (extra) {
-                  extra.apis().toggleGrow();
-                });
-              }
+              action: toggleForm
             }
           )
         ),
@@ -105,7 +107,11 @@ define(
           },
           {
             parts: fieldParts
-
+          },
+          {
+            apis: {
+              toggleForm: toggleForm
+            }
           }
         )
       );

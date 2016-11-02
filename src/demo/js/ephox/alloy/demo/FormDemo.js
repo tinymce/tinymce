@@ -294,6 +294,10 @@ define(
         }
       );
 
+      setTimeout(function () {
+        expform.apis().toggleForm();
+      }, 1000);
+
       // var slideform = HtmlDisplay.section(
       //   gui,
       //   'This is a sliding form',
