@@ -49,6 +49,7 @@ define(
                 openStyle: 'demo-sliding-open',
                 shrinkingStyle: 'demo-sliding-height-shrinking',
                 growingStyle: 'demo-sliding-height-growing',
+                expanded: true,
                 onShrunk: function () {
                   console.log('height.slider.shrunk');
                 },

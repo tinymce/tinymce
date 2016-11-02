@@ -23,14 +23,19 @@ define(
         FieldSchema.strict('growingStyle'),
         FieldSchema.defaulted('onShrunk', function () { }),
         FieldSchema.defaulted('onGrown', function () { }),
-        FieldSchema.state('state', function () {
-          return Cell(false);
+        FieldSchema.defaulted('expanded', false),
+        FieldSchema.state('state', function (spec) {
+          return Cell(spec.expanded === true);
         }),
         FieldSchema.state('handler', function () {
           var schema = [ ];
 
           var doExhibit = function (oInfo, base) {
-            return DomModification.nu({
+            var expanded = oInfo.expanded();
+            return expanded ? DomModification.nu({
+              classes: [ oInfo.openStyle() ],
+              styles: { }
+            }) : DomModification.nu({
               classes: [ oInfo.closedStyle() ],
               styles: Objects.wrap(dimensionProperty, '0px')
             });
