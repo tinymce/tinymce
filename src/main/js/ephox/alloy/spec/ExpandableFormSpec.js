@@ -35,7 +35,20 @@ define(
             detail.parts()['extra-form'](),
             detail.parts()['extra-form'].base,
             {
-              uid: detail.partUids()['extra-form']
+              uid: detail.partUids()['extra-form'],
+              sliding: {
+                mode: 'height',
+                closedStyle: 'demo-sliding-closed',
+                openStyle: 'demo-sliding-open',
+                shrinkingStyle: 'demo-sliding-height-shrinking',
+                growingStyle: 'demo-sliding-height-growing',
+                onShrunk: function () {
+                  console.log('height.slider.shrunk');
+                },
+                onGrown: function () {
+                  console.log('height.slider.grown');
+                }
+              }
             }
           )
         ),
@@ -44,7 +57,14 @@ define(
             detail.parts()['expander'](),
             detail.parts()['expander'].base,
             {
-              uid: detail.partUids().expander
+              uid: detail.partUids().expander,
+              uiType: 'button',
+              action: function (button) {
+                var extraOpt = button.getSystem().getByUid(detail.partUids()['extra-form']);
+                extraOpt.each(function (extra) {
+                  extra.apis().toggleGrow();
+                });
+              }
             }
           )
         ),

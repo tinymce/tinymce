@@ -237,12 +237,18 @@ define(
             {
               'minimal-form': {
                 uiType: 'container',
+                dom: {
+                  classes: [ 'form-section' ]
+                },
                 components: [
                   { uiType: 'placeholder', owner: 'form', name: '<alloy.field.alpha>' }
                 ]
               },
               'extra-form': {
                 uiType: 'container',
+                dom: {
+                  classes: [ 'form-section' ]
+                },
                 components: [
                   { uiType: 'placeholder', owner: 'form', name: '<alloy.field.beta>' },
                   { uiType: 'placeholder', owner: 'form', name: '<alloy.field.gamma>' },
@@ -251,8 +257,27 @@ define(
                   { uiType: 'placeholder', owner: 'form', name: '<alloy.field.rho>' }
                 ]
               },
-              'expander': { uiType: 'container' },
-              'controls': { uiType: 'container' }
+              'expander': {
+                dom: {
+                  tag: 'button',
+                  innerHtml: 'v'
+                },
+                keying: {
+                  mode: 'execution'
+                },
+                tabstopping: true
+              },
+              'controls': {
+                uiType: 'container',
+                tabstopping: true,
+                keying: {
+                  mode: 'flow',
+                  selector: 'button'
+                },
+                components: [
+                  { uiType: 'button', dom: { tag: 'button', innerHtml: 'OK' } }
+                ]
+              }
             }
           ),
 
@@ -263,7 +288,8 @@ define(
             { uiType: 'placeholder', name: '<alloy.expandable-form.controls>', owner: 'expandable-form' }
           ],
           keying: {
-            mode: 'cyclic'
+            mode: 'cyclic',
+            visibilitySelector: '.form-section'
           }
         }
       );
