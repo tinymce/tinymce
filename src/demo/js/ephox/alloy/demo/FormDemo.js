@@ -70,12 +70,22 @@ define(
           },
           parts: {
             alpha: { type: 'text-input', label: 'Alpha' },
-            beta: { type: 'text-input', label: 'Beta' }
+            beta: { type: 'text-input', label: 'Beta' },
+            gamma: {
+              type: 'radio-group',
+              name: 'gamma',
+              candidates: [
+                { value: 'abra', text: 'Abra' },
+                { value: 'cad', text: 'Cad' },
+                { value: 'abra!', text: 'abra!' }
+              ]
+            }
           },
 
           components: [
             { uiType: 'placeholder', owner: 'form', name: '<alloy.field.alpha>' },
-            { uiType: 'placeholder', owner: 'form', name: '<alloy.field.beta>' }
+            { uiType: 'placeholder', owner: 'form', name: '<alloy.field.beta>' },
+            { uiType: 'placeholder', owner: 'form', name: '<alloy.field.gamma>' },
           ],
 
           // uis: [
