@@ -225,6 +225,13 @@ define(
             tag: 'div',
             classes: [ 'outside-slide-form' ]
           },
+          members: {
+            ui: {
+              munge: function (spec) {
+                return mungers[spec.type](spec);
+              }
+            }
+          },
           parts: {
             tabbar: {
               dom: {
@@ -232,7 +239,14 @@ define(
               },
               members: {
                 tab: {
-                  munge: Fun.identity
+                  munge: function (spec) {
+                    return {
+                      dom: {
+                        tag: 'button',
+                        innerHtml: spec.value
+                      }
+                    };
+                  }
                 }
               },
               markers: {

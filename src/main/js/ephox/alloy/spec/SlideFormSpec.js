@@ -6,31 +6,36 @@ define(
     'ephox.alloy.form.FormScaffoldSpec',
     'ephox.alloy.form.RadioGroupSpec',
     'ephox.alloy.form.TextInputSpec',
+    'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.TabbedSpec',
     'ephox.alloy.spec.UiSubstitutes',
+    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
+    'ephox.compass.Arr',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option'
+    'ephox.perhaps.Option',
+    'global!Error'
   ],
 
-  function (CustomRadioGroupSpec, FormScaffoldSpec, RadioGroupSpec, TextInputSpec, SpecSchema, TabbedSpec, UiSubstitutes, FieldSchema, ValueSchema, Merger, Fun, Option) {
+  function (CustomRadioGroupSpec, FormScaffoldSpec, RadioGroupSpec, TextInputSpec, Tagger, SpecSchema, TabbedSpec, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Option, Error) {
     var schema = [
       FieldSchema.strict('dom'),
 
       FieldSchema.strict('fieldOrder'),
-      FieldSchema.strict('fields')
-      
-      // FieldSchema.field(
-      //   'members',
-      //   'members',
-      //   FieldPresence.strict(),
-      //   ValueSchema.objOf([
-      //     FieldSchema.strict('ui')
-      //   ])
-      // )
+      FieldSchema.strict('fields'),
+
+      FieldSchema.field(
+        'members',
+        'members',
+        FieldPresence.strict(),
+        ValueSchema.objOf([
+          FieldSchema.strict('ui')
+        ])
+      )
     ];
 
     var uiSchema = ValueSchema.choose(
@@ -55,7 +60,29 @@ define(
         dom: detail.dom(),
         components: detail.components(),
         defaultView: Fun.constant([ { uiType: 'container' } ]),
-        tabs: [ ],
+        tabs: Arr.map(detail.fieldOrder(), function (f) {
+          return Objects.readOptFrom(detail.fields(), f).fold(function () {
+            throw new Error('Slide form trying to create view for: ' + f + '. Field does not exist');
+          }, function (uiSpec) {
+            var fullSpec = detail.members().ui().munge(
+              Merger.deepMerge(
+                uiSpec,
+                {
+                  uid: Objects.readOptFrom(uiSpec, 'uid').getOr(Tagger.generate(''))
+                }
+              )
+            );
+            var itemInfo = ValueSchema.asStructOrDie('ui.spec item', uiSchema, fullSpec);
+            var output = itemInfo.builder()(itemInfo);
+            return {
+              value: f,
+              text: f,
+              view: function (view, revertToBase) {
+                return [ output ];
+              }
+            };
+          });
+        }),
         parts: spec.parts
       });
 
