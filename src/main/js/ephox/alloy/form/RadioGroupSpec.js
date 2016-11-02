@@ -137,7 +137,7 @@ define(
             // Don't really want to return an Option. Hmm.
             return Checked.find(comp.element()).map(function (radio) {
               return Attr.get(radio, 'value');
-            });
+            }).getOr(null);
           },
           set: function (group, value) {
             SelectorFind.descendant(group.element(), '[value="' + value + '"]').each(function (item) {
