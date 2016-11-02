@@ -24,7 +24,8 @@ define(
         FieldSchema.strict('highlightClass'),
         FieldSchema.strict('itemClass'),
 
-        FieldSchema.defaulted('onHighlight', Fun.noop)
+        FieldSchema.defaulted('onHighlight', Fun.noop),
+        FieldSchema.defaulted('onDehighlight', Fun.noop)
       ])
     );
 
@@ -36,11 +37,15 @@ define(
       var highlighted = SelectorFilter.descendants(component.element(), '.' + hInfo.highlightClass());
       Arr.each(highlighted, function (h) {
         Class.remove(h, hInfo.highlightClass());
+        component.getSystem().getByDom(h).each(function (target) {
+          hInfo.onDehighlight()(component, target);
+        });
       });
     };
 
     var dehighlight = function (component, hInfo, target) {
       Class.remove(target.element(), hInfo.highlightClass());
+      hInfo.onDehighlight()(component, target);
     };
 
     var highlight = function (component, hInfo, target) {

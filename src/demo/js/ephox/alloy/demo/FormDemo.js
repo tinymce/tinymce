@@ -18,42 +18,69 @@ define(
       Class.add(gui.element(), 'gui-root-demo-container');
       Insert.append(body, gui.element());
 
-      var mungers = {
-        'text-input': function (spec) {
-          return Merger.deepMerge(spec, {
-            dom: {
-              tag: 'div'
-            },
-            components: [
-              { uiType: 'placeholder', name: '<alloy.form.field-label>', owner: 'formlabel' },
-              { uiType: 'placeholder', name: '<alloy.form.field-input>', owner: 'formlabel' }
-            ]
-          });
-        },
-        'radio-group': function (spec) {
-          return Merger.deepMerge(spec, {
-            dom: {
-              tag: 'fieldset'
-            },
-            label: 'Radio',
-            parts: {
-              legend: { },
-              fields: { }
-            },
-            markers: {
-              radioSelector: 'input[type="radio"]'
-            },
-            components: [
-              { uiType: 'placeholder', name: '<alloy.form.radio-fields>', owner: 'radio-group' },
-              { uiType: 'placeholder', name: '<alloy.form.field-legend>', owner: 'radio-group' }
-            ]
-          });
-        }
+      var textMunger = function (spec) {
+        return Merger.deepMerge(spec, {
+          dom: {
+            tag: 'div'
+          },
+          components: [
+            { uiType: 'placeholder', name: '<alloy.form.field-label>', owner: 'formlabel' },
+            { uiType: 'placeholder', name: '<alloy.form.field-input>', owner: 'formlabel' }
+          ]
+        });
       };
 
-   
-          
+      var radioMunger = function (spec) {
+        return Merger.deepMerge(spec, {
+          dom: {
+            tag: 'fieldset'
+          },
+          label: 'Radio',
+          parts: {
+            legend: { },
+            fields: { }
+          },
+          markers: {
+            radioSelector: 'input[type="radio"]'
+          },
+          components: [
+            { uiType: 'placeholder', name: '<alloy.form.radio-fields>', owner: 'radio-group' },
+            { uiType: 'placeholder', name: '<alloy.form.field-legend>', owner: 'radio-group' }
+          ]
+        });
+      };
 
+      var customRadioMunger = function (spec) {
+        return Merger.deepMerge(spec, {
+          dom: {
+            tag: 'fieldset'
+          },
+          label: 'Radio',
+          parts: {
+            legend: { },
+            fields: { }
+          },
+          markers: {
+            itemClass: 'ephox-pastry-independent-button',
+            selectedClass: 'demo-selected'
+          },
+          components: [
+            { uiType: 'placeholder', name: '<alloy.form.field-legend>', owner: 'radio-group' },
+            {
+              uiType: 'container',
+              components: [
+                { uiType: 'placeholder', name: '<alloy.form.radio-fields>', owner: 'radio-group' }
+              ]
+            }
+          ]
+        });
+      };
+
+      var mungers = {
+        'text-input': textMunger,
+        'radio-group': radioMunger,
+        'custom-radio-group': customRadioMunger 
+      };
 
       var form = HtmlDisplay.section(
         gui,
@@ -84,7 +111,8 @@ define(
                       dom: {
                         tag: 'input',
                         attributes: {
-                          type: 'radio'
+                          type: 'radio',
+                          value: data.value
                         }
                       },
                       label: 'Radio',
@@ -107,7 +135,55 @@ define(
               ]
             },
             delta: { type: 'text-input', label: 'Delta' },
-            epsilon: { type: 'text-input', label: 'Epsilon' }
+            epsilon: { type: 'text-input', label: 'Epsilon' },
+            rho: {
+              type: 'custom-radio-group',
+              radioStyle: 'icons',
+              members: {
+                radio: {
+                  munge: function (data) {
+                    return {
+                      uiType: 'custom',
+                      dom: {
+                        tag: 'span',
+                        classes: [ 'ephox-pastry-independent-button' ],
+                        attributes: {
+                          title: data.text
+                        },
+                        styles: {
+                          display: 'flex'
+                        }
+                      },
+
+// <span class="ephox-pastry-independent-button ephox-pastry-button ephox-polish-dialog-float-container ephox-polish-dialog-float-selected" unselectable="on" tabindex="-1" data-float-value="none" 
+//   title="Align None" aria-label="Align None" role="radio" aria-checked="true" style="-webkit-user-select: none;">
+//                 <div role="presentation" aria-hidden="true" class="ephox-polish-dialog-float-icon">
+//                   <div role="presentation" class="ephox-polish-dialog-float-icon-inner-left"></div>
+//                   <div role="presentation" class="ephox-polish-dialog-float-icon-inner-center"></div>
+//                   <div role="presentation" class="ephox-polish-dialog-float-icon-inner-right"></div>
+//                 </div>
+//               </span>
+
+
+                      label: 'Alignment',
+                      parts: {
+                        legend: { },
+                        fields: { }
+                      },
+                      markers: {
+                        radioSelector: 'input[type="radio"]'
+                      }
+                    };
+                  }
+                }
+              },
+              name: 'rho',
+              candidates: [
+                { value: 'left', text: 'Left' },
+                { value: 'middle', text: 'Middle' },
+                { value: 'right', text: 'Right' }
+              ]
+            }
           },
 
           components: [
@@ -120,7 +196,9 @@ define(
                 { uiType: 'placeholder', owner: 'form', name: '<alloy.field.delta>' },
                 { uiType: 'placeholder', owner: 'form', name: '<alloy.field.epsilon>' }
               ]
-            }
+            },
+            { uiType: 'placeholder', owner: 'form', name: '<alloy.field.rho>' }
+
           ],
 
           /*
@@ -178,6 +256,8 @@ define(
         beta: 'bottle',
         gamma: 'cad'
       });
+
+      window.CC = form;
     };
   }
 );

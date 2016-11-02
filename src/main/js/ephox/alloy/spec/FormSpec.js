@@ -2,6 +2,7 @@ define(
   'ephox.alloy.spec.FormSpec',
 
   [
+    'ephox.alloy.form.CustomRadioGroupSpec',
     'ephox.alloy.form.FormScaffoldSpec',
     'ephox.alloy.form.RadioGroupSpec',
     'ephox.alloy.form.TextInputSpec',
@@ -18,7 +19,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (FormScaffoldSpec, RadioGroupSpec, TextInputSpec, Tagger, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Option) {
+  function (CustomRadioGroupSpec, FormScaffoldSpec, RadioGroupSpec, TextInputSpec, Tagger, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Option) {
     var schema = [
       FieldSchema.strict('dom'),
       
@@ -37,6 +38,7 @@ define(
       {
         'text-input': TextInputSpec,
         'radio-group': RadioGroupSpec,
+        'custom-radio-group': CustomRadioGroupSpec,
         'form-scaffold': FormScaffoldSpec
       }
     );

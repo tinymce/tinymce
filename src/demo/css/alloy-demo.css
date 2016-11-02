@@ -36,6 +36,10 @@ button {
   background: #cadbee;
 }
 
+.ephox-pastry-independent-button:before {
+  content: '+';
+}
+
 /*
  * Hiding and showing the more drawer
  *

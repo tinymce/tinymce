@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.form.RadioGroupSpec',
+  'ephox.alloy.form.CustomRadioGroupSpec',
 
   [
     'ephox.alloy.api.SystemEvents',
@@ -38,15 +38,14 @@ define(
       FieldSchema.strict('label'),
       FieldSchema.strict('candidates'),
       FieldSchema.option('selectedValue'),
-      FieldSchema.defaulted('useLabel', true),
-      FieldSchema.defaulted('useName', true),
 
       FieldSchema.field(
         'markers',
         'markers',
         FieldPresence.strict(),
         ValueSchema.objOf([
-          FieldSchema.strict('radioSelector')
+          FieldSchema.strict('itemClass'),
+          FieldSchema.strict('selectedClass')
         ])
       ),
 
@@ -69,6 +68,8 @@ define(
       ])
     );
 
+    var valueAttr = 'data-alloy-radio-value';
+
 
     // '<alloy.form.field-input>': UiSubstitutes.single(
     //       info.parts().field()
@@ -84,14 +85,13 @@ define(
               Merger.deepMerge(
                 info.members().radio().munge(candidate),
                 {
+                  uiType: 'button',
                   dom: {
-                    tag: 'input',
                     attributes: Objects.wrapAll(
                       [ 
-                        { key: 'type', value: 'radio' },
-                        { key: 'name', value: info.name() },
                         { key: 'role', value: 'radio' },
-                        { key: 'value', value: candidate.value }
+                        { key: valueAttr, value: candidate.value },
+                        { key: 'aria-checked', value: 'false' }
                       ]
                     )
                   },
@@ -100,22 +100,21 @@ define(
                     SystemEvents.execute(),
                     EventHandler.nu({
                       run: function (radio) {
-                        // FIX: Hard coded to traditional radio buttons
-                        Checked.set(radio.element(), true);
+                        radio.getSystem().getByUid(info.uid()).each(function (group) {
+                          group.apis().highlight(radio);
+                        });
                       }
                     })
-                  ) 
+                  ),
+                  representing: {
+                    query: function (radio) {
+                      return candidate.value;
+                    },
+                    set: function () { }
+                  }
                 }
               )
-            ].concat(info.useLabel() ? [
-              {
-                uiType: 'custom',
-                dom: {
-                  tag: 'label',
-                  innerHtml: candidate.text
-                }
-              }
-            ] : [ ]);
+            ];
           })
         ),
         '<alloy.form.field-legend>': UiSubstitutes.single(
@@ -137,27 +136,43 @@ define(
         { }
       );
 
+      var getItemBy = function (group, value) {
+        return SelectorFind.descendant(group.element(), '[' + valueAttr + '="' + value + '"]').bind(function (itemDom) {
+          return group.getSystem().getByDom(itemDom).fold(Option.none, Option.some);
+        });
+      };
+
       return {
         uiType: 'custom',
         keying: {
           mode: 'flow',
-          selector: info.markers().radioSelector(),
+          selector: '.' + info.markers().itemClass(),
           executeOnMove: true,
-          getInitial: function (comp) {
-            return Checked.find(comp.element());
+          getInitial: function (group) {
+            return group.apis().getHighlighted().map(function (item) {
+              return item.element();
+            });
+          }
+        },
+        highlighting: {
+          itemClass: info.markers().itemClass(),
+          highlightClass: info.markers().selectedClass(),
+          onHighlight: function (group, item) {
+            Attr.set(item.element(), 'aria-checked', 'true');
+          },
+          onDehighlight: function (group, item) {
+            Attr.set(item.element(), 'aria-checked', 'false');
           }
         },
         representing: {
-          query: function (comp) {
-
-            // Don't really want to return an Option. Hmm.
-            return Checked.find(comp.element()).map(function (radio) {
-              return Attr.get(radio, 'value');
+          query: function (group) {
+            return group.apis().getHighlighted().map(function (item) {
+              return item.apis().getValue();
             }).getOr(null);
           },
           set: function (group, value) {
-            SelectorFind.descendant(group.element(), '[value="' + value + '"]').each(function (item) {
-              Checked.set(item, true);
+            getItemBy(group, value).each(function (item) {
+              group.apis().highlight(item);
             });
           }
         },
@@ -166,8 +181,9 @@ define(
           EventHandler.nu({
             run: function (group) {
               info.selectedValue().orThunk(function () {
-                return SelectorFind.descendant(group.element(), 'input[value]').map(function (first) {
-                  return Attr.get(first, 'value');
+                group.apis().highlightFirst();
+                return group.apis().getHighlighted().map(function (item) {
+                  return item.apis().getValue();
                 });
               }).each(function (val) {
                 group.apis().setValue(val);
