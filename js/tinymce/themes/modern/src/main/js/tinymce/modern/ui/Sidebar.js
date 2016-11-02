@@ -10,8 +10,9 @@
 
 define('tinymce.modern.ui.Sidebar', [
 	'global!tinymce.util.Tools',
-	'global!tinymce.ui.Factory'
-], function (Tools, Factory) {
+	'global!tinymce.ui.Factory',
+	'global!tinymce.Env'
+], function (Tools, Factory, Env) {
 	var api = function (elm) {
 		return {
 			element: function () {
@@ -89,8 +90,12 @@ define('tinymce.modern.ui.Sidebar', [
 		};
 	};
 
+	var isModernBrowser = function () {
+		return !Env.ie || Env.ie >= 11;
+	};
+
 	var hasSidebar = function (editor) {
-		return editor.sidebars ? editor.sidebars.length > 0 : false;
+		return isModernBrowser() && editor.sidebars ? editor.sidebars.length > 0 : false;
 	};
 
 	var createSidebar = function (editor) {
