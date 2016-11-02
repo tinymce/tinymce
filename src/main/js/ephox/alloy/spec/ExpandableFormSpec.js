@@ -5,15 +5,32 @@ define(
     'ephox.alloy.spec.FormSpec',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
+    'ephox.boulder.api.FieldPresence',
+    'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.highway.Merger',
     'ephox.perhaps.Option'
   ],
 
-  function (FormSpec, SpecSchema, UiSubstitutes, Arr, Obj, Merger, Option) {
+  function (FormSpec, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Arr, Obj, Merger, Option) {
+    var schema = [
+      FieldSchema.field(
+        'markers',
+        'markers',
+        FieldPresence.strict(),
+        ValueSchema.objOf([
+          FieldSchema.strict('closedStyle'),
+          FieldSchema.strict('openStyle'),
+          FieldSchema.strict('shrinkingStyle'),
+          FieldSchema.strict('growingStyle')
+        ])
+      )
+    ];
+
     var make = function (spec) {
-      var detail = SpecSchema.asStructOrDie('Form', [ ], spec, [
+      var detail = SpecSchema.asStructOrDie('Form', schema, spec, [
         'minimal-form',
         'extra-form',
         'expander',
@@ -59,10 +76,10 @@ define(
               uid: detail.partUids()['extra-form'],
               sliding: {
                 mode: 'height',
-                closedStyle: 'demo-sliding-closed',
-                openStyle: 'demo-sliding-open',
-                shrinkingStyle: 'demo-sliding-height-shrinking',
-                growingStyle: 'demo-sliding-height-growing',
+                closedStyle: detail.markers().closedStyle(),
+                openStyle: detail.markers().openStyle(),
+                shrinkingStyle: detail.markers().shrinkingStyle(),
+                growingStyle: detail.markers().growingStyle(),
                 expanded: true,
                 onShrunk: function () {
                   console.log('height.slider.shrunk');

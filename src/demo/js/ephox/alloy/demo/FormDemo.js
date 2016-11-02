@@ -232,6 +232,12 @@ define(
               }
             }
           },
+          markers: {
+            closedStyle: 'demo-sliding-closed',
+            openStyle: 'demo-sliding-open',
+            shrinkingStyle: 'demo-sliding-height-shrinking',
+            growingStyle: 'demo-sliding-height-growing'
+          },
           parts: Merger.deepMerge(
             fieldParts,
             {
