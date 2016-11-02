@@ -22,7 +22,9 @@ define(
         FieldSchema.strict('shrinkingStyle'),
         FieldSchema.strict('growingStyle'),
         FieldSchema.defaulted('onShrunk', function () { }),
+        FieldSchema.defaulted('onStartShrink', function () { }),
         FieldSchema.defaulted('onGrown', function () { }),
+        FieldSchema.defaulted('onStartGrow', function () { }),
         FieldSchema.defaulted('expanded', false),
         FieldSchema.state('state', function (spec) {
           return Cell(spec.expanded === true);
@@ -77,6 +79,7 @@ define(
 
             Class.add(component.element(), oInfo.shrinkingStyle()); // enable transitions
             setShrunk(component, oInfo);
+            oInfo.onStartShrink()(component);
           };
 
           // Showing is complex due to the inability to transition to "auto".
@@ -90,6 +93,7 @@ define(
             setGrown(component, oInfo);
             Css.set(component.element(), dimensionProperty, fullSize);
             oInfo.state().set(true);
+            oInfo.onStartGrow()(component);
           };
 
 

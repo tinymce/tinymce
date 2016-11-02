@@ -11,10 +11,11 @@ define(
     'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.highway.Merger',
-    'ephox.perhaps.Option'
+    'ephox.perhaps.Option',
+    'ephox.sugar.api.Class'
   ],
 
-  function (FormSpec, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Arr, Obj, Merger, Option) {
+  function (FormSpec, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Arr, Obj, Merger, Option, Class) {
     var schema = [
       FieldSchema.field(
         'markers',
@@ -24,7 +25,9 @@ define(
           FieldSchema.strict('closedStyle'),
           FieldSchema.strict('openStyle'),
           FieldSchema.strict('shrinkingStyle'),
-          FieldSchema.strict('growingStyle')
+          FieldSchema.strict('growingStyle'),
+          FieldSchema.option('expandedClass'),
+          FieldSchema.option('collapsedClass')
         ])
       )
     ];
@@ -81,6 +84,18 @@ define(
                 shrinkingStyle: detail.markers().shrinkingStyle(),
                 growingStyle: detail.markers().growingStyle(),
                 expanded: true,
+                onStartShrink: function (extra) {
+                  extra.getSystem().getByUid(detail.uid()).each(function (form) {
+                    detail.markers().expandedClass().each(function (ec) { Class.remove(form.element(), ec); });
+                    detail.markers().collapsedClass().each(function (cs) { Class.add(form.element(), cs); });
+                  });
+                },
+                onStartGrow: function (extra) {
+                  extra.getSystem().getByUid(detail.uid()).each(function (form) {
+                    detail.markers().expandedClass().each(function (ec) { Class.add(form.element(), ec); });
+                    detail.markers().collapsedClass().each(function (cs) { Class.remove(form.element(), cs); });
+                  });
+                },
                 onShrunk: function () {
                   console.log('height.slider.shrunk');
                 },
