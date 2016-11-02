@@ -69,7 +69,7 @@ define(
             }
           },
           parts: {
-            alpha: { type: 'text-input', label: 'Alpha' },
+            alpha: { type: 'text-input', label: 'Alpha', inline: false },
             beta: { type: 'text-input', label: 'Beta' },
             gamma: {
               type: 'radio-group',
@@ -79,13 +79,22 @@ define(
                 { value: 'cad', text: 'Cad' },
                 { value: 'abra!', text: 'abra!' }
               ]
-            }
+            },
+            delta: { type: 'text-input', label: 'Delta' },
+            epsilon: { type: 'text-input', label: 'Epsilon' }
           },
 
           components: [
             { uiType: 'placeholder', owner: 'form', name: '<alloy.field.alpha>' },
             { uiType: 'placeholder', owner: 'form', name: '<alloy.field.beta>' },
             { uiType: 'placeholder', owner: 'form', name: '<alloy.field.gamma>' },
+            {
+              uiType: 'container',
+              components: [
+                { uiType: 'placeholder', owner: 'form', name: '<alloy.field.delta>' },
+                { uiType: 'placeholder', owner: 'form', name: '<alloy.field.epsilon>' }
+              ]
+            }
           ],
 
           // uis: [
