@@ -4,7 +4,6 @@ define(
   [
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.construct.EventHandler',
-    'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldPresence',
@@ -12,7 +11,6 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
-    'ephox.epithet.Id',
     'ephox.highway.Merger',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Attr',
@@ -20,7 +18,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (SystemEvents, EventHandler, Tagger, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Id, Merger, Option, Attr, Checked, SelectorFind) {
+  function (SystemEvents, EventHandler, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Option, Attr, Checked, SelectorFind) {
     /*
      <fieldset>
        <legend>Border</legend>

@@ -2,14 +2,8 @@ define(
   'ephox.alloy.spec.SlideFormSpec',
 
   [
-    'ephox.alloy.alien.Cycles',
     'ephox.alloy.api.SystemEvents',
-    'ephox.alloy.construct.EventHandler',
-    'ephox.alloy.form.CustomRadioGroupSpec',
-    'ephox.alloy.form.FormScaffoldSpec',
-    'ephox.alloy.form.RadioGroupSpec',
-    'ephox.alloy.form.TextInputSpec',
-    'ephox.alloy.registry.Tagger',
+    'ephox.alloy.form.FormUis',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.TabbedSpec',
     'ephox.alloy.spec.UiSubstitutes',
@@ -27,7 +21,7 @@ define(
     'global!Error'
   ],
 
-  function (Cycles, SystemEvents, EventHandler, CustomRadioGroupSpec, FormScaffoldSpec, RadioGroupSpec, TextInputSpec, Tagger, SpecSchema, TabbedSpec, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Thunk, Option, Cell, Error) {
+  function (SystemEvents, FormUis, SpecSchema, TabbedSpec, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Thunk, Option, Cell, Error) {
     var schema = [
       FieldSchema.strict('dom'),
 
@@ -43,16 +37,6 @@ define(
         ])
       )
     ];
-
-    var uiSchema = ValueSchema.choose(
-      'type',
-      {
-        'text-input': TextInputSpec,
-        'radio-group': RadioGroupSpec,
-        'custom-radio-group': CustomRadioGroupSpec,
-        'form-scaffold': FormScaffoldSpec
-      }
-    );
 
     var make = function (spec) {
 
@@ -139,7 +123,7 @@ define(
                 )
               );
               console.log('fullSpec', fullSpec);
-              var itemInfo = ValueSchema.asStructOrDie('ui.spec item', uiSchema, fullSpec);
+              var itemInfo = ValueSchema.asStructOrDie('ui.spec item', FormUis.schema(), fullSpec);
               var output = itemInfo.builder()(itemInfo);
               return {
                 value: f,

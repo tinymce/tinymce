@@ -3,23 +3,20 @@ define(
 
   [
     'ephox.alloy.form.CustomRadioGroupSpec',
-    'ephox.alloy.form.FormScaffoldSpec',
+    'ephox.alloy.form.FormUis',
     'ephox.alloy.form.RadioGroupSpec',
     'ephox.alloy.form.TextInputSpec',
-    'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
-    'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.highway.Merger',
     'ephox.perhaps.Option'
   ],
 
-  function (CustomRadioGroupSpec, FormScaffoldSpec, RadioGroupSpec, TextInputSpec, Tagger, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Option) {
+  function (CustomRadioGroupSpec, FormUis, RadioGroupSpec, TextInputSpec, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Obj, Merger, Option) {
     var schema = [
       FieldSchema.strict('dom'),
       
@@ -32,16 +29,6 @@ define(
         ])
       )
     ];
-
-    var uiSchema = ValueSchema.choose(
-      'type',
-      {
-        'text-input': TextInputSpec,
-        'radio-group': RadioGroupSpec,
-        'custom-radio-group': CustomRadioGroupSpec,
-        'form-scaffold': FormScaffoldSpec
-      }
-    );
 
     var make = function (spec) {
       var detail = SpecSchema.asStructOrDie('Form', schema, spec, Obj.keys(spec.parts));
@@ -57,7 +44,7 @@ define(
           )
         );
 
-        var itemInfo = ValueSchema.asStructOrDie('ui.spec item', uiSchema, fullSpec);
+        var itemInfo = ValueSchema.asStructOrDie('ui.spec item', FormUis.schema(), fullSpec);
         var output = itemInfo.builder()(itemInfo);
         return {
           k: '<alloy.field.' + partName + '>',

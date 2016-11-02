@@ -31,6 +31,52 @@ define(
         });
       };
 
+      var selectMunger = function (spec) {
+        return Merger.deepMerge(spec, {
+          dom: {
+            tag: 'div',
+            styles: {
+              border: '1px solid blue'
+            }
+          },
+          components: [
+            { uiType: 'placeholder', name: '<alloy.form.field-label>', owner: 'formlabel' },
+            {
+              uiType: 'container',
+              dom: {
+                classes: [ 'wrapper' ]
+              },
+              components: [
+                { uiType: 'placeholder', name: '<alloy.form.field-input>', owner: 'formlabel' }
+              ]
+            }
+          ],
+          members: {
+            option: {
+              munge: function (spec) {
+                return {
+                  dom: {
+                    attributes: {
+                      value: spec.value
+                    },
+                    innerHtml: spec.text
+                  }
+                };
+              }
+            }
+          },
+          parts: {
+            field: {
+              dom: {
+                classes: [ 'ephox-select-wrapper' ]
+              },
+              tabstopping: true,
+              focusing: true
+            }
+          }
+        });
+      };
+
       var radioMunger = function (spec) {
         return Merger.deepMerge(spec, {
           dom: {
@@ -79,6 +125,7 @@ define(
 
       var mungers = {
         'text-input': textMunger,
+        'select-input': selectMunger,
         'radio-group': radioMunger,
         'custom-radio-group': customRadioMunger 
       };
@@ -93,20 +140,10 @@ define(
               munge: function (data) {
                 return {
                   uiType: 'custom',
-                  dom: {
-                    tag: 'input',
-                    attributes: {
-                      type: 'radio',
-                      value: data.value
-                    }
-                  },
                   label: 'Radio',
                   parts: {
                     legend: { },
                     fields: { }
-                  },
-                  markers: {
-                    radioSelector: 'input[type="radio"]'
                   }
                 };
               }
@@ -168,6 +205,16 @@ define(
             { value: 'middle', text: 'Middle' },
             { value: 'right', text: 'Right' }
           ]
+        },
+        theta: {
+          type: 'select-input',
+          label: 'AA',
+          options: [
+            { value: 'a.a', text: 'A.A' },
+            { value: 'b.b', text: 'B.B' },
+            { value: 'c.c', text: 'C.C' },
+            { value: 'd.d', text: 'D.D' }
+          ]        
         }
       };
 
@@ -247,7 +294,8 @@ define(
                   classes: [ 'form-section' ]
                 },
                 components: [
-                  { uiType: 'placeholder', owner: 'form', name: '<alloy.field.alpha>' }
+                  { uiType: 'placeholder', owner: 'form', name: '<alloy.field.alpha>' },
+                  { uiType: 'placeholder', owner: 'form', name: '<alloy.field.theta>' }
                 ]
               },
               'extra-form': {
