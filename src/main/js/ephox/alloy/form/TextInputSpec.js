@@ -2,18 +2,16 @@ define(
   'ephox.alloy.form.TextInputSpec',
 
   [
-    'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.FormLabelSpec',
     'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
     'ephox.sugar.api.Value'
   ],
 
-  function (Tagger, FormLabelSpec, FieldSchema, Merger, Value) {
+  function (FormLabelSpec, FieldSchema, Merger, Value) {
     var schema = [
       FieldSchema.strict('uid'),
       FieldSchema.strict('label'),
-      FieldSchema.strict('name'),
       FieldSchema.strict('components'),
       FieldSchema.strict('dom'),
       FieldSchema.defaulted('inline', true),

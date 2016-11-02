@@ -45,16 +45,6 @@ define(
               { uiType: 'placeholder', name: '<alloy.form.field-legend>', owner: 'radio-group' }
             ]
           });
-        },
-        'form-scaffold': function (spec) {
-          return Merger.deepMerge(
-            spec,
-            {
-              parts: {
-                field: mungers[spec.parts.field.type](spec.parts.field)
-              }
-            }
-          );
         }
       };
 
@@ -68,9 +58,9 @@ define(
         {
           uiType: 'form',
           dom: {
-            tag: 'div'
+            tag: 'div',
+            classes: [ 'outside-form' ]
           },
-          components: [ ],
           members: {
             ui: {
               munge: function (spec) {
@@ -78,36 +68,46 @@ define(
               }
             }
           },
-          uis: [
-            { type: 'text-input', label: 'Alpha', name: 'alpha' },
-            { type: 'text-input', label: 'Beta', inline: false, name: 'beta' },
-            {
-              type: 'radio-group',
-              name: 'gamma',
-              candidates: [
-                { value: 'abra', text: 'Abra' },
-                { value: 'cad', text: 'Cad' },
-                { value: 'abra!', text: 'abra!' }
-              ]
-            },
-            {
-              type: 'form-scaffold',
-              dom: {
-                tag: 'div',
-                classes: [ 'scaffold' ]
-              },
-              parts: {
-                field: {
-                  type: 'text-input',
-                  label: 'scaffold-a',
-                  name: 'scaffold-a'
-                }
-              },
-              components: [
-                { uiType: 'placeholder', name: '<alloy.form.element>', owner: 'form-scaffold' }
-              ]
-            }
+          parts: {
+            alpha: { type: 'text-input', label: 'Alpha' },
+            beta: { type: 'text-input', label: 'Beta' }
+          },
+
+          components: [
+            { uiType: 'placeholder', owner: 'form', name: '<alloy.field.alpha>' },
+            { uiType: 'placeholder', owner: 'form', name: '<alloy.field.beta>' }
           ],
+
+          // uis: [
+          //   { type: 'text-input', label: 'Alpha', name: 'alpha' },
+          //   { type: 'text-input', label: 'Beta', inline: false, name: 'beta' },
+            // {
+            //   type: 'radio-group',
+            //   name: 'gamma',
+            //   candidates: [
+            //     { value: 'abra', text: 'Abra' },
+            //     { value: 'cad', text: 'Cad' },
+            //     { value: 'abra!', text: 'abra!' }
+            //   ]
+            // },
+            // {
+            //   type: 'form-scaffold',
+            //   dom: {
+            //     tag: 'div',
+            //     classes: [ 'scaffold' ]
+            //   },
+            //   parts: {
+            //     field: {
+            //       type: 'text-input',
+            //       label: 'scaffold-a',
+            //       name: 'scaffold-a'
+            //     }
+            //   },
+            //   components: [
+            //     { uiType: 'placeholder', name: '<alloy.form.element>', owner: 'form-scaffold' }
+            //   ]
+            // }
+          // ],
           keying: {
             mode: 'cyclic'
           }

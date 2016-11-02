@@ -21,8 +21,7 @@ define(
   function (FormScaffoldSpec, RadioGroupSpec, TextInputSpec, Tagger, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Option) {
     var schema = [
       FieldSchema.strict('dom'),
-      FieldSchema.strict('uis'),
-
+      
       FieldSchema.field(
         'members',
         'members',
@@ -43,42 +42,57 @@ define(
     );
 
     var make = function (spec) {
-      var detail = SpecSchema.asStructOrDie('Form', schema, spec, [
+      var detail = SpecSchema.asStructOrDie('Form', schema, spec, Obj.keys(spec.parts));
 
-      ]);
+      var placeholders = Obj.tupleMap(spec.parts, function (partSpec, partName) {
+        var partUid = detail.partUids()[partName];
+        var fullSpec = detail.members().ui().munge(
+          Merger.deepMerge(
+            partSpec,
+            {
+              uid: partUid
+            }
+          )
+        );
 
-      var byName = { };
-
-      var fields = Arr.map(detail.uis(), function (ui) {
-        var uid = Objects.readOptFrom(ui, 'uid').getOrThunk(function () { return Tagger.generate(''); });
-        var uiSpec = detail.members().ui().munge(Merger.deepMerge(
-          ui,
-          {
-            uid: uid
-          }
-        ));
-        var itemInfo = ValueSchema.asStructOrDie('ui.spec item', uiSchema, uiSpec);
+        var itemInfo = ValueSchema.asStructOrDie('ui.spec item', uiSchema, fullSpec);
         var output = itemInfo.builder()(itemInfo);
-        byName[uiSpec.name] = output.uid;
-        return output;
+        return {
+          k: '<alloy.field.' + partName + '>',
+          v: UiSubstitutes.single(
+            output
+          )
+        };
       });
 
+      var components = UiSubstitutes.substitutePlaces(
+        Option.some('form'),
+        detail,
+        detail.components(),
+        placeholders,
+        { }
+      );
+
       return Merger.deepMerge(spec, {
-        dom: detail.dom(),
-        uid: detail.uid(),
         uiType: 'container',
-        components: fields,
+        uid: detail.uid(),
+        dom: detail.dom(),
+        components: components,
         representing: {
           query: function (form) {
             var r = {};
-            Obj.each(byName, function (field, name) {
-              r[name] = field.apis().getValue();
+            Obj.each(detail.partUids(), function (partUid, name) {
+              form.getSystem().getByUid(partUid).each(function (field) {
+                r[name] = field.delegate().map(function (dlg) {
+                  return dlg.get()(field);
+                }).getOr(field).apis().getValue();
+              });
             });
             return r;
           },
           set: function (form, value) {
             Obj.each(value, function (v, k) {
-              var fieldUid = byName[k];
+              var fieldUid = detail.partUids()[k];
               form.getSystem().getByUid(fieldUid).each(function (field) {
                 field.delegate().map(function (dlg) {
                   return dlg.get()(field);
