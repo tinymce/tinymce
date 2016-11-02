@@ -58,7 +58,6 @@ define(
         ])
       ),
   
-      FieldSchema.strict('name'),
       FieldSchema.state('builder', function () {
         return builder;
       })
