@@ -4,6 +4,12 @@
     "amd": true
   },
 
+  "globals": {
+    "assert": true,
+    "test": true,
+    "asynctest": true
+  },
+
   "rules": {
     "eqeqeq": "error",
     "indent": ["error", "tab"],
