@@ -223,7 +223,10 @@ define(
           uiType: 'slide-form',
           dom: {
             tag: 'div',
-            classes: [ 'outside-slide-form' ]
+            classes: [ 'outside-slide-form' ],
+            styles: {
+              width: '300px'
+            }
           },
           members: {
             ui: {
@@ -266,7 +269,13 @@ define(
           },
           components: [
             { uiType: 'placeholder', name: '<alloy.tabview>', owner: 'tabbing' },
-            { uiType: 'placeholder', name: '<alloy.tabbar>', owner: 'tabbing' }
+            {
+              uiType: 'container',
+              dom: { classes: [ 'dot-container' ] },
+              components: [
+                { uiType: 'placeholder', name: '<alloy.tabbar>', owner: 'tabbing' }
+              ]
+            }
           ],
           fields: fieldParts,
           fieldOrder: [

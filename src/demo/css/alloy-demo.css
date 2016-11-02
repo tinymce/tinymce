@@ -40,6 +40,8 @@ button {
   content: '+';
 }
 
+
+
 .dot {
   border-radius: 50%;
   border: 7px solid #333;
@@ -56,6 +58,14 @@ button {
 
 .dot:focus {
   background: green;
+}
+
+.dot-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 }
 
 /*
