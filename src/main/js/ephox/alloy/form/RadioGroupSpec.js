@@ -38,6 +38,8 @@ define(
       FieldSchema.strict('label'),
       FieldSchema.strict('candidates'),
       FieldSchema.option('selectedValue'),
+      FieldSchema.defaulted('useLabel', true),
+      FieldSchema.defaulted('useName', true),
 
       FieldSchema.field(
         'markers',
@@ -45,6 +47,15 @@ define(
         FieldPresence.strict(),
         ValueSchema.objOf([
           FieldSchema.strict('radioSelector')
+        ])
+      ),
+
+      FieldSchema.field(
+        'members',
+        'members',
+        FieldPresence.strict(),
+        ValueSchema.objOf([
+          FieldSchema.strict('radio')
         ])
       ),
   
@@ -72,26 +83,29 @@ define(
         '<alloy.form.radio-fields>': UiSubstitutes.multiple(
           Arr.bind(info.candidates(), function (candidate, i) {
             return [
-              {
-                uiType: 'custom',
-                dom: {
-                  tag: 'input',
-                  attributes: {
-                    name: name,
-                    type: 'radio',
-                    value: candidate.value
-                  }
-                },
-                focusing: true,
-                events: Objects.wrap(
-                  SystemEvents.execute(),
-                  EventHandler.nu({
-                    run: function (radio) {
-                      Checked.set(radio.element(), true);
-                    }
-                  })
-                ) 
-              },
+              Merger.deepMerge(
+                info.members().radio().munge(candidate),
+                {
+                  dom: {
+                    attributes: Objects.wrapAll(
+                      Arr.flatten([
+                        info.useName() ? [ { key: 'name', value: name } ] : [ ],
+                        [ { key: 'role', value: 'radio' } ]
+                      ])
+                    )
+                  },
+                  focusing: true,
+                  events: Objects.wrap(
+                    SystemEvents.execute(),
+                    EventHandler.nu({
+                      run: function (radio) {
+                        Checked.set(radio.element(), true);
+                      }
+                    })
+                  ) 
+                }
+              )
+            ].concat(info.useLabel() ? [
               {
                 uiType: 'custom',
                 dom: {
@@ -99,7 +113,7 @@ define(
                   innerHtml: candidate.text
                 }
               }
-            ];
+            ] : [ ]);
           })
         ),
         '<alloy.form.field-legend>': UiSubstitutes.single(

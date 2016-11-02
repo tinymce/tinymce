@@ -76,6 +76,29 @@ define(
             beta: { type: 'text-input', label: 'Beta' },
             gamma: {
               type: 'radio-group',
+              members: {
+                radio: {
+                  munge: function (data) {
+                    return {
+                      uiType: 'custom',
+                      dom: {
+                        tag: 'input',
+                        attributes: {
+                          type: 'radio'
+                        }
+                      },
+                      label: 'Radio',
+                      parts: {
+                        legend: { },
+                        fields: { }
+                      },
+                      markers: {
+                        radioSelector: 'input[type="radio"]'
+                      }
+                    };
+                  }
+                }
+              },
               name: 'gamma',
               candidates: [
                 { value: 'abra', text: 'Abra' },
