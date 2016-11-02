@@ -14,7 +14,8 @@ define(
 
   function (SystemEvents, EventHandler, SpecSchema, FieldSchema, Objects, Arr, Merger, Fun) {
     var schema = [
-      FieldSchema.option('action')
+      FieldSchema.option('action'),
+      FieldSchema.option('role')
     ];
 
 
@@ -65,7 +66,7 @@ define(
         {
           dom: {
             attributes: {
-              role: 'button'
+              role: detail.role.getOr('button')
             }
           }
         },

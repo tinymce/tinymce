@@ -66,7 +66,8 @@ define(
                   var bar = button.getSystem().getByUid(detail.uid()).getOrDie();
                   bar.apis().highlight(button);
                   detail.onExecute()(bar, button);
-                }
+                },
+                role: 'tab'
               }
             );
           })
