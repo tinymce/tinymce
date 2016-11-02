@@ -2,6 +2,7 @@ define(
   'ephox.alloy.behaviour.Highlighting',
 
   [
+    'ephox.alloy.alien.Cycles',
     'ephox.alloy.behaviour.Behaviour',
     'ephox.alloy.dom.DomModification',
     'ephox.boulder.api.FieldPresence',
@@ -15,7 +16,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Behaviour, DomModification, FieldPresence, FieldSchema, ValueSchema, Arr, Fun, Option, Class, SelectorFilter, SelectorFind) {
+  function (Cycles, Behaviour, DomModification, FieldPresence, FieldSchema, ValueSchema, Arr, Fun, Option, Class, SelectorFilter, SelectorFind) {
     var schema = FieldSchema.field(
       'highlighting',
       'highlighting',
@@ -84,6 +85,24 @@ define(
       return last.bind(component.getSystem().getByDom);
     };
 
+    var getDelta = function (component, hInfo, delta) {
+      var items = SelectorFilter.descendants(component.element(), '.' + hInfo.itemClass());
+      var selected = Arr.findIndex(items, function (item) {
+        return Class.has(item, hInfo.highlightClass());
+      });
+      if (selected === -1) return Option.none();
+      var dest = Cycles.cycleBy(selected, delta, 0, items.length - 1);
+      return component.getSystem().getByDom(items[dest]);
+    };
+
+    var getPrevious = function (component, hInfo) {
+      return getDelta(component, hInfo, -1);
+    };
+
+    var getNext = function (component, hInfo) {
+      return getDelta(component, hInfo, +1);
+    };
+
     var apis = function (info) {
       return {
         highlight: Behaviour.tryActionOpt('highlighting', info, 'highlight', highlight),
@@ -94,7 +113,9 @@ define(
         isHighlighted: Behaviour.tryActionOpt('highlighting', info, 'isHighlighted', isHighlighted),
         getHighlighted: Behaviour.tryActionOpt('highlighting', info, 'getHighlighted', getHighlighted),
         getFirst: Behaviour.tryActionOpt('highlighting', info, 'getFirst', getFirst),
-        getLast: Behaviour.tryActionOpt('highlighting', info, 'getLast', getLast)
+        getLast: Behaviour.tryActionOpt('highlighting', info, 'getLast', getLast),
+        getPrevious: Behaviour.tryActionOpt('highlighting', info, 'getPrevious', getPrevious),
+        getNext: Behaviour.tryActionOpt('highlighting', info, 'getNext', getNext)
       };
     };
 

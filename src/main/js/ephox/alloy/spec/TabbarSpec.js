@@ -2,6 +2,7 @@ define(
   'ephox.alloy.spec.TabbarSpec',
 
   [
+    'ephox.alloy.api.SystemEvents',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldPresence',
@@ -13,7 +14,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Option) {
+  function (SystemEvents, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Option) {
     var schema = [
       FieldSchema.strict('tabs'),
 
@@ -44,8 +45,6 @@ define(
       var detail = SpecSchema.asStructOrDie('tabbar', schema, spec, [
         'tabs'
       ]);
-
-      console.log('tabbar.2', detail.parts().tabs());
 
       var placeholders = {
         '<alloy.tabs>': UiSubstitutes.multiple(

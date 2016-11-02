@@ -2,6 +2,8 @@ define(
   'ephox.alloy.spec.SlideFormSpec',
 
   [
+    'ephox.alloy.alien.Cycles',
+    'ephox.alloy.api.SystemEvents',
     'ephox.alloy.form.CustomRadioGroupSpec',
     'ephox.alloy.form.FormScaffoldSpec',
     'ephox.alloy.form.RadioGroupSpec',
@@ -24,7 +26,7 @@ define(
     'global!Error'
   ],
 
-  function (CustomRadioGroupSpec, FormScaffoldSpec, RadioGroupSpec, TextInputSpec, Tagger, SpecSchema, TabbedSpec, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Thunk, Option, Cell, Error) {
+  function (Cycles, SystemEvents, CustomRadioGroupSpec, FormScaffoldSpec, RadioGroupSpec, TextInputSpec, Tagger, SpecSchema, TabbedSpec, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Thunk, Option, Cell, Error) {
     var schema = [
       FieldSchema.strict('dom'),
 
@@ -65,6 +67,22 @@ define(
         'right'
       ].concat(spec.fieldOrder));
 
+      var navigateLeft = function (button) {
+        button.getSystem().getByUid(detail.partUids().tabbar).each(function (tabbar) {
+          tabbar.apis().getPrevious().each(function (previous) {
+            previous.getSystem().triggerEvent(SystemEvents.execute(), previous.element(), { });
+          });
+        });
+      };
+
+      var navigateRight = function (button) {
+        button.getSystem().getByUid(detail.partUids().tabbar).each(function (tabbar) {
+          tabbar.apis().getNext().each(function (previous) {
+            previous.getSystem().triggerEvent(SystemEvents.execute(), previous.element(), { });
+          });
+        });
+      };
+
       var placeholders = {
         '<alloy.slide-form.left>': UiSubstitutes.single(
           Merger.deepMerge(
@@ -72,7 +90,9 @@ define(
             detail.parts().left().base,
             {
               uid: detail.partUids().left,
-              uiType: 'button'
+              uiType: 'button',
+              tabstopping: true,
+              action: navigateLeft
             }
           )
         ),
@@ -82,7 +102,9 @@ define(
             detail.parts().right().base,
             {
               uid: detail.partUids().right,
-              uiType: 'button'
+              uiType: 'button',
+              tabstopping :true,
+              action: navigateRight
             }
           )
         )
@@ -115,6 +137,7 @@ define(
                   }
                 )
               );
+              console.log('fullSpec', fullSpec);
               var itemInfo = ValueSchema.asStructOrDie('ui.spec item', uiSchema, fullSpec);
               var output = itemInfo.builder()(itemInfo);
               return {
