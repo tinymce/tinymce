@@ -113,10 +113,10 @@ define(
           var toApis = function (oInfo) {
             return {
               grow: function (comp) {
-                startGrow(comp, oInfo);
+                if (oInfo.state().get() !== true) startGrow(comp, oInfo);
               },
               shrink: function (comp) {
-                startShrink(comp, oInfo);
+                if (oInfo.state().get() !== false) startShrink(comp, oInfo);
               },
               hasGrown: function (comp) {
                 return oInfo.state().get() === true;

@@ -27,6 +27,20 @@ define(
         });
       };
 
+      var collapseForm = function (anyComp) {
+        var extraOpt = anyComp.getSystem().getByUid(detail.partUids()['extra-form']);
+        extraOpt.each(function (extra) {
+          extra.apis().shrink();
+        });
+      };
+
+      var expandForm = function (anyComp) {
+        var extraOpt = anyComp.getSystem().getByUid(detail.partUids()['extra-form']);
+        extraOpt.each(function (extra) {
+          extra.apis().grow();
+        });
+      };
+
       var placeholders = {
         '<alloy.expandable-form.minimal-form>': UiSubstitutes.single(
           Merger.deepMerge(
@@ -111,7 +125,9 @@ define(
           },
           {
             apis: {
-              toggleForm: toggleForm
+              toggleForm: toggleForm,
+              collapseForm: collapseForm,
+              expandForm: expandForm
             }
           }
         )
