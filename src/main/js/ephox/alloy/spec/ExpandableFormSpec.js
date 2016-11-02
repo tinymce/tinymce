@@ -26,6 +26,8 @@ define(
           FieldSchema.strict('openStyle'),
           FieldSchema.strict('shrinkingStyle'),
           FieldSchema.strict('growingStyle'),
+
+          // TODO: Sync with initial value
           FieldSchema.option('expandedClass'),
           FieldSchema.option('collapsedClass')
         ])
