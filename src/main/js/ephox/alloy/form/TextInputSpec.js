@@ -13,6 +13,7 @@ define(
       FieldSchema.strict('uid'),
       FieldSchema.strict('label'),
       FieldSchema.strict('components'),
+      FieldSchema.option('placeholder'),
       FieldSchema.strict('dom'),
       FieldSchema.defaulted('inline', true),
       // FieldSchema.strict('label'),
@@ -37,6 +38,7 @@ define(
         },
         parts: {
           field: Merger.deepMerge(
+            info.placeholder().map(function (p) { return { dom: { attributes: { placeholder: p } } }; }).getOr({ }),
             {
               uiType: 'input',
               representing: { 
@@ -51,7 +53,7 @@ define(
             info.inline() ? {
               dom: {
                 attributes: {
-                  placeholder: info.label()
+                  placeholder: info.placeholder().getOr(info.label())
                 }
               }
             } : {}
