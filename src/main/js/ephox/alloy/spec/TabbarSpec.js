@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldPresence',
@@ -11,10 +12,11 @@ define(
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.highway.Merger',
-    'ephox.perhaps.Option'
+    'ephox.perhaps.Option',
+    'ephox.sugar.api.Compare'
   ],
 
-  function (SystemEvents, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Option) {
+  function (SystemEvents, EventHandler, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Option, Compare) {
     var schema = [
       FieldSchema.strict('tabs'),
 
@@ -99,6 +101,18 @@ define(
           selector: '.' + detail.markers().tabClass(),
           executeOnMove: true
         },
+        events: Objects.wrap(
+          SystemEvents.systemInit(),
+          EventHandler.nu({
+            run: function (tabbar, simulatedEvent) {
+              if (Compare.eq(simulatedEvent.event().target(), tabbar.element())) {
+                tabbar.apis().getFirst().each(function (first) {
+                  first.getSystem().triggerEvent(SystemEvents.execute(), first.element(), { });
+                });
+              }
+            }
+          })
+        ),
         tabstopping: true
       };
     };

@@ -85,8 +85,8 @@ define(
         if (! Node.isText(component.element())) {
           registry.register(component);
           component.connect(systemApi);
-          systemApi.triggerEvent(SystemEvents.systemInit(), component.element(), { });
           Arr.each(component.components(), addToWorld);
+          systemApi.triggerEvent(SystemEvents.systemInit(), component.element(), { target: Fun.constant( component.element() ) });
         }
       };
 

@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.alien.Cycles',
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.form.CustomRadioGroupSpec',
     'ephox.alloy.form.FormScaffoldSpec',
     'ephox.alloy.form.RadioGroupSpec',
@@ -26,7 +27,7 @@ define(
     'global!Error'
   ],
 
-  function (Cycles, SystemEvents, CustomRadioGroupSpec, FormScaffoldSpec, RadioGroupSpec, TextInputSpec, Tagger, SpecSchema, TabbedSpec, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Thunk, Option, Cell, Error) {
+  function (Cycles, SystemEvents, EventHandler, CustomRadioGroupSpec, FormScaffoldSpec, RadioGroupSpec, TextInputSpec, Tagger, SpecSchema, TabbedSpec, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Thunk, Option, Cell, Error) {
     var schema = [
       FieldSchema.strict('dom'),
 
