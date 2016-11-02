@@ -170,6 +170,7 @@ define(
               return r;
             },
             set: function (form, value) {
+              // TODO: Update the values of things not created yet.
               Obj.each(value, function (v, k) {
                 var fieldUid = detail.partUids()[k];
                 form.getSystem().getByUid(fieldUid).each(function (field) {

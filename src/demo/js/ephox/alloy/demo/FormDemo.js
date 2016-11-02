@@ -171,59 +171,14 @@ define(
         }
       };
 
-      // var form = HtmlDisplay.section(
-      //   gui,
-      //   'This form has many fields',
-      //   {
-      //     uiType: 'form',
-      //     dom: {
-      //       tag: 'div',
-      //       classes: [ 'outside-form' ]
-      //     },
-      //     members: {
-      //       ui: {
-      //         munge: function (spec) {
-      //           return mungers[spec.type](spec);
-      //         }
-      //       }
-      //     },
-      //     parts: fieldParts,
-
-      //     components: [
-      //       { uiType: 'placeholder', owner: 'form', name: '<alloy.field.alpha>' },
-      //       { uiType: 'placeholder', owner: 'form', name: '<alloy.field.beta>' },
-      //       { uiType: 'placeholder', owner: 'form', name: '<alloy.field.gamma>' },
-      //       {
-      //         uiType: 'container',
-      //         components: [
-      //           { uiType: 'placeholder', owner: 'form', name: '<alloy.field.delta>' },
-      //           { uiType: 'placeholder', owner: 'form', name: '<alloy.field.epsilon>' }
-      //         ]
-      //       },
-      //       { uiType: 'placeholder', owner: 'form', name: '<alloy.field.rho>' }
-
-      //     ],
-
-      //     keying: {
-      //       mode: 'cyclic'
-      //     }
-      //   }
-      // );
-
-      // form.apis().setValue({
-      //   alpha: 'doggy',
-      //   beta: 'bottle',
-      //   gamma: 'cad'
-      // });
-
-      var slideform = HtmlDisplay.section(
+      var form = HtmlDisplay.section(
         gui,
-        'This is a sliding form',
+        'This form has many fields',
         {
-          uiType: 'slide-form',
+          uiType: 'form',
           dom: {
             tag: 'div',
-            classes: [ 'outside-slide-form' ]
+            classes: [ 'outside-form' ]
           },
           members: {
             ui: {
@@ -232,80 +187,125 @@ define(
               }
             }
           },
-          parts: Merger.deepMerge(
-            fieldParts,
-            {
-              left: {
-                dom: { tag: 'button', innerHtml: '<' }
-              },
-              right: {
-                dom: { tag: 'button', innerHtml: '>' }
-              },
-              tabbar: {
-                dom: {
-                  tag: 'span'
-                },
-                members: {
-                  tab: {
-                    munge: function (spec) {
-                      return Merger.deepMerge(
-                        spec,
-                        {
-                          dom: {
-                            tag: 'span',
-                            classes: [ 'dot' ]
-                          }
-                        }
-                      );
-                    }
-                  }
-                },
-                markers: {
-                  tabClass: 'dot',
-                  selectedClass: 'selected-dot'
-                },
-                parts: {
-                  tabs: { }
-                },
-                components: [
-                  { uiType: 'placeholder', name: '<alloy.tabs>', owner: 'tabbar' }
-                ]
-              },
-              tabview: {
+          parts: fieldParts,
 
-              }
-            }
-          ),
           components: [
-            { uiType: 'placeholder', name: '<alloy.tabview>', owner: 'tabbing' },
+            { uiType: 'placeholder', owner: 'form', name: '<alloy.field.alpha>' },
+            { uiType: 'placeholder', owner: 'form', name: '<alloy.field.beta>' },
+            { uiType: 'placeholder', owner: 'form', name: '<alloy.field.gamma>' },
             {
               uiType: 'container',
-              dom: { classes: [ 'dot-container' ] },
               components: [
-                { uiType: 'placeholder', name: '<alloy.slide-form.left>', owner: 'slide-form' },
-                { uiType: 'placeholder', name: '<alloy.tabbar>', owner: 'tabbing' },
-                { uiType: 'placeholder', name: '<alloy.slide-form.right>', owner: 'slide-form' }
+                { uiType: 'placeholder', owner: 'form', name: '<alloy.field.delta>' },
+                { uiType: 'placeholder', owner: 'form', name: '<alloy.field.epsilon>' }
               ]
-            }
+            },
+            { uiType: 'placeholder', owner: 'form', name: '<alloy.field.rho>' }
+
           ],
-          fields: fieldParts,
-          fieldOrder: [
-            // 'alpha',
-            'beta',
-            // 'gamma',
-            'delta'
-          ],
+
           keying: {
             mode: 'cyclic'
           }
         }
       );
 
-      slideform.apis().setValue({
-        delta: 'dog'
+      form.apis().setValue({
+        alpha: 'doggy',
+        beta: 'bottle',
+        gamma: 'cad'
       });
 
-      window.SC = slideform;
+      // var slideform = HtmlDisplay.section(
+      //   gui,
+      //   'This is a sliding form',
+      //   {
+      //     uiType: 'slide-form',
+      //     dom: {
+      //       tag: 'div',
+      //       classes: [ 'outside-slide-form' ]
+      //     },
+      //     members: {
+      //       ui: {
+      //         munge: function (spec) {
+      //           return mungers[spec.type](spec);
+      //         }
+      //       }
+      //     },
+      //     parts: Merger.deepMerge(
+      //       fieldParts,
+      //       {
+      //         left: {
+      //           dom: { tag: 'button', innerHtml: '<' }
+      //         },
+      //         right: {
+      //           dom: { tag: 'button', innerHtml: '>' }
+      //         },
+      //         tabbar: {
+      //           dom: {
+      //             tag: 'span'
+      //           },
+      //           members: {
+      //             tab: {
+      //               munge: function (spec) {
+      //                 return Merger.deepMerge(
+      //                   spec,
+      //                   {
+      //                     dom: {
+      //                       tag: 'span',
+      //                       classes: [ 'dot' ]
+      //                     }
+      //                   }
+      //                 );
+      //               }
+      //             }
+      //           },
+      //           markers: {
+      //             tabClass: 'dot',
+      //             selectedClass: 'selected-dot'
+      //           },
+      //           parts: {
+      //             tabs: { }
+      //           },
+      //           components: [
+      //             { uiType: 'placeholder', name: '<alloy.tabs>', owner: 'tabbar' }
+      //           ]
+      //         },
+      //         tabview: {
+
+      //         }
+      //       }
+      //     ),
+      //     components: [
+      //       { uiType: 'placeholder', name: '<alloy.tabview>', owner: 'tabbing' },
+      //       {
+      //         uiType: 'container',
+      //         dom: { classes: [ 'dot-container' ] },
+      //         components: [
+      //           { uiType: 'placeholder', name: '<alloy.slide-form.left>', owner: 'slide-form' },
+      //           { uiType: 'placeholder', name: '<alloy.tabbar>', owner: 'tabbing' },
+      //           { uiType: 'placeholder', name: '<alloy.slide-form.right>', owner: 'slide-form' }
+      //         ]
+      //       }
+      //     ],
+      //     fields: fieldParts,
+      //     fieldOrder: [
+      //       // 'alpha',
+      //       'beta',
+      //       // 'gamma',
+      //       'delta'
+      //     ],
+      //     keying: {
+      //       mode: 'cyclic'
+      //     }
+      //   }
+      // );
+
+      // slideform.apis().setValue({
+      //   delta: 'dog'
+      // });
+
+      // window.SC = slideform;
     };
   }
 );
