@@ -171,14 +171,59 @@ define(
         }
       };
 
-      var form = HtmlDisplay.section(
+      // var form = HtmlDisplay.section(
+      //   gui,
+      //   'This form has many fields',
+      //   {
+      //     uiType: 'form',
+      //     dom: {
+      //       tag: 'div',
+      //       classes: [ 'outside-form' ]
+      //     },
+      //     members: {
+      //       ui: {
+      //         munge: function (spec) {
+      //           return mungers[spec.type](spec);
+      //         }
+      //       }
+      //     },
+      //     parts: fieldParts,
+
+      //     components: [
+      //       { uiType: 'placeholder', owner: 'form', name: '<alloy.field.alpha>' },
+      //       { uiType: 'placeholder', owner: 'form', name: '<alloy.field.beta>' },
+      //       { uiType: 'placeholder', owner: 'form', name: '<alloy.field.gamma>' },
+      //       {
+      //         uiType: 'container',
+      //         components: [
+      //           { uiType: 'placeholder', owner: 'form', name: '<alloy.field.delta>' },
+      //           { uiType: 'placeholder', owner: 'form', name: '<alloy.field.epsilon>' }
+      //         ]
+      //       },
+      //       { uiType: 'placeholder', owner: 'form', name: '<alloy.field.rho>' }
+
+      //     ],
+
+      //     keying: {
+      //       mode: 'cyclic'
+      //     }
+      //   }
+      // );
+
+      // form.apis().setValue({
+      //   alpha: 'doggy',
+      //   beta: 'bottle',
+      //   gamma: 'cad'
+      // });
+
+      var expform = HtmlDisplay.section(
         gui,
-        'This form has many fields',
+        'This form expands',
         {
-          uiType: 'form',
+          uiType: 'expandable-form',
           dom: {
             tag: 'div',
-            classes: [ 'outside-form' ]
+            classes: [ 'expandable-form' ]
           },
           members: {
             ui: {
@@ -187,34 +232,41 @@ define(
               }
             }
           },
-          parts: fieldParts,
+          parts: Merger.deepMerge(
+            fieldParts,
+            {
+              'minimal-form': {
+                uiType: 'container',
+                components: [
+                  { uiType: 'placeholder', owner: 'form', name: '<alloy.field.alpha>' }
+                ]
+              },
+              'extra-form': {
+                uiType: 'container',
+                components: [
+                  { uiType: 'placeholder', owner: 'form', name: '<alloy.field.beta>' },
+                  { uiType: 'placeholder', owner: 'form', name: '<alloy.field.gamma>' },
+                  { uiType: 'placeholder', owner: 'form', name: '<alloy.field.delta>' },
+                  { uiType: 'placeholder', owner: 'form', name: '<alloy.field.epsilon>' },
+                  { uiType: 'placeholder', owner: 'form', name: '<alloy.field.rho>' }
+                ]
+              },
+              'expander': { uiType: 'container' },
+              'controls': { uiType: 'container' }
+            }
+          ),
 
           components: [
-            { uiType: 'placeholder', owner: 'form', name: '<alloy.field.alpha>' },
-            { uiType: 'placeholder', owner: 'form', name: '<alloy.field.beta>' },
-            { uiType: 'placeholder', owner: 'form', name: '<alloy.field.gamma>' },
-            {
-              uiType: 'container',
-              components: [
-                { uiType: 'placeholder', owner: 'form', name: '<alloy.field.delta>' },
-                { uiType: 'placeholder', owner: 'form', name: '<alloy.field.epsilon>' }
-              ]
-            },
-            { uiType: 'placeholder', owner: 'form', name: '<alloy.field.rho>' }
-
+            { uiType: 'placeholder', name: '<alloy.expandable-form.minimal-form>', owner: 'expandable-form' },
+            { uiType: 'placeholder', name: '<alloy.expandable-form.extra-form>', owner: 'expandable-form' },
+            { uiType: 'placeholder', name: '<alloy.expandable-form.expander>', owner: 'expandable-form' },
+            { uiType: 'placeholder', name: '<alloy.expandable-form.controls>', owner: 'expandable-form' }
           ],
-
           keying: {
             mode: 'cyclic'
           }
         }
       );
-
-      form.apis().setValue({
-        alpha: 'doggy',
-        beta: 'bottle',
-        gamma: 'cad'
-      });
 
       // var slideform = HtmlDisplay.section(
       //   gui,

@@ -15,6 +15,7 @@ define(
     'ephox.alloy.spec.DropdownMenuSpec',
     'ephox.alloy.spec.DropdownWidgetSpec',
     'ephox.alloy.spec.DummySpec',
+    'ephox.alloy.spec.ExpandableFormSpec',
     'ephox.alloy.spec.FlatgridSpec',
     'ephox.alloy.spec.FormLabelSpec',
     'ephox.alloy.spec.FormSpec',
@@ -46,7 +47,7 @@ define(
     'global!Error'
   ],
 
-  function (Component, Components, DefaultEvents, Tagger, ButtonSpec, ContainerSpec, CustomSpec, DropdownAlphaSpec, DropdownGridSpec, DropdownListSpec, DropdownMenuSpec, DropdownWidgetSpec, DummySpec, FlatgridSpec, FormLabelSpec, FormSpec, GroupButtonSpec, HtmlSelectSpec, InlineSpec, InputSpec, MenuSpec, ModalDialogSpec, SandboxedSpec, SlideFormSpec, SplitDropdownSpec, TabbarSpec, TabbedSpec, ToolbarGroupSpec, ToolbarSpec, TypeaheadSpec, WidgetContainerSpec, MoreToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
+  function (Component, Components, DefaultEvents, Tagger, ButtonSpec, ContainerSpec, CustomSpec, DropdownAlphaSpec, DropdownGridSpec, DropdownListSpec, DropdownMenuSpec, DropdownWidgetSpec, DummySpec, ExpandableFormSpec, FlatgridSpec, FormLabelSpec, FormSpec, GroupButtonSpec, HtmlSelectSpec, InlineSpec, InputSpec, MenuSpec, ModalDialogSpec, SandboxedSpec, SlideFormSpec, SplitDropdownSpec, TabbarSpec, TabbedSpec, ToolbarGroupSpec, ToolbarSpec, TypeaheadSpec, WidgetContainerSpec, MoreToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
     var knownSpecs = {
       container: ContainerSpec.make,
       custom: CustomSpec.make,
@@ -81,7 +82,8 @@ define(
       'modal-dialog': ModalDialogSpec.make,
 
       'form': FormSpec.make,
-      'slide-form': SlideFormSpec.make
+      'slide-form': SlideFormSpec.make,
+      'expandable-form': ExpandableFormSpec.make
 
       // Add other specs here.
     };
