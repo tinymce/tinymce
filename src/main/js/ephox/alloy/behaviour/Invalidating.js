@@ -83,10 +83,14 @@ define(
     };
 
     var apis = function (info) {
-      return {
-        markInvalid: Behaviour.tryActionOpt(behaviourName, info, 'markInvalid', doMarkInvalid),
-        markValid: Behaviour.tryActionOpt(behaviourName, info, 'markValid', doMarkValid)
-      };
+      return Behaviour.activeApis(
+        behaviourName,
+        info,
+        {
+          markInvalid: doMarkInvalid,
+          markValid: doMarkValid
+        }
+      );
     };
 
     var handlers = function (info) {

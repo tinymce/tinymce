@@ -79,9 +79,13 @@ define(
     };
 
     var apis = function (info) {
-      return {
-        redesign: Behaviour.tryActionOpt(behaviourName, info, 'redesign', redesign)
-      };
+      return Behaviour.activeApis(
+        behaviourName,
+        info,
+        {
+          redesign: redesign
+        }
+      );
     };
 
     return Behaviour.contract({

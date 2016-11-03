@@ -59,7 +59,6 @@ define(
       //   behaviourName,
         return info[behaviourName]().map(function (behaviourInfo) {
           return Obj.map(apiCalls, function (f, apiName) {
-            console.log('f', f, 'apiName', apiName);
             return function (component/*, */) {
               var args = Array.prototype.slice.call(arguments, 0);
               return f.apply(undefined, [ component, behaviourInfo ].concat(args.slice(1)));

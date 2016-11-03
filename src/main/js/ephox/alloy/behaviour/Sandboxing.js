@@ -110,15 +110,19 @@ define(
     };
 
     var apis = function (info) {
-      return {
-        openSandbox: Behaviour.tryActionOpt('sandboxing', info, 'openSandbox', openSandbox),
-        closeSandbox: Behaviour.tryActionOpt('sandboxing', info, 'closeSandbox', closeSandbox),
-        isShowing: Behaviour.tryActionOpt('sandboxing', info, 'isShowing', isShowing),
-        isPartOf: Behaviour.tryActionOpt('sandboxing', info, 'isPartOf', isPartOf),
-        showSandbox: Behaviour.tryActionOpt('sandboxing', info, 'showSandbox', showSandbox),
-        gotoSandbox: Behaviour.tryActionOpt('sandboxing', info, 'gotoSandbox', gotoSandbox),
-        getState: Behaviour.tryActionOpt('sandboxing', info, 'getState', getState)
-      };
+      return Behaviour.activeApis(
+        'sandboxing',
+        info,
+        {
+          openSandbox: openSandbox,
+          closeSandbox: closeSandbox,
+          isShowing: isShowing,
+          isPartOf: isPartOf,
+          showSandbox: showSandbox,
+          gotoSandbox: gotoSandbox,
+          getState: getState
+        }
+      );
     };
 
     return Behaviour.contract({

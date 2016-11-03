@@ -78,12 +78,15 @@ define(
     };
 
     var apis = function (info) {
-      return {
-        enable: Behaviour.tryActionOpt(behaviourName, info, 'enable', doEnable),
-        disable: Behaviour.tryActionOpt(behaviourName, info, 'disable', doDisable),
-        // TODO: Find a way to stop other apis building on things that return.
-        isDisabled: Behaviour.tryActionOpt(behaviourName, info, 'isDisabled', doIsDisabled)
-      };
+      return Behaviour.activeApis(
+        behaviourName,
+        info,
+        {
+          enable: doEnable,
+          disable: doDisable,
+          isDisabled: doIsDisabled
+        }
+      );
     };
 
     var handlers = function (info) {

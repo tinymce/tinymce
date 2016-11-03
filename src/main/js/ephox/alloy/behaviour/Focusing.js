@@ -57,12 +57,15 @@ define(
     };
 
     var apis = function (info) {
-      return {
-        focus: Behaviour.tryActionOpt('focusing', info, 'focus', doFocus),
-        blur: Behaviour.tryActionOpt('focusing', info, 'blur', doBlur),
-        // Should be supported either way.
-        isFocused: doIsFocused
-      };
+      return Behaviour.activeApis(
+        'focusing',
+        info,
+        {
+          focus: doFocus,
+          blur: doBlur,
+          isFocused: doIsFocused
+        }
+      );
     };
 
     var handlers = function (info) {

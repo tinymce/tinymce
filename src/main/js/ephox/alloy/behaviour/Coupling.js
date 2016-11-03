@@ -56,9 +56,13 @@ define(
     };
 
     var apis = function (info) {
-      return {
-        getCoupled: Behaviour.tryActionOpt('coupling', info, 'getCoupled', getCoupled)
-      };
+      return Behaviour.activeApis(
+        'coupling',
+        info,
+        {
+          getCoupled: getCoupled
+        }
+      );
     };
 
     return Behaviour.contract({

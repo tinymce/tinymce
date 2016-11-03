@@ -41,11 +41,15 @@ define(
     };
 
     var apis = function (info) {
-      return {
-        getValue: Behaviour.tryActionOpt(behaviourName, info, 'getValue', doGetValue),
-        setValue: Behaviour.tryActionOpt(behaviourName, info, 'setValue', doSetValue),
-        setValueFrom: Behaviour.tryActionOpt(behaviourName, info, 'setValueFrom', doSetValueFrom)
-      };
+      return Behaviour.activeApis(
+        behaviourName,
+        info,
+        {
+          getValue: doGetValue,
+          setValue: doSetValue,
+          setValueFrom: doSetValueFrom
+        }
+      );
     };
 
     return Behaviour.contract({

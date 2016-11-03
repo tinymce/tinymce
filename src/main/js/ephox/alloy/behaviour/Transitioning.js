@@ -87,10 +87,14 @@ define(
     };
 
     var apis = function (info) {
-      return {
-        transition: Behaviour.tryActionOpt(behaviourName, info, 'transition', doTransition),
-        revertToBase: Behaviour.tryActionOpt(behaviourName, info, 'revertToBase', revertToBase)
-      };
+      return Behaviour.activeApis(
+        behaviourName,
+        info,
+        {
+          transition: doTransition,
+          revertToBase: revertToBase
+        }
+      );
     };
 
     var handlers = function (info) {

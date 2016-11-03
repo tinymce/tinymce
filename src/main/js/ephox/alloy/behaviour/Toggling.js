@@ -77,12 +77,16 @@ define(
     };
 
     var apis = function (info) {
-      return {
-        toggle: Behaviour.tryActionOpt('toggling', info, 'toggle', doToggle),
-        select: Behaviour.tryActionOpt('toggling', info, 'select', doSelect),
-        deselect: Behaviour.tryActionOpt('toggling', info, 'deselect', doDeselect),
-        isSelected: Behaviour.tryActionOpt('toggling', info, 'isSelected', doIsSelected)
-      };
+      return Behaviour.activeApis(
+        'toggling',
+        info,
+        {
+          toggle: doToggle,
+          select: doSelect,
+          deselect: doDeselect,
+          isSelected: doIsSelected
+        }
+      );
     };
 
     var schema = FieldSchema.field(

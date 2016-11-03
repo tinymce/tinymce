@@ -2,10 +2,11 @@ define(
   'ephox.alloy.api.behaviour.Focusing',
 
   [
-    'ephox.alloy.api.behaviour.BehaviourExport'
+    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.sugar.api.Focus'
   ],
 
-  function (BehaviourExport) {
+  function (BehaviourExport, Focus) {
     return BehaviourExport.build(
       'focusing',
       [
@@ -13,7 +14,12 @@ define(
         'blur',
         'isFocused'
       ],
-      { }
+      {
+        isFocused: function (component) {
+          // Dupe wth Focusing.
+          return Focus.hasFocus(component.element());
+        }
+      }
     );
   }
 );

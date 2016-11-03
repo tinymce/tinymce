@@ -42,9 +42,13 @@ define(
     };
 
     var apis = function (info) {
-      return {
-        command1: Behaviour.tryActionOpt(behaviourName, info, 'command1', doCommand1)
-      };
+      return Behaviour.activeApis(
+        behaviourName,
+        info,
+        {
+          command1: doCommand1
+        }
+      );
     };
 
     var handlers = function (info) {

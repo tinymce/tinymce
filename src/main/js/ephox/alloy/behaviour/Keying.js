@@ -41,9 +41,16 @@ define(
         return handler.toApis(keyInfo);
       });
 
-      return Merger.deepMerge(handlerApis, {
-        focusIn: Behaviour.tryActionOpt('keying', info, 'focusIn', doFocusIn)
+      // The handler APIs should have their info curried in
+      var allApis = Merger.deepMerge(handlerApis, {
+        focusIn: doFocusIn
       });
+
+      return Behaviour.activeApis(
+        'keying',
+        info,
+        allApis
+      );
     };
 
     var schema = FieldSchema.field(

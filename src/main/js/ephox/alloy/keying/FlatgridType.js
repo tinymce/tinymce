@@ -104,7 +104,7 @@ define(
 
     var getApis = function (gridInfo) {
       return {
-        setGridSize: function (component, numRows, numCols) {
+        setGridSize: function (component, keyingInfo, numRows, numCols) {
           setGridSize(gridInfo, numRows, numCols);
         }
       };

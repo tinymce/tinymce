@@ -104,25 +104,23 @@ define(
       return getDelta(component, hInfo, +1);
     };
 
-    var apiCalls = Objects.wrapAll([
-      { key: 'highlight', value: highlight },
-      { key: 'dehighlight', value: dehighlight },
-      { key: 'dehighlightAll', value: dehighlightAll },
-      { key: 'highlightFirst', value: highlightFirst },
-      { key: 'highlightLast', value: highlightLast },
-      { key: 'isHighlighted', value: isHighlighted },
-      { key: 'getHighlighted', value: getHighlighted },
-      { key: 'getFirst', value: getFirst },
-      { key: 'getLast', value: getLast },
-      { key: 'getPrevious', value: getPrevious },
-      { key: 'getNext', value: getNext }
-    ]);
-
     var apis = function (info) {
       return Behaviour.activeApis(
         'highlighting',
         info,
-        apiCalls
+        {
+          'highlight': highlight,
+          'dehighlight': dehighlight,
+          'dehighlightAll': dehighlightAll,
+          'highlightFirst': highlightFirst,
+          'highlightLast': highlightLast,
+          'isHighlighted': isHighlighted,
+          'getHighlighted': getHighlighted,
+          'getFirst': getFirst,
+          'getLast': getLast,
+          'getPrevious': getPrevious,
+          'getNext': getNext
+        }
       );
     };
 

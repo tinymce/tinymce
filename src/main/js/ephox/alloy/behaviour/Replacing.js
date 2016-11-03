@@ -65,10 +65,14 @@ define(
     };
 
     var apis = function (info) {
-      return {
-        replace: Behaviour.tryActionOpt(behaviourName, info, 'replace', doReplace),
-        contents: Behaviour.tryActionOpt(behaviourName, info, 'contents', doContents)
-      };
+      return Behaviour.activeApis(
+        behaviourName,
+        info,
+        {
+          replace: doReplace,
+          contents: doContents
+        }
+      );
     };
 
     return Behaviour.contract({

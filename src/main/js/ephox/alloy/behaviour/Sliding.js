@@ -52,7 +52,12 @@ define(
       return info[behaviourName]().fold(function () {
         return { };
       }, function (oInfo) {
-        return oInfo.handler().toApis(oInfo);
+        var allApis = oInfo.handler().toApis(oInfo);
+        return Behaviour.activeApis(
+          behaviourName,
+          info,
+          allApis
+        );
       });
     };
 

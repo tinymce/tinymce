@@ -116,11 +116,15 @@ define(
     };
 
     var apis = function (info) {
-      return {
-        position: Behaviour.tryActionOpt('positioning', info, 'position', position),
-        addContainer: Behaviour.tryActionOpt('positioning', info, 'addContainer', addContainer),
-        removeContainer: Behaviour.tryActionOpt('positioning', info, 'removeContainer', removeContainer)
-      };
+      return Behaviour.activeApis(
+        'positioning',
+        info,
+        {
+          position: position,
+          addContainer: addContainer,
+          removeContainer: removeContainer
+        }
+      );
     };
 
     return Behaviour.contract({
