@@ -23,6 +23,7 @@ define(
       behaviourName,
       behaviourName,
       FieldPresence.asOption(),
+      // I can probably get rid of this state, now that there is a sync components method.
       ValueSchema.objOf([
         FieldSchema.state('state', function () { return Cell(Option.none()); })
       ])
@@ -51,6 +52,8 @@ define(
 
         replaceInfo.state().set(Option.some(children));
       }, component.element());
+
+      component.syncComponents();
     };
 
     var doContents = function (component, replaceInfo) {

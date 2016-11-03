@@ -2,6 +2,7 @@ define(
   'ephox.alloy.spec.ToolbarSpec',
 
   [
+    'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.alloy.toolbar.Overflowing',
@@ -15,7 +16,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (SpecSchema, UiSubstitutes, Overflowing, ToolbarSpecs, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Fun, Option) {
+  function (Replacing, SpecSchema, UiSubstitutes, Overflowing, ToolbarSpecs, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Fun, Option) {
     var schema = [
       FieldSchema.strict('dom'),
       FieldSchema.strict('initGroups'),
@@ -86,8 +87,7 @@ define(
         console.log('gs1', gs);
         component.getSystem().getByUid(containerUid).each(function (container) {
           var newGroups = buildGroups(gs);
-          container.apis().replace(newGroups);
-          container.syncComponents();
+          Replacing.replace(container, newGroups);
         });
       };
 
@@ -95,8 +95,7 @@ define(
         var containerUid = detail.partUids().groups;
         console.log('gs2', gs);
         component.getSystem().getByUid(containerUid).each(function (container) {
-          container.apis().replace(gs);
-          container.syncComponents();
+          Replacing.replace(container, gs);
         });
       };
 
