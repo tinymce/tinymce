@@ -12,6 +12,7 @@ asynctest(
     'ephox.agar.api.Waiter',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Sandboxing',
+    'ephox.alloy.api.ui.InlineApis',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.Sinks',
@@ -20,7 +21,7 @@ asynctest(
     'ephox.peanut.Fun'
   ],
  
-  function (GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Sandboxing, EventHandler, GuiSetup, Sinks, TestBroadcasts, Future, Fun) {
+  function (GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Sandboxing, InlineApis, EventHandler, GuiSetup, Sinks, TestBroadcasts, Future, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -91,7 +92,7 @@ asynctest(
 
       return [
         Step.sync(function () {
-          inline.apis().setAnchor({
+          InlineApis.setAnchor(inline, {
             anchor: 'hotspot',
             hotspot: box
           });

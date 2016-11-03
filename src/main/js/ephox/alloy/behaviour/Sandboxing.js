@@ -43,7 +43,7 @@ define(
     var rebuildSandbox = function (sandbox, sInfo, data) {
       clear(sandbox, sInfo);
       Remove.empty(sandbox.element());
-      Positioning.addContaienr(sInfo.sink(), sandbox);
+      Positioning.addContainer(sInfo.sink(), sandbox);
       sInfo.sink().getSystem().addToWorld(sandbox);
       var output = Manager.populate(sandbox, sInfo, data);
       sInfo.state().set(
