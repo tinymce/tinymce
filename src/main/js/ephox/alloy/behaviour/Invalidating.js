@@ -33,7 +33,11 @@ define(
           ValueSchema.objOf([
             FieldSchema.defaulted('aria', 'alert'),
             // Maybe we should use something else.
-            FieldSchema.defaulted('getContainer', Option.none)
+            FieldSchema.defaulted('getContainer', Option.none),
+            FieldSchema.defaulted('validHtml', ''),
+            FieldSchema.defaulted('onValid', Fun.noop),
+            FieldSchema.defaulted('onInvalid', Fun.noop),
+            FieldSchema.defaulted('onValidate', Fun.noop)
           ])
         ),
 
@@ -52,9 +56,11 @@ define(
     var doMarkValid = function (component, invalidInfo) {
       Class.remove(component.element(), invalidInfo.invalidClass());
       invalidInfo.notify().bind(function (notifyInfo) {
-        return notifyInfo.getContainer()(component);
-      }).each(function (container) {
-        Html.set(container, '');
+        notifyInfo.getContainer()(component).each(function (container) {
+          Html.set(container, notifyInfo.validHtml());
+        });
+
+        notifyInfo.onValid()(component);
       });
     };
 
@@ -67,6 +73,8 @@ define(
           // TODO: Should we just use Text here, not HTML?
           Html.set(container, text);
         });
+
+        notifyInfo.onInvalid()(component, text);
       });
     };
 
@@ -88,6 +96,10 @@ define(
             validatorInfo.onEvent(),
             EventHandler.nu({
               run: function (component) {
+                invalidInfo.notify().each(function (notifyInfo) {
+                  notifyInfo.onValidate()(component);
+                });
+
                 validatorInfo.validate()(component).get(function (valid) {
                   valid.fold(function (err) {
                     doMarkInvalid(component, invalidInfo, err);
