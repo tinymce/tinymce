@@ -95,7 +95,7 @@ define(
           SystemEvents.execute(),
           EventHandler.nu({
             abort: function (component, simulatedEvent) {
-              return component.apis().isDisabled();
+              return doIsDisabled(component, disableInfo);
             }
           })
         );
