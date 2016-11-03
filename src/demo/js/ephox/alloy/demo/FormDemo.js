@@ -39,11 +39,16 @@ define(
           parts: {
             'field-1': spec.field1,
             'field-2': spec.field2,
-            lock: { uiType: 'button', dom: { tag: 'button', innerHtml: 'x' } }
+            lock: { uiType: 'button', dom: { tag: 'button', innerHtml: 'x' }, tabstopping: true }
           },
           markers: {
             lockClass: 'demo-selected'
           },
+          onLockedChange: function (current, other) {
+            var cValue = current.apis().getValue();
+            other.apis().setValue(cValue);
+          },
+
           components: [
             { uiType: 'placeholder', name: '<alloy.form.field-1>', owner: 'coupled-text-input' },
             { uiType: 'placeholder', name: '<alloy.form.field-2>', owner: 'coupled-text-input' },

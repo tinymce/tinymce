@@ -2,6 +2,7 @@ define(
   'ephox.alloy.form.CoupledTextInputSpec',
 
   [
+    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.form.TextInputSpec',
     'ephox.alloy.spec.FormLabelSpec',
     'ephox.alloy.spec.SpecSchema',
@@ -14,11 +15,13 @@ define(
     'ephox.sugar.api.Value'
   ],
 
-  function (TextInputSpec, FormLabelSpec, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Merger, Option, Value) {
+  function (EventHandler, TextInputSpec, FormLabelSpec, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Merger, Option, Value) {
     var schema = [
       FieldSchema.strict('uid'),
       FieldSchema.strict('components'),
       FieldSchema.strict('dom'),
+
+      FieldSchema.strict('onLockedChange'),
 
       FieldSchema.field(
         'markers',
@@ -47,6 +50,18 @@ define(
     //       Merger.deepMerge(
 
     var builder = function (info, munge) {
+
+
+      var getPart = function (comp, part) {
+        return comp.getSystem().getByUid(info.partUids()[part]);
+      };
+
+      var getDelegate = function (field) {
+        return field.delegate().map(function (dlg) {
+          return dlg.get()(field);
+        }).getOr(field);
+      };
+
       var placeholders = {
         '<alloy.form.field-1>': UiSubstitutes.single(
           TextInputSpec.make(
@@ -55,6 +70,22 @@ define(
               munge(info.parts()['field-1']()),
               {
                 uid: info.partUids()['field-1']
+              },
+              {
+                events: {
+                  'input': EventHandler.nu({
+                    run: function (field1) {
+                      getPart(field1, 'field-2').each(function (field2) {
+                        getPart(field2, 'lock').each(function (lock) {
+
+                          if (lock.apis().isSelected()) {
+                            info.onLockedChange()(getDelegate(field1), getDelegate(field2));
+                          }
+                        });
+                      });
+                    }
+                  })
+                }
               }
             )
           )
@@ -66,6 +97,22 @@ define(
               munge(info.parts()['field-2']()),
               {
                 uid: info.partUids()['field-2']
+              },
+              {
+                events: {
+                  'input': EventHandler.nu({
+                    run: function (field2) {
+                      getPart(field2, 'field-1').each(function (field1) {
+                        getPart(field2, 'lock').each(function (lock) {
+                          if (lock.apis().isSelected()) {
+                            // Order is important
+                            info.onLockedChange()(getDelegate(field2), getDelegate(field1));
+                          }
+                        });
+                      });
+                    }
+                  })
+                }
               }
             )
           )
