@@ -49,7 +49,7 @@ tinymce.PluginManager.add('contextmenu', function(editor) {
 		}
 
 		e.preventDefault();
-		contextmenu = editor.settings.contextmenu || 'link image inserttable | cell row column deletetable';
+		contextmenu = editor.settings.contextmenu || 'link openlink image inserttable | cell row column deletetable';
 
 		// Render menu
 		if (!menu) {

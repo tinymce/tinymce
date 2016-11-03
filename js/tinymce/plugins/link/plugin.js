@@ -21,14 +21,22 @@ tinymce.PluginManager.add('link', function(editor) {
 		return tinymce.util.Tools.grep(elements, isLink).length > 0;
 	}
 
+	function getLink(elm) {
+		return editor.dom.getParent(elm, 'a[href]');
+	}
+
 	function getSelectedLink() {
-		return editor.dom.getParent(editor.selection.getStart(), 'a[href]');
+		return getLink(editor.selection.getStart());
 	}
 
 	function isContextMenuVisible() {
 		var contextmenu = editor.plugins.contextmenu;
 		return contextmenu ? contextmenu.isContextMenuVisible() : false;
 	}
+
+	var hasOnlyAltModifier = function (e) {
+		return e.altKey === true && e.shiftKey === false && e.ctrlKey === false && e.metaKey === false;
+	};
 
 	function leftClickedOnAHref(elm) {
 		var sel, rng, node;
@@ -44,46 +52,30 @@ tinymce.PluginManager.add('link', function(editor) {
 		return false;
 	}
 
-	/**
-	 * Document opened with window.open(..., '_blank'), retains access to originating
-	 * page through window.opener property, even across domain origins. This opens
-	 * possibilities for phishing attacks by redirecting window.opener to some malicious
-	 * address.
-	 *
-	 * Inspired by blankshield: https://github.com/danielstjules/blankshield
-	 * The MIT License (MIT)
-	 * Copyright (c) 2015 Daniel St. Jules
-	 *
-	 * @method openDetachedWindow
-	 * @param {string} url
-	 * @returns {window}
-	 */
-	function openDetachedWindow(url, target) {
-		var win, iframe, iframeDoc, script;
+	function openDetachedWindow(url) {
+		// Chrome and Webkit has implemented noopener and works correctly with/without popup blocker
+		// Firefox has it implemented noopener but when the popup blocker is activated it doesn't work
+		// Edge has only implemented noreferrer and it seems to remove opener as well
+		// Older IE versions pre IE 11 falls back to a window.open approach
+		if (!tinymce.Env.ie || tinymce.Env.ie > 10) {
+			var link = document.createElement('a');
+			link.target = '_blank';
+			link.href = url;
+			link.rel = 'noreferrer noopener';
 
-		if (target && target != '_blank') {
-			return open.call(window, url, target);
-		}
-		if (!tinymce.Env.ie) {
-			iframe = document.createElement('iframe');
-			iframe.style.display = 'none';
-			document.body.appendChild(iframe);
-			iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-
-			script = iframeDoc.createElement('script');
-			script.text =
-				'window.parent = window.top = window.frameElement = null;' +
-				'var child = window.open("' + url + '", "_blank");' +
-				'child.opener = null;';
-
-			iframeDoc.body.appendChild(script);
-			win = iframe.contentWindow.child;
-			document.body.removeChild(iframe);
+			var evt = document.createEvent('MouseEvents');
+			evt.initMouseEvent('click', true, true, window, true, 0, 0, 0, 0, false, false, false, false, 0, null);
+			link.dispatchEvent(evt);
 		} else {
-			win = open.call(window, url, '_blank');
-			win.opener = null;
+			var win = window.open('', '_blank');
+			if (win) {
+				win.opener = null;
+				var doc = win.document;
+				doc.open();
+				doc.write('<meta http-equiv="refresh" content="0; url=' + tinymce.DOM.encode(url) + '">');
+				doc.close();
+			}
 		}
-		return win;
 	}
 
 	function gotoHref() {
@@ -538,15 +530,15 @@ tinymce.PluginManager.add('link', function(editor) {
 
 
 	if (editor.addContextToolbar) {
-		editor.addButton('gotolink', {
-			icon: 'preview',
-			tooltip: 'View link',
+		editor.addButton('openlink', {
+			icon: 'newtab',
+			tooltip: 'Open link',
 			onclick: gotoHref
 		});
 
 		editor.addContextToolbar(
 			leftClickedOnAHref,
-			'gotolink | link unlink'
+			'openlink | link unlink'
 		);
 	}
 
@@ -554,10 +546,27 @@ tinymce.PluginManager.add('link', function(editor) {
 	editor.addShortcut('Meta+K', '', createLinkList(showDialog));
 	editor.addCommand('mceLink', createLinkList(showDialog));
 
+	editor.on('click', function (e) {
+		var link = getLink(e.target);
+		if (link && tinymce.util.VK.metaKeyPressed(e)) {
+			e.preventDefault();
+			openDetachedWindow(link.href);
+		}
+	});
+
+	editor.on('keydown', function (e) {
+		var link = getSelectedLink();
+		if (link && e.keyCode === 13 && hasOnlyAltModifier(e)) {
+			e.preventDefault();
+			openDetachedWindow(link.href);
+		}
+	});
+
 	this.showDialog = showDialog;
 
-	editor.addMenuItem('gotolink', {
-		text: 'View link',
+	editor.addMenuItem('openlink', {
+		text: 'Open link',
+		icon: 'newtab',
 		onclick: gotoHref,
 		onPostRender: toggleViewLinkState,
 		prependToContext: true
