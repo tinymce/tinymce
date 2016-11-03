@@ -82,7 +82,7 @@ define(
                         getPart(field2, 'lock').each(function (lock) {
 
                           if (lock.apis().isSelected()) {
-                            info.onLockedChange()(getDelegate(field1), getDelegate(field2), lock);
+                            info.onLockedChange()(field1, getDelegate(field1), getDelegate(field2), lock);
                           }
                         });
                       });
@@ -110,7 +110,7 @@ define(
                         getPart(field2, 'lock').each(function (lock) {
                           if (lock.apis().isSelected()) {
                             // Order is important
-                            info.onLockedChange()(getDelegate(field2), getDelegate(field1), lock);
+                            info.onLockedChange()(field2, getDelegate(field2), getDelegate(field1), lock);
                           }
                         });
                       });
