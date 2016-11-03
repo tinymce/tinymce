@@ -46,7 +46,7 @@ define(
                     var v = input.apis().getValue();
                     return Future.nu(function (callback) {
                       setTimeout(function () {
-                        var res = v.indexOf('a') === 0 ?Result.error('Do not start with a!') : Result.value({ });
+                        var res = v.indexOf('a') === 0 ? Result.error('Do not start with a!') : Result.value({ });
                         callback(res);
                       }, 1000);  
                     });
