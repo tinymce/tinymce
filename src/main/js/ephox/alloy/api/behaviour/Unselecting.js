@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.api.behaviour.Transitioning',
+  'ephox.alloy.api.behaviour.Unselecting',
 
   [
     'ephox.alloy.api.behaviour.BehaviourExport'
@@ -7,11 +7,8 @@ define(
 
   function (BehaviourExport) {
     return BehaviourExport.build(
-      'transitioning',
-      [
-        'transition',
-        'revertToBase'
-      ],
+      'unselecting',
+      [ ],
       { }
     );
   }
