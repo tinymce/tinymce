@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.alien.EditableFields',
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.util.ItemEvents',
     'ephox.alloy.menu.util.MenuMarkers',
@@ -16,7 +17,7 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (EditableFields, SystemEvents, EventHandler, ItemEvents, MenuMarkers, UiSubstitutes, FieldPresence, FieldSchema, Objects, Merger, Option, Traverse) {
+  function (EditableFields, SystemEvents, Focusing, EventHandler, ItemEvents, MenuMarkers, UiSubstitutes, FieldPresence, FieldSchema, Objects, Merger, Option, Traverse) {
     var schema = [
       FieldSchema.strict('uid'),
       FieldSchema.strict('value'),
@@ -95,7 +96,7 @@ console.debug('components', components);
             value: EventHandler.nu({
               run: function (component, simulatedEvent) {
                 if (info.autofocus()) focusWidget(component);
-                else component.apis().focus();
+                else Focusing.focus(component);
               }
             })
           }
@@ -112,8 +113,8 @@ console.debug('components', components);
           onEscape: function (component, simulatedEvent) {
             // If the outer list item didn't have focus, 
             // then focus it (i.e. escape the inner widget)
-            if (!component.apis().isFocused()) {
-              component.apis().focus();
+            if (! Focusing.isFocused(component)) {
+              Focusing.focus(component);
               return Option.some(true);
             } else {
               return Option.none();

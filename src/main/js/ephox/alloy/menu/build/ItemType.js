@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.util.ItemEvents',
     'ephox.boulder.api.FieldSchema',
@@ -11,7 +12,7 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (SystemEvents, EventHandler, ItemEvents, FieldSchema, Objects, Merger, Fun) {
+  function (SystemEvents, Focusing, EventHandler, ItemEvents, FieldSchema, Objects, Merger, Fun) {
     var schema = [
       FieldSchema.strict('value'),
       FieldSchema.strict('components'),
@@ -54,9 +55,7 @@ define(
           {
             key: SystemEvents.focusItem(),
             value: EventHandler.nu({
-              run: function (component) {
-                component.apis().focus();
-              }
+              run: Focusing.focus
             })
           }
         ]),

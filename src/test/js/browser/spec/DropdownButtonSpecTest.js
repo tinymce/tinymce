@@ -14,6 +14,7 @@ asynctest(
     'ephox.agar.api.UiFinder',
     'ephox.agar.api.Waiter',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.NavigationUtils',
     'ephox.alloy.test.Sinks',
@@ -26,7 +27,7 @@ asynctest(
     'global!parseInt'
   ],
  
-  function (Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, GuiSetup, NavigationUtils, Sinks, TestBroadcasts, Future, Css, Width, Error, Math, parseInt) {
+  function (Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Focusing, GuiSetup, NavigationUtils, Sinks, TestBroadcasts, Future, Css, Width, Error, Math, parseInt) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -73,7 +74,7 @@ asynctest(
 
       return [
         Step.sync(function () {
-          dropdown.apis().focus();
+          Focusing.focus(dropdown);
         }),
         UiFinder.sNotExists(gui.element(), '[data-alloy-item-value]'),
         Keyboard.sKeydown(doc, Keys.enter(), { }),

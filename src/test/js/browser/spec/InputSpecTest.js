@@ -8,11 +8,12 @@ asynctest(
     'ephox.agar.api.Logger',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.test.GuiSetup',
     'ephox.fred.PlatformDetection'
   ],
  
-  function (ApproxStructure, Assertions, GeneralSteps, Logger, Step, GuiFactory, GuiSetup, PlatformDetection) {
+  function (ApproxStructure, Assertions, GeneralSteps, Logger, Step, GuiFactory, Focusing, GuiSetup, PlatformDetection) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -66,7 +67,7 @@ asynctest(
         GeneralSteps.sequence([
           sCheckInputSelection('before focus', { start: defaultCursor, end: defaultCursor }),
           Step.sync(function () {
-            component.apis().focus();
+            Focusing.focus(component);
           }),
           sCheckInputSelection('after focus', { start: 0, end: 'initial-value'.length })
 

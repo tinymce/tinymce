@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.Coupling',
+    'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dropdown.Beta',
     'ephox.alloy.dropdown.Gamma',
@@ -21,7 +22,7 @@ define(
     'global!document'
   ],
 
-  function (SystemEvents, Coupling, EventHandler, Beta, Gamma, ViewTypes, InputSpec, SpecSchema, FieldSchema, Objects, Merger, Fun, Option, Cell, Value, Strings, document) {
+  function (SystemEvents, Coupling, Focusing, EventHandler, Beta, Gamma, ViewTypes, InputSpec, SpecSchema, FieldSchema, Objects, Merger, Fun, Option, Cell, Value, Strings, document) {
     var schema = [
       FieldSchema.strict('sink'),
       FieldSchema.strict('fetch'),
@@ -93,7 +94,7 @@ define(
             },
             onStream: function (component, simulatedEvent) {
               var sandbox = Coupling.getCoupled(component, 'sandbox');
-              var focusInInput = component.apis().isFocused();
+              var focusInInput = Focusing.isFocused(component);
               // You don't want it to change when something else has triggered the change.
               if (focusInInput) {
                 if (sandbox.apis().isShowing()) sandbox.apis().closeSandbox();

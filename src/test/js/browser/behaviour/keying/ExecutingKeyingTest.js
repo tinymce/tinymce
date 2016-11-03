@@ -6,11 +6,12 @@ asynctest(
     'ephox.agar.api.Keys',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup'
   ],
  
-  function (Keyboard, Keys, Step, GuiFactory, EventHandler, GuiSetup) {
+  function (Keyboard, Keys, Step, GuiFactory, Focusing, EventHandler, GuiSetup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -43,7 +44,7 @@ asynctest(
       return [
         GuiSetup.mSetupKeyLogger(body),
         Step.sync(function () {
-          component.apis().focus();
+          Focusing.focus(component);
         }),
         store.sAssertEq('Initially empty', [ ]),
         Keyboard.sKeydown(doc, Keys.enter(), { }),

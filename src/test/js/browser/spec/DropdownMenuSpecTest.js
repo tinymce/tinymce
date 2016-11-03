@@ -13,6 +13,7 @@ asynctest(
     'ephox.agar.api.UiFinder',
     'ephox.agar.api.Waiter',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.NavigationUtils',
     'ephox.alloy.test.Sinks',
@@ -20,7 +21,7 @@ asynctest(
     'ephox.knoch.future.Future'
   ],
  
-  function (Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, GuiSetup, NavigationUtils, Sinks, Arr, Future) {
+  function (Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Focusing, GuiSetup, NavigationUtils, Sinks, Arr, Future) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -174,7 +175,7 @@ asynctest(
       // A bit of dupe with DropdownButtonSpecTest
       return [
         Step.sync(function () {
-          dropdown.apis().focus();
+          Focusing.focus(dropdown);
         }),
 
         sTestMenus(
