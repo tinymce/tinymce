@@ -2,6 +2,7 @@ define(
   'ephox.alloy.form.FormUis',
 
   [
+    'ephox.alloy.form.CoupledTextInputSpec',
     'ephox.alloy.form.CustomRadioGroupSpec',
     'ephox.alloy.form.RadioGroupSpec',
     'ephox.alloy.form.SelectInputSpec',
@@ -10,11 +11,12 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (CustomRadioGroupSpec, RadioGroupSpec, SelectInputSpec, TextInputSpec, ValueSchema, Fun) {
+  function (CoupledTextInputSpec, CustomRadioGroupSpec, RadioGroupSpec, SelectInputSpec, TextInputSpec, ValueSchema, Fun) {
     var schema = ValueSchema.choose(
       'type',
       {
-        'text-input': TextInputSpec,
+        'coupled-text-input': CoupledTextInputSpec,
+        'text-input': TextInputSpec.schema(),
         'radio-group': RadioGroupSpec,
         'custom-radio-group': CustomRadioGroupSpec,
         'select-input': SelectInputSpec

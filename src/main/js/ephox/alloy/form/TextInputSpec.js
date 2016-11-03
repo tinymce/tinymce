@@ -3,12 +3,14 @@ define(
 
   [
     'ephox.alloy.spec.FormLabelSpec',
+    'ephox.alloy.spec.SpecSchema',
     'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
+    'ephox.peanut.Fun',
     'ephox.sugar.api.Value'
   ],
 
-  function (FormLabelSpec, FieldSchema, Merger, Value) {
+  function (FormLabelSpec, SpecSchema, FieldSchema, Merger, Fun, Value) {
     var schema = [
       FieldSchema.strict('uid'),
       FieldSchema.strict('label'),
@@ -65,6 +67,14 @@ define(
       });
     };
 
-    return schema;
+    var make = function (spec) {
+      var info = SpecSchema.asStructOrDie('TextInputSpec.make', schema, spec, [ ]);
+      return builder(info);
+    };
+
+    return {
+      schema: Fun.constant(schema),
+      make: make
+    };
   }
 );

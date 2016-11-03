@@ -31,6 +31,27 @@ define(
         });
       };
 
+      var coupledTextMunger = function (spec) {
+        return Merger.deepMerge(spec, {
+          dom: {
+            tag: 'div'
+          },
+          parts: {
+            'field-1': spec.field1,
+            'field-2': spec.field2,
+            lock: { uiType: 'button', dom: { tag: 'button', innerHtml: 'x' } }
+          },
+          markers: {
+            lockClass: 'demo-selected'
+          },
+          components: [
+            { uiType: 'placeholder', name: '<alloy.form.field-1>', owner: 'coupled-text-input' },
+            { uiType: 'placeholder', name: '<alloy.form.field-2>', owner: 'coupled-text-input' },
+            { uiType: 'placeholder', name: '<alloy.form.lock>', owner: 'coupled-text-input' }
+          ]
+        });
+      };
+
       var selectMunger = function (spec) {
         return Merger.deepMerge(spec, {
           dom: {
@@ -127,10 +148,16 @@ define(
         'text-input': textMunger,
         'select-input': selectMunger,
         'radio-group': radioMunger,
-        'custom-radio-group': customRadioMunger 
+        'custom-radio-group': customRadioMunger,
+        'coupled-text-input': coupledTextMunger
       };
 
       var fieldParts = {
+        omega: {
+          type: 'coupled-text-input',
+          field1: { type: 'text-input', label: 'Omega.1' },
+          field2: { type: 'text-input', label: 'Omega.2' }
+        },
         alpha: { type: 'text-input', label: 'Alpha', inline: false },
         beta: { type: 'text-input', label: 'Beta', inline: false },
         gamma: {
@@ -287,6 +314,7 @@ define(
                   classes: [ 'form-section' ]
                 },
                 components: [
+                  { uiType: 'placeholder', owner: 'form', name: '<alloy.field.omega>' },
                   { uiType: 'placeholder', owner: 'form', name: '<alloy.field.alpha>' },
                   { uiType: 'placeholder', owner: 'form', name: '<alloy.field.theta>' }
                 ]

@@ -124,7 +124,7 @@ define(
               );
               console.log('fullSpec', fullSpec);
               var itemInfo = ValueSchema.asStructOrDie('ui.spec item', FormUis.schema(), fullSpec);
-              var output = itemInfo.builder()(itemInfo);
+              var output = itemInfo.builder()(itemInfo, detail.members().ui().munge);
               return {
                 value: f,
                 text: f,
