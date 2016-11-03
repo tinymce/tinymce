@@ -97,10 +97,9 @@ define(
                     SystemEvents.execute(),
                     EventHandler.nu({
                       run: function (radio) {
-                        radio.getSystem().getByUid(info.uid()).each(function (group) {
-                          Highlighting.highlight(group, radio);
-                          // group.apis().highlight(radio);
-                        });
+                        radio.getSystem().getByUid(info.uid()).each(
+                          Highlighting.highlight_(radio)
+                        );
                       }
                     })
                   ),
