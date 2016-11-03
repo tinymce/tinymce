@@ -49,6 +49,9 @@ define(
     //     '<alloy.form.field-label>': UiSubstitutes.single(
     //       Merger.deepMerge(
 
+    // Would perfer a much better way of doing this, but things like aspect ratios
+    // Have to know which is which.
+  
     var builder = function (info, munge) {
 
 
@@ -79,7 +82,7 @@ define(
                         getPart(field2, 'lock').each(function (lock) {
 
                           if (lock.apis().isSelected()) {
-                            info.onLockedChange()(getDelegate(field1), getDelegate(field2));
+                            info.onLockedChange()(getDelegate(field1), getDelegate(field2), lock);
                           }
                         });
                       });
@@ -107,7 +110,7 @@ define(
                         getPart(field2, 'lock').each(function (lock) {
                           if (lock.apis().isSelected()) {
                             // Order is important
-                            info.onLockedChange()(getDelegate(field2), getDelegate(field1));
+                            info.onLockedChange()(getDelegate(field2), getDelegate(field1), lock);
                           }
                         });
                       });
