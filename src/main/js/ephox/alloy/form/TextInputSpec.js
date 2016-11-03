@@ -2,6 +2,7 @@ define(
   'ephox.alloy.form.TextInputSpec',
 
   [
+    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.spec.FormLabelSpec',
     'ephox.alloy.spec.SpecSchema',
     'ephox.boulder.api.FieldSchema',
@@ -10,12 +11,13 @@ define(
     'ephox.sugar.api.Value'
   ],
 
-  function (FormLabelSpec, SpecSchema, FieldSchema, Merger, Fun, Value) {
+  function (EventHandler, FormLabelSpec, SpecSchema, FieldSchema, Merger, Fun, Value) {
     var schema = [
       FieldSchema.strict('uid'),
       FieldSchema.strict('label'),
       FieldSchema.strict('components'),
       FieldSchema.option('placeholder'),
+      FieldSchema.defaulted('stickyPlaceholder', false),
       FieldSchema.strict('dom'),
       FieldSchema.defaulted('inline', true),
       FieldSchema.state('originalSpec', Fun.identity),
@@ -53,6 +55,17 @@ define(
                   set: function (input, value) {
                     Value.set(input.element(), value);
                   }
+                },
+                events: {
+                  focusin: EventHandler.nu({
+                    run: function (input) {
+                      if (info.stickyPlaceholder() && input.apis().getValue().length === 0) {
+                        info.placeholder().each(function (pc) {
+                          input.apis().setValue(pc);
+                        });
+                      }
+                    }
+                  })
                 }
               },
               info.inline() ? {
