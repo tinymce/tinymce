@@ -2,6 +2,7 @@ define(
   'ephox.alloy.dropdown.Beta',
 
   [
+    'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.dropdown.Gamma',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Remove',
@@ -9,7 +10,7 @@ define(
     'global!Error'
   ],
 
-  function (Gamma, Option, Remove, Width, Error) {
+  function (Coupling, Gamma, Option, Remove, Width, Error) {
     
     var fetch = function (detail, component) {
       var fetcher = detail.fetch();
@@ -34,7 +35,7 @@ define(
     };
 
     var togglePopup = function (detail, hotspot) {
-      var sandbox = hotspot.apis().getCoupled('sandbox');
+      var sandbox = Coupling.getCoupled(hotspot, 'sandbox');
       var showing = sandbox.apis().isShowing();
       var action = showing ? close : open;
       action(detail, hotspot, sandbox);
@@ -73,14 +74,14 @@ define(
 
     
     var previewPopup = function (detail, hotspot) {
-      var sandbox = hotspot.apis().getCoupled('sandbox');
+      var sandbox = Coupling.getCoupled(hotspot, 'sandbox');
       if (sandbox.apis().isShowing()) close(detail, hotspot, sandbox);
       preview(detail, hotspot, sandbox);
       return Option.some(true);
     };
 
     var enterPopup = function (detail, hotspot) {
-      var sandbox = hotspot.apis().getCoupled('sandbox');
+      var sandbox = Coupling.getCoupled(hotspot, 'sandbox');
       if (sandbox.apis().isShowing()) {
         console.log('going to sandbox');
         sandbox.apis().gotoSandbox();
@@ -91,7 +92,7 @@ define(
     };
 
     var escapePopup = function (detail, hotspot) {
-      var sandbox = hotspot.apis().getCoupled('sandbox');
+      var sandbox = Coupling.getCoupled(hotspot, 'sandbox');
       close(detail, hotspot, sandbox);
       return Option.some(true);
     };

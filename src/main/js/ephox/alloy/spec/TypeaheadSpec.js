@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dropdown.Beta',
     'ephox.alloy.dropdown.Gamma',
@@ -20,7 +21,7 @@ define(
     'global!document'
   ],
 
-  function (SystemEvents, EventHandler, Beta, Gamma, ViewTypes, InputSpec, SpecSchema, FieldSchema, Objects, Merger, Fun, Option, Cell, Value, Strings, document) {
+  function (SystemEvents, Coupling, EventHandler, Beta, Gamma, ViewTypes, InputSpec, SpecSchema, FieldSchema, Objects, Merger, Fun, Option, Cell, Value, Strings, document) {
     var schema = [
       FieldSchema.strict('sink'),
       FieldSchema.strict('fetch'),
@@ -91,7 +92,7 @@ define(
               delay: 1000
             },
             onStream: function (component, simulatedEvent) {
-              var sandbox = component.apis().getCoupled('sandbox');
+              var sandbox = Coupling.getCoupled(component, 'sandbox');
               var focusInInput = component.apis().isFocused();
               // You don't want it to change when something else has triggered the change.
               if (focusInInput) {
@@ -124,7 +125,7 @@ define(
           keying: {
             mode: 'special',
             onDown: function (comp, simulatedEvent) {
-              var sandbox = comp.apis().getCoupled('sandbox');
+              var sandbox = Coupling.getCoupled(comp, 'sandbox');
               if (sandbox.apis().isShowing()) {
                 sandbox.getSystem().triggerEvent('keydown', sandbox.element(), simulatedEvent.event());
                 return Option.some(true);
@@ -136,12 +137,12 @@ define(
               return Beta.escapePopup(detail, comp);
             },
             onUp: function (comp, simulatedEvent) {
-              var sandbox = comp.apis().getCoupled('sandbox');
+              var sandbox = Coupling.getCoupled(comp, 'sandbox');
               sandbox.getSystem().triggerEvent('keydown', sandbox.element(), simulatedEvent.event());
               return Option.some(true);
             },
             onEnter: function (comp, simulatedEvent) {
-              var sandbox = comp.apis().getCoupled('sandbox');
+              var sandbox = Coupling.getCoupled(comp, 'sandbox');
               detail.onExecute()(sandbox, comp);
               return Option.some(true);
             }
