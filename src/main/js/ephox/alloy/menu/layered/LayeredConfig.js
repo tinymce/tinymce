@@ -6,6 +6,7 @@ define(
     'ephox.alloy.alien.EditableFields',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.Highlighting',
+    'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.layered.LayeredState',
     'ephox.alloy.menu.logic.HotspotViews',
@@ -31,7 +32,7 @@ define(
     'ephox.sugar.api.SelectorFilter'
   ],
 
-  function (ComponentStructure, EditableFields, SystemEvents, Highlighting, EventHandler, LayeredState, HotspotViews, ItemEvents, MenuEvents, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, Insert, Remove, SelectorFilter) {
+  function (ComponentStructure, EditableFields, SystemEvents, Highlighting, Positioning, EventHandler, LayeredState, HotspotViews, ItemEvents, MenuEvents, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, Insert, Remove, SelectorFilter) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('lazyHotspot'),
 
@@ -106,7 +107,7 @@ define(
       };
 
       var showMenu = function (sandbox, menu) {
-        uiSpec.sink().apis().position({
+        Positioning.position(uiSpec.sink(), {
           anchor: 'hotspot',
           hotspot: uiSpec.lazyHotspot()(),
           bubble: Option.none()
@@ -116,7 +117,7 @@ define(
       };
 
       var showSubmenu = function (sandbox, triggerItem, submenu) {
-        uiSpec.sink().apis().position({
+        Positioning.position(uiSpec.sink(), {
           anchor: 'submenu',
           item: triggerItem,
           bubble: Option.none()

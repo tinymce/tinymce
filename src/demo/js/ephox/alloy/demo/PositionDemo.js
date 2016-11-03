@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.demo.DemoContent',
@@ -16,7 +17,7 @@ define(
     'ephox.sugar.api.Insert'
   ],
 
-  function (Gui, GuiFactory, Toggling, EventHandler, DemoContent, HtmlDisplay, Writer, Class, Css, DomEvent, Element, Insert) {
+  function (Gui, GuiFactory, Positioning, Toggling, EventHandler, DemoContent, HtmlDisplay, Writer, Class, Css, DomEvent, Element, Insert) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -73,13 +74,13 @@ define(
           },
           action: function (comp) {
             if (Toggling.isSelected(comp)) {
-              sink.apis().addContainer(popup);
-              sink.apis().position({
+              Positioning.addContainer(sink, popup);
+              Positioning.position(sink, {
                 anchor: 'hotspot',
                 hotspot: comp
               }, popup);
             } else {
-              sink.apis().removeContainer(popup);
+              Positioning.removeContainer(sink, popup);
             }
           },
           toggling: {
@@ -113,8 +114,8 @@ define(
               events: {
                 mouseover: EventHandler.nu({
                   run: function (item) {
-                    sink.apis().addContainer(popup);
-                    sink.apis().position({
+                    Positioning.addContainer(sink, popup);
+                    Positioning.position(sink, {
                       anchor: 'submenu',
                       item: item
                     }, popup);
@@ -160,8 +161,8 @@ define(
                 text: 'Show popup at cursor'
               },
               action: function (button) {
-                sink.apis().addContainer(popup);
-                sink.apis().position({
+                Positioning.addContainer(sink, popup);
+                Positioning.position(sink, {
                   anchor: 'selection',
                   root: button.getSystem().getByUid('text-editor').getOrDie(
                     'Could not find text editor'
@@ -204,8 +205,8 @@ define(
                 text: 'Show popup at cursor'
               },
               action: function (button) {
-                sink.apis().addContainer(popup);
-                sink.apis().position({
+                Positioning.addContainer(sink, popup);
+                Positioning.position(sink, {
                   anchor: 'selection',
                   root: Element.fromDom(frame.dom().contentWindow.document.body)
                 }, popup);

@@ -5,6 +5,7 @@ define(
     'ephox.agar.api.Chain',
     'ephox.agar.api.Guard',
     'ephox.agar.api.NamedChain',
+    'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.test.ChainUtils',
     'ephox.alloy.test.Sinks',
     'ephox.perhaps.Result',
@@ -14,12 +15,12 @@ define(
     'global!Error'
   ],
 
-  function (Chain, Guard, NamedChain, ChainUtils, Sinks, Result, Css, Scroll, Traverse, Error) {
+  function (Chain, Guard, NamedChain, Positioning, ChainUtils, Sinks, Result, Css, Scroll, Traverse, Error) {
     var cAddPopupToSink = function (sinkName) {
       return NamedChain.bundle(function (data) {
         var sink = data[sinkName];
-        sink.apis().addContainer(data.popup);
-        sink.apis().position(data.anchor, data.popup);
+        Positioning.addContainer(sink, data.popup);
+        Positioning.position(sink, data.anchor, data.popup);
         return Result.value(data);
       });
     };

@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.ComponentStructure',
+    'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.inline.state.InlineState',
     'ephox.alloy.sandbox.Dismissal',
     'ephox.alloy.sandbox.Manager',
@@ -13,7 +14,7 @@ define(
     'ephox.sugar.api.Remove'
   ],
 
-  function (ComponentStructure, InlineState, Dismissal, Manager, FieldSchema, ValueSchema, Fun, Insert, Remove) {
+  function (ComponentStructure, Positioning, InlineState, Dismissal, Manager, FieldSchema, ValueSchema, Fun, Insert, Remove) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('anchorage'),
       FieldSchema.defaulted('onClose', Fun.noop),
@@ -51,7 +52,7 @@ define(
 
       var show = function (sandbox, component) {
         var anchor = uiSpec.anchorage().get(sandbox, component);
-        uiSpec.sink().apis().position(anchor, component);
+        Positioning.position(uiSpec.sink(), anchor, component);
         uiSpec.onOpen()(sandbox, component);
       };
 

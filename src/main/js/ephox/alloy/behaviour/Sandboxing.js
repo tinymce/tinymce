@@ -2,6 +2,7 @@ define(
   'ephox.alloy.behaviour.Sandboxing',
 
   [
+    'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.behaviour.Behaviour',
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.sandbox.Manager',
@@ -14,7 +15,7 @@ define(
     'ephox.sugar.api.Remove'
   ],
 
-  function (Behaviour, DomModification, Manager, FieldPresence, FieldSchema, ValueSchema, Fun, Option, Cell, Remove) {
+  function (Positioning, Behaviour, DomModification, Manager, FieldPresence, FieldSchema, ValueSchema, Fun, Option, Cell, Remove) {
     var schema = FieldSchema.field(
       'sandboxing',
       'sandboxing',
@@ -42,7 +43,7 @@ define(
     var rebuildSandbox = function (sandbox, sInfo, data) {
       clear(sandbox, sInfo);
       Remove.empty(sandbox.element());
-      sInfo.sink().apis().addContainer(sandbox);
+      Positioning.addContaienr(sInfo.sink(), sandbox);
       sInfo.sink().getSystem().addToWorld(sandbox);
       var output = Manager.populate(sandbox, sInfo, data);
       sInfo.state().set(
@@ -86,7 +87,7 @@ define(
         Manager.clear(sandbox, sInfo);
         Remove.empty(sandbox.element());
         sandbox.getSystem().removeFromWorld(sandbox);
-        sInfo.sink().apis().removeContainer(sandbox);
+        Positioning.removeContainer(sInfo.sink(), sandbox);
         sInfo.onClose()(sandbox, state);
         sInfo.state().set(Option.none());
       });

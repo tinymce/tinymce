@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.GuiTemplate',
+    'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Class',
@@ -13,7 +14,7 @@ define(
     'text!dom-templates/tinymce.dialog.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, HtmlDisplay, Option, Class, Element, Insert, TemplateTinyDialog) {
+  function (Gui, GuiFactory, GuiTemplate, Positioning, HtmlDisplay, Option, Class, Element, Insert, TemplateTinyDialog) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -86,7 +87,7 @@ define(
         )
       );
 
-      sink.apis().position({
+      Positioning.position(sink, {
         anchor: 'modal'
       }, dialog);
     };
