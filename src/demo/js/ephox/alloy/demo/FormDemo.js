@@ -138,14 +138,7 @@ define(
           members: {
             radio: {
               munge: function (data) {
-                return {
-                  uiType: 'custom',
-                  label: 'Radio',
-                  parts: {
-                    legend: { },
-                    fields: { }
-                  }
-                };
+                return { uiType: 'custom' };
               }
             }
           },
@@ -352,90 +345,90 @@ define(
         expform.apis().toggleForm();
       }, 1000);
 
-      // var slideform = HtmlDisplay.section(
-      //   gui,
-      //   'This is a sliding form',
-      //   {
-      //     uiType: 'slide-form',
-      //     dom: {
-      //       tag: 'div',
-      //       classes: [ 'outside-slide-form' ]
-      //     },
-      //     members: {
-      //       ui: {
-      //         munge: function (spec) {
-      //           return mungers[spec.type](spec);
-      //         }
-      //       }
-      //     },
-      //     parts: Merger.deepMerge(
-      //       fieldParts,
-      //       {
-      //         left: {
-      //           dom: { tag: 'button', innerHtml: '<' }
-      //         },
-      //         right: {
-      //           dom: { tag: 'button', innerHtml: '>' }
-      //         },
-      //         tabbar: {
-      //           dom: {
-      //             tag: 'span'
-      //           },
-      //           members: {
-      //             tab: {
-      //               munge: function (spec) {
-      //                 return Merger.deepMerge(
-      //                   spec,
-      //                   {
-      //                     dom: {
-      //                       tag: 'span',
-      //                       classes: [ 'dot' ]
-      //                     }
-      //                   }
-      //                 );
-      //               }
-      //             }
-      //           },
-      //           markers: {
-      //             tabClass: 'dot',
-      //             selectedClass: 'selected-dot'
-      //           },
-      //           parts: {
-      //             tabs: { }
-      //           },
-      //           components: [
-      //             { uiType: 'placeholder', name: '<alloy.tabs>', owner: 'tabbar' }
-      //           ]
-      //         },
-      //         tabview: {
+      var slideform = HtmlDisplay.section(
+        gui,
+        'This is a sliding form',
+        {
+          uiType: 'slide-form',
+          dom: {
+            tag: 'div',
+            classes: [ 'outside-slide-form' ]
+          },
+          members: {
+            ui: {
+              munge: function (spec) {
+                return mungers[spec.type](spec);
+              }
+            }
+          },
+          parts: Merger.deepMerge(
+            fieldParts,
+            {
+              left: {
+                dom: { tag: 'button', innerHtml: '<' }
+              },
+              right: {
+                dom: { tag: 'button', innerHtml: '>' }
+              },
+              tabbar: {
+                dom: {
+                  tag: 'span'
+                },
+                members: {
+                  tab: {
+                    munge: function (spec) {
+                      return Merger.deepMerge(
+                        spec,
+                        {
+                          dom: {
+                            tag: 'span',
+                            classes: [ 'dot' ]
+                          }
+                        }
+                      );
+                    }
+                  }
+                },
+                markers: {
+                  tabClass: 'dot',
+                  selectedClass: 'selected-dot'
+                },
+                parts: {
+                  tabs: { }
+                },
+                components: [
+                  { uiType: 'placeholder', name: '<alloy.tabs>', owner: 'tabbar' }
+                ]
+              },
+              tabview: {
 
-      //         }
-      //       }
-      //     ),
-      //     components: [
-      //       { uiType: 'placeholder', name: '<alloy.tabview>', owner: 'tabbing' },
-      //       {
-      //         uiType: 'container',
-      //         dom: { classes: [ 'dot-container' ] },
-      //         components: [
-      //           { uiType: 'placeholder', name: '<alloy.slide-form.left>', owner: 'slide-form' },
-      //           { uiType: 'placeholder', name: '<alloy.tabbar>', owner: 'tabbing' },
-      //           { uiType: 'placeholder', name: '<alloy.slide-form.right>', owner: 'slide-form' }
-      //         ]
-      //       }
-      //     ],
-      //     fields: fieldParts,
-      //     fieldOrder: [
-      //       // 'alpha',
-      //       'beta',
-      //       // 'gamma',
-      //       'delta'
-      //     ],
-      //     keying: {
-      //       mode: 'cyclic'
-      //     }
-      //   }
-      // );
+              }
+            }
+          ),
+          components: [
+            { uiType: 'placeholder', name: '<alloy.tabview>', owner: 'tabbing' },
+            {
+              uiType: 'container',
+              dom: { classes: [ 'dot-container' ] },
+              components: [
+                { uiType: 'placeholder', name: '<alloy.slide-form.left>', owner: 'slide-form' },
+                { uiType: 'placeholder', name: '<alloy.tabbar>', owner: 'tabbing' },
+                { uiType: 'placeholder', name: '<alloy.slide-form.right>', owner: 'slide-form' }
+              ]
+            }
+          ],
+          fields: fieldParts,
+          fieldOrder: [
+            // 'alpha',
+            'beta',
+            // 'gamma',
+            'delta'
+          ],
+          keying: {
+            mode: 'cyclic'
+          }
+        }
+      );
 
       // slideform.apis().setValue({
       //   delta: 'dog'
