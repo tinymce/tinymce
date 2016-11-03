@@ -8,7 +8,7 @@ define(
   ],
 
   function (Objects, Arr, Array) {
-    // Add some off behaviour also.
+    // Add some off behaviour also (alternatives).
     var build = function (behaviourName, apiNames, alternatives) {
       // If readability becomes a problem, stop dynamically generating these.
 

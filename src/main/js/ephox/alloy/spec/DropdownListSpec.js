@@ -2,6 +2,7 @@ define(
   'ephox.alloy.spec.DropdownListSpec',
 
   [
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.dropdown.Beta',
     'ephox.alloy.dropdown.DropdownBehaviour',
     'ephox.alloy.dropdown.Gamma',
@@ -16,7 +17,7 @@ define(
     'global!Error'
   ],
 
-  function (Beta, DropdownBehaviour, Gamma, ViewTypes, ButtonSpec, SpecSchema, UiSubstitutes, FieldSchema, Merger, Fun, Option, Error) {
+  function (Toggling, Beta, DropdownBehaviour, Gamma, ViewTypes, ButtonSpec, SpecSchema, UiSubstitutes, FieldSchema, Merger, Fun, Option, Error) {
     var schema = [
       FieldSchema.strict('fetch'),
       FieldSchema.defaulted('onOpen', Fun.noop),
@@ -66,8 +67,8 @@ define(
             others: {
               sandbox: function (hotspot) {
                 return Beta.makeSandbox(detail, hotspot, {
-                  onOpen: hotspot.apis().select,
-                  onClose: hotspot.apis().deselect
+                  onOpen: function () { Toggling.select(hotspot); },
+                  onClose: function () { Toggling.deselect(hotspot); }
                 });
               }
             }

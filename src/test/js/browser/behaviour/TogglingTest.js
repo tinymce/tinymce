@@ -8,10 +8,11 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.test.GuiSetup'
   ],
  
-  function (ApproxStructure, Assertions, Logger, Step, GuiFactory, SystemEvents, GuiSetup) {
+  function (ApproxStructure, Assertions, Logger, Step, GuiFactory, SystemEvents, Toggling, GuiSetup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -84,22 +85,22 @@ asynctest(
         return Logger.t(
           'Asserting isSelected()\n' + label,
           Step.sync(function () {
-            var actual = component.apis().isSelected();
+            var actual = Toggling.isSelected(component);
             Assertions.assertEq(label, expected, actual);
           })
         );
       };
 
       var sSelect = Step.sync(function () {
-        component.apis().select();
+        Toggling.select(component);
       });
 
       var sDeselect = Step.sync(function () {
-        component.apis().deselect();
+        Toggling.deselect(component);
       });
 
       var sToggle = Step.sync(function () {
-        component.apis().toggle();
+        Toggling.toggle(component);
       });
 
       return [

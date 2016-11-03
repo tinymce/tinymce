@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.demo.DemoContent',
     'ephox.alloy.demo.HtmlDisplay',
@@ -15,7 +16,7 @@ define(
     'ephox.sugar.api.Insert'
   ],
 
-  function (Gui, GuiFactory, EventHandler, DemoContent, HtmlDisplay, Writer, Class, Css, DomEvent, Element, Insert) {
+  function (Gui, GuiFactory, Toggling, EventHandler, DemoContent, HtmlDisplay, Writer, Class, Css, DomEvent, Element, Insert) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -71,7 +72,7 @@ define(
             'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
           },
           action: function (comp) {
-            if (comp.apis().isSelected()) {
+            if (Toggling.isSelected(comp)) {
               sink.apis().addContainer(popup);
               sink.apis().position({
                 anchor: 'hotspot',

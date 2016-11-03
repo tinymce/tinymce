@@ -2,6 +2,7 @@ define(
   'ephox.alloy.dropdown.Dropdown',
 
   [
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.menu.grid.GridView',
     'ephox.alloy.menu.layered.LayeredView',
     'ephox.alloy.menu.widget.WidgetView',
@@ -17,7 +18,7 @@ define(
     'ephox.sugar.api.Remove'
   ],
 
-  function (GridView, LayeredView, WidgetView, ButtonSpec, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Id, Merger, Fun, Option, Remove) {
+  function (Toggling, GridView, LayeredView, WidgetView, ButtonSpec, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Id, Merger, Fun, Option, Remove) {
     var make = function (spec) {
       var detail = SpecSchema.asStructOrDie('dropdownmenu', [
         FieldSchema.strict('fetch'),
@@ -65,7 +66,7 @@ define(
         };
 
         var onClose = function (component, menu) {
-          dropdown.apis().deselect();
+          Toggling.deselect(dropdown);
         };
 
         var sink = detail.sink().getOrThunk(function () {
@@ -84,7 +85,7 @@ define(
 
       var togglePopup = function (dropdown) {
         var sandbox = dropdown.apis().getCoupled('sandbox');
-        var action = dropdown.apis().isSelected() ? open : close;
+        var action = Toggling.isSelected(dropdown) ? open : close;
         action(dropdown, sandbox);
       };
         

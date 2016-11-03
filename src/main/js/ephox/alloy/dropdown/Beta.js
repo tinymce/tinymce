@@ -54,7 +54,7 @@ define(
 
       var onClose = function (component, menu) {
         // FIX: Will need to do this for non split-dropdown
-        // hotspot.apis().deselect();
+        // Toggling.deselect(hotspot);
         // FIX: Using to hack in turning off the arrow.
         if (extras !== undefined && extras.onClose !== undefined) extras.onClose(component, menu);
       };

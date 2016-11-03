@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dropdown.Beta',
     'ephox.alloy.dropdown.Gamma',
@@ -18,7 +19,7 @@ define(
     'global!Error'
   ],
 
-  function (SystemEvents, EventHandler, Beta, Gamma, ViewTypes, ButtonSpec, SpecSchema, UiSubstitutes, FieldSchema, Objects, Merger, Fun, Option, Error) {
+  function (SystemEvents, Toggling, EventHandler, Beta, Gamma, ViewTypes, ButtonSpec, SpecSchema, UiSubstitutes, FieldSchema, Objects, Merger, Fun, Option, Error) {
     var schema = [
       FieldSchema.strict('toggleClass'),
       FieldSchema.strict('fetch'),
@@ -95,14 +96,13 @@ define(
           coupling: {
             others: {
               sandbox: function (hotspot) {
-                var button = hotspot.getSystem().getByUid(detail.partUids().button).getOrDie();
                 var arrow = hotspot.getSystem().getByUid(detail.partUids().arrow).getOrDie();
                 var extras = {
                   onOpen: function () {
-                    arrow.apis().select();
+                    Toggling.select(arrow);
                   },
                   onClose: function () {
-                    arrow.apis().deselect();
+                    Toggling.deselect(arrow);
                   }
                 };
 

@@ -2,6 +2,7 @@ define(
   'ephox.alloy.form.CoupledTextInputSpec',
 
   [
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.form.TextInputSpec',
     'ephox.alloy.spec.FormLabelSpec',
@@ -15,7 +16,7 @@ define(
     'ephox.sugar.api.Value'
   ],
 
-  function (EventHandler, TextInputSpec, FormLabelSpec, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Merger, Option, Value) {
+  function (Toggling, EventHandler, TextInputSpec, FormLabelSpec, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Merger, Option, Value) {
     var schema = [
       FieldSchema.strict('uid'),
       FieldSchema.strict('components'),
@@ -81,7 +82,7 @@ define(
                       getPart(field1, 'field-2').each(function (field2) {
                         getPart(field2, 'lock').each(function (lock) {
 
-                          if (lock.apis().isSelected()) {
+                          if (Toggling.isSelected(lock)) {
                             info.onLockedChange()(field1, getDelegate(field1), getDelegate(field2), lock);
                           }
                         });
@@ -108,7 +109,7 @@ define(
                     run: function (field2) {
                       getPart(field2, 'field-1').each(function (field1) {
                         getPart(field2, 'lock').each(function (lock) {
-                          if (lock.apis().isSelected()) {
+                          if (Toggling.isSelected(lock)) {
                             // Order is important
                             info.onLockedChange()(field2, getDelegate(field2), getDelegate(field1), lock);
                           }
