@@ -115,6 +115,9 @@ asynctest('browser.core.PluginTest', [
 			sChangeWidthValue(ui, "350"),
 			sAssertWidthValue(ui, "350"),
 			sAssertHeightValue(ui, "175"),
+			sChangeHeightValue(ui, "100"),
+			sAssertHeightValue(ui, "100"),
+			sAssertWidthValue(ui, "200"),
 			Utils.sCloseDialog(ui)
 		]);
 	};
@@ -129,6 +132,9 @@ asynctest('browser.core.PluginTest', [
 			sChangeWidthValue(ui, "350"),
 			sAssertWidthValue(ui, "350"),
 			sAssertHeightValue(ui, "150"),
+			sChangeHeightValue(ui, "100"),
+			sAssertHeightValue(ui, "100"),
+			sAssertWidthValue(ui, "350"),
 			Utils.sCloseDialog(ui)
 		]);
 	};

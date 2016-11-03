@@ -7,11 +7,14 @@ define('tinymce.media.ui.Dialog', [
 	var embedChange = (tinymce.Env.ie && tinymce.Env.ie <= 8) ? 'onChange' : 'onInput';
 
 	var checkEmbedHandler = function (editor, data) {
-		return new Promise(function (resolve) {
+		return new Promise(function (resolve, reject) {
 			if ('media_embed_handler' in editor.settings) {
-				editor.settings.media_embed_handler(data.source1, resolve);
+				var wrappedResolve = function (data) {
+					return resolve({url: data.source1, html: data.html});
+				};
+				editor.settings.media_embed_handler({url: data.source1}, wrappedResolve, reject);
 			} else {
-				resolve({html: Data.dataToHtml(editor, data), src: data.source1});
+				resolve({html: Data.dataToHtml(editor, data), url: data.source1});
 			}
 		});
 	};
@@ -19,7 +22,7 @@ define('tinymce.media.ui.Dialog', [
 	var addEmbedHtml = function (ctx, editor) {
 		return function (response) {
 			ctx.find('#embed').value(response.html);
-			var data = tinymce.extend({}, Data.htmlToData(editor, response.html), {source1: response.src});
+			var data = tinymce.extend({}, Data.htmlToData(editor, response.html), {source1: response.url});
 			ctx.fromJSON(data);
 			updateSize(ctx);
 		};
@@ -137,13 +140,13 @@ define('tinymce.media.ui.Dialog', [
 				spacing: 5,
 				items: [
 					{
-						name: 'width', type: 'textbox', maxLength: 5, size: 3, onchange: recalcSize,
-						onkeydown: Delay.debounce(recalcSize, 500), ariaLabel: 'Width'
+						name: 'width', type: 'textbox', maxLength: 5, size: 3,
+						onchange: recalcSize, ariaLabel: 'Width'
 					},
 					{type: 'label', text: 'x'},
 					{
-						name: 'height', type: 'textbox', maxLength: 5, size: 3, onchange: recalcSize,
-						onkeydown: Delay.debounce(recalcSize, 500), ariaLabel: 'Height'
+						name: 'height', type: 'textbox', maxLength: 5, size: 3,
+						onchange: recalcSize, ariaLabel: 'Height'
 					},
 					{name: 'constrain', type: 'checkbox', checked: true, text: 'Constrain proportions'}
 				]

@@ -1,103 +1,48 @@
-// asynctest('browser.core.PluginTest', [
-// 	'tinymce.media.Plugin',
-// 	'ephox.mcagar.api.TinyLoader',
-// 	'ephox.mcagar.api.TinyApis',
-// 	'ephox.mcagar.api.TinyDom',
-// 	'ephox.agar.api.Pipeline',
-// 	'ephox.agar.api.Keyboard',
-// 	'ephox.agar.api.Keys',
-// 	'ephox.agar.api.GeneralSteps',
-// 	'ephox.agar.api.Waiter',
-// 	'ephox.agar.api.Step',
-// 	'ephox.agar.api.Assertions',
-// 	'ephox/tinymce'
-// ], function (
-// 	Plugin, TinyLoader, TinyApis, TinyDom,
-// 	Pipeline, Keyboard, Keys, GeneralSteps,
-// 	Waiter, Step, Assertions, Tiny
-// ) {
-// 	var success = arguments[arguments.length - 2];
-// 	var failure = arguments[arguments.length - 1];
+asynctest('browser.core.MediaEmbedTest', [
+	'global!tinymce',
+	'tinymce.media.Plugin',
+	'ephox.mcagar.api.TinyLoader',
+	'ephox.mcagar.api.TinyDom',
+	'ephox.mcagar.api.TinyUi',
+	'ephox.agar.api.Pipeline',
+	'ephox.agar.api.GeneralSteps',
+	'ephox.agar.api.Waiter',
+	'ephox.agar.api.Step',
+	'ephox.agar.api.Chain',
+	'ephox.agar.api.UiFinder',
+	'ephox.agar.api.UiControls',
+	'ephox.agar.api.Assertions',
+	'tinymce.media.test.Utils'
+], function (
+	tinymce, Plugin, TinyLoader, TinyDom,
+	TinyUi, Pipeline, GeneralSteps,	Waiter,
+	Step, Chain, UiFinder, UiControls, Assertions, Utils
+) {
+	var success = arguments[arguments.length - 2];
+	var failure = arguments[arguments.length - 1];
 
-// 	var sReset = function (tinyApis) {
-// 		return GeneralSteps.sequence([
-// 			tinyApis.sSetContent(''),
-// 			sWaitForWordcount(0)
-// 		], 0);
-// 	};
+	TinyLoader.setup(function (editor, onSuccess, onFailure) {
+		var ui = TinyUi(editor);
 
-// 	var sAssertWordcount = function (num) {
-// 		return Step.sync(function () {
-// 			var countEl = Tiny.DOM.select('.mce-wordcount')[0];
-// 			var value = countEl ? countEl.innerText : '';
-// 			Assertions.assertEq('wordcount', 'Words: ' + num, value);
-// 		});
-// 	};
-
-// 	var sWaitForWordcount = function (num) {
-// 		return Waiter.sTryUntil('wordcount did not change', sAssertWordcount(num), 100, 3000);
-// 	};
-
-// 	var sFakeTyping = function (editor, str) {
-// 		return Step.sync(function () {
-// 			editor.getBody().innerHTML = '<p>' + str + '</p>';
-// 			Keyboard.keystroke(Keys.space(), {}, TinyDom.fromDom(editor.getBody()));
-// 		});
-// 	};
-
-// 	var sTestSetContent = function (tinyApis) {
-// 		return GeneralSteps.sequence([
-// 			sReset(tinyApis),
-// 			tinyApis.sSetContent('<p>hello world</p>'),
-// 			sWaitForWordcount(2)
-// 		], 0);
-// 	};
-
-// 	var sTestKeystroke = function (editor, tinyApis) {
-// 		return GeneralSteps.sequence([
-// 			sReset(tinyApis),
-// 			sFakeTyping(editor, 'a b c'),
-// 			sAssertWordcount(0),
-// 			sWaitForWordcount(3)
-// 		], 0);
-// 	};
-
-// 	var sExecCommand = function (editor, command) {
-// 		return Step.sync(function () {
-// 			editor.execCommand(command);
-// 		});
-// 	};
-
-// 	var sSetRawContent = function (editor, content) {
-// 		return Step.sync(function () {
-// 			editor.getBody().innerHTML = content;
-// 		});
-// 	};
-
-// 	var sTestUndoRedo = function (editor, tinyApis) {
-// 		return GeneralSteps.sequence([
-// 			sReset(tinyApis),
-// 			tinyApis.sSetContent('<p>a b c</p>'),
-// 			sWaitForWordcount(3),
-// 			sExecCommand(editor, 'undo'),
-// 			sWaitForWordcount(0),
-// 			sExecCommand(editor, 'redo'),
-// 			sWaitForWordcount(3),
-// 			sSetRawContent(editor, '<p>hello world</p>'),
-// 			sExecCommand(editor, 'mceAddUndoLevel'),
-// 			sWaitForWordcount(2)
-// 		], 0);
-// 	};
-
-// 	TinyLoader.setup(function (editor, onSuccess, onFailure) {
-// 		var tinyApis = TinyApis(editor);
-
-// 		Pipeline.async({}, [
-// 			sTestSetContent(tinyApis),
-// 			sTestKeystroke(editor, tinyApis),
-// 			sTestUndoRedo(editor, tinyApis)
-// 		], onSuccess, onFailure);
-// 	}, {
-// 		plugins: 'wordcount'
-// 	}, success, failure);
-// });
+		Pipeline.async({}, [
+			Utils.sAssertEmbedContentFromUrl(ui,
+				'https://www.youtube.com/watch?v=b3XFjWInBog',
+				'<video width="300" height="150" controls="controls">\n' +
+				'<source src="https://www.youtube.com/watch?v=b3XFjWInBog" />\n</video>'
+			),
+			Utils.sAssertEmbedContentFromUrl(ui,
+				'https://www.google.com',
+				'<video width="300" height="150" controls="controls">\n' +
+				'<source src="https://www.google.com" />\n</video>'
+			)
+		], onSuccess, onFailure);
+	}, {
+		plugins: ["media"],
+		toolbar: "media",
+		media_embed_handler: function (data, resolve) {
+			resolve({
+				html: '<video width="300" height="150" ' +
+					'controls="controls">\n<source src="' + data.url + '" />\n</video>'});
+		}
+	}, success, failure);
+});
