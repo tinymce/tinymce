@@ -88,11 +88,12 @@ define(
             validatorInfo.onEvent(),
             EventHandler.nu({
               run: function (component) {
-                var valid = validatorInfo.validate()(component);
-                valid.fold(function (err) {
-                  doMarkInvalid(component, invalidInfo, err);
-                }, function () {
-                  doMarkValid(component, invalidInfo);
+                validatorInfo.validate()(component).get(function (valid) {
+                  valid.fold(function (err) {
+                    doMarkInvalid(component, invalidInfo, err);
+                  }, function () {
+                    doMarkValid(component, invalidInfo);
+                  });
                 });
               }
             })

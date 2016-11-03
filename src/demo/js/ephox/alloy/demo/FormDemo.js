@@ -6,16 +6,18 @@ define(
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.alloy.registry.Tagger',
     'ephox.highway.Merger',
+    'ephox.knoch.future.Future',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.perhaps.Result',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
-    'global!document'
+    'global!document',
+    'global!setTimeout'
   ],
 
-  function (Gui, HtmlDisplay, Tagger, Merger, Fun, Option, Result, Class, Element, Insert, document) {
+  function (Gui, HtmlDisplay, Tagger, Merger, Future, Fun, Option, Result, Class, Element, Insert, document, setTimeout) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -42,8 +44,12 @@ define(
                 validator: {
                   validate: function (input) {
                     var v = input.apis().getValue();
-                    if (v.indexOf('a') === 0) return Result.error('Do not start with a!');
-                    return Result.value({ });
+                    return Future.nu(function (callback) {
+                      setTimeout(function () {
+                        var res = v.indexOf('a') === 0 ?Result.error('Do not start with a!') : Result.value({ });
+                        callback(res);
+                      }, 1000);  
+                    });
                   },
                   onEvent: 'input'
                 }
