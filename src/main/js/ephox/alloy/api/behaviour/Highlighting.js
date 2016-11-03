@@ -2,33 +2,54 @@ define(
   'ephox.alloy.api.behaviour.Highlighting',
 
   [
-
+    'ephox.boulder.api.Objects',
+    'ephox.compass.Arr',
+    'global!Array'
   ],
 
-  function () {
+  function (Objects, Arr, Array) {
     // If readability becomes a problem, stop dynamically generating these.
 
     var access = function (component) {
       return component.apis();
     };
 
-    // I want to avoid exposing info/detail on component, so let's see how this plays out.
-    var getFirst = function (component) {
-      return access(component).getFirst();
-    };
+    // TODO: Get from behaviour
+    var apiNames = [
+      'highlight',
+      'dehighlight',
+      'dehighlightAll',
+      'highlightFirst',
+      'highlightLast',
+      'isHighlighted',
+      'getHighlighted',
+      'getFirst',
+      'getLast',
+      'getPrevious',
+      'getNext'
+    ];
 
-    var getLast = function (component) {
-      return access(component).getLast();
-    };
-
-    var highlight = function (component, item) {
-      access(component).highlight(item);
-    };
-
-    return {
-      getFirst: getFirst,
-      getLast: getLast,
-      highlight: highlight
-    };
+    return Objects.wrapAll(
+      Arr.bind(apiNames, function (apiName) {
+        return [
+          {
+            key: apiName,
+            value: function (component/*, args */) {
+              var args = Array.prototype.slice.call(arguments, 1);
+              return access(component)[apiName].apply(undefined, args);
+            }
+          },
+          {
+            key: apiName + '_',
+            value: function (/* */) {
+              var args = Array.prototype.slice.call(arguments, 0);
+              return function (component) {
+                return access(component)[apiName].apply(undefined, args);
+              };
+            }
+          }
+        ];
+      })
+    );
   }
 );
