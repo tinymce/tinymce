@@ -2,10 +2,7 @@ define(
   'ephox.alloy.spec.FormSpec',
 
   [
-    'ephox.alloy.form.CustomRadioGroupSpec',
     'ephox.alloy.form.FormUis',
-    'ephox.alloy.form.RadioGroupSpec',
-    'ephox.alloy.form.TextInputSpec',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldPresence',
@@ -16,7 +13,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (CustomRadioGroupSpec, FormUis, RadioGroupSpec, TextInputSpec, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Obj, Merger, Option) {
+  function (FormUis, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Obj, Merger, Option) {
     var schema = [
       FieldSchema.strict('dom'),
       

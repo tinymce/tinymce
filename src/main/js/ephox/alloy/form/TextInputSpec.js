@@ -31,7 +31,7 @@ define(
     //     '<alloy.form.field-label>': UiSubstitutes.single(
     //       Merger.deepMerge(
 
-    var builder = function (info) {
+    var builder = function (info, _munge) {
       return Merger.deepMerge(
         info.originalSpec(),
         FormLabelSpec.make({
@@ -71,9 +71,9 @@ define(
       );
     };
 
-    var make = function (spec) {
+    var make = function (spec, munge) {
       var info = SpecSchema.asStructOrDie('TextInputSpec.make', schema, spec, [ ]);
-      return builder(info);
+      return builder(info, munge);
     };
 
     return {

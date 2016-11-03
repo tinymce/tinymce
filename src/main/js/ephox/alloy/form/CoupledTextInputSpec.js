@@ -87,7 +87,8 @@ define(
                   })
                 }
               }
-            )
+            ),
+            munge
           )
         ),
         '<alloy.form.field-2>': UiSubstitutes.single(
@@ -114,7 +115,8 @@ define(
                   })
                 }
               }
-            )
+            ),
+            munge
           )
         ),
         '<alloy.form.lock>': UiSubstitutes.single(
