@@ -9,6 +9,7 @@ define(
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.layered.LayeredState',
     'ephox.alloy.menu.logic.HotspotViews',
@@ -34,7 +35,7 @@ define(
     'ephox.sugar.api.SelectorFilter'
   ],
 
-  function (ComponentStructure, EditableFields, SystemEvents, Highlighting, Keying, Positioning, Representing, EventHandler, LayeredState, HotspotViews, ItemEvents, MenuEvents, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, Insert, Remove, SelectorFilter) {
+  function (ComponentStructure, EditableFields, SystemEvents, Highlighting, Keying, Positioning, Representing, Sandboxing, EventHandler, LayeredState, HotspotViews, ItemEvents, MenuEvents, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, Insert, Remove, SelectorFilter) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('lazyHotspot'),
 
@@ -208,7 +209,7 @@ define(
 
       var expandRight = function (sandbox, item) {
         var value = Representing.getValue(item);
-        return sandbox.apis().getState().bind(function (state) {
+        return Sandboxing.getState(sandbox).bind(function (state) {
           return state.expand(value).bind(function (path) {
             // When expanding, always select the first.
             Option.from(path[0]).bind(state.lookupMenu).each(function (newMenuComp) {
@@ -228,7 +229,7 @@ define(
 
       var collapseLeft = function (sandbox, item) {
         var value = Representing.getValue(item);
-        return sandbox.apis().getState().bind(function (state) {
+        return Sandboxing.getState(sandbox).bind(function (state) {
           return state.collapse(value).bind(function (path) {
             return updateMenuPath(sandbox, state, path);
           });
@@ -237,7 +238,7 @@ define(
 
       var updateView = function (sandbox, item) {
         var value = Representing.getValue(item);
-        return sandbox.apis().getState().bind(function (state) {
+        return Sandboxing.getState(sandbox).bind(function (state) {
           return state.refresh(value).bind(function (path) {
             return updateMenuPath(sandbox, state, path);
           });

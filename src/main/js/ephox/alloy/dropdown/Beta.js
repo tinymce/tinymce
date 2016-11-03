@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Coupling',
+    'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.dropdown.Gamma',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Remove',
@@ -10,7 +11,7 @@ define(
     'global!Error'
   ],
 
-  function (Coupling, Gamma, Option, Remove, Width, Error) {
+  function (Coupling, Sandboxing, Gamma, Option, Remove, Width, Error) {
     
     var fetch = function (detail, component) {
       var fetcher = detail.fetch();
@@ -20,23 +21,23 @@ define(
     var open = function (detail, component, sandbox) {
       var futureData = fetch(detail, component);
       // Resolve the future to open the dropdown
-      sandbox.apis().openSandbox(futureData).get(function () { });
+      Sandboxing.openSandbox(sandbox, futureData).get(function () { });
     };
 
     var preview = function (detail, component, sandbox) {
       var futureData = fetch(detail, component);
-      sandbox.apis().showSandbox(futureData).get(function () { });
+      Sandboxing.showSandbox(sandbox, futureData).get(function () { });
     };
 
     var close = function (detail, component, sandbox) {
-      sandbox.apis().closeSandbox();
+      Sandboxing.closeSandbox(sandbox);
       // INVESTIGATE: Not sure if this is needed. 
       Remove.remove(sandbox.element());
     };
 
     var togglePopup = function (detail, hotspot) {
       var sandbox = Coupling.getCoupled(hotspot, 'sandbox');
-      var showing = sandbox.apis().isShowing();
+      var showing = Sandboxing.isShowing(sandbox);
       var action = showing ? close : open;
       action(detail, hotspot, sandbox);
     };
@@ -75,16 +76,16 @@ define(
     
     var previewPopup = function (detail, hotspot) {
       var sandbox = Coupling.getCoupled(hotspot, 'sandbox');
-      if (sandbox.apis().isShowing()) close(detail, hotspot, sandbox);
+      if (Sandboxing.isShowing(sandbox)) close(detail, hotspot, sandbox);
       preview(detail, hotspot, sandbox);
       return Option.some(true);
     };
 
     var enterPopup = function (detail, hotspot) {
       var sandbox = Coupling.getCoupled(hotspot, 'sandbox');
-      if (sandbox.apis().isShowing()) {
+      if (Sandboxing.isShowing(sandbox)) {
         console.log('going to sandbox');
-        sandbox.apis().gotoSandbox();
+        Sandboxing.gotoSandbox(sandbox);
       } else {
         open(detail, hotspot, sandbox);
       }

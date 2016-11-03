@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Coupling',
+    'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.menu.grid.GridView',
     'ephox.alloy.menu.layered.LayeredView',
@@ -19,7 +20,7 @@ define(
     'ephox.sugar.api.Remove'
   ],
 
-  function (Coupling, Toggling, GridView, LayeredView, WidgetView, ButtonSpec, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Id, Merger, Fun, Option, Remove) {
+  function (Coupling, Sandboxing, Toggling, GridView, LayeredView, WidgetView, ButtonSpec, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Id, Merger, Fun, Option, Remove) {
     var make = function (spec) {
       var detail = SpecSchema.asStructOrDie('dropdownmenu', [
         FieldSchema.strict('fetch'),
@@ -53,11 +54,11 @@ define(
         
         var futureData = fetcher();
         // Resolve the future to open the dropdown
-        sandbox.apis().openSandbox(futureData).get(function () { });
+        Sandboxing.openSandbox(futureData).get(function () { });
       };
 
       var close = function (component, sandbox) {
-        sandbox.apis().closeSandbox();
+        Sandboxing.closeSandbox(sandbox);
         Remove.remove(sandbox.element());
       };
 

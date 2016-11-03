@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.knoch.future.Future',
@@ -15,7 +16,7 @@ define(
     'global!document'
   ],
 
-  function (Gui, GuiFactory, EventHandler, HtmlDisplay, Future, Class, DomEvent, Element, Insert, Value, document) {
+  function (Gui, GuiFactory, Sandboxing, EventHandler, HtmlDisplay, Future, Class, DomEvent, Element, Insert, Value, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -90,7 +91,8 @@ define(
 
                     var anchor = Value.get(input.element()).length > 0 ? nonEmptyAnchor : emptyAnchor;
                     inlineComp.apis().setAnchor(anchor);
-                    inlineComp.apis().showSandbox(
+                    Sandboxing.showSandbox(
+                      inlineComp, 
                       Future.pure({
                         uiType: 'custom',
                         dom: {

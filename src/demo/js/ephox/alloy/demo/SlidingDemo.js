@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.Gui',
+    'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
@@ -10,7 +11,7 @@ define(
     'global!document'
   ],
 
-  function (Gui, HtmlDisplay, Class, Element, Insert, document) {
+  function (Gui, Sliding, HtmlDisplay, Class, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -57,8 +58,8 @@ define(
               },
               action: function () {
                 var slider = gui.getByUid('height-slider').getOrDie();
-                if (slider.apis().hasGrown()) slider.apis().shrink();
-                else slider.apis().grow();
+                if (Sliding.hasGrown(slider)) Sliding.shrink(slider);
+                else Sliding.grow(slider);
               }
             }
           ]
@@ -105,8 +106,8 @@ define(
               },
               action: function () {
                 var slider = gui.getByUid('width-slider').getOrDie();
-                if (slider.apis().hasGrown()) slider.apis().shrink();
-                else slider.apis().grow();
+                if (Sliding.hasGrown(slider)) Sliding.shrink(slider);
+                else Sliding.grow(slider);
               }
             }
           ]

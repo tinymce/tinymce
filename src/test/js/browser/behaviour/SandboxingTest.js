@@ -8,6 +8,7 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.sandbox.Manager',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.Sinks',
@@ -21,7 +22,7 @@ asynctest(
     'ephox.sugar.api.Remove'
   ],
  
-  function (Assertions, GeneralSteps, Logger, Step, UiFinder, GuiFactory, Manager, GuiSetup, Sinks, CachedFuture, Future, Fun, Attr, Element, Insert, Node, Remove) {
+  function (Assertions, GeneralSteps, Logger, Step, UiFinder, GuiFactory, Sandboxing, Manager, GuiSetup, Sinks, CachedFuture, Future, Fun, Attr, Element, Insert, Node, Remove) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -69,7 +70,8 @@ asynctest(
 
       var sShowWith = function (data) {
         return Step.async(function (next, die) {
-          sandbox.apis().showSandbox(
+          Sandboxing.showSandbox(
+            sandbox,
             CachedFuture.pure(data)
           ).get(function () {
             next();
@@ -79,16 +81,14 @@ asynctest(
 
       var sOpenWith = function (data) {
         return Step.async(function (next, die) {
-          sandbox.apis().openSandbox(
-            CachedFuture.pure(data)
-          ).get(function () {
+          Sandboxing.openSandbox(sandbox, CachedFuture.pure(data)).get(function () {
             next();
           });
         });
       };
 
       var sClose = Step.sync(function () {
-        sandbox.apis().closeSandbox();
+        Sandboxing.closeSandbox(sandbox);
       });
 
       var sCheckShowing = function (label, expected) {
@@ -96,7 +96,7 @@ asynctest(
           Assertions.assertEq(
             label + '\nSandbox should ' + (expected === false ? '*not* ' : '') + 'be showing',
             expected,
-            sandbox.apis().isShowing()
+            Sandboxing.isShowing(sandbox)
           );
         });
       };
@@ -111,7 +111,7 @@ asynctest(
             store.sAssertEq('Checking store', expected.store),
             store.sClear,
             Step.sync(function () {
-              var state = sandbox.apis().getState();
+              var state = Sandboxing.getState(sandbox);
               Assertions.assertEq(label + '\nChecking state node name', 'input', Node.name(state.getOrDie()));
             })
           ])
@@ -128,7 +128,7 @@ asynctest(
             store.sAssertEq(label, expected.store),
             store.sClear,
             Step.sync(function () {
-              var state = sandbox.apis().getState();
+              var state = Sandboxing.getState(sandbox);
               Assertions.assertEq(label + '\nChecking state is not set', true, state.isNone());
             })
           ])
@@ -171,7 +171,7 @@ asynctest(
 
         // goto showing sandbox
         Logger.t('Goto sandbox', Step.sync(function () {
-          sandbox.apis().gotoSandbox();
+          Sandboxing.gotoSandbox(sandbox);
         })),
         sCheckOpenState('After goto sandbox', {
           data: 'second-showing',
@@ -183,7 +183,7 @@ asynctest(
         sCheckClosedState('After closing 3', { store: [ ] }),
 
         Logger.t('Goto closed sandbox', Step.sync(function () {
-          sandbox.apis().gotoSandbox();
+          Sandboxing.gotoSandbox(sandbox);
         })),
         sCheckClosedState('After goto closed sandbox', {
           store: [ ]

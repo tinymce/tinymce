@@ -2,6 +2,7 @@ define(
   'ephox.alloy.toolbar.MoreToolbar',
 
   [
+    'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.alloy.toolbar.MoreOverflow',
@@ -14,7 +15,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (SpecSchema, UiSubstitutes, MoreOverflow, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Fun, Option) {
+  function (Sliding, SpecSchema, UiSubstitutes, MoreOverflow, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Fun, Option) {
     var schema = [
       FieldSchema.strict('dom'),
       FieldSchema.strict('initGroups'),
@@ -110,9 +111,9 @@ define(
             {
               uiType: 'button',
               action: function (component) {
-                component.getSystem().getByUid(detail.partUids().more).each(function (drawer) {
-                  drawer.apis().toggleGrow();
-                });
+                component.getSystem().getByUid(detail.partUids().more).each(
+                  Sliding.toggleGrow
+                );
               }
             }
           )

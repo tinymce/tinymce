@@ -6,6 +6,7 @@ define(
     'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dropdown.Beta',
     'ephox.alloy.dropdown.Gamma',
@@ -23,7 +24,7 @@ define(
     'global!document'
   ],
 
-  function (SystemEvents, Coupling, Focusing, Representing, EventHandler, Beta, Gamma, ViewTypes, InputSpec, SpecSchema, FieldSchema, Objects, Merger, Fun, Option, Cell, Value, Strings, document) {
+  function (SystemEvents, Coupling, Focusing, Representing, Sandboxing, EventHandler, Beta, Gamma, ViewTypes, InputSpec, SpecSchema, FieldSchema, Objects, Merger, Fun, Option, Cell, Value, Strings, document) {
     var schema = [
       FieldSchema.strict('sink'),
       FieldSchema.strict('fetch'),
@@ -72,7 +73,7 @@ define(
         // Find a nice way of doing this.
         {
           onExecute: function (sandbox, item) {
-            sandbox.apis().closeSandbox();
+            Sandboxing.closeSandbox(sandbox);
             var currentValue = Representing.getValue(item);
             return item.getSystem().getByUid(detail.uid()).bind(function (input) {
               input.element().dom().setSelectionRange(currentValue.length, currentValue.length);
@@ -98,7 +99,7 @@ define(
               var focusInInput = Focusing.isFocused(component);
               // You don't want it to change when something else has triggered the change.
               if (focusInInput) {
-                if (sandbox.apis().isShowing()) sandbox.apis().closeSandbox();
+                if (Sandboxing.isShowing(sandbox)) Sandboxing.closeSandbox(sandbox);
                 if (Value.get(component.element()).length >= detail.minChars()) {
                   detail.previewing().set(true);
                   Beta.enterPopup(detail, component);
@@ -128,7 +129,7 @@ define(
             mode: 'special',
             onDown: function (comp, simulatedEvent) {
               var sandbox = Coupling.getCoupled(comp, 'sandbox');
-              if (sandbox.apis().isShowing()) {
+              if (Sandboxing.isShowing(sandbox)) {
                 sandbox.getSystem().triggerEvent('keydown', sandbox.element(), simulatedEvent.event());
                 return Option.some(true);
               } else {

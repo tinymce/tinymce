@@ -2,6 +2,7 @@ define(
   'ephox.alloy.spec.ExpandableFormSpec',
 
   [
+    'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.spec.FormSpec',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
@@ -15,7 +16,7 @@ define(
     'ephox.sugar.api.Class'
   ],
 
-  function (FormSpec, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Arr, Obj, Merger, Option, Class) {
+  function (Sliding, FormSpec, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Arr, Obj, Merger, Option, Class) {
     var schema = [
       FieldSchema.field(
         'markers',
@@ -44,23 +45,17 @@ define(
 
       var toggleForm = function (anyComp) {
         var extraOpt = anyComp.getSystem().getByUid(detail.partUids()['extra-form']);
-        extraOpt.each(function (extra) {
-          extra.apis().toggleGrow();
-        });
+        extraOpt.each(Sliding.toggleGrow);
       };
 
       var collapseForm = function (anyComp) {
         var extraOpt = anyComp.getSystem().getByUid(detail.partUids()['extra-form']);
-        extraOpt.each(function (extra) {
-          extra.apis().shrink();
-        });
+        extraOpt.each(Sliding.shrink);
       };
 
       var expandForm = function (anyComp) {
         var extraOpt = anyComp.getSystem().getByUid(detail.partUids()['extra-form']);
-        extraOpt.each(function (extra) {
-          extra.apis().grow();
-        });
+        extraOpt.each(Sliding.grow);
       };
 
       var placeholders = {

@@ -3,13 +3,14 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option'
   ],
 
-  function (Focusing, Fun, Option) {
+  function (Focusing, Sandboxing, Fun, Option) {
     var onEscape = function (hotspot, sandbox) {
-      sandbox.apis().closeSandbox();
+      Sandboxing.closeSandbox(sandbox);
       Focusing.focus(hotspot);
       return Option.some(true);
     };

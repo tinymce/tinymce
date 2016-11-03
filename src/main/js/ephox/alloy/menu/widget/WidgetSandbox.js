@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.alien.ComponentStructure',
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.logic.HotspotViews',
     'ephox.alloy.menu.widget.WidgetConfig',
@@ -16,7 +17,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (ComponentStructure, SystemEvents, EventHandler, HotspotViews, WidgetConfig, Dismissal, SpecSchema, FieldPresence, FieldSchema, Objects, ValueSchema, Option) {
+  function (ComponentStructure, SystemEvents, Sandboxing, EventHandler, HotspotViews, WidgetConfig, Dismissal, SpecSchema, FieldPresence, FieldSchema, Objects, ValueSchema, Option) {
     var schema = [
       // This hotspot is going to have to be a little more advanced when we get away from menus and dropdowns
       FieldSchema.strict('lazyHotspot'),
@@ -58,9 +59,7 @@ define(
           {
             key: SystemEvents.sandboxClose(),
             value: EventHandler.nu({
-              run: function (sandbox) {
-                sandbox.apis().closeSandbox();
-              }
+              run: Sandboxing.closeSandbox
             })
           }
         ]),

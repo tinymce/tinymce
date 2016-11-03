@@ -2,12 +2,13 @@ define(
   'ephox.alloy.sandbox.Dismissal',
 
   [
+    'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.peanut.Fun'
   ],
 
-  function (FieldSchema, ValueSchema, Fun) {
+  function (Sandboxing, FieldSchema, ValueSchema, Fun) {
     var schema = ValueSchema.objOf([
       FieldSchema.defaulted('isExtraPart', Fun.constant(false))
     ]);
@@ -21,9 +22,9 @@ define(
               FieldSchema.strict('target')
             ]),
             onReceive: function (sandbox, data) {
-              if (sandbox.apis().isShowing()) {
-                var isPart = sandbox.apis().isPartOf(data.target()) || spec.isExtraPart(sandbox, data.target());
-                if (! isPart) sandbox.apis().closeSandbox();
+              if (Sandboxing.isShowing(sandbox)) {
+                var isPart = Sandboxing.isPartOf(sandbox, data.target()) || spec.isExtraPart(sandbox, data.target());
+                if (! isPart) Sandboxing.closeSandbox(sandbox);
               }
             }
           }
