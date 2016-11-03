@@ -2,6 +2,7 @@ define(
   'ephox.alloy.dropdown.DropdownBehaviour',
 
   [
+    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.behaviour.Behaviour',
     'ephox.alloy.dom.DomModification',
     'ephox.boulder.api.FieldPresence',
@@ -10,7 +11,7 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (Behaviour, DomModification, FieldPresence, FieldSchema, ValueSchema, Fun) {
+  function (Representing, Behaviour, DomModification, FieldPresence, FieldSchema, ValueSchema, Fun) {
     return function (displayUid) {
       return Behaviour.contract({
         name: Fun.constant('dropdown.button.api'),
@@ -20,7 +21,7 @@ define(
           return {
             showValue: function (component, value) {
               var displayer = component.getSystem().getByUid(displayUid).getOrDie();
-              displayer.apis().setValue(value);
+              Representing.setValue(displayer, value);
             }
           };
         },

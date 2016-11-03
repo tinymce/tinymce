@@ -2,6 +2,7 @@ define(
   'ephox.alloy.spec.TabbedSpec',
 
   [
+    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldSchema',
@@ -10,7 +11,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (SpecSchema, UiSubstitutes, FieldSchema, Arr, Merger, Option) {
+  function (Representing, SpecSchema, UiSubstitutes, FieldSchema, Arr, Merger, Option) {
     var schema = [
       FieldSchema.strict('tabs'),
       FieldSchema.strict('defaultView'),
@@ -39,7 +40,7 @@ define(
               uid: detail.partUids().tabbar,
               uiType: 'tabbar',
               onExecute: function (tabbar, button) {
-                var tabValue = button.apis().getValue();
+                var tabValue = Representing.getValue(button);
                 button.getSystem().getByUid(detail.partUids().tabview).each(function (viewer) {
                   viewer.apis().transition(tabValue);
                 });

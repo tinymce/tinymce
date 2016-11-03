@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.GuiTemplate',
+    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.demo.DemoTemplates',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.compass.Arr',
@@ -17,7 +18,7 @@ define(
     'text!dom-templates/demo.menu.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, DemoTemplates, HtmlDisplay, Arr, Future, Option, Class, Element, Insert, Value, TemplateMenu) {
+  function (Gui, GuiFactory, GuiTemplate, Representing, DemoTemplates, HtmlDisplay, Arr, Future, Option, Class, Element, Insert, Value, TemplateMenu) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -121,7 +122,7 @@ define(
             return Future.pure(matches);
           },
           onExecute: function (sandbox, item, itemValue) {
-            var value = item.apis().getValue();
+            var value = Representing.getValue(item);
             console.log('*** typeahead menu demo execute on: ' + value + ' ***');
           },
           parts: {

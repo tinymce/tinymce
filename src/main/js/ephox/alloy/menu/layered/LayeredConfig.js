@@ -8,6 +8,7 @@ define(
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Positioning',
+    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.layered.LayeredState',
     'ephox.alloy.menu.logic.HotspotViews',
@@ -33,7 +34,7 @@ define(
     'ephox.sugar.api.SelectorFilter'
   ],
 
-  function (ComponentStructure, EditableFields, SystemEvents, Highlighting, Keying, Positioning, EventHandler, LayeredState, HotspotViews, ItemEvents, MenuEvents, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, Insert, Remove, SelectorFilter) {
+  function (ComponentStructure, EditableFields, SystemEvents, Highlighting, Keying, Positioning, Representing, EventHandler, LayeredState, HotspotViews, ItemEvents, MenuEvents, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, Insert, Remove, SelectorFilter) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('lazyHotspot'),
 
@@ -96,7 +97,7 @@ define(
           var menuItems = SelectorFilter.descendants(menu.element(), '.' + uiSpec.markers().item());
           return Arr.bind(menuItems, function (mi) {
             return sandbox.getSystem().getByDom(mi).map(function (item) {
-              return item.apis().getValue();
+              return Representing.getValue(item);
             }).fold(Fun.constant([ ]), Arr.pure);
           });
         });
@@ -206,7 +207,7 @@ define(
       };
 
       var expandRight = function (sandbox, item) {
-        var value = item.apis().getValue();
+        var value = Representing.getValue(item);
         return sandbox.apis().getState().bind(function (state) {
           return state.expand(value).bind(function (path) {
             // When expanding, always select the first.
@@ -226,7 +227,7 @@ define(
       };
 
       var collapseLeft = function (sandbox, item) {
-        var value = item.apis().getValue();
+        var value = Representing.getValue(item);
         return sandbox.apis().getState().bind(function (state) {
           return state.collapse(value).bind(function (path) {
             return updateMenuPath(sandbox, state, path);
@@ -235,7 +236,7 @@ define(
       };
 
       var updateView = function (sandbox, item) {
-        var value = item.apis().getValue();
+        var value = Representing.getValue(item);
         return sandbox.apis().getState().bind(function (state) {
           return state.refresh(value).bind(function (path) {
             return updateMenuPath(sandbox, state, path);

@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
@@ -18,7 +19,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (SystemEvents, EventHandler, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Option, Attr, Checked, SelectorFind) {
+  function (SystemEvents, Representing, EventHandler, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Option, Attr, Checked, SelectorFind) {
     /*
      <fieldset>
        <legend>Border</legend>
@@ -168,7 +169,7 @@ define(
                   return Attr.get(first, 'value');
                 });
               }).each(function (val) {
-                group.apis().setValue(val);
+                Representing.setValue(group, val);
               });
             }
           })

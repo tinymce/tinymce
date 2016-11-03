@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.GuiTemplate',
+    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.demo.DemoTemplates',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.knoch.future.Future',
@@ -25,7 +26,7 @@ define(
     'text!dom-templates/dropdown-alpha.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, DemoTemplates, HtmlDisplay, Future, Option, Class, DomEvent, Element, Html, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateToolbarDropdown, TemplateToolbarSplitButton, TemplateWidgetContainer, TemplateInlineDropdown) {
+  function (Gui, GuiFactory, GuiTemplate, Representing, DemoTemplates, HtmlDisplay, Future, Option, Class, DomEvent, Element, Html, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateToolbarDropdown, TemplateToolbarSplitButton, TemplateWidgetContainer, TemplateInlineDropdown) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -241,7 +242,7 @@ define(
           // sink: sink,
           desc: 'demo-dropdown',
           onExecute: function (sandbox, item, itemValue) {
-            console.log('*** dropdown demo execute on: ' + item.apis().getValue());
+            console.log('*** dropdown demo execute on: ' + Representing.getValue(item));
           },
           sink: sink,
           parts: {
@@ -326,7 +327,7 @@ define(
           // sink: sink,
           desc: 'demo-dropdown',
           onExecute: function (sandbox, item, itemValue) {
-            console.log('*** dropdown demo execute on: ' + item.apis().getValue());
+            console.log('*** dropdown demo execute on: ' + Representing.getValue(item));
           }
         }
       );
@@ -387,7 +388,7 @@ define(
           },
           onExecute: function (sandbox, item, itemValue) {
             console.trace();
-            console.log('*** dropdown menu demo execute on: ' + item.apis().getValue() + ' ***');
+            console.log('*** dropdown menu demo execute on: ' + Representing.getValue(item) + ' ***');
           },
           fetch: function () {
             return Future.pure({

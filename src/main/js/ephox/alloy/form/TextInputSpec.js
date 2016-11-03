@@ -2,6 +2,7 @@ define(
   'ephox.alloy.form.TextInputSpec',
 
   [
+    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.spec.FormLabelSpec',
     'ephox.alloy.spec.SpecSchema',
@@ -12,7 +13,7 @@ define(
     'ephox.sugar.api.Value'
   ],
 
-  function (EventHandler, FormLabelSpec, SpecSchema, FieldSchema, Objects, Merger, Fun, Value) {
+  function (Representing, EventHandler, FormLabelSpec, SpecSchema, FieldSchema, Objects, Merger, Fun, Value) {
     var schema = [
       FieldSchema.strict('uid'),
       FieldSchema.strict('label'),
@@ -68,9 +69,9 @@ define(
                 events: {
                   focusin: EventHandler.nu({
                     run: function (input) {
-                      if (info.stickyPlaceholder() && input.apis().getValue().length === 0) {
+                      if (info.stickyPlaceholder() && Representing.getValue(input).length === 0) {
                         info.placeholder().each(function (pc) {
-                          input.apis().setValue(pc);
+                          Representing.setValue(input, pc);
                         });
                       }
                     }

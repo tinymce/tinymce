@@ -2,6 +2,7 @@ define(
   'ephox.alloy.spec.FormSpec',
 
   [
+    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.form.FormUis',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
@@ -13,7 +14,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (FormUis, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Obj, Merger, Option) {
+  function (Representing, FormUis, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Obj, Merger, Option) {
     var schema = [
       FieldSchema.strict('dom'),
       
@@ -69,9 +70,10 @@ define(
             var r = {};
             Obj.each(detail.partUids(), function (partUid, name) {
               form.getSystem().getByUid(partUid).each(function (field) {
-                r[name] = field.delegate().map(function (dlg) {
+                var delegate = field.delegate().map(function (dlg) {
                   return dlg.get()(field);
-                }).getOr(field).apis().getValue();
+                }).getOr(field);
+                r[name] = Representing.getValue(delegate);
               });
             });
             return r;
@@ -80,9 +82,10 @@ define(
             Obj.each(value, function (v, k) {
               var fieldUid = detail.partUids()[k];
               form.getSystem().getByUid(fieldUid).each(function (field) {
-                field.delegate().map(function (dlg) {
+                var delegate = field.delegate().map(function (dlg) {
                   return dlg.get()(field);
-                }).getOr(field).apis().setValue(v);
+                }).getOr(field);
+                Representing.setValue(delegate, v);
               });
             });
           }

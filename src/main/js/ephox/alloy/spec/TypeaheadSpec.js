@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dropdown.Beta',
     'ephox.alloy.dropdown.Gamma',
@@ -22,7 +23,7 @@ define(
     'global!document'
   ],
 
-  function (SystemEvents, Coupling, Focusing, EventHandler, Beta, Gamma, ViewTypes, InputSpec, SpecSchema, FieldSchema, Objects, Merger, Fun, Option, Cell, Value, Strings, document) {
+  function (SystemEvents, Coupling, Focusing, Representing, EventHandler, Beta, Gamma, ViewTypes, InputSpec, SpecSchema, FieldSchema, Objects, Merger, Fun, Option, Cell, Value, Strings, document) {
     var schema = [
       FieldSchema.strict('sink'),
       FieldSchema.strict('fetch'),
@@ -49,15 +50,15 @@ define(
             onHighlight: function (menu, item) {
               if (! detail.previewing().get()) {
                 menu.getSystem().getByUid(detail.uid()).each(function (input) {
-                  input.apis().setValue(item.apis().getValue());
+                  Representing.setValueFrom(input, item);
                 });
               } else {
                 // Highlight the rest of the text so that the user types over it.
                 menu.getSystem().getByUid(detail.uid()).each(function (input) {
-                  var currentValue = input.apis().getValue();
-                  var nextValue = item.apis().getValue();
+                  var currentValue = Representing.getValue(input);
+                  var nextValue = Representing.getValue(item);
                   if (Strings.startsWith(nextValue, currentValue)) {
-                    input.apis().setValue(nextValue);
+                    Representing.setValue(input, nextValue);
                     input.element().dom().setSelectionRange(currentValue.length, nextValue.length);
                   }
                   
@@ -72,7 +73,7 @@ define(
         {
           onExecute: function (sandbox, item) {
             sandbox.apis().closeSandbox();
-            var currentValue = item.apis().getValue();
+            var currentValue = Representing.getValue(item);
             return item.getSystem().getByUid(detail.uid()).bind(function (input) {
               input.element().dom().setSelectionRange(currentValue.length, currentValue.length);
               // Should probably streamline this one.

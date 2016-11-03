@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.Highlighting',
+    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
@@ -18,7 +19,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (SystemEvents, Highlighting, EventHandler, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Option, Attr, SelectorFind) {
+  function (SystemEvents, Highlighting, Representing, EventHandler, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Option, Attr, SelectorFind) {
     /*
      <fieldset>
        <legend>Border</legend>
@@ -163,9 +164,7 @@ define(
         },
         representing: {
           query: function (group) {
-            return Highlighting.getHighlighted(group).map(function (item) {
-              return item.apis().getValue();
-            }).getOr(null);
+            return Highlighting.getHighlighted(group).map(Representing.getValue).getOr(null);
           },
           set: function (group, value) {
             getItemBy(group, value).each(function (item) {
@@ -179,11 +178,9 @@ define(
             run: function (group) {
               info.selectedValue().orThunk(function () {
                 Highlighting.highlightFirst(group);
-                return Highlighting.getHighlighted(group).map(function (item) {
-                  return item.apis().getValue();
-                });
+                return Highlighting.getHighlighted(group).map(Representing.getValue);
               }).each(function (val) {
-                group.apis().setValue(val);
+                Representing.setValue(group, val);
               });
             }
           })

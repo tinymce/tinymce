@@ -31,6 +31,11 @@ define(
       repInfo.set()(component, value);
     };
 
+    var doSetValueFrom = function (component, repInfo, source) {
+      var v = doGetValue(source);
+      doSetValue(component, repInfo, v);
+    };
+
     var exhibit = function (info, base) {
       return DomModification.nu({ });
     };
@@ -38,7 +43,8 @@ define(
     var apis = function (info) {
       return {
         getValue: Behaviour.tryActionOpt(behaviourName, info, 'getValue', doGetValue),
-        setValue: Behaviour.tryActionOpt(behaviourName, info, 'setValue', doSetValue)
+        setValue: Behaviour.tryActionOpt(behaviourName, info, 'setValue', doSetValue),
+        setValueFrom: Behaviour.tryActionOpt(behaviourName, info, 'setValueFrom', doSetValueFrom)
       };
     };
 

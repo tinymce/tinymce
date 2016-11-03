@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.Gui',
+    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.alloy.registry.Tagger',
     'ephox.highway.Merger',
@@ -17,7 +18,7 @@ define(
     'global!setTimeout'
   ],
 
-  function (Gui, HtmlDisplay, Tagger, Merger, Future, Fun, Option, Result, Class, Element, Insert, document, setTimeout) {
+  function (Gui, Representing, HtmlDisplay, Tagger, Merger, Future, Fun, Option, Result, Class, Element, Insert, document, setTimeout) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -43,7 +44,7 @@ define(
                 },
                 validator: {
                   validate: function (input) {
-                    var v = input.apis().getValue();
+                    var v = Representing.getValue(input);
                     return Future.nu(function (callback) {
                       setTimeout(function () {
                         var res = v.indexOf('a') === 0 ? Result.error('Do not start with a!') : Result.value({ });
@@ -78,8 +79,8 @@ define(
             lockClass: 'demo-selected'
           },
           onLockedChange: function (primary, current, other) {
-            var cValue = current.apis().getValue();
-            other.apis().setValue(cValue);
+            var cValue = Representing.getValue(current);
+            Representing.setValue(other, cValue);
           },
 
           components: [
@@ -315,7 +316,7 @@ define(
       //   }
       // );
 
-      // form.apis().setValue({
+      // Representing.setValue(form, {
       //   alpha: 'doggy',
       //   beta: 'bottle',
       //   gamma: 'cad'
@@ -496,7 +497,7 @@ define(
         }
       );
 
-      // slideform.apis().setValue({
+      // Representing.setValue(slideform, {
       //   delta: 'dog'
       // });
 
