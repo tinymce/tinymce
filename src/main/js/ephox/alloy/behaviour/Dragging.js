@@ -26,12 +26,6 @@ define(
       )
     );
 
-
-
-    var doCommand1 = function (component, bInfo) {
-      /* */
-    };
-
     var exhibit = function (info, base) {
       return info[behaviourName]().fold(function () {
         return DomModification.nu({ });
@@ -41,9 +35,7 @@ define(
     };
 
     var apis = function (info) {
-      return {
-        command1: Behaviour.tryActionOpt(behaviourName, info, 'command1', doCommand1)
-      };
+      return { };
     };
 
     var handlers = function (info) {
