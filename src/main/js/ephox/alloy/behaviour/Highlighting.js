@@ -7,6 +7,7 @@ define(
     'ephox.alloy.dom.DomModification',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
@@ -16,7 +17,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Cycles, Behaviour, DomModification, FieldPresence, FieldSchema, ValueSchema, Arr, Fun, Option, Class, SelectorFilter, SelectorFind) {
+  function (Cycles, Behaviour, DomModification, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Fun, Option, Class, SelectorFilter, SelectorFind) {
     var schema = FieldSchema.field(
       'highlighting',
       'highlighting',
@@ -103,20 +104,26 @@ define(
       return getDelta(component, hInfo, +1);
     };
 
+    var apiCalls = Objects.wrapAll([
+      { key: 'highlight', value: highlight },
+      { key: 'dehighlight', value: dehighlight },
+      { key: 'dehighlightAll', value: dehighlightAll },
+      { key: 'highlightFirst', value: highlightFirst },
+      { key: 'highlightLast', value: highlightLast },
+      { key: 'isHighlighted', value: isHighlighted },
+      { key: 'getHighlighted', value: getHighlighted },
+      { key: 'getFirst', value: getFirst },
+      { key: 'getLast', value: getLast },
+      { key: 'getPrevious', value: getPrevious },
+      { key: 'getNext', value: getNext }
+    ]);
+
     var apis = function (info) {
-      return {
-        highlight: Behaviour.tryActionOpt('highlighting', info, 'highlight', highlight),
-        dehighlight: Behaviour.tryActionOpt('highlighting', info, 'dehighlight', dehighlight),
-        dehighlightAll: Behaviour.tryActionOpt('highlighting', info, 'dehighlightAll', dehighlightAll),
-        highlightFirst: Behaviour.tryActionOpt('highlighting', info, 'highlight', highlightFirst),
-        highlightLast: Behaviour.tryActionOpt('highlighting', info, 'highlight', highlightLast),
-        isHighlighted: Behaviour.tryActionOpt('highlighting', info, 'isHighlighted', isHighlighted),
-        getHighlighted: Behaviour.tryActionOpt('highlighting', info, 'getHighlighted', getHighlighted),
-        getFirst: Behaviour.tryActionOpt('highlighting', info, 'getFirst', getFirst),
-        getLast: Behaviour.tryActionOpt('highlighting', info, 'getLast', getLast),
-        getPrevious: Behaviour.tryActionOpt('highlighting', info, 'getPrevious', getPrevious),
-        getNext: Behaviour.tryActionOpt('highlighting', info, 'getNext', getNext)
-      };
+      return Behaviour.activeApis(
+        'highlighting',
+        info,
+        apiCalls
+      );
     };
 
     return Behaviour.contract({

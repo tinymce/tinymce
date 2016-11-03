@@ -5,13 +5,15 @@ define(
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.log.AlloyLogger',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects',
+    'ephox.compass.Obj',
     'ephox.peanut.Fun',
     'ephox.scullion.Contracts',
     'global!Array',
     'global!console'
   ],
 
-  function (DomModification, AlloyLogger, FieldSchema, Fun, Contracts, Array, console) {
+  function (DomModification, AlloyLogger, FieldSchema, Objects, Obj, Fun, Contracts, Array, console) {
     var contract = Contracts.exactly([ 'name', 'exhibit', 'handlers', 'apis', 'schema' ]);
 
     var truncate = function (element) {
@@ -52,10 +54,26 @@ define(
       });
     };
 
+    var activeApis = function (behaviourName, info, apiCalls) {
+      // return Objects.wrap(
+      //   behaviourName,
+        return info[behaviourName]().map(function (behaviourInfo) {
+          return Obj.map(apiCalls, function (f, apiName) {
+            console.log('f', f, 'apiName', apiName);
+            return function (component/*, */) {
+              var args = Array.prototype.slice.call(arguments, 0);
+              return f.apply(undefined, [ component, behaviourInfo ].concat(args.slice(1)));
+            };
+          });
+        }).getOr({ });
+      // );
+    };
+
     return {
       tryActionOpt: tryActionOpt,
       exhibition: exhibition,
-      contract: contract
+      contract: contract,
+      activeApis: activeApis
     };
   }
 );
