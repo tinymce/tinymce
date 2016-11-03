@@ -25,7 +25,11 @@ define(
       FieldSchema.state('builder', function () {
         return builder;
       })
-    ];
+    ].concat(
+      SpecSchema.getPartsSchema([
+        'field'
+      ])
+    );
 
     // '<alloy.form.field-input>': UiSubstitutes.single(
     //       detail.parts().field()
@@ -45,6 +49,10 @@ define(
           },
           parts: {
             field: Merger.deepMerge(
+              info.parts().field(),
+              {
+                uid: info.partUids().field
+              },
               info.placeholder().map(function (p) { return { dom: { attributes: { placeholder: p } } }; }).getOr({ }),
               {
                 uiType: 'input',

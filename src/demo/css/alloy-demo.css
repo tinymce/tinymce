@@ -48,6 +48,10 @@ button {
   width: 100%;
 }
 
+input.invalid-input {
+  border-color: red;
+  outline: 2px solid red;
+}
 
 
 .dot {

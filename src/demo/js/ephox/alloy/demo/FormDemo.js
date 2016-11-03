@@ -4,15 +4,18 @@ define(
   [
     'ephox.alloy.api.Gui',
     'ephox.alloy.demo.HtmlDisplay',
+    'ephox.alloy.registry.Tagger',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
+    'ephox.perhaps.Result',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'global!document'
   ],
 
-  function (Gui, HtmlDisplay, Merger, Fun, Class, Element, Insert, document) {
+  function (Gui, HtmlDisplay, Tagger, Merger, Fun, Option, Result, Class, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -20,12 +23,36 @@ define(
       Insert.append(body, gui.element());
 
       var textMunger = function (spec) {
+        var invalidUid = Tagger.generate('demo-invalid-uid');
         return Merger.deepMerge(spec, {
           dom: {
             tag: 'div'
           },
+          parts: {
+            field: {
+              invalidating: {
+                invalidClass: 'invalid-input',
+                notify: {
+                  getContainer: function (input) {
+                    return input.getSystem().getByUid(invalidUid).fold(Option.none, function (c) {
+                      return Option.some(c.element());
+                    });
+                  }
+                },
+                validator: {
+                  validate: function (input) {
+                    var v = input.apis().getValue();
+                    if (v.indexOf('a') === 0) return Result.error('Do not start with a!');
+                    return Result.value({ });
+                  },
+                  onEvent: 'input'
+                }
+              }
+            }
+          },
           components: [
             { uiType: 'placeholder', name: '<alloy.form.field-label>', owner: 'formlabel' },
+            { uiType: 'container', uid: invalidUid },
             { uiType: 'placeholder', name: '<alloy.form.field-input>', owner: 'formlabel' }
           ]
         });
@@ -44,7 +71,7 @@ define(
           markers: {
             lockClass: 'demo-selected'
           },
-          onLockedChange: function (current, other) {
+          onLockedChange: function (primary, current, other) {
             var cValue = current.apis().getValue();
             other.apis().setValue(cValue);
           },
