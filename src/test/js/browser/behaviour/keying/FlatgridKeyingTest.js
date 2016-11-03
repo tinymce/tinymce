@@ -7,6 +7,7 @@ asynctest(
     'ephox.agar.api.Keys',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.NavigationUtils',
@@ -14,7 +15,7 @@ asynctest(
     'ephox.compass.Arr'
   ],
  
-  function (FocusTools, Keyboard, Keys, Step, GuiFactory, EventHandler, GuiSetup, NavigationUtils, Objects, Arr) {
+  function (FocusTools, Keyboard, Keys, Step, GuiFactory, Keying, EventHandler, GuiSetup, NavigationUtils, Objects, Arr) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -89,7 +90,7 @@ asynctest(
         GuiSetup.mSetupKeyLogger(body),
         FocusTools.sSetFocus('Initial focus', gui.element(), '.s11'),
         Step.sync(function () {
-          component.apis().setGridSize(4, 6);
+          Keying.setGridSize(component, 4, 6);
         }),         
         NavigationUtils.sequence(
           doc,

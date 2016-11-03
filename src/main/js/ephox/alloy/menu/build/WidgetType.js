@@ -5,6 +5,7 @@ define(
     'ephox.alloy.alien.EditableFields',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.util.ItemEvents',
     'ephox.alloy.menu.util.MenuMarkers',
@@ -17,7 +18,7 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (EditableFields, SystemEvents, Focusing, EventHandler, ItemEvents, MenuMarkers, UiSubstitutes, FieldPresence, FieldSchema, Objects, Merger, Option, Traverse) {
+  function (EditableFields, SystemEvents, Focusing, Keying, EventHandler, ItemEvents, MenuMarkers, UiSubstitutes, FieldPresence, FieldSchema, Objects, Merger, Option, Traverse) {
     var schema = [
       FieldSchema.strict('uid'),
       FieldSchema.strict('value'),
@@ -53,10 +54,10 @@ define(
       };
 
       var components = UiSubstitutes.substitutePlaces(Option.some('item-widget'), info, info.components(), placeholders);
-console.debug('components', components);
+
       var focusWidget = function (component) {
         return component.getSystem().getByUid(widgetUid).map(function (widget) {
-          widget.apis().focusIn();
+          Keying.focusIn(widget);
           return widget;
         });
       };

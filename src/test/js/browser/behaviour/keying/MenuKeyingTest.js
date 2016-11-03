@@ -8,10 +8,11 @@ asynctest(
     'ephox.agar.api.Keys',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.test.GuiSetup'
   ],
  
-  function (FocusTools, GeneralSteps, Keyboard, Keys, Step, GuiFactory, GuiSetup) {
+  function (FocusTools, GeneralSteps, Keyboard, Keys, Step, GuiFactory, Keying, GuiSetup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -65,7 +66,7 @@ asynctest(
       return [
         GuiSetup.mSetupKeyLogger(body),
         Step.sync(function () {
-          component.apis().focusIn();
+          Keying.focusIn(component);
         }),
 
         FocusTools.sTryOnSelector('Focus should start on alpha', doc, '.alpha'),

@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.alien.ComponentStructure',
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.logic.HotspotViews',
@@ -20,7 +21,7 @@ define(
     'ephox.sugar.api.Insert'
   ],
 
-  function (ComponentStructure, SystemEvents, Positioning, EventHandler, HotspotViews, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Merger, Option, Cell, Body, Insert) {
+  function (ComponentStructure, SystemEvents, Keying, Positioning, EventHandler, HotspotViews, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Merger, Option, Cell, Body, Insert) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('lazyHotspot'),
 
@@ -104,7 +105,7 @@ define(
           bubble: Option.none()
         }, container);
 
-        sandbox.apis().setGridSize(2, 2);
+        Keying.setGridSize(sandbox, 2, 2);
 
         uiSpec.onOpen()(sandbox, container);
       };
@@ -112,7 +113,7 @@ define(
       var enter = function (sandbox, state) {
         state.get().each(function (container) {
           show(sandbox, container);
-          sandbox.apis().focusIn();
+          Keying.focusIn(sandbox);
         });
       };
 

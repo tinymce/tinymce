@@ -8,13 +8,14 @@ asynctest(
     'ephox.agar.api.Keys',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.NavigationUtils',
     'ephox.sugar.api.Focus',
     'ephox.sugar.api.Value'
   ],
  
-  function (Assertions, FocusTools, Keyboard, Keys, Step, GuiFactory, GuiSetup, NavigationUtils, Focus, Value) {
+  function (Assertions, FocusTools, Keyboard, Keys, Step, GuiFactory, Keying, GuiSetup, NavigationUtils, Focus, Value) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -59,7 +60,7 @@ asynctest(
 
       return [
         Step.sync(function () {
-          component.apis().focusIn();
+          Keying.focusIn(component);
         }),
         FocusTools.sTryOnSelector(
           'Focus should have started in input',

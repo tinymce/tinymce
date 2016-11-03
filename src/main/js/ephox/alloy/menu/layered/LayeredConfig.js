@@ -6,6 +6,7 @@ define(
     'ephox.alloy.alien.EditableFields',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.Highlighting',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.layered.LayeredState',
@@ -32,7 +33,7 @@ define(
     'ephox.sugar.api.SelectorFilter'
   ],
 
-  function (ComponentStructure, EditableFields, SystemEvents, Highlighting, Positioning, EventHandler, LayeredState, HotspotViews, ItemEvents, MenuEvents, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, Insert, Remove, SelectorFilter) {
+  function (ComponentStructure, EditableFields, SystemEvents, Highlighting, Keying, Positioning, EventHandler, LayeredState, HotspotViews, ItemEvents, MenuEvents, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, Insert, Remove, SelectorFilter) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('lazyHotspot'),
 
@@ -152,7 +153,7 @@ define(
         state.getPrimary().each(function (primary) {
           setActiveMenu(sandbox, primary);
           showMenu(sandbox, primary);
-          sandbox.apis().focusIn();
+          Keying.focusIn(sandbox);
         });
       };
 

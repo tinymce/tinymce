@@ -74,7 +74,7 @@ define(
       //         ];
       //       },
       //       onChange: function (component) {
-      //         component.apis().focusIn();
+      //         Keying.focusIn(component);
       //       }
       //     }
       //   }

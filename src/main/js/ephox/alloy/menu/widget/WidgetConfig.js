@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.ComponentStructure',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.sandbox.Manager',
     'ephox.boulder.api.FieldPresence',
@@ -15,7 +16,7 @@ define(
     'ephox.sugar.api.Insert'
   ],
 
-  function (ComponentStructure, Positioning, Manager, FieldPresence, FieldSchema, ValueSchema, Merger, Option, Cell, Body, Insert) {
+  function (ComponentStructure, Keying, Positioning, Manager, FieldPresence, FieldSchema, ValueSchema, Merger, Option, Cell, Body, Insert) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('lazyHotspot'),
 
@@ -74,7 +75,7 @@ define(
       var enter = function (sandbox, state) {
         state.get().each(function (container) {
           show(sandbox, container);
-          container.apis().focusIn();
+          Keying.focusIn(container);
         });
       };
 

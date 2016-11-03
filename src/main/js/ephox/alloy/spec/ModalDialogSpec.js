@@ -2,6 +2,7 @@ define(
   'ephox.alloy.spec.ModalDialogSpec',
 
   [
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.behaviour.Behaviour',
     'ephox.alloy.dom.DomModification',
@@ -17,7 +18,7 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Positioning, Behaviour, DomModification, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Merger, Fun, Option, SelectorFind, Traverse) {
+  function (Keying, Positioning, Behaviour, DomModification, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Merger, Fun, Option, SelectorFind, Traverse) {
     var schema = [
       FieldSchema.strict('dom'),
       FieldSchema.strict('onEscape'),
@@ -142,7 +143,7 @@ define(
                     });
                     detail.sink().getSystem().addToWorld(blocker);
                     Positioning.addContainer(detail.sink(), blocker);
-                    dialog.apis().focusIn();
+                    Keying.focusIn(dialog);
                   },
                   hideDialog: function (dialog) {
                     console.log('hiding dialog');
