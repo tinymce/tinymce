@@ -58,7 +58,7 @@ define(
       //       base: function (component) {
       //         var moveTo = function (view) {
       //           return function () {
-      //             component.apis().transition(view);
+      //             Transitioning.transition(component, view);
       //           };
       //         };
 
@@ -80,7 +80,7 @@ define(
       //   }
       // );
 
-      // subject.apis().revertToBase();
+      // Transitioning.revertToBase(subject);
 
       var subject2 = HtmlDisplay.section(
         gui,

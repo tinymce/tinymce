@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.behaviour.Transitioning',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldSchema',
@@ -11,7 +12,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (Representing, SpecSchema, UiSubstitutes, FieldSchema, Arr, Merger, Option) {
+  function (Representing, Transitioning, SpecSchema, UiSubstitutes, FieldSchema, Arr, Merger, Option) {
     var schema = [
       FieldSchema.strict('tabs'),
       FieldSchema.strict('defaultView'),
@@ -42,7 +43,7 @@ define(
               onExecute: function (tabbar, button) {
                 var tabValue = Representing.getValue(button);
                 button.getSystem().getByUid(detail.partUids().tabview).each(function (viewer) {
-                  viewer.apis().transition(tabValue);
+                  Transitioning.transition(viewer, tabValue);
                 });
               },
               tabs: detail.tabs()
