@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
@@ -16,7 +17,7 @@ define(
     'ephox.sugar.api.Compare'
   ],
 
-  function (SystemEvents, EventHandler, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Option, Compare) {
+  function (SystemEvents, Highlighting, EventHandler, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Option, Compare) {
     var schema = [
       FieldSchema.strict('tabs'),
 
@@ -64,7 +65,7 @@ define(
                 },
                 action: function (button) {
                   var bar = button.getSystem().getByUid(detail.uid()).getOrDie();
-                  bar.apis().highlight(button);
+                  Highlighting.highlight(bar, button);
                   detail.onExecute()(bar, button);
                 },
                 role: 'tab'
@@ -95,7 +96,7 @@ define(
           mode: 'flow',
           getInitial: function (tabbar) {
             // Restore focus to the previously highlighted tab.
-            return tabbar.apis().getHighlighted().map(function (tab) {
+            return Highlighting.getHighlighted(tabbar).map(function (tab) {
               return tab.element();
             });
           },
@@ -107,7 +108,7 @@ define(
           EventHandler.nu({
             run: function (tabbar, simulatedEvent) {
               if (Compare.eq(simulatedEvent.event().target(), tabbar.element())) {
-                tabbar.apis().getFirst().each(function (first) {
+                Highlighting.getFirst(tabbar).each(function (first) {
                   first.getSystem().triggerEvent(SystemEvents.execute(), first.element(), { });
                 });
               }

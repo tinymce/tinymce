@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.form.FormUis',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.TabbedSpec',
@@ -21,7 +22,7 @@ define(
     'global!Error'
   ],
 
-  function (SystemEvents, FormUis, SpecSchema, TabbedSpec, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Thunk, Option, Cell, Error) {
+  function (SystemEvents, Highlighting, FormUis, SpecSchema, TabbedSpec, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Thunk, Option, Cell, Error) {
     var schema = [
       FieldSchema.strict('dom'),
 
@@ -54,7 +55,7 @@ define(
 
       var navigateLeft = function (button) {
         button.getSystem().getByUid(detail.partUids().tabbar).each(function (tabbar) {
-          tabbar.apis().getPrevious().each(function (previous) {
+          Highlighting.getPrevious(tabbar).each(function (previous) {
             previous.getSystem().triggerEvent(SystemEvents.execute(), previous.element(), { });
           });
         });
@@ -62,8 +63,8 @@ define(
 
       var navigateRight = function (button) {
         button.getSystem().getByUid(detail.partUids().tabbar).each(function (tabbar) {
-          tabbar.apis().getNext().each(function (previous) {
-            previous.getSystem().triggerEvent(SystemEvents.execute(), previous.element(), { });
+          Highlighting.getNext(tabbar).each(function (next) {
+            next.getSystem().triggerEvent(SystemEvents.execute(), next.element(), { });
           });
         });
       };

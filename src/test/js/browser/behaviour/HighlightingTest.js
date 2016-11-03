@@ -8,6 +8,7 @@ asynctest(
     'ephox.agar.api.NamedChain',
     'ephox.agar.api.UiFinder',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.test.ChainUtils',
     'ephox.alloy.test.GuiSetup',
     'ephox.compass.Arr',
@@ -17,7 +18,7 @@ asynctest(
     'global!Error'
   ],
  
-  function (Truncate, Assertions, Chain, NamedChain, UiFinder, GuiFactory, ChainUtils, GuiSetup, Arr, Result, Attr, Class, Error) {
+  function (Truncate, Assertions, Chain, NamedChain, UiFinder, GuiFactory, Highlighting, ChainUtils, GuiSetup, Arr, Result, Attr, Class, Error) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -86,38 +87,38 @@ asynctest(
         ]);
       };
 
-      var cHighlight = Chain.op(function (elem) {
-        component.apis().highlight(elem);
+      var cHighlight = Chain.op(function (item) {
+        Highlighting.highlight(component, item);
       });
 
-      var cDehighlight = Chain.op(function (elem) {
-        component.apis().dehighlight(elem);
+      var cDehighlight = Chain.op(function (item) {
+        Highlighting.dehighlight(component, item);
       });
 
       var cDehighlightAll = Chain.op(function () {
-        component.apis().dehighlightAll();
+        Highlighting.dehighlightAll(component);
       });
 
       var cHighlightFirst = Chain.op(function () {
-        component.apis().highlightFirst();
+        Highlighting.highlightFirst(component);
       });
 
       var cHighlightLast = Chain.op(function () {
-        component.apis().highlightLast();
+        Highlighting.highlightLast(component);
       });
 
-      var cIsHighlighted = Chain.mapper(function (elem) {
-        return component.apis().isHighlighted(elem);
+      var cIsHighlighted = Chain.mapper(function (item) {
+        return Highlighting.isHighlighted(component, item);
       });
 
       var cGetHighlightedOrDie = Chain.binder(function () {
-        return component.apis().getHighlighted().fold(function () {
+        return Highlighting.getHighlighted(component).fold(function () {
           return Result.error(new Error('getHighlighted did not find a selection'));
         }, Result.value);
       });
 
       var cGetHighlightedIsNone = Chain.binder(function (v) {
-        return component.apis().getHighlighted().fold(function () {
+        return Highlighting.getHighlighted(component).fold(function () {
           return Result.value(v);
         }, function (comp) {
           return Result.error('Highlighted value should be nothing. Was: ' + Truncate.getHtml(comp.element()));
@@ -125,13 +126,13 @@ asynctest(
       });
 
       var cGetFirst = Chain.binder(function () {
-        return component.apis().getFirst().fold(function () {
+        return  Highlighting.getFirst(component).fold(function () {
           return Result.error(new Error('getFirst found nothing'));
         }, Result.value);
       });
 
       var cGetLast = Chain.binder(function () {
-        return component.apis().getLast().fold(function () {
+        return Highlighting.getLast(component).fold(function () {
           return Result.error(new Error('getLast found nothing'));
         }, Result.value);
       });

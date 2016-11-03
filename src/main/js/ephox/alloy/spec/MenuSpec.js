@@ -2,6 +2,7 @@ define(
   'ephox.alloy.spec.MenuSpec',
 
   [
+    'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.build.ItemType',
     'ephox.alloy.menu.build.SeparatorType',
@@ -23,7 +24,7 @@ define(
     'global!Error'
   ],
 
-  function (EventHandler, ItemType, SeparatorType, WidgetType, ItemEvents, MenuEvents, MenuMarkers, Tagger, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Option, Error) {
+  function (Highlighting, EventHandler, ItemType, SeparatorType, WidgetType, ItemEvents, MenuEvents, MenuMarkers, Tagger, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Option, Error) {
     var itemSchema = ValueSchema.choose(
       'type',
       {
@@ -98,7 +99,7 @@ define(
                 // Highlight the item
                 var event = simulatedEvent.event();
                 menu.getSystem().getByDom(event.target()).each(function (item) {
-                  menu.apis().highlight(item);
+                  Highlighting.highlight(menu, item);
 
                   simulatedEvent.stop();
 
@@ -121,7 +122,7 @@ define(
               // on hovered item
               run: function (menu, simulatedEvent) {
                 var item = simulatedEvent.event().item();
-                menu.apis().highlight(item);
+                Highlighting.highlight(menu, item);
               }
             })
           }

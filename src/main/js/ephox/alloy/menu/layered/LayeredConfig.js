@@ -5,6 +5,7 @@ define(
     'ephox.alloy.alien.ComponentStructure',
     'ephox.alloy.alien.EditableFields',
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.layered.LayeredState',
     'ephox.alloy.menu.logic.HotspotViews',
@@ -30,7 +31,7 @@ define(
     'ephox.sugar.api.SelectorFilter'
   ],
 
-  function (ComponentStructure, EditableFields, SystemEvents, EventHandler, LayeredState, HotspotViews, ItemEvents, MenuEvents, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, Insert, Remove, SelectorFilter) {
+  function (ComponentStructure, EditableFields, SystemEvents, Highlighting, EventHandler, LayeredState, HotspotViews, ItemEvents, MenuEvents, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, Insert, Remove, SelectorFilter) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('lazyHotspot'),
 
@@ -123,9 +124,9 @@ define(
       };
 
       var setActiveMenu = function (sandbox, menu) {
-        sandbox.apis().highlight(menu);
-        menu.apis().getHighlighted().orThunk(function () {
-          return menu.apis().getFirst();
+        Highlighting.highlight(sandbox, menu);
+        Highlighting.getHighlighted(menu).orThunk(function () {
+          return Highlighting.getFirst(menu);
         }).each(function (item) {
           sandbox.getSystem().triggerEvent(SystemEvents.focusItem(), item.element(), { });
         });
@@ -208,7 +209,7 @@ define(
           return state.expand(value).bind(function (path) {
             // When expanding, always select the first.
             Option.from(path[0]).bind(state.lookupMenu).each(function (newMenuComp) {
-              newMenuComp.apis().highlightFirst();
+              Highlighting.highlightFirst(newMenuComp);
 
               // DUPE with above. Fix later.
               if (! Body.inBody(newMenuComp.element())) {
@@ -269,7 +270,7 @@ define(
             // Set "active-menu" for the menu with focus
             run: function (sandbox, simulatedEvent) {
               var menu = simulatedEvent.event().menu();
-              sandbox.apis().highlight(menu);
+              Highlighting.highlight(sandbox, menu);
             }
           })
         },
@@ -305,14 +306,14 @@ define(
       var focusManager = {
         set: function (sandbox, element) {
           sandbox.getSystem().getByDom(element).fold(Fun.noop, function (item) {
-            sandbox.apis().getHighlighted().each(function (menu) {
-              menu.apis().highlight(item);
+            Highlighting.getHighlighted(sandbox).each(function (menu) {
+              Highlighting.highlight(menu, item);
             });
           });          
         },
         get: function (sandbox) {
-          return sandbox.apis().getHighlighted().bind(function (menu) {
-            return menu.apis().getHighlighted().map(function (item) {
+          return Highlighting.getHighlighted(sandbox).bind(function (menu) {
+            return Highlighting.getHighlighted(menu).map(function (item) {
               return item.element();
             });
           });

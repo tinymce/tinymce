@@ -146,7 +146,7 @@ define(
           selector: '.' + info.markers().itemClass(),
           executeOnMove: true,
           getInitial: function (group) {
-            return group.apis().getHighlighted().map(function (item) {
+            return Highlighting.getHighlighted(group).map(function (item) {
               return item.element();
             });
           }
@@ -163,13 +163,13 @@ define(
         },
         representing: {
           query: function (group) {
-            return group.apis().getHighlighted().map(function (item) {
+            return Highlighting.getHighlighted(group).map(function (item) {
               return item.apis().getValue();
             }).getOr(null);
           },
           set: function (group, value) {
             getItemBy(group, value).each(function (item) {
-              group.apis().highlight(item);
+              Highlighting.highlight(group, item);
             });
           }
         },
@@ -178,8 +178,8 @@ define(
           EventHandler.nu({
             run: function (group) {
               info.selectedValue().orThunk(function () {
-                group.apis().highlightFirst();
-                return group.apis().getHighlighted().map(function (item) {
+                Highlighting.highlightFirst(group);
+                return Highlighting.getHighlighted(group).map(function (item) {
                   return item.apis().getValue();
                 });
               }).each(function (val) {

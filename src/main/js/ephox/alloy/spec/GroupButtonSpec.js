@@ -2,6 +2,7 @@ define(
   'ephox.alloy.spec.GroupButtonSpec',
 
   [
+    'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.construct.EventHandler',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
@@ -11,7 +12,7 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (EventHandler, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Fun) {
+  function (Highlighting, EventHandler, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Fun) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('action'),
       FieldSchema.strict('buttonTypes'),
@@ -81,7 +82,7 @@ define(
         events: {
           'alloy.groupbutton.value': EventHandler.nu({
             run: function (component, event) {
-              component.apis().highlight(event.event().button());
+              Highlighting.highlight(component, event.event().button());
               detail.action()(event.event().value());
             }
           })
