@@ -7,6 +7,7 @@ define(
 
   function () {
     // If readability becomes a problem, stop dynamically generating these.
+
     var access = function (component) {
       return component.apis();
     };
@@ -20,8 +21,8 @@ define(
       return access(component).getLast();
     };
 
-    var highlight = function (component) {
-      access(component).highlight();
+    var highlight = function (component, item) {
+      access(component).highlight(item);
     };
 
     return {

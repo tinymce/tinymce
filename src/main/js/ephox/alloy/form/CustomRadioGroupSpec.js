@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
@@ -17,7 +18,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (SystemEvents, EventHandler, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Option, Attr, SelectorFind) {
+  function (SystemEvents, Highlighting, EventHandler, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Option, Attr, SelectorFind) {
     /*
      <fieldset>
        <legend>Border</legend>
@@ -97,7 +98,8 @@ define(
                     EventHandler.nu({
                       run: function (radio) {
                         radio.getSystem().getByUid(info.uid()).each(function (group) {
-                          group.apis().highlight(radio);
+                          Highlighting.highlight(group, radio);
+                          // group.apis().highlight(radio);
                         });
                       }
                     })
