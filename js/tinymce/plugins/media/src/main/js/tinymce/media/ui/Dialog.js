@@ -8,13 +8,16 @@ define('tinymce.media.ui.Dialog', [
 
 	var checkEmbedHandler = function (editor, data) {
 		return new Promise(function (resolve, reject) {
+			var defaultResolve = function () {
+				return resolve({html: Data.dataToHtml(editor, data), url: data.source1});
+			};
+			var wrappedResolve = function (response) {
+				return response.html ? resolve({url: data.source1, html: response.html}) : defaultResolve();
+			};
 			if ('media_embed_handler' in editor.settings) {
-				var wrappedResolve = function (data) {
-					return resolve({url: data.source1, html: data.html});
-				};
 				editor.settings.media_embed_handler({url: data.source1}, wrappedResolve, reject);
 			} else {
-				resolve({html: Data.dataToHtml(editor, data), url: data.source1});
+				defaultResolve();
 			}
 		});
 	};

@@ -5,9 +5,10 @@ define('tinymce.media.test.Utils', [
 	'ephox.agar.api.Chain',
 	'ephox.agar.api.UiControls',
 	'ephox.agar.api.Waiter',
+	'ephox.agar.api.Step',
 	'ephox.agar.api.Assertions',
 	'ephox.agar.api.GeneralSteps'
-], function (tinymce, TinyDom, UiFinder, Chain, UiControls, Waiter, Assertions, GeneralSteps) {
+], function (tinymce, TinyDom, UiFinder, Chain, UiControls, Waiter, Step, Assertions, GeneralSteps) {
 	var sOpenDialog = function (ui) {
 		return ui.sClickOnToolbar('Click on media button', 'div[aria-label="Insert/edit video"] > button');
 	};
@@ -96,6 +97,12 @@ define('tinymce.media.test.Utils', [
 		);
 	};
 
+	var sSetSetting = function (editorSetting, key, value) {
+		return Step.sync(function () {
+			editorSetting[key] = value;
+		});
+	};
+
 	return {
 		cSetFormItem: cSetFormItem,
 		cFakeEvent: cFakeEvent,
@@ -104,6 +111,7 @@ define('tinymce.media.test.Utils', [
 		sCloseDialog: sCloseDialog,
 		sTestEmbedContentFromUrl: sTestEmbedContentFromUrl,
 		sSetFormItemNoEvent: sSetFormItemNoEvent,
-		sAssertEditorContent: sAssertEditorContent
+		sAssertEditorContent: sAssertEditorContent,
+		sSetSetting: sSetSetting
 	};
 });

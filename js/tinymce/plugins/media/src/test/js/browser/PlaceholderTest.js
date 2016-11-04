@@ -18,12 +18,6 @@ asynctest('browser.core.SubmitTest', [
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
 
-	var sSetSetting = function (editorSetting, key, value) {
-		return Step.sync(function () {
-			editorSetting[key] = value;
-		});
-	};
-
 	var sTestPlaceholder = function (ui, editor, apis, url, expected, struct) {
 		return GeneralSteps.sequence([
 			Utils.sOpenDialog(ui),
@@ -76,13 +70,13 @@ asynctest('browser.core.SubmitTest', [
 		});
 
 		Pipeline.async({}, [
-			sSetSetting(editor.settings, 'media_live_embeds', false),
+			Utils.sSetSetting(editor.settings, 'media_live_embeds', false),
 			sTestPlaceholder(ui, editor, apis,
 				'https://www.youtube.com/watch?v=P_205ZY52pY',
 				'<p><iframe src="//www.youtube.com/embed/P_205ZY52pY" width="560" ' +
 				'height="314" allowfullscreen="allowfullscreen"></iframe></p>',
 				placeholderStructure),
-			sSetSetting(editor.settings, 'media_live_embeds', true),
+			Utils.sSetSetting(editor.settings, 'media_live_embeds', true),
 			sTestPlaceholder(ui, editor, apis,
 				'https://www.youtube.com/watch?v=P_205ZY52pY',
 				'<p><iframe src="//www.youtube.com/embed/P_205ZY52pY" width="560" ' +

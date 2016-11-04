@@ -31,8 +31,15 @@ asynctest('browser.core.SubmitTest', [
 		var apis = TinyApis(editor);
 
 		Pipeline.async({}, [
-			sTestEmbedContentSubmit(ui, editor, apis, 'https://www.youtube.com',
-			'<p><iframe src="https://www.youtube.com" width="560" height="314" allowfullscreen="allowfullscreen"></iframe></p>'),
+			sTestEmbedContentSubmit(ui, editor, apis, 'https://www.youtube.com/watch?v=IcgmSRJHu_8',
+			'<p><span id="fake">https://www.youtube.com/watch?v=IcgmSRJHu_8</span></p>'),
+			apis.sSetContent(''),
+			Utils.sSetSetting(editor.settings, 'media_embed_handler', function (data, resolve) {
+				resolve({html: ''});
+			}),
+			sTestEmbedContentSubmit(ui, editor, apis, 'https://www.youtube.com/watch?v=IcgmSRJHu_8',
+			'<p><iframe src="//www.youtube.com/embed/IcgmSRJHu_8" width="560" height="314" allowfullscreen="allowfullscreen"></iframe></p>'),
+			apis.sSetContent('')
 		], onSuccess, onFailure);
 	}, {
 		plugins: ["media"],
@@ -40,7 +47,7 @@ asynctest('browser.core.SubmitTest', [
 		media_embed_handler: function (data, resolve) {
 			setTimeout(function () {
 				resolve({
-					html: '<iframe src="' + data.url + '" width="560" height="314" allowfullscreen="allowfullscreen"></iframe>'
+					html: '<span id="fake">' + data.url + '</span>'
 				});
 			}, 500);
 		}
