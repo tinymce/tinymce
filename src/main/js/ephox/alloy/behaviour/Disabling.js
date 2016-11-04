@@ -14,10 +14,11 @@ define(
     'ephox.peanut.Fun',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Class',
+    'ephox.sugar.api.Compare',
     'ephox.sugar.api.Node'
   ],
 
-  function (SystemEvents, Behaviour, EventHandler, DomModification, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Fun, Attr, Class, Node) {
+  function (SystemEvents, Behaviour, EventHandler, DomModification, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Fun, Attr, Class, Compare, Node) {
     var behaviourName = 'disabling';
 
     var nativeDisabled = [
@@ -86,7 +87,6 @@ define(
     };
 
     var doesExhibit = function (base, disableInfo) {
-
       return DomModification.nu({
         classes: disableInfo.disabled() ? disableInfo.disableClass().map(Arr.pure).getOr([ ]) : [ ]
       });
@@ -109,9 +109,6 @@ define(
           enable: doEnable,
           disable: doDisable,
           isDisabled: doIsDisabled
-        },
-        {
-          isDisabled: doIsDisabled
         }
       );
     };
@@ -133,9 +130,11 @@ define(
           {
             key: SystemEvents.systemInit(),
             value: EventHandler.nu({
-              run: function (component) {
-                debugger;
-                if (disableInfo.disabled()) doDisable(component, disableInfo);
+              run: function (component, simulatedEvent) {
+                if (Compare.eq(component.element(), simulatedEvent.event().target()) && disableInfo.disabled()) {
+                  doDisable(component, disableInfo);
+                  simulatedEvent.stop();
+                }
               }
             })
           }
