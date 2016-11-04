@@ -3,6 +3,7 @@ asynctest('browser.core.PluginTest', [
 	'tinymce.media.Plugin',
 	'ephox.mcagar.api.TinyLoader',
 	'ephox.mcagar.api.TinyDom',
+	'ephox.mcagar.api.TinyApis',
 	'ephox.mcagar.api.TinyUi',
 	'ephox.agar.api.Pipeline',
 	'ephox.agar.api.GeneralSteps',
@@ -14,7 +15,7 @@ asynctest('browser.core.PluginTest', [
 	'ephox.agar.api.Assertions',
 	'tinymce.media.test.Utils'
 ], function (
-	tinymce, Plugin, TinyLoader, TinyDom,
+	tinymce, Plugin, TinyLoader, TinyDom, TinyApis,
 	TinyUi, Pipeline, GeneralSteps,	Waiter,
 	Step, Chain, UiFinder, UiControls, Assertions, Utils
 ) {
@@ -30,14 +31,6 @@ asynctest('browser.core.PluginTest', [
 	var cFindHeightInput = Utils.cFindInDialog(function (value) {
 		return document.getElementById(value.dom().htmlFor).querySelector('input[aria-label="Height"]');
 	});
-
-
-	var cSetFormItem = function (ui, value) {
-		return Chain.fromChains([
-			cFindFilepickerInput(ui, 'Source'),
-			UiControls.cSetValue(value)
-		]);
-	};
 
 	var cGetWidthValue = function (ui) {
 		return Chain.fromChains([
@@ -68,7 +61,7 @@ asynctest('browser.core.PluginTest', [
 	};
 
 	var sAssertWidthValue = function (ui, value) {
-		return Waiter.sTryUntil('',
+		return Waiter.sTryUntil('Wait for new width value',
 			Chain.asStep({}, [
 				cGetWidthValue(ui),
 				Assertions.cAssertEq('Assert size value', value)
@@ -77,7 +70,7 @@ asynctest('browser.core.PluginTest', [
 	};
 
 	var sAssertHeightValue = function (ui, value) {
-		return Waiter.sTryUntil('',
+		return Waiter.sTryUntil('Wait for new height value',
 			Chain.asStep({}, [
 				cGetHeightValue(ui),
 				Assertions.cAssertEq('Assert size value', value)
@@ -87,7 +80,7 @@ asynctest('browser.core.PluginTest', [
 
 	var sSetFormItemPaste = function (ui, value) {
 		return Chain.asStep({}, [
-			cSetFormItem(ui, value),
+			Utils.cSetFormItem(ui, value),
 			Utils.cFakeEvent('paste')
 		]);
 	};
@@ -139,18 +132,46 @@ asynctest('browser.core.PluginTest', [
 		]);
 	};
 
+
+	var sSetFormItemNoEvent = function (ui, value) {
+		return Chain.asStep({}, [
+			Utils.cSetFormItem(ui, value)
+		]);
+	};
+
+	var sAssertEditorContent = function (apis, expected) {
+		return Waiter.sTryUntil('Wait for editor value',
+			Chain.asStep({}, [
+				apis.cGetContent,
+				Assertions.cAssertHtml('Assert body content', expected)
+			]), 1, 3000
+		);
+	};
+
+	var sTestEmbedContentSubmit = function (ui, editor, apis, url, expected) {
+		return GeneralSteps.sequence([
+			Utils.sOpenDialog(ui),
+			sSetFormItemNoEvent(ui, url),
+			ui.sClickOnUi('click checkbox', 'div.mce-primary > button'),
+			sAssertEditorContent(apis, expected)
+
+		]);
+	};
+
 	TinyLoader.setup(function (editor, onSuccess, onFailure) {
 		var ui = TinyUi(editor);
+		var apis = TinyApis(editor);
 
 		Pipeline.async({}, [
-			Utils.sAssertEmbedContentFromUrl(ui,
+			Utils.sTestEmbedContentFromUrl(ui,
 				'https://www.youtube.com/watch?v=b3XFjWInBog',
-				'<iframe src=\"//www.youtube.com/embed/b3XFjWInBog\" width=\"560\" height=\"314\" allowFullscreen=\"1\"></iframe>'
+				'<iframe src="//www.youtube.com/embed/b3XFjWInBog" width="560" height="314" allowFullscreen="1"></iframe>'
 			),
-			Utils.sAssertEmbedContentFromUrl(ui,
+			Utils.sTestEmbedContentFromUrl(ui,
 				'https://www.google.com',
-				'<video width=\"300\" height=\"150\" controls=\"controls\">\n<source src=\"https://www.google.com\" />\n</video>'
+				'<video width="300" height="150" controls="controls">\n<source src="https://www.google.com" />\n</video>'
 			),
+			// sTestEmbedContentSubmit(ui, editor, apis, 'test.se', 'test.se'),
 			sAssertSizeRecalcConstrained(ui),
 			sAssertSizeRecalcUnconstrained(ui)
 		], onSuccess, onFailure);

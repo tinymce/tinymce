@@ -72,7 +72,7 @@ define('tinymce.media.test.Utils', [
 		]);
 	};
 
-	var sAssertEmbedContentFromUrl = function (ui, url, content) {
+	var sTestEmbedContentFromUrl = function (ui, url, content) {
 		return GeneralSteps.sequence([
 			sOpenDialog(ui),
 			sSetFormItemPaste(ui, url),
@@ -81,11 +81,29 @@ define('tinymce.media.test.Utils', [
 		]);
 	};
 
+	var sSetFormItemNoEvent = function (ui, value) {
+		return Chain.asStep({}, [
+			cSetFormItem(ui, value)
+		]);
+	};
+
+	var sAssertEditorContent = function (apis, editor, expected) {
+		return Waiter.sTryUntil('Wait for editor value',
+			Chain.asStep({}, [
+				apis.cGetContent,
+				Assertions.cAssertHtml('Assert body content', expected)
+			]), 50, 3000
+		);
+	};
+
 	return {
+		cSetFormItem: cSetFormItem,
 		cFakeEvent: cFakeEvent,
 		cFindInDialog: cFindInDialog,
 		sOpenDialog: sOpenDialog,
 		sCloseDialog: sCloseDialog,
-		sAssertEmbedContentFromUrl: sAssertEmbedContentFromUrl
+		sTestEmbedContentFromUrl: sTestEmbedContentFromUrl,
+		sSetFormItemNoEvent: sSetFormItemNoEvent,
+		sAssertEditorContent: sAssertEditorContent
 	};
 });

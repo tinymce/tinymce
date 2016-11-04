@@ -9,8 +9,7 @@ define('tinymce.media.core.Mime', [
 			'ogg': 'video/ogg',
 			'swf': 'application/x-shockwave-flash'
 		};
-		var arr = url.toLowerCase().split('.');
-		var fileEnd = arr[arr.length - 1];
+		var fileEnd = url.toLowerCase().split('.').pop();
 		var mime = mimes[fileEnd];
 
 		return mime ? mime : '';

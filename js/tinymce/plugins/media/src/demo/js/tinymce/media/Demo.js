@@ -22,8 +22,10 @@ define("tinymce.media.Demo", [
 			plugins: ["media"],
 			toolbar: "media",
 			height: 600,
-			// media_embed_handler: function (editor, resolve) {
-			// 	resolve({html: 'a lot of html'});
+			// media_live_embeds: false,
+			// media_embed_handler: function (data, resolve) {
+			// 	resolve({
+			// 		html: '<iframe src="' + data.url + '" width="560" height="314" allowfullscreen="allowfullscreen"></iframe>'});
 			// }
 		});
 	};

@@ -3,6 +3,6 @@ configure({
     './prod.js'
   ],
   sources: [
-		source('amd', 'tinymce.media.Demo', '../../src/demo/js', mapper.hierarchical)
+    source('amd', 'tinymce.media.Demo', '../../src/demo/js', mapper.hierarchical)
   ]
 });

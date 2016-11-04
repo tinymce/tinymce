@@ -28,31 +28,34 @@ define('tinymce.media.ui.Dialog', [
 		};
 	};
 
-	var submitForm = function (editor) {
-		return function () {
-			var i;
-			var y;
-			var data = this.toJSON();
-			var beforeObjects = editor.dom.select('img[data-mce-object]');
-
-			checkEmbedHandler(editor, data)
-				.then(addEmbedHtml(this, editor));
-
-			editor.insertContent(Data.dataToHtml(editor, data));
-
-			var afterObjects = editor.dom.select('img[data-mce-object]');
+	var selectPlaceholder = function (editor, beforeObjects) {
+		var i;
+		var y;
+		var afterObjects = editor.dom.select('img[data-mce-object]');
 
 			// Find new image placeholder so we can select it
-			for (i = 0; i < beforeObjects.length; i++) {
-				for (y = afterObjects.length - 1; y >= 0; y--) {
-					if (beforeObjects[i] === afterObjects[y]) {
-						afterObjects.splice(y, 1);
-					}
+		for (i = 0; i < beforeObjects.length; i++) {
+			for (y = afterObjects.length - 1; y >= 0; y--) {
+				if (beforeObjects[i] === afterObjects[y]) {
+					afterObjects.splice(y, 1);
 				}
 			}
+		}
 
-			editor.selection.select(afterObjects[0]);
-			editor.nodeChanged();
+		editor.selection.select(afterObjects[0]);
+	};
+
+	var submitForm = function (editor) {
+		return function () {
+			var data = this.toJSON();
+
+			checkEmbedHandler(editor, data)
+				.then(function (response) {
+					var beforeObjects = editor.dom.select('img[data-mce-object]');
+					editor.insertContent(response.html);
+					selectPlaceholder(editor, beforeObjects);
+					editor.nodeChanged();
+				});
 		};
 	};
 
