@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.GuiTemplate',
+    'ephox.alloy.api.ui.SplitToolbar',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.highway.Merger',
     'ephox.perhaps.Option',
@@ -18,7 +19,7 @@ define(
     'text!dom-templates/tinymce.toolstrip.html'
   ],
 
-  function (Gui, GuiTemplate, HtmlDisplay, Merger, Option, Class, Element, Insert, document, TemplateButton, TemplateGroup, TemplateTextButton, TemplateToolbar, TemplateToolstrip) {
+  function (Gui, GuiTemplate, SplitToolbar, HtmlDisplay, Merger, Option, Class, Element, Insert, document, TemplateButton, TemplateGroup, TemplateTextButton, TemplateToolbar, TemplateToolstrip) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -260,11 +261,11 @@ define(
         // }
       );
 
-      toolbar2.getSystem().getByUid('demo-toolstrip').getOrDie().apis().refresh();
+      toolbar2.getSystem().getByUid('demo-toolstrip').each(SplitToolbar.refresh);
       
 
       window.addEventListener('resize', function () {
-        toolbar2.getSystem().getByUid('demo-toolstrip').getOrDie().apis().refresh();
+        toolbar2.getSystem().getByUid('demo-toolstrip').each(SplitToolbar.refresh);
       });
     };
   }

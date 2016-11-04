@@ -126,7 +126,7 @@ define(
         // Not ideal. Breaking abstraction somewhat, though remove is better than insert
         // Can just reset the toolbar groups also ... but may be a bit slower.
         Remove.remove(overflow.element());
-        ToolbarApis.setGroups([ ]);
+        ToolbarApis.setGroups(drawer, [ ]);
         // Remove.remove(drawer.element());
       } else {
         var inPrimary = Arr.map(overflows.within(), prebuild);
