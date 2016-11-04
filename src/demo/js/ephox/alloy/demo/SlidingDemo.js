@@ -52,9 +52,9 @@ define(
 
             {
               uiType: 'button',
-              buttonType: {
-                mode: 'text',
-                text: 'Toggle'
+              dom: {
+                tag: 'button',
+                innerHtml: 'Toggle'
               },
               action: function () {
                 var slider = gui.getByUid('height-slider').getOrDie();
@@ -100,9 +100,9 @@ define(
 
             {
               uiType: 'button',
-              buttonType: {
-                mode: 'text',
-                text: 'Toggle'
+              dom: {
+                tag: 'button',
+                innerHtml: 'Toggle'
               },
               action: function () {
                 var slider = gui.getByUid('width-slider').getOrDie();

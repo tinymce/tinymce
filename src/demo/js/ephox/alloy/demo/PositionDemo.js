@@ -65,9 +65,9 @@ define(
         'Position anchoring to button',
         {
           uiType: 'button',
-          buttonType: {
-            mode: 'text',
-            text: 'Toggle Popup'
+          dom: {
+            tag: 'button',
+            innerHtml: 'Toggle Popup'
           },
           eventOrder: {
             'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
@@ -156,9 +156,9 @@ define(
             },
             {
               uiType: 'button',
-              buttonType: {
-                mode: 'text',
-                text: 'Show popup at cursor'
+              dom: {
+                tag: 'button',
+                innerHtml: 'Show popup at cursor'
               },
               action: function (button) {
                 Positioning.addContainer(sink, popup);
@@ -200,9 +200,9 @@ define(
             },
             {
               uiType: 'button',
-              buttonType: {
-                mode: 'text',
-                text: 'Show popup at cursor'
+              dom: {
+                tag: 'button',
+                innerHtml: 'Show popup at cursor'
               },
               action: function (button) {
                 Positioning.addContainer(sink, popup);

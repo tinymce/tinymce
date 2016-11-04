@@ -60,17 +60,17 @@ define(
         'This button is a <code>button</code> tag with an image',
         {
           uiType: 'button',
-          buttonType: {
-            mode: 'image',
-            url: 'http://yamaha/textbox/icons/Transforms13.png'
+          dom: {
+            tag: 'button',
+            styles: {
+              'background-color': 'black',
+              'background-image': 'url(http://yamaha/textbox/icons/Transforms13.png)',
+              width: '20px',
+              height: '20px'
+            }
           },
           action: function () {
             console.log('*** Image ButtonDemo click ***');
-          },
-          dom: {
-            styles: {
-              'background-color': 'black'
-            }
           }
         }
       );
@@ -80,19 +80,16 @@ define(
         'This toggle button is a <code>span</code> tag with an font',
         {
           uiType: 'button',
-          buttonType: {
-            mode: 'font',
-            classes: [ 'demo-alloy-bold' ]
-          },
-          action: function () {
-            console.log('*** Font ButtonDemo click ***');
-          },
           dom: {
-            tag: 'span',
+            tag: 'button',
+            classes: [ 'demo-alloy-bold' ],
             styles: {
               border: '1px solid #ccc',
               display: 'inline-block'
             }
+          },
+          action: function () {
+            console.log('*** Font ButtonDemo click ***');
           },
           toggling: {
             toggleClass: 'demo-selected'
@@ -106,12 +103,9 @@ define(
         'background blue, and the other adds color red',
         {
           uiType: 'button',
-          buttonType: {
-            mode: 'text',
-            text: 'Button.with.Text'
-          },
           dom: {
-            tag: 'span'
+            tag: 'span',
+            innerHtml: 'Button.with.Text'
           },
           action: function () {
             console.log('*** ButtonDemo click ***');
@@ -125,24 +119,24 @@ define(
         }
       );
 
-      var group1 = HtmlDisplay.section(
-        gui,
-        'This button can only have one value selected. It can not be turned off',
-        {
-          uiType: 'groupbutton',
-          buttonTypes: 'text',
-          buttonClass: 'group-button',
-          selectedClass: 'demo-selected',
-          buttons: [
-            { value: 'alpha', spec: { text: 'Alpha' } },
-            { value: 'beta', spec: { text: 'Beta' } },
-            { value: 'gamma', spec: { text: 'Gamma' } }
-          ],
-          action: function (value) {
-            console.log('fired value', value);
-          }
-        }
-      );
+      // var group1 = HtmlDisplay.section(
+      //   gui,
+      //   'This button can only have one value selected. It can not be turned off',
+      //   {
+      //     uiType: 'groupbutton',
+      //     buttonTypes: 'text',
+      //     buttonClass: 'group-button',
+      //     selectedClass: 'demo-selected',
+      //     buttons: [
+      //       { value: 'alpha', spec: { text: 'Alpha' } },
+      //       { value: 'beta', spec: { text: 'Beta' } },
+      //       { value: 'gamma', spec: { text: 'Gamma' } }
+      //     ],
+      //     action: function (value) {
+      //       console.log('fired value', value);
+      //     }
+      //   }
+      // );
     };
   }
 );

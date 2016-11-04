@@ -37,7 +37,7 @@ define(
               TemplateToolbar,
               {
                 uiType: 'toolbar',
-                groups: [
+                initGroups: [
                   {
                     items: [
                       { },
@@ -63,6 +63,9 @@ define(
                   }
 
                 ],
+                parts: {
+                  groups: { }
+                },
                 members: {
                   'group': {
                     munge: function (s) {

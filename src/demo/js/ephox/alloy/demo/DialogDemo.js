@@ -8,13 +8,14 @@ define(
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.perhaps.Option',
+    'ephox.perhaps.Result',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'text!dom-templates/tinymce.dialog.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, Positioning, HtmlDisplay, Option, Class, Element, Insert, TemplateTinyDialog) {
+  function (Gui, GuiFactory, GuiTemplate, Positioning, HtmlDisplay, Option, Result, Class, Element, Insert, TemplateTinyDialog) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -33,6 +34,10 @@ define(
 
       gui.add(sink);
 
+      var lazySink = function () {
+        return Result.value(sink);
+      };
+
       var dialog = HtmlDisplay.section(
         gui,
         'This dialog is customised',
@@ -42,6 +47,13 @@ define(
           {
             uiType: 'modal-dialog',
             draggable: true,
+
+            lazySink: lazySink,
+
+            onEscape: function () {
+              console.log('Escaped');
+            },
+
             parts: {
               title: {
                 uiType: 'container',
@@ -86,10 +98,6 @@ define(
           }
         )
       );
-
-      Positioning.position(sink, {
-        anchor: 'modal'
-      }, dialog);
     };
   }
 );

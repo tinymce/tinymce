@@ -121,7 +121,8 @@ define(
               apis: function () {
                 return {
                   showDialog: function (dialog) {
-                    var blocker = detail.sink().getSystem().build({
+                    var sink = detail.lazySink()().getOrDie();
+                    var blocker = sink.getSystem().build({
                       uiType: 'custom',
                       dom: {
                         tag: 'div',
@@ -141,16 +142,17 @@ define(
                         { built: dialog }
                       ]
                     });
-                    detail.sink().getSystem().addToWorld(blocker);
-                    Positioning.addContainer(detail.sink(), blocker);
+                    sink.getSystem().addToWorld(blocker);
+                    Positioning.addContainer(sink, blocker);
                     Keying.focusIn(dialog);
                   },
                   hideDialog: function (dialog) {
                     console.log('hiding dialog');
+                    var sink = detail.lazySink()().getOrDie();
                     Traverse.parent(dialog.element()).each(function (parent) {
                       dialog.getSystem().getByDom(parent).each(function (blocker) {
-                        Positioning.removeContainer(detail.sink(), blocker);
-                        detail.sink().getSystem().removeFromWorld(blocker);
+                        Positioning.removeContainer(sink, blocker);
+                        sink.getSystem().removeFromWorld(blocker);
                       });
                     });
                   },
