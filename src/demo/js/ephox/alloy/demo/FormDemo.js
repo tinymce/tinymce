@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.ui.ExpandableFormApis',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.alloy.registry.Tagger',
     'ephox.highway.Merger',
@@ -19,7 +20,7 @@ define(
     'global!setTimeout'
   ],
 
-  function (Gui, Keying, Representing, HtmlDisplay, Tagger, Merger, Future, Fun, Option, Result, Class, Element, Insert, document, setTimeout) {
+  function (Gui, Keying, Representing, ExpandableFormApis, HtmlDisplay, Tagger, Merger, Future, Fun, Option, Result, Class, Element, Insert, document, setTimeout) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -412,7 +413,7 @@ define(
       Keying.focusIn(expform);
 
       setTimeout(function () {
-        expform.apis().toggleForm();
+        ExpandableFormApis.toggleForm(expform);
       }, 1000);
 
       var slideform = HtmlDisplay.section(

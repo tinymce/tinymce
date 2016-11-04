@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.api.ui.SplitToolbar',
+  'ephox.alloy.api.ui.SplitToolbarApis',
 
   [
 

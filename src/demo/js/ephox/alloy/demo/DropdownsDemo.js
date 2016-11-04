@@ -6,6 +6,7 @@ define(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.ui.DropdownApis',
     'ephox.alloy.demo.DemoTemplates',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.knoch.future.Future',
@@ -26,7 +27,7 @@ define(
     'text!dom-templates/dropdown-alpha.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, Representing, DemoTemplates, HtmlDisplay, Future, Option, Class, DomEvent, Element, Html, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateToolbarDropdown, TemplateToolbarSplitButton, TemplateWidgetContainer, TemplateInlineDropdown) {
+  function (Gui, GuiFactory, GuiTemplate, Representing, DropdownApis, DemoTemplates, HtmlDisplay, Future, Option, Class, DomEvent, Element, Html, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateToolbarDropdown, TemplateToolbarSplitButton, TemplateWidgetContainer, TemplateInlineDropdown) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -174,7 +175,7 @@ define(
 
 
 
-      x.apis().showValue('dog');
+      DropdownApis.showValue(x, 'dog');
 
       console.log('x', x.element().dom());
 
