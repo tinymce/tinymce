@@ -10,7 +10,6 @@ module("tinymce.plugins.VisualChars", {
 			skin: false,
 			indent: false,
 			disable_nodechange: true,
-			valid_elements: 'b,i',
 			init_instance_callback : function(ed) {
 				window.editor = ed;
 				tinymce.util.Delay.setTimeout(function() {
@@ -21,7 +20,7 @@ module("tinymce.plugins.VisualChars", {
 	}
 });
 
-test('Find no match', function() {
+test('Visualchar toggle on/off', function() {
 	editor.setContent('<p>a&nbsp;&nbsp;b</p>');
 	equal(0, editor.dom.select('span').length);
 	editor.execCommand('mceVisualChars');
