@@ -29,7 +29,7 @@ define(
     var sink  = {
       '<alloy.sink>': function (dSpec, detail) {
         // NOT sure what to do here.
-        if (detail.sink().isSome()) return { uiType: 'container' };
+        if (detail.lazySink().isSome()) return { uiType: 'container' };
         return {
           uid: detail.uid() + '-internal-sink',
           uiType: 'custom',
@@ -64,15 +64,19 @@ define(
     };
 
     var getSink = function (hotspot, detail) {
-      return hotspot.getSystem().getByUid(detail.uid() + '-internal-sink').orThunk(function () {
+      return hotspot.getSystem().getByUid(detail.uid() + '-internal-sink').map(function (internalSink) {
+        return Fun.constant(
+          Result.value(internalSink)
+        );
+      }).getOrThunk(function () {
         return detail.lazySink().fold(function () {
-          return Result.error(new Error(
-            'No internal sink is specified, nor an external sink'
-          ));
-        }, function (lazySink) {
-          return lazySink();
-        });
-      }).getOrDie();
+          return Fun.constant(
+            Result.error(new Error(
+              'No internal sink is specified, nor could an external sink be found'
+            ))
+          );
+        }, Fun.identity);
+      });
     };
       
     return {

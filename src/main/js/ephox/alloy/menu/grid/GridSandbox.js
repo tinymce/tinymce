@@ -20,7 +20,7 @@ define(
       FieldSchema.strict('onClose'),
       FieldSchema.strict('onOpen'),
       FieldSchema.defaulted('onExecute', Option.none),
-      FieldSchema.strict('sink'),
+      FieldSchema.strict('lazySink'),
       FieldSchema.defaulted('itemValue', 'data-item-value'),
       FieldSchema.defaulted('backgroundClass', 'background-menu'),
       FieldSchema.strict('flat'),

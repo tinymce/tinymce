@@ -22,7 +22,7 @@ define(
       FieldSchema.strict('onOpen'),
       FieldSchema.defaulted('onExecute', Option.none),
       FieldSchema.defaulted('fakeFocus', false),
-      FieldSchema.strict('sink'),
+      FieldSchema.strict('lazySink'),
       FieldSchema.defaulted('itemValue', 'data-item-value'),
       FieldSchema.defaulted('backgroundClass', 'background-menu'),
       FieldSchema.field(

@@ -29,7 +29,7 @@ define(
       FieldSchema.strict('onClose'),
       FieldSchema.strict('onExecute'),
 
-      FieldSchema.strict('sink'),
+      FieldSchema.strict('lazySink'),
       FieldSchema.strict('flat'),
 
       FieldSchema.field(
@@ -98,8 +98,13 @@ define(
         return state;
       };
 
+      var getSink = function () {
+        return uiSpec.lazySink()().getOrDie();
+      };
+
       var show = function (sandbox, container) {
-        Positioning.position(uiSpec.sink(), {
+        var sink = getSink();
+        Positioning.position(sink, {
           anchor: 'hotspot',
           hotspot: uiSpec.lazyHotspot()(),
           bubble: Option.none()
@@ -162,7 +167,7 @@ define(
             enter: enter
           }),
           onClose: uiSpec.onClose(),
-          sink: uiSpec.sink()
+          lazySink: uiSpec.lazySink()
         },
         keying: {
           mode: 'flatgrid',

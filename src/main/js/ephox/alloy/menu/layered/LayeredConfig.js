@@ -45,7 +45,7 @@ define(
       FieldSchema.defaulted('fakeFocus', false),
 
 
-      FieldSchema.strict('sink'),
+      FieldSchema.strict('lazySink'),
 
       FieldSchema.field(
         'markers',
@@ -93,6 +93,10 @@ define(
         });
       };
 
+      var getSink = function () {
+        return uiSpec.lazySink()().getOrDie();
+      }
+
       var toMenuValues = function (sandbox, sMenus) {
         return Obj.map(sMenus, function (menu) {
           var menuItems = SelectorFilter.descendants(menu.element(), '.' + uiSpec.markers().item());
@@ -110,7 +114,8 @@ define(
       };
 
       var showMenu = function (sandbox, menu) {
-        Positioning.position(uiSpec.sink(), {
+        var sink = getSink();
+        Positioning.position(sink, {
           anchor: 'hotspot',
           hotspot: uiSpec.lazyHotspot()(),
           bubble: Option.none()
@@ -120,7 +125,8 @@ define(
       };
 
       var showSubmenu = function (sandbox, triggerItem, submenu) {
-        Positioning.position(uiSpec.sink(), {
+        var sink = getSink();
+        Positioning.position(sink, {
           anchor: 'submenu',
           item: triggerItem,
           bubble: Option.none()
@@ -334,7 +340,7 @@ define(
             enter: enter
           }),
           onClose: uiSpec.onClose(),
-          sink: uiSpec.sink()
+          lazySink: uiSpec.lazySink()
         },
         keying: {
           mode: 'menu',

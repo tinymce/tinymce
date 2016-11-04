@@ -48,7 +48,7 @@ define(
           return GridSandbox.make({
             uid: detail.uid() + '-sandbox',
             lazyHotspot: Fun.constant(button),
-            sink: interactions.sink,
+            lazySink: interactions.lazySink,
             onOpen: interactions.onOpen,
             onClose: interactions.onClose,
             onExecute: interactions.onExecute,

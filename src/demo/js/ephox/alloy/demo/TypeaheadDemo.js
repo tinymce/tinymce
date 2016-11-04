@@ -11,6 +11,7 @@ define(
     'ephox.compass.Arr',
     'ephox.knoch.future.Future',
     'ephox.perhaps.Option',
+    'ephox.perhaps.Result',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
@@ -18,7 +19,7 @@ define(
     'text!dom-templates/demo.menu.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, Representing, DemoTemplates, HtmlDisplay, Arr, Future, Option, Class, Element, Insert, Value, TemplateMenu) {
+  function (Gui, GuiFactory, GuiTemplate, Representing, DemoTemplates, HtmlDisplay, Arr, Future, Option, Result, Class, Element, Insert, Value, TemplateMenu) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -66,12 +67,16 @@ define(
         'zebra'
       ];
 
+      var lazySink = function () {
+        return Result.value(sink);
+      };
+
       HtmlDisplay.section(gui,
         'An example of a typeahead component',
         {
           uiType: 'typeahead',
           minChars: 1,
-          sink: sink,
+          lazySink: lazySink,
           dom: {
             tag: 'input'
           },

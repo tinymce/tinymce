@@ -26,7 +26,7 @@ define(
 
   function (SystemEvents, Coupling, Focusing, Representing, Sandboxing, EventHandler, Beta, Gamma, ViewTypes, InputSpec, SpecSchema, FieldSchema, Objects, Merger, Fun, Option, Cell, Value, Strings, document) {
     var schema = [
-      FieldSchema.strict('sink'),
+      FieldSchema.strict('lazySink'),
       FieldSchema.strict('fetch'),
       FieldSchema.strict('dom'),
       FieldSchema.option('sink'),

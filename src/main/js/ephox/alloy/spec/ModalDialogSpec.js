@@ -22,7 +22,7 @@ define(
     var schema = [
       FieldSchema.strict('dom'),
       FieldSchema.strict('onEscape'),
-      FieldSchema.strict('sink'),
+      FieldSchema.strict('lazySink'),
       FieldSchema.defaulted('draggable', false)
     ];
 

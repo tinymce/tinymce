@@ -10,7 +10,9 @@ define(
     'ephox.alloy.demo.DemoTemplates',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.knoch.future.Future',
+    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.perhaps.Result',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
@@ -27,7 +29,7 @@ define(
     'text!dom-templates/dropdown-alpha.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, Representing, DropdownApis, DemoTemplates, HtmlDisplay, Future, Option, Class, DomEvent, Element, Html, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateToolbarDropdown, TemplateToolbarSplitButton, TemplateWidgetContainer, TemplateInlineDropdown) {
+  function (Gui, GuiFactory, GuiTemplate, Representing, DropdownApis, DemoTemplates, HtmlDisplay, Future, Fun, Option, Result, Class, DomEvent, Element, Html, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateToolbarDropdown, TemplateToolbarSplitButton, TemplateWidgetContainer, TemplateInlineDropdown) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -56,6 +58,10 @@ define(
         });
       });
 
+      var lazySink = function () {
+        return Result.value(sink);
+      };
+
       HtmlDisplay.section(
         gui,
         'Thi is a split-button dropdown',
@@ -74,7 +80,7 @@ define(
 
               });
             },
-            sink: sink,
+            lazySink: lazySink,
             onExecute: function () {
 
             },
@@ -130,7 +136,7 @@ define(
           TemplateToolbarDropdown,
           {
             uiType: 'dropdown-widget',
-            sink: sink,
+            lazySink: lazySink,
             members: {
               container: {
                 munge: function (spec) {
@@ -245,7 +251,7 @@ define(
           onExecute: function (sandbox, item, itemValue) {
             console.log('*** dropdown demo execute on: ' + Representing.getValue(item));
           },
-          sink: sink,
+          lazySink: lazySink,
           parts: {
             display: {
               representing: {
@@ -312,7 +318,7 @@ define(
               }
             }
           },
-          sink: sink,
+          lazySink: lazySink,
           fetch: function () {
 
             var data = [
@@ -342,7 +348,7 @@ define(
             tag: 'button',
             innerHtml: '+'
           },
-          sink: sink,
+          lazySink: lazySink,
           markers: {
             item: 'alloy-item',
             selectedItem: 'alloy-selected-item',

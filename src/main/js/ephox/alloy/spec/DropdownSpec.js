@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.spec.DropdownWidgetSpec',
+  'ephox.alloy.spec.DropdownSpec',
 
   [
     'ephox.alloy.api.behaviour.Toggling',
@@ -11,37 +11,36 @@ define(
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option'
   ],
 
-  function (Toggling, Beta, DropdownBehaviour, Gamma, ViewTypes, ButtonSpec, SpecSchema, UiSubstitutes, FieldSchema, Merger, Fun, Option) {
-    // DUPE:
+  function (Toggling, Beta, DropdownBehaviour, Gamma, ViewTypes, ButtonSpec, SpecSchema, UiSubstitutes, FieldSchema, Objects, Merger, Fun, Option) {
     var schema = [
       FieldSchema.strict('fetch'),
       FieldSchema.defaulted('onOpen', Fun.noop),
       FieldSchema.defaulted('onExecute', Option.none),
       FieldSchema.defaulted('toggleClass', 'alloy-selected-button'),
       FieldSchema.strict('dom'),
-      FieldSchema.option('sink'),
-      FieldSchema.defaulted('matchWidth', true),
+      FieldSchema.option('lazySink'),
+      FieldSchema.defaulted('matchWidth', false),
       ViewTypes.schema()
     ];
 
-    var make = function (spec) {
-      var detail = SpecSchema.asStructOrDie('dropdown.widget', schema, Merger.deepMerge(spec, {
-        view: ViewTypes.useWidget(spec)
+    var make = function (label, useView, spec) {
+      var detail = SpecSchema.asStructOrDie(label, schema, Merger.deepMerge(spec, {
+        view: useView
       }), Gamma.parts());
 
-    
       var factories = Merger.deepMerge(
         Gamma.sink(),
         Gamma.display()
       );
 
       var components = UiSubstitutes.substitutePlaces(Option.none(), detail, detail.components(), { }, factories);
-
+    
       return Merger.deepMerge(
         ButtonSpec.make({
           uid: detail.uid(),
@@ -86,8 +85,48 @@ define(
       );
     };
 
+    var list = function (spec) {
+      return make(
+        'dropdown.list',
+        ViewTypes.useList(spec),
+        Merger.deepMerge(
+          {
+            matchWidth: true
+          },
+          spec
+        )
+      );
+    };
+
+    var widget = function (spec) {
+      return make(
+        'dropdown.widget',
+        ViewTypes.useWidget(spec),
+        spec
+      );
+    };
+
+    var menu = function (spec) {
+      return make(
+        'dropdown.menu',
+        ViewTypes.useLayered(spec),
+        spec
+      );
+    };
+
+    var grid = function (spec) {
+      return make(
+        'dropdown.grid',
+        ViewTypes.useGrid(spec),
+        spec
+      );
+    };
+
     return {
-      make: make
+      list: list,
+      widget: widget,
+      menu: menu,
+      grid: grid
     };
   }
 );

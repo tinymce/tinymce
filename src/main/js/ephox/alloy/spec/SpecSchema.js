@@ -66,12 +66,12 @@ define(
     var asRawOrDie = function (label, schema, spec, partNames) {
 
       var baseS = base(label, partNames, spec);
-      return ValueSchema.asRawOrDie(label + 'spec', ValueSchema.objOf(baseS.concat(schema)), spec);
+      return ValueSchema.asRawOrDie(label + ' [SpecSchema]', ValueSchema.objOf(baseS.concat(schema)), spec);
     };
 
     var asStructOrDie = function (label, schema, spec, partNames) {
       var baseS = base(label, partNames, spec);
-      return ValueSchema.asStructOrDie(label + 'spec', ValueSchema.objOf(baseS.concat(schema)), spec);
+      return ValueSchema.asStructOrDie(label + ' [SpecSchema]', ValueSchema.objOf(baseS.concat(schema)), spec);
     };
 
     var extend = function (builder, original, nu) {

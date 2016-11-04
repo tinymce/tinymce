@@ -24,7 +24,7 @@ define(
       FieldSchema.strict('toggleClass'),
       FieldSchema.strict('fetch'),
       FieldSchema.strict('onExecute'),
-      FieldSchema.option('sink'),
+      FieldSchema.option('lazySink'),
       FieldSchema.strict('dom'),
       FieldSchema.defaulted('onOpen', Fun.noop),
       // FieldSchema.defaulted('onClose', Fun.noop),

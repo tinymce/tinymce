@@ -61,13 +61,13 @@ define(
         if (extras !== undefined && extras.onClose !== undefined) extras.onClose(component, menu);
       };
 
-      var sink = Gamma.getSink(hotspot, detail);
+      var lazySink = Gamma.getSink(hotspot, detail);
 
       var interactions = {
         onOpen: onOpen,
         onClose: onClose,
         onExecute: detail.onExecute(),
-        sink: sink
+        lazySink: lazySink
       };
 
       return detail.view().sandbox().spawn(hotspot, detail, interactions);

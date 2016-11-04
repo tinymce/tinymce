@@ -24,7 +24,7 @@ define(
       FieldSchema.strict('onClose'),
       FieldSchema.strict('onExecute'),
 
-      FieldSchema.strict('sink'),
+      FieldSchema.strict('lazySink'),
       
       FieldSchema.field(
         'members',
@@ -40,6 +40,10 @@ define(
       var uiSpec = ValueSchema.asStructOrDie('WidgetConfig', schema, rawUiSpec);
 
       var state = Cell(Option.none());
+
+      var getSink = function () {
+        return uiSpec.lazySink()().getOrDie();
+      };
 
       var build = function (sandbox, data) {
         var container = Merger.deepMerge(
@@ -63,7 +67,8 @@ define(
       };
 
       var show = function (sandbox, container) {
-        Positioning.position(uiSpec.sink(), {
+        var sink = getSink();
+        Positioning.position(sink, {
           anchor: 'hotspot',
           hotspot: uiSpec.lazyHotspot()(),
           bubble: Option.none()
@@ -108,7 +113,7 @@ define(
             enter: enter
           }),
           onClose: uiSpec.onClose(),
-          sink: uiSpec.sink()
+          lazySink: uiSpec.lazySink()
         }
       };
     };

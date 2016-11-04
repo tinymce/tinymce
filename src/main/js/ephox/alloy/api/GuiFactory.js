@@ -9,12 +9,7 @@ define(
     'ephox.alloy.spec.ButtonSpec',
     'ephox.alloy.spec.ContainerSpec',
     'ephox.alloy.spec.CustomSpec',
-    'ephox.alloy.spec.DropdownAlphaSpec',
-    'ephox.alloy.spec.DropdownGridSpec',
-    'ephox.alloy.spec.DropdownListSpec',
-    'ephox.alloy.spec.DropdownMenuSpec',
-    'ephox.alloy.spec.DropdownWidgetSpec',
-    'ephox.alloy.spec.DummySpec',
+    'ephox.alloy.spec.DropdownSpec',
     'ephox.alloy.spec.ExpandableFormSpec',
     'ephox.alloy.spec.FlatgridSpec',
     'ephox.alloy.spec.FormLabelSpec',
@@ -25,7 +20,6 @@ define(
     'ephox.alloy.spec.InputSpec',
     'ephox.alloy.spec.MenuSpec',
     'ephox.alloy.spec.ModalDialogSpec',
-    'ephox.alloy.spec.SandboxedSpec',
     'ephox.alloy.spec.SlideFormSpec',
     'ephox.alloy.spec.SplitDropdownSpec',
     'ephox.alloy.spec.TabbarSpec',
@@ -47,37 +41,41 @@ define(
     'global!Error'
   ],
 
-  function (Component, Components, DefaultEvents, Tagger, ButtonSpec, ContainerSpec, CustomSpec, DropdownAlphaSpec, DropdownGridSpec, DropdownListSpec, DropdownMenuSpec, DropdownWidgetSpec, DummySpec, ExpandableFormSpec, FlatgridSpec, FormLabelSpec, FormSpec, GroupButtonSpec, HtmlSelectSpec, InlineSpec, InputSpec, MenuSpec, ModalDialogSpec, SandboxedSpec, SlideFormSpec, SplitDropdownSpec, TabbarSpec, TabbedSpec, ToolbarGroupSpec, ToolbarSpec, TypeaheadSpec, WidgetContainerSpec, MoreToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
+  function (Component, Components, DefaultEvents, Tagger, ButtonSpec, ContainerSpec, CustomSpec, DropdownSpec, ExpandableFormSpec, FlatgridSpec, FormLabelSpec, FormSpec, GroupButtonSpec, HtmlSelectSpec, InlineSpec, InputSpec, MenuSpec, ModalDialogSpec, SlideFormSpec, SplitDropdownSpec, TabbarSpec, TabbedSpec, ToolbarGroupSpec, ToolbarSpec, TypeaheadSpec, WidgetContainerSpec, MoreToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
     var knownSpecs = {
       container: ContainerSpec.make,
       custom: CustomSpec.make,
       button: ButtonSpec.make,
-      input: InputSpec.make,
+      
       formlabel: FormLabelSpec.make,
-      'dropdown-menu': DropdownMenuSpec.make,
-      'dropdown-widget': DropdownWidgetSpec.make,
-      'dropdown-list': DropdownListSpec.make,
-      'dropdown-grid': DropdownGridSpec.make,
-      menu: MenuSpec.make,
-      inline: InlineSpec.make,
+      
+      input: InputSpec.make,
       typeahead: TypeaheadSpec.make,
+
       select: HtmlSelectSpec.make,
-      toolbar: ToolbarSpec.make,
+
+      inline: InlineSpec.make,
+      
       groupbutton: GroupButtonSpec.make,
+
+      toolbar: ToolbarSpec.make,
+      'toolbar-group': ToolbarGroupSpec.make,
       'more.toolbar': MoreToolbar.make,
-      'dummy': DummySpec.make,
+
       flatgrid: FlatgridSpec.make,
       'widget-container': WidgetContainerSpec.make,
-
-      'dropdown-alpha': DropdownAlphaSpec.make,
+      menu: MenuSpec.make,
+      
+      'dropdown-menu': DropdownSpec.menu,
+      'dropdown-widget': DropdownSpec.widget,
+      'dropdown-list': DropdownSpec.list,
+      'dropdown-grid': DropdownSpec.grid,
       'split-dropdown': SplitDropdownSpec.make,
-
-      'sandboxed-component': SandboxedSpec.make,
 
       'tabbing': TabbedSpec.make,
       'tabbar': TabbarSpec.make,
 
-      'toolbar-group': ToolbarGroupSpec.make,
+      
 
       'modal-dialog': ModalDialogSpec.make,
 

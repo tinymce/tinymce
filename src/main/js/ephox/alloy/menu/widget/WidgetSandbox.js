@@ -24,7 +24,7 @@ define(
       FieldSchema.strict('onClose'),
       FieldSchema.strict('onOpen'),
       FieldSchema.defaulted('onExecute', Option.none),
-      FieldSchema.strict('sink'),
+      FieldSchema.strict('lazySink'),
 
       FieldSchema.field(
         'members',
