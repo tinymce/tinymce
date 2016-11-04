@@ -70,13 +70,14 @@ define("tinymce/Editor", [
 	"tinymce/Shortcuts",
 	"tinymce/EditorUpload",
 	"tinymce/SelectionOverrides",
-	"tinymce/util/Uuid"
+	"tinymce/util/Uuid",
+	"tinymce/ui/Sidebar"
 ], function(
 	DOMUtils, DomQuery, AddOnManager, NodeChange, Node, DomSerializer, Serializer,
 	Selection, Formatter, UndoManager, EnterKey, ForceBlocks, EditorCommands,
 	URI, ScriptLoader, EventUtils, WindowManager, NotificationManager,
 	Schema, DomParser, Quirks, Env, Tools, Delay, EditorObservable, Mode, Shortcuts, EditorUpload,
-	SelectionOverrides, Uuid
+	SelectionOverrides, Uuid, Sidebar
 ) {
 	// Shorten these names
 	var DOM = DOMUtils.DOM, ThemeManager = AddOnManager.ThemeManager, PluginManager = AddOnManager.PluginManager;
@@ -1305,6 +1306,31 @@ define("tinymce/Editor", [
 			self.buttons = self.buttons || {};
 			settings.tooltip = settings.tooltip || settings.title;
 			self.buttons[name] = settings;
+		},
+
+		/**
+		 * Adds a sidebar for the editor instance.
+		 *
+		 * @method addSidebar
+		 * @param {String} name Sidebar name to add.
+		 * @param {Object} settings Settings object with icon, onshow etc.
+		 * @example
+		 * // Adds a custom sidebar that when clicked logs the panel element
+		 * tinymce.init({
+		 *    ...
+		 *    setup: function(ed) {
+		 *       ed.addSidebar('example', {
+		 *          tooltip: 'My sidebar',
+		 *          icon: 'my-side-bar',
+		 *          onshow: function(api) {
+		 *             console.log(api.element());
+		 *          }
+		 *       });
+		 *    }
+		 * });
+		 */
+		addSidebar: function (name, settings) {
+			return Sidebar.add(this, name, settings);
 		},
 
 		/**

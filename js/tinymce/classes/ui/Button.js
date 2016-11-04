@@ -135,7 +135,7 @@ define("tinymce/ui/Button", [
 				textHtml = '<span class="' + prefix + 'txt">' + self.encode(text) + '</span>';
 			}
 
-			icon = self.settings.icon ? prefix + 'ico ' + prefix + 'i-' + icon : '';
+			icon = icon ? prefix + 'ico ' + prefix + 'i-' + icon : '';
 
 			return (
 				'<div id="' + id + '" class="' + self.classes + '" tabindex="-1" aria-labelledby="' + id + '">' +

@@ -32,8 +32,7 @@ module.exports = function(grunt) {
 			],
 
 			themes: [
-				"js/tinymce/themes/*/theme.js",
-				"!js/tinymce/themes/inlite/theme.js"
+				"js/tinymce/themes/*/src/**/*.js"
 			]
 		},
 
@@ -62,6 +61,10 @@ module.exports = function(grunt) {
 
 			"inlite-theme": {
 				config_dir: "js/tinymce/themes/inlite/config/bolt"
+			},
+
+			"modern-theme": {
+				config_dir: "js/tinymce/themes/modern/config/bolt"
 			}
 		},
 
@@ -120,6 +123,20 @@ module.exports = function(grunt) {
 				files: {
 					src: ['js/tinymce/themes/inlite/src/main/js/tinymce/inlite/Theme.js']
 				}
+			},
+
+			"modern-theme": {
+				config_js: "js/tinymce/themes/modern/config/bolt/prod.js",
+				output_dir: "js/tinymce/themes/modern/scratch",
+				main: "tinymce.modern.Theme",
+				filename: "theme",
+
+				generate_inline: true,
+				minimise_module_names: true,
+
+				files: {
+					src: ['js/tinymce/themes/modern/src/main/js/tinymce/modern/Theme.js']
+				}
 			}
 		},
 
@@ -146,6 +163,11 @@ module.exports = function(grunt) {
 					{
 						src: "js/tinymce/themes/inlite/scratch/inline/theme.raw.js",
 						dest: "js/tinymce/themes/inlite/theme.js"
+					},
+
+					{
+						src: "js/tinymce/themes/modern/scratch/inline/theme.raw.js",
+						dest: "js/tinymce/themes/modern/theme.js"
 					}
 				]
 			}
@@ -253,7 +275,8 @@ module.exports = function(grunt) {
 						"TinyMCE.less",
 						"CropRect.less",
 						"ImagePanel.less",
-						"Arrows.less"
+						"Arrows.less",
+						"Sidebar.less"
 					],
 					append: ["Icons.less"],
 					importFrom: "js/tinymce/tinymce.js",

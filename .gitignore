@@ -13,6 +13,7 @@ tmp
 *.bak
 *.log
 *.swp
+yarn.lock
 .DS_Store
 .project
 node_modules
@@ -26,6 +27,7 @@ js/tinymce/plugins/media/plugin.js
 js/tinymce/plugins/wordcount/plugin.js
 js/tinymce/plugins/codesample/plugin.js
 js/tinymce/themes/inlite/theme.js
+js/tinymce/themes/modern/theme.js
 imagemanager
 filemanager
 mcmanager
