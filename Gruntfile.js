@@ -366,6 +366,16 @@ module.exports = function(grunt) {
 					{
 						src: "js/tinymce/plugins/imagetools/scratch/inline/plugin.js",
 						dest: "js/tinymce/plugins/imagetools/plugin.min.js"
+					},
+
+					{
+						src: "js/tinymce/plugins/wordcount/scratch/inline/plugin.js",
+						dest: "js/tinymce/plugins/wordcount/plugin.min.js"
+					},
+
+					{
+						src: "js/tinymce/plugins/media/scratch/inline/plugin.js",
+						dest: "js/tinymce/plugins/media/plugin.min.js"
 					}
 				]
 			},
@@ -375,6 +385,11 @@ module.exports = function(grunt) {
 					{
 						src: "js/tinymce/themes/inlite/scratch/inline/theme.js",
 						dest: "js/tinymce/themes/inlite/theme.min.js"
+					},
+
+					{
+						src: "js/tinymce/themes/modern/scratch/inline/theme.js",
+						dest: "js/tinymce/themes/modern/theme.min.js"
 					}
 				]
 			},
