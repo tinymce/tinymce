@@ -29,7 +29,7 @@ define(
       FieldSchema.strict('lazySink'),
       FieldSchema.strict('fetch'),
       FieldSchema.strict('dom'),
-      FieldSchema.option('sink'),
+      FieldSchema.option('lazySink'),
       FieldSchema.defaulted('minChars', 5),
       ViewTypes.schema(),
       FieldSchema.defaulted('onOpen', Fun.noop),

@@ -31,11 +31,6 @@ define(
       repInfo.set()(component, value);
     };
 
-    var doSetValueFrom = function (component, repInfo, source) {
-      var v = doGetValue(source);
-      doSetValue(component, repInfo, v);
-    };
-
     var exhibit = function (info, base) {
       return DomModification.nu({ });
     };
@@ -46,8 +41,7 @@ define(
         info,
         {
           getValue: doGetValue,
-          setValue: doSetValue,
-          setValueFrom: doSetValueFrom
+          setValue: doSetValue
         }
       );
     };
