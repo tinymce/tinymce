@@ -1315,7 +1315,7 @@ define("tinymce/Editor", [
 		 * @param {String} name Sidebar name to add.
 		 * @param {Object} settings Settings object with icon, onshow etc.
 		 * @example
-		 * // Adds a custom sidebar that when clicked loggs the panel element
+		 * // Adds a custom sidebar that when clicked logs the panel element
 		 * tinymce.init({
 		 *    ...
 		 *    setup: function(ed) {
